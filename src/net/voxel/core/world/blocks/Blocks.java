@@ -13,8 +13,8 @@ public abstract class Blocks {
 	private boolean isActive;
 
 	public abstract byte getId();
-
 	public abstract Color4f getColor();
+	public abstract float[] getTexCoords();
 
 	public static Blocks getBlocks(byte id) {
 		switch (id) {

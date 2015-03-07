@@ -87,7 +87,7 @@ public class Chunk {
 		for (int x = (int) pos.getX(); x < sizeX; x++) {
 			for (int y = (int) pos.getY(); y < sizeY; y++) {
 				for (int z = (int) pos.getZ(); z < sizeZ; z++) {
-					Shape.createCube(x, y, z, Blocks.getBlocks(blocks[x][y][z]).getColor(), 1);
+					Shape.createCube(x, y, z, Blocks.getBlocks(blocks[x][y][z]).getColor(), Blocks.getBlocks(blocks[x][y][z]).getTexCoords(), 1);
 				}
 			}
 		}

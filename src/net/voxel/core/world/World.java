@@ -4,6 +4,7 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.util.glu.GLU.gluPerspective;
 import net.logger.Logger;
 import net.voxel.core.Main;
+import net.voxel.core.util.SpriteSheets;
 import net.voxel.core.world.chunks.Chunk;
 
 import org.lwjgl.input.Keyboard;
@@ -91,6 +92,7 @@ public class World extends Screen {
 	public void render() {
 		render2D();
 		render3D();
+		SpriteSheets.blocks.bind();
 		camera.applyTranslations();
 		c.render();
 		glLoadIdentity();
@@ -126,7 +128,6 @@ public class World extends Screen {
 	}
 
 	public void render3D() {
-		;
 		glViewport(0, 0, Display.getWidth(), Display.getHeight());
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();

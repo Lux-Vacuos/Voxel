@@ -15,4 +15,9 @@ public class BlockVoid extends Blocks {
 	public Color4f getColor() {
 		return Color4f.BLACK;
 	}
+
+	@Override
+	public float[] getTexCoords() {
+		return new float[] {0f, 0f};
+	}
 }
