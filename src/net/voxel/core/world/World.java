@@ -1,8 +1,17 @@
 package net.voxel.core.world;
 
+import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
+import static org.lwjgl.opengl.GL11.GL_MODELVIEW;
+import static org.lwjgl.opengl.GL11.GL_PROJECTION;
+import static org.lwjgl.opengl.GL11.glClearDepth;
+import static org.lwjgl.opengl.GL11.glEnable;
+import static org.lwjgl.opengl.GL11.glLoadIdentity;
+import static org.lwjgl.opengl.GL11.glMatrixMode;
+import static org.lwjgl.opengl.GL11.glOrtho;
+import static org.lwjgl.opengl.GL11.glViewport;
+import static org.lwjgl.util.glu.GLU.gluPerspective;
 import net.logger.Logger;
 import net.voxel.core.Main;
-import net.voxel.core.util.Font;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -10,13 +19,17 @@ import org.lwjgl.opengl.Display;
 
 import com.nishu.utils.Camera;
 import com.nishu.utils.Camera3D;
+import com.nishu.utils.Color4f;
+import com.nishu.utils.Font;
 import com.nishu.utils.Screen;
-
-import static org.lwjgl.opengl.GL11.*;
+import com.nishu.utils.Text;
 
 public class World extends Screen {	
 	private Camera camera;
 	private Font font;
+	
+	public String title = "Voxel ";
+	public String version = "0.0.1a";
 	
 	public World() {
 		initGL();
@@ -28,7 +41,7 @@ public class World extends Screen {
 		Logger.log("Initializing Camera");
 		camera = new Camera3D.CameraBuilder().setAspectRatio(Main.aspect).setRotation(0, 0, 0).setPosition(0, 0, 0).setFieldOfView(Main.fov).build();
 		font = new Font();
-		font.loadFont("comic.png");
+		font.loadFont("Default", "comic.png");
 	}
 
 	@Override
@@ -38,6 +51,8 @@ public class World extends Screen {
 	@Override
 	public void render() {
 		render2D();
+		Color4f color4f = new Color4f(1, 1, 1, 1);
+		Text.renderString(font, title + version, 0f, 1.21f, 0.4f, color4f);
 		render3D();
 	}
 	public void render2D() {
@@ -50,8 +65,13 @@ public class World extends Screen {
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
 	}
-	public void render3D(){
-		
+	public void render3D(){;
+		glViewport(0, 0, Display.getWidth(), Display.getHeight());
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		gluPerspective(Main.fov, Main.aspect, Main.nearClip, Main.farClip);
+		glMatrixMode(GL_MODELVIEW);
+		glEnable(GL_DEPTH_TEST);
 	}
 	
 	@Override

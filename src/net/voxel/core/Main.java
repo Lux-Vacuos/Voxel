@@ -19,8 +19,8 @@ public class Main extends Screen{
 	public static final int fps = 60;
 	public static final String title = "Voxel game";
 	public static float fov = 90.0f;
-	private float nearClip = 0.001f;
-	private float farClip = 10.0f;
+	public static float nearClip = 0.001f;
+	public static float farClip = 10.0f;
 	public static int aspect = WIDTH / HEIGHT;
 	private static boolean mouseLock = false;
 	
