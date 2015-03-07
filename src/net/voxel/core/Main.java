@@ -11,6 +11,7 @@ import static org.lwjgl.opengl.GL11.glMatrixMode;
 import static org.lwjgl.opengl.GL11.glViewport;
 import static org.lwjgl.util.glu.GLU.gluPerspective;
 import net.logger.Logger;
+import net.voxel.core.world.World;
 
 import org.lwjgl.opengl.Display;
 
@@ -24,13 +25,14 @@ public class Main extends Screen{
 	public static final int HEIGHT = 720;
 	public static final int fps = 60;
 	public static final String title = "Voxel game";
-	private float fov = 90.0f;
+	public static float fov = 90.0f;
 	private float nearClip = 0.001f;
 	private float farClip = 50.0f;
-	private int aspect = WIDTH / HEIGHT;
+	public static int aspect = WIDTH / HEIGHT;
 	private static boolean mouseLock = false;
 	
 	private GameLoop gameLoop;
+	private World world;
 	
 	public Main() {
 		Logger.log("Starting game loop");
@@ -48,12 +50,12 @@ public class Main extends Screen{
 	}
 	@Override
 	public void init() {
-		
+		world = new World();
 	}
 
 	@Override
 	public void initGL() {
-		Logger.log("Initializing GL");
+		Logger.log("Initializing OpenGL");
 		glViewport(0, 0, Display.getWidth(), Display.getHeight());
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
@@ -66,15 +68,17 @@ public class Main extends Screen{
 	public void render() {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glClearColor(0.22f, 0.34f, 0.525f, 1);
+		
+		world.render();
 	}
 
 	@Override
 	public void update() {
-		
+		world.update();
 	}
 
 	@Override
 	public void dispose() {	
-		
+		world.dispose();
 	}
 }
