@@ -31,6 +31,8 @@ public class World extends Screen {
 	public String title = "Voxel ";
 	public String version = "0.0.1a";
 	
+	private boolean debug = true;
+	
 	public World() {
 		initGL();
 		init();
@@ -47,12 +49,37 @@ public class World extends Screen {
 	@Override
 	public void initGL() {
 	}
-
+	@Override
+	public void update() {
+		input();
+	}
+	private void input() {
+		camera.updateKeys(32, 1);
+		camera.updateMouse(1, 90, -90);
+		if(Mouse.isButtonDown(0)) {
+			Mouse.setGrabbed(true);
+		}else if(Mouse.isButtonDown(1)) {
+			Mouse.setGrabbed(false);
+		}
+		
+		while (Keyboard.next()) {
+			if (Keyboard.getEventKeyState()) {
+				if(Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
+					Logger.log("Disposing");
+					dispose();
+				}
+				if (Keyboard.isKeyDown(Keyboard.KEY_F3) && !debug) {
+					debug = true;
+				}
+				else if (Keyboard.isKeyDown(Keyboard.KEY_F3) && debug) {
+					debug = false;
+				}
+			}
+		}
+	}	
 	@Override
 	public void render() {
 		render2D();
-		Color4f color4f = new Color4f(1, 1, 1, 1);
-		Text.renderString(font, title + version, 0f, 1.21f, 0.4f, color4f);
 		render3D();
 	}
 	public void render2D() {
@@ -63,7 +90,18 @@ public class World extends Screen {
 		glViewport(0, 0, Main.WIDTH, Main.HEIGHT);
 		glOrtho(0, 1, 0, 1, -1, 1);
 		glMatrixMode(GL_MODELVIEW);
-		glLoadIdentity();
+		glLoadIdentity();	
+		Color4f color4f = new Color4f(1, 1, 1, 1);
+		Text.renderString(font, title + version, 0f, 1.21f, 0.4f, color4f);
+		if(debug) {
+			Text.renderString(font, "Debug Info", 0f, 1.15f, 0.4f, color4f);
+			Text.renderString(font, "X: " + camera.getX(), 0f, 1.10f, 0.4f, color4f);
+			Text.renderString(font, "Y: " + camera.getY(), 0f, 1.05f, 0.4f, color4f);
+			Text.renderString(font, "Z: " + camera.getZ(), 0f, 1.00f, 0.4f, color4f);
+			Text.renderString(font, "Xrot: " + camera.getYaw(), 0f, 0.95f, 0.4f, color4f);
+			Text.renderString(font, "Yrot: " + camera.getPitch(), 0f, 0.90f, 0.4f, color4f);
+			Text.renderString(font, "Zrot: " + camera.getRoll(), 0f, 0.90f, 0.4f, color4f);
+		}
 	}
 	public void render3D(){;
 		glViewport(0, 0, Display.getWidth(), Display.getHeight());
@@ -73,23 +111,9 @@ public class World extends Screen {
 		glMatrixMode(GL_MODELVIEW);
 		glEnable(GL_DEPTH_TEST);
 	}
-	
-	@Override
-	public void update() {
-		camera.updateKeys(32, 1);
-		camera.updateMouse(1, 90, -90);
-		if(Mouse.isButtonDown(0)) {
-			Mouse.setGrabbed(true);
-		}else if(Mouse.isButtonDown(1)) {
-			Mouse.setGrabbed(false);
-		}
-		if(Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
-			dispose();
-		}
-	}
 	@Override
 	public void dispose() {
-		Logger.log("Sistem closed");
+		Logger.log("System closed");
 		Display.destroy();
 		System.exit(0);
 	}
