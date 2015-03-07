@@ -5,7 +5,7 @@ public class SpriteSheets {
 	private String path;
 	private float size;
 	
-	public static SpriteSheets blocks = new SpriteSheets("spritesheets/blocks/BlocksText.png", 15);
+	public static SpriteSheets blocks = new SpriteSheets("spritesheets/blocks/BlocksText.png", 16);
 	
 	public SpriteSheets(String path, float size) {
 		this.path = path;
@@ -29,7 +29,7 @@ public class SpriteSheets {
 		texture.delete();
 	}
 
-	public int uniformSize() {
-		return (int) size;
+	public float uniformSize() {
+		return size;
 	}
 }
