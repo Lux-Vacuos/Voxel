@@ -22,35 +22,35 @@ import com.nishu.utils.GameLoop;
 import com.nishu.utils.Screen;
 import com.nishu.utils.Window;
 
-public class Main extends Screen{
-	
+public class Main extends Screen {
+
 	public static final int WIDTH = 1280;
 	public static final int HEIGHT = 720;
 	public static final int fps = 60;
 	public static final String title = "Voxel game";
 	public static float fov = 90.0f;
 	public static float nearClip = 0.001f;
-	public static float farClip = 10.0f;
+	public static float farClip = 30.0f;
 	public static int aspect = WIDTH / HEIGHT;
 	private static boolean mouseLock = false;
-	
+
 	private GameLoop gameLoop;
 	private World world;
-	
+
 	public Main() {
 		Logger.log("Starting game loop");
 		gameLoop = new GameLoop();
 		gameLoop.setScreen(this);
-		gameLoop.setDebugMode(true);
 		Logger.log("Max fps: " + fps);
 		gameLoop.start(fps);
 	}
-	
+
 	public static void main(String[] args) {
 		Logger.log("Creating Window");
 		Window.createWindow(WIDTH, HEIGHT, title, mouseLock);
 		new Main();
 	}
+
 	@Override
 	public void init() {
 		world = new World();
@@ -73,7 +73,7 @@ public class Main extends Screen{
 	public void render() {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glClearColor(0.22f, 0.34f, 0.525f, 1);
-		
+
 		world.render();
 	}
 
@@ -83,7 +83,7 @@ public class Main extends Screen{
 	}
 
 	@Override
-	public void dispose() {	
+	public void dispose() {
 		world.dispose();
 	}
 }

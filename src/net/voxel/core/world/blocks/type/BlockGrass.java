@@ -4,7 +4,7 @@ import com.nishu.utils.Color4f;
 
 import net.voxel.core.world.blocks.Blocks;
 
-public class BlockGrass extends Blocks{
+public class BlockGrass extends Blocks {
 
 	@Override
 	public byte getId() {
@@ -15,5 +15,5 @@ public class BlockGrass extends Blocks{
 	public Color4f getColor() {
 		return Color4f.GREEN;
 	}
-	
+
 }

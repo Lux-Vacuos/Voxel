@@ -1,8 +1,10 @@
-package net.voxel.core.world.blocks;
+package net.voxel.core.world.blocks.type;
+
+import net.voxel.core.world.blocks.Blocks;
 
 import com.nishu.utils.Color4f;
 
-public class BlocksVoid extends Blocks{
+public class BlockVoid extends Blocks {
 
 	@Override
 	public byte getId() {

@@ -9,15 +9,10 @@ import java.util.Date;
  * to Fatal Erros use "Logger.error("Unable to find files")" and will be printed
  */
 public final class Logger {
-	public static boolean development = true;
-
 	private Logger() {
 	}
 
 	public static void log(String... messages) {
-		if (!development)
-			return;
-
 		for (String message : messages)
 			System.out.println("[INFO " + getTimeStamp() + "] " + message);
 	}
@@ -30,9 +25,6 @@ public final class Logger {
 	}
 
 	public static void warn(String... messages) {
-		if (development)
-			return;
-
 		for (String message : messages)
 			System.err.println("[WARNING " + getTimeStamp() + "] " + message);
 	}

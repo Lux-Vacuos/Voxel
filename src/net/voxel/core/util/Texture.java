@@ -78,6 +78,7 @@ public class Texture {
 	public void unbind() {
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
+
 	public void delete() {
 		glDeleteTextures(id);
 	}
