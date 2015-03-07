@@ -3,11 +3,11 @@ package net.voxel.core.util;
 public class SpriteSheets {
 	private Texture texture;
 	private String path;
-	private float size;
+	private int size;
 	
 	public static SpriteSheets blocks = new SpriteSheets("spritesheets/blocks/BlocksText.png", 16);
 	
-	public SpriteSheets(String path, float size) {
+	public SpriteSheets(String path, int size) {
 		this.path = path;
 		this.size = 1 / size;
 		load();
@@ -29,7 +29,7 @@ public class SpriteSheets {
 		texture.delete();
 	}
 
-	public float uniformSize() {
+	public int uniformSize() {
 		return size;
 	}
 }
