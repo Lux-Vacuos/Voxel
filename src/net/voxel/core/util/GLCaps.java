@@ -26,18 +26,21 @@ public class GLCaps {
 		}
 		else {
 			Logger.log("OpenGL 1.3 is not supported");
+			System.exit(0);
+		}
+		if(GLContext.getCapabilities().OpenGL14) {
+			Logger.log("OpenGL 1.4 is supported");
+		}
+		else {
+			Logger.log("OpenGL 1.4 is not supported");
+			System.exit(0);
 		}
 		if(GLContext.getCapabilities().OpenGL15) {
 			Logger.log("OpenGL 1.5 is supported");
 		}
 		else {
 			Logger.log("OpenGL 1.5 is not supported");
-		}
-		if(GLContext.getCapabilities().OpenGL15) {
-			Logger.log("OpenGL 1.5 is supported");
-		}
-		else {
-			Logger.log("OpenGL 1.5 is not supported");
+			System.exit(0);
 		}
 		if(GLContext.getCapabilities().OpenGL20) {
 			Logger.log("OpenGL 2.0 is supported");

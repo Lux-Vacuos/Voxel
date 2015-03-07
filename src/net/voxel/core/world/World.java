@@ -31,7 +31,7 @@ public class World extends Screen {
 	public String title = "Voxel ";
 	public String version = "0.0.1a";
 	
-	private boolean debug = true;
+	public static boolean debug = false;
 	
 	public World() {
 		initGL();
@@ -69,9 +69,10 @@ public class World extends Screen {
 					dispose();
 				}
 				if (Keyboard.isKeyDown(Keyboard.KEY_F3) && !debug) {
+					Logger.log("Debug is enable");
 					debug = true;
-				}
-				else if (Keyboard.isKeyDown(Keyboard.KEY_F3) && debug) {
+				} else if (Keyboard.isKeyDown(Keyboard.KEY_F3) && debug) {
+					Logger.log("Debug is disable");
 					debug = false;
 				}
 			}
@@ -92,8 +93,8 @@ public class World extends Screen {
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();	
 		Color4f color4f = new Color4f(1, 1, 1, 1);
-		Text.renderString(font, title + version, 0f, 1.21f, 0.4f, color4f);
 		if(debug) {
+			Text.renderString(font, title + version, 0f, 1.21f, 0.4f, color4f);
 			Text.renderString(font, "Debug Info", 0f, 1.15f, 0.4f, color4f);
 			Text.renderString(font, "X: " + camera.getX(), 0f, 1.10f, 0.4f, color4f);
 			Text.renderString(font, "Y: " + camera.getY(), 0f, 1.05f, 0.4f, color4f);
