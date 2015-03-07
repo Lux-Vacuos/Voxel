@@ -1,13 +1,22 @@
 package net.voxel.core.world.chunks;
 
+import static org.lwjgl.opengl.GL11.GL_COMPILE;
+import static org.lwjgl.opengl.GL11.GL_QUADS;
+import static org.lwjgl.opengl.GL11.glBegin;
+import static org.lwjgl.opengl.GL11.glCallList;
+import static org.lwjgl.opengl.GL11.glEnd;
+import static org.lwjgl.opengl.GL11.glEndList;
+import static org.lwjgl.opengl.GL11.glGenLists;
+import static org.lwjgl.opengl.GL11.glNewList;
+
+import java.util.Random;
+
 import net.logger.Logger;
 import net.voxel.core.geometry.Shape;
 import net.voxel.core.world.blocks.Blocks;
 
 import com.nishu.utils.ShaderProgram;
 import com.nishu.utils.Vector3f;
-
-import static org.lwjgl.opengl.GL11.*;
 
 public class Chunk {
 
@@ -20,6 +29,8 @@ public class Chunk {
 
 	private int vcID, sizeX, sizeY, sizeZ;
 	private boolean isActive;
+	
+	private Random rand;
 
 	public Chunk(ShaderProgram shader, float x, float y, float z) {
 		this(shader, new Vector3f(x, y, z));
@@ -35,6 +46,7 @@ public class Chunk {
 
 	public void initGL() {
 		Logger.log("Generating Chunks");
+		rand = new Random();
 		sizeX = (int) pos.getX() + CHUNKSIZE;
 		sizeY = (int) pos.getY() + CHUNKHEIGHT;
 		sizeZ = (int) pos.getZ() + CHUNKSIZE;
@@ -56,6 +68,7 @@ public class Chunk {
 			for (int y = (int) pos.getY(); y < sizeY; y++) {
 				for (int z = (int) pos.getZ(); z < sizeZ; z++) {
 					blocks[x][y][z] = Blocks.Grass.getId();
+					if(rand.nextInt(10) == 0) blocks[x][y][z] = Blocks.Void.getId();
 				}
 			}
 		}
