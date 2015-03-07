@@ -1,5 +1,9 @@
 package net.voxel.core.geometry;
 
+import net.voxel.core.world.blocks.Blocks;
+
+import com.nishu.utils.Color4f;
+
 public class Shape {
 	public static float[] createCubeVertices(float x, float y, float z, float size) {
 		return new float[] {
@@ -33,6 +37,41 @@ public class Shape {
 				x, y, z,
 				x, y + size, z,
 				x, y + size, z + size
+		};
+	}
+	public static float[] getCubeColors(byte id) {
+		Color4f color = Blocks.getBlocks(id).getColor();
+		return new float[] {
+				color.r, color.g, color.b, color.a,
+				color.r, color.g, color.b, color.a,
+				color.r, color.g, color.b, color.a,
+				color.r, color.g, color.b, color.a,
+				
+				color.r, color.g, color.b, color.a,
+				color.r, color.g, color.b, color.a,
+				color.r, color.g, color.b, color.a,
+				color.r, color.g, color.b, color.a,
+				
+				color.r, color.g, color.b, color.a,
+				color.r, color.g, color.b, color.a,
+				color.r, color.g, color.b, color.a,
+				color.r, color.g, color.b, color.a,
+				
+				color.r, color.g, color.b, color.a,
+				color.r, color.g, color.b, color.a,
+				color.r, color.g, color.b, color.a,
+				color.r, color.g, color.b, color.a,
+				
+				color.r, color.g, color.b, color.a,
+				color.r, color.g, color.b, color.a,
+				color.r, color.g, color.b, color.a,
+				color.r, color.g, color.b, color.a,
+				
+				color.r, color.g, color.b, color.a,
+				color.r, color.g, color.b, color.a,
+				color.r, color.g, color.b, color.a,
+				color.r, color.g, color.b, color.a,
+				
 		};
 	}
 }

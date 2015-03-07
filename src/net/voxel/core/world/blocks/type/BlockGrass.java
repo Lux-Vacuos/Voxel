@@ -13,7 +13,7 @@ public class BlockGrass extends Blocks {
 
 	@Override
 	public Color4f getColor() {
-		return Color4f.GREEN;
+		return new Color4f(0f, 0.75f, 0.10f, 1f);
 	}
 
 }

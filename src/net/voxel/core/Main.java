@@ -26,11 +26,11 @@ public class Main extends Screen {
 
 	public static final int WIDTH = 1280;
 	public static final int HEIGHT = 720;
-	public static final int fps = 60;
+	public static final int fps = 30;
 	public static final String title = "Voxel game";
 	public static float fov = 90.0f;
 	public static float nearClip = 0.001f;
-	public static float farClip = 30.0f;
+	public static float farClip = 50.0f;
 	public static int aspect = WIDTH / HEIGHT;
 	private static boolean mouseLock = false;
 

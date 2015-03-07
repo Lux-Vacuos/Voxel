@@ -119,9 +119,9 @@ public class World extends Screen {
 					color4f);
 			Text.renderString(font, "Z: " + camera.getZ(), 0f, 1.00f, 0.4f,
 					color4f);
-			Text.renderString(font, "Xrot: " + camera.getYaw(), 0f, 0.95f,
+			Text.renderString(font, "Xrot: " + camera.getPitch(), 0f, 0.95f,
 					0.4f, color4f);
-			Text.renderString(font, "Yrot: " + camera.getPitch(), 0f, 0.90f,
+			Text.renderString(font, "Yrot: " + camera.getYaw(), 0f, 0.90f,
 					0.4f, color4f);
 			Text.renderString(font, "FPS: " + GameLoop.getFPS(), 0f, 0.85f,
 					0.4f, color4f);
