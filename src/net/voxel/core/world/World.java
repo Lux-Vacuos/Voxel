@@ -25,6 +25,8 @@ import com.nishu.utils.Color4f;
 import com.nishu.utils.Font;
 import com.nishu.utils.GameLoop;
 import com.nishu.utils.Screen;
+import com.nishu.utils.Shader;
+import com.nishu.utils.ShaderProgram;
 import com.nishu.utils.Text;
 
 public class World extends Screen {
@@ -32,9 +34,10 @@ public class World extends Screen {
 	private Font font;
 	
 	private Chunk c;
+	private ShaderProgram shader;
 	
 	public String title = "Voxel ";
-	public String version = "0.0.2a";
+	public String version = "0.0.3a";
 
 	public static boolean debug = false;
 
@@ -50,9 +53,12 @@ public class World extends Screen {
 				.setRotation(0, 0, 0).setPosition(0, 0, 0)
 				.setFieldOfView(Main.fov).build();
 		font = new Font();
-		font.loadFont("Default", "comic.png");
+		font.loadFont("Default", "fonts/comic.png");
 		
-		c = new Chunk(0, 0, 0);
+		Shader temp = new Shader("/shaders/chunk.vert", "/shaders/chunk.frag");
+		shader = new ShaderProgram(temp.getvShader(), temp.getfShader());
+		
+		c = new Chunk(shader, 0, 0, 0);
 	}
 
 	@Override
@@ -65,7 +71,7 @@ public class World extends Screen {
 	}
 
 	private void input() {
-		camera.updateKeys(32, 1);
+		camera.updateKeys(32, 2);
 		camera.updateMouse(1, 90, -90);
 		if (Mouse.isButtonDown(0)) {
 			Mouse.setGrabbed(true);
@@ -109,7 +115,7 @@ public class World extends Screen {
 		glOrtho(0, 1, 0, 1, -1, 1);
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
-		Color4f color4f = new Color4f(1, 1, 1, 1);
+		Color4f color4f = Color4f.GRAY;
 		if (debug) {
 			Text.renderString(font, title + version, 0f, 1.21f, 0.4f, color4f);
 			Text.renderString(font, "Debug Info", 0f, 1.15f, 0.4f, color4f);

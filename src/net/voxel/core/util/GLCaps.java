@@ -41,6 +41,7 @@ public class GLCaps {
 			Logger.log("OpenGL 2.0 is supported");
 		} else {
 			Logger.warn("OpenGL 2.0 is not supported");
+			System.exit(0);
 		}
 		if (GLContext.getCapabilities().OpenGL21) {
 			Logger.log("OpenGL 2.1 is supported");

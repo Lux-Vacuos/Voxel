@@ -1,77 +1,52 @@
 package net.voxel.core.geometry;
 
-import net.voxel.core.world.blocks.Blocks;
+import static org.lwjgl.opengl.GL11.glColor4f;
+import static org.lwjgl.opengl.GL11.glVertex3f;
 
 import com.nishu.utils.Color4f;
 
 public class Shape {
-	public static float[] createCubeVertices(float x, float y, float z, float size) {
-		return new float[] {
-				//bottom face
-				x, y, z + size,
-				x +  size, y, z + size,
-				x + size, y, z,
-				x, y, z,
-				//top face
-				x, y + size, z,
-				x + size, y + size, z,
-				x + size, y + size, z + size,
-				x, y + size, z + size,
-				//front face
-				x, y, z,
-				x + size, y, z,
-				x + size, y + size, z,
-				x , y + size, z,
-				//back face
-				x, y + size, z + size,
-				x + size, y + size, z + size,
-				x + size, y, z + size,
-				x, y + size, z,
-				//left face
-				x + size, y, z,
-				x + size, y, z + size,
-				x + size, y + size, z + size,
-				x + size, y + size, z,
-				//right face
-				x, y, z + size,
-				x, y, z,
-				x, y + size, z,
-				x, y + size, z + size
-		};
-	}
-	public static float[] getCubeColors(byte id) {
-		Color4f color = Blocks.getBlocks(id).getColor();
-		return new float[] {
-				color.r, color.g, color.b, color.a,
-				color.r, color.g, color.b, color.a,
-				color.r, color.g, color.b, color.a,
-				color.r, color.g, color.b, color.a,
-				
-				color.r, color.g, color.b, color.a,
-				color.r, color.g, color.b, color.a,
-				color.r, color.g, color.b, color.a,
-				color.r, color.g, color.b, color.a,
-				
-				color.r, color.g, color.b, color.a,
-				color.r, color.g, color.b, color.a,
-				color.r, color.g, color.b, color.a,
-				color.r, color.g, color.b, color.a,
-				
-				color.r, color.g, color.b, color.a,
-				color.r, color.g, color.b, color.a,
-				color.r, color.g, color.b, color.a,
-				color.r, color.g, color.b, color.a,
-				
-				color.r, color.g, color.b, color.a,
-				color.r, color.g, color.b, color.a,
-				color.r, color.g, color.b, color.a,
-				color.r, color.g, color.b, color.a,
-				
-				color.r, color.g, color.b, color.a,
-				color.r, color.g, color.b, color.a,
-				color.r, color.g, color.b, color.a,
-				color.r, color.g, color.b, color.a,
-				
-		};
+	public static void createCube(float x, float y, float z, Color4f color, float size) {
+        // bottom face
+        glColor4f(color.r, color.g, color.b, color.a);
+        glVertex3f(x, y, z + size);
+        glVertex3f(x + size, y, z + size);
+        glVertex3f(x + size, y, z);
+        glVertex3f(x, y, z);
+
+        // top face
+        glColor4f(color.r, color.g, color.b, color.a);
+        glVertex3f(x, y + size, z);
+        glVertex3f(x + size, y + size, z);
+        glVertex3f(x + size, y + size, z + size);
+        glVertex3f(x, y + size, z + size);
+
+        // front face
+        glColor4f(color.r, color.g, color.b, color.a);
+        glVertex3f(x, y, z);
+        glVertex3f(x + size, y, z);
+        glVertex3f(x + size, y + size, z);
+        glVertex3f(x, y + size, z);
+
+        // back face
+        glColor4f(color.r, color.g, color.b, color.a);
+        glVertex3f(x, y + size, z + size);
+        glVertex3f(x + size, y + size, z + size);
+        glVertex3f(x + size, y, z + size);
+        glVertex3f(x, y, z + size);
+
+        // left face
+        glColor4f(color.r, color.g, color.b, color.a);
+        glVertex3f(x + size, y, z);
+        glVertex3f(x + size, y, z + size);
+        glVertex3f(x + size, y + size, z + size);
+        glVertex3f(x + size, y + size, z);
+
+        // right face
+        glColor4f(color.r, color.g, color.b, color.a);
+        glVertex3f(x, y, z + size);
+        glVertex3f(x, y, z);
+        glVertex3f(x, y + size, z);
+        glVertex3f(x, y + size, z + size);
 	}
 }
