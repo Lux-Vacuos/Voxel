@@ -1,17 +1,9 @@
 package net.voxel.core.world.chunks;
 
-import static org.lwjgl.opengl.GL11.GL_COMPILE;
-import static org.lwjgl.opengl.GL11.GL_QUADS;
-import static org.lwjgl.opengl.GL11.glBegin;
-import static org.lwjgl.opengl.GL11.glCallList;
-import static org.lwjgl.opengl.GL11.glEnd;
-import static org.lwjgl.opengl.GL11.glEndList;
-import static org.lwjgl.opengl.GL11.glGenLists;
-import static org.lwjgl.opengl.GL11.glNewList;
+import static org.lwjgl.opengl.GL11.*;
 
 import java.util.Random;
 
-import net.logger.Logger;
 import net.voxel.core.geometry.Shape;
 import net.voxel.core.world.World;
 import net.voxel.core.world.blocks.Blocks;
@@ -22,7 +14,7 @@ import com.nishu.utils.Vector3f;
 public class Chunk {
 
 	public static int CHUNKSIZE = 16;
-	public static int CHUNKHEIGHT = 256;
+	public static int CHUNKHEIGHT = 16;
 
 	private Vector3f pos;
 	private byte[][][] blocks;
@@ -47,7 +39,6 @@ public class Chunk {
 	}
 
 	public void initGL() {
-		Logger.log("Generating Chunks");
 		rand = new Random();
 		sizeX = (int) pos.getX() + CHUNKSIZE;
 		sizeY = (int) pos.getY() + CHUNKHEIGHT;
@@ -65,7 +56,6 @@ public class Chunk {
 	}
 
 	private void createChunk() {
-		Logger.log("Generating Blocks");
 		if (type == World.AIRCHUNK) {
 			for (int x = (int) pos.getX(); x < sizeX; x++) {
 				for (int y = (int) pos.getY(); y < sizeY; y++) {
@@ -154,7 +144,7 @@ public class Chunk {
 		}else {
 			facesHidden[4] = false;
 		}
-		if (z < sizeX - 1) {
+		if (z < sizeZ - 1) {
 			if(blocks[x][y][z + 1] != 0) facesHidden[5] =  true;
 			else facesHidden[5] = false;
 		}else {
@@ -165,6 +155,7 @@ public class Chunk {
 
 	public void dispose() {
 		shader.dispose();
+		glDeleteLists(vcID, 1);
 	}
 
 	public boolean isActive() {

@@ -16,6 +16,7 @@ import net.logger.Logger;
 import net.voxel.core.util.GLCaps;
 import net.voxel.core.world.World;
 
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 
 import com.nishu.utils.GameLoop;
@@ -26,11 +27,11 @@ public class Main extends Screen {
 
 	public static final int WIDTH = 1280;
 	public static final int HEIGHT = 720;
-	public static final int fps = 60;
+	public static final int fps = 30;
 	public static final String title = "Voxel game";
 	public static float fov = 90.0f;
 	public static float nearClip = 0.001f;
-	public static float farClip = 200.0f;
+	public static float farClip = 100.0f;
 	public static float aspect = 1.777777777777778f;
 	private static boolean mouseLock = false;
 
@@ -79,6 +80,10 @@ public class Main extends Screen {
 
 	@Override
 	public void update() {
+		if (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
+			Logger.log("Disposing");
+			dispose();
+		}
 		world.update();
 	}
 

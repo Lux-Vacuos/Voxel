@@ -5,7 +5,6 @@ import static org.lwjgl.util.glu.GLU.gluPerspective;
 import net.logger.Logger;
 import net.voxel.core.Main;
 import net.voxel.core.util.SpriteSheets;
-import net.voxel.core.world.chunks.Chunk;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -17,20 +16,17 @@ import com.nishu.utils.Color4f;
 import com.nishu.utils.Font;
 import com.nishu.utils.GameLoop;
 import com.nishu.utils.Screen;
-import com.nishu.utils.Shader;
-import com.nishu.utils.ShaderProgram;
 import com.nishu.utils.Text;
 
 public class World extends Screen {
 	
 	//chunk types
 	public static final int AIRCHUNK = 0, MIXEDCHUNK = 1; 
+	public static int viewDistance = 4;
 	
 	private Camera camera;
 	private Font font;
-	
-	private Chunk c;
-	private ShaderProgram shader;
+	private WorldManager worldManager;
 	
 	public String title = "Voxel ";
 	public String version = "0.0.3a";
@@ -50,10 +46,9 @@ public class World extends Screen {
 				.setFieldOfView(Main.fov).build();
 		font = new Font();
 		font.loadFont("Default", "fonts/comic.png");
-		
-		Shader temp = new Shader("/shaders/chunk.vert", "/shaders/chunk.frag");
-		shader = new ShaderProgram(temp.getvShader(), temp.getfShader());
-		c = new Chunk(shader, 1, 0, 0, 0);
+		Logger.log("Generating Chunks");
+		worldManager = new WorldManager();
+		Logger.log("Generation completed");
 	}
 
 	@Override
@@ -64,8 +59,8 @@ public class World extends Screen {
 
 	@Override
 	public void update() {
-		c.update();
 		input();
+		worldManager.update();
 	}
 
 	private void input() {
@@ -79,10 +74,6 @@ public class World extends Screen {
 
 		while (Keyboard.next()) {
 			if (Keyboard.getEventKeyState()) {
-				if (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
-					Logger.log("Disposing");
-					dispose();
-				}
 				if (Keyboard.isKeyDown(Keyboard.KEY_F3) && !debug) {
 					Logger.log("Debug is enable");
 					debug = true;
@@ -99,10 +90,10 @@ public class World extends Screen {
 		render3D();
 		SpriteSheets.blocks.bind();
 		camera.applyTranslations();
-		c.render();
+		worldManager.render();
 		glLoadIdentity();
 		render2D();
-			}
+		}
 
 	public void render2D() {
 		glCullFace(GL_BACK);
@@ -147,7 +138,6 @@ public class World extends Screen {
 	@Override
 	public void dispose() {
 		Logger.log("System closed");
-		c.dispose();
 		Display.destroy();
 		System.exit(0);
 	}
