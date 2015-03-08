@@ -72,5 +72,5 @@ public class Shape {
         glVertex3f(x, y + size, z);
         glTexCoord2f(texCoords[0], texCoords[1] + SpriteSheets.blocks.uniformSize());
         glVertex3f(x, y + size, z + size);
-}
+        }
 }

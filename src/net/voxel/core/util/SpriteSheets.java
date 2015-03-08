@@ -5,11 +5,11 @@ import net.logger.Logger;
 public class SpriteSheets {
 	private Texture texture;
 	private String path;
-	private int size;
+	private float size;
 	
 	public static SpriteSheets blocks = new SpriteSheets("spritesheets/blocks/BlocksText.png", 16);
 	
-	public SpriteSheets(String path, int size) {
+	public SpriteSheets(String path, float size) {
 		Logger.log("Loading Texture");
 		this.path = path;
 		this.size = 1 / size;
@@ -32,7 +32,7 @@ public class SpriteSheets {
 		texture.delete();
 	}
 
-	public int uniformSize() {
+	public float uniformSize() {
 		return size;
 	}
 }
