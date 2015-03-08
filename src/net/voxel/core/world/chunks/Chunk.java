@@ -74,6 +74,8 @@ public class Chunk {
 						if (rand.nextInt(10) == 0)
 							blocks[x][y][z] = Blocks.Void.getId();
 						if (rand.nextInt(10) == 0)
+							blocks[x][y][z] = Blocks.Stone.getId();
+						if (rand.nextInt(10) == 0)
 							blocks[x][y][z] = Blocks.Air.getId();
 					}
 				}
@@ -100,9 +102,8 @@ public class Chunk {
 						if (blocks[x][y][z] != 0 && !checkBlockNotView(x, y, z)) {
 							Shape.createCube(x, y, z,
 									Blocks.getBlock(blocks[x][y][z])
-											.getColor(),
-									Blocks.getBlock(blocks[x][y][z])
-											.getTexCoords(), 1);
+											.getColor()
+									, 1);
 						}
 					}
 				}

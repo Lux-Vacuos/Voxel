@@ -4,21 +4,20 @@ import net.voxel.core.world.blocks.Blocks;
 
 import com.nishu.utils.Color4f;
 
-public class BlockGrass extends Blocks {
+public class BlockStone extends Blocks {
 
 	@Override
 	public byte getId() {
-		return 2;
+		return 3;
 	}
 
 	@Override
 	public Color4f getColor() {
-		return new Color4f(0f, 0.75f, 0.10f, 1f);
+		return Color4f.GRAY;
 	}
 
 	@Override
 	public float[] getTexCoords() {
-		return new float[] { 1f, 0f };
+		return new float[] { 2f, 0f };
 	}
-
 }

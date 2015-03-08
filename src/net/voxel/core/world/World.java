@@ -2,14 +2,19 @@ package net.voxel.core.world;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.util.glu.GLU.gluPerspective;
+
+import java.io.IOException;
+
 import net.logger.Logger;
 import net.voxel.core.Main;
-import net.voxel.core.util.SpriteSheets;
 import net.voxel.core.world.blocks.Blocks;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
+import org.newdawn.slick.opengl.Texture;
+import org.newdawn.slick.opengl.TextureLoader;
+import org.newdawn.slick.util.ResourceLoader;
 
 import com.nishu.utils.Camera;
 import com.nishu.utils.Camera3D;
@@ -28,9 +33,10 @@ public class World extends Screen {
 	private Camera camera;
 	private Font font;
 	private WorldManager worldManager;
+	public static Texture texture;
 	
 	public String title = "Voxel ";
-	public String version = "0.0.3a";
+	public String version = "0.0.4a";
 
 	public static boolean debug = false;
 
@@ -42,6 +48,11 @@ public class World extends Screen {
 	@Override
 	public void init() {
 		Blocks.createBlockMap();
+		try {
+			texture = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream("spritesheets/blocks/BlocksText.png"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		Logger.log("Initializing Camera");
 		camera = new Camera3D.CameraBuilder().setAspectRatio(Main.aspect)
 				.setRotation(0, 0, 0).setPosition(0, 0, 0)
@@ -57,6 +68,9 @@ public class World extends Screen {
 	public void initGL() { 
 		glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 		glEnable(GL_CULL_FACE);
+		glEnable(GL_TEXTURE_2D); 
+		glEnable(GL_BLEND);
+    	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	}
 
 	@Override
@@ -89,6 +103,7 @@ public class World extends Screen {
 
 	@Override
 	public void render() {
+		texture.bind();
 		render3D();
 		camera.applyTranslations();
 		worldManager.render();
@@ -133,7 +148,6 @@ public class World extends Screen {
 		gluPerspective(Main.fov, Main.aspect, Main.nearClip, Main.farClip);
 		glMatrixMode(GL_MODELVIEW);
 		glEnable(GL_DEPTH_TEST);
-		SpriteSheets.blocks.bind();
 	}
 
 	@Override

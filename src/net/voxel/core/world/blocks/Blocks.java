@@ -2,9 +2,9 @@ package net.voxel.core.world.blocks;
 
 import java.util.HashMap;
 
-import jdk.nashorn.internal.ir.Block;
 import net.voxel.core.world.blocks.type.BlockAir;
 import net.voxel.core.world.blocks.type.BlockGrass;
+import net.voxel.core.world.blocks.type.BlockStone;
 import net.voxel.core.world.blocks.type.BlockVoid;
 
 import com.nishu.utils.Color4f;
@@ -16,6 +16,7 @@ public abstract class Blocks {
 	public static Blocks Air = new BlockAir();
 	public static Blocks Void = new BlockVoid();
 	public static Blocks Grass = new BlockGrass();
+	public static Blocks Stone = new BlockStone();
 
 	public abstract byte getId();
 	public abstract Color4f getColor();
@@ -28,5 +29,6 @@ public abstract class Blocks {
 		blocksMap.put((byte) 0, Air);
 		blocksMap.put((byte) 1, Void);
 		blocksMap.put((byte) 2, Grass);
+		blocksMap.put((byte) 3, Stone);
 	}
 }
