@@ -22,6 +22,10 @@ import com.nishu.utils.ShaderProgram;
 import com.nishu.utils.Text;
 
 public class World extends Screen {
+	
+	//chunk types
+	public static final int AIRCHUNK = 0, MIXEDCHUNK = 1; 
+	
 	private Camera camera;
 	private Font font;
 	
@@ -49,16 +53,18 @@ public class World extends Screen {
 		
 		Shader temp = new Shader("/shaders/chunk.vert", "/shaders/chunk.frag");
 		shader = new ShaderProgram(temp.getvShader(), temp.getfShader());
-		
-		c = new Chunk(shader, 0, 0, 0);
+		c = new Chunk(shader, 1, 0, 0, 0);
 	}
 
 	@Override
-	public void initGL() {
+	public void initGL() { 
+		glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+		glEnable(GL_CULL_FACE);
 	}
 
 	@Override
 	public void update() {
+		c.update();
 		input();
 	}
 
@@ -90,15 +96,16 @@ public class World extends Screen {
 
 	@Override
 	public void render() {
-		render2D();
 		render3D();
 		SpriteSheets.blocks.bind();
 		camera.applyTranslations();
 		c.render();
 		glLoadIdentity();
-	}
+		render2D();
+			}
 
 	public void render2D() {
+		glCullFace(GL_BACK);
 		glColor3f(1, 1, 1);
 		glClearDepth(1);
 		glMatrixMode(GL_PROJECTION);
@@ -107,9 +114,9 @@ public class World extends Screen {
 		glViewport(0, 0, Main.WIDTH, Main.HEIGHT);
 		glOrtho(0, 1, 0, 1, -1, 1);
 		glMatrixMode(GL_MODELVIEW);
-		glLoadIdentity();
-		Color4f color4f = Color4f.GRAY;
+		Color4f color4f = Color4f.WHITE;
 		if (debug) {
+			SpriteSheets.blocks.bind();
 			Text.renderString(font, title + version, 0f, 1.21f, 0.4f, color4f);
 			Text.renderString(font, "Debug Info", 0f, 1.15f, 0.4f, color4f);
 			Text.renderString(font, "X: " + camera.getX(), 0f, 1.10f, 0.4f,
@@ -128,6 +135,7 @@ public class World extends Screen {
 	}
 
 	public void render3D() {
+		glCullFace(GL_FRONT);
 		glViewport(0, 0, Display.getWidth(), Display.getHeight());
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();

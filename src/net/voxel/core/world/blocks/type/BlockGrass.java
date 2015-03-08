@@ -9,7 +9,7 @@ public class BlockGrass extends Blocks {
 
 	@Override
 	public byte getId() {
-		return 1;
+		return 2;
 	}
 
 	@Override

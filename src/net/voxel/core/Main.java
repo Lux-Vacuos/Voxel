@@ -26,12 +26,12 @@ public class Main extends Screen {
 
 	public static final int WIDTH = 1280;
 	public static final int HEIGHT = 720;
-	public static final int fps = 30;
+	public static final int fps = 60;
 	public static final String title = "Voxel game";
-	public static float fov = 67.0f;
+	public static float fov = 90.0f;
 	public static float nearClip = 0.001f;
-	public static float farClip = 50.0f;
-	public static int aspect = WIDTH / HEIGHT;
+	public static float farClip = 200.0f;
+	public static float aspect = 1.777777777777778f;
 	private static boolean mouseLock = false;
 
 	private GameLoop gameLoop;
@@ -46,7 +46,7 @@ public class Main extends Screen {
 	}
 
 	public static void main(String[] args) {
-		Logger.log("Creating Window");
+		Logger.log("Creating Window"); 
 		Window.createWindow(WIDTH, HEIGHT, title, mouseLock);
 		new Main();
 	}
