@@ -5,6 +5,7 @@ import static org.lwjgl.util.glu.GLU.gluPerspective;
 import net.logger.Logger;
 import net.voxel.core.Main;
 import net.voxel.core.util.SpriteSheets;
+import net.voxel.core.world.blocks.Blocks;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -40,6 +41,7 @@ public class World extends Screen {
 
 	@Override
 	public void init() {
+		Blocks.createBlockMap();
 		Logger.log("Initializing Camera");
 		camera = new Camera3D.CameraBuilder().setAspectRatio(Main.aspect)
 				.setRotation(0, 0, 0).setPosition(0, 0, 0)
@@ -88,7 +90,6 @@ public class World extends Screen {
 	@Override
 	public void render() {
 		render3D();
-		SpriteSheets.blocks.bind();
 		camera.applyTranslations();
 		worldManager.render();
 		glLoadIdentity();
@@ -107,7 +108,6 @@ public class World extends Screen {
 		glMatrixMode(GL_MODELVIEW);
 		Color4f color4f = Color4f.WHITE;
 		if (debug) {
-			SpriteSheets.blocks.bind();
 			Text.renderString(font, title + version, 0f, 1.21f, 0.4f, color4f);
 			Text.renderString(font, "Debug Info", 0f, 1.15f, 0.4f, color4f);
 			Text.renderString(font, "X: " + camera.getX(), 0f, 1.10f, 0.4f,
@@ -133,6 +133,7 @@ public class World extends Screen {
 		gluPerspective(Main.fov, Main.aspect, Main.nearClip, Main.farClip);
 		glMatrixMode(GL_MODELVIEW);
 		glEnable(GL_DEPTH_TEST);
+		SpriteSheets.blocks.bind();
 	}
 
 	@Override

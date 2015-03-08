@@ -99,9 +99,9 @@ public class Chunk {
 					for (int z = (int) pos.getZ(); z < sizeZ; z++) {
 						if (blocks[x][y][z] != 0 && !checkBlockNotView(x, y, z)) {
 							Shape.createCube(x, y, z,
-									Blocks.getBlocks(blocks[x][y][z])
+									Blocks.getBlock(blocks[x][y][z])
 											.getColor(),
-									Blocks.getBlocks(blocks[x][y][z])
+									Blocks.getBlock(blocks[x][y][z])
 											.getTexCoords(), 1);
 						}
 					}

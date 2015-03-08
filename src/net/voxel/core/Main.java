@@ -1,16 +1,6 @@
 package net.voxel.core;
 
-import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
-import static org.lwjgl.opengl.GL11.GL_MODELVIEW;
-import static org.lwjgl.opengl.GL11.GL_PROJECTION;
-import static org.lwjgl.opengl.GL11.glClear;
-import static org.lwjgl.opengl.GL11.glClearColor;
-import static org.lwjgl.opengl.GL11.glEnable;
-import static org.lwjgl.opengl.GL11.glLoadIdentity;
-import static org.lwjgl.opengl.GL11.glMatrixMode;
-import static org.lwjgl.opengl.GL11.glViewport;
+import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.util.glu.GLU.gluPerspective;
 import net.logger.Logger;
 import net.voxel.core.util.GLCaps;
@@ -31,7 +21,7 @@ public class Main extends Screen {
 	public static final String title = "Voxel game";
 	public static float fov = 90.0f;
 	public static float nearClip = 0.001f;
-	public static float farClip = 100.0f;
+	public static float farClip = 200.0f;
 	public static float aspect = 1.777777777777778f;
 	private static boolean mouseLock = false;
 
@@ -67,6 +57,7 @@ public class Main extends Screen {
 		gluPerspective(fov, aspect, nearClip, farClip);
 		glMatrixMode(GL_MODELVIEW);
 		glEnable(GL_DEPTH_TEST);
+		glEnable(GL_TEXTURE_2D);
 		Logger.log("Initializing Render");
 	}
 
