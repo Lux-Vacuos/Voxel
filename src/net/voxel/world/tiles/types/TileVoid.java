@@ -1,14 +1,14 @@
-package net.voxel.core.world.blocks.type;
+package net.voxel.world.tiles.types;
 
-import net.voxel.core.world.blocks.Blocks;
+import net.voxel.world.tiles.Tile;
 
 import com.nishu.utils.Color4f;
 
-public class BlockVoid extends Blocks {
+public class TileVoid extends Tile {
 
 	@Override
 	public byte getId() {
-		return 1;
+		return 0;
 	}
 
 	@Override
@@ -18,6 +18,6 @@ public class BlockVoid extends Blocks {
 
 	@Override
 	public float[] getTexCoords() {
-		return new float[] {0f, 0f};
+		return new float[] { 0f, 0f };
 	}
 }

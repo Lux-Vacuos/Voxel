@@ -1,4 +1,4 @@
-package net.voxel.core.util;
+package net.voxel.utilites;
 
 import net.logger.Logger;
 
@@ -6,7 +6,6 @@ import org.lwjgl.opengl.GLContext;
 
 public class GLCaps {
 	public static void checkGLCaps() {
-		Logger.log("Checking GPU OpenGL Capabilities");
 		if (GLContext.getCapabilities().OpenGL11) {
 			Logger.log("OpenGL 1.1 is supported");
 		} else {
@@ -98,6 +97,7 @@ public class GLCaps {
 		} else {
 			Logger.warn("OpenGL 4.5 is not supported");
 		}
+		Logger.log("Checking completed correctly");
 
 	}
 }

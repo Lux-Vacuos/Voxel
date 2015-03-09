@@ -1,23 +1,29 @@
-package net.voxel.core.world.chunks;
+package net.voxel.world.chunks;
 
-import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.GL_COMPILE;
+import static org.lwjgl.opengl.GL11.GL_QUADS;
+import static org.lwjgl.opengl.GL11.glBegin;
+import static org.lwjgl.opengl.GL11.glCallList;
+import static org.lwjgl.opengl.GL11.glDeleteLists;
+import static org.lwjgl.opengl.GL11.glEnd;
+import static org.lwjgl.opengl.GL11.glEndList;
+import static org.lwjgl.opengl.GL11.glGenLists;
+import static org.lwjgl.opengl.GL11.glNewList;
 
 import java.util.Random;
 
-import net.voxel.core.geometry.Shape;
-import net.voxel.core.world.World;
-import net.voxel.core.world.blocks.Blocks;
+import net.voxel.geometry.Shape;
+import net.voxel.utilites.Constants;
+import net.voxel.world.World;
+import net.voxel.world.tiles.Tile;
 
 import com.nishu.utils.ShaderProgram;
 import com.nishu.utils.Vector3f;
 
 public class Chunk {
 
-	public static int CHUNKSIZE = 16;
-	public static int CHUNKHEIGHT = 16;
-
 	private Vector3f pos;
-	private byte[][][] blocks;
+	private byte[][][] tiles;
 	private ShaderProgram shader;
 
 	private int vcID, sizeX, sizeY, sizeZ, type;
@@ -40,16 +46,17 @@ public class Chunk {
 
 	public void initGL() {
 		rand = new Random();
-		sizeX = (int) pos.getX() + CHUNKSIZE;
-		sizeY = (int) pos.getY() + CHUNKHEIGHT;
-		sizeZ = (int) pos.getZ() + CHUNKSIZE;
+
+		sizeX = (int) pos.getX() + Constants.CHUNKSIZE;
+		sizeY = (int) pos.getY() + Constants.CHUNKHEIGTH;
+		sizeZ = (int) pos.getZ() + Constants.CHUNKSIZE;
 
 		vcID = glGenLists(1);
 
-		blocks = new byte[sizeX][sizeY][sizeZ];
+		tiles = new byte[sizeX][sizeY][sizeZ];
 
 		createChunk();
-		reBuild();
+		rebuild();
 	}
 
 	public void init() {
@@ -60,23 +67,19 @@ public class Chunk {
 			for (int x = (int) pos.getX(); x < sizeX; x++) {
 				for (int y = (int) pos.getY(); y < sizeY; y++) {
 					for (int z = (int) pos.getZ(); z < sizeZ; z++) {
-						blocks[x][y][z] = Blocks.Air.getId();
+						tiles[x][y][z] = Tile.Air.getId();
 					}
 				}
 			}
 		}
 		if (type == World.MIXEDCHUNK) {
-
 			for (int x = (int) pos.getX(); x < sizeX; x++) {
 				for (int y = (int) pos.getY(); y < sizeY; y++) {
 					for (int z = (int) pos.getZ(); z < sizeZ; z++) {
-						blocks[x][y][z] = Blocks.Grass.getId();
-						if (rand.nextInt(10) == 0)
-							blocks[x][y][z] = Blocks.Void.getId();
-						if (rand.nextInt(10) == 0)
-							blocks[x][y][z] = Blocks.Stone.getId();
-						if (rand.nextInt(10) == 0)
-							blocks[x][y][z] = Blocks.Air.getId();
+						tiles[x][y][z] = Tile.Grass.getId();
+						if (rand.nextInt(2) == 0)
+							if(rand.nextBoolean()) tiles[x][y][z] = Tile.Air.getId();
+							else tiles[x][y][z] = Tile.CrackedStone.getId();
 					}
 				}
 			}
@@ -92,18 +95,15 @@ public class Chunk {
 		}
 	}
 
-	public void reBuild() {
+	public void rebuild() {
 		if (type != World.AIRCHUNK) {
 			glNewList(vcID, GL_COMPILE);
 			glBegin(GL_QUADS);
 			for (int x = (int) pos.getX(); x < sizeX; x++) {
 				for (int y = (int) pos.getY(); y < sizeY; y++) {
 					for (int z = (int) pos.getZ(); z < sizeZ; z++) {
-						if (blocks[x][y][z] != 0 && !checkBlockNotView(x, y, z)) {
-							Shape.createCube(x, y, z,
-									Blocks.getBlock(blocks[x][y][z])
-											.getColor()
-									, 1);
+						if (tiles[x][y][z] != -1 && !checkTileNotInView(x, y, z)) {
+							Shape.createCube(x, y, z, Tile.getTile(tiles[x][y][z]).getColor(), Tile.getTile(tiles[x][y][z]).getTexCoords(), 1);
 						}
 					}
 				}
@@ -113,40 +113,42 @@ public class Chunk {
 		}
 	}
 
-	private boolean checkBlockNotView(int x, int y, int z) {
+	private boolean checkTileNotInView(int x, int y, int z) {
 		boolean facesHidden[] = new boolean[6];
-		if (x > pos.getX()) {
-			if(blocks[x - 1][y][z] != 0)  facesHidden[0] = true;
+		if(x > pos.getX()) {
+			if(tiles[x - 1][y][z] != -1) facesHidden[0] = true;
 			else facesHidden[0] = false;
 		}else {
 			facesHidden[0] = false;
 		}
-		if (x < sizeX - 1) {
-			if(blocks[x + 1][y][z] != 0) facesHidden[1] =  true;
+		if(x < sizeX - 1) {
+			if(tiles[x + 1][y][z] != -1) facesHidden[1] = true;
 			else facesHidden[1] = false;
 		}else {
 			facesHidden[1] = false;
 		}
-		if (y > pos.getY()) {
-			if(blocks[x][y - 1][z] != 0)  facesHidden[2] = true;
+		
+		if(y > pos.getY()) {
+			if(tiles[x][y - 1][z] != -1) facesHidden[2] = true;
 			else facesHidden[2] = false;
 		}else {
 			facesHidden[2] = false;
 		}
-		if (y < sizeY - 1) {
-			if(blocks[x][y + 1][z] != 0) facesHidden[3] =  true;
+		if(y < sizeY - 1) {
+			if(tiles[x][y + 1][z] != -1) facesHidden[3] = true;
 			else facesHidden[3] = false;
 		}else {
 			facesHidden[3] = false;
 		}
-		if (z > pos.getZ()) {
-			if(blocks[x ][y][z - 1] != 0)  facesHidden[4] = true;
+		
+		if(z > pos.getZ()) {
+			if(tiles[x][y][z - 1] != -1) facesHidden[4] = true;
 			else facesHidden[4] = false;
 		}else {
 			facesHidden[4] = false;
 		}
-		if (z < sizeZ - 1) {
-			if(blocks[x][y][z + 1] != 0) facesHidden[5] =  true;
+		if(z < sizeZ - 1) {
+			if(tiles[x][y][z + 1] != -1) facesHidden[5] = true;
 			else facesHidden[5] = false;
 		}else {
 			facesHidden[5] = false;
@@ -165,5 +167,17 @@ public class Chunk {
 
 	public void setActive(boolean isActive) {
 		this.isActive = isActive;
+	}
+	
+	public Vector3f getCenter() {
+		return new Vector3f(pos.getX() - (Constants.CHUNKSIZE / 2), pos.getY() - (Constants.CHUNKSIZE / 2), pos.getZ() - (Constants.CHUNKSIZE / 2));
+	}
+	
+	public Vector3f getPos() {
+		return pos;
+	}
+	
+	public int getType() {
+		return type;
 	}
 }
