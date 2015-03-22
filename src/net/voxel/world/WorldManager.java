@@ -60,7 +60,7 @@ public class WorldManager {
 		getMobManager().getPlayer().getCamera().applyTranslations();
 		for (int i = 0; i < activeChunks.size(); i++) {
 			if (Frustum.getFrustum().cubeInFrustum(activeChunks.get(i).getPos().getX(), activeChunks.get(i).getPos().getY(), activeChunks.get(i).getPos().getZ(), activeChunks.get(i).getPos().getX() + Constants.CHUNKSIZE, activeChunks.get(i).getPos().getY() + Constants.CHUNKSIZE, activeChunks.get(i).getPos().getZ() + Constants.CHUNKSIZE)) {
-				if (Math.abs(activeChunks.get(i).getCenter().getX() - (int) mobManager.getPlayer().getX()) < 64 && Math.abs(activeChunks.get(i).getCenter().getZ() - mobManager.getPlayer().getZ()) < 64 && activeChunks.get(i).getCenter().getY() - mobManager.getPlayer().getY() < 32) {
+				if (Math.abs(activeChunks.get(i).getCenter().getX() + 16 - (int) mobManager.getPlayer().getX()) < 24 && Math.abs(activeChunks.get(i).getCenter().getZ() + 16 - mobManager.getPlayer().getZ()) < 24 && activeChunks.get(i).getCenter().getY() - mobManager.getPlayer().getY() < 24) {
 					Constants.chunksFrustum++;
 					activeChunks.get(i).render();
 				}

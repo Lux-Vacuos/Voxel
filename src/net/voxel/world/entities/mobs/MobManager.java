@@ -6,7 +6,6 @@ import static org.lwjgl.opengl.GL11.glGenLists;
 
 import java.util.ArrayList;
 
-import net.voxel.utilites.Constants;
 import net.voxel.utilites.GameObject;
 import net.voxel.world.entities.Camera;
 
@@ -24,7 +23,7 @@ public class MobManager implements GameObject{
 
 	private void init() {
 		mobs = new ArrayList<Mob>();
-		player = new Player(new Camera(0, (Constants.viewDistance * Constants.CHUNKSIZE) + 2, 0, 5, 131, 0, 1, 90, -90, 1), 0);
+		player = new Player(new Camera(0, 16, 0, 5, 131, 0, 1, 90, -90, 1), 0);
 	}
 	
 	private void initGL() {
