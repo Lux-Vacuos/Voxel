@@ -45,13 +45,13 @@ public class World extends Screen {
 		initGL();
 		init();
 	}
-
 	@Override
 	public void init() {
 		Tile.createTileMap();
 		font = new Font();
 		font.loadFont("Default", "fonts/comic.png");
 		
+		Logger.log("Creating World with " + Constants.viewDistance + " Chunks");
 		worldManager = new WorldManager();
 		Logger.log("World initialization completed");
 	}
