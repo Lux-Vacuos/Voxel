@@ -33,9 +33,5 @@ public final class Logger {
 		for (String message : messages)
 			System.err.println("[FATAL ERROR " + getTimeStamp() + "] "
 					+ message);
-
-		System.err.println("Terminating with exception");
-		throw new LauncherException(
-				"FATAL Error occurred, cannot continue further");
 	}
 }
