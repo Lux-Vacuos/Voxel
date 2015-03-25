@@ -17,7 +17,7 @@ public class TileVoid extends Tile {
 	}
 
 	@Override
-	public float[] getTexCoords() {
-		return new float[] { 0f, 0f };
+	public int getTextID() {
+		return 3;
 	}
 }

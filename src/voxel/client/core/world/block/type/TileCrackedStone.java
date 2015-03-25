@@ -1,11 +1,10 @@
 package voxel.client.core.world.block.type;
 
-import voxel.client.core.util.Spritesheet;
 import voxel.client.core.world.block.Tile;
 
 import com.nishu.utils.Color4f;
 
-public class TileCrackedStone extends Tile{
+public class TileCrackedStone extends Tile {
 
 	@Override
 	public byte getId() {
@@ -18,8 +17,8 @@ public class TileCrackedStone extends Tile{
 	}
 
 	@Override
-	public float[] getTexCoords() {
-		return new float[] { 2 * Spritesheet.tiles.uniformSize(), 0f };
+	public int getTextID() {
+		return 1;
 	}
 
 }

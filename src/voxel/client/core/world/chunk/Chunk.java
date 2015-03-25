@@ -15,7 +15,7 @@ import java.util.Random;
 import voxel.client.core.util.Constants;
 import voxel.client.core.world.World;
 import voxel.client.core.world.block.Tile;
-import net.voxel.geometry.Shape;
+import voxel.client.core.world.block.geometry.Shape;
 
 import com.nishu.utils.ShaderProgram;
 import com.nishu.utils.Vector3f;
@@ -103,7 +103,7 @@ public class Chunk {
 				for (int y = (int) pos.getY(); y < sizeY; y++) {
 					for (int z = (int) pos.getZ(); z < sizeZ; z++) {
 						if (tiles[x][y][z] != -1 && !checkTileNotInView(x, y, z)) {
-							Shape.createCube(x, y, z, Tile.getTile(tiles[x][y][z]).getColor(), Tile.getTile(tiles[x][y][z]).getTexCoords(), 1);
+							Shape.createCube(x, y, z, Tile.getTile(tiles[x][y][z]).getColor(), Tile.getTile(tiles[x][y][z]).getTextID(), 1);
 						}
 					}
 				}

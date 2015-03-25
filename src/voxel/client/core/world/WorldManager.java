@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import voxel.client.core.util.Constants;
 import voxel.client.core.util.Frustum;
 import voxel.client.core.util.Logger;
-import voxel.client.core.util.Spritesheet;
 import voxel.client.core.world.chunk.Chunk;
 import voxel.client.core.world.entities.type.MobManager;
 
@@ -56,7 +55,6 @@ public class WorldManager {
 
 	public void render() {
 		Constants.chunksFrustum = 0;
-		Spritesheet.tiles.bind();
 		getMobManager().getPlayer().getCamera().applyTranslations();
 		for (int i = 0; i < activeChunks.size(); i++) {
 			if (Frustum.getFrustum().cubeInFrustum(activeChunks.get(i).getPos().getX(), activeChunks.get(i).getPos().getY(), activeChunks.get(i).getPos().getZ(), activeChunks.get(i).getPos().getX() + Constants.CHUNKSIZE, activeChunks.get(i).getPos().getY() + Constants.CHUNKSIZE, activeChunks.get(i).getPos().getZ() + Constants.CHUNKSIZE)) {

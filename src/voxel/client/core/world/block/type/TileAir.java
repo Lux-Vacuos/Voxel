@@ -4,7 +4,7 @@ import voxel.client.core.world.block.Tile;
 
 import com.nishu.utils.Color4f;
 
-public class TileAir extends Tile{
+public class TileAir extends Tile {
 
 	@Override
 	public byte getId() {
@@ -17,7 +17,7 @@ public class TileAir extends Tile{
 	}
 
 	@Override
-	public float[] getTexCoords() {
-		return new float[] {-1, -1};
+	public int getTextID() {
+		return 0;
 	}
 }

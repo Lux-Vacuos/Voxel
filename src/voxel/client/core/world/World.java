@@ -41,6 +41,10 @@ public class World extends Screen {
 	private WorldManager worldManager;
 
 	private boolean renderText = false;
+	
+	private Color4f color4f = Color4f.WHITE;
+	
+	public static int textureID;
 
 	public World() {
 		initGL();
@@ -55,6 +59,7 @@ public class World extends Screen {
 		Logger.log("Creating World with " + Constants.viewDistance + " Chunks");
 		worldManager = new WorldManager();
 		Logger.log("World initialization completed");
+		
 	}
 
 	@Override
@@ -90,6 +95,8 @@ public class World extends Screen {
 		worldManager.render();
 		glLoadIdentity();
 		
+		Text.renderString(font, Constants.title + Constants.version, 0f, 1.45f, Constants.textSize, color4f);
+		
 		if (renderText) {
 			render2D();
 			renderText();
@@ -97,7 +104,6 @@ public class World extends Screen {
 	}
 
 	private void renderText() {
-		Color4f color4f = Color4f.WHITE;
 		Text.renderString(font, Constants.title + Constants.version, 0f, 1.45f, Constants.textSize, color4f);
 		Text.renderString(font, "Debug Info", 0f, 1.35f, Constants.textSize, color4f);
 		Text.renderString(font, "FPS: " + GameLoop.getFPS(), 0f, 1.30f, Constants.textSize, Color4f.WHITE);
