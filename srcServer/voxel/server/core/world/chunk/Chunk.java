@@ -1,4 +1,4 @@
-package voxel.client.core.world.chunk;
+package voxel.server.core.world.chunk;
 
 import static org.lwjgl.opengl.GL11.GL_COMPILE;
 import static org.lwjgl.opengl.GL11.GL_QUADS;
@@ -13,9 +13,9 @@ import static org.lwjgl.opengl.GL11.glNewList;
 import java.util.Random;
 
 import voxel.client.core.util.Constants;
-import voxel.client.core.world.World;
 import voxel.client.core.world.block.Tile;
 import voxel.client.core.world.block.geometry.Shape;
+import voxel.server.core.world.World;
 
 import com.nishu.utils.ShaderProgram;
 import com.nishu.utils.Vector3f;

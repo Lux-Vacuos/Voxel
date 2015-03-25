@@ -1,4 +1,4 @@
-package voxel.client.core.world.entities.type;
+package voxel.server.core.world.entities.type;
 
 import static org.lwjgl.opengl.GL11.glCallList;
 import static org.lwjgl.opengl.GL11.glDeleteLists;
@@ -7,7 +7,7 @@ import static org.lwjgl.opengl.GL11.glGenLists;
 import java.util.ArrayList;
 
 import voxel.client.core.util.GameObject;
-import voxel.client.core.world.entities.Camera;
+import voxel.server.core.world.entities.Camera;
 
 public class MobManager implements GameObject{
 	

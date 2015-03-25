@@ -1,8 +1,8 @@
-package voxel.client.core.world.entities.type;
+package voxel.server.core.world.entities.type;
 
 import voxel.client.core.util.GameObject;
-import voxel.client.core.world.entities.Camera;
-import voxel.client.core.world.entities.Entity;
+import voxel.server.core.world.entities.Camera;
+import voxel.server.core.world.entities.Entity;
 
 public class Mob extends Entity implements GameObject{
 

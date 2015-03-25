@@ -1,12 +1,12 @@
-package voxel.client.core.world;
+package voxel.server.core.world;
 
 import java.util.ArrayList;
 
 import voxel.client.core.util.Constants;
 import voxel.client.core.util.Frustum;
 import voxel.client.core.util.Logger;
-import voxel.client.core.world.chunk.Chunk;
-import voxel.client.core.world.entities.type.MobManager;
+import voxel.server.core.world.chunk.Chunk;
+import voxel.server.core.world.entities.type.MobManager;
 
 import com.nishu.utils.Shader;
 import com.nishu.utils.ShaderProgram;

@@ -1,4 +1,4 @@
-package voxel.client.core.world;
+package voxel.server.core.world;
 
 import static org.lwjgl.opengl.GL11.GL_BACK;
 import static org.lwjgl.opengl.GL11.GL_CULL_FACE;

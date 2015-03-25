@@ -1,6 +1,6 @@
-package voxel.client.core.world.entities.type;
+package voxel.server.core.world.entities.type;
 
-import voxel.client.core.world.entities.Camera;
+import voxel.server.core.world.entities.Camera;
 
 public class Player extends Mob {
 

@@ -1,4 +1,4 @@
-package voxel.client.core.world.entities;
+package voxel.server.core.world.entities;
 
 import org.lwjgl.util.vector.Vector3f;
 
