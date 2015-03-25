@@ -2,28 +2,24 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="jar/jinput.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="http://legacy.lwjgl.org/javadoc/"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="jar/lwjgl_util.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="http://legacy.lwjgl.org/javadoc/"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="jar/lwjgl.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="http://legacy.lwjgl.org/javadoc/"/>
-			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="Voxel/native/windows"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="jar/GLUtils.jar"/>
 	<classpathentry kind="lib" path="res"/>
-	<classpathentry kind="lib" path="jar/slick-util.jar">
+	<classpathentry kind="lib" path="library/jar/GLUtils.jar"/>
+	<classpathentry kind="lib" path="library/jar/jinput.jar" sourcepath="C:/Users/pablo/Documents/LWJGL/LWJGL 2.9.3/lwjgl-source-2.9.3.zip">
 		<attributes>
-			<attribute name="javadoc_location" value="http://slick.ninjacave.com/javadoc-util/"/>
+			<attribute name="javadoc_location" value="http://legacy.lwjgl.org/javadoc/"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="library/jar/lwjgl_util.jar" sourcepath="C:/Users/pablo/Documents/LWJGL/LWJGL 2.9.3/lwjgl-source-2.9.3.zip">
+		<attributes>
+			<attribute name="javadoc_location" value="http://legacy.lwjgl.org/javadoc/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="library/jar/lwjgl.jar" sourcepath="C:/Users/pablo/Documents/LWJGL/LWJGL 2.9.3/lwjgl-source-2.9.3.zip">
+		<attributes>
+			<attribute name="javadoc_location" value="http://legacy.lwjgl.org/javadoc/"/>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="Voxel/library/native/windows"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="library/jar/slick-util.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

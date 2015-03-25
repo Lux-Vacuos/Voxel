@@ -1,7 +1,7 @@
 package net.voxel.geometry;
 
 import static org.lwjgl.opengl.GL11.*;
-import net.voxel.utilites.Spritesheet;
+import voxel.client.core.util.Spritesheet;
 
 import com.nishu.utils.Color4f;
 
