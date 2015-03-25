@@ -11,7 +11,7 @@ public class Constants {
 	
 	public static Random rand = new Random();
 	
-	public static int viewDistance = 4;
+	public static int viewDistance = 12;
 	public static int CHUNKSIZE = 16;
 	public static int CHUNKHEIGTH = 16;
 	

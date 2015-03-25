@@ -41,25 +41,25 @@ public class World extends Screen {
 	private WorldManager worldManager;
 
 	private boolean renderText = false;
-	
+
 	private Color4f color4f = Color4f.WHITE;
-	
+
 	public static int textureID;
 
 	public World() {
 		initGL();
 		init();
 	}
+
 	@Override
 	public void init() {
 		Tile.createTileMap();
 		font = new Font();
 		font.loadFont("Default", "fonts/comic.png");
-		
+
 		Logger.log("Creating World with " + Constants.viewDistance + " Chunks");
 		worldManager = new WorldManager();
 		Logger.log("World initialization completed");
-		
 	}
 
 	@Override
@@ -83,7 +83,7 @@ public class World extends Screen {
 			if (Keyboard.getEventKeyState()) {
 				if (Keyboard.isKeyDown(Keyboard.KEY_F3)) {
 					renderText = !renderText;
-				} 
+				}
 			}
 		}
 	}
@@ -91,12 +91,12 @@ public class World extends Screen {
 	@Override
 	public void render() {
 		render3D();
-		
+
 		worldManager.render();
 		glLoadIdentity();
-		
-		Text.renderString(font, Constants.title + Constants.version, 0f, 1.45f, Constants.textSize, color4f);
-		
+		Text.renderString(font, Constants.title + Constants.version, 0f, 1.45f,
+				Constants.textSize, color4f);
+
 		if (renderText) {
 			render2D();
 			renderText();
@@ -104,12 +104,27 @@ public class World extends Screen {
 	}
 
 	private void renderText() {
-		Text.renderString(font, Constants.title + Constants.version, 0f, 1.45f, Constants.textSize, color4f);
-		Text.renderString(font, "Debug Info", 0f, 1.35f, Constants.textSize, color4f);
-		Text.renderString(font, "FPS: " + GameLoop.getFPS(), 0f, 1.30f, Constants.textSize, Color4f.WHITE);
-		Text.renderString(font, "X:" + (int) worldManager.getMobManager().getPlayer().getX() + " Y:" + (int) worldManager.getMobManager().getPlayer().getY() + " Z:" + (int) worldManager.getMobManager().getPlayer().getZ(), 0f, 1.25f, Constants.textSize, Color4f.WHITE);
-		Text.renderString(font, "Rotx:" + (int) worldManager.getMobManager().getPlayer().getPitch() + " RotY:" + (int) worldManager.getMobManager().getPlayer().getYaw() + " RotZ:" + (int) worldManager.getMobManager().getPlayer().getRoll(), 0f, 1.20f, Constants.textSize, Color4f.WHITE);
-		Text.renderString(font, "Chunks: " + Constants.chunksLoaded + " (" + Constants.chunksFrustum + ")", 0f, 1.20f, Constants.textSize, Color4f.WHITE);
+		Text.renderString(font, Constants.title + Constants.version, 0f, 1.45f,
+				Constants.textSize, color4f);
+		Text.renderString(font, "Debug Info", 0f, 1.35f, Constants.textSize,
+				color4f);
+		Text.renderString(font, "FPS: " + GameLoop.getFPS(), 0f, 1.30f,
+				Constants.textSize, Color4f.WHITE);
+		Text.renderString(font, "X:"
+				+ (int) worldManager.getMobManager().getPlayer().getX() + " Y:"
+				+ (int) worldManager.getMobManager().getPlayer().getY() + " Z:"
+				+ (int) worldManager.getMobManager().getPlayer().getZ(), 0f,
+				1.25f, Constants.textSize, Color4f.WHITE);
+		Text.renderString(font, "Rotx:"
+				+ (int) worldManager.getMobManager().getPlayer().getPitch()
+				+ " RotY:"
+				+ (int) worldManager.getMobManager().getPlayer().getYaw()
+				+ " RotZ:"
+				+ (int) worldManager.getMobManager().getPlayer().getRoll(), 0f,
+				1.20f, Constants.textSize, Color4f.WHITE);
+		Text.renderString(font, "Chunks: " + Constants.chunksLoaded + " ("
+				+ Constants.chunksFrustum + ")", 0f, 1.20f, Constants.textSize,
+				Color4f.WHITE);
 	}
 
 	public void render2D() {
