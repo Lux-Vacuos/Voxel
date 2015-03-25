@@ -1,4 +1,4 @@
-package voxel.client.core.util;
+package voxel.server.core.util;
 
 import java.nio.FloatBuffer;
 

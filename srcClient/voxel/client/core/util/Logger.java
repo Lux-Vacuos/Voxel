@@ -3,11 +3,6 @@ package voxel.client.core.util;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-/*
- * To use the logger write "Logger.log("Hello")" and will be printed in the console
- * to warnings use "Logger.warn("Fps to low")" and will be printed
- * to Fatal Erros use "Logger.error("Unable to find files")" and will be printed
- */
 public final class Logger {
 	private Logger() {
 	}

@@ -3,8 +3,8 @@ package voxel.server.core.world;
 import java.util.ArrayList;
 
 import voxel.client.core.util.Constants;
-import voxel.client.core.util.Frustum;
 import voxel.client.core.util.Logger;
+import voxel.server.core.util.Frustum;
 import voxel.server.core.world.chunk.Chunk;
 import voxel.server.core.world.entities.type.MobManager;
 

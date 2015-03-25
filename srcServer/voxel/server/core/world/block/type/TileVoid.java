@@ -1,6 +1,6 @@
-package voxel.client.core.world.block.type;
+package voxel.server.core.world.block.type;
 
-import voxel.client.core.world.block.Tile;
+import voxel.server.core.world.block.Tile;
 
 import com.nishu.utils.Color4f;
 

@@ -33,6 +33,7 @@ import com.nishu.utils.Window;
 public class MainClient extends Screen {
 
 	private GameLoop gameLoop;
+	
 
 	public MainClient() {
 		gameLoop = new GameLoop();

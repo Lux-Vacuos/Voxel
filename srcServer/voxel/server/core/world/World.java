@@ -25,7 +25,7 @@ import org.lwjgl.opengl.Display;
 
 import voxel.client.core.util.Constants;
 import voxel.client.core.util.Logger;
-import voxel.client.core.world.block.Tile;
+import voxel.server.core.world.block.Tile;
 
 import com.nishu.utils.Color4f;
 import com.nishu.utils.Font;

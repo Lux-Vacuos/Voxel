@@ -1,11 +1,11 @@
-package voxel.client.core.world.block;
+package voxel.server.core.world.block;
 
 import java.util.HashMap;
 
-import voxel.client.core.world.block.type.TileAir;
-import voxel.client.core.world.block.type.TileCrackedStone;
-import voxel.client.core.world.block.type.TileGrass;
-import voxel.client.core.world.block.type.TileVoid;
+import voxel.server.core.world.block.type.TileAir;
+import voxel.server.core.world.block.type.TileCrackedStone;
+import voxel.server.core.world.block.type.TileGrass;
+import voxel.server.core.world.block.type.TileVoid;
 
 import com.nishu.utils.Color4f;
 
