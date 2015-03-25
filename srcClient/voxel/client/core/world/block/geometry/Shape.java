@@ -1,6 +1,9 @@
 package voxel.client.core.world.block.geometry;
 
+import static org.lwjgl.opengl.GL11.GL_QUADS;
+import static org.lwjgl.opengl.GL11.glBegin;
 import static org.lwjgl.opengl.GL11.glColor4f;
+import static org.lwjgl.opengl.GL11.glEnd;
 import static org.lwjgl.opengl.GL11.glVertex3f;
 
 import com.nishu.utils.Color4f;
@@ -9,6 +12,7 @@ public class Shape {
 
 	public static void createCube(float x, float y, float z, Color4f color,
 			int textureID, float size) {
+		glBegin(GL_QUADS);
 		// bottom face
 		glColor4f(color.r, color.g, color.b, color.a);
 		glVertex3f(x, y, z + size);
@@ -50,6 +54,6 @@ public class Shape {
 		glVertex3f(x, y, z);
 		glVertex3f(x, y + size, z);
 		glVertex3f(x, y + size, z + size);
-		
+		glEnd();
 	}
 }
