@@ -18,6 +18,7 @@ import static org.lwjgl.opengl.GL11.glMatrixMode;
 import static org.lwjgl.opengl.GL11.glViewport;
 import static org.lwjgl.util.glu.GLU.gluPerspective;
 
+import org.lwjgl.Sys;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 
@@ -32,7 +33,6 @@ import voxel.server.core.MainServer;
 public class MainClient extends Screen {
 
 	private GameLoop gameLoop;
-	
 
 	public MainClient() {
 		gameLoop = new GameLoop();
@@ -49,9 +49,11 @@ public class MainClient extends Screen {
 
 	@Override
 	public void initGL() {
+		Logger.log("LWJGL Version: " + Sys.getVersion());
 		Logger.log("Initializing OpenGL");
 		Logger.log("Checking OpenGL GPU Capabilitites");
 		GLCaps.checkGLCaps();
+		Logger.log("Checking completed correctly");
 		glViewport(0, 0, Display.getWidth(), Display.getHeight());
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();

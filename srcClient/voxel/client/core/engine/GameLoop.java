@@ -1,6 +1,5 @@
 package voxel.client.core.engine;
 
-
 public class GameLoop {
 
 	private Screen currentScreen;

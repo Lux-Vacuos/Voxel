@@ -3,13 +3,20 @@ package voxel.client.core.engine.camera;
 import static java.lang.Math.cos;
 import static java.lang.Math.sin;
 import static java.lang.Math.toRadians;
+import static org.lwjgl.opengl.GL11.GL_MODELVIEW;
+import static org.lwjgl.opengl.GL11.GL_PROJECTION;
+import static org.lwjgl.opengl.GL11.GL_TRANSFORM_BIT;
+import static org.lwjgl.opengl.GL11.glLoadIdentity;
+import static org.lwjgl.opengl.GL11.glMatrixMode;
+import static org.lwjgl.opengl.GL11.glOrtho;
+import static org.lwjgl.opengl.GL11.glPopAttrib;
+import static org.lwjgl.opengl.GL11.glPushAttrib;
+import static org.lwjgl.opengl.GL11.glRotatef;
+import static org.lwjgl.opengl.GL11.glTranslatef;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
-
 import org.lwjgl.util.glu.GLU;
-
-import static org.lwjgl.opengl.GL11.*;
 
 public class Camera3D implements Camera {
 	private float x = 0, y = 0, z = 0;

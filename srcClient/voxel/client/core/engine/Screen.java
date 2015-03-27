@@ -1,6 +1,5 @@
 package voxel.client.core.engine;
 
-
 public abstract class Screen implements ScreenObject {
 	@Override
 	public abstract void init();

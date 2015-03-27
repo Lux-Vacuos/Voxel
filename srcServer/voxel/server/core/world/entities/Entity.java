@@ -12,12 +12,15 @@ public class Entity {
 		this(x, y, z, 0, 0, 0, id);
 	}
 
-	public Entity(float x, float y, float z, float rx, float ry, float rz, int id) {
+	public Entity(float x, float y, float z, float rx, float ry, float rz,
+			int id) {
 		this(new Vector3f(x, y, z), new Vector3f(rx, ry, rz), id);
 	}
 
 	public Entity(Camera camera, int id) {
-		this(camera, new Vector3f(camera.getX(), camera.getY(), camera.getZ()), new Vector3f(camera.getPitch(), camera.getYaw(), camera.getRoll()), id);
+		this(camera, new Vector3f(camera.getX(), camera.getY(), camera.getZ()),
+				new Vector3f(camera.getPitch(), camera.getYaw(),
+						camera.getRoll()), id);
 	}
 
 	public Entity(Camera camera, Vector3f pos, Vector3f rot, int id) {

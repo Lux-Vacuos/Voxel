@@ -41,9 +41,10 @@ public class WorldManager {
 
 	private void createWorld() {
 		for (int x = 0; x < Constants.viewDistance; x++) {
-				for (int z = 0; z < Constants.viewDistance; z++) {
-					activeChunks.add(new Chunk(shader, 1, x * Constants.CHUNKSIZE, 0, z * Constants.CHUNKSIZE));
-					Constants.chunksLoaded++;
+			for (int z = 0; z < Constants.viewDistance; z++) {
+				activeChunks.add(new Chunk(shader, 1, x * Constants.CHUNKSIZE,
+						0, z * Constants.CHUNKSIZE));
+				Constants.chunksLoaded++;
 			}
 		}
 	}
@@ -56,8 +57,19 @@ public class WorldManager {
 		Constants.chunksFrustum = 0;
 		getMobManager().getPlayer().getCamera().applyTranslations();
 		for (int i = 0; i < activeChunks.size(); i++) {
-			if (Frustum.getFrustum().cubeInFrustum(activeChunks.get(i).getPos().getX(), activeChunks.get(i).getPos().getY(), activeChunks.get(i).getPos().getZ(), activeChunks.get(i).getPos().getX() + Constants.CHUNKSIZE, activeChunks.get(i).getPos().getY() + Constants.CHUNKSIZE, activeChunks.get(i).getPos().getZ() + Constants.CHUNKSIZE)) {
-				if (Math.abs(activeChunks.get(i).getCenter().getX() + 16 - (int) mobManager.getPlayer().getX()) < 24 && Math.abs(activeChunks.get(i).getCenter().getZ() + 16 - mobManager.getPlayer().getZ()) < 24 && activeChunks.get(i).getCenter().getY() - mobManager.getPlayer().getY() < 24) {
+			if (Frustum.getFrustum().cubeInFrustum(
+					activeChunks.get(i).getPos().getX(),
+					activeChunks.get(i).getPos().getY(),
+					activeChunks.get(i).getPos().getZ(),
+					activeChunks.get(i).getPos().getX() + Constants.CHUNKSIZE,
+					activeChunks.get(i).getPos().getY() + Constants.CHUNKSIZE,
+					activeChunks.get(i).getPos().getZ() + Constants.CHUNKSIZE)) {
+				if (Math.abs(activeChunks.get(i).getCenter().getX() + 16
+						- (int) mobManager.getPlayer().getX()) < 24
+						&& Math.abs(activeChunks.get(i).getCenter().getZ() + 16
+								- mobManager.getPlayer().getZ()) < 24
+						&& activeChunks.get(i).getCenter().getY()
+								- mobManager.getPlayer().getY() < 24) {
 					Constants.chunksFrustum++;
 					activeChunks.get(i).render();
 				}

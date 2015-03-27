@@ -17,18 +17,16 @@ public class Camera extends Entity {
 
 	private float speed, maxU, maxD;
 
-	/*
-	 * Rotation x - pitch y - yaw z - roll
-	 */
-
-	public Camera(float x, float y, float z, float speed, float maxU, float maxD, int id) {
+	public Camera(float x, float y, float z, float speed, float maxU,
+			float maxD, int id) {
 		super(x, y, z, 0, 0, 0, id);
 		this.speed = speed;
 		this.maxU = maxU;
 		this.maxD = maxD;
 	}
 
-	public Camera(float x, float y, float z, float rx, float ry, float rz, float speed, float maxU, float maxD, int id) {
+	public Camera(float x, float y, float z, float rx, float ry, float rz,
+			float speed, float maxU, float maxD, int id) {
 		super(x, y, z, rx, ry, rz, id);
 		this.speed = speed;
 		this.maxU = maxU;
@@ -65,19 +63,23 @@ public class Camera extends Entity {
 		boolean shift = Keyboard.isKeyDown(Keyboard.KEY_LSHIFT);
 
 		if (keyUp && keyRight && !keyLeft && !keyDown) {
-			move(speed * delay * (float) Time.getDelta(), 0, -speed * delay * (float) Time.getDelta());
+			move(speed * delay * (float) Time.getDelta(), 0, -speed * delay
+					* (float) Time.getDelta());
 		}
 		if (keyUp && keyLeft && !keyRight && !keyDown) {
-			move(-speed * delay * (float) Time.getDelta(), 0, -speed * delay * (float) Time.getDelta());
+			move(-speed * delay * (float) Time.getDelta(), 0, -speed * delay
+					* (float) Time.getDelta());
 		}
 		if (keyUp && !keyLeft && !keyRight && !keyDown) {
 			move(0, 0, -speed * delay * (float) Time.getDelta());
 		}
 		if (keyDown && keyLeft && !keyRight && !keyUp) {
-			move(-speed * delay * (float) Time.getDelta(), 0, speed * delay * (float) Time.getDelta());
+			move(-speed * delay * (float) Time.getDelta(), 0, speed * delay
+					* (float) Time.getDelta());
 		}
 		if (keyDown && keyRight && !keyLeft && !keyUp) {
-			move(speed * delay * (float) Time.getDelta(), 0, speed * delay * (float) Time.getDelta());
+			move(speed * delay * (float) Time.getDelta(), 0, speed * delay
+					* (float) Time.getDelta());
 		}
 		if (keyDown && !keyUp && !keyLeft && !keyRight) {
 			move(0, 0, speed * delay * (float) Time.getDelta());
@@ -97,11 +99,17 @@ public class Camera extends Entity {
 	}
 
 	public void move(float x, float y, float z) {
-		setZ((float) (getZ() + (x * (float) Math.cos(Math.toRadians(getYaw() - 90)) + z * Math.cos(Math.toRadians(getYaw())))));
-		setX((float) (getX() - (x * (float) Math.sin(Math.toRadians(getYaw() - 90)) + z * Math.sin(Math.toRadians(getYaw())))));
-		setY((float) (getY() + (y * (float) Math.sin(Math.toRadians(getPitch() - 90)) + z * Math.sin(Math.toRadians(getPitch())))));
+		setZ((float) (getZ() + (x
+				* (float) Math.cos(Math.toRadians(getYaw() - 90)) + z
+				* Math.cos(Math.toRadians(getYaw())))));
+		setX((float) (getX() - (x
+				* (float) Math.sin(Math.toRadians(getYaw() - 90)) + z
+				* Math.sin(Math.toRadians(getYaw())))));
+		setY((float) (getY() + (y
+				* (float) Math.sin(Math.toRadians(getPitch() - 90)) + z
+				* Math.sin(Math.toRadians(getPitch())))));
 	}
-	
+
 	public void applyTranslations() {
 		glPushAttrib(GL_TRANSFORM_BIT);
 		glMatrixMode(GL_MODELVIEW);

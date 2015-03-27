@@ -9,13 +9,13 @@ import java.util.ArrayList;
 import voxel.client.core.engine.GameObject;
 import voxel.server.core.world.entities.Camera;
 
-public class MobManager implements GameObject{
-	
+public class MobManager implements GameObject {
+
 	private ArrayList<Mob> mobs;
 	private Player player;
-	
+
 	private int mobRenderID;
-	
+
 	public MobManager() {
 		init();
 		initGL();
@@ -25,15 +25,16 @@ public class MobManager implements GameObject{
 		mobs = new ArrayList<Mob>();
 		player = new Player(new Camera(0, 16, 0, 5, 131, 0, 1, 90, -90, 1), 0);
 	}
-	
+
 	private void initGL() {
 		mobRenderID = glGenLists(1);
 	}
 
 	@Override
 	public void update() {
-		for(int i = 0; i < mobs.size(); i++) {
-			if(mobs.get(i).isDead()) mobs.remove(i);
+		for (int i = 0; i < mobs.size(); i++) {
+			if (mobs.get(i).isDead())
+				mobs.remove(i);
 			mobs.get(i).update();
 		}
 		player.update();
@@ -41,7 +42,7 @@ public class MobManager implements GameObject{
 
 	@Override
 	public void render() {
-		for(int i = 0; i < mobs.size(); i++) {
+		for (int i = 0; i < mobs.size(); i++) {
 			mobs.get(i).render();
 		}
 		glCallList(mobRenderID);
@@ -52,7 +53,7 @@ public class MobManager implements GameObject{
 		player.dispose();
 		glDeleteLists(mobRenderID, 1);
 	}
-	
+
 	public Player getPlayer() {
 		return player;
 	}
