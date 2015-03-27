@@ -4,12 +4,11 @@ import java.util.ArrayList;
 
 import voxel.client.core.util.Constants;
 import voxel.client.core.util.Logger;
+import voxel.server.core.glutil.Shader;
+import voxel.server.core.glutil.ShaderProgram;
 import voxel.server.core.util.Frustum;
 import voxel.server.core.world.chunk.Chunk;
 import voxel.server.core.world.entities.type.MobManager;
-
-import com.nishu.utils.Shader;
-import com.nishu.utils.ShaderProgram;
 
 public class WorldManager {
 

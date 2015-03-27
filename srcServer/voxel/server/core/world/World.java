@@ -25,13 +25,12 @@ import org.lwjgl.opengl.Display;
 
 import voxel.client.core.util.Constants;
 import voxel.client.core.util.Logger;
+import voxel.server.core.glutil.Color4f;
+import voxel.server.core.glutil.Font;
+import voxel.server.core.glutil.GameLoop;
+import voxel.server.core.glutil.Screen;
+import voxel.server.core.glutil.Text;
 import voxel.server.core.world.block.Tile;
-
-import com.nishu.utils.Color4f;
-import com.nishu.utils.Font;
-import com.nishu.utils.GameLoop;
-import com.nishu.utils.Screen;
-import com.nishu.utils.Text;
 
 public class World extends Screen {
 

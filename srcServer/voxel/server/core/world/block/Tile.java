@@ -2,12 +2,11 @@ package voxel.server.core.world.block;
 
 import java.util.HashMap;
 
+import voxel.server.core.glutil.Color4f;
 import voxel.server.core.world.block.type.TileAir;
 import voxel.server.core.world.block.type.TileCrackedStone;
 import voxel.server.core.world.block.type.TileGrass;
 import voxel.server.core.world.block.type.TileVoid;
-
-import com.nishu.utils.Color4f;
 
 public abstract class Tile {
 	public static HashMap<Byte, Tile> tileMap = new HashMap<Byte, Tile>();

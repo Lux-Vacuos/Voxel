@@ -25,10 +25,9 @@ import voxel.client.core.util.Constants;
 import voxel.client.core.util.GLCaps;
 import voxel.client.core.util.Logger;
 import voxel.server.core.MainServer;
-
-import com.nishu.utils.GameLoop;
-import com.nishu.utils.Screen;
-import com.nishu.utils.Window;
+import voxel.server.core.glutil.GameLoop;
+import voxel.server.core.glutil.Screen;
+import voxel.server.core.glutil.Window;
 
 public class MainClient extends Screen {
 

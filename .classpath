@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="srcClient"/>
-	<classpathentry kind="src" path="srcServer/"/>
+	<classpathentry kind="src" path="srcServer"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="res"/>
-	<classpathentry kind="lib" path="library/jar/GLUtils.jar"/>
 	<classpathentry kind="lib" path="library/jar/jinput.jar" sourcepath="C:/Users/pablo/Documents/LWJGL/LWJGL 2.9.3/lwjgl-source-2.9.3.zip">
 		<attributes>
 			<attribute name="javadoc_location" value="http://legacy.lwjgl.org/javadoc/"/>
