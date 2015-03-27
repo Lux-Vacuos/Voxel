@@ -1,4 +1,4 @@
-package voxel.server.core.glutil;
+package voxel.client.core.engine.resources;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL15.*;
@@ -7,6 +7,10 @@ import static org.lwjgl.opengl.GL20.*;
 import java.nio.FloatBuffer;
 
 import org.lwjgl.BufferUtils;
+
+import voxel.client.core.engine.color.Color4f;
+import voxel.client.core.engine.shaders.Shader;
+import voxel.client.core.engine.shaders.ShaderProgram;
 
 public class SpriteBatch {
 

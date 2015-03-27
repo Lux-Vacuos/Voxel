@@ -11,7 +11,7 @@ import static org.lwjgl.opengl.GL11.glTranslatef;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
-import voxel.server.core.glutil.Time;
+import voxel.client.core.engine.Time;
 
 public class Camera extends Entity {
 

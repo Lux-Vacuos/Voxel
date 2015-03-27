@@ -1,4 +1,4 @@
-package voxel.server.core.glutil;
+package voxel.client.core.engine.resources;
 
 import static org.lwjgl.opengl.GL11.GL_CLAMP;
 import static org.lwjgl.opengl.GL11.GL_NEAREST;

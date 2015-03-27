@@ -1,4 +1,4 @@
-package voxel.server.core.glutil;
+package voxel.client.core.engine.shaders;
 
 import static org.lwjgl.opengl.GL20.*;
 

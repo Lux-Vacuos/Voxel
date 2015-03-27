@@ -5,7 +5,7 @@ import static org.lwjgl.opengl.GL11.glBegin;
 import static org.lwjgl.opengl.GL11.glColor4f;
 import static org.lwjgl.opengl.GL11.glEnd;
 import static org.lwjgl.opengl.GL11.glVertex3f;
-import voxel.server.core.glutil.Color4f;
+import voxel.client.core.engine.color.Color4f;
 
 public class Shape {
 

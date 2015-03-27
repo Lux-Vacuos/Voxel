@@ -9,10 +9,10 @@ import static org.lwjgl.opengl.GL11.glNewList;
 
 import java.util.Random;
 
+import voxel.client.core.engine.shaders.ShaderProgram;
+import voxel.client.core.engine.vectors.Vector3f;
 import voxel.client.core.util.Constants;
 import voxel.client.core.world.block.geometry.Shape;
-import voxel.server.core.glutil.ShaderProgram;
-import voxel.server.core.glutil.Vector3f;
 import voxel.server.core.world.World;
 import voxel.server.core.world.block.Tile;
 

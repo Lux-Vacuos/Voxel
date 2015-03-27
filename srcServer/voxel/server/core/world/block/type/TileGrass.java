@@ -1,6 +1,6 @@
 package voxel.server.core.world.block.type;
 
-import voxel.server.core.glutil.Color4f;
+import voxel.client.core.engine.color.Color4f;
 import voxel.server.core.world.block.Tile;
 
 public class TileGrass extends Tile {

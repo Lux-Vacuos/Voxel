@@ -1,6 +1,7 @@
-package voxel.server.core.glutil;
+package voxel.client.core.engine.resources;
 
 import static org.lwjgl.opengl.GL11.*;
+import voxel.client.core.engine.color.Color4f;
 
 public class Text {
 

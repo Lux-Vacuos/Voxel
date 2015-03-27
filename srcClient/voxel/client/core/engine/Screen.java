@@ -1,4 +1,5 @@
-package voxel.server.core.glutil;
+package voxel.client.core.engine;
+
 
 public abstract class Screen implements ScreenObject {
 	@Override

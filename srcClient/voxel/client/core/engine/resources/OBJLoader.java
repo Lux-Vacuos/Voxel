@@ -1,4 +1,4 @@
-package voxel.server.core.glutil;
+package voxel.client.core.engine.resources;
 
 import java.io.BufferedReader;
 import java.io.File;

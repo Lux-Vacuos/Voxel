@@ -1,4 +1,4 @@
-package voxel.client.core.util;
+package voxel.client.core.engine;
 
 public interface GameObject {
 	public void update();

@@ -1,4 +1,4 @@
-package voxel.server.core.glutil;
+package voxel.client.core.engine.color;
 
 public class Color4f {
 

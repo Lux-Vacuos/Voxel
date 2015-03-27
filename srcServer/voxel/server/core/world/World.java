@@ -23,13 +23,13 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 
+import voxel.client.core.engine.GameLoop;
+import voxel.client.core.engine.Screen;
+import voxel.client.core.engine.color.Color4f;
+import voxel.client.core.engine.resources.Font;
+import voxel.client.core.engine.resources.Text;
 import voxel.client.core.util.Constants;
 import voxel.client.core.util.Logger;
-import voxel.server.core.glutil.Color4f;
-import voxel.server.core.glutil.Font;
-import voxel.server.core.glutil.GameLoop;
-import voxel.server.core.glutil.Screen;
-import voxel.server.core.glutil.Text;
 import voxel.server.core.world.block.Tile;
 
 public class World extends Screen {

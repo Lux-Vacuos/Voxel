@@ -6,7 +6,7 @@ import static org.lwjgl.opengl.GL11.glGenLists;
 
 import java.util.ArrayList;
 
-import voxel.client.core.util.GameObject;
+import voxel.client.core.engine.GameObject;
 import voxel.server.core.world.entities.Camera;
 
 public class MobManager implements GameObject{

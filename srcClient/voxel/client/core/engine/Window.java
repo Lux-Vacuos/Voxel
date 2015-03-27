@@ -1,4 +1,4 @@
-package voxel.server.core.glutil;
+package voxel.client.core.engine;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Mouse;

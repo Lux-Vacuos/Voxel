@@ -1,9 +1,11 @@
-package voxel.server.core.glutil;
+package voxel.client.core.engine;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.util.glu.GLU.gluPerspective;
 
 import org.lwjgl.opengl.Display;
+
+import voxel.client.core.engine.color.Color4f;
 
 public class ScreenTools {
 

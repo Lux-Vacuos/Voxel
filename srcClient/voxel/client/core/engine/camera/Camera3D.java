@@ -1,4 +1,4 @@
-package voxel.server.core.glutil;
+package voxel.client.core.engine.camera;
 
 import static java.lang.Math.cos;
 import static java.lang.Math.sin;

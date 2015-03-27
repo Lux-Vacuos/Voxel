@@ -1,6 +1,8 @@
-package voxel.server.core.glutil;
+package voxel.client.core.engine.resources;
 
 import java.util.HashMap;
+
+import voxel.client.core.engine.shaders.ShaderProgram;
 
 public class ResourceManager {
 

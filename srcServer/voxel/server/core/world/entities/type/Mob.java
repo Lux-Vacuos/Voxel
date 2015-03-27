@@ -1,6 +1,6 @@
 package voxel.server.core.world.entities.type;
 
-import voxel.client.core.util.GameObject;
+import voxel.client.core.engine.GameObject;
 import voxel.server.core.world.entities.Camera;
 import voxel.server.core.world.entities.Entity;
 

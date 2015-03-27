@@ -2,7 +2,7 @@ package voxel.server.core.world.block;
 
 import java.util.HashMap;
 
-import voxel.server.core.glutil.Color4f;
+import voxel.client.core.engine.color.Color4f;
 import voxel.server.core.world.block.type.TileAir;
 import voxel.server.core.world.block.type.TileCrackedStone;
 import voxel.server.core.world.block.type.TileGrass;
