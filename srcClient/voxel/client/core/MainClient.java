@@ -87,7 +87,7 @@ public class MainClient extends Screen {
 		MainServer.dispose();
 	}
 
-	public static void main(String[] args) {
+	public static void LaunchVoxel() {
 		// System.setProperty("org.lwjgl.librarypath",System.getProperty("user.dir")
 		// + "\\dlls");
 		Window.createWindow(Constants.WIDTH, Constants.HEIGHT, "Voxels", true);
