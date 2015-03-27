@@ -37,8 +37,10 @@ public class SpriteBatch {
 	private FloatBuffer vertices, colorVertices, textureVertices;
 
 	private ShaderProgram currentShader;
+	@SuppressWarnings("unused")
 	private Texture currentTexture, defaultTexture = Texture
 			.createEmptyTexture();
+	@SuppressWarnings("unused")
 	private Color4f currentColor, defaultColor = Color4f.DEFAULT;
 
 	private int type, size, currentSize, vID, cID, tID, shaderProgram;
@@ -169,6 +171,7 @@ public class SpriteBatch {
 
 	// not recommended to use shaders this way. Should first add the shader to
 	// the batcher and then call batcher.useShader()
+	@SuppressWarnings("static-access")
 	public void useShader(ResourceManager rm, String name) {
 		rm.loadShaderProgram(name).use();
 	}
@@ -196,6 +199,7 @@ public class SpriteBatch {
 		currentShader = shader;
 	}
 
+	@SuppressWarnings("static-access")
 	public void addShader(ResourceManager rm, String name) {
 		if (currentShader != null) {
 			currentShader.release();
@@ -263,6 +267,7 @@ public class SpriteBatch {
 		currentSize++;
 	}
 
+	@SuppressWarnings("unused")
 	private void restartBatch() {
 		end();
 		begin();
