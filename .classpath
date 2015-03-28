@@ -19,7 +19,5 @@
 			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="Voxel/library/native/windows"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="library/jar/slick-util.jar"/>
-	<classpathentry kind="lib" path="library/jar/netty-3.10.1.Final.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
