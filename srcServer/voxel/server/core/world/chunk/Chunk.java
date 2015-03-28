@@ -28,12 +28,11 @@ public class Chunk {
 	private Random rand;
 
 	public Chunk(ShaderProgram shader, int type, float x, float y, float z) {
-		this(shader, type, new Vector3f(x, y, z));
+		this(type, new Vector3f(x, y, z));
 	}
 
-	public Chunk(ShaderProgram shader, int type, Vector3f pos) {
+	public Chunk(int type, Vector3f pos) {
 		this.pos = pos;
-		this.shader = shader;
 		this.type = type;
 
 		initGL();

@@ -95,4 +95,10 @@ public class MainClient extends Screen {
 		Window.createWindow(ConstantsClient.WIDTH, ConstantsClient.HEIGHT, "Voxels", true);
 		new MainClient();
 	}
+	public static void main(String[] args) {
+		//System.setProperty("org.lwjgl.librarypath",
+		//		System.getProperty("user.dir") + "\\dlls");
+		Window.createWindow(ConstantsClient.WIDTH, ConstantsClient.HEIGHT, "Voxels", true);
+		new MainClient();
+	}
 }

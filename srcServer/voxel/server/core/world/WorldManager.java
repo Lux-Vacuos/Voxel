@@ -2,7 +2,6 @@ package voxel.server.core.world;
 
 import java.util.ArrayList;
 
-import voxel.client.core.engine.shaders.Shader;
 import voxel.client.core.engine.shaders.ShaderProgram;
 import voxel.client.core.util.ConstantsClient;
 import voxel.client.core.util.Logger;
@@ -28,8 +27,6 @@ public class WorldManager {
 
 	private void initGL() {
 		Logger.log("Initializing Shaders");
-		Shader temp = new Shader("/shaders/chunk.vert", "/shaders/chunk.frag");
-		shader = new ShaderProgram(temp.getvShader(), temp.getfShader());
 		Logger.log("Shaders initialization");
 	}
 
