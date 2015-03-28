@@ -4,7 +4,7 @@ import org.lwjgl.Sys;
 
 import voxel.client.core.engine.GameLoop;
 import voxel.client.core.engine.Screen;
-import voxel.client.core.engine.util.GLCaps;
+import voxel.client.core.engine.Window;
 import voxel.client.core.engine.util.Logger;
 
 public class MainClient extends Screen {
@@ -19,12 +19,13 @@ public class MainClient extends Screen {
 
 	@Override
 	public void init() {
+		Window.createWindow(1280, 720, false);
 	}
 
 	@Override
 	public void initGL() {
 		Logger.log("LWJGL Version: " + Sys.getVersion());
-		GLCaps.checkGLCaps();
+		// GLCaps.checkGLCaps();
 	}
 
 	@Override

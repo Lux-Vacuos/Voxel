@@ -46,16 +46,6 @@ public class Window {
 		Display.setVSyncEnabled(enabled);
 	}
 
-	/**
-	 * Set the display mode to be used
-	 * 
-	 * @param width
-	 *            The width of the display required
-	 * @param height
-	 *            The height of the display required
-	 * @param fullscreen
-	 *            True if we want fullscreen mode
-	 */
 	public static void setDisplayResolution(int width, int height,
 			boolean fullscreen) {
 
@@ -87,12 +77,6 @@ public class Window {
 								freq = targetDisplayMode.getFrequency();
 							}
 						}
-
-						// if we've found a match for bpp and frequence against
-						// the
-						// original display mode then it's probably best to go
-						// for this one
-						// since it's most likely compatible with the monitor
 						if ((current.getBitsPerPixel() == Display
 								.getDesktopDisplayMode().getBitsPerPixel())
 								&& (current.getFrequency() == Display
