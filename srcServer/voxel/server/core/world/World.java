@@ -36,12 +36,7 @@ public class World extends Screen {
 
 	public static final int AIRCHUNK = 0, MIXEDCHUNK = 1;
 
-	private Font font;
 	private WorldManager worldManager;
-
-	private boolean renderText = false;
-
-	private Color4f color4f = Color4f.WHITE;
 
 	public static int textureID;
 
@@ -52,11 +47,8 @@ public class World extends Screen {
 
 	@Override
 	public void init() {
-		Tile.createTileMap();
-		font = new Font();
-		font.loadFont("Default", "fonts/comic.png");
-
-		Logger.log("Creating World with " + ConstantsClient.viewDistance + " Chunks");
+		Logger.log("Creating World with " + ConstantsClient.viewDistance
+				+ " Chunks");
 		worldManager = new WorldManager();
 		Logger.log("World initialization completed");
 	}
@@ -70,21 +62,7 @@ public class World extends Screen {
 
 	@Override
 	public void update() {
-		input();
 		worldManager.update();
-	}
-
-	private void input() {
-		if (Mouse.isButtonDown(0)) {
-			Mouse.setGrabbed(true);
-		}
-		while (Keyboard.next()) {
-			if (Keyboard.getEventKeyState()) {
-				if (Keyboard.isKeyDown(Keyboard.KEY_F3)) {
-					renderText = !renderText;
-				}
-			}
-		}
 	}
 
 	@Override
@@ -93,48 +71,6 @@ public class World extends Screen {
 
 		worldManager.render();
 		glLoadIdentity();
-		Text.renderString(font, ConstantsClient.title + ConstantsClient.version, 0f, 1.45f,
-				ConstantsClient.textSize, color4f);
-
-		if (renderText) {
-			render2D();
-			renderText();
-		}
-	}
-
-	private void renderText() {
-		Text.renderString(font, ConstantsClient.title + ConstantsClient.version, 0f, 1.45f,
-				ConstantsClient.textSize, color4f);
-		Text.renderString(font, "Debug Info", 0f, 1.35f, ConstantsClient.textSize,
-				color4f);
-		Text.renderString(font, "FPS: " + GameLoop.getFPS(), 0f, 1.30f,
-				ConstantsClient.textSize, Color4f.WHITE);
-		Text.renderString(font, "X:"
-				+ (int) worldManager.getMobManager().getPlayer().getX() + " Y:"
-				+ (int) worldManager.getMobManager().getPlayer().getY() + " Z:"
-				+ (int) worldManager.getMobManager().getPlayer().getZ(), 0f,
-				1.25f, ConstantsClient.textSize, Color4f.WHITE);
-		Text.renderString(font, "Rotx:"
-				+ (int) worldManager.getMobManager().getPlayer().getPitch()
-				+ " RotY:"
-				+ (int) worldManager.getMobManager().getPlayer().getYaw()
-				+ " RotZ:"
-				+ (int) worldManager.getMobManager().getPlayer().getRoll(), 0f,
-				1.20f, ConstantsClient.textSize, Color4f.WHITE);
-		Text.renderString(font, "Chunks: " + ConstantsClient.chunksLoaded + " ("
-				+ ConstantsClient.chunksFrustum + ")", 0f, 1.20f, ConstantsClient.textSize,
-				Color4f.WHITE);
-	}
-
-	public void render2D() {
-		glCullFace(GL_BACK);
-		glClearDepth(1);
-		glMatrixMode(GL_PROJECTION);
-		glLoadIdentity();
-
-		glOrtho(0, 1, 0, 1, -1, 1);
-		glViewport(0, 0, ConstantsClient.WIDTH, ConstantsClient.HEIGHT);
-		glMatrixMode(GL_MODELVIEW);
 	}
 
 	public void render3D() {
@@ -143,7 +79,8 @@ public class World extends Screen {
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
 
-		gluPerspective(ConstantsClient.FOV, ConstantsClient.ASPECT, 0.001f, 1000f);
+		gluPerspective(ConstantsClient.FOV, ConstantsClient.ASPECT, 0.001f,
+				1000f);
 		glMatrixMode(GL_MODELVIEW);
 
 		glEnable(GL_DEPTH_TEST);

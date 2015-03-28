@@ -25,14 +25,21 @@ import org.lwjgl.opengl.Display;
 import voxel.client.core.engine.GameLoop;
 import voxel.client.core.engine.Screen;
 import voxel.client.core.engine.Window;
+import voxel.client.core.engine.init.FontRender;
+import voxel.client.core.engine.init.InitRender2D;
+import voxel.client.core.engine.init.Input;
 import voxel.client.core.util.ConstantsClient;
 import voxel.client.core.util.GLCaps;
 import voxel.client.core.util.Logger;
 import voxel.server.core.MainServer;
+import voxel.server.core.world.WorldManager;
+import voxel.server.core.world.block.Tile;
 
 public class MainClient extends Screen {
 
 	private GameLoop gameLoop;
+	@SuppressWarnings("unused")
+	private WorldManager worldManager;
 
 	public MainClient() {
 		gameLoop = new GameLoop();
@@ -42,6 +49,8 @@ public class MainClient extends Screen {
 
 	@Override
 	public void init() {
+		Tile.createTileMap();
+		FontRender.renderFont();
 		Logger.log("Initializing engine");
 		MainServer.init();
 		Logger.log("Engine initialization completed");
@@ -58,7 +67,8 @@ public class MainClient extends Screen {
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
 
-		gluPerspective(ConstantsClient.FOV, ConstantsClient.ASPECT, 0.001f, 1000f);
+		gluPerspective(ConstantsClient.FOV, ConstantsClient.ASPECT, 0.001f,
+				1000f);
 		glMatrixMode(GL_MODELVIEW);
 
 		glEnable(GL_DEPTH_TEST);
@@ -73,6 +83,7 @@ public class MainClient extends Screen {
 		if (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
 			dispose();
 		}
+		Input.input();
 		MainServer.update();
 	}
 
@@ -81,6 +92,10 @@ public class MainClient extends Screen {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glClearColor(0, 0.25f, 0.75f, 1);
 		MainServer.render();
+		InitRender2D.render2D();
+		if (Input.renderText) {
+			FontRender.renderText();
+		}
 	}
 
 	@Override
@@ -90,15 +105,18 @@ public class MainClient extends Screen {
 	}
 
 	public static void LaunchVoxel() {
-		//System.setProperty("org.lwjgl.librarypath",
-		//		System.getProperty("user.dir") + "\\dlls");
-		Window.createWindow(ConstantsClient.WIDTH, ConstantsClient.HEIGHT, "Voxels", true);
+		// System.setProperty("org.lwjgl.librarypath",
+		// System.getProperty("user.dir") + "\\dlls");
+		Window.createWindow(ConstantsClient.WIDTH, ConstantsClient.HEIGHT,
+				"Voxels", true);
 		new MainClient();
 	}
+
 	public static void main(String[] args) {
-		//System.setProperty("org.lwjgl.librarypath",
-		//		System.getProperty("user.dir") + "\\dlls");
-		Window.createWindow(ConstantsClient.WIDTH, ConstantsClient.HEIGHT, "Voxels", true);
+		// System.setProperty("org.lwjgl.librarypath",
+		// System.getProperty("user.dir") + "\\dlls");
+		Window.createWindow(ConstantsClient.WIDTH, ConstantsClient.HEIGHT,
+				"Voxels", true);
 		new MainClient();
 	}
 }
