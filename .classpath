@@ -22,5 +22,10 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="library/jar/slick-util.jar"/>
+	<classpathentry kind="lib" path="library/jar/netty-all-5.0.0.Alpha2.jar" sourcepath="library/sources/netty-all-5.0.0.Alpha2-sources.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:file:/C:/Users/pablo/Documents/javadocs/netty/javadoc/netty-all-5.0.0.Alpha2-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
