@@ -4,7 +4,7 @@ import voxel.client.core.MainClient;
 
 public class CreateThread extends Thread {
 	public void run() {
-		MainClient.LaunchVoxel();
+		MainClient.LaunchGame();
 	}
 
 	public static void StartThread() {

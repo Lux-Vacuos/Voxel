@@ -1,52 +1,73 @@
 package voxel.client.core;
 
-import org.lwjgl.Sys;
+import static org.lwjgl.opengl.GL11.*;
 
-import voxel.client.core.engine.GameLoop;
-import voxel.client.core.engine.Screen;
-import voxel.client.core.engine.Window;
+import org.lwjgl.LWJGLException;
+import org.lwjgl.Sys;
+import org.lwjgl.opengl.Display;
+import org.lwjgl.opengl.DisplayMode;
+
+import voxel.client.core.engine.util.GLCaps;
 import voxel.client.core.engine.util.Logger;
 
-public class MainClient extends Screen {
+public class MainClient {
 
-	private GameLoop gameLoop;
+	public static int WIDTH = 1280;
+	public static int HEIGHT = 720;
 
-	public MainClient() {
-		gameLoop = new GameLoop();
-		gameLoop.setScreen(this);
-		gameLoop.start(30);
+	public static void Start() {
+		try {
+			Logger.log("Creating Display");
+			Display.setDisplayMode(new DisplayMode(WIDTH, HEIGHT));
+			Display.create();
+		} catch (LWJGLException e) {
+			e.printStackTrace();
+			Logger.error("Unable to create display");
+			System.exit(0);
+		}
+
+		InitGL();
+
+		while (!Display.isCloseRequested()) {
+			Render();
+			Display.update();
+		}
+
+		Display.destroy();
 	}
 
-	@Override
-	public void init() {
-		Window.createWindow(1280, 720, "Voxel", false);
-		
+	public static void InitGL() {
+		GLCaps.checkGLCaps();
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		glOrtho(0, WIDTH, 0, HEIGHT, 1, -1);
+		glMatrixMode(GL_MODELVIEW);
 	}
 
-	@Override
-	public void initGL() {
-		Logger.log("LWJGL Version: " + Sys.getVersion());
-		// GLCaps.checkGLCaps();
-	}
+	public static void Render() {
+		// Clear the screen and depth buffer
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	@Override
-	public void update() {
-	}
+		// set the color of the quad (R,G,B,A)
+		glColor3f(0.5f, 0.5f, 1.0f);
 
-	@Override
-	public void render() {
-	}
+		// draw quad
+		glBegin(GL_QUADS);
+		glVertex2f(100, 100);
+		glVertex2f(100 + 200, 100);
+		glVertex2f(100 + 200, 100 + 200);
+		glVertex2f(100, 100 + 200);
+		glEnd();
 
-	@Override
-	public void dispose() {
-		Logger.log("Disposing");
-	}
-
-	public static void LaunchVoxel() {
-		new MainClient();
 	}
 
 	public static void main(String[] args) {
-		new MainClient();
+		Logger.log("LWJGL Version: " + Sys.getVersion());
+		Start();
 	}
+
+	public static void LaunchGame() {
+		Start();
+	}
+
 }

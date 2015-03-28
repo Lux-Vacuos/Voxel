@@ -52,7 +52,7 @@ public class Launcher {
 				if (loginDlg.isSucceeded()) {
 					frame.dispose();
 					Logger.log("Starting Voxel");
-					MainClient.LaunchVoxel();
+					MainClient.LaunchGame();
 				}
 			}
 		});
