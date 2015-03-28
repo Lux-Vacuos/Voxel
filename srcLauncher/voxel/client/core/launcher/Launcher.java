@@ -24,10 +24,12 @@ public class Launcher {
 
 		Logger.log(ConstantsLauncher.launcherVersion);
 
-		final JFrame frame = new JFrame("Launcher " + ConstantsLauncher.gameName);
+		final JFrame frame = new JFrame("Launcher "
+				+ ConstantsLauncher.gameName);
 		final JButton btnLogin = new JButton("Login");
 		final JButton btnExit = new JButton("Exit");
 		final JButton btnWeb = new JButton("News");
+		final JButton btnOptions = new JButton("Options");
 
 		Insets insets = frame.getInsets();
 		Dimension size = btnLogin.getPreferredSize();
@@ -36,7 +38,11 @@ public class Launcher {
 		size = btnExit.getPreferredSize();
 		btnExit.setBounds(640 + insets.left, 630 + insets.top, size.width,
 				size.height);
+		size = btnWeb.getPreferredSize();
 		btnWeb.setBounds(740 + insets.left, 630 + insets.top, 100, size.height);
+		size = btnOptions.getPreferredSize();
+		btnOptions.setBounds(850 + insets.left, 630 + insets.top, 100,
+				size.height);
 		Logger.log("Launcher Started");
 		btnLogin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -66,6 +72,11 @@ public class Launcher {
 			}
 
 		});
+		btnOptions.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+
+		});
 		frame.setSize(1280 + insets.left + insets.right, 720 + insets.top
 				+ insets.bottom);
 		frame.setLayout(null);
@@ -74,6 +85,7 @@ public class Launcher {
 		frame.getContentPane().add(btnLogin);
 		frame.getContentPane().add(btnExit);
 		frame.getContentPane().add(btnWeb);
+		frame.getContentPane().add(btnOptions);
 		frame.setVisible(true);
 		frame.setLocation(85, 85);
 		frame.setResizable(false);
