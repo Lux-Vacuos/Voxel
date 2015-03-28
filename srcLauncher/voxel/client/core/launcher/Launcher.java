@@ -11,10 +11,10 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 
 import voxel.client.core.MainClient;
+import voxel.client.core.engine.util.Logger;
 import voxel.client.core.launcher.login.LoginDialog;
 import voxel.client.core.launcher.properties.Reader;
 import voxel.client.core.launcher.webpage.LoadingWebPage;
-import voxel.client.core.util.Logger;
 
 public class Launcher {
 

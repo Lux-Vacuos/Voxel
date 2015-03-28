@@ -15,7 +15,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-import voxel.client.core.util.Logger;
+import voxel.client.core.engine.util.Logger;
 
 public class Shader {
 

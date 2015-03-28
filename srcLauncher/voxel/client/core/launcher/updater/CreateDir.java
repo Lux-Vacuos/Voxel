@@ -2,7 +2,7 @@ package voxel.client.core.launcher.updater;
 
 import java.io.File;
 
-import voxel.client.core.util.Logger;
+import voxel.client.core.engine.util.Logger;
 
 public class CreateDir {
 	public static void createDirectory() {

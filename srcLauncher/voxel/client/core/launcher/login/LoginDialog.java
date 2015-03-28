@@ -17,7 +17,7 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
 
-import voxel.client.core.util.Logger;
+import voxel.client.core.engine.util.Logger;
 
 public class LoginDialog extends JDialog {
 

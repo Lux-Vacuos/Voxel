@@ -4,8 +4,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
 
+import voxel.client.core.engine.util.Logger;
 import voxel.client.core.launcher.ConstantsLauncher;
-import voxel.client.core.util.Logger;
 
 public class Init {
 	public static void InitLog() {

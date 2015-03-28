@@ -1,4 +1,4 @@
-package voxel.client.core.util;
+package voxel.client.core.engine.util;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
