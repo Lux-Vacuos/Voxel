@@ -25,7 +25,7 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.SwingUtilities;
 
-import voxel.client.core.launcher.Constants;
+import voxel.client.core.launcher.ConstantsLauncher;
 
 public class LoadingWebPage extends JFrame {
 
@@ -172,7 +172,7 @@ public class LoadingWebPage extends JFrame {
 			public void run() {
 				LoadingWebPage browser = new LoadingWebPage();
 				browser.setVisible(true);
-				browser.loadURL(Constants.url);
+				browser.loadURL(ConstantsLauncher.url);
 			}
 		});
 	}

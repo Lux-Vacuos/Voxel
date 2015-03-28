@@ -25,7 +25,7 @@ import org.lwjgl.opengl.Display;
 import voxel.client.core.engine.GameLoop;
 import voxel.client.core.engine.Screen;
 import voxel.client.core.engine.Window;
-import voxel.client.core.util.Constants;
+import voxel.client.core.util.ConstantsClient;
 import voxel.client.core.util.GLCaps;
 import voxel.client.core.util.Logger;
 import voxel.server.core.MainServer;
@@ -58,7 +58,7 @@ public class MainClient extends Screen {
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
 
-		gluPerspective(Constants.FOV, Constants.ASPECT, 0.001f, 1000f);
+		gluPerspective(ConstantsClient.FOV, ConstantsClient.ASPECT, 0.001f, 1000f);
 		glMatrixMode(GL_MODELVIEW);
 
 		glEnable(GL_DEPTH_TEST);
@@ -92,7 +92,7 @@ public class MainClient extends Screen {
 	public static void LaunchVoxel() {
 		//System.setProperty("org.lwjgl.librarypath",
 		//		System.getProperty("user.dir") + "\\dlls");
-		Window.createWindow(Constants.WIDTH, Constants.HEIGHT, "Voxels", true);
+		Window.createWindow(ConstantsClient.WIDTH, ConstantsClient.HEIGHT, "Voxels", true);
 		new MainClient();
 	}
 }

@@ -1,9 +1,9 @@
 package voxel.client.core.launcher;
 
-public class Constants {
+public class ConstantsLauncher {
 
 	public static String gameName = "Voxel";// Name of your app
-	public static String launcherVersion = "Launcher Version 1.0.2 Beta Pre-Relase";// Version of the launcher
+	public static String launcherVersion = "Launcher Version 1.0.2 Beta";// Version of the launcher
 	public static String url = "http://guerra24.tumblr.com/";// Web page
 	
 	public static String appdata = System.getenv("APPDATA");

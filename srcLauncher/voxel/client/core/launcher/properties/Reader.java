@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-import voxel.client.core.launcher.Constants;
+import voxel.client.core.launcher.ConstantsLauncher;
 
 public class Reader {
 	
@@ -20,7 +20,7 @@ public class Reader {
 
 		try {
 
-			input = new FileInputStream(Constants.optionsPath);
+			input = new FileInputStream(ConstantsLauncher.optionsPath);
 
 			prop.load(input);
 			

@@ -2,7 +2,7 @@ package voxel.client.core.util;
 
 import java.util.Random;
 
-public class Constants {
+public class ConstantsClient {
 
 	public static final int WIDTH = 1280;
 	public static final int HEIGHT = 720;

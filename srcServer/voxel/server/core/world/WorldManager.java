@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import voxel.client.core.engine.shaders.Shader;
 import voxel.client.core.engine.shaders.ShaderProgram;
-import voxel.client.core.util.Constants;
+import voxel.client.core.util.ConstantsClient;
 import voxel.client.core.util.Logger;
 import voxel.server.core.util.Frustum;
 import voxel.server.core.world.chunk.Chunk;
@@ -40,11 +40,11 @@ public class WorldManager {
 	}
 
 	private void createWorld() {
-		for (int x = 0; x < Constants.viewDistance; x++) {
-			for (int z = 0; z < Constants.viewDistance; z++) {
-				activeChunks.add(new Chunk(shader, 1, x * Constants.CHUNKSIZE,
-						0, z * Constants.CHUNKSIZE));
-				Constants.chunksLoaded++;
+		for (int x = 0; x < ConstantsClient.viewDistance; x++) {
+			for (int z = 0; z < ConstantsClient.viewDistance; z++) {
+				activeChunks.add(new Chunk(shader, 1, x * ConstantsClient.CHUNKSIZE,
+						0, z * ConstantsClient.CHUNKSIZE));
+				ConstantsClient.chunksLoaded++;
 			}
 		}
 	}
@@ -54,23 +54,23 @@ public class WorldManager {
 	}
 
 	public void render() {
-		Constants.chunksFrustum = 0;
+		ConstantsClient.chunksFrustum = 0;
 		getMobManager().getPlayer().getCamera().applyTranslations();
 		for (int i = 0; i < activeChunks.size(); i++) {
 			if (Frustum.getFrustum().cubeInFrustum(
 					activeChunks.get(i).getPos().getX(),
 					activeChunks.get(i).getPos().getY(),
 					activeChunks.get(i).getPos().getZ(),
-					activeChunks.get(i).getPos().getX() + Constants.CHUNKSIZE,
-					activeChunks.get(i).getPos().getY() + Constants.CHUNKSIZE,
-					activeChunks.get(i).getPos().getZ() + Constants.CHUNKSIZE)) {
+					activeChunks.get(i).getPos().getX() + ConstantsClient.CHUNKSIZE,
+					activeChunks.get(i).getPos().getY() + ConstantsClient.CHUNKSIZE,
+					activeChunks.get(i).getPos().getZ() + ConstantsClient.CHUNKSIZE)) {
 				if (Math.abs(activeChunks.get(i).getCenter().getX() + 16
 						- (int) mobManager.getPlayer().getX()) < 24
 						&& Math.abs(activeChunks.get(i).getCenter().getZ() + 16
 								- mobManager.getPlayer().getZ()) < 24
 						&& activeChunks.get(i).getCenter().getY()
 								- mobManager.getPlayer().getY() < 24) {
-					Constants.chunksFrustum++;
+					ConstantsClient.chunksFrustum++;
 					activeChunks.get(i).render();
 				}
 			}

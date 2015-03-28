@@ -22,9 +22,9 @@ public class Launcher {
 		ImageIcon imgicon = new ImageIcon(Reader.IconPath);
 		ImageIcon imgicon1 = new ImageIcon(Reader.BackPath);
 
-		Logger.log(Constants.launcherVersion);
+		Logger.log(ConstantsLauncher.launcherVersion);
 
-		final JFrame frame = new JFrame("Launcher " + Constants.gameName);
+		final JFrame frame = new JFrame("Launcher " + ConstantsLauncher.gameName);
 		final JButton btnLogin = new JButton("Login");
 		final JButton btnExit = new JButton("Exit");
 		final JButton btnWeb = new JButton("News");
@@ -61,7 +61,7 @@ public class Launcher {
 		btnWeb.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Logger.log("Loading News");
-				Logger.log("Loading " + Constants.url);
+				Logger.log("Loading " + ConstantsLauncher.url);
 				LoadingWebPage.main();
 			}
 

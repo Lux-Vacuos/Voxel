@@ -28,7 +28,7 @@ import voxel.client.core.engine.Screen;
 import voxel.client.core.engine.color.Color4f;
 import voxel.client.core.engine.resources.Font;
 import voxel.client.core.engine.resources.Text;
-import voxel.client.core.util.Constants;
+import voxel.client.core.util.ConstantsClient;
 import voxel.client.core.util.Logger;
 import voxel.server.core.world.block.Tile;
 
@@ -56,7 +56,7 @@ public class World extends Screen {
 		font = new Font();
 		font.loadFont("Default", "fonts/comic.png");
 
-		Logger.log("Creating World with " + Constants.viewDistance + " Chunks");
+		Logger.log("Creating World with " + ConstantsClient.viewDistance + " Chunks");
 		worldManager = new WorldManager();
 		Logger.log("World initialization completed");
 	}
@@ -93,8 +93,8 @@ public class World extends Screen {
 
 		worldManager.render();
 		glLoadIdentity();
-		Text.renderString(font, Constants.title + Constants.version, 0f, 1.45f,
-				Constants.textSize, color4f);
+		Text.renderString(font, ConstantsClient.title + ConstantsClient.version, 0f, 1.45f,
+				ConstantsClient.textSize, color4f);
 
 		if (renderText) {
 			render2D();
@@ -103,26 +103,26 @@ public class World extends Screen {
 	}
 
 	private void renderText() {
-		Text.renderString(font, Constants.title + Constants.version, 0f, 1.45f,
-				Constants.textSize, color4f);
-		Text.renderString(font, "Debug Info", 0f, 1.35f, Constants.textSize,
+		Text.renderString(font, ConstantsClient.title + ConstantsClient.version, 0f, 1.45f,
+				ConstantsClient.textSize, color4f);
+		Text.renderString(font, "Debug Info", 0f, 1.35f, ConstantsClient.textSize,
 				color4f);
 		Text.renderString(font, "FPS: " + GameLoop.getFPS(), 0f, 1.30f,
-				Constants.textSize, Color4f.WHITE);
+				ConstantsClient.textSize, Color4f.WHITE);
 		Text.renderString(font, "X:"
 				+ (int) worldManager.getMobManager().getPlayer().getX() + " Y:"
 				+ (int) worldManager.getMobManager().getPlayer().getY() + " Z:"
 				+ (int) worldManager.getMobManager().getPlayer().getZ(), 0f,
-				1.25f, Constants.textSize, Color4f.WHITE);
+				1.25f, ConstantsClient.textSize, Color4f.WHITE);
 		Text.renderString(font, "Rotx:"
 				+ (int) worldManager.getMobManager().getPlayer().getPitch()
 				+ " RotY:"
 				+ (int) worldManager.getMobManager().getPlayer().getYaw()
 				+ " RotZ:"
 				+ (int) worldManager.getMobManager().getPlayer().getRoll(), 0f,
-				1.20f, Constants.textSize, Color4f.WHITE);
-		Text.renderString(font, "Chunks: " + Constants.chunksLoaded + " ("
-				+ Constants.chunksFrustum + ")", 0f, 1.20f, Constants.textSize,
+				1.20f, ConstantsClient.textSize, Color4f.WHITE);
+		Text.renderString(font, "Chunks: " + ConstantsClient.chunksLoaded + " ("
+				+ ConstantsClient.chunksFrustum + ")", 0f, 1.20f, ConstantsClient.textSize,
 				Color4f.WHITE);
 	}
 
@@ -133,7 +133,7 @@ public class World extends Screen {
 		glLoadIdentity();
 
 		glOrtho(0, 1, 0, 1, -1, 1);
-		glViewport(0, 0, Constants.WIDTH, Constants.HEIGHT);
+		glViewport(0, 0, ConstantsClient.WIDTH, ConstantsClient.HEIGHT);
 		glMatrixMode(GL_MODELVIEW);
 	}
 
@@ -143,7 +143,7 @@ public class World extends Screen {
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
 
-		gluPerspective(Constants.FOV, Constants.ASPECT, 0.001f, 1000f);
+		gluPerspective(ConstantsClient.FOV, ConstantsClient.ASPECT, 0.001f, 1000f);
 		glMatrixMode(GL_MODELVIEW);
 
 		glEnable(GL_DEPTH_TEST);

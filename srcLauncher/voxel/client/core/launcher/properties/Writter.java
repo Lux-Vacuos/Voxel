@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Properties;
 
-import voxel.client.core.launcher.Constants;
+import voxel.client.core.launcher.ConstantsLauncher;
 import voxel.client.core.util.Logger;
 
 public class Writter {
@@ -15,14 +15,14 @@ public class Writter {
 		Properties prop = new Properties();
 		OutputStream output = null;
 
-		File f = new File(Constants.optionsPath);
+		File f = new File(ConstantsLauncher.optionsPath);
 		if (!f.exists()) {
 
 			try {
 				Logger.log("Creating config file");
-				output = new FileOutputStream(Constants.optionsPath);
-				prop.setProperty("IconPath", Constants.iconPath1);
-				prop.setProperty("BackgroundPath", Constants.iconPath2);
+				output = new FileOutputStream(ConstantsLauncher.optionsPath);
+				prop.setProperty("IconPath", ConstantsLauncher.iconPath1);
+				prop.setProperty("BackgroundPath", ConstantsLauncher.iconPath2);
 				prop.store(output, null);
 
 			} catch (IOException io) {

@@ -4,14 +4,14 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
 
-import voxel.client.core.launcher.Constants;
+import voxel.client.core.launcher.ConstantsLauncher;
 import voxel.client.core.util.Logger;
 
 public class Init {
 	public static void InitLog() {
 		try {
 			System.setOut(new PrintStream(new FileOutputStream(
-					Constants.logpath)));
+					ConstantsLauncher.logpath)));
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}

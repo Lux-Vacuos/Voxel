@@ -11,7 +11,7 @@ import java.util.Random;
 
 import voxel.client.core.engine.shaders.ShaderProgram;
 import voxel.client.core.engine.vectors.Vector3f;
-import voxel.client.core.util.Constants;
+import voxel.client.core.util.ConstantsClient;
 import voxel.client.core.world.block.geometry.Shape;
 import voxel.server.core.world.World;
 import voxel.server.core.world.block.Tile;
@@ -43,9 +43,9 @@ public class Chunk {
 	public void initGL() {
 		rand = new Random();
 
-		sizeX = (int) pos.getX() + Constants.CHUNKSIZE;
-		sizeY = (int) pos.getY() + Constants.CHUNKHEIGTH;
-		sizeZ = (int) pos.getZ() + Constants.CHUNKSIZE;
+		sizeX = (int) pos.getX() + ConstantsClient.CHUNKSIZE;
+		sizeY = (int) pos.getY() + ConstantsClient.CHUNKHEIGTH;
+		sizeZ = (int) pos.getZ() + ConstantsClient.CHUNKSIZE;
 
 		vcID = glGenLists(1);
 
@@ -182,9 +182,9 @@ public class Chunk {
 	}
 
 	public Vector3f getCenter() {
-		return new Vector3f(pos.getX() - (Constants.CHUNKSIZE / 2), pos.getY()
-				- (Constants.CHUNKSIZE / 2), pos.getZ()
-				- (Constants.CHUNKSIZE / 2));
+		return new Vector3f(pos.getX() - (ConstantsClient.CHUNKSIZE / 2), pos.getY()
+				- (ConstantsClient.CHUNKSIZE / 2), pos.getZ()
+				- (ConstantsClient.CHUNKSIZE / 2));
 	}
 
 	public Vector3f getPos() {

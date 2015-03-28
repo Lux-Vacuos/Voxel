@@ -4,29 +4,47 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public final class Logger {
+	private static boolean printTimeStamps;
+	private static SimpleDateFormat timeStampFormat;
+
 	private Logger() {
 	}
 
-	public static void log(String... messages) {
-		for (String message : messages)
-			System.out.println("[INFO " + getTimeStamp() + "] " + message);
+	static {
+		setPrintTimeStamps(true);
+		setTimeStampFormat(new SimpleDateFormat("MM/dd/yyyy h:mm:ss a"));
+	}
+
+	public static void log(Object... messages) {
+		for (Object message : messages)
+			System.out.println((printTimeStamps ? "[INFO " + getTimeStamp()
+					+ "] " : "")
+					+ message);
 	}
 
 	public static String getTimeStamp() {
-		Date date = new Date();
-		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy h:mm:ss a");
-
-		return sdf.format(date);
+		return timeStampFormat.format(new Date());
 	}
 
-	public static void warn(String... messages) {
-		for (String message : messages)
-			System.err.println("[WARNING " + getTimeStamp() + "] " + message);
-	}
-
-	public static void error(String... messages) {
-		for (String message : messages)
-			System.err.println("[FATAL ERROR " + getTimeStamp() + "] "
+	public static void warn(Object... messages) {
+		for (Object message : messages)
+			System.err.println((printTimeStamps ? "[WARNING " + getTimeStamp()
+					+ "] " : "")
 					+ message);
+	}
+
+	public static void error(Object... messages) {
+		for (Object message : messages)
+			System.err.println((printTimeStamps ? "[FATAL ERROR "
+					+ getTimeStamp() + "] " : "")
+					+ message);
+	}
+
+	public static void setTimeStampFormat(SimpleDateFormat timeStampFormat) {
+		Logger.timeStampFormat = timeStampFormat;
+	}
+
+	public static void setPrintTimeStamps(boolean printTimeStamps) {
+		Logger.printTimeStamps = printTimeStamps;
 	}
 }

@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 
-import voxel.client.core.launcher.Constants;
+import voxel.client.core.launcher.ConstantsLauncher;
 import voxel.client.core.launcher.updater.downloader.AssetsDownloader;
 import voxel.client.core.launcher.updater.downloader.Downloader;
 import voxel.client.core.util.Logger;
@@ -15,8 +15,8 @@ public class Update {
 	public static void getUpdate() {
 		try {
 			Downloader.download(
-					Constants.download3,
-					Constants.versionpath, false, false);
+					ConstantsLauncher.download3,
+					ConstantsLauncher.versionpath, false, false);
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
@@ -24,7 +24,7 @@ public class Update {
 		Reader readerUnicode = null;
 		try {
 			readerUnicode = new InputStreamReader(new FileInputStream(
-					Constants.versionpath));
+					ConstantsLauncher.versionpath));
 		} catch (FileNotFoundException e1) {
 			e1.printStackTrace();
 		}
@@ -44,8 +44,8 @@ public class Update {
 	public static void getUpdateAssets() {
 		try {
 			Downloader.download(
-					Constants.download4,
-					Constants.assetspath, false, false);
+					ConstantsLauncher.download4,
+					ConstantsLauncher.assetspath, false, false);
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
@@ -53,7 +53,7 @@ public class Update {
 		Reader readerUnicode = null;
 		try {
 			readerUnicode = new InputStreamReader(new FileInputStream(
-					Constants.assetspath));
+					ConstantsLauncher.assetspath));
 		} catch (FileNotFoundException e1) {
 			e1.printStackTrace();
 		}
