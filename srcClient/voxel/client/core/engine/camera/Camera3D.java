@@ -61,28 +61,6 @@ public class Camera3D implements Camera {
 		this.z = z;
 	}
 
-	/**
-	 * Creates a new camera with the given aspect ratio, location, and
-	 * orientation.
-	 * 
-	 * @param aspectRatio
-	 *            the aspect ratio (width/height) of the camera
-	 * @param x
-	 *            the first location coordinate
-	 * @param y
-	 *            the second location coordinate
-	 * @param z
-	 *            the third location coordinate
-	 * @param pitch
-	 *            the pitch (rotation on the x-axis)
-	 * @param yaw
-	 *            the yaw (rotation on the y-axis)
-	 * @param roll
-	 *            the roll (rotation on the z-axis)
-	 * 
-	 * @throws IllegalArgumentException
-	 *             if aspectRatio is 0 or smaller than 0
-	 */
 	public Camera3D(float aspectRatio, float x, float y, float z, float pitch,
 			float yaw, float roll) {
 		this(aspectRatio, x, y, z);
@@ -102,15 +80,6 @@ public class Camera3D implements Camera {
 		public CameraBuilder() {
 		}
 
-		/**
-		 * Sets the aspect ratio of the camera.
-		 * 
-		 * @param aspectRatio
-		 *            the aspect ratio of the camera (window width / window
-		 *            height)
-		 * 
-		 * @return this
-		 */
 		public CameraBuilder setAspectRatio(float aspectRatio) {
 			if (aspectRatio <= 0) {
 				throw new IllegalArgumentException("aspectRatio " + aspectRatio
@@ -120,17 +89,6 @@ public class Camera3D implements Camera {
 			return this;
 		}
 
-		/**
-		 * Sets the distance from the camera to the near clipping pane.
-		 * 
-		 * @param nearClippingPane
-		 *            the distance from the camera to the near clipping pane
-		 * 
-		 * @return this
-		 * 
-		 * @throws IllegalArgumentException
-		 *             if nearClippingPane is 0 or less
-		 */
 		public CameraBuilder setNearClippingPane(float nearClippingPane) {
 			if (nearClippingPane <= 0) {
 				throw new IllegalArgumentException("nearClippingPane "
@@ -140,17 +98,6 @@ public class Camera3D implements Camera {
 			return this;
 		}
 
-		/**
-		 * Sets the distance from the camera to the far clipping pane.
-		 * 
-		 * @param farClippingPane
-		 *            the distance from the camera to the far clipping pane
-		 * 
-		 * @return this
-		 * 
-		 * @throws IllegalArgumentException
-		 *             if farClippingPane is 0 or less
-		 */
 		public CameraBuilder setFarClippingPane(float farClippingPane) {
 			if (farClippingPane <= 0) {
 				throw new IllegalArgumentException("farClippingPane "
@@ -160,31 +107,11 @@ public class Camera3D implements Camera {
 			return this;
 		}
 
-		/**
-		 * Sets the field of view angle in degrees in the y direction.
-		 * 
-		 * @param fov
-		 *            the field of view angle in degrees in the y direction
-		 * 
-		 * @return this
-		 */
 		public CameraBuilder setFieldOfView(float fov) {
 			this.fov = fov;
 			return this;
 		}
 
-		/**
-		 * Sets the position of the camera.
-		 * 
-		 * @param x
-		 *            the x-coordinate of the camera
-		 * @param y
-		 *            the y-coordinate of the camera
-		 * @param z
-		 *            the z-coordinate of the camera
-		 * 
-		 * @return this
-		 */
 		public CameraBuilder setPosition(float x, float y, float z) {
 			this.x = x;
 			this.y = y;
@@ -192,16 +119,6 @@ public class Camera3D implements Camera {
 			return this;
 		}
 
-		/**
-		 * Sets the rotation of the camera.
-		 * 
-		 * @param pitch
-		 *            the rotation around the x-axis in degrees
-		 * @param yaw
-		 *            the rotation around the y-axis in degrees
-		 * @param roll
-		 *            the rotation around the z-axis in degrees
-		 */
 		public CameraBuilder setRotation(float pitch, float yaw, float roll) {
 			this.pitch = pitch;
 			this.yaw = yaw;
@@ -209,15 +126,6 @@ public class Camera3D implements Camera {
 			return this;
 		}
 
-		/**
-		 * Constructs an instance of EulerCamera from this builder helper class.
-		 * 
-		 * @return an instance of EulerCamera
-		 * 
-		 * @throws IllegalArgumentException
-		 *             if farClippingPane is the same or less than
-		 *             nearClippingPane
-		 */
 		public Camera3D build() {
 			if (zFar <= zNear) {
 				throw new IllegalArgumentException("farClippingPane " + zFar

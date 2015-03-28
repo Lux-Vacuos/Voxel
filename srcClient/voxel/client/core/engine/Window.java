@@ -49,7 +49,6 @@ public class Window {
 	public static void setDisplayResolution(int width, int height,
 			boolean fullscreen) {
 
-		// return if requested DisplayMode is already set
 		if ((Display.getDisplayMode().getWidth() == width)
 				&& (Display.getDisplayMode().getHeight() == height)
 				&& (Display.isFullscreen() == fullscreen)) {

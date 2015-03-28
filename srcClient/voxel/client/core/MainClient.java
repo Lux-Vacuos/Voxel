@@ -19,7 +19,7 @@ public class MainClient extends Screen {
 
 	@Override
 	public void init() {
-		Window.createWindow(1280, 720, false);
+		Window.createWindow(1280, 720, "Voxel", false);
 	}
 
 	@Override
