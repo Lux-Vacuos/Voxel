@@ -89,6 +89,7 @@ public class Launcher {
 		frame.setVisible(true);
 		frame.setLocation(85, 85);
 		frame.setResizable(false);
+		btnOptions.setEnabled(false);
 		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 	}
 }
