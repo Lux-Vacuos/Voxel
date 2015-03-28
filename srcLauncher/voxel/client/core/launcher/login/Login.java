@@ -7,6 +7,7 @@ import java.util.Scanner;
 public class Login {
 	public static String appdata = System.getenv("APPDATA");
 	public static String infoPath = appdata + "\\Assets\\Info.txt";
+
 	@SuppressWarnings("resource")
 	public static boolean authenticate(String username, String password) {
 		Scanner fileScan;

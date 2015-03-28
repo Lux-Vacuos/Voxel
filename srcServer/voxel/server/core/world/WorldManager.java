@@ -11,7 +11,7 @@ import voxel.server.core.world.entities.type.MobManager;
 
 public class WorldManager {
 
-	private MobManager mobManager;
+	private static MobManager mobManager;
 
 	@SuppressWarnings("unused")
 	private ArrayList<Chunk> loadedChunks;
@@ -75,7 +75,7 @@ public class WorldManager {
 		mobManager.render();
 	}
 
-	public MobManager getMobManager() {
+	public static MobManager getMobManager() {
 		return mobManager;
 	}
 }
