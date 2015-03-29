@@ -16,9 +16,11 @@ public class DisplayManager {
 	private static final int WIDTH = 1280;
 	private static final int HEIGHT = 720;
 
+	private static PixelFormat pixelformat = new PixelFormat();
+
 	public static final int FPS_CAP = 60;
 
-	private static PixelFormat pixelformat = new PixelFormat();
+	public static final String Title = "Game";
 
 	public static void createDisplay() {
 		Logger.log("Creating Display");
@@ -28,6 +30,8 @@ public class DisplayManager {
 		try {
 			Display.setDisplayMode(new DisplayMode(WIDTH, HEIGHT));
 			Display.create(pixelformat, attribs);
+			Display.setTitle(Title);
+			Display.setResizable(false);
 		} catch (LWJGLException e) {
 			e.printStackTrace();
 			Logger.error("Failed to create Display");
