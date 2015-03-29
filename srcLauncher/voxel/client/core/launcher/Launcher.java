@@ -12,8 +12,7 @@ import javax.swing.JLabel;
 
 import voxel.client.core.launcher.login.LoginDialog;
 import voxel.client.core.launcher.properties.Reader;
-import voxel.client.core.launcher.webpage.LoadingWebPage;
-import voxel.client.engine.StartEngine;
+import voxel.client.core.launcher.thread.CreateThread;
 import voxel.client.engine.util.Logger;
 
 public class Launcher {
@@ -28,7 +27,6 @@ public class Launcher {
 				+ ConstantsLauncher.gameName);
 		final JButton btnLogin = new JButton("Login");
 		final JButton btnExit = new JButton("Exit");
-		final JButton btnWeb = new JButton("News");
 		final JButton btnOptions = new JButton("Options");
 
 		Insets insets = frame.getInsets();
@@ -38,8 +36,6 @@ public class Launcher {
 		size = btnExit.getPreferredSize();
 		btnExit.setBounds(640 + insets.left, 630 + insets.top, size.width,
 				size.height);
-		size = btnWeb.getPreferredSize();
-		btnWeb.setBounds(740 + insets.left, 630 + insets.top, 100, size.height);
 		size = btnOptions.getPreferredSize();
 		btnOptions.setBounds(850 + insets.left, 630 + insets.top, 100,
 				size.height);
@@ -52,7 +48,7 @@ public class Launcher {
 				if (loginDlg.isSucceeded()) {
 					frame.dispose();
 					Logger.log("Starting Voxel");
-					StartEngine.LaunchGame();
+					CreateThread.StartThread();
 				}
 			}
 		});
@@ -61,14 +57,6 @@ public class Launcher {
 				Logger.log("Launcher Closed");
 				frame.dispose();
 				System.exit(0);
-			}
-
-		});
-		btnWeb.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				Logger.log("Loading News");
-				Logger.log("Loading " + ConstantsLauncher.url);
-				LoadingWebPage.main();
 			}
 
 		});
@@ -84,7 +72,6 @@ public class Launcher {
 		frame.setContentPane(new JLabel(new ImageIcon(imgicon1.getImage())));
 		frame.getContentPane().add(btnLogin);
 		frame.getContentPane().add(btnExit);
-		frame.getContentPane().add(btnWeb);
 		frame.getContentPane().add(btnOptions);
 		frame.setVisible(true);
 		frame.setLocation(85, 85);
