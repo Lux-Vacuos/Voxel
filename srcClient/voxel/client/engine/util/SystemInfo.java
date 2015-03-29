@@ -25,10 +25,10 @@ public class SystemInfo {
 	}
 
 	public static void chechOpenGl32() {
-		if (GLContext.getCapabilities().OpenGL32) {
-			Logger.log("OpenGL 3.2 is supported");
+		if (GLContext.getCapabilities().OpenGL33) {
+			Logger.log("OpenGL 3.3 is supported");
 		} else {
-			Logger.error("OpenGL 3.2 is not supported");
+			Logger.error("OpenGL 3.3 is not supported");
 			Logger.error("Check Log");
 			System.exit(-1);
 		}

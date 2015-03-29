@@ -25,7 +25,7 @@ public class DisplayManager {
 	public static void createDisplay() {
 		Logger.log("Creating Display");
 		Logger.log("LWJGL Version: " + Sys.getVersion());
-		ContextAttribs attribs = new ContextAttribs(3, 2)
+		ContextAttribs attribs = new ContextAttribs(3, 3)
 				.withForwardCompatible(true).withProfileCore(true);
 		try {
 			Display.setDisplayMode(new DisplayMode(WIDTH, HEIGHT));
