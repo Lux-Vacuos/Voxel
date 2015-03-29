@@ -1,10 +1,10 @@
 package voxel.client.core.launcher.thread;
 
-import voxel.client.engine.MainClient;
+import voxel.client.engine.StartEngine;
 
 public class CreateThread extends Thread {
 	public void run() {
-		MainClient.LaunchGame();
+		StartEngine.LaunchGame();
 	}
 
 	public static void StartThread() {

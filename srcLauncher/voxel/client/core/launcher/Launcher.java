@@ -13,7 +13,7 @@ import javax.swing.JLabel;
 import voxel.client.core.launcher.login.LoginDialog;
 import voxel.client.core.launcher.properties.Reader;
 import voxel.client.core.launcher.webpage.LoadingWebPage;
-import voxel.client.engine.MainClient;
+import voxel.client.engine.StartEngine;
 import voxel.client.engine.util.Logger;
 
 public class Launcher {
@@ -52,7 +52,7 @@ public class Launcher {
 				if (loginDlg.isSucceeded()) {
 					frame.dispose();
 					Logger.log("Starting Voxel");
-					MainClient.LaunchGame();
+					StartEngine.LaunchGame();
 				}
 			}
 		});

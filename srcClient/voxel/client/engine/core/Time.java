@@ -2,15 +2,15 @@ package voxel.client.engine.core;
 
 import org.lwjgl.Sys;
 
-import voxel.client.engine.MainClient;
+import voxel.client.engine.StartEngine;
 import voxel.client.engine.util.Logger;
 
 public class Time {
 
 	public static int getDelta() {
 		long time = getTime();
-		int delta = (int) (time - MainClient.lastFrame);
-		MainClient.lastFrame = time;
+		int delta = (int) (time - StartEngine.lastFrame);
+		StartEngine.lastFrame = time;
 
 		return delta;
 	}
@@ -20,11 +20,11 @@ public class Time {
 	}
 
 	public static void updateFPS() {
-		if (getTime() - MainClient.lastFPS > 1000) {
-			Logger.log("FPS: " + MainClient.fps);
-			MainClient.fps = 0;
-			MainClient.lastFPS += 1000;
+		if (getTime() - StartEngine.lastFPS > 1000) {
+			Logger.log("FPS: " + StartEngine.fps);
+			StartEngine.fps = 0;
+			StartEngine.lastFPS += 1000;
 		}
-		MainClient.fps++;
+		StartEngine.fps++;
 	}
 }

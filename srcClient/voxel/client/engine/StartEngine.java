@@ -11,7 +11,7 @@ import org.lwjgl.opengl.PixelFormat;
 import voxel.client.engine.core.Time;
 import voxel.client.engine.util.Logger;
 
-public class MainClient {
+public class StartEngine {
 
 	public static int WIDTH = 1280;
 	public static int HEIGHT = 720;
@@ -64,10 +64,6 @@ public class MainClient {
 		Time.updateFPS();
 		Display.update();
 		Display.sync(60);
-	}
-
-	public static void main(String[] args) {
-		Start();
 	}
 
 	public static void LaunchGame() {
