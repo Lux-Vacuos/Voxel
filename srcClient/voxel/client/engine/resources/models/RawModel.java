@@ -1,4 +1,4 @@
-package voxel.client.engine.resources;
+package voxel.client.engine.resources.models;
 
 public class RawModel {
 
