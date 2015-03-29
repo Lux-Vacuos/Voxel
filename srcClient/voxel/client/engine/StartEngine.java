@@ -18,6 +18,7 @@ public class StartEngine {
 	public static long lastFrame;
 	public static int fps;
 	public static long lastFPS;
+	public static float x = 0;
 
 	public static void Start() {
 		try {
@@ -57,10 +58,20 @@ public class StartEngine {
 		Logger.log("Running in OpenGL: " + glGetString(GL_VERSION));
 		glViewport(0, 0, Display.getDisplayMode().getWidth(), Display
 				.getDisplayMode().getHeight());
-		glClearColor(0f, 0f, 0f, 0f);
 	}
 
 	public static void Render() {
+
+		glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+		glEnable(GL_DEPTH_TEST);
+		glClearColor(0.381f, 0.555f, 0.612f, 1);
+		glColor3f(0.5f,0.5f,1.0f);
+		glBegin(GL_QUADS);
+		glVertex2f(100, 100);
+		glVertex2f(100 + 200, 100);
+		glVertex2f(100 + 200, 100 + 200);
+		glVertex2f(100, 100 + 200);
+		glEnd();
 		Time.updateFPS();
 		Display.update();
 		Display.sync(60);
