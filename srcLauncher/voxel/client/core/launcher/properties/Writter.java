@@ -6,8 +6,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Properties;
 
-import voxel.client.core.engine.util.Logger;
 import voxel.client.core.launcher.ConstantsLauncher;
+import voxel.client.engine.util.Logger;
 
 public class Writter {
 	public static void configWritter() {

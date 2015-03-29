@@ -6,10 +6,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 
-import voxel.client.core.engine.util.Logger;
 import voxel.client.core.launcher.ConstantsLauncher;
 import voxel.client.core.launcher.updater.downloader.AssetsDownloader;
 import voxel.client.core.launcher.updater.downloader.Downloader;
+import voxel.client.engine.util.Logger;
 
 public class Update {
 	public static void getUpdate() {

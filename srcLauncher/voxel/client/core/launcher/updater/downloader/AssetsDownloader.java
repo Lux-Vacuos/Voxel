@@ -1,9 +1,9 @@
 package voxel.client.core.launcher.updater.downloader;
 
-import voxel.client.core.engine.util.Logger;
 import voxel.client.core.launcher.ConstantsLauncher;
 import voxel.client.core.launcher.login.Login;
 import voxel.client.core.launcher.properties.Reader;
+import voxel.client.engine.util.Logger;
 
 public class AssetsDownloader {
 	public static void Assets() {

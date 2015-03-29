@@ -12,7 +12,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JProgressBar;
 
-import voxel.client.core.engine.util.Logger;
+import voxel.client.engine.util.Logger;
 
 public class Downloader extends JFrame {
 	private static final long serialVersionUID = 1L;

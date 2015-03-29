@@ -1,6 +1,6 @@
 package voxel.client.core.launcher.thread;
 
-import voxel.client.core.MainClient;
+import voxel.client.engine.MainClient;
 
 public class CreateThread extends Thread {
 	public void run() {

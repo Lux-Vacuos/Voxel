@@ -1,11 +1,11 @@
 package voxel.client.core.launcher;
 
-import voxel.client.core.engine.util.Logger;
 import voxel.client.core.launcher.init.Init;
 import voxel.client.core.launcher.properties.Reader;
 import voxel.client.core.launcher.properties.Writter;
 import voxel.client.core.launcher.updater.CreateDir;
 import voxel.client.core.launcher.updater.Update;
+import voxel.client.engine.util.Logger;
 
 public class Main {
 	public static void main(String[] args) {
