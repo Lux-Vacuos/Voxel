@@ -36,7 +36,7 @@ public class DisplayManager {
 			e.printStackTrace();
 			Logger.error("Failed to create Display");
 		}
-		Logger.log("Running in OpenGL: " + glGetString(GL_VERSION));
+		Logger.log("OpenGL Version: " + glGetString(GL_VERSION));
 		glViewport(0, 0, WIDTH, HEIGHT);
 
 	}
