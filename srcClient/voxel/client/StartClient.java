@@ -28,30 +28,29 @@ public class StartClient {
 		SystemInfo.chechOpenGl32();
 		SystemInfo.printSystemInfo();
 		Logger.log("Starting Rendering");
-
 		Loader loader = new Loader();
 		StaticShader shader = new StaticShader();
 		Renderer renderer = new Renderer(shader);
-
 		RawModel model = OBJLoader.loadObjModel("GrassBlock", loader);
 		ModelTexture texture = new ModelTexture(loader.loadTexture("Grass"));
 		TexturedModel textureModel = new TexturedModel(model, texture);
-		ModelTexture texture1 = textureModel.getTexture();
-		texture1.setShineDamper(10);
-		texture1.setReflectivity(1f);
+		/*
+		 * ModelTexture texture1 = textureModel.getTexture();
+		 * texture1.setShineDamper(10); texture1.setReflectivity(1f);
+		 */
 
-		Entity entity = new Entity(textureModel, new Vector3f(0, 0, -4), 0, 0,
+		// Light light = new Light(new Vector3f(0, 0, 0), new Vector3f(1, 1,
+		// 1));
+		Camera camera = new Camera();
+		Entity entity = new Entity(textureModel, new Vector3f(0, 0, 0), 0, 0,
 				0, 1);
 
-		//Light light = new Light(new Vector3f(0, 0, 0), new Vector3f(1, 1, 1));
-		Camera camera = new Camera();
-
 		while (!Display.isCloseRequested()) {
-			entity.increaseRotation(0f, 0.5f, 0f);
+			// entity.increaseRotation(0f, 0.5f, 0f);
 			camera.move();
 			renderer.prepare();
 			shader.start();
-			//shader.loadLight(light);
+			// shader.loadLight(light);
 			shader.loadviewMatrix(camera);
 			renderer.render(entity, shader);
 			shader.stop();
