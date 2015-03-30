@@ -36,17 +36,22 @@ public class StartClient {
 		RawModel model = OBJLoader.loadObjModel("GrassBlock", loader);
 		ModelTexture texture = new ModelTexture(loader.loadTexture("Grass"));
 		TexturedModel textureModel = new TexturedModel(model, texture);
+		ModelTexture texture1 = textureModel.getTexture();
+		texture1.setShineDamper(10);
+		texture1.setReflectivity(1f);
 
-		Entity entity = new Entity(textureModel, new Vector3f(0, 0, -5), 0, 0,
+		Entity entity = new Entity(textureModel, new Vector3f(0, 0, -4), 0, 0,
 				0, 1);
 
+		//Light light = new Light(new Vector3f(0, 0, 0), new Vector3f(1, 1, 1));
 		Camera camera = new Camera();
 
 		while (!Display.isCloseRequested()) {
-			entity.increaseRotation(0, 0.5f, 0);
+			entity.increaseRotation(0f, 0.5f, 0f);
 			camera.move();
 			renderer.prepare();
 			shader.start();
+			//shader.loadLight(light);
 			shader.loadviewMatrix(camera);
 			renderer.render(entity, shader);
 			shader.stop();
