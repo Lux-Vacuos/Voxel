@@ -21,7 +21,7 @@ public class StartClient {
 	public static void main(String[] args) {
 
 		DisplayManager.createDisplay();
-		//ystemInfo.chechOpenGl32();
+		SystemInfo.chechOpenGl32();
 		SystemInfo.printSystemInfo();
 		Logger.log("Starting Rendering");
 
