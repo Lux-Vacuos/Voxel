@@ -1,4 +1,6 @@
 #version 330 core
+//Shaders uses OpenGL 3.3
+
 
 in vec2 pass_textureCoords;
 

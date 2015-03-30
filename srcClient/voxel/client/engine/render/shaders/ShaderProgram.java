@@ -3,9 +3,13 @@ package voxel.client.engine.render.shaders;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.FloatBuffer;
+
+import org.lwjgl.BufferUtils;
+import org.lwjgl.util.vector.Matrix4f;
+import org.lwjgl.util.vector.Vector3f;
 
 import voxel.client.engine.util.Logger;
-
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL20.*;
 
@@ -15,6 +19,8 @@ public abstract class ShaderProgram {
 	private int vertexShaderID;
 	private int fragmentShaderID;
 
+	private static FloatBuffer matrixBuffer = BufferUtils.createFloatBuffer(16);
+
 	public ShaderProgram(String vertexFile, String fragmentFile) {
 		vertexShaderID = loadShader(vertexFile, GL_VERTEX_SHADER);
 		fragmentShaderID = loadShader(fragmentFile, GL_FRAGMENT_SHADER);
@@ -22,9 +28,16 @@ public abstract class ShaderProgram {
 		glAttachShader(programID, vertexShaderID);
 		glAttachShader(programID, fragmentShaderID);
 		glLinkProgram(programID);
-		glValidateProgram(programID);
 		bindAttributes();
+		glValidateProgram(programID);
 		glLinkProgram(programID);
+		getAllUniformLocations();
+	}
+
+	protected abstract void getAllUniformLocations();
+
+	protected int getUniformLocation(String uniformName) {
+		return glGetUniformLocation(programID, uniformName);
 	}
 
 	public void start() {
@@ -48,7 +61,28 @@ public abstract class ShaderProgram {
 
 	protected void bindAttribute(int attribute, String variableName) {
 		glBindAttribLocation(programID, attribute, variableName);
+	}
 
+	protected void loadFloat(int location, float value) {
+		glUniform1f(location, value);
+	}
+
+	protected void loadVector(int location, Vector3f vector) {
+		glUniform3f(location, vector.x, vector.y, vector.z);
+	}
+
+	protected void loadBoolean(int location, boolean value) {
+		float toLoad = 0;
+		if (value) {
+			toLoad = 1;
+		}
+		glUniform1f(location, toLoad);
+	}
+
+	protected void loadMatrix(int locations, Matrix4f matrix) {
+		matrix.store(matrixBuffer);
+		matrixBuffer.flip();
+		glUniformMatrix4(locations, false, matrixBuffer);
 	}
 
 	private static int loadShader(String file, int type) {
