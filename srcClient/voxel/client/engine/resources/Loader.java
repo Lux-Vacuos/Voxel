@@ -6,7 +6,6 @@ import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL30.*;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
@@ -42,9 +41,8 @@ public class Loader {
 			texture = TextureLoader.getTexture("PNG", new FileInputStream(
 					"assets/textures/" + fileName + ".png"), GL_NEAREST);
 			Logger.log("Loading Texture: " + fileName + ".png");
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
 		} catch (IOException e) {
+			Logger.error("Couldn' load texture file");
 			e.printStackTrace();
 		}
 		int textureID = texture.getTextureID();
