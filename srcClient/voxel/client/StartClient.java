@@ -9,8 +9,7 @@ import org.lwjgl.util.vector.Vector3f;
 import voxel.client.engine.DisplayManager;
 import voxel.client.engine.entities.Camera;
 import voxel.client.engine.entities.Entity;
-import voxel.client.engine.render.Renderer;
-import voxel.client.engine.render.shaders.StaticShader;
+import voxel.client.engine.render.MasterRenderer;
 import voxel.client.engine.render.textures.ModelTexture;
 import voxel.client.engine.resources.Loader;
 import voxel.client.engine.resources.OBJLoader;
@@ -35,8 +34,6 @@ public class StartClient {
 		Logger.log("Starting Rendering");
 
 		Loader loader = new Loader();
-		StaticShader shader = new StaticShader();
-		Renderer renderer = new Renderer(shader);
 
 		RawModel model = OBJLoader.loadObjModel("Block", loader);
 		ModelTexture texture = new ModelTexture(loader.loadTexture("Grass"));
@@ -48,23 +45,21 @@ public class StartClient {
 		for (int x = 0; x < CHUNK_SIZE; x++) {
 			for (int y = 0; y < CHUNK_SIZE; y++)
 				for (int z = 0; z < CHUNK_SIZE; z++) {
-					allCubes.add(new Entity(cubeModel, new Vector3f(x,y,z), 0f, 0f, 0f, 1f));
+					allCubes.add(new Entity(cubeModel, new Vector3f(x, y, z),
+							0f, 0f, 0f, 1f));
 				}
 		}
-
+		MasterRenderer renderer = new MasterRenderer();
 		while (!Display.isCloseRequested()) {
 			camera.move();
-			renderer.prepare();
-			shader.start();
-			shader.loadviewMatrix(camera);
-			for(Entity cube : allCubes) {
-				renderer.render(cube, shader);
+			for (Entity cube : allCubes) {
+				renderer.processEntity(cube);
 			}
-			shader.stop();
+			renderer.render(camera);
 			DisplayManager.updateDisplay();
 		}
 		Logger.log("Closing Game");
-		shader.cleanUp();
+		renderer.cleanUp();
 		loader.cleanUp();
 		DisplayManager.closeDisplay();
 	}
