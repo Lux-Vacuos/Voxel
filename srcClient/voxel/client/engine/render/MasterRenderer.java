@@ -27,7 +27,11 @@ public class MasterRenderer {
 
 	private static final float FOV = 90f;
 	private static final float NEAR_PLANE = 0.1f;
-	private static final float FAR_PLANE = 100f;
+	private static final float FAR_PLANE = 150f;
+	
+	private static final float RED = 0.375f;
+	private static final float GREEN = 0.555f;
+	private static final float BLUE = 0.655f;
 
 	private Matrix4f projectionMatrix;
 
@@ -47,6 +51,7 @@ public class MasterRenderer {
 	public void render(Camera camera) {
 		prepare();
 		shader.start();
+		shader.loadSkyColour(RED, GREEN, BLUE);
 		shader.loadviewMatrix(camera);
 		renderer.render(entities);
 		shader.stop();
@@ -72,7 +77,7 @@ public class MasterRenderer {
 	public void prepare() {
 		glEnable(GL_DEPTH_TEST);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		glClearColor(0.381f, 0.555f, 0.612f, 1);
+		glClearColor(RED, GREEN, BLUE, 1);
 	}
 
 	private void createProjectionMatrix() {

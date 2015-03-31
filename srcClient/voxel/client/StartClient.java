@@ -10,20 +10,13 @@ import voxel.client.engine.DisplayManager;
 import voxel.client.engine.entities.Camera;
 import voxel.client.engine.entities.Entity;
 import voxel.client.engine.render.MasterRenderer;
-import voxel.client.engine.render.textures.ModelTexture;
-import voxel.client.engine.resources.Loader;
-import voxel.client.engine.resources.OBJLoader;
-import voxel.client.engine.resources.models.RawModel;
-import voxel.client.engine.resources.models.TexturedModel;
 import voxel.client.engine.util.Logger;
 import voxel.client.engine.util.SystemInfo;
 import voxel.client.engine.world.CreateChunk;
+import voxel.client.engine.world.blocks.Blocks;
 
 public class StartClient {
 
-	public static TexturedModel cubeGrass;
-	public static TexturedModel cubeStone;
-	public static TexturedModel cubeSand;
 	public static List<Entity> allCubes = new ArrayList<Entity>();
 
 	public static Random rand;
@@ -37,18 +30,9 @@ public class StartClient {
 		SystemInfo.chechOpenGl32();
 		SystemInfo.printSystemInfo();
 		Logger.log("Starting Rendering");
-
-		Loader loader = new Loader();
-
-		RawModel model = OBJLoader.loadObjModel("Block", loader);
-		ModelTexture texture = new ModelTexture(loader.loadTexture("Grass"));
-		ModelTexture texture1 = new ModelTexture(
-				loader.loadTexture("Cobblestone"));
-		ModelTexture texture2 = new ModelTexture(loader.loadTexture("Sand"));
-		cubeGrass = new TexturedModel(model, texture);
-		cubeStone = new TexturedModel(model, texture1);
-		cubeSand = new TexturedModel(model, texture2);
-
+		
+		Blocks.createBlocks();
+		
 		Camera camera = new Camera();
 
 		rand = new Random();
@@ -65,7 +49,7 @@ public class StartClient {
 		}
 		Logger.log("Closing Game");
 		renderer.cleanUp();
-		loader.cleanUp();
+		Blocks.loader.cleanUp();
 		DisplayManager.closeDisplay();
 	}
 }
