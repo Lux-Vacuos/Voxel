@@ -1,5 +1,8 @@
 package voxel.client;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -18,6 +21,8 @@ import voxel.client.engine.util.SystemInfo;
 
 public class StartClient {
 
+	public static final int CHUNK_SIZE = 16;
+
 	public static void StartGame() {
 
 	}
@@ -28,31 +33,33 @@ public class StartClient {
 		SystemInfo.chechOpenGl32();
 		SystemInfo.printSystemInfo();
 		Logger.log("Starting Rendering");
+
 		Loader loader = new Loader();
 		StaticShader shader = new StaticShader();
 		Renderer renderer = new Renderer(shader);
-		RawModel model = OBJLoader.loadObjModel("GrassBlock", loader);
-		ModelTexture texture = new ModelTexture(loader.loadTexture("Grass"));
-		TexturedModel textureModel = new TexturedModel(model, texture);
-		/*
-		 * ModelTexture texture1 = textureModel.getTexture();
-		 * texture1.setShineDamper(10); texture1.setReflectivity(1f);
-		 */
 
-		// Light light = new Light(new Vector3f(0, 0, 0), new Vector3f(1, 1,
-		// 1));
+		RawModel model = OBJLoader.loadObjModel("Block", loader);
+		ModelTexture texture = new ModelTexture(loader.loadTexture("Grass"));
+		TexturedModel cubeModel = new TexturedModel(model, texture);
+
 		Camera camera = new Camera();
-		Entity entity = new Entity(textureModel, new Vector3f(0, 0, 0), 0, 0,
-				0, 1);
+		List<Entity> allCubes = new ArrayList<Entity>();
+
+		for (int x = 0; x < CHUNK_SIZE; x++) {
+			for (int y = 0; y < CHUNK_SIZE; y++)
+				for (int z = 0; z < CHUNK_SIZE; z++) {
+					allCubes.add(new Entity(cubeModel, new Vector3f(x,y,z), 0f, 0f, 0f, 1f));
+				}
+		}
 
 		while (!Display.isCloseRequested()) {
-			// entity.increaseRotation(0f, 0.5f, 0f);
 			camera.move();
 			renderer.prepare();
 			shader.start();
-			// shader.loadLight(light);
 			shader.loadviewMatrix(camera);
-			renderer.render(entity, shader);
+			for(Entity cube : allCubes) {
+				renderer.render(cube, shader);
+			}
 			shader.stop();
 			DisplayManager.updateDisplay();
 		}

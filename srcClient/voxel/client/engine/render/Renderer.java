@@ -10,7 +10,6 @@ import org.lwjgl.util.vector.Matrix4f;
 
 import voxel.client.engine.entities.Entity;
 import voxel.client.engine.render.shaders.StaticShader;
-import voxel.client.engine.render.textures.ModelTexture;
 import voxel.client.engine.resources.models.RawModel;
 import voxel.client.engine.resources.models.TexturedModel;
 import voxel.client.engine.vectors.Maths;
@@ -19,11 +18,13 @@ public class Renderer {
 
 	private static final float FOV = 90f;
 	private static final float NEAR_PLANE = 0.1f;
-	private static final float FAR_PLANE = 10f;
+	private static final float FAR_PLANE = 30f;
 
 	private Matrix4f projectionMatrix;
 
 	public Renderer(StaticShader shader) {
+		glEnable(GL_CULL_FACE);
+		glCullFace(GL_BACK);
 		createProjectionMatrix();
 		shader.start();
 		shader.loadProjectionMatrix(projectionMatrix);
@@ -32,7 +33,6 @@ public class Renderer {
 
 	public void prepare() {
 		glEnable(GL_DEPTH_TEST);
-		glEnable(GL_CULL_FACE);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glClearColor(0.381f, 0.555f, 0.612f, 1);
 	}
@@ -43,21 +43,16 @@ public class Renderer {
 		glBindVertexArray(rawmodel.getVaoID());
 		glEnableVertexAttribArray(0);
 		glEnableVertexAttribArray(1);
-		glEnableVertexAttribArray(2);
 		Matrix4f transformationMatrix = Maths.createTransformationMatrix(
 				entity.getPosition(), entity.getRotX(), entity.getRotY(),
 				entity.getRotZ(), entity.getScale());
 		shader.loadTransformationMatrix(transformationMatrix);
-		ModelTexture texture = model.getTexture();
-		shader.loadShineVariable(texture.getShineDamper(),
-				texture.getReflectivity());
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, model.getTexture().getID());
 		glDrawElements(GL_TRIANGLES, rawmodel.getVertexCount(),
 				GL_UNSIGNED_INT, 0);
 		glDisableVertexAttribArray(0);
 		glDisableVertexAttribArray(1);
-		glDisableVertexAttribArray(2);
 		glBindVertexArray(0);
 	}
 
