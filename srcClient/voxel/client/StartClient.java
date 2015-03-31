@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.lwjgl.opengl.Display;
-import org.lwjgl.util.vector.Vector3f;
 
 import voxel.client.engine.DisplayManager;
 import voxel.client.engine.entities.Camera;
@@ -17,13 +16,14 @@ import voxel.client.engine.resources.models.RawModel;
 import voxel.client.engine.resources.models.TexturedModel;
 import voxel.client.engine.util.Logger;
 import voxel.client.engine.util.SystemInfo;
+import voxel.client.engine.world.CreateChunk;
 
 public class StartClient {
 
-	public static final int CHUNK_SIZE = 16;
+	public static TexturedModel cubeModel;
+	public static List<Entity> allCubes = new ArrayList<Entity>();
 
 	public static void StartGame() {
-
 	}
 
 	public static void main(String[] args) {
@@ -37,18 +37,11 @@ public class StartClient {
 
 		RawModel model = OBJLoader.loadObjModel("Block", loader);
 		ModelTexture texture = new ModelTexture(loader.loadTexture("Grass"));
-		TexturedModel cubeModel = new TexturedModel(model, texture);
+		cubeModel = new TexturedModel(model, texture);
 
 		Camera camera = new Camera();
-		List<Entity> allCubes = new ArrayList<Entity>();
+		CreateChunk.createChunks();
 
-		for (int x = 0; x < CHUNK_SIZE; x++) {
-			for (int y = 0; y < CHUNK_SIZE; y++)
-				for (int z = 0; z < CHUNK_SIZE; z++) {
-					allCubes.add(new Entity(cubeModel, new Vector3f(x, y, z),
-							0f, 0f, 0f, 1f));
-				}
-		}
 		MasterRenderer renderer = new MasterRenderer();
 		while (!Display.isCloseRequested()) {
 			camera.move();
