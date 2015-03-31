@@ -8,7 +8,6 @@ import static org.lwjgl.opengl.GL30.*;
 import java.util.List;
 import java.util.Map;
 
-import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Matrix4f;
 
 import voxel.client.engine.entities.Entity;
@@ -17,29 +16,15 @@ import voxel.client.engine.resources.models.RawModel;
 import voxel.client.engine.resources.models.TexturedModel;
 import voxel.client.engine.vectors.Maths;
 
-public class Renderer {
+public class EntityRenderer {
 
-	private static final float FOV = 90f;
-	private static final float NEAR_PLANE = 0.1f;
-	private static final float FAR_PLANE = 30f;
-
-	private Matrix4f projectionMatrix;
 	private StaticShader shader;
 
-	public Renderer(StaticShader shader) {
+	public EntityRenderer(StaticShader shader, Matrix4f projectionMatrix) {
 		this.shader = shader;
-		glEnable(GL_CULL_FACE);
-		glCullFace(GL_BACK);
-		createProjectionMatrix();
 		shader.start();
 		shader.loadProjectionMatrix(projectionMatrix);
 		shader.stop();
-	}
-
-	public void prepare() {
-		glEnable(GL_DEPTH_TEST);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		glClearColor(0.381f, 0.555f, 0.612f, 1);
 	}
 
 	public void render(Map<TexturedModel, List<Entity>> entities) {
@@ -78,19 +63,4 @@ public class Renderer {
 		shader.loadTransformationMatrix(transformationMatrix);
 	}
 
-	private void createProjectionMatrix() {
-		float aspectRatio = (float) Display.getWidth()
-				/ (float) Display.getHeight();
-		float y_scale = (float) ((1f / Math.tan(Math.toRadians(FOV / 2f))) * aspectRatio);
-		float x_scale = y_scale / aspectRatio;
-		float frustrum_length = FAR_PLANE - NEAR_PLANE;
-
-		projectionMatrix = new Matrix4f();
-		projectionMatrix.m00 = x_scale;
-		projectionMatrix.m11 = y_scale;
-		projectionMatrix.m22 = -((FAR_PLANE + NEAR_PLANE) / frustrum_length);
-		projectionMatrix.m23 = -1;
-		projectionMatrix.m32 = -((2 * NEAR_PLANE * FAR_PLANE) / frustrum_length);
-		projectionMatrix.m33 = 0;
-	}
 }
