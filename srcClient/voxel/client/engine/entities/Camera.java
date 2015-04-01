@@ -63,13 +63,13 @@ public class Camera {
 
 		}
 		if (Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
-			
-			position.y += (float) Math.sin(Math.toRadians(yaw)) * speed;
-			
+
+			position.y += speed;
+
 		} else if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
-			
-			position.y -= (float) Math.sin(Math.toRadians(yaw)) * speed;
-			
+
+			position.y -= speed;
+
 		}
 
 		if (Mouse.isButtonDown(0)) {

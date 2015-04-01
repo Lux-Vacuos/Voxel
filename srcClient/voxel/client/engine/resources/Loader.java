@@ -1,6 +1,7 @@
 package voxel.client.engine.resources;
 
 import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL14.*;
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL30.*;
@@ -42,6 +43,9 @@ public class Loader {
 			texture = TextureLoader.getTexture("PNG", new FileInputStream(
 					"assets/textures/" + fileName + ".png"), GL_NEAREST);
 			Logger.log("Loading Texture: " + fileName + ".png");
+			glGenerateMipmap(GL_TEXTURE_2D);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_LOD_BIAS, -0.4f);
 		} catch (IOException e) {
 			Logger.error("Couldn' load texture file");
 			e.printStackTrace();
