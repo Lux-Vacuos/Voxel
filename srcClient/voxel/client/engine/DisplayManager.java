@@ -15,12 +15,13 @@ public class DisplayManager {
 
 	private static final int WIDTH = 1280;
 	private static final int HEIGHT = 720;
+	public static final int FPS_CAP = 60;
+	public static final String Title = "Game";
+
+	private static long lastFrameTime;
+	private static float delta;
 
 	private static PixelFormat pixelformat = new PixelFormat();
-
-	public static final int FPS_CAP = 60;
-
-	public static final String Title = "Game";
 
 	public static void createDisplay() {
 		Logger.log("Creating Display");
@@ -38,18 +39,27 @@ public class DisplayManager {
 		}
 		Logger.log("OpenGL Version: " + glGetString(GL_VERSION));
 		glViewport(0, 0, WIDTH, HEIGHT);
-
+		lastFrameTime = getCurrentTime();
 	}
 
 	public static void updateDisplay() {
-
 		Display.sync(FPS_CAP);
 		Display.update();
+		long currentFrameTime = getCurrentTime();
+		delta = (currentFrameTime - lastFrameTime) / 1000f;
+		lastFrameTime = currentFrameTime;
+	}
 
+	public static float getFrameTimeSeconds() {
+		return delta;
 	}
 
 	public static void closeDisplay() {
 
 		Display.destroy();
+	}
+
+	private static long getCurrentTime() {
+		return Sys.getTime() * 1000 / Sys.getTimerResolution();
 	}
 }
