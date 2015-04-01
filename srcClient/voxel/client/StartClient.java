@@ -24,9 +24,6 @@ public class StartClient {
 	public static Random rand;
 
 	public static void StartGame() {
-	}
-
-	public static void main(String[] args) {
 
 		DisplayManager.createDisplay();
 		SystemInfo.chechOpenGl32();
@@ -59,5 +56,9 @@ public class StartClient {
 		renderer.cleanUp();
 		Blocks.loader.cleanUp();
 		DisplayManager.closeDisplay();
+	}
+
+	public static void main(String[] args) {
+		StartGame();
 	}
 }
