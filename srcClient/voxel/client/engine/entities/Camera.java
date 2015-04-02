@@ -2,6 +2,7 @@ package voxel.client.engine.entities;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector3f;
 
 public class Camera {
@@ -74,6 +75,8 @@ public class Camera {
 
 		if (Mouse.isButtonDown(0)) {
 			Mouse.setGrabbed(true);
+			Mouse.setCursorPosition(Display.getWidth() / 2,
+					Display.getHeight() / 2);
 		} else if (Mouse.isButtonDown(1)) {
 			Mouse.setGrabbed(false);
 		}

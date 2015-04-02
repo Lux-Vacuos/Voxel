@@ -43,7 +43,7 @@ public class StartClient {
 		MasterRenderer renderer = new MasterRenderer(loader);
 		List<GuiTexture> guis = new ArrayList<GuiTexture>();
 		GuiTexture gui = new GuiTexture(loader.loadTexture("HotBar"),
-				new Vector2f(0.6f, -0.427f), new Vector2f(1.6f, 1.427f));
+				new Vector2f(0.6f, -0.425f), new Vector2f(1.6f, 1.425f));
 		guis.add(gui);
 
 		GuiRenderer guiRenderer = new GuiRenderer(loader);
