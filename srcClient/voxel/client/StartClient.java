@@ -18,7 +18,7 @@ import voxel.client.engine.render.gui.GuiTexture;
 import voxel.client.engine.resources.Loader;
 import voxel.client.engine.util.Logger;
 import voxel.client.engine.util.SystemInfo;
-import voxel.client.engine.world.Chunk;
+import voxel.client.engine.world.World;
 import voxel.client.engine.world.blocks.Blocks;
 
 public class StartClient {
@@ -38,7 +38,7 @@ public class StartClient {
 		Blocks.createBlocks();
 		Camera camera = new Camera();
 		rand = new Random();
-		Chunk.create();
+		World world = new World(null, new Vector3f(0, 0, 0), 0, 0, 0, 0);
 
 		MasterRenderer renderer = new MasterRenderer(loader);
 		List<GuiTexture> guis = new ArrayList<GuiTexture>();

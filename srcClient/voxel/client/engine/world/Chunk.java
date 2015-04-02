@@ -4,11 +4,18 @@ import org.lwjgl.util.vector.Vector3f;
 
 import voxel.client.StartClient;
 import voxel.client.engine.entities.Entity;
+import voxel.client.engine.resources.models.TexturedModel;
 import voxel.client.engine.world.blocks.Blocks;
 
-public class Chunk {
+public class Chunk extends Entity {
 
-	private static final int CHUNK_SIZE = 64;
+	public Chunk(TexturedModel model, Vector3f position, float rotX,
+			float rotY, float rotZ, float scale) {
+		super(model, position, rotX, rotY, rotZ, scale);
+		create();
+	}
+
+	public static final int CHUNK_SIZE = 64;
 	private static final int CHUNK_HEIGHT = 128;
 
 	public static void create() {
@@ -19,7 +26,7 @@ public class Chunk {
 					// new Vector3f(x, 16, z), 0f, 0f, 0f, 1f));
 					// StartClient.allCubes.add(new Entity(Blocks.cubeGlass,
 					// new Vector3f(x, 32, z), 0f, 0f, 0f, 1f));
-					if (y < 16) {
+					if (y < 8) {
 						if (StartClient.rand.nextInt(2) == 0) {
 							if (StartClient.rand.nextBoolean()) {
 								StartClient.allCubes.add(new Entity(
