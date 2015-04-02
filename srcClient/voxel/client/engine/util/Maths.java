@@ -1,4 +1,4 @@
-package voxel.client.engine.vectors;
+package voxel.client.engine.util;
 
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector2f;

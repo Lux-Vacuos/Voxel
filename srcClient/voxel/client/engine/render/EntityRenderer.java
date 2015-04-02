@@ -14,7 +14,7 @@ import voxel.client.engine.entities.Entity;
 import voxel.client.engine.render.shaders.StaticShader;
 import voxel.client.engine.resources.models.RawModel;
 import voxel.client.engine.resources.models.TexturedModel;
-import voxel.client.engine.vectors.Maths;
+import voxel.client.engine.util.Maths;
 
 public class EntityRenderer {
 

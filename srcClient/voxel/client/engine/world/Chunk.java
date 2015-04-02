@@ -8,7 +8,7 @@ import voxel.client.engine.world.blocks.Blocks;
 
 public class Chunk {
 
-	public static final int CHUNK_SIZE = 16;
+	public static final int CHUNK_SIZE = 64;
 	public static final int CHUNK_HEIGHT = 128;
 
 	public static void create() {

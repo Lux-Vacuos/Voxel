@@ -20,5 +20,6 @@
 			<attribute name="javadoc_location" value="http://legacy.lwjgl.org/javadoc/"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="library/jar/PNGDecoder.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
