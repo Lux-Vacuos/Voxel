@@ -1,6 +1,7 @@
 package voxel.client.engine.resources;
 
 import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL13.*;
 import static org.lwjgl.opengl.GL14.*;
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.*;
@@ -8,6 +9,7 @@ import static org.lwjgl.opengl.GL30.*;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
@@ -17,6 +19,9 @@ import org.lwjgl.BufferUtils;
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
 
+import de.matthiasmann.twl.utils.PNGDecoder;
+import de.matthiasmann.twl.utils.PNGDecoder.Format;
+import voxel.client.engine.render.textures.TextureData;
 import voxel.client.engine.resources.models.RawModel;
 import voxel.client.engine.util.Logger;
 
@@ -36,11 +41,11 @@ public class Loader {
 		return new RawModel(vaoID, indices.length);
 	}
 
-	public RawModel loadToVAO(float[] positions) {
+	public RawModel loadToVAO(float[] positions, int dimensions) {
 		int vaoID = createVAO();
-		this.storeDataInAttributeList(0, 2, positions);
+		this.storeDataInAttributeList(0, dimensions, positions);
 		unbindVAO();
-		return new RawModel(vaoID, positions.length / 2);
+		return new RawModel(vaoID, positions.length / dimensions);
 	}
 
 	public int loadTexture(String fileName) {
@@ -54,12 +59,51 @@ public class Loader {
 					GL_LINEAR_MIPMAP_LINEAR);
 			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_LOD_BIAS, -0.4f);
 		} catch (IOException e) {
-			Logger.error("Couldn' load texture file");
+			Logger.error("Couldn' load texture file" + fileName);
 			e.printStackTrace();
 		}
 		int textureID = texture.getTextureID();
 		textures.add(textureID);
 		return textureID;
+	}
+
+	public int loadCubeMap(String[] textureFiles) {
+		int texID = glGenTextures();
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, texID);
+
+		for (int i = 0; i < textureFiles.length; i++) {
+			TextureData data = decodeTextureFile("assets/textures/skybox/"
+					+ textureFiles[i] + ".png");
+			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGBA,
+					data.getWidth(), data.getHeight(), 0, GL_RGBA,
+					GL_UNSIGNED_BYTE, data.getBuffer());
+		}
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		textures.add(texID);
+		return texID;
+	}
+
+	private TextureData decodeTextureFile(String fileName) {
+		int width = 0;
+		int height = 0;
+		ByteBuffer buffer = null;
+		try {
+			FileInputStream in = new FileInputStream(fileName);
+			PNGDecoder decoder = new PNGDecoder(in);
+			width = decoder.getWidth();
+			height = decoder.getHeight();
+			buffer = ByteBuffer.allocateDirect(4 * width * height);
+			decoder.decode(buffer, width * 4, Format.RGBA);
+			buffer.flip();
+			in.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+			Logger.error("Tried to load texture " + fileName + ", didn't work");
+			System.exit(-1);
+		}
+		return new TextureData(buffer, width, height);
 	}
 
 	public void cleanUp() {

@@ -4,7 +4,7 @@ import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
 import voxel.client.engine.entities.Camera;
-import voxel.client.engine.vectors.Maths;
+import voxel.client.engine.util.Maths;
 
 public class StaticShader extends ShaderProgram {
 

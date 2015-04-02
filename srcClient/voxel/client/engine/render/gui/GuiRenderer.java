@@ -11,7 +11,7 @@ import org.lwjgl.util.vector.Matrix4f;
 
 import voxel.client.engine.resources.Loader;
 import voxel.client.engine.resources.models.RawModel;
-import voxel.client.engine.vectors.Maths;
+import voxel.client.engine.util.Maths;
 
 public class GuiRenderer {
 
@@ -20,7 +20,7 @@ public class GuiRenderer {
 
 	public GuiRenderer(Loader loader) {
 		float[] positions = { -1, 1, -1, -1, 1, 1, 1, -1 };
-		quad = loader.loadToVAO(positions);
+		quad = loader.loadToVAO(positions, 2);
 		shader = new GuiShader();
 	}
 
