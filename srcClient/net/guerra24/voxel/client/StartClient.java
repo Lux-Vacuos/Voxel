@@ -13,11 +13,11 @@ import net.guerra24.voxel.client.engine.render.gui.GuiRenderer;
 import net.guerra24.voxel.client.engine.render.gui.GuiTexture;
 import net.guerra24.voxel.client.engine.resources.Loader;
 import net.guerra24.voxel.client.engine.util.Logger;
-import net.guerra24.voxel.client.engine.util.MousePicker;
 import net.guerra24.voxel.client.engine.util.SystemInfo;
 import net.guerra24.voxel.client.engine.world.World;
 import net.guerra24.voxel.client.engine.world.blocks.Blocks;
 
+import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
@@ -35,31 +35,31 @@ public class StartClient {
 		SystemInfo.printSystemInfo();
 		Logger.log("Starting Rendering");
 
-		Loader loader = new Loader();
-		Blocks.createBlocks();
-		Camera camera = new Camera();
-		rand = new Random();
+		Mouse.setGrabbed(true);
+		Mouse.setCursorPosition(Display.getWidth() / 2, Display.getHeight() / 2);
 
+		rand = new Random();
+		Loader loader = new Loader();
+		Camera camera = new Camera();
+		Blocks.createBlocks();
 		MasterRenderer renderer = new MasterRenderer(loader);
+		GuiRenderer guiRenderer = new GuiRenderer(loader);
+
 		List<GuiTexture> guis = new ArrayList<GuiTexture>();
 		GuiTexture gui = new GuiTexture(loader.loadTexture("HotBar"),
 				new Vector2f(0.6f, -0.425f), new Vector2f(1.6f, 1.425f));
-		guis.add(gui);
 
-		GuiRenderer guiRenderer = new GuiRenderer(loader);
+		guis.add(gui);
 
 		Player player = new Player(Blocks.cubeGrass,
 				new Vector3f(300, 64, 300), 0, 0, 90, 1);
+		Logger.log("Generating World with size: " + World.WORLD_SIZE);
 		World.init();
 
-		MousePicker picker = new MousePicker(camera,
-				MasterRenderer.getProjectionMatrix());
 		while (!Display.isCloseRequested()) {
 			camera.move();
 			player.move();
-			picker.update();
 			renderer.processEntity(player);
-			// System.out.println(picker.getCurrentRay());
 			for (Entity cube : allCubes) {
 				renderer.processEntity(cube);
 			}

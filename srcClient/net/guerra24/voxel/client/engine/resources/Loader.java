@@ -53,7 +53,7 @@ public class Loader {
 		Texture texture = null;
 		try {
 			texture = TextureLoader.getTexture("PNG", new FileInputStream(
-					"assets/textures/" + fileName + ".png"), GL_NEAREST);
+					"assets/textures/blocks/" + fileName + ".png"), GL_NEAREST);
 			Logger.log("Loading Texture: " + fileName + ".png");
 			glGenerateMipmap(GL_TEXTURE_2D);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
