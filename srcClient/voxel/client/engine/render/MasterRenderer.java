@@ -35,7 +35,7 @@ public class MasterRenderer {
 	private static final float GREEN = 0.555f;
 	private static final float BLUE = 0.655f;
 
-	private Matrix4f projectionMatrix;
+	private static Matrix4f projectionMatrix;
 
 	private StaticShader shader = new StaticShader();
 	private EntityRenderer renderer;
@@ -50,6 +50,10 @@ public class MasterRenderer {
 		createProjectionMatrix();
 		renderer = new EntityRenderer(shader, projectionMatrix);
 		skyboxRenderer = new SkyboxRenderer(loader, projectionMatrix);
+	}
+
+	public static Matrix4f getProjectionMatrix() {
+		return projectionMatrix;
 	}
 
 	public void render(Camera camera) {

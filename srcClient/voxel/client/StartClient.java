@@ -17,6 +17,7 @@ import voxel.client.engine.render.gui.GuiRenderer;
 import voxel.client.engine.render.gui.GuiTexture;
 import voxel.client.engine.resources.Loader;
 import voxel.client.engine.util.Logger;
+import voxel.client.engine.util.MousePicker;
 import voxel.client.engine.util.SystemInfo;
 import voxel.client.engine.world.World;
 import voxel.client.engine.world.blocks.Blocks;
@@ -47,14 +48,18 @@ public class StartClient {
 
 		GuiRenderer guiRenderer = new GuiRenderer(loader);
 
-		Player player = new Player(Blocks.cubeGrass, new Vector3f(300, 64, 300),
-				0, 0, 90, 1);
+		Player player = new Player(Blocks.cubeGrass,
+				new Vector3f(300, 64, 300), 0, 0, 90, 1);
 		World.init();
+
+		MousePicker picker = new MousePicker(camera,
+				MasterRenderer.getProjectionMatrix());
 		while (!Display.isCloseRequested()) {
 			camera.move();
 			player.move();
+			picker.update();
 			renderer.processEntity(player);
-
+			System.out.println(picker.getCurrentRay());
 			for (Entity cube : allCubes) {
 				renderer.processEntity(cube);
 			}
