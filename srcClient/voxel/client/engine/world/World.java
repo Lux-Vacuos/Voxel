@@ -1,7 +1,5 @@
 package voxel.client.engine.world;
 
-import java.util.ArrayList;
-
 import org.lwjgl.util.vector.Vector3f;
 
 import voxel.client.engine.entities.Entity;
@@ -15,21 +13,10 @@ public class World extends Entity {
 		init();
 	}
 
-	private static ArrayList<Chunk> loadedChunks;
 	public static final int WORLD_SIZE = 1;
 
 	public static void init() {
-		loadedChunks = new ArrayList<Chunk>();
-		createWorld();
+		Chunk.create();
 	}
 
-	public static void createWorld() {
-		for (int x = 0; x < WORLD_SIZE; x++) {
-			for (int z = 0; z < WORLD_SIZE; z++) {
-				loadedChunks.add(new Chunk(null, new Vector3f(x
-						* Chunk.CHUNK_SIZE, 0, z * Chunk.CHUNK_SIZE), 0, 0, 0,
-						0));
-			}
-		}
-	}
 }

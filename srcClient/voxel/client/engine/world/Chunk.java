@@ -22,24 +22,30 @@ public class Chunk extends Entity {
 		for (int x = 0; x < CHUNK_SIZE; x++) {
 			for (int y = 0; y < CHUNK_HEIGHT; y++) {
 				for (int z = 0; z < CHUNK_SIZE; z++) {
-					// StartClient.allCubes.add(new Entity(Blocks.cubeGrass,
-					// new Vector3f(x, 16, z), 0f, 0f, 0f, 1f));
-					// StartClient.allCubes.add(new Entity(Blocks.cubeGlass,
-					// new Vector3f(x, 32, z), 0f, 0f, 0f, 1f));
-					if (y < 8) {
-						if (StartClient.rand.nextInt(2) == 0) {
-							if (StartClient.rand.nextBoolean()) {
-								StartClient.allCubes.add(new Entity(
-										Blocks.cubeStone,
-										new Vector3f(x, y, z), 0f, 0f, 0f, 1f));
-							}
-							if (StartClient.rand.nextInt(2) == 0) {
-								StartClient.allCubes.add(new Entity(
-										Blocks.cubeSand, new Vector3f(x, y, z),
-										0f, 0f, 0f, 1f));
+					double sizeMena = (Math.random() * 2 + 2);
+					int sizeHalfMena = (int) Math.round(sizeMena / 2);
+
+					if (y < 8 && Math.round(Math.random() * 100.0f) == 40) {
+						for (int y1 = -sizeHalfMena; y1 < sizeHalfMena; y1++) {
+							for (int z1 = -sizeHalfMena; z1 < sizeHalfMena; z1++) {
+								for (int x1 = -sizeHalfMena; x1 < sizeHalfMena; x1++) {
+									if (Math.sqrt(Math.pow(y1, 2)
+											+ Math.pow(z1, 2) + Math.pow(x1, 2)) < sizeHalfMena) {
+
+										StartClient.allCubes.add(new Entity(
+												Blocks.cubeSand, new Vector3f(x
+														+ x1, y + y1, z + z1),
+												0f, 0f, 0f, 1f));
+									}
+								}
 							}
 						}
 					}
+
+					//else if (y < 8) {
+					//	StartClient.allCubes.add(new Entity(Blocks.cubeGrass,
+					//			new Vector3f(x, y, z), 0, 0, 0, 1));
+					//}
 				}
 			}
 		}
