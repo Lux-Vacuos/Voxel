@@ -59,7 +59,7 @@ public class MasterRenderer {
 		shader.loadviewMatrix(camera);
 		renderer.render(entities);
 		shader.stop();
-		skyboxRenderer.render(camera);
+		skyboxRenderer.render(camera, RED, GREEN, BLUE);
 		entities.clear();
 	}
 

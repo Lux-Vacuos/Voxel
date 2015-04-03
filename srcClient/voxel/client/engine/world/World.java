@@ -2,7 +2,7 @@ package voxel.client.engine.world;
 
 public class World {
 
-	public static final int WORLD_SIZE = 1;
+	public static final int WORLD_SIZE = 2;
 
 	public static void init() {
 		for (int x = 0; x < WORLD_SIZE; x++) {
