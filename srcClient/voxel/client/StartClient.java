@@ -38,7 +38,6 @@ public class StartClient {
 		Blocks.createBlocks();
 		Camera camera = new Camera();
 		rand = new Random();
-		World world = new World(null, new Vector3f(0, 0, 0), 0, 0, 0, 0);
 
 		MasterRenderer renderer = new MasterRenderer(loader);
 		List<GuiTexture> guis = new ArrayList<GuiTexture>();
@@ -48,8 +47,9 @@ public class StartClient {
 
 		GuiRenderer guiRenderer = new GuiRenderer(loader);
 
-		Player player = new Player(Blocks.cubeGrass, new Vector3f(16, 16, 0),
+		Player player = new Player(Blocks.cubeGrass, new Vector3f(300, 64, 300),
 				0, 0, 90, 1);
+		World.init();
 		while (!Display.isCloseRequested()) {
 			camera.move();
 			player.move();
