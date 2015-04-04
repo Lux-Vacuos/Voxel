@@ -8,13 +8,14 @@ import net.guerra24.voxel.client.engine.resources.models.TexturedModel;
 
 public class Blocks {
 
+	public static TexturedModel cubeIndes;
 	public static TexturedModel cubeGrass;
 	public static TexturedModel cubeStone;
 	public static TexturedModel cubeSand;
 	public static TexturedModel cubeGlass;
 	public static TexturedModel cubeDirt;
 	public static TexturedModel cubeDiamondOre;
-	public static TexturedModel cubeIndes;
+	public static TexturedModel cubeGoldOre;
 	public static Loader loader;
 
 	public static void createBlocks() {
@@ -30,6 +31,7 @@ public class Blocks {
 		ModelTexture texture4 = new ModelTexture(loader.loadTexture("Dirt"));
 		ModelTexture texture5 = new ModelTexture(
 				loader.loadTexture("Diamond-Ore"));
+		ModelTexture texture6 = new ModelTexture(loader.loadTexture("Gold-Ore"));
 		// Block Mix texture and model
 		cubeIndes = new TexturedModel(model, texture0);
 		cubeGrass = new TexturedModel(model, texture);
@@ -38,5 +40,6 @@ public class Blocks {
 		cubeGlass = new TexturedModel(model, texture3);
 		cubeDirt = new TexturedModel(model, texture4);
 		cubeDiamondOre = new TexturedModel(model, texture5);
+		cubeGoldOre = new TexturedModel(model, texture6);
 	}
 }

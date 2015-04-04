@@ -17,6 +17,7 @@ public class Chunk {
 		for (int x = 0; x < CHUNK_SIZE; x++) {
 			for (int y = 0; y < CHUNK_HEIGHT; y++) {
 				for (int z = 0; z < CHUNK_SIZE; z++) {
+
 					if (y < 60 && y > 0) {
 						if (StartClient.rand.nextInt(2) == 0) {
 							if (StartClient.rand.nextBoolean()) {
@@ -44,7 +45,7 @@ public class Chunk {
 					double sizeMena = (Math.random() * 2 + 2);
 					int sizeHalfMena = (int) Math.round(sizeMena / 2);
 
-					if (y < 12 && y > 0
+					if (y < 12 && y > 1
 							&& Math.round(Math.random() * 2000.0f) == 1) {
 						for (int y1 = -sizeHalfMena; y1 < sizeHalfMena; y1++) {
 							for (int z1 = -sizeHalfMena; z1 < sizeHalfMena; z1++) {
@@ -68,6 +69,28 @@ public class Chunk {
 							StartClient.allCubes.add(new Entity(
 									Blocks.cubeIndes, new Vector3f(x + xOffset,
 											y, z + zOffset), 0, 0, 0, 1));
+						}
+					}
+					double sizeMena1 = (Math.random() * 2 + 2);
+					int sizeHalfMena1 = (int) Math.round(sizeMena1 / 2);
+
+					if (y < 32 && y > 1
+							&& Math.round(Math.random() * 2000.0f) == 1) {
+						for (int y2 = -sizeHalfMena1; y2 < sizeHalfMena1; y2++) {
+							for (int z2 = -sizeHalfMena1; z2 < sizeHalfMena1; z2++) {
+								for (int x2 = -sizeHalfMena1; x2 < sizeHalfMena1; x2++) {
+									if (Math.sqrt(Math.pow(y2, 2)
+											+ Math.pow(z2, 2) + Math.pow(x2, 2)) < sizeHalfMena1) {
+
+										StartClient.allCubes.add(new Entity(
+												Blocks.cubeGoldOre,
+												new Vector3f(x + x2 + xOffset,
+														y + y2, z + z2
+																+ zOffset), 0f,
+												0f, 0f, 1f));
+									}
+								}
+							}
 						}
 					}
 				}
