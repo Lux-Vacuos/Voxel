@@ -1,8 +1,8 @@
-package net.guerra24.voxel.client.engine.world;
+package net.guerra24.voxel.client.engine.world.chunks;
 
 import net.guerra24.voxel.client.StartClient;
 import net.guerra24.voxel.client.engine.entities.Entity;
-import net.guerra24.voxel.client.engine.world.blocks.Blocks;
+import net.guerra24.voxel.client.engine.world.chunks.blocks.Blocks;
 
 import org.lwjgl.util.vector.Vector3f;
 

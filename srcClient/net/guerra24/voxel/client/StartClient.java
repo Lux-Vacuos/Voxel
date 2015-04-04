@@ -15,7 +15,7 @@ import net.guerra24.voxel.client.engine.resources.Loader;
 import net.guerra24.voxel.client.engine.util.Logger;
 import net.guerra24.voxel.client.engine.util.SystemInfo;
 import net.guerra24.voxel.client.engine.world.World;
-import net.guerra24.voxel.client.engine.world.blocks.Blocks;
+import net.guerra24.voxel.client.engine.world.chunks.blocks.Blocks;
 
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;

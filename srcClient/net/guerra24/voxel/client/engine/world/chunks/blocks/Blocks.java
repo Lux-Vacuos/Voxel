@@ -1,4 +1,4 @@
-package net.guerra24.voxel.client.engine.world.blocks;
+package net.guerra24.voxel.client.engine.world.chunks.blocks;
 
 import net.guerra24.voxel.client.engine.render.textures.ModelTexture;
 import net.guerra24.voxel.client.engine.resources.Loader;
