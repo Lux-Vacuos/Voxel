@@ -1,5 +1,10 @@
 package net.guerra24.voxel.client.engine.entities;
 
+import java.nio.DoubleBuffer;
+
+import net.guerra24.voxel.client.engine.DisplayManager;
+
+import org.lwjgl.BufferUtils;
 import org.lwjgl.util.vector.Vector3f;
 
 public class Camera {
@@ -20,25 +25,8 @@ public class Camera {
 	}
 
 	public void move() {
-/*
-		float mouseDX = Mouse.getDX() * mouseSpeed * 0.16f;
-		float mouseDY = Mouse.getDY() * mouseSpeed * 0.16f;
-		if (yaw + mouseDX >= 360) {
-			yaw = yaw + mouseDX - 360;
-		} else if (yaw + mouseDX < 0) {
-			yaw = 360 - yaw + mouseDX;
-		} else {
-			yaw += mouseDX;
-		}
-		if (pitch - mouseDY >= maxLookDown && pitch - mouseDY <= maxLookUp) {
-			pitch += -mouseDY;
-		} else if (pitch - mouseDY < maxLookDown) {
-			pitch = maxLookDown;
-		} else if (pitch - mouseDY > maxLookUp) {
-			pitch = maxLookUp;
-		}
 
-		if (Keyboard.isKeyDown(Keyboard.KEY_W)) {
+		/*if (Keyboard.isKeyDown(Keyboard.KEY_W)) {
 
 			position.z += -(float) Math.cos(Math.toRadians(yaw)) * speed;
 			position.x += (float) Math.sin(Math.toRadians(yaw)) * speed;
@@ -69,16 +57,7 @@ public class Camera {
 			position.y -= speed;
 
 		}
-
-		if (Mouse.isButtonDown(0)) {
-			Mouse.setGrabbed(true);
-			Mouse.setCursorPosition(Display.getWidth() / 2,
-					Display.getHeight() / 2);
-		} else if (Mouse.isButtonDown(1)) {
-			Mouse.setGrabbed(false);
-		}
-*/
-	}
+	*/}
 
 	public Vector3f getPosition() {
 		return position;
