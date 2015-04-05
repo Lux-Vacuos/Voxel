@@ -62,13 +62,11 @@ public class StartClient {
 			guiRenderer.render(guis);
 			glfwSwapBuffers(DisplayManager.window);
 			glfwPollEvents();
-			DisplayManager.updateDisplay();
 		}
 		Logger.log("Closing Game");
 		guiRenderer.cleanUp();
 		renderer.cleanUp();
 		Blocks.loader.cleanUp();
-		DisplayManager.closeDisplay();
 	}
 
 	public static void main(String[] args) {

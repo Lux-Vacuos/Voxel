@@ -1,9 +1,7 @@
 package net.guerra24.voxel.client.engine.entities;
 
-import net.guerra24.voxel.client.engine.DisplayManager;
 import net.guerra24.voxel.client.engine.resources.models.TexturedModel;
 
-import org.lwjgl.input.Keyboard;
 import org.lwjgl.util.vector.Vector3f;
 
 public class Player extends Entity {
@@ -28,16 +26,16 @@ public class Player extends Entity {
 	public void move() {
 		checkInputs();
 		super.increaseRotation(0,
-				currentTurnSpeed * DisplayManager.getFrameTimeSeconds(), 0);
-		float distance = currentSpeed * DisplayManager.getFrameTimeSeconds();
+				currentTurnSpeed, 0);
+		float distance = currentSpeed;
 		float dx = (float) (distance * Math
 				.sin(Math.toRadians(super.getRotY())));
 		float dz = (float) (distance * Math
 				.cos(Math.toRadians(super.getRotY())));
 		super.increasePosition(dx, 0, dz);
-		upwardsSpeed += GRAVITY * DisplayManager.getFrameTimeSeconds();
+		upwardsSpeed += GRAVITY;
 		super.increasePosition(0,
-				upwardsSpeed * DisplayManager.getFrameTimeSeconds(), 0);
+				upwardsSpeed, 0);
 		if (super.getPosition().y < TERRAIN_HEIGHT) {
 			upwardsSpeed = 0;
 			isInAir = false;
@@ -53,7 +51,7 @@ public class Player extends Entity {
 	}
 
 	private void checkInputs() {
-		if (Keyboard.isKeyDown(Keyboard.KEY_UP)) {
+		/*if (Keyboard.isKeyDown(Keyboard.KEY_UP)) {
 			this.currentSpeed = -RUN_SPEED;
 		} else if (Keyboard.isKeyDown(Keyboard.KEY_DOWN)) {
 			this.currentSpeed = RUN_SPEED;
@@ -71,6 +69,6 @@ public class Player extends Entity {
 		if (Keyboard.isKeyDown(Keyboard.KEY_RSHIFT)) {
 			jump();
 		}
-	}
+	*/}
 	
 }

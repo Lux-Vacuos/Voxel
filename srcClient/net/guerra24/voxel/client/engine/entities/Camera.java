@@ -1,8 +1,5 @@
 package net.guerra24.voxel.client.engine.entities;
 
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector3f;
 
 public class Camera {
@@ -23,7 +20,7 @@ public class Camera {
 	}
 
 	public void move() {
-
+/*
 		float mouseDX = Mouse.getDX() * mouseSpeed * 0.16f;
 		float mouseDY = Mouse.getDY() * mouseSpeed * 0.16f;
 		if (yaw + mouseDX >= 360) {
@@ -80,7 +77,7 @@ public class Camera {
 		} else if (Mouse.isButtonDown(1)) {
 			Mouse.setGrabbed(false);
 		}
-
+*/
 	}
 
 	public Vector3f getPosition() {

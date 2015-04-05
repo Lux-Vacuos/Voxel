@@ -24,9 +24,6 @@ public class DisplayManager {
 	private static final int FPS_CAP = 60;
 	private static final String Title = "Game";
 
-	private static long lastFrameTime;
-	private static float delta;
-
 	public static long window;
 
 	public static void createDisplay() {
@@ -40,9 +37,7 @@ public class DisplayManager {
 		} finally {
 			glfwTerminate();
 			errorCallback.release();
-			Logger.error("Failed to create Display");
 		}
-		lastFrameTime = getCurrentTime();
 	}
 
 	private static void init() {
@@ -88,27 +83,10 @@ public class DisplayManager {
 
 	private static void loop() {
 		GLContext.createFromCurrent();
-
-		// glClearColor(1.0f, 0.0f, 0.0f, 0.0f);
 		StartClient.StartGame();
-
-	}
-
-	public static void updateDisplay() {
-		long currentFrameTime = getCurrentTime();
-		delta = (currentFrameTime - lastFrameTime) / 1000f;
-		lastFrameTime = currentFrameTime;
-	}
-
-	public static float getFrameTimeSeconds() {
-		return delta;
 	}
 
 	public static void closeDisplay() {
 		glfwTerminate();
-	}
-
-	private static long getCurrentTime() {
-		return (long) (GLFW.glfwGetTime() * 1000 / GLFW.glfwGetTime());
 	}
 }
