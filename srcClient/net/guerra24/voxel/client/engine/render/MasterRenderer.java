@@ -15,7 +15,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.guerra24.voxel.client.engine.DisplayManager;
 import net.guerra24.voxel.client.engine.entities.Camera;
 import net.guerra24.voxel.client.engine.entities.Entity;
 import net.guerra24.voxel.client.engine.render.shaders.StaticShader;
@@ -23,6 +22,7 @@ import net.guerra24.voxel.client.engine.render.textures.skybox.SkyboxRenderer;
 import net.guerra24.voxel.client.engine.resources.Loader;
 import net.guerra24.voxel.client.engine.resources.models.TexturedModel;
 
+import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Matrix4f;
 
 public class MasterRenderer {
@@ -90,8 +90,8 @@ public class MasterRenderer {
 	}
 
 	private void createProjectionMatrix() {
-		float aspectRatio = (float) DisplayManager.WIDTH
-				/ (float) DisplayManager.HEIGHT;
+		float aspectRatio = (float) Display.getWidth()
+				/ (float) Display.getHeight();
 		float y_scale = (float) ((1f / Math.tan(Math.toRadians(FOV / 2f))) * aspectRatio);
 		float x_scale = y_scale / aspectRatio;
 		float frustrum_length = FAR_PLANE - NEAR_PLANE;

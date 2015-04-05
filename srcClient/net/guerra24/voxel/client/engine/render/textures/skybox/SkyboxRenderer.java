@@ -4,6 +4,7 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL13.*;
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL30.*;
+import net.guerra24.voxel.client.engine.DisplayManager;
 import net.guerra24.voxel.client.engine.entities.Camera;
 import net.guerra24.voxel.client.engine.resources.Loader;
 import net.guerra24.voxel.client.engine.resources.models.RawModel;
@@ -70,7 +71,7 @@ public class SkyboxRenderer {
 	}
 
 	private void bindTextures() {
-		time += 10;
+		time += DisplayManager.getFrameTimeSeconds() * 100;
 		time %= 24000;
 		int texture1;
 		int texture2;

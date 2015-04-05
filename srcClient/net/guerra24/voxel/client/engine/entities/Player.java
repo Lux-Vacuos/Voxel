@@ -3,13 +3,12 @@ package net.guerra24.voxel.client.engine.entities;
 import net.guerra24.voxel.client.engine.DisplayManager;
 import net.guerra24.voxel.client.engine.resources.models.TexturedModel;
 
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.util.vector.Vector3f;
 
-import static org.lwjgl.glfw.GLFW.*;
-
 public class Player extends Entity {
-	private static final float RUN_SPEED = 1;
-	private static final float TURN_SPEED = 5;
+	private static final float RUN_SPEED = 20;
+	private static final float TURN_SPEED = 160;
 	private static final float GRAVITY = -50;
 	private static final float JUMP_POWER = 12;
 
@@ -28,15 +27,17 @@ public class Player extends Entity {
 
 	public void move() {
 		checkInputs();
-		super.increaseRotation(0, currentTurnSpeed, 0);
-		float distance = currentSpeed;
+		super.increaseRotation(0,
+				currentTurnSpeed * DisplayManager.getFrameTimeSeconds(), 0);
+		float distance = currentSpeed * DisplayManager.getFrameTimeSeconds();
 		float dx = (float) (distance * Math
 				.sin(Math.toRadians(super.getRotY())));
 		float dz = (float) (distance * Math
 				.cos(Math.toRadians(super.getRotY())));
 		super.increasePosition(dx, 0, dz);
-		upwardsSpeed += GRAVITY;
-		super.increasePosition(0, upwardsSpeed, 0);
+		upwardsSpeed += GRAVITY * DisplayManager.getFrameTimeSeconds();
+		super.increasePosition(0,
+				upwardsSpeed * DisplayManager.getFrameTimeSeconds(), 0);
 		if (super.getPosition().y < TERRAIN_HEIGHT) {
 			upwardsSpeed = 0;
 			isInAir = false;
@@ -52,30 +53,24 @@ public class Player extends Entity {
 	}
 
 	private void checkInputs() {
-		glfwSetKeyCallback(
-				DisplayManager.window,
-				DisplayManager.keyCallback = GLFWKeyCallback((window, key,
-						scancode, action, mods) -> {
+		if (Keyboard.isKeyDown(Keyboard.KEY_UP)) {
+			this.currentSpeed = -RUN_SPEED;
+		} else if (Keyboard.isKeyDown(Keyboard.KEY_DOWN)) {
+			this.currentSpeed = RUN_SPEED;
+		} else {
+			this.currentSpeed = 0;
+		}
+		if (Keyboard.isKeyDown(Keyboard.KEY_LEFT)) {
+			this.currentTurnSpeed = TURN_SPEED;
+		} else if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT)) {
+			this.currentTurnSpeed = -TURN_SPEED;
+		} else {
+			this.currentTurnSpeed = 0;
+		}
 
-					if (key == GLFW_KEY_UP && action == GLFW_PRESS) {
-						this.currentSpeed = -RUN_SPEED;
-					} else if (key == GLFW_KEY_DOWN && action ==  GLFW_PRESS) {
-						this.currentSpeed = RUN_SPEED;
-					} else {
-						this.currentSpeed = 0;
-					}
-					if (key == GLFW_KEY_LEFT && action ==  GLFW_PRESS) {
-						this.currentTurnSpeed = TURN_SPEED;
-					} else if (key == GLFW_KEY_RIGHT && action ==  GLFW_PRESS) {
-						this.currentTurnSpeed = -TURN_SPEED;
-					} else {
-						this.currentTurnSpeed = 0;
-					}
-
-					if (key == GLFW_KEY_RIGHT_SHIFT && action ==  GLFW_PRESS) {
-						jump();
-					}
-				}));
+		if (Keyboard.isKeyDown(Keyboard.KEY_RSHIFT)) {
+			jump();
+		}
 	}
-
+	
 }

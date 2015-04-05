@@ -1,10 +1,5 @@
 package net.guerra24.voxel.client;
 
-import static org.lwjgl.glfw.GLFW.glfwPollEvents;
-import static org.lwjgl.glfw.GLFW.glfwSwapBuffers;
-import static org.lwjgl.glfw.GLFW.glfwWindowShouldClose;
-import static org.lwjgl.opengl.GL11.GL_FALSE;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -18,9 +13,12 @@ import net.guerra24.voxel.client.engine.render.gui.GuiRenderer;
 import net.guerra24.voxel.client.engine.render.gui.GuiTexture;
 import net.guerra24.voxel.client.engine.resources.Loader;
 import net.guerra24.voxel.client.engine.util.Logger;
+import net.guerra24.voxel.client.engine.util.SystemInfo;
 import net.guerra24.voxel.client.engine.world.World;
 import net.guerra24.voxel.client.engine.world.chunks.blocks.Blocks;
 
+import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -31,6 +29,14 @@ public class StartClient {
 	public static Random rand;
 
 	public static void StartGame() {
+
+		DisplayManager.createDisplay();
+		SystemInfo.chechOpenGl32();
+		SystemInfo.printSystemInfo();
+		Logger.log("Starting Rendering");
+
+		Mouse.setGrabbed(true);
+		Mouse.setCursorPosition(Display.getWidth() / 2, Display.getHeight() / 2);
 
 		rand = new Random();
 		Loader loader = new Loader();
@@ -51,7 +57,7 @@ public class StartClient {
 		World.init();
 		Logger.log("World Generation completed with size: " + World.WORLD_SIZE);
 
-		while (glfwWindowShouldClose(DisplayManager.window) == GL_FALSE) {
+		while (!Display.isCloseRequested()) {
 			camera.move();
 			player.move();
 			renderer.processEntity(player);
@@ -60,16 +66,16 @@ public class StartClient {
 			}
 			renderer.render(camera);
 			guiRenderer.render(guis);
-			glfwSwapBuffers(DisplayManager.window);
-			glfwPollEvents();
+			DisplayManager.updateDisplay();
 		}
 		Logger.log("Closing Game");
 		guiRenderer.cleanUp();
 		renderer.cleanUp();
 		Blocks.loader.cleanUp();
+		DisplayManager.closeDisplay();
 	}
 
 	public static void main(String[] args) {
-		DisplayManager.createDisplay();
+		StartGame();
 	}
 }

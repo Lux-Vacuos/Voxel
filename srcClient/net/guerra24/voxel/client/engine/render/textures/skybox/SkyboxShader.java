@@ -1,5 +1,6 @@
 package net.guerra24.voxel.client.engine.render.textures.skybox;
 
+import net.guerra24.voxel.client.engine.DisplayManager;
 import net.guerra24.voxel.client.engine.entities.Camera;
 import net.guerra24.voxel.client.engine.render.shaders.ShaderProgram;
 import net.guerra24.voxel.client.engine.util.Maths;
@@ -12,7 +13,7 @@ public class SkyboxShader extends ShaderProgram {
 	private static final String VERTEX_FILE = "assets/shaders/vertexShaderSkybox.glsl";
 	private static final String FRAGMENT_FILE = "assets/shaders/fragmentShaderSkybox.glsl";
 
-	private static final float ROTATE_SPEED = 0.05f;
+	private static final float ROTATE_SPEED = 0.1f;
 
 	private int location_projectionMatrix;
 	private int location_viewMatrix;
@@ -36,7 +37,7 @@ public class SkyboxShader extends ShaderProgram {
 		matrix.m30 = 0;
 		matrix.m31 = 0;
 		matrix.m32 = 0;
-		rotation += ROTATE_SPEED;
+		rotation += ROTATE_SPEED * DisplayManager.getFrameTimeSeconds();
 		Matrix4f.rotate((float) Math.toRadians(rotation),
 				new Vector3f(0, 1, 0), matrix, matrix);
 		super.loadMatrix(location_viewMatrix, matrix);
