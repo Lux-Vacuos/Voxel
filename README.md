@@ -4,8 +4,8 @@ I'm not using OpenGL 4.0+ because my gpu only supports up to OpenGL 3.3
 
 # Credits
 Lharing: Ores generation algorithm.
-quew8: Fixing the chunk movement. http://www.java-gaming.org/topics/lwjgl-opengl-3-3-voxel-chunk-management/35879/view.html
-ThinMatrix: GLSL, Timming and Day/Night Cycle. https://www.youtube.com/channel/UCUkRj4qoT1bsWpE_C8lZYoQ
+--- quew8: Fixing the chunk movement. http://www.java-gaming.org/topics/lwjgl-opengl-3-3-voxel-chunk-management/35879/view.html
+--- ThinMatrix: GLSL, Timming and Day/Night Cycle. https://www.youtube.com/channel/UCUkRj4qoT1bsWpE_C8lZYoQ
 
 # TODO
 +Simple Culling
