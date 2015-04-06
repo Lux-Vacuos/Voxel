@@ -19,7 +19,7 @@ void main(void) {
 	vec3 unitLightVector = normalize(toLightVector);
 	
 	float nDotl = dot(unitNormal,unitLightVector);
-	float brightness = max(nDotl, 0.0);
+	float brightness = max(nDotl, 0.1);
 	vec3 diffuse = brightness * lightColour;
 		
 	vec4 textureColour = texture(textureSampler, pass_textureCoords);
