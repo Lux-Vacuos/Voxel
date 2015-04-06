@@ -1,22 +1,25 @@
 package net.guerra24.voxel.client.engine.render.shaders;
 
 import net.guerra24.voxel.client.engine.entities.Camera;
+import net.guerra24.voxel.client.engine.entities.Light;
 import net.guerra24.voxel.client.engine.util.Maths;
 
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
-public class StaticShader extends ShaderProgram {
+public class EntityShader extends ShaderProgram {
 
 	private static final String VERTEX_FILE = "assets/shaders/vertexShaderEntity.glsl";
 	private static final String FRAGMENT_FILE = "assets/shaders/fragmentShaderEntity.glsl";
 
 	private int location_transformationMatrix;
 	private int location_projectionMatrix;
+	private int location_lightPosition;
+	private int location_lightColour;
 	private int location_viewMatrix;
 	private int location_skyColour;
 
-	public StaticShader() {
+	public EntityShader() {
 		super(VERTEX_FILE, FRAGMENT_FILE);
 	}
 
@@ -24,6 +27,7 @@ public class StaticShader extends ShaderProgram {
 	protected void bindAttributes() {
 		super.bindAttribute(0, "position");
 		super.bindAttribute(1, "textureCoords");
+		super.bindAttribute(3, "normal");
 	}
 
 	@Override
@@ -33,6 +37,8 @@ public class StaticShader extends ShaderProgram {
 		location_projectionMatrix = super
 				.getUniformLocation("projectionMatrix");
 		location_viewMatrix = super.getUniformLocation("viewMatrix");
+		location_lightPosition = super.getUniformLocation("lightPosition");
+		location_lightColour = super.getUniformLocation("lightColour");
 		location_skyColour = super.getUniformLocation("skyColour");
 	}
 
@@ -42,6 +48,11 @@ public class StaticShader extends ShaderProgram {
 
 	public void loadTransformationMatrix(Matrix4f matrix) {
 		super.loadMatrix(location_transformationMatrix, matrix);
+	}
+
+	public void loadLight(Light light) {
+		super.loadVector(location_lightPosition, light.getPosition());
+		super.loadVector(location_lightColour, light.getColour());
 	}
 
 	public void loadviewMatrix(Camera camera) {

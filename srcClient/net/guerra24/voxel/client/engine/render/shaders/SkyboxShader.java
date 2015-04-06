@@ -1,8 +1,7 @@
-package net.guerra24.voxel.client.engine.render.textures.skybox;
+package net.guerra24.voxel.client.engine.render.shaders;
 
 import net.guerra24.voxel.client.engine.DisplayManager;
 import net.guerra24.voxel.client.engine.entities.Camera;
-import net.guerra24.voxel.client.engine.render.shaders.ShaderProgram;
 import net.guerra24.voxel.client.engine.util.Maths;
 
 import org.lwjgl.util.vector.Matrix4f;
@@ -13,7 +12,7 @@ public class SkyboxShader extends ShaderProgram {
 	private static final String VERTEX_FILE = "assets/shaders/vertexShaderSkybox.glsl";
 	private static final String FRAGMENT_FILE = "assets/shaders/fragmentShaderSkybox.glsl";
 
-	private static final float ROTATE_SPEED = 0.1f;
+	private static final float ROTATE_SPEED = 0.3f;
 
 	private int location_projectionMatrix;
 	private int location_viewMatrix;

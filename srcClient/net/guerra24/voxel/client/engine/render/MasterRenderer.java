@@ -15,9 +15,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.guerra24.voxel.client.StartClient;
 import net.guerra24.voxel.client.engine.entities.Camera;
 import net.guerra24.voxel.client.engine.entities.Entity;
-import net.guerra24.voxel.client.engine.render.shaders.StaticShader;
+import net.guerra24.voxel.client.engine.render.shaders.EntityShader;
 import net.guerra24.voxel.client.engine.render.textures.skybox.SkyboxRenderer;
 import net.guerra24.voxel.client.engine.resources.Loader;
 import net.guerra24.voxel.client.engine.resources.models.TexturedModel;
@@ -37,7 +38,7 @@ public class MasterRenderer {
 
 	private static Matrix4f projectionMatrix;
 
-	private StaticShader shader = new StaticShader();
+	private EntityShader shader = new EntityShader();
 	private EntityRenderer renderer;
 
 	private Map<TexturedModel, List<Entity>> entities = new HashMap<TexturedModel, List<Entity>>();
@@ -59,6 +60,7 @@ public class MasterRenderer {
 	public void render(Camera camera) {
 		prepare();
 		shader.start();
+		shader.loadLight(StartClient.light);
 		shader.loadSkyColour(RED, GREEN, BLUE);
 		shader.loadviewMatrix(camera);
 		renderer.render(entities);

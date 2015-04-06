@@ -7,6 +7,7 @@ import java.util.Random;
 import net.guerra24.voxel.client.engine.DisplayManager;
 import net.guerra24.voxel.client.engine.entities.Camera;
 import net.guerra24.voxel.client.engine.entities.Entity;
+import net.guerra24.voxel.client.engine.entities.Light;
 import net.guerra24.voxel.client.engine.entities.Player;
 import net.guerra24.voxel.client.engine.render.MasterRenderer;
 import net.guerra24.voxel.client.engine.render.gui.GuiRenderer;
@@ -27,6 +28,8 @@ public class StartClient {
 	public static List<Entity> allCubes = new ArrayList<Entity>();
 
 	public static Random rand;
+	public static Light light = new Light(new Vector3f(300, 64, 300),
+			new Vector3f(1, 1, 1));
 
 	public static void StartGame() {
 

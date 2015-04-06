@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import net.guerra24.voxel.client.engine.entities.Entity;
-import net.guerra24.voxel.client.engine.render.shaders.StaticShader;
+import net.guerra24.voxel.client.engine.render.shaders.EntityShader;
 import net.guerra24.voxel.client.engine.resources.models.RawModel;
 import net.guerra24.voxel.client.engine.resources.models.TexturedModel;
 import net.guerra24.voxel.client.engine.util.Maths;
@@ -18,9 +18,9 @@ import org.lwjgl.util.vector.Matrix4f;
 
 public class EntityRenderer {
 
-	private StaticShader shader;
+	private EntityShader shader;
 
-	public EntityRenderer(StaticShader shader, Matrix4f projectionMatrix) {
+	public EntityRenderer(EntityShader shader, Matrix4f projectionMatrix) {
 		this.shader = shader;
 		shader.start();
 		shader.loadProjectionMatrix(projectionMatrix);
@@ -45,6 +45,7 @@ public class EntityRenderer {
 		glBindVertexArray(rawmodel.getVaoID());
 		glEnableVertexAttribArray(0);
 		glEnableVertexAttribArray(1);
+		glEnableVertexAttribArray(2);
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, model.getTexture().getID());
 
@@ -53,6 +54,7 @@ public class EntityRenderer {
 	private void unbindTexturedModel() {
 		glDisableVertexAttribArray(0);
 		glDisableVertexAttribArray(1);
+		glDisableVertexAttribArray(2);
 		glBindVertexArray(0);
 	}
 
