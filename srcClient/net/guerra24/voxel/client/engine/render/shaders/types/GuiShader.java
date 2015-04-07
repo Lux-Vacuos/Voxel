@@ -1,4 +1,4 @@
-package net.guerra24.voxel.client.engine.render.gui;
+package net.guerra24.voxel.client.engine.render.shaders.types;
 
 import net.guerra24.voxel.client.engine.render.shaders.ShaderProgram;
 

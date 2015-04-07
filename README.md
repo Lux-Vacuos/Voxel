@@ -8,12 +8,12 @@ Lharing: Ores generation algorithm.
 --- ThinMatrix: GLSL, Timming and Day/Night Cycle. https://www.youtube.com/channel/UCUkRj4qoT1bsWpE_C8lZYoQ
 
 # TODO
-+Simple Culling
-+Frustrim Culling
-+Blocks collisions
-+Real Ilumiation
-+Bind Player and Camera class
-+Noise based world generation
-+Save chunks
++Simple Culling 
++Frustrim Culling 
++Blocks collisions 
++Real Ilumiation(Partialy) 
++Bind Player and Camera class 
++Noise based world generation 
++Save chunks 
 
 Necessarily requires a GPU that supports OpenGL 3.3+

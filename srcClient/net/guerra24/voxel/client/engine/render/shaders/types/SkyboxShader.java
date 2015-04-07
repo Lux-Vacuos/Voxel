@@ -1,7 +1,8 @@
-package net.guerra24.voxel.client.engine.render.shaders;
+package net.guerra24.voxel.client.engine.render.shaders.types;
 
 import net.guerra24.voxel.client.engine.DisplayManager;
-import net.guerra24.voxel.client.engine.entities.Camera;
+import net.guerra24.voxel.client.engine.entities.types.Camera;
+import net.guerra24.voxel.client.engine.render.shaders.ShaderProgram;
 import net.guerra24.voxel.client.engine.util.Maths;
 
 import org.lwjgl.util.vector.Matrix4f;

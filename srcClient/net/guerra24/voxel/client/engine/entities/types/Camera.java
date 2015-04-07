@@ -1,4 +1,4 @@
-package net.guerra24.voxel.client.engine.entities;
+package net.guerra24.voxel.client.engine.entities.types;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;

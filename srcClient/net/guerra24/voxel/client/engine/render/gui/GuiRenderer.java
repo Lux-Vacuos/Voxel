@@ -7,6 +7,8 @@ import static org.lwjgl.opengl.GL11.*;
 
 import java.util.List;
 
+import net.guerra24.voxel.client.engine.render.gui.textures.GuiTexture;
+import net.guerra24.voxel.client.engine.render.shaders.types.GuiShader;
 import net.guerra24.voxel.client.engine.resources.Loader;
 import net.guerra24.voxel.client.engine.resources.models.RawModel;
 import net.guerra24.voxel.client.engine.util.Maths;

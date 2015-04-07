@@ -1,4 +1,4 @@
-package net.guerra24.voxel.client.engine.render.gui;
+package net.guerra24.voxel.client.engine.render.gui.textures;
 
 import org.lwjgl.util.vector.Vector2f;
 

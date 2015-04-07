@@ -9,6 +9,7 @@ import static org.lwjgl.opengl.GL11.glClear;
 import static org.lwjgl.opengl.GL11.glClearColor;
 import static org.lwjgl.opengl.GL11.glCullFace;
 import static org.lwjgl.opengl.GL11.glEnable;
+import static org.lwjgl.opengl.GL11.glDisable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,9 +17,10 @@ import java.util.List;
 import java.util.Map;
 
 import net.guerra24.voxel.client.StartClient;
-import net.guerra24.voxel.client.engine.entities.Camera;
 import net.guerra24.voxel.client.engine.entities.Entity;
-import net.guerra24.voxel.client.engine.render.shaders.EntityShader;
+import net.guerra24.voxel.client.engine.entities.types.Camera;
+import net.guerra24.voxel.client.engine.render.entity.EntityRenderer;
+import net.guerra24.voxel.client.engine.render.shaders.types.EntityShader;
 import net.guerra24.voxel.client.engine.render.textures.skybox.SkyboxRenderer;
 import net.guerra24.voxel.client.engine.resources.Loader;
 import net.guerra24.voxel.client.engine.resources.models.TexturedModel;
@@ -46,11 +48,19 @@ public class MasterRenderer {
 	private SkyboxRenderer skyboxRenderer;
 
 	public MasterRenderer(Loader loader) {
-		glEnable(GL_CULL_FACE);
-		glCullFace(GL_BACK);
+		enableCulling();
 		createProjectionMatrix();
 		renderer = new EntityRenderer(shader, projectionMatrix);
 		skyboxRenderer = new SkyboxRenderer(loader, projectionMatrix);
+	}
+
+	public static void enableCulling() {
+		glEnable(GL_CULL_FACE);
+		glCullFace(GL_BACK);
+	}
+
+	public static void disableCulling() {
+		glDisable(GL_CULL_FACE);
 	}
 
 	public static Matrix4f getProjectionMatrix() {
