@@ -1,11 +1,15 @@
 package net.guerra24.voxel.client;
 
+import net.guerra24.voxel.client.engine.util.Logger;
+
 import org.gnet.client.ClientEventListener;
 import org.gnet.client.GNetClient;
 import org.gnet.client.ServerModel;
 import org.gnet.packet.Packet;
 
 public class Start {
+
+	private static boolean log = false;
 
 	/**
 	 * Main entry point into the application.
@@ -29,7 +33,10 @@ public class Start {
 
 			@Override
 			protected void clientConnected(final ServerModel server) {
-				StartClient.StartGame();
+				Packet loginPacket = new Packet("MockLoginPacket", 2);
+				loginPacket.addEntry("username", new String("Guerra24"));
+				loginPacket.addEntry("pass", new String("test1"));
+				server.sendPacket(loginPacket);
 			}
 
 			@Override
@@ -39,6 +46,15 @@ public class Start {
 			@Override
 			protected void packetReceived(final ServerModel server,
 					final Packet packet) {
+				if (packet.getPacketName().equals("Login")) {
+					Boolean login = (Boolean) packet.getEntry("login");
+					log = login.booleanValue();
+					Logger.log("Login Succesfull");
+				}
+				if (log) {
+					Logger.log("Starting Game");
+					StartClient.StartGame();
+				}
 			}
 
 			@Override

@@ -1,11 +1,17 @@
 package org.gnet;
 
+import net.guerra24.client.launcher.login.Login;
+import net.guerra24.voxel.client.engine.util.Logger;
+
 import org.gnet.packet.Packet;
 import org.gnet.server.ClientModel;
 import org.gnet.server.GNetServer;
 import org.gnet.server.ServerEventListener;
 
 public class ServerStart {
+
+	public static String user;
+	public static String pass;
 
 	/**
 	 * Main entry point into the application.
@@ -29,6 +35,9 @@ public class ServerStart {
 
 			@Override
 			protected void clientConnected(final ClientModel client) {
+				Packet loginPacket = new Packet("Login", 1);
+				loginPacket.addEntry("login", new Boolean(true));
+				client.sendPacket(loginPacket);
 			}
 
 			@Override
@@ -38,7 +47,13 @@ public class ServerStart {
 			@Override
 			protected void packetReceived(final ClientModel client,
 					final Packet packet) {
-
+				if (packet.getPacketName().equals("MockLoginPacket")) {
+					user = (String) packet.getEntry("username");
+					pass = (String) packet.getEntry("pass");
+					if (Login.authenticate(user, pass)) {
+						Logger.log("Login Succesfull");
+					}
+				}
 			}
 
 			@Override

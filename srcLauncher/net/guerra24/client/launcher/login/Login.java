@@ -7,6 +7,7 @@ import java.util.Scanner;
 public class Login {
 	public static String appdata = System.getenv("APPDATA");
 	public static String infoPath = appdata + "\\Assets\\Info.txt";
+	public static String username1;
 
 	@SuppressWarnings("resource")
 	public static boolean authenticate(String username, String password) {
@@ -15,9 +16,9 @@ public class Login {
 			fileScan = new Scanner(new File(infoPath));
 			while (fileScan.hasNextLine()) {
 				String input = fileScan.nextLine();
-				String username1 = input.substring(0, input.indexOf(' '));// Reads
-																			// the
-																			// username
+				username1 = input.substring(0, input.indexOf(' '));// Reads
+																	// the
+																	// username
 				String password1 = input.substring(input.indexOf(' ') + 1,
 						input.length()); // Reads the password
 				new Login();
