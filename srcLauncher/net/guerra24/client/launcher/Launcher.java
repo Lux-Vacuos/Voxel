@@ -38,7 +38,7 @@ public class Launcher {
 		btnExit.setBounds(640 + insets.left, 630 + insets.top, size.width,
 				size.height);
 		size = btnOptions.getPreferredSize();
-		btnOptions.setBounds(740 + insets.left, 630 + insets.top, 100,
+		btnOptions.setBounds(740 + insets.left, 630 + insets.top, 150,
 				size.height);
 		Logger.log("Launcher Started");
 		btnLogin.addActionListener(new ActionListener() {

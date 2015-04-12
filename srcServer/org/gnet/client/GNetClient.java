@@ -220,6 +220,12 @@ public class GNetClient {
 		debug("Client started!");
 	}
 
+	@SuppressWarnings("deprecation")
+	public void stop() {
+		clientThread.stop();
+		debug("Client started!");
+	}
+
 	public void addEventListener(final ClientEventListener clientEventListener) {
 		this.clientEventListener = clientEventListener;
 	}
@@ -281,4 +287,5 @@ public class GNetClient {
 	public boolean isInitialized() {
 		return initialized;
 	}
+
 }

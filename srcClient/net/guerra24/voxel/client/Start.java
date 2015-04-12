@@ -57,6 +57,7 @@ public class Start {
 				if (log) {
 					Logger.log("Starting Game");
 					StartClient.StartGame();
+					networkedClient.stop();
 				}
 			}
 

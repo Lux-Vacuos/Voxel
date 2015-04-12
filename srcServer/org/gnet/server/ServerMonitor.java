@@ -40,7 +40,7 @@ public class ServerMonitor {
 		frame = new JFrame("GNetLib Server Monitor");
 		frame.setPreferredSize(new Dimension(800, 380));
 		frame.setResizable(false);
-		frame.setAlwaysOnTop(true);
+		frame.setAlwaysOnTop(false);
 		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		frame.addWindowListener(new WindowListener() {
 
