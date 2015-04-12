@@ -41,7 +41,7 @@ public class ServerMonitor {
 		frame.setPreferredSize(new Dimension(800, 380));
 		frame.setResizable(false);
 		frame.setAlwaysOnTop(true);
-		frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		frame.addWindowListener(new WindowListener() {
 
 			public void windowOpened(final WindowEvent arg0) {

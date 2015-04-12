@@ -22,8 +22,8 @@ import net.guerra24.voxel.client.engine.util.Logger;
 public class LoginDialog extends JDialog {
 
 	private static final long serialVersionUID = -2591843125795843815L;
-	private JTextField tfUsername;
-	private JPasswordField pfPassword;
+	private static JTextField tfUsername;
+	private static JPasswordField pfPassword;
 	private JLabel lbUsername;
 	private JLabel lbPassword;
 	private JButton btnLogin;
@@ -107,11 +107,11 @@ public class LoginDialog extends JDialog {
 		setLocationRelativeTo(parent);
 	}
 
-	public String getUsername() {
+	public static String getUsername() {
 		return tfUsername.getText().trim();
 	}
 
-	public String getPassword() {
+	public static String getPassword() {
 		return new String(pfPassword.getPassword());
 	}
 

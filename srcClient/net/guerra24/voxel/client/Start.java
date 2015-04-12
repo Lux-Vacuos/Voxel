@@ -1,5 +1,6 @@
 package net.guerra24.voxel.client;
 
+import net.guerra24.client.launcher.login.LoginDialog;
 import net.guerra24.voxel.client.engine.util.Logger;
 
 import org.gnet.client.ClientEventListener;
@@ -34,8 +35,10 @@ public class Start {
 			@Override
 			protected void clientConnected(final ServerModel server) {
 				Packet loginPacket = new Packet("MockLoginPacket", 2);
-				loginPacket.addEntry("username", new String("Guerra24"));
-				loginPacket.addEntry("pass", new String("test1"));
+				loginPacket.addEntry("username",
+						new String(LoginDialog.getUsername()));
+				loginPacket.addEntry("pass",
+						new String(LoginDialog.getPassword()));
 				server.sendPacket(loginPacket);
 			}
 

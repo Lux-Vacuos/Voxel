@@ -13,6 +13,7 @@ import javax.swing.JLabel;
 import net.guerra24.client.launcher.login.LoginDialog;
 import net.guerra24.client.launcher.properties.Reader;
 import net.guerra24.client.launcher.thread.CreateThread;
+import net.guerra24.voxel.client.Start;
 import net.guerra24.voxel.client.engine.util.Logger;
 
 public class Launcher {
@@ -27,7 +28,7 @@ public class Launcher {
 				+ ConstantsLauncher.gameName);
 		final JButton btnLogin = new JButton("Login");
 		final JButton btnExit = new JButton("Exit");
-		final JButton btnOptions = new JButton("Options");
+		final JButton btnOptions = new JButton("Start Local Server");
 
 		Insets insets = frame.getInsets();
 		Dimension size = btnLogin.getPreferredSize();
@@ -48,7 +49,7 @@ public class Launcher {
 				if (loginDlg.isSucceeded()) {
 					frame.dispose();
 					Logger.log("Starting Voxel");
-					CreateThread.StartThread();
+					Start.main(null);
 				}
 			}
 		});
@@ -62,6 +63,8 @@ public class Launcher {
 		});
 		btnOptions.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				btnOptions.setEnabled(false);
+				CreateThread.StartThread();
 			}
 
 		});
@@ -76,7 +79,6 @@ public class Launcher {
 		frame.setVisible(true);
 		frame.setLocation(85, 85);
 		frame.setResizable(false);
-		btnOptions.setEnabled(false);
 		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 	}
 }

@@ -1,10 +1,14 @@
 package net.guerra24.client.launcher.thread;
 
-import net.guerra24.voxel.client.StartClient;
+import org.gnet.ServerStart;
 
 public class CreateThread extends Thread {
 	public void run() {
-		StartClient.StartGame();
+		try {
+			ServerStart.main(null);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public static void StartThread() {
