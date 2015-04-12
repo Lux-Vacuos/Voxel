@@ -3,6 +3,7 @@
 	<classpathentry kind="src" path="srcClient"/>
 	<classpathentry kind="src" path="srcLauncher"/>
 	<classpathentry kind="src" path="assets"/>
+	<classpathentry kind="src" path="srcServer"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="library/jar/jinput.jar" sourcepath="C:/Users/pablo/Documents/LWJGL/LWJGL 2.9.3/lwjgl-source-2.9.3.zip">
 		<attributes>
