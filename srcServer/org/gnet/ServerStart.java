@@ -5,7 +5,7 @@ import org.gnet.server.ClientModel;
 import org.gnet.server.GNetServer;
 import org.gnet.server.ServerEventListener;
 
-public class ServerTest {
+public class ServerStart {
 
 	/**
 	 * Main entry point into the application.
@@ -16,7 +16,7 @@ public class ServerTest {
 	 */
 	public static void main(final String[] args) throws InterruptedException {
 		// Host to connect to:
-		final String host = "0.0.0.0";
+		final String host = "127.0.0.1";
 
 		// Port # to connect to the host on:
 		final int port = 43594;

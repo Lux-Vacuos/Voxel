@@ -1,11 +1,11 @@
-package org.gnet;
+package net.guerra24.voxel.client;
 
 import org.gnet.client.ClientEventListener;
 import org.gnet.client.GNetClient;
 import org.gnet.client.ServerModel;
 import org.gnet.packet.Packet;
 
-public class ClientTest {
+public class Start {
 
 	/**
 	 * Main entry point into the application.
@@ -19,7 +19,7 @@ public class ClientTest {
 		final String host = "127.0.0.1";
 
 		// Port # to connect to the host on:
-		final int port = 1999;
+		final int port = 43594;
 
 		// Setup our client.
 		final GNetClient networkedClient = new GNetClient(host, port);
@@ -29,7 +29,7 @@ public class ClientTest {
 
 			@Override
 			protected void clientConnected(final ServerModel server) {
-
+				StartClient.StartGame();
 			}
 
 			@Override
