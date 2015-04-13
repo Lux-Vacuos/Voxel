@@ -83,8 +83,4 @@ public class StartClient {
 		Blocks.loader.cleanUp();
 		DisplayManager.closeDisplay();
 	}
-
-	public static void main(String[] args) {
-		StartGame();
-	}
 }

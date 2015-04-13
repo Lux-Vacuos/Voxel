@@ -35,9 +35,6 @@ public class ServerStart {
 
 			@Override
 			protected void clientConnected(final ClientModel client) {
-				Packet loginPacket = new Packet("Login", 1);
-				loginPacket.addEntry("login", new Boolean(true));
-				client.sendPacket(loginPacket);
 			}
 
 			@Override
