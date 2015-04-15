@@ -61,7 +61,7 @@ public class Update {
 		try {
 			while ((e = readerUnicode.read()) != -1) {
 				char f = (char) e;
-				char v = '1';// Local version of the assets please use only "ints".
+				char v = '0';// Local version of the assets please use only "ints".
 				if (f > v) {
 					Logger.log("Downloading Assets");
 					AssetsDownloader.Assets();
