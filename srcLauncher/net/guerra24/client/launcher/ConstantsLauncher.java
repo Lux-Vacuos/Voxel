@@ -9,7 +9,7 @@ public class ConstantsLauncher {
 	public static String appdata = System.getenv("APPDATA");
 	public static String iconPath1 = appdata +  "\\Assets\\LAUNCHER_icon.png";
 	public static String iconPath2 = appdata +  "\\Assets\\LAUNCHER_icon1.png";
-	public static String optionsPath = appdata + "\\Assets\\options.conf";// Location of the user info
+	public static String optionsPath = appdata + "\\Assets\\options.conf";
 	public static String versionpath = appdata + "\\Assets\\Version.txt";// Version file
 	public static String assetspath = appdata + "\\Assets\\VersionAssets.txt";// Version file
 	public static String logpath = appdata + "\\Assets\\Log.txt";// Version file
