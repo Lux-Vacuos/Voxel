@@ -13,6 +13,7 @@ import javax.swing.JLabel;
 import net.guerra24.client.launcher.login.LoginDialog;
 import net.guerra24.client.launcher.properties.Reader;
 import net.guerra24.client.launcher.thread.CreateThread;
+import net.guerra24.voxel.client.VoxelClient;
 import net.guerra24.voxel.client.engine.util.Logger;
 
 public class Launcher {
@@ -48,6 +49,7 @@ public class Launcher {
 				if (loginDlg.isSucceeded()) {
 					frame.dispose();
 					Logger.log("Starting Voxel");
+					VoxelClient.main(null);
 				}
 			}
 		});
