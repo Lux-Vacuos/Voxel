@@ -3,7 +3,6 @@
 	<classpathentry kind="src" path="srcClient"/>
 	<classpathentry kind="src" path="srcLauncher"/>
 	<classpathentry kind="src" path="assets"/>
-	<classpathentry kind="src" path="srcServer"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="library/jar/jinput.jar" sourcepath="C:/Users/pablo/Documents/LWJGL/LWJGL 2.9.3/lwjgl-source-2.9.3.zip">
 		<attributes>
@@ -23,5 +22,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="library/jar/PNGDecoder.jar"/>
+	<classpathentry kind="lib" path="library/jar/kryonet-2.21-all.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

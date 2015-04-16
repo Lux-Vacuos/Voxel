@@ -22,6 +22,13 @@ public final class Logger {
 					+ message);
 	}
 
+	public static void logS(Object... messages) {
+		for (Object message : messages)
+			System.out.println((printTimeStamps ? "[CLIENT " + getTimeStamp()
+					+ "] " : "")
+					+ message);
+	}
+
 	public static String getTimeStamp() {
 		return timeStampFormat.format(new Date());
 	}
