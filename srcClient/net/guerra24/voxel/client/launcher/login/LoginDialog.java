@@ -1,4 +1,4 @@
-package net.guerra24.client.launcher.login;
+package net.guerra24.voxel.client.launcher.login;
 
 import java.awt.BorderLayout;
 import java.awt.Color;

@@ -1,4 +1,4 @@
-package net.guerra24.client.launcher.updater.downloader;
+package net.guerra24.voxel.client.launcher.updater.downloader;
 
 import java.awt.GridLayout;
 import java.io.BufferedInputStream;

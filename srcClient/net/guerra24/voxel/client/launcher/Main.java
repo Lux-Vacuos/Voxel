@@ -1,11 +1,11 @@
-package net.guerra24.client.launcher;
+package net.guerra24.voxel.client.launcher;
 
-import net.guerra24.client.launcher.init.Init;
-import net.guerra24.client.launcher.properties.Reader;
-import net.guerra24.client.launcher.properties.Writter;
-import net.guerra24.client.launcher.updater.CreateDir;
-import net.guerra24.client.launcher.updater.Update;
 import net.guerra24.voxel.client.engine.util.Logger;
+import net.guerra24.voxel.client.launcher.init.Init;
+import net.guerra24.voxel.client.launcher.properties.Reader;
+import net.guerra24.voxel.client.launcher.properties.Writter;
+import net.guerra24.voxel.client.launcher.updater.CreateDir;
+import net.guerra24.voxel.client.launcher.updater.Update;
 
 public class Main {
 	public static void main(String[] args) {

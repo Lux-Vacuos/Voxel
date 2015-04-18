@@ -1,4 +1,4 @@
-package net.guerra24.client.launcher;
+package net.guerra24.voxel.client.launcher;
 
 public class ConstantsLauncher {
 

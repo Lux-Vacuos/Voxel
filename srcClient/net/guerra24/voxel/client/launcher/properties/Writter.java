@@ -1,4 +1,4 @@
-package net.guerra24.client.launcher.properties;
+package net.guerra24.voxel.client.launcher.properties;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -6,8 +6,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Properties;
 
-import net.guerra24.client.launcher.ConstantsLauncher;
 import net.guerra24.voxel.client.engine.util.Logger;
+import net.guerra24.voxel.client.launcher.ConstantsLauncher;
 
 public class Writter {
 	public static void configWritter() {

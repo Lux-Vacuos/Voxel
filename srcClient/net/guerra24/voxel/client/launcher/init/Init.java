@@ -1,11 +1,11 @@
-package net.guerra24.client.launcher.init;
+package net.guerra24.voxel.client.launcher.init;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
 
-import net.guerra24.client.launcher.ConstantsLauncher;
 import net.guerra24.voxel.client.engine.util.Logger;
+import net.guerra24.voxel.client.launcher.ConstantsLauncher;
 
 public class Init {
 	public static void InitLog() {

@@ -1,11 +1,11 @@
-package net.guerra24.client.launcher.properties;
+package net.guerra24.voxel.client.launcher.properties;
 
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-import net.guerra24.client.launcher.ConstantsLauncher;
+import net.guerra24.voxel.client.launcher.ConstantsLauncher;
 
 public class Reader {
 	

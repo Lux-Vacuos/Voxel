@@ -1,4 +1,4 @@
-package net.guerra24.client.launcher.updater;
+package net.guerra24.voxel.client.launcher.updater;
 
 import java.io.File;
 

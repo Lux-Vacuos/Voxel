@@ -1,9 +1,9 @@
 package net.guerra24.voxel.client.engine.network;
 
-import net.guerra24.client.launcher.login.LoginDialog;
 import net.guerra24.voxel.client.engine.network.packets.Packet.Packet0LoginRequest;
 import net.guerra24.voxel.client.engine.network.packets.Packet.Packet1LoginAnswer;
 import net.guerra24.voxel.client.engine.util.Logger;
+import net.guerra24.voxel.client.launcher.login.LoginDialog;
 
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;

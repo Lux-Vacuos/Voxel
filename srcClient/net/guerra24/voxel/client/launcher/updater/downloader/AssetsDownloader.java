@@ -1,9 +1,9 @@
-package net.guerra24.client.launcher.updater.downloader;
+package net.guerra24.voxel.client.launcher.updater.downloader;
 
-import net.guerra24.client.launcher.ConstantsLauncher;
-import net.guerra24.client.launcher.login.Login;
-import net.guerra24.client.launcher.properties.Reader;
 import net.guerra24.voxel.client.engine.util.Logger;
+import net.guerra24.voxel.client.launcher.ConstantsLauncher;
+import net.guerra24.voxel.client.launcher.login.Login;
+import net.guerra24.voxel.client.launcher.properties.Reader;
 
 public class AssetsDownloader {
 	public static void Assets() {
