@@ -21,6 +21,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="library/jar/PNGDecoder.jar"/>
-	<classpathentry kind="lib" path="library/jar/kryonet-2.21-all.jar"/>
+	<classpathentry kind="lib" path="library/jar/kryonet-2.12-all.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

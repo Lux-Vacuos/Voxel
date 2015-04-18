@@ -72,8 +72,6 @@ public class Downloader extends JFrame {
 			}
 			bout.close();
 			in.close();
-			Logger.log("Took " + System.nanoTime() / 1000000000L / 10000L
-					+ " seconds");
 			Logger.log("File downloaded");
 			frame.dispose();
 		} catch (Exception e) {

@@ -1,7 +1,9 @@
 package net.guerra24.voxel.client.engine.network;
 
+import net.guerra24.voxel.client.VoxelClient;
 import net.guerra24.voxel.client.engine.network.packets.Packet.Packet0LoginRequest;
 import net.guerra24.voxel.client.engine.network.packets.Packet.Packet1LoginAnswer;
+import net.guerra24.voxel.client.engine.network.packets.Packet.Packet2Message;
 import net.guerra24.voxel.client.engine.util.Logger;
 import net.guerra24.voxel.client.launcher.login.LoginDialog;
 
@@ -35,9 +37,16 @@ public class NetworkListener extends Listener {
 		if (o instanceof Packet1LoginAnswer) {
 			boolean answer = ((Packet1LoginAnswer) o).accepted;
 			if (answer) {
-
+				Logger.log("Enter Message");
+				while (true) {
+					if (VoxelClient.scanner.hasNext()) {
+						Packet2Message mpacket = new Packet2Message();
+						mpacket.message = LoginDialog.getUsername()
+								+ VoxelClient.scanner.nextLine();
+						client.sendTCP(mpacket);
+					}
+				}
 			} else {
-				c.close();
 			}
 		}
 	}

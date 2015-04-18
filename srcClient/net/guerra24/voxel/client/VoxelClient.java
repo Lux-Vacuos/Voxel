@@ -16,7 +16,7 @@ import com.esotericsoftware.minlog.Log;
 public class VoxelClient {
 
 	public Client client;
-	public Scanner scanner;
+	public static Scanner scanner;
 
 	public VoxelClient() {
 		scanner = new Scanner(System.in);
@@ -45,7 +45,7 @@ public class VoxelClient {
 	}
 
 	public static void main(String[] args) {
-		new Client();
+		VoxelClient voxel = new VoxelClient();
 		Log.set(Log.LEVEL_DEBUG);
 	}
 }
