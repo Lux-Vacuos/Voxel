@@ -1,4 +1,4 @@
-package net.guerra24.voxel.client.engine;
+package net.guerra24.voxel.client.engine.display;
 
 import static org.lwjgl.opengl.GL11.*;
 import net.guerra24.voxel.client.engine.util.Logger;

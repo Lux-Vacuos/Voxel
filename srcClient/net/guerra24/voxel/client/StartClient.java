@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import net.guerra24.voxel.client.engine.DisplayManager;
+import net.guerra24.voxel.client.engine.display.DisplayManager;
 import net.guerra24.voxel.client.engine.entities.Entity;
 import net.guerra24.voxel.client.engine.entities.types.Camera;
 import net.guerra24.voxel.client.engine.entities.types.Light;
