@@ -4,15 +4,15 @@
 
 in vec2 pass_textureCoords;
 in vec3 surfaceNormal;
-in vec3 toLightVector[4];
+in vec3 toLightVector[2];
 in float visibility;
 
 out vec4 out_Color;
 
 uniform sampler2D textureSampler;
 uniform vec3 skyColour;
-uniform vec3 lightColour[4];
-uniform vec3 attenuations[4];
+uniform vec3 lightColour[2];
+uniform vec3 attenuations[2];
 
 void main(void) {
 
@@ -20,7 +20,7 @@ void main(void) {
 	
 	vec3 totalDiffuse = vec3(0.0);
 	
-	for(int i=0;i<4;i++) {
+	for(int i=0;i<2;i++) {
 		float distance = length(toLightVector[i]);
 		float attFactor = attenuations[i].x + (attenuations[i].y * distance) + (attenuations[i].z * distance * distance);
 		vec3 unitLightVector = normalize(toLightVector[i]);

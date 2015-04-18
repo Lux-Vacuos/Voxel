@@ -1,4 +1,4 @@
-package net.guerra24.voxel.client;
+package net.guerra24.voxel.client.engine;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,13 +23,15 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
-public class StartClient {
+public class Engine {
 
 	public static List<Entity> allCubes = new ArrayList<Entity>();
 	public static List<Light> lights = new ArrayList<Light>();
 
 	public static Random rand;
 	public static Player player;
+	public static Light sun;
+	public static Light spot;
 
 	public static void StartGame() {
 
@@ -58,21 +60,24 @@ public class StartClient {
 		 * texture.getTexture().setHasTransparency(true); Enables transparency.
 		 */
 
-		player = new Player(Blocks.cubeGlass, new Vector3f(300, 64, 300), 0, 0,
+		player = new Player(Blocks.cubeGlass, new Vector3f(-10, 68, -10), 0, 0,
 				90, 1);
-		lights.add(new Light(new Vector3f(300, 64, 300), new Vector3f(1, 1, 1)));
-		// lights.add(new Light(new Vector3f(280, 68, 300), new Vector3f(1, 0,
-		// 0),
-		// new Vector3f(1, 0.01f, 0.002f)));
+		sun = new Light(new Vector3f(0, 10000000000f, 0), new Vector3f(1f, 1f,
+				1f));
+		spot = new Light(new Vector3f(0, 0, 0), new Vector3f(1, 0, 0),
+				new Vector3f(1, 0.01f, 0.002f));
 
 		Logger.log("Generating World with size: " + World.WORLD_SIZE);
 		World.init();
 		Logger.log("World Generation completed with size: " + World.WORLD_SIZE);
 
+		lights.add(spot);
+		lights.add(sun);
 		allCubes.add(player);
 		while (!Display.isCloseRequested()) {
 			camera.move();
 			player.move();
+			spot.setPosition(player.getPosition());
 			renderer.renderScene(allCubes, lights, camera);
 			guiRenderer.render(guis);
 			DisplayManager.updateDisplay();
