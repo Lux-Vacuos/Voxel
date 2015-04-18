@@ -16,9 +16,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.guerra24.voxel.client.StartClient;
 import net.guerra24.voxel.client.engine.entities.Entity;
 import net.guerra24.voxel.client.engine.entities.types.Camera;
+import net.guerra24.voxel.client.engine.entities.types.Light;
 import net.guerra24.voxel.client.engine.render.entity.EntityRenderer;
 import net.guerra24.voxel.client.engine.render.shaders.types.EntityShader;
 import net.guerra24.voxel.client.engine.render.textures.skybox.SkyboxRenderer;
@@ -66,12 +66,20 @@ public class MasterRenderer {
 	public static Matrix4f getProjectionMatrix() {
 		return projectionMatrix;
 	}
+	
+	public void renderScene(List<Entity> entities, List<Light> lights,
+            Camera camera) {
+        for (Entity entity : entities) {
+            processEntity(entity);
+        }
+        render(lights, camera);
+    }
 
-	public void render(Camera camera) {
+	public void render(List<Light> lights, Camera camera) {
 		prepare();
 		shader.start();
-		shader.loadLight(StartClient.light);
 		shader.loadSkyColour(RED, GREEN, BLUE);
+		shader.loadLights(lights);
 		shader.loadviewMatrix(camera);
 		renderer.render(entities);
 		shader.stop();

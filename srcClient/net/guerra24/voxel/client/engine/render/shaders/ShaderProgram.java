@@ -8,11 +8,11 @@ import java.nio.FloatBuffer;
 import net.guerra24.voxel.client.engine.util.Logger;
 
 import org.lwjgl.BufferUtils;
-import org.lwjgl.util.vector.Matrix4f;
-import org.lwjgl.util.vector.Vector3f;
-
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL20.*;
+import org.lwjgl.util.vector.Matrix4f;
+import org.lwjgl.util.vector.Vector2f;
+import org.lwjgl.util.vector.Vector3f;
 
 public abstract class ShaderProgram {
 
@@ -28,10 +28,9 @@ public abstract class ShaderProgram {
 		programID = glCreateProgram();
 		glAttachShader(programID, vertexShaderID);
 		glAttachShader(programID, fragmentShaderID);
-		glLinkProgram(programID);
 		bindAttributes();
-		glValidateProgram(programID);
 		glLinkProgram(programID);
+		glValidateProgram(programID);
 		getAllUniformLocations();
 	}
 
@@ -76,6 +75,10 @@ public abstract class ShaderProgram {
 		glUniform3f(location, vector.x, vector.y, vector.z);
 	}
 
+	protected void load2DVector(int location, Vector2f vector) {
+		glUniform2f(location, vector.x, vector.y);
+	}
+
 	protected void loadBoolean(int location, boolean value) {
 		float toLoad = 0;
 		if (value) {
@@ -84,23 +87,23 @@ public abstract class ShaderProgram {
 		glUniform1f(location, toLoad);
 	}
 
-	protected void loadMatrix(int locations, Matrix4f matrix) {
+	protected void loadMatrix(int location, Matrix4f matrix) {
 		matrix.store(matrixBuffer);
 		matrixBuffer.flip();
-		glUniformMatrix4(locations, false, matrixBuffer);
+		glUniformMatrix4(location, false, matrixBuffer);
 	}
 
 	private static int loadShader(String file, int type) {
 		StringBuilder shaderSource = new StringBuilder();
 		try {
-			BufferedReader reader = new BufferedReader(new FileReader(file));
+			BufferedReader reader = new BufferedReader(new FileReader("assets/shaders/" + file));
+			Logger.log("Loading Shader: " + file);
 			String line;
 			while ((line = reader.readLine()) != null) {
-				shaderSource.append(line).append("\n");
+				shaderSource.append(line).append("//\n");
 			}
 			reader.close();
 		} catch (IOException e) {
-			Logger.error("Could not reade file!");
 			e.printStackTrace();
 			System.exit(-1);
 		}
@@ -109,9 +112,10 @@ public abstract class ShaderProgram {
 		glCompileShader(shaderID);
 		if (glGetShaderi(shaderID, GL_COMPILE_STATUS) == GL_FALSE) {
 			Logger.log(glGetShaderInfoLog(shaderID, 500));
-			Logger.error("Could not compile shader");
+			Logger.log("Could not compile shader!");
 			System.exit(-1);
 		}
 		return shaderID;
 	}
+
 }

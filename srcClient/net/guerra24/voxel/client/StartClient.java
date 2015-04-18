@@ -26,11 +26,9 @@ import org.lwjgl.util.vector.Vector3f;
 public class StartClient {
 
 	public static List<Entity> allCubes = new ArrayList<Entity>();
+	public static List<Light> lights = new ArrayList<Light>();
 
 	public static Random rand;
-	public static Light light = new Light(new Vector3f(300, 64, 300),
-			new Vector3f(1, 1, 1));
-
 	public static Player player;
 
 	public static void StartGame() {
@@ -60,20 +58,20 @@ public class StartClient {
 		 * texture.getTexture().setHasTransparency(true); Enables transparency.
 		 */
 
-		player = new Player(Blocks.cubeGrass, new Vector3f(300, 64, 300), 0, 0,
+		player = new Player(Blocks.cubeGlass, new Vector3f(300, 64, 300), 0, 0,
 				90, 1);
+		lights.add(new Light(new Vector3f(300, 64, 300), new Vector3f(1, 1, 1)));
+		lights.add(new Light(new Vector3f(280, 64, 300), new Vector3f(1, 0, 0)));
+
 		Logger.log("Generating World with size: " + World.WORLD_SIZE);
 		World.init();
 		Logger.log("World Generation completed with size: " + World.WORLD_SIZE);
 
+		allCubes.add(player);
 		while (!Display.isCloseRequested()) {
 			camera.move();
 			player.move();
-			renderer.processEntity(player);
-			for (Entity cube : allCubes) {
-				renderer.processEntity(cube);
-			}
-			renderer.render(camera);
+			renderer.renderScene(allCubes, lights, camera);
 			guiRenderer.render(guis);
 			DisplayManager.updateDisplay();
 		}

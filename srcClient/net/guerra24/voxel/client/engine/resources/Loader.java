@@ -1,14 +1,6 @@
 package net.guerra24.voxel.client.engine.resources;
 
-import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL13.*;
-import static org.lwjgl.opengl.GL14.*;
-import static org.lwjgl.opengl.GL15.*;
-import static org.lwjgl.opengl.GL20.*;
-import static org.lwjgl.opengl.GL30.*;
-
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
@@ -20,6 +12,14 @@ import net.guerra24.voxel.client.engine.resources.models.RawModel;
 import net.guerra24.voxel.client.engine.util.Logger;
 
 import org.lwjgl.BufferUtils;
+
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL13.*;
+import static org.lwjgl.opengl.GL14.*;
+import static org.lwjgl.opengl.GL15.*;
+import static org.lwjgl.opengl.GL20.*;
+import static org.lwjgl.opengl.GL30.*;
+
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
 
@@ -60,13 +60,25 @@ public class Loader {
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
 					GL_LINEAR_MIPMAP_LINEAR);
 			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_LOD_BIAS, -0.4f);
-		} catch (IOException e) {
-			Logger.error("Couldn' load texture file" + fileName);
+		} catch (Exception e) {
 			e.printStackTrace();
+			Logger.error("Couldn' load texture file" + fileName);
+			System.exit(-1);
 		}
-		int textureID = texture.getTextureID();
-		textures.add(textureID);
-		return textureID;
+		textures.add(texture.getTextureID());
+		return texture.getTextureID();
+	}
+
+	public void cleanUp() {
+		for (int vao : vaos) {
+			glDeleteVertexArrays(vao);
+		}
+		for (int vbo : vbos) {
+			glDeleteBuffers(vbo);
+		}
+		for (int texture : textures) {
+			glDeleteTextures(texture);
+		}
 	}
 
 	public int loadCubeMap(String[] textureFiles) {
@@ -81,8 +93,9 @@ public class Loader {
 					data.getWidth(), data.getHeight(), 0, GL_RGBA,
 					GL_UNSIGNED_BYTE, data.getBuffer());
 		}
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		textures.add(texID);
 		return texID;
 	}
@@ -108,18 +121,6 @@ public class Loader {
 		return new TextureData(buffer, width, height);
 	}
 
-	public void cleanUp() {
-		for (int vao : vaos) {
-			glDeleteVertexArrays(vao);
-		}
-		for (int vbo : vbos) {
-			glDeleteBuffers(vbo);
-		}
-		for (int textures : textures) {
-			glDeleteTextures(textures);
-		}
-	}
-
 	private int createVAO() {
 		int vaoID = glGenVertexArrays();
 		vaos.add(vaoID);
@@ -127,14 +128,14 @@ public class Loader {
 		return vaoID;
 	}
 
-	private void storeDataInAttributeList(int attributeNumbre,
+	private void storeDataInAttributeList(int attributeNumber,
 			int coordinateSize, float[] data) {
 		int vboID = glGenBuffers();
 		vbos.add(vboID);
 		glBindBuffer(GL_ARRAY_BUFFER, vboID);
 		FloatBuffer buffer = storeDataInFloatBuffer(data);
 		glBufferData(GL_ARRAY_BUFFER, buffer, GL_STATIC_DRAW);
-		glVertexAttribPointer(attributeNumbre, coordinateSize, GL_FLOAT, false,
+		glVertexAttribPointer(attributeNumber, coordinateSize, GL_FLOAT, false,
 				0, 0);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
@@ -164,4 +165,5 @@ public class Loader {
 		buffer.flip();
 		return buffer;
 	}
+
 }
