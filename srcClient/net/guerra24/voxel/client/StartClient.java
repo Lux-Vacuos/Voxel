@@ -61,7 +61,9 @@ public class StartClient {
 		player = new Player(Blocks.cubeGlass, new Vector3f(300, 64, 300), 0, 0,
 				90, 1);
 		lights.add(new Light(new Vector3f(300, 64, 300), new Vector3f(1, 1, 1)));
-		lights.add(new Light(new Vector3f(280, 64, 300), new Vector3f(1, 0, 0)));
+		// lights.add(new Light(new Vector3f(280, 68, 300), new Vector3f(1, 0,
+		// 0),
+		// new Vector3f(1, 0.01f, 0.002f)));
 
 		Logger.log("Generating World with size: " + World.WORLD_SIZE);
 		World.init();

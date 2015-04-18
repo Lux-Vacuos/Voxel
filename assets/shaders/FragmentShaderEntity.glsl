@@ -12,6 +12,7 @@ out vec4 out_Color;
 uniform sampler2D textureSampler;
 uniform vec3 skyColour;
 uniform vec3 lightColour[4];
+uniform vec3 attenuations[4];
 
 void main(void) {
 
@@ -20,10 +21,12 @@ void main(void) {
 	vec3 totalDiffuse = vec3(0.0);
 	
 	for(int i=0;i<4;i++) {
+		float distance = length(toLightVector[i]);
+		float attFactor = attenuations[i].x + (attenuations[i].y * distance) + (attenuations[i].z * distance * distance);
 		vec3 unitLightVector = normalize(toLightVector[i]);
 		float nDotl = dot(unitNormal,unitLightVector);
 		float brightness = max(nDotl, 0.0);
-		totalDiffuse = totalDiffuse + brightness * lightColour[i];
+		totalDiffuse = totalDiffuse + (brightness * lightColour[i])/attFactor;
 	}
 	totalDiffuse = max(totalDiffuse, 0.2);
 	
