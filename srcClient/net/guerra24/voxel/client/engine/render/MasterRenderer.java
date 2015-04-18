@@ -63,7 +63,7 @@ public class MasterRenderer {
 		glDisable(GL_CULL_FACE);
 	}
 
-	public static Matrix4f getProjectionMatrix() {
+	public Matrix4f getProjectionMatrix() {
 		return projectionMatrix;
 	}
 	
