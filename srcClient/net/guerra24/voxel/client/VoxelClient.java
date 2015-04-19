@@ -45,6 +45,7 @@ public class VoxelClient {
 	}
 
 	public static void main(String[] args) {
+		@SuppressWarnings("unused")
 		VoxelClient voxel = new VoxelClient();
 		Log.set(Log.LEVEL_DEBUG);
 	}

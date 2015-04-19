@@ -14,7 +14,6 @@ import net.guerra24.voxel.client.VoxelClient;
 import net.guerra24.voxel.client.engine.util.Logger;
 import net.guerra24.voxel.client.launcher.login.LoginDialog;
 import net.guerra24.voxel.client.launcher.properties.Reader;
-import net.guerra24.voxel.client.launcher.thread.CreateThread;
 
 public class Launcher {
 
@@ -64,7 +63,6 @@ public class Launcher {
 		btnOptions.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				btnOptions.setEnabled(false);
-				CreateThread.StartThread();
 			}
 
 		});

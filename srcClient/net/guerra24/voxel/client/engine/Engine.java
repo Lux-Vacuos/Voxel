@@ -67,6 +67,7 @@ public class Engine {
 		 */
 
 		// SETTING UP VARIABLES
+		
 		GuiTexture gui = new GuiTexture(loader.loadTexture("HotBar"),
 				new Vector2f(0.6f, -0.425f), new Vector2f(1.6f, 1.425f));
 

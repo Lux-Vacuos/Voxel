@@ -21,13 +21,17 @@ void main(void) {
 	vec3 totalDiffuse = vec3(0.0);
 	
 	for(int i=0;i<1;i++) {
-		float distance = length(toLightVector[i]);
-		float attFactor = attenuations[i].x + (attenuations[i].y * distance) + (attenuations[i].z * distance * distance);
-		vec3 unitLightVector = normalize(toLightVector[i]);
+		//float distance = length(toLightVector[i]);
+		//float attFactor = attenuations[i].x + (attenuations[i].y * distance) + (attenuations[i].z * distance * distance);
+		//vec3 unitLightVector = normalize(toLightVector[i]);
 		//float nDotl = dot(unitNormal,unitLightVector);
 		//float brightness = max(nDotl, 0.0);
+		
 		float brightness = 1;
-		totalDiffuse = totalDiffuse + (brightness * lightColour[i])/attFactor;
+		totalDiffuse = totalDiffuse + (brightness * lightColour[i]);
+		
+		//totalDiffuse = totalDiffuse + (brightness * lightColour[i])/attFactor;
+		
 	}
 	totalDiffuse = max(totalDiffuse, 0.2);
 	
