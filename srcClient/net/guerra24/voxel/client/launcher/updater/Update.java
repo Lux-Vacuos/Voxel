@@ -57,7 +57,7 @@ public class Update {
 		} catch (FileNotFoundException e1) {
 			e1.printStackTrace();
 		}
-		int e = 0;
+		int e = 1;
 		try {
 			while ((e = readerUnicode.read()) != -1) {
 				char f = (char) e;
