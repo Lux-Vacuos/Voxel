@@ -19,15 +19,15 @@ public class Chunk {
 		for (int x = 0; x < CHUNK_SIZE; x++) {
 			for (int y = 0; y < CHUNK_HEIGHT; y++) {
 				for (int z = 0; z < CHUNK_SIZE; z++) {
-					int x2 = (int) (SimplexNoise.noise(x, z) * CHUNK_SIZE);
-					int z2 = (int) (SimplexNoise.noise(z, x) * CHUNK_SIZE);
-					create(x, y, z, xOffset, zOffset);
+					int x9 = (int) (SimplexNoise.noise(x, z) * CHUNK_SIZE);
+					int z9 = (int) (SimplexNoise.noise(y, z) * CHUNK_SIZE);
+					create(x, y, z, xOffset, zOffset, x9, z9);
 				}
 			}
 		}
 	}
 
-	private static void create(int x, int y, int z, int xOffset, int zOffset) {
+	private static void create(int x, int y, int z, int xOffset, int zOffset, int x9, int z9) {
 		if (y < 60 && y > 0) {
 			if (Engine.rand.nextInt(2) == 0) {
 				if (Engine.rand.nextBoolean()) {
