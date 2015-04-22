@@ -20,7 +20,6 @@ import net.guerra24.voxel.client.engine.util.Logger;
 import net.guerra24.voxel.client.engine.util.SystemInfo;
 import net.guerra24.voxel.client.engine.world.World;
 import net.guerra24.voxel.client.engine.world.chunks.blocks.Blocks;
-import net.guerra24.voxel.client.engine.world.chunks.blocks.BlocksType;
 
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
@@ -31,7 +30,7 @@ public class Engine {
 
 	public static List<Entity> allCubes = new ArrayList<Entity>();
 	public static List<Light> lights = new ArrayList<Light>();
-	
+
 	public static Random rand;
 	public static Player player;
 	public static Light sun;
@@ -61,15 +60,13 @@ public class Engine {
 				renderer.getProjectionMatrix());
 		List<WaterTile> waters = new ArrayList<WaterTile>();
 		List<GuiTexture> guis = new ArrayList<GuiTexture>();
-		BlocksType.createTileMap();
-
 		Blocks.createBlocks();
 		/*
 		 * texture.getTexture().setHasTransparency(true); Enables transparency.
 		 */
 
 		// SETTING UP VARIABLES
-		
+
 		GuiTexture gui = new GuiTexture(loader.loadTexture("HotBar"),
 				new Vector2f(0.6f, -0.425f), new Vector2f(1.6f, 1.425f));
 
@@ -93,7 +90,7 @@ public class Engine {
 		allCubes.add(player);
 		waters.add(new WaterTile(60, 60, 50));
 		guis.add(gui);
-		
+
 		// GAME LOOP
 		while (!Display.isCloseRequested()) {
 			camera.move();
