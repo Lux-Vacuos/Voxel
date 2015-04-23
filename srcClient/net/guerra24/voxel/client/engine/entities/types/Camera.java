@@ -1,5 +1,8 @@
 package net.guerra24.voxel.client.engine.entities.types;
 
+import net.guerra24.voxel.client.engine.util.Logger;
+import net.guerra24.voxel.client.engine.world.World;
+
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
@@ -71,6 +74,11 @@ public class Camera {
 
 			position.y -= speed;
 
+		}
+		if (Keyboard.isKeyDown(Keyboard.KEY_G)) {
+			Logger.log("Saving World");
+			World.saveGame(World.worldPath);
+			Logger.log("World saved");
 		}
 
 		if (Mouse.isButtonDown(0)) {

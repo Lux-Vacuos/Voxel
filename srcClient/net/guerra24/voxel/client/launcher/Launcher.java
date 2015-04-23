@@ -10,7 +10,6 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
-import net.guerra24.voxel.client.VoxelClient;
 import net.guerra24.voxel.client.engine.Engine;
 import net.guerra24.voxel.client.engine.util.Logger;
 import net.guerra24.voxel.client.launcher.login.LoginDialog;
