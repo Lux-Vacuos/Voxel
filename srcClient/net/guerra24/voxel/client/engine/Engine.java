@@ -61,9 +61,6 @@ public class Engine {
 		List<WaterTile> waters = new ArrayList<WaterTile>();
 		List<GuiTexture> guis = new ArrayList<GuiTexture>();
 		Blocks.createBlocks();
-		/*
-		 * texture.getTexture().setHasTransparency(true); Enables transparency.
-		 */
 
 		// SETTING UP VARIABLES
 
