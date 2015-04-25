@@ -48,7 +48,7 @@ public class Chunk {
 
 			}
 		}
-		if (y < 63 && y > 57) {
+		if (y < 63 && y > 59) {
 			if (Engine.rand.nextInt(2) == 1) {
 				cubes.add(new Entity(Blocks.cubeDirt, new Vector3f(x + xOffset,
 						y, z + zOffset), 0, 0, 0, 1));

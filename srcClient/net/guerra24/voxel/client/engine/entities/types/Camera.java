@@ -79,6 +79,10 @@ public class Camera {
 			Logger.log("Saving World");
 			World.saveGame(World.worldPath);
 			Logger.log("World saved");
+		} else if (Keyboard.isKeyDown(Keyboard.KEY_F)) {
+			Logger.log("Loading World");
+			World.loadGame(World.worldPath);
+			Logger.log("World loaded");
 		}
 
 		if (Mouse.isButtonDown(0)) {
