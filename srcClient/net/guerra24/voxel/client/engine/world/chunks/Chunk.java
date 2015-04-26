@@ -23,36 +23,30 @@ public class Chunk {
 		for (int x = 0; x < CHUNK_SIZE; x++) {
 			for (int y = 0; y < CHUNK_HEIGHT; y++) {
 				for (int z = 0; z < CHUNK_SIZE; z++) {
-					int x9 = (int) (SimplexNoise.noise(x, z) * CHUNK_SIZE);
-					int z9 = (int) (SimplexNoise.noise(y, z) * CHUNK_SIZE);
-					create(x, y, z, xOffset, zOffset, x9, z9);
+					int y10 = Engine.rand.nextInt();
+					int y7 = (int) (SimplexNoise.noise(y10, z) * CHUNK_HEIGHT);
+					int y8 = (int) (SimplexNoise.noise(y10, x) * CHUNK_HEIGHT);
+					int y9 = y7 + y8;
+					create(x, y, z, xOffset, zOffset, y9);
 				}
 			}
 		}
 	}
 
 	private static void create(int x, int y, int z, int xOffset, int zOffset,
-			int x9, int z9) {
-		if (y < 60 && y > 0) {
-			if (Engine.rand.nextInt(2) == 0) {
-				if (Engine.rand.nextBoolean()) {
-					cubes.add(new Entity(Blocks.cubeStone, new Vector3f(x
-							+ xOffset, y, z + zOffset), 0f, 0f, 0f, 1f));
-				}
-			}
+			int y9) {
+		if (y9 < 60 && y9 > 0) {
+			cubes.add(new Entity(Blocks.cubeStone, new Vector3f(x + xOffset,
+					y9, z + zOffset), 0f, 0f, 0f, 1f));
 		}
-		if (y < 64 && y > 62) {
-			if (Engine.rand.nextInt(2) == 0) {
-				cubes.add(new Entity(Blocks.cubeGrass, new Vector3f(
-						x + xOffset, y, z + zOffset), 0f, 0f, 0f, 1f));
+		if (y9 < 64 && y9 > 62) {
+			cubes.add(new Entity(Blocks.cubeGrass, new Vector3f(x + xOffset,
+					y9, z + zOffset), 0f, 0f, 0f, 1f));
 
-			}
 		}
-		if (y < 63 && y > 59) {
-			if (Engine.rand.nextInt(2) == 1) {
-				cubes.add(new Entity(Blocks.cubeDirt, new Vector3f(x + xOffset,
-						y, z + zOffset), 0, 0, 0, 1));
-			}
+		if (y9 < 63 && y9 > 59) {
+			cubes.add(new Entity(Blocks.cubeDirt, new Vector3f(x + xOffset, y9,
+					z + zOffset), 0, 0, 0, 1));
 		}
 		double sizeMena = (Math.random() * 2 + 2);
 		int sizeHalfMena = (int) Math.round(sizeMena / 2);
