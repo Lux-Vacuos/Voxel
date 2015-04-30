@@ -1,14 +1,14 @@
-package net.guerra24.voxel.client.engine.render.textures;
+package net.guerra24.voxel.client.engine.render.textures.types;
 
 import java.nio.ByteBuffer;
 
-public class TextureData {
+public class EntityTexture {
 
 	private int width;
 	private int height;
 	private ByteBuffer buffer;
 
-	public TextureData(ByteBuffer buffer, int width, int height) {
+	public EntityTexture(ByteBuffer buffer, int width, int height) {
 		this.buffer = buffer;
 		this.width = width;
 		this.height = height;

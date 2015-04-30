@@ -7,7 +7,11 @@ import net.guerra24.voxel.client.engine.util.Logger;
 public class CreateDir {
 	public static void createDirectory() {
 		String appdata = System.getenv("APPDATA");
-		Logger.log("Creating directory");
-		new File(appdata + "\\Assets").mkdir();
+		File f = new File(appdata + "\\Assets");
+		if (!f.exists()) {
+			Logger.log("Creating directory");
+			new File(appdata + "\\Assets").mkdir();
+		}
+
 	}
 }

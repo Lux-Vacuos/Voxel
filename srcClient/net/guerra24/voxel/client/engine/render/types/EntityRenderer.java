@@ -1,4 +1,4 @@
-package net.guerra24.voxel.client.engine.render.entity;
+package net.guerra24.voxel.client.engine.render.types;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL13.*;

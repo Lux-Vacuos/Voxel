@@ -1,6 +1,6 @@
 package net.guerra24.voxel.client.engine.render.shaders.types;
 
-import net.guerra24.voxel.client.engine.display.DisplayManager;
+import net.guerra24.voxel.client.engine.DisplayManager;
 import net.guerra24.voxel.client.engine.entities.types.Camera;
 import net.guerra24.voxel.client.engine.render.shaders.ShaderProgram;
 import net.guerra24.voxel.client.engine.util.Maths;

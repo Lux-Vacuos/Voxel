@@ -7,7 +7,7 @@ import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.guerra24.voxel.client.engine.render.textures.TextureData;
+import net.guerra24.voxel.client.engine.render.textures.types.EntityTexture;
 import net.guerra24.voxel.client.engine.resources.models.RawModel;
 import net.guerra24.voxel.client.engine.util.Logger;
 
@@ -50,11 +50,29 @@ public class Loader {
 		return new RawModel(vaoID, positions.length / dimensions);
 	}
 
-	public int loadTexture(String fileName) {
+	public int loadTextureBlocks(String fileName) {
 		Texture texture = null;
 		try {
 			texture = TextureLoader.getTexture("PNG", new FileInputStream(
 					"assets/textures/blocks/" + fileName + ".png"), GL_NEAREST);
+			Logger.log("Loading Texture: " + fileName + ".png");
+			glGenerateMipmap(GL_TEXTURE_2D);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
+					GL_LINEAR_MIPMAP_LINEAR);
+			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_LOD_BIAS, -0.4f);
+		} catch (Exception e) {
+			e.printStackTrace();
+			Logger.error("Couldn' load texture file" + fileName);
+			System.exit(-1);
+		}
+		textures.add(texture.getTextureID());
+		return texture.getTextureID();
+	}
+	public int loadTextureGui(String fileName) {
+		Texture texture = null;
+		try {
+			texture = TextureLoader.getTexture("PNG", new FileInputStream(
+					"assets/textures/menu/" + fileName + ".png"), GL_NEAREST);
 			Logger.log("Loading Texture: " + fileName + ".png");
 			glGenerateMipmap(GL_TEXTURE_2D);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
@@ -87,7 +105,7 @@ public class Loader {
 		glBindTexture(GL_TEXTURE_CUBE_MAP, texID);
 
 		for (int i = 0; i < textureFiles.length; i++) {
-			TextureData data = decodeTextureFile("assets/textures/skybox/"
+			EntityTexture data = decodeTextureFile("assets/textures/skybox/"
 					+ textureFiles[i] + ".png");
 			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGBA,
 					data.getWidth(), data.getHeight(), 0, GL_RGBA,
@@ -100,7 +118,7 @@ public class Loader {
 		return texID;
 	}
 
-	private TextureData decodeTextureFile(String fileName) {
+	private EntityTexture decodeTextureFile(String fileName) {
 		int width = 0;
 		int height = 0;
 		ByteBuffer buffer = null;
@@ -118,7 +136,7 @@ public class Loader {
 			Logger.error("Tried to load texture " + fileName + ", didn't work");
 			System.exit(-1);
 		}
-		return new TextureData(buffer, width, height);
+		return new EntityTexture(buffer, width, height);
 	}
 
 	private int createVAO() {

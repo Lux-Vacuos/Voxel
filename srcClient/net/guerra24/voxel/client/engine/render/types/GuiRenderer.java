@@ -1,4 +1,4 @@
-package net.guerra24.voxel.client.engine.render.gui;
+package net.guerra24.voxel.client.engine.render.types;
 
 import static org.lwjgl.opengl.GL30.*;
 import static org.lwjgl.opengl.GL20.*;
@@ -7,8 +7,9 @@ import static org.lwjgl.opengl.GL11.*;
 
 import java.util.List;
 
-import net.guerra24.voxel.client.engine.render.gui.textures.GuiTexture;
+import net.guerra24.voxel.client.engine.render.MasterRenderer;
 import net.guerra24.voxel.client.engine.render.shaders.types.GuiShader;
+import net.guerra24.voxel.client.engine.render.textures.types.GuiTexture;
 import net.guerra24.voxel.client.engine.resources.Loader;
 import net.guerra24.voxel.client.engine.resources.models.RawModel;
 import net.guerra24.voxel.client.engine.util.Maths;
@@ -27,6 +28,27 @@ public class GuiRenderer {
 	}
 
 	public void render(List<GuiTexture> guis) {
+		prepare();
+		shader.start();
+		glBindVertexArray(quad.getVaoID());
+		glEnableVertexAttribArray(0);
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		for (GuiTexture gui : guis) {
+			glActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_2D, gui.getTexture());
+			Matrix4f matrix = Maths.createTransformationMatrix(
+					gui.getPosition(), gui.getScale());
+			shader.loadTransformation(matrix);
+			glDrawArrays(GL_TRIANGLE_STRIP, 0, quad.getVertexCount());
+		}
+		glDisable(GL_BLEND);
+		glDisableVertexAttribArray(0);
+		glBindVertexArray(0);
+		shader.stop();
+	}
+
+	public void renderNoPrepare(List<GuiTexture> guis) {
 		shader.start();
 		glBindVertexArray(quad.getVaoID());
 		glEnableVertexAttribArray(0);
@@ -48,5 +70,12 @@ public class GuiRenderer {
 
 	public void cleanUp() {
 		shader.cleanUp();
+	}
+
+	public static void prepare() {
+		glEnable(GL_DEPTH_TEST);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glClearColor(MasterRenderer.RED, MasterRenderer.GREEN,
+				MasterRenderer.BLUE, 1);
 	}
 }

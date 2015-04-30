@@ -19,9 +19,9 @@ import java.util.Map;
 import net.guerra24.voxel.client.engine.entities.Entity;
 import net.guerra24.voxel.client.engine.entities.types.Camera;
 import net.guerra24.voxel.client.engine.entities.types.Light;
-import net.guerra24.voxel.client.engine.render.entity.EntityRenderer;
 import net.guerra24.voxel.client.engine.render.shaders.types.EntityShader;
-import net.guerra24.voxel.client.engine.render.textures.skybox.SkyboxRenderer;
+import net.guerra24.voxel.client.engine.render.types.EntityRenderer;
+import net.guerra24.voxel.client.engine.render.types.SkyboxRenderer;
 import net.guerra24.voxel.client.engine.resources.Loader;
 import net.guerra24.voxel.client.engine.resources.models.TexturedModel;
 
@@ -34,9 +34,9 @@ public class MasterRenderer {
 	private static final float NEAR_PLANE = 0.1f;
 	private static final float FAR_PLANE = 1000f;
 
-	private static final float RED = 0.375f;
-	private static final float GREEN = 0.555f;
-	private static final float BLUE = 0.655f;
+	public static final float RED = 0.375f;
+	public static final float GREEN = 0.555f;
+	public static final float BLUE = 0.655f;
 
 	private static Matrix4f projectionMatrix;
 
@@ -103,7 +103,7 @@ public class MasterRenderer {
 		shader.cleanUp();
 	}
 
-	public void prepare() {
+	public static void prepare() {
 		glEnable(GL_DEPTH_TEST);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glClearColor(RED, GREEN, BLUE, 1);

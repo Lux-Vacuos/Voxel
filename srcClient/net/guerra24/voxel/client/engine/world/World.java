@@ -19,7 +19,7 @@ import net.guerra24.voxel.client.engine.world.chunks.Chunk;
 
 public class World {
 
-	public static final int WORLD_SIZE = 2;
+	public static final int WORLD_SIZE = 3;
 	public static String worldPath = "assets/world/World.json";
 
 	public static void init() {

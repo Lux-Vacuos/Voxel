@@ -9,7 +9,7 @@ import net.guerra24.voxel.client.launcher.updater.Update;
 
 public class Main {
 	public static void main(String[] args) {
-		//Init.InitLog();
+		// Init.InitLog();
 		Logger.log("Starting Launcher");
 		Init.checkJava();
 		Init.printSystemInfo();

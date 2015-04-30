@@ -1,6 +1,6 @@
 package net.guerra24.voxel.client.engine.entities.types;
 
-import net.guerra24.voxel.client.engine.display.DisplayManager;
+import net.guerra24.voxel.client.engine.DisplayManager;
 import net.guerra24.voxel.client.engine.entities.Entity;
 import net.guerra24.voxel.client.engine.resources.models.TexturedModel;
 

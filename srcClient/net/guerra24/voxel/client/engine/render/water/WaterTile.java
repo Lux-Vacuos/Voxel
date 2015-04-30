@@ -2,7 +2,7 @@ package net.guerra24.voxel.client.engine.render.water;
 
 public class WaterTile {
 	
-	public static final float TILE_SIZE = 60;
+	public static final float TILE_SIZE = 0.5f;
 	
 	private float height;
 	private float x,z;

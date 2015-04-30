@@ -5,6 +5,7 @@ import java.util.List;
 
 import net.guerra24.voxel.client.engine.Engine;
 import net.guerra24.voxel.client.engine.entities.Entity;
+import net.guerra24.voxel.client.engine.render.water.WaterTile;
 import net.guerra24.voxel.client.engine.world.chunks.blocks.Blocks;
 import net.guerra24.voxel.client.engine.world.generation.SimplexNoise;
 
@@ -88,6 +89,8 @@ public class Chunk {
 			if (Engine.rand.nextInt(1) == 0) {
 				cubes.add(new Entity(Blocks.cubeIndes, new Vector3f(
 						x + xOffset, y, z + zOffset), 0, 0, 0, 1));
+				Engine.waters
+						.add(new WaterTile(x + xOffset, z + zOffset, 63.4f));
 			}
 		}
 	}

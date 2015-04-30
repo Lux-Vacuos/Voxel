@@ -8,8 +8,8 @@ import net.guerra24.voxel.client.launcher.properties.Reader;
 public class AssetsDownloader {
 	public static void Assets() {
 		try {
-			Downloader.download(ConstantsLauncher.download1, Reader.IconPath, false,
-					false);
+			Downloader.download(ConstantsLauncher.download1, Reader.IconPath,
+					false, false);
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
@@ -21,10 +21,8 @@ public class AssetsDownloader {
 		}
 		try {
 			Logger.log("Downloading user info");
-			Downloader.download(
-					ConstantsLauncher.userInfo,
-					Login.infoPath, false, false);// Specific the web host of the
-											// username and pass file
+			Downloader.download(ConstantsLauncher.userInfo, Login.infoPath,
+					false, false);
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}

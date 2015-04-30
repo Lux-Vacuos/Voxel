@@ -1,4 +1,4 @@
-package net.guerra24.voxel.client.engine.display;
+package net.guerra24.voxel.client.engine;
 
 import static org.lwjgl.opengl.GL11.*;
 import net.guerra24.voxel.client.engine.util.Logger;
@@ -16,7 +16,7 @@ public class DisplayManager {
 	private static final int HEIGHT = 720;
 	private static final int FPS_CAP = 60;
 	private static final String Title = "Game";
-	
+
 	private static long lastFrameTime;
 	private static float delta;
 

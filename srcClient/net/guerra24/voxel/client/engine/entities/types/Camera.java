@@ -85,6 +85,9 @@ public class Camera {
 			Logger.log("World loaded");
 		}
 
+	}
+
+	public void setMouse() {
 		if (Mouse.isButtonDown(0)) {
 			Mouse.setGrabbed(true);
 			Mouse.setCursorPosition(Display.getWidth() / 2,
@@ -92,7 +95,6 @@ public class Camera {
 		} else if (Mouse.isButtonDown(1)) {
 			Mouse.setGrabbed(false);
 		}
-
 	}
 
 	public Vector3f getPosition() {

@@ -23,15 +23,15 @@ public class Blocks {
 		loader = new Loader();
 		// Block set texture
 		RawModel model = OBJLoader.loadObjModel("Block", loader);
-		ModelTexture texture0 = new ModelTexture(loader.loadTexture("Indes"));
-		ModelTexture texture = new ModelTexture(loader.loadTexture("Grass"));
-		ModelTexture texture1 = new ModelTexture(loader.loadTexture("Stone"));
-		ModelTexture texture2 = new ModelTexture(loader.loadTexture("Sand"));
-		ModelTexture texture3 = new ModelTexture(loader.loadTexture("Glass"));
-		ModelTexture texture4 = new ModelTexture(loader.loadTexture("Dirt"));
+		ModelTexture texture0 = new ModelTexture(loader.loadTextureBlocks("Indes"));
+		ModelTexture texture = new ModelTexture(loader.loadTextureBlocks("Grass"));
+		ModelTexture texture1 = new ModelTexture(loader.loadTextureBlocks("Stone"));
+		ModelTexture texture2 = new ModelTexture(loader.loadTextureBlocks("Sand"));
+		ModelTexture texture3 = new ModelTexture(loader.loadTextureBlocks("Glass"));
+		ModelTexture texture4 = new ModelTexture(loader.loadTextureBlocks("Dirt"));
 		ModelTexture texture5 = new ModelTexture(
-				loader.loadTexture("Diamond-Ore"));
-		ModelTexture texture6 = new ModelTexture(loader.loadTexture("Gold-Ore"));
+				loader.loadTextureBlocks("Diamond-Ore"));
+		ModelTexture texture6 = new ModelTexture(loader.loadTextureBlocks("Gold-Ore"));
 		// Block Mix texture and model
 		cubeIndes = new TexturedModel(model, texture0);
 		cubeGrass = new TexturedModel(model, texture);

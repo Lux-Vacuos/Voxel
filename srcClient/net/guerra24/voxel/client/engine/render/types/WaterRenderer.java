@@ -1,15 +1,17 @@
-package net.guerra24.voxel.client.engine.render.water;
+package net.guerra24.voxel.client.engine.render.types;
 
 import java.util.List;
 
 import net.guerra24.voxel.client.engine.entities.types.Camera;
 import net.guerra24.voxel.client.engine.render.shaders.types.WaterShader;
+import net.guerra24.voxel.client.engine.render.water.WaterTile;
 import net.guerra24.voxel.client.engine.resources.Loader;
 import net.guerra24.voxel.client.engine.resources.models.RawModel;
 import net.guerra24.voxel.client.engine.util.Maths;
 
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
+
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL30.*;
