@@ -68,6 +68,7 @@ public class Loader {
 		textures.add(texture.getTextureID());
 		return texture.getTextureID();
 	}
+
 	public int loadTextureGui(String fileName) {
 		Texture texture = null;
 		try {

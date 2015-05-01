@@ -1,6 +1,7 @@
 package net.guerra24.voxel.client.engine;
 
 import static org.lwjgl.opengl.GL11.*;
+
 import net.guerra24.voxel.client.engine.util.Logger;
 
 import org.lwjgl.LWJGLException;
@@ -22,6 +23,8 @@ public class DisplayManager {
 
 	private static PixelFormat pixelformat = new PixelFormat();
 
+	public static Loading splash;
+
 	public static void createDisplay() {
 		Logger.log("Creating Display");
 		Logger.log("LWJGL Version: " + Sys.getVersion());
@@ -30,6 +33,7 @@ public class DisplayManager {
 		try {
 			Display.setDisplayMode(new DisplayMode(WIDTH, HEIGHT));
 			Display.create(pixelformat, attribs);
+			splash = new Loading();
 			Display.setTitle(Title);
 			Display.setResizable(false);
 			Display.setFullscreen(false);
@@ -55,7 +59,6 @@ public class DisplayManager {
 	}
 
 	public static void closeDisplay() {
-
 		Display.destroy();
 	}
 

@@ -36,25 +36,23 @@ public class Engine {
 	public static Player player;
 	public static Light sun;
 	public static Light spot;
+	public static Loader loader;
 
 	private static State state = State.MAINMENU;
 
 	public static void StartGame() {
 
-		// CREATING WINDOW
+		Logger.log("Loading");
 
 		DisplayManager.createDisplay();
 		SystemInfo.chechOpenGl32();
 		SystemInfo.printSystemInfo();
 		Logger.log("Starting Rendering");
 
-		Mouse.setGrabbed(true);
 		Mouse.setCursorPosition(Display.getWidth() / 2, Display.getHeight() / 2);
 
-		// SETTING UP CONSTRUCTORS AND VARIABLES
-
 		rand = new Random();
-		Loader loader = new Loader();
+		loader = new Loader();
 		Camera camera = new Camera();
 		MasterRenderer renderer = new MasterRenderer(loader);
 		GuiRenderer guiRenderer = new GuiRenderer(loader);
@@ -64,8 +62,6 @@ public class Engine {
 		List<GuiTexture> guis = new ArrayList<GuiTexture>();
 		List<GuiTexture> guis2 = new ArrayList<GuiTexture>();
 		Blocks.createBlocks();
-
-		// SETTING UP VARIABLES
 
 		GuiTexture gui = new GuiTexture(loader.loadTextureGui("HotBar"),
 				new Vector2f(0.6f, -0.425f), new Vector2f(1.6f, 1.425f));
@@ -79,13 +75,9 @@ public class Engine {
 		// spot = new Light(new Vector3f(0, 0, 0), new Vector3f(1, 0, 0),
 		// new Vector3f(1, 0.01f, 0.002f));
 
-		// WORLD GENERATION
-
 		Logger.log("Generating World with size: " + World.WORLD_SIZE);
 		World.init();
 		Logger.log("World Generation completed with size: " + World.WORLD_SIZE);
-
-		// PUT RESOURCES IN LISTS
 
 		// lights.add(spot);
 		lights.add(sun);
@@ -93,7 +85,8 @@ public class Engine {
 		guis.add(gui);
 		guis2.add(menu);
 
-		// GAME LOOP
+		DisplayManager.splash.dispose();
+
 		while (!Display.isCloseRequested()) {
 			switch (state) {
 			case MAINMENU:
@@ -116,7 +109,7 @@ public class Engine {
 		waterShader.cleanUp();
 		guiRenderer.cleanUp();
 		renderer.cleanUp();
-		Blocks.loader.cleanUp();
+		loader.cleanUp();
 		DisplayManager.closeDisplay();
 	}
 

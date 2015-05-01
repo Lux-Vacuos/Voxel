@@ -1,7 +1,7 @@
 package net.guerra24.voxel.client.engine.world.chunks.blocks;
 
+import net.guerra24.voxel.client.engine.Engine;
 import net.guerra24.voxel.client.engine.render.textures.ModelTexture;
-import net.guerra24.voxel.client.engine.resources.Loader;
 import net.guerra24.voxel.client.engine.resources.OBJLoader;
 import net.guerra24.voxel.client.engine.resources.models.RawModel;
 import net.guerra24.voxel.client.engine.resources.models.TexturedModel;
@@ -16,22 +16,27 @@ public class Blocks {
 	public static TexturedModel cubeDirt;
 	public static TexturedModel cubeDiamondOre;
 	public static TexturedModel cubeGoldOre;
-	public static Loader loader;
 
 	public static void createBlocks() {
 
-		loader = new Loader();
 		// Block set texture
-		RawModel model = OBJLoader.loadObjModel("Block", loader);
-		ModelTexture texture0 = new ModelTexture(loader.loadTextureBlocks("Indes"));
-		ModelTexture texture = new ModelTexture(loader.loadTextureBlocks("Grass"));
-		ModelTexture texture1 = new ModelTexture(loader.loadTextureBlocks("Stone"));
-		ModelTexture texture2 = new ModelTexture(loader.loadTextureBlocks("Sand"));
-		ModelTexture texture3 = new ModelTexture(loader.loadTextureBlocks("Glass"));
-		ModelTexture texture4 = new ModelTexture(loader.loadTextureBlocks("Dirt"));
+		RawModel model = OBJLoader.loadObjModel("Block", Engine.loader);
+		ModelTexture texture0 = new ModelTexture(
+				Engine.loader.loadTextureBlocks("Indes"));
+		ModelTexture texture = new ModelTexture(
+				Engine.loader.loadTextureBlocks("Grass"));
+		ModelTexture texture1 = new ModelTexture(
+				Engine.loader.loadTextureBlocks("Stone"));
+		ModelTexture texture2 = new ModelTexture(
+				Engine.loader.loadTextureBlocks("Sand"));
+		ModelTexture texture3 = new ModelTexture(
+				Engine.loader.loadTextureBlocks("Glass"));
+		ModelTexture texture4 = new ModelTexture(
+				Engine.loader.loadTextureBlocks("Dirt"));
 		ModelTexture texture5 = new ModelTexture(
-				loader.loadTextureBlocks("Diamond-Ore"));
-		ModelTexture texture6 = new ModelTexture(loader.loadTextureBlocks("Gold-Ore"));
+				Engine.loader.loadTextureBlocks("Diamond-Ore"));
+		ModelTexture texture6 = new ModelTexture(
+				Engine.loader.loadTextureBlocks("Gold-Ore"));
 		// Block Mix texture and model
 		cubeIndes = new TexturedModel(model, texture0);
 		cubeGrass = new TexturedModel(model, texture);
