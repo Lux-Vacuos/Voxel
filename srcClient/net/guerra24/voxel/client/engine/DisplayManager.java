@@ -32,6 +32,7 @@ public class DisplayManager {
 			Display.create(pixelformat, attribs);
 			Display.setTitle(Title);
 			Display.setResizable(false);
+			Display.setFullscreen(false);
 		} catch (LWJGLException e) {
 			e.printStackTrace();
 			Logger.error("Failed to create Display");

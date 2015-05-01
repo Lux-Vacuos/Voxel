@@ -1,4 +1,4 @@
-package net.guerra24.voxel.client.engine.render.water;
+package net.guerra24.voxel.client.engine.resources.models;
 
 public class WaterTile {
 	

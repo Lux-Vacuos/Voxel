@@ -5,7 +5,7 @@ import java.util.List;
 
 import net.guerra24.voxel.client.engine.Engine;
 import net.guerra24.voxel.client.engine.entities.Entity;
-import net.guerra24.voxel.client.engine.render.water.WaterTile;
+import net.guerra24.voxel.client.engine.resources.models.WaterTile;
 import net.guerra24.voxel.client.engine.world.chunks.blocks.Blocks;
 import net.guerra24.voxel.client.engine.world.generation.SimplexNoise;
 

@@ -4,9 +4,9 @@ import java.util.List;
 
 import net.guerra24.voxel.client.engine.entities.types.Camera;
 import net.guerra24.voxel.client.engine.render.shaders.types.WaterShader;
-import net.guerra24.voxel.client.engine.render.water.WaterTile;
 import net.guerra24.voxel.client.engine.resources.Loader;
 import net.guerra24.voxel.client.engine.resources.models.RawModel;
+import net.guerra24.voxel.client.engine.resources.models.WaterTile;
 import net.guerra24.voxel.client.engine.util.Maths;
 
 import org.lwjgl.util.vector.Matrix4f;
