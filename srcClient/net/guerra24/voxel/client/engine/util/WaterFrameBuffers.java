@@ -44,12 +44,6 @@ public class WaterFrameBuffers {
 				REFLECTION_HEIGHT);
 	}
 
-	public void bindRefractionFrameBuffer() {// call before rendering to this
-												// FBO
-		bindFrameBuffer(refractionFrameBuffer, REFRACTION_WIDTH,
-				REFRACTION_HEIGHT);
-	}
-
 	public void unbindCurrentFrameBuffer() {// call to switch to default frame
 											// buffer
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
