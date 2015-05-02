@@ -17,6 +17,7 @@ import net.guerra24.voxel.client.engine.resources.Loader;
 import net.guerra24.voxel.client.engine.resources.models.WaterTile;
 import net.guerra24.voxel.client.engine.util.Logger;
 import net.guerra24.voxel.client.engine.util.SystemInfo;
+import net.guerra24.voxel.client.engine.util.WaterFrameBuffers;
 import net.guerra24.voxel.client.engine.world.World;
 import net.guerra24.voxel.client.engine.world.chunks.blocks.Blocks;
 
@@ -59,6 +60,7 @@ public class Engine {
 		WaterShader waterShader = new WaterShader();
 		WaterRenderer waterRenderer = new WaterRenderer(loader, waterShader,
 				renderer.getProjectionMatrix());
+		WaterFrameBuffers fbos = new WaterFrameBuffers();
 		List<GuiTexture> guis = new ArrayList<GuiTexture>();
 		List<GuiTexture> guis2 = new ArrayList<GuiTexture>();
 		Blocks.createBlocks();
@@ -67,6 +69,8 @@ public class Engine {
 				new Vector2f(0.6f, -0.425f), new Vector2f(1.6f, 1.425f));
 		GuiTexture menu = new GuiTexture(loader.loadTextureGui("MainMenu"),
 				new Vector2f(0.6f, -0.425f), new Vector2f(1.6f, 1.425f));
+		GuiTexture gui2 = new GuiTexture(fbos.getReflectionTexture(),
+				new Vector2f(-0.5f, 0.5f), new Vector2f(0.5f, 0.5f));
 
 		player = new Player(Blocks.cubeGlass, new Vector3f(-10, 68, -10), 0, 0,
 				90, 1);
@@ -82,6 +86,7 @@ public class Engine {
 		// lights.add(spot);
 		lights.add(sun);
 		allCubes.add(player);
+		guis.add(gui2);
 		guis.add(gui);
 		guis2.add(menu);
 
@@ -95,6 +100,9 @@ public class Engine {
 			case GAME:
 				camera.move();
 				player.move();
+				fbos.bindReflectionFrameBuffer();
+				renderer.renderScene(allCubes, lights, camera);
+				fbos.unbindCurrentFrameBuffer();
 				// spot.setPosition(player.getPosition());
 				renderer.renderScene(allCubes, lights, camera);
 				waterRenderer.render(waters, camera);
@@ -107,6 +115,7 @@ public class Engine {
 		}
 		Logger.log("Closing Game");
 		waterShader.cleanUp();
+		fbos.cleanUp();
 		guiRenderer.cleanUp();
 		renderer.cleanUp();
 		loader.cleanUp();
