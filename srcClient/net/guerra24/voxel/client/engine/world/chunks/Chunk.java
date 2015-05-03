@@ -6,6 +6,7 @@ import java.util.List;
 import net.guerra24.voxel.client.engine.Engine;
 import net.guerra24.voxel.client.engine.entities.Entity;
 import net.guerra24.voxel.client.engine.world.chunks.blocks.Blocks;
+import net.guerra24.voxel.client.engine.world.generation.SimplexNoise;
 
 import org.lwjgl.util.vector.Vector3f;
 
@@ -22,16 +23,22 @@ public class Chunk {
 		for (int x = 0; x < CHUNK_SIZE; x++) {
 			for (int y = 0; y < CHUNK_HEIGHT; y++) {
 				for (int z = 0; z < CHUNK_SIZE; z++) {
-					create(x, y, z, xOffset, zOffset, 64);
+					create(x,
+							y,
+							z,
+							xOffset,
+							zOffset,
+							(int) SimplexNoise.noise(y, x)
+									+ (int) SimplexNoise.noise(y, z));
 				}
 			}
 		}
 	}
 
 	private static void create(int x, int y, int z, int xOffset, int zOffset,
-			float y9) {
+			int y9) {
 		if (y9 < 60 && y9 > 0) {
-			cubes.add(new Entity(Blocks.cubeGrass, new Vector3f(x + xOffset,
+			cubes.add(new Entity(Blocks.cubeStone, new Vector3f(x + xOffset,
 					y9, z + zOffset), 0f, 0f, 0f, 1f));
 		}
 		if (y9 < 64 && y9 > 62) {
@@ -88,5 +95,4 @@ public class Chunk {
 			}
 		}
 	}
-
 }
