@@ -5,7 +5,7 @@ import java.util.List;
 
 import net.guerra24.voxel.client.engine.Engine;
 import net.guerra24.voxel.client.engine.entities.Entity;
-import net.guerra24.voxel.client.engine.world.chunks.blocks.Blocks;
+import net.guerra24.voxel.client.engine.world.Blocks;
 import net.guerra24.voxel.client.engine.world.generation.SimplexNoise;
 
 import org.lwjgl.util.vector.Vector3f;

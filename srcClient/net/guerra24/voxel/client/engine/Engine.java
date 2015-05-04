@@ -8,6 +8,7 @@ import net.guerra24.voxel.client.engine.entities.Entity;
 import net.guerra24.voxel.client.engine.entities.types.Camera;
 import net.guerra24.voxel.client.engine.entities.types.Light;
 import net.guerra24.voxel.client.engine.entities.types.Player;
+import net.guerra24.voxel.client.engine.menu.Button;
 import net.guerra24.voxel.client.engine.render.MasterRenderer;
 import net.guerra24.voxel.client.engine.render.shaders.types.WaterShader;
 import net.guerra24.voxel.client.engine.render.textures.types.GuiTexture;
@@ -18,18 +19,17 @@ import net.guerra24.voxel.client.engine.resources.models.WaterTile;
 import net.guerra24.voxel.client.engine.util.Logger;
 import net.guerra24.voxel.client.engine.util.SystemInfo;
 import net.guerra24.voxel.client.engine.util.WaterFrameBuffers;
+import net.guerra24.voxel.client.engine.world.Blocks;
 import net.guerra24.voxel.client.engine.world.World;
-import net.guerra24.voxel.client.engine.world.chunks.blocks.Blocks;
 
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
 public class Engine {
 
-	public static List<Entity> allCubes = new ArrayList<Entity>();
+	public static List<Entity> allObjects = new ArrayList<Entity>();
+	public static List<Entity> allEntities = new ArrayList<Entity>();
 	public static List<Light> lights = new ArrayList<Light>();
 	public static List<WaterTile> waters = new ArrayList<WaterTile>();
 
@@ -39,6 +39,8 @@ public class Engine {
 	public static Light spot;
 	public static Loader loader;
 	public static Camera camera;
+
+	public static boolean loop = true;
 
 	private static State state = State.MAINMENU;
 
@@ -53,8 +55,6 @@ public class Engine {
 		SystemInfo.printSystemInfo();
 		Logger.log("Starting Rendering");
 
-		Mouse.setCursorPosition(Display.getWidth() / 2, Display.getHeight() / 2);
-
 		rand = new Random();
 		loader = new Loader();
 		camera = new Camera();
@@ -66,16 +66,24 @@ public class Engine {
 		WaterFrameBuffers fbos = new WaterFrameBuffers();
 		List<GuiTexture> guis = new ArrayList<GuiTexture>();
 		List<GuiTexture> guis2 = new ArrayList<GuiTexture>();
+		List<GuiTexture> guis3 = new ArrayList<GuiTexture>();
 		Blocks.createBlocks();
 
 		GuiTexture gui = new GuiTexture(loader.loadTextureGui("HotBar"),
 				new Vector2f(0.6f, -0.425f), new Vector2f(1.6f, 1.425f));
 		GuiTexture menu = new GuiTexture(loader.loadTextureGui("MainMenu"),
 				new Vector2f(0.6f, -0.425f), new Vector2f(1.6f, 1.425f));
-		GuiTexture button1 = new GuiTexture(loader.loadTextureGui("Button"),
-				new Vector2f(0.0f, 0.0f), new Vector2f(0.3f, 0.12f));
-		GuiTexture button2 = new GuiTexture(loader.loadTextureGui("Button"),
-				new Vector2f(0.0f, 0.3f), new Vector2f(0.3f, 0.12f));
+		GuiTexture world = new GuiTexture(loader.loadTextureGui("WSelection"),
+				new Vector2f(0.6f, -0.425f), new Vector2f(1.6f, 1.425f));
+		GuiTexture button1 = new GuiTexture(
+				loader.loadTextureGui("ButtonExit"), new Vector2f(0.0f, 0.0f),
+				new Vector2f(0.2f, 0.12f));
+		GuiTexture button2 = new GuiTexture(
+				loader.loadTextureGui("ButtonPlay"), new Vector2f(0.0f, 0.3f),
+				new Vector2f(0.2f, 0.12f));
+		GuiTexture button3 = new GuiTexture(
+				loader.loadTextureGui("ButtonExit"), new Vector2f(0.5f, -0.7f),
+				new Vector2f(0.2f, 0.12f));
 		// GuiTexture gui2 = new GuiTexture(fbos.getReflectionTexture(),
 		// new Vector2f(-0.5f, 0.5f), new Vector2f(0.5f, 0.5f));
 
@@ -94,45 +102,45 @@ public class Engine {
 
 		// lights.add(spot);
 		lights.add(sun);
-		allCubes.add(player);
+		allObjects.add(player);
 		// guis.add(gui2);
 		guis.add(gui);
 		guis2.add(button1);
 		guis2.add(button2);
 		guis2.add(menu);
+		guis3.add(button3);
+		guis3.add(world);
 
-		if (isLoading) {
-			Logger.log("Loading Game");
-			camera.loadCameraPos();
-			World.loadGame(AbstractFilesPath.worldPath);
-		}
+		allEntities.addAll(allObjects);
 
 		DisplayManager.splash.dispose();
 
-		while (!Display.isCloseRequested()) {
+		while (loop) {
 			switch (state) {
 			case MAINMENU:
+				switchStatesMainMenu();
 				guiRenderer.render(guis2);
 				break;
+			case WORLDSELECTION:
+				switchStatesWSelection();
+				guiRenderer.render(guis3);
+				break;
 			case GAME:
+				switchStatesGame();
 				camera.move();
 				player.move();
 				// fbos.bindReflectionFrameBuffer();
 				// renderer.renderScene(allCubes, lights, camera);
 				// fbos.unbindCurrentFrameBuffer();
 				// spot.setPosition(player.getPosition());
-				renderer.renderScene(allCubes, lights, camera);
+				renderer.renderScene(allEntities, lights, camera);
 				waterRenderer.render(waters, camera);
 				guiRenderer.renderNoPrepare(guis);
 				break;
 			}
-			camera.setMouse();
-			switchStates();
+			// System.out.println("X" + Mouse.getX() + "Y" + Mouse.getY());
 			DisplayManager.updateDisplay();
 		}
-		Logger.log("Saving Game");
-		World.saveGame(AbstractFilesPath.worldPath);
-		camera.saveCameraPos();
 		Logger.log("Closing Game");
 		waterShader.cleanUp();
 		fbos.cleanUp();
@@ -143,18 +151,34 @@ public class Engine {
 	}
 
 	private enum State {
-		GAME, MAINMENU;
+		GAME, MAINMENU, WORLDSELECTION;
 	}
 
-	private static void switchStates() {
-		while (Keyboard.next()) {
-			if (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
-				if (state == State.MAINMENU) {
-					state = State.GAME;
-				} else if (state == State.GAME) {
-					state = State.MAINMENU;
-				}
+	private static void switchStatesMainMenu() {
+		if (state == State.MAINMENU && Button.isInButtonPlay()) {
+			state = State.WORLDSELECTION;
+		}
 
+		if (state == State.MAINMENU && Button.isInButtonExit()) {
+			loop = false;
+		}
+	}
+
+	private static void switchStatesWSelection() {
+		if (state == State.WORLDSELECTION && Button.isInButtonBacK()) {
+			state = State.MAINMENU;
+		}
+		/*
+		 * if (state == State.GAME) { if (isLoading) { World.loadGame(); }
+		 * camera.setMouse(); }
+		 */}
+
+	private static void switchStatesGame() {
+		while (Keyboard.next()) {
+			if (state == State.GAME && Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
+				World.saveGame();
+				camera.unlockMouse();
+				state = State.MAINMENU;
 			}
 		}
 	}

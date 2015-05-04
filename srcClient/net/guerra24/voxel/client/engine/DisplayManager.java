@@ -1,7 +1,7 @@
 package net.guerra24.voxel.client.engine;
 
 import static org.lwjgl.opengl.GL11.*;
-
+import net.guerra24.voxel.client.engine.menu.Loading;
 import net.guerra24.voxel.client.engine.util.Logger;
 
 import org.lwjgl.LWJGLException;

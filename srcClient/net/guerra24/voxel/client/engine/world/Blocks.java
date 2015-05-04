@@ -1,4 +1,4 @@
-package net.guerra24.voxel.client.engine.world.chunks.blocks;
+package net.guerra24.voxel.client.engine.world;
 
 import net.guerra24.voxel.client.engine.Engine;
 import net.guerra24.voxel.client.engine.render.textures.ModelTexture;
@@ -19,7 +19,6 @@ public class Blocks {
 
 	public static void createBlocks() {
 
-		// Block set texture
 		RawModel model = OBJLoader.loadObjModel("Block", Engine.loader);
 		ModelTexture texture0 = new ModelTexture(
 				Engine.loader.loadTextureBlocks("Indes"));

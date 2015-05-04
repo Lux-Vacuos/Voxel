@@ -13,6 +13,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 
+import net.guerra24.voxel.client.engine.AbstractFilesPath;
 import net.guerra24.voxel.client.engine.Engine;
 import net.guerra24.voxel.client.engine.entities.Entity;
 import net.guerra24.voxel.client.engine.util.Logger;
@@ -22,17 +23,31 @@ public class World {
 
 	public static final int WORLD_SIZE = 1;
 
+	private static boolean load = true;
+	private static Gson gson = new Gson();
+
 	public static void init() {
 		for (int x = 0; x < WORLD_SIZE; x++) {
 			for (int z = 0; z < WORLD_SIZE; z++) {
 				Chunk.create(x + 16, z + 16);
 			}
 		}
-		Engine.allCubes.addAll(Chunk.cubes);
+		Engine.allEntities.addAll(Chunk.cubes);
 	}
 
-	public static void saveGame(String path) {
-		Gson gson = new Gson();
+	public static void loadGame() {
+		Engine.camera.loadCameraPos();
+		SaveEntities.loadGame(AbstractFilesPath.entitiesPath);
+		loadWorld(AbstractFilesPath.worldPath);
+	}
+
+	public static void saveGame() {
+		saveWorld(AbstractFilesPath.worldPath);
+		Engine.camera.saveCameraPos();
+		SaveEntities.saveGame(AbstractFilesPath.entitiesPath);
+	}
+
+	private static void saveWorld(String path) {
 		String json = gson.toJson(Chunk.cubes);
 
 		FileWriter writer;
@@ -46,22 +61,25 @@ public class World {
 		}
 	}
 
-	public static void loadGame(String path) {
-		Gson gson = new Gson();
-
+	private static void loadWorld(String path) {
 		try {
-			BufferedReader world = new BufferedReader(new FileReader(path));
-			JsonParser parser = new JsonParser();
-			JsonArray jArray = parser.parse(world).getAsJsonArray();
-			List<Entity> lcs = new ArrayList<Entity>();
+			if (load) {
+				Logger.log("Loading Game");
+				BufferedReader world = new BufferedReader(new FileReader(path));
+				JsonParser parser = new JsonParser();
+				JsonArray jArray = parser.parse(world).getAsJsonArray();
+				List<Entity> lcs = new ArrayList<Entity>();
 
-			for (JsonElement obj : jArray) {
-				Entity cse = gson.fromJson(obj, Entity.class);
-				lcs.add(cse);
+				for (JsonElement obj : jArray) {
+					Entity cse = gson.fromJson(obj, Entity.class);
+					lcs.add(cse);
+				}
+				Engine.allEntities.removeAll(Chunk.cubes);
+				Chunk.cubes = lcs;
+				Engine.allEntities.addAll(Chunk.cubes);
+				load = false;
+				Logger.log("Load Completed");
 			}
-			Engine.allCubes.removeAll(Chunk.cubes);
-			Chunk.cubes = lcs;
-			Engine.allCubes.addAll(Chunk.cubes);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 			Logger.error("Failed to load Save Game");

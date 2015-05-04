@@ -1,4 +1,4 @@
-package net.guerra24.voxel.client.engine;
+package net.guerra24.voxel.client.engine.menu;
 
 import java.awt.BorderLayout;
 import java.awt.Color;

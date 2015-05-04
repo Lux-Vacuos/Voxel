@@ -9,7 +9,6 @@ import java.io.IOException;
 import net.guerra24.voxel.client.engine.AbstractFilesPath;
 import net.guerra24.voxel.client.engine.Engine;
 import net.guerra24.voxel.client.engine.util.Logger;
-import net.guerra24.voxel.client.engine.world.World;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -86,15 +85,6 @@ public class Camera {
 			position.y -= speed;
 
 		}
-		if (Keyboard.isKeyDown(Keyboard.KEY_G)) {
-			Logger.log("Saving World");
-			World.saveGame(AbstractFilesPath.worldPath);
-			Logger.log("World saved");
-		} else if (Keyboard.isKeyDown(Keyboard.KEY_F)) {
-			Logger.log("Loading World");
-			World.loadGame(AbstractFilesPath.worldPath);
-			Logger.log("World loaded");
-		}
 		if (Mouse.isButtonDown(2)) {
 			loadCameraPos();
 		}
@@ -102,13 +92,12 @@ public class Camera {
 	}
 
 	public void setMouse() {
-		if (Mouse.isButtonDown(0)) {
-			Mouse.setGrabbed(true);
-			Mouse.setCursorPosition(Display.getWidth() / 2,
-					Display.getHeight() / 2);
-		} else if (Mouse.isButtonDown(1)) {
-			Mouse.setGrabbed(false);
-		}
+		Mouse.setGrabbed(true);
+		Mouse.setCursorPosition(Display.getWidth() / 2, Display.getHeight() / 2);
+	}
+
+	public void unlockMouse() {
+		Mouse.setGrabbed(false);
 	}
 
 	public void saveCameraPos() {
