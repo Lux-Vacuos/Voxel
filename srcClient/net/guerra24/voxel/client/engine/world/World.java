@@ -15,12 +15,12 @@ import com.google.gson.JsonParser;
 
 import net.guerra24.voxel.client.engine.Engine;
 import net.guerra24.voxel.client.engine.entities.Entity;
+import net.guerra24.voxel.client.engine.util.Logger;
 import net.guerra24.voxel.client.engine.world.chunks.Chunk;
 
 public class World {
 
-	public static final int WORLD_SIZE = 3;
-	public static String worldPath = "assets/world/World.json";
+	public static final int WORLD_SIZE = 1;
 
 	public static void init() {
 		for (int x = 0; x < WORLD_SIZE; x++) {
@@ -42,6 +42,7 @@ public class World {
 			writer.close();
 		} catch (IOException e) {
 			e.printStackTrace();
+			Logger.error("Failed to Save Game");
 		}
 	}
 
@@ -63,6 +64,7 @@ public class World {
 			Engine.allCubes.addAll(Chunk.cubes);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
+			Logger.error("Failed to load Save Game");
 		}
 	}
 }

@@ -23,13 +23,9 @@ public class Chunk {
 		for (int x = 0; x < CHUNK_SIZE; x++) {
 			for (int y = 0; y < CHUNK_HEIGHT; y++) {
 				for (int z = 0; z < CHUNK_SIZE; z++) {
-					create(x,
-							y,
-							z,
-							xOffset,
-							zOffset,
-							(int) SimplexNoise.noise(y, x)
-									+ (int) SimplexNoise.noise(y, z));
+					int yN = (int) SimplexNoise.noise(x, y)
+							+ (int) SimplexNoise.noise(z, y);
+					create(x, y, z, xOffset, zOffset, yN);
 				}
 			}
 		}

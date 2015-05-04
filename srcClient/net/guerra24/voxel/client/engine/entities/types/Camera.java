@@ -1,5 +1,13 @@
 package net.guerra24.voxel.client.engine.entities.types;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+
+import net.guerra24.voxel.client.engine.AbstractFilesPath;
+import net.guerra24.voxel.client.engine.Engine;
 import net.guerra24.voxel.client.engine.util.Logger;
 import net.guerra24.voxel.client.engine.world.World;
 
@@ -8,12 +16,15 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector3f;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
 public class Camera {
 
 	private Vector3f position = new Vector3f(0, 70, 0);
 	private float pitch;
 	private float yaw;
-	private float roll;// Optional!!!
 
 	private float speed;
 
@@ -77,12 +88,15 @@ public class Camera {
 		}
 		if (Keyboard.isKeyDown(Keyboard.KEY_G)) {
 			Logger.log("Saving World");
-			World.saveGame(World.worldPath);
+			World.saveGame(AbstractFilesPath.worldPath);
 			Logger.log("World saved");
 		} else if (Keyboard.isKeyDown(Keyboard.KEY_F)) {
 			Logger.log("Loading World");
-			World.loadGame(World.worldPath);
+			World.loadGame(AbstractFilesPath.worldPath);
 			Logger.log("World loaded");
+		}
+		if (Mouse.isButtonDown(2)) {
+			loadCameraPos();
 		}
 
 	}
@@ -97,6 +111,39 @@ public class Camera {
 		}
 	}
 
+	public void saveCameraPos() {
+		Gson gson = new Gson();
+		String json = gson.toJson(Engine.camera);
+
+		FileWriter writer;
+		try {
+			writer = new FileWriter(AbstractFilesPath.camPath);
+			writer.write(json);
+			writer.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+			Logger.error("Failed to Save Camera pos");
+		}
+	}
+
+	public void loadCameraPos() {
+		Gson gson = new Gson();
+
+		try {
+			BufferedReader camera = new BufferedReader(new FileReader(
+					AbstractFilesPath.camPath));
+			JsonParser parser = new JsonParser();
+			JsonObject jobject = parser.parse(camera).getAsJsonObject();
+
+			Camera cse = gson.fromJson(jobject, Camera.class);
+			Engine.camera = cse;
+
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			Logger.error("Failed to load Save Game");
+		}
+	}
+
 	public Vector3f getPosition() {
 		return position;
 	}
@@ -108,9 +155,4 @@ public class Camera {
 	public float getYaw() {
 		return yaw;
 	}
-
-	public float getRoll() {
-		return roll;
-	}
-
 }

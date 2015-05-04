@@ -38,8 +38,11 @@ public class Engine {
 	public static Light sun;
 	public static Light spot;
 	public static Loader loader;
+	public static Camera camera;
 
 	private static State state = State.MAINMENU;
+
+	private static boolean isLoading = false;
 
 	public static void StartGame() {
 
@@ -54,7 +57,7 @@ public class Engine {
 
 		rand = new Random();
 		loader = new Loader();
-		Camera camera = new Camera();
+		camera = new Camera();
 		MasterRenderer renderer = new MasterRenderer(loader);
 		GuiRenderer guiRenderer = new GuiRenderer(loader);
 		WaterShader waterShader = new WaterShader();
@@ -69,8 +72,12 @@ public class Engine {
 				new Vector2f(0.6f, -0.425f), new Vector2f(1.6f, 1.425f));
 		GuiTexture menu = new GuiTexture(loader.loadTextureGui("MainMenu"),
 				new Vector2f(0.6f, -0.425f), new Vector2f(1.6f, 1.425f));
-		//GuiTexture gui2 = new GuiTexture(fbos.getReflectionTexture(),
-		//		new Vector2f(-0.5f, 0.5f), new Vector2f(0.5f, 0.5f));
+		GuiTexture button1 = new GuiTexture(loader.loadTextureGui("Button"),
+				new Vector2f(0.0f, 0.0f), new Vector2f(0.3f, 0.12f));
+		GuiTexture button2 = new GuiTexture(loader.loadTextureGui("Button"),
+				new Vector2f(0.0f, 0.3f), new Vector2f(0.3f, 0.12f));
+		// GuiTexture gui2 = new GuiTexture(fbos.getReflectionTexture(),
+		// new Vector2f(-0.5f, 0.5f), new Vector2f(0.5f, 0.5f));
 
 		player = new Player(Blocks.cubeGlass, new Vector3f(-10, 68, -10), 0, 0,
 				90, 1);
@@ -78,17 +85,27 @@ public class Engine {
 				1f));
 		// spot = new Light(new Vector3f(0, 0, 0), new Vector3f(1, 0, 0),
 		// new Vector3f(1, 0.01f, 0.002f));
-
-		Logger.log("Generating World with size: " + World.WORLD_SIZE);
-		World.init();
-		Logger.log("World Generation completed with size: " + World.WORLD_SIZE);
+		if (!isLoading) {
+			Logger.log("Generating World with size: " + World.WORLD_SIZE);
+			World.init();
+			Logger.log("World Generation completed with size: "
+					+ World.WORLD_SIZE);
+		}
 
 		// lights.add(spot);
 		lights.add(sun);
 		allCubes.add(player);
-		//guis.add(gui2);
+		// guis.add(gui2);
 		guis.add(gui);
+		guis2.add(button1);
+		guis2.add(button2);
 		guis2.add(menu);
+
+		if (isLoading) {
+			Logger.log("Loading Game");
+			camera.loadCameraPos();
+			World.loadGame(AbstractFilesPath.worldPath);
+		}
 
 		DisplayManager.splash.dispose();
 
@@ -100,9 +117,9 @@ public class Engine {
 			case GAME:
 				camera.move();
 				player.move();
-//				fbos.bindReflectionFrameBuffer();
-//				renderer.renderScene(allCubes, lights, camera);
-//				fbos.unbindCurrentFrameBuffer();
+				// fbos.bindReflectionFrameBuffer();
+				// renderer.renderScene(allCubes, lights, camera);
+				// fbos.unbindCurrentFrameBuffer();
 				// spot.setPosition(player.getPosition());
 				renderer.renderScene(allCubes, lights, camera);
 				waterRenderer.render(waters, camera);
@@ -113,6 +130,9 @@ public class Engine {
 			switchStates();
 			DisplayManager.updateDisplay();
 		}
+		Logger.log("Saving Game");
+		World.saveGame(AbstractFilesPath.worldPath);
+		camera.saveCameraPos();
 		Logger.log("Closing Game");
 		waterShader.cleanUp();
 		fbos.cleanUp();
