@@ -20,7 +20,7 @@ public class Chunk {
 		int xOffset = CHUNK_SIZE * chunkX - 303;
 		int zOffset = CHUNK_SIZE * chunkZ - 303;
 
-		for (int x = 0; x < CHUNK_SIZE; x++) {
+		for (int x = 0; x < CHUNK_SIZE; x++) {// Random Generation are Broken.
 			for (int y = 0; y < CHUNK_HEIGHT; y++) {
 				for (int z = 0; z < CHUNK_SIZE; z++) {
 					int yN = (int) SimplexNoise.noise(x, y)

@@ -10,13 +10,16 @@ Lharing: Ores generation algorithm.
 --- ThinMatrix: GLSL, Timming and Day/Night Cycle. https://www.youtube.com/channel/UCUkRj4qoT1bsWpE_C8lZYoQ
 --- EsotericSoftware: Kryonet: https://github.com/EsotericSoftware/kryonet
 
+# In Process
++ GUI 90%
++ World Save and Loading 70%
++ NBWG (Noise Based World Generation) 50%
++ Ilumination 95%
+
 # TODO
 +Simple Culling 
 +Frustrim Culling 
 +Blocks collisions 
-+Real Ilumiation(Partialy) 
 +Bind Player and Camera class 
-+Noise based world generation 
-+Save chunks 
 
 Necessarily requires a GPU that supports OpenGL 3.3+
