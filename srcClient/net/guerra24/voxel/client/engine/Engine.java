@@ -23,9 +23,9 @@ import net.guerra24.voxel.client.engine.util.SystemInfo;
 import net.guerra24.voxel.client.engine.util.WaterFrameBuffers;
 import net.guerra24.voxel.client.engine.world.Blocks;
 import net.guerra24.voxel.client.engine.world.World;
+import net.guerra24.voxel.client.engine.world.chunks.Chunk;
 
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
 import org.lwjgl.util.vector.Vector3f;
 
 public class Engine {
@@ -39,6 +39,7 @@ public class Engine {
 	public static List<GuiTexture> guis2 = new ArrayList<GuiTexture>();
 	public static List<GuiTexture> guis3 = new ArrayList<GuiTexture>();
 	public static List<GuiTexture> guis4 = new ArrayList<GuiTexture>();
+	public static List<GuiTexture> guis5 = new ArrayList<GuiTexture>();
 
 	public static Random rand;
 	public static Player player;
@@ -46,32 +47,41 @@ public class Engine {
 	public static Light spot;
 	public static Loader loader;
 	public static Camera camera;
+	public static GuiRenderer guiRenderer;
 	public static boolean loop = true;
 
 	public static State state = State.MAINMENU;
 	public static boolean isLoading = false;
-	private static int build = 2;
+	private static int build = 3;
 
 	public static void StartGame() {
 
 		Logger.log("Loading");
 		Logger.log("Voxel Game BUILD: " + build);
 		DisplayManager.createDisplay();
+
+		loader = new Loader();
+		guiRenderer = new GuiRenderer(loader);
+		GuiResources.loadingGui();
+		guiRenderer.render(guis5);
+		DisplayManager.updateDisplay();
+
 		SystemInfo.chechOpenGl32();
 		SystemInfo.printSystemInfo();
 		Logger.log("Loading Resources");
 
 		rand = new Random();
-		loader = new Loader();
 		camera = new Camera();
+
 		MasterRenderer renderer = new MasterRenderer(loader);
-		GuiRenderer guiRenderer = new GuiRenderer(loader);
 		WaterShader waterShader = new WaterShader();
 		WaterRenderer waterRenderer = new WaterRenderer(loader, waterShader,
 				renderer.getProjectionMatrix());
 		WaterFrameBuffers fbos = new WaterFrameBuffers();
+
 		Blocks.createBlocks();
 		GuiResources.loadGuiTexture();
+		GuiResources.addGuiTextures();
 
 		player = new Player(Blocks.cubeGlass, new Vector3f(-10, 68, -10), 0, 0,
 				90, 1);
@@ -79,16 +89,11 @@ public class Engine {
 				1f));
 		// spot = new Light(new Vector3f(0, 0, 0), new Vector3f(1, 0, 0),
 		// new Vector3f(1, 0.01f, 0.002f));
-
 		// lights.add(spot);
 		lights.add(sun);
 		allObjects.add(player);
 		// guis.add(gui2);
 		allEntities.addAll(allObjects);
-
-		GuiResources.addGuiTextures();
-
-		DisplayManager.splash.dispose();
 
 		while (loop) {
 			switch (state) {
@@ -111,7 +116,7 @@ public class Engine {
 				// spot.setPosition(player.getPosition());
 				renderer.renderScene(allEntities, lights, camera);
 				waterRenderer.render(waters, camera);
-				guiRenderer.renderNoPrepare(guis);
+				//guiRenderer.renderNoPrepare(guis);
 				break;
 			}
 			// System.out.println("X" + Mouse.getX() + "Y" + Mouse.getY());
@@ -145,6 +150,9 @@ public class Engine {
 
 		if (state == State.IN_PAUSE && Button.backToMainMenu()) {
 			World.saveGame();
+			Chunk.cubes = new ArrayList<Entity>();
+			WorldSelectionScreen.isPlaying = false;
+			WorldSelectionScreen.isPrePlay = true;
 			state = State.MAINMENU;
 		}
 		while (Keyboard.next()) {

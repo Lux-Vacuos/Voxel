@@ -13,23 +13,29 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 
-import net.guerra24.voxel.client.engine.AbstractFilesPath;
+import net.guerra24.voxel.client.engine.DisplayManager;
 import net.guerra24.voxel.client.engine.Engine;
 import net.guerra24.voxel.client.engine.entities.Entity;
+import net.guerra24.voxel.client.engine.resources.GuiResources;
+import net.guerra24.voxel.client.engine.util.AbstractFilesPath;
 import net.guerra24.voxel.client.engine.util.Logger;
 import net.guerra24.voxel.client.engine.world.chunks.Chunk;
 
 public class World {
 
-	public static final int WORLD_SIZE = 1;
+	public static final int WORLD_SIZE = 2;
 
 	private static boolean load = true;
 	private static Gson gson = new Gson();
 
 	public static void init() {
+		Engine.guis5.add(GuiResources.loadW);
+		Engine.guis5.remove(GuiResources.load);
 		for (int x = 0; x < WORLD_SIZE; x++) {
 			for (int z = 0; z < WORLD_SIZE; z++) {
 				Chunk.create(x + 16, z + 16);
+				Engine.guiRenderer.render(Engine.guis5);
+				DisplayManager.updateDisplay();
 			}
 		}
 		Engine.allEntities.addAll(Chunk.cubes);

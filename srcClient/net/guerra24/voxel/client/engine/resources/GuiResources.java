@@ -9,6 +9,8 @@ public class GuiResources {
 
 	private static GuiTexture gui;
 	private static GuiTexture menu;
+	public static GuiTexture load;
+	public static GuiTexture loadW;
 	public static GuiTexture world;
 	private static GuiTexture button1;
 	private static GuiTexture button2;
@@ -40,6 +42,14 @@ public class GuiResources {
 						-0.42f, 0.5f), new Vector2f(0.5f, 0.14f));
 		// gui2 = new GuiTexture(fbos.getReflectionTexture(),
 		// new Vector2f(-0.5f, 0.5f), new Vector2f(0.5f, 0.5f));
+	}
+
+	public static void loadingGui() {
+		load = new GuiTexture(Engine.loader.loadTextureGui("Loading"),
+				new Vector2f(0.6f, -0.425f), new Vector2f(1.6f, 1.425f));
+		loadW = new GuiTexture(Engine.loader.loadTextureGui("LoadingW"),
+				new Vector2f(0.6f, -0.425f), new Vector2f(1.6f, 1.425f));
+		Engine.guis5.add(load);
 	}
 
 	public static void addGuiTextures() {

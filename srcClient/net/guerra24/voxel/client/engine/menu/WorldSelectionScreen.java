@@ -10,22 +10,26 @@ import net.guerra24.voxel.client.engine.world.World;
 public class WorldSelectionScreen {
 
 	private static boolean selected = false;
-	private static boolean isPlaying = false;
+	public static boolean isPrePlay = false;
+	public static boolean isPlaying = false;
 
 	public static void worldSelected() {
 		while (Mouse.next()) {
 			if (Button.isWorldSelected() && selected) {
 				Engine.state = Engine.State.GAME;
 
-				if (Engine.isLoading) {
+				if (Engine.isLoading && !isPlaying && !isPrePlay) {
 					World.loadGame();
-				}
-				if (!Engine.isLoading && !isPlaying) {
+					isPlaying = true;
+				} else if (!Engine.isLoading && !isPlaying && !isPrePlay) {
 					Logger.log("Generating World with size: "
 							+ World.WORLD_SIZE);
 					World.init();
 					Logger.log("World Generation completed with size: "
 							+ World.WORLD_SIZE);
+					isPlaying = true;
+				} else if (!isPlaying && isPrePlay) {
+					World.loadGame();
 					isPlaying = true;
 				}
 				Engine.camera.setMouse();

@@ -6,8 +6,8 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import net.guerra24.voxel.client.engine.AbstractFilesPath;
 import net.guerra24.voxel.client.engine.Engine;
+import net.guerra24.voxel.client.engine.util.AbstractFilesPath;
 import net.guerra24.voxel.client.engine.util.Logger;
 
 import org.lwjgl.input.Keyboard;

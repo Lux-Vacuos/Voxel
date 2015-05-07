@@ -1,12 +1,10 @@
 package net.guerra24.voxel.client.engine;
 
 import static org.lwjgl.opengl.GL11.*;
-import net.guerra24.voxel.client.engine.menu.Loading;
 import net.guerra24.voxel.client.engine.util.Logger;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;
-import org.lwjgl.opengl.ContextAttribs;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.PixelFormat;
@@ -23,18 +21,13 @@ public class DisplayManager {
 
 	private static PixelFormat pixelformat = new PixelFormat();
 
-	public static Loading splash;
 
 	public static void createDisplay() {
 		Logger.log("Creating Display");
 		Logger.log("LWJGL Version: " + Sys.getVersion());
-		//ContextAttribs attribs = new ContextAttribs(3, 3)
-		//		.withForwardCompatible(true).withProfileCore(true);
 		try {
 			Display.setDisplayMode(new DisplayMode(WIDTH, HEIGHT));
-			//Display.create(pixelformat, attribs);
 			Display.create(pixelformat);
-			splash = new Loading();
 			Display.setTitle(Title);
 			Display.setResizable(false);
 			Display.setFullscreen(false);
