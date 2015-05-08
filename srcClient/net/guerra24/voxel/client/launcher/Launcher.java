@@ -27,7 +27,7 @@ public class Launcher {
 				+ ConstantsLauncher.gameName);
 		final JButton btnLogin = new JButton("Login");
 		final JButton btnExit = new JButton("Exit");
-		final JButton btnOptions = new JButton("Start Local Server");
+		final JButton btnOptions = new JButton("Options");
 
 		Insets insets = frame.getInsets();
 		Dimension size = btnLogin.getPreferredSize();
@@ -48,7 +48,7 @@ public class Launcher {
 				if (loginDlg.isSucceeded()) {
 					frame.dispose();
 					Logger.log("Starting Voxel");
-					Engine.main(null);
+					Engine.StartGame();
 				}
 			}
 		});

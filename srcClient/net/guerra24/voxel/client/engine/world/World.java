@@ -14,8 +14,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 
 import net.guerra24.voxel.client.engine.DisplayManager;
-import net.guerra24.voxel.client.engine.Engine;
 import net.guerra24.voxel.client.engine.entities.Entity;
+import net.guerra24.voxel.client.engine.resources.GameResources;
 import net.guerra24.voxel.client.engine.resources.GuiResources;
 import net.guerra24.voxel.client.engine.util.AbstractFilesPath;
 import net.guerra24.voxel.client.engine.util.Logger;
@@ -29,27 +29,27 @@ public class World {
 	private static Gson gson = new Gson();
 
 	public static void init() {
-		Engine.guis5.add(GuiResources.loadW);
-		Engine.guis5.remove(GuiResources.load);
+		GameResources.guis5.add(GuiResources.loadW);
+		GameResources.guis5.remove(GuiResources.load);
 		for (int x = 0; x < WORLD_SIZE; x++) {
 			for (int z = 0; z < WORLD_SIZE; z++) {
 				Chunk.create(x + 16, z + 16);
-				Engine.guiRenderer.render(Engine.guis5);
+				GameResources.guiRenderer.render(GameResources.guis5);
 				DisplayManager.updateDisplay();
 			}
 		}
-		Engine.allEntities.addAll(Chunk.cubes);
+		GameResources.allEntities.addAll(Chunk.cubes);
 	}
 
 	public static void loadGame() {
-		Engine.camera.loadCameraPos();
+		GameResources.camera.loadCameraPos();
 		SaveEntities.loadGame(AbstractFilesPath.entitiesPath);
 		loadWorld(AbstractFilesPath.worldPath);
 	}
 
 	public static void saveGame() {
 		saveWorld(AbstractFilesPath.worldPath);
-		Engine.camera.saveCameraPos();
+		GameResources.camera.saveCameraPos();
 		SaveEntities.saveGame(AbstractFilesPath.entitiesPath);
 	}
 
@@ -80,9 +80,9 @@ public class World {
 					Entity cse = gson.fromJson(obj, Entity.class);
 					lcs.add(cse);
 				}
-				Engine.allEntities.removeAll(Chunk.cubes);
+				GameResources.allEntities.removeAll(Chunk.cubes);
 				Chunk.cubes = lcs;
-				Engine.allEntities.addAll(Chunk.cubes);
+				GameResources.allEntities.addAll(Chunk.cubes);
 				load = false;
 				Logger.log("Load Completed");
 			}

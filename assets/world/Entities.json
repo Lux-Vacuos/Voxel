@@ -1,1 +1,1 @@
-[{"currentSpeed":0.0,"currentTurnSpeed":0.0,"upwardsSpeed":0.0,"isInAir":false,"model":{"rawModel":{"vaoID":4,"vertexCount":36},"texture":{"textureID":12}},"position":{"x":-10.0,"y":63.0,"z":-10.0},"rotX":0.0,"rotY":0.0,"rotZ":90.0,"scale":1.0}]
+[{"currentSpeed":0.0,"currentTurnSpeed":0.0,"upwardsSpeed":0.0,"isInAir":false,"model":{"rawModel":{"vaoID":4,"vertexCount":36},"texture":{"textureID":12}},"position":{"x":-42.277866,"y":63.0,"z":18.360939},"rotX":0.0,"rotY":361.11996,"rotZ":90.0,"scale":1.0}]

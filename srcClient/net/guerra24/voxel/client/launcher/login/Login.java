@@ -18,7 +18,7 @@ public class Login {
 			while (fileScan.hasNextLine()) {
 				String input = fileScan.nextLine();
 				username1 = input.substring(0, input.indexOf(' '));
-				String password1 = input.substring(input.indexOf(' ') + 1,
+				password1 = input.substring(input.indexOf(' ') + 1,
 						input.length()); // Reads the password
 				new Login();
 				if (username.equals(username1) && password.equals(password1)) {

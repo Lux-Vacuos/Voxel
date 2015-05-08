@@ -3,8 +3,8 @@ package net.guerra24.voxel.client.engine.world.chunks;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.guerra24.voxel.client.engine.Engine;
 import net.guerra24.voxel.client.engine.entities.Entity;
+import net.guerra24.voxel.client.engine.resources.GameResources;
 import net.guerra24.voxel.client.engine.world.Blocks;
 import net.guerra24.voxel.client.engine.world.generation.SimplexNoise;
 
@@ -83,7 +83,7 @@ public class Chunk {
 			}
 		}
 		if (y == 0) {
-			if (Engine.rand.nextInt(1) == 0) {
+			if (GameResources.rand.nextInt(1) == 0) {
 				cubes.add(new Entity(Blocks.cubeIndes, new Vector3f(
 						x + xOffset, y, z + zOffset), 0, 0, 0, 1));
 				// Engine.waters

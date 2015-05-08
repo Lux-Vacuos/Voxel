@@ -8,8 +8,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.guerra24.voxel.client.engine.Engine;
 import net.guerra24.voxel.client.engine.entities.Entity;
+import net.guerra24.voxel.client.engine.resources.GameResources;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -19,7 +19,7 @@ import com.google.gson.JsonParser;
 public class SaveEntities {
 	public static void saveGame(String path) {
 		Gson gson = new Gson();
-		String json = gson.toJson(Engine.allObjects);
+		String json = gson.toJson(GameResources.allObjects);
 
 		FileWriter writer;
 		try {
@@ -44,9 +44,9 @@ public class SaveEntities {
 				Entity cse = gson.fromJson(obj, Entity.class);
 				lcs.add(cse);
 			}
-			Engine.allEntities.removeAll(Engine.allObjects);
-			Engine.allObjects = lcs;	
-			Engine.allEntities.addAll(Engine.allObjects);
+			GameResources.allEntities.removeAll(GameResources.allObjects);
+			GameResources.allObjects = lcs;	
+			GameResources.allEntities.addAll(GameResources.allObjects);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}

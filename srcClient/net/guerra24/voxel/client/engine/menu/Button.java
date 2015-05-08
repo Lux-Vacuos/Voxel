@@ -18,12 +18,26 @@ public class Button {
 		return isPressed;
 	}
 
+	public static boolean isInButtonMutli() {
+		boolean isPressed = false;
+		int buttonx = 457;
+		int buttony = 320;
+		int buttonx1 = 822;
+		int buttony1 = 397;
+		if (Mouse.getY() > buttony && Mouse.getX() > buttonx
+				&& Mouse.getY() < buttony1 && Mouse.getX() < buttonx1
+				&& Mouse.isButtonDown(0)) {
+			isPressed = true;
+		}
+		return isPressed;
+	}
+
 	public static boolean isInButtonExit() {
 		boolean isPressed = false;
-		int buttonx = 459;
-		int buttony = 320;
-		int buttonx1 = 820;
-		int buttony1 = 397;
+		int buttonx = 457;
+		int buttony = 214;
+		int buttonx1 = 822;
+		int buttony1 = 289;
 		if (Mouse.getY() > buttony && Mouse.getX() > buttonx
 				&& Mouse.getY() < buttony1 && Mouse.getX() < buttonx1
 				&& Mouse.isButtonDown(0)) {
