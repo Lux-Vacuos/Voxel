@@ -45,6 +45,7 @@ public class Engine {
 		SystemInfo.printSystemInfo();
 
 		ID.generateUUID();
+		ID.writeUUID();
 
 		Blocks.createBlocks();
 		GuiResources.loadGuiTexture();
@@ -95,10 +96,11 @@ public class Engine {
 			if (debug) {
 				debugMode();
 			}
-			Button.isInButtonExit();
 			switchStates();
 			DisplayManager.updateDisplay();
 		}
+		GameResources.guiRenderer.render(GameResources.guis5);
+		DisplayManager.updateDisplay();
 		Logger.log("Closing Game");
 		GameResources.cleanUp();
 		DisplayManager.closeDisplay();
