@@ -15,7 +15,6 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector3f;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -101,8 +100,7 @@ public class Camera {
 	}
 
 	public void saveCameraPos() {
-		Gson gson = new Gson();
-		String json = gson.toJson(GameResources.camera);
+		String json = GameResources.gson.toJson(GameResources.camera);
 
 		FileWriter writer;
 		try {
@@ -116,7 +114,6 @@ public class Camera {
 	}
 
 	public void loadCameraPos() {
-		Gson gson = new Gson();
 
 		try {
 			BufferedReader camera = new BufferedReader(new FileReader(
@@ -124,7 +121,7 @@ public class Camera {
 			JsonParser parser = new JsonParser();
 			JsonObject jobject = parser.parse(camera).getAsJsonObject();
 
-			Camera cse = gson.fromJson(jobject, Camera.class);
+			Camera cse = GameResources.gson.fromJson(jobject, Camera.class);
 			GameResources.camera = cse;
 
 		} catch (FileNotFoundException e) {

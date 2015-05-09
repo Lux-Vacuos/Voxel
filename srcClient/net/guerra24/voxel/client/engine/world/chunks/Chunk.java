@@ -19,32 +19,33 @@ public class Chunk {
 	public static void create(int chunkX, int chunkZ) {
 		int xOffset = CHUNK_SIZE * chunkX - 303;
 		int zOffset = CHUNK_SIZE * chunkZ - 303;
+		int yOffset = 16;
 
 		for (int x = 0; x < CHUNK_SIZE; x++) {// Random Generation are Broken.
 			for (int y = 0; y < CHUNK_HEIGHT; y++) {
 				for (int z = 0; z < CHUNK_SIZE; z++) {
 					int yN = (int) SimplexNoise.noise(x, y)
 							+ (int) SimplexNoise.noise(z, y);
-					create(x, y, z, xOffset, zOffset, yN);
+					create(x, y, z, xOffset, yOffset, zOffset, yN);
 				}
 			}
 		}
 	}
 
-	private static void create(int x, int y, int z, int xOffset, int zOffset,
-			int y9) {
+	private static void create(int x, int y, int z, int xOffset, int yOffset,
+			int zOffset, int y9) {
 		if (y9 < 60 && y9 > 0) {
-			cubes.add(new Entity(Blocks.cubeStone, new Vector3f(x + xOffset,
-					y9, z + zOffset), 0f, 0f, 0f, 1f));
+			cubes.add(new Entity(Blocks.cubeStone, new Vector3f(x + xOffset, y9
+					+ yOffset, z + zOffset), 0f, 0f, 0f, 1f));
 		}
 		if (y9 < 64 && y9 > 62) {
-			cubes.add(new Entity(Blocks.cubeGrass, new Vector3f(x + xOffset,
-					y9, z + zOffset), 0f, 0f, 0f, 1f));
+			cubes.add(new Entity(Blocks.cubeGrass, new Vector3f(x + xOffset, y9
+					+ yOffset, z + zOffset), 0f, 0f, 0f, 1f));
 
 		}
 		if (y9 < 63 && y9 > 59) {
-			cubes.add(new Entity(Blocks.cubeDirt, new Vector3f(x + xOffset, y9,
-					z + zOffset), 0, 0, 0, 1));
+			cubes.add(new Entity(Blocks.cubeDirt, new Vector3f(x + xOffset, y9
+					+ yOffset, z + zOffset), 0, 0, 0, 1));
 		}
 		double sizeMena = (Math.random() * 2 + 2);
 		int sizeHalfMena = (int) Math.round(sizeMena / 2);
@@ -57,8 +58,9 @@ public class Chunk {
 								+ Math.pow(x1, 2)) < sizeHalfMena) {
 
 							cubes.add(new Entity(Blocks.cubeDiamondOre,
-									new Vector3f(x + x1 + xOffset, y + y1, z
-											+ z1 + zOffset), 0f, 0f, 0f, 1f));
+									new Vector3f(x + x1 + xOffset, y + y1
+											+ yOffset, z + z1 + zOffset), 0f,
+									0f, 0f, 1f));
 						}
 					}
 				}
@@ -75,8 +77,9 @@ public class Chunk {
 								+ Math.pow(x2, 2)) < sizeHalfMena1) {
 
 							cubes.add(new Entity(Blocks.cubeGoldOre,
-									new Vector3f(x + x2 + xOffset, y + y2, z
-											+ z2 + zOffset), 0f, 0f, 0f, 1f));
+									new Vector3f(x + x2 + xOffset, y + y2
+											+ yOffset, z + z2 + zOffset), 0f,
+									0f, 0f, 1f));
 						}
 					}
 				}
@@ -85,7 +88,7 @@ public class Chunk {
 		if (y == 0) {
 			if (GameResources.rand.nextInt(1) == 0) {
 				cubes.add(new Entity(Blocks.cubeIndes, new Vector3f(
-						x + xOffset, y, z + zOffset), 0, 0, 0, 1));
+						x + xOffset, y + yOffset, z + zOffset), 0, 0, 0, 1));
 				// Engine.waters
 				// .add(new WaterTile(x + xOffset, z + zOffset, 63.4f));
 			}

@@ -4,25 +4,30 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.UUID;
 
-import com.google.gson.Gson;
-
+import net.guerra24.voxel.client.engine.resources.GameResources;
 import net.guerra24.voxel.client.engine.util.AbstractFilesPath;
 import net.guerra24.voxel.client.engine.util.Logger;
 import net.guerra24.voxel.client.launcher.login.Login;
 
 public class ID {
 
-	private static Gson gson = new Gson();
-	public static String id;
+	private static String Username;
+	private static UUID ID;
 
-	public static void generateUUID() {
-		id = "Username: " + Login.username1 + " UUID: "
-				+ UUID.randomUUID();
-		Logger.log(id);
+	public ID() {
+		Username = Login.username1;
+		ID = UUID.randomUUID();
+		if (Username != null) {
+			String id = "Username: " + Username + " UUID: " + ID;
+			Logger.log(id);
+			writeUUID(id);
+		} else {
+			throw new RuntimeException("Invalid Username");
+		}
 	}
 
-	public static void writeUUID() {
-		String json = gson.toJson(id);
+	private void writeUUID(String id) {
+		String json = GameResources.gson.toJson(id);
 
 		FileWriter writer;
 		try {
@@ -31,7 +36,6 @@ public class ID {
 			writer.close();
 		} catch (IOException e) {
 			e.printStackTrace();
-			Logger.error("Failed to Save Game");
 		}
 	}
 }

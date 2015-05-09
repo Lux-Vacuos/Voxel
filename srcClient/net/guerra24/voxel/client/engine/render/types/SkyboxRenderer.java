@@ -7,10 +7,12 @@ import static org.lwjgl.opengl.GL30.*;
 import net.guerra24.voxel.client.engine.DisplayManager;
 import net.guerra24.voxel.client.engine.entities.types.Camera;
 import net.guerra24.voxel.client.engine.render.shaders.types.SkyboxShader;
+import net.guerra24.voxel.client.engine.resources.GameResources;
 import net.guerra24.voxel.client.engine.resources.Loader;
 import net.guerra24.voxel.client.engine.resources.models.RawModel;
 
 import org.lwjgl.util.vector.Matrix4f;
+import org.lwjgl.util.vector.Vector3f;
 
 public class SkyboxRenderer {
 
@@ -81,18 +83,22 @@ public class SkyboxRenderer {
 			texture1 = nightTexture;
 			texture2 = nightTexture;
 			blendFactor = (time - 0) / (5000 - 0);
+			GameResources.sun.setPosition(new Vector3f(-7000, -10000f, -7000));
 		} else if (time >= 5000 && time < 8000) {
 			texture1 = nightTexture;
 			texture2 = texture;
 			blendFactor = (time - 5000) / (8000 - 5000);
+			GameResources.sun.setPosition(new Vector3f(-7000, 0f, -7000));
 		} else if (time >= 8000 && time < 21000) {
 			texture1 = texture;
 			texture2 = texture;
 			blendFactor = (time - 8000) / (21000 - 8000);
+			GameResources.sun.setPosition(new Vector3f(-7000, 10000f, -7000));
 		} else {
 			texture1 = texture;
 			texture2 = nightTexture;
 			blendFactor = (time - 21000) / (24000 - 21000);
+			GameResources.sun.setPosition(new Vector3f(-7000, 0f, -7000));
 		}
 
 		glActiveTexture(GL_TEXTURE0);

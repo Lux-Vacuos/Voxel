@@ -49,20 +49,22 @@ public class GuiResources {
 		wnoselect = new GuiTexture(
 				GameResources.loader.loadTextureGui("WorldnoSelect"),
 				new Vector2f(-0.42f, 0.5f), new Vector2f(0.5f, 0.14f));
-		// gui2 = new GuiTexture(fbos.getReflectionTexture(),
-		// new Vector2f(-0.5f, 0.5f), new Vector2f(0.5f, 0.5f));
+		loadW = new GuiTexture(GameResources.loader.loadTextureGui("LoadingW"),
+				new Vector2f(0.6f, -0.425f), new Vector2f(1.6f, 1.425f));
+		gui2 = new GuiTexture(GameResources.fbos.getReflectionTexture(),
+				new Vector2f(-0.5f, 0.5f), new Vector2f(0.5f, 0.5f));
 	}
 
 	public static void loadingGui() {
 		load = new GuiTexture(GameResources.loader.loadTextureGui("Loading"),
 				new Vector2f(0.6f, -0.425f), new Vector2f(1.6f, 1.425f));
-		loadW = new GuiTexture(GameResources.loader.loadTextureGui("LoadingW"),
-				new Vector2f(0.6f, -0.425f), new Vector2f(1.6f, 1.425f));
+
 		GameResources.guis5.add(load);
 	}
 
 	public static void addGuiTextures() {
 		GameResources.guis.add(gui);
+		// GameResources.guis.add(gui2);
 		GameResources.guis2.add(button1);
 		GameResources.guis2.add(button2);
 		GameResources.guis2.add(button4);

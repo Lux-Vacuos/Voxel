@@ -8,11 +8,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
-
 import net.guerra24.voxel.client.engine.DisplayManager;
 import net.guerra24.voxel.client.engine.entities.Entity;
 import net.guerra24.voxel.client.engine.resources.GameResources;
@@ -21,12 +16,15 @@ import net.guerra24.voxel.client.engine.util.AbstractFilesPath;
 import net.guerra24.voxel.client.engine.util.Logger;
 import net.guerra24.voxel.client.engine.world.chunks.Chunk;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
+
 public class World {
 
 	public static final int WORLD_SIZE = 2;
 
 	private static boolean load = true;
-	private static Gson gson = new Gson();
 
 	public static void init() {
 		GameResources.guis5.add(GuiResources.loadW);
@@ -54,7 +52,7 @@ public class World {
 	}
 
 	private static void saveWorld(String path) {
-		String json = gson.toJson(Chunk.cubes);
+		String json = GameResources.gson.toJson(Chunk.cubes);
 
 		FileWriter writer;
 		try {
@@ -77,7 +75,7 @@ public class World {
 				List<Entity> lcs = new ArrayList<Entity>();
 
 				for (JsonElement obj : jArray) {
-					Entity cse = gson.fromJson(obj, Entity.class);
+					Entity cse = GameResources.gson.fromJson(obj, Entity.class);
 					lcs.add(cse);
 				}
 				GameResources.allEntities.removeAll(Chunk.cubes);

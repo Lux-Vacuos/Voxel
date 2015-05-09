@@ -22,5 +22,12 @@
 	<classpathentry kind="lib" path="library/jar/PNGDecoder.jar"/>
 	<classpathentry kind="lib" path="library/jar/kryonet-2.12-all.jar"/>
 	<classpathentry kind="lib" path="library/jar/gson-2.3.1.jar"/>
+	<classpathentry kind="lib" path="library/jar/CodecJOgg.jar"/>
+	<classpathentry kind="lib" path="library/jar/LibraryLWJGLOpenAL.jar"/>
+	<classpathentry kind="lib" path="library/jar/SoundSystem.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="http://www.paulscode.com/docs/SoundSystem/"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -5,7 +5,6 @@ import static org.lwjgl.opengl.GL11.GL_VENDOR;
 import static org.lwjgl.opengl.GL11.glGetString;
 
 import org.lwjgl.opengl.Display;
-import org.lwjgl.opengl.GLContext;
 
 public class SystemInfo {
 	public static void printSystemInfo() {
@@ -24,12 +23,4 @@ public class SystemInfo {
 
 	}
 
-	public static void chechOpenGl32() {
-		if (GLContext.getCapabilities().OpenGL33) {
-			Logger.log("OpenGL 3.3 is supported");
-		} else {
-			Logger.error("OpenGL 3.3 is not supported");
-			System.exit(-1);
-		}
-	}
 }

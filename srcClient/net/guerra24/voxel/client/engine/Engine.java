@@ -3,11 +3,8 @@ package net.guerra24.voxel.client.engine;
 import java.util.ArrayList;
 
 import net.guerra24.voxel.client.engine.entities.Entity;
-import net.guerra24.voxel.client.engine.entities.types.Light;
-import net.guerra24.voxel.client.engine.entities.types.Player;
 import net.guerra24.voxel.client.engine.menu.Button;
 import net.guerra24.voxel.client.engine.menu.MenuScreen;
-import net.guerra24.voxel.client.engine.network.ID;
 import net.guerra24.voxel.client.engine.resources.GameResources;
 import net.guerra24.voxel.client.engine.resources.GuiResources;
 import net.guerra24.voxel.client.engine.util.Logger;
@@ -18,7 +15,8 @@ import net.guerra24.voxel.client.engine.world.chunks.Chunk;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
-import org.lwjgl.util.vector.Vector3f;
+
+import paulscode.sound.SoundSystemConfig;
 
 public class Engine {
 
@@ -27,13 +25,14 @@ public class Engine {
 
 	public static State state = State.MAINMENU;
 	public static boolean isLoading = false;
-	private static int build = 3;
+	private static int build = 4;
 
 	public static void StartGame() {
 
 		Logger.log("Loading");
 		Logger.log("Voxel Game BUILD: " + build);
 		DisplayManager.createDisplay();
+		SystemInfo.printSystemInfo();
 
 		GameResources.init();
 
@@ -41,27 +40,14 @@ public class Engine {
 		GameResources.guiRenderer.render(GameResources.guis5);
 		DisplayManager.updateDisplay();
 
-		SystemInfo.chechOpenGl32();
-		SystemInfo.printSystemInfo();
-
-		ID.generateUUID();
-		ID.writeUUID();
-
 		Blocks.createBlocks();
 		GuiResources.loadGuiTexture();
 		GuiResources.addGuiTextures();
 
-		GameResources.player = new Player(Blocks.cubeGlass, new Vector3f(-10,
-				68, -10), 0, 0, 90, 1);
-		GameResources.sun = new Light(new Vector3f(0, 10000000000f, 0),
-				new Vector3f(1f, 1f, 1f));
-		// spot = new Light(new Vector3f(0, 0, 0), new Vector3f(1, 0, 0),
-		// new Vector3f(1, 0.01f, 0.002f));
-		// lights.add(spot);
-		GameResources.lights.add(GameResources.sun);
-		GameResources.allObjects.add(GameResources.player);
-		// guis.add(gui2);
-		GameResources.allEntities.addAll(GameResources.allObjects);
+		GameResources.addRes();
+
+		GameResources.SoundSystem.quickPlay(false, "Storm.ogg", false, 0, 0, 0,
+				SoundSystemConfig.ATTENUATION_NONE, 0);
 
 		while (loop) {
 			switch (state) {
@@ -82,10 +68,10 @@ public class Engine {
 			case GAME:
 				GameResources.camera.move();
 				GameResources.player.move();
-				// fbos.bindReflectionFrameBuffer();
-				// renderer.renderScene(allCubes, lights, camera);
-				// fbos.unbindCurrentFrameBuffer();
-				// spot.setPosition(player.getPosition());
+				GameResources.fbos.bindReflectionFrameBuffer();
+				GameResources.renderer.renderScene(GameResources.allEntities,
+						GameResources.lights, GameResources.camera);
+				GameResources.fbos.unbindCurrentFrameBuffer();
 				GameResources.renderer.renderScene(GameResources.allEntities,
 						GameResources.lights, GameResources.camera);
 				GameResources.waterRenderer.render(GameResources.waters,
