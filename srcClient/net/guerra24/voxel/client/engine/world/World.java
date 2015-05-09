@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.lwjgl.util.vector.Vector2f;
+
 import net.guerra24.voxel.client.engine.DisplayManager;
 import net.guerra24.voxel.client.engine.entities.Entity;
 import net.guerra24.voxel.client.engine.resources.GameResources;
@@ -26,16 +28,30 @@ public class World {
 
 	private static boolean load = true;
 
+	@SuppressWarnings("unused")
 	public static void init() {
 		GameResources.guis5.add(GuiResources.loadW);
+		GameResources.guis5.add(GuiResources.loadBar);
 		GameResources.guis5.remove(GuiResources.load);
+		float pos = -0.85f;
+		double pos2 = 0.0d;
+		if (WORLD_SIZE == 16) {
+			pos2 = WORLD_SIZE / 6500.0;
+		} else if (WORLD_SIZE == 8) {
+			pos2 = WORLD_SIZE / 800.0;
+		}
 		for (int x = 0; x < WORLD_SIZE; x++) {
 			for (int z = 0; z < WORLD_SIZE; z++) {
 				Chunk.create(x + 16, z + 16);
+				pos = (float) (pos + pos2);
+				GuiResources.loadBar.setPosition(new Vector2f(pos, 0));
 				GameResources.guiRenderer.render(GameResources.guis5);
 				DisplayManager.updateDisplay();
 			}
 		}
+		GameResources.guis5.remove(GuiResources.loadW);
+		GameResources.guis5.remove(GuiResources.loadBar);
+		GameResources.guis5.add(GuiResources.load);
 		GameResources.allEntities.addAll(Chunk.cubes);
 	}
 

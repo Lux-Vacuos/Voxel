@@ -19,6 +19,7 @@ public class GuiResources {
 	public static GuiTexture wselect;
 	public static GuiTexture wnoselect;
 	public static GuiTexture gui2;
+	public static GuiTexture loadBar;
 
 	public static void loadGuiTexture() {
 		gui = new GuiTexture(GameResources.loader.loadTextureGui("HotBar"),
@@ -53,6 +54,9 @@ public class GuiResources {
 				new Vector2f(0.6f, -0.425f), new Vector2f(1.6f, 1.425f));
 		gui2 = new GuiTexture(GameResources.fbos.getReflectionTexture(),
 				new Vector2f(-0.5f, 0.5f), new Vector2f(0.5f, 0.5f));
+		loadBar = new GuiTexture(
+				GameResources.loader.loadTextureGui("LoadBar"), new Vector2f(
+						-0.9f, 0f), new Vector2f(0.5f, 0.5f));
 	}
 
 	public static void loadingGui() {

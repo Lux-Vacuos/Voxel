@@ -81,6 +81,10 @@ public class GameResources {
 
 	}
 
+	public static void music() {
+		SoundSystem.backgroundMusic("MainMenuMusic", "Water_Lily.ogg", false);
+	}
+
 	public static void addRes() {
 		player = new Player(Blocks.cubeGlass, new Vector3f(-10, 68, -10), 0, 0,
 				90, 1);

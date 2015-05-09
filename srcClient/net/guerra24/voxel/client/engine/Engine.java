@@ -16,8 +16,6 @@ import net.guerra24.voxel.client.engine.world.chunks.Chunk;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
-import paulscode.sound.SoundSystemConfig;
-
 public class Engine {
 
 	public static boolean loop = true;
@@ -45,9 +43,7 @@ public class Engine {
 		GuiResources.addGuiTextures();
 
 		GameResources.addRes();
-
-		GameResources.SoundSystem.quickPlay(false, "Storm.ogg", false, 0, 0, 0,
-				SoundSystemConfig.ATTENUATION_NONE, 0);
+		GameResources.music();
 
 		while (loop) {
 			switch (state) {
@@ -68,13 +64,14 @@ public class Engine {
 			case GAME:
 				GameResources.camera.move();
 				GameResources.player.move();
-				GameResources.fbos.bindReflectionFrameBuffer();
-				GameResources.renderer.renderScene(GameResources.allEntities,
-						GameResources.lights, GameResources.camera);
-				GameResources.fbos.unbindCurrentFrameBuffer();
-				GameResources.renderer.renderScene(GameResources.allEntities,
-						GameResources.lights, GameResources.camera);
-				GameResources.waterRenderer.render(GameResources.waters,
+				/*
+				 * GameResources.fbos.bindReflectionFrameBuffer();
+				 * GameResources.renderer.renderScene(GameResources.allEntities,
+				 * GameResources.lights, GameResources.camera);
+				 * GameResources.fbos.unbindCurrentFrameBuffer();
+				 */ GameResources.renderer.renderScene(GameResources.allEntities,
+				  GameResources.lights, GameResources.camera);
+				 GameResources.waterRenderer.render(GameResources.waters,
 						GameResources.camera);
 				GameResources.guiRenderer.renderNoPrepare(GameResources.guis);
 				break;
@@ -119,6 +116,8 @@ public class Engine {
 			Chunk.cubes = new ArrayList<Entity>();
 			MenuScreen.isPlaying = false;
 			MenuScreen.isPrePlay = true;
+			GameResources.SoundSystem.rewind("MainMenuMusic");
+			GameResources.SoundSystem.play("MainMenuMusic");
 			state = State.MAINMENU;
 		}
 		while (Keyboard.next()) {

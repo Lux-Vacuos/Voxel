@@ -18,6 +18,7 @@ public class MenuScreen {
 		while (Mouse.next()) {
 			if (Button.isWorldSelected() && selected) {
 				Engine.state = Engine.State.GAME;
+				GameResources.SoundSystem.pause("MainMenuMusic");
 
 				if (Engine.isLoading && !isPlaying && !isPrePlay) {
 					World.loadGame();

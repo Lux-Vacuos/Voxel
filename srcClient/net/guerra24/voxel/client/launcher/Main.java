@@ -16,8 +16,8 @@ public class Main {
 		CreateDir.createDirectory();
 		Writter.configWritter();
 		Reader.configReader();
-		Update.getUpdate();
-		Update.getUpdateAssets();
+		//Update.getUpdate();
+		//Update.getUpdateAssets();
 		Launcher.LauncherStart();
 	}
 }
