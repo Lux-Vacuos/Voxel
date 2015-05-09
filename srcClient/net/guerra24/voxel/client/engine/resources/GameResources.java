@@ -51,8 +51,9 @@ public class GameResources {
 		waterRenderer = new WaterRenderer(loader, waterShader,
 				renderer.getProjectionMatrix());
 		fbos = new WaterFrameBuffers();
+
 	}
-	
+
 	public static void cleanUp() {
 		waterShader.cleanUp();
 		fbos.cleanUp();

@@ -90,7 +90,7 @@ public class Engine {
 						GameResources.lights, GameResources.camera);
 				GameResources.waterRenderer.render(GameResources.waters,
 						GameResources.camera);
-				// guiRenderer.renderNoPrepare(guis);
+				GameResources.guiRenderer.renderNoPrepare(GameResources.guis);
 				break;
 			}
 			if (debug) {
