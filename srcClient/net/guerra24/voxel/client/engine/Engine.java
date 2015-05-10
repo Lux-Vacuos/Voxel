@@ -112,12 +112,12 @@ public class Engine {
 		}
 
 		if (state == State.IN_PAUSE && Button.backToMainMenu()) {
+			GameResources.SoundSystem.rewind("MainMenuMusic");
+			GameResources.SoundSystem.play("MainMenuMusic");
 			World.saveGame();
 			Chunk.cubes = new ArrayList<Entity>();
 			MenuScreen.isPlaying = false;
 			MenuScreen.isPrePlay = true;
-			GameResources.SoundSystem.rewind("MainMenuMusic");
-			GameResources.SoundSystem.play("MainMenuMusic");
 			state = State.MAINMENU;
 		}
 		while (Keyboard.next()) {
