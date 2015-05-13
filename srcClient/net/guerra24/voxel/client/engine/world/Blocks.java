@@ -1,7 +1,7 @@
 package net.guerra24.voxel.client.engine.world;
 
+import net.guerra24.voxel.client.engine.Engine;
 import net.guerra24.voxel.client.engine.render.textures.ModelTexture;
-import net.guerra24.voxel.client.engine.resources.GameResources;
 import net.guerra24.voxel.client.engine.resources.OBJLoader;
 import net.guerra24.voxel.client.engine.resources.models.RawModel;
 import net.guerra24.voxel.client.engine.resources.models.TexturedModel;
@@ -19,23 +19,24 @@ public class Blocks {
 
 	public static void createBlocks() {
 
-		RawModel model = OBJLoader.loadObjModel("Block", GameResources.loader);
+		RawModel model = OBJLoader.loadObjModel("Block",
+				Engine.gameResources.loader);
 		ModelTexture texture0 = new ModelTexture(
-				GameResources.loader.loadTextureBlocks("Indes"));
+				Engine.gameResources.loader.loadTextureBlocks("Indes"));
 		ModelTexture texture = new ModelTexture(
-				GameResources.loader.loadTextureBlocks("Grass"));
+				Engine.gameResources.loader.loadTextureBlocks("Grass"));
 		ModelTexture texture1 = new ModelTexture(
-				GameResources.loader.loadTextureBlocks("Stone"));
+				Engine.gameResources.loader.loadTextureBlocks("Stone"));
 		ModelTexture texture2 = new ModelTexture(
-				GameResources.loader.loadTextureBlocks("Sand"));
+				Engine.gameResources.loader.loadTextureBlocks("Sand"));
 		ModelTexture texture3 = new ModelTexture(
-				GameResources.loader.loadTextureBlocks("Glass"));
+				Engine.gameResources.loader.loadTextureBlocks("Glass"));
 		ModelTexture texture4 = new ModelTexture(
-				GameResources.loader.loadTextureBlocks("Dirt"));
+				Engine.gameResources.loader.loadTextureBlocks("Dirt"));
 		ModelTexture texture5 = new ModelTexture(
-				GameResources.loader.loadTextureBlocks("Diamond-Ore"));
+				Engine.gameResources.loader.loadTextureBlocks("Diamond-Ore"));
 		ModelTexture texture6 = new ModelTexture(
-				GameResources.loader.loadTextureBlocks("Gold-Ore"));
+				Engine.gameResources.loader.loadTextureBlocks("Gold-Ore"));
 		// Block Mix texture and model
 		cubeIndes = new TexturedModel(model, texture0);
 		cubeGrass = new TexturedModel(model, texture);

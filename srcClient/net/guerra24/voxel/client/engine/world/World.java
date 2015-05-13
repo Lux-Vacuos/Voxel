@@ -8,15 +8,15 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.lwjgl.util.vector.Vector2f;
-
 import net.guerra24.voxel.client.engine.DisplayManager;
+import net.guerra24.voxel.client.engine.Engine;
 import net.guerra24.voxel.client.engine.entities.Entity;
-import net.guerra24.voxel.client.engine.resources.GameResources;
 import net.guerra24.voxel.client.engine.resources.GuiResources;
 import net.guerra24.voxel.client.engine.util.AbstractFilesPath;
 import net.guerra24.voxel.client.engine.util.Logger;
 import net.guerra24.voxel.client.engine.world.chunks.Chunk;
+
+import org.lwjgl.util.vector.Vector2f;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -24,51 +24,56 @@ import com.google.gson.JsonParser;
 
 public class World {
 
-	public static final int WORLD_SIZE = 2;
-
 	private static boolean load = true;
 
-	@SuppressWarnings("unused")
-	public static void init() {
-		GameResources.guis5.add(GuiResources.loadW);
-		GameResources.guis5.add(GuiResources.loadBar);
-		GameResources.guis5.remove(GuiResources.load);
-		float pos = -0.85f;
-		double pos2 = 0.0d;
-		if (WORLD_SIZE == 16) {
-			pos2 = WORLD_SIZE / 6500.0;
-		} else if (WORLD_SIZE == 8) {
-			pos2 = WORLD_SIZE / 800.0;
-		}
-		for (int x = 0; x < WORLD_SIZE; x++) {
-			for (int z = 0; z < WORLD_SIZE; z++) {
+	private static float pos = -0.85f;
+	private static double pos2 = 0.0d;
+	public int WORLD_SIZE;
+
+	public void init(int WORLD_SIZE) {
+		this.WORLD_SIZE = WORLD_SIZE;
+		initialize();
+		Engine.gameResources.guis5.add(Engine.guiResources.loadW);
+		Engine.gameResources.guis5.add(Engine.guiResources.loadBar);
+		Engine.gameResources.guis5.remove(GuiResources.load);
+		for (int x = 0; x < this.WORLD_SIZE; x++) {
+			for (int z = 0; z < this.WORLD_SIZE; z++) {
 				Chunk.create(x + 16, z + 16);
 				pos = (float) (pos + pos2);
-				GuiResources.loadBar.setPosition(new Vector2f(pos, 0));
-				GameResources.guiRenderer.render(GameResources.guis5);
+				Engine.guiResources.loadBar.setPosition(new Vector2f(pos, 0));
+				Engine.gameResources.guiRenderer
+						.render(Engine.gameResources.guis5);
 				DisplayManager.updateDisplay();
 			}
 		}
-		GameResources.guis5.remove(GuiResources.loadW);
-		GameResources.guis5.remove(GuiResources.loadBar);
-		GameResources.guis5.add(GuiResources.load);
-		GameResources.allEntities.addAll(Chunk.cubes);
+		Engine.gameResources.guis5.remove(Engine.guiResources.loadW);
+		Engine.gameResources.guis5.remove(Engine.guiResources.loadBar);
+		Engine.gameResources.guis5.add(GuiResources.load);
+		Engine.gameResources.allEntities.addAll(Chunk.cubes);
 	}
 
-	public static void loadGame() {
-		GameResources.camera.loadCameraPos();
+	public void initialize() {
+		if (WORLD_SIZE == 16) {
+			pos2 = 16 / 6500.0;
+		} else if (WORLD_SIZE == 8) {
+			pos2 = 8 / 800.0;
+		}
+	}
+
+	public void loadGame() {
+		Engine.gameResources.camera.loadCameraPos();
 		SaveEntities.loadGame(AbstractFilesPath.entitiesPath);
 		loadWorld(AbstractFilesPath.worldPath);
 	}
 
-	public static void saveGame() {
+	public void saveGame() {
 		saveWorld(AbstractFilesPath.worldPath);
-		GameResources.camera.saveCameraPos();
+		Engine.gameResources.camera.saveCameraPos();
 		SaveEntities.saveGame(AbstractFilesPath.entitiesPath);
 	}
 
-	private static void saveWorld(String path) {
-		String json = GameResources.gson.toJson(Chunk.cubes);
+	private void saveWorld(String path) {
+		String json = Engine.gameResources.gson.toJson(Chunk.cubes);
 
 		FileWriter writer;
 		try {
@@ -81,7 +86,7 @@ public class World {
 		}
 	}
 
-	private static void loadWorld(String path) {
+	private void loadWorld(String path) {
 		try {
 			if (load) {
 				Logger.log("Loading Game");
@@ -91,12 +96,13 @@ public class World {
 				List<Entity> lcs = new ArrayList<Entity>();
 
 				for (JsonElement obj : jArray) {
-					Entity cse = GameResources.gson.fromJson(obj, Entity.class);
+					Entity cse = Engine.gameResources.gson.fromJson(obj,
+							Entity.class);
 					lcs.add(cse);
 				}
-				GameResources.allEntities.removeAll(Chunk.cubes);
+				Engine.gameResources.allEntities.removeAll(Chunk.cubes);
 				Chunk.cubes = lcs;
-				GameResources.allEntities.addAll(Chunk.cubes);
+				Engine.gameResources.allEntities.addAll(Chunk.cubes);
 				load = false;
 				Logger.log("Load Completed");
 			}

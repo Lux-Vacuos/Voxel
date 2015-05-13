@@ -1,13 +1,19 @@
 package net.guerra24.voxel.client.engine.render.types;
 
-import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL13.*;
-import static org.lwjgl.opengl.GL20.*;
-import static org.lwjgl.opengl.GL30.*;
+import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
+import static org.lwjgl.opengl.GL11.glBindTexture;
+import static org.lwjgl.opengl.GL11.glDrawArrays;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE1;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE_CUBE_MAP;
+import static org.lwjgl.opengl.GL13.glActiveTexture;
+import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
+import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
+import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import net.guerra24.voxel.client.engine.DisplayManager;
+import net.guerra24.voxel.client.engine.Engine;
 import net.guerra24.voxel.client.engine.entities.types.Camera;
 import net.guerra24.voxel.client.engine.render.shaders.types.SkyboxShader;
-import net.guerra24.voxel.client.engine.resources.GameResources;
 import net.guerra24.voxel.client.engine.resources.Loader;
 import net.guerra24.voxel.client.engine.resources.models.RawModel;
 
@@ -83,22 +89,26 @@ public class SkyboxRenderer {
 			texture1 = nightTexture;
 			texture2 = nightTexture;
 			blendFactor = (time - 0) / (5000 - 0);
-			GameResources.sun.setPosition(new Vector3f(-7000, -10000f, -7000));
+			Engine.gameResources.sun.setPosition(new Vector3f(-7000, -10000f,
+					-7000));
 		} else if (time >= 5000 && time < 8000) {
 			texture1 = nightTexture;
 			texture2 = texture;
 			blendFactor = (time - 5000) / (8000 - 5000);
-			GameResources.sun.setPosition(new Vector3f(-7000, 0f, -7000));
+			Engine.gameResources.sun
+					.setPosition(new Vector3f(-7000, 0f, -7000));
 		} else if (time >= 8000 && time < 21000) {
 			texture1 = texture;
 			texture2 = texture;
 			blendFactor = (time - 8000) / (21000 - 8000);
-			GameResources.sun.setPosition(new Vector3f(-7000, 10000f, -7000));
+			Engine.gameResources.sun.setPosition(new Vector3f(-7000, 10000f,
+					-7000));
 		} else {
 			texture1 = texture;
 			texture2 = nightTexture;
 			blendFactor = (time - 21000) / (24000 - 21000);
-			GameResources.sun.setPosition(new Vector3f(-7000, 0f, -7000));
+			Engine.gameResources.sun
+					.setPosition(new Vector3f(-7000, 0f, -7000));
 		}
 
 		glActiveTexture(GL_TEXTURE0);

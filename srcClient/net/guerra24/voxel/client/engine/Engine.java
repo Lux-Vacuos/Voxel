@@ -6,6 +6,7 @@ import net.guerra24.voxel.client.engine.resources.GuiResources;
 import net.guerra24.voxel.client.engine.util.Logger;
 import net.guerra24.voxel.client.engine.util.SystemInfo;
 import net.guerra24.voxel.client.engine.world.Blocks;
+import net.guerra24.voxel.client.engine.world.World;
 
 import org.lwjgl.input.Mouse;
 
@@ -13,11 +14,12 @@ public class Engine {
 
 	public static boolean debug = false;
 
-	public static State state = State.MAINMENU;
 	public static boolean isLoading = false;
 	private static int build = 4;
 
 	public static GameResources gameResources;
+	public static GuiResources guiResources;
+	public static World world;
 
 	public static void StartGame() {
 
@@ -29,57 +31,61 @@ public class Engine {
 		gameResources = new GameResources();
 
 		GuiResources.loadingGui();
-		GameResources.guiRenderer.render(GameResources.guis5);
+		gameResources.guiRenderer.render(gameResources.guis5);
 		DisplayManager.updateDisplay();
 
+		guiResources = new GuiResources();
+
 		Blocks.createBlocks();
-		GuiResources.loadGuiTexture();
-		GuiResources.addGuiTextures();
 		gameResources.addRes();
 		gameResources.music();
 
-		while (GameResources.state.loop) {
-			switch (state) {
+		world = new World();
+
+		while (gameResources.gameStates.loop) {
+			switch (gameResources.gameStates.state) {
 			case MAINMENU:
-				GameResources.guiRenderer.render(GameResources.guis2);
+				gameResources.guiRenderer.render(gameResources.guis2);
 				break;
 			case WORLDSELECTION:
 				MenuScreen.worldSelected();
-				GameResources.guiRenderer.render(GameResources.guis3);
+				gameResources.guiRenderer.render(gameResources.guis3);
 				break;
 			case MULTIPLAY_SCREEN:
 				MenuScreen.multiScreen();
-				GameResources.guiRenderer.render(GameResources.guis3);
+				gameResources.guiRenderer.render(gameResources.guis3);
 				break;
 			case IN_PAUSE:
-				GameResources.guiRenderer.render(GameResources.guis4);
+				gameResources.guiRenderer.render(gameResources.guis4);
 				break;
 			case GAME:
-				GameResources.camera.move();
-				GameResources.player.move();
-
-				GameResources.renderer.renderScene(GameResources.allEntities,
-						GameResources.lights, GameResources.camera);
-				GameResources.waterRenderer.render(GameResources.waters,
-						GameResources.camera);
-				GameResources.guiRenderer.renderNoPrepare(GameResources.guis);
+				gameResources.camera.move();
+				gameResources.player.move();
+				gameResources.renderer.renderScene(gameResources.allEntities,
+						gameResources.lights, gameResources.camera);
+				gameResources.waterRenderer.render(gameResources.waters,
+						gameResources.camera);
+				gameResources.guiRenderer.renderNoPrepare(gameResources.guis);
 				break;
 			}
 			if (debug) {
 				debugMode();
 			}
-			GameResources.state.switchStates();
+			gameResources.gameStates.switchStates();
 			DisplayManager.updateDisplay();
 		}
-		GameResources.guiRenderer.render(GameResources.guis5);
+		gameResources.guiRenderer.render(gameResources.guis5);
 		DisplayManager.updateDisplay();
 		Logger.log("Closing Game");
 		gameResources.cleanUp();
 		DisplayManager.closeDisplay();
 	}
 
-	public enum State {
-		GAME, MAINMENU, MULTIPLAY_SCREEN, WORLDSELECTION, IN_PAUSE;
+	public void setReflection() {
+		gameResources.fbos.bindReflectionFrameBuffer();
+		gameResources.renderer.renderScene(gameResources.allEntities,
+				gameResources.lights, gameResources.camera);
+		gameResources.fbos.unbindCurrentFrameBuffer();
 	}
 
 	public static void debugMode() {

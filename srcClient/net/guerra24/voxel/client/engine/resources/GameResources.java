@@ -14,7 +14,7 @@ import paulscode.sound.libraries.LibraryLWJGLOpenAL;
 
 import com.google.gson.Gson;
 
-import net.guerra24.voxel.client.engine.States;
+import net.guerra24.voxel.client.engine.GameStates;
 import net.guerra24.voxel.client.engine.entities.Entity;
 import net.guerra24.voxel.client.engine.entities.types.Camera;
 import net.guerra24.voxel.client.engine.entities.types.Light;
@@ -31,35 +31,39 @@ import net.guerra24.voxel.client.engine.util.WaterFrameBuffers;
 import net.guerra24.voxel.client.engine.world.Blocks;
 
 public class GameResources {
-	public static List<GuiTexture> guis = new ArrayList<GuiTexture>();
-	public static List<GuiTexture> guis2 = new ArrayList<GuiTexture>();
-	public static List<GuiTexture> guis3 = new ArrayList<GuiTexture>();
-	public static List<GuiTexture> guis4 = new ArrayList<GuiTexture>();
-	public static List<GuiTexture> guis5 = new ArrayList<GuiTexture>();
+	public List<GuiTexture> guis = new ArrayList<GuiTexture>();
+	public List<GuiTexture> guis2 = new ArrayList<GuiTexture>();
+	public List<GuiTexture> guis3 = new ArrayList<GuiTexture>();
+	public List<GuiTexture> guis4 = new ArrayList<GuiTexture>();
+	public List<GuiTexture> guis5 = new ArrayList<GuiTexture>();
 
-	public static List<Entity> allObjects = new ArrayList<Entity>();
-	public static List<Entity> allEntities = new ArrayList<Entity>();
-	public static List<Light> lights = new ArrayList<Light>();
-	public static List<WaterTile> waters = new ArrayList<WaterTile>();
+	public List<Entity> allObjects = new ArrayList<Entity>();
+	public List<Entity> allEntities = new ArrayList<Entity>();
+	public List<Light> lights = new ArrayList<Light>();
+	public List<WaterTile> waters = new ArrayList<WaterTile>();
 
-	public static Random rand;
-	public static Player player;
-	public static Light sun;
-	public static Light spot;
-	public static Loader loader;
-	public static Camera camera;
-	public static MasterRenderer renderer;
-	public static WaterShader waterShader;
-	public static WaterRenderer waterRenderer;
-	public static GuiRenderer guiRenderer;
-	public static WaterFrameBuffers fbos;
-	public static States state;
-	public static MousePicker mouse;
-	public static Gson gson;
-	public static ID id;
-	public static SoundSystem SoundSystem;
+	public Random rand;
+	public Player player;
+	public Light sun;
+	public Light spot;
+	public Loader loader;
+	public Camera camera;
+	public MasterRenderer renderer;
+	public WaterShader waterShader;
+	public WaterRenderer waterRenderer;
+	public GuiRenderer guiRenderer;
+	public WaterFrameBuffers fbos;
+	public GameStates gameStates;
+	public MousePicker mouse;
+	public Gson gson;
+	public ID id;
+	public SoundSystem SoundSystem;
 
 	public GameResources() {
+		init();
+	}
+
+	private void init() {
 		rand = new Random();
 		camera = new Camera();
 		gson = new Gson();
@@ -80,8 +84,7 @@ public class GameResources {
 				renderer.getProjectionMatrix());
 		fbos = new WaterFrameBuffers();
 		mouse = new MousePicker(camera, renderer.getProjectionMatrix());
-		state = new States();
-
+		gameStates = new GameStates();
 	}
 
 	public void music() {
@@ -99,12 +102,6 @@ public class GameResources {
 		lights.add(sun);
 		allObjects.add(player);
 		allEntities.addAll(allObjects);
-	}
-
-	public void setReflection() {
-		fbos.bindReflectionFrameBuffer();
-		renderer.renderScene(allEntities, lights, camera);
-		fbos.unbindCurrentFrameBuffer();
 	}
 
 	public void cleanUp() {

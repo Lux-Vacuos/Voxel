@@ -8,8 +8,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.guerra24.voxel.client.engine.Engine;
 import net.guerra24.voxel.client.engine.entities.Entity;
-import net.guerra24.voxel.client.engine.resources.GameResources;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -17,7 +17,8 @@ import com.google.gson.JsonParser;
 
 public class SaveEntities {
 	public static void saveGame(String path) {
-		String json = GameResources.gson.toJson(GameResources.allObjects);
+		String json = Engine.gameResources.gson
+				.toJson(Engine.gameResources.allObjects);
 
 		FileWriter writer;
 		try {
@@ -38,12 +39,15 @@ public class SaveEntities {
 			List<Entity> lcs = new ArrayList<Entity>();
 
 			for (JsonElement obj : jArray) {
-				Entity cse = GameResources.gson.fromJson(obj, Entity.class);
+				Entity cse = Engine.gameResources.gson.fromJson(obj,
+						Entity.class);
 				lcs.add(cse);
 			}
-			GameResources.allEntities.removeAll(GameResources.allObjects);
-			GameResources.allObjects = lcs;	
-			GameResources.allEntities.addAll(GameResources.allObjects);
+			Engine.gameResources.allEntities
+					.removeAll(Engine.gameResources.allObjects);
+			Engine.gameResources.allObjects = lcs;
+			Engine.gameResources.allEntities
+					.addAll(Engine.gameResources.allObjects);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
