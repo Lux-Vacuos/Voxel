@@ -14,6 +14,7 @@ import paulscode.sound.libraries.LibraryLWJGLOpenAL;
 
 import com.google.gson.Gson;
 
+import net.guerra24.voxel.client.engine.States;
 import net.guerra24.voxel.client.engine.entities.Entity;
 import net.guerra24.voxel.client.engine.entities.types.Camera;
 import net.guerra24.voxel.client.engine.entities.types.Light;
@@ -52,12 +53,13 @@ public class GameResources {
 	public static WaterRenderer waterRenderer;
 	public static GuiRenderer guiRenderer;
 	public static WaterFrameBuffers fbos;
+	public static States state;
 	public static MousePicker mouse;
 	public static Gson gson;
 	public static ID id;
 	public static SoundSystem SoundSystem;
 
-	public static void init() {
+	public GameResources() {
 		rand = new Random();
 		camera = new Camera();
 		gson = new Gson();
@@ -78,14 +80,15 @@ public class GameResources {
 				renderer.getProjectionMatrix());
 		fbos = new WaterFrameBuffers();
 		mouse = new MousePicker(camera, renderer.getProjectionMatrix());
+		state = new States();
 
 	}
 
-	public static void music() {
+	public void music() {
 		SoundSystem.backgroundMusic("MainMenuMusic", "Water_Lily.ogg", false);
 	}
 
-	public static void addRes() {
+	public void addRes() {
 		player = new Player(Blocks.cubeGlass, new Vector3f(-10, 68, -10), 0, 0,
 				90, 1);
 		sun = new Light(new Vector3f(-7000, 0f, -7000),
@@ -98,7 +101,13 @@ public class GameResources {
 		allEntities.addAll(allObjects);
 	}
 
-	public static void cleanUp() {
+	public void setReflection() {
+		fbos.bindReflectionFrameBuffer();
+		renderer.renderScene(allEntities, lights, camera);
+		fbos.unbindCurrentFrameBuffer();
+	}
+
+	public void cleanUp() {
 		waterShader.cleanUp();
 		fbos.cleanUp();
 		guiRenderer.cleanUp();
