@@ -9,6 +9,7 @@ import net.guerra24.voxel.client.engine.util.Maths;
 
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
+import org.lwjgl.util.vector.Vector4f;
 
 public class EntityShader extends ShaderProgram {
 
@@ -24,6 +25,7 @@ public class EntityShader extends ShaderProgram {
 	private int location_attenuations[];
 	private int location_viewMatrix;
 	private int location_skyColour;
+	private int location_plane;
 
 	public EntityShader() {
 		super(VERTEX_FILE, FRAGMENT_FILE);
@@ -44,6 +46,7 @@ public class EntityShader extends ShaderProgram {
 				.getUniformLocation("projectionMatrix");
 		location_viewMatrix = super.getUniformLocation("viewMatrix");
 		location_skyColour = super.getUniformLocation("skyColour");
+		location_plane = super.getUniformLocation("plane");
 
 		location_lightPosition = new int[MAX_LIGHTS];
 		location_lightColour = new int[MAX_LIGHTS];
@@ -56,6 +59,10 @@ public class EntityShader extends ShaderProgram {
 			location_attenuations[i] = super.getUniformLocation("attenuations["
 					+ i + "]");
 		}
+	}
+
+	public void loadClipPlane(Vector4f plane) {
+		super.loadVector(location_plane, plane);
 	}
 
 	public void loadSkyColour(float r, float g, float b) {
@@ -79,7 +86,8 @@ public class EntityShader extends ShaderProgram {
 				super.loadVector(location_lightPosition[i], new Vector3f(0, 0,
 						0));
 				super.loadVector(location_lightColour[i], new Vector3f(0, 0, 0));
-				super.loadVector(location_attenuations[i], new Vector3f(1, 0, 0));
+				super.loadVector(location_attenuations[i],
+						new Vector3f(1, 0, 0));
 			}
 		}
 	}

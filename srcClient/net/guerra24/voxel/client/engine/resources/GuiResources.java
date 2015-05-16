@@ -19,7 +19,8 @@ public class GuiResources {
 	public GuiTexture button5;
 	public GuiTexture wselect;
 	public GuiTexture wnoselect;
-	public GuiTexture gui2;
+	public GuiTexture refraction;
+	public GuiTexture reflection;
 	public GuiTexture loadBar;
 
 	public GuiResources() {
@@ -61,11 +62,15 @@ public class GuiResources {
 		loadW = new GuiTexture(
 				Engine.gameResources.loader.loadTextureGui("LoadingW"),
 				new Vector2f(0.6f, -0.425f), new Vector2f(1.6f, 1.425f));
-		gui2 = new GuiTexture(Engine.gameResources.fbos.getReflectionTexture(),
-				new Vector2f(-0.5f, 0.5f), new Vector2f(0.5f, 0.5f));
 		loadBar = new GuiTexture(
 				Engine.gameResources.loader.loadTextureGui("LoadBar"),
 				new Vector2f(-0.9f, 0f), new Vector2f(0.5f, 0.5f));
+		refraction = new GuiTexture(
+				Engine.gameResources.fbos.getReflectionTexture(), new Vector2f(
+						0.5f, 0.5f), new Vector2f(0.25f, 0.25f));
+		reflection = new GuiTexture(
+				Engine.gameResources.fbos1.getReflectionTexture(),
+				new Vector2f(-0.5f, 0.5f), new Vector2f(0.25f, 0.25f));
 	}
 
 	public static void loadingGui() {
@@ -78,7 +83,8 @@ public class GuiResources {
 
 	public void addGuiTextures() {
 		Engine.gameResources.guis.add(gui);
-		// Engine.gameResources.guis.add(gui2);
+		Engine.gameResources.guis.add(refraction);
+		Engine.gameResources.guis.add(reflection);
 		Engine.gameResources.guis2.add(button1);
 		Engine.gameResources.guis2.add(button2);
 		Engine.gameResources.guis2.add(button4);

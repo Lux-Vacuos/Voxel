@@ -7,8 +7,10 @@ import net.guerra24.voxel.client.engine.util.Logger;
 import net.guerra24.voxel.client.engine.util.SystemInfo;
 import net.guerra24.voxel.client.engine.world.Blocks;
 import net.guerra24.voxel.client.engine.world.World;
+import net.guerra24.voxel.client.engine.world.chunks.Chunk;
 
 import org.lwjgl.input.Mouse;
+import org.lwjgl.util.vector.Vector4f;
 
 public class Engine {
 
@@ -61,8 +63,12 @@ public class Engine {
 			case GAME:
 				gameResources.camera.move();
 				gameResources.player.move();
+				gameResources.glEn();
+				setReflection();
+				gameResources.glDi();
 				gameResources.renderer.renderScene(gameResources.allEntities,
-						gameResources.lights, gameResources.camera);
+						gameResources.lights, gameResources.camera,
+						gameResources.plane);
 				gameResources.waterRenderer.render(gameResources.waters,
 						gameResources.camera);
 				gameResources.guiRenderer.renderNoPrepare(gameResources.guis);
@@ -81,11 +87,30 @@ public class Engine {
 		DisplayManager.closeDisplay();
 	}
 
-	public void setReflection() {
+	public static void setReflection() {
+		gameResources.fbos1.bindReflectionFrameBuffer();
+		reflectionCam();
+		gameResources.renderer.renderScene(gameResources.allEntities,
+				gameResources.lights, gameResources.camera, new Vector4f(0, 1,
+						0, -Chunk.water.getHeight()));
+		restoreCam();
+		gameResources.fbos1.unbindCurrentFrameBuffer();
 		gameResources.fbos.bindReflectionFrameBuffer();
 		gameResources.renderer.renderScene(gameResources.allEntities,
-				gameResources.lights, gameResources.camera);
+				gameResources.lights, gameResources.camera, new Vector4f(0, -1,
+						0, Chunk.water.getHeight()));
 		gameResources.fbos.unbindCurrentFrameBuffer();
+	}
+
+	public static void reflectionCam() {
+		gameResources.localLoop();
+		gameResources.camera.getPosition().y -= gameResources.distance;
+		gameResources.camera.invertPitch();
+	}
+
+	public static void restoreCam() {
+		gameResources.camera.getPosition().y += gameResources.distance;
+		gameResources.camera.invertPitch();
 	}
 
 	public static void debugMode() {

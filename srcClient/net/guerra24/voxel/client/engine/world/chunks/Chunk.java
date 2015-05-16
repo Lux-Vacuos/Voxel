@@ -5,6 +5,7 @@ import java.util.List;
 
 import net.guerra24.voxel.client.engine.Engine;
 import net.guerra24.voxel.client.engine.entities.Entity;
+import net.guerra24.voxel.client.engine.resources.models.WaterTile;
 import net.guerra24.voxel.client.engine.world.Blocks;
 import net.guerra24.voxel.client.engine.world.generation.SimplexNoise;
 
@@ -13,23 +14,29 @@ import org.lwjgl.util.vector.Vector3f;
 public class Chunk {
 
 	public static final int CHUNK_SIZE = 16;
-	private static final int CHUNK_HEIGHT = 128;
 	public static List<Entity> cubes = new ArrayList<Entity>();
+	public static WaterTile water;
+	private static final int CHUNK_HEIGHT = 128;
+	private static int yOffset = 16;
+	private static int x;
+	private static int y;
+	private static int z;
 
 	public static void create(int chunkX, int chunkZ) {
 		int xOffset = CHUNK_SIZE * chunkX - 303;
 		int zOffset = CHUNK_SIZE * chunkZ - 303;
-		int yOffset = 16;
 
-		for (int x = 0; x < CHUNK_SIZE; x++) {// Random Generation are Broken.
-			for (int y = 0; y < CHUNK_HEIGHT; y++) {
-				for (int z = 0; z < CHUNK_SIZE; z++) {
+		for (x = 0; x < CHUNK_SIZE; x++) {// Random Generation are Broken.
+			for (y = 0; y < CHUNK_HEIGHT; y++) {
+				for (z = 0; z < CHUNK_SIZE; z++) {
 					int yN = (int) SimplexNoise.noise(x, y)
 							+ (int) SimplexNoise.noise(z, y);
 					create(x, y, z, xOffset, yOffset, zOffset, yN);
 				}
 			}
 		}
+		Engine.gameResources.waters.add(water = new WaterTile(x + xOffset, z
+				+ zOffset, 60.4f + yOffset));
 	}
 
 	private static void create(int x, int y, int z, int xOffset, int yOffset,
@@ -89,9 +96,12 @@ public class Chunk {
 			if (Engine.gameResources.rand.nextInt(1) == 0) {
 				cubes.add(new Entity(Blocks.cubeIndes, new Vector3f(
 						x + xOffset, y + yOffset, z + zOffset), 0, 0, 0, 1));
-				// Engine.waters
-				// .add(new WaterTile(x + xOffset, z + zOffset, 63.4f));
 			}
 		}
 	}
+
+	public static int getyOffset() {
+		return yOffset;
+	}
+
 }

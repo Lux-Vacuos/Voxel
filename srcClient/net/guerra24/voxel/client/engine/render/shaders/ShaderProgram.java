@@ -8,11 +8,14 @@ import java.nio.FloatBuffer;
 import net.guerra24.voxel.client.engine.util.Logger;
 
 import org.lwjgl.BufferUtils;
+
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL20.*;
+
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
+import org.lwjgl.util.vector.Vector4f;
 
 public abstract class ShaderProgram {
 
@@ -71,6 +74,10 @@ public abstract class ShaderProgram {
 		glUniform1i(location, value);
 	}
 
+	protected void loadVector(int location, Vector4f vector) {
+		glUniform4f(location, vector.x, vector.y, vector.z, vector.w);
+	}
+
 	protected void loadVector(int location, Vector3f vector) {
 		glUniform3f(location, vector.x, vector.y, vector.z);
 	}
@@ -96,7 +103,8 @@ public abstract class ShaderProgram {
 	private static int loadShader(String file, int type) {
 		StringBuilder shaderSource = new StringBuilder();
 		try {
-			BufferedReader reader = new BufferedReader(new FileReader("assets/shaders/" + file));
+			BufferedReader reader = new BufferedReader(new FileReader(
+					"assets/shaders/" + file));
 			Logger.log("Loading Shader: " + file);
 			String line;
 			while ((line = reader.readLine()) != null) {

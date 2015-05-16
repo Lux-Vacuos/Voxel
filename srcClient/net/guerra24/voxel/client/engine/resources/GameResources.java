@@ -1,18 +1,12 @@
 package net.guerra24.voxel.client.engine.resources;
 
+import static org.lwjgl.opengl.GL11.glEnable;
+import static org.lwjgl.opengl.GL11.glDisable;
+import static org.lwjgl.opengl.GL30.GL_CLIP_DISTANCE0;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-
-import org.lwjgl.util.vector.Vector3f;
-
-import paulscode.sound.SoundSystem;
-import paulscode.sound.SoundSystemConfig;
-import paulscode.sound.SoundSystemException;
-import paulscode.sound.codecs.CodecJOgg;
-import paulscode.sound.libraries.LibraryLWJGLOpenAL;
-
-import com.google.gson.Gson;
 
 import net.guerra24.voxel.client.engine.GameStates;
 import net.guerra24.voxel.client.engine.entities.Entity;
@@ -29,6 +23,18 @@ import net.guerra24.voxel.client.engine.resources.models.WaterTile;
 import net.guerra24.voxel.client.engine.util.MousePicker;
 import net.guerra24.voxel.client.engine.util.WaterFrameBuffers;
 import net.guerra24.voxel.client.engine.world.Blocks;
+import net.guerra24.voxel.client.engine.world.chunks.Chunk;
+
+import org.lwjgl.util.vector.Vector3f;
+import org.lwjgl.util.vector.Vector4f;
+
+import paulscode.sound.SoundSystem;
+import paulscode.sound.SoundSystemConfig;
+import paulscode.sound.SoundSystemException;
+import paulscode.sound.codecs.CodecJOgg;
+import paulscode.sound.libraries.LibraryLWJGLOpenAL;
+
+import com.google.gson.Gson;
 
 public class GameResources {
 	public List<GuiTexture> guis = new ArrayList<GuiTexture>();
@@ -53,11 +59,14 @@ public class GameResources {
 	public WaterRenderer waterRenderer;
 	public GuiRenderer guiRenderer;
 	public WaterFrameBuffers fbos;
+	public WaterFrameBuffers fbos1;
 	public GameStates gameStates;
 	public MousePicker mouse;
 	public Gson gson;
 	public ID id;
 	public SoundSystem SoundSystem;
+	public Vector4f plane;
+	public float distance;
 
 	public GameResources() {
 		init();
@@ -83,8 +92,21 @@ public class GameResources {
 		waterRenderer = new WaterRenderer(loader, waterShader,
 				renderer.getProjectionMatrix());
 		fbos = new WaterFrameBuffers();
+		fbos1 = new WaterFrameBuffers();
 		mouse = new MousePicker(camera, renderer.getProjectionMatrix());
 		gameStates = new GameStates();
+	}
+
+	public void localLoop() {
+		distance = 2 * (camera.getPosition().y - Chunk.water.getHeight());
+	}
+
+	public void glEn() {
+		glEnable(GL_CLIP_DISTANCE0);
+	}
+
+	public void glDi() {
+		glDisable(GL_CLIP_DISTANCE0);
 	}
 
 	public void music() {
@@ -102,11 +124,13 @@ public class GameResources {
 		lights.add(sun);
 		allObjects.add(player);
 		allEntities.addAll(allObjects);
+		plane = new Vector4f(0, -1, 0, 128 + Chunk.getyOffset());
 	}
 
 	public void cleanUp() {
 		waterShader.cleanUp();
 		fbos.cleanUp();
+		fbos1.cleanUp();
 		guiRenderer.cleanUp();
 		renderer.cleanUp();
 		loader.cleanUp();

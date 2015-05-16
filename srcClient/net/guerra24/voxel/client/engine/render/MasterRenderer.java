@@ -27,6 +27,7 @@ import net.guerra24.voxel.client.engine.resources.models.TexturedModel;
 
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Matrix4f;
+import org.lwjgl.util.vector.Vector4f;
 
 public class MasterRenderer {
 
@@ -66,18 +67,19 @@ public class MasterRenderer {
 	public Matrix4f getProjectionMatrix() {
 		return projectionMatrix;
 	}
-	
-	public void renderScene(List<Entity> entities, List<Light> lights,
-            Camera camera) {
-        for (Entity entity : entities) {
-            processEntity(entity);
-        }
-        render(lights, camera);
-    }
 
-	public void render(List<Light> lights, Camera camera) {
+	public void renderScene(List<Entity> entities, List<Light> lights,
+			Camera camera, Vector4f clipPlane) {
+		for (Entity entity : entities) {
+			processEntity(entity);
+		}
+		render(lights, camera, clipPlane);
+	}
+
+	public void render(List<Light> lights, Camera camera, Vector4f clipPlane) {
 		prepare();
 		shader.start();
+		shader.loadClipPlane(clipPlane);
 		shader.loadSkyColour(RED, GREEN, BLUE);
 		shader.loadLights(lights);
 		shader.loadviewMatrix(camera);
