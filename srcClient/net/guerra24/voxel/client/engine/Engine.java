@@ -22,6 +22,7 @@ public class Engine {
 	public static GameResources gameResources;
 	public static GuiResources guiResources;
 	public static World world;
+	public static boolean error = false;
 
 	public static void StartGame() {
 
@@ -72,14 +73,31 @@ public class Engine {
 				gameResources.waterRenderer.render(gameResources.waters,
 						gameResources.camera);
 				gameResources.guiRenderer.renderNoPrepare(gameResources.guis);
+				if (DisplayManager.getFrameTimeSeconds() > 0.2f) {
+					gameResources.camera.unlockMouse();
+					try {
+						error = true;
+						gameResources.gameStates.loop = false;
+						throw new EngineException("Game inestability");
+					} catch (EngineException e) {
+						e.printStackTrace();
+					}
+				}
 				break;
 			}
 			if (debug) {
 				debugMode();
 			}
-			gameResources.gameStates.switchStates();
-			DisplayManager.updateDisplay();
+			if (!error) {
+				gameResources.gameStates.switchStates();
+				DisplayManager.updateDisplay();
+			}
 		}
+		if (!error)
+			disposeGame();
+	}
+
+	private static void disposeGame() {
 		gameResources.guiRenderer.render(gameResources.guis5);
 		DisplayManager.updateDisplay();
 		Logger.log("Closing Game");

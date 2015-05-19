@@ -21,7 +21,6 @@ public class DisplayManager {
 
 	private static PixelFormat pixelformat = new PixelFormat();
 
-
 	public static void createDisplay() {
 		Logger.log("Creating Display");
 		Logger.log("LWJGL Version: " + Sys.getVersion());
