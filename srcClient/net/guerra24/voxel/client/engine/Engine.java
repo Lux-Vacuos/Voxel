@@ -37,6 +37,7 @@ public class Engine {
 		gameResources.guiRenderer.render(gameResources.guis5);
 		DisplayManager.updateDisplay();
 
+		gameResources.init();
 		guiResources = new GuiResources();
 
 		Blocks.createBlocks();

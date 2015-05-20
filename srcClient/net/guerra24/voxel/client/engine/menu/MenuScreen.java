@@ -21,7 +21,7 @@ public class MenuScreen {
 					Engine.world.saveGame();
 					isPlaying = true;
 				} else if (!Engine.isLoading && !isPlaying && !isPrePlay) {
-					Engine.world.init(4);
+					Engine.world.init(2);
 					isPlaying = true;
 				} else if (!isPlaying && isPrePlay) {
 					Engine.world.loadGame();

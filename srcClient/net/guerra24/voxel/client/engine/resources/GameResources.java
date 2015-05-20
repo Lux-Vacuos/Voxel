@@ -69,14 +69,14 @@ public class GameResources {
 	public float distance;
 
 	public GameResources() {
-		init();
+		loader = new Loader();
+		guiRenderer = new GuiRenderer(loader);
 	}
 
-	private void init() {
+	public void init() {
 		rand = new Random();
 		camera = new Camera();
 		gson = new Gson();
-		loader = new Loader();
 		// id = new ID();
 
 		try {
@@ -87,7 +87,6 @@ public class GameResources {
 		}
 		SoundSystem = new SoundSystem();
 		renderer = new MasterRenderer(loader);
-		guiRenderer = new GuiRenderer(loader);
 		waterShader = new WaterShader();
 		waterRenderer = new WaterRenderer(loader, waterShader,
 				renderer.getProjectionMatrix());
