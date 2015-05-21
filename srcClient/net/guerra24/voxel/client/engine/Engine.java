@@ -74,16 +74,7 @@ public class Engine {
 				gameResources.waterRenderer.render(gameResources.waters,
 						gameResources.camera);
 				gameResources.guiRenderer.renderNoPrepare(gameResources.guis);
-				if (DisplayManager.getFrameTimeSeconds() > 0.2f) {
-					gameResources.camera.unlockMouse();
-					try {
-						error = true;
-						gameResources.gameStates.loop = false;
-						throw new EngineException("Game inestability");
-					} catch (EngineException e) {
-						e.printStackTrace();
-					}
-				}
+				checkGameState();
 				break;
 			}
 			if (debug) {
@@ -96,6 +87,28 @@ public class Engine {
 		}
 		if (!error)
 			disposeGame();
+	}
+
+	private static void checkGameState() {
+		if (DisplayManager.getFrameTimeSeconds() > 0.2f) {
+			gameResources.camera.unlockMouse();
+			try {
+				error = true;
+				gameResources.gameStates.loop = false;
+				throw new EngineException("Game inestability");
+			} catch (EngineException e) {
+				e.printStackTrace();
+			}
+		}
+		if (gameResources.camera.getPosition().y <= -1 + 16) {
+			try {
+				error = true;
+				gameResources.gameStates.loop = false;
+				throw new EngineException("Invalid player position");
+			} catch (EngineException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	private static void disposeGame() {
