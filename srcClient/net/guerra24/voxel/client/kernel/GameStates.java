@@ -3,8 +3,8 @@ package net.guerra24.voxel.client.kernel;
 import java.util.ArrayList;
 
 import net.guerra24.voxel.client.kernel.entities.Entity;
-import net.guerra24.voxel.client.kernel.menu.Button;
-import net.guerra24.voxel.client.kernel.menu.MenuScreen;
+import net.guerra24.voxel.client.menu.Button;
+import net.guerra24.voxel.client.menu.MenuScreen;
 import net.guerra24.voxel.client.world.chunks.Chunk;
 
 import org.lwjgl.input.Keyboard;

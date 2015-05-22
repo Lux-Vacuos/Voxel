@@ -1,4 +1,4 @@
-package net.guerra24.voxel.client.kernel.menu;
+package net.guerra24.voxel.client.menu;
 
 import net.guerra24.voxel.client.kernel.Engine;
 import net.guerra24.voxel.client.kernel.GameStates.State;
