@@ -12,7 +12,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JProgressBar;
 
-import net.guerra24.voxel.client.engine.util.Logger;
+import net.guerra24.voxel.client.kernel.util.Logger;
 
 public class Downloader extends JFrame {
 	private static final long serialVersionUID = 1L;

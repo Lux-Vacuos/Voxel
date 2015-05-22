@@ -3,11 +3,11 @@ package net.guerra24.voxel.client;
 import java.io.IOException;
 import java.util.Scanner;
 
-import net.guerra24.voxel.client.engine.network.NetworkListener;
-import net.guerra24.voxel.client.engine.network.packets.Packet.Packet0LoginRequest;
-import net.guerra24.voxel.client.engine.network.packets.Packet.Packet1LoginAnswer;
-import net.guerra24.voxel.client.engine.network.packets.Packet.Packet2Message;
-import net.guerra24.voxel.client.engine.util.Logger;
+import net.guerra24.voxel.client.kernel.network.NetworkListener;
+import net.guerra24.voxel.client.kernel.packets.Packet.Packet0LoginRequest;
+import net.guerra24.voxel.client.kernel.packets.Packet.Packet1LoginAnswer;
+import net.guerra24.voxel.client.kernel.packets.Packet.Packet2Message;
+import net.guerra24.voxel.client.kernel.util.Logger;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Client;

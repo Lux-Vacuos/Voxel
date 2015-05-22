@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Properties;
 
-import net.guerra24.voxel.client.engine.util.Logger;
+import net.guerra24.voxel.client.kernel.util.Logger;
 import net.guerra24.voxel.client.launcher.ConstantsLauncher;
 
 public class Writter {

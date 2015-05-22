@@ -2,7 +2,7 @@ package net.guerra24.voxel.client.launcher.updater;
 
 import java.io.File;
 
-import net.guerra24.voxel.client.engine.util.Logger;
+import net.guerra24.voxel.client.kernel.util.Logger;
 
 public class CreateDir {
 	public static void createDirectory() {

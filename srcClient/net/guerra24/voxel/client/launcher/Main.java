@@ -1,6 +1,6 @@
 package net.guerra24.voxel.client.launcher;
 
-import net.guerra24.voxel.client.engine.util.Logger;
+import net.guerra24.voxel.client.kernel.util.Logger;
 import net.guerra24.voxel.client.launcher.init.Init;
 import net.guerra24.voxel.client.launcher.properties.Reader;
 import net.guerra24.voxel.client.launcher.properties.Writter;

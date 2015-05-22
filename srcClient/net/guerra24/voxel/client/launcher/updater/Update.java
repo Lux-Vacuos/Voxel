@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 
-import net.guerra24.voxel.client.engine.util.Logger;
+import net.guerra24.voxel.client.kernel.util.Logger;
 import net.guerra24.voxel.client.launcher.ConstantsLauncher;
 import net.guerra24.voxel.client.launcher.updater.downloader.AssetsDownloader;
 import net.guerra24.voxel.client.launcher.updater.downloader.Downloader;
