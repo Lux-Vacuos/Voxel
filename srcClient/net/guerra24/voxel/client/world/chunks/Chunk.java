@@ -37,14 +37,16 @@ public class Chunk {
 	}
 
 	public void update() {
-		float X = pos.x / 2;
-		float Y = pos.y / 2;
+		float X = pos.x;
+		float Z = pos.y;
 		if (Engine.gameResources.camera.getPosition().x > X + 16
-				&& Engine.gameResources.camera.getPosition().y > Y + 16) {
-			Engine.gameResources.allEntities.removeAll(World.c.cubes);
+				& Engine.gameResources.camera.getPosition().z > Z + 16) {
+			Engine.gameResources.allEntities.removeAll(cubes);
 			cubes.clear();
 		} else {
+			Engine.gameResources.allEntities.removeAll(cubes);
 			rebuild();
+			Engine.gameResources.allEntities.addAll(cubes);
 		}
 	}
 
@@ -54,7 +56,8 @@ public class Chunk {
 				for (int z = (int) pos.getZ(); z < sizeZ; z++) {
 					if (y < 61 && y > 0) {
 						blocks[x][y][z] = Block.Stone.getId();
-					} else if (y < 65 && y > 60) {
+					} else if (y < 65 && y > 60
+							&& Engine.gameResources.rand.nextBoolean()) {
 						blocks[x][y][z] = Block.Grass.getId();
 					}
 					if (blocks[x][y][z] == Block.Stone.getId()) {
@@ -88,5 +91,7 @@ public class Chunk {
 	}
 
 	public void dispose() {
+		Engine.gameResources.allEntities.removeAll(World.c.cubes);
+		cubes.clear();
 	}
 }
