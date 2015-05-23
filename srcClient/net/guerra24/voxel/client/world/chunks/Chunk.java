@@ -62,10 +62,10 @@ public class Chunk {
 				for (int z = (int) pos.getZ(); z < sizeZ; z++) {
 					if (y == 0) {
 						blocks[x][y][z] = Block.Indes.getId();
-					} else if (y < 61 && y > 0) {
+					} else if (y < 65 && y > 0 && !checkBlockNotInView(x, y, z)) {
 						blocks[x][y][z] = Block.Stone.getId();
-					} else if (y < 65 && y > 60
-							&& Kernel.gameResources.rand.nextBoolean()) {
+					} else if (y < 71 && y > 64
+							&& !checkBlockNotInView(x, y, z)) {
 						blocks[x][y][z] = Block.Grass.getId();
 					}
 					if (blocks[x][y][z] == Block.Indes.getId()) {
@@ -89,10 +89,9 @@ public class Chunk {
 				for (int z = (int) pos.getZ(); z < sizeZ; z++) {
 					if (y == 0) {
 						blocks[x][y][z] = Block.Indes.getId();
-					} else if (y < 61 && y > 0) {
+					} else if (!checkBlockNotInView(x, y, z)) {
 						blocks[x][y][z] = Block.Stone.getId();
-					} else if (y < 65 && y > 60
-							&& Kernel.gameResources.rand.nextBoolean()) {
+					} else if (!checkBlockNotInView(x, y, z)) {
 						blocks[x][y][z] = Block.Grass.getId();
 					}
 					if (blocks[x][y][z] == Block.Indes.getId()) {
@@ -105,6 +104,62 @@ public class Chunk {
 				}
 			}
 		}
+	}
+
+	private boolean checkBlockNotInView(int x, int y, int z) {
+		boolean facesHidden[] = new boolean[6];
+		if (x > pos.getX()) {
+			if (blocks[x - 1][y][z] != -2)
+				facesHidden[0] = true;
+			else
+				facesHidden[0] = false;
+		} else {
+			facesHidden[0] = false;
+		}
+		if (x < sizeX - 1) {
+			if (blocks[x + 1][y][z] != -2)
+				facesHidden[1] = true;
+			else
+				facesHidden[1] = false;
+		} else {
+			facesHidden[1] = false;
+		}
+
+		if (y > pos.getY()) {
+			if (blocks[x][y - 1][z] != -2)
+				facesHidden[2] = true;
+			else
+				facesHidden[2] = false;
+		} else {
+			facesHidden[2] = false;
+		}
+		if (y < sizeY - 1) {
+			if (blocks[x][y + 1][z] != -2)
+				facesHidden[3] = true;
+			else
+				facesHidden[3] = false;
+		} else {
+			facesHidden[3] = false;
+		}
+
+		if (z > pos.getZ()) {
+			if (blocks[x][y][z - 1] != -2)
+				facesHidden[4] = true;
+			else
+				facesHidden[4] = false;
+		} else {
+			facesHidden[4] = false;
+		}
+		if (z < sizeZ - 1) {
+			if (blocks[x][y][z + 1] != -2)
+				facesHidden[5] = true;
+			else
+				facesHidden[5] = false;
+		} else {
+			facesHidden[5] = false;
+		}
+		return facesHidden[0] && facesHidden[1] && facesHidden[2]
+				&& facesHidden[3] && facesHidden[4] && facesHidden[5];
 	}
 
 	public void dispose() {

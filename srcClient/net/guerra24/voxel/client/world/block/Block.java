@@ -23,14 +23,14 @@ public abstract class Block {
 	public static Block DiamondOre = new BlockDimOre();
 	public static Block GoldOre = new BlockGoldOre();
 
-	private boolean isActive;
-
 	public abstract byte getId();
 
 	public abstract Entity getEntity(Vector3f pos);
 
 	public static Block getBlock(byte id) {
 		switch (id) {
+		case -2:
+			return Block.NULL;
 		case -1:
 			return Block.Indes;
 		case 1:
@@ -47,14 +47,6 @@ public abstract class Block {
 			return Block.GoldOre;
 		}
 		return Block.NULL;
-	}
-
-	public boolean isActive() {
-		return isActive;
-	}
-
-	public void setActive(boolean isActive) {
-		this.isActive = isActive;
 	}
 
 }

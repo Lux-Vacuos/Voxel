@@ -80,8 +80,9 @@ public class Camera {
 			position.y += speed;
 
 		} else if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
-
-			position.y -= speed;
+			if (position.y > 0) {
+				position.y -= speed;
+			}
 
 		}
 		if (Mouse.isButtonDown(2)) {

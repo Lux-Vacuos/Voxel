@@ -50,7 +50,7 @@ public class World {
 
 	public void update() {
 		time++;
-		if (time == 30) {
+		if (time == 20) {
 			d.update();
 			c.update();
 			time = 0;
