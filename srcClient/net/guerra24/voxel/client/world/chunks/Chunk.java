@@ -17,8 +17,8 @@ public class Chunk {
 	private List<Entity> cubes = new ArrayList<Entity>();
 	private Vector3f pos;
 	private byte[][][] blocks;
-
 	private int sizeX, sizeY, sizeZ;
+	private boolean isNotLoaded;
 
 	public Chunk(Vector3f pos) {
 		this.pos = pos;
@@ -38,17 +38,21 @@ public class Chunk {
 	public void update() {
 		float X = pos.x;
 		float Z = pos.z;
-		if (Kernel.gameResources.camera.getPosition().z > Z + 32) {
+		if (Kernel.gameResources.camera.getPosition().z > Z + 32
+				&& !isNotLoaded) {
 			Kernel.gameResources.allEntities.removeAll(cubes);
-			cubes.clear();
-		} else if (Kernel.gameResources.camera.getPosition().x > X + 32) {
+			isNotLoaded = true;
+		} else if (Kernel.gameResources.camera.getPosition().x > X + 32
+				&& !isNotLoaded) {
 			Kernel.gameResources.allEntities.removeAll(cubes);
-			cubes.clear();
-		} else {
-			Kernel.gameResources.allEntities.removeAll(cubes);
-			cubes.clear();
-			rebuild();
-			Kernel.gameResources.allEntities.addAll(cubes);
+			isNotLoaded = true;
+		} else if (isNotLoaded) {
+			if (Kernel.gameResources.camera.getPosition().x < X + 32) {
+				if (Kernel.gameResources.camera.getPosition().z < Z + 32) {
+					Kernel.gameResources.allEntities.addAll(cubes);
+					isNotLoaded = false;
+				}
+			}
 		}
 	}
 
@@ -74,8 +78,10 @@ public class Chunk {
 				}
 			}
 		}
+		Kernel.gameResources.allEntities.addAll(cubes);
 	}
 
+	@SuppressWarnings("unused")
 	private void rebuild() {
 		blocks = new byte[sizeX][sizeY][sizeZ];
 		for (int x = (int) pos.getX(); x < sizeX; x++) {

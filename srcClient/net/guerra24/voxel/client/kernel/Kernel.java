@@ -15,7 +15,7 @@ import org.lwjgl.util.vector.Vector4f;
 
 public class Kernel {
 
-	public static boolean debug = true;
+	public static boolean debug = false;
 	public static boolean isLoading = false;
 
 	private static int build = 5;
