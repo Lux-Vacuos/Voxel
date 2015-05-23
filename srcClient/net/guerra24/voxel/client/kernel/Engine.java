@@ -6,9 +6,9 @@ import net.guerra24.voxel.client.kernel.util.SystemInfo;
 import net.guerra24.voxel.client.menu.MenuScreen;
 import net.guerra24.voxel.client.resources.GameResources;
 import net.guerra24.voxel.client.resources.GuiResources;
-import net.guerra24.voxel.client.world.Blocks;
+import net.guerra24.voxel.client.world.Water;
 import net.guerra24.voxel.client.world.World;
-import net.guerra24.voxel.client.world.chunks.Chunk;
+import net.guerra24.voxel.client.world.block.BlocksResources;
 
 import org.lwjgl.input.Mouse;
 import org.lwjgl.util.vector.Vector4f;
@@ -23,7 +23,6 @@ public class Engine {
 	public static GuiResources guiResources;
 	public static World world;
 	public static boolean error = false;
-	private static int mb = 1024 * 1024;
 
 	public static void StartGame() {
 
@@ -41,7 +40,7 @@ public class Engine {
 		gameResources.init();
 		guiResources = new GuiResources();
 
-		Blocks.createBlocks();
+		BlocksResources.createBlocks();
 		gameResources.addRes();
 		gameResources.music();
 
@@ -76,7 +75,7 @@ public class Engine {
 						gameResources.camera);
 				gameResources.guiRenderer.renderNoPrepare(gameResources.guis);
 				checkGameState();
-				checkRam();
+				world.update();
 				break;
 			}
 			if (debug) {
@@ -92,43 +91,11 @@ public class Engine {
 	}
 
 	private static void checkGameState() {
-		if (DisplayManager.getFrameTimeSeconds() > 0.2f) {
-			gameResources.camera.unlockMouse();
-			try {
-				error = true;
-				gameResources.gameStates.loop = false;
-				throw new EngineException("Game inestability");
-			} catch (EngineException e) {
-				e.printStackTrace();
-			}
-		}
-		if (gameResources.camera.getPosition().y <= -1 + 16) {
+		if (gameResources.camera.getPosition().y <= -1) {
 			try {
 				error = true;
 				gameResources.gameStates.loop = false;
 				throw new EngineException("Invalid player position");
-			} catch (EngineException e) {
-				e.printStackTrace();
-			}
-		}
-	}
-
-	public static void checkRam() {
-		if (gameResources.instance.freeMemory() / mb <= 5) {
-			try {
-				error = true;
-				gameResources.gameStates.loop = false;
-				Logger.log("***** Heap utilization statistics [MB] *****");
-				Logger.log("Total Memory: "
-						+ gameResources.instance.totalMemory() / mb);
-				Logger.log("Free Memory: "
-						+ gameResources.instance.freeMemory() / mb);
-				Logger.log("Used Memory: "
-						+ (gameResources.instance.totalMemory() - gameResources.instance
-								.freeMemory()) / mb);
-				Logger.log("Max Memory: " + gameResources.instance.maxMemory()
-						/ mb);
-				throw new EngineException("Out of Memory");
 			} catch (EngineException e) {
 				e.printStackTrace();
 			}
@@ -140,13 +107,13 @@ public class Engine {
 		WaterReflection.reflectionCam();
 		gameResources.renderer.renderScene(gameResources.allEntities,
 				gameResources.lights, gameResources.camera, new Vector4f(0, 1,
-						0, -Chunk.water.getHeight()));
+						0, -Water.water.getHeight()));
 		WaterReflection.restoreCam();
 		gameResources.fbos1.unbindCurrentFrameBuffer();
 		gameResources.fbos.bindReflectionFrameBuffer();
 		gameResources.renderer.renderScene(gameResources.allEntities,
 				gameResources.lights, gameResources.camera, new Vector4f(0, -1,
-						0, Chunk.water.getHeight()));
+						0, Water.water.getHeight()));
 		gameResources.fbos.unbindCurrentFrameBuffer();
 	}
 

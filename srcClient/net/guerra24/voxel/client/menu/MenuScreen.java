@@ -18,13 +18,11 @@ public class MenuScreen {
 				Engine.gameResources.SoundSystem.pause("MainMenuMusic");
 
 				if (Engine.isLoading && !isPlaying && !isPrePlay) {
-					Engine.world.saveGame();
 					isPlaying = true;
 				} else if (!Engine.isLoading && !isPlaying && !isPrePlay) {
-					Engine.world.init(2);
+					Engine.world.init(1);
 					isPlaying = true;
 				} else if (!isPlaying && isPrePlay) {
-					Engine.world.loadGame();
 					isPlaying = true;
 				}
 				Engine.gameResources.camera.setMouse();

@@ -1,11 +1,7 @@
 package net.guerra24.voxel.client.kernel;
 
-import java.util.ArrayList;
-
-import net.guerra24.voxel.client.kernel.entities.Entity;
 import net.guerra24.voxel.client.menu.Button;
 import net.guerra24.voxel.client.menu.MenuScreen;
-import net.guerra24.voxel.client.world.chunks.Chunk;
 
 import org.lwjgl.input.Keyboard;
 
@@ -45,15 +41,12 @@ public class GameStates {
 		if (state == State.IN_PAUSE && Button.backToMainMenu()) {
 			Engine.gameResources.SoundSystem.rewind("MainMenuMusic");
 			Engine.gameResources.SoundSystem.play("MainMenuMusic");
-			Engine.world.saveGame();
-			Chunk.cubes = new ArrayList<Entity>();
 			MenuScreen.isPlaying = false;
 			MenuScreen.isPrePlay = true;
 			state = State.MAINMENU;
 		}
 		while (Keyboard.next()) {
 			if (state == State.GAME && Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
-				Engine.world.saveGame();
 				Engine.gameResources.camera.unlockMouse();
 				state = State.IN_PAUSE;
 			} else if (state == State.IN_PAUSE

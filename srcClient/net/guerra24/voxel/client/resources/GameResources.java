@@ -22,8 +22,8 @@ import net.guerra24.voxel.client.kernel.render.types.WaterRenderer;
 import net.guerra24.voxel.client.kernel.util.MousePicker;
 import net.guerra24.voxel.client.kernel.util.WaterFrameBuffers;
 import net.guerra24.voxel.client.resources.models.WaterTile;
-import net.guerra24.voxel.client.world.Blocks;
-import net.guerra24.voxel.client.world.chunks.Chunk;
+import net.guerra24.voxel.client.world.Water;
+import net.guerra24.voxel.client.world.block.BlocksResources;
 
 import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.util.vector.Vector4f;
@@ -99,7 +99,7 @@ public class GameResources {
 	}
 
 	public void localLoop() {
-		distance = 2 * (camera.getPosition().y - Chunk.water.getHeight());
+		distance = 2 * (camera.getPosition().y - Water.water.getHeight());
 	}
 
 	public void glEn() {
@@ -115,7 +115,7 @@ public class GameResources {
 	}
 
 	public void addRes() {
-		player = new Player(Blocks.cubeGlass, new Vector3f(-10, 68, -10), 0, 0,
+		player = new Player(BlocksResources.cubeGlass, new Vector3f(-10, 68, -10), 0, 0,
 				90, 1);
 		sun = new Light(new Vector3f(-7000, 0f, -7000),
 				new Vector3f(1f, 1f, 1f));
@@ -125,7 +125,7 @@ public class GameResources {
 		lights.add(sun);
 		allObjects.add(player);
 		allEntities.addAll(allObjects);
-		plane = new Vector4f(0, -1, 0, 128 + Chunk.getyOffset());
+		plane = new Vector4f(0, -1, 0, 128 + 16);
 	}
 
 	public void cleanUp() {

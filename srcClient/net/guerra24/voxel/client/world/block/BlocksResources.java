@@ -1,4 +1,4 @@
-package net.guerra24.voxel.client.world;
+package net.guerra24.voxel.client.world.block;
 
 import net.guerra24.voxel.client.kernel.Engine;
 import net.guerra24.voxel.client.kernel.render.textures.ModelTexture;
@@ -6,7 +6,7 @@ import net.guerra24.voxel.client.resources.OBJLoader;
 import net.guerra24.voxel.client.resources.models.RawModel;
 import net.guerra24.voxel.client.resources.models.TexturedModel;
 
-public class Blocks {
+public class BlocksResources {
 
 	public static TexturedModel cubeIndes;
 	public static TexturedModel cubeGrass;
