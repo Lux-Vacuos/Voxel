@@ -11,7 +11,7 @@ import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
 import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import net.guerra24.voxel.client.kernel.DisplayManager;
-import net.guerra24.voxel.client.kernel.Engine;
+import net.guerra24.voxel.client.kernel.Kernel;
 import net.guerra24.voxel.client.kernel.entities.types.Camera;
 import net.guerra24.voxel.client.kernel.render.shaders.types.SkyboxShader;
 import net.guerra24.voxel.client.resources.Loader;
@@ -89,25 +89,25 @@ public class SkyboxRenderer {
 			texture1 = nightTexture;
 			texture2 = nightTexture;
 			blendFactor = (time - 0) / (5000 - 0);
-			Engine.gameResources.sun.setPosition(new Vector3f(-7000, -10000f,
+			Kernel.gameResources.sun.setPosition(new Vector3f(-7000, -10000f,
 					-7000));
 		} else if (time >= 5000 && time < 8000) {
 			texture1 = nightTexture;
 			texture2 = texture;
 			blendFactor = (time - 5000) / (8000 - 5000);
-			Engine.gameResources.sun
+			Kernel.gameResources.sun
 					.setPosition(new Vector3f(-7000, 0f, -7000));
 		} else if (time >= 8000 && time < 21000) {
 			texture1 = texture;
 			texture2 = texture;
 			blendFactor = (time - 8000) / (21000 - 8000);
-			Engine.gameResources.sun.setPosition(new Vector3f(-7000, 10000f,
+			Kernel.gameResources.sun.setPosition(new Vector3f(-7000, 10000f,
 					-7000));
 		} else {
 			texture1 = texture;
 			texture2 = nightTexture;
 			blendFactor = (time - 21000) / (24000 - 21000);
-			Engine.gameResources.sun
+			Kernel.gameResources.sun
 					.setPosition(new Vector3f(-7000, 0f, -7000));
 		}
 

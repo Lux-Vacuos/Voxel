@@ -76,8 +76,29 @@ public class MasterRenderer {
 		render(lights, camera, clipPlane);
 	}
 
+	public void renderSceneNoPrepare(List<Entity> entities, List<Light> lights,
+			Camera camera, Vector4f clipPlane) {
+		for (Entity entity : entities) {
+			processEntity(entity);
+		}
+		renderNoPrepare(lights, camera, clipPlane);
+	}
+
 	public void render(List<Light> lights, Camera camera, Vector4f clipPlane) {
 		prepare();
+		shader.start();
+		shader.loadClipPlane(clipPlane);
+		shader.loadSkyColour(RED, GREEN, BLUE);
+		shader.loadLights(lights);
+		shader.loadviewMatrix(camera);
+		renderer.render(entities);
+		shader.stop();
+		skyboxRenderer.render(camera, RED, GREEN, BLUE);
+		entities.clear();
+	}
+
+	public void renderNoPrepare(List<Light> lights, Camera camera,
+			Vector4f clipPlane) {
 		shader.start();
 		shader.loadClipPlane(clipPlane);
 		shader.loadSkyColour(RED, GREEN, BLUE);

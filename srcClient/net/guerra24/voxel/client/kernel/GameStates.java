@@ -39,19 +39,19 @@ public class GameStates {
 		}
 
 		if (state == State.IN_PAUSE && Button.backToMainMenu()) {
-			Engine.gameResources.SoundSystem.rewind("MainMenuMusic");
-			Engine.gameResources.SoundSystem.play("MainMenuMusic");
+			Kernel.gameResources.SoundSystem.rewind("MainMenuMusic");
+			Kernel.gameResources.SoundSystem.play("MainMenuMusic");
 			MenuScreen.isPlaying = false;
 			MenuScreen.isPrePlay = true;
 			state = State.MAINMENU;
 		}
 		while (Keyboard.next()) {
 			if (state == State.GAME && Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
-				Engine.gameResources.camera.unlockMouse();
+				Kernel.gameResources.camera.unlockMouse();
 				state = State.IN_PAUSE;
 			} else if (state == State.IN_PAUSE
 					&& Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
-				Engine.gameResources.camera.setMouse();
+				Kernel.gameResources.camera.setMouse();
 				state = State.GAME;
 			}
 		}

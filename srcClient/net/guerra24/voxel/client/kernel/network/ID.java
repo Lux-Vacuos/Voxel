@@ -4,7 +4,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.UUID;
 
-import net.guerra24.voxel.client.kernel.Engine;
+import net.guerra24.voxel.client.kernel.Kernel;
 import net.guerra24.voxel.client.kernel.util.AbstractFilesPath;
 import net.guerra24.voxel.client.kernel.util.Logger;
 import net.guerra24.voxel.client.launcher.login.Login;
@@ -27,7 +27,7 @@ public class ID {
 	}
 
 	private void writeUUID(String id) {
-		String json = Engine.gameResources.gson.toJson(id);
+		String json = Kernel.gameResources.gson.toJson(id);
 
 		FileWriter writer;
 		try {

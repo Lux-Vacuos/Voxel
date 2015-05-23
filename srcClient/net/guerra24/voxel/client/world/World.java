@@ -1,7 +1,7 @@
 package net.guerra24.voxel.client.world;
 
 import net.guerra24.voxel.client.kernel.DisplayManager;
-import net.guerra24.voxel.client.kernel.Engine;
+import net.guerra24.voxel.client.kernel.Kernel;
 import net.guerra24.voxel.client.resources.GuiResources;
 import net.guerra24.voxel.client.world.chunks.Chunk;
 
@@ -20,26 +20,24 @@ public class World {
 	public void init(int WORLD_SIZE) {
 		this.WORLD_SIZE = WORLD_SIZE;
 		initialize();
-		Engine.gameResources.guis5.add(Engine.guiResources.loadW);
-		Engine.gameResources.guis5.add(Engine.guiResources.loadBar);
-		Engine.gameResources.guis5.remove(GuiResources.load);
+		Kernel.gameResources.guis5.add(Kernel.guiResources.loadW);
+		Kernel.gameResources.guis5.add(Kernel.guiResources.loadBar);
+		Kernel.gameResources.guis5.remove(GuiResources.load);
 		for (int x = 0; x < this.WORLD_SIZE; x++) {
 			for (int z = 0; z < this.WORLD_SIZE; z++) {
 				pos = (float) (pos + pos2);
 				Water.createWater();
 				c = new Chunk(new Vector3f(0, 0, 0));
 				d = new Chunk(new Vector3f(16, 0, 0));
-				Engine.guiResources.loadBar.setPosition(new Vector2f(pos, 0));
-				Engine.gameResources.guiRenderer
-						.render(Engine.gameResources.guis5);
+				Kernel.guiResources.loadBar.setPosition(new Vector2f(pos, 0));
+				Kernel.gameResources.guiRenderer
+						.render(Kernel.gameResources.guis5);
 				DisplayManager.updateDisplay();
 			}
 		}
-		Engine.gameResources.guis5.remove(Engine.guiResources.loadW);
-		Engine.gameResources.guis5.remove(Engine.guiResources.loadBar);
-		Engine.gameResources.guis5.add(GuiResources.load);
-		Engine.gameResources.allEntities.addAll(c.cubes);
-		Engine.gameResources.allEntities.addAll(d.cubes);
+		Kernel.gameResources.guis5.remove(Kernel.guiResources.loadW);
+		Kernel.gameResources.guis5.remove(Kernel.guiResources.loadBar);
+		Kernel.gameResources.guis5.add(GuiResources.load);
 	}
 
 	public void initialize() {
@@ -53,8 +51,8 @@ public class World {
 	public void update() {
 		time++;
 		if (time == 30) {
-			c.update();
 			d.update();
+			c.update();
 			time = 0;
 		}
 	}

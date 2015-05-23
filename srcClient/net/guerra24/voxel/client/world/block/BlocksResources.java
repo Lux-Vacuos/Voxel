@@ -1,6 +1,6 @@
 package net.guerra24.voxel.client.world.block;
 
-import net.guerra24.voxel.client.kernel.Engine;
+import net.guerra24.voxel.client.kernel.Kernel;
 import net.guerra24.voxel.client.kernel.render.textures.ModelTexture;
 import net.guerra24.voxel.client.resources.OBJLoader;
 import net.guerra24.voxel.client.resources.models.RawModel;
@@ -20,23 +20,23 @@ public class BlocksResources {
 	public static void createBlocks() {
 
 		RawModel model = OBJLoader.loadObjModel("Block",
-				Engine.gameResources.loader);
+				Kernel.gameResources.loader);
 		ModelTexture texture0 = new ModelTexture(
-				Engine.gameResources.loader.loadTextureBlocks("Indes"));
+				Kernel.gameResources.loader.loadTextureBlocks("Indes"));
 		ModelTexture texture = new ModelTexture(
-				Engine.gameResources.loader.loadTextureBlocks("Grass"));
+				Kernel.gameResources.loader.loadTextureBlocks("Grass"));
 		ModelTexture texture1 = new ModelTexture(
-				Engine.gameResources.loader.loadTextureBlocks("Stone"));
+				Kernel.gameResources.loader.loadTextureBlocks("Stone"));
 		ModelTexture texture2 = new ModelTexture(
-				Engine.gameResources.loader.loadTextureBlocks("Sand"));
+				Kernel.gameResources.loader.loadTextureBlocks("Sand"));
 		ModelTexture texture3 = new ModelTexture(
-				Engine.gameResources.loader.loadTextureBlocks("Glass"));
+				Kernel.gameResources.loader.loadTextureBlocks("Glass"));
 		ModelTexture texture4 = new ModelTexture(
-				Engine.gameResources.loader.loadTextureBlocks("Dirt"));
+				Kernel.gameResources.loader.loadTextureBlocks("Dirt"));
 		ModelTexture texture5 = new ModelTexture(
-				Engine.gameResources.loader.loadTextureBlocks("Diamond-Ore"));
+				Kernel.gameResources.loader.loadTextureBlocks("Diamond-Ore"));
 		ModelTexture texture6 = new ModelTexture(
-				Engine.gameResources.loader.loadTextureBlocks("Gold-Ore"));
+				Kernel.gameResources.loader.loadTextureBlocks("Gold-Ore"));
 		// Block Mix texture and model
 		cubeIndes = new TexturedModel(model, texture0);
 		cubeGrass = new TexturedModel(model, texture);

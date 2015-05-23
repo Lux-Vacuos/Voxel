@@ -6,7 +6,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import net.guerra24.voxel.client.kernel.Engine;
+import net.guerra24.voxel.client.kernel.Kernel;
 import net.guerra24.voxel.client.kernel.util.AbstractFilesPath;
 import net.guerra24.voxel.client.kernel.util.Logger;
 
@@ -100,8 +100,8 @@ public class Camera {
 	}
 
 	public void saveCameraPos() {
-		String json = Engine.gameResources.gson
-				.toJson(Engine.gameResources.camera);
+		String json = Kernel.gameResources.gson
+				.toJson(Kernel.gameResources.camera);
 
 		FileWriter writer;
 		try {
@@ -122,9 +122,9 @@ public class Camera {
 			JsonParser parser = new JsonParser();
 			JsonObject jobject = parser.parse(camera).getAsJsonObject();
 
-			Camera cse = Engine.gameResources.gson.fromJson(jobject,
+			Camera cse = Kernel.gameResources.gson.fromJson(jobject,
 					Camera.class);
-			Engine.gameResources.camera = cse;
+			Kernel.gameResources.camera = cse;
 
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();

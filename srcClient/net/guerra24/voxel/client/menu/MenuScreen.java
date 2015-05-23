@@ -1,6 +1,6 @@
 package net.guerra24.voxel.client.menu;
 
-import net.guerra24.voxel.client.kernel.Engine;
+import net.guerra24.voxel.client.kernel.Kernel;
 import net.guerra24.voxel.client.kernel.GameStates.State;
 
 import org.lwjgl.input.Mouse;
@@ -14,36 +14,36 @@ public class MenuScreen {
 	public static void worldSelected() {
 		while (Mouse.next()) {
 			if (Button.isWorldSelected() && selected) {
-				Engine.gameResources.gameStates.state = State.GAME;
-				Engine.gameResources.SoundSystem.pause("MainMenuMusic");
+				Kernel.gameResources.gameStates.state = State.GAME;
+				Kernel.gameResources.SoundSystem.pause("MainMenuMusic");
 
-				if (Engine.isLoading && !isPlaying && !isPrePlay) {
+				if (Kernel.isLoading && !isPlaying && !isPrePlay) {
 					isPlaying = true;
-				} else if (!Engine.isLoading && !isPlaying && !isPrePlay) {
-					Engine.world.init(1);
+				} else if (!Kernel.isLoading && !isPlaying && !isPrePlay) {
+					Kernel.world.init(1);
 					isPlaying = true;
 				} else if (!isPlaying && isPrePlay) {
 					isPlaying = true;
 				}
-				Engine.gameResources.camera.setMouse();
+				Kernel.gameResources.camera.setMouse();
 			}
 			if (Button.isWorldSelected() && !selected) {
-				Engine.gameResources.guis3.remove(Engine.guiResources.button3);
-				Engine.gameResources.guis3.remove(Engine.guiResources.world);
-				Engine.gameResources.guis3
-						.remove(Engine.guiResources.wnoselect);
-				Engine.gameResources.guis3.add(Engine.guiResources.wselect);
-				Engine.gameResources.guis3.add(Engine.guiResources.button3);
-				Engine.gameResources.guis3.add(Engine.guiResources.world);
+				Kernel.gameResources.guis3.remove(Kernel.guiResources.button3);
+				Kernel.gameResources.guis3.remove(Kernel.guiResources.world);
+				Kernel.gameResources.guis3
+						.remove(Kernel.guiResources.wnoselect);
+				Kernel.gameResources.guis3.add(Kernel.guiResources.wselect);
+				Kernel.gameResources.guis3.add(Kernel.guiResources.button3);
+				Kernel.gameResources.guis3.add(Kernel.guiResources.world);
 				selected = true;
 			}
 			if (Button.isWorldNotSelected() && selected) {
-				Engine.gameResources.guis3.remove(Engine.guiResources.button3);
-				Engine.gameResources.guis3.remove(Engine.guiResources.world);
-				Engine.gameResources.guis3.remove(Engine.guiResources.wselect);
-				Engine.gameResources.guis3.add(Engine.guiResources.wnoselect);
-				Engine.gameResources.guis3.add(Engine.guiResources.button3);
-				Engine.gameResources.guis3.add(Engine.guiResources.world);
+				Kernel.gameResources.guis3.remove(Kernel.guiResources.button3);
+				Kernel.gameResources.guis3.remove(Kernel.guiResources.world);
+				Kernel.gameResources.guis3.remove(Kernel.guiResources.wselect);
+				Kernel.gameResources.guis3.add(Kernel.guiResources.wnoselect);
+				Kernel.gameResources.guis3.add(Kernel.guiResources.button3);
+				Kernel.gameResources.guis3.add(Kernel.guiResources.world);
 				selected = false;
 			}
 		}
@@ -57,22 +57,22 @@ public class MenuScreen {
 
 			}
 			if (Button.isWorldSelected() && !selected) {
-				Engine.gameResources.guis3.remove(Engine.guiResources.button3);
-				Engine.gameResources.guis3.remove(Engine.guiResources.world);
-				Engine.gameResources.guis3
-						.remove(Engine.guiResources.wnoselect);
-				Engine.gameResources.guis3.add(Engine.guiResources.wselect);
-				Engine.gameResources.guis3.add(Engine.guiResources.button3);
-				Engine.gameResources.guis3.add(Engine.guiResources.world);
+				Kernel.gameResources.guis3.remove(Kernel.guiResources.button3);
+				Kernel.gameResources.guis3.remove(Kernel.guiResources.world);
+				Kernel.gameResources.guis3
+						.remove(Kernel.guiResources.wnoselect);
+				Kernel.gameResources.guis3.add(Kernel.guiResources.wselect);
+				Kernel.gameResources.guis3.add(Kernel.guiResources.button3);
+				Kernel.gameResources.guis3.add(Kernel.guiResources.world);
 				selected = true;
 			}
 			if (Button.isWorldNotSelected() && selected) {
-				Engine.gameResources.guis3.remove(Engine.guiResources.button3);
-				Engine.gameResources.guis3.remove(Engine.guiResources.world);
-				Engine.gameResources.guis3.remove(Engine.guiResources.wselect);
-				Engine.gameResources.guis3.add(Engine.guiResources.wnoselect);
-				Engine.gameResources.guis3.add(Engine.guiResources.button3);
-				Engine.gameResources.guis3.add(Engine.guiResources.world);
+				Kernel.gameResources.guis3.remove(Kernel.guiResources.button3);
+				Kernel.gameResources.guis3.remove(Kernel.guiResources.world);
+				Kernel.gameResources.guis3.remove(Kernel.guiResources.wselect);
+				Kernel.gameResources.guis3.add(Kernel.guiResources.wnoselect);
+				Kernel.gameResources.guis3.add(Kernel.guiResources.button3);
+				Kernel.gameResources.guis3.add(Kernel.guiResources.world);
 				selected = false;
 			}
 		}

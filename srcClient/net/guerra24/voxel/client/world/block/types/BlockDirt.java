@@ -6,16 +6,16 @@ import net.guerra24.voxel.client.kernel.entities.Entity;
 import net.guerra24.voxel.client.world.block.Block;
 import net.guerra24.voxel.client.world.block.BlocksResources;
 
-public class BlockGrass extends Block {
+public class BlockDirt extends Block {
 
 	@Override
 	public byte getId() {
-		return 2;
+		return 4;
 	}
 
 	@Override
 	public Entity getEntity(Vector3f pos) {
-		return new Entity(BlocksResources.cubeGrass, pos, 0, 0, 0, 1);
+		return new Entity(BlocksResources.cubeDirt, pos, 0, 0, 0, 1);
 	}
 
 }

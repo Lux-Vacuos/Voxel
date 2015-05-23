@@ -1,16 +1,16 @@
 package net.guerra24.voxel.client.kernel.render.types;
 
-import net.guerra24.voxel.client.kernel.Engine;
+import net.guerra24.voxel.client.kernel.Kernel;
 
 public class WaterReflection {
 	public static void reflectionCam() {
-		Engine.gameResources.localLoop();
-		Engine.gameResources.camera.getPosition().y -= Engine.gameResources.distance;
-		Engine.gameResources.camera.invertPitch();
+		Kernel.gameResources.localLoop();
+		Kernel.gameResources.camera.getPosition().y -= Kernel.gameResources.distance;
+		Kernel.gameResources.camera.invertPitch();
 	}
 
 	public static void restoreCam() {
-		Engine.gameResources.camera.getPosition().y += Engine.gameResources.distance;
-		Engine.gameResources.camera.invertPitch();
+		Kernel.gameResources.camera.getPosition().y += Kernel.gameResources.distance;
+		Kernel.gameResources.camera.invertPitch();
 	}
 }

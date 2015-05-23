@@ -115,8 +115,8 @@ public class GameResources {
 	}
 
 	public void addRes() {
-		player = new Player(BlocksResources.cubeGlass, new Vector3f(-10, 68, -10), 0, 0,
-				90, 1);
+		player = new Player(BlocksResources.cubeGlass, new Vector3f(-10, 68,
+				-10), 0, 0, 90, 1);
 		sun = new Light(new Vector3f(-7000, 0f, -7000),
 				new Vector3f(1f, 1f, 1f));
 		spot = new Light(new Vector3f(0, 0, 0), new Vector3f(1, 0, 0),
@@ -124,7 +124,6 @@ public class GameResources {
 		// lights.add(spot);
 		lights.add(sun);
 		allObjects.add(player);
-		allEntities.addAll(allObjects);
 		plane = new Vector4f(0, -1, 0, 128 + 16);
 	}
 

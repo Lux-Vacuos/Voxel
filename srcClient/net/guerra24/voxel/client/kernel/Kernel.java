@@ -13,9 +13,9 @@ import net.guerra24.voxel.client.world.block.BlocksResources;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.util.vector.Vector4f;
 
-public class Engine {
+public class Kernel {
 
-	public static boolean debug = false;
+	public static boolean debug = true;
 	public static boolean isLoading = false;
 
 	private static int build = 5;
@@ -71,6 +71,9 @@ public class Engine {
 				gameResources.renderer.renderScene(gameResources.allEntities,
 						gameResources.lights, gameResources.camera,
 						gameResources.plane);
+				gameResources.renderer.renderSceneNoPrepare(gameResources.allObjects,
+						gameResources.lights, gameResources.camera,
+						gameResources.plane);
 				gameResources.waterRenderer.render(gameResources.waters,
 						gameResources.camera);
 				gameResources.guiRenderer.renderNoPrepare(gameResources.guis);
@@ -95,8 +98,8 @@ public class Engine {
 			try {
 				error = true;
 				gameResources.gameStates.loop = false;
-				throw new EngineException("Invalid player position");
-			} catch (EngineException e) {
+				throw new KernelException("Invalid player position");
+			} catch (KernelException e) {
 				e.printStackTrace();
 			}
 		}
@@ -119,6 +122,7 @@ public class Engine {
 
 	public static void debugMode() {
 		System.out.println("X" + Mouse.getX() + "Y" + Mouse.getY());
+		System.out.println(gameResources.camera.getPosition());
 	}
 
 	private static void disposeGame() {
