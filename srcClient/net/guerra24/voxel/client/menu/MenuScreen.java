@@ -20,7 +20,7 @@ public class MenuScreen {
 				if (Kernel.isLoading && !isPlaying && !isPrePlay) {
 					isPlaying = true;
 				} else if (!Kernel.isLoading && !isPlaying && !isPrePlay) {
-					Kernel.world.init(1);
+					Kernel.world.startWorld();
 					isPlaying = true;
 				} else if (!isPlaying && isPrePlay) {
 					isPlaying = true;

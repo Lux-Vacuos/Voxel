@@ -33,6 +33,7 @@ public class Chunk {
 		blocks = new byte[sizeX][sizeY][sizeZ];
 
 		createChunk();
+		rebuild();
 	}
 
 	public void update() {
@@ -62,48 +63,35 @@ public class Chunk {
 				for (int z = (int) pos.getZ(); z < sizeZ; z++) {
 					if (y == 0) {
 						blocks[x][y][z] = Block.Indes.getId();
-					} else if (y < 65 && y > 0 && !checkBlockNotInView(x, y, z)) {
+					} else if (y < 65 && y > 0) {
 						blocks[x][y][z] = Block.Stone.getId();
 					} else if (y < 71 && y > 64
 							&& !checkBlockNotInView(x, y, z)) {
 						blocks[x][y][z] = Block.Grass.getId();
 					}
-					if (blocks[x][y][z] == Block.Indes.getId()) {
+				}
+			}
+		}
+	}
+
+	private void rebuild() {
+		for (int x = (int) pos.getX(); x < sizeX; x++) {
+			for (int y = (int) pos.getY(); y < sizeY; y++) {
+				for (int z = (int) pos.getZ(); z < sizeZ; z++) {
+					if (blocks[x][y][z] == Block.Indes.getId()
+							&& !checkBlockNotInView(x, y, z)) {
 						cubes.add(Block.Indes.getEntity(new Vector3f(x, y, z)));
-					} else if (blocks[x][y][z] == Block.Stone.getId()) {
+					} else if (blocks[x][y][z] == Block.Stone.getId()
+							&& !checkBlockNotInView(x, y, z)) {
 						cubes.add(Block.Stone.getEntity(new Vector3f(x, y, z)));
-					} else if (blocks[x][y][z] == Block.Grass.getId()) {
+					} else if (blocks[x][y][z] == Block.Grass.getId()
+							&& !checkBlockNotInView(x, y, z)) {
 						cubes.add(Block.Grass.getEntity(new Vector3f(x, y, z)));
 					}
 				}
 			}
 		}
 		Kernel.gameResources.allEntities.addAll(cubes);
-	}
-
-	@SuppressWarnings("unused")
-	private void rebuild() {
-		blocks = new byte[sizeX][sizeY][sizeZ];
-		for (int x = (int) pos.getX(); x < sizeX; x++) {
-			for (int y = (int) pos.getY(); y < sizeY; y++) {
-				for (int z = (int) pos.getZ(); z < sizeZ; z++) {
-					if (y == 0) {
-						blocks[x][y][z] = Block.Indes.getId();
-					} else if (!checkBlockNotInView(x, y, z)) {
-						blocks[x][y][z] = Block.Stone.getId();
-					} else if (!checkBlockNotInView(x, y, z)) {
-						blocks[x][y][z] = Block.Grass.getId();
-					}
-					if (blocks[x][y][z] == Block.Indes.getId()) {
-						cubes.add(Block.Indes.getEntity(new Vector3f(x, y, z)));
-					} else if (blocks[x][y][z] == Block.Stone.getId()) {
-						cubes.add(Block.Stone.getEntity(new Vector3f(x, y, z)));
-					} else if (blocks[x][y][z] == Block.Grass.getId()) {
-						cubes.add(Block.Grass.getEntity(new Vector3f(x, y, z)));
-					}
-				}
-			}
-		}
 	}
 
 	private boolean checkBlockNotInView(int x, int y, int z) {
@@ -133,7 +121,7 @@ public class Chunk {
 		} else {
 			facesHidden[2] = false;
 		}
-		if (y < sizeY - 1) {
+		if (y < sizeY - 58) {
 			if (blocks[x][y + 1][z] != -2)
 				facesHidden[3] = true;
 			else

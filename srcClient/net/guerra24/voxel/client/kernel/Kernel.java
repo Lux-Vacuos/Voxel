@@ -63,6 +63,7 @@ public class Kernel {
 				gameResources.guiRenderer.render(gameResources.guis4);
 				break;
 			case GAME:
+				world.update();
 				gameResources.camera.move();
 				gameResources.player.move();
 				gameResources.glEn();
@@ -71,14 +72,13 @@ public class Kernel {
 				gameResources.renderer.renderScene(gameResources.allEntities,
 						gameResources.lights, gameResources.camera,
 						gameResources.plane);
-				gameResources.renderer.renderSceneNoPrepare(gameResources.allObjects,
-						gameResources.lights, gameResources.camera,
-						gameResources.plane);
+				gameResources.renderer.renderSceneNoPrepare(
+						gameResources.allObjects, gameResources.lights,
+						gameResources.camera, gameResources.plane);
 				gameResources.waterRenderer.render(gameResources.waters,
 						gameResources.camera);
 				gameResources.guiRenderer.renderNoPrepare(gameResources.guis);
 				checkGameState();
-				world.update();
 				break;
 			}
 			if (debug) {
