@@ -47,11 +47,23 @@ public class Chunk {
 				&& !isNotLoaded) {
 			Kernel.gameResources.allEntities.removeAll(cubes);
 			isNotLoaded = true;
+		} else if (Kernel.gameResources.camera.getPosition().z < Z - 16
+				&& !isNotLoaded) {
+			Kernel.gameResources.allEntities.removeAll(cubes);
+			isNotLoaded = true;
+		} else if (Kernel.gameResources.camera.getPosition().x < X - 16
+				&& !isNotLoaded) {
+			Kernel.gameResources.allEntities.removeAll(cubes);
+			isNotLoaded = true;
 		} else if (isNotLoaded) {
 			if (Kernel.gameResources.camera.getPosition().x < X + 32) {
 				if (Kernel.gameResources.camera.getPosition().z < Z + 32) {
-					Kernel.gameResources.allEntities.addAll(cubes);
-					isNotLoaded = false;
+					if (Kernel.gameResources.camera.getPosition().x > X - 16) {
+						if (Kernel.gameResources.camera.getPosition().z > Z - 16) {
+							Kernel.gameResources.allEntities.addAll(cubes);
+							isNotLoaded = false;
+						}
+					}
 				}
 			}
 		}
@@ -91,7 +103,6 @@ public class Chunk {
 				}
 			}
 		}
-		Kernel.gameResources.allEntities.addAll(cubes);
 	}
 
 	private boolean checkBlockNotInView(int x, int y, int z) {

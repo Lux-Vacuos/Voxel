@@ -13,7 +13,7 @@ public class World {
 	private static float pos = -0.85f;
 	private static double pos2 = 0.0d;
 	private Chunk[][] chunks;
-	private int viewDistance = 2, x, z;
+	private int viewDistance = 8, x, z;
 	public int time = 0;
 
 	public void startWorld() {
