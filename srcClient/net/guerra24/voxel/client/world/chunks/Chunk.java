@@ -17,7 +17,8 @@ public class Chunk {
 	private List<Entity> cubes = new ArrayList<Entity>();
 	private Vector3f pos;
 	private byte[][][] blocks;
-	private int sizeX, sizeY, sizeZ;
+	private int sizeX, sizeY, sizeZ, viewDistanceX = 32 - 8,
+			viewDistanceZ = 16 - 8;
 	private boolean isNotLoaded;
 
 	public Chunk(Vector3f pos) {
@@ -37,29 +38,34 @@ public class Chunk {
 	}
 
 	public void update() {
-		float X = pos.x;
-		float Z = pos.z;
-		if (Kernel.gameResources.camera.getPosition().z > Z + 32
+		if (Kernel.gameResources.camera.getPosition().z > pos.z + viewDistanceX
 				&& !isNotLoaded) {
 			Kernel.gameResources.allEntities.removeAll(cubes);
 			isNotLoaded = true;
-		} else if (Kernel.gameResources.camera.getPosition().x > X + 32
+		} else if (Kernel.gameResources.camera.getPosition().x > pos.x
+				+ viewDistanceX
 				&& !isNotLoaded) {
 			Kernel.gameResources.allEntities.removeAll(cubes);
 			isNotLoaded = true;
-		} else if (Kernel.gameResources.camera.getPosition().z < Z - 16
+		} else if (Kernel.gameResources.camera.getPosition().z < pos.z
+				- viewDistanceZ
 				&& !isNotLoaded) {
 			Kernel.gameResources.allEntities.removeAll(cubes);
 			isNotLoaded = true;
-		} else if (Kernel.gameResources.camera.getPosition().x < X - 16
+		} else if (Kernel.gameResources.camera.getPosition().x < pos.x
+				- viewDistanceZ
 				&& !isNotLoaded) {
 			Kernel.gameResources.allEntities.removeAll(cubes);
 			isNotLoaded = true;
 		} else if (isNotLoaded) {
-			if (Kernel.gameResources.camera.getPosition().x < X + 32) {
-				if (Kernel.gameResources.camera.getPosition().z < Z + 32) {
-					if (Kernel.gameResources.camera.getPosition().x > X - 16) {
-						if (Kernel.gameResources.camera.getPosition().z > Z - 16) {
+			if (Kernel.gameResources.camera.getPosition().x < pos.x
+					+ viewDistanceX) {
+				if (Kernel.gameResources.camera.getPosition().z < pos.z
+						+ viewDistanceX) {
+					if (Kernel.gameResources.camera.getPosition().x > pos.x
+							- viewDistanceZ) {
+						if (Kernel.gameResources.camera.getPosition().z > pos.z
+								- viewDistanceZ) {
 							Kernel.gameResources.allEntities.addAll(cubes);
 							isNotLoaded = false;
 						}

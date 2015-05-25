@@ -7,8 +7,7 @@ import org.lwjgl.input.Mouse;
 
 public class MenuScreen {
 
-	private static boolean selected = false;
-	public static boolean isPrePlay = false;
+	public static boolean selected = false;
 	public static boolean isPlaying = false;
 
 	public static void worldSelected() {
@@ -17,12 +16,10 @@ public class MenuScreen {
 				Kernel.gameResources.gameStates.state = State.GAME;
 				Kernel.gameResources.SoundSystem.pause("MainMenuMusic");
 
-				if (Kernel.isLoading && !isPlaying && !isPrePlay) {
+				if (Kernel.isLoading && !isPlaying) {
 					isPlaying = true;
-				} else if (!Kernel.isLoading && !isPlaying && !isPrePlay) {
+				} else if (!Kernel.isLoading && !isPlaying) {
 					Kernel.world.startWorld();
-					isPlaying = true;
-				} else if (!isPlaying && isPrePlay) {
 					isPlaying = true;
 				}
 				Kernel.gameResources.camera.setMouse();

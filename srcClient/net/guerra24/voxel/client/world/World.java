@@ -12,8 +12,10 @@ public class World {
 
 	private static float pos = -0.85f;
 	private static double pos2 = 0.0d;
-	private Chunk[][] chunks;
-	private int viewDistance = 8, x, z;
+	public Chunk[][] chunks;
+	public int viewDistance = 8;
+	private int x;
+	private int z;
 	public int time = 0;
 
 	public void startWorld() {
@@ -25,6 +27,7 @@ public class World {
 		Kernel.gameResources.guis5.add(Kernel.guiResources.loadW);
 		Kernel.gameResources.guis5.add(Kernel.guiResources.loadBar);
 		Kernel.gameResources.guis5.remove(GuiResources.load);
+		pos = -0.85f;
 		for (x = 0; x < viewDistance; x++) {
 			for (z = 0; z < viewDistance; z++) {
 				pos = (float) (pos + pos2);

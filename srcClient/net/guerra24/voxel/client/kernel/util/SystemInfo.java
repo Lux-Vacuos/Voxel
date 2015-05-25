@@ -9,11 +9,9 @@ import org.lwjgl.opengl.Display;
 public class SystemInfo {
 	public static void printSystemInfo() {
 
-		String vendor = glGetString(GL_VENDOR);
-		Logger.log("Vendor: " + vendor);
+		Logger.log("Vendor: " + glGetString(GL_VENDOR));
 
-		String renderGl = glGetString(GL_RENDERER);
-		Logger.log("Renderer: " + renderGl);
+		Logger.log("Renderer: " + glGetString(GL_RENDERER));
 
 		if (Display.getVersion() != null) {
 			Logger.log("Driver Version: " + Display.getVersion());
