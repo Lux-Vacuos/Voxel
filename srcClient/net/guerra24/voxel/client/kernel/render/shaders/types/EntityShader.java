@@ -2,10 +2,10 @@ package net.guerra24.voxel.client.kernel.render.shaders.types;
 
 import java.util.List;
 
-import net.guerra24.voxel.client.kernel.entities.types.Camera;
-import net.guerra24.voxel.client.kernel.entities.types.Light;
 import net.guerra24.voxel.client.kernel.render.shaders.ShaderProgram;
 import net.guerra24.voxel.client.kernel.util.Maths;
+import net.guerra24.voxel.client.world.entities.types.Camera;
+import net.guerra24.voxel.client.world.entities.types.Light;
 
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;

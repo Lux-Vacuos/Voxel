@@ -2,7 +2,6 @@ package net.guerra24.voxel.client.world.block;
 
 import org.lwjgl.util.vector.Vector3f;
 
-import net.guerra24.voxel.client.kernel.entities.Entity;
 import net.guerra24.voxel.client.world.block.types.BlockDimOre;
 import net.guerra24.voxel.client.world.block.types.BlockDirt;
 import net.guerra24.voxel.client.world.block.types.BlockGoldOre;
@@ -11,6 +10,7 @@ import net.guerra24.voxel.client.world.block.types.BlockIndes;
 import net.guerra24.voxel.client.world.block.types.BlockNull;
 import net.guerra24.voxel.client.world.block.types.BlockSand;
 import net.guerra24.voxel.client.world.block.types.BlockStone;
+import net.guerra24.voxel.client.world.entities.Entity;
 
 public abstract class Block {
 

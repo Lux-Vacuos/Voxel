@@ -9,10 +9,6 @@ import java.util.List;
 import java.util.Random;
 
 import net.guerra24.voxel.client.kernel.GameStates;
-import net.guerra24.voxel.client.kernel.entities.Entity;
-import net.guerra24.voxel.client.kernel.entities.types.Camera;
-import net.guerra24.voxel.client.kernel.entities.types.Light;
-import net.guerra24.voxel.client.kernel.entities.types.Player;
 import net.guerra24.voxel.client.kernel.network.ID;
 import net.guerra24.voxel.client.kernel.render.MasterRenderer;
 import net.guerra24.voxel.client.kernel.render.shaders.types.WaterShader;
@@ -24,6 +20,10 @@ import net.guerra24.voxel.client.kernel.util.WaterFrameBuffers;
 import net.guerra24.voxel.client.resources.models.WaterTile;
 import net.guerra24.voxel.client.world.Water;
 import net.guerra24.voxel.client.world.block.BlocksResources;
+import net.guerra24.voxel.client.world.entities.Entity;
+import net.guerra24.voxel.client.world.entities.types.Camera;
+import net.guerra24.voxel.client.world.entities.types.Light;
+import net.guerra24.voxel.client.world.entities.types.Player;
 
 import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.util.vector.Vector4f;
@@ -135,6 +135,5 @@ public class GameResources {
 		renderer.cleanUp();
 		loader.cleanUp();
 		SoundSystem.cleanup();
-
 	}
 }

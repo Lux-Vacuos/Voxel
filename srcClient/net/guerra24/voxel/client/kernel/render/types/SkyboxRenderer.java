@@ -12,10 +12,10 @@ import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import net.guerra24.voxel.client.kernel.DisplayManager;
 import net.guerra24.voxel.client.kernel.Kernel;
-import net.guerra24.voxel.client.kernel.entities.types.Camera;
 import net.guerra24.voxel.client.kernel.render.shaders.types.SkyboxShader;
 import net.guerra24.voxel.client.resources.Loader;
 import net.guerra24.voxel.client.resources.models.RawModel;
+import net.guerra24.voxel.client.world.entities.types.Camera;
 
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;

@@ -8,12 +8,12 @@ import static org.lwjgl.opengl.GL30.glBindVertexArray;
 
 import java.util.List;
 
-import net.guerra24.voxel.client.kernel.entities.types.Camera;
 import net.guerra24.voxel.client.kernel.render.shaders.types.WaterShader;
 import net.guerra24.voxel.client.kernel.util.Maths;
 import net.guerra24.voxel.client.resources.Loader;
 import net.guerra24.voxel.client.resources.models.RawModel;
 import net.guerra24.voxel.client.resources.models.WaterTile;
+import net.guerra24.voxel.client.world.entities.types.Camera;
 
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;

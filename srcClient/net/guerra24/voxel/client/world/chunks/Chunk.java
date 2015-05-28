@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.guerra24.voxel.client.kernel.Kernel;
-import net.guerra24.voxel.client.kernel.entities.Entity;
 import net.guerra24.voxel.client.world.block.Block;
+import net.guerra24.voxel.client.world.entities.Entity;
 
 import org.lwjgl.util.vector.Vector3f;
 

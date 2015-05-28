@@ -1,4 +1,4 @@
-package net.guerra24.voxel.client.kernel.entities;
+package net.guerra24.voxel.client.world.entities;
 
 import net.guerra24.voxel.client.resources.models.TexturedModel;
 

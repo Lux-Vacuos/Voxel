@@ -2,8 +2,8 @@ package net.guerra24.voxel.client.world.block.types;
 
 import org.lwjgl.util.vector.Vector3f;
 
-import net.guerra24.voxel.client.kernel.entities.Entity;
 import net.guerra24.voxel.client.world.block.Block;
+import net.guerra24.voxel.client.world.entities.Entity;
 
 public class BlockNull extends Block {
 

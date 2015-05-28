@@ -1,8 +1,8 @@
-package net.guerra24.voxel.client.kernel.entities.types;
+package net.guerra24.voxel.client.world.entities.types;
 
 import net.guerra24.voxel.client.kernel.DisplayManager;
-import net.guerra24.voxel.client.kernel.entities.Entity;
 import net.guerra24.voxel.client.resources.models.TexturedModel;
+import net.guerra24.voxel.client.world.entities.Entity;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.util.vector.Vector3f;

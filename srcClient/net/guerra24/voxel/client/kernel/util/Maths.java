@@ -1,6 +1,6 @@
 package net.guerra24.voxel.client.kernel.util;
 
-import net.guerra24.voxel.client.kernel.entities.types.Camera;
+import net.guerra24.voxel.client.world.entities.types.Camera;
 
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector2f;

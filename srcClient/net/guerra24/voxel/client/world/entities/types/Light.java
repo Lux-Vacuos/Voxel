@@ -1,4 +1,4 @@
-package net.guerra24.voxel.client.kernel.entities.types;
+package net.guerra24.voxel.client.world.entities.types;
 
 import org.lwjgl.util.vector.Vector3f;
 

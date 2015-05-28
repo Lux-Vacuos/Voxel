@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.guerra24.voxel.client.kernel.Kernel;
-import net.guerra24.voxel.client.kernel.entities.Entity;
+import net.guerra24.voxel.client.world.entities.Entity;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;

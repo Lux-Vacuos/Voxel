@@ -16,7 +16,7 @@ public class World {
 	public int viewDistance = 8;
 	private int x;
 	private int z;
-	public int time = 0;
+	public float time = 0;
 
 	public void startWorld() {
 		initialize();

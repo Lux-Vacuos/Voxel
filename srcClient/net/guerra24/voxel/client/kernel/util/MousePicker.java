@@ -1,6 +1,6 @@
 package net.guerra24.voxel.client.kernel.util;
 
-import net.guerra24.voxel.client.kernel.entities.types.Camera;
+import net.guerra24.voxel.client.world.entities.types.Camera;
 
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;

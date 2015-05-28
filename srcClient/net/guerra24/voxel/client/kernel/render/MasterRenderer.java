@@ -16,14 +16,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.guerra24.voxel.client.kernel.entities.Entity;
-import net.guerra24.voxel.client.kernel.entities.types.Camera;
-import net.guerra24.voxel.client.kernel.entities.types.Light;
 import net.guerra24.voxel.client.kernel.render.shaders.types.EntityShader;
 import net.guerra24.voxel.client.kernel.render.types.EntityRenderer;
 import net.guerra24.voxel.client.kernel.render.types.SkyboxRenderer;
 import net.guerra24.voxel.client.resources.Loader;
 import net.guerra24.voxel.client.resources.models.TexturedModel;
+import net.guerra24.voxel.client.world.entities.Entity;
+import net.guerra24.voxel.client.world.entities.types.Camera;
+import net.guerra24.voxel.client.world.entities.types.Light;
 
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Matrix4f;
