@@ -14,9 +14,10 @@ public class Chunk {
 	public static final int CHUNK_SIZE = 16;
 	public static final int CHUNK_HEIGHT = 128;
 
+	public byte[][][] blocks;
+	public boolean isToRebuild = false;
 	private List<Entity> cubes = new ArrayList<Entity>();
 	private Vector3f pos;
-	private byte[][][] blocks;
 	private int sizeX, sizeY, sizeZ, viewDistanceX = 32 - 8,
 			viewDistanceZ = 16 - 8;
 	private boolean isNotLoaded;
@@ -72,6 +73,12 @@ public class Chunk {
 					}
 				}
 			}
+		} else if (isToRebuild) {
+			Kernel.gameResources.allEntities.removeAll(cubes);
+			cubes.clear();
+			rebuild();
+			Kernel.gameResources.allEntities.addAll(cubes);
+			isToRebuild = false;
 		}
 	}
 
@@ -83,8 +90,7 @@ public class Chunk {
 						blocks[x][y][z] = Block.Indes.getId();
 					} else if (y < 65 && y > 0) {
 						blocks[x][y][z] = Block.Stone.getId();
-					} else if (y < 71 && y > 64
-							&& !checkBlockNotInView(x, y, z)) {
+					} else if (y < 71 && y > 64) {
 						blocks[x][y][z] = Block.Grass.getId();
 					}
 				}

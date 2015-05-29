@@ -1,7 +1,7 @@
 package io.github.guerra24.voxel.client.menu;
 
-import io.github.guerra24.voxel.client.kernel.Kernel;
 import io.github.guerra24.voxel.client.kernel.GameStates.State;
+import io.github.guerra24.voxel.client.kernel.Kernel;
 
 import org.lwjgl.input.Mouse;
 

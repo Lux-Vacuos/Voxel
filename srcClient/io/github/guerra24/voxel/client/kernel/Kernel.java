@@ -21,8 +21,8 @@ public class Kernel {
 	private static int build = 5;
 	public static GameResources gameResources;
 	public static GuiResources guiResources;
-	public static World world;
 	public static boolean error = false;
+	public static World world;
 
 	public static void StartGame() {
 
@@ -43,7 +43,6 @@ public class Kernel {
 		BlocksResources.createBlocks();
 		gameResources.addRes();
 		gameResources.music();
-
 		world = new World();
 
 		while (gameResources.gameStates.loop) {
@@ -63,7 +62,9 @@ public class Kernel {
 				gameResources.guiRenderer.render(gameResources.guis4);
 				break;
 			case GAME:
-				world.update();
+				// world.test();
+				Kernel.world.update();
+				// gameResources.mouse.update();
 				gameResources.camera.move();
 				gameResources.player.move();
 				gameResources.glEn();
@@ -103,6 +104,25 @@ public class Kernel {
 				e.printStackTrace();
 			}
 		}
+	}
+
+	public static void standaloneRender() {
+		gameResources.camera.move();
+		gameResources.player.move();
+		gameResources.glEn();
+		setReflection();
+		gameResources.glDi();
+		gameResources.renderer
+				.renderScene(gameResources.allEntities, gameResources.lights,
+						gameResources.camera, gameResources.plane);
+		gameResources.renderer
+				.renderSceneNoPrepare(gameResources.allObjects,
+						gameResources.lights, gameResources.camera,
+						gameResources.plane);
+		gameResources.waterRenderer.render(gameResources.waters,
+				gameResources.camera);
+		gameResources.guiRenderer.renderNoPrepare(gameResources.guis);
+		DisplayManager.updateDisplay();
 	}
 
 	public static void setReflection() {

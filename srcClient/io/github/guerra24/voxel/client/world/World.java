@@ -5,6 +5,7 @@ import io.github.guerra24.voxel.client.kernel.Kernel;
 import io.github.guerra24.voxel.client.resources.GuiResources;
 import io.github.guerra24.voxel.client.world.chunks.Chunk;
 
+import org.lwjgl.input.Mouse;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -23,7 +24,7 @@ public class World {
 		createWorld();
 	}
 
-	public void createWorld() {
+	private void createWorld() {
 		Kernel.gameResources.guis5.add(Kernel.guiResources.loadW);
 		Kernel.gameResources.guis5.add(Kernel.guiResources.loadBar);
 		Kernel.gameResources.guis5.remove(GuiResources.load);
@@ -45,7 +46,7 @@ public class World {
 		Kernel.gameResources.guis5.add(GuiResources.load);
 	}
 
-	public void initialize() {
+	private void initialize() {
 		chunks = new Chunk[viewDistance][viewDistance];
 		if (viewDistance == 16) {
 			pos2 = 16 / 6500.0;
@@ -54,12 +55,29 @@ public class World {
 		}
 	}
 
+	public void test() {
+		if (Mouse.isButtonDown(0)) {
+			chunks[0][0].blocks[(int) Kernel.gameResources.mouse
+					.getCurrentRay().x * 10][(int) Kernel.gameResources.mouse
+					.getCurrentRay().y * 10][(int) Kernel.gameResources.mouse
+					.getCurrentRay().z * 10] = 0;
+			System.out
+					.println(Kernel.gameResources.mouse.getCurrentRay().x * 10);
+			System.out
+					.println(Kernel.gameResources.mouse.getCurrentRay().y * 10);
+			System.out
+					.println(Kernel.gameResources.mouse.getCurrentRay().z * 10);
+			chunks[0][0].isToRebuild = true;
+		}
+	}
+
 	public void update() {
 		time++;
-		if (time == 20) {
+		if (time == 10) {
 			for (int x = 0; x < viewDistance; x++) {
 				for (int z = 0; z < viewDistance; z++) {
 					chunks[x][z].update();
+					Kernel.standaloneRender();
 				}
 			}
 			time = 0;
