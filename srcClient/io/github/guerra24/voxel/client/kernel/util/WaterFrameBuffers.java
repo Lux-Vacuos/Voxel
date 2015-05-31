@@ -10,11 +10,11 @@ import static org.lwjgl.opengl.GL32.*;
 
 public class WaterFrameBuffers {
 
-	protected static final int REFLECTION_WIDTH = 320;
-	private static final int REFLECTION_HEIGHT = 180;
+	protected static final int REFLECTION_WIDTH = 128;
+	private static final int REFLECTION_HEIGHT = 128;
 
-	protected static final int REFRACTION_WIDTH = 1280;
-	private static final int REFRACTION_HEIGHT = 720;
+	protected static final int REFRACTION_WIDTH = 512;
+	private static final int REFRACTION_HEIGHT = 512;
 
 	private int reflectionFrameBuffer;
 	private int reflectionTexture;
@@ -44,21 +44,27 @@ public class WaterFrameBuffers {
 				REFLECTION_HEIGHT);
 	}
 
+	public void bindRefractionFrameBuffer() {// call before rendering to this
+		// FBO
+		bindFrameBuffer(refractionFrameBuffer, REFRACTION_WIDTH,
+				REFRACTION_HEIGHT);
+	}
+
 	public void unbindCurrentFrameBuffer() {// call to switch to default frame
 											// buffer
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		glViewport(0, 0, Display.getWidth(), Display.getHeight());
 	}
 
-	public int getReflectionTexture() {// get the resulting texture
+	public int getReflectionTexture() {
 		return reflectionTexture;
 	}
 
-	public int getRefractionTexture() {// get the resulting texture
+	public int getRefractionTexture() {
 		return refractionTexture;
 	}
 
-	public int getRefractionDepthTexture() {// get the resulting depth texture
+	public int getRefractionDepthTexture() {
 		return refractionDepthTexture;
 	}
 

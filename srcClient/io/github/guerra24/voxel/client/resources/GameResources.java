@@ -58,7 +58,7 @@ public class GameResources {
 	public WaterRenderer waterRenderer;
 	public GuiRenderer guiRenderer;
 	public WaterFrameBuffers fbos;
-	public WaterFrameBuffers fbos1;
+	public WaterFrameBuffers fbos2;
 	public GameStates gameStates;
 	public MousePicker mouse;
 	public Gson gson;
@@ -89,10 +89,10 @@ public class GameResources {
 		SoundSystem = new SoundSystem();
 		renderer = new MasterRenderer(loader);
 		waterShader = new WaterShader();
-		waterRenderer = new WaterRenderer(loader, waterShader,
-				renderer.getProjectionMatrix());
 		fbos = new WaterFrameBuffers();
-		fbos1 = new WaterFrameBuffers();
+		fbos2 = new WaterFrameBuffers();
+		waterRenderer = new WaterRenderer(loader, waterShader,
+				renderer.getProjectionMatrix(), fbos, fbos2);
 		mouse = new MousePicker(camera, renderer.getProjectionMatrix());
 		gameStates = new GameStates();
 	}
@@ -129,7 +129,7 @@ public class GameResources {
 	public void cleanUp() {
 		waterShader.cleanUp();
 		fbos.cleanUp();
-		fbos1.cleanUp();
+		fbos2.cleanUp();
 		guiRenderer.cleanUp();
 		renderer.cleanUp();
 		loader.cleanUp();

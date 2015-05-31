@@ -19,8 +19,6 @@ public class GuiResources {
 	public GuiTexture button5;
 	public GuiTexture wselect;
 	public GuiTexture wnoselect;
-	public GuiTexture refraction;
-	public GuiTexture reflection;
 	public GuiTexture loadBar;
 
 	public GuiResources() {
@@ -65,12 +63,6 @@ public class GuiResources {
 		loadBar = new GuiTexture(
 				Kernel.gameResources.loader.loadTextureGui("LoadBar"),
 				new Vector2f(-0.9f, 0f), new Vector2f(0.5f, 0.5f));
-		refraction = new GuiTexture(
-				Kernel.gameResources.fbos.getReflectionTexture(), new Vector2f(
-						0.5f, 0.5f), new Vector2f(0.25f, 0.25f));
-		reflection = new GuiTexture(
-				Kernel.gameResources.fbos1.getReflectionTexture(),
-				new Vector2f(-0.5f, 0.5f), new Vector2f(0.25f, 0.25f));
 	}
 
 	public static void loadingGui() {
@@ -83,8 +75,6 @@ public class GuiResources {
 
 	public void addGuiTextures() {
 		Kernel.gameResources.guis.add(gui);
-		Kernel.gameResources.guis.add(refraction);
-		Kernel.gameResources.guis.add(reflection);
 		Kernel.gameResources.guis2.add(button1);
 		Kernel.gameResources.guis2.add(button2);
 		Kernel.gameResources.guis2.add(button4);

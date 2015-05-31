@@ -1,17 +1,14 @@
 package io.github.guerra24.voxel.client.kernel;
 
-import io.github.guerra24.voxel.client.kernel.render.types.WaterReflection;
 import io.github.guerra24.voxel.client.kernel.util.Logger;
 import io.github.guerra24.voxel.client.kernel.util.SystemInfo;
 import io.github.guerra24.voxel.client.menu.MenuScreen;
 import io.github.guerra24.voxel.client.resources.GameResources;
 import io.github.guerra24.voxel.client.resources.GuiResources;
-import io.github.guerra24.voxel.client.world.Water;
 import io.github.guerra24.voxel.client.world.World;
 import io.github.guerra24.voxel.client.world.block.BlocksResources;
 
 import org.lwjgl.input.Mouse;
-import org.lwjgl.util.vector.Vector4f;
 
 public class Kernel {
 
@@ -68,7 +65,7 @@ public class Kernel {
 				gameResources.camera.move();
 				gameResources.player.move();
 				gameResources.glEn();
-				setReflection();
+				gameResources.waterRenderer.setReflection();
 				gameResources.glDi();
 				gameResources.renderer.renderScene(gameResources.allEntities,
 						gameResources.lights, gameResources.camera,
@@ -110,7 +107,7 @@ public class Kernel {
 		gameResources.camera.move();
 		gameResources.player.move();
 		gameResources.glEn();
-		setReflection();
+		gameResources.waterRenderer.setReflection();
 		gameResources.glDi();
 		gameResources.renderer
 				.renderScene(gameResources.allEntities, gameResources.lights,
@@ -122,22 +119,8 @@ public class Kernel {
 		gameResources.waterRenderer.render(gameResources.waters,
 				gameResources.camera);
 		gameResources.guiRenderer.renderNoPrepare(gameResources.guis);
+		gameResources.gameStates.switchStates();
 		DisplayManager.updateDisplay();
-	}
-
-	public static void setReflection() {
-		gameResources.fbos1.bindReflectionFrameBuffer();
-		WaterReflection.reflectionCam();
-		gameResources.renderer.renderScene(gameResources.allEntities,
-				gameResources.lights, gameResources.camera, new Vector4f(0, 1,
-						0, -Water.water.getHeight()));
-		WaterReflection.restoreCam();
-		gameResources.fbos1.unbindCurrentFrameBuffer();
-		gameResources.fbos.bindReflectionFrameBuffer();
-		gameResources.renderer.renderScene(gameResources.allEntities,
-				gameResources.lights, gameResources.camera, new Vector4f(0, -1,
-						0, Water.water.getHeight()));
-		gameResources.fbos.unbindCurrentFrameBuffer();
 	}
 
 	public static void debugMode() {
