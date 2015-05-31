@@ -1,0 +1,12 @@
+.progress-bar { 
+   -fx-padding-top: 10px;
+   -fx-margin: auto;
+}
+
+.root { 
+   -fx-margin: auto;
+}
+
+.green-bar  { 
+   -fx-accent: green;  
+}

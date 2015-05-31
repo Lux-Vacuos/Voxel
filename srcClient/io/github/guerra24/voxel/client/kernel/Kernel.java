@@ -16,15 +16,17 @@ public class Kernel {
 	public static boolean isLoading = false;
 
 	private static int build = 5;
+	private static double version = 1.0;
 	public static GameResources gameResources;
 	public static GuiResources guiResources;
-	public static boolean error = false;
+	public static boolean error = false, postPro = true;
 	public static World world;
 
 	public static void StartGame() {
 
 		Logger.log("Loading");
-		Logger.log("Voxel Game BUILD: " + build);
+		Logger.log("Voxel Game Version: " + version);
+		Logger.log("Build: " + build);
 		DisplayManager.createDisplay();
 		SystemInfo.printSystemInfo();
 
