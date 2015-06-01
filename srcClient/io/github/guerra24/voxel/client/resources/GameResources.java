@@ -4,7 +4,6 @@ import static org.lwjgl.opengl.GL11.glDisable;
 import static org.lwjgl.opengl.GL11.glEnable;
 import static org.lwjgl.opengl.GL30.GL_CLIP_DISTANCE0;
 import io.github.guerra24.voxel.client.kernel.GameStates;
-import io.github.guerra24.voxel.client.kernel.network.ID;
 import io.github.guerra24.voxel.client.kernel.render.MasterRenderer;
 import io.github.guerra24.voxel.client.kernel.render.shaders.types.WaterShader;
 import io.github.guerra24.voxel.client.kernel.render.textures.types.GuiTexture;
@@ -62,11 +61,9 @@ public class GameResources {
 	public GameStates gameStates;
 	public MousePicker mouse;
 	public Gson gson;
-	public ID id;
 	public SoundSystem SoundSystem;
 	public Vector4f plane;
 	public float distance;
-	public Runtime instance;
 
 	public GameResources() {
 		loader = new Loader();
@@ -77,8 +74,6 @@ public class GameResources {
 		rand = new Random();
 		camera = new Camera();
 		gson = new Gson();
-		// id = new ID();
-		instance = Runtime.getRuntime();
 
 		try {
 			SoundSystemConfig.addLibrary(LibraryLWJGLOpenAL.class);
