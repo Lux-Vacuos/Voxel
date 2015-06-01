@@ -2,8 +2,13 @@ package io.github.guerra24.voxel.client.world;
 
 import io.github.guerra24.voxel.client.kernel.DisplayManager;
 import io.github.guerra24.voxel.client.kernel.Kernel;
+import io.github.guerra24.voxel.client.kernel.util.AbstractFilesPath;
 import io.github.guerra24.voxel.client.resources.GuiResources;
 import io.github.guerra24.voxel.client.world.chunks.Chunk;
+import io.github.guerra24.voxel.updater.Logger;
+
+import java.io.FileWriter;
+import java.io.IOException;
 
 import org.lwjgl.input.Mouse;
 import org.lwjgl.util.vector.Vector2f;
@@ -57,7 +62,7 @@ public class World {
 
 	public void test() {
 		if (Mouse.isButtonDown(0)) {
-			chunks[0][0].blocks[(int) Kernel.gameResources.mouse
+			chunks[0][0].blocksData.blocks[(int) Kernel.gameResources.mouse
 					.getCurrentRay().x * 10][(int) Kernel.gameResources.mouse
 					.getCurrentRay().y * 10][(int) Kernel.gameResources.mouse
 					.getCurrentRay().z * 10] = 0;
@@ -69,6 +74,32 @@ public class World {
 					.println(Kernel.gameResources.mouse.getCurrentRay().z * 10);
 			chunks[0][0].isToRebuild = true;
 		}
+	}
+
+	public void saveGame() {
+		int total = 0;
+		for (int x = 0; x < viewDistance; x++) {
+			for (int z = 0; z < viewDistance; z++) {
+				String json = Kernel.gameResources.gson
+						.toJson(chunks[x][z].blocksData);
+				String chunkName = AbstractFilesPath.chunks + x + z + ".json";
+				FileWriter writer;
+				try {
+					writer = new FileWriter(chunkName);
+					Logger.log("Saving: " + chunkName);
+					writer.write(json);
+					writer.close();
+					total++;
+				} catch (IOException e) {
+					Logger.warn("Fail to save: " + chunkName);
+					e.printStackTrace();
+				}
+			}
+		}
+		Logger.log("Succesfull Saved: " + total + " chunks");
+	}
+
+	public void loadGame() {
 	}
 
 	public void update() {

@@ -14,16 +14,17 @@ public class Chunk {
 	public static final int CHUNK_SIZE = 16;
 	public static final int CHUNK_HEIGHT = 128;
 
-	public byte[][][] blocks;
 	public boolean isToRebuild = false;
 	private List<Entity> cubes = new ArrayList<Entity>();
 	private Vector3f pos;
 	private int sizeX, sizeY, sizeZ, viewDistanceX = 32 - 8,
 			viewDistanceZ = 16 - 8;
 	private boolean isNotLoaded;
+	public ChunkInfo blocksData;
 
 	public Chunk(Vector3f pos) {
 		this.pos = pos;
+		blocksData = new ChunkInfo();
 		init();
 	}
 
@@ -32,7 +33,7 @@ public class Chunk {
 		sizeY = (int) (pos.getY() + CHUNK_HEIGHT);
 		sizeZ = (int) (pos.getZ() + CHUNK_SIZE);
 
-		blocks = new byte[sizeX][sizeY][sizeZ];
+		blocksData.blocks = new byte[sizeX][sizeY][sizeZ];
 
 		createChunk();
 		rebuild();
@@ -87,11 +88,11 @@ public class Chunk {
 			for (int y = (int) pos.getY(); y < sizeY; y++) {
 				for (int z = (int) pos.getZ(); z < sizeZ; z++) {
 					if (y == 0) {
-						blocks[x][y][z] = Block.Indes.getId();
+						blocksData.blocks[x][y][z] = Block.Indes.getId();
 					} else if (y < 65 && y > 0) {
-						blocks[x][y][z] = Block.Stone.getId();
+						blocksData.blocks[x][y][z] = Block.Stone.getId();
 					} else if (y < 71 && y > 64) {
-						blocks[x][y][z] = Block.Grass.getId();
+						blocksData.blocks[x][y][z] = Block.Grass.getId();
 					}
 				}
 			}
@@ -102,14 +103,14 @@ public class Chunk {
 		for (int x = (int) pos.getX(); x < sizeX; x++) {
 			for (int y = (int) pos.getY(); y < sizeY; y++) {
 				for (int z = (int) pos.getZ(); z < sizeZ; z++) {
-					if (blocks[x][y][z] == Block.Indes.getId()
+					if (blocksData.blocks[x][y][z] == Block.Indes.getId()
 							&& !checkBlockNotInView(x, y, z)) {
 						cubes.add(Block.Indes.getEntity(new Vector3f(x, y, z)));
-					} else if (blocks[x][y][z] == Block.Stone.getId()
-							&& !checkBlockNotInView(x, y, z)) {
+					} else if (blocksData.blocks[x][y][z] == Block.Stone
+							.getId() && !checkBlockNotInView(x, y, z)) {
 						cubes.add(Block.Stone.getEntity(new Vector3f(x, y, z)));
-					} else if (blocks[x][y][z] == Block.Grass.getId()
-							&& !checkBlockNotInView(x, y, z)) {
+					} else if (blocksData.blocks[x][y][z] == Block.Grass
+							.getId() && !checkBlockNotInView(x, y, z)) {
 						cubes.add(Block.Grass.getEntity(new Vector3f(x, y, z)));
 					}
 				}
@@ -120,7 +121,7 @@ public class Chunk {
 	private boolean checkBlockNotInView(int x, int y, int z) {
 		boolean facesHidden[] = new boolean[6];
 		if (x > pos.getX()) {
-			if (blocks[x - 1][y][z] != -2)
+			if (blocksData.blocks[x - 1][y][z] != -2)
 				facesHidden[0] = true;
 			else
 				facesHidden[0] = false;
@@ -128,7 +129,7 @@ public class Chunk {
 			facesHidden[0] = false;
 		}
 		if (x < sizeX - 1) {
-			if (blocks[x + 1][y][z] != -2)
+			if (blocksData.blocks[x + 1][y][z] != -2)
 				facesHidden[1] = true;
 			else
 				facesHidden[1] = false;
@@ -137,7 +138,7 @@ public class Chunk {
 		}
 
 		if (y > pos.getY()) {
-			if (blocks[x][y - 1][z] != -2)
+			if (blocksData.blocks[x][y - 1][z] != -2)
 				facesHidden[2] = true;
 			else
 				facesHidden[2] = false;
@@ -145,7 +146,7 @@ public class Chunk {
 			facesHidden[2] = false;
 		}
 		if (y < sizeY - 58) {
-			if (blocks[x][y + 1][z] != -2)
+			if (blocksData.blocks[x][y + 1][z] != -2)
 				facesHidden[3] = true;
 			else
 				facesHidden[3] = false;
@@ -154,7 +155,7 @@ public class Chunk {
 		}
 
 		if (z > pos.getZ()) {
-			if (blocks[x][y][z - 1] != -2)
+			if (blocksData.blocks[x][y][z - 1] != -2)
 				facesHidden[4] = true;
 			else
 				facesHidden[4] = false;
@@ -162,7 +163,7 @@ public class Chunk {
 			facesHidden[4] = false;
 		}
 		if (z < sizeZ - 1) {
-			if (blocks[x][y][z + 1] != -2)
+			if (blocksData.blocks[x][y][z + 1] != -2)
 				facesHidden[5] = true;
 			else
 				facesHidden[5] = false;
