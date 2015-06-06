@@ -1,5 +1,6 @@
 package io.github.guerra24.voxel.client.resources;
 
+import io.github.guerra24.voxel.client.kernel.Kernel;
 import io.github.guerra24.voxel.client.kernel.render.textures.types.EntityTexture;
 import io.github.guerra24.voxel.client.kernel.util.Logger;
 import io.github.guerra24.voxel.client.resources.models.RawModel;
@@ -55,14 +56,16 @@ public class Loader {
 		try {
 			texture = TextureLoader.getTexture("PNG", new FileInputStream(
 					"assets/textures/blocks/" + fileName + ".png"), GL_NEAREST);
-			Logger.log("Loading Texture: " + fileName + ".png");
+			Logger.log(Kernel.currentThread(), "Loading Texture: " + fileName
+					+ ".png");
 			glGenerateMipmap(GL_TEXTURE_2D);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
 					GL_LINEAR_MIPMAP_LINEAR);
 			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_LOD_BIAS, -0.4f);
 		} catch (Exception e) {
 			e.printStackTrace();
-			Logger.error("Couldn' load texture file" + fileName);
+			Logger.log(Kernel.currentThread(), "Couldn' load texture file"
+					+ fileName);
 			System.exit(-1);
 		}
 		textures.add(texture.getTextureID());
@@ -74,14 +77,16 @@ public class Loader {
 		try {
 			texture = TextureLoader.getTexture("PNG", new FileInputStream(
 					"assets/textures/menu/" + fileName + ".png"), GL_NEAREST);
-			Logger.log("Loading Texture: " + fileName + ".png");
+			Logger.log(Kernel.currentThread(), "Loading Texture: " + fileName
+					+ ".png");
 			glGenerateMipmap(GL_TEXTURE_2D);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
 					GL_LINEAR_MIPMAP_LINEAR);
 			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_LOD_BIAS, -0.4f);
 		} catch (Exception e) {
 			e.printStackTrace();
-			Logger.error("Couldn' load texture file" + fileName);
+			Logger.error(Kernel.currentThread(), "Couldn' load texture file"
+					+ fileName);
 			System.exit(-1);
 		}
 		textures.add(texture.getTextureID());
@@ -134,7 +139,8 @@ public class Loader {
 			in.close();
 		} catch (Exception e) {
 			e.printStackTrace();
-			Logger.error("Tried to load texture " + fileName + ", didn't work");
+			Logger.error(Kernel.currentThread(), "Tried to load texture "
+					+ fileName + ", didn't work");
 			System.exit(-1);
 		}
 		return new EntityTexture(buffer, width, height);

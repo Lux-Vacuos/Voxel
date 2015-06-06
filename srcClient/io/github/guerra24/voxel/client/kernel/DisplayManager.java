@@ -22,8 +22,8 @@ public class DisplayManager {
 	private static PixelFormat pixelformat = new PixelFormat();
 
 	public static void createDisplay() {
-		Logger.log("Creating Display");
-		Logger.log("LWJGL Version: " + Sys.getVersion());
+		Logger.log(Kernel.currentThread(), "Creating Display");
+		Logger.log(Kernel.currentThread(), "LWJGL Version: " + Sys.getVersion());
 		try {
 			Display.setDisplayMode(new DisplayMode(WIDTH, HEIGHT));
 			Display.create(pixelformat);
@@ -32,9 +32,10 @@ public class DisplayManager {
 			Display.setFullscreen(false);
 		} catch (LWJGLException e) {
 			e.printStackTrace();
-			Logger.error("Failed to create Display");
+			Logger.error(Kernel.currentThread(), "Failed to create Display");
 		}
-		Logger.log("OpenGL Version: " + glGetString(GL_VERSION));
+		Logger.log(Kernel.currentThread(), "OpenGL Version: "
+				+ glGetString(GL_VERSION));
 		glViewport(0, 0, WIDTH, HEIGHT);
 		lastFrameTime = getCurrentTime();
 	}

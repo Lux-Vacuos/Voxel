@@ -1,5 +1,6 @@
 package io.github.guerra24.voxel.client.kernel.render.shaders;
 
+import io.github.guerra24.voxel.client.kernel.Kernel;
 import io.github.guerra24.voxel.client.kernel.util.Logger;
 
 import java.io.BufferedReader;
@@ -105,7 +106,7 @@ public abstract class ShaderProgram {
 		try {
 			BufferedReader reader = new BufferedReader(new FileReader(
 					"assets/shaders/" + file));
-			Logger.log("Loading Shader: " + file);
+			Logger.log(Kernel.currentThread(), "Loading Shader: " + file);
 			String line;
 			while ((line = reader.readLine()) != null) {
 				shaderSource.append(line).append("//\n");
@@ -119,8 +120,9 @@ public abstract class ShaderProgram {
 		glShaderSource(shaderID, shaderSource);
 		glCompileShader(shaderID);
 		if (glGetShaderi(shaderID, GL_COMPILE_STATUS) == GL_FALSE) {
-			Logger.error(glGetShaderInfoLog(shaderID, 500));
-			Logger.error("Could not compile shader!");
+			Logger.error(Kernel.currentThread(),
+					glGetShaderInfoLog(shaderID, 500));
+			Logger.error(Kernel.currentThread(), "Could not compile shader!");
 			System.exit(-1);
 		}
 		return shaderID;

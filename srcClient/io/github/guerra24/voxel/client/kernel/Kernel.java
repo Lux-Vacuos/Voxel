@@ -1,5 +1,6 @@
 package io.github.guerra24.voxel.client.kernel;
 
+import io.github.guerra24.voxel.client.kernel.console.Console;
 import io.github.guerra24.voxel.client.kernel.util.Logger;
 import io.github.guerra24.voxel.client.kernel.util.SystemInfo;
 import io.github.guerra24.voxel.client.menu.MenuScreen;
@@ -10,7 +11,7 @@ import io.github.guerra24.voxel.client.world.block.BlocksResources;
 
 import org.lwjgl.input.Mouse;
 
-public class Kernel {
+public class Kernel extends Thread {
 
 	public static boolean debug = false;
 	public static boolean isLoading = false;
@@ -21,12 +22,23 @@ public class Kernel {
 	public static GuiResources guiResources;
 	public static boolean error = false, postPro = true;
 	public static World world;
+	public static Kernel thread0;
+	public static Console thread1;
 
-	public static void StartGame() {
+	public void run() {
 
-		Logger.log("Loading");
-		Logger.log("Voxel Game Version: " + version);
-		Logger.log("Build: " + build);
+		thread1 = new Console();
+		thread1.start();
+
+		try {
+			Thread.sleep(300);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
+		Logger.log(currentThread(), "Loading");
+		Logger.log(currentThread(), "Voxel Game Version: " + version);
+		Logger.log(currentThread(), "Build: " + build);
 		DisplayManager.createDisplay();
 		SystemInfo.printSystemInfo();
 
@@ -103,6 +115,9 @@ public class Kernel {
 				e.printStackTrace();
 			}
 		}
+		if (thread0.isInterrupted()) {
+			gameResources.gameStates.loop = false;
+		}
 	}
 
 	public static void standaloneRender() {
@@ -133,12 +148,14 @@ public class Kernel {
 	private static void disposeGame() {
 		gameResources.guiRenderer.render(gameResources.guis5);
 		DisplayManager.updateDisplay();
-		Logger.log("Closing Game");
+		Logger.log(currentThread(), "Closing Game");
 		gameResources.cleanUp();
 		DisplayManager.closeDisplay();
+		System.exit(0);
 	}
 
 	public static void main(String[] args) {
-		StartGame();
+		thread0 = new Kernel();
+		thread0.start();
 	}
 }

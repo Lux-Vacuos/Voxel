@@ -12,7 +12,7 @@ public class KernelException extends Exception {
 		super(message);
 		Kernel.gameResources.guiRenderer.render(Kernel.gameResources.guis5);
 		DisplayManager.updateDisplay();
-		Logger.log("Closing Game");
+		Logger.log(Kernel.currentThread(), "Closing Game");
 		Kernel.gameResources.cleanUp();
 		DisplayManager.closeDisplay();
 	}

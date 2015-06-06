@@ -15,10 +15,10 @@ public final class Logger {
 		setTimeStampFormat(new SimpleDateFormat("MM/dd/yyyy h:mm:ss a"));
 	}
 
-	public static void log(Object... messages) {
+	public static void log(Thread thread, Object... messages) {
 		for (Object message : messages)
 			System.out.println((printTimeStamps ? "[INFO " + getTimeStamp()
-					+ "] " : "")
+					+ "] " + "[" + thread.getName() + "]" : "")
 					+ message);
 	}
 
@@ -33,18 +33,20 @@ public final class Logger {
 		return timeStampFormat.format(new Date());
 	}
 
-	public static void warn(Object... messages) {
+	public static void warn(Thread thread, Object... messages) {
 		for (Object message : messages)
 			System.err.println((printTimeStamps ? "[WARNING " + getTimeStamp()
-					+ "] " : "")
+					+ "] " + "[" + thread.getName() + "]" : "")
 					+ message);
 	}
 
-	public static void error(Object... messages) {
+	public static void error(Thread thread, Object... messages) {
 		for (Object message : messages)
-			System.err.println((printTimeStamps ? "[FATAL ERROR "
-					+ getTimeStamp() + "] " : "")
-					+ message);
+			System.err
+					.println((printTimeStamps ? "[FATAL ERROR "
+							+ getTimeStamp() + "] " + "[" + thread.getName()
+							+ "]" : "")
+							+ message);
 	}
 
 	public static void setTimeStampFormat(SimpleDateFormat timeStampFormat) {
