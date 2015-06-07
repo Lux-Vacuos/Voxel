@@ -1,5 +1,6 @@
 package io.github.guerra24.voxel.client.world.block;
 
+import io.github.guerra24.voxel.client.resources.models.WaterTile;
 import io.github.guerra24.voxel.client.world.block.types.BlockDimOre;
 import io.github.guerra24.voxel.client.world.block.types.BlockDirt;
 import io.github.guerra24.voxel.client.world.block.types.BlockGoldOre;
@@ -8,6 +9,7 @@ import io.github.guerra24.voxel.client.world.block.types.BlockIndes;
 import io.github.guerra24.voxel.client.world.block.types.BlockNull;
 import io.github.guerra24.voxel.client.world.block.types.BlockSand;
 import io.github.guerra24.voxel.client.world.block.types.BlockStone;
+import io.github.guerra24.voxel.client.world.block.types.BlockWater;
 import io.github.guerra24.voxel.client.world.entities.Entity;
 
 import org.lwjgl.util.vector.Vector3f;
@@ -22,10 +24,13 @@ public abstract class Block {
 	public static Block Dirt = new BlockDirt();
 	public static Block DiamondOre = new BlockDimOre();
 	public static Block GoldOre = new BlockGoldOre();
+	public static Block Water = new BlockWater();
 
 	public abstract byte getId();
 
 	public abstract Entity getEntity(Vector3f pos);
+
+	public abstract WaterTile getWaterTitle(Vector3f pos);
 
 	public static Block getBlock(byte id) {
 		switch (id) {
@@ -45,6 +50,8 @@ public abstract class Block {
 			return Block.DiamondOre;
 		case 6:
 			return Block.GoldOre;
+		case 7:
+			return Block.Water;
 		}
 		return Block.NULL;
 	}

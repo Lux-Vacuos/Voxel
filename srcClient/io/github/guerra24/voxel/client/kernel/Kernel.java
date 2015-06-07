@@ -16,7 +16,7 @@ public class Kernel extends Thread {
 	public static boolean debug = false;
 	public static boolean isLoading = false;
 
-	private static int build = 5;
+	private static int build = 8;
 	private static double version = 1.0;
 	public static GameResources gameResources;
 	public static GuiResources guiResources;
@@ -31,7 +31,7 @@ public class Kernel extends Thread {
 		thread1.start();
 
 		try {
-			Thread.sleep(300);
+			Thread.sleep(500);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -114,9 +114,6 @@ public class Kernel extends Thread {
 			} catch (KernelException e) {
 				e.printStackTrace();
 			}
-		}
-		if (thread0.isInterrupted()) {
-			gameResources.gameStates.loop = false;
 		}
 	}
 

@@ -18,7 +18,7 @@ public final class Logger {
 	public static void log(Thread thread, Object... messages) {
 		for (Object message : messages)
 			System.out.println((printTimeStamps ? "[INFO " + getTimeStamp()
-					+ "] " + "[" + thread.getName() + "]" : "")
+					+ "] " + "[" + thread.getName() + "] " : "")
 					+ message);
 	}
 

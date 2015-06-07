@@ -19,7 +19,7 @@ public class Chunk {
 	private Vector3f pos;
 	private int sizeX, sizeY, sizeZ, viewDistanceX = 32 - 8,
 			viewDistanceZ = 16 - 8;
-	private boolean isNotLoaded;
+	public boolean isNotLoaded;
 	public ChunkInfo blocksData;
 
 	public Chunk(Vector3f pos) {
@@ -121,7 +121,7 @@ public class Chunk {
 	private boolean checkBlockNotInView(int x, int y, int z) {
 		boolean facesHidden[] = new boolean[6];
 		if (x > pos.getX()) {
-			if (blocksData.blocks[x - 1][y][z] != -2)
+			if (blocksData.blocks[x - 1][y][z] != 0)
 				facesHidden[0] = true;
 			else
 				facesHidden[0] = false;
@@ -129,7 +129,7 @@ public class Chunk {
 			facesHidden[0] = false;
 		}
 		if (x < sizeX - 1) {
-			if (blocksData.blocks[x + 1][y][z] != -2)
+			if (blocksData.blocks[x + 1][y][z] != 0)
 				facesHidden[1] = true;
 			else
 				facesHidden[1] = false;
@@ -138,15 +138,15 @@ public class Chunk {
 		}
 
 		if (y > pos.getY()) {
-			if (blocksData.blocks[x][y - 1][z] != -2)
+			if (blocksData.blocks[x][y - 1][z] != 0)
 				facesHidden[2] = true;
 			else
 				facesHidden[2] = false;
 		} else {
 			facesHidden[2] = false;
 		}
-		if (y < sizeY - 58) {
-			if (blocksData.blocks[x][y + 1][z] != -2)
+		if (y < sizeY - 1) {
+			if (blocksData.blocks[x][y + 1][z] != 0)
 				facesHidden[3] = true;
 			else
 				facesHidden[3] = false;
@@ -155,7 +155,7 @@ public class Chunk {
 		}
 
 		if (z > pos.getZ()) {
-			if (blocksData.blocks[x][y][z - 1] != -2)
+			if (blocksData.blocks[x][y][z - 1] != 0)
 				facesHidden[4] = true;
 			else
 				facesHidden[4] = false;
@@ -163,7 +163,7 @@ public class Chunk {
 			facesHidden[4] = false;
 		}
 		if (z < sizeZ - 1) {
-			if (blocksData.blocks[x][y][z + 1] != -2)
+			if (blocksData.blocks[x][y][z + 1] != 0)
 				facesHidden[5] = true;
 			else
 				facesHidden[5] = false;

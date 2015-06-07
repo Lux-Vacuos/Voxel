@@ -9,6 +9,7 @@ import java.io.PrintStream;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.text.DefaultCaret;
 
 public class Console extends Thread {
 
@@ -19,6 +20,8 @@ public class Console extends Thread {
 		txtConsole = new JTextArea();
 		frame = new JFrame();
 		PrintStream out = new PrintStream(new TextAreaOutputStream(txtConsole));
+		DefaultCaret caret = (DefaultCaret) txtConsole.getCaret();
+		caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 		JScrollPane scroll = new JScrollPane(txtConsole);
 		scroll.setViewportView(txtConsole);
 
@@ -32,6 +35,7 @@ public class Console extends Thread {
 		frame.setVisible(true);
 		frame.setResizable(false);
 		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		frame.setTitle("Voxel Game Log Console");
 
 		Logger.log(currentThread(), "Starting Console");
 	}

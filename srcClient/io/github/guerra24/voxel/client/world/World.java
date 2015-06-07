@@ -3,9 +3,9 @@ package io.github.guerra24.voxel.client.world;
 import io.github.guerra24.voxel.client.kernel.DisplayManager;
 import io.github.guerra24.voxel.client.kernel.Kernel;
 import io.github.guerra24.voxel.client.kernel.util.AbstractFilesPath;
+import io.github.guerra24.voxel.client.kernel.util.Logger;
 import io.github.guerra24.voxel.client.resources.GuiResources;
 import io.github.guerra24.voxel.client.world.chunks.Chunk;
-import io.github.guerra24.voxel.updater.Logger;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -33,6 +33,7 @@ public class World {
 		Kernel.gameResources.guis5.add(Kernel.guiResources.loadW);
 		Kernel.gameResources.guis5.add(Kernel.guiResources.loadBar);
 		Kernel.gameResources.guis5.remove(GuiResources.load);
+		Logger.log(Kernel.currentThread(), "Generation World");
 		pos = -0.85f;
 		for (x = 0; x < viewDistance; x++) {
 			for (z = 0; z < viewDistance; z++) {
@@ -86,17 +87,19 @@ public class World {
 				FileWriter writer;
 				try {
 					writer = new FileWriter(chunkName);
-					Logger.log("Saving: " + chunkName);
+					Logger.log(Kernel.currentThread(), "Saving: " + chunkName);
 					writer.write(json);
 					writer.close();
 					total++;
 				} catch (IOException e) {
-					Logger.warn("Fail to save: " + chunkName);
+					Logger.warn(Kernel.currentThread(), "Fail to save: "
+							+ chunkName);
 					e.printStackTrace();
 				}
 			}
 		}
-		Logger.log("Succesfull Saved: " + total + " chunks");
+		Logger.log(Kernel.currentThread(), "Succesfull Saved: " + total
+				+ " chunks");
 	}
 
 	public void loadGame() {
@@ -108,7 +111,9 @@ public class World {
 			for (int x = 0; x < viewDistance; x++) {
 				for (int z = 0; z < viewDistance; z++) {
 					chunks[x][z].update();
-					Kernel.standaloneRender();
+					if (!chunks[x][z].isNotLoaded) {
+						Kernel.standaloneRender();
+					}
 				}
 			}
 			time = 0;
