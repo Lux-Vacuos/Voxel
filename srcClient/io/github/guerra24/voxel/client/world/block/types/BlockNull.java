@@ -10,7 +10,7 @@ public class BlockNull extends Block {
 
 	@Override
 	public byte getId() {
-		return -2;
+		return 0;
 	}
 
 	@Override

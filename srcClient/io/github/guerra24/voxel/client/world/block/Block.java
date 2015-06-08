@@ -34,10 +34,10 @@ public abstract class Block {
 
 	public static Block getBlock(byte id) {
 		switch (id) {
-		case -2:
-			return Block.NULL;
 		case -1:
 			return Block.Indes;
+		case 0:
+			return Block.NULL;
 		case 1:
 			return Block.Stone;
 		case 2:

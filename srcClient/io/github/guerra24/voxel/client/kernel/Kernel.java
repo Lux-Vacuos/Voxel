@@ -1,5 +1,7 @@
 package io.github.guerra24.voxel.client.kernel;
 
+import java.io.File;
+
 import io.github.guerra24.voxel.client.kernel.console.Console;
 import io.github.guerra24.voxel.client.kernel.util.Logger;
 import io.github.guerra24.voxel.client.kernel.util.SystemInfo;
@@ -16,11 +18,11 @@ public class Kernel extends Thread {
 	public static boolean debug = false;
 	public static boolean isLoading = false;
 
-	private static int build = 8;
+	private static int build = 9;
 	private static double version = 1.0;
 	public static GameResources gameResources;
 	public static GuiResources guiResources;
-	public static boolean error = false, postPro = true;
+	public static boolean error = false, postPro = false;
 	public static World world;
 	public static Kernel thread0;
 	public static Console thread1;
@@ -152,6 +154,10 @@ public class Kernel extends Thread {
 	}
 
 	public static void main(String[] args) {
+		if (postPro) {
+			System.setProperty("org.lwjgl.librarypath",
+					new File("natives").getAbsolutePath());
+		}
 		thread0 = new Kernel();
 		thread0.start();
 	}

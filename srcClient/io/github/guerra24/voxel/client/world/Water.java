@@ -8,7 +8,7 @@ public class Water {
 	public static WaterTile water;
 
 	public static void createWater() {
-		Kernel.gameResources.waters.add(water = new WaterTile(0, 0, 60.4f));
+		Kernel.gameResources.waters.add(water = new WaterTile(0, 0, 64.4f));
 	}
 
 }

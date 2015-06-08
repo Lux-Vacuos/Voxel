@@ -12,7 +12,7 @@ Lharing: Ores generation algorithm.
 
 # In Process
 + GUI 95%
-+ World Save and Loading 0%
++ World Save and Loading 40%
 + NBWG (Noise Based World Generation) 0%
 
 # COMPLETED

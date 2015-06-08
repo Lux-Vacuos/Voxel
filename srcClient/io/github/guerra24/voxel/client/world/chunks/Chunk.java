@@ -5,7 +5,6 @@ import io.github.guerra24.voxel.client.world.block.Block;
 import io.github.guerra24.voxel.client.world.entities.Entity;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import org.lwjgl.util.vector.Vector3f;
 
@@ -15,7 +14,7 @@ public class Chunk {
 	public static final int CHUNK_HEIGHT = 128;
 
 	public boolean isToRebuild = false;
-	private List<Entity> cubes = new ArrayList<Entity>();
+	private ArrayList<Entity> cubes = new ArrayList<Entity>();
 	private Vector3f pos;
 	private int sizeX, sizeY, sizeZ, viewDistanceX = 32 - 8,
 			viewDistanceZ = 16 - 8;

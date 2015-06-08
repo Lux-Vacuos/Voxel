@@ -3,7 +3,7 @@ package io.github.guerra24.voxel.client.resources.models;
 public class WaterTile {
 
 	// public static final float TILE_SIZE = 0.5f;
-	public static final float TILE_SIZE = 10f;
+	public static final float TILE_SIZE = 1000f;
 
 	private float height;
 	private float x, z;

@@ -12,8 +12,7 @@ public class Player extends Entity {
 	private static final float TURN_SPEED = 160;
 	private static final float GRAVITY = -50;
 	private static final float JUMP_POWER = 12;
-
-	private static final float TERRAIN_HEIGHT = 63;
+	private static final float TERRAIN_HEIGHT = 71;
 
 	private float currentSpeed = 0;
 	private float currentTurnSpeed = 0;
@@ -39,6 +38,7 @@ public class Player extends Entity {
 		upwardsSpeed += GRAVITY * DisplayManager.getFrameTimeSeconds();
 		super.increasePosition(0,
 				upwardsSpeed * DisplayManager.getFrameTimeSeconds(), 0);
+
 		if (super.getPosition().y < TERRAIN_HEIGHT) {
 			upwardsSpeed = 0;
 			isInAir = false;
