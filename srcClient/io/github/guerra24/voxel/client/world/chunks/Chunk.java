@@ -1,10 +1,12 @@
 package io.github.guerra24.voxel.client.world.chunks;
 
 import io.github.guerra24.voxel.client.kernel.Kernel;
+import io.github.guerra24.voxel.client.world.PerlinNoise;
 import io.github.guerra24.voxel.client.world.block.Block;
 import io.github.guerra24.voxel.client.world.entities.Entity;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import org.lwjgl.util.vector.Vector3f;
 
@@ -20,6 +22,8 @@ public class Chunk {
 			viewDistanceZ = 16 - 8;
 	public boolean isNotLoaded;
 	public ChunkInfo blocksData;
+	private int octaveCount;
+	private float[][] perlinNoiseArray;
 
 	public Chunk(Vector3f pos) {
 		this.pos = pos;
@@ -33,6 +37,12 @@ public class Chunk {
 		sizeZ = (int) (pos.getZ() + CHUNK_SIZE);
 
 		blocksData.blocks = new byte[sizeX][sizeY][sizeZ];
+
+		octaveCount = 6;
+		perlinNoiseArray = new float[sizeX][];
+
+		perlinNoiseArray = PerlinNoise.GeneratePerlinNoise(sizeX, sizeZ,
+				octaveCount);
 
 		createChunk();
 		rebuild();
@@ -84,14 +94,21 @@ public class Chunk {
 
 	private void createChunk() {
 		for (int x = (int) pos.getX(); x < sizeX; x++) {
-			for (int y = (int) pos.getY(); y < sizeY; y++) {
-				for (int z = (int) pos.getZ(); z < sizeZ; z++) {
+			for (int z = (int) pos.getZ(); z < sizeZ; z++) {
+				int rand = (int) (sizeY * clamp(perlinNoiseArray[x][z]));
+				for (int y = (int) pos.getY(); y < rand; y++) {
+					if (y == rand - 1 && y > 65) {
+						blocksData.blocks[x][y][z] = Block.Grass.getId();
+					} else if (y == rand - 2 && y > 65) {
+						blocksData.blocks[x][y][z] = Block.Dirt.getId();
+					} else if (y == rand - 1 && y < 66) {
+						blocksData.blocks[x][y][z] = Block.Sand.getId();
+						blocksData.blocks[x][y - 1][z] = Block.Sand.getId();
+					} else {
+						blocksData.blocks[x][y][z] = Block.Stone.getId();
+					}
 					if (y == 0) {
 						blocksData.blocks[x][y][z] = Block.Indes.getId();
-					} else if (y < 65 && y > 0) {
-						blocksData.blocks[x][y][z] = Block.Stone.getId();
-					} else if (y < 71 && y > 64) {
-						blocksData.blocks[x][y][z] = Block.Grass.getId();
 					}
 				}
 			}
@@ -100,8 +117,8 @@ public class Chunk {
 
 	private void rebuild() {
 		for (int x = (int) pos.getX(); x < sizeX; x++) {
-			for (int y = (int) pos.getY(); y < sizeY; y++) {
-				for (int z = (int) pos.getZ(); z < sizeZ; z++) {
+			for (int z = (int) pos.getZ(); z < sizeZ; z++) {
+				for (int y = (int) pos.getY(); y < sizeY; y++) {
 					if (blocksData.blocks[x][y][z] == Block.Indes.getId()
 							&& !checkBlockNotInView(x, y, z)) {
 						cubes.add(Block.Indes.getEntity(new Vector3f(x, y, z)));
@@ -111,6 +128,12 @@ public class Chunk {
 					} else if (blocksData.blocks[x][y][z] == Block.Grass
 							.getId() && !checkBlockNotInView(x, y, z)) {
 						cubes.add(Block.Grass.getEntity(new Vector3f(x, y, z)));
+					} else if (blocksData.blocks[x][y][z] == Block.Sand.getId()
+							&& !checkBlockNotInView(x, y, z)) {
+						cubes.add(Block.Sand.getEntity(new Vector3f(x, y, z)));
+					} else if (blocksData.blocks[x][y][z] == Block.Dirt.getId()
+							&& !checkBlockNotInView(x, y, z)) {
+						cubes.add(Block.Dirt.getEntity(new Vector3f(x, y, z)));
 					}
 				}
 			}
@@ -171,6 +194,16 @@ public class Chunk {
 		}
 		return facesHidden[0] && facesHidden[1] && facesHidden[2]
 				&& facesHidden[3] && facesHidden[4] && facesHidden[5];
+	}
+
+	public static float clamp(float val) {
+		return Math.max(0, Math.min(128, val));
+	}
+
+	public static int randInt(int min, int max) {
+		Random rand = new Random();
+		int randomNum = rand.nextInt((max - min) + 1) + min;
+		return randomNum;
 	}
 
 	public void dispose() {

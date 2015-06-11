@@ -114,7 +114,6 @@ public abstract class ShaderProgram {
 			reader.close();
 		} catch (IOException e) {
 			e.printStackTrace();
-			System.exit(-1);
 		}
 		int shaderID = glCreateShader(type);
 		glShaderSource(shaderID, shaderSource);
@@ -123,7 +122,6 @@ public abstract class ShaderProgram {
 			Logger.error(Kernel.currentThread(),
 					glGetShaderInfoLog(shaderID, 500));
 			Logger.error(Kernel.currentThread(), "Could not compile shader!");
-			System.exit(-1);
 		}
 		return shaderID;
 	}

@@ -4,11 +4,13 @@ import static org.lwjgl.opengl.GL11.glDisable;
 import static org.lwjgl.opengl.GL11.glEnable;
 import static org.lwjgl.opengl.GL30.GL_CLIP_DISTANCE0;
 import io.github.guerra24.voxel.client.kernel.GameStates;
+import io.github.guerra24.voxel.client.kernel.Kernel;
 import io.github.guerra24.voxel.client.kernel.render.MasterRenderer;
 import io.github.guerra24.voxel.client.kernel.render.shaders.types.WaterShader;
 import io.github.guerra24.voxel.client.kernel.render.textures.types.GuiTexture;
 import io.github.guerra24.voxel.client.kernel.render.types.GuiRenderer;
 import io.github.guerra24.voxel.client.kernel.render.types.WaterRenderer;
+import io.github.guerra24.voxel.client.kernel.util.Logger;
 import io.github.guerra24.voxel.client.kernel.util.MousePicker;
 import io.github.guerra24.voxel.client.kernel.util.WaterFrameBuffers;
 import io.github.guerra24.voxel.client.resources.models.WaterTile;
@@ -79,7 +81,7 @@ public class GameResources {
 			SoundSystemConfig.addLibrary(LibraryLWJGLOpenAL.class);
 			SoundSystemConfig.setCodec("ogg", CodecJOgg.class);
 		} catch (SoundSystemException e) {
-			throw new RuntimeException("Unable to bind");
+			Logger.log(Kernel.currentThread(), "Unable to bind SounSystem Libs");
 		}
 		SoundSystem = new SoundSystem();
 		renderer = new MasterRenderer(loader);
@@ -109,14 +111,14 @@ public class GameResources {
 	}
 
 	public void addRes() {
-		player = new Player(BlocksResources.cubeGlass, new Vector3f(10, 80,
-				10), 0, 0, 90, 1);
+		player = new Player(BlocksResources.cubeGlass,
+				new Vector3f(10, 80, 10), 0, 0, 90, 1);
 		sun = new Light(new Vector3f(-7000, 0f, -7000),
 				new Vector3f(1f, 1f, 1f));
 		spot = new Light(new Vector3f(0, 0, 0), new Vector3f(1, 0, 0),
 				new Vector3f(1, 0.01f, 0.002f));
 		// lights.add(spot);
-		lights.add(sun);
+		// lights.add(sun);
 		allObjects.add(player);
 		plane = new Vector4f(0, -1, 0, 128 + 16);
 	}
