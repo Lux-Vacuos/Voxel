@@ -20,8 +20,12 @@ public class World {
 	private static double pos2 = 0.0d;
 	public Chunk[][] chunks;
 	public int viewDistance = 8;
+	private int sizeX = 16;
+	private int sizeZ = 16;
 	private int x;
 	private int z;
+	private int octaveCount;
+	public float[][] perlinNoiseArray;
 	public float time = 0;
 
 	public void startWorld() {
@@ -34,6 +38,10 @@ public class World {
 		Kernel.gameResources.guis5.add(Kernel.guiResources.loadBar);
 		Kernel.gameResources.guis5.remove(GuiResources.load);
 		Logger.log(Kernel.currentThread(), "Generation World");
+		octaveCount = 6;
+		perlinNoiseArray = new float[sizeX * viewDistance][];
+		perlinNoiseArray = PerlinNoise.GeneratePerlinNoise(
+				sizeX * viewDistance, sizeZ * viewDistance, octaveCount);
 		pos = -0.85f;
 		for (x = 0; x < viewDistance; x++) {
 			for (z = 0; z < viewDistance; z++) {

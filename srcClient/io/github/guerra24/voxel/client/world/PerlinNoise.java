@@ -18,7 +18,6 @@ public class PerlinNoise {
 		return x0 * (1 - alpha) + alpha * x1;
 	}
 
-	// Perlin Noise Generation
 	public static float[][] GenerateWhiteNoise(int width, int height) {
 		float[][] noise = GetEmptyArray(width, height);
 

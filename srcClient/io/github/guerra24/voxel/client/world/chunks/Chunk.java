@@ -1,7 +1,6 @@
 package io.github.guerra24.voxel.client.world.chunks;
 
 import io.github.guerra24.voxel.client.kernel.Kernel;
-import io.github.guerra24.voxel.client.world.PerlinNoise;
 import io.github.guerra24.voxel.client.world.block.Block;
 import io.github.guerra24.voxel.client.world.entities.Entity;
 
@@ -22,8 +21,6 @@ public class Chunk {
 			viewDistanceZ = 16 - 8;
 	public boolean isNotLoaded;
 	public ChunkInfo blocksData;
-	private int octaveCount;
-	private float[][] perlinNoiseArray;
 
 	public Chunk(Vector3f pos) {
 		this.pos = pos;
@@ -37,12 +34,6 @@ public class Chunk {
 		sizeZ = (int) (pos.getZ() + CHUNK_SIZE);
 
 		blocksData.blocks = new byte[sizeX][sizeY][sizeZ];
-
-		octaveCount = 6;
-		perlinNoiseArray = new float[sizeX][];
-
-		perlinNoiseArray = PerlinNoise.GeneratePerlinNoise(sizeX, sizeZ,
-				octaveCount);
 
 		createChunk();
 		rebuild();
@@ -95,7 +86,7 @@ public class Chunk {
 	private void createChunk() {
 		for (int x = (int) pos.getX(); x < sizeX; x++) {
 			for (int z = (int) pos.getZ(); z < sizeZ; z++) {
-				int rand = (int) (sizeY * clamp(perlinNoiseArray[x][z]));
+				int rand = (int) (sizeY * clamp(Kernel.world.perlinNoiseArray[x][z]));
 				for (int y = (int) pos.getY(); y < rand; y++) {
 					if (y == rand - 1 && y > 65) {
 						blocksData.blocks[x][y][z] = Block.Grass.getId();
@@ -103,7 +94,6 @@ public class Chunk {
 						blocksData.blocks[x][y][z] = Block.Dirt.getId();
 					} else if (y == rand - 1 && y < 66) {
 						blocksData.blocks[x][y][z] = Block.Sand.getId();
-						blocksData.blocks[x][y - 1][z] = Block.Sand.getId();
 					} else {
 						blocksData.blocks[x][y][z] = Block.Stone.getId();
 					}
