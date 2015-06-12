@@ -18,7 +18,7 @@ public class Kernel extends Thread {
 	public static boolean debug = false;
 	public static boolean isLoading = false;
 
-	private static int build = 12;
+	private static int build = 13;
 	private static double version = 1.0;
 	public static GameResources gameResources;
 	public static GuiResources guiResources;
@@ -76,7 +76,7 @@ public class Kernel extends Thread {
 				break;
 			case GAME:
 				// world.test();
-				Kernel.world.update();
+				world.update();
 				// gameResources.mouse.update();
 				gameResources.camera.move();
 				gameResources.player.move();

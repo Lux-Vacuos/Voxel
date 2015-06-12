@@ -28,6 +28,7 @@ public abstract class Block {
 
 	public abstract byte getId();
 
+
 	public abstract Entity getEntity(Vector3f pos);
 
 	public abstract WaterTile getWaterTitle(Vector3f pos);

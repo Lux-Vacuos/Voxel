@@ -116,11 +116,10 @@ public class World {
 	public void update() {
 		time++;
 		if (time == 10) {
-			for (int x = 0; x < viewDistance; x++) {
-				for (int z = 0; z < viewDistance; z++) {
-					chunks[x][z].update();
-					if (!chunks[x][z].isNotLoaded) {
-						Kernel.standaloneRender();
+			if (Kernel.gameResources.camera.isMoved) {
+				for (int x = 0; x < viewDistance; x++) {
+					for (int z = 0; z < viewDistance; z++) {
+						chunks[x][z].update();
 					}
 				}
 			}

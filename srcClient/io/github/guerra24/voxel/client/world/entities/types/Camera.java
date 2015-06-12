@@ -29,13 +29,14 @@ public class Camera {
 	private static int mouseSpeed = 2;
 	private static final int maxLookUp = 90;
 	private static final int maxLookDown = -90;
+	public boolean isMoved = false;
 
 	public Camera() {
 		this.speed = 0.5f;
 	}
 
 	public void move() {
-
+		isMoved = false;
 		float mouseDX = Mouse.getDX() * mouseSpeed * 0.16f;
 		float mouseDY = Mouse.getDY() * mouseSpeed * 0.16f;
 		if (yaw + mouseDX >= 360) {
@@ -57,28 +58,28 @@ public class Camera {
 
 			position.z += -(float) Math.cos(Math.toRadians(yaw)) * speed;
 			position.x += (float) Math.sin(Math.toRadians(yaw)) * speed;
+			isMoved = true;
 
 		} else if (Keyboard.isKeyDown(Keyboard.KEY_S)) {
 			position.z -= -(float) Math.cos(Math.toRadians(yaw)) * speed;
 			position.x -= (float) Math.sin(Math.toRadians(yaw)) * speed;
-
+			isMoved = true;
 		}
 
 		if (Keyboard.isKeyDown(Keyboard.KEY_D)) {
 
 			position.z += (float) Math.sin(Math.toRadians(yaw)) * speed;
 			position.x += (float) Math.cos(Math.toRadians(yaw)) * speed;
-
+			isMoved = true;
 		} else if (Keyboard.isKeyDown(Keyboard.KEY_A)) {
 
 			position.z -= (float) Math.sin(Math.toRadians(yaw)) * speed;
 			position.x -= (float) Math.cos(Math.toRadians(yaw)) * speed;
-
+			isMoved = true;
 		}
 		if (Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
 
 			position.y += speed;
-
 		} else if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
 			if (position.y > 0) {
 				position.y -= speed;
