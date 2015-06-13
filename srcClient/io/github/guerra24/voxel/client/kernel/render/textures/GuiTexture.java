@@ -1,4 +1,4 @@
-package io.github.guerra24.voxel.client.kernel.render.textures.types;
+package io.github.guerra24.voxel.client.kernel.render.textures;
 
 import org.lwjgl.util.vector.Vector2f;
 

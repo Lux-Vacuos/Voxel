@@ -5,6 +5,7 @@ import io.github.guerra24.voxel.client.kernel.Kernel;
 import io.github.guerra24.voxel.client.kernel.util.AbstractFilesPath;
 import io.github.guerra24.voxel.client.kernel.util.Logger;
 import io.github.guerra24.voxel.client.resources.GuiResources;
+import io.github.guerra24.voxel.client.resources.models.WaterTile;
 import io.github.guerra24.voxel.client.world.chunks.Chunk;
 
 import java.io.FileWriter;
@@ -48,13 +49,15 @@ public class World {
 				pos = (float) (pos + pos2);
 				chunks[x][z] = new Chunk(new Vector3f(x * Chunk.CHUNK_SIZE, 0,
 						z * Chunk.CHUNK_SIZE));
+				Kernel.gameResources.waters.add(new WaterTile(x
+						* Chunk.CHUNK_SIZE + WaterTile.TILE_SIZE - 0.5f, z
+						* Chunk.CHUNK_SIZE + WaterTile.TILE_SIZE - 0.5f, 64.4f));
 				Kernel.guiResources.loadBar.setPosition(new Vector2f(pos, 0));
 				Kernel.gameResources.guiRenderer
 						.render(Kernel.gameResources.guis5);
 				DisplayManager.updateDisplay();
 			}
 		}
-		Water.createWater();
 		Kernel.gameResources.guis5.remove(Kernel.guiResources.loadW);
 		Kernel.gameResources.guis5.remove(Kernel.guiResources.loadBar);
 		Kernel.gameResources.guis5.add(GuiResources.load);

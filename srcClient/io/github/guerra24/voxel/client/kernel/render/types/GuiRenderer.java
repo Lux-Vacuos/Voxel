@@ -6,7 +6,7 @@ import static org.lwjgl.opengl.GL13.*;
 import static org.lwjgl.opengl.GL11.*;
 import io.github.guerra24.voxel.client.kernel.render.MasterRenderer;
 import io.github.guerra24.voxel.client.kernel.render.shaders.types.GuiShader;
-import io.github.guerra24.voxel.client.kernel.render.textures.types.GuiTexture;
+import io.github.guerra24.voxel.client.kernel.render.textures.GuiTexture;
 import io.github.guerra24.voxel.client.kernel.util.Maths;
 import io.github.guerra24.voxel.client.resources.Loader;
 import io.github.guerra24.voxel.client.resources.models.RawModel;

@@ -1,4 +1,4 @@
-package io.github.guerra24.voxel.client.kernel.render.textures.types;
+package io.github.guerra24.voxel.client.kernel.render.textures;
 
 import java.nio.ByteBuffer;
 

@@ -1,7 +1,7 @@
 package io.github.guerra24.voxel.client.resources;
 
 import io.github.guerra24.voxel.client.kernel.Kernel;
-import io.github.guerra24.voxel.client.kernel.render.textures.types.EntityTexture;
+import io.github.guerra24.voxel.client.kernel.render.textures.EntityTexture;
 import io.github.guerra24.voxel.client.kernel.util.Logger;
 import io.github.guerra24.voxel.client.resources.models.RawModel;
 
@@ -66,7 +66,6 @@ public class Loader {
 			e.printStackTrace();
 			Logger.log(Kernel.currentThread(), "Couldn' load texture file"
 					+ fileName);
-			System.exit(-1);
 		}
 		textures.add(texture.getTextureID());
 		return texture.getTextureID();

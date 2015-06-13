@@ -7,14 +7,13 @@ import io.github.guerra24.voxel.client.kernel.GameStates;
 import io.github.guerra24.voxel.client.kernel.Kernel;
 import io.github.guerra24.voxel.client.kernel.render.MasterRenderer;
 import io.github.guerra24.voxel.client.kernel.render.shaders.types.WaterShader;
-import io.github.guerra24.voxel.client.kernel.render.textures.types.GuiTexture;
+import io.github.guerra24.voxel.client.kernel.render.textures.GuiTexture;
 import io.github.guerra24.voxel.client.kernel.render.types.GuiRenderer;
 import io.github.guerra24.voxel.client.kernel.render.types.WaterRenderer;
 import io.github.guerra24.voxel.client.kernel.util.Logger;
 import io.github.guerra24.voxel.client.kernel.util.MousePicker;
 import io.github.guerra24.voxel.client.kernel.util.WaterFrameBuffers;
 import io.github.guerra24.voxel.client.resources.models.WaterTile;
-import io.github.guerra24.voxel.client.world.Water;
 import io.github.guerra24.voxel.client.world.block.BlocksResources;
 import io.github.guerra24.voxel.client.world.entities.Entity;
 import io.github.guerra24.voxel.client.world.entities.types.Camera;
@@ -95,7 +94,7 @@ public class GameResources {
 	}
 
 	public void localLoop() {
-		distance = 2 * (camera.getPosition().y - Water.water.getHeight());
+		distance = 2 * (camera.getPosition().y - 64.4f);
 		spot.setPosition(player.getPosition());
 	}
 
