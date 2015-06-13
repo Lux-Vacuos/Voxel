@@ -43,21 +43,25 @@ public class Chunk {
 		if (Kernel.gameResources.camera.getPosition().z > pos.z + viewDistanceX
 				&& !isNotLoaded) {
 			Kernel.gameResources.allEntities.removeAll(cubes);
+			Kernel.standaloneRender();
 			isNotLoaded = true;
 		} else if (Kernel.gameResources.camera.getPosition().x > pos.x
 				+ viewDistanceX
 				&& !isNotLoaded) {
 			Kernel.gameResources.allEntities.removeAll(cubes);
+			Kernel.standaloneRender();
 			isNotLoaded = true;
 		} else if (Kernel.gameResources.camera.getPosition().z < pos.z
 				- viewDistanceZ
 				&& !isNotLoaded) {
 			Kernel.gameResources.allEntities.removeAll(cubes);
+			Kernel.standaloneRender();
 			isNotLoaded = true;
 		} else if (Kernel.gameResources.camera.getPosition().x < pos.x
 				- viewDistanceZ
 				&& !isNotLoaded) {
 			Kernel.gameResources.allEntities.removeAll(cubes);
+			Kernel.standaloneRender();
 			isNotLoaded = true;
 		} else if (isNotLoaded) {
 			if (Kernel.gameResources.camera.getPosition().x < pos.x

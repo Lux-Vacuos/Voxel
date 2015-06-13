@@ -13,7 +13,7 @@ public class DisplayManager {
 
 	public static final int WIDTH = 1280;
 	public static final int HEIGHT = 720;
-	private static final int FPS_CAP = 60;
+	private static final int FPS_CAP = 30;
 	private static final String Title = "Voxel Game";
 
 	private static long lastFrameTime;

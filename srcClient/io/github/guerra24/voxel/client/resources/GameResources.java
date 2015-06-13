@@ -96,6 +96,7 @@ public class GameResources {
 
 	public void localLoop() {
 		distance = 2 * (camera.getPosition().y - Water.water.getHeight());
+		spot.setPosition(player.getPosition());
 	}
 
 	public void glEn() {
@@ -115,10 +116,10 @@ public class GameResources {
 				new Vector3f(10, 80, 10), 0, 0, 90, 1);
 		sun = new Light(new Vector3f(-7000, 0f, -7000),
 				new Vector3f(1f, 1f, 1f));
-		spot = new Light(new Vector3f(0, 0, 0), new Vector3f(1, 0, 0),
+		spot = new Light(new Vector3f(16, 64, 16), new Vector3f(1, 1, 1),
 				new Vector3f(1, 0.01f, 0.002f));
-		// lights.add(spot);
-		// lights.add(sun);
+		lights.add(spot);
+		lights.add(sun);
 		allObjects.add(player);
 		plane = new Vector4f(0, -1, 0, 128 + 16);
 	}

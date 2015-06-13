@@ -71,16 +71,13 @@ public class World {
 
 	public void test() {
 		if (Mouse.isButtonDown(0)) {
-			chunks[0][0].blocksData.blocks[(int) Kernel.gameResources.mouse
-					.getCurrentRay().x * 10][(int) Kernel.gameResources.mouse
-					.getCurrentRay().y * 10][(int) Kernel.gameResources.mouse
-					.getCurrentRay().z * 10] = 0;
-			System.out
-					.println(Kernel.gameResources.mouse.getCurrentRay().x * 10);
-			System.out
-					.println(Kernel.gameResources.mouse.getCurrentRay().y * 10);
-			System.out
-					.println(Kernel.gameResources.mouse.getCurrentRay().z * 10);
+			chunks[0][0].blocksData.blocks[(int) (Kernel.gameResources.mouse
+					.getCurrentRay().x + Kernel.gameResources.camera
+					.getPosition().x)][(int) (Kernel.gameResources.mouse
+					.getCurrentRay().y + Kernel.gameResources.camera
+					.getPosition().y)][(int) (Kernel.gameResources.mouse
+					.getCurrentRay().z + Kernel.gameResources.camera
+					.getPosition().z)] = 0;
 			chunks[0][0].isToRebuild = true;
 		}
 	}
@@ -116,13 +113,13 @@ public class World {
 	public void update() {
 		time++;
 		if (time == 10) {
-			if (Kernel.gameResources.camera.isMoved) {
-				for (int x = 0; x < viewDistance; x++) {
-					for (int z = 0; z < viewDistance; z++) {
-						chunks[x][z].update();
-					}
+			// if (Kernel.gameResources.camera.isMoved) {
+			for (int x = 0; x < viewDistance; x++) {
+				for (int z = 0; z < viewDistance; z++) {
+					chunks[x][z].update();
 				}
 			}
+			// }
 			time = 0;
 		}
 	}
