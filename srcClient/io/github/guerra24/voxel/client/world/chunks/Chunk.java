@@ -1,10 +1,10 @@
 package io.github.guerra24.voxel.client.world.chunks;
 
 import io.github.guerra24.voxel.client.kernel.Kernel;
+import io.github.guerra24.voxel.client.kernel.util.ArrayList3;
 import io.github.guerra24.voxel.client.world.block.Block;
 import io.github.guerra24.voxel.client.world.entities.Entity;
 
-import java.util.ArrayList;
 import java.util.Random;
 
 import org.lwjgl.util.vector.Vector3f;
@@ -15,7 +15,7 @@ public class Chunk {
 	public static final int CHUNK_HEIGHT = 128;
 
 	public boolean isToRebuild = false;
-	private ArrayList<Entity> cubes = new ArrayList<Entity>();
+	private ArrayList3<Entity> cubes = new ArrayList3<Entity>();
 	private Vector3f pos;
 	private int sizeX, sizeY, sizeZ, viewDistanceX = 32 - 8,
 			viewDistanceZ = 16 - 8;
@@ -43,25 +43,21 @@ public class Chunk {
 		if (Kernel.gameResources.camera.getPosition().z > pos.z + viewDistanceX
 				&& !isNotLoaded) {
 			Kernel.gameResources.allEntities.removeAll(cubes);
-			Kernel.standaloneRender();
 			isNotLoaded = true;
 		} else if (Kernel.gameResources.camera.getPosition().x > pos.x
 				+ viewDistanceX
 				&& !isNotLoaded) {
 			Kernel.gameResources.allEntities.removeAll(cubes);
-			Kernel.standaloneRender();
 			isNotLoaded = true;
 		} else if (Kernel.gameResources.camera.getPosition().z < pos.z
 				- viewDistanceZ
 				&& !isNotLoaded) {
 			Kernel.gameResources.allEntities.removeAll(cubes);
-			Kernel.standaloneRender();
 			isNotLoaded = true;
 		} else if (Kernel.gameResources.camera.getPosition().x < pos.x
 				- viewDistanceZ
 				&& !isNotLoaded) {
 			Kernel.gameResources.allEntities.removeAll(cubes);
-			Kernel.standaloneRender();
 			isNotLoaded = true;
 		} else if (isNotLoaded) {
 			if (Kernel.gameResources.camera.getPosition().x < pos.x

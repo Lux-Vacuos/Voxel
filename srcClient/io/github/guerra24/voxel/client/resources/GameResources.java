@@ -10,6 +10,7 @@ import io.github.guerra24.voxel.client.kernel.render.shaders.types.WaterShader;
 import io.github.guerra24.voxel.client.kernel.render.textures.GuiTexture;
 import io.github.guerra24.voxel.client.kernel.render.types.GuiRenderer;
 import io.github.guerra24.voxel.client.kernel.render.types.WaterRenderer;
+import io.github.guerra24.voxel.client.kernel.util.ArrayList3;
 import io.github.guerra24.voxel.client.kernel.util.Logger;
 import io.github.guerra24.voxel.client.kernel.util.MousePicker;
 import io.github.guerra24.voxel.client.kernel.util.WaterFrameBuffers;
@@ -42,8 +43,8 @@ public class GameResources {
 	public List<GuiTexture> guis4 = new ArrayList<GuiTexture>();
 	public List<GuiTexture> guis5 = new ArrayList<GuiTexture>();
 
-	public List<Entity> allObjects = new ArrayList<Entity>();
-	public List<Entity> allEntities = new ArrayList<Entity>();
+	public ArrayList3<Entity> allObjects = new ArrayList3<Entity>();
+	public ArrayList3<Entity> allEntities = new ArrayList3<Entity>();
 	public List<Light> lights = new ArrayList<Light>();
 	public List<WaterTile> waters = new ArrayList<WaterTile>();
 
