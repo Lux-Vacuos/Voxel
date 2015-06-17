@@ -1,7 +1,5 @@
 package io.github.guerra24.voxel.client.kernel;
 
-import java.io.File;
-
 import io.github.guerra24.voxel.client.kernel.console.Console;
 import io.github.guerra24.voxel.client.kernel.util.Logger;
 import io.github.guerra24.voxel.client.kernel.util.SystemInfo;
@@ -11,6 +9,8 @@ import io.github.guerra24.voxel.client.resources.GuiResources;
 import io.github.guerra24.voxel.client.world.World;
 import io.github.guerra24.voxel.client.world.block.BlocksResources;
 
+import java.io.File;
+
 import org.lwjgl.input.Mouse;
 
 public class Kernel extends Thread {
@@ -18,7 +18,7 @@ public class Kernel extends Thread {
 	public static boolean debug = false;
 	public static boolean isLoading = false;
 
-	private static int build = 16;
+	private static int build = 17;
 	private static double version = 1.0;
 	public static GameResources gameResources;
 	public static GuiResources guiResources;
@@ -92,7 +92,6 @@ public class Kernel extends Thread {
 				gameResources.waterRenderer.render(gameResources.waters,
 						gameResources.camera);
 				gameResources.guiRenderer.renderNoPrepare(gameResources.guis);
-				checkGameState();
 				break;
 			}
 			if (debug) {
@@ -105,18 +104,6 @@ public class Kernel extends Thread {
 		}
 		if (!error)
 			disposeGame();
-	}
-
-	private static void checkGameState() {
-		if (gameResources.camera.getPosition().y <= -1) {
-			try {
-				error = true;
-				gameResources.gameStates.loop = false;
-				throw new KernelException("Invalid player position");
-			} catch (KernelException e) {
-				e.printStackTrace();
-			}
-		}
 	}
 
 	public static void standaloneRender() {
@@ -148,8 +135,8 @@ public class Kernel extends Thread {
 		DisplayManager.updateDisplay();
 		Logger.log(currentThread(), "Closing Game");
 		gameResources.cleanUp();
+		thread1.close();
 		DisplayManager.closeDisplay();
-		System.exit(0);
 	}
 
 	public static void main(String[] args) {

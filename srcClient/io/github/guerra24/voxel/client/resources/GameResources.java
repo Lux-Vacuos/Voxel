@@ -81,7 +81,7 @@ public class GameResources {
 			SoundSystemConfig.addLibrary(LibraryLWJGLOpenAL.class);
 			SoundSystemConfig.setCodec("ogg", CodecJOgg.class);
 		} catch (SoundSystemException e) {
-			Logger.log(Kernel.currentThread(), "Unable to bind SounSystem Libs");
+			Logger.log(Kernel.currentThread(), "Unable to bind SoundSystem Libs");
 		}
 		SoundSystem = new SoundSystem();
 		renderer = new MasterRenderer(loader);

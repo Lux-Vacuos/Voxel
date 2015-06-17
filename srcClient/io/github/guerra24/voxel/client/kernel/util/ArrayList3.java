@@ -117,6 +117,7 @@ public class ArrayList3<E> extends AbstractList<E> implements List<E>,
 	 * @exception IllegalArgumentException
 	 *                if the specified initial capacity is negative
 	 */
+	@SuppressWarnings("unchecked")
 	public ArrayList3(int initialCapacity) {
 		super();
 		if (initialCapacity < 0)
@@ -143,6 +144,7 @@ public class ArrayList3<E> extends AbstractList<E> implements List<E>,
 	 * @throws NullPointerException
 	 *             if the specified collection is null
 	 */
+	@SuppressWarnings("unchecked")
 	public ArrayList3(Collection<? extends E> c) {
 		size = c.size();
 		// Allow 10% room for growth
@@ -175,6 +177,7 @@ public class ArrayList3<E> extends AbstractList<E> implements List<E>,
 		modCount++;
 		int oldCapacity = elementData.length;
 		if (minCapacity > oldCapacity) {
+			@SuppressWarnings("unused")
 			Object oldData[] = elementData;
 			int newCapacity = (oldCapacity * 3) / 2 + 1;
 			if (newCapacity < minCapacity)
@@ -264,6 +267,7 @@ public class ArrayList3<E> extends AbstractList<E> implements List<E>,
 	 */
 	public Object clone() {
 		try {
+			@SuppressWarnings("unchecked")
 			ArrayList3<E> v = (ArrayList3<E>) super.clone();
 			v.elementData = Arrays.copyOf(elementData, size);
 			v.modCount = 0;
@@ -318,6 +322,7 @@ public class ArrayList3<E> extends AbstractList<E> implements List<E>,
 	 * @throws NullPointerException
 	 *             if the specified array is null
 	 */
+	@SuppressWarnings("unchecked")
 	public <T> T[] toArray(T[] a) {
 		if (a.length < size)
 			// Make a new array of a's runtime type, but my contents:
@@ -622,6 +627,7 @@ public class ArrayList3<E> extends AbstractList<E> implements List<E>,
 
 		// Read in array length and allocate array
 		int arrayLength = s.readInt();
+		@SuppressWarnings("unchecked")
 		Object[] a = elementData = (E[]) new Object[arrayLength];
 
 		// Read in all elements in the proper order.

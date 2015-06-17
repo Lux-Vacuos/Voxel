@@ -37,7 +37,7 @@ public class BlocksResources {
 				Kernel.gameResources.loader.loadTextureBlocks("Diamond-Ore"));
 		ModelTexture texture6 = new ModelTexture(
 				Kernel.gameResources.loader.loadTextureBlocks("Gold-Ore"));
-		// Block Mix texture and model
+
 		cubeIndes = new TexturedModel(model, texture0);
 		cubeGrass = new TexturedModel(model, texture);
 		cubeStone = new TexturedModel(model, texture1);

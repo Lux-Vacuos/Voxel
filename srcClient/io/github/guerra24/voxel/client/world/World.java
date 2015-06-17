@@ -2,16 +2,11 @@ package io.github.guerra24.voxel.client.world;
 
 import io.github.guerra24.voxel.client.kernel.DisplayManager;
 import io.github.guerra24.voxel.client.kernel.Kernel;
-import io.github.guerra24.voxel.client.kernel.util.AbstractFilesPath;
 import io.github.guerra24.voxel.client.kernel.util.Logger;
 import io.github.guerra24.voxel.client.resources.GuiResources;
 import io.github.guerra24.voxel.client.resources.models.WaterTile;
 import io.github.guerra24.voxel.client.world.chunks.Chunk;
 
-import java.io.FileWriter;
-import java.io.IOException;
-
-import org.lwjgl.input.Mouse;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -19,7 +14,6 @@ public class World {
 
 	private static float pos = -0.85f;
 	private static double pos2 = 0.0d;
-	public Chunk[][] chunks;
 	public int viewDistance = 8;
 	private int sizeX = 16;
 	private int sizeZ = 16;
@@ -28,6 +22,7 @@ public class World {
 	private int octaveCount;
 	public float[][] perlinNoiseArray;
 	public float time = 0;
+	public Chunk chunks[][];
 
 	public void startWorld() {
 		initialize();
@@ -39,10 +34,6 @@ public class World {
 		Kernel.gameResources.guis5.add(Kernel.guiResources.loadBar);
 		Kernel.gameResources.guis5.remove(GuiResources.load);
 		Logger.log(Kernel.currentThread(), "Generation World");
-		octaveCount = 6;
-		perlinNoiseArray = new float[sizeX * viewDistance][];
-		perlinNoiseArray = PerlinNoise.GeneratePerlinNoise(
-				sizeX * viewDistance, sizeZ * viewDistance, octaveCount);
 		pos = -0.85f;
 		for (x = 0; x < viewDistance; x++) {
 			for (z = 0; z < viewDistance; z++) {
@@ -67,52 +58,15 @@ public class World {
 
 	private void initialize() {
 		chunks = new Chunk[viewDistance][viewDistance];
+		octaveCount = 6;
+		perlinNoiseArray = new float[sizeX * viewDistance][];
+		perlinNoiseArray = PerlinNoise.GeneratePerlinNoise(
+				sizeX * viewDistance, sizeZ * viewDistance, octaveCount);
 		if (viewDistance == 16) {
 			pos2 = 16 / 6500.0;
 		} else if (viewDistance == 8) {
 			pos2 = 8 / 800.0;
 		}
-	}
-
-	public void test() {
-		if (Mouse.isButtonDown(0)) {
-			chunks[0][0].blocksData.blocks[(int) (Kernel.gameResources.mouse
-					.getCurrentRay().x + Kernel.gameResources.camera
-					.getPosition().x)][(int) (Kernel.gameResources.mouse
-					.getCurrentRay().y + Kernel.gameResources.camera
-					.getPosition().y)][(int) (Kernel.gameResources.mouse
-					.getCurrentRay().z + Kernel.gameResources.camera
-					.getPosition().z)] = 0;
-			chunks[0][0].isToRebuild = true;
-		}
-	}
-
-	public void saveGame() {
-		int total = 0;
-		for (int x = 0; x < viewDistance; x++) {
-			for (int z = 0; z < viewDistance; z++) {
-				String json = Kernel.gameResources.gson
-						.toJson(chunks[x][z].blocksData);
-				String chunkName = AbstractFilesPath.chunks + x + z + ".json";
-				FileWriter writer;
-				try {
-					writer = new FileWriter(chunkName);
-					Logger.log(Kernel.currentThread(), "Saving: " + chunkName);
-					writer.write(json);
-					writer.close();
-					total++;
-				} catch (IOException e) {
-					Logger.warn(Kernel.currentThread(), "Fail to save: "
-							+ chunkName);
-					e.printStackTrace();
-				}
-			}
-		}
-		Logger.log(Kernel.currentThread(), "Succesfull Saved: " + total
-				+ " chunks");
-	}
-
-	public void loadGame() {
 	}
 
 	public void update() {

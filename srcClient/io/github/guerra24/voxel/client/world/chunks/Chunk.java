@@ -2,10 +2,9 @@ package io.github.guerra24.voxel.client.world.chunks;
 
 import io.github.guerra24.voxel.client.kernel.Kernel;
 import io.github.guerra24.voxel.client.kernel.util.ArrayList3;
+import io.github.guerra24.voxel.client.kernel.util.Maths;
 import io.github.guerra24.voxel.client.world.block.Block;
 import io.github.guerra24.voxel.client.world.entities.Entity;
-
-import java.util.Random;
 
 import org.lwjgl.util.vector.Vector3f;
 
@@ -14,12 +13,11 @@ public class Chunk {
 	public static final int CHUNK_SIZE = 16;
 	public static final int CHUNK_HEIGHT = 128;
 
-	public boolean isToRebuild = false;
-	private ArrayList3<Entity> cubes = new ArrayList3<Entity>();
+	private ArrayList3<Entity> cubes;
 	private Vector3f pos;
 	private int sizeX, sizeY, sizeZ, viewDistanceX = 32 - 8,
 			viewDistanceZ = 16 - 8;
-	public boolean isNotLoaded;
+	public boolean isNotLoaded, isToRebuild = false;
 	public ChunkInfo blocksData;
 
 	public Chunk(Vector3f pos) {
@@ -34,30 +32,35 @@ public class Chunk {
 		sizeZ = (int) (pos.getZ() + CHUNK_SIZE);
 
 		blocksData.blocks = new byte[sizeX][sizeY][sizeZ];
+		cubes = new ArrayList3<Entity>();
 
 		createChunk();
-		rebuild();
+		// rebuild();
 	}
 
 	public void update() {
 		if (Kernel.gameResources.camera.getPosition().z > pos.z + viewDistanceX
 				&& !isNotLoaded) {
 			Kernel.gameResources.allEntities.removeAll(cubes);
+			cubes.clear();
 			isNotLoaded = true;
 		} else if (Kernel.gameResources.camera.getPosition().x > pos.x
 				+ viewDistanceX
 				&& !isNotLoaded) {
 			Kernel.gameResources.allEntities.removeAll(cubes);
+			cubes.clear();
 			isNotLoaded = true;
 		} else if (Kernel.gameResources.camera.getPosition().z < pos.z
 				- viewDistanceZ
 				&& !isNotLoaded) {
 			Kernel.gameResources.allEntities.removeAll(cubes);
+			cubes.clear();
 			isNotLoaded = true;
 		} else if (Kernel.gameResources.camera.getPosition().x < pos.x
 				- viewDistanceZ
 				&& !isNotLoaded) {
 			Kernel.gameResources.allEntities.removeAll(cubes);
+			cubes.clear();
 			isNotLoaded = true;
 		} else if (isNotLoaded) {
 			if (Kernel.gameResources.camera.getPosition().x < pos.x
@@ -68,6 +71,8 @@ public class Chunk {
 							- viewDistanceZ) {
 						if (Kernel.gameResources.camera.getPosition().z > pos.z
 								- viewDistanceZ) {
+							cubes.clear();
+							rebuild();
 							Kernel.gameResources.allEntities.addAll(cubes);
 							isNotLoaded = false;
 						}
@@ -86,7 +91,8 @@ public class Chunk {
 	private void createChunk() {
 		for (int x = (int) pos.getX(); x < sizeX; x++) {
 			for (int z = (int) pos.getZ(); z < sizeZ; z++) {
-				int rand = (int) (sizeY * clamp(Kernel.world.perlinNoiseArray[x][z]));
+				int rand = (int) (sizeY * Maths
+						.clamp(Kernel.world.perlinNoiseArray[x][z]));
 				for (int y = (int) pos.getY(); y < rand; y++) {
 					if (y == rand - 1 && y > 65) {
 						blocksData.blocks[x][y][z] = Block.Grass.getId();
@@ -184,16 +190,6 @@ public class Chunk {
 		}
 		return facesHidden[0] && facesHidden[1] && facesHidden[2]
 				&& facesHidden[3] && facesHidden[4] && facesHidden[5];
-	}
-
-	public static float clamp(float val) {
-		return Math.max(0, Math.min(128, val));
-	}
-
-	public static int randInt(int min, int max) {
-		Random rand = new Random();
-		int randomNum = rand.nextInt((max - min) + 1) + min;
-		return randomNum;
 	}
 
 	public void dispose() {

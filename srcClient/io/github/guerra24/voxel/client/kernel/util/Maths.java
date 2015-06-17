@@ -1,5 +1,7 @@
 package io.github.guerra24.voxel.client.kernel.util;
 
+import java.util.Random;
+
 import io.github.guerra24.voxel.client.world.entities.types.Camera;
 
 import org.lwjgl.util.vector.Matrix4f;
@@ -44,5 +46,15 @@ public class Maths {
 				-cameraPost.z);
 		Matrix4f.translate(negativeCameraPos, viewMatrix, viewMatrix);
 		return viewMatrix;
+	}
+
+	public static float clamp(float val) {
+		return Math.max(0, Math.min(128, val));
+	}
+
+	public static int randInt(int min, int max) {
+		Random rand = new Random();
+		int randomNum = rand.nextInt((max - min) + 1) + min;
+		return randomNum;
 	}
 }

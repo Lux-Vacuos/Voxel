@@ -57,7 +57,6 @@ public class GameStates {
 			Kernel.gameResources.SoundSystem.play("MainMenuMusic");
 			MenuScreen.isPlaying = false;
 			Kernel.gameResources.allEntities.clear();
-			Kernel.world.saveGame();
 			for (int x = 0; x < Kernel.world.viewDistance; x++) {
 				for (int z = 0; z < Kernel.world.viewDistance; z++) {
 					Kernel.world.chunks[x][z].dispose();

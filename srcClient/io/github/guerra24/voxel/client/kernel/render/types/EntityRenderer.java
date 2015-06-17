@@ -32,9 +32,11 @@ public class EntityRenderer {
 			prepareTexturedModel(model);
 			List<Entity> batch = entities.get(model);
 			for (Entity entity : batch) {
-				prepareInstance(entity);
-				glDrawElements(GL_TRIANGLES, model.getRawModel()
-						.getVertexCount(), GL_UNSIGNED_INT, 0);
+				if (entity.isVisible()) {
+					prepareInstance(entity);
+					glDrawElements(GL_TRIANGLES, model.getRawModel()
+							.getVertexCount(), GL_UNSIGNED_INT, 0);
+				}
 			}
 			unbindTexturedModel();
 		}

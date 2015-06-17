@@ -83,6 +83,7 @@ public class PerlinNoise {
 		}
 		float[][] perlinNoise = GetEmptyArray(width, height);
 		float amplitude = 1.00f;
+		@SuppressWarnings("unused")
 		float totalAmplitude = 0.0f;
 		for (int octave = octaveCount - 1; octave >= 0; octave--) {
 			amplitude *= persistance;

@@ -20,7 +20,7 @@ import com.google.gson.JsonParser;
 
 public class Camera {
 
-	private Vector3f position = new Vector3f(0, 70, 0);
+	private Vector3f position = new Vector3f(2, 70, 2);
 	private float pitch;
 	private float yaw;
 
@@ -55,7 +55,6 @@ public class Camera {
 		}
 
 		if (Keyboard.isKeyDown(Keyboard.KEY_W)) {
-
 			position.z += -(float) Math.cos(Math.toRadians(yaw)) * speed;
 			position.x += (float) Math.sin(Math.toRadians(yaw)) * speed;
 			isMoved = true;
@@ -67,29 +66,26 @@ public class Camera {
 		}
 
 		if (Keyboard.isKeyDown(Keyboard.KEY_D)) {
-
 			position.z += (float) Math.sin(Math.toRadians(yaw)) * speed;
 			position.x += (float) Math.cos(Math.toRadians(yaw)) * speed;
 			isMoved = true;
 		} else if (Keyboard.isKeyDown(Keyboard.KEY_A)) {
-
 			position.z -= (float) Math.sin(Math.toRadians(yaw)) * speed;
 			position.x -= (float) Math.cos(Math.toRadians(yaw)) * speed;
 			isMoved = true;
 		}
 		if (Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
-
-			position.y += speed;
+			if (position.y < 128) {
+				position.y += speed;
+			}
 		} else if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
 			if (position.y > 0) {
 				position.y -= speed;
 			}
-
 		}
 		if (Mouse.isButtonDown(2)) {
 			loadCameraPos();
 		}
-
 	}
 
 	public void setMouse() {
