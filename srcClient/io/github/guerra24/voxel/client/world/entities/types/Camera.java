@@ -108,7 +108,7 @@ public class Camera {
 			writer.close();
 		} catch (IOException e) {
 			e.printStackTrace();
-			Logger.error(Kernel.currentThread(), "Failed to Save Camera pos");
+			Logger.error(Thread.currentThread(), "Failed to Save Camera pos");
 		}
 	}
 
@@ -126,7 +126,7 @@ public class Camera {
 
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
-			Logger.error(Kernel.currentThread(), "Failed to load Save Game");
+			Logger.error(Thread.currentThread(), "Failed to load Save Game");
 		}
 	}
 

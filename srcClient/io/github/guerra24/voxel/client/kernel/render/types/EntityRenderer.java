@@ -1,9 +1,16 @@
 package io.github.guerra24.voxel.client.kernel.render.types;
 
-import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL13.*;
-import static org.lwjgl.opengl.GL20.*;
-import static org.lwjgl.opengl.GL30.*;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
+import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
+import static org.lwjgl.opengl.GL11.GL_UNSIGNED_INT;
+import static org.lwjgl.opengl.GL11.glBindTexture;
+import static org.lwjgl.opengl.GL11.glDrawElements;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
+import static org.lwjgl.opengl.GL13.glActiveTexture;
+import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
+import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
+import static org.lwjgl.opengl.GL30.glBindVertexArray;
+import io.github.guerra24.voxel.client.kernel.Kernel;
 import io.github.guerra24.voxel.client.kernel.render.MasterRenderer;
 import io.github.guerra24.voxel.client.kernel.render.shaders.types.EntityShader;
 import io.github.guerra24.voxel.client.kernel.util.Maths;
@@ -19,6 +26,7 @@ import org.lwjgl.util.vector.Matrix4f;
 public class EntityRenderer {
 
 	private EntityShader shader;
+	private int viewDistanceX = 8, viewDistanceZ = 8;
 
 	public EntityRenderer(EntityShader shader, Matrix4f projectionMatrix) {
 		this.shader = shader;
@@ -32,6 +40,7 @@ public class EntityRenderer {
 			prepareTexturedModel(model);
 			List<Entity> batch = entities.get(model);
 			for (Entity entity : batch) {
+				viewCull(entity);
 				if (entity.isVisible()) {
 					prepareInstance(entity);
 					glDrawElements(GL_TRIANGLES, model.getRawModel()
@@ -59,6 +68,30 @@ public class EntityRenderer {
 		glDisableVertexAttribArray(1);
 		glDisableVertexAttribArray(2);
 		glBindVertexArray(0);
+	}
+
+	private void viewCull(Entity entity) {
+		if ((int) Kernel.gameResources.camera.getPosition().x < (int) entity
+				.getPosition().x + viewDistanceX) {
+			if ((int) Kernel.gameResources.camera.getPosition().z < (int) entity
+					.getPosition().z + viewDistanceX) {
+				if ((int) Kernel.gameResources.camera.getPosition().x > (int) entity
+						.getPosition().x - viewDistanceZ) {
+					if ((int) Kernel.gameResources.camera.getPosition().z > (int) entity
+							.getPosition().z - viewDistanceZ) {
+						entity.setVisible(true);
+					} else {
+						entity.setVisible(false);
+					}
+				} else {
+					entity.setVisible(false);
+				}
+			} else {
+				entity.setVisible(false);
+			}
+		} else {
+			entity.setVisible(false);
+		}
 	}
 
 	private void prepareInstance(Entity entity) {

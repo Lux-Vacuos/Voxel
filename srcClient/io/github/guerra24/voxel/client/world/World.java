@@ -33,7 +33,7 @@ public class World {
 		Kernel.gameResources.guis5.add(Kernel.guiResources.loadW);
 		Kernel.gameResources.guis5.add(Kernel.guiResources.loadBar);
 		Kernel.gameResources.guis5.remove(GuiResources.load);
-		Logger.log(Kernel.currentThread(), "Generation World");
+		Logger.log(Thread.currentThread(), "Generation World");
 		pos = -0.85f;
 		for (x = 0; x < viewDistance; x++) {
 			for (z = 0; z < viewDistance; z++) {
@@ -72,13 +72,11 @@ public class World {
 	public void update() {
 		time++;
 		if (time == 10) {
-			// if (Kernel.gameResources.camera.isMoved) {
 			for (int x = 0; x < viewDistance; x++) {
 				for (int z = 0; z < viewDistance; z++) {
 					chunks[x][z].update();
 				}
 			}
-			// }
 			time = 0;
 		}
 	}

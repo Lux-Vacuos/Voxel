@@ -1,6 +1,5 @@
 package io.github.guerra24.voxel.client.resources;
 
-import io.github.guerra24.voxel.client.kernel.Kernel;
 import io.github.guerra24.voxel.client.kernel.util.Logger;
 import io.github.guerra24.voxel.client.resources.models.RawModel;
 
@@ -20,11 +19,11 @@ public class OBJLoader {
 		FileReader fr = null;
 		try {
 			fr = new FileReader(new File("assets/models/" + fileName + ".obj"));
-			Logger.log(Kernel.currentThread(), "Loading Model: " + fileName
+			Logger.log(Thread.currentThread(), "Loading Model: " + fileName
 					+ ".obj");
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
-			Logger.error(Kernel.currentThread(), "Couldn' load model file");
+			Logger.error(Thread.currentThread(), "Couldn' load model file");
 		}
 		BufferedReader reader = new BufferedReader(fr);
 		String line;
@@ -86,7 +85,7 @@ public class OBJLoader {
 			}
 			reader.close();
 		} catch (Exception e) {
-			Logger.error(Kernel.currentThread(), "Unknown error, Check Log");
+			Logger.error(Thread.currentThread(), "Unknown error, Check Log");
 			e.printStackTrace();
 		}
 		verticesArray = new float[vertices.size() * 3];

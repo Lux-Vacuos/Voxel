@@ -13,7 +13,7 @@ import org.lwjgl.util.vector.Vector4f;
 
 public class EntityShader extends ShaderProgram {
 
-	private static final int MAX_LIGHTS = 4;
+	private static final int MAX_LIGHTS = 2;
 
 	private static final String VERTEX_FILE = "VertexShaderEntity.glsl";
 	private static final String FRAGMENT_FILE = "FragmentShaderEntity.glsl";
@@ -82,12 +82,6 @@ public class EntityShader extends ShaderProgram {
 						.getColour());
 				super.loadVector(location_attenuations[i], lights.get(i)
 						.getAttenuation());
-			} else {
-				super.loadVector(location_lightPosition[i], new Vector3f(0, 0,
-						0));
-				super.loadVector(location_lightColour[i], new Vector3f(0, 0, 0));
-				super.loadVector(location_attenuations[i],
-						new Vector3f(1, 0, 0));
 			}
 		}
 	}

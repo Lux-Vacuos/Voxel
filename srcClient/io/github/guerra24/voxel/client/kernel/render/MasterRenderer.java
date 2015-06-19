@@ -41,7 +41,7 @@ public class MasterRenderer {
 	private static Matrix4f projectionMatrix;
 
 	private EntityShader shader = new EntityShader();
-	private EntityRenderer renderer;
+	public static EntityRenderer renderer;
 
 	private Map<TexturedModel, List<Entity>> entities = new HashMap<TexturedModel, List<Entity>>();
 

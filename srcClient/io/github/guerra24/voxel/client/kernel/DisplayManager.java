@@ -1,6 +1,8 @@
 package io.github.guerra24.voxel.client.kernel;
 
-import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.GL_VERSION;
+import static org.lwjgl.opengl.GL11.glGetString;
+import static org.lwjgl.opengl.GL11.glViewport;
 import io.github.guerra24.voxel.client.kernel.util.Logger;
 
 import org.lwjgl.LWJGLException;
@@ -22,8 +24,8 @@ public class DisplayManager {
 	private static PixelFormat pixelformat = new PixelFormat();
 
 	public static void createDisplay() {
-		Logger.log(Kernel.currentThread(), "Creating Display");
-		Logger.log(Kernel.currentThread(), "LWJGL Version: " + Sys.getVersion());
+		Logger.log(Thread.currentThread(), "Creating Display");
+		Logger.log(Thread.currentThread(), "LWJGL Version: " + Sys.getVersion());
 		try {
 			Display.setDisplayMode(new DisplayMode(WIDTH, HEIGHT));
 			Display.create(pixelformat);
@@ -31,10 +33,10 @@ public class DisplayManager {
 			Display.setResizable(false);
 			Display.setFullscreen(false);
 		} catch (LWJGLException e) {
+			Logger.error(Thread.currentThread(), "Failed to create Display");
 			e.printStackTrace();
-			Logger.error(Kernel.currentThread(), "Failed to create Display");
 		}
-		Logger.log(Kernel.currentThread(), "OpenGL Version: "
+		Logger.log(Thread.currentThread(), "OpenGL Version: "
 				+ glGetString(GL_VERSION));
 		glViewport(0, 0, WIDTH, HEIGHT);
 		lastFrameTime = getCurrentTime();

@@ -7,9 +7,15 @@
 
 package io.github.guerra24.voxel.client.kernel.util;
 
-import io.github.guerra24.voxel.client.kernel.Kernel;
-
-import java.util.*; // for javadoc (till 6280605 is fixed)
+import java.util.AbstractList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections; // for javadoc (till 6280605 is fixed)
+import java.util.ConcurrentModificationException;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.RandomAccess;
+import java.util.Vector;
 
 /**
  * Resizable-array implementation of the <tt>List</tt> interface. Implements all
@@ -649,7 +655,6 @@ public class ArrayList3<E> extends AbstractList<E> implements List<E>,
 				//
 				while (++newHi < size && c.contains(elementData[newHi]))
 					;
-				Kernel.standaloneRender();
 				final int length = i - oldHi;
 				System.arraycopy(elementData, oldHi, elementData, top, length);
 				i = newHi;
@@ -660,7 +665,6 @@ public class ArrayList3<E> extends AbstractList<E> implements List<E>,
 		if (newHi > 0) {
 			System.arraycopy(elementData, newHi, elementData, top, size - newHi);
 			size += top - newHi;
-			Kernel.standaloneRender();
 			return true;
 		} else {
 			return false;

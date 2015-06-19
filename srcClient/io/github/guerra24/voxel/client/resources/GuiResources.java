@@ -15,7 +15,6 @@ public class GuiResources {
 	private GuiTexture button1;
 	private GuiTexture button2;
 	public GuiTexture button3;
-	public GuiTexture button4;
 	public GuiTexture button5;
 	public GuiTexture wselect;
 	public GuiTexture wnoselect;
@@ -45,9 +44,6 @@ public class GuiResources {
 		button3 = new GuiTexture(
 				Kernel.gameResources.loader.loadTextureGui("ButtonExit"),
 				new Vector2f(0.5f, -0.7f), new Vector2f(0.2f, 0.12f));
-		button4 = new GuiTexture(
-				Kernel.gameResources.loader.loadTextureGui("ButtonMulti"),
-				new Vector2f(0.0f, 0.0f), new Vector2f(0.3f, 0.12f));
 		button5 = new GuiTexture(
 				Kernel.gameResources.loader.loadTextureGui("ButtonExit"),
 				new Vector2f(0.0f, -0.7f), new Vector2f(0.2f, 0.12f));
@@ -77,7 +73,6 @@ public class GuiResources {
 		Kernel.gameResources.guis.add(gui);
 		Kernel.gameResources.guis2.add(button1);
 		Kernel.gameResources.guis2.add(button2);
-		Kernel.gameResources.guis2.add(button4);
 		Kernel.gameResources.guis2.add(menu);
 		Kernel.gameResources.guis3.add(wnoselect);
 		Kernel.gameResources.guis3.add(button3);

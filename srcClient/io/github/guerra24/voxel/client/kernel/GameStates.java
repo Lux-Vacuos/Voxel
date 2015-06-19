@@ -17,31 +17,18 @@ public class GameStates {
 	}
 
 	public enum State {
-		GAME, MAINMENU, MULTIPLAY_SCREEN, WORLDSELECTION, IN_PAUSE;
+		GAME, MAINMENU, WORLDSELECTION, IN_PAUSE;
 	}
 
 	public void switchStates() {
 		if (state == State.MAINMENU && Button.isInButtonPlay()) {
 			state = State.WORLDSELECTION;
 		}
-		if (state == State.MAINMENU && Button.isInButtonMutli()) {
-			state = State.MULTIPLAY_SCREEN;
-		}
 
 		if (state == State.MAINMENU && Button.isInButtonExit()) {
 			loop = false;
 		}
 		if (state == State.WORLDSELECTION && Button.isInButtonBacK()) {
-			Kernel.gameResources.guis3.remove(Kernel.guiResources.button3);
-			Kernel.gameResources.guis3.remove(Kernel.guiResources.world);
-			Kernel.gameResources.guis3.remove(Kernel.guiResources.wselect);
-			Kernel.gameResources.guis3.add(Kernel.guiResources.wnoselect);
-			Kernel.gameResources.guis3.add(Kernel.guiResources.button3);
-			Kernel.gameResources.guis3.add(Kernel.guiResources.world);
-			MenuScreen.selected = false;
-			state = State.MAINMENU;
-		}
-		if (state == State.MULTIPLAY_SCREEN && Button.isInButtonBacK()) {
 			Kernel.gameResources.guis3.remove(Kernel.guiResources.button3);
 			Kernel.gameResources.guis3.remove(Kernel.guiResources.world);
 			Kernel.gameResources.guis3.remove(Kernel.guiResources.wselect);

@@ -46,32 +46,4 @@ public class MenuScreen {
 		}
 	}
 
-	public static void multiScreen() {
-		while (Mouse.next()) {
-			if (Button.isWorldSelected() && selected) {
-				// Engine.state = Engine.State.GAME;
-				// Engine.gameResources.camera.setMouse();
-
-			}
-			if (Button.isWorldSelected() && !selected) {
-				Kernel.gameResources.guis3.remove(Kernel.guiResources.button3);
-				Kernel.gameResources.guis3.remove(Kernel.guiResources.world);
-				Kernel.gameResources.guis3
-						.remove(Kernel.guiResources.wnoselect);
-				Kernel.gameResources.guis3.add(Kernel.guiResources.wselect);
-				Kernel.gameResources.guis3.add(Kernel.guiResources.button3);
-				Kernel.gameResources.guis3.add(Kernel.guiResources.world);
-				selected = true;
-			}
-			if (Button.isWorldNotSelected() && selected) {
-				Kernel.gameResources.guis3.remove(Kernel.guiResources.button3);
-				Kernel.gameResources.guis3.remove(Kernel.guiResources.world);
-				Kernel.gameResources.guis3.remove(Kernel.guiResources.wselect);
-				Kernel.gameResources.guis3.add(Kernel.guiResources.wnoselect);
-				Kernel.gameResources.guis3.add(Kernel.guiResources.button3);
-				Kernel.gameResources.guis3.add(Kernel.guiResources.world);
-				selected = false;
-			}
-		}
-	}
 }

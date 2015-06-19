@@ -1,6 +1,37 @@
 package io.github.guerra24.voxel.client.resources;
 
-import io.github.guerra24.voxel.client.kernel.Kernel;
+import static org.lwjgl.opengl.GL11.GL_FLOAT;
+import static org.lwjgl.opengl.GL11.GL_LINEAR;
+import static org.lwjgl.opengl.GL11.GL_LINEAR_MIPMAP_LINEAR;
+import static org.lwjgl.opengl.GL11.GL_NEAREST;
+import static org.lwjgl.opengl.GL11.GL_RGBA;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_MAG_FILTER;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_MIN_FILTER;
+import static org.lwjgl.opengl.GL11.GL_UNSIGNED_BYTE;
+import static org.lwjgl.opengl.GL11.glBindTexture;
+import static org.lwjgl.opengl.GL11.glDeleteTextures;
+import static org.lwjgl.opengl.GL11.glGenTextures;
+import static org.lwjgl.opengl.GL11.glTexImage2D;
+import static org.lwjgl.opengl.GL11.glTexParameterf;
+import static org.lwjgl.opengl.GL11.glTexParameteri;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE_CUBE_MAP;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE_CUBE_MAP_POSITIVE_X;
+import static org.lwjgl.opengl.GL13.glActiveTexture;
+import static org.lwjgl.opengl.GL14.GL_TEXTURE_LOD_BIAS;
+import static org.lwjgl.opengl.GL15.GL_ARRAY_BUFFER;
+import static org.lwjgl.opengl.GL15.GL_ELEMENT_ARRAY_BUFFER;
+import static org.lwjgl.opengl.GL15.GL_STATIC_DRAW;
+import static org.lwjgl.opengl.GL15.glBindBuffer;
+import static org.lwjgl.opengl.GL15.glBufferData;
+import static org.lwjgl.opengl.GL15.glDeleteBuffers;
+import static org.lwjgl.opengl.GL15.glGenBuffers;
+import static org.lwjgl.opengl.GL20.glVertexAttribPointer;
+import static org.lwjgl.opengl.GL30.glBindVertexArray;
+import static org.lwjgl.opengl.GL30.glDeleteVertexArrays;
+import static org.lwjgl.opengl.GL30.glGenVertexArrays;
+import static org.lwjgl.opengl.GL30.glGenerateMipmap;
 import io.github.guerra24.voxel.client.kernel.render.textures.EntityTexture;
 import io.github.guerra24.voxel.client.kernel.util.Logger;
 import io.github.guerra24.voxel.client.resources.models.RawModel;
@@ -13,14 +44,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.lwjgl.BufferUtils;
-
-import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL13.*;
-import static org.lwjgl.opengl.GL14.*;
-import static org.lwjgl.opengl.GL15.*;
-import static org.lwjgl.opengl.GL20.*;
-import static org.lwjgl.opengl.GL30.*;
-
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
 
@@ -56,7 +79,7 @@ public class Loader {
 		try {
 			texture = TextureLoader.getTexture("PNG", new FileInputStream(
 					"assets/textures/blocks/" + fileName + ".png"), GL_NEAREST);
-			Logger.log(Kernel.currentThread(), "Loading Texture: " + fileName
+			Logger.log(Thread.currentThread(), "Loading Texture: " + fileName
 					+ ".png");
 			glGenerateMipmap(GL_TEXTURE_2D);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
@@ -64,7 +87,7 @@ public class Loader {
 			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_LOD_BIAS, -0.4f);
 		} catch (Exception e) {
 			e.printStackTrace();
-			Logger.log(Kernel.currentThread(), "Couldn' load texture file"
+			Logger.log(Thread.currentThread(), "Couldn' load texture file"
 					+ fileName);
 		}
 		textures.add(texture.getTextureID());
@@ -76,7 +99,7 @@ public class Loader {
 		try {
 			texture = TextureLoader.getTexture("PNG", new FileInputStream(
 					"assets/textures/menu/" + fileName + ".png"), GL_NEAREST);
-			Logger.log(Kernel.currentThread(), "Loading Texture: " + fileName
+			Logger.log(Thread.currentThread(), "Loading Texture: " + fileName
 					+ ".png");
 			glGenerateMipmap(GL_TEXTURE_2D);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
@@ -84,7 +107,7 @@ public class Loader {
 			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_LOD_BIAS, -0.4f);
 		} catch (Exception e) {
 			e.printStackTrace();
-			Logger.error(Kernel.currentThread(), "Couldn' load texture file"
+			Logger.error(Thread.currentThread(), "Couldn' load texture file"
 					+ fileName);
 			System.exit(-1);
 		}
@@ -138,7 +161,7 @@ public class Loader {
 			in.close();
 		} catch (Exception e) {
 			e.printStackTrace();
-			Logger.error(Kernel.currentThread(), "Tried to load texture "
+			Logger.error(Thread.currentThread(), "Tried to load texture "
 					+ fileName + ", didn't work");
 			System.exit(-1);
 		}

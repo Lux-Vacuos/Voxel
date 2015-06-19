@@ -19,6 +19,7 @@ public class Chunk {
 			viewDistanceZ = 16 - 8;
 	public boolean isNotLoaded, isToRebuild = false;
 	public ChunkInfo blocksData;
+	public float lastUsed;
 
 	public Chunk(Vector3f pos) {
 		this.pos = pos;
@@ -35,32 +36,28 @@ public class Chunk {
 		cubes = new ArrayList3<Entity>();
 
 		createChunk();
-		// rebuild();
+		rebuild();
 	}
 
 	public void update() {
 		if (Kernel.gameResources.camera.getPosition().z > pos.z + viewDistanceX
 				&& !isNotLoaded) {
 			Kernel.gameResources.allEntities.removeAll(cubes);
-			cubes.clear();
 			isNotLoaded = true;
 		} else if (Kernel.gameResources.camera.getPosition().x > pos.x
 				+ viewDistanceX
 				&& !isNotLoaded) {
 			Kernel.gameResources.allEntities.removeAll(cubes);
-			cubes.clear();
 			isNotLoaded = true;
 		} else if (Kernel.gameResources.camera.getPosition().z < pos.z
 				- viewDistanceZ
 				&& !isNotLoaded) {
 			Kernel.gameResources.allEntities.removeAll(cubes);
-			cubes.clear();
 			isNotLoaded = true;
 		} else if (Kernel.gameResources.camera.getPosition().x < pos.x
 				- viewDistanceZ
 				&& !isNotLoaded) {
 			Kernel.gameResources.allEntities.removeAll(cubes);
-			cubes.clear();
 			isNotLoaded = true;
 		} else if (isNotLoaded) {
 			if (Kernel.gameResources.camera.getPosition().x < pos.x
@@ -71,8 +68,6 @@ public class Chunk {
 							- viewDistanceZ) {
 						if (Kernel.gameResources.camera.getPosition().z > pos.z
 								- viewDistanceZ) {
-							cubes.clear();
-							rebuild();
 							Kernel.gameResources.allEntities.addAll(cubes);
 							isNotLoaded = false;
 						}

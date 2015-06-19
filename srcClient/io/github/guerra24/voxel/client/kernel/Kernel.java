@@ -11,23 +11,20 @@ import io.github.guerra24.voxel.client.world.block.BlocksResources;
 
 import java.io.File;
 
-import org.lwjgl.input.Mouse;
-
-public class Kernel extends Thread {
+public class Kernel {
 
 	public static boolean debug = false;
 	public static boolean isLoading = false;
 
-	private static int build = 17;
+	private static int build = 18;
 	private static double version = 1.0;
 	public static GameResources gameResources;
 	public static GuiResources guiResources;
 	public static boolean error = false, postPro = false;
 	public static World world;
-	public static Kernel thread0;
 	public static Console thread1;
 
-	public void run() {
+	public static void run() {
 
 		thread1 = new Console();
 		thread1.start();
@@ -38,9 +35,9 @@ public class Kernel extends Thread {
 			e.printStackTrace();
 		}
 
-		Logger.log(currentThread(), "Loading");
-		Logger.log(currentThread(), "Voxel Game Version: " + version);
-		Logger.log(currentThread(), "Build: " + build);
+		Logger.log(Thread.currentThread(), "Loading");
+		Logger.log(Thread.currentThread(), "Voxel Game Version: " + version);
+		Logger.log(Thread.currentThread(), "Build: " + build);
 		DisplayManager.createDisplay();
 		SystemInfo.printSystemInfo();
 
@@ -67,10 +64,6 @@ public class Kernel extends Thread {
 				MenuScreen.worldSelected();
 				gameResources.guiRenderer.render(gameResources.guis3);
 				break;
-			case MULTIPLAY_SCREEN:
-				MenuScreen.multiScreen();
-				gameResources.guiRenderer.render(gameResources.guis3);
-				break;
 			case IN_PAUSE:
 				gameResources.guiRenderer.render(gameResources.guis4);
 				break;
@@ -94,46 +87,16 @@ public class Kernel extends Thread {
 				gameResources.guiRenderer.renderNoPrepare(gameResources.guis);
 				break;
 			}
-			if (debug) {
-				debugMode();
-			}
-			if (!error) {
-				gameResources.gameStates.switchStates();
-				DisplayManager.updateDisplay();
-			}
+			gameResources.gameStates.switchStates();
+			DisplayManager.updateDisplay();
 		}
-		if (!error)
-			disposeGame();
-	}
-
-	public static void standaloneRender() {
-		gameResources.camera.move();
-		gameResources.player.move();
-		gameResources.glEn();
-		gameResources.waterRenderer.setReflection();
-		gameResources.glDi();
-		gameResources.renderer
-				.renderScene(gameResources.allEntities, gameResources.lights,
-						gameResources.camera, gameResources.plane);
-		gameResources.renderer
-				.renderSceneNoPrepare(gameResources.allObjects,
-						gameResources.lights, gameResources.camera,
-						gameResources.plane);
-		gameResources.waterRenderer.render(gameResources.waters,
-				gameResources.camera);
-		gameResources.guiRenderer.renderNoPrepare(gameResources.guis);
-		DisplayManager.updateDisplay();
-	}
-
-	public static void debugMode() {
-		System.out.println("X" + Mouse.getX() + "Y" + Mouse.getY());
-		System.out.println(gameResources.camera.getPosition());
+		disposeGame();
 	}
 
 	private static void disposeGame() {
 		gameResources.guiRenderer.render(gameResources.guis5);
 		DisplayManager.updateDisplay();
-		Logger.log(currentThread(), "Closing Game");
+		Logger.log(Thread.currentThread(), "Closing Game");
 		gameResources.cleanUp();
 		thread1.close();
 		DisplayManager.closeDisplay();
@@ -144,7 +107,6 @@ public class Kernel extends Thread {
 			System.setProperty("org.lwjgl.librarypath",
 					new File("natives").getAbsolutePath());
 		}
-		thread0 = new Kernel();
-		thread0.start();
+		run();
 	}
 }
