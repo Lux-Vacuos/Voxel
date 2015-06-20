@@ -1,4 +1,4 @@
-[![Stories in Ready](https://badge.waffle.io/guerra24/voxel.png?label=ready&title=Ready)](https://waffle.io/guerra24/voxel)
+# Old Voxel Project
 
 # Voxel
 This is a voxel engine type programmed in java using LWJGL and OpenGL 3.3, uses features that are not deprecated.
