@@ -39,7 +39,6 @@ public class DisplayManager {
 
 	public static final int WIDTH = 1280;
 	public static final int HEIGHT = 720;
-	private static final int FPS_CAP = 30;
 	private static final String Title = "Voxel Game";
 
 	private static long lastFrameTime;
@@ -66,8 +65,8 @@ public class DisplayManager {
 		lastFrameTime = getCurrentTime();
 	}
 
-	public static void updateDisplay() {
-		Display.sync(FPS_CAP);
+	public static void updateDisplay(int fps) {
+		Display.sync(fps);
 		Display.update();
 		long currentFrameTime = getCurrentTime();
 		delta = (currentFrameTime - lastFrameTime) / 1000f;

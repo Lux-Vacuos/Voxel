@@ -42,7 +42,6 @@ import io.github.guerra24.voxel.client.resources.models.RawModel;
 import io.github.guerra24.voxel.client.world.entities.types.Camera;
 
 import org.lwjgl.util.vector.Matrix4f;
-import org.lwjgl.util.vector.Vector3f;
 
 public class SkyboxRenderer {
 
@@ -113,26 +112,22 @@ public class SkyboxRenderer {
 			texture1 = nightTexture;
 			texture2 = nightTexture;
 			blendFactor = (time - 0) / (5000 - 0);
-			Kernel.gameResources.sun.setPosition(new Vector3f(-7000, -10000f,
-					-7000));
+			Kernel.gameResources.renderer.BRIGHT = 0.1f;
 		} else if (time >= 5000 && time < 8000) {
 			texture1 = nightTexture;
 			texture2 = texture;
 			blendFactor = (time - 5000) / (8000 - 5000);
-			Kernel.gameResources.sun
-					.setPosition(new Vector3f(-7000, 0f, -7000));
+			Kernel.gameResources.renderer.BRIGHT = 0.8f;
 		} else if (time >= 8000 && time < 21000) {
 			texture1 = texture;
 			texture2 = texture;
 			blendFactor = (time - 8000) / (21000 - 8000);
-			Kernel.gameResources.sun.setPosition(new Vector3f(-7000, 10000f,
-					-7000));
+			Kernel.gameResources.renderer.BRIGHT = 0.8f;
 		} else {
 			texture1 = texture;
 			texture2 = nightTexture;
 			blendFactor = (time - 21000) / (24000 - 21000);
-			Kernel.gameResources.sun
-					.setPosition(new Vector3f(-7000, 0f, -7000));
+			Kernel.gameResources.renderer.BRIGHT = 0.1f;
 		}
 
 		glActiveTexture(GL_TEXTURE0);

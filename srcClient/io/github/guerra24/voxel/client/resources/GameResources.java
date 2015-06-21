@@ -142,8 +142,8 @@ public class GameResources {
 				new Vector3f(1f, 1f, 1f));
 		spot = new Light(new Vector3f(16, 64, 16), new Vector3f(1, 1, 1),
 				new Vector3f(1, 0.01f, 0.002f));
-		lights.add(spot);
-		lights.add(sun);
+		// lights.add(spot);
+		// lights.add(sun);
 		allObjects.add(player);
 		plane = new Vector4f(0, -1, 0, 128 + 16);
 	}

@@ -50,7 +50,7 @@ import org.lwjgl.util.vector.Matrix4f;
 public class EntityRenderer {
 
 	private EntityShader shader;
-	private int viewDistanceX = 8, viewDistanceZ = 8;
+	private int viewDistanceX = 16, viewDistanceZ = 16;
 
 	public EntityRenderer(EntityShader shader, Matrix4f projectionMatrix) {
 		this.shader = shader;

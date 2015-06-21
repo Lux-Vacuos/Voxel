@@ -63,18 +63,18 @@ public class MasterRenderer {
 	public static final float BLUE = 0.655f;
 
 	private static Matrix4f projectionMatrix;
-
 	private EntityShader shader = new EntityShader();
-	public static EntityRenderer renderer;
-
 	private Map<TexturedModel, List<Entity>> entities = new HashMap<TexturedModel, List<Entity>>();
-
 	private SkyboxRenderer skyboxRenderer;
+	
+	public float BRIGHT = 0.0f;
+	
+	public static EntityRenderer entityRenderer;
 
 	public MasterRenderer(Loader loader) {
 		enableCulling();
 		createProjectionMatrix();
-		renderer = new EntityRenderer(shader, projectionMatrix);
+		entityRenderer = new EntityRenderer(shader, projectionMatrix);
 		skyboxRenderer = new SkyboxRenderer(loader, projectionMatrix);
 	}
 
@@ -114,7 +114,8 @@ public class MasterRenderer {
 		shader.loadSkyColour(RED, GREEN, BLUE);
 		shader.loadLights(lights);
 		shader.loadviewMatrix(camera);
-		renderer.render(entities);
+		shader.loadBrightValue(BRIGHT);
+		entityRenderer.render(entities);
 		shader.stop();
 		skyboxRenderer.render(camera, RED, GREEN, BLUE);
 		entities.clear();
@@ -127,7 +128,7 @@ public class MasterRenderer {
 		shader.loadSkyColour(RED, GREEN, BLUE);
 		shader.loadLights(lights);
 		shader.loadviewMatrix(camera);
-		renderer.render(entities);
+		entityRenderer.render(entities);
 		shader.stop();
 		skyboxRenderer.render(camera, RED, GREEN, BLUE);
 		entities.clear();

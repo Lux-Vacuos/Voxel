@@ -40,6 +40,8 @@ public class Console extends Thread {
 	private static JFrame frame;
 	private static JTextArea txtConsole;
 
+	public boolean isReady = false;
+
 	public void setPanel() {
 		txtConsole = new JTextArea();
 		frame = new JFrame();
@@ -73,5 +75,6 @@ public class Console extends Thread {
 		Insets insets = frame.getInsets();
 		frame.setSize(856 + insets.left + insets.right, 482 + insets.top
 				+ insets.bottom);
+		isReady = true;
 	}
 }

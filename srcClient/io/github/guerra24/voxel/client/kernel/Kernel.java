@@ -40,7 +40,7 @@ public class Kernel {
 	public static boolean debug = false;
 	public static boolean isLoading = false;
 
-	private static int build = 19;
+	private static int build = 20;
 	private static double version = 1.0;
 	public static GameResources gameResources;
 	public static GuiResources guiResources;
@@ -53,11 +53,25 @@ public class Kernel {
 		thread1 = new Console();
 		thread1.start();
 
-		try {
-			Thread.sleep(500);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
+		while (!thread1.isReady) {
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
+		startGame();
+	}
+
+	private static void startGame() {
+		init();
+		while (gameResources.gameStates.loop) {
+			loop();
+		}
+		disposeGame();
+	}
+
+	private static void init() {
 
 		Logger.log(Thread.currentThread(), "Loading");
 		Logger.log(Thread.currentThread(), "Voxel Game Version: " + version);
@@ -69,7 +83,7 @@ public class Kernel {
 
 		GuiResources.loadingGui();
 		gameResources.guiRenderer.render(gameResources.guis5);
-		DisplayManager.updateDisplay();
+		DisplayManager.updateDisplay(30);
 
 		gameResources.init();
 		guiResources = new GuiResources();
@@ -79,47 +93,50 @@ public class Kernel {
 		gameResources.music();
 		world = new World();
 
-		while (gameResources.gameStates.loop) {
-			switch (gameResources.gameStates.state) {
-			case MAINMENU:
-				gameResources.guiRenderer.render(gameResources.guis2);
-				break;
-			case WORLDSELECTION:
-				MenuScreen.worldSelected();
-				gameResources.guiRenderer.render(gameResources.guis3);
-				break;
-			case IN_PAUSE:
-				gameResources.guiRenderer.render(gameResources.guis4);
-				break;
-			case GAME:
-				// world.test();
-				world.update();
-				// gameResources.mouse.update();
-				gameResources.camera.move();
-				gameResources.player.move();
-				gameResources.glEn();
-				gameResources.waterRenderer.setReflection();
-				gameResources.glDi();
-				gameResources.renderer.renderScene(gameResources.allEntities,
-						gameResources.lights, gameResources.camera,
-						gameResources.plane);
-				gameResources.renderer.renderSceneNoPrepare(
-						gameResources.allObjects, gameResources.lights,
-						gameResources.camera, gameResources.plane);
-				gameResources.waterRenderer.render(gameResources.waters,
-						gameResources.camera);
-				gameResources.guiRenderer.renderNoPrepare(gameResources.guis);
-				break;
-			}
-			gameResources.gameStates.switchStates();
-			DisplayManager.updateDisplay();
+	}
+
+	private static void loop() {
+		switch (gameResources.gameStates.state) {
+		case MAINMENU:
+			gameResources.guiRenderer.render(gameResources.guis2);
+			DisplayManager.updateDisplay(30);
+			break;
+		case WORLDSELECTION:
+			MenuScreen.worldSelected();
+			gameResources.guiRenderer.render(gameResources.guis3);
+			DisplayManager.updateDisplay(30);
+			break;
+		case IN_PAUSE:
+			gameResources.guiRenderer.render(gameResources.guis4);
+			DisplayManager.updateDisplay(30);
+			break;
+		case GAME:
+			// world.test();
+			world.update();
+			// gameResources.mouse.update();
+			gameResources.camera.move();
+			gameResources.player.move();
+			gameResources.glEn();
+			gameResources.waterRenderer.setReflection();
+			gameResources.glDi();
+			gameResources.renderer.renderScene(gameResources.allEntities,
+					gameResources.lights, gameResources.camera,
+					gameResources.plane);
+			gameResources.renderer.renderSceneNoPrepare(
+					gameResources.allObjects, gameResources.lights,
+					gameResources.camera, gameResources.plane);
+			gameResources.waterRenderer.render(gameResources.waters,
+					gameResources.camera);
+			gameResources.guiRenderer.renderNoPrepare(gameResources.guis);
+			DisplayManager.updateDisplay(60);
+			break;
 		}
-		disposeGame();
+		gameResources.gameStates.switchStates();
 	}
 
 	private static void disposeGame() {
 		gameResources.guiRenderer.render(gameResources.guis5);
-		DisplayManager.updateDisplay();
+		DisplayManager.updateDisplay(30);
 		Logger.log(Thread.currentThread(), "Closing Game");
 		gameResources.cleanUp();
 		thread1.close();

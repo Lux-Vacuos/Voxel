@@ -39,11 +39,7 @@ public class World {
 	private static float pos = -0.85f;
 	private static double pos2 = 0.0d;
 	public int viewDistance = 8;
-	private int sizeX = 16;
-	private int sizeZ = 16;
-	private int x;
-	private int z;
-	private int octaveCount;
+	private int x, z, octaveCount;
 	public float[][] perlinNoiseArray;
 	public float time = 0;
 	public Chunk chunks[][];
@@ -72,7 +68,7 @@ public class World {
 				Kernel.guiResources.loadBar.setPosition(new Vector2f(pos, 0));
 				Kernel.gameResources.guiRenderer
 						.render(Kernel.gameResources.guis5);
-				DisplayManager.updateDisplay();
+				DisplayManager.updateDisplay(30);
 			}
 		}
 		Kernel.gameResources.guis5.remove(Kernel.guiResources.loadW);
@@ -83,9 +79,9 @@ public class World {
 	private void initialize() {
 		chunks = new Chunk[viewDistance][viewDistance];
 		octaveCount = 6;
-		perlinNoiseArray = new float[sizeX * viewDistance][];
-		perlinNoiseArray = PerlinNoise.GeneratePerlinNoise(
-				sizeX * viewDistance, sizeZ * viewDistance, octaveCount);
+		perlinNoiseArray = new float[Chunk.CHUNK_SIZE * viewDistance][];
+		perlinNoiseArray = PerlinNoise.GeneratePerlinNoise(Chunk.CHUNK_SIZE
+				* viewDistance, Chunk.CHUNK_SIZE * viewDistance, octaveCount);
 		if (viewDistance == 16) {
 			pos2 = 16 / 6500.0;
 		} else if (viewDistance == 8) {
