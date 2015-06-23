@@ -67,12 +67,9 @@ public class GameStates {
 			Kernel.gameResources.SoundSystem.rewind("MainMenuMusic");
 			Kernel.gameResources.SoundSystem.play("MainMenuMusic");
 			MenuScreen.isPlaying = false;
+			Kernel.gameResources.waters.clear();
 			Kernel.gameResources.allEntities.clear();
-			for (int x = 0; x < Kernel.world.viewDistance; x++) {
-				for (int z = 0; z < Kernel.world.viewDistance; z++) {
-					Kernel.world.chunks[x][z].dispose();
-				}
-			}
+			Kernel.world.chunks.clear();
 			Kernel.gameResources.guis3.remove(Kernel.guiResources.button3);
 			Kernel.gameResources.guis3.remove(Kernel.guiResources.world);
 			Kernel.gameResources.guis3.remove(Kernel.guiResources.wselect);

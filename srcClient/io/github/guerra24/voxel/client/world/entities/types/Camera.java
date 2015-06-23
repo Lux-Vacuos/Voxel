@@ -44,7 +44,7 @@ import com.google.gson.JsonParser;
 
 public class Camera {
 
-	private Vector3f position = new Vector3f(2, 70, 2);
+	private Vector3f position = new Vector3f(20, 80, 20);
 	private float pitch;
 	private float yaw;
 
@@ -77,7 +77,6 @@ public class Camera {
 		} else if (pitch - mouseDY > maxLookUp) {
 			pitch = maxLookUp;
 		}
-
 		if (Keyboard.isKeyDown(Keyboard.KEY_W)) {
 			position.z += -(float) Math.cos(Math.toRadians(yaw)) * speed;
 			position.x += (float) Math.sin(Math.toRadians(yaw)) * speed;

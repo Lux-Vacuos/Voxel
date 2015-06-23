@@ -37,7 +37,7 @@ import org.lwjgl.util.vector.Vector4f;
 
 public class EntityShader extends ShaderProgram {
 
-	private static final int MAX_LIGHTS = 0;
+	private static final int MAX_LIGHTS = 2;
 
 	private static final String VERTEX_FILE = "VertexShaderEntity.glsl";
 	private static final String FRAGMENT_FILE = "FragmentShaderEntity.glsl";

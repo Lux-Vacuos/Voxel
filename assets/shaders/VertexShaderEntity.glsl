@@ -34,9 +34,9 @@ void main() {
 	surfaceNormal = (transformationMatrix * vec4(normal, 0.0)).xyz;
 	
 	//Dynamic Light
-	//for(int i=0;i<1;i++) {
-	//	toLightVector[i]= lightPosition[i] - worldPosition.xyz;
-	//}
+	for(int i=0;i<2;i++) {
+		toLightVector[i]= lightPosition[i] - worldPosition.xyz;
+	}
 	
 	float distance = length(positionRelativeToCam.xyz);
 	visibility = exp(-pow((distance*density),gradient));

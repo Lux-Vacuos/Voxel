@@ -40,7 +40,7 @@ public class Kernel {
 	public static boolean debug = false;
 	public static boolean isLoading = false;
 
-	private static int build = 20;
+	private static int build = 21;
 	private static double version = 1.0;
 	public static GameResources gameResources;
 	public static GuiResources guiResources;
@@ -99,6 +99,10 @@ public class Kernel {
 		switch (gameResources.gameStates.state) {
 		case MAINMENU:
 			gameResources.guiRenderer.render(gameResources.guis2);
+			gameResources.renderer.renderSceneNoPrepare(
+					gameResources.allObjects, gameResources.lights,
+					gameResources.camera, gameResources.plane);
+
 			DisplayManager.updateDisplay(30);
 			break;
 		case WORLDSELECTION:
@@ -111,11 +115,10 @@ public class Kernel {
 			DisplayManager.updateDisplay(30);
 			break;
 		case GAME:
-			// world.test();
-			world.update();
+			world.update(gameResources.camera);
 			// gameResources.mouse.update();
 			gameResources.camera.move();
-			gameResources.player.move();
+			// gameResources.player.move();
 			gameResources.glEn();
 			gameResources.waterRenderer.setReflection();
 			gameResources.glDi();

@@ -66,9 +66,9 @@ public class MasterRenderer {
 	private EntityShader shader = new EntityShader();
 	private Map<TexturedModel, List<Entity>> entities = new HashMap<TexturedModel, List<Entity>>();
 	private SkyboxRenderer skyboxRenderer;
-	
+
 	public float BRIGHT = 0.0f;
-	
+
 	public static EntityRenderer entityRenderer;
 
 	public MasterRenderer(Loader loader) {

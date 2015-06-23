@@ -39,8 +39,33 @@ public class BlockSand extends Block {
 	}
 
 	@Override
-	public Entity getEntity(Vector3f pos) {
-		return new Entity(BlocksResources.cubeSand, pos, 0, 0, 0, 1);
+	public Entity getFaceUp(Vector3f pos) {
+		return new Entity(BlocksResources.cubeSandUP, pos, 0, 0, 0, 1);
+	}
+
+	@Override
+	public Entity getFaceDown(Vector3f pos) {
+		return new Entity(BlocksResources.cubeSandDOWN, pos, 0, 0, 0, 1);
+	}
+
+	@Override
+	public Entity getFaceEast(Vector3f pos) {
+		return new Entity(BlocksResources.cubeSandEAST, pos, 0, 0, 0, 1);
+	}
+
+	@Override
+	public Entity getFaceWest(Vector3f pos) {
+		return new Entity(BlocksResources.cubeSandWEST, pos, 0, 0, 0, 1);
+	}
+
+	@Override
+	public Entity getFaceNorth(Vector3f pos) {
+		return new Entity(BlocksResources.cubeSandNORTH, pos, 0, 0, 0, 1);
+	}
+
+	@Override
+	public Entity getFaceSouth(Vector3f pos) {
+		return new Entity(BlocksResources.cubeSandSOUTH, pos, 0, 0, 0, 1);
 	}
 
 	@Override

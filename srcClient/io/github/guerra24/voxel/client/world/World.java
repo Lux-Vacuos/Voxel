@@ -24,80 +24,88 @@
 
 package io.github.guerra24.voxel.client.world;
 
-import io.github.guerra24.voxel.client.kernel.DisplayManager;
 import io.github.guerra24.voxel.client.kernel.Kernel;
-import io.github.guerra24.voxel.client.kernel.util.Logger;
-import io.github.guerra24.voxel.client.resources.GuiResources;
-import io.github.guerra24.voxel.client.resources.models.WaterTile;
+import io.github.guerra24.voxel.client.kernel.util.ArrayList3;
 import io.github.guerra24.voxel.client.world.chunks.Chunk;
+import io.github.guerra24.voxel.client.world.entities.types.Camera;
 
-import org.lwjgl.util.vector.Vector2f;
+import java.util.Random;
+
 import org.lwjgl.util.vector.Vector3f;
 
 public class World {
 
-	private static float pos = -0.85f;
-	private static double pos2 = 0.0d;
-	public int viewDistance = 8;
-	private int x, z, octaveCount;
+	public int viewDistance = 16;
+
+	private int octaveCount, dist = 2, unloadDist = 3;
 	public float[][] perlinNoiseArray;
-	public float time = 0;
-	public Chunk chunks[][];
+	public int time = 0;
+	public ArrayList3<Chunk> chunks;
+	public boolean isCustomSeed = true;
+	public Random seed;
 
 	public void startWorld() {
 		initialize();
 		createWorld();
 	}
 
-	private void createWorld() {
-		Kernel.gameResources.guis5.add(Kernel.guiResources.loadW);
-		Kernel.gameResources.guis5.add(Kernel.guiResources.loadBar);
-		Kernel.gameResources.guis5.remove(GuiResources.load);
-		Logger.log(Thread.currentThread(), "Generation World");
-		pos = -0.85f;
-		for (x = 0; x < viewDistance; x++) {
-			for (z = 0; z < viewDistance; z++) {
-				pos = (float) (pos + pos2);
-				chunks[x][z] = new Chunk(new Vector3f(x * Chunk.CHUNK_SIZE, 0,
-						z * Chunk.CHUNK_SIZE));
-				Kernel.gameResources.waters
-						.add(new WaterTile(x * Chunk.CHUNK_SIZE
-								+ WaterTile.TILE_SIZE - 0.5f,
-								z * Chunk.CHUNK_SIZE + WaterTile.TILE_SIZE
-										- 0.5f, 64.4f));
-				Kernel.guiResources.loadBar.setPosition(new Vector2f(pos, 0));
-				Kernel.gameResources.guiRenderer
-						.render(Kernel.gameResources.guis5);
-				DisplayManager.updateDisplay(30);
-			}
-		}
-		Kernel.gameResources.guis5.remove(Kernel.guiResources.loadW);
-		Kernel.gameResources.guis5.remove(Kernel.guiResources.loadBar);
-		Kernel.gameResources.guis5.add(GuiResources.load);
-	}
-
 	private void initialize() {
-		chunks = new Chunk[viewDistance][viewDistance];
-		octaveCount = 6;
+		chunks = new ArrayList3<Chunk>();
+		octaveCount = 7;
+		if (isCustomSeed) {
+			seed = new Random("X".hashCode());
+		} else {
+			seed = new Random();
+		}
 		perlinNoiseArray = new float[Chunk.CHUNK_SIZE * viewDistance][];
 		perlinNoiseArray = PerlinNoise.GeneratePerlinNoise(Chunk.CHUNK_SIZE
 				* viewDistance, Chunk.CHUNK_SIZE * viewDistance, octaveCount);
-		if (viewDistance == 16) {
-			pos2 = 16 / 6500.0;
-		} else if (viewDistance == 8) {
-			pos2 = 8 / 800.0;
+	}
+
+	private void createWorld() {
+		for (int x = 0; x < 2; x++) {
+			for (int z = 0; z < 2; z++) {
+				chunks.add(new Chunk(new Vector3f(x * Chunk.CHUNK_SIZE, 0, z
+						* Chunk.CHUNK_SIZE)));
+			}
 		}
 	}
 
-	public void update() {
+	public void update(Camera camera) {
 		time++;
-		if (time == 10) {
-			for (int x = 0; x < viewDistance; x++) {
-				for (int z = 0; z < viewDistance; z++) {
-					chunks[x][z].update();
+
+		/*if (time % 10 == 0) {
+			Kernel.gameResources.allEntities.clear();
+			Kernel.gameResources.waters.clear();
+			for (int x = -dist + (int) camera.getPosition().x; x <= dist
+					+ (int) camera.getPosition().x; x++) {
+				for (int z = -dist + (int) camera.getPosition().z; z <= dist
+						+ (int) camera.getPosition().z; z++) {
+					double d = distanceFromPlayer(x * 16, z * 16,
+							(int) camera.getPosition().x,
+							(int) camera.getPosition().z);
+					if (d > unloadDist * 16) {
+
+					} else {
+
+					}
 				}
 			}
 			time = 0;
 		}
+	*/}
+
+	public byte getBlock(int x, int y, int z) {
+		for (Chunk chunk : chunks) {
+			return chunk.getBlock(x, y, z);
+		}
+		return 0;
 	}
+
+	public double distanceFromPlayer(int x, int z, int i, int k) {
+		int xx = x - i;
+		int zz = z - k;
+		return Math.sqrt(xx * xx + zz * zz);
+	}
+
 }

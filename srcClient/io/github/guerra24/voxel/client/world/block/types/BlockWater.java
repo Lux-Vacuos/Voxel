@@ -38,7 +38,32 @@ public class BlockWater extends Block {
 	}
 
 	@Override
-	public Entity getEntity(Vector3f pos) {
+	public Entity getFaceUp(Vector3f pos) {
+		return null;
+	}
+
+	@Override
+	public Entity getFaceDown(Vector3f pos) {
+		return null;
+	}
+
+	@Override
+	public Entity getFaceEast(Vector3f pos) {
+		return null;
+	}
+
+	@Override
+	public Entity getFaceWest(Vector3f pos) {
+		return null;
+	}
+
+	@Override
+	public Entity getFaceNorth(Vector3f pos) {
+		return null;
+	}
+
+	@Override
+	public Entity getFaceSouth(Vector3f pos) {
 		return null;
 	}
 

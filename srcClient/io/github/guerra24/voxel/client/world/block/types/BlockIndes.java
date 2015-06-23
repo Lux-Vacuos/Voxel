@@ -39,8 +39,33 @@ public class BlockIndes extends Block {
 	}
 
 	@Override
-	public Entity getEntity(Vector3f pos) {
-		return new Entity(BlocksResources.cubeIndes, pos, 0, 0, 0, 1);
+	public Entity getFaceUp(Vector3f pos) {
+		return new Entity(BlocksResources.cubeIndesUP, pos, 0, 0, 0, 1);
+	}
+
+	@Override
+	public Entity getFaceDown(Vector3f pos) {
+		return new Entity(BlocksResources.cubeIndesDOWN, pos, 0, 0, 0, 1);
+	}
+
+	@Override
+	public Entity getFaceEast(Vector3f pos) {
+		return new Entity(BlocksResources.cubeIndesEAST, pos, 0, 0, 0, 1);
+	}
+
+	@Override
+	public Entity getFaceWest(Vector3f pos) {
+		return new Entity(BlocksResources.cubeIndesWEST, pos, 0, 0, 0, 1);
+	}
+
+	@Override
+	public Entity getFaceNorth(Vector3f pos) {
+		return new Entity(BlocksResources.cubeIndesNORTH, pos, 0, 0, 0, 1);
+	}
+
+	@Override
+	public Entity getFaceSouth(Vector3f pos) {
+		return new Entity(BlocksResources.cubeIndesSOUTH, pos, 0, 0, 0, 1);
 	}
 
 	@Override

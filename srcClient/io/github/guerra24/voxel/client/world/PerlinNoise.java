@@ -24,10 +24,12 @@
 
 package io.github.guerra24.voxel.client.world;
 
+import io.github.guerra24.voxel.client.kernel.Kernel;
+
 import java.util.Random;
 
 public class PerlinNoise {
-	static Random random = new Random();
+	static Random random = Kernel.world.seed;
 
 	public static <T> float[][] GetEmptyArray(int width, int height) {
 		float[][] image = new float[width][];
@@ -58,31 +60,25 @@ public class PerlinNoise {
 		int height = baseNoise[0].length;
 
 		float[][] smoothNoise = GetEmptyArray(width, height);
-		int samplePeriod = 1 << octave; // calculates 2 ^ k
+		int samplePeriod = 1 << octave;
 		float sampleFrequency = 1.0f / samplePeriod;
 
 		for (int i = 0; i < width; i++) {
-			// calculate the horizontal sampling indices
 			int sample_i0 = (i / samplePeriod) * samplePeriod;
-			int sample_i1 = (sample_i0 + samplePeriod) % width; // wrap around
+			int sample_i1 = (sample_i0 + samplePeriod) % width;
 			float horizontal_blend = (i - sample_i0) * sampleFrequency;
 
 			for (int j = 0; j < height; j++) {
-				// calculate the vertical sampling indices
 				int sample_j0 = (j / samplePeriod) * samplePeriod;
-				int sample_j1 = (sample_j0 + samplePeriod) % height; // wrap
-																		// around
+				int sample_j1 = (sample_j0 + samplePeriod) % height;
 				float vertical_blend = (j - sample_j0) * sampleFrequency;
 
-				// blend the top two corners
 				float top = Interpolate(baseNoise[sample_i0][sample_j0],
 						baseNoise[sample_i1][sample_j0], horizontal_blend);
 
-				// blend the bottom two corners
 				float bottom = Interpolate(baseNoise[sample_i0][sample_j1],
 						baseNoise[sample_i1][sample_j1], horizontal_blend);
 
-				// final blend
 				smoothNoise[i][j] = Interpolate(top, bottom, vertical_blend);
 			}
 		}
@@ -95,9 +91,7 @@ public class PerlinNoise {
 		int width = baseNoise.length;
 		int height = baseNoise[0].length;
 
-		float[][][] smoothNoise = new float[octaveCount][][]; // an array of 2D
-																// arrays
-																// containing
+		float[][][] smoothNoise = new float[octaveCount][][];
 
 		float persistance = 0.45f;
 

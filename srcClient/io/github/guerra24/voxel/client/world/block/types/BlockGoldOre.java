@@ -39,8 +39,33 @@ public class BlockGoldOre extends Block {
 	}
 
 	@Override
-	public Entity getEntity(Vector3f pos) {
-		return new Entity(BlocksResources.cubeGoldOre, pos, 0, 0, 0, 1);
+	public Entity getFaceUp(Vector3f pos) {
+		return new Entity(BlocksResources.cubeGoldOreUP, pos, 0, 0, 0, 1);
+	}
+
+	@Override
+	public Entity getFaceDown(Vector3f pos) {
+		return new Entity(BlocksResources.cubeGoldOreDOWN, pos, 0, 0, 0, 1);
+	}
+
+	@Override
+	public Entity getFaceEast(Vector3f pos) {
+		return new Entity(BlocksResources.cubeGoldOreEAST, pos, 0, 0, 0, 1);
+	}
+
+	@Override
+	public Entity getFaceWest(Vector3f pos) {
+		return new Entity(BlocksResources.cubeGoldOreWEST, pos, 0, 0, 0, 1);
+	}
+
+	@Override
+	public Entity getFaceNorth(Vector3f pos) {
+		return new Entity(BlocksResources.cubeGoldOreNORTH, pos, 0, 0, 0, 1);
+	}
+
+	@Override
+	public Entity getFaceSouth(Vector3f pos) {
+		return new Entity(BlocksResources.cubeGoldOreSOUTH, pos, 0, 0, 0, 1);
 	}
 
 	@Override

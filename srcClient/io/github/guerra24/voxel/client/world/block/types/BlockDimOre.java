@@ -39,8 +39,33 @@ public class BlockDimOre extends Block {
 	}
 
 	@Override
-	public Entity getEntity(Vector3f pos) {
-		return new Entity(BlocksResources.cubeDiamondOre, pos, 0, 0, 0, 1);
+	public Entity getFaceUp(Vector3f pos) {
+		return new Entity(BlocksResources.cubeDiamondOreUP, pos, 0, 0, 0, 1);
+	}
+
+	@Override
+	public Entity getFaceDown(Vector3f pos) {
+		return new Entity(BlocksResources.cubeDiamondOreDOWN, pos, 0, 0, 0, 1);
+	}
+
+	@Override
+	public Entity getFaceEast(Vector3f pos) {
+		return new Entity(BlocksResources.cubeDiamondOreEAST, pos, 0, 0, 0, 1);
+	}
+
+	@Override
+	public Entity getFaceWest(Vector3f pos) {
+		return new Entity(BlocksResources.cubeDiamondOreWEST, pos, 0, 0, 0, 1);
+	}
+
+	@Override
+	public Entity getFaceNorth(Vector3f pos) {
+		return new Entity(BlocksResources.cubeDiamondOreNORTH, pos, 0, 0, 0, 1);
+	}
+
+	@Override
+	public Entity getFaceSouth(Vector3f pos) {
+		return new Entity(BlocksResources.cubeDiamondOreSOUTH, pos, 0, 0, 0, 1);
 	}
 
 	@Override

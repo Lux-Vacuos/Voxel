@@ -64,7 +64,7 @@ public class EntityRenderer {
 			prepareTexturedModel(model);
 			List<Entity> batch = entities.get(model);
 			for (Entity entity : batch) {
-				viewCull(entity);
+				// viewCull(entity);
 				if (entity.isVisible()) {
 					prepareInstance(entity);
 					glDrawElements(GL_TRIANGLES, model.getRawModel()

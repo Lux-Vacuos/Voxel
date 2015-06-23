@@ -26,11 +26,19 @@ package io.github.guerra24.voxel.client.resources.models;
 
 public class WaterTile {
 
-	// public static final float TILE_SIZE = 0.5f;
-	public static final float TILE_SIZE = 8;
+	public static final float TILE_SIZE = 0.5f;
 
 	private float height;
 	private float x, z;
+	private boolean visible;
+
+	public boolean isVisible() {
+		return visible;
+	}
+
+	public void setVisible(boolean visible) {
+		this.visible = visible;
+	}
 
 	public WaterTile(float centerX, float centerZ, float height) {
 		this.x = centerX;

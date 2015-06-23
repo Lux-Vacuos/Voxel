@@ -39,8 +39,33 @@ public class BlockStone extends Block {
 	}
 
 	@Override
-	public Entity getEntity(Vector3f pos) {
-		return new Entity(BlocksResources.cubeStone, pos, 0, 0, 0, 1);
+	public Entity getFaceUp(Vector3f pos) {
+		return new Entity(BlocksResources.cubeStoneUP, pos, 0, 0, 0, 1);
+	}
+
+	@Override
+	public Entity getFaceDown(Vector3f pos) {
+		return new Entity(BlocksResources.cubeStoneDOWN, pos, 0, 0, 0, 1);
+	}
+
+	@Override
+	public Entity getFaceEast(Vector3f pos) {
+		return new Entity(BlocksResources.cubeStoneEAST, pos, 0, 0, 0, 1);
+	}
+
+	@Override
+	public Entity getFaceWest(Vector3f pos) {
+		return new Entity(BlocksResources.cubeStoneWEST, pos, 0, 0, 0, 1);
+	}
+
+	@Override
+	public Entity getFaceNorth(Vector3f pos) {
+		return new Entity(BlocksResources.cubeStoneNORTH, pos, 0, 0, 0, 1);
+	}
+
+	@Override
+	public Entity getFaceSouth(Vector3f pos) {
+		return new Entity(BlocksResources.cubeStoneSOUTH, pos, 0, 0, 0, 1);
 	}
 
 	@Override

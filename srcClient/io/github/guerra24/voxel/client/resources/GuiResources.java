@@ -53,9 +53,6 @@ public class GuiResources {
 		gui = new GuiTexture(
 				Kernel.gameResources.loader.loadTextureGui("HotBar"),
 				new Vector2f(0.6f, -0.425f), new Vector2f(1.6f, 1.425f));
-		menu = new GuiTexture(
-				Kernel.gameResources.loader.loadTextureGui("MainMenu"),
-				new Vector2f(0.6f, -0.425f), new Vector2f(1.6f, 1.425f));
 		world = new GuiTexture(
 				Kernel.gameResources.loader.loadTextureGui("WSelection"),
 				new Vector2f(0.6f, -0.425f), new Vector2f(1.6f, 1.425f));
@@ -97,7 +94,6 @@ public class GuiResources {
 		Kernel.gameResources.guis.add(gui);
 		Kernel.gameResources.guis2.add(button1);
 		Kernel.gameResources.guis2.add(button2);
-		Kernel.gameResources.guis2.add(menu);
 		Kernel.gameResources.guis3.add(wnoselect);
 		Kernel.gameResources.guis3.add(button3);
 		Kernel.gameResources.guis3.add(world);

@@ -10,14 +10,14 @@ Lharing: Ores generation algorithm.
 
 # In Process
 + GUI 95%
-+ World Save and Loading 40%
-+ PNWG (Perlin Noise World Generation) 80%
++ World Save and Loading 0%
++ Block Culling 90%
 
 # COMPLETED
 + Ilumination
 + Day/Night Cycle
-+ Block Culling
 + Frustrim Culling
++ PNWG (Perlin Noise World Generation)
 
 # TODO
 + Blocks collisions 
