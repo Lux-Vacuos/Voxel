@@ -3,6 +3,7 @@ apply plugin:'eclipse'
 apply plugin:'application'
 
 mainClassName = 'io.github.guerra24.voxel.client.kernel.Kernel'
+version = '1.0'
 
 sourceSets {
     main {
@@ -20,10 +21,6 @@ dependencies {
 
 run {        
     systemProperty('java.library.path', 'natives')
-}
-
-task compilar << {
-	println 'Compilando...'
 }
 
 task wrapper(type: Wrapper) {
