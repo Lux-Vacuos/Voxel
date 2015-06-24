@@ -149,7 +149,7 @@ public abstract class ShaderProgram {
 		StringBuilder shaderSource = new StringBuilder();
 		try {
 			BufferedReader reader = new BufferedReader(new FileReader(
-					"assets/shaders/" + file));
+					"src/main/java/assets/shaders/" + file));
 			Logger.log(Thread.currentThread(), "Loading Shader: " + file);
 			String line;
 			while ((line = reader.readLine()) != null) {
