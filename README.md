@@ -2,6 +2,9 @@
 This is a voxel engine type programmed in java using LWJGL and OpenGL 3.3, uses features that are not deprecated.
 I'm not using OpenGL 4.0+ because my gpu only supports up to OpenGL 3.3
 
+# Build Status
+[![Build Status](https://drone.io/github.com/Guerra24/Voxel/status.png)](https://drone.io/github.com/Guerra24/Voxel/latest)
+
 # Credits
 Lharing: Ores generation algorithm.
 --- quew8: Fixing the chunk movement. http://www.java-gaming.org/topics/lwjgl-opengl-3-3-voxel-chunk-management/35879/view.html
