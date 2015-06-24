@@ -24,6 +24,7 @@
 
 package io.github.guerra24.voxel.client.world.entities.types;
 
+import io.github.guerra24.voxel.client.kernel.DisplayManager;
 import io.github.guerra24.voxel.client.kernel.Kernel;
 import io.github.guerra24.voxel.client.kernel.util.AbstractFilesPath;
 import io.github.guerra24.voxel.client.kernel.util.Logger;
@@ -47,8 +48,9 @@ public class Camera {
 	private Vector3f position = new Vector3f(20, 80, 20);
 	private float pitch;
 	private float yaw;
-
 	private float speed;
+	private float multiplierMouse = 24;
+	private float multiplierMovement = 16;
 
 	private static int mouseSpeed = 2;
 	private static final int maxLookUp = 90;
@@ -61,8 +63,10 @@ public class Camera {
 
 	public void move() {
 		isMoved = false;
-		float mouseDX = Mouse.getDX() * mouseSpeed * 0.16f;
-		float mouseDY = Mouse.getDY() * mouseSpeed * 0.16f;
+		float mouseDX = Mouse.getDX() * DisplayManager.getFrameTimeSeconds()
+				* mouseSpeed * 0.16f * multiplierMouse;
+		float mouseDY = Mouse.getDY() * DisplayManager.getFrameTimeSeconds()
+				* mouseSpeed * 0.16f * multiplierMouse;
 		if (yaw + mouseDX >= 360) {
 			yaw = yaw + mouseDX - 360;
 		} else if (yaw + mouseDX < 0) {
@@ -78,32 +82,50 @@ public class Camera {
 			pitch = maxLookUp;
 		}
 		if (Keyboard.isKeyDown(Keyboard.KEY_W)) {
-			position.z += -(float) Math.cos(Math.toRadians(yaw)) * speed;
-			position.x += (float) Math.sin(Math.toRadians(yaw)) * speed;
+			position.z += -(float) Math.cos(Math.toRadians(yaw))
+					* DisplayManager.getFrameTimeSeconds() * speed
+					* multiplierMovement;
+			position.x += (float) Math.sin(Math.toRadians(yaw))
+					* DisplayManager.getFrameTimeSeconds() * speed
+					* multiplierMovement;
 			isMoved = true;
 
 		} else if (Keyboard.isKeyDown(Keyboard.KEY_S)) {
-			position.z -= -(float) Math.cos(Math.toRadians(yaw)) * speed;
-			position.x -= (float) Math.sin(Math.toRadians(yaw)) * speed;
+			position.z -= -(float) Math.cos(Math.toRadians(yaw))
+					* DisplayManager.getFrameTimeSeconds() * speed
+					* multiplierMovement;
+			position.x -= (float) Math.sin(Math.toRadians(yaw))
+					* DisplayManager.getFrameTimeSeconds() * speed
+					* multiplierMovement;
 			isMoved = true;
 		}
 
 		if (Keyboard.isKeyDown(Keyboard.KEY_D)) {
-			position.z += (float) Math.sin(Math.toRadians(yaw)) * speed;
-			position.x += (float) Math.cos(Math.toRadians(yaw)) * speed;
+			position.z += (float) Math.sin(Math.toRadians(yaw))
+					* DisplayManager.getFrameTimeSeconds() * speed
+					* multiplierMovement;
+			position.x += (float) Math.cos(Math.toRadians(yaw))
+					* DisplayManager.getFrameTimeSeconds() * speed
+					* multiplierMovement;
 			isMoved = true;
 		} else if (Keyboard.isKeyDown(Keyboard.KEY_A)) {
-			position.z -= (float) Math.sin(Math.toRadians(yaw)) * speed;
-			position.x -= (float) Math.cos(Math.toRadians(yaw)) * speed;
+			position.z -= (float) Math.sin(Math.toRadians(yaw))
+					* DisplayManager.getFrameTimeSeconds() * speed
+					* multiplierMovement;
+			position.x -= (float) Math.cos(Math.toRadians(yaw))
+					* DisplayManager.getFrameTimeSeconds() * speed
+					* multiplierMovement;
 			isMoved = true;
 		}
 		if (Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
 			if (position.y < 128) {
-				position.y += speed;
+				position.y += DisplayManager.getFrameTimeSeconds() * speed
+						* multiplierMovement;
 			}
 		} else if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
 			if (position.y > 0) {
-				position.y -= speed;
+				position.y -= DisplayManager.getFrameTimeSeconds() * speed
+						* multiplierMovement;
 			}
 		}
 		if (Mouse.isButtonDown(2)) {
