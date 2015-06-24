@@ -1,0 +1,31 @@
+apply plugin:'java'
+apply plugin:'eclipse'
+apply plugin:'application'
+
+mainClassName = 'io.github.guerra24.voxel.client.kernel.Kernel'
+
+sourceSets {
+    main {
+        java.srcDir("${projectDir}/src/main/java/")
+        resources.srcDir("${projectDir}/src/main/java/assets/")
+    }
+}
+
+dependencies {
+    compile fileTree(dir: "libs", includes: ["*.jar"])
+    runtime fileTree(dir: "libs", includes: ["*.jar"])
+
+    runtime fileTree(dir: "${projectDir}/src/main/java/", includes: ["*"])
+}
+
+run {        
+    systemProperty('java.library.path', 'natives')
+}
+
+task compilar << {
+	println 'Compilando...'
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.4'
+}
