@@ -31,7 +31,6 @@ import io.github.guerra24.voxel.client.resources.models.RawModel;
 import io.github.guerra24.voxel.client.resources.models.TexturedModel;
 
 public class BlocksResources {
-
 	public static TexturedModel cubeIndesUP;
 	public static TexturedModel cubeGrassUP;
 	public static TexturedModel cubeStoneUP;
@@ -116,6 +115,8 @@ public class BlocksResources {
 				Kernel.gameResources.loader.loadTextureBlocks("Diamond-Ore"));
 		ModelTexture texture6 = new ModelTexture(
 				Kernel.gameResources.loader.loadTextureBlocks("Gold-Ore"));
+		ModelTexture texture7 = new ModelTexture(
+				Kernel.gameResources.loader.loadTextureBlocks("GrassSide"));
 
 		cubeIndesUP = new TexturedModel(up, texture0);
 		cubeGrassUP = new TexturedModel(up, texture);
@@ -127,7 +128,7 @@ public class BlocksResources {
 		cubeGoldOreUP = new TexturedModel(up, texture6);
 
 		cubeIndesDOWN = new TexturedModel(down, texture0);
-		cubeGrassDOWN = new TexturedModel(down, texture);
+		cubeGrassDOWN = new TexturedModel(down, texture4);
 		cubeStoneDOWN = new TexturedModel(down, texture1);
 		cubeSandDOWN = new TexturedModel(down, texture2);
 		cubeGlassDOWN = new TexturedModel(down, texture3);
@@ -136,7 +137,7 @@ public class BlocksResources {
 		cubeGoldOreDOWN = new TexturedModel(down, texture6);
 
 		cubeIndesEAST = new TexturedModel(east, texture0);
-		cubeGrassEAST = new TexturedModel(east, texture);
+		cubeGrassEAST = new TexturedModel(east, texture7);
 		cubeStoneEAST = new TexturedModel(east, texture1);
 		cubeSandEAST = new TexturedModel(east, texture2);
 		cubeGlassEAST = new TexturedModel(east, texture3);
@@ -145,7 +146,7 @@ public class BlocksResources {
 		cubeGoldOreEAST = new TexturedModel(east, texture6);
 
 		cubeIndesWEST = new TexturedModel(west, texture0);
-		cubeGrassWEST = new TexturedModel(west, texture);
+		cubeGrassWEST = new TexturedModel(west, texture7);
 		cubeStoneWEST = new TexturedModel(west, texture1);
 		cubeSandWEST = new TexturedModel(west, texture2);
 		cubeGlassWEST = new TexturedModel(west, texture3);
@@ -154,7 +155,7 @@ public class BlocksResources {
 		cubeGoldOreWEST = new TexturedModel(west, texture6);
 
 		cubeIndesNORTH = new TexturedModel(nort, texture0);
-		cubeGrassNORTH = new TexturedModel(nort, texture);
+		cubeGrassNORTH = new TexturedModel(nort, texture7);
 		cubeStoneNORTH = new TexturedModel(nort, texture1);
 		cubeSandNORTH = new TexturedModel(nort, texture2);
 		cubeGlassNORTH = new TexturedModel(nort, texture3);
@@ -163,7 +164,7 @@ public class BlocksResources {
 		cubeGoldOreNORTH = new TexturedModel(nort, texture6);
 
 		cubeIndesSOUTH = new TexturedModel(south, texture0);
-		cubeGrassSOUTH = new TexturedModel(south, texture);
+		cubeGrassSOUTH = new TexturedModel(south, texture7);
 		cubeStoneSOUTH = new TexturedModel(south, texture1);
 		cubeSandSOUTH = new TexturedModel(south, texture2);
 		cubeGlassSOUTH = new TexturedModel(south, texture3);

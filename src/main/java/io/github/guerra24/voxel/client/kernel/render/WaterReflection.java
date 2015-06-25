@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package io.github.guerra24.voxel.client.kernel.render.types;
+package io.github.guerra24.voxel.client.kernel.render;
 
 import io.github.guerra24.voxel.client.kernel.Kernel;
 

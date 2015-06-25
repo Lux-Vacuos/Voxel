@@ -102,8 +102,10 @@ public class Chunk {
 						blocksData.blocks[x][y][z] = Block.Dirt.getId();
 					} else if (y == rand - 1 && y < 66) {
 						blocksData.blocks[x][y][z] = Block.Sand.getId();
-					} else if (Kernel.world.seed.nextInt(100) == 1 && y < 15) {
+					} else if (Kernel.world.seed.nextInt(150) == 1 && y < 15) {
 						blocksData.blocks[x][y][z] = Block.DiamondOre.getId();
+					} else if (Kernel.world.seed.nextInt(100) == 1 && y < 25) {
+						blocksData.blocks[x][y][z] = Block.GoldOre.getId();
 					} else {
 						blocksData.blocks[x][y][z] = Block.Stone.getId();
 					}
@@ -279,6 +281,32 @@ public class Chunk {
 						if (cullFaceSouth(x, y, z)) {
 							cubes.add(Block.DiamondOre
 									.getFaceSouth(new Vector3f(x, y, z)));
+						}
+					} else if (blocksData.blocks[x][y][z] == Block.GoldOre
+							.getId()) {
+						if (cullFaceWest(x, y, z)) {
+							cubes.add(Block.GoldOre.getFaceWest(new Vector3f(x,
+									y, z)));
+						}
+						if (cullFaceEast(x, y, z)) {
+							cubes.add(Block.GoldOre.getFaceEast(new Vector3f(x,
+									y, z)));
+						}
+						if (cullFaceDown(x, y, z)) {
+							cubes.add(Block.GoldOre.getFaceDown(new Vector3f(x,
+									y, z)));
+						}
+						if (cullFaceUp(x, y, z)) {
+							cubes.add(Block.GoldOre.getFaceUp(new Vector3f(x,
+									y, z)));
+						}
+						if (cullFaceNorth(x, y, z)) {
+							cubes.add(Block.GoldOre.getFaceNorth(new Vector3f(
+									x, y, z)));
+						}
+						if (cullFaceSouth(x, y, z)) {
+							cubes.add(Block.GoldOre.getFaceSouth(new Vector3f(
+									x, y, z)));
 						}
 					} else if (water[x][y][z] == Block.Water.getId()) {
 						waters.add(Block.Water.getWaterTitle(new Vector3f(x, y,

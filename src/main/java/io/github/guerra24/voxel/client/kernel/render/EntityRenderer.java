@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package io.github.guerra24.voxel.client.kernel.render.types;
+package io.github.guerra24.voxel.client.kernel.render;
 
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
@@ -35,8 +35,7 @@ import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
 import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import io.github.guerra24.voxel.client.kernel.Kernel;
-import io.github.guerra24.voxel.client.kernel.render.MasterRenderer;
-import io.github.guerra24.voxel.client.kernel.render.shaders.types.EntityShader;
+import io.github.guerra24.voxel.client.kernel.render.shaders.EntityShader;
 import io.github.guerra24.voxel.client.kernel.util.Maths;
 import io.github.guerra24.voxel.client.resources.models.RawModel;
 import io.github.guerra24.voxel.client.resources.models.TexturedModel;
@@ -65,11 +64,11 @@ public class EntityRenderer {
 			List<Entity> batch = entities.get(model);
 			for (Entity entity : batch) {
 				// viewCull(entity);
-				if (entity.isVisible()) {
-					prepareInstance(entity);
-					glDrawElements(GL_TRIANGLES, model.getRawModel()
-							.getVertexCount(), GL_UNSIGNED_INT, 0);
-				}
+				// if (entity.isVisible()) {
+				prepareInstance(entity);
+				glDrawElements(GL_TRIANGLES, model.getRawModel()
+						.getVertexCount(), GL_UNSIGNED_INT, 0);
+				// }
 			}
 			unbindTexturedModel();
 		}

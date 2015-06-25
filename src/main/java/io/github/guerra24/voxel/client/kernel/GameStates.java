@@ -64,8 +64,8 @@ public class GameStates {
 		}
 
 		if (state == State.IN_PAUSE && Button.backToMainMenu()) {
-			Kernel.gameResources.SoundSystem.rewind("MainMenuMusic");
-			Kernel.gameResources.SoundSystem.play("MainMenuMusic");
+			//Kernel.gameResources.SoundSystem.rewind("MainMenuMusic");
+			//Kernel.gameResources.SoundSystem.play("MainMenuMusic");
 			MenuScreen.isPlaying = false;
 			Kernel.gameResources.waters.clear();
 			Kernel.gameResources.allEntities.clear();

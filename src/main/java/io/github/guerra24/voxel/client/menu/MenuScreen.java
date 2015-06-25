@@ -38,7 +38,7 @@ public class MenuScreen {
 		while (Mouse.next()) {
 			if (Button.isWorldSelected() && selected) {
 				Kernel.gameResources.gameStates.state = State.GAME;
-				Kernel.gameResources.SoundSystem.pause("MainMenuMusic");
+				//Kernel.gameResources.SoundSystem.pause("MainMenuMusic");
 
 				if (Kernel.isLoading && !isPlaying) {
 					isPlaying = true;

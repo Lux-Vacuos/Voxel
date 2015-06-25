@@ -40,7 +40,7 @@ public class Kernel {
 	public static boolean debug = false;
 	public static boolean isLoading = false;
 
-	private static int build = 24;
+	private static int build = 25;
 	private static double version = 1.0;
 	public static GameResources gameResources;
 	public static GuiResources guiResources;
@@ -118,7 +118,7 @@ public class Kernel {
 			world.update(gameResources.camera);
 			// gameResources.mouse.update();
 			gameResources.camera.move();
-			// gameResources.player.move();
+			gameResources.player.move();
 			gameResources.glEn();
 			gameResources.waterRenderer.setReflection();
 			gameResources.glDi();

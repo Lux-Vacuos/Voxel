@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package io.github.guerra24.voxel.client.kernel.render.types;
+package io.github.guerra24.voxel.client.kernel.render;
 
 import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
 import static org.lwjgl.opengl.GL11.glBindTexture;
@@ -36,7 +36,7 @@ import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import io.github.guerra24.voxel.client.kernel.DisplayManager;
 import io.github.guerra24.voxel.client.kernel.Kernel;
-import io.github.guerra24.voxel.client.kernel.render.shaders.types.SkyboxShader;
+import io.github.guerra24.voxel.client.kernel.render.shaders.SkyboxShader;
 import io.github.guerra24.voxel.client.resources.Loader;
 import io.github.guerra24.voxel.client.resources.models.RawModel;
 import io.github.guerra24.voxel.client.world.entities.types.Camera;

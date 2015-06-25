@@ -22,9 +22,7 @@
  * SOFTWARE.
  */
 
-package io.github.guerra24.voxel.client.kernel.render.shaders.types;
-
-import io.github.guerra24.voxel.client.kernel.render.shaders.ShaderProgram;
+package io.github.guerra24.voxel.client.kernel.render.shaders;
 
 import org.lwjgl.util.vector.Matrix4f;
 

@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package io.github.guerra24.voxel.client.kernel.render.types;
+package io.github.guerra24.voxel.client.kernel.render;
 
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
@@ -37,7 +37,7 @@ import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import io.github.guerra24.voxel.client.kernel.DisplayManager;
 import io.github.guerra24.voxel.client.kernel.Kernel;
-import io.github.guerra24.voxel.client.kernel.render.shaders.types.WaterShader;
+import io.github.guerra24.voxel.client.kernel.render.shaders.WaterShader;
 import io.github.guerra24.voxel.client.kernel.util.Maths;
 import io.github.guerra24.voxel.client.kernel.util.WaterFrameBuffers;
 import io.github.guerra24.voxel.client.resources.Loader;

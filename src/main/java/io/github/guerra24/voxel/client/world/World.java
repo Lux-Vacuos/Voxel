@@ -63,8 +63,8 @@ public class World {
 	}
 
 	private void createWorld() {
-		for (int x = 0; x < 2; x++) {
-			for (int z = 0; z < 2; z++) {
+		for (int x = 0; x < 4; x++) {
+			for (int z = 0; z < 4; z++) {
 				chunks.add(new Chunk(new Vector3f(x * Chunk.CHUNK_SIZE, 0, z
 						* Chunk.CHUNK_SIZE)));
 			}
@@ -95,7 +95,7 @@ public class World {
 		}
 	*/}
 
-	public byte getBlock(int x, int y, int z) {
+	public byte getBlock(int x, int y, int z) {// Not Working
 		for (Chunk chunk : chunks) {
 			return chunk.getBlock(x, y, z);
 		}
