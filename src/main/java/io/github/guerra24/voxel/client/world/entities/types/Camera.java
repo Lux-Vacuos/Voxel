@@ -45,7 +45,7 @@ import com.google.gson.JsonParser;
 
 public class Camera {
 
-	private Vector3f position = new Vector3f(40, 80, 40);
+	private Vector3f position = new Vector3f(0, 80, 0);
 	private float pitch;
 	private float yaw;
 	private float speed;
@@ -118,12 +118,12 @@ public class Camera {
 			isMoved = true;
 		}
 		if (Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
-			if (position.y < 128) {
+			if (position.y < 144) {
 				position.y += DisplayManager.getFrameTimeSeconds() * speed
 						* multiplierMovement;
 			}
 		} else if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
-			if (position.y > 0) {
+			if (position.y > -16) {
 				position.y -= DisplayManager.getFrameTimeSeconds() * speed
 						* multiplierMovement;
 			}

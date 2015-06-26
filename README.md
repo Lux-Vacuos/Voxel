@@ -14,7 +14,7 @@ Lharing: Ores generation algorithm.
 # In Process
 + GUI 95%
 + World Save and Loading 0%
-+ Block Culling 90%
++ Block Culling 98%
 
 # COMPLETED
 + Ilumination

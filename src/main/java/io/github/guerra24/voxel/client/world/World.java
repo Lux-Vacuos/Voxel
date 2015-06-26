@@ -34,12 +34,13 @@ import org.lwjgl.util.vector.Vector3f;
 
 public class World {
 
-	public int viewDistance = 16;
-
 	private int octaveCount, unloadDist = 2;
+	public int viewDistance = 32;
 	public float[][] perlinNoiseArray;
 	public int time = 0;
 	public Chunk[][] chunks;
+	public byte[][][] blocks;
+	public byte[][][] water;
 	public boolean isCustomSeed = true;
 	public Random seed;
 
@@ -49,23 +50,25 @@ public class World {
 	}
 
 	private void initialize() {
-		chunks = new Chunk[64][64];
+		chunks = new Chunk[viewDistance][viewDistance];
 		octaveCount = 7;
 		if (isCustomSeed) {
 			seed = new Random("X".hashCode());
 		} else {
 			seed = new Random();
 		}
+		blocks = new byte[viewDistance * 16][144][viewDistance * 16];
+		water = new byte[viewDistance * 16][144][viewDistance * 16];
 		perlinNoiseArray = new float[Chunk.CHUNK_SIZE * viewDistance][];
 		perlinNoiseArray = PerlinNoise.GeneratePerlinNoise(Chunk.CHUNK_SIZE
 				* viewDistance, Chunk.CHUNK_SIZE * viewDistance, octaveCount);
 	}
 
 	private void createWorld() {
-		for (int x = 0; x < 6; x++) {
-			for (int z = 0; z < 6; z++) {
+		for (int x = 0; x < 16; x++) {
+			for (int z = 0; z < 16; z++) {
 				chunks[x][z] = new Chunk(new Vector3f(x * Chunk.CHUNK_SIZE, 0,
-						z * Chunk.CHUNK_SIZE));
+						z * Chunk.CHUNK_SIZE), false);
 			}
 		}
 	}
@@ -76,32 +79,32 @@ public class World {
 		if (time % 10 == 0) {
 			for (int x = 0; x < chunks.length; x++) {
 				for (int z = 0; z < chunks.length; z++) {
-					double e = distanceFromPlayer(x * 16, z * 16,
+					double e = distanceFromPlayer(x * 16 + 8, z * 16 + 8,
 							(int) Kernel.gameResources.camera.getPosition().x,
 							(int) Kernel.gameResources.camera.getPosition().z);
 					if (chunks[x][z] != null) {
 						double d = distanceFromPlayer(
-								chunks[x][z].posX,
-								chunks[x][z].posZ,
+								chunks[x][z].posX + 8,
+								chunks[x][z].posZ + 8,
 								(int) Kernel.gameResources.camera.getPosition().x,
 								(int) Kernel.gameResources.camera.getPosition().z);
 						if (d < unloadDist * 16) {
 							if (!chunks[x][z].isChunkloaded) {
 								chunks[x][z] = new Chunk(new Vector3f(x
 										* Chunk.CHUNK_SIZE, 0, z
-										* Chunk.CHUNK_SIZE));
+										* Chunk.CHUNK_SIZE), true);
 							}
 						} else {
 							if (chunks[x][z].isChunkloaded) {
 								chunks[x][z].dispose();
-								chunks[x][z].isChunkloaded = false;
+								chunks[x][z] = null;
 							}
 						}
 					} else {
 						if (e < unloadDist * 16) {
 							chunks[x][z] = new Chunk(
 									new Vector3f(x * Chunk.CHUNK_SIZE, 0, z
-											* Chunk.CHUNK_SIZE));
+											* Chunk.CHUNK_SIZE), true);
 						}
 					}
 				}
@@ -110,14 +113,8 @@ public class World {
 		}
 	}
 
-	@SuppressWarnings("unused")
 	public byte getBlock(int x, int y, int z) {
-		for (int i = 0; i < 4; i++) {
-			for (int k = 0; k < 4; k++) {
-				return chunks[i][k].getBlock(x, y, z);
-			}
-		}
-		return 0;
+		return blocks[x][y][z];
 	}
 
 	public double distanceFromPlayer(int x, int z, int i, int k) {

@@ -70,9 +70,12 @@ public class GameStates {
 			Kernel.gameResources.waters.clear();
 			Kernel.gameResources.cubes.clear();
 
-			for (int x = 0; x < 4; x++) {
-				for (int z = 0; z < 4; z++) {
-					Kernel.world.chunks[x][z].dispose();
+			for (int x = 0; x < Kernel.world.chunks.length; x++) {
+				for (int z = 0; z < Kernel.world.chunks.length; z++) {
+					if (Kernel.world.chunks[x][z] != null) {
+						Kernel.world.chunks[x][z].dispose();
+						Kernel.world.chunks[x][z] = null;
+					}
 				}
 			}
 			Kernel.gameResources.guis3.remove(Kernel.guiResources.button3);

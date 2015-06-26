@@ -40,7 +40,7 @@ public class Kernel {
 	public static boolean debug = false;
 	public static boolean isLoading = false;
 
-	private static int build = 26;
+	private static int build = 27;
 	private static double version = 1.0;
 	public static GameResources gameResources;
 	public static GuiResources guiResources;
