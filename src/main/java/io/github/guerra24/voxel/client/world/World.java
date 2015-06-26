@@ -26,16 +26,17 @@ package io.github.guerra24.voxel.client.world;
 
 import io.github.guerra24.voxel.client.kernel.Kernel;
 import io.github.guerra24.voxel.client.world.chunks.Chunk;
-import io.github.guerra24.voxel.client.world.entities.types.Camera;
+import io.github.guerra24.voxel.client.world.entities.Camera;
 
 import java.util.Random;
 
+import org.lwjgl.input.Mouse;
 import org.lwjgl.util.vector.Vector3f;
 
 public class World {
 
 	private int octaveCount, unloadDist = 2;
-	public int viewDistance = 32;
+	public int viewDistance = 16;
 	public float[][] perlinNoiseArray;
 	public int time = 0;
 	public Chunk[][] chunks;
@@ -65,10 +66,37 @@ public class World {
 	}
 
 	private void createWorld() {
-		for (int x = 0; x < 16; x++) {
-			for (int z = 0; z < 16; z++) {
+		for (int x = 0; x < viewDistance; x++) {
+			for (int z = 0; z < viewDistance; z++) {
 				chunks[x][z] = new Chunk(new Vector3f(x * Chunk.CHUNK_SIZE, 0,
 						z * Chunk.CHUNK_SIZE), false);
+			}
+		}
+		for (int x = 0; x < viewDistance; x++) {
+			for (int z = 0; z < viewDistance; z++) {
+				chunks[x][z].remove();
+				chunks[x][z] = null;
+			}
+		}
+	}
+
+	public void test() {
+		if (Mouse.isButtonDown(0)) {
+			Kernel.gameResources.mouse.update();
+			if (Kernel.gameResources.mouse.getCurrentRay().x
+					+ Kernel.gameResources.camera.getPosition().x >= 0
+					&& Kernel.gameResources.mouse.getCurrentRay().y
+							+ Kernel.gameResources.camera.getPosition().y >= 0
+					&& Kernel.gameResources.mouse.getCurrentRay().z
+							+ Kernel.gameResources.camera.getPosition().z >= 0) {
+				blocks[(int) (Kernel.gameResources.mouse.getCurrentRay().x + Kernel.gameResources.camera
+						.getPosition().x)][(int) (Kernel.gameResources.mouse
+						.getCurrentRay().y + Kernel.gameResources.camera
+						.getPosition().y)][(int) (Kernel.gameResources.mouse
+						.getCurrentRay().z + Kernel.gameResources.camera
+						.getPosition().z)] = 0;
+				chunks[(int) (Kernel.gameResources.camera.getPosition().x / 16)][(int) (Kernel.gameResources.camera
+						.getPosition().z / 16)].update();
 			}
 		}
 	}
@@ -80,14 +108,13 @@ public class World {
 			for (int x = 0; x < chunks.length; x++) {
 				for (int z = 0; z < chunks.length; z++) {
 					double e = distanceFromPlayer(x * 16 + 8, z * 16 + 8,
-							(int) Kernel.gameResources.camera.getPosition().x,
-							(int) Kernel.gameResources.camera.getPosition().z);
+							(int) camera.getPosition().x,
+							(int) camera.getPosition().z);
 					if (chunks[x][z] != null) {
-						double d = distanceFromPlayer(
-								chunks[x][z].posX + 8,
+						double d = distanceFromPlayer(chunks[x][z].posX + 8,
 								chunks[x][z].posZ + 8,
-								(int) Kernel.gameResources.camera.getPosition().x,
-								(int) Kernel.gameResources.camera.getPosition().z);
+								(int) camera.getPosition().x,
+								(int) camera.getPosition().z);
 						if (d < unloadDist * 16) {
 							if (!chunks[x][z].isChunkloaded) {
 								chunks[x][z] = new Chunk(new Vector3f(x

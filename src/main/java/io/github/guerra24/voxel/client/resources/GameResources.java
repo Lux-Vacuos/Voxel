@@ -38,21 +38,15 @@ import io.github.guerra24.voxel.client.kernel.util.MousePicker;
 import io.github.guerra24.voxel.client.kernel.util.WaterFrameBuffers;
 import io.github.guerra24.voxel.client.resources.models.WaterTile;
 import io.github.guerra24.voxel.client.world.block.BlocksResources;
+import io.github.guerra24.voxel.client.world.entities.Camera;
 import io.github.guerra24.voxel.client.world.entities.Entity;
-import io.github.guerra24.voxel.client.world.entities.types.Camera;
-import io.github.guerra24.voxel.client.world.entities.types.Light;
-import io.github.guerra24.voxel.client.world.entities.types.Player;
+import io.github.guerra24.voxel.client.world.entities.Light;
+import io.github.guerra24.voxel.client.world.entities.Player;
 
 import java.util.Random;
 
 import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.util.vector.Vector4f;
-
-import paulscode.sound.SoundSystem;
-import paulscode.sound.SoundSystemConfig;
-import paulscode.sound.SoundSystemException;
-import paulscode.sound.codecs.CodecJOgg;
-import paulscode.sound.libraries.LibraryLWJGLOpenAL;
 
 import com.google.gson.Gson;
 

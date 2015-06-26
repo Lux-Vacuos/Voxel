@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package io.github.guerra24.voxel.client.world.entities.types;
+package io.github.guerra24.voxel.client.world.entities;
 
 import org.lwjgl.util.vector.Vector3f;
 

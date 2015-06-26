@@ -25,8 +25,8 @@
 package io.github.guerra24.voxel.client.kernel.render.shaders;
 
 import io.github.guerra24.voxel.client.kernel.util.Maths;
-import io.github.guerra24.voxel.client.world.entities.types.Camera;
-import io.github.guerra24.voxel.client.world.entities.types.Light;
+import io.github.guerra24.voxel.client.world.entities.Camera;
+import io.github.guerra24.voxel.client.world.entities.Light;
 
 import java.util.List;
 

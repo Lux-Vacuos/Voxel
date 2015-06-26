@@ -39,7 +39,7 @@ import io.github.guerra24.voxel.client.kernel.Kernel;
 import io.github.guerra24.voxel.client.kernel.render.shaders.SkyboxShader;
 import io.github.guerra24.voxel.client.resources.Loader;
 import io.github.guerra24.voxel.client.resources.models.RawModel;
-import io.github.guerra24.voxel.client.world.entities.types.Camera;
+import io.github.guerra24.voxel.client.world.entities.Camera;
 
 import org.lwjgl.util.vector.Matrix4f;
 

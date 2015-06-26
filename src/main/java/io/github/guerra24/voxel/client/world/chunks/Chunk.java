@@ -70,14 +70,12 @@ public class Chunk {
 	}
 
 	public void update() {
-		if (isToRebuild) {
-			Kernel.gameResources.cubes.removeAll(cubes);
-			Kernel.gameResources.waters.removeAll(waters);
-			cubes.clear();
-			waters.clear();
-			rebuild();
-			isToRebuild = false;
-		}
+		Kernel.gameResources.cubes.removeAll(cubes);
+		Kernel.gameResources.waters.removeAll(waters);
+		cubes.clear();
+		waters.clear();
+		rebuild();
+		isToRebuild = false;
 	}
 
 	private void createChunk() {
@@ -124,7 +122,7 @@ public class Chunk {
 	 * (cullFaceNorth(x, y, z)) { } if (cullFaceSouth(x, y, z)) { }
 	 */
 
-	private void rebuild() {
+	public void rebuild() {
 		for (int x = (int) pos.getX(); x < sizeX; x++) {
 			for (int z = (int) pos.getZ(); z < sizeZ; z++) {
 				for (int y = (int) pos.getY(); y < sizeY; y++) {
@@ -347,7 +345,7 @@ public class Chunk {
 
 	private boolean cullFaceDown(int x, int y, int z) {
 		if (y == 0) {
-			return false;
+			return true;
 		} else {
 			if (Kernel.world.getBlock(x, y - 1, z) != 0) {
 				return false;
@@ -390,6 +388,11 @@ public class Chunk {
 				return true;
 			}
 		}
+	}
+	
+	public void remove(){
+		waters.clear();
+		cubes.clear();
 	}
 
 	public void dispose() {

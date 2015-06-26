@@ -24,9 +24,9 @@
 
 package io.github.guerra24.voxel.client.kernel.util;
 
-import io.github.guerra24.voxel.client.world.entities.types.Camera;
+import io.github.guerra24.voxel.client.kernel.DisplayManager;
+import io.github.guerra24.voxel.client.world.entities.Camera;
 
-import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector2f;
@@ -57,8 +57,8 @@ public class MousePicker {
 	}
 
 	private Vector3f calculateMouseRay() {
-		float mouseX = Mouse.getX();
-		float mouseY = Mouse.getY();
+		float mouseX = DisplayManager.WIDTH / 2;
+		float mouseY = DisplayManager.HEIGHT / 2;
 		Vector2f normalizeCoords = getNormalizedDeviceCoords(mouseX, mouseY);
 		Vector4f clipCoords = new Vector4f(normalizeCoords.x,
 				normalizeCoords.y, -1f, 1f);

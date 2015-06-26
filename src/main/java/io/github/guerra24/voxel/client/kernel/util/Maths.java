@@ -26,7 +26,7 @@ package io.github.guerra24.voxel.client.kernel.util;
 
 import java.util.Random;
 
-import io.github.guerra24.voxel.client.world.entities.types.Camera;
+import io.github.guerra24.voxel.client.world.entities.Camera;
 
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector2f;

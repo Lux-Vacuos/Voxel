@@ -37,9 +37,9 @@ import static org.lwjgl.opengl.GL11.glDisable;
 import io.github.guerra24.voxel.client.kernel.render.shaders.EntityShader;
 import io.github.guerra24.voxel.client.resources.Loader;
 import io.github.guerra24.voxel.client.resources.models.TexturedModel;
+import io.github.guerra24.voxel.client.world.entities.Camera;
 import io.github.guerra24.voxel.client.world.entities.Entity;
-import io.github.guerra24.voxel.client.world.entities.types.Camera;
-import io.github.guerra24.voxel.client.world.entities.types.Light;
+import io.github.guerra24.voxel.client.world.entities.Light;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -60,7 +60,7 @@ public class MasterRenderer {
 	public static final float GREEN = 0.555f;
 	public static final float BLUE = 0.655f;
 
-	private static Matrix4f projectionMatrix;
+	private Matrix4f projectionMatrix;
 	private EntityShader shader = new EntityShader();
 	private Map<TexturedModel, List<Entity>> entities = new HashMap<TexturedModel, List<Entity>>();
 	private SkyboxRenderer skyboxRenderer;

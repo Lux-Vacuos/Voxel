@@ -22,11 +22,10 @@
  * SOFTWARE.
  */
 
-package io.github.guerra24.voxel.client.world.entities.types;
+package io.github.guerra24.voxel.client.world.entities;
 
 import io.github.guerra24.voxel.client.kernel.DisplayManager;
 import io.github.guerra24.voxel.client.resources.models.TexturedModel;
-import io.github.guerra24.voxel.client.world.entities.Entity;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.util.vector.Vector3f;

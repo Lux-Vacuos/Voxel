@@ -43,7 +43,7 @@ import io.github.guerra24.voxel.client.kernel.util.WaterFrameBuffers;
 import io.github.guerra24.voxel.client.resources.Loader;
 import io.github.guerra24.voxel.client.resources.models.RawModel;
 import io.github.guerra24.voxel.client.resources.models.WaterTile;
-import io.github.guerra24.voxel.client.world.entities.types.Camera;
+import io.github.guerra24.voxel.client.world.entities.Camera;
 
 import java.util.List;
 
@@ -60,8 +60,6 @@ public class WaterRenderer {
 	private WaterShader shader;
 	private WaterFrameBuffers fbos;
 	private WaterFrameBuffers fbos2;
-
-	private int viewDistanceX = 16, viewDistanceZ = 16;
 
 	private float moveFactor = 0;
 
@@ -84,7 +82,6 @@ public class WaterRenderer {
 	public void render(List<WaterTile> water, Camera camera) {
 		prepareRender(camera);
 		for (WaterTile tile : water) {
-			// viewCull(tile);
 			// if (tile.isVisible()) {
 			Matrix4f modelMatrix = Maths.createTransformationMatrix(
 					new Vector3f(tile.getX(), tile.getHeight(), tile.getZ()),
@@ -142,30 +139,6 @@ public class WaterRenderer {
 	private void setUpVAO(Loader loader) {
 		float[] vertices = { -1, -1, -1, 1, 1, -1, 1, -1, -1, 1, 1, 1 };
 		quad = loader.loadToVAO(vertices, 2);
-	}
-
-	private void viewCull(WaterTile water) {
-		if ((int) Kernel.gameResources.camera.getPosition().x < (int) water
-				.getX() + viewDistanceX) {
-			if ((int) Kernel.gameResources.camera.getPosition().z < (int) water
-					.getZ() + viewDistanceX) {
-				if ((int) Kernel.gameResources.camera.getPosition().x > (int) water
-						.getX() - viewDistanceZ) {
-					if ((int) Kernel.gameResources.camera.getPosition().z > (int) water
-							.getZ() - viewDistanceZ) {
-						water.setVisible(true);
-					} else {
-						water.setVisible(false);
-					}
-				} else {
-					water.setVisible(false);
-				}
-			} else {
-				water.setVisible(false);
-			}
-		} else {
-			water.setVisible(false);
-		}
 	}
 
 }

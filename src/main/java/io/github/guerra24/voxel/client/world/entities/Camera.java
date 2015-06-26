@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package io.github.guerra24.voxel.client.world.entities.types;
+package io.github.guerra24.voxel.client.world.entities;
 
 import io.github.guerra24.voxel.client.kernel.DisplayManager;
 import io.github.guerra24.voxel.client.kernel.Kernel;
@@ -45,7 +45,7 @@ import com.google.gson.JsonParser;
 
 public class Camera {
 
-	private Vector3f position = new Vector3f(0, 80, 0);
+	private Vector3f position = new Vector3f(16, 80, 16);
 	private float pitch;
 	private float yaw;
 	private float speed;
