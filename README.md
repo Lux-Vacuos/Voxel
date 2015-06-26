@@ -21,6 +21,7 @@ Lharing: Ores generation algorithm.
 + Day/Night Cycle
 + Frustrim Culling
 + PNWG (Perlin Noise World Generation)
++ Infinite Terrain
 
 # TODO
 + Blocks collisions 

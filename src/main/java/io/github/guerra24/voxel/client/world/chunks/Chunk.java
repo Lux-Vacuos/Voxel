@@ -43,7 +43,8 @@ public class Chunk {
 	private Vector3f pos;
 	private int sizeX, sizeY, sizeZ;
 	public int posX, posZ;
-	public boolean isNotLoaded, isToRebuild = false;
+	public boolean isToRebuild = false;
+	public boolean isChunkloaded = false;
 	public ChunkInfo blocksData;
 	public float lastUsed;
 	public byte[][][] water;
@@ -68,11 +69,12 @@ public class Chunk {
 		waters = new ArrayList3<WaterTile>();
 		createChunk();
 		rebuild();
+		isChunkloaded = true;
 	}
 
 	public void update() {
 		if (isToRebuild) {
-			Kernel.gameResources.allEntities.removeAll(cubes);
+			Kernel.gameResources.cubes.removeAll(cubes);
 			Kernel.gameResources.waters.removeAll(waters);
 			cubes.clear();
 			waters.clear();
@@ -316,7 +318,7 @@ public class Chunk {
 			}
 		}
 		Kernel.gameResources.waters.addAll(waters);
-		Kernel.gameResources.allEntities.addAll(cubes);
+		Kernel.gameResources.cubes.addAll(cubes);
 	}
 
 	private boolean cullFaceWest(int x, int y, int z) {
@@ -396,7 +398,7 @@ public class Chunk {
 	}
 
 	public void dispose() {
-		Kernel.gameResources.allEntities.removeAll(cubes);
+		Kernel.gameResources.cubes.removeAll(cubes);
 		Kernel.gameResources.waters.removeAll(waters);
 		waters.clear();
 		cubes.clear();

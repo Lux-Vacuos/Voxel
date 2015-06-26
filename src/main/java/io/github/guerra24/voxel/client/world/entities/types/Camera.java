@@ -45,7 +45,7 @@ import com.google.gson.JsonParser;
 
 public class Camera {
 
-	private Vector3f position = new Vector3f(20, 80, 20);
+	private Vector3f position = new Vector3f(40, 80, 40);
 	private float pitch;
 	private float yaw;
 	private float speed;

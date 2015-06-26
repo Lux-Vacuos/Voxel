@@ -64,12 +64,17 @@ public class GameStates {
 		}
 
 		if (state == State.IN_PAUSE && Button.backToMainMenu()) {
-			//Kernel.gameResources.SoundSystem.rewind("MainMenuMusic");
-			//Kernel.gameResources.SoundSystem.play("MainMenuMusic");
+			// Kernel.gameResources.SoundSystem.rewind("MainMenuMusic");
+			// Kernel.gameResources.SoundSystem.play("MainMenuMusic");
 			MenuScreen.isPlaying = false;
 			Kernel.gameResources.waters.clear();
-			Kernel.gameResources.allEntities.clear();
-			Kernel.world.chunks.clear();
+			Kernel.gameResources.cubes.clear();
+
+			for (int x = 0; x < 4; x++) {
+				for (int z = 0; z < 4; z++) {
+					Kernel.world.chunks[x][z].dispose();
+				}
+			}
 			Kernel.gameResources.guis3.remove(Kernel.guiResources.button3);
 			Kernel.gameResources.guis3.remove(Kernel.guiResources.world);
 			Kernel.gameResources.guis3.remove(Kernel.guiResources.wselect);

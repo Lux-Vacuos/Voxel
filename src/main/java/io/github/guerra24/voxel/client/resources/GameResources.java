@@ -64,7 +64,7 @@ public class GameResources {
 	public ArrayList3<GuiTexture> guis5 = new ArrayList3<GuiTexture>();
 
 	public ArrayList3<Entity> allObjects = new ArrayList3<Entity>();
-	public ArrayList3<Entity> allEntities = new ArrayList3<Entity>();
+	public ArrayList3<Entity> cubes = new ArrayList3<Entity>();
 	public ArrayList3<Light> lights = new ArrayList3<Light>();
 	public ArrayList3<WaterTile> waters = new ArrayList3<WaterTile>();
 
