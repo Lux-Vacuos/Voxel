@@ -36,13 +36,13 @@ import org.lwjgl.util.vector.Vector3f;
 public class World {
 
 	private int octaveCount, unloadDist = 2;
-	public int viewDistance = 16;
+	public int viewDistance = 32;
 	public float[][] perlinNoiseArray;
 	public int time = 0;
 	public Chunk[][] chunks;
 	public byte[][][] blocks;
 	public byte[][][] water;
-	public boolean isCustomSeed = true;
+	public boolean isCustomSeed = false;
 	public Random seed;
 
 	public void startWorld() {
@@ -63,6 +63,9 @@ public class World {
 		perlinNoiseArray = new float[Chunk.CHUNK_SIZE * viewDistance][];
 		perlinNoiseArray = PerlinNoise.GeneratePerlinNoise(Chunk.CHUNK_SIZE
 				* viewDistance, Chunk.CHUNK_SIZE * viewDistance, octaveCount);
+		Kernel.gameResources.camera.setPosition(new Vector3f(
+				viewDistance / 2 * 16, 64, viewDistance / 2 * 16));
+		Kernel.gameResources.player.setPosition(Kernel.gameResources.camera.getPosition());
 	}
 
 	private void createWorld() {
@@ -105,7 +108,40 @@ public class World {
 		time++;
 
 		if (time % 10 == 0) {
-			for (int x = 0; x < chunks.length; x++) {
+/*
+			int xPlayChunk = (int) (camera.getPosition().x / 16);
+			int zPlayChunk = (int) (camera.getPosition().z / 16);
+			int radius = 2;
+			for (int zr = -radius; zr <= radius; zr++) {
+				int zz = zPlayChunk + zr;
+				if (zz < 0)
+					zz = 0;
+				if (zz > viewDistance)
+					zz = viewDistance;
+
+				for (int xr = -radius; xr <= radius; xr++) {
+					int xx = xPlayChunk + xr;
+					if (xx < 0)
+						xx = 0;
+					if (xx > viewDistance)
+						xx = viewDistance;
+					if (chunks[xx][zz] != null) {
+						if (!chunks[xx][zz].isChunkloaded) {
+							chunks[xx][zz] = new Chunk(new Vector3f(xx
+									* Chunk.CHUNK_SIZE, 0, zz
+									* Chunk.CHUNK_SIZE), true);
+						}
+						if(chunks[xx][zz].isChunkloaded){
+							
+						}
+					} else {
+						chunks[xx][zz] = new Chunk(new Vector3f(xx
+								* Chunk.CHUNK_SIZE, 0, zz * Chunk.CHUNK_SIZE),
+								true);
+					}
+				}
+			}
+			*/for (int x = 0; x < chunks.length; x++) {
 				for (int z = 0; z < chunks.length; z++) {
 					double e = distanceFromPlayer(x * 16 + 8, z * 16 + 8,
 							(int) camera.getPosition().x,
@@ -136,6 +172,7 @@ public class World {
 					}
 				}
 			}
+
 			time = 0;
 		}
 	}

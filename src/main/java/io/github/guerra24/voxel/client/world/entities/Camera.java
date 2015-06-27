@@ -45,7 +45,7 @@ import com.google.gson.JsonParser;
 
 public class Camera {
 
-	private Vector3f position = new Vector3f(16, 80, 16);
+	private Vector3f position = new Vector3f(0, 80, 0);
 	private float pitch;
 	private float yaw;
 	private float speed;
@@ -119,13 +119,14 @@ public class Camera {
 		}
 		if (Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
 			if (position.y < 144) {
-				position.y += DisplayManager.getFrameTimeSeconds() * speed
-						* multiplierMovement;
+				// position.y += DisplayManager.getFrameTimeSeconds() * speed
+				// * multiplierMovement;
+				Kernel.gameResources.player.jump();
 			}
 		} else if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
 			if (position.y > -16) {
-				position.y -= DisplayManager.getFrameTimeSeconds() * speed
-						* multiplierMovement;
+				// position.y -= DisplayManager.getFrameTimeSeconds() * speed
+				// * multiplierMovement;
 			}
 		}
 		if (Mouse.isButtonDown(2)) {
@@ -181,6 +182,10 @@ public class Camera {
 
 	public Vector3f getPosition() {
 		return position;
+	}
+
+	public void setPosition(Vector3f position) {
+		this.position = position;
 	}
 
 	public float getPitch() {

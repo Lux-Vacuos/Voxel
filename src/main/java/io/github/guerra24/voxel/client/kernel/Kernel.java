@@ -27,7 +27,6 @@ package io.github.guerra24.voxel.client.kernel;
 import io.github.guerra24.voxel.client.kernel.console.Console;
 import io.github.guerra24.voxel.client.kernel.util.Logger;
 import io.github.guerra24.voxel.client.kernel.util.SystemInfo;
-import io.github.guerra24.voxel.client.menu.MenuScreen;
 import io.github.guerra24.voxel.client.resources.GameResources;
 import io.github.guerra24.voxel.client.resources.GuiResources;
 import io.github.guerra24.voxel.client.world.World;
@@ -37,7 +36,7 @@ import java.io.File;
 
 public class Kernel {
 
-	private static int build = 29;
+	private static int build = 30;
 	private static Platform platform;
 	private static double version = 1.0;
 
@@ -45,7 +44,7 @@ public class Kernel {
 	public static boolean isLoading = false;
 	public static GameResources gameResources;
 	public static GuiResources guiResources;
-	public static boolean error = false, postPro = false;
+	public static boolean error = false, postPro = true;
 	public static World world;
 	public static Console thread1;
 
@@ -101,15 +100,6 @@ public class Kernel {
 		switch (gameResources.gameStates.state) {
 		case MAINMENU:
 			gameResources.guiRenderer.render(gameResources.guis2);
-			gameResources.renderer.renderSceneNoPrepare(
-					gameResources.allObjects, gameResources.lights,
-					gameResources.camera, gameResources.plane);
-
-			DisplayManager.updateDisplay(30);
-			break;
-		case WORLDSELECTION:
-			MenuScreen.worldSelected();
-			gameResources.guiRenderer.render(gameResources.guis3);
 			DisplayManager.updateDisplay(30);
 			break;
 		case IN_PAUSE:

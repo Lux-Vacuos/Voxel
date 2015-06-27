@@ -53,7 +53,6 @@ import com.google.gson.Gson;
 public class GameResources {
 	public ArrayList3<GuiTexture> guis = new ArrayList3<GuiTexture>();
 	public ArrayList3<GuiTexture> guis2 = new ArrayList3<GuiTexture>();
-	public ArrayList3<GuiTexture> guis3 = new ArrayList3<GuiTexture>();
 	public ArrayList3<GuiTexture> guis4 = new ArrayList3<GuiTexture>();
 	public ArrayList3<GuiTexture> guis5 = new ArrayList3<GuiTexture>();
 

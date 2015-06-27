@@ -25,14 +25,15 @@
 package io.github.guerra24.voxel.client.kernel;
 
 import io.github.guerra24.voxel.client.menu.Button;
-import io.github.guerra24.voxel.client.menu.MenuScreen;
 
 import org.lwjgl.input.Keyboard;
+import org.lwjgl.opengl.Display;
+import org.lwjgl.util.vector.Vector3f;
 
 public class GameStates {
 
 	public boolean loop;
-
+	public boolean isPlaying;
 	public State state;
 
 	public GameStates() {
@@ -41,32 +42,25 @@ public class GameStates {
 	}
 
 	public enum State {
-		GAME, MAINMENU, WORLDSELECTION, IN_PAUSE;
+		GAME, MAINMENU, IN_PAUSE;
 	}
 
 	public void switchStates() {
 		if (state == State.MAINMENU && Button.isInButtonPlay()) {
-			state = State.WORLDSELECTION;
+			// Kernel.gameResources.SoundSystem.pause("MainMenuMusic");
+			isPlaying = true;
+			Kernel.world.startWorld();
+			Kernel.gameResources.camera.setMouse();
+			state = State.GAME;
 		}
 
 		if (state == State.MAINMENU && Button.isInButtonExit()) {
 			loop = false;
 		}
-		if (state == State.WORLDSELECTION && Button.isInButtonBacK()) {
-			Kernel.gameResources.guis3.remove(Kernel.guiResources.button3);
-			Kernel.gameResources.guis3.remove(Kernel.guiResources.world);
-			Kernel.gameResources.guis3.remove(Kernel.guiResources.wselect);
-			Kernel.gameResources.guis3.add(Kernel.guiResources.wnoselect);
-			Kernel.gameResources.guis3.add(Kernel.guiResources.button3);
-			Kernel.gameResources.guis3.add(Kernel.guiResources.world);
-			MenuScreen.selected = false;
-			state = State.MAINMENU;
-		}
 
 		if (state == State.IN_PAUSE && Button.backToMainMenu()) {
 			// Kernel.gameResources.SoundSystem.rewind("MainMenuMusic");
 			// Kernel.gameResources.SoundSystem.play("MainMenuMusic");
-			MenuScreen.isPlaying = false;
 			Kernel.gameResources.waters.clear();
 			Kernel.gameResources.cubes.clear();
 
@@ -77,15 +71,14 @@ public class GameStates {
 						Kernel.world.chunks[x][z] = null;
 					}
 				}
+				Kernel.gameResources.camera.setPosition(new Vector3f(0, 80, 0));
+				state = State.MAINMENU;
 			}
-			Kernel.gameResources.guis3.remove(Kernel.guiResources.button3);
-			Kernel.gameResources.guis3.remove(Kernel.guiResources.world);
-			Kernel.gameResources.guis3.remove(Kernel.guiResources.wselect);
-			Kernel.gameResources.guis3.add(Kernel.guiResources.wnoselect);
-			Kernel.gameResources.guis3.add(Kernel.guiResources.button3);
-			Kernel.gameResources.guis3.add(Kernel.guiResources.world);
-			MenuScreen.selected = false;
-			state = State.MAINMENU;
+		}
+
+		if (state == State.GAME && !Display.isActive()) {
+			Kernel.gameResources.camera.unlockMouse();
+			state = State.IN_PAUSE;
 		}
 		while (Keyboard.next()) {
 			if (state == State.GAME && Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {

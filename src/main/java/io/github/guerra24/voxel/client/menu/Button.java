@@ -70,34 +70,6 @@ public class Button {
 		return isPressed;
 	}
 
-	public static boolean isWorldSelected() {
-		boolean isPressed = false;
-		int buttonx = 56;
-		int buttony = 493;
-		int buttonx1 = 686;
-		int buttony1 = 586;
-		if (Mouse.getY() > buttony && Mouse.getX() > buttonx
-				&& Mouse.getY() < buttony1 && Mouse.getX() < buttonx1
-				&& Mouse.isButtonDown(0)) {
-			isPressed = true;
-		}
-		return isPressed;
-	}
-
-	public static boolean isWorldNotSelected() {
-		boolean isPressed = false;
-		int buttonx = 56;
-		int buttony = 493;
-		int buttonx1 = 686;
-		int buttony1 = 586;
-		if (Mouse.getY() > buttony && Mouse.getX() > buttonx
-				&& Mouse.getY() < buttony1 && Mouse.getX() < buttonx1
-				&& Mouse.isButtonDown(1)) {
-			isPressed = true;
-		}
-		return isPressed;
-	}
-
 	public static boolean backToMainMenu() {
 		boolean isPressed = false;
 		int buttonx = 520;
