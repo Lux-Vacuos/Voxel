@@ -42,7 +42,7 @@ public class OBJLoader {
 	public static RawModel loadObjModel(String fileName, Loader loader) {
 		FileReader fr = null;
 		try {
-			fr = new FileReader(new File("src/main/java/assets/models/" + fileName + ".obj"));
+			fr = new FileReader(new File("assets/models/" + fileName + ".obj"));
 			Logger.log(Thread.currentThread(), "Loading Model: " + fileName
 					+ ".obj");
 		} catch (FileNotFoundException e) {

@@ -37,11 +37,12 @@ import java.io.File;
 
 public class Kernel {
 
+	private static int build = 29;
+	private static Platform platform;
+	private static double version = 1.0;
+
 	public static boolean debug = false;
 	public static boolean isLoading = false;
-
-	private static int build = 28;
-	private static double version = 1.0;
 	public static GameResources gameResources;
 	public static GuiResources guiResources;
 	public static boolean error = false, postPro = false;
@@ -76,6 +77,7 @@ public class Kernel {
 		Logger.log(Thread.currentThread(), "Loading");
 		Logger.log(Thread.currentThread(), "Voxel Game Version: " + version);
 		Logger.log(Thread.currentThread(), "Build: " + build);
+		Logger.log(Thread.currentThread(), "Running on: " + getPlatform());
 		DisplayManager.createDisplay();
 		SystemInfo.printSystemInfo();
 
@@ -144,6 +146,33 @@ public class Kernel {
 		gameResources.cleanUp();
 		thread1.close();
 		DisplayManager.closeDisplay();
+	}
+
+	public static Platform getPlatform() {
+		if (platform == null) {
+			final String OS = System.getProperty("os.name").toLowerCase();
+			final String ARCH = System.getProperty("os.arch").toLowerCase();
+
+			boolean isWindows = OS.contains("windows");
+			boolean isLinux = OS.contains("linux");
+			boolean isMac = OS.contains("mac");
+			boolean is64Bit = ARCH.equals("amd64") || ARCH.equals("x86_64");
+
+			platform = Platform.UNKNOWN;
+
+			if (isWindows)
+				platform = is64Bit ? Platform.WINDOWS_64 : Platform.WINDOWS_32;
+			if (isLinux)
+				platform = is64Bit ? Platform.LINUX_64 : Platform.LINUX_32;
+			if (isMac)
+				platform = Platform.MACOSX;
+		}
+
+		return platform;
+	}
+
+	public enum Platform {
+		WINDOWS_32, WINDOWS_64, MACOSX, LINUX_32, LINUX_64, UNKNOWN
 	}
 
 	public static void main(String[] args) {

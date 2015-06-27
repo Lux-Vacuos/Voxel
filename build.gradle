@@ -8,7 +8,7 @@ version = '1.0'
 sourceSets {
     main {
         java.srcDir("${projectDir}/src/main/java/")
-        resources.srcDir("${projectDir}/src/main/java/assets/")
+        resources.srcDir("${projectDir}/assets/")
     }
 }
 
@@ -26,3 +26,8 @@ run {
 task wrapper(type: Wrapper) {
     gradleVersion = '2.4'
 }
+
+jar {
+    include("io/github/guerra24/voxel/**")
+} 
+    

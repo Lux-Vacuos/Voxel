@@ -102,7 +102,7 @@ public class Loader {
 		Texture texture = null;
 		try {
 			texture = TextureLoader.getTexture("PNG", new FileInputStream(
-					"src/main/java/assets/textures/blocks/" + fileName + ".png"), GL_NEAREST);
+					"assets/textures/blocks/" + fileName + ".png"), GL_NEAREST);
 			Logger.log(Thread.currentThread(), "Loading Texture: " + fileName
 					+ ".png");
 			glGenerateMipmap(GL_TEXTURE_2D);
@@ -122,7 +122,7 @@ public class Loader {
 		Texture texture = null;
 		try {
 			texture = TextureLoader.getTexture("PNG", new FileInputStream(
-					"src/main/java/assets/textures/menu/" + fileName + ".png"), GL_NEAREST);
+					"assets/textures/menu/" + fileName + ".png"), GL_NEAREST);
 			Logger.log(Thread.currentThread(), "Loading Texture: " + fileName
 					+ ".png");
 			glGenerateMipmap(GL_TEXTURE_2D);
@@ -156,7 +156,7 @@ public class Loader {
 		glBindTexture(GL_TEXTURE_CUBE_MAP, texID);
 
 		for (int i = 0; i < textureFiles.length; i++) {
-			EntityTexture data = decodeTextureFile("src/main/java/assets/textures/skybox/"
+			EntityTexture data = decodeTextureFile("assets/textures/skybox/"
 					+ textureFiles[i] + ".png");
 			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGBA,
 					data.getWidth(), data.getHeight(), 0, GL_RGBA,
