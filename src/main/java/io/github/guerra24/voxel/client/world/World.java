@@ -35,7 +35,7 @@ import org.lwjgl.util.vector.Vector3f;
 
 public class World {
 
-	private int octaveCount, unloadDist = 2;
+	private int octaveCount;
 	public int viewDistance = 32;
 	public float[][] perlinNoiseArray;
 	public int time = 0;
@@ -65,7 +65,8 @@ public class World {
 				* viewDistance, Chunk.CHUNK_SIZE * viewDistance, octaveCount);
 		Kernel.gameResources.camera.setPosition(new Vector3f(
 				viewDistance / 2 * 16, 64, viewDistance / 2 * 16));
-		Kernel.gameResources.player.setPosition(Kernel.gameResources.camera.getPosition());
+		// Kernel.gameResources.player.setPosition(Kernel.gameResources.camera
+		// .getPosition());
 	}
 
 	private void createWorld() {
@@ -108,7 +109,7 @@ public class World {
 		time++;
 
 		if (time % 10 == 0) {
-/*
+
 			int xPlayChunk = (int) (camera.getPosition().x / 16);
 			int zPlayChunk = (int) (camera.getPosition().z / 16);
 			int radius = 2;
@@ -125,54 +126,17 @@ public class World {
 						xx = 0;
 					if (xx > viewDistance)
 						xx = viewDistance;
-					if (chunks[xx][zz] != null) {
-						if (!chunks[xx][zz].isChunkloaded) {
+
+					if (zr * zr + xr * xr < radius * radius) {
+						if (chunks[xx][zz] != null) {
+						} else {
 							chunks[xx][zz] = new Chunk(new Vector3f(xx
 									* Chunk.CHUNK_SIZE, 0, zz
 									* Chunk.CHUNK_SIZE), true);
 						}
-						if(chunks[xx][zz].isChunkloaded){
-							
-						}
-					} else {
-						chunks[xx][zz] = new Chunk(new Vector3f(xx
-								* Chunk.CHUNK_SIZE, 0, zz * Chunk.CHUNK_SIZE),
-								true);
 					}
 				}
 			}
-			*/for (int x = 0; x < chunks.length; x++) {
-				for (int z = 0; z < chunks.length; z++) {
-					double e = distanceFromPlayer(x * 16 + 8, z * 16 + 8,
-							(int) camera.getPosition().x,
-							(int) camera.getPosition().z);
-					if (chunks[x][z] != null) {
-						double d = distanceFromPlayer(chunks[x][z].posX + 8,
-								chunks[x][z].posZ + 8,
-								(int) camera.getPosition().x,
-								(int) camera.getPosition().z);
-						if (d < unloadDist * 16) {
-							if (!chunks[x][z].isChunkloaded) {
-								chunks[x][z] = new Chunk(new Vector3f(x
-										* Chunk.CHUNK_SIZE, 0, z
-										* Chunk.CHUNK_SIZE), true);
-							}
-						} else {
-							if (chunks[x][z].isChunkloaded) {
-								chunks[x][z].dispose();
-								chunks[x][z] = null;
-							}
-						}
-					} else {
-						if (e < unloadDist * 16) {
-							chunks[x][z] = new Chunk(
-									new Vector3f(x * Chunk.CHUNK_SIZE, 0, z
-											* Chunk.CHUNK_SIZE), true);
-						}
-					}
-				}
-			}
-
 			time = 0;
 		}
 	}

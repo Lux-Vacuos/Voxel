@@ -38,7 +38,6 @@ public class BlockGrass extends Block {
 		return 2;
 	}
 
-
 	@Override
 	public Entity getFaceUp(Vector3f pos) {
 		return new Entity(BlocksResources.cubeGrassUP, pos, 0, 0, 0, 1);

@@ -13,7 +13,6 @@ uniform sampler2D textureSampler;
 uniform vec3 skyColour;
 uniform vec3 lightColour[2];
 uniform vec3 attenuations[2];
-uniform float bright;
 
 void main(void) {
 

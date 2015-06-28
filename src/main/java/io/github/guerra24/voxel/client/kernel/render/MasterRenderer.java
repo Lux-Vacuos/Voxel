@@ -65,8 +65,6 @@ public class MasterRenderer {
 	private Map<TexturedModel, List<Entity>> entities = new HashMap<TexturedModel, List<Entity>>();
 	private SkyboxRenderer skyboxRenderer;
 
-	public float BRIGHT = 0.0f;
-
 	public static EntityRenderer entityRenderer;
 
 	public MasterRenderer(Loader loader) {
@@ -112,7 +110,6 @@ public class MasterRenderer {
 		shader.loadSkyColour(RED, GREEN, BLUE);
 		shader.loadLights(lights);
 		shader.loadviewMatrix(camera);
-		shader.loadBrightValue(BRIGHT);
 		entityRenderer.render(entities);
 		shader.stop();
 		skyboxRenderer.render(camera, RED, GREEN, BLUE);

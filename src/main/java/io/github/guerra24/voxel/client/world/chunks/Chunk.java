@@ -103,6 +103,10 @@ public class Chunk {
 						Kernel.world.blocks[x][y][z] = Block.DiamondOre.getId();
 					} else if (Kernel.world.seed.nextInt(100) == 1 && y < 25) {
 						Kernel.world.blocks[x][y][z] = Block.GoldOre.getId();
+						// } else if (Kernel.world.seed.nextInt(100) == 1 && y >
+						// 40
+						// && y < 60) {
+						// Kernel.world.blocks[x][y][z] = Block.Glass.getId();
 					} else {
 						Kernel.world.blocks[x][y][z] = Block.Stone.getId();
 					}
@@ -307,6 +311,32 @@ public class Chunk {
 							cubes.add(Block.GoldOre.getFaceSouth(new Vector3f(
 									x, y, z)));
 						}
+					} else if (Kernel.world.blocks[x][y][z] == Block.Glass
+							.getId()) {
+						if (cullFaceWest(x, y, z)) {
+							cubes.add(Block.Glass.getFaceWest(new Vector3f(x,
+									y, z)));
+						}
+						if (cullFaceEast(x, y, z)) {
+							cubes.add(Block.Glass.getFaceEast(new Vector3f(x,
+									y, z)));
+						}
+						if (cullFaceDown(x, y, z)) {
+							cubes.add(Block.Glass.getFaceDown(new Vector3f(x,
+									y, z)));
+						}
+						if (cullFaceUp(x, y, z)) {
+							cubes.add(Block.Glass.getFaceUp(new Vector3f(x, y,
+									z)));
+						}
+						if (cullFaceNorth(x, y, z)) {
+							cubes.add(Block.Glass.getFaceNorth(new Vector3f(x,
+									y, z)));
+						}
+						if (cullFaceSouth(x, y, z)) {
+							cubes.add(Block.Glass.getFaceSouth(new Vector3f(x,
+									y, z)));
+						}
 					} else if (Kernel.world.water[x][y][z] == Block.Water
 							.getId()) {
 						waters.add(Block.Water.getWaterTitle(new Vector3f(x, y,
@@ -389,8 +419,8 @@ public class Chunk {
 			}
 		}
 	}
-	
-	public void remove(){
+
+	public void remove() {
 		waters.clear();
 		cubes.clear();
 	}
@@ -400,5 +430,6 @@ public class Chunk {
 		Kernel.gameResources.waters.removeAll(waters);
 		waters.clear();
 		cubes.clear();
+		isChunkloaded = false;
 	}
 }

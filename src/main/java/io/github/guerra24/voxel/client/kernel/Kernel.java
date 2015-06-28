@@ -36,7 +36,7 @@ import java.io.File;
 
 public class Kernel {
 
-	private static int build = 30;
+	private static int build = 31;
 	private static Platform platform;
 	private static double version = 1.0;
 
@@ -110,7 +110,7 @@ public class Kernel {
 			gameResources.camera.move();
 			world.update(gameResources.camera);
 			// world.test();
-			gameResources.player.move();
+			//gameResources.player.move();
 			gameResources.glEn();
 			gameResources.waterRenderer.setReflection();
 			gameResources.glDi();

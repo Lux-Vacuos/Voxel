@@ -25,8 +25,10 @@
 package io.github.guerra24.voxel.client.world.block;
 
 import io.github.guerra24.voxel.client.resources.models.WaterTile;
+import io.github.guerra24.voxel.client.world.block.types.BlockAir;
 import io.github.guerra24.voxel.client.world.block.types.BlockDimOre;
 import io.github.guerra24.voxel.client.world.block.types.BlockDirt;
+import io.github.guerra24.voxel.client.world.block.types.BlockGlass;
 import io.github.guerra24.voxel.client.world.block.types.BlockGoldOre;
 import io.github.guerra24.voxel.client.world.block.types.BlockGrass;
 import io.github.guerra24.voxel.client.world.block.types.BlockIndes;
@@ -49,6 +51,8 @@ public abstract class Block {
 	public static Block DiamondOre = new BlockDimOre();
 	public static Block GoldOre = new BlockGoldOre();
 	public static Block Water = new BlockWater();
+	public static Block Glass = new BlockGlass();
+	public static Block Air = new BlockAir();
 
 	public abstract byte getId();
 
@@ -67,7 +71,7 @@ public abstract class Block {
 		case -1:
 			return Block.Indes;
 		case 0:
-			return Block.NULL;
+			return Block.Air;
 		case 1:
 			return Block.Stone;
 		case 2:
@@ -82,6 +86,8 @@ public abstract class Block {
 			return Block.GoldOre;
 		case 7:
 			return Block.Water;
+		case 8:
+			return Block.Glass;
 		}
 		return Block.NULL;
 	}
