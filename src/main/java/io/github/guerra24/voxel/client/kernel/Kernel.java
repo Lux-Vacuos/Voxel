@@ -36,15 +36,9 @@ import java.io.File;
 
 public class Kernel {
 
-	private static int build = 31;
 	private static Platform platform;
-	private static double version = 1.0;
-
-	public static boolean debug = false;
-	public static boolean isLoading = false;
 	public static GameResources gameResources;
 	public static GuiResources guiResources;
-	public static boolean error = false, postPro = true;
 	public static World world;
 	public static Console thread1;
 
@@ -74,8 +68,9 @@ public class Kernel {
 	private static void init() {
 
 		Logger.log(Thread.currentThread(), "Loading");
-		Logger.log(Thread.currentThread(), "Voxel Game Version: " + version);
-		Logger.log(Thread.currentThread(), "Build: " + build);
+		Logger.log(Thread.currentThread(), "Voxel Game Version: "
+				+ KernelConstants.version);
+		Logger.log(Thread.currentThread(), "Build: " + KernelConstants.build);
 		Logger.log(Thread.currentThread(), "Running on: " + getPlatform());
 		DisplayManager.createDisplay();
 		SystemInfo.printSystemInfo();
@@ -110,7 +105,7 @@ public class Kernel {
 			gameResources.camera.move();
 			world.update(gameResources.camera);
 			// world.test();
-			//gameResources.player.move();
+			// gameResources.player.move();
 			gameResources.glEn();
 			gameResources.waterRenderer.setReflection();
 			gameResources.glDi();
@@ -166,7 +161,7 @@ public class Kernel {
 	}
 
 	public static void main(String[] args) {
-		if (postPro) {
+		if (KernelConstants.postPro) {
 			System.setProperty("org.lwjgl.librarypath",
 					new File("natives").getAbsolutePath());
 		}

@@ -37,6 +37,7 @@ import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import io.github.guerra24.voxel.client.kernel.DisplayManager;
 import io.github.guerra24.voxel.client.kernel.Kernel;
+import io.github.guerra24.voxel.client.kernel.KernelConstants;
 import io.github.guerra24.voxel.client.kernel.render.shaders.WaterShader;
 import io.github.guerra24.voxel.client.kernel.util.Maths;
 import io.github.guerra24.voxel.client.kernel.util.WaterFrameBuffers;
@@ -54,8 +55,7 @@ import org.lwjgl.util.vector.Vector4f;
 public class WaterRenderer {
 
 	private static final String DUDV_MAP = "dudvMap";
-	private static final float WAVE_SPEED = 0.03f;
-
+	
 	private RawModel quad;
 	private WaterShader shader;
 	private WaterFrameBuffers fbos;
@@ -96,7 +96,7 @@ public class WaterRenderer {
 	private void prepareRender(Camera camera) {
 		shader.start();
 		shader.loadViewMatrix(camera);
-		moveFactor += WAVE_SPEED * DisplayManager.getFrameTimeSeconds();
+		moveFactor += KernelConstants.WAVE_SPEED * DisplayManager.getFrameTimeSeconds();
 		moveFactor %= 1;
 		shader.loadMoveFactor(moveFactor);
 		glBindVertexArray(quad.getVaoID());
@@ -118,18 +118,18 @@ public class WaterRenderer {
 	public void setReflection() {
 		Kernel.gameResources.fbos.bindReflectionFrameBuffer();
 		WaterReflection.reflectionCam();
-		Kernel.gameResources.renderer.renderScene(
-				Kernel.gameResources.cubes, Kernel.gameResources.lights,
-				Kernel.gameResources.camera, new Vector4f(0, 1, 0, -64.4f));
+		Kernel.gameResources.renderer.renderScene(Kernel.gameResources.cubes,
+				Kernel.gameResources.lights, Kernel.gameResources.camera,
+				new Vector4f(0, 1, 0, -64.4f));
 		Kernel.gameResources.renderer.renderSceneNoPrepare(
 				Kernel.gameResources.allObjects, Kernel.gameResources.lights,
 				Kernel.gameResources.camera, new Vector4f(0, 1, 0, -64.4f));
 		WaterReflection.restoreCam();
 		Kernel.gameResources.fbos.unbindCurrentFrameBuffer();
 		Kernel.gameResources.fbos2.bindRefractionFrameBuffer();
-		Kernel.gameResources.renderer.renderScene(
-				Kernel.gameResources.cubes, Kernel.gameResources.lights,
-				Kernel.gameResources.camera, new Vector4f(0, -1, 0, 64.4f));
+		Kernel.gameResources.renderer.renderScene(Kernel.gameResources.cubes,
+				Kernel.gameResources.lights, Kernel.gameResources.camera,
+				new Vector4f(0, -1, 0, 64.4f));
 		Kernel.gameResources.renderer.renderSceneNoPrepare(
 				Kernel.gameResources.allObjects, Kernel.gameResources.lights,
 				Kernel.gameResources.camera, new Vector4f(0, -1, 0, 64.4f));

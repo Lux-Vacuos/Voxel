@@ -24,21 +24,18 @@
 
 package io.github.guerra24.voxel.client.kernel.util;
 
+import io.github.guerra24.voxel.client.kernel.KernelConstants;
+
 import java.nio.ByteBuffer;
 
 import org.lwjgl.opengl.Display;
+
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL14.*;
 import static org.lwjgl.opengl.GL30.*;
 import static org.lwjgl.opengl.GL32.*;
 
 public class WaterFrameBuffers {
-
-	protected static final int REFLECTION_WIDTH = 128;
-	private static final int REFLECTION_HEIGHT = 128;
-
-	protected static final int REFRACTION_WIDTH = 512;
-	private static final int REFRACTION_HEIGHT = 512;
 
 	private int reflectionFrameBuffer;
 	private int reflectionTexture;
@@ -64,14 +61,16 @@ public class WaterFrameBuffers {
 
 	public void bindReflectionFrameBuffer() {// call before rendering to this
 												// FBO
-		bindFrameBuffer(reflectionFrameBuffer, REFLECTION_WIDTH,
-				REFLECTION_HEIGHT);
+		bindFrameBuffer(reflectionFrameBuffer,
+				KernelConstants.REFLECTION_WIDTH,
+				KernelConstants.REFLECTION_HEIGHT);
 	}
 
 	public void bindRefractionFrameBuffer() {// call before rendering to this
 		// FBO
-		bindFrameBuffer(refractionFrameBuffer, REFRACTION_WIDTH,
-				REFRACTION_HEIGHT);
+		bindFrameBuffer(refractionFrameBuffer,
+				KernelConstants.REFRACTION_WIDTH,
+				KernelConstants.REFRACTION_HEIGHT);
 	}
 
 	public void unbindCurrentFrameBuffer() {// call to switch to default frame
@@ -94,19 +93,23 @@ public class WaterFrameBuffers {
 
 	private void initialiseReflectionFrameBuffer() {
 		reflectionFrameBuffer = createFrameBuffer();
-		reflectionTexture = createTextureAttachment(REFLECTION_WIDTH,
-				REFLECTION_HEIGHT);
-		reflectionDepthBuffer = createDepthBufferAttachment(REFLECTION_WIDTH,
-				REFLECTION_HEIGHT);
+		reflectionTexture = createTextureAttachment(
+				KernelConstants.REFLECTION_WIDTH,
+				KernelConstants.REFLECTION_HEIGHT);
+		reflectionDepthBuffer = createDepthBufferAttachment(
+				KernelConstants.REFLECTION_WIDTH,
+				KernelConstants.REFLECTION_HEIGHT);
 		unbindCurrentFrameBuffer();
 	}
 
 	private void initialiseRefractionFrameBuffer() {
 		refractionFrameBuffer = createFrameBuffer();
-		refractionTexture = createTextureAttachment(REFRACTION_WIDTH,
-				REFRACTION_HEIGHT);
-		refractionDepthTexture = createDepthTextureAttachment(REFRACTION_WIDTH,
-				REFRACTION_HEIGHT);
+		refractionTexture = createTextureAttachment(
+				KernelConstants.REFRACTION_WIDTH,
+				KernelConstants.REFRACTION_HEIGHT);
+		refractionDepthTexture = createDepthTextureAttachment(
+				KernelConstants.REFRACTION_WIDTH,
+				KernelConstants.REFRACTION_HEIGHT);
 		unbindCurrentFrameBuffer();
 	}
 

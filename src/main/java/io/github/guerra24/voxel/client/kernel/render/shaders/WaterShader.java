@@ -24,15 +24,13 @@
 
 package io.github.guerra24.voxel.client.kernel.render.shaders;
 
+import io.github.guerra24.voxel.client.kernel.KernelConstants;
 import io.github.guerra24.voxel.client.kernel.util.Maths;
 import io.github.guerra24.voxel.client.world.entities.Camera;
 
 import org.lwjgl.util.vector.Matrix4f;
 
 public class WaterShader extends ShaderProgram {
-
-	private final static String VERTEX_FILE = "VertexShaderWater.glsl";
-	private final static String FRAGMENT_FILE = "FragmentShaderWater.glsl";
 
 	private int location_modelMatrix;
 	private int location_viewMatrix;
@@ -44,7 +42,8 @@ public class WaterShader extends ShaderProgram {
 	private int location_cameraPosition;
 
 	public WaterShader() {
-		super(VERTEX_FILE, FRAGMENT_FILE);
+		super(KernelConstants.VERTEX_FILE_WATER,
+				KernelConstants.FRAGMENT_FILE_WATER);
 	}
 
 	@Override

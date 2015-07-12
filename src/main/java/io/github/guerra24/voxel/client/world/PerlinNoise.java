@@ -29,7 +29,7 @@ import io.github.guerra24.voxel.client.kernel.Kernel;
 import java.util.Random;
 
 public class PerlinNoise {
-	static Random random = Kernel.world.seed;
+	private static Random random = Kernel.world.seed;
 
 	public static <T> float[][] GetEmptyArray(int width, int height) {
 		float[][] image = new float[width][];

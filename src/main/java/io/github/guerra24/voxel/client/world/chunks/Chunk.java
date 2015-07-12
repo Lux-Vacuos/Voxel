@@ -25,6 +25,7 @@
 package io.github.guerra24.voxel.client.world.chunks;
 
 import io.github.guerra24.voxel.client.kernel.Kernel;
+import io.github.guerra24.voxel.client.kernel.KernelConstants;
 import io.github.guerra24.voxel.client.kernel.util.ArrayList3;
 import io.github.guerra24.voxel.client.kernel.util.Maths;
 import io.github.guerra24.voxel.client.resources.models.WaterTile;
@@ -35,17 +36,14 @@ import org.lwjgl.util.vector.Vector3f;
 
 public class Chunk {
 
-	public static final int CHUNK_SIZE = 16;
-	public static final int CHUNK_HEIGHT = 144;
-
-	private ArrayList3<Entity> cubes;
-	private ArrayList3<WaterTile> waters;
-	private Vector3f pos;
-	private int sizeX, sizeY, sizeZ;
 	public int posX, posZ;
 	public boolean isToRebuild = false;
 	public boolean isChunkloaded = false;
-	public float lastUsed;
+	
+	private int sizeX, sizeY, sizeZ;
+	private ArrayList3<Entity> cubes;
+	private ArrayList3<WaterTile> waters;
+	private Vector3f pos;
 
 	public Chunk(Vector3f pos, boolean rebuild) {
 		this.pos = pos;
@@ -55,9 +53,9 @@ public class Chunk {
 	}
 
 	public void init(boolean rebuild) {
-		sizeX = (int) (pos.getX() + CHUNK_SIZE);
-		sizeY = (int) (pos.getY() + CHUNK_HEIGHT);
-		sizeZ = (int) (pos.getZ() + CHUNK_SIZE);
+		sizeX = (int) (pos.getX() + KernelConstants.CHUNK_SIZE);
+		sizeY = (int) (pos.getY() + KernelConstants.CHUNK_HEIGHT);
+		sizeZ = (int) (pos.getZ() + KernelConstants.CHUNK_SIZE);
 
 		cubes = new ArrayList3<Entity>();
 
@@ -345,8 +343,6 @@ public class Chunk {
 				}
 			}
 		}
-		Kernel.gameResources.waters.addAll(waters);
-		Kernel.gameResources.cubes.addAll(cubes);
 	}
 
 	private boolean cullFaceWest(int x, int y, int z) {
@@ -362,7 +358,7 @@ public class Chunk {
 	}
 
 	private boolean cullFaceEast(int x, int y, int z) {
-		if (x == Kernel.world.viewDistance * 16 - 1) {
+		if (x == KernelConstants.viewDistance * 16 - 1) {
 			return true;
 		} else {
 			if (Kernel.world.getBlock(x + 1, y, z) != 0) {
@@ -409,7 +405,7 @@ public class Chunk {
 	}
 
 	private boolean cullFaceSouth(int x, int y, int z) {
-		if (z == Kernel.world.viewDistance * 16 - 1) {
+		if (z == KernelConstants.viewDistance * 16 - 1) {
 			return true;
 		} else {
 			if (Kernel.world.getBlock(x, y, z + 1) != 0) {
@@ -420,7 +416,12 @@ public class Chunk {
 		}
 	}
 
-	public void remove() {
+	public void sendToRender() {
+		Kernel.gameResources.waters.addAll(waters);
+		Kernel.gameResources.cubes.addAll(cubes);
+	}
+
+	public void clear() {
 		waters.clear();
 		cubes.clear();
 	}

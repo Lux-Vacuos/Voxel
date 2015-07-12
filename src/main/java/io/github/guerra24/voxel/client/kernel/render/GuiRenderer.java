@@ -28,6 +28,7 @@ import static org.lwjgl.opengl.GL30.*;
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL13.*;
 import static org.lwjgl.opengl.GL11.*;
+import io.github.guerra24.voxel.client.kernel.KernelConstants;
 import io.github.guerra24.voxel.client.kernel.render.shaders.GuiShader;
 import io.github.guerra24.voxel.client.kernel.render.textures.GuiTexture;
 import io.github.guerra24.voxel.client.kernel.util.Maths;
@@ -97,7 +98,7 @@ public class GuiRenderer {
 	public static void prepare() {
 		glEnable(GL_DEPTH_TEST);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		glClearColor(MasterRenderer.RED, MasterRenderer.GREEN,
-				MasterRenderer.BLUE, 1);
+		glClearColor(KernelConstants.RED, KernelConstants.GREEN,
+				KernelConstants.BLUE, 1);
 	}
 }

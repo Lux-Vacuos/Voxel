@@ -34,6 +34,3 @@ Lharing: Ores generation algorithm.
 "This software is based on or using the J-Ogg library available from
 http://www.j-ogg.de and copyrighted by Tor-Einar Jarnbjo."
 
-"Water Lily" Kevin MacLeod (incompetech.com) 
-Licensed under Creative Commons: By Attribution 3.0
-http://creativecommons.org/licenses/by/3.0/

@@ -25,6 +25,7 @@
 package io.github.guerra24.voxel.client.world;
 
 import io.github.guerra24.voxel.client.kernel.Kernel;
+import io.github.guerra24.voxel.client.kernel.KernelConstants;
 import io.github.guerra24.voxel.client.world.chunks.Chunk;
 import io.github.guerra24.voxel.client.world.entities.Camera;
 
@@ -35,14 +36,11 @@ import org.lwjgl.util.vector.Vector3f;
 
 public class World {
 
-	private int octaveCount;
-	public int viewDistance = 32;
-	public float[][] perlinNoiseArray;
 	public int time = 0;
 	public Chunk[][] chunks;
+	public float[][] perlinNoiseArray;
 	public byte[][][] blocks;
 	public byte[][][] water;
-	public boolean isCustomSeed = false;
 	public Random seed;
 
 	public void startWorld() {
@@ -51,36 +49,77 @@ public class World {
 	}
 
 	private void initialize() {
-		chunks = new Chunk[viewDistance][viewDistance];
-		octaveCount = 7;
-		if (isCustomSeed) {
+		chunks = new Chunk[KernelConstants.viewDistance][KernelConstants.viewDistance];
+		if (KernelConstants.isCustomSeed) {
 			seed = new Random("X".hashCode());
 		} else {
 			seed = new Random();
 		}
-		blocks = new byte[viewDistance * 16][144][viewDistance * 16];
-		water = new byte[viewDistance * 16][144][viewDistance * 16];
-		perlinNoiseArray = new float[Chunk.CHUNK_SIZE * viewDistance][];
-		perlinNoiseArray = PerlinNoise.GeneratePerlinNoise(Chunk.CHUNK_SIZE
-				* viewDistance, Chunk.CHUNK_SIZE * viewDistance, octaveCount);
+		blocks = new byte[KernelConstants.viewDistance * 16][144][KernelConstants.viewDistance * 16];
+		water = new byte[KernelConstants.viewDistance * 16][144][KernelConstants.viewDistance * 16];
+		perlinNoiseArray = new float[KernelConstants.CHUNK_SIZE
+				* KernelConstants.viewDistance][];
+		perlinNoiseArray = PerlinNoise.GeneratePerlinNoise(
+				KernelConstants.CHUNK_SIZE * KernelConstants.viewDistance,
+				KernelConstants.CHUNK_SIZE * KernelConstants.viewDistance,
+				KernelConstants.octaveCount);
 		Kernel.gameResources.camera.setPosition(new Vector3f(
-				viewDistance / 2 * 16, 64, viewDistance / 2 * 16));
-		// Kernel.gameResources.player.setPosition(Kernel.gameResources.camera
-		// .getPosition());
+				KernelConstants.viewDistance / 2 * 16, 64,
+				KernelConstants.viewDistance / 2 * 16));
 	}
 
 	private void createWorld() {
-		for (int x = 0; x < viewDistance; x++) {
-			for (int z = 0; z < viewDistance; z++) {
-				chunks[x][z] = new Chunk(new Vector3f(x * Chunk.CHUNK_SIZE, 0,
-						z * Chunk.CHUNK_SIZE), false);
+		for (int x = 0; x < KernelConstants.viewDistance; x++) {
+			for (int z = 0; z < KernelConstants.viewDistance; z++) {
+				chunks[x][z] = new Chunk(new Vector3f(x
+						* KernelConstants.CHUNK_SIZE, 0, z
+						* KernelConstants.CHUNK_SIZE), false);
 			}
 		}
-		for (int x = 0; x < viewDistance; x++) {
-			for (int z = 0; z < viewDistance; z++) {
-				chunks[x][z].remove();
+		for (int x = 0; x < KernelConstants.viewDistance; x++) {
+			for (int z = 0; z < KernelConstants.viewDistance; z++) {
+				chunks[x][z].clear();
 				chunks[x][z] = null;
 			}
+		}
+		for (int x = 0; x < KernelConstants.viewDistance; x++) {
+			for (int z = 0; z < KernelConstants.viewDistance; z++) {
+				chunks[x][z] = new Chunk(new Vector3f(x
+						* KernelConstants.CHUNK_SIZE, 0, z
+						* KernelConstants.CHUNK_SIZE), true);
+			}
+		}
+	}
+
+	public void update(Camera camera) {
+		time++;
+
+		if (time % 10 == 0) {
+			Kernel.gameResources.cubes.clear();
+			Kernel.gameResources.waters.clear();
+			int xPlayChunk = (int) (camera.getPosition().x / 16);
+			int zPlayChunk = (int) (camera.getPosition().z / 16);
+			int radius = 2;
+			for (int zr = -radius; zr <= radius; zr++) {
+				int zz = zPlayChunk + zr;
+				if (zz < 0)
+					zz = 0;
+				if (zz > KernelConstants.viewDistance)
+					zz = KernelConstants.viewDistance;
+
+				for (int xr = -radius; xr <= radius; xr++) {
+					int xx = xPlayChunk + xr;
+					if (xx < 0)
+						xx = 0;
+					if (xx > KernelConstants.viewDistance)
+						xx = KernelConstants.viewDistance;
+
+					if (zr * zr + xr * xr < radius * radius) {
+						chunks[xx][zz].sendToRender();
+					}
+				}
+			}
+			time = 0;
 		}
 	}
 
@@ -102,42 +141,6 @@ public class World {
 				chunks[(int) (Kernel.gameResources.camera.getPosition().x / 16)][(int) (Kernel.gameResources.camera
 						.getPosition().z / 16)].update();
 			}
-		}
-	}
-
-	public void update(Camera camera) {
-		time++;
-
-		if (time % 10 == 0) {
-
-			int xPlayChunk = (int) (camera.getPosition().x / 16);
-			int zPlayChunk = (int) (camera.getPosition().z / 16);
-			int radius = 2;
-			for (int zr = -radius; zr <= radius; zr++) {
-				int zz = zPlayChunk + zr;
-				if (zz < 0)
-					zz = 0;
-				if (zz > viewDistance)
-					zz = viewDistance;
-
-				for (int xr = -radius; xr <= radius; xr++) {
-					int xx = xPlayChunk + xr;
-					if (xx < 0)
-						xx = 0;
-					if (xx > viewDistance)
-						xx = viewDistance;
-
-					if (zr * zr + xr * xr < radius * radius) {
-						if (chunks[xx][zz] != null) {
-						} else {
-							chunks[xx][zz] = new Chunk(new Vector3f(xx
-									* Chunk.CHUNK_SIZE, 0, zz
-									* Chunk.CHUNK_SIZE), true);
-						}
-					}
-				}
-			}
-			time = 0;
 		}
 	}
 

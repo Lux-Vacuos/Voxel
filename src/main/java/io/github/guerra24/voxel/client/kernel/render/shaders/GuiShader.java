@@ -24,17 +24,17 @@
 
 package io.github.guerra24.voxel.client.kernel.render.shaders;
 
+import io.github.guerra24.voxel.client.kernel.KernelConstants;
+
 import org.lwjgl.util.vector.Matrix4f;
 
 public class GuiShader extends ShaderProgram {
 
-	private static final String VERTEX_FILE = "VertexShaderGui.glsl";
-	private static final String FRAGMENT_FILE = "FragmentShaderGui.glsl";
-
 	private int location_transformationMatrix;
 
 	public GuiShader() {
-		super(VERTEX_FILE, FRAGMENT_FILE);
+		super(KernelConstants.VERTEX_FILE_GUI,
+				KernelConstants.FRAGMENT_FILE_GUI);
 	}
 
 	public void loadTransformation(Matrix4f matrix) {

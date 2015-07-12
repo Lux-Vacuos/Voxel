@@ -35,6 +35,7 @@ import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
 import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import io.github.guerra24.voxel.client.kernel.DisplayManager;
+import io.github.guerra24.voxel.client.kernel.KernelConstants;
 import io.github.guerra24.voxel.client.kernel.render.shaders.SkyboxShader;
 import io.github.guerra24.voxel.client.resources.Loader;
 import io.github.guerra24.voxel.client.resources.models.RawModel;
@@ -44,26 +45,50 @@ import org.lwjgl.util.vector.Matrix4f;
 
 public class SkyboxRenderer {
 
-	private static final float SIZE = 500f;
+	private static final float[] VERTICES = { -KernelConstants.SIZE,
+			KernelConstants.SIZE, -KernelConstants.SIZE, -KernelConstants.SIZE,
+			-KernelConstants.SIZE, -KernelConstants.SIZE, KernelConstants.SIZE,
+			-KernelConstants.SIZE, -KernelConstants.SIZE, KernelConstants.SIZE,
+			-KernelConstants.SIZE, -KernelConstants.SIZE, KernelConstants.SIZE,
+			KernelConstants.SIZE, -KernelConstants.SIZE, -KernelConstants.SIZE,
+			KernelConstants.SIZE, -KernelConstants.SIZE,
 
-	private static final float[] VERTICES = { -SIZE, SIZE, -SIZE, -SIZE, -SIZE,
-			-SIZE, SIZE, -SIZE, -SIZE, SIZE, -SIZE, -SIZE, SIZE, SIZE, -SIZE,
-			-SIZE, SIZE, -SIZE,
+			-KernelConstants.SIZE, -KernelConstants.SIZE, KernelConstants.SIZE,
+			-KernelConstants.SIZE, -KernelConstants.SIZE,
+			-KernelConstants.SIZE, -KernelConstants.SIZE, KernelConstants.SIZE,
+			-KernelConstants.SIZE, -KernelConstants.SIZE, KernelConstants.SIZE,
+			-KernelConstants.SIZE, -KernelConstants.SIZE, KernelConstants.SIZE,
+			KernelConstants.SIZE, -KernelConstants.SIZE, -KernelConstants.SIZE,
+			KernelConstants.SIZE,
 
-			-SIZE, -SIZE, SIZE, -SIZE, -SIZE, -SIZE, -SIZE, SIZE, -SIZE, -SIZE,
-			SIZE, -SIZE, -SIZE, SIZE, SIZE, -SIZE, -SIZE, SIZE,
+			KernelConstants.SIZE, -KernelConstants.SIZE, -KernelConstants.SIZE,
+			KernelConstants.SIZE, -KernelConstants.SIZE, KernelConstants.SIZE,
+			KernelConstants.SIZE, KernelConstants.SIZE, KernelConstants.SIZE,
+			KernelConstants.SIZE, KernelConstants.SIZE, KernelConstants.SIZE,
+			KernelConstants.SIZE, KernelConstants.SIZE, -KernelConstants.SIZE,
+			KernelConstants.SIZE, -KernelConstants.SIZE, -KernelConstants.SIZE,
 
-			SIZE, -SIZE, -SIZE, SIZE, -SIZE, SIZE, SIZE, SIZE, SIZE, SIZE,
-			SIZE, SIZE, SIZE, SIZE, -SIZE, SIZE, -SIZE, -SIZE,
+			-KernelConstants.SIZE, -KernelConstants.SIZE, KernelConstants.SIZE,
+			-KernelConstants.SIZE, KernelConstants.SIZE, KernelConstants.SIZE,
+			KernelConstants.SIZE, KernelConstants.SIZE, KernelConstants.SIZE,
+			KernelConstants.SIZE, KernelConstants.SIZE, KernelConstants.SIZE,
+			KernelConstants.SIZE, -KernelConstants.SIZE, KernelConstants.SIZE,
+			-KernelConstants.SIZE, -KernelConstants.SIZE, KernelConstants.SIZE,
 
-			-SIZE, -SIZE, SIZE, -SIZE, SIZE, SIZE, SIZE, SIZE, SIZE, SIZE,
-			SIZE, SIZE, SIZE, -SIZE, SIZE, -SIZE, -SIZE, SIZE,
+			-KernelConstants.SIZE, KernelConstants.SIZE, -KernelConstants.SIZE,
+			KernelConstants.SIZE, KernelConstants.SIZE, -KernelConstants.SIZE,
+			KernelConstants.SIZE, KernelConstants.SIZE, KernelConstants.SIZE,
+			KernelConstants.SIZE, KernelConstants.SIZE, KernelConstants.SIZE,
+			-KernelConstants.SIZE, KernelConstants.SIZE, KernelConstants.SIZE,
+			-KernelConstants.SIZE, KernelConstants.SIZE, -KernelConstants.SIZE,
 
-			-SIZE, SIZE, -SIZE, SIZE, SIZE, -SIZE, SIZE, SIZE, SIZE, SIZE,
-			SIZE, SIZE, -SIZE, SIZE, SIZE, -SIZE, SIZE, -SIZE,
-
-			-SIZE, -SIZE, -SIZE, -SIZE, -SIZE, SIZE, SIZE, -SIZE, -SIZE, SIZE,
-			-SIZE, -SIZE, -SIZE, -SIZE, SIZE, SIZE, -SIZE, SIZE };
+			-KernelConstants.SIZE, -KernelConstants.SIZE,
+			-KernelConstants.SIZE, -KernelConstants.SIZE,
+			-KernelConstants.SIZE, KernelConstants.SIZE, KernelConstants.SIZE,
+			-KernelConstants.SIZE, -KernelConstants.SIZE, KernelConstants.SIZE,
+			-KernelConstants.SIZE, -KernelConstants.SIZE,
+			-KernelConstants.SIZE, -KernelConstants.SIZE, KernelConstants.SIZE,
+			KernelConstants.SIZE, -KernelConstants.SIZE, KernelConstants.SIZE };
 
 	private static String[] TEXTURE_FILES = { "day/right", "day/left",
 			"day/top", "day/bottom", "day/front", "day/back" };

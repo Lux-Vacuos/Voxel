@@ -34,6 +34,7 @@ import static org.lwjgl.opengl.GL11.glClearColor;
 import static org.lwjgl.opengl.GL11.glCullFace;
 import static org.lwjgl.opengl.GL11.glEnable;
 import static org.lwjgl.opengl.GL11.glDisable;
+import io.github.guerra24.voxel.client.kernel.KernelConstants;
 import io.github.guerra24.voxel.client.kernel.render.shaders.EntityShader;
 import io.github.guerra24.voxel.client.resources.Loader;
 import io.github.guerra24.voxel.client.resources.models.TexturedModel;
@@ -51,14 +52,6 @@ import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector4f;
 
 public class MasterRenderer {
-
-	private static final float FOV = 90f;
-	private static final float NEAR_PLANE = 0.1f;
-	private static final float FAR_PLANE = 1000f;
-
-	public static final float RED = 0.375f;
-	public static final float GREEN = 0.555f;
-	public static final float BLUE = 0.655f;
 
 	private Matrix4f projectionMatrix;
 	private EntityShader shader = new EntityShader();
@@ -107,12 +100,14 @@ public class MasterRenderer {
 		prepare();
 		shader.start();
 		shader.loadClipPlane(clipPlane);
-		shader.loadSkyColour(RED, GREEN, BLUE);
+		shader.loadSkyColour(KernelConstants.RED, KernelConstants.GREEN,
+				KernelConstants.BLUE);
 		shader.loadLights(lights);
 		shader.loadviewMatrix(camera);
 		entityRenderer.render(entities);
 		shader.stop();
-		skyboxRenderer.render(camera, RED, GREEN, BLUE);
+		skyboxRenderer.render(camera, KernelConstants.RED,
+				KernelConstants.GREEN, KernelConstants.BLUE);
 		entities.clear();
 	}
 
@@ -120,12 +115,14 @@ public class MasterRenderer {
 			Vector4f clipPlane) {
 		shader.start();
 		shader.loadClipPlane(clipPlane);
-		shader.loadSkyColour(RED, GREEN, BLUE);
+		shader.loadSkyColour(KernelConstants.RED, KernelConstants.GREEN,
+				KernelConstants.BLUE);
 		shader.loadLights(lights);
 		shader.loadviewMatrix(camera);
 		entityRenderer.render(entities);
 		shader.stop();
-		skyboxRenderer.render(camera, RED, GREEN, BLUE);
+		skyboxRenderer.render(camera, KernelConstants.RED,
+				KernelConstants.GREEN, KernelConstants.BLUE);
 		entities.clear();
 	}
 
@@ -148,22 +145,25 @@ public class MasterRenderer {
 	public static void prepare() {
 		glEnable(GL_DEPTH_TEST);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		glClearColor(RED, GREEN, BLUE, 1);
+		glClearColor(KernelConstants.RED, KernelConstants.GREEN,
+				KernelConstants.BLUE, 1);
 	}
 
 	private void createProjectionMatrix() {
 		float aspectRatio = (float) Display.getWidth()
 				/ (float) Display.getHeight();
-		float y_scale = (float) ((1f / Math.tan(Math.toRadians(FOV / 2f))) * aspectRatio);
+		float y_scale = (float) ((1f / Math.tan(Math
+				.toRadians(KernelConstants.FOV / 2f))) * aspectRatio);
 		float x_scale = y_scale / aspectRatio;
-		float frustrum_length = FAR_PLANE - NEAR_PLANE;
+		float frustrum_length = KernelConstants.FAR_PLANE
+				- KernelConstants.NEAR_PLANE;
 
 		projectionMatrix = new Matrix4f();
 		projectionMatrix.m00 = x_scale;
 		projectionMatrix.m11 = y_scale;
-		projectionMatrix.m22 = -((FAR_PLANE + NEAR_PLANE) / frustrum_length);
+		projectionMatrix.m22 = -((KernelConstants.FAR_PLANE + KernelConstants.NEAR_PLANE) / frustrum_length);
 		projectionMatrix.m23 = -1;
-		projectionMatrix.m32 = -((2 * NEAR_PLANE * FAR_PLANE) / frustrum_length);
+		projectionMatrix.m32 = -((2 * KernelConstants.NEAR_PLANE * KernelConstants.FAR_PLANE) / frustrum_length);
 		projectionMatrix.m33 = 0;
 	}
 

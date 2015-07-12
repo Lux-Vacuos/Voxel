@@ -37,10 +37,6 @@ import org.lwjgl.opengl.PixelFormat;
 
 public class DisplayManager {
 
-	public static final int WIDTH = 1280;
-	public static final int HEIGHT = 720;
-	private static final String Title = "Voxel Game";
-
 	private static long lastFrameTime;
 	private static float delta;
 
@@ -50,9 +46,10 @@ public class DisplayManager {
 		Logger.log(Thread.currentThread(), "Creating Display");
 		Logger.log(Thread.currentThread(), "LWJGL Version: " + Sys.getVersion());
 		try {
-			Display.setDisplayMode(new DisplayMode(WIDTH, HEIGHT));
+			Display.setDisplayMode(new DisplayMode(KernelConstants.WIDTH,
+					KernelConstants.HEIGHT));
 			Display.create(pixelformat);
-			Display.setTitle(Title);
+			Display.setTitle(KernelConstants.Title);
 			Display.setResizable(false);
 			Display.setFullscreen(false);
 		} catch (LWJGLException e) {
@@ -61,7 +58,7 @@ public class DisplayManager {
 		}
 		Logger.log(Thread.currentThread(), "OpenGL Version: "
 				+ glGetString(GL_VERSION));
-		glViewport(0, 0, WIDTH, HEIGHT);
+		glViewport(0, 0, KernelConstants.WIDTH, KernelConstants.HEIGHT);
 		lastFrameTime = getCurrentTime();
 	}
 

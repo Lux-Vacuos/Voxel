@@ -24,6 +24,7 @@
 
 package io.github.guerra24.voxel.client.kernel.render.shaders;
 
+import io.github.guerra24.voxel.client.kernel.KernelConstants;
 import io.github.guerra24.voxel.client.kernel.util.Maths;
 import io.github.guerra24.voxel.client.world.entities.Camera;
 import io.github.guerra24.voxel.client.world.entities.Light;
@@ -36,11 +37,6 @@ import org.lwjgl.util.vector.Vector4f;
 
 public class EntityShader extends ShaderProgram {
 
-	private static final int MAX_LIGHTS = 2;
-
-	private static final String VERTEX_FILE = "VertexShaderEntity.glsl";
-	private static final String FRAGMENT_FILE = "FragmentShaderEntity.glsl";
-
 	private int location_transformationMatrix;
 	private int location_projectionMatrix;
 	private int location_lightPosition[];
@@ -51,7 +47,7 @@ public class EntityShader extends ShaderProgram {
 	private int location_plane;
 
 	public EntityShader() {
-		super(VERTEX_FILE, FRAGMENT_FILE);
+		super(KernelConstants.VERTEX_FILE_ENTITY, KernelConstants.FRAGMENT_FILE_ENTITY);
 	}
 
 	@Override
@@ -71,10 +67,10 @@ public class EntityShader extends ShaderProgram {
 		location_skyColour = super.getUniformLocation("skyColour");
 		location_plane = super.getUniformLocation("plane");
 
-		location_lightPosition = new int[MAX_LIGHTS];
-		location_lightColour = new int[MAX_LIGHTS];
-		location_attenuations = new int[MAX_LIGHTS];
-		for (int i = 0; i < MAX_LIGHTS; i++) {
+		location_lightPosition = new int[KernelConstants.MAX_LIGHTS];
+		location_lightColour = new int[KernelConstants.MAX_LIGHTS];
+		location_attenuations = new int[KernelConstants.MAX_LIGHTS];
+		for (int i = 0; i < KernelConstants.MAX_LIGHTS; i++) {
 			location_lightPosition[i] = super
 					.getUniformLocation("lightPosition[" + i + "]");
 			location_lightColour[i] = super.getUniformLocation("lightColour["
@@ -97,7 +93,7 @@ public class EntityShader extends ShaderProgram {
 	}
 
 	public void loadLights(List<Light> lights) {
-		for (int i = 0; i < MAX_LIGHTS; i++) {
+		for (int i = 0; i < KernelConstants.MAX_LIGHTS; i++) {
 			if (i < lights.size()) {
 				super.loadVector(location_lightPosition[i], lights.get(i)
 						.getPosition());

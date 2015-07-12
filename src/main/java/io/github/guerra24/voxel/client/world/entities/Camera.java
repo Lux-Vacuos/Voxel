@@ -26,7 +26,7 @@ package io.github.guerra24.voxel.client.world.entities;
 
 import io.github.guerra24.voxel.client.kernel.DisplayManager;
 import io.github.guerra24.voxel.client.kernel.Kernel;
-import io.github.guerra24.voxel.client.kernel.util.AbstractFilesPath;
+import io.github.guerra24.voxel.client.kernel.KernelConstants;
 import io.github.guerra24.voxel.client.kernel.util.Logger;
 
 import java.io.BufferedReader;
@@ -119,14 +119,13 @@ public class Camera {
 		}
 		if (Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
 			if (position.y < 144) {
-				 position.y += DisplayManager.getFrameTimeSeconds() * speed
-				 * multiplierMovement;
-				//Kernel.gameResources.player.jump();
+				position.y += DisplayManager.getFrameTimeSeconds() * speed
+						* multiplierMovement;
 			}
 		} else if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
 			if (position.y > -16) {
-				 position.y -= DisplayManager.getFrameTimeSeconds() * speed
-				 * multiplierMovement;
+				position.y -= DisplayManager.getFrameTimeSeconds() * speed
+						* multiplierMovement;
 			}
 		}
 		if (Mouse.isButtonDown(2)) {
@@ -149,7 +148,7 @@ public class Camera {
 
 		FileWriter writer;
 		try {
-			writer = new FileWriter(AbstractFilesPath.camPath);
+			writer = new FileWriter(KernelConstants.camPath);
 			writer.write(json);
 			writer.close();
 		} catch (IOException e) {
@@ -162,7 +161,7 @@ public class Camera {
 
 		try {
 			BufferedReader camera = new BufferedReader(new FileReader(
-					AbstractFilesPath.camPath));
+					KernelConstants.camPath));
 			JsonParser parser = new JsonParser();
 			JsonObject jobject = parser.parse(camera).getAsJsonObject();
 

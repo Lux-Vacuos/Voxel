@@ -25,6 +25,7 @@
 package io.github.guerra24.voxel.client.kernel.render.shaders;
 
 import io.github.guerra24.voxel.client.kernel.DisplayManager;
+import io.github.guerra24.voxel.client.kernel.KernelConstants;
 import io.github.guerra24.voxel.client.kernel.util.Maths;
 import io.github.guerra24.voxel.client.world.entities.Camera;
 
@@ -32,11 +33,6 @@ import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
 public class SkyboxShader extends ShaderProgram {
-
-	private static final String VERTEX_FILE = "VertexShaderSkybox.glsl";
-	private static final String FRAGMENT_FILE = "FragmentShaderSkybox.glsl";
-
-	private static final float ROTATE_SPEED = 0.3f;
 
 	private int location_projectionMatrix;
 	private int location_viewMatrix;
@@ -48,7 +44,8 @@ public class SkyboxShader extends ShaderProgram {
 	private float rotation = 0;
 
 	public SkyboxShader() {
-		super(VERTEX_FILE, FRAGMENT_FILE);
+		super(KernelConstants.VERTEX_FILE_SKYBOX,
+				KernelConstants.FRAGMENT_FILE_SKYBOX);
 	}
 
 	public void loadProjectionMatrix(Matrix4f matrix) {
@@ -60,7 +57,8 @@ public class SkyboxShader extends ShaderProgram {
 		matrix.m30 = 0;
 		matrix.m31 = 0;
 		matrix.m32 = 0;
-		rotation += ROTATE_SPEED * DisplayManager.getFrameTimeSeconds();
+		rotation += KernelConstants.ROTATE_SPEED
+				* DisplayManager.getFrameTimeSeconds();
 		Matrix4f.rotate((float) Math.toRadians(rotation),
 				new Vector3f(0, 1, 0), matrix, matrix);
 		super.loadMatrix(location_viewMatrix, matrix);
