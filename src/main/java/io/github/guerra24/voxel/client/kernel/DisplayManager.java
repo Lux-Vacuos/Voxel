@@ -52,6 +52,7 @@ public class DisplayManager {
 			Display.setTitle(KernelConstants.Title);
 			Display.setResizable(false);
 			Display.setFullscreen(false);
+			Display.setVSyncEnabled(KernelConstants.VSYNC);
 		} catch (LWJGLException e) {
 			Logger.error(Thread.currentThread(), "Failed to create Display");
 			e.printStackTrace();

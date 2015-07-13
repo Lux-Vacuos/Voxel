@@ -61,8 +61,8 @@ public class Console extends Thread {
 		frame.setVisible(true);
 		frame.setResizable(false);
 		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		frame.setTitle("Voxel Game Log Console");
-
+		frame.setTitle("Voxel Log Console");
+		currentThread().setName("Console");
 		Logger.log(currentThread(), "Starting Console");
 	}
 

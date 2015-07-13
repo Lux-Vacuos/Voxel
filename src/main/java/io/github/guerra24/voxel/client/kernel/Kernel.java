@@ -27,6 +27,7 @@ package io.github.guerra24.voxel.client.kernel;
 import io.github.guerra24.voxel.client.kernel.console.Console;
 import io.github.guerra24.voxel.client.kernel.util.Logger;
 import io.github.guerra24.voxel.client.kernel.util.SystemInfo;
+import io.github.guerra24.voxel.client.menu.ConfigGUI;
 import io.github.guerra24.voxel.client.resources.GameResources;
 import io.github.guerra24.voxel.client.resources.GuiResources;
 import io.github.guerra24.voxel.client.world.World;
@@ -41,6 +42,7 @@ public class Kernel {
 	public static GuiResources guiResources;
 	public static World world;
 	public static Console thread1;
+	public static ConfigGUI config;
 
 	public static void run() {
 
@@ -48,6 +50,15 @@ public class Kernel {
 		thread1.start();
 
 		while (!thread1.isReady) {
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		Thread.currentThread().setName("Voxel");
+		config = new ConfigGUI();
+		while (!config.ready) {
 			try {
 				Thread.sleep(100);
 			} catch (InterruptedException e) {
@@ -118,7 +129,7 @@ public class Kernel {
 			gameResources.waterRenderer.render(gameResources.waters,
 					gameResources.camera);
 			gameResources.guiRenderer.renderNoPrepare(gameResources.guis);
-			DisplayManager.updateDisplay(60);
+			DisplayManager.updateDisplay(KernelConstants.FPS);
 			break;
 		}
 		gameResources.gameStates.switchStates();

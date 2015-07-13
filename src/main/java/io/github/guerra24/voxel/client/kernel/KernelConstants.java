@@ -28,16 +28,18 @@ public class KernelConstants {
 	// Display Settings
 	public static int WIDTH = 1280;
 	public static int HEIGHT = 720;
+	public static int FPS = 60;
+	public static boolean VSYNC = false;
 	public static String Title = "Voxel Game";
 	// Game Settings
-	public static float FOV = 90f;
+	public static int FOV = 90;
 	public static float NEAR_PLANE = 0.1f;
 	public static float FAR_PLANE = 1000f;
 	public static float RED = 0.375f;
 	public static float GREEN = 0.555f;
 	public static float BLUE = 0.655f;
 	// Game Variables
-	public static int build = 32;
+	public static int build = 33;
 	public static double version = 1.0;
 	public static boolean debug = false;
 	public static boolean isLoading = false;
@@ -46,6 +48,7 @@ public class KernelConstants {
 	public static int octaveCount = 7;
 	public static int viewDistance = 8;
 	public static boolean isCustomSeed = false;
+	public static String seed = "";
 	// Chunk Settings
 	public static final int CHUNK_SIZE = 16;
 	public static final int CHUNK_HEIGHT = 144;
@@ -53,10 +56,10 @@ public class KernelConstants {
 	public static final int MAX_LIGHTS = 2;
 	// Water Settings
 	public static float WAVE_SPEED = 0.03f;
-	public static final int REFLECTION_WIDTH = 128;
-	public static final int REFLECTION_HEIGHT = 128;
-	public static final int REFRACTION_WIDTH = 512;
-	public static final int REFRACTION_HEIGHT = 512;
+	public static int REFLECTION_WIDTH = 128;
+	public static int REFLECTION_HEIGHT = 128;
+	public static int REFRACTION_WIDTH = 512;
+	public static int REFRACTION_HEIGHT = 512;
 	// Skybox Settings
 	public static float SIZE = 500f;
 	public static final float ROTATE_SPEED = 0.3f;

@@ -51,7 +51,7 @@ public class World {
 	private void initialize() {
 		chunks = new Chunk[KernelConstants.viewDistance][KernelConstants.viewDistance];
 		if (KernelConstants.isCustomSeed) {
-			seed = new Random("X".hashCode());
+			seed = new Random(KernelConstants.seed.hashCode());
 		} else {
 			seed = new Random();
 		}
@@ -104,15 +104,15 @@ public class World {
 				int zz = zPlayChunk + zr;
 				if (zz < 0)
 					zz = 0;
-				if (zz > KernelConstants.viewDistance)
-					zz = KernelConstants.viewDistance;
+				if (zz > KernelConstants.viewDistance - 1)
+					zz = KernelConstants.viewDistance - 1;
 
 				for (int xr = -radius; xr <= radius; xr++) {
 					int xx = xPlayChunk + xr;
 					if (xx < 0)
 						xx = 0;
-					if (xx > KernelConstants.viewDistance)
-						xx = KernelConstants.viewDistance;
+					if (xx > KernelConstants.viewDistance - 1)
+						xx = KernelConstants.viewDistance - 1;
 
 					if (zr * zr + xr * xr < radius * radius) {
 						chunks[xx][zz].sendToRender();
