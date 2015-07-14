@@ -30,15 +30,6 @@ public class WaterTile {
 
 	private float height;
 	private float x, z;
-	private boolean visible;
-
-	public boolean isVisible() {
-		return visible;
-	}
-
-	public void setVisible(boolean visible) {
-		this.visible = visible;
-	}
 
 	public WaterTile(float centerX, float centerZ, float height) {
 		this.x = centerX;

@@ -76,7 +76,7 @@ public class GameStates {
 			}
 		}
 
-		if (state == State.GAME && !Display.isActive()) {
+		if (state == State.GAME && !Display.isActive() && !KernelConstants.debug) {
 			Kernel.gameResources.camera.unlockMouse();
 			state = State.IN_PAUSE;
 		}

@@ -24,6 +24,7 @@
 
 package io.github.guerra24.voxel.client.kernel;
 
+import static org.lwjgl.opengl.GL11.glLoadIdentity;
 import io.github.guerra24.voxel.client.kernel.console.Console;
 import io.github.guerra24.voxel.client.kernel.util.Logger;
 import io.github.guerra24.voxel.client.kernel.util.SystemInfo;
@@ -56,7 +57,7 @@ public class Kernel {
 				e.printStackTrace();
 			}
 		}
-		Thread.currentThread().setName("Voxel");
+		Thread.currentThread().setName("Voxel Main");
 		config = new ConfigGUI();
 		while (!config.ready) {
 			try {
@@ -85,6 +86,8 @@ public class Kernel {
 		Logger.log(Thread.currentThread(), "Running on: " + getPlatform());
 		DisplayManager.createDisplay();
 		SystemInfo.printSystemInfo();
+		if (KernelConstants.advancedOpenGL)
+			Logger.log(Thread.currentThread(), "Using Advanced Rendering");
 
 		gameResources = new GameResources();
 
@@ -126,6 +129,7 @@ public class Kernel {
 			gameResources.renderer.renderSceneNoPrepare(
 					gameResources.allObjects, gameResources.lights,
 					gameResources.camera, gameResources.plane);
+			glLoadIdentity();
 			gameResources.waterRenderer.render(gameResources.waters,
 					gameResources.camera);
 			gameResources.guiRenderer.renderNoPrepare(gameResources.guis);

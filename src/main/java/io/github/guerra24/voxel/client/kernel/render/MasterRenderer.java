@@ -32,8 +32,8 @@ import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
 import static org.lwjgl.opengl.GL11.glClear;
 import static org.lwjgl.opengl.GL11.glClearColor;
 import static org.lwjgl.opengl.GL11.glCullFace;
-import static org.lwjgl.opengl.GL11.glEnable;
 import static org.lwjgl.opengl.GL11.glDisable;
+import static org.lwjgl.opengl.GL11.glEnable;
 import io.github.guerra24.voxel.client.kernel.KernelConstants;
 import io.github.guerra24.voxel.client.kernel.render.shaders.EntityShader;
 import io.github.guerra24.voxel.client.resources.Loader;
@@ -58,7 +58,8 @@ public class MasterRenderer {
 	private Map<TexturedModel, List<Entity>> entities = new HashMap<TexturedModel, List<Entity>>();
 	private SkyboxRenderer skyboxRenderer;
 
-	public static EntityRenderer entityRenderer;
+	public EntityRenderer entityRenderer;
+	public float aspectRatio;
 
 	public MasterRenderer(Loader loader) {
 		enableCulling();
@@ -82,6 +83,7 @@ public class MasterRenderer {
 
 	public void renderScene(List<Entity> entities, List<Light> lights,
 			Camera camera, Vector4f clipPlane) {
+		createProjectionMatrix();
 		for (Entity entity : entities) {
 			processEntity(entity);
 		}
@@ -104,7 +106,10 @@ public class MasterRenderer {
 				KernelConstants.BLUE);
 		shader.loadLights(lights);
 		shader.loadviewMatrix(camera);
-		entityRenderer.render(entities);
+		if (KernelConstants.advancedOpenGL)
+			entityRenderer.renderAdvancedOpenGL(entities);
+		else
+			entityRenderer.render(entities);
 		shader.stop();
 		skyboxRenderer.render(camera, KernelConstants.RED,
 				KernelConstants.GREEN, KernelConstants.BLUE);
@@ -150,8 +155,7 @@ public class MasterRenderer {
 	}
 
 	private void createProjectionMatrix() {
-		float aspectRatio = (float) Display.getWidth()
-				/ (float) Display.getHeight();
+		aspectRatio = (float) Display.getWidth() / (float) Display.getHeight();
 		float y_scale = (float) ((1f / Math.tan(Math
 				.toRadians(KernelConstants.FOV / 2f))) * aspectRatio);
 		float x_scale = y_scale / aspectRatio;

@@ -38,10 +38,11 @@ public class KernelConstants {
 	public static float RED = 0.375f;
 	public static float GREEN = 0.555f;
 	public static float BLUE = 0.655f;
+	public static boolean advancedOpenGL = false;
 	// Game Variables
-	public static int build = 34;
+	public static int build = 35;
 	public static double version = 1.0;
-	public static boolean debug = false;
+	public static boolean debug = true;
 	public static boolean isLoading = false;
 	public static boolean postPro = true;
 	// World Settings

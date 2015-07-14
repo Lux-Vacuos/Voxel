@@ -55,7 +55,7 @@ import org.lwjgl.util.vector.Vector4f;
 public class WaterRenderer {
 
 	private static final String DUDV_MAP = "dudvMap";
-	
+
 	private RawModel quad;
 	private WaterShader shader;
 	private WaterFrameBuffers fbos;
@@ -82,13 +82,11 @@ public class WaterRenderer {
 	public void render(List<WaterTile> water, Camera camera) {
 		prepareRender(camera);
 		for (WaterTile tile : water) {
-			// if (tile.isVisible()) {
 			Matrix4f modelMatrix = Maths.createTransformationMatrix(
 					new Vector3f(tile.getX(), tile.getHeight(), tile.getZ()),
 					0, 0, 0, WaterTile.TILE_SIZE);
 			shader.loadModelMatrix(modelMatrix);
 			glDrawArrays(GL_TRIANGLES, 0, quad.getVertexCount());
-			// }
 		}
 		unbind();
 	}
@@ -96,7 +94,8 @@ public class WaterRenderer {
 	private void prepareRender(Camera camera) {
 		shader.start();
 		shader.loadViewMatrix(camera);
-		moveFactor += KernelConstants.WAVE_SPEED * DisplayManager.getFrameTimeSeconds();
+		moveFactor += KernelConstants.WAVE_SPEED
+				* DisplayManager.getFrameTimeSeconds();
 		moveFactor %= 1;
 		shader.loadMoveFactor(moveFactor);
 		glBindVertexArray(quad.getVaoID());

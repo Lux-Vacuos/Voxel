@@ -24,6 +24,9 @@
 
 package io.github.guerra24.voxel.client.world;
 
+import static org.lwjgl.opengl.GL11.glLoadIdentity;
+import static org.lwjgl.opengl.GL11.glMatrixMode;
+import static org.lwjgl.util.glu.GLU.gluPerspective;
 import io.github.guerra24.voxel.client.kernel.Kernel;
 import io.github.guerra24.voxel.client.kernel.KernelConstants;
 import io.github.guerra24.voxel.client.world.chunks.Chunk;
@@ -93,6 +96,13 @@ public class World {
 
 	public void update(Camera camera) {
 		time++;
+
+		glMatrixMode(5889);
+		glLoadIdentity();
+		gluPerspective(KernelConstants.FOV,
+				Kernel.gameResources.renderer.aspectRatio,
+				KernelConstants.NEAR_PLANE, KernelConstants.FAR_PLANE);
+		glMatrixMode(5888);
 
 		if (time % 10 == 0) {
 			Kernel.gameResources.cubes.clear();

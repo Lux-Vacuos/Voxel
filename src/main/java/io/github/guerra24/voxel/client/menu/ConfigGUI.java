@@ -65,6 +65,7 @@ public class ConfigGUI extends JFrame implements ItemListener {
 
 	private JCheckBox customSeed = new JCheckBox("Custom Seed");
 	private JCheckBox vsync = new JCheckBox("Vsync");
+	private JCheckBox advancedOpenGL = new JCheckBox("Advanced Rendering");
 
 	private JSlider slider = new JSlider();
 
@@ -132,6 +133,12 @@ public class ConfigGUI extends JFrame implements ItemListener {
 		vsync.setSelected(false);
 		add(vsync, constraints);
 		vsync.addItemListener(this);
+
+		constraints.gridx = -2;
+		advancedOpenGL.setMnemonic(KeyEvent.VK_D);
+		advancedOpenGL.setSelected(false);
+		add(advancedOpenGL, constraints);
+		advancedOpenGL.addItemListener(this);
 
 		constraints.gridy = 4;
 		constraints.gridx = 0;
@@ -280,6 +287,8 @@ public class ConfigGUI extends JFrame implements ItemListener {
 			KernelConstants.isCustomSeed = true;
 		} else if (source == vsync) {
 			KernelConstants.VSYNC = true;
+		} else if (source == advancedOpenGL) {
+			KernelConstants.advancedOpenGL = true;
 		}
 		if (e.getStateChange() == ItemEvent.DESELECTED) {
 			if (source == customSeed) {
@@ -287,6 +296,8 @@ public class ConfigGUI extends JFrame implements ItemListener {
 				KernelConstants.isCustomSeed = false;
 			} else if (source == vsync) {
 				KernelConstants.VSYNC = false;
+			} else if (source == advancedOpenGL) {
+				KernelConstants.advancedOpenGL = false;
 			}
 		}
 	}
@@ -299,15 +310,16 @@ public class ConfigGUI extends JFrame implements ItemListener {
 		defaultProps.setProperty("FOV", "90");
 		defaultProps.setProperty("FPS", "60");
 		defaultProps.setProperty("VSYNC", "false");
+		defaultProps.setProperty("advancedOpenGL", "false");
 		defaultProps.setProperty("SEED", "");
 		defaultProps.setProperty("ViewDistance", "8");
 		defaultProps.setProperty("DrawDistance", "2");
 
 		configProps = new Properties(defaultProps);
+		advancedOpenGL.setSelected(false);
+		vsync.setSelected(false);
+		textSEED.setEditable(false);
 
-		if (configProps.getProperty("VSYNC").equals("true")) {
-			vsync.setSelected(true);
-		}
 		slider.setValue(Integer.parseInt(configProps
 				.getProperty("DrawDistance")));
 		textWIDTH.setText(configProps.getProperty("WIDTH"));
@@ -327,6 +339,8 @@ public class ConfigGUI extends JFrame implements ItemListener {
 		KernelConstants.FPS = Integer.parseInt(configProps.getProperty("FPS"));
 		KernelConstants.VSYNC = Boolean.parseBoolean(configProps
 				.getProperty("VSYNC"));
+		KernelConstants.advancedOpenGL = Boolean.parseBoolean(configProps
+				.getProperty("advancedOpenGL"));
 		KernelConstants.seed = configProps.getProperty("SEED");
 		KernelConstants.viewDistance = Integer.parseInt(configProps
 				.getProperty("ViewDistance"));
@@ -352,6 +366,9 @@ public class ConfigGUI extends JFrame implements ItemListener {
 		if (configProps.getProperty("VSYNC").equals("true")) {
 			vsync.setSelected(true);
 		}
+		if (configProps.getProperty("advancedOpenGL").equals("true")) {
+			advancedOpenGL.setSelected(true);
+		}
 		slider.setValue(Integer.parseInt(configProps
 				.getProperty("DrawDistance")));
 		inputStream.close();
@@ -365,6 +382,8 @@ public class ConfigGUI extends JFrame implements ItemListener {
 		configProps.setProperty("FPS", textFPS.getText());
 		configProps.setProperty("VSYNC",
 				Boolean.toString(KernelConstants.VSYNC));
+		configProps.setProperty("advancedOpenGL",
+				Boolean.toString(KernelConstants.advancedOpenGL));
 		configProps.setProperty("SEED", textSEED.getText());
 		configProps.setProperty("ViewDistance", textviewDistance.getText());
 		configProps.setProperty("DrawDistance", s.toString());

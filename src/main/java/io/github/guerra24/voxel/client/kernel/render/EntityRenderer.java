@@ -35,6 +35,7 @@ import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
 import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import io.github.guerra24.voxel.client.kernel.render.shaders.EntityShader;
+import io.github.guerra24.voxel.client.kernel.util.Frustum;
 import io.github.guerra24.voxel.client.kernel.util.Maths;
 import io.github.guerra24.voxel.client.resources.models.RawModel;
 import io.github.guerra24.voxel.client.resources.models.TexturedModel;
@@ -61,7 +62,21 @@ public class EntityRenderer {
 			prepareTexturedModel(model);
 			List<Entity> batch = entities.get(model);
 			for (Entity entity : batch) {
-				if (entity.isVisible()) {
+				prepareInstance(entity);
+				glDrawElements(GL_TRIANGLES, model.getRawModel()
+						.getVertexCount(), GL_UNSIGNED_INT, 0);
+			}
+			unbindTexturedModel();
+		}
+	}
+
+	public void renderAdvancedOpenGL(Map<TexturedModel, List<Entity>> entities) {
+		for (TexturedModel model : entities.keySet()) {
+			prepareTexturedModel(model);
+			List<Entity> batch = entities.get(model);
+			for (Entity entity : batch) {
+				if (Frustum.getFrustum().pointInFrustum(entity.getPosition().x,
+						entity.getPosition().y, entity.getPosition().z)) {
 					prepareInstance(entity);
 					glDrawElements(GL_TRIANGLES, model.getRawModel()
 							.getVertexCount(), GL_UNSIGNED_INT, 0);

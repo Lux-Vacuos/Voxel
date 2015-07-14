@@ -24,6 +24,11 @@
 
 package io.github.guerra24.voxel.client.world.entities;
 
+import static org.lwjgl.opengl.GL11.glMatrixMode;
+import static org.lwjgl.opengl.GL11.glPopAttrib;
+import static org.lwjgl.opengl.GL11.glPushAttrib;
+import static org.lwjgl.opengl.GL11.glRotatef;
+import static org.lwjgl.opengl.GL11.glTranslatef;
 import io.github.guerra24.voxel.client.kernel.DisplayManager;
 import io.github.guerra24.voxel.client.kernel.Kernel;
 import io.github.guerra24.voxel.client.kernel.KernelConstants;
@@ -131,6 +136,17 @@ public class Camera {
 		if (Mouse.isButtonDown(2)) {
 			loadCameraPos();
 		}
+		applyTranslations();
+	}
+
+	public void applyTranslations() {
+		glPushAttrib(4096);
+		glMatrixMode(5888);
+		glRotatef(getPitch(), 1.0F, 0.0F, 0.0F);
+		glRotatef(getYaw(), 0.0F, 1.0F, 0.0F);
+		glRotatef(0, 0.0F, 0.0F, 1.0F);
+		glTranslatef(-getPosition().x, -getPosition().y, -getPosition().z);
+		glPopAttrib();
 	}
 
 	public void setMouse() {
