@@ -39,12 +39,13 @@ public class KernelConstants {
 	public static float GREEN = 0.555f;
 	public static float BLUE = 0.655f;
 	// Game Variables
-	public static int build = 33;
+	public static int build = 34;
 	public static double version = 1.0;
 	public static boolean debug = false;
 	public static boolean isLoading = false;
 	public static boolean postPro = true;
 	// World Settings
+	public static int radius = 2;
 	public static int octaveCount = 7;
 	public static int viewDistance = 8;
 	public static boolean isCustomSeed = false;
@@ -56,10 +57,10 @@ public class KernelConstants {
 	public static final int MAX_LIGHTS = 2;
 	// Water Settings
 	public static float WAVE_SPEED = 0.03f;
-	public static int REFLECTION_WIDTH = 128;
-	public static int REFLECTION_HEIGHT = 128;
-	public static int REFRACTION_WIDTH = 512;
-	public static int REFRACTION_HEIGHT = 512;
+	public static int REFLECTION_WIDTH = 512;
+	public static int REFLECTION_HEIGHT = 512;
+	public static int REFRACTION_WIDTH = 1024;
+	public static int REFRACTION_HEIGHT = 1024;
 	// Skybox Settings
 	public static float SIZE = 500f;
 	public static final float ROTATE_SPEED = 0.3f;

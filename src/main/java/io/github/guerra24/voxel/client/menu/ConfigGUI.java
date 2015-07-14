@@ -49,7 +49,10 @@ import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JSlider;
 import javax.swing.JTextField;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 public class ConfigGUI extends JFrame implements ItemListener {
 
@@ -63,6 +66,9 @@ public class ConfigGUI extends JFrame implements ItemListener {
 	private JCheckBox customSeed = new JCheckBox("Custom Seed");
 	private JCheckBox vsync = new JCheckBox("Vsync");
 
+	private JSlider slider = new JSlider();
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private JComboBox waterQuality = new JComboBox(waterQualityList);
 
 	private JLabel labelWIDTH = new JLabel("Width: ");
@@ -72,6 +78,8 @@ public class ConfigGUI extends JFrame implements ItemListener {
 	private JLabel labelSEED = new JLabel("Seed: ");
 	private JLabel labelviewDistance = new JLabel("World Size: ");
 	private JLabel labelwaterQuality = new JLabel("Water Quality: ");
+	private JLabel labeldrawDistance = new JLabel("View Distance: ");
+	private JLabel labelChunks = new JLabel(" Chunks");
 
 	private JTextField textWIDTH = new JTextField(20);
 	private JTextField textHEIGHT = new JTextField(20);
@@ -81,6 +89,7 @@ public class ConfigGUI extends JFrame implements ItemListener {
 	private JTextField textviewDistance = new JTextField(20);
 
 	private JButton buttonSave = new JButton("Save and Continue");
+	private JButton buttonDefault = new JButton("Reset Settings");
 
 	public ConfigGUI() {
 		super("Game Settings");
@@ -126,6 +135,7 @@ public class ConfigGUI extends JFrame implements ItemListener {
 
 		constraints.gridy = 4;
 		constraints.gridx = 0;
+		textSEED.setEditable(false);
 		add(labelSEED, constraints);
 
 		constraints.gridx = 1;
@@ -162,22 +172,49 @@ public class ConfigGUI extends JFrame implements ItemListener {
 
 			private void updateLabel(String quality) {
 				if (quality.equals("Low")) {
-					KernelConstants.REFLECTION_WIDTH = 128;
+					KernelConstants.REFLECTION_WIDTH = 64;
 					KernelConstants.REFLECTION_HEIGHT = 64;
+					KernelConstants.REFRACTION_WIDTH = 128;
+					KernelConstants.REFRACTION_HEIGHT = 128;
 				} else if (quality.equals("Medium")) {
-					KernelConstants.REFLECTION_WIDTH = 256;
+					KernelConstants.REFLECTION_WIDTH = 128;
 					KernelConstants.REFLECTION_HEIGHT = 128;
+					KernelConstants.REFRACTION_WIDTH = 256;
+					KernelConstants.REFRACTION_HEIGHT = 256;
 				} else if (quality.equals("High")) {
-					KernelConstants.REFLECTION_WIDTH = 512;
+					KernelConstants.REFLECTION_WIDTH = 256;
 					KernelConstants.REFLECTION_HEIGHT = 256;
+					KernelConstants.REFRACTION_WIDTH = 512;
+					KernelConstants.REFRACTION_HEIGHT = 512;
 				} else if (quality.equals("Ultra")) {
-					KernelConstants.REFLECTION_WIDTH = 1024;
+					KernelConstants.REFLECTION_WIDTH = 512;
 					KernelConstants.REFLECTION_HEIGHT = 512;
+					KernelConstants.REFRACTION_WIDTH = 1024;
+					KernelConstants.REFRACTION_HEIGHT = 1024;
 				}
 			}
 		});
 
 		constraints.gridy = 7;
+		constraints.gridx = 1;
+		slider.setMinimum(2);
+		slider.setMaximum(8);
+		slider.addChangeListener(new ChangeListener() {
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				JSlider s = (JSlider) e.getSource();
+				labelChunks.setText(s.getValue() + " Chunks");
+				KernelConstants.radius = s.getValue();
+			}
+		});
+		add(slider, constraints);
+
+		constraints.gridx = 0;
+		add(labeldrawDistance, constraints);
+		constraints.gridx = 2;
+		add(labelChunks, constraints);
+
+		constraints.gridy = 9;
 		constraints.gridx = 0;
 		constraints.gridwidth = 3;
 		constraints.anchor = GridBagConstraints.CENTER;
@@ -197,6 +234,21 @@ public class ConfigGUI extends JFrame implements ItemListener {
 					JOptionPane.showMessageDialog(ConfigGUI.this,
 							"Error saving settings file: " + ex.getMessage());
 				}
+			}
+		});
+
+		constraints.gridy = 9;
+		constraints.gridx = 2;
+		constraints.gridwidth = 2;
+		constraints.anchor = GridBagConstraints.CENTER;
+		add(buttonDefault, constraints);
+
+		buttonDefault.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				setDefault();
+				JOptionPane.showMessageDialog(ConfigGUI.this,
+						"Default Settings loaded");
 			}
 		});
 
@@ -224,17 +276,46 @@ public class ConfigGUI extends JFrame implements ItemListener {
 	public void itemStateChanged(ItemEvent e) {
 		Object source = e.getItemSelectable();
 		if (source == customSeed) {
+			textSEED.setEditable(true);
 			KernelConstants.isCustomSeed = true;
 		} else if (source == vsync) {
 			KernelConstants.VSYNC = true;
 		}
 		if (e.getStateChange() == ItemEvent.DESELECTED) {
 			if (source == customSeed) {
+				textSEED.setEditable(false);
 				KernelConstants.isCustomSeed = false;
 			} else if (source == vsync) {
 				KernelConstants.VSYNC = false;
 			}
 		}
+	}
+
+	private void setDefault() {
+		Properties defaultProps = new Properties();
+		// sets default properties
+		defaultProps.setProperty("WIDTH", "1280");
+		defaultProps.setProperty("HEIGHT", "720");
+		defaultProps.setProperty("FOV", "90");
+		defaultProps.setProperty("FPS", "60");
+		defaultProps.setProperty("VSYNC", "false");
+		defaultProps.setProperty("SEED", "");
+		defaultProps.setProperty("ViewDistance", "8");
+		defaultProps.setProperty("DrawDistance", "2");
+
+		configProps = new Properties(defaultProps);
+
+		if (configProps.getProperty("VSYNC").equals("true")) {
+			vsync.setSelected(true);
+		}
+		slider.setValue(Integer.parseInt(configProps
+				.getProperty("DrawDistance")));
+		textWIDTH.setText(configProps.getProperty("WIDTH"));
+		textHEIGHT.setText(configProps.getProperty("HEIGHT"));
+		textFOV.setText(configProps.getProperty("FOV"));
+		textFPS.setText(configProps.getProperty("FPS"));
+		textSEED.setText(configProps.getProperty("SEED"));
+		textviewDistance.setText(configProps.getProperty("ViewDistance"));
 	}
 
 	private void sendProperties() {
@@ -247,11 +328,14 @@ public class ConfigGUI extends JFrame implements ItemListener {
 		KernelConstants.VSYNC = Boolean.parseBoolean(configProps
 				.getProperty("VSYNC"));
 		KernelConstants.seed = configProps.getProperty("SEED");
+		KernelConstants.viewDistance = Integer.parseInt(configProps
+				.getProperty("ViewDistance"));
+		KernelConstants.radius = Integer.parseInt(configProps
+				.getProperty("DrawDistance"));
 	}
 
 	private void loadProperties() throws IOException {
 		Properties defaultProps = new Properties();
-		// sets default properties
 		defaultProps.setProperty("WIDTH", "1280");
 		defaultProps.setProperty("HEIGHT", "720");
 		defaultProps.setProperty("FOV", "90");
@@ -259,19 +343,22 @@ public class ConfigGUI extends JFrame implements ItemListener {
 		defaultProps.setProperty("VSYNC", "false");
 		defaultProps.setProperty("SEED", "");
 		defaultProps.setProperty("ViewDistance", "8");
+		defaultProps.setProperty("DrawDistance", "2");
 
 		configProps = new Properties(defaultProps);
 
-		// loads properties from file
 		InputStream inputStream = new FileInputStream(configFile);
 		configProps.load(inputStream);
 		if (configProps.getProperty("VSYNC").equals("true")) {
 			vsync.setSelected(true);
 		}
+		slider.setValue(Integer.parseInt(configProps
+				.getProperty("DrawDistance")));
 		inputStream.close();
 	}
 
 	private void saveProperties() throws IOException {
+		Integer s = slider.getValue();
 		configProps.setProperty("WIDTH", textWIDTH.getText());
 		configProps.setProperty("HEIGHT", textHEIGHT.getText());
 		configProps.setProperty("FOV", textFOV.getText());
@@ -280,6 +367,7 @@ public class ConfigGUI extends JFrame implements ItemListener {
 				Boolean.toString(KernelConstants.VSYNC));
 		configProps.setProperty("SEED", textSEED.getText());
 		configProps.setProperty("ViewDistance", textviewDistance.getText());
+		configProps.setProperty("DrawDistance", s.toString());
 		OutputStream outputStream = new FileOutputStream(configFile);
 		configProps.store(outputStream, "Game Settings");
 		outputStream.close();

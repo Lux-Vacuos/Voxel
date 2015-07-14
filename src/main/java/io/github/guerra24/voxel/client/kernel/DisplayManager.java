@@ -50,7 +50,7 @@ public class DisplayManager {
 					KernelConstants.HEIGHT));
 			Display.create(pixelformat);
 			Display.setTitle(KernelConstants.Title);
-			Display.setResizable(false);
+			Display.setResizable(true);
 			Display.setFullscreen(false);
 			Display.setVSyncEnabled(KernelConstants.VSYNC);
 		} catch (LWJGLException e) {

@@ -99,22 +99,22 @@ public class World {
 			Kernel.gameResources.waters.clear();
 			int xPlayChunk = (int) (camera.getPosition().x / 16);
 			int zPlayChunk = (int) (camera.getPosition().z / 16);
-			int radius = 2;
-			for (int zr = -radius; zr <= radius; zr++) {
+			for (int zr = -KernelConstants.radius; zr <= KernelConstants.radius; zr++) {
 				int zz = zPlayChunk + zr;
 				if (zz < 0)
 					zz = 0;
 				if (zz > KernelConstants.viewDistance - 1)
 					zz = KernelConstants.viewDistance - 1;
 
-				for (int xr = -radius; xr <= radius; xr++) {
+				for (int xr = -KernelConstants.radius; xr <= KernelConstants.radius; xr++) {
 					int xx = xPlayChunk + xr;
 					if (xx < 0)
 						xx = 0;
 					if (xx > KernelConstants.viewDistance - 1)
 						xx = KernelConstants.viewDistance - 1;
 
-					if (zr * zr + xr * xr < radius * radius) {
+					if (zr * zr + xr * xr < KernelConstants.radius
+							* KernelConstants.radius) {
 						chunks[xx][zz].sendToRender();
 					}
 				}

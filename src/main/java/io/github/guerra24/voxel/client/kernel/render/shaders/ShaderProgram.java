@@ -157,7 +157,7 @@ public abstract class ShaderProgram {
 			}
 			reader.close();
 		} catch (IOException e) {
-			e.printStackTrace();
+			Logger.warn(Thread.currentThread(), "Fail to load shader");
 		}
 		int shaderID = glCreateShader(type);
 		glShaderSource(shaderID, shaderSource);
