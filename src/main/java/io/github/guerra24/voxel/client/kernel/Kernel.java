@@ -117,9 +117,9 @@ public class Kernel {
 			break;
 		case GAME:
 			gameResources.camera.move();
+			gameResources.player.move();
 			world.update(gameResources.camera);
 			// world.test();
-			// gameResources.player.move();
 			gameResources.glEn();
 			gameResources.waterRenderer.setReflection();
 			gameResources.glDi();

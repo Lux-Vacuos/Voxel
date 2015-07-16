@@ -31,22 +31,11 @@ import static org.lwjgl.opengl.GL11.glRotatef;
 import static org.lwjgl.opengl.GL11.glTranslatef;
 import io.github.guerra24.voxel.client.kernel.DisplayManager;
 import io.github.guerra24.voxel.client.kernel.Kernel;
-import io.github.guerra24.voxel.client.kernel.KernelConstants;
-import io.github.guerra24.voxel.client.kernel.util.Logger;
-
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector3f;
-
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
 public class Camera {
 
@@ -124,17 +113,15 @@ public class Camera {
 		}
 		if (Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
 			if (position.y < 144) {
-				position.y += DisplayManager.getFrameTimeSeconds() * speed
-						* multiplierMovement;
+				//position.y += DisplayManager.getFrameTimeSeconds() * speed
+				//		* multiplierMovement;
+				Kernel.gameResources.player.jump();
 			}
 		} else if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
 			if (position.y > -16) {
-				position.y -= DisplayManager.getFrameTimeSeconds() * speed
-						* multiplierMovement;
+				//position.y -= DisplayManager.getFrameTimeSeconds() * speed
+				//		* multiplierMovement;
 			}
-		}
-		if (Mouse.isButtonDown(2)) {
-			loadCameraPos();
 		}
 		applyTranslations();
 	}
@@ -156,39 +143,6 @@ public class Camera {
 
 	public void unlockMouse() {
 		Mouse.setGrabbed(false);
-	}
-
-	public void saveCameraPos() {
-		String json = Kernel.gameResources.gson
-				.toJson(Kernel.gameResources.camera);
-
-		FileWriter writer;
-		try {
-			writer = new FileWriter(KernelConstants.camPath);
-			writer.write(json);
-			writer.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-			Logger.error(Thread.currentThread(), "Failed to Save Camera pos");
-		}
-	}
-
-	public void loadCameraPos() {
-
-		try {
-			BufferedReader camera = new BufferedReader(new FileReader(
-					KernelConstants.camPath));
-			JsonParser parser = new JsonParser();
-			JsonObject jobject = parser.parse(camera).getAsJsonObject();
-
-			Camera cse = Kernel.gameResources.gson.fromJson(jobject,
-					Camera.class);
-			Kernel.gameResources.camera = cse;
-
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-			Logger.error(Thread.currentThread(), "Failed to load Save Game");
-		}
 	}
 
 	public void invertPitch() {

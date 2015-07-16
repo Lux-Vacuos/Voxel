@@ -35,6 +35,7 @@ import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
 import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import io.github.guerra24.voxel.client.kernel.DisplayManager;
+import io.github.guerra24.voxel.client.kernel.Kernel;
 import io.github.guerra24.voxel.client.kernel.KernelConstants;
 import io.github.guerra24.voxel.client.kernel.render.shaders.SkyboxShader;
 import io.github.guerra24.voxel.client.resources.Loader;
@@ -136,18 +137,23 @@ public class SkyboxRenderer {
 			texture1 = nightTexture;
 			texture2 = nightTexture;
 			blendFactor = (time - 0) / (5000 - 0);
+			Kernel.gameResources.renderer.bright = 0.2f;
 		} else if (time >= 5000 && time < 8000) {
 			texture1 = nightTexture;
 			texture2 = texture;
 			blendFactor = (time - 5000) / (8000 - 5000);
+			Kernel.gameResources.renderer.bright = (time - 5000)
+					/ (8000 - 5000);
 		} else if (time >= 8000 && time < 21000) {
 			texture1 = texture;
 			texture2 = texture;
-			blendFactor = (time - 8000) / (21000 - 8000);
+			blendFactor = 1f;
 		} else {
 			texture1 = texture;
 			texture2 = nightTexture;
 			blendFactor = (time - 21000) / (24000 - 21000);
+			Kernel.gameResources.renderer.bright = (24000 - 21000)
+					/ (time - 21000);
 		}
 
 		glActiveTexture(GL_TEXTURE0);
@@ -156,5 +162,4 @@ public class SkyboxRenderer {
 		glBindTexture(GL_TEXTURE_CUBE_MAP, texture2);
 		shader.loadBlendFactor(blendFactor);
 	}
-
 }

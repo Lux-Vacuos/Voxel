@@ -45,9 +45,11 @@ public class EntityShader extends ShaderProgram {
 	private int location_viewMatrix;
 	private int location_skyColour;
 	private int location_plane;
+	private int location_bright;
 
 	public EntityShader() {
-		super(KernelConstants.VERTEX_FILE_ENTITY, KernelConstants.FRAGMENT_FILE_ENTITY);
+		super(KernelConstants.VERTEX_FILE_ENTITY,
+				KernelConstants.FRAGMENT_FILE_ENTITY);
 	}
 
 	@Override
@@ -66,6 +68,7 @@ public class EntityShader extends ShaderProgram {
 		location_viewMatrix = super.getUniformLocation("viewMatrix");
 		location_skyColour = super.getUniformLocation("skyColour");
 		location_plane = super.getUniformLocation("plane");
+		location_bright = super.getUniformLocation("bright");
 
 		location_lightPosition = new int[KernelConstants.MAX_LIGHTS];
 		location_lightColour = new int[KernelConstants.MAX_LIGHTS];
@@ -78,6 +81,10 @@ public class EntityShader extends ShaderProgram {
 			location_attenuations[i] = super.getUniformLocation("attenuations["
 					+ i + "]");
 		}
+	}
+
+	public void loadBright(float bright) {
+		super.loadFloat(location_bright, bright);
 	}
 
 	public void loadClipPlane(Vector4f plane) {

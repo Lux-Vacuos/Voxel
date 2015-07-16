@@ -29,6 +29,7 @@ import static org.lwjgl.opengl.GL11.glMatrixMode;
 import static org.lwjgl.util.glu.GLU.gluPerspective;
 import io.github.guerra24.voxel.client.kernel.Kernel;
 import io.github.guerra24.voxel.client.kernel.KernelConstants;
+import io.github.guerra24.voxel.client.kernel.util.Frustum;
 import io.github.guerra24.voxel.client.world.chunks.Chunk;
 import io.github.guerra24.voxel.client.world.entities.Camera;
 
@@ -69,6 +70,8 @@ public class World {
 		Kernel.gameResources.camera.setPosition(new Vector3f(
 				KernelConstants.viewDistance / 2 * 16, 64,
 				KernelConstants.viewDistance / 2 * 16));
+		Kernel.gameResources.player.setPosition(Kernel.gameResources.camera
+				.getPosition());
 	}
 
 	private void createWorld() {
@@ -82,14 +85,11 @@ public class World {
 		for (int x = 0; x < KernelConstants.viewDistance; x++) {
 			for (int z = 0; z < KernelConstants.viewDistance; z++) {
 				chunks[x][z].clear();
-				chunks[x][z] = null;
 			}
 		}
 		for (int x = 0; x < KernelConstants.viewDistance; x++) {
 			for (int z = 0; z < KernelConstants.viewDistance; z++) {
-				chunks[x][z] = new Chunk(new Vector3f(x
-						* KernelConstants.CHUNK_SIZE, 0, z
-						* KernelConstants.CHUNK_SIZE), true);
+				chunks[x][z].rebuild();
 			}
 		}
 	}
@@ -125,7 +125,31 @@ public class World {
 
 					if (zr * zr + xr * xr < KernelConstants.radius
 							* KernelConstants.radius) {
-						chunks[xx][zz].sendToRender();
+						if (Frustum.getFrustum().cubeInFrustum(
+								chunks[xx][zz].posX, 0, chunks[xx][zz].posZ,
+								chunks[xx][zz].posX + 16, 32,
+								chunks[xx][zz].posZ + 16)) {
+							chunks[xx][zz].sendToRender1();
+						}
+						if (Frustum.getFrustum().cubeInFrustum(
+								chunks[xx][zz].posX, 32, chunks[xx][zz].posZ,
+								chunks[xx][zz].posX + 16, 64,
+								chunks[xx][zz].posZ + 16)) {
+							chunks[xx][zz].sendToRender2();
+						}
+						if (Frustum.getFrustum().cubeInFrustum(
+								chunks[xx][zz].posX, 64, chunks[xx][zz].posZ,
+								chunks[xx][zz].posX + 16, 96,
+								chunks[xx][zz].posZ + 16)) {
+							chunks[xx][zz].sendToRender3();
+							chunks[xx][zz].sendToRenderWater();
+						}
+						if (Frustum.getFrustum().cubeInFrustum(
+								chunks[xx][zz].posX, 96, chunks[xx][zz].posZ,
+								chunks[xx][zz].posX + 16, 128,
+								chunks[xx][zz].posZ + 16)) {
+							chunks[xx][zz].sendToRender4();
+						}
 					}
 				}
 			}

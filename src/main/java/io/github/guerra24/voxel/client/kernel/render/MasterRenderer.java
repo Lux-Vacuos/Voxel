@@ -60,6 +60,7 @@ public class MasterRenderer {
 
 	public EntityRenderer entityRenderer;
 	public float aspectRatio;
+	public float bright;
 
 	public MasterRenderer(Loader loader) {
 		enableCulling();
@@ -105,6 +106,7 @@ public class MasterRenderer {
 		shader.loadSkyColour(KernelConstants.RED, KernelConstants.GREEN,
 				KernelConstants.BLUE);
 		shader.loadLights(lights);
+		shader.loadBright(bright);
 		shader.loadviewMatrix(camera);
 		if (KernelConstants.advancedOpenGL)
 			entityRenderer.renderAdvancedOpenGL(entities);
@@ -124,7 +126,10 @@ public class MasterRenderer {
 				KernelConstants.BLUE);
 		shader.loadLights(lights);
 		shader.loadviewMatrix(camera);
-		entityRenderer.render(entities);
+		if (KernelConstants.advancedOpenGL)
+			entityRenderer.renderAdvancedOpenGL(entities);
+		else
+			entityRenderer.render(entities);
 		shader.stop();
 		skyboxRenderer.render(camera, KernelConstants.RED,
 				KernelConstants.GREEN, KernelConstants.BLUE);

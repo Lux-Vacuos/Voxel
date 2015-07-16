@@ -33,14 +33,14 @@ public class KernelConstants {
 	public static String Title = "Voxel Game";
 	// Game Settings
 	public static int FOV = 90;
-	public static float NEAR_PLANE = 0.1f;
+	public static float NEAR_PLANE = 0.01f;
 	public static float FAR_PLANE = 1000f;
 	public static float RED = 0.375f;
 	public static float GREEN = 0.555f;
 	public static float BLUE = 0.655f;
 	public static boolean advancedOpenGL = false;
 	// Game Variables
-	public static int build = 35;
+	public static int build = 36;
 	public static double version = 1.0;
 	public static boolean debug = true;
 	public static boolean isLoading = false;
@@ -55,7 +55,7 @@ public class KernelConstants {
 	public static final int CHUNK_SIZE = 16;
 	public static final int CHUNK_HEIGHT = 144;
 	// Graphics Settings
-	public static final int MAX_LIGHTS = 2;
+	public static final int MAX_LIGHTS = 0;
 	// Water Settings
 	public static float WAVE_SPEED = 0.03f;
 	public static int REFLECTION_WIDTH = 512;
@@ -64,7 +64,7 @@ public class KernelConstants {
 	public static int REFRACTION_HEIGHT = 1024;
 	// Skybox Settings
 	public static float SIZE = 500f;
-	public static final float ROTATE_SPEED = 0.3f;
+	public static final float ROTATE_SPEED = 0.2f;
 	// Shader Settings
 	public static final String VERTEX_FILE_ENTITY = "VertexShaderEntity.glsl";
 	public static final String FRAGMENT_FILE_ENTITY = "FragmentShaderEntity.glsl";
