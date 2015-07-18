@@ -68,57 +68,14 @@ public class Frustum {
 		this._modl.flip().limit(16);
 		this._modl.get(this.modl);
 
-		this.clip[0] = (this.modl[0] * this.proj[0] + this.modl[1]
-				* this.proj[4] + this.modl[2] * this.proj[8] + this.modl[3]
-				* this.proj[12]);
-		this.clip[1] = (this.modl[0] * this.proj[1] + this.modl[1]
-				* this.proj[5] + this.modl[2] * this.proj[9] + this.modl[3]
-				* this.proj[13]);
-		this.clip[2] = (this.modl[0] * this.proj[2] + this.modl[1]
-				* this.proj[6] + this.modl[2] * this.proj[10] + this.modl[3]
-				* this.proj[14]);
-		this.clip[3] = (this.modl[0] * this.proj[3] + this.modl[1]
-				* this.proj[7] + this.modl[2] * this.proj[11] + this.modl[3]
-				* this.proj[15]);
-
-		this.clip[4] = (this.modl[4] * this.proj[0] + this.modl[5]
-				* this.proj[4] + this.modl[6] * this.proj[8] + this.modl[7]
-				* this.proj[12]);
-		this.clip[5] = (this.modl[4] * this.proj[1] + this.modl[5]
-				* this.proj[5] + this.modl[6] * this.proj[9] + this.modl[7]
-				* this.proj[13]);
-		this.clip[6] = (this.modl[4] * this.proj[2] + this.modl[5]
-				* this.proj[6] + this.modl[6] * this.proj[10] + this.modl[7]
-				* this.proj[14]);
-		this.clip[7] = (this.modl[4] * this.proj[3] + this.modl[5]
-				* this.proj[7] + this.modl[6] * this.proj[11] + this.modl[7]
-				* this.proj[15]);
-
-		this.clip[8] = (this.modl[8] * this.proj[0] + this.modl[9]
-				* this.proj[4] + this.modl[10] * this.proj[8] + this.modl[11]
-				* this.proj[12]);
-		this.clip[9] = (this.modl[8] * this.proj[1] + this.modl[9]
-				* this.proj[5] + this.modl[10] * this.proj[9] + this.modl[11]
-				* this.proj[13]);
-		this.clip[10] = (this.modl[8] * this.proj[2] + this.modl[9]
-				* this.proj[6] + this.modl[10] * this.proj[10] + this.modl[11]
-				* this.proj[14]);
-		this.clip[11] = (this.modl[8] * this.proj[3] + this.modl[9]
-				* this.proj[7] + this.modl[10] * this.proj[11] + this.modl[11]
-				* this.proj[15]);
-
-		this.clip[12] = (this.modl[12] * this.proj[0] + this.modl[13]
-				* this.proj[4] + this.modl[14] * this.proj[8] + this.modl[15]
-				* this.proj[12]);
-		this.clip[13] = (this.modl[12] * this.proj[1] + this.modl[13]
-				* this.proj[5] + this.modl[14] * this.proj[9] + this.modl[15]
-				* this.proj[13]);
-		this.clip[14] = (this.modl[12] * this.proj[2] + this.modl[13]
-				* this.proj[6] + this.modl[14] * this.proj[10] + this.modl[15]
-				* this.proj[14]);
-		this.clip[15] = (this.modl[12] * this.proj[3] + this.modl[13]
-				* this.proj[7] + this.modl[14] * this.proj[11] + this.modl[15]
-				* this.proj[15]);
+		for (int i = 0; i < 4; i++) {
+			for (int n = 0; n < 4; n++) {
+				this.clip[i * 4 + n] = (this.modl[i * 4] * this.proj[n]
+						+ this.modl[((i + 1) * 4) - 3] * this.proj[4 + n]
+						+ this.modl[((i + 1) * 4) - 2] * this.proj[8 + n] + this.modl[((i + 1) * 4) - 1]
+						* this.proj[12 + n]);
+			}
+		}
 
 		for (int j = 0; j < 6; j++) {
 			int tt = j >> 1;

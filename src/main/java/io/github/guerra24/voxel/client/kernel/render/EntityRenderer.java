@@ -69,19 +69,6 @@ public class EntityRenderer {
 		}
 	}
 
-	public void renderAdvancedOpenGL(Map<TexturedModel, List<Entity>> entities) {
-		for (TexturedModel model : entities.keySet()) {
-			prepareTexturedModel(model);
-			List<Entity> batch = entities.get(model);
-			for (Entity entity : batch) {
-				prepareInstance(entity);
-				glDrawElements(GL_TRIANGLES, model.getRawModel()
-						.getVertexCount(), GL_UNSIGNED_INT, 0);
-			}
-			unbindTexturedModel();
-		}
-	}
-
 	private void prepareTexturedModel(TexturedModel model) {
 		RawModel rawmodel = model.getRawModel();
 		glBindVertexArray(rawmodel.getVaoID());

@@ -108,10 +108,7 @@ public class MasterRenderer {
 		shader.loadLights(lights);
 		shader.loadBright(bright);
 		shader.loadviewMatrix(camera);
-		if (KernelConstants.advancedOpenGL)
-			entityRenderer.renderAdvancedOpenGL(entities);
-		else
-			entityRenderer.render(entities);
+		entityRenderer.render(entities);
 		shader.stop();
 		skyboxRenderer.render(camera, KernelConstants.RED,
 				KernelConstants.GREEN, KernelConstants.BLUE);
@@ -126,10 +123,7 @@ public class MasterRenderer {
 				KernelConstants.BLUE);
 		shader.loadLights(lights);
 		shader.loadviewMatrix(camera);
-		if (KernelConstants.advancedOpenGL)
-			entityRenderer.renderAdvancedOpenGL(entities);
-		else
-			entityRenderer.render(entities);
+		entityRenderer.render(entities);
 		shader.stop();
 		skyboxRenderer.render(camera, KernelConstants.RED,
 				KernelConstants.GREEN, KernelConstants.BLUE);

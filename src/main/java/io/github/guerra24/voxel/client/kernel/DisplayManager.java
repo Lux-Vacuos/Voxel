@@ -40,7 +40,7 @@ public class DisplayManager {
 	private static long lastFrameTime;
 	private static float delta;
 
-	private static PixelFormat pixelformat = new PixelFormat();
+	private static PixelFormat pixelformat = new PixelFormat(8, 8, 8);
 
 	public static void createDisplay() {
 		Logger.log(Thread.currentThread(), "Creating Display");
@@ -48,11 +48,11 @@ public class DisplayManager {
 		try {
 			Display.setDisplayMode(new DisplayMode(KernelConstants.WIDTH,
 					KernelConstants.HEIGHT));
-			Display.create(pixelformat);
 			Display.setTitle(KernelConstants.Title);
 			Display.setResizable(false);
 			Display.setFullscreen(false);
 			Display.setVSyncEnabled(KernelConstants.VSYNC);
+			Display.create(pixelformat);
 		} catch (LWJGLException e) {
 			Logger.error(Thread.currentThread(), "Failed to create Display");
 			e.printStackTrace();

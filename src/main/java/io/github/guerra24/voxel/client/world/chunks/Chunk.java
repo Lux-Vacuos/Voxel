@@ -74,9 +74,11 @@ public class Chunk {
 	}
 
 	public void update() {
-		dispose();
-		rebuild();
-		isToRebuild = false;
+		if (isToRebuild) {
+			prepareRebuild();
+			rebuild();
+			isToRebuild = false;
+		}
 	}
 
 	private void createChunk() {
@@ -951,6 +953,19 @@ public class Chunk {
 	}
 
 	public void clear() {
+		waters.clear();
+		cubes1.clear();
+		cubes2.clear();
+		cubes3.clear();
+		cubes4.clear();
+	}
+	
+	public void prepareRebuild(){
+		Kernel.gameResources.cubes.removeAll(cubes1);
+		Kernel.gameResources.cubes.removeAll(cubes2);
+		Kernel.gameResources.cubes.removeAll(cubes3);
+		Kernel.gameResources.cubes.removeAll(cubes4);
+		Kernel.gameResources.waters.removeAll(waters);
 		waters.clear();
 		cubes1.clear();
 		cubes2.clear();
