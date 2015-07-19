@@ -63,7 +63,6 @@ public class GameResources {
 
 	public Random rand;
 	public Player player;
-	public Light sun;
 	public Light spot;
 	public Loader loader;
 	public Camera camera;
@@ -126,11 +125,9 @@ public class GameResources {
 	public void addRes() {
 		player = new Player(BlocksResources.cubeGlassUP,
 				new Vector3f(0, 80, -4), 0, 0, 0, 1);
-		sun = new Light(new Vector3f(0, 0f, 100f), new Vector3f(1f, 1f, 1f));
-		spot = new Light(new Vector3f(256, 70, 256), new Vector3f(5, 5, 5),
+		spot = new Light(new Vector3f(256, 70, 256), new Vector3f(1, 1, 5),
 				new Vector3f(1, 0.1f, 0.09f));
 		lights.add(spot);
-		// lights.add(sun);
 		allObjects.add(player);
 		plane = new Vector4f(0, -1, 0, 128 + 16);
 	}
