@@ -40,7 +40,7 @@ import org.lwjgl.util.vector.Vector3f;
 
 public class World {
 
-	public int time = 0;
+	public int time = 0, time2 = 0;
 	public Chunk[][] chunks;
 	public float[][] perlinNoiseArray;
 	public byte[][][] blocks;
@@ -75,18 +75,6 @@ public class World {
 	}
 
 	private void createWorld() {
-		for (int x = 0; x < KernelConstants.viewDistance; x++) {
-			for (int z = 0; z < KernelConstants.viewDistance; z++) {
-				chunks[x][z] = new Chunk(new Vector3f(x
-						* KernelConstants.CHUNK_SIZE, 0, z
-						* KernelConstants.CHUNK_SIZE), false);
-			}
-		}
-		for (int x = 0; x < KernelConstants.viewDistance; x++) {
-			for (int z = 0; z < KernelConstants.viewDistance; z++) {
-				chunks[x][z].rebuild();
-			}
-		}
 	}
 
 	public void update(Camera camera) {
@@ -104,7 +92,7 @@ public class World {
 			Kernel.gameResources.waters.clear();
 			int xPlayChunk = (int) (camera.getPosition().x / 16);
 			int zPlayChunk = (int) (camera.getPosition().z / 16);
-			for (int zr = -KernelConstants.radius; zr <= KernelConstants.radius; zr++) {
+			CHUNK_LOADING: for (int zr = -KernelConstants.radius; zr <= KernelConstants.radius; zr++) {
 				int zz = zPlayChunk + zr;
 				if (zz < 0)
 					zz = 0;
@@ -120,43 +108,50 @@ public class World {
 
 					if (zr * zr + xr * xr < KernelConstants.radius
 							* KernelConstants.radius) {
-						chunks[xx][zz].update();
-						if (KernelConstants.advancedOpenGL) {
-							if (Frustum.getFrustum().cubeInFrustum(
-									chunks[xx][zz].posX, 0,
-									chunks[xx][zz].posZ,
-									chunks[xx][zz].posX + 16, 32,
-									chunks[xx][zz].posZ + 16)) {
+						if (chunks[xx][zz] == null) {
+							chunks[xx][zz] = new Chunk(new Vector3f(xx
+									* KernelConstants.CHUNK_SIZE, 0, zz
+									* KernelConstants.CHUNK_SIZE), true);
+							break CHUNK_LOADING;
+						} else {
+							chunks[xx][zz].update();
+							if (KernelConstants.advancedOpenGL) {
+								if (Frustum.getFrustum().cubeInFrustum(
+										chunks[xx][zz].posX, 0,
+										chunks[xx][zz].posZ,
+										chunks[xx][zz].posX + 16, 32,
+										chunks[xx][zz].posZ + 16)) {
+									chunks[xx][zz].sendToRender1();
+								}
+								if (Frustum.getFrustum().cubeInFrustum(
+										chunks[xx][zz].posX, 32,
+										chunks[xx][zz].posZ,
+										chunks[xx][zz].posX + 16, 64,
+										chunks[xx][zz].posZ + 16)) {
+									chunks[xx][zz].sendToRender2();
+								}
+								if (Frustum.getFrustum().cubeInFrustum(
+										chunks[xx][zz].posX, 64,
+										chunks[xx][zz].posZ,
+										chunks[xx][zz].posX + 16, 96,
+										chunks[xx][zz].posZ + 16)) {
+									chunks[xx][zz].sendToRender3();
+									chunks[xx][zz].sendToRenderWater();
+								}
+								if (Frustum.getFrustum().cubeInFrustum(
+										chunks[xx][zz].posX, 96,
+										chunks[xx][zz].posZ,
+										chunks[xx][zz].posX + 16, 128,
+										chunks[xx][zz].posZ + 16)) {
+									chunks[xx][zz].sendToRender4();
+								}
+							} else {
 								chunks[xx][zz].sendToRender1();
-							}
-							if (Frustum.getFrustum().cubeInFrustum(
-									chunks[xx][zz].posX, 32,
-									chunks[xx][zz].posZ,
-									chunks[xx][zz].posX + 16, 64,
-									chunks[xx][zz].posZ + 16)) {
 								chunks[xx][zz].sendToRender2();
-							}
-							if (Frustum.getFrustum().cubeInFrustum(
-									chunks[xx][zz].posX, 64,
-									chunks[xx][zz].posZ,
-									chunks[xx][zz].posX + 16, 96,
-									chunks[xx][zz].posZ + 16)) {
 								chunks[xx][zz].sendToRender3();
+								chunks[xx][zz].sendToRender4();
 								chunks[xx][zz].sendToRenderWater();
 							}
-							if (Frustum.getFrustum().cubeInFrustum(
-									chunks[xx][zz].posX, 96,
-									chunks[xx][zz].posZ,
-									chunks[xx][zz].posX + 16, 128,
-									chunks[xx][zz].posZ + 16)) {
-								chunks[xx][zz].sendToRender4();
-							}
-						} else {
-							chunks[xx][zz].sendToRender1();
-							chunks[xx][zz].sendToRender2();
-							chunks[xx][zz].sendToRender3();
-							chunks[xx][zz].sendToRender4();
-							chunks[xx][zz].sendToRenderWater();
 						}
 					}
 				}

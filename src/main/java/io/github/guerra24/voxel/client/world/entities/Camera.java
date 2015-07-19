@@ -113,14 +113,14 @@ public class Camera {
 		}
 		if (Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
 			if (position.y < 144) {
-				//position.y += DisplayManager.getFrameTimeSeconds() * speed
-				//		* multiplierMovement;
-				Kernel.gameResources.player.jump();
+				 position.y += DisplayManager.getFrameTimeSeconds() * speed
+						* multiplierMovement;
+				//Kernel.gameResources.player.jump();
 			}
 		} else if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
 			if (position.y > -16) {
-				//position.y -= DisplayManager.getFrameTimeSeconds() * speed
-				//		* multiplierMovement;
+				position.y -= DisplayManager.getFrameTimeSeconds() * speed
+						* multiplierMovement;
 			}
 		}
 		applyTranslations();

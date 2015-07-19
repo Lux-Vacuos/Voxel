@@ -76,7 +76,7 @@ public class GameResources {
 	public GameStates gameStates;
 	public MousePicker mouse;
 	public Gson gson;
-	//public SoundSystem SoundSystem;
+	// public SoundSystem SoundSystem;
 	public Vector4f plane;
 	public float distance;
 
@@ -89,16 +89,13 @@ public class GameResources {
 		rand = new Random();
 		camera = new Camera();
 		gson = new Gson();
-/*
-		try {
-			SoundSystemConfig.addLibrary(LibraryLWJGLOpenAL.class);
-			SoundSystemConfig.setCodec("ogg", CodecJOgg.class);
-		} catch (SoundSystemException e) {
-			Logger.error(Thread.currentThread(),
-					"Unable to bind SoundSystem Libs");
-		}
-		SoundSystem = new SoundSystem();
-		*/renderer = new MasterRenderer(loader);
+		/*
+		 * try { SoundSystemConfig.addLibrary(LibraryLWJGLOpenAL.class);
+		 * SoundSystemConfig.setCodec("ogg", CodecJOgg.class); } catch
+		 * (SoundSystemException e) { Logger.error(Thread.currentThread(),
+		 * "Unable to bind SoundSystem Libs"); } SoundSystem = new
+		 * SoundSystem();
+		 */renderer = new MasterRenderer(loader);
 		waterShader = new WaterShader();
 		fbos = new WaterFrameBuffers();
 		fbos2 = new WaterFrameBuffers();
@@ -110,7 +107,7 @@ public class GameResources {
 
 	public void localLoop() {
 		distance = 2 * (camera.getPosition().y - 64.4f);
-		//spot.setPosition(player.getPosition());
+		// spot.setPosition(player.getPosition());
 	}
 
 	public void glEn() {
@@ -122,18 +119,18 @@ public class GameResources {
 	}
 
 	public void music() {
-		//SoundSystem.backgroundMusic("MainMenuMusic", "Water_Lily.ogg", false);
+		// SoundSystem.backgroundMusic("MainMenuMusic", "Water_Lily.ogg",
+		// false);
 	}
 
 	public void addRes() {
-		player = new Player(BlocksResources.cubeGlassUP, new Vector3f(0, 80, -4),
-				0, 0, 0, 1);
-		sun = new Light(new Vector3f(-7000, 0f, -7000),
-				new Vector3f(1f, 1f, 1f));
-		spot = new Light(new Vector3f(20, 70, 20), new Vector3f(1, 1, 1),
-				new Vector3f(1, 0.01f, 0.002f));
-		//lights.add(spot);
-		//lights.add(sun);
+		player = new Player(BlocksResources.cubeGlassUP,
+				new Vector3f(0, 80, -4), 0, 0, 0, 1);
+		sun = new Light(new Vector3f(0, 0f, 100f), new Vector3f(1f, 1f, 1f));
+		spot = new Light(new Vector3f(256, 70, 256), new Vector3f(5, 5, 5),
+				new Vector3f(1, 0.1f, 0.09f));
+		lights.add(spot);
+		// lights.add(sun);
 		allObjects.add(player);
 		plane = new Vector4f(0, -1, 0, 128 + 16);
 	}
@@ -145,6 +142,6 @@ public class GameResources {
 		guiRenderer.cleanUp();
 		renderer.cleanUp();
 		loader.cleanUp();
-		//SoundSystem.cleanup();
+		// SoundSystem.cleanup();
 	}
 }

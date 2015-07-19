@@ -36,7 +36,7 @@ import org.lwjgl.util.vector.Vector3f;
 
 public class Chunk {
 
-	public int posX, posZ;
+	public int posX, posZ, time = 0;
 	public boolean isToRebuild = false;
 	public boolean isChunkloaded = false;
 
@@ -70,14 +70,20 @@ public class Chunk {
 		if (rebuild) {
 			rebuild();
 		}
+		time = Kernel.gameResources.rand.nextInt(10);
 		isChunkloaded = true;
 	}
 
 	public void update() {
+		time++;
 		if (isToRebuild) {
-			prepareRebuild();
+			clear();
 			rebuild();
 			isToRebuild = false;
+		}
+		if (time % 10 == 0) {
+			isToRebuild = true;
+			time = 0;
 		}
 	}
 
@@ -953,19 +959,6 @@ public class Chunk {
 	}
 
 	public void clear() {
-		waters.clear();
-		cubes1.clear();
-		cubes2.clear();
-		cubes3.clear();
-		cubes4.clear();
-	}
-	
-	public void prepareRebuild(){
-		Kernel.gameResources.cubes.removeAll(cubes1);
-		Kernel.gameResources.cubes.removeAll(cubes2);
-		Kernel.gameResources.cubes.removeAll(cubes3);
-		Kernel.gameResources.cubes.removeAll(cubes4);
-		Kernel.gameResources.waters.removeAll(waters);
 		waters.clear();
 		cubes1.clear();
 		cubes2.clear();

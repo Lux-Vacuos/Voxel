@@ -40,7 +40,7 @@ public class KernelConstants {
 	public static float BLUE = 0.655f;
 	public static boolean advancedOpenGL = false;
 	// Game Variables
-	public static int build = 37;
+	public static int build = 38;
 	public static double version = 1.0;
 	public static boolean debug = true;
 	public static boolean isLoading = false;
@@ -55,7 +55,7 @@ public class KernelConstants {
 	public static final int CHUNK_SIZE = 16;
 	public static final int CHUNK_HEIGHT = 144;
 	// Graphics Settings
-	public static final int MAX_LIGHTS = 0;
+	public static final int MAX_LIGHTS = 1;
 	// Water Settings
 	public static float WAVE_SPEED = 0.03f;
 	public static int REFLECTION_WIDTH = 512;

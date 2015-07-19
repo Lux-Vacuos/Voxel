@@ -60,7 +60,6 @@ public class MasterRenderer {
 
 	public EntityRenderer entityRenderer;
 	public float aspectRatio;
-	public float bright;
 
 	public MasterRenderer(Loader loader) {
 		enableCulling();
@@ -106,7 +105,6 @@ public class MasterRenderer {
 		shader.loadSkyColour(KernelConstants.RED, KernelConstants.GREEN,
 				KernelConstants.BLUE);
 		shader.loadLights(lights);
-		shader.loadBright(bright);
 		shader.loadviewMatrix(camera);
 		entityRenderer.render(entities);
 		shader.stop();

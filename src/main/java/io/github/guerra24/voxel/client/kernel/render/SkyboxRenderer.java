@@ -43,6 +43,7 @@ import io.github.guerra24.voxel.client.resources.models.RawModel;
 import io.github.guerra24.voxel.client.world.entities.Camera;
 
 import org.lwjgl.util.vector.Matrix4f;
+import org.lwjgl.util.vector.Vector3f;
 
 public class SkyboxRenderer {
 
@@ -137,23 +138,30 @@ public class SkyboxRenderer {
 			texture1 = nightTexture;
 			texture2 = nightTexture;
 			blendFactor = (time - 0) / (5000 - 0);
-			Kernel.gameResources.renderer.bright = 0.2f;
+			Kernel.gameResources.sun.setPosition(new Vector3f(
+					0f + Kernel.gameResources.player.getPosition().x, -50000f,
+					0f + Kernel.gameResources.player.getPosition().z));
 		} else if (time >= 5000 && time < 8000) {
 			texture1 = nightTexture;
 			texture2 = texture;
 			blendFactor = (time - 5000) / (8000 - 5000);
-			Kernel.gameResources.renderer.bright = (time - 5000)
-					/ (8000 - 5000);
+			Kernel.gameResources.sun.setPosition(new Vector3f(
+					0f + Kernel.gameResources.player.getPosition().x, 0f,
+					50000f + Kernel.gameResources.player.getPosition().z));
 		} else if (time >= 8000 && time < 21000) {
 			texture1 = texture;
 			texture2 = texture;
 			blendFactor = 1f;
+			Kernel.gameResources.sun.setPosition(new Vector3f(
+					0f + Kernel.gameResources.player.getPosition().x, 50000f,
+					0f + Kernel.gameResources.player.getPosition().z));
 		} else {
 			texture1 = texture;
 			texture2 = nightTexture;
 			blendFactor = (time - 21000) / (24000 - 21000);
-			Kernel.gameResources.renderer.bright = (24000 - 21000)
-					/ (time - 21000);
+			Kernel.gameResources.sun.setPosition(new Vector3f(
+					50000f + Kernel.gameResources.player.getPosition().x, 0f,
+					0f + Kernel.gameResources.player.getPosition().z));
 		}
 
 		glActiveTexture(GL_TEXTURE0);
