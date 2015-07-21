@@ -36,10 +36,10 @@ import org.lwjgl.util.vector.Vector4f;
 public class MousePicker {
 
 	private Vector3f currentRay;
-
 	private Matrix4f projectionMatrix;
 	private Matrix4f viewMatrix;
 	private Camera camera;
+	private float distance = 1.2f;
 
 	public MousePicker(Camera cam, Matrix4f projection) {
 		this.camera = cam;
@@ -48,6 +48,9 @@ public class MousePicker {
 	}
 
 	public Vector3f getCurrentRay() {
+		currentRay.x *= distance;
+		currentRay.y *= distance;
+		currentRay.z *= distance;
 		return currentRay;
 	}
 

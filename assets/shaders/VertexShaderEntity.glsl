@@ -52,9 +52,9 @@ void main() {
         vec3 Direction;
     } Light0;
     
-    Light0.Color = vec3(0.0, 0.0,0.0);
-    Light0.AmbientIntensity = vec3(0.0, 0.0, 0.0);
-    Light0.DiffuseIntensity = vec3(0.0, 0.0, 0.0);
+    Light0.Color = vec3(1.0, 1.0,1.0);
+    Light0.AmbientIntensity = vec3(0.5, 0.5, 0.5);
+    Light0.DiffuseIntensity = vec3(0.8, 0.8, 0.8);
     Light0.Direction = vec3(-10, -100, -100);
 
 	vec4 worldPosition = transformationMatrix * vec4(position, 1.0);

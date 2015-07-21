@@ -30,7 +30,7 @@ public class KernelConstants {
 	public static int HEIGHT = 720;
 	public static int FPS = 60;
 	public static boolean VSYNC = false;
-	public static String Title = "Voxel Game";
+	public static String Title = "Voxel";
 	// Game Settings
 	public static int FOV = 90;
 	public static float NEAR_PLANE = 0.01f;
@@ -40,11 +40,11 @@ public class KernelConstants {
 	public static float BLUE = 0.655f;
 	public static boolean advancedOpenGL = false;
 	// Game Variables
-	public static int build = 38;
+	public static int build = 39;
 	public static double version = 1.0;
 	public static boolean debug = true;
 	public static boolean isLoading = false;
-	public static boolean postPro = true;
+	public static boolean postPro = false;
 	// World Settings
 	public static int radius = 2;
 	public static int octaveCount = 7;
@@ -53,7 +53,7 @@ public class KernelConstants {
 	public static String seed = "";
 	// Chunk Settings
 	public static final int CHUNK_SIZE = 16;
-	public static final int CHUNK_HEIGHT = 144;
+	public static final int CHUNK_HEIGHT = 128;
 	// Graphics Settings
 	public static final int MAX_LIGHTS = 1;
 	// Water Settings

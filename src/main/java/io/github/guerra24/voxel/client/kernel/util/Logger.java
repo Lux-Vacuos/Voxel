@@ -29,6 +29,7 @@ import java.util.Date;
 
 public final class Logger {
 	private static boolean printTimeStamps;
+	private static boolean info = false;
 	private static SimpleDateFormat timeStampFormat;
 
 	private Logger() {
@@ -79,5 +80,9 @@ public final class Logger {
 
 	public static void setPrintTimeStamps(boolean printTimeStamps) {
 		Logger.printTimeStamps = printTimeStamps;
+	}
+
+	public static boolean isInfoEnabled() {
+		return info;
 	}
 }

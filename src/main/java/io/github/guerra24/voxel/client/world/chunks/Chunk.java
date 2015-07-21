@@ -99,8 +99,8 @@ public class Chunk {
 		}
 		for (int x = (int) pos.getX(); x < sizeX; x++) {
 			for (int z = (int) pos.getZ(); z < sizeZ; z++) {
-				int rand = (int) (sizeY * Maths
-						.clamp(Kernel.world.perlinNoiseArray[x][z]));
+				int rand = (int) (Maths
+						.clamp(Kernel.world.noise.getNoise(x, z) * 128));
 				for (int y = (int) pos.getY(); y < rand; y++) {
 					if (y == rand - 1 && y > 65)
 						Kernel.world.blocks[x][y][z] = Block.Grass.getId();

@@ -24,15 +24,20 @@
 
 package io.github.guerra24.voxel.client.kernel.util;
 
-import java.util.Random;
-
 import io.github.guerra24.voxel.client.world.entities.Camera;
+
+import java.util.Random;
 
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
 public class Maths {
+
+	private static final Vector3f forward = new Vector3f();
+	private static final Vector3f side = new Vector3f();
+	private static final Vector3f up = new Vector3f();
+	private static final Vector3f eye = new Vector3f();
 
 	public static Matrix4f createTransformationMatrix(Vector2f translation,
 			Vector2f scale) {
@@ -72,8 +77,43 @@ public class Maths {
 		return viewMatrix;
 	}
 
-	public static float clamp(float val) {
-		return Math.max(0, Math.min(128, val));
+	public static Matrix4f lookAt(float eyeX, float eyeY, float eyeZ,
+			float centerX, float centerY, float centerZ, float upX, float upY,
+			float upZ) {
+		forward.set(centerX - eyeX, centerY - eyeY, centerZ - eyeZ);
+		forward.normalise();
+
+		up.set(upX, upY, upZ);
+
+		Vector3f.cross(forward, up, side);
+		side.normalise();
+
+		Vector3f.cross(side, forward, up);
+		up.normalise();
+
+		Matrix4f matrix = new Matrix4f();
+		matrix.m00 = side.x;
+		matrix.m01 = side.y;
+		matrix.m02 = side.z;
+
+		matrix.m10 = up.x;
+		matrix.m11 = up.y;
+		matrix.m12 = up.z;
+
+		matrix.m20 = -forward.x;
+		matrix.m21 = -forward.y;
+		matrix.m22 = -forward.z;
+
+		matrix.transpose(); // <------ My dumb hack
+
+		eye.set(-eyeX, -eyeY, -eyeZ);
+		matrix.translate(eye);
+
+		return matrix;
+	}
+
+	public static float clamp(double d) {
+		return (float) Math.max(0, Math.min(128, d));
 	}
 
 	public static int randInt(int min, int max) {

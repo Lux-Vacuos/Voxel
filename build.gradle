@@ -5,6 +5,43 @@ apply plugin:'application'
 mainClassName = 'io.github.guerra24.voxel.client.kernel.Kernel'
 version = '1.0'
 
+buildscript {
+	repositories {
+		mavenCentral()
+    	maven {
+     	 url "https://plugins.gradle.org/m2/"
+    	}
+  	}
+  	dependencies {
+    	classpath "gradle.plugin.com.stehno:gradle-natives:0.2.3"
+  	}
+}
+
+apply plugin: "com.stehno.natives"
+
+natives {
+    jars = [
+        'lwjgl-platform-2.9.3-natives-windows', 
+        'lwjgl-platform-2.9.3-natives-osx', 
+        'lwjgl-platform-2.9.3-natives-linux'
+    ]
+}
+
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	compile 'net.openhft:affinity:3.0:'
+	compile 'com.google.code.gson:gson:2.3.1'
+	compile 'org.lwjgl.lwjgl:lwjgl:2.9.3'
+	compile 'org.lwjgl.lwjgl:lwjgl_util:2.9.3'
+	compile 'org.slick2d:slick2d-core:1.0.1'
+	compile 'org.l33tlabs.twl:pngdecoder:1.0'
+    compile fileTree(dir: "libs", includes: ["*.jar"])
+}
+
 sourceSets {
     main {
         java.srcDir("${projectDir}/src/main/java/")
@@ -12,19 +49,12 @@ sourceSets {
     }
 }
 
-dependencies {
-    compile fileTree(dir: "libs", includes: ["*.jar"])
-    runtime fileTree(dir: "libs", includes: ["*.jar"])
-
-    runtime fileTree(dir: "${projectDir}/src/main/java/", includes: ["*"])
-}
-
-run {        
-    systemProperty('java.library.path', 'natives')
-}
-
 task wrapper(type: Wrapper) {
     gradleVersion = '2.4'
+}
+
+run {
+    systemProperty 'java.library.path', file( 'build/natives/windows' )
 }
 
 jar {

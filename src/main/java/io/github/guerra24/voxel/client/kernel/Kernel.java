@@ -119,7 +119,7 @@ public class Kernel {
 			gameResources.camera.move();
 			// gameResources.player.move();
 			world.update(gameResources.camera);
-			// world.test();
+			world.test();
 			gameResources.glEn();
 			gameResources.waterRenderer.setReflection();
 			gameResources.glDi();
@@ -129,10 +129,10 @@ public class Kernel {
 			gameResources.renderer.renderSceneNoPrepare(
 					gameResources.allObjects, gameResources.lights,
 					gameResources.camera, gameResources.plane);
-			glLoadIdentity();
 			gameResources.waterRenderer.render(gameResources.waters,
 					gameResources.camera);
 			gameResources.guiRenderer.renderNoPrepare(gameResources.guis);
+			glLoadIdentity();
 			DisplayManager.updateDisplay(KernelConstants.FPS);
 			break;
 		}
@@ -172,7 +172,8 @@ public class Kernel {
 	}
 
 	public enum Platform {
-		WINDOWS_32, WINDOWS_64, MACOSX, LINUX_32, LINUX_64, UNKNOWN
+		WINDOWS_32, WINDOWS_64, MACOSX, LINUX_32, LINUX_64, UNKNOWN;
+
 	}
 
 	public static void main(String[] args) {

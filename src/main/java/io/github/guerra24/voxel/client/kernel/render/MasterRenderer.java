@@ -28,7 +28,6 @@ import static org.lwjgl.opengl.GL11.GL_BACK;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_CULL_FACE;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
 import static org.lwjgl.opengl.GL11.glClear;
 import static org.lwjgl.opengl.GL11.glClearColor;
 import static org.lwjgl.opengl.GL11.glCullFace;
@@ -83,7 +82,6 @@ public class MasterRenderer {
 
 	public void renderScene(List<Entity> entities, List<Light> lights,
 			Camera camera, Vector4f clipPlane) {
-		createProjectionMatrix();
 		for (Entity entity : entities) {
 			processEntity(entity);
 		}
@@ -145,7 +143,6 @@ public class MasterRenderer {
 	}
 
 	public static void prepare() {
-		glEnable(GL_DEPTH_TEST);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glClearColor(KernelConstants.RED, KernelConstants.GREEN,
 				KernelConstants.BLUE, 1);

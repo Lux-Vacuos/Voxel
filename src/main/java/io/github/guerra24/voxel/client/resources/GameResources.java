@@ -125,7 +125,7 @@ public class GameResources {
 	public void addRes() {
 		player = new Player(BlocksResources.cubeGlassUP,
 				new Vector3f(0, 80, -4), 0, 0, 0, 1);
-		spot = new Light(new Vector3f(256, 70, 256), new Vector3f(1, 1, 5),
+		spot = new Light(new Vector3f(256, 70, 256), new Vector3f(5, 5, 5),
 				new Vector3f(1, 0.1f, 0.09f));
 		lights.add(spot);
 		allObjects.add(player);

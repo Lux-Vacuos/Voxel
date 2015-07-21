@@ -24,13 +24,14 @@
 
 package io.github.guerra24.voxel.client.world.entities;
 
+import static org.lwjgl.opengl.GL11.GL_MODELVIEW;
+import static org.lwjgl.opengl.GL11.GL_TRANSFORM_BIT;
 import static org.lwjgl.opengl.GL11.glMatrixMode;
 import static org.lwjgl.opengl.GL11.glPopAttrib;
 import static org.lwjgl.opengl.GL11.glPushAttrib;
 import static org.lwjgl.opengl.GL11.glRotatef;
 import static org.lwjgl.opengl.GL11.glTranslatef;
 import io.github.guerra24.voxel.client.kernel.DisplayManager;
-import io.github.guerra24.voxel.client.kernel.Kernel;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -113,9 +114,9 @@ public class Camera {
 		}
 		if (Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
 			if (position.y < 144) {
-				 position.y += DisplayManager.getFrameTimeSeconds() * speed
+				position.y += DisplayManager.getFrameTimeSeconds() * speed
 						* multiplierMovement;
-				//Kernel.gameResources.player.jump();
+				// Kernel.gameResources.player.jump();
 			}
 		} else if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
 			if (position.y > -16) {
@@ -127,11 +128,11 @@ public class Camera {
 	}
 
 	public void applyTranslations() {
-		glPushAttrib(4096);
-		glMatrixMode(5888);
-		glRotatef(getPitch(), 1.0F, 0.0F, 0.0F);
-		glRotatef(getYaw(), 0.0F, 1.0F, 0.0F);
-		glRotatef(0, 0.0F, 0.0F, 1.0F);
+		glPushAttrib(GL_TRANSFORM_BIT);
+		glMatrixMode(GL_MODELVIEW);
+		glRotatef(getPitch(), 1, 0, 0);
+		glRotatef(getYaw(), 0, 1, 0);
+		glRotatef(0, 0, 0, 1);
 		glTranslatef(-getPosition().x, -getPosition().y, -getPosition().z);
 		glPopAttrib();
 	}

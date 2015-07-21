@@ -35,6 +35,8 @@ import io.github.guerra24.voxel.client.world.entities.Camera;
 
 import java.util.Random;
 
+import net.openhft.affinity.AffinityLock;
+
 import org.lwjgl.input.Mouse;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -42,9 +44,9 @@ public class World {
 
 	public int time = 0, time2 = 0;
 	public Chunk[][] chunks;
-	public float[][] perlinNoiseArray;
 	public byte[][][] blocks;
 	public byte[][][] water;
+	public SimplexNoise noise;
 	public Random seed;
 
 	public void startWorld() {
@@ -59,14 +61,9 @@ public class World {
 		} else {
 			seed = new Random();
 		}
+		noise = new SimplexNoise(100, 0.1, 5000);
 		blocks = new byte[KernelConstants.viewDistance * 16][144][KernelConstants.viewDistance * 16];
 		water = new byte[KernelConstants.viewDistance * 16][144][KernelConstants.viewDistance * 16];
-		perlinNoiseArray = new float[KernelConstants.CHUNK_SIZE
-				* KernelConstants.viewDistance][];
-		perlinNoiseArray = PerlinNoise.GeneratePerlinNoise(
-				KernelConstants.CHUNK_SIZE * KernelConstants.viewDistance,
-				KernelConstants.CHUNK_SIZE * KernelConstants.viewDistance,
-				KernelConstants.octaveCount);
 		Kernel.gameResources.camera.setPosition(new Vector3f(
 				KernelConstants.viewDistance / 2 * 16, 64,
 				KernelConstants.viewDistance / 2 * 16));
@@ -92,65 +89,66 @@ public class World {
 			Kernel.gameResources.waters.clear();
 			int xPlayChunk = (int) (camera.getPosition().x / 16);
 			int zPlayChunk = (int) (camera.getPosition().z / 16);
-			CHUNK_LOADING: for (int zr = -KernelConstants.radius; zr <= KernelConstants.radius; zr++) {
-				int zz = zPlayChunk + zr;
-				if (zz < 0)
-					zz = 0;
-				if (zz > KernelConstants.viewDistance - 1)
-					zz = KernelConstants.viewDistance - 1;
+			try (AffinityLock al = AffinityLock.acquireCore()) {
+				for (int zr = -KernelConstants.radius; zr <= KernelConstants.radius; zr++) {
+					int zz = zPlayChunk + zr;
+					if (zz < 0)
+						zz = 0;
+					if (zz > KernelConstants.viewDistance - 1)
+						zz = KernelConstants.viewDistance - 1;
 
-				for (int xr = -KernelConstants.radius; xr <= KernelConstants.radius; xr++) {
-					int xx = xPlayChunk + xr;
-					if (xx < 0)
-						xx = 0;
-					if (xx > KernelConstants.viewDistance - 1)
-						xx = KernelConstants.viewDistance - 1;
+					for (int xr = -KernelConstants.radius; xr <= KernelConstants.radius; xr++) {
+						int xx = xPlayChunk + xr;
+						if (xx < 0)
+							xx = 0;
+						if (xx > KernelConstants.viewDistance - 1)
+							xx = KernelConstants.viewDistance - 1;
 
-					if (zr * zr + xr * xr < KernelConstants.radius
-							* KernelConstants.radius) {
-						if (chunks[xx][zz] == null) {
-							chunks[xx][zz] = new Chunk(new Vector3f(xx
-									* KernelConstants.CHUNK_SIZE, 0, zz
-									* KernelConstants.CHUNK_SIZE), true);
-							break CHUNK_LOADING;
-						} else {
-							chunks[xx][zz].update();
-							if (KernelConstants.advancedOpenGL) {
-								if (Frustum.getFrustum().cubeInFrustum(
-										chunks[xx][zz].posX, 0,
-										chunks[xx][zz].posZ,
-										chunks[xx][zz].posX + 16, 32,
-										chunks[xx][zz].posZ + 16)) {
+						if (zr * zr + xr * xr < KernelConstants.radius
+								* KernelConstants.radius) {
+							if (chunks[xx][zz] == null) {
+								chunks[xx][zz] = new Chunk(new Vector3f(xx
+										* KernelConstants.CHUNK_SIZE, 0, zz
+										* KernelConstants.CHUNK_SIZE), true);
+							} else {
+								chunks[xx][zz].update();
+								if (KernelConstants.advancedOpenGL) {
+									if (Frustum.getFrustum().cubeInFrustum(
+											chunks[xx][zz].posX, 0,
+											chunks[xx][zz].posZ,
+											chunks[xx][zz].posX + 16, 32,
+											chunks[xx][zz].posZ + 16)) {
+										chunks[xx][zz].sendToRender1();
+									}
+									if (Frustum.getFrustum().cubeInFrustum(
+											chunks[xx][zz].posX, 32,
+											chunks[xx][zz].posZ,
+											chunks[xx][zz].posX + 16, 64,
+											chunks[xx][zz].posZ + 16)) {
+										chunks[xx][zz].sendToRender2();
+									}
+									if (Frustum.getFrustum().cubeInFrustum(
+											chunks[xx][zz].posX, 64,
+											chunks[xx][zz].posZ,
+											chunks[xx][zz].posX + 16, 96,
+											chunks[xx][zz].posZ + 16)) {
+										chunks[xx][zz].sendToRender3();
+										chunks[xx][zz].sendToRenderWater();
+									}
+									if (Frustum.getFrustum().cubeInFrustum(
+											chunks[xx][zz].posX, 96,
+											chunks[xx][zz].posZ,
+											chunks[xx][zz].posX + 16, 128,
+											chunks[xx][zz].posZ + 16)) {
+										chunks[xx][zz].sendToRender4();
+									}
+								} else {
 									chunks[xx][zz].sendToRender1();
-								}
-								if (Frustum.getFrustum().cubeInFrustum(
-										chunks[xx][zz].posX, 32,
-										chunks[xx][zz].posZ,
-										chunks[xx][zz].posX + 16, 64,
-										chunks[xx][zz].posZ + 16)) {
 									chunks[xx][zz].sendToRender2();
-								}
-								if (Frustum.getFrustum().cubeInFrustum(
-										chunks[xx][zz].posX, 64,
-										chunks[xx][zz].posZ,
-										chunks[xx][zz].posX + 16, 96,
-										chunks[xx][zz].posZ + 16)) {
 									chunks[xx][zz].sendToRender3();
+									chunks[xx][zz].sendToRender4();
 									chunks[xx][zz].sendToRenderWater();
 								}
-								if (Frustum.getFrustum().cubeInFrustum(
-										chunks[xx][zz].posX, 96,
-										chunks[xx][zz].posZ,
-										chunks[xx][zz].posX + 16, 128,
-										chunks[xx][zz].posZ + 16)) {
-									chunks[xx][zz].sendToRender4();
-								}
-							} else {
-								chunks[xx][zz].sendToRender1();
-								chunks[xx][zz].sendToRender2();
-								chunks[xx][zz].sendToRender3();
-								chunks[xx][zz].sendToRender4();
-								chunks[xx][zz].sendToRenderWater();
 							}
 						}
 					}
@@ -161,7 +159,7 @@ public class World {
 	}
 
 	public void test() {
-		if (Mouse.isButtonDown(0)) {
+		if (Mouse.isButtonDown(1)) {
 			Kernel.gameResources.mouse.update();
 			if (Kernel.gameResources.mouse.getCurrentRay().x
 					+ Kernel.gameResources.camera.getPosition().x >= 0
