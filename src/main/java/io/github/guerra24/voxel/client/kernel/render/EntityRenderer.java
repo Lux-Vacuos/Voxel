@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015 Guerra24
+ * Copyright (c) 2015 Guerra24 / ThinMatrix
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -81,7 +81,6 @@ public class EntityRenderer {
 	}
 
 	private void unbindTexturedModel() {
-		MasterRenderer.enableCulling();
 		glDisableVertexAttribArray(0);
 		glDisableVertexAttribArray(1);
 		glDisableVertexAttribArray(2);

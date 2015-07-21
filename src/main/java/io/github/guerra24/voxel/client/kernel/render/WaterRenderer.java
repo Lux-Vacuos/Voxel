@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015 Guerra24
+ * Copyright (c) 2015 Guerra24 / ThinMatrix
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -117,19 +117,19 @@ public class WaterRenderer {
 	public void setReflection() {
 		Kernel.gameResources.fbos.bindReflectionFrameBuffer();
 		WaterReflection.reflectionCam();
-		Kernel.gameResources.renderer.renderScene(Kernel.gameResources.cubes,
+		Kernel.gameResources.renderer.renderWorld(Kernel.gameResources.cubes,
 				Kernel.gameResources.lights, Kernel.gameResources.camera,
 				new Vector4f(0, 1, 0, -64.4f));
-		Kernel.gameResources.renderer.renderSceneNoPrepare(
+		Kernel.gameResources.renderer.renderEntity(
 				Kernel.gameResources.allObjects, Kernel.gameResources.lights,
 				Kernel.gameResources.camera, new Vector4f(0, 1, 0, -64.4f));
 		WaterReflection.restoreCam();
 		Kernel.gameResources.fbos.unbindCurrentFrameBuffer();
 		Kernel.gameResources.fbos2.bindRefractionFrameBuffer();
-		Kernel.gameResources.renderer.renderScene(Kernel.gameResources.cubes,
+		Kernel.gameResources.renderer.renderWorld(Kernel.gameResources.cubes,
 				Kernel.gameResources.lights, Kernel.gameResources.camera,
 				new Vector4f(0, -1, 0, 64.4f));
-		Kernel.gameResources.renderer.renderSceneNoPrepare(
+		Kernel.gameResources.renderer.renderEntity(
 				Kernel.gameResources.allObjects, Kernel.gameResources.lights,
 				Kernel.gameResources.camera, new Vector4f(0, -1, 0, 64.4f));
 		Kernel.gameResources.fbos2.unbindCurrentFrameBuffer();

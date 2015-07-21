@@ -32,6 +32,7 @@ import static org.lwjgl.opengl.GL11.glPushAttrib;
 import static org.lwjgl.opengl.GL11.glRotatef;
 import static org.lwjgl.opengl.GL11.glTranslatef;
 import io.github.guerra24.voxel.client.kernel.DisplayManager;
+import io.github.guerra24.voxel.client.kernel.Kernel;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -114,14 +115,14 @@ public class Camera {
 		}
 		if (Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
 			if (position.y < 144) {
-				position.y += DisplayManager.getFrameTimeSeconds() * speed
-						* multiplierMovement;
-				// Kernel.gameResources.player.jump();
+				// position.y += DisplayManager.getFrameTimeSeconds() * speed
+				// * multiplierMovement;
+				Kernel.gameResources.player.jump();
 			}
 		} else if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
 			if (position.y > -16) {
-				position.y -= DisplayManager.getFrameTimeSeconds() * speed
-						* multiplierMovement;
+				// position.y -= DisplayManager.getFrameTimeSeconds() * speed
+				// * multiplierMovement;
 			}
 		}
 		applyTranslations();

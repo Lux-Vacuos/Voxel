@@ -40,7 +40,7 @@ public class DisplayManager {
 	private static long lastFrameTime;
 	private static float delta;
 
-	private static PixelFormat pixelformat = new PixelFormat(8, 8, 8);
+	private static PixelFormat pixelformat = new PixelFormat();
 
 	public static void createDisplay() {
 		Logger.log(Thread.currentThread(), "Creating Display");

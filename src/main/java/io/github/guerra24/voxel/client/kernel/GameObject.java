@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015 Guerra24 / ThinMatrix
+ * Copyright (c) 2015 Guerra24
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,36 +22,14 @@
  * SOFTWARE.
  */
 
-package io.github.guerra24.voxel.client.kernel.render.textures;
+package io.github.guerra24.voxel.client.kernel;
 
-import org.lwjgl.util.vector.Vector2f;
+public interface GameObject {
+	public void init();
+	
+	public void update();
 
-public class GuiTexture {
+	public void render();
 
-	private int texture;
-	private Vector2f position;
-	private Vector2f scale;
-
-	public GuiTexture(int texture, Vector2f position, Vector2f scale) {
-		this.texture = texture;
-		this.position = position;
-		this.scale = scale;
-	}
-
-	public int getTexture() {
-		return texture;
-	}
-
-	public Vector2f getPosition() {
-		return position;
-	}
-
-	public Vector2f getScale() {
-		return scale;
-	}
-
-	public void setPosition(Vector2f position) {
-		this.position = position;
-	}
-
+	public void dispose();
 }

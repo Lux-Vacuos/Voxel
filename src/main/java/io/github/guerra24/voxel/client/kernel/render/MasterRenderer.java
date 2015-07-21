@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015 Guerra24
+ * Copyright (c) 2015 Guerra24 / ThinMatrix
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -31,10 +31,10 @@ import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.glClear;
 import static org.lwjgl.opengl.GL11.glClearColor;
 import static org.lwjgl.opengl.GL11.glCullFace;
-import static org.lwjgl.opengl.GL11.glDisable;
 import static org.lwjgl.opengl.GL11.glEnable;
 import io.github.guerra24.voxel.client.kernel.KernelConstants;
 import io.github.guerra24.voxel.client.kernel.render.shaders.EntityShader;
+import io.github.guerra24.voxel.client.kernel.util.Frustum;
 import io.github.guerra24.voxel.client.resources.Loader;
 import io.github.guerra24.voxel.client.resources.models.TexturedModel;
 import io.github.guerra24.voxel.client.world.entities.Camera;
@@ -72,31 +72,32 @@ public class MasterRenderer {
 		glCullFace(GL_BACK);
 	}
 
-	public static void disableCulling() {
-		glDisable(GL_CULL_FACE);
-	}
-
 	public Matrix4f getProjectionMatrix() {
 		return projectionMatrix;
 	}
 
-	public void renderScene(List<Entity> entities, List<Light> lights,
+	public void renderWorld(List<Entity> entities, List<Light> lights,
 			Camera camera, Vector4f clipPlane) {
 		for (Entity entity : entities) {
-			processEntity(entity);
+			if (Frustum.getFrustum().pointInFrustum(entity.getPosition().x,
+					entity.getPosition().y, entity.getPosition().z))
+				processEntity(entity);
 		}
-		render(lights, camera, clipPlane);
+		renderWorld(lights, camera, clipPlane);
 	}
 
-	public void renderSceneNoPrepare(List<Entity> entities, List<Light> lights,
+	public void renderEntity(List<Entity> entities, List<Light> lights,
 			Camera camera, Vector4f clipPlane) {
 		for (Entity entity : entities) {
-			processEntity(entity);
+			if (Frustum.getFrustum().pointInFrustum(entity.getPosition().x,
+					entity.getPosition().y, entity.getPosition().z))
+				processEntity(entity);
 		}
-		renderNoPrepare(lights, camera, clipPlane);
+		renderEntity(lights, camera, clipPlane);
 	}
 
-	public void render(List<Light> lights, Camera camera, Vector4f clipPlane) {
+	public void renderWorld(List<Light> lights, Camera camera,
+			Vector4f clipPlane) {
 		prepare();
 		shader.start();
 		shader.loadClipPlane(clipPlane);
@@ -111,18 +112,14 @@ public class MasterRenderer {
 		entities.clear();
 	}
 
-	public void renderNoPrepare(List<Light> lights, Camera camera,
+	public void renderEntity(List<Light> lights, Camera camera,
 			Vector4f clipPlane) {
 		shader.start();
 		shader.loadClipPlane(clipPlane);
-		shader.loadSkyColour(KernelConstants.RED, KernelConstants.GREEN,
-				KernelConstants.BLUE);
 		shader.loadLights(lights);
 		shader.loadviewMatrix(camera);
 		entityRenderer.render(entities);
 		shader.stop();
-		skyboxRenderer.render(camera, KernelConstants.RED,
-				KernelConstants.GREEN, KernelConstants.BLUE);
 		entities.clear();
 	}
 

@@ -46,7 +46,6 @@ public class Kernel {
 	public static ConfigGUI config;
 
 	public static void run() {
-
 		thread1 = new Console();
 		thread1.start();
 
@@ -70,11 +69,13 @@ public class Kernel {
 	}
 
 	private static void startGame() {
+
 		init();
 		while (gameResources.gameStates.loop) {
 			loop();
 		}
 		disposeGame();
+
 	}
 
 	private static void init() {
@@ -117,18 +118,18 @@ public class Kernel {
 			break;
 		case GAME:
 			gameResources.camera.move();
-			// gameResources.player.move();
+			gameResources.player.move();
 			world.update(gameResources.camera);
 			world.test();
 			gameResources.glEn();
 			gameResources.waterRenderer.setReflection();
 			gameResources.glDi();
-			gameResources.renderer.renderScene(gameResources.cubes,
+			gameResources.renderer.renderWorld(gameResources.cubes,
 					gameResources.lights, gameResources.camera,
 					gameResources.plane);
-			gameResources.renderer.renderSceneNoPrepare(
-					gameResources.allObjects, gameResources.lights,
-					gameResources.camera, gameResources.plane);
+			gameResources.renderer.renderEntity(gameResources.allObjects,
+					gameResources.lights, gameResources.camera,
+					gameResources.plane);
 			gameResources.waterRenderer.render(gameResources.waters,
 					gameResources.camera);
 			gameResources.guiRenderer.renderNoPrepare(gameResources.guis);

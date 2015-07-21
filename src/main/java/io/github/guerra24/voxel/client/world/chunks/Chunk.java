@@ -24,6 +24,7 @@
 
 package io.github.guerra24.voxel.client.world.chunks;
 
+import io.github.guerra24.voxel.client.kernel.GameObject;
 import io.github.guerra24.voxel.client.kernel.Kernel;
 import io.github.guerra24.voxel.client.kernel.KernelConstants;
 import io.github.guerra24.voxel.client.kernel.util.ArrayList3;
@@ -34,11 +35,15 @@ import io.github.guerra24.voxel.client.world.entities.Entity;
 
 import org.lwjgl.util.vector.Vector3f;
 
-public class Chunk {
+public class Chunk implements GameObject {
 
 	public int posX, posZ, time = 0;
 	public boolean isToRebuild = false;
 	public boolean isChunkloaded = false;
+	public boolean sec1NotClear = false;
+	public boolean sec2NotClear = false;
+	public boolean sec3NotClear = false;
+	public boolean sec4NotClear = false;
 
 	private int sizeX, sizeY, sizeZ;
 	private ArrayList3<Entity> cubes1;
@@ -48,14 +53,15 @@ public class Chunk {
 	private ArrayList3<WaterTile> waters;
 	private Vector3f pos;
 
-	public Chunk(Vector3f pos, boolean rebuild) {
+	public Chunk(Vector3f pos) {
 		this.pos = pos;
 		this.posX = (int) pos.x;
 		this.posZ = (int) pos.z;
-		init(rebuild);
+		init();
 	}
 
-	public void init(boolean rebuild) {
+	@Override
+	public void init() {
 		sizeX = (int) (pos.getX() + KernelConstants.CHUNK_SIZE);
 		sizeY = (int) (pos.getY() + KernelConstants.CHUNK_HEIGHT);
 		sizeZ = (int) (pos.getZ() + KernelConstants.CHUNK_SIZE);
@@ -67,13 +73,12 @@ public class Chunk {
 
 		waters = new ArrayList3<WaterTile>();
 		createChunk();
-		if (rebuild) {
-			rebuild();
-		}
+		rebuild();
 		time = Kernel.gameResources.rand.nextInt(10);
 		isChunkloaded = true;
 	}
 
+	@Override
 	public void update() {
 		time++;
 		if (isToRebuild) {
@@ -85,6 +90,9 @@ public class Chunk {
 			isToRebuild = true;
 			time = 0;
 		}
+	}
+
+	public void render() {
 	}
 
 	private void createChunk() {
@@ -99,8 +107,10 @@ public class Chunk {
 		}
 		for (int x = (int) pos.getX(); x < sizeX; x++) {
 			for (int z = (int) pos.getZ(); z < sizeZ; z++) {
-				int rand = (int) (Maths
-						.clamp(Kernel.world.noise.getNoise(x, z) * 128));
+				// int rand = (int) (Maths
+				// .clamp(Kernel.world.noise.getNoise(x, z) * 128));
+				int rand = (int) (sizeY * Maths
+						.clamp(Kernel.world.perlin[x][z]));
 				for (int y = (int) pos.getY(); y < rand; y++) {
 					if (y == rand - 1 && y > 65)
 						Kernel.world.blocks[x][y][z] = Block.Grass.getId();
@@ -139,723 +149,138 @@ public class Chunk {
 		for (int x = (int) pos.getX(); x < sizeX; x++) {
 			for (int z = (int) pos.getZ(); z < sizeZ; z++) {
 				for (int y = (int) pos.getY(); y < sizeY; y++) {
-					if (Kernel.world.blocks[x][y][z] == Block.Indes.getId()) {
+					if (Block.getBlock(Kernel.world.blocks[x][y][z]) != Block.Air) {
 						if (cullFaceWest(x, y, z)) {
 							if (y < 32)
-								cubes1.add(Block.Indes
+								cubes1.add(Block.getBlock(
+										Kernel.world.blocks[x][y][z])
 										.getFaceWest(new Vector3f(x, y, z)));
+							sec1NotClear = true;
 							if (y > 31 && y < 64)
-								cubes2.add(Block.Indes
+								cubes2.add(Block.getBlock(
+										Kernel.world.blocks[x][y][z])
 										.getFaceWest(new Vector3f(x, y, z)));
-
+							sec2NotClear = true;
 							if (y > 63 && y < 96)
-								cubes3.add(Block.Indes
+								cubes3.add(Block.getBlock(
+										Kernel.world.blocks[x][y][z])
 										.getFaceWest(new Vector3f(x, y, z)));
-
+							sec3NotClear = true;
 							if (y > 95 && y < 129)
-								cubes4.add(Block.Indes
+								cubes4.add(Block.getBlock(
+										Kernel.world.blocks[x][y][z])
 										.getFaceWest(new Vector3f(x, y, z)));
-
+							sec4NotClear = true;
 						}
 						if (cullFaceEast(x, y, z)) {
 							if (y < 32)
-								cubes1.add(Block.Indes
+								cubes1.add(Block.getBlock(
+										Kernel.world.blocks[x][y][z])
 										.getFaceEast(new Vector3f(x, y, z)));
+							sec1NotClear = true;
 							if (y > 31 && y < 64)
-								cubes2.add(Block.Indes
+								cubes2.add(Block.getBlock(
+										Kernel.world.blocks[x][y][z])
 										.getFaceEast(new Vector3f(x, y, z)));
+							sec2NotClear = true;
 							if (y > 63 && y < 96)
-								cubes3.add(Block.Indes
+								cubes3.add(Block.getBlock(
+										Kernel.world.blocks[x][y][z])
 										.getFaceEast(new Vector3f(x, y, z)));
+							sec3NotClear = true;
 							if (y > 95 && y < 129)
-								cubes4.add(Block.Indes
+								cubes4.add(Block.getBlock(
+										Kernel.world.blocks[x][y][z])
 										.getFaceEast(new Vector3f(x, y, z)));
+							sec4NotClear = true;
 						}
 						if (cullFaceDown(x, y, z)) {
 							if (y < 32)
-								cubes1.add(Block.Indes
+								cubes1.add(Block.getBlock(
+										Kernel.world.blocks[x][y][z])
 										.getFaceDown(new Vector3f(x, y, z)));
+							sec1NotClear = true;
 							if (y > 31 && y < 64)
-								cubes2.add(Block.Indes
+								cubes2.add(Block.getBlock(
+										Kernel.world.blocks[x][y][z])
 										.getFaceDown(new Vector3f(x, y, z)));
+							sec2NotClear = true;
 							if (y > 63 && y < 96)
-								cubes3.add(Block.Indes
+								cubes3.add(Block.getBlock(
+										Kernel.world.blocks[x][y][z])
 										.getFaceDown(new Vector3f(x, y, z)));
+							sec3NotClear = true;
 							if (y > 95 && y < 129)
-								cubes4.add(Block.Indes
+								cubes4.add(Block.getBlock(
+										Kernel.world.blocks[x][y][z])
 										.getFaceDown(new Vector3f(x, y, z)));
+							sec4NotClear = true;
 						}
 						if (cullFaceUp(x, y, z)) {
 							if (y < 32)
-								cubes1.add(Block.Indes.getFaceUp(new Vector3f(
-										x, y, z)));
+								cubes1.add(Block.getBlock(
+										Kernel.world.blocks[x][y][z])
+										.getFaceUp(new Vector3f(x, y, z)));
+							sec1NotClear = true;
 							if (y > 31 && y < 64)
-								cubes2.add(Block.Indes.getFaceUp(new Vector3f(
-										x, y, z)));
+								cubes2.add(Block.getBlock(
+										Kernel.world.blocks[x][y][z])
+										.getFaceUp(new Vector3f(x, y, z)));
+							sec2NotClear = true;
 							if (y > 63 && y < 96)
-								cubes3.add(Block.Indes.getFaceUp(new Vector3f(
-										x, y, z)));
+								cubes3.add(Block.getBlock(
+										Kernel.world.blocks[x][y][z])
+										.getFaceUp(new Vector3f(x, y, z)));
+							sec3NotClear = true;
 							if (y > 95 && y < 129)
-								cubes4.add(Block.Indes.getFaceUp(new Vector3f(
-										x, y, z)));
+								cubes4.add(Block.getBlock(
+										Kernel.world.blocks[x][y][z])
+										.getFaceUp(new Vector3f(x, y, z)));
+							sec4NotClear = true;
 						}
 						if (cullFaceNorth(x, y, z)) {
 							if (y < 32)
-								cubes1.add(Block.Indes
+								cubes1.add(Block.getBlock(
+										Kernel.world.blocks[x][y][z])
 										.getFaceNorth(new Vector3f(x, y, z)));
+							sec1NotClear = true;
 							if (y > 31 && y < 64)
-								cubes2.add(Block.Indes
+								cubes2.add(Block.getBlock(
+										Kernel.world.blocks[x][y][z])
 										.getFaceNorth(new Vector3f(x, y, z)));
+							sec2NotClear = true;
 							if (y > 63 && y < 96)
-								cubes3.add(Block.Indes
+								cubes3.add(Block.getBlock(
+										Kernel.world.blocks[x][y][z])
 										.getFaceNorth(new Vector3f(x, y, z)));
+							sec3NotClear = true;
 							if (y > 95 && y < 129)
-								cubes4.add(Block.Indes
+								cubes4.add(Block.getBlock(
+										Kernel.world.blocks[x][y][z])
 										.getFaceNorth(new Vector3f(x, y, z)));
+							sec4NotClear = true;
 						}
 						if (cullFaceSouth(x, y, z)) {
 							if (y < 32)
-								cubes1.add(Block.Indes
+								cubes1.add(Block.getBlock(
+										Kernel.world.blocks[x][y][z])
 										.getFaceSouth(new Vector3f(x, y, z)));
+							sec1NotClear = true;
 							if (y > 31 && y < 64)
-								cubes2.add(Block.Indes
+								cubes2.add(Block.getBlock(
+										Kernel.world.blocks[x][y][z])
 										.getFaceSouth(new Vector3f(x, y, z)));
+							sec2NotClear = true;
 							if (y > 63 && y < 96)
-								cubes3.add(Block.Indes
+								cubes3.add(Block.getBlock(
+										Kernel.world.blocks[x][y][z])
 										.getFaceSouth(new Vector3f(x, y, z)));
+							sec3NotClear = true;
 							if (y > 95 && y < 129)
-								cubes4.add(Block.Indes
+								cubes4.add(Block.getBlock(
+										Kernel.world.blocks[x][y][z])
 										.getFaceSouth(new Vector3f(x, y, z)));
-						}
-					} else if (Kernel.world.blocks[x][y][z] == Block.Stone
-							.getId()) {
-						if (cullFaceWest(x, y, z)) {
-							if (y < 32) {
-								cubes1.add(Block.Stone
-										.getFaceWest(new Vector3f(x, y, z)));
-							}
-							if (y > 31 && y < 64) {
-								cubes2.add(Block.Stone
-										.getFaceWest(new Vector3f(x, y, z)));
-							}
-							if (y > 63 && y < 96) {
-								cubes3.add(Block.Stone
-										.getFaceWest(new Vector3f(x, y, z)));
-							}
-							if (y > 95 && y < 129) {
-								cubes4.add(Block.Stone
-										.getFaceWest(new Vector3f(x, y, z)));
-							}
-						}
-						if (cullFaceEast(x, y, z)) {
-							if (y < 32)
-								cubes1.add(Block.Stone
-										.getFaceEast(new Vector3f(x, y, z)));
-							if (y > 31 && y < 64)
-								cubes2.add(Block.Stone
-										.getFaceEast(new Vector3f(x, y, z)));
-							if (y > 63 && y < 96)
-								cubes3.add(Block.Stone
-										.getFaceEast(new Vector3f(x, y, z)));
-							if (y > 95 && y < 129)
-								cubes4.add(Block.Stone
-										.getFaceEast(new Vector3f(x, y, z)));
-						}
-						if (cullFaceDown(x, y, z)) {
-							if (y < 32)
-								cubes1.add(Block.Stone
-										.getFaceDown(new Vector3f(x, y, z)));
-							if (y > 31 && y < 64)
-								cubes2.add(Block.Stone
-										.getFaceDown(new Vector3f(x, y, z)));
-							if (y > 63 && y < 96)
-								cubes3.add(Block.Stone
-										.getFaceDown(new Vector3f(x, y, z)));
-							if (y > 95 && y < 129)
-								cubes4.add(Block.Stone
-										.getFaceDown(new Vector3f(x, y, z)));
-						}
-						if (cullFaceUp(x, y, z)) {
-							if (y < 32)
-								cubes1.add(Block.Stone.getFaceUp(new Vector3f(
-										x, y, z)));
-							if (y > 31 && y < 64)
-								cubes2.add(Block.Stone.getFaceUp(new Vector3f(
-										x, y, z)));
-							if (y > 63 && y < 96)
-								cubes3.add(Block.Stone.getFaceUp(new Vector3f(
-										x, y, z)));
-							if (y > 95 && y < 129)
-								cubes4.add(Block.Stone.getFaceUp(new Vector3f(
-										x, y, z)));
-						}
-						if (cullFaceNorth(x, y, z)) {
-							if (y < 32)
-								cubes1.add(Block.Stone
-										.getFaceNorth(new Vector3f(x, y, z)));
-							if (y > 31 && y < 64)
-								cubes2.add(Block.Stone
-										.getFaceNorth(new Vector3f(x, y, z)));
-							if (y > 63 && y < 96)
-								cubes3.add(Block.Stone
-										.getFaceNorth(new Vector3f(x, y, z)));
-							if (y > 95 && y < 129)
-								cubes4.add(Block.Stone
-										.getFaceNorth(new Vector3f(x, y, z)));
-						}
-						if (cullFaceSouth(x, y, z)) {
-							if (y < 32)
-								cubes1.add(Block.Stone
-										.getFaceSouth(new Vector3f(x, y, z)));
-							if (y > 31 && y < 64)
-								cubes2.add(Block.Stone
-										.getFaceSouth(new Vector3f(x, y, z)));
-							if (y > 63 && y < 96)
-								cubes3.add(Block.Stone
-										.getFaceSouth(new Vector3f(x, y, z)));
-							if (y > 95 && y < 129)
-								cubes4.add(Block.Stone
-										.getFaceSouth(new Vector3f(x, y, z)));
-						}
-					} else if (Kernel.world.blocks[x][y][z] == Block.Grass
-							.getId()) {
-						if (cullFaceWest(x, y, z)) {
-							if (y < 32) {
-								cubes1.add(Block.Grass
-										.getFaceWest(new Vector3f(x, y, z)));
-							}
-							if (y > 31 && y < 64) {
-								cubes2.add(Block.Grass
-										.getFaceWest(new Vector3f(x, y, z)));
-							}
-							if (y > 63 && y < 96) {
-								cubes3.add(Block.Grass
-										.getFaceWest(new Vector3f(x, y, z)));
-							}
-							if (y > 95 && y < 129) {
-								cubes4.add(Block.Grass
-										.getFaceWest(new Vector3f(x, y, z)));
-							}
-						}
-						if (cullFaceEast(x, y, z)) {
-							if (y < 32)
-								cubes1.add(Block.Grass
-										.getFaceEast(new Vector3f(x, y, z)));
-							if (y > 31 && y < 64)
-								cubes2.add(Block.Grass
-										.getFaceEast(new Vector3f(x, y, z)));
-							if (y > 63 && y < 96)
-								cubes3.add(Block.Grass
-										.getFaceEast(new Vector3f(x, y, z)));
-							if (y > 95 && y < 129)
-								cubes4.add(Block.Grass
-										.getFaceEast(new Vector3f(x, y, z)));
-						}
-						if (cullFaceDown(x, y, z)) {
-							if (y < 32)
-								cubes1.add(Block.Grass
-										.getFaceDown(new Vector3f(x, y, z)));
-							if (y > 31 && y < 64)
-								cubes2.add(Block.Grass
-										.getFaceDown(new Vector3f(x, y, z)));
-							if (y > 63 && y < 96)
-								cubes3.add(Block.Grass
-										.getFaceDown(new Vector3f(x, y, z)));
-							if (y > 95 && y < 129)
-								cubes4.add(Block.Grass
-										.getFaceDown(new Vector3f(x, y, z)));
-						}
-						if (cullFaceUp(x, y, z)) {
-							if (y < 32)
-								cubes1.add(Block.Grass.getFaceUp(new Vector3f(
-										x, y, z)));
-							if (y > 31 && y < 64)
-								cubes2.add(Block.Grass.getFaceUp(new Vector3f(
-										x, y, z)));
-							if (y > 63 && y < 96)
-								cubes3.add(Block.Grass.getFaceUp(new Vector3f(
-										x, y, z)));
-							if (y > 95 && y < 129)
-								cubes4.add(Block.Grass.getFaceUp(new Vector3f(
-										x, y, z)));
-						}
-						if (cullFaceNorth(x, y, z)) {
-							if (y < 32)
-								cubes1.add(Block.Grass
-										.getFaceNorth(new Vector3f(x, y, z)));
-							if (y > 31 && y < 64)
-								cubes2.add(Block.Grass
-										.getFaceNorth(new Vector3f(x, y, z)));
-							if (y > 63 && y < 96)
-								cubes3.add(Block.Grass
-										.getFaceNorth(new Vector3f(x, y, z)));
-							if (y > 95 && y < 129)
-								cubes4.add(Block.Grass
-										.getFaceNorth(new Vector3f(x, y, z)));
-						}
-						if (cullFaceSouth(x, y, z)) {
-							if (y < 32)
-								cubes1.add(Block.Grass
-										.getFaceSouth(new Vector3f(x, y, z)));
-							if (y > 31 && y < 64)
-								cubes2.add(Block.Grass
-										.getFaceSouth(new Vector3f(x, y, z)));
-							if (y > 63 && y < 96)
-								cubes3.add(Block.Grass
-										.getFaceSouth(new Vector3f(x, y, z)));
-							if (y > 95 && y < 129)
-								cubes4.add(Block.Grass
-										.getFaceSouth(new Vector3f(x, y, z)));
-						}
-					} else if (Kernel.world.blocks[x][y][z] == Block.Sand
-							.getId()) {
-						if (cullFaceWest(x, y, z)) {
-							if (y < 32) {
-								cubes1.add(Block.Sand.getFaceWest(new Vector3f(
-										x, y, z)));
-							}
-							if (y > 31 && y < 64) {
-								cubes2.add(Block.Sand.getFaceWest(new Vector3f(
-										x, y, z)));
-							}
-							if (y > 63 && y < 96) {
-								cubes3.add(Block.Sand.getFaceWest(new Vector3f(
-										x, y, z)));
-							}
-							if (y > 95 && y < 129) {
-								cubes4.add(Block.Sand.getFaceWest(new Vector3f(
-										x, y, z)));
-							}
-						}
-						if (cullFaceEast(x, y, z)) {
-							if (y < 32)
-								cubes1.add(Block.Sand.getFaceEast(new Vector3f(
-										x, y, z)));
-							if (y > 31 && y < 64)
-								cubes2.add(Block.Sand.getFaceEast(new Vector3f(
-										x, y, z)));
-							if (y > 63 && y < 96)
-								cubes3.add(Block.Sand.getFaceEast(new Vector3f(
-										x, y, z)));
-							if (y > 95 && y < 129)
-								cubes4.add(Block.Sand.getFaceEast(new Vector3f(
-										x, y, z)));
-						}
-						if (cullFaceDown(x, y, z)) {
-							if (y < 32)
-								cubes1.add(Block.Sand.getFaceDown(new Vector3f(
-										x, y, z)));
-							if (y > 31 && y < 64)
-								cubes2.add(Block.Sand.getFaceDown(new Vector3f(
-										x, y, z)));
-							if (y > 63 && y < 96)
-								cubes3.add(Block.Sand.getFaceDown(new Vector3f(
-										x, y, z)));
-							if (y > 95 && y < 129)
-								cubes4.add(Block.Sand.getFaceDown(new Vector3f(
-										x, y, z)));
-						}
-						if (cullFaceUp(x, y, z)) {
-							if (y < 32)
-								cubes1.add(Block.Sand.getFaceUp(new Vector3f(x,
-										y, z)));
-							if (y > 31 && y < 64)
-								cubes2.add(Block.Sand.getFaceUp(new Vector3f(x,
-										y, z)));
-							if (y > 63 && y < 96)
-								cubes3.add(Block.Sand.getFaceUp(new Vector3f(x,
-										y, z)));
-							if (y > 95 && y < 129)
-								cubes4.add(Block.Sand.getFaceUp(new Vector3f(x,
-										y, z)));
-						}
-						if (cullFaceNorth(x, y, z)) {
-							if (y < 32)
-								cubes1.add(Block.Sand
-										.getFaceNorth(new Vector3f(x, y, z)));
-							if (y > 31 && y < 64)
-								cubes2.add(Block.Sand
-										.getFaceNorth(new Vector3f(x, y, z)));
-							if (y > 63 && y < 96)
-								cubes3.add(Block.Sand
-										.getFaceNorth(new Vector3f(x, y, z)));
-							if (y > 95 && y < 129)
-								cubes4.add(Block.Sand
-										.getFaceNorth(new Vector3f(x, y, z)));
-						}
-						if (cullFaceSouth(x, y, z)) {
-							if (y < 32)
-								cubes1.add(Block.Sand
-										.getFaceSouth(new Vector3f(x, y, z)));
-							if (y > 31 && y < 64)
-								cubes2.add(Block.Sand
-										.getFaceSouth(new Vector3f(x, y, z)));
-							if (y > 63 && y < 96)
-								cubes3.add(Block.Sand
-										.getFaceSouth(new Vector3f(x, y, z)));
-							if (y > 95 && y < 129)
-								cubes4.add(Block.Sand
-										.getFaceSouth(new Vector3f(x, y, z)));
-						}
-					} else if (Kernel.world.blocks[x][y][z] == Block.Dirt
-							.getId()) {
-						if (cullFaceWest(x, y, z)) {
-							if (y < 32) {
-								cubes1.add(Block.Dirt.getFaceWest(new Vector3f(
-										x, y, z)));
-							}
-							if (y > 31 && y < 64) {
-								cubes2.add(Block.Dirt.getFaceWest(new Vector3f(
-										x, y, z)));
-							}
-							if (y > 63 && y < 96) {
-								cubes3.add(Block.Dirt.getFaceWest(new Vector3f(
-										x, y, z)));
-							}
-							if (y > 95 && y < 129) {
-								cubes4.add(Block.Dirt.getFaceWest(new Vector3f(
-										x, y, z)));
-							}
-						}
-						if (cullFaceEast(x, y, z)) {
-							if (y < 32)
-								cubes1.add(Block.Dirt.getFaceEast(new Vector3f(
-										x, y, z)));
-							if (y > 31 && y < 64)
-								cubes2.add(Block.Dirt.getFaceEast(new Vector3f(
-										x, y, z)));
-							if (y > 63 && y < 96)
-								cubes3.add(Block.Dirt.getFaceEast(new Vector3f(
-										x, y, z)));
-							if (y > 95 && y < 129)
-								cubes4.add(Block.Dirt.getFaceEast(new Vector3f(
-										x, y, z)));
-						}
-						if (cullFaceDown(x, y, z)) {
-							if (y < 32)
-								cubes1.add(Block.Dirt.getFaceDown(new Vector3f(
-										x, y, z)));
-							if (y > 31 && y < 64)
-								cubes2.add(Block.Dirt.getFaceDown(new Vector3f(
-										x, y, z)));
-							if (y > 63 && y < 96)
-								cubes3.add(Block.Dirt.getFaceDown(new Vector3f(
-										x, y, z)));
-							if (y > 95 && y < 129)
-								cubes4.add(Block.Dirt.getFaceDown(new Vector3f(
-										x, y, z)));
-						}
-						if (cullFaceUp(x, y, z)) {
-							if (y < 32)
-								cubes1.add(Block.Dirt.getFaceUp(new Vector3f(x,
-										y, z)));
-							if (y > 31 && y < 64)
-								cubes2.add(Block.Dirt.getFaceUp(new Vector3f(x,
-										y, z)));
-							if (y > 63 && y < 96)
-								cubes3.add(Block.Dirt.getFaceUp(new Vector3f(x,
-										y, z)));
-							if (y > 95 && y < 129)
-								cubes4.add(Block.Dirt.getFaceUp(new Vector3f(x,
-										y, z)));
-						}
-						if (cullFaceNorth(x, y, z)) {
-							if (y < 32)
-								cubes1.add(Block.Dirt
-										.getFaceNorth(new Vector3f(x, y, z)));
-							if (y > 31 && y < 64)
-								cubes2.add(Block.Dirt
-										.getFaceNorth(new Vector3f(x, y, z)));
-							if (y > 63 && y < 96)
-								cubes3.add(Block.Dirt
-										.getFaceNorth(new Vector3f(x, y, z)));
-							if (y > 95 && y < 129)
-								cubes4.add(Block.Dirt
-										.getFaceNorth(new Vector3f(x, y, z)));
-						}
-						if (cullFaceSouth(x, y, z)) {
-							if (y < 32)
-								cubes1.add(Block.Dirt
-										.getFaceSouth(new Vector3f(x, y, z)));
-							if (y > 31 && y < 64)
-								cubes2.add(Block.Dirt
-										.getFaceSouth(new Vector3f(x, y, z)));
-							if (y > 63 && y < 96)
-								cubes3.add(Block.Dirt
-										.getFaceSouth(new Vector3f(x, y, z)));
-							if (y > 95 && y < 129)
-								cubes4.add(Block.Dirt
-										.getFaceSouth(new Vector3f(x, y, z)));
-						}
-					} else if (Kernel.world.blocks[x][y][z] == Block.DiamondOre
-							.getId()) {
-						if (cullFaceWest(x, y, z)) {
-							if (y < 32) {
-								cubes1.add(Block.DiamondOre
-										.getFaceWest(new Vector3f(x, y, z)));
-							}
-							if (y > 31 && y < 64) {
-								cubes2.add(Block.DiamondOre
-										.getFaceWest(new Vector3f(x, y, z)));
-							}
-							if (y > 63 && y < 96) {
-								cubes3.add(Block.DiamondOre
-										.getFaceWest(new Vector3f(x, y, z)));
-							}
-							if (y > 95 && y < 129) {
-								cubes4.add(Block.DiamondOre
-										.getFaceWest(new Vector3f(x, y, z)));
-							}
-						}
-						if (cullFaceEast(x, y, z)) {
-							if (y < 32)
-								cubes1.add(Block.DiamondOre
-										.getFaceEast(new Vector3f(x, y, z)));
-							if (y > 31 && y < 64)
-								cubes2.add(Block.DiamondOre
-										.getFaceEast(new Vector3f(x, y, z)));
-							if (y > 63 && y < 96)
-								cubes3.add(Block.DiamondOre
-										.getFaceEast(new Vector3f(x, y, z)));
-							if (y > 95 && y < 129)
-								cubes4.add(Block.DiamondOre
-										.getFaceEast(new Vector3f(x, y, z)));
-						}
-						if (cullFaceDown(x, y, z)) {
-							if (y < 32)
-								cubes1.add(Block.DiamondOre
-										.getFaceDown(new Vector3f(x, y, z)));
-							if (y > 31 && y < 64)
-								cubes2.add(Block.DiamondOre
-										.getFaceDown(new Vector3f(x, y, z)));
-							if (y > 63 && y < 96)
-								cubes3.add(Block.DiamondOre
-										.getFaceDown(new Vector3f(x, y, z)));
-							if (y > 95 && y < 129)
-								cubes4.add(Block.DiamondOre
-										.getFaceDown(new Vector3f(x, y, z)));
-						}
-						if (cullFaceUp(x, y, z)) {
-							if (y < 32)
-								cubes1.add(Block.DiamondOre
-										.getFaceUp(new Vector3f(x, y, z)));
-							if (y > 31 && y < 64)
-								cubes2.add(Block.DiamondOre
-										.getFaceUp(new Vector3f(x, y, z)));
-							if (y > 63 && y < 96)
-								cubes3.add(Block.DiamondOre
-										.getFaceUp(new Vector3f(x, y, z)));
-							if (y > 95 && y < 129)
-								cubes4.add(Block.DiamondOre
-										.getFaceUp(new Vector3f(x, y, z)));
-						}
-						if (cullFaceNorth(x, y, z)) {
-							if (y < 32)
-								cubes1.add(Block.DiamondOre
-										.getFaceNorth(new Vector3f(x, y, z)));
-							if (y > 31 && y < 64)
-								cubes2.add(Block.DiamondOre
-										.getFaceNorth(new Vector3f(x, y, z)));
-							if (y > 63 && y < 96)
-								cubes3.add(Block.DiamondOre
-										.getFaceNorth(new Vector3f(x, y, z)));
-							if (y > 95 && y < 129)
-								cubes4.add(Block.DiamondOre
-										.getFaceNorth(new Vector3f(x, y, z)));
-						}
-						if (cullFaceSouth(x, y, z)) {
-							if (y < 32)
-								cubes1.add(Block.DiamondOre
-										.getFaceSouth(new Vector3f(x, y, z)));
-							if (y > 31 && y < 64)
-								cubes2.add(Block.DiamondOre
-										.getFaceSouth(new Vector3f(x, y, z)));
-							if (y > 63 && y < 96)
-								cubes3.add(Block.DiamondOre
-										.getFaceSouth(new Vector3f(x, y, z)));
-							if (y > 95 && y < 129)
-								cubes4.add(Block.DiamondOre
-										.getFaceSouth(new Vector3f(x, y, z)));
-						}
-					} else if (Kernel.world.blocks[x][y][z] == Block.GoldOre
-							.getId()) {
-						if (cullFaceWest(x, y, z)) {
-							if (y < 32) {
-								cubes1.add(Block.GoldOre
-										.getFaceWest(new Vector3f(x, y, z)));
-							}
-							if (y > 31 && y < 64) {
-								cubes2.add(Block.GoldOre
-										.getFaceWest(new Vector3f(x, y, z)));
-							}
-							if (y > 63 && y < 96) {
-								cubes3.add(Block.GoldOre
-										.getFaceWest(new Vector3f(x, y, z)));
-							}
-							if (y > 95 && y < 129) {
-								cubes4.add(Block.GoldOre
-										.getFaceWest(new Vector3f(x, y, z)));
-							}
-						}
-						if (cullFaceEast(x, y, z)) {
-							if (y < 32)
-								cubes1.add(Block.GoldOre
-										.getFaceEast(new Vector3f(x, y, z)));
-							if (y > 31 && y < 64)
-								cubes2.add(Block.GoldOre
-										.getFaceEast(new Vector3f(x, y, z)));
-							if (y > 63 && y < 96)
-								cubes3.add(Block.GoldOre
-										.getFaceEast(new Vector3f(x, y, z)));
-							if (y > 95 && y < 129)
-								cubes4.add(Block.GoldOre
-										.getFaceEast(new Vector3f(x, y, z)));
-						}
-						if (cullFaceDown(x, y, z)) {
-							if (y < 32)
-								cubes1.add(Block.GoldOre
-										.getFaceDown(new Vector3f(x, y, z)));
-							if (y > 31 && y < 64)
-								cubes2.add(Block.GoldOre
-										.getFaceDown(new Vector3f(x, y, z)));
-							if (y > 63 && y < 96)
-								cubes3.add(Block.GoldOre
-										.getFaceDown(new Vector3f(x, y, z)));
-							if (y > 95 && y < 129)
-								cubes4.add(Block.GoldOre
-										.getFaceDown(new Vector3f(x, y, z)));
-						}
-						if (cullFaceUp(x, y, z)) {
-							if (y < 32)
-								cubes1.add(Block.GoldOre
-										.getFaceUp(new Vector3f(x, y, z)));
-							if (y > 31 && y < 64)
-								cubes2.add(Block.GoldOre
-										.getFaceUp(new Vector3f(x, y, z)));
-							if (y > 63 && y < 96)
-								cubes3.add(Block.GoldOre
-										.getFaceUp(new Vector3f(x, y, z)));
-							if (y > 95 && y < 129)
-								cubes4.add(Block.GoldOre
-										.getFaceUp(new Vector3f(x, y, z)));
-						}
-						if (cullFaceNorth(x, y, z)) {
-							if (y < 32)
-								cubes1.add(Block.GoldOre
-										.getFaceNorth(new Vector3f(x, y, z)));
-							if (y > 31 && y < 64)
-								cubes2.add(Block.GoldOre
-										.getFaceNorth(new Vector3f(x, y, z)));
-							if (y > 63 && y < 96)
-								cubes3.add(Block.GoldOre
-										.getFaceNorth(new Vector3f(x, y, z)));
-							if (y > 95 && y < 129)
-								cubes4.add(Block.GoldOre
-										.getFaceNorth(new Vector3f(x, y, z)));
-						}
-						if (cullFaceSouth(x, y, z)) {
-							if (y < 32)
-								cubes1.add(Block.GoldOre
-										.getFaceSouth(new Vector3f(x, y, z)));
-							if (y > 31 && y < 64)
-								cubes2.add(Block.GoldOre
-										.getFaceSouth(new Vector3f(x, y, z)));
-							if (y > 63 && y < 96)
-								cubes3.add(Block.GoldOre
-										.getFaceSouth(new Vector3f(x, y, z)));
-							if (y > 95 && y < 129)
-								cubes4.add(Block.GoldOre
-										.getFaceSouth(new Vector3f(x, y, z)));
-						}
-					} else if (Kernel.world.blocks[x][y][z] == Block.Glass
-							.getId()) {
-						if (cullFaceWest(x, y, z)) {
-							if (y < 32) {
-								cubes1.add(Block.Glass
-										.getFaceWest(new Vector3f(x, y, z)));
-							}
-							if (y > 31 && y < 64) {
-								cubes2.add(Block.Glass
-										.getFaceWest(new Vector3f(x, y, z)));
-							}
-							if (y > 63 && y < 96) {
-								cubes3.add(Block.Glass
-										.getFaceWest(new Vector3f(x, y, z)));
-							}
-							if (y > 95 && y < 129) {
-								cubes4.add(Block.Glass
-										.getFaceWest(new Vector3f(x, y, z)));
-							}
-						}
-						if (cullFaceEast(x, y, z)) {
-							if (y < 32)
-								cubes1.add(Block.Glass
-										.getFaceEast(new Vector3f(x, y, z)));
-							if (y > 31 && y < 64)
-								cubes2.add(Block.Glass
-										.getFaceEast(new Vector3f(x, y, z)));
-							if (y > 63 && y < 96)
-								cubes3.add(Block.Glass
-										.getFaceEast(new Vector3f(x, y, z)));
-							if (y > 95 && y < 129)
-								cubes4.add(Block.Glass
-										.getFaceEast(new Vector3f(x, y, z)));
-						}
-						if (cullFaceDown(x, y, z)) {
-							if (y < 32)
-								cubes1.add(Block.Glass
-										.getFaceDown(new Vector3f(x, y, z)));
-							if (y > 31 && y < 64)
-								cubes2.add(Block.Glass
-										.getFaceDown(new Vector3f(x, y, z)));
-							if (y > 63 && y < 96)
-								cubes3.add(Block.Glass
-										.getFaceDown(new Vector3f(x, y, z)));
-							if (y > 95 && y < 129)
-								cubes4.add(Block.Glass
-										.getFaceDown(new Vector3f(x, y, z)));
-						}
-						if (cullFaceUp(x, y, z)) {
-							if (y < 32)
-								cubes1.add(Block.Glass.getFaceUp(new Vector3f(
-										x, y, z)));
-							if (y > 31 && y < 64)
-								cubes2.add(Block.Glass.getFaceUp(new Vector3f(
-										x, y, z)));
-							if (y > 63 && y < 96)
-								cubes3.add(Block.Glass.getFaceUp(new Vector3f(
-										x, y, z)));
-							if (y > 95 && y < 129)
-								cubes4.add(Block.Glass.getFaceUp(new Vector3f(
-										x, y, z)));
-						}
-						if (cullFaceNorth(x, y, z)) {
-							if (y < 32)
-								cubes1.add(Block.Glass
-										.getFaceNorth(new Vector3f(x, y, z)));
-							if (y > 31 && y < 64)
-								cubes2.add(Block.Glass
-										.getFaceNorth(new Vector3f(x, y, z)));
-							if (y > 63 && y < 96)
-								cubes3.add(Block.Glass
-										.getFaceNorth(new Vector3f(x, y, z)));
-							if (y > 95 && y < 129)
-								cubes4.add(Block.Glass
-										.getFaceNorth(new Vector3f(x, y, z)));
-						}
-						if (cullFaceSouth(x, y, z)) {
-							if (y < 32)
-								cubes1.add(Block.Glass
-										.getFaceSouth(new Vector3f(x, y, z)));
-							if (y > 31 && y < 64)
-								cubes2.add(Block.Glass
-										.getFaceSouth(new Vector3f(x, y, z)));
-							if (y > 63 && y < 96)
-								cubes3.add(Block.Glass
-										.getFaceSouth(new Vector3f(x, y, z)));
-							if (y > 95 && y < 129)
-								cubes4.add(Block.Glass
-										.getFaceSouth(new Vector3f(x, y, z)));
+							sec4NotClear = true;
 						}
 					} else if (Kernel.world.water[x][y][z] == Block.Water
 							.getId()) {

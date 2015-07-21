@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015 Guerra24
+ * Copyright (c) 2015 Guerra24 / Lharing
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -39,8 +39,11 @@ public class Frustum {
 	float[] modl = new float[16];
 	float[] clip = new float[16];
 
-	public static Frustum getFrustum() {
+	public static void updateFrustum() {
 		frustum.calculateFrustum();
+	}
+
+	public static Frustum getFrustum() {
 		return frustum;
 	}
 
