@@ -2,7 +2,7 @@ apply plugin:'java'
 apply plugin:'eclipse'
 apply plugin:'application'
 
-mainClassName = 'io.github.guerra24.voxel.client.kernel.Kernel'
+mainClassName = 'io.github.guerra24.voxel.client.kernel.Launcher'
 version = '1.0'
 
 buildscript {

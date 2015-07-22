@@ -24,7 +24,7 @@
 
 package io.github.guerra24.voxel.client.kernel;
 
-import io.github.guerra24.voxel.client.menu.Button;
+import io.github.guerra24.voxel.client.kernel.menu.Button;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;

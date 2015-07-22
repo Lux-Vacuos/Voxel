@@ -25,66 +25,48 @@
 package io.github.guerra24.voxel.client.kernel;
 
 import static org.lwjgl.opengl.GL11.glLoadIdentity;
-import io.github.guerra24.voxel.client.kernel.console.Console;
+import io.github.guerra24.voxel.client.kernel.resources.GameResources;
+import io.github.guerra24.voxel.client.kernel.resources.GuiResources;
 import io.github.guerra24.voxel.client.kernel.util.Logger;
 import io.github.guerra24.voxel.client.kernel.util.SystemInfo;
-import io.github.guerra24.voxel.client.menu.ConfigGUI;
-import io.github.guerra24.voxel.client.resources.GameResources;
-import io.github.guerra24.voxel.client.resources.GuiResources;
-import io.github.guerra24.voxel.client.world.World;
-import io.github.guerra24.voxel.client.world.block.BlocksResources;
+import io.github.guerra24.voxel.client.kernel.world.World;
+import io.github.guerra24.voxel.client.kernel.world.block.BlocksResources;
 
-import java.io.File;
+public class Kernel implements IKernel {
 
-public class Kernel {
-
-	private static Platform platform;
 	public static GameResources gameResources;
 	public static GuiResources guiResources;
 	public static World world;
-	public static Console thread1;
-	public static ConfigGUI config;
+	public static float renderCalls = 0;
+	public static float renderCallsPerFrame = 0;
+	public static float totalRenderCalls = 0;
 
-	public static void run() {
-		thread1 = new Console();
-		thread1.start();
-
-		while (!thread1.isReady) {
-			try {
-				Thread.sleep(100);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
-		Thread.currentThread().setName("Voxel Main");
-		config = new ConfigGUI();
-		while (!config.ready) {
-			try {
-				Thread.sleep(100);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
-		startGame();
+	public Kernel() {
+		mainLoop();
 	}
 
-	private static void startGame() {
-
+	@Override
+	public void mainLoop() {
 		init();
 		while (gameResources.gameStates.loop) {
-			loop();
+			update();
+			render();
+			totalRenderCalls += renderCalls;
+	        renderCallsPerFrame = renderCalls;
+			renderCalls = 0;
 		}
-		disposeGame();
-
+		dispose();
 	}
 
-	private static void init() {
+	@Override
+	public void init() {
 
 		Logger.log(Thread.currentThread(), "Loading");
 		Logger.log(Thread.currentThread(), "Voxel Game Version: "
 				+ KernelConstants.version);
 		Logger.log(Thread.currentThread(), "Build: " + KernelConstants.build);
-		Logger.log(Thread.currentThread(), "Running on: " + getPlatform());
+		Logger.log(Thread.currentThread(),
+				"Running on: " + Launcher.getPlatform());
 		DisplayManager.createDisplay();
 		SystemInfo.printSystemInfo();
 		if (KernelConstants.advancedOpenGL)
@@ -106,7 +88,8 @@ public class Kernel {
 
 	}
 
-	private static void loop() {
+	@Override
+	public void render() {
 		switch (gameResources.gameStates.state) {
 		case MAINMENU:
 			gameResources.guiRenderer.render(gameResources.guis2);
@@ -117,10 +100,6 @@ public class Kernel {
 			DisplayManager.updateDisplay(30);
 			break;
 		case GAME:
-			gameResources.camera.move();
-			gameResources.player.move();
-			world.update(gameResources.camera);
-			world.test();
 			gameResources.glEn();
 			gameResources.waterRenderer.setReflection();
 			gameResources.glDi();
@@ -137,51 +116,33 @@ public class Kernel {
 			DisplayManager.updateDisplay(KernelConstants.FPS);
 			break;
 		}
+	}
+
+	@Override
+	public void update() {
+		switch (gameResources.gameStates.state) {
+		case MAINMENU:
+			break;
+		case IN_PAUSE:
+			break;
+		case GAME:
+			gameResources.camera.move();
+			gameResources.player.move();
+			world.update(gameResources.camera);
+			world.test();
+			break;
+		}
 		gameResources.gameStates.switchStates();
 	}
 
-	private static void disposeGame() {
+	@Override
+	public void dispose() {
 		gameResources.guiRenderer.render(gameResources.guis5);
 		DisplayManager.updateDisplay(30);
 		Logger.log(Thread.currentThread(), "Closing Game");
 		gameResources.cleanUp();
-		thread1.close();
+		Launcher.thread1.close();
 		DisplayManager.closeDisplay();
 	}
 
-	public static Platform getPlatform() {
-		if (platform == null) {
-			final String OS = System.getProperty("os.name").toLowerCase();
-			final String ARCH = System.getProperty("os.arch").toLowerCase();
-
-			boolean isWindows = OS.contains("windows");
-			boolean isLinux = OS.contains("linux");
-			boolean isMac = OS.contains("mac");
-			boolean is64Bit = ARCH.equals("amd64") || ARCH.equals("x86_64");
-
-			platform = Platform.UNKNOWN;
-
-			if (isWindows)
-				platform = is64Bit ? Platform.WINDOWS_64 : Platform.WINDOWS_32;
-			if (isLinux)
-				platform = is64Bit ? Platform.LINUX_64 : Platform.LINUX_32;
-			if (isMac)
-				platform = Platform.MACOSX;
-		}
-
-		return platform;
-	}
-
-	public enum Platform {
-		WINDOWS_32, WINDOWS_64, MACOSX, LINUX_32, LINUX_64, UNKNOWN;
-
-	}
-
-	public static void main(String[] args) {
-		if (KernelConstants.postPro) {
-			System.setProperty("org.lwjgl.librarypath",
-					new File("natives").getAbsolutePath());
-		}
-		run();
-	}
 }

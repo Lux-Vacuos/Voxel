@@ -25,7 +25,7 @@
 package io.github.guerra24.voxel.client.kernel.util;
 
 import io.github.guerra24.voxel.client.kernel.KernelConstants;
-import io.github.guerra24.voxel.client.world.entities.Camera;
+import io.github.guerra24.voxel.client.kernel.world.entities.Camera;
 
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Matrix4f;
