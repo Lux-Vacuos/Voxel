@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package io.github.guerra24.voxel.client.kernel;
+package io.github.guerra24.voxel.client.kernel.core;
 
 import io.github.guerra24.voxel.client.kernel.menu.Button;
 

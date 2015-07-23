@@ -24,7 +24,7 @@
 
 package io.github.guerra24.voxel.client.kernel.graphics;
 
-import io.github.guerra24.voxel.client.kernel.Kernel;
+import io.github.guerra24.voxel.client.kernel.core.Kernel;
 
 public class WaterReflection {
 	public static void reflectionCam() {

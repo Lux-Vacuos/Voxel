@@ -61,17 +61,16 @@ public final class Logger {
 	public static void warn(Thread thread, Object... messages) {
 		for (Object message : messages)
 			System.err.println((printTimeStamps ? "[WARNING " + getTimeStamp()
-					+ "] " + "[" + thread.getName() + "]" : "")
+					+ "] " + "[" + thread.getName() + "] " : "")
 					+ message);
 	}
 
 	public static void error(Thread thread, Object... messages) {
 		for (Object message : messages)
-			System.err
-					.println((printTimeStamps ? "[FATAL ERROR "
-							+ getTimeStamp() + "] " + "[" + thread.getName()
-							+ "]" : "")
-							+ message);
+			System.err.println((printTimeStamps ? "[FATAL ERROR "
+					+ getTimeStamp() + "] " + "[" + thread.getName() + "] "
+					: "")
+					+ message);
 	}
 
 	public static void setTimeStampFormat(SimpleDateFormat timeStampFormat) {

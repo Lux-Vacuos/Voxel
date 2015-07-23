@@ -24,9 +24,8 @@
 
 package io.github.guerra24.voxel.client.kernel.world.chunks;
 
-import io.github.guerra24.voxel.client.kernel.GameObject;
-import io.github.guerra24.voxel.client.kernel.Kernel;
-import io.github.guerra24.voxel.client.kernel.KernelConstants;
+import io.github.guerra24.voxel.client.kernel.core.Kernel;
+import io.github.guerra24.voxel.client.kernel.core.KernelConstants;
 import io.github.guerra24.voxel.client.kernel.resources.models.WaterTile;
 import io.github.guerra24.voxel.client.kernel.util.ArrayList3;
 import io.github.guerra24.voxel.client.kernel.util.Maths;
@@ -35,7 +34,7 @@ import io.github.guerra24.voxel.client.kernel.world.entities.Entity;
 
 import org.lwjgl.util.vector.Vector3f;
 
-public class Chunk implements GameObject {
+public class Chunk implements IChunk {
 
 	public int posX, posZ, time = 0;
 	public boolean isToRebuild = false;
@@ -73,7 +72,7 @@ public class Chunk implements GameObject {
 
 		waters = new ArrayList3<WaterTile>();
 		createChunk();
-		rebuild();
+		rebuildChunk();
 		time = Kernel.gameResources.rand.nextInt(10);
 		isChunkloaded = true;
 	}
@@ -83,7 +82,7 @@ public class Chunk implements GameObject {
 		time++;
 		if (isToRebuild) {
 			clear();
-			rebuild();
+			rebuildChunk();
 			isToRebuild = false;
 		}
 		if (time % 10 == 0) {
@@ -92,10 +91,8 @@ public class Chunk implements GameObject {
 		}
 	}
 
-	public void render() {
-	}
-
-	private void createChunk() {
+	@Override
+	public void createChunk() {
 		for (int x = (int) pos.getX(); x < sizeX; x++) {
 			for (int z = (int) pos.getZ(); z < sizeZ; z++) {
 				for (int y = (int) pos.getY(); y < sizeY; y++) {
@@ -144,8 +141,8 @@ public class Chunk implements GameObject {
 	 * (cullFaceDown(x, y, z)) { } if (cullFaceUp(x, y, z)) { } if
 	 * (cullFaceNorth(x, y, z)) { } if (cullFaceSouth(x, y, z)) { }
 	 */
-
-	public void rebuild() {
+	@Override
+	public void rebuildChunk() {
 		for (int x = (int) pos.getX(); x < sizeX; x++) {
 			for (int z = (int) pos.getZ(); z < sizeZ; z++) {
 				for (int y = (int) pos.getY(); y < sizeY; y++) {
@@ -363,22 +360,27 @@ public class Chunk implements GameObject {
 		}
 	}
 
+	@Override
 	public void sendToRender1() {
 		Kernel.gameResources.cubes.addAll(cubes1);
 	}
 
+	@Override
 	public void sendToRender2() {
 		Kernel.gameResources.cubes.addAll(cubes2);
 	}
 
+	@Override
 	public void sendToRender3() {
 		Kernel.gameResources.cubes.addAll(cubes3);
 	}
 
+	@Override
 	public void sendToRender4() {
 		Kernel.gameResources.cubes.addAll(cubes4);
 	}
 
+	@Override
 	public void sendToRenderWater() {
 		Kernel.gameResources.waters.addAll(waters);
 	}
@@ -391,6 +393,7 @@ public class Chunk implements GameObject {
 		cubes4.clear();
 	}
 
+	@Override
 	public void dispose() {
 		Kernel.gameResources.cubes.removeAll(cubes1);
 		Kernel.gameResources.cubes.removeAll(cubes2);

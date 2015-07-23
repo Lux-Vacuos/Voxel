@@ -56,7 +56,6 @@ public abstract class Block {
 
 	public abstract byte getId();
 
-
 	public abstract Entity getFaceUp(Vector3f pos);
 	public abstract Entity getFaceDown(Vector3f pos);
 	public abstract Entity getFaceEast(Vector3f pos);

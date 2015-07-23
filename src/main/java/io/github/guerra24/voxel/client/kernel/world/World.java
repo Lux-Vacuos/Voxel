@@ -24,12 +24,9 @@
 
 package io.github.guerra24.voxel.client.kernel.world;
 
-import static org.lwjgl.opengl.GL11.glLoadIdentity;
-import static org.lwjgl.opengl.GL11.glMatrixMode;
-import static org.lwjgl.util.glu.GLU.gluPerspective;
-import io.github.guerra24.voxel.client.kernel.Kernel;
-import io.github.guerra24.voxel.client.kernel.KernelConstants;
-import io.github.guerra24.voxel.client.kernel.util.Frustum;
+import io.github.guerra24.voxel.client.kernel.core.Kernel;
+import io.github.guerra24.voxel.client.kernel.core.KernelConstants;
+import io.github.guerra24.voxel.client.kernel.graphics.Frustum;
 import io.github.guerra24.voxel.client.kernel.world.chunks.Chunk;
 import io.github.guerra24.voxel.client.kernel.world.entities.Camera;
 
@@ -69,7 +66,7 @@ public class World {
 		blocks = new byte[KernelConstants.viewDistance * 16][144][KernelConstants.viewDistance * 16];
 		water = new byte[KernelConstants.viewDistance * 16][144][KernelConstants.viewDistance * 16];
 		Kernel.gameResources.camera.setPosition(new Vector3f(
-				KernelConstants.viewDistance / 2 * 16, 64,
+				KernelConstants.viewDistance / 2 * 16, 128,
 				KernelConstants.viewDistance / 2 * 16));
 		Kernel.gameResources.player.setPosition(Kernel.gameResources.camera
 				.getPosition());
@@ -81,20 +78,12 @@ public class World {
 	public void update(Camera camera) {
 		time++;
 
-		glMatrixMode(5889);
-		glLoadIdentity();
-		gluPerspective(KernelConstants.FOV,
-				Kernel.gameResources.renderer.aspectRatio,
-				KernelConstants.NEAR_PLANE, KernelConstants.FAR_PLANE);
-		glMatrixMode(5888);
-		Frustum.updateFrustum();
-
 		if (time % 10 == 0) {
 			Kernel.gameResources.cubes.clear();
 			Kernel.gameResources.waters.clear();
 			int xPlayChunk = (int) (camera.getPosition().x / 16);
 			int zPlayChunk = (int) (camera.getPosition().z / 16);
-			CHUNK_LOAD: for (int zr = -KernelConstants.radius; zr <= KernelConstants.radius; zr++) {
+			CHUNK_LOADING: for (int zr = -KernelConstants.radius; zr <= KernelConstants.radius; zr++) {
 				int zz = zPlayChunk + zr;
 				if (zz < 0)
 					zz = 0;
@@ -114,7 +103,7 @@ public class World {
 							chunks[xx][zz] = new Chunk(new Vector3f(xx
 									* KernelConstants.CHUNK_SIZE, 0, zz
 									* KernelConstants.CHUNK_SIZE));
-							break CHUNK_LOAD;
+							break CHUNK_LOADING;
 						} else {
 							chunks[xx][zz].update();
 							if (KernelConstants.advancedOpenGL) {

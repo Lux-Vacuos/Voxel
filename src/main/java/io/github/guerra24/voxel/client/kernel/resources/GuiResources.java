@@ -24,7 +24,7 @@
 
 package io.github.guerra24.voxel.client.kernel.resources;
 
-import io.github.guerra24.voxel.client.kernel.Kernel;
+import io.github.guerra24.voxel.client.kernel.core.Kernel;
 import io.github.guerra24.voxel.client.kernel.resources.models.GuiTexture;
 
 import org.lwjgl.util.vector.Vector2f;

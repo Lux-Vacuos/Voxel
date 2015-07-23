@@ -24,7 +24,7 @@
 
 package io.github.guerra24.voxel.client.kernel.graphics.shaders;
 
-import io.github.guerra24.voxel.client.kernel.KernelConstants;
+import io.github.guerra24.voxel.client.kernel.core.KernelConstants;
 import io.github.guerra24.voxel.client.kernel.util.Maths;
 import io.github.guerra24.voxel.client.kernel.world.entities.Camera;
 

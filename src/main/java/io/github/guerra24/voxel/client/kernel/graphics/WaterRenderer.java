@@ -34,16 +34,15 @@ import static org.lwjgl.opengl.GL13.glActiveTexture;
 import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
 import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
-import io.github.guerra24.voxel.client.kernel.DisplayManager;
-import io.github.guerra24.voxel.client.kernel.Kernel;
-import io.github.guerra24.voxel.client.kernel.KernelConstants;
+import io.github.guerra24.voxel.client.kernel.core.Kernel;
+import io.github.guerra24.voxel.client.kernel.core.KernelConstants;
+import io.github.guerra24.voxel.client.kernel.graphics.opengl.DisplayManager;
 import io.github.guerra24.voxel.client.kernel.graphics.opengl.GL3Context;
 import io.github.guerra24.voxel.client.kernel.graphics.shaders.WaterShader;
 import io.github.guerra24.voxel.client.kernel.resources.Loader;
 import io.github.guerra24.voxel.client.kernel.resources.models.RawModel;
 import io.github.guerra24.voxel.client.kernel.resources.models.WaterTile;
 import io.github.guerra24.voxel.client.kernel.util.Maths;
-import io.github.guerra24.voxel.client.kernel.util.WaterFrameBuffers;
 import io.github.guerra24.voxel.client.kernel.world.entities.Camera;
 
 import java.util.List;
@@ -82,11 +81,15 @@ public class WaterRenderer {
 	public void render(List<WaterTile> water, Camera camera) {
 		prepareRender(camera);
 		for (WaterTile tile : water) {
-			Matrix4f modelMatrix = Maths.createTransformationMatrix(
-					new Vector3f(tile.getX(), tile.getHeight(), tile.getZ()),
-					0, 0, 0, WaterTile.TILE_SIZE);
-			shader.loadModelMatrix(modelMatrix);
-			GL3Context.glDrawArrays(GL_TRIANGLES, 0, quad.getVertexCount());
+			if (Frustum.getFrustum().pointInFrustum(tile.getX(), 64,
+					tile.getZ())) {
+				Matrix4f modelMatrix = Maths
+						.createTransformationMatrix(new Vector3f(tile.getX(),
+								tile.getHeight(), tile.getZ()), 0, 0, 0,
+								WaterTile.TILE_SIZE);
+				shader.loadModelMatrix(modelMatrix);
+				GL3Context.glDrawArrays(GL_TRIANGLES, 0, quad.getVertexCount());
+			}
 		}
 		unbind();
 	}

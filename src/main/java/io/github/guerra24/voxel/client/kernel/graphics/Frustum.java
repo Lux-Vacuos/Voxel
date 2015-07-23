@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package io.github.guerra24.voxel.client.kernel.util;
+package io.github.guerra24.voxel.client.kernel.graphics;
 
 import java.nio.FloatBuffer;
 

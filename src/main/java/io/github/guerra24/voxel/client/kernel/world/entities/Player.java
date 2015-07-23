@@ -24,8 +24,8 @@
 
 package io.github.guerra24.voxel.client.kernel.world.entities;
 
-import io.github.guerra24.voxel.client.kernel.DisplayManager;
-import io.github.guerra24.voxel.client.kernel.Kernel;
+import io.github.guerra24.voxel.client.kernel.core.Kernel;
+import io.github.guerra24.voxel.client.kernel.graphics.opengl.DisplayManager;
 import io.github.guerra24.voxel.client.kernel.resources.models.TexturedModel;
 
 import org.lwjgl.util.vector.Vector3f;

@@ -26,13 +26,16 @@ package io.github.guerra24.voxel.client.kernel.world.entities;
 
 import static org.lwjgl.opengl.GL11.GL_MODELVIEW;
 import static org.lwjgl.opengl.GL11.GL_TRANSFORM_BIT;
+import static org.lwjgl.opengl.GL11.glLoadIdentity;
 import static org.lwjgl.opengl.GL11.glMatrixMode;
 import static org.lwjgl.opengl.GL11.glPopAttrib;
 import static org.lwjgl.opengl.GL11.glPushAttrib;
 import static org.lwjgl.opengl.GL11.glRotatef;
 import static org.lwjgl.opengl.GL11.glTranslatef;
-import io.github.guerra24.voxel.client.kernel.DisplayManager;
-import io.github.guerra24.voxel.client.kernel.Kernel;
+import static org.lwjgl.util.glu.GLU.gluPerspective;
+import io.github.guerra24.voxel.client.kernel.core.Kernel;
+import io.github.guerra24.voxel.client.kernel.core.KernelConstants;
+import io.github.guerra24.voxel.client.kernel.graphics.opengl.DisplayManager;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -115,14 +118,14 @@ public class Camera {
 		}
 		if (Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
 			if (position.y < 144) {
-				// position.y += DisplayManager.getFrameTimeSeconds() * speed
-				// * multiplierMovement;
-				Kernel.gameResources.player.jump();
+				position.y += DisplayManager.getFrameTimeSeconds() * speed
+						* multiplierMovement;
+				// Kernel.gameResources.player.jump();
 			}
 		} else if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
 			if (position.y > -16) {
-				// position.y -= DisplayManager.getFrameTimeSeconds() * speed
-				// * multiplierMovement;
+				position.y -= DisplayManager.getFrameTimeSeconds() * speed
+						* multiplierMovement;
 			}
 		}
 		applyTranslations();
@@ -136,6 +139,12 @@ public class Camera {
 		glRotatef(0, 0, 0, 1);
 		glTranslatef(-getPosition().x, -getPosition().y, -getPosition().z);
 		glPopAttrib();
+		glMatrixMode(5889);
+		glLoadIdentity();
+		gluPerspective(KernelConstants.FOV,
+				Kernel.gameResources.renderer.aspectRatio,
+				KernelConstants.NEAR_PLANE, KernelConstants.FAR_PLANE);
+		glMatrixMode(GL_MODELVIEW);
 	}
 
 	public void setMouse() {

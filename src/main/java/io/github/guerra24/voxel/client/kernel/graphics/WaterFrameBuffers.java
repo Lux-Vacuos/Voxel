@@ -22,9 +22,9 @@
  * SOFTWARE.
  */
 
-package io.github.guerra24.voxel.client.kernel.util;
+package io.github.guerra24.voxel.client.kernel.graphics;
 
-import io.github.guerra24.voxel.client.kernel.KernelConstants;
+import io.github.guerra24.voxel.client.kernel.core.KernelConstants;
 
 import java.nio.ByteBuffer;
 

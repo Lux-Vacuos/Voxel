@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package io.github.guerra24.voxel.client.kernel;
+package io.github.guerra24.voxel.client.kernel.core;
 
 public class KernelConstants {
 	// Display Settings
@@ -40,8 +40,8 @@ public class KernelConstants {
 	public static float BLUE = 0.655f;
 	public static boolean advancedOpenGL = false;
 	// Game Variables
-	public static int build = 41;
-	public static double version = 1.0;
+	public static int build = 42;
+	public static double version = 0.1f;
 	public static boolean debug = true;
 	public static boolean isLoading = false;
 	public static boolean postPro = false;

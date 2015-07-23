@@ -24,7 +24,7 @@
 
 package io.github.guerra24.voxel.client.kernel.graphics.opengl;
 
-import io.github.guerra24.voxel.client.kernel.Kernel;
+import io.github.guerra24.voxel.client.kernel.core.Kernel;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.Color;

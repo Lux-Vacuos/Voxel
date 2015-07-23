@@ -22,30 +22,26 @@
  * SOFTWARE.
  */
 
-package io.github.guerra24.voxel.client.kernel.util;
+package io.github.guerra24.voxel.client.kernel.world.chunks;
 
-import static org.lwjgl.opengl.GL11.GL_RENDERER;
-import static org.lwjgl.opengl.GL11.GL_VENDOR;
-import static org.lwjgl.opengl.GL11.glGetString;
+public interface IChunk {
+	public void init();
 
-import org.lwjgl.opengl.Display;
+	public void createChunk();
+	
+	public void rebuildChunk();
+	
+	public void update();
 
-public class SystemInfo {
-	public static void printSystemInfo() {
+	public void sendToRender1();
 
-		Logger.log(Thread.currentThread(), "Vendor: " + glGetString(GL_VENDOR));
+	public void sendToRender2();
 
-		Logger.log(Thread.currentThread(), "Renderer: "
-				+ glGetString(GL_RENDERER));
+	public void sendToRender3();
 
-		if (Display.getVersion() != null) {
-			Logger.log(Thread.currentThread(),
-					"Driver Version: " + Display.getVersion());
-		} else {
-			Logger.warn(Thread.currentThread(),
-					"Could not detect driver version");
-		}
+	public void sendToRender4();
+	
+	public void sendToRenderWater();
 
-	}
-
+	public void dispose();
 }

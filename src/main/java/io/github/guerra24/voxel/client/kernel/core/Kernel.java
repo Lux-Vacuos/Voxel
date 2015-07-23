@@ -22,13 +22,16 @@
  * SOFTWARE.
  */
 
-package io.github.guerra24.voxel.client.kernel;
+package io.github.guerra24.voxel.client.kernel.core;
 
 import static org.lwjgl.opengl.GL11.glLoadIdentity;
+import io.github.guerra24.voxel.client.kernel.Launcher;
+import io.github.guerra24.voxel.client.kernel.graphics.Frustum;
+import io.github.guerra24.voxel.client.kernel.graphics.opengl.DisplayManager;
+import io.github.guerra24.voxel.client.kernel.graphics.opengl.SystemInfo;
 import io.github.guerra24.voxel.client.kernel.resources.GameResources;
 import io.github.guerra24.voxel.client.kernel.resources.GuiResources;
 import io.github.guerra24.voxel.client.kernel.util.Logger;
-import io.github.guerra24.voxel.client.kernel.util.SystemInfo;
 import io.github.guerra24.voxel.client.kernel.world.World;
 import io.github.guerra24.voxel.client.kernel.world.block.BlocksResources;
 
@@ -40,6 +43,8 @@ public class Kernel implements IKernel {
 	public static float renderCalls = 0;
 	public static float renderCallsPerFrame = 0;
 	public static float totalRenderCalls = 0;
+	public static int errorTime = 0;
+	public static UpdateThread update;
 
 	public Kernel() {
 		mainLoop();
@@ -49,10 +54,11 @@ public class Kernel implements IKernel {
 	public void mainLoop() {
 		init();
 		while (gameResources.gameStates.loop) {
-			update();
 			render();
+			update();
+			error();
 			totalRenderCalls += renderCalls;
-	        renderCallsPerFrame = renderCalls;
+			renderCallsPerFrame = renderCalls;
 			renderCalls = 0;
 		}
 		dispose();
@@ -85,7 +91,8 @@ public class Kernel implements IKernel {
 		gameResources.addRes();
 		gameResources.music();
 		world = new World();
-
+		update = new UpdateThread();
+		update.start();
 	}
 
 	@Override
@@ -100,18 +107,23 @@ public class Kernel implements IKernel {
 			DisplayManager.updateDisplay(30);
 			break;
 		case GAME:
-			gameResources.glEn();
-			gameResources.waterRenderer.setReflection();
-			gameResources.glDi();
-			gameResources.renderer.renderWorld(gameResources.cubes,
-					gameResources.lights, gameResources.camera,
-					gameResources.plane);
-			gameResources.renderer.renderEntity(gameResources.allObjects,
-					gameResources.lights, gameResources.camera,
-					gameResources.plane);
-			gameResources.waterRenderer.render(gameResources.waters,
-					gameResources.camera);
-			gameResources.guiRenderer.renderNoPrepare(gameResources.guis);
+			synchronized (gameResources.waters) {
+				synchronized (gameResources.cubes) {
+					gameResources.glEn();
+					gameResources.waterRenderer.setReflection();
+					gameResources.glDi();
+					gameResources.renderer.renderWorld(gameResources.cubes,
+							gameResources.lights, gameResources.camera,
+							gameResources.plane);
+					gameResources.renderer.renderEntity(
+							gameResources.allObjects, gameResources.lights,
+							gameResources.camera, gameResources.plane);
+					gameResources.waterRenderer.render(gameResources.waters,
+							gameResources.camera);
+					gameResources.guiRenderer
+							.renderNoPrepare(gameResources.guis);
+				}
+			}
 			glLoadIdentity();
 			DisplayManager.updateDisplay(KernelConstants.FPS);
 			break;
@@ -126,13 +138,22 @@ public class Kernel implements IKernel {
 		case IN_PAUSE:
 			break;
 		case GAME:
+			//gameResources.player.move();
 			gameResources.camera.move();
-			gameResources.player.move();
-			world.update(gameResources.camera);
-			world.test();
+			Frustum.updateFrustum();
 			break;
 		}
-		gameResources.gameStates.switchStates();
+	}
+
+	@Override
+	public void error() {
+		errorTime++;
+		if (errorTime % 100 == 0) {
+			if (renderCallsPerFrame > 10000) {
+				Logger.warn(Thread.currentThread(), "Render Overflow");
+			}
+			errorTime = 0;
+		}
 	}
 
 	@Override

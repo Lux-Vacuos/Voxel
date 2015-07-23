@@ -28,15 +28,11 @@ import static org.lwjgl.opengl.GL11.GL_BACK;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_CULL_FACE;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11.glClear;
-import static org.lwjgl.opengl.GL11.glClearColor;
-import static org.lwjgl.opengl.GL11.glCullFace;
-import static org.lwjgl.opengl.GL11.glEnable;
-import io.github.guerra24.voxel.client.kernel.KernelConstants;
+import io.github.guerra24.voxel.client.kernel.core.KernelConstants;
+import io.github.guerra24.voxel.client.kernel.graphics.opengl.GL3Context;
 import io.github.guerra24.voxel.client.kernel.graphics.shaders.EntityShader;
 import io.github.guerra24.voxel.client.kernel.resources.Loader;
 import io.github.guerra24.voxel.client.kernel.resources.models.TexturedModel;
-import io.github.guerra24.voxel.client.kernel.util.Frustum;
 import io.github.guerra24.voxel.client.kernel.world.entities.Camera;
 import io.github.guerra24.voxel.client.kernel.world.entities.Entity;
 import io.github.guerra24.voxel.client.kernel.world.entities.Light;
@@ -68,8 +64,8 @@ public class MasterRenderer {
 	}
 
 	public static void enableCulling() {
-		glEnable(GL_CULL_FACE);
-		glCullFace(GL_BACK);
+		GL3Context.glEnable(GL_CULL_FACE);
+		GL3Context.glCullFace(GL_BACK);
 	}
 
 	public Matrix4f getProjectionMatrix() {
@@ -140,8 +136,8 @@ public class MasterRenderer {
 	}
 
 	public static void prepare() {
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		glClearColor(KernelConstants.RED, KernelConstants.GREEN,
+		GL3Context.glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		GL3Context.glClearColor(KernelConstants.RED, KernelConstants.GREEN,
 				KernelConstants.BLUE, 1);
 	}
 

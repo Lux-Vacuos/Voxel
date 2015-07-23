@@ -24,7 +24,7 @@
 
 package io.github.guerra24.voxel.client.kernel.world.block;
 
-import io.github.guerra24.voxel.client.kernel.Kernel;
+import io.github.guerra24.voxel.client.kernel.core.Kernel;
 import io.github.guerra24.voxel.client.kernel.resources.OBJLoader;
 import io.github.guerra24.voxel.client.kernel.resources.models.ModelTexture;
 import io.github.guerra24.voxel.client.kernel.resources.models.RawModel;

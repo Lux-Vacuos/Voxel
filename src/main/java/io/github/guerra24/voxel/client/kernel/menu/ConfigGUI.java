@@ -24,7 +24,7 @@
 
 package io.github.guerra24.voxel.client.kernel.menu;
 
-import io.github.guerra24.voxel.client.kernel.KernelConstants;
+import io.github.guerra24.voxel.client.kernel.core.KernelConstants;
 import io.github.guerra24.voxel.client.kernel.util.Logger;
 
 import java.awt.GridBagConstraints;

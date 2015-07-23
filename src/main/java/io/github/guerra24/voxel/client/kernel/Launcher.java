@@ -3,6 +3,8 @@ package io.github.guerra24.voxel.client.kernel;
 import java.io.File;
 
 import io.github.guerra24.voxel.client.kernel.console.Console;
+import io.github.guerra24.voxel.client.kernel.core.Kernel;
+import io.github.guerra24.voxel.client.kernel.core.KernelConstants;
 import io.github.guerra24.voxel.client.kernel.menu.ConfigGUI;
 
 public class Launcher {

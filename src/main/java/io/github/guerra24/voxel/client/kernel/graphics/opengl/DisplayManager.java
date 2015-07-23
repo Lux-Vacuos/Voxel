@@ -22,11 +22,12 @@
  * SOFTWARE.
  */
 
-package io.github.guerra24.voxel.client.kernel;
+package io.github.guerra24.voxel.client.kernel.graphics.opengl;
 
 import static org.lwjgl.opengl.GL11.GL_VERSION;
 import static org.lwjgl.opengl.GL11.glGetString;
 import static org.lwjgl.opengl.GL11.glViewport;
+import io.github.guerra24.voxel.client.kernel.core.KernelConstants;
 import io.github.guerra24.voxel.client.kernel.util.Logger;
 
 import org.lwjgl.LWJGLException;

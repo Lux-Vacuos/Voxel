@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015 Guerra24 / ThinMatrix
+ * Copyright (c) 2015 Guerra24
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,34 +22,14 @@
  * SOFTWARE.
  */
 
-package io.github.guerra24.voxel.client.kernel.graphics.shaders;
+package io.github.guerra24.voxel.client.kernel.core;
 
-import io.github.guerra24.voxel.client.kernel.core.KernelConstants;
+public interface GameObject {
+	public void init();
+	
+	public void update();
 
-import org.lwjgl.util.vector.Matrix4f;
+	public void render();
 
-public class GuiShader extends ShaderProgram {
-
-	private int location_transformationMatrix;
-
-	public GuiShader() {
-		super(KernelConstants.VERTEX_FILE_GUI,
-				KernelConstants.FRAGMENT_FILE_GUI);
-	}
-
-	public void loadTransformation(Matrix4f matrix) {
-		super.loadMatrix(location_transformationMatrix, matrix);
-	}
-
-	@Override
-	protected void getAllUniformLocations() {
-		location_transformationMatrix = super
-				.getUniformLocation("transformationMatrix");
-	}
-
-	@Override
-	protected void bindAttributes() {
-		super.bindAttribute(0, "position");
-	}
-
+	public void dispose();
 }
