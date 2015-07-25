@@ -44,15 +44,16 @@ import java.util.Map;
 
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Matrix4f;
+import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.util.vector.Vector4f;
 
 public class MasterRenderer {
 
 	private Matrix4f projectionMatrix;
-	private EntityShader shader = new EntityShader();
 	private Map<TexturedModel, List<Entity>> entities = new HashMap<TexturedModel, List<Entity>>();
 	private SkyboxRenderer skyboxRenderer;
 
+	public EntityShader shader = new EntityShader();
 	public EntityRenderer entityRenderer;
 	public float aspectRatio;
 
@@ -99,6 +100,7 @@ public class MasterRenderer {
 		shader.loadClipPlane(clipPlane);
 		shader.loadSkyColour(KernelConstants.RED, KernelConstants.GREEN,
 				KernelConstants.BLUE);
+		shader.loadDirectLightDirection(new Vector3f(-80, -100, -40));
 		shader.loadLights(lights);
 		shader.loadviewMatrix(camera);
 		entityRenderer.render(entities);

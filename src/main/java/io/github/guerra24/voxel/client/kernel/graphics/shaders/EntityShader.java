@@ -45,7 +45,7 @@ public class EntityShader extends ShaderProgram {
 	private int location_viewMatrix;
 	private int location_skyColour;
 	private int location_plane;
-	private int location_bright;
+	private int location_directLightDirection;
 
 	public EntityShader() {
 		super(KernelConstants.VERTEX_FILE_ENTITY,
@@ -68,7 +68,8 @@ public class EntityShader extends ShaderProgram {
 		location_viewMatrix = super.getUniformLocation("viewMatrix");
 		location_skyColour = super.getUniformLocation("skyColour");
 		location_plane = super.getUniformLocation("plane");
-		location_bright = super.getUniformLocation("bright");
+		location_directLightDirection = super
+				.getUniformLocation("directLightDirection");
 
 		location_lightPosition = new int[KernelConstants.MAX_LIGHTS];
 		location_lightColour = new int[KernelConstants.MAX_LIGHTS];
@@ -83,10 +84,6 @@ public class EntityShader extends ShaderProgram {
 		}
 	}
 
-	public void loadBright(float bright) {
-		super.loadFloat(location_bright, bright);
-	}
-
 	public void loadClipPlane(Vector4f plane) {
 		super.loadVector(location_plane, plane);
 	}
@@ -97,6 +94,10 @@ public class EntityShader extends ShaderProgram {
 
 	public void loadTransformationMatrix(Matrix4f matrix) {
 		super.loadMatrix(location_transformationMatrix, matrix);
+	}
+
+	public void loadDirectLightDirection(Vector3f direction) {
+		super.loadVector(location_directLightDirection, direction);
 	}
 
 	public void loadLights(List<Light> lights) {

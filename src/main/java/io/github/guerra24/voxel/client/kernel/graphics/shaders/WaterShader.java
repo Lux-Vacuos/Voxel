@@ -27,8 +27,10 @@ package io.github.guerra24.voxel.client.kernel.graphics.shaders;
 import io.github.guerra24.voxel.client.kernel.core.KernelConstants;
 import io.github.guerra24.voxel.client.kernel.util.Maths;
 import io.github.guerra24.voxel.client.kernel.world.entities.Camera;
+import io.github.guerra24.voxel.client.kernel.world.entities.Light;
 
 import org.lwjgl.util.vector.Matrix4f;
+import org.lwjgl.util.vector.Vector3f;
 
 public class WaterShader extends ShaderProgram {
 
@@ -38,8 +40,12 @@ public class WaterShader extends ShaderProgram {
 	private int location_reflectionTexture;
 	private int location_refractionTexture;
 	private int location_dudvMap;
+	private int location_normalMap;
 	private int location_moveFactor;
 	private int location_cameraPosition;
+	private int location_directLightDirection;
+	private int location_lightColour;
+	private int location_lightPosition;
 
 	public WaterShader() {
 		super(KernelConstants.VERTEX_FILE_WATER,
@@ -59,14 +65,25 @@ public class WaterShader extends ShaderProgram {
 		location_reflectionTexture = getUniformLocation("reflectionTexture");
 		location_refractionTexture = getUniformLocation("refractionTexture");
 		location_dudvMap = getUniformLocation("dudvMap");
+		location_normalMap = getUniformLocation("normalMap");
 		location_moveFactor = getUniformLocation("moveFactor");
 		location_cameraPosition = getUniformLocation("cameraPosition");
+		location_lightColour = getUniformLocation("lightColour");
+		location_lightPosition = getUniformLocation("lightPosition");
+		location_directLightDirection = super
+				.getUniformLocation("directLightDirection");
 	}
 
 	public void connectTextureUnits() {
 		super.loadInt(location_reflectionTexture, 0);
 		super.loadInt(location_refractionTexture, 1);
 		super.loadInt(location_dudvMap, 2);
+		super.loadInt(location_normalMap, 3);
+	}
+
+	public void loadLight(Light light) {
+		super.loadVector(location_lightColour, light.getColour());
+		super.loadVector(location_lightPosition, light.getPosition());
 	}
 
 	public void loadMoveFactor(float factor) {
@@ -75,6 +92,10 @@ public class WaterShader extends ShaderProgram {
 
 	public void loadProjectionMatrix(Matrix4f projection) {
 		loadMatrix(location_projectionMatrix, projection);
+	}
+
+	public void loadDirectLightDirection(Vector3f direction) {
+		super.loadVector(location_directLightDirection, direction);
 	}
 
 	public void loadViewMatrix(Camera camera) {

@@ -30,6 +30,7 @@ import static org.lwjgl.opengl.GL11.glBindTexture;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE1;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE2;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE3;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
 import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
 import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
@@ -44,6 +45,7 @@ import io.github.guerra24.voxel.client.kernel.resources.models.RawModel;
 import io.github.guerra24.voxel.client.kernel.resources.models.WaterTile;
 import io.github.guerra24.voxel.client.kernel.util.Maths;
 import io.github.guerra24.voxel.client.kernel.world.entities.Camera;
+import io.github.guerra24.voxel.client.kernel.world.entities.Light;
 
 import java.util.List;
 
@@ -54,6 +56,7 @@ import org.lwjgl.util.vector.Vector4f;
 public class WaterRenderer {
 
 	private static final String DUDV_MAP = "dudvMap";
+	private static final String NORMAL_MAP = "normalMap";
 
 	private RawModel quad;
 	private WaterShader shader;
@@ -63,6 +66,7 @@ public class WaterRenderer {
 	private float moveFactor = 0;
 
 	private int dudvTexture;
+	private int normalTexture;
 
 	public WaterRenderer(Loader loader, WaterShader shader,
 			Matrix4f projectionMatrix, WaterFrameBuffers fbos,
@@ -71,6 +75,7 @@ public class WaterRenderer {
 		this.fbos = fbos;
 		this.fbos2 = fbos2;
 		dudvTexture = loader.loadTextureBlocks(DUDV_MAP);
+		normalTexture = loader.loadTextureBlocks(NORMAL_MAP);
 		shader.start();
 		shader.connectTextureUnits();
 		shader.loadProjectionMatrix(projectionMatrix);
@@ -94,13 +99,30 @@ public class WaterRenderer {
 		unbind();
 	}
 
-	private void prepareRender(Camera camera) {
+	public void render(List<WaterTile> water, Camera camera, Light light) {
+		prepareRender(camera, light);
+		for (WaterTile tile : water) {
+			if (Frustum.getFrustum().pointInFrustum(tile.getX(), 64,
+					tile.getZ())) {
+				Matrix4f modelMatrix = Maths
+						.createTransformationMatrix(new Vector3f(tile.getX(),
+								tile.getHeight(), tile.getZ()), 0, 0, 0,
+								WaterTile.TILE_SIZE);
+				shader.loadModelMatrix(modelMatrix);
+				GL3Context.glDrawArrays(GL_TRIANGLES, 0, quad.getVertexCount());
+			}
+		}
+		unbind();
+	}
+
+	private void prepareRender(Camera camera, Light light) {
 		shader.start();
 		shader.loadViewMatrix(camera);
 		moveFactor += KernelConstants.WAVE_SPEED
 				* DisplayManager.getFrameTimeSeconds();
 		moveFactor %= 1;
 		shader.loadMoveFactor(moveFactor);
+		shader.loadLight(light);
 		glBindVertexArray(quad.getVaoID());
 		glEnableVertexAttribArray(0);
 		glActiveTexture(GL_TEXTURE0);
@@ -109,6 +131,28 @@ public class WaterRenderer {
 		glBindTexture(GL_TEXTURE_2D, fbos2.getRefractionTexture());
 		glActiveTexture(GL_TEXTURE2);
 		glBindTexture(GL_TEXTURE_2D, dudvTexture);
+		glActiveTexture(GL_TEXTURE3);
+		glBindTexture(GL_TEXTURE_2D, normalTexture);
+	}
+
+	private void prepareRender(Camera camera) {
+		shader.start();
+		shader.loadViewMatrix(camera);
+		moveFactor += KernelConstants.WAVE_SPEED
+				* DisplayManager.getFrameTimeSeconds();
+		moveFactor %= 1;
+		shader.loadMoveFactor(moveFactor);
+		shader.loadDirectLightDirection(new Vector3f(-80, -100, -40));
+		glBindVertexArray(quad.getVaoID());
+		glEnableVertexAttribArray(0);
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, fbos.getReflectionTexture());
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, fbos2.getRefractionTexture());
+		glActiveTexture(GL_TEXTURE2);
+		glBindTexture(GL_TEXTURE_2D, dudvTexture);
+		glActiveTexture(GL_TEXTURE3);
+		glBindTexture(GL_TEXTURE_2D, normalTexture);
 	}
 
 	private void unbind() {

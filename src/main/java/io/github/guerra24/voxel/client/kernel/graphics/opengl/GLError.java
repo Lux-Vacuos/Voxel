@@ -41,19 +41,19 @@ public final class GLError {
 		case GL_NO_ERROR:
 			break;
 		case GL_INVALID_ENUM:
-			throw new GLException.InvalidEnum();
+			new GLException.InvalidEnum();
 		case GL_INVALID_VALUE:
-			throw new GLException.InvalidValue();
+			new GLException.InvalidValue();
 		case GL_INVALID_OPERATION:
-			throw new GLException.InvalidOperation();
+			new GLException.InvalidOperation();
 		case GL_INVALID_FRAMEBUFFER_OPERATION:
-			throw new GLException.InvalidFramebufferOperation();
+			new GLException.InvalidFramebufferOperation();
 		case GL_OUT_OF_MEMORY:
-			throw new GLException.OutOfMemory();
+			new GLException.OutOfMemory();
 		case GL_STACK_UNDERFLOW:
-			throw new GLException.StackUnderflow();
+			new GLException.StackUnderflow();
 		case GL_STACK_OVERFLOW:
-			throw new GLException.StackOverflow();
+			new GLException.StackOverflow();
 		}
 	}
 

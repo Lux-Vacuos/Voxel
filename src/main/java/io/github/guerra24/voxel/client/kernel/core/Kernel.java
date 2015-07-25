@@ -137,7 +137,7 @@ public class Kernel implements IKernel {
 		case IN_PAUSE:
 			break;
 		case GAME:
-			gameResources.player.move();
+			//gameResources.player.move();
 			gameResources.camera.move();
 			Frustum.updateFrustum();
 			break;

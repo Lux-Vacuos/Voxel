@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2014-2015 Guerra24 / Sri Harsha Chilakapati / Josh "ShadowLordAlpha"
+ * Copyright (c) 2015 Guerra24 / Sri Harsha Chilakapati / Josh "ShadowLordAlpha"
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,15 +24,15 @@
 
 package io.github.guerra24.voxel.client.kernel.graphics.opengl;
 
-public class GLException extends RuntimeException {
-	private static final long serialVersionUID = -4233294051491634242L;
+import io.github.guerra24.voxel.client.kernel.util.Logger;
+
+public class GLException {
 
 	public GLException(String message) {
-		super(message);
+		Logger.warn(Thread.currentThread(), message);
 	}
 
 	public static class InvalidEnum extends GLException {
-		private static final long serialVersionUID = 2029433042086596990L;
 
 		public InvalidEnum() {
 			super(
@@ -41,7 +41,6 @@ public class GLException extends RuntimeException {
 	}
 
 	public static class InvalidValue extends GLException {
-		private static final long serialVersionUID = -8619110001750124988L;
 
 		public InvalidValue() {
 			super("A numeric argument is out of range");
@@ -49,7 +48,6 @@ public class GLException extends RuntimeException {
 	}
 
 	public static class InvalidOperation extends GLException {
-		private static final long serialVersionUID = -8672095451587407513L;
 
 		public InvalidOperation() {
 			super("The specified operation is not allowed in current state");
@@ -57,7 +55,6 @@ public class GLException extends RuntimeException {
 	}
 
 	public static class InvalidFramebufferOperation extends GLException {
-		private static final long serialVersionUID = -6321399771655108100L;
 
 		public InvalidFramebufferOperation() {
 			super("The FrameBuffer object is incomplete");
@@ -65,7 +62,6 @@ public class GLException extends RuntimeException {
 	}
 
 	public static class OutOfMemory extends GLException {
-		private static final long serialVersionUID = -5726568667092289095L;
 
 		public OutOfMemory() {
 			super("There is not enough memory left to execute the command");
@@ -73,7 +69,6 @@ public class GLException extends RuntimeException {
 	}
 
 	public static class StackUnderflow extends GLException {
-		private static final long serialVersionUID = 6029167882538662114L;
 
 		public StackUnderflow() {
 			super(
@@ -82,7 +77,6 @@ public class GLException extends RuntimeException {
 	}
 
 	public static class StackOverflow extends GLException {
-		private static final long serialVersionUID = 3794676582619102610L;
 
 		public StackOverflow() {
 			super(
