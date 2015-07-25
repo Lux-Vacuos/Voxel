@@ -120,10 +120,9 @@ public class Kernel implements IKernel {
 							gameResources.camera, gameResources.plane);
 					gameResources.waterRenderer.render(gameResources.waters,
 							gameResources.camera);
-					gameResources.guiRenderer
-							.renderNoPrepare(gameResources.guis);
 				}
 			}
+			gameResources.guiRenderer.renderNoPrepare(gameResources.guis);
 			glLoadIdentity();
 			DisplayManager.updateDisplay(KernelConstants.FPS);
 			break;
@@ -138,7 +137,7 @@ public class Kernel implements IKernel {
 		case IN_PAUSE:
 			break;
 		case GAME:
-			//gameResources.player.move();
+			gameResources.player.move();
 			gameResources.camera.move();
 			Frustum.updateFrustum();
 			break;

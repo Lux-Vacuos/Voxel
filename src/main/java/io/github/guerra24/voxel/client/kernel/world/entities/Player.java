@@ -47,9 +47,9 @@ public class Player extends Entity {
 		super.increasePosition(0,
 				upwardsSpeed * DisplayManager.getFrameTimeSeconds(), 0);
 		try {
-			if (Kernel.world.getBlock((int) super.getPosition().x,
+			if (Kernel.world.getBlock((int) (super.getPosition().x - 0.5f),
 					(int) super.getPosition().y - 1,
-					(int) super.getPosition().z) == 0) {
+					(int) (super.getPosition().z + 0.5f)) == 0) {
 				upwardsSpeed += GRAVITY * DisplayManager.getFrameTimeSeconds();
 				isInAir = true;
 			} else {

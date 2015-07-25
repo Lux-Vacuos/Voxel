@@ -40,7 +40,6 @@ public class World {
 	public int time = 0, time2 = 0;
 	public Chunk[][] chunks;
 	public byte[][][] blocks;
-	public byte[][][] water;
 	// public SimplexNoise noise;
 	public float[][] perlin;
 	public Random seed;
@@ -63,8 +62,7 @@ public class World {
 		perlin = PerlinNoise.GeneratePerlinNoise(KernelConstants.CHUNK_SIZE
 				* KernelConstants.viewDistance, KernelConstants.CHUNK_SIZE
 				* KernelConstants.viewDistance, KernelConstants.octaveCount);
-		blocks = new byte[KernelConstants.viewDistance * 16][144][KernelConstants.viewDistance * 16];
-		water = new byte[KernelConstants.viewDistance * 16][144][KernelConstants.viewDistance * 16];
+		blocks = new byte[KernelConstants.viewDistance * 16][128][KernelConstants.viewDistance * 16];
 		Kernel.gameResources.camera.setPosition(new Vector3f(
 				KernelConstants.viewDistance / 2 * 16, 128,
 				KernelConstants.viewDistance / 2 * 16));
@@ -158,21 +156,15 @@ public class World {
 	public void test() {
 		if (Mouse.isButtonDown(1)) {
 			Kernel.gameResources.mouse.update();
-			if (Kernel.gameResources.mouse.getCurrentRay().x
-					+ Kernel.gameResources.camera.getPosition().x >= 0
-					&& Kernel.gameResources.mouse.getCurrentRay().y
-							+ Kernel.gameResources.camera.getPosition().y >= 0
-					&& Kernel.gameResources.mouse.getCurrentRay().z
-							+ Kernel.gameResources.camera.getPosition().z >= 0) {
-				blocks[(int) (Kernel.gameResources.mouse.getCurrentRay().x + Kernel.gameResources.camera
-						.getPosition().x)][(int) (Kernel.gameResources.mouse
-						.getCurrentRay().y + Kernel.gameResources.camera
-						.getPosition().y)][(int) (Kernel.gameResources.mouse
-						.getCurrentRay().z + Kernel.gameResources.camera
-						.getPosition().z)] = 0;
-				chunks[(int) (Kernel.gameResources.camera.getPosition().x / 16)][(int) (Kernel.gameResources.camera
-						.getPosition().z / 16)].update();
-			}
+			blocks[(int) (Kernel.gameResources.mouse.getCurrentRay().x + Kernel.gameResources.camera
+					.getPosition().x)][(int) (Kernel.gameResources.mouse
+					.getCurrentRay().y + Kernel.gameResources.camera
+					.getPosition().y)][(int) (Kernel.gameResources.mouse
+					.getCurrentRay().z
+					+ Kernel.gameResources.camera.getPosition().z + 1)] = 0;
+			chunks[(int) (Kernel.gameResources.camera.getPosition().x / 16)][(int) (Kernel.gameResources.camera
+					.getPosition().z / 16)].update();
+
 		}
 	}
 

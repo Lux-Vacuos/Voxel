@@ -24,14 +24,13 @@
 
 package io.github.guerra24.voxel.client.kernel.resources;
 
-import static org.lwjgl.opengl.GL11.glDisable;
-import static org.lwjgl.opengl.GL11.glEnable;
 import static org.lwjgl.opengl.GL30.GL_CLIP_DISTANCE0;
 import io.github.guerra24.voxel.client.kernel.core.GameStates;
 import io.github.guerra24.voxel.client.kernel.graphics.GuiRenderer;
 import io.github.guerra24.voxel.client.kernel.graphics.MasterRenderer;
 import io.github.guerra24.voxel.client.kernel.graphics.WaterFrameBuffers;
 import io.github.guerra24.voxel.client.kernel.graphics.WaterRenderer;
+import io.github.guerra24.voxel.client.kernel.graphics.opengl.GL3Context;
 import io.github.guerra24.voxel.client.kernel.graphics.shaders.WaterShader;
 import io.github.guerra24.voxel.client.kernel.resources.models.GuiTexture;
 import io.github.guerra24.voxel.client.kernel.resources.models.WaterTile;
@@ -110,11 +109,11 @@ public class GameResources {
 	}
 
 	public void glEn() {
-		glEnable(GL_CLIP_DISTANCE0);
+		GL3Context.glEnable(GL_CLIP_DISTANCE0);
 	}
 
 	public void glDi() {
-		glDisable(GL_CLIP_DISTANCE0);
+		GL3Context.glDisable(GL_CLIP_DISTANCE0);
 	}
 
 	public void music() {

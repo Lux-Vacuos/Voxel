@@ -122,19 +122,19 @@ public class WaterRenderer {
 		WaterReflection.reflectionCam();
 		Kernel.gameResources.renderer.renderWorld(Kernel.gameResources.cubes,
 				Kernel.gameResources.lights, Kernel.gameResources.camera,
-				new Vector4f(0, 1, 0, -64.4f));
+				new Vector4f(0, 1, 0, -64.0f));
 		Kernel.gameResources.renderer.renderEntity(
 				Kernel.gameResources.allObjects, Kernel.gameResources.lights,
-				Kernel.gameResources.camera, new Vector4f(0, 1, 0, -64.4f));
+				Kernel.gameResources.camera, new Vector4f(0, 1, 0, -64.0f));
 		WaterReflection.restoreCam();
 		Kernel.gameResources.fbos.unbindCurrentFrameBuffer();
 		Kernel.gameResources.fbos2.bindRefractionFrameBuffer();
 		Kernel.gameResources.renderer.renderWorld(Kernel.gameResources.cubes,
 				Kernel.gameResources.lights, Kernel.gameResources.camera,
-				new Vector4f(0, -1, 0, 64.4f));
+				new Vector4f(0, -1, 0, 64.8f));
 		Kernel.gameResources.renderer.renderEntity(
 				Kernel.gameResources.allObjects, Kernel.gameResources.lights,
-				Kernel.gameResources.camera, new Vector4f(0, -1, 0, 64.4f));
+				Kernel.gameResources.camera, new Vector4f(0, -1, 0, 64.8f));
 		Kernel.gameResources.fbos2.unbindCurrentFrameBuffer();
 	}
 

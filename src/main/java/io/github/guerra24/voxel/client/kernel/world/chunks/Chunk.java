@@ -97,7 +97,7 @@ public class Chunk implements IChunk {
 			for (int z = (int) pos.getZ(); z < sizeZ; z++) {
 				for (int y = (int) pos.getY(); y < sizeY; y++) {
 					if (y == 64) {
-						Kernel.world.water[x][y][z] = Block.Water.getId();
+						Kernel.world.blocks[x][y][z] = Block.Water.getId();
 					}
 				}
 			}
@@ -146,7 +146,8 @@ public class Chunk implements IChunk {
 		for (int x = (int) pos.getX(); x < sizeX; x++) {
 			for (int z = (int) pos.getZ(); z < sizeZ; z++) {
 				for (int y = (int) pos.getY(); y < sizeY; y++) {
-					if (Block.getBlock(Kernel.world.blocks[x][y][z]) != Block.Air) {
+					if (Block.getBlock(Kernel.world.blocks[x][y][z]) != Block.Air
+							&& Block.getBlock(Kernel.world.blocks[x][y][z]) != Block.Water) {
 						if (cullFaceWest(x, y, z)) {
 							if (y < 32)
 								cubes1.add(Block.getBlock(
@@ -279,7 +280,7 @@ public class Chunk implements IChunk {
 										.getFaceSouth(new Vector3f(x, y, z)));
 							sec4NotClear = true;
 						}
-					} else if (Kernel.world.water[x][y][z] == Block.Water
+					} else if (Kernel.world.blocks[x][y][z] == Block.Water
 							.getId()) {
 						waters.add(Block.Water.getWaterTitle(new Vector3f(x, y,
 								z)));
@@ -293,7 +294,9 @@ public class Chunk implements IChunk {
 		if (x == 0) {
 			return true;
 		} else {
-			if (Kernel.world.getBlock(x - 1, y, z) != 0) {
+			if (Kernel.world.getBlock(x - 1, y, z) != Block.Air.getId()
+					&& Kernel.world.getBlock(x - 1, y, z) != Block.Water
+							.getId()) {
 				return false;
 			} else {
 				return true;
@@ -305,7 +308,9 @@ public class Chunk implements IChunk {
 		if (x == KernelConstants.viewDistance * 16 - 1) {
 			return true;
 		} else {
-			if (Kernel.world.getBlock(x + 1, y, z) != 0) {
+			if (Kernel.world.getBlock(x + 1, y, z) != Block.Air.getId()
+					&& Kernel.world.getBlock(x + 1, y, z) != Block.Water
+							.getId()) {
 				return false;
 			} else {
 				return true;
@@ -317,7 +322,9 @@ public class Chunk implements IChunk {
 		if (y == 0) {
 			return true;
 		} else {
-			if (Kernel.world.getBlock(x, y - 1, z) != 0) {
+			if (Kernel.world.getBlock(x, y - 1, z) != Block.Air.getId()
+					&& Kernel.world.getBlock(x, y - 1, z) != Block.Water
+							.getId()) {
 				return false;
 			} else {
 				return true;
@@ -327,7 +334,9 @@ public class Chunk implements IChunk {
 
 	private boolean cullFaceUp(int x, int y, int z) {
 		if (y < sizeY - 1) {
-			if (Kernel.world.getBlock(x, y + 1, z) != 0) {
+			if (Kernel.world.getBlock(x, y + 1, z) != Block.Air.getId()
+					&& Kernel.world.getBlock(x, y + 1, z) != Block.Water
+							.getId()) {
 				return false;
 			} else {
 				return true;
@@ -341,7 +350,8 @@ public class Chunk implements IChunk {
 		if (z == 0) {
 			return true;
 		}
-		if (Kernel.world.getBlock(x, y, z - 1) != 0) {
+		if (Kernel.world.getBlock(x, y, z - 1) != Block.Air.getId()
+				&& Kernel.world.getBlock(x, y, z - 1) != Block.Water.getId()) {
 			return false;
 		} else {
 			return true;
@@ -352,7 +362,9 @@ public class Chunk implements IChunk {
 		if (z == KernelConstants.viewDistance * 16 - 1) {
 			return true;
 		} else {
-			if (Kernel.world.getBlock(x, y, z + 1) != 0) {
+			if (Kernel.world.getBlock(x, y, z + 1) != Block.Air.getId()
+					&& Kernel.world.getBlock(x, y, z + 1) != Block.Water
+							.getId()) {
 				return false;
 			} else {
 				return true;

@@ -40,8 +40,8 @@ public class KernelConstants {
 	public static float BLUE = 0.655f;
 	public static boolean advancedOpenGL = false;
 	// Game Variables
-	public static int build = 42;
-	public static double version = 0.1f;
+	public static int build = 43;
+	public static String version = "0.0.1";
 	public static boolean debug = true;
 	public static boolean isLoading = false;
 	public static boolean postPro = false;

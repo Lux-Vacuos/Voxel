@@ -69,7 +69,7 @@ public class BlockWater extends Block {
 
 	@Override
 	public WaterTile getWaterTitle(Vector3f pos) {
-		return new WaterTile(pos.x, pos.z, pos.y + 0.4f);
+		return new WaterTile(pos.x + 0.5f, pos.z - 0.5f, pos.y + 0.8f);
 	}
 
 }
