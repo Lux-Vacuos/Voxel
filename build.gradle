@@ -3,7 +3,15 @@ apply plugin:'eclipse'
 apply plugin:'application'
 
 mainClassName = 'io.github.guerra24.voxel.client.kernel.Launcher'
-version = '1.0'
+version = '0.0.1-ALPHA'
+
+jar {
+	include("io/github/guerra24/voxel/**")
+    manifest {
+        attributes 'Implementation-Title': 'Voxel Client',
+                   'Implementation-Version': version
+    }
+}
 
 buildscript {
 	repositories {
@@ -33,15 +41,14 @@ repositories {
 }
 
 dependencies {
-	compile 'org.apache.httpcomponents:httpclient:4.5'
-	compile 'org.apache.httpcomponents:httpcore:4.4.1'
-	compile 'mysql:mysql-connector-java:5.1.36'
-	compile 'commons-logging:commons-logging:1.2'
 	compile 'com.google.code.gson:gson:2.3.1'
 	compile 'org.lwjgl.lwjgl:lwjgl:2.9.3'
 	compile 'org.lwjgl.lwjgl:lwjgl_util:2.9.3'
 	compile 'org.slick2d:slick2d-core:1.0.1'
 	compile 'org.l33tlabs.twl:pngdecoder:1.0'
+	compile 'org.joml:joml:1.4.0'
+    compile group: 'commons-collections', name: 'commons-collections', version: '3.2'
+    testCompile group: 'junit', name: 'junit', version: '4.+'
     compile fileTree(dir: "libs", includes: ["*.jar"])
 }
 
@@ -59,8 +66,3 @@ task wrapper(type: Wrapper) {
 run {
     systemProperty 'java.library.path', file( 'build/natives/windows' )
 }
-
-jar {
-    include("io/github/guerra24/voxel/**")
-} 
-    
