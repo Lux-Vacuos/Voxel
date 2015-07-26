@@ -5,6 +5,8 @@ public interface IKernel {
 	public void init();
 
 	public void mainLoop();
+	
+	public void errorTest();
 
 	public void render();
 	

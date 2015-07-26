@@ -105,7 +105,6 @@ public class GameResources {
 
 	public void localLoop() {
 		distance = 2 * (camera.getPosition().y - 64.4f);
-		// spot.setPosition(player.getPosition());
 	}
 
 	public void glEn() {

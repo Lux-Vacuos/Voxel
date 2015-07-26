@@ -37,7 +37,7 @@ import org.lwjgl.util.vector.Vector3f;
 
 public class World {
 
-	public int time = 0, time2 = 0;
+	public int time = 0;
 	public Chunk[][] chunks;
 	public byte[][][] blocks;
 	// public SimplexNoise noise;

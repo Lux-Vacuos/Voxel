@@ -33,7 +33,7 @@ public class Launcher {
 				e.printStackTrace();
 			}
 		}
-		new Kernel();
+		new Kernel(false);
 	}
 
 	public static Platform getPlatform() {
@@ -66,8 +66,8 @@ public class Launcher {
 
 	public static void main(String[] args) {
 		if (KernelConstants.postPro) {
-			System.setProperty("org.lwjgl.librarypath",
-					new File("natives").getAbsolutePath());
+			System.setProperty("java.library.path",
+					new File("build/natives/windows").getAbsolutePath());
 		}
 		run();
 	}

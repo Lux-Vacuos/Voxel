@@ -46,8 +46,14 @@ public class Kernel implements IKernel {
 	public static int errorTime = 0;
 	public static UpdateThread update;
 
-	public Kernel() {
-		mainLoop();
+	public boolean errorTest;
+
+	public Kernel(boolean errorTest) {
+		this.errorTest = errorTest;
+		if (errorTest)
+			errorTest();
+		else
+			mainLoop();
 	}
 
 	@Override
@@ -62,6 +68,12 @@ public class Kernel implements IKernel {
 			renderCalls = 0;
 		}
 		dispose();
+	}
+
+	@Override
+	public void errorTest() {
+		init();
+		gameResources.gameStates.loop = false;
 	}
 
 	@Override
@@ -137,7 +149,7 @@ public class Kernel implements IKernel {
 		case IN_PAUSE:
 			break;
 		case GAME:
-			//gameResources.player.move();
+			// gameResources.player.move();
 			gameResources.camera.move();
 			Frustum.updateFrustum();
 			break;
@@ -161,7 +173,8 @@ public class Kernel implements IKernel {
 		DisplayManager.updateDisplay(30);
 		Logger.log(Thread.currentThread(), "Closing Game");
 		gameResources.cleanUp();
-		Launcher.thread1.close();
+		if (!errorTest)
+			Launcher.thread1.close();
 		DisplayManager.closeDisplay();
 	}
 

@@ -45,7 +45,6 @@ public class DisplayManager {
 
 	public static void createDisplay() {
 		Logger.log(Thread.currentThread(), "Creating Display");
-		Logger.log(Thread.currentThread(), "LWJGL Version: " + Sys.getVersion());
 		try {
 			Display.setDisplayMode(new DisplayMode(KernelConstants.WIDTH,
 					KernelConstants.HEIGHT));
@@ -58,6 +57,7 @@ public class DisplayManager {
 			Logger.error(Thread.currentThread(), "Failed to create Display");
 			e.printStackTrace();
 		}
+		Logger.log(Thread.currentThread(), "LWJGL Version: " + Sys.getVersion());
 		Logger.log(Thread.currentThread(), "OpenGL Version: "
 				+ glGetString(GL_VERSION));
 		GL3Context.glViewport(0, 0, KernelConstants.WIDTH,
