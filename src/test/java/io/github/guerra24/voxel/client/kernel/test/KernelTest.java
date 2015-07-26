@@ -29,14 +29,13 @@ import static org.junit.Assert.assertEquals;
 import java.io.File;
 
 import io.github.guerra24.voxel.client.kernel.core.Kernel;
-import io.github.guerra24.voxel.client.kernel.resources.GameResources;
 import io.github.guerra24.voxel.client.kernel.world.World;
 import io.github.guerra24.voxel.client.kernel.world.entities.Camera;
 
 import org.junit.Test;
 
 public class KernelTest {
-	@Test
+	/*@Test
 	public void worldTest() {
 		System.setProperty("org.lwjgl.librarypath", new File(
 				"src/test/resources/natives").getAbsolutePath());
@@ -46,7 +45,7 @@ public class KernelTest {
 	}
 
 	@Test
-	public void camerTest() {
+	public void cameraTest() {
 		System.setProperty("org.lwjgl.librarypath", new File(
 				"src/test/resources/natives").getAbsolutePath());
 		Kernel kernel = new Kernel(true);
@@ -63,4 +62,4 @@ public class KernelTest {
 		assertEquals(1, kernel.gameResources.allObjects.size());
 		kernel.dispose();
 	}
-}
+*/}
