@@ -46,10 +46,16 @@ public final class Logger {
 					+ "] " + "[" + thread.getName() + "] " : "")
 					+ message);
 	}
-
-	public static void logS(Object... messages) {
+	public static void log(Object... messages) {
 		for (Object message : messages)
-			System.out.println((printTimeStamps ? "[CLIENT " + getTimeStamp()
+			System.out.println((printTimeStamps ? "[INFO " + getTimeStamp()
+					+ "] " : "")
+					+ message);
+	}
+
+	public static void logServer(Object... messages) {
+		for (Object message : messages)
+			System.out.println((printTimeStamps ? "[SERVER " + getTimeStamp()
 					+ "] " : "")
 					+ message);
 	}

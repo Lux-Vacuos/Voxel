@@ -26,7 +26,7 @@ package io.github.guerra24.voxel.client.kernel.graphics.opengl;
 
 import static org.lwjgl.opengl.GL11.GL_VERSION;
 import static org.lwjgl.opengl.GL11.glGetString;
-import static org.lwjgl.opengl.GL11.glViewport;
+import io.github.guerra24.voxel.client.kernel.core.Kernel;
 import io.github.guerra24.voxel.client.kernel.core.KernelConstants;
 import io.github.guerra24.voxel.client.kernel.util.Logger;
 
@@ -50,7 +50,7 @@ public class DisplayManager {
 			Display.setDisplayMode(new DisplayMode(KernelConstants.WIDTH,
 					KernelConstants.HEIGHT));
 			Display.setTitle(KernelConstants.Title);
-			Display.setResizable(false);
+			Display.setResizable(true);
 			Display.setFullscreen(false);
 			Display.setVSyncEnabled(KernelConstants.VSYNC);
 			Display.create(pixelformat);
@@ -60,13 +60,19 @@ public class DisplayManager {
 		}
 		Logger.log(Thread.currentThread(), "OpenGL Version: "
 				+ glGetString(GL_VERSION));
-		glViewport(0, 0, KernelConstants.WIDTH, KernelConstants.HEIGHT);
+		GL3Context.glViewport(0, 0, KernelConstants.WIDTH,
+				KernelConstants.HEIGHT);
 		lastFrameTime = getCurrentTime();
 	}
 
 	public static void updateDisplay(int fps) {
 		Display.sync(fps);
 		Display.update();
+		if (Display.wasResized()) {
+			GL3Context
+					.glViewport(0, 0, Display.getWidth(), Display.getHeight());
+			Kernel.gameResources.renderer.createProjectionMatrix();
+		}
 		long currentFrameTime = getCurrentTime();
 		delta = (currentFrameTime - lastFrameTime) / 1000f;
 		lastFrameTime = currentFrameTime;

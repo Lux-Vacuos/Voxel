@@ -76,10 +76,14 @@ public class GameStates {
 			}
 		}
 
-		if (state == State.GAME && !Display.isActive() && !KernelConstants.debug) {
+		if (state == State.GAME && !Display.isActive()
+				&& !KernelConstants.debug) {
 			Kernel.gameResources.camera.unlockMouse();
 			state = State.IN_PAUSE;
 		}
+		if (Display.isCloseRequested())
+			loop = false;
+
 		while (Keyboard.next()) {
 			if (state == State.GAME && Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
 				Kernel.gameResources.camera.unlockMouse();

@@ -33,6 +33,7 @@ import static org.lwjgl.opengl.GL13.glActiveTexture;
 import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
 import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
+import io.github.guerra24.voxel.client.kernel.core.Kernel;
 import io.github.guerra24.voxel.client.kernel.core.KernelConstants;
 import io.github.guerra24.voxel.client.kernel.graphics.opengl.DisplayManager;
 import io.github.guerra24.voxel.client.kernel.graphics.opengl.GL3Context;
@@ -41,6 +42,7 @@ import io.github.guerra24.voxel.client.kernel.resources.Loader;
 import io.github.guerra24.voxel.client.kernel.resources.models.RawModel;
 import io.github.guerra24.voxel.client.kernel.world.entities.Camera;
 
+import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Matrix4f;
 
 public class SkyboxRenderer {
@@ -115,6 +117,9 @@ public class SkyboxRenderer {
 
 	public void render(Camera camera, float r, float g, float b) {
 		shader.start();
+		if (Display.wasResized())
+			shader.loadProjectionMatrix(Kernel.gameResources.renderer
+					.getProjectionMatrix());
 		shader.loadViewMatrix(camera);
 		shader.loadFog(r, g, b);
 		glBindVertexArray(cube.getVaoID());

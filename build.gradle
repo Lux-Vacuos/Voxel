@@ -33,7 +33,10 @@ repositories {
 }
 
 dependencies {
-	compile 'net.openhft:affinity:3.0:'
+	compile 'org.apache.httpcomponents:httpclient:4.5'
+	compile 'org.apache.httpcomponents:httpcore:4.4.1'
+	compile 'mysql:mysql-connector-java:5.1.36'
+	compile 'commons-logging:commons-logging:1.2'
 	compile 'com.google.code.gson:gson:2.3.1'
 	compile 'org.lwjgl.lwjgl:lwjgl:2.9.3'
 	compile 'org.lwjgl.lwjgl:lwjgl_util:2.9.3'

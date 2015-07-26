@@ -64,7 +64,7 @@ public class MasterRenderer {
 		skyboxRenderer = new SkyboxRenderer(loader, projectionMatrix);
 	}
 
-	public static void enableCulling() {
+	public void enableCulling() {
 		GL3Context.glEnable(GL_CULL_FACE);
 		GL3Context.glCullFace(GL_BACK);
 	}
@@ -97,6 +97,8 @@ public class MasterRenderer {
 			Vector4f clipPlane) {
 		prepare();
 		shader.start();
+		if (Display.wasResized())
+			shader.loadProjectionMatrix(projectionMatrix);
 		shader.loadClipPlane(clipPlane);
 		shader.loadSkyColour(KernelConstants.RED, KernelConstants.GREEN,
 				KernelConstants.BLUE);
@@ -113,6 +115,8 @@ public class MasterRenderer {
 	public void renderEntity(List<Light> lights, Camera camera,
 			Vector4f clipPlane) {
 		shader.start();
+		if (Display.wasResized())
+			shader.loadProjectionMatrix(projectionMatrix);
 		shader.loadClipPlane(clipPlane);
 		shader.loadLights(lights);
 		shader.loadviewMatrix(camera);
@@ -137,13 +141,13 @@ public class MasterRenderer {
 		shader.cleanUp();
 	}
 
-	public static void prepare() {
+	public void prepare() {
 		GL3Context.glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		GL3Context.glClearColor(KernelConstants.RED, KernelConstants.GREEN,
 				KernelConstants.BLUE, 1);
 	}
 
-	private void createProjectionMatrix() {
+	public void createProjectionMatrix() {
 		aspectRatio = (float) Display.getWidth() / (float) Display.getHeight();
 		float y_scale = (float) ((1f / Math.tan(Math
 				.toRadians(KernelConstants.FOV / 2f))) * aspectRatio);
@@ -152,6 +156,7 @@ public class MasterRenderer {
 				- KernelConstants.NEAR_PLANE;
 
 		projectionMatrix = new Matrix4f();
+		projectionMatrix.setIdentity();
 		projectionMatrix.m00 = x_scale;
 		projectionMatrix.m11 = y_scale;
 		projectionMatrix.m22 = -((KernelConstants.FAR_PLANE + KernelConstants.NEAR_PLANE) / frustrum_length);

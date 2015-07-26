@@ -49,6 +49,7 @@ import io.github.guerra24.voxel.client.kernel.world.entities.Light;
 
 import java.util.List;
 
+import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.util.vector.Vector4f;
@@ -121,6 +122,9 @@ public class WaterRenderer {
 		moveFactor += KernelConstants.WAVE_SPEED
 				* DisplayManager.getFrameTimeSeconds();
 		moveFactor %= 1;
+		if (Display.wasResized())
+			shader.loadProjectionMatrix(Kernel.gameResources.renderer
+					.getProjectionMatrix());
 		shader.loadMoveFactor(moveFactor);
 		shader.loadLight(light);
 		glBindVertexArray(quad.getVaoID());
@@ -141,6 +145,9 @@ public class WaterRenderer {
 		moveFactor += KernelConstants.WAVE_SPEED
 				* DisplayManager.getFrameTimeSeconds();
 		moveFactor %= 1;
+		if (Display.wasResized())
+			shader.loadProjectionMatrix(Kernel.gameResources.renderer
+					.getProjectionMatrix());
 		shader.loadMoveFactor(moveFactor);
 		shader.loadDirectLightDirection(new Vector3f(-80, -100, -40));
 		glBindVertexArray(quad.getVaoID());
