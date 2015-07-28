@@ -93,7 +93,7 @@ public class PerlinNoise {
 
 		float[][][] smoothNoise = new float[octaveCount][][];
 
-		float persistance = 0.45f;
+		float persistance = 0.5f;
 
 		for (int i = 0; i < octaveCount; i++) {
 			smoothNoise[i] = GenerateSmoothNoise(baseNoise, i);

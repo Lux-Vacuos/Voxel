@@ -102,4 +102,9 @@ public final class GL3Context {
 		GL11.glCullFace(mode);
 		GLError.check();
 	}
+
+	public static void glColorMask(boolean red, boolean green, boolean blue, boolean alpha) {
+		GL11.glColorMask(red, green, blue, alpha);
+		GLError.check();
+	}
 }

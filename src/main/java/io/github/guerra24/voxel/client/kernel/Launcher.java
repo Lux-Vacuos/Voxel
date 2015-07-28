@@ -65,8 +65,8 @@ public class Launcher {
 	}
 
 	public static void main(String[] args) {
-		if (KernelConstants.postPro) {
-			System.setProperty("java.library.path",
+		if (true) {
+			System.setProperty("org.lwjgl.librarypath",
 					new File("build/natives/windows").getAbsolutePath());
 		}
 		run();

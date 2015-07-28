@@ -24,13 +24,14 @@
 
 package io.github.guerra24.voxel.client.kernel.graphics;
 
+import static org.lwjgl.opengl.GL11.GL_BLEND;
+import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
+import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
 import static org.lwjgl.opengl.GL11.glBindTexture;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE1;
-import static org.lwjgl.opengl.GL13.GL_TEXTURE2;
-import static org.lwjgl.opengl.GL13.GL_TEXTURE3;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
 import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
 import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
@@ -52,7 +53,6 @@ import java.util.List;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
-import org.lwjgl.util.vector.Vector4f;
 
 public class WaterRenderer {
 
@@ -61,8 +61,6 @@ public class WaterRenderer {
 
 	private RawModel quad;
 	private WaterShader shader;
-	private WaterFrameBuffers fbos;
-	private WaterFrameBuffers fbos2;
 
 	private float moveFactor = 0;
 
@@ -70,11 +68,8 @@ public class WaterRenderer {
 	private int normalTexture;
 
 	public WaterRenderer(Loader loader, WaterShader shader,
-			Matrix4f projectionMatrix, WaterFrameBuffers fbos,
-			WaterFrameBuffers fbos2) {
+			Matrix4f projectionMatrix) {
 		this.shader = shader;
-		this.fbos = fbos;
-		this.fbos2 = fbos2;
 		dudvTexture = loader.loadTextureBlocks(DUDV_MAP);
 		normalTexture = loader.loadTextureBlocks(NORMAL_MAP);
 		shader.start();
@@ -118,6 +113,8 @@ public class WaterRenderer {
 
 	private void prepareRender(Camera camera, Light light) {
 		shader.start();
+		shader.loadSkyColour(KernelConstants.RED, KernelConstants.GREEN,
+				KernelConstants.BLUE);
 		shader.loadViewMatrix(camera);
 		moveFactor += KernelConstants.WAVE_SPEED
 				* DisplayManager.getFrameTimeSeconds();
@@ -127,20 +124,20 @@ public class WaterRenderer {
 					.getProjectionMatrix());
 		shader.loadMoveFactor(moveFactor);
 		shader.loadLight(light);
+		GL3Context.glEnable(GL_BLEND);
+		GL3Context.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glBindVertexArray(quad.getVaoID());
 		glEnableVertexAttribArray(0);
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, fbos.getReflectionTexture());
-		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_2D, fbos2.getRefractionTexture());
-		glActiveTexture(GL_TEXTURE2);
 		glBindTexture(GL_TEXTURE_2D, dudvTexture);
-		glActiveTexture(GL_TEXTURE3);
+		glActiveTexture(GL_TEXTURE1);
 		glBindTexture(GL_TEXTURE_2D, normalTexture);
 	}
 
 	private void prepareRender(Camera camera) {
 		shader.start();
+		shader.loadSkyColour(KernelConstants.RED, KernelConstants.GREEN,
+				KernelConstants.BLUE);
 		shader.loadViewMatrix(camera);
 		moveFactor += KernelConstants.WAVE_SPEED
 				* DisplayManager.getFrameTimeSeconds();
@@ -150,43 +147,21 @@ public class WaterRenderer {
 					.getProjectionMatrix());
 		shader.loadMoveFactor(moveFactor);
 		shader.loadDirectLightDirection(new Vector3f(-80, -100, -40));
+		GL3Context.glEnable(GL_BLEND);
+		GL3Context.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glBindVertexArray(quad.getVaoID());
 		glEnableVertexAttribArray(0);
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, fbos.getReflectionTexture());
-		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_2D, fbos2.getRefractionTexture());
-		glActiveTexture(GL_TEXTURE2);
 		glBindTexture(GL_TEXTURE_2D, dudvTexture);
-		glActiveTexture(GL_TEXTURE3);
+		glActiveTexture(GL_TEXTURE1);
 		glBindTexture(GL_TEXTURE_2D, normalTexture);
 	}
 
 	private void unbind() {
 		glDisableVertexAttribArray(0);
 		glBindVertexArray(0);
+		GL3Context.glDisable(GL_BLEND);
 		shader.stop();
-	}
-
-	public void setReflection() {
-		Kernel.gameResources.fbos.bindReflectionFrameBuffer();
-		WaterReflection.reflectionCam();
-		Kernel.gameResources.renderer.renderWorld(Kernel.gameResources.cubes,
-				Kernel.gameResources.lights, Kernel.gameResources.camera,
-				new Vector4f(0, 1, 0, -64.0f));
-		Kernel.gameResources.renderer.renderEntity(
-				Kernel.gameResources.allObjects, Kernel.gameResources.lights,
-				Kernel.gameResources.camera, new Vector4f(0, 1, 0, -64.0f));
-		WaterReflection.restoreCam();
-		Kernel.gameResources.fbos.unbindCurrentFrameBuffer();
-		Kernel.gameResources.fbos2.bindRefractionFrameBuffer();
-		Kernel.gameResources.renderer.renderWorld(Kernel.gameResources.cubes,
-				Kernel.gameResources.lights, Kernel.gameResources.camera,
-				new Vector4f(0, -1, 0, 64.8f));
-		Kernel.gameResources.renderer.renderEntity(
-				Kernel.gameResources.allObjects, Kernel.gameResources.lights,
-				Kernel.gameResources.camera, new Vector4f(0, -1, 0, 64.8f));
-		Kernel.gameResources.fbos2.unbindCurrentFrameBuffer();
 	}
 
 	private void setUpVAO(Loader loader) {

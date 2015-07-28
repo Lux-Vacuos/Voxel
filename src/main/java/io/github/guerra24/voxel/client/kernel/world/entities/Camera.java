@@ -128,7 +128,10 @@ public class Camera {
 						* multiplierMovement;
 			}
 		}
+
 		applyTranslations();
+		if (Keyboard.isKeyDown(Keyboard.KEY_T))
+			System.out.println(Kernel.renderCallsPerFrame);
 	}
 
 	public void applyTranslations() {
@@ -136,7 +139,6 @@ public class Camera {
 		glMatrixMode(GL_MODELVIEW);
 		glRotatef(getPitch(), 1, 0, 0);
 		glRotatef(getYaw(), 0, 1, 0);
-		glRotatef(0, 0, 0, 1);
 		glTranslatef(-getPosition().x, -getPosition().y, -getPosition().z);
 		glPopAttrib();
 		glMatrixMode(5889);

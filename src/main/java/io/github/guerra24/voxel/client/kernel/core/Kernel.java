@@ -121,15 +121,11 @@ public class Kernel implements IKernel {
 		case GAME:
 			synchronized (gameResources.waters) {
 				synchronized (gameResources.cubes) {
-					gameResources.glEn();
-					gameResources.waterRenderer.setReflection();
-					gameResources.glDi();
 					gameResources.renderer.renderWorld(gameResources.cubes,
-							gameResources.lights, gameResources.camera,
-							gameResources.plane);
+							gameResources.lights, gameResources.camera);
 					gameResources.renderer.renderEntity(
 							gameResources.allObjects, gameResources.lights,
-							gameResources.camera, gameResources.plane);
+							gameResources.camera);
 					gameResources.waterRenderer.render(gameResources.waters,
 							gameResources.camera);
 				}

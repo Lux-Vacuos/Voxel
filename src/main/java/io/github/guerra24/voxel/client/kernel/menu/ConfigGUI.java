@@ -45,7 +45,6 @@ import java.util.Properties;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -60,7 +59,6 @@ public class ConfigGUI extends JFrame implements ItemListener {
 
 	private static final long serialVersionUID = 1L;
 	private File configFile = new File("assets/game/settings.conf");
-	private String[] waterQualityList = { "Low", "Medium", "High", "Ultra" };
 	private Properties configProps;
 
 	private JCheckBox customSeed = new JCheckBox("Custom Seed");
@@ -69,16 +67,12 @@ public class ConfigGUI extends JFrame implements ItemListener {
 
 	private JSlider slider = new JSlider();
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private JComboBox waterQuality = new JComboBox(waterQualityList);
-
 	private JLabel labelWIDTH = new JLabel("Width: ");
 	private JLabel labelHEIGHT = new JLabel("Height: ");
 	private JLabel labelFOV = new JLabel("FOV: ");
 	private JLabel labelFPS = new JLabel("FPS: ");
 	private JLabel labelSEED = new JLabel("Seed: ");
 	private JLabel labelviewDistance = new JLabel("World Size: ");
-	private JLabel labelwaterQuality = new JLabel("Water Quality: ");
 	private JLabel labeldrawDistance = new JLabel("View Distance: ");
 	private JLabel labelChunks = new JLabel(" Chunks");
 
@@ -160,47 +154,6 @@ public class ConfigGUI extends JFrame implements ItemListener {
 
 		constraints.gridx = 1;
 		add(textviewDistance, constraints);
-
-		constraints.gridy = 6;
-		constraints.gridx = 0;
-		add(labelwaterQuality, constraints);
-
-		constraints.gridx = 1;
-		waterQuality.setSelectedIndex(3);
-		add(waterQuality, constraints);
-		waterQuality.addActionListener(new ActionListener() {
-			@SuppressWarnings("rawtypes")
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				JComboBox cb = (JComboBox) e.getSource();
-				String quality = (String) cb.getSelectedItem();
-				updateLabel(quality);
-			}
-
-			private void updateLabel(String quality) {
-				if (quality.equals("Low")) {
-					KernelConstants.REFLECTION_WIDTH = 64;
-					KernelConstants.REFLECTION_HEIGHT = 64;
-					KernelConstants.REFRACTION_WIDTH = 128;
-					KernelConstants.REFRACTION_HEIGHT = 128;
-				} else if (quality.equals("Medium")) {
-					KernelConstants.REFLECTION_WIDTH = 128;
-					KernelConstants.REFLECTION_HEIGHT = 128;
-					KernelConstants.REFRACTION_WIDTH = 256;
-					KernelConstants.REFRACTION_HEIGHT = 256;
-				} else if (quality.equals("High")) {
-					KernelConstants.REFLECTION_WIDTH = 256;
-					KernelConstants.REFLECTION_HEIGHT = 256;
-					KernelConstants.REFRACTION_WIDTH = 512;
-					KernelConstants.REFRACTION_HEIGHT = 512;
-				} else if (quality.equals("Ultra")) {
-					KernelConstants.REFLECTION_WIDTH = 512;
-					KernelConstants.REFLECTION_HEIGHT = 512;
-					KernelConstants.REFRACTION_WIDTH = 1024;
-					KernelConstants.REFRACTION_HEIGHT = 1024;
-				}
-			}
-		});
 
 		constraints.gridy = 7;
 		constraints.gridx = 1;

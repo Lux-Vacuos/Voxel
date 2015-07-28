@@ -33,7 +33,6 @@ import java.util.List;
 
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
-import org.lwjgl.util.vector.Vector4f;
 
 public class EntityShader extends ShaderProgram {
 
@@ -44,7 +43,6 @@ public class EntityShader extends ShaderProgram {
 	private int location_attenuations[];
 	private int location_viewMatrix;
 	private int location_skyColour;
-	private int location_plane;
 	private int location_directLightDirection;
 
 	public EntityShader() {
@@ -67,7 +65,6 @@ public class EntityShader extends ShaderProgram {
 				.getUniformLocation("projectionMatrix");
 		location_viewMatrix = super.getUniformLocation("viewMatrix");
 		location_skyColour = super.getUniformLocation("skyColour");
-		location_plane = super.getUniformLocation("plane");
 		location_directLightDirection = super
 				.getUniformLocation("directLightDirection");
 
@@ -82,10 +79,6 @@ public class EntityShader extends ShaderProgram {
 			location_attenuations[i] = super.getUniformLocation("attenuations["
 					+ i + "]");
 		}
-	}
-
-	public void loadClipPlane(Vector4f plane) {
-		super.loadVector(location_plane, plane);
 	}
 
 	public void loadSkyColour(float r, float g, float b) {

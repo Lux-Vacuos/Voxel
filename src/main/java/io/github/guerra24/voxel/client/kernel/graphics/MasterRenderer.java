@@ -28,6 +28,7 @@ import static org.lwjgl.opengl.GL11.GL_BACK;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_CULL_FACE;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
 import io.github.guerra24.voxel.client.kernel.core.KernelConstants;
 import io.github.guerra24.voxel.client.kernel.graphics.opengl.GL3Context;
 import io.github.guerra24.voxel.client.kernel.graphics.shaders.EntityShader;
@@ -45,7 +46,6 @@ import java.util.Map;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
-import org.lwjgl.util.vector.Vector4f;
 
 public class MasterRenderer {
 
@@ -58,13 +58,14 @@ public class MasterRenderer {
 	public float aspectRatio;
 
 	public MasterRenderer(Loader loader) {
-		enableCulling();
+		initGL();
 		createProjectionMatrix();
 		entityRenderer = new EntityRenderer(shader, projectionMatrix);
 		skyboxRenderer = new SkyboxRenderer(loader, projectionMatrix);
 	}
 
-	public void enableCulling() {
+	public void initGL() {
+		GL3Context.glEnable(GL_DEPTH_TEST);
 		GL3Context.glEnable(GL_CULL_FACE);
 		GL3Context.glCullFace(GL_BACK);
 	}
@@ -74,32 +75,30 @@ public class MasterRenderer {
 	}
 
 	public void renderWorld(List<Entity> entities, List<Light> lights,
-			Camera camera, Vector4f clipPlane) {
+			Camera camera) {
 		for (Entity entity : entities) {
 			if (Frustum.getFrustum().pointInFrustum(entity.getPosition().x,
 					entity.getPosition().y, entity.getPosition().z))
 				processEntity(entity);
 		}
-		renderWorld(lights, camera, clipPlane);
+		renderWorld(lights, camera);
 	}
 
 	public void renderEntity(List<Entity> entities, List<Light> lights,
-			Camera camera, Vector4f clipPlane) {
+			Camera camera) {
 		for (Entity entity : entities) {
 			if (Frustum.getFrustum().pointInFrustum(entity.getPosition().x,
 					entity.getPosition().y, entity.getPosition().z))
 				processEntity(entity);
 		}
-		renderEntity(lights, camera, clipPlane);
+		renderEntity(lights, camera);
 	}
 
-	public void renderWorld(List<Light> lights, Camera camera,
-			Vector4f clipPlane) {
+	public void renderWorld(List<Light> lights, Camera camera) {
 		prepare();
 		shader.start();
 		if (Display.wasResized())
 			shader.loadProjectionMatrix(projectionMatrix);
-		shader.loadClipPlane(clipPlane);
 		shader.loadSkyColour(KernelConstants.RED, KernelConstants.GREEN,
 				KernelConstants.BLUE);
 		shader.loadDirectLightDirection(new Vector3f(-80, -100, -40));
@@ -112,12 +111,10 @@ public class MasterRenderer {
 		entities.clear();
 	}
 
-	public void renderEntity(List<Light> lights, Camera camera,
-			Vector4f clipPlane) {
+	public void renderEntity(List<Light> lights, Camera camera) {
 		shader.start();
 		if (Display.wasResized())
 			shader.loadProjectionMatrix(projectionMatrix);
-		shader.loadClipPlane(clipPlane);
 		shader.loadLights(lights);
 		shader.loadviewMatrix(camera);
 		entityRenderer.render(entities);

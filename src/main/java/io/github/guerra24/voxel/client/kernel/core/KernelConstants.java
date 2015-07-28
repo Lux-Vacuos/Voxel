@@ -33,14 +33,14 @@ public class KernelConstants {
 	public static String Title = "Voxel";
 	// Game Settings
 	public static int FOV = 90;
-	public static float NEAR_PLANE = 0.01f;
+	public static float NEAR_PLANE = 0.05f;
 	public static float FAR_PLANE = 1000f;
 	public static float RED = 0.375f;
 	public static float GREEN = 0.555f;
 	public static float BLUE = 0.655f;
 	public static boolean advancedOpenGL = false;
 	// Game Variables
-	public static int build = 46;
+	public static int build = 47;
 	public static String version = "0.0.1";
 	public static boolean debug = true;
 	public static boolean isLoading = false;
@@ -58,10 +58,6 @@ public class KernelConstants {
 	public static final int MAX_LIGHTS = 1;
 	// Water Settings
 	public static float WAVE_SPEED = 0.03f;
-	public static int REFLECTION_WIDTH = 512;
-	public static int REFLECTION_HEIGHT = 512;
-	public static int REFRACTION_WIDTH = 1024;
-	public static int REFRACTION_HEIGHT = 1024;
 	// Skybox Settings
 	public static float SIZE = 500f;
 	public static final float ROTATE_SPEED = 0.2f;
