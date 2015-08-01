@@ -41,7 +41,7 @@ uniform vec3 lightColour;
 uniform vec3 directLightDirection;
 
 const float tiling = 0.5;
-const float density = 0.01;
+const float density = 0.0023;
 const float gradient = 10.0;
 
 void main(void) {

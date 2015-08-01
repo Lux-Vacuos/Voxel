@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015 Guerra24 / ThinMatrix
+ * Copyright (c) 2015 Guerra24
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,6 +25,7 @@
 package io.github.guerra24.voxel.client.kernel.graphics;
 
 import static org.lwjgl.opengl.GL11.GL_BLEND;
+import static org.lwjgl.opengl.GL11.GL_CULL_FACE;
 import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
 import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
@@ -39,7 +40,7 @@ import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import io.github.guerra24.voxel.client.kernel.core.Kernel;
 import io.github.guerra24.voxel.client.kernel.core.KernelConstants;
 import io.github.guerra24.voxel.client.kernel.graphics.opengl.DisplayManager;
-import io.github.guerra24.voxel.client.kernel.graphics.opengl.GL3Context;
+import io.github.guerra24.voxel.client.kernel.graphics.opengl.VoxelGL33;
 import io.github.guerra24.voxel.client.kernel.graphics.shaders.WaterShader;
 import io.github.guerra24.voxel.client.kernel.resources.Loader;
 import io.github.guerra24.voxel.client.kernel.resources.models.RawModel;
@@ -82,14 +83,14 @@ public class WaterRenderer {
 	public void render(List<WaterTile> water, Camera camera) {
 		prepareRender(camera);
 		for (WaterTile tile : water) {
-			if (Frustum.getFrustum().pointInFrustum(tile.getX(), 64,
-					tile.getZ())) {
+			if (Frustum.getFrustum().pointInFrustum(tile.getX(),
+					tile.getHeight(), tile.getZ())) {
 				Matrix4f modelMatrix = Maths
 						.createTransformationMatrix(new Vector3f(tile.getX(),
 								tile.getHeight(), tile.getZ()), 0, 0, 0,
 								WaterTile.TILE_SIZE);
 				shader.loadModelMatrix(modelMatrix);
-				GL3Context.glDrawArrays(GL_TRIANGLES, 0, quad.getVertexCount());
+				VoxelGL33.glDrawArrays(GL_TRIANGLES, 0, quad.getVertexCount());
 			}
 		}
 		unbind();
@@ -98,14 +99,14 @@ public class WaterRenderer {
 	public void render(List<WaterTile> water, Camera camera, Light light) {
 		prepareRender(camera, light);
 		for (WaterTile tile : water) {
-			if (Frustum.getFrustum().pointInFrustum(tile.getX(), 64,
-					tile.getZ())) {
+			if (Frustum.getFrustum().pointInFrustum(tile.getX(),
+					tile.getHeight(), tile.getZ())) {
 				Matrix4f modelMatrix = Maths
 						.createTransformationMatrix(new Vector3f(tile.getX(),
 								tile.getHeight(), tile.getZ()), 0, 0, 0,
 								WaterTile.TILE_SIZE);
 				shader.loadModelMatrix(modelMatrix);
-				GL3Context.glDrawArrays(GL_TRIANGLES, 0, quad.getVertexCount());
+				VoxelGL33.glDrawArrays(GL_TRIANGLES, 0, quad.getVertexCount());
 			}
 		}
 		unbind();
@@ -124,8 +125,9 @@ public class WaterRenderer {
 					.getProjectionMatrix());
 		shader.loadMoveFactor(moveFactor);
 		shader.loadLight(light);
-		GL3Context.glEnable(GL_BLEND);
-		GL3Context.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		VoxelGL33.glDisable(GL_CULL_FACE);
+		VoxelGL33.glEnable(GL_BLEND);
+		VoxelGL33.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glBindVertexArray(quad.getVaoID());
 		glEnableVertexAttribArray(0);
 		glActiveTexture(GL_TEXTURE0);
@@ -147,8 +149,9 @@ public class WaterRenderer {
 					.getProjectionMatrix());
 		shader.loadMoveFactor(moveFactor);
 		shader.loadDirectLightDirection(new Vector3f(-80, -100, -40));
-		GL3Context.glEnable(GL_BLEND);
-		GL3Context.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		VoxelGL33.glDisable(GL_CULL_FACE);
+		VoxelGL33.glEnable(GL_BLEND);
+		VoxelGL33.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glBindVertexArray(quad.getVaoID());
 		glEnableVertexAttribArray(0);
 		glActiveTexture(GL_TEXTURE0);
@@ -160,7 +163,8 @@ public class WaterRenderer {
 	private void unbind() {
 		glDisableVertexAttribArray(0);
 		glBindVertexArray(0);
-		GL3Context.glDisable(GL_BLEND);
+		VoxelGL33.glDisable(GL_BLEND);
+		VoxelGL33.glEnable(GL_CULL_FACE);
 		shader.stop();
 	}
 

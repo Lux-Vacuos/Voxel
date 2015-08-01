@@ -57,10 +57,15 @@ public abstract class Block {
 	public abstract byte getId();
 
 	public abstract Entity getFaceUp(Vector3f pos);
+
 	public abstract Entity getFaceDown(Vector3f pos);
+
 	public abstract Entity getFaceEast(Vector3f pos);
+
 	public abstract Entity getFaceWest(Vector3f pos);
+
 	public abstract Entity getFaceNorth(Vector3f pos);
+
 	public abstract Entity getFaceSouth(Vector3f pos);
 
 	public abstract WaterTile getWaterTitle(Vector3f pos);
@@ -87,8 +92,9 @@ public abstract class Block {
 			return Block.Water;
 		case 8:
 			return Block.Glass;
+		default:
+			return Block.NULL;
 		}
-		return Block.NULL;
 	}
 
 }

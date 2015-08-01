@@ -150,6 +150,7 @@ public class ConfigGUI extends JFrame implements ItemListener {
 
 		constraints.gridy = 5;
 		constraints.gridx = 0;
+		labelviewDistance.setEnabled(false);
 		add(labelviewDistance, constraints);
 
 		constraints.gridx = 1;
@@ -158,7 +159,7 @@ public class ConfigGUI extends JFrame implements ItemListener {
 		constraints.gridy = 7;
 		constraints.gridx = 1;
 		slider.setMinimum(2);
-		slider.setMaximum(8);
+		slider.setMaximum(32);
 		slider.addChangeListener(new ChangeListener() {
 			@Override
 			public void stateChanged(ChangeEvent e) {

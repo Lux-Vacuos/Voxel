@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015 Guerra24 / Sri Harsha Chilakapati
+ * Copyright (c) 2015 Guerra24
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -30,23 +30,23 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.Color;
 import org.lwjgl.util.Rectangle;
 
-public final class GL3Context {
-	private GL3Context() {
+public final class VoxelGL33 {
+	private VoxelGL33() {
 	}
 
 	public static void glEnable(int capability) {
 		GL11.glEnable(capability);
-		GLError.check();
+		VoxelGLError.check();
 	}
 
 	public static void glBlendFunc(int src, int dst) {
 		GL11.glBlendFunc(src, dst);
-		GLError.check();
+		VoxelGLError.check();
 	}
 
 	public static void glDisable(int capability) {
 		GL11.glDisable(capability);
-		GLError.check();
+		VoxelGLError.check();
 	}
 
 	public static void glClearColor(Color color) {
@@ -56,17 +56,17 @@ public final class GL3Context {
 
 	public static void glClearColor(float r, float g, float b, float a) {
 		GL11.glClearColor(r, g, b, a);
-		GLError.check();
+		VoxelGLError.check();
 	}
 
 	public static void glClear(int buffers) {
 		GL11.glClear(buffers);
-		GLError.check();
+		VoxelGLError.check();
 	}
 
 	public static void glDrawArrays(int mode, int offset, int vertexCount) {
 		GL11.glDrawArrays(mode, offset, vertexCount);
-		GLError.check();
+		VoxelGLError.check();
 
 		Kernel.renderCalls++;
 	}
@@ -74,7 +74,7 @@ public final class GL3Context {
 	public static void glDrawElements(int mode, int vertexCount, int type,
 			int offset) {
 		GL11.glDrawElements(mode, vertexCount, type, offset);
-		GLError.check();
+		VoxelGLError.check();
 
 		Kernel.renderCalls++;
 	}
@@ -85,26 +85,26 @@ public final class GL3Context {
 
 	public static void glViewport(float x, float y, float width, float height) {
 		GL11.glViewport((int) x, (int) y, (int) width, (int) height);
-		GLError.check();
+		VoxelGLError.check();
 	}
 
 	public static void glDepthMask(boolean value) {
 		GL11.glDepthMask(value);
-		GLError.check();
+		VoxelGLError.check();
 	}
 
 	public static void glDepthFunc(int func) {
 		GL11.glDepthFunc(func);
-		GLError.check();
+		VoxelGLError.check();
 	}
 
 	public static void glCullFace(int mode) {
 		GL11.glCullFace(mode);
-		GLError.check();
+		VoxelGLError.check();
 	}
 
 	public static void glColorMask(boolean red, boolean green, boolean blue, boolean alpha) {
 		GL11.glColorMask(red, green, blue, alpha);
-		GLError.check();
+		VoxelGLError.check();
 	}
 }

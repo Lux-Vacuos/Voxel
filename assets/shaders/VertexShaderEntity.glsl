@@ -41,7 +41,7 @@ uniform vec3 lightPosition[1];
 uniform vec4 plane;
 uniform vec3 directLightDirection;
 
-const float density = 0.01;
+const float density = 0.0023;
 const float gradient = 10.0;
 
 float CalcDirectionalLightFactor(vec3 lightDirection, vec3 normal) {

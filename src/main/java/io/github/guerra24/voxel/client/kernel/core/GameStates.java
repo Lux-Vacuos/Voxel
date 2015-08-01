@@ -49,7 +49,7 @@ public class GameStates {
 		if (state == State.MAINMENU && Button.isInButtonPlay()) {
 			// Kernel.gameResources.SoundSystem.pause("MainMenuMusic");
 			isPlaying = true;
-			Kernel.world.startWorld();
+			Kernel.world.startWorld(Kernel.gameResources.camera);
 			Kernel.gameResources.camera.setMouse();
 			state = State.GAME;
 		}
@@ -64,16 +64,9 @@ public class GameStates {
 			Kernel.gameResources.waters.clear();
 			Kernel.gameResources.cubes.clear();
 
-			for (int x = 0; x < Kernel.world.chunks.length; x++) {
-				for (int z = 0; z < Kernel.world.chunks.length; z++) {
-					if (Kernel.world.chunks[x][z] != null) {
-						Kernel.world.chunks[x][z].dispose();
-						Kernel.world.chunks[x][z] = null;
-					}
-				}
-				Kernel.gameResources.camera.setPosition(new Vector3f(0, 80, 0));
-				state = State.MAINMENU;
-			}
+			Kernel.world.removeAll();
+			Kernel.gameResources.camera.setPosition(new Vector3f(0, 80, 0));
+			state = State.MAINMENU;
 		}
 
 		if (state == State.GAME && !Display.isActive()

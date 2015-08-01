@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015 Guerra24 / Sri Harsha Chilakapati
+ * Copyright (c) 2015 Guerra24
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,8 +27,8 @@ package io.github.guerra24.voxel.client.kernel.graphics.opengl;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL30.*;
 
-public final class GLError {
-	private GLError() {
+public final class VoxelGLError {
+	private VoxelGLError() {
 	}
 
 	public static void check() {
@@ -41,19 +41,19 @@ public final class GLError {
 		case GL_NO_ERROR:
 			break;
 		case GL_INVALID_ENUM:
-			new GLException.InvalidEnum();
+			new VoxelGLException.InvalidEnum();
 		case GL_INVALID_VALUE:
-			new GLException.InvalidValue();
+			new VoxelGLException.InvalidValue();
 		case GL_INVALID_OPERATION:
-			new GLException.InvalidOperation();
+			new VoxelGLException.InvalidOperation();
 		case GL_INVALID_FRAMEBUFFER_OPERATION:
-			new GLException.InvalidFramebufferOperation();
+			new VoxelGLException.InvalidFramebufferOperation();
 		case GL_OUT_OF_MEMORY:
-			new GLException.OutOfMemory();
+			new VoxelGLException.OutOfMemory();
 		case GL_STACK_UNDERFLOW:
-			new GLException.StackUnderflow();
+			new VoxelGLException.StackUnderflow();
 		case GL_STACK_OVERFLOW:
-			new GLException.StackOverflow();
+			new VoxelGLException.StackOverflow();
 		}
 	}
 

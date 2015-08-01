@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015 Guerra24 / ThinMatrix
+ * Copyright (c) 2015 Guerra24
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -36,7 +36,7 @@ import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import io.github.guerra24.voxel.client.kernel.core.Kernel;
 import io.github.guerra24.voxel.client.kernel.core.KernelConstants;
 import io.github.guerra24.voxel.client.kernel.graphics.opengl.DisplayManager;
-import io.github.guerra24.voxel.client.kernel.graphics.opengl.GL3Context;
+import io.github.guerra24.voxel.client.kernel.graphics.opengl.VoxelGL33;
 import io.github.guerra24.voxel.client.kernel.graphics.shaders.SkyboxShader;
 import io.github.guerra24.voxel.client.kernel.resources.Loader;
 import io.github.guerra24.voxel.client.kernel.resources.models.RawModel;
@@ -125,7 +125,7 @@ public class SkyboxRenderer {
 		glBindVertexArray(cube.getVaoID());
 		glEnableVertexAttribArray(0);
 		bindTextures();
-		GL3Context.glDrawArrays(GL_TRIANGLES, 0, cube.getVertexCount());
+		VoxelGL33.glDrawArrays(GL_TRIANGLES, 0, cube.getVertexCount());
 		glDisableVertexAttribArray(0);
 		glBindVertexArray(0);
 		shader.stop();

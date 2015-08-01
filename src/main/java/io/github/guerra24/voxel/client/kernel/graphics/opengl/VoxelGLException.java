@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015 Guerra24 / Sri Harsha Chilakapati / Josh "ShadowLordAlpha"
+ * Copyright (c) 2015 Guerra24
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,13 +26,13 @@ package io.github.guerra24.voxel.client.kernel.graphics.opengl;
 
 import io.github.guerra24.voxel.client.kernel.util.Logger;
 
-public class GLException {
+public class VoxelGLException {
 
-	public GLException(String message) {
+	public VoxelGLException(String message) {
 		Logger.warn(Thread.currentThread(), message);
 	}
 
-	public static class InvalidEnum extends GLException {
+	public static class InvalidEnum extends VoxelGLException {
 
 		public InvalidEnum() {
 			super(
@@ -40,35 +40,35 @@ public class GLException {
 		}
 	}
 
-	public static class InvalidValue extends GLException {
+	public static class InvalidValue extends VoxelGLException {
 
 		public InvalidValue() {
 			super("A numeric argument is out of range");
 		}
 	}
 
-	public static class InvalidOperation extends GLException {
+	public static class InvalidOperation extends VoxelGLException {
 
 		public InvalidOperation() {
 			super("The specified operation is not allowed in current state");
 		}
 	}
 
-	public static class InvalidFramebufferOperation extends GLException {
+	public static class InvalidFramebufferOperation extends VoxelGLException {
 
 		public InvalidFramebufferOperation() {
 			super("The FrameBuffer object is incomplete");
 		}
 	}
 
-	public static class OutOfMemory extends GLException {
+	public static class OutOfMemory extends VoxelGLException {
 
 		public OutOfMemory() {
 			super("There is not enough memory left to execute the command");
 		}
 	}
 
-	public static class StackUnderflow extends GLException {
+	public static class StackUnderflow extends VoxelGLException {
 
 		public StackUnderflow() {
 			super(
@@ -76,7 +76,7 @@ public class GLException {
 		}
 	}
 
-	public static class StackOverflow extends GLException {
+	public static class StackOverflow extends VoxelGLException {
 
 		public StackOverflow() {
 			super(

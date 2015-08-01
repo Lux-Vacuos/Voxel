@@ -156,7 +156,7 @@ public class Kernel implements IKernel {
 	public void error() {
 		errorTime++;
 		if (errorTime % 100 == 0) {
-			if (renderCallsPerFrame > 10000) {
+			if (renderCallsPerFrame > 50000) {
 				Logger.warn(Thread.currentThread(), "Render Overflow");
 			}
 			errorTime = 0;

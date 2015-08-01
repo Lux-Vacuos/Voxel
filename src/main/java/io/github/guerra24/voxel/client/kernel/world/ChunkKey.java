@@ -22,48 +22,64 @@
  * SOFTWARE.
  */
 
-package io.github.guerra24.voxel.client.kernel.world.entities;
+package io.github.guerra24.voxel.client.kernel.world;
 
-import org.lwjgl.util.vector.Vector3f;
+import java.util.ArrayList;
 
-public class Light {
+public class ChunkKey implements Cloneable {
+	public int dim, cx, cz;
 
-	private Vector3f position;
-	private Vector3f colour;
-	private Vector3f attenuation = new Vector3f(1, 0, 0);
-
-	public Light(Vector3f position, Vector3f colour) {
-		this.position = position;
-		this.colour = colour;
+	public ChunkKey(int dim, int cx, int cz) {
+		this.dim = dim;
+		this.cx = cx;
+		this.cz = cz;
 	}
 
-	public Light(Vector3f position, Vector3f colour, Vector3f attenuation) {
-		this.position = position;
-		this.colour = colour;
-		this.attenuation = attenuation;
+	public int hashCode() {
+		return (dim << 16) ^ (cx << 8) ^ cz;
 	}
 
-	public Vector3f getPosition() {
-		return position;
+	public boolean equals(Object obj) {
+		ChunkKey key = (ChunkKey) obj;
+		if (key.dim != dim)
+			return false;
+		if (key.cx != cx)
+			return false;
+		if (key.cz != cz)
+			return false;
+		return true;
 	}
 
-	public void setPosition(Vector3f position) {
-		this.position = position;
+	public ChunkKey clone() {
+		return new ChunkKey(dim, cx, cz);
 	}
 
-	public Vector3f getColour() {
-		return colour;
+	private static ArrayList<ChunkKey> pool = new ArrayList<ChunkKey>();
+	public static int cnt;
+
+	public static ChunkKey alloc(int dim, int cx, int cz) {
+		ChunkKey c;
+		synchronized (pool) {
+			int size = pool.size();
+			if (size == 0) {
+				cnt++;
+				return new ChunkKey(dim, cx, cz);
+			}
+			c = pool.remove(size - 1);
+		}
+		c.dim = dim;
+		c.cx = cx;
+		c.cz = cz;
+		return c;
 	}
 
-	public void setColour(Vector3f colour) {
-		this.colour = colour;
+	private static void free(ChunkKey c) {
+		synchronized (pool) {
+			pool.add(c);
+		}
 	}
 
-	public Vector3f getAttenuation() {
-		return attenuation;
-	}
-
-	public void setAttenuation(Vector3f attenuation) {
-		this.attenuation = attenuation;
+	public void free() {
+		free(this);
 	}
 }

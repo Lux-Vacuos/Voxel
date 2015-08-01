@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015 Guerra24 / ThinMatrix
+ * Copyright (c) 2015 Guerra24
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -47,15 +47,15 @@ public class Player extends Entity {
 		super.increasePosition(0,
 				upwardsSpeed * DisplayManager.getFrameTimeSeconds(), 0);
 		try {
-			if (Kernel.world.getBlock((int) (super.getPosition().x - 0.5f),
-					(int) super.getPosition().y - 1,
-					(int) (super.getPosition().z + 0.5f)) == 0) {
+			//if (Kernel.world.getBlock((int) (super.getPosition().x - 0.5f),
+			//		(int) super.getPosition().y - 1,
+			//		(int) (super.getPosition().z + 0.5f)) == 0) {
 				upwardsSpeed += GRAVITY * DisplayManager.getFrameTimeSeconds();
 				isInAir = true;
-			} else {
+			//} else {
 				upwardsSpeed = 0;
 				isInAir = false;
-			}
+			//}
 		} finally {
 		}
 	}

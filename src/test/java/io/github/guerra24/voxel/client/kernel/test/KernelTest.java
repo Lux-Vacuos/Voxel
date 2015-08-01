@@ -35,12 +35,14 @@ import io.github.guerra24.voxel.client.kernel.world.entities.Camera;
 import org.junit.Test;
 
 public class KernelTest {
-	/*@Test
+	@Test
 	public void worldTest() {
 		System.setProperty("org.lwjgl.librarypath", new File(
 				"src/test/resources/natives").getAbsolutePath());
 		Kernel kernel = new Kernel(true);
-		assertEquals(new World().getClass(), kernel.world.getClass());
+		World world = new World();
+		assertEquals(world.chunks, Kernel.world.chunks);
+		assertEquals(world.getClass(), kernel.world.getClass());
 		kernel.dispose();
 	}
 
@@ -49,8 +51,13 @@ public class KernelTest {
 		System.setProperty("org.lwjgl.librarypath", new File(
 				"src/test/resources/natives").getAbsolutePath());
 		Kernel kernel = new Kernel(true);
-		assertEquals(new Camera().getPosition(),
+		Camera camera = new Camera();
+		assertEquals(camera.getPosition(),
 				kernel.gameResources.camera.getPosition());
+		assertEquals(camera.getPitch(), kernel.gameResources.camera.getPitch(),
+				0.0f);
+		assertEquals(camera.getYaw(), kernel.gameResources.camera.getYaw(),
+				0.0f);
 		kernel.dispose();
 	}
 
@@ -62,4 +69,4 @@ public class KernelTest {
 		assertEquals(1, kernel.gameResources.allObjects.size());
 		kernel.dispose();
 	}
-*/}
+}

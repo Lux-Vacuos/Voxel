@@ -60,7 +60,7 @@ public class DisplayManager {
 		Logger.log(Thread.currentThread(), "LWJGL Version: " + Sys.getVersion());
 		Logger.log(Thread.currentThread(), "OpenGL Version: "
 				+ glGetString(GL_VERSION));
-		GL3Context.glViewport(0, 0, KernelConstants.WIDTH,
+		VoxelGL33.glViewport(0, 0, KernelConstants.WIDTH,
 				KernelConstants.HEIGHT);
 		lastFrameTime = getCurrentTime();
 	}
@@ -69,7 +69,7 @@ public class DisplayManager {
 		Display.sync(fps);
 		Display.update();
 		if (Display.wasResized()) {
-			GL3Context
+			VoxelGL33
 					.glViewport(0, 0, Display.getWidth(), Display.getHeight());
 			Kernel.gameResources.renderer.createProjectionMatrix();
 		}

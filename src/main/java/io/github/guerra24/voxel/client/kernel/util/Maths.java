@@ -104,7 +104,7 @@ public class Maths {
 		matrix.m21 = -forward.y;
 		matrix.m22 = -forward.z;
 
-		matrix.transpose(); // <------ My dumb hack
+		matrix.transpose();
 
 		eye.set(-eyeX, -eyeY, -eyeZ);
 		matrix.translate(eye);

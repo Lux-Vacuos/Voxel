@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015 Guerra24 / ThinMatrix
+ * Copyright (c) 2015 Guerra24
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -42,7 +42,7 @@ import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
 import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import io.github.guerra24.voxel.client.kernel.core.KernelConstants;
-import io.github.guerra24.voxel.client.kernel.graphics.opengl.GL3Context;
+import io.github.guerra24.voxel.client.kernel.graphics.opengl.VoxelGL33;
 import io.github.guerra24.voxel.client.kernel.graphics.shaders.GuiShader;
 import io.github.guerra24.voxel.client.kernel.resources.Loader;
 import io.github.guerra24.voxel.client.kernel.resources.models.GuiTexture;
@@ -69,18 +69,18 @@ public class GuiRenderer {
 		shader.start();
 		glBindVertexArray(quad.getVaoID());
 		glEnableVertexAttribArray(0);
-		GL3Context.glEnable(GL_BLEND);
-		GL3Context.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		VoxelGL33.glEnable(GL_BLEND);
+		VoxelGL33.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		for (GuiTexture gui : guis) {
 			glActiveTexture(GL_TEXTURE0);
 			glBindTexture(GL_TEXTURE_2D, gui.getTexture());
 			Matrix4f matrix = Maths.createTransformationMatrix(
 					gui.getPosition(), gui.getScale());
 			shader.loadTransformation(matrix);
-			GL3Context
+			VoxelGL33
 					.glDrawArrays(GL_TRIANGLE_STRIP, 0, quad.getVertexCount());
 		}
-		GL3Context.glDisable(GL_BLEND);
+		VoxelGL33.glDisable(GL_BLEND);
 		glDisableVertexAttribArray(0);
 		glBindVertexArray(0);
 		shader.stop();
@@ -90,18 +90,18 @@ public class GuiRenderer {
 		shader.start();
 		glBindVertexArray(quad.getVaoID());
 		glEnableVertexAttribArray(0);
-		GL3Context.glEnable(GL_BLEND);
-		GL3Context.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		VoxelGL33.glEnable(GL_BLEND);
+		VoxelGL33.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		for (GuiTexture gui : guis) {
 			glActiveTexture(GL_TEXTURE0);
 			glBindTexture(GL_TEXTURE_2D, gui.getTexture());
 			Matrix4f matrix = Maths.createTransformationMatrix(
 					gui.getPosition(), gui.getScale());
 			shader.loadTransformation(matrix);
-			GL3Context
+			VoxelGL33
 					.glDrawArrays(GL_TRIANGLE_STRIP, 0, quad.getVertexCount());
 		}
-		GL3Context.glDisable(GL_BLEND);
+		VoxelGL33.glDisable(GL_BLEND);
 		glDisableVertexAttribArray(0);
 		glBindVertexArray(0);
 		shader.stop();

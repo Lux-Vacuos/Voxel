@@ -39,7 +39,7 @@ public class MousePicker {
 	private Matrix4f projectionMatrix;
 	private Matrix4f viewMatrix;
 	private Camera camera;
-	private float distance = 1.2f;
+	private float distance = 1.4f;
 
 	public MousePicker(Camera cam, Matrix4f projection) {
 		this.camera = cam;

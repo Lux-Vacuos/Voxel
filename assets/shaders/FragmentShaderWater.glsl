@@ -24,13 +24,13 @@
 
 #version 330 core
 
-out vec4 out_Color;
-
 in vec4 clipSpace;
 in vec2 textureCoords;
 in vec3 toCameraVector;
 in vec3 fromLightVector;
 in float visibility;
+
+out vec4 out_Color;
 
 uniform sampler2D dudvMap;
 uniform sampler2D normalMap;

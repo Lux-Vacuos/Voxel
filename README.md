@@ -7,9 +7,9 @@ When the project is in a more stable and complete stage, my plan is to develop a
 [![Build Status](https://drone.io/github.com/Guerra24/Voxel/status.png)](https://drone.io/github.com/Guerra24/Voxel/latest)
 
 # Credits
-- Lharing: Ores generation algorithm.
-- quew8: Fixing the chunk movement. http://www.java-gaming.org/topics/lwjgl-opengl-3-3-voxel-chunk-management/35879/view.html
-- ThinMatrix: GLSL, Timming and Day/Night Cycle. https://www.youtube.com/channel/UCUkRj4qoT1bsWpE_C8lZYoQ
+- ThinMatrix: Rendering System
+- sriharshachilakapati: General OpenGL stuff
+- Lharing: General Optimization and code cleaning
 - Paul Lamb: Sound. http://www.paulscode.com
 
 # Licenses

@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015 Guerra24 / ThinMatrix
+ * Copyright (c) 2015 Guerra24
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -33,7 +33,7 @@ import static org.lwjgl.opengl.GL13.glActiveTexture;
 import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
 import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
-import io.github.guerra24.voxel.client.kernel.graphics.opengl.GL3Context;
+import io.github.guerra24.voxel.client.kernel.graphics.opengl.VoxelGL33;
 import io.github.guerra24.voxel.client.kernel.graphics.shaders.EntityShader;
 import io.github.guerra24.voxel.client.kernel.resources.models.RawModel;
 import io.github.guerra24.voxel.client.kernel.resources.models.TexturedModel;
@@ -62,7 +62,7 @@ public class EntityRenderer {
 			List<Entity> batch = entities.get(model);
 			for (Entity entity : batch) {
 				prepareInstance(entity);
-				GL3Context.glDrawElements(GL_TRIANGLES, model.getRawModel()
+				VoxelGL33.glDrawElements(GL_TRIANGLES, model.getRawModel()
 						.getVertexCount(), GL_UNSIGNED_INT, 0);
 			}
 			unbindTexturedModel();

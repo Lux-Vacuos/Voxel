@@ -49,7 +49,8 @@ public class Camera {
 	private float yaw;
 	private float speed;
 	private float multiplierMouse = 24;
-	private float multiplierMovement = 16;
+	private float multiplierMovement = 32;
+	private byte block = 2;
 
 	private static int mouseSpeed = 2;
 	private static final int maxLookUp = 90;
@@ -132,6 +133,17 @@ public class Camera {
 		applyTranslations();
 		if (Keyboard.isKeyDown(Keyboard.KEY_T))
 			System.out.println(Kernel.renderCallsPerFrame);
+	}
+
+	public void updatePicker() {
+
+		if (Mouse.getDWheel() > 0) {
+			if (block >= 8) {
+				block = 1;
+			} else {
+				block++;
+			}
+		}
 	}
 
 	public void applyTranslations() {
