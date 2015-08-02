@@ -154,6 +154,7 @@ public class ConfigGUI extends JFrame implements ItemListener {
 		add(labelviewDistance, constraints);
 
 		constraints.gridx = 1;
+		textviewDistance.setEnabled(false);
 		add(textviewDistance, constraints);
 
 		constraints.gridy = 7;

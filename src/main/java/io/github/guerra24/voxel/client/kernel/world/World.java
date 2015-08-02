@@ -28,8 +28,15 @@ import io.github.guerra24.voxel.client.kernel.core.Kernel;
 import io.github.guerra24.voxel.client.kernel.core.KernelConstants;
 import io.github.guerra24.voxel.client.kernel.graphics.Frustum;
 import io.github.guerra24.voxel.client.kernel.world.chunks.Chunk;
+import io.github.guerra24.voxel.client.kernel.world.chunks.ChunkKey;
 import io.github.guerra24.voxel.client.kernel.world.entities.Camera;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Random;
 
@@ -37,22 +44,29 @@ import org.lwjgl.util.vector.Vector3f;
 
 public class World {
 
-	public int time = 0, time2 = 0;
+	public int time = 0, time2 = 0, dim = 0;
 	public HashMap<ChunkKey, Chunk> chunks;
 	public Random seed;
 	public SimplexNoise noise;
+	public String path = "assets/game/world/", name;
 
-	public void startWorld(Camera camera) {
+	private int xPlayChunk;
+	private int zPlayChunk;
+
+	public void startWorld(String name, Camera camera, Random seed,
+			int dimension) {
+		this.name = name;
+		this.seed = seed;
+		this.dim = dimension;
+		if (existWorld()) {
+			loadWorld();
+		}
+		saveWorld();
 		initialize();
 		createWorld(camera);
 	}
 
 	private void initialize() {
-		if (KernelConstants.isCustomSeed) {
-			seed = new Random(KernelConstants.seed.hashCode());
-		} else {
-			seed = new Random();
-		}
 		noise = new SimplexNoise(128, 0.2f, seed.nextInt());
 		chunks = new HashMap<ChunkKey, Chunk>();
 		Kernel.gameResources.camera.setPosition(new Vector3f(0, 128, 0));
@@ -61,15 +75,20 @@ public class World {
 	}
 
 	private void createWorld(Camera camera) {
-		int xPlayChunk = (int) (camera.getPosition().x / 16);
-		int zPlayChunk = (int) (camera.getPosition().z / 16);
+		xPlayChunk = (int) (camera.getPosition().x / 16);
+		zPlayChunk = (int) (camera.getPosition().z / 16);
 		for (int zr = -5; zr <= 5; zr++) {
 			int zz = zPlayChunk + zr;
 			for (int xr = -5; xr <= 5; xr++) {
 				int xx = xPlayChunk + xr;
 				if (zr * zr + xr * xr < 5 * 5) {
-					if (!hasChunk(0, xx, zz)) {
-						addChunk(new Chunk(0, xx, zz));
+					if (!hasChunk(dim, xx, zz)) {
+						if (existChunkFile(dim, xx, zz)) {
+							loadChunk(dim, xx, zz);
+						} else {
+							addChunk(new Chunk(dim, xx, zz));
+							saveChunk(dim, xx, zz);
+						}
 					}
 				}
 			}
@@ -79,17 +98,30 @@ public class World {
 	public void updateChunkGeneration(Camera camera) {
 		time++;
 		if (time % 10 == 0) {
-			int xPlayChunk = (int) (camera.getPosition().x / 16);
-			int zPlayChunk = (int) (camera.getPosition().z / 16);
+			if (camera.getPosition().x < 0)
+				xPlayChunk = (int) ((camera.getPosition().x - 16) / 16);
+			if (camera.getPosition().z < 0)
+				zPlayChunk = (int) ((camera.getPosition().z - 16) / 16);
+			if (camera.getPosition().x > 0)
+				xPlayChunk = (int) ((camera.getPosition().x) / 16);
+			if (camera.getPosition().z > 0)
+				zPlayChunk = (int) ((camera.getPosition().z) / 16);
+
 			CHUNK_LOADING: for (int zr = -KernelConstants.radius; zr <= KernelConstants.radius; zr++) {
 				int zz = zPlayChunk + zr;
 				for (int xr = -KernelConstants.radius; xr <= KernelConstants.radius; xr++) {
 					int xx = xPlayChunk + xr;
 					if (zr * zr + xr * xr < KernelConstants.radius
 							* KernelConstants.radius) {
-						if (!hasChunk(0, xx, zz)) {
-							addChunk(new Chunk(0, xx, zz));
-							break CHUNK_LOADING;
+						if (!hasChunk(dim, xx, zz)) {
+							if (existChunkFile(dim, xx, zz)) {
+								loadChunk(dim, xx, zz);
+								break CHUNK_LOADING;
+							} else {
+								addChunk(new Chunk(dim, xx, zz));
+								saveChunk(dim, xx, zz);
+								break CHUNK_LOADING;
+							}
 						}
 					}
 				}
@@ -100,19 +132,17 @@ public class World {
 
 	public void updateChunksRender(Camera camera) {
 		time2++;
-		if (time % 10 == 0) {
+		if (time2 % 10 == 0) {
 			Kernel.gameResources.cubes.clear();
 			Kernel.gameResources.waters.clear();
-			int xPlayChunk = (int) (camera.getPosition().x / 16);
-			int zPlayChunk = (int) (camera.getPosition().z / 16);
 			for (int zr = -KernelConstants.radius; zr <= KernelConstants.radius; zr++) {
 				int zz = zPlayChunk + zr;
 				for (int xr = -KernelConstants.radius; xr <= KernelConstants.radius; xr++) {
 					int xx = xPlayChunk + xr;
 					if (zr * zr + xr * xr < KernelConstants.radius
 							* KernelConstants.radius) {
-						if (hasChunk(0, xx, zz)) {
-							Chunk chunk = getChunk(0, xx, zz);
+						if (hasChunk(dim, xx, zz)) {
+							Chunk chunk = getChunk(dim, xx, zz);
 							chunk.update();
 							if (KernelConstants.advancedOpenGL) {
 								if (chunk.sec1NotClear)
@@ -159,6 +189,67 @@ public class World {
 	public void test() {
 	}
 
+	public void saveWorld() {
+		if (!existWorld()) {
+			File file = new File(path + name + "/");
+			file.mkdir();
+		}
+		String json = Kernel.gameResources.gson.toJson(seed);
+		try {
+			FileWriter file = new FileWriter(path + name + "/world.json");
+			file.write(json);
+			file.flush();
+			file.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void loadWorld() {
+		try {
+			BufferedReader br = new BufferedReader(new FileReader(path + name
+					+ "/world.json"));
+			seed = Kernel.gameResources.gson.fromJson(br, Random.class);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void saveChunk(int dim, int cx, int cz) {
+		String json = Kernel.gameResources.gson.toJson(getChunk(dim, cx, cz));
+		try {
+			FileWriter file = new FileWriter(path + name + "/chunk_" + dim
+					+ "_" + cx + "_" + cz + ".json");
+			file.write(json);
+			file.flush();
+			file.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void loadChunk(int dim, int cx, int cz) {
+		try {
+			BufferedReader br = new BufferedReader(new FileReader(path + name
+					+ "/chunk_" + dim + "_" + cx + "_" + cz + ".json"));
+			Chunk chunk = Kernel.gameResources.gson.fromJson(br, Chunk.class);
+			addChunk(chunk);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public boolean existChunkFile(int dim, int cx, int cz) {
+		File file = new File(path + name + "/chunk_" + dim + "_" + cx + "_"
+				+ cz + ".json");
+		return file.exists();
+	}
+
+	public boolean existWorld() {
+		File file = new File(path + name + "/world.json");
+		return file.exists();
+	}
+
 	public Chunk getChunk(int dim, int cx, int cz) {
 		ChunkKey key = ChunkKey.alloc(dim, cx, cz);
 		Chunk chunk;
@@ -197,13 +288,13 @@ public class World {
 	}
 
 	public byte getGlobalBlock(int dim, int x, int y, int z) {
-		int cx = x / 16;
-		int cz = z / 16;
+		int cx = x >> 4;
+		int cz = z >> 4;
 		Chunk chunk = getChunk(dim, cx, cz);
 		if (chunk != null)
 			return chunk.getLocalBlock(x, y, z);
 		else
-			return 0;
+			return 1;
 	}
 
 	public void removeAll() {

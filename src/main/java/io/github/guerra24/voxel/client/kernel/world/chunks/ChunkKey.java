@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package io.github.guerra24.voxel.client.kernel.world;
+package io.github.guerra24.voxel.client.kernel.world.chunks;
 
 import java.util.ArrayList;
 

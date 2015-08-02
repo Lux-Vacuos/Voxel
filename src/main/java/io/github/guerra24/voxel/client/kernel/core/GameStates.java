@@ -24,6 +24,8 @@
 
 package io.github.guerra24.voxel.client.kernel.core;
 
+import java.util.Random;
+
 import io.github.guerra24.voxel.client.kernel.menu.Button;
 
 import org.lwjgl.input.Keyboard;
@@ -49,7 +51,14 @@ public class GameStates {
 		if (state == State.MAINMENU && Button.isInButtonPlay()) {
 			// Kernel.gameResources.SoundSystem.pause("MainMenuMusic");
 			isPlaying = true;
-			Kernel.world.startWorld(Kernel.gameResources.camera);
+			Random seed;
+			if (KernelConstants.isCustomSeed) {
+				seed = new Random(KernelConstants.seed.hashCode());
+			} else {
+				seed = new Random();
+			}
+			Kernel.world.startWorld("Mundo-1", Kernel.gameResources.camera,
+					seed, 0);
 			Kernel.gameResources.camera.setMouse();
 			state = State.GAME;
 		}

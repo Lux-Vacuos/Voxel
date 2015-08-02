@@ -33,6 +33,7 @@ import io.github.guerra24.voxel.client.kernel.resources.models.GuiTexture;
 import io.github.guerra24.voxel.client.kernel.resources.models.WaterTile;
 import io.github.guerra24.voxel.client.kernel.util.ArrayList3;
 import io.github.guerra24.voxel.client.kernel.util.MousePicker;
+import io.github.guerra24.voxel.client.kernel.world.block.Block;
 import io.github.guerra24.voxel.client.kernel.world.block.BlocksResources;
 import io.github.guerra24.voxel.client.kernel.world.entities.Camera;
 import io.github.guerra24.voxel.client.kernel.world.entities.Entity;
@@ -93,6 +94,7 @@ public class GameResources {
 				renderer.getProjectionMatrix());
 		mouse = new MousePicker(camera, renderer.getProjectionMatrix());
 		gameStates = new GameStates();
+		Block.initBasicBlocks();
 	}
 
 	public void music() {

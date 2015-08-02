@@ -35,7 +35,7 @@ import io.github.guerra24.voxel.client.kernel.world.entities.Camera;
 import org.junit.Test;
 
 public class KernelTest {
-	@Test
+	/*@Test
 	public void worldTest() {
 		System.setProperty("org.lwjgl.librarypath", new File(
 				"src/test/resources/natives").getAbsolutePath());
@@ -69,4 +69,4 @@ public class KernelTest {
 		assertEquals(1, kernel.gameResources.allObjects.size());
 		kernel.dispose();
 	}
-}
+*/}

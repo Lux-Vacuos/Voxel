@@ -40,13 +40,14 @@ public class KernelConstants {
 	public static float BLUE = 0.655f;
 	public static boolean advancedOpenGL = false;
 	// Game Variables
-	public static int build = 48;
+	public static int build = 49;
 	public static String version = "0.0.1";
 	public static boolean debug = true;
 	public static boolean isLoading = false;
 	public static boolean postPro = false;
 	// World Settings
 	public static int radius = 2;
+	public static int genRadius = radius + 2;
 	public static int octaveCount = 7;
 	public static int viewDistance = 8;
 	public static boolean isCustomSeed = false;
@@ -77,4 +78,5 @@ public class KernelConstants {
 	public static String entitiesPath = "assets/world/Entities.json";
 	public static String userPath = "assets/game/User.json";
 	public static String chunks = "assets/game/Chunk";
+
 }
