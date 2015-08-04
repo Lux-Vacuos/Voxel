@@ -40,7 +40,9 @@ import io.github.guerra24.voxel.client.kernel.world.entities.Entity;
 import io.github.guerra24.voxel.client.kernel.world.entities.Light;
 import io.github.guerra24.voxel.client.kernel.world.entities.Player;
 
+import java.util.Queue;
 import java.util.Random;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.lwjgl.util.vector.Vector3f;
 
@@ -49,13 +51,14 @@ import com.google.gson.Gson;
 public class GameResources {
 	public ArrayList3<GuiTexture> guis = new ArrayList3<GuiTexture>();
 	public ArrayList3<GuiTexture> guis2 = new ArrayList3<GuiTexture>();
+	public ArrayList3<GuiTexture> guis3 = new ArrayList3<GuiTexture>();
 	public ArrayList3<GuiTexture> guis4 = new ArrayList3<GuiTexture>();
 	public ArrayList3<GuiTexture> guis5 = new ArrayList3<GuiTexture>();
 
 	public ArrayList3<Entity> allObjects = new ArrayList3<Entity>();
-	public ArrayList3<Entity> cubes = new ArrayList3<Entity>();
+	public Queue<Entity> cubes = new ConcurrentLinkedQueue<Entity>();
+	public Queue<WaterTile> waters = new ConcurrentLinkedQueue<WaterTile>();
 	public ArrayList3<Light> lights = new ArrayList3<Light>();
-	public ArrayList3<WaterTile> waters = new ArrayList3<WaterTile>();
 
 	public Random rand;
 	public Player player;
@@ -118,4 +121,5 @@ public class GameResources {
 		loader.cleanUp();
 		// SoundSystem.cleanup();
 	}
+
 }

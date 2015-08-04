@@ -28,10 +28,14 @@ public interface IChunk {
 	public void init();
 
 	public void createChunk();
-	
+
 	public void rebuildChunk();
-	
+
 	public void update();
+
+	public void dispose();
+
+	public void clear();
 
 	public void sendToRender1();
 
@@ -40,8 +44,6 @@ public interface IChunk {
 	public void sendToRender3();
 
 	public void sendToRender4();
-	
-	public void sendToRenderWater();
 
-	public void dispose();
+	public void sendToRenderWater();
 }

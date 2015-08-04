@@ -31,12 +31,16 @@ import org.lwjgl.util.vector.Vector2f;
 
 public class GuiResources {
 
-	public GuiTexture gui;
-	public GuiTexture menu;
-	public static GuiTexture load;
 	private GuiTexture button1;
 	private GuiTexture button2;
+	private GuiTexture worldLoading;
+	private GuiTexture loadBar;
+
 	public GuiTexture button5;
+	public GuiTexture gui;
+	public GuiTexture menu;
+
+	public static GuiTexture load;
 
 	public GuiResources() {
 		loadGuiTexture();
@@ -53,6 +57,12 @@ public class GuiResources {
 		button2 = new GuiTexture(
 				Kernel.gameResources.loader.loadTextureGui("ButtonPlay"),
 				new Vector2f(0.0f, 0.3f), new Vector2f(0.3f, 0.12f));
+		worldLoading = new GuiTexture(
+				Kernel.gameResources.loader.loadTextureGui("WorldLoading"),
+				new Vector2f(0.6f, -0.425f), new Vector2f(1.6f, 1.425f));
+		loadBar = new GuiTexture(
+				Kernel.gameResources.loader.loadTextureGui("LoadBar"),
+				new Vector2f(-0.5f, 0.1f), new Vector2f(0.1f, 0.1f));
 		button5 = new GuiTexture(button1.getTexture(),
 				new Vector2f(0.0f, -0.7f), new Vector2f(0.2f, 0.12f));
 	}
@@ -61,7 +71,6 @@ public class GuiResources {
 		load = new GuiTexture(
 				Kernel.gameResources.loader.loadTextureGui("Loading"),
 				new Vector2f(0.6f, -0.425f), new Vector2f(1.6f, 1.425f));
-
 		Kernel.gameResources.guis5.add(load);
 	}
 
@@ -69,7 +78,8 @@ public class GuiResources {
 		Kernel.gameResources.guis.add(gui);
 		Kernel.gameResources.guis2.add(button1);
 		Kernel.gameResources.guis2.add(button2);
+		Kernel.gameResources.guis3.add(worldLoading);
+		Kernel.gameResources.guis3.add(loadBar);
 		Kernel.gameResources.guis4.add(button5);
 	}
-
 }

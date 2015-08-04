@@ -33,9 +33,9 @@ uniform sampler2D guiTexture;
 void main(void){
 
 	vec4 textureColour = texture(guiTexture, textureCoords);
-	//if(textureColour.a<0.5) {
-	//	discard;
-	//}
+	if(textureColour.a<0.5) {
+		discard;
+	}
 	
 	out_Color = texture(guiTexture,textureCoords);
 }

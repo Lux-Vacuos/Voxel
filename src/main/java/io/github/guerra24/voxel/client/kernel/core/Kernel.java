@@ -119,20 +119,23 @@ public class Kernel implements IKernel {
 			DisplayManager.updateDisplay(30);
 			break;
 		case GAME:
-			synchronized (gameResources.waters) {
-				synchronized (gameResources.cubes) {
+			synchronized (Kernel.gameResources.waters) {
+				synchronized (Kernel.gameResources.cubes) {
 					gameResources.renderer.renderWorld(gameResources.cubes,
 							gameResources.lights, gameResources.camera);
-					gameResources.renderer.renderEntity(
-							gameResources.allObjects, gameResources.lights,
-							gameResources.camera);
 					gameResources.waterRenderer.render(gameResources.waters,
 							gameResources.camera);
 				}
 			}
+			gameResources.renderer.renderEntity(gameResources.allObjects,
+					gameResources.lights, gameResources.camera);
 			gameResources.guiRenderer.renderNoPrepare(gameResources.guis);
 			glLoadIdentity();
 			DisplayManager.updateDisplay(KernelConstants.FPS);
+			break;
+		case LOADING_WORLD:
+			gameResources.guiRenderer.render(gameResources.guis3);
+			DisplayManager.updateDisplay(30);
 			break;
 		}
 	}
@@ -148,6 +151,8 @@ public class Kernel implements IKernel {
 			// gameResources.player.move();
 			gameResources.camera.move();
 			Frustum.updateFrustum();
+			break;
+		case LOADING_WORLD:
 			break;
 		}
 	}

@@ -50,6 +50,7 @@ import io.github.guerra24.voxel.client.kernel.world.entities.Camera;
 import io.github.guerra24.voxel.client.kernel.world.entities.Light;
 
 import java.util.List;
+import java.util.Queue;
 
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Matrix4f;
@@ -80,9 +81,9 @@ public class WaterRenderer {
 		setUpVAO(loader);
 	}
 
-	public void render(List<WaterTile> water, Camera camera) {
+	public void render(Queue<WaterTile> waters, Camera camera) {
 		prepareRender(camera);
-		for (WaterTile tile : water) {
+		for (WaterTile tile : waters) {
 			if (Frustum.getFrustum().pointInFrustum(tile.getX(),
 					tile.getHeight(), tile.getZ())) {
 				Matrix4f modelMatrix = Maths

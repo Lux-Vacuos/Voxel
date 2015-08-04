@@ -42,6 +42,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Matrix4f;
@@ -74,9 +75,9 @@ public class MasterRenderer {
 		return projectionMatrix;
 	}
 
-	public void renderWorld(List<Entity> entities, List<Light> lights,
+	public void renderWorld(Queue<Entity> cubes, List<Light> lights,
 			Camera camera) {
-		for (Entity entity : entities) {
+		for (Entity entity : cubes) {
 			if (Frustum.getFrustum().pointInFrustum(entity.getPosition().x,
 					entity.getPosition().y, entity.getPosition().z))
 				processEntity(entity);

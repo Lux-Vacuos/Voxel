@@ -32,6 +32,7 @@ public class UpdateThread extends Thread {
 			case MAINMENU:
 				break;
 			case IN_PAUSE:
+				Kernel.world.updateChunkGeneration(Kernel.gameResources.camera);
 				break;
 			case GAME:
 				synchronized (Kernel.gameResources.waters) {
@@ -41,9 +42,11 @@ public class UpdateThread extends Thread {
 						Kernel.world
 								.updateChunksRender(Kernel.gameResources.camera);
 						Kernel.gameResources.camera.updatePicker();
+						Kernel.world.test();
 					}
 				}
-				Kernel.world.test();
+				break;
+			case LOADING_WORLD:
 				break;
 			}
 			Kernel.gameResources.gameStates.switchStates();

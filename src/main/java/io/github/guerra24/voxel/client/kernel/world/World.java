@@ -27,6 +27,7 @@ package io.github.guerra24.voxel.client.kernel.world;
 import io.github.guerra24.voxel.client.kernel.core.Kernel;
 import io.github.guerra24.voxel.client.kernel.core.KernelConstants;
 import io.github.guerra24.voxel.client.kernel.graphics.Frustum;
+import io.github.guerra24.voxel.client.kernel.util.Logger;
 import io.github.guerra24.voxel.client.kernel.world.chunks.Chunk;
 import io.github.guerra24.voxel.client.kernel.world.chunks.ChunkKey;
 import io.github.guerra24.voxel.client.kernel.world.entities.Camera;
@@ -40,6 +41,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Random;
 
+import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
 public class World {
@@ -75,13 +77,26 @@ public class World {
 	}
 
 	private void createWorld(Camera camera) {
+		Logger.log(Thread.currentThread(), "Generating World");
 		xPlayChunk = (int) (camera.getPosition().x / 16);
 		zPlayChunk = (int) (camera.getPosition().z / 16);
-		for (int zr = -5; zr <= 5; zr++) {
+		float i = -0.45f;
+		boolean k = true;
+		for (int zr = -16; zr <= 16; zr++) {
 			int zz = zPlayChunk + zr;
-			for (int xr = -5; xr <= 5; xr++) {
+			for (int xr = -16; xr <= 16; xr++) {
 				int xx = xPlayChunk + xr;
-				if (zr * zr + xr * xr < 5 * 5) {
+				if (zr * zr + xr * xr < 16 * 16) {
+					if (i >= 0.4f)
+						k = false;
+					if (i <= -0.45f)
+						k = true;
+					if (k == false)
+						Kernel.gameResources.guis3.get(1).setPosition(
+								new Vector2f(i -= 0.01f, 0.1f));
+					if (k == true)
+						Kernel.gameResources.guis3.get(1).setPosition(
+								new Vector2f(i += 0.01f, 0.1f));
 					if (!hasChunk(dim, xx, zz)) {
 						if (existChunkFile(dim, xx, zz)) {
 							loadChunk(dim, xx, zz);
@@ -89,6 +104,8 @@ public class World {
 							addChunk(new Chunk(dim, xx, zz));
 							saveChunk(dim, xx, zz);
 						}
+					} else {
+						getChunk(dim, xx, zz).update();
 					}
 				}
 			}
@@ -122,6 +139,8 @@ public class World {
 								saveChunk(dim, xx, zz);
 								break CHUNK_LOADING;
 							}
+						} else {
+							getChunk(dim, xx, zz).update();
 						}
 					}
 				}
@@ -143,7 +162,6 @@ public class World {
 							* KernelConstants.radius) {
 						if (hasChunk(dim, xx, zz)) {
 							Chunk chunk = getChunk(dim, xx, zz);
-							chunk.update();
 							if (KernelConstants.advancedOpenGL) {
 								if (chunk.sec1NotClear)
 									if (Frustum.getFrustum().cubeInFrustum(
@@ -194,6 +212,10 @@ public class World {
 			File file = new File(path + name + "/");
 			file.mkdir();
 		}
+		if (!existChunkFolder(dim)) {
+			File filec = new File(path + name + "/chunks_" + dim + "/");
+			filec.mkdir();
+		}
 		String json = Kernel.gameResources.gson.toJson(seed);
 		try {
 			FileWriter file = new FileWriter(path + name + "/world.json");
@@ -218,8 +240,8 @@ public class World {
 	public void saveChunk(int dim, int cx, int cz) {
 		String json = Kernel.gameResources.gson.toJson(getChunk(dim, cx, cz));
 		try {
-			FileWriter file = new FileWriter(path + name + "/chunk_" + dim
-					+ "_" + cx + "_" + cz + ".json");
+			FileWriter file = new FileWriter(path + name + "/chunks_" + dim
+					+ "/chunk_" + dim + "_" + cx + "_" + cz + ".json");
 			file.write(json);
 			file.flush();
 			file.close();
@@ -231,8 +253,10 @@ public class World {
 	public void loadChunk(int dim, int cx, int cz) {
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(path + name
-					+ "/chunk_" + dim + "_" + cx + "_" + cz + ".json"));
+					+ "/chunks_" + dim + "/chunk_" + dim + "_" + cx + "_" + cz
+					+ ".json"));
 			Chunk chunk = Kernel.gameResources.gson.fromJson(br, Chunk.class);
+			chunk.clear();
 			addChunk(chunk);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -240,13 +264,18 @@ public class World {
 	}
 
 	public boolean existChunkFile(int dim, int cx, int cz) {
-		File file = new File(path + name + "/chunk_" + dim + "_" + cx + "_"
-				+ cz + ".json");
+		File file = new File(path + name + "/chunks_" + dim + "/chunk_" + dim
+				+ "_" + cx + "_" + cz + ".json");
 		return file.exists();
 	}
 
 	public boolean existWorld() {
 		File file = new File(path + name + "/world.json");
+		return file.exists();
+	}
+
+	public boolean existChunkFolder(int dim) {
+		File file = new File(path + name + "/chunks_" + dim + "/");
 		return file.exists();
 	}
 

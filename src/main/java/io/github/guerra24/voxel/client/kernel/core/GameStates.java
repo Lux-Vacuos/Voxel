@@ -44,12 +44,13 @@ public class GameStates {
 	}
 
 	public enum State {
-		GAME, MAINMENU, IN_PAUSE;
+		GAME, MAINMENU, IN_PAUSE, LOADING_WORLD;
 	}
 
 	public void switchStates() {
 		if (state == State.MAINMENU && Button.isInButtonPlay()) {
 			// Kernel.gameResources.SoundSystem.pause("MainMenuMusic");
+			state = State.LOADING_WORLD;
 			isPlaying = true;
 			Random seed;
 			if (KernelConstants.isCustomSeed) {
