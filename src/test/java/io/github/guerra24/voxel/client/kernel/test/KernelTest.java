@@ -24,49 +24,14 @@
 
 package io.github.guerra24.voxel.client.kernel.test;
 
-import static org.junit.Assert.assertEquals;
-
-import java.io.File;
-
-import io.github.guerra24.voxel.client.kernel.core.Kernel;
-import io.github.guerra24.voxel.client.kernel.world.World;
-import io.github.guerra24.voxel.client.kernel.world.entities.Camera;
+import static org.junit.Assert.fail;
 
 import org.junit.Test;
 
 public class KernelTest {
-	/*@Test
-	public void worldTest() {
-		System.setProperty("org.lwjgl.librarypath", new File(
-				"src/test/resources/natives").getAbsolutePath());
-		Kernel kernel = new Kernel(true);
-		World world = new World();
-		assertEquals(world.chunks, Kernel.world.chunks);
-		assertEquals(world.getClass(), kernel.world.getClass());
-		kernel.dispose();
+	@Test
+	public void zipTest() {
+		fail("Not Implemented");
 	}
 
-	@Test
-	public void cameraTest() {
-		System.setProperty("org.lwjgl.librarypath", new File(
-				"src/test/resources/natives").getAbsolutePath());
-		Kernel kernel = new Kernel(true);
-		Camera camera = new Camera();
-		assertEquals(camera.getPosition(),
-				kernel.gameResources.camera.getPosition());
-		assertEquals(camera.getPitch(), kernel.gameResources.camera.getPitch(),
-				0.0f);
-		assertEquals(camera.getYaw(), kernel.gameResources.camera.getYaw(),
-				0.0f);
-		kernel.dispose();
-	}
-
-	@Test
-	public void gameResourcesObjectTest() {
-		System.setProperty("org.lwjgl.librarypath", new File(
-				"src/test/resources/natives").getAbsolutePath());
-		Kernel kernel = new Kernel(true);
-		assertEquals(1, kernel.gameResources.allObjects.size());
-		kernel.dispose();
-	}
-*/}
+}

@@ -26,6 +26,8 @@ package io.github.guerra24.voxel.client.kernel.world.chunks;
 
 public interface IChunk {
 	public void init();
+	
+	public void loadInit();
 
 	public void createChunk();
 

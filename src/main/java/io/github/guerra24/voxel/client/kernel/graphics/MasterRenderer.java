@@ -71,10 +71,6 @@ public class MasterRenderer {
 		VoxelGL33.glCullFace(GL_BACK);
 	}
 
-	public Matrix4f getProjectionMatrix() {
-		return projectionMatrix;
-	}
-
 	public void renderWorld(Queue<Entity> cubes, List<Light> lights,
 			Camera camera) {
 		for (Entity entity : cubes) {
@@ -95,7 +91,7 @@ public class MasterRenderer {
 		renderEntity(lights, camera);
 	}
 
-	public void renderWorld(List<Light> lights, Camera camera) {
+	private void renderWorld(List<Light> lights, Camera camera) {
 		prepare();
 		shader.start();
 		if (Display.wasResized())
@@ -112,7 +108,7 @@ public class MasterRenderer {
 		entities.clear();
 	}
 
-	public void renderEntity(List<Light> lights, Camera camera) {
+	private void renderEntity(List<Light> lights, Camera camera) {
 		shader.start();
 		if (Display.wasResized())
 			shader.loadProjectionMatrix(projectionMatrix);
@@ -123,7 +119,7 @@ public class MasterRenderer {
 		entities.clear();
 	}
 
-	public void processEntity(Entity entity) {
+	private void processEntity(Entity entity) {
 		TexturedModel entityModel = entity.getModel();
 		List<Entity> batch = entities.get(entityModel);
 		if (batch != null) {
@@ -135,11 +131,7 @@ public class MasterRenderer {
 		}
 	}
 
-	public void cleanUp() {
-		shader.cleanUp();
-	}
-
-	public void prepare() {
+	private void prepare() {
 		VoxelGL33.glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		VoxelGL33.glClearColor(KernelConstants.RED, KernelConstants.GREEN,
 				KernelConstants.BLUE, 1);
@@ -163,4 +155,11 @@ public class MasterRenderer {
 		projectionMatrix.m33 = 0;
 	}
 
+	public void cleanUp() {
+		shader.cleanUp();
+	}
+
+	public Matrix4f getProjectionMatrix() {
+		return projectionMatrix;
+	}
 }

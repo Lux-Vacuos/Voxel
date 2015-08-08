@@ -49,7 +49,7 @@ public class Camera {
 	private float yaw;
 	private float speed;
 	private float multiplierMouse = 24;
-	private float multiplierMovement = 32;
+	private float multiplierMovement = 24;
 	private byte block = 2;
 
 	private static int mouseSpeed = 2;
@@ -58,7 +58,7 @@ public class Camera {
 	public boolean isMoved = false;
 
 	public Camera() {
-		this.speed = 0.5f;
+		this.speed = 0.2f;
 	}
 
 	public void move() {
@@ -91,6 +91,7 @@ public class Camera {
 			isMoved = true;
 
 		} else if (Keyboard.isKeyDown(Keyboard.KEY_S)) {
+
 			position.z -= -(float) Math.cos(Math.toRadians(yaw))
 					* DisplayManager.getFrameTimeSeconds() * speed
 					* multiplierMovement;
@@ -118,16 +119,21 @@ public class Camera {
 			isMoved = true;
 		}
 		if (Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
-			if (position.y < 144) {
-				position.y += DisplayManager.getFrameTimeSeconds() * speed
-						* multiplierMovement;
-				// Kernel.gameResources.player.jump();
-			}
-		} else if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
-			if (position.y > -16) {
-				position.y -= DisplayManager.getFrameTimeSeconds() * speed
-						* multiplierMovement;
-			}
+			// position.y += DisplayManager.getFrameTimeSeconds() * speed
+			// * multiplierMovement;
+			Kernel.gameResources.player.jump();
+		}
+		if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
+			// position.y -= DisplayManager.getFrameTimeSeconds() * speed
+			// * multiplierMovement;
+			speed = 0.1f;
+		} else {
+			speed = 0.2f;
+		}
+		if (Keyboard.isKeyDown(Keyboard.KEY_LCONTROL)) {
+			speed = 1;
+		} else {
+			speed = 0.2f;
 		}
 
 		applyTranslations();
@@ -152,6 +158,33 @@ public class Camera {
 			block = 6;
 		else if (Keyboard.isKeyDown(Keyboard.KEY_7))
 			block = 8;
+		if (Mouse.isButtonDown(0)) {
+			Kernel.gameResources.mouse.update();
+			Kernel.world
+					.setGlobalBlock(
+							Kernel.world.dim,
+							(int) (Kernel.gameResources.mouse.getCurrentRay().x + position.x),
+							(int) (Kernel.gameResources.mouse.getCurrentRay().y + position.y),
+							(int) (Kernel.gameResources.mouse.getCurrentRay().z + position.z),
+							(byte) 0);
+		} else if (Mouse.isButtonDown(1)) {
+			Kernel.gameResources.mouse.update();
+			Kernel.world
+					.setGlobalBlock(
+							Kernel.world.dim,
+							(int) (Kernel.gameResources.mouse.getCurrentRay().x + position.x),
+							(int) (Kernel.gameResources.mouse.getCurrentRay().y + position.y),
+							(int) (Kernel.gameResources.mouse.getCurrentRay().z + position.z),
+							block);
+		} else if (Mouse.isButtonDown(2)) {
+			Kernel.gameResources.mouse.update();
+			Kernel.gameResources.lights.get(0).setPosition(
+					new Vector3f(Kernel.gameResources.mouse.getCurrentRay().x
+							+ position.x, Kernel.gameResources.mouse
+							.getCurrentRay().y + position.y,
+							Kernel.gameResources.mouse.getCurrentRay().z
+									+ position.z));
+		}
 	}
 
 	public void applyTranslations() {
@@ -165,7 +198,7 @@ public class Camera {
 		glLoadIdentity();
 		gluPerspective(KernelConstants.FOV,
 				Kernel.gameResources.renderer.aspectRatio,
-				KernelConstants.NEAR_PLANE, KernelConstants.FAR_PLANE);
+				KernelConstants.NEAR_PLANE, 500);
 		glMatrixMode(GL_MODELVIEW);
 	}
 

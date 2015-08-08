@@ -24,9 +24,10 @@
 
 package io.github.guerra24.voxel.client.kernel.core;
 
-import java.util.Random;
-
 import io.github.guerra24.voxel.client.kernel.menu.Button;
+import io.github.guerra24.voxel.client.kernel.util.Logger;
+
+import java.util.Random;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
@@ -73,7 +74,19 @@ public class GameStates {
 			// Kernel.gameResources.SoundSystem.play("MainMenuMusic");
 			Kernel.gameResources.waters.clear();
 			Kernel.gameResources.cubes.clear();
-
+			Logger.log(Thread.currentThread(), "Saving World");
+			for (int zr = -KernelConstants.genRadius; zr <= KernelConstants.genRadius; zr++) {
+				int zz = Kernel.world.getzPlayChunk() + zr;
+				for (int xr = -KernelConstants.genRadius; xr <= KernelConstants.genRadius; xr++) {
+					int xx = Kernel.world.getxPlayChunk() + xr;
+					if (zr * zr + xr * xr <= KernelConstants.genRadius
+							* KernelConstants.genRadius) {
+						if (Kernel.world.hasChunk(Kernel.world.dim, xx, zz)) {
+							Kernel.world.saveChunk(Kernel.world.dim, xx, zz);
+						}
+					}
+				}
+			}
 			Kernel.world.removeAll();
 			Kernel.gameResources.camera.setPosition(new Vector3f(0, 80, 0));
 			state = State.MAINMENU;

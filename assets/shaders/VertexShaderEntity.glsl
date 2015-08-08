@@ -1,7 +1,7 @@
 //
 // The MIT License (MIT)
 //
-// Copyright (c) 2015 Guerra24 / ThinMatrix
+// Copyright (c) 2015 Guerra24
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -38,7 +38,6 @@ uniform mat4 transformationMatrix;
 uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;
 uniform vec3 lightPosition[1];
-uniform vec4 plane;
 uniform vec3 directLightDirection;
 
 const float density = 0.0023;
@@ -75,14 +74,12 @@ void main() {
         vec3 Direction;
     } Light0;
     
-    Light0.Color = vec3(1.0, 1.0,1.0);
+    Light0.Color = vec3(1.0, 1.0, 1.0);
     Light0.AmbientIntensity = vec3(0.5, 0.5, 0.5);
     Light0.DiffuseIntensity = vec3(0.8, 0.8, 0.8);
     Light0.Direction = directLightDirection;
 
 	vec4 worldPosition = transformationMatrix * vec4(position, 1.0);
-	
-	gl_ClipDistance[0] = dot(worldPosition, plane);
 	
 	vec4 positionRelativeToCam = viewMatrix * worldPosition;
 	gl_Position = projectionMatrix * positionRelativeToCam;
@@ -96,7 +93,7 @@ void main() {
 	}
 	
 	vec3 AmbientColor = Light0.AmbientIntensity * Light0.Color;
-    vec3 DiffuseColor = Light0.Color * Light0.DiffuseIntensity * CalcDirectionalLightFactor(Light0.Direction, normal);
+    vec3 DiffuseColor = Light0.Color * Light0.DiffuseIntensity * CalcDirectionalLightFactor(Light0.Direction, surfaceNormal);
 
     lightIntensity = DiffuseColor + AmbientColor;
 	

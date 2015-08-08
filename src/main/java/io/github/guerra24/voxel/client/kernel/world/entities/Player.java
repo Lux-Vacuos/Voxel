@@ -27,6 +27,7 @@ package io.github.guerra24.voxel.client.kernel.world.entities;
 import io.github.guerra24.voxel.client.kernel.core.Kernel;
 import io.github.guerra24.voxel.client.kernel.graphics.opengl.DisplayManager;
 import io.github.guerra24.voxel.client.kernel.resources.models.TexturedModel;
+import io.github.guerra24.voxel.client.kernel.world.block.Block;
 
 import org.lwjgl.util.vector.Vector3f;
 
@@ -47,23 +48,46 @@ public class Player extends Entity {
 		super.increasePosition(0,
 				upwardsSpeed * DisplayManager.getFrameTimeSeconds(), 0);
 		try {
-			//if (Kernel.world.getBlock((int) (super.getPosition().x - 0.5f),
-			//		(int) super.getPosition().y - 1,
-			//		(int) (super.getPosition().z + 0.5f)) == 0) {
+			if (Kernel.world.getGlobalBlock(Kernel.world.dim,
+					(int) (super.getPosition().x - 0.2f),
+					(int) (super.getPosition().y - 1.8f),
+					(int) (super.getPosition().z - 0.2f)) == Block.Air.getId()
+					&& Kernel.world.getGlobalBlock(Kernel.world.dim,
+							(int) (super.getPosition().x + 0.2f),
+							(int) (super.getPosition().y - 1.8f),
+							(int) (super.getPosition().z + 0.2f)) == Block.Air
+							.getId()) {
 				upwardsSpeed += GRAVITY * DisplayManager.getFrameTimeSeconds();
 				isInAir = true;
-			//} else {
+			} else {
 				upwardsSpeed = 0;
 				isInAir = false;
-			//}
+			}
 		} finally {
 		}
 	}
 
 	public void jump() {
 		if (!isInAir) {
-			this.upwardsSpeed = JUMP_POWER;
-			isInAir = true;
+			try {
+				if (Kernel.world.getGlobalBlock(Kernel.world.dim,
+						(int) (super.getPosition().x - 0.2f),
+						(int) (super.getPosition().y + 2),
+						(int) (super.getPosition().z - 0.2f)) == Block.Air
+						.getId()
+						&& Kernel.world.getGlobalBlock(Kernel.world.dim,
+								(int) (super.getPosition().x + 0.2f),
+								(int) (super.getPosition().y + 2),
+								(int) (super.getPosition().z + 0.2f)) == Block.Air
+								.getId()) {
+					this.upwardsSpeed = JUMP_POWER;
+					isInAir = true;
+				} else {
+					upwardsSpeed = 0;
+					isInAir = false;
+				}
+			} finally {
+			}
 		}
 	}
 }

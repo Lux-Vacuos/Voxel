@@ -35,16 +35,10 @@ public class UpdateThread extends Thread {
 				Kernel.world.updateChunkGeneration(Kernel.gameResources.camera);
 				break;
 			case GAME:
-				synchronized (Kernel.gameResources.waters) {
-					synchronized (Kernel.gameResources.cubes) {
-						Kernel.world
-								.updateChunkGeneration(Kernel.gameResources.camera);
-						Kernel.world
-								.updateChunksRender(Kernel.gameResources.camera);
-						Kernel.gameResources.camera.updatePicker();
-						Kernel.world.test();
-					}
-				}
+				Kernel.world.updateChunkGeneration(Kernel.gameResources.camera);
+				Kernel.world.updateChunksRender(Kernel.gameResources.camera);
+				Kernel.gameResources.camera.updatePicker();
+				Kernel.world.test();
 				break;
 			case LOADING_WORLD:
 				break;

@@ -40,14 +40,14 @@ public class KernelConstants {
 	public static float BLUE = 0.655f;
 	public static boolean advancedOpenGL = false;
 	// Game Variables
-	public static int build = 50;
+	public static int build = 51;
 	public static String version = "0.0.1";
 	public static boolean debug = true;
 	public static boolean isLoading = false;
 	public static boolean postPro = false;
 	// World Settings
 	public static int radius = 2;
-	public static int genRadius = radius + 2;
+	public static int genRadius = radius + 10;
 	public static int octaveCount = 7;
 	public static int viewDistance = 8;
 	public static boolean isCustomSeed = false;
@@ -72,11 +72,13 @@ public class KernelConstants {
 	public final static String VERTEX_FILE_WATER = "VertexShaderWater.glsl";
 	public final static String FRAGMENT_FILE_WATER = "FragmentShaderWater.glsl";
 	// World Save Path
+	public static String worldPath = "assets/game/world/";
+	public static String worldPathZip = "assets\\game\\world\\";
 	public static String camPath = "assets/world/Camera.json";
-	public static String worldPath = "assets/world/World.json";
 	public static String isPrePath = "assets/world/State.json";
-	public static String entitiesPath = "assets/world/Entities.json";
-	public static String userPath = "assets/game/User.json";
-	public static String chunks = "assets/game/Chunk";
+
+	public static void update() {
+		genRadius = radius + 10;
+	}
 
 }

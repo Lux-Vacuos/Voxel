@@ -46,6 +46,7 @@ public final class Logger {
 					+ "] " + "[" + thread.getName() + "] " : "")
 					+ message);
 	}
+
 	public static void log(Object... messages) {
 		for (Object message : messages)
 			System.out.println((printTimeStamps ? "[INFO " + getTimeStamp()
@@ -72,11 +73,13 @@ public final class Logger {
 	}
 
 	public static void error(Thread thread, Object... messages) {
-		for (Object message : messages)
+		for (Object message : messages) {
 			System.err.println((printTimeStamps ? "[FATAL ERROR "
 					+ getTimeStamp() + "] " + "[" + thread.getName() + "] "
 					: "")
 					+ message);
+			System.exit(-1);
+		}
 	}
 
 	public static void setTimeStampFormat(SimpleDateFormat timeStampFormat) {

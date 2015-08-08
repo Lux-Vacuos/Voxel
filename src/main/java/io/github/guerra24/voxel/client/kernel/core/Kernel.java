@@ -35,6 +35,9 @@ import io.github.guerra24.voxel.client.kernel.util.Logger;
 import io.github.guerra24.voxel.client.kernel.world.World;
 import io.github.guerra24.voxel.client.kernel.world.block.BlocksResources;
 
+import java.lang.management.ManagementFactory;
+import java.lang.management.ThreadMXBean;
+
 public class Kernel implements IKernel {
 
 	public static GameResources gameResources;
@@ -47,6 +50,7 @@ public class Kernel implements IKernel {
 	public static UpdateThread update;
 
 	public boolean errorTest;
+	public ThreadMXBean tmxb = ManagementFactory.getThreadMXBean();
 
 	public Kernel(boolean errorTest) {
 		this.errorTest = errorTest;
@@ -104,7 +108,11 @@ public class Kernel implements IKernel {
 		gameResources.music();
 		world = new World();
 		update = new UpdateThread();
+		update.setName("Voxel World");
 		update.start();
+		//byte[] user = Launcher.user.getBytes(Charset.forName("UTF-8"));
+		//Logger.log(Thread.currentThread(), "User: " + Launcher.user + "UUID: "
+		//		+ UUID.nameUUIDFromBytes(user));
 	}
 
 	@Override
@@ -119,14 +127,10 @@ public class Kernel implements IKernel {
 			DisplayManager.updateDisplay(30);
 			break;
 		case GAME:
-			synchronized (Kernel.gameResources.waters) {
-				synchronized (Kernel.gameResources.cubes) {
-					gameResources.renderer.renderWorld(gameResources.cubes,
-							gameResources.lights, gameResources.camera);
-					gameResources.waterRenderer.render(gameResources.waters,
-							gameResources.camera);
-				}
-			}
+			gameResources.renderer.renderWorld(gameResources.cubes,
+					gameResources.lights, gameResources.camera);
+			gameResources.waterRenderer.render(gameResources.waters,
+					gameResources.camera);
 			gameResources.renderer.renderEntity(gameResources.allObjects,
 					gameResources.lights, gameResources.camera);
 			gameResources.guiRenderer.renderNoPrepare(gameResources.guis);
@@ -148,7 +152,7 @@ public class Kernel implements IKernel {
 		case IN_PAUSE:
 			break;
 		case GAME:
-			// gameResources.player.move();
+			gameResources.player.move();
 			gameResources.camera.move();
 			Frustum.updateFrustum();
 			break;

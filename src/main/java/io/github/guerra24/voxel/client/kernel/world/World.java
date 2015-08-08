@@ -46,11 +46,11 @@ import org.lwjgl.util.vector.Vector3f;
 
 public class World {
 
-	public int time = 0, time2 = 0, dim = 0;
+	public int time = 0, time2 = 5, dim = 0;
 	public HashMap<ChunkKey, Chunk> chunks;
 	public Random seed;
 	public SimplexNoise noise;
-	public String path = "assets/game/world/", name;
+	public String name;
 
 	private int xPlayChunk;
 	private int zPlayChunk;
@@ -123,24 +123,31 @@ public class World {
 				xPlayChunk = (int) ((camera.getPosition().x) / 16);
 			if (camera.getPosition().z > 0)
 				zPlayChunk = (int) ((camera.getPosition().z) / 16);
-
-			CHUNK_LOADING: for (int zr = -KernelConstants.radius; zr <= KernelConstants.radius; zr++) {
+			KernelConstants.update();
+			for (int zr = -KernelConstants.genRadius; zr <= KernelConstants.genRadius; zr++) {
 				int zz = zPlayChunk + zr;
-				for (int xr = -KernelConstants.radius; xr <= KernelConstants.radius; xr++) {
+				for (int xr = -KernelConstants.genRadius; xr <= KernelConstants.genRadius; xr++) {
 					int xx = xPlayChunk + xr;
-					if (zr * zr + xr * xr < KernelConstants.radius
-							* KernelConstants.radius) {
+					if (zr * zr + xr * xr < (KernelConstants.genRadius - 10)
+							* (KernelConstants.genRadius - 10)) {
 						if (!hasChunk(dim, xx, zz)) {
 							if (existChunkFile(dim, xx, zz)) {
 								loadChunk(dim, xx, zz);
-								break CHUNK_LOADING;
 							} else {
 								addChunk(new Chunk(dim, xx, zz));
 								saveChunk(dim, xx, zz);
-								break CHUNK_LOADING;
 							}
 						} else {
 							getChunk(dim, xx, zz).update();
+						}
+					}
+					if (zr * zr + xr * xr <= KernelConstants.genRadius
+							* KernelConstants.genRadius
+							&& zr * zr + xr * xr >= (KernelConstants.genRadius - 9)
+									* (KernelConstants.genRadius - 9)) {
+						if (hasChunk(dim, xx, zz)) {
+							saveChunk(dim, xx, zz);
+							removeChunk(getChunk(dim, xx, zz));
 						}
 					}
 				}
@@ -209,16 +216,18 @@ public class World {
 
 	public void saveWorld() {
 		if (!existWorld()) {
-			File file = new File(path + name + "/");
+			File file = new File(KernelConstants.worldPath + name + "/");
 			file.mkdir();
 		}
 		if (!existChunkFolder(dim)) {
-			File filec = new File(path + name + "/chunks_" + dim + "/");
+			File filec = new File(KernelConstants.worldPath + name + "/chunks_"
+					+ dim + "/");
 			filec.mkdir();
 		}
 		String json = Kernel.gameResources.gson.toJson(seed);
 		try {
-			FileWriter file = new FileWriter(path + name + "/world.json");
+			FileWriter file = new FileWriter(KernelConstants.worldPath + name
+					+ "/world.json");
 			file.write(json);
 			file.flush();
 			file.close();
@@ -229,8 +238,8 @@ public class World {
 
 	public void loadWorld() {
 		try {
-			BufferedReader br = new BufferedReader(new FileReader(path + name
-					+ "/world.json"));
+			BufferedReader br = new BufferedReader(new FileReader(
+					KernelConstants.worldPath + name + "/world.json"));
 			seed = Kernel.gameResources.gson.fromJson(br, Random.class);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -240,8 +249,9 @@ public class World {
 	public void saveChunk(int dim, int cx, int cz) {
 		String json = Kernel.gameResources.gson.toJson(getChunk(dim, cx, cz));
 		try {
-			FileWriter file = new FileWriter(path + name + "/chunks_" + dim
-					+ "/chunk_" + dim + "_" + cx + "_" + cz + ".json");
+			FileWriter file = new FileWriter(KernelConstants.worldPath + name
+					+ "/chunks_" + dim + "/chunk_" + dim + "_" + cx + "_" + cz
+					+ ".json");
 			file.write(json);
 			file.flush();
 			file.close();
@@ -252,11 +262,11 @@ public class World {
 
 	public void loadChunk(int dim, int cx, int cz) {
 		try {
-			BufferedReader br = new BufferedReader(new FileReader(path + name
-					+ "/chunks_" + dim + "/chunk_" + dim + "_" + cx + "_" + cz
-					+ ".json"));
+			BufferedReader br = new BufferedReader(new FileReader(
+					KernelConstants.worldPath + name + "/chunks_" + dim
+							+ "/chunk_" + dim + "_" + cx + "_" + cz + ".json"));
 			Chunk chunk = Kernel.gameResources.gson.fromJson(br, Chunk.class);
-			chunk.clear();
+			chunk.loadInit();
 			addChunk(chunk);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -264,18 +274,19 @@ public class World {
 	}
 
 	public boolean existChunkFile(int dim, int cx, int cz) {
-		File file = new File(path + name + "/chunks_" + dim + "/chunk_" + dim
-				+ "_" + cx + "_" + cz + ".json");
+		File file = new File(KernelConstants.worldPath + name + "/chunks_"
+				+ dim + "/chunk_" + dim + "_" + cx + "_" + cz + ".json");
 		return file.exists();
 	}
 
 	public boolean existWorld() {
-		File file = new File(path + name + "/world.json");
+		File file = new File(KernelConstants.worldPath + name + "/world.json");
 		return file.exists();
 	}
 
 	public boolean existChunkFolder(int dim) {
-		File file = new File(path + name + "/chunks_" + dim + "/");
+		File file = new File(KernelConstants.worldPath + name + "/chunks_"
+				+ dim + "/");
 		return file.exists();
 	}
 
@@ -326,6 +337,14 @@ public class World {
 			return 1;
 	}
 
+	public void setGlobalBlock(int dim, int x, int y, int z, byte id) {
+		int cx = x >> 4;
+		int cz = z >> 4;
+		Chunk chunk = getChunk(dim, cx, cz);
+		chunk.setLocalBlock(x, y, z, id);
+		chunk.rebuildChunk();
+	}
+
 	public void removeAll() {
 		chunks.clear();
 	}
@@ -334,6 +353,22 @@ public class World {
 		int xx = x - i;
 		int zz = z - k;
 		return Math.sqrt(xx * xx + zz * zz);
+	}
+
+	public int getzPlayChunk() {
+		return zPlayChunk;
+	}
+
+	public void setzPlayChunk(int zPlayChunk) {
+		this.zPlayChunk = zPlayChunk;
+	}
+
+	public int getxPlayChunk() {
+		return xPlayChunk;
+	}
+
+	public void setxPlayChunk(int xPlayChunk) {
+		this.xPlayChunk = xPlayChunk;
 	}
 
 }

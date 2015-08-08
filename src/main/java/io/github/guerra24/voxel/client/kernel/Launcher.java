@@ -24,18 +24,20 @@
 
 package io.github.guerra24.voxel.client.kernel;
 
-import java.io.File;
-
 import io.github.guerra24.voxel.client.kernel.console.Console;
 import io.github.guerra24.voxel.client.kernel.core.Kernel;
 import io.github.guerra24.voxel.client.kernel.core.KernelConstants;
 import io.github.guerra24.voxel.client.kernel.menu.ConfigGUI;
+
+import java.io.File;
 
 public class Launcher {
 
 	private static Platform platform;
 	public static Console thread1;
 	public static ConfigGUI config;
+
+	public static String user;
 
 	public static void run() {
 		thread1 = new Console();
@@ -48,7 +50,6 @@ public class Launcher {
 				e.printStackTrace();
 			}
 		}
-		Thread.currentThread().setName("Voxel Main");
 		config = new ConfigGUI();
 		while (!config.ready) {
 			try {
@@ -57,7 +58,6 @@ public class Launcher {
 				e.printStackTrace();
 			}
 		}
-		new Kernel(false);
 	}
 
 	public static Platform getPlatform() {
@@ -89,11 +89,13 @@ public class Launcher {
 	}
 
 	public static void main(String[] args) {
+		Thread.currentThread().setName("Voxel Main");
+		run();
 		if (KernelConstants.postPro) {
 			System.setProperty("org.lwjgl.librarypath", new File(
 					"build/natives/windows").getAbsolutePath());
 		}
-		run();
+		new Kernel(false);
 	}
 
 }

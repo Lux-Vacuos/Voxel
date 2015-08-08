@@ -75,6 +75,15 @@ public class Chunk implements IChunk {
 	}
 
 	@Override
+	public void loadInit() {
+		cubes1 = new ArrayList3<Entity>();
+		cubes2 = new ArrayList3<Entity>();
+		cubes3 = new ArrayList3<Entity>();
+		cubes4 = new ArrayList3<Entity>();
+		waters = new ArrayList3<WaterTile>();
+	}
+
+	@Override
 	public void update() {
 		time++;
 		if (isToRebuild) {

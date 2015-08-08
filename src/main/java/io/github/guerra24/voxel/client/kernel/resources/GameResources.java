@@ -32,6 +32,7 @@ import io.github.guerra24.voxel.client.kernel.graphics.shaders.WaterShader;
 import io.github.guerra24.voxel.client.kernel.resources.models.GuiTexture;
 import io.github.guerra24.voxel.client.kernel.resources.models.WaterTile;
 import io.github.guerra24.voxel.client.kernel.util.ArrayList3;
+import io.github.guerra24.voxel.client.kernel.util.Logger;
 import io.github.guerra24.voxel.client.kernel.util.MousePicker;
 import io.github.guerra24.voxel.client.kernel.world.block.Block;
 import io.github.guerra24.voxel.client.kernel.world.block.BlocksResources;
@@ -45,6 +46,12 @@ import java.util.Random;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.lwjgl.util.vector.Vector3f;
+
+import paulscode.sound.SoundSystem;
+import paulscode.sound.SoundSystemConfig;
+import paulscode.sound.SoundSystemException;
+import paulscode.sound.codecs.CodecJOgg;
+import paulscode.sound.libraries.LibraryLWJGLOpenAL;
 
 import com.google.gson.Gson;
 
@@ -72,7 +79,7 @@ public class GameResources {
 	public GameStates gameStates;
 	public MousePicker mouse;
 	public Gson gson;
-	// public SoundSystem SoundSystem;
+	public SoundSystem SoundSystem;
 	public float distance;
 
 	public GameResources() {
@@ -84,13 +91,16 @@ public class GameResources {
 		rand = new Random();
 		camera = new Camera();
 		gson = new Gson();
-		/*
-		 * try { SoundSystemConfig.addLibrary(LibraryLWJGLOpenAL.class);
-		 * SoundSystemConfig.setCodec("ogg", CodecJOgg.class); } catch
-		 * (SoundSystemException e) { Logger.error(Thread.currentThread(),
-		 * "Unable to bind SoundSystem Libs"); } SoundSystem = new
-		 * SoundSystem();
-		 */
+
+		try {
+			SoundSystemConfig.addLibrary(LibraryLWJGLOpenAL.class);
+			SoundSystemConfig.setCodec("ogg", CodecJOgg.class);
+		} catch (SoundSystemException e) {
+			Logger.error(Thread.currentThread(),
+					"Unable to bind SoundSystem Libs");
+		}
+		SoundSystem = new SoundSystem();
+
 		renderer = new MasterRenderer(loader);
 		waterShader = new WaterShader();
 		waterRenderer = new WaterRenderer(loader, waterShader,
@@ -119,7 +129,7 @@ public class GameResources {
 		guiRenderer.cleanUp();
 		renderer.cleanUp();
 		loader.cleanUp();
-		// SoundSystem.cleanup();
+		SoundSystem.cleanup();
 	}
 
 }
