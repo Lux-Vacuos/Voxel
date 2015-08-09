@@ -26,12 +26,31 @@ package io.github.guerra24.voxel.client.kernel.graphics.opengl;
 
 import io.github.guerra24.voxel.client.kernel.util.Logger;
 
+/**
+ * Voxel OpenGL Exception
+ * 
+ * @author Guerra24 <pablo230699@hotmail.com>
+ * @version 0.0.1 Build-52
+ * @since 0.0.1 Build-1
+ * @category OpenGL
+ */
 public class VoxelGLException {
-
+	/**
+	 * Constructor, A Message
+	 * 
+	 * @param message
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public VoxelGLException(String message) {
 		Logger.warn(Thread.currentThread(), message);
 	}
 
+	/**
+	 * Invalid Enum Error
+	 * 
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 *
+	 */
 	public static class InvalidEnum extends VoxelGLException {
 
 		public InvalidEnum() {
@@ -40,6 +59,12 @@ public class VoxelGLException {
 		}
 	}
 
+	/**
+	 * Invalid Value Error
+	 * 
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 *
+	 */
 	public static class InvalidValue extends VoxelGLException {
 
 		public InvalidValue() {
@@ -47,6 +72,12 @@ public class VoxelGLException {
 		}
 	}
 
+	/**
+	 * Invalid Operation Error
+	 * 
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 *
+	 */
 	public static class InvalidOperation extends VoxelGLException {
 
 		public InvalidOperation() {
@@ -54,6 +85,12 @@ public class VoxelGLException {
 		}
 	}
 
+	/**
+	 * Invalid Framebuffer Operation Error
+	 * 
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 *
+	 */
 	public static class InvalidFramebufferOperation extends VoxelGLException {
 
 		public InvalidFramebufferOperation() {
@@ -61,6 +98,12 @@ public class VoxelGLException {
 		}
 	}
 
+	/**
+	 * Out Of Memory Error
+	 * 
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 *
+	 */
 	public static class OutOfMemory extends VoxelGLException {
 
 		public OutOfMemory() {
@@ -68,6 +111,12 @@ public class VoxelGLException {
 		}
 	}
 
+	/**
+	 * Stack Under Flow Error
+	 * 
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 *
+	 */
 	public static class StackUnderflow extends VoxelGLException {
 
 		public StackUnderflow() {
@@ -76,6 +125,12 @@ public class VoxelGLException {
 		}
 	}
 
+	/**
+	 * Stack Overflow Error
+	 * 
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 *
+	 */
 	public static class StackOverflow extends VoxelGLException {
 
 		public StackOverflow() {

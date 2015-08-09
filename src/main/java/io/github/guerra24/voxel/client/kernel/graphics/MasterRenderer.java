@@ -48,16 +48,49 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
+/**
+ * Game Master Renderer
+ * 
+ * @author Guerra24 <pablo230699@hotmail.com>
+ * @version 0.0.1 Build-52
+ * @since 0.0.1 Build-52
+ * @category Rendering
+ */
 public class MasterRenderer {
 
+	/**
+	 * Matrix4f Projection
+	 */
 	private Matrix4f projectionMatrix;
+	/**
+	 * Batcher of entity
+	 */
 	private Map<TexturedModel, List<Entity>> entities = new HashMap<TexturedModel, List<Entity>>();
+	/**
+	 * Skybox Renderer
+	 */
 	private SkyboxRenderer skyboxRenderer;
-
+	/**
+	 * Entity Shader
+	 */
 	public EntityShader shader = new EntityShader();
+	/**
+	 * Entity Renderer
+	 */
 	public EntityRenderer entityRenderer;
+	/**
+	 * Game Aspect Ratio
+	 */
 	public float aspectRatio;
 
+	/**
+	 * Constructor, Initializes the OpenGL code, creates the projection matrix,
+	 * entity renderer and skybox renderer
+	 * 
+	 * @param loader
+	 *            Game Loader
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public MasterRenderer(Loader loader) {
 		initGL();
 		createProjectionMatrix();
@@ -65,12 +98,28 @@ public class MasterRenderer {
 		skyboxRenderer = new SkyboxRenderer(loader, projectionMatrix);
 	}
 
+	/**
+	 * Initialize the OpenGL Code
+	 * 
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public void initGL() {
 		VoxelGL33.glEnable(GL_DEPTH_TEST);
 		VoxelGL33.glEnable(GL_CULL_FACE);
 		VoxelGL33.glCullFace(GL_BACK);
 	}
 
+	/**
+	 * Render the World
+	 * 
+	 * @param cubes
+	 *            A list of Cubes
+	 * @param lights
+	 *            A list of Lights
+	 * @param camera
+	 *            A Camera
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public void renderWorld(Queue<Entity> cubes, List<Light> lights,
 			Camera camera) {
 		for (Entity entity : cubes) {
@@ -81,6 +130,17 @@ public class MasterRenderer {
 		renderWorld(lights, camera);
 	}
 
+	/**
+	 * Render the Entity's
+	 * 
+	 * @param entities
+	 *            A list of Entity's
+	 * @param lights
+	 *            A list of Lights
+	 * @param camera
+	 *            A Camera
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public void renderEntity(List<Entity> entities, List<Light> lights,
 			Camera camera) {
 		for (Entity entity : entities) {
@@ -91,6 +151,15 @@ public class MasterRenderer {
 		renderEntity(lights, camera);
 	}
 
+	/**
+	 * World Rendering PipeLine
+	 * 
+	 * @param lights
+	 *            A list of lights
+	 * @param camera
+	 *            A Camera
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	private void renderWorld(List<Light> lights, Camera camera) {
 		prepare();
 		shader.start();
@@ -108,6 +177,15 @@ public class MasterRenderer {
 		entities.clear();
 	}
 
+	/**
+	 * Entity's Rendering PipeLine
+	 * 
+	 * @param lights
+	 *            A list of Lights
+	 * @param camera
+	 *            A Camera
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	private void renderEntity(List<Light> lights, Camera camera) {
 		shader.start();
 		if (Display.wasResized())
@@ -119,6 +197,13 @@ public class MasterRenderer {
 		entities.clear();
 	}
 
+	/**
+	 * Add the Entity to the batcher map
+	 * 
+	 * @param entity
+	 *            An Entity
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	private void processEntity(Entity entity) {
 		TexturedModel entityModel = entity.getModel();
 		List<Entity> batch = entities.get(entityModel);
@@ -131,12 +216,22 @@ public class MasterRenderer {
 		}
 	}
 
+	/**
+	 * Clear the OpenGL Buffers
+	 * 
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	private void prepare() {
 		VoxelGL33.glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		VoxelGL33.glClearColor(KernelConstants.RED, KernelConstants.GREEN,
 				KernelConstants.BLUE, 1);
 	}
 
+	/**
+	 * Creates the Projection Matrix
+	 * 
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public void createProjectionMatrix() {
 		aspectRatio = (float) Display.getWidth() / (float) Display.getHeight();
 		float y_scale = (float) ((1f / Math.tan(Math
@@ -155,10 +250,21 @@ public class MasterRenderer {
 		projectionMatrix.m33 = 0;
 	}
 
+	/**
+	 * Clear the Shader
+	 * 
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public void cleanUp() {
 		shader.cleanUp();
 	}
 
+	/**
+	 * Gets the Projection matrix
+	 * 
+	 * @return A Projection Matrix
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public Matrix4f getProjectionMatrix() {
 		return projectionMatrix;
 	}

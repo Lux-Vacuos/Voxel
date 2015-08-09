@@ -56,19 +56,55 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
+/**
+ * Water Renderer
+ * 
+ * @author Guerra24 <pablo230699@hotmail.com>
+ * @version 0.0.1 Build-52
+ * @since 0.0.1 Build-52
+ * @category Rendering
+ */
 public class WaterRenderer {
-
-	private static final String DUDV_MAP = "dudvMap";
-	private static final String NORMAL_MAP = "normalMap";
-
+	/**
+	 * Water DUDVMap Texture
+	 */
+	private final String DUDV_MAP = "dudvMap";
+	/**
+	 * Water NormalMap Texture
+	 */
+	private final String NORMAL_MAP = "normalMap";
+	/**
+	 * Water RawModel
+	 */
 	private RawModel quad;
+	/**
+	 * Water Shader
+	 */
 	private WaterShader shader;
-
+	/**
+	 * Water Move Factor
+	 */
 	private float moveFactor = 0;
-
+	/**
+	 * Water DUDVMap Texture ID
+	 */
 	private int dudvTexture;
+	/**
+	 * Water NormalMap Texture ID
+	 */
 	private int normalTexture;
 
+	/**
+	 * Constructor, Initializes the Water Shaders, Textures and VAOs
+	 * 
+	 * @param loader
+	 *            Game Loader
+	 * @param shader
+	 *            Water Shader
+	 * @param projectionMatrix
+	 *            A Matrix4f Projection
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public WaterRenderer(Loader loader, WaterShader shader,
 			Matrix4f projectionMatrix) {
 		this.shader = shader;
@@ -81,6 +117,15 @@ public class WaterRenderer {
 		setUpVAO(loader);
 	}
 
+	/**
+	 * Renders the Water Tiles in the List
+	 * 
+	 * @param waters
+	 *            A list of Water Tiles
+	 * @param camera
+	 *            A Camera
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public void render(Queue<WaterTile> waters, Camera camera) {
 		prepareRender(camera);
 		for (WaterTile tile : waters) {
@@ -97,6 +142,18 @@ public class WaterRenderer {
 		unbind();
 	}
 
+	/**
+	 * Renders the Water Tiles in the List
+	 * 
+	 * @param waters
+	 *            A list of Water Tiles
+	 * @param camera
+	 *            A Camera
+	 * @param light
+	 *            A list of Lights
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 * @deprecated
+	 */
 	public void render(List<WaterTile> water, Camera camera, Light light) {
 		prepareRender(camera, light);
 		for (WaterTile tile : water) {
@@ -113,30 +170,13 @@ public class WaterRenderer {
 		unbind();
 	}
 
-	private void prepareRender(Camera camera, Light light) {
-		shader.start();
-		shader.loadSkyColour(KernelConstants.RED, KernelConstants.GREEN,
-				KernelConstants.BLUE);
-		shader.loadViewMatrix(camera);
-		moveFactor += KernelConstants.WAVE_SPEED
-				* DisplayManager.getFrameTimeSeconds();
-		moveFactor %= 1;
-		if (Display.wasResized())
-			shader.loadProjectionMatrix(Kernel.gameResources.renderer
-					.getProjectionMatrix());
-		shader.loadMoveFactor(moveFactor);
-		shader.loadLight(light);
-		VoxelGL33.glDisable(GL_CULL_FACE);
-		VoxelGL33.glEnable(GL_BLEND);
-		VoxelGL33.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		glBindVertexArray(quad.getVaoID());
-		glEnableVertexAttribArray(0);
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, dudvTexture);
-		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_2D, normalTexture);
-	}
-
+	/**
+	 * Water Tile Prepare PipeLine
+	 * 
+	 * @param camera
+	 *            A Camera
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	private void prepareRender(Camera camera) {
 		shader.start();
 		shader.loadSkyColour(KernelConstants.RED, KernelConstants.GREEN,
@@ -161,6 +201,44 @@ public class WaterRenderer {
 		glBindTexture(GL_TEXTURE_2D, normalTexture);
 	}
 
+	/**
+	 * Water Tile Prepare PipeLine
+	 * 
+	 * @param camera
+	 *            A Camera
+	 * @param light
+	 *            A list of Lights
+	 * @deprecated
+	 */
+	private void prepareRender(Camera camera, Light light) {
+		shader.start();
+		shader.loadSkyColour(KernelConstants.RED, KernelConstants.GREEN,
+				KernelConstants.BLUE);
+		shader.loadViewMatrix(camera);
+		moveFactor += KernelConstants.WAVE_SPEED
+				* DisplayManager.getFrameTimeSeconds();
+		moveFactor %= 1;
+		if (Display.wasResized())
+			shader.loadProjectionMatrix(Kernel.gameResources.renderer
+					.getProjectionMatrix());
+		shader.loadMoveFactor(moveFactor);
+		shader.loadLight(light);
+		VoxelGL33.glDisable(GL_CULL_FACE);
+		VoxelGL33.glEnable(GL_BLEND);
+		VoxelGL33.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glBindVertexArray(quad.getVaoID());
+		glEnableVertexAttribArray(0);
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, dudvTexture);
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, normalTexture);
+	}
+
+	/**
+	 * Unbinds the VAOs
+	 * 
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	private void unbind() {
 		glDisableVertexAttribArray(0);
 		glBindVertexArray(0);
@@ -169,6 +247,13 @@ public class WaterRenderer {
 		shader.stop();
 	}
 
+	/**
+	 * Creates the VAOs
+	 * 
+	 * @param loader
+	 *            Game Loader
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	private void setUpVAO(Loader loader) {
 		float[] vertices = { -1, -1, -1, 1, 1, -1, 1, -1, -1, 1, 1, 1 };
 		quad = loader.loadToVAO(vertices, 2);

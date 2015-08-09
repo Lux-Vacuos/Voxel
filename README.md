@@ -3,6 +3,8 @@ This is a voxel engine type that is programmed in Java, using LWJGL and OpenGL3.
 
 When the project is in a more stable and complete stage, my plan is to develop an API for the implementation of mods.
 
+Now have a basic JavaDoc
+
 # Build Status
 [![Build Status](https://drone.io/github.com/Guerra24/Voxel/status.png)](https://drone.io/github.com/Guerra24/Voxel/latest)
 
@@ -10,7 +12,7 @@ When the project is in a more stable and complete stage, my plan is to develop a
 - ThinMatrix: Rendering System
 - sriharshachilakapati: General OpenGL stuff
 - Lharing: General Optimization and code cleaning
-- Paul Lamb: Sound. http://www.paulscode.com
+- Paul Lamb: Sound
 
 # Licenses
 "This software is based on or using the J-Ogg library available from

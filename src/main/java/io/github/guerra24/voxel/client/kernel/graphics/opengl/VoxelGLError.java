@@ -27,15 +27,21 @@ package io.github.guerra24.voxel.client.kernel.graphics.opengl;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL30.*;
 
+/**
+ * Voxel OpenGL Error Check
+ * 
+ * @author Guerra24 <pablo230699@hotmail.com>
+ * @version 0.0.1 Build-52
+ * @since 0.0.1 Build-1
+ * @category OpenGL
+ */
 public final class VoxelGLError {
-	private VoxelGLError() {
-	}
-
+	/**
+	 * Check the OpenGL Errors
+	 * 
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public static void check() {
-		check(false);
-	}
-
-	public static void check(boolean force) {
 
 		switch (glGetError()) {
 		case GL_NO_ERROR:
@@ -57,6 +63,12 @@ public final class VoxelGLError {
 		}
 	}
 
+	/**
+	 * Gets The OpenGL Error
+	 * 
+	 * @return The OpenGL Error
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public static Value get() {
 		switch (glGetError()) {
 		case GL_INVALID_ENUM:
@@ -78,6 +90,12 @@ public final class VoxelGLError {
 		return Value.NO_ERROR;
 	}
 
+	/**
+	 * Enumerator of OpenGL Errors
+	 * 
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 *
+	 */
 	public static enum Value {
 		NO_ERROR, INVALID_ENUM, INVALID_VALUE, INVALID_OPERATION, INVALID_FRAMEBUFFER_OPERATION, OUT_OF_MEMORY, STACK_UNDERFLOW, STACK_OVERFLOW
 	}

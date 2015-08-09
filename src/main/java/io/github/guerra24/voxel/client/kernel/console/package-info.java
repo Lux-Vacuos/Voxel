@@ -21,37 +21,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
-package io.github.guerra24.voxel.client.kernel.core;
-
 /**
- * World Thread
+ * Contains the Console
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
  * @version 0.0.1 Build-52
  * @since 0.0.1 Build-52
- * @category Kernel
  */
-public class UpdateThread extends Thread {
-	@Override
-	public void run() {
-		while (Kernel.gameResources.gameStates.loop) {
-			switch (Kernel.gameResources.gameStates.state) {
-			case MAINMENU:
-				break;
-			case IN_PAUSE:
-				Kernel.world.updateChunkGeneration(Kernel.gameResources.camera);
-				break;
-			case GAME:
-				Kernel.world.updateChunkGeneration(Kernel.gameResources.camera);
-				Kernel.world.updateChunksRender(Kernel.gameResources.camera);
-				Kernel.gameResources.camera.updatePicker();
-				Kernel.world.test();
-				break;
-			case LOADING_WORLD:
-				break;
-			}
-			Kernel.gameResources.gameStates.switchStates();
-		}
-	}
-}
+package io.github.guerra24.voxel.client.kernel.console;

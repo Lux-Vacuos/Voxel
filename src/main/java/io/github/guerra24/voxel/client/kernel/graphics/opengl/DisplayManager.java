@@ -36,13 +36,34 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.PixelFormat;
 
+/**
+ * Display Manager
+ * 
+ * @author Guerra24 <pablo230699@hotmail.com>
+ * @version 0.0.1 Build-52
+ * @since 0.0.1 Build-1
+ * @category OpenGL
+ */
 public class DisplayManager {
 
+	/**
+	 * Last Frame Time Value
+	 */
 	private static long lastFrameTime;
+	/**
+	 * Game Delta Value
+	 */
 	private static float delta;
-
+	/**
+	 * Display Pixel Format
+	 */
 	private static PixelFormat pixelformat = new PixelFormat();
 
+	/**
+	 * Creates and Sets the Display
+	 * 
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public static void createDisplay() {
 		Logger.log(Thread.currentThread(), "Creating Display");
 		try {
@@ -65,12 +86,18 @@ public class DisplayManager {
 		lastFrameTime = getCurrentTime();
 	}
 
+	/**
+	 * Updates the Display
+	 * 
+	 * @param fps
+	 *            Game Max FPS
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public static void updateDisplay(int fps) {
 		Display.sync(fps);
 		Display.update();
 		if (Display.wasResized()) {
-			VoxelGL33
-					.glViewport(0, 0, Display.getWidth(), Display.getHeight());
+			VoxelGL33.glViewport(0, 0, Display.getWidth(), Display.getHeight());
 			Kernel.gameResources.renderer.createProjectionMatrix();
 		}
 		long currentFrameTime = getCurrentTime();
@@ -78,14 +105,30 @@ public class DisplayManager {
 		lastFrameTime = currentFrameTime;
 	}
 
-	public static float getFrameTimeSeconds() {
-		return delta;
-	}
-
+	/**
+	 * Destroy the display
+	 * 
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public static void closeDisplay() {
 		Display.destroy();
 	}
 
+	/**
+	 * Get the delta value
+	 * 
+	 * @return Delta Value
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
+	public static float getFrameTimeSeconds() {
+		return delta;
+	}
+
+	/**
+	 * Get the Current Time
+	 * 
+	 * @return Current Time
+	 */
 	private static long getCurrentTime() {
 		return Sys.getTime() * 1000 / Sys.getTimerResolution();
 	}

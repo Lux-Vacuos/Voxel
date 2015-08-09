@@ -30,40 +30,106 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.Color;
 import org.lwjgl.util.Rectangle;
 
+/**
+ * Voxel OpenGL Calls Manager
+ * 
+ * @author Guerra24 <pablo230699@hotmail.com>
+ * @version 0.0.1 Build-52
+ * @since 0.0.1 Build-52
+ * @category OpenGL
+ */
 public final class VoxelGL33 {
-	private VoxelGL33() {
-	}
-
+	/**
+	 * glEnable
+	 * 
+	 * @param capability
+	 *            Value
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public static void glEnable(int capability) {
 		GL11.glEnable(capability);
 		VoxelGLError.check();
 	}
 
-	public static void glBlendFunc(int src, int dst) {
-		GL11.glBlendFunc(src, dst);
-		VoxelGLError.check();
-	}
-
+	/**
+	 * glDisable
+	 * 
+	 * @param capability
+	 *            Value
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public static void glDisable(int capability) {
 		GL11.glDisable(capability);
 		VoxelGLError.check();
 	}
 
+	/**
+	 * glBlendFunc
+	 * 
+	 * @param src
+	 *            OpenGL Blend src
+	 * @param dst
+	 *            OpenGL Blend dst
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
+	public static void glBlendFunc(int src, int dst) {
+		GL11.glBlendFunc(src, dst);
+		VoxelGLError.check();
+	}
+
+	/**
+	 * glClearColor
+	 * 
+	 * @param color
+	 *            Color
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public static void glClearColor(Color color) {
 		GL11.glClearColor(color.getRed(), color.getGreen(), color.getBlue(),
 				color.getAlpha());
 	}
 
+	/**
+	 * glClearColor
+	 * 
+	 * @param r
+	 *            Red Value
+	 * @param g
+	 *            Green Value
+	 * @param b
+	 *            Blue Value
+	 * @param a
+	 *            Alpha Value
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public static void glClearColor(float r, float g, float b, float a) {
 		GL11.glClearColor(r, g, b, a);
 		VoxelGLError.check();
 	}
 
+	/**
+	 * glClear
+	 * 
+	 * @param buffers
+	 *            OpenGL Buffers
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public static void glClear(int buffers) {
 		GL11.glClear(buffers);
 		VoxelGLError.check();
 	}
 
+	/**
+	 * glDrawArrays
+	 * 
+	 * @param mode
+	 *            Mode of Rendering
+	 * @param offset
+	 *            Offset
+	 * @param vertexCount
+	 *            Vertex
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public static void glDrawArrays(int mode, int offset, int vertexCount) {
 		GL11.glDrawArrays(mode, offset, vertexCount);
 		VoxelGLError.check();
@@ -71,6 +137,18 @@ public final class VoxelGL33 {
 		Kernel.renderCalls++;
 	}
 
+	/**
+	 * glDrawElements
+	 * 
+	 * @param mode
+	 *            Mode of Rendering
+	 * @param vertexCount
+	 *            Vertex
+	 * @param type
+	 *            Type of Rendering
+	 * @param offset
+	 *            Offset
+	 */
 	public static void glDrawElements(int mode, int vertexCount, int type,
 			int offset) {
 		GL11.glDrawElements(mode, vertexCount, type, offset);
@@ -79,31 +157,86 @@ public final class VoxelGL33 {
 		Kernel.renderCalls++;
 	}
 
+	/**
+	 * glViewport
+	 * 
+	 * @param rect
+	 *            Rectangle
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public static void glViewport(Rectangle rect) {
 		glViewport(rect.getX(), rect.getY(), rect.getWidth(), rect.getHeight());
 	}
 
+	/**
+	 * glViewPort
+	 * 
+	 * @param x
+	 *            X Position
+	 * @param y
+	 *            Y Position
+	 * @param width
+	 *            Width
+	 * @param height
+	 *            Height
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public static void glViewport(float x, float y, float width, float height) {
 		GL11.glViewport((int) x, (int) y, (int) width, (int) height);
 		VoxelGLError.check();
 	}
 
+	/**
+	 * glDepthMask
+	 * 
+	 * @param value
+	 *            Boolean Flag
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public static void glDepthMask(boolean value) {
 		GL11.glDepthMask(value);
 		VoxelGLError.check();
 	}
 
+	/**
+	 * glDepthFunc
+	 * 
+	 * @param func
+	 *            Type
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public static void glDepthFunc(int func) {
 		GL11.glDepthFunc(func);
 		VoxelGLError.check();
 	}
 
+	/**
+	 * glCullFace
+	 * 
+	 * @param mode
+	 *            Type
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public static void glCullFace(int mode) {
 		GL11.glCullFace(mode);
 		VoxelGLError.check();
 	}
 
-	public static void glColorMask(boolean red, boolean green, boolean blue, boolean alpha) {
+	/**
+	 * glColorMask
+	 * 
+	 * @param red
+	 *            Red Color
+	 * @param green
+	 *            Green Color
+	 * @param blue
+	 *            Blue Color
+	 * @param alpha
+	 *            Alpha Color
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
+	public static void glColorMask(boolean red, boolean green, boolean blue,
+			boolean alpha) {
 		GL11.glColorMask(red, green, blue, alpha);
 		VoxelGLError.check();
 	}

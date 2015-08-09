@@ -31,14 +31,34 @@ import io.github.guerra24.voxel.client.kernel.menu.ConfigGUI;
 
 import java.io.File;
 
+/**
+ * Initialize the basic game code
+ * 
+ * @author Guerra24 <pablo230699@hotmail.com>
+ * @version 0.0.1 Build-52
+ * @since 0.0.1 Build-52
+ */
 public class Launcher {
-
+	/**
+	 * OS info
+	 */
 	private static Platform platform;
+	/**
+	 * Console Thread
+	 */
 	public static Console thread1;
+	/**
+	 * Config GUI
+	 */
 	public static ConfigGUI config;
 
 	public static String user;
 
+	/**
+	 * Initialize the console thread, the settings gui and starts the game
+	 * 
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public static void run() {
 		thread1 = new Console();
 		thread1.start();
@@ -60,6 +80,14 @@ public class Launcher {
 		}
 	}
 
+	/**
+	 * 
+	 * Gets the OS
+	 * 
+	 * @return The OS and the architecture
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 * 
+	 */
 	public static Platform getPlatform() {
 		if (platform == null) {
 			final String OS = System.getProperty("os.name").toLowerCase();
@@ -83,11 +111,24 @@ public class Launcher {
 		return platform;
 	}
 
-	public enum Platform {
+	/**
+	 * Enumerator of the OS
+	 * 
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 *
+	 */
+	private enum Platform {
 		WINDOWS_32, WINDOWS_64, MACOSX, LINUX_32, LINUX_64, UNKNOWN;
 
 	}
 
+	/**
+	 * Launcher main function
+	 * 
+	 * @param args
+	 *            Not Used
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public static void main(String[] args) {
 		Thread.currentThread().setName("Voxel Main");
 		run();

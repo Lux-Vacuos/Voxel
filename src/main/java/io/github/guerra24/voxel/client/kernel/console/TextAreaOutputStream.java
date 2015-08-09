@@ -28,13 +28,30 @@ import java.io.IOException;
 import java.io.OutputStream;
 import javax.swing.JTextArea;
 
+/**
+ * Redirects the OutStream
+ * 
+ * @author Guerra24 <pablo230699@hotmail.com>
+ * @version 0.0.1 Build-52
+ * @since 0.0.1 Build-52
+ */
 public class TextAreaOutputStream extends OutputStream {
+	/**
+	 * JTextArea
+	 */
 	private JTextArea textControl;
 
+	/**
+	 * 
+	 * @param control
+	 *            Needs a JTextArea
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public TextAreaOutputStream(JTextArea control) {
 		textControl = control;
 	}
 
+	@Override
 	public void write(int b) throws IOException {
 		textControl.append(String.valueOf((char) b));
 	}

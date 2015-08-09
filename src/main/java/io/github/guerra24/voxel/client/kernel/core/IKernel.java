@@ -24,19 +24,55 @@
 
 package io.github.guerra24.voxel.client.kernel.core;
 
+/**
+ * Interface for Kernel
+ * 
+ * @author Guerra24 <pablo230699@hotmail.com>
+ * @version 0.0.1 Build-52
+ * @since 0.0.1 Build-52
+ * @category Kernel
+ */
 public interface IKernel {
-	
+
+	/**
+	 * Initialize the Kernel
+	 * 
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public void init();
 
+	/**
+	 * The Main Loop, contains the render, update and error loops
+	 * 
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public void mainLoop();
-	
-	public void errorTest();
 
+	/**
+	 * Render Loop, contains all the render functions
+	 * 
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public void render();
-	
+
+	/**
+	 * Update Loop, contains all the update functions
+	 * 
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public void update();
-	
+
+	/**
+	 * Error Detection Loop, check the game errors
+	 * 
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public void error();
 
+	/**
+	 * Dispose Kernel, disposes all resources loaded
+	 * 
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public void dispose();
 }

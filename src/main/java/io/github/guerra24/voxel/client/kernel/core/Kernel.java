@@ -35,49 +35,63 @@ import io.github.guerra24.voxel.client.kernel.util.Logger;
 import io.github.guerra24.voxel.client.kernel.world.World;
 import io.github.guerra24.voxel.client.kernel.world.block.BlocksResources;
 
-import java.lang.management.ManagementFactory;
-import java.lang.management.ThreadMXBean;
-
+/**
+ * The Kernel, Game Engine Core
+ * 
+ * @author Guerra24 <pablo230699@hotmail.com>
+ * @version 0.0.1 Build-52
+ * @since 0.0.1 Build-1
+ * @category Kernel
+ */
 public class Kernel implements IKernel {
 
+	/**
+	 * Contains the Game Resources, all the textures, models and other type of
+	 * data
+	 */
 	public static GameResources gameResources;
+	/**
+	 * Contains the GUI/UI Resources
+	 */
 	public static GuiResources guiResources;
+	/**
+	 * Contains and Handles the Game World
+	 */
 	public static World world;
+	/**
+	 * Render calls
+	 */
 	public static float renderCalls = 0;
+	/**
+	 * Render Calls Per Frame
+	 */
 	public static float renderCallsPerFrame = 0;
+	/**
+	 * Total Render Calls
+	 */
 	public static float totalRenderCalls = 0;
+	/**
+	 * Error Check timing
+	 */
 	public static int errorTime = 0;
+	/**
+	 * Update Thread
+	 */
 	public static UpdateThread update;
-
+	/**
+	 * Error Test
+	 */
 	public boolean errorTest;
-	public ThreadMXBean tmxb = ManagementFactory.getThreadMXBean();
 
+	/**
+	 * Constructor of the Kernel, Initializes the Game and starts the loop
+	 * 
+	 * @param errorTest
+	 *            If running JUnit Test
+	 */
 	public Kernel(boolean errorTest) {
 		this.errorTest = errorTest;
-		if (errorTest)
-			errorTest();
-		else
-			mainLoop();
-	}
-
-	@Override
-	public void mainLoop() {
-		init();
-		while (gameResources.gameStates.loop) {
-			render();
-			update();
-			error();
-			totalRenderCalls += renderCalls;
-			renderCallsPerFrame = renderCalls;
-			renderCalls = 0;
-		}
-		dispose();
-	}
-
-	@Override
-	public void errorTest() {
-		init();
-		gameResources.gameStates.loop = false;
+		mainLoop();
 	}
 
 	@Override
@@ -110,9 +124,24 @@ public class Kernel implements IKernel {
 		update = new UpdateThread();
 		update.setName("Voxel World");
 		update.start();
-		//byte[] user = Launcher.user.getBytes(Charset.forName("UTF-8"));
-		//Logger.log(Thread.currentThread(), "User: " + Launcher.user + "UUID: "
-		//		+ UUID.nameUUIDFromBytes(user));
+		// byte[] user = Launcher.user.getBytes(Charset.forName("UTF-8"));
+		// Logger.log(Thread.currentThread(), "User: " + Launcher.user +
+		// "UUID: "
+		// + UUID.nameUUIDFromBytes(user));
+	}
+
+	@Override
+	public void mainLoop() {
+		init();
+		while (gameResources.gameStates.loop) {
+			render();
+			update();
+			error();
+			totalRenderCalls += renderCalls;
+			renderCallsPerFrame = renderCalls;
+			renderCalls = 0;
+		}
+		dispose();
 	}
 
 	@Override

@@ -31,7 +31,20 @@ import io.github.guerra24.voxel.client.kernel.util.Logger;
 
 import org.lwjgl.opengl.Display;
 
+/**
+ * System Info
+ * 
+ * @author Guerra24 <pablo230699@hotmail.com>
+ * @version 0.0.1 Build-52
+ * @since 0.0.1 Build-52
+ * @category OpenGL
+ */
 public class SystemInfo {
+	/**
+	 * Prints the GPU Info
+	 * 
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public static void printSystemInfo() {
 
 		Logger.log(Thread.currentThread(), "Vendor: " + glGetString(GL_VENDOR));

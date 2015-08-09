@@ -29,6 +29,15 @@ import java.nio.FloatBuffer;
 import org.lwjgl.BufferUtils;
 import static org.lwjgl.opengl.GL11.*;
 
+/**
+ * Old OpenGL Fixed-Func Frustum
+ * 
+ * @author Guerra24 <pablo230699@hotmail.com>
+ * @version 0.0.1 Build-52
+ * @since 0.0.1 Build-52
+ * @category Rendering
+ * @deprecated
+ */
 public class Frustum {
 	public float[][] m_Frustum = new float[6][4];
 	private static Frustum frustum = new Frustum();

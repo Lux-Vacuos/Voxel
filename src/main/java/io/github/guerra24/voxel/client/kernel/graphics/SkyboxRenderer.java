@@ -45,9 +45,19 @@ import io.github.guerra24.voxel.client.kernel.world.entities.Camera;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Matrix4f;
 
+/**
+ * Skybox Rendering
+ * 
+ * @author Guerra24 <pablo230699@hotmail.com>
+ * @version 0.0.1 Build-52
+ * @since 0.0.1 Build-52
+ * @category Rendering
+ */
 public class SkyboxRenderer {
-
-	private static final float[] VERTICES = { -KernelConstants.SIZE,
+	/**
+	 * Skybox Model Vertices
+	 */
+	private final float[] VERTICES = { -KernelConstants.SIZE,
 			KernelConstants.SIZE, -KernelConstants.SIZE, -KernelConstants.SIZE,
 			-KernelConstants.SIZE, -KernelConstants.SIZE, KernelConstants.SIZE,
 			-KernelConstants.SIZE, -KernelConstants.SIZE, KernelConstants.SIZE,
@@ -92,18 +102,47 @@ public class SkyboxRenderer {
 			-KernelConstants.SIZE, -KernelConstants.SIZE, KernelConstants.SIZE,
 			KernelConstants.SIZE, -KernelConstants.SIZE, KernelConstants.SIZE };
 
-	private static String[] TEXTURE_FILES = { "day/right", "day/left",
-			"day/top", "day/bottom", "day/front", "day/back" };
-	private static String[] NIGHT_TEXTURE_FILES = { "night/right",
-			"night/left", "night/top", "night/bottom", "night/front",
-			"night/back" };
+	/**
+	 * Skybox Day Texture Files
+	 */
+	private String[] TEXTURE_FILES = { "day/right", "day/left", "day/top",
+			"day/bottom", "day/front", "day/back" };
+	/**
+	 * Skybox Night Texture Files
+	 */
+	private String[] NIGHT_TEXTURE_FILES = { "night/right", "night/left",
+			"night/top", "night/bottom", "night/front", "night/back" };
 
+	/**
+	 * Skybox RawModel
+	 */
 	private RawModel cube;
+	/**
+	 * Skybox Day Texture ID
+	 */
 	private int texture;
+	/**
+	 * Skybox Night Texture ID
+	 */
 	private int nightTexture;
+	/**
+	 * Skybox Shader
+	 */
 	private SkyboxShader shader;
+	/**
+	 * Skybox Day/Night Timer
+	 */
 	private float time = 0;
 
+	/**
+	 * Constructor, Initializes the Skybox model, Textures and Shader
+	 * 
+	 * @param loader
+	 *            Game Loader
+	 * @param projectionMatrix
+	 *            Matrix4f, Projection Matrix
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public SkyboxRenderer(Loader loader, Matrix4f projectionMatrix) {
 		cube = loader.loadToVAO(VERTICES, 3);
 		texture = loader.loadCubeMap(TEXTURE_FILES);
@@ -115,6 +154,19 @@ public class SkyboxRenderer {
 		shader.stop();
 	}
 
+	/**
+	 * Render the Skybox
+	 * 
+	 * @param camera
+	 *            A Camera
+	 * @param r
+	 *            Fog Red Color
+	 * @param g
+	 *            Fog Green Color
+	 * @param b
+	 *            Fog Blue Color
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public void render(Camera camera, float r, float g, float b) {
 		shader.start();
 		if (Display.wasResized())
@@ -131,6 +183,11 @@ public class SkyboxRenderer {
 		shader.stop();
 	}
 
+	/**
+	 * Updates the Skybox Textures
+	 * 
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	private void bindTextures() {
 		time += DisplayManager.getFrameTimeSeconds() * 10;
 		time %= 24000;

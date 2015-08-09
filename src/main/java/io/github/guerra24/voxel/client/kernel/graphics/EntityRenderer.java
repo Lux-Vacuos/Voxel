@@ -45,10 +45,29 @@ import java.util.Map;
 
 import org.lwjgl.util.vector.Matrix4f;
 
+/**
+ * Entity Rendering
+ * 
+ * @author Guerra24 <pablo230699@hotmail.com>
+ * @version 0.0.1 Build-52
+ * @since 0.0.1 Build-52
+ * @category Rendering
+ */
 public class EntityRenderer {
-
+	/**
+	 * Entity Shader
+	 */
 	private EntityShader shader;
 
+	/**
+	 * Constructor, initializes the shaders and the projection matrix
+	 * 
+	 * @param shader
+	 *            Entity Shader
+	 * @param projectionMatrix
+	 *            A Matrix4f Projection
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public EntityRenderer(EntityShader shader, Matrix4f projectionMatrix) {
 		this.shader = shader;
 		shader.start();
@@ -56,6 +75,13 @@ public class EntityRenderer {
 		shader.stop();
 	}
 
+	/**
+	 * Render the entity's in the list
+	 * 
+	 * @param entities
+	 *            A List of entity's
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public void render(Map<TexturedModel, List<Entity>> entities) {
 		for (TexturedModel model : entities.keySet()) {
 			prepareTexturedModel(model);
@@ -69,6 +95,12 @@ public class EntityRenderer {
 		}
 	}
 
+	/**
+	 * Prepares the Entity Textured Model and binds the VAOs
+	 * 
+	 * @param model
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	private void prepareTexturedModel(TexturedModel model) {
 		RawModel rawmodel = model.getRawModel();
 		glBindVertexArray(rawmodel.getVaoID());
@@ -80,6 +112,11 @@ public class EntityRenderer {
 
 	}
 
+	/**
+	 * UnBinds the VAOs
+	 * 
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	private void unbindTexturedModel() {
 		glDisableVertexAttribArray(0);
 		glDisableVertexAttribArray(1);
@@ -87,6 +124,12 @@ public class EntityRenderer {
 		glBindVertexArray(0);
 	}
 
+	/**
+	 * Prepares the Textured Model Translation, Rotation and Scale
+	 * 
+	 * @param entity
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	private void prepareInstance(Entity entity) {
 		Matrix4f transformationMatrix = Maths.createTransformationMatrix(
 				entity.getPosition(), entity.getRotX(), entity.getRotY(),

@@ -24,12 +24,41 @@
 
 package io.github.guerra24.voxel.client.kernel.core;
 
+/**
+ * Interface for GameObjects
+ * 
+ * @author Guerra24 <pablo230699@hotmail.com>
+ * @version 0.0.1 Build-52
+ * @since 0.0.1 Build-52
+ * @category KernelS
+ */
 public interface GameObject {
+
+	/**
+	 * Initialize the GameObject
+	 * 
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public void init();
-	
+
+	/**
+	 * Updates the GameObject
+	 * 
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public void update();
 
-	public void render();
+	/**
+	 * Sends the TexturedModel to render
+	 * 
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
+	public void sendToRender();
 
+	/**
+	 * Disposes the GameObject
+	 * 
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public void dispose();
 }

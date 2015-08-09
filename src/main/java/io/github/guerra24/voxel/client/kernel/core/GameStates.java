@@ -33,21 +33,52 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector3f;
 
+/**
+ * Game States
+ * 
+ * @author Guerra24 <pablo230699@hotmail.com>
+ * @version 0.0.1 Build-52
+ * @since 0.0.1 Build-52
+ * @category Kernel
+ */
 public class GameStates {
-
+	/**
+	 * The game main loop bool
+	 */
 	public boolean loop;
+	/**
+	 * If the player is in game
+	 */
 	public boolean isPlaying;
+	/**
+	 * Game State
+	 */
 	public State state;
 
+	/**
+	 * Game States Constructor, Initializes the loop and the default game state
+	 * 
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public GameStates() {
 		loop = true;
 		state = State.MAINMENU;
 	}
 
+	/**
+	 * Contains the game states values
+	 * 
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public enum State {
 		GAME, MAINMENU, IN_PAUSE, LOADING_WORLD;
 	}
 
+	/**
+	 * Updates the game state
+	 * 
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public void switchStates() {
 		if (state == State.MAINMENU && Button.isInButtonPlay()) {
 			// Kernel.gameResources.SoundSystem.pause("MainMenuMusic");

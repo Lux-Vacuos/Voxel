@@ -35,13 +35,45 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.text.DefaultCaret;
 
+/**
+ * The console thread, handles the Log
+ * 
+ * @author Guerra24 <pablo230699@hotmail.com>
+ * @version 0.0.1 Build-52
+ * @since 0.0.1 Build-52
+ */
 public class Console extends Thread {
-
+	/**
+	 * Console window
+	 */
 	private static JFrame frame;
+	/**
+	 * Console text
+	 */
 	private static JTextArea txtConsole;
-
+	/**
+	 * The console has successfully initialized
+	 */
 	public boolean isReady = false;
 
+	/**
+	 * Starts the thread and finally sets the console status
+	 * 
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
+	public void run() {
+		setPanel();
+		Insets insets = frame.getInsets();
+		frame.setSize(856 + insets.left + insets.right, 482 + insets.top
+				+ insets.bottom);
+		isReady = true;
+	}
+
+	/**
+	 * Initialize the JText and the JFrame
+	 * 
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public void setPanel() {
 		txtConsole = new JTextArea();
 		frame = new JFrame();
@@ -66,15 +98,13 @@ public class Console extends Thread {
 		Logger.log(currentThread(), "Starting Console");
 	}
 
+	/**
+	 * Disposes the JFrame
+	 * 
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public void close() {
 		frame.dispose();
 	}
 
-	public void run() {
-		setPanel();
-		Insets insets = frame.getInsets();
-		frame.setSize(856 + insets.left + insets.right, 482 + insets.top
-				+ insets.bottom);
-		isReady = true;
-	}
 }
