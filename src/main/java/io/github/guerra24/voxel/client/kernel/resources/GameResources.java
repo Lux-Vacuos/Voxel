@@ -55,6 +55,14 @@ import paulscode.sound.libraries.LibraryLWJGLOpenAL;
 
 import com.google.gson.Gson;
 
+/**
+ * Game Resources
+ * 
+ * @author Guerra24 <pablo230699@hotmail.com>
+ * @version 0.0.1 Build-52
+ * @since 0.0.1 Build-52
+ * @category Assets
+ */
 public class GameResources {
 	public ArrayList3<GuiTexture> guis = new ArrayList3<GuiTexture>();
 	public ArrayList3<GuiTexture> guis2 = new ArrayList3<GuiTexture>();
@@ -82,11 +90,21 @@ public class GameResources {
 	public SoundSystem SoundSystem;
 	public float distance;
 
+	/**
+	 * Constructor, Create the Game Resources and Init Loader
+	 * 
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public GameResources() {
 		loader = new Loader();
 		guiRenderer = new GuiRenderer(loader);
 	}
 
+	/**
+	 * Initialize the Game Objects
+	 * 
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public void init() {
 		rand = new Random();
 		camera = new Camera();
@@ -110,11 +128,21 @@ public class GameResources {
 		Block.initBasicBlocks();
 	}
 
+	/**
+	 * Load Music
+	 * 
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public void music() {
 		// SoundSystem.backgroundMusic("MainMenuMusic", "Water_Lily.ogg",
 		// false);
 	}
 
+	/**
+	 * Load Resources like Mobs
+	 * 
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public void addRes() {
 		player = new Player(BlocksResources.cubeGlassUP,
 				new Vector3f(0, 80, -4), 0, 0, 0, 1);
@@ -124,6 +152,11 @@ public class GameResources {
 		allObjects.add(player);
 	}
 
+	/**
+	 * Disposes all objects
+	 * 
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public void cleanUp() {
 		waterShader.cleanUp();
 		guiRenderer.cleanUp();

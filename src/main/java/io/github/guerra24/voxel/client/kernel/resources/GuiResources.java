@@ -29,6 +29,14 @@ import io.github.guerra24.voxel.client.kernel.resources.models.GuiTexture;
 
 import org.lwjgl.util.vector.Vector2f;
 
+/**
+ * Gui Resources
+ * 
+ * @author Guerra24 <pablo230699@hotmail.com>
+ * @version 0.0.1 Build-52
+ * @since 0.0.1 Build-52
+ * @category Assets
+ */
 public class GuiResources {
 
 	private GuiTexture button1;
@@ -42,11 +50,21 @@ public class GuiResources {
 
 	public static GuiTexture load;
 
+	/**
+	 * Constructor
+	 * 
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public GuiResources() {
 		loadGuiTexture();
 		addGuiTextures();
 	}
 
+	/**
+	 * Load all Gui Assets
+	 * 
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public void loadGuiTexture() {
 		gui = new GuiTexture(
 				Kernel.gameResources.loader.loadTextureGui("HotBar"),
@@ -74,6 +92,11 @@ public class GuiResources {
 		Kernel.gameResources.guis5.add(load);
 	}
 
+	/**
+	 * Sends GUIs to the List
+	 * 
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public void addGuiTextures() {
 		Kernel.gameResources.guis.add(gui);
 		Kernel.gameResources.guis2.add(button1);

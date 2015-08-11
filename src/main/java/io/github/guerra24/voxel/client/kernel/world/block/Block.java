@@ -42,9 +42,19 @@ import io.github.guerra24.voxel.client.kernel.world.entities.Entity;
 
 import org.lwjgl.util.vector.Vector3f;
 
+/**
+ * Block
+ * 
+ * @author Guerra24 <pablo230699@hotmail.com>
+ * @version 0.0.1 Build-52
+ * @since 0.0.1 Build-52
+ * @category World
+ */
 public abstract class Block {
-
-	public static HashMap<Byte, Block> tileMap = new HashMap<Byte, Block>();
+	/**
+	 * Map of blocks
+	 */
+	public static HashMap<Byte, Block> blockMap = new HashMap<Byte, Block>();
 
 	public static Block Grass = new BlockGrass();
 	public static Block Stone = new BlockStone();
@@ -58,22 +68,88 @@ public abstract class Block {
 	public static Block Glass = new BlockGlass();
 	public static Block Air = new BlockAir();
 
+	/**
+	 * Gets the Block ID
+	 * 
+	 * @return ID
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public abstract byte getId();
 
+	/**
+	 * Get the Face Up of the Block
+	 * 
+	 * @param pos
+	 *            Position
+	 * @return Entity
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public abstract Entity getFaceUp(Vector3f pos);
 
+	/**
+	 * Get the Face Down of the Block
+	 * 
+	 * @param pos
+	 *            Position
+	 * @return Entity
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public abstract Entity getFaceDown(Vector3f pos);
 
+	/**
+	 * Get the Face East of the Block
+	 * 
+	 * @param pos
+	 *            Position
+	 * @return Entity
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public abstract Entity getFaceEast(Vector3f pos);
 
+	/**
+	 * Get the Face West of the Block
+	 * 
+	 * @param pos
+	 *            Position
+	 * @return Entity
+	 */
 	public abstract Entity getFaceWest(Vector3f pos);
 
+	/**
+	 * Get the Face North of the Block
+	 * 
+	 * @param pos
+	 *            Position
+	 * @return Entity
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public abstract Entity getFaceNorth(Vector3f pos);
 
+	/**
+	 * Get the Face South of the Block
+	 * 
+	 * @param pos
+	 *            Position
+	 * @return Entity
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public abstract Entity getFaceSouth(Vector3f pos);
 
+	/**
+	 * Get the WaterTile of the Block
+	 * 
+	 * @param pos
+	 *            Position
+	 * @return WaterTile
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public abstract WaterTile getWaterTitle(Vector3f pos);
 
+	/**
+	 * Initialize the basic Block
+	 * 
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public static void initBasicBlocks() {
 		registerBlock((byte) -1, Indes);
 		registerBlock((byte) 0, Air);
@@ -87,12 +163,29 @@ public abstract class Block {
 		registerBlock((byte) 8, Glass);
 	}
 
+	/**
+	 * Register a Block to the map
+	 * 
+	 * @param id
+	 *            Bloc ID
+	 * @param block
+	 *            Block
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public static void registerBlock(byte id, Block block) {
-		tileMap.put(id, block);
+		blockMap.put(id, block);
 	}
 
+	/**
+	 * Get the block in the position id of the map
+	 * 
+	 * @param id
+	 *            Block ID
+	 * @return Block
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public static Block getBlock(byte id) {
-		return tileMap.get(id);
+		return blockMap.get(id);
 	}
 
 }

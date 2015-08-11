@@ -32,20 +32,67 @@ import io.github.guerra24.voxel.client.kernel.world.entities.Light;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
+/**
+ * Water Shader
+ * 
+ * @author Guerra24 <pablo230699@hotmail.com>
+ * @version 0.0.1 Build-52
+ * @since 0.0.1 Build-52
+ * @category Rendering
+ */
 public class WaterShader extends ShaderProgram {
-
+	/**
+	 * Model View Matrix ID
+	 */
 	private int location_modelMatrix;
+	/**
+	 * View Matrix ID
+	 */
 	private int location_viewMatrix;
+	/**
+	 * Projection Matrix ID
+	 */
 	private int location_projectionMatrix;
+	/**
+	 * DUDVMap Texture ID
+	 */
 	private int location_dudvMap;
+	/**
+	 * NormalMap Texture ID
+	 */
 	private int location_normalMap;
+	/**
+	 * Move Factor ID
+	 */
 	private int location_moveFactor;
+	/**
+	 * Camera Position ID
+	 */
 	private int location_cameraPosition;
+	/**
+	 * Directional Light Direction ID
+	 */
 	private int location_directLightDirection;
+	/**
+	 * Light Colour ID
+	 * 
+	 * @deprecated
+	 */
 	private int location_lightColour;
+	/**
+	 * Light Position ID
+	 * 
+	 * @deprecated
+	 */
 	private int location_lightPosition;
+	/**
+	 * SkyColour ID
+	 */
 	private int location_skyColour;
 
+	/**
+	 * Constructor, Create a Water Shader
+	 */
 	public WaterShader() {
 		super(KernelConstants.VERTEX_FILE_WATER,
 				KernelConstants.FRAGMENT_FILE_WATER);
@@ -72,38 +119,96 @@ public class WaterShader extends ShaderProgram {
 		location_skyColour = super.getUniformLocation("skyColour");
 	}
 
+	/**
+	 * Loads the Sky Color to the shader
+	 * 
+	 * @param r
+	 *            Red Value
+	 * @param g
+	 *            Green Value
+	 * @param b
+	 *            Blue Value
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public void loadSkyColour(float r, float g, float b) {
 		super.loadVector(location_skyColour, new Vector3f(r, g, b));
 	}
 
+	/**
+	 * Loads Textures ID
+	 * 
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public void connectTextureUnits() {
 		super.loadInt(location_dudvMap, 0);
 		super.loadInt(location_normalMap, 1);
 	}
 
+	/**
+	 * Loads the List of Lights to the shader
+	 * 
+	 * @param lights
+	 *            List of Lights
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public void loadLight(Light light) {
 		super.loadVector(location_lightColour, light.getColour());
 		super.loadVector(location_lightPosition, light.getPosition());
 	}
 
+	/**
+	 * Loads the Move Factor
+	 * 
+	 * @param factor
+	 *            Factor
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public void loadMoveFactor(float factor) {
 		super.loadFloat(location_moveFactor, factor);
 	}
 
+	/**
+	 * Loads the Projection Matrix
+	 * 
+	 * @param projection
+	 *            Projection Matrix
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public void loadProjectionMatrix(Matrix4f projection) {
 		loadMatrix(location_projectionMatrix, projection);
 	}
 
+	/**
+	 * Load Directional Light Direction
+	 * 
+	 * @param direction
+	 *            Light Direction
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public void loadDirectLightDirection(Vector3f direction) {
 		super.loadVector(location_directLightDirection, direction);
 	}
 
+	/**
+	 * Load View Matrix
+	 * 
+	 * @param camera
+	 *            Camera
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public void loadViewMatrix(Camera camera) {
 		Matrix4f viewMatrix = Maths.createViewMatrix(camera);
 		loadMatrix(location_viewMatrix, viewMatrix);
 		super.loadVector(location_cameraPosition, camera.getPosition());
 	}
 
+	/**
+	 * Load Model Matrix
+	 * 
+	 * @param modelMatrix
+	 *            Model Matrix
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public void loadModelMatrix(Matrix4f modelMatrix) {
 		loadMatrix(location_modelMatrix, modelMatrix);
 	}

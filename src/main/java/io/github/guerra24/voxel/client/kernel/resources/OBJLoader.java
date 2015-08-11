@@ -37,8 +37,25 @@ import java.util.List;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
+/**
+ * OBJLoader
+ * 
+ * @author Guerra24 <pablo230699@hotmail.com>
+ * @version 0.0.1 Build-52
+ * @since 0.0.1 Build-52
+ * @category Assets
+ */
 public class OBJLoader {
-
+	/**
+	 * Load an ObjModel
+	 * 
+	 * @param fileName
+	 *            File Name
+	 * @param loader
+	 *            Loader
+	 * @return RawModel
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public static RawModel loadObjModel(String fileName, Loader loader) {
 		FileReader fr = null;
 		try {
@@ -129,6 +146,23 @@ public class OBJLoader {
 				indicesArray);
 	}
 
+	/**
+	 * Process Vertex Data
+	 * 
+	 * @param vertexData
+	 *            Vertex Data
+	 * @param indices
+	 *            Indices Data
+	 * @param textures
+	 *            Textures Data
+	 * @param normals
+	 *            Normals Data
+	 * @param textureArrays
+	 *            Texture Array
+	 * @param normalsArray
+	 *            Normals Arrays
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	private static void processVertex(String[] vertexData,
 			List<Integer> indices, List<Vector2f> textures,
 			List<Vector3f> normals, float[] textureArrays, float[] normalsArray) {

@@ -24,27 +24,70 @@
 
 package io.github.guerra24.voxel.client.kernel.resources.models;
 
+/**
+ * Water Tile
+ * 
+ * @author Guerra24 <pablo230699@hotmail.com>
+ * @version 0.0.1 Build-52
+ * @since 0.0.1 Build-52
+ * @category Assets
+ */
 public class WaterTile {
-
+	/**
+	 * Tile Size
+	 */
 	public static final float TILE_SIZE = 0.5f;
-
+	/**
+	 * Y Coord of the Tile
+	 */
 	private float height;
+	/**
+	 * X and Z Coords
+	 */
 	private float x, z;
 
+	/**
+	 * Constructor, Create a Water Tile
+	 * 
+	 * @param centerX
+	 *            X Coord
+	 * @param centerZ
+	 *            Z Coord
+	 * @param height
+	 *            Y Coord
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public WaterTile(float centerX, float centerZ, float height) {
 		this.x = centerX;
 		this.z = centerZ;
 		this.height = height;
 	}
 
+	/**
+	 * Get Y Coord
+	 * 
+	 * @return Y Coord
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public float getHeight() {
 		return height;
 	}
 
+	/**
+	 * Get X Coord
+	 * 
+	 * @return Z Coord
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public float getX() {
 		return x;
 	}
 
+	/**
+	 * Get Z Coord
+	 * 
+	 * @return Z Coord
+	 */
 	public float getZ() {
 		return z;
 	}

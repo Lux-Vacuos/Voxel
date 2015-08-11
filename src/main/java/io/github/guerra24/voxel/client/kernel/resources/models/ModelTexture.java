@@ -24,16 +24,39 @@
 
 package io.github.guerra24.voxel.client.kernel.resources.models;
 
+/**
+ * Model Texture
+ * 
+ * @author Guerra24 <pablo230699@hotmail.com>
+ * @version 0.0.1 Build-52
+ * @since 0.0.1 Build-52
+ * @category Assets
+ */
 public class ModelTexture {
-
+	/**
+	 * Texture ID
+	 */
 	private int textureID;
 
+	/**
+	 * Constructor, Create a Model Texture
+	 * 
+	 * @param id
+	 *            Texture ID
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public ModelTexture(int id) {
 		this.textureID = id;
 	}
 
+	/**
+	 * Get Texture ID
+	 * 
+	 * @return Texture ID
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public int getID() {
-		return this.textureID;
+		return textureID;
 	}
 
 }

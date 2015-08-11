@@ -34,17 +34,53 @@ import java.util.List;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
+/**
+ * Entity Shader
+ * 
+ * @author Guerra24 <pablo230699@hotmail.com>
+ * @version 0.0.1 Build-52
+ * @since 0.0.1 Build-52
+ * @category Rendering
+ */
 public class EntityShader extends ShaderProgram {
-
+	/**
+	 * Transformation Matrix ID
+	 */
 	private int location_transformationMatrix;
+	/**
+	 * Projection Matrix ID
+	 */
 	private int location_projectionMatrix;
+	/**
+	 * Light Position Array ID
+	 */
 	private int location_lightPosition[];
+	/**
+	 * Light Colour Array ID
+	 */
 	private int location_lightColour[];
+	/**
+	 * Attenuation ID
+	 */
 	private int location_attenuations[];
+	/**
+	 * View Matrix ID
+	 */
 	private int location_viewMatrix;
+	/**
+	 * Sky Colour ID
+	 */
 	private int location_skyColour;
+	/**
+	 * Directional Light ID
+	 */
 	private int location_directLightDirection;
 
+	/**
+	 * Constructor, creates an Entity Shader
+	 * 
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public EntityShader() {
 		super(KernelConstants.VERTEX_FILE_ENTITY,
 				KernelConstants.FRAGMENT_FILE_ENTITY);
@@ -81,18 +117,50 @@ public class EntityShader extends ShaderProgram {
 		}
 	}
 
+	/**
+	 * Loads the Sky Color to the shader
+	 * 
+	 * @param r
+	 *            Red Value
+	 * @param g
+	 *            Green Value
+	 * @param b
+	 *            Blue Value
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public void loadSkyColour(float r, float g, float b) {
 		super.loadVector(location_skyColour, new Vector3f(r, g, b));
 	}
 
+	/**
+	 * Loads Transformation Matrix to the shader
+	 * 
+	 * @param matrix
+	 *            Transformation Matrix
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public void loadTransformationMatrix(Matrix4f matrix) {
 		super.loadMatrix(location_transformationMatrix, matrix);
 	}
 
+	/**
+	 * Loads The Directional Light Direction to the shader
+	 * 
+	 * @param direction
+	 *            Light Direction
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public void loadDirectLightDirection(Vector3f direction) {
 		super.loadVector(location_directLightDirection, direction);
 	}
 
+	/**
+	 * Loads the List of Lights to the shader
+	 * 
+	 * @param lights
+	 *            List of Lights
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public void loadLights(List<Light> lights) {
 		for (int i = 0; i < KernelConstants.MAX_LIGHTS; i++) {
 			if (i < lights.size()) {
@@ -106,11 +174,24 @@ public class EntityShader extends ShaderProgram {
 		}
 	}
 
+	/**
+	 * Loads View Matrix to the shader
+	 * 
+	 * @param camera
+	 *            Camera
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public void loadviewMatrix(Camera camera) {
 		Matrix4f viewMatrix = Maths.createViewMatrix(camera);
 		super.loadMatrix(location_viewMatrix, viewMatrix);
 	}
 
+	/**
+	 * Loads Projection Matrix to the shader
+	 * 
+	 * @param projection
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public void loadProjectionMatrix(Matrix4f projection) {
 		super.loadMatrix(location_projectionMatrix, projection);
 	}

@@ -44,17 +44,54 @@ import java.util.Random;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
+/**
+ * World
+ * 
+ * @author Guerra24 <pablo230699@hotmail.com>
+ * @version 0.0.1 Build-52
+ * @since 0.0.1 Build-52
+ * @category World
+ */
 public class World {
-
+	/**
+	 * Timing and World Dimension
+	 */
 	public int time = 0, time2 = 5, dim = 0;
+	/**
+	 * Chunks Map
+	 */
 	public HashMap<ChunkKey, Chunk> chunks;
+	/**
+	 * World Seed
+	 */
 	public Random seed;
+	/**
+	 * World noise
+	 */
 	public SimplexNoise noise;
+	/**
+	 * World Name
+	 */
 	public String name;
-
+	/**
+	 * Player Position in Chunk
+	 */
 	private int xPlayChunk;
 	private int zPlayChunk;
 
+	/**
+	 * Start a new World
+	 * 
+	 * @param name
+	 *            World Name
+	 * @param camera
+	 *            Camera
+	 * @param seed
+	 *            Seed
+	 * @param dimension
+	 *            World Dimension
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public void startWorld(String name, Camera camera, Random seed,
 			int dimension) {
 		this.name = name;
@@ -68,6 +105,11 @@ public class World {
 		createWorld(camera);
 	}
 
+	/**
+	 * Initialize The Basic World System
+	 * 
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	private void initialize() {
 		noise = new SimplexNoise(128, 0.2f, seed.nextInt());
 		chunks = new HashMap<ChunkKey, Chunk>();
@@ -76,6 +118,13 @@ public class World {
 				.getPosition());
 	}
 
+	/**
+	 * Creates the World in a range of 16*16 Chunks
+	 * 
+	 * @param camera
+	 *            Camera
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	private void createWorld(Camera camera) {
 		Logger.log(Thread.currentThread(), "Generating World");
 		xPlayChunk = (int) (camera.getPosition().x / 16);
@@ -112,6 +161,13 @@ public class World {
 		}
 	}
 
+	/**
+	 * Updates the Chunk Generation
+	 * 
+	 * @param camera
+	 *            Camera
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public void updateChunkGeneration(Camera camera) {
 		time++;
 		if (time % 10 == 0) {
@@ -156,6 +212,13 @@ public class World {
 		}
 	}
 
+	/**
+	 * Updates the Chunk Rendering
+	 * 
+	 * @param camera
+	 *            Camera
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public void updateChunksRender(Camera camera) {
 		time2++;
 		if (time2 % 10 == 0) {
@@ -211,9 +274,19 @@ public class World {
 		}
 	}
 
+	/**
+	 * ONLY FOR TESTING
+	 * 
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public void test() {
 	}
 
+	/**
+	 * Saves the World info
+	 * 
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public void saveWorld() {
 		if (!existWorld()) {
 			File file = new File(KernelConstants.worldPath + name + "/");
@@ -236,6 +309,11 @@ public class World {
 		}
 	}
 
+	/**
+	 * Loads the World Info
+	 * 
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public void loadWorld() {
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(
@@ -246,6 +324,17 @@ public class World {
 		}
 	}
 
+	/**
+	 * Save a Chunk
+	 * 
+	 * @param dim
+	 *            World Dimension
+	 * @param cx
+	 *            X Coord
+	 * @param cz
+	 *            Z Coord
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public void saveChunk(int dim, int cx, int cz) {
 		String json = Kernel.gameResources.gson.toJson(getChunk(dim, cx, cz));
 		try {
@@ -260,6 +349,17 @@ public class World {
 		}
 	}
 
+	/**
+	 * Load a Chunk to the Map
+	 * 
+	 * @param dim
+	 *            World Dimension
+	 * @param cx
+	 *            X Coord
+	 * @param cz
+	 *            Z Coord
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public void loadChunk(int dim, int cx, int cz) {
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(
@@ -273,23 +373,61 @@ public class World {
 		}
 	}
 
+	/**
+	 * Checks if exist the chunk file
+	 * 
+	 * @param dim
+	 *            World Dimension
+	 * @param cx
+	 *            X Coord
+	 * @param cz
+	 *            Z Coord
+	 * @return Boolean
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public boolean existChunkFile(int dim, int cx, int cz) {
 		File file = new File(KernelConstants.worldPath + name + "/chunks_"
 				+ dim + "/chunk_" + dim + "_" + cx + "_" + cz + ".json");
 		return file.exists();
 	}
 
+	/**
+	 * Check if exist the World info file
+	 * 
+	 * @return Boolean
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public boolean existWorld() {
 		File file = new File(KernelConstants.worldPath + name + "/world.json");
 		return file.exists();
 	}
 
+	/**
+	 * Check if exist chunk folder
+	 * 
+	 * @param dim
+	 *            World Dimension
+	 * @return Boolean
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public boolean existChunkFolder(int dim) {
 		File file = new File(KernelConstants.worldPath + name + "/chunks_"
 				+ dim + "/");
 		return file.exists();
 	}
 
+	/**
+	 * Get the chunk of the map
+	 * 
+	 * @param dim
+	 *            World Dimension
+	 * @param cx
+	 *            X Coord
+	 * @param cz
+	 *            Z Coord
+	 * @return Chunk
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public Chunk getChunk(int dim, int cx, int cz) {
 		ChunkKey key = ChunkKey.alloc(dim, cx, cz);
 		Chunk chunk;
@@ -298,6 +436,17 @@ public class World {
 		return chunk;
 	}
 
+	/**
+	 * If in the position exist a chunk
+	 * 
+	 * @param dim
+	 *            World Dimension
+	 * @param cx
+	 *            X Coord
+	 * @param cz
+	 *            Z Coord
+	 * @return Boolean
+	 */
 	public boolean hasChunk(int dim, int cx, int cz) {
 		ChunkKey key = ChunkKey.alloc(dim, cx, cz);
 		boolean contains;
@@ -306,6 +455,13 @@ public class World {
 		return contains;
 	}
 
+	/**
+	 * Add a chunk to the Map
+	 * 
+	 * @param chunk
+	 *            Chunk
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public void addChunk(Chunk chunk) {
 		ChunkKey key = ChunkKey.alloc(chunk.dim, chunk.cx, chunk.cz);
 		Chunk old = chunks.get(key);
@@ -315,18 +471,45 @@ public class World {
 		chunks.put(key.clone(), chunk);
 	}
 
+	/**
+	 * Remove the chunk of the map
+	 * 
+	 * @param chunk
+	 *            Chunk
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public void removeChunk(Chunk chunk) {
 		ChunkKey key = ChunkKey.alloc(chunk.dim, chunk.cx, chunk.cz);
 		chunks.remove(key);
 		key.free();
 	}
 
+	/**
+	 * Get Map Size
+	 * 
+	 * @return Size
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public int getCount() {
 		int cnt;
 		cnt = chunks.size();
 		return cnt;
 	}
 
+	/**
+	 * Gets the Block in global coords
+	 * 
+	 * @param dim
+	 *            World Dimension
+	 * @param x
+	 *            X Coord
+	 * @param y
+	 *            Y Coord
+	 * @param z
+	 *            Z Coord
+	 * @return Block ID
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public byte getGlobalBlock(int dim, int x, int y, int z) {
 		int cx = x >> 4;
 		int cz = z >> 4;
@@ -337,6 +520,21 @@ public class World {
 			return 1;
 	}
 
+	/**
+	 * Set a block in global coords
+	 * 
+	 * @param dim
+	 *            World Dimension
+	 * @param x
+	 *            X Coord
+	 * @param y
+	 *            Y Coord
+	 * @param z
+	 *            Z Coord
+	 * @param id
+	 *            Block ID
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public void setGlobalBlock(int dim, int x, int y, int z, byte id) {
 		int cx = x >> 4;
 		int cz = z >> 4;
@@ -345,30 +543,31 @@ public class World {
 		chunk.rebuildChunk();
 	}
 
+	/**
+	 * Clear the chunk map
+	 * 
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public void removeAll() {
 		chunks.clear();
 	}
 
-	public double distanceFromPlayer(int x, int z, int i, int k) {
-		int xx = x - i;
-		int zz = z - k;
-		return Math.sqrt(xx * xx + zz * zz);
-	}
-
+	/**
+	 * Gets Player Position in Chunk Style
+	 * 
+	 * @return Z Position
+	 */
 	public int getzPlayChunk() {
 		return zPlayChunk;
 	}
 
-	public void setzPlayChunk(int zPlayChunk) {
-		this.zPlayChunk = zPlayChunk;
-	}
-
+	/**
+	 * Gets Player Position in Chunk Style
+	 * 
+	 * @return X Position
+	 */
 	public int getxPlayChunk() {
 		return xPlayChunk;
-	}
-
-	public void setxPlayChunk(int xPlayChunk) {
-		this.xPlayChunk = xPlayChunk;
 	}
 
 }

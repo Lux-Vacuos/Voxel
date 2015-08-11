@@ -62,14 +62,42 @@ import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.util.vector.Vector4f;
 
+/**
+ * Shader Program, Use to create shaders
+ * 
+ * @author Guerra24 <pablo230699@hotmail.com>
+ * @version 0.0.1 Build-52
+ * @since 0.0.1 Build-52
+ * @category Rendering
+ */
 public abstract class ShaderProgram {
-
+	/**
+	 * Program ID
+	 */
 	private int programID;
+	/**
+	 * Vertex Shader ID
+	 */
 	private int vertexShaderID;
+	/**
+	 * Fragment Shader ID
+	 */
 	private int fragmentShaderID;
-
+	/**
+	 * Used to Load Matrix to shader
+	 */
 	private static FloatBuffer matrixBuffer = BufferUtils.createFloatBuffer(16);
 
+	/**
+	 * Constructor, Creates a Shader Program Using a Vertex Shader and a
+	 * Fragment Shader
+	 * 
+	 * @param vertexFile
+	 *            Vertex Shader Path
+	 * @param fragmentFile
+	 *            Fragment Shader Path
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public ShaderProgram(String vertexFile, String fragmentFile) {
 		vertexShaderID = loadShader(vertexFile, GL_VERTEX_SHADER);
 		fragmentShaderID = loadShader(fragmentFile, GL_FRAGMENT_SHADER);
@@ -82,20 +110,46 @@ public abstract class ShaderProgram {
 		getAllUniformLocations();
 	}
 
+	/**
+	 * Loads all Uniform Locations
+	 */
 	protected abstract void getAllUniformLocations();
 
+	/**
+	 * Gets The Uniform Location
+	 * 
+	 * @param uniformName
+	 *            Uniform Namer
+	 * @return ID of the Uniform Location
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	protected int getUniformLocation(String uniformName) {
 		return glGetUniformLocation(programID, uniformName);
 	}
 
+	/**
+	 * Starts the Shader
+	 * 
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public void start() {
 		glUseProgram(programID);
 	}
 
+	/**
+	 * Stops the Shader
+	 * 
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public void stop() {
 		glUseProgram(0);
 	}
 
+	/**
+	 * Clear all the shader loaded data
+	 * 
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public void cleanUp() {
 		stop();
 		glDetachShader(programID, vertexShaderID);
@@ -105,32 +159,98 @@ public abstract class ShaderProgram {
 		glDeleteProgram(programID);
 	}
 
+	/**
+	 * Binds the Shader Attributes
+	 */
 	protected abstract void bindAttributes();
 
+	/**
+	 * Binds the variable to an uniform id
+	 * 
+	 * @param attribute
+	 *            Uniform ID
+	 * @param variableName
+	 *            Variable Name
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	protected void bindAttribute(int attribute, String variableName) {
 		glBindAttribLocation(programID, attribute, variableName);
 	}
 
+	/**
+	 * Load a float
+	 * 
+	 * @param location
+	 *            Uniform ID
+	 * @param value
+	 *            Value
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	protected void loadFloat(int location, float value) {
 		glUniform1f(location, value);
 	}
 
+	/**
+	 * Load an int
+	 * 
+	 * @param location
+	 *            Uniform ID
+	 * @param value
+	 *            Value
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	protected void loadInt(int location, int value) {
 		glUniform1i(location, value);
 	}
 
+	/**
+	 * Load a Vector4f
+	 * 
+	 * @param location
+	 *            Uniform ID
+	 * @param vector
+	 *            Vector4f
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	protected void loadVector(int location, Vector4f vector) {
 		glUniform4f(location, vector.x, vector.y, vector.z, vector.w);
 	}
 
+	/**
+	 * Load a Vector3f
+	 * 
+	 * @param location
+	 *            Uniform ID
+	 * @param vector
+	 *            Vector3f
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	protected void loadVector(int location, Vector3f vector) {
 		glUniform3f(location, vector.x, vector.y, vector.z);
 	}
 
+	/**
+	 * Load a Vector2f
+	 * 
+	 * @param location
+	 *            Uniform ID
+	 * @param vector
+	 *            Vector2f
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	protected void load2DVector(int location, Vector2f vector) {
 		glUniform2f(location, vector.x, vector.y);
 	}
 
+	/**
+	 * Load a Boolean
+	 * 
+	 * @param location
+	 *            Uniform ID
+	 * @param value
+	 *            Value
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	protected void loadBoolean(int location, boolean value) {
 		float toLoad = 0;
 		if (value) {
@@ -139,12 +259,31 @@ public abstract class ShaderProgram {
 		glUniform1f(location, toLoad);
 	}
 
+	/**
+	 * Load a Matrix4f
+	 * 
+	 * @param location
+	 *            Uniform ID
+	 * @param matrix
+	 *            Matrix4f
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	protected void loadMatrix(int location, Matrix4f matrix) {
 		matrix.store(matrixBuffer);
 		matrixBuffer.flip();
 		glUniformMatrix4(location, false, matrixBuffer);
 	}
 
+	/**
+	 * Load a Shader File
+	 * 
+	 * @param file
+	 *            Shader Path
+	 * @param type
+	 *            Type of Shader
+	 * @return Shader ID
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	private static int loadShader(String file, int type) {
 		StringBuilder shaderSource = new StringBuilder();
 		try {

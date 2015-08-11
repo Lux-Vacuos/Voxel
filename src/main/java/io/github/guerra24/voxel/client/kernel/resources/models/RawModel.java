@@ -24,20 +24,51 @@
 
 package io.github.guerra24.voxel.client.kernel.resources.models;
 
+/**
+ * Raw Model
+ * 
+ * @author Guerra24 <pablo230699@hotmail.com>
+ * @version 0.0.1 Build-52
+ * @since 0.0.1 Build-52
+ * @category Assets
+ */
 public class RawModel {
-
+	/**
+	 * VAOid
+	 */
 	private int vaoID;
+	/**
+	 * Vertex Count
+	 */
 	private int vertexCount;
 
+	/**
+	 * 
+	 * @param vaoID
+	 * @param vertexCount
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public RawModel(int vaoID, int vertexCount) {
 		this.vaoID = vaoID;
 		this.vertexCount = vertexCount;
 	}
 
+	/**
+	 * Get VAOid
+	 * 
+	 * @return VAOid
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public int getVaoID() {
 		return vaoID;
 	}
 
+	/**
+	 * Get Vertex Count
+	 * 
+	 * @return Vertex Count
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public int getVertexCount() {
 		return vertexCount;
 	}

@@ -4,6 +4,7 @@ apply plugin:'application'
 
 mainClassName = 'io.github.guerra24.voxel.client.kernel.Launcher'
 version = '0.0.1-ALPHA'
+applicationDefaultJvmArgs = ["-Xmx512M"]
 
 jar {
 	include("io/github/guerra24/voxel/**")

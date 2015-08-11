@@ -21,8 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
-package io.github.guerra24.voxel.client.kernel.util;
-
-public class AbstractFilesPath {
-}
+/**
+ * Contains the World
+ * 
+ * @author Guerra24 <pablo230699@hotmail.com>
+ * @version 0.0.1 Build-52
+ * @since 0.0.1 Build-52
+ * @category World
+ */
+package io.github.guerra24.voxel.client.kernel.world;

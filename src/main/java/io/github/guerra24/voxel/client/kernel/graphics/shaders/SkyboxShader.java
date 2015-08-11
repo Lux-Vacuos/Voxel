@@ -32,26 +32,71 @@ import io.github.guerra24.voxel.client.kernel.world.entities.Camera;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
+/**
+ * Skybox Shader
+ * 
+ * @author Guerra24 <pablo230699@hotmail.com>
+ * @version 0.0.1 Build-52
+ * @since 0.0.1 Build-52
+ * @category Rendering
+ */
 public class SkyboxShader extends ShaderProgram {
-
+	/**
+	 * Projection Matrix ID
+	 */
 	private int location_projectionMatrix;
+	/**
+	 * View Matrix ID
+	 */
 	private int location_viewMatrix;
+	/**
+	 * Fog Colour ID
+	 */
 	private int location_fogColour;
+	/**
+	 * Skybox Texture1 ID
+	 */
 	private int location_cubeMap;
+	/**
+	 * Skybox Texture2 ID
+	 */
 	private int location_cubeMap2;
+	/**
+	 * Skybox Blend Factor ID
+	 */
 	private int location_blendFactor;
-
+	/**
+	 * Skybox Rotation
+	 */
 	private float rotation = 0;
 
+	/**
+	 * Constructor, Create a Skybox Shader
+	 * 
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public SkyboxShader() {
 		super(KernelConstants.VERTEX_FILE_SKYBOX,
 				KernelConstants.FRAGMENT_FILE_SKYBOX);
 	}
 
+	/**
+	 * Loads a Projection Matrix
+	 * 
+	 * @param matrix
+	 *            Projection Matrix
+	 */
 	public void loadProjectionMatrix(Matrix4f matrix) {
 		super.loadMatrix(location_projectionMatrix, matrix);
 	}
 
+	/**
+	 * Loads View Matrix
+	 * 
+	 * @param camera
+	 *            Camera
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public void loadViewMatrix(Camera camera) {
 		Matrix4f matrix = Maths.createViewMatrix(camera);
 		matrix.m30 = 0;
@@ -75,15 +120,38 @@ public class SkyboxShader extends ShaderProgram {
 		location_cubeMap2 = super.getUniformLocation("cubeMap2");
 	}
 
+	/**
+	 * Loads Fog Color
+	 * 
+	 * @param r
+	 *            Red Value
+	 * @param g
+	 *            Green Value
+	 * @param b
+	 *            Blue Value
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public void loadFog(float r, float g, float b) {
 		super.loadVector(location_fogColour, new Vector3f(r, g, b));
 	}
 
+	/**
+	 * Loads Textures ID
+	 * 
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public void connectTextureUnits() {
 		super.loadInt(location_cubeMap, 0);
 		super.loadInt(location_cubeMap2, 1);
 	}
 
+	/**
+	 * Loads Blend Factor
+	 * 
+	 * @param blend
+	 *            Value
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public void loadBlendFactor(float blend) {
 		super.loadFloat(location_blendFactor, blend);
 	}

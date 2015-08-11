@@ -53,6 +53,14 @@ import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+/**
+ * Settings GUI
+ * 
+ * @author Guerra24 <pablo230699@hotmail.com>
+ * @version 0.0.1 Build-52
+ * @since 0.0.1 Build-52
+ * @category GUI
+ */
 public class ConfigGUI extends JFrame implements ItemListener {
 
 	public boolean ready = false;
@@ -86,6 +94,9 @@ public class ConfigGUI extends JFrame implements ItemListener {
 	private JButton buttonSave = new JButton("Save and Continue");
 	private JButton buttonDefault = new JButton("Reset Settings");
 
+	/**
+	 * Constructor, Creastes the Settings GUI
+	 */
 	public ConfigGUI() {
 		super("Game Settings");
 		Logger.log(Thread.currentThread(), "Starting Settings GUI");
@@ -257,6 +268,11 @@ public class ConfigGUI extends JFrame implements ItemListener {
 		}
 	}
 
+	/**
+	 * Set Default Settings
+	 * 
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	private void setDefault() {
 		Properties defaultProps = new Properties();
 		// sets default properties
@@ -285,6 +301,11 @@ public class ConfigGUI extends JFrame implements ItemListener {
 		textviewDistance.setText(configProps.getProperty("ViewDistance"));
 	}
 
+	/**
+	 * Send The Settings to the Global Variables
+	 * 
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	private void sendProperties() {
 		KernelConstants.WIDTH = Integer.parseInt(configProps
 				.getProperty("WIDTH"));
@@ -303,6 +324,12 @@ public class ConfigGUI extends JFrame implements ItemListener {
 				.getProperty("DrawDistance"));
 	}
 
+	/**
+	 * Load Game Settings
+	 * 
+	 * @throws IOException
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	private void loadProperties() throws IOException {
 		Properties defaultProps = new Properties();
 		defaultProps.setProperty("WIDTH", "1280");
@@ -329,6 +356,12 @@ public class ConfigGUI extends JFrame implements ItemListener {
 		inputStream.close();
 	}
 
+	/**
+	 * Save Game Settings
+	 * 
+	 * @throws IOException
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	private void saveProperties() throws IOException {
 		Integer s = slider.getValue();
 		configProps.setProperty("WIDTH", textWIDTH.getText());

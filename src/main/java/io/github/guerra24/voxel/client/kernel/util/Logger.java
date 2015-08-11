@@ -27,19 +27,32 @@ package io.github.guerra24.voxel.client.kernel.util;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * Logger
+ * 
+ * @author Guerra24 <pablo230699@hotmail.com>
+ * @version 0.0.1 Build-52
+ * @since 0.0.1 Build-52
+ * @category Util
+ */
 public final class Logger {
 	private static boolean printTimeStamps;
-	private static boolean info = false;
 	private static SimpleDateFormat timeStampFormat;
-
-	private Logger() {
-	}
 
 	static {
 		setPrintTimeStamps(true);
 		setTimeStampFormat(new SimpleDateFormat("MM/dd/yyyy h:mm:ss a"));
 	}
 
+	/**
+	 * Prints to the Log
+	 * 
+	 * @param thread
+	 *            Thread
+	 * @param messages
+	 *            Message
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public static void log(Thread thread, Object... messages) {
 		for (Object message : messages)
 			System.out.println((printTimeStamps ? "[INFO " + getTimeStamp()
@@ -47,6 +60,13 @@ public final class Logger {
 					+ message);
 	}
 
+	/**
+	 * Prints to the Log
+	 * 
+	 * @param messages
+	 *            Message
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public static void log(Object... messages) {
 		for (Object message : messages)
 			System.out.println((printTimeStamps ? "[INFO " + getTimeStamp()
@@ -65,6 +85,15 @@ public final class Logger {
 		return timeStampFormat.format(new Date());
 	}
 
+	/**
+	 * Prints a Warning Message
+	 * 
+	 * @param thread
+	 *            Thread
+	 * @param messages
+	 *            Message
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public static void warn(Thread thread, Object... messages) {
 		for (Object message : messages)
 			System.err.println((printTimeStamps ? "[WARNING " + getTimeStamp()
@@ -72,13 +101,21 @@ public final class Logger {
 					+ message);
 	}
 
+	/**
+	 * Prints a Fatal Error
+	 * 
+	 * @param thread
+	 *            Thread
+	 * @param messages
+	 *            Message
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public static void error(Thread thread, Object... messages) {
 		for (Object message : messages) {
 			System.err.println((printTimeStamps ? "[FATAL ERROR "
 					+ getTimeStamp() + "] " + "[" + thread.getName() + "] "
 					: "")
 					+ message);
-			System.exit(-1);
 		}
 	}
 
@@ -90,7 +127,4 @@ public final class Logger {
 		Logger.printTimeStamps = printTimeStamps;
 	}
 
-	public static boolean isInfoEnabled() {
-		return info;
-	}
 }

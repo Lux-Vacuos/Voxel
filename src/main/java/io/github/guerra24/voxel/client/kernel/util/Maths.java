@@ -32,13 +32,26 @@ import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
+/**
+ * Maths
+ * 
+ * @author Guerra24 <pablo230699@hotmail.com>
+ * @version 0.0.1 Build-52
+ * @since 0.0.1 Build-52
+ * @category Util
+ */
 public class Maths {
 
-	private static final Vector3f forward = new Vector3f();
-	private static final Vector3f side = new Vector3f();
-	private static final Vector3f up = new Vector3f();
-	private static final Vector3f eye = new Vector3f();
-
+	/**
+	 * Create a Transformation Matrix 2D
+	 * 
+	 * @param translation
+	 *            Position
+	 * @param scale
+	 *            Scale
+	 * @return Transformation Matrix 2D
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public static Matrix4f createTransformationMatrix(Vector2f translation,
 			Vector2f scale) {
 		Matrix4f matrix = new Matrix4f();
@@ -48,6 +61,22 @@ public class Maths {
 		return matrix;
 	}
 
+	/**
+	 * Create a Transformation Matrix 3D
+	 * 
+	 * @param translation
+	 *            Position
+	 * @param rx
+	 *            Rotation X
+	 * @param ry
+	 *            Rotation Y
+	 * @param rz
+	 *            Rotation Z
+	 * @param scale
+	 *            Scale
+	 * @return Transformation Matrix 3D
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public static Matrix4f createTransformationMatrix(Vector3f translation,
 			float rx, float ry, float rz, float scale) {
 		Matrix4f matrix = new Matrix4f();
@@ -63,6 +92,14 @@ public class Maths {
 		return matrix;
 	}
 
+	/**
+	 * Create a View Matrix
+	 * 
+	 * @param camera
+	 *            Camera
+	 * @return View Matrix
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public static Matrix4f createViewMatrix(Camera camera) {
 		Matrix4f viewMatrix = new Matrix4f();
 		viewMatrix.setIdentity();
@@ -77,45 +114,28 @@ public class Maths {
 		return viewMatrix;
 	}
 
-	public static Matrix4f lookAt(float eyeX, float eyeY, float eyeZ,
-			float centerX, float centerY, float centerZ, float upX, float upY,
-			float upZ) {
-		forward.set(centerX - eyeX, centerY - eyeY, centerZ - eyeZ);
-		forward.normalise();
-
-		up.set(upX, upY, upZ);
-
-		Vector3f.cross(forward, up, side);
-		side.normalise();
-
-		Vector3f.cross(side, forward, up);
-		up.normalise();
-
-		Matrix4f matrix = new Matrix4f();
-		matrix.m00 = side.x;
-		matrix.m01 = side.y;
-		matrix.m02 = side.z;
-
-		matrix.m10 = up.x;
-		matrix.m11 = up.y;
-		matrix.m12 = up.z;
-
-		matrix.m20 = -forward.x;
-		matrix.m21 = -forward.y;
-		matrix.m22 = -forward.z;
-
-		matrix.transpose();
-
-		eye.set(-eyeX, -eyeY, -eyeZ);
-		matrix.translate(eye);
-
-		return matrix;
-	}
-
+	/**
+	 * Clamp the value to Generation Terrain
+	 * 
+	 * @param d
+	 *            Value
+	 * @return Clamped Value
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public static float clamp(double d) {
 		return (float) Math.max(0, Math.min(128, d));
 	}
 
+	/**
+	 * Gets a Random int from Range
+	 * 
+	 * @param min
+	 *            Min Value
+	 * @param max
+	 *            Max Value
+	 * @return Random Int
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public static int randInt(int min, int max) {
 		Random rand = new Random();
 		int randomNum = rand.nextInt((max - min) + 1) + min;

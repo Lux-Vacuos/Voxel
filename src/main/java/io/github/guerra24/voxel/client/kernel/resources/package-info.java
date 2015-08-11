@@ -21,59 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
-package io.github.guerra24.voxel.client.kernel.resources.models;
-
 /**
- * Textured Model
+ * Contains the Game Assets
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
  * @version 0.0.1 Build-52
  * @since 0.0.1 Build-52
  * @category Assets
  */
-public class TexturedModel {
-
-	/**
-	 * Raw Model
-	 */
-	private RawModel rawModel;
-	/**
-	 * Model Texture
-	 */
-	private ModelTexture texture;
-
-	/**
-	 * Constructor, Create a Textured Model
-	 * 
-	 * @param model
-	 *            RawModel
-	 * @param texture
-	 *            ModelTexture
-	 * @author Guerra24 <pablo230699@hotmail.com>
-	 */
-	public TexturedModel(RawModel model, ModelTexture texture) {
-		this.rawModel = model;
-		this.texture = texture;
-	}
-
-	/**
-	 * Get Raw Model
-	 * 
-	 * @return RawModel
-	 * @author Guerra24 <pablo230699@hotmail.com>
-	 */
-	public RawModel getRawModel() {
-		return rawModel;
-	}
-
-	/**
-	 * Get Model Texture
-	 * 
-	 * @return ModelTexture
-	 * @author Guerra24 <pablo230699@hotmail.com>
-	 */
-	public ModelTexture getTexture() {
-		return texture;
-	}
-}
+package io.github.guerra24.voxel.client.kernel.resources;

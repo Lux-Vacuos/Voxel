@@ -28,15 +28,35 @@ import io.github.guerra24.voxel.client.kernel.core.KernelConstants;
 
 import org.lwjgl.util.vector.Matrix4f;
 
+/**
+ * Gui Shader
+ * 
+ * @author Guerra24 <pablo230699@hotmail.com>
+ * @version 0.0.1 Build-52
+ * @since 0.0.1 Build-52
+ * @category Rendering
+ */
 public class GuiShader extends ShaderProgram {
-
+	/**
+	 * Transformation Matrix ID
+	 */
 	private int location_transformationMatrix;
 
+	/**
+	 * Constructor, Creastes an GUI Shader
+	 */
 	public GuiShader() {
 		super(KernelConstants.VERTEX_FILE_GUI,
 				KernelConstants.FRAGMENT_FILE_GUI);
 	}
 
+	/**
+	 * Loads Transformation Matrix to the shader
+	 * 
+	 * @param matrix
+	 *            Transformation Matrix
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public void loadTransformation(Matrix4f matrix) {
 		super.loadMatrix(location_transformationMatrix, matrix);
 	}

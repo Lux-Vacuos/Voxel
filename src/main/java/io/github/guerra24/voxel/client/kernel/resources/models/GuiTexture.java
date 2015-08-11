@@ -26,30 +26,82 @@ package io.github.guerra24.voxel.client.kernel.resources.models;
 
 import org.lwjgl.util.vector.Vector2f;
 
+/**
+ * Gui Texture
+ * 
+ * @author Guerra24 <pablo230699@hotmail.com>
+ * @version 0.0.1 Build-52
+ * @since 0.0.1 Build-52
+ * @category Assets
+ */
 public class GuiTexture {
-
+	/**
+	 * Texture ID
+	 */
 	private int texture;
+	/**
+	 * Position
+	 */
 	private Vector2f position;
+	/**
+	 * Scale
+	 */
 	private Vector2f scale;
 
+	/**
+	 * Constructor, Create a Gui Texture
+	 * 
+	 * @param texture
+	 *            Texture ID
+	 * @param position
+	 *            Position
+	 * @param scale
+	 *            Scale
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public GuiTexture(int texture, Vector2f position, Vector2f scale) {
 		this.texture = texture;
 		this.position = position;
 		this.scale = scale;
 	}
 
+	/**
+	 * Get Texture ID
+	 * 
+	 * @return Texture ID
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public int getTexture() {
 		return texture;
 	}
 
+	/**
+	 * Get Position
+	 * 
+	 * @return Position
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public Vector2f getPosition() {
 		return position;
 	}
 
+	/**
+	 * Get Scale
+	 * 
+	 * @return Scale
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public Vector2f getScale() {
 		return scale;
 	}
 
+	/**
+	 * Set Position
+	 * 
+	 * @param position
+	 *            Position
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public void setPosition(Vector2f position) {
 		this.position = position;
 	}
