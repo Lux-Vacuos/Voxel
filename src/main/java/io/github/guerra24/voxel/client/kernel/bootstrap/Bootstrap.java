@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package io.github.guerra24.voxel.client.kernel;
+package io.github.guerra24.voxel.client.kernel.bootstrap;
 
 import io.github.guerra24.voxel.client.kernel.console.Console;
 import io.github.guerra24.voxel.client.kernel.core.Kernel;
@@ -38,7 +38,7 @@ import java.io.File;
  * @version 0.0.1 Build-52
  * @since 0.0.1 Build-52
  */
-public class Launcher {
+public class Bootstrap {
 	/**
 	 * OS info
 	 */
@@ -51,8 +51,6 @@ public class Launcher {
 	 * Config GUI
 	 */
 	public static ConfigGUI config;
-
-	public static String user;
 
 	/**
 	 * Initialize the console thread, the settings gui and starts the game

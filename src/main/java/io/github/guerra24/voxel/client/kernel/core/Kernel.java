@@ -25,7 +25,8 @@
 package io.github.guerra24.voxel.client.kernel.core;
 
 import static org.lwjgl.opengl.GL11.glLoadIdentity;
-import io.github.guerra24.voxel.client.kernel.Launcher;
+import io.github.guerra24.voxel.client.kernel.api.API;
+import io.github.guerra24.voxel.client.kernel.bootstrap.Bootstrap;
 import io.github.guerra24.voxel.client.kernel.graphics.Frustum;
 import io.github.guerra24.voxel.client.kernel.graphics.opengl.DisplayManager;
 import io.github.guerra24.voxel.client.kernel.graphics.opengl.SystemInfo;
@@ -84,6 +85,11 @@ public class Kernel implements IKernel {
 	public boolean errorTest;
 
 	/**
+	 * Modding API
+	 */
+	public static API api;
+
+	/**
 	 * Constructor of the Kernel, Initializes the Game and starts the loop
 	 * 
 	 * @param errorTest
@@ -102,7 +108,7 @@ public class Kernel implements IKernel {
 				+ KernelConstants.version);
 		Logger.log(Thread.currentThread(), "Build: " + KernelConstants.build);
 		Logger.log(Thread.currentThread(),
-				"Running on: " + Launcher.getPlatform());
+				"Running on: " + Bootstrap.getPlatform());
 		DisplayManager.createDisplay();
 		SystemInfo.printSystemInfo();
 		if (KernelConstants.advancedOpenGL)
@@ -113,6 +119,8 @@ public class Kernel implements IKernel {
 		GuiResources.loadingGui();
 		gameResources.guiRenderer.render(gameResources.guis5);
 		DisplayManager.updateDisplay(30);
+		api = new API();
+		api.preInit();
 
 		gameResources.init();
 		guiResources = new GuiResources();
@@ -124,10 +132,12 @@ public class Kernel implements IKernel {
 		update = new UpdateThread();
 		update.setName("Voxel World");
 		update.start();
+		api.init();
 		// byte[] user = Launcher.user.getBytes(Charset.forName("UTF-8"));
 		// Logger.log(Thread.currentThread(), "User: " + Launcher.user +
 		// "UUID: "
 		// + UUID.nameUUIDFromBytes(user));
+		api.postInit();
 	}
 
 	@Override
@@ -208,7 +218,7 @@ public class Kernel implements IKernel {
 		Logger.log(Thread.currentThread(), "Closing Game");
 		gameResources.cleanUp();
 		if (!errorTest)
-			Launcher.thread1.close();
+			Bootstrap.thread1.close();
 		DisplayManager.closeDisplay();
 	}
 

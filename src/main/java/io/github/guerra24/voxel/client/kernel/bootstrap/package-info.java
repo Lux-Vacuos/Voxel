@@ -28,4 +28,4 @@
  * @version 0.0.1 Build-52
  * @since 0.0.1 Build-52
  */
-package io.github.guerra24.voxel.client.kernel;
+package io.github.guerra24.voxel.client.kernel.bootstrap;

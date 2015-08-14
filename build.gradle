@@ -2,8 +2,8 @@ apply plugin:'java'
 apply plugin:'eclipse'
 apply plugin:'application'
 
-mainClassName = 'io.github.guerra24.voxel.client.kernel.Launcher'
-version = '0.0.1-ALPHA'
+mainClassName = 'io.github.guerra24.voxel.client.kernel.bootstrap.Bootstrap'
+version = '0.0.2-ALPHA'
 applicationDefaultJvmArgs = ["-Xmx512M"]
 
 jar {
