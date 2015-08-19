@@ -130,7 +130,7 @@ public class Bootstrap {
 	public static void main(String[] args) {
 		Thread.currentThread().setName("Voxel Main");
 		run();
-		if (true) {
+		if (KernelConstants.debug) {
 			System.setProperty("org.lwjgl.librarypath", new File(
 					"build/natives/windows").getAbsolutePath());
 		}

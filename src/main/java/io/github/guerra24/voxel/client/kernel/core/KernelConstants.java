@@ -28,7 +28,7 @@ package io.github.guerra24.voxel.client.kernel.core;
  * Locations of all global variables
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
- * @version 0.0.2 Build-55
+ * @version 0.0.2 Build-56
  * @since 0.0.1 Build-52
  * @category Kernel
  */
@@ -87,7 +87,7 @@ public class KernelConstants {
 	/**
 	 * Game Build Number
 	 */
-	public static int build = 55;
+	public static int build = 56;
 	/**
 	 * Game Version
 	 */
@@ -96,7 +96,6 @@ public class KernelConstants {
 	 * Game Debug Mode
 	 */
 	public static boolean debug = false;
-	public static boolean postPro = false;
 	// World Settings
 	/**
 	 * Game Draw Distance Radius
@@ -127,7 +126,7 @@ public class KernelConstants {
 	/**
 	 * Game Max Rendered Lights
 	 */
-	public static final int MAX_LIGHTS = 4;
+	public static final int MAX_LIGHTS = 8;
 	// Water Settings
 	/**
 	 * Water Wave Speed

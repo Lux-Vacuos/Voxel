@@ -168,9 +168,10 @@ public class Chunk implements IChunk {
 									.getSingleModel(
 											new Vector3f(x + cx * sizeX, y, z
 													+ cz * sizeZ)));
-							lights1.add(new Light(new Vector3f(x + cx * sizeX,
-									y + 0.7f, z + cx * sizeZ), new Vector3f(5,
-									5, 5), new Vector3f(1, 0.1f, 0.09f)));
+							lights1.add(new Light(new Vector3f(
+									(x + cx * sizeX) + 0.5f, y + 0.8f, (z + cz
+											* sizeZ) - 0.5f), new Vector3f(1,
+									1, 1), new Vector3f(1, 0.1f, 0.09f)));
 							sec1NotClear = true;
 						}
 						if (y > 31 && y < 64) {
@@ -178,9 +179,10 @@ public class Chunk implements IChunk {
 									.getSingleModel(
 											new Vector3f(x + cx * sizeX, y, z
 													+ cz * sizeZ)));
-							lights2.add(new Light(new Vector3f(x + cx * sizeX,
-									y + 0.7f, z + cx * sizeZ), new Vector3f(5,
-									5, 5), new Vector3f(1, 0.1f, 0.09f)));
+							lights2.add(new Light(new Vector3f(
+									(x + cx * sizeX) + 0.5f, y + 0.8f, (z + cz
+											* sizeZ) - 0.5f), new Vector3f(1,
+									1, 1), new Vector3f(1, 0.1f, 0.09f)));
 							sec2NotClear = true;
 						}
 						if (y > 63 && y < 96) {
@@ -188,9 +190,10 @@ public class Chunk implements IChunk {
 									.getSingleModel(
 											new Vector3f(x + cx * sizeX, y, z
 													+ cz * sizeZ)));
-							lights3.add(new Light(new Vector3f(x + cx * sizeX,
-									y + 0.7f, z + cx * sizeZ), new Vector3f(5,
-									5, 5), new Vector3f(1, 0.1f, 0.09f)));
+							lights3.add(new Light(new Vector3f(
+									(x + cx * sizeX) + 0.5f, y + 0.8f, (z + cz
+											* sizeZ) - 0.5f), new Vector3f(1,
+									1, 1), new Vector3f(1, 0.1f, 0.09f)));
 							sec3NotClear = true;
 						}
 						if (y > 95 && y < 129) {
@@ -198,9 +201,10 @@ public class Chunk implements IChunk {
 									.getSingleModel(
 											new Vector3f(x + cx * sizeX, y, z
 													+ cz * sizeZ)));
-							lights4.add(new Light(new Vector3f(x + cx * sizeX,
-									y + 0.7f, z + cx * sizeZ), new Vector3f(5,
-									5, 5), new Vector3f(1, 0.1f, 0.09f)));
+							lights4.add(new Light(new Vector3f(
+									(x + cx * sizeX) + 0.5f, y + 0.8f, (z + cz
+											* sizeZ) - 0.5f), new Vector3f(1,
+									1, 1), new Vector3f(1, 0.1f, 0.09f)));
 							sec4NotClear = true;
 						}
 					} else if (Block.getBlock(blocks[x][y][z]) != Block.Air
@@ -408,6 +412,15 @@ public class Chunk implements IChunk {
 
 	public void setLocalBlock(int x, int y, int z, byte id) {
 		blocks[x & 0xF][y & 0x7F][z & 0xF] = id;
+	}
+
+	public float getHeightOfChunk(int x, int z) {
+		for (int k = 0; k < sizeY; k++) {
+			if (blocks[x & 0xF][k][z & 0xF] != 0) {
+				return k;
+			}
+		}
+		return 0;
 	}
 
 	private boolean cullFaceWest(int x, int y, int z) {

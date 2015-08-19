@@ -38,7 +38,7 @@ import org.lwjgl.util.vector.Vector3f;
  * Entity Shader
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
- * @version 0.0.1 Build-52
+ * @version 0.0.2 Build-56
  * @since 0.0.1 Build-52
  * @category Rendering
  */
@@ -170,6 +170,12 @@ public class EntityShader extends ShaderProgram {
 						.getColour());
 				super.loadVector(location_attenuations[i], lights.get(i)
 						.getAttenuation());
+			} else {
+				super.loadVector(location_lightPosition[i], new Vector3f(0, 0,
+						0));
+				super.loadVector(location_lightColour[i], new Vector3f(0, 0, 0));
+				super.loadVector(location_attenuations[i],
+						new Vector3f(0, 0, 0));
 			}
 		}
 	}
