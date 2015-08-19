@@ -26,7 +26,6 @@ package io.github.guerra24.voxel.client.kernel.world;
 
 import io.github.guerra24.voxel.client.kernel.core.Kernel;
 import io.github.guerra24.voxel.client.kernel.core.KernelConstants;
-import io.github.guerra24.voxel.client.kernel.graphics.Frustum;
 import io.github.guerra24.voxel.client.kernel.util.Logger;
 import io.github.guerra24.voxel.client.kernel.world.chunks.Chunk;
 import io.github.guerra24.voxel.client.kernel.world.chunks.ChunkKey;
@@ -48,7 +47,7 @@ import org.lwjgl.util.vector.Vector3f;
  * World
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
- * @version 0.0.1 Build-52
+ * @version 0.0.2 Build-55
  * @since 0.0.1 Build-52
  * @category World
  */
@@ -131,11 +130,11 @@ public class World {
 		zPlayChunk = (int) (camera.getPosition().z / 16);
 		float i = -0.45f;
 		boolean k = true;
-		for (int zr = -16; zr <= 16; zr++) {
+		for (int zr = -10; zr <= 10; zr++) {
 			int zz = zPlayChunk + zr;
-			for (int xr = -16; xr <= 16; xr++) {
+			for (int xr = -10; xr <= 10; xr++) {
 				int xx = xPlayChunk + xr;
-				if (zr * zr + xr * xr < 16 * 16) {
+				if (zr * zr + xr * xr < 10 * 10) {
 					if (i >= 0.4f)
 						k = false;
 					if (i <= -0.45f)
@@ -224,6 +223,7 @@ public class World {
 		if (time2 % 10 == 0) {
 			Kernel.gameResources.cubes.clear();
 			Kernel.gameResources.waters.clear();
+			Kernel.gameResources.lights.clear();
 			for (int zr = -KernelConstants.radius; zr <= KernelConstants.radius; zr++) {
 				int zz = zPlayChunk + zr;
 				for (int xr = -KernelConstants.radius; xr <= KernelConstants.radius; xr++) {
@@ -234,31 +234,42 @@ public class World {
 							Chunk chunk = getChunk(dim, xx, zz);
 							if (KernelConstants.advancedOpenGL) {
 								if (chunk.sec1NotClear)
-									if (Frustum.getFrustum().cubeInFrustum(
-											chunk.posX, 0, chunk.posZ,
-											chunk.posX + 16, 32,
-											chunk.posZ + 16))
+									if (Kernel.gameResources.frustum
+											.cubeInFrustum(chunk.posX, 0,
+													chunk.posZ,
+													chunk.posX + 16, 32,
+													chunk.posZ + 16)) {
 										chunk.sendToRender1();
+										chunk.sendToRenderLights1();
+									}
 								if (chunk.sec2NotClear)
-									if (Frustum.getFrustum().cubeInFrustum(
-											chunk.posX, 32, chunk.posZ,
-											chunk.posX + 16, 64,
-											chunk.posZ + 16))
+									if (Kernel.gameResources.frustum
+											.cubeInFrustum(chunk.posX, 32,
+													chunk.posZ,
+													chunk.posX + 16, 64,
+													chunk.posZ + 16)) {
 										chunk.sendToRender2();
+										chunk.sendToRenderLights2();
+									}
 								if (chunk.sec3NotClear)
-									if (Frustum.getFrustum().cubeInFrustum(
-											chunk.posX, 64, chunk.posZ,
-											chunk.posX + 16, 96,
-											chunk.posZ + 16)) {
+									if (Kernel.gameResources.frustum
+											.cubeInFrustum(chunk.posX, 64,
+													chunk.posZ,
+													chunk.posX + 16, 96,
+													chunk.posZ + 16)) {
 										chunk.sendToRender3();
 										chunk.sendToRenderWater();
+										chunk.sendToRenderLights3();
 									}
 								if (chunk.sec4NotClear)
-									if (Frustum.getFrustum().cubeInFrustum(
-											chunk.posX, 96, chunk.posZ,
-											chunk.posX + 16, 128,
-											chunk.posZ + 16))
+									if (Kernel.gameResources.frustum
+											.cubeInFrustum(chunk.posX, 96,
+													chunk.posZ,
+													chunk.posX + 16, 128,
+													chunk.posZ + 16)) {
 										chunk.sendToRender4();
+										chunk.sendToRenderLights4();
+									}
 							} else {
 								chunk.sendToRender1();
 								chunk.sendToRender2();
@@ -540,6 +551,7 @@ public class World {
 		int cz = z >> 4;
 		Chunk chunk = getChunk(dim, cx, cz);
 		chunk.setLocalBlock(x, y, z, id);
+		chunk.clear();
 		chunk.rebuildChunk();
 	}
 

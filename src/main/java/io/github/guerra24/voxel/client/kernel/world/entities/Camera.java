@@ -24,17 +24,7 @@
 
 package io.github.guerra24.voxel.client.kernel.world.entities;
 
-import static org.lwjgl.opengl.GL11.GL_MODELVIEW;
-import static org.lwjgl.opengl.GL11.GL_TRANSFORM_BIT;
-import static org.lwjgl.opengl.GL11.glLoadIdentity;
-import static org.lwjgl.opengl.GL11.glMatrixMode;
-import static org.lwjgl.opengl.GL11.glPopAttrib;
-import static org.lwjgl.opengl.GL11.glPushAttrib;
-import static org.lwjgl.opengl.GL11.glRotatef;
-import static org.lwjgl.opengl.GL11.glTranslatef;
-import static org.lwjgl.util.glu.GLU.gluPerspective;
 import io.github.guerra24.voxel.client.kernel.core.Kernel;
-import io.github.guerra24.voxel.client.kernel.core.KernelConstants;
 import io.github.guerra24.voxel.client.kernel.graphics.opengl.DisplayManager;
 
 import org.lwjgl.input.Keyboard;
@@ -42,6 +32,13 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector3f;
 
+/**
+ * Camera
+ * 
+ * @author Guerra24 <pablo230699@hotmail.com>
+ * @version 0.0.2 Build-55
+ * @since 0.0.1 Build-5
+ */
 public class Camera {
 
 	private Vector3f position = new Vector3f(0, 80, 0);
@@ -136,7 +133,6 @@ public class Camera {
 			speed = 0.2f;
 		}
 
-		applyTranslations();
 		if (Keyboard.isKeyDown(Keyboard.KEY_T))
 			System.out.println(Kernel.renderCallsPerFrame);
 		if (Keyboard.isKeyDown(Keyboard.KEY_Y))
@@ -158,6 +154,8 @@ public class Camera {
 			block = 6;
 		else if (Keyboard.isKeyDown(Keyboard.KEY_7))
 			block = 8;
+		else if (Keyboard.isKeyDown(Keyboard.KEY_8))
+			block = 9;
 		if (Mouse.isButtonDown(0)) {
 			Kernel.gameResources.mouse.update();
 			Kernel.world
@@ -176,30 +174,7 @@ public class Camera {
 							(int) (Kernel.gameResources.mouse.getCurrentRay().y + position.y),
 							(int) (Kernel.gameResources.mouse.getCurrentRay().z + position.z),
 							block);
-		} else if (Mouse.isButtonDown(2)) {
-			Kernel.gameResources.mouse.update();
-			Kernel.gameResources.lights.get(0).setPosition(
-					new Vector3f(Kernel.gameResources.mouse.getCurrentRay().x
-							+ position.x, Kernel.gameResources.mouse
-							.getCurrentRay().y + position.y,
-							Kernel.gameResources.mouse.getCurrentRay().z
-									+ position.z));
 		}
-	}
-
-	public void applyTranslations() {
-		glPushAttrib(GL_TRANSFORM_BIT);
-		glMatrixMode(GL_MODELVIEW);
-		glRotatef(getPitch(), 1, 0, 0);
-		glRotatef(getYaw(), 0, 1, 0);
-		glTranslatef(-getPosition().x, -getPosition().y, -getPosition().z);
-		glPopAttrib();
-		glMatrixMode(5889);
-		glLoadIdentity();
-		gluPerspective(KernelConstants.FOV,
-				Kernel.gameResources.renderer.aspectRatio,
-				KernelConstants.NEAR_PLANE, 500);
-		glMatrixMode(GL_MODELVIEW);
 	}
 
 	public void setMouse() {

@@ -30,14 +30,14 @@ in vec3 normal;
 
 out vec2 pass_textureCoords;
 out vec3 surfaceNormal;
-out vec3 toLightVector[1];
+out vec3 toLightVector[8];
 out vec3 lightIntensity;
 out float visibility;
 
 uniform mat4 transformationMatrix;
 uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;
-uniform vec3 lightPosition[1];
+uniform vec3 lightPosition[8];
 uniform vec3 directLightDirection;
 
 const float density = 0.0023;
@@ -75,7 +75,7 @@ void main() {
     } Light0;
     
     Light0.Color = vec3(1.0, 1.0, 1.0);
-    Light0.AmbientIntensity = vec3(0.5, 0.5, 0.5);
+    Light0.AmbientIntensity = vec3(0.1, 0.1, 0.1);
     Light0.DiffuseIntensity = vec3(0.8, 0.8, 0.8);
     Light0.Direction = directLightDirection;
 
@@ -88,14 +88,14 @@ void main() {
 	surfaceNormal = (transformationMatrix * vec4(normal, 0.0)).xyz;
 	
 	//Dynamic Light
-	for(int i=0;i<1;i++) {
+	for(int i=0;i<8;i++) {
 		toLightVector[i]= lightPosition[i] - worldPosition.xyz;
 	}
 	
 	vec3 AmbientColor = Light0.AmbientIntensity * Light0.Color;
     vec3 DiffuseColor = Light0.Color * Light0.DiffuseIntensity * CalcDirectionalLightFactor(Light0.Direction, surfaceNormal);
 
-    lightIntensity = DiffuseColor + AmbientColor;
+    lightIntensity =  AmbientColor;
 	
 	float distance = length(positionRelativeToCam.xyz);
 	visibility = exp(-pow((distance*density),gradient));

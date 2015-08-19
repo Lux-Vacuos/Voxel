@@ -26,7 +26,7 @@ package io.github.guerra24.voxel.client.kernel.world.chunks;
 
 public interface IChunk {
 	public void init();
-	
+
 	public void loadInit();
 
 	public void createChunk();
@@ -48,4 +48,12 @@ public interface IChunk {
 	public void sendToRender4();
 
 	public void sendToRenderWater();
+
+	public void sendToRenderLights1();
+
+	public void sendToRenderLights2();
+
+	public void sendToRenderLights3();
+
+	public void sendToRenderLights4();
 }

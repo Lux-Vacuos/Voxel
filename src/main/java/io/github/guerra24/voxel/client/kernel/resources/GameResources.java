@@ -25,13 +25,14 @@
 package io.github.guerra24.voxel.client.kernel.resources;
 
 import io.github.guerra24.voxel.client.kernel.core.GameStates;
+import io.github.guerra24.voxel.client.kernel.graphics.Frustum;
 import io.github.guerra24.voxel.client.kernel.graphics.GuiRenderer;
 import io.github.guerra24.voxel.client.kernel.graphics.MasterRenderer;
+import io.github.guerra24.voxel.client.kernel.graphics.SkyboxRenderer;
 import io.github.guerra24.voxel.client.kernel.graphics.WaterRenderer;
 import io.github.guerra24.voxel.client.kernel.graphics.shaders.WaterShader;
 import io.github.guerra24.voxel.client.kernel.resources.models.GuiTexture;
 import io.github.guerra24.voxel.client.kernel.resources.models.WaterTile;
-import io.github.guerra24.voxel.client.kernel.util.ArrayList3;
 import io.github.guerra24.voxel.client.kernel.util.Logger;
 import io.github.guerra24.voxel.client.kernel.util.MousePicker;
 import io.github.guerra24.voxel.client.kernel.world.block.Block;
@@ -41,9 +42,9 @@ import io.github.guerra24.voxel.client.kernel.world.entities.Entity;
 import io.github.guerra24.voxel.client.kernel.world.entities.Light;
 import io.github.guerra24.voxel.client.kernel.world.entities.Player;
 
-import java.util.Queue;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.lwjgl.util.vector.Vector3f;
 
@@ -59,35 +60,36 @@ import com.google.gson.Gson;
  * Game Resources
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
- * @version 0.0.1 Build-52
+ * @version 0.0.2 Build-55
  * @since 0.0.1 Build-52
  * @category Assets
  */
 public class GameResources {
-	public ArrayList3<GuiTexture> guis = new ArrayList3<GuiTexture>();
-	public ArrayList3<GuiTexture> guis2 = new ArrayList3<GuiTexture>();
-	public ArrayList3<GuiTexture> guis3 = new ArrayList3<GuiTexture>();
-	public ArrayList3<GuiTexture> guis4 = new ArrayList3<GuiTexture>();
-	public ArrayList3<GuiTexture> guis5 = new ArrayList3<GuiTexture>();
+	public List<GuiTexture> guis = new ArrayList<GuiTexture>();
+	public List<GuiTexture> guis2 = new ArrayList<GuiTexture>();
+	public List<GuiTexture> guis3 = new ArrayList<GuiTexture>();
+	public List<GuiTexture> guis4 = new ArrayList<GuiTexture>();
+	public List<GuiTexture> guis5 = new ArrayList<GuiTexture>();
 
-	public ArrayList3<Entity> allObjects = new ArrayList3<Entity>();
-	public Queue<Entity> cubes = new ConcurrentLinkedQueue<Entity>();
-	public Queue<WaterTile> waters = new ConcurrentLinkedQueue<WaterTile>();
-	public ArrayList3<Light> lights = new ArrayList3<Light>();
+	public List<Entity> allObjects = new ArrayList<Entity>();
+	public List<Entity> cubes = new ArrayList<Entity>();
+	public List<WaterTile> waters = new ArrayList<WaterTile>();
+	public List<Light> lights = new ArrayList<Light>();
 
 	public Random rand;
 	public Player player;
-	public Light spot;
 	public Loader loader;
 	public Camera camera;
 	public MasterRenderer renderer;
 	public WaterShader waterShader;
 	public WaterRenderer waterRenderer;
+	public SkyboxRenderer skyboxRenderer;
 	public GuiRenderer guiRenderer;
 	public GameStates gameStates;
 	public MousePicker mouse;
 	public Gson gson;
 	public SoundSystem SoundSystem;
+	public Frustum frustum;
 	public float distance;
 
 	/**
@@ -123,8 +125,11 @@ public class GameResources {
 		waterShader = new WaterShader();
 		waterRenderer = new WaterRenderer(loader, waterShader,
 				renderer.getProjectionMatrix());
+		skyboxRenderer = new SkyboxRenderer(loader,
+				renderer.getProjectionMatrix());
 		mouse = new MousePicker(camera, renderer.getProjectionMatrix());
 		gameStates = new GameStates();
+		frustum = new Frustum();
 		Block.initBasicBlocks();
 	}
 
@@ -146,9 +151,6 @@ public class GameResources {
 	public void addRes() {
 		player = new Player(BlocksResources.cubeGlassUP,
 				new Vector3f(0, 80, -4), 0, 0, 0, 1);
-		spot = new Light(new Vector3f(256, 70, 256), new Vector3f(5, 5, 5),
-				new Vector3f(1, 0.1f, 0.09f));
-		lights.add(spot);
 		allObjects.add(player);
 	}
 

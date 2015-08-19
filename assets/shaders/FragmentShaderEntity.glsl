@@ -26,7 +26,7 @@
 
 in vec2 pass_textureCoords;
 in vec3 surfaceNormal;
-in vec3 toLightVector[1];
+in vec3 toLightVector[8];
 in vec3 lightIntensity;
 in float visibility;
 
@@ -34,8 +34,8 @@ out vec4 out_Color;
 
 uniform sampler2D textureSampler;
 uniform vec3 skyColour;
-uniform vec3 lightColour[1];
-uniform vec3 attenuations[1];
+uniform vec3 lightColour[8];
+uniform vec3 attenuations[8];
 
 void main(void) {
 
@@ -44,7 +44,7 @@ void main(void) {
 	vec4 totalDiffuse = vec4(0.0);
 	
 	// code for dynamic light
-	for(int i=0;i<1;i++) {
+	for(int i=0;i<8;i++) {
 		float distance = length(toLightVector[i]);
 		float attFactor = attenuations[i].x + (attenuations[i].y * distance) + (attenuations[i].z * distance * distance);
 		vec3 unitLightVector = normalize(toLightVector[i]);

@@ -78,7 +78,7 @@ import de.matthiasmann.twl.utils.PNGDecoder.Format;
  * Loader
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
- * @version 0.0.1 Build-52
+ * @version 0.0.2 Build-55
  * @since 0.0.1 Build-52
  * @category Assets
  */
@@ -150,6 +150,34 @@ public class Loader {
 		try {
 			texture = TextureLoader.getTexture("PNG", new FileInputStream(
 					"assets/textures/blocks/" + fileName + ".png"), GL_NEAREST);
+			Logger.log(Thread.currentThread(), "Loading Texture: " + fileName
+					+ ".png");
+			glGenerateMipmap(GL_TEXTURE_2D);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
+					GL_LINEAR_MIPMAP_LINEAR);
+			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_LOD_BIAS, -0.4f);
+		} catch (Exception e) {
+			e.printStackTrace();
+			Logger.log(Thread.currentThread(), "Couldn' load texture file"
+					+ fileName);
+		}
+		textures.add(texture.getTextureID());
+		return texture.getTextureID();
+	}
+	
+	/**
+	 * Load Block Texture
+	 * 
+	 * @param fileName
+	 *            Block Texture Name
+	 * @return Texture ID
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
+	public int loadTextureEntity(String fileName) {
+		Texture texture = null;
+		try {
+			texture = TextureLoader.getTexture("PNG", new FileInputStream(
+					"assets/textures/entity/" + fileName + ".png"), GL_NEAREST);
 			Logger.log(Thread.currentThread(), "Loading Texture: " + fileName
 					+ ".png");
 			glGenerateMipmap(GL_TEXTURE_2D);

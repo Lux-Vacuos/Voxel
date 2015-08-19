@@ -24,11 +24,17 @@
 
 package io.github.guerra24.voxel.client.kernel.core;
 
+import io.github.guerra24.voxel.client.kernel.graphics.GuiRenderer;
+import io.github.guerra24.voxel.client.kernel.graphics.MasterRenderer;
+import io.github.guerra24.voxel.client.kernel.graphics.SkyboxRenderer;
+import io.github.guerra24.voxel.client.kernel.graphics.WaterRenderer;
+import io.github.guerra24.voxel.client.kernel.resources.GameResources;
+
 /**
  * Interface for Kernel
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
- * @version 0.0.1 Build-52
+ * @version 0.0.2 Build-55
  * @since 0.0.1 Build-52
  * @category Kernel
  */
@@ -53,14 +59,15 @@ public interface IKernel {
 	 * 
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public void render();
+	public void render(GameResources gm, MasterRenderer renderer,
+			GuiRenderer guiRenderer, WaterRenderer waterRenderer, SkyboxRenderer skyboxRenderer);
 
 	/**
 	 * Update Loop, contains all the update functions
 	 * 
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public void update();
+	public void update(GameResources gm);
 
 	/**
 	 * Error Detection Loop, check the game errors

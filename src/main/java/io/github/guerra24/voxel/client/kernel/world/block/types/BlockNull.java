@@ -34,7 +34,7 @@ public class BlockNull extends Block {
 
 	@Override
 	public byte getId() {
-		return 0;
+		return -99;
 	}
 
 	@Override
@@ -69,6 +69,11 @@ public class BlockNull extends Block {
 
 	@Override
 	public WaterTile getWaterTitle(Vector3f pos) {
+		return null;
+	}
+
+	@Override
+	public Entity getSingleModel(Vector3f pos) {
 		return null;
 	}
 

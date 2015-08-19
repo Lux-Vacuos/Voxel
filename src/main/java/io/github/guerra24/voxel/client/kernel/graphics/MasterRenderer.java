@@ -29,6 +29,7 @@ import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_CULL_FACE;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
+import io.github.guerra24.voxel.client.kernel.core.Kernel;
 import io.github.guerra24.voxel.client.kernel.core.KernelConstants;
 import io.github.guerra24.voxel.client.kernel.graphics.opengl.VoxelGL33;
 import io.github.guerra24.voxel.client.kernel.graphics.shaders.EntityShader;
@@ -42,7 +43,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Queue;
 
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Matrix4f;
@@ -52,7 +52,7 @@ import org.lwjgl.util.vector.Vector3f;
  * Game Master Renderer
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
- * @version 0.0.1 Build-52
+ * @version 0.0.2 Build-55
  * @since 0.0.1 Build-52
  * @category Rendering
  */
@@ -66,10 +66,6 @@ public class MasterRenderer {
 	 * Batcher of entity
 	 */
 	private Map<TexturedModel, List<Entity>> entities = new HashMap<TexturedModel, List<Entity>>();
-	/**
-	 * Skybox Renderer
-	 */
-	private SkyboxRenderer skyboxRenderer;
 	/**
 	 * Entity Shader
 	 */
@@ -95,7 +91,6 @@ public class MasterRenderer {
 		initGL();
 		createProjectionMatrix();
 		entityRenderer = new EntityRenderer(shader, projectionMatrix);
-		skyboxRenderer = new SkyboxRenderer(loader, projectionMatrix);
 	}
 
 	/**
@@ -120,12 +115,10 @@ public class MasterRenderer {
 	 *            A Camera
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public void renderWorld(Queue<Entity> cubes, List<Light> lights,
+	public void renderWorld(List<Entity> cubes, List<Light> lights,
 			Camera camera) {
 		for (Entity entity : cubes) {
-			if (Frustum.getFrustum().pointInFrustum(entity.getPosition().x,
-					entity.getPosition().y, entity.getPosition().z))
-				processEntity(entity);
+			processEntity(entity);
 		}
 		renderWorld(lights, camera);
 	}
@@ -144,8 +137,9 @@ public class MasterRenderer {
 	public void renderEntity(List<Entity> entities, List<Light> lights,
 			Camera camera) {
 		for (Entity entity : entities) {
-			if (Frustum.getFrustum().pointInFrustum(entity.getPosition().x,
-					entity.getPosition().y, entity.getPosition().z))
+			if (Kernel.gameResources.frustum.pointInFrustum(
+					entity.getPosition().x, entity.getPosition().y,
+					entity.getPosition().z))
 				processEntity(entity);
 		}
 		renderEntity(lights, camera);
@@ -163,8 +157,7 @@ public class MasterRenderer {
 	private void renderWorld(List<Light> lights, Camera camera) {
 		prepare();
 		shader.start();
-		if (Display.wasResized())
-			shader.loadProjectionMatrix(projectionMatrix);
+		shader.loadProjectionMatrix(projectionMatrix);
 		shader.loadSkyColour(KernelConstants.RED, KernelConstants.GREEN,
 				KernelConstants.BLUE);
 		shader.loadDirectLightDirection(new Vector3f(-80, -100, -40));
@@ -172,8 +165,6 @@ public class MasterRenderer {
 		shader.loadviewMatrix(camera);
 		entityRenderer.render(entities);
 		shader.stop();
-		skyboxRenderer.render(camera, KernelConstants.RED,
-				KernelConstants.GREEN, KernelConstants.BLUE);
 		entities.clear();
 	}
 
@@ -188,8 +179,7 @@ public class MasterRenderer {
 	 */
 	private void renderEntity(List<Light> lights, Camera camera) {
 		shader.start();
-		if (Display.wasResized())
-			shader.loadProjectionMatrix(projectionMatrix);
+		shader.loadProjectionMatrix(projectionMatrix);
 		shader.loadLights(lights);
 		shader.loadviewMatrix(camera);
 		entityRenderer.render(entities);

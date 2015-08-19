@@ -24,7 +24,7 @@
 
 package io.github.guerra24.voxel.client.kernel.world.block;
 
-import io.github.guerra24.voxel.client.kernel.core.Kernel;
+import io.github.guerra24.voxel.client.kernel.resources.Loader;
 import io.github.guerra24.voxel.client.kernel.resources.OBJLoader;
 import io.github.guerra24.voxel.client.kernel.resources.models.ModelTexture;
 import io.github.guerra24.voxel.client.kernel.resources.models.RawModel;
@@ -85,38 +85,38 @@ public class BlocksResources {
 	public static TexturedModel cubeDiamondOreSOUTH;
 	public static TexturedModel cubeGoldOreSOUTH;
 
-	public static void createBlocks() {
+	public static TexturedModel cubeTorch;
 
-		RawModel up = OBJLoader.loadObjModel("FACE_UP",
-				Kernel.gameResources.loader);
-		RawModel down = OBJLoader.loadObjModel("FACE_DOWN",
-				Kernel.gameResources.loader);
-		RawModel east = OBJLoader.loadObjModel("FACE_EAST",
-				Kernel.gameResources.loader);
-		RawModel west = OBJLoader.loadObjModel("FACE_WEST",
-				Kernel.gameResources.loader);
-		RawModel nort = OBJLoader.loadObjModel("FACE_NORTH",
-				Kernel.gameResources.loader);
-		RawModel south = OBJLoader.loadObjModel("FACE_SOUTH",
-				Kernel.gameResources.loader);
+	public static void createBlocks(Loader loader) {
+
+		RawModel up = OBJLoader.loadObjModel("FACE_UP", loader);
+		RawModel down = OBJLoader.loadObjModel("FACE_DOWN", loader);
+		RawModel east = OBJLoader.loadObjModel("FACE_EAST", loader);
+		RawModel west = OBJLoader.loadObjModel("FACE_WEST", loader);
+		RawModel nort = OBJLoader.loadObjModel("FACE_NORTH", loader);
+		RawModel south = OBJLoader.loadObjModel("FACE_SOUTH", loader);
+		RawModel torch = OBJLoader.loadObjModel("Torch", loader);
+
 		ModelTexture texture0 = new ModelTexture(
-				Kernel.gameResources.loader.loadTextureBlocks("Indes"));
+				loader.loadTextureBlocks("Indes"));
 		ModelTexture texture = new ModelTexture(
-				Kernel.gameResources.loader.loadTextureBlocks("Grass"));
+				loader.loadTextureBlocks("Grass"));
 		ModelTexture texture1 = new ModelTexture(
-				Kernel.gameResources.loader.loadTextureBlocks("Stone"));
+				loader.loadTextureBlocks("Stone"));
 		ModelTexture texture2 = new ModelTexture(
-				Kernel.gameResources.loader.loadTextureBlocks("Sand"));
+				loader.loadTextureBlocks("Sand"));
 		ModelTexture texture3 = new ModelTexture(
-				Kernel.gameResources.loader.loadTextureBlocks("Glass"));
+				loader.loadTextureBlocks("Glass"));
 		ModelTexture texture4 = new ModelTexture(
-				Kernel.gameResources.loader.loadTextureBlocks("Dirt"));
+				loader.loadTextureBlocks("Dirt"));
 		ModelTexture texture5 = new ModelTexture(
-				Kernel.gameResources.loader.loadTextureBlocks("Diamond-Ore"));
+				loader.loadTextureBlocks("Diamond-Ore"));
 		ModelTexture texture6 = new ModelTexture(
-				Kernel.gameResources.loader.loadTextureBlocks("Gold-Ore"));
+				loader.loadTextureBlocks("Gold-Ore"));
 		ModelTexture texture7 = new ModelTexture(
-				Kernel.gameResources.loader.loadTextureBlocks("GrassSide"));
+				loader.loadTextureBlocks("GrassSide"));
+		ModelTexture texture8 = new ModelTexture(
+				loader.loadTextureBlocks("Torch"));
 
 		cubeIndesUP = new TexturedModel(up, texture0);
 		cubeGrassUP = new TexturedModel(up, texture);
@@ -171,5 +171,7 @@ public class BlocksResources {
 		cubeDirtSOUTH = new TexturedModel(south, texture4);
 		cubeDiamondOreSOUTH = new TexturedModel(south, texture5);
 		cubeGoldOreSOUTH = new TexturedModel(south, texture6);
+
+		cubeTorch = new TexturedModel(torch, texture8);
 	}
 }

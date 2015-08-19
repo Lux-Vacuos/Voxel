@@ -42,14 +42,13 @@ import io.github.guerra24.voxel.client.kernel.resources.Loader;
 import io.github.guerra24.voxel.client.kernel.resources.models.RawModel;
 import io.github.guerra24.voxel.client.kernel.world.entities.Camera;
 
-import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Matrix4f;
 
 /**
  * Skybox Rendering
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
- * @version 0.0.1 Build-52
+ * @version 0.0.2 Build-55
  * @since 0.0.1 Build-52
  * @category Rendering
  */
@@ -152,6 +151,7 @@ public class SkyboxRenderer {
 		shader.connectTextureUnits();
 		shader.loadProjectionMatrix(projectionMatrix);
 		shader.stop();
+		time = 4900;
 	}
 
 	/**
@@ -169,9 +169,8 @@ public class SkyboxRenderer {
 	 */
 	public void render(Camera camera, float r, float g, float b) {
 		shader.start();
-		if (Display.wasResized())
-			shader.loadProjectionMatrix(Kernel.gameResources.renderer
-					.getProjectionMatrix());
+		shader.loadProjectionMatrix(Kernel.gameResources.renderer
+				.getProjectionMatrix());
 		shader.loadViewMatrix(camera);
 		shader.loadFog(r, g, b);
 		glBindVertexArray(cube.getVaoID());

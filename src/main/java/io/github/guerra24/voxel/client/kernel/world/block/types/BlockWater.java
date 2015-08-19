@@ -72,4 +72,9 @@ public class BlockWater extends Block {
 		return new WaterTile(pos.x + 0.5f, pos.z - 0.5f, pos.y + 0.8f);
 	}
 
+	@Override
+	public Entity getSingleModel(Vector3f pos) {
+		return null;
+	}
+
 }

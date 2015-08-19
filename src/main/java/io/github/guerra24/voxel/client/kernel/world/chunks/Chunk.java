@@ -27,10 +27,13 @@ package io.github.guerra24.voxel.client.kernel.world.chunks;
 import io.github.guerra24.voxel.client.kernel.core.Kernel;
 import io.github.guerra24.voxel.client.kernel.core.KernelConstants;
 import io.github.guerra24.voxel.client.kernel.resources.models.WaterTile;
-import io.github.guerra24.voxel.client.kernel.util.ArrayList3;
 import io.github.guerra24.voxel.client.kernel.util.Maths;
 import io.github.guerra24.voxel.client.kernel.world.block.Block;
 import io.github.guerra24.voxel.client.kernel.world.entities.Entity;
+import io.github.guerra24.voxel.client.kernel.world.entities.Light;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.lwjgl.util.vector.Vector3f;
 
@@ -42,8 +45,12 @@ public class Chunk implements IChunk {
 	public byte[][][] blocks;
 
 	private int sizeX, sizeY, sizeZ, time = 0;
-	public transient ArrayList3<Entity> cubes1, cubes2, cubes3, cubes4;
-	public transient ArrayList3<WaterTile> waters;
+	public transient List<Entity> cubes1, cubes2, cubes3, cubes4;
+	public transient List<WaterTile> waters;
+	public transient List<Light> lights1;
+	public transient List<Light> lights2;
+	public transient List<Light> lights3;
+	public transient List<Light> lights4;
 
 	public Chunk(int dim, int cx, int cz) {
 		this.dim = dim;
@@ -60,11 +67,15 @@ public class Chunk implements IChunk {
 		sizeY = KernelConstants.CHUNK_HEIGHT;
 		sizeZ = KernelConstants.CHUNK_SIZE;
 
-		cubes1 = new ArrayList3<Entity>();
-		cubes2 = new ArrayList3<Entity>();
-		cubes3 = new ArrayList3<Entity>();
-		cubes4 = new ArrayList3<Entity>();
-		waters = new ArrayList3<WaterTile>();
+		cubes1 = new ArrayList<Entity>();
+		cubes2 = new ArrayList<Entity>();
+		cubes3 = new ArrayList<Entity>();
+		cubes4 = new ArrayList<Entity>();
+		waters = new ArrayList<WaterTile>();
+		lights1 = new ArrayList<Light>();
+		lights2 = new ArrayList<Light>();
+		lights3 = new ArrayList<Light>();
+		lights4 = new ArrayList<Light>();
 
 		blocks = new byte[sizeX][sizeY][sizeZ];
 
@@ -76,11 +87,15 @@ public class Chunk implements IChunk {
 
 	@Override
 	public void loadInit() {
-		cubes1 = new ArrayList3<Entity>();
-		cubes2 = new ArrayList3<Entity>();
-		cubes3 = new ArrayList3<Entity>();
-		cubes4 = new ArrayList3<Entity>();
-		waters = new ArrayList3<WaterTile>();
+		cubes1 = new ArrayList<Entity>();
+		cubes2 = new ArrayList<Entity>();
+		cubes3 = new ArrayList<Entity>();
+		cubes4 = new ArrayList<Entity>();
+		waters = new ArrayList<WaterTile>();
+		lights1 = new ArrayList<Light>();
+		lights2 = new ArrayList<Light>();
+		lights3 = new ArrayList<Light>();
+		lights4 = new ArrayList<Light>();
 	}
 
 	@Override
@@ -147,7 +162,48 @@ public class Chunk implements IChunk {
 		for (int x = 0; x < sizeX; x++) {
 			for (int z = 0; z < sizeZ; z++) {
 				for (int y = 0; y < sizeY; y++) {
-					if (Block.getBlock(blocks[x][y][z]) != Block.Air
+					if (Block.getBlock(blocks[x][y][z]) == Block.Torch) {
+						if (y < 32) {
+							cubes1.add(Block.getBlock(blocks[x][y][z])
+									.getSingleModel(
+											new Vector3f(x + cx * sizeX, y, z
+													+ cz * sizeZ)));
+							lights1.add(new Light(new Vector3f(x + cx * sizeX,
+									y + 0.7f, z + cx * sizeZ), new Vector3f(5,
+									5, 5), new Vector3f(1, 0.1f, 0.09f)));
+							sec1NotClear = true;
+						}
+						if (y > 31 && y < 64) {
+							cubes2.add(Block.getBlock(blocks[x][y][z])
+									.getSingleModel(
+											new Vector3f(x + cx * sizeX, y, z
+													+ cz * sizeZ)));
+							lights2.add(new Light(new Vector3f(x + cx * sizeX,
+									y + 0.7f, z + cx * sizeZ), new Vector3f(5,
+									5, 5), new Vector3f(1, 0.1f, 0.09f)));
+							sec2NotClear = true;
+						}
+						if (y > 63 && y < 96) {
+							cubes3.add(Block.getBlock(blocks[x][y][z])
+									.getSingleModel(
+											new Vector3f(x + cx * sizeX, y, z
+													+ cz * sizeZ)));
+							lights3.add(new Light(new Vector3f(x + cx * sizeX,
+									y + 0.7f, z + cx * sizeZ), new Vector3f(5,
+									5, 5), new Vector3f(1, 0.1f, 0.09f)));
+							sec3NotClear = true;
+						}
+						if (y > 95 && y < 129) {
+							cubes4.add(Block.getBlock(blocks[x][y][z])
+									.getSingleModel(
+											new Vector3f(x + cx * sizeX, y, z
+													+ cz * sizeZ)));
+							lights4.add(new Light(new Vector3f(x + cx * sizeX,
+									y + 0.7f, z + cx * sizeZ), new Vector3f(5,
+									5, 5), new Vector3f(1, 0.1f, 0.09f)));
+							sec4NotClear = true;
+						}
+					} else if (Block.getBlock(blocks[x][y][z]) != Block.Air
 							&& Block.getBlock(blocks[x][y][z]) != Block.Water) {
 						if (cullFaceWest(x + cx * sizeX, y, z + cz * sizeZ)) {
 							if (y < 32) {
@@ -361,7 +417,8 @@ public class Chunk implements IChunk {
 					if (z < (cz * sizeZ) + 15) {
 						if (getLocal(x - 1, y, z) != Block.Air.getId()
 								&& getLocal(x - 1, y, z) != Block.Water.getId()
-								&& getLocal(x - 1, y, z) != Block.Glass.getId()) {
+								&& getLocal(x - 1, y, z) != Block.Glass.getId()
+								&& getLocal(x - 1, y, z) != Block.Torch.getId()) {
 							return false;
 						} else {
 							return true;
@@ -374,6 +431,8 @@ public class Chunk implements IChunk {
 				&& Kernel.world.getGlobalBlock(dim, x - 1, y, z) != Block.Water
 						.getId()
 				&& Kernel.world.getGlobalBlock(dim, x - 1, y, z) != Block.Glass
+						.getId()
+				&& Kernel.world.getGlobalBlock(dim, x - 1, y, z) != Block.Torch
 						.getId()) {
 			return false;
 		} else {
@@ -388,7 +447,8 @@ public class Chunk implements IChunk {
 					if (z < (cz * sizeZ) + 15) {
 						if (getLocal(x + 1, y, z) != Block.Air.getId()
 								&& getLocal(x + 1, y, z) != Block.Water.getId()
-								&& getLocal(x + 1, y, z) != Block.Glass.getId()) {
+								&& getLocal(x + 1, y, z) != Block.Glass.getId()
+								&& getLocal(x + 1, y, z) != Block.Torch.getId()) {
 							return false;
 						} else {
 							return true;
@@ -401,6 +461,8 @@ public class Chunk implements IChunk {
 				&& Kernel.world.getGlobalBlock(dim, x + 1, y, z) != Block.Water
 						.getId()
 				&& Kernel.world.getGlobalBlock(dim, x + 1, y, z) != Block.Glass
+						.getId()
+				&& Kernel.world.getGlobalBlock(dim, x + 1, y, z) != Block.Torch
 						.getId()) {
 			return false;
 		} else {
@@ -420,6 +482,8 @@ public class Chunk implements IChunk {
 									&& getLocal(x, y - 1, z) != Block.Water
 											.getId()
 									&& getLocal(x, y - 1, z) != Block.Glass
+											.getId()
+									&& getLocal(x, y - 1, z) != Block.Torch
 											.getId()) {
 								return false;
 							} else {
@@ -434,6 +498,8 @@ public class Chunk implements IChunk {
 					&& Kernel.world.getGlobalBlock(dim, x, y - 1, z) != Block.Water
 							.getId()
 					&& Kernel.world.getGlobalBlock(dim, x, y - 1, z) != Block.Glass
+							.getId()
+					&& Kernel.world.getGlobalBlock(dim, x, y - 1, z) != Block.Torch
 							.getId()) {
 				return false;
 			} else {
@@ -449,7 +515,8 @@ public class Chunk implements IChunk {
 					if (z < (cz * sizeZ) + 15) {
 						if (getLocal(x, y + 1, z) != Block.Air.getId()
 								&& getLocal(x, y + 1, z) != Block.Water.getId()
-								&& getLocal(x, y + 1, z) != Block.Glass.getId()) {
+								&& getLocal(x, y + 1, z) != Block.Glass.getId()
+								&& getLocal(x, y + 1, z) != Block.Torch.getId()) {
 							return false;
 						} else {
 							return true;
@@ -464,6 +531,8 @@ public class Chunk implements IChunk {
 					&& Kernel.world.getGlobalBlock(dim, x, y + 1, z) != Block.Water
 							.getId()
 					&& Kernel.world.getGlobalBlock(dim, x, y + 1, z) != Block.Glass
+							.getId()
+					&& Kernel.world.getGlobalBlock(dim, x, y + 1, z) != Block.Torch
 							.getId()) {
 				return false;
 			} else {
@@ -510,7 +579,8 @@ public class Chunk implements IChunk {
 					if (z < (cz * sizeZ) + 15) {
 						if (getLocal(x, y, z - 1) != Block.Air.getId()
 								&& getLocal(x, y, z - 1) != Block.Water.getId()
-								&& getLocal(x, y, z - 1) != Block.Glass.getId()) {
+								&& getLocal(x, y, z - 1) != Block.Glass.getId()
+								&& getLocal(x, y, z - 1) != Block.Torch.getId()) {
 							return false;
 						} else {
 							return true;
@@ -523,6 +593,8 @@ public class Chunk implements IChunk {
 				&& Kernel.world.getGlobalBlock(dim, x, y, z - 1) != Block.Water
 						.getId()
 				&& Kernel.world.getGlobalBlock(dim, x, y, z - 1) != Block.Glass
+						.getId()
+				&& Kernel.world.getGlobalBlock(dim, x, y, z - 1) != Block.Torch
 						.getId()) {
 			return false;
 		} else {
@@ -537,7 +609,8 @@ public class Chunk implements IChunk {
 					if (z < (cz * sizeZ) + 15) {
 						if (getLocal(x, y, z + 1) != Block.Air.getId()
 								&& getLocal(x, y, z + 1) != Block.Water.getId()
-								&& getLocal(x, y, z + 1) != Block.Glass.getId()) {
+								&& getLocal(x, y, z + 1) != Block.Glass.getId()
+								&& getLocal(x, y, z + 1) != Block.Torch.getId()) {
 							return false;
 						} else {
 							return true;
@@ -550,6 +623,8 @@ public class Chunk implements IChunk {
 				&& Kernel.world.getGlobalBlock(dim, x, y, z + 1) != Block.Water
 						.getId()
 				&& Kernel.world.getGlobalBlock(dim, x, y, z + 1) != Block.Glass
+						.getId()
+				&& Kernel.world.getGlobalBlock(dim, x, y, z + 1) != Block.Torch
 						.getId()) {
 			return false;
 		} else {
@@ -582,12 +657,36 @@ public class Chunk implements IChunk {
 		Kernel.gameResources.waters.addAll(waters);
 	}
 
+	@Override
+	public void sendToRenderLights1() {
+		Kernel.gameResources.lights.addAll(lights1);
+	}
+
+	@Override
+	public void sendToRenderLights2() {
+		Kernel.gameResources.lights.addAll(lights2);
+	}
+
+	@Override
+	public void sendToRenderLights3() {
+		Kernel.gameResources.lights.addAll(lights3);
+	}
+
+	@Override
+	public void sendToRenderLights4() {
+		Kernel.gameResources.lights.addAll(lights4);
+	}
+
 	public void clear() {
 		waters.clear();
 		cubes1.clear();
 		cubes2.clear();
 		cubes3.clear();
 		cubes4.clear();
+		lights1.clear();
+		lights2.clear();
+		lights3.clear();
+		lights4.clear();
 	}
 
 	@Override
@@ -597,11 +696,8 @@ public class Chunk implements IChunk {
 		Kernel.gameResources.cubes.removeAll(cubes3);
 		Kernel.gameResources.cubes.removeAll(cubes4);
 		Kernel.gameResources.waters.removeAll(waters);
-		waters.clear();
-		cubes1.clear();
-		cubes2.clear();
-		cubes3.clear();
-		cubes4.clear();
+		clear();
 		isChunkloaded = false;
 	}
+
 }

@@ -33,10 +33,6 @@ public class Mob extends Entity {
 	public Mob(TexturedModel model, Vector3f position, float rotX, float rotY,
 			float rotZ, float scale) {
 		super(model, position, rotX, rotY, rotZ, scale);
-		init();
-	}
-
-	public void init() {
 	}
 
 }

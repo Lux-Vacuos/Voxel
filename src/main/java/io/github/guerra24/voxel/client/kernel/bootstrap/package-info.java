@@ -25,7 +25,7 @@
  * Contains the Game Startup Config and initializes the Game
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
- * @version 0.0.1 Build-52
+ * @version 0.0.2 Build-55
  * @since 0.0.1 Build-52
  */
 package io.github.guerra24.voxel.client.kernel.bootstrap;

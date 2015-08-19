@@ -1,5 +1,6 @@
 package io.github.guerra24.voxel.client.kernel.api;
 
+import io.github.guerra24.voxel.client.kernel.api.mod.Mod;
 import io.github.guerra24.voxel.client.kernel.util.Logger;
 
 import java.io.IOException;
@@ -17,7 +18,7 @@ import java.util.Map;
  * API
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
- * @version 0.0.1 Build-54
+ * @version 0.0.2 Build-55
  * @since 0.0.1 Build-54
  * @category API
  */
@@ -55,12 +56,16 @@ public class API {
 											| IllegalAccessException
 											| IllegalArgumentException
 											| InvocationTargetException e) {
-										e.printStackTrace();
+										Logger.log(
+												Thread.currentThread(),
+												"Error Loading Mod: "
+														+ e.getMessage());
 									}
 								}
 							});
 		} catch (IOException e) {
-			e.printStackTrace();
+			Logger.log(Thread.currentThread(),
+					"Error Loading Mod: " + e.getMessage());
 		}
 
 	}
@@ -97,9 +102,9 @@ public class API {
 	public void postInit() {
 		Logger.log(Thread.currentThread(), "Post Initializing Mods");
 		for (int x = 0; x < mods.size(); x++) {
+			mods.get(x).postInit();
 			Logger.log(Thread.currentThread(), "Succesfully Loaded: "
 					+ mods.get(x).getName() + " ID: " + mods.get(x).getID());
-			mods.get(x).postInit();
 		}
 	}
 
@@ -117,6 +122,19 @@ public class API {
 	}
 
 	/**
+	 * Gets the Mod from ID
+	 * 
+	 * @param id
+	 *            ID
+	 * @return Mod
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 * 
+	 */
+	public static Mod getMod(int id) {
+		return mods.get(id);
+	}
+
+	/**
 	 * Get last avaiable ID
 	 * 
 	 * @return ID
@@ -124,6 +142,15 @@ public class API {
 	 */
 	public static int getLastID() {
 		return mods.size();
+	}
+
+	/**
+	 * Dispose the API
+	 * 
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
+	public void dispose() {
+		mods.clear();
 	}
 
 }

@@ -32,6 +32,7 @@ import io.github.guerra24.voxel.client.kernel.util.Logger;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;
+import org.lwjgl.opengl.ContextAttribs;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.PixelFormat;
@@ -40,7 +41,7 @@ import org.lwjgl.opengl.PixelFormat;
  * Display Manager
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
- * @version 0.0.1 Build-52
+ * @version 0.0.2 Build-55
  * @since 0.0.1 Build-1
  * @category OpenGL
  */
@@ -60,6 +61,11 @@ public class DisplayManager {
 	private static PixelFormat pixelformat = new PixelFormat();
 
 	/**
+	 * Display Context Attribs
+	 */
+	private static ContextAttribs attribs = new ContextAttribs(3, 3);
+
+	/**
 	 * Creates and Sets the Display
 	 * 
 	 * @author Guerra24 <pablo230699@hotmail.com>
@@ -67,13 +73,14 @@ public class DisplayManager {
 	public static void createDisplay() {
 		Logger.log(Thread.currentThread(), "Creating Display");
 		try {
+			attribs.withForwardCompatible(true).withProfileCore(true);
 			Display.setDisplayMode(new DisplayMode(KernelConstants.WIDTH,
 					KernelConstants.HEIGHT));
 			Display.setTitle(KernelConstants.Title);
 			Display.setResizable(true);
 			Display.setFullscreen(false);
 			Display.setVSyncEnabled(KernelConstants.VSYNC);
-			Display.create(pixelformat);
+			Display.create(pixelformat, attribs);
 		} catch (LWJGLException e) {
 			Logger.error(Thread.currentThread(), "Failed to create Display");
 			e.printStackTrace();
@@ -96,7 +103,7 @@ public class DisplayManager {
 	public static void updateDisplay(int fps) {
 		Display.sync(fps);
 		Display.update();
-		if (Display.wasResized()) {
+		if (KernelConstants.loaded) {
 			VoxelGL33.glViewport(0, 0, Display.getWidth(), Display.getHeight());
 			Kernel.gameResources.renderer.createProjectionMatrix();
 		}

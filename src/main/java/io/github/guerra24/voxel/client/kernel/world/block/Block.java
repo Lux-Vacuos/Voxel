@@ -24,8 +24,6 @@
 
 package io.github.guerra24.voxel.client.kernel.world.block;
 
-import java.util.HashMap;
-
 import io.github.guerra24.voxel.client.kernel.resources.models.WaterTile;
 import io.github.guerra24.voxel.client.kernel.world.block.types.BlockAir;
 import io.github.guerra24.voxel.client.kernel.world.block.types.BlockDimOre;
@@ -37,8 +35,11 @@ import io.github.guerra24.voxel.client.kernel.world.block.types.BlockIndes;
 import io.github.guerra24.voxel.client.kernel.world.block.types.BlockNull;
 import io.github.guerra24.voxel.client.kernel.world.block.types.BlockSand;
 import io.github.guerra24.voxel.client.kernel.world.block.types.BlockStone;
+import io.github.guerra24.voxel.client.kernel.world.block.types.BlockTorch;
 import io.github.guerra24.voxel.client.kernel.world.block.types.BlockWater;
 import io.github.guerra24.voxel.client.kernel.world.entities.Entity;
+
+import java.util.HashMap;
 
 import org.lwjgl.util.vector.Vector3f;
 
@@ -46,7 +47,7 @@ import org.lwjgl.util.vector.Vector3f;
  * Block
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
- * @version 0.0.1 Build-52
+ * @version 0.0.2 Build-55
  * @since 0.0.1 Build-52
  * @category World
  */
@@ -67,6 +68,7 @@ public abstract class Block {
 	public static Block Water = new BlockWater();
 	public static Block Glass = new BlockGlass();
 	public static Block Air = new BlockAir();
+	public static Block Torch = new BlockTorch();
 
 	/**
 	 * Gets the Block ID
@@ -146,21 +148,32 @@ public abstract class Block {
 	public abstract WaterTile getWaterTitle(Vector3f pos);
 
 	/**
+	 * Get a single model
+	 * 
+	 * @param pos
+	 *            Position
+	 * @return Entity
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
+	public abstract Entity getSingleModel(Vector3f pos);
+
+	/**
 	 * Initialize the basic Block
 	 * 
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public static void initBasicBlocks() {
-		registerBlock((byte) -1, Indes);
-		registerBlock((byte) 0, Air);
-		registerBlock((byte) 1, Stone);
-		registerBlock((byte) 2, Grass);
-		registerBlock((byte) 3, Sand);
-		registerBlock((byte) 4, Dirt);
-		registerBlock((byte) 5, DiamondOre);
-		registerBlock((byte) 6, GoldOre);
-		registerBlock((byte) 7, Water);
-		registerBlock((byte) 8, Glass);
+		registerBlock(Indes.getId(), Indes);
+		registerBlock(Air.getId(), Air);
+		registerBlock(Stone.getId(), Stone);
+		registerBlock(Grass.getId(), Grass);
+		registerBlock(Sand.getId(), Sand);
+		registerBlock(Dirt.getId(), Dirt);
+		registerBlock(DiamondOre.getId(), DiamondOre);
+		registerBlock(GoldOre.getId(), GoldOre);
+		registerBlock(Water.getId(), Water);
+		registerBlock(Glass.getId(), Glass);
+		registerBlock(Torch.getId(), Torch);
 	}
 
 	/**

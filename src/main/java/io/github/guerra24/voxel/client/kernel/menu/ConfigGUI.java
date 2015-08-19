@@ -57,7 +57,7 @@ import javax.swing.event.ChangeListener;
  * Settings GUI
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
- * @version 0.0.1 Build-52
+ * @version 0.0.2 Build-55
  * @since 0.0.1 Build-52
  * @category GUI
  */
@@ -80,8 +80,7 @@ public class ConfigGUI extends JFrame implements ItemListener {
 	private JLabel labelFOV = new JLabel("FOV: ");
 	private JLabel labelFPS = new JLabel("FPS: ");
 	private JLabel labelSEED = new JLabel("Seed: ");
-	private JLabel labelviewDistance = new JLabel("World Size: ");
-	private JLabel labeldrawDistance = new JLabel("View Distance: ");
+	private JLabel labeldrawDistance = new JLabel("Draw Distance: ");
 	private JLabel labelChunks = new JLabel(" Chunks");
 
 	private JTextField textWIDTH = new JTextField(20);
@@ -89,7 +88,6 @@ public class ConfigGUI extends JFrame implements ItemListener {
 	private JTextField textFOV = new JTextField(20);
 	private JTextField textFPS = new JTextField(20);
 	private JTextField textSEED = new JTextField(20);
-	private JTextField textviewDistance = new JTextField(20);
 
 	private JButton buttonSave = new JButton("Save and Continue");
 	private JButton buttonDefault = new JButton("Reset Settings");
@@ -159,15 +157,6 @@ public class ConfigGUI extends JFrame implements ItemListener {
 		add(customSeed, constraints);
 		customSeed.addItemListener(this);
 
-		constraints.gridy = 5;
-		constraints.gridx = 0;
-		labelviewDistance.setEnabled(false);
-		add(labelviewDistance, constraints);
-
-		constraints.gridx = 1;
-		textviewDistance.setEnabled(false);
-		add(textviewDistance, constraints);
-
 		constraints.gridy = 7;
 		constraints.gridx = 1;
 		slider.setMinimum(2);
@@ -199,10 +188,8 @@ public class ConfigGUI extends JFrame implements ItemListener {
 				try {
 					saveProperties();
 					sendProperties();
-					JOptionPane.showMessageDialog(ConfigGUI.this,
-							"Settings were saved successfully!");
 					ready = true;
-					dispose();
+					setVisible(false);
 				} catch (IOException ex) {
 					JOptionPane.showMessageDialog(ConfigGUI.this,
 							"Error saving settings file: " + ex.getMessage());
@@ -243,7 +230,6 @@ public class ConfigGUI extends JFrame implements ItemListener {
 		textFOV.setText(configProps.getProperty("FOV"));
 		textFPS.setText(configProps.getProperty("FPS"));
 		textSEED.setText(configProps.getProperty("SEED"));
-		textviewDistance.setText(configProps.getProperty("ViewDistance"));
 	}
 
 	public void itemStateChanged(ItemEvent e) {
@@ -283,7 +269,6 @@ public class ConfigGUI extends JFrame implements ItemListener {
 		defaultProps.setProperty("VSYNC", "false");
 		defaultProps.setProperty("advancedOpenGL", "false");
 		defaultProps.setProperty("SEED", "");
-		defaultProps.setProperty("ViewDistance", "8");
 		defaultProps.setProperty("DrawDistance", "2");
 
 		configProps = new Properties(defaultProps);
@@ -298,7 +283,6 @@ public class ConfigGUI extends JFrame implements ItemListener {
 		textFOV.setText(configProps.getProperty("FOV"));
 		textFPS.setText(configProps.getProperty("FPS"));
 		textSEED.setText(configProps.getProperty("SEED"));
-		textviewDistance.setText(configProps.getProperty("ViewDistance"));
 	}
 
 	/**
@@ -318,8 +302,6 @@ public class ConfigGUI extends JFrame implements ItemListener {
 		KernelConstants.advancedOpenGL = Boolean.parseBoolean(configProps
 				.getProperty("advancedOpenGL"));
 		KernelConstants.seed = configProps.getProperty("SEED");
-		KernelConstants.viewDistance = Integer.parseInt(configProps
-				.getProperty("ViewDistance"));
 		KernelConstants.radius = Integer.parseInt(configProps
 				.getProperty("DrawDistance"));
 	}
@@ -373,7 +355,6 @@ public class ConfigGUI extends JFrame implements ItemListener {
 		configProps.setProperty("advancedOpenGL",
 				Boolean.toString(KernelConstants.advancedOpenGL));
 		configProps.setProperty("SEED", textSEED.getText());
-		configProps.setProperty("ViewDistance", textviewDistance.getText());
 		configProps.setProperty("DrawDistance", s.toString());
 		OutputStream outputStream = new FileOutputStream(configFile);
 		configProps.store(outputStream, "Game Settings");

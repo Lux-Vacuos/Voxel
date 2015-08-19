@@ -28,7 +28,7 @@ package io.github.guerra24.voxel.client.kernel.core;
  * Locations of all global variables
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
- * @version 0.0.1 Build-52
+ * @version 0.0.2 Build-55
  * @since 0.0.1 Build-52
  * @category Kernel
  */
@@ -62,7 +62,7 @@ public class KernelConstants {
 	/**
 	 * Game Near Plane
 	 */
-	public static float NEAR_PLANE = 0.05f;
+	public static float NEAR_PLANE = 0.001f;
 	/**
 	 * Game Far Plane
 	 */
@@ -87,7 +87,7 @@ public class KernelConstants {
 	/**
 	 * Game Build Number
 	 */
-	public static int build = 53;
+	public static int build = 55;
 	/**
 	 * Game Version
 	 */
@@ -95,7 +95,7 @@ public class KernelConstants {
 	/**
 	 * Game Debug Mode
 	 */
-	public static boolean debug = true;
+	public static boolean debug = false;
 	public static boolean postPro = false;
 	// World Settings
 	/**
@@ -106,18 +106,6 @@ public class KernelConstants {
 	 * Game Chunk Gen Radius
 	 */
 	public static int genRadius = radius + 10;
-	/**
-	 * Perlin octave
-	 * 
-	 * @deprecated
-	 */
-	public static int octaveCount = 7;
-	/**
-	 * Game World Size
-	 * 
-	 * @deprecated
-	 */
-	public static int viewDistance = 8;
 	/**
 	 * Using a custom seed
 	 */
@@ -139,7 +127,7 @@ public class KernelConstants {
 	/**
 	 * Game Max Rendered Lights
 	 */
-	public static final int MAX_LIGHTS = 1;
+	public static final int MAX_LIGHTS = 4;
 	// Water Settings
 	/**
 	 * Water Wave Speed
@@ -192,6 +180,10 @@ public class KernelConstants {
 	 * World Folder Path
 	 */
 	public static String worldPath = "assets/game/world/";
+	/**
+	 * Checks if the Kernel has successfully loaded
+	 */
+	public static boolean loaded = false;
 	/**
 	 * Camera Storage Path
 	 * 

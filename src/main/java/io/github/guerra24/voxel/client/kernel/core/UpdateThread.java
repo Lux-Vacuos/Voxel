@@ -28,7 +28,7 @@ package io.github.guerra24.voxel.client.kernel.core;
  * World Thread
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
- * @version 0.0.1 Build-52
+ * @version 0.0.2 Build-55
  * @since 0.0.1 Build-52
  * @category Kernel
  */
@@ -44,7 +44,6 @@ public class UpdateThread extends Thread {
 				break;
 			case GAME:
 				Kernel.world.updateChunkGeneration(Kernel.gameResources.camera);
-				Kernel.world.updateChunksRender(Kernel.gameResources.camera);
 				Kernel.gameResources.camera.updatePicker();
 				Kernel.world.test();
 				break;

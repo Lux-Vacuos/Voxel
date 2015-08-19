@@ -35,7 +35,7 @@ import java.io.File;
  * Initialize the basic game code
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
- * @version 0.0.1 Build-52
+ * @version 0.0.2 Build-55
  * @since 0.0.1 Build-52
  */
 public class Bootstrap {
@@ -130,7 +130,7 @@ public class Bootstrap {
 	public static void main(String[] args) {
 		Thread.currentThread().setName("Voxel Main");
 		run();
-		if (KernelConstants.postPro) {
+		if (true) {
 			System.setProperty("org.lwjgl.librarypath", new File(
 					"build/natives/windows").getAbsolutePath());
 		}

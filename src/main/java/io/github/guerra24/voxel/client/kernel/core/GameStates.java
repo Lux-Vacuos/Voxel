@@ -37,7 +37,7 @@ import org.lwjgl.util.vector.Vector3f;
  * Game States
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
- * @version 0.0.1 Build-52
+ * @version 0.0.2 Build-55
  * @since 0.0.1 Build-52
  * @category Kernel
  */
@@ -103,8 +103,6 @@ public class GameStates {
 		if (state == State.IN_PAUSE && Button.backToMainMenu()) {
 			// Kernel.gameResources.SoundSystem.rewind("MainMenuMusic");
 			// Kernel.gameResources.SoundSystem.play("MainMenuMusic");
-			Kernel.gameResources.waters.clear();
-			Kernel.gameResources.cubes.clear();
 			Logger.log(Thread.currentThread(), "Saving World");
 			for (int zr = -KernelConstants.genRadius; zr <= KernelConstants.genRadius; zr++) {
 				int zz = Kernel.world.getzPlayChunk() + zr;

@@ -73,4 +73,9 @@ public class BlockGrass extends Block {
 		return null;
 	}
 
+	@Override
+	public Entity getSingleModel(Vector3f pos) {
+		return null;
+	}
+
 }
