@@ -44,7 +44,7 @@ import org.lwjgl.input.Keyboard;
  * The Kernel, Game Engine Core
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
- * @version 0.0.2 Build-55
+ * @version 0.0.2 Build-57
  * @since 0.0.1 Build-1
  * @category Kernel
  */
@@ -79,6 +79,10 @@ public class Kernel implements IKernel {
 	 * Error Check timing
 	 */
 	public static int errorTime = 0;
+	/**
+	 * World Thread
+	 */
+	public static WorldThread worldThread;
 	/**
 	 * Update Thread
 	 */
@@ -133,8 +137,11 @@ public class Kernel implements IKernel {
 		gameResources.addRes();
 		gameResources.music();
 		world = new World();
+		worldThread = new WorldThread();
+		worldThread.setName("Voxel World");
+		worldThread.start();
 		update = new UpdateThread();
-		update.setName("Voxel World");
+		update.setName("Voxel Update");
 		update.start();
 		api.init();
 		// byte[] user = Launcher.user.getBytes(Charset.forName("UTF-8"));
@@ -149,10 +156,10 @@ public class Kernel implements IKernel {
 	public void mainLoop() {
 		init();
 		while (gameResources.gameStates.loop) {
+			update(gameResources);
 			render(gameResources, gameResources.renderer,
 					gameResources.guiRenderer, gameResources.waterRenderer,
 					gameResources.skyboxRenderer);
-			update(gameResources);
 			error();
 			totalRenderCalls += renderCalls;
 			renderCallsPerFrame = renderCalls;
@@ -171,19 +178,19 @@ public class Kernel implements IKernel {
 			DisplayManager.updateDisplay(30);
 			break;
 		case IN_PAUSE:
-			renderer.renderWorld(gm.cubes, gm.lights, gm.camera);
-			waterRenderer.render(gm.waters, gm.camera);
+			renderer.prepare();
+			world.updateChunksRender(gm, Kernel.gameResources.camera);
 			renderer.renderEntity(gm.allObjects, gm.lights, gm.camera);
-			guiRenderer.renderNoPrepare(gm.guis4);
-			DisplayManager.updateDisplay(30);
+			guiRenderer.renderGui(gm.guis4);
+			DisplayManager.updateDisplay(KernelConstants.FPS);
 			break;
 		case GAME:
-			renderer.renderWorld(gm.cubes, gm.lights, gm.camera);
-			waterRenderer.render(gm.waters, gm.camera);
+			renderer.prepare();
+			world.updateChunksRender(gm, Kernel.gameResources.camera);
 			renderer.renderEntity(gm.allObjects, gm.lights, gm.camera);
 			skyboxRenderer.render(gm.camera, KernelConstants.RED,
 					KernelConstants.GREEN, KernelConstants.BLUE);
-			guiRenderer.renderNoPrepare(gm.guis);
+			guiRenderer.renderGui(gm.guis);
 			DisplayManager.updateDisplay(KernelConstants.FPS);
 			break;
 		case LOADING_WORLD:
@@ -204,13 +211,13 @@ public class Kernel implements IKernel {
 			if (Keyboard.isKeyDown(Keyboard.KEY_O))
 				Bootstrap.config.setVisible(true);
 			gm.frustum.calculateFrustum(gm.camera);
-			world.updateChunksRender(Kernel.gameResources.camera);
 			break;
 		case GAME:
 			gm.player.move();
 			gm.camera.move();
+			gm.camera.updatePicker();
 			gm.frustum.calculateFrustum(gm.camera);
-			world.updateChunksRender(Kernel.gameResources.camera);
+			gm.waterRenderer.update();
 			break;
 		case LOADING_WORLD:
 			break;

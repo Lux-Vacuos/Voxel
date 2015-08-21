@@ -32,7 +32,6 @@ import io.github.guerra24.voxel.client.kernel.graphics.SkyboxRenderer;
 import io.github.guerra24.voxel.client.kernel.graphics.WaterRenderer;
 import io.github.guerra24.voxel.client.kernel.graphics.shaders.WaterShader;
 import io.github.guerra24.voxel.client.kernel.resources.models.GuiTexture;
-import io.github.guerra24.voxel.client.kernel.resources.models.WaterTile;
 import io.github.guerra24.voxel.client.kernel.util.Logger;
 import io.github.guerra24.voxel.client.kernel.util.MousePicker;
 import io.github.guerra24.voxel.client.kernel.world.block.Block;
@@ -60,7 +59,7 @@ import com.google.gson.Gson;
  * Game Resources
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
- * @version 0.0.2 Build-55
+ * @version 0.0.2 Build-57
  * @since 0.0.1 Build-52
  * @category Assets
  */
@@ -72,8 +71,6 @@ public class GameResources {
 	public List<GuiTexture> guis5 = new ArrayList<GuiTexture>();
 
 	public List<Entity> allObjects = new ArrayList<Entity>();
-	public List<Entity> cubes = new ArrayList<Entity>();
-	public List<WaterTile> waters = new ArrayList<WaterTile>();
 	public List<Light> lights = new ArrayList<Light>();
 
 	public Random rand;

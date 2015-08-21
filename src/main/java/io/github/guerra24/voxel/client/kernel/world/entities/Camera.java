@@ -25,6 +25,7 @@
 package io.github.guerra24.voxel.client.kernel.world.entities;
 
 import io.github.guerra24.voxel.client.kernel.core.Kernel;
+import io.github.guerra24.voxel.client.kernel.core.KernelConstants;
 import io.github.guerra24.voxel.client.kernel.graphics.opengl.DisplayManager;
 
 import org.lwjgl.input.Keyboard;
@@ -36,7 +37,7 @@ import org.lwjgl.util.vector.Vector3f;
  * Camera
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
- * @version 0.0.2 Build-55
+ * @version 0.0.2 Build-57
  * @since 0.0.1 Build-5
  */
 public class Camera {
@@ -175,6 +176,24 @@ public class Camera {
 							(int) (Kernel.gameResources.mouse.getCurrentRay().z + position.z),
 							block);
 		}
+	}
+
+	public void updateDebug() {
+		if (Keyboard.isKeyDown(Keyboard.KEY_F3)
+				&& Keyboard.isKeyDown(Keyboard.KEY_R))
+			for (int zr = -KernelConstants.genRadius; zr <= KernelConstants.genRadius; zr++) {
+				int zz = Kernel.world.getzPlayChunk() + zr;
+				for (int xr = -KernelConstants.genRadius; xr <= KernelConstants.genRadius; xr++) {
+					int xx = Kernel.world.getxPlayChunk() + xr;
+					if (zr * zr + xr * xr <= KernelConstants.genRadius
+							* KernelConstants.genRadius) {
+						if (Kernel.world.hasChunk(Kernel.world.dim, xx, zz)) {
+							Kernel.world.getChunk(Kernel.world.dim, xx, zz)
+									.clear();
+						}
+					}
+				}
+			}
 	}
 
 	public void setMouse() {

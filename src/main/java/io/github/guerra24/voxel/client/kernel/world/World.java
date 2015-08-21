@@ -26,6 +26,7 @@ package io.github.guerra24.voxel.client.kernel.world;
 
 import io.github.guerra24.voxel.client.kernel.core.Kernel;
 import io.github.guerra24.voxel.client.kernel.core.KernelConstants;
+import io.github.guerra24.voxel.client.kernel.resources.GameResources;
 import io.github.guerra24.voxel.client.kernel.util.Logger;
 import io.github.guerra24.voxel.client.kernel.world.chunks.Chunk;
 import io.github.guerra24.voxel.client.kernel.world.chunks.ChunkKey;
@@ -47,7 +48,7 @@ import org.lwjgl.util.vector.Vector3f;
  * World
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
- * @version 0.0.2 Build-55
+ * @version 0.0.2 Build-57
  * @since 0.0.1 Build-52
  * @category World
  */
@@ -55,7 +56,7 @@ public class World {
 	/**
 	 * Timing and World Dimension
 	 */
-	public int time = 0, time2 = 5, dim = 0;
+	public int dim = 0;
 	/**
 	 * Chunks Map
 	 */
@@ -168,46 +169,44 @@ public class World {
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void updateChunkGeneration(Camera camera) {
-		time++;
-		if (time % 10 == 0) {
-			if (camera.getPosition().x < 0)
-				xPlayChunk = (int) ((camera.getPosition().x - 16) / 16);
-			if (camera.getPosition().z < 0)
-				zPlayChunk = (int) ((camera.getPosition().z - 16) / 16);
-			if (camera.getPosition().x > 0)
-				xPlayChunk = (int) ((camera.getPosition().x) / 16);
-			if (camera.getPosition().z > 0)
-				zPlayChunk = (int) ((camera.getPosition().z) / 16);
-			KernelConstants.update();
-			for (int zr = -KernelConstants.genRadius; zr <= KernelConstants.genRadius; zr++) {
-				int zz = zPlayChunk + zr;
-				for (int xr = -KernelConstants.genRadius; xr <= KernelConstants.genRadius; xr++) {
-					int xx = xPlayChunk + xr;
-					if (zr * zr + xr * xr < (KernelConstants.genRadius - 10)
-							* (KernelConstants.genRadius - 10)) {
-						if (!hasChunk(dim, xx, zz)) {
-							if (existChunkFile(dim, xx, zz)) {
-								loadChunk(dim, xx, zz);
-							} else {
-								addChunk(new Chunk(dim, xx, zz));
-								saveChunk(dim, xx, zz);
-							}
+		if (camera.getPosition().x < 0)
+			xPlayChunk = (int) ((camera.getPosition().x - 16) / 16);
+		if (camera.getPosition().z < 0)
+			zPlayChunk = (int) ((camera.getPosition().z - 16) / 16);
+		if (camera.getPosition().x > 0)
+			xPlayChunk = (int) ((camera.getPosition().x) / 16);
+		if (camera.getPosition().z > 0)
+			zPlayChunk = (int) ((camera.getPosition().z) / 16);
+		KernelConstants.update();
+		for (int zr = -KernelConstants.genRadius; zr <= KernelConstants.genRadius; zr++) {
+			int zz = zPlayChunk + zr;
+			for (int xr = -KernelConstants.genRadius; xr <= KernelConstants.genRadius; xr++) {
+				int xx = xPlayChunk + xr;
+				if (zr * zr + xr * xr < (KernelConstants.genRadius - KernelConstants.radiusLimit)
+						* (KernelConstants.genRadius - KernelConstants.radiusLimit)) {
+					if (!hasChunk(dim, xx, zz)) {
+						if (existChunkFile(dim, xx, zz)) {
+							loadChunk(dim, xx, zz);
 						} else {
-							getChunk(dim, xx, zz).update();
-						}
-					}
-					if (zr * zr + xr * xr <= KernelConstants.genRadius
-							* KernelConstants.genRadius
-							&& zr * zr + xr * xr >= (KernelConstants.genRadius - 9)
-									* (KernelConstants.genRadius - 9)) {
-						if (hasChunk(dim, xx, zz)) {
+							addChunk(new Chunk(dim, xx, zz));
 							saveChunk(dim, xx, zz);
-							removeChunk(getChunk(dim, xx, zz));
 						}
+					} else {
+						getChunk(dim, xx, zz).update();
+					}
+				}
+				if (zr * zr + xr * xr <= KernelConstants.genRadius
+						* KernelConstants.genRadius
+						&& zr * zr + xr * xr >= (KernelConstants.genRadius
+								- KernelConstants.radiusLimit - 1)
+								* (KernelConstants.genRadius
+										- KernelConstants.radiusLimit - 1)) {
+					if (hasChunk(dim, xx, zz)) {
+						saveChunk(dim, xx, zz);
+						removeChunk(getChunk(dim, xx, zz));
 					}
 				}
 			}
-			time = 0;
 		}
 	}
 
@@ -218,70 +217,51 @@ public class World {
 	 *            Camera
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public void updateChunksRender(Camera camera) {
-		time2++;
-		if (time2 % 10 == 0) {
-			Kernel.gameResources.cubes.clear();
-			Kernel.gameResources.waters.clear();
-			Kernel.gameResources.lights.clear();
-			for (int zr = -KernelConstants.radius; zr <= KernelConstants.radius; zr++) {
-				int zz = zPlayChunk + zr;
-				for (int xr = -KernelConstants.radius; xr <= KernelConstants.radius; xr++) {
-					int xx = xPlayChunk + xr;
-					if (zr * zr + xr * xr < KernelConstants.radius
-							* KernelConstants.radius) {
-						if (hasChunk(dim, xx, zz)) {
-							Chunk chunk = getChunk(dim, xx, zz);
-							if (KernelConstants.advancedOpenGL) {
-								if (chunk.sec1NotClear)
-									if (Kernel.gameResources.frustum
-											.cubeInFrustum(chunk.posX, 0,
-													chunk.posZ,
-													chunk.posX + 16, 32,
-													chunk.posZ + 16)) {
-										chunk.sendToRender1();
-										chunk.sendToRenderLights1();
-									}
-								if (chunk.sec2NotClear)
-									if (Kernel.gameResources.frustum
-											.cubeInFrustum(chunk.posX, 32,
-													chunk.posZ,
-													chunk.posX + 16, 64,
-													chunk.posZ + 16)) {
-										chunk.sendToRender2();
-										chunk.sendToRenderLights2();
-									}
-								if (chunk.sec3NotClear)
-									if (Kernel.gameResources.frustum
-											.cubeInFrustum(chunk.posX, 64,
-													chunk.posZ,
-													chunk.posX + 16, 96,
-													chunk.posZ + 16)) {
-										chunk.sendToRender3();
-										chunk.sendToRenderWater();
-										chunk.sendToRenderLights3();
-									}
-								if (chunk.sec4NotClear)
-									if (Kernel.gameResources.frustum
-											.cubeInFrustum(chunk.posX, 96,
-													chunk.posZ,
-													chunk.posX + 16, 128,
-													chunk.posZ + 16)) {
-										chunk.sendToRender4();
-										chunk.sendToRenderLights4();
-									}
-							} else {
-								chunk.sendToRender1();
-								chunk.sendToRender2();
-								chunk.sendToRender3();
-								chunk.sendToRender4();
-								chunk.sendToRenderWater();
-							}
+	public void updateChunksRender(GameResources gm, Camera camera) {
+		Kernel.gameResources.lights.clear();
+		for (int zr = -KernelConstants.radius; zr <= KernelConstants.radius; zr++) {
+			int zz = zPlayChunk + zr;
+			for (int xr = -KernelConstants.radius; xr <= KernelConstants.radius; xr++) {
+				int xx = xPlayChunk + xr;
+				if (zr * zr + xr * xr < KernelConstants.radius
+						* KernelConstants.radius) {
+					if (hasChunk(dim, xx, zz)) {
+						Chunk chunk = getChunk(dim, xx, zz);
+						if (KernelConstants.advancedOpenGL) {
+							if (chunk.sec1NotClear)
+								if (Kernel.gameResources.frustum.cubeInFrustum(
+										chunk.posX, 0, chunk.posZ,
+										chunk.posX + 16, 32, chunk.posZ + 16)) {
+									chunk.render1(gm.renderer, camera);
+									chunk.sendToRenderLights1();
+								}
+							if (chunk.sec2NotClear)
+								if (Kernel.gameResources.frustum.cubeInFrustum(
+										chunk.posX, 32, chunk.posZ,
+										chunk.posX + 16, 64, chunk.posZ + 16)) {
+									chunk.render2(gm.renderer, camera);
+									chunk.sendToRenderLights2();
+								}
+							if (chunk.sec3NotClear)
+								if (Kernel.gameResources.frustum.cubeInFrustum(
+										chunk.posX, 64, chunk.posZ,
+										chunk.posX + 16, 96, chunk.posZ + 16)) {
+									chunk.render3(gm.renderer,
+											gm.waterRenderer, camera);
+									chunk.sendToRenderLights3();
+								}
+							if (chunk.sec4NotClear)
+								if (Kernel.gameResources.frustum.cubeInFrustum(
+										chunk.posX, 96, chunk.posZ,
+										chunk.posX + 16, 128, chunk.posZ + 16)) {
+									chunk.render4(gm.renderer, camera);
+									chunk.sendToRenderLights4();
+								}
+						} else {
 						}
 					}
 				}
 			}
-			time2 = 0;
 		}
 	}
 
@@ -490,9 +470,11 @@ public class World {
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void removeChunk(Chunk chunk) {
-		ChunkKey key = ChunkKey.alloc(chunk.dim, chunk.cx, chunk.cz);
-		chunks.remove(key);
-		key.free();
+		if (chunk != null) {
+			ChunkKey key = ChunkKey.alloc(chunk.dim, chunk.cx, chunk.cz);
+			chunks.remove(key);
+			key.free();
+		}
 	}
 
 	/**

@@ -75,7 +75,7 @@ void main() {
     } Light0;
     
     Light0.Color = vec3(1.0, 1.0, 1.0);
-    Light0.AmbientIntensity = vec3(0.1, 0.1, 0.1);
+    Light0.AmbientIntensity = vec3(0.4, 0.4, 0.4);
     Light0.DiffuseIntensity = vec3(0.8, 0.8, 0.8);
     Light0.Direction = directLightDirection;
 
@@ -95,7 +95,7 @@ void main() {
 	vec3 AmbientColor = Light0.AmbientIntensity * Light0.Color;
     vec3 DiffuseColor = Light0.Color * Light0.DiffuseIntensity * CalcDirectionalLightFactor(Light0.Direction, surfaceNormal);
 
-    lightIntensity =  AmbientColor;
+    lightIntensity = DiffuseColor + AmbientColor;
 	
 	float distance = length(positionRelativeToCam.xyz);
 	visibility = exp(-pow((distance*density),gradient));

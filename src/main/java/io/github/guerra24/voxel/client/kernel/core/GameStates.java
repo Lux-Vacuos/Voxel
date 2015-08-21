@@ -37,7 +37,7 @@ import org.lwjgl.util.vector.Vector3f;
  * Game States
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
- * @version 0.0.2 Build-55
+ * @version 0.0.2 Build-57
  * @since 0.0.1 Build-52
  * @category Kernel
  */
@@ -104,6 +104,11 @@ public class GameStates {
 			// Kernel.gameResources.SoundSystem.rewind("MainMenuMusic");
 			// Kernel.gameResources.SoundSystem.play("MainMenuMusic");
 			Logger.log(Thread.currentThread(), "Saving World");
+			try {
+				WorldThread.sleep(10000l);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 			for (int zr = -KernelConstants.genRadius; zr <= KernelConstants.genRadius; zr++) {
 				int zz = Kernel.world.getzPlayChunk() + zr;
 				for (int xr = -KernelConstants.genRadius; xr <= KernelConstants.genRadius; xr++) {

@@ -54,7 +54,7 @@ import org.lwjgl.util.vector.Matrix4f;
  * Gui Rendering
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
- * @version 0.0.1 Build-52
+ * @version 0.0.2 Build-57
  * @since 0.0.1 Build-52
  * @category Rendering
  */
@@ -88,6 +88,7 @@ public class GuiRenderer {
 	 * @param guis
 	 *            A list of Guis
 	 * @author Guerra24 <pablo230699@hotmail.com>
+	 * @deprecated
 	 */
 	public void render(List<GuiTexture> guis) {
 		prepare();
@@ -116,9 +117,8 @@ public class GuiRenderer {
 	 * @param guis
 	 *            A list of Guis
 	 * @author Guerra24 <pablo230699@hotmail.com>
-	 * @deprecated
 	 */
-	public void renderNoPrepare(List<GuiTexture> guis) {
+	public void renderGui(List<GuiTexture> guis) {
 		shader.start();
 		glBindVertexArray(quad.getVaoID());
 		glEnableVertexAttribArray(0);

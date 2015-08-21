@@ -50,8 +50,8 @@ import io.github.guerra24.voxel.client.kernel.world.entities.Camera;
 import io.github.guerra24.voxel.client.kernel.world.entities.Light;
 
 import java.util.List;
+import java.util.Queue;
 
-import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -59,7 +59,7 @@ import org.lwjgl.util.vector.Vector3f;
  * Water Renderer
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
- * @version 0.0.2 Build-55
+ * @version 0.0.2 Build-57
  * @since 0.0.1 Build-52
  * @category Rendering
  */
@@ -125,7 +125,7 @@ public class WaterRenderer {
 	 *            A Camera
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public void render(List<WaterTile> waters, Camera camera) {
+	public void render(Queue<WaterTile> waters, Camera camera) {
 		prepareRender(camera);
 		for (WaterTile tile : waters) {
 			Matrix4f modelMatrix = Maths.createTransformationMatrix(
@@ -177,9 +177,6 @@ public class WaterRenderer {
 		shader.loadSkyColour(KernelConstants.RED, KernelConstants.GREEN,
 				KernelConstants.BLUE);
 		shader.loadViewMatrix(camera);
-		moveFactor += KernelConstants.WAVE_SPEED
-				* DisplayManager.getFrameTimeSeconds();
-		moveFactor %= 1;
 		shader.loadProjectionMatrix(Kernel.gameResources.renderer
 				.getProjectionMatrix());
 		shader.loadMoveFactor(moveFactor);
@@ -193,6 +190,12 @@ public class WaterRenderer {
 		glBindTexture(GL_TEXTURE_2D, dudvTexture);
 		glActiveTexture(GL_TEXTURE1);
 		glBindTexture(GL_TEXTURE_2D, normalTexture);
+	}
+
+	public void update() {
+		moveFactor += KernelConstants.WAVE_SPEED
+				* DisplayManager.getFrameTimeSeconds();
+		moveFactor %= 1;
 	}
 
 	/**

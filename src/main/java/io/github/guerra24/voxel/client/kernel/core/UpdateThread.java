@@ -25,10 +25,10 @@
 package io.github.guerra24.voxel.client.kernel.core;
 
 /**
- * World Thread
+ * Update Thread
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
- * @version 0.0.2 Build-55
+ * @version 0.0.2 Build-57
  * @since 0.0.1 Build-52
  * @category Kernel
  */
@@ -40,17 +40,19 @@ public class UpdateThread extends Thread {
 			case MAINMENU:
 				break;
 			case IN_PAUSE:
-				Kernel.world.updateChunkGeneration(Kernel.gameResources.camera);
 				break;
 			case GAME:
-				Kernel.world.updateChunkGeneration(Kernel.gameResources.camera);
-				Kernel.gameResources.camera.updatePicker();
-				Kernel.world.test();
+				Kernel.gameResources.camera.updateDebug();
 				break;
 			case LOADING_WORLD:
 				break;
 			}
 			Kernel.gameResources.gameStates.switchStates();
+			try {
+				Thread.sleep((long) 33.3333);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 }

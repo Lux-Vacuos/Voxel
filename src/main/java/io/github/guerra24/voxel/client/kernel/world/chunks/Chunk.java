@@ -26,31 +26,33 @@ package io.github.guerra24.voxel.client.kernel.world.chunks;
 
 import io.github.guerra24.voxel.client.kernel.core.Kernel;
 import io.github.guerra24.voxel.client.kernel.core.KernelConstants;
+import io.github.guerra24.voxel.client.kernel.graphics.MasterRenderer;
+import io.github.guerra24.voxel.client.kernel.graphics.WaterRenderer;
 import io.github.guerra24.voxel.client.kernel.resources.models.WaterTile;
 import io.github.guerra24.voxel.client.kernel.util.Maths;
 import io.github.guerra24.voxel.client.kernel.world.block.Block;
+import io.github.guerra24.voxel.client.kernel.world.entities.Camera;
 import io.github.guerra24.voxel.client.kernel.world.entities.Entity;
 import io.github.guerra24.voxel.client.kernel.world.entities.Light;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.lwjgl.util.vector.Vector3f;
 
-public class Chunk implements IChunk {
+public class Chunk {
 
 	public int dim, cx, cz, posX, posZ;
-	public boolean isToRebuild, isChunkloaded, sec1NotClear = false,
-			sec2NotClear = false, sec3NotClear = false, sec4NotClear = false;
+	public boolean isToRebuild, sec1NotClear = false, sec2NotClear = false,
+			sec3NotClear = false, sec4NotClear = false;
 	public byte[][][] blocks;
 
-	private int sizeX, sizeY, sizeZ, time = 0;
-	public transient List<Entity> cubes1, cubes2, cubes3, cubes4;
-	public transient List<WaterTile> waters;
-	public transient List<Light> lights1;
-	public transient List<Light> lights2;
-	public transient List<Light> lights3;
-	public transient List<Light> lights4;
+	private transient Queue<Entity> cubes1, cubes2, cubes3, cubes4;
+	private transient Queue<WaterTile> waters;
+	private transient List<Light> lights1, lights2, lights3, lights4;
+	private int sizeX, sizeY, sizeZ;
 
 	public Chunk(int dim, int cx, int cz) {
 		this.dim = dim;
@@ -61,17 +63,16 @@ public class Chunk implements IChunk {
 		init();
 	}
 
-	@Override
 	public void init() {
 		sizeX = KernelConstants.CHUNK_SIZE;
 		sizeY = KernelConstants.CHUNK_HEIGHT;
 		sizeZ = KernelConstants.CHUNK_SIZE;
 
-		cubes1 = new ArrayList<Entity>();
-		cubes2 = new ArrayList<Entity>();
-		cubes3 = new ArrayList<Entity>();
-		cubes4 = new ArrayList<Entity>();
-		waters = new ArrayList<WaterTile>();
+		cubes1 = new ConcurrentLinkedQueue<Entity>();
+		cubes2 = new ConcurrentLinkedQueue<Entity>();
+		cubes3 = new ConcurrentLinkedQueue<Entity>();
+		cubes4 = new ConcurrentLinkedQueue<Entity>();
+		waters = new ConcurrentLinkedQueue<WaterTile>();
 		lights1 = new ArrayList<Light>();
 		lights2 = new ArrayList<Light>();
 		lights3 = new ArrayList<Light>();
@@ -81,39 +82,31 @@ public class Chunk implements IChunk {
 
 		createChunk();
 		rebuildChunk();
-		time = Kernel.gameResources.rand.nextInt(10);
-		isChunkloaded = true;
 	}
 
-	@Override
 	public void loadInit() {
-		cubes1 = new ArrayList<Entity>();
-		cubes2 = new ArrayList<Entity>();
-		cubes3 = new ArrayList<Entity>();
-		cubes4 = new ArrayList<Entity>();
-		waters = new ArrayList<WaterTile>();
+		cubes1 = new ConcurrentLinkedQueue<Entity>();
+		cubes2 = new ConcurrentLinkedQueue<Entity>();
+		cubes3 = new ConcurrentLinkedQueue<Entity>();
+		cubes4 = new ConcurrentLinkedQueue<Entity>();
+		waters = new ConcurrentLinkedQueue<WaterTile>();
 		lights1 = new ArrayList<Light>();
 		lights2 = new ArrayList<Light>();
 		lights3 = new ArrayList<Light>();
 		lights4 = new ArrayList<Light>();
 	}
 
-	@Override
 	public void update() {
-		time++;
 		if (isToRebuild) {
 			clear();
 			rebuildChunk();
 			isToRebuild = false;
 		}
-
-		if (time % 10 == 0) {
+		if (cubes1.isEmpty() && cubes2.isEmpty() && cubes3.isEmpty()
+				&& cubes4.isEmpty())
 			isToRebuild = true;
-			time = 0;
-		}
 	}
 
-	@Override
 	public void createChunk() {
 		for (int x = 0; x < sizeX; x++) {
 			for (int z = 0; z < sizeZ; z++) {
@@ -157,7 +150,6 @@ public class Chunk implements IChunk {
 	 * (cullFaceDown(x, y, z)) { } if (cullFaceUp(x, y, z)) { } if
 	 * (cullFaceNorth(x, y, z)) { } if (cullFaceSouth(x, y, z)) { }
 	 */
-	@Override
 	public void rebuildChunk() {
 		for (int x = 0; x < sizeX; x++) {
 			for (int z = 0; z < sizeZ; z++) {
@@ -484,7 +476,7 @@ public class Chunk implements IChunk {
 	}
 
 	private boolean cullFaceDown(int x, int y, int z) {
-		if (y < 0) {
+		if (y <= 0) {
 			return false;
 		} else {
 			if (x > (cx * sizeX) + 1) {
@@ -645,47 +637,36 @@ public class Chunk implements IChunk {
 		}
 	}
 
-	@Override
-	public void sendToRender1() {
-		Kernel.gameResources.cubes.addAll(cubes1);
+	public void render1(MasterRenderer renderer, Camera camera) {
+		renderer.renderChunk(cubes1, lights1, camera);
 	}
 
-	@Override
-	public void sendToRender2() {
-		Kernel.gameResources.cubes.addAll(cubes2);
+	public void render2(MasterRenderer renderer, Camera camera) {
+		renderer.renderChunk(cubes2, lights2, camera);
 	}
 
-	@Override
-	public void sendToRender3() {
-		Kernel.gameResources.cubes.addAll(cubes3);
+	public void render3(MasterRenderer renderer, WaterRenderer waterRenderer,
+			Camera camera) {
+		renderer.renderChunk(cubes3, lights3, camera);
+		waterRenderer.render(waters, camera);
 	}
 
-	@Override
-	public void sendToRender4() {
-		Kernel.gameResources.cubes.addAll(cubes4);
+	public void render4(MasterRenderer renderer, Camera camera) {
+		renderer.renderChunk(cubes4, lights4, camera);
 	}
 
-	@Override
-	public void sendToRenderWater() {
-		Kernel.gameResources.waters.addAll(waters);
-	}
-
-	@Override
 	public void sendToRenderLights1() {
 		Kernel.gameResources.lights.addAll(lights1);
 	}
 
-	@Override
 	public void sendToRenderLights2() {
 		Kernel.gameResources.lights.addAll(lights2);
 	}
 
-	@Override
 	public void sendToRenderLights3() {
 		Kernel.gameResources.lights.addAll(lights3);
 	}
 
-	@Override
 	public void sendToRenderLights4() {
 		Kernel.gameResources.lights.addAll(lights4);
 	}
@@ -702,15 +683,8 @@ public class Chunk implements IChunk {
 		lights4.clear();
 	}
 
-	@Override
 	public void dispose() {
-		Kernel.gameResources.cubes.removeAll(cubes1);
-		Kernel.gameResources.cubes.removeAll(cubes2);
-		Kernel.gameResources.cubes.removeAll(cubes3);
-		Kernel.gameResources.cubes.removeAll(cubes4);
-		Kernel.gameResources.waters.removeAll(waters);
 		clear();
-		isChunkloaded = false;
 	}
 
 }

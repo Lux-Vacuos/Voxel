@@ -51,10 +51,9 @@ void main(void) {
 		float nDotl = dot(unitNormal,unitLightVector);
 		float brightness = max(nDotl, 0.0);
 		totalDiffuse.xyz = totalDiffuse.xyz + (brightness * lightColour[i])/attFactor;
-		
 	}
 	vec4 light = clamp(vec4(lightIntensity, 1.0), 0.0, 1.0);
-	totalDiffuse = totalDiffuse + light;
+	totalDiffuse = light;
 	totalDiffuse = max(totalDiffuse, 0.1);
 	totalDiffuse = min(totalDiffuse, 0.8);
 	

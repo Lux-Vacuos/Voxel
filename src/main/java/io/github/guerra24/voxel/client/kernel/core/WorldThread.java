@@ -22,38 +22,33 @@
  * SOFTWARE.
  */
 
-package io.github.guerra24.voxel.client.kernel.world.chunks;
+package io.github.guerra24.voxel.client.kernel.core;
 
-public interface IChunk {
-	public void init();
-
-	public void loadInit();
-
-	public void createChunk();
-
-	public void rebuildChunk();
-
-	public void update();
-
-	public void dispose();
-
-	public void clear();
-
-	public void sendToRender1();
-
-	public void sendToRender2();
-
-	public void sendToRender3();
-
-	public void sendToRender4();
-
-	public void sendToRenderWater();
-
-	public void sendToRenderLights1();
-
-	public void sendToRenderLights2();
-
-	public void sendToRenderLights3();
-
-	public void sendToRenderLights4();
+/**
+ * World Thread
+ * 
+ * @author Guerra24 <pablo230699@hotmail.com>
+ * @version 0.0.2 Build-57
+ * @since 0.0.1 Build-52
+ * @category Kernel
+ */
+public class WorldThread extends Thread {
+	@Override
+	public void run() {
+		while (Kernel.gameResources.gameStates.loop) {
+			switch (Kernel.gameResources.gameStates.state) {
+			case MAINMENU:
+				break;
+			case IN_PAUSE:
+				Kernel.world.updateChunkGeneration(Kernel.gameResources.camera);
+				break;
+			case GAME:
+				Kernel.world.updateChunkGeneration(Kernel.gameResources.camera);
+				Kernel.world.test();
+				break;
+			case LOADING_WORLD:
+				break;
+			}
+		}
+	}
 }

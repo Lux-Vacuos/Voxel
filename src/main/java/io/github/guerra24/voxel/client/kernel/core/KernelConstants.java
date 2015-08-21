@@ -28,7 +28,7 @@ package io.github.guerra24.voxel.client.kernel.core;
  * Locations of all global variables
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
- * @version 0.0.2 Build-56
+ * @version 0.0.2 Build-57
  * @since 0.0.1 Build-52
  * @category Kernel
  */
@@ -87,7 +87,7 @@ public class KernelConstants {
 	/**
 	 * Game Build Number
 	 */
-	public static int build = 56;
+	public static int build = 57;
 	/**
 	 * Game Version
 	 */
@@ -95,16 +95,20 @@ public class KernelConstants {
 	/**
 	 * Game Debug Mode
 	 */
-	public static boolean debug = false;
+	public static boolean debug = true;
 	// World Settings
 	/**
 	 * Game Draw Distance Radius
 	 */
 	public static int radius = 2;
 	/**
+	 * Game Save Game Limit
+	 */
+	public static int radiusLimit = 8;
+	/**
 	 * Game Chunk Gen Radius
 	 */
-	public static int genRadius = radius + 10;
+	public static int genRadius = radius + radiusLimit;
 	/**
 	 * Using a custom seed
 	 */
@@ -196,7 +200,7 @@ public class KernelConstants {
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public static void update() {
-		genRadius = radius + 10;
+		genRadius = radius + radiusLimit;
 	}
 
 }

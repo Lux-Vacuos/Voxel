@@ -34,6 +34,7 @@ public class Entity {
 	private Vector3f position;
 	private float rotX, rotY, rotZ;
 	private float scale;
+	private int visibility;
 
 	public Entity(TexturedModel model, Vector3f position, float rotX,
 			float rotY, float rotZ, float scale) {
@@ -103,6 +104,14 @@ public class Entity {
 
 	public void setScale(float scale) {
 		this.scale = scale;
+	}
+
+	public int getVisibility() {
+		return visibility;
+	}
+
+	public void setVisibility(int visibility) {
+		this.visibility = visibility;
 	}
 
 }

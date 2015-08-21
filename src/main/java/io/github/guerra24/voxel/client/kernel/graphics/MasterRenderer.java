@@ -43,6 +43,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Matrix4f;
@@ -52,7 +53,7 @@ import org.lwjgl.util.vector.Vector3f;
  * Game Master Renderer
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
- * @version 0.0.2 Build-55
+ * @version 0.0.2 Build-57
  * @since 0.0.1 Build-52
  * @category Rendering
  */
@@ -105,7 +106,7 @@ public class MasterRenderer {
 	}
 
 	/**
-	 * Render the World
+	 * Render the Chunk
 	 * 
 	 * @param cubes
 	 *            A list of Cubes
@@ -115,12 +116,12 @@ public class MasterRenderer {
 	 *            A Camera
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public void renderWorld(List<Entity> cubes, List<Light> lights,
+	public void renderChunk(Queue<Entity> cubes, List<Light> lights,
 			Camera camera) {
 		for (Entity entity : cubes) {
 			processEntity(entity);
 		}
-		renderWorld(lights, camera);
+		renderChunk(lights, camera);
 	}
 
 	/**
@@ -146,7 +147,7 @@ public class MasterRenderer {
 	}
 
 	/**
-	 * World Rendering PipeLine
+	 * Chunk Rendering PipeLine
 	 * 
 	 * @param lights
 	 *            A list of lights
@@ -154,8 +155,7 @@ public class MasterRenderer {
 	 *            A Camera
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	private void renderWorld(List<Light> lights, Camera camera) {
-		prepare();
+	private void renderChunk(List<Light> lights, Camera camera) {
 		shader.start();
 		shader.loadProjectionMatrix(projectionMatrix);
 		shader.loadSkyColour(KernelConstants.RED, KernelConstants.GREEN,
@@ -211,7 +211,7 @@ public class MasterRenderer {
 	 * 
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	private void prepare() {
+	public void prepare() {
 		VoxelGL33.glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		VoxelGL33.glClearColor(KernelConstants.RED, KernelConstants.GREEN,
 				KernelConstants.BLUE, 1);
