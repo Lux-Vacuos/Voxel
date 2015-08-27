@@ -31,6 +31,7 @@ import io.github.guerra24.voxel.client.kernel.graphics.MasterRenderer;
 import io.github.guerra24.voxel.client.kernel.graphics.SkyboxRenderer;
 import io.github.guerra24.voxel.client.kernel.graphics.WaterRenderer;
 import io.github.guerra24.voxel.client.kernel.graphics.shaders.WaterShader;
+import io.github.guerra24.voxel.client.kernel.menu.MainMenu;
 import io.github.guerra24.voxel.client.kernel.resources.models.GuiTexture;
 import io.github.guerra24.voxel.client.kernel.util.Logger;
 import io.github.guerra24.voxel.client.kernel.util.MousePicker;
@@ -59,7 +60,7 @@ import com.google.gson.Gson;
  * Game Resources
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
- * @version 0.0.2 Build-57
+ * @version 0.0.2 Build-58
  * @since 0.0.1 Build-52
  * @category Assets
  */
@@ -68,9 +69,10 @@ public class GameResources {
 	public List<GuiTexture> guis2 = new ArrayList<GuiTexture>();
 	public List<GuiTexture> guis3 = new ArrayList<GuiTexture>();
 	public List<GuiTexture> guis4 = new ArrayList<GuiTexture>();
-	public List<GuiTexture> guis5 = new ArrayList<GuiTexture>();
 
 	public List<Entity> allObjects = new ArrayList<Entity>();
+	public List<Entity> mainMenuModels = new ArrayList<Entity>();
+	public List<Light> mainMenuLights = new ArrayList<Light>();
 	public List<Light> lights = new ArrayList<Light>();
 
 	public Random rand;
@@ -95,8 +97,6 @@ public class GameResources {
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public GameResources() {
-		loader = new Loader();
-		guiRenderer = new GuiRenderer(loader);
 	}
 
 	/**
@@ -105,10 +105,10 @@ public class GameResources {
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void init() {
+		loader = new Loader();
 		rand = new Random();
 		camera = new Camera();
 		gson = new Gson();
-
 		try {
 			SoundSystemConfig.addLibrary(LibraryLWJGLOpenAL.class);
 			SoundSystemConfig.setCodec("ogg", CodecJOgg.class);
@@ -117,8 +117,8 @@ public class GameResources {
 					"Unable to bind SoundSystem Libs");
 		}
 		SoundSystem = new SoundSystem();
-
 		renderer = new MasterRenderer(loader);
+		guiRenderer = new GuiRenderer(loader);
 		waterShader = new WaterShader();
 		waterRenderer = new WaterRenderer(loader, waterShader,
 				renderer.getProjectionMatrix());
@@ -146,9 +146,16 @@ public class GameResources {
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void addRes() {
+		MainMenu.loadModels(this);
+		Entity planet = new Entity(MainMenu.planet, new Vector3f(-3, 0, -3), 0,
+				90, 0, 1);
+		Light sun = new Light(new Vector3f(0, 0, 0), new Vector3f(1, 1, 1),
+				new Vector3f(1, 0.1f, 0.09f));
 		player = new Player(BlocksResources.cubeGlassUP,
 				new Vector3f(0, 80, -4), 0, 0, 0, 1);
 		allObjects.add(player);
+		mainMenuModels.add(planet);
+		mainMenuLights.add(sun);
 	}
 
 	/**

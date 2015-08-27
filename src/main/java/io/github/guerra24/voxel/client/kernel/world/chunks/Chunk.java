@@ -53,6 +53,7 @@ public class Chunk {
 	private transient Queue<WaterTile> waters;
 	private transient List<Light> lights1, lights2, lights3, lights4;
 	private int sizeX, sizeY, sizeZ;
+	private transient boolean readyToRender = true;
 
 	public Chunk(int dim, int cx, int cz) {
 		this.dim = dim;
@@ -98,9 +99,11 @@ public class Chunk {
 
 	public void update() {
 		if (isToRebuild) {
+			readyToRender = false;
 			clear();
 			rebuildChunk();
 			isToRebuild = false;
+			readyToRender = true;
 		}
 		if (cubes1.isEmpty() && cubes2.isEmpty() && cubes3.isEmpty()
 				&& cubes4.isEmpty())
@@ -638,21 +641,26 @@ public class Chunk {
 	}
 
 	public void render1(MasterRenderer renderer, Camera camera) {
-		renderer.renderChunk(cubes1, lights1, camera);
+		if (readyToRender)
+			renderer.renderChunk(cubes1, lights1, camera);
 	}
 
 	public void render2(MasterRenderer renderer, Camera camera) {
-		renderer.renderChunk(cubes2, lights2, camera);
+		if (readyToRender)
+			renderer.renderChunk(cubes2, lights2, camera);
 	}
 
 	public void render3(MasterRenderer renderer, WaterRenderer waterRenderer,
 			Camera camera) {
-		renderer.renderChunk(cubes3, lights3, camera);
-		waterRenderer.render(waters, camera);
+		if (readyToRender) {
+			renderer.renderChunk(cubes3, lights3, camera);
+			waterRenderer.render(waters, camera);
+		}
 	}
 
 	public void render4(MasterRenderer renderer, Camera camera) {
-		renderer.renderChunk(cubes4, lights4, camera);
+		if (readyToRender)
+			renderer.renderChunk(cubes4, lights4, camera);
 	}
 
 	public void sendToRenderLights1() {

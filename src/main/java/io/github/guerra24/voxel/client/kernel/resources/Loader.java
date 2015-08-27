@@ -78,7 +78,7 @@ import de.matthiasmann.twl.utils.PNGDecoder.Format;
  * Loader
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
- * @version 0.0.2 Build-55
+ * @version 0.0.2 Build-58
  * @since 0.0.1 Build-52
  * @category Assets
  */
@@ -164,7 +164,7 @@ public class Loader {
 		textures.add(texture.getTextureID());
 		return texture.getTextureID();
 	}
-	
+
 	/**
 	 * Load Block Texture
 	 * 
@@ -290,7 +290,6 @@ public class Loader {
 			e.printStackTrace();
 			Logger.error(Thread.currentThread(), "Tried to load texture "
 					+ fileName + ", didn't work");
-			System.exit(-1);
 		}
 		return new EntityTexture(buffer, width, height);
 	}

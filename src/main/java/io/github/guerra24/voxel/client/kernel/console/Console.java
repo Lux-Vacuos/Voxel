@@ -39,7 +39,7 @@ import javax.swing.text.DefaultCaret;
  * The console thread, handles the Log
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
- * @version 0.0.1 Build-52
+ * @version 0.0.2 Build-58
  * @since 0.0.1 Build-52
  */
 public class Console extends Thread {
@@ -92,7 +92,7 @@ public class Console extends Thread {
 		frame.add(scroll, BorderLayout.CENTER);
 		frame.setVisible(true);
 		frame.setResizable(false);
-		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frame.setTitle("Voxel Log Console");
 		currentThread().setName("Console");
 		Logger.log(currentThread(), "Starting Console");

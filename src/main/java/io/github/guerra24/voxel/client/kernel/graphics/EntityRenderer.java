@@ -24,7 +24,7 @@
 
 package io.github.guerra24.voxel.client.kernel.graphics;
 
-import static org.lwjgl.opengl.GL11.GL_LINES;
+import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11.GL_UNSIGNED_INT;
 import static org.lwjgl.opengl.GL11.glBindTexture;
@@ -88,7 +88,7 @@ public class EntityRenderer {
 			List<Entity> batch = entities.get(model);
 			for (Entity entity : batch) {
 				prepareInstance(entity);
-				VoxelGL33.glDrawElements(GL_LINES, model.getRawModel()
+				VoxelGL33.glDrawElements(GL_TRIANGLES, model.getRawModel()
 						.getVertexCount(), GL_UNSIGNED_INT, 0);
 			}
 			unbindTexturedModel();

@@ -37,7 +37,7 @@ import org.lwjgl.util.vector.Vector3f;
  * Game States
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
- * @version 0.0.2 Build-57
+ * @version 0.0.2 Build-58
  * @since 0.0.1 Build-52
  * @category Kernel
  */
@@ -122,7 +122,9 @@ public class GameStates {
 				}
 			}
 			Kernel.world.removeAll();
-			Kernel.gameResources.camera.setPosition(new Vector3f(0, 80, 0));
+			Kernel.gameResources.camera.setPosition(new Vector3f(-2, 0, -1));
+			Kernel.gameResources.camera.setPitch(0);
+			Kernel.gameResources.camera.setYaw(0);
 			state = State.MAINMENU;
 		}
 

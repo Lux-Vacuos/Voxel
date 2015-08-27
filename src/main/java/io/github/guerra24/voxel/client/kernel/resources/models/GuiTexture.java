@@ -30,7 +30,7 @@ import org.lwjgl.util.vector.Vector2f;
  * Gui Texture
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
- * @version 0.0.1 Build-52
+ * @version 0.0.2 Build-58
  * @since 0.0.1 Build-52
  * @category Assets
  */
@@ -104,6 +104,17 @@ public class GuiTexture {
 	 */
 	public void setPosition(Vector2f position) {
 		this.position = position;
+	}
+
+	/**
+	 * Set Scale
+	 * 
+	 * @param position
+	 *            Position
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
+	public void setScale(Vector2f scale) {
+		this.scale = scale;
 	}
 
 }

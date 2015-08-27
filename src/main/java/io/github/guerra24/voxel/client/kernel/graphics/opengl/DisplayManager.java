@@ -30,6 +30,14 @@ import io.github.guerra24.voxel.client.kernel.core.Kernel;
 import io.github.guerra24.voxel.client.kernel.core.KernelConstants;
 import io.github.guerra24.voxel.client.kernel.util.Logger;
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.nio.ByteBuffer;
+
+import javax.imageio.ImageIO;
+
 import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;
 import org.lwjgl.opengl.ContextAttribs;
@@ -41,7 +49,7 @@ import org.lwjgl.opengl.PixelFormat;
  * Display Manager
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
- * @version 0.0.2 Build-55
+ * @version 0.0.2 Build-58
  * @since 0.0.1 Build-1
  * @category OpenGL
  */
@@ -74,14 +82,20 @@ public class DisplayManager {
 		Logger.log(Thread.currentThread(), "Creating Display");
 		try {
 			attribs.withForwardCompatible(true).withProfileCore(true);
+			ByteBuffer[] list = new ByteBuffer[2];
+			list[0] = convertImageData(ImageIO.read(new File(
+					"assets/icon/icon32.png")));
+			list[1] = convertImageData(ImageIO.read(new File(
+					"assets/icon/icon64.png")));
 			Display.setDisplayMode(new DisplayMode(KernelConstants.WIDTH,
 					KernelConstants.HEIGHT));
 			Display.setTitle(KernelConstants.Title);
+			Display.setIcon(list);
 			Display.setResizable(true);
 			Display.setFullscreen(false);
 			Display.setVSyncEnabled(KernelConstants.VSYNC);
 			Display.create(pixelformat, attribs);
-		} catch (LWJGLException e) {
+		} catch (LWJGLException | IOException e) {
 			Logger.error(Thread.currentThread(), "Failed to create Display");
 			e.printStackTrace();
 		}
@@ -138,5 +152,24 @@ public class DisplayManager {
 	 */
 	private static long getCurrentTime() {
 		return Sys.getTime() * 1000 / Sys.getTimerResolution();
+	}
+
+	/**
+	 * Converts the BufferedImage to ByteBuffer
+	 * 
+	 * @param bi
+	 * @return
+	 * @throws IOException
+	 * @Deprecated
+	 */
+	public static ByteBuffer convertImageData(BufferedImage bi)
+			throws IOException {
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		ImageIO.write(bi, "jpg", baos);
+		baos.flush();
+		byte[] imageInByte = baos.toByteArray();
+		baos.close();
+		ByteBuffer buf = ByteBuffer.wrap(imageInByte);
+		return buf;
 	}
 }

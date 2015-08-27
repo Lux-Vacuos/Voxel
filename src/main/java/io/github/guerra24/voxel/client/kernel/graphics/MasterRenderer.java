@@ -160,9 +160,9 @@ public class MasterRenderer {
 		shader.loadProjectionMatrix(projectionMatrix);
 		shader.loadSkyColour(KernelConstants.RED, KernelConstants.GREEN,
 				KernelConstants.BLUE);
-		shader.loadDirectLightDirection(new Vector3f(-80, -100, -40));
 		shader.loadLights(lights);
 		shader.loadviewMatrix(camera);
+		shader.loadDirectLightDirection(new Vector3f(-80, -100, -40));
 		entityRenderer.render(entities);
 		shader.stop();
 		entities.clear();
@@ -182,6 +182,7 @@ public class MasterRenderer {
 		shader.loadProjectionMatrix(projectionMatrix);
 		shader.loadLights(lights);
 		shader.loadviewMatrix(camera);
+		shader.loadDirectLightDirection(new Vector3f(-80, -100, -40));
 		entityRenderer.render(entities);
 		shader.stop();
 		entities.clear();

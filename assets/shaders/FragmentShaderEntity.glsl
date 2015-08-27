@@ -44,7 +44,7 @@ void main(void) {
 	vec4 totalDiffuse = vec4(0.0);
 	
 	// code for dynamic light
-	for(int i=0;i<8;i++) {
+	for(int i=0;i<1;i++) {
 		float distance = length(toLightVector[i]);
 		float attFactor = attenuations[i].x + (attenuations[i].y * distance) + (attenuations[i].z * distance * distance);
 		vec3 unitLightVector = normalize(toLightVector[i]);

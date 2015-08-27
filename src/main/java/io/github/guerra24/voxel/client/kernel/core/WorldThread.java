@@ -28,7 +28,7 @@ package io.github.guerra24.voxel.client.kernel.core;
  * World Thread
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
- * @version 0.0.2 Build-57
+ * @version 0.0.2 Build-58
  * @since 0.0.1 Build-52
  * @category Kernel
  */
@@ -38,6 +38,11 @@ public class WorldThread extends Thread {
 		while (Kernel.gameResources.gameStates.loop) {
 			switch (Kernel.gameResources.gameStates.state) {
 			case MAINMENU:
+				try {
+					Thread.sleep((long) 33.3333);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 				break;
 			case IN_PAUSE:
 				Kernel.world.updateChunkGeneration(Kernel.gameResources.camera);

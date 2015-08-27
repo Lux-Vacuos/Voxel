@@ -44,7 +44,7 @@ import org.lwjgl.input.Keyboard;
  * The Kernel, Game Engine Core
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
- * @version 0.0.2 Build-57
+ * @version 0.0.2 Build-58
  * @since 0.0.1 Build-1
  * @category Kernel
  */
@@ -123,16 +123,10 @@ public class Kernel implements IKernel {
 			Logger.log(Thread.currentThread(), "Using Advanced Rendering");
 
 		gameResources = new GameResources();
-
-		GuiResources.loadingGui();
-		gameResources.guiRenderer.render(gameResources.guis5);
-		DisplayManager.updateDisplay(30);
 		api = new API();
 		api.preInit();
-
 		gameResources.init();
 		guiResources = new GuiResources();
-
 		BlocksResources.createBlocks(gameResources.loader);
 		gameResources.addRes();
 		gameResources.music();
@@ -174,7 +168,11 @@ public class Kernel implements IKernel {
 			SkyboxRenderer skyboxRenderer) {
 		switch (gm.gameStates.state) {
 		case MAINMENU:
-			guiRenderer.render(gm.guis2);
+			renderer.prepare();
+			gm.mainMenuModels.get(0).increaseRotation(0, 0.1f, 0);
+			renderer.renderEntity(gm.mainMenuModels, gm.mainMenuLights,
+					gm.camera);
+			guiRenderer.renderGui(gm.guis2);
 			DisplayManager.updateDisplay(30);
 			break;
 		case IN_PAUSE:
@@ -194,8 +192,9 @@ public class Kernel implements IKernel {
 			DisplayManager.updateDisplay(KernelConstants.FPS);
 			break;
 		case LOADING_WORLD:
-			guiRenderer.render(gm.guis3);
-			DisplayManager.updateDisplay(30);
+			renderer.prepare();
+			guiRenderer.renderGui(gm.guis3);
+			DisplayManager.updateDisplay(60);
 			break;
 		}
 	}
@@ -206,6 +205,9 @@ public class Kernel implements IKernel {
 		case MAINMENU:
 			if (Keyboard.isKeyDown(Keyboard.KEY_O))
 				Bootstrap.config.setVisible(true);
+			gm.frustum.calculateFrustum(gm.camera);
+			if (Keyboard.isKeyDown(Keyboard.KEY_T))
+				System.out.println(Kernel.renderCallsPerFrame);
 			break;
 		case IN_PAUSE:
 			if (Keyboard.isKeyDown(Keyboard.KEY_O))
@@ -215,7 +217,6 @@ public class Kernel implements IKernel {
 		case GAME:
 			gm.player.move();
 			gm.camera.move();
-			gm.camera.updatePicker();
 			gm.frustum.calculateFrustum(gm.camera);
 			gm.waterRenderer.update();
 			break;
@@ -237,8 +238,6 @@ public class Kernel implements IKernel {
 
 	@Override
 	public void dispose() {
-		gameResources.guiRenderer.render(gameResources.guis5);
-		DisplayManager.updateDisplay(30);
 		Logger.log(Thread.currentThread(), "Closing Game");
 		gameResources.cleanUp();
 		api.dispose();

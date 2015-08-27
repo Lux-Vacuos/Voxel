@@ -28,6 +28,7 @@ import io.github.guerra24.voxel.client.kernel.core.Kernel;
 import io.github.guerra24.voxel.client.kernel.core.KernelConstants;
 import io.github.guerra24.voxel.client.kernel.resources.GameResources;
 import io.github.guerra24.voxel.client.kernel.util.Logger;
+import io.github.guerra24.voxel.client.kernel.util.Maths;
 import io.github.guerra24.voxel.client.kernel.world.chunks.Chunk;
 import io.github.guerra24.voxel.client.kernel.world.chunks.ChunkKey;
 import io.github.guerra24.voxel.client.kernel.world.entities.Camera;
@@ -48,7 +49,7 @@ import org.lwjgl.util.vector.Vector3f;
  * World
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
- * @version 0.0.2 Build-57
+ * @version 0.0.2 Build-58
  * @since 0.0.1 Build-52
  * @category World
  */
@@ -78,6 +79,11 @@ public class World {
 	 */
 	private int xPlayChunk;
 	private int zPlayChunk;
+
+	/**
+	 * Temporal Radius
+	 */
+	public transient int tempRadius = 0;
 
 	/**
 	 * Start a new World
@@ -113,7 +119,7 @@ public class World {
 	private void initialize() {
 		noise = new SimplexNoise(128, 0.2f, seed.nextInt());
 		chunks = new HashMap<ChunkKey, Chunk>();
-		Kernel.gameResources.camera.setPosition(new Vector3f(0, 128, 0));
+		Kernel.gameResources.camera.setPosition(new Vector3f(30000000, 128, Maths.randInt(-200, 200)));
 		Kernel.gameResources.player.setPosition(Kernel.gameResources.camera
 				.getPosition());
 	}
@@ -129,23 +135,15 @@ public class World {
 		Logger.log(Thread.currentThread(), "Generating World");
 		xPlayChunk = (int) (camera.getPosition().x / 16);
 		zPlayChunk = (int) (camera.getPosition().z / 16);
-		float i = -0.45f;
-		boolean k = true;
+		float i = 0f;
 		for (int zr = -10; zr <= 10; zr++) {
 			int zz = zPlayChunk + zr;
 			for (int xr = -10; xr <= 10; xr++) {
 				int xx = xPlayChunk + xr;
 				if (zr * zr + xr * xr < 10 * 10) {
-					if (i >= 0.4f)
-						k = false;
-					if (i <= -0.45f)
-						k = true;
-					if (k == false)
-						Kernel.gameResources.guis3.get(1).setPosition(
-								new Vector2f(i -= 0.01f, 0.1f));
-					if (k == true)
-						Kernel.gameResources.guis3.get(1).setPosition(
-								new Vector2f(i += 0.01f, 0.1f));
+					i += 0.00200f;
+					Kernel.gameResources.guis3.get(1).setScale(
+							new Vector2f(i, 0.041f));
 					if (!hasChunk(dim, xx, zz)) {
 						if (existChunkFile(dim, xx, zz)) {
 							loadChunk(dim, xx, zz);
@@ -178,11 +176,11 @@ public class World {
 		if (camera.getPosition().z > 0)
 			zPlayChunk = (int) ((camera.getPosition().z) / 16);
 		KernelConstants.update();
-		for (int zr = -KernelConstants.genRadius; zr <= KernelConstants.genRadius; zr++) {
+		for (int zr = -tempRadius; zr <= tempRadius; zr++) {
 			int zz = zPlayChunk + zr;
-			for (int xr = -KernelConstants.genRadius; xr <= KernelConstants.genRadius; xr++) {
+			for (int xr = -tempRadius; xr <= tempRadius; xr++) {
 				int xx = xPlayChunk + xr;
-				if (zr * zr + xr * xr < (KernelConstants.genRadius - KernelConstants.radiusLimit)
+				if (zr * zr + xr * xr <= (KernelConstants.genRadius - KernelConstants.radiusLimit)
 						* (KernelConstants.genRadius - KernelConstants.radiusLimit)) {
 					if (!hasChunk(dim, xx, zz)) {
 						if (existChunkFile(dim, xx, zz)) {
@@ -197,8 +195,7 @@ public class World {
 				}
 				if (zr * zr + xr * xr <= KernelConstants.genRadius
 						* KernelConstants.genRadius
-						&& zr * zr + xr * xr >= (KernelConstants.genRadius
-								- KernelConstants.radiusLimit - 1)
+						&& zr * zr + xr * xr >= (KernelConstants.genRadius - KernelConstants.radiusLimit)
 								* (KernelConstants.genRadius
 										- KernelConstants.radiusLimit - 1)) {
 					if (hasChunk(dim, xx, zz)) {
@@ -208,6 +205,8 @@ public class World {
 				}
 			}
 		}
+		if (tempRadius <= KernelConstants.genRadius)
+			tempRadius++;
 	}
 
 	/**
@@ -219,11 +218,11 @@ public class World {
 	 */
 	public void updateChunksRender(GameResources gm, Camera camera) {
 		Kernel.gameResources.lights.clear();
-		for (int zr = -KernelConstants.radius; zr <= KernelConstants.radius; zr++) {
+		for (int zr = -tempRadius; zr <= tempRadius; zr++) {
 			int zz = zPlayChunk + zr;
-			for (int xr = -KernelConstants.radius; xr <= KernelConstants.radius; xr++) {
+			for (int xr = -tempRadius; xr <= tempRadius; xr++) {
 				int xx = xPlayChunk + xr;
-				if (zr * zr + xr * xr < KernelConstants.radius
+				if (zr * zr + xr * xr <= KernelConstants.radius
 						* KernelConstants.radius) {
 					if (hasChunk(dim, xx, zz)) {
 						Chunk chunk = getChunk(dim, xx, zz);
@@ -258,6 +257,14 @@ public class World {
 									chunk.sendToRenderLights4();
 								}
 						} else {
+							chunk.render1(gm.renderer, camera);
+							chunk.sendToRenderLights1();
+							chunk.render2(gm.renderer, camera);
+							chunk.sendToRenderLights2();
+							chunk.render3(gm.renderer, gm.waterRenderer, camera);
+							chunk.sendToRenderLights3();
+							chunk.render4(gm.renderer, camera);
+							chunk.sendToRenderLights4();
 						}
 					}
 				}

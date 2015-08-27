@@ -33,7 +33,7 @@ import org.lwjgl.util.vector.Vector2f;
  * Gui Resources
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
- * @version 0.0.1 Build-52
+ * @version 0.0.2 Build-58
  * @since 0.0.1 Build-52
  * @category Assets
  */
@@ -46,9 +46,8 @@ public class GuiResources {
 
 	public GuiTexture button5;
 	public GuiTexture gui;
-	public GuiTexture menu;
-
-	public static GuiTexture load;
+	public GuiTexture stats;
+	public GuiTexture life;
 
 	/**
 	 * Constructor
@@ -69,6 +68,12 @@ public class GuiResources {
 		gui = new GuiTexture(
 				Kernel.gameResources.loader.loadTextureGui("HotBar"),
 				new Vector2f(0.6f, -0.425f), new Vector2f(1.6f, 1.425f));
+		stats = new GuiTexture(
+				Kernel.gameResources.loader.loadTextureGui("Stats"),
+				new Vector2f(0.6f, -0.425f), new Vector2f(1.6f, 1.425f));
+		life = new GuiTexture(
+				Kernel.gameResources.loader.loadTextureGui("Life"),
+				new Vector2f(-0.958f, 0.735f), new Vector2f(0.346f, 0.02f));
 		button1 = new GuiTexture(
 				Kernel.gameResources.loader.loadTextureGui("ButtonExit"),
 				new Vector2f(0.0f, -0.3f), new Vector2f(0.3f, 0.12f));
@@ -80,16 +85,9 @@ public class GuiResources {
 				new Vector2f(0.6f, -0.425f), new Vector2f(1.6f, 1.425f));
 		loadBar = new GuiTexture(
 				Kernel.gameResources.loader.loadTextureGui("LoadBar"),
-				new Vector2f(-0.5f, 0.1f), new Vector2f(0.1f, 0.1f));
+				new Vector2f(-0.3f, 0.15f), new Vector2f(0.1f, 0.1f));
 		button5 = new GuiTexture(button1.getTexture(),
 				new Vector2f(0.0f, -0.7f), new Vector2f(0.2f, 0.12f));
-	}
-
-	public static void loadingGui() {
-		load = new GuiTexture(
-				Kernel.gameResources.loader.loadTextureGui("Loading"),
-				new Vector2f(0.6f, -0.425f), new Vector2f(1.6f, 1.425f));
-		Kernel.gameResources.guis5.add(load);
 	}
 
 	/**
@@ -98,6 +96,8 @@ public class GuiResources {
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void addGuiTextures() {
+		Kernel.gameResources.guis.add(stats);
+		Kernel.gameResources.guis.add(life);
 		Kernel.gameResources.guis.add(gui);
 		Kernel.gameResources.guis2.add(button1);
 		Kernel.gameResources.guis2.add(button2);

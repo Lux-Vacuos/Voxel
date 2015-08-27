@@ -28,31 +28,34 @@ import io.github.guerra24.voxel.client.kernel.core.Kernel;
 import io.github.guerra24.voxel.client.kernel.core.KernelConstants;
 import io.github.guerra24.voxel.client.kernel.graphics.opengl.DisplayManager;
 
-import org.lwjgl.input.Keyboard;
+import static org.lwjgl.input.Keyboard.*;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
+import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
 /**
  * Camera
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
- * @version 0.0.2 Build-57
+ * @version 0.0.2 Build-58
  * @since 0.0.1 Build-5
  */
 public class Camera {
 
-	private Vector3f position = new Vector3f(0, 80, 0);
+	private Vector3f position = new Vector3f(-2, 0, -1);
 	private float pitch;
 	private float yaw;
 	private float speed;
 	private float multiplierMouse = 24;
 	private float multiplierMovement = 24;
+	private int life = 0;
 	private byte block = 2;
 
 	private static int mouseSpeed = 2;
 	private static final int maxLookUp = 90;
 	private static final int maxLookDown = -90;
+
 	public boolean isMoved = false;
 
 	public Camera() {
@@ -79,7 +82,7 @@ public class Camera {
 		} else if (pitch - mouseDY > maxLookUp) {
 			pitch = maxLookUp;
 		}
-		if (Keyboard.isKeyDown(Keyboard.KEY_W)) {
+		if (isKeyDown(KEY_W)) {
 			position.z += -(float) Math.cos(Math.toRadians(yaw))
 					* DisplayManager.getFrameTimeSeconds() * speed
 					* multiplierMovement;
@@ -88,7 +91,7 @@ public class Camera {
 					* multiplierMovement;
 			isMoved = true;
 
-		} else if (Keyboard.isKeyDown(Keyboard.KEY_S)) {
+		} else if (isKeyDown(KEY_S)) {
 
 			position.z -= -(float) Math.cos(Math.toRadians(yaw))
 					* DisplayManager.getFrameTimeSeconds() * speed
@@ -99,7 +102,7 @@ public class Camera {
 			isMoved = true;
 		}
 
-		if (Keyboard.isKeyDown(Keyboard.KEY_D)) {
+		if (isKeyDown(KEY_D)) {
 			position.z += (float) Math.sin(Math.toRadians(yaw))
 					* DisplayManager.getFrameTimeSeconds() * speed
 					* multiplierMovement;
@@ -107,7 +110,7 @@ public class Camera {
 					* DisplayManager.getFrameTimeSeconds() * speed
 					* multiplierMovement;
 			isMoved = true;
-		} else if (Keyboard.isKeyDown(Keyboard.KEY_A)) {
+		} else if (isKeyDown(KEY_A)) {
 			position.z -= (float) Math.sin(Math.toRadians(yaw))
 					* DisplayManager.getFrameTimeSeconds() * speed
 					* multiplierMovement;
@@ -116,46 +119,53 @@ public class Camera {
 					* multiplierMovement;
 			isMoved = true;
 		}
-		if (Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
+		if (isKeyDown(KEY_SPACE)) {
 			// position.y += DisplayManager.getFrameTimeSeconds() * speed
 			// * multiplierMovement;
 			Kernel.gameResources.player.jump();
 		}
-		if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
+		if (isKeyDown(KEY_LSHIFT)) {
 			// position.y -= DisplayManager.getFrameTimeSeconds() * speed
 			// * multiplierMovement;
 			speed = 0.1f;
 		} else {
 			speed = 0.2f;
 		}
-		if (Keyboard.isKeyDown(Keyboard.KEY_LCONTROL)) {
+		if (isKeyDown(KEY_LCONTROL)) {
 			speed = 1;
 		} else {
 			speed = 0.2f;
 		}
 
-		if (Keyboard.isKeyDown(Keyboard.KEY_T))
+		if (isKeyDown(KEY_T))
 			System.out.println(Kernel.renderCallsPerFrame);
-		if (Keyboard.isKeyDown(Keyboard.KEY_Y))
+		if (isKeyDown(KEY_Y))
 			System.out.println(position);
+		updatePlayerState();
+	}
+
+	public void updatePlayerState() {
+		if (isKeyDown(KEY_K))
+			life += 1;
+		setLife(life);
 	}
 
 	public void updatePicker() {
-		if (Keyboard.isKeyDown(Keyboard.KEY_1))
+		if (isKeyDown(KEY_1))
 			block = 1;
-		else if (Keyboard.isKeyDown(Keyboard.KEY_2))
+		else if (isKeyDown(KEY_2))
 			block = 2;
-		else if (Keyboard.isKeyDown(Keyboard.KEY_3))
+		else if (isKeyDown(KEY_3))
 			block = 3;
-		else if (Keyboard.isKeyDown(Keyboard.KEY_4))
+		else if (isKeyDown(KEY_4))
 			block = 4;
-		else if (Keyboard.isKeyDown(Keyboard.KEY_5))
+		else if (isKeyDown(KEY_5))
 			block = 5;
-		else if (Keyboard.isKeyDown(Keyboard.KEY_6))
+		else if (isKeyDown(KEY_6))
 			block = 6;
-		else if (Keyboard.isKeyDown(Keyboard.KEY_7))
+		else if (isKeyDown(KEY_7))
 			block = 8;
-		else if (Keyboard.isKeyDown(Keyboard.KEY_8))
+		else if (isKeyDown(KEY_8))
 			block = 9;
 		if (Mouse.isButtonDown(0)) {
 			Kernel.gameResources.mouse.update();
@@ -179,8 +189,7 @@ public class Camera {
 	}
 
 	public void updateDebug() {
-		if (Keyboard.isKeyDown(Keyboard.KEY_F3)
-				&& Keyboard.isKeyDown(Keyboard.KEY_R))
+		if (isKeyDown(KEY_F3) && isKeyDown(KEY_R))
 			for (int zr = -KernelConstants.genRadius; zr <= KernelConstants.genRadius; zr++) {
 				int zz = Kernel.world.getzPlayChunk() + zr;
 				for (int xr = -KernelConstants.genRadius; xr <= KernelConstants.genRadius; xr++) {
@@ -190,6 +199,7 @@ public class Camera {
 						if (Kernel.world.hasChunk(Kernel.world.dim, xx, zz)) {
 							Kernel.world.getChunk(Kernel.world.dim, xx, zz)
 									.clear();
+							Kernel.world.tempRadius = 0;
 						}
 					}
 				}
@@ -203,10 +213,6 @@ public class Camera {
 
 	public void unlockMouse() {
 		Mouse.setGrabbed(false);
-	}
-
-	public void invertPitch() {
-		this.pitch = -pitch;
 	}
 
 	public Vector3f getPosition() {
@@ -223,5 +229,27 @@ public class Camera {
 
 	public float getYaw() {
 		return yaw;
+	}
+
+	public void setPitch(float pitch) {
+		this.pitch = pitch;
+	}
+
+	public void setYaw(float yaw) {
+		this.yaw = yaw;
+	}
+
+	public float getLife() {
+		return life;
+	}
+
+	public void setLife(int life) {
+		if (life >= 0 && life <= 20) {
+			float temp = 0;
+			for (int templ = 0; templ < life; temp += 0.0173f)
+				templ += 1;
+			Kernel.guiResources.life.setScale(new Vector2f(temp, 0.02f));
+			this.life = life;
+		}
 	}
 }
