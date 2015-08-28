@@ -45,15 +45,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 
-import org.lwjgl.opengl.Display;
-import org.lwjgl.util.vector.Matrix4f;
-import org.lwjgl.util.vector.Vector3f;
+import org.lwjglx.opengl.Display;
+import org.lwjglx.util.vector.Matrix4f;
+import org.lwjglx.util.vector.Vector3f;
 
 /**
  * Game Master Renderer
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
- * @version 0.0.2 Build-57
+ * @version 0.0.3 Build-59
  * @since 0.0.1 Build-52
  * @category Rendering
  */

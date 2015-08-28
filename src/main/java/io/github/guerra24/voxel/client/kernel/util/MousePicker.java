@@ -27,11 +27,11 @@ package io.github.guerra24.voxel.client.kernel.util;
 import io.github.guerra24.voxel.client.kernel.core.KernelConstants;
 import io.github.guerra24.voxel.client.kernel.world.entities.Camera;
 
-import org.lwjgl.opengl.Display;
-import org.lwjgl.util.vector.Matrix4f;
-import org.lwjgl.util.vector.Vector2f;
-import org.lwjgl.util.vector.Vector3f;
-import org.lwjgl.util.vector.Vector4f;
+import org.lwjglx.opengl.Display;
+import org.lwjglx.util.vector.Matrix4f;
+import org.lwjglx.util.vector.Vector2f;
+import org.lwjglx.util.vector.Vector3f;
+import org.lwjglx.util.vector.Vector4f;
 
 public class MousePicker {
 

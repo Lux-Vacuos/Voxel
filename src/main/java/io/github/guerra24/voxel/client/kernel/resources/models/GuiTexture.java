@@ -24,13 +24,13 @@
 
 package io.github.guerra24.voxel.client.kernel.resources.models;
 
-import org.lwjgl.util.vector.Vector2f;
+import org.lwjglx.util.vector.Vector2f;
 
 /**
  * Gui Texture
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
- * @version 0.0.2 Build-58
+ * @version 0.0.3 Build-59
  * @since 0.0.1 Build-52
  * @category Assets
  */

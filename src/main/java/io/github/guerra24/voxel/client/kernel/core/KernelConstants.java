@@ -28,7 +28,7 @@ package io.github.guerra24.voxel.client.kernel.core;
  * Locations of all global variables
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
- * @version 0.0.2 Build-58
+ * @version 0.0.3 Build-59
  * @since 0.0.1 Build-52
  * @category Kernel
  */
@@ -87,11 +87,11 @@ public class KernelConstants {
 	/**
 	 * Game Build Number
 	 */
-	public static int build = 58;
+	public static int build = 59;
 	/**
 	 * Game Version
 	 */
-	public static String version = "0.0.2";
+	public static String version = "0.0.3";
 	/**
 	 * Game Debug Mode
 	 */

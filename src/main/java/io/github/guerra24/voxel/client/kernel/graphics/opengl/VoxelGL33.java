@@ -27,14 +27,12 @@ package io.github.guerra24.voxel.client.kernel.graphics.opengl;
 import io.github.guerra24.voxel.client.kernel.core.Kernel;
 
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.util.Color;
-import org.lwjgl.util.Rectangle;
 
 /**
  * Voxel OpenGL Calls Manager
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
- * @version 0.0.1 Build-52
+ * @version 0.0.3 Build-59
  * @since 0.0.1 Build-52
  * @category OpenGL
  */
@@ -75,18 +73,6 @@ public final class VoxelGL33 {
 	public static void glBlendFunc(int src, int dst) {
 		GL11.glBlendFunc(src, dst);
 		VoxelGLError.check();
-	}
-
-	/**
-	 * glClearColor
-	 * 
-	 * @param color
-	 *            Color
-	 * @author Guerra24 <pablo230699@hotmail.com>
-	 */
-	public static void glClearColor(Color color) {
-		GL11.glClearColor(color.getRed(), color.getGreen(), color.getBlue(),
-				color.getAlpha());
 	}
 
 	/**
@@ -155,17 +141,6 @@ public final class VoxelGL33 {
 		VoxelGLError.check();
 
 		Kernel.renderCalls++;
-	}
-
-	/**
-	 * glViewport
-	 * 
-	 * @param rect
-	 *            Rectangle
-	 * @author Guerra24 <pablo230699@hotmail.com>
-	 */
-	public static void glViewport(Rectangle rect) {
-		glViewport(rect.getX(), rect.getY(), rect.getWidth(), rect.getHeight());
 	}
 
 	/**

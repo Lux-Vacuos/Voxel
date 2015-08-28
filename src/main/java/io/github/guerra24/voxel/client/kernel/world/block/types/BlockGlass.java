@@ -1,11 +1,11 @@
 package io.github.guerra24.voxel.client.kernel.world.block.types;
 
-import org.lwjgl.util.vector.Vector3f;
-
 import io.github.guerra24.voxel.client.kernel.resources.models.WaterTile;
 import io.github.guerra24.voxel.client.kernel.world.block.Block;
 import io.github.guerra24.voxel.client.kernel.world.block.BlocksResources;
 import io.github.guerra24.voxel.client.kernel.world.entities.Entity;
+
+import org.lwjglx.util.vector.Vector3f;
 
 public class BlockGlass extends Block {
 

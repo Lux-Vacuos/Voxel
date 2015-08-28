@@ -46,7 +46,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import org.lwjgl.util.vector.Vector3f;
+import org.lwjglx.util.vector.Vector3f;
 
 import paulscode.sound.SoundSystem;
 import paulscode.sound.SoundSystemConfig;
@@ -60,7 +60,7 @@ import com.google.gson.Gson;
  * Game Resources
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
- * @version 0.0.2 Build-58
+ * @version 0.0.3 Build-59
  * @since 0.0.1 Build-52
  * @category Assets
  */

@@ -35,7 +35,7 @@ import java.io.File;
  * Initialize the basic game code
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
- * @version 0.0.2 Build-55
+ * @version 0.0.3 Build-59
  * @since 0.0.1 Build-52
  */
 public class Bootstrap {
@@ -132,7 +132,7 @@ public class Bootstrap {
 		run();
 		if (KernelConstants.debug) {
 			System.setProperty("org.lwjgl.librarypath", new File(
-					"build/natives/windows").getAbsolutePath());
+					"build/natives").getAbsolutePath());
 		}
 		new Kernel(false);
 	}

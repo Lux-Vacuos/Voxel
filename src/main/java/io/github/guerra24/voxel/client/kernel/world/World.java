@@ -42,14 +42,14 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Random;
 
-import org.lwjgl.util.vector.Vector2f;
-import org.lwjgl.util.vector.Vector3f;
+import org.lwjglx.util.vector.Vector2f;
+import org.lwjglx.util.vector.Vector3f;
 
 /**
  * World
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
- * @version 0.0.2 Build-58
+ * @version 0.0.3 Build-59
  * @since 0.0.1 Build-52
  * @category World
  */
@@ -119,7 +119,7 @@ public class World {
 	private void initialize() {
 		noise = new SimplexNoise(128, 0.2f, seed.nextInt());
 		chunks = new HashMap<ChunkKey, Chunk>();
-		Kernel.gameResources.camera.setPosition(new Vector3f(30000000, 128, Maths.randInt(-200, 200)));
+		Kernel.gameResources.camera.setPosition(new Vector3f(Maths.randInt(-200, 200), 128, Maths.randInt(-200, 200)));
 		Kernel.gameResources.player.setPosition(Kernel.gameResources.camera
 				.getPosition());
 	}

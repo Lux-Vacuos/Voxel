@@ -43,13 +43,13 @@ import io.github.guerra24.voxel.client.kernel.world.entities.Entity;
 import java.util.List;
 import java.util.Map;
 
-import org.lwjgl.util.vector.Matrix4f;
+import org.lwjglx.util.vector.Matrix4f;
 
 /**
  * Entity Rendering
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
- * @version 0.0.2 Build-57
+ * @version 0.0.3 Build-59
  * @since 0.0.1 Build-52
  * @category Rendering
  */

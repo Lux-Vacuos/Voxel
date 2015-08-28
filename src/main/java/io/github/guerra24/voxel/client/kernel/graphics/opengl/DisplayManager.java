@@ -30,26 +30,23 @@ import io.github.guerra24.voxel.client.kernel.core.Kernel;
 import io.github.guerra24.voxel.client.kernel.core.KernelConstants;
 import io.github.guerra24.voxel.client.kernel.util.Logger;
 
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.ByteBuffer;
 
-import javax.imageio.ImageIO;
-
-import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;
-import org.lwjgl.opengl.ContextAttribs;
-import org.lwjgl.opengl.Display;
-import org.lwjgl.opengl.DisplayMode;
-import org.lwjgl.opengl.PixelFormat;
+import org.lwjglx.LWJGLException;
+import org.lwjglx.opengl.Display;
+import org.lwjglx.opengl.DisplayMode;
+
+import de.matthiasmann.twl.utils.PNGDecoder;
 
 /**
  * Display Manager
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
- * @version 0.0.2 Build-58
+ * @version 0.0.3 Build-59
  * @since 0.0.1 Build-1
  * @category OpenGL
  */
@@ -63,15 +60,6 @@ public class DisplayManager {
 	 * Game Delta Value
 	 */
 	private static float delta;
-	/**
-	 * Display Pixel Format
-	 */
-	private static PixelFormat pixelformat = new PixelFormat();
-
-	/**
-	 * Display Context Attribs
-	 */
-	private static ContextAttribs attribs = new ContextAttribs(3, 3);
 
 	/**
 	 * Creates and Sets the Display
@@ -81,20 +69,20 @@ public class DisplayManager {
 	public static void createDisplay() {
 		Logger.log(Thread.currentThread(), "Creating Display");
 		try {
-			attribs.withForwardCompatible(true).withProfileCore(true);
-			ByteBuffer[] list = new ByteBuffer[2];
-			list[0] = convertImageData(ImageIO.read(new File(
-					"assets/icon/icon32.png")));
-			list[1] = convertImageData(ImageIO.read(new File(
-					"assets/icon/icon64.png")));
+			String[] IconPath = new String[2];
+			IconPath[0] = "assets/icon/icon32.png";
+			IconPath[1] = "assets/icon/icon64.png";
+			ByteBuffer[] icon_array = new ByteBuffer[IconPath.length];
+			for (int i = 0; i < IconPath.length; i++) {
+				icon_array[i] = ByteBuffer.allocateDirect(1);
+				String path = IconPath[i];
+				icon_array[i] = loadIcon(path);
+			}
 			Display.setDisplayMode(new DisplayMode(KernelConstants.WIDTH,
 					KernelConstants.HEIGHT));
 			Display.setTitle(KernelConstants.Title);
-			Display.setIcon(list);
 			Display.setResizable(true);
-			Display.setFullscreen(false);
-			Display.setVSyncEnabled(KernelConstants.VSYNC);
-			Display.create(pixelformat, attribs);
+			Display.create();
 		} catch (LWJGLException | IOException e) {
 			Logger.error(Thread.currentThread(), "Failed to create Display");
 			e.printStackTrace();
@@ -151,25 +139,31 @@ public class DisplayManager {
 	 * @return Current Time
 	 */
 	private static long getCurrentTime() {
-		return Sys.getTime() * 1000 / Sys.getTimerResolution();
+		return org.lwjglx.Sys.getTime() * 1000
+				/ org.lwjglx.Sys.getTimerResolution();
 	}
 
 	/**
-	 * Converts the BufferedImage to ByteBuffer
+	 * Loads the Icon
 	 * 
-	 * @param bi
-	 * @return
+	 * @param path
+	 *            Icon Path
+	 * @return ByteBuffer
 	 * @throws IOException
-	 * @Deprecated
+	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public static ByteBuffer convertImageData(BufferedImage bi)
-			throws IOException {
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		ImageIO.write(bi, "jpg", baos);
-		baos.flush();
-		byte[] imageInByte = baos.toByteArray();
-		baos.close();
-		ByteBuffer buf = ByteBuffer.wrap(imageInByte);
-		return buf;
+	private static ByteBuffer loadIcon(String path) throws IOException {
+		InputStream inputStream = new FileInputStream(path);
+		try {
+			PNGDecoder decoder = new PNGDecoder(inputStream);
+			ByteBuffer bytebuf = ByteBuffer.allocateDirect(decoder.getWidth()
+					* decoder.getHeight() * 4);
+			decoder.decode(bytebuf, decoder.getWidth() * 4,
+					PNGDecoder.Format.RGBA);
+			bytebuf.flip();
+			return bytebuf;
+		} finally {
+			inputStream.close();
+		}
 	}
 }

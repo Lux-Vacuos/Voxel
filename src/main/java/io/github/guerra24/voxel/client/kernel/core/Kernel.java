@@ -38,13 +38,13 @@ import io.github.guerra24.voxel.client.kernel.util.Logger;
 import io.github.guerra24.voxel.client.kernel.world.World;
 import io.github.guerra24.voxel.client.kernel.world.block.BlocksResources;
 
-import org.lwjgl.input.Keyboard;
+import org.lwjglx.input.Keyboard;
 
 /**
  * The Kernel, Game Engine Core
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
- * @version 0.0.2 Build-58
+ * @version 0.0.3 Build-59
  * @since 0.0.1 Build-1
  * @category Kernel
  */

@@ -29,13 +29,11 @@ import static org.lwjgl.opengl.GL11.GL_VENDOR;
 import static org.lwjgl.opengl.GL11.glGetString;
 import io.github.guerra24.voxel.client.kernel.util.Logger;
 
-import org.lwjgl.opengl.Display;
-
 /**
  * System Info
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
- * @version 0.0.1 Build-52
+ * @version 0.0.3 Build-59
  * @since 0.0.1 Build-52
  * @category OpenGL
  */
@@ -46,19 +44,9 @@ public class SystemInfo {
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public static void printSystemInfo() {
-
 		Logger.log(Thread.currentThread(), "Vendor: " + glGetString(GL_VENDOR));
-
 		Logger.log(Thread.currentThread(), "Renderer: "
 				+ glGetString(GL_RENDERER));
-
-		if (Display.getVersion() != null) {
-			Logger.log(Thread.currentThread(),
-					"Driver Version: " + Display.getVersion());
-		} else {
-			Logger.warn(Thread.currentThread(),
-					"Could not detect driver version");
-		}
 
 	}
 

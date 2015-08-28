@@ -40,7 +40,7 @@ import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import org.lwjgl.util.vector.Vector3f;
+import org.lwjglx.util.vector.Vector3f;
 
 public class Chunk {
 

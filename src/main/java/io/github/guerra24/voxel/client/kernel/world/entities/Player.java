@@ -29,7 +29,7 @@ import io.github.guerra24.voxel.client.kernel.graphics.opengl.DisplayManager;
 import io.github.guerra24.voxel.client.kernel.resources.models.TexturedModel;
 import io.github.guerra24.voxel.client.kernel.world.block.Block;
 
-import org.lwjgl.util.vector.Vector3f;
+import org.lwjglx.util.vector.Vector3f;
 
 public class Player extends Entity {
 	private static final float GRAVITY = -10;

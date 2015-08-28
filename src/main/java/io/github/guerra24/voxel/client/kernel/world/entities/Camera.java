@@ -28,17 +28,17 @@ import io.github.guerra24.voxel.client.kernel.core.Kernel;
 import io.github.guerra24.voxel.client.kernel.core.KernelConstants;
 import io.github.guerra24.voxel.client.kernel.graphics.opengl.DisplayManager;
 
-import static org.lwjgl.input.Keyboard.*;
-import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.Display;
-import org.lwjgl.util.vector.Vector2f;
-import org.lwjgl.util.vector.Vector3f;
+import static org.lwjglx.input.Keyboard.*;
+import org.lwjglx.input.Mouse;
+import org.lwjglx.opengl.Display;
+import org.lwjglx.util.vector.Vector2f;
+import org.lwjglx.util.vector.Vector3f;
 
 /**
  * Camera
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
- * @version 0.0.2 Build-58
+ * @version 0.0.3 Build-59
  * @since 0.0.1 Build-5
  */
 public class Camera {

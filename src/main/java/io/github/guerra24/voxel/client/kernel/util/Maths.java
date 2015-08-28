@@ -28,15 +28,15 @@ import io.github.guerra24.voxel.client.kernel.world.entities.Camera;
 
 import java.util.Random;
 
-import org.lwjgl.util.vector.Matrix4f;
-import org.lwjgl.util.vector.Vector2f;
-import org.lwjgl.util.vector.Vector3f;
+import org.lwjglx.util.vector.Matrix4f;
+import org.lwjglx.util.vector.Vector2f;
+import org.lwjglx.util.vector.Vector3f;
 
 /**
  * Maths
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
- * @version 0.0.1 Build-52
+ * @version 0.0.3 Build-59
  * @since 0.0.1 Build-52
  * @category Util
  */

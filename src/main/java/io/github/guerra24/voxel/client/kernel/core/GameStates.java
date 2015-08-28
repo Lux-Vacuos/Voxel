@@ -29,15 +29,15 @@ import io.github.guerra24.voxel.client.kernel.util.Logger;
 
 import java.util.Random;
 
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.opengl.Display;
-import org.lwjgl.util.vector.Vector3f;
+import org.lwjglx.input.Keyboard;
+import org.lwjglx.opengl.Display;
+import org.lwjglx.util.vector.Vector3f;
 
 /**
  * Game States
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
- * @version 0.0.2 Build-58
+ * @version 0.0.3 Build-59
  * @since 0.0.1 Build-52
  * @category Kernel
  */

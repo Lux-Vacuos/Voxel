@@ -46,7 +46,7 @@ import static org.lwjgl.opengl.GL20.glUniform1i;
 import static org.lwjgl.opengl.GL20.glUniform2f;
 import static org.lwjgl.opengl.GL20.glUniform3f;
 import static org.lwjgl.opengl.GL20.glUniform4f;
-import static org.lwjgl.opengl.GL20.glUniformMatrix4;
+import static org.lwjgl.opengl.GL20.glUniformMatrix4fv;
 import static org.lwjgl.opengl.GL20.glUseProgram;
 import static org.lwjgl.opengl.GL20.glValidateProgram;
 import io.github.guerra24.voxel.client.kernel.util.Logger;
@@ -57,16 +57,16 @@ import java.io.IOException;
 import java.nio.FloatBuffer;
 
 import org.lwjgl.BufferUtils;
-import org.lwjgl.util.vector.Matrix4f;
-import org.lwjgl.util.vector.Vector2f;
-import org.lwjgl.util.vector.Vector3f;
-import org.lwjgl.util.vector.Vector4f;
+import org.lwjglx.util.vector.Matrix4f;
+import org.lwjglx.util.vector.Vector2f;
+import org.lwjglx.util.vector.Vector3f;
+import org.lwjglx.util.vector.Vector4f;
 
 /**
  * Shader Program, Use to create shaders
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
- * @version 0.0.1 Build-52
+ * @version 0.0.3 Build-59
  * @since 0.0.1 Build-52
  * @category Rendering
  */
@@ -271,7 +271,7 @@ public abstract class ShaderProgram {
 	protected void loadMatrix(int location, Matrix4f matrix) {
 		matrix.store(matrixBuffer);
 		matrixBuffer.flip();
-		glUniformMatrix4(location, false, matrixBuffer);
+		glUniformMatrix4fv(location, false, matrixBuffer);
 	}
 
 	/**

@@ -31,14 +31,14 @@ import io.github.guerra24.voxel.client.kernel.world.entities.Light;
 
 import java.util.List;
 
-import org.lwjgl.util.vector.Matrix4f;
-import org.lwjgl.util.vector.Vector3f;
+import org.lwjglx.util.vector.Matrix4f;
+import org.lwjglx.util.vector.Vector3f;
 
 /**
  * Entity Shader
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
- * @version 0.0.2 Build-56
+ * @version 0.0.3 Build-59
  * @since 0.0.1 Build-52
  * @category Rendering
  */

@@ -29,7 +29,7 @@ import io.github.guerra24.voxel.client.kernel.world.block.Block;
 import io.github.guerra24.voxel.client.kernel.world.block.BlocksResources;
 import io.github.guerra24.voxel.client.kernel.world.entities.Entity;
 
-import org.lwjgl.util.vector.Vector3f;
+import org.lwjglx.util.vector.Vector3f;
 
 public class BlockGoldOre extends Block {
 
