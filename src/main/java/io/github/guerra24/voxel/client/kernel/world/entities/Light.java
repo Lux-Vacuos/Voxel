@@ -24,7 +24,7 @@
 
 package io.github.guerra24.voxel.client.kernel.world.entities;
 
-import org.lwjglx.util.vector.Vector3f;
+import io.github.guerra24.voxel.client.kernel.util.vector.Vector3f;
 
 public class Light {
 

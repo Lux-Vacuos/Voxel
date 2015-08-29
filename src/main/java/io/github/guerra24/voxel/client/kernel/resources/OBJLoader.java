@@ -26,6 +26,8 @@ package io.github.guerra24.voxel.client.kernel.resources;
 
 import io.github.guerra24.voxel.client.kernel.resources.models.RawModel;
 import io.github.guerra24.voxel.client.kernel.util.Logger;
+import io.github.guerra24.voxel.client.kernel.util.vector.Vector2f;
+import io.github.guerra24.voxel.client.kernel.util.vector.Vector3f;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -34,14 +36,11 @@ import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.lwjglx.util.vector.Vector2f;
-import org.lwjglx.util.vector.Vector3f;
-
 /**
  * OBJLoader
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
- * @version 0.0.3 Build-59
+ * @version 0.0.3 Build-60
  * @since 0.0.1 Build-52
  * @category Assets
  */

@@ -33,8 +33,10 @@ import io.github.guerra24.voxel.client.kernel.graphics.WaterRenderer;
 import io.github.guerra24.voxel.client.kernel.graphics.shaders.WaterShader;
 import io.github.guerra24.voxel.client.kernel.menu.MainMenu;
 import io.github.guerra24.voxel.client.kernel.resources.models.GuiTexture;
+import io.github.guerra24.voxel.client.kernel.sound.LibraryLWJGLOpenAL;
 import io.github.guerra24.voxel.client.kernel.util.Logger;
 import io.github.guerra24.voxel.client.kernel.util.MousePicker;
+import io.github.guerra24.voxel.client.kernel.util.vector.Vector3f;
 import io.github.guerra24.voxel.client.kernel.world.block.Block;
 import io.github.guerra24.voxel.client.kernel.world.block.BlocksResources;
 import io.github.guerra24.voxel.client.kernel.world.entities.Camera;
@@ -46,13 +48,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import org.lwjglx.util.vector.Vector3f;
-
 import paulscode.sound.SoundSystem;
 import paulscode.sound.SoundSystemConfig;
 import paulscode.sound.SoundSystemException;
 import paulscode.sound.codecs.CodecJOgg;
-import paulscode.sound.libraries.LibraryLWJGLOpenAL;
 
 import com.google.gson.Gson;
 
@@ -60,7 +59,7 @@ import com.google.gson.Gson;
  * Game Resources
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
- * @version 0.0.3 Build-59
+ * @version 0.0.3 Build-60
  * @since 0.0.1 Build-52
  * @category Assets
  */

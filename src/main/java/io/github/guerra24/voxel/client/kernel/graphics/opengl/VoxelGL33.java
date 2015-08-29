@@ -32,7 +32,7 @@ import org.lwjgl.opengl.GL11;
  * Voxel OpenGL Calls Manager
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
- * @version 0.0.3 Build-59
+ * @version 0.0.3 Build-60
  * @since 0.0.1 Build-52
  * @category OpenGL
  */
@@ -156,8 +156,8 @@ public final class VoxelGL33 {
 	 *            Height
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public static void glViewport(float x, float y, float width, float height) {
-		GL11.glViewport((int) x, (int) y, (int) width, (int) height);
+	public static void glViewport(int x, int y, int width, int height) {
+		GL11.glViewport(x, y, width, height);
 		VoxelGLError.check();
 	}
 

@@ -24,20 +24,19 @@
 
 package io.github.guerra24.voxel.client.kernel.core;
 
+import io.github.guerra24.voxel.client.kernel.graphics.opengl.DisplayManager;
+import io.github.guerra24.voxel.client.kernel.input.Keyboard;
 import io.github.guerra24.voxel.client.kernel.menu.Button;
 import io.github.guerra24.voxel.client.kernel.util.Logger;
+import io.github.guerra24.voxel.client.kernel.util.vector.Vector3f;
 
 import java.util.Random;
-
-import org.lwjglx.input.Keyboard;
-import org.lwjglx.opengl.Display;
-import org.lwjglx.util.vector.Vector3f;
 
 /**
  * Game States
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
- * @version 0.0.3 Build-59
+ * @version 0.0.3 Build-60
  * @since 0.0.1 Build-52
  * @category Kernel
  */
@@ -128,12 +127,12 @@ public class GameStates {
 			state = State.MAINMENU;
 		}
 
-		if (state == State.GAME && !Display.isActive()
+		if (state == State.GAME && !DisplayManager.displayFocused
 				&& !KernelConstants.debug) {
 			Kernel.gameResources.camera.unlockMouse();
 			state = State.IN_PAUSE;
 		}
-		if (Display.isCloseRequested())
+		if (DisplayManager.isCloseRequested())
 			loop = false;
 
 		while (Keyboard.next()) {

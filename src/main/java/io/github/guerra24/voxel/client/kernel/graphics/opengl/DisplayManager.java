@@ -24,10 +24,19 @@
 
 package io.github.guerra24.voxel.client.kernel.graphics.opengl;
 
+import static org.lwjgl.glfw.Callbacks.errorCallbackPrint;
+import static org.lwjgl.glfw.Callbacks.glfwSetCallback;
+import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.opengl.GL.createCapabilities;
+import static org.lwjgl.opengl.GL11.GL_FALSE;
+import static org.lwjgl.opengl.GL11.GL_TRUE;
 import static org.lwjgl.opengl.GL11.GL_VERSION;
 import static org.lwjgl.opengl.GL11.glGetString;
+import static org.lwjgl.system.MemoryUtil.NULL;
 import io.github.guerra24.voxel.client.kernel.core.Kernel;
 import io.github.guerra24.voxel.client.kernel.core.KernelConstants;
+import io.github.guerra24.voxel.client.kernel.input.Keyboard;
+import io.github.guerra24.voxel.client.kernel.input.Mouse;
 import io.github.guerra24.voxel.client.kernel.util.Logger;
 
 import java.io.FileInputStream;
@@ -35,10 +44,23 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 
+import org.lwjgl.BufferUtils;
 import org.lwjgl.Sys;
-import org.lwjglx.LWJGLException;
-import org.lwjglx.opengl.Display;
-import org.lwjglx.opengl.DisplayMode;
+import org.lwjgl.glfw.GLFW;
+import org.lwjgl.glfw.GLFWCharCallback;
+import org.lwjgl.glfw.GLFWCursorEnterCallback;
+import org.lwjgl.glfw.GLFWCursorPosCallback;
+import org.lwjgl.glfw.GLFWErrorCallback;
+import org.lwjgl.glfw.GLFWFramebufferSizeCallback;
+import org.lwjgl.glfw.GLFWKeyCallback;
+import org.lwjgl.glfw.GLFWMouseButtonCallback;
+import org.lwjgl.glfw.GLFWScrollCallback;
+import org.lwjgl.glfw.GLFWWindowFocusCallback;
+import org.lwjgl.glfw.GLFWWindowIconifyCallback;
+import org.lwjgl.glfw.GLFWWindowPosCallback;
+import org.lwjgl.glfw.GLFWWindowRefreshCallback;
+import org.lwjgl.glfw.GLFWWindowSizeCallback;
+import org.lwjgl.glfw.GLFWvidmode;
 
 import de.matthiasmann.twl.utils.PNGDecoder;
 
@@ -46,7 +68,7 @@ import de.matthiasmann.twl.utils.PNGDecoder;
  * Display Manager
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
- * @version 0.0.3 Build-59
+ * @version 0.0.3 Build-60
  * @since 0.0.1 Build-1
  * @category OpenGL
  */
@@ -62,11 +84,204 @@ public class DisplayManager {
 	private static float delta;
 
 	/**
+	 * LWJGL Window
+	 */
+	private static long window;
+
+	/**
+	 * Display VidMode
+	 */
+	private static ByteBuffer vidmode;
+
+	/**
+	 * LWJGL Callback
+	 */
+	private static GLFWErrorCallback errorCallback;
+	public static GLFWKeyCallback keyCallback;
+	public static GLFWCharCallback charCallback;
+	public static GLFWCursorEnterCallback cursorEnterCallback;
+	public static GLFWCursorPosCallback cursorPosCallback;
+	public static GLFWMouseButtonCallback mouseButtonCallback;
+	public static GLFWWindowFocusCallback windowFocusCallback;
+	public static GLFWWindowIconifyCallback windowIconifyCallback;
+	public static GLFWWindowSizeCallback windowSizeCallback;
+	public static GLFWWindowPosCallback windowPosCallback;
+	public static GLFWWindowRefreshCallback windowRefreshCallback;
+	public static GLFWFramebufferSizeCallback framebufferSizeCallback;
+	public static GLFWScrollCallback scrollCallback;
+
+	/**
+	 * Window variables
+	 */
+	public static boolean displayCreated = false;
+	public static boolean displayFocused = false;
+	public static boolean displayVisible = true;
+	public static boolean displayDirty = false;
+	public static boolean displayResizable = false;
+	public static int latestEventKey = 0;
+	public static int displayX = 0;
+	public static int displayY = 0;
+	public static boolean displayResized = false;
+	public static int displayWidth = 0;
+	public static int displayHeight = 0;
+	public static int displayFramebufferWidth = 0;
+	public static int displayFramebufferHeight = 0;
+	public static boolean latestResized = false;
+	public static int latestWidth = 0;
+	public static int latestHeight = 0;
+
+	public static void initDsiplay() {
+		glfwSetErrorCallback(errorCallback = errorCallbackPrint(System.err));
+		if (glfwInit() != GL_TRUE)
+			throw new IllegalStateException("Unable to initialize GLFW");
+
+		glfwDefaultWindowHints();
+		glfwWindowHint(GLFW_VISIBLE, GL_FALSE);
+		glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
+		glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);
+
+		window = glfwCreateWindow(KernelConstants.WIDTH,
+				KernelConstants.HEIGHT, KernelConstants.Title, NULL, NULL);
+		if (window == NULL)
+			throw new RuntimeException("Failed to create the GLFW window");
+		createCallBacks();
+		setCallbacks();
+		vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+		glfwSetWindowPos(window,
+				(GLFWvidmode.width(vidmode) - KernelConstants.WIDTH) / 2,
+				(GLFWvidmode.height(vidmode) - KernelConstants.HEIGHT) / 2);
+		glfwMakeContextCurrent(window);
+		glfwSwapInterval(1);
+		glfwShowWindow(window);
+	}
+
+	/**
+	 * Create the LWJGL CallBacks
+	 * 
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
+	public static void createCallBacks() {
+		keyCallback = new GLFWKeyCallback() {
+			@Override
+			public void invoke(long window, int key, int scancode, int action,
+					int mods) {
+				latestEventKey = key;
+				if (action == GLFW_RELEASE || action == GLFW.GLFW_PRESS) {
+					Keyboard.addKeyEvent(key, action == GLFW.GLFW_PRESS ? true
+							: false);
+				}
+			}
+		};
+
+		charCallback = new GLFWCharCallback() {
+			@Override
+			public void invoke(long window, int codepoint) {
+				Keyboard.addCharEvent(latestEventKey, (char) codepoint);
+			}
+		};
+
+		cursorEnterCallback = new GLFWCursorEnterCallback() {
+			@Override
+			public void invoke(long window, int entered) {
+				Mouse.setMouseInsideWindow(entered == GL_TRUE);
+			}
+		};
+
+		cursorPosCallback = new GLFWCursorPosCallback() {
+			@Override
+			public void invoke(long window, double xpos, double ypos) {
+				Mouse.addMoveEvent(xpos, ypos);
+			}
+		};
+
+		mouseButtonCallback = new GLFWMouseButtonCallback() {
+			@Override
+			public void invoke(long window, int button, int action, int mods) {
+				Mouse.addButtonEvent(button, action == GLFW.GLFW_PRESS ? true
+						: false);
+			}
+		};
+
+		windowFocusCallback = new GLFWWindowFocusCallback() {
+			@Override
+			public void invoke(long window, int focused) {
+				displayFocused = focused == GL_TRUE;
+			}
+		};
+
+		windowIconifyCallback = new GLFWWindowIconifyCallback() {
+			@Override
+			public void invoke(long window, int iconified) {
+				displayVisible = iconified == GL_FALSE;
+			}
+		};
+
+		windowSizeCallback = new GLFWWindowSizeCallback() {
+			@Override
+			public void invoke(long window, int width, int height) {
+				latestResized = true;
+				latestWidth = width;
+				latestHeight = height;
+			}
+		};
+
+		windowPosCallback = new GLFWWindowPosCallback() {
+			@Override
+			public void invoke(long window, int xpos, int ypos) {
+				displayX = xpos;
+				displayY = ypos;
+			}
+		};
+
+		windowRefreshCallback = new GLFWWindowRefreshCallback() {
+			@Override
+			public void invoke(long window) {
+				displayDirty = true;
+			}
+		};
+
+		framebufferSizeCallback = new GLFWFramebufferSizeCallback() {
+			@Override
+			public void invoke(long window, int width, int height) {
+				displayFramebufferWidth = width;
+				displayFramebufferHeight = height;
+			}
+		};
+
+		scrollCallback = new GLFWScrollCallback() {
+			@Override
+			public void invoke(long window, double xoffset, double yoffset) {
+				Mouse.addWheelEvent((int) (yoffset * 120));
+			}
+		};
+	}
+
+	/**
+	 * Set the LWJGL CallBacks
+	 * 
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
+	public static void setCallbacks() {
+		glfwSetCallback(window, keyCallback);
+		glfwSetCallback(window, charCallback);
+		glfwSetCallback(window, cursorEnterCallback);
+		glfwSetCallback(window, cursorPosCallback);
+		glfwSetCallback(window, mouseButtonCallback);
+		glfwSetCallback(window, windowFocusCallback);
+		glfwSetCallback(window, windowIconifyCallback);
+		glfwSetCallback(window, windowSizeCallback);
+		glfwSetCallback(window, windowPosCallback);
+		glfwSetCallback(window, windowRefreshCallback);
+		glfwSetCallback(window, framebufferSizeCallback);
+		glfwSetCallback(window, scrollCallback);
+	}
+
+	/**
 	 * Creates and Sets the Display
 	 * 
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public static void createDisplay() {
+	public static void startUp() {
 		Logger.log(Thread.currentThread(), "Creating Display");
 		try {
 			String[] IconPath = new String[2];
@@ -78,15 +293,11 @@ public class DisplayManager {
 				String path = IconPath[i];
 				icon_array[i] = loadIcon(path);
 			}
-			Display.setDisplayMode(new DisplayMode(KernelConstants.WIDTH,
-					KernelConstants.HEIGHT));
-			Display.setTitle(KernelConstants.Title);
-			Display.setResizable(true);
-			Display.create();
-		} catch (LWJGLException | IOException e) {
+		} catch (IOException e) {
 			Logger.error(Thread.currentThread(), "Failed to create Display");
 			e.printStackTrace();
 		}
+		createCapabilities();
 		Logger.log(Thread.currentThread(), "LWJGL Version: " + Sys.getVersion());
 		Logger.log(Thread.currentThread(), "OpenGL Version: "
 				+ glGetString(GL_VERSION));
@@ -103,15 +314,23 @@ public class DisplayManager {
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public static void updateDisplay(int fps) {
-		Display.sync(fps);
-		Display.update();
 		if (KernelConstants.loaded) {
-			VoxelGL33.glViewport(0, 0, Display.getWidth(), Display.getHeight());
+			ByteBuffer w = BufferUtils.createByteBuffer(4);
+			ByteBuffer h = BufferUtils.createByteBuffer(4);
+			glfwGetWindowSize(window, w, h);
+			int width = w.getInt(0);
+			int height = h.getInt(0);
+			KernelConstants.WIDTH = width;
+			KernelConstants.HEIGHT = height;
+			VoxelGL33.glViewport(0, 0, width, height);
 			Kernel.gameResources.renderer.createProjectionMatrix();
 		}
 		long currentFrameTime = getCurrentTime();
 		delta = (currentFrameTime - lastFrameTime) / 1000f;
 		lastFrameTime = currentFrameTime;
+		glfwSwapBuffers(window);
+		glfwPollEvents();
+		Mouse.poll();
 	}
 
 	/**
@@ -120,7 +339,21 @@ public class DisplayManager {
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public static void closeDisplay() {
-		Display.destroy();
+		glfwDestroyWindow(window);
+		glfwTerminate();
+		errorCallback.release();
+		keyCallback.release();
+		charCallback.release();
+		cursorEnterCallback.release();
+		cursorPosCallback.release();
+		mouseButtonCallback.release();
+		windowFocusCallback.release();
+		windowIconifyCallback.release();
+		windowSizeCallback.release();
+		windowPosCallback.release();
+		windowRefreshCallback.release();
+		framebufferSizeCallback.release();
+		scrollCallback.release();
 	}
 
 	/**
@@ -139,8 +372,7 @@ public class DisplayManager {
 	 * @return Current Time
 	 */
 	private static long getCurrentTime() {
-		return org.lwjglx.Sys.getTime() * 1000
-				/ org.lwjglx.Sys.getTimerResolution();
+		return (long) (GLFW.glfwGetTime() * 1000) * 1000 / 1000;
 	}
 
 	/**
@@ -166,4 +398,25 @@ public class DisplayManager {
 			inputStream.close();
 		}
 	}
+
+	/**
+	 * Get the Window
+	 * 
+	 * @return window
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
+	public static long getWindow() {
+		return window;
+	}
+
+	/**
+	 * If a close is requested
+	 * 
+	 * @return Boolean
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
+	public static boolean isCloseRequested() {
+		return glfwWindowShouldClose(window) == GL_TRUE;
+	}
+
 }
