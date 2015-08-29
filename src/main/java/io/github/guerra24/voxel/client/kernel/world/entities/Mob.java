@@ -25,8 +25,7 @@
 package io.github.guerra24.voxel.client.kernel.world.entities;
 
 import io.github.guerra24.voxel.client.kernel.resources.models.TexturedModel;
-
-import org.lwjglx.util.vector.Vector3f;
+import io.github.guerra24.voxel.client.kernel.util.vector.Vector3f;
 
 public class Mob extends Entity {
 

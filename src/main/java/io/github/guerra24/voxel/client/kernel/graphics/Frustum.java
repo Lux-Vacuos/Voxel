@@ -26,19 +26,19 @@ package io.github.guerra24.voxel.client.kernel.graphics;
 
 import io.github.guerra24.voxel.client.kernel.core.Kernel;
 import io.github.guerra24.voxel.client.kernel.util.Maths;
+import io.github.guerra24.voxel.client.kernel.util.vector.Vector3f;
 import io.github.guerra24.voxel.client.kernel.world.entities.Camera;
 
 import java.nio.FloatBuffer;
 
 import org.lwjgl.BufferUtils;
-import org.lwjglx.util.vector.Vector3f;
 
 /**
  * Frustum Culling
  * 
  * @author Ron Sullivan (modified by Thomas Hourdel(modified by Guerra24))
  *         <thomas.hourdel@libertysurf.fr>
- * @version 0.0.3 Build-59
+ * @version 0.0.3 Build-60
  * @since 0.0.2 Build-55
  */
 public class Frustum {

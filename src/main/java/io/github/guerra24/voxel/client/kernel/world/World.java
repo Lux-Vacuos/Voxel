@@ -29,6 +29,8 @@ import io.github.guerra24.voxel.client.kernel.core.KernelConstants;
 import io.github.guerra24.voxel.client.kernel.resources.GameResources;
 import io.github.guerra24.voxel.client.kernel.util.Logger;
 import io.github.guerra24.voxel.client.kernel.util.Maths;
+import io.github.guerra24.voxel.client.kernel.util.vector.Vector2f;
+import io.github.guerra24.voxel.client.kernel.util.vector.Vector3f;
 import io.github.guerra24.voxel.client.kernel.world.chunks.Chunk;
 import io.github.guerra24.voxel.client.kernel.world.chunks.ChunkKey;
 import io.github.guerra24.voxel.client.kernel.world.entities.Camera;
@@ -42,14 +44,11 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Random;
 
-import org.lwjglx.util.vector.Vector2f;
-import org.lwjglx.util.vector.Vector3f;
-
 /**
  * World
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
- * @version 0.0.3 Build-59
+ * @version 0.0.3 Build-60
  * @since 0.0.1 Build-52
  * @category World
  */

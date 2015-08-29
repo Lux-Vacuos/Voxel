@@ -25,6 +25,7 @@
 package io.github.guerra24.voxel.client.kernel.world.block;
 
 import io.github.guerra24.voxel.client.kernel.resources.models.WaterTile;
+import io.github.guerra24.voxel.client.kernel.util.vector.Vector3f;
 import io.github.guerra24.voxel.client.kernel.world.block.types.BlockAir;
 import io.github.guerra24.voxel.client.kernel.world.block.types.BlockDimOre;
 import io.github.guerra24.voxel.client.kernel.world.block.types.BlockDirt;
@@ -40,8 +41,6 @@ import io.github.guerra24.voxel.client.kernel.world.block.types.BlockWater;
 import io.github.guerra24.voxel.client.kernel.world.entities.Entity;
 
 import java.util.HashMap;
-
-import org.lwjglx.util.vector.Vector3f;
 
 /**
  * Block

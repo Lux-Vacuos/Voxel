@@ -26,17 +26,16 @@ package io.github.guerra24.voxel.client.kernel.graphics.shaders;
 
 import io.github.guerra24.voxel.client.kernel.core.KernelConstants;
 import io.github.guerra24.voxel.client.kernel.util.Maths;
+import io.github.guerra24.voxel.client.kernel.util.vector.Matrix4f;
+import io.github.guerra24.voxel.client.kernel.util.vector.Vector3f;
 import io.github.guerra24.voxel.client.kernel.world.entities.Camera;
 import io.github.guerra24.voxel.client.kernel.world.entities.Light;
-
-import org.lwjglx.util.vector.Matrix4f;
-import org.lwjglx.util.vector.Vector3f;
 
 /**
  * Water Shader
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
- * @version 0.0.3 Build-59
+ * @version 0.0.3 Build-60
  * @since 0.0.1 Build-52
  * @category Rendering
  */

@@ -32,19 +32,18 @@ import io.github.guerra24.voxel.client.kernel.graphics.SkyboxRenderer;
 import io.github.guerra24.voxel.client.kernel.graphics.WaterRenderer;
 import io.github.guerra24.voxel.client.kernel.graphics.opengl.DisplayManager;
 import io.github.guerra24.voxel.client.kernel.graphics.opengl.SystemInfo;
+import io.github.guerra24.voxel.client.kernel.input.Keyboard;
 import io.github.guerra24.voxel.client.kernel.resources.GameResources;
 import io.github.guerra24.voxel.client.kernel.resources.GuiResources;
 import io.github.guerra24.voxel.client.kernel.util.Logger;
 import io.github.guerra24.voxel.client.kernel.world.World;
 import io.github.guerra24.voxel.client.kernel.world.block.BlocksResources;
 
-import org.lwjglx.input.Keyboard;
-
 /**
  * The Kernel, Game Engine Core
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
- * @version 0.0.3 Build-59
+ * @version 0.0.3 Build-60
  * @since 0.0.1 Build-1
  * @category Kernel
  */
@@ -117,7 +116,8 @@ public class Kernel implements IKernel {
 		Logger.log(Thread.currentThread(), "Build: " + KernelConstants.build);
 		Logger.log(Thread.currentThread(),
 				"Running on: " + Bootstrap.getPlatform());
-		DisplayManager.createDisplay();
+		DisplayManager.initDsiplay();
+		DisplayManager.startUp();
 		SystemInfo.printSystemInfo();
 		if (KernelConstants.advancedOpenGL)
 			Logger.log(Thread.currentThread(), "Using Advanced Rendering");

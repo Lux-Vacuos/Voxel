@@ -25,13 +25,11 @@
 package io.github.guerra24.voxel.client.kernel.util;
 
 import io.github.guerra24.voxel.client.kernel.core.KernelConstants;
+import io.github.guerra24.voxel.client.kernel.util.vector.Matrix4f;
+import io.github.guerra24.voxel.client.kernel.util.vector.Vector2f;
+import io.github.guerra24.voxel.client.kernel.util.vector.Vector3f;
+import io.github.guerra24.voxel.client.kernel.util.vector.Vector4f;
 import io.github.guerra24.voxel.client.kernel.world.entities.Camera;
-
-import org.lwjglx.opengl.Display;
-import org.lwjglx.util.vector.Matrix4f;
-import org.lwjglx.util.vector.Vector2f;
-import org.lwjglx.util.vector.Vector3f;
-import org.lwjglx.util.vector.Vector4f;
 
 public class MousePicker {
 
@@ -86,8 +84,8 @@ public class MousePicker {
 	}
 
 	private Vector2f getNormalizedDeviceCoords(float mouseX, float mouseY) {
-		float x = (2f * mouseX) / Display.getWidth() - 1;
-		float y = (2f * mouseY) / Display.getHeight() - 1f;
+		float x = (2f * mouseX) / KernelConstants.WIDTH - 1;
+		float y = (2f * mouseY) / KernelConstants.HEIGHT - 1f;
 		return new Vector2f(x, y);
 	}
 }

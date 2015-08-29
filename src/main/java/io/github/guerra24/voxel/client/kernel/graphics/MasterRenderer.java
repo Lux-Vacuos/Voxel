@@ -35,6 +35,8 @@ import io.github.guerra24.voxel.client.kernel.graphics.opengl.VoxelGL33;
 import io.github.guerra24.voxel.client.kernel.graphics.shaders.EntityShader;
 import io.github.guerra24.voxel.client.kernel.resources.Loader;
 import io.github.guerra24.voxel.client.kernel.resources.models.TexturedModel;
+import io.github.guerra24.voxel.client.kernel.util.vector.Matrix4f;
+import io.github.guerra24.voxel.client.kernel.util.vector.Vector3f;
 import io.github.guerra24.voxel.client.kernel.world.entities.Camera;
 import io.github.guerra24.voxel.client.kernel.world.entities.Entity;
 import io.github.guerra24.voxel.client.kernel.world.entities.Light;
@@ -45,15 +47,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 
-import org.lwjglx.opengl.Display;
-import org.lwjglx.util.vector.Matrix4f;
-import org.lwjglx.util.vector.Vector3f;
-
 /**
  * Game Master Renderer
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
- * @version 0.0.3 Build-59
+ * @version 0.0.3 Build-60
  * @since 0.0.1 Build-52
  * @category Rendering
  */
@@ -224,7 +222,8 @@ public class MasterRenderer {
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void createProjectionMatrix() {
-		aspectRatio = (float) Display.getWidth() / (float) Display.getHeight();
+		aspectRatio = (float) KernelConstants.WIDTH
+				/ (float) KernelConstants.HEIGHT;
 		float y_scale = (float) ((1f / Math.tan(Math
 				.toRadians(KernelConstants.FOV / 2f))) * aspectRatio);
 		float x_scale = y_scale / aspectRatio;

@@ -3,7 +3,7 @@ apply plugin:'eclipse'
 apply plugin:'application'
 
 mainClassName = 'io.github.guerra24.voxel.client.kernel.bootstrap.Bootstrap'
-version = '0.0.2-ALPHA'
+version = '0.0.3-ALPHA'
 applicationDefaultJvmArgs = ["-Xmx512M"]
 
 jar {
@@ -21,21 +21,7 @@ buildscript {
      	 url "https://plugins.gradle.org/m2/"
     	}
   	}
-  	dependencies {
-    	classpath "gradle.plugin.com.stehno:gradle-natives:0.2.3"
-  	}
 }
-
-apply plugin: "com.stehno.natives"
-
-natives {
-    jars = [
-        'lwjgl-platform-2.9.3-natives-windows', 
-        'lwjgl-platform-2.9.3-natives-osx', 
-        'lwjgl-platform-2.9.3-natives-linux'
-    ]
-}
-
 
 repositories {
 	mavenCentral()
@@ -44,6 +30,8 @@ repositories {
 dependencies {
 	compile 'com.google.code.gson:gson:2.3.+'
 	compile 'org.l33tlabs.twl:pngdecoder:1.+'
+	compile 'de.jarnbjo:j-ogg-all:1.0.0'
+	compile 'org.jcraft:jorbis:0.0.17'
     compile fileTree(dir: "libs", includes: ["*.jar"])
 }
 
@@ -59,5 +47,5 @@ task wrapper(type: Wrapper) {
 }
 
 run {
-    systemProperty 'java.library.path', file( 'build/natives' )
+    systemProperty 'java.library.path', file( 'natives' )
 }

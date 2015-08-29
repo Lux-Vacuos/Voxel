@@ -50,6 +50,10 @@ import static org.lwjgl.opengl.GL20.glUniformMatrix4fv;
 import static org.lwjgl.opengl.GL20.glUseProgram;
 import static org.lwjgl.opengl.GL20.glValidateProgram;
 import io.github.guerra24.voxel.client.kernel.util.Logger;
+import io.github.guerra24.voxel.client.kernel.util.vector.Matrix4f;
+import io.github.guerra24.voxel.client.kernel.util.vector.Vector2f;
+import io.github.guerra24.voxel.client.kernel.util.vector.Vector3f;
+import io.github.guerra24.voxel.client.kernel.util.vector.Vector4f;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -57,16 +61,12 @@ import java.io.IOException;
 import java.nio.FloatBuffer;
 
 import org.lwjgl.BufferUtils;
-import org.lwjglx.util.vector.Matrix4f;
-import org.lwjglx.util.vector.Vector2f;
-import org.lwjglx.util.vector.Vector3f;
-import org.lwjglx.util.vector.Vector4f;
 
 /**
  * Shader Program, Use to create shaders
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
- * @version 0.0.3 Build-59
+ * @version 0.0.3 Build-60
  * @since 0.0.1 Build-52
  * @category Rendering
  */
