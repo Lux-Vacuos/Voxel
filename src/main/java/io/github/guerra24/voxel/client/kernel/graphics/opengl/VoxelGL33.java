@@ -32,8 +32,6 @@ import org.lwjgl.opengl.GL11;
  * Voxel OpenGL Calls Manager
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
- * @version 0.0.3 Build-60
- * @since 0.0.1 Build-52
  * @category OpenGL
  */
 public final class VoxelGL33 {

@@ -30,8 +30,6 @@ import java.nio.ByteBuffer;
  * Entity Texture
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
- * @version 0.0.1 Build-52
- * @since 0.0.1 Build-52
  * @category Assets
  */
 public class EntityTexture {

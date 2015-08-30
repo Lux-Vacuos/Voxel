@@ -31,8 +31,6 @@ import static org.lwjgl.opengl.GL30.*;
  * Voxel OpenGL Error Check
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
- * @version 0.0.1 Build-52
- * @since 0.0.1 Build-1
  * @category OpenGL
  */
 public final class VoxelGLError {

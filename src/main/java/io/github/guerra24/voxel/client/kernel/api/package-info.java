@@ -26,7 +26,7 @@
  * Contains the Game Modding API
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
- * @version 0.0.2 Build-55
+ * @version 0.0.3 Build-61
  * @since 0.0.1 Build-52
  * @category API
  */

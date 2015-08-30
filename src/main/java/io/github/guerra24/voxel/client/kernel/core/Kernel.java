@@ -43,8 +43,6 @@ import io.github.guerra24.voxel.client.kernel.world.block.BlocksResources;
  * The Kernel, Game Engine Core
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
- * @version 0.0.3 Build-60
- * @since 0.0.1 Build-1
  * @category Kernel
  */
 public class Kernel implements IKernel {

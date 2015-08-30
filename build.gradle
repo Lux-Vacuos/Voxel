@@ -7,7 +7,9 @@ version = '0.0.3-ALPHA'
 applicationDefaultJvmArgs = ["-Xmx512M"]
 
 jar {
-	include("io/github/guerra24/voxel/**")
+	include("*io/**")
+	include("*org/**")
+
     manifest {
         attributes 'Implementation-Title': 'Voxel Client',
                    'Implementation-Version': version

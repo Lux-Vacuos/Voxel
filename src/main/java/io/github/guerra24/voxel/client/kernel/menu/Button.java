@@ -30,8 +30,6 @@ import io.github.guerra24.voxel.client.kernel.input.Mouse;
  * Hardcoded Buttons
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
- * @version 0.0.3 Build-60
- * @since 0.0.1 Build-52
  * @category GUI
  * @deprecated
  */

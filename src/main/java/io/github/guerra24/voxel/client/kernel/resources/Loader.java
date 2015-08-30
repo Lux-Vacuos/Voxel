@@ -78,8 +78,6 @@ import de.matthiasmann.twl.utils.PNGDecoder.Format;
  * Loader
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
- * @version 0.0.2 Build-58
- * @since 0.0.1 Build-52
  * @category Assets
  */
 public class Loader {

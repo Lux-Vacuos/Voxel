@@ -32,8 +32,6 @@ import javax.swing.JTextArea;
  * Redirects the OutStream
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
- * @version 0.0.1 Build-52
- * @since 0.0.1 Build-52
  */
 public class TextAreaOutputStream extends OutputStream {
 	/**

@@ -34,6 +34,7 @@ import io.github.guerra24.voxel.client.kernel.util.vector.Vector3f;
 import io.github.guerra24.voxel.client.kernel.world.chunks.Chunk;
 import io.github.guerra24.voxel.client.kernel.world.chunks.ChunkKey;
 import io.github.guerra24.voxel.client.kernel.world.entities.Camera;
+import io.github.guerra24.voxel.client.kernel.api.*;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -48,8 +49,6 @@ import java.util.Random;
  * World
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
- * @version 0.0.3 Build-60
- * @since 0.0.1 Build-52
  * @category World
  */
 public class World {
@@ -98,7 +97,7 @@ public class World {
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void startWorld(String name, Camera camera, Random seed,
-			int dimension) {
+			int dimension, API api) {
 		this.name = name;
 		this.seed = seed;
 		this.dim = dimension;
@@ -107,7 +106,7 @@ public class World {
 		}
 		saveWorld();
 		initialize();
-		createWorld(camera);
+		createWorld(camera, api);
 	}
 
 	/**
@@ -118,7 +117,8 @@ public class World {
 	private void initialize() {
 		noise = new SimplexNoise(128, 0.2f, seed.nextInt());
 		chunks = new HashMap<ChunkKey, Chunk>();
-		Kernel.gameResources.camera.setPosition(new Vector3f(Maths.randInt(-200, 200), 128, Maths.randInt(-200, 200)));
+		Kernel.gameResources.camera.setPosition(new Vector3f(Maths.randInt(
+				-200, 200), 128, Maths.randInt(-200, 200)));
 		Kernel.gameResources.player.setPosition(Kernel.gameResources.camera
 				.getPosition());
 	}
@@ -130,7 +130,7 @@ public class World {
 	 *            Camera
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	private void createWorld(Camera camera) {
+	private void createWorld(Camera camera, API api) {
 		Logger.log(Thread.currentThread(), "Generating World");
 		xPlayChunk = (int) (camera.getPosition().x / 16);
 		zPlayChunk = (int) (camera.getPosition().z / 16);
@@ -147,7 +147,7 @@ public class World {
 						if (existChunkFile(dim, xx, zz)) {
 							loadChunk(dim, xx, zz);
 						} else {
-							addChunk(new Chunk(dim, xx, zz));
+							addChunk(new Chunk(dim, xx, zz, api));
 							saveChunk(dim, xx, zz);
 						}
 					} else {
@@ -165,7 +165,7 @@ public class World {
 	 *            Camera
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public void updateChunkGeneration(Camera camera) {
+	public void updateChunkGeneration(Camera camera, API api) {
 		if (camera.getPosition().x < 0)
 			xPlayChunk = (int) ((camera.getPosition().x - 16) / 16);
 		if (camera.getPosition().z < 0)
@@ -185,7 +185,7 @@ public class World {
 						if (existChunkFile(dim, xx, zz)) {
 							loadChunk(dim, xx, zz);
 						} else {
-							addChunk(new Chunk(dim, xx, zz));
+							addChunk(new Chunk(dim, xx, zz, api));
 							saveChunk(dim, xx, zz);
 						}
 					} else {
@@ -539,8 +539,7 @@ public class World {
 		int cz = z >> 4;
 		Chunk chunk = getChunk(dim, cx, cz);
 		chunk.setLocalBlock(x, y, z, id);
-		chunk.clear();
-		chunk.rebuildChunk();
+		chunk.isToRebuild = true;
 	}
 
 	/**

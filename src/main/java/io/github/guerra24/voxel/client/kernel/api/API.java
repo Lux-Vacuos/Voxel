@@ -42,8 +42,6 @@ import java.util.Map;
  * API
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
- * @version 0.0.2 Build-55
- * @since 0.0.1 Build-54
  * @category API
  */
 public class API {
@@ -51,9 +49,11 @@ public class API {
 	 * Mods
 	 */
 	public static Map<Integer, Mod> mods;
+	public static APIWorld world;
 
 	public API() {
 		mods = new HashMap<Integer, Mod>();
+		world = new APIWorld();
 		try {
 			Files.walk(Paths.get("assets/mods"))
 					.forEach(
@@ -80,7 +80,7 @@ public class API {
 											| IllegalAccessException
 											| IllegalArgumentException
 											| InvocationTargetException e) {
-										Logger.log(
+										Logger.error(
 												Thread.currentThread(),
 												"Error Loading Mod: "
 														+ e.getMessage());
@@ -88,7 +88,7 @@ public class API {
 								}
 							});
 		} catch (IOException e) {
-			Logger.log(Thread.currentThread(),
+			Logger.error(Thread.currentThread(),
 					"Error Loading Mod: " + e.getMessage());
 		}
 

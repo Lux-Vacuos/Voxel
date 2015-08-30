@@ -28,8 +28,6 @@ package io.github.guerra24.voxel.client.kernel.core;
  * Interface for GameObjects
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
- * @version 0.0.1 Build-52
- * @since 0.0.1 Build-52
  * @category KernelS
  */
 public interface GameObject {

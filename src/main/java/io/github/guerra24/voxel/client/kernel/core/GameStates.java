@@ -36,8 +36,6 @@ import java.util.Random;
  * Game States
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
- * @version 0.0.3 Build-60
- * @since 0.0.1 Build-52
  * @category Kernel
  */
 public class GameStates {
@@ -90,7 +88,7 @@ public class GameStates {
 				seed = new Random();
 			}
 			Kernel.world.startWorld("Mundo-1", Kernel.gameResources.camera,
-					seed, 0);
+					seed, 0, Kernel.api);
 			Kernel.gameResources.camera.setMouse();
 			state = State.GAME;
 		}

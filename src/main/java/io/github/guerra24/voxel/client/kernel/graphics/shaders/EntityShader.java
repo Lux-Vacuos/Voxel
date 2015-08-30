@@ -37,8 +37,6 @@ import java.util.List;
  * Entity Shader
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
- * @version 0.0.3 Build-60
- * @since 0.0.1 Build-52
  * @category Rendering
  */
 public class EntityShader extends ShaderProgram {

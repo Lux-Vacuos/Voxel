@@ -38,8 +38,6 @@ import org.lwjgl.BufferUtils;
  * 
  * @author Ron Sullivan (modified by Thomas Hourdel(modified by Guerra24))
  *         <thomas.hourdel@libertysurf.fr>
- * @version 0.0.3 Build-60
- * @since 0.0.2 Build-55
  */
 public class Frustum {
 

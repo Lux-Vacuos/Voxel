@@ -28,8 +28,6 @@ package io.github.guerra24.voxel.client.kernel.core;
  * Update Thread
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
- * @version 0.0.2 Build-58
- * @since 0.0.1 Build-52
  * @category Kernel
  */
 public class UpdateThread extends Thread {

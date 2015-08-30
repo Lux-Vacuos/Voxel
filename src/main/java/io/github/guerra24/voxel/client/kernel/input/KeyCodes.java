@@ -6,8 +6,6 @@ import org.lwjgl.glfw.GLFW;
  * KeyCodes
  * 
  * @author kappaOne
- * @version 0.0.3 Build-60
- * @since 0.0.3 Build-60
  * @category Input
  */
 public class KeyCodes {

@@ -39,8 +39,6 @@ import javax.swing.text.DefaultCaret;
  * The console thread, handles the Log
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
- * @version 0.0.2 Build-58
- * @since 0.0.1 Build-52
  */
 public class Console extends Thread {
 	/**

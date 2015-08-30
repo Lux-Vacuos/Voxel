@@ -35,8 +35,6 @@ import java.io.File;
  * Initialize the basic game code
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
- * @version 0.0.3 Build-60
- * @since 0.0.1 Build-52
  */
 public class Bootstrap {
 	/**
@@ -58,6 +56,7 @@ public class Bootstrap {
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public static void run() {
+
 		thread1 = new Console();
 		thread1.start();
 
@@ -131,8 +130,8 @@ public class Bootstrap {
 		Thread.currentThread().setName("Voxel Main");
 		run();
 		if (KernelConstants.debug) {
-			System.setProperty("org.lwjgl.librarypath", new File(
-					"natives").getAbsolutePath());
+			System.setProperty("org.lwjgl.librarypath",
+					new File("natives").getAbsolutePath());
 		}
 		new Kernel(false);
 	}

@@ -10,8 +10,6 @@ import io.github.guerra24.voxel.client.kernel.resources.models.TexturedModel;
  * Main Menu
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
- * @version 0.0.2 Build-58
- * @since 0.0.2 Build-58
  * @category Assets
  */
 public class MainMenu {

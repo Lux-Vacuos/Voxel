@@ -24,17 +24,52 @@
 
 package io.github.guerra24.voxel.client.kernel.api;
 
+import io.github.guerra24.voxel.client.kernel.api.mod.ChunkHandler;
 import io.github.guerra24.voxel.client.kernel.world.block.Block;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * World API
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
- * @version 0.0.2 Build-55
- * @since 0.0.2 Build-55
- *
+ * @category API
  */
 public class APIWorld {
+
+	public static Map<Integer, ChunkHandler> modsWorld;
+
+	public APIWorld() {
+		modsWorld = new HashMap<Integer, ChunkHandler>();
+	}
+
+	/**
+	 * Register the ChunkHandler
+	 * 
+	 * @param id
+	 *            Use APIWorld.getLastId()
+	 * @param handler
+	 *            Handler
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
+	public static void registerChunkHandler(int id, ChunkHandler handler) {
+		modsWorld.put(id, handler);
+	}
+
+	/**
+	 * Gets the Mod from ID
+	 * 
+	 * @param id
+	 *            ID
+	 * @return Mod
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 * 
+	 */
+	public static ChunkHandler getChunkHandler(int id) {
+		return modsWorld.get(id);
+	}
+
 	/**
 	 * Register a block to the world generation
 	 * 
@@ -47,4 +82,24 @@ public class APIWorld {
 	public static void registerBlock(byte id, Block block) {
 		Block.registerBlock(id, block);
 	}
+
+	/**
+	 * Get last avaiable ID
+	 * 
+	 * @return ID
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
+	public static int getLastID() {
+		return modsWorld.size();
+	}
+
+	/**
+	 * Dispose the APIWorld
+	 * 
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
+	public void dispose() {
+		modsWorld.clear();
+	}
+
 }

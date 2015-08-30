@@ -30,8 +30,6 @@ import io.github.guerra24.voxel.client.kernel.util.Logger;
  * Voxel OpenGL Exception
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
- * @version 0.0.1 Build-52
- * @since 0.0.1 Build-1
  * @category OpenGL
  */
 public class VoxelGLException {

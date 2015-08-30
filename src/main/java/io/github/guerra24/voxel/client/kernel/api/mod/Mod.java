@@ -28,8 +28,6 @@ package io.github.guerra24.voxel.client.kernel.api.mod;
  * Mod
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
- * @version 0.0.2 Build-55
- * @since 0.0.1 Build-54
  * @category API
  */
 public abstract class Mod {

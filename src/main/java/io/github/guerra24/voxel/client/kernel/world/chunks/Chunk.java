@@ -24,6 +24,8 @@
 
 package io.github.guerra24.voxel.client.kernel.world.chunks;
 
+import io.github.guerra24.voxel.client.kernel.api.API;
+import io.github.guerra24.voxel.client.kernel.api.APIWorld;
 import io.github.guerra24.voxel.client.kernel.core.Kernel;
 import io.github.guerra24.voxel.client.kernel.core.KernelConstants;
 import io.github.guerra24.voxel.client.kernel.graphics.MasterRenderer;
@@ -54,16 +56,16 @@ public class Chunk {
 	private int sizeX, sizeY, sizeZ;
 	private transient boolean readyToRender = true;
 
-	public Chunk(int dim, int cx, int cz) {
+	public Chunk(int dim, int cx, int cz, API api) {
 		this.dim = dim;
 		this.cx = cx;
 		this.cz = cz;
 		this.posX = cx * 16;
 		this.posZ = cz * 16;
-		init();
+		init(api);
 	}
 
-	public void init() {
+	public void init(API api) {
 		sizeX = KernelConstants.CHUNK_SIZE;
 		sizeY = KernelConstants.CHUNK_HEIGHT;
 		sizeZ = KernelConstants.CHUNK_SIZE;
@@ -80,7 +82,7 @@ public class Chunk {
 
 		blocks = new byte[sizeX][sizeY][sizeZ];
 
-		createChunk();
+		createChunk(api);
 		rebuildChunk();
 	}
 
@@ -109,7 +111,7 @@ public class Chunk {
 			isToRebuild = true;
 	}
 
-	public void createChunk() {
+	public void createChunk(API api) {
 		for (int x = 0; x < sizeX; x++) {
 			for (int z = 0; z < sizeZ; z++) {
 				for (int y = 0; y < sizeY; y++) {
@@ -137,6 +139,10 @@ public class Chunk {
 						blocks[x][y][z] = Block.GoldOre.getId();
 					else
 						blocks[x][y][z] = Block.Stone.getId();
+
+					for (int i = 0; i < APIWorld.getLastID(); i++) {
+						APIWorld.getChunkHandler(i).chunkGen(blocks, x, y, z);
+					}
 
 					if (y == 0)
 						blocks[x][y][z] = Block.Indes.getId();

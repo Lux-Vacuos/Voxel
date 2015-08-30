@@ -31,8 +31,6 @@ import io.github.guerra24.voxel.client.kernel.util.vector.Matrix4f;
  * Gui Shader
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
- * @version 0.0.3 Build-60
- * @since 0.0.1 Build-52
  * @category Rendering
  */
 public class GuiShader extends ShaderProgram {

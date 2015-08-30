@@ -57,8 +57,6 @@ import javax.swing.event.ChangeListener;
  * Settings GUI
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
- * @version 0.0.2 Build-55
- * @since 0.0.1 Build-52
  * @category GUI
  */
 public class ConfigGUI extends JFrame implements ItemListener {

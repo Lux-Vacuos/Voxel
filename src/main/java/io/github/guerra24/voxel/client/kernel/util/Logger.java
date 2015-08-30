@@ -31,8 +31,6 @@ import java.util.Date;
  * Logger
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
- * @version 0.0.1 Build-52
- * @since 0.0.1 Build-52
  * @category Util
  */
 public final class Logger {

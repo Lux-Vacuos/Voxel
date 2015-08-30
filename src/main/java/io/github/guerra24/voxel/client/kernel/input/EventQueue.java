@@ -4,8 +4,6 @@ package io.github.guerra24.voxel.client.kernel.input;
  * EventQueue
  * 
  * @author kappaOne
- * @version 0.0.3 Build-60
- * @since 0.0.3 Build-60
  * @category Input
  */
 class EventQueue {
