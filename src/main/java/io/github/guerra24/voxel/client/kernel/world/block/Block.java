@@ -46,8 +46,6 @@ import java.util.HashMap;
  * Block
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
- * @version 0.0.3 Build-59
- * @since 0.0.1 Build-52
  * @category World
  */
 public abstract class Block {
@@ -82,10 +80,10 @@ public abstract class Block {
 	 * 
 	 * @param pos
 	 *            Position
-	 * @return Entity
+	 * @return BlockEntity
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public abstract Entity getFaceUp(Vector3f pos);
+	public abstract BlockEntity getFaceUp(Vector3f pos);
 
 	/**
 	 * Get the Face Down of the Block
@@ -95,46 +93,46 @@ public abstract class Block {
 	 * @return Entity
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public abstract Entity getFaceDown(Vector3f pos);
+	public abstract BlockEntity getFaceDown(Vector3f pos);
 
 	/**
 	 * Get the Face East of the Block
 	 * 
 	 * @param pos
 	 *            Position
-	 * @return Entity
+	 * @return BlockEntity
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public abstract Entity getFaceEast(Vector3f pos);
+	public abstract BlockEntity getFaceEast(Vector3f pos);
 
 	/**
 	 * Get the Face West of the Block
 	 * 
 	 * @param pos
 	 *            Position
-	 * @return Entity
+	 * @return BlockEntity
 	 */
-	public abstract Entity getFaceWest(Vector3f pos);
+	public abstract BlockEntity getFaceWest(Vector3f pos);
 
 	/**
 	 * Get the Face North of the Block
 	 * 
 	 * @param pos
 	 *            Position
-	 * @return Entity
+	 * @return BlockEntity
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public abstract Entity getFaceNorth(Vector3f pos);
+	public abstract BlockEntity getFaceNorth(Vector3f pos);
 
 	/**
 	 * Get the Face South of the Block
 	 * 
 	 * @param pos
 	 *            Position
-	 * @return Entity
+	 * @return BlockEntity
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public abstract Entity getFaceSouth(Vector3f pos);
+	public abstract BlockEntity getFaceSouth(Vector3f pos);
 
 	/**
 	 * Get the WaterTile of the Block
@@ -151,10 +149,10 @@ public abstract class Block {
 	 * 
 	 * @param pos
 	 *            Position
-	 * @return Entity
+	 * @return BlockEntity
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public abstract Entity getSingleModel(Vector3f pos);
+	public abstract BlockEntity getSingleModel(Vector3f pos);
 
 	/**
 	 * Initialize the basic Block

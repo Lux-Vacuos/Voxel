@@ -58,14 +58,15 @@ public interface IKernel {
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void render(GameResources gm, MasterRenderer renderer,
-			GuiRenderer guiRenderer, WaterRenderer waterRenderer, SkyboxRenderer skyboxRenderer);
+			GuiRenderer guiRenderer, WaterRenderer waterRenderer,
+			SkyboxRenderer skyboxRenderer, float delta);
 
 	/**
 	 * Update Loop, contains all the update functions
 	 * 
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public void update(GameResources gm);
+	public void update(GameResources gm, float delta);
 
 	/**
 	 * Error Detection Loop, check the game errors

@@ -25,7 +25,6 @@
 package io.github.guerra24.voxel.client.kernel.graphics.shaders;
 
 import io.github.guerra24.voxel.client.kernel.core.KernelConstants;
-import io.github.guerra24.voxel.client.kernel.graphics.opengl.DisplayManager;
 import io.github.guerra24.voxel.client.kernel.util.Maths;
 import io.github.guerra24.voxel.client.kernel.util.vector.Matrix4f;
 import io.github.guerra24.voxel.client.kernel.util.vector.Vector3f;
@@ -92,15 +91,16 @@ public class SkyboxShader extends ShaderProgram {
 	 * 
 	 * @param camera
 	 *            Camera
+	 * @param delta
+	 *            Delta
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public void loadViewMatrix(Camera camera) {
+	public void loadViewMatrix(Camera camera, float delta) {
 		Matrix4f matrix = Maths.createViewMatrix(camera);
 		matrix.m30 = 0;
 		matrix.m31 = 0;
 		matrix.m32 = 0;
-		rotation += KernelConstants.ROTATE_SPEED
-				* DisplayManager.getFrameTimeSeconds();
+		rotation += KernelConstants.ROTATE_SPEED * delta;
 		Matrix4f.rotate((float) Math.toRadians(rotation),
 				new Vector3f(0, 1, 0), matrix, matrix);
 		super.loadMatrix(location_viewMatrix, matrix);

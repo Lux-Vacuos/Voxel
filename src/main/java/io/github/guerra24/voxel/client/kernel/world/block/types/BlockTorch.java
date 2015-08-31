@@ -3,8 +3,8 @@ package io.github.guerra24.voxel.client.kernel.world.block.types;
 import io.github.guerra24.voxel.client.kernel.resources.models.WaterTile;
 import io.github.guerra24.voxel.client.kernel.util.vector.Vector3f;
 import io.github.guerra24.voxel.client.kernel.world.block.Block;
+import io.github.guerra24.voxel.client.kernel.world.block.BlockEntity;
 import io.github.guerra24.voxel.client.kernel.world.block.BlocksResources;
-import io.github.guerra24.voxel.client.kernel.world.entities.Entity;
 
 public class BlockTorch extends Block {
 
@@ -14,32 +14,32 @@ public class BlockTorch extends Block {
 	}
 
 	@Override
-	public Entity getFaceUp(Vector3f pos) {
+	public BlockEntity getFaceUp(Vector3f pos) {
 		return null;
 	}
 
 	@Override
-	public Entity getFaceDown(Vector3f pos) {
+	public BlockEntity getFaceDown(Vector3f pos) {
 		return null;
 	}
 
 	@Override
-	public Entity getFaceEast(Vector3f pos) {
+	public BlockEntity getFaceEast(Vector3f pos) {
 		return null;
 	}
 
 	@Override
-	public Entity getFaceWest(Vector3f pos) {
+	public BlockEntity getFaceWest(Vector3f pos) {
 		return null;
 	}
 
 	@Override
-	public Entity getFaceNorth(Vector3f pos) {
+	public BlockEntity getFaceNorth(Vector3f pos) {
 		return null;
 	}
 
 	@Override
-	public Entity getFaceSouth(Vector3f pos) {
+	public BlockEntity getFaceSouth(Vector3f pos) {
 		return null;
 	}
 
@@ -49,7 +49,7 @@ public class BlockTorch extends Block {
 	}
 
 	@Override
-	public Entity getSingleModel(Vector3f pos) {
-		return new Entity(BlocksResources.cubeTorch, pos, 0, 0, 0, 1);
+	public BlockEntity getSingleModel(Vector3f pos) {
+		return new BlockEntity(BlocksResources.cubeTorch, pos, 0, 0, 0, 1);
 	}
 }

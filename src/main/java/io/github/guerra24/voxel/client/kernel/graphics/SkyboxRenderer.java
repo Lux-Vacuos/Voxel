@@ -35,7 +35,6 @@ import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import io.github.guerra24.voxel.client.kernel.core.Kernel;
 import io.github.guerra24.voxel.client.kernel.core.KernelConstants;
-import io.github.guerra24.voxel.client.kernel.graphics.opengl.DisplayManager;
 import io.github.guerra24.voxel.client.kernel.graphics.opengl.VoxelGL33;
 import io.github.guerra24.voxel.client.kernel.graphics.shaders.SkyboxShader;
 import io.github.guerra24.voxel.client.kernel.resources.Loader;
@@ -162,13 +161,15 @@ public class SkyboxRenderer {
 	 *            Fog Green Color
 	 * @param b
 	 *            Fog Blue Color
+	 * @param delta
+	 *            Delta
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public void render(Camera camera, float r, float g, float b) {
+	public void render(Camera camera, float r, float g, float b, float delta) {
 		shader.start();
 		shader.loadProjectionMatrix(Kernel.gameResources.renderer
 				.getProjectionMatrix());
-		shader.loadViewMatrix(camera);
+		shader.loadViewMatrix(camera, delta);
 		shader.loadFog(r, g, b);
 		glBindVertexArray(cube.getVaoID());
 		glEnableVertexAttribArray(0);
@@ -180,13 +181,23 @@ public class SkyboxRenderer {
 	}
 
 	/**
+	 * Update world time
+	 * 
+	 * @param delta
+	 *            Delta
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
+	public void update(float delta) {
+		time += delta * 10;
+		time %= 24000;
+	}
+
+	/**
 	 * Updates the Skybox Textures
 	 * 
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	private void bindTextures() {
-		time += DisplayManager.getFrameTimeSeconds() * 10;
-		time %= 24000;
 		int texture1;
 		int texture2;
 		float blendFactor;

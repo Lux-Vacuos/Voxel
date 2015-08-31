@@ -90,6 +90,8 @@ public class GameStates {
 			Kernel.world.startWorld("Mundo-1", Kernel.gameResources.camera,
 					seed, 0, Kernel.api);
 			Kernel.gameResources.camera.setMouse();
+			Kernel.gameResources.soundSystem.stop("menu1");
+			Kernel.gameResources.soundSystem.rewind("menu1");
 			state = State.GAME;
 		}
 
@@ -118,11 +120,13 @@ public class GameStates {
 					}
 				}
 			}
+			Kernel.gameResources.soundSystem.play("menu1");
 			Kernel.world.removeAll();
 			Kernel.gameResources.camera.setPosition(new Vector3f(-2, 0, -1));
 			Kernel.gameResources.camera.setPitch(0);
 			Kernel.gameResources.camera.setYaw(0);
 			state = State.MAINMENU;
+			Kernel.gameResources.soundSystem.setVolume("menu1", 1f);
 		}
 
 		if (state == State.GAME && !DisplayManager.displayFocused

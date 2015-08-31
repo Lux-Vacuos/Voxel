@@ -25,12 +25,11 @@
 package io.github.guerra24.voxel.client.kernel.world.entities;
 
 import io.github.guerra24.voxel.client.kernel.core.Kernel;
-import io.github.guerra24.voxel.client.kernel.graphics.opengl.DisplayManager;
 import io.github.guerra24.voxel.client.kernel.resources.models.TexturedModel;
 import io.github.guerra24.voxel.client.kernel.util.vector.Vector3f;
 import io.github.guerra24.voxel.client.kernel.world.block.Block;
 
-public class Player extends Entity {
+public class Player extends Entity implements IEntity {
 	private static final float GRAVITY = -10;
 	private static final float JUMP_POWER = 4;
 
@@ -43,9 +42,9 @@ public class Player extends Entity {
 		super(model, position, rotX, rotY, rotZ, scale);
 	}
 
-	public void move() {
-		super.increasePosition(0,
-				upwardsSpeed * DisplayManager.getFrameTimeSeconds(), 0);
+	@Override
+	public void update(float delta) {
+		super.increasePosition(0, upwardsSpeed * delta, 0);
 		try {
 			if (Kernel.world.getGlobalBlock(Kernel.world.dim,
 					(int) (super.getPosition().x - 0.2f),
@@ -56,7 +55,7 @@ public class Player extends Entity {
 							(int) (super.getPosition().y - 1.8f),
 							(int) (super.getPosition().z + 0.2f)) == Block.Air
 							.getId()) {
-				upwardsSpeed += GRAVITY * DisplayManager.getFrameTimeSeconds();
+				upwardsSpeed += GRAVITY * delta;
 				isInAir = true;
 			} else {
 				upwardsSpeed = 0;
@@ -80,6 +79,7 @@ public class Player extends Entity {
 								(int) (super.getPosition().z + 0.2f)) == Block.Air
 								.getId()) {
 					this.upwardsSpeed = JUMP_POWER;
+
 					isInAir = true;
 				} else {
 					upwardsSpeed = 0;

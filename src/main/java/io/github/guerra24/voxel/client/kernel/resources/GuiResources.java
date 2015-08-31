@@ -82,7 +82,7 @@ public class GuiResources {
 				new Vector2f(0.6f, -0.425f), new Vector2f(1.6f, 1.425f));
 		loadBar = new GuiTexture(
 				Kernel.gameResources.loader.loadTextureGui("LoadBar"),
-				new Vector2f(-0.3f, 0.15f), new Vector2f(0.1f, 0.1f));
+				new Vector2f(-0.3f, 0.15f), new Vector2f(0.0f, 0.1f));
 		button5 = new GuiTexture(button1.getTexture(),
 				new Vector2f(0.0f, -0.7f), new Vector2f(0.2f, 0.12f));
 	}

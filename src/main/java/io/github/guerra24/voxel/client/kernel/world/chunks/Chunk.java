@@ -34,8 +34,8 @@ import io.github.guerra24.voxel.client.kernel.resources.models.WaterTile;
 import io.github.guerra24.voxel.client.kernel.util.Maths;
 import io.github.guerra24.voxel.client.kernel.util.vector.Vector3f;
 import io.github.guerra24.voxel.client.kernel.world.block.Block;
+import io.github.guerra24.voxel.client.kernel.world.block.BlockEntity;
 import io.github.guerra24.voxel.client.kernel.world.entities.Camera;
-import io.github.guerra24.voxel.client.kernel.world.entities.Entity;
 import io.github.guerra24.voxel.client.kernel.world.entities.Light;
 
 import java.util.ArrayList;
@@ -50,7 +50,7 @@ public class Chunk {
 			sec3NotClear = false, sec4NotClear = false;
 	public byte[][][] blocks;
 
-	private transient Queue<Entity> cubes1, cubes2, cubes3, cubes4;
+	private transient Queue<BlockEntity> cubes1, cubes2, cubes3, cubes4;
 	private transient Queue<WaterTile> waters;
 	private transient List<Light> lights1, lights2, lights3, lights4;
 	private int sizeX, sizeY, sizeZ;
@@ -70,10 +70,10 @@ public class Chunk {
 		sizeY = KernelConstants.CHUNK_HEIGHT;
 		sizeZ = KernelConstants.CHUNK_SIZE;
 
-		cubes1 = new ConcurrentLinkedQueue<Entity>();
-		cubes2 = new ConcurrentLinkedQueue<Entity>();
-		cubes3 = new ConcurrentLinkedQueue<Entity>();
-		cubes4 = new ConcurrentLinkedQueue<Entity>();
+		cubes1 = new ConcurrentLinkedQueue<BlockEntity>();
+		cubes2 = new ConcurrentLinkedQueue<BlockEntity>();
+		cubes3 = new ConcurrentLinkedQueue<BlockEntity>();
+		cubes4 = new ConcurrentLinkedQueue<BlockEntity>();
 		waters = new ConcurrentLinkedQueue<WaterTile>();
 		lights1 = new ArrayList<Light>();
 		lights2 = new ArrayList<Light>();
@@ -87,10 +87,10 @@ public class Chunk {
 	}
 
 	public void loadInit() {
-		cubes1 = new ConcurrentLinkedQueue<Entity>();
-		cubes2 = new ConcurrentLinkedQueue<Entity>();
-		cubes3 = new ConcurrentLinkedQueue<Entity>();
-		cubes4 = new ConcurrentLinkedQueue<Entity>();
+		cubes1 = new ConcurrentLinkedQueue<BlockEntity>();
+		cubes2 = new ConcurrentLinkedQueue<BlockEntity>();
+		cubes3 = new ConcurrentLinkedQueue<BlockEntity>();
+		cubes4 = new ConcurrentLinkedQueue<BlockEntity>();
 		waters = new ConcurrentLinkedQueue<WaterTile>();
 		lights1 = new ArrayList<Light>();
 		lights2 = new ArrayList<Light>();

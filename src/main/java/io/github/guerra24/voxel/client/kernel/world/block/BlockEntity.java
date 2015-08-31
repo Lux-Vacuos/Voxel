@@ -22,12 +22,12 @@
  * SOFTWARE.
  */
 
-package io.github.guerra24.voxel.client.kernel.world.entities;
+package io.github.guerra24.voxel.client.kernel.world.block;
 
 import io.github.guerra24.voxel.client.kernel.resources.models.TexturedModel;
 import io.github.guerra24.voxel.client.kernel.util.vector.Vector3f;
 
-public class Entity {
+public class BlockEntity {
 
 	private TexturedModel model;
 	private Vector3f position;
@@ -35,7 +35,7 @@ public class Entity {
 	private float scale;
 	private int visibility;
 
-	public Entity(TexturedModel model, Vector3f position, float rotX,
+	public BlockEntity(TexturedModel model, Vector3f position, float rotX,
 			float rotY, float rotZ, float scale) {
 		this.model = model;
 		this.position = position;

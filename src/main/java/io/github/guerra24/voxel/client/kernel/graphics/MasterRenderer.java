@@ -37,6 +37,7 @@ import io.github.guerra24.voxel.client.kernel.resources.Loader;
 import io.github.guerra24.voxel.client.kernel.resources.models.TexturedModel;
 import io.github.guerra24.voxel.client.kernel.util.vector.Matrix4f;
 import io.github.guerra24.voxel.client.kernel.util.vector.Vector3f;
+import io.github.guerra24.voxel.client.kernel.world.block.BlockEntity;
 import io.github.guerra24.voxel.client.kernel.world.entities.Camera;
 import io.github.guerra24.voxel.client.kernel.world.entities.Entity;
 import io.github.guerra24.voxel.client.kernel.world.entities.Light;
@@ -63,6 +64,10 @@ public class MasterRenderer {
 	 * Batcher of entity
 	 */
 	private Map<TexturedModel, List<Entity>> entities = new HashMap<TexturedModel, List<Entity>>();
+	/**
+	 * Batcher of BlockEntity
+	 */
+	private Map<TexturedModel, List<BlockEntity>> blockEntities = new HashMap<TexturedModel, List<BlockEntity>>();
 	/**
 	 * Entity Shader
 	 */
@@ -104,18 +109,18 @@ public class MasterRenderer {
 	/**
 	 * Render the Chunk
 	 * 
-	 * @param cubes
-	 *            A list of Cubes
+	 * @param cubes1
+	 *            A list of BlockEntity
 	 * @param lights
 	 *            A list of Lights
 	 * @param camera
 	 *            A Camera
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public void renderChunk(Queue<Entity> cubes, List<Light> lights,
+	public void renderChunk(Queue<BlockEntity> cubes1, List<Light> lights,
 			Camera camera) {
-		for (Entity entity : cubes) {
-			processEntity(entity);
+		for (BlockEntity entity : cubes1) {
+			processBlockEntity(entity);
 		}
 		renderChunk(lights, camera);
 	}
@@ -159,9 +164,9 @@ public class MasterRenderer {
 		shader.loadLights(lights);
 		shader.loadviewMatrix(camera);
 		shader.loadDirectLightDirection(new Vector3f(-80, -100, -40));
-		entityRenderer.render(entities);
+		entityRenderer.renderBlockEntity(blockEntities);
 		shader.stop();
-		entities.clear();
+		blockEntities.clear();
 	}
 
 	/**
@@ -179,9 +184,28 @@ public class MasterRenderer {
 		shader.loadLights(lights);
 		shader.loadviewMatrix(camera);
 		shader.loadDirectLightDirection(new Vector3f(-80, -100, -40));
-		entityRenderer.render(entities);
+		entityRenderer.renderEntity(entities);
 		shader.stop();
 		entities.clear();
+	}
+
+	/**
+	 * Add the BlockEntity to the batcher map
+	 * 
+	 * @param BlockEntity
+	 *            An Entity
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
+	private void processBlockEntity(BlockEntity entity) {
+		TexturedModel entityModel = entity.getModel();
+		List<BlockEntity> batch = blockEntities.get(entityModel);
+		if (batch != null) {
+			batch.add(entity);
+		} else {
+			List<BlockEntity> newBatch = new ArrayList<BlockEntity>();
+			newBatch.add(entity);
+			blockEntities.put(entityModel, newBatch);
+		}
 	}
 
 	/**

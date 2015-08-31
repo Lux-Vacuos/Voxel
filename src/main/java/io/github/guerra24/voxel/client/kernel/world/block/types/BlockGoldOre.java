@@ -27,8 +27,8 @@ package io.github.guerra24.voxel.client.kernel.world.block.types;
 import io.github.guerra24.voxel.client.kernel.resources.models.WaterTile;
 import io.github.guerra24.voxel.client.kernel.util.vector.Vector3f;
 import io.github.guerra24.voxel.client.kernel.world.block.Block;
+import io.github.guerra24.voxel.client.kernel.world.block.BlockEntity;
 import io.github.guerra24.voxel.client.kernel.world.block.BlocksResources;
-import io.github.guerra24.voxel.client.kernel.world.entities.Entity;
 
 public class BlockGoldOre extends Block {
 
@@ -38,33 +38,33 @@ public class BlockGoldOre extends Block {
 	}
 
 	@Override
-	public Entity getFaceUp(Vector3f pos) {
-		return new Entity(BlocksResources.cubeGoldOreUP, pos, 0, 0, 0, 1);
+	public BlockEntity getFaceUp(Vector3f pos) {
+		return new BlockEntity(BlocksResources.cubeGoldOreUP, pos, 0, 0, 0, 1);
 	}
 
 	@Override
-	public Entity getFaceDown(Vector3f pos) {
-		return new Entity(BlocksResources.cubeGoldOreDOWN, pos, 0, 0, 0, 1);
+	public BlockEntity getFaceDown(Vector3f pos) {
+		return new BlockEntity(BlocksResources.cubeGoldOreDOWN, pos, 0, 0, 0, 1);
 	}
 
 	@Override
-	public Entity getFaceEast(Vector3f pos) {
-		return new Entity(BlocksResources.cubeGoldOreEAST, pos, 0, 0, 0, 1);
+	public BlockEntity getFaceEast(Vector3f pos) {
+		return new BlockEntity(BlocksResources.cubeGoldOreEAST, pos, 0, 0, 0, 1);
 	}
 
 	@Override
-	public Entity getFaceWest(Vector3f pos) {
-		return new Entity(BlocksResources.cubeGoldOreWEST, pos, 0, 0, 0, 1);
+	public BlockEntity getFaceWest(Vector3f pos) {
+		return new BlockEntity(BlocksResources.cubeGoldOreWEST, pos, 0, 0, 0, 1);
 	}
 
 	@Override
-	public Entity getFaceNorth(Vector3f pos) {
-		return new Entity(BlocksResources.cubeGoldOreNORTH, pos, 0, 0, 0, 1);
+	public BlockEntity getFaceNorth(Vector3f pos) {
+		return new BlockEntity(BlocksResources.cubeGoldOreNORTH, pos, 0, 0, 0, 1);
 	}
 
 	@Override
-	public Entity getFaceSouth(Vector3f pos) {
-		return new Entity(BlocksResources.cubeGoldOreSOUTH, pos, 0, 0, 0, 1);
+	public BlockEntity getFaceSouth(Vector3f pos) {
+		return new BlockEntity(BlocksResources.cubeGoldOreSOUTH, pos, 0, 0, 0, 1);
 	}
 
 	@Override
@@ -73,7 +73,7 @@ public class BlockGoldOre extends Block {
 	}
 
 	@Override
-	public Entity getSingleModel(Vector3f pos) {
+	public BlockEntity getSingleModel(Vector3f pos) {
 		return null;
 	}
 

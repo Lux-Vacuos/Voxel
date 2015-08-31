@@ -39,7 +39,6 @@ import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import io.github.guerra24.voxel.client.kernel.core.Kernel;
 import io.github.guerra24.voxel.client.kernel.core.KernelConstants;
-import io.github.guerra24.voxel.client.kernel.graphics.opengl.DisplayManager;
 import io.github.guerra24.voxel.client.kernel.graphics.opengl.VoxelGL33;
 import io.github.guerra24.voxel.client.kernel.graphics.shaders.WaterShader;
 import io.github.guerra24.voxel.client.kernel.resources.Loader;
@@ -49,9 +48,7 @@ import io.github.guerra24.voxel.client.kernel.util.Maths;
 import io.github.guerra24.voxel.client.kernel.util.vector.Matrix4f;
 import io.github.guerra24.voxel.client.kernel.util.vector.Vector3f;
 import io.github.guerra24.voxel.client.kernel.world.entities.Camera;
-import io.github.guerra24.voxel.client.kernel.world.entities.Light;
 
-import java.util.List;
 import java.util.Queue;
 
 /**
@@ -135,34 +132,6 @@ public class WaterRenderer {
 	}
 
 	/**
-	 * Renders the Water Tiles in the List
-	 * 
-	 * @param waters
-	 *            A list of Water Tiles
-	 * @param camera
-	 *            A Camera
-	 * @param light
-	 *            A list of Lights
-	 * @author Guerra24 <pablo230699@hotmail.com>
-	 * @deprecated
-	 */
-	public void render(List<WaterTile> water, Camera camera, Light light) {
-		prepareRender(camera, light);
-		for (WaterTile tile : water) {
-			if (Kernel.gameResources.frustum.pointInFrustum(tile.getX(),
-					tile.getHeight(), tile.getZ())) {
-				Matrix4f modelMatrix = Maths
-						.createTransformationMatrix(new Vector3f(tile.getX(),
-								tile.getHeight(), tile.getZ()), 0, 0, 0,
-								WaterTile.TILE_SIZE);
-				shader.loadModelMatrix(modelMatrix);
-				VoxelGL33.glDrawArrays(GL_TRIANGLES, 0, quad.getVertexCount());
-			}
-		}
-		unbind();
-	}
-
-	/**
 	 * Water Tile Prepare PipeLine
 	 * 
 	 * @param camera
@@ -189,42 +158,16 @@ public class WaterRenderer {
 		glBindTexture(GL_TEXTURE_2D, normalTexture);
 	}
 
-	public void update() {
-		moveFactor += KernelConstants.WAVE_SPEED
-				* DisplayManager.getFrameTimeSeconds();
-		moveFactor %= 1;
-	}
-
 	/**
-	 * Water Tile Prepare PipeLine
+	 * Updates the water
 	 * 
-	 * @param camera
-	 *            A Camera
-	 * @param light
-	 *            A list of Lights
-	 * @deprecated
+	 * @param delta
+	 *            Delta
+	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	private void prepareRender(Camera camera, Light light) {
-		shader.start();
-		shader.loadSkyColour(KernelConstants.RED, KernelConstants.GREEN,
-				KernelConstants.BLUE);
-		shader.loadViewMatrix(camera);
-		moveFactor += KernelConstants.WAVE_SPEED
-				* DisplayManager.getFrameTimeSeconds();
+	public void update(float delta) {
+		moveFactor += KernelConstants.WAVE_SPEED * delta;
 		moveFactor %= 1;
-		shader.loadProjectionMatrix(Kernel.gameResources.renderer
-				.getProjectionMatrix());
-		shader.loadMoveFactor(moveFactor);
-		shader.loadLight(light);
-		VoxelGL33.glDisable(GL_CULL_FACE);
-		VoxelGL33.glEnable(GL_BLEND);
-		VoxelGL33.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		glBindVertexArray(quad.getVaoID());
-		glEnableVertexAttribArray(0);
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, dudvTexture);
-		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_2D, normalTexture);
 	}
 
 	/**

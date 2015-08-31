@@ -39,6 +39,7 @@ import io.github.guerra24.voxel.client.kernel.resources.models.RawModel;
 import io.github.guerra24.voxel.client.kernel.resources.models.TexturedModel;
 import io.github.guerra24.voxel.client.kernel.util.Maths;
 import io.github.guerra24.voxel.client.kernel.util.vector.Matrix4f;
+import io.github.guerra24.voxel.client.kernel.world.block.BlockEntity;
 import io.github.guerra24.voxel.client.kernel.world.entities.Entity;
 
 import java.util.List;
@@ -73,16 +74,37 @@ public class EntityRenderer {
 	}
 
 	/**
-	 * Render the entity's in the list
+	 * Render the block entity's in the list
 	 * 
-	 * @param entities
+	 * @param blockEntities
 	 *            A List of entity's
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public void render(Map<TexturedModel, List<Entity>> entities) {
-		for (TexturedModel model : entities.keySet()) {
+	public void renderBlockEntity(
+			Map<TexturedModel, List<BlockEntity>> blockEntities) {
+		for (TexturedModel model : blockEntities.keySet()) {
 			prepareTexturedModel(model);
-			List<Entity> batch = entities.get(model);
+			List<BlockEntity> batch = blockEntities.get(model);
+			for (BlockEntity entity : batch) {
+				prepareInstance(entity);
+				VoxelGL33.glDrawElements(GL_TRIANGLES, model.getRawModel()
+						.getVertexCount(), GL_UNSIGNED_INT, 0);
+			}
+			unbindTexturedModel();
+		}
+	}
+
+	/**
+	 * Render the entity's in the list
+	 * 
+	 * @param blockEntities
+	 *            A List of entity's
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
+	public void renderEntity(Map<TexturedModel, List<Entity>> blockEntities) {
+		for (TexturedModel model : blockEntities.keySet()) {
+			prepareTexturedModel(model);
+			List<Entity> batch = blockEntities.get(model);
 			for (Entity entity : batch) {
 				prepareInstance(entity);
 				VoxelGL33.glDrawElements(GL_TRIANGLES, model.getRawModel()
@@ -119,6 +141,20 @@ public class EntityRenderer {
 		glDisableVertexAttribArray(1);
 		glDisableVertexAttribArray(2);
 		glBindVertexArray(0);
+	}
+
+	/**
+	 * Prepares the Textured Model Translation, Rotation and Scale
+	 * 
+	 * @param entity
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
+	private void prepareInstance(BlockEntity entity) {
+		Matrix4f transformationMatrix = Maths.createTransformationMatrix(
+				entity.getPosition(), entity.getRotX(), entity.getRotY(),
+				entity.getRotZ(), entity.getScale());
+		shader.loadTransformationMatrix(transformationMatrix);
+
 	}
 
 	/**

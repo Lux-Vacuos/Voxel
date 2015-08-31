@@ -128,12 +128,15 @@ public class World {
 	 * 
 	 * @param camera
 	 *            Camera
+	 * @param api
+	 *            API
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	private void createWorld(Camera camera, API api) {
 		Logger.log(Thread.currentThread(), "Generating World");
 		xPlayChunk = (int) (camera.getPosition().x / 16);
 		zPlayChunk = (int) (camera.getPosition().z / 16);
+		float o = 1f;
 		float i = 0f;
 		for (int zr = -10; zr <= 10; zr++) {
 			int zz = zPlayChunk + zr;
@@ -143,6 +146,12 @@ public class World {
 					i += 0.00200f;
 					Kernel.gameResources.guis3.get(1).setScale(
 							new Vector2f(i, 0.041f));
+					if (i > 0.5060006f) {
+						o -= 0.04f;
+						if (o >= 0)
+							Kernel.gameResources.soundSystem.setVolume("menu1",
+									o);
+					}
 					if (!hasChunk(dim, xx, zz)) {
 						if (existChunkFile(dim, xx, zz)) {
 							loadChunk(dim, xx, zz);
@@ -163,6 +172,8 @@ public class World {
 	 * 
 	 * @param camera
 	 *            Camera
+	 * @param api
+	 *            API
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void updateChunkGeneration(Camera camera, API api) {

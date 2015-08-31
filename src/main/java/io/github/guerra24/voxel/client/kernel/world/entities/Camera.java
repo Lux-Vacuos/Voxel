@@ -24,20 +24,45 @@
 
 package io.github.guerra24.voxel.client.kernel.world.entities;
 
+import static io.github.guerra24.voxel.client.kernel.input.Keyboard.KEY_1;
+import static io.github.guerra24.voxel.client.kernel.input.Keyboard.KEY_2;
+import static io.github.guerra24.voxel.client.kernel.input.Keyboard.KEY_3;
+import static io.github.guerra24.voxel.client.kernel.input.Keyboard.KEY_4;
+import static io.github.guerra24.voxel.client.kernel.input.Keyboard.KEY_5;
+import static io.github.guerra24.voxel.client.kernel.input.Keyboard.KEY_6;
+import static io.github.guerra24.voxel.client.kernel.input.Keyboard.KEY_7;
+import static io.github.guerra24.voxel.client.kernel.input.Keyboard.KEY_8;
+import static io.github.guerra24.voxel.client.kernel.input.Keyboard.KEY_A;
+import static io.github.guerra24.voxel.client.kernel.input.Keyboard.KEY_D;
+import static io.github.guerra24.voxel.client.kernel.input.Keyboard.KEY_F3;
+import static io.github.guerra24.voxel.client.kernel.input.Keyboard.KEY_K;
+import static io.github.guerra24.voxel.client.kernel.input.Keyboard.KEY_LCONTROL;
+import static io.github.guerra24.voxel.client.kernel.input.Keyboard.KEY_LSHIFT;
+import static io.github.guerra24.voxel.client.kernel.input.Keyboard.KEY_R;
+import static io.github.guerra24.voxel.client.kernel.input.Keyboard.KEY_S;
+import static io.github.guerra24.voxel.client.kernel.input.Keyboard.KEY_SPACE;
+import static io.github.guerra24.voxel.client.kernel.input.Keyboard.KEY_T;
+import static io.github.guerra24.voxel.client.kernel.input.Keyboard.KEY_W;
+import static io.github.guerra24.voxel.client.kernel.input.Keyboard.KEY_Y;
+import static io.github.guerra24.voxel.client.kernel.input.Keyboard.isKeyDown;
+import static io.github.guerra24.voxel.client.kernel.input.Mouse.getDX;
+import static io.github.guerra24.voxel.client.kernel.input.Mouse.getDY;
+import static io.github.guerra24.voxel.client.kernel.input.Mouse.isButtonDown;
+import static io.github.guerra24.voxel.client.kernel.input.Mouse.setCursorPosition;
+import static io.github.guerra24.voxel.client.kernel.input.Mouse.setGrabbed;
 import io.github.guerra24.voxel.client.kernel.core.Kernel;
 import io.github.guerra24.voxel.client.kernel.core.KernelConstants;
 import io.github.guerra24.voxel.client.kernel.graphics.opengl.DisplayManager;
+import io.github.guerra24.voxel.client.kernel.util.Logger;
 import io.github.guerra24.voxel.client.kernel.util.vector.Vector2f;
 import io.github.guerra24.voxel.client.kernel.util.vector.Vector3f;
-import static io.github.guerra24.voxel.client.kernel.input.Keyboard.*;
-import static io.github.guerra24.voxel.client.kernel.input.Mouse.*;
 
 /**
  * Camera
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
  */
-public class Camera {
+public class Camera implements IEntity {
 
 	private Vector3f position = new Vector3f(-2, 0, -1);
 	private float pitch;
@@ -58,12 +83,11 @@ public class Camera {
 		this.speed = 0.2f;
 	}
 
-	public void move() {
+	@Override
+	public void update(float delta) {
 		isMoved = false;
-		float mouseDX = getDX() * DisplayManager.getFrameTimeSeconds()
-				* mouseSpeed * 0.16f * multiplierMouse;
-		float mouseDY = getDY() * DisplayManager.getFrameTimeSeconds()
-				* mouseSpeed * 0.16f * multiplierMouse;
+		float mouseDX = getDX() * delta * mouseSpeed * 0.16f * multiplierMouse;
+		float mouseDY = getDY() * delta * mouseSpeed * 0.16f * multiplierMouse;
 		if (yaw + mouseDX >= 360) {
 			yaw = yaw + mouseDX - 360;
 		} else if (yaw + mouseDX < 0) {
@@ -79,51 +103,43 @@ public class Camera {
 			pitch = maxLookUp;
 		}
 		if (isKeyDown(KEY_W)) {
-			position.z += -(float) Math.cos(Math.toRadians(yaw))
-					* DisplayManager.getFrameTimeSeconds() * speed
+			position.z += -Math.cos(Math.toRadians(yaw)) * delta * speed
 					* multiplierMovement;
-			position.x += (float) Math.sin(Math.toRadians(yaw))
-					* DisplayManager.getFrameTimeSeconds() * speed
+			position.x += Math.sin(Math.toRadians(yaw)) * delta * speed
 					* multiplierMovement;
 			isMoved = true;
 
 		} else if (isKeyDown(KEY_S)) {
 
-			position.z -= -(float) Math.cos(Math.toRadians(yaw))
-					* DisplayManager.getFrameTimeSeconds() * speed
+			position.z -= -Math.cos(Math.toRadians(yaw)) * delta * speed
 					* multiplierMovement;
-			position.x -= (float) Math.sin(Math.toRadians(yaw))
-					* DisplayManager.getFrameTimeSeconds() * speed
+			position.x -= Math.sin(Math.toRadians(yaw)) * delta * speed
 					* multiplierMovement;
 			isMoved = true;
 		}
 
 		if (isKeyDown(KEY_D)) {
-			position.z += (float) Math.sin(Math.toRadians(yaw))
-					* DisplayManager.getFrameTimeSeconds() * speed
+			position.z += Math.sin(Math.toRadians(yaw)) * delta * speed
 					* multiplierMovement;
-			position.x += (float) Math.cos(Math.toRadians(yaw))
-					* DisplayManager.getFrameTimeSeconds() * speed
+			position.x += Math.cos(Math.toRadians(yaw)) * delta * speed
 					* multiplierMovement;
 			isMoved = true;
 		} else if (isKeyDown(KEY_A)) {
-			position.z -= (float) Math.sin(Math.toRadians(yaw))
-					* DisplayManager.getFrameTimeSeconds() * speed
+			position.z -= Math.sin(Math.toRadians(yaw)) * delta * speed
 					* multiplierMovement;
-			position.x -= (float) Math.cos(Math.toRadians(yaw))
-					* DisplayManager.getFrameTimeSeconds() * speed
+			position.x -= Math.cos(Math.toRadians(yaw)) * delta * speed
 					* multiplierMovement;
 			isMoved = true;
 		}
 		if (isKeyDown(KEY_SPACE)) {
-			// position.y += DisplayManager.getFrameTimeSeconds() * speed
+			// position.y += delta * speed
 			// * multiplierMovement;
 			Kernel.gameResources.player.jump();
 		}
 		if (isKeyDown(KEY_LSHIFT)) {
-			// position.y -= DisplayManager.getFrameTimeSeconds() * speed
+			// position.y -= delta * speed
 			// * multiplierMovement;
-			speed = 0.1f;
+			speed = 0.05f;
 		} else {
 			speed = 0.2f;
 		}
@@ -133,8 +149,6 @@ public class Camera {
 			speed = 0.2f;
 		}
 
-		if (isKeyDown(KEY_T))
-			System.out.println(Kernel.renderCallsPerFrame);
 		if (isKeyDown(KEY_Y))
 			System.out.println(position);
 		updatePlayerState();
@@ -163,24 +177,23 @@ public class Camera {
 			block = 8;
 		else if (isKeyDown(KEY_8))
 			block = 9;
+		Kernel.gameResources.mouse.update();
 		if (isButtonDown(0)) {
-			Kernel.gameResources.mouse.update();
-			Kernel.world
-					.setGlobalBlock(
-							Kernel.world.dim,
-							(int) (Kernel.gameResources.mouse.getCurrentRay().x + position.x),
-							(int) (Kernel.gameResources.mouse.getCurrentRay().y + position.y),
-							(int) (Kernel.gameResources.mouse.getCurrentRay().z + position.z),
-							(byte) 0);
+			Kernel.world.setGlobalBlock(Kernel.world.dim, (int) Math
+					.ceil(Kernel.gameResources.mouse.getCurrentRay().x
+							+ position.x), (int) Math
+					.ceil(Kernel.gameResources.mouse.getCurrentRay().y
+							+ position.y), (int) Math
+					.ceil(Kernel.gameResources.mouse.getCurrentRay().z
+							+ position.z), (byte) 0);
 		} else if (isButtonDown(1)) {
-			Kernel.gameResources.mouse.update();
-			Kernel.world
-					.setGlobalBlock(
-							Kernel.world.dim,
-							(int) (Kernel.gameResources.mouse.getCurrentRay().x + position.x),
-							(int) (Kernel.gameResources.mouse.getCurrentRay().y + position.y),
-							(int) (Kernel.gameResources.mouse.getCurrentRay().z + position.z),
-							block);
+			Kernel.world.setGlobalBlock(Kernel.world.dim, (int) Math
+					.ceil(Kernel.gameResources.mouse.getCurrentRay().x
+							+ position.x), (int) Math
+					.ceil(Kernel.gameResources.mouse.getCurrentRay().y
+							+ position.y), (int) Math
+					.ceil(Kernel.gameResources.mouse.getCurrentRay().z
+							+ position.z), block);
 		}
 	}
 

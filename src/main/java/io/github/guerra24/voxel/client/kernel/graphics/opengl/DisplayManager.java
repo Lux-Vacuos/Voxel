@@ -73,15 +73,6 @@ import de.matthiasmann.twl.utils.PNGDecoder;
 public class DisplayManager {
 
 	/**
-	 * Last Frame Time Value
-	 */
-	private static long lastFrameTime;
-	/**
-	 * Game Delta Value
-	 */
-	private static float delta;
-
-	/**
 	 * LWJGL Window
 	 */
 	private static long window;
@@ -90,6 +81,15 @@ public class DisplayManager {
 	 * Display VidMode
 	 */
 	private static ByteBuffer vidmode;
+	/**
+	 * Game loop variables
+	 */
+	private static double lastLoopTime;
+	public static float timeCount;
+	public static int fps;
+	public static int fpsCount;
+	public static int ups;
+	public static int upsCount;
 
 	/**
 	 * LWJGL Callback
@@ -137,6 +137,10 @@ public class DisplayManager {
 		glfwWindowHint(GLFW_VISIBLE, GL_FALSE);
 		glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
 		glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+		glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
 		window = glfwCreateWindow(KernelConstants.WIDTH,
 				KernelConstants.HEIGHT, KernelConstants.Title, NULL, NULL);
@@ -149,7 +153,6 @@ public class DisplayManager {
 				(GLFWvidmode.width(vidmode) - KernelConstants.WIDTH) / 2,
 				(GLFWvidmode.height(vidmode) - KernelConstants.HEIGHT) / 2);
 		glfwMakeContextCurrent(window);
-		glfwSwapInterval(1);
 		glfwShowWindow(window);
 	}
 
@@ -301,7 +304,7 @@ public class DisplayManager {
 				+ glGetString(GL_VERSION));
 		VoxelGL33.glViewport(0, 0, KernelConstants.WIDTH,
 				KernelConstants.HEIGHT);
-		lastFrameTime = getCurrentTime();
+		lastLoopTime = getTime();
 	}
 
 	/**
@@ -323,12 +326,10 @@ public class DisplayManager {
 			VoxelGL33.glViewport(0, 0, width, height);
 			Kernel.gameResources.renderer.createProjectionMatrix();
 		}
-		long currentFrameTime = getCurrentTime();
-		delta = (currentFrameTime - lastFrameTime) / 1000f;
-		lastFrameTime = currentFrameTime;
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 		Mouse.poll();
+		// sync(fps);
 	}
 
 	/**
@@ -355,25 +356,6 @@ public class DisplayManager {
 	}
 
 	/**
-	 * Get the delta value
-	 * 
-	 * @return Delta Value
-	 * @author Guerra24 <pablo230699@hotmail.com>
-	 */
-	public static float getFrameTimeSeconds() {
-		return delta;
-	}
-
-	/**
-	 * Get the Current Time
-	 * 
-	 * @return Current Time
-	 */
-	private static long getCurrentTime() {
-		return (long) (GLFW.glfwGetTime() * 1000) * 1000 / 1000;
-	}
-
-	/**
 	 * Loads the Icon
 	 * 
 	 * @param path
@@ -395,6 +377,30 @@ public class DisplayManager {
 		} finally {
 			inputStream.close();
 		}
+	}
+
+	/**
+	 * Get the time
+	 * 
+	 * @return time
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
+	public static double getTime() {
+		return glfwGetTime();
+	}
+
+	/**
+	 * Calculates the Delta
+	 * 
+	 * @return Delta
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
+	public static float getDelta() {
+		double time = getTime();
+		float delta = (float) (time - lastLoopTime);
+		lastLoopTime = time;
+		timeCount += delta;
+		return delta;
 	}
 
 	/**
