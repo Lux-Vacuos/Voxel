@@ -87,7 +87,6 @@ public class GameResources {
 	public SoundSystem soundSystem;
 	public Frustum frustum;
 	public float distance;
-	public Entity planet;
 
 	/**
 	 * Constructor, Create the Game Resources and Init Loader
@@ -146,13 +145,10 @@ public class GameResources {
 		MainMenu.loadModels(this);
 		Entity planet = new Entity(MainMenu.planet, new Vector3f(-1, 0, -3), 0,
 				90, 0, 1);
-		Light sun = new Light(new Vector3f(0, 0, 0), new Vector3f(1, 1, 1),
+		Light sun = new Light(new Vector3f(-3, 0, -2), new Vector3f(1, 1, 1),
 				new Vector3f(1, 0.1f, 0.09f));
 		player = new Player(BlocksResources.cubeGlassUP,
 				new Vector3f(0, 80, -4), 0, 0, 0, 1);
-		this.planet = new Entity(MainMenu.planet, new Vector3f(-3, 0, -3), 0,
-				90, 0, 1);
-		allObjects.add(this.planet);
 		allObjects.add(player);
 		mainMenuModels.add(planet);
 		mainMenuLights.add(sun);

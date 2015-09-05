@@ -179,21 +179,21 @@ public class Camera implements IEntity {
 			block = 9;
 		Kernel.gameResources.mouse.update();
 		if (isButtonDown(0)) {
-			Kernel.world.setGlobalBlock(Kernel.world.dim, (int) Math
-					.ceil(Kernel.gameResources.mouse.getCurrentRay().x
-							+ position.x), (int) Math
-					.ceil(Kernel.gameResources.mouse.getCurrentRay().y
-							+ position.y), (int) Math
-					.ceil(Kernel.gameResources.mouse.getCurrentRay().z
-							+ position.z), (byte) 0);
+			Kernel.world
+					.setGlobalBlock(
+							Kernel.world.dim,
+							(int) (Kernel.gameResources.mouse.getCurrentRay().x + position.x),
+							(int) (Kernel.gameResources.mouse.getCurrentRay().y + position.y),
+							(int) (Kernel.gameResources.mouse.getCurrentRay().z + position.z),
+							(byte) 0);
 		} else if (isButtonDown(1)) {
-			Kernel.world.setGlobalBlock(Kernel.world.dim, (int) Math
-					.ceil(Kernel.gameResources.mouse.getCurrentRay().x
-							+ position.x), (int) Math
-					.ceil(Kernel.gameResources.mouse.getCurrentRay().y
-							+ position.y), (int) Math
-					.ceil(Kernel.gameResources.mouse.getCurrentRay().z
-							+ position.z), block);
+			Kernel.world
+					.setGlobalBlock(
+							Kernel.world.dim,
+							(int) (Kernel.gameResources.mouse.getCurrentRay().x + position.x),
+							(int) (Kernel.gameResources.mouse.getCurrentRay().y + position.y),
+							(int) (Kernel.gameResources.mouse.getCurrentRay().z + position.z),
+							block);
 		}
 	}
 

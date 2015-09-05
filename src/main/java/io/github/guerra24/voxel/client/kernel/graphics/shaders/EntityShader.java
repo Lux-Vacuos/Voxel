@@ -72,6 +72,14 @@ public class EntityShader extends ShaderProgram {
 	 * Directional Light ID
 	 */
 	private int location_directLightDirection;
+	/**
+	 * World Time
+	 */
+	private int location_time;
+	/**
+	 * Day/Night blend factor
+	 */
+	private int location_blendFactor;
 
 	/**
 	 * Constructor, creates an Entity Shader
@@ -100,6 +108,8 @@ public class EntityShader extends ShaderProgram {
 		location_skyColour = super.getUniformLocation("skyColour");
 		location_directLightDirection = super
 				.getUniformLocation("directLightDirection");
+		location_blendFactor = super.getUniformLocation("blendFactor");
+		location_time = super.getUniformLocation("time");
 
 		location_lightPosition = new int[KernelConstants.MAX_LIGHTS];
 		location_lightColour = new int[KernelConstants.MAX_LIGHTS];
@@ -152,6 +162,28 @@ public class EntityShader extends ShaderProgram {
 	}
 
 	/**
+	 * Loads the Day/Night blend factor
+	 * 
+	 * @param time
+	 *            Time
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
+	public void loadblendFactor(float factor) {
+		super.loadFloat(location_blendFactor, factor);
+	}
+
+	/**
+	 * Loads the World Time
+	 * 
+	 * @param time
+	 *            Time
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
+	public void loadTime(float time) {
+		super.loadFloat(location_time, time);
+	}
+
+	/**
 	 * Loads the List of Lights to the shader
 	 * 
 	 * @param lights
@@ -168,11 +200,14 @@ public class EntityShader extends ShaderProgram {
 				super.loadVector(location_attenuations[i], lights.get(i)
 						.getAttenuation());
 			} else {
-				super.loadVector(location_lightPosition[i], new Vector3f(0, 0,
-						0));
-				super.loadVector(location_lightColour[i], new Vector3f(0, 0, 0));
-				super.loadVector(location_attenuations[i],
-						new Vector3f(0, 0, 0));
+				super.loadVector(location_lightPosition[i], new Vector3f(0,
+						-128, 0));
+				super.loadVector(location_lightColour[i], new Vector3f(
+						0.0000000000000000001f, 0.0000000000000000001f,
+						0.0000000000000000001f));
+				super.loadVector(location_attenuations[i], new Vector3f(
+						0.0000000000000000001f, 0.0000000000000000001f,
+						0.0000000000000000001f));
 			}
 		}
 	}

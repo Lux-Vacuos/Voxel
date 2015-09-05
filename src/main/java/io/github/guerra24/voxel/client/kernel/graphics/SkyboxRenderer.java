@@ -128,6 +128,10 @@ public class SkyboxRenderer {
 	 * Skybox Day/Night Timer
 	 */
 	private float time = 0;
+	/**
+	 * Blend Factor
+	 */
+	float blendFactor = 0;
 
 	/**
 	 * Constructor, Initializes the Skybox model, Textures and Shader
@@ -147,7 +151,7 @@ public class SkyboxRenderer {
 		shader.connectTextureUnits();
 		shader.loadProjectionMatrix(projectionMatrix);
 		shader.stop();
-		time = 4900;
+		time = 3000;
 	}
 
 	/**
@@ -200,7 +204,6 @@ public class SkyboxRenderer {
 	private void bindTextures() {
 		int texture1;
 		int texture2;
-		float blendFactor;
 		if (time >= 0 && time < 5000) {
 			texture1 = nightTexture;
 			texture2 = nightTexture;
@@ -224,5 +227,25 @@ public class SkyboxRenderer {
 		glActiveTexture(GL_TEXTURE1);
 		glBindTexture(GL_TEXTURE_CUBE_MAP, texture2);
 		shader.loadBlendFactor(blendFactor);
+	}
+
+	/**
+	 * Get the blend factor
+	 * 
+	 * @return time
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
+	public float getBlendFactor() {
+		return blendFactor;
+	}
+
+	/**
+	 * Get the world time
+	 * 
+	 * @return time
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
+	public float getTime() {
+		return time;
 	}
 }

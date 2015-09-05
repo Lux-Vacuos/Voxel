@@ -44,7 +44,7 @@ void main(void) {
 	vec4 totalDiffuse = vec4(0.0);
 	
 	// code for dynamic light
-	for(int i=0;i<1;i++) {
+	for(int i=0;i<8;i++) {
 		float distance = length(toLightVector[i]);
 		float attFactor = attenuations[i].x + (attenuations[i].y * distance) + (attenuations[i].z * distance * distance);
 		vec3 unitLightVector = normalize(toLightVector[i]);
@@ -53,8 +53,8 @@ void main(void) {
 		totalDiffuse.xyz = totalDiffuse.xyz + (brightness * lightColour[i])/attFactor;
 	}
 	vec4 light = clamp(vec4(lightIntensity, 1.0), 0.0, 1.0);
-	totalDiffuse = light;
-	totalDiffuse = max(totalDiffuse, 0.1);
+	totalDiffuse = totalDiffuse + light;
+	totalDiffuse = max(totalDiffuse, 0.0);
 	totalDiffuse = min(totalDiffuse, 0.8);
 	
 	vec4 textureColour = texture(textureSampler, pass_textureCoords);

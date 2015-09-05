@@ -226,7 +226,7 @@ public class World {
 	 *            Camera
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public void updateChunksRender(GameResources gm, Camera camera) {
+	public void updateChunksRender(GameResources gm, Camera camera) throws NullPointerException {
 		Kernel.gameResources.lights.clear();
 		for (int zr = -tempRadius; zr <= tempRadius; zr++) {
 			int zz = zPlayChunk + zr;
@@ -527,7 +527,7 @@ public class World {
 		if (chunk != null)
 			return chunk.getLocalBlock(x, y, z);
 		else
-			return 1;
+			return 0;
 	}
 
 	/**

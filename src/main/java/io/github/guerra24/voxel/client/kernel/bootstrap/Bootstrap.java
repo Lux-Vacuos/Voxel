@@ -24,7 +24,6 @@
 
 package io.github.guerra24.voxel.client.kernel.bootstrap;
 
-import io.github.guerra24.voxel.client.kernel.console.Console;
 import io.github.guerra24.voxel.client.kernel.core.Kernel;
 import io.github.guerra24.voxel.client.kernel.core.KernelConstants;
 import io.github.guerra24.voxel.client.kernel.menu.ConfigGUI;
@@ -42,10 +41,6 @@ public class Bootstrap {
 	 */
 	private static Platform platform;
 	/**
-	 * Console Thread
-	 */
-	public static Console thread1;
-	/**
 	 * Config GUI
 	 */
 	public static ConfigGUI config;
@@ -56,17 +51,6 @@ public class Bootstrap {
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public static void run() {
-
-		thread1 = new Console();
-		thread1.start();
-
-		while (!thread1.isReady) {
-			try {
-				Thread.sleep(100);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
 		config = new ConfigGUI();
 		while (!config.ready) {
 			try {

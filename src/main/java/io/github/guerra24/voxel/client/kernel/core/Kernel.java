@@ -191,7 +191,6 @@ public class Kernel implements IKernel {
 		switch (gm.gameStates.state) {
 		case MAINMENU:
 			renderer.prepare();
-			gm.mainMenuModels.get(0).increaseRotation(0, 0.1f, 0);
 			renderer.renderEntity(gm.mainMenuModels, gm.mainMenuLights,
 					gm.camera);
 			guiRenderer.renderGui(gm.guis2);
@@ -230,6 +229,7 @@ public class Kernel implements IKernel {
 		case MAINMENU:
 			if (Keyboard.isKeyDown(Keyboard.KEY_O))
 				Bootstrap.config.setVisible(true);
+			gm.mainMenuModels.get(0).increaseRotation(0, 0.1f, 0);
 			gm.frustum.calculateFrustum(gm.camera);
 			break;
 		case IN_PAUSE:
@@ -266,7 +266,6 @@ public class Kernel implements IKernel {
 		gameResources.cleanUp();
 		api.dispose();
 		if (!errorTest) {
-			Bootstrap.thread1.close();
 			Bootstrap.config.dispose();
 		}
 		DisplayManager.closeDisplay();

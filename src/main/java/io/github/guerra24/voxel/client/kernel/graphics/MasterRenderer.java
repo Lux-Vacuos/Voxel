@@ -164,6 +164,9 @@ public class MasterRenderer {
 		shader.loadLights(lights);
 		shader.loadviewMatrix(camera);
 		shader.loadDirectLightDirection(new Vector3f(-80, -100, -40));
+		shader.loadblendFactor(Kernel.gameResources.skyboxRenderer
+				.getBlendFactor());
+		shader.loadTime(Kernel.gameResources.skyboxRenderer.getTime());
 		entityRenderer.renderBlockEntity(blockEntities);
 		shader.stop();
 		blockEntities.clear();

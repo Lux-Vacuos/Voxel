@@ -45,14 +45,18 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class Chunk {
 
-	public int dim, cx, cz, posX, posZ;
-	public boolean isToRebuild, sec1NotClear = false, sec2NotClear = false,
-			sec3NotClear = false, sec4NotClear = false;
+	public int dim, cx, cz, posX, posZ, time;
+	public volatile boolean isToRebuild, sec1NotClear = false,
+			sec2NotClear = false, sec3NotClear = false, sec4NotClear = false;
 	public byte[][][] blocks;
 
-	private transient Queue<BlockEntity> cubes1, cubes2, cubes3, cubes4;
-	private transient Queue<WaterTile> waters;
-	private transient List<Light> lights1, lights2, lights3, lights4;
+	private transient volatile Queue<BlockEntity> cubes1, cubes2, cubes3,
+			cubes4;
+	private transient volatile Queue<BlockEntity> cubes1temp, cubes2temp,
+			cubes3temp, cubes4temp;
+	private transient volatile Queue<WaterTile> waters;
+	private transient volatile Queue<WaterTile> waterstemp;
+	private transient volatile List<Light> lights1, lights2, lights3, lights4;
 	private int sizeX, sizeY, sizeZ;
 	private transient boolean readyToRender = true;
 
@@ -74,7 +78,12 @@ public class Chunk {
 		cubes2 = new ConcurrentLinkedQueue<BlockEntity>();
 		cubes3 = new ConcurrentLinkedQueue<BlockEntity>();
 		cubes4 = new ConcurrentLinkedQueue<BlockEntity>();
+		cubes1temp = new ConcurrentLinkedQueue<BlockEntity>();
+		cubes2temp = new ConcurrentLinkedQueue<BlockEntity>();
+		cubes3temp = new ConcurrentLinkedQueue<BlockEntity>();
+		cubes4temp = new ConcurrentLinkedQueue<BlockEntity>();
 		waters = new ConcurrentLinkedQueue<WaterTile>();
+		waterstemp = new ConcurrentLinkedQueue<WaterTile>();
 		lights1 = new ArrayList<Light>();
 		lights2 = new ArrayList<Light>();
 		lights3 = new ArrayList<Light>();
@@ -84,6 +93,7 @@ public class Chunk {
 
 		createChunk(api);
 		rebuildChunk();
+		time = Maths.randInt(0, 20);
 	}
 
 	public void loadInit() {
@@ -91,7 +101,12 @@ public class Chunk {
 		cubes2 = new ConcurrentLinkedQueue<BlockEntity>();
 		cubes3 = new ConcurrentLinkedQueue<BlockEntity>();
 		cubes4 = new ConcurrentLinkedQueue<BlockEntity>();
+		cubes1temp = new ConcurrentLinkedQueue<BlockEntity>();
+		cubes2temp = new ConcurrentLinkedQueue<BlockEntity>();
+		cubes3temp = new ConcurrentLinkedQueue<BlockEntity>();
+		cubes4temp = new ConcurrentLinkedQueue<BlockEntity>();
 		waters = new ConcurrentLinkedQueue<WaterTile>();
+		waterstemp = new ConcurrentLinkedQueue<WaterTile>();
 		lights1 = new ArrayList<Light>();
 		lights2 = new ArrayList<Light>();
 		lights3 = new ArrayList<Light>();
@@ -99,12 +114,27 @@ public class Chunk {
 	}
 
 	public void update() {
+		time++;
+		if (time == 20){
+			isToRebuild = true;
+			time = 0;
+		}
 		if (isToRebuild) {
+			cubes1temp.addAll(cubes1);
+			cubes2temp.addAll(cubes2);
+			cubes3temp.addAll(cubes3);
+			cubes4temp.addAll(cubes4);
+			waterstemp.addAll(waters);
 			readyToRender = false;
 			clear();
 			rebuildChunk();
 			isToRebuild = false;
 			readyToRender = true;
+			cubes1temp.clear();
+			cubes2temp.clear();
+			cubes3temp.clear();
+			cubes4temp.clear();
+			waterstemp.clear();
 		}
 		if (cubes1.isEmpty() && cubes2.isEmpty() && cubes3.isEmpty()
 				&& cubes4.isEmpty())
@@ -159,6 +189,10 @@ public class Chunk {
 	 * (cullFaceNorth(x, y, z)) { } if (cullFaceSouth(x, y, z)) { }
 	 */
 	public void rebuildChunk() {
+		sec1NotClear = false;
+		sec2NotClear = false;
+		sec3NotClear = false;
+		sec4NotClear = false;
 		for (int x = 0; x < sizeX; x++) {
 			for (int z = 0; z < sizeZ; z++) {
 				for (int y = 0; y < sizeY; y++) {
@@ -455,9 +489,9 @@ public class Chunk {
 
 	private boolean cullFaceEast(int x, int y, int z) {
 		if (x > (cx * sizeX) + 1) {
-			if (z > (cz * sizeZ) + 1) {
+			if (z > (cz * sizeZ)) {
 				if (x < (cx * sizeX) + 15) {
-					if (z < (cz * sizeZ) + 15) {
+					if (z < (cz * sizeZ) + 16) {
 						if (getLocal(x + 1, y, z) != Block.Air.getId()
 								&& getLocal(x + 1, y, z) != Block.Water.getId()
 								&& getLocal(x + 1, y, z) != Block.Glass.getId()
@@ -648,11 +682,15 @@ public class Chunk {
 	public void render1(MasterRenderer renderer, Camera camera) {
 		if (readyToRender)
 			renderer.renderChunk(cubes1, lights1, camera);
+		else
+			renderer.renderChunk(cubes1temp, lights1, camera);
 	}
 
 	public void render2(MasterRenderer renderer, Camera camera) {
 		if (readyToRender)
 			renderer.renderChunk(cubes2, lights2, camera);
+		else
+			renderer.renderChunk(cubes2temp, lights2, camera);
 	}
 
 	public void render3(MasterRenderer renderer, WaterRenderer waterRenderer,
@@ -660,12 +698,17 @@ public class Chunk {
 		if (readyToRender) {
 			renderer.renderChunk(cubes3, lights3, camera);
 			waterRenderer.render(waters, camera);
+		} else {
+			renderer.renderChunk(cubes3temp, lights3, camera);
+			waterRenderer.render(waterstemp, camera);
 		}
 	}
 
 	public void render4(MasterRenderer renderer, Camera camera) {
 		if (readyToRender)
 			renderer.renderChunk(cubes4, lights4, camera);
+		else
+			renderer.renderChunk(cubes4temp, lights4, camera);
 	}
 
 	public void sendToRenderLights1() {
