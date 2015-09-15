@@ -25,8 +25,7 @@ public class MainMenu {
 	 */
 	public static void loadModels(GameResources gm) {
 		RawModel planetModel = OBJLoader.loadObjModel("Planet", gm.loader);
-		ModelTexture planetTexture = new ModelTexture(
-				gm.loader.loadTextureEntity("Planet"));
+		ModelTexture planetTexture = new ModelTexture(gm.loader.loadTextureEntity("Planet"));
 		planet = new TexturedModel(planetModel, planetTexture);
 	}
 }

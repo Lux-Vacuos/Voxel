@@ -133,8 +133,7 @@ public final class VoxelGL33 {
 	 * @param offset
 	 *            Offset
 	 */
-	public static void glDrawElements(int mode, int vertexCount, int type,
-			int offset) {
+	public static void glDrawElements(int mode, int vertexCount, int type, int offset) {
 		GL11.glDrawElements(mode, vertexCount, type, offset);
 		VoxelGLError.check();
 
@@ -208,8 +207,7 @@ public final class VoxelGL33 {
 	 *            Alpha Color
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public static void glColorMask(boolean red, boolean green, boolean blue,
-			boolean alpha) {
+	public static void glColorMask(boolean red, boolean green, boolean blue, boolean alpha) {
 		GL11.glColorMask(red, green, blue, alpha);
 		VoxelGLError.check();
 	}

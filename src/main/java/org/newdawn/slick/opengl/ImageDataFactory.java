@@ -40,8 +40,7 @@ public class ImageDataFactory {
 							usePngLoader = false;
 						}
 
-						Logger.log(Thread.currentThread(),
-								"Using Java PNG Loader: " + usePngLoader);
+						Logger.log(Thread.currentThread(), "Using Java PNG Loader: " + usePngLoader);
 						return null;
 					}
 				});

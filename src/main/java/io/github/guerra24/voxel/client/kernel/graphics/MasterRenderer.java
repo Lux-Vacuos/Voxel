@@ -29,8 +29,16 @@ import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_CULL_FACE;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Queue;
+
 import io.github.guerra24.voxel.client.kernel.core.Kernel;
 import io.github.guerra24.voxel.client.kernel.core.KernelConstants;
+import io.github.guerra24.voxel.client.kernel.graphics.opengl.Display;
 import io.github.guerra24.voxel.client.kernel.graphics.opengl.VoxelGL33;
 import io.github.guerra24.voxel.client.kernel.graphics.shaders.EntityShader;
 import io.github.guerra24.voxel.client.kernel.resources.Loader;
@@ -40,13 +48,8 @@ import io.github.guerra24.voxel.client.kernel.util.vector.Vector3f;
 import io.github.guerra24.voxel.client.kernel.world.block.BlockEntity;
 import io.github.guerra24.voxel.client.kernel.world.entities.Camera;
 import io.github.guerra24.voxel.client.kernel.world.entities.Entity;
+import io.github.guerra24.voxel.client.kernel.world.entities.IEntity;
 import io.github.guerra24.voxel.client.kernel.world.entities.Light;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Queue;
 
 /**
  * Game Master Renderer
@@ -109,7 +112,7 @@ public class MasterRenderer {
 	/**
 	 * Render the Chunk
 	 * 
-	 * @param cubes1
+	 * @param cubes1temp
 	 *            A list of BlockEntity
 	 * @param lights
 	 *            A list of Lights
@@ -117,9 +120,8 @@ public class MasterRenderer {
 	 *            A Camera
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public void renderChunk(Queue<BlockEntity> cubes1, List<Light> lights,
-			Camera camera) {
-		for (BlockEntity entity : cubes1) {
+	public void renderChunk(Queue<BlockEntity> cubes1temp, List<Light> lights, Camera camera) {
+		for (BlockEntity entity : cubes1temp) {
 			processBlockEntity(entity);
 		}
 		renderChunk(lights, camera);
@@ -128,7 +130,7 @@ public class MasterRenderer {
 	/**
 	 * Render the Entity's
 	 * 
-	 * @param entities
+	 * @param list.get(index)
 	 *            A list of Entity's
 	 * @param lights
 	 *            A list of Lights
@@ -136,13 +138,13 @@ public class MasterRenderer {
 	 *            A Camera
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public void renderEntity(List<Entity> entities, List<Light> lights,
-			Camera camera) {
-		for (Entity entity : entities) {
-			if (Kernel.gameResources.frustum.pointInFrustum(
-					entity.getPosition().x, entity.getPosition().y,
-					entity.getPosition().z))
-				processEntity(entity);
+	public void renderEntity(List<IEntity> list, List<Light> lights, Camera camera) {
+		for (IEntity entity : list) {
+			if (entity != null)
+				if (entity.getEntity() != null)
+					if (Kernel.gameResources.frustum.pointInFrustum(entity.getEntity().getPosition().x,
+							entity.getEntity().getPosition().y, entity.getEntity().getPosition().z))
+						processEntity(entity.getEntity());
 		}
 		renderEntity(lights, camera);
 	}
@@ -159,13 +161,11 @@ public class MasterRenderer {
 	private void renderChunk(List<Light> lights, Camera camera) {
 		shader.start();
 		shader.loadProjectionMatrix(projectionMatrix);
-		shader.loadSkyColour(KernelConstants.RED, KernelConstants.GREEN,
-				KernelConstants.BLUE);
+		shader.loadSkyColour(KernelConstants.RED, KernelConstants.GREEN, KernelConstants.BLUE);
 		shader.loadLights(lights);
 		shader.loadviewMatrix(camera);
 		shader.loadDirectLightDirection(new Vector3f(-80, -100, -40));
-		shader.loadblendFactor(Kernel.gameResources.skyboxRenderer
-				.getBlendFactor());
+		shader.loadblendFactor(Kernel.gameResources.skyboxRenderer.getBlendFactor());
 		shader.loadTime(Kernel.gameResources.skyboxRenderer.getTime());
 		entityRenderer.renderBlockEntity(blockEntities);
 		shader.stop();
@@ -237,8 +237,7 @@ public class MasterRenderer {
 	 */
 	public void prepare() {
 		VoxelGL33.glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		VoxelGL33.glClearColor(KernelConstants.RED, KernelConstants.GREEN,
-				KernelConstants.BLUE, 1);
+		VoxelGL33.glClearColor(KernelConstants.RED, KernelConstants.GREEN, KernelConstants.BLUE, 1);
 	}
 
 	/**
@@ -247,13 +246,10 @@ public class MasterRenderer {
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void createProjectionMatrix() {
-		aspectRatio = (float) KernelConstants.WIDTH
-				/ (float) KernelConstants.HEIGHT;
-		float y_scale = (float) ((1f / Math.tan(Math
-				.toRadians(KernelConstants.FOV / 2f))) * aspectRatio);
+		aspectRatio = (float) Display.getWidth() / (float) Display.getHeight();
+		float y_scale = (float) ((1f / Math.tan(Math.toRadians(KernelConstants.FOV / 2f))) * aspectRatio);
 		float x_scale = y_scale / aspectRatio;
-		float frustrum_length = KernelConstants.FAR_PLANE
-				- KernelConstants.NEAR_PLANE;
+		float frustrum_length = KernelConstants.FAR_PLANE - KernelConstants.NEAR_PLANE;
 
 		projectionMatrix = new Matrix4f();
 		projectionMatrix.setIdentity();

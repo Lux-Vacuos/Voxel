@@ -37,6 +37,9 @@ import static org.lwjgl.opengl.GL13.glActiveTexture;
 import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
 import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
+
+import java.util.Queue;
+
 import io.github.guerra24.voxel.client.kernel.core.Kernel;
 import io.github.guerra24.voxel.client.kernel.core.KernelConstants;
 import io.github.guerra24.voxel.client.kernel.graphics.opengl.VoxelGL33;
@@ -48,8 +51,6 @@ import io.github.guerra24.voxel.client.kernel.util.Maths;
 import io.github.guerra24.voxel.client.kernel.util.vector.Matrix4f;
 import io.github.guerra24.voxel.client.kernel.util.vector.Vector3f;
 import io.github.guerra24.voxel.client.kernel.world.entities.Camera;
-
-import java.util.Queue;
 
 /**
  * Water Renderer
@@ -98,8 +99,7 @@ public class WaterRenderer {
 	 *            A Matrix4f Projection
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public WaterRenderer(Loader loader, WaterShader shader,
-			Matrix4f projectionMatrix) {
+	public WaterRenderer(Loader loader, WaterShader shader, Matrix4f projectionMatrix) {
 		this.shader = shader;
 		dudvTexture = loader.loadTextureBlocks(DUDV_MAP);
 		normalTexture = loader.loadTextureBlocks(NORMAL_MAP);
@@ -123,8 +123,7 @@ public class WaterRenderer {
 		prepareRender(camera);
 		for (WaterTile tile : waters) {
 			Matrix4f modelMatrix = Maths.createTransformationMatrix(
-					new Vector3f(tile.getX(), tile.getHeight(), tile.getZ()),
-					0, 0, 0, WaterTile.TILE_SIZE);
+					new Vector3f(tile.getX(), tile.getHeight(), tile.getZ()), 0, 0, 0, WaterTile.TILE_SIZE);
 			shader.loadModelMatrix(modelMatrix);
 			VoxelGL33.glDrawArrays(GL_TRIANGLES, 0, quad.getVertexCount());
 		}
@@ -140,11 +139,9 @@ public class WaterRenderer {
 	 */
 	private void prepareRender(Camera camera) {
 		shader.start();
-		shader.loadSkyColour(KernelConstants.RED, KernelConstants.GREEN,
-				KernelConstants.BLUE);
+		shader.loadSkyColour(KernelConstants.RED, KernelConstants.GREEN, KernelConstants.BLUE);
 		shader.loadViewMatrix(camera);
-		shader.loadProjectionMatrix(Kernel.gameResources.renderer
-				.getProjectionMatrix());
+		shader.loadProjectionMatrix(Kernel.gameResources.renderer.getProjectionMatrix());
 		shader.loadMoveFactor(moveFactor);
 		shader.loadDirectLightDirection(new Vector3f(-80, -100, -40));
 		VoxelGL33.glDisable(GL_CULL_FACE);

@@ -52,61 +52,51 @@ public class SkyboxRenderer {
 	/**
 	 * Skybox Model Vertices
 	 */
-	private final float[] VERTICES = { -KernelConstants.SIZE,
-			KernelConstants.SIZE, -KernelConstants.SIZE, -KernelConstants.SIZE,
-			-KernelConstants.SIZE, -KernelConstants.SIZE, KernelConstants.SIZE,
-			-KernelConstants.SIZE, -KernelConstants.SIZE, KernelConstants.SIZE,
-			-KernelConstants.SIZE, -KernelConstants.SIZE, KernelConstants.SIZE,
-			KernelConstants.SIZE, -KernelConstants.SIZE, -KernelConstants.SIZE,
+	private final float[] VERTICES = { -KernelConstants.SIZE, KernelConstants.SIZE, -KernelConstants.SIZE,
+			-KernelConstants.SIZE, -KernelConstants.SIZE, -KernelConstants.SIZE, KernelConstants.SIZE,
+			-KernelConstants.SIZE, -KernelConstants.SIZE, KernelConstants.SIZE, -KernelConstants.SIZE,
+			-KernelConstants.SIZE, KernelConstants.SIZE, KernelConstants.SIZE, -KernelConstants.SIZE,
+			-KernelConstants.SIZE, KernelConstants.SIZE, -KernelConstants.SIZE,
+
+			-KernelConstants.SIZE, -KernelConstants.SIZE, KernelConstants.SIZE, -KernelConstants.SIZE,
+			-KernelConstants.SIZE, -KernelConstants.SIZE, -KernelConstants.SIZE, KernelConstants.SIZE,
+			-KernelConstants.SIZE, -KernelConstants.SIZE, KernelConstants.SIZE, -KernelConstants.SIZE,
+			-KernelConstants.SIZE, KernelConstants.SIZE, KernelConstants.SIZE, -KernelConstants.SIZE,
+			-KernelConstants.SIZE, KernelConstants.SIZE,
+
+			KernelConstants.SIZE, -KernelConstants.SIZE, -KernelConstants.SIZE, KernelConstants.SIZE,
+			-KernelConstants.SIZE, KernelConstants.SIZE, KernelConstants.SIZE, KernelConstants.SIZE,
+			KernelConstants.SIZE, KernelConstants.SIZE, KernelConstants.SIZE, KernelConstants.SIZE,
+			KernelConstants.SIZE, KernelConstants.SIZE, -KernelConstants.SIZE, KernelConstants.SIZE,
+			-KernelConstants.SIZE, -KernelConstants.SIZE,
+
+			-KernelConstants.SIZE, -KernelConstants.SIZE, KernelConstants.SIZE, -KernelConstants.SIZE,
+			KernelConstants.SIZE, KernelConstants.SIZE, KernelConstants.SIZE, KernelConstants.SIZE,
+			KernelConstants.SIZE, KernelConstants.SIZE, KernelConstants.SIZE, KernelConstants.SIZE,
+			KernelConstants.SIZE, -KernelConstants.SIZE, KernelConstants.SIZE, -KernelConstants.SIZE,
+			-KernelConstants.SIZE, KernelConstants.SIZE,
+
+			-KernelConstants.SIZE, KernelConstants.SIZE, -KernelConstants.SIZE, KernelConstants.SIZE,
+			KernelConstants.SIZE, -KernelConstants.SIZE, KernelConstants.SIZE, KernelConstants.SIZE,
+			KernelConstants.SIZE, KernelConstants.SIZE, KernelConstants.SIZE, KernelConstants.SIZE,
+			-KernelConstants.SIZE, KernelConstants.SIZE, KernelConstants.SIZE, -KernelConstants.SIZE,
 			KernelConstants.SIZE, -KernelConstants.SIZE,
 
-			-KernelConstants.SIZE, -KernelConstants.SIZE, KernelConstants.SIZE,
-			-KernelConstants.SIZE, -KernelConstants.SIZE,
-			-KernelConstants.SIZE, -KernelConstants.SIZE, KernelConstants.SIZE,
-			-KernelConstants.SIZE, -KernelConstants.SIZE, KernelConstants.SIZE,
-			-KernelConstants.SIZE, -KernelConstants.SIZE, KernelConstants.SIZE,
-			KernelConstants.SIZE, -KernelConstants.SIZE, -KernelConstants.SIZE,
-			KernelConstants.SIZE,
-
-			KernelConstants.SIZE, -KernelConstants.SIZE, -KernelConstants.SIZE,
-			KernelConstants.SIZE, -KernelConstants.SIZE, KernelConstants.SIZE,
-			KernelConstants.SIZE, KernelConstants.SIZE, KernelConstants.SIZE,
-			KernelConstants.SIZE, KernelConstants.SIZE, KernelConstants.SIZE,
-			KernelConstants.SIZE, KernelConstants.SIZE, -KernelConstants.SIZE,
-			KernelConstants.SIZE, -KernelConstants.SIZE, -KernelConstants.SIZE,
-
-			-KernelConstants.SIZE, -KernelConstants.SIZE, KernelConstants.SIZE,
-			-KernelConstants.SIZE, KernelConstants.SIZE, KernelConstants.SIZE,
-			KernelConstants.SIZE, KernelConstants.SIZE, KernelConstants.SIZE,
-			KernelConstants.SIZE, KernelConstants.SIZE, KernelConstants.SIZE,
-			KernelConstants.SIZE, -KernelConstants.SIZE, KernelConstants.SIZE,
-			-KernelConstants.SIZE, -KernelConstants.SIZE, KernelConstants.SIZE,
-
-			-KernelConstants.SIZE, KernelConstants.SIZE, -KernelConstants.SIZE,
-			KernelConstants.SIZE, KernelConstants.SIZE, -KernelConstants.SIZE,
-			KernelConstants.SIZE, KernelConstants.SIZE, KernelConstants.SIZE,
-			KernelConstants.SIZE, KernelConstants.SIZE, KernelConstants.SIZE,
-			-KernelConstants.SIZE, KernelConstants.SIZE, KernelConstants.SIZE,
-			-KernelConstants.SIZE, KernelConstants.SIZE, -KernelConstants.SIZE,
-
-			-KernelConstants.SIZE, -KernelConstants.SIZE,
-			-KernelConstants.SIZE, -KernelConstants.SIZE,
-			-KernelConstants.SIZE, KernelConstants.SIZE, KernelConstants.SIZE,
-			-KernelConstants.SIZE, -KernelConstants.SIZE, KernelConstants.SIZE,
-			-KernelConstants.SIZE, -KernelConstants.SIZE,
-			-KernelConstants.SIZE, -KernelConstants.SIZE, KernelConstants.SIZE,
-			KernelConstants.SIZE, -KernelConstants.SIZE, KernelConstants.SIZE };
+			-KernelConstants.SIZE, -KernelConstants.SIZE, -KernelConstants.SIZE, -KernelConstants.SIZE,
+			-KernelConstants.SIZE, KernelConstants.SIZE, KernelConstants.SIZE, -KernelConstants.SIZE,
+			-KernelConstants.SIZE, KernelConstants.SIZE, -KernelConstants.SIZE, -KernelConstants.SIZE,
+			-KernelConstants.SIZE, -KernelConstants.SIZE, KernelConstants.SIZE, KernelConstants.SIZE,
+			-KernelConstants.SIZE, KernelConstants.SIZE };
 
 	/**
 	 * Skybox Day Texture Files
 	 */
-	private String[] TEXTURE_FILES = { "day/right", "day/left", "day/top",
-			"day/bottom", "day/front", "day/back" };
+	private String[] TEXTURE_FILES = { "day/right", "day/left", "day/top", "day/bottom", "day/front", "day/back" };
 	/**
 	 * Skybox Night Texture Files
 	 */
-	private String[] NIGHT_TEXTURE_FILES = { "night/right", "night/left",
-			"night/top", "night/bottom", "night/front", "night/back" };
+	private String[] NIGHT_TEXTURE_FILES = { "night/right", "night/left", "night/top", "night/bottom", "night/front",
+			"night/back" };
 
 	/**
 	 * Skybox RawModel
@@ -151,7 +141,7 @@ public class SkyboxRenderer {
 		shader.connectTextureUnits();
 		shader.loadProjectionMatrix(projectionMatrix);
 		shader.stop();
-		time = 3000;
+		time = 0000;
 	}
 
 	/**
@@ -171,8 +161,7 @@ public class SkyboxRenderer {
 	 */
 	public void render(Camera camera, float r, float g, float b, float delta) {
 		shader.start();
-		shader.loadProjectionMatrix(Kernel.gameResources.renderer
-				.getProjectionMatrix());
+		shader.loadProjectionMatrix(Kernel.gameResources.renderer.getProjectionMatrix());
 		shader.loadViewMatrix(camera, delta);
 		shader.loadFog(r, g, b);
 		glBindVertexArray(cube.getVaoID());

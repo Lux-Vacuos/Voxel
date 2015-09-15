@@ -24,7 +24,7 @@
 
 package io.github.guerra24.voxel.client.kernel.core;
 
-import io.github.guerra24.voxel.client.kernel.graphics.opengl.DisplayManager;
+import io.github.guerra24.voxel.client.kernel.graphics.opengl.Display;
 import io.github.guerra24.voxel.client.kernel.input.Keyboard;
 import io.github.guerra24.voxel.client.kernel.menu.Button;
 import io.github.guerra24.voxel.client.kernel.util.Logger;
@@ -87,8 +87,7 @@ public class GameStates {
 			} else {
 				seed = new Random();
 			}
-			Kernel.world.startWorld("Mundo-1", Kernel.gameResources.camera,
-					seed, 0, Kernel.api);
+			Kernel.world.startWorld("Mundo-1", Kernel.gameResources.camera, seed, 0, Kernel.api);
 			Kernel.gameResources.camera.setMouse();
 			Kernel.gameResources.soundSystem.stop("menu1");
 			Kernel.gameResources.soundSystem.rewind("menu1");
@@ -112,8 +111,7 @@ public class GameStates {
 				int zz = Kernel.world.getzPlayChunk() + zr;
 				for (int xr = -KernelConstants.genRadius; xr <= KernelConstants.genRadius; xr++) {
 					int xx = Kernel.world.getxPlayChunk() + xr;
-					if (zr * zr + xr * xr <= KernelConstants.genRadius
-							* KernelConstants.genRadius) {
+					if (zr * zr + xr * xr <= KernelConstants.genRadius * KernelConstants.genRadius) {
 						if (Kernel.world.hasChunk(Kernel.world.dim, xx, zz)) {
 							Kernel.world.saveChunk(Kernel.world.dim, xx, zz);
 						}
@@ -129,20 +127,18 @@ public class GameStates {
 			Kernel.gameResources.soundSystem.setVolume("menu1", 1f);
 		}
 
-		if (state == State.GAME && !DisplayManager.displayFocused
-				&& !KernelConstants.debug) {
+		if (state == State.GAME && !Display.displayFocused && !KernelConstants.debug) {
 			Kernel.gameResources.camera.unlockMouse();
 			state = State.IN_PAUSE;
 		}
-		if (DisplayManager.isCloseRequested())
+		if (Display.isCloseRequested())
 			loop = false;
 
 		while (Keyboard.next()) {
 			if (state == State.GAME && Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
 				Kernel.gameResources.camera.unlockMouse();
 				state = State.IN_PAUSE;
-			} else if (state == State.IN_PAUSE
-					&& Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
+			} else if (state == State.IN_PAUSE && Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
 				Kernel.gameResources.camera.setMouse();
 				state = State.GAME;
 			}

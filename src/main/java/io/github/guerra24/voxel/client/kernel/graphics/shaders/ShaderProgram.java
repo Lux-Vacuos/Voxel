@@ -285,8 +285,7 @@ public abstract class ShaderProgram {
 	private static int loadShader(String file, int type) {
 		StringBuilder shaderSource = new StringBuilder();
 		try {
-			BufferedReader reader = new BufferedReader(new FileReader(
-					"assets/shaders/" + file));
+			BufferedReader reader = new BufferedReader(new FileReader("assets/shaders/" + file));
 			Logger.log(Thread.currentThread(), "Loading Shader: " + file);
 			String line;
 			while ((line = reader.readLine()) != null) {
@@ -300,8 +299,7 @@ public abstract class ShaderProgram {
 		glShaderSource(shaderID, shaderSource);
 		glCompileShader(shaderID);
 		if (glGetShaderi(shaderID, GL_COMPILE_STATUS) == GL_FALSE) {
-			Logger.error(Thread.currentThread(),
-					glGetShaderInfoLog(shaderID, 500));
+			Logger.error(Thread.currentThread(), glGetShaderInfoLog(shaderID, 500));
 			Logger.error(Thread.currentThread(), "Could not compile shader!");
 		}
 		return shaderID;

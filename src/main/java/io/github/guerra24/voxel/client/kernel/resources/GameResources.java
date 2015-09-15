@@ -24,6 +24,12 @@
 
 package io.github.guerra24.voxel.client.kernel.resources;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
+import com.google.gson.Gson;
+
 import io.github.guerra24.voxel.client.kernel.core.GameStates;
 import io.github.guerra24.voxel.client.kernel.graphics.Frustum;
 import io.github.guerra24.voxel.client.kernel.graphics.GuiRenderer;
@@ -34,26 +40,18 @@ import io.github.guerra24.voxel.client.kernel.graphics.shaders.WaterShader;
 import io.github.guerra24.voxel.client.kernel.menu.MainMenu;
 import io.github.guerra24.voxel.client.kernel.resources.models.GuiTexture;
 import io.github.guerra24.voxel.client.kernel.sound.LibraryLWJGLOpenAL;
+import io.github.guerra24.voxel.client.kernel.sound.soundsystem.SoundSystem;
+import io.github.guerra24.voxel.client.kernel.sound.soundsystem.SoundSystemConfig;
+import io.github.guerra24.voxel.client.kernel.sound.soundsystem.SoundSystemException;
+import io.github.guerra24.voxel.client.kernel.sound.soundsystem.codecs.CodecJOgg;
 import io.github.guerra24.voxel.client.kernel.util.Logger;
-import io.github.guerra24.voxel.client.kernel.util.MousePicker;
 import io.github.guerra24.voxel.client.kernel.util.vector.Vector3f;
+import io.github.guerra24.voxel.client.kernel.world.MobManager;
 import io.github.guerra24.voxel.client.kernel.world.block.Block;
-import io.github.guerra24.voxel.client.kernel.world.block.BlocksResources;
 import io.github.guerra24.voxel.client.kernel.world.entities.Camera;
-import io.github.guerra24.voxel.client.kernel.world.entities.Entity;
+import io.github.guerra24.voxel.client.kernel.world.entities.IEntity;
 import io.github.guerra24.voxel.client.kernel.world.entities.Light;
-import io.github.guerra24.voxel.client.kernel.world.entities.Player;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-
-import paulscode.sound.SoundSystem;
-import paulscode.sound.SoundSystemConfig;
-import paulscode.sound.SoundSystemException;
-import paulscode.sound.codecs.CodecJOgg;
-
-import com.google.gson.Gson;
+import io.github.guerra24.voxel.client.kernel.world.entities.Mob;
 
 /**
  * Game Resources
@@ -67,13 +65,11 @@ public class GameResources {
 	public List<GuiTexture> guis3 = new ArrayList<GuiTexture>();
 	public List<GuiTexture> guis4 = new ArrayList<GuiTexture>();
 
-	public List<Entity> allObjects = new ArrayList<Entity>();
-	public List<Entity> mainMenuModels = new ArrayList<Entity>();
+	public List<IEntity> mainMenuModels = new ArrayList<IEntity>();
 	public List<Light> mainMenuLights = new ArrayList<Light>();
 	public List<Light> lights = new ArrayList<Light>();
 
 	public Random rand;
-	public Player player;
 	public Loader loader;
 	public Camera camera;
 	public MasterRenderer renderer;
@@ -82,10 +78,10 @@ public class GameResources {
 	public SkyboxRenderer skyboxRenderer;
 	public GuiRenderer guiRenderer;
 	public GameStates gameStates;
-	public MousePicker mouse;
 	public Gson gson;
 	public SoundSystem soundSystem;
 	public Frustum frustum;
+	public MobManager mobManager;
 	public float distance;
 
 	/**
@@ -110,21 +106,18 @@ public class GameResources {
 			SoundSystemConfig.addLibrary(LibraryLWJGLOpenAL.class);
 			SoundSystemConfig.setCodec("ogg", CodecJOgg.class);
 		} catch (SoundSystemException e) {
-			Logger.error(Thread.currentThread(),
-					"Unable to bind SoundSystem Libs");
+			Logger.error(Thread.currentThread(), "Unable to bind SoundSystem Libs");
 		}
 		soundSystem = new SoundSystem();
 		renderer = new MasterRenderer(loader);
 		guiRenderer = new GuiRenderer(loader);
 		waterShader = new WaterShader();
-		waterRenderer = new WaterRenderer(loader, waterShader,
-				renderer.getProjectionMatrix());
-		skyboxRenderer = new SkyboxRenderer(loader,
-				renderer.getProjectionMatrix());
-		mouse = new MousePicker(camera, renderer.getProjectionMatrix());
+		waterRenderer = new WaterRenderer(loader, waterShader, renderer.getProjectionMatrix());
+		skyboxRenderer = new SkyboxRenderer(loader, renderer.getProjectionMatrix());
 		gameStates = new GameStates();
 		frustum = new Frustum();
 		Block.initBasicBlocks();
+		mobManager = new MobManager();
 	}
 
 	/**
@@ -143,13 +136,8 @@ public class GameResources {
 	 */
 	public void addRes() {
 		MainMenu.loadModels(this);
-		Entity planet = new Entity(MainMenu.planet, new Vector3f(-1, 0, -3), 0,
-				90, 0, 1);
-		Light sun = new Light(new Vector3f(-3, 0, -2), new Vector3f(1, 1, 1),
-				new Vector3f(1, 0.1f, 0.09f));
-		player = new Player(BlocksResources.cubeGlassUP,
-				new Vector3f(0, 80, -4), 0, 0, 0, 1);
-		allObjects.add(player);
+		Mob planet = new Mob(MainMenu.planet, new Vector3f(-1, 0, -3), 0, 90, 0, 1);
+		Light sun = new Light(new Vector3f(-3, 0, -2), new Vector3f(1, 1, 1), new Vector3f(1, 0.1f, 0.09f));
 		mainMenuModels.add(planet);
 		mainMenuLights.add(sun);
 	}

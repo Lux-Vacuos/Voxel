@@ -24,10 +24,6 @@
 
 package io.github.guerra24.voxel.client.kernel.core;
 
-import io.github.guerra24.voxel.client.kernel.graphics.GuiRenderer;
-import io.github.guerra24.voxel.client.kernel.graphics.MasterRenderer;
-import io.github.guerra24.voxel.client.kernel.graphics.SkyboxRenderer;
-import io.github.guerra24.voxel.client.kernel.graphics.WaterRenderer;
 import io.github.guerra24.voxel.client.kernel.resources.GameResources;
 
 /**
@@ -57,9 +53,7 @@ public interface IKernel {
 	 * 
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public void render(GameResources gm, MasterRenderer renderer,
-			GuiRenderer guiRenderer, WaterRenderer waterRenderer,
-			SkyboxRenderer skyboxRenderer, float delta);
+	public void render(GameResources gm, float delta);
 
 	/**
 	 * Update Loop, contains all the update functions

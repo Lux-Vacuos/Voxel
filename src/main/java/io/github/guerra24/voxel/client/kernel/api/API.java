@@ -24,19 +24,11 @@
 
 package io.github.guerra24.voxel.client.kernel.api;
 
-import io.github.guerra24.voxel.client.kernel.api.mod.Mod;
-import io.github.guerra24.voxel.client.kernel.util.Logger;
-
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
+
+import io.github.guerra24.voxel.client.kernel.api.mod.Mod;
+import io.github.guerra24.voxel.client.kernel.util.Logger;
 
 /**
  * API
@@ -49,49 +41,14 @@ public class API {
 	 * Mods
 	 */
 	public static Map<Integer, Mod> mods;
-	public static APIWorld world;
+	public static WorldAPI world;
+	public static ModLoader modLoader;
 
 	public API() {
 		mods = new HashMap<Integer, Mod>();
-		world = new APIWorld();
-		try {
-			Files.walk(Paths.get("assets/mods"))
-					.forEach(
-							filePath -> {
-								if (Files.isRegularFile(filePath)) {
-									try {
-										URLClassLoader child = new URLClassLoader(
-												new URL[] { filePath.toFile()
-														.toURL() }, this
-														.getClass()
-														.getClassLoader());
-										Class<?> classToLoad = Class.forName(
-												"Main", true, child);
-										Method method = classToLoad
-												.getDeclaredMethod("mod");
-										Object instance = classToLoad
-												.newInstance();
-										method.invoke(instance);
-									} catch (MalformedURLException
-											| ClassNotFoundException
-											| NoSuchMethodException
-											| SecurityException
-											| InstantiationException
-											| IllegalAccessException
-											| IllegalArgumentException
-											| InvocationTargetException e) {
-										Logger.error(
-												Thread.currentThread(),
-												"Error Loading Mod: "
-														+ e.getMessage());
-									}
-								}
-							});
-		} catch (IOException e) {
-			Logger.error(Thread.currentThread(),
-					"Error Loading Mod: " + e.getMessage());
-		}
-
+		world = new WorldAPI();
+		modLoader = new ModLoader();
+		modLoader.loadMods();
 	}
 
 	/**
@@ -127,8 +84,8 @@ public class API {
 		Logger.log(Thread.currentThread(), "Post Initializing Mods");
 		for (int x = 0; x < mods.size(); x++) {
 			mods.get(x).postInit();
-			Logger.log(Thread.currentThread(), "Succesfully Loaded: "
-					+ mods.get(x).getName() + " ID: " + mods.get(x).getID());
+			Logger.log(Thread.currentThread(),
+					"Succesfully Loaded: " + mods.get(x).getName() + " ID: " + mods.get(x).getID());
 		}
 	}
 

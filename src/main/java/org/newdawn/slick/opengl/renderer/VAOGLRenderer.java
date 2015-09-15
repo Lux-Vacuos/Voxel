@@ -40,7 +40,9 @@ public class VAOGLRenderer extends ImmediateModeOGLRenderer {
 	private FloatBuffer vertices = BufferUtils.createFloatBuffer(MAX_VERTS * 3);
 	/** The buffer used to pass the vertex color data to the card */
 	private FloatBuffer colors = BufferUtils.createFloatBuffer(MAX_VERTS * 4);
-	/** The buffer used to pass the vertex texture coordinate data to the card */
+	/**
+	 * The buffer used to pass the vertex texture coordinate data to the card
+	 */
 	private FloatBuffer textures = BufferUtils.createFloatBuffer(MAX_VERTS * 2);
 
 	/**
@@ -83,11 +85,9 @@ public class VAOGLRenderer extends ImmediateModeOGLRenderer {
 		if (vertIndex < TOLERANCE) {
 			GL11.glBegin(currentType);
 			for (int i = 0; i < vertIndex; i++) {
-				GL11.glColor4f(cols[(i * 4) + 0], cols[(i * 4) + 1],
-						cols[(i * 4) + 2], cols[(i * 4) + 3]);
+				GL11.glColor4f(cols[(i * 4) + 0], cols[(i * 4) + 1], cols[(i * 4) + 2], cols[(i * 4) + 3]);
 				GL11.glTexCoord2f(texs[(i * 2) + 0], texs[(i * 2) + 1]);
-				GL11.glVertex3f(verts[(i * 3) + 0], verts[(i * 3) + 1],
-						verts[(i * 3) + 2]);
+				GL11.glVertex3f(verts[(i * 3) + 0], verts[(i * 3) + 1], verts[(i * 3) + 2]);
 			}
 			GL11.glEnd();
 			currentType = NONE;
@@ -307,8 +307,7 @@ public class VAOGLRenderer extends ImmediateModeOGLRenderer {
 	 * @see org.newdawn.slick.opengl.renderer.ImmediateModeOGLRenderer#glColorMask(boolean,
 	 *      boolean, boolean, boolean)
 	 */
-	public void glColorMask(boolean red, boolean green, boolean blue,
-			boolean alpha) {
+	public void glColorMask(boolean red, boolean green, boolean blue, boolean alpha) {
 		applyBuffer();
 		super.glColorMask(red, green, blue, alpha);
 	}

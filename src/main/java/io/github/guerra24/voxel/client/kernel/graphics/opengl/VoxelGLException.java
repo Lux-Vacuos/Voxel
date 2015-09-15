@@ -52,8 +52,7 @@ public class VoxelGLException {
 	public static class InvalidEnum extends VoxelGLException {
 
 		public InvalidEnum() {
-			super(
-					"An unacceptable value is specified for an enumerated argument");
+			super("An unacceptable value is specified for an enumerated argument");
 		}
 	}
 
@@ -118,8 +117,7 @@ public class VoxelGLException {
 	public static class StackUnderflow extends VoxelGLException {
 
 		public StackUnderflow() {
-			super(
-					"An attempt has been made to perform an operation that would cause an internal stack to underflow");
+			super("An attempt has been made to perform an operation that would cause an internal stack to underflow");
 		}
 	}
 
@@ -132,8 +130,7 @@ public class VoxelGLException {
 	public static class StackOverflow extends VoxelGLException {
 
 		public StackOverflow() {
-			super(
-					"An attempt has been made to perform an operation that would cause an internal stack to overflow");
+			super("An attempt has been made to perform an operation that would cause an internal stack to overflow");
 		}
 	}
 }

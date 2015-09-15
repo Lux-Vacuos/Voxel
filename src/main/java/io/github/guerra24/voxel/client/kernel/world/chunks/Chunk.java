@@ -25,7 +25,7 @@
 package io.github.guerra24.voxel.client.kernel.world.chunks;
 
 import io.github.guerra24.voxel.client.kernel.api.API;
-import io.github.guerra24.voxel.client.kernel.api.APIWorld;
+import io.github.guerra24.voxel.client.kernel.api.WorldAPI;
 import io.github.guerra24.voxel.client.kernel.core.Kernel;
 import io.github.guerra24.voxel.client.kernel.core.KernelConstants;
 import io.github.guerra24.voxel.client.kernel.graphics.MasterRenderer;
@@ -45,15 +45,13 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class Chunk {
 
-	public int dim, cx, cz, posX, posZ, time;
-	public volatile boolean isToRebuild, sec1NotClear = false,
-			sec2NotClear = false, sec3NotClear = false, sec4NotClear = false;
+	public int dim, cx, cz, posX, posZ;
+	public volatile boolean  sec1NotClear = false, sec2NotClear = false, sec3NotClear = false,
+			sec4NotClear = false;
 	public byte[][][] blocks;
 
-	private transient volatile Queue<BlockEntity> cubes1, cubes2, cubes3,
-			cubes4;
-	private transient volatile Queue<BlockEntity> cubes1temp, cubes2temp,
-			cubes3temp, cubes4temp;
+	private transient volatile Queue<BlockEntity> cubes1, cubes2, cubes3, cubes4;
+	private transient volatile Queue<BlockEntity> cubes1temp, cubes2temp, cubes3temp, cubes4temp;
 	private transient volatile Queue<WaterTile> waters;
 	private transient volatile Queue<WaterTile> waterstemp;
 	private transient volatile List<Light> lights1, lights2, lights3, lights4;
@@ -74,26 +72,12 @@ public class Chunk {
 		sizeY = KernelConstants.CHUNK_HEIGHT;
 		sizeZ = KernelConstants.CHUNK_SIZE;
 
-		cubes1 = new ConcurrentLinkedQueue<BlockEntity>();
-		cubes2 = new ConcurrentLinkedQueue<BlockEntity>();
-		cubes3 = new ConcurrentLinkedQueue<BlockEntity>();
-		cubes4 = new ConcurrentLinkedQueue<BlockEntity>();
-		cubes1temp = new ConcurrentLinkedQueue<BlockEntity>();
-		cubes2temp = new ConcurrentLinkedQueue<BlockEntity>();
-		cubes3temp = new ConcurrentLinkedQueue<BlockEntity>();
-		cubes4temp = new ConcurrentLinkedQueue<BlockEntity>();
-		waters = new ConcurrentLinkedQueue<WaterTile>();
-		waterstemp = new ConcurrentLinkedQueue<WaterTile>();
-		lights1 = new ArrayList<Light>();
-		lights2 = new ArrayList<Light>();
-		lights3 = new ArrayList<Light>();
-		lights4 = new ArrayList<Light>();
+		loadInit();
 
 		blocks = new byte[sizeX][sizeY][sizeZ];
 
 		createChunk(api);
 		rebuildChunk();
-		time = Maths.randInt(0, 20);
 	}
 
 	public void loadInit() {
@@ -114,31 +98,20 @@ public class Chunk {
 	}
 
 	public void update() {
-		time++;
-		if (time == 20){
-			isToRebuild = true;
-			time = 0;
-		}
-		if (isToRebuild) {
-			cubes1temp.addAll(cubes1);
-			cubes2temp.addAll(cubes2);
-			cubes3temp.addAll(cubes3);
-			cubes4temp.addAll(cubes4);
-			waterstemp.addAll(waters);
-			readyToRender = false;
-			clear();
-			rebuildChunk();
-			isToRebuild = false;
-			readyToRender = true;
-			cubes1temp.clear();
-			cubes2temp.clear();
-			cubes3temp.clear();
-			cubes4temp.clear();
-			waterstemp.clear();
-		}
-		if (cubes1.isEmpty() && cubes2.isEmpty() && cubes3.isEmpty()
-				&& cubes4.isEmpty())
-			isToRebuild = true;
+		cubes1temp.addAll(cubes1);
+		cubes2temp.addAll(cubes2);
+		cubes3temp.addAll(cubes3);
+		cubes4temp.addAll(cubes4);
+		waterstemp.addAll(waters);
+		readyToRender = false;
+		clear();
+		rebuildChunk();
+		readyToRender = true;
+		cubes1temp.clear();
+		cubes2temp.clear();
+		cubes3temp.clear();
+		cubes4temp.clear();
+		waterstemp.clear();
 	}
 
 	public void createChunk(API api) {
@@ -152,8 +125,7 @@ public class Chunk {
 		}
 		for (int x = 0; x < sizeX; x++) {
 			for (int z = 0; z < sizeZ; z++) {
-				double tempHegiht = Kernel.world.noise.getNoise(x + cx * 16, z
-						+ cz * 16);
+				double tempHegiht = Kernel.world.noise.getNoise(x + cx * 16, z + cz * 16);
 				tempHegiht += 1;
 				int height = (int) (64 * Maths.clamp(tempHegiht));
 				for (int y = 0; y < height; y++) {
@@ -170,8 +142,8 @@ public class Chunk {
 					else
 						blocks[x][y][z] = Block.Stone.getId();
 
-					for (int i = 0; i < APIWorld.getLastID(); i++) {
-						APIWorld.getChunkHandler(i).chunkGen(blocks, x, y, z);
+					for (int i = 0; i < WorldAPI.getLastID(); i++) {
+						WorldAPI.getChunkHandler(i).chunkGen(blocks, x, y, z);
 					}
 
 					if (y == 0)
@@ -199,46 +171,34 @@ public class Chunk {
 					if (Block.getBlock(blocks[x][y][z]) == Block.Torch) {
 						if (y < 32) {
 							cubes1.add(Block.getBlock(blocks[x][y][z])
-									.getSingleModel(
-											new Vector3f(x + cx * sizeX, y, z
-													+ cz * sizeZ)));
-							lights1.add(new Light(new Vector3f(
-									(x + cx * sizeX) + 0.5f, y + 0.8f, (z + cz
-											* sizeZ) - 0.5f), new Vector3f(1,
-									1, 1), new Vector3f(1, 0.1f, 0.09f)));
+									.getSingleModel(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
+							lights1.add(
+									new Light(new Vector3f((x + cx * sizeX) + 0.5f, y + 0.8f, (z + cz * sizeZ) - 0.5f),
+											new Vector3f(1, 1, 1), new Vector3f(1, 0.1f, 0.09f)));
 							sec1NotClear = true;
 						}
 						if (y > 31 && y < 64) {
 							cubes2.add(Block.getBlock(blocks[x][y][z])
-									.getSingleModel(
-											new Vector3f(x + cx * sizeX, y, z
-													+ cz * sizeZ)));
-							lights2.add(new Light(new Vector3f(
-									(x + cx * sizeX) + 0.5f, y + 0.8f, (z + cz
-											* sizeZ) - 0.5f), new Vector3f(1,
-									1, 1), new Vector3f(1, 0.1f, 0.09f)));
+									.getSingleModel(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
+							lights2.add(
+									new Light(new Vector3f((x + cx * sizeX) + 0.5f, y + 0.8f, (z + cz * sizeZ) - 0.5f),
+											new Vector3f(1, 1, 1), new Vector3f(1, 0.1f, 0.09f)));
 							sec2NotClear = true;
 						}
 						if (y > 63 && y < 96) {
 							cubes3.add(Block.getBlock(blocks[x][y][z])
-									.getSingleModel(
-											new Vector3f(x + cx * sizeX, y, z
-													+ cz * sizeZ)));
-							lights3.add(new Light(new Vector3f(
-									(x + cx * sizeX) + 0.5f, y + 0.8f, (z + cz
-											* sizeZ) - 0.5f), new Vector3f(1,
-									1, 1), new Vector3f(1, 0.1f, 0.09f)));
+									.getSingleModel(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
+							lights3.add(
+									new Light(new Vector3f((x + cx * sizeX) + 0.5f, y + 0.8f, (z + cz * sizeZ) - 0.5f),
+											new Vector3f(1, 1, 1), new Vector3f(1, 0.1f, 0.09f)));
 							sec3NotClear = true;
 						}
 						if (y > 95 && y < 129) {
 							cubes4.add(Block.getBlock(blocks[x][y][z])
-									.getSingleModel(
-											new Vector3f(x + cx * sizeX, y, z
-													+ cz * sizeZ)));
-							lights4.add(new Light(new Vector3f(
-									(x + cx * sizeX) + 0.5f, y + 0.8f, (z + cz
-											* sizeZ) - 0.5f), new Vector3f(1,
-									1, 1), new Vector3f(1, 0.1f, 0.09f)));
+									.getSingleModel(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
+							lights4.add(
+									new Light(new Vector3f((x + cx * sizeX) + 0.5f, y + 0.8f, (z + cz * sizeZ) - 0.5f),
+											new Vector3f(1, 1, 1), new Vector3f(1, 0.1f, 0.09f)));
 							sec4NotClear = true;
 						}
 					} else if (Block.getBlock(blocks[x][y][z]) != Block.Air
@@ -246,188 +206,138 @@ public class Chunk {
 						if (cullFaceWest(x + cx * sizeX, y, z + cz * sizeZ)) {
 							if (y < 32) {
 								cubes1.add(Block.getBlock(blocks[x][y][z])
-										.getFaceWest(
-												new Vector3f(x + cx * sizeX, y,
-														z + cz * sizeZ)));
+										.getFaceWest(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
 								sec1NotClear = true;
 							}
 							if (y > 31 && y < 64) {
 								cubes2.add(Block.getBlock(blocks[x][y][z])
-										.getFaceWest(
-												new Vector3f(x + cx * sizeX, y,
-														z + cz * sizeZ)));
+										.getFaceWest(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
 								sec2NotClear = true;
 							}
 							if (y > 63 && y < 96) {
 								cubes3.add(Block.getBlock(blocks[x][y][z])
-										.getFaceWest(
-												new Vector3f(x + cx * sizeX, y,
-														z + cz * sizeZ)));
+										.getFaceWest(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
 								sec3NotClear = true;
 							}
 							if (y > 95 && y < 129) {
 								cubes4.add(Block.getBlock(blocks[x][y][z])
-										.getFaceWest(
-												new Vector3f(x + cx * sizeX, y,
-														z + cz * sizeZ)));
+										.getFaceWest(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
 								sec4NotClear = true;
 							}
 						}
 						if (cullFaceEast(x + cx * sizeX, y, z + cz * sizeZ)) {
 							if (y < 32) {
 								cubes1.add(Block.getBlock(blocks[x][y][z])
-										.getFaceEast(
-												new Vector3f(x + cx * sizeX, y,
-														z + cz * sizeZ)));
+										.getFaceEast(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
 								sec1NotClear = true;
 							}
 							if (y > 31 && y < 64) {
 								cubes2.add(Block.getBlock(blocks[x][y][z])
-										.getFaceEast(
-												new Vector3f(x + cx * sizeX, y,
-														z + cz * sizeZ)));
+										.getFaceEast(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
 								sec2NotClear = true;
 							}
 							if (y > 63 && y < 96) {
 								cubes3.add(Block.getBlock(blocks[x][y][z])
-										.getFaceEast(
-												new Vector3f(x + cx * sizeX, y,
-														z + cz * sizeZ)));
+										.getFaceEast(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
 								sec3NotClear = true;
 							}
 							if (y > 95 && y < 129) {
 								cubes4.add(Block.getBlock(blocks[x][y][z])
-										.getFaceEast(
-												new Vector3f(x + cx * sizeX, y,
-														z + cz * sizeZ)));
+										.getFaceEast(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
 								sec4NotClear = true;
 							}
 						}
 						if (cullFaceDown(x + cx * sizeX, y, z + cz * sizeZ)) {
 							if (y < 32) {
 								cubes1.add(Block.getBlock(blocks[x][y][z])
-										.getFaceDown(
-												new Vector3f(x + cx * sizeX, y,
-														z + cz * sizeZ)));
+										.getFaceDown(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
 								sec1NotClear = true;
 							}
 							if (y > 31 && y < 64) {
 								cubes2.add(Block.getBlock(blocks[x][y][z])
-										.getFaceDown(
-												new Vector3f(x + cx * sizeX, y,
-														z + cz * sizeZ)));
+										.getFaceDown(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
 								sec2NotClear = true;
 							}
 							if (y > 63 && y < 96) {
 								cubes3.add(Block.getBlock(blocks[x][y][z])
-										.getFaceDown(
-												new Vector3f(x + cx * sizeX, y,
-														z + cz * sizeZ)));
+										.getFaceDown(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
 								sec3NotClear = true;
 							}
 							if (y > 95 && y < 129) {
 								cubes4.add(Block.getBlock(blocks[x][y][z])
-										.getFaceDown(
-												new Vector3f(x + cx * sizeX, y,
-														z + cz * sizeZ)));
+										.getFaceDown(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
 								sec4NotClear = true;
 							}
 						}
-						if (cullFaceUpSolidBlock(x + cx * sizeX, y, z + cz
-								* sizeZ)) {
+						if (cullFaceUpSolidBlock(x + cx * sizeX, y, z + cz * sizeZ)) {
 							if (y < 32) {
 								cubes1.add(Block.getBlock(blocks[x][y][z])
-										.getFaceUp(
-												new Vector3f(x + cx * sizeX, y,
-														z + cz * sizeZ)));
+										.getFaceUp(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
 								sec1NotClear = true;
 							}
 							if (y > 31 && y < 64) {
 								cubes2.add(Block.getBlock(blocks[x][y][z])
-										.getFaceUp(
-												new Vector3f(x + cx * sizeX, y,
-														z + cz * sizeZ)));
+										.getFaceUp(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
 								sec2NotClear = true;
 							}
 							if (y > 63 && y < 96) {
 								cubes3.add(Block.getBlock(blocks[x][y][z])
-										.getFaceUp(
-												new Vector3f(x + cx * sizeX, y,
-														z + cz * sizeZ)));
+										.getFaceUp(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
 								sec3NotClear = true;
 							}
 							if (y > 95 && y < 129) {
 								cubes4.add(Block.getBlock(blocks[x][y][z])
-										.getFaceUp(
-												new Vector3f(x + cx * sizeX, y,
-														z + cz * sizeZ)));
+										.getFaceUp(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
 								sec4NotClear = true;
 							}
 						}
 						if (cullFaceNorth(x + cx * sizeX, y, z + cz * sizeZ)) {
 							if (y < 32) {
 								cubes1.add(Block.getBlock(blocks[x][y][z])
-										.getFaceNorth(
-												new Vector3f(x + cx * sizeX, y,
-														z + cz * sizeZ)));
+										.getFaceNorth(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
 								sec1NotClear = true;
 							}
 							if (y > 31 && y < 64) {
 								cubes2.add(Block.getBlock(blocks[x][y][z])
-										.getFaceNorth(
-												new Vector3f(x + cx * sizeX, y,
-														z + cz * sizeZ)));
+										.getFaceNorth(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
 								sec2NotClear = true;
 							}
 							if (y > 63 && y < 96) {
 								cubes3.add(Block.getBlock(blocks[x][y][z])
-										.getFaceNorth(
-												new Vector3f(x + cx * sizeX, y,
-														z + cz * sizeZ)));
+										.getFaceNorth(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
 								sec3NotClear = true;
 							}
 							if (y > 95 && y < 129) {
 								cubes4.add(Block.getBlock(blocks[x][y][z])
-										.getFaceNorth(
-												new Vector3f(x + cx * sizeX, y,
-														z + cz * sizeZ)));
+										.getFaceNorth(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
 								sec4NotClear = true;
 							}
 						}
 						if (cullFaceSouth(x + cx * sizeX, y, z + cz * sizeZ)) {
 							if (y < 32) {
 								cubes1.add(Block.getBlock(blocks[x][y][z])
-										.getFaceSouth(
-												new Vector3f(x + cx * sizeX, y,
-														z + cz * sizeZ)));
+										.getFaceSouth(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
 								sec1NotClear = true;
 							}
 							if (y > 31 && y < 64) {
 								cubes2.add(Block.getBlock(blocks[x][y][z])
-										.getFaceSouth(
-												new Vector3f(x + cx * sizeX, y,
-														z + cz * sizeZ)));
+										.getFaceSouth(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
 								sec2NotClear = true;
 							}
 							if (y > 63 && y < 96) {
 								cubes3.add(Block.getBlock(blocks[x][y][z])
-										.getFaceSouth(
-												new Vector3f(x + cx * sizeX, y,
-														z + cz * sizeZ)));
+										.getFaceSouth(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
 								sec3NotClear = true;
 							}
 							if (y > 95 && y < 129) {
 								cubes4.add(Block.getBlock(blocks[x][y][z])
-										.getFaceSouth(
-												new Vector3f(x + cx * sizeX, y,
-														z + cz * sizeZ)));
+										.getFaceSouth(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
 								sec4NotClear = true;
 							}
 						}
 					} else if (blocks[x][y][z] == Block.Water.getId()) {
 						if (cullFaceUpWater(x + cx * sizeX, y, z + cz * sizeZ)) {
-							waters.add(Block.Water.getWaterTitle(new Vector3f(x
-									+ cx * sizeX, y, z + cz * sizeZ)));
+							waters.add(Block.Water.getWaterTitle(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
 							sec3NotClear = true;
 						}
 					}
@@ -462,8 +372,7 @@ public class Chunk {
 			if (z > (cz * sizeZ) + 1) {
 				if (x < (cx * sizeX) + 15) {
 					if (z < (cz * sizeZ) + 15) {
-						if (getLocal(x - 1, y, z) != Block.Air.getId()
-								&& getLocal(x - 1, y, z) != Block.Water.getId()
+						if (getLocal(x - 1, y, z) != Block.Air.getId() && getLocal(x - 1, y, z) != Block.Water.getId()
 								&& getLocal(x - 1, y, z) != Block.Glass.getId()
 								&& getLocal(x - 1, y, z) != Block.Torch.getId()) {
 							return false;
@@ -475,12 +384,9 @@ public class Chunk {
 			}
 		}
 		if (Kernel.world.getGlobalBlock(dim, x - 1, y, z) != Block.Air.getId()
-				&& Kernel.world.getGlobalBlock(dim, x - 1, y, z) != Block.Water
-						.getId()
-				&& Kernel.world.getGlobalBlock(dim, x - 1, y, z) != Block.Glass
-						.getId()
-				&& Kernel.world.getGlobalBlock(dim, x - 1, y, z) != Block.Torch
-						.getId()) {
+				&& Kernel.world.getGlobalBlock(dim, x - 1, y, z) != Block.Water.getId()
+				&& Kernel.world.getGlobalBlock(dim, x - 1, y, z) != Block.Glass.getId()
+				&& Kernel.world.getGlobalBlock(dim, x - 1, y, z) != Block.Torch.getId()) {
 			return false;
 		} else {
 			return true;
@@ -489,11 +395,10 @@ public class Chunk {
 
 	private boolean cullFaceEast(int x, int y, int z) {
 		if (x > (cx * sizeX) + 1) {
-			if (z > (cz * sizeZ)) {
+			if (z > (cz * sizeZ) + 1) {
 				if (x < (cx * sizeX) + 15) {
-					if (z < (cz * sizeZ) + 16) {
-						if (getLocal(x + 1, y, z) != Block.Air.getId()
-								&& getLocal(x + 1, y, z) != Block.Water.getId()
+					if (z < (cz * sizeZ) + 15) {
+						if (getLocal(x + 1, y, z) != Block.Air.getId() && getLocal(x + 1, y, z) != Block.Water.getId()
 								&& getLocal(x + 1, y, z) != Block.Glass.getId()
 								&& getLocal(x + 1, y, z) != Block.Torch.getId()) {
 							return false;
@@ -505,12 +410,9 @@ public class Chunk {
 			}
 		}
 		if (Kernel.world.getGlobalBlock(dim, x + 1, y, z) != Block.Air.getId()
-				&& Kernel.world.getGlobalBlock(dim, x + 1, y, z) != Block.Water
-						.getId()
-				&& Kernel.world.getGlobalBlock(dim, x + 1, y, z) != Block.Glass
-						.getId()
-				&& Kernel.world.getGlobalBlock(dim, x + 1, y, z) != Block.Torch
-						.getId()) {
+				&& Kernel.world.getGlobalBlock(dim, x + 1, y, z) != Block.Water.getId()
+				&& Kernel.world.getGlobalBlock(dim, x + 1, y, z) != Block.Glass.getId()
+				&& Kernel.world.getGlobalBlock(dim, x + 1, y, z) != Block.Torch.getId()) {
 			return false;
 		} else {
 			return true;
@@ -526,12 +428,9 @@ public class Chunk {
 					if (x < (cx * sizeX) + 15) {
 						if (z < (cz * sizeZ) + 15) {
 							if (getLocal(x, y - 1, z) != Block.Air.getId()
-									&& getLocal(x, y - 1, z) != Block.Water
-											.getId()
-									&& getLocal(x, y - 1, z) != Block.Glass
-											.getId()
-									&& getLocal(x, y - 1, z) != Block.Torch
-											.getId()) {
+									&& getLocal(x, y - 1, z) != Block.Water.getId()
+									&& getLocal(x, y - 1, z) != Block.Glass.getId()
+									&& getLocal(x, y - 1, z) != Block.Torch.getId()) {
 								return false;
 							} else {
 								return true;
@@ -540,14 +439,10 @@ public class Chunk {
 					}
 				}
 			}
-			if (Kernel.world.getGlobalBlock(dim, x, y - 1, z) != Block.Air
-					.getId()
-					&& Kernel.world.getGlobalBlock(dim, x, y - 1, z) != Block.Water
-							.getId()
-					&& Kernel.world.getGlobalBlock(dim, x, y - 1, z) != Block.Glass
-							.getId()
-					&& Kernel.world.getGlobalBlock(dim, x, y - 1, z) != Block.Torch
-							.getId()) {
+			if (Kernel.world.getGlobalBlock(dim, x, y - 1, z) != Block.Air.getId()
+					&& Kernel.world.getGlobalBlock(dim, x, y - 1, z) != Block.Water.getId()
+					&& Kernel.world.getGlobalBlock(dim, x, y - 1, z) != Block.Glass.getId()
+					&& Kernel.world.getGlobalBlock(dim, x, y - 1, z) != Block.Torch.getId()) {
 				return false;
 			} else {
 				return true;
@@ -560,8 +455,7 @@ public class Chunk {
 			if (z > (cz * sizeZ) + 1) {
 				if (x < (cx * sizeX) + 15) {
 					if (z < (cz * sizeZ) + 15) {
-						if (getLocal(x, y + 1, z) != Block.Air.getId()
-								&& getLocal(x, y + 1, z) != Block.Water.getId()
+						if (getLocal(x, y + 1, z) != Block.Air.getId() && getLocal(x, y + 1, z) != Block.Water.getId()
 								&& getLocal(x, y + 1, z) != Block.Glass.getId()
 								&& getLocal(x, y + 1, z) != Block.Torch.getId()) {
 							return false;
@@ -573,14 +467,10 @@ public class Chunk {
 			}
 		}
 		if (y < sizeY - 1) {
-			if (Kernel.world.getGlobalBlock(dim, x, y + 1, z) != Block.Air
-					.getId()
-					&& Kernel.world.getGlobalBlock(dim, x, y + 1, z) != Block.Water
-							.getId()
-					&& Kernel.world.getGlobalBlock(dim, x, y + 1, z) != Block.Glass
-							.getId()
-					&& Kernel.world.getGlobalBlock(dim, x, y + 1, z) != Block.Torch
-							.getId()) {
+			if (Kernel.world.getGlobalBlock(dim, x, y + 1, z) != Block.Air.getId()
+					&& Kernel.world.getGlobalBlock(dim, x, y + 1, z) != Block.Water.getId()
+					&& Kernel.world.getGlobalBlock(dim, x, y + 1, z) != Block.Glass.getId()
+					&& Kernel.world.getGlobalBlock(dim, x, y + 1, z) != Block.Torch.getId()) {
 				return false;
 			} else {
 				return true;
@@ -606,10 +496,8 @@ public class Chunk {
 			}
 		}
 		if (y < sizeY - 1) {
-			if (Kernel.world.getGlobalBlock(dim, x, y + 1, z) != Block.Air
-					.getId()
-					&& Kernel.world.getGlobalBlock(dim, x, y + 1, z) != Block.Glass
-							.getId()) {
+			if (Kernel.world.getGlobalBlock(dim, x, y + 1, z) != Block.Air.getId()
+					&& Kernel.world.getGlobalBlock(dim, x, y + 1, z) != Block.Glass.getId()) {
 				return false;
 			} else {
 				return true;
@@ -624,8 +512,7 @@ public class Chunk {
 			if (z > (cz * sizeZ) + 1) {
 				if (x < (cx * sizeX) + 15) {
 					if (z < (cz * sizeZ) + 15) {
-						if (getLocal(x, y, z - 1) != Block.Air.getId()
-								&& getLocal(x, y, z - 1) != Block.Water.getId()
+						if (getLocal(x, y, z - 1) != Block.Air.getId() && getLocal(x, y, z - 1) != Block.Water.getId()
 								&& getLocal(x, y, z - 1) != Block.Glass.getId()
 								&& getLocal(x, y, z - 1) != Block.Torch.getId()) {
 							return false;
@@ -637,12 +524,9 @@ public class Chunk {
 			}
 		}
 		if (Kernel.world.getGlobalBlock(dim, x, y, z - 1) != Block.Air.getId()
-				&& Kernel.world.getGlobalBlock(dim, x, y, z - 1) != Block.Water
-						.getId()
-				&& Kernel.world.getGlobalBlock(dim, x, y, z - 1) != Block.Glass
-						.getId()
-				&& Kernel.world.getGlobalBlock(dim, x, y, z - 1) != Block.Torch
-						.getId()) {
+				&& Kernel.world.getGlobalBlock(dim, x, y, z - 1) != Block.Water.getId()
+				&& Kernel.world.getGlobalBlock(dim, x, y, z - 1) != Block.Glass.getId()
+				&& Kernel.world.getGlobalBlock(dim, x, y, z - 1) != Block.Torch.getId()) {
 			return false;
 		} else {
 			return true;
@@ -654,8 +538,7 @@ public class Chunk {
 			if (z > (cz * sizeZ) + 1) {
 				if (x < (cx * sizeX) + 15) {
 					if (z < (cz * sizeZ) + 15) {
-						if (getLocal(x, y, z + 1) != Block.Air.getId()
-								&& getLocal(x, y, z + 1) != Block.Water.getId()
+						if (getLocal(x, y, z + 1) != Block.Air.getId() && getLocal(x, y, z + 1) != Block.Water.getId()
 								&& getLocal(x, y, z + 1) != Block.Glass.getId()
 								&& getLocal(x, y, z + 1) != Block.Torch.getId()) {
 							return false;
@@ -667,12 +550,9 @@ public class Chunk {
 			}
 		}
 		if (Kernel.world.getGlobalBlock(dim, x, y, z + 1) != Block.Air.getId()
-				&& Kernel.world.getGlobalBlock(dim, x, y, z + 1) != Block.Water
-						.getId()
-				&& Kernel.world.getGlobalBlock(dim, x, y, z + 1) != Block.Glass
-						.getId()
-				&& Kernel.world.getGlobalBlock(dim, x, y, z + 1) != Block.Torch
-						.getId()) {
+				&& Kernel.world.getGlobalBlock(dim, x, y, z + 1) != Block.Water.getId()
+				&& Kernel.world.getGlobalBlock(dim, x, y, z + 1) != Block.Glass.getId()
+				&& Kernel.world.getGlobalBlock(dim, x, y, z + 1) != Block.Torch.getId()) {
 			return false;
 		} else {
 			return true;
@@ -693,8 +573,7 @@ public class Chunk {
 			renderer.renderChunk(cubes2temp, lights2, camera);
 	}
 
-	public void render3(MasterRenderer renderer, WaterRenderer waterRenderer,
-			Camera camera) {
+	public void render3(MasterRenderer renderer, WaterRenderer waterRenderer, Camera camera) {
 		if (readyToRender) {
 			renderer.renderChunk(cubes3, lights3, camera);
 			waterRenderer.render(waters, camera);

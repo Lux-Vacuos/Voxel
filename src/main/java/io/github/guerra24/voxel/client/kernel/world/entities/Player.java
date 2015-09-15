@@ -37,8 +37,7 @@ public class Player extends Entity implements IEntity {
 
 	private boolean isInAir = false;
 
-	public Player(TexturedModel model, Vector3f position, float rotX,
-			float rotY, float rotZ, float scale) {
+	public Player(TexturedModel model, Vector3f position, float rotX, float rotY, float rotZ, float scale) {
 		super(model, position, rotX, rotY, rotZ, scale);
 	}
 
@@ -46,15 +45,11 @@ public class Player extends Entity implements IEntity {
 	public void update(float delta) {
 		super.increasePosition(0, upwardsSpeed * delta, 0);
 		try {
-			if (Kernel.world.getGlobalBlock(Kernel.world.dim,
-					(int) (super.getPosition().x - 0.2f),
-					(int) (super.getPosition().y - 1.8f),
-					(int) (super.getPosition().z - 0.2f)) == Block.Air.getId()
-					&& Kernel.world.getGlobalBlock(Kernel.world.dim,
-							(int) (super.getPosition().x + 0.2f),
+			if (Kernel.world.getGlobalBlock(Kernel.world.dim, (int) (super.getPosition().x - 0.2f),
+					(int) (super.getPosition().y - 1.8f), (int) (super.getPosition().z - 0.2f)) == Block.Air.getId()
+					&& Kernel.world.getGlobalBlock(Kernel.world.dim, (int) (super.getPosition().x + 0.2f),
 							(int) (super.getPosition().y - 1.8f),
-							(int) (super.getPosition().z + 0.2f)) == Block.Air
-							.getId()) {
+							(int) (super.getPosition().z + 0.2f)) == Block.Air.getId()) {
 				upwardsSpeed += GRAVITY * delta;
 				isInAir = true;
 			} else {
@@ -68,16 +63,11 @@ public class Player extends Entity implements IEntity {
 	public void jump() {
 		if (!isInAir) {
 			try {
-				if (Kernel.world.getGlobalBlock(Kernel.world.dim,
-						(int) (super.getPosition().x - 0.2f),
-						(int) (super.getPosition().y + 2),
-						(int) (super.getPosition().z - 0.2f)) == Block.Air
-						.getId()
-						&& Kernel.world.getGlobalBlock(Kernel.world.dim,
-								(int) (super.getPosition().x + 0.2f),
+				if (Kernel.world.getGlobalBlock(Kernel.world.dim, (int) (super.getPosition().x - 0.2f),
+						(int) (super.getPosition().y + 2), (int) (super.getPosition().z - 0.2f)) == Block.Air.getId()
+						&& Kernel.world.getGlobalBlock(Kernel.world.dim, (int) (super.getPosition().x + 0.2f),
 								(int) (super.getPosition().y + 2),
-								(int) (super.getPosition().z + 0.2f)) == Block.Air
-								.getId()) {
+								(int) (super.getPosition().z + 0.2f)) == Block.Air.getId()) {
 					this.upwardsSpeed = JUMP_POWER;
 
 					isInAir = true;
@@ -88,5 +78,10 @@ public class Player extends Entity implements IEntity {
 			} finally {
 			}
 		}
+	}
+
+	@Override
+	public Entity getEntity() {
+		return this;
 	}
 }

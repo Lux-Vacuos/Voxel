@@ -1,10 +1,9 @@
 package io.github.guerra24.voxel.client.kernel.input;
 
-import io.github.guerra24.voxel.client.kernel.core.KernelConstants;
-import io.github.guerra24.voxel.client.kernel.graphics.opengl.DisplayManager;
-
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.system.MemoryUtil;
+
+import io.github.guerra24.voxel.client.kernel.graphics.opengl.Display;
 
 /**
  * Mouse
@@ -31,8 +30,7 @@ public class Mouse {
 
 	private static int[] buttonEvents = new int[queue.getMaxEvents()];
 	private static int[] wheelEvents = new int[queue.getMaxEvents()];
-	private static boolean[] buttonEventStates = new boolean[queue
-			.getMaxEvents()];
+	private static boolean[] buttonEventStates = new boolean[queue.getMaxEvents()];
 	private static int[] xEvents = new int[queue.getMaxEvents()];
 	private static int[] yEvents = new int[queue.getMaxEvents()];
 	private static int[] lastxEvents = new int[queue.getMaxEvents()];
@@ -45,7 +43,7 @@ public class Mouse {
 
 	public static void addMoveEvent(double mouseX, double mouseY) {
 		latestX = (int) mouseX;
-		latestY = KernelConstants.HEIGHT - (int) mouseY;
+		latestY = Display.getHeight() - (int) mouseY;
 
 		lastxEvents[queue.getNextPos()] = xEvents[queue.getNextPos()];
 		lastyEvents[queue.getNextPos()] = yEvents[queue.getNextPos()];
@@ -111,10 +109,10 @@ public class Mouse {
 				latestX = 0;
 			if (latestY < 0)
 				latestY = 0;
-			if (latestX > KernelConstants.WIDTH - 1)
-				latestX = KernelConstants.WIDTH - 1;
-			if (latestY > KernelConstants.HEIGHT - 1)
-				latestY = KernelConstants.HEIGHT - 1;
+			if (latestX > Display.getWidth() - 1)
+				latestX = Display.getWidth() - 1;
+			if (latestY > Display.getHeight() - 1)
+				latestY = Display.getHeight() - 1;
 		}
 
 		x = latestX;
@@ -122,7 +120,7 @@ public class Mouse {
 	}
 
 	public static void setGrabbed(boolean grab) {
-		GLFW.glfwSetInputMode(DisplayManager.getWindow(), GLFW.GLFW_CURSOR,
+		GLFW.glfwSetInputMode(Display.getWindow(), GLFW.GLFW_CURSOR,
 				grab ? GLFW.GLFW_CURSOR_DISABLED : GLFW.GLFW_CURSOR_NORMAL);
 		grabbed = grab;
 	}
@@ -132,7 +130,7 @@ public class Mouse {
 	}
 
 	public static boolean isButtonDown(int button) {
-		return GLFW.glfwGetMouseButton(DisplayManager.getWindow(), button) == GLFW.GLFW_PRESS;
+		return GLFW.glfwGetMouseButton(Display.getWindow(), button) == GLFW.GLFW_PRESS;
 	}
 
 	public static boolean next() {
@@ -148,13 +146,11 @@ public class Mouse {
 	}
 
 	public static int getEventDX() {
-		return xEvents[queue.getCurrentPos()]
-				- lastxEvents[queue.getCurrentPos()];
+		return xEvents[queue.getCurrentPos()] - lastxEvents[queue.getCurrentPos()];
 	}
 
 	public static int getEventDY() {
-		return yEvents[queue.getCurrentPos()]
-				- lastyEvents[queue.getCurrentPos()];
+		return yEvents[queue.getCurrentPos()] - lastyEvents[queue.getCurrentPos()];
 	}
 
 	public static long getEventNanoseconds() {
@@ -208,16 +204,16 @@ public class Mouse {
 	}
 
 	public static void setCursorPosition(int new_x, int new_y) {
-		GLFW.glfwSetCursorPos(DisplayManager.getWindow(), new_x, new_y);
+		GLFW.glfwSetCursorPos(Display.getWindow(), new_x, new_y);
 	}
 
 	public static Cursor setNativeCursor(Cursor cursor) {
 		if (cursor == null) {
-			GLFW.glfwSetCursor(DisplayManager.getWindow(), MemoryUtil.NULL);
+			GLFW.glfwSetCursor(Display.getWindow(), MemoryUtil.NULL);
 			return null;
 		}
 
-		GLFW.glfwSetCursor(DisplayManager.getWindow(), cursor.getHandle());
+		GLFW.glfwSetCursor(Display.getWindow(), cursor.getHandle());
 		return cursor;
 	}
 

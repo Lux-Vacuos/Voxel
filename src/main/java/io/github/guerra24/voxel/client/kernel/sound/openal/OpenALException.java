@@ -33,12 +33,11 @@ package io.github.guerra24.voxel.client.kernel.sound.openal;
 
 /**
  * <br>
- * Thrown by the debug build library of the LWJGL if any OpenAL operation
- * causes an error.
+ * Thrown by the debug build library of the LWJGL if any OpenAL operation causes
+ * an error.
  * 
  * @author Brian Matzon <brian@matzon.dk>
- * @version $Revision$
- * $Id$
+ * @version $Revision$ $Id$
  */
 public class OpenALException extends RuntimeException {
 
@@ -52,14 +51,15 @@ public class OpenALException extends RuntimeException {
 	}
 
 	/**
-	  * Constructor that takes an AL error number
-	  */
+	 * Constructor that takes an AL error number
+	 */
 	public OpenALException(int error_code) {
-		super("OpenAL error: " + org.lwjgl.openal.AL10.alGetString(error_code) + " (" + error_code + ")");		
+		super("OpenAL error: " + org.lwjgl.openal.AL10.alGetString(error_code) + " (" + error_code + ")");
 	}
 
 	/**
 	 * Constructor for OpenALException.
+	 * 
 	 * @param message
 	 */
 	public OpenALException(String message) {
@@ -68,6 +68,7 @@ public class OpenALException extends RuntimeException {
 
 	/**
 	 * Constructor for OpenALException.
+	 * 
 	 * @param message
 	 * @param cause
 	 */
@@ -77,6 +78,7 @@ public class OpenALException extends RuntimeException {
 
 	/**
 	 * Constructor for OpenALException.
+	 * 
 	 * @param cause
 	 */
 	public OpenALException(Throwable cause) {

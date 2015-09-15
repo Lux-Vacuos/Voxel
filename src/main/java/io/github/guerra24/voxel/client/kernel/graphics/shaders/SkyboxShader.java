@@ -72,8 +72,7 @@ public class SkyboxShader extends ShaderProgram {
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public SkyboxShader() {
-		super(KernelConstants.VERTEX_FILE_SKYBOX,
-				KernelConstants.FRAGMENT_FILE_SKYBOX);
+		super(KernelConstants.VERTEX_FILE_SKYBOX, KernelConstants.FRAGMENT_FILE_SKYBOX);
 	}
 
 	/**
@@ -101,15 +100,13 @@ public class SkyboxShader extends ShaderProgram {
 		matrix.m31 = 0;
 		matrix.m32 = 0;
 		rotation += KernelConstants.ROTATE_SPEED * delta;
-		Matrix4f.rotate((float) Math.toRadians(rotation),
-				new Vector3f(0, 1, 0), matrix, matrix);
+		Matrix4f.rotate((float) Math.toRadians(rotation), new Vector3f(0, 1, 0), matrix, matrix);
 		super.loadMatrix(location_viewMatrix, matrix);
 	}
 
 	@Override
 	protected void getAllUniformLocations() {
-		location_projectionMatrix = super
-				.getUniformLocation("projectionMatrix");
+		location_projectionMatrix = super.getUniformLocation("projectionMatrix");
 		location_viewMatrix = super.getUniformLocation("viewMatrix");
 		location_fogColour = super.getUniformLocation("fogColour");
 		location_blendFactor = super.getUniformLocation("blendFactor");

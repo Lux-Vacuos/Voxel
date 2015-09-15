@@ -38,42 +38,43 @@ import java.util.HashMap;
  *
  * ALC introduces the notion of a Device. A Device can be, depending on the
  * implementation, a hardware device, or a daemon/OS service/actual server. This
- * mechanism also permits different drivers (and hardware) to coexist within the same
- * system, as well as allowing several applications to share system resources for audio,
- * including a single hardware output device. The details are left to the implementation,
- * which has to map the available backends to unique device specifiers.
+ * mechanism also permits different drivers (and hardware) to coexist within the
+ * same system, as well as allowing several applications to share system
+ * resources for audio, including a single hardware output device. The details
+ * are left to the implementation, which has to map the available backends to
+ * unique device specifiers.
  *
  * @author Brian Matzon <brian@matzon.dk>
- * @version $Revision$
- * $Id$
+ * @version $Revision$ $Id$
  */
 public final class ALCdevice {
 
-    /** Address of actual device */
-    final long device;
+	/** Address of actual device */
+	final long device;
 
-    /** Whether this device is valid */
-    private boolean valid;
+	/** Whether this device is valid */
+	private boolean valid;
 
 	/** List of contexts belonging to the device */
 	private final HashMap<Long, ALCcontext> contexts = new HashMap<Long, ALCcontext>();
 
-    /**
-     * Creates a new instance of ALCdevice
-     *
-     * @param device address of actual device
-     */
-    ALCdevice(long device) {
-        this.device = device;
-        this.valid = true;
-    }
+	/**
+	 * Creates a new instance of ALCdevice
+	 *
+	 * @param device
+	 *            address of actual device
+	 */
+	ALCdevice(long device) {
+		this.device = device;
+		this.valid = true;
+	}
 
-    /*
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
+	/*
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
 	public boolean equals(Object device) {
-		if(device instanceof ALCdevice) {
-			return ((ALCdevice)device).device == this.device;
+		if (device instanceof ALCdevice) {
+			return ((ALCdevice) device).device == this.device;
 		}
 		return super.equals(device);
 	}
@@ -81,7 +82,8 @@ public final class ALCdevice {
 	/**
 	 * Adds a context to the device
 	 *
-	 * @param context context to add to the list of contexts for this device
+	 * @param context
+	 *            context to add to the list of contexts for this device
 	 */
 	void addContext(ALCcontext context) {
 		synchronized (contexts) {
@@ -92,7 +94,8 @@ public final class ALCdevice {
 	/**
 	 * Remove context associated with device
 	 *
-	 * @param context Context to disassociate with device
+	 * @param context
+	 *            Context to disassociate with device
 	 */
 	void removeContext(ALCcontext context) {
 		synchronized (contexts) {
@@ -106,7 +109,7 @@ public final class ALCdevice {
 	void setInvalid() {
 		valid = false;
 		synchronized (contexts) {
-			for ( ALCcontext context : contexts.values() )
+			for (ALCcontext context : contexts.values())
 				context.setInvalid();
 		}
 		contexts.clear();

@@ -43,15 +43,18 @@ public class WorldThread extends Thread {
 				}
 				break;
 			case IN_PAUSE:
-				Kernel.world.updateChunkGeneration(Kernel.gameResources.camera,
-						Kernel.api);
+				Kernel.world.updateChunkGeneration(Kernel.gameResources.camera, Kernel.api);
 				break;
 			case GAME:
-				Kernel.world.updateChunkGeneration(Kernel.gameResources.camera,
-						Kernel.api);
+				Kernel.world.updateChunkGeneration(Kernel.gameResources.camera, Kernel.api);
 				Kernel.world.test();
 				break;
 			case LOADING_WORLD:
+				try {
+					Thread.sleep((long) 33.3333);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 				break;
 			}
 		}

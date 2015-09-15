@@ -26,11 +26,7 @@ package io.github.guerra24.voxel.client.kernel.core;
 
 import io.github.guerra24.voxel.client.kernel.api.API;
 import io.github.guerra24.voxel.client.kernel.bootstrap.Bootstrap;
-import io.github.guerra24.voxel.client.kernel.graphics.GuiRenderer;
-import io.github.guerra24.voxel.client.kernel.graphics.MasterRenderer;
-import io.github.guerra24.voxel.client.kernel.graphics.SkyboxRenderer;
-import io.github.guerra24.voxel.client.kernel.graphics.WaterRenderer;
-import io.github.guerra24.voxel.client.kernel.graphics.opengl.DisplayManager;
+import io.github.guerra24.voxel.client.kernel.graphics.opengl.Display;
 import io.github.guerra24.voxel.client.kernel.graphics.opengl.SystemInfo;
 import io.github.guerra24.voxel.client.kernel.input.Keyboard;
 import io.github.guerra24.voxel.client.kernel.resources.GameResources;
@@ -109,16 +105,12 @@ public class Kernel implements IKernel {
 	public void init() {
 
 		Logger.log(Thread.currentThread(), "Loading");
-		Logger.log(Thread.currentThread(), "Voxel Game Version: "
-				+ KernelConstants.version);
+		Logger.log(Thread.currentThread(), "Voxel Game Version: " + KernelConstants.version);
 		Logger.log(Thread.currentThread(), "Build: " + KernelConstants.build);
-		Logger.log(Thread.currentThread(),
-				"Running on: " + Bootstrap.getPlatform());
-		DisplayManager.initDsiplay();
-		DisplayManager.startUp();
+		Logger.log(Thread.currentThread(), "Running on: " + Bootstrap.getPlatform());
+		Display.initDsiplay();
+		Display.startUp();
 		SystemInfo.printSystemInfo();
-		if (KernelConstants.advancedOpenGL)
-			Logger.log(Thread.currentThread(), "Using Advanced Rendering");
 
 		gameResources = new GameResources();
 		api = new API();
@@ -153,18 +145,17 @@ public class Kernel implements IKernel {
 		float interval = 1f / 60;
 		float alpha = 0;
 		while (gameResources.gameStates.loop) {
-			if (DisplayManager.timeCount > 1f) {
-				Logger.log(Thread.currentThread(), "RCPS: "
-						+ Kernel.renderCallsPerFrame);
-				Logger.log(Thread.currentThread(), "FPS: " + DisplayManager.fps);
-				Logger.log(Thread.currentThread(), "UPS: " + DisplayManager.ups);
-				DisplayManager.fps = DisplayManager.fpsCount;
-				DisplayManager.fpsCount = 0;
-				DisplayManager.ups = DisplayManager.upsCount;
-				DisplayManager.upsCount = 0;
-				DisplayManager.timeCount -= 1f;
+			if (Display.timeCount > 1f) {
+				Logger.log(Thread.currentThread(), "RCPS: " + Kernel.renderCallsPerFrame);
+				Logger.log(Thread.currentThread(), "FPS: " + Display.fps);
+				Logger.log(Thread.currentThread(), "UPS: " + Display.ups);
+				Display.fps = Display.fpsCount;
+				Display.fpsCount = 0;
+				Display.ups = Display.upsCount;
+				Display.upsCount = 0;
+				Display.timeCount -= 1f;
 			}
-			delta = DisplayManager.getDelta();
+			delta = Display.getDelta();
 			accumulator += delta;
 			while (accumulator >= interval) {
 				update(gameResources, interval);
@@ -172,9 +163,7 @@ public class Kernel implements IKernel {
 			}
 
 			alpha = accumulator / interval;
-			render(gameResources, gameResources.renderer,
-					gameResources.guiRenderer, gameResources.waterRenderer,
-					gameResources.skyboxRenderer, delta);
+			render(gameResources, delta);
 			error();
 			totalRenderCalls += renderCalls;
 			renderCallsPerFrame = renderCalls;
@@ -184,52 +173,50 @@ public class Kernel implements IKernel {
 	}
 
 	@Override
-	public void render(GameResources gm, MasterRenderer renderer,
-			GuiRenderer guiRenderer, WaterRenderer waterRenderer,
-			SkyboxRenderer skyboxRenderer, float delta) {
-		DisplayManager.fpsCount++;
+	public void render(GameResources gm, float delta) {
+		Display.fpsCount++;
 		switch (gm.gameStates.state) {
 		case MAINMENU:
-			renderer.prepare();
-			renderer.renderEntity(gm.mainMenuModels, gm.mainMenuLights,
-					gm.camera);
-			guiRenderer.renderGui(gm.guis2);
-			DisplayManager.updateDisplay(30);
+			gm.renderer.prepare();
+			gm.renderer.renderEntity(gm.mainMenuModels, gm.mainMenuLights, gm.camera);
+			gm.guiRenderer.renderGui(gm.guis2);
+			Display.updateDisplay(30);
 			break;
 		case IN_PAUSE:
-			renderer.prepare();
+			gm.renderer.prepare();
 			world.updateChunksRender(gm, Kernel.gameResources.camera);
-			renderer.renderEntity(gm.allObjects, gm.lights, gm.camera);
-			skyboxRenderer.render(gm.camera, KernelConstants.RED,
-					KernelConstants.GREEN, KernelConstants.BLUE, delta);
-			guiRenderer.renderGui(gm.guis4);
-			DisplayManager.updateDisplay(KernelConstants.FPS);
+			gm.renderer.renderEntity(gm.mobManager.getMobs(), gm.lights, gm.camera);
+			gm.skyboxRenderer.render(gm.camera, KernelConstants.RED, KernelConstants.GREEN, KernelConstants.BLUE,
+					delta);
+			gm.guiRenderer.renderGui(gm.guis4);
+			Display.updateDisplay(KernelConstants.FPS);
 			break;
 		case GAME:
-			renderer.prepare();
+			gm.renderer.prepare();
 			world.updateChunksRender(gm, Kernel.gameResources.camera);
-			renderer.renderEntity(gm.allObjects, gm.lights, gm.camera);
-			skyboxRenderer.render(gm.camera, KernelConstants.RED,
-					KernelConstants.GREEN, KernelConstants.BLUE, delta);
-			guiRenderer.renderGui(gm.guis);
-			DisplayManager.updateDisplay(KernelConstants.FPS);
+			gm.renderer.renderEntity(gm.mobManager.getMobs(), gm.lights, gm.camera);
+			gm.camera.updatePicker();
+			gm.skyboxRenderer.render(gm.camera, KernelConstants.RED, KernelConstants.GREEN, KernelConstants.BLUE,
+					delta);
+			gm.guiRenderer.renderGui(gm.guis);
+			Display.updateDisplay(KernelConstants.FPS);
 			break;
 		case LOADING_WORLD:
-			renderer.prepare();
-			guiRenderer.renderGui(gm.guis3);
-			DisplayManager.updateDisplay(60);
+			gm.renderer.prepare();
+			gm.guiRenderer.renderGui(gm.guis3);
+			Display.updateDisplay(60);
 			break;
 		}
 	}
 
 	@Override
 	public void update(GameResources gm, float delta) {
-		DisplayManager.upsCount++;
+		Display.upsCount++;
 		switch (gm.gameStates.state) {
 		case MAINMENU:
 			if (Keyboard.isKeyDown(Keyboard.KEY_O))
 				Bootstrap.config.setVisible(true);
-			gm.mainMenuModels.get(0).increaseRotation(0, 0.1f, 0);
+			gm.mainMenuModels.get(0).getEntity().increaseRotation(0, 0.1f, 0);
 			gm.frustum.calculateFrustum(gm.camera);
 			break;
 		case IN_PAUSE:
@@ -238,8 +225,7 @@ public class Kernel implements IKernel {
 			gm.frustum.calculateFrustum(gm.camera);
 			break;
 		case GAME:
-			gm.player.update(delta);
-			gm.camera.update(delta);
+			gm.mobManager.update(delta);
 			gm.waterRenderer.update(delta);
 			gm.skyboxRenderer.update(delta);
 			gm.frustum.calculateFrustum(gm.camera);
@@ -268,7 +254,7 @@ public class Kernel implements IKernel {
 		if (!errorTest) {
 			Bootstrap.config.dispose();
 		}
-		DisplayManager.closeDisplay();
+		Display.closeDisplay();
 	}
 
 }

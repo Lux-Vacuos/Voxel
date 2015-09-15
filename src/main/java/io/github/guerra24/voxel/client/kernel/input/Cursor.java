@@ -89,8 +89,8 @@ public class Cursor {
 	 * @throws LWJGLException
 	 *             if the cursor could not be created for any reason
 	 */
-	public Cursor(int width, int height, int xHotspot, int yHotspot,
-			int numImages, IntBuffer images, IntBuffer delays) {
+	public Cursor(int width, int height, int xHotspot, int yHotspot, int numImages, IntBuffer images,
+			IntBuffer delays) {
 
 		if (numImages != 1) {
 			System.out.println("ANIMATED CURSORS NOT YET SUPPORTED IN LWJGLX");
@@ -100,19 +100,16 @@ public class Cursor {
 		IntBuffer flippedImages = BufferUtils.createIntBuffer(images.limit());
 		flipImages(width, height, numImages, images, flippedImages);
 
-		ByteBuffer pixels = convertARGBIntBuffertoRGBAByteBuffer(width, height,
-				flippedImages);
+		ByteBuffer pixels = convertARGBIntBuffertoRGBAByteBuffer(width, height, flippedImages);
 		ByteBuffer imageBuffer = GLFWimage.malloc(width, height, pixels);
 
-		cursorHandle = GLFW.glfwCreateCursor(imageBuffer, xHotspot, height
-				- yHotspot - 1);
+		cursorHandle = GLFW.glfwCreateCursor(imageBuffer, xHotspot, height - yHotspot - 1);
 
 		if (cursorHandle == MemoryUtil.NULL)
 			throw new RuntimeException("Error creating GLFW cursor");
 	}
 
-	private static ByteBuffer convertARGBIntBuffertoRGBAByteBuffer(int width,
-			int height, IntBuffer imageBuffer) {
+	private static ByteBuffer convertARGBIntBuffertoRGBAByteBuffer(int width, int height, IntBuffer imageBuffer) {
 		ByteBuffer pixels = BufferUtils.createByteBuffer(width * height * 4);
 
 		for (int i = 0; i < imageBuffer.limit(); i++) {
@@ -181,8 +178,7 @@ public class Cursor {
 	 * @param images_copy
 	 *            Destination images
 	 */
-	private static void flipImages(int width, int height, int numImages,
-			IntBuffer images, IntBuffer images_copy) {
+	private static void flipImages(int width, int height, int numImages, IntBuffer images, IntBuffer images_copy) {
 		for (int i = 0; i < numImages; i++) {
 			int start_index = i * width * height;
 			flipImage(width, height, start_index, images, images_copy);
@@ -201,8 +197,7 @@ public class Cursor {
 	 * @param images_copy
 	 *            Destination images
 	 */
-	private static void flipImage(int width, int height, int start_index,
-			IntBuffer images, IntBuffer images_copy) {
+	private static void flipImage(int width, int height, int start_index, IntBuffer images, IntBuffer images_copy) {
 		for (int y = 0; y < height >> 1; y++) {
 			int index_y_1 = y * width + start_index;
 			int index_y_2 = (height - y - 1) * width + start_index;

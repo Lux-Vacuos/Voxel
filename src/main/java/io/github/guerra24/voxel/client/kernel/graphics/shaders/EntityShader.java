@@ -87,8 +87,7 @@ public class EntityShader extends ShaderProgram {
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public EntityShader() {
-		super(KernelConstants.VERTEX_FILE_ENTITY,
-				KernelConstants.FRAGMENT_FILE_ENTITY);
+		super(KernelConstants.VERTEX_FILE_ENTITY, KernelConstants.FRAGMENT_FILE_ENTITY);
 	}
 
 	@Override
@@ -100,14 +99,11 @@ public class EntityShader extends ShaderProgram {
 
 	@Override
 	protected void getAllUniformLocations() {
-		location_transformationMatrix = super
-				.getUniformLocation("transformationMatrix");
-		location_projectionMatrix = super
-				.getUniformLocation("projectionMatrix");
+		location_transformationMatrix = super.getUniformLocation("transformationMatrix");
+		location_projectionMatrix = super.getUniformLocation("projectionMatrix");
 		location_viewMatrix = super.getUniformLocation("viewMatrix");
 		location_skyColour = super.getUniformLocation("skyColour");
-		location_directLightDirection = super
-				.getUniformLocation("directLightDirection");
+		location_directLightDirection = super.getUniformLocation("directLightDirection");
 		location_blendFactor = super.getUniformLocation("blendFactor");
 		location_time = super.getUniformLocation("time");
 
@@ -115,12 +111,9 @@ public class EntityShader extends ShaderProgram {
 		location_lightColour = new int[KernelConstants.MAX_LIGHTS];
 		location_attenuations = new int[KernelConstants.MAX_LIGHTS];
 		for (int i = 0; i < KernelConstants.MAX_LIGHTS; i++) {
-			location_lightPosition[i] = super
-					.getUniformLocation("lightPosition[" + i + "]");
-			location_lightColour[i] = super.getUniformLocation("lightColour["
-					+ i + "]");
-			location_attenuations[i] = super.getUniformLocation("attenuations["
-					+ i + "]");
+			location_lightPosition[i] = super.getUniformLocation("lightPosition[" + i + "]");
+			location_lightColour[i] = super.getUniformLocation("lightColour[" + i + "]");
+			location_attenuations[i] = super.getUniformLocation("attenuations[" + i + "]");
 		}
 	}
 
@@ -193,21 +186,15 @@ public class EntityShader extends ShaderProgram {
 	public void loadLights(List<Light> lights) {
 		for (int i = 0; i < KernelConstants.MAX_LIGHTS; i++) {
 			if (i < lights.size()) {
-				super.loadVector(location_lightPosition[i], lights.get(i)
-						.getPosition());
-				super.loadVector(location_lightColour[i], lights.get(i)
-						.getColour());
-				super.loadVector(location_attenuations[i], lights.get(i)
-						.getAttenuation());
+				super.loadVector(location_lightPosition[i], lights.get(i).getPosition());
+				super.loadVector(location_lightColour[i], lights.get(i).getColour());
+				super.loadVector(location_attenuations[i], lights.get(i).getAttenuation());
 			} else {
-				super.loadVector(location_lightPosition[i], new Vector3f(0,
-						-128, 0));
-				super.loadVector(location_lightColour[i], new Vector3f(
-						0.0000000000000000001f, 0.0000000000000000001f,
-						0.0000000000000000001f));
-				super.loadVector(location_attenuations[i], new Vector3f(
-						0.0000000000000000001f, 0.0000000000000000001f,
-						0.0000000000000000001f));
+				super.loadVector(location_lightPosition[i], new Vector3f(0, -128, 0));
+				super.loadVector(location_lightColour[i],
+						new Vector3f(0.0000000000000000001f, 0.0000000000000000001f, 0.0000000000000000001f));
+				super.loadVector(location_attenuations[i],
+						new Vector3f(0.0000000000000000001f, 0.0000000000000000001f, 0.0000000000000000001f));
 			}
 		}
 	}

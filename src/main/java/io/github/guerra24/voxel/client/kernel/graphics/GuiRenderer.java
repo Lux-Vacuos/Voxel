@@ -91,8 +91,7 @@ public class GuiRenderer {
 		for (GuiTexture gui : guis) {
 			glActiveTexture(GL_TEXTURE0);
 			glBindTexture(GL_TEXTURE_2D, gui.getTexture());
-			Matrix4f matrix = Maths.createTransformationMatrix(
-					gui.getPosition(), gui.getScale());
+			Matrix4f matrix = Maths.createTransformationMatrix(gui.getPosition(), gui.getScale());
 			shader.loadTransformation(matrix);
 			VoxelGL33.glDrawArrays(GL_TRIANGLE_STRIP, 0, quad.getVertexCount());
 		}

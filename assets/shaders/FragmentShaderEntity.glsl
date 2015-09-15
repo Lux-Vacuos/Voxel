@@ -54,8 +54,7 @@ void main(void) {
 	}
 	vec4 light = clamp(vec4(lightIntensity, 1.0), 0.0, 1.0);
 	totalDiffuse = totalDiffuse + light;
-	totalDiffuse = max(totalDiffuse, 0.0);
-	totalDiffuse = min(totalDiffuse, 0.8);
+	totalDiffuse = clamp(totalDiffuse, 0.0, 1.0);
 	
 	vec4 textureColour = texture(textureSampler, pass_textureCoords);
 	if(textureColour.a<0.5) {

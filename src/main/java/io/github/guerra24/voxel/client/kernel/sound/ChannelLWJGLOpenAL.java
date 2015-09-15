@@ -3,6 +3,7 @@ package io.github.guerra24.voxel.client.kernel.sound;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.util.LinkedList;
+
 import javax.sound.sampled.AudioFormat;
 
 // From the lwjgl library, http://www.lwjgl.org
@@ -10,8 +11,9 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.openal.AL10;
 import org.lwjgl.openal.AL11;
 
-import paulscode.sound.Channel;
-import paulscode.sound.SoundSystemConfig;
+import io.github.guerra24.voxel.client.kernel.sound.soundsystem.Channel;
+import io.github.guerra24.voxel.client.kernel.sound.soundsystem.SoundSystemConfig;
+
 
 /**
  * The ChannelLWJGLOpenAL class is used to reserve a sound-card voice using the
@@ -25,7 +27,8 @@ import paulscode.sound.SoundSystemConfig;
  * <i> Copyright (c) 2002-2008 Lightweight Java Game Library Project All rights
  * reserved. <br>
  * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met: <br>
+ * modification, are permitted provided that the following conditions are met:
+ * <br>
  * * Redistributions of source code must retain the above copyright notice, this
  * list of conditions and the following disclaimer. <br>
  * * Redistributions in binary form must reproduce the above copyright notice,
@@ -177,8 +180,7 @@ public class ChannelLWJGLOpenAL extends Channel {
 			} else if (audioFormat.getSampleSizeInBits() == 16) {
 				soundFormat = AL10.AL_FORMAT_MONO16;
 			} else {
-				errorMessage("Illegal sample size in method "
-						+ "'setAudioFormat'");
+				errorMessage("Illegal sample size in method " + "'setAudioFormat'");
 				return;
 			}
 		} else if (audioFormat.getChannels() == 2) {
@@ -187,13 +189,11 @@ public class ChannelLWJGLOpenAL extends Channel {
 			} else if (audioFormat.getSampleSizeInBits() == 16) {
 				soundFormat = AL10.AL_FORMAT_STEREO16;
 			} else {
-				errorMessage("Illegal sample size in method "
-						+ "'setAudioFormat'");
+				errorMessage("Illegal sample size in method " + "'setAudioFormat'");
 				return;
 			}
 		} else {
-			errorMessage("Audio data neither mono nor stereo in "
-					+ "method 'setAudioFormat'");
+			errorMessage("Audio data neither mono nor stereo in " + "method 'setAudioFormat'");
 			return;
 		}
 		ALformat = soundFormat;
@@ -228,8 +228,7 @@ public class ChannelLWJGLOpenAL extends Channel {
 				"Buffers may only be queued for streaming sources."))
 			return false;
 
-		if (errorCheck(bufferList == null,
-				"Buffer List null in method 'preLoadBuffers'"))
+		if (errorCheck(bufferList == null, "Buffer List null in method 'preLoadBuffers'"))
 			return false;
 
 		IntBuffer streamBuffers;
@@ -242,17 +241,14 @@ public class ChannelLWJGLOpenAL extends Channel {
 			checkALError();
 		}
 		// Clear out any previously queued buffers:
-		int processed = AL10.alGetSourcei(ALSource.get(0),
-				AL10.AL_BUFFERS_PROCESSED);
+		int processed = AL10.alGetSourcei(ALSource.get(0), AL10.AL_BUFFERS_PROCESSED);
 		if (processed > 0) {
 			streamBuffers = BufferUtils.createIntBuffer(processed);
 			AL10.alGenBuffers(streamBuffers);
-			if (errorCheck(checkALError(),
-					"Error clearing stream buffers in method 'preLoadBuffers'"))
+			if (errorCheck(checkALError(), "Error clearing stream buffers in method 'preLoadBuffers'"))
 				return false;
 			AL10.alSourceUnqueueBuffers(ALSource.get(0), streamBuffers);
-			if (errorCheck(checkALError(),
-					"Error unqueuing stream buffers in method 'preLoadBuffers'"))
+			if (errorCheck(checkALError(), "Error unqueuing stream buffers in method 'preLoadBuffers'"))
 				return false;
 		}
 
@@ -264,29 +260,24 @@ public class ChannelLWJGLOpenAL extends Channel {
 
 		streamBuffers = BufferUtils.createIntBuffer(bufferList.size());
 		AL10.alGenBuffers(streamBuffers);
-		if (errorCheck(checkALError(),
-				"Error generating stream buffers in method 'preLoadBuffers'"))
+		if (errorCheck(checkALError(), "Error generating stream buffers in method 'preLoadBuffers'"))
 			return false;
 
 		ByteBuffer byteBuffer = null;
 		for (int i = 0; i < bufferList.size(); i++) {
 			// byteBuffer = ByteBuffer.wrap( bufferList.get(i), 0,
 			// bufferList.get(i).length );
-			byteBuffer = (ByteBuffer) BufferUtils
-					.createByteBuffer(bufferList.get(i).length)
-					.put(bufferList.get(i)).flip();
+			byteBuffer = (ByteBuffer) BufferUtils.createByteBuffer(bufferList.get(i).length).put(bufferList.get(i))
+					.flip();
 
 			try {
-				AL10.alBufferData(streamBuffers.get(i), ALformat, byteBuffer,
-						sampleRate);
+				AL10.alBufferData(streamBuffers.get(i), ALformat, byteBuffer, sampleRate);
 			} catch (Exception e) {
-				errorMessage("Error creating buffers in method "
-						+ "'preLoadBuffers'");
+				errorMessage("Error creating buffers in method " + "'preLoadBuffers'");
 				printStackTrace(e);
 				return false;
 			}
-			if (errorCheck(checkALError(),
-					"Error creating buffers in method 'preLoadBuffers'"))
+			if (errorCheck(checkALError(), "Error creating buffers in method 'preLoadBuffers'"))
 				return false;
 
 		}
@@ -298,13 +289,11 @@ public class ChannelLWJGLOpenAL extends Channel {
 			printStackTrace(e);
 			return false;
 		}
-		if (errorCheck(checkALError(),
-				"Error queuing buffers in method 'preLoadBuffers'"))
+		if (errorCheck(checkALError(), "Error queuing buffers in method 'preLoadBuffers'"))
 			return false;
 
 		AL10.alSourcePlay(ALSource.get(0));
-		if (errorCheck(checkALError(),
-				"Error playing source in method 'preLoadBuffers'"))
+		if (errorCheck(checkALError(), "Error playing source in method 'preLoadBuffers'"))
 			return false;
 
 		// Success:
@@ -326,8 +315,7 @@ public class ChannelLWJGLOpenAL extends Channel {
 			return false;
 
 		// ByteBuffer byteBuffer = ByteBuffer.wrap( buffer, 0, buffer.length );
-		ByteBuffer byteBuffer = (ByteBuffer) BufferUtils
-				.createByteBuffer(buffer.length).put(buffer).flip();
+		ByteBuffer byteBuffer = (ByteBuffer) BufferUtils.createByteBuffer(buffer.length).put(buffer).flip();
 
 		IntBuffer intBuffer = BufferUtils.createIntBuffer(1);
 
@@ -366,23 +354,19 @@ public class ChannelLWJGLOpenAL extends Channel {
 			return -1;
 
 		// ByteBuffer byteBuffer = ByteBuffer.wrap( buffer, 0, buffer.length );
-		ByteBuffer byteBuffer = (ByteBuffer) BufferUtils
-				.createByteBuffer(buffer.length).put(buffer).flip();
+		ByteBuffer byteBuffer = (ByteBuffer) BufferUtils.createByteBuffer(buffer.length).put(buffer).flip();
 
 		IntBuffer intBuffer;
 
 		// Clear out any previously queued buffers:
-		int processed = AL10.alGetSourcei(ALSource.get(0),
-				AL10.AL_BUFFERS_PROCESSED);
+		int processed = AL10.alGetSourcei(ALSource.get(0), AL10.AL_BUFFERS_PROCESSED);
 		if (processed > 0) {
 			intBuffer = BufferUtils.createIntBuffer(processed);
 			AL10.alGenBuffers(intBuffer);
-			if (errorCheck(checkALError(),
-					"Error clearing stream buffers in method 'feedRawAudioData'"))
+			if (errorCheck(checkALError(), "Error clearing stream buffers in method 'feedRawAudioData'"))
 				return -1;
 			AL10.alSourceUnqueueBuffers(ALSource.get(0), intBuffer);
-			if (errorCheck(checkALError(),
-					"Error unqueuing stream buffers in method 'feedRawAudioData'"))
+			if (errorCheck(checkALError(), "Error unqueuing stream buffers in method 'feedRawAudioData'"))
 				return -1;
 			int i;
 			intBuffer.rewind();
@@ -398,8 +382,7 @@ public class ChannelLWJGLOpenAL extends Channel {
 		}
 		intBuffer = BufferUtils.createIntBuffer(1);
 		AL10.alGenBuffers(intBuffer);
-		if (errorCheck(checkALError(),
-				"Error generating stream buffers in method 'preLoadBuffers'"))
+		if (errorCheck(checkALError(), "Error generating stream buffers in method 'preLoadBuffers'"))
 			return -1;
 
 		AL10.alBufferData(intBuffer.get(0), ALformat, byteBuffer, sampleRate);
@@ -410,8 +393,7 @@ public class ChannelLWJGLOpenAL extends Channel {
 		if (checkALError())
 			return -1;
 
-		if (attachedSource != null && attachedSource.channel == this
-				&& attachedSource.active()) {
+		if (attachedSource != null && attachedSource.channel == this && attachedSource.active()) {
 			// restart the channel if it was previously playing:
 			if (!playing()) {
 				AL10.alSourcePlay(ALSource.get(0));
@@ -442,8 +424,7 @@ public class ChannelLWJGLOpenAL extends Channel {
 	@Override
 	public float millisecondsPlayed() {
 		// get number of samples played in current buffer
-		float offset = (float) AL10.alGetSourcei(ALSource.get(0),
-				AL11.AL_BYTE_OFFSET);
+		float offset = (float) AL10.alGetSourcei(ALSource.get(0), AL11.AL_BYTE_OFFSET);
 
 		float bytesPerFrame = 1f;
 		switch (ALformat) {
@@ -485,8 +466,7 @@ public class ChannelLWJGLOpenAL extends Channel {
 			return 0;
 
 		// determine how many have been processed:
-		int processed = AL10.alGetSourcei(ALSource.get(0),
-				AL10.AL_BUFFERS_PROCESSED);
+		int processed = AL10.alGetSourcei(ALSource.get(0), AL10.AL_BUFFERS_PROCESSED);
 
 		// Check for errors:
 		if (checkALError())

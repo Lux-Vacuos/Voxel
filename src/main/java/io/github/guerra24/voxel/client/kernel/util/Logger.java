@@ -53,8 +53,7 @@ public final class Logger {
 	 */
 	public static void log(Thread thread, Object... messages) {
 		for (Object message : messages)
-			System.out.println((printTimeStamps ? "[INFO " + getTimeStamp()
-					+ "] " + "[" + thread.getName() + "] " : "")
+			System.out.println((printTimeStamps ? "[INFO " + getTimeStamp() + "] " + "[" + thread.getName() + "] " : "")
 					+ message);
 	}
 
@@ -67,16 +66,12 @@ public final class Logger {
 	 */
 	public static void log(Object... messages) {
 		for (Object message : messages)
-			System.out.println((printTimeStamps ? "[INFO " + getTimeStamp()
-					+ "] " : "")
-					+ message);
+			System.out.println((printTimeStamps ? "[INFO " + getTimeStamp() + "] " : "") + message);
 	}
 
 	public static void logServer(Object... messages) {
 		for (Object message : messages)
-			System.out.println((printTimeStamps ? "[SERVER " + getTimeStamp()
-					+ "] " : "")
-					+ message);
+			System.out.println((printTimeStamps ? "[SERVER " + getTimeStamp() + "] " : "") + message);
 	}
 
 	public static String getTimeStamp() {
@@ -94,9 +89,9 @@ public final class Logger {
 	 */
 	public static void warn(Thread thread, Object... messages) {
 		for (Object message : messages)
-			System.err.println((printTimeStamps ? "[WARNING " + getTimeStamp()
-					+ "] " + "[" + thread.getName() + "] " : "")
-					+ message);
+			System.err.println(
+					(printTimeStamps ? "[WARNING " + getTimeStamp() + "] " + "[" + thread.getName() + "] " : "")
+							+ message);
 	}
 
 	/**
@@ -110,10 +105,9 @@ public final class Logger {
 	 */
 	public static void error(Thread thread, Object... messages) {
 		for (Object message : messages) {
-			System.err.println((printTimeStamps ? "[FATAL ERROR "
-					+ getTimeStamp() + "] " + "[" + thread.getName() + "] "
-					: "")
-					+ message);
+			System.err.println(
+					(printTimeStamps ? "[FATAL ERROR " + getTimeStamp() + "] " + "[" + thread.getName() + "] " : "")
+							+ message);
 		}
 	}
 

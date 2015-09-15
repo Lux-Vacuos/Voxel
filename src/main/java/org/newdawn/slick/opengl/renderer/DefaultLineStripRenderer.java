@@ -1,7 +1,7 @@
 package org.newdawn.slick.opengl.renderer;
 
 /**
- * The default version of the renderer relies of GL calls to do everything. 
+ * The default version of the renderer relies of GL calls to do everything.
  * Unfortunately this is driver dependent and often implemented inconsistantly
  * 
  * @author kevin
@@ -9,7 +9,7 @@ package org.newdawn.slick.opengl.renderer;
 public class DefaultLineStripRenderer implements LineStripRenderer {
 	/** The access to OpenGL */
 	private SGL GL = Renderer.get();
-	
+
 	/**
 	 * @see org.newdawn.slick.opengl.renderer.LineStripRenderer#end()
 	 */
@@ -43,14 +43,16 @@ public class DefaultLineStripRenderer implements LineStripRenderer {
 	}
 
 	/**
-	 * @see org.newdawn.slick.opengl.renderer.LineStripRenderer#vertex(float, float)
+	 * @see org.newdawn.slick.opengl.renderer.LineStripRenderer#vertex(float,
+	 *      float)
 	 */
 	public void vertex(float x, float y) {
-		GL.glVertex2f(x,y);
+		GL.glVertex2f(x, y);
 	}
 
 	/**
-	 * @see org.newdawn.slick.opengl.renderer.LineStripRenderer#color(float, float, float, float)
+	 * @see org.newdawn.slick.opengl.renderer.LineStripRenderer#color(float,
+	 *      float, float, float)
 	 */
 	public void color(float r, float g, float b, float a) {
 		GL.glColor4f(r, g, b, a);

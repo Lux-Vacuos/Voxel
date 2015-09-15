@@ -97,26 +97,16 @@ public class BlocksResources {
 		RawModel south = OBJLoader.loadObjModel("FACE_SOUTH", loader);
 		RawModel torch = OBJLoader.loadObjModel("Torch", loader);
 
-		ModelTexture texture0 = new ModelTexture(
-				loader.loadTextureBlocks("Indes"));
-		ModelTexture texture = new ModelTexture(
-				loader.loadTextureBlocks("Grass"));
-		ModelTexture texture1 = new ModelTexture(
-				loader.loadTextureBlocks("Stone"));
-		ModelTexture texture2 = new ModelTexture(
-				loader.loadTextureBlocks("Sand"));
-		ModelTexture texture3 = new ModelTexture(
-				loader.loadTextureBlocks("Glass"));
-		ModelTexture texture4 = new ModelTexture(
-				loader.loadTextureBlocks("Dirt"));
-		ModelTexture texture5 = new ModelTexture(
-				loader.loadTextureBlocks("Diamond-Ore"));
-		ModelTexture texture6 = new ModelTexture(
-				loader.loadTextureBlocks("Gold-Ore"));
-		ModelTexture texture7 = new ModelTexture(
-				loader.loadTextureBlocks("GrassSide"));
-		ModelTexture texture8 = new ModelTexture(
-				loader.loadTextureBlocks("Torch"));
+		ModelTexture texture0 = new ModelTexture(loader.loadTextureBlocks("Indes"));
+		ModelTexture texture = new ModelTexture(loader.loadTextureBlocks("Grass"));
+		ModelTexture texture1 = new ModelTexture(loader.loadTextureBlocks("Stone"));
+		ModelTexture texture2 = new ModelTexture(loader.loadTextureBlocks("Sand"));
+		ModelTexture texture3 = new ModelTexture(loader.loadTextureBlocks("Glass"));
+		ModelTexture texture4 = new ModelTexture(loader.loadTextureBlocks("Dirt"));
+		ModelTexture texture5 = new ModelTexture(loader.loadTextureBlocks("Diamond-Ore"));
+		ModelTexture texture6 = new ModelTexture(loader.loadTextureBlocks("Gold-Ore"));
+		ModelTexture texture7 = new ModelTexture(loader.loadTextureBlocks("GrassSide"));
+		ModelTexture texture8 = new ModelTexture(loader.loadTextureBlocks("Torch"));
 
 		cubeIndesUP = new TexturedModel(up, texture0);
 		cubeGrassUP = new TexturedModel(up, texture);

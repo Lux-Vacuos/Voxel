@@ -34,8 +34,7 @@ public class AL {
 			attribs.put(0);
 			attribs.flip();
 
-			long contextHandle = org.lwjgl.openal.ALC10.alcCreateContext(
-					alDevice.getPointer(), attribs);
+			long contextHandle = org.lwjgl.openal.ALC10.alcCreateContext(alDevice.getPointer(), attribs);
 
 			alContext = new ALContext(alDevice, contextHandle);
 

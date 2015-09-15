@@ -43,8 +43,7 @@ public class SystemInfo {
 	 */
 	public static void printSystemInfo() {
 		Logger.log(Thread.currentThread(), "Vendor: " + glGetString(GL_VENDOR));
-		Logger.log(Thread.currentThread(), "Renderer: "
-				+ glGetString(GL_RENDERER));
+		Logger.log(Thread.currentThread(), "Renderer: " + glGetString(GL_RENDERER));
 
 	}
 

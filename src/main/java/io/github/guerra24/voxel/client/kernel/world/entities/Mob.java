@@ -29,13 +29,17 @@ import io.github.guerra24.voxel.client.kernel.util.vector.Vector3f;
 
 public class Mob extends Entity implements IEntity {
 
-	public Mob(TexturedModel model, Vector3f position, float rotX, float rotY,
-			float rotZ, float scale) {
+	public Mob(TexturedModel model, Vector3f position, float rotX, float rotY, float rotZ, float scale) {
 		super(model, position, rotX, rotY, rotZ, scale);
 	}
 
 	@Override
 	public void update(float delta) {
+	}
+
+	@Override
+	public Entity getEntity() {
+		return this;
 	}
 
 }

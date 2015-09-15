@@ -9,7 +9,8 @@ public class SlickException extends Exception {
 	/**
 	 * Create a new exception with a detail message
 	 * 
-	 * @param message The message describing the cause of this exception
+	 * @param message
+	 *            The message describing the cause of this exception
 	 */
 	public SlickException(String message) {
 		super(message);
@@ -18,8 +19,10 @@ public class SlickException extends Exception {
 	/**
 	 * Create a new exception with a detail message
 	 * 
-	 * @param message The message describing the cause of this exception
-	 * @param e The exception causing this exception to be thrown
+	 * @param message
+	 *            The message describing the cause of this exception
+	 * @param e
+	 *            The exception causing this exception to be thrown
 	 */
 	public SlickException(String message, Throwable e) {
 		super(message, e);

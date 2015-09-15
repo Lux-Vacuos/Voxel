@@ -1,11 +1,9 @@
 package io.github.guerra24.voxel.client.kernel.sound;
 
-import io.github.guerra24.voxel.client.kernel.sound.openal.AL;
-
-import java.nio.ByteBuffer;
-import java.nio.IntBuffer;
-import java.nio.FloatBuffer;
 import java.net.URL;
+import java.nio.ByteBuffer;
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
@@ -15,15 +13,16 @@ import javax.sound.sampled.AudioFormat;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.openal.AL10;
 
-import paulscode.sound.Channel;
-import paulscode.sound.FilenameURL;
-import paulscode.sound.ICodec;
-import paulscode.sound.Library;
-import paulscode.sound.ListenerData;
-import paulscode.sound.SoundBuffer;
-import paulscode.sound.SoundSystemConfig;
-import paulscode.sound.SoundSystemException;
-import paulscode.sound.Source;
+import io.github.guerra24.voxel.client.kernel.sound.openal.AL;
+import io.github.guerra24.voxel.client.kernel.sound.soundsystem.Channel;
+import io.github.guerra24.voxel.client.kernel.sound.soundsystem.FilenameURL;
+import io.github.guerra24.voxel.client.kernel.sound.soundsystem.ICodec;
+import io.github.guerra24.voxel.client.kernel.sound.soundsystem.Library;
+import io.github.guerra24.voxel.client.kernel.sound.soundsystem.ListenerData;
+import io.github.guerra24.voxel.client.kernel.sound.soundsystem.SoundBuffer;
+import io.github.guerra24.voxel.client.kernel.sound.soundsystem.SoundSystemConfig;
+import io.github.guerra24.voxel.client.kernel.sound.soundsystem.SoundSystemException;
+import io.github.guerra24.voxel.client.kernel.sound.soundsystem.Source;
 
 /**
  * The LibraryLWJGLOpenAL class interfaces the lwjgl binding of OpenAL. <b><br>
@@ -35,7 +34,8 @@ import paulscode.sound.Source;
  * <i> Copyright (c) 2002-2008 Lightweight Java Game Library Project All rights
  * reserved. <br>
  * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met: <br>
+ * modification, are permitted provided that the following conditions are met:
+ * <br>
  * * Redistributions of source code must retain the above copyright notice, this
  * list of conditions and the following disclaimer. <br>
  * * Redistributions in binary form must reproduce the above copyright notice,
@@ -138,16 +138,13 @@ public class LibraryLWJGLOpenAL extends Library {
 	@Override
 	public void init() throws SoundSystemException {
 		boolean errors = false; // set to 'true' if error(s) occur:
-
 		try {
 			AL.create();
 			errors = checkALError();
 		} catch (java.lang.Exception e) {
-			errorMessage("Unable to initialize OpenAL.  Probable cause: "
-					+ "OpenAL not supported.");
+			errorMessage("Unable to initialize OpenAL.  Probable cause: " + "OpenAL not supported.");
 			printStackTrace(e);
-			throw new LibraryLWJGLOpenAL.Exception(e.getMessage(),
-					LibraryLWJGLOpenAL.Exception.CREATE);
+			throw new LibraryLWJGLOpenAL.Exception(e.getMessage(), LibraryLWJGLOpenAL.Exception.CREATE);
 		}
 
 		if (errors)
@@ -155,15 +152,11 @@ public class LibraryLWJGLOpenAL extends Library {
 		else
 			message("OpenAL initialized.");
 
-		listenerPositionAL = BufferUtils.createFloatBuffer(3).put(
-				new float[] { listener.position.x, listener.position.y,
-						listener.position.z });
-		listenerOrientation = BufferUtils.createFloatBuffer(6).put(
-				new float[] { listener.lookAt.x, listener.lookAt.y,
-						listener.lookAt.z, listener.up.x, listener.up.y,
-						listener.up.z });
-		listenerVelocity = BufferUtils.createFloatBuffer(3).put(
-				new float[] { 0.0f, 0.0f, 0.0f });
+		listenerPositionAL = BufferUtils.createFloatBuffer(3)
+				.put(new float[] { listener.position.x, listener.position.y, listener.position.z });
+		listenerOrientation = BufferUtils.createFloatBuffer(6).put(new float[] { listener.lookAt.x, listener.lookAt.y,
+				listener.lookAt.z, listener.up.x, listener.up.y, listener.up.z });
+		listenerVelocity = BufferUtils.createFloatBuffer(3).put(new float[] { 0.0f, 0.0f, 0.0f });
 
 		// Flip the buffers, so they can be used:
 		listenerPositionAL.flip();
@@ -187,9 +180,8 @@ public class LibraryLWJGLOpenAL extends Library {
 		// Let user know what caused the above error messages:
 		if (errors) {
 			importantMessage("OpenAL did not initialize properly!");
-			throw new LibraryLWJGLOpenAL.Exception("Problem encountered "
-					+ "while loading OpenAL or " + "creating the listener.  "
-					+ "Probable cause:  OpenAL not " + "supported",
+			throw new LibraryLWJGLOpenAL.Exception("Problem encountered " + "while loading OpenAL or "
+					+ "creating the listener.  " + "Probable cause:  OpenAL not " + "supported",
 					LibraryLWJGLOpenAL.Exception.CREATE);
 		}
 
@@ -201,16 +193,15 @@ public class LibraryLWJGLOpenAL extends Library {
 			AL10.alSourcef(channel.ALSource.get(0), AL10.AL_PITCH, 1.0f);
 			if (checkALError()) {
 				alPitchSupported(SET, false);
-				throw new LibraryLWJGLOpenAL.Exception("OpenAL: AL_PITCH not "
-						+ "supported.",
+				throw new LibraryLWJGLOpenAL.Exception("OpenAL: AL_PITCH not " + "supported.",
 						LibraryLWJGLOpenAL.Exception.NO_AL_PITCH);
 			} else {
 				alPitchSupported(SET, true);
 			}
 		} catch (java.lang.Exception e) {
 			alPitchSupported(SET, false);
-			throw new LibraryLWJGLOpenAL.Exception("OpenAL: AL_PITCH not "
-					+ "supported.", LibraryLWJGLOpenAL.Exception.NO_AL_PITCH);
+			throw new LibraryLWJGLOpenAL.Exception("OpenAL: AL_PITCH not " + "supported.",
+					LibraryLWJGLOpenAL.Exception.NO_AL_PITCH);
 		}
 	}
 
@@ -315,13 +306,11 @@ public class LibraryLWJGLOpenAL extends Library {
 		// Make sure the OpenAL buffer map exists:
 		if (ALBufferMap == null) {
 			ALBufferMap = new HashMap<String, IntBuffer>();
-			importantMessage("Open AL Buffer Map was null in method"
-					+ "'loadSound'");
+			importantMessage("Open AL Buffer Map was null in method" + "'loadSound'");
 		}
 
 		// make sure they gave us a filename:
-		if (errorCheck(filenameURL == null,
-				"Filename/URL not specified in method 'loadSound'"))
+		if (errorCheck(filenameURL == null, "Filename/URL not specified in method 'loadSound'"))
 			return false;
 
 		// check if it is already loaded:
@@ -330,23 +319,19 @@ public class LibraryLWJGLOpenAL extends Library {
 
 		ICodec codec = SoundSystemConfig.getCodec(filenameURL.getFilename());
 		if (errorCheck(codec == null,
-				"No codec found for file '" + filenameURL.getFilename()
-						+ "' in method 'loadSound'"))
+				"No codec found for file '" + filenameURL.getFilename() + "' in method 'loadSound'"))
 			return false;
 		codec.reverseByteOrder(true);
 
 		URL url = filenameURL.getURL();
-		if (errorCheck(url == null,
-				"Unable to open file '" + filenameURL.getFilename()
-						+ "' in method 'loadSound'"))
+		if (errorCheck(url == null, "Unable to open file '" + filenameURL.getFilename() + "' in method 'loadSound'"))
 			return false;
 
 		codec.initialize(url);
 		SoundBuffer buffer = codec.readAll();
 		codec.cleanup();
 		codec = null;
-		if (errorCheck(buffer == null,
-				"Sound buffer null in method 'loadSound'"))
+		if (errorCheck(buffer == null, "Sound buffer null in method 'loadSound'"))
 			return false;
 
 		bufferMap.put(filenameURL.getFilename(), buffer);
@@ -372,8 +357,7 @@ public class LibraryLWJGLOpenAL extends Library {
 				return false;
 			}
 		} else {
-			errorMessage("File neither mono nor stereo in method "
-					+ "'loadSound'");
+			errorMessage("File neither mono nor stereo in method " + "'loadSound'");
 			return false;
 		}
 
@@ -386,21 +370,14 @@ public class LibraryLWJGLOpenAL extends Library {
 		// AL10.alBufferData( intBuffer.get( 0 ), soundFormat,
 		// ByteBuffer.wrap( buffer.audioData ),
 		// (int) audioFormat.getSampleRate() );
-		AL10.alBufferData(
-				intBuffer.get(0),
-				soundFormat,
-				(ByteBuffer) BufferUtils
-						.createByteBuffer(buffer.audioData.length)
-						.put(buffer.audioData).flip(),
+		AL10.alBufferData(intBuffer.get(0), soundFormat,
+				(ByteBuffer) BufferUtils.createByteBuffer(buffer.audioData.length).put(buffer.audioData).flip(),
 				(int) audioFormat.getSampleRate());
 
 		if (errorCheck(AL10.alGetError() != AL10.AL_NO_ERROR,
 				"alBufferData error when loading " + filenameURL.getFilename()))
 
-			if (errorCheck(
-					intBuffer == null,
-					"Sound buffer was not created for "
-							+ filenameURL.getFilename()))
+			if (errorCheck(intBuffer == null, "Sound buffer was not created for " + filenameURL.getFilename()))
 				return false;
 
 		ALBufferMap.put(filenameURL.getFilename(), intBuffer);
@@ -429,21 +406,18 @@ public class LibraryLWJGLOpenAL extends Library {
 		// Make sure the OpenAL buffer map exists:
 		if (ALBufferMap == null) {
 			ALBufferMap = new HashMap<String, IntBuffer>();
-			importantMessage("Open AL Buffer Map was null in method"
-					+ "'loadSound'");
+			importantMessage("Open AL Buffer Map was null in method" + "'loadSound'");
 		}
 
 		// make sure they gave us an identifier:
-		if (errorCheck(identifier == null,
-				"Identifier not specified in method 'loadSound'"))
+		if (errorCheck(identifier == null, "Identifier not specified in method 'loadSound'"))
 			return false;
 
 		// check if it is already loaded:
 		if (bufferMap.get(identifier) != null)
 			return true;
 
-		if (errorCheck(buffer == null,
-				"Sound buffer null in method 'loadSound'"))
+		if (errorCheck(buffer == null, "Sound buffer null in method 'loadSound'"))
 			return false;
 
 		bufferMap.put(identifier, buffer);
@@ -469,33 +443,25 @@ public class LibraryLWJGLOpenAL extends Library {
 				return false;
 			}
 		} else {
-			errorMessage("File neither mono nor stereo in method "
-					+ "'loadSound'");
+			errorMessage("File neither mono nor stereo in method " + "'loadSound'");
 			return false;
 		}
 
 		IntBuffer intBuffer = BufferUtils.createIntBuffer(1);
 		AL10.alGenBuffers(intBuffer);
-		if (errorCheck(AL10.alGetError() != AL10.AL_NO_ERROR,
-				"alGenBuffers error when saving " + identifier))
+		if (errorCheck(AL10.alGetError() != AL10.AL_NO_ERROR, "alGenBuffers error when saving " + identifier))
 			return false;
 
 		// AL10.alBufferData( intBuffer.get( 0 ), soundFormat,
 		// ByteBuffer.wrap( buffer.audioData ),
 		// (int) audioFormat.getSampleRate() );
-		AL10.alBufferData(
-				intBuffer.get(0),
-				soundFormat,
-				(ByteBuffer) BufferUtils
-						.createByteBuffer(buffer.audioData.length)
-						.put(buffer.audioData).flip(),
+		AL10.alBufferData(intBuffer.get(0), soundFormat,
+				(ByteBuffer) BufferUtils.createByteBuffer(buffer.audioData.length).put(buffer.audioData).flip(),
 				(int) audioFormat.getSampleRate());
 
-		if (errorCheck(AL10.alGetError() != AL10.AL_NO_ERROR,
-				"alBufferData error when saving " + identifier))
+		if (errorCheck(AL10.alGetError() != AL10.AL_NO_ERROR, "alBufferData error when saving " + identifier))
 
-			if (errorCheck(intBuffer == null,
-					"Sound buffer was not created for " + identifier))
+			if (errorCheck(intBuffer == null, "Sound buffer was not created for " + identifier))
 				return false;
 
 		ALBufferMap.put(identifier, intBuffer);
@@ -561,9 +527,8 @@ public class LibraryLWJGLOpenAL extends Library {
 	 *            value of "attmodel".
 	 */
 	@Override
-	public void newSource(boolean priority, boolean toStream, boolean toLoop,
-			String sourcename, FilenameURL filenameURL, float x, float y,
-			float z, int attModel, float distOrRoll) {
+	public void newSource(boolean priority, boolean toStream, boolean toLoop, String sourcename,
+			FilenameURL filenameURL, float x, float y, float z, int attModel, float distOrRoll) {
 		IntBuffer myBuffer = null;
 		if (!toStream) {
 			// Grab the sound buffer for this file:
@@ -573,8 +538,7 @@ public class LibraryLWJGLOpenAL extends Library {
 			if (myBuffer == null) {
 				if (!loadSound(filenameURL)) {
 					errorMessage("Source '" + sourcename + "' was not created "
-							+ "because an error occurred while loading "
-							+ filenameURL.getFilename());
+							+ "because an error occurred while loading " + filenameURL.getFilename());
 					return;
 				}
 			}
@@ -584,8 +548,7 @@ public class LibraryLWJGLOpenAL extends Library {
 			// see if it was there this time:
 			if (myBuffer == null) {
 				errorMessage("Source '" + sourcename + "' was not created "
-						+ "because a sound buffer was not found for "
-						+ filenameURL.getFilename());
+						+ "because a sound buffer was not found for " + filenameURL.getFilename());
 				return;
 			}
 		}
@@ -598,8 +561,7 @@ public class LibraryLWJGLOpenAL extends Library {
 			if (buffer == null) {
 				if (!loadSound(filenameURL)) {
 					errorMessage("Source '" + sourcename + "' was not created "
-							+ "because an error occurred while loading "
-							+ filenameURL.getFilename());
+							+ "because an error occurred while loading " + filenameURL.getFilename());
 					return;
 				}
 			}
@@ -607,16 +569,14 @@ public class LibraryLWJGLOpenAL extends Library {
 			buffer = bufferMap.get(filenameURL.getFilename());
 			// see if it was there this time:
 			if (buffer == null) {
-				errorMessage("Source '" + sourcename + "' was not created "
-						+ "because audio data was not found for "
+				errorMessage("Source '" + sourcename + "' was not created " + "because audio data was not found for "
 						+ filenameURL.getFilename());
 				return;
 			}
 		}
 
-		sourceMap.put(sourcename, new SourceLWJGLOpenAL(listenerPositionAL,
-				myBuffer, priority, toStream, toLoop, sourcename, filenameURL,
-				buffer, x, y, z, attModel, distOrRoll, false));
+		sourceMap.put(sourcename, new SourceLWJGLOpenAL(listenerPositionAL, myBuffer, priority, toStream, toLoop,
+				sourcename, filenameURL, buffer, x, y, z, attModel, distOrRoll, false));
 	}
 
 	/**
@@ -643,12 +603,10 @@ public class LibraryLWJGLOpenAL extends Library {
 	 *            value of "attmodel".
 	 */
 	@Override
-	public void rawDataStream(AudioFormat audioFormat, boolean priority,
-			String sourcename, float x, float y, float z, int attModel,
-			float distOrRoll) {
-		sourceMap.put(sourcename, new SourceLWJGLOpenAL(listenerPositionAL,
-				audioFormat, priority, sourcename, x, y, z, attModel,
-				distOrRoll));
+	public void rawDataStream(AudioFormat audioFormat, boolean priority, String sourcename, float x, float y, float z,
+			int attModel, float distOrRoll) {
+		sourceMap.put(sourcename, new SourceLWJGLOpenAL(listenerPositionAL, audioFormat, priority, sourcename, x, y, z,
+				attModel, distOrRoll));
 	}
 
 	/**
@@ -683,9 +641,8 @@ public class LibraryLWJGLOpenAL extends Library {
 	 *            playing.
 	 */
 	@Override
-	public void quickPlay(boolean priority, boolean toStream, boolean toLoop,
-			String sourcename, FilenameURL filenameURL, float x, float y,
-			float z, int attModel, float distOrRoll, boolean temporary) {
+	public void quickPlay(boolean priority, boolean toStream, boolean toLoop, String sourcename,
+			FilenameURL filenameURL, float x, float y, float z, int attModel, float distOrRoll, boolean temporary) {
 		IntBuffer myBuffer = null;
 		if (!toStream) {
 			// Grab the sound buffer for this file:
@@ -697,8 +654,7 @@ public class LibraryLWJGLOpenAL extends Library {
 			myBuffer = ALBufferMap.get(filenameURL.getFilename());
 			// see if it was there this time:
 			if (myBuffer == null) {
-				errorMessage("Sound buffer was not created for "
-						+ filenameURL.getFilename());
+				errorMessage("Sound buffer was not created for " + filenameURL.getFilename());
 				return;
 			}
 		}
@@ -712,8 +668,7 @@ public class LibraryLWJGLOpenAL extends Library {
 			if (buffer == null) {
 				if (!loadSound(filenameURL)) {
 					errorMessage("Source '" + sourcename + "' was not created "
-							+ "because an error occurred while loading "
-							+ filenameURL.getFilename());
+							+ "because an error occurred while loading " + filenameURL.getFilename());
 					return;
 				}
 			}
@@ -721,15 +676,13 @@ public class LibraryLWJGLOpenAL extends Library {
 			buffer = bufferMap.get(filenameURL.getFilename());
 			// see if it was there this time:
 			if (buffer == null) {
-				errorMessage("Source '" + sourcename + "' was not created "
-						+ "because audio data was not found for "
+				errorMessage("Source '" + sourcename + "' was not created " + "because audio data was not found for "
 						+ filenameURL.getFilename());
 				return;
 			}
 		}
-		SourceLWJGLOpenAL s = new SourceLWJGLOpenAL(listenerPositionAL,
-				myBuffer, priority, toStream, toLoop, sourcename, filenameURL,
-				buffer, x, y, z, attModel, distOrRoll, false);
+		SourceLWJGLOpenAL s = new SourceLWJGLOpenAL(listenerPositionAL, myBuffer, priority, toStream, toLoop,
+				sourcename, filenameURL, buffer, x, y, z, attModel, distOrRoll, false);
 
 		sourceMap.put(sourcename, s);
 		play(s);
@@ -760,8 +713,7 @@ public class LibraryLWJGLOpenAL extends Library {
 		// Make sure the OpenAL buffer map exists:
 		if (ALBufferMap == null) {
 			ALBufferMap = new HashMap<String, IntBuffer>();
-			importantMessage("Open AL Buffer Map was null in method"
-					+ "'copySources'");
+			importantMessage("Open AL Buffer Map was null in method" + "'copySources'");
 		}
 
 		// remove any existing sources before starting:
@@ -779,11 +731,8 @@ public class LibraryLWJGLOpenAL extends Library {
 					buffer = bufferMap.get(source.filenameURL.getFilename());
 				}
 				if (source.toStream || buffer != null)
-					sourceMap.put(
-							sourcename,
-							new SourceLWJGLOpenAL(listenerPositionAL,
-									ALBufferMap.get(source.filenameURL
-											.getFilename()), source, buffer));
+					sourceMap.put(sourcename, new SourceLWJGLOpenAL(listenerPositionAL,
+							ALBufferMap.get(source.filenameURL.getFilename()), source, buffer));
 			}
 		}
 	}
@@ -849,8 +798,7 @@ public class LibraryLWJGLOpenAL extends Library {
 	 *            Z element of the up direction.
 	 */
 	@Override
-	public void setListenerOrientation(float lookX, float lookY, float lookZ,
-			float upX, float upY, float upZ) {
+	public void setListenerOrientation(float lookX, float lookY, float lookZ, float upX, float upY, float upZ) {
 		super.setListenerOrientation(lookX, lookY, lookZ, upX, upY, upZ);
 		listenerOrientation.put(0, lookX);
 		listenerOrientation.put(1, lookY);
@@ -976,8 +924,7 @@ public class LibraryLWJGLOpenAL extends Library {
 	 *            New value if action is SET, otherwise XXX.
 	 * @return value of boolean 'alPitchSupported'.
 	 */
-	private static synchronized boolean alPitchSupported(boolean action,
-			boolean value) {
+	private static synchronized boolean alPitchSupported(boolean action, boolean value) {
 		if (action == SET)
 			alPitchSupported = value;
 		return alPitchSupported;
@@ -998,8 +945,7 @@ public class LibraryLWJGLOpenAL extends Library {
 	 * @return A longer description.
 	 */
 	public static String getDescription() {
-		return "The LWJGL binding of OpenAL.  For more information, see "
-				+ "http://www.lwjgl.org";
+		return "The LWJGL binding of OpenAL.  For more information, see " + "http://www.lwjgl.org";
 	}
 
 	/**

@@ -56,8 +56,7 @@ public class CursorLoader {
 		imageData = ImageDataFactory.getImageDataFor(ref);
 		imageData.configureEdging(false);
 
-		ByteBuffer buf = imageData.loadImage(
-				ResourceLoader.getResourceAsStream(ref), true, true, null);
+		ByteBuffer buf = imageData.loadImage(ResourceLoader.getResourceAsStream(ref), true, true, null);
 		for (int i = 0; i < buf.limit(); i += 4) {
 			byte red = buf.get(i);
 			byte green = buf.get(i + 1);
@@ -76,9 +75,7 @@ public class CursorLoader {
 				yspot = 0;
 			}
 
-			return new Cursor(imageData.getTexWidth(),
-					imageData.getTexHeight(), x, yspot, 1, buf.asIntBuffer(),
-					null);
+			return new Cursor(imageData.getTexWidth(), imageData.getTexHeight(), x, yspot, 1, buf.asIntBuffer(), null);
 		} catch (Throwable e) {
 			Log.info("Chances are you cursor is too small for this platform");
 		}
@@ -104,8 +101,7 @@ public class CursorLoader {
 	 * @throws LWJGLException
 	 *             Indicates a failure to create the hardware cursor
 	 */
-	public Cursor getCursor(ByteBuffer buf, int x, int y, int width, int height)
-			throws IOException {
+	public Cursor getCursor(ByteBuffer buf, int x, int y, int width, int height) throws IOException {
 		for (int i = 0; i < buf.limit(); i += 4) {
 			byte red = buf.get(i);
 			byte green = buf.get(i + 1);
@@ -123,8 +119,7 @@ public class CursorLoader {
 			if (yspot < 0) {
 				yspot = 0;
 			}
-			return new Cursor(width, height, x, yspot, 1, buf.asIntBuffer(),
-					null);
+			return new Cursor(width, height, x, yspot, 1, buf.asIntBuffer(), null);
 		} catch (Throwable e) {
 			Log.info("Chances are you cursor is too small for this platform");
 		}
@@ -146,8 +141,7 @@ public class CursorLoader {
 	 * @throws LWJGLException
 	 *             Indicates a failure to create the hardware cursor
 	 */
-	public Cursor getCursor(ImageData imageData, int x, int y)
-			throws IOException {
+	public Cursor getCursor(ImageData imageData, int x, int y) throws IOException {
 		ByteBuffer buf = imageData.getImageBufferData();
 		for (int i = 0; i < buf.limit(); i += 4) {
 			byte red = buf.get(i);
@@ -166,9 +160,7 @@ public class CursorLoader {
 			if (yspot < 0) {
 				yspot = 0;
 			}
-			return new Cursor(imageData.getTexWidth(),
-					imageData.getTexHeight(), x, yspot, 1, buf.asIntBuffer(),
-					null);
+			return new Cursor(imageData.getTexWidth(), imageData.getTexHeight(), x, yspot, 1, buf.asIntBuffer(), null);
 		} catch (Throwable e) {
 			Log.info("Chances are you cursor is too small for this platform");
 		}
@@ -199,21 +191,18 @@ public class CursorLoader {
 	 * @throws LWJGLException
 	 *             Indicates a failure to create the hardware cursor
 	 */
-	public Cursor getAnimatedCursor(String ref, int x, int y, int width,
-			int height, int[] cursorDelays) throws IOException {
-		IntBuffer cursorDelaysBuffer = ByteBuffer
-				.allocateDirect(cursorDelays.length * 4)
-				.order(ByteOrder.nativeOrder()).asIntBuffer();
+	public Cursor getAnimatedCursor(String ref, int x, int y, int width, int height, int[] cursorDelays)
+			throws IOException {
+		IntBuffer cursorDelaysBuffer = ByteBuffer.allocateDirect(cursorDelays.length * 4).order(ByteOrder.nativeOrder())
+				.asIntBuffer();
 		for (int i = 0; i < cursorDelays.length; i++) {
 			cursorDelaysBuffer.put(cursorDelays[i]);
 		}
 		cursorDelaysBuffer.flip();
 
 		LoadableImageData imageData = new TGAImageData();
-		ByteBuffer buf = imageData.loadImage(
-				ResourceLoader.getResourceAsStream(ref), false, null);
+		ByteBuffer buf = imageData.loadImage(ResourceLoader.getResourceAsStream(ref), false, null);
 
-		return new Cursor(width, height, x, y, cursorDelays.length,
-				buf.asIntBuffer(), cursorDelaysBuffer);
+		return new Cursor(width, height, x, y, cursorDelays.length, buf.asIntBuffer(), cursorDelaysBuffer);
 	}
 }

@@ -108,8 +108,7 @@ public class Loader {
 	 * @return A RawModel
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public RawModel loadToVAO(float[] positions, float[] textureCoords,
-			float[] normals, int[] indices) {
+	public RawModel loadToVAO(float[] positions, float[] textureCoords, float[] normals, int[] indices) {
 		int vaoID = createVAO();
 		bindIndicesBuffer(indices);
 		storeDataInAttributeList(0, 3, positions);
@@ -146,18 +145,15 @@ public class Loader {
 	public int loadTextureBlocks(String fileName) {
 		Texture texture = null;
 		try {
-			texture = TextureLoader.getTexture("PNG", new FileInputStream(
-					"assets/textures/blocks/" + fileName + ".png"), GL_NEAREST);
-			Logger.log(Thread.currentThread(), "Loading Texture: " + fileName
-					+ ".png");
+			texture = TextureLoader.getTexture("PNG",
+					new FileInputStream("assets/textures/blocks/" + fileName + ".png"), GL_NEAREST);
+			Logger.log(Thread.currentThread(), "Loading Texture: " + fileName + ".png");
 			glGenerateMipmap(GL_TEXTURE_2D);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
-					GL_LINEAR_MIPMAP_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_LOD_BIAS, -0.4f);
 		} catch (Exception e) {
 			e.printStackTrace();
-			Logger.log(Thread.currentThread(), "Couldn' load texture file"
-					+ fileName);
+			Logger.log(Thread.currentThread(), "Couldn' load texture file" + fileName);
 		}
 		textures.add(texture.getTextureID());
 		return texture.getTextureID();
@@ -174,18 +170,15 @@ public class Loader {
 	public int loadTextureEntity(String fileName) {
 		Texture texture = null;
 		try {
-			texture = TextureLoader.getTexture("PNG", new FileInputStream(
-					"assets/textures/entity/" + fileName + ".png"), GL_NEAREST);
-			Logger.log(Thread.currentThread(), "Loading Texture: " + fileName
-					+ ".png");
+			texture = TextureLoader.getTexture("PNG",
+					new FileInputStream("assets/textures/entity/" + fileName + ".png"), GL_NEAREST);
+			Logger.log(Thread.currentThread(), "Loading Texture: " + fileName + ".png");
 			glGenerateMipmap(GL_TEXTURE_2D);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
-					GL_LINEAR_MIPMAP_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_LOD_BIAS, -0.4f);
 		} catch (Exception e) {
 			e.printStackTrace();
-			Logger.log(Thread.currentThread(), "Couldn' load texture file"
-					+ fileName);
+			Logger.log(Thread.currentThread(), "Couldn' load texture file" + fileName);
 		}
 		textures.add(texture.getTextureID());
 		return texture.getTextureID();
@@ -202,18 +195,15 @@ public class Loader {
 	public int loadTextureGui(String fileName) {
 		Texture texture = null;
 		try {
-			texture = TextureLoader.getTexture("PNG", new FileInputStream(
-					"assets/textures/menu/" + fileName + ".png"), GL_NEAREST);
-			Logger.log(Thread.currentThread(), "Loading Texture: " + fileName
-					+ ".png");
+			texture = TextureLoader.getTexture("PNG", new FileInputStream("assets/textures/menu/" + fileName + ".png"),
+					GL_NEAREST);
+			Logger.log(Thread.currentThread(), "Loading Texture: " + fileName + ".png");
 			glGenerateMipmap(GL_TEXTURE_2D);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
-					GL_LINEAR_MIPMAP_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_LOD_BIAS, -0.4f);
 		} catch (Exception e) {
 			e.printStackTrace();
-			Logger.error(Thread.currentThread(), "Couldn' load texture file"
-					+ fileName);
+			Logger.error(Thread.currentThread(), "Couldn' load texture file" + fileName);
 		}
 		textures.add(texture.getTextureID());
 		return texture.getTextureID();
@@ -250,10 +240,8 @@ public class Loader {
 		glBindTexture(GL_TEXTURE_CUBE_MAP, texID);
 
 		for (int i = 0; i < textureFiles.length; i++) {
-			EntityTexture data = decodeTextureFile("assets/textures/skybox/"
-					+ textureFiles[i] + ".png");
-			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGBA,
-					data.getWidth(), data.getHeight(), 0, GL_RGBA,
+			EntityTexture data = decodeTextureFile("assets/textures/skybox/" + textureFiles[i] + ".png");
+			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGBA, data.getWidth(), data.getHeight(), 0, GL_RGBA,
 					GL_UNSIGNED_BYTE, data.getBuffer());
 		}
 
@@ -286,8 +274,7 @@ public class Loader {
 			in.close();
 		} catch (Exception e) {
 			e.printStackTrace();
-			Logger.error(Thread.currentThread(), "Tried to load texture "
-					+ fileName + ", didn't work");
+			Logger.error(Thread.currentThread(), "Tried to load texture " + fileName + ", didn't work");
 		}
 		return new EntityTexture(buffer, width, height);
 	}
@@ -316,15 +303,13 @@ public class Loader {
 	 *            Data
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	private void storeDataInAttributeList(int attributeNumber,
-			int coordinateSize, float[] data) {
+	private void storeDataInAttributeList(int attributeNumber, int coordinateSize, float[] data) {
 		int vboID = glGenBuffers();
 		vbos.add(vboID);
 		glBindBuffer(GL_ARRAY_BUFFER, vboID);
 		FloatBuffer buffer = storeDataInFloatBuffer(data);
 		glBufferData(GL_ARRAY_BUFFER, buffer, GL_STATIC_DRAW);
-		glVertexAttribPointer(attributeNumber, coordinateSize, GL_FLOAT, false,
-				0, 0);
+		glVertexAttribPointer(attributeNumber, coordinateSize, GL_FLOAT, false, 0, 0);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
 

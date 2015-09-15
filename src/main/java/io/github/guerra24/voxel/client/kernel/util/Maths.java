@@ -29,6 +29,12 @@ import io.github.guerra24.voxel.client.kernel.util.vector.Vector2f;
 import io.github.guerra24.voxel.client.kernel.util.vector.Vector3f;
 import io.github.guerra24.voxel.client.kernel.world.entities.Camera;
 
+import static org.lwjgl.opengl.GL11.GL_DEPTH_COMPONENT;
+import static org.lwjgl.opengl.GL11.GL_FLOAT;
+import static org.lwjgl.opengl.GL11.glReadPixels;
+
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.util.Random;
 
 /**
@@ -38,6 +44,9 @@ import java.util.Random;
  * @category Util
  */
 public class Maths {
+
+	private static final int SIZE_FLOAT = 4;
+	private static final int SIZE_BYTE = 1;
 
 	/**
 	 * Create a Transformation Matrix 2D
@@ -49,8 +58,7 @@ public class Maths {
 	 * @return Transformation Matrix 2D
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public static Matrix4f createTransformationMatrix(Vector2f translation,
-			Vector2f scale) {
+	public static Matrix4f createTransformationMatrix(Vector2f translation, Vector2f scale) {
 		Matrix4f matrix = new Matrix4f();
 		matrix.setIdentity();
 		Matrix4f.translate(translation, matrix, matrix);
@@ -74,17 +82,13 @@ public class Maths {
 	 * @return Transformation Matrix 3D
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public static Matrix4f createTransformationMatrix(Vector3f translation,
-			float rx, float ry, float rz, float scale) {
+	public static Matrix4f createTransformationMatrix(Vector3f translation, float rx, float ry, float rz, float scale) {
 		Matrix4f matrix = new Matrix4f();
 		matrix.setIdentity();
 		Matrix4f.translate(translation, matrix, matrix);
-		Matrix4f.rotate((float) Math.toRadians(rx), new Vector3f(1, 0, 0),
-				matrix, matrix);
-		Matrix4f.rotate((float) Math.toRadians(ry), new Vector3f(0, 1, 0),
-				matrix, matrix);
-		Matrix4f.rotate((float) Math.toRadians(rz), new Vector3f(0, 0, 1),
-				matrix, matrix);
+		Matrix4f.rotate((float) Math.toRadians(rx), new Vector3f(1, 0, 0), matrix, matrix);
+		Matrix4f.rotate((float) Math.toRadians(ry), new Vector3f(0, 1, 0), matrix, matrix);
+		Matrix4f.rotate((float) Math.toRadians(rz), new Vector3f(0, 0, 1), matrix, matrix);
 		Matrix4f.scale(new Vector3f(scale, scale, scale), matrix, matrix);
 		return matrix;
 	}
@@ -100,13 +104,10 @@ public class Maths {
 	public static Matrix4f createViewMatrix(Camera camera) {
 		Matrix4f viewMatrix = new Matrix4f();
 		viewMatrix.setIdentity();
-		Matrix4f.rotate((float) Math.toRadians(camera.getPitch()),
-				new Vector3f(1, 0, 0), viewMatrix, viewMatrix);
-		Matrix4f.rotate((float) Math.toRadians(camera.getYaw()), new Vector3f(
-				0, 1, 0), viewMatrix, viewMatrix);
+		Matrix4f.rotate((float) Math.toRadians(camera.getPitch()), new Vector3f(1, 0, 0), viewMatrix, viewMatrix);
+		Matrix4f.rotate((float) Math.toRadians(camera.getYaw()), new Vector3f(0, 1, 0), viewMatrix, viewMatrix);
 		Vector3f cameraPost = camera.getPosition();
-		Vector3f negativeCameraPos = new Vector3f(-cameraPost.x, -cameraPost.y,
-				-cameraPost.z);
+		Vector3f negativeCameraPos = new Vector3f(-cameraPost.x, -cameraPost.y, -cameraPost.z);
 		Matrix4f.translate(negativeCameraPos, viewMatrix, viewMatrix);
 		return viewMatrix;
 	}
@@ -137,5 +138,19 @@ public class Maths {
 		Random rand = new Random();
 		int randomNum = rand.nextInt((max - min) + 1) + min;
 		return randomNum;
+	}
+
+	public static float dti(float val) {
+		return Math.abs(val - Math.round(val));
+	}
+
+	public static ByteBuffer allocBytes(int size) {
+		return ByteBuffer.allocateDirect(size * SIZE_BYTE).order(ByteOrder.nativeOrder());
+	}
+
+	public static float getZDepth(int x, int y) {
+		ByteBuffer zdepth = allocBytes(SIZE_FLOAT);
+		glReadPixels(x, y, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, zdepth);
+		return ((float) (zdepth.getFloat(0)));
 	}
 }

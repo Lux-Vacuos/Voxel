@@ -12,11 +12,16 @@ Now have a basic JavaDoc
 - ThinMatrix: Rendering System
 - sriharshachilakapati: General OpenGL stuff
 - Lharing: General Optimization and code cleaning
-- Paul Lamb: Sound
+- Paul Lamb: Sound System Code
 - kappaOne: LWJGLX Base Code
 - ninjacave: Slick Base Code
+- Tor-Einar Jarnbjo: J-OGG Lib
 
 # Licenses
+SoundSystem:
+
+Read SoundSystemChanges
+
 J-OGG:
 
 "This software is based on or using the J-Ogg library available from

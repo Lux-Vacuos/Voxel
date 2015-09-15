@@ -36,11 +36,11 @@ import java.util.Map;
  * @author Guerra24 <pablo230699@hotmail.com>
  * @category API
  */
-public class APIWorld {
+public class WorldAPI {
 
 	public static Map<Integer, ChunkHandler> modsWorld;
 
-	public APIWorld() {
+	public WorldAPI() {
 		modsWorld = new HashMap<Integer, ChunkHandler>();
 	}
 

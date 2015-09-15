@@ -91,8 +91,7 @@ public class WaterShader extends ShaderProgram {
 	 * Constructor, Create a Water Shader
 	 */
 	public WaterShader() {
-		super(KernelConstants.VERTEX_FILE_WATER,
-				KernelConstants.FRAGMENT_FILE_WATER);
+		super(KernelConstants.VERTEX_FILE_WATER, KernelConstants.FRAGMENT_FILE_WATER);
 	}
 
 	@Override
@@ -111,8 +110,7 @@ public class WaterShader extends ShaderProgram {
 		location_cameraPosition = getUniformLocation("cameraPosition");
 		location_lightColour = getUniformLocation("lightColour");
 		location_lightPosition = getUniformLocation("lightPosition");
-		location_directLightDirection = super
-				.getUniformLocation("directLightDirection");
+		location_directLightDirection = super.getUniformLocation("directLightDirection");
 		location_skyColour = super.getUniformLocation("skyColour");
 	}
 

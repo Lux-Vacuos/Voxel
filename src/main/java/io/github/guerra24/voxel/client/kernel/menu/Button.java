@@ -31,7 +31,7 @@ import io.github.guerra24.voxel.client.kernel.input.Mouse;
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
  * @category GUI
- * @deprecated
+ * @deprecated The buttons are fixed size and position, needs rewrite
  */
 public class Button {
 
@@ -41,8 +41,7 @@ public class Button {
 		int buttony = 429;
 		int buttonx1 = 820;
 		int buttony1 = 505;
-		if (Mouse.getY() > buttony && Mouse.getX() > buttonx
-				&& Mouse.getY() < buttony1 && Mouse.getX() < buttonx1
+		if (Mouse.getY() > buttony && Mouse.getX() > buttonx && Mouse.getY() < buttony1 && Mouse.getX() < buttonx1
 				&& Mouse.isButtonDown(0)) {
 			isPressed = true;
 		}
@@ -55,8 +54,7 @@ public class Button {
 		int buttony = 214;
 		int buttonx1 = 822;
 		int buttony1 = 289;
-		if (Mouse.getY() > buttony && Mouse.getX() > buttonx
-				&& Mouse.getY() < buttony1 && Mouse.getX() < buttonx1
+		if (Mouse.getY() > buttony && Mouse.getX() > buttonx && Mouse.getY() < buttony1 && Mouse.getX() < buttonx1
 				&& Mouse.isButtonDown(0)) {
 			isPressed = true;
 		}
@@ -69,8 +67,7 @@ public class Button {
 		int buttony = 70;
 		int buttonx1 = 1080;
 		int buttony1 = 145;
-		if (Mouse.getY() > buttony && Mouse.getX() > buttonx
-				&& Mouse.getY() < buttony1 && Mouse.getX() < buttonx1
+		if (Mouse.getY() > buttony && Mouse.getX() > buttonx && Mouse.getY() < buttony1 && Mouse.getX() < buttonx1
 				&& Mouse.isButtonDown(0)) {
 			isPressed = true;
 		}
@@ -83,8 +80,7 @@ public class Button {
 		int buttony = 70;
 		int buttonx1 = 760;
 		int buttony1 = 145;
-		if (Mouse.getY() > buttony && Mouse.getX() > buttonx
-				&& Mouse.getY() < buttony1 && Mouse.getX() < buttonx1
+		if (Mouse.getY() > buttony && Mouse.getX() > buttonx && Mouse.getY() < buttony1 && Mouse.getX() < buttonx1
 				&& Mouse.isButtonDown(0)) {
 			isPressed = true;
 		}

@@ -14,16 +14,17 @@ import java.net.URL;
 public class FileSystemLocation implements ResourceLocation {
 	/** The root of the file system to search */
 	private File root;
-	
+
 	/**
 	 * Create a new resoruce location based on the file system
 	 * 
-	 * @param root The root of the file system to search
+	 * @param root
+	 *            The root of the file system to search
 	 */
 	public FileSystemLocation(File root) {
 		this.root = root;
 	}
-	
+
 	/**
 	 * @see ResourceLocation#getResource(String)
 	 */
@@ -36,7 +37,7 @@ public class FileSystemLocation implements ResourceLocation {
 			if (!file.exists()) {
 				return null;
 			}
-			
+
 			return file.toURI().toURL();
 		} catch (IOException e) {
 			return null;

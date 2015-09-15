@@ -70,7 +70,7 @@ import de.matthiasmann.twl.utils.PNGDecoder;
  * @author Guerra24 <pablo230699@hotmail.com>
  * @category OpenGL
  */
-public class DisplayManager {
+public class Display {
 
 	/**
 	 * LWJGL Window
@@ -90,6 +90,8 @@ public class DisplayManager {
 	public static int fpsCount;
 	public static int ups;
 	public static int upsCount;
+	private static int WIDTH = 1280;
+	private static int HEIGHT = 720;
 
 	/**
 	 * LWJGL Callback
@@ -142,18 +144,16 @@ public class DisplayManager {
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 		glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
-		window = glfwCreateWindow(KernelConstants.WIDTH,
-				KernelConstants.HEIGHT, KernelConstants.Title, NULL, NULL);
+		window = glfwCreateWindow(WIDTH, HEIGHT, KernelConstants.Title, NULL, NULL);
 		if (window == NULL)
 			throw new RuntimeException("Failed to create the GLFW window");
 		createCallBacks();
 		setCallbacks();
 		vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-		glfwSetWindowPos(window,
-				(GLFWvidmode.width(vidmode) - KernelConstants.WIDTH) / 2,
-				(GLFWvidmode.height(vidmode) - KernelConstants.HEIGHT) / 2);
+		glfwSetWindowPos(window, (GLFWvidmode.width(vidmode) - WIDTH) / 2, (GLFWvidmode.height(vidmode) - HEIGHT) / 2);
 		glfwMakeContextCurrent(window);
 		glfwShowWindow(window);
+		glfwSwapInterval(0);
 	}
 
 	/**
@@ -164,12 +164,10 @@ public class DisplayManager {
 	public static void createCallBacks() {
 		keyCallback = new GLFWKeyCallback() {
 			@Override
-			public void invoke(long window, int key, int scancode, int action,
-					int mods) {
+			public void invoke(long window, int key, int scancode, int action, int mods) {
 				latestEventKey = key;
 				if (action == GLFW_RELEASE || action == GLFW.GLFW_PRESS) {
-					Keyboard.addKeyEvent(key, action == GLFW.GLFW_PRESS ? true
-							: false);
+					Keyboard.addKeyEvent(key, action == GLFW.GLFW_PRESS ? true : false);
 				}
 			}
 		};
@@ -198,8 +196,7 @@ public class DisplayManager {
 		mouseButtonCallback = new GLFWMouseButtonCallback() {
 			@Override
 			public void invoke(long window, int button, int action, int mods) {
-				Mouse.addButtonEvent(button, action == GLFW.GLFW_PRESS ? true
-						: false);
+				Mouse.addButtonEvent(button, action == GLFW.GLFW_PRESS ? true : false);
 			}
 		};
 
@@ -300,10 +297,8 @@ public class DisplayManager {
 		}
 		createCapabilities();
 		Logger.log(Thread.currentThread(), "LWJGL Version: " + Sys.getVersion());
-		Logger.log(Thread.currentThread(), "OpenGL Version: "
-				+ glGetString(GL_VERSION));
-		VoxelGL33.glViewport(0, 0, KernelConstants.WIDTH,
-				KernelConstants.HEIGHT);
+		Logger.log(Thread.currentThread(), "OpenGL Version: " + glGetString(GL_VERSION));
+		VoxelGL33.glViewport(0, 0, WIDTH, HEIGHT);
 		lastLoopTime = getTime();
 	}
 
@@ -321,8 +316,8 @@ public class DisplayManager {
 			glfwGetWindowSize(window, w, h);
 			int width = w.getInt(0);
 			int height = h.getInt(0);
-			KernelConstants.WIDTH = width;
-			KernelConstants.HEIGHT = height;
+			WIDTH = width;
+			HEIGHT = height;
 			VoxelGL33.glViewport(0, 0, width, height);
 			Kernel.gameResources.renderer.createProjectionMatrix();
 		}
@@ -368,10 +363,8 @@ public class DisplayManager {
 		InputStream inputStream = new FileInputStream(path);
 		try {
 			PNGDecoder decoder = new PNGDecoder(inputStream);
-			ByteBuffer bytebuf = ByteBuffer.allocateDirect(decoder.getWidth()
-					* decoder.getHeight() * 4);
-			decoder.decode(bytebuf, decoder.getWidth() * 4,
-					PNGDecoder.Format.RGBA);
+			ByteBuffer bytebuf = ByteBuffer.allocateDirect(decoder.getWidth() * decoder.getHeight() * 4);
+			decoder.decode(bytebuf, decoder.getWidth() * 4, PNGDecoder.Format.RGBA);
 			bytebuf.flip();
 			return bytebuf;
 		} finally {
@@ -421,6 +414,22 @@ public class DisplayManager {
 	 */
 	public static boolean isCloseRequested() {
 		return glfwWindowShouldClose(window) == GL_TRUE;
+	}
+
+	public static int getWidth() {
+		return WIDTH;
+	}
+
+	public static void setWidth(int wIDTH) {
+		WIDTH = wIDTH;
+	}
+
+	public static int getHeight() {
+		return HEIGHT;
+	}
+
+	public static void setHeight(int hEIGHT) {
+		HEIGHT = hEIGHT;
 	}
 
 }

@@ -41,7 +41,6 @@ import static io.github.guerra24.voxel.client.kernel.input.Keyboard.KEY_LSHIFT;
 import static io.github.guerra24.voxel.client.kernel.input.Keyboard.KEY_R;
 import static io.github.guerra24.voxel.client.kernel.input.Keyboard.KEY_S;
 import static io.github.guerra24.voxel.client.kernel.input.Keyboard.KEY_SPACE;
-import static io.github.guerra24.voxel.client.kernel.input.Keyboard.KEY_T;
 import static io.github.guerra24.voxel.client.kernel.input.Keyboard.KEY_W;
 import static io.github.guerra24.voxel.client.kernel.input.Keyboard.KEY_Y;
 import static io.github.guerra24.voxel.client.kernel.input.Keyboard.isKeyDown;
@@ -50,10 +49,10 @@ import static io.github.guerra24.voxel.client.kernel.input.Mouse.getDY;
 import static io.github.guerra24.voxel.client.kernel.input.Mouse.isButtonDown;
 import static io.github.guerra24.voxel.client.kernel.input.Mouse.setCursorPosition;
 import static io.github.guerra24.voxel.client.kernel.input.Mouse.setGrabbed;
+
 import io.github.guerra24.voxel.client.kernel.core.Kernel;
 import io.github.guerra24.voxel.client.kernel.core.KernelConstants;
-import io.github.guerra24.voxel.client.kernel.graphics.opengl.DisplayManager;
-import io.github.guerra24.voxel.client.kernel.util.Logger;
+import io.github.guerra24.voxel.client.kernel.graphics.opengl.Display;
 import io.github.guerra24.voxel.client.kernel.util.vector.Vector2f;
 import io.github.guerra24.voxel.client.kernel.util.vector.Vector3f;
 
@@ -103,38 +102,30 @@ public class Camera implements IEntity {
 			pitch = maxLookUp;
 		}
 		if (isKeyDown(KEY_W)) {
-			position.z += -Math.cos(Math.toRadians(yaw)) * delta * speed
-					* multiplierMovement;
-			position.x += Math.sin(Math.toRadians(yaw)) * delta * speed
-					* multiplierMovement;
+			position.z += -Math.cos(Math.toRadians(yaw)) * delta * speed * multiplierMovement;
+			position.x += Math.sin(Math.toRadians(yaw)) * delta * speed * multiplierMovement;
 			isMoved = true;
 
 		} else if (isKeyDown(KEY_S)) {
 
-			position.z -= -Math.cos(Math.toRadians(yaw)) * delta * speed
-					* multiplierMovement;
-			position.x -= Math.sin(Math.toRadians(yaw)) * delta * speed
-					* multiplierMovement;
+			position.z -= -Math.cos(Math.toRadians(yaw)) * delta * speed * multiplierMovement;
+			position.x -= Math.sin(Math.toRadians(yaw)) * delta * speed * multiplierMovement;
 			isMoved = true;
 		}
 
 		if (isKeyDown(KEY_D)) {
-			position.z += Math.sin(Math.toRadians(yaw)) * delta * speed
-					* multiplierMovement;
-			position.x += Math.cos(Math.toRadians(yaw)) * delta * speed
-					* multiplierMovement;
+			position.z += Math.sin(Math.toRadians(yaw)) * delta * speed * multiplierMovement;
+			position.x += Math.cos(Math.toRadians(yaw)) * delta * speed * multiplierMovement;
 			isMoved = true;
 		} else if (isKeyDown(KEY_A)) {
-			position.z -= Math.sin(Math.toRadians(yaw)) * delta * speed
-					* multiplierMovement;
-			position.x -= Math.cos(Math.toRadians(yaw)) * delta * speed
-					* multiplierMovement;
+			position.z -= Math.sin(Math.toRadians(yaw)) * delta * speed * multiplierMovement;
+			position.x -= Math.cos(Math.toRadians(yaw)) * delta * speed * multiplierMovement;
 			isMoved = true;
 		}
 		if (isKeyDown(KEY_SPACE)) {
 			// position.y += delta * speed
 			// * multiplierMovement;
-			Kernel.gameResources.player.jump();
+			Kernel.gameResources.mobManager.getPlayer().jump();
 		}
 		if (isKeyDown(KEY_LSHIFT)) {
 			// position.y -= delta * speed
@@ -161,6 +152,7 @@ public class Camera implements IEntity {
 	}
 
 	public void updatePicker() {
+
 		if (isKeyDown(KEY_1))
 			block = 1;
 		else if (isKeyDown(KEY_2))
@@ -177,23 +169,14 @@ public class Camera implements IEntity {
 			block = 8;
 		else if (isKeyDown(KEY_8))
 			block = 9;
-		Kernel.gameResources.mouse.update();
 		if (isButtonDown(0)) {
-			Kernel.world
-					.setGlobalBlock(
-							Kernel.world.dim,
-							(int) (Kernel.gameResources.mouse.getCurrentRay().x + position.x),
-							(int) (Kernel.gameResources.mouse.getCurrentRay().y + position.y),
-							(int) (Kernel.gameResources.mouse.getCurrentRay().z + position.z),
-							(byte) 0);
+			// Vector3f pos = calculatePicker();
+			// Kernel.world.setGlobalBlock(Kernel.world.dim, (int) pos.x, (int)
+			// pos.y, (int) pos.z, (byte) 0);
 		} else if (isButtonDown(1)) {
-			Kernel.world
-					.setGlobalBlock(
-							Kernel.world.dim,
-							(int) (Kernel.gameResources.mouse.getCurrentRay().x + position.x),
-							(int) (Kernel.gameResources.mouse.getCurrentRay().y + position.y),
-							(int) (Kernel.gameResources.mouse.getCurrentRay().z + position.z),
-							block);
+			// Vector3f pos = calculatePicker();
+			// Kernel.world.setGlobalBlock(Kernel.world.dim, (int) pos.x, (int)
+			// pos.y, (int) pos.z, block);
 		}
 	}
 
@@ -203,11 +186,9 @@ public class Camera implements IEntity {
 				int zz = Kernel.world.getzPlayChunk() + zr;
 				for (int xr = -KernelConstants.genRadius; xr <= KernelConstants.genRadius; xr++) {
 					int xx = Kernel.world.getxPlayChunk() + xr;
-					if (zr * zr + xr * xr <= KernelConstants.genRadius
-							* KernelConstants.genRadius) {
+					if (zr * zr + xr * xr <= KernelConstants.genRadius * KernelConstants.genRadius) {
 						if (Kernel.world.hasChunk(Kernel.world.dim, xx, zz)) {
-							Kernel.world.getChunk(Kernel.world.dim, xx, zz)
-									.clear();
+							Kernel.world.getChunk(Kernel.world.dim, xx, zz).clear();
 							Kernel.world.tempRadius = 0;
 						}
 					}
@@ -217,7 +198,12 @@ public class Camera implements IEntity {
 
 	public void setMouse() {
 		setGrabbed(true);
-		setCursorPosition(KernelConstants.WIDTH / 2, KernelConstants.HEIGHT / 2);
+		setCursorPosition(Display.getWidth() / 2, Display.getHeight() / 2);
+	}
+
+	@Override
+	public Entity getEntity() {
+		return null;
 	}
 
 	public void unlockMouse() {
@@ -261,4 +247,5 @@ public class Camera implements IEntity {
 			this.life = life;
 		}
 	}
+
 }

@@ -35,8 +35,7 @@ public class BlockEntity {
 	private float scale;
 	private int visibility;
 
-	public BlockEntity(TexturedModel model, Vector3f position, float rotX,
-			float rotY, float rotZ, float scale) {
+	public BlockEntity(TexturedModel model, Vector3f position, float rotX, float rotY, float rotZ, float scale) {
 		this.model = model;
 		this.position = position;
 		this.rotX = rotX;
@@ -44,7 +43,7 @@ public class BlockEntity {
 		this.rotZ = rotZ;
 		this.scale = scale;
 	}
-	
+
 	public void increasePosition(float dx, float dy, float dz) {
 		this.position.x += dx;
 		this.position.y += dy;

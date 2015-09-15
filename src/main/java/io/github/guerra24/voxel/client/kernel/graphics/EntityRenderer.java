@@ -80,15 +80,13 @@ public class EntityRenderer {
 	 *            A List of entity's
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public void renderBlockEntity(
-			Map<TexturedModel, List<BlockEntity>> blockEntities) {
+	public void renderBlockEntity(Map<TexturedModel, List<BlockEntity>> blockEntities) {
 		for (TexturedModel model : blockEntities.keySet()) {
 			prepareTexturedModel(model);
 			List<BlockEntity> batch = blockEntities.get(model);
 			for (BlockEntity entity : batch) {
 				prepareInstance(entity);
-				VoxelGL33.glDrawElements(GL_TRIANGLES, model.getRawModel()
-						.getVertexCount(), GL_UNSIGNED_INT, 0);
+				VoxelGL33.glDrawElements(GL_TRIANGLES, model.getRawModel().getVertexCount(), GL_UNSIGNED_INT, 0);
 			}
 			unbindTexturedModel();
 		}
@@ -107,8 +105,7 @@ public class EntityRenderer {
 			List<Entity> batch = blockEntities.get(model);
 			for (Entity entity : batch) {
 				prepareInstance(entity);
-				VoxelGL33.glDrawElements(GL_TRIANGLES, model.getRawModel()
-						.getVertexCount(), GL_UNSIGNED_INT, 0);
+				VoxelGL33.glDrawElements(GL_TRIANGLES, model.getRawModel().getVertexCount(), GL_UNSIGNED_INT, 0);
 			}
 			unbindTexturedModel();
 		}
@@ -150,9 +147,8 @@ public class EntityRenderer {
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	private void prepareInstance(BlockEntity entity) {
-		Matrix4f transformationMatrix = Maths.createTransformationMatrix(
-				entity.getPosition(), entity.getRotX(), entity.getRotY(),
-				entity.getRotZ(), entity.getScale());
+		Matrix4f transformationMatrix = Maths.createTransformationMatrix(entity.getPosition(), entity.getRotX(),
+				entity.getRotY(), entity.getRotZ(), entity.getScale());
 		shader.loadTransformationMatrix(transformationMatrix);
 
 	}
@@ -164,9 +160,8 @@ public class EntityRenderer {
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	private void prepareInstance(Entity entity) {
-		Matrix4f transformationMatrix = Maths.createTransformationMatrix(
-				entity.getPosition(), entity.getRotX(), entity.getRotY(),
-				entity.getRotZ(), entity.getScale());
+		Matrix4f transformationMatrix = Maths.createTransformationMatrix(entity.getPosition(), entity.getRotX(),
+				entity.getRotY(), entity.getRotZ(), entity.getScale());
 		shader.loadTransformationMatrix(transformationMatrix);
 	}
 

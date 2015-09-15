@@ -38,16 +38,16 @@ import org.lwjgl.BufferUtils;
 /**
  * The ALCcontext class represents a context opened in OpenAL space.
  *
- * All operations of the AL core API affect a current AL context. Within the scope of AL,
- * the ALC is implied - it is not visible as a handle or function parameter. Only one AL
- * Context per process can be current at a time. Applications maintaining multiple AL
- * Contexts, whether threaded or not, have to set the current context accordingly.
- * Applications can have multiple threads that share one more or contexts. In other words,
- * AL and ALC are threadsafe.
+ * All operations of the AL core API affect a current AL context. Within the
+ * scope of AL, the ALC is implied - it is not visible as a handle or function
+ * parameter. Only one AL Context per process can be current at a time.
+ * Applications maintaining multiple AL Contexts, whether threaded or not, have
+ * to set the current context accordingly. Applications can have multiple
+ * threads that share one more or contexts. In other words, AL and ALC are
+ * threadsafe.
  *
  * @author Brian Matzon <brian@matzon.dk>
- * @version $Revision$
- * $Id$
+ * @version $Revision$ $Id$
  */
 public final class ALCcontext {
 
@@ -60,7 +60,8 @@ public final class ALCcontext {
 	/**
 	 * Creates a new instance of ALCcontext
 	 *
-	 * @param context address of actual context
+	 * @param context
+	 *            address of actual context
 	 */
 	ALCcontext(long context) {
 		this.context = context;
@@ -71,17 +72,21 @@ public final class ALCcontext {
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	public boolean equals(Object context) {
-		if(context instanceof ALCcontext) {
-			return ((ALCcontext)context).context == this.context;
+		if (context instanceof ALCcontext) {
+			return ((ALCcontext) context).context == this.context;
 		}
 		return super.equals(context);
 	}
 
 	/**
 	 * Creates an attribute list in a ByteBuffer
-	 * @param contextFrequency Frequency to add
-	 * @param contextRefresh Refresh rate to add
-	 * @param contextSynchronized Whether to synchronize the context
+	 * 
+	 * @param contextFrequency
+	 *            Frequency to add
+	 * @param contextRefresh
+	 *            Refresh rate to add
+	 * @param contextSynchronized
+	 *            Whether to synchronize the context
 	 * @return
 	 */
 	static IntBuffer createAttributeList(int contextFrequency, int contextRefresh, int contextSynchronized) {
@@ -93,7 +98,7 @@ public final class ALCcontext {
 		attribList.put(contextRefresh);
 		attribList.put(ALC10.ALC_SYNC);
 		attribList.put(contextSynchronized);
-		attribList.put(0); //terminating int
+		attribList.put(0); // terminating int
 
 		return attribList;
 	}

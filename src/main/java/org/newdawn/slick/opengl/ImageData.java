@@ -3,8 +3,8 @@ package org.newdawn.slick.opengl;
 import java.nio.ByteBuffer;
 
 /**
- * A description of any class providing ImageData in a form suitable for OpenGL texture
- * creation.
+ * A description of any class providing ImageData in a form suitable for OpenGL
+ * texture creation.
  * 
  * @author kevin
  */
@@ -44,7 +44,7 @@ public interface ImageData {
 	 * @return Get the ast required texture height for a loaded image
 	 */
 	public int getTexHeight();
-	
+
 	/**
 	 * Get the store image
 	 * 

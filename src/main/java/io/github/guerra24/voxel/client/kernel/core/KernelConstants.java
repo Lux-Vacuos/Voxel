@@ -33,14 +33,6 @@ package io.github.guerra24.voxel.client.kernel.core;
 public class KernelConstants {
 	// Display
 	/**
-	 * Display Width Resolution
-	 */
-	public static int WIDTH = 1280;
-	/**
-	 * Display Height Resolution
-	 */
-	public static int HEIGHT = 720;
-	/**
 	 * Display FPS
 	 */
 	public static int FPS = 60;
@@ -77,15 +69,11 @@ public class KernelConstants {
 	 * Game Blue Background Color
 	 */
 	public static float BLUE = 0.655f;
-	/**
-	 * Game Advanced Rendering
-	 */
-	public static boolean advancedOpenGL = false;
 	// Game Variables
 	/**
 	 * Game Build Number
 	 */
-	public static int build = 63;
+	public static int build = 64;
 	/**
 	 * Game Version
 	 */

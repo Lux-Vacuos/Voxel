@@ -131,8 +131,7 @@ public class ImmediateModeOGLRenderer implements SGL {
 	 * @see org.newdawn.slick.opengl.renderer.SGL#glColorMask(boolean, boolean,
 	 *      boolean, boolean)
 	 */
-	public void glColorMask(boolean red, boolean green, boolean blue,
-			boolean alpha) {
+	public void glColorMask(boolean red, boolean green, boolean blue, boolean alpha) {
 		GL11.glColorMask(red, green, blue, alpha);
 	}
 
@@ -140,10 +139,9 @@ public class ImmediateModeOGLRenderer implements SGL {
 	 * @see org.newdawn.slick.opengl.renderer.SGL#glCopyTexImage2D(int, int,
 	 *      int, int, int, int, int, int)
 	 */
-	public void glCopyTexImage2D(int target, int level, int internalFormat,
-			int x, int y, int width, int height, int border) {
-		GL11.glCopyTexImage2D(target, level, internalFormat, x, y, width,
-				height, border);
+	public void glCopyTexImage2D(int target, int level, int internalFormat, int x, int y, int width, int height,
+			int border) {
+		GL11.glCopyTexImage2D(target, level, internalFormat, x, y, width, height, border);
 	}
 
 	/**
@@ -208,8 +206,7 @@ public class ImmediateModeOGLRenderer implements SGL {
 	 * @see org.newdawn.slick.opengl.renderer.SGL#glGetTexImage(int, int, int,
 	 *      int, java.nio.ByteBuffer)
 	 */
-	public void glGetTexImage(int target, int level, int format, int type,
-			ByteBuffer pixels) {
+	public void glGetTexImage(int target, int level, int format, int type, ByteBuffer pixels) {
 		GL11.glGetTexImage(target, level, format, type, pixels);
 	}
 
@@ -259,8 +256,7 @@ public class ImmediateModeOGLRenderer implements SGL {
 	 * @see org.newdawn.slick.opengl.renderer.SGL#glReadPixels(int, int, int,
 	 *      int, int, int, java.nio.ByteBuffer)
 	 */
-	public void glReadPixels(int x, int y, int width, int height, int format,
-			int type, ByteBuffer pixels) {
+	public void glReadPixels(int x, int y, int width, int height, int format, int type, ByteBuffer pixels) {
 		GL11.glReadPixels(x, y, width, height, format, type, pixels);
 	}
 
@@ -410,18 +406,14 @@ public class ImmediateModeOGLRenderer implements SGL {
 	 * @see org.newdawn.slick.opengl.renderer.SGL#glTexImage2D(int, int, int,
 	 * int, int, int, int, int, java.nio.ByteBuffer)
 	 */
-	public void glTexImage2D(int target, int i, int dstPixelFormat, int width,
-			int height, int j, int srcPixelFormat, int glUnsignedByte,
-			ByteBuffer textureBuffer) {
-		GL11.glTexImage2D(target, i, dstPixelFormat, width, height, j,
-				srcPixelFormat, glUnsignedByte, textureBuffer);
+	public void glTexImage2D(int target, int i, int dstPixelFormat, int width, int height, int j, int srcPixelFormat,
+			int glUnsignedByte, ByteBuffer textureBuffer) {
+		GL11.glTexImage2D(target, i, dstPixelFormat, width, height, j, srcPixelFormat, glUnsignedByte, textureBuffer);
 	}
 
-	public void glTexSubImage2D(int glTexture2d, int i, int pageX, int pageY,
-			int width, int height, int glBgra, int glUnsignedByte,
-			ByteBuffer scratchByteBuffer) {
-		GL11.glTexSubImage2D(glTexture2d, i, pageX, pageY, width, height,
-				glBgra, glUnsignedByte, scratchByteBuffer);
+	public void glTexSubImage2D(int glTexture2d, int i, int pageX, int pageY, int width, int height, int glBgra,
+			int glUnsignedByte, ByteBuffer scratchByteBuffer) {
+		GL11.glTexSubImage2D(glTexture2d, i, pageX, pageY, width, height, glBgra, glUnsignedByte, scratchByteBuffer);
 	}
 
 	/*

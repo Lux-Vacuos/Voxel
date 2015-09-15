@@ -41,7 +41,6 @@ public class UpdateThread extends Thread {
 				break;
 			case GAME:
 				Kernel.gameResources.camera.updateDebug();
-				Kernel.gameResources.camera.updatePicker();
 				break;
 			case LOADING_WORLD:
 				break;

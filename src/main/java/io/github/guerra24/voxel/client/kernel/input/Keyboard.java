@@ -1,6 +1,6 @@
 package io.github.guerra24.voxel.client.kernel.input;
 
-import io.github.guerra24.voxel.client.kernel.graphics.opengl.DisplayManager;
+import io.github.guerra24.voxel.client.kernel.graphics.opengl.Display;
 import io.github.guerra24.voxel.client.kernel.util.Logger;
 
 import java.lang.reflect.Field;
@@ -125,9 +125,9 @@ public class Keyboard {
 	public static final int KEY_NOCONVERT = 0x7B; /* (Japanese keyboard) */
 	public static final int KEY_YEN = 0x7D; /* (Japanese keyboard) */
 	public static final int KEY_NUMPADEQUALS = 0x8D; /*
-													 * = on numeric keypad (NEC
-													 * PC98)
-													 */
+														 * = on numeric keypad
+														 * (NEC PC98)
+														 */
 	public static final int KEY_CIRCUMFLEX = 0x90; /* (Japanese keyboard) */
 	public static final int KEY_AT = 0x91; /* (NEC PC98) */
 	public static final int KEY_COLON = 0x92; /* (NEC PC98) */
@@ -136,7 +136,9 @@ public class Keyboard {
 	public static final int KEY_STOP = 0x95; /* (NEC PC98) */
 	public static final int KEY_AX = 0x96; /* (Japan AX) */
 	public static final int KEY_UNLABELED = 0x97; /* (J3100) */
-	public static final int KEY_NUMPADENTER = 0x9C; /* Enter on numeric keypad */
+	public static final int KEY_NUMPADENTER = 0x9C; /*
+													 * Enter on numeric keypad
+													 */
 	public static final int KEY_RCONTROL = 0x9D;
 	public static final int KEY_SECTION = 0xA7; /* Section symbol (Mac) */
 	public static final int KEY_NUMPADCOMMA = 0xB3; /*
@@ -176,19 +178,15 @@ public class Keyboard {
 	public static final int KEYBOARD_SIZE = 256;
 
 	private static final String[] keyName = new String[KEYBOARD_SIZE];
-	private static final Map<String, Integer> keyMap = new HashMap<String, Integer>(
-			253);
+	private static final Map<String, Integer> keyMap = new HashMap<String, Integer>(253);
 
 	static {
 		Field[] fields = Keyboard.class.getFields();
 		try {
 			for (Field field : fields) {
-				if (Modifier.isStatic(field.getModifiers())
-						&& Modifier.isPublic(field.getModifiers())
-						&& Modifier.isFinal(field.getModifiers())
-						&& field.getType().equals(int.class)
-						&& field.getName().startsWith("KEY_")
-						&& !field.getName().endsWith("WIN")) {
+				if (Modifier.isStatic(field.getModifiers()) && Modifier.isPublic(field.getModifiers())
+						&& Modifier.isFinal(field.getModifiers()) && field.getType().equals(int.class)
+						&& field.getName().startsWith("KEY_") && !field.getName().endsWith("WIN")) {
 
 					int key = field.getInt(null);
 					String name = field.getName().substring(4);
@@ -221,8 +219,7 @@ public class Keyboard {
 	}
 
 	public static boolean isKeyDown(int key) {
-		return GLFW.glfwGetKey(DisplayManager.getWindow(),
-				KeyCodes.toGlfwKey(key)) == GLFW.GLFW_PRESS;
+		return GLFW.glfwGetKey(Display.getWindow(), KeyCodes.toGlfwKey(key)) == GLFW.GLFW_PRESS;
 	}
 
 	public static boolean next() {

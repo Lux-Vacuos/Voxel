@@ -25,6 +25,7 @@
 package io.github.guerra24.voxel.client.kernel.menu;
 
 import io.github.guerra24.voxel.client.kernel.core.KernelConstants;
+import io.github.guerra24.voxel.client.kernel.graphics.opengl.Display;
 import io.github.guerra24.voxel.client.kernel.util.Logger;
 
 import java.awt.GridBagConstraints;
@@ -69,7 +70,6 @@ public class ConfigGUI extends JFrame implements ItemListener {
 
 	private JCheckBox customSeed = new JCheckBox("Custom Seed");
 	private JCheckBox vsync = new JCheckBox("Vsync");
-	private JCheckBox advancedOpenGL = new JCheckBox("Advanced Rendering");
 
 	private JSlider slider = new JSlider();
 
@@ -135,12 +135,6 @@ public class ConfigGUI extends JFrame implements ItemListener {
 		add(vsync, constraints);
 		vsync.addItemListener(this);
 
-		constraints.gridx = -2;
-		advancedOpenGL.setMnemonic(KeyEvent.VK_D);
-		advancedOpenGL.setSelected(false);
-		add(advancedOpenGL, constraints);
-		advancedOpenGL.addItemListener(this);
-
 		constraints.gridy = 4;
 		constraints.gridx = 0;
 		textSEED.setEditable(false);
@@ -189,8 +183,7 @@ public class ConfigGUI extends JFrame implements ItemListener {
 					ready = true;
 					setVisible(false);
 				} catch (IOException ex) {
-					JOptionPane.showMessageDialog(ConfigGUI.this,
-							"Error saving settings file: " + ex.getMessage());
+					JOptionPane.showMessageDialog(ConfigGUI.this, "Error saving settings file: " + ex.getMessage());
 				}
 			}
 		});
@@ -205,8 +198,7 @@ public class ConfigGUI extends JFrame implements ItemListener {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				setDefault();
-				JOptionPane.showMessageDialog(ConfigGUI.this,
-						"Default Settings loaded");
+				JOptionPane.showMessageDialog(ConfigGUI.this, "Default Settings loaded");
 			}
 		});
 
@@ -219,9 +211,7 @@ public class ConfigGUI extends JFrame implements ItemListener {
 		try {
 			loadProperties();
 		} catch (IOException ex) {
-			JOptionPane
-					.showMessageDialog(this,
-							"The settings.conf file does not exist, default settings loaded.");
+			JOptionPane.showMessageDialog(this, "The settings.conf file does not exist, default settings loaded.");
 		}
 		textWIDTH.setText(configProps.getProperty("WIDTH"));
 		textHEIGHT.setText(configProps.getProperty("HEIGHT"));
@@ -237,8 +227,6 @@ public class ConfigGUI extends JFrame implements ItemListener {
 			KernelConstants.isCustomSeed = true;
 		} else if (source == vsync) {
 			KernelConstants.VSYNC = true;
-		} else if (source == advancedOpenGL) {
-			KernelConstants.advancedOpenGL = true;
 		}
 		if (e.getStateChange() == ItemEvent.DESELECTED) {
 			if (source == customSeed) {
@@ -246,8 +234,6 @@ public class ConfigGUI extends JFrame implements ItemListener {
 				KernelConstants.isCustomSeed = false;
 			} else if (source == vsync) {
 				KernelConstants.VSYNC = false;
-			} else if (source == advancedOpenGL) {
-				KernelConstants.advancedOpenGL = false;
 			}
 		}
 	}
@@ -265,17 +251,14 @@ public class ConfigGUI extends JFrame implements ItemListener {
 		defaultProps.setProperty("FOV", "90");
 		defaultProps.setProperty("FPS", "60");
 		defaultProps.setProperty("VSYNC", "false");
-		defaultProps.setProperty("advancedOpenGL", "false");
 		defaultProps.setProperty("SEED", "");
 		defaultProps.setProperty("DrawDistance", "2");
 
 		configProps = new Properties(defaultProps);
-		advancedOpenGL.setSelected(false);
 		vsync.setSelected(false);
 		textSEED.setEditable(false);
 
-		slider.setValue(Integer.parseInt(configProps
-				.getProperty("DrawDistance")));
+		slider.setValue(Integer.parseInt(configProps.getProperty("DrawDistance")));
 		textWIDTH.setText(configProps.getProperty("WIDTH"));
 		textHEIGHT.setText(configProps.getProperty("HEIGHT"));
 		textFOV.setText(configProps.getProperty("FOV"));
@@ -289,19 +272,14 @@ public class ConfigGUI extends JFrame implements ItemListener {
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	private void sendProperties() {
-		KernelConstants.WIDTH = Integer.parseInt(configProps
-				.getProperty("WIDTH"));
-		KernelConstants.HEIGHT = Integer.parseInt(configProps
-				.getProperty("HEIGHT"));
+		Display.setWidth(Integer.parseInt(configProps.getProperty("WIDTH")));
+		Display.setHeight(Integer.parseInt(configProps.getProperty("HEIGHT")));
+		;
 		KernelConstants.FOV = Integer.parseInt(configProps.getProperty("FOV"));
 		KernelConstants.FPS = Integer.parseInt(configProps.getProperty("FPS"));
-		KernelConstants.VSYNC = Boolean.parseBoolean(configProps
-				.getProperty("VSYNC"));
-		KernelConstants.advancedOpenGL = Boolean.parseBoolean(configProps
-				.getProperty("advancedOpenGL"));
+		KernelConstants.VSYNC = Boolean.parseBoolean(configProps.getProperty("VSYNC"));
 		KernelConstants.seed = configProps.getProperty("SEED");
-		KernelConstants.radius = Integer.parseInt(configProps
-				.getProperty("DrawDistance"));
+		KernelConstants.radius = Integer.parseInt(configProps.getProperty("DrawDistance"));
 	}
 
 	/**
@@ -328,11 +306,7 @@ public class ConfigGUI extends JFrame implements ItemListener {
 		if (configProps.getProperty("VSYNC").equals("true")) {
 			vsync.setSelected(true);
 		}
-		if (configProps.getProperty("advancedOpenGL").equals("true")) {
-			advancedOpenGL.setSelected(true);
-		}
-		slider.setValue(Integer.parseInt(configProps
-				.getProperty("DrawDistance")));
+		slider.setValue(Integer.parseInt(configProps.getProperty("DrawDistance")));
 		inputStream.close();
 	}
 
@@ -348,10 +322,7 @@ public class ConfigGUI extends JFrame implements ItemListener {
 		configProps.setProperty("HEIGHT", textHEIGHT.getText());
 		configProps.setProperty("FOV", textFOV.getText());
 		configProps.setProperty("FPS", textFPS.getText());
-		configProps.setProperty("VSYNC",
-				Boolean.toString(KernelConstants.VSYNC));
-		configProps.setProperty("advancedOpenGL",
-				Boolean.toString(KernelConstants.advancedOpenGL));
+		configProps.setProperty("VSYNC", Boolean.toString(KernelConstants.VSYNC));
 		configProps.setProperty("SEED", textSEED.getText());
 		configProps.setProperty("DrawDistance", s.toString());
 		OutputStream outputStream = new FileOutputStream(configFile);

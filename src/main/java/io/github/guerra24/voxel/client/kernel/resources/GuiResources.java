@@ -62,29 +62,21 @@ public class GuiResources {
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void loadGuiTexture() {
-		gui = new GuiTexture(
-				Kernel.gameResources.loader.loadTextureGui("HotBar"),
+		gui = new GuiTexture(Kernel.gameResources.loader.loadTextureGui("HotBar"), new Vector2f(0.6f, -0.425f),
+				new Vector2f(1.6f, 1.425f));
+		stats = new GuiTexture(Kernel.gameResources.loader.loadTextureGui("Stats"), new Vector2f(0.6f, -0.425f),
+				new Vector2f(1.6f, 1.425f));
+		life = new GuiTexture(Kernel.gameResources.loader.loadTextureGui("Life"), new Vector2f(-0.958f, 0.735f),
+				new Vector2f(0.346f, 0.02f));
+		button1 = new GuiTexture(Kernel.gameResources.loader.loadTextureGui("ButtonExit"), new Vector2f(0.0f, -0.3f),
+				new Vector2f(0.3f, 0.12f));
+		button2 = new GuiTexture(Kernel.gameResources.loader.loadTextureGui("ButtonPlay"), new Vector2f(0.0f, 0.3f),
+				new Vector2f(0.3f, 0.12f));
+		worldLoading = new GuiTexture(Kernel.gameResources.loader.loadTextureGui("WorldLoading"),
 				new Vector2f(0.6f, -0.425f), new Vector2f(1.6f, 1.425f));
-		stats = new GuiTexture(
-				Kernel.gameResources.loader.loadTextureGui("Stats"),
-				new Vector2f(0.6f, -0.425f), new Vector2f(1.6f, 1.425f));
-		life = new GuiTexture(
-				Kernel.gameResources.loader.loadTextureGui("Life"),
-				new Vector2f(-0.958f, 0.735f), new Vector2f(0.346f, 0.02f));
-		button1 = new GuiTexture(
-				Kernel.gameResources.loader.loadTextureGui("ButtonExit"),
-				new Vector2f(0.0f, -0.3f), new Vector2f(0.3f, 0.12f));
-		button2 = new GuiTexture(
-				Kernel.gameResources.loader.loadTextureGui("ButtonPlay"),
-				new Vector2f(0.0f, 0.3f), new Vector2f(0.3f, 0.12f));
-		worldLoading = new GuiTexture(
-				Kernel.gameResources.loader.loadTextureGui("WorldLoading"),
-				new Vector2f(0.6f, -0.425f), new Vector2f(1.6f, 1.425f));
-		loadBar = new GuiTexture(
-				Kernel.gameResources.loader.loadTextureGui("LoadBar"),
-				new Vector2f(-0.3f, 0.15f), new Vector2f(0.0f, 0.1f));
-		button5 = new GuiTexture(button1.getTexture(),
-				new Vector2f(0.0f, -0.7f), new Vector2f(0.2f, 0.12f));
+		loadBar = new GuiTexture(Kernel.gameResources.loader.loadTextureGui("LoadBar"), new Vector2f(-0.3f, 0.15f),
+				new Vector2f(0.0f, 0.1f));
+		button5 = new GuiTexture(button1.getTexture(), new Vector2f(0.0f, -0.7f), new Vector2f(0.2f, 0.12f));
 	}
 
 	/**

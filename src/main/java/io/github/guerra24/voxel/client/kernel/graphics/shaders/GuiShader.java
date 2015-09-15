@@ -43,8 +43,7 @@ public class GuiShader extends ShaderProgram {
 	 * Constructor, Creastes an GUI Shader
 	 */
 	public GuiShader() {
-		super(KernelConstants.VERTEX_FILE_GUI,
-				KernelConstants.FRAGMENT_FILE_GUI);
+		super(KernelConstants.VERTEX_FILE_GUI, KernelConstants.FRAGMENT_FILE_GUI);
 	}
 
 	/**
@@ -60,8 +59,7 @@ public class GuiShader extends ShaderProgram {
 
 	@Override
 	protected void getAllUniformLocations() {
-		location_transformationMatrix = super
-				.getUniformLocation("transformationMatrix");
+		location_transformationMatrix = super.getUniformLocation("transformationMatrix");
 	}
 
 	@Override

@@ -66,8 +66,7 @@ public class SoundStore {
 	private boolean deferred;
 
 	/** The buffer used to set the velocity of a source */
-	private FloatBuffer sourceVel = BufferUtils.createFloatBuffer(3).put(
-			new float[] { 0.0f, 0.0f, 0.0f });
+	private FloatBuffer sourceVel = BufferUtils.createFloatBuffer(3).put(new float[] { 0.0f, 0.0f, 0.0f });
 	/** The buffer used to set the position of a source */
 	private FloatBuffer sourcePos = BufferUtils.createFloatBuffer(3);
 
@@ -157,8 +156,7 @@ public class SoundStore {
 
 		musicVolume = volume;
 		if (soundWorks) {
-			AL10.alSourcef(sources.get(0), AL10.AL_GAIN, lastCurrentMusicVolume
-					* musicVolume);
+			AL10.alSourcef(sources.get(0), AL10.AL_GAIN, lastCurrentMusicVolume * musicVolume);
 		}
 	}
 
@@ -188,8 +186,7 @@ public class SoundStore {
 
 		if (soundWorks) {
 			lastCurrentMusicVolume = volume;
-			AL10.alSourcef(sources.get(0), AL10.AL_GAIN, lastCurrentMusicVolume
-					* musicVolume);
+			AL10.alSourcef(sources.get(0), AL10.AL_GAIN, lastCurrentMusicVolume * musicVolume);
 		}
 	}
 
@@ -349,12 +346,10 @@ public class SoundStore {
 				soundWorks = false;
 				Log.error("- AL init failed");
 			} else {
-				FloatBuffer listenerOri = BufferUtils.createFloatBuffer(6).put(
-						new float[] { 0.0f, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f });
-				FloatBuffer listenerVel = BufferUtils.createFloatBuffer(3).put(
-						new float[] { 0.0f, 0.0f, 0.0f });
-				FloatBuffer listenerPos = BufferUtils.createFloatBuffer(3).put(
-						new float[] { 0.0f, 0.0f, 0.0f });
+				FloatBuffer listenerOri = BufferUtils.createFloatBuffer(6)
+						.put(new float[] { 0.0f, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f });
+				FloatBuffer listenerVel = BufferUtils.createFloatBuffer(3).put(new float[] { 0.0f, 0.0f, 0.0f });
+				FloatBuffer listenerPos = BufferUtils.createFloatBuffer(3).put(new float[] { 0.0f, 0.0f, 0.0f });
 				listenerPos.flip();
 				listenerVel.flip();
 				listenerOri.flip();
@@ -415,8 +410,7 @@ public class SoundStore {
 	 *            The z position to play the sound from
 	 * @return source The source that will be used
 	 */
-	int playAsSoundAt(int buffer, float pitch, float gain, boolean loop,
-			float x, float y, float z) {
+	int playAsSoundAt(int buffer, float pitch, float gain, boolean loop, float x, float y, float z) {
 		gain *= soundVolume;
 		if (gain == 0) {
 			gain = 0.001f;
@@ -433,8 +427,7 @@ public class SoundStore {
 				AL10.alSourcei(sources.get(nextSource), AL10.AL_BUFFER, buffer);
 				AL10.alSourcef(sources.get(nextSource), AL10.AL_PITCH, pitch);
 				AL10.alSourcef(sources.get(nextSource), AL10.AL_GAIN, gain);
-				AL10.alSourcei(sources.get(nextSource), AL10.AL_LOOPING,
-						loop ? AL10.AL_TRUE : AL10.AL_FALSE);
+				AL10.alSourcei(sources.get(nextSource), AL10.AL_LOOPING, loop ? AL10.AL_TRUE : AL10.AL_FALSE);
 
 				sourcePos.clear();
 				sourceVel.clear();
@@ -442,10 +435,8 @@ public class SoundStore {
 				sourcePos.put(new float[] { x, y, z });
 				sourcePos.flip();
 				sourceVel.flip();
-				AL10.alSourcefv(sources.get(nextSource), AL10.AL_POSITION,
-						sourcePos);
-				AL10.alSourcefv(sources.get(nextSource), AL10.AL_VELOCITY,
-						sourceVel);
+				AL10.alSourcefv(sources.get(nextSource), AL10.AL_POSITION, sourcePos);
+				AL10.alSourcefv(sources.get(nextSource), AL10.AL_VELOCITY, sourceVel);
 
 				AL10.alSourcePlay(sources.get(nextSource));
 
@@ -512,8 +503,7 @@ public class SoundStore {
 
 			AL10.alSourcei(sources.get(0), AL10.AL_BUFFER, buffer);
 			AL10.alSourcef(sources.get(0), AL10.AL_PITCH, pitch);
-			AL10.alSourcei(sources.get(0), AL10.AL_LOOPING, loop ? AL10.AL_TRUE
-					: AL10.AL_FALSE);
+			AL10.alSourcei(sources.get(0), AL10.AL_LOOPING, loop ? AL10.AL_TRUE : AL10.AL_FALSE);
 
 			currentMusic = sources.get(0);
 
@@ -691,8 +681,7 @@ public class SoundStore {
 
 				AiffData data = AiffData.create(in);
 				AL10.alGenBuffers(buf);
-				AL10.alBufferData(buf.get(0), data.format, data.data,
-						data.samplerate);
+				AL10.alBufferData(buf.get(0), data.format, data.data, data.samplerate);
 
 				loaded.put(ref, new Integer(buf.get(0)));
 				buffer = buf.get(0);
@@ -771,8 +760,7 @@ public class SoundStore {
 
 				WaveData data = WaveData.create(in);
 				AL10.alGenBuffers(buf);
-				AL10.alBufferData(buf.get(0), data.format, data.data,
-						data.samplerate);
+				AL10.alBufferData(buf.get(0), data.format, data.data, data.samplerate);
 
 				loaded.put(ref, new Integer(buf.get(0)));
 				buffer = buf.get(0);
@@ -907,9 +895,8 @@ public class SoundStore {
 				OggData ogg = decoder.getData(in);
 
 				AL10.alGenBuffers(buf);
-				AL10.alBufferData(buf.get(0),
-						ogg.channels > 1 ? AL10.AL_FORMAT_STEREO16
-								: AL10.AL_FORMAT_MONO16, ogg.data, ogg.rate);
+				AL10.alBufferData(buf.get(0), ogg.channels > 1 ? AL10.AL_FORMAT_STEREO16 : AL10.AL_FORMAT_MONO16,
+						ogg.data, ogg.rate);
 
 				loaded.put(ref, new Integer(buf.get(0)));
 
