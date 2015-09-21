@@ -113,6 +113,32 @@ public class Maths {
 	}
 
 	/**
+	 * Create orthographic matrix
+	 * 
+	 * @param left
+	 * @param right
+	 * @param bottom
+	 * @param top
+	 * @param near
+	 * @param far
+	 * @return Matrix4f
+	 */
+	public static Matrix4f orthographic(float left, float right, float bottom, float top, float near, float far) {
+		Matrix4f matrix = new Matrix4f();
+		matrix.m00 = 2.0f / (right - left);
+		matrix.m11 = 2.0f / (top - bottom);
+		matrix.m22 = 2.0f / (near - far);
+
+		matrix.m03 = (left + right) / (left - right);
+		matrix.m13 = (bottom + top) / (bottom - top);
+		matrix.m23 = (far + near) / (far - near);
+
+		matrix.m33 = 1.0f;
+
+		return matrix;
+	}
+
+	/**
 	 * Clamp the value to Generation Terrain
 	 * 
 	 * @param d

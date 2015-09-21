@@ -59,8 +59,11 @@ import static org.lwjgl.opengl.GL30.glGenerateMipmap;
 import io.github.guerra24.voxel.client.kernel.resources.models.EntityTexture;
 import io.github.guerra24.voxel.client.kernel.resources.models.RawModel;
 import io.github.guerra24.voxel.client.kernel.util.Logger;
+import net.lingala.zip4j.core.ZipFile;
+import net.lingala.zip4j.exception.ZipException;
 
 import java.io.FileInputStream;
+import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
@@ -93,6 +96,11 @@ public class Loader {
 	 * Texture List
 	 */
 	private List<Integer> textures = new ArrayList<Integer>();
+	private OBJLoader objLoader;
+
+	public Loader() {
+		objLoader = new OBJLoader();
+	}
 
 	/**
 	 * Load a multiple arrays of positions, texture coords, normals and indices
@@ -145,8 +153,8 @@ public class Loader {
 	public int loadTextureBlocks(String fileName) {
 		Texture texture = null;
 		try {
-			texture = TextureLoader.getTexture("PNG",
-					new FileInputStream("assets/textures/blocks/" + fileName + ".png"), GL_NEAREST);
+			URL file = getClass().getClassLoader().getResource("assets/textures/blocks/" + fileName + ".png");
+			texture = TextureLoader.getTexture("PNG", new FileInputStream(file.getFile()), GL_NEAREST);
 			Logger.log(Thread.currentThread(), "Loading Texture: " + fileName + ".png");
 			glGenerateMipmap(GL_TEXTURE_2D);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
@@ -170,8 +178,8 @@ public class Loader {
 	public int loadTextureEntity(String fileName) {
 		Texture texture = null;
 		try {
-			texture = TextureLoader.getTexture("PNG",
-					new FileInputStream("assets/textures/entity/" + fileName + ".png"), GL_NEAREST);
+			URL file = getClass().getClassLoader().getResource("assets/textures/entity/" + fileName + ".png");
+			texture = TextureLoader.getTexture("PNG", new FileInputStream(file.getFile()), GL_NEAREST);
 			Logger.log(Thread.currentThread(), "Loading Texture: " + fileName + ".png");
 			glGenerateMipmap(GL_TEXTURE_2D);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
@@ -195,8 +203,8 @@ public class Loader {
 	public int loadTextureGui(String fileName) {
 		Texture texture = null;
 		try {
-			texture = TextureLoader.getTexture("PNG", new FileInputStream("assets/textures/menu/" + fileName + ".png"),
-					GL_NEAREST);
+			URL file = getClass().getClassLoader().getResource("assets/textures/menu/" + fileName + ".png");
+			texture = TextureLoader.getTexture("PNG", new FileInputStream(file.getFile()), GL_NEAREST);
 			Logger.log(Thread.currentThread(), "Loading Texture: " + fileName + ".png");
 			glGenerateMipmap(GL_TEXTURE_2D);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
@@ -240,7 +248,8 @@ public class Loader {
 		glBindTexture(GL_TEXTURE_CUBE_MAP, texID);
 
 		for (int i = 0; i < textureFiles.length; i++) {
-			EntityTexture data = decodeTextureFile("assets/textures/skybox/" + textureFiles[i] + ".png");
+			URL file = getClass().getClassLoader().getResource("assets/textures/skybox/" + textureFiles[i] + ".png");
+			EntityTexture data = decodeTextureFile(file.getFile());
 			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGBA, data.getWidth(), data.getHeight(), 0, GL_RGBA,
 					GL_UNSIGNED_BYTE, data.getBuffer());
 		}
@@ -343,6 +352,7 @@ public class Loader {
 	 * @param data
 	 *            Array of data
 	 * @return IntBuffer
+	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	private IntBuffer storeDataInIntBuffer(int[] data) {
 		IntBuffer buffer = BufferUtils.createIntBuffer(data.length);
@@ -357,12 +367,41 @@ public class Loader {
 	 * @param data
 	 *            Array of data
 	 * @return FloatBuffer
+	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	private FloatBuffer storeDataInFloatBuffer(float[] data) {
 		FloatBuffer buffer = BufferUtils.createFloatBuffer(data.length);
 		buffer.put(data);
 		buffer.flip();
 		return buffer;
+	}
+
+	/**
+	 * Unzip the gived file
+	 * 
+	 * @param source
+	 *            Source Path
+	 * @param destination
+	 *            Dest Path
+	 * @param password
+	 *            File Pass
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
+	public static void unzip(String source, String destination, String password) {
+		try {
+			ZipFile zipFile = new ZipFile(source);
+			if (zipFile.isEncrypted()) {
+				zipFile.setPassword(password);
+			}
+			zipFile.extractAll(destination);
+		} catch (ZipException e) {
+			Logger.error(Thread.currentThread(), "Error in unzip process");
+			e.printStackTrace();
+		}
+	}
+
+	public OBJLoader getObjLoader() {
+		return objLoader;
 	}
 
 }

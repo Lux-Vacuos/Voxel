@@ -24,13 +24,16 @@
 
 package io.github.guerra24.voxel.client.kernel.core;
 
+import java.util.Random;
+
+import io.github.guerra24.voxel.client.kernel.api.API;
 import io.github.guerra24.voxel.client.kernel.graphics.opengl.Display;
 import io.github.guerra24.voxel.client.kernel.input.Keyboard;
 import io.github.guerra24.voxel.client.kernel.menu.Button;
+import io.github.guerra24.voxel.client.kernel.resources.GameResources;
 import io.github.guerra24.voxel.client.kernel.util.Logger;
 import io.github.guerra24.voxel.client.kernel.util.vector.Vector3f;
-
-import java.util.Random;
+import io.github.guerra24.voxel.client.kernel.world.World;
 
 /**
  * Game States
@@ -76,7 +79,7 @@ public class GameStates {
 	 * 
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public void switchStates() {
+	public void switchStates(GameResources gm, World world, API api) {
 		if (state == State.MAINMENU && Button.isInButtonPlay()) {
 			// Kernel.gameResources.SoundSystem.pause("MainMenuMusic");
 			state = State.LOADING_WORLD;
@@ -87,10 +90,10 @@ public class GameStates {
 			} else {
 				seed = new Random();
 			}
-			Kernel.world.startWorld("Mundo-1", Kernel.gameResources.camera, seed, 0, Kernel.api);
-			Kernel.gameResources.camera.setMouse();
-			Kernel.gameResources.soundSystem.stop("menu1");
-			Kernel.gameResources.soundSystem.rewind("menu1");
+			world.startWorld("Mundo-1", seed, 0, api, gm);
+			gm.getCamera().setMouse();
+			gm.getSoundSystem().stop("menu1");
+			gm.getSoundSystem().rewind("menu1");
 			state = State.GAME;
 		}
 
@@ -108,27 +111,27 @@ public class GameStates {
 				e.printStackTrace();
 			}
 			for (int zr = -KernelConstants.genRadius; zr <= KernelConstants.genRadius; zr++) {
-				int zz = Kernel.world.getzPlayChunk() + zr;
+				int zz = world.getzPlayChunk() + zr;
 				for (int xr = -KernelConstants.genRadius; xr <= KernelConstants.genRadius; xr++) {
-					int xx = Kernel.world.getxPlayChunk() + xr;
+					int xx = world.getxPlayChunk() + xr;
 					if (zr * zr + xr * xr <= KernelConstants.genRadius * KernelConstants.genRadius) {
-						if (Kernel.world.hasChunk(Kernel.world.dim, xx, zz)) {
-							Kernel.world.saveChunk(Kernel.world.dim, xx, zz);
+						if (world.hasChunk(world.dim, xx, zz)) {
+							world.saveChunk(world.dim, xx, zz, gm);
 						}
 					}
 				}
 			}
-			Kernel.gameResources.soundSystem.play("menu1");
-			Kernel.world.removeAll();
-			Kernel.gameResources.camera.setPosition(new Vector3f(-2, 0, -1));
-			Kernel.gameResources.camera.setPitch(0);
-			Kernel.gameResources.camera.setYaw(0);
+			gm.getSoundSystem().play("menu1");
+			world.removeAll();
+			gm.getCamera().setPosition(new Vector3f(-2, 0, -1));
+			gm.getCamera().setPitch(0);
+			gm.getCamera().setYaw(0);
 			state = State.MAINMENU;
-			Kernel.gameResources.soundSystem.setVolume("menu1", 1f);
+			gm.getSoundSystem().setVolume("menu1", 1f);
 		}
 
 		if (state == State.GAME && !Display.displayFocused && !KernelConstants.debug) {
-			Kernel.gameResources.camera.unlockMouse();
+			gm.getCamera().unlockMouse();
 			state = State.IN_PAUSE;
 		}
 		if (Display.isCloseRequested())
@@ -136,10 +139,10 @@ public class GameStates {
 
 		while (Keyboard.next()) {
 			if (state == State.GAME && Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
-				Kernel.gameResources.camera.unlockMouse();
+				gm.getCamera().unlockMouse();
 				state = State.IN_PAUSE;
 			} else if (state == State.IN_PAUSE && Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
-				Kernel.gameResources.camera.setMouse();
+				gm.getCamera().setMouse();
 				state = State.GAME;
 			}
 		}

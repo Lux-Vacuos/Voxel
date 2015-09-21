@@ -7,9 +7,6 @@ version = '0.0.3-ALPHA'
 applicationDefaultJvmArgs = ["-Xmx512M"]
 
 jar {
-	include("*io/**")
-	include("*org/**")
-
     manifest {
         attributes 'Implementation-Title': 'Voxel Client',
                    'Implementation-Version': version
@@ -34,13 +31,14 @@ dependencies {
 	compile 'org.l33tlabs.twl:pngdecoder:1.+'
 	compile 'de.jarnbjo:j-ogg-all:1.0.0'
 	compile 'org.jcraft:jorbis:0.0.17'
+	compile 'net.lingala.zip4j:zip4j:1.3.2'
     compile fileTree(dir: "libs", includes: ["*.jar"])
 }
 
 sourceSets {
     main {
         java.srcDir("${projectDir}/src/main/java/")
-        resources.srcDir("${projectDir}/assets/")
+        resources.srcDir("${projectDir}/src/main/resources")
     }
 }
 

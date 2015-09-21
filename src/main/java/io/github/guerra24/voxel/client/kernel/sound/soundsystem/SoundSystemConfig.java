@@ -161,7 +161,7 @@ public class SoundSystemConfig {
 	/**
 	 * Package where the sound files are located (must be followed by '/').
 	 */
-	private static String soundFilesPackage = "Sounds/";
+	private static String soundFilesPackage = "assets/sounds/";
 
 	/**
 	 * Number of bytes to load at a time when streaming.

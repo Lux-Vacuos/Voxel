@@ -24,6 +24,10 @@
 
 package io.github.guerra24.voxel.client.kernel.core;
 
+import io.github.guerra24.voxel.client.kernel.api.API;
+import io.github.guerra24.voxel.client.kernel.resources.GameResources;
+import io.github.guerra24.voxel.client.kernel.world.World;
+
 /**
  * Update Thread
  * 
@@ -31,21 +35,25 @@ package io.github.guerra24.voxel.client.kernel.core;
  * @category Kernel
  */
 public class UpdateThread extends Thread {
+	private GameResources gm;
+	private World world;
+	private API api;
+
 	@Override
 	public void run() {
-		while (Kernel.gameResources.gameStates.loop) {
-			switch (Kernel.gameResources.gameStates.state) {
+		while (gm.getGameStates().loop) {
+			switch (gm.getGameStates().state) {
 			case MAINMENU:
 				break;
 			case IN_PAUSE:
 				break;
 			case GAME:
-				Kernel.gameResources.camera.updateDebug();
+				gm.getCamera().updateDebug(world);
 				break;
 			case LOADING_WORLD:
 				break;
 			}
-			Kernel.gameResources.gameStates.switchStates();
+			gm.getGameStates().switchStates(gm, world, api);
 			try {
 				Thread.sleep((long) 33.3333);
 			} catch (InterruptedException e) {
@@ -53,4 +61,17 @@ public class UpdateThread extends Thread {
 			}
 		}
 	}
+
+	public void setGm(GameResources gm) {
+		this.gm = gm;
+	}
+
+	public void setWorld(World world) {
+		this.world = world;
+	}
+
+	public void setApi(API api) {
+		this.api = api;
+	}
+
 }

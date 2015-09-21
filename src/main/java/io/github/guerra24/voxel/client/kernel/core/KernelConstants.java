@@ -73,7 +73,7 @@ public class KernelConstants {
 	/**
 	 * Game Build Number
 	 */
-	public static int build = 64;
+	public static int build = 65;
 	/**
 	 * Game Version
 	 */
@@ -133,37 +133,18 @@ public class KernelConstants {
 	public static final float ROTATE_SPEED = 0.2f;
 	// Shader Settings
 	/**
-	 * Entity Vertex Shader File
+	 * Shader files Path
 	 */
 	public static final String VERTEX_FILE_ENTITY = "VertexShaderEntity.glsl";
-	/**
-	 * Entity Fragment Shader File
-	 */
 	public static final String FRAGMENT_FILE_ENTITY = "FragmentShaderEntity.glsl";
-	/**
-	 * Gui Vertex Shader File
-	 */
 	public static final String VERTEX_FILE_GUI = "VertexShaderGui.glsl";
-	/**
-	 * Gui Fragment Shader File
-	 */
 	public static final String FRAGMENT_FILE_GUI = "FragmentShaderGui.glsl";
-	/**
-	 * Skybox Vertex Shader File
-	 */
 	public static final String VERTEX_FILE_SKYBOX = "VertexShaderSkybox.glsl";
-	/**
-	 * Skybox Fragment Shader File
-	 */
 	public static final String FRAGMENT_FILE_SKYBOX = "FragmentShaderSkybox.glsl";
-	/**
-	 * Water Vertex Shader File
-	 */
-	public final static String VERTEX_FILE_WATER = "VertexShaderWater.glsl";
-	/**
-	 * Water Fragment Shader File
-	 */
-	public final static String FRAGMENT_FILE_WATER = "FragmentShaderWater.glsl";
+	public static final String VERTEX_FILE_WATER = "VertexShaderWater.glsl";
+	public static final String FRAGMENT_FILE_WATER = "FragmentShaderWater.glsl";
+	public static final String VERTEX_FILE_SHADOW = "VertexShaderShadow.glsl";
+	public static final String FRAGMENT_FILE_SHADOW = "FragmentShaderShadow.glsl";
 	// World Save Path
 	/**
 	 * World Folder Path

@@ -1,7 +1,6 @@
 package io.github.guerra24.voxel.client.kernel.menu;
 
 import io.github.guerra24.voxel.client.kernel.resources.GameResources;
-import io.github.guerra24.voxel.client.kernel.resources.OBJLoader;
 import io.github.guerra24.voxel.client.kernel.resources.models.ModelTexture;
 import io.github.guerra24.voxel.client.kernel.resources.models.RawModel;
 import io.github.guerra24.voxel.client.kernel.resources.models.TexturedModel;
@@ -24,8 +23,8 @@ public class MainMenu {
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public static void loadModels(GameResources gm) {
-		RawModel planetModel = OBJLoader.loadObjModel("Planet", gm.loader);
-		ModelTexture planetTexture = new ModelTexture(gm.loader.loadTextureEntity("Planet"));
+		RawModel planetModel = gm.getLoader().getObjLoader().loadObjModel("Planet", gm.getLoader());
+		ModelTexture planetTexture = new ModelTexture(gm.getLoader().loadTextureEntity("Planet"));
 		planet = new TexturedModel(planetModel, planetTexture);
 	}
 }

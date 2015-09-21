@@ -24,14 +24,13 @@
 
 package io.github.guerra24.voxel.client.kernel.graphics;
 
-import io.github.guerra24.voxel.client.kernel.core.Kernel;
-import io.github.guerra24.voxel.client.kernel.util.Maths;
-import io.github.guerra24.voxel.client.kernel.util.vector.Vector3f;
-import io.github.guerra24.voxel.client.kernel.world.entities.Camera;
-
 import java.nio.FloatBuffer;
 
 import org.lwjgl.BufferUtils;
+
+import io.github.guerra24.voxel.client.kernel.resources.GameResources;
+import io.github.guerra24.voxel.client.kernel.util.Maths;
+import io.github.guerra24.voxel.client.kernel.util.vector.Vector3f;
 
 /**
  * Frustum Culling
@@ -70,17 +69,17 @@ public class Frustum {
 		frustum[side][D] /= magnitude;
 	}
 
-	public void calculateFrustum(Camera camera) {
+	public void calculateFrustum(GameResources gm) {
 		float[] proj = new float[16];
 		float[] modl = new float[16];
 		float[] clip = new float[16];
 
 		proj_b.rewind();
-		Kernel.gameResources.renderer.getProjectionMatrix().store(proj_b);
+		gm.getRenderer().getProjectionMatrix().store(proj_b);
 		proj_b.rewind();
 		proj_b.get(proj);
 		modl_b.rewind();
-		Maths.createViewMatrix(camera).store(modl_b);
+		Maths.createViewMatrix(gm.getCamera()).store(modl_b);
 		modl_b.rewind();
 		modl_b.get(modl);
 

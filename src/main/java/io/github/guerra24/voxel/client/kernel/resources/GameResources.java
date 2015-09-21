@@ -46,7 +46,7 @@ import io.github.guerra24.voxel.client.kernel.sound.soundsystem.SoundSystemExcep
 import io.github.guerra24.voxel.client.kernel.sound.soundsystem.codecs.CodecJOgg;
 import io.github.guerra24.voxel.client.kernel.util.Logger;
 import io.github.guerra24.voxel.client.kernel.util.vector.Vector3f;
-import io.github.guerra24.voxel.client.kernel.world.MobManager;
+import io.github.guerra24.voxel.client.kernel.world.Physics;
 import io.github.guerra24.voxel.client.kernel.world.block.Block;
 import io.github.guerra24.voxel.client.kernel.world.entities.Camera;
 import io.github.guerra24.voxel.client.kernel.world.entities.IEntity;
@@ -69,20 +69,19 @@ public class GameResources {
 	public List<Light> mainMenuLights = new ArrayList<Light>();
 	public List<Light> lights = new ArrayList<Light>();
 
-	public Random rand;
-	public Loader loader;
-	public Camera camera;
-	public MasterRenderer renderer;
-	public WaterShader waterShader;
-	public WaterRenderer waterRenderer;
-	public SkyboxRenderer skyboxRenderer;
-	public GuiRenderer guiRenderer;
-	public GameStates gameStates;
-	public Gson gson;
-	public SoundSystem soundSystem;
-	public Frustum frustum;
-	public MobManager mobManager;
-	public float distance;
+	private Random rand;
+	private Loader loader;
+	private Camera camera;
+	private MasterRenderer renderer;
+	private WaterShader waterShader;
+	private WaterRenderer waterRenderer;
+	private SkyboxRenderer skyboxRenderer;
+	private GuiRenderer guiRenderer;
+	private GameStates gameStates;
+	private Gson gson;
+	private SoundSystem soundSystem;
+	private Frustum frustum;
+	private Physics physics;
 
 	/**
 	 * Constructor, Create the Game Resources and Init Loader
@@ -116,8 +115,8 @@ public class GameResources {
 		skyboxRenderer = new SkyboxRenderer(loader, renderer.getProjectionMatrix());
 		gameStates = new GameStates();
 		frustum = new Frustum();
+		physics = new Physics(this);
 		Block.initBasicBlocks();
-		mobManager = new MobManager();
 	}
 
 	/**
@@ -153,6 +152,86 @@ public class GameResources {
 		renderer.cleanUp();
 		loader.cleanUp();
 		soundSystem.cleanup();
+	}
+
+	public List<GuiTexture> getGuis() {
+		return guis;
+	}
+
+	public List<GuiTexture> getGuis2() {
+		return guis2;
+	}
+
+	public List<GuiTexture> getGuis3() {
+		return guis3;
+	}
+
+	public List<GuiTexture> getGuis4() {
+		return guis4;
+	}
+
+	public List<IEntity> getMainMenuModels() {
+		return mainMenuModels;
+	}
+
+	public List<Light> getMainMenuLights() {
+		return mainMenuLights;
+	}
+
+	public List<Light> getLights() {
+		return lights;
+	}
+
+	public Random getRand() {
+		return rand;
+	}
+
+	public Loader getLoader() {
+		return loader;
+	}
+
+	public Camera getCamera() {
+		return camera;
+	}
+
+	public MasterRenderer getRenderer() {
+		return renderer;
+	}
+
+	public WaterShader getWaterShader() {
+		return waterShader;
+	}
+
+	public WaterRenderer getWaterRenderer() {
+		return waterRenderer;
+	}
+
+	public SkyboxRenderer getSkyboxRenderer() {
+		return skyboxRenderer;
+	}
+
+	public GuiRenderer getGuiRenderer() {
+		return guiRenderer;
+	}
+
+	public GameStates getGameStates() {
+		return gameStates;
+	}
+
+	public Gson getGson() {
+		return gson;
+	}
+
+	public SoundSystem getSoundSystem() {
+		return soundSystem;
+	}
+
+	public Frustum getFrustum() {
+		return frustum;
+	}
+
+	public Physics getPhysics() {
+		return physics;
 	}
 
 }

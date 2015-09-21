@@ -24,6 +24,10 @@
 
 package io.github.guerra24.voxel.client.kernel.core;
 
+import io.github.guerra24.voxel.client.kernel.api.API;
+import io.github.guerra24.voxel.client.kernel.resources.GameResources;
+import io.github.guerra24.voxel.client.kernel.world.World;
+
 /**
  * World Thread
  * 
@@ -31,10 +35,14 @@ package io.github.guerra24.voxel.client.kernel.core;
  * @category Kernel
  */
 public class WorldThread extends Thread {
+	private GameResources gm;
+	private World world;
+	private API api;
+
 	@Override
 	public void run() {
-		while (Kernel.gameResources.gameStates.loop) {
-			switch (Kernel.gameResources.gameStates.state) {
+		while (gm.getGameStates().loop) {
+			switch (gm.getGameStates().state) {
 			case MAINMENU:
 				try {
 					Thread.sleep((long) 33.3333);
@@ -43,11 +51,11 @@ public class WorldThread extends Thread {
 				}
 				break;
 			case IN_PAUSE:
-				Kernel.world.updateChunkGeneration(Kernel.gameResources.camera, Kernel.api);
+				world.updateChunkGeneration(gm, api);
 				break;
 			case GAME:
-				Kernel.world.updateChunkGeneration(Kernel.gameResources.camera, Kernel.api);
-				Kernel.world.test();
+				world.updateChunkGeneration(gm, api);
+				world.test();
 				break;
 			case LOADING_WORLD:
 				try {
@@ -58,5 +66,17 @@ public class WorldThread extends Thread {
 				break;
 			}
 		}
+	}
+
+	public void setGm(GameResources gm) {
+		this.gm = gm;
+	}
+
+	public void setWorld(World world) {
+		this.world = world;
+	}
+
+	public void setApi(API api) {
+		this.api = api;
 	}
 }

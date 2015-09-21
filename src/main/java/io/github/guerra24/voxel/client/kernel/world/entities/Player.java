@@ -24,10 +24,10 @@
 
 package io.github.guerra24.voxel.client.kernel.world.entities;
 
-import io.github.guerra24.voxel.client.kernel.core.Kernel;
+import io.github.guerra24.voxel.client.kernel.resources.GameResources;
+import io.github.guerra24.voxel.client.kernel.resources.GuiResources;
 import io.github.guerra24.voxel.client.kernel.resources.models.TexturedModel;
 import io.github.guerra24.voxel.client.kernel.util.vector.Vector3f;
-import io.github.guerra24.voxel.client.kernel.world.block.Block;
 
 public class Player extends Entity implements IEntity {
 	private static final float GRAVITY = -10;
@@ -42,32 +42,21 @@ public class Player extends Entity implements IEntity {
 	}
 
 	@Override
-	public void update(float delta) {
+	public void update(float delta, GameResources gm, GuiResources gi) {
 		super.increasePosition(0, upwardsSpeed * delta, 0);
-		try {
-			if (Kernel.world.getGlobalBlock(Kernel.world.dim, (int) (super.getPosition().x - 0.2f),
-					(int) (super.getPosition().y - 1.8f), (int) (super.getPosition().z - 0.2f)) == Block.Air.getId()
-					&& Kernel.world.getGlobalBlock(Kernel.world.dim, (int) (super.getPosition().x + 0.2f),
-							(int) (super.getPosition().y - 1.8f),
-							(int) (super.getPosition().z + 0.2f)) == Block.Air.getId()) {
-				upwardsSpeed += GRAVITY * delta;
-				isInAir = true;
-			} else {
-				upwardsSpeed = 0;
-				isInAir = false;
-			}
-		} finally {
+		if (false) {
+			upwardsSpeed += GRAVITY * delta;
+			isInAir = true;
+		} else {
+			upwardsSpeed = 0;
+			isInAir = false;
 		}
 	}
 
 	public void jump() {
 		if (!isInAir) {
 			try {
-				if (Kernel.world.getGlobalBlock(Kernel.world.dim, (int) (super.getPosition().x - 0.2f),
-						(int) (super.getPosition().y + 2), (int) (super.getPosition().z - 0.2f)) == Block.Air.getId()
-						&& Kernel.world.getGlobalBlock(Kernel.world.dim, (int) (super.getPosition().x + 0.2f),
-								(int) (super.getPosition().y + 2),
-								(int) (super.getPosition().z + 0.2f)) == Block.Air.getId()) {
+				if (false) {
 					this.upwardsSpeed = JUMP_POWER;
 
 					isInAir = true;

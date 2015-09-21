@@ -24,10 +24,6 @@
 
 package io.github.guerra24.voxel.client.kernel.menu;
 
-import io.github.guerra24.voxel.client.kernel.core.KernelConstants;
-import io.github.guerra24.voxel.client.kernel.graphics.opengl.Display;
-import io.github.guerra24.voxel.client.kernel.util.Logger;
-
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -53,6 +49,10 @@ import javax.swing.JSlider;
 import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+
+import io.github.guerra24.voxel.client.kernel.core.KernelConstants;
+import io.github.guerra24.voxel.client.kernel.graphics.opengl.Display;
+import io.github.guerra24.voxel.client.kernel.util.Logger;
 
 /**
  * Settings GUI

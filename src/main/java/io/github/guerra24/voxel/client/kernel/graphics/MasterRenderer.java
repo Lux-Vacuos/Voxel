@@ -36,11 +36,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 
-import io.github.guerra24.voxel.client.kernel.core.Kernel;
 import io.github.guerra24.voxel.client.kernel.core.KernelConstants;
 import io.github.guerra24.voxel.client.kernel.graphics.opengl.Display;
 import io.github.guerra24.voxel.client.kernel.graphics.opengl.VoxelGL33;
 import io.github.guerra24.voxel.client.kernel.graphics.shaders.EntityShader;
+import io.github.guerra24.voxel.client.kernel.resources.GameResources;
 import io.github.guerra24.voxel.client.kernel.resources.Loader;
 import io.github.guerra24.voxel.client.kernel.resources.models.TexturedModel;
 import io.github.guerra24.voxel.client.kernel.util.vector.Matrix4f;
@@ -120,11 +120,11 @@ public class MasterRenderer {
 	 *            A Camera
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public void renderChunk(Queue<BlockEntity> cubes1temp, List<Light> lights, Camera camera) {
+	public void renderChunk(Queue<BlockEntity> cubes1temp, List<Light> lights, GameResources gm) {
 		for (BlockEntity entity : cubes1temp) {
 			processBlockEntity(entity);
 		}
-		renderChunk(lights, camera);
+		renderChunk(lights, gm);
 	}
 
 	/**
@@ -138,15 +138,15 @@ public class MasterRenderer {
 	 *            A Camera
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public void renderEntity(List<IEntity> list, List<Light> lights, Camera camera) {
+	public void renderEntity(List<IEntity> list, List<Light> lights, GameResources gm) {
 		for (IEntity entity : list) {
 			if (entity != null)
 				if (entity.getEntity() != null)
-					if (Kernel.gameResources.frustum.pointInFrustum(entity.getEntity().getPosition().x,
+					if (gm.getFrustum().pointInFrustum(entity.getEntity().getPosition().x,
 							entity.getEntity().getPosition().y, entity.getEntity().getPosition().z))
 						processEntity(entity.getEntity());
 		}
-		renderEntity(lights, camera);
+		renderEntity(lights, gm.getCamera());
 	}
 
 	/**
@@ -158,15 +158,15 @@ public class MasterRenderer {
 	 *            A Camera
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	private void renderChunk(List<Light> lights, Camera camera) {
+	private void renderChunk(List<Light> lights, GameResources gm) {
 		shader.start();
 		shader.loadProjectionMatrix(projectionMatrix);
 		shader.loadSkyColour(KernelConstants.RED, KernelConstants.GREEN, KernelConstants.BLUE);
 		shader.loadLights(lights);
-		shader.loadviewMatrix(camera);
+		shader.loadviewMatrix(gm.getCamera());
 		shader.loadDirectLightDirection(new Vector3f(-80, -100, -40));
-		shader.loadblendFactor(Kernel.gameResources.skyboxRenderer.getBlendFactor());
-		shader.loadTime(Kernel.gameResources.skyboxRenderer.getTime());
+		shader.loadblendFactor(gm.getSkyboxRenderer().getBlendFactor());
+		shader.loadTime(gm.getSkyboxRenderer().getTime());
 		entityRenderer.renderBlockEntity(blockEntities);
 		shader.stop();
 		blockEntities.clear();

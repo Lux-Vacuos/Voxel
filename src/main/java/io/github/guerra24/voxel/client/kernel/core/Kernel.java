@@ -47,15 +47,16 @@ public class Kernel implements IKernel {
 	 * Contains the Game Resources, all the textures, models and other type of
 	 * data
 	 */
-	public static GameResources gameResources;
+	private GameResources gameResources;
+
 	/**
 	 * Contains the GUI/UI Resources
 	 */
-	public static GuiResources guiResources;
+	private GuiResources guiResources;
 	/**
 	 * Contains and Handles the Game World
 	 */
-	public static World world;
+	private World world;
 	/**
 	 * Render calls
 	 */
@@ -75,11 +76,13 @@ public class Kernel implements IKernel {
 	/**
 	 * World Thread
 	 */
-	public static WorldThread worldThread;
+	private static WorldThread worldThread;
 	/**
 	 * Update Thread
 	 */
-	public static UpdateThread update;
+	private static UpdateThread update;
+
+	private Display display;
 	/**
 	 * Error Test
 	 */
@@ -88,7 +91,7 @@ public class Kernel implements IKernel {
 	/**
 	 * Modding API
 	 */
-	public static API api;
+	private API api;
 
 	/**
 	 * Constructor of the Kernel, Initializes the Game and starts the loop
@@ -108,24 +111,31 @@ public class Kernel implements IKernel {
 		Logger.log(Thread.currentThread(), "Voxel Game Version: " + KernelConstants.version);
 		Logger.log(Thread.currentThread(), "Build: " + KernelConstants.build);
 		Logger.log(Thread.currentThread(), "Running on: " + Bootstrap.getPlatform());
-		Display.initDsiplay();
-		Display.startUp();
+		display = new Display();
+		display.initDsiplay();
+		display.startUp();
 		SystemInfo.printSystemInfo();
 
 		gameResources = new GameResources();
 		api = new API();
 		api.preInit();
 		gameResources.init();
-		guiResources = new GuiResources();
-		BlocksResources.createBlocks(gameResources.loader);
+		guiResources = new GuiResources(gameResources);
+		BlocksResources.createBlocks(gameResources.getLoader());
 		gameResources.addRes();
 		gameResources.music();
 		world = new World();
 		worldThread = new WorldThread();
 		worldThread.setName("Voxel World");
+		worldThread.setApi(api);
+		worldThread.setWorld(world);
+		worldThread.setGm(gameResources);
 		worldThread.start();
 		update = new UpdateThread();
 		update.setName("Voxel Update");
+		update.setApi(api);
+		update.setWorld(world);
+		update.setGm(gameResources);
 		update.start();
 		api.init();
 		// byte[] user = Launcher.user.getBytes(Charset.forName("UTF-8"));
@@ -134,7 +144,7 @@ public class Kernel implements IKernel {
 		// + UUID.nameUUIDFromBytes(user));
 		api.postInit();
 		KernelConstants.loaded = true;
-		gameResources.soundSystem.play("menu1");
+		gameResources.getSoundSystem().play("menu1");
 	}
 
 	@Override
@@ -142,9 +152,9 @@ public class Kernel implements IKernel {
 		init();
 		float delta = 0;
 		float accumulator = 0f;
-		float interval = 1f / 60;
+		float interval = 1f / 30;
 		float alpha = 0;
-		while (gameResources.gameStates.loop) {
+		while (gameResources.getGameStates().loop) {
 			if (Display.timeCount > 1f) {
 				Logger.log(Thread.currentThread(), "RCPS: " + Kernel.renderCallsPerFrame);
 				Logger.log(Thread.currentThread(), "FPS: " + Display.fps);
@@ -158,7 +168,7 @@ public class Kernel implements IKernel {
 			delta = Display.getDelta();
 			accumulator += delta;
 			while (accumulator >= interval) {
-				update(gameResources, interval);
+				update(gameResources, guiResources, interval);
 				accumulator -= interval;
 			}
 
@@ -175,60 +185,58 @@ public class Kernel implements IKernel {
 	@Override
 	public void render(GameResources gm, float delta) {
 		Display.fpsCount++;
-		switch (gm.gameStates.state) {
+		switch (gm.getGameStates().state) {
 		case MAINMENU:
-			gm.renderer.prepare();
-			gm.renderer.renderEntity(gm.mainMenuModels, gm.mainMenuLights, gm.camera);
-			gm.guiRenderer.renderGui(gm.guis2);
-			Display.updateDisplay(30);
+			gm.getFrustum().calculateFrustum(gm);
+			gm.getRenderer().prepare();
+			gm.getRenderer().renderEntity(gm.mainMenuModels, gm.mainMenuLights, gm);
+			gm.getGuiRenderer().renderGui(gm.guis2);
+			display.updateDisplay(30, gm);
 			break;
 		case IN_PAUSE:
-			gm.renderer.prepare();
-			world.updateChunksRender(gm, Kernel.gameResources.camera);
-			gm.renderer.renderEntity(gm.mobManager.getMobs(), gm.lights, gm.camera);
-			gm.skyboxRenderer.render(gm.camera, KernelConstants.RED, KernelConstants.GREEN, KernelConstants.BLUE,
-					delta);
-			gm.guiRenderer.renderGui(gm.guis4);
-			Display.updateDisplay(KernelConstants.FPS);
+			gm.getFrustum().calculateFrustum(gm);
+			gm.getRenderer().prepare();
+			world.updateChunksRender(gm);
+			gm.getRenderer().renderEntity(gm.getPhysics().getMobManager().getMobs(), gm.lights, gm);
+			gm.getSkyboxRenderer().render(KernelConstants.RED, KernelConstants.GREEN, KernelConstants.BLUE, delta, gm);
+			gm.getGuiRenderer().renderGui(gm.guis4);
+			display.updateDisplay(KernelConstants.FPS, gm);
 			break;
 		case GAME:
-			gm.renderer.prepare();
-			world.updateChunksRender(gm, Kernel.gameResources.camera);
-			gm.renderer.renderEntity(gm.mobManager.getMobs(), gm.lights, gm.camera);
-			gm.camera.updatePicker();
-			gm.skyboxRenderer.render(gm.camera, KernelConstants.RED, KernelConstants.GREEN, KernelConstants.BLUE,
-					delta);
-			gm.guiRenderer.renderGui(gm.guis);
-			Display.updateDisplay(KernelConstants.FPS);
+			gm.getFrustum().calculateFrustum(gm);
+			gm.getRenderer().prepare();
+			world.updateChunksRender(gm);
+			gm.getRenderer().renderEntity(gm.getPhysics().getMobManager().getMobs(), gm.lights, gm);
+			gm.getCamera().updatePicker();
+			gm.getSkyboxRenderer().render(KernelConstants.RED, KernelConstants.GREEN, KernelConstants.BLUE, delta, gm);
+			gm.getGuiRenderer().renderGui(gm.guis);
+			display.updateDisplay(KernelConstants.FPS, gm);
 			break;
 		case LOADING_WORLD:
-			gm.renderer.prepare();
-			gm.guiRenderer.renderGui(gm.guis3);
-			Display.updateDisplay(60);
+			gm.getRenderer().prepare();
+			gm.getGuiRenderer().renderGui(gm.guis3);
+			display.updateDisplay(60, gm);
 			break;
 		}
 	}
 
 	@Override
-	public void update(GameResources gm, float delta) {
+	public void update(GameResources gm, GuiResources gi, float delta) {
 		Display.upsCount++;
-		switch (gm.gameStates.state) {
+		switch (gm.getGameStates().state) {
 		case MAINMENU:
 			if (Keyboard.isKeyDown(Keyboard.KEY_O))
 				Bootstrap.config.setVisible(true);
 			gm.mainMenuModels.get(0).getEntity().increaseRotation(0, 0.1f, 0);
-			gm.frustum.calculateFrustum(gm.camera);
 			break;
 		case IN_PAUSE:
 			if (Keyboard.isKeyDown(Keyboard.KEY_O))
 				Bootstrap.config.setVisible(true);
-			gm.frustum.calculateFrustum(gm.camera);
 			break;
 		case GAME:
-			gm.mobManager.update(delta);
-			gm.waterRenderer.update(delta);
-			gm.skyboxRenderer.update(delta);
-			gm.frustum.calculateFrustum(gm.camera);
+			gm.getPhysics().getMobManager().update(delta, gm, gi);
+			gm.getWaterRenderer().update(delta);
+			gm.getSkyboxRenderer().update(delta);
 			break;
 		case LOADING_WORLD:
 			break;
@@ -254,7 +262,23 @@ public class Kernel implements IKernel {
 		if (!errorTest) {
 			Bootstrap.config.dispose();
 		}
-		Display.closeDisplay();
+		display.closeDisplay();
+	}
+
+	public GameResources getGameResources() {
+		return gameResources;
+	}
+
+	public GuiResources getGuiResources() {
+		return guiResources;
+	}
+
+	public World getWorld() {
+		return world;
+	}
+
+	public API getApi() {
+		return api;
 	}
 
 }

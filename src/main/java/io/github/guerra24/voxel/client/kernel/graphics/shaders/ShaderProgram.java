@@ -58,6 +58,7 @@ import io.github.guerra24.voxel.client.kernel.util.vector.Vector4f;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.URL;
 import java.nio.FloatBuffer;
 
 import org.lwjgl.BufferUtils;
@@ -282,10 +283,11 @@ public abstract class ShaderProgram {
 	 * @return Shader ID
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	private static int loadShader(String file, int type) {
+	private int loadShader(String file, int type) {
 		StringBuilder shaderSource = new StringBuilder();
+		URL sfile = getClass().getClassLoader().getResource("assets/shaders/" + file);
 		try {
-			BufferedReader reader = new BufferedReader(new FileReader("assets/shaders/" + file));
+			BufferedReader reader = new BufferedReader(new FileReader(sfile.getFile()));
 			Logger.log(Thread.currentThread(), "Loading Shader: " + file);
 			String line;
 			while ((line = reader.readLine()) != null) {

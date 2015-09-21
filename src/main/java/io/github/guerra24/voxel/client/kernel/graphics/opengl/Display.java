@@ -26,22 +26,44 @@ package io.github.guerra24.voxel.client.kernel.graphics.opengl;
 
 import static org.lwjgl.glfw.Callbacks.errorCallbackPrint;
 import static org.lwjgl.glfw.Callbacks.glfwSetCallback;
-import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.glfw.GLFW.GLFW_CONTEXT_VERSION_MAJOR;
+import static org.lwjgl.glfw.GLFW.GLFW_CONTEXT_VERSION_MINOR;
+import static org.lwjgl.glfw.GLFW.GLFW_OPENGL_CORE_PROFILE;
+import static org.lwjgl.glfw.GLFW.GLFW_OPENGL_DEBUG_CONTEXT;
+import static org.lwjgl.glfw.GLFW.GLFW_OPENGL_FORWARD_COMPAT;
+import static org.lwjgl.glfw.GLFW.GLFW_OPENGL_PROFILE;
+import static org.lwjgl.glfw.GLFW.GLFW_RELEASE;
+import static org.lwjgl.glfw.GLFW.GLFW_RESIZABLE;
+import static org.lwjgl.glfw.GLFW.GLFW_VISIBLE;
+import static org.lwjgl.glfw.GLFW.glfwCreateWindow;
+import static org.lwjgl.glfw.GLFW.glfwDefaultWindowHints;
+import static org.lwjgl.glfw.GLFW.glfwDestroyWindow;
+import static org.lwjgl.glfw.GLFW.glfwGetPrimaryMonitor;
+import static org.lwjgl.glfw.GLFW.glfwGetTime;
+import static org.lwjgl.glfw.GLFW.glfwGetVideoMode;
+import static org.lwjgl.glfw.GLFW.glfwGetWindowSize;
+import static org.lwjgl.glfw.GLFW.glfwInit;
+import static org.lwjgl.glfw.GLFW.glfwMakeContextCurrent;
+import static org.lwjgl.glfw.GLFW.glfwPollEvents;
+import static org.lwjgl.glfw.GLFW.glfwSetErrorCallback;
+import static org.lwjgl.glfw.GLFW.glfwSetWindowPos;
+import static org.lwjgl.glfw.GLFW.glfwShowWindow;
+import static org.lwjgl.glfw.GLFW.glfwSwapBuffers;
+import static org.lwjgl.glfw.GLFW.glfwSwapInterval;
+import static org.lwjgl.glfw.GLFW.glfwTerminate;
+import static org.lwjgl.glfw.GLFW.glfwWindowHint;
+import static org.lwjgl.glfw.GLFW.glfwWindowShouldClose;
 import static org.lwjgl.opengl.GL.createCapabilities;
 import static org.lwjgl.opengl.GL11.GL_FALSE;
 import static org.lwjgl.opengl.GL11.GL_TRUE;
 import static org.lwjgl.opengl.GL11.GL_VERSION;
 import static org.lwjgl.opengl.GL11.glGetString;
 import static org.lwjgl.system.MemoryUtil.NULL;
-import io.github.guerra24.voxel.client.kernel.core.Kernel;
-import io.github.guerra24.voxel.client.kernel.core.KernelConstants;
-import io.github.guerra24.voxel.client.kernel.input.Keyboard;
-import io.github.guerra24.voxel.client.kernel.input.Mouse;
-import io.github.guerra24.voxel.client.kernel.util.Logger;
 
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.nio.ByteBuffer;
 
 import org.lwjgl.BufferUtils;
@@ -63,6 +85,11 @@ import org.lwjgl.glfw.GLFWWindowSizeCallback;
 import org.lwjgl.glfw.GLFWvidmode;
 
 import de.matthiasmann.twl.utils.PNGDecoder;
+import io.github.guerra24.voxel.client.kernel.core.KernelConstants;
+import io.github.guerra24.voxel.client.kernel.input.Keyboard;
+import io.github.guerra24.voxel.client.kernel.input.Mouse;
+import io.github.guerra24.voxel.client.kernel.resources.GameResources;
+import io.github.guerra24.voxel.client.kernel.util.Logger;
 
 /**
  * Display Manager
@@ -130,7 +157,7 @@ public class Display {
 	public static int latestWidth = 0;
 	public static int latestHeight = 0;
 
-	public static void initDsiplay() {
+	public void initDsiplay() {
 		glfwSetErrorCallback(errorCallback = errorCallbackPrint(System.err));
 		if (glfwInit() != GL_TRUE)
 			throw new IllegalStateException("Unable to initialize GLFW");
@@ -161,7 +188,7 @@ public class Display {
 	 * 
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public static void createCallBacks() {
+	public void createCallBacks() {
 		keyCallback = new GLFWKeyCallback() {
 			@Override
 			public void invoke(long window, int key, int scancode, int action, int mods) {
@@ -259,7 +286,7 @@ public class Display {
 	 * 
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public static void setCallbacks() {
+	public void setCallbacks() {
 		glfwSetCallback(window, keyCallback);
 		glfwSetCallback(window, charCallback);
 		glfwSetCallback(window, cursorEnterCallback);
@@ -279,12 +306,15 @@ public class Display {
 	 * 
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public static void startUp() {
+	public void startUp() {
 		Logger.log(Thread.currentThread(), "Creating Display");
 		try {
+			URL icon1 = getClass().getClassLoader().getResource("assets/icon/icon32.png");
+			URL icon2 = getClass().getClassLoader().getResource("assets/icon/icon64.png");
+
 			String[] IconPath = new String[2];
-			IconPath[0] = "assets/icon/icon32.png";
-			IconPath[1] = "assets/icon/icon64.png";
+			IconPath[0] = icon1.getFile();
+			IconPath[1] = icon2.getFile();
 			ByteBuffer[] icon_array = new ByteBuffer[IconPath.length];
 			for (int i = 0; i < IconPath.length; i++) {
 				icon_array[i] = ByteBuffer.allocateDirect(1);
@@ -309,7 +339,7 @@ public class Display {
 	 *            Game Max FPS
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public static void updateDisplay(int fps) {
+	public void updateDisplay(int fps, GameResources gm) {
 		if (KernelConstants.loaded) {
 			ByteBuffer w = BufferUtils.createByteBuffer(4);
 			ByteBuffer h = BufferUtils.createByteBuffer(4);
@@ -319,7 +349,7 @@ public class Display {
 			WIDTH = width;
 			HEIGHT = height;
 			VoxelGL33.glViewport(0, 0, width, height);
-			Kernel.gameResources.renderer.createProjectionMatrix();
+			gm.getRenderer().createProjectionMatrix();
 		}
 		glfwSwapBuffers(window);
 		glfwPollEvents();
@@ -332,7 +362,7 @@ public class Display {
 	 * 
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public static void closeDisplay() {
+	public void closeDisplay() {
 		glfwDestroyWindow(window);
 		glfwTerminate();
 		errorCallback.release();

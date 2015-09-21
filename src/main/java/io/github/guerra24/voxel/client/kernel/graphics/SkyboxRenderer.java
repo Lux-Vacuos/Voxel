@@ -33,14 +33,14 @@ import static org.lwjgl.opengl.GL13.glActiveTexture;
 import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
 import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
-import io.github.guerra24.voxel.client.kernel.core.Kernel;
+
 import io.github.guerra24.voxel.client.kernel.core.KernelConstants;
 import io.github.guerra24.voxel.client.kernel.graphics.opengl.VoxelGL33;
 import io.github.guerra24.voxel.client.kernel.graphics.shaders.SkyboxShader;
+import io.github.guerra24.voxel.client.kernel.resources.GameResources;
 import io.github.guerra24.voxel.client.kernel.resources.Loader;
 import io.github.guerra24.voxel.client.kernel.resources.models.RawModel;
 import io.github.guerra24.voxel.client.kernel.util.vector.Matrix4f;
-import io.github.guerra24.voxel.client.kernel.world.entities.Camera;
 
 /**
  * Skybox Rendering
@@ -159,10 +159,10 @@ public class SkyboxRenderer {
 	 *            Delta
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public void render(Camera camera, float r, float g, float b, float delta) {
+	public void render(float r, float g, float b, float delta, GameResources gm) {
 		shader.start();
-		shader.loadProjectionMatrix(Kernel.gameResources.renderer.getProjectionMatrix());
-		shader.loadViewMatrix(camera, delta);
+		shader.loadProjectionMatrix(gm.getRenderer().getProjectionMatrix());
+		shader.loadViewMatrix(gm.getCamera(), delta);
 		shader.loadFog(r, g, b);
 		glBindVertexArray(cube.getVaoID());
 		glEnableVertexAttribArray(0);

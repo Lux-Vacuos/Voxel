@@ -24,6 +24,8 @@
 
 package io.github.guerra24.voxel.client.kernel.world.entities;
 
+import io.github.guerra24.voxel.client.kernel.resources.GameResources;
+import io.github.guerra24.voxel.client.kernel.resources.GuiResources;
 import io.github.guerra24.voxel.client.kernel.resources.models.TexturedModel;
 import io.github.guerra24.voxel.client.kernel.util.vector.Vector3f;
 
@@ -34,7 +36,7 @@ public class Mob extends Entity implements IEntity {
 	}
 
 	@Override
-	public void update(float delta) {
+	public void update(float delta, GameResources gm, GuiResources gi) {
 	}
 
 	@Override

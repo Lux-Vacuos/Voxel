@@ -50,11 +50,13 @@ import static io.github.guerra24.voxel.client.kernel.input.Mouse.isButtonDown;
 import static io.github.guerra24.voxel.client.kernel.input.Mouse.setCursorPosition;
 import static io.github.guerra24.voxel.client.kernel.input.Mouse.setGrabbed;
 
-import io.github.guerra24.voxel.client.kernel.core.Kernel;
 import io.github.guerra24.voxel.client.kernel.core.KernelConstants;
 import io.github.guerra24.voxel.client.kernel.graphics.opengl.Display;
+import io.github.guerra24.voxel.client.kernel.resources.GameResources;
+import io.github.guerra24.voxel.client.kernel.resources.GuiResources;
 import io.github.guerra24.voxel.client.kernel.util.vector.Vector2f;
 import io.github.guerra24.voxel.client.kernel.util.vector.Vector3f;
+import io.github.guerra24.voxel.client.kernel.world.World;
 
 /**
  * Camera
@@ -83,7 +85,7 @@ public class Camera implements IEntity {
 	}
 
 	@Override
-	public void update(float delta) {
+	public void update(float delta, GameResources gm, GuiResources gi) {
 		isMoved = false;
 		float mouseDX = getDX() * delta * mouseSpeed * 0.16f * multiplierMouse;
 		float mouseDY = getDY() * delta * mouseSpeed * 0.16f * multiplierMouse;
@@ -125,7 +127,7 @@ public class Camera implements IEntity {
 		if (isKeyDown(KEY_SPACE)) {
 			// position.y += delta * speed
 			// * multiplierMovement;
-			Kernel.gameResources.mobManager.getPlayer().jump();
+			gm.getPhysics().getMobManager().getPlayer().jump();
 		}
 		if (isKeyDown(KEY_LSHIFT)) {
 			// position.y -= delta * speed
@@ -142,13 +144,13 @@ public class Camera implements IEntity {
 
 		if (isKeyDown(KEY_Y))
 			System.out.println(position);
-		updatePlayerState();
+		updatePlayerState(gi);
 	}
 
-	public void updatePlayerState() {
+	public void updatePlayerState(GuiResources gi) {
 		if (isKeyDown(KEY_K))
 			life += 1;
-		setLife(life);
+		setLife(life, gi);
 	}
 
 	public void updatePicker() {
@@ -180,16 +182,16 @@ public class Camera implements IEntity {
 		}
 	}
 
-	public void updateDebug() {
+	public void updateDebug(World world) {
 		if (isKeyDown(KEY_F3) && isKeyDown(KEY_R))
 			for (int zr = -KernelConstants.genRadius; zr <= KernelConstants.genRadius; zr++) {
-				int zz = Kernel.world.getzPlayChunk() + zr;
+				int zz = world.getzPlayChunk() + zr;
 				for (int xr = -KernelConstants.genRadius; xr <= KernelConstants.genRadius; xr++) {
-					int xx = Kernel.world.getxPlayChunk() + xr;
+					int xx = world.getxPlayChunk() + xr;
 					if (zr * zr + xr * xr <= KernelConstants.genRadius * KernelConstants.genRadius) {
-						if (Kernel.world.hasChunk(Kernel.world.dim, xx, zz)) {
-							Kernel.world.getChunk(Kernel.world.dim, xx, zz).clear();
-							Kernel.world.tempRadius = 0;
+						if (world.hasChunk(world.dim, xx, zz)) {
+							world.getChunk(world.dim, xx, zz).clear();
+							world.tempRadius = 0;
 						}
 					}
 				}
@@ -238,12 +240,12 @@ public class Camera implements IEntity {
 		return life;
 	}
 
-	public void setLife(int life) {
+	public void setLife(int life, GuiResources gi) {
 		if (life >= 0 && life <= 20) {
 			float temp = 0;
 			for (int templ = 0; templ < life; temp += 0.0173f)
 				templ += 1;
-			Kernel.guiResources.life.setScale(new Vector2f(temp, 0.02f));
+			gi.life.setScale(new Vector2f(temp, 0.02f));
 			this.life = life;
 		}
 	}

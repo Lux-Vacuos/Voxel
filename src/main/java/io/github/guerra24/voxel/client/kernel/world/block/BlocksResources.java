@@ -25,7 +25,6 @@
 package io.github.guerra24.voxel.client.kernel.world.block;
 
 import io.github.guerra24.voxel.client.kernel.resources.Loader;
-import io.github.guerra24.voxel.client.kernel.resources.OBJLoader;
 import io.github.guerra24.voxel.client.kernel.resources.models.ModelTexture;
 import io.github.guerra24.voxel.client.kernel.resources.models.RawModel;
 import io.github.guerra24.voxel.client.kernel.resources.models.TexturedModel;
@@ -89,13 +88,13 @@ public class BlocksResources {
 
 	public static void createBlocks(Loader loader) {
 
-		RawModel up = OBJLoader.loadObjModel("FACE_UP", loader);
-		RawModel down = OBJLoader.loadObjModel("FACE_DOWN", loader);
-		RawModel east = OBJLoader.loadObjModel("FACE_EAST", loader);
-		RawModel west = OBJLoader.loadObjModel("FACE_WEST", loader);
-		RawModel nort = OBJLoader.loadObjModel("FACE_NORTH", loader);
-		RawModel south = OBJLoader.loadObjModel("FACE_SOUTH", loader);
-		RawModel torch = OBJLoader.loadObjModel("Torch", loader);
+		RawModel up = loader.getObjLoader().loadObjModel("FACE_UP", loader);
+		RawModel down = loader.getObjLoader().loadObjModel("FACE_DOWN", loader);
+		RawModel east = loader.getObjLoader().loadObjModel("FACE_EAST", loader);
+		RawModel west = loader.getObjLoader().loadObjModel("FACE_WEST", loader);
+		RawModel nort = loader.getObjLoader().loadObjModel("FACE_NORTH", loader);
+		RawModel south = loader.getObjLoader().loadObjModel("FACE_SOUTH", loader);
+		RawModel torch = loader.getObjLoader().loadObjModel("Torch", loader);
 
 		ModelTexture texture0 = new ModelTexture(loader.loadTextureBlocks("Indes"));
 		ModelTexture texture = new ModelTexture(loader.loadTextureBlocks("Grass"));

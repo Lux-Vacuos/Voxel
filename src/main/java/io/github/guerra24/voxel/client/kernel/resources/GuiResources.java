@@ -24,7 +24,6 @@
 
 package io.github.guerra24.voxel.client.kernel.resources;
 
-import io.github.guerra24.voxel.client.kernel.core.Kernel;
 import io.github.guerra24.voxel.client.kernel.resources.models.GuiTexture;
 import io.github.guerra24.voxel.client.kernel.util.vector.Vector2f;
 
@@ -51,9 +50,9 @@ public class GuiResources {
 	 * 
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public GuiResources() {
-		loadGuiTexture();
-		addGuiTextures();
+	public GuiResources(GameResources gm) {
+		loadGuiTexture(gm);
+		addGuiTextures(gm);
 	}
 
 	/**
@@ -61,20 +60,20 @@ public class GuiResources {
 	 * 
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public void loadGuiTexture() {
-		gui = new GuiTexture(Kernel.gameResources.loader.loadTextureGui("HotBar"), new Vector2f(0.6f, -0.425f),
+	public void loadGuiTexture(GameResources gm) {
+		gui = new GuiTexture(gm.getLoader().loadTextureGui("HotBar"), new Vector2f(0.6f, -0.425f),
 				new Vector2f(1.6f, 1.425f));
-		stats = new GuiTexture(Kernel.gameResources.loader.loadTextureGui("Stats"), new Vector2f(0.6f, -0.425f),
+		stats = new GuiTexture(gm.getLoader().loadTextureGui("Stats"), new Vector2f(0.6f, -0.425f),
 				new Vector2f(1.6f, 1.425f));
-		life = new GuiTexture(Kernel.gameResources.loader.loadTextureGui("Life"), new Vector2f(-0.958f, 0.735f),
+		life = new GuiTexture(gm.getLoader().loadTextureGui("Life"), new Vector2f(-0.958f, 0.735f),
 				new Vector2f(0.346f, 0.02f));
-		button1 = new GuiTexture(Kernel.gameResources.loader.loadTextureGui("ButtonExit"), new Vector2f(0.0f, -0.3f),
+		button1 = new GuiTexture(gm.getLoader().loadTextureGui("ButtonExit"), new Vector2f(0.0f, -0.3f),
 				new Vector2f(0.3f, 0.12f));
-		button2 = new GuiTexture(Kernel.gameResources.loader.loadTextureGui("ButtonPlay"), new Vector2f(0.0f, 0.3f),
+		button2 = new GuiTexture(gm.getLoader().loadTextureGui("ButtonPlay"), new Vector2f(0.0f, 0.3f),
 				new Vector2f(0.3f, 0.12f));
-		worldLoading = new GuiTexture(Kernel.gameResources.loader.loadTextureGui("WorldLoading"),
-				new Vector2f(0.6f, -0.425f), new Vector2f(1.6f, 1.425f));
-		loadBar = new GuiTexture(Kernel.gameResources.loader.loadTextureGui("LoadBar"), new Vector2f(-0.3f, 0.15f),
+		worldLoading = new GuiTexture(gm.getLoader().loadTextureGui("WorldLoading"), new Vector2f(0.6f, -0.425f),
+				new Vector2f(1.6f, 1.425f));
+		loadBar = new GuiTexture(gm.getLoader().loadTextureGui("LoadBar"), new Vector2f(-0.3f, 0.15f),
 				new Vector2f(0.0f, 0.1f));
 		button5 = new GuiTexture(button1.getTexture(), new Vector2f(0.0f, -0.7f), new Vector2f(0.2f, 0.12f));
 	}
@@ -84,14 +83,14 @@ public class GuiResources {
 	 * 
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public void addGuiTextures() {
-		Kernel.gameResources.guis.add(stats);
-		Kernel.gameResources.guis.add(life);
-		Kernel.gameResources.guis.add(gui);
-		Kernel.gameResources.guis2.add(button1);
-		Kernel.gameResources.guis2.add(button2);
-		Kernel.gameResources.guis3.add(worldLoading);
-		Kernel.gameResources.guis3.add(loadBar);
-		Kernel.gameResources.guis4.add(button5);
+	public void addGuiTextures(GameResources gm) {
+		gm.guis.add(stats);
+		gm.guis.add(life);
+		gm.guis.add(gui);
+		gm.guis2.add(button1);
+		gm.guis2.add(button2);
+		gm.guis3.add(worldLoading);
+		gm.guis3.add(loadBar);
+		gm.guis4.add(button5);
 	}
 }

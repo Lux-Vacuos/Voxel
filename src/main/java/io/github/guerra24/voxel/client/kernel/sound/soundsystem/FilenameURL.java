@@ -1,5 +1,7 @@
 package io.github.guerra24.voxel.client.kernel.sound.soundsystem;
 
+import java.io.File;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
@@ -112,8 +114,12 @@ public class FilenameURL {
 					return null;
 				}
 			} else {
-				// Inside the JAR
-				url = getClass().getClassLoader().getResource(SoundSystemConfig.getSoundFilesPackage() + filename);
+				try {
+					url = new File(getClass().getClassLoader().getResource(SoundSystemConfig.getSoundFilesPackage() + filename).getPath()).toURI().toURL();
+				} catch (MalformedURLException e) {
+					errorMessage("File path error");
+					printStackTrace(e);
+				}
 			}
 		}
 		return url;
