@@ -34,6 +34,7 @@ out vec4 out_Color;
 
 uniform sampler2D dudvMap;
 uniform sampler2D normalMap;
+uniform sampler2D reflectionTexture;
 uniform float moveFactor;
 uniform vec3 lightColour;
 uniform vec3 skyColour;
@@ -45,10 +46,17 @@ const float reflectivity = 0.6;
 void main(void) {
 
 	vec2 ndc = (clipSpace.xy/clipSpace.w)/2.0 + 0.5;
+	vec2 reflectTexCoords = vec2(ndc.x, -ndc.y);
 	
 	vec2 distortedTexCoords = texture(dudvMap, vec2(textureCoords.x + moveFactor, textureCoords.y)).rg*0.1;
 	distortedTexCoords = textureCoords + vec2(distortedTexCoords.x, distortedTexCoords.y+moveFactor);
 	vec2 totalDistortion = (texture(dudvMap, distortedTexCoords).rg * 2.0 - 1.0) * waveStrength;
+	
+	reflectTexCoords += totalDistortion;
+	reflectTexCoords.x = clamp(reflectTexCoords.x, 0.001, 0.999);
+	reflectTexCoords.y = clamp(reflectTexCoords.y, -0.999, -0.001);
+	
+	vec4 reflectionColour = texture(reflectionTexture, reflectTexCoords);
 	
 	vec3 viewVector = normalize(toCameraVector);
 	float refractiveFactor = dot(viewVector, vec3( 0.0, 1.0, 0.0));
@@ -63,7 +71,8 @@ void main(void) {
 	specular = pow(specular, shineDamper);
 	vec3 specularHighlights = vec3(1.0,1.0,1.0) * specular * reflectivity;
 	
-	out_Color = vec4(0.0, 0.0, 0.8, 0.8) + vec4(specularHighlights, 0.0);
+	out_Color = mix(out_Color, vec4(0.0, 0.0, 0.2, 1.0), 0.2) + vec4(specularHighlights,0.0);
+	out_Color = mix(reflectionColour, out_Color, refractiveFactor);
 	out_Color = mix(vec4(skyColour,1.0),out_Color,visibility);
 
 }

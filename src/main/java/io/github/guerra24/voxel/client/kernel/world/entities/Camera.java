@@ -197,6 +197,10 @@ public class Camera implements IEntity {
 				}
 			}
 	}
+	
+	public void invertPitch(){
+		pitch = -pitch;
+	}
 
 	public void setMouse() {
 		setGrabbed(true);

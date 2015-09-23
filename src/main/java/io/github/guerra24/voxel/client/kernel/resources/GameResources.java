@@ -34,6 +34,7 @@ import io.github.guerra24.voxel.client.kernel.core.GameStates;
 import io.github.guerra24.voxel.client.kernel.graphics.Frustum;
 import io.github.guerra24.voxel.client.kernel.graphics.GuiRenderer;
 import io.github.guerra24.voxel.client.kernel.graphics.MasterRenderer;
+import io.github.guerra24.voxel.client.kernel.graphics.FrameBuffer;
 import io.github.guerra24.voxel.client.kernel.graphics.SkyboxRenderer;
 import io.github.guerra24.voxel.client.kernel.graphics.WaterRenderer;
 import io.github.guerra24.voxel.client.kernel.graphics.shaders.WaterShader;
@@ -81,6 +82,7 @@ public class GameResources {
 	private Gson gson;
 	private SoundSystem soundSystem;
 	private Frustum frustum;
+	private FrameBuffer frameBuffer;
 	private Physics physics;
 
 	/**
@@ -115,6 +117,7 @@ public class GameResources {
 		skyboxRenderer = new SkyboxRenderer(loader, renderer.getProjectionMatrix());
 		gameStates = new GameStates();
 		frustum = new Frustum();
+		frameBuffer = new FrameBuffer();
 		physics = new Physics(this);
 		Block.initBasicBlocks();
 	}
@@ -148,6 +151,7 @@ public class GameResources {
 	 */
 	public void cleanUp() {
 		waterShader.cleanUp();
+		frameBuffer.cleanUp();
 		guiRenderer.cleanUp();
 		renderer.cleanUp();
 		loader.cleanUp();
@@ -194,6 +198,10 @@ public class GameResources {
 		return camera;
 	}
 
+	public void setCamera(Camera camera) {
+		this.camera = camera;
+	}
+
 	public MasterRenderer getRenderer() {
 		return renderer;
 	}
@@ -232,6 +240,10 @@ public class GameResources {
 
 	public Physics getPhysics() {
 		return physics;
+	}
+
+	public FrameBuffer getFrameBuffer() {
+		return frameBuffer;
 	}
 
 }

@@ -33,6 +33,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Random;
 
+import com.google.gson.JsonSyntaxException;
+
 import io.github.guerra24.voxel.client.kernel.api.API;
 import io.github.guerra24.voxel.client.kernel.core.KernelConstants;
 import io.github.guerra24.voxel.client.kernel.resources.GameResources;
@@ -98,6 +100,7 @@ public class World {
 		this.name = name;
 		this.seed = seed;
 		this.dim = dimension;
+		gm.getCamera().setPosition(new Vector3f(Maths.randInt(-200, 200), 128, Maths.randInt(-200, 200)));
 		if (existWorld()) {
 			loadWorld(gm);
 		}
@@ -114,7 +117,6 @@ public class World {
 	private void initialize(GameResources gm) {
 		noise = new SimplexNoise(128, 0.2f, seed.nextInt());
 		chunks = new HashMap<ChunkKey, Chunk>();
-		gm.getCamera().setPosition(new Vector3f(Maths.randInt(-200, 200), 128, Maths.randInt(-200, 200)));
 		gm.getPhysics().getMobManager().getPlayer().setPosition(gm.getCamera().getPosition());
 	}
 
@@ -147,7 +149,7 @@ public class World {
 					}
 					if (!hasChunk(dim, xx, zz)) {
 						if (existChunkFile(dim, xx, zz)) {
-							loadChunk(dim, xx, zz, gm);
+							loadChunk(dim, xx, zz, gm, api);
 						} else {
 							addChunk(new Chunk(dim, xx, zz, api, this));
 							saveChunk(dim, xx, zz, gm);
@@ -187,7 +189,7 @@ public class World {
 						* (KernelConstants.genRadius - KernelConstants.radiusLimit)) {
 					if (!hasChunk(dim, xx, zz)) {
 						if (existChunkFile(dim, xx, zz)) {
-							loadChunk(dim, xx, zz, gm);
+							loadChunk(dim, xx, zz, gm, api);
 						} else {
 							addChunk(new Chunk(dim, xx, zz, api, this));
 							saveChunk(dim, xx, zz, gm);
@@ -273,10 +275,10 @@ public class World {
 			File filec = new File(KernelConstants.worldPath + name + "/chunks_" + dim + "/");
 			filec.mkdirs();
 		}
-		String json = gm.getGson().toJson(seed);
+		String jsonwo = gm.getGson().toJson(seed);
 		try {
 			FileWriter file = new FileWriter(KernelConstants.worldPath + name + "/world.json");
-			file.write(json);
+			file.write(jsonwo);
 			file.flush();
 			file.close();
 		} catch (IOException e) {
@@ -333,15 +335,24 @@ public class World {
 	 *            Z Coord
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public void loadChunk(int dim, int cx, int cz, GameResources gm) {
+	public void loadChunk(int dim, int cx, int cz, GameResources gm, API api) {
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(KernelConstants.worldPath + name + "/chunks_" + dim
 					+ "/chunk_" + dim + "_" + cx + "_" + cz + ".json"));
 			Chunk chunk = gm.getGson().fromJson(br, Chunk.class);
-			chunk.loadInit();
+			if (chunk != null)
+				chunk.loadInit();
+			else {
+				Logger.warn(Thread.currentThread(), "Re-Creating Chunk-" + dim + cx + "-" + cz);
+				chunk = new Chunk(dim, cx, cz, api, this);
+			}
 			addChunk(chunk);
-		} catch (FileNotFoundException e) {
+		} catch (JsonSyntaxException | FileNotFoundException e) {
 			e.printStackTrace();
+			Logger.warn(Thread.currentThread(), "Re-Creating Chunk-" + dim + cx + "-" + cz);
+			Chunk chunk = new Chunk(dim, cx, cz, api, this);
+			addChunk(chunk);
+			saveChunk(dim, cx, cz, gm);
 		}
 	}
 

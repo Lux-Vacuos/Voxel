@@ -44,7 +44,7 @@ public class Player extends Entity implements IEntity {
 	@Override
 	public void update(float delta, GameResources gm, GuiResources gi) {
 		super.increasePosition(0, upwardsSpeed * delta, 0);
-		if (false) {
+		if (checkAABB(getPosition(), new Vector3f(0, 66, 0))) {
 			upwardsSpeed += GRAVITY * delta;
 			isInAir = true;
 		} else {
@@ -56,9 +56,8 @@ public class Player extends Entity implements IEntity {
 	public void jump() {
 		if (!isInAir) {
 			try {
-				if (false) {
+				if (!checkAABB(getPosition(), new Vector3f(0, 128, 0))) {
 					this.upwardsSpeed = JUMP_POWER;
-
 					isInAir = true;
 				} else {
 					upwardsSpeed = 0;
@@ -67,6 +66,12 @@ public class Player extends Entity implements IEntity {
 			} finally {
 			}
 		}
+	}
+
+	private boolean checkAABB(Vector3f pos, Vector3f coll) {
+		if (pos.y > coll.y)
+			return true;
+		return false;
 	}
 
 	@Override

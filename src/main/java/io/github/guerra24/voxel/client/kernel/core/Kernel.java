@@ -76,7 +76,7 @@ public class Kernel implements IKernel {
 	/**
 	 * World Thread
 	 */
-	private static WorldThread worldThread;
+	public static WorldThread worldThread;
 	/**
 	 * Update Thread
 	 */
@@ -204,6 +204,12 @@ public class Kernel implements IKernel {
 			break;
 		case GAME:
 			gm.getFrustum().calculateFrustum(gm);
+			gm.getFrameBuffer().begin();
+			gm.getCamera().invertPitch();
+			gm.getRenderer().prepare();
+			gm.getSkyboxRenderer().render(KernelConstants.RED, KernelConstants.GREEN, KernelConstants.BLUE, delta, gm);
+			gm.getFrameBuffer().end();
+			gm.getCamera().invertPitch();
 			gm.getRenderer().prepare();
 			world.updateChunksRender(gm);
 			gm.getRenderer().renderEntity(gm.getPhysics().getMobManager().getMobs(), gm.lights, gm);

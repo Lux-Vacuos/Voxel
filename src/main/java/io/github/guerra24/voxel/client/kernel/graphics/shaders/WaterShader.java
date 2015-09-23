@@ -53,6 +53,10 @@ public class WaterShader extends ShaderProgram {
 	/**
 	 * DUDVMap Texture ID
 	 */
+	private int location_texture;
+	/**
+	 * DUDVMap Texture ID
+	 */
 	private int location_dudvMap;
 	/**
 	 * NormalMap Texture ID
@@ -105,6 +109,7 @@ public class WaterShader extends ShaderProgram {
 		location_viewMatrix = getUniformLocation("viewMatrix");
 		location_modelMatrix = getUniformLocation("modelMatrix");
 		location_dudvMap = getUniformLocation("dudvMap");
+		location_texture = getUniformLocation("reflectionTexture");
 		location_normalMap = getUniformLocation("normalMap");
 		location_moveFactor = getUniformLocation("moveFactor");
 		location_cameraPosition = getUniformLocation("cameraPosition");
@@ -137,6 +142,7 @@ public class WaterShader extends ShaderProgram {
 	public void connectTextureUnits() {
 		super.loadInt(location_dudvMap, 0);
 		super.loadInt(location_normalMap, 1);
+		super.loadInt(location_texture, 2);
 	}
 
 	/**

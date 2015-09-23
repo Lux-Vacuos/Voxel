@@ -73,6 +73,10 @@ public class GuiTexture {
 		return texture;
 	}
 
+	public void setTexture(int texture) {
+		this.texture = texture;
+	}
+
 	/**
 	 * Get Position
 	 * 

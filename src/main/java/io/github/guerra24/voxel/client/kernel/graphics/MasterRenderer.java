@@ -46,7 +46,6 @@ import io.github.guerra24.voxel.client.kernel.resources.models.TexturedModel;
 import io.github.guerra24.voxel.client.kernel.util.vector.Matrix4f;
 import io.github.guerra24.voxel.client.kernel.util.vector.Vector3f;
 import io.github.guerra24.voxel.client.kernel.world.block.BlockEntity;
-import io.github.guerra24.voxel.client.kernel.world.entities.Camera;
 import io.github.guerra24.voxel.client.kernel.world.entities.Entity;
 import io.github.guerra24.voxel.client.kernel.world.entities.IEntity;
 import io.github.guerra24.voxel.client.kernel.world.entities.Light;
@@ -146,7 +145,7 @@ public class MasterRenderer {
 							entity.getEntity().getPosition().y, entity.getEntity().getPosition().z))
 						processEntity(entity.getEntity());
 		}
-		renderEntity(lights, gm.getCamera());
+		renderEntity(lights, gm);
 	}
 
 	/**
@@ -167,7 +166,7 @@ public class MasterRenderer {
 		shader.loadDirectLightDirection(new Vector3f(-80, -100, -40));
 		shader.loadblendFactor(gm.getSkyboxRenderer().getBlendFactor());
 		shader.loadTime(gm.getSkyboxRenderer().getTime());
-		entityRenderer.renderBlockEntity(blockEntities);
+		entityRenderer.renderBlockEntity(blockEntities, gm);
 		shader.stop();
 		blockEntities.clear();
 	}
@@ -181,13 +180,13 @@ public class MasterRenderer {
 	 *            A Camera
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	private void renderEntity(List<Light> lights, Camera camera) {
+	private void renderEntity(List<Light> lights, GameResources gm) {
 		shader.start();
 		shader.loadProjectionMatrix(projectionMatrix);
 		shader.loadLights(lights);
-		shader.loadviewMatrix(camera);
+		shader.loadviewMatrix(gm.getCamera());
 		shader.loadDirectLightDirection(new Vector3f(-80, -100, -40));
-		entityRenderer.renderEntity(entities);
+		entityRenderer.renderEntity(entities, gm);
 		shader.stop();
 		entities.clear();
 	}

@@ -75,7 +75,10 @@ public class Chunk {
 		blocks = new byte[sizeX][sizeY][sizeZ];
 
 		createChunk(api, world);
-		rebuildChunk(world);
+		rebuildChunk1(world);
+		rebuildChunk2(world);
+		rebuildChunk3(world);
+		rebuildChunk4(world);
 	}
 
 	public void loadInit() {
@@ -104,7 +107,10 @@ public class Chunk {
 			waterstemp.addAll(waters);
 			readyToRender = false;
 			clear();
-			rebuildChunk(world);
+			rebuildChunk1(world);
+			rebuildChunk2(world);
+			rebuildChunk3(world);
+			rebuildChunk4(world);
 			readyToRender = true;
 			cubes1temp.clear();
 			cubes2temp.clear();
@@ -156,192 +162,200 @@ public class Chunk {
 		}
 	}
 
-	/*
-	 * MODEL FOR CULLING
-	 * 
-	 * if (cullFaceWest(x, y, z)) { } if (cullFaceEast(x, y, z)) { } if
-	 * (cullFaceDown(x, y, z)) { } if (cullFaceUp(x, y, z)) { } if
-	 * (cullFaceNorth(x, y, z)) { } if (cullFaceSouth(x, y, z)) { }
-	 */
-	public void rebuildChunk(World world) {
+	public void rebuildChunk1(World world) {
 		sec1NotClear = false;
-		sec2NotClear = false;
-		sec3NotClear = false;
-		sec4NotClear = false;
 		for (int x = 0; x < sizeX; x++) {
 			for (int z = 0; z < sizeZ; z++) {
-				for (int y = 0; y < sizeY; y++) {
+				for (int y = 0; y < 32; y++) {
 					if (Block.getBlock(blocks[x][y][z]) == Block.Torch) {
-						if (y < 32) {
-							cubes1.add(Block.getBlock(blocks[x][y][z])
-									.getSingleModel(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
-							lights1.add(
-									new Light(new Vector3f((x + cx * sizeX) + 0.5f, y + 0.8f, (z + cz * sizeZ) - 0.5f),
-											new Vector3f(1, 1, 1), new Vector3f(1, 0.1f, 0.09f)));
-							sec1NotClear = true;
-						}
-						if (y > 31 && y < 64) {
-							cubes2.add(Block.getBlock(blocks[x][y][z])
-									.getSingleModel(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
-							lights2.add(
-									new Light(new Vector3f((x + cx * sizeX) + 0.5f, y + 0.8f, (z + cz * sizeZ) - 0.5f),
-											new Vector3f(1, 1, 1), new Vector3f(1, 0.1f, 0.09f)));
-							sec2NotClear = true;
-						}
-						if (y > 63 && y < 96) {
-							cubes3.add(Block.getBlock(blocks[x][y][z])
-									.getSingleModel(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
-							lights3.add(
-									new Light(new Vector3f((x + cx * sizeX) + 0.5f, y + 0.8f, (z + cz * sizeZ) - 0.5f),
-											new Vector3f(1, 1, 1), new Vector3f(1, 0.1f, 0.09f)));
-							sec3NotClear = true;
-						}
-						if (y > 95 && y < 129) {
-							cubes4.add(Block.getBlock(blocks[x][y][z])
-									.getSingleModel(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
-							lights4.add(
-									new Light(new Vector3f((x + cx * sizeX) + 0.5f, y + 0.8f, (z + cz * sizeZ) - 0.5f),
-											new Vector3f(1, 1, 1), new Vector3f(1, 0.1f, 0.09f)));
-							sec4NotClear = true;
-						}
+						cubes1.add(Block.getBlock(blocks[x][y][z])
+								.getSingleModel(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
+						lights1.add(new Light(new Vector3f((x + cx * sizeX) + 0.5f, y + 0.8f, (z + cz * sizeZ) - 0.5f),
+								new Vector3f(1, 1, 1), new Vector3f(1, 0.1f, 0.09f)));
+						sec1NotClear = true;
 					} else if (Block.getBlock(blocks[x][y][z]) != Block.Air
 							&& Block.getBlock(blocks[x][y][z]) != Block.Water) {
 						if (cullFaceWest(x + cx * sizeX, y, z + cz * sizeZ, world)) {
-							if (y < 32) {
-								cubes1.add(Block.getBlock(blocks[x][y][z])
-										.getFaceWest(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
-								sec1NotClear = true;
-							}
-							if (y > 31 && y < 64) {
-								cubes2.add(Block.getBlock(blocks[x][y][z])
-										.getFaceWest(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
-								sec2NotClear = true;
-							}
-							if (y > 63 && y < 96) {
-								cubes3.add(Block.getBlock(blocks[x][y][z])
-										.getFaceWest(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
-								sec3NotClear = true;
-							}
-							if (y > 95 && y < 129) {
-								cubes4.add(Block.getBlock(blocks[x][y][z])
-										.getFaceWest(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
-								sec4NotClear = true;
-							}
+							cubes1.add(Block.getBlock(blocks[x][y][z])
+									.getFaceWest(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
+							sec1NotClear = true;
 						}
 						if (cullFaceEast(x + cx * sizeX, y, z + cz * sizeZ, world)) {
-							if (y < 32) {
-								cubes1.add(Block.getBlock(blocks[x][y][z])
-										.getFaceEast(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
-								sec1NotClear = true;
-							}
-							if (y > 31 && y < 64) {
-								cubes2.add(Block.getBlock(blocks[x][y][z])
-										.getFaceEast(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
-								sec2NotClear = true;
-							}
-							if (y > 63 && y < 96) {
-								cubes3.add(Block.getBlock(blocks[x][y][z])
-										.getFaceEast(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
-								sec3NotClear = true;
-							}
-							if (y > 95 && y < 129) {
-								cubes4.add(Block.getBlock(blocks[x][y][z])
-										.getFaceEast(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
-								sec4NotClear = true;
-							}
+							cubes1.add(Block.getBlock(blocks[x][y][z])
+									.getFaceEast(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
+							sec1NotClear = true;
 						}
 						if (cullFaceDown(x + cx * sizeX, y, z + cz * sizeZ)) {
-							if (y < 32) {
-								cubes1.add(Block.getBlock(blocks[x][y][z])
-										.getFaceDown(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
-								sec1NotClear = true;
-							}
-							if (y > 31 && y < 64) {
-								cubes2.add(Block.getBlock(blocks[x][y][z])
-										.getFaceDown(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
-								sec2NotClear = true;
-							}
-							if (y > 63 && y < 96) {
-								cubes3.add(Block.getBlock(blocks[x][y][z])
-										.getFaceDown(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
-								sec3NotClear = true;
-							}
-							if (y > 95 && y < 129) {
-								cubes4.add(Block.getBlock(blocks[x][y][z])
-										.getFaceDown(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
-								sec4NotClear = true;
-							}
+							cubes1.add(Block.getBlock(blocks[x][y][z])
+									.getFaceDown(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
+							sec1NotClear = true;
 						}
 						if (cullFaceUpSolidBlock(x + cx * sizeX, y, z + cz * sizeZ)) {
-							if (y < 32) {
-								cubes1.add(Block.getBlock(blocks[x][y][z])
-										.getFaceUp(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
-								sec1NotClear = true;
-							}
-							if (y > 31 && y < 64) {
-								cubes2.add(Block.getBlock(blocks[x][y][z])
-										.getFaceUp(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
-								sec2NotClear = true;
-							}
-							if (y > 63 && y < 96) {
-								cubes3.add(Block.getBlock(blocks[x][y][z])
-										.getFaceUp(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
-								sec3NotClear = true;
-							}
-							if (y > 95 && y < 129) {
-								cubes4.add(Block.getBlock(blocks[x][y][z])
-										.getFaceUp(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
-								sec4NotClear = true;
-							}
+							cubes1.add(Block.getBlock(blocks[x][y][z])
+									.getFaceUp(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
+							sec1NotClear = true;
 						}
 						if (cullFaceNorth(x + cx * sizeX, y, z + cz * sizeZ, world)) {
-							if (y < 32) {
-								cubes1.add(Block.getBlock(blocks[x][y][z])
-										.getFaceNorth(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
-								sec1NotClear = true;
-							}
-							if (y > 31 && y < 64) {
-								cubes2.add(Block.getBlock(blocks[x][y][z])
-										.getFaceNorth(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
-								sec2NotClear = true;
-							}
-							if (y > 63 && y < 96) {
-								cubes3.add(Block.getBlock(blocks[x][y][z])
-										.getFaceNorth(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
-								sec3NotClear = true;
-							}
-							if (y > 95 && y < 129) {
-								cubes4.add(Block.getBlock(blocks[x][y][z])
-										.getFaceNorth(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
-								sec4NotClear = true;
-							}
+							cubes1.add(Block.getBlock(blocks[x][y][z])
+									.getFaceNorth(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
+							sec1NotClear = true;
 						}
 						if (cullFaceSouth(x + cx * sizeX, y, z + cz * sizeZ, world)) {
-							if (y < 32) {
-								cubes1.add(Block.getBlock(blocks[x][y][z])
-										.getFaceSouth(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
-								sec1NotClear = true;
-							}
-							if (y > 31 && y < 64) {
-								cubes2.add(Block.getBlock(blocks[x][y][z])
-										.getFaceSouth(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
-								sec2NotClear = true;
-							}
-							if (y > 63 && y < 96) {
-								cubes3.add(Block.getBlock(blocks[x][y][z])
-										.getFaceSouth(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
-								sec3NotClear = true;
-							}
-							if (y > 95 && y < 129) {
-								cubes4.add(Block.getBlock(blocks[x][y][z])
-										.getFaceSouth(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
-								sec4NotClear = true;
-							}
+							cubes1.add(Block.getBlock(blocks[x][y][z])
+									.getFaceSouth(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
+							sec1NotClear = true;
+						}
+					}
+				}
+			}
+		}
+	}
+
+	public void rebuildChunk2(World world) {
+		sec2NotClear = false;
+		for (int x = 0; x < sizeX; x++) {
+			for (int z = 0; z < sizeZ; z++) {
+				for (int y = 32; y < 64; y++) {
+					if (Block.getBlock(blocks[x][y][z]) == Block.Torch) {
+						cubes2.add(Block.getBlock(blocks[x][y][z])
+								.getSingleModel(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
+						lights2.add(new Light(new Vector3f((x + cx * sizeX) + 0.5f, y + 0.8f, (z + cz * sizeZ) - 0.5f),
+								new Vector3f(1, 1, 1), new Vector3f(1, 0.1f, 0.09f)));
+						sec2NotClear = true;
+					} else if (Block.getBlock(blocks[x][y][z]) != Block.Air
+							&& Block.getBlock(blocks[x][y][z]) != Block.Water) {
+						if (cullFaceWest(x + cx * sizeX, y, z + cz * sizeZ, world)) {
+							cubes2.add(Block.getBlock(blocks[x][y][z])
+									.getFaceWest(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
+							sec2NotClear = true;
+						}
+						if (cullFaceEast(x + cx * sizeX, y, z + cz * sizeZ, world)) {
+							cubes2.add(Block.getBlock(blocks[x][y][z])
+									.getFaceEast(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
+							sec2NotClear = true;
+						}
+						if (cullFaceDown(x + cx * sizeX, y, z + cz * sizeZ)) {
+							cubes2.add(Block.getBlock(blocks[x][y][z])
+									.getFaceDown(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
+							sec2NotClear = true;
+						}
+						if (cullFaceUpSolidBlock(x + cx * sizeX, y, z + cz * sizeZ)) {
+							cubes2.add(Block.getBlock(blocks[x][y][z])
+									.getFaceUp(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
+							sec2NotClear = true;
+						}
+						if (cullFaceNorth(x + cx * sizeX, y, z + cz * sizeZ, world)) {
+							cubes2.add(Block.getBlock(blocks[x][y][z])
+									.getFaceNorth(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
+							sec2NotClear = true;
+						}
+						if (cullFaceSouth(x + cx * sizeX, y, z + cz * sizeZ, world)) {
+							cubes2.add(Block.getBlock(blocks[x][y][z])
+									.getFaceSouth(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
+							sec2NotClear = true;
+						}
+					}
+				}
+			}
+		}
+	}
+
+	public void rebuildChunk3(World world) {
+		sec3NotClear = false;
+		for (int x = 0; x < sizeX; x++) {
+			for (int z = 0; z < sizeZ; z++) {
+				for (int y = 64; y < 96; y++) {
+					if (Block.getBlock(blocks[x][y][z]) == Block.Torch) {
+						cubes3.add(Block.getBlock(blocks[x][y][z])
+								.getSingleModel(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
+						lights3.add(new Light(new Vector3f((x + cx * sizeX) + 0.5f, y + 0.8f, (z + cz * sizeZ) - 0.5f),
+								new Vector3f(1, 1, 1), new Vector3f(1, 0.1f, 0.09f)));
+						sec3NotClear = true;
+					} else if (Block.getBlock(blocks[x][y][z]) != Block.Air
+							&& Block.getBlock(blocks[x][y][z]) != Block.Water) {
+						if (cullFaceWest(x + cx * sizeX, y, z + cz * sizeZ, world)) {
+							cubes3.add(Block.getBlock(blocks[x][y][z])
+									.getFaceWest(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
+							sec3NotClear = true;
+						}
+						if (cullFaceEast(x + cx * sizeX, y, z + cz * sizeZ, world)) {
+							cubes3.add(Block.getBlock(blocks[x][y][z])
+									.getFaceEast(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
+							sec3NotClear = true;
+						}
+						if (cullFaceDown(x + cx * sizeX, y, z + cz * sizeZ)) {
+							cubes3.add(Block.getBlock(blocks[x][y][z])
+									.getFaceDown(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
+							sec3NotClear = true;
+						}
+						if (cullFaceUpSolidBlock(x + cx * sizeX, y, z + cz * sizeZ)) {
+							cubes3.add(Block.getBlock(blocks[x][y][z])
+									.getFaceUp(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
+							sec3NotClear = true;
+						}
+						if (cullFaceNorth(x + cx * sizeX, y, z + cz * sizeZ, world)) {
+							cubes3.add(Block.getBlock(blocks[x][y][z])
+									.getFaceNorth(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
+							sec3NotClear = true;
+						}
+						if (cullFaceSouth(x + cx * sizeX, y, z + cz * sizeZ, world)) {
+							cubes3.add(Block.getBlock(blocks[x][y][z])
+									.getFaceSouth(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
+							sec3NotClear = true;
 						}
 					} else if (blocks[x][y][z] == Block.Water.getId()) {
 						if (cullFaceUpWater(x + cx * sizeX, y, z + cz * sizeZ)) {
 							waters.add(Block.Water.getWaterTitle(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
 							sec3NotClear = true;
+						}
+					}
+				}
+			}
+		}
+	}
+
+	public void rebuildChunk4(World world) {
+		sec4NotClear = false;
+		for (int x = 0; x < sizeX; x++) {
+			for (int z = 0; z < sizeZ; z++) {
+				for (int y = 96; y < 128; y++) {
+					if (Block.getBlock(blocks[x][y][z]) == Block.Torch) {
+						cubes4.add(Block.getBlock(blocks[x][y][z])
+								.getSingleModel(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
+						lights4.add(new Light(new Vector3f((x + cx * sizeX) + 0.5f, y + 0.8f, (z + cz * sizeZ) - 0.5f),
+								new Vector3f(1, 1, 1), new Vector3f(1, 0.1f, 0.09f)));
+						sec4NotClear = true;
+					} else if (Block.getBlock(blocks[x][y][z]) != Block.Air
+							&& Block.getBlock(blocks[x][y][z]) != Block.Water) {
+						if (cullFaceWest(x + cx * sizeX, y, z + cz * sizeZ, world)) {
+							cubes4.add(Block.getBlock(blocks[x][y][z])
+									.getFaceWest(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
+							sec4NotClear = true;
+						}
+						if (cullFaceEast(x + cx * sizeX, y, z + cz * sizeZ, world)) {
+							cubes4.add(Block.getBlock(blocks[x][y][z])
+									.getFaceEast(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
+							sec4NotClear = true;
+						}
+						if (cullFaceDown(x + cx * sizeX, y, z + cz * sizeZ)) {
+							cubes4.add(Block.getBlock(blocks[x][y][z])
+									.getFaceDown(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
+							sec4NotClear = true;
+						}
+						if (cullFaceUpSolidBlock(x + cx * sizeX, y, z + cz * sizeZ)) {
+							cubes4.add(Block.getBlock(blocks[x][y][z])
+									.getFaceUp(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
+							sec4NotClear = true;
+						}
+						if (cullFaceNorth(x + cx * sizeX, y, z + cz * sizeZ, world)) {
+							cubes4.add(Block.getBlock(blocks[x][y][z])
+									.getFaceNorth(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
+							sec4NotClear = true;
+						}
+						if (cullFaceSouth(x + cx * sizeX, y, z + cz * sizeZ, world)) {
+							cubes4.add(Block.getBlock(blocks[x][y][z])
+									.getFaceSouth(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
+							sec4NotClear = true;
 						}
 					}
 				}
