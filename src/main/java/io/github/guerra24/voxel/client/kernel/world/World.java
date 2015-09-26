@@ -100,7 +100,7 @@ public class World {
 		this.name = name;
 		this.seed = seed;
 		this.dim = dimension;
-		gm.getCamera().setPosition(new Vector3f(Maths.randInt(-200, 200), 128, Maths.randInt(-200, 200)));
+		gm.getCamera().setPosition(new Vector3f(0, 128, 0));
 		if (existWorld()) {
 			loadWorld(gm);
 		}

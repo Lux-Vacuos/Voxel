@@ -9,9 +9,9 @@ public class AABB {
 	public AABB(final float x, final float y, final float z) {
 		center = new Vector3f();
 		r = new float[3];
-		r[0] = x * 0.5f;
-		r[1] = y * 0.5f;
-		r[2] = z * 0.5f;
+		r[0] = x;
+		r[1] = y;
+		r[2] = z;
 	}
 
 	public void update(final Vector3f position) {
@@ -21,13 +21,13 @@ public class AABB {
 	}
 
 	public static boolean testAABB(final AABB box1, final AABB box2) {
-		if (Math.abs(box1.center.x - box2.center.x) > (box1.r[0] + box2.r[0]))
-			return false;
-		if (Math.abs(box1.center.y - box2.center.y) > (box1.r[1] + box2.r[1]))
-			return false;
-		if (Math.abs(box1.center.z - box2.center.z) > (box1.r[2] + box2.r[2]))
-			return false;
-		return true;
+		if ((box1.center.x > box2.center.x) && (box1.center.x + box1.r[0] < box2.center.x + box2.r[0]))
+			return true;
+		if ((box1.center.y > box2.center.y) && (box1.center.y + box1.r[1] < box2.center.y + box2.r[1]))
+			return true;
+		if ((box1.center.z > box2.center.z) && (box1.center.z + box1.r[2] < box2.center.z + box2.r[2]))
+			return true;
+		return false;
 	}
-	
+
 }

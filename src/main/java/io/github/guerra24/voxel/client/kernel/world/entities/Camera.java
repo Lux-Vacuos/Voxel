@@ -24,30 +24,8 @@
 
 package io.github.guerra24.voxel.client.kernel.world.entities;
 
-import static io.github.guerra24.voxel.client.kernel.input.Keyboard.KEY_1;
-import static io.github.guerra24.voxel.client.kernel.input.Keyboard.KEY_2;
-import static io.github.guerra24.voxel.client.kernel.input.Keyboard.KEY_3;
-import static io.github.guerra24.voxel.client.kernel.input.Keyboard.KEY_4;
-import static io.github.guerra24.voxel.client.kernel.input.Keyboard.KEY_5;
-import static io.github.guerra24.voxel.client.kernel.input.Keyboard.KEY_6;
-import static io.github.guerra24.voxel.client.kernel.input.Keyboard.KEY_7;
-import static io.github.guerra24.voxel.client.kernel.input.Keyboard.KEY_8;
-import static io.github.guerra24.voxel.client.kernel.input.Keyboard.KEY_A;
-import static io.github.guerra24.voxel.client.kernel.input.Keyboard.KEY_D;
-import static io.github.guerra24.voxel.client.kernel.input.Keyboard.KEY_F3;
-import static io.github.guerra24.voxel.client.kernel.input.Keyboard.KEY_K;
-import static io.github.guerra24.voxel.client.kernel.input.Keyboard.KEY_LCONTROL;
-import static io.github.guerra24.voxel.client.kernel.input.Keyboard.KEY_LSHIFT;
-import static io.github.guerra24.voxel.client.kernel.input.Keyboard.KEY_R;
-import static io.github.guerra24.voxel.client.kernel.input.Keyboard.KEY_S;
-import static io.github.guerra24.voxel.client.kernel.input.Keyboard.KEY_SPACE;
-import static io.github.guerra24.voxel.client.kernel.input.Keyboard.KEY_W;
-import static io.github.guerra24.voxel.client.kernel.input.Keyboard.isKeyDown;
-import static io.github.guerra24.voxel.client.kernel.input.Mouse.getDX;
-import static io.github.guerra24.voxel.client.kernel.input.Mouse.getDY;
-import static io.github.guerra24.voxel.client.kernel.input.Mouse.isButtonDown;
-import static io.github.guerra24.voxel.client.kernel.input.Mouse.setCursorPosition;
-import static io.github.guerra24.voxel.client.kernel.input.Mouse.setGrabbed;
+import static io.github.guerra24.voxel.client.kernel.input.Keyboard.*;
+import static io.github.guerra24.voxel.client.kernel.input.Mouse.*;
 
 import io.github.guerra24.voxel.client.kernel.core.KernelConstants;
 import io.github.guerra24.voxel.client.kernel.graphics.opengl.Display;
@@ -102,9 +80,52 @@ public class Camera implements IEntity {
 		} else if (pitch - mouseDY > maxLookUp) {
 			pitch = maxLookUp;
 		}
+
+		Vector3f v = this.getPosition();
+
+		float tempx = (v.x);
+		int tempX = (int) tempx;
+		if (v.x < 0) {
+			tempx = (v.x);
+			tempX = (int) tempx - 1;
+		}
+
+		float tempz = (v.z);
+		int tempZ = (int) tempz;
+		if (v.z > 0) {
+			tempz = (v.z);
+			tempZ = (int) tempz + 1;
+		}
+
+		float tempy = (v.y);
+		int tempY = (int) tempy - 1;
+
+		int bx = (int) tempX;
+		int by = (int) tempY;
+		int bz = (int) tempZ;
+
 		if (isKeyDown(KEY_W)) {
-			position.z += -Math.cos(Math.toRadians(yaw)) * delta * speed * multiplierMovement;
-			position.x += Math.sin(Math.toRadians(yaw)) * delta * speed * multiplierMovement;
+
+
+			if (yaw > 90 && yaw < 270) {
+				if (world.getGlobalBlock(world.dim, bx, by, bz + 1) == 0)
+					position.z += -Math.cos(Math.toRadians(yaw)) * delta * speed * multiplierMovement;
+			} else if ((yaw > 270 && yaw < 360) || (yaw > 0 && yaw < 90)) {
+				if (world.getGlobalBlock(world.dim, bx, by, bz - 1) == 0)
+					position.z += -Math.cos(Math.toRadians(yaw)) * delta * speed * multiplierMovement;
+			} else {
+				position.z += -Math.cos(Math.toRadians(yaw)) * delta * speed * multiplierMovement;
+			}
+			
+			if (yaw > 0 && yaw < 180) {
+				if (world.getGlobalBlock(world.dim, bx + 1, by, bz) == 0)
+					position.x += Math.sin(Math.toRadians(yaw)) * delta * speed * multiplierMovement;
+			} else if (yaw > 180 && yaw < 360) {
+				if (world.getGlobalBlock(world.dim, bx - 1, by, bz) == 0)
+					position.x += Math.sin(Math.toRadians(yaw)) * delta * speed * multiplierMovement;
+			} else {
+				position.x += Math.sin(Math.toRadians(yaw)) * delta * speed * multiplierMovement;
+			}
 			isMoved = true;
 
 		} else if (isKeyDown(KEY_S)) {
@@ -135,6 +156,10 @@ public class Camera implements IEntity {
 			speed = 1;
 		} else {
 			speed = 0.2f;
+		}
+		if (isKeyDown(KEY_Y)) {
+			System.out.println(position);
+			System.out.println(yaw);
 		}
 
 		updatePlayerState(gi);
