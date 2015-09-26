@@ -31,6 +31,9 @@ package io.github.guerra24.voxel.client.kernel.resources.models;
  * @category Assets
  */
 public class WaterTile {
+
+	private RawModel quad;
+
 	/**
 	 * Tile Size
 	 */
@@ -88,6 +91,14 @@ public class WaterTile {
 	 */
 	public float getZ() {
 		return z;
+	}
+
+	public RawModel getQuad() {
+		return quad;
+	}
+
+	public static float getTileSize() {
+		return TILE_SIZE;
 	}
 
 }

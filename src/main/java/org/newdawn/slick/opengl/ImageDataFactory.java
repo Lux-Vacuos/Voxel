@@ -64,9 +64,6 @@ public class ImageDataFactory {
 
 		ref = ref.toLowerCase();
 
-		if (ref.endsWith(".tga")) {
-			return new TGAImageData();
-		}
 		if (ref.endsWith(".png")) {
 			CompositeImageData data = new CompositeImageData();
 			if (usePngLoader) {

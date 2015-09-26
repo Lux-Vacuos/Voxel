@@ -2,7 +2,6 @@ package org.newdawn.slick.loading;
 
 import java.util.ArrayList;
 
-import org.newdawn.slick.openal.SoundStore;
 import org.newdawn.slick.opengl.InternalTextureLoader;
 import org.newdawn.slick.util.Log;
 
@@ -37,7 +36,6 @@ public class LoadingList {
 		single = new LoadingList();
 
 		InternalTextureLoader.get().setDeferredLoading(loading);
-		SoundStore.get().setDeferredLoading(loading);
 	}
 
 	/**

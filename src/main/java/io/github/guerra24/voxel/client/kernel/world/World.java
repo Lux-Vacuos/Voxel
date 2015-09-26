@@ -343,13 +343,13 @@ public class World {
 			if (chunk != null)
 				chunk.loadInit();
 			else {
-				Logger.warn(Thread.currentThread(), "Re-Creating Chunk-" + dim + cx + "-" + cz);
+				Logger.warn(Thread.currentThread(), "Re-Creating Chunk " + dim + " " + cx + " " + cz);
 				chunk = new Chunk(dim, cx, cz, api, this);
 			}
 			addChunk(chunk);
 		} catch (JsonSyntaxException | FileNotFoundException e) {
 			e.printStackTrace();
-			Logger.warn(Thread.currentThread(), "Re-Creating Chunk-" + dim + cx + "-" + cz);
+			Logger.warn(Thread.currentThread(), "Re-Creating Chunk " + dim + " " + cx + " " + cz);
 			Chunk chunk = new Chunk(dim, cx, cz, api, this);
 			addChunk(chunk);
 			saveChunk(dim, cx, cz, gm);

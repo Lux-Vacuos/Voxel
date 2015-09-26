@@ -42,7 +42,6 @@ import static io.github.guerra24.voxel.client.kernel.input.Keyboard.KEY_R;
 import static io.github.guerra24.voxel.client.kernel.input.Keyboard.KEY_S;
 import static io.github.guerra24.voxel.client.kernel.input.Keyboard.KEY_SPACE;
 import static io.github.guerra24.voxel.client.kernel.input.Keyboard.KEY_W;
-import static io.github.guerra24.voxel.client.kernel.input.Keyboard.KEY_Y;
 import static io.github.guerra24.voxel.client.kernel.input.Keyboard.isKeyDown;
 import static io.github.guerra24.voxel.client.kernel.input.Mouse.getDX;
 import static io.github.guerra24.voxel.client.kernel.input.Mouse.getDY;
@@ -85,7 +84,7 @@ public class Camera implements IEntity {
 	}
 
 	@Override
-	public void update(float delta, GameResources gm, GuiResources gi) {
+	public void update(float delta, GameResources gm, GuiResources gi, World world) {
 		isMoved = false;
 		float mouseDX = getDX() * delta * mouseSpeed * 0.16f * multiplierMouse;
 		float mouseDY = getDY() * delta * mouseSpeed * 0.16f * multiplierMouse;
@@ -125,13 +124,9 @@ public class Camera implements IEntity {
 			isMoved = true;
 		}
 		if (isKeyDown(KEY_SPACE)) {
-			// position.y += delta * speed
-			// * multiplierMovement;
 			gm.getPhysics().getMobManager().getPlayer().jump();
 		}
 		if (isKeyDown(KEY_LSHIFT)) {
-			// position.y -= delta * speed
-			// * multiplierMovement;
 			speed = 0.05f;
 		} else {
 			speed = 0.2f;
@@ -142,8 +137,6 @@ public class Camera implements IEntity {
 			speed = 0.2f;
 		}
 
-		if (isKeyDown(KEY_Y))
-			System.out.println(position);
 		updatePlayerState(gi);
 	}
 
@@ -153,7 +146,7 @@ public class Camera implements IEntity {
 		setLife(life, gi);
 	}
 
-	public void updatePicker() {
+	public void updatePicker(World world) {
 
 		if (isKeyDown(KEY_1))
 			block = 1;
@@ -172,13 +165,9 @@ public class Camera implements IEntity {
 		else if (isKeyDown(KEY_8))
 			block = 9;
 		if (isButtonDown(0)) {
-			// Vector3f pos = calculatePicker();
-			// Kernel.world.setGlobalBlock(Kernel.world.dim, (int) pos.x, (int)
-			// pos.y, (int) pos.z, (byte) 0);
+			world.setGlobalBlock(world.dim, (int) position.x, (int) position.y, (int) position.z, (byte) 0);
 		} else if (isButtonDown(1)) {
-			// Vector3f pos = calculatePicker();
-			// Kernel.world.setGlobalBlock(Kernel.world.dim, (int) pos.x, (int)
-			// pos.y, (int) pos.z, block);
+			world.setGlobalBlock(world.dim, (int) position.x, (int) position.y, (int) position.z, block);
 		}
 	}
 
@@ -197,8 +186,8 @@ public class Camera implements IEntity {
 				}
 			}
 	}
-	
-	public void invertPitch(){
+
+	public void invertPitch() {
 		pitch = -pitch;
 	}
 

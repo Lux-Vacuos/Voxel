@@ -10,7 +10,7 @@ import io.github.guerra24.voxel.client.kernel.world.entities.Player;
 public interface IMobManagerController {
 	public void init(GameResources gm);
 
-	public void update(float delta, GameResources gm, GuiResources gi);
+	public void update(float delta, GameResources gm, GuiResources gi, World world);
 
 	public void dispose();
 

@@ -28,23 +28,29 @@ import io.github.guerra24.voxel.client.kernel.resources.GameResources;
 import io.github.guerra24.voxel.client.kernel.resources.GuiResources;
 import io.github.guerra24.voxel.client.kernel.resources.models.TexturedModel;
 import io.github.guerra24.voxel.client.kernel.util.vector.Vector3f;
+import io.github.guerra24.voxel.client.kernel.world.World;
+import io.github.guerra24.voxel.client.kernel.world.physics.AABB;
+import io.github.guerra24.voxel.client.kernel.world.physics.CollisionType;
 
 public class Player extends Entity implements IEntity {
 	private static final float GRAVITY = -10;
 	private static final float JUMP_POWER = 4;
 
 	private float upwardsSpeed = 0;
+	private AABB aabb;
 
 	private boolean isInAir = false;
 
 	public Player(TexturedModel model, Vector3f position, float rotX, float rotY, float rotZ, float scale) {
 		super(model, position, rotX, rotY, rotZ, scale);
+		aabb = new AABB(1, 2, 1);
 	}
 
 	@Override
-	public void update(float delta, GameResources gm, GuiResources gi) {
+	public void update(float delta, GameResources gm, GuiResources gi, World world) {
+		aabb.update(getPosition());
 		super.increasePosition(0, upwardsSpeed * delta, 0);
-		if (checkAABB(getPosition(), new Vector3f(0, 66, 0))) {
+		if (isCollision(0, world) == CollisionType.NONE) {
 			upwardsSpeed += GRAVITY * delta;
 			isInAir = true;
 		} else {
@@ -77,5 +83,50 @@ public class Player extends Entity implements IEntity {
 	@Override
 	public Entity getEntity() {
 		return this;
+	}
+
+	private CollisionType isCollision(int dir, World world) {// This Works >>>
+
+		Vector3f v = this.getPosition();
+
+		float tempx = (v.x) / 1 * 1;
+		int tempX = (int) tempx;
+
+		float tempz = (v.z) / 1 * 1;
+		int tempZ = (int) tempz;
+
+		float tempy = (v.y) / 1 * 1;
+		int tempY = (int) tempy - 1;
+
+		int bx = (int) tempX;
+		int by = (int) tempY;
+		int bz = (int) tempZ;
+
+		CollisionType collisionType = CollisionType.NONE;
+
+		byte b = -99;
+		b = world.getGlobalBlock(world.dim, bx, by, bz);
+
+		if (b != 0) {
+			Vector3f playerPosition = new Vector3f();
+			playerPosition.x = v.x;
+			playerPosition.y = v.y;
+			playerPosition.z = v.z;
+			aabb.update(playerPosition);
+
+			AABB voxel = new AABB(1f, 1f, 1f);
+			Vector3f voxelPosition = new Vector3f();
+			voxelPosition.x = bx;
+			voxelPosition.y = by;
+			voxelPosition.z = bz;
+			voxel.update(voxelPosition);
+
+			if (!AABB.testAABB(aabb, voxel)) {
+				collisionType = CollisionType.TOP;
+				upwardsSpeed = 0;
+			}
+		}
+
+		return collisionType;
 	}
 }

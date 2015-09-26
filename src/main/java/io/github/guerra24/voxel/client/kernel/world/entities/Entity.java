@@ -26,8 +26,9 @@ package io.github.guerra24.voxel.client.kernel.world.entities;
 
 import io.github.guerra24.voxel.client.kernel.resources.models.TexturedModel;
 import io.github.guerra24.voxel.client.kernel.util.vector.Vector3f;
+import io.github.guerra24.voxel.client.kernel.world.physics.AABB;
 
-public class Entity {
+public class Entity extends AABB {
 
 	private TexturedModel model;
 	private Vector3f position;
@@ -36,6 +37,7 @@ public class Entity {
 	private int visibility;
 
 	public Entity(TexturedModel model, Vector3f position, float rotX, float rotY, float rotZ, float scale) {
+		super(position.x, position.y, position.z);
 		this.model = model;
 		this.position = position;
 		this.rotX = rotX;

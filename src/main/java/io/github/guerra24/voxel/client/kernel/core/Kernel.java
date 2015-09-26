@@ -203,6 +203,7 @@ public class Kernel implements IKernel {
 			display.updateDisplay(KernelConstants.FPS, gm);
 			break;
 		case GAME:
+			gm.getCamera().updatePicker(world);
 			gm.getFrustum().calculateFrustum(gm);
 			gm.getFrameBuffer().begin();
 			gm.getCamera().invertPitch();
@@ -213,7 +214,6 @@ public class Kernel implements IKernel {
 			gm.getRenderer().prepare();
 			world.updateChunksRender(gm);
 			gm.getRenderer().renderEntity(gm.getPhysics().getMobManager().getMobs(), gm.lights, gm);
-			gm.getCamera().updatePicker();
 			gm.getSkyboxRenderer().render(KernelConstants.RED, KernelConstants.GREEN, KernelConstants.BLUE, delta, gm);
 			gm.getGuiRenderer().renderGui(gm.guis);
 			display.updateDisplay(KernelConstants.FPS, gm);
@@ -240,7 +240,7 @@ public class Kernel implements IKernel {
 				Bootstrap.config.setVisible(true);
 			break;
 		case GAME:
-			gm.getPhysics().getMobManager().update(delta, gm, gi);
+			gm.getPhysics().getMobManager().update(delta, gm, gi, world);
 			gm.getWaterRenderer().update(delta);
 			gm.getSkyboxRenderer().update(delta);
 			break;
