@@ -30,6 +30,7 @@ import java.util.Random;
 
 import com.google.gson.Gson;
 
+import io.github.guerra24.voxel.client.kernel.api.VAPI;
 import io.github.guerra24.voxel.client.kernel.core.GameStates;
 import io.github.guerra24.voxel.client.kernel.graphics.Frustum;
 import io.github.guerra24.voxel.client.kernel.graphics.GuiRenderer;
@@ -120,6 +121,7 @@ public class GameResources {
 		frameBuffer = new FrameBuffer();
 		physics = new Physics(this);
 		Block.initBasicBlocks();
+		VAPI.getMobAPI().setMobController(physics.getMobManager());
 	}
 
 	/**

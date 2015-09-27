@@ -26,7 +26,7 @@ package io.github.guerra24.voxel.client.kernel.core;
 
 import java.util.Random;
 
-import io.github.guerra24.voxel.client.kernel.api.API;
+import io.github.guerra24.voxel.client.kernel.api.VAPI;
 import io.github.guerra24.voxel.client.kernel.graphics.opengl.Display;
 import io.github.guerra24.voxel.client.kernel.input.Keyboard;
 import io.github.guerra24.voxel.client.kernel.menu.Button;
@@ -79,7 +79,7 @@ public class GameStates {
 	 * 
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public void switchStates(GameResources gm, World world, API api) {
+	public void switchStates(GameResources gm, World world, VAPI api) {
 		if (state == State.MAINMENU && Button.isInButtonPlay()) {
 			// Kernel.gameResources.SoundSystem.pause("MainMenuMusic");
 			state = State.LOADING_WORLD;

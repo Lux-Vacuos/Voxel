@@ -325,6 +325,9 @@ public class ConfigGUI extends JFrame implements ItemListener {
 		configProps.setProperty("VSYNC", Boolean.toString(KernelConstants.VSYNC));
 		configProps.setProperty("SEED", textSEED.getText());
 		configProps.setProperty("DrawDistance", s.toString());
+		File folder = new File("assets/game/");
+		if (!folder.exists())
+			folder.mkdirs();
 		OutputStream outputStream = new FileOutputStream(configFile);
 		configProps.store(outputStream, "Game Settings");
 		outputStream.close();

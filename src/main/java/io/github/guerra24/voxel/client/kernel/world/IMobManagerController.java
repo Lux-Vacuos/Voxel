@@ -14,6 +14,8 @@ public interface IMobManagerController {
 
 	public void dispose();
 
+	public void registerMob(IEntity mob);
+
 	public List<IEntity> getMobs();
 
 	public Player getPlayer();

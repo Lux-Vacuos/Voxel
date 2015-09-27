@@ -24,7 +24,7 @@
 
 package io.github.guerra24.voxel.client.kernel.core;
 
-import io.github.guerra24.voxel.client.kernel.api.API;
+import io.github.guerra24.voxel.client.kernel.api.VAPI;
 import io.github.guerra24.voxel.client.kernel.bootstrap.Bootstrap;
 import io.github.guerra24.voxel.client.kernel.graphics.opengl.Display;
 import io.github.guerra24.voxel.client.kernel.graphics.opengl.SystemInfo;
@@ -81,7 +81,9 @@ public class Kernel implements IKernel {
 	 * Update Thread
 	 */
 	private static UpdateThread update;
-
+	/**
+	 * Display
+	 */
 	private Display display;
 	/**
 	 * Error Test
@@ -91,7 +93,7 @@ public class Kernel implements IKernel {
 	/**
 	 * Modding API
 	 */
-	private API api;
+	private VAPI api;
 
 	/**
 	 * Constructor of the Kernel, Initializes the Game and starts the loop
@@ -117,7 +119,7 @@ public class Kernel implements IKernel {
 		SystemInfo.printSystemInfo();
 
 		gameResources = new GameResources();
-		api = new API();
+		api = new VAPI();
 		api.preInit();
 		gameResources.init();
 		guiResources = new GuiResources(gameResources);
@@ -125,6 +127,7 @@ public class Kernel implements IKernel {
 		gameResources.addRes();
 		gameResources.music();
 		world = new World();
+		Logger.log(Thread.currentThread(), "Initializing Threads");
 		worldThread = new WorldThread();
 		worldThread.setName("Voxel World");
 		worldThread.setApi(api);
@@ -152,7 +155,7 @@ public class Kernel implements IKernel {
 		init();
 		float delta = 0;
 		float accumulator = 0f;
-		float interval = 1f / 30;
+		float interval = 1f / 60;
 		float alpha = 0;
 		while (gameResources.getGameStates().loop) {
 			if (Display.timeCount > 1f) {
@@ -194,7 +197,6 @@ public class Kernel implements IKernel {
 			display.updateDisplay(30, gm);
 			break;
 		case IN_PAUSE:
-			gm.getFrustum().calculateFrustum(gm);
 			gm.getRenderer().prepare();
 			world.updateChunksRender(gm);
 			gm.getRenderer().renderEntity(gm.getPhysics().getMobManager().getMobs(), gm.lights, gm);
@@ -202,7 +204,7 @@ public class Kernel implements IKernel {
 			gm.getGuiRenderer().renderGui(gm.guis4);
 			display.updateDisplay(KernelConstants.FPS, gm);
 			break;
-		case GAME:
+		case GAME:// THIS NEEDS OPTIMIZATION...
 			gm.getCamera().updatePicker(world);
 			gm.getFrustum().calculateFrustum(gm);
 			gm.getFrameBuffer().begin();
@@ -221,7 +223,7 @@ public class Kernel implements IKernel {
 		case LOADING_WORLD:
 			gm.getRenderer().prepare();
 			gm.getGuiRenderer().renderGui(gm.guis3);
-			display.updateDisplay(60, gm);
+			display.updateDisplay(30, gm);
 			break;
 		}
 	}
@@ -283,7 +285,7 @@ public class Kernel implements IKernel {
 		return world;
 	}
 
-	public API getApi() {
+	public VAPI getApi() {
 		return api;
 	}
 

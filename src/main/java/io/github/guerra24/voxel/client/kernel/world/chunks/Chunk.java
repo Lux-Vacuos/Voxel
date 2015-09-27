@@ -29,8 +29,7 @@ import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import io.github.guerra24.voxel.client.kernel.api.API;
-import io.github.guerra24.voxel.client.kernel.api.WorldAPI;
+import io.github.guerra24.voxel.client.kernel.api.VAPI;
 import io.github.guerra24.voxel.client.kernel.core.KernelConstants;
 import io.github.guerra24.voxel.client.kernel.resources.GameResources;
 import io.github.guerra24.voxel.client.kernel.resources.models.WaterTile;
@@ -48,33 +47,29 @@ public class Chunk {
 			sec4NotClear = false;
 	public byte[][][] blocks;
 
-	private transient volatile Queue<BlockEntity> cubes1, cubes2, cubes3, cubes4;
-	private transient volatile Queue<BlockEntity> cubes1temp, cubes2temp, cubes3temp, cubes4temp;
-	private transient volatile Queue<WaterTile> waters;
-	private transient volatile Queue<WaterTile> waterstemp;
-	private transient volatile List<Light> lights1, lights2, lights3, lights4;
-	private int sizeX, sizeY, sizeZ;
+	private transient Queue<BlockEntity> cubes1, cubes2, cubes3, cubes4;
+	private transient Queue<BlockEntity> cubes1temp, cubes2temp, cubes3temp, cubes4temp;
+	private transient Queue<WaterTile> waters;
+	private transient Queue<WaterTile> waterstemp;
+	private transient List<Light> lights1, lights2, lights3, lights4;
+	private transient int sizeX, sizeY, sizeZ;
 	private transient boolean readyToRender = true;
 
-	public Chunk(int dim, int cx, int cz, API api, World world) {
+	public Chunk(int dim, int cx, int cz, World world) {
 		this.dim = dim;
 		this.cx = cx;
 		this.cz = cz;
 		this.posX = cx * 16;
 		this.posZ = cz * 16;
-		init(api, world);
+		init(world);
 	}
 
-	public void init(API api, World world) {
-		sizeX = KernelConstants.CHUNK_SIZE;
-		sizeY = KernelConstants.CHUNK_HEIGHT;
-		sizeZ = KernelConstants.CHUNK_SIZE;
-
+	public void init(World world) {
 		loadInit();
 
 		blocks = new byte[sizeX][sizeY][sizeZ];
 
-		createChunk(api, world);
+		createChunk(world);
 		rebuildChunk1(world);
 		rebuildChunk2(world);
 		rebuildChunk3(world);
@@ -96,6 +91,9 @@ public class Chunk {
 		lights2 = new ArrayList<Light>();
 		lights3 = new ArrayList<Light>();
 		lights4 = new ArrayList<Light>();
+		sizeX = KernelConstants.CHUNK_SIZE;
+		sizeY = KernelConstants.CHUNK_HEIGHT;
+		sizeZ = KernelConstants.CHUNK_SIZE;
 	}
 
 	public void update(World world) {
@@ -123,7 +121,7 @@ public class Chunk {
 			rebuild = true;
 	}
 
-	public void createChunk(API api, World world) {
+	public void createChunk(World world) {
 		for (int x = 0; x < sizeX; x++) {
 			for (int z = 0; z < sizeZ; z++) {
 				for (int y = 0; y < sizeY; y++) {
@@ -151,8 +149,8 @@ public class Chunk {
 					else
 						blocks[x][y][z] = Block.Stone.getId();
 
-					for (int i = 0; i < WorldAPI.getLastID(); i++) {
-						WorldAPI.getChunkHandler(i).chunkGen(blocks, x, y, z);
+					for (int i = 0; i < VAPI.getWorldAPI().getLastID(); i++) {
+						VAPI.getWorldAPI().getChunkHandler(i).chunkGen(blocks, x, y, z);
 					}
 
 					if (y == 0)

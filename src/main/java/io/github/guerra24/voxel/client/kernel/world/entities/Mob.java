@@ -36,6 +36,11 @@ public class Mob extends Entity implements IEntity {
 		super(model, position, rotX, rotY, rotZ, scale);
 	}
 
+	public Mob(Entity entity) {
+		super(entity.getModel(), entity.getPosition(), entity.getRotX(), entity.getRotY(), entity.getRotZ(),
+				entity.getScale());
+	}
+
 	@Override
 	public void update(float delta, GameResources gm, GuiResources gi, World world) {
 	}

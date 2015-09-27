@@ -7,6 +7,10 @@ version = '0.0.3-ALPHA'
 applicationDefaultJvmArgs = ["-Xmx512M"]
 
 jar {
+	include("*io/**")
+	include("*org/**")
+	include("assets/**")
+	
     manifest {
         attributes 'Implementation-Title': 'Voxel Client',
                    'Implementation-Version': version

@@ -24,7 +24,7 @@
 
 package io.github.guerra24.voxel.client.kernel.core;
 
-import io.github.guerra24.voxel.client.kernel.api.API;
+import io.github.guerra24.voxel.client.kernel.api.VAPI;
 import io.github.guerra24.voxel.client.kernel.resources.GameResources;
 import io.github.guerra24.voxel.client.kernel.world.World;
 
@@ -37,7 +37,7 @@ import io.github.guerra24.voxel.client.kernel.world.World;
 public class WorldThread extends Thread {
 	private GameResources gm;
 	private World world;
-	private API api;
+	private VAPI api;
 
 	@Override
 	public void run() {
@@ -76,7 +76,7 @@ public class WorldThread extends Thread {
 		this.world = world;
 	}
 
-	public void setApi(API api) {
+	public void setApi(VAPI api) {
 		this.api = api;
 	}
 }

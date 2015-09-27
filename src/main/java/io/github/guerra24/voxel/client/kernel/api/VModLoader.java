@@ -11,9 +11,9 @@ import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-public class ModLoader {
+public class VModLoader {
 
-	public ModLoader() {
+	public VModLoader() {
 	}
 
 	public void loadMods() {
@@ -24,13 +24,14 @@ public class ModLoader {
 						URLClassLoader child = new URLClassLoader(new URL[] { filePath.toFile().toURI().toURL() },
 								this.getClass().getClassLoader());
 						Class<?> classToLoad = Class.forName("voxel.api.Loader", true, child);
-						Method method = classToLoad.getDeclaredMethod("mod");
+						Method method = classToLoad.getDeclaredMethod("loadMod");
 						Object instance = classToLoad.newInstance();
 						method.invoke(instance);
 					} catch (MalformedURLException | ClassNotFoundException | NoSuchMethodException | SecurityException
 							| InstantiationException | IllegalAccessException | IllegalArgumentException
 							| InvocationTargetException e) {
 						Logger.error(Thread.currentThread(), "Error Loading Mod");
+						e.printStackTrace();
 					}
 				}
 			});

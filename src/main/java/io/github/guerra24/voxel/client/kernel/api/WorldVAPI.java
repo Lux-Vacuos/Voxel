@@ -36,11 +36,11 @@ import java.util.Map;
  * @author Guerra24 <pablo230699@hotmail.com>
  * @category API
  */
-public class WorldAPI {
+public class WorldVAPI {
 
-	public static Map<Integer, ChunkHandler> modsWorld;
+	public Map<Integer, ChunkHandler> modsWorld;
 
-	public WorldAPI() {
+	public WorldVAPI() {
 		modsWorld = new HashMap<Integer, ChunkHandler>();
 	}
 
@@ -53,7 +53,7 @@ public class WorldAPI {
 	 *            Handler
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public static void registerChunkHandler(int id, ChunkHandler handler) {
+	public void registerChunkHandler(int id, ChunkHandler handler) {
 		modsWorld.put(id, handler);
 	}
 
@@ -66,7 +66,7 @@ public class WorldAPI {
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 * 
 	 */
-	public static ChunkHandler getChunkHandler(int id) {
+	public ChunkHandler getChunkHandler(int id) {
 		return modsWorld.get(id);
 	}
 
@@ -79,7 +79,7 @@ public class WorldAPI {
 	 *            Block
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public static void registerBlock(byte id, Block block) {
+	public void registerBlock(byte id, Block block) {
 		Block.registerBlock(id, block);
 	}
 
@@ -89,7 +89,7 @@ public class WorldAPI {
 	 * @return ID
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public static int getLastID() {
+	public int getLastID() {
 		return modsWorld.size();
 	}
 

@@ -89,7 +89,6 @@ void main() {
 	
 	surfaceNormal = (transformationMatrix * vec4(normal, 0.0)).xyz;
 	
-	//Dynamic Light
 	for(int i=0;i<8;i++) {
 		toLightVector[i]= lightPosition[i] - worldPosition.xyz;
 	}

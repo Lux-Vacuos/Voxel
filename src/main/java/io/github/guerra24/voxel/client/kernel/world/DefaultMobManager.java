@@ -33,6 +33,11 @@ public class DefaultMobManager implements IMobManagerController {
 	}
 
 	@Override
+	public void registerMob(IEntity entity) {
+		mobs.add(entity);
+	}
+
+	@Override
 	public void dispose() {
 		mobs.clear();
 	}

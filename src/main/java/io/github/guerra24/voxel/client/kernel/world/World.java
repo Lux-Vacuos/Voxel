@@ -35,11 +35,10 @@ import java.util.Random;
 
 import com.google.gson.JsonSyntaxException;
 
-import io.github.guerra24.voxel.client.kernel.api.API;
+import io.github.guerra24.voxel.client.kernel.api.VAPI;
 import io.github.guerra24.voxel.client.kernel.core.KernelConstants;
 import io.github.guerra24.voxel.client.kernel.resources.GameResources;
 import io.github.guerra24.voxel.client.kernel.util.Logger;
-import io.github.guerra24.voxel.client.kernel.util.Maths;
 import io.github.guerra24.voxel.client.kernel.util.vector.Vector2f;
 import io.github.guerra24.voxel.client.kernel.util.vector.Vector3f;
 import io.github.guerra24.voxel.client.kernel.world.chunks.Chunk;
@@ -96,7 +95,7 @@ public class World {
 	 *            World Dimension
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public void startWorld(String name, Random seed, int dimension, API api, GameResources gm) {
+	public void startWorld(String name, Random seed, int dimension, VAPI api, GameResources gm) {
 		this.name = name;
 		this.seed = seed;
 		this.dim = dimension;
@@ -129,7 +128,7 @@ public class World {
 	 *            API
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	private void createWorld(GameResources gm, API api) {
+	private void createWorld(GameResources gm, VAPI api) {
 		Logger.log(Thread.currentThread(), "Generating World");
 		xPlayChunk = (int) (gm.getCamera().getPosition().x / 16);
 		zPlayChunk = (int) (gm.getCamera().getPosition().z / 16);
@@ -149,9 +148,9 @@ public class World {
 					}
 					if (!hasChunk(dim, xx, zz)) {
 						if (existChunkFile(dim, xx, zz)) {
-							loadChunk(dim, xx, zz, gm, api);
+							loadChunk(dim, xx, zz, gm);
 						} else {
-							addChunk(new Chunk(dim, xx, zz, api, this));
+							addChunk(new Chunk(dim, xx, zz, this));
 							saveChunk(dim, xx, zz, gm);
 						}
 					} else {
@@ -171,7 +170,7 @@ public class World {
 	 *            API
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public void updateChunkGeneration(GameResources gm, API api) {
+	public void updateChunkGeneration(GameResources gm, VAPI api) {
 		if (gm.getCamera().getPosition().x < 0)
 			xPlayChunk = (int) ((gm.getCamera().getPosition().x - 16) / 16);
 		if (gm.getCamera().getPosition().z < 0)
@@ -189,9 +188,9 @@ public class World {
 						* (KernelConstants.genRadius - KernelConstants.radiusLimit)) {
 					if (!hasChunk(dim, xx, zz)) {
 						if (existChunkFile(dim, xx, zz)) {
-							loadChunk(dim, xx, zz, gm, api);
+							loadChunk(dim, xx, zz, gm);
 						} else {
-							addChunk(new Chunk(dim, xx, zz, api, this));
+							addChunk(new Chunk(dim, xx, zz, this));
 							saveChunk(dim, xx, zz, gm);
 						}
 					} else {
@@ -219,7 +218,7 @@ public class World {
 	 *            Camera
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public void updateChunksRender(GameResources gm) throws NullPointerException {
+	public void updateChunksRender(GameResources gm) {
 		gm.lights.clear();
 		for (int zr = -KernelConstants.radius; zr <= KernelConstants.radius; zr++) {
 			int zz = zPlayChunk + zr;
@@ -229,24 +228,24 @@ public class World {
 					Chunk chunk = getChunk(dim, xx, zz);
 					if (chunk.sec1NotClear)
 						if (gm.getFrustum().cubeInFrustum(chunk.posX, 0, chunk.posZ, chunk.posX + 16, 32,
-								chunk.posZ + 16)) {
+								chunk.posZ + 16))
 							chunk.render1(gm);
-						}
+
 					if (chunk.sec2NotClear)
 						if (gm.getFrustum().cubeInFrustum(chunk.posX, 32, chunk.posZ, chunk.posX + 16, 64,
-								chunk.posZ + 16)) {
+								chunk.posZ + 16))
 							chunk.render2(gm);
-						}
+
 					if (chunk.sec3NotClear)
 						if (gm.getFrustum().cubeInFrustum(chunk.posX, 64, chunk.posZ, chunk.posX + 16, 96,
-								chunk.posZ + 16)) {
+								chunk.posZ + 16))
 							chunk.render3(gm);
-						}
+
 					if (chunk.sec4NotClear)
 						if (gm.getFrustum().cubeInFrustum(chunk.posX, 96, chunk.posZ, chunk.posX + 16, 128,
-								chunk.posZ + 16)) {
+								chunk.posZ + 16))
 							chunk.render4(gm);
-						}
+
 				}
 			}
 		}
@@ -335,7 +334,7 @@ public class World {
 	 *            Z Coord
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public void loadChunk(int dim, int cx, int cz, GameResources gm, API api) {
+	public void loadChunk(int dim, int cx, int cz, GameResources gm) {
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(KernelConstants.worldPath + name + "/chunks_" + dim
 					+ "/chunk_" + dim + "_" + cx + "_" + cz + ".json"));
@@ -344,13 +343,13 @@ public class World {
 				chunk.loadInit();
 			else {
 				Logger.warn(Thread.currentThread(), "Re-Creating Chunk " + dim + " " + cx + " " + cz);
-				chunk = new Chunk(dim, cx, cz, api, this);
+				chunk = new Chunk(dim, cx, cz, this);
 			}
 			addChunk(chunk);
 		} catch (JsonSyntaxException | FileNotFoundException e) {
 			e.printStackTrace();
 			Logger.warn(Thread.currentThread(), "Re-Creating Chunk " + dim + " " + cx + " " + cz);
-			Chunk chunk = new Chunk(dim, cx, cz, api, this);
+			Chunk chunk = new Chunk(dim, cx, cz, this);
 			addChunk(chunk);
 			saveChunk(dim, cx, cz, gm);
 		}
