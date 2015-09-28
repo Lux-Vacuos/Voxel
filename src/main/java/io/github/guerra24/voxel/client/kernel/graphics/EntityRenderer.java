@@ -39,7 +39,7 @@ import java.util.Map;
 
 import io.github.guerra24.voxel.client.kernel.graphics.opengl.VoxelGL33;
 import io.github.guerra24.voxel.client.kernel.graphics.shaders.EntityShader;
-import io.github.guerra24.voxel.client.kernel.resources.GameResources;
+import io.github.guerra24.voxel.client.kernel.resources.GameControllers;
 import io.github.guerra24.voxel.client.kernel.resources.models.RawModel;
 import io.github.guerra24.voxel.client.kernel.resources.models.TexturedModel;
 import io.github.guerra24.voxel.client.kernel.util.Maths;
@@ -82,7 +82,7 @@ public class EntityRenderer {
 	 *            A List of entity's
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public void renderBlockEntity(Map<TexturedModel, List<BlockEntity>> blockEntities, GameResources gm) {
+	public void renderBlockEntity(Map<TexturedModel, List<BlockEntity>> blockEntities, GameControllers gm) {
 		for (TexturedModel model : blockEntities.keySet()) {
 			prepareTexturedModel(model, gm);
 			List<BlockEntity> batch = blockEntities.get(model);
@@ -101,7 +101,7 @@ public class EntityRenderer {
 	 *            A List of entity's
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public void renderEntity(Map<TexturedModel, List<Entity>> blockEntities, GameResources gm) {
+	public void renderEntity(Map<TexturedModel, List<Entity>> blockEntities, GameControllers gm) {
 		for (TexturedModel model : blockEntities.keySet()) {
 			prepareTexturedModel(model, gm);
 			List<Entity> batch = blockEntities.get(model);
@@ -119,7 +119,7 @@ public class EntityRenderer {
 	 * @param model
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	private void prepareTexturedModel(TexturedModel model, GameResources gm) {
+	private void prepareTexturedModel(TexturedModel model, GameControllers gm) {
 		RawModel rawmodel = model.getRawModel();
 		glBindVertexArray(rawmodel.getVaoID());
 		glEnableVertexAttribArray(0);

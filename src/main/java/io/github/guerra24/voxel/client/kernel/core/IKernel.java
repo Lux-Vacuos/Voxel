@@ -24,7 +24,7 @@
 
 package io.github.guerra24.voxel.client.kernel.core;
 
-import io.github.guerra24.voxel.client.kernel.resources.GameResources;
+import io.github.guerra24.voxel.client.kernel.resources.GameControllers;
 import io.github.guerra24.voxel.client.kernel.resources.GuiResources;
 
 /**
@@ -54,14 +54,14 @@ public interface IKernel {
 	 * 
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public void render(GameResources gm, float delta);
+	public void render(GameControllers gm, float delta);
 
 	/**
 	 * Update Loop, contains all the update functions
 	 * 
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public void update(GameResources gm, GuiResources gi, float delta);
+	public void update(GameControllers gm, GuiResources gi, float delta);
 
 	/**
 	 * Error Detection Loop, check the game errors

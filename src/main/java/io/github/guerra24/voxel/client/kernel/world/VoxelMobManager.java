@@ -1,10 +1,10 @@
 package io.github.guerra24.voxel.client.kernel.world;
 
-import io.github.guerra24.voxel.client.kernel.resources.GameResources;
+import io.github.guerra24.voxel.client.kernel.resources.GameControllers;
 
 public class VoxelMobManager extends DefaultMobManager {
 
-	public VoxelMobManager(GameResources gm) {
+	public VoxelMobManager(GameControllers gm) {
 		super(gm);
 	}
 

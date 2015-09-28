@@ -62,7 +62,7 @@ import de.matthiasmann.twl.utils.PNGDecoder;
 import io.github.guerra24.voxel.client.kernel.core.KernelConstants;
 import io.github.guerra24.voxel.client.kernel.input.Keyboard;
 import io.github.guerra24.voxel.client.kernel.input.Mouse;
-import io.github.guerra24.voxel.client.kernel.resources.GameResources;
+import io.github.guerra24.voxel.client.kernel.resources.GameControllers;
 import io.github.guerra24.voxel.client.kernel.util.Logger;
 
 /**
@@ -315,7 +315,7 @@ public class Display {
 	 *            Game Max FPS
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public void updateDisplay(int fps, GameResources gm) {
+	public void updateDisplay(int fps, GameControllers gm) {
 		if (KernelConstants.loaded) {
 			ByteBuffer w = BufferUtils.createByteBuffer(4);
 			ByteBuffer h = BufferUtils.createByteBuffer(4);

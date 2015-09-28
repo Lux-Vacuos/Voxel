@@ -31,7 +31,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 import io.github.guerra24.voxel.client.kernel.api.VAPI;
 import io.github.guerra24.voxel.client.kernel.core.KernelConstants;
-import io.github.guerra24.voxel.client.kernel.resources.GameResources;
+import io.github.guerra24.voxel.client.kernel.resources.GameControllers;
 import io.github.guerra24.voxel.client.kernel.resources.models.WaterTile;
 import io.github.guerra24.voxel.client.kernel.util.Maths;
 import io.github.guerra24.voxel.client.kernel.util.vector.Vector3f;
@@ -533,21 +533,21 @@ public class Chunk {
 		}
 	}
 
-	public void render1(GameResources gm) {
+	public void render1(GameControllers gm) {
 		if (readyToRender)
 			gm.getRenderer().renderChunk(cubes1, lights1, gm);
 		else
 			gm.getRenderer().renderChunk(cubes1temp, lights1, gm);
 	}
 
-	public void render2(GameResources gm) {
+	public void render2(GameControllers gm) {
 		if (readyToRender)
 			gm.getRenderer().renderChunk(cubes2, lights2, gm);
 		else
 			gm.getRenderer().renderChunk(cubes2temp, lights2, gm);
 	}
 
-	public void render3(GameResources gm) {
+	public void render3(GameControllers gm) {
 		if (readyToRender) {
 			gm.getRenderer().renderChunk(cubes3, lights3, gm);
 			gm.getWaterRenderer().render(waters, gm);
@@ -557,7 +557,7 @@ public class Chunk {
 		}
 	}
 
-	public void render4(GameResources gm) {
+	public void render4(GameControllers gm) {
 		if (readyToRender)
 			gm.getRenderer().renderChunk(cubes4, lights4, gm);
 		else

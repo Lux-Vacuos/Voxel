@@ -166,6 +166,22 @@ public class Maths {
 		return randomNum;
 	}
 
+	/**
+	 * Gets a Random float from Range
+	 * 
+	 * @param min
+	 *            Min Value
+	 * @param max
+	 *            Max Value
+	 * @return Random Int
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
+	public static float randFloat(float min, float max) {
+		Random rand = new Random();
+		float randomNum = rand.nextFloat();
+		return randomNum;
+	}
+
 	public static float dti(float val) {
 		return Math.abs(val - Math.round(val));
 	}

@@ -159,7 +159,7 @@ public class Loader {
 			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_LOD_BIAS, -0.4f);
 		} catch (Exception e) {
 			e.printStackTrace();
-			Logger.log(Thread.currentThread(), "Couldn' load texture file" + fileName);
+			Logger.log(Thread.currentThread(), "Couldn' load texture file " + fileName);
 		}
 		textures.add(texture.getTextureID());
 		return texture.getTextureID();

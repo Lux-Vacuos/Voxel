@@ -40,7 +40,7 @@ import io.github.guerra24.voxel.client.kernel.core.KernelConstants;
 import io.github.guerra24.voxel.client.kernel.graphics.opengl.Display;
 import io.github.guerra24.voxel.client.kernel.graphics.opengl.VoxelGL33;
 import io.github.guerra24.voxel.client.kernel.graphics.shaders.EntityShader;
-import io.github.guerra24.voxel.client.kernel.resources.GameResources;
+import io.github.guerra24.voxel.client.kernel.resources.GameControllers;
 import io.github.guerra24.voxel.client.kernel.resources.Loader;
 import io.github.guerra24.voxel.client.kernel.resources.models.TexturedModel;
 import io.github.guerra24.voxel.client.kernel.util.vector.Matrix4f;
@@ -119,7 +119,7 @@ public class MasterRenderer {
 	 *            A Camera
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public void renderChunk(Queue<BlockEntity> cubes1temp, List<Light> lights, GameResources gm) {
+	public void renderChunk(Queue<BlockEntity> cubes1temp, List<Light> lights, GameControllers gm) {
 		for (BlockEntity entity : cubes1temp) {
 			processBlockEntity(entity);
 		}
@@ -137,7 +137,7 @@ public class MasterRenderer {
 	 *            A Camera
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public void renderEntity(List<IEntity> list, List<Light> lights, GameResources gm) {
+	public void renderEntity(List<IEntity> list, List<Light> lights, GameControllers gm) {
 		for (IEntity entity : list) {
 			if (entity != null)
 				if (entity.getEntity() != null)
@@ -157,7 +157,7 @@ public class MasterRenderer {
 	 *            A Camera
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	private void renderChunk(List<Light> lights, GameResources gm) {
+	private void renderChunk(List<Light> lights, GameControllers gm) {
 		shader.start();
 		shader.loadProjectionMatrix(projectionMatrix);
 		shader.loadSkyColour(KernelConstants.RED, KernelConstants.GREEN, KernelConstants.BLUE);
@@ -180,7 +180,7 @@ public class MasterRenderer {
 	 *            A Camera
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	private void renderEntity(List<Light> lights, GameResources gm) {
+	private void renderEntity(List<Light> lights, GameControllers gm) {
 		shader.start();
 		shader.loadProjectionMatrix(projectionMatrix);
 		shader.loadLights(lights);
