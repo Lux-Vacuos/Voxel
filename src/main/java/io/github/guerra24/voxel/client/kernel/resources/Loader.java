@@ -56,11 +56,6 @@ import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import static org.lwjgl.opengl.GL30.glDeleteVertexArrays;
 import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 import static org.lwjgl.opengl.GL30.glGenerateMipmap;
-import io.github.guerra24.voxel.client.kernel.resources.models.EntityTexture;
-import io.github.guerra24.voxel.client.kernel.resources.models.RawModel;
-import io.github.guerra24.voxel.client.kernel.util.Logger;
-import net.lingala.zip4j.core.ZipFile;
-import net.lingala.zip4j.exception.ZipException;
 
 import java.io.FileInputStream;
 import java.net.URL;
@@ -76,6 +71,9 @@ import org.newdawn.slick.opengl.TextureLoader;
 
 import de.matthiasmann.twl.utils.PNGDecoder;
 import de.matthiasmann.twl.utils.PNGDecoder.Format;
+import io.github.guerra24.voxel.client.kernel.resources.models.EntityTexture;
+import io.github.guerra24.voxel.client.kernel.resources.models.RawModel;
+import io.github.guerra24.voxel.client.kernel.util.Logger;
 
 /**
  * Loader
@@ -374,30 +372,6 @@ public class Loader {
 		buffer.put(data);
 		buffer.flip();
 		return buffer;
-	}
-
-	/**
-	 * Unzip the gived file
-	 * 
-	 * @param source
-	 *            Source Path
-	 * @param destination
-	 *            Dest Path
-	 * @param password
-	 *            File Pass
-	 * @author Guerra24 <pablo230699@hotmail.com>
-	 */
-	public static void unzip(String source, String destination, String password) {
-		try {
-			ZipFile zipFile = new ZipFile(source);
-			if (zipFile.isEncrypted()) {
-				zipFile.setPassword(password);
-			}
-			zipFile.extractAll(destination);
-		} catch (ZipException e) {
-			Logger.error(Thread.currentThread(), "Error in unzip process");
-			e.printStackTrace();
-		}
 	}
 
 	public OBJLoader getObjLoader() {
