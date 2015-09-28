@@ -24,7 +24,7 @@
 
 package io.github.guerra24.voxel.client.kernel.world.entities;
 
-import io.github.guerra24.voxel.client.kernel.resources.GameResources;
+import io.github.guerra24.voxel.client.kernel.resources.GameControllers;
 import io.github.guerra24.voxel.client.kernel.resources.GuiResources;
 import io.github.guerra24.voxel.client.kernel.resources.models.TexturedModel;
 import io.github.guerra24.voxel.client.kernel.util.vector.Vector3f;
@@ -33,8 +33,8 @@ import io.github.guerra24.voxel.client.kernel.world.physics.AABB;
 import io.github.guerra24.voxel.client.kernel.world.physics.CollisionType;
 
 public class Player extends Entity implements IEntity {
-	private static final float GRAVITY = -10;
-	private static final float JUMP_POWER = 4;
+	private final float GRAVITY = -10;
+	private final float JUMP_POWER = 4;
 
 	private float upwardsSpeed = 0;
 	private AABB aabb;
@@ -47,7 +47,7 @@ public class Player extends Entity implements IEntity {
 	}
 
 	@Override
-	public void update(float delta, GameResources gm, GuiResources gi, World world) {
+	public void update(float delta, GameControllers gm, GuiResources gi, World world) {
 		aabb.update(getPosition());
 		super.increasePosition(0, upwardsSpeed * delta, 0);
 		if (isCollision(0, world) == CollisionType.FRONT) {

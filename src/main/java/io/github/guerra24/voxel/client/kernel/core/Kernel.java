@@ -29,7 +29,7 @@ import io.github.guerra24.voxel.client.kernel.bootstrap.Bootstrap;
 import io.github.guerra24.voxel.client.kernel.graphics.opengl.Display;
 import io.github.guerra24.voxel.client.kernel.graphics.opengl.SystemInfo;
 import io.github.guerra24.voxel.client.kernel.input.Keyboard;
-import io.github.guerra24.voxel.client.kernel.resources.GameResources;
+import io.github.guerra24.voxel.client.kernel.resources.GameControllers;
 import io.github.guerra24.voxel.client.kernel.resources.GuiResources;
 import io.github.guerra24.voxel.client.kernel.util.Logger;
 import io.github.guerra24.voxel.client.kernel.world.World;
@@ -47,7 +47,7 @@ public class Kernel implements IKernel {
 	 * Contains the Game Resources, all the textures, models and other type of
 	 * data
 	 */
-	private GameResources gameResources;
+	private GameControllers gameResources;
 
 	/**
 	 * Contains the GUI/UI Resources
@@ -118,7 +118,7 @@ public class Kernel implements IKernel {
 		display.startUp();
 		SystemInfo.printSystemInfo();
 
-		gameResources = new GameResources();
+		gameResources = new GameControllers();
 		api = new VAPI();
 		api.preInit();
 		gameResources.init();
@@ -186,7 +186,7 @@ public class Kernel implements IKernel {
 	}
 
 	@Override
-	public void render(GameResources gm, float delta) {
+	public void render(GameControllers gm, float delta) {
 		Display.fpsCount++;
 		switch (gm.getGameStates().state) {
 		case MAINMENU:
@@ -207,16 +207,21 @@ public class Kernel implements IKernel {
 		case GAME:// THIS NEEDS OPTIMIZATION...
 			gm.getCamera().updatePicker(world);
 			gm.getFrustum().calculateFrustum(gm);
+
 			gm.getFrameBuffer().begin();
+			
 			gm.getCamera().invertPitch();
 			gm.getRenderer().prepare();
 			gm.getSkyboxRenderer().render(KernelConstants.RED, KernelConstants.GREEN, KernelConstants.BLUE, delta, gm);
 			gm.getFrameBuffer().end();
+			
 			gm.getCamera().invertPitch();
+
 			gm.getRenderer().prepare();
 			world.updateChunksRender(gm);
 			gm.getRenderer().renderEntity(gm.getPhysics().getMobManager().getMobs(), gm.lights, gm);
 			gm.getSkyboxRenderer().render(KernelConstants.RED, KernelConstants.GREEN, KernelConstants.BLUE, delta, gm);
+			gm.getParticleController().render(gm);
 			gm.getGuiRenderer().renderGui(gm.guis);
 			display.updateDisplay(KernelConstants.FPS, gm);
 			break;
@@ -229,7 +234,7 @@ public class Kernel implements IKernel {
 	}
 
 	@Override
-	public void update(GameResources gm, GuiResources gi, float delta) {
+	public void update(GameControllers gm, GuiResources gi, float delta) {
 		Display.upsCount++;
 		switch (gm.getGameStates().state) {
 		case MAINMENU:
@@ -243,8 +248,10 @@ public class Kernel implements IKernel {
 			break;
 		case GAME:
 			gm.getPhysics().getMobManager().update(delta, gm, gi, world);
+			gm.getParticleController().update(delta, gm, gi, world);
 			gm.getWaterRenderer().update(delta);
 			gm.getSkyboxRenderer().update(delta);
+			gm.getParticleController().update(delta, gm, gi, world);
 			break;
 		case LOADING_WORLD:
 			break;
@@ -273,7 +280,7 @@ public class Kernel implements IKernel {
 		display.closeDisplay();
 	}
 
-	public GameResources getGameResources() {
+	public GameControllers getGameResources() {
 		return gameResources;
 	}
 

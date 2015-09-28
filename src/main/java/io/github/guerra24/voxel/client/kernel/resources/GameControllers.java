@@ -40,6 +40,7 @@ import io.github.guerra24.voxel.client.kernel.graphics.SkyboxRenderer;
 import io.github.guerra24.voxel.client.kernel.graphics.WaterRenderer;
 import io.github.guerra24.voxel.client.kernel.graphics.shaders.WaterShader;
 import io.github.guerra24.voxel.client.kernel.menu.MainMenu;
+import io.github.guerra24.voxel.client.kernel.particle.ParticleController;
 import io.github.guerra24.voxel.client.kernel.resources.models.GuiTexture;
 import io.github.guerra24.voxel.client.kernel.sound.LibraryLWJGLOpenAL;
 import io.github.guerra24.voxel.client.kernel.sound.soundsystem.SoundSystem;
@@ -61,7 +62,7 @@ import io.github.guerra24.voxel.client.kernel.world.entities.Mob;
  * @author Guerra24 <pablo230699@hotmail.com>
  * @category Assets
  */
-public class GameResources {
+public class GameControllers {
 	public List<GuiTexture> guis = new ArrayList<GuiTexture>();
 	public List<GuiTexture> guis2 = new ArrayList<GuiTexture>();
 	public List<GuiTexture> guis3 = new ArrayList<GuiTexture>();
@@ -80,6 +81,7 @@ public class GameResources {
 	private SkyboxRenderer skyboxRenderer;
 	private GuiRenderer guiRenderer;
 	private GameStates gameStates;
+	private ParticleController particleController;
 	private Gson gson;
 	private SoundSystem soundSystem;
 	private Frustum frustum;
@@ -91,7 +93,7 @@ public class GameResources {
 	 * 
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public GameResources() {
+	public GameControllers() {
 	}
 
 	/**
@@ -101,9 +103,19 @@ public class GameResources {
 	 */
 	public void init() {
 		loader = new Loader();
-		rand = new Random();
 		camera = new Camera();
 		gson = new Gson();
+		renderer = new MasterRenderer(loader);
+		waterShader = new WaterShader();
+		guiRenderer = new GuiRenderer(loader);
+		waterRenderer = new WaterRenderer(loader, waterShader, renderer.getProjectionMatrix());
+		skyboxRenderer = new SkyboxRenderer(loader, renderer.getProjectionMatrix());
+		particleController = new ParticleController(loader);
+		gameStates = new GameStates();
+		frameBuffer = new FrameBuffer();
+		physics = new Physics(this);
+		frustum = new Frustum();
+		rand = new Random();
 		try {
 			SoundSystemConfig.addLibrary(LibraryLWJGLOpenAL.class);
 			SoundSystemConfig.setCodec("ogg", CodecJOgg.class);
@@ -111,16 +123,9 @@ public class GameResources {
 			Logger.error(Thread.currentThread(), "Unable to bind SoundSystem Libs");
 		}
 		soundSystem = new SoundSystem();
-		renderer = new MasterRenderer(loader);
-		guiRenderer = new GuiRenderer(loader);
-		waterShader = new WaterShader();
-		waterRenderer = new WaterRenderer(loader, waterShader, renderer.getProjectionMatrix());
-		skyboxRenderer = new SkyboxRenderer(loader, renderer.getProjectionMatrix());
-		gameStates = new GameStates();
-		frustum = new Frustum();
-		frameBuffer = new FrameBuffer();
-		physics = new Physics(this);
+
 		Block.initBasicBlocks();
+
 		VAPI.getMobAPI().setMobController(physics.getMobManager());
 	}
 
@@ -152,6 +157,7 @@ public class GameResources {
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void cleanUp() {
+		particleController.dispose();
 		waterShader.cleanUp();
 		frameBuffer.cleanUp();
 		guiRenderer.cleanUp();
@@ -234,6 +240,10 @@ public class GameResources {
 
 	public SoundSystem getSoundSystem() {
 		return soundSystem;
+	}
+
+	public ParticleController getParticleController() {
+		return particleController;
 	}
 
 	public Frustum getFrustum() {

@@ -37,7 +37,7 @@ import com.google.gson.JsonSyntaxException;
 
 import io.github.guerra24.voxel.client.kernel.api.VAPI;
 import io.github.guerra24.voxel.client.kernel.core.KernelConstants;
-import io.github.guerra24.voxel.client.kernel.resources.GameResources;
+import io.github.guerra24.voxel.client.kernel.resources.GameControllers;
 import io.github.guerra24.voxel.client.kernel.util.Logger;
 import io.github.guerra24.voxel.client.kernel.util.vector.Vector2f;
 import io.github.guerra24.voxel.client.kernel.util.vector.Vector3f;
@@ -95,11 +95,11 @@ public class World {
 	 *            World Dimension
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public void startWorld(String name, Random seed, int dimension, VAPI api, GameResources gm) {
+	public void startWorld(String name, Random seed, int dimension, VAPI api, GameControllers gm) {
 		this.name = name;
 		this.seed = seed;
 		this.dim = dimension;
-		gm.getCamera().setPosition(new Vector3f(0, 128, 0));
+		gm.getCamera().setPosition(new Vector3f(10, 128, 10));
 		if (existWorld()) {
 			loadWorld(gm);
 		}
@@ -113,7 +113,7 @@ public class World {
 	 * 
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	private void initialize(GameResources gm) {
+	private void initialize(GameControllers gm) {
 		noise = new SimplexNoise(128, 0.2f, seed.nextInt());
 		chunks = new HashMap<ChunkKey, Chunk>();
 		gm.getPhysics().getMobManager().getPlayer().setPosition(gm.getCamera().getPosition());
@@ -128,7 +128,7 @@ public class World {
 	 *            API
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	private void createWorld(GameResources gm, VAPI api) {
+	private void createWorld(GameControllers gm, VAPI api) {
 		Logger.log(Thread.currentThread(), "Generating World");
 		xPlayChunk = (int) (gm.getCamera().getPosition().x / 16);
 		zPlayChunk = (int) (gm.getCamera().getPosition().z / 16);
@@ -170,7 +170,7 @@ public class World {
 	 *            API
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public void updateChunkGeneration(GameResources gm, VAPI api) {
+	public void updateChunkGeneration(GameControllers gm, VAPI api) {
 		if (gm.getCamera().getPosition().x < 0)
 			xPlayChunk = (int) ((gm.getCamera().getPosition().x - 16) / 16);
 		if (gm.getCamera().getPosition().z < 0)
@@ -218,7 +218,7 @@ public class World {
 	 *            Camera
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public void updateChunksRender(GameResources gm) {
+	public void updateChunksRender(GameControllers gm) {
 		gm.lights.clear();
 		for (int zr = -KernelConstants.radius; zr <= KernelConstants.radius; zr++) {
 			int zz = zPlayChunk + zr;
@@ -265,7 +265,7 @@ public class World {
 	 * 
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public void saveWorld(GameResources gm) {
+	public void saveWorld(GameControllers gm) {
 		if (!existWorld()) {
 			File file = new File(KernelConstants.worldPath + name + "/");
 			file.mkdirs();
@@ -290,7 +290,7 @@ public class World {
 	 * 
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public void loadWorld(GameResources gm) {
+	public void loadWorld(GameControllers gm) {
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(KernelConstants.worldPath + name + "/world.json"));
 			seed = gm.getGson().fromJson(br, Random.class);
@@ -310,7 +310,7 @@ public class World {
 	 *            Z Coord
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public void saveChunk(int dim, int cx, int cz, GameResources gm) {
+	public void saveChunk(int dim, int cx, int cz, GameControllers gm) {
 		String json = gm.getGson().toJson(getChunk(dim, cx, cz));
 		try {
 			FileWriter file = new FileWriter(KernelConstants.worldPath + name + "/chunks_" + dim + "/chunk_" + dim + "_"
@@ -334,7 +334,7 @@ public class World {
 	 *            Z Coord
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public void loadChunk(int dim, int cx, int cz, GameResources gm) {
+	public void loadChunk(int dim, int cx, int cz, GameControllers gm) {
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(KernelConstants.worldPath + name + "/chunks_" + dim
 					+ "/chunk_" + dim + "_" + cx + "_" + cz + ".json"));

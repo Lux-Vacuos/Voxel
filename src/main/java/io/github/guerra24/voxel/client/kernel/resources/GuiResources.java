@@ -50,7 +50,7 @@ public class GuiResources {
 	 * 
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public GuiResources(GameResources gm) {
+	public GuiResources(GameControllers gm) {
 		loadGuiTexture(gm);
 		addGuiTextures(gm);
 	}
@@ -60,7 +60,7 @@ public class GuiResources {
 	 * 
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public void loadGuiTexture(GameResources gm) {
+	public void loadGuiTexture(GameControllers gm) {
 		gui = new GuiTexture(gm.getLoader().loadTextureGui("HotBar"), new Vector2f(0.6f, -0.425f),
 				new Vector2f(1.6f, 1.425f));
 		stats = new GuiTexture(gm.getLoader().loadTextureGui("Stats"), new Vector2f(0.6f, -0.425f),
@@ -83,7 +83,7 @@ public class GuiResources {
 	 * 
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public void addGuiTextures(GameResources gm) {
+	public void addGuiTextures(GameControllers gm) {
 		gm.guis.add(stats);
 		gm.guis.add(life);
 		gm.guis.add(gui);

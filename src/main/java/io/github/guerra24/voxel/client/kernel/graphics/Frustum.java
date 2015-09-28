@@ -28,7 +28,7 @@ import java.nio.FloatBuffer;
 
 import org.lwjgl.BufferUtils;
 
-import io.github.guerra24.voxel.client.kernel.resources.GameResources;
+import io.github.guerra24.voxel.client.kernel.resources.GameControllers;
 import io.github.guerra24.voxel.client.kernel.util.Maths;
 import io.github.guerra24.voxel.client.kernel.util.vector.Vector3f;
 
@@ -69,7 +69,7 @@ public class Frustum {
 		frustum[side][D] /= magnitude;
 	}
 
-	public void calculateFrustum(GameResources gm) {
+	public void calculateFrustum(GameControllers gm) {
 		float[] proj = new float[16];
 		float[] modl = new float[16];
 		float[] clip = new float[16];
