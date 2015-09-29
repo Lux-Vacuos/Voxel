@@ -33,9 +33,9 @@ public class EmiterPoint {
 	public void spawnParticles(ParticleController controller) {
 		origin = new Vector3f(x, y, z);
 		spawnRationPerTick++;
-		max = 200;
 		if (spawnRationPerTick >= max) {
-			controller.getParticles().add(new Particle(model, origin, 0, 0, 0, 600, 0.4f));
+			controller.getParticles()
+					.add(new Particle(model, origin, 0, 0, 0, 2000, 0.4f, Maths.randFloat(), Maths.randFloat()));
 			spawnRationPerTick = 0;
 		}
 	}

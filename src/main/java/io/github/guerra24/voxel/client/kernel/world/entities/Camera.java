@@ -106,7 +106,6 @@ public class Camera implements IEntity {
 
 		if (isKeyDown(KEY_W)) {
 
-
 			if (yaw > 90 && yaw < 270) {
 				if (world.getGlobalBlock(world.dim, bx, by, bz + 1) == 0)
 					position.z += -Math.cos(Math.toRadians(yaw)) * delta * speed * multiplierMovement;
@@ -116,7 +115,7 @@ public class Camera implements IEntity {
 			} else {
 				position.z += -Math.cos(Math.toRadians(yaw)) * delta * speed * multiplierMovement;
 			}
-			
+
 			if (yaw > 0 && yaw < 180) {
 				if (world.getGlobalBlock(world.dim, bx + 1, by, bz) == 0)
 					position.x += Math.sin(Math.toRadians(yaw)) * delta * speed * multiplierMovement;
@@ -190,9 +189,9 @@ public class Camera implements IEntity {
 		else if (isKeyDown(KEY_8))
 			block = 9;
 		if (isButtonDown(0)) {
-			world.setGlobalBlock(world.dim, (int) position.x, (int) position.y, (int) position.z, (byte) 0);
+			setBlock(position, (byte) 0, world);
 		} else if (isButtonDown(1)) {
-			world.setGlobalBlock(world.dim, (int) position.x, (int) position.y, (int) position.z, block);
+			setBlock(position, block, world);
 		}
 	}
 
@@ -210,6 +209,32 @@ public class Camera implements IEntity {
 					}
 				}
 			}
+	}
+
+	private void setBlock(Vector3f v, byte block, World world) {
+
+		float tempx = (v.x);
+		int tempX = (int) tempx;
+		if (v.x < 0) {
+			tempx = (v.x);
+			tempX = (int) tempx - 1;
+		}
+
+		float tempz = (v.z);
+		int tempZ = (int) tempz;
+		if (v.z > 0) {
+			tempz = (v.z);
+			tempZ = (int) tempz + 1;
+		}
+
+		float tempy = (v.y);
+		int tempY = (int) tempy;
+
+		int bx = (int) tempX;
+		int by = (int) tempY;
+		int bz = (int) tempZ;
+
+		world.setGlobalBlock(world.dim, bx, by - 2, bz, block);
 	}
 
 	public void invertPitch() {

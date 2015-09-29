@@ -6,18 +6,23 @@ import io.github.guerra24.voxel.client.kernel.resources.models.TexturedModel;
 import io.github.guerra24.voxel.client.kernel.util.vector.Vector3f;
 import io.github.guerra24.voxel.client.kernel.world.World;
 import io.github.guerra24.voxel.client.kernel.world.entities.Entity;
+import io.github.guerra24.voxel.client.kernel.world.physics.AABB;
+import io.github.guerra24.voxel.client.kernel.world.physics.CollisionType;
 
 public class Particle extends Entity {
 
-	private final float GRAVITY = 0.001f;
+	private final float GRAVITY = -0.001f;
 	private float lifeTime;
+	private float friction = 0.01f;
 	private float xVel = 0;
 	private float yVel = 0;
 	private float zVel = 0;
 
 	public Particle(TexturedModel model, Vector3f position, float rotX, float rotY, float rotZ, float lifeTime,
-			float scale) {
+			float scale, float xVel, float zVel) {
 		super(model, position, rotX, rotY, rotZ, scale);
+		this.xVel = xVel;
+		this.zVel = zVel;
 		this.lifeTime = lifeTime;
 	}
 
@@ -34,9 +39,77 @@ public class Particle extends Entity {
 		super.setRotX(angle * rotationAxis.x);
 		super.setRotY(angle * rotationAxis.y);
 		super.setRotZ(angle * rotationAxis.z);
-		yVel += GRAVITY * delta;
-		super.increasePosition(xVel, yVel, zVel);
+		updatePysics(delta, world);
 		lifeTime--;
+	}
+
+	private void updatePysics(float delta, World world) {
+		if (xVel > 0)
+			xVel -= friction * delta;
+		else if (xVel < 0)
+			xVel += friction * delta;
+		if (zVel > 0)
+			zVel -= friction * delta;
+		else if (zVel < 0)
+			zVel += friction * delta;
+
+		if (isCollision(0, world) == CollisionType.TOP)
+			yVel = 0;
+		else
+			yVel += GRAVITY * delta;
+		super.increasePosition(xVel, yVel, zVel);
+	}
+
+	private CollisionType isCollision(int direction, World world) {
+
+		Vector3f v = this.getPosition();
+
+		float tempx = (v.x);
+		int tempX = (int) tempx;
+		if (v.x < 0) {
+			tempx = (v.x);
+			tempX = (int) tempx - 1;
+		}
+
+		float tempz = (v.z);
+		int tempZ = (int) tempz;
+		if (v.z > 0) {
+			tempz = (v.z);
+			tempZ = (int) tempz + 1;
+		}
+
+		float tempy = (v.y);
+		int tempY = (int) tempy;
+
+		int bx = (int) tempX;
+		int by = (int) tempY;
+		int bz = (int) tempZ;
+
+		CollisionType collisionType = CollisionType.NONE;
+
+		byte b = -99;
+		b = world.getGlobalBlock(world.dim, bx, by, bz);
+
+		if (b != 0) {
+			Vector3f playerPosition = new Vector3f();
+			playerPosition.x = v.x;
+			playerPosition.y = v.y;
+			playerPosition.z = v.z;
+			this.update(playerPosition);
+
+			AABB voxel = new AABB(0.5f, 0.5f, 0.5f);
+			Vector3f voxelPosition = new Vector3f();
+			voxelPosition.x = bx - 1;
+			voxelPosition.y = by;
+			voxelPosition.z = bz;
+			voxel.update(voxelPosition);
+
+			if (!AABB.testAABB(this, voxel)) {
+				collisionType = CollisionType.TOP;
+			}
+		}
+
+		return collisionType;
 	}
 
 	public float getLifeTime() {

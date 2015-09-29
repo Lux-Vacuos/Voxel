@@ -25,6 +25,7 @@
 package io.github.guerra24.voxel.client.kernel.core;
 
 import io.github.guerra24.voxel.client.kernel.api.VAPI;
+import io.github.guerra24.voxel.client.kernel.graphics.opengl.Display;
 import io.github.guerra24.voxel.client.kernel.resources.GameControllers;
 import io.github.guerra24.voxel.client.kernel.world.World;
 
@@ -38,6 +39,7 @@ public class UpdateThread extends Thread {
 	private GameControllers gm;
 	private World world;
 	private VAPI api;
+	private Display display;
 
 	@Override
 	public void run() {
@@ -53,7 +55,7 @@ public class UpdateThread extends Thread {
 			case LOADING_WORLD:
 				break;
 			}
-			gm.getGameStates().switchStates(gm, world, api);
+			gm.getGameStates().switchStates(gm, world, api, display);
 			try {
 				Thread.sleep((long) 33.3333);
 			} catch (InterruptedException e) {
@@ -72,6 +74,10 @@ public class UpdateThread extends Thread {
 
 	public void setApi(VAPI api) {
 		this.api = api;
+	}
+
+	public void setDisplay(Display display) {
+		this.display = display;
 	}
 
 }

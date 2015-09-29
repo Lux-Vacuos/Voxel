@@ -114,7 +114,7 @@ public class Kernel implements IKernel {
 		Logger.log(Thread.currentThread(), "Build: " + KernelConstants.build);
 		Logger.log(Thread.currentThread(), "Running on: " + Bootstrap.getPlatform());
 		display = new Display();
-		display.initDsiplay();
+		display.initDsiplay(1280, 720);
 		display.startUp();
 		SystemInfo.printSystemInfo();
 
@@ -139,6 +139,7 @@ public class Kernel implements IKernel {
 		update.setApi(api);
 		update.setWorld(world);
 		update.setGm(gameResources);
+		update.setDisplay(display);
 		update.start();
 		api.init();
 		// byte[] user = Launcher.user.getBytes(Charset.forName("UTF-8"));
@@ -201,6 +202,7 @@ public class Kernel implements IKernel {
 			world.updateChunksRender(gm);
 			gm.getRenderer().renderEntity(gm.getPhysics().getMobManager().getMobs(), gm.lights, gm);
 			gm.getSkyboxRenderer().render(KernelConstants.RED, KernelConstants.GREEN, KernelConstants.BLUE, delta, gm);
+			gm.getParticleController().render(gm);
 			gm.getGuiRenderer().renderGui(gm.guis4);
 			display.updateDisplay(KernelConstants.FPS, gm);
 			break;
@@ -209,12 +211,12 @@ public class Kernel implements IKernel {
 			gm.getFrustum().calculateFrustum(gm);
 
 			gm.getFrameBuffer().begin();
-			
+
 			gm.getCamera().invertPitch();
 			gm.getRenderer().prepare();
 			gm.getSkyboxRenderer().render(KernelConstants.RED, KernelConstants.GREEN, KernelConstants.BLUE, delta, gm);
 			gm.getFrameBuffer().end();
-			
+
 			gm.getCamera().invertPitch();
 
 			gm.getRenderer().prepare();

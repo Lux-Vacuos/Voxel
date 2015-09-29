@@ -79,7 +79,7 @@ public class GameStates {
 	 * 
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public void switchStates(GameControllers gm, World world, VAPI api) {
+	public void switchStates(GameControllers gm, World world, VAPI api, Display display) {
 		if (state == State.MAINMENU && Button.isInButtonPlay()) {
 			// Kernel.gameResources.SoundSystem.pause("MainMenuMusic");
 			state = State.LOADING_WORLD;
@@ -130,7 +130,7 @@ public class GameStates {
 			gm.getSoundSystem().setVolume("menu1", 1f);
 		}
 
-		if (state == State.GAME && !Display.displayFocused && !KernelConstants.debug) {
+		if (state == State.GAME && !display.isDisplayFocused() && !KernelConstants.debug) {
 			gm.getCamera().unlockMouse();
 			state = State.IN_PAUSE;
 		}

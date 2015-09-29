@@ -176,9 +176,9 @@ public class Maths {
 	 * @return Random Int
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public static float randFloat(float min, float max) {
+	public static float randFloat() {
 		Random rand = new Random();
-		float randomNum = rand.nextFloat();
+		float randomNum = (rand.nextFloat() - 0.5f) / 16;
 		return randomNum;
 	}
 
