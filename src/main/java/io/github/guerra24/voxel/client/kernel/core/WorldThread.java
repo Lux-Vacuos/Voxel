@@ -26,7 +26,7 @@ package io.github.guerra24.voxel.client.kernel.core;
 
 import io.github.guerra24.voxel.client.kernel.api.VAPI;
 import io.github.guerra24.voxel.client.kernel.resources.GameControllers;
-import io.github.guerra24.voxel.client.kernel.world.World;
+import io.github.guerra24.voxel.client.kernel.world.WorldHandler;
 
 /**
  * World Thread
@@ -36,7 +36,7 @@ import io.github.guerra24.voxel.client.kernel.world.World;
  */
 public class WorldThread extends Thread {
 	private GameControllers gm;
-	private World world;
+	private WorldHandler world;
 	private VAPI api;
 
 	@Override
@@ -51,11 +51,10 @@ public class WorldThread extends Thread {
 				}
 				break;
 			case IN_PAUSE:
-				world.updateChunkGeneration(gm, api);
+				world.getWorld(world.getActiveWorld()).updateChunkGeneration(gm, api);
 				break;
 			case GAME:
-				world.updateChunkGeneration(gm, api);
-				world.test();
+				world.getWorld(world.getActiveWorld()).updateChunkGeneration(gm, api);
 				break;
 			case LOADING_WORLD:
 				try {
@@ -72,8 +71,8 @@ public class WorldThread extends Thread {
 		this.gm = gm;
 	}
 
-	public void setWorld(World world) {
-		this.world = world;
+	public void setWorldHandler(WorldHandler dimensionHandler) {
+		this.world = dimensionHandler;
 	}
 
 	public void setApi(VAPI api) {

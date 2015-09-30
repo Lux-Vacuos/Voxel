@@ -32,7 +32,7 @@ import io.github.guerra24.voxel.client.kernel.input.Keyboard;
 import io.github.guerra24.voxel.client.kernel.resources.GameControllers;
 import io.github.guerra24.voxel.client.kernel.resources.GuiResources;
 import io.github.guerra24.voxel.client.kernel.util.Logger;
-import io.github.guerra24.voxel.client.kernel.world.World;
+import io.github.guerra24.voxel.client.kernel.world.WorldHandler;
 import io.github.guerra24.voxel.client.kernel.world.block.BlocksResources;
 
 /**
@@ -56,7 +56,7 @@ public class Kernel implements IKernel {
 	/**
 	 * Contains and Handles the Game World
 	 */
-	private World world;
+	private WorldHandler worlds;
 	/**
 	 * Render calls
 	 */
@@ -126,18 +126,18 @@ public class Kernel implements IKernel {
 		BlocksResources.createBlocks(gameResources.getLoader());
 		gameResources.addRes();
 		gameResources.music();
-		world = new World();
+		worlds = new WorldHandler();
 		Logger.log(Thread.currentThread(), "Initializing Threads");
 		worldThread = new WorldThread();
 		worldThread.setName("Voxel World");
 		worldThread.setApi(api);
-		worldThread.setWorld(world);
+		worldThread.setWorldHandler(worlds);
 		worldThread.setGm(gameResources);
 		worldThread.start();
 		update = new UpdateThread();
 		update.setName("Voxel Update");
 		update.setApi(api);
-		update.setWorld(world);
+		update.setWorldHandler(worlds);
 		update.setGm(gameResources);
 		update.setDisplay(display);
 		update.start();
@@ -199,7 +199,7 @@ public class Kernel implements IKernel {
 			break;
 		case IN_PAUSE:
 			gm.getRenderer().prepare();
-			world.updateChunksRender(gm);
+			worlds.getWorld(worlds.getActiveWorld()).updateChunksRender(gm);
 			gm.getRenderer().renderEntity(gm.getPhysics().getMobManager().getMobs(), gm.lights, gm);
 			gm.getSkyboxRenderer().render(KernelConstants.RED, KernelConstants.GREEN, KernelConstants.BLUE, delta, gm);
 			gm.getParticleController().render(gm);
@@ -207,7 +207,16 @@ public class Kernel implements IKernel {
 			display.updateDisplay(KernelConstants.FPS, gm);
 			break;
 		case GAME:// THIS NEEDS OPTIMIZATION...
-			gm.getCamera().updatePicker(world);
+			int testdim = 0;
+			if (Keyboard.isKeyDown(Keyboard.KEY_U)) {
+				testdim = 1;
+				worlds.getWorld(worlds.getActiveWorld()).switchDimension(testdim, gm, api);
+			} else if (Keyboard.isKeyDown(Keyboard.KEY_I)) {
+				testdim = 0;
+				worlds.getWorld(worlds.getActiveWorld()).switchDimension(testdim, gm, api);
+			}
+
+			gm.getCamera().updatePicker(worlds.getWorld(worlds.getActiveWorld()));
 			gm.getFrustum().calculateFrustum(gm);
 
 			gm.getFrameBuffer().begin();
@@ -220,7 +229,7 @@ public class Kernel implements IKernel {
 			gm.getCamera().invertPitch();
 
 			gm.getRenderer().prepare();
-			world.updateChunksRender(gm);
+			worlds.getWorld(0).updateChunksRender(gm);
 			gm.getRenderer().renderEntity(gm.getPhysics().getMobManager().getMobs(), gm.lights, gm);
 			gm.getSkyboxRenderer().render(KernelConstants.RED, KernelConstants.GREEN, KernelConstants.BLUE, delta, gm);
 			gm.getParticleController().render(gm);
@@ -249,11 +258,11 @@ public class Kernel implements IKernel {
 				Bootstrap.config.setVisible(true);
 			break;
 		case GAME:
-			gm.getPhysics().getMobManager().update(delta, gm, gi, world);
-			gm.getParticleController().update(delta, gm, gi, world);
+			gm.getPhysics().getMobManager().update(delta, gm, gi, worlds.getWorld(worlds.getActiveWorld()));
+			gm.getParticleController().update(delta, gm, gi, worlds.getWorld(worlds.getActiveWorld()));
 			gm.getWaterRenderer().update(delta);
 			gm.getSkyboxRenderer().update(delta);
-			gm.getParticleController().update(delta, gm, gi, world);
+			gm.getParticleController().update(delta, gm, gi, worlds.getWorld(worlds.getActiveWorld()));
 			break;
 		case LOADING_WORLD:
 			break;
@@ -290,8 +299,8 @@ public class Kernel implements IKernel {
 		return guiResources;
 	}
 
-	public World getWorld() {
-		return world;
+	public WorldHandler getWorldHadler() {
+		return worlds;
 	}
 
 	public VAPI getApi() {

@@ -24,8 +24,31 @@
 
 package io.github.guerra24.voxel.client.kernel.world.entities;
 
-import static io.github.guerra24.voxel.client.kernel.input.Keyboard.*;
-import static io.github.guerra24.voxel.client.kernel.input.Mouse.*;
+import static io.github.guerra24.voxel.client.kernel.input.Keyboard.KEY_1;
+import static io.github.guerra24.voxel.client.kernel.input.Keyboard.KEY_2;
+import static io.github.guerra24.voxel.client.kernel.input.Keyboard.KEY_3;
+import static io.github.guerra24.voxel.client.kernel.input.Keyboard.KEY_4;
+import static io.github.guerra24.voxel.client.kernel.input.Keyboard.KEY_5;
+import static io.github.guerra24.voxel.client.kernel.input.Keyboard.KEY_6;
+import static io.github.guerra24.voxel.client.kernel.input.Keyboard.KEY_7;
+import static io.github.guerra24.voxel.client.kernel.input.Keyboard.KEY_8;
+import static io.github.guerra24.voxel.client.kernel.input.Keyboard.KEY_A;
+import static io.github.guerra24.voxel.client.kernel.input.Keyboard.KEY_D;
+import static io.github.guerra24.voxel.client.kernel.input.Keyboard.KEY_F3;
+import static io.github.guerra24.voxel.client.kernel.input.Keyboard.KEY_K;
+import static io.github.guerra24.voxel.client.kernel.input.Keyboard.KEY_LCONTROL;
+import static io.github.guerra24.voxel.client.kernel.input.Keyboard.KEY_LSHIFT;
+import static io.github.guerra24.voxel.client.kernel.input.Keyboard.KEY_R;
+import static io.github.guerra24.voxel.client.kernel.input.Keyboard.KEY_S;
+import static io.github.guerra24.voxel.client.kernel.input.Keyboard.KEY_SPACE;
+import static io.github.guerra24.voxel.client.kernel.input.Keyboard.KEY_W;
+import static io.github.guerra24.voxel.client.kernel.input.Keyboard.KEY_Y;
+import static io.github.guerra24.voxel.client.kernel.input.Keyboard.isKeyDown;
+import static io.github.guerra24.voxel.client.kernel.input.Mouse.getDX;
+import static io.github.guerra24.voxel.client.kernel.input.Mouse.getDY;
+import static io.github.guerra24.voxel.client.kernel.input.Mouse.isButtonDown;
+import static io.github.guerra24.voxel.client.kernel.input.Mouse.setCursorPosition;
+import static io.github.guerra24.voxel.client.kernel.input.Mouse.setGrabbed;
 
 import io.github.guerra24.voxel.client.kernel.core.KernelConstants;
 import io.github.guerra24.voxel.client.kernel.graphics.opengl.Display;
@@ -33,7 +56,7 @@ import io.github.guerra24.voxel.client.kernel.resources.GameControllers;
 import io.github.guerra24.voxel.client.kernel.resources.GuiResources;
 import io.github.guerra24.voxel.client.kernel.util.vector.Vector2f;
 import io.github.guerra24.voxel.client.kernel.util.vector.Vector3f;
-import io.github.guerra24.voxel.client.kernel.world.World;
+import io.github.guerra24.voxel.client.kernel.world.DimensionalWorld;
 
 /**
  * Camera
@@ -62,7 +85,7 @@ public class Camera implements IEntity {
 	}
 
 	@Override
-	public void update(float delta, GameControllers gm, GuiResources gi, World world) {
+	public void update(float delta, GameControllers gm, GuiResources gi, DimensionalWorld world) {
 		isMoved = false;
 		float mouseDX = getDX() * delta * mouseSpeed * 0.16f * multiplierMouse;
 		float mouseDY = getDY() * delta * mouseSpeed * 0.16f * multiplierMouse;
@@ -107,20 +130,20 @@ public class Camera implements IEntity {
 		if (isKeyDown(KEY_W)) {
 
 			if (yaw > 90 && yaw < 270) {
-				if (world.getGlobalBlock(world.dim, bx, by, bz + 1) == 0)
+				if (world.getGlobalBlock(world.getChunkDimension(), bx, by, bz + 1) == 0)
 					position.z += -Math.cos(Math.toRadians(yaw)) * delta * speed * multiplierMovement;
 			} else if ((yaw > 270 && yaw < 360) || (yaw > 0 && yaw < 90)) {
-				if (world.getGlobalBlock(world.dim, bx, by, bz - 1) == 0)
+				if (world.getGlobalBlock(world.getChunkDimension(), bx, by, bz - 1) == 0)
 					position.z += -Math.cos(Math.toRadians(yaw)) * delta * speed * multiplierMovement;
 			} else {
 				position.z += -Math.cos(Math.toRadians(yaw)) * delta * speed * multiplierMovement;
 			}
 
 			if (yaw > 0 && yaw < 180) {
-				if (world.getGlobalBlock(world.dim, bx + 1, by, bz) == 0)
+				if (world.getGlobalBlock(world.getChunkDimension(), bx + 1, by, bz) == 0)
 					position.x += Math.sin(Math.toRadians(yaw)) * delta * speed * multiplierMovement;
 			} else if (yaw > 180 && yaw < 360) {
-				if (world.getGlobalBlock(world.dim, bx - 1, by, bz) == 0)
+				if (world.getGlobalBlock(world.getChunkDimension(), bx - 1, by, bz) == 0)
 					position.x += Math.sin(Math.toRadians(yaw)) * delta * speed * multiplierMovement;
 			} else {
 				position.x += Math.sin(Math.toRadians(yaw)) * delta * speed * multiplierMovement;
@@ -170,7 +193,7 @@ public class Camera implements IEntity {
 		setLife(life, gi);
 	}
 
-	public void updatePicker(World world) {
+	public void updatePicker(DimensionalWorld world) {
 
 		if (isKeyDown(KEY_1))
 			block = 1;
@@ -195,23 +218,23 @@ public class Camera implements IEntity {
 		}
 	}
 
-	public void updateDebug(World world) {
+	public void updateDebug(DimensionalWorld world) {
 		if (isKeyDown(KEY_F3) && isKeyDown(KEY_R))
 			for (int zr = -KernelConstants.genRadius; zr <= KernelConstants.genRadius; zr++) {
 				int zz = world.getzPlayChunk() + zr;
 				for (int xr = -KernelConstants.genRadius; xr <= KernelConstants.genRadius; xr++) {
 					int xx = world.getxPlayChunk() + xr;
 					if (zr * zr + xr * xr <= KernelConstants.genRadius * KernelConstants.genRadius) {
-						if (world.hasChunk(world.dim, xx, zz)) {
-							world.getChunk(world.dim, xx, zz).clear();
-							world.tempRadius = 0;
+						if (world.hasChunk(world.getChunkDimension(), xx, zz)) {
+							world.getChunk(world.getChunkDimension(), xx, zz).clear();
+							world.setTempRadius(0);
 						}
 					}
 				}
 			}
 	}
 
-	private void setBlock(Vector3f v, byte block, World world) {
+	private void setBlock(Vector3f v, byte block, DimensionalWorld world) {
 
 		float tempx = (v.x);
 		int tempX = (int) tempx;
@@ -234,7 +257,7 @@ public class Camera implements IEntity {
 		int by = (int) tempY;
 		int bz = (int) tempZ;
 
-		world.setGlobalBlock(world.dim, bx, by - 2, bz, block);
+		world.setGlobalBlock(world.getChunkDimension(), bx, by - 2, bz, block);
 	}
 
 	public void invertPitch() {

@@ -26,7 +26,7 @@ public class DefaultMobManager implements IMobManagerController {
 	}
 
 	@Override
-	public void update(float delta, GameControllers gm, GuiResources gi, World world) {
+	public void update(float delta, GameControllers gm, GuiResources gi, DimensionalWorld world) {
 		for (int x = 0; x < mobs.size(); x++) {
 			mobs.get(x).update(delta, gm, gi, world);
 		}

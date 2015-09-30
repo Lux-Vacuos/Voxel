@@ -17,7 +17,7 @@ import io.github.guerra24.voxel.client.kernel.resources.GuiResources;
 import io.github.guerra24.voxel.client.kernel.resources.Loader;
 import io.github.guerra24.voxel.client.kernel.resources.models.TexturedModel;
 import io.github.guerra24.voxel.client.kernel.util.vector.Vector3f;
-import io.github.guerra24.voxel.client.kernel.world.World;
+import io.github.guerra24.voxel.client.kernel.world.DimensionalWorld;
 
 public class ParticleController implements IParticleController {
 
@@ -63,7 +63,7 @@ public class ParticleController implements IParticleController {
 	}
 
 	@Override
-	public void update(float delta, GameControllers gm, GuiResources gi, World world) {
+	public void update(float delta, GameControllers gm, GuiResources gi, DimensionalWorld world) {
 		emiter.spawnParticles(this);
 		for (int x = 0; x < particles.size(); x++) {
 			particles.get(x).update(delta, gm, gi, world);

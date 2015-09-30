@@ -28,7 +28,7 @@ import io.github.guerra24.voxel.client.kernel.resources.GameControllers;
 import io.github.guerra24.voxel.client.kernel.resources.GuiResources;
 import io.github.guerra24.voxel.client.kernel.resources.models.TexturedModel;
 import io.github.guerra24.voxel.client.kernel.util.vector.Vector3f;
-import io.github.guerra24.voxel.client.kernel.world.World;
+import io.github.guerra24.voxel.client.kernel.world.DimensionalWorld;
 
 public class Mob extends Entity implements IEntity {
 
@@ -42,7 +42,7 @@ public class Mob extends Entity implements IEntity {
 	}
 
 	@Override
-	public void update(float delta, GameControllers gm, GuiResources gi, World world) {
+	public void update(float delta, GameControllers gm, GuiResources gi, DimensionalWorld world) {
 	}
 
 	@Override

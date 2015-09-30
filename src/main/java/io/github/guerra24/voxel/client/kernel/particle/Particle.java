@@ -4,7 +4,7 @@ import io.github.guerra24.voxel.client.kernel.resources.GameControllers;
 import io.github.guerra24.voxel.client.kernel.resources.GuiResources;
 import io.github.guerra24.voxel.client.kernel.resources.models.TexturedModel;
 import io.github.guerra24.voxel.client.kernel.util.vector.Vector3f;
-import io.github.guerra24.voxel.client.kernel.world.World;
+import io.github.guerra24.voxel.client.kernel.world.DimensionalWorld;
 import io.github.guerra24.voxel.client.kernel.world.entities.Entity;
 import io.github.guerra24.voxel.client.kernel.world.physics.AABB;
 import io.github.guerra24.voxel.client.kernel.world.physics.CollisionType;
@@ -26,7 +26,7 @@ public class Particle extends Entity {
 		this.lifeTime = lifeTime;
 	}
 
-	public void update(float delta, GameControllers gm, GuiResources gi, World world) {
+	public void update(float delta, GameControllers gm, GuiResources gi, DimensionalWorld world) {
 		Vector3f normal = new Vector3f(0, 1, 0);
 		Vector3f dir = Vector3f.sub(
 				new Vector3f(gm.getCamera().getPosition().x, gm.getCamera().getPosition().y,
@@ -43,7 +43,7 @@ public class Particle extends Entity {
 		lifeTime--;
 	}
 
-	private void updatePysics(float delta, World world) {
+	private void updatePysics(float delta, DimensionalWorld world) {
 		if (xVel > 0)
 			xVel -= friction * delta;
 		else if (xVel < 0)
@@ -60,7 +60,7 @@ public class Particle extends Entity {
 		super.increasePosition(xVel, yVel, zVel);
 	}
 
-	private CollisionType isCollision(int direction, World world) {
+	private CollisionType isCollision(int direction, DimensionalWorld world) {
 
 		Vector3f v = this.getPosition();
 
@@ -88,7 +88,7 @@ public class Particle extends Entity {
 		CollisionType collisionType = CollisionType.NONE;
 
 		byte b = -99;
-		b = world.getGlobalBlock(world.dim, bx, by, bz);
+		b = world.getGlobalBlock(world.getChunkDimension(), bx, by, bz);
 
 		if (b != 0) {
 			Vector3f playerPosition = new Vector3f();
