@@ -36,6 +36,7 @@ import io.github.guerra24.voxel.client.kernel.graphics.FrameBuffer;
 import io.github.guerra24.voxel.client.kernel.graphics.Frustum;
 import io.github.guerra24.voxel.client.kernel.graphics.GuiRenderer;
 import io.github.guerra24.voxel.client.kernel.graphics.MasterRenderer;
+import io.github.guerra24.voxel.client.kernel.graphics.PostProcessingRenderer;
 import io.github.guerra24.voxel.client.kernel.graphics.SkyboxRenderer;
 import io.github.guerra24.voxel.client.kernel.graphics.WaterRenderer;
 import io.github.guerra24.voxel.client.kernel.graphics.shaders.WaterShader;
@@ -82,6 +83,7 @@ public class GameResources {
 	private GuiRenderer guiRenderer;
 	private GameStates gameStates;
 	private ParticleController particleController;
+	private PostProcessingRenderer postProcessing;
 	private Gson gson;
 	private SoundSystem soundSystem;
 	private Frustum frustum;
@@ -111,8 +113,9 @@ public class GameResources {
 		waterRenderer = new WaterRenderer(loader, waterShader, renderer.getProjectionMatrix());
 		skyboxRenderer = new SkyboxRenderer(loader, renderer.getProjectionMatrix());
 		particleController = new ParticleController(loader);
+		postProcessing = new PostProcessingRenderer(loader);
 		gameStates = new GameStates();
-		waterFBO = new FrameBuffer(false);
+		waterFBO = new FrameBuffer(false, 512, 512);
 		physics = new Physics(this);
 		frustum = new Frustum();
 		rand = new Random();
@@ -244,6 +247,10 @@ public class GameResources {
 
 	public ParticleController getParticleController() {
 		return particleController;
+	}
+
+	public PostProcessingRenderer getPostProcessing() {
+		return postProcessing;
 	}
 
 	public Frustum getFrustum() {

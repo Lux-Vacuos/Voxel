@@ -204,20 +204,23 @@ public class Kernel implements IKernel {
 			gm.getCamera().updatePicker(worlds.getWorld(worlds.getActiveWorld()));
 			gm.getFrustum().calculateFrustum(gm);
 
-			gm.getWaterFBO().begin();
-
+			gm.getWaterFBO().begin(512, 512);
 			gm.getCamera().invertPitch();
 			gm.getRenderer().prepare();
 			gm.getSkyboxRenderer().render(KernelConstants.RED, KernelConstants.GREEN, KernelConstants.BLUE, delta, gm);
 			gm.getWaterFBO().end();
-
 			gm.getCamera().invertPitch();
 
+			gm.getPostProcessing().getPost_fbo().begin(Display.getWidth(), Display.getHeight());
 			gm.getRenderer().prepare();
 			worlds.getWorld(worlds.getActiveWorld()).updateChunksRender(gm);
 			gm.getSkyboxRenderer().render(KernelConstants.RED, KernelConstants.GREEN, KernelConstants.BLUE, delta, gm);
 			gm.getRenderer().renderEntity(gm.getPhysics().getMobManager().getMobs(), gm.lights, gm);
 			gm.getParticleController().render(gm);
+			gm.getPostProcessing().getPost_fbo().end();
+
+			gm.getRenderer().prepare();
+			gm.getPostProcessing().render();
 			gm.getGuiRenderer().renderGui(gm.guis);
 			display.updateDisplay(KernelConstants.FPS, gm);
 			break;

@@ -85,12 +85,12 @@ import org.lwjgl.glfw.GLFWFramebufferSizeCallback;
 import org.lwjgl.glfw.GLFWKeyCallback;
 import org.lwjgl.glfw.GLFWMouseButtonCallback;
 import org.lwjgl.glfw.GLFWScrollCallback;
+import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.glfw.GLFWWindowFocusCallback;
 import org.lwjgl.glfw.GLFWWindowIconifyCallback;
 import org.lwjgl.glfw.GLFWWindowPosCallback;
 import org.lwjgl.glfw.GLFWWindowRefreshCallback;
 import org.lwjgl.glfw.GLFWWindowSizeCallback;
-import org.lwjgl.glfw.GLFWvidmode;
 
 import de.matthiasmann.twl.utils.PNGDecoder;
 import io.github.guerra24.voxel.client.kernel.core.KernelConstants;
@@ -115,7 +115,7 @@ public class Display {
 	/**
 	 * Display VidMode
 	 */
-	private ByteBuffer vidmode;
+	private GLFWVidMode vidmode;
 	/**
 	 * Game loop variables
 	 */
@@ -192,8 +192,7 @@ public class Display {
 		createCallBacks();
 		setCallbacks();
 		vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-		glfwSetWindowPos(window, (GLFWvidmode.width(vidmode) - displayWidth) / 2,
-				(GLFWvidmode.height(vidmode) - displayHeight) / 2);
+		glfwSetWindowPos(window, (vidmode.getWidth() - displayWidth) / 2, (vidmode.getHeight() - displayHeight) / 2);
 		glfwMakeContextCurrent(window);
 		glfwShowWindow(window);
 		glfwSwapInterval(0);

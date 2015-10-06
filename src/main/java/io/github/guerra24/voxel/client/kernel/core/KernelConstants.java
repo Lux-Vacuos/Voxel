@@ -73,7 +73,7 @@ public class KernelConstants {
 	/**
 	 * Game Build Number
 	 */
-	public static int build = 76;
+	public static int build = 77;
 	/**
 	 * Game Version
 	 */
@@ -145,8 +145,8 @@ public class KernelConstants {
 	public static final String FRAGMENT_FILE_WATER = "FragmentShaderWater.glsl";
 	public static final String VERTEX_FILE_PARTICLE = "VertexShaderParticle.glsl";
 	public static final String FRAGMENT_FILE_PARTICLE = "FragmentShaderParticle.glsl";
-	public static final String VERTEX_FILE_SHADOW = "VertexShaderShadow.glsl";
-	public static final String FRAGMENT_FILE_SHADOW = "FragmentShaderShadow.glsl";
+	public static final String VERTEX_FILE_POST = "VertexPost.glsl";
+	public static final String FRAGMENT_FILE_POST = "FragmentPost.glsl";
 	// World Save Path
 	/**
 	 * World Folder Path

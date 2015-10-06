@@ -1,8 +1,32 @@
 package io.github.guerra24.voxel.client.kernel.graphics;
 
-import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL30.*;
-import static org.lwjgl.opengl.GL32.*;
+import static org.lwjgl.opengl.GL11.GL_DEPTH_COMPONENT;
+import static org.lwjgl.opengl.GL11.GL_FLOAT;
+import static org.lwjgl.opengl.GL11.GL_LINEAR;
+import static org.lwjgl.opengl.GL11.GL_RGB;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_MAG_FILTER;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_MIN_FILTER;
+import static org.lwjgl.opengl.GL11.GL_UNSIGNED_BYTE;
+import static org.lwjgl.opengl.GL11.glBindTexture;
+import static org.lwjgl.opengl.GL11.glDeleteTextures;
+import static org.lwjgl.opengl.GL11.glGenTextures;
+import static org.lwjgl.opengl.GL11.glTexImage2D;
+import static org.lwjgl.opengl.GL11.glTexParameteri;
+import static org.lwjgl.opengl.GL11.glViewport;
+import static org.lwjgl.opengl.GL30.GL_COLOR_ATTACHMENT0;
+import static org.lwjgl.opengl.GL30.GL_DEPTH_ATTACHMENT;
+import static org.lwjgl.opengl.GL30.GL_FRAMEBUFFER;
+import static org.lwjgl.opengl.GL30.GL_RENDERBUFFER;
+import static org.lwjgl.opengl.GL30.glBindFramebuffer;
+import static org.lwjgl.opengl.GL30.glBindRenderbuffer;
+import static org.lwjgl.opengl.GL30.glDeleteFramebuffers;
+import static org.lwjgl.opengl.GL30.glDeleteRenderbuffers;
+import static org.lwjgl.opengl.GL30.glFramebufferRenderbuffer;
+import static org.lwjgl.opengl.GL30.glGenFramebuffers;
+import static org.lwjgl.opengl.GL30.glGenRenderbuffers;
+import static org.lwjgl.opengl.GL30.glRenderbufferStorage;
+import static org.lwjgl.opengl.GL32.glFramebufferTexture;
 
 import java.nio.ByteBuffer;
 
@@ -13,23 +37,23 @@ public class FrameBuffer {
 	private int DepthBuffer;
 	private int DepthTexture;
 
-	public FrameBuffer(boolean depth) {
-		initialiseFrameBuffer(depth);
+	public FrameBuffer(boolean depth, int width, int height) {
+		initialiseFrameBuffer(depth, width, height);
 	}
 
-	private void initialiseFrameBuffer(boolean depth) {
+	private void initialiseFrameBuffer(boolean depth, int width, int height) {
 		FrameBuffer = createFrameBuffer();
 		if (depth) {
-			DepthTexture = createDepthTextureAttachment(512, 512);
+			DepthTexture = createDepthTextureAttachment(width, height);
 		} else {
-			DepthTexture = createTextureAttachment(512, 512);
+			DepthTexture = createTextureAttachment(width, height);
 		}
-		DepthBuffer = createDepthBufferAttachment(512, 512);
+		DepthBuffer = createDepthBufferAttachment(width, height);
 		end();
 	}
 
-	public void begin() {
-		bindFrameBuffer(FrameBuffer, 512, 512);
+	public void begin(int width, int height) {
+		bindFrameBuffer(FrameBuffer, width, height);
 	}
 
 	public void end() {
