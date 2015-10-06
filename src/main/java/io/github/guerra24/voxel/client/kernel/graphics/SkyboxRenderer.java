@@ -37,7 +37,7 @@ import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import io.github.guerra24.voxel.client.kernel.core.KernelConstants;
 import io.github.guerra24.voxel.client.kernel.graphics.opengl.VoxelGL33;
 import io.github.guerra24.voxel.client.kernel.graphics.shaders.SkyboxShader;
-import io.github.guerra24.voxel.client.kernel.resources.GameControllers;
+import io.github.guerra24.voxel.client.kernel.resources.GameResources;
 import io.github.guerra24.voxel.client.kernel.resources.Loader;
 import io.github.guerra24.voxel.client.kernel.resources.models.RawModel;
 import io.github.guerra24.voxel.client.kernel.util.vector.Matrix4f;
@@ -141,7 +141,7 @@ public class SkyboxRenderer {
 		shader.connectTextureUnits();
 		shader.loadProjectionMatrix(projectionMatrix);
 		shader.stop();
-		time = 8000;
+		time = 7960;
 	}
 
 	/**
@@ -159,7 +159,7 @@ public class SkyboxRenderer {
 	 *            Delta
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public void render(float r, float g, float b, float delta, GameControllers gm) {
+	public void render(float r, float g, float b, float delta, GameResources gm) {
 		shader.start();
 		shader.loadProjectionMatrix(gm.getRenderer().getProjectionMatrix());
 		shader.loadViewMatrix(gm.getCamera(), delta);

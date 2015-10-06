@@ -31,7 +31,8 @@ in float visibility;
 
 out vec4 out_Color;
 
-uniform sampler2D textureSampler;
+uniform sampler2D texture0;
+uniform sampler2D depth0;
 uniform vec3 skyColour;
 uniform vec3 lightColour[8];
 uniform vec3 attenuations[8];
@@ -39,6 +40,11 @@ uniform float time;
 uniform float blendFactor;
 uniform vec3 directLightDirection;
 
+<<<<<<< HEAD
+#define DEPTH_OFSSET 0.001
+
+=======
+>>>>>>> develop
 float CalcDirectionalLightFactor(vec3 lightDirection, vec3 normal) {
     float DiffuseFactor = dot(normalize(normal), -lightDirection);
 
@@ -79,6 +85,8 @@ void main(void) {
     
     vec3 Day = vec3(0,0,0);
     vec3 Night = vec3(0,0,0);
+<<<<<<< HEAD
+=======
     
     if (time >= 0 && time < 5000) {
 		Day = AmbientColor;
@@ -96,7 +104,24 @@ void main(void) {
     
 	vec3 lightIntensity = mix(Day, Night, blendFactor);
 
+>>>>>>> develop
 	
+    if (time >= 0 && time < 5000) {
+		Day = AmbientColor;
+		Night = AmbientColor;
+	} else if (time >= 5000 && time < 8000) {
+		Day = AmbientColor;
+		Night = DiffuseColor + AmbientColor;
+	} else if (time >= 8000 && time < 21000) {
+		Day = DiffuseColor + AmbientColor;
+		Night = DiffuseColor + AmbientColor;
+	} else {
+		Day = DiffuseColor + AmbientColor;
+		Night = AmbientColor;
+	}
+    
+	vec3 lightIntensity = mix(Day, Night, blendFactor);
+
 	vec4 totalDiffuse = vec4(0.0);
 	
 	// code for dynamic light
@@ -112,7 +137,7 @@ void main(void) {
 	totalDiffuse = totalDiffuse + light;
 	totalDiffuse = clamp(totalDiffuse, 0.0, 1.0);
 	
-	vec4 textureColour = texture(textureSampler, pass_textureCoords);
+	vec4 textureColour = texture(texture0, pass_textureCoords);
 	if(textureColour.a<0.5) {
 		discard;
 	}

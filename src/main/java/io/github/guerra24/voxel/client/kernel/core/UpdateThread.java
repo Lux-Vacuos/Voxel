@@ -26,8 +26,8 @@ package io.github.guerra24.voxel.client.kernel.core;
 
 import io.github.guerra24.voxel.client.kernel.api.VAPI;
 import io.github.guerra24.voxel.client.kernel.graphics.opengl.Display;
-import io.github.guerra24.voxel.client.kernel.resources.GameControllers;
-import io.github.guerra24.voxel.client.kernel.world.World;
+import io.github.guerra24.voxel.client.kernel.resources.GameResources;
+import io.github.guerra24.voxel.client.kernel.world.WorldHandler;
 
 /**
  * Update Thread
@@ -36,8 +36,8 @@ import io.github.guerra24.voxel.client.kernel.world.World;
  * @category Kernel
  */
 public class UpdateThread extends Thread {
-	private GameControllers gm;
-	private World world;
+	private GameResources gm;
+	private WorldHandler world;
 	private VAPI api;
 	private Display display;
 
@@ -50,7 +50,7 @@ public class UpdateThread extends Thread {
 			case IN_PAUSE:
 				break;
 			case GAME:
-				gm.getCamera().updateDebug(world);
+				gm.getCamera().updateDebug(world.getWorld(world.getActiveWorld()));
 				break;
 			case LOADING_WORLD:
 				break;
@@ -64,12 +64,12 @@ public class UpdateThread extends Thread {
 		}
 	}
 
-	public void setGm(GameControllers gm) {
+	public void setGm(GameResources gm) {
 		this.gm = gm;
 	}
 
-	public void setWorld(World world) {
-		this.world = world;
+	public void setWorldHandler(WorldHandler dimensionHandler) {
+		this.world = dimensionHandler;
 	}
 
 	public void setApi(VAPI api) {

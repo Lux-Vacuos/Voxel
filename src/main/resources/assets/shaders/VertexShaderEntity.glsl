@@ -45,7 +45,6 @@ const float gradient = 10.0;
 void main() {
 
 	vec4 worldPosition = transformationMatrix * vec4(position, 1.0);
-	
 	vec4 positionRelativeToCam = viewMatrix * worldPosition;
 	gl_Position = projectionMatrix * positionRelativeToCam;
 	pass_textureCoords = textureCoords;
@@ -59,5 +58,4 @@ void main() {
 	float distance = length(positionRelativeToCam.xyz);
 	visibility = exp(-pow((distance*density),gradient));
 	visibility = clamp(visibility,0.0,1.1);
-	
 }

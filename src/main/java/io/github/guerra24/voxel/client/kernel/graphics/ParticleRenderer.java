@@ -16,7 +16,7 @@ import java.util.Map;
 import io.github.guerra24.voxel.client.kernel.graphics.opengl.VoxelGL33;
 import io.github.guerra24.voxel.client.kernel.graphics.shaders.ParticleShader;
 import io.github.guerra24.voxel.client.kernel.particle.Particle;
-import io.github.guerra24.voxel.client.kernel.resources.GameControllers;
+import io.github.guerra24.voxel.client.kernel.resources.GameResources;
 import io.github.guerra24.voxel.client.kernel.resources.models.RawModel;
 import io.github.guerra24.voxel.client.kernel.resources.models.TexturedModel;
 import io.github.guerra24.voxel.client.kernel.util.Maths;
@@ -30,7 +30,7 @@ public class ParticleRenderer {
 		this.shader = shader;
 	}
 
-	public void render(Map<TexturedModel, List<Particle>> particles, GameControllers gm) {
+	public void render(Map<TexturedModel, List<Particle>> particles, GameResources gm) {
 		for (TexturedModel model : particles.keySet()) {
 			prepareTexturedModel(model, gm);
 			List<Particle> batch = particles.get(model);
@@ -48,7 +48,7 @@ public class ParticleRenderer {
 	 * @param model
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	private void prepareTexturedModel(TexturedModel model, GameControllers gm) {
+	private void prepareTexturedModel(TexturedModel model, GameResources gm) {
 		RawModel rawmodel = model.getRawModel();
 		glBindVertexArray(rawmodel.getVaoID());
 		glEnableVertexAttribArray(0);

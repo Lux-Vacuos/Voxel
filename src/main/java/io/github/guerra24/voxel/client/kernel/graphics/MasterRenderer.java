@@ -40,7 +40,7 @@ import io.github.guerra24.voxel.client.kernel.core.KernelConstants;
 import io.github.guerra24.voxel.client.kernel.graphics.opengl.Display;
 import io.github.guerra24.voxel.client.kernel.graphics.opengl.VoxelGL33;
 import io.github.guerra24.voxel.client.kernel.graphics.shaders.EntityShader;
-import io.github.guerra24.voxel.client.kernel.resources.GameControllers;
+import io.github.guerra24.voxel.client.kernel.resources.GameResources;
 import io.github.guerra24.voxel.client.kernel.resources.Loader;
 import io.github.guerra24.voxel.client.kernel.resources.models.TexturedModel;
 import io.github.guerra24.voxel.client.kernel.util.vector.Matrix4f;
@@ -93,7 +93,8 @@ public class MasterRenderer {
 	 */
 	public MasterRenderer(Loader loader) {
 		initGL();
-		createProjectionMatrix();
+		projectionMatrix = createProjectionMatrix(Display.getWidth(), Display.getHeight(), KernelConstants.FOV,
+				KernelConstants.NEAR_PLANE, KernelConstants.FAR_PLANE);
 		entityRenderer = new EntityRenderer(shader, projectionMatrix);
 	}
 
@@ -119,7 +120,7 @@ public class MasterRenderer {
 	 *            A Camera
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public void renderChunk(Queue<BlockEntity> cubes1temp, List<Light> lights, GameControllers gm) {
+	public void renderChunk(Queue<BlockEntity> cubes1temp, List<Light> lights, GameResources gm) {
 		for (BlockEntity entity : cubes1temp) {
 			processBlockEntity(entity);
 		}
@@ -137,7 +138,7 @@ public class MasterRenderer {
 	 *            A Camera
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public void renderEntity(List<IEntity> list, List<Light> lights, GameControllers gm) {
+	public void renderEntity(List<IEntity> list, List<Light> lights, GameResources gm) {
 		for (IEntity entity : list) {
 			if (entity != null)
 				if (entity.getEntity() != null)
@@ -157,7 +158,7 @@ public class MasterRenderer {
 	 *            A Camera
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	private void renderChunk(List<Light> lights, GameControllers gm) {
+	private void renderChunk(List<Light> lights, GameResources gm) {
 		shader.start();
 		shader.loadProjectionMatrix(projectionMatrix);
 		shader.loadSkyColour(KernelConstants.RED, KernelConstants.GREEN, KernelConstants.BLUE);
@@ -180,7 +181,7 @@ public class MasterRenderer {
 	 *            A Camera
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	private void renderEntity(List<Light> lights, GameControllers gm) {
+	private void renderEntity(List<Light> lights, GameResources gm) {
 		shader.start();
 		shader.loadProjectionMatrix(projectionMatrix);
 		shader.loadLights(lights);
@@ -244,20 +245,21 @@ public class MasterRenderer {
 	 * 
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public void createProjectionMatrix() {
-		aspectRatio = (float) Display.getWidth() / (float) Display.getHeight();
-		float y_scale = (float) ((1f / Math.tan(Math.toRadians(KernelConstants.FOV / 2f))) * aspectRatio);
+	public Matrix4f createProjectionMatrix(int width, int height, float fov, float nearPlane, float farPlane) {
+		aspectRatio = (float) width / (float) height;
+		float y_scale = (float) ((1f / Math.tan(Math.toRadians(fov / 2f))) * aspectRatio);
 		float x_scale = y_scale / aspectRatio;
-		float frustrum_length = KernelConstants.FAR_PLANE - KernelConstants.NEAR_PLANE;
+		float frustrum_length = farPlane - nearPlane;
 
-		projectionMatrix = new Matrix4f();
+		Matrix4f projectionMatrix = new Matrix4f();
 		projectionMatrix.setIdentity();
 		projectionMatrix.m00 = x_scale;
 		projectionMatrix.m11 = y_scale;
-		projectionMatrix.m22 = -((KernelConstants.FAR_PLANE + KernelConstants.NEAR_PLANE) / frustrum_length);
+		projectionMatrix.m22 = -((farPlane + nearPlane) / frustrum_length);
 		projectionMatrix.m23 = -1;
-		projectionMatrix.m32 = -((2 * KernelConstants.NEAR_PLANE * KernelConstants.FAR_PLANE) / frustrum_length);
+		projectionMatrix.m32 = -((2 * nearPlane * farPlane) / frustrum_length);
 		projectionMatrix.m33 = 0;
+		return projectionMatrix;
 	}
 
 	/**
@@ -277,5 +279,9 @@ public class MasterRenderer {
 	 */
 	public Matrix4f getProjectionMatrix() {
 		return projectionMatrix;
+	}
+	
+	public void setProjectionMatrix(Matrix4f matrix){
+		projectionMatrix = matrix;
 	}
 }

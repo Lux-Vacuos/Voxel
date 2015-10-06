@@ -25,15 +25,21 @@
 package io.github.guerra24.voxel.client.kernel.world.entities;
 
 import static io.github.guerra24.voxel.client.kernel.input.Keyboard.*;
-import static io.github.guerra24.voxel.client.kernel.input.Mouse.*;
+import static io.github.guerra24.voxel.client.kernel.input.Mouse.getDX;
+import static io.github.guerra24.voxel.client.kernel.input.Mouse.getDY;
+import static io.github.guerra24.voxel.client.kernel.input.Mouse.isButtonDown;
+import static io.github.guerra24.voxel.client.kernel.input.Mouse.setCursorPosition;
+import static io.github.guerra24.voxel.client.kernel.input.Mouse.setGrabbed;
 
+import io.github.guerra24.voxel.client.kernel.api.VAPI;
 import io.github.guerra24.voxel.client.kernel.core.KernelConstants;
 import io.github.guerra24.voxel.client.kernel.graphics.opengl.Display;
-import io.github.guerra24.voxel.client.kernel.resources.GameControllers;
+import io.github.guerra24.voxel.client.kernel.resources.GameResources;
 import io.github.guerra24.voxel.client.kernel.resources.GuiResources;
 import io.github.guerra24.voxel.client.kernel.util.vector.Vector2f;
 import io.github.guerra24.voxel.client.kernel.util.vector.Vector3f;
-import io.github.guerra24.voxel.client.kernel.world.World;
+import io.github.guerra24.voxel.client.kernel.world.DimensionalWorld;
+import io.github.guerra24.voxel.client.kernel.world.block.Block;
 
 /**
  * Camera
@@ -45,24 +51,29 @@ public class Camera implements IEntity {
 	private Vector3f position = new Vector3f(-2, 0, -1);
 	private float pitch;
 	private float yaw;
+	private float roll;
 	private float speed;
 	private float multiplierMouse = 24;
 	private float multiplierMovement = 24;
 	private int life = 0;
 	private byte block = 2;
+	private boolean teleporting = false;
+	private int teleportingTime = 0;
 
-	private static int mouseSpeed = 2;
-	private static final int maxLookUp = 90;
-	private static final int maxLookDown = -90;
+	private int mouseSpeed = 2;
+	private final int maxLookUp = 90;
+	private final int maxLookDown = -90;
 
 	public boolean isMoved = false;
+	
+	int id = 0;
 
 	public Camera() {
 		this.speed = 0.2f;
 	}
 
 	@Override
-	public void update(float delta, GameControllers gm, GuiResources gi, World world) {
+	public void update(float delta, GameResources gm, GuiResources gi, DimensionalWorld world, VAPI api) {
 		isMoved = false;
 		float mouseDX = getDX() * delta * mouseSpeed * 0.16f * multiplierMouse;
 		float mouseDY = getDY() * delta * mouseSpeed * 0.16f * multiplierMouse;
@@ -103,24 +114,42 @@ public class Camera implements IEntity {
 		int bx = (int) tempX;
 		int by = (int) tempY;
 		int bz = (int) tempZ;
+		
+		if(isKeyDown(KEY_K))
+			id = KernelConstants.DIM_0;
+		if(isKeyDown(KEY_J))
+			id = KernelConstants.DIM_1;
+		
+		if (world.getGlobalBlock(world.getChunkDimension(), bx, by, bz + 1) == Block.Portal.getId()
+				&& teleporting == false) {
+			teleporting = true;
+			world.switchDimension(id, gm, api);
+		}
+		if (teleporting) {
+			teleportingTime++;
+			if (teleportingTime >= 100) {
+				teleporting = false;
+				teleportingTime = 0;
+			}
+		}
 
 		if (isKeyDown(KEY_W)) {
 
 			if (yaw > 90 && yaw < 270) {
-				if (world.getGlobalBlock(world.dim, bx, by, bz + 1) == 0)
+				if (world.getGlobalBlock(world.getChunkDimension(), bx, by, bz + 1) == 0)
 					position.z += -Math.cos(Math.toRadians(yaw)) * delta * speed * multiplierMovement;
 			} else if ((yaw > 270 && yaw < 360) || (yaw > 0 && yaw < 90)) {
-				if (world.getGlobalBlock(world.dim, bx, by, bz - 1) == 0)
+				if (world.getGlobalBlock(world.getChunkDimension(), bx, by, bz - 1) == 0)
 					position.z += -Math.cos(Math.toRadians(yaw)) * delta * speed * multiplierMovement;
 			} else {
 				position.z += -Math.cos(Math.toRadians(yaw)) * delta * speed * multiplierMovement;
 			}
 
 			if (yaw > 0 && yaw < 180) {
-				if (world.getGlobalBlock(world.dim, bx + 1, by, bz) == 0)
+				if (world.getGlobalBlock(world.getChunkDimension(), bx + 1, by, bz) == 0)
 					position.x += Math.sin(Math.toRadians(yaw)) * delta * speed * multiplierMovement;
 			} else if (yaw > 180 && yaw < 360) {
-				if (world.getGlobalBlock(world.dim, bx - 1, by, bz) == 0)
+				if (world.getGlobalBlock(world.getChunkDimension(), bx - 1, by, bz) == 0)
 					position.x += Math.sin(Math.toRadians(yaw)) * delta * speed * multiplierMovement;
 			} else {
 				position.x += Math.sin(Math.toRadians(yaw)) * delta * speed * multiplierMovement;
@@ -170,7 +199,7 @@ public class Camera implements IEntity {
 		setLife(life, gi);
 	}
 
-	public void updatePicker(World world) {
+	public void updatePicker(DimensionalWorld world) {
 
 		if (isKeyDown(KEY_1))
 			block = 1;
@@ -188,6 +217,8 @@ public class Camera implements IEntity {
 			block = 8;
 		else if (isKeyDown(KEY_8))
 			block = 9;
+		else if (isKeyDown(KEY_9))
+			block = 10;
 		if (isButtonDown(0)) {
 			setBlock(position, (byte) 0, world);
 		} else if (isButtonDown(1)) {
@@ -195,23 +226,23 @@ public class Camera implements IEntity {
 		}
 	}
 
-	public void updateDebug(World world) {
+	public void updateDebug(DimensionalWorld world) {
 		if (isKeyDown(KEY_F3) && isKeyDown(KEY_R))
 			for (int zr = -KernelConstants.genRadius; zr <= KernelConstants.genRadius; zr++) {
 				int zz = world.getzPlayChunk() + zr;
 				for (int xr = -KernelConstants.genRadius; xr <= KernelConstants.genRadius; xr++) {
 					int xx = world.getxPlayChunk() + xr;
 					if (zr * zr + xr * xr <= KernelConstants.genRadius * KernelConstants.genRadius) {
-						if (world.hasChunk(world.dim, xx, zz)) {
-							world.getChunk(world.dim, xx, zz).clear();
-							world.tempRadius = 0;
+						if (world.hasChunk(world.getChunkDimension(), xx, zz)) {
+							world.getChunk(world.getChunkDimension(), xx, zz).clear();
+							world.setTempRadius(0);
 						}
 					}
 				}
 			}
 	}
 
-	private void setBlock(Vector3f v, byte block, World world) {
+	private void setBlock(Vector3f v, byte block, DimensionalWorld world) {
 
 		float tempx = (v.x);
 		int tempX = (int) tempx;
@@ -234,7 +265,7 @@ public class Camera implements IEntity {
 		int by = (int) tempY;
 		int bz = (int) tempZ;
 
-		world.setGlobalBlock(world.dim, bx, by - 2, bz, block);
+		world.setGlobalBlock(world.getChunkDimension(), bx, by - 2, bz, block);
 	}
 
 	public void invertPitch() {
@@ -242,8 +273,8 @@ public class Camera implements IEntity {
 	}
 
 	public void setMouse() {
-		setGrabbed(true);
 		setCursorPosition(Display.getWidth() / 2, Display.getHeight() / 2);
+		setGrabbed(true);
 	}
 
 	@Override
@@ -279,6 +310,14 @@ public class Camera implements IEntity {
 		this.yaw = yaw;
 	}
 
+	public float getRoll() {
+		return roll;
+	}
+
+	public void setRoll(float roll) {
+		this.roll = roll;
+	}
+
 	public float getLife() {
 		return life;
 	}
@@ -291,6 +330,10 @@ public class Camera implements IEntity {
 			gi.life.setScale(new Vector2f(temp, 0.02f));
 			this.life = life;
 		}
+	}
+
+	public boolean isTeleporting() {
+		return teleporting;
 	}
 
 }

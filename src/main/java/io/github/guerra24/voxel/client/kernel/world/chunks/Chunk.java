@@ -31,11 +31,11 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 import io.github.guerra24.voxel.client.kernel.api.VAPI;
 import io.github.guerra24.voxel.client.kernel.core.KernelConstants;
-import io.github.guerra24.voxel.client.kernel.resources.GameControllers;
+import io.github.guerra24.voxel.client.kernel.resources.GameResources;
 import io.github.guerra24.voxel.client.kernel.resources.models.WaterTile;
 import io.github.guerra24.voxel.client.kernel.util.Maths;
 import io.github.guerra24.voxel.client.kernel.util.vector.Vector3f;
-import io.github.guerra24.voxel.client.kernel.world.World;
+import io.github.guerra24.voxel.client.kernel.world.DimensionalWorld;
 import io.github.guerra24.voxel.client.kernel.world.block.Block;
 import io.github.guerra24.voxel.client.kernel.world.block.BlockEntity;
 import io.github.guerra24.voxel.client.kernel.world.entities.Light;
@@ -55,7 +55,7 @@ public class Chunk {
 	private transient int sizeX, sizeY, sizeZ;
 	private transient boolean readyToRender = true;
 
-	public Chunk(int dim, int cx, int cz, World world) {
+	public Chunk(int dim, int cx, int cz, DimensionalWorld world) {
 		this.dim = dim;
 		this.cx = cx;
 		this.cz = cz;
@@ -64,7 +64,7 @@ public class Chunk {
 		init(world);
 	}
 
-	public void init(World world) {
+	public void init(DimensionalWorld world) {
 		loadInit();
 
 		blocks = new byte[sizeX][sizeY][sizeZ];
@@ -96,7 +96,7 @@ public class Chunk {
 		sizeZ = KernelConstants.CHUNK_SIZE;
 	}
 
-	public void update(World world) {
+	public void update(DimensionalWorld world) {
 		if (rebuild) {
 			cubes1temp.addAll(cubes1);
 			cubes2temp.addAll(cubes2);
@@ -121,7 +121,7 @@ public class Chunk {
 			rebuild = true;
 	}
 
-	public void createChunk(World world) {
+	public void createChunk(DimensionalWorld world) {
 		for (int x = 0; x < sizeX; x++) {
 			for (int z = 0; z < sizeZ; z++) {
 				for (int y = 0; y < sizeY; y++) {
@@ -132,7 +132,7 @@ public class Chunk {
 		}
 		for (int x = 0; x < sizeX; x++) {
 			for (int z = 0; z < sizeZ; z++) {
-				double tempHegiht = world.noise.getNoise(x + cx * 16, z + cz * 16);
+				double tempHegiht = world.getNoise().getNoise(x + cx * 16, z + cz * 16);
 				tempHegiht += 1;
 				int height = (int) (64 * Maths.clamp(tempHegiht));
 				for (int y = 0; y < height; y++) {
@@ -142,9 +142,9 @@ public class Chunk {
 						blocks[x][y][z] = Block.Dirt.getId();
 					else if (y == height - 1 && y < 66)
 						blocks[x][y][z] = Block.Sand.getId();
-					else if (world.seed.nextInt(150) == 1 && y < 15)
+					else if (world.getSeed().nextInt(150) == 1 && y < 15)
 						blocks[x][y][z] = Block.DiamondOre.getId();
-					else if (world.seed.nextInt(100) == 1 && y < 25)
+					else if (world.getSeed().nextInt(100) == 1 && y < 25)
 						blocks[x][y][z] = Block.GoldOre.getId();
 					else
 						blocks[x][y][z] = Block.Stone.getId();
@@ -160,17 +160,22 @@ public class Chunk {
 		}
 	}
 
-	public void rebuildChunk1(World world) {
+	public void rebuildChunk1(DimensionalWorld world) {
 		sec1NotClear = false;
 		for (int x = 0; x < sizeX; x++) {
 			for (int z = 0; z < sizeZ; z++) {
 				for (int y = 0; y < 32; y++) {
 					if (Block.getBlock(blocks[x][y][z]) == Block.Torch) {
-						cubes1.add(Block.getBlock(blocks[x][y][z])
-								.getSingleModel(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
-						lights1.add(new Light(new Vector3f((x + cx * sizeX) + 0.5f, y + 0.8f, (z + cz * sizeZ) - 0.5f),
-								new Vector3f(1, 1, 1), new Vector3f(1, 0.1f, 0.09f)));
-						sec1NotClear = true;
+						if (cullFaceDown(x, y, z) && cullFaceEast(x, y, z, world) && cullFaceNorth(x, y, z, world)
+								&& cullFaceSouth(x, y, z, world) && cullFaceUpSolidBlock(x, y, z)
+								&& cullFaceWest(x, y, z, world)) {
+							cubes1.add(Block.getBlock(blocks[x][y][z])
+									.getSingleModel(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
+							lights1.add(
+									new Light(new Vector3f((x + cx * sizeX) + 0.5f, y + 0.8f, (z + cz * sizeZ) - 0.5f),
+											new Vector3f(1, 1, 1), new Vector3f(1, 0.1f, 0.09f)));
+							sec1NotClear = true;
+						}
 					} else if (Block.getBlock(blocks[x][y][z]) != Block.Air
 							&& Block.getBlock(blocks[x][y][z]) != Block.Water) {
 						if (cullFaceWest(x + cx * sizeX, y, z + cz * sizeZ, world)) {
@@ -209,17 +214,22 @@ public class Chunk {
 		}
 	}
 
-	public void rebuildChunk2(World world) {
+	public void rebuildChunk2(DimensionalWorld world) {
 		sec2NotClear = false;
 		for (int x = 0; x < sizeX; x++) {
 			for (int z = 0; z < sizeZ; z++) {
 				for (int y = 32; y < 64; y++) {
 					if (Block.getBlock(blocks[x][y][z]) == Block.Torch) {
-						cubes2.add(Block.getBlock(blocks[x][y][z])
-								.getSingleModel(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
-						lights2.add(new Light(new Vector3f((x + cx * sizeX) + 0.5f, y + 0.8f, (z + cz * sizeZ) - 0.5f),
-								new Vector3f(1, 1, 1), new Vector3f(1, 0.1f, 0.09f)));
-						sec2NotClear = true;
+						if (cullFaceDown(x, y, z) && cullFaceEast(x, y, z, world) && cullFaceNorth(x, y, z, world)
+								&& cullFaceSouth(x, y, z, world) && cullFaceUpSolidBlock(x, y, z)
+								&& cullFaceWest(x, y, z, world)) {
+							cubes2.add(Block.getBlock(blocks[x][y][z])
+									.getSingleModel(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
+							lights2.add(
+									new Light(new Vector3f((x + cx * sizeX) + 0.5f, y + 0.8f, (z + cz * sizeZ) - 0.5f),
+											new Vector3f(1, 1, 1), new Vector3f(1, 0.1f, 0.09f)));
+							sec2NotClear = true;
+						}
 					} else if (Block.getBlock(blocks[x][y][z]) != Block.Air
 							&& Block.getBlock(blocks[x][y][z]) != Block.Water) {
 						if (cullFaceWest(x + cx * sizeX, y, z + cz * sizeZ, world)) {
@@ -258,7 +268,7 @@ public class Chunk {
 		}
 	}
 
-	public void rebuildChunk3(World world) {
+	public void rebuildChunk3(DimensionalWorld world) {
 		sec3NotClear = false;
 		for (int x = 0; x < sizeX; x++) {
 			for (int z = 0; z < sizeZ; z++) {
@@ -269,8 +279,13 @@ public class Chunk {
 						lights3.add(new Light(new Vector3f((x + cx * sizeX) + 0.5f, y + 0.8f, (z + cz * sizeZ) - 0.5f),
 								new Vector3f(1, 1, 1), new Vector3f(1, 0.1f, 0.09f)));
 						sec3NotClear = true;
+					} else if (Block.getBlock(blocks[x][y][z]).usesSingleModel()) {
+						cubes3.add(Block.getBlock(blocks[x][y][z])
+								.getSingleModel(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
+						sec3NotClear = true;
 					} else if (Block.getBlock(blocks[x][y][z]) != Block.Air
-							&& Block.getBlock(blocks[x][y][z]) != Block.Water) {
+							&& Block.getBlock(blocks[x][y][z]) != Block.Water
+							&& !Block.getBlock(blocks[x][y][z]).usesSingleModel()) {
 						if (cullFaceWest(x + cx * sizeX, y, z + cz * sizeZ, world)) {
 							cubes3.add(Block.getBlock(blocks[x][y][z])
 									.getFaceWest(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
@@ -312,17 +327,22 @@ public class Chunk {
 		}
 	}
 
-	public void rebuildChunk4(World world) {
+	public void rebuildChunk4(DimensionalWorld world) {
 		sec4NotClear = false;
 		for (int x = 0; x < sizeX; x++) {
 			for (int z = 0; z < sizeZ; z++) {
 				for (int y = 96; y < 128; y++) {
 					if (Block.getBlock(blocks[x][y][z]) == Block.Torch) {
-						cubes4.add(Block.getBlock(blocks[x][y][z])
-								.getSingleModel(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
-						lights4.add(new Light(new Vector3f((x + cx * sizeX) + 0.5f, y + 0.8f, (z + cz * sizeZ) - 0.5f),
-								new Vector3f(1, 1, 1), new Vector3f(1, 0.1f, 0.09f)));
-						sec4NotClear = true;
+						if (cullFaceDown(x, y, z) && cullFaceEast(x, y, z, world) && cullFaceNorth(x, y, z, world)
+								&& cullFaceSouth(x, y, z, world) && cullFaceUpSolidBlock(x, y, z)
+								&& cullFaceWest(x, y, z, world)) {
+							cubes4.add(Block.getBlock(blocks[x][y][z])
+									.getSingleModel(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
+							lights4.add(
+									new Light(new Vector3f((x + cx * sizeX) + 0.5f, y + 0.8f, (z + cz * sizeZ) - 0.5f),
+											new Vector3f(1, 1, 1), new Vector3f(1, 0.1f, 0.09f)));
+							sec4NotClear = true;
+						}
 					} else if (Block.getBlock(blocks[x][y][z]) != Block.Air
 							&& Block.getBlock(blocks[x][y][z]) != Block.Water) {
 						if (cullFaceWest(x + cx * sizeX, y, z + cz * sizeZ, world)) {
@@ -373,7 +393,7 @@ public class Chunk {
 		blocks[x & 0xF][y & 0x7F][z & 0xF] = id;
 	}
 
-	private boolean cullFaceWest(int x, int y, int z, World world) {
+	private boolean cullFaceWest(int x, int y, int z, DimensionalWorld world) {
 		if (x > (cx * sizeX) + 1) {
 			if (z > (cz * sizeZ)) {
 				if (x < (cx * sizeX) + 16) {
@@ -399,7 +419,7 @@ public class Chunk {
 		}
 	}
 
-	private boolean cullFaceEast(int x, int y, int z, World world) {
+	private boolean cullFaceEast(int x, int y, int z, DimensionalWorld world) {
 		if (x > (cx * sizeX)) {
 			if (z > (cz * sizeZ)) {
 				if (x < (cx * sizeX) + 15) {
@@ -481,7 +501,7 @@ public class Chunk {
 		return false;
 	}
 
-	private boolean cullFaceNorth(int x, int y, int z, World world) {
+	private boolean cullFaceNorth(int x, int y, int z, DimensionalWorld world) {
 		if (x > (cx * sizeX)) {
 			if (z > (cz * sizeZ) + 1) {
 				if (x < (cx * sizeX) + 16) {
@@ -507,7 +527,7 @@ public class Chunk {
 		}
 	}
 
-	private boolean cullFaceSouth(int x, int y, int z, World world) {
+	private boolean cullFaceSouth(int x, int y, int z, DimensionalWorld world) {
 		if (x > (cx * sizeX)) {
 			if (z > (cz * sizeZ)) {
 				if (x < (cx * sizeX) + 16) {
@@ -533,21 +553,21 @@ public class Chunk {
 		}
 	}
 
-	public void render1(GameControllers gm) {
+	public void render1(GameResources gm) {
 		if (readyToRender)
 			gm.getRenderer().renderChunk(cubes1, lights1, gm);
 		else
 			gm.getRenderer().renderChunk(cubes1temp, lights1, gm);
 	}
 
-	public void render2(GameControllers gm) {
+	public void render2(GameResources gm) {
 		if (readyToRender)
 			gm.getRenderer().renderChunk(cubes2, lights2, gm);
 		else
 			gm.getRenderer().renderChunk(cubes2temp, lights2, gm);
 	}
 
-	public void render3(GameControllers gm) {
+	public void render3(GameResources gm) {
 		if (readyToRender) {
 			gm.getRenderer().renderChunk(cubes3, lights3, gm);
 			gm.getWaterRenderer().render(waters, gm);
@@ -557,7 +577,7 @@ public class Chunk {
 		}
 	}
 
-	public void render4(GameControllers gm) {
+	public void render4(GameResources gm) {
 		if (readyToRender)
 			gm.getRenderer().renderChunk(cubes4, lights4, gm);
 		else

@@ -76,4 +76,9 @@ public class BlockWater extends Block {
 		return null;
 	}
 
+	@Override
+	public boolean usesSingleModel() {
+		return false;
+	}
+
 }

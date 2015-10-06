@@ -30,10 +30,9 @@ import io.github.guerra24.voxel.client.kernel.api.VAPI;
 import io.github.guerra24.voxel.client.kernel.graphics.opengl.Display;
 import io.github.guerra24.voxel.client.kernel.input.Keyboard;
 import io.github.guerra24.voxel.client.kernel.menu.Button;
-import io.github.guerra24.voxel.client.kernel.resources.GameControllers;
-import io.github.guerra24.voxel.client.kernel.util.Logger;
+import io.github.guerra24.voxel.client.kernel.resources.GameResources;
 import io.github.guerra24.voxel.client.kernel.util.vector.Vector3f;
-import io.github.guerra24.voxel.client.kernel.world.World;
+import io.github.guerra24.voxel.client.kernel.world.WorldHandler;
 
 /**
  * Game States
@@ -79,7 +78,7 @@ public class GameStates {
 	 * 
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public void switchStates(GameControllers gm, World world, VAPI api, Display display) {
+	public void switchStates(GameResources gm, WorldHandler worlds, VAPI api, Display display) {
 		if (state == State.MAINMENU && Button.isInButtonPlay()) {
 			// Kernel.gameResources.SoundSystem.pause("MainMenuMusic");
 			state = State.LOADING_WORLD;
@@ -90,7 +89,7 @@ public class GameStates {
 			} else {
 				seed = new Random();
 			}
-			world.startWorld("Mundo-1", seed, 0, api, gm);
+			worlds.addWorld(0, seed, api, gm);
 			gm.getCamera().setMouse();
 			gm.getSoundSystem().stop("menu1");
 			gm.getSoundSystem().rewind("menu1");
@@ -104,25 +103,8 @@ public class GameStates {
 		if (state == State.IN_PAUSE && Button.backToMainMenu()) {
 			// Kernel.gameResources.SoundSystem.rewind("MainMenuMusic");
 			// Kernel.gameResources.SoundSystem.play("MainMenuMusic");
-			Logger.log(Thread.currentThread(), "Saving World");
-			try {
-				WorldThread.sleep(10000l);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			for (int zr = -KernelConstants.genRadius; zr <= KernelConstants.genRadius; zr++) {
-				int zz = world.getzPlayChunk() + zr;
-				for (int xr = -KernelConstants.genRadius; xr <= KernelConstants.genRadius; xr++) {
-					int xx = world.getxPlayChunk() + xr;
-					if (zr * zr + xr * xr <= KernelConstants.genRadius * KernelConstants.genRadius) {
-						if (world.hasChunk(world.dim, xx, zz)) {
-							world.saveChunk(world.dim, xx, zz, gm);
-						}
-					}
-				}
-			}
+			worlds.removeWorld(worlds.getActiveWorld(), gm);
 			gm.getSoundSystem().play("menu1");
-			world.removeAll();
 			gm.getCamera().setPosition(new Vector3f(-2, 0, -1));
 			gm.getCamera().setPitch(0);
 			gm.getCamera().setYaw(0);

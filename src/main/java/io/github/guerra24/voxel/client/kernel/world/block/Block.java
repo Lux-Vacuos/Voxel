@@ -34,6 +34,7 @@ import io.github.guerra24.voxel.client.kernel.world.block.types.BlockGoldOre;
 import io.github.guerra24.voxel.client.kernel.world.block.types.BlockGrass;
 import io.github.guerra24.voxel.client.kernel.world.block.types.BlockIndes;
 import io.github.guerra24.voxel.client.kernel.world.block.types.BlockNull;
+import io.github.guerra24.voxel.client.kernel.world.block.types.BlockPortal;
 import io.github.guerra24.voxel.client.kernel.world.block.types.BlockSand;
 import io.github.guerra24.voxel.client.kernel.world.block.types.BlockStone;
 import io.github.guerra24.voxel.client.kernel.world.block.types.BlockTorch;
@@ -66,6 +67,7 @@ public abstract class Block {
 	public static Block Glass = new BlockGlass();
 	public static Block Air = new BlockAir();
 	public static Block Torch = new BlockTorch();
+	public static Block Portal = new BlockPortal();
 
 	/**
 	 * Gets the Block ID
@@ -153,6 +155,13 @@ public abstract class Block {
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public abstract BlockEntity getSingleModel(Vector3f pos);
+	
+	/**
+	 * Check if uses single model
+	 * 
+	 * @return Uses single model
+	 */
+	public abstract boolean usesSingleModel();
 
 	/**
 	 * Initialize the basic Block
@@ -171,6 +180,7 @@ public abstract class Block {
 		registerBlock(Water.getId(), Water);
 		registerBlock(Glass.getId(), Glass);
 		registerBlock(Torch.getId(), Torch);
+		registerBlock(Portal.getId(), Portal);
 	}
 
 	/**

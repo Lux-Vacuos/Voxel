@@ -1,5 +1,4 @@
 /*
- * The MIT License (MIT)
  *
  * Copyright (c) 2015 Guerra24
  *
@@ -75,6 +74,11 @@ public class BlockGrass extends Block {
 	@Override
 	public BlockEntity getSingleModel(Vector3f pos) {
 		return null;
+	}
+
+	@Override
+	public boolean usesSingleModel() {
+		return false;
 	}
 
 }

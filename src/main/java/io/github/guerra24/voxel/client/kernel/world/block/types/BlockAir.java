@@ -52,4 +52,9 @@ public class BlockAir extends Block {
 		return null;
 	}
 
+	@Override
+	public boolean usesSingleModel() {
+		return false;
+	}
+
 }
