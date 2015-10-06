@@ -28,8 +28,9 @@ import java.nio.FloatBuffer;
 
 import org.lwjgl.BufferUtils;
 
-import io.github.guerra24.voxel.client.kernel.resources.GameControllers;
+import io.github.guerra24.voxel.client.kernel.resources.GameResources;
 import io.github.guerra24.voxel.client.kernel.util.Maths;
+import io.github.guerra24.voxel.client.kernel.util.vector.Matrix4f;
 import io.github.guerra24.voxel.client.kernel.util.vector.Vector3f;
 
 /**
@@ -52,12 +53,9 @@ public class Frustum {
 	public static final int D = 3;
 
 	float[][] m_Frustum = new float[6][4];
+	Matrix4f clip_ = new Matrix4f();
 
-	/** FloatBuffer to get ModelView matrix. **/
-	FloatBuffer modl_b;
-
-	/** FloatBuffer to get Projection matrix. **/
-	FloatBuffer proj_b;
+	FloatBuffer clip_b;
 
 	public void normalizePlane(float[][] frustum, int side) {
 		float magnitude = (float) Math.sqrt(frustum[side][A] * frustum[side][A] + frustum[side][B] * frustum[side][B]
@@ -69,39 +67,15 @@ public class Frustum {
 		frustum[side][D] /= magnitude;
 	}
 
-	public void calculateFrustum(GameControllers gm) {
-		float[] proj = new float[16];
-		float[] modl = new float[16];
+	public void calculateFrustum(GameResources gm) {
 		float[] clip = new float[16];
 
-		proj_b.rewind();
-		gm.getRenderer().getProjectionMatrix().store(proj_b);
-		proj_b.rewind();
-		proj_b.get(proj);
-		modl_b.rewind();
-		Maths.createViewMatrix(gm.getCamera()).store(modl_b);
-		modl_b.rewind();
-		modl_b.get(modl);
+		Matrix4f.mul(gm.getRenderer().getProjectionMatrix(), Maths.createViewMatrix(gm.getCamera()), clip_);
+		clip_b.rewind();
+		clip_.store(clip_b);
+		clip_b.rewind();
+		clip_b.get(clip);
 
-		clip[0] = modl[0] * proj[0] + modl[1] * proj[4] + modl[2] * proj[8] + modl[3] * proj[12];
-		clip[1] = modl[0] * proj[1] + modl[1] * proj[5] + modl[2] * proj[9] + modl[3] * proj[13];
-		clip[2] = modl[0] * proj[2] + modl[1] * proj[6] + modl[2] * proj[10] + modl[3] * proj[14];
-		clip[3] = modl[0] * proj[3] + modl[1] * proj[7] + modl[2] * proj[11] + modl[3] * proj[15];
-
-		clip[4] = modl[4] * proj[0] + modl[5] * proj[4] + modl[6] * proj[8] + modl[7] * proj[12];
-		clip[5] = modl[4] * proj[1] + modl[5] * proj[5] + modl[6] * proj[9] + modl[7] * proj[13];
-		clip[6] = modl[4] * proj[2] + modl[5] * proj[6] + modl[6] * proj[10] + modl[7] * proj[14];
-		clip[7] = modl[4] * proj[3] + modl[5] * proj[7] + modl[6] * proj[11] + modl[7] * proj[15];
-
-		clip[8] = modl[8] * proj[0] + modl[9] * proj[4] + modl[10] * proj[8] + modl[11] * proj[12];
-		clip[9] = modl[8] * proj[1] + modl[9] * proj[5] + modl[10] * proj[9] + modl[11] * proj[13];
-		clip[10] = modl[8] * proj[2] + modl[9] * proj[6] + modl[10] * proj[10] + modl[11] * proj[14];
-		clip[11] = modl[8] * proj[3] + modl[9] * proj[7] + modl[10] * proj[11] + modl[11] * proj[15];
-
-		clip[12] = modl[12] * proj[0] + modl[13] * proj[4] + modl[14] * proj[8] + modl[15] * proj[12];
-		clip[13] = modl[12] * proj[1] + modl[13] * proj[5] + modl[14] * proj[9] + modl[15] * proj[13];
-		clip[14] = modl[12] * proj[2] + modl[13] * proj[6] + modl[14] * proj[10] + modl[15] * proj[14];
-		clip[15] = modl[12] * proj[3] + modl[13] * proj[7] + modl[14] * proj[11] + modl[15] * proj[15];
 		m_Frustum[RIGHT][A] = clip[3] - clip[0];
 		m_Frustum[RIGHT][B] = clip[7] - clip[4];
 		m_Frustum[RIGHT][C] = clip[11] - clip[8];
@@ -218,7 +192,6 @@ public class Frustum {
 	 * Frustum constructor, creates FloatBuffer
 	 */
 	public Frustum() {
-		modl_b = BufferUtils.createFloatBuffer(16);
-		proj_b = BufferUtils.createFloatBuffer(16);
+		clip_b = BufferUtils.createFloatBuffer(16);
 	}
 }

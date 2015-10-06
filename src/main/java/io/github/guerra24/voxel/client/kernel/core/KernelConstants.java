@@ -73,7 +73,7 @@ public class KernelConstants {
 	/**
 	 * Game Build Number
 	 */
-	public static int build = 73;
+	public static int build = 74;
 	/**
 	 * Game Version
 	 */
@@ -143,8 +143,10 @@ public class KernelConstants {
 	public static final String FRAGMENT_FILE_SKYBOX = "FragmentShaderSkybox.glsl";
 	public static final String VERTEX_FILE_WATER = "VertexShaderWater.glsl";
 	public static final String FRAGMENT_FILE_WATER = "FragmentShaderWater.glsl";
-	public static final String VERTEX_FILE_PARTICLE= "VertexShaderParticle.glsl";
+	public static final String VERTEX_FILE_PARTICLE = "VertexShaderParticle.glsl";
 	public static final String FRAGMENT_FILE_PARTICLE = "FragmentShaderParticle.glsl";
+	public static final String VERTEX_FILE_SHADOW = "VertexShaderShadow.glsl";
+	public static final String FRAGMENT_FILE_SHADOW = "FragmentShaderShadow.glsl";
 	// World Save Path
 	/**
 	 * World Folder Path
@@ -154,12 +156,9 @@ public class KernelConstants {
 	 * Checks if the Kernel has successfully loaded
 	 */
 	public static boolean loaded = false;
-	/**
-	 * Camera Storage Path
-	 * 
-	 * @deprecated
-	 */
-	public static String camPath = "assets/world/Camera.json";
+
+	public static int DIM_0 = 0;
+	public static int DIM_1 = 1;
 
 	/**
 	 * Update Global Variables

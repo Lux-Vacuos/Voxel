@@ -26,7 +26,7 @@ package io.github.guerra24.voxel.client.kernel.core;
 
 import io.github.guerra24.voxel.client.kernel.api.VAPI;
 import io.github.guerra24.voxel.client.kernel.graphics.opengl.Display;
-import io.github.guerra24.voxel.client.kernel.resources.GameControllers;
+import io.github.guerra24.voxel.client.kernel.resources.GameResources;
 import io.github.guerra24.voxel.client.kernel.world.WorldHandler;
 
 /**
@@ -36,7 +36,7 @@ import io.github.guerra24.voxel.client.kernel.world.WorldHandler;
  * @category Kernel
  */
 public class UpdateThread extends Thread {
-	private GameControllers gm;
+	private GameResources gm;
 	private WorldHandler world;
 	private VAPI api;
 	private Display display;
@@ -64,7 +64,7 @@ public class UpdateThread extends Thread {
 		}
 	}
 
-	public void setGm(GameControllers gm) {
+	public void setGm(GameResources gm) {
 		this.gm = gm;
 	}
 

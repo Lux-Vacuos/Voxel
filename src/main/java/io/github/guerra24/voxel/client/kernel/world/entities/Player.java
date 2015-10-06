@@ -24,7 +24,8 @@
 
 package io.github.guerra24.voxel.client.kernel.world.entities;
 
-import io.github.guerra24.voxel.client.kernel.resources.GameControllers;
+import io.github.guerra24.voxel.client.kernel.api.VAPI;
+import io.github.guerra24.voxel.client.kernel.resources.GameResources;
 import io.github.guerra24.voxel.client.kernel.resources.GuiResources;
 import io.github.guerra24.voxel.client.kernel.resources.models.TexturedModel;
 import io.github.guerra24.voxel.client.kernel.util.vector.Vector3f;
@@ -47,7 +48,7 @@ public class Player extends Entity implements IEntity {
 	}
 
 	@Override
-	public void update(float delta, GameControllers gm, GuiResources gi, DimensionalWorld world) {
+	public void update(float delta, GameResources gm, GuiResources gi, DimensionalWorld world, VAPI api) {
 		aabb.update(getPosition());
 		super.increasePosition(0, upwardsSpeed * delta, 0);
 		if (isCollision(0, world) == CollisionType.FRONT) {

@@ -1,56 +1,35 @@
 package io.github.guerra24.voxel.client.kernel.graphics;
 
-import static org.lwjgl.opengl.GL11.GL_DEPTH_COMPONENT;
-import static org.lwjgl.opengl.GL11.GL_FLOAT;
-import static org.lwjgl.opengl.GL11.GL_LINEAR;
-import static org.lwjgl.opengl.GL11.GL_RGB;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_MAG_FILTER;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_MIN_FILTER;
-import static org.lwjgl.opengl.GL11.GL_UNSIGNED_BYTE;
-import static org.lwjgl.opengl.GL11.glBindTexture;
-import static org.lwjgl.opengl.GL11.glDeleteTextures;
-import static org.lwjgl.opengl.GL11.glDrawBuffer;
-import static org.lwjgl.opengl.GL11.glGenTextures;
-import static org.lwjgl.opengl.GL11.glTexImage2D;
-import static org.lwjgl.opengl.GL11.glTexParameteri;
-import static org.lwjgl.opengl.GL11.glViewport;
-import static org.lwjgl.opengl.GL30.GL_COLOR_ATTACHMENT0;
-import static org.lwjgl.opengl.GL30.GL_DEPTH_ATTACHMENT;
-import static org.lwjgl.opengl.GL30.GL_FRAMEBUFFER;
-import static org.lwjgl.opengl.GL30.GL_RENDERBUFFER;
-import static org.lwjgl.opengl.GL30.glBindFramebuffer;
-import static org.lwjgl.opengl.GL30.glBindRenderbuffer;
-import static org.lwjgl.opengl.GL30.glDeleteFramebuffers;
-import static org.lwjgl.opengl.GL30.glDeleteRenderbuffers;
-import static org.lwjgl.opengl.GL30.glFramebufferRenderbuffer;
-import static org.lwjgl.opengl.GL30.glGenFramebuffers;
-import static org.lwjgl.opengl.GL30.glGenRenderbuffers;
-import static org.lwjgl.opengl.GL30.glRenderbufferStorage;
-import static org.lwjgl.opengl.GL32.glFramebufferTexture;
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL30.*;
+import static org.lwjgl.opengl.GL32.*;
 
 import java.nio.ByteBuffer;
 
 import io.github.guerra24.voxel.client.kernel.graphics.opengl.Display;
 
 public class FrameBuffer {
-	private int shadowFrameBuffer;
-	private int shadowDepthBuffer;
-	private int shadowDepthTexture;
+	private int FrameBuffer;
+	private int DepthBuffer;
+	private int DepthTexture;
 
-	public FrameBuffer() {
-		initialiseShadowFrameBuffer();
+	public FrameBuffer(boolean depth) {
+		initialiseFrameBuffer(depth);
 	}
 
-	private void initialiseShadowFrameBuffer() {
-		shadowFrameBuffer = createFrameBuffer();
-		shadowDepthTexture = createTextureAttachment(512, 512);
-		shadowDepthBuffer = createDepthBufferAttachment(512, 512);
+	private void initialiseFrameBuffer(boolean depth) {
+		FrameBuffer = createFrameBuffer();
+		if (depth) {
+			DepthTexture = createDepthTextureAttachment(512, 512);
+		} else {
+			DepthTexture = createTextureAttachment(512, 512);
+		}
+		DepthBuffer = createDepthBufferAttachment(512, 512);
 		end();
 	}
 
 	public void begin() {
-		bindFrameBuffer(shadowFrameBuffer, 512, 512);
+		bindFrameBuffer(FrameBuffer, 512, 512);
 	}
 
 	public void end() {
@@ -67,7 +46,6 @@ public class FrameBuffer {
 	private int createFrameBuffer() {
 		int frameBuffer = glGenFramebuffers();
 		glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
-		glDrawBuffer(GL_COLOR_ATTACHMENT0);
 		return frameBuffer;
 	}
 
@@ -101,21 +79,21 @@ public class FrameBuffer {
 	}
 
 	public void cleanUp() {
-		glDeleteFramebuffers(shadowFrameBuffer);
-		glDeleteRenderbuffers(shadowDepthBuffer);
-		glDeleteTextures(shadowDepthTexture);
+		glDeleteFramebuffers(FrameBuffer);
+		glDeleteRenderbuffers(DepthBuffer);
+		glDeleteTextures(DepthTexture);
 	}
 
-	public int getShadowFrameBuffer() {
-		return shadowFrameBuffer;
+	public int getFrameBuffer() {
+		return FrameBuffer;
 	}
 
-	public int getShadowDepthBuffer() {
-		return shadowDepthBuffer;
+	public int getDepthBuffer() {
+		return DepthBuffer;
 	}
 
-	public int getShadowDepthTexture() {
-		return shadowDepthTexture;
+	public int getDepthTexture() {
+		return DepthTexture;
 	}
 
 }

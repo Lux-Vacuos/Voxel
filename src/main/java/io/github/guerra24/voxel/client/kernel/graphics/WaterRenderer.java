@@ -44,7 +44,7 @@ import java.util.Queue;
 import io.github.guerra24.voxel.client.kernel.core.KernelConstants;
 import io.github.guerra24.voxel.client.kernel.graphics.opengl.VoxelGL33;
 import io.github.guerra24.voxel.client.kernel.graphics.shaders.WaterShader;
-import io.github.guerra24.voxel.client.kernel.resources.GameControllers;
+import io.github.guerra24.voxel.client.kernel.resources.GameResources;
 import io.github.guerra24.voxel.client.kernel.resources.Loader;
 import io.github.guerra24.voxel.client.kernel.resources.models.RawModel;
 import io.github.guerra24.voxel.client.kernel.resources.models.WaterTile;
@@ -119,7 +119,7 @@ public class WaterRenderer {
 	 *            A Camera
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public void render(Queue<WaterTile> waters, GameControllers gm) {
+	public void render(Queue<WaterTile> waters, GameResources gm) {
 		prepareRender(gm);
 		for (WaterTile tile : waters) {
 			Matrix4f modelMatrix = Maths.createTransformationMatrix(
@@ -137,7 +137,7 @@ public class WaterRenderer {
 	 *            A Camera
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	private void prepareRender(GameControllers gm) {
+	private void prepareRender(GameResources gm) {
 		shader.start();
 		shader.loadSkyColour(KernelConstants.RED, KernelConstants.GREEN, KernelConstants.BLUE);
 		shader.loadViewMatrix(gm.getCamera());
@@ -154,7 +154,7 @@ public class WaterRenderer {
 		glActiveTexture(GL_TEXTURE1);
 		glBindTexture(GL_TEXTURE_2D, normalTexture);
 		glActiveTexture(GL_TEXTURE2);
-		glBindTexture(GL_TEXTURE_2D, gm.getFrameBuffer().getShadowDepthTexture());
+		glBindTexture(GL_TEXTURE_2D, gm.getWaterFBO().getDepthTexture());
 	}
 
 	/**

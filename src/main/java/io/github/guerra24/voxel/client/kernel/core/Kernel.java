@@ -29,7 +29,7 @@ import io.github.guerra24.voxel.client.kernel.bootstrap.Bootstrap;
 import io.github.guerra24.voxel.client.kernel.graphics.opengl.Display;
 import io.github.guerra24.voxel.client.kernel.graphics.opengl.SystemInfo;
 import io.github.guerra24.voxel.client.kernel.input.Keyboard;
-import io.github.guerra24.voxel.client.kernel.resources.GameControllers;
+import io.github.guerra24.voxel.client.kernel.resources.GameResources;
 import io.github.guerra24.voxel.client.kernel.resources.GuiResources;
 import io.github.guerra24.voxel.client.kernel.util.Logger;
 import io.github.guerra24.voxel.client.kernel.world.WorldHandler;
@@ -47,7 +47,7 @@ public class Kernel implements IKernel {
 	 * Contains the Game Resources, all the textures, models and other type of
 	 * data
 	 */
-	private GameControllers gameResources;
+	private GameResources gameResources;
 
 	/**
 	 * Contains the GUI/UI Resources
@@ -80,15 +80,11 @@ public class Kernel implements IKernel {
 	/**
 	 * Update Thread
 	 */
-	private static UpdateThread update;
+	private static UpdateThread updateThread;
 	/**
 	 * Display
 	 */
 	private Display display;
-	/**
-	 * Error Test
-	 */
-	public boolean errorTest;
 
 	/**
 	 * Modding API
@@ -102,7 +98,6 @@ public class Kernel implements IKernel {
 	 *            If running JUnit Test
 	 */
 	public Kernel(boolean errorTest) {
-		this.errorTest = errorTest;
 		mainLoop();
 	}
 
@@ -118,7 +113,7 @@ public class Kernel implements IKernel {
 		display.startUp();
 		SystemInfo.printSystemInfo();
 
-		gameResources = new GameControllers();
+		gameResources = new GameResources();
 		api = new VAPI();
 		api.preInit();
 		gameResources.init();
@@ -134,13 +129,13 @@ public class Kernel implements IKernel {
 		worldThread.setWorldHandler(worlds);
 		worldThread.setGm(gameResources);
 		worldThread.start();
-		update = new UpdateThread();
-		update.setName("Voxel Update");
-		update.setApi(api);
-		update.setWorldHandler(worlds);
-		update.setGm(gameResources);
-		update.setDisplay(display);
-		update.start();
+		updateThread = new UpdateThread();
+		updateThread.setName("Voxel Update");
+		updateThread.setApi(api);
+		updateThread.setWorldHandler(worlds);
+		updateThread.setGm(gameResources);
+		updateThread.setDisplay(display);
+		updateThread.start();
 		api.init();
 		// byte[] user = Launcher.user.getBytes(Charset.forName("UTF-8"));
 		// Logger.log(Thread.currentThread(), "User: " + Launcher.user +
@@ -159,7 +154,7 @@ public class Kernel implements IKernel {
 		float interval = 1f / 60;
 		float alpha = 0;
 		while (gameResources.getGameStates().loop) {
-			if (Display.timeCount > 1f) {
+			if (Display.timeCountRendering > 1f) {
 				Logger.log(Thread.currentThread(), "RCPS: " + Kernel.renderCallsPerFrame);
 				Logger.log(Thread.currentThread(), "FPS: " + Display.fps);
 				Logger.log(Thread.currentThread(), "UPS: " + Display.ups);
@@ -167,9 +162,9 @@ public class Kernel implements IKernel {
 				Display.fpsCount = 0;
 				Display.ups = Display.upsCount;
 				Display.upsCount = 0;
-				Display.timeCount -= 1f;
+				Display.timeCountRendering -= 1f;
 			}
-			delta = Display.getDelta();
+			delta = Display.getDeltaRendering();
 			accumulator += delta;
 			while (accumulator >= interval) {
 				update(gameResources, guiResources, interval);
@@ -178,7 +173,6 @@ public class Kernel implements IKernel {
 
 			alpha = accumulator / interval;
 			render(gameResources, delta);
-			error();
 			totalRenderCalls += renderCalls;
 			renderCallsPerFrame = renderCalls;
 			renderCalls = 0;
@@ -187,7 +181,7 @@ public class Kernel implements IKernel {
 	}
 
 	@Override
-	public void render(GameControllers gm, float delta) {
+	public void render(GameResources gm, float delta) {
 		Display.fpsCount++;
 		switch (gm.getGameStates().state) {
 		case MAINMENU:
@@ -207,31 +201,22 @@ public class Kernel implements IKernel {
 			display.updateDisplay(KernelConstants.FPS, gm);
 			break;
 		case GAME:// THIS NEEDS OPTIMIZATION...
-			int testdim = 0;
-			if (Keyboard.isKeyDown(Keyboard.KEY_U)) {
-				testdim = 1;
-				worlds.getWorld(worlds.getActiveWorld()).switchDimension(testdim, gm, api);
-			} else if (Keyboard.isKeyDown(Keyboard.KEY_I)) {
-				testdim = 0;
-				worlds.getWorld(worlds.getActiveWorld()).switchDimension(testdim, gm, api);
-			}
-
 			gm.getCamera().updatePicker(worlds.getWorld(worlds.getActiveWorld()));
 			gm.getFrustum().calculateFrustum(gm);
 
-			gm.getFrameBuffer().begin();
+			gm.getWaterFBO().begin();
 
 			gm.getCamera().invertPitch();
 			gm.getRenderer().prepare();
 			gm.getSkyboxRenderer().render(KernelConstants.RED, KernelConstants.GREEN, KernelConstants.BLUE, delta, gm);
-			gm.getFrameBuffer().end();
+			gm.getWaterFBO().end();
 
 			gm.getCamera().invertPitch();
 
 			gm.getRenderer().prepare();
-			worlds.getWorld(0).updateChunksRender(gm);
+			worlds.getWorld(worlds.getActiveWorld()).updateChunksRender(gm);
+			gm.getSkyboxRenderer().render(KernelConstants.RED, KernelConstants.GREEN, KernelConstants.BLUE, delta, gm);
 			gm.getRenderer().renderEntity(gm.getPhysics().getMobManager().getMobs(), gm.lights, gm);
-			gm.getSkyboxRenderer().render(KernelConstants.RED, KernelConstants.GREEN, KernelConstants.BLUE, delta, gm);
 			gm.getParticleController().render(gm);
 			gm.getGuiRenderer().renderGui(gm.guis);
 			display.updateDisplay(KernelConstants.FPS, gm);
@@ -244,8 +229,7 @@ public class Kernel implements IKernel {
 		}
 	}
 
-	@Override
-	public void update(GameControllers gm, GuiResources gi, float delta) {
+	public void update(GameResources gm, GuiResources gi, float delta) {
 		Display.upsCount++;
 		switch (gm.getGameStates().state) {
 		case MAINMENU:
@@ -258,7 +242,7 @@ public class Kernel implements IKernel {
 				Bootstrap.config.setVisible(true);
 			break;
 		case GAME:
-			gm.getPhysics().getMobManager().update(delta, gm, gi, worlds.getWorld(worlds.getActiveWorld()));
+			gm.getPhysics().getMobManager().update(delta, gm, gi, worlds.getWorld(worlds.getActiveWorld()), api);
 			gm.getParticleController().update(delta, gm, gi, worlds.getWorld(worlds.getActiveWorld()));
 			gm.getWaterRenderer().update(delta);
 			gm.getSkyboxRenderer().update(delta);
@@ -270,28 +254,15 @@ public class Kernel implements IKernel {
 	}
 
 	@Override
-	public void error() {
-		errorTime++;
-		if (errorTime % 100 == 0) {
-			if (renderCallsPerFrame > 50000) {
-				Logger.warn(Thread.currentThread(), "Render Overflow");
-			}
-			errorTime = 0;
-		}
-	}
-
-	@Override
 	public void dispose() {
 		Logger.log(Thread.currentThread(), "Closing Game");
 		gameResources.cleanUp();
 		api.dispose();
-		if (!errorTest) {
-			Bootstrap.config.dispose();
-		}
+		Bootstrap.config.dispose();
 		display.closeDisplay();
 	}
 
-	public GameControllers getGameResources() {
+	public GameResources getGameResources() {
 		return gameResources;
 	}
 

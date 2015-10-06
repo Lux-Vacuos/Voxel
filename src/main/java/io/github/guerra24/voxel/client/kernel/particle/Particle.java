@@ -1,6 +1,6 @@
 package io.github.guerra24.voxel.client.kernel.particle;
 
-import io.github.guerra24.voxel.client.kernel.resources.GameControllers;
+import io.github.guerra24.voxel.client.kernel.resources.GameResources;
 import io.github.guerra24.voxel.client.kernel.resources.GuiResources;
 import io.github.guerra24.voxel.client.kernel.resources.models.TexturedModel;
 import io.github.guerra24.voxel.client.kernel.util.vector.Vector3f;
@@ -26,7 +26,7 @@ public class Particle extends Entity {
 		this.lifeTime = lifeTime;
 	}
 
-	public void update(float delta, GameControllers gm, GuiResources gi, DimensionalWorld world) {
+	public void update(float delta, GameResources gm, GuiResources gi, DimensionalWorld world) {
 		Vector3f normal = new Vector3f(0, 1, 0);
 		Vector3f dir = Vector3f.sub(
 				new Vector3f(gm.getCamera().getPosition().x, gm.getCamera().getPosition().y,

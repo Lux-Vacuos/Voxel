@@ -31,7 +31,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 import io.github.guerra24.voxel.client.kernel.api.VAPI;
 import io.github.guerra24.voxel.client.kernel.core.KernelConstants;
-import io.github.guerra24.voxel.client.kernel.resources.GameControllers;
+import io.github.guerra24.voxel.client.kernel.resources.GameResources;
 import io.github.guerra24.voxel.client.kernel.resources.models.WaterTile;
 import io.github.guerra24.voxel.client.kernel.util.Maths;
 import io.github.guerra24.voxel.client.kernel.util.vector.Vector3f;
@@ -166,11 +166,16 @@ public class Chunk {
 			for (int z = 0; z < sizeZ; z++) {
 				for (int y = 0; y < 32; y++) {
 					if (Block.getBlock(blocks[x][y][z]) == Block.Torch) {
-						cubes1.add(Block.getBlock(blocks[x][y][z])
-								.getSingleModel(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
-						lights1.add(new Light(new Vector3f((x + cx * sizeX) + 0.5f, y + 0.8f, (z + cz * sizeZ) - 0.5f),
-								new Vector3f(1, 1, 1), new Vector3f(1, 0.1f, 0.09f)));
-						sec1NotClear = true;
+						if (cullFaceDown(x, y, z) && cullFaceEast(x, y, z, world) && cullFaceNorth(x, y, z, world)
+								&& cullFaceSouth(x, y, z, world) && cullFaceUpSolidBlock(x, y, z)
+								&& cullFaceWest(x, y, z, world)) {
+							cubes1.add(Block.getBlock(blocks[x][y][z])
+									.getSingleModel(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
+							lights1.add(
+									new Light(new Vector3f((x + cx * sizeX) + 0.5f, y + 0.8f, (z + cz * sizeZ) - 0.5f),
+											new Vector3f(1, 1, 1), new Vector3f(1, 0.1f, 0.09f)));
+							sec1NotClear = true;
+						}
 					} else if (Block.getBlock(blocks[x][y][z]) != Block.Air
 							&& Block.getBlock(blocks[x][y][z]) != Block.Water) {
 						if (cullFaceWest(x + cx * sizeX, y, z + cz * sizeZ, world)) {
@@ -215,11 +220,16 @@ public class Chunk {
 			for (int z = 0; z < sizeZ; z++) {
 				for (int y = 32; y < 64; y++) {
 					if (Block.getBlock(blocks[x][y][z]) == Block.Torch) {
-						cubes2.add(Block.getBlock(blocks[x][y][z])
-								.getSingleModel(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
-						lights2.add(new Light(new Vector3f((x + cx * sizeX) + 0.5f, y + 0.8f, (z + cz * sizeZ) - 0.5f),
-								new Vector3f(1, 1, 1), new Vector3f(1, 0.1f, 0.09f)));
-						sec2NotClear = true;
+						if (cullFaceDown(x, y, z) && cullFaceEast(x, y, z, world) && cullFaceNorth(x, y, z, world)
+								&& cullFaceSouth(x, y, z, world) && cullFaceUpSolidBlock(x, y, z)
+								&& cullFaceWest(x, y, z, world)) {
+							cubes2.add(Block.getBlock(blocks[x][y][z])
+									.getSingleModel(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
+							lights2.add(
+									new Light(new Vector3f((x + cx * sizeX) + 0.5f, y + 0.8f, (z + cz * sizeZ) - 0.5f),
+											new Vector3f(1, 1, 1), new Vector3f(1, 0.1f, 0.09f)));
+							sec2NotClear = true;
+						}
 					} else if (Block.getBlock(blocks[x][y][z]) != Block.Air
 							&& Block.getBlock(blocks[x][y][z]) != Block.Water) {
 						if (cullFaceWest(x + cx * sizeX, y, z + cz * sizeZ, world)) {
@@ -269,8 +279,13 @@ public class Chunk {
 						lights3.add(new Light(new Vector3f((x + cx * sizeX) + 0.5f, y + 0.8f, (z + cz * sizeZ) - 0.5f),
 								new Vector3f(1, 1, 1), new Vector3f(1, 0.1f, 0.09f)));
 						sec3NotClear = true;
+					} else if (Block.getBlock(blocks[x][y][z]).usesSingleModel()) {
+						cubes3.add(Block.getBlock(blocks[x][y][z])
+								.getSingleModel(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
+						sec3NotClear = true;
 					} else if (Block.getBlock(blocks[x][y][z]) != Block.Air
-							&& Block.getBlock(blocks[x][y][z]) != Block.Water) {
+							&& Block.getBlock(blocks[x][y][z]) != Block.Water
+							&& !Block.getBlock(blocks[x][y][z]).usesSingleModel()) {
 						if (cullFaceWest(x + cx * sizeX, y, z + cz * sizeZ, world)) {
 							cubes3.add(Block.getBlock(blocks[x][y][z])
 									.getFaceWest(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
@@ -318,11 +333,16 @@ public class Chunk {
 			for (int z = 0; z < sizeZ; z++) {
 				for (int y = 96; y < 128; y++) {
 					if (Block.getBlock(blocks[x][y][z]) == Block.Torch) {
-						cubes4.add(Block.getBlock(blocks[x][y][z])
-								.getSingleModel(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
-						lights4.add(new Light(new Vector3f((x + cx * sizeX) + 0.5f, y + 0.8f, (z + cz * sizeZ) - 0.5f),
-								new Vector3f(1, 1, 1), new Vector3f(1, 0.1f, 0.09f)));
-						sec4NotClear = true;
+						if (cullFaceDown(x, y, z) && cullFaceEast(x, y, z, world) && cullFaceNorth(x, y, z, world)
+								&& cullFaceSouth(x, y, z, world) && cullFaceUpSolidBlock(x, y, z)
+								&& cullFaceWest(x, y, z, world)) {
+							cubes4.add(Block.getBlock(blocks[x][y][z])
+									.getSingleModel(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
+							lights4.add(
+									new Light(new Vector3f((x + cx * sizeX) + 0.5f, y + 0.8f, (z + cz * sizeZ) - 0.5f),
+											new Vector3f(1, 1, 1), new Vector3f(1, 0.1f, 0.09f)));
+							sec4NotClear = true;
+						}
 					} else if (Block.getBlock(blocks[x][y][z]) != Block.Air
 							&& Block.getBlock(blocks[x][y][z]) != Block.Water) {
 						if (cullFaceWest(x + cx * sizeX, y, z + cz * sizeZ, world)) {
@@ -533,21 +553,21 @@ public class Chunk {
 		}
 	}
 
-	public void render1(GameControllers gm) {
+	public void render1(GameResources gm) {
 		if (readyToRender)
 			gm.getRenderer().renderChunk(cubes1, lights1, gm);
 		else
 			gm.getRenderer().renderChunk(cubes1temp, lights1, gm);
 	}
 
-	public void render2(GameControllers gm) {
+	public void render2(GameResources gm) {
 		if (readyToRender)
 			gm.getRenderer().renderChunk(cubes2, lights2, gm);
 		else
 			gm.getRenderer().renderChunk(cubes2temp, lights2, gm);
 	}
 
-	public void render3(GameControllers gm) {
+	public void render3(GameResources gm) {
 		if (readyToRender) {
 			gm.getRenderer().renderChunk(cubes3, lights3, gm);
 			gm.getWaterRenderer().render(waters, gm);
@@ -557,7 +577,7 @@ public class Chunk {
 		}
 	}
 
-	public void render4(GameControllers gm) {
+	public void render4(GameResources gm) {
 		if (readyToRender)
 			gm.getRenderer().renderChunk(cubes4, lights4, gm);
 		else

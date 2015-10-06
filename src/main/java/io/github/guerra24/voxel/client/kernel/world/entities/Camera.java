@@ -24,39 +24,22 @@
 
 package io.github.guerra24.voxel.client.kernel.world.entities;
 
-import static io.github.guerra24.voxel.client.kernel.input.Keyboard.KEY_1;
-import static io.github.guerra24.voxel.client.kernel.input.Keyboard.KEY_2;
-import static io.github.guerra24.voxel.client.kernel.input.Keyboard.KEY_3;
-import static io.github.guerra24.voxel.client.kernel.input.Keyboard.KEY_4;
-import static io.github.guerra24.voxel.client.kernel.input.Keyboard.KEY_5;
-import static io.github.guerra24.voxel.client.kernel.input.Keyboard.KEY_6;
-import static io.github.guerra24.voxel.client.kernel.input.Keyboard.KEY_7;
-import static io.github.guerra24.voxel.client.kernel.input.Keyboard.KEY_8;
-import static io.github.guerra24.voxel.client.kernel.input.Keyboard.KEY_A;
-import static io.github.guerra24.voxel.client.kernel.input.Keyboard.KEY_D;
-import static io.github.guerra24.voxel.client.kernel.input.Keyboard.KEY_F3;
-import static io.github.guerra24.voxel.client.kernel.input.Keyboard.KEY_K;
-import static io.github.guerra24.voxel.client.kernel.input.Keyboard.KEY_LCONTROL;
-import static io.github.guerra24.voxel.client.kernel.input.Keyboard.KEY_LSHIFT;
-import static io.github.guerra24.voxel.client.kernel.input.Keyboard.KEY_R;
-import static io.github.guerra24.voxel.client.kernel.input.Keyboard.KEY_S;
-import static io.github.guerra24.voxel.client.kernel.input.Keyboard.KEY_SPACE;
-import static io.github.guerra24.voxel.client.kernel.input.Keyboard.KEY_W;
-import static io.github.guerra24.voxel.client.kernel.input.Keyboard.KEY_Y;
-import static io.github.guerra24.voxel.client.kernel.input.Keyboard.isKeyDown;
+import static io.github.guerra24.voxel.client.kernel.input.Keyboard.*;
 import static io.github.guerra24.voxel.client.kernel.input.Mouse.getDX;
 import static io.github.guerra24.voxel.client.kernel.input.Mouse.getDY;
 import static io.github.guerra24.voxel.client.kernel.input.Mouse.isButtonDown;
 import static io.github.guerra24.voxel.client.kernel.input.Mouse.setCursorPosition;
 import static io.github.guerra24.voxel.client.kernel.input.Mouse.setGrabbed;
 
+import io.github.guerra24.voxel.client.kernel.api.VAPI;
 import io.github.guerra24.voxel.client.kernel.core.KernelConstants;
 import io.github.guerra24.voxel.client.kernel.graphics.opengl.Display;
-import io.github.guerra24.voxel.client.kernel.resources.GameControllers;
+import io.github.guerra24.voxel.client.kernel.resources.GameResources;
 import io.github.guerra24.voxel.client.kernel.resources.GuiResources;
 import io.github.guerra24.voxel.client.kernel.util.vector.Vector2f;
 import io.github.guerra24.voxel.client.kernel.util.vector.Vector3f;
 import io.github.guerra24.voxel.client.kernel.world.DimensionalWorld;
+import io.github.guerra24.voxel.client.kernel.world.block.Block;
 
 /**
  * Camera
@@ -68,24 +51,29 @@ public class Camera implements IEntity {
 	private Vector3f position = new Vector3f(-2, 0, -1);
 	private float pitch;
 	private float yaw;
+	private float roll;
 	private float speed;
 	private float multiplierMouse = 24;
 	private float multiplierMovement = 24;
 	private int life = 0;
 	private byte block = 2;
+	private boolean teleporting = false;
+	private int teleportingTime = 0;
 
-	private static int mouseSpeed = 2;
-	private static final int maxLookUp = 90;
-	private static final int maxLookDown = -90;
+	private int mouseSpeed = 2;
+	private final int maxLookUp = 90;
+	private final int maxLookDown = -90;
 
 	public boolean isMoved = false;
+	
+	int id = 0;
 
 	public Camera() {
 		this.speed = 0.2f;
 	}
 
 	@Override
-	public void update(float delta, GameControllers gm, GuiResources gi, DimensionalWorld world) {
+	public void update(float delta, GameResources gm, GuiResources gi, DimensionalWorld world, VAPI api) {
 		isMoved = false;
 		float mouseDX = getDX() * delta * mouseSpeed * 0.16f * multiplierMouse;
 		float mouseDY = getDY() * delta * mouseSpeed * 0.16f * multiplierMouse;
@@ -126,6 +114,24 @@ public class Camera implements IEntity {
 		int bx = (int) tempX;
 		int by = (int) tempY;
 		int bz = (int) tempZ;
+		
+		if(isKeyDown(KEY_K))
+			id = KernelConstants.DIM_0;
+		if(isKeyDown(KEY_J))
+			id = KernelConstants.DIM_1;
+		
+		if (world.getGlobalBlock(world.getChunkDimension(), bx, by, bz + 1) == Block.Portal.getId()
+				&& teleporting == false) {
+			teleporting = true;
+			world.switchDimension(id, gm, api);
+		}
+		if (teleporting) {
+			teleportingTime++;
+			if (teleportingTime >= 100) {
+				teleporting = false;
+				teleportingTime = 0;
+			}
+		}
 
 		if (isKeyDown(KEY_W)) {
 
@@ -211,6 +217,8 @@ public class Camera implements IEntity {
 			block = 8;
 		else if (isKeyDown(KEY_8))
 			block = 9;
+		else if (isKeyDown(KEY_9))
+			block = 10;
 		if (isButtonDown(0)) {
 			setBlock(position, (byte) 0, world);
 		} else if (isButtonDown(1)) {
@@ -265,8 +273,8 @@ public class Camera implements IEntity {
 	}
 
 	public void setMouse() {
-		setGrabbed(true);
 		setCursorPosition(Display.getWidth() / 2, Display.getHeight() / 2);
+		setGrabbed(true);
 	}
 
 	@Override
@@ -302,6 +310,14 @@ public class Camera implements IEntity {
 		this.yaw = yaw;
 	}
 
+	public float getRoll() {
+		return roll;
+	}
+
+	public void setRoll(float roll) {
+		this.roll = roll;
+	}
+
 	public float getLife() {
 		return life;
 	}
@@ -314,6 +330,10 @@ public class Camera implements IEntity {
 			gi.life.setScale(new Vector2f(temp, 0.02f));
 			this.life = life;
 		}
+	}
+
+	public boolean isTeleporting() {
+		return teleporting;
 	}
 
 }

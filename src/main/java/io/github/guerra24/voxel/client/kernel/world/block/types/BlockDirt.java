@@ -77,4 +77,9 @@ public class BlockDirt extends Block {
 		return null;
 	}
 
+	@Override
+	public boolean usesSingleModel() {
+		return false;
+	}
+
 }

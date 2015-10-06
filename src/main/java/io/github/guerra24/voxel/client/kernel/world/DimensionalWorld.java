@@ -14,7 +14,7 @@ import com.google.gson.JsonSyntaxException;
 import io.github.guerra24.voxel.client.kernel.api.VAPI;
 import io.github.guerra24.voxel.client.kernel.core.KernelConstants;
 import io.github.guerra24.voxel.client.kernel.core.WorldThread;
-import io.github.guerra24.voxel.client.kernel.resources.GameControllers;
+import io.github.guerra24.voxel.client.kernel.resources.GameResources;
 import io.github.guerra24.voxel.client.kernel.util.Logger;
 import io.github.guerra24.voxel.client.kernel.util.vector.Vector2f;
 import io.github.guerra24.voxel.client.kernel.util.vector.Vector3f;
@@ -23,6 +23,7 @@ import io.github.guerra24.voxel.client.kernel.world.chunks.ChunkKey;
 
 public class DimensionalWorld {
 	private int chunkDim;
+	private int previusChunkDim;
 	private int worldID;
 	private HashMap<ChunkKey, Chunk> chunks;
 	private Random seed;
@@ -45,7 +46,7 @@ public class DimensionalWorld {
 	 *            World Dimension
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public void startWorld(String name, Random seed, int chunkDim, VAPI api, GameControllers gm) {
+	public void startWorld(String name, Random seed, int chunkDim, VAPI api, GameResources gm) {
 		this.name = name;
 		this.seed = seed;
 		this.chunkDim = chunkDim;
@@ -58,13 +59,13 @@ public class DimensionalWorld {
 		createWorld(gm, api);
 	}
 
-	private void initialize(GameControllers gm) {
+	private void initialize(GameResources gm) {
 		noise = new SimplexNoise(128, 0.2f, seed.nextInt());
 		chunks = new HashMap<ChunkKey, Chunk>();
 		gm.getPhysics().getMobManager().getPlayer().setPosition(gm.getCamera().getPosition());
 	}
 
-	private void createWorld(GameControllers gm, VAPI api) {
+	private void createWorld(GameResources gm, VAPI api) {
 		Logger.log(Thread.currentThread(), "Generating World");
 		xPlayChunk = (int) (gm.getCamera().getPosition().x / 16);
 		zPlayChunk = (int) (gm.getCamera().getPosition().z / 16);
@@ -97,7 +98,7 @@ public class DimensionalWorld {
 		}
 	}
 
-	public void updateChunkGeneration(GameControllers gm, VAPI api) {
+	public void updateChunkGeneration(GameResources gm, VAPI api) {
 		if (gm.getCamera().getPosition().x < 0)
 			xPlayChunk = (int) ((gm.getCamera().getPosition().x - 16) / 16);
 		if (gm.getCamera().getPosition().z < 0)
@@ -138,7 +139,7 @@ public class DimensionalWorld {
 			tempRadius++;
 	}
 
-	public void updateChunksRender(GameControllers gm) {
+	public void updateChunksRender(GameResources gm) {
 		gm.lights.clear();
 		for (int zr = -KernelConstants.radius; zr <= KernelConstants.radius; zr++) {
 			int zz = zPlayChunk + zr;
@@ -172,14 +173,16 @@ public class DimensionalWorld {
 
 	}
 
-	public void switchDimension(int id, GameControllers gm, VAPI api) {
-		clearChunkDimension(gm);
-		chunkDim = id;
-		initialize(gm);
-		createWorld(gm, api);
+	public void switchDimension(int id, GameResources gm, VAPI api) {
+		if (id != chunkDim) {
+			clearChunkDimension(gm);
+			chunkDim = id;
+			initialize(gm);
+			createWorld(gm, api);
+		}
 	}
 
-	public void saveWorld(GameControllers gm) {
+	public void saveWorld(GameResources gm) {
 		if (!existWorld()) {
 			File file = new File(KernelConstants.worldPath + name + "/");
 			file.mkdirs();
@@ -199,7 +202,7 @@ public class DimensionalWorld {
 		}
 	}
 
-	public void loadWorld(GameControllers gm) {
+	public void loadWorld(GameResources gm) {
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(KernelConstants.worldPath + name + "/world.json"));
 			seed = gm.getGson().fromJson(br, Random.class);
@@ -208,7 +211,7 @@ public class DimensionalWorld {
 		}
 	}
 
-	public void saveChunk(int chunkDim, int cx, int cz, GameControllers gm) {
+	public void saveChunk(int chunkDim, int cx, int cz, GameResources gm) {
 		String json = gm.getGson().toJson(getChunk(chunkDim, cx, cz));
 		try {
 			File chunksFolder = new File(KernelConstants.worldPath + name + "/chunks_" + chunkDim);
@@ -224,7 +227,7 @@ public class DimensionalWorld {
 		}
 	}
 
-	public void loadChunk(int chunkDim, int cx, int cz, GameControllers gm) {
+	public void loadChunk(int chunkDim, int cx, int cz, GameResources gm) {
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(KernelConstants.worldPath + name + "/chunks_"
 					+ chunkDim + "/chunk_" + chunkDim + "_" + cx + "_" + cz + ".json"));
@@ -320,7 +323,7 @@ public class DimensionalWorld {
 		}
 	}
 
-	public void clearChunkDimension(GameControllers gm) {
+	public void clearChunkDimension(GameResources gm) {
 		Logger.log(Thread.currentThread(), "Saving World");
 		try {
 			WorldThread.sleep(10000l);

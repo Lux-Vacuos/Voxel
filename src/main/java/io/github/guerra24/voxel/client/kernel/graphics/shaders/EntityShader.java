@@ -24,14 +24,14 @@
 
 package io.github.guerra24.voxel.client.kernel.graphics.shaders;
 
+import java.util.List;
+
 import io.github.guerra24.voxel.client.kernel.core.KernelConstants;
 import io.github.guerra24.voxel.client.kernel.util.Maths;
 import io.github.guerra24.voxel.client.kernel.util.vector.Matrix4f;
 import io.github.guerra24.voxel.client.kernel.util.vector.Vector3f;
 import io.github.guerra24.voxel.client.kernel.world.entities.Camera;
 import io.github.guerra24.voxel.client.kernel.world.entities.Light;
-
-import java.util.List;
 
 /**
  * Entity Shader
@@ -40,46 +40,18 @@ import java.util.List;
  * @category Rendering
  */
 public class EntityShader extends ShaderProgram {
-	/**
-	 * Transformation Matrix ID
-	 */
 	private int location_transformationMatrix;
-	/**
-	 * Projection Matrix ID
-	 */
 	private int location_projectionMatrix;
-	/**
-	 * Light Position Array ID
-	 */
 	private int location_lightPosition[];
-	/**
-	 * Light Colour Array ID
-	 */
 	private int location_lightColour[];
-	/**
-	 * Attenuation ID
-	 */
 	private int location_attenuations[];
-	/**
-	 * View Matrix ID
-	 */
 	private int location_viewMatrix;
-	/**
-	 * Sky Colour ID
-	 */
 	private int location_skyColour;
-	/**
-	 * Directional Light ID
-	 */
 	private int location_directLightDirection;
-	/**
-	 * World Time
-	 */
 	private int location_time;
-	/**
-	 * Day/Night blend factor
-	 */
 	private int location_blendFactor;
+	private int location_texture0;
+	private int location_depth0;
 
 	/**
 	 * Constructor, creates an Entity Shader
@@ -106,6 +78,8 @@ public class EntityShader extends ShaderProgram {
 		location_directLightDirection = super.getUniformLocation("directLightDirection");
 		location_blendFactor = super.getUniformLocation("blendFactor");
 		location_time = super.getUniformLocation("time");
+		location_texture0 = super.getUniformLocation("texture0");
+		location_depth0 = super.getUniformLocation("depth0");
 
 		location_lightPosition = new int[KernelConstants.MAX_LIGHTS];
 		location_lightColour = new int[KernelConstants.MAX_LIGHTS];
@@ -117,6 +91,15 @@ public class EntityShader extends ShaderProgram {
 		}
 	}
 
+	/**
+	 * Loads Textures ID
+	 * 
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
+	public void connectTextureUnits() {
+		super.loadInt(location_texture0, 0);
+		super.loadInt(location_depth0, 1);
+	}
 	/**
 	 * Loads the Sky Color to the shader
 	 * 

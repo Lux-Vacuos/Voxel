@@ -12,7 +12,7 @@ import java.util.Map;
 import io.github.guerra24.voxel.client.kernel.graphics.ParticleRenderer;
 import io.github.guerra24.voxel.client.kernel.graphics.opengl.VoxelGL33;
 import io.github.guerra24.voxel.client.kernel.graphics.shaders.ParticleShader;
-import io.github.guerra24.voxel.client.kernel.resources.GameControllers;
+import io.github.guerra24.voxel.client.kernel.resources.GameResources;
 import io.github.guerra24.voxel.client.kernel.resources.GuiResources;
 import io.github.guerra24.voxel.client.kernel.resources.Loader;
 import io.github.guerra24.voxel.client.kernel.resources.models.TexturedModel;
@@ -41,7 +41,7 @@ public class ParticleController implements IParticleController {
 	}
 
 	@Override
-	public void render(GameControllers gm) {
+	public void render(GameResources gm) {
 		for (Particle particle : particles) {
 			if (gm.getFrustum().pointInFrustum(particle.getPosition().x, particle.getPosition().y,
 					particle.getPosition().z))
@@ -50,7 +50,7 @@ public class ParticleController implements IParticleController {
 		renderParticles(particleBatcher, gm);
 	}
 
-	private void renderParticles(Map<TexturedModel, List<Particle>> particles, GameControllers gm) {
+	private void renderParticles(Map<TexturedModel, List<Particle>> particles, GameResources gm) {
 		VoxelGL33.glEnable(GL_BLEND);
 		VoxelGL33.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		shader.start();
@@ -63,7 +63,7 @@ public class ParticleController implements IParticleController {
 	}
 
 	@Override
-	public void update(float delta, GameControllers gm, GuiResources gi, DimensionalWorld world) {
+	public void update(float delta, GameResources gm, GuiResources gi, DimensionalWorld world) {
 		emiter.spawnParticles(this);
 		for (int x = 0; x < particles.size(); x++) {
 			particles.get(x).update(delta, gm, gi, world);

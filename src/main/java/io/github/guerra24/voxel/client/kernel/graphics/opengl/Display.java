@@ -96,7 +96,7 @@ import de.matthiasmann.twl.utils.PNGDecoder;
 import io.github.guerra24.voxel.client.kernel.core.KernelConstants;
 import io.github.guerra24.voxel.client.kernel.input.Keyboard;
 import io.github.guerra24.voxel.client.kernel.input.Mouse;
-import io.github.guerra24.voxel.client.kernel.resources.GameControllers;
+import io.github.guerra24.voxel.client.kernel.resources.GameResources;
 import io.github.guerra24.voxel.client.kernel.util.Logger;
 
 /**
@@ -119,8 +119,10 @@ public class Display {
 	/**
 	 * Game loop variables
 	 */
-	private static double lastLoopTime;
-	public static float timeCount;
+	private static double lastLoopTimeRendering;
+	private static double lastLoopTimeUpdate;
+	public static float timeCountRendering;
+	public static float timeCountUpdate;
 	public static int fps;
 	public static int fpsCount;
 	public static int ups;
@@ -146,7 +148,7 @@ public class Display {
 	/**
 	 * Window variables
 	 */
-	private  boolean displayCreated = false;
+	private boolean displayCreated = false;
 	private boolean displayFocused = false;
 	private boolean displayVisible = true;
 	private boolean displayDirty = false;
@@ -343,7 +345,8 @@ public class Display {
 		Logger.log(Thread.currentThread(), "LWJGL Version: " + Sys.getVersion());
 		Logger.log(Thread.currentThread(), "OpenGL Version: " + glGetString(GL_VERSION));
 		VoxelGL33.glViewport(0, 0, displayWidth, displayHeight);
-		lastLoopTime = getTime();
+		lastLoopTimeRendering = getTime();
+		lastLoopTimeUpdate = getTime();
 		displayCreated = true;
 	}
 
@@ -354,7 +357,7 @@ public class Display {
 	 *            Game Max FPS
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public void updateDisplay(int fps, GameControllers gm) {
+	public void updateDisplay(int fps, GameResources gm) {
 		if (KernelConstants.loaded) {
 			ByteBuffer w = BufferUtils.createByteBuffer(4);
 			ByteBuffer h = BufferUtils.createByteBuffer(4);
@@ -364,7 +367,8 @@ public class Display {
 			displayHeight = width;
 			displayHeight = height;
 			VoxelGL33.glViewport(0, 0, width, height);
-			gm.getRenderer().createProjectionMatrix();
+			gm.getRenderer().setProjectionMatrix(gm.getRenderer().createProjectionMatrix(Display.getWidth(),
+					Display.getHeight(), KernelConstants.FOV, KernelConstants.NEAR_PLANE, KernelConstants.FAR_PLANE));
 		}
 		glfwSwapBuffers(window);
 		glfwPollEvents();
@@ -433,11 +437,25 @@ public class Display {
 	 * @return Delta
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public static float getDelta() {
+	public static float getDeltaRendering() {
 		double time = getTime();
-		float delta = (float) (time - lastLoopTime);
-		lastLoopTime = time;
-		timeCount += delta;
+		float delta = (float) (time - lastLoopTimeRendering);
+		lastLoopTimeRendering = time;
+		timeCountRendering += delta;
+		return delta;
+	}
+
+	/**
+	 * Calculates the Delta
+	 * 
+	 * @return Delta
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
+	public static float getDeltaUpdate() {
+		double time = getTime();
+		float delta = (float) (time - lastLoopTimeUpdate);
+		lastLoopTimeUpdate = time;
+		timeCountUpdate += delta;
 		return delta;
 	}
 

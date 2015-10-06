@@ -77,4 +77,9 @@ public class BlockSand extends Block {
 		return null;
 	}
 
+	@Override
+	public boolean usesSingleModel() {
+		return false;
+	}
+
 }

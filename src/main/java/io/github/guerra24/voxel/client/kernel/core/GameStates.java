@@ -30,10 +30,9 @@ import io.github.guerra24.voxel.client.kernel.api.VAPI;
 import io.github.guerra24.voxel.client.kernel.graphics.opengl.Display;
 import io.github.guerra24.voxel.client.kernel.input.Keyboard;
 import io.github.guerra24.voxel.client.kernel.menu.Button;
-import io.github.guerra24.voxel.client.kernel.resources.GameControllers;
+import io.github.guerra24.voxel.client.kernel.resources.GameResources;
 import io.github.guerra24.voxel.client.kernel.util.vector.Vector3f;
 import io.github.guerra24.voxel.client.kernel.world.WorldHandler;
-import io.github.guerra24.voxel.client.kernel.world.DimensionalWorld;
 
 /**
  * Game States
@@ -79,7 +78,7 @@ public class GameStates {
 	 * 
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public void switchStates(GameControllers gm, WorldHandler worlds, VAPI api, Display display) {
+	public void switchStates(GameResources gm, WorldHandler worlds, VAPI api, Display display) {
 		if (state == State.MAINMENU && Button.isInButtonPlay()) {
 			// Kernel.gameResources.SoundSystem.pause("MainMenuMusic");
 			state = State.LOADING_WORLD;

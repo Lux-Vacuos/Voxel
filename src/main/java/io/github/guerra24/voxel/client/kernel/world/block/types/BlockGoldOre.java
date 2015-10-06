@@ -77,4 +77,9 @@ public class BlockGoldOre extends Block {
 		return null;
 	}
 
+	@Override
+	public boolean usesSingleModel() {
+		return false;
+	}
+
 }

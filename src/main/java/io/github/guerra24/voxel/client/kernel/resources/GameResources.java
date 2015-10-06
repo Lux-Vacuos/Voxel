@@ -32,10 +32,10 @@ import com.google.gson.Gson;
 
 import io.github.guerra24.voxel.client.kernel.api.VAPI;
 import io.github.guerra24.voxel.client.kernel.core.GameStates;
+import io.github.guerra24.voxel.client.kernel.graphics.FrameBuffer;
 import io.github.guerra24.voxel.client.kernel.graphics.Frustum;
 import io.github.guerra24.voxel.client.kernel.graphics.GuiRenderer;
 import io.github.guerra24.voxel.client.kernel.graphics.MasterRenderer;
-import io.github.guerra24.voxel.client.kernel.graphics.FrameBuffer;
 import io.github.guerra24.voxel.client.kernel.graphics.SkyboxRenderer;
 import io.github.guerra24.voxel.client.kernel.graphics.WaterRenderer;
 import io.github.guerra24.voxel.client.kernel.graphics.shaders.WaterShader;
@@ -62,7 +62,7 @@ import io.github.guerra24.voxel.client.kernel.world.entities.Mob;
  * @author Guerra24 <pablo230699@hotmail.com>
  * @category Assets
  */
-public class GameControllers {
+public class GameResources {
 	public List<GuiTexture> guis = new ArrayList<GuiTexture>();
 	public List<GuiTexture> guis2 = new ArrayList<GuiTexture>();
 	public List<GuiTexture> guis3 = new ArrayList<GuiTexture>();
@@ -85,7 +85,7 @@ public class GameControllers {
 	private Gson gson;
 	private SoundSystem soundSystem;
 	private Frustum frustum;
-	private FrameBuffer frameBuffer;
+	private FrameBuffer waterFBO;
 	private Physics physics;
 
 	/**
@@ -93,7 +93,7 @@ public class GameControllers {
 	 * 
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public GameControllers() {
+	public GameResources() {
 	}
 
 	/**
@@ -112,7 +112,7 @@ public class GameControllers {
 		skyboxRenderer = new SkyboxRenderer(loader, renderer.getProjectionMatrix());
 		particleController = new ParticleController(loader);
 		gameStates = new GameStates();
-		frameBuffer = new FrameBuffer();
+		waterFBO = new FrameBuffer(false);
 		physics = new Physics(this);
 		frustum = new Frustum();
 		rand = new Random();
@@ -159,7 +159,7 @@ public class GameControllers {
 	public void cleanUp() {
 		particleController.dispose();
 		waterShader.cleanUp();
-		frameBuffer.cleanUp();
+		waterFBO.cleanUp();
 		guiRenderer.cleanUp();
 		renderer.cleanUp();
 		loader.cleanUp();
@@ -254,8 +254,8 @@ public class GameControllers {
 		return physics;
 	}
 
-	public FrameBuffer getFrameBuffer() {
-		return frameBuffer;
+	public FrameBuffer getWaterFBO() {
+		return waterFBO;
 	}
 
 }

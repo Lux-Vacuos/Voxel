@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.Random;
 
 import io.github.guerra24.voxel.client.kernel.api.VAPI;
-import io.github.guerra24.voxel.client.kernel.resources.GameControllers;
+import io.github.guerra24.voxel.client.kernel.resources.GameResources;
 
 public class WorldHandler {
 
@@ -16,10 +16,10 @@ public class WorldHandler {
 		worlds = new HashMap<Integer, DimensionalWorld>();
 	}
 
-	public void addWorld(int id, Random seed, VAPI api, GameControllers gm) {
+	public void addWorld(int id, Random seed, VAPI api, GameResources gm) {
 		if (!worldExist(id)) {
 			DimensionalWorld world = new DimensionalWorld();
-			world.startWorld("Mundo-" + id, seed, id, api, gm);
+			world.startWorld("World-" + id, seed, id, api, gm);
 			worlds.put(world.getWorldID(), world);
 		}
 		activeWorld = id;
@@ -32,7 +32,7 @@ public class WorldHandler {
 			return false;
 	}
 
-	public void removeWorld(int world, GameControllers gm) {
+	public void removeWorld(int world, GameResources gm) {
 		worlds.get(world).clearChunkDimension(gm);
 	}
 

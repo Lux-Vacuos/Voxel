@@ -52,4 +52,9 @@ public class BlockTorch extends Block {
 	public BlockEntity getSingleModel(Vector3f pos) {
 		return new BlockEntity(BlocksResources.cubeTorch, pos, 0, 0, 0, 1);
 	}
+
+	@Override
+	public boolean usesSingleModel() {
+		return false;
+	}
 }

@@ -3,7 +3,8 @@ package io.github.guerra24.voxel.client.kernel.world;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.github.guerra24.voxel.client.kernel.resources.GameControllers;
+import io.github.guerra24.voxel.client.kernel.api.VAPI;
+import io.github.guerra24.voxel.client.kernel.resources.GameResources;
 import io.github.guerra24.voxel.client.kernel.resources.GuiResources;
 import io.github.guerra24.voxel.client.kernel.util.vector.Vector3f;
 import io.github.guerra24.voxel.client.kernel.world.block.BlocksResources;
@@ -14,21 +15,21 @@ public class DefaultMobManager implements IMobManagerController {
 	private List<IEntity> mobs = new ArrayList<IEntity>();
 	private Player player;
 
-	public DefaultMobManager(GameControllers gm) {
+	public DefaultMobManager(GameResources gm) {
 		init(gm);
 	}
 
 	@Override
-	public void init(GameControllers gm) {
+	public void init(GameResources gm) {
 		player = new Player(BlocksResources.cubeGlassUP, new Vector3f(0, 80, -4), 0, 0, 0, 1);
 		mobs.add(player);
 		mobs.add(gm.getCamera());
 	}
 
 	@Override
-	public void update(float delta, GameControllers gm, GuiResources gi, DimensionalWorld world) {
+	public void update(float delta, GameResources gm, GuiResources gi, DimensionalWorld world, VAPI api) {
 		for (int x = 0; x < mobs.size(); x++) {
-			mobs.get(x).update(delta, gm, gi, world);
+			mobs.get(x).update(delta, gm, gi, world, api);
 		}
 	}
 
