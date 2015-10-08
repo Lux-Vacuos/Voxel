@@ -3,8 +3,7 @@ package io.github.guerra24.voxel.client.kernel.graphics;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11.GL_TRIANGLE_STRIP;
 import static org.lwjgl.opengl.GL11.glBindTexture;
-import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
-import static org.lwjgl.opengl.GL13.glActiveTexture;
+import static org.lwjgl.opengl.GL13.*;
 import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
 import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
@@ -22,6 +21,7 @@ public class PostProcessingRenderer {
 
 	private PostProcessingShader shader;
 	private FrameBuffer post_fbo;
+	private FrameBuffer post_fbo_depth;
 	private final RawModel quad;
 
 	public PostProcessingRenderer(Loader loader) {
@@ -31,8 +31,10 @@ public class PostProcessingRenderer {
 		shader.start();
 		Matrix4f matrix = Maths.createTransformationMatrix(new Vector2f(0, 0), new Vector2f(1, 1));
 		shader.loadTransformation(matrix);
+		shader.connectTextureUnits();
 		shader.stop();
 		post_fbo = new FrameBuffer(false, Display.getWidth(), Display.getHeight());
+		post_fbo_depth = new FrameBuffer(true, 512, 512);
 	}
 
 	public void render() {
@@ -42,6 +44,8 @@ public class PostProcessingRenderer {
 		glEnableVertexAttribArray(0);
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, post_fbo.getDepthTexture());
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, post_fbo_depth.getDepthTexture());
 		VoxelGL33.glDrawArrays(GL_TRIANGLE_STRIP, 0, quad.getVertexCount());
 		glDisableVertexAttribArray(0);
 		glBindVertexArray(0);
@@ -54,5 +58,9 @@ public class PostProcessingRenderer {
 
 	public FrameBuffer getPost_fbo() {
 		return post_fbo;
+	}
+
+	public FrameBuffer getPost_fbo_depth() {
+		return post_fbo_depth;
 	}
 }

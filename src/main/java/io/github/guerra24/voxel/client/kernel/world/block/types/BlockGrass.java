@@ -25,11 +25,11 @@ package io.github.guerra24.voxel.client.kernel.world.block.types;
 
 import io.github.guerra24.voxel.client.kernel.resources.models.WaterTile;
 import io.github.guerra24.voxel.client.kernel.util.vector.Vector3f;
-import io.github.guerra24.voxel.client.kernel.world.block.Block;
 import io.github.guerra24.voxel.client.kernel.world.block.BlockEntity;
 import io.github.guerra24.voxel.client.kernel.world.block.BlocksResources;
+import io.github.guerra24.voxel.client.kernel.world.block.IBlock;
 
-public class BlockGrass extends Block {
+public class BlockGrass extends IBlock {
 
 	@Override
 	public byte getId() {

@@ -43,8 +43,7 @@ import io.github.guerra24.voxel.client.kernel.world.entities.Light;
 public class Chunk {
 
 	public int dim, cx, cz, posX, posZ;
-	public volatile boolean rebuild = false, sec1NotClear = false, sec2NotClear = false, sec3NotClear = false,
-			sec4NotClear = false;
+	public volatile boolean sec1NotClear = false, sec2NotClear = false, sec3NotClear = false, sec4NotClear = false;
 	public byte[][][] blocks;
 
 	private transient Queue<BlockEntity> cubes1, cubes2, cubes3, cubes4;
@@ -53,7 +52,9 @@ public class Chunk {
 	private transient Queue<WaterTile> waterstemp;
 	private transient List<Light> lights1, lights2, lights3, lights4;
 	private transient int sizeX, sizeY, sizeZ;
-	private transient boolean readyToRender = true;
+	private transient boolean readyToRender1 = true, readyToRender2 = true, readyToRender3 = true,
+			readyToRender4 = true;
+	public transient boolean rebuild1 = false, rebuild2 = false, rebuild3 = false, rebuild4 = false;
 
 	public Chunk(int dim, int cx, int cz, DimensionalWorld world) {
 		this.dim = dim;
@@ -96,29 +97,51 @@ public class Chunk {
 		sizeZ = KernelConstants.CHUNK_SIZE;
 	}
 
-	public void update(DimensionalWorld world) {
-		if (rebuild) {
+	public void update1(DimensionalWorld world) {
+		if (rebuild1) {
 			cubes1temp.addAll(cubes1);
-			cubes2temp.addAll(cubes2);
-			cubes3temp.addAll(cubes3);
-			cubes4temp.addAll(cubes4);
-			waterstemp.addAll(waters);
-			readyToRender = false;
+			readyToRender1 = false;
 			clear();
 			rebuildChunk1(world);
-			rebuildChunk2(world);
-			rebuildChunk3(world);
-			rebuildChunk4(world);
-			readyToRender = true;
+			readyToRender1 = true;
 			cubes1temp.clear();
-			cubes2temp.clear();
-			cubes3temp.clear();
-			cubes4temp.clear();
-			waterstemp.clear();
-			rebuild = false;
+			rebuild1 = false;
 		}
-		if (cubes1.isEmpty() && cubes2.isEmpty() && cubes3.isEmpty() && cubes4.isEmpty())
-			rebuild = true;
+	}
+
+	public void update2(DimensionalWorld world) {
+		if (rebuild2) {
+			cubes2temp.addAll(cubes2);
+			readyToRender2 = false;
+			clear();
+			rebuildChunk2(world);
+			readyToRender2 = true;
+			cubes2temp.clear();
+			rebuild2 = false;
+		}
+	}
+
+	public void update3(DimensionalWorld world) {
+		waterstemp.addAll(waters);
+		cubes3temp.addAll(cubes3);
+		readyToRender3 = false;
+		clear();
+		rebuildChunk3(world);
+		readyToRender3 = true;
+		cubes3temp.clear();
+		waterstemp.clear();
+	}
+
+	public void update4(DimensionalWorld world) {
+		if (rebuild4) {
+			cubes4temp.addAll(cubes4);
+			readyToRender4 = false;
+			clear();
+			rebuildChunk4(world);
+			readyToRender4 = true;
+			cubes4temp.clear();
+			rebuild4 = false;
+		}
 	}
 
 	public void createChunk(DimensionalWorld world) {
@@ -554,21 +577,21 @@ public class Chunk {
 	}
 
 	public void render1(GameResources gm) {
-		if (readyToRender)
+		if (readyToRender1)
 			gm.getRenderer().renderChunk(cubes1, lights1, gm);
 		else
 			gm.getRenderer().renderChunk(cubes1temp, lights1, gm);
 	}
 
 	public void render2(GameResources gm) {
-		if (readyToRender)
+		if (readyToRender2)
 			gm.getRenderer().renderChunk(cubes2, lights2, gm);
 		else
 			gm.getRenderer().renderChunk(cubes2temp, lights2, gm);
 	}
 
 	public void render3(GameResources gm) {
-		if (readyToRender) {
+		if (readyToRender3) {
 			gm.getRenderer().renderChunk(cubes3, lights3, gm);
 			gm.getWaterRenderer().render(waters, gm);
 		} else {
@@ -578,7 +601,7 @@ public class Chunk {
 	}
 
 	public void render4(GameResources gm) {
-		if (readyToRender)
+		if (readyToRender4)
 			gm.getRenderer().renderChunk(cubes4, lights4, gm);
 		else
 			gm.getRenderer().renderChunk(cubes4temp, lights4, gm);

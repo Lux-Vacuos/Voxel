@@ -73,7 +73,7 @@ public class KernelConstants {
 	/**
 	 * Game Build Number
 	 */
-	public static int build = 77;
+	public static int build = 78;
 	/**
 	 * Game Version
 	 */

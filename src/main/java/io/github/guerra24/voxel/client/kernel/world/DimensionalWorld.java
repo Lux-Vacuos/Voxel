@@ -23,7 +23,6 @@ import io.github.guerra24.voxel.client.kernel.world.chunks.ChunkKey;
 
 public class DimensionalWorld {
 	private int chunkDim;
-	private int previusChunkDim;
 	private int worldID;
 	private HashMap<ChunkKey, Chunk> chunks;
 	private Random seed;
@@ -90,8 +89,6 @@ public class DimensionalWorld {
 							addChunk(new Chunk(chunkDim, xx, zz, this));
 							saveChunk(chunkDim, xx, zz, gm);
 						}
-					} else {
-						getChunk(chunkDim, xx, zz).update(this);
 					}
 				}
 			}
@@ -121,8 +118,6 @@ public class DimensionalWorld {
 							addChunk(new Chunk(chunkDim, xx, zz, this));
 							saveChunk(chunkDim, xx, zz, gm);
 						}
-					} else {
-						getChunk(chunkDim, xx, zz).update(this);
 					}
 				}
 				if (zr * zr + xr * xr <= KernelConstants.genRadius * KernelConstants.genRadius
@@ -137,6 +132,27 @@ public class DimensionalWorld {
 		}
 		if (tempRadius <= KernelConstants.genRadius)
 			tempRadius++;
+	}
+
+	public void updateChunkMesh(GameResources gm, VAPI api) {
+		if (gm.getCamera().getPosition().x < 0)
+			xPlayChunk = (int) ((gm.getCamera().getPosition().x - 16) / 16);
+		if (gm.getCamera().getPosition().z < 0)
+			zPlayChunk = (int) ((gm.getCamera().getPosition().z - 16) / 16);
+		if (gm.getCamera().getPosition().x > 0)
+			xPlayChunk = (int) ((gm.getCamera().getPosition().x) / 16);
+		if (gm.getCamera().getPosition().z > 0)
+			zPlayChunk = (int) ((gm.getCamera().getPosition().z) / 16);
+		for (int zr = -tempRadius; zr <= tempRadius; zr++) {
+			int zz = zPlayChunk + zr;
+			for (int xr = -tempRadius; xr <= tempRadius; xr++) {
+				int xx = xPlayChunk + xr;
+				if (getChunk(chunkDim, xx, zz) != null)
+					if (gm.getFrustum().cubeInFrustum(xx * 16, 0, zz * 16, (xx * 16) + 16, 128, (zz * 16) + 16)) {
+						getChunk(chunkDim, xx, zz).update3(this);
+					}
+			}
+		}
 	}
 
 	public void updateChunksRender(GameResources gm) {
@@ -319,7 +335,15 @@ public class DimensionalWorld {
 		Chunk chunk = getChunk(chunkDim, cx, cz);
 		if (chunk != null) {
 			chunk.setLocalBlock(x, y, z, id);
-			chunk.rebuild = true;
+			if (y < 32)
+				chunk.rebuild1 = true;
+			else if (y > 32 && y < 64)
+				chunk.rebuild2 = true;
+			else if (y > 64 && y < 96)
+				chunk.rebuild3 = true;
+			else if (y > 96 && y < 128)
+				chunk.rebuild4 = true;
+
 		}
 	}
 

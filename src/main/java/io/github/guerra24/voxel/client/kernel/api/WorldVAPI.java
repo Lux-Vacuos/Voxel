@@ -24,11 +24,12 @@
 
 package io.github.guerra24.voxel.client.kernel.api;
 
-import io.github.guerra24.voxel.client.kernel.api.mod.ChunkHandler;
-import io.github.guerra24.voxel.client.kernel.world.block.Block;
-
 import java.util.HashMap;
 import java.util.Map;
+
+import io.github.guerra24.voxel.client.kernel.api.mod.ChunkHandler;
+import io.github.guerra24.voxel.client.kernel.world.block.Block;
+import io.github.guerra24.voxel.client.kernel.world.block.IBlock;
 
 /**
  * World API
@@ -79,7 +80,7 @@ public class WorldVAPI {
 	 *            Block
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public void registerBlock(byte id, Block block) {
+	public void registerBlock(byte id, IBlock block) {
 		Block.registerBlock(id, block);
 	}
 

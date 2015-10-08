@@ -77,10 +77,7 @@ public class Kernel implements IKernel {
 	 * World Thread
 	 */
 	public static WorldThread worldThread;
-	/**
-	 * Update Thread
-	 */
-	private static UpdateThread updateThread;
+	public static WorldThread2 worldThread2;
 	/**
 	 * Display
 	 */
@@ -129,13 +126,12 @@ public class Kernel implements IKernel {
 		worldThread.setWorldHandler(worlds);
 		worldThread.setGm(gameResources);
 		worldThread.start();
-		updateThread = new UpdateThread();
-		updateThread.setName("Voxel Update");
-		updateThread.setApi(api);
-		updateThread.setWorldHandler(worlds);
-		updateThread.setGm(gameResources);
-		updateThread.setDisplay(display);
-		updateThread.start();
+		worldThread2 = new WorldThread2();
+		worldThread2.setName("Voxel World");
+		worldThread2.setApi(api);
+		worldThread2.setWorldHandler(worlds);
+		worldThread2.setGm(gameResources);
+		worldThread2.start();
 		api.init();
 		// byte[] user = Launcher.user.getBytes(Charset.forName("UTF-8"));
 		// Logger.log(Thread.currentThread(), "User: " + Launcher.user +
@@ -167,7 +163,7 @@ public class Kernel implements IKernel {
 			delta = Display.getDeltaRendering();
 			accumulator += delta;
 			while (accumulator >= interval) {
-				update(gameResources, guiResources, interval);
+				update(gameResources, guiResources, worlds, interval);
 				accumulator -= interval;
 			}
 
@@ -219,6 +215,14 @@ public class Kernel implements IKernel {
 			gm.getParticleController().render(gm);
 			gm.getPostProcessing().getPost_fbo().end();
 
+			gm.getPostProcessing().getPost_fbo_depth().begin(512, 512);
+			gm.getRenderer().prepare();
+			worlds.getWorld(worlds.getActiveWorld()).updateChunksRender(gm);
+			gm.getSkyboxRenderer().render(KernelConstants.RED, KernelConstants.GREEN, KernelConstants.BLUE, delta, gm);
+			gm.getRenderer().renderEntity(gm.getPhysics().getMobManager().getMobs(), gm.lights, gm);
+			gm.getParticleController().render(gm);
+			gm.getPostProcessing().getPost_fbo_depth().end();
+
 			gm.getRenderer().prepare();
 			gm.getPostProcessing().render();
 			gm.getGuiRenderer().renderGui(gm.guis);
@@ -232,7 +236,7 @@ public class Kernel implements IKernel {
 		}
 	}
 
-	public void update(GameResources gm, GuiResources gi, float delta) {
+	public void update(GameResources gm, GuiResources gi, WorldHandler world, float delta) {
 		Display.upsCount++;
 		switch (gm.getGameStates().state) {
 		case MAINMENU:
@@ -254,6 +258,7 @@ public class Kernel implements IKernel {
 		case LOADING_WORLD:
 			break;
 		}
+		gm.getGameStates().switchStates(gm, world, api, display);
 	}
 
 	@Override
