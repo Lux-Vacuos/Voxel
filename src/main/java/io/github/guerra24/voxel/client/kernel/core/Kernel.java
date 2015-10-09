@@ -215,14 +215,6 @@ public class Kernel implements IKernel {
 			gm.getParticleController().render(gm);
 			gm.getPostProcessing().getPost_fbo().end();
 
-			gm.getPostProcessing().getPost_fbo_depth().begin(512, 512);
-			gm.getRenderer().prepare();
-			worlds.getWorld(worlds.getActiveWorld()).updateChunksRender(gm);
-			gm.getSkyboxRenderer().render(KernelConstants.RED, KernelConstants.GREEN, KernelConstants.BLUE, delta, gm);
-			gm.getRenderer().renderEntity(gm.getPhysics().getMobManager().getMobs(), gm.lights, gm);
-			gm.getParticleController().render(gm);
-			gm.getPostProcessing().getPost_fbo_depth().end();
-
 			gm.getRenderer().prepare();
 			gm.getPostProcessing().render();
 			gm.getGuiRenderer().renderGui(gm.guis);

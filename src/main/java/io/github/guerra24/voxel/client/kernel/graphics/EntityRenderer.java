@@ -89,6 +89,7 @@ public class EntityRenderer {
 			List<BlockEntity> batch = blockEntities.get(model);
 			for (BlockEntity entity : batch) {
 				prepareInstance(entity);
+				shader.localLight(entity.getLocalLight());
 				VoxelGL33.glDrawElements(GL_TRIANGLES, model.getRawModel().getVertexCount(), GL_UNSIGNED_INT, 0);
 			}
 			unbindTexturedModel();

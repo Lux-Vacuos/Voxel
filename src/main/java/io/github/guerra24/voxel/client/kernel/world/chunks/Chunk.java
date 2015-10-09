@@ -54,7 +54,6 @@ public class Chunk {
 	private transient int sizeX, sizeY, sizeZ;
 	private transient boolean readyToRender1 = true, readyToRender2 = true, readyToRender3 = true,
 			readyToRender4 = true;
-	public transient boolean rebuild1 = false, rebuild2 = false, rebuild3 = false, rebuild4 = false;
 
 	public Chunk(int dim, int cx, int cz, DimensionalWorld world) {
 		this.dim = dim;
@@ -98,34 +97,32 @@ public class Chunk {
 	}
 
 	public void update1(DimensionalWorld world) {
-		if (rebuild1) {
-			cubes1temp.addAll(cubes1);
-			readyToRender1 = false;
-			clear();
-			rebuildChunk1(world);
-			readyToRender1 = true;
-			cubes1temp.clear();
-			rebuild1 = false;
-		}
+		cubes1temp.addAll(cubes1);
+		readyToRender1 = false;
+		cubes1.clear();
+		lights1.clear();
+		rebuildChunk1(world);
+		readyToRender1 = true;
+		cubes1temp.clear();
 	}
 
 	public void update2(DimensionalWorld world) {
-		if (rebuild2) {
-			cubes2temp.addAll(cubes2);
-			readyToRender2 = false;
-			clear();
-			rebuildChunk2(world);
-			readyToRender2 = true;
-			cubes2temp.clear();
-			rebuild2 = false;
-		}
+		cubes2temp.addAll(cubes2);
+		readyToRender2 = false;
+		cubes2.clear();
+		lights2.clear();
+		rebuildChunk2(world);
+		readyToRender2 = true;
+		cubes2temp.clear();
 	}
 
 	public void update3(DimensionalWorld world) {
 		waterstemp.addAll(waters);
 		cubes3temp.addAll(cubes3);
 		readyToRender3 = false;
-		clear();
+		waters.clear();
+		cubes3.clear();
+		lights3.clear();
 		rebuildChunk3(world);
 		readyToRender3 = true;
 		cubes3temp.clear();
@@ -133,15 +130,13 @@ public class Chunk {
 	}
 
 	public void update4(DimensionalWorld world) {
-		if (rebuild4) {
-			cubes4temp.addAll(cubes4);
-			readyToRender4 = false;
-			clear();
-			rebuildChunk4(world);
-			readyToRender4 = true;
-			cubes4temp.clear();
-			rebuild4 = false;
-		}
+		cubes4temp.addAll(cubes4);
+		readyToRender4 = false;
+		cubes4.clear();
+		lights4.clear();
+		rebuildChunk4(world);
+		readyToRender4 = true;
+		cubes4temp.clear();
 	}
 
 	public void createChunk(DimensionalWorld world) {
@@ -217,8 +212,11 @@ public class Chunk {
 							sec1NotClear = true;
 						}
 						if (cullFaceUpSolidBlock(x + cx * sizeX, y, z + cz * sizeZ)) {
+							float light = 1;
+							if (blocks[x][y + 1][z] != 0)
+								light = 0;
 							cubes1.add(Block.getBlock(blocks[x][y][z])
-									.getFaceUp(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
+									.getFaceUp(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ), light));
 							sec1NotClear = true;
 						}
 						if (cullFaceNorth(x + cx * sizeX, y, z + cz * sizeZ, world)) {
@@ -271,8 +269,11 @@ public class Chunk {
 							sec2NotClear = true;
 						}
 						if (cullFaceUpSolidBlock(x + cx * sizeX, y, z + cz * sizeZ)) {
+							float light = 1;
+							if (blocks[x][y + 1][z] != 0)
+								light = 0;
 							cubes2.add(Block.getBlock(blocks[x][y][z])
-									.getFaceUp(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
+									.getFaceUp(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ), light));
 							sec2NotClear = true;
 						}
 						if (cullFaceNorth(x + cx * sizeX, y, z + cz * sizeZ, world)) {
@@ -325,8 +326,11 @@ public class Chunk {
 							sec3NotClear = true;
 						}
 						if (cullFaceUpSolidBlock(x + cx * sizeX, y, z + cz * sizeZ)) {
+							float light = 1;
+							if (blocks[x][y + 1][z] != 0)
+								light = 0;
 							cubes3.add(Block.getBlock(blocks[x][y][z])
-									.getFaceUp(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
+									.getFaceUp(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ), light));
 							sec3NotClear = true;
 						}
 						if (cullFaceNorth(x + cx * sizeX, y, z + cz * sizeZ, world)) {
@@ -384,8 +388,11 @@ public class Chunk {
 							sec4NotClear = true;
 						}
 						if (cullFaceUpSolidBlock(x + cx * sizeX, y, z + cz * sizeZ)) {
+							float light = 1;
+							if (blocks[x][y + 1][z] != 0)
+								light = 0;
 							cubes4.add(Block.getBlock(blocks[x][y][z])
-									.getFaceUp(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
+									.getFaceUp(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ), light));
 							sec4NotClear = true;
 						}
 						if (cullFaceNorth(x + cx * sizeX, y, z + cz * sizeZ, world)) {

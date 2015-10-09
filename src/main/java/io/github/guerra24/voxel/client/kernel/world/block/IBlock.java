@@ -20,7 +20,7 @@ public abstract class IBlock {
 	 * @return BlockEntity
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public abstract BlockEntity getFaceUp(Vector3f pos);
+	public abstract BlockEntity getFaceUp(Vector3f pos, float light);
 
 	/**
 	 * Get the Face Down of the Block

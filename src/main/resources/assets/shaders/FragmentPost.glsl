@@ -31,7 +31,6 @@
 // DOF and FXAA cant be enabled at the same time
 
 //#define FXAA
-//#define DOF
 
 /*--------------------------------------------------------*/
 /*----------------------FXAA CONFIG-----------------------*/
@@ -111,15 +110,6 @@ void main(void){
 		vec4 textureColour = PostFX(texture0, textureCoords, 0.0);
 	#else
 		vec4 textureColour = texture(texture0, textureCoords);
-	#endif
-	#ifdef DOF
-	float bias = min(abs(texture(depth0, textureCoords).x - texture(depth0, vec2(0.5)).x) * .05, .005);
-	for (int i = -3; i < 3; i++) {
-		for (int j = -3; j < 3; j++) {
-			textureColour.rgb += texture(texture0, textureCoords + vec2(j, i) * bias ).rgb;
-		}
-	}
-	textureColour.rgb /= 36.0;
 	#endif
 
 	out_Color = textureColour;

@@ -93,7 +93,7 @@ public class GameStates {
 			gm.getCamera().setMouse();
 			gm.getSoundSystem().stop("menu1");
 			gm.getSoundSystem().rewind("menu1");
-			state = State.GAME;
+			state = State.IN_PAUSE;
 		}
 
 		if (state == State.MAINMENU && Button.isInButtonExit()) {
