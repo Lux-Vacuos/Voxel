@@ -46,6 +46,7 @@ import static org.lwjgl.glfw.GLFW.glfwPollEvents;
 import static org.lwjgl.glfw.GLFW.glfwSetCharCallback;
 import static org.lwjgl.glfw.GLFW.glfwSetCursorEnterCallback;
 import static org.lwjgl.glfw.GLFW.glfwSetCursorPosCallback;
+import static org.lwjgl.glfw.GLFW.glfwSetErrorCallback;
 import static org.lwjgl.glfw.GLFW.glfwSetFramebufferSizeCallback;
 import static org.lwjgl.glfw.GLFW.glfwSetKeyCallback;
 import static org.lwjgl.glfw.GLFW.glfwSetMouseButtonCallback;
@@ -81,6 +82,7 @@ import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWCharCallback;
 import org.lwjgl.glfw.GLFWCursorEnterCallback;
 import org.lwjgl.glfw.GLFWCursorPosCallback;
+import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWFramebufferSizeCallback;
 import org.lwjgl.glfw.GLFWKeyCallback;
 import org.lwjgl.glfw.GLFWMouseButtonCallback;
@@ -120,9 +122,7 @@ public class Display {
 	 * Game loop variables
 	 */
 	private static double lastLoopTimeRendering;
-	private static double lastLoopTimeUpdate;
 	public static float timeCountRendering;
-	public static float timeCountUpdate;
 	public static int fps;
 	public static int fpsCount;
 	public static int ups;
@@ -131,7 +131,7 @@ public class Display {
 	/**
 	 * LWJGL Callback
 	 */
-	// private static GLFWErrorCallback errorCallback;
+	private static GLFWErrorCallback errorCallback;
 	public GLFWKeyCallback keyCallback;
 	public GLFWCharCallback charCallback;
 	public GLFWCursorEnterCallback cursorEnterCallback;
@@ -170,8 +170,12 @@ public class Display {
 	public void initDsiplay(int width, int height) {
 		displayWidth = width;
 		displayHeight = height;
-		// glfwSetErrorCallback(errorCallback =
-		// errorCallbackPrint(System.err));//This not work...
+		errorCallback = new GLFWErrorCallback() {
+			@Override
+			public void invoke(int arg0, long arg1) {
+			}
+		};
+		glfwSetErrorCallback(errorCallback);
 		if (glfwInit() != GL_TRUE)
 			throw new IllegalStateException("Unable to initialize GLFW");
 
@@ -345,7 +349,6 @@ public class Display {
 		Logger.log(Thread.currentThread(), "OpenGL Version: " + glGetString(GL_VERSION));
 		VoxelGL33.glViewport(0, 0, displayWidth, displayHeight);
 		lastLoopTimeRendering = getTime();
-		lastLoopTimeUpdate = getTime();
 		displayCreated = true;
 	}
 
@@ -441,20 +444,6 @@ public class Display {
 		float delta = (float) (time - lastLoopTimeRendering);
 		lastLoopTimeRendering = time;
 		timeCountRendering += delta;
-		return delta;
-	}
-
-	/**
-	 * Calculates the Delta
-	 * 
-	 * @return Delta
-	 * @author Guerra24 <pablo230699@hotmail.com>
-	 */
-	public static float getDeltaUpdate() {
-		double time = getTime();
-		float delta = (float) (time - lastLoopTimeUpdate);
-		lastLoopTimeUpdate = time;
-		timeCountUpdate += delta;
 		return delta;
 	}
 

@@ -38,7 +38,7 @@ public class BlockStone extends IBlock {
 	}
 
 	@Override
-	public BlockEntity getFaceUp(Vector3f pos) {
+	public BlockEntity getFaceUp(Vector3f pos, float light) {
 		return new BlockEntity(BlocksResources.cubeStoneUP, pos, 0, 0, 0, 1);
 	}
 

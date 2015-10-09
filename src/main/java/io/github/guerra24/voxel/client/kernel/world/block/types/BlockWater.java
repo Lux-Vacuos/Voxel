@@ -37,7 +37,7 @@ public class BlockWater extends IBlock {
 	}
 
 	@Override
-	public BlockEntity getFaceUp(Vector3f pos) {
+	public BlockEntity getFaceUp(Vector3f pos, float light) {
 		return null;
 	}
 

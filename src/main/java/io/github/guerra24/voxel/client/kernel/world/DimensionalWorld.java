@@ -1,3 +1,27 @@
+/*
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2015 Guerra24
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
 package io.github.guerra24.voxel.client.kernel.world;
 
 import java.io.BufferedReader;
@@ -30,7 +54,8 @@ public class DimensionalWorld {
 	private String name;
 	private int xPlayChunk;
 	private int zPlayChunk;
-	private transient int tempRadius = 0;
+	private int tempRadius = 0;
+	private int updatesPerTick = 0;
 
 	/**
 	 * Start a new World
@@ -135,22 +160,39 @@ public class DimensionalWorld {
 	}
 
 	public void updateChunkMesh(GameResources gm, VAPI api) {
-		if (gm.getCamera().getPosition().x < 0)
-			xPlayChunk = (int) ((gm.getCamera().getPosition().x - 16) / 16);
-		if (gm.getCamera().getPosition().z < 0)
-			zPlayChunk = (int) ((gm.getCamera().getPosition().z - 16) / 16);
-		if (gm.getCamera().getPosition().x > 0)
-			xPlayChunk = (int) ((gm.getCamera().getPosition().x) / 16);
-		if (gm.getCamera().getPosition().z > 0)
-			zPlayChunk = (int) ((gm.getCamera().getPosition().z) / 16);
-		for (int zr = -tempRadius; zr <= tempRadius; zr++) {
-			int zz = zPlayChunk + zr;
-			for (int xr = -tempRadius; xr <= tempRadius; xr++) {
-				int xx = xPlayChunk + xr;
-				if (getChunk(chunkDim, xx, zz) != null)
-					if (gm.getFrustum().cubeInFrustum(xx * 16, 0, zz * 16, (xx * 16) + 16, 128, (zz * 16) + 16)) {
-						getChunk(chunkDim, xx, zz).update3(this);
+		if (updatesPerTick > 0) {
+			for (int yy = 4; yy > 0; yy--) {
+				for (int zr = -KernelConstants.genRadius; zr <= KernelConstants.genRadius; zr++) {
+					int zz = zPlayChunk + zr;
+					for (int xr = -KernelConstants.genRadius; xr <= KernelConstants.genRadius; xr++) {
+						int xx = xPlayChunk + xr;
+						Chunk chunk = getChunk(chunkDim, xx, zz);
+						if (chunk != null) {
+							if (gm.getFrustum().cubeInFrustum(xx * 16, 0, zz * 16, (xx * 16) + 16, 128,
+									(zz * 16) + 16)) {
+								if (yy == 0)
+									if (chunk.sec1NotClear)
+										getChunk(chunkDim, xx, zz).update1(this);
+								if (yy == 1)
+									if (chunk.sec2NotClear)
+										getChunk(chunkDim, xx, zz).update2(this);
+								if (yy == 2)
+									if (chunk.sec3NotClear)
+										getChunk(chunkDim, xx, zz).update3(this);
+								if (yy == 3)
+									if (chunk.sec4NotClear)
+										getChunk(chunkDim, xx, zz).update4(this);
+							}
+						}
 					}
+				}
+			}
+			updatesPerTick--;
+		} else {
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
 			}
 		}
 	}
@@ -163,25 +205,15 @@ public class DimensionalWorld {
 				int xx = xPlayChunk + xr;
 				if (hasChunk(chunkDim, xx, zz)) {
 					Chunk chunk = getChunk(chunkDim, xx, zz);
-					if (chunk.sec1NotClear)
-						if (gm.getFrustum().cubeInFrustum(chunk.posX, 0, chunk.posZ, chunk.posX + 16, 32,
-								chunk.posZ + 16))
-							chunk.render1(gm);
-
-					if (chunk.sec2NotClear)
-						if (gm.getFrustum().cubeInFrustum(chunk.posX, 32, chunk.posZ, chunk.posX + 16, 64,
-								chunk.posZ + 16))
-							chunk.render2(gm);
-
-					if (chunk.sec3NotClear)
-						if (gm.getFrustum().cubeInFrustum(chunk.posX, 64, chunk.posZ, chunk.posX + 16, 96,
-								chunk.posZ + 16))
-							chunk.render3(gm);
-
-					if (chunk.sec4NotClear)
-						if (gm.getFrustum().cubeInFrustum(chunk.posX, 96, chunk.posZ, chunk.posX + 16, 128,
-								chunk.posZ + 16))
-							chunk.render4(gm);
+					if (gm.getFrustum().cubeInFrustum(chunk.posX, 0, chunk.posZ, chunk.posX + 16, 32, chunk.posZ + 16))
+						chunk.render1(gm);
+					if (gm.getFrustum().cubeInFrustum(chunk.posX, 32, chunk.posZ, chunk.posX + 16, 64, chunk.posZ + 16))
+						chunk.render2(gm);
+					if (gm.getFrustum().cubeInFrustum(chunk.posX, 64, chunk.posZ, chunk.posX + 16, 96, chunk.posZ + 16))
+						chunk.render3(gm);
+					if (gm.getFrustum().cubeInFrustum(chunk.posX, 96, chunk.posZ, chunk.posX + 16, 128,
+							chunk.posZ + 16))
+						chunk.render4(gm);
 
 				}
 			}
@@ -302,6 +334,7 @@ public class DimensionalWorld {
 		if (old != null) {
 			removeChunk(old);
 		}
+		updatesPerTick++;
 		chunks.put(key.clone(), chunk);
 	}
 
@@ -335,15 +368,6 @@ public class DimensionalWorld {
 		Chunk chunk = getChunk(chunkDim, cx, cz);
 		if (chunk != null) {
 			chunk.setLocalBlock(x, y, z, id);
-			if (y < 32)
-				chunk.rebuild1 = true;
-			else if (y > 32 && y < 64)
-				chunk.rebuild2 = true;
-			else if (y > 64 && y < 96)
-				chunk.rebuild3 = true;
-			else if (y > 96 && y < 128)
-				chunk.rebuild4 = true;
-
 		}
 	}
 

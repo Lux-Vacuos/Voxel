@@ -73,7 +73,7 @@ public class KernelConstants {
 	/**
 	 * Game Build Number
 	 */
-	public static int build = 78;
+	public static int build = 79;
 	/**
 	 * Game Version
 	 */
@@ -81,7 +81,7 @@ public class KernelConstants {
 	/**
 	 * Game Debug Mode
 	 */
-	public static boolean debug = true;
+	public static boolean debug = false;
 	// World Settings
 	/**
 	 * Game Draw Distance Radius

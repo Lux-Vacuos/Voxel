@@ -37,8 +37,10 @@ public class BlockGrass extends IBlock {
 	}
 
 	@Override
-	public BlockEntity getFaceUp(Vector3f pos) {
-		return new BlockEntity(BlocksResources.cubeGrassUP, pos, 0, 0, 0, 1);
+	public BlockEntity getFaceUp(Vector3f pos, float light) {
+		BlockEntity entity = new BlockEntity(BlocksResources.cubeGrassUP, pos, 0, 0, 0, 1);
+		entity.setLocalLight(light);
+		return entity;
 	}
 
 	@Override

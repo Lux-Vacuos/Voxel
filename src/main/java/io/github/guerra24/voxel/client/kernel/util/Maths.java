@@ -183,17 +183,4 @@ public class Maths {
 		return randomNum;
 	}
 
-	public static float dti(float val) {
-		return Math.abs(val - Math.round(val));
-	}
-
-	public static ByteBuffer allocBytes(int size) {
-		return ByteBuffer.allocateDirect(size * SIZE_BYTE).order(ByteOrder.nativeOrder());
-	}
-
-	public static float getZDepth(int x, int y) {
-		ByteBuffer zdepth = allocBytes(SIZE_FLOAT);
-		glReadPixels(x, y, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, zdepth);
-		return ((float) (zdepth.getFloat(0)));
-	}
 }
