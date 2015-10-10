@@ -14,7 +14,7 @@ public class BlockPortal extends IBlock {
 	}
 
 	@Override
-	public BlockEntity getFaceUp(Vector3f pos, float light) {
+	public BlockEntity getFaceUp(Vector3f pos) {
 		return null;
 	}
 

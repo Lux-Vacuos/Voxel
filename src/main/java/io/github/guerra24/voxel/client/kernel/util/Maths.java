@@ -24,18 +24,12 @@
 
 package io.github.guerra24.voxel.client.kernel.util;
 
+import java.util.Random;
+
 import io.github.guerra24.voxel.client.kernel.util.vector.Matrix4f;
 import io.github.guerra24.voxel.client.kernel.util.vector.Vector2f;
 import io.github.guerra24.voxel.client.kernel.util.vector.Vector3f;
 import io.github.guerra24.voxel.client.kernel.world.entities.Camera;
-
-import static org.lwjgl.opengl.GL11.GL_DEPTH_COMPONENT;
-import static org.lwjgl.opengl.GL11.GL_FLOAT;
-import static org.lwjgl.opengl.GL11.glReadPixels;
-
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.util.Random;
 
 /**
  * Maths
@@ -44,9 +38,6 @@ import java.util.Random;
  * @category Util
  */
 public class Maths {
-
-	private static final int SIZE_FLOAT = 4;
-	private static final int SIZE_BYTE = 1;
 
 	/**
 	 * Create a Transformation Matrix 2D

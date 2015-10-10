@@ -66,14 +66,8 @@ public class Chunk {
 
 	public void init(DimensionalWorld world) {
 		loadInit();
-
 		blocks = new byte[sizeX][sizeY][sizeZ];
-
 		createChunk(world);
-		rebuildChunk1(world);
-		rebuildChunk2(world);
-		rebuildChunk3(world);
-		rebuildChunk4(world);
 	}
 
 	public void loadInit() {
@@ -212,11 +206,8 @@ public class Chunk {
 							sec1NotClear = true;
 						}
 						if (cullFaceUpSolidBlock(x + cx * sizeX, y, z + cz * sizeZ)) {
-							float light = 1;
-							if (blocks[x][y + 1][z] != 0)
-								light = 0;
 							cubes1.add(Block.getBlock(blocks[x][y][z])
-									.getFaceUp(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ), light));
+									.getFaceUp(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
 							sec1NotClear = true;
 						}
 						if (cullFaceNorth(x + cx * sizeX, y, z + cz * sizeZ, world)) {
@@ -269,11 +260,8 @@ public class Chunk {
 							sec2NotClear = true;
 						}
 						if (cullFaceUpSolidBlock(x + cx * sizeX, y, z + cz * sizeZ)) {
-							float light = 1;
-							if (blocks[x][y + 1][z] != 0)
-								light = 0;
 							cubes2.add(Block.getBlock(blocks[x][y][z])
-									.getFaceUp(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ), light));
+									.getFaceUp(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
 							sec2NotClear = true;
 						}
 						if (cullFaceNorth(x + cx * sizeX, y, z + cz * sizeZ, world)) {
@@ -303,10 +291,6 @@ public class Chunk {
 						lights3.add(new Light(new Vector3f((x + cx * sizeX) + 0.5f, y + 0.8f, (z + cz * sizeZ) - 0.5f),
 								new Vector3f(1, 1, 1), new Vector3f(1, 0.1f, 0.09f)));
 						sec3NotClear = true;
-					} else if (Block.getBlock(blocks[x][y][z]).usesSingleModel()) {
-						cubes3.add(Block.getBlock(blocks[x][y][z])
-								.getSingleModel(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
-						sec3NotClear = true;
 					} else if (Block.getBlock(blocks[x][y][z]) != Block.Air
 							&& Block.getBlock(blocks[x][y][z]) != Block.Water
 							&& !Block.getBlock(blocks[x][y][z]).usesSingleModel()) {
@@ -326,11 +310,8 @@ public class Chunk {
 							sec3NotClear = true;
 						}
 						if (cullFaceUpSolidBlock(x + cx * sizeX, y, z + cz * sizeZ)) {
-							float light = 1;
-							if (blocks[x][y + 1][z] != 0)
-								light = 0;
 							cubes3.add(Block.getBlock(blocks[x][y][z])
-									.getFaceUp(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ), light));
+									.getFaceUp(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
 							sec3NotClear = true;
 						}
 						if (cullFaceNorth(x + cx * sizeX, y, z + cz * sizeZ, world)) {
@@ -388,11 +369,8 @@ public class Chunk {
 							sec4NotClear = true;
 						}
 						if (cullFaceUpSolidBlock(x + cx * sizeX, y, z + cz * sizeZ)) {
-							float light = 1;
-							if (blocks[x][y + 1][z] != 0)
-								light = 0;
 							cubes4.add(Block.getBlock(blocks[x][y][z])
-									.getFaceUp(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ), light));
+									.getFaceUp(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
 							sec4NotClear = true;
 						}
 						if (cullFaceNorth(x + cx * sizeX, y, z + cz * sizeZ, world)) {

@@ -22,7 +22,6 @@
  * SOFTWARE.
  */
 
-
 package io.github.guerra24.voxel.client.kernel.world.block.types;
 
 import io.github.guerra24.voxel.client.kernel.resources.models.WaterTile;
@@ -39,7 +38,7 @@ public class BlockTorch extends IBlock {
 	}
 
 	@Override
-	public BlockEntity getFaceUp(Vector3f pos, float light) {
+	public BlockEntity getFaceUp(Vector3f pos) {
 		return null;
 	}
 

@@ -24,6 +24,8 @@
 
 package io.github.guerra24.voxel.client.kernel.core;
 
+import java.net.URL;
+
 /**
  * Locations of all global variables
  * 
@@ -52,7 +54,7 @@ public class KernelConstants {
 	/**
 	 * Game Near Plane
 	 */
-	public static float NEAR_PLANE = 0.001f;
+	public static float NEAR_PLANE = 0.1f;
 	/**
 	 * Game Far Plane
 	 */
@@ -73,7 +75,7 @@ public class KernelConstants {
 	/**
 	 * Game Build Number
 	 */
-	public static int build = 79;
+	public static int build = 80;
 	/**
 	 * Game Version
 	 */
@@ -81,7 +83,7 @@ public class KernelConstants {
 	/**
 	 * Game Debug Mode
 	 */
-	public static boolean debug = false;
+	public static boolean debug = true;
 	// World Settings
 	/**
 	 * Game Draw Distance Radius
@@ -152,6 +154,7 @@ public class KernelConstants {
 	 * World Folder Path
 	 */
 	public static String worldPath = "assets/game/world/";
+	public static String blockPath = "assets/blocks/";
 	/**
 	 * Checks if the Kernel has successfully loaded
 	 */

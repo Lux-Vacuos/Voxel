@@ -38,8 +38,7 @@ public class BlockIndes extends IBlock {
 	}
 
 	@Override
-	public BlockEntity getFaceUp(Vector3f pos, float light) {
-		return new BlockEntity(BlocksResources.cubeIndesUP, pos, 0, 0, 0, 1);
+	public BlockEntity getFaceUp(Vector3f pos) {		return new BlockEntity(BlocksResources.cubeIndesUP, pos, 0, 0, 0, 1);
 	}
 
 	@Override

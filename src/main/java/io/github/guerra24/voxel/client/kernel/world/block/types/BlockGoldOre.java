@@ -38,7 +38,7 @@ public class BlockGoldOre extends IBlock {
 	}
 
 	@Override
-	public BlockEntity getFaceUp(Vector3f pos, float light) {
+	public BlockEntity getFaceUp(Vector3f pos) {
 		return new BlockEntity(BlocksResources.cubeGoldOreUP, pos, 0, 0, 0, 1);
 	}
 

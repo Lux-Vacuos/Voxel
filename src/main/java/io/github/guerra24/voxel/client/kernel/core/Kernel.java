@@ -24,6 +24,8 @@
 
 package io.github.guerra24.voxel.client.kernel.core;
 
+import static org.lwjgl.glfw.GLFW.glfwShowWindow;
+
 import io.github.guerra24.voxel.client.kernel.api.VAPI;
 import io.github.guerra24.voxel.client.kernel.bootstrap.Bootstrap;
 import io.github.guerra24.voxel.client.kernel.graphics.opengl.Display;
@@ -77,7 +79,7 @@ public class Kernel implements IKernel {
 	 * World Thread
 	 */
 	public static WorldThread worldThread;
-	public static WorldThread2 worldThread2;
+	public static WorldThread1 worldThread2;
 	/**
 	 * Display
 	 */
@@ -121,16 +123,18 @@ public class Kernel implements IKernel {
 		worlds = new WorldHandler();
 		Logger.log(Thread.currentThread(), "Initializing Threads");
 		worldThread = new WorldThread();
-		worldThread.setName("Voxel World");
+		worldThread.setName("Voxel World 1");
 		worldThread.setApi(api);
 		worldThread.setWorldHandler(worlds);
 		worldThread.setGm(gameResources);
 		worldThread.start();
-		worldThread2 = new WorldThread2();
-		worldThread2.setName("Voxel World");
+		worldThread2 = new WorldThread1();
+		worldThread2.setName("Voxel World 2");
 		worldThread2.setApi(api);
 		worldThread2.setWorldHandler(worlds);
-		worldThread2.setGm(gameResources);
+		worldThread2.setGameResources(gameResources);
+		worldThread2.setKernel(this);
+		worldThread2.setGuiResources(guiResources);
 		worldThread2.start();
 		api.init();
 		// byte[] user = Launcher.user.getBytes(Charset.forName("UTF-8"));
@@ -139,6 +143,7 @@ public class Kernel implements IKernel {
 		// + UUID.nameUUIDFromBytes(user));
 		api.postInit();
 		KernelConstants.loaded = true;
+		glfwShowWindow(Display.getWindow());
 		gameResources.getSoundSystem().play("menu1");
 	}
 
@@ -146,11 +151,8 @@ public class Kernel implements IKernel {
 	public void mainLoop() {
 		init();
 		float delta = 0;
-		float accumulator = 0f;
-		float interval = 1f / 60;
-		float alpha = 0;
 		while (gameResources.getGameStates().loop) {
-			if (Display.timeCountRendering > 1f) {
+			if (Display.timeCountRender > 1f) {
 				Logger.log(Thread.currentThread(), "RCPS: " + Kernel.renderCallsPerFrame);
 				Logger.log(Thread.currentThread(), "FPS: " + Display.fps);
 				Logger.log(Thread.currentThread(), "UPS: " + Display.ups);
@@ -158,16 +160,9 @@ public class Kernel implements IKernel {
 				Display.fpsCount = 0;
 				Display.ups = Display.upsCount;
 				Display.upsCount = 0;
-				Display.timeCountRendering -= 1f;
+				Display.timeCountRender -= 1f;
 			}
-			delta = Display.getDeltaRendering();
-			accumulator += delta;
-			while (accumulator >= interval) {
-				update(gameResources, guiResources, worlds, interval);
-				accumulator -= interval;
-			}
-
-			alpha = accumulator / interval;
+			delta = Display.getDeltaRender();
 			render(gameResources, delta);
 			totalRenderCalls += renderCalls;
 			renderCallsPerFrame = renderCalls;
@@ -197,6 +192,9 @@ public class Kernel implements IKernel {
 			display.updateDisplay(KernelConstants.FPS, gm);
 			break;
 		case GAME:// THIS NEEDS OPTIMIZATION...
+			gm.getCamera().update(delta, gameResources, guiResources, worlds.getWorld(worlds.getActiveWorld()), api);
+			gm.getPhysics().getMobManager().getPlayer().update(delta, gm, guiResources,
+					worlds.getWorld(worlds.getActiveWorld()), api);
 			gm.getCamera().updatePicker(worlds.getWorld(worlds.getActiveWorld()));
 			gm.getFrustum().calculateFrustum(gm);
 

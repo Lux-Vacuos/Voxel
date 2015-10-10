@@ -84,9 +84,9 @@ public class GameResources {
 	private GameStates gameStates;
 	private ParticleController particleController;
 	private PostProcessingRenderer postProcessing;
-	private Gson gson;
 	private SoundSystem soundSystem;
 	private Frustum frustum;
+	private Gson gson;
 	private FrameBuffer waterFBO;
 	private Physics physics;
 
@@ -205,12 +205,12 @@ public class GameResources {
 		return loader;
 	}
 
-	public Camera getCamera() {
-		return camera;
+	public Gson getGson() {
+		return gson;
 	}
 
-	public void setCamera(Camera camera) {
-		this.camera = camera;
+	public Camera getCamera() {
+		return camera;
 	}
 
 	public MasterRenderer getRenderer() {
@@ -235,10 +235,6 @@ public class GameResources {
 
 	public GameStates getGameStates() {
 		return gameStates;
-	}
-
-	public Gson getGson() {
-		return gson;
 	}
 
 	public SoundSystem getSoundSystem() {

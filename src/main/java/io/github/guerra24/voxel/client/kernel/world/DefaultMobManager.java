@@ -47,8 +47,6 @@ public class DefaultMobManager implements IMobManagerController {
 	@Override
 	public void init(GameResources gm) {
 		player = new Player(BlocksResources.cubeGlassUP, new Vector3f(0, 80, -4), 0, 0, 0, 1);
-		mobs.add(player);
-		mobs.add(gm.getCamera());
 	}
 
 	@Override

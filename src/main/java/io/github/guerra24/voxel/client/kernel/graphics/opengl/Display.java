@@ -57,7 +57,6 @@ import static org.lwjgl.glfw.GLFW.glfwSetWindowPos;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowPosCallback;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowRefreshCallback;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowSizeCallback;
-import static org.lwjgl.glfw.GLFW.glfwShowWindow;
 import static org.lwjgl.glfw.GLFW.glfwSwapBuffers;
 import static org.lwjgl.glfw.GLFW.glfwSwapInterval;
 import static org.lwjgl.glfw.GLFW.glfwTerminate;
@@ -121,8 +120,10 @@ public class Display {
 	/**
 	 * Game loop variables
 	 */
-	private static double lastLoopTimeRendering;
-	public static float timeCountRendering;
+	private static double lastLoopTimeUpdate;
+	public static float timeCountUpdate;
+	private static double lastLoopTimeRender;
+	public static float timeCountRender;
 	public static int fps;
 	public static int fpsCount;
 	public static int ups;
@@ -198,7 +199,6 @@ public class Display {
 		vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 		glfwSetWindowPos(window, (vidmode.getWidth() - displayWidth) / 2, (vidmode.getHeight() - displayHeight) / 2);
 		glfwMakeContextCurrent(window);
-		glfwShowWindow(window);
 		glfwSwapInterval(0);
 	}
 
@@ -348,7 +348,8 @@ public class Display {
 		Logger.log(Thread.currentThread(), "LWJGL Version: " + Sys.getVersion());
 		Logger.log(Thread.currentThread(), "OpenGL Version: " + glGetString(GL_VERSION));
 		VoxelGL33.glViewport(0, 0, displayWidth, displayHeight);
-		lastLoopTimeRendering = getTime();
+		lastLoopTimeUpdate = getTime();
+		lastLoopTimeRender = getTime();
 		displayCreated = true;
 	}
 
@@ -439,11 +440,25 @@ public class Display {
 	 * @return Delta
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public static float getDeltaRendering() {
+	public static float getDeltaUpdate() {
 		double time = getTime();
-		float delta = (float) (time - lastLoopTimeRendering);
-		lastLoopTimeRendering = time;
-		timeCountRendering += delta;
+		float delta = (float) (time - lastLoopTimeUpdate);
+		lastLoopTimeUpdate = time;
+		timeCountUpdate += delta;
+		return delta;
+	}
+
+	/**
+	 * Calculates the Delta
+	 * 
+	 * @return Delta
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
+	public static float getDeltaRender() {
+		double time = getTime();
+		float delta = (float) (time - lastLoopTimeRender);
+		lastLoopTimeRender = time;
+		timeCountRender += delta;
 		return delta;
 	}
 
@@ -545,7 +560,7 @@ public class Display {
 	 * @param fps
 	 *            FPS Limit
 	 */
-	public static void sync(int fps) {
+	private void sync(int fps) {
 		if (fps <= 0)
 			return;
 		long sleepTime = 1000000000 / fps;

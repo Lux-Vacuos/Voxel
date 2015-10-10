@@ -55,7 +55,7 @@ public class DimensionalWorld {
 	private int xPlayChunk;
 	private int zPlayChunk;
 	private int tempRadius = 0;
-	private int updatesPerTick = 0;
+	private int seedi;
 
 	/**
 	 * Start a new World
@@ -84,7 +84,8 @@ public class DimensionalWorld {
 	}
 
 	private void initialize(GameResources gm) {
-		noise = new SimplexNoise(128, 0.2f, seed.nextInt());
+		seedi = seed.nextInt();
+		noise = new SimplexNoise(128, 0.3f, seedi);
 		chunks = new HashMap<ChunkKey, Chunk>();
 		gm.getPhysics().getMobManager().getPlayer().setPosition(gm.getCamera().getPosition());
 	}
@@ -160,45 +161,32 @@ public class DimensionalWorld {
 	}
 
 	public void updateChunkMesh(GameResources gm, VAPI api) {
-		if (updatesPerTick > 0) {
-			for (int yy = 4; yy > 0; yy--) {
-				for (int zr = -KernelConstants.genRadius; zr <= KernelConstants.genRadius; zr++) {
-					int zz = zPlayChunk + zr;
-					for (int xr = -KernelConstants.genRadius; xr <= KernelConstants.genRadius; xr++) {
-						int xx = xPlayChunk + xr;
-						Chunk chunk = getChunk(chunkDim, xx, zz);
-						if (chunk != null) {
-							if (gm.getFrustum().cubeInFrustum(xx * 16, 0, zz * 16, (xx * 16) + 16, 128,
-									(zz * 16) + 16)) {
-								if (yy == 0)
-									if (chunk.sec1NotClear)
-										getChunk(chunkDim, xx, zz).update1(this);
-								if (yy == 1)
-									if (chunk.sec2NotClear)
-										getChunk(chunkDim, xx, zz).update2(this);
-								if (yy == 2)
-									if (chunk.sec3NotClear)
-										getChunk(chunkDim, xx, zz).update3(this);
-								if (yy == 3)
-									if (chunk.sec4NotClear)
-										getChunk(chunkDim, xx, zz).update4(this);
-							}
-						}
+		for (int yy = 4; yy > 0; yy--) {
+			for (int zr = -KernelConstants.genRadius; zr <= KernelConstants.genRadius; zr++) {
+				int zz = zPlayChunk + zr;
+				for (int xr = -KernelConstants.genRadius; xr <= KernelConstants.genRadius; xr++) {
+					int xx = xPlayChunk + xr;
+					Chunk chunk = getChunk(chunkDim, xx, zz);
+					if (chunk != null) {
+						if (gm.getFrustum().cubeInFrustum(xx * 16, 0, zz * 16, (xx * 16) + 16, 32, (zz * 16) + 16))
+							if (yy == 0)
+								getChunk(chunkDim, xx, zz).update1(this);
+						if (gm.getFrustum().cubeInFrustum(xx * 16, 32, zz * 16, (xx * 16) + 16, 64, (zz * 16) + 16))
+							if (yy == 1)
+								getChunk(chunkDim, xx, zz).update2(this);
+						if (gm.getFrustum().cubeInFrustum(xx * 16, 64, zz * 16, (xx * 16) + 16, 96, (zz * 16) + 16))
+							if (yy == 2)
+								getChunk(chunkDim, xx, zz).update3(this);
+						if (gm.getFrustum().cubeInFrustum(xx * 16, 96, zz * 16, (xx * 16) + 16, 128, (zz * 16) + 16))
+							if (yy == 3)
+								getChunk(chunkDim, xx, zz).update4(this);
 					}
 				}
-			}
-			updatesPerTick--;
-		} else {
-			try {
-				Thread.sleep(100);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
 			}
 		}
 	}
 
 	public void updateChunksRender(GameResources gm) {
-		gm.lights.clear();
 		for (int zr = -KernelConstants.radius; zr <= KernelConstants.radius; zr++) {
 			int zz = zPlayChunk + zr;
 			for (int xr = -KernelConstants.radius; xr <= KernelConstants.radius; xr++) {
@@ -334,7 +322,6 @@ public class DimensionalWorld {
 		if (old != null) {
 			removeChunk(old);
 		}
-		updatesPerTick++;
 		chunks.put(key.clone(), chunk);
 	}
 
@@ -359,7 +346,7 @@ public class DimensionalWorld {
 		if (chunk != null)
 			return chunk.getLocalBlock(x, y, z);
 		else
-			return -99;
+			return 0;
 	}
 
 	public void setGlobalBlock(int chunkDim, int x, int y, int z, byte id) {

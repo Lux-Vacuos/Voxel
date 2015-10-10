@@ -120,8 +120,8 @@ public class MasterRenderer {
 	 *            A Camera
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public void renderChunk(Queue<BlockEntity> cubes1temp, List<Light> lights, GameResources gm) {
-		for (BlockEntity entity : cubes1temp) {
+	public void renderChunk(Queue<BlockEntity> cubes, List<Light> lights, GameResources gm) {
+		for (BlockEntity entity : cubes) {
 			processBlockEntity(entity);
 		}
 		renderChunk(lights, gm);
@@ -280,8 +280,8 @@ public class MasterRenderer {
 	public Matrix4f getProjectionMatrix() {
 		return projectionMatrix;
 	}
-	
-	public void setProjectionMatrix(Matrix4f matrix){
+
+	public void setProjectionMatrix(Matrix4f matrix) {
 		projectionMatrix = matrix;
 	}
 }

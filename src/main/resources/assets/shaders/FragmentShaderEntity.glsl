@@ -39,7 +39,6 @@ uniform vec3 attenuations[8];
 uniform vec3 directLightDirection;
 uniform float time;
 uniform float blendFactor;
-uniform float localLight;
 
 float CalcDirectionalLightFactor(vec3 lightDirection, vec3 normal) {
     float DiffuseFactor = dot(normalize(normal), -lightDirection);

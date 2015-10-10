@@ -52,7 +52,6 @@ public class EntityShader extends ShaderProgram {
 	private int location_blendFactor;
 	private int location_texture0;
 	private int location_depth0;
-	private int loc_localLight;
 
 	/**
 	 * Constructor, creates an Entity Shader
@@ -81,7 +80,6 @@ public class EntityShader extends ShaderProgram {
 		location_time = super.getUniformLocation("time");
 		location_texture0 = super.getUniformLocation("texture0");
 		location_depth0 = super.getUniformLocation("depth0");
-		loc_localLight = super.getUniformLocation("localLight");
 
 		location_lightPosition = new int[KernelConstants.MAX_LIGHTS];
 		location_lightColour = new int[KernelConstants.MAX_LIGHTS];
@@ -103,10 +101,6 @@ public class EntityShader extends ShaderProgram {
 		super.loadInt(location_depth0, 1);
 	}
 	
-	public void localLight(float light){
-		super.loadFloat(loc_localLight, light);
-	}
-
 	/**
 	 * Loads the Sky Color to the shader
 	 * 
