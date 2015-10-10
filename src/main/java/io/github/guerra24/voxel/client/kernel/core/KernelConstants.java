@@ -24,6 +24,8 @@
 
 package io.github.guerra24.voxel.client.kernel.core;
 
+import java.net.URL;
+
 /**
  * Locations of all global variables
  * 
@@ -52,7 +54,7 @@ public class KernelConstants {
 	/**
 	 * Game Near Plane
 	 */
-	public static float NEAR_PLANE = 0.001f;
+	public static float NEAR_PLANE = 0.1f;
 	/**
 	 * Game Far Plane
 	 */
@@ -73,7 +75,7 @@ public class KernelConstants {
 	/**
 	 * Game Build Number
 	 */
-	public static int build = 67;
+	public static int build = 80;
 	/**
 	 * Game Version
 	 */
@@ -143,23 +145,23 @@ public class KernelConstants {
 	public static final String FRAGMENT_FILE_SKYBOX = "FragmentShaderSkybox.glsl";
 	public static final String VERTEX_FILE_WATER = "VertexShaderWater.glsl";
 	public static final String FRAGMENT_FILE_WATER = "FragmentShaderWater.glsl";
-	public static final String VERTEX_FILE_SHADOW = "VertexShaderShadow.glsl";
-	public static final String FRAGMENT_FILE_SHADOW = "FragmentShaderShadow.glsl";
+	public static final String VERTEX_FILE_PARTICLE = "VertexShaderParticle.glsl";
+	public static final String FRAGMENT_FILE_PARTICLE = "FragmentShaderParticle.glsl";
+	public static final String VERTEX_FILE_POST = "VertexPost.glsl";
+	public static final String FRAGMENT_FILE_POST = "FragmentPost.glsl";
 	// World Save Path
 	/**
 	 * World Folder Path
 	 */
 	public static String worldPath = "assets/game/world/";
+	public static String blockPath = "assets/blocks/";
 	/**
 	 * Checks if the Kernel has successfully loaded
 	 */
 	public static boolean loaded = false;
-	/**
-	 * Camera Storage Path
-	 * 
-	 * @deprecated
-	 */
-	public static String camPath = "assets/world/Camera.json";
+
+	public static int DIM_0 = 0;
+	public static int DIM_1 = 1;
 
 	/**
 	 * Update Global Variables

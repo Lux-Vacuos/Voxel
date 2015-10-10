@@ -154,7 +154,7 @@ public class WaterRenderer {
 		glActiveTexture(GL_TEXTURE1);
 		glBindTexture(GL_TEXTURE_2D, normalTexture);
 		glActiveTexture(GL_TEXTURE2);
-		glBindTexture(GL_TEXTURE_2D, gm.getFrameBuffer().getShadowDepthTexture());
+		glBindTexture(GL_TEXTURE_2D, gm.getWaterFBO().getDepthTexture());
 	}
 
 	/**

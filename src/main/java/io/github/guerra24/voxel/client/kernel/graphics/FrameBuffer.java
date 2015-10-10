@@ -1,8 +1,34 @@
+/*
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2015 Guerra24
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
+
 package io.github.guerra24.voxel.client.kernel.graphics;
 
 import static org.lwjgl.opengl.GL11.GL_DEPTH_COMPONENT;
 import static org.lwjgl.opengl.GL11.GL_FLOAT;
 import static org.lwjgl.opengl.GL11.GL_LINEAR;
+import static org.lwjgl.opengl.GL11.GL_NONE;
 import static org.lwjgl.opengl.GL11.GL_RGB;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_MAG_FILTER;
@@ -12,6 +38,7 @@ import static org.lwjgl.opengl.GL11.glBindTexture;
 import static org.lwjgl.opengl.GL11.glDeleteTextures;
 import static org.lwjgl.opengl.GL11.glDrawBuffer;
 import static org.lwjgl.opengl.GL11.glGenTextures;
+import static org.lwjgl.opengl.GL11.glReadBuffer;
 import static org.lwjgl.opengl.GL11.glTexImage2D;
 import static org.lwjgl.opengl.GL11.glTexParameteri;
 import static org.lwjgl.opengl.GL11.glViewport;
@@ -34,23 +61,27 @@ import java.nio.ByteBuffer;
 import io.github.guerra24.voxel.client.kernel.graphics.opengl.Display;
 
 public class FrameBuffer {
-	private int shadowFrameBuffer;
-	private int shadowDepthBuffer;
-	private int shadowDepthTexture;
+	private int FrameBuffer;
+	private int DepthBuffer;
+	private int DepthTexture;
 
-	public FrameBuffer() {
-		initialiseShadowFrameBuffer();
+	public FrameBuffer(boolean depth, int width, int height) {
+		initialiseFrameBuffer(depth, width, height);
 	}
 
-	private void initialiseShadowFrameBuffer() {
-		shadowFrameBuffer = createFrameBuffer();
-		shadowDepthTexture = createTextureAttachment(512, 512);
-		shadowDepthBuffer = createDepthBufferAttachment(512, 512);
+	private void initialiseFrameBuffer(boolean depth, int width, int height) {
+		FrameBuffer = createFrameBuffer(depth);
+		if (depth) {
+			DepthTexture = createDepthTextureAttachment(width, height);
+		} else {
+			DepthTexture = createTextureAttachment(width, height);
+		}
+		DepthBuffer = createDepthBufferAttachment(width, height);
 		end();
 	}
 
-	public void begin() {
-		bindFrameBuffer(shadowFrameBuffer, 512, 512);
+	public void begin(int width, int height) {
+		bindFrameBuffer(FrameBuffer, width, height);
 	}
 
 	public void end() {
@@ -64,10 +95,13 @@ public class FrameBuffer {
 		glViewport(0, 0, width, height);
 	}
 
-	private int createFrameBuffer() {
+	private int createFrameBuffer(boolean depth) {
 		int frameBuffer = glGenFramebuffers();
 		glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
-		glDrawBuffer(GL_COLOR_ATTACHMENT0);
+		if (depth) {
+			glDrawBuffer(GL_NONE);
+			glReadBuffer(GL_NONE);
+		}
 		return frameBuffer;
 	}
 
@@ -101,21 +135,21 @@ public class FrameBuffer {
 	}
 
 	public void cleanUp() {
-		glDeleteFramebuffers(shadowFrameBuffer);
-		glDeleteRenderbuffers(shadowDepthBuffer);
-		glDeleteTextures(shadowDepthTexture);
+		glDeleteFramebuffers(FrameBuffer);
+		glDeleteRenderbuffers(DepthBuffer);
+		glDeleteTextures(DepthTexture);
 	}
 
-	public int getShadowFrameBuffer() {
-		return shadowFrameBuffer;
+	public int getFrameBuffer() {
+		return FrameBuffer;
 	}
 
-	public int getShadowDepthBuffer() {
-		return shadowDepthBuffer;
+	public int getDepthBuffer() {
+		return DepthBuffer;
 	}
 
-	public int getShadowDepthTexture() {
-		return shadowDepthTexture;
+	public int getDepthTexture() {
+		return DepthTexture;
 	}
 
 }

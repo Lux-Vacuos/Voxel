@@ -24,8 +24,8 @@
 
 package io.github.guerra24.voxel.client.kernel.world.block;
 
-import io.github.guerra24.voxel.client.kernel.resources.models.WaterTile;
-import io.github.guerra24.voxel.client.kernel.util.vector.Vector3f;
+import java.util.HashMap;
+
 import io.github.guerra24.voxel.client.kernel.world.block.types.BlockAir;
 import io.github.guerra24.voxel.client.kernel.world.block.types.BlockDimOre;
 import io.github.guerra24.voxel.client.kernel.world.block.types.BlockDirt;
@@ -34,13 +34,11 @@ import io.github.guerra24.voxel.client.kernel.world.block.types.BlockGoldOre;
 import io.github.guerra24.voxel.client.kernel.world.block.types.BlockGrass;
 import io.github.guerra24.voxel.client.kernel.world.block.types.BlockIndes;
 import io.github.guerra24.voxel.client.kernel.world.block.types.BlockNull;
+import io.github.guerra24.voxel.client.kernel.world.block.types.BlockPortal;
 import io.github.guerra24.voxel.client.kernel.world.block.types.BlockSand;
 import io.github.guerra24.voxel.client.kernel.world.block.types.BlockStone;
 import io.github.guerra24.voxel.client.kernel.world.block.types.BlockTorch;
 import io.github.guerra24.voxel.client.kernel.world.block.types.BlockWater;
-import io.github.guerra24.voxel.client.kernel.world.entities.Entity;
-
-import java.util.HashMap;
 
 /**
  * Block
@@ -52,107 +50,21 @@ public abstract class Block {
 	/**
 	 * Map of blocks
 	 */
-	public static HashMap<Byte, Block> blockMap = new HashMap<Byte, Block>();
+	public static HashMap<Byte, IBlock> blockMap = new HashMap<Byte, IBlock>();
 
-	public static Block Grass = new BlockGrass();
-	public static Block Stone = new BlockStone();
-	public static Block NULL = new BlockNull();
-	public static Block Indes = new BlockIndes();
-	public static Block Sand = new BlockSand();
-	public static Block Dirt = new BlockDirt();
-	public static Block DiamondOre = new BlockDimOre();
-	public static Block GoldOre = new BlockGoldOre();
-	public static Block Water = new BlockWater();
-	public static Block Glass = new BlockGlass();
-	public static Block Air = new BlockAir();
-	public static Block Torch = new BlockTorch();
-
-	/**
-	 * Gets the Block ID
-	 * 
-	 * @return ID
-	 * @author Guerra24 <pablo230699@hotmail.com>
-	 */
-	public abstract byte getId();
-
-	/**
-	 * Get the Face Up of the Block
-	 * 
-	 * @param pos
-	 *            Position
-	 * @return BlockEntity
-	 * @author Guerra24 <pablo230699@hotmail.com>
-	 */
-	public abstract BlockEntity getFaceUp(Vector3f pos);
-
-	/**
-	 * Get the Face Down of the Block
-	 * 
-	 * @param pos
-	 *            Position
-	 * @return Entity
-	 * @author Guerra24 <pablo230699@hotmail.com>
-	 */
-	public abstract BlockEntity getFaceDown(Vector3f pos);
-
-	/**
-	 * Get the Face East of the Block
-	 * 
-	 * @param pos
-	 *            Position
-	 * @return BlockEntity
-	 * @author Guerra24 <pablo230699@hotmail.com>
-	 */
-	public abstract BlockEntity getFaceEast(Vector3f pos);
-
-	/**
-	 * Get the Face West of the Block
-	 * 
-	 * @param pos
-	 *            Position
-	 * @return BlockEntity
-	 */
-	public abstract BlockEntity getFaceWest(Vector3f pos);
-
-	/**
-	 * Get the Face North of the Block
-	 * 
-	 * @param pos
-	 *            Position
-	 * @return BlockEntity
-	 * @author Guerra24 <pablo230699@hotmail.com>
-	 */
-	public abstract BlockEntity getFaceNorth(Vector3f pos);
-
-	/**
-	 * Get the Face South of the Block
-	 * 
-	 * @param pos
-	 *            Position
-	 * @return BlockEntity
-	 * @author Guerra24 <pablo230699@hotmail.com>
-	 */
-	public abstract BlockEntity getFaceSouth(Vector3f pos);
-
-	/**
-	 * Get the WaterTile of the Block
-	 * 
-	 * @param pos
-	 *            Position
-	 * @return WaterTile
-	 * @author Guerra24 <pablo230699@hotmail.com>
-	 */
-	public abstract WaterTile getWaterTitle(Vector3f pos);
-
-	/**
-	 * Get a single model
-	 * 
-	 * @param pos
-	 *            Position
-	 * @return BlockEntity
-	 * @author Guerra24 <pablo230699@hotmail.com>
-	 */
-	public abstract BlockEntity getSingleModel(Vector3f pos);
+	public static IBlock Grass = new BlockGrass();
+	public static IBlock Stone = new BlockStone();
+	public static IBlock NULL = new BlockNull();
+	public static IBlock Indes = new BlockIndes();
+	public static IBlock Sand = new BlockSand();
+	public static IBlock Dirt = new BlockDirt();
+	public static IBlock DiamondOre = new BlockDimOre();
+	public static IBlock GoldOre = new BlockGoldOre();
+	public static IBlock Water = new BlockWater();
+	public static IBlock Glass = new BlockGlass();
+	public static IBlock Air = new BlockAir();
+	public static IBlock Torch = new BlockTorch();
+	public static IBlock Portal = new BlockPortal();
 
 	/**
 	 * Initialize the basic Block
@@ -171,6 +83,7 @@ public abstract class Block {
 		registerBlock(Water.getId(), Water);
 		registerBlock(Glass.getId(), Glass);
 		registerBlock(Torch.getId(), Torch);
+		registerBlock(Portal.getId(), Portal);
 	}
 
 	/**
@@ -182,7 +95,7 @@ public abstract class Block {
 	 *            Block
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public static void registerBlock(byte id, Block block) {
+	public static void registerBlock(byte id, IBlock block) {
 		blockMap.put(id, block);
 	}
 
@@ -194,7 +107,7 @@ public abstract class Block {
 	 * @return Block
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public static Block getBlock(byte id) {
+	public static IBlock getBlock(byte id) {
 		return blockMap.get(id);
 	}
 

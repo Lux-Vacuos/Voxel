@@ -93,7 +93,8 @@ public class MasterRenderer {
 	 */
 	public MasterRenderer(Loader loader) {
 		initGL();
-		createProjectionMatrix();
+		projectionMatrix = createProjectionMatrix(Display.getWidth(), Display.getHeight(), KernelConstants.FOV,
+				KernelConstants.NEAR_PLANE, KernelConstants.FAR_PLANE);
 		entityRenderer = new EntityRenderer(shader, projectionMatrix);
 	}
 
@@ -119,8 +120,8 @@ public class MasterRenderer {
 	 *            A Camera
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public void renderChunk(Queue<BlockEntity> cubes1temp, List<Light> lights, GameResources gm) {
-		for (BlockEntity entity : cubes1temp) {
+	public void renderChunk(Queue<BlockEntity> cubes, List<Light> lights, GameResources gm) {
+		for (BlockEntity entity : cubes) {
 			processBlockEntity(entity);
 		}
 		renderChunk(lights, gm);
@@ -244,20 +245,21 @@ public class MasterRenderer {
 	 * 
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public void createProjectionMatrix() {
-		aspectRatio = (float) Display.getWidth() / (float) Display.getHeight();
-		float y_scale = (float) ((1f / Math.tan(Math.toRadians(KernelConstants.FOV / 2f))) * aspectRatio);
+	public Matrix4f createProjectionMatrix(int width, int height, float fov, float nearPlane, float farPlane) {
+		aspectRatio = (float) width / (float) height;
+		float y_scale = (float) ((1f / Math.tan(Math.toRadians(fov / 2f))) * aspectRatio);
 		float x_scale = y_scale / aspectRatio;
-		float frustrum_length = KernelConstants.FAR_PLANE - KernelConstants.NEAR_PLANE;
+		float frustrum_length = farPlane - nearPlane;
 
-		projectionMatrix = new Matrix4f();
+		Matrix4f projectionMatrix = new Matrix4f();
 		projectionMatrix.setIdentity();
 		projectionMatrix.m00 = x_scale;
 		projectionMatrix.m11 = y_scale;
-		projectionMatrix.m22 = -((KernelConstants.FAR_PLANE + KernelConstants.NEAR_PLANE) / frustrum_length);
+		projectionMatrix.m22 = -((farPlane + nearPlane) / frustrum_length);
 		projectionMatrix.m23 = -1;
-		projectionMatrix.m32 = -((2 * KernelConstants.NEAR_PLANE * KernelConstants.FAR_PLANE) / frustrum_length);
+		projectionMatrix.m32 = -((2 * nearPlane * farPlane) / frustrum_length);
 		projectionMatrix.m33 = 0;
+		return projectionMatrix;
 	}
 
 	/**
@@ -277,5 +279,9 @@ public class MasterRenderer {
 	 */
 	public Matrix4f getProjectionMatrix() {
 		return projectionMatrix;
+	}
+
+	public void setProjectionMatrix(Matrix4f matrix) {
+		projectionMatrix = matrix;
 	}
 }

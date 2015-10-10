@@ -30,15 +30,18 @@ import java.util.Random;
 
 import com.google.gson.Gson;
 
+import io.github.guerra24.voxel.client.kernel.api.VAPI;
 import io.github.guerra24.voxel.client.kernel.core.GameStates;
+import io.github.guerra24.voxel.client.kernel.graphics.FrameBuffer;
 import io.github.guerra24.voxel.client.kernel.graphics.Frustum;
 import io.github.guerra24.voxel.client.kernel.graphics.GuiRenderer;
 import io.github.guerra24.voxel.client.kernel.graphics.MasterRenderer;
-import io.github.guerra24.voxel.client.kernel.graphics.FrameBuffer;
+import io.github.guerra24.voxel.client.kernel.graphics.PostProcessingRenderer;
 import io.github.guerra24.voxel.client.kernel.graphics.SkyboxRenderer;
 import io.github.guerra24.voxel.client.kernel.graphics.WaterRenderer;
 import io.github.guerra24.voxel.client.kernel.graphics.shaders.WaterShader;
 import io.github.guerra24.voxel.client.kernel.menu.MainMenu;
+import io.github.guerra24.voxel.client.kernel.particle.ParticleController;
 import io.github.guerra24.voxel.client.kernel.resources.models.GuiTexture;
 import io.github.guerra24.voxel.client.kernel.sound.LibraryLWJGLOpenAL;
 import io.github.guerra24.voxel.client.kernel.sound.soundsystem.SoundSystem;
@@ -79,10 +82,12 @@ public class GameResources {
 	private SkyboxRenderer skyboxRenderer;
 	private GuiRenderer guiRenderer;
 	private GameStates gameStates;
-	private Gson gson;
+	private ParticleController particleController;
+	private PostProcessingRenderer postProcessing;
 	private SoundSystem soundSystem;
 	private Frustum frustum;
-	private FrameBuffer frameBuffer;
+	private Gson gson;
+	private FrameBuffer waterFBO;
 	private Physics physics;
 
 	/**
@@ -100,9 +105,20 @@ public class GameResources {
 	 */
 	public void init() {
 		loader = new Loader();
-		rand = new Random();
 		camera = new Camera();
 		gson = new Gson();
+		renderer = new MasterRenderer(loader);
+		waterShader = new WaterShader();
+		guiRenderer = new GuiRenderer(loader);
+		waterRenderer = new WaterRenderer(loader, waterShader, renderer.getProjectionMatrix());
+		skyboxRenderer = new SkyboxRenderer(loader, renderer.getProjectionMatrix());
+		particleController = new ParticleController(loader);
+		postProcessing = new PostProcessingRenderer(loader);
+		gameStates = new GameStates();
+		waterFBO = new FrameBuffer(false, 512, 512);
+		physics = new Physics(this);
+		frustum = new Frustum();
+		rand = new Random();
 		try {
 			SoundSystemConfig.addLibrary(LibraryLWJGLOpenAL.class);
 			SoundSystemConfig.setCodec("ogg", CodecJOgg.class);
@@ -110,16 +126,10 @@ public class GameResources {
 			Logger.error(Thread.currentThread(), "Unable to bind SoundSystem Libs");
 		}
 		soundSystem = new SoundSystem();
-		renderer = new MasterRenderer(loader);
-		guiRenderer = new GuiRenderer(loader);
-		waterShader = new WaterShader();
-		waterRenderer = new WaterRenderer(loader, waterShader, renderer.getProjectionMatrix());
-		skyboxRenderer = new SkyboxRenderer(loader, renderer.getProjectionMatrix());
-		gameStates = new GameStates();
-		frustum = new Frustum();
-		frameBuffer = new FrameBuffer();
-		physics = new Physics(this);
+
 		Block.initBasicBlocks();
+
+		VAPI.getMobAPI().setMobController(physics.getMobManager());
 	}
 
 	/**
@@ -150,8 +160,9 @@ public class GameResources {
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void cleanUp() {
+		particleController.dispose();
 		waterShader.cleanUp();
-		frameBuffer.cleanUp();
+		waterFBO.cleanUp();
 		guiRenderer.cleanUp();
 		renderer.cleanUp();
 		loader.cleanUp();
@@ -194,12 +205,12 @@ public class GameResources {
 		return loader;
 	}
 
-	public Camera getCamera() {
-		return camera;
+	public Gson getGson() {
+		return gson;
 	}
 
-	public void setCamera(Camera camera) {
-		this.camera = camera;
+	public Camera getCamera() {
+		return camera;
 	}
 
 	public MasterRenderer getRenderer() {
@@ -226,12 +237,16 @@ public class GameResources {
 		return gameStates;
 	}
 
-	public Gson getGson() {
-		return gson;
-	}
-
 	public SoundSystem getSoundSystem() {
 		return soundSystem;
+	}
+
+	public ParticleController getParticleController() {
+		return particleController;
+	}
+
+	public PostProcessingRenderer getPostProcessing() {
+		return postProcessing;
 	}
 
 	public Frustum getFrustum() {
@@ -242,8 +257,8 @@ public class GameResources {
 		return physics;
 	}
 
-	public FrameBuffer getFrameBuffer() {
-		return frameBuffer;
+	public FrameBuffer getWaterFBO() {
+		return waterFBO;
 	}
 
 }

@@ -72,6 +72,7 @@ public class EntityRenderer {
 		this.shader = shader;
 		shader.start();
 		shader.loadProjectionMatrix(projectionMatrix);
+		shader.connectTextureUnits();
 		shader.stop();
 	}
 
@@ -103,13 +104,16 @@ public class EntityRenderer {
 	 */
 	public void renderEntity(Map<TexturedModel, List<Entity>> blockEntities, GameResources gm) {
 		for (TexturedModel model : blockEntities.keySet()) {
-			prepareTexturedModel(model, gm);
-			List<Entity> batch = blockEntities.get(model);
-			for (Entity entity : batch) {
-				prepareInstance(entity);
-				VoxelGL33.glDrawElements(GL_TRIANGLES, model.getRawModel().getVertexCount(), GL_UNSIGNED_INT, 0);
+			try {
+				prepareTexturedModel(model, gm);
+				List<Entity> batch = blockEntities.get(model);
+				for (Entity entity : batch) {
+					prepareInstance(entity);
+					VoxelGL33.glDrawElements(GL_TRIANGLES, model.getRawModel().getVertexCount(), GL_UNSIGNED_INT, 0);
+				}
+				unbindTexturedModel();
+			} catch (NullPointerException e) {
 			}
-			unbindTexturedModel();
 		}
 	}
 

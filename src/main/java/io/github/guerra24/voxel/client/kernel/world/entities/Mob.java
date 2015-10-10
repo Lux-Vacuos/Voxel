@@ -24,11 +24,12 @@
 
 package io.github.guerra24.voxel.client.kernel.world.entities;
 
+import io.github.guerra24.voxel.client.kernel.api.VAPI;
 import io.github.guerra24.voxel.client.kernel.resources.GameResources;
 import io.github.guerra24.voxel.client.kernel.resources.GuiResources;
 import io.github.guerra24.voxel.client.kernel.resources.models.TexturedModel;
 import io.github.guerra24.voxel.client.kernel.util.vector.Vector3f;
-import io.github.guerra24.voxel.client.kernel.world.World;
+import io.github.guerra24.voxel.client.kernel.world.DimensionalWorld;
 
 public class Mob extends Entity implements IEntity {
 
@@ -36,8 +37,13 @@ public class Mob extends Entity implements IEntity {
 		super(model, position, rotX, rotY, rotZ, scale);
 	}
 
+	public Mob(Entity entity) {
+		super(entity.getModel(), entity.getPosition(), entity.getRotX(), entity.getRotY(), entity.getRotZ(),
+				entity.getScale());
+	}
+
 	@Override
-	public void update(float delta, GameResources gm, GuiResources gi, World world) {
+	public void update(float delta, GameResources gm, GuiResources gi, DimensionalWorld world, VAPI api) {
 	}
 
 	@Override

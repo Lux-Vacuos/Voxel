@@ -22,41 +22,85 @@
  * SOFTWARE.
  */
 
-package io.github.guerra24.voxel.client.kernel.core;
+package io.github.guerra24.voxel.client.kernel.api;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import io.github.guerra24.voxel.client.kernel.api.mod.ChunkHandler;
+import io.github.guerra24.voxel.client.kernel.world.block.Block;
+import io.github.guerra24.voxel.client.kernel.world.block.IBlock;
 
 /**
- * Interface for GameObjects
+ * World API
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
- * @category KernelS
+ * @category API
  */
-public interface GameObject {
+public class WorldVAPI {
+
+	public Map<Integer, ChunkHandler> modsWorld;
+
+	public WorldVAPI() {
+		modsWorld = new HashMap<Integer, ChunkHandler>();
+	}
 
 	/**
-	 * Initialize the GameObject
+	 * Register the ChunkHandler
+	 * 
+	 * @param id
+	 *            Use APIWorld.getLastId()
+	 * @param handler
+	 *            Handler
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
+	public void registerChunkHandler(int id, ChunkHandler handler) {
+		modsWorld.put(id, handler);
+	}
+
+	/**
+	 * Gets the Mod from ID
+	 * 
+	 * @param id
+	 *            ID
+	 * @return Mod
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 * 
+	 */
+	public ChunkHandler getChunkHandler(int id) {
+		return modsWorld.get(id);
+	}
+
+	/**
+	 * Register a block to the world generation
+	 * 
+	 * @param id
+	 *            Block id
+	 * @param block
+	 *            Block
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
+	public void registerBlock(byte id, IBlock block) {
+		Block.registerBlock(id, block);
+	}
+
+	/**
+	 * Get last avaiable ID
+	 * 
+	 * @return ID
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
+	public int getLastID() {
+		return modsWorld.size();
+	}
+
+	/**
+	 * Dispose the APIWorld
 	 * 
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public void init();
+	public void dispose() {
+		modsWorld.clear();
+	}
 
-	/**
-	 * Updates the GameObject
-	 * 
-	 * @author Guerra24 <pablo230699@hotmail.com>
-	 */
-	public void update();
-
-	/**
-	 * Sends the TexturedModel to render
-	 * 
-	 * @author Guerra24 <pablo230699@hotmail.com>
-	 */
-	public void sendToRender();
-
-	/**
-	 * Disposes the GameObject
-	 * 
-	 * @author Guerra24 <pablo230699@hotmail.com>
-	 */
-	public void dispose();
 }

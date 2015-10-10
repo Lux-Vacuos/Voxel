@@ -27,20 +27,76 @@
 in vec2 pass_textureCoords;
 in vec3 surfaceNormal;
 in vec3 toLightVector[8];
-in vec3 lightIntensity;
 in float visibility;
 
 out vec4 out_Color;
 
-uniform sampler2D textureSampler;
+uniform sampler2D texture0;
+uniform sampler2D depth0;
 uniform vec3 skyColour;
 uniform vec3 lightColour[8];
 uniform vec3 attenuations[8];
+uniform vec3 directLightDirection;
+uniform float time;
+uniform float blendFactor;
+
+float CalcDirectionalLightFactor(vec3 lightDirection, vec3 normal) {
+    float DiffuseFactor = dot(normalize(normal), -lightDirection);
+
+    if (DiffuseFactor > 0) {
+        return DiffuseFactor;
+    } else {
+        return 0.0;
+    }
+}
+
+float CalcPointLightFactor(vec3 lightPosition, vec3 normal, vec3 position) {
+    vec3 LightDirection = position - lightPosition;
+    float Distance = length(LightDirection);
+    LightDirection = normalize(LightDirection);
+
+    float Attenuation = 0.1 * Distance + //linear
+                        0.001 * Distance * Distance; //exponential
+
+    return CalcDirectionalLightFactor(LightDirection, normal) / Attenuation;
+}
 
 void main(void) {
 
+	struct DirectionalLight {
+        vec3 Color;
+        vec3 AmbientIntensity;
+        vec3 DiffuseIntensity;
+        vec3 Direction;
+    } Light0;
 	vec3 unitNormal = normalize(surfaceNormal);
+    Light0.Direction = directLightDirection;
+    Light0.Color = vec3(1.0, 1.0, 1.0);
+    Light0.AmbientIntensity = vec3(0.1, 0.1, 0.1);
+    Light0.DiffuseIntensity = vec3(0.8, 0.8, 0.8);
+
+	vec3 AmbientColor = Light0.AmbientIntensity * Light0.Color;
+    vec3 DiffuseColor = Light0.Color * Light0.DiffuseIntensity * CalcDirectionalLightFactor(Light0.Direction, unitNormal);
+    
+    vec3 Day = vec3(0,0,0);
+    vec3 Night = vec3(0,0,0);
 	
+    if (time >= 0 && time < 5000) {
+		Day = AmbientColor;
+		Night = AmbientColor;
+	} else if (time >= 5000 && time < 8000) {
+		Day = AmbientColor;
+		Night = DiffuseColor + AmbientColor;
+	} else if (time >= 8000 && time < 21000) {
+		Day = DiffuseColor + AmbientColor;
+		Night = DiffuseColor + AmbientColor;
+	} else {
+		Day = DiffuseColor + AmbientColor;
+		Night = AmbientColor;
+	}
+    
+	vec3 lightIntensity = mix(Day, Night, blendFactor);
+
 	vec4 totalDiffuse = vec4(0.0);
 	
 	// code for dynamic light
@@ -56,7 +112,7 @@ void main(void) {
 	totalDiffuse = totalDiffuse + light;
 	totalDiffuse = clamp(totalDiffuse, 0.0, 1.0);
 	
-	vec4 textureColour = texture(textureSampler, pass_textureCoords);
+	vec4 textureColour = texture(texture0, pass_textureCoords);
 	if(textureColour.a<0.5) {
 		discard;
 	}

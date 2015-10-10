@@ -24,18 +24,12 @@
 
 package io.github.guerra24.voxel.client.kernel.util;
 
+import java.util.Random;
+
 import io.github.guerra24.voxel.client.kernel.util.vector.Matrix4f;
 import io.github.guerra24.voxel.client.kernel.util.vector.Vector2f;
 import io.github.guerra24.voxel.client.kernel.util.vector.Vector3f;
 import io.github.guerra24.voxel.client.kernel.world.entities.Camera;
-
-import static org.lwjgl.opengl.GL11.GL_DEPTH_COMPONENT;
-import static org.lwjgl.opengl.GL11.GL_FLOAT;
-import static org.lwjgl.opengl.GL11.glReadPixels;
-
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.util.Random;
 
 /**
  * Maths
@@ -44,9 +38,6 @@ import java.util.Random;
  * @category Util
  */
 public class Maths {
-
-	private static final int SIZE_FLOAT = 4;
-	private static final int SIZE_BYTE = 1;
 
 	/**
 	 * Create a Transformation Matrix 2D
@@ -106,6 +97,7 @@ public class Maths {
 		viewMatrix.setIdentity();
 		Matrix4f.rotate((float) Math.toRadians(camera.getPitch()), new Vector3f(1, 0, 0), viewMatrix, viewMatrix);
 		Matrix4f.rotate((float) Math.toRadians(camera.getYaw()), new Vector3f(0, 1, 0), viewMatrix, viewMatrix);
+		Matrix4f.rotate((float) Math.toRadians(camera.getRoll()), new Vector3f(0, 0, 1), viewMatrix, viewMatrix);
 		Vector3f cameraPost = camera.getPosition();
 		Vector3f negativeCameraPos = new Vector3f(-cameraPost.x, -cameraPost.y, -cameraPost.z);
 		Matrix4f.translate(negativeCameraPos, viewMatrix, viewMatrix);
@@ -166,17 +158,20 @@ public class Maths {
 		return randomNum;
 	}
 
-	public static float dti(float val) {
-		return Math.abs(val - Math.round(val));
+	/**
+	 * Gets a Random float from Range
+	 * 
+	 * @param min
+	 *            Min Value
+	 * @param max
+	 *            Max Value
+	 * @return Random Int
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
+	public static float randFloat() {
+		Random rand = new Random();
+		float randomNum = (rand.nextFloat() - 0.5f) / 16;
+		return randomNum;
 	}
 
-	public static ByteBuffer allocBytes(int size) {
-		return ByteBuffer.allocateDirect(size * SIZE_BYTE).order(ByteOrder.nativeOrder());
-	}
-
-	public static float getZDepth(int x, int y) {
-		ByteBuffer zdepth = allocBytes(SIZE_FLOAT);
-		glReadPixels(x, y, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, zdepth);
-		return ((float) (zdepth.getFloat(0)));
-	}
 }
