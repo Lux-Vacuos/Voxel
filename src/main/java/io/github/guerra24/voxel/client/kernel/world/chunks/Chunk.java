@@ -56,9 +56,9 @@ public class Chunk {
 	public byte[][][] blocks;
 
 	private transient Queue<BlockEntity> cubes1, cubes2, cubes3, cubes4;
+	private transient Queue<WaterTile> water1, water2, water3, water4;
+	private transient Queue<WaterTile> water1temp, water2temp, water3temp, water4temp;
 	private transient Queue<BlockEntity> cubes1temp, cubes2temp, cubes3temp, cubes4temp;
-	private transient Queue<WaterTile> waters;
-	private transient Queue<WaterTile> waterstemp;
 	private transient List<Light> lights1, lights2, lights3, lights4;
 	private transient int sizeX, sizeY, sizeZ;
 	private transient boolean readyToRender1 = true, readyToRender2 = true, readyToRender3 = true,
@@ -113,8 +113,14 @@ public class Chunk {
 		cubes2temp = new ConcurrentLinkedQueue<BlockEntity>();
 		cubes3temp = new ConcurrentLinkedQueue<BlockEntity>();
 		cubes4temp = new ConcurrentLinkedQueue<BlockEntity>();
-		waters = new ConcurrentLinkedQueue<WaterTile>();
-		waterstemp = new ConcurrentLinkedQueue<WaterTile>();
+		water1 = new ConcurrentLinkedQueue<WaterTile>();
+		water2 = new ConcurrentLinkedQueue<WaterTile>();
+		water3 = new ConcurrentLinkedQueue<WaterTile>();
+		water4 = new ConcurrentLinkedQueue<WaterTile>();
+		water1temp = new ConcurrentLinkedQueue<WaterTile>();
+		water2temp = new ConcurrentLinkedQueue<WaterTile>();
+		water3temp = new ConcurrentLinkedQueue<WaterTile>();
+		water4temp = new ConcurrentLinkedQueue<WaterTile>();
 		lights1 = new ArrayList<Light>();
 		lights2 = new ArrayList<Light>();
 		lights3 = new ArrayList<Light>();
@@ -125,46 +131,55 @@ public class Chunk {
 	}
 
 	public void update1(DimensionalWorld world) {
+		water1temp.addAll(water1);
 		cubes1temp.addAll(cubes1);
 		readyToRender1 = false;
+		water1.clear();
 		cubes1.clear();
 		lights1.clear();
-		rebuildChunk1(world);
+		rebuildChunkSection(sec1NotClear, lights1, cubes1, water1, world, 0, 32);
 		readyToRender1 = true;
 		cubes1temp.clear();
+		water1temp.clear();
 	}
 
 	public void update2(DimensionalWorld world) {
+		water2temp.addAll(water2);
 		cubes2temp.addAll(cubes2);
 		readyToRender2 = false;
+		water2.clear();
 		cubes2.clear();
 		lights2.clear();
-		rebuildChunk2(world);
+		rebuildChunkSection(sec2NotClear, lights2, cubes2, water2, world, 32, 64);
 		readyToRender2 = true;
 		cubes2temp.clear();
+		water2temp.clear();
 	}
 
 	public void update3(DimensionalWorld world) {
-		waterstemp.addAll(waters);
+		water3temp.addAll(water3);
 		cubes3temp.addAll(cubes3);
 		readyToRender3 = false;
-		waters.clear();
+		water3.clear();
 		cubes3.clear();
 		lights3.clear();
-		rebuildChunk3(world);
+		rebuildChunkSection(sec3NotClear, lights3, cubes3, water3, world, 64, 96);
 		readyToRender3 = true;
 		cubes3temp.clear();
-		waterstemp.clear();
+		water3temp.clear();
 	}
 
 	public void update4(DimensionalWorld world) {
+		water4temp.addAll(water4);
 		cubes4temp.addAll(cubes4);
 		readyToRender4 = false;
+		water4.clear();
 		cubes4.clear();
 		lights4.clear();
-		rebuildChunk4(world);
+		rebuildChunkSection(sec4NotClear, lights4, cubes4, water4, world, 96, 128);
 		readyToRender4 = true;
 		cubes4temp.clear();
+		water4temp.clear();
 	}
 
 	public void createChunk(DimensionalWorld world) {
@@ -206,216 +221,59 @@ public class Chunk {
 		}
 	}
 
-	public void rebuildChunk1(DimensionalWorld world) {
-		sec1NotClear = false;
+	public void rebuildChunkSection(boolean secClear, List<Light> lights, Queue<BlockEntity> cubes,
+			Queue<WaterTile> water, DimensionalWorld world, int minY, int maxY) {
+		secClear = false;
 		for (int x = 0; x < sizeX; x++) {
 			for (int z = 0; z < sizeZ; z++) {
-				for (int y = 0; y < 32; y++) {
+				for (int y = minY; y < maxY; y++) {
 					if (Block.getBlock(blocks[x][y][z]) == Block.Torch) {
 						if (cullFaceDown(x, y, z) && cullFaceEast(x, y, z, world) && cullFaceNorth(x, y, z, world)
 								&& cullFaceSouth(x, y, z, world) && cullFaceUpSolidBlock(x, y, z)
 								&& cullFaceWest(x, y, z, world)) {
-							cubes1.add(Block.getBlock(blocks[x][y][z])
+							cubes.add(Block.getBlock(blocks[x][y][z])
 									.getSingleModel(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
-							lights1.add(
+							lights.add(
 									new Light(new Vector3f((x + cx * sizeX) + 0.5f, y + 0.8f, (z + cz * sizeZ) - 0.5f),
 											new Vector3f(1, 1, 1), new Vector3f(1, 0.1f, 0.09f)));
-							sec1NotClear = true;
+							secClear = true;
 						}
 					} else if (Block.getBlock(blocks[x][y][z]) != Block.Air
 							&& Block.getBlock(blocks[x][y][z]) != Block.Water) {
 						if (cullFaceWest(x + cx * sizeX, y, z + cz * sizeZ, world)) {
-							cubes1.add(Block.getBlock(blocks[x][y][z])
+							cubes.add(Block.getBlock(blocks[x][y][z])
 									.getFaceWest(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
-							sec1NotClear = true;
+							secClear = true;
 						}
 						if (cullFaceEast(x + cx * sizeX, y, z + cz * sizeZ, world)) {
-							cubes1.add(Block.getBlock(blocks[x][y][z])
+							cubes.add(Block.getBlock(blocks[x][y][z])
 									.getFaceEast(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
-							sec1NotClear = true;
+							secClear = true;
 						}
 						if (cullFaceDown(x + cx * sizeX, y, z + cz * sizeZ)) {
-							cubes1.add(Block.getBlock(blocks[x][y][z])
+							cubes.add(Block.getBlock(blocks[x][y][z])
 									.getFaceDown(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
-							sec1NotClear = true;
+							secClear = true;
 						}
 						if (cullFaceUpSolidBlock(x + cx * sizeX, y, z + cz * sizeZ)) {
-							cubes1.add(Block.getBlock(blocks[x][y][z])
+							cubes.add(Block.getBlock(blocks[x][y][z])
 									.getFaceUp(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
-							sec1NotClear = true;
+							secClear = true;
 						}
 						if (cullFaceNorth(x + cx * sizeX, y, z + cz * sizeZ, world)) {
-							cubes1.add(Block.getBlock(blocks[x][y][z])
+							cubes.add(Block.getBlock(blocks[x][y][z])
 									.getFaceNorth(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
-							sec1NotClear = true;
+							secClear = true;
 						}
 						if (cullFaceSouth(x + cx * sizeX, y, z + cz * sizeZ, world)) {
-							cubes1.add(Block.getBlock(blocks[x][y][z])
+							cubes.add(Block.getBlock(blocks[x][y][z])
 									.getFaceSouth(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
-							sec1NotClear = true;
+							secClear = true;
 						}
-					}
-				}
-			}
-		}
-	}
-
-	public void rebuildChunk2(DimensionalWorld world) {
-		sec2NotClear = false;
-		for (int x = 0; x < sizeX; x++) {
-			for (int z = 0; z < sizeZ; z++) {
-				for (int y = 32; y < 64; y++) {
-					if (Block.getBlock(blocks[x][y][z]) == Block.Torch) {
-						if (cullFaceDown(x, y, z) && cullFaceEast(x, y, z, world) && cullFaceNorth(x, y, z, world)
-								&& cullFaceSouth(x, y, z, world) && cullFaceUpSolidBlock(x, y, z)
-								&& cullFaceWest(x, y, z, world)) {
-							cubes2.add(Block.getBlock(blocks[x][y][z])
-									.getSingleModel(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
-							lights2.add(
-									new Light(new Vector3f((x + cx * sizeX) + 0.5f, y + 0.8f, (z + cz * sizeZ) - 0.5f),
-											new Vector3f(1, 1, 1), new Vector3f(1, 0.1f, 0.09f)));
-							sec2NotClear = true;
-						}
-					} else if (Block.getBlock(blocks[x][y][z]) != Block.Air
-							&& Block.getBlock(blocks[x][y][z]) != Block.Water) {
-						if (cullFaceWest(x + cx * sizeX, y, z + cz * sizeZ, world)) {
-							cubes2.add(Block.getBlock(blocks[x][y][z])
-									.getFaceWest(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
-							sec2NotClear = true;
-						}
-						if (cullFaceEast(x + cx * sizeX, y, z + cz * sizeZ, world)) {
-							cubes2.add(Block.getBlock(blocks[x][y][z])
-									.getFaceEast(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
-							sec2NotClear = true;
-						}
-						if (cullFaceDown(x + cx * sizeX, y, z + cz * sizeZ)) {
-							cubes2.add(Block.getBlock(blocks[x][y][z])
-									.getFaceDown(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
-							sec2NotClear = true;
-						}
-						if (cullFaceUpSolidBlock(x + cx * sizeX, y, z + cz * sizeZ)) {
-							cubes2.add(Block.getBlock(blocks[x][y][z])
-									.getFaceUp(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
-							sec2NotClear = true;
-						}
-						if (cullFaceNorth(x + cx * sizeX, y, z + cz * sizeZ, world)) {
-							cubes2.add(Block.getBlock(blocks[x][y][z])
-									.getFaceNorth(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
-							sec2NotClear = true;
-						}
-						if (cullFaceSouth(x + cx * sizeX, y, z + cz * sizeZ, world)) {
-							cubes2.add(Block.getBlock(blocks[x][y][z])
-									.getFaceSouth(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
-							sec2NotClear = true;
-						}
-					}
-				}
-			}
-		}
-	}
-
-	public void rebuildChunk3(DimensionalWorld world) {
-		sec3NotClear = false;
-		for (int x = 0; x < sizeX; x++) {
-			for (int z = 0; z < sizeZ; z++) {
-				for (int y = 64; y < 96; y++) {
-					if (Block.getBlock(blocks[x][y][z]) == Block.Torch) {
-						cubes3.add(Block.getBlock(blocks[x][y][z])
-								.getSingleModel(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
-						lights3.add(new Light(new Vector3f((x + cx * sizeX) + 0.5f, y + 0.8f, (z + cz * sizeZ) - 0.5f),
-								new Vector3f(1, 1, 1), new Vector3f(1, 0.1f, 0.09f)));
-						sec3NotClear = true;
-					} else if (Block.getBlock(blocks[x][y][z]) != Block.Air
-							&& Block.getBlock(blocks[x][y][z]) != Block.Water
-							&& !Block.getBlock(blocks[x][y][z]).usesSingleModel()) {
-						if (cullFaceWest(x + cx * sizeX, y, z + cz * sizeZ, world)) {
-							cubes3.add(Block.getBlock(blocks[x][y][z])
-									.getFaceWest(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
-							sec3NotClear = true;
-						}
-						if (cullFaceEast(x + cx * sizeX, y, z + cz * sizeZ, world)) {
-							cubes3.add(Block.getBlock(blocks[x][y][z])
-									.getFaceEast(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
-							sec3NotClear = true;
-						}
-						if (cullFaceDown(x + cx * sizeX, y, z + cz * sizeZ)) {
-							cubes3.add(Block.getBlock(blocks[x][y][z])
-									.getFaceDown(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
-							sec3NotClear = true;
-						}
-						if (cullFaceUpSolidBlock(x + cx * sizeX, y, z + cz * sizeZ)) {
-							cubes3.add(Block.getBlock(blocks[x][y][z])
-									.getFaceUp(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
-							sec3NotClear = true;
-						}
-						if (cullFaceNorth(x + cx * sizeX, y, z + cz * sizeZ, world)) {
-							cubes3.add(Block.getBlock(blocks[x][y][z])
-									.getFaceNorth(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
-							sec3NotClear = true;
-						}
-						if (cullFaceSouth(x + cx * sizeX, y, z + cz * sizeZ, world)) {
-							cubes3.add(Block.getBlock(blocks[x][y][z])
-									.getFaceSouth(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
-							sec3NotClear = true;
-						}
-					} else if (blocks[x][y][z] == Block.Water.getId()) {
+					} else if (Block.getBlock(blocks[x][y][z]) == Block.Water) {
 						if (cullFaceUpWater(x + cx * sizeX, y, z + cz * sizeZ)) {
-							waters.add(Block.Water.getWaterTitle(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
-							sec3NotClear = true;
-						}
-					}
-				}
-			}
-		}
-	}
-
-	public void rebuildChunk4(DimensionalWorld world) {
-		sec4NotClear = false;
-		for (int x = 0; x < sizeX; x++) {
-			for (int z = 0; z < sizeZ; z++) {
-				for (int y = 96; y < 128; y++) {
-					if (Block.getBlock(blocks[x][y][z]) == Block.Torch) {
-						if (cullFaceDown(x, y, z) && cullFaceEast(x, y, z, world) && cullFaceNorth(x, y, z, world)
-								&& cullFaceSouth(x, y, z, world) && cullFaceUpSolidBlock(x, y, z)
-								&& cullFaceWest(x, y, z, world)) {
-							cubes4.add(Block.getBlock(blocks[x][y][z])
-									.getSingleModel(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
-							lights4.add(
-									new Light(new Vector3f((x + cx * sizeX) + 0.5f, y + 0.8f, (z + cz * sizeZ) - 0.5f),
-											new Vector3f(1, 1, 1), new Vector3f(1, 0.1f, 0.09f)));
-							sec4NotClear = true;
-						}
-					} else if (Block.getBlock(blocks[x][y][z]) != Block.Air
-							&& Block.getBlock(blocks[x][y][z]) != Block.Water) {
-						if (cullFaceWest(x + cx * sizeX, y, z + cz * sizeZ, world)) {
-							cubes4.add(Block.getBlock(blocks[x][y][z])
-									.getFaceWest(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
-							sec4NotClear = true;
-						}
-						if (cullFaceEast(x + cx * sizeX, y, z + cz * sizeZ, world)) {
-							cubes4.add(Block.getBlock(blocks[x][y][z])
-									.getFaceEast(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
-							sec4NotClear = true;
-						}
-						if (cullFaceDown(x + cx * sizeX, y, z + cz * sizeZ)) {
-							cubes4.add(Block.getBlock(blocks[x][y][z])
-									.getFaceDown(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
-							sec4NotClear = true;
-						}
-						if (cullFaceUpSolidBlock(x + cx * sizeX, y, z + cz * sizeZ)) {
-							cubes4.add(Block.getBlock(blocks[x][y][z])
-									.getFaceUp(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
-							sec4NotClear = true;
-						}
-						if (cullFaceNorth(x + cx * sizeX, y, z + cz * sizeZ, world)) {
-							cubes4.add(Block.getBlock(blocks[x][y][z])
-									.getFaceNorth(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
-							sec4NotClear = true;
-						}
-						if (cullFaceSouth(x + cx * sizeX, y, z + cz * sizeZ, world)) {
-							cubes4.add(Block.getBlock(blocks[x][y][z])
-									.getFaceSouth(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
-							sec4NotClear = true;
+							water.add(Block.Water.getWaterTitle(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
+							secClear = true;
 						}
 					}
 				}
@@ -596,38 +454,50 @@ public class Chunk {
 	}
 
 	public void render1(GameResources gm) {
-		if (readyToRender1)
+		if (readyToRender1) {
 			gm.getRenderer().renderChunk(cubes1, lights1, gm);
-		else
+			gm.getWaterRenderer().render(water1, gm);
+		} else {
 			gm.getRenderer().renderChunk(cubes1temp, lights1, gm);
+			gm.getWaterRenderer().render(water1, gm);
+		}
 	}
 
 	public void render2(GameResources gm) {
-		if (readyToRender2)
+		if (readyToRender2) {
 			gm.getRenderer().renderChunk(cubes2, lights2, gm);
-		else
+			gm.getWaterRenderer().render(water2, gm);
+		} else {
 			gm.getRenderer().renderChunk(cubes2temp, lights2, gm);
+			gm.getWaterRenderer().render(water2, gm);
+		}
 	}
 
 	public void render3(GameResources gm) {
 		if (readyToRender3) {
 			gm.getRenderer().renderChunk(cubes3, lights3, gm);
-			gm.getWaterRenderer().render(waters, gm);
+			gm.getWaterRenderer().render(water3, gm);
 		} else {
 			gm.getRenderer().renderChunk(cubes3temp, lights3, gm);
-			gm.getWaterRenderer().render(waterstemp, gm);
+			gm.getWaterRenderer().render(water3, gm);
 		}
 	}
 
 	public void render4(GameResources gm) {
-		if (readyToRender4)
+		if (readyToRender4) {
 			gm.getRenderer().renderChunk(cubes4, lights4, gm);
-		else
+			gm.getWaterRenderer().render(water4, gm);
+		} else {
 			gm.getRenderer().renderChunk(cubes4temp, lights4, gm);
+			gm.getWaterRenderer().render(water4, gm);
+		}
 	}
 
 	public void clear() {
-		waters.clear();
+		water1.clear();
+		water2.clear();
+		water3.clear();
+		water4.clear();
 		cubes1.clear();
 		cubes2.clear();
 		cubes3.clear();

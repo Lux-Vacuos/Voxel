@@ -27,7 +27,18 @@ package io.github.guerra24.voxel.client.kernel.core;
 import static org.lwjgl.glfw.GLFW.glfwShowWindow;
 import static org.lwjgl.opengl.GL11.GL_RENDERER;
 import static org.lwjgl.opengl.GL11.GL_VENDOR;
+import static org.lwjgl.opengl.GL11.GL_VERSION;
 import static org.lwjgl.opengl.GL11.glGetString;
+
+import java.io.IOException;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.Enumeration;
+import java.util.Map;
+import java.util.jar.Attributes;
+import java.util.jar.Manifest;
+
+import org.lwjgl.Sys;
 
 import io.github.guerra24.voxel.client.kernel.api.VAPI;
 import io.github.guerra24.voxel.client.kernel.bootstrap.Bootstrap;
@@ -87,9 +98,10 @@ public class Kernel implements IKernel {
 		Logger.log(Thread.currentThread(), "Voxel Game Version: " + KernelConstants.version);
 		Logger.log(Thread.currentThread(), "Build: " + KernelConstants.build);
 		Logger.log(Thread.currentThread(), "Running on: " + Bootstrap.getPlatform());
+		Logger.log(Thread.currentThread(), "LWJGL Version: " + Sys.getVersion());
+		Logger.log(Thread.currentThread(), "OpenGL Version: " + glGetString(GL_VERSION));
 		Logger.log(Thread.currentThread(), "Vendor: " + glGetString(GL_VENDOR));
 		Logger.log(Thread.currentThread(), "Renderer: " + glGetString(GL_RENDERER));
-
 		gameResources = new GameResources();
 		api = new VAPI();
 		api.preInit();

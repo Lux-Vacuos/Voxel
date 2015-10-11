@@ -40,9 +40,9 @@ public class KernelConstants {
 	/**
 	 * Game Settings
 	 */
-	public static boolean debug = false;
-	public static String version = "0.0.4";
-	public static int build = 83;
+	public static boolean debug = true;
+	public static String version = "0.0.5";
+	public static int build = 84;
 	public static int FOV = 90;
 	public static float NEAR_PLANE = 0.1f;
 	public static float FAR_PLANE = 1000f;

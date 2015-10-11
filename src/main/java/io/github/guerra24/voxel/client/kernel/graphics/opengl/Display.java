@@ -65,18 +65,14 @@ import static org.lwjgl.glfw.GLFW.glfwWindowShouldClose;
 import static org.lwjgl.opengl.GL.createCapabilities;
 import static org.lwjgl.opengl.GL11.GL_FALSE;
 import static org.lwjgl.opengl.GL11.GL_TRUE;
-import static org.lwjgl.opengl.GL11.GL_VERSION;
-import static org.lwjgl.opengl.GL11.glGetString;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 import java.nio.ByteBuffer;
 
 import org.lwjgl.BufferUtils;
-import org.lwjgl.Sys;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWCharCallback;
 import org.lwjgl.glfw.GLFWCursorEnterCallback;
@@ -328,12 +324,9 @@ public class Display {
 	public void startUp() {
 		Logger.log(Thread.currentThread(), "Creating Display");
 		try {
-			URL icon1 = getClass().getClassLoader().getResource("assets/icon/icon32.png");
-			URL icon2 = getClass().getClassLoader().getResource("assets/icon/icon64.png");
-
 			String[] IconPath = new String[2];
-			IconPath[0] = icon1.getFile();
-			IconPath[1] = icon2.getFile();
+			IconPath[0] = "assets/icon/icon32.png";
+			IconPath[1] = "assets/icon/icon64.png";
 			ByteBuffer[] icon_array = new ByteBuffer[IconPath.length];
 			for (int i = 0; i < IconPath.length; i++) {
 				icon_array[i] = ByteBuffer.allocateDirect(1);
@@ -345,8 +338,6 @@ public class Display {
 			e.printStackTrace();
 		}
 		createCapabilities();
-		Logger.log(Thread.currentThread(), "LWJGL Version: " + Sys.getVersion());
-		Logger.log(Thread.currentThread(), "OpenGL Version: " + glGetString(GL_VERSION));
 		VoxelGL33.glViewport(0, 0, displayWidth, displayHeight);
 		lastLoopTimeUpdate = getTime();
 		lastLoopTimeRender = getTime();
