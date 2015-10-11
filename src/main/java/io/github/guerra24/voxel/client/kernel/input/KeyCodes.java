@@ -2,6 +2,8 @@ package io.github.guerra24.voxel.client.kernel.input;
 
 import org.lwjgl.glfw.GLFW;
 
+import io.github.guerra24.voxel.client.kernel.util.Logger;
+
 /**
  * KeyCodes
  * 
@@ -280,7 +282,7 @@ public class KeyCodes {
 		// public static final int KEY_SLEEP = 0xDF;
 
 		default:
-			System.out.println("UNKNOWN GLFW KEY CODE: " + glfwKeyCode);
+			Logger.warn(Thread.currentThread(), "UNKNOWN GLFW KEY CODE: " + glfwKeyCode);
 			return Keyboard.KEY_NONE;
 		}
 	}
@@ -557,7 +559,7 @@ public class KeyCodes {
 		// public static final int KEY_SLEEP = 0xDF;
 
 		default:
-			System.out.println("UNKNOWN LWJGL KEY CODE: " + lwjglKeyCode);
+			Logger.warn(Thread.currentThread(), "UNKNOWN LWJGL KEY CODE: " + lwjglKeyCode);
 			return GLFW.GLFW_KEY_UNKNOWN;
 		}
 	}

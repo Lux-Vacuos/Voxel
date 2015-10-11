@@ -31,12 +31,11 @@
  */
 package io.github.guerra24.voxel.client.kernel.input;
 
-import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFW;
-import org.lwjgl.glfw.GLFWimage;
+import org.lwjgl.glfw.GLFWImage;
 import org.lwjgl.system.MemoryUtil;
 
 /**
@@ -100,35 +99,12 @@ public class Cursor {
 		IntBuffer flippedImages = BufferUtils.createIntBuffer(images.limit());
 		flipImages(width, height, numImages, images, flippedImages);
 
-		ByteBuffer pixels = convertARGBIntBuffertoRGBAByteBuffer(width, height, flippedImages);
-		ByteBuffer imageBuffer = GLFWimage.malloc(width, height, pixels);
+		GLFWImage imageBuffer = GLFWImage.malloc();
 
 		cursorHandle = GLFW.glfwCreateCursor(imageBuffer, xHotspot, height - yHotspot - 1);
 
 		if (cursorHandle == MemoryUtil.NULL)
 			throw new RuntimeException("Error creating GLFW cursor");
-	}
-
-	private static ByteBuffer convertARGBIntBuffertoRGBAByteBuffer(int width, int height, IntBuffer imageBuffer) {
-		ByteBuffer pixels = BufferUtils.createByteBuffer(width * height * 4);
-
-		for (int i = 0; i < imageBuffer.limit(); i++) {
-			int argbColor = imageBuffer.get(i);
-
-			byte alpha = (byte) (argbColor >>> 24);
-			byte blue = (byte) (argbColor >>> 16);
-			byte green = (byte) (argbColor >>> 8);
-			byte red = (byte) argbColor;
-
-			pixels.put(red);
-			pixels.put(green);
-			pixels.put(blue);
-			pixels.put(alpha);
-		}
-
-		pixels.flip();
-
-		return pixels;
 	}
 
 	/**

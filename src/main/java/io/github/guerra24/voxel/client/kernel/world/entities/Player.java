@@ -24,17 +24,18 @@
 
 package io.github.guerra24.voxel.client.kernel.world.entities;
 
+import io.github.guerra24.voxel.client.kernel.api.VAPI;
 import io.github.guerra24.voxel.client.kernel.resources.GameResources;
 import io.github.guerra24.voxel.client.kernel.resources.GuiResources;
 import io.github.guerra24.voxel.client.kernel.resources.models.TexturedModel;
 import io.github.guerra24.voxel.client.kernel.util.vector.Vector3f;
-import io.github.guerra24.voxel.client.kernel.world.World;
+import io.github.guerra24.voxel.client.kernel.world.DimensionalWorld;
 import io.github.guerra24.voxel.client.kernel.world.physics.AABB;
 import io.github.guerra24.voxel.client.kernel.world.physics.CollisionType;
 
 public class Player extends Entity implements IEntity {
-	private static final float GRAVITY = -10;
-	private static final float JUMP_POWER = 4;
+	private final float GRAVITY = -10;
+	private final float JUMP_POWER = 4;
 
 	private float upwardsSpeed = 0;
 	private AABB aabb;
@@ -47,15 +48,20 @@ public class Player extends Entity implements IEntity {
 	}
 
 	@Override
-	public void update(float delta, GameResources gm, GuiResources gi, World world) {
+	public void update(float delta, GameResources gm, GuiResources gi, DimensionalWorld world, VAPI api) {
 		aabb.update(getPosition());
 		super.increasePosition(0, upwardsSpeed * delta, 0);
-		if (isCollision(0, world) == CollisionType.NONE) {
-			upwardsSpeed += GRAVITY * delta;
-			isInAir = true;
-		} else {
+		if (isCollision(0, world) == CollisionType.FRONT) {
+			super.increasePosition(0.1f, 0, 0);
+		}
+
+		if (isCollision(0, world) == CollisionType.TOP) {
 			upwardsSpeed = 0;
 			isInAir = false;
+
+		} else {
+			upwardsSpeed += GRAVITY * delta;
+			isInAir = true;
 		}
 	}
 
@@ -85,18 +91,26 @@ public class Player extends Entity implements IEntity {
 		return this;
 	}
 
-	private CollisionType isCollision(int dir, World world) {// This Works >>>
+	private CollisionType isCollision(int direction, DimensionalWorld world) {
 
 		Vector3f v = this.getPosition();
 
-		float tempx = (v.x) / 1 * 1;
+		float tempx = (v.x);
 		int tempX = (int) tempx;
+		if (v.x < 0) {
+			tempx = (v.x);
+			tempX = (int) tempx - 1;
+		}
 
-		float tempz = (v.z) / 1 * 1;
+		float tempz = (v.z);
 		int tempZ = (int) tempz;
+		if (v.z > 0) {
+			tempz = (v.z);
+			tempZ = (int) tempz + 1;
+		}
 
-		float tempy = (v.y) / 1 * 1;
-		int tempY = (int) tempy - 1;
+		float tempy = (v.y);
+		int tempY = (int) tempy - 2;
 
 		int bx = (int) tempX;
 		int by = (int) tempY;
@@ -105,7 +119,8 @@ public class Player extends Entity implements IEntity {
 		CollisionType collisionType = CollisionType.NONE;
 
 		byte b = -99;
-		b = world.getGlobalBlock(world.dim, bx, by, bz);
+		int ground = 0;
+		b = world.getGlobalBlock(world.getChunkDimension(), bx, by, bz);
 
 		if (b != 0) {
 			Vector3f playerPosition = new Vector3f();
@@ -116,14 +131,14 @@ public class Player extends Entity implements IEntity {
 
 			AABB voxel = new AABB(1f, 1f, 1f);
 			Vector3f voxelPosition = new Vector3f();
-			voxelPosition.x = bx;
+			voxelPosition.x = bx - 1;
 			voxelPosition.y = by;
 			voxelPosition.z = bz;
 			voxel.update(voxelPosition);
 
 			if (!AABB.testAABB(aabb, voxel)) {
 				collisionType = CollisionType.TOP;
-				upwardsSpeed = 0;
+				ground = (int) voxelPosition.y;
 			}
 		}
 

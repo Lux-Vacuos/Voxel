@@ -24,14 +24,14 @@
 
 package io.github.guerra24.voxel.client.kernel.graphics.shaders;
 
+import java.util.List;
+
 import io.github.guerra24.voxel.client.kernel.core.KernelConstants;
 import io.github.guerra24.voxel.client.kernel.util.Maths;
 import io.github.guerra24.voxel.client.kernel.util.vector.Matrix4f;
 import io.github.guerra24.voxel.client.kernel.util.vector.Vector3f;
 import io.github.guerra24.voxel.client.kernel.world.entities.Camera;
 import io.github.guerra24.voxel.client.kernel.world.entities.Light;
-
-import java.util.List;
 
 /**
  * Entity Shader
@@ -40,46 +40,22 @@ import java.util.List;
  * @category Rendering
  */
 public class EntityShader extends ShaderProgram {
+
 	/**
-	 * Transformation Matrix ID
+	 * Entity Shader Data
 	 */
-	private int location_transformationMatrix;
-	/**
-	 * Projection Matrix ID
-	 */
-	private int location_projectionMatrix;
-	/**
-	 * Light Position Array ID
-	 */
-	private int location_lightPosition[];
-	/**
-	 * Light Colour Array ID
-	 */
-	private int location_lightColour[];
-	/**
-	 * Attenuation ID
-	 */
-	private int location_attenuations[];
-	/**
-	 * View Matrix ID
-	 */
-	private int location_viewMatrix;
-	/**
-	 * Sky Colour ID
-	 */
-	private int location_skyColour;
-	/**
-	 * Directional Light ID
-	 */
-	private int location_directLightDirection;
-	/**
-	 * World Time
-	 */
-	private int location_time;
-	/**
-	 * Day/Night blend factor
-	 */
-	private int location_blendFactor;
+	private int loc_transformationMatrix;
+	private int loc_projectionMatrix;
+	private int loc_lightPosition[];
+	private int loc_lightColour[];
+	private int loc_attenuations[];
+	private int loc_viewMatrix;
+	private int loc_skyColour;
+	private int loc_directLightDirection;
+	private int loc_time;
+	private int loc_blendFactor;
+	private int loc_texture0;
+	private int loc_depth0;
 
 	/**
 	 * Constructor, creates an Entity Shader
@@ -99,22 +75,34 @@ public class EntityShader extends ShaderProgram {
 
 	@Override
 	protected void getAllUniformLocations() {
-		location_transformationMatrix = super.getUniformLocation("transformationMatrix");
-		location_projectionMatrix = super.getUniformLocation("projectionMatrix");
-		location_viewMatrix = super.getUniformLocation("viewMatrix");
-		location_skyColour = super.getUniformLocation("skyColour");
-		location_directLightDirection = super.getUniformLocation("directLightDirection");
-		location_blendFactor = super.getUniformLocation("blendFactor");
-		location_time = super.getUniformLocation("time");
+		loc_transformationMatrix = super.getUniformLocation("transformationMatrix");
+		loc_projectionMatrix = super.getUniformLocation("projectionMatrix");
+		loc_viewMatrix = super.getUniformLocation("viewMatrix");
+		loc_skyColour = super.getUniformLocation("skyColour");
+		loc_directLightDirection = super.getUniformLocation("directLightDirection");
+		loc_blendFactor = super.getUniformLocation("blendFactor");
+		loc_time = super.getUniformLocation("time");
+		loc_texture0 = super.getUniformLocation("texture0");
+		loc_depth0 = super.getUniformLocation("depth0");
 
-		location_lightPosition = new int[KernelConstants.MAX_LIGHTS];
-		location_lightColour = new int[KernelConstants.MAX_LIGHTS];
-		location_attenuations = new int[KernelConstants.MAX_LIGHTS];
+		loc_lightPosition = new int[KernelConstants.MAX_LIGHTS];
+		loc_lightColour = new int[KernelConstants.MAX_LIGHTS];
+		loc_attenuations = new int[KernelConstants.MAX_LIGHTS];
 		for (int i = 0; i < KernelConstants.MAX_LIGHTS; i++) {
-			location_lightPosition[i] = super.getUniformLocation("lightPosition[" + i + "]");
-			location_lightColour[i] = super.getUniformLocation("lightColour[" + i + "]");
-			location_attenuations[i] = super.getUniformLocation("attenuations[" + i + "]");
+			loc_lightPosition[i] = super.getUniformLocation("lightPosition[" + i + "]");
+			loc_lightColour[i] = super.getUniformLocation("lightColour[" + i + "]");
+			loc_attenuations[i] = super.getUniformLocation("attenuations[" + i + "]");
 		}
+	}
+
+	/**
+	 * Loads Textures ID
+	 * 
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
+	public void connectTextureUnits() {
+		super.loadInt(loc_texture0, 0);
+		super.loadInt(loc_depth0, 1);
 	}
 
 	/**
@@ -129,7 +117,7 @@ public class EntityShader extends ShaderProgram {
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void loadSkyColour(float r, float g, float b) {
-		super.loadVector(location_skyColour, new Vector3f(r, g, b));
+		super.loadVector(loc_skyColour, new Vector3f(r, g, b));
 	}
 
 	/**
@@ -140,7 +128,7 @@ public class EntityShader extends ShaderProgram {
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void loadTransformationMatrix(Matrix4f matrix) {
-		super.loadMatrix(location_transformationMatrix, matrix);
+		super.loadMatrix(loc_transformationMatrix, matrix);
 	}
 
 	/**
@@ -151,7 +139,7 @@ public class EntityShader extends ShaderProgram {
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void loadDirectLightDirection(Vector3f direction) {
-		super.loadVector(location_directLightDirection, direction);
+		super.loadVector(loc_directLightDirection, direction);
 	}
 
 	/**
@@ -162,7 +150,7 @@ public class EntityShader extends ShaderProgram {
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void loadblendFactor(float factor) {
-		super.loadFloat(location_blendFactor, factor);
+		super.loadFloat(loc_blendFactor, factor);
 	}
 
 	/**
@@ -173,7 +161,7 @@ public class EntityShader extends ShaderProgram {
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void loadTime(float time) {
-		super.loadFloat(location_time, time);
+		super.loadFloat(loc_time, time);
 	}
 
 	/**
@@ -186,14 +174,14 @@ public class EntityShader extends ShaderProgram {
 	public void loadLights(List<Light> lights) {
 		for (int i = 0; i < KernelConstants.MAX_LIGHTS; i++) {
 			if (i < lights.size()) {
-				super.loadVector(location_lightPosition[i], lights.get(i).getPosition());
-				super.loadVector(location_lightColour[i], lights.get(i).getColour());
-				super.loadVector(location_attenuations[i], lights.get(i).getAttenuation());
+				super.loadVector(loc_lightPosition[i], lights.get(i).getPosition());
+				super.loadVector(loc_lightColour[i], lights.get(i).getColour());
+				super.loadVector(loc_attenuations[i], lights.get(i).getAttenuation());
 			} else {
-				super.loadVector(location_lightPosition[i], new Vector3f(0, -128, 0));
-				super.loadVector(location_lightColour[i],
+				super.loadVector(loc_lightPosition[i], new Vector3f(0, -128, 0));
+				super.loadVector(loc_lightColour[i],
 						new Vector3f(0.0000000000000000001f, 0.0000000000000000001f, 0.0000000000000000001f));
-				super.loadVector(location_attenuations[i],
+				super.loadVector(loc_attenuations[i],
 						new Vector3f(0.0000000000000000001f, 0.0000000000000000001f, 0.0000000000000000001f));
 			}
 		}
@@ -208,16 +196,16 @@ public class EntityShader extends ShaderProgram {
 	 */
 	public void loadviewMatrix(Camera camera) {
 		Matrix4f viewMatrix = Maths.createViewMatrix(camera);
-		super.loadMatrix(location_viewMatrix, viewMatrix);
+		super.loadMatrix(loc_viewMatrix, viewMatrix);
 	}
 
 	/**
 	 * Loads Projection Matrix to the shader
 	 * 
-	 * @param projection
+	 * @param projection Projection Matrix
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void loadProjectionMatrix(Matrix4f projection) {
-		super.loadMatrix(location_projectionMatrix, projection);
+		super.loadMatrix(loc_projectionMatrix, projection);
 	}
 }

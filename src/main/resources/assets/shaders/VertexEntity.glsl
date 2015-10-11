@@ -31,93 +31,31 @@ in vec3 normal;
 out vec2 pass_textureCoords;
 out vec3 surfaceNormal;
 out vec3 toLightVector[8];
-out vec3 lightIntensity;
 out float visibility;
 
 uniform mat4 transformationMatrix;
 uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;
 uniform vec3 lightPosition[8];
-uniform vec3 directLightDirection;
-uniform float blendFactor;
-uniform float time;
 
 const float density = 0.0023;
 const float gradient = 10.0;
 
-float CalcDirectionalLightFactor(vec3 lightDirection, vec3 normal) {
-    float DiffuseFactor = dot(normalize(normal), -lightDirection);
-
-    if (DiffuseFactor > 0) {
-        return DiffuseFactor;
-    }
-    else {
-        return 0.0;
-    }
-}
-
-float CalcPointLightFactor(vec3 lightPosition, vec3 normal, vec3 position) {
-    vec3 LightDirection = position - lightPosition;
-    float Distance = length(LightDirection);
-    LightDirection = normalize(LightDirection);
-
-    float Attenuation = 0.1 * Distance + //linear
-                        0.001 * Distance * Distance; //exponential
-
-    return CalcDirectionalLightFactor(LightDirection, normal) / Attenuation;
-}
 
 void main() {
 
-	struct DirectionalLight {
-        vec3 Color;
-        vec3 AmbientIntensity;
-        vec3 DiffuseIntensity;
-        vec3 Direction;
-    } Light0;
-    
-    Light0.Color = vec3(1.0, 1.0, 1.0);
-    Light0.AmbientIntensity = vec3(0.1, 0.1, 0.1);
-    Light0.DiffuseIntensity = vec3(0.8, 0.8, 0.8);
-    Light0.Direction = directLightDirection;
-
 	vec4 worldPosition = transformationMatrix * vec4(position, 1.0);
-	
 	vec4 positionRelativeToCam = viewMatrix * worldPosition;
 	gl_Position = projectionMatrix * positionRelativeToCam;
 	pass_textureCoords = textureCoords;
 	
 	surfaceNormal = (transformationMatrix * vec4(normal, 0.0)).xyz;
 	
-	//Dynamic Light
 	for(int i=0;i<8;i++) {
 		toLightVector[i]= lightPosition[i] - worldPosition.xyz;
 	}
 	
-	vec3 AmbientColor = Light0.AmbientIntensity * Light0.Color;
-    vec3 DiffuseColor = Light0.Color * Light0.DiffuseIntensity * CalcDirectionalLightFactor(Light0.Direction, surfaceNormal);
-    
-    vec3 Day = vec3(0,0,0);
-    vec3 Night = vec3(0,0,0);
-    
-    if (time >= 0 && time < 5000) {
-		Day = AmbientColor;
-		Night = AmbientColor;
-	} else if (time >= 5000 && time < 8000) {
-		Day = AmbientColor;
-		Night = DiffuseColor + AmbientColor;
-	} else if (time >= 8000 && time < 21000) {
-		Day = DiffuseColor + AmbientColor;
-		Night = DiffuseColor + AmbientColor;
-	} else {
-		Day = DiffuseColor + AmbientColor;
-		Night = AmbientColor;
-	}
-    
-	lightIntensity = mix(Day, Night, blendFactor);
-	
 	float distance = length(positionRelativeToCam.xyz);
 	visibility = exp(-pow((distance*density),gradient));
 	visibility = clamp(visibility,0.0,1.1);
-	
 }

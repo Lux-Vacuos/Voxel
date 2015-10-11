@@ -36,12 +36,11 @@ uniform sampler2D dudvMap;
 uniform sampler2D normalMap;
 uniform sampler2D reflectionTexture;
 uniform float moveFactor;
-uniform vec3 lightColour;
 uniform vec3 skyColour;
 
 const float waveStrength = 0.02;
 const float shineDamper = 20.0;
-const float reflectivity = 0.6;
+const float reflectivity = 20;
 
 void main(void) {
 

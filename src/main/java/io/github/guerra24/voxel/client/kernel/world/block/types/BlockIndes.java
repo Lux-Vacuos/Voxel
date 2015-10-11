@@ -26,11 +26,11 @@ package io.github.guerra24.voxel.client.kernel.world.block.types;
 
 import io.github.guerra24.voxel.client.kernel.resources.models.WaterTile;
 import io.github.guerra24.voxel.client.kernel.util.vector.Vector3f;
-import io.github.guerra24.voxel.client.kernel.world.block.Block;
 import io.github.guerra24.voxel.client.kernel.world.block.BlockEntity;
 import io.github.guerra24.voxel.client.kernel.world.block.BlocksResources;
+import io.github.guerra24.voxel.client.kernel.world.block.IBlock;
 
-public class BlockIndes extends Block {
+public class BlockIndes extends IBlock {
 
 	@Override
 	public byte getId() {
@@ -38,8 +38,7 @@ public class BlockIndes extends Block {
 	}
 
 	@Override
-	public BlockEntity getFaceUp(Vector3f pos) {
-		return new BlockEntity(BlocksResources.cubeIndesUP, pos, 0, 0, 0, 1);
+	public BlockEntity getFaceUp(Vector3f pos) {		return new BlockEntity(BlocksResources.cubeIndesUP, pos, 0, 0, 0, 1);
 	}
 
 	@Override
@@ -75,6 +74,11 @@ public class BlockIndes extends Block {
 	@Override
 	public BlockEntity getSingleModel(Vector3f pos) {
 		return null;
+	}
+
+	@Override
+	public boolean usesSingleModel() {
+		return false;
 	}
 
 }

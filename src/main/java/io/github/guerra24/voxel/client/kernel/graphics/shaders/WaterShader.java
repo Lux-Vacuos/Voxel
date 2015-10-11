@@ -29,7 +29,6 @@ import io.github.guerra24.voxel.client.kernel.util.Maths;
 import io.github.guerra24.voxel.client.kernel.util.vector.Matrix4f;
 import io.github.guerra24.voxel.client.kernel.util.vector.Vector3f;
 import io.github.guerra24.voxel.client.kernel.world.entities.Camera;
-import io.github.guerra24.voxel.client.kernel.world.entities.Light;
 
 /**
  * Water Shader
@@ -39,60 +38,23 @@ import io.github.guerra24.voxel.client.kernel.world.entities.Light;
  */
 public class WaterShader extends ShaderProgram {
 	/**
-	 * Model View Matrix ID
+	 * Water Shader Data
 	 */
 	private int location_modelMatrix;
-	/**
-	 * View Matrix ID
-	 */
 	private int location_viewMatrix;
-	/**
-	 * Projection Matrix ID
-	 */
 	private int location_projectionMatrix;
-	/**
-	 * DUDVMap Texture ID
-	 */
 	private int location_texture;
-	/**
-	 * DUDVMap Texture ID
-	 */
 	private int location_dudvMap;
-	/**
-	 * NormalMap Texture ID
-	 */
 	private int location_normalMap;
-	/**
-	 * Move Factor ID
-	 */
 	private int location_moveFactor;
-	/**
-	 * Camera Position ID
-	 */
 	private int location_cameraPosition;
-	/**
-	 * Directional Light Direction ID
-	 */
 	private int location_directLightDirection;
-	/**
-	 * Light Colour ID
-	 * 
-	 * @deprecated
-	 */
-	private int location_lightColour;
-	/**
-	 * Light Position ID
-	 * 
-	 * @deprecated
-	 */
-	private int location_lightPosition;
-	/**
-	 * SkyColour ID
-	 */
 	private int location_skyColour;
 
 	/**
-	 * Constructor, Create a Water Shader
+	 * Constructor
+	 * 
+	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public WaterShader() {
 		super(KernelConstants.VERTEX_FILE_WATER, KernelConstants.FRAGMENT_FILE_WATER);
@@ -113,8 +75,6 @@ public class WaterShader extends ShaderProgram {
 		location_normalMap = getUniformLocation("normalMap");
 		location_moveFactor = getUniformLocation("moveFactor");
 		location_cameraPosition = getUniformLocation("cameraPosition");
-		location_lightColour = getUniformLocation("lightColour");
-		location_lightPosition = getUniformLocation("lightPosition");
 		location_directLightDirection = super.getUniformLocation("directLightDirection");
 		location_skyColour = super.getUniformLocation("skyColour");
 	}
@@ -143,18 +103,6 @@ public class WaterShader extends ShaderProgram {
 		super.loadInt(location_dudvMap, 0);
 		super.loadInt(location_normalMap, 1);
 		super.loadInt(location_texture, 2);
-	}
-
-	/**
-	 * Loads the List of Lights to the shader
-	 * 
-	 * @param lights
-	 *            List of Lights
-	 * @author Guerra24 <pablo230699@hotmail.com>
-	 */
-	public void loadLight(Light light) {
-		super.loadVector(location_lightColour, light.getColour());
-		super.loadVector(location_lightPosition, light.getPosition());
 	}
 
 	/**

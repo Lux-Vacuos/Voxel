@@ -24,42 +24,21 @@
 
 #version 330 core
 
-in vec2 pass_textureCoords;
-in vec3 surfaceNormal;
-in vec3 toLightVector[8];
-in vec3 lightIntensity;
-in float visibility;
+in vec3 position;
+in vec2 textureCoords;
 
-out vec4 out_Color;
+out vec2 pass_textureCoords;
 
-uniform sampler2D textureSampler;
-uniform vec3 skyColour;
-uniform vec3 lightColour[8];
-uniform vec3 attenuations[8];
+uniform mat4 transformationMatrix;
+uniform mat4 projectionMatrix;
+uniform mat4 viewMatrix;
 
-void main(void) {
-
-	vec3 unitNormal = normalize(surfaceNormal);
+void main(void){
+	vec4 worldPosition = transformationMatrix * vec4(position, 1.0);
 	
-	vec4 totalDiffuse = vec4(0.0);
+	vec4 positionRelativeToCam = viewMatrix * worldPosition;
+	gl_Position = projectionMatrix * positionRelativeToCam;
 	
-	// code for dynamic light
-	for(int i=0;i<8;i++) {
-		float distance = length(toLightVector[i]);
-		float attFactor = attenuations[i].x + (attenuations[i].y * distance) + (attenuations[i].z * distance * distance);
-		vec3 unitLightVector = normalize(toLightVector[i]);
-		float nDotl = dot(unitNormal,unitLightVector);
-		float brightness = max(nDotl, 0.0);
-		totalDiffuse.xyz = totalDiffuse.xyz + (brightness * lightColour[i])/attFactor;
-	}
-	vec4 light = clamp(vec4(lightIntensity, 1.0), 0.0, 1.0);
-	totalDiffuse = totalDiffuse + light;
-	totalDiffuse = clamp(totalDiffuse, 0.0, 1.0);
-	
-	vec4 textureColour = texture(textureSampler, pass_textureCoords);
-	if(textureColour.a<0.5) {
-		discard;
-	}
-	out_Color = totalDiffuse * textureColour;
-	out_Color = mix(vec4(skyColour,1.0),out_Color,visibility);
+	pass_textureCoords = textureCoords;
+
 }
