@@ -22,7 +22,6 @@
  * SOFTWARE.
  */
 
-
 package io.github.guerra24.voxel.client.kernel.world;
 
 import java.util.List;
@@ -33,16 +32,69 @@ import io.github.guerra24.voxel.client.kernel.resources.GuiResources;
 import io.github.guerra24.voxel.client.kernel.world.entities.IEntity;
 import io.github.guerra24.voxel.client.kernel.world.entities.Player;
 
+/**
+ * Mob Manager Controller
+ * 
+ * @author Guerra24 <pablo230699@hotmail.com>
+ * @category World
+ *
+ */
 public interface IMobManagerController {
+	/**
+	 * Initialize Data
+	 * 
+	 * @param gm
+	 *            Game Resources
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public void init(GameResources gm);
 
+	/**
+	 * Update Data
+	 * 
+	 * @param delta
+	 *            Game Delta
+	 * @param gm
+	 *            Game Resources
+	 * @param gi
+	 *            Gui Resources
+	 * @param world
+	 *            Dimensional World
+	 * @param api
+	 *            Voxel API
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public void update(float delta, GameResources gm, GuiResources gi, DimensionalWorld world, VAPI api);
 
+	/**
+	 * Dispose Data
+	 * 
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public void dispose();
 
+	/**
+	 * Register a mob
+	 * 
+	 * @param mob
+	 *            Mob
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public void registerMob(IEntity mob);
 
+	/**
+	 * Get Mobs
+	 * 
+	 * @return List of mobs
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public List<IEntity> getMobs();
 
+	/**
+	 * Get Player
+	 * 
+	 * @return Player
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public Player getPlayer();
 }

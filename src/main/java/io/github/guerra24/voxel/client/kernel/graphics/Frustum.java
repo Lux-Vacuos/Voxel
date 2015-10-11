@@ -38,25 +38,36 @@ import io.github.guerra24.voxel.client.kernel.util.vector.Vector3f;
  * 
  * @author Ron Sullivan (modified by Thomas Hourdel(modified by Guerra24))
  *         <thomas.hourdel@libertysurf.fr>
+ * @category Rendering
  */
 public class Frustum {
 
-	public static final int RIGHT = 0;
-	public static final int LEFT = 1;
-	public static final int BOTTOM = 2;
-	public static final int TOP = 3;
-	public static final int BACK = 4;
-	public static final int FRONT = 5;
-	public static final int A = 0;
-	public static final int B = 1;
-	public static final int C = 2;
-	public static final int D = 3;
+	/**
+	 * Frustum Culling Data
+	 */
+	private final int RIGHT = 0;
+	private final int LEFT = 1;
+	private final int BOTTOM = 2;
+	private final int TOP = 3;
+	private final int BACK = 4;
+	private final int FRONT = 5;
+	private final int A = 0;
+	private final int B = 1;
+	private final int C = 2;
+	private final int D = 3;
+	private float[][] m_Frustum = new float[6][4];
+	private Matrix4f clip_ = new Matrix4f();
+	private FloatBuffer clip_b;
 
-	float[][] m_Frustum = new float[6][4];
-	Matrix4f clip_ = new Matrix4f();
-
-	FloatBuffer clip_b;
-
+	/**
+	 * Normalize Frustum Plane
+	 * 
+	 * @param frustum
+	 *            2D float frustum
+	 * @param side
+	 *            side
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public void normalizePlane(float[][] frustum, int side) {
 		float magnitude = (float) Math.sqrt(frustum[side][A] * frustum[side][A] + frustum[side][B] * frustum[side][B]
 				+ frustum[side][C] * frustum[side][C]);
@@ -67,6 +78,13 @@ public class Frustum {
 		frustum[side][D] /= magnitude;
 	}
 
+	/**
+	 * Update Frustum
+	 * 
+	 * @param gm
+	 *            GameResources
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public void calculateFrustum(GameResources gm) {
 		float[] clip = new float[16];
 
@@ -109,6 +127,18 @@ public class Frustum {
 		normalizePlane(m_Frustum, FRONT);
 	}
 
+	/**
+	 * Calculate a point in Frustum
+	 * 
+	 * @param x
+	 *            X Position
+	 * @param y
+	 *            Y Position
+	 * @param z
+	 *            Z Position
+	 * @return true if in Frustum
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public boolean pointInFrustum(float x, float y, float z) {
 		for (int i = 0; i < 6; i++) {
 			if (m_Frustum[i][A] * x + m_Frustum[i][B] * y + m_Frustum[i][C] * z + m_Frustum[i][D] <= 0) {
@@ -118,6 +148,20 @@ public class Frustum {
 		return true;
 	}
 
+	/**
+	 * Calculate a sphere in Frustum
+	 * 
+	 * @param x
+	 *            X Position
+	 * @param y
+	 *            Y Position
+	 * @param z
+	 *            Z Position
+	 * @param radius
+	 *            Sphere Radius
+	 * @return true if in Frustum
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public boolean sphereInFrustum(float x, float y, float z, float radius) {
 		for (int i = 0; i < 6; i++) {
 			if (m_Frustum[i][A] * x + m_Frustum[i][B] * y + m_Frustum[i][C] * z + m_Frustum[i][D] <= -radius) {
@@ -128,10 +172,34 @@ public class Frustum {
 		return true;
 	}
 
+	/**
+	 * Calculate a cube in Frustum
+	 * 
+	 * @param center
+	 *            Center of the Cube
+	 * @param size
+	 *            Size of the cube
+	 * @return true if in Frustum
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public boolean cubeInFrustum(Vector3f center, float size) {
 		return cubeInFrustum(center.x, center.y, center.z, size);
 	}
 
+	/**
+	 * Calculate a cube in Frustum
+	 * 
+	 * @param x
+	 *            X Position
+	 * @param y
+	 *            Y Position
+	 * @param z
+	 *            Z Position
+	 * @param size
+	 *            Size of the cube
+	 * @return true if in Frustum
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public boolean cubeInFrustum(float x, float y, float z, float size) {
 		for (int i = 0; i < 6; i++) {
 			if (m_Frustum[i][A] * (x - size) + m_Frustum[i][B] * (y - size) + m_Frustum[i][C] * (z - size)
@@ -164,6 +232,24 @@ public class Frustum {
 		return true;
 	}
 
+	/**
+	 * Calculate a cube in Frustum
+	 * 
+	 * @param x1
+	 *            X1 Position
+	 * @param y1
+	 *            Y1 Postion
+	 * @param z1
+	 *            Z1 Position
+	 * @param x2
+	 *            X2 Position
+	 * @param y2
+	 *            Y2 Position
+	 * @param z2
+	 *            Z2 Position
+	 * @return true if in Frustum
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public boolean cubeInFrustum(float x1, float y1, float z1, float x2, float y2, float z2) {
 		for (int i = 0; i < 6; i++) {
 			if ((this.m_Frustum[i][A] * x1 + this.m_Frustum[i][B] * y1 + this.m_Frustum[i][C] * z1
@@ -189,7 +275,9 @@ public class Frustum {
 	}
 
 	/**
-	 * Frustum constructor, creates FloatBuffer
+	 * Frustum constructor
+	 * 
+	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public Frustum() {
 		clip_b = BufferUtils.createFloatBuffer(16);

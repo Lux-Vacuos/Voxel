@@ -25,11 +25,13 @@
 package io.github.guerra24.voxel.client.kernel.core;
 
 import static org.lwjgl.glfw.GLFW.glfwShowWindow;
+import static org.lwjgl.opengl.GL11.GL_RENDERER;
+import static org.lwjgl.opengl.GL11.GL_VENDOR;
+import static org.lwjgl.opengl.GL11.glGetString;
 
 import io.github.guerra24.voxel.client.kernel.api.VAPI;
 import io.github.guerra24.voxel.client.kernel.bootstrap.Bootstrap;
 import io.github.guerra24.voxel.client.kernel.graphics.opengl.Display;
-import io.github.guerra24.voxel.client.kernel.graphics.opengl.SystemInfo;
 import io.github.guerra24.voxel.client.kernel.input.Keyboard;
 import io.github.guerra24.voxel.client.kernel.resources.GameResources;
 import io.github.guerra24.voxel.client.kernel.resources.GuiResources;
@@ -45,49 +47,24 @@ import io.github.guerra24.voxel.client.kernel.world.block.BlocksResources;
  */
 public class Kernel implements IKernel {
 
-	/**
-	 * Contains the Game Resources, all the textures, models and other type of
-	 * data
-	 */
-	private GameResources gameResources;
+	public static float renderCalls = 0;
+	public static float renderCallsPerFrame = 0;
+	public static float totalRenderCalls = 0;
+	public static int errorTime = 0;
 
 	/**
-	 * Contains the GUI/UI Resources
-	 */
-	private GuiResources guiResources;
-	/**
-	 * Contains and Handles the Game World
-	 */
-	private WorldHandler worlds;
-	/**
-	 * Render calls
-	 */
-	public static float renderCalls = 0;
-	/**
-	 * Render Calls Per Frame
-	 */
-	public static float renderCallsPerFrame = 0;
-	/**
-	 * Total Render Calls
-	 */
-	public static float totalRenderCalls = 0;
-	/**
-	 * Error Check timing
-	 */
-	public static int errorTime = 0;
-	/**
-	 * World Thread
+	 * Game Threads
 	 */
 	public static WorldThread worldThread;
 	public static WorldThread1 worldThread2;
-	/**
-	 * Display
-	 */
-	private Display display;
 
 	/**
-	 * Modding API
+	 * Game Data
 	 */
+	private GameResources gameResources;
+	private GuiResources guiResources;
+	private WorldHandler worlds;
+	private Display display;
 	private VAPI api;
 
 	/**
@@ -96,7 +73,7 @@ public class Kernel implements IKernel {
 	 * @param errorTest
 	 *            If running JUnit Test
 	 */
-	public Kernel(boolean errorTest) {
+	public Kernel() {
 		mainLoop();
 	}
 
@@ -107,10 +84,11 @@ public class Kernel implements IKernel {
 		Logger.log(Thread.currentThread(), "Voxel Game Version: " + KernelConstants.version);
 		Logger.log(Thread.currentThread(), "Build: " + KernelConstants.build);
 		Logger.log(Thread.currentThread(), "Running on: " + Bootstrap.getPlatform());
+		Logger.log(Thread.currentThread(), "Vendor: " + glGetString(GL_VENDOR));
+		Logger.log(Thread.currentThread(), "Renderer: " + glGetString(GL_RENDERER));
 		display = new Display();
 		display.initDsiplay(1280, 720);
 		display.startUp();
-		SystemInfo.printSystemInfo();
 
 		gameResources = new GameResources();
 		api = new VAPI();
@@ -137,12 +115,7 @@ public class Kernel implements IKernel {
 		worldThread2.setGuiResources(guiResources);
 		worldThread2.start();
 		api.init();
-		// byte[] user = Launcher.user.getBytes(Charset.forName("UTF-8"));
-		// Logger.log(Thread.currentThread(), "User: " + Launcher.user +
-		// "UUID: "
-		// + UUID.nameUUIDFromBytes(user));
 		api.postInit();
-		KernelConstants.loaded = true;
 		glfwShowWindow(Display.getWindow());
 		gameResources.getSoundSystem().play("menu1");
 	}

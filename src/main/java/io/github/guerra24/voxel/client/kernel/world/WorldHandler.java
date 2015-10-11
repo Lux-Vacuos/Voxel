@@ -22,7 +22,6 @@
  * SOFTWARE.
  */
 
-
 package io.github.guerra24.voxel.client.kernel.world;
 
 import java.util.HashMap;
@@ -32,15 +31,42 @@ import java.util.Random;
 import io.github.guerra24.voxel.client.kernel.api.VAPI;
 import io.github.guerra24.voxel.client.kernel.resources.GameResources;
 
+/**
+ * World Handler
+ * 
+ * @author Guerra24 <pablo230699@hotmail.com>
+ * @category World
+ */
 public class WorldHandler {
 
+	/**
+	 * World Hanlder Data
+	 */
 	private Map<Integer, DimensionalWorld> worlds;
 	private int activeWorld;
 
+	/**
+	 * Constructor
+	 * 
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public WorldHandler() {
 		worlds = new HashMap<Integer, DimensionalWorld>();
 	}
 
+	/**
+	 * Add a world
+	 * 
+	 * @param id
+	 *            Id of the World
+	 * @param seed
+	 *            Seed of the World
+	 * @param api
+	 *            Voxel API
+	 * @param gm
+	 *            Game Resources
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public void addWorld(int id, Random seed, VAPI api, GameResources gm) {
 		if (!worldExist(id)) {
 			DimensionalWorld world = new DimensionalWorld();
@@ -50,6 +76,14 @@ public class WorldHandler {
 		activeWorld = id;
 	}
 
+	/**
+	 * Check if a world Exist
+	 * 
+	 * @param id
+	 *            World ID
+	 * @return true if exist
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public boolean worldExist(int id) {
 		if (worlds.get(id) != null)
 			return true;
@@ -57,14 +91,37 @@ public class WorldHandler {
 			return false;
 	}
 
+	/**
+	 * Remove World
+	 * 
+	 * @param world
+	 *            World ID
+	 * @param gm
+	 *            Game Resources
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public void removeWorld(int world, GameResources gm) {
 		worlds.get(world).clearChunkDimension(gm);
 	}
 
+	/**
+	 * Get Dimensional World
+	 * 
+	 * @param world
+	 *            World ID
+	 * @return Dimensional World
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public DimensionalWorld getWorld(int world) {
 		return worlds.get(world);
 	}
 
+	/**
+	 * Get Active World
+	 * 
+	 * @return Active World ID
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public int getActiveWorld() {
 		return activeWorld;
 	}

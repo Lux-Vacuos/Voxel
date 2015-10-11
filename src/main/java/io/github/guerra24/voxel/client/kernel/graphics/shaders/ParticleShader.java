@@ -22,7 +22,6 @@
  * SOFTWARE.
  */
 
-
 package io.github.guerra24.voxel.client.kernel.graphics.shaders;
 
 import io.github.guerra24.voxel.client.kernel.core.KernelConstants;
@@ -30,21 +29,35 @@ import io.github.guerra24.voxel.client.kernel.util.Maths;
 import io.github.guerra24.voxel.client.kernel.util.vector.Matrix4f;
 import io.github.guerra24.voxel.client.kernel.world.entities.Camera;
 
+/**
+ * Particle Shader
+ * 
+ * @author Guerra24 <pablo230699@hotmail.com>
+ * @category Rendering
+ */
 public class ParticleShader extends ShaderProgram {
 
-	private int location_projectionMatrix;
-	private int location_transformationMatrix;
-	private int location_viewMatrix;
+	/**
+	 * Particle Shader Data
+	 */
+	private int loc_projectionMatrix;
+	private int loc_transformationMatrix;
+	private int loc_viewMatrix;
 
+	/**
+	 * Constructor
+	 * 
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public ParticleShader() {
 		super(KernelConstants.VERTEX_FILE_PARTICLE, KernelConstants.FRAGMENT_FILE_PARTICLE);
 	}
 
 	@Override
 	protected void getAllUniformLocations() {
-		location_projectionMatrix = super.getUniformLocation("projectionMatrix");
-		location_transformationMatrix = super.getUniformLocation("transformationMatrix");
-		location_viewMatrix = super.getUniformLocation("viewMatrix");
+		loc_projectionMatrix = super.getUniformLocation("projectionMatrix");
+		loc_transformationMatrix = super.getUniformLocation("transformationMatrix");
+		loc_viewMatrix = super.getUniformLocation("viewMatrix");
 	}
 
 	@Override
@@ -61,7 +74,7 @@ public class ParticleShader extends ShaderProgram {
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void loadTransformationMatrix(Matrix4f matrix) {
-		super.loadMatrix(location_transformationMatrix, matrix);
+		super.loadMatrix(loc_transformationMatrix, matrix);
 	}
 
 	/**
@@ -73,16 +86,16 @@ public class ParticleShader extends ShaderProgram {
 	 */
 	public void loadviewMatrix(Camera camera) {
 		Matrix4f viewMatrix = Maths.createViewMatrix(camera);
-		super.loadMatrix(location_viewMatrix, viewMatrix);
+		super.loadMatrix(loc_viewMatrix, viewMatrix);
 	}
 
 	/**
 	 * Loads Projection Matrix to the shader
 	 * 
-	 * @param projection
+	 * @param projection Projection Matrix
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void loadProjectionMatrix(Matrix4f projection) {
-		super.loadMatrix(location_projectionMatrix, projection);
+		super.loadMatrix(loc_projectionMatrix, projection);
 	}
 }

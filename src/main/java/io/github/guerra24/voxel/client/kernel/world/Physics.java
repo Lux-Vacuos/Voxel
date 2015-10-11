@@ -22,22 +22,50 @@
  * SOFTWARE.
  */
 
-
 package io.github.guerra24.voxel.client.kernel.world;
 
 import io.github.guerra24.voxel.client.kernel.resources.GameResources;
 
+/**
+ * Physics
+ * 
+ * @author Guerra24 <pablo230699@hotmail.com>
+ * @category World
+ */
 public class Physics {
+	/**
+	 * Physics Data
+	 */
 	private DefaultMobManager mobManager;
 
+	/**
+	 * Constructor
+	 * 
+	 * @param gm
+	 *            Game Resources
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public Physics(GameResources gm) {
 		mobManager = new VoxelMobManager(gm);
 	}
 
+	/**
+	 * Default Mob Manager
+	 * 
+	 * @return Mob Manager
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public DefaultMobManager getMobManager() {
 		return mobManager;
 	}
 
+	/**
+	 * Set Mob Manager
+	 * 
+	 * @param mobManager
+	 *            Mob Manager
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public void setMobManager(DefaultMobManager mobManager) {
 		this.mobManager = mobManager;
 	}

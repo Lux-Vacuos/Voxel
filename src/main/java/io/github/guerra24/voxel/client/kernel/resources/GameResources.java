@@ -64,6 +64,10 @@ import io.github.guerra24.voxel.client.kernel.world.entities.Mob;
  * @category Assets
  */
 public class GameResources {
+
+	/**
+	 * GameResources Data
+	 */
 	public List<GuiTexture> guis = new ArrayList<GuiTexture>();
 	public List<GuiTexture> guis2 = new ArrayList<GuiTexture>();
 	public List<GuiTexture> guis3 = new ArrayList<GuiTexture>();

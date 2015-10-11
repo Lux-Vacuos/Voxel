@@ -22,7 +22,6 @@
  * SOFTWARE.
  */
 
-
 package io.github.guerra24.voxel.client.kernel.particle;
 
 import io.github.guerra24.voxel.client.kernel.resources.Loader;
@@ -32,18 +31,40 @@ import io.github.guerra24.voxel.client.kernel.resources.models.TexturedModel;
 import io.github.guerra24.voxel.client.kernel.util.Maths;
 import io.github.guerra24.voxel.client.kernel.util.vector.Vector3f;
 
+/**
+ * Particle Emiter Point
+ * 
+ * @author Guerra24 <pablo230699@hotmail.com>
+ * @category Particle
+ */
 public class EmiterPoint {
 
+	/**
+	 * Emiter Point Data
+	 */
 	private Vector3f origin;
 	private TexturedModel model;
 	private float spawnRationPerTick = 0;
 	private int max;
-
 	private float x, y, z;
-
 	private RawModel rModel;
 	private ModelTexture texture;
 
+	/**
+	 * Constructor
+	 * 
+	 * @param origin
+	 *            Origin of particles
+	 * @param loader
+	 *            Loader
+	 * @param x
+	 *            Origin X
+	 * @param y
+	 *            Origin Y
+	 * @param z
+	 *            Origin Z
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public EmiterPoint(Vector3f origin, Loader loader, float x, float y, float z) {
 		this.origin = origin;
 		this.x = x;
@@ -55,6 +76,13 @@ public class EmiterPoint {
 		max = 40;
 	}
 
+	/**
+	 * Spaw Particles
+	 * 
+	 * @param controller
+	 *            ParticleController
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public void spawnParticles(ParticleController controller) {
 		origin = new Vector3f(x, y, z);
 		spawnRationPerTick++;

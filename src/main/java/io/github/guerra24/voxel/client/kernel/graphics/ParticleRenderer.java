@@ -22,7 +22,6 @@
  * SOFTWARE.
  */
 
-
 package io.github.guerra24.voxel.client.kernel.graphics;
 
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
@@ -47,14 +46,39 @@ import io.github.guerra24.voxel.client.kernel.resources.models.TexturedModel;
 import io.github.guerra24.voxel.client.kernel.util.Maths;
 import io.github.guerra24.voxel.client.kernel.util.vector.Matrix4f;
 
+/**
+ * Particle Renderer
+ * 
+ * @author Guerra24 <pablo230699@hotmail.com>
+ *
+ */
 public class ParticleRenderer {
 
+	/**
+	 * ParticleRenderer Data
+	 */
 	private ParticleShader shader;
 
+	/**
+	 * Constructor
+	 * 
+	 * @param shader
+	 *            Particle Shader
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public ParticleRenderer(ParticleShader shader) {
 		this.shader = shader;
 	}
 
+	/**
+	 * Render Particles
+	 * 
+	 * @param particles
+	 *            Batch of particles
+	 * @param gm
+	 *            GameResources
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public void render(Map<TexturedModel, List<Particle>> particles, GameResources gm) {
 		for (TexturedModel model : particles.keySet()) {
 			prepareTexturedModel(model, gm);
@@ -71,6 +95,7 @@ public class ParticleRenderer {
 	 * Prepares the Entity Textured Model and binds the VAOs
 	 * 
 	 * @param model
+	 *            TexturedModel
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	private void prepareTexturedModel(TexturedModel model, GameResources gm) {

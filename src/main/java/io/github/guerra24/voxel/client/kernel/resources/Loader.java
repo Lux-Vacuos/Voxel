@@ -374,6 +374,12 @@ public class Loader {
 		return buffer;
 	}
 
+	/**
+	 * Get OBJLoader
+	 * 
+	 * @return OBJLoader
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public OBJLoader getObjLoader() {
 		return objLoader;
 	}

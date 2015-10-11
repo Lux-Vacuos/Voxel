@@ -65,7 +65,7 @@ public class Camera implements IEntity {
 	private final int maxLookDown = -90;
 
 	public boolean isMoved = false;
-	
+
 	int id = 0;
 
 	public Camera() {
@@ -114,12 +114,12 @@ public class Camera implements IEntity {
 		int bx = (int) tempX;
 		int by = (int) tempY;
 		int bz = (int) tempZ;
-		
-		if(isKeyDown(KEY_K))
+
+		if (isKeyDown(KEY_K))
 			id = KernelConstants.DIM_0;
-		if(isKeyDown(KEY_J))
+		if (isKeyDown(KEY_J))
 			id = KernelConstants.DIM_1;
-		
+
 		if (world.getGlobalBlock(world.getChunkDimension(), bx, by, bz + 1) == Block.Portal.getId()
 				&& teleporting == false) {
 			teleporting = true;
@@ -191,6 +191,7 @@ public class Camera implements IEntity {
 		}
 
 		updatePlayerState(gi);
+		updateDebug(world);
 	}
 
 	public void updatePlayerState(GuiResources gi) {

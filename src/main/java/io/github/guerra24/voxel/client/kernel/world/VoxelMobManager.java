@@ -22,13 +22,25 @@
  * SOFTWARE.
  */
 
-
 package io.github.guerra24.voxel.client.kernel.world;
 
 import io.github.guerra24.voxel.client.kernel.resources.GameResources;
 
+/**
+ * Voxel Mob Manager
+ *
+ * @author Guerra24 <pablo230699@hotmail.com>
+ * @category World
+ */
 public class VoxelMobManager extends DefaultMobManager {
 
+	/**
+	 * Constructor
+	 * 
+	 * @param gm
+	 *            Game Resources
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public VoxelMobManager(GameResources gm) {
 		super(gm);
 	}

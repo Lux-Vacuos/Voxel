@@ -25,7 +25,7 @@
  * Contains the Game Engine Core, Graphics, Game States and The World Thread
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
- * @version 0.0.3 Build-61
+ * @version 0.0.4 Build-81
  * @since 0.0.1 Build-52
  * @category Kernel
  */

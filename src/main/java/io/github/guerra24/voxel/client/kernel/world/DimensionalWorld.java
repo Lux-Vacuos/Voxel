@@ -45,7 +45,17 @@ import io.github.guerra24.voxel.client.kernel.util.vector.Vector3f;
 import io.github.guerra24.voxel.client.kernel.world.chunks.Chunk;
 import io.github.guerra24.voxel.client.kernel.world.chunks.ChunkKey;
 
+/**
+ * Dimensional World
+ * 
+ * @author Guerra24 <pablo230699@hotmail.com>
+ * @category World
+ */
 public class DimensionalWorld {
+
+	/**
+	 * Dimensional World Data
+	 */
 	private int chunkDim;
 	private int worldID;
 	private HashMap<ChunkKey, Chunk> chunks;
@@ -80,9 +90,16 @@ public class DimensionalWorld {
 		}
 		saveWorld(gm);
 		initialize(gm);
-		createWorld(gm, api);
+		createDimension(gm, api);
 	}
 
+	/**
+	 * Initialize the World
+	 * 
+	 * @param gm
+	 *            Game Resources
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	private void initialize(GameResources gm) {
 		seedi = seed.nextInt();
 		noise = new SimplexNoise(128, 0.3f, seedi);
@@ -90,7 +107,16 @@ public class DimensionalWorld {
 		gm.getPhysics().getMobManager().getPlayer().setPosition(gm.getCamera().getPosition());
 	}
 
-	private void createWorld(GameResources gm, VAPI api) {
+	/**
+	 * Create Dimension
+	 * 
+	 * @param gm
+	 *            Game Resources
+	 * @param api
+	 *            Voxel API
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
+	private void createDimension(GameResources gm, VAPI api) {
 		Logger.log(Thread.currentThread(), "Generating World");
 		xPlayChunk = (int) (gm.getCamera().getPosition().x / 16);
 		zPlayChunk = (int) (gm.getCamera().getPosition().z / 16);
@@ -121,6 +147,15 @@ public class DimensionalWorld {
 		}
 	}
 
+	/**
+	 * Update Chunk Generation
+	 * 
+	 * @param gm
+	 *            Game Resources
+	 * @param api
+	 *            Voxel API
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public void updateChunkGeneration(GameResources gm, VAPI api) {
 		if (gm.getCamera().getPosition().x < 0)
 			xPlayChunk = (int) ((gm.getCamera().getPosition().x - 16) / 16);
@@ -160,6 +195,15 @@ public class DimensionalWorld {
 			tempRadius++;
 	}
 
+	/**
+	 * Update Chunk Mesh
+	 * 
+	 * @param gm
+	 *            GameResources
+	 * @param api
+	 *            Voxel API
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public void updateChunkMesh(GameResources gm, VAPI api) {
 		for (int yy = 4; yy > 0; yy--) {
 			for (int zr = -KernelConstants.genRadius; zr <= KernelConstants.genRadius; zr++) {
@@ -186,6 +230,13 @@ public class DimensionalWorld {
 		}
 	}
 
+	/**
+	 * Render Chunks
+	 * 
+	 * @param gm
+	 *            GameResources
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public void updateChunksRender(GameResources gm) {
 		for (int zr = -KernelConstants.radius; zr <= KernelConstants.radius; zr++) {
 			int zz = zPlayChunk + zr;
@@ -209,16 +260,34 @@ public class DimensionalWorld {
 
 	}
 
+	/**
+	 * Switch Dimension
+	 * 
+	 * @param id
+	 *            Dimension ID
+	 * @param gm
+	 *            Game Resources
+	 * @param api
+	 *            Voxel API
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public void switchDimension(int id, GameResources gm, VAPI api) {
 		if (id != chunkDim) {
 			clearChunkDimension(gm);
 			chunkDim = id;
 			initialize(gm);
-			createWorld(gm, api);
+			createDimension(gm, api);
 		}
 	}
 
-	public void saveWorld(GameResources gm) {
+	/**
+	 * Save World Data
+	 * 
+	 * @param gm
+	 *            GameResources
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
+	private void saveWorld(GameResources gm) {
 		if (!existWorld()) {
 			File file = new File(KernelConstants.worldPath + name + "/");
 			file.mkdirs();
@@ -238,7 +307,14 @@ public class DimensionalWorld {
 		}
 	}
 
-	public void loadWorld(GameResources gm) {
+	/**
+	 * Load World Data
+	 * 
+	 * @param gm
+	 *            GameResources
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
+	private void loadWorld(GameResources gm) {
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(KernelConstants.worldPath + name + "/world.json"));
 			seed = gm.getGson().fromJson(br, Random.class);
@@ -247,7 +323,20 @@ public class DimensionalWorld {
 		}
 	}
 
-	public void saveChunk(int chunkDim, int cx, int cz, GameResources gm) {
+	/**
+	 * Save Chunk Data
+	 * 
+	 * @param chunkDim
+	 *            Chunk Dimension
+	 * @param cx
+	 *            Chunk X
+	 * @param cz
+	 *            Chunk Z
+	 * @param gm
+	 *            GameResources
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
+	private void saveChunk(int chunkDim, int cx, int cz, GameResources gm) {
 		String json = gm.getGson().toJson(getChunk(chunkDim, cx, cz));
 		try {
 			File chunksFolder = new File(KernelConstants.worldPath + name + "/chunks_" + chunkDim);
@@ -263,7 +352,20 @@ public class DimensionalWorld {
 		}
 	}
 
-	public void loadChunk(int chunkDim, int cx, int cz, GameResources gm) {
+	/**
+	 * Load Chunk Data
+	 * 
+	 * @param chunkDim
+	 *            Chunk Dimension
+	 * @param cx
+	 *            Chunk X
+	 * @param cz
+	 *            Chunk Z
+	 * @param gm
+	 *            Game Resources
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
+	private void loadChunk(int chunkDim, int cx, int cz, GameResources gm) {
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(KernelConstants.worldPath + name + "/chunks_"
 					+ chunkDim + "/chunk_" + chunkDim + "_" + cx + "_" + cz + ".json"));
@@ -284,22 +386,60 @@ public class DimensionalWorld {
 		}
 	}
 
-	public boolean existChunkFile(int chunkDim, int cx, int cz) {
+	/**
+	 * Check if exist a chunk file
+	 * 
+	 * @param chunkDim
+	 *            Chunk Dimension
+	 * @param cx
+	 *            Chunk X
+	 * @param cz
+	 *            Chunk Z
+	 * @return true if exist
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
+	private boolean existChunkFile(int chunkDim, int cx, int cz) {
 		File file = new File(KernelConstants.worldPath + name + "/chunks_" + chunkDim + "/chunk_" + chunkDim + "_" + cx
 				+ "_" + cz + ".json");
 		return file.exists();
 	}
 
-	public boolean existWorld() {
+	/**
+	 * Check if exist a world file
+	 * 
+	 * @return true if exist
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
+	private boolean existWorld() {
 		File file = new File(KernelConstants.worldPath + name + "/world.json");
 		return file.exists();
 	}
 
-	public boolean existChunkFolder(int chunkDim) {
+	/**
+	 * Check if exist a chunk folder
+	 * 
+	 * @param chunkDim
+	 *            Chunk Dimension
+	 * @return true if exist
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
+	private boolean existChunkFolder(int chunkDim) {
 		File file = new File(KernelConstants.worldPath + name + "/chunks_" + chunkDim + "/");
 		return file.exists();
 	}
 
+	/**
+	 * Get Chunk from coords
+	 * 
+	 * @param chunkDim
+	 *            Chunk Dimension
+	 * @param cx
+	 *            Chunk X
+	 * @param cz
+	 *            Chunk Z
+	 * @return Chunk
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public Chunk getChunk(int chunkDim, int cx, int cz) {
 		ChunkKey key = ChunkKey.alloc(chunkDim, cx, cz);
 		Chunk chunk;
@@ -308,6 +448,18 @@ public class DimensionalWorld {
 		return chunk;
 	}
 
+	/**
+	 * Check if the Map contain a chunk
+	 * 
+	 * @param chunkDim
+	 *            Chunk Dimension
+	 * @param cx
+	 *            Chunk X
+	 * @param cz
+	 *            Chunk Z
+	 * @return true if exist
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public boolean hasChunk(int chunkDim, int cx, int cz) {
 		ChunkKey key = ChunkKey.alloc(chunkDim, cx, cz);
 		boolean contains;
@@ -316,6 +468,13 @@ public class DimensionalWorld {
 		return contains;
 	}
 
+	/**
+	 * Add a new Chunk
+	 * 
+	 * @param chunk
+	 *            Chunk
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public void addChunk(Chunk chunk) {
 		ChunkKey key = ChunkKey.alloc(chunk.dim, chunk.cx, chunk.cz);
 		Chunk old = chunks.get(key);
@@ -325,6 +484,13 @@ public class DimensionalWorld {
 		chunks.put(key.clone(), chunk);
 	}
 
+	/**
+	 * Remove Chunk
+	 * 
+	 * @param chunk
+	 *            Chunk
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public void removeChunk(Chunk chunk) {
 		if (chunk != null) {
 			ChunkKey key = ChunkKey.alloc(chunk.dim, chunk.cx, chunk.cz);
@@ -333,12 +499,30 @@ public class DimensionalWorld {
 		}
 	}
 
+	/**
+	 * @return Chunks in Memory
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public int getCount() {
 		int cnt;
 		cnt = chunks.size();
 		return cnt;
 	}
 
+	/**
+	 * Get a block from global Coords
+	 * 
+	 * @param chunkDim
+	 *            Chunk Dimension
+	 * @param x
+	 *            Postion X
+	 * @param y
+	 *            Postion Y
+	 * @param z
+	 *            Postion Z
+	 * @return block ID
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public byte getGlobalBlock(int chunkDim, int x, int y, int z) {
 		int cx = x >> 4;
 		int cz = z >> 4;
@@ -349,6 +533,21 @@ public class DimensionalWorld {
 			return 0;
 	}
 
+	/**
+	 * Set a block from gloal coords
+	 * 
+	 * @param chunkDim
+	 *            Chunk Dimension
+	 * @param x
+	 *            Position X
+	 * @param y
+	 *            Position Y
+	 * @param z
+	 *            Position Z
+	 * @param id
+	 *            Block ID
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public void setGlobalBlock(int chunkDim, int x, int y, int z, byte id) {
 		int cx = x >> 4;
 		int cz = z >> 4;
@@ -358,6 +557,13 @@ public class DimensionalWorld {
 		}
 	}
 
+	/**
+	 * Clear the chunks of a dimension
+	 * 
+	 * @param gm
+	 *            Game Resources
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public void clearChunkDimension(GameResources gm) {
 		Logger.log(Thread.currentThread(), "Saving World");
 		try {

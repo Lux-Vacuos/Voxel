@@ -22,7 +22,6 @@
  * SOFTWARE.
  */
 
-
 package io.github.guerra24.voxel.client.kernel.particle;
 
 import io.github.guerra24.voxel.client.kernel.resources.GameResources;
@@ -34,8 +33,16 @@ import io.github.guerra24.voxel.client.kernel.world.entities.Entity;
 import io.github.guerra24.voxel.client.kernel.world.physics.AABB;
 import io.github.guerra24.voxel.client.kernel.world.physics.CollisionType;
 
+/**
+ * Particle
+ * 
+ * @author Guerra24 <pablo230699@hotmail.com>
+ */
 public class Particle extends Entity {
 
+	/**
+	 * Particle Data
+	 */
 	private final float GRAVITY = -0.001f;
 	private float lifeTime;
 	private float friction = 0.01f;
@@ -43,6 +50,29 @@ public class Particle extends Entity {
 	private float yVel = 0;
 	private float zVel = 0;
 
+	/**
+	 * Constructor
+	 * 
+	 * @param model
+	 *            Particle Model
+	 * @param position
+	 *            Particle Position
+	 * @param rotX
+	 *            Particle RotX
+	 * @param rotY
+	 *            Particle RotY
+	 * @param rotZ
+	 *            Particle RotZ
+	 * @param lifeTime
+	 *            Particle LifeTime in ticks
+	 * @param scale
+	 *            Particle Scale
+	 * @param xVel
+	 *            Particle XVelocity
+	 * @param zVel
+	 *            Particle ZVelocity
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public Particle(TexturedModel model, Vector3f position, float rotX, float rotY, float rotZ, float lifeTime,
 			float scale, float xVel, float zVel) {
 		super(model, position, rotX, rotY, rotZ, scale);
@@ -51,6 +81,19 @@ public class Particle extends Entity {
 		this.lifeTime = lifeTime;
 	}
 
+	/**
+	 * Update Particle State
+	 * 
+	 * @param delta
+	 *            Game Delta
+	 * @param gm
+	 *            GameResources
+	 * @param gi
+	 *            GuiResources
+	 * @param world
+	 *            DimensionalWorld
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public void update(float delta, GameResources gm, GuiResources gi, DimensionalWorld world) {
 		Vector3f normal = new Vector3f(0, 1, 0);
 		Vector3f dir = Vector3f.sub(
@@ -64,11 +107,20 @@ public class Particle extends Entity {
 		super.setRotX(angle * rotationAxis.x);
 		super.setRotY(angle * rotationAxis.y);
 		super.setRotZ(angle * rotationAxis.z);
-		updatePysics(delta, world);
+		updatePhysics(delta, world);
 		lifeTime--;
 	}
 
-	private void updatePysics(float delta, DimensionalWorld world) {
+	/**
+	 * Update Particle Physics
+	 * 
+	 * @param delta
+	 *            Game Delta
+	 * @param world
+	 *            Dimensional World
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
+	private void updatePhysics(float delta, DimensionalWorld world) {
 		if (xVel > 0)
 			xVel -= friction * delta;
 		else if (xVel < 0)
@@ -85,6 +137,16 @@ public class Particle extends Entity {
 		super.increasePosition(xVel, yVel, zVel);
 	}
 
+	/**
+	 * Particle Collision
+	 * 
+	 * @param direction
+	 *            Direction of Collision
+	 * @param world
+	 *            Dimensional World
+	 * @return Collision Type
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	private CollisionType isCollision(int direction, DimensionalWorld world) {
 
 		Vector3f v = this.getPosition();

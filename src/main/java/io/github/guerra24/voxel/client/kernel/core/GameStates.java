@@ -80,7 +80,6 @@ public class GameStates {
 	 */
 	public void switchStates(GameResources gm, WorldHandler worlds, VAPI api, Display display) {
 		if (state == State.MAINMENU && Button.isInButtonPlay()) {
-			// Kernel.gameResources.SoundSystem.pause("MainMenuMusic");
 			state = State.LOADING_WORLD;
 			isPlaying = true;
 			Random seed;
@@ -93,7 +92,7 @@ public class GameStates {
 			gm.getCamera().setMouse();
 			gm.getSoundSystem().stop("menu1");
 			gm.getSoundSystem().rewind("menu1");
-			state = State.IN_PAUSE;
+			state = State.GAME;
 		}
 
 		if (state == State.MAINMENU && Button.isInButtonExit()) {
@@ -101,8 +100,6 @@ public class GameStates {
 		}
 
 		if (state == State.IN_PAUSE && Button.backToMainMenu()) {
-			// Kernel.gameResources.SoundSystem.rewind("MainMenuMusic");
-			// Kernel.gameResources.SoundSystem.play("MainMenuMusic");
 			worlds.removeWorld(worlds.getActiveWorld(), gm);
 			gm.getSoundSystem().play("menu1");
 			gm.getCamera().setPosition(new Vector3f(-2, 0, -1));

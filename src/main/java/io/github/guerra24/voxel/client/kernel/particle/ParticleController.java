@@ -22,7 +22,6 @@
  * SOFTWARE.
  */
 
-
 package io.github.guerra24.voxel.client.kernel.particle;
 
 import static org.lwjgl.opengl.GL11.GL_BLEND;
@@ -44,14 +43,27 @@ import io.github.guerra24.voxel.client.kernel.resources.models.TexturedModel;
 import io.github.guerra24.voxel.client.kernel.util.vector.Vector3f;
 import io.github.guerra24.voxel.client.kernel.world.DimensionalWorld;
 
+/**
+ * Particle Controller
+ * 
+ * @author Guerra24 <pablo230699@hotmail.com>
+ */
 public class ParticleController implements IParticleController {
 
+	/**
+	 * Particle Controller Data
+	 */
 	private List<Particle> particles;
 	private Map<TexturedModel, List<Particle>> particleBatcher;
 	private ParticleRenderer renderer;
 	private ParticleShader shader;
 	private EmiterPoint emiter;
 
+	/**
+	 * Constructor
+	 * 
+	 * @param loader
+	 */
 	public ParticleController(Loader loader) {
 		init(loader);
 	}
@@ -75,7 +87,8 @@ public class ParticleController implements IParticleController {
 		renderParticles(particleBatcher, gm);
 	}
 
-	private void renderParticles(Map<TexturedModel, List<Particle>> particles, GameResources gm) {
+	@Override
+	public void renderParticles(Map<TexturedModel, List<Particle>> particles, GameResources gm) {
 		VoxelGL33.glEnable(GL_BLEND);
 		VoxelGL33.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		shader.start();

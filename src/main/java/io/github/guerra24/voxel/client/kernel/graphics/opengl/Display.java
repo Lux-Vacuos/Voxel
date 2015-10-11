@@ -118,7 +118,7 @@ public class Display {
 	 */
 	private GLFWVidMode vidmode;
 	/**
-	 * Game loop variables
+	 * Display Data
 	 */
 	private static double lastLoopTimeUpdate;
 	public static float timeCountUpdate;
@@ -361,18 +361,16 @@ public class Display {
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void updateDisplay(int fps, GameResources gm) {
-		if (KernelConstants.loaded) {
-			ByteBuffer w = BufferUtils.createByteBuffer(4);
-			ByteBuffer h = BufferUtils.createByteBuffer(4);
-			glfwGetWindowSize(window, w, h);
-			int width = w.getInt(0);
-			int height = h.getInt(0);
-			displayHeight = width;
-			displayHeight = height;
-			VoxelGL33.glViewport(0, 0, width, height);
-			gm.getRenderer().setProjectionMatrix(gm.getRenderer().createProjectionMatrix(Display.getWidth(),
-					Display.getHeight(), KernelConstants.FOV, KernelConstants.NEAR_PLANE, KernelConstants.FAR_PLANE));
-		}
+		ByteBuffer w = BufferUtils.createByteBuffer(4);
+		ByteBuffer h = BufferUtils.createByteBuffer(4);
+		glfwGetWindowSize(window, w, h);
+		int width = w.getInt(0);
+		int height = h.getInt(0);
+		displayHeight = width;
+		displayHeight = height;
+		VoxelGL33.glViewport(0, 0, width, height);
+		gm.getRenderer().setProjectionMatrix(gm.getRenderer().createProjectionMatrix(Display.getWidth(),
+				Display.getHeight(), KernelConstants.FOV, KernelConstants.NEAR_PLANE, KernelConstants.FAR_PLANE));
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 		Mouse.poll();
@@ -387,7 +385,7 @@ public class Display {
 	public void closeDisplay() {
 		glfwDestroyWindow(window);
 		glfwTerminate();
-		// errorCallback.release();//This not work
+		errorCallback.release();
 		keyCallback.release();
 		charCallback.release();
 		cursorEnterCallback.release();
