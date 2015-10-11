@@ -38,32 +38,14 @@ import io.github.guerra24.voxel.client.kernel.world.entities.Camera;
  */
 public class SkyboxShader extends ShaderProgram {
 	/**
-	 * Projection Matrix ID
+	 * Skybox Shader Data
 	 */
-	private int location_projectionMatrix;
-	/**
-	 * View Matrix ID
-	 */
-	private int location_viewMatrix;
-	/**
-	 * Fog Colour ID
-	 */
-	private int location_fogColour;
-	/**
-	 * Skybox Texture1 ID
-	 */
-	private int location_cubeMap;
-	/**
-	 * Skybox Texture2 ID
-	 */
-	private int location_cubeMap2;
-	/**
-	 * Skybox Blend Factor ID
-	 */
-	private int location_blendFactor;
-	/**
-	 * Skybox Rotation
-	 */
+	private int loc_projectionMatrix;
+	private int loc_viewMatrix;
+	private int loc_fogColour;
+	private int loc_cubeMap;
+	private int loc_cubeMap2;
+	private int loc_blendFactor;
 	private float rotation = 0;
 
 	/**
@@ -75,6 +57,21 @@ public class SkyboxShader extends ShaderProgram {
 		super(KernelConstants.VERTEX_FILE_SKYBOX, KernelConstants.FRAGMENT_FILE_SKYBOX);
 	}
 
+	@Override
+	protected void bindAttributes() {
+		super.bindAttribute(0, "position");
+	}
+
+	@Override
+	protected void getAllUniformLocations() {
+		loc_projectionMatrix = super.getUniformLocation("projectionMatrix");
+		loc_viewMatrix = super.getUniformLocation("viewMatrix");
+		loc_fogColour = super.getUniformLocation("fogColour");
+		loc_blendFactor = super.getUniformLocation("blendFactor");
+		loc_cubeMap = super.getUniformLocation("cubeMap");
+		loc_cubeMap2 = super.getUniformLocation("cubeMap2");
+	}
+
 	/**
 	 * Loads a Projection Matrix
 	 * 
@@ -82,7 +79,7 @@ public class SkyboxShader extends ShaderProgram {
 	 *            Projection Matrix
 	 */
 	public void loadProjectionMatrix(Matrix4f matrix) {
-		super.loadMatrix(location_projectionMatrix, matrix);
+		super.loadMatrix(loc_projectionMatrix, matrix);
 	}
 
 	/**
@@ -101,17 +98,7 @@ public class SkyboxShader extends ShaderProgram {
 		matrix.m32 = 0;
 		rotation += KernelConstants.ROTATE_SPEED * delta;
 		Matrix4f.rotate((float) Math.toRadians(rotation), new Vector3f(0, 1, 0), matrix, matrix);
-		super.loadMatrix(location_viewMatrix, matrix);
-	}
-
-	@Override
-	protected void getAllUniformLocations() {
-		location_projectionMatrix = super.getUniformLocation("projectionMatrix");
-		location_viewMatrix = super.getUniformLocation("viewMatrix");
-		location_fogColour = super.getUniformLocation("fogColour");
-		location_blendFactor = super.getUniformLocation("blendFactor");
-		location_cubeMap = super.getUniformLocation("cubeMap");
-		location_cubeMap2 = super.getUniformLocation("cubeMap2");
+		super.loadMatrix(loc_viewMatrix, matrix);
 	}
 
 	/**
@@ -126,7 +113,7 @@ public class SkyboxShader extends ShaderProgram {
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void loadFog(float r, float g, float b) {
-		super.loadVector(location_fogColour, new Vector3f(r, g, b));
+		super.loadVector(loc_fogColour, new Vector3f(r, g, b));
 	}
 
 	/**
@@ -135,8 +122,8 @@ public class SkyboxShader extends ShaderProgram {
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void connectTextureUnits() {
-		super.loadInt(location_cubeMap, 0);
-		super.loadInt(location_cubeMap2, 1);
+		super.loadInt(loc_cubeMap, 0);
+		super.loadInt(loc_cubeMap2, 1);
 	}
 
 	/**
@@ -147,12 +134,7 @@ public class SkyboxShader extends ShaderProgram {
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void loadBlendFactor(float blend) {
-		super.loadFloat(location_blendFactor, blend);
-	}
-
-	@Override
-	protected void bindAttributes() {
-		super.bindAttribute(0, "position");
+		super.loadFloat(loc_blendFactor, blend);
 	}
 
 }

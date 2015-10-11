@@ -50,7 +50,7 @@ import io.github.guerra24.voxel.client.kernel.util.vector.Matrix4f;
  */
 public class SkyboxRenderer {
 	/**
-	 * Skybox Model Vertices
+	 * Skybox Data
 	 */
 	private final float[] VERTICES = { -KernelConstants.SIZE, KernelConstants.SIZE, -KernelConstants.SIZE,
 			-KernelConstants.SIZE, -KernelConstants.SIZE, -KernelConstants.SIZE, KernelConstants.SIZE,
@@ -88,40 +88,15 @@ public class SkyboxRenderer {
 			-KernelConstants.SIZE, -KernelConstants.SIZE, KernelConstants.SIZE, KernelConstants.SIZE,
 			-KernelConstants.SIZE, KernelConstants.SIZE };
 
-	/**
-	 * Skybox Day Texture Files
-	 */
 	private String[] TEXTURE_FILES = { "day/right", "day/left", "day/top", "day/bottom", "day/front", "day/back" };
-	/**
-	 * Skybox Night Texture Files
-	 */
 	private String[] NIGHT_TEXTURE_FILES = { "night/right", "night/left", "night/top", "night/bottom", "night/front",
 			"night/back" };
-
-	/**
-	 * Skybox RawModel
-	 */
 	private RawModel cube;
-	/**
-	 * Skybox Day Texture ID
-	 */
 	private int texture;
-	/**
-	 * Skybox Night Texture ID
-	 */
 	private int nightTexture;
-	/**
-	 * Skybox Shader
-	 */
 	private SkyboxShader shader;
-	/**
-	 * Skybox Day/Night Timer
-	 */
 	private float time = 0;
-	/**
-	 * Blend Factor
-	 */
-	float blendFactor = 0;
+	private float blendFactor = 0;
 
 	/**
 	 * Constructor, Initializes the Skybox model, Textures and Shader
@@ -141,7 +116,7 @@ public class SkyboxRenderer {
 		shader.connectTextureUnits();
 		shader.loadProjectionMatrix(projectionMatrix);
 		shader.stop();
-		time = 8000;
+		time = 7960;
 	}
 
 	/**

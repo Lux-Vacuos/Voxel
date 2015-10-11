@@ -36,19 +36,21 @@ import io.github.guerra24.voxel.client.kernel.util.Logger;
  * @author Guerra24 <pablo230699@hotmail.com>
  * @category API
  */
-public class API {
+public class VAPI {
 	/**
 	 * Mods
 	 */
-	public static Map<Integer, Mod> mods;
-	public static WorldAPI world;
-	public static ModLoader modLoader;
+	private static Map<Integer, Mod> mods;
+	private static WorldVAPI worldAPI;
+	private static VModLoader modLoader;
+	private static MobVAPI mobAPI;
 
-	public API() {
+	public VAPI() {
 		mods = new HashMap<Integer, Mod>();
-		world = new WorldAPI();
-		modLoader = new ModLoader();
+		worldAPI = new WorldVAPI();
+		modLoader = new VModLoader();
 		modLoader.loadMods();
+		mobAPI = new MobVAPI();
 	}
 
 	/**
@@ -132,6 +134,18 @@ public class API {
 	 */
 	public void dispose() {
 		mods.clear();
+	}
+
+	public static WorldVAPI getWorldAPI() {
+		return worldAPI;
+	}
+
+	public static VModLoader getModLoader() {
+		return modLoader;
+	}
+
+	public static MobVAPI getMobAPI() {
+		return mobAPI;
 	}
 
 }
