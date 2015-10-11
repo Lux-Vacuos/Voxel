@@ -49,19 +49,19 @@ import static org.lwjgl.opengl.GL20.glUniform4f;
 import static org.lwjgl.opengl.GL20.glUniformMatrix4fv;
 import static org.lwjgl.opengl.GL20.glUseProgram;
 import static org.lwjgl.opengl.GL20.glValidateProgram;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.nio.FloatBuffer;
+
+import org.lwjgl.BufferUtils;
+
 import io.github.guerra24.voxel.client.kernel.util.Logger;
 import io.github.guerra24.voxel.client.kernel.util.vector.Matrix4f;
 import io.github.guerra24.voxel.client.kernel.util.vector.Vector2f;
 import io.github.guerra24.voxel.client.kernel.util.vector.Vector3f;
 import io.github.guerra24.voxel.client.kernel.util.vector.Vector4f;
-
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.net.URL;
-import java.nio.FloatBuffer;
-
-import org.lwjgl.BufferUtils;
 
 /**
  * Shader Program, Use to create shaders
@@ -285,9 +285,9 @@ public abstract class ShaderProgram {
 	 */
 	private int loadShader(String file, int type) {
 		StringBuilder shaderSource = new StringBuilder();
-		URL sfile = getClass().getClassLoader().getResource("assets/shaders/" + file);
+		String sfile = "assets/shaders/" + file;
 		try {
-			BufferedReader reader = new BufferedReader(new FileReader(sfile.getFile()));
+			BufferedReader reader = new BufferedReader(new FileReader(sfile));
 			Logger.log(Thread.currentThread(), "Loading Shader: " + file);
 			String line;
 			while ((line = reader.readLine()) != null) {

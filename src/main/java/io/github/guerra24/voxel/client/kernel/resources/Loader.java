@@ -57,8 +57,7 @@ import static org.lwjgl.opengl.GL30.glDeleteVertexArrays;
 import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 import static org.lwjgl.opengl.GL30.glGenerateMipmap;
 
-import java.io.FileInputStream;
-import java.net.URL;
+import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
@@ -151,8 +150,9 @@ public class Loader {
 	public int loadTextureBlocks(String fileName) {
 		Texture texture = null;
 		try {
-			URL file = getClass().getClassLoader().getResource("assets/textures/blocks/" + fileName + ".png");
-			texture = TextureLoader.getTexture("PNG", new FileInputStream(file.getFile()), GL_NEAREST);
+			InputStream file = getClass().getClassLoader()
+					.getResourceAsStream("assets/textures/blocks/" + fileName + ".png");
+			texture = TextureLoader.getTexture("PNG", file, GL_NEAREST);
 			Logger.log(Thread.currentThread(), "Loading Texture: " + fileName + ".png");
 			glGenerateMipmap(GL_TEXTURE_2D);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
@@ -176,8 +176,9 @@ public class Loader {
 	public int loadTextureEntity(String fileName) {
 		Texture texture = null;
 		try {
-			URL file = getClass().getClassLoader().getResource("assets/textures/entity/" + fileName + ".png");
-			texture = TextureLoader.getTexture("PNG", new FileInputStream(file.getFile()), GL_NEAREST);
+			InputStream file = getClass().getClassLoader()
+					.getResourceAsStream("assets/textures/entity/" + fileName + ".png");
+			texture = TextureLoader.getTexture("PNG", file, GL_NEAREST);
 			Logger.log(Thread.currentThread(), "Loading Texture: " + fileName + ".png");
 			glGenerateMipmap(GL_TEXTURE_2D);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
@@ -201,8 +202,9 @@ public class Loader {
 	public int loadTextureGui(String fileName) {
 		Texture texture = null;
 		try {
-			URL file = getClass().getClassLoader().getResource("assets/textures/menu/" + fileName + ".png");
-			texture = TextureLoader.getTexture("PNG", new FileInputStream(file.getFile()), GL_NEAREST);
+			InputStream file = getClass().getClassLoader()
+					.getResourceAsStream("assets/textures/menu/" + fileName + ".png");
+			texture = TextureLoader.getTexture("PNG", file, GL_NEAREST);
 			Logger.log(Thread.currentThread(), "Loading Texture: " + fileName + ".png");
 			glGenerateMipmap(GL_TEXTURE_2D);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
@@ -246,8 +248,9 @@ public class Loader {
 		glBindTexture(GL_TEXTURE_CUBE_MAP, texID);
 
 		for (int i = 0; i < textureFiles.length; i++) {
-			URL file = getClass().getClassLoader().getResource("assets/textures/skybox/" + textureFiles[i] + ".png");
-			EntityTexture data = decodeTextureFile(file.getFile());
+			InputStream file = getClass().getClassLoader()
+					.getResourceAsStream("assets/textures/skybox/" + textureFiles[i] + ".png");
+			EntityTexture data = decodeTextureFile(file);
 			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGBA, data.getWidth(), data.getHeight(), 0, GL_RGBA,
 					GL_UNSIGNED_BYTE, data.getBuffer());
 		}
@@ -261,17 +264,17 @@ public class Loader {
 	/**
 	 * Decodes the Texture
 	 * 
-	 * @param fileName
+	 * @param file.
 	 *            Name
 	 * @return EntityTexture
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	private EntityTexture decodeTextureFile(String fileName) {
+	private EntityTexture decodeTextureFile(InputStream file) {
 		int width = 0;
 		int height = 0;
 		ByteBuffer buffer = null;
 		try {
-			FileInputStream in = new FileInputStream(fileName);
+			InputStream in = file;
 			PNGDecoder decoder = new PNGDecoder(in);
 			width = decoder.getWidth();
 			height = decoder.getHeight();
@@ -281,7 +284,7 @@ public class Loader {
 			in.close();
 		} catch (Exception e) {
 			e.printStackTrace();
-			Logger.error(Thread.currentThread(), "Tried to load texture " + fileName + ", didn't work");
+			Logger.error(Thread.currentThread(), "Tried to load texture " + file + ", didn't work");
 		}
 		return new EntityTexture(buffer, width, height);
 	}
