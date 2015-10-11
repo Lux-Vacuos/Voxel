@@ -59,28 +59,13 @@ import io.github.guerra24.voxel.client.kernel.world.entities.Light;
 public class MasterRenderer {
 
 	/**
-	 * Matrix4f Projection
+	 * Master Renderer Data
 	 */
 	private Matrix4f projectionMatrix;
-	/**
-	 * Batcher of entity
-	 */
 	private Map<TexturedModel, List<Entity>> entities = new HashMap<TexturedModel, List<Entity>>();
-	/**
-	 * Batcher of BlockEntity
-	 */
 	private Map<TexturedModel, List<BlockEntity>> blockEntities = new HashMap<TexturedModel, List<BlockEntity>>();
-	/**
-	 * Entity Shader
-	 */
-	public EntityShader shader = new EntityShader();
-	/**
-	 * Entity Renderer
-	 */
-	public EntityRenderer entityRenderer;
-	/**
-	 * Game Aspect Ratio
-	 */
+	private EntityShader shader = new EntityShader();
+	private EntityRenderer entityRenderer;
 	public float aspectRatio;
 
 	/**

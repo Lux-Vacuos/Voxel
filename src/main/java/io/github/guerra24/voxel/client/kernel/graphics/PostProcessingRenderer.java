@@ -22,7 +22,6 @@
  * SOFTWARE.
  */
 
-
 package io.github.guerra24.voxel.client.kernel.graphics;
 
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
@@ -44,10 +43,20 @@ import io.github.guerra24.voxel.client.kernel.util.vector.Vector2f;
 
 public class PostProcessingRenderer {
 
+	/**
+	 * post Processing Data
+	 */
 	private PostProcessingShader shader;
 	private FrameBuffer post_fbo;
 	private final RawModel quad;
 
+	/**
+	 * Constructor
+	 * 
+	 * @param loader
+	 *            Loader
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public PostProcessingRenderer(Loader loader) {
 		float[] positions = { -1, 1, -1, -1, 1, 1, 1, -1 };
 		quad = loader.loadToVAO(positions, 2);
@@ -60,23 +69,39 @@ public class PostProcessingRenderer {
 		post_fbo = new FrameBuffer(false, Display.getWidth(), Display.getHeight());
 	}
 
+	/**
+	 * Render the Post Processing Quad
+	 * 
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public void render() {
 		shader.start();
 		shader.loadResolution(new Vector2f(Display.getWidth(), Display.getHeight()));
 		glBindVertexArray(quad.getVaoID());
 		glEnableVertexAttribArray(0);
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, post_fbo.getDepthTexture());
+		glBindTexture(GL_TEXTURE_2D, post_fbo.getTexture());
 		VoxelGL33.glDrawArrays(GL_TRIANGLE_STRIP, 0, quad.getVertexCount());
 		glDisableVertexAttribArray(0);
 		glBindVertexArray(0);
 		shader.stop();
 	}
 
+	/**
+	 * Clear shader
+	 * 
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public void cleanUp() {
 		shader.cleanUp();
 	}
 
+	/**
+	 * Post Processing FBO
+	 * 
+	 * @return FrameBuffer
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public FrameBuffer getPost_fbo() {
 		return post_fbo;
 	}

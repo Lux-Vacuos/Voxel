@@ -22,20 +22,67 @@
  * SOFTWARE.
  */
 
-
 package io.github.guerra24.voxel.client.kernel.particle;
+
+import java.util.List;
+import java.util.Map;
 
 import io.github.guerra24.voxel.client.kernel.resources.GameResources;
 import io.github.guerra24.voxel.client.kernel.resources.GuiResources;
 import io.github.guerra24.voxel.client.kernel.resources.Loader;
+import io.github.guerra24.voxel.client.kernel.resources.models.TexturedModel;
 import io.github.guerra24.voxel.client.kernel.world.DimensionalWorld;
 
+/**
+ * Particle Controller
+ * 
+ * @author Guerra24 <pablo230699@hotmail.com>
+ * @category Particle
+ */
 public interface IParticleController {
+	/**
+	 * Initialize the Particle
+	 * 
+	 * @param loader
+	 *            Loader
+	 */
 	public void init(Loader loader);
 
+	/**
+	 * Render Particles
+	 * 
+	 * @param gm
+	 *            GameResources
+	 */
 	public void render(GameResources gm);
-	
+
+	/**
+	 * Render Particles
+	 * 
+	 * @param particles
+	 *            Batch of particles
+	 * @param gm
+	 *            GameResources
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
+	public void renderParticles(Map<TexturedModel, List<Particle>> particles, GameResources gm);
+
+	/**
+	 * Update Particles
+	 * 
+	 * @param delta
+	 *            Game Delta
+	 * @param gm
+	 *            GameResources
+	 * @param gi
+	 *            GuiResources
+	 * @param world
+	 *            Dimensional World
+	 */
 	public void update(float delta, GameResources gm, GuiResources gi, DimensionalWorld world);
 
+	/**
+	 * Dispose Particle Data
+	 */
 	public void dispose();
 }

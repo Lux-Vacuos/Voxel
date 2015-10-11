@@ -3,7 +3,7 @@ apply plugin:'eclipse'
 apply plugin:'application'
 
 mainClassName = 'io.github.guerra24.voxel.client.kernel.bootstrap.Bootstrap'
-version = '0.0.3-ALPHA'
+version = '0.0.4-ALPHA'
 applicationDefaultJvmArgs = ["-Xmx512M"]
 
 jar {

@@ -22,7 +22,6 @@
  * SOFTWARE.
  */
 
-
 package io.github.guerra24.voxel.client.kernel.graphics;
 
 import static org.lwjgl.opengl.GL11.GL_DEPTH_COMPONENT;
@@ -60,10 +59,16 @@ import java.nio.ByteBuffer;
 
 import io.github.guerra24.voxel.client.kernel.graphics.opengl.Display;
 
+/**
+ * FrameBuffer
+ * 
+ * @author Guerra24 <pablo230699@hotmail.com>
+ * @category Rendering
+ */
 public class FrameBuffer {
 	private int FrameBuffer;
-	private int DepthBuffer;
-	private int DepthTexture;
+	private int RenderBuffer;
+	private int Texture;
 
 	public FrameBuffer(boolean depth, int width, int height) {
 		initialiseFrameBuffer(depth, width, height);
@@ -72,11 +77,11 @@ public class FrameBuffer {
 	private void initialiseFrameBuffer(boolean depth, int width, int height) {
 		FrameBuffer = createFrameBuffer(depth);
 		if (depth) {
-			DepthTexture = createDepthTextureAttachment(width, height);
+			Texture = createDepthTextureAttachment(width, height);
 		} else {
-			DepthTexture = createTextureAttachment(width, height);
+			Texture = createTextureAttachment(width, height);
 		}
-		DepthBuffer = createDepthBufferAttachment(width, height);
+		RenderBuffer = createDepthBufferAttachment(width, height);
 		end();
 	}
 
@@ -136,20 +141,20 @@ public class FrameBuffer {
 
 	public void cleanUp() {
 		glDeleteFramebuffers(FrameBuffer);
-		glDeleteRenderbuffers(DepthBuffer);
-		glDeleteTextures(DepthTexture);
+		glDeleteRenderbuffers(RenderBuffer);
+		glDeleteTextures(Texture);
 	}
 
 	public int getFrameBuffer() {
 		return FrameBuffer;
 	}
 
-	public int getDepthBuffer() {
-		return DepthBuffer;
+	public int getRenderBuffer() {
+		return RenderBuffer;
 	}
 
-	public int getDepthTexture() {
-		return DepthTexture;
+	public int getTexture() {
+		return Texture;
 	}
 
 }

@@ -24,8 +24,6 @@
 
 package io.github.guerra24.voxel.client.kernel.core;
 
-import java.net.URL;
-
 /**
  * Locations of all global variables
  * 
@@ -33,135 +31,63 @@ import java.net.URL;
  * @category Kernel
  */
 public class KernelConstants {
-	// Display
 	/**
-	 * Display FPS
+	 * Display Data
 	 */
 	public static int FPS = 60;
-	/**
-	 * Display VSync
-	 */
 	public static boolean VSYNC = false;
-	/**
-	 * Diplay Title
-	 */
 	public static String Title = "Voxel";
-	// Game Settings
 	/**
-	 * Game Fov
+	 * Game Settings
 	 */
+	public static boolean debug = false;
+	public static String version = "0.0.4";
+	public static int build = 83;
 	public static int FOV = 90;
-	/**
-	 * Game Near Plane
-	 */
 	public static float NEAR_PLANE = 0.1f;
-	/**
-	 * Game Far Plane
-	 */
 	public static float FAR_PLANE = 1000f;
-	/**
-	 * Game Red Background Color
-	 */
 	public static float RED = 0.375f;
-	/**
-	 * Game Greeb Background Color
-	 */
 	public static float GREEN = 0.555f;
-	/**
-	 * Game Blue Background Color
-	 */
 	public static float BLUE = 0.655f;
-	// Game Variables
 	/**
-	 * Game Build Number
-	 */
-	public static int build = 80;
-	/**
-	 * Game Version
-	 */
-	public static String version = "0.0.3";
-	/**
-	 * Game Debug Mode
-	 */
-	public static boolean debug = true;
-	// World Settings
-	/**
-	 * Game Draw Distance Radius
+	 * World Settings
 	 */
 	public static int radius = 2;
-	/**
-	 * Game Save Game Limit
-	 */
 	public static int radiusLimit = 8;
-	/**
-	 * Game Chunk Gen Radius
-	 */
 	public static int genRadius = radius + radiusLimit;
-	/**
-	 * Using a custom seed
-	 */
 	public static boolean isCustomSeed = false;
-	/**
-	 * Game Seed
-	 */
 	public static String seed = "";
-	// Chunk Settings
-	/**
-	 * Chunk Size
-	 */
 	public static final int CHUNK_SIZE = 16;
-	/**
-	 * Chunk Height
-	 */
 	public static final int CHUNK_HEIGHT = 128;
-	// Graphics Settings
+	public static int DIM_0 = 0;
+	public static int DIM_1 = 1;
 	/**
-	 * Game Max Rendered Lights
+	 * Graphics Settings
 	 */
 	public static final int MAX_LIGHTS = 8;
-	// Water Settings
-	/**
-	 * Water Wave Speed
-	 */
 	public static float WAVE_SPEED = 0.03f;
-	// Skybox Settings
-	/**
-	 * Skybox size
-	 */
 	public static float SIZE = 500f;
-	/**
-	 * Skybox rotation speed
-	 */
 	public static final float ROTATE_SPEED = 0.2f;
-	// Shader Settings
 	/**
-	 * Shader files Path
+	 * Shader Files
 	 */
-	public static final String VERTEX_FILE_ENTITY = "VertexShaderEntity.glsl";
-	public static final String FRAGMENT_FILE_ENTITY = "FragmentShaderEntity.glsl";
-	public static final String VERTEX_FILE_GUI = "VertexShaderGui.glsl";
-	public static final String FRAGMENT_FILE_GUI = "FragmentShaderGui.glsl";
-	public static final String VERTEX_FILE_SKYBOX = "VertexShaderSkybox.glsl";
-	public static final String FRAGMENT_FILE_SKYBOX = "FragmentShaderSkybox.glsl";
-	public static final String VERTEX_FILE_WATER = "VertexShaderWater.glsl";
-	public static final String FRAGMENT_FILE_WATER = "FragmentShaderWater.glsl";
-	public static final String VERTEX_FILE_PARTICLE = "VertexShaderParticle.glsl";
-	public static final String FRAGMENT_FILE_PARTICLE = "FragmentShaderParticle.glsl";
+	public static final String VERTEX_FILE_ENTITY = "VertexEntity.glsl";
+	public static final String FRAGMENT_FILE_ENTITY = "FragmentEntity.glsl";
+	public static final String VERTEX_FILE_GUI = "VertexGui.glsl";
+	public static final String FRAGMENT_FILE_GUI = "FragmentGui.glsl";
+	public static final String VERTEX_FILE_SKYBOX = "VertexSkybox.glsl";
+	public static final String FRAGMENT_FILE_SKYBOX = "FragmentSkybox.glsl";
+	public static final String VERTEX_FILE_WATER = "VertexWater.glsl";
+	public static final String FRAGMENT_FILE_WATER = "FragmentWater.glsl";
+	public static final String VERTEX_FILE_PARTICLE = "VertexParticle.glsl";
+	public static final String FRAGMENT_FILE_PARTICLE = "FragmentParticle.glsl";
 	public static final String VERTEX_FILE_POST = "VertexPost.glsl";
 	public static final String FRAGMENT_FILE_POST = "FragmentPost.glsl";
-	// World Save Path
 	/**
 	 * World Folder Path
 	 */
 	public static String worldPath = "assets/game/world/";
 	public static String blockPath = "assets/blocks/";
-	/**
-	 * Checks if the Kernel has successfully loaded
-	 */
-	public static boolean loaded = false;
-
-	public static int DIM_0 = 0;
-	public static int DIM_1 = 1;
 
 	/**
 	 * Update Global Variables

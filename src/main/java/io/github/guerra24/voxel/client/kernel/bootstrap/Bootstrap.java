@@ -116,7 +116,7 @@ public class Bootstrap {
 		if (KernelConstants.debug) {
 			System.setProperty("org.lwjgl.librarypath", new File("natives").getAbsolutePath());
 		}
-		new Kernel(false);
+		new Kernel();
 	}
 
 }

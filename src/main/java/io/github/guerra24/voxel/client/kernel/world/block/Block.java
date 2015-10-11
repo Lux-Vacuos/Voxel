@@ -48,7 +48,7 @@ import io.github.guerra24.voxel.client.kernel.world.block.types.BlockWater;
  */
 public abstract class Block {
 	/**
-	 * Map of blocks
+	 * Blocks Data
 	 */
 	public static HashMap<Byte, IBlock> blockMap = new HashMap<Byte, IBlock>();
 
@@ -90,7 +90,7 @@ public abstract class Block {
 	 * Register a Block to the map
 	 * 
 	 * @param id
-	 *            Bloc ID
+	 *            Block ID
 	 * @param block
 	 *            Block
 	 * @author Guerra24 <pablo230699@hotmail.com>

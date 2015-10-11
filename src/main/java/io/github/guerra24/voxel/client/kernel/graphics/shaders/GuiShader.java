@@ -34,16 +34,27 @@ import io.github.guerra24.voxel.client.kernel.util.vector.Matrix4f;
  * @category Rendering
  */
 public class GuiShader extends ShaderProgram {
+
 	/**
-	 * Transformation Matrix ID
+	 * Gui Shader Data
 	 */
-	private int location_transformationMatrix;
+	private int loc_transformationMatrix;
 
 	/**
 	 * Constructor, Creastes an GUI Shader
 	 */
 	public GuiShader() {
 		super(KernelConstants.VERTEX_FILE_GUI, KernelConstants.FRAGMENT_FILE_GUI);
+	}
+
+	@Override
+	protected void getAllUniformLocations() {
+		loc_transformationMatrix = super.getUniformLocation("transformationMatrix");
+	}
+
+	@Override
+	protected void bindAttributes() {
+		super.bindAttribute(0, "position");
 	}
 
 	/**
@@ -54,17 +65,7 @@ public class GuiShader extends ShaderProgram {
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void loadTransformation(Matrix4f matrix) {
-		super.loadMatrix(location_transformationMatrix, matrix);
-	}
-
-	@Override
-	protected void getAllUniformLocations() {
-		location_transformationMatrix = super.getUniformLocation("transformationMatrix");
-	}
-
-	@Override
-	protected void bindAttributes() {
-		super.bindAttribute(0, "position");
+		super.loadMatrix(loc_transformationMatrix, matrix);
 	}
 
 }

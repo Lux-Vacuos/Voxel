@@ -40,8 +40,17 @@ import io.github.guerra24.voxel.client.kernel.world.block.Block;
 import io.github.guerra24.voxel.client.kernel.world.block.BlockEntity;
 import io.github.guerra24.voxel.client.kernel.world.entities.Light;
 
+/**
+ * Chunk
+ * 
+ * @author Guerra24 <pablo230699@hotmail.com>
+ * @category World
+ */
 public class Chunk {
 
+	/**
+	 * Chunk Data
+	 */
 	public int dim, cx, cz, posX, posZ;
 	public volatile boolean sec1NotClear = false, sec2NotClear = false, sec3NotClear = false, sec4NotClear = false;
 	public byte[][][] blocks;
@@ -55,6 +64,19 @@ public class Chunk {
 	private transient boolean readyToRender1 = true, readyToRender2 = true, readyToRender3 = true,
 			readyToRender4 = true;
 
+	/**
+	 * Constructor
+	 * 
+	 * @param dim
+	 *            Chunk Dimension
+	 * @param cx
+	 *            Chunk X
+	 * @param cz
+	 *            Chunk Z
+	 * @param world
+	 *            Dimensional World
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public Chunk(int dim, int cx, int cz, DimensionalWorld world) {
 		this.dim = dim;
 		this.cx = cx;
@@ -64,12 +86,24 @@ public class Chunk {
 		init(world);
 	}
 
+	/**
+	 * Initialize Chunk
+	 * 
+	 * @param world
+	 *            Dimensional World
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public void init(DimensionalWorld world) {
 		loadInit();
 		blocks = new byte[sizeX][sizeY][sizeZ];
 		createChunk(world);
 	}
 
+	/**
+	 * Initialize List
+	 * 
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public void loadInit() {
 		cubes1 = new ConcurrentLinkedQueue<BlockEntity>();
 		cubes2 = new ConcurrentLinkedQueue<BlockEntity>();

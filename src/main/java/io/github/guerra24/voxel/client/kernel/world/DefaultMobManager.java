@@ -22,7 +22,6 @@
  * SOFTWARE.
  */
 
-
 package io.github.guerra24.voxel.client.kernel.world;
 
 import java.util.ArrayList;
@@ -40,6 +39,12 @@ public class DefaultMobManager implements IMobManagerController {
 	private List<IEntity> mobs = new ArrayList<IEntity>();
 	private Player player;
 
+	/**
+	 * Constructor
+	 * 
+	 * @param gm
+	 *            GameResources
+	 */
 	public DefaultMobManager(GameResources gm) {
 		init(gm);
 	}

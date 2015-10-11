@@ -22,20 +22,33 @@
  * SOFTWARE.
  */
 
-
 package io.github.guerra24.voxel.client.kernel.graphics.shaders;
 
 import io.github.guerra24.voxel.client.kernel.core.KernelConstants;
 import io.github.guerra24.voxel.client.kernel.util.vector.Matrix4f;
 import io.github.guerra24.voxel.client.kernel.util.vector.Vector2f;
 
+/**
+ * Post Processing Shader
+ * 
+ * @author Guerra24 <pablo230699@hotmail.com>
+ * @category Rendering
+ */
 public class PostProcessingShader extends ShaderProgram {
 
+	/**
+	 * Post Processing Shadaer Data
+	 */
 	private int loc_transformationMatrix;
 	private int loc_resolution;
 	private int loc_texture0;
 	private int loc_depth0;
 
+	/**
+	 * Constructor
+	 * 
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public PostProcessingShader() {
 		super(KernelConstants.VERTEX_FILE_POST, KernelConstants.FRAGMENT_FILE_POST);
 	}
@@ -63,6 +76,13 @@ public class PostProcessingShader extends ShaderProgram {
 		super.loadInt(loc_depth0, 1);
 	}
 
+	/**
+	 * Load Display Resolution
+	 * 
+	 * @param res
+	 *            Resolution as Vector2f
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
 	public void loadResolution(Vector2f res) {
 		super.load2DVector(loc_resolution, res);
 	}

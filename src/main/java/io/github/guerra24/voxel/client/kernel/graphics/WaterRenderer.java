@@ -60,32 +60,14 @@ import io.github.guerra24.voxel.client.kernel.util.vector.Vector3f;
  */
 public class WaterRenderer {
 	/**
-	 * Water DUDVMap Texture
+	 * Water Data
 	 */
 	private final String DUDV_MAP = "dudvMap";
-	/**
-	 * Water NormalMap Texture
-	 */
 	private final String NORMAL_MAP = "normalMap";
-	/**
-	 * Water RawModel
-	 */
 	private RawModel quad;
-	/**
-	 * Water Shader
-	 */
 	private WaterShader shader;
-	/**
-	 * Water Move Factor
-	 */
 	private float moveFactor = 0;
-	/**
-	 * Water DUDVMap Texture ID
-	 */
 	private int dudvTexture;
-	/**
-	 * Water NormalMap Texture ID
-	 */
 	private int normalTexture;
 
 	/**
@@ -154,7 +136,7 @@ public class WaterRenderer {
 		glActiveTexture(GL_TEXTURE1);
 		glBindTexture(GL_TEXTURE_2D, normalTexture);
 		glActiveTexture(GL_TEXTURE2);
-		glBindTexture(GL_TEXTURE_2D, gm.getWaterFBO().getDepthTexture());
+		glBindTexture(GL_TEXTURE_2D, gm.getWaterFBO().getTexture());
 	}
 
 	/**

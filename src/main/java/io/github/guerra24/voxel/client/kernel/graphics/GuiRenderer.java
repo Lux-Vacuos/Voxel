@@ -54,12 +54,9 @@ import java.util.List;
 public class GuiRenderer {
 
 	/**
-	 * Gui RawModel
+	 * Gui Data
 	 */
 	private final RawModel quad;
-	/**
-	 * Gui Shader
-	 */
 	private GuiShader shader;
 
 	/**

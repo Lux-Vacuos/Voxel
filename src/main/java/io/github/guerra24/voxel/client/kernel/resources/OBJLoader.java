@@ -33,6 +33,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -57,8 +58,8 @@ public class OBJLoader {
 	public RawModel loadObjModel(String fileName, Loader loader) {
 		FileReader fr = null;
 		try {
-			URL file = getClass().getClassLoader().getResource("assets/models/" + fileName + ".obj");
-			fr = new FileReader(new File(file.getFile()));
+			String file = "assets/models/" + fileName + ".obj";
+			fr = new FileReader(new File(file));
 			Logger.log(Thread.currentThread(), "Loading Model: " + fileName + ".obj");
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
