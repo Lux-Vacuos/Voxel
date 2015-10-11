@@ -35,11 +35,13 @@ import io.github.guerra24.voxel.client.kernel.util.vector.Vector2f;
  */
 public class GuiResources {
 
+	/**
+	 * GuiResources Data
+	 */
 	private GuiTexture button1;
 	private GuiTexture button2;
 	private GuiTexture worldLoading;
 	private GuiTexture loadBar;
-
 	public GuiTexture button5;
 	public GuiTexture gui;
 	public GuiTexture stats;
@@ -58,6 +60,8 @@ public class GuiResources {
 	/**
 	 * Load all Gui Assets
 	 * 
+	 * @param gm
+	 *            Game Resources
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void loadGuiTexture(GameResources gm) {
@@ -81,6 +85,8 @@ public class GuiResources {
 	/**
 	 * Sends GUIs to the List
 	 * 
+	 * @param gm
+	 *            Game Resources
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void addGuiTextures(GameResources gm) {

@@ -24,15 +24,19 @@
 
 package io.github.guerra24.voxel.client.kernel.core;
 
-import io.github.guerra24.voxel.client.kernel.api.API;
+import static org.lwjgl.glfw.GLFW.glfwShowWindow;
+import static org.lwjgl.opengl.GL11.GL_RENDERER;
+import static org.lwjgl.opengl.GL11.GL_VENDOR;
+import static org.lwjgl.opengl.GL11.glGetString;
+
+import io.github.guerra24.voxel.client.kernel.api.VAPI;
 import io.github.guerra24.voxel.client.kernel.bootstrap.Bootstrap;
 import io.github.guerra24.voxel.client.kernel.graphics.opengl.Display;
-import io.github.guerra24.voxel.client.kernel.graphics.opengl.SystemInfo;
 import io.github.guerra24.voxel.client.kernel.input.Keyboard;
 import io.github.guerra24.voxel.client.kernel.resources.GameResources;
 import io.github.guerra24.voxel.client.kernel.resources.GuiResources;
 import io.github.guerra24.voxel.client.kernel.util.Logger;
-import io.github.guerra24.voxel.client.kernel.world.World;
+import io.github.guerra24.voxel.client.kernel.world.WorldHandler;
 import io.github.guerra24.voxel.client.kernel.world.block.BlocksResources;
 
 /**
@@ -43,55 +47,25 @@ import io.github.guerra24.voxel.client.kernel.world.block.BlocksResources;
  */
 public class Kernel implements IKernel {
 
-	/**
-	 * Contains the Game Resources, all the textures, models and other type of
-	 * data
-	 */
-	private GameResources gameResources;
+	public static float renderCalls = 0;
+	public static float renderCallsPerFrame = 0;
+	public static float totalRenderCalls = 0;
+	public static int errorTime = 0;
 
 	/**
-	 * Contains the GUI/UI Resources
-	 */
-	private GuiResources guiResources;
-	/**
-	 * Contains and Handles the Game World
-	 */
-	private World world;
-	/**
-	 * Render calls
-	 */
-	public static float renderCalls = 0;
-	/**
-	 * Render Calls Per Frame
-	 */
-	public static float renderCallsPerFrame = 0;
-	/**
-	 * Total Render Calls
-	 */
-	public static float totalRenderCalls = 0;
-	/**
-	 * Error Check timing
-	 */
-	public static int errorTime = 0;
-	/**
-	 * World Thread
+	 * Game Threads
 	 */
 	public static WorldThread worldThread;
-	/**
-	 * Update Thread
-	 */
-	private static UpdateThread update;
+	public static WorldThread1 worldThread2;
 
+	/**
+	 * Game Data
+	 */
+	private GameResources gameResources;
+	private GuiResources guiResources;
+	private WorldHandler worlds;
 	private Display display;
-	/**
-	 * Error Test
-	 */
-	public boolean errorTest;
-
-	/**
-	 * Modding API
-	 */
-	private API api;
+	private VAPI api;
 
 	/**
 	 * Constructor of the Kernel, Initializes the Game and starts the loop
@@ -99,51 +73,50 @@ public class Kernel implements IKernel {
 	 * @param errorTest
 	 *            If running JUnit Test
 	 */
-	public Kernel(boolean errorTest) {
-		this.errorTest = errorTest;
+	public Kernel() {
 		mainLoop();
 	}
 
 	@Override
 	public void init() {
 
+		display = new Display();
+		display.initDsiplay(1280, 720);
+		display.startUp();
 		Logger.log(Thread.currentThread(), "Loading");
 		Logger.log(Thread.currentThread(), "Voxel Game Version: " + KernelConstants.version);
 		Logger.log(Thread.currentThread(), "Build: " + KernelConstants.build);
 		Logger.log(Thread.currentThread(), "Running on: " + Bootstrap.getPlatform());
-		display = new Display();
-		display.initDsiplay();
-		display.startUp();
-		SystemInfo.printSystemInfo();
+		Logger.log(Thread.currentThread(), "Vendor: " + glGetString(GL_VENDOR));
+		Logger.log(Thread.currentThread(), "Renderer: " + glGetString(GL_RENDERER));
 
 		gameResources = new GameResources();
-		api = new API();
+		api = new VAPI();
 		api.preInit();
 		gameResources.init();
 		guiResources = new GuiResources(gameResources);
 		BlocksResources.createBlocks(gameResources.getLoader());
 		gameResources.addRes();
 		gameResources.music();
-		world = new World();
+		worlds = new WorldHandler();
+		Logger.log(Thread.currentThread(), "Initializing Threads");
 		worldThread = new WorldThread();
-		worldThread.setName("Voxel World");
+		worldThread.setName("Voxel World 1");
 		worldThread.setApi(api);
-		worldThread.setWorld(world);
+		worldThread.setWorldHandler(worlds);
 		worldThread.setGm(gameResources);
 		worldThread.start();
-		update = new UpdateThread();
-		update.setName("Voxel Update");
-		update.setApi(api);
-		update.setWorld(world);
-		update.setGm(gameResources);
-		update.start();
+		worldThread2 = new WorldThread1();
+		worldThread2.setName("Voxel World 2");
+		worldThread2.setApi(api);
+		worldThread2.setWorldHandler(worlds);
+		worldThread2.setGameResources(gameResources);
+		worldThread2.setKernel(this);
+		worldThread2.setGuiResources(guiResources);
+		worldThread2.start();
 		api.init();
-		// byte[] user = Launcher.user.getBytes(Charset.forName("UTF-8"));
-		// Logger.log(Thread.currentThread(), "User: " + Launcher.user +
-		// "UUID: "
-		// + UUID.nameUUIDFromBytes(user));
 		api.postInit();
-		KernelConstants.loaded = true;
+		glfwShowWindow(Display.getWindow());
 		gameResources.getSoundSystem().play("menu1");
 	}
 
@@ -151,11 +124,8 @@ public class Kernel implements IKernel {
 	public void mainLoop() {
 		init();
 		float delta = 0;
-		float accumulator = 0f;
-		float interval = 1f / 30;
-		float alpha = 0;
 		while (gameResources.getGameStates().loop) {
-			if (Display.timeCount > 1f) {
+			if (Display.timeCountRender > 1f) {
 				Logger.log(Thread.currentThread(), "RCPS: " + Kernel.renderCallsPerFrame);
 				Logger.log(Thread.currentThread(), "FPS: " + Display.fps);
 				Logger.log(Thread.currentThread(), "UPS: " + Display.ups);
@@ -163,18 +133,10 @@ public class Kernel implements IKernel {
 				Display.fpsCount = 0;
 				Display.ups = Display.upsCount;
 				Display.upsCount = 0;
-				Display.timeCount -= 1f;
+				Display.timeCountRender -= 1f;
 			}
-			delta = Display.getDelta();
-			accumulator += delta;
-			while (accumulator >= interval) {
-				update(gameResources, guiResources, interval);
-				accumulator -= interval;
-			}
-
-			alpha = accumulator / interval;
+			delta = Display.getDeltaRender();
 			render(gameResources, delta);
-			error();
 			totalRenderCalls += renderCalls;
 			renderCallsPerFrame = renderCalls;
 			renderCalls = 0;
@@ -194,40 +156,50 @@ public class Kernel implements IKernel {
 			display.updateDisplay(30, gm);
 			break;
 		case IN_PAUSE:
-			gm.getFrustum().calculateFrustum(gm);
 			gm.getRenderer().prepare();
-			world.updateChunksRender(gm);
+			worlds.getWorld(worlds.getActiveWorld()).updateChunksRender(gm);
 			gm.getRenderer().renderEntity(gm.getPhysics().getMobManager().getMobs(), gm.lights, gm);
 			gm.getSkyboxRenderer().render(KernelConstants.RED, KernelConstants.GREEN, KernelConstants.BLUE, delta, gm);
+			gm.getParticleController().render(gm);
 			gm.getGuiRenderer().renderGui(gm.guis4);
 			display.updateDisplay(KernelConstants.FPS, gm);
 			break;
-		case GAME:
-			gm.getCamera().updatePicker(world);
+		case GAME:// THIS NEEDS OPTIMIZATION...
+			gm.getCamera().update(delta, gameResources, guiResources, worlds.getWorld(worlds.getActiveWorld()), api);
+			gm.getPhysics().getMobManager().getPlayer().update(delta, gm, guiResources,
+					worlds.getWorld(worlds.getActiveWorld()), api);
+			gm.getCamera().updatePicker(worlds.getWorld(worlds.getActiveWorld()));
 			gm.getFrustum().calculateFrustum(gm);
-			gm.getFrameBuffer().begin();
+
+			gm.getWaterFBO().begin(512, 512);
 			gm.getCamera().invertPitch();
 			gm.getRenderer().prepare();
 			gm.getSkyboxRenderer().render(KernelConstants.RED, KernelConstants.GREEN, KernelConstants.BLUE, delta, gm);
-			gm.getFrameBuffer().end();
+			gm.getWaterFBO().end();
 			gm.getCamera().invertPitch();
+
+			gm.getPostProcessing().getPost_fbo().begin(Display.getWidth(), Display.getHeight());
 			gm.getRenderer().prepare();
-			world.updateChunksRender(gm);
+			worlds.getWorld(worlds.getActiveWorld()).updateChunksRender(gm);
+			gm.getSkyboxRenderer().render(KernelConstants.RED, KernelConstants.GREEN, KernelConstants.BLUE, delta, gm);
 			gm.getRenderer().renderEntity(gm.getPhysics().getMobManager().getMobs(), gm.lights, gm);
-			gm.getSkyboxRenderer().render(KernelConstants.RED, KernelConstants.GREEN, KernelConstants.BLUE, delta, gm);
+			gm.getParticleController().render(gm);
+			gm.getPostProcessing().getPost_fbo().end();
+
+			gm.getRenderer().prepare();
+			gm.getPostProcessing().render();
 			gm.getGuiRenderer().renderGui(gm.guis);
 			display.updateDisplay(KernelConstants.FPS, gm);
 			break;
 		case LOADING_WORLD:
 			gm.getRenderer().prepare();
 			gm.getGuiRenderer().renderGui(gm.guis3);
-			display.updateDisplay(60, gm);
+			display.updateDisplay(30, gm);
 			break;
 		}
 	}
 
-	@Override
-	public void update(GameResources gm, GuiResources gi, float delta) {
+	public void update(GameResources gm, GuiResources gi, WorldHandler world, float delta) {
 		Display.upsCount++;
 		switch (gm.getGameStates().state) {
 		case MAINMENU:
@@ -240,24 +212,16 @@ public class Kernel implements IKernel {
 				Bootstrap.config.setVisible(true);
 			break;
 		case GAME:
-			gm.getPhysics().getMobManager().update(delta, gm, gi, world);
+			gm.getPhysics().getMobManager().update(delta, gm, gi, worlds.getWorld(worlds.getActiveWorld()), api);
+			gm.getParticleController().update(delta, gm, gi, worlds.getWorld(worlds.getActiveWorld()));
 			gm.getWaterRenderer().update(delta);
 			gm.getSkyboxRenderer().update(delta);
+			gm.getParticleController().update(delta, gm, gi, worlds.getWorld(worlds.getActiveWorld()));
 			break;
 		case LOADING_WORLD:
 			break;
 		}
-	}
-
-	@Override
-	public void error() {
-		errorTime++;
-		if (errorTime % 100 == 0) {
-			if (renderCallsPerFrame > 50000) {
-				Logger.warn(Thread.currentThread(), "Render Overflow");
-			}
-			errorTime = 0;
-		}
+		gm.getGameStates().switchStates(gm, world, api, display);
 	}
 
 	@Override
@@ -265,9 +229,7 @@ public class Kernel implements IKernel {
 		Logger.log(Thread.currentThread(), "Closing Game");
 		gameResources.cleanUp();
 		api.dispose();
-		if (!errorTest) {
-			Bootstrap.config.dispose();
-		}
+		Bootstrap.config.dispose();
 		display.closeDisplay();
 	}
 
@@ -279,11 +241,11 @@ public class Kernel implements IKernel {
 		return guiResources;
 	}
 
-	public World getWorld() {
-		return world;
+	public WorldHandler getWorldHadler() {
+		return worlds;
 	}
 
-	public API getApi() {
+	public VAPI getApi() {
 		return api;
 	}
 

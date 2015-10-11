@@ -85,6 +85,7 @@ public class BlocksResources {
 	public static TexturedModel cubeGoldOreSOUTH;
 
 	public static TexturedModel cubeTorch;
+	public static TexturedModel cubePortal;
 
 	public static void createBlocks(Loader loader) {
 
@@ -95,6 +96,7 @@ public class BlocksResources {
 		RawModel nort = loader.getObjLoader().loadObjModel("FACE_NORTH", loader);
 		RawModel south = loader.getObjLoader().loadObjModel("FACE_SOUTH", loader);
 		RawModel torch = loader.getObjLoader().loadObjModel("Torch", loader);
+		RawModel portal = loader.getObjLoader().loadObjModel("Portal", loader);
 
 		ModelTexture texture0 = new ModelTexture(loader.loadTextureBlocks("Indes"));
 		ModelTexture texture = new ModelTexture(loader.loadTextureBlocks("Grass"));
@@ -106,6 +108,7 @@ public class BlocksResources {
 		ModelTexture texture6 = new ModelTexture(loader.loadTextureBlocks("Gold-Ore"));
 		ModelTexture texture7 = new ModelTexture(loader.loadTextureBlocks("GrassSide"));
 		ModelTexture texture8 = new ModelTexture(loader.loadTextureBlocks("Torch"));
+		ModelTexture texture9 = new ModelTexture(loader.loadTextureBlocks("Portal"));
 
 		cubeIndesUP = new TexturedModel(up, texture0);
 		cubeGrassUP = new TexturedModel(up, texture);
@@ -162,5 +165,7 @@ public class BlocksResources {
 		cubeGoldOreSOUTH = new TexturedModel(south, texture6);
 
 		cubeTorch = new TexturedModel(torch, texture8);
+
+		cubePortal = new TexturedModel(portal, texture9);
 	}
 }

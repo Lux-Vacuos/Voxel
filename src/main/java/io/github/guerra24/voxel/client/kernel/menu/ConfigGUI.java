@@ -40,6 +40,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Properties;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
@@ -95,6 +96,8 @@ public class ConfigGUI extends JFrame implements ItemListener {
 	 */
 	public ConfigGUI() {
 		super("Game Settings");
+		ImageIcon imgicon = new ImageIcon(getClass().getClassLoader().getResource("assets/icon/icon64.png"));
+		setIconImage(imgicon.getImage());
 		Logger.log(Thread.currentThread(), "Starting Settings GUI");
 		setLayout(new GridBagLayout());
 		GridBagConstraints constraints = new GridBagConstraints();
@@ -325,6 +328,9 @@ public class ConfigGUI extends JFrame implements ItemListener {
 		configProps.setProperty("VSYNC", Boolean.toString(KernelConstants.VSYNC));
 		configProps.setProperty("SEED", textSEED.getText());
 		configProps.setProperty("DrawDistance", s.toString());
+		File folder = new File("assets/game/");
+		if (!folder.exists())
+			folder.mkdirs();
 		OutputStream outputStream = new FileOutputStream(configFile);
 		configProps.store(outputStream, "Game Settings");
 		outputStream.close();

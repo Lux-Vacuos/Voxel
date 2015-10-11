@@ -36,8 +36,6 @@ uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;
 uniform mat4 modelMatrix;
 uniform vec3 cameraPosition;
-uniform vec3 lightPosition;
-uniform vec3 lightColour;
 uniform vec3 directLightDirection;
 
 const float tiling = 0.5;
@@ -54,7 +52,6 @@ void main(void) {
 	
 	textureCoords = vec2(position.x/2.0 + 0.5, position.y/2.0 + 0.5) * tiling;
 	toCameraVector = cameraPosition - worldPosition.xyz;
-	//fromLightVector = worldPosition.xyz - lightPosition;
 	fromLightVector = directLightDirection;
 	
 	float distance = length(positionRelativeToCam.xyz);
