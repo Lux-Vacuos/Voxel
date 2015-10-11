@@ -80,15 +80,15 @@ public class Kernel implements IKernel {
 	@Override
 	public void init() {
 
+		display = new Display();
+		display.initDsiplay(1280, 720);
+		display.startUp();
 		Logger.log(Thread.currentThread(), "Loading");
 		Logger.log(Thread.currentThread(), "Voxel Game Version: " + KernelConstants.version);
 		Logger.log(Thread.currentThread(), "Build: " + KernelConstants.build);
 		Logger.log(Thread.currentThread(), "Running on: " + Bootstrap.getPlatform());
 		Logger.log(Thread.currentThread(), "Vendor: " + glGetString(GL_VENDOR));
 		Logger.log(Thread.currentThread(), "Renderer: " + glGetString(GL_RENDERER));
-		display = new Display();
-		display.initDsiplay(1280, 720);
-		display.startUp();
 
 		gameResources = new GameResources();
 		api = new VAPI();
