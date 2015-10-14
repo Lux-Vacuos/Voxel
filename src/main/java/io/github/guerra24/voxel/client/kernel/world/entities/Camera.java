@@ -134,22 +134,25 @@ public class Camera implements IEntity {
 		}
 
 		if (isKeyDown(KEY_W)) {
-
+			int xa = world.getGlobalBlock(world.getChunkDimension(), bx, by, bz + 1);
+			int xb = world.getGlobalBlock(world.getChunkDimension(), bx, by, bz - 1);
+			int za = world.getGlobalBlock(world.getChunkDimension(), bx + 1, by, bz);
+			int zb = world.getGlobalBlock(world.getChunkDimension(), bx - 1, by, bz);
 			if (yaw > 90 && yaw < 270) {
-				if (world.getGlobalBlock(world.getChunkDimension(), bx, by, bz + 1) == 0)
+				if (xa == 0 || xa == Block.Water.getId())
 					position.z += -Math.cos(Math.toRadians(yaw)) * delta * speed * multiplierMovement;
 			} else if ((yaw > 270 && yaw < 360) || (yaw > 0 && yaw < 90)) {
-				if (world.getGlobalBlock(world.getChunkDimension(), bx, by, bz - 1) == 0)
+				if (xb == 0 || xb == Block.Water.getId())
 					position.z += -Math.cos(Math.toRadians(yaw)) * delta * speed * multiplierMovement;
 			} else {
 				position.z += -Math.cos(Math.toRadians(yaw)) * delta * speed * multiplierMovement;
 			}
 
 			if (yaw > 0 && yaw < 180) {
-				if (world.getGlobalBlock(world.getChunkDimension(), bx + 1, by, bz) == 0)
+				if (za == 0 || za == Block.Water.getId())
 					position.x += Math.sin(Math.toRadians(yaw)) * delta * speed * multiplierMovement;
 			} else if (yaw > 180 && yaw < 360) {
-				if (world.getGlobalBlock(world.getChunkDimension(), bx - 1, by, bz) == 0)
+				if (zb == 0 || zb == Block.Water.getId())
 					position.x += Math.sin(Math.toRadians(yaw)) * delta * speed * multiplierMovement;
 			} else {
 				position.x += Math.sin(Math.toRadians(yaw)) * delta * speed * multiplierMovement;
