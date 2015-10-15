@@ -24,7 +24,9 @@
 
 package io.github.guerra24.voxel.client.kernel.graphics.shaders;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Queue;
 
 import io.github.guerra24.voxel.client.kernel.core.KernelConstants;
 import io.github.guerra24.voxel.client.kernel.util.Maths;
@@ -171,12 +173,14 @@ public class EntityShader extends ShaderProgram {
 	 *            List of Lights
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public void loadLights(List<Light> lights) {
+	public void loadLights(Queue<Light> lights) {
+		List<Light> fixedList = new ArrayList<Light>();
+		fixedList.addAll(lights);
 		for (int i = 0; i < KernelConstants.MAX_LIGHTS; i++) {
 			if (i < lights.size()) {
-				super.loadVector(loc_lightPosition[i], lights.get(i).getPosition());
-				super.loadVector(loc_lightColour[i], lights.get(i).getColour());
-				super.loadVector(loc_attenuations[i], lights.get(i).getAttenuation());
+				super.loadVector(loc_lightPosition[i], fixedList.get(i).getPosition());
+				super.loadVector(loc_lightColour[i], fixedList.get(i).getColour());
+				super.loadVector(loc_attenuations[i], fixedList.get(i).getAttenuation());
 			} else {
 				super.loadVector(loc_lightPosition[i], new Vector3f(0, -128, 0));
 				super.loadVector(loc_lightColour[i],
@@ -202,7 +206,8 @@ public class EntityShader extends ShaderProgram {
 	/**
 	 * Loads Projection Matrix to the shader
 	 * 
-	 * @param projection Projection Matrix
+	 * @param projection
+	 *            Projection Matrix
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void loadProjectionMatrix(Matrix4f projection) {

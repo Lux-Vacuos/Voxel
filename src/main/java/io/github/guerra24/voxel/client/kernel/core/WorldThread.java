@@ -52,7 +52,6 @@ public class WorldThread extends Thread {
 				break;
 			case IN_PAUSE:
 				world.getWorld(world.getActiveWorld()).updateChunkGeneration(gm, api);
-				world.getWorld(world.getActiveWorld()).updateChunkMesh(gm, api);
 				break;
 			case GAME:
 				world.getWorld(world.getActiveWorld()).updateChunkGeneration(gm, api);

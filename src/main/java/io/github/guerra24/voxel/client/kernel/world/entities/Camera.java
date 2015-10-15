@@ -139,26 +139,27 @@ public class Camera implements IEntity {
 		else
 			underWater = false;
 
+		int xa = world.getGlobalBlock(world.getChunkDimension(), bx + 1, by, bz);
+		int xb = world.getGlobalBlock(world.getChunkDimension(), bx - 1, by, bz);
+		int za = world.getGlobalBlock(world.getChunkDimension(), bx, by, bz + 1);
+		int zb = world.getGlobalBlock(world.getChunkDimension(), bx, by, bz - 1);
+
 		if (isKeyDown(KEY_W)) {
-			int xa = world.getGlobalBlock(world.getChunkDimension(), bx, by, bz + 1);
-			int xb = world.getGlobalBlock(world.getChunkDimension(), bx, by, bz - 1);
-			int za = world.getGlobalBlock(world.getChunkDimension(), bx + 1, by, bz);
-			int zb = world.getGlobalBlock(world.getChunkDimension(), bx - 1, by, bz);
 			if (yaw > 90 && yaw < 270) {
-				if (xa == 0 || xa == Block.Water.getId())
+				if (za == 0 || za == Block.Water.getId())
 					position.z += -Math.cos(Math.toRadians(yaw)) * delta * speed * multiplierMovement;
 			} else if ((yaw > 270 && yaw < 360) || (yaw > 0 && yaw < 90)) {
-				if (xb == 0 || xb == Block.Water.getId())
+				if (zb == 0 || zb == Block.Water.getId())
 					position.z += -Math.cos(Math.toRadians(yaw)) * delta * speed * multiplierMovement;
 			} else {
 				position.z += -Math.cos(Math.toRadians(yaw)) * delta * speed * multiplierMovement;
 			}
 
 			if (yaw > 0 && yaw < 180) {
-				if (za == 0 || za == Block.Water.getId())
+				if (xa == 0 || xa == Block.Water.getId())
 					position.x += Math.sin(Math.toRadians(yaw)) * delta * speed * multiplierMovement;
 			} else if (yaw > 180 && yaw < 360) {
-				if (zb == 0 || zb == Block.Water.getId())
+				if (xb == 0 || xb == Block.Water.getId())
 					position.x += Math.sin(Math.toRadians(yaw)) * delta * speed * multiplierMovement;
 			} else {
 				position.x += Math.sin(Math.toRadians(yaw)) * delta * speed * multiplierMovement;
@@ -167,18 +168,72 @@ public class Camera implements IEntity {
 
 		} else if (isKeyDown(KEY_S)) {
 
-			position.z -= -Math.cos(Math.toRadians(yaw)) * delta * speed * multiplierMovement;
-			position.x -= Math.sin(Math.toRadians(yaw)) * delta * speed * multiplierMovement;
+			if (yaw > 90 && yaw < 270) {
+				if (zb == 0 || zb == Block.Water.getId())
+					position.z -= -Math.cos(Math.toRadians(yaw)) * delta * speed * multiplierMovement;
+			} else if ((yaw > 270 && yaw < 360) || (yaw > 0 && yaw < 90)) {
+				if (za == 0 || za == Block.Water.getId())
+					position.z -= -Math.cos(Math.toRadians(yaw)) * delta * speed * multiplierMovement;
+			} else {
+				position.z -= -Math.cos(Math.toRadians(yaw)) * delta * speed * multiplierMovement;
+			}
+
+			if (yaw > 0 && yaw < 180) {
+				if (xb == 0 || xb == Block.Water.getId())
+					position.x -= Math.sin(Math.toRadians(yaw)) * delta * speed * multiplierMovement;
+			} else if (yaw > 180 && yaw < 360) {
+				if (xa == 0 || xa == Block.Water.getId())
+					position.x -= Math.sin(Math.toRadians(yaw)) * delta * speed * multiplierMovement;
+			} else {
+				position.x -= Math.sin(Math.toRadians(yaw)) * delta * speed * multiplierMovement;
+			}
+
 			isMoved = true;
 		}
 
 		if (isKeyDown(KEY_D)) {
-			position.z += Math.sin(Math.toRadians(yaw)) * delta * speed * multiplierMovement;
-			position.x += Math.cos(Math.toRadians(yaw)) * delta * speed * multiplierMovement;
+
+			if (yaw > 0 && yaw < 180) {
+				if (za == 0 || za == Block.Water.getId())
+					position.z += Math.sin(Math.toRadians(yaw)) * delta * speed * multiplierMovement;
+			} else if (yaw > 180 && yaw < 360) {
+				if (zb == 0 || zb == Block.Water.getId())
+					position.z += Math.sin(Math.toRadians(yaw)) * delta * speed * multiplierMovement;
+			} else {
+				position.z += Math.sin(Math.toRadians(yaw)) * delta * speed * multiplierMovement;
+			}
+
+			if (yaw > 90 && yaw < 270) {
+				if (xb == 0 || xb == Block.Water.getId())
+					position.x += Math.cos(Math.toRadians(yaw)) * delta * speed * multiplierMovement;
+			} else if ((yaw > 270 && yaw < 360) || (yaw > 0 && yaw < 90)) {
+				if (xa == 0 || xa == Block.Water.getId())
+					position.x += Math.cos(Math.toRadians(yaw)) * delta * speed * multiplierMovement;
+			} else {
+				position.x += Math.cos(Math.toRadians(yaw)) * delta * speed * multiplierMovement;
+			}
+
 			isMoved = true;
 		} else if (isKeyDown(KEY_A)) {
-			position.z -= Math.sin(Math.toRadians(yaw)) * delta * speed * multiplierMovement;
-			position.x -= Math.cos(Math.toRadians(yaw)) * delta * speed * multiplierMovement;
+			if (yaw > 0 && yaw < 180) {
+				if (zb == 0 || zb == Block.Water.getId())
+					position.z -= Math.sin(Math.toRadians(yaw)) * delta * speed * multiplierMovement;
+			} else if (yaw > 180 && yaw < 360) {
+				if (za == 0 || za == Block.Water.getId())
+					position.z -= Math.sin(Math.toRadians(yaw)) * delta * speed * multiplierMovement;
+			} else {
+				position.z -= Math.sin(Math.toRadians(yaw)) * delta * speed * multiplierMovement;
+			}
+
+			if (yaw > 90 && yaw < 270) {
+				if (xa == 0 || xa == Block.Water.getId())
+					position.x -= Math.cos(Math.toRadians(yaw)) * delta * speed * multiplierMovement;
+			} else if ((yaw > 270 && yaw < 360) || (yaw > 0 && yaw < 90)) {
+				if (xb == 0 || xb == Block.Water.getId())
+					position.x -= Math.cos(Math.toRadians(yaw)) * delta * speed * multiplierMovement;
+			} else {
+				position.x -= Math.cos(Math.toRadians(yaw)) * delta * speed * multiplierMovement;
+			}
 			isMoved = true;
 		}
 		if (isKeyDown(KEY_SPACE)) {
@@ -195,8 +250,8 @@ public class Camera implements IEntity {
 			speed = 0.2f;
 		}
 		if (isKeyDown(KEY_Y)) {
-			System.out.println(position);
 			System.out.println(yaw);
+			System.out.println(position);
 		}
 
 		updatePlayerState(gi);

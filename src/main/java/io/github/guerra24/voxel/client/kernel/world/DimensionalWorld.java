@@ -183,7 +183,7 @@ public class DimensionalWorld {
 				}
 				if (zr * zr + xr * xr <= KernelConstants.genRadius * KernelConstants.genRadius
 						&& zr * zr + xr * xr >= (KernelConstants.genRadius - KernelConstants.radiusLimit)
-								* (KernelConstants.genRadius - KernelConstants.radiusLimit - 1)) {
+								* (KernelConstants.genRadius - KernelConstants.radiusLimit)) {
 					if (hasChunk(chunkDim, xx, zz)) {
 						saveChunk(chunkDim, xx, zz, gm);
 						removeChunk(getChunk(chunkDim, xx, zz));

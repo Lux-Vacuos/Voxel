@@ -24,8 +24,6 @@
 
 package io.github.guerra24.voxel.client.kernel.world.chunks;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -59,7 +57,7 @@ public class Chunk {
 	private transient Queue<WaterTile> water1, water2, water3, water4;
 	private transient Queue<WaterTile> water1temp, water2temp, water3temp, water4temp;
 	private transient Queue<BlockEntity> cubes1temp, cubes2temp, cubes3temp, cubes4temp;
-	private transient List<Light> lights1, lights2, lights3, lights4;
+	private transient Queue<Light> lights1, lights2, lights3, lights4;
 	private transient int sizeX, sizeY, sizeZ;
 	private transient boolean readyToRender1 = true, readyToRender2 = true, readyToRender3 = true,
 			readyToRender4 = true;
@@ -121,10 +119,10 @@ public class Chunk {
 		water2temp = new ConcurrentLinkedQueue<WaterTile>();
 		water3temp = new ConcurrentLinkedQueue<WaterTile>();
 		water4temp = new ConcurrentLinkedQueue<WaterTile>();
-		lights1 = new ArrayList<Light>();
-		lights2 = new ArrayList<Light>();
-		lights3 = new ArrayList<Light>();
-		lights4 = new ArrayList<Light>();
+		lights1 = new ConcurrentLinkedQueue<Light>();
+		lights2 = new ConcurrentLinkedQueue<Light>();
+		lights3 = new ConcurrentLinkedQueue<Light>();
+		lights4 = new ConcurrentLinkedQueue<Light>();
 		sizeX = KernelConstants.CHUNK_SIZE;
 		sizeY = KernelConstants.CHUNK_HEIGHT;
 		sizeZ = KernelConstants.CHUNK_SIZE;
@@ -221,23 +219,18 @@ public class Chunk {
 		}
 	}
 
-	public void rebuildChunkSection(boolean secClear, List<Light> lights, Queue<BlockEntity> cubes,
+	public void rebuildChunkSection(boolean secClear, Queue<Light> lights, Queue<BlockEntity> cubes,
 			Queue<WaterTile> water, DimensionalWorld world, int minY, int maxY) {
 		secClear = false;
 		for (int x = 0; x < sizeX; x++) {
 			for (int z = 0; z < sizeZ; z++) {
 				for (int y = minY; y < maxY; y++) {
 					if (Block.getBlock(blocks[x][y][z]) == Block.Torch) {
-						if (cullFaceDown(x, y, z) && cullFaceEast(x, y, z, world) && cullFaceNorth(x, y, z, world)
-								&& cullFaceSouth(x, y, z, world) && cullFaceUpSolidBlock(x, y, z)
-								&& cullFaceWest(x, y, z, world)) {
-							cubes.add(Block.getBlock(blocks[x][y][z])
-									.getSingleModel(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
-							lights.add(
-									new Light(new Vector3f((x + cx * sizeX) + 0.5f, y + 0.8f, (z + cz * sizeZ) - 0.5f),
-											new Vector3f(1, 1, 1), new Vector3f(1, 0.1f, 0.09f)));
-							secClear = true;
-						}
+						cubes.add(Block.getBlock(blocks[x][y][z])
+								.getSingleModel(new Vector3f(x + cx * sizeX, y, z + cz * sizeZ)));
+						lights.add(new Light(new Vector3f((x + cx * sizeX) + 0.5f, y + 0.8f, (z + cz * sizeZ) - 0.5f),
+								new Vector3f(1, 1, 1), new Vector3f(1, 0.1f, 0.09f)));
+						secClear = true;
 					} else if (Block.getBlock(blocks[x][y][z]) != Block.Air
 							&& Block.getBlock(blocks[x][y][z]) != Block.Water) {
 						if (cullFaceWest(x + cx * sizeX, y, z + cz * sizeZ, world)) {

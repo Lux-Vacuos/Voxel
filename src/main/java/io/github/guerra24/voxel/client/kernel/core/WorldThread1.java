@@ -37,12 +37,13 @@ public class WorldThread1 extends Thread {
 	private VAPI api;
 	private Kernel kernel;
 	private long variableYieldTime, lastTime;
+	private int fps = 15;
 
 	@Override
 	public void run() {
 		float delta = 0;
 		float accumulator = 0f;
-		float interval = 1f / 60;
+		float interval = 1f / fps;
 		float alpha = 0;
 		while (gameResources.getGameStates().loop) {
 			delta = Display.getDeltaUpdate();
@@ -52,7 +53,7 @@ public class WorldThread1 extends Thread {
 				accumulator -= interval;
 			}
 			alpha = accumulator / interval;
-			sync(60);
+			sync(fps);
 		}
 	}
 

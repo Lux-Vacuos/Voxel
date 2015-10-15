@@ -47,7 +47,7 @@ uniform vec2 resolution;
 
 void main(void){
 
-	gl_Position = transformationMatrix * vec4(position, -1.0, 1.0);
+	gl_Position = transformationMatrix * vec4(position, -0.8, 1.0);
 	textureCoords = vec2((position.x+1.0)/2.0, (position.y+1.0)/2.0);
 	#ifdef FXAA
 		vec2 rcpFrame = vec2(1.0/resolution.x, 1.0/resolution.y);

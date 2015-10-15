@@ -35,6 +35,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import io.github.guerra24.voxel.client.kernel.core.KernelConstants;
 import io.github.guerra24.voxel.client.kernel.graphics.opengl.Display;
@@ -99,17 +100,17 @@ public class MasterRenderer {
 	 * 
 	 * @param cubes1temp
 	 *            A list of BlockEntity
-	 * @param lights
+	 * @param lights1
 	 *            A list of Lights
 	 * @param camera
 	 *            A Camera
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public void renderChunk(Queue<BlockEntity> cubes, List<Light> lights, GameResources gm) {
+	public void renderChunk(Queue<BlockEntity> cubes, Queue<Light> lights1, GameResources gm) {
 		for (BlockEntity entity : cubes) {
 			processBlockEntity(entity);
 		}
-		renderChunk(lights, gm);
+		renderChunk(lights1, gm);
 	}
 
 	/**
@@ -143,7 +144,7 @@ public class MasterRenderer {
 	 *            A Camera
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	private void renderChunk(List<Light> lights, GameResources gm) {
+	private void renderChunk(Queue<Light> lights, GameResources gm) {
 		shader.start();
 		shader.loadProjectionMatrix(projectionMatrix);
 		shader.loadSkyColour(KernelConstants.RED, KernelConstants.GREEN, KernelConstants.BLUE);
@@ -169,7 +170,9 @@ public class MasterRenderer {
 	private void renderEntity(List<Light> lights, GameResources gm) {
 		shader.start();
 		shader.loadProjectionMatrix(projectionMatrix);
-		shader.loadLights(lights);
+		Queue<Light> fixedLights = new ConcurrentLinkedQueue<Light>();
+		fixedLights.addAll(lights);
+		shader.loadLights(fixedLights);
 		shader.loadviewMatrix(gm.getCamera());
 		shader.loadDirectLightDirection(new Vector3f(-80, -100, -40));
 		entityRenderer.renderEntity(entities, gm);
