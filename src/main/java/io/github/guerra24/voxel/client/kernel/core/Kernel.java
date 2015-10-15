@@ -30,14 +30,6 @@ import static org.lwjgl.opengl.GL11.GL_VENDOR;
 import static org.lwjgl.opengl.GL11.GL_VERSION;
 import static org.lwjgl.opengl.GL11.glGetString;
 
-import java.io.IOException;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.util.Enumeration;
-import java.util.Map;
-import java.util.jar.Attributes;
-import java.util.jar.Manifest;
-
 import org.lwjgl.Sys;
 
 import io.github.guerra24.voxel.client.kernel.api.VAPI;
@@ -199,7 +191,7 @@ public class Kernel implements IKernel {
 			gm.getPostProcessing().getPost_fbo().end();
 
 			gm.getRenderer().prepare();
-			gm.getPostProcessing().render();
+			gm.getPostProcessing().render(gm);
 			gm.getGuiRenderer().renderGui(gm.guis);
 			display.updateDisplay(KernelConstants.FPS, gm);
 			break;

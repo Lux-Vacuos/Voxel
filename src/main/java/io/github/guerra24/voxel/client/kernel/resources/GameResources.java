@@ -119,7 +119,7 @@ public class GameResources {
 		particleController = new ParticleController(loader);
 		postProcessing = new PostProcessingRenderer(loader);
 		gameStates = new GameStates();
-		waterFBO = new FrameBuffer(false, 512, 512);
+		waterFBO = new FrameBuffer(false, false, 512, 512);
 		physics = new Physics(this);
 		frustum = new Frustum();
 		rand = new Random();

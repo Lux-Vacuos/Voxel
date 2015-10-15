@@ -40,9 +40,13 @@ public class PostProcessingShader extends ShaderProgram {
 	 * Post Processing Shadaer Data
 	 */
 	private int loc_transformationMatrix;
+	private int loc_camUnderWater;
+	private int loc_camUnderWaterOffset;
 	private int loc_resolution;
 	private int loc_texture0;
 	private int loc_depth0;
+
+	private float time;
 
 	/**
 	 * Constructor
@@ -56,6 +60,8 @@ public class PostProcessingShader extends ShaderProgram {
 	@Override
 	protected void getAllUniformLocations() {
 		loc_transformationMatrix = super.getUniformLocation("transformationMatrix");
+		loc_camUnderWater = super.getUniformLocation("camUnderWater");
+		loc_camUnderWaterOffset = super.getUniformLocation("camUnderWaterOffset");
 		loc_resolution = super.getUniformLocation("resolution");
 		loc_texture0 = super.getUniformLocation("texture0");
 		loc_depth0 = super.getUniformLocation("depth0");
@@ -74,6 +80,11 @@ public class PostProcessingShader extends ShaderProgram {
 	public void connectTextureUnits() {
 		super.loadInt(loc_texture0, 0);
 		super.loadInt(loc_depth0, 1);
+	}
+
+	public void loadUnderWater(boolean value) {
+		super.loadBoolean(loc_camUnderWater, value);
+		super.loadFloat(loc_camUnderWaterOffset, time += 0.1f);
 	}
 
 	/**

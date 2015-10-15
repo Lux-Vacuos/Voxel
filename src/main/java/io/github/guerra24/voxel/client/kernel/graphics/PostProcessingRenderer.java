@@ -35,6 +35,7 @@ import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import io.github.guerra24.voxel.client.kernel.graphics.opengl.Display;
 import io.github.guerra24.voxel.client.kernel.graphics.opengl.VoxelGL33;
 import io.github.guerra24.voxel.client.kernel.graphics.shaders.PostProcessingShader;
+import io.github.guerra24.voxel.client.kernel.resources.GameResources;
 import io.github.guerra24.voxel.client.kernel.resources.Loader;
 import io.github.guerra24.voxel.client.kernel.resources.models.RawModel;
 import io.github.guerra24.voxel.client.kernel.util.Maths;
@@ -66,7 +67,7 @@ public class PostProcessingRenderer {
 		shader.loadTransformation(matrix);
 		shader.connectTextureUnits();
 		shader.stop();
-		post_fbo = new FrameBuffer(false, Display.getWidth(), Display.getHeight());
+		post_fbo = new FrameBuffer(false, true, Display.getWidth(), Display.getHeight());
 	}
 
 	/**
@@ -74,9 +75,10 @@ public class PostProcessingRenderer {
 	 * 
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public void render() {
+	public void render(GameResources gm) {
 		shader.start();
 		shader.loadResolution(new Vector2f(Display.getWidth(), Display.getHeight()));
+		shader.loadUnderWater(gm.getCamera().isUnderWater());
 		glBindVertexArray(quad.getVaoID());
 		glEnableVertexAttribArray(0);
 		glActiveTexture(GL_TEXTURE0);

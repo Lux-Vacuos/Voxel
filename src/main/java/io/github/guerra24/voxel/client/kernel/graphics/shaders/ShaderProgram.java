@@ -251,11 +251,11 @@ public abstract class ShaderProgram {
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	protected void loadBoolean(int location, boolean value) {
-		float toLoad = 0;
+		int toLoad = 0;
 		if (value) {
 			toLoad = 1;
 		}
-		glUniform1f(location, toLoad);
+		glUniform1i(location, toLoad);
 	}
 
 	/**

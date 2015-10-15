@@ -32,6 +32,8 @@ import static org.lwjgl.opengl.GL11.GL_RGB;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_MAG_FILTER;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_MIN_FILTER;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_WRAP_S;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_WRAP_T;
 import static org.lwjgl.opengl.GL11.GL_UNSIGNED_BYTE;
 import static org.lwjgl.opengl.GL11.glBindTexture;
 import static org.lwjgl.opengl.GL11.glDeleteTextures;
@@ -41,6 +43,7 @@ import static org.lwjgl.opengl.GL11.glReadBuffer;
 import static org.lwjgl.opengl.GL11.glTexImage2D;
 import static org.lwjgl.opengl.GL11.glTexParameteri;
 import static org.lwjgl.opengl.GL11.glViewport;
+import static org.lwjgl.opengl.GL12.GL_CLAMP_TO_EDGE;
 import static org.lwjgl.opengl.GL30.GL_COLOR_ATTACHMENT0;
 import static org.lwjgl.opengl.GL30.GL_DEPTH_ATTACHMENT;
 import static org.lwjgl.opengl.GL30.GL_FRAMEBUFFER;
@@ -70,17 +73,23 @@ public class FrameBuffer {
 	private int RenderBuffer;
 	private int Texture;
 
-	public FrameBuffer(boolean depth, int width, int height) {
-		initialiseFrameBuffer(depth, width, height);
+	public FrameBuffer(boolean depth, boolean post, int width, int height) {
+		initialiseFrameBuffer(depth, post, width, height);
 	}
 
-	private void initialiseFrameBuffer(boolean depth, int width, int height) {
+	private void initialiseFrameBuffer(boolean depth, boolean postProcessing, int width, int height) {
 		FrameBuffer = createFrameBuffer(depth);
+		FrameBuffer = createFrameBuffer(depth);
+
 		if (depth) {
 			Texture = createDepthTextureAttachment(width, height);
 		} else {
-			Texture = createTextureAttachment(width, height);
+			if (postProcessing)
+				Texture = createTextureAttachmentPost(width, height);
+			else
+				Texture = createTextureAttachment(width, height);
 		}
+
 		RenderBuffer = createDepthBufferAttachment(width, height);
 		end();
 	}
@@ -116,6 +125,18 @@ public class FrameBuffer {
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, (ByteBuffer) null);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texture, 0);
+		return texture;
+	}
+
+	private int createTextureAttachmentPost(int width, int height) {
+		int texture = glGenTextures();
+		glBindTexture(GL_TEXTURE_2D, texture);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, (ByteBuffer) null);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texture, 0);
 		return texture;
 	}

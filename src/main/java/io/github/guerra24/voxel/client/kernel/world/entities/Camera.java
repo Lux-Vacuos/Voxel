@@ -59,6 +59,7 @@ public class Camera implements IEntity {
 	private byte block = 2;
 	private boolean teleporting = false;
 	private int teleportingTime = 0;
+	private boolean underWater = false;
 
 	private int mouseSpeed = 2;
 	private final int maxLookUp = 90;
@@ -132,6 +133,11 @@ public class Camera implements IEntity {
 				teleportingTime = 0;
 			}
 		}
+
+		if (world.getGlobalBlock(world.getChunkDimension(), bx, by + 1, bz) == Block.Water.getId())
+			underWater = true;
+		else
+			underWater = false;
 
 		if (isKeyDown(KEY_W)) {
 			int xa = world.getGlobalBlock(world.getChunkDimension(), bx, by, bz + 1);
@@ -338,6 +344,10 @@ public class Camera implements IEntity {
 
 	public boolean isTeleporting() {
 		return teleporting;
+	}
+
+	public boolean isUnderWater() {
+		return underWater;
 	}
 
 }
