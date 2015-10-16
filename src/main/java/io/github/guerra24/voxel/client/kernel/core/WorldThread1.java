@@ -37,7 +37,7 @@ public class WorldThread1 extends Thread {
 	private VAPI api;
 	private Kernel kernel;
 	private long variableYieldTime, lastTime;
-	private int fps = 15;
+	private int fps = 60;
 
 	@Override
 	public void run() {

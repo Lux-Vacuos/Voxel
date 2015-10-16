@@ -43,6 +43,7 @@ import io.github.guerra24.voxel.client.kernel.util.Logger;
 import io.github.guerra24.voxel.client.kernel.util.vector.Vector2f;
 import io.github.guerra24.voxel.client.kernel.util.vector.Vector3f;
 import io.github.guerra24.voxel.client.kernel.world.chunks.Chunk;
+import io.github.guerra24.voxel.client.kernel.world.chunks.ChunkGenerator;
 import io.github.guerra24.voxel.client.kernel.world.chunks.ChunkKey;
 
 /**
@@ -66,6 +67,7 @@ public class DimensionalWorld {
 	private int zPlayChunk;
 	private int tempRadius = 0;
 	private int seedi;
+	private ChunkGenerator chunkGenerator;
 
 	/**
 	 * Start a new World
@@ -104,6 +106,7 @@ public class DimensionalWorld {
 		seedi = seed.nextInt();
 		noise = new SimplexNoise(128, 0.3f, seedi);
 		chunks = new HashMap<ChunkKey, Chunk>();
+		chunkGenerator = new ChunkGenerator();
 		gm.getPhysics().getMobManager().getPlayer().setPosition(gm.getCamera().getPosition());
 	}
 
@@ -213,16 +216,16 @@ public class DimensionalWorld {
 					Chunk chunk = getChunk(chunkDim, xx, zz);
 					if (chunk != null) {
 						if (gm.getFrustum().cubeInFrustum(xx * 16, 0, zz * 16, (xx * 16) + 16, 32, (zz * 16) + 16))
-							if (yy == 0)
+							if (yy == 1)
 								getChunk(chunkDim, xx, zz).update1(this);
 						if (gm.getFrustum().cubeInFrustum(xx * 16, 32, zz * 16, (xx * 16) + 16, 64, (zz * 16) + 16))
-							if (yy == 1)
+							if (yy == 2)
 								getChunk(chunkDim, xx, zz).update2(this);
 						if (gm.getFrustum().cubeInFrustum(xx * 16, 64, zz * 16, (xx * 16) + 16, 96, (zz * 16) + 16))
-							if (yy == 2)
+							if (yy == 3)
 								getChunk(chunkDim, xx, zz).update3(this);
 						if (gm.getFrustum().cubeInFrustum(xx * 16, 96, zz * 16, (xx * 16) + 16, 128, (zz * 16) + 16))
-							if (yy == 3)
+							if (yy == 4)
 								getChunk(chunkDim, xx, zz).update4(this);
 					}
 				}
@@ -371,7 +374,7 @@ public class DimensionalWorld {
 					+ chunkDim + "/chunk_" + chunkDim + "_" + cx + "_" + cz + ".json"));
 			Chunk chunk = gm.getGson().fromJson(br, Chunk.class);
 			if (chunk != null)
-				chunk.loadInit();
+				chunk.createList();
 			else {
 				Logger.warn(Thread.currentThread(), "Re-Creating Chunk " + chunkDim + " " + cx + " " + cz);
 				chunk = new Chunk(chunkDim, cx, cz, this);
@@ -611,6 +614,10 @@ public class DimensionalWorld {
 
 	public Random getSeed() {
 		return seed;
+	}
+
+	public ChunkGenerator getChunkGenerator() {
+		return chunkGenerator;
 	}
 
 	public void setTempRadius(int tempRadius) {

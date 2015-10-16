@@ -299,7 +299,7 @@ public class Camera implements IEntity {
 					int xx = world.getxPlayChunk() + xr;
 					if (zr * zr + xr * xr <= KernelConstants.genRadius * KernelConstants.genRadius) {
 						if (world.hasChunk(world.getChunkDimension(), xx, zz)) {
-							world.getChunk(world.getChunkDimension(), xx, zz).clear();
+							world.getChunk(world.getChunkDimension(), xx, zz).dispose();
 							world.setTempRadius(0);
 						}
 					}

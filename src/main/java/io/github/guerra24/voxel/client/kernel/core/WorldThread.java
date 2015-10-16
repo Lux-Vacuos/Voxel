@@ -38,17 +38,15 @@ public class WorldThread extends Thread {
 	private GameResources gm;
 	private WorldHandler world;
 	private VAPI api;
+	private long variableYieldTime, lastTime;
+	private int fps = 1;
 
 	@Override
 	public void run() {
 		while (gm.getGameStates().loop) {
 			switch (gm.getGameStates().state) {
 			case MAINMENU:
-				try {
-					Thread.sleep((long) 33.3333);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
+				sync(1);
 				break;
 			case IN_PAUSE:
 				world.getWorld(world.getActiveWorld()).updateChunkGeneration(gm, api);
@@ -58,11 +56,7 @@ public class WorldThread extends Thread {
 				world.getWorld(world.getActiveWorld()).updateChunkMesh(gm, api);
 				break;
 			case LOADING_WORLD:
-				try {
-					Thread.sleep((long) 33.3333);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
+				sync(1);
 				break;
 			}
 		}
@@ -78,5 +72,37 @@ public class WorldThread extends Thread {
 
 	public void setApi(VAPI api) {
 		this.api = api;
+	}
+
+	private void sync(int fps) {
+		if (fps <= 0)
+			return;
+		long sleepTime = 1000000000 / fps;
+		long yieldTime = Math.min(sleepTime, variableYieldTime + sleepTime % (1000 * 1000));
+		long overSleep = 0;
+
+		try {
+			while (true) {
+				long t = System.nanoTime() - lastTime;
+
+				if (t < sleepTime - yieldTime) {
+					Thread.sleep(1);
+				} else if (t < sleepTime) {
+					Thread.yield();
+				} else {
+					overSleep = t - sleepTime;
+					break;
+				}
+			}
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		} finally {
+			lastTime = System.nanoTime() - Math.min(overSleep, sleepTime);
+			if (overSleep > variableYieldTime) {
+				variableYieldTime = Math.min(variableYieldTime + 200 * 1000, sleepTime);
+			} else if (overSleep < variableYieldTime - 200 * 1000) {
+				variableYieldTime = Math.max(variableYieldTime - 2 * 1000, 0);
+			}
+		}
 	}
 }

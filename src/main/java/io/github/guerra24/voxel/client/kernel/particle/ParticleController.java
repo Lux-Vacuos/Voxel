@@ -32,6 +32,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import io.github.guerra24.voxel.client.kernel.graphics.ParticleRenderer;
 import io.github.guerra24.voxel.client.kernel.graphics.opengl.VoxelGL33;
@@ -53,7 +55,7 @@ public class ParticleController implements IParticleController {
 	/**
 	 * Particle Controller Data
 	 */
-	private List<Particle> particles;
+	private Queue<Particle> particles;
 	private Map<TexturedModel, List<Particle>> particleBatcher;
 	private ParticleRenderer renderer;
 	private ParticleShader shader;
@@ -70,7 +72,7 @@ public class ParticleController implements IParticleController {
 
 	@Override
 	public void init(Loader loader) {
-		particles = new ArrayList<Particle>();
+		particles = new ConcurrentLinkedQueue<Particle>();
 		particleBatcher = new HashMap<TexturedModel, List<Particle>>();
 		shader = new ParticleShader();
 		renderer = new ParticleRenderer(shader);
@@ -103,10 +105,11 @@ public class ParticleController implements IParticleController {
 	@Override
 	public void update(float delta, GameResources gm, GuiResources gi, DimensionalWorld world) {
 		emiter.spawnParticles(this);
-		for (int x = 0; x < particles.size(); x++) {
-			particles.get(x).update(delta, gm, gi, world);
-			if (particles.get(x).getLifeTime() <= 0)
-				particles.remove(x);
+		List<Particle> tempParticles = new ArrayList<Particle>(particles);
+		for (int x = 0; x < tempParticles.size(); x++) {
+			tempParticles.get(x).update(delta, gm, gi, world);
+			if (tempParticles.get(x).getLifeTime() <= 0)
+				tempParticles.remove(x);
 		}
 	}
 
@@ -136,7 +139,7 @@ public class ParticleController implements IParticleController {
 		}
 	}
 
-	public List<Particle> getParticles() {
+	public Queue<Particle> getParticles() {
 		return particles;
 	}
 
