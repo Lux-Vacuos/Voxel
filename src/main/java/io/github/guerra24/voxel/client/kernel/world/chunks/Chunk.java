@@ -136,7 +136,7 @@ public class Chunk {
 		cubes1.clear();
 		lights1.clear();
 		rebuildChunkSection(sec1NotClear, lights1, cubes1, water1, world, 0, 32);
-		calculateLight(cubes1);
+		calculateLight(cubes1, world);
 		readyToRender1 = true;
 		cubes1temp.clear();
 		water1temp.clear();
@@ -150,7 +150,7 @@ public class Chunk {
 		cubes2.clear();
 		lights2.clear();
 		rebuildChunkSection(sec2NotClear, lights2, cubes2, water2, world, 32, 64);
-		calculateLight(cubes2);
+		calculateLight(cubes2, world);
 		readyToRender2 = true;
 		cubes2temp.clear();
 		water2temp.clear();
@@ -164,7 +164,7 @@ public class Chunk {
 		cubes3.clear();
 		lights3.clear();
 		rebuildChunkSection(sec3NotClear, lights3, cubes3, water3, world, 64, 96);
-		calculateLight(cubes3);
+		calculateLight(cubes3, world);
 		readyToRender3 = true;
 		cubes3temp.clear();
 		water3temp.clear();
@@ -178,7 +178,7 @@ public class Chunk {
 		cubes4.clear();
 		lights4.clear();
 		rebuildChunkSection(sec4NotClear, lights4, cubes4, water4, world, 96, 128);
-		calculateLight(cubes4);
+		calculateLight(cubes4, world);
 		readyToRender4 = true;
 		cubes4temp.clear();
 		water4temp.clear();
@@ -289,7 +289,7 @@ public class Chunk {
 		}
 	}
 
-	private void calculateLight(Queue<BlockEntity> cubes) {
+	private void calculateLight(Queue<BlockEntity> cubes, DimensionalWorld world) {
 		for (BlockEntity blockEntity : cubes) {
 			int x, y, z;
 			x = (int) blockEntity.getPosition().x;
@@ -297,25 +297,25 @@ public class Chunk {
 			z = (int) blockEntity.getPosition().z;
 			switch (blockEntity.getSide()) {
 			case "UP":
-				blockEntity.setLocalLight(getLight(x, y, z));
+				blockEntity.setLocalLight(getLight(world, x, y, z));
 				break;
 			case "DOWN":
-				blockEntity.setLocalLight(getLight(x, y, z));
+				blockEntity.setLocalLight(getLight(world, x, y, z));
 				break;
 			case "EAST":
-				blockEntity.setLocalLight(getLight(x + 1, y, z));
+				blockEntity.setLocalLight(getLight(world, x + 1, y, z));
 				break;
 			case "WEST":
-				blockEntity.setLocalLight(getLight(x - 1, y, z));
+				blockEntity.setLocalLight(getLight(world, x - 1, y, z));
 				break;
 			case "NORTH":
-				blockEntity.setLocalLight(getLight(x, y, z - 1));
+				blockEntity.setLocalLight(getLight(world, x, y, z - 1));
 				break;
 			case "SOUTH":
-				blockEntity.setLocalLight(getLight(x, y, z + 1));
+				blockEntity.setLocalLight(getLight(world, x, y, z + 1));
 				break;
 			case "SINGLE MODEL":
-				blockEntity.setLocalLight(getLight(x, y, z));
+				blockEntity.setLocalLight(getLight(world, x, y, z));
 				break;
 			}
 		}
@@ -329,11 +329,17 @@ public class Chunk {
 		blocks[x & 0xF][y & 0x7F][z & 0xF] = id;
 	}
 
-	private float getLight(int x, int blockPos, int z) {
+	private float getLight(DimensionalWorld world, int x, int blockPos, int z) {
 		float result = 1;
 		for (int y = 128; y > blockPos; y--) {
-			if (getLocalBlock(x, y, z) != 0)
-				result -= 0.05f;
+			if (x > ((cx * sizeX) + 1) && (z > (cz * sizeZ) + 1) && (x < (cx * sizeX) + 15)
+					&& (z < (cz * sizeZ) + 15)) {
+				if (getLocalBlock(x, y, z) != Block.Air.getId())
+					result -= 0.05f;
+			} else {
+				if (world.getGlobalBlock(dim, x, y, z) != Block.Air.getId())
+					result -= 0.05f;
+			}
 		}
 		return result;
 	}
