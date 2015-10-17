@@ -42,7 +42,7 @@ public class KernelConstants {
 	 */
 	public static boolean debug = true;
 	public static String version = "0.0.5";
-	public static int build = 89;
+	public static int build = 90;
 	public static int FOV = 90;
 	public static float NEAR_PLANE = 0.2f;
 	public static float FAR_PLANE = 1000f;

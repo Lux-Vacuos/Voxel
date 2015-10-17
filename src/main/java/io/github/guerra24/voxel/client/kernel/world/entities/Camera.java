@@ -329,7 +329,6 @@ public class Camera implements IEntity {
 		int bx = (int) tempX;
 		int by = (int) tempY;
 		int bz = (int) tempZ;
-
 		world.setGlobalBlock(world.getChunkDimension(), bx, by - 2, bz, block);
 	}
 

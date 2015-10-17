@@ -125,11 +125,11 @@ public class DimensionalWorld {
 		zPlayChunk = (int) (gm.getCamera().getPosition().z / 16);
 		float o = 1f;
 		float i = 0f;
-		for (int zr = -10; zr <= 10; zr++) {
+		for (int zr = -4; zr <= 4; zr++) {
 			int zz = zPlayChunk + zr;
-			for (int xr = -10; xr <= 10; xr++) {
+			for (int xr = -4; xr <= 4; xr++) {
 				int xx = xPlayChunk + xr;
-				if (zr * zr + xr * xr < 10 * 10) {
+				if (zr * zr + xr * xr < 4 * 4) {
 					i += 0.00200f;
 					gm.guis3.get(1).setScale(new Vector2f(i, 0.041f));
 					if (i > 0.5060006f) {

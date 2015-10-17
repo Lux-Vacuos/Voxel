@@ -2,7 +2,6 @@ package io.github.guerra24.voxel.client.kernel.world.chunks;
 
 import java.util.Random;
 
-import io.github.guerra24.voxel.client.kernel.util.Maths;
 import io.github.guerra24.voxel.client.kernel.world.DimensionalWorld;
 import io.github.guerra24.voxel.client.kernel.world.block.Block;
 
@@ -32,17 +31,21 @@ public class ChunkGenerator {
 
 	}
 
-	public void generateCaves(byte[][][] blocks, DimensionalWorld world, int sizeX, int sizeZ, int cx, int cz) {
+	public void generateCaves(byte[][][] blocks, DimensionalWorld world, int sizeX, int sizeZ, int sizeY, int cx,
+			int cz) {
 		for (int x = 0; x < sizeX; x++) {
 			for (int z = 0; z < sizeZ; z++) {
-				double tempHeight = world.getNoise().getNoise(x + cx * 16, z + cz * 16);
-				tempHeight += 1;
-				int height = (int) (32 * Maths.clamp(tempHeight));
-				for (int y = 0; y < height; y++) {
-					if (y > 16)
+				for (int y = 0; y < sizeY; y++) {
+					double tempHeight = world.getNoise().getNoise(x + cx * 16, y, z + cz * 16);
+					tempHeight++;
+					if (tempHeight > 0.9) {
+					} else
 						blocks[x][y][z] = 0;
+					if (y == 0)
+						blocks[x][y][z] = Block.Indes.getId();
 				}
 			}
 		}
+
 	}
 }

@@ -208,23 +208,22 @@ public class Chunk {
 						VAPI.getWorldAPI().getChunkHandler(i).chunkGen(blocks, x, y, z);
 					}
 
-					if (y == 0)
-						blocks[x][y][z] = Block.Indes.getId();
 				}
 			}
 		}
 	}
 
 	private void createStructures(ChunkGenerator generator, DimensionalWorld world) {
-		generator.generateCaves(blocks, world, sizeX, sizeZ, cx, cz);
+		generator.generateCaves(blocks, world, sizeX, sizeZ, sizeY, cx, cz);
 		for (int i = 0; i < 4; i++) {
 			int xx = Maths.randInt(4, 12);
 			int zz = Maths.randInt(4, 12);
 			double tempHeight = world.getNoise().getNoise(xx + cx * 16, zz + cz * 16);
 			tempHeight += 1;
 			int height = (int) (64 * Maths.clamp(tempHeight));
-			if (getLocalBlock(xx, height, zz) != Block.Water.getId())
-				generator.addTree(blocks, xx, height, zz, 8, world.getSeed());
+			int h = getLocalBlock(xx, height - 1, zz);
+			if (h == Block.Grass.getId() || h == Block.Dirt.getId())
+				generator.addTree(blocks, xx, height, zz, Maths.randInt(4, 10), world.getSeed());
 		}
 	}
 

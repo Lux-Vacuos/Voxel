@@ -112,7 +112,6 @@ public class Kernel implements IKernel {
 		worldThread.start();
 		worldThread2 = new WorldThread1();
 		worldThread2.setName("Voxel World 2");
-		worldThread2.setApi(api);
 		worldThread2.setWorldHandler(worlds);
 		worldThread2.setGameResources(gameResources);
 		worldThread2.setKernel(this);
