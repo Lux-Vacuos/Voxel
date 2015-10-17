@@ -154,14 +154,14 @@ public class Kernel implements IKernel {
 		case MAINMENU:
 			gm.getFrustum().calculateFrustum(gm);
 			gm.getRenderer().prepare();
-			gm.getRenderer().renderEntity(gm.mainMenuModels, gm.mainMenuLights, gm);
+			gm.getRenderer().renderEntity(gm.mainMenuModels, gm);
 			gm.getGuiRenderer().renderGui(gm.guis2);
 			display.updateDisplay(30, gm);
 			break;
 		case IN_PAUSE:
 			gm.getRenderer().prepare();
 			worlds.getWorld(worlds.getActiveWorld()).updateChunksRender(gm);
-			gm.getRenderer().renderEntity(gm.getPhysics().getMobManager().getMobs(), gm.lights, gm);
+			gm.getRenderer().renderEntity(gm.getPhysics().getMobManager().getMobs(), gm);
 			gm.getSkyboxRenderer().render(KernelConstants.RED, KernelConstants.GREEN, KernelConstants.BLUE, delta, gm);
 			gm.getParticleController().render(gm);
 			gm.getGuiRenderer().renderGui(gm.guis4);
@@ -185,7 +185,7 @@ public class Kernel implements IKernel {
 			gm.getRenderer().prepare();
 			worlds.getWorld(worlds.getActiveWorld()).updateChunksRender(gm);
 			gm.getSkyboxRenderer().render(KernelConstants.RED, KernelConstants.GREEN, KernelConstants.BLUE, delta, gm);
-			gm.getRenderer().renderEntity(gm.getPhysics().getMobManager().getMobs(), gm.lights, gm);
+			gm.getRenderer().renderEntity(gm.getPhysics().getMobManager().getMobs(), gm);
 			gm.getParticleController().render(gm);
 			gm.getPostProcessing().getPost_fbo().end();
 

@@ -136,6 +136,7 @@ public class Chunk {
 		cubes1.clear();
 		lights1.clear();
 		rebuildChunkSection(sec1NotClear, lights1, cubes1, water1, world, 0, 32);
+		calculateLight(cubes1);
 		readyToRender1 = true;
 		cubes1temp.clear();
 		water1temp.clear();
@@ -149,6 +150,7 @@ public class Chunk {
 		cubes2.clear();
 		lights2.clear();
 		rebuildChunkSection(sec2NotClear, lights2, cubes2, water2, world, 32, 64);
+		calculateLight(cubes2);
 		readyToRender2 = true;
 		cubes2temp.clear();
 		water2temp.clear();
@@ -162,6 +164,7 @@ public class Chunk {
 		cubes3.clear();
 		lights3.clear();
 		rebuildChunkSection(sec3NotClear, lights3, cubes3, water3, world, 64, 96);
+		calculateLight(cubes3);
 		readyToRender3 = true;
 		cubes3temp.clear();
 		water3temp.clear();
@@ -175,6 +178,7 @@ public class Chunk {
 		cubes4.clear();
 		lights4.clear();
 		rebuildChunkSection(sec4NotClear, lights4, cubes4, water4, world, 96, 128);
+		calculateLight(cubes4);
 		readyToRender4 = true;
 		cubes4temp.clear();
 		water4temp.clear();
@@ -285,12 +289,53 @@ public class Chunk {
 		}
 	}
 
+	private void calculateLight(Queue<BlockEntity> cubes) {
+		for (BlockEntity blockEntity : cubes) {
+			int x, y, z;
+			x = (int) blockEntity.getPosition().x;
+			y = (int) blockEntity.getPosition().y;
+			z = (int) blockEntity.getPosition().z;
+			switch (blockEntity.getSide()) {
+			case "UP":
+				blockEntity.setLocalLight(getLight(x, y, z));
+				break;
+			case "DOWN":
+				blockEntity.setLocalLight(getLight(x, y, z));
+				break;
+			case "EAST":
+				blockEntity.setLocalLight(getLight(x + 1, y, z));
+				break;
+			case "WEST":
+				blockEntity.setLocalLight(getLight(x - 1, y, z));
+				break;
+			case "NORTH":
+				blockEntity.setLocalLight(getLight(x, y, z - 1));
+				break;
+			case "SOUTH":
+				blockEntity.setLocalLight(getLight(x, y, z + 1));
+				break;
+			case "SINGLE MODEL":
+				blockEntity.setLocalLight(getLight(x, y, z));
+				break;
+			}
+		}
+	}
+
 	public byte getLocalBlock(int x, int y, int z) {
 		return blocks[x & 0xF][y & 0x7F][z & 0xF];
 	}
 
 	public void setLocalBlock(int x, int y, int z, byte id) {
 		blocks[x & 0xF][y & 0x7F][z & 0xF] = id;
+	}
+
+	private float getLight(int x, int blockPos, int z) {
+		float result = 1;
+		for (int y = 128; y > blockPos; y--) {
+			if (getLocalBlock(x, y, z) != 0)
+				result -= 0.05f;
+		}
+		return result;
 	}
 
 	private boolean cullFaceWest(int x, int y, int z, DimensionalWorld world) {
@@ -472,40 +517,40 @@ public class Chunk {
 
 	public void render1(GameResources gm) {
 		if (readyToRender1) {
-			gm.getRenderer().renderChunk(cubes1, lights1, gm);
+			gm.getRenderer().renderChunk(cubes1, gm);
 			gm.getWaterRenderer().render(water1, gm);
 		} else {
-			gm.getRenderer().renderChunk(cubes1temp, lights1, gm);
+			gm.getRenderer().renderChunk(cubes1temp, gm);
 			gm.getWaterRenderer().render(water1, gm);
 		}
 	}
 
 	public void render2(GameResources gm) {
 		if (readyToRender2) {
-			gm.getRenderer().renderChunk(cubes2, lights2, gm);
+			gm.getRenderer().renderChunk(cubes2, gm);
 			gm.getWaterRenderer().render(water2, gm);
 		} else {
-			gm.getRenderer().renderChunk(cubes2temp, lights2, gm);
+			gm.getRenderer().renderChunk(cubes2temp, gm);
 			gm.getWaterRenderer().render(water2, gm);
 		}
 	}
 
 	public void render3(GameResources gm) {
 		if (readyToRender3) {
-			gm.getRenderer().renderChunk(cubes3, lights3, gm);
+			gm.getRenderer().renderChunk(cubes3, gm);
 			gm.getWaterRenderer().render(water3, gm);
 		} else {
-			gm.getRenderer().renderChunk(cubes3temp, lights3, gm);
+			gm.getRenderer().renderChunk(cubes3temp, gm);
 			gm.getWaterRenderer().render(water3, gm);
 		}
 	}
 
 	public void render4(GameResources gm) {
 		if (readyToRender4) {
-			gm.getRenderer().renderChunk(cubes4, lights4, gm);
+			gm.getRenderer().renderChunk(cubes4, gm);
 			gm.getWaterRenderer().render(water4, gm);
 		} else {
-			gm.getRenderer().renderChunk(cubes4temp, lights4, gm);
+			gm.getRenderer().renderChunk(cubes4temp, gm);
 			gm.getWaterRenderer().render(water4, gm);
 		}
 	}

@@ -42,7 +42,7 @@ public class KernelConstants {
 	 */
 	public static boolean debug = true;
 	public static String version = "0.0.5";
-	public static int build = 90;
+	public static int build = 91;
 	public static int FOV = 90;
 	public static float NEAR_PLANE = 0.2f;
 	public static float FAR_PLANE = 1000f;
@@ -64,7 +64,6 @@ public class KernelConstants {
 	/**
 	 * Graphics Settings
 	 */
-	public static final int MAX_LIGHTS = 8;
 	public static float WAVE_SPEED = 0.03f;
 	public static float SIZE = 500f;
 	public static final float ROTATE_SPEED = 0.2f;
