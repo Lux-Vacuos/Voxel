@@ -38,6 +38,7 @@ import io.github.guerra24.voxel.client.kernel.graphics.GuiRenderer;
 import io.github.guerra24.voxel.client.kernel.graphics.MasterRenderer;
 import io.github.guerra24.voxel.client.kernel.graphics.PostProcessingRenderer;
 import io.github.guerra24.voxel.client.kernel.graphics.SkyboxRenderer;
+import io.github.guerra24.voxel.client.kernel.graphics.TextRenderer;
 import io.github.guerra24.voxel.client.kernel.graphics.WaterRenderer;
 import io.github.guerra24.voxel.client.kernel.graphics.shaders.WaterShader;
 import io.github.guerra24.voxel.client.kernel.menu.MainMenu;
@@ -86,6 +87,8 @@ public class GameResources {
 	private SkyboxRenderer skyboxRenderer;
 	private GuiRenderer guiRenderer;
 	private GameStates gameStates;
+	private TextRenderer textRenderer;
+
 	private ParticleController particleController;
 	private PostProcessingRenderer postProcessing;
 	private SoundSystem soundSystem;
@@ -123,6 +126,7 @@ public class GameResources {
 		physics = new Physics(this);
 		frustum = new Frustum();
 		rand = new Random();
+		textRenderer = new TextRenderer("Voxel");
 		try {
 			SoundSystemConfig.addLibrary(LibraryLWJGLOpenAL.class);
 			SoundSystemConfig.setCodec("ogg", CodecJOgg.class);
@@ -223,6 +227,10 @@ public class GameResources {
 
 	public WaterShader getWaterShader() {
 		return waterShader;
+	}
+
+	public TextRenderer getTextRenderer() {
+		return textRenderer;
 	}
 
 	public WaterRenderer getWaterRenderer() {

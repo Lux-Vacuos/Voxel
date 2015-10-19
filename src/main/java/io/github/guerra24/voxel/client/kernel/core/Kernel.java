@@ -129,9 +129,6 @@ public class Kernel implements IKernel {
 		float delta = 0;
 		while (gameResources.getGameStates().loop) {
 			if (Display.timeCountRender > 1f) {
-				Logger.log(Thread.currentThread(), "RCPS: " + Kernel.renderCallsPerFrame);
-				Logger.log(Thread.currentThread(), "FPS: " + Display.fps);
-				Logger.log(Thread.currentThread(), "UPS: " + Display.ups);
 				Display.fps = Display.fpsCount;
 				Display.fpsCount = 0;
 				Display.ups = Display.upsCount;
@@ -192,6 +189,11 @@ public class Kernel implements IKernel {
 			gm.getRenderer().prepare();
 			gm.getPostProcessing().render(gm);
 			gm.getGuiRenderer().renderGui(gm.guis);
+			gm.getTextRenderer().begin();
+			gm.getTextRenderer().renderString("FPS: " + Display.fps, 25, 0);
+			gm.getTextRenderer().renderString("UPS: " + Display.ups, 25, 20);
+			gm.getTextRenderer().renderString("RCPS: " + Kernel.renderCallsPerFrame, 25, 40);
+			gm.getTextRenderer().end();
 			display.updateDisplay(KernelConstants.FPS, gm);
 			break;
 		case LOADING_WORLD:

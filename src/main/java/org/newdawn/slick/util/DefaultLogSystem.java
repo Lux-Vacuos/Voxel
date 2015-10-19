@@ -15,10 +15,8 @@ public class DefaultLogSystem implements LogSystem {
 	/**
 	 * Log an error
 	 * 
-	 * @param message
-	 *            The message describing the error
-	 * @param e
-	 *            The exception causing the error
+	 * @param message The message describing the error
+	 * @param e The exception causing the error
 	 */
 	public void error(String message, Throwable e) {
 		error(message);
@@ -28,61 +26,54 @@ public class DefaultLogSystem implements LogSystem {
 	/**
 	 * Log an error
 	 * 
-	 * @param e
-	 *            The exception causing the error
+	 * @param e The exception causing the error
 	 */
 	public void error(Throwable e) {
-		out.println(new Date() + " ERROR:" + e.getMessage());
+		out.println(new Date()+" ERROR:" +e.getMessage());
 		e.printStackTrace(out);
 	}
 
 	/**
 	 * Log an error
 	 * 
-	 * @param message
-	 *            The message describing the error
+	 * @param message The message describing the error
 	 */
 	public void error(String message) {
-		out.println(new Date() + " ERROR:" + message);
+		out.println(new Date()+" ERROR:" +message);
 	}
 
 	/**
 	 * Log a warning
 	 * 
-	 * @param message
-	 *            The message describing the warning
+	 * @param message The message describing the warning
 	 */
 	public void warn(String message) {
-		out.println(new Date() + " WARN:" + message);
+		out.println(new Date()+" WARN:" +message);
 	}
 
 	/**
 	 * Log an information message
 	 * 
-	 * @param message
-	 *            The message describing the infomation
+	 * @param message The message describing the infomation
 	 */
-	public void info(String message) {
-		out.println(new Date() + " INFO:" + message);
+	public  void info(String message) {
+		out.println(new Date()+" INFO:" +message);
 	}
 
 	/**
 	 * Log a debug message
 	 * 
-	 * @param message
-	 *            The message describing the debug
+	 * @param message The message describing the debug
 	 */
 	public void debug(String message) {
-		out.println(new Date() + " DEBUG:" + message);
+		out.println(new Date()+" DEBUG:" +message);
 	}
 
 	/**
 	 * Log a warning with an exception that caused it
 	 * 
-	 * @param message
-	 *            The message describing the warning
-	 * @param e
-	 *            The cause of the warning
+	 * @param message The message describing the warning
+	 * @param e The cause of the warning
 	 */
 	public void warn(String message, Throwable e) {
 		warn(message);

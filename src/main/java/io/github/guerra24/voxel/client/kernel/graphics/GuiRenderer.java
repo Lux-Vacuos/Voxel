@@ -98,6 +98,20 @@ public class GuiRenderer {
 		VoxelGL33.glDisable(GL_BLEND);
 	}
 
+	public void renderGui(GuiTexture guis) {
+		shader.start();
+		glBindVertexArray(quad.getVaoID());
+		glEnableVertexAttribArray(0);
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, guis.getTexture());
+		Matrix4f matrix = Maths.createTransformationMatrix(guis.getPosition(), guis.getScale());
+		shader.loadTransformation(matrix);
+		VoxelGL33.glDrawArrays(GL_TRIANGLE_STRIP, 0, quad.getVertexCount());
+		glDisableVertexAttribArray(0);
+		glBindVertexArray(0);
+		shader.stop();
+	}
+
 	/**
 	 * Clear the Shader
 	 * 

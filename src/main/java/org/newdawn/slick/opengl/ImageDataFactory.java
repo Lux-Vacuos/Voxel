@@ -40,7 +40,8 @@ public class ImageDataFactory {
 							usePngLoader = false;
 						}
 
-						Logger.log(Thread.currentThread(), "Using Java PNG Loader: " + usePngLoader);
+						Logger.log(Thread.currentThread(),
+								"Using Java PNG Loader: " + usePngLoader);
 						return null;
 					}
 				});
@@ -64,6 +65,9 @@ public class ImageDataFactory {
 
 		ref = ref.toLowerCase();
 
+		if (ref.endsWith(".tga")) {
+			return new TGAImageData();
+		}
 		if (ref.endsWith(".png")) {
 			CompositeImageData data = new CompositeImageData();
 			if (usePngLoader) {
