@@ -58,7 +58,6 @@ public class Kernel implements IKernel {
 	/**
 	 * Game Threads
 	 */
-	public static WorldThread worldThread;
 	public static WorldThread1 worldThread2;
 
 	/**
@@ -104,12 +103,6 @@ public class Kernel implements IKernel {
 		gameResources.music();
 		worlds = new WorldHandler();
 		Logger.log(Thread.currentThread(), "Initializing Threads");
-		worldThread = new WorldThread();
-		worldThread.setName("Voxel World 1");
-		worldThread.setApi(api);
-		worldThread.setWorldHandler(worlds);
-		worldThread.setGm(gameResources);
-		worldThread.start();
 		worldThread2 = new WorldThread1();
 		worldThread2.setName("Voxel World 2");
 		worldThread2.setWorldHandler(worlds);
@@ -170,7 +163,7 @@ public class Kernel implements IKernel {
 					worlds.getWorld(worlds.getActiveWorld()), api);
 			gm.getCamera().updatePicker(worlds.getWorld(worlds.getActiveWorld()));
 			gm.getFrustum().calculateFrustum(gm);
-
+			worlds.getWorld(worlds.getActiveWorld()).updateChunkGeneration(gm, api);
 			gm.getWaterFBO().begin(512, 512);
 			gm.getCamera().invertPitch();
 			gm.getRenderer().prepare();
@@ -236,6 +229,7 @@ public class Kernel implements IKernel {
 		api.dispose();
 		Bootstrap.config.dispose();
 		display.closeDisplay();
+		System.exit(0);
 	}
 
 	public GameResources getGameResources() {

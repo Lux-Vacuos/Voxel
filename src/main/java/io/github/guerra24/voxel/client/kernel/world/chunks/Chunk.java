@@ -60,6 +60,8 @@ public class Chunk {
 	private transient int sizeX, sizeY, sizeZ;
 	private transient boolean readyToRender1 = true, readyToRender2 = true, readyToRender3 = true,
 			readyToRender4 = true;
+	public transient boolean rebuilding = false;
+	public transient boolean needsRebuild = true;
 
 	/**
 	 * Constructor
@@ -218,7 +220,7 @@ public class Chunk {
 	}
 
 	private void createStructures(ChunkGenerator generator, DimensionalWorld world) {
-		generator.generateCaves(blocks, world, sizeX, sizeZ, sizeY, cx, cz);
+		// generator.generateCaves(blocks, world, sizeX, sizeZ, sizeY, cx, cz);
 		for (int i = 0; i < 4; i++) {
 			int xx = Maths.randInt(4, 12);
 			int zz = Maths.randInt(4, 12);
@@ -527,7 +529,7 @@ public class Chunk {
 			gm.getWaterRenderer().render(water1, gm);
 		} else {
 			gm.getRenderer().renderChunk(cubes1temp, gm);
-			gm.getWaterRenderer().render(water1, gm);
+			gm.getWaterRenderer().render(water1temp, gm);
 		}
 	}
 
@@ -537,7 +539,7 @@ public class Chunk {
 			gm.getWaterRenderer().render(water2, gm);
 		} else {
 			gm.getRenderer().renderChunk(cubes2temp, gm);
-			gm.getWaterRenderer().render(water2, gm);
+			gm.getWaterRenderer().render(water2temp, gm);
 		}
 	}
 
@@ -547,7 +549,7 @@ public class Chunk {
 			gm.getWaterRenderer().render(water3, gm);
 		} else {
 			gm.getRenderer().renderChunk(cubes3temp, gm);
-			gm.getWaterRenderer().render(water3, gm);
+			gm.getWaterRenderer().render(water3temp, gm);
 		}
 	}
 
@@ -557,7 +559,7 @@ public class Chunk {
 			gm.getWaterRenderer().render(water4, gm);
 		} else {
 			gm.getRenderer().renderChunk(cubes4temp, gm);
-			gm.getWaterRenderer().render(water4, gm);
+			gm.getWaterRenderer().render(water4temp, gm);
 		}
 	}
 
@@ -574,6 +576,14 @@ public class Chunk {
 		lights2.clear();
 		lights3.clear();
 		lights4.clear();
+		cubes1temp.clear();
+		cubes2temp.clear();
+		cubes3temp.clear();
+		cubes4temp.clear();
+		water1temp.clear();
+		water2temp.clear();
+		water3temp.clear();
+		water4temp.clear();
 	}
 
 	public void dispose() {
