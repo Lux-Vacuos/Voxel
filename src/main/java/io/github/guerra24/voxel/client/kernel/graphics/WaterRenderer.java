@@ -25,7 +25,6 @@
 package io.github.guerra24.voxel.client.kernel.graphics;
 
 import static org.lwjgl.opengl.GL11.GL_BLEND;
-import static org.lwjgl.opengl.GL11.GL_CULL_FACE;
 import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
 import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
@@ -126,7 +125,6 @@ public class WaterRenderer {
 		shader.loadProjectionMatrix(gm.getRenderer().getProjectionMatrix());
 		shader.loadMoveFactor(moveFactor);
 		shader.loadDirectLightDirection(new Vector3f(-80, -100, -40));
-		VoxelGL33.glDisable(GL_CULL_FACE);
 		VoxelGL33.glEnable(GL_BLEND);
 		VoxelGL33.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glBindVertexArray(quad.getVaoID());
@@ -160,7 +158,6 @@ public class WaterRenderer {
 		glDisableVertexAttribArray(0);
 		glBindVertexArray(0);
 		VoxelGL33.glDisable(GL_BLEND);
-		VoxelGL33.glEnable(GL_CULL_FACE);
 		shader.stop();
 	}
 

@@ -34,16 +34,15 @@ public class WorldThread1 extends Thread {
 	private GameResources gameResources;
 	private GuiResources guiResources;
 	private WorldHandler world;
-	private VAPI api;
 	private Kernel kernel;
 	private long variableYieldTime, lastTime;
+	private int fps = 30;
 
 	@Override
 	public void run() {
 		float delta = 0;
 		float accumulator = 0f;
-		float interval = 1f / 60;
-		float alpha = 0;
+		float interval = 1f / fps;
 		while (gameResources.getGameStates().loop) {
 			delta = Display.getDeltaUpdate();
 			accumulator += delta;
@@ -51,8 +50,7 @@ public class WorldThread1 extends Thread {
 				kernel.update(gameResources, guiResources, world, interval);
 				accumulator -= interval;
 			}
-			alpha = accumulator / interval;
-			sync(60);
+			sync(fps);
 		}
 	}
 
@@ -62,10 +60,6 @@ public class WorldThread1 extends Thread {
 
 	public void setWorldHandler(WorldHandler dimensionHandler) {
 		this.world = dimensionHandler;
-	}
-
-	public void setApi(VAPI api) {
-		this.api = api;
 	}
 
 	public void setKernel(Kernel kernel) {

@@ -24,38 +24,29 @@
 
 #version 330 core
 
-in vec3 position;
-in vec2 textureCoords;
-in vec3 normal;
+in vec2 pass_textureCoords;
+in vec3 surfaceNormal;
+in float visibility;
 
-out vec2 pass_textureCoords;
-out vec3 surfaceNormal;
-out vec3 toLightVector[8];
-out float visibility;
+out vec4 out_Color;
 
-uniform mat4 transformationMatrix;
-uniform mat4 projectionMatrix;
-uniform mat4 viewMatrix;
-uniform vec3 lightPosition[8];
+uniform sampler2D texture0;
+uniform sampler2D depth0;
+uniform vec3 skyColour;
+uniform float time;
+uniform float blendFactor;
+uniform float blockBright;
 
-const float density = 0.0023;
-const float gradient = 10.0;
+void main(void) {
 
-
-void main() {
-
-	vec4 worldPosition = transformationMatrix * vec4(position, 1.0);
-	vec4 positionRelativeToCam = viewMatrix * worldPosition;
-	gl_Position = projectionMatrix * positionRelativeToCam;
-	pass_textureCoords = textureCoords;
+	vec4 totalDiffuse = vec4(blockBright);
 	
-	surfaceNormal = (transformationMatrix * vec4(normal, 0.0)).xyz;
+	totalDiffuse = clamp(totalDiffuse, 0.0, 1.0);
 	
-	for(int i=0;i<8;i++) {
-		toLightVector[i]= lightPosition[i] - worldPosition.xyz;
+	vec4 textureColour = texture(texture0, pass_textureCoords);
+	if(textureColour.a<0.5) {
+		discard;
 	}
-	
-	float distance = length(positionRelativeToCam.xyz);
-	visibility = exp(-pow((distance*density),gradient));
-	visibility = clamp(visibility,0.0,1.1);
+	out_Color = totalDiffuse * textureColour;
+	out_Color = mix(vec4(skyColour,1.0),out_Color,visibility);
 }

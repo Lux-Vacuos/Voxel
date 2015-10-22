@@ -30,13 +30,14 @@ import io.github.guerra24.voxel.client.kernel.resources.GuiResources;
 import io.github.guerra24.voxel.client.kernel.resources.models.TexturedModel;
 import io.github.guerra24.voxel.client.kernel.util.vector.Vector3f;
 import io.github.guerra24.voxel.client.kernel.world.DimensionalWorld;
+import io.github.guerra24.voxel.client.kernel.world.block.Block;
 import io.github.guerra24.voxel.client.kernel.world.physics.AABB;
 import io.github.guerra24.voxel.client.kernel.world.physics.CollisionType;
 
 public class Player extends Entity implements IEntity {
 	private final float GRAVITY = -10;
 	private final float JUMP_POWER = 4;
-
+	private boolean isInWater = false;
 	private float upwardsSpeed = 0;
 	private AABB aabb;
 
@@ -54,36 +55,29 @@ public class Player extends Entity implements IEntity {
 		if (isCollision(0, world) == CollisionType.FRONT) {
 			super.increasePosition(0.1f, 0, 0);
 		}
-
-		if (isCollision(0, world) == CollisionType.TOP) {
+		CollisionType collision = isCollision(0, world);
+		if (collision == CollisionType.TOP) {
 			upwardsSpeed = 0;
 			isInAir = false;
-
+			isInWater = false;
+		} else if (collision == CollisionType.WATER) {
+			upwardsSpeed = -30f * delta;
+			isInWater = true;
+			isInAir = false;
 		} else {
 			upwardsSpeed += GRAVITY * delta;
 			isInAir = true;
+			isInWater = false;
 		}
 	}
 
 	public void jump() {
-		if (!isInAir) {
-			try {
-				if (!checkAABB(getPosition(), new Vector3f(0, 128, 0))) {
-					this.upwardsSpeed = JUMP_POWER;
-					isInAir = true;
-				} else {
-					upwardsSpeed = 0;
-					isInAir = false;
-				}
-			} finally {
-			}
+		if (!isInAir && !isInWater) {
+			this.upwardsSpeed = JUMP_POWER;
+			isInAir = true;
+		} else if (isInWater) {
+			this.upwardsSpeed = 4;
 		}
-	}
-
-	private boolean checkAABB(Vector3f pos, Vector3f coll) {
-		if (pos.y > coll.y)
-			return true;
-		return false;
 	}
 
 	@Override
@@ -119,10 +113,9 @@ public class Player extends Entity implements IEntity {
 		CollisionType collisionType = CollisionType.NONE;
 
 		byte b = -99;
-		int ground = 0;
 		b = world.getGlobalBlock(world.getChunkDimension(), bx, by, bz);
 
-		if (b != 0) {
+		if (b != 0 && b != Block.Water.getId()) {
 			Vector3f playerPosition = new Vector3f();
 			playerPosition.x = v.x;
 			playerPosition.y = v.y;
@@ -138,7 +131,23 @@ public class Player extends Entity implements IEntity {
 
 			if (!AABB.testAABB(aabb, voxel)) {
 				collisionType = CollisionType.TOP;
-				ground = (int) voxelPosition.y;
+			}
+		} else if (b == Block.Water.getId()) {
+			Vector3f playerPosition = new Vector3f();
+			playerPosition.x = v.x;
+			playerPosition.y = v.y;
+			playerPosition.z = v.z;
+			aabb.update(playerPosition);
+
+			AABB voxel = new AABB(1f, 1f, 1f);
+			Vector3f voxelPosition = new Vector3f();
+			voxelPosition.x = bx - 1;
+			voxelPosition.y = by;
+			voxelPosition.z = bz;
+			voxel.update(voxelPosition);
+
+			if (!AABB.testAABB(aabb, voxel)) {
+				collisionType = CollisionType.WATER;
 			}
 		}
 

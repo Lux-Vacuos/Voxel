@@ -29,7 +29,7 @@ import java.util.Random;
 import io.github.guerra24.voxel.client.kernel.api.VAPI;
 import io.github.guerra24.voxel.client.kernel.graphics.opengl.Display;
 import io.github.guerra24.voxel.client.kernel.input.Keyboard;
-import io.github.guerra24.voxel.client.kernel.menu.Button;
+import io.github.guerra24.voxel.client.kernel.menu.LegacyButtons;
 import io.github.guerra24.voxel.client.kernel.resources.GameResources;
 import io.github.guerra24.voxel.client.kernel.util.vector.Vector3f;
 import io.github.guerra24.voxel.client.kernel.world.WorldHandler;
@@ -79,7 +79,7 @@ public class GameStates {
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void switchStates(GameResources gm, WorldHandler worlds, VAPI api, Display display) {
-		if (state == State.MAINMENU && Button.isInButtonPlay()) {
+		if (state == State.MAINMENU && LegacyButtons.isInButtonPlay()) {
 			state = State.LOADING_WORLD;
 			isPlaying = true;
 			Random seed;
@@ -95,11 +95,11 @@ public class GameStates {
 			state = State.GAME;
 		}
 
-		if (state == State.MAINMENU && Button.isInButtonExit()) {
+		if (state == State.MAINMENU && LegacyButtons.isInButtonExit()) {
 			loop = false;
 		}
 
-		if (state == State.IN_PAUSE && Button.backToMainMenu()) {
+		if (state == State.IN_PAUSE && LegacyButtons.backToMainMenu()) {
 			worlds.removeWorld(worlds.getActiveWorld(), gm);
 			gm.getSoundSystem().play("menu1");
 			gm.getCamera().setPosition(new Vector3f(-2, 0, -1));

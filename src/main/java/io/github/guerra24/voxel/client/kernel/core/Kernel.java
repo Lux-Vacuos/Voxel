@@ -27,7 +27,10 @@ package io.github.guerra24.voxel.client.kernel.core;
 import static org.lwjgl.glfw.GLFW.glfwShowWindow;
 import static org.lwjgl.opengl.GL11.GL_RENDERER;
 import static org.lwjgl.opengl.GL11.GL_VENDOR;
+import static org.lwjgl.opengl.GL11.GL_VERSION;
 import static org.lwjgl.opengl.GL11.glGetString;
+
+import org.lwjgl.Sys;
 
 import io.github.guerra24.voxel.client.kernel.api.VAPI;
 import io.github.guerra24.voxel.client.kernel.bootstrap.Bootstrap;
@@ -55,7 +58,6 @@ public class Kernel implements IKernel {
 	/**
 	 * Game Threads
 	 */
-	public static WorldThread worldThread;
 	public static WorldThread1 worldThread2;
 
 	/**
@@ -87,9 +89,10 @@ public class Kernel implements IKernel {
 		Logger.log(Thread.currentThread(), "Voxel Game Version: " + KernelConstants.version);
 		Logger.log(Thread.currentThread(), "Build: " + KernelConstants.build);
 		Logger.log(Thread.currentThread(), "Running on: " + Bootstrap.getPlatform());
+		Logger.log(Thread.currentThread(), "LWJGL Version: " + Sys.getVersion());
+		Logger.log(Thread.currentThread(), "OpenGL Version: " + glGetString(GL_VERSION));
 		Logger.log(Thread.currentThread(), "Vendor: " + glGetString(GL_VENDOR));
 		Logger.log(Thread.currentThread(), "Renderer: " + glGetString(GL_RENDERER));
-
 		gameResources = new GameResources();
 		api = new VAPI();
 		api.preInit();
@@ -100,15 +103,8 @@ public class Kernel implements IKernel {
 		gameResources.music();
 		worlds = new WorldHandler();
 		Logger.log(Thread.currentThread(), "Initializing Threads");
-		worldThread = new WorldThread();
-		worldThread.setName("Voxel World 1");
-		worldThread.setApi(api);
-		worldThread.setWorldHandler(worlds);
-		worldThread.setGm(gameResources);
-		worldThread.start();
 		worldThread2 = new WorldThread1();
 		worldThread2.setName("Voxel World 2");
-		worldThread2.setApi(api);
 		worldThread2.setWorldHandler(worlds);
 		worldThread2.setGameResources(gameResources);
 		worldThread2.setKernel(this);
@@ -126,9 +122,6 @@ public class Kernel implements IKernel {
 		float delta = 0;
 		while (gameResources.getGameStates().loop) {
 			if (Display.timeCountRender > 1f) {
-				Logger.log(Thread.currentThread(), "RCPS: " + Kernel.renderCallsPerFrame);
-				Logger.log(Thread.currentThread(), "FPS: " + Display.fps);
-				Logger.log(Thread.currentThread(), "UPS: " + Display.ups);
 				Display.fps = Display.fpsCount;
 				Display.fpsCount = 0;
 				Display.ups = Display.upsCount;
@@ -151,14 +144,14 @@ public class Kernel implements IKernel {
 		case MAINMENU:
 			gm.getFrustum().calculateFrustum(gm);
 			gm.getRenderer().prepare();
-			gm.getRenderer().renderEntity(gm.mainMenuModels, gm.mainMenuLights, gm);
+			gm.getRenderer().renderEntity(gm.mainMenuModels, gm);
 			gm.getGuiRenderer().renderGui(gm.guis2);
 			display.updateDisplay(30, gm);
 			break;
 		case IN_PAUSE:
 			gm.getRenderer().prepare();
 			worlds.getWorld(worlds.getActiveWorld()).updateChunksRender(gm);
-			gm.getRenderer().renderEntity(gm.getPhysics().getMobManager().getMobs(), gm.lights, gm);
+			gm.getRenderer().renderEntity(gm.getPhysics().getMobManager().getMobs(), gm);
 			gm.getSkyboxRenderer().render(KernelConstants.RED, KernelConstants.GREEN, KernelConstants.BLUE, delta, gm);
 			gm.getParticleController().render(gm);
 			gm.getGuiRenderer().renderGui(gm.guis4);
@@ -170,7 +163,7 @@ public class Kernel implements IKernel {
 					worlds.getWorld(worlds.getActiveWorld()), api);
 			gm.getCamera().updatePicker(worlds.getWorld(worlds.getActiveWorld()));
 			gm.getFrustum().calculateFrustum(gm);
-
+			worlds.getWorld(worlds.getActiveWorld()).updateChunkGeneration(gm, api);
 			gm.getWaterFBO().begin(512, 512);
 			gm.getCamera().invertPitch();
 			gm.getRenderer().prepare();
@@ -182,13 +175,18 @@ public class Kernel implements IKernel {
 			gm.getRenderer().prepare();
 			worlds.getWorld(worlds.getActiveWorld()).updateChunksRender(gm);
 			gm.getSkyboxRenderer().render(KernelConstants.RED, KernelConstants.GREEN, KernelConstants.BLUE, delta, gm);
-			gm.getRenderer().renderEntity(gm.getPhysics().getMobManager().getMobs(), gm.lights, gm);
+			gm.getRenderer().renderEntity(gm.getPhysics().getMobManager().getMobs(), gm);
 			gm.getParticleController().render(gm);
 			gm.getPostProcessing().getPost_fbo().end();
 
 			gm.getRenderer().prepare();
-			gm.getPostProcessing().render();
+			gm.getPostProcessing().render(gm);
 			gm.getGuiRenderer().renderGui(gm.guis);
+			gm.getTextRenderer().begin();
+			gm.getTextRenderer().renderString("FPS: " + Display.fps, 25, 0);
+			gm.getTextRenderer().renderString("UPS: " + Display.ups, 25, 20);
+			gm.getTextRenderer().renderString("RCPS: " + Kernel.renderCallsPerFrame, 25, 40);
+			gm.getTextRenderer().end();
 			display.updateDisplay(KernelConstants.FPS, gm);
 			break;
 		case LOADING_WORLD:
@@ -231,6 +229,7 @@ public class Kernel implements IKernel {
 		api.dispose();
 		Bootstrap.config.dispose();
 		display.closeDisplay();
+		System.exit(0);
 	}
 
 	public GameResources getGameResources() {
