@@ -74,7 +74,7 @@ public class BlockTorch extends IBlock {
 
 	@Override
 	public BlockEntity getSingleModel(Vector3f pos) {
-		return new BlockEntity(BlocksResources.cubeTorch, pos, 0, 0, 0, 1);
+		return new BlockEntity(BlocksResources.cubeTorch, pos, 0, 0, 0, 1, "SINGLE MODEL");
 	}
 
 	@Override

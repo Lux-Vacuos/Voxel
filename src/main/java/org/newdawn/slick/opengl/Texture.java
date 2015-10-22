@@ -22,7 +22,7 @@ public interface Texture {
 	public String getTextureRef();
 
 	/**
-	 * Bind the GL context to a texture
+	 * Bind the  GL context to a texture
 	 */
 	public void bind();
 
@@ -33,7 +33,7 @@ public interface Texture {
 	 */
 	public int getImageHeight();
 
-	/**
+	/** 
 	 * Get the width of the original image
 	 *
 	 * @return The width of the original image
@@ -86,12 +86,11 @@ public interface Texture {
 	 * @return The texture data from the card for this texture
 	 */
 	public byte[] getTextureData();
-
+	
 	/**
 	 * Apply a given texture filter to the texture
 	 * 
-	 * @param textureFilter
-	 *            The texture filter to apply (GL_LINEAR, GL_NEAREST, etc..)
+	 * @param textureFilter The texture filter to apply (GL_LINEAR, GL_NEAREST, etc..)
 	 */
 	public void setTextureFilter(int textureFilter);
 

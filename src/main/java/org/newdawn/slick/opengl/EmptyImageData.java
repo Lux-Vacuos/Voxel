@@ -14,20 +14,18 @@ public class EmptyImageData implements ImageData {
 	private int width;
 	/** The height of the data */
 	private int height;
-
+	
 	/**
 	 * Create an empty image data source
 	 * 
-	 * @param width
-	 *            The width of the source
-	 * @param height
-	 *            The height of the source
+	 * @param width The width of the source
+	 * @param height The height of the source
 	 */
 	public EmptyImageData(int width, int height) {
 		this.width = width;
 		this.height = height;
 	}
-
+	
 	/**
 	 * @see org.newdawn.slick.opengl.ImageData#getDepth()
 	 */

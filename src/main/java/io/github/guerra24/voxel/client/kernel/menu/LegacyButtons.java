@@ -33,7 +33,7 @@ import io.github.guerra24.voxel.client.kernel.input.Mouse;
  * @category GUI
  * @deprecated The buttons are fixed size and position, needs rewrite
  */
-public class Button {
+public class LegacyButtons {
 
 	public static boolean isInButtonPlay() {
 		boolean isPressed = false;

@@ -37,13 +37,17 @@ import com.google.gson.JsonSyntaxException;
 
 import io.github.guerra24.voxel.client.kernel.api.VAPI;
 import io.github.guerra24.voxel.client.kernel.core.KernelConstants;
-import io.github.guerra24.voxel.client.kernel.core.WorldThread;
 import io.github.guerra24.voxel.client.kernel.resources.GameResources;
 import io.github.guerra24.voxel.client.kernel.util.Logger;
 import io.github.guerra24.voxel.client.kernel.util.vector.Vector2f;
 import io.github.guerra24.voxel.client.kernel.util.vector.Vector3f;
 import io.github.guerra24.voxel.client.kernel.world.chunks.Chunk;
+import io.github.guerra24.voxel.client.kernel.world.chunks.ChunkGenerator;
 import io.github.guerra24.voxel.client.kernel.world.chunks.ChunkKey;
+import io.github.guerra24.voxel.client.kernel.world.chunks.ChunkWorkerDestroy;
+import io.github.guerra24.voxel.client.kernel.world.chunks.ChunkWorkerGenerate;
+import io.github.guerra24.voxel.client.kernel.world.chunks.ChunkWorkerMesh;
+import io.github.guerra24.voxel.client.kernel.world.chunks.WorldService;
 
 /**
  * Dimensional World
@@ -66,6 +70,8 @@ public class DimensionalWorld {
 	private int zPlayChunk;
 	private int tempRadius = 0;
 	private int seedi;
+	private ChunkGenerator chunkGenerator;
+	private WorldService service;
 
 	/**
 	 * Start a new World
@@ -104,6 +110,8 @@ public class DimensionalWorld {
 		seedi = seed.nextInt();
 		noise = new SimplexNoise(128, 0.3f, seedi);
 		chunks = new HashMap<ChunkKey, Chunk>();
+		chunkGenerator = new ChunkGenerator();
+		service = new WorldService();
 		gm.getPhysics().getMobManager().getPlayer().setPosition(gm.getCamera().getPosition());
 	}
 
@@ -122,11 +130,11 @@ public class DimensionalWorld {
 		zPlayChunk = (int) (gm.getCamera().getPosition().z / 16);
 		float o = 1f;
 		float i = 0f;
-		for (int zr = -10; zr <= 10; zr++) {
+		for (int zr = -4; zr <= 4; zr++) {
 			int zz = zPlayChunk + zr;
-			for (int xr = -10; xr <= 10; xr++) {
+			for (int xr = -4; xr <= 4; xr++) {
 				int xx = xPlayChunk + xr;
-				if (zr * zr + xr * xr < 10 * 10) {
+				if (zr * zr + xr * xr < 4 * 4) {
 					i += 0.00200f;
 					gm.guis3.get(1).setScale(new Vector2f(i, 0.041f));
 					if (i > 0.5060006f) {
@@ -173,61 +181,29 @@ public class DimensionalWorld {
 				if (zr * zr + xr * xr <= (KernelConstants.genRadius - KernelConstants.radiusLimit)
 						* (KernelConstants.genRadius - KernelConstants.radiusLimit)) {
 					if (!hasChunk(chunkDim, xx, zz)) {
-						if (existChunkFile(chunkDim, xx, zz)) {
-							loadChunk(chunkDim, xx, zz, gm);
-						} else {
-							addChunk(new Chunk(chunkDim, xx, zz, this));
-							saveChunk(chunkDim, xx, zz, gm);
-						}
+						if (!Thread.holdsLock(chunks))
+							service.add_worker(new ChunkWorkerGenerate(this, gm, xx, zz));
+					} else {
+						Chunk chunk = getChunk(chunkDim, xx, zz);
+						if (!Thread.holdsLock(chunk))
+							if (chunk.needsRebuild) {
+								if (!chunk.rebuilding) {
+									chunk.rebuilding = true;
+									service.add_worker(new ChunkWorkerMesh(this, chunk));
+								}
+							}
 					}
 				}
 				if (zr * zr + xr * xr <= KernelConstants.genRadius * KernelConstants.genRadius
-						&& zr * zr + xr * xr >= (KernelConstants.genRadius - KernelConstants.radiusLimit)
-								* (KernelConstants.genRadius - KernelConstants.radiusLimit - 1)) {
-					if (hasChunk(chunkDim, xx, zz)) {
-						saveChunk(chunkDim, xx, zz, gm);
-						removeChunk(getChunk(chunkDim, xx, zz));
-					}
+						&& zr * zr + xr * xr >= (KernelConstants.genRadius - KernelConstants.radiusLimit + 1)
+								* (KernelConstants.genRadius - KernelConstants.radiusLimit + 1)) {
+					if (!Thread.holdsLock(chunks))
+						service.add_worker(new ChunkWorkerDestroy(this, gm, xx, zz));
 				}
 			}
 		}
 		if (tempRadius <= KernelConstants.genRadius)
 			tempRadius++;
-	}
-
-	/**
-	 * Update Chunk Mesh
-	 * 
-	 * @param gm
-	 *            GameResources
-	 * @param api
-	 *            Voxel API
-	 * @author Guerra24 <pablo230699@hotmail.com>
-	 */
-	public void updateChunkMesh(GameResources gm, VAPI api) {
-		for (int yy = 4; yy > 0; yy--) {
-			for (int zr = -KernelConstants.genRadius; zr <= KernelConstants.genRadius; zr++) {
-				int zz = zPlayChunk + zr;
-				for (int xr = -KernelConstants.genRadius; xr <= KernelConstants.genRadius; xr++) {
-					int xx = xPlayChunk + xr;
-					Chunk chunk = getChunk(chunkDim, xx, zz);
-					if (chunk != null) {
-						if (gm.getFrustum().cubeInFrustum(xx * 16, 0, zz * 16, (xx * 16) + 16, 32, (zz * 16) + 16))
-							if (yy == 0)
-								getChunk(chunkDim, xx, zz).update1(this);
-						if (gm.getFrustum().cubeInFrustum(xx * 16, 32, zz * 16, (xx * 16) + 16, 64, (zz * 16) + 16))
-							if (yy == 1)
-								getChunk(chunkDim, xx, zz).update2(this);
-						if (gm.getFrustum().cubeInFrustum(xx * 16, 64, zz * 16, (xx * 16) + 16, 96, (zz * 16) + 16))
-							if (yy == 2)
-								getChunk(chunkDim, xx, zz).update3(this);
-						if (gm.getFrustum().cubeInFrustum(xx * 16, 96, zz * 16, (xx * 16) + 16, 128, (zz * 16) + 16))
-							if (yy == 3)
-								getChunk(chunkDim, xx, zz).update4(this);
-					}
-				}
-			}
-		}
 	}
 
 	/**
@@ -336,7 +312,7 @@ public class DimensionalWorld {
 	 *            GameResources
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	private void saveChunk(int chunkDim, int cx, int cz, GameResources gm) {
+	public void saveChunk(int chunkDim, int cx, int cz, GameResources gm) {
 		String json = gm.getGson().toJson(getChunk(chunkDim, cx, cz));
 		try {
 			File chunksFolder = new File(KernelConstants.worldPath + name + "/chunks_" + chunkDim);
@@ -365,13 +341,13 @@ public class DimensionalWorld {
 	 *            Game Resources
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	private void loadChunk(int chunkDim, int cx, int cz, GameResources gm) {
+	public void loadChunk(int chunkDim, int cx, int cz, GameResources gm) {
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(KernelConstants.worldPath + name + "/chunks_"
 					+ chunkDim + "/chunk_" + chunkDim + "_" + cx + "_" + cz + ".json"));
 			Chunk chunk = gm.getGson().fromJson(br, Chunk.class);
 			if (chunk != null)
-				chunk.loadInit();
+				chunk.createList();
 			else {
 				Logger.warn(Thread.currentThread(), "Re-Creating Chunk " + chunkDim + " " + cx + " " + cz);
 				chunk = new Chunk(chunkDim, cx, cz, this);
@@ -398,7 +374,7 @@ public class DimensionalWorld {
 	 * @return true if exist
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	private boolean existChunkFile(int chunkDim, int cx, int cz) {
+	public boolean existChunkFile(int chunkDim, int cx, int cz) {
 		File file = new File(KernelConstants.worldPath + name + "/chunks_" + chunkDim + "/chunk_" + chunkDim + "_" + cx
 				+ "_" + cz + ".json");
 		return file.exists();
@@ -482,6 +458,13 @@ public class DimensionalWorld {
 			removeChunk(old);
 		}
 		chunks.put(key.clone(), chunk);
+		for (int xx = chunk.cx - 2; xx < chunk.cx + 2; xx++) {
+			for (int zz = chunk.cz - 2; zz < chunk.cz + 2; zz++) {
+				Chunk chunka = getChunk(chunkDim, xx, zz);
+				if (chunka != null)
+					chunka.needsRebuild = true;
+			}
+		}
 	}
 
 	/**
@@ -494,8 +477,16 @@ public class DimensionalWorld {
 	public void removeChunk(Chunk chunk) {
 		if (chunk != null) {
 			ChunkKey key = ChunkKey.alloc(chunk.dim, chunk.cx, chunk.cz);
+			chunk.dispose();
 			chunks.remove(key);
 			key.free();
+			for (int xx = chunk.cx - 2; xx < chunk.cx + 2; xx++) {
+				for (int zz = chunk.cz - 2; zz < chunk.cz + 2; zz++) {
+					Chunk chunka = getChunk(chunkDim, xx, zz);
+					if (chunka != null)
+						chunka.needsRebuild = true;
+				}
+			}
 		}
 	}
 
@@ -566,11 +557,6 @@ public class DimensionalWorld {
 	 */
 	public void clearChunkDimension(GameResources gm) {
 		Logger.log(Thread.currentThread(), "Saving World");
-		try {
-			WorldThread.sleep(10000l);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
 		for (int zr = -KernelConstants.genRadius; zr <= KernelConstants.genRadius; zr++) {
 			int zz = getzPlayChunk() + zr;
 			for (int xr = -KernelConstants.genRadius; xr <= KernelConstants.genRadius; xr++) {
@@ -582,6 +568,7 @@ public class DimensionalWorld {
 				}
 			}
 		}
+		service.es.shutdown();
 		chunks.clear();
 	}
 
@@ -611,6 +598,10 @@ public class DimensionalWorld {
 
 	public Random getSeed() {
 		return seed;
+	}
+
+	public ChunkGenerator getChunkGenerator() {
+		return chunkGenerator;
 	}
 
 	public void setTempRadius(int tempRadius) {

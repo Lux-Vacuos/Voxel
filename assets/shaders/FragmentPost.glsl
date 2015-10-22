@@ -28,8 +28,6 @@
 /*-----------------POST PROCESSING CONFIG-----------------*/
 /*--------------------------------------------------------*/
 
-// DOF and FXAA cant be enabled at the same time
-
 //#define FXAA
 
 /*--------------------------------------------------------*/
@@ -53,6 +51,8 @@ out vec4 out_Color;
 uniform sampler2D texture0;
 uniform sampler2D depth0;
 uniform vec2 resolution;
+uniform int camUnderWater;
+uniform float camUnderWaterOffset;
 
 #define rt_w resolution.x
 #define rt_h resolution.y
@@ -105,11 +105,15 @@ vec4 PostFX(sampler2D tex, vec2 uv, float time) {
 }
 
 void main(void){
+	vec2 texcoord = textureCoords;
+	if(camUnderWater == 1){
+		texcoord.x += sin(texcoord.y * 4*2*3.14159 + camUnderWaterOffset) / 100;
+	}
 
 	#ifdef FXAA
-		vec4 textureColour = PostFX(texture0, textureCoords, 0.0);
+		vec4 textureColour = PostFX(texture0, texcoord, 0.0);
 	#else
-		vec4 textureColour = texture(texture0, textureCoords);
+		vec4 textureColour = texture(texture0, texcoord);
 	#endif
 
 	out_Color = textureColour;

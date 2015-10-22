@@ -41,10 +41,10 @@ public class KernelConstants {
 	 * Game Settings
 	 */
 	public static boolean debug = false;
-	public static String version = "0.0.4";
-	public static int build = 83;
+	public static String version = "0.0.5";
+	public static int build = 95;
 	public static int FOV = 90;
-	public static float NEAR_PLANE = 0.1f;
+	public static float NEAR_PLANE = 0.2f;
 	public static float FAR_PLANE = 1000f;
 	public static float RED = 0.375f;
 	public static float GREEN = 0.555f;
@@ -64,7 +64,6 @@ public class KernelConstants {
 	/**
 	 * Graphics Settings
 	 */
-	public static final int MAX_LIGHTS = 8;
 	public static float WAVE_SPEED = 0.03f;
 	public static float SIZE = 500f;
 	public static final float ROTATE_SPEED = 0.2f;
