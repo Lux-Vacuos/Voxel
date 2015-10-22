@@ -88,6 +88,7 @@ public class EntityRenderer {
 			prepareTexturedModel(model, gm);
 			List<BlockEntity> batch = blockEntities.get(model);
 			for (BlockEntity entity : batch) {
+				shader.loadBlockBright(entity.getLocalLight());
 				prepareInstance(entity);
 				VoxelGL33.glDrawElements(GL_TRIANGLES, model.getRawModel().getVertexCount(), GL_UNSIGNED_INT, 0);
 			}
@@ -104,16 +105,13 @@ public class EntityRenderer {
 	 */
 	public void renderEntity(Map<TexturedModel, List<Entity>> blockEntities, GameResources gm) {
 		for (TexturedModel model : blockEntities.keySet()) {
-			try {
-				prepareTexturedModel(model, gm);
-				List<Entity> batch = blockEntities.get(model);
-				for (Entity entity : batch) {
-					prepareInstance(entity);
-					VoxelGL33.glDrawElements(GL_TRIANGLES, model.getRawModel().getVertexCount(), GL_UNSIGNED_INT, 0);
-				}
-				unbindTexturedModel();
-			} catch (NullPointerException e) {
+			prepareTexturedModel(model, gm);
+			List<Entity> batch = blockEntities.get(model);
+			for (Entity entity : batch) {
+				prepareInstance(entity);
+				VoxelGL33.glDrawElements(GL_TRIANGLES, model.getRawModel().getVertexCount(), GL_UNSIGNED_INT, 0);
 			}
+			unbindTexturedModel();
 		}
 	}
 

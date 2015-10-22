@@ -34,14 +34,17 @@ public class BlockEntity {
 	private float rotX, rotY, rotZ;
 	private float scale;
 	private float localLight;
+	private String side;
 
-	public BlockEntity(TexturedModel model, Vector3f position, float rotX, float rotY, float rotZ, float scale) {
+	public BlockEntity(TexturedModel model, Vector3f position, float rotX, float rotY, float rotZ, float scale,
+			String side) {
 		this.model = model;
 		this.position = position;
 		this.rotX = rotX;
 		this.rotY = rotY;
 		this.rotZ = rotZ;
 		this.scale = scale;
+		this.side = side;
 	}
 
 	public TexturedModel getModel() {
@@ -98,6 +101,10 @@ public class BlockEntity {
 
 	public void setLocalLight(float localLight) {
 		this.localLight = localLight;
+	}
+
+	public String getSide() {
+		return side;
 	}
 
 }

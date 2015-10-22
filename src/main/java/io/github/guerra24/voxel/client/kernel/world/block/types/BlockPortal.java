@@ -50,7 +50,7 @@ public class BlockPortal extends IBlock {
 
 	@Override
 	public BlockEntity getSingleModel(Vector3f pos) {
-		return new BlockEntity(BlocksResources.cubePortal, pos, 0, 0, 0, 1);
+		return new BlockEntity(BlocksResources.cubePortal, pos, 0, 0, 0, 1, "SINGLE MODEL");
 	}
 
 	@Override

@@ -33,12 +33,14 @@ import io.github.guerra24.voxel.client.kernel.world.block.types.BlockGlass;
 import io.github.guerra24.voxel.client.kernel.world.block.types.BlockGoldOre;
 import io.github.guerra24.voxel.client.kernel.world.block.types.BlockGrass;
 import io.github.guerra24.voxel.client.kernel.world.block.types.BlockIndes;
+import io.github.guerra24.voxel.client.kernel.world.block.types.BlockLeaves;
 import io.github.guerra24.voxel.client.kernel.world.block.types.BlockNull;
 import io.github.guerra24.voxel.client.kernel.world.block.types.BlockPortal;
 import io.github.guerra24.voxel.client.kernel.world.block.types.BlockSand;
 import io.github.guerra24.voxel.client.kernel.world.block.types.BlockStone;
 import io.github.guerra24.voxel.client.kernel.world.block.types.BlockTorch;
 import io.github.guerra24.voxel.client.kernel.world.block.types.BlockWater;
+import io.github.guerra24.voxel.client.kernel.world.block.types.BlockWood;
 
 /**
  * Block
@@ -65,6 +67,8 @@ public abstract class Block {
 	public static IBlock Air = new BlockAir();
 	public static IBlock Torch = new BlockTorch();
 	public static IBlock Portal = new BlockPortal();
+	public static IBlock Leaves = new BlockLeaves();
+	public static IBlock Wood = new BlockWood();
 
 	/**
 	 * Initialize the basic Block
@@ -84,6 +88,8 @@ public abstract class Block {
 		registerBlock(Glass.getId(), Glass);
 		registerBlock(Torch.getId(), Torch);
 		registerBlock(Portal.getId(), Portal);
+		registerBlock(Leaves.getId(), Leaves);
+		registerBlock(Wood.getId(), Wood);
 	}
 
 	/**

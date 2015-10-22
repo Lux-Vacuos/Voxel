@@ -22,7 +22,7 @@ public class ClasspathLocation implements ResourceLocation {
 	 */
 	public InputStream getResourceAsStream(String ref) {
 		String cpRef = ref.replace('\\', '/');
-		return ResourceLoader.class.getClassLoader().getResourceAsStream(cpRef);
+		return ResourceLoader.class.getClassLoader().getResourceAsStream(cpRef);	
 	}
 
 }

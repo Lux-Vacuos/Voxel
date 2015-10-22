@@ -38,6 +38,7 @@ public class BlocksResources {
 	public static TexturedModel cubeDirtUP;
 	public static TexturedModel cubeDiamondOreUP;
 	public static TexturedModel cubeGoldOreUP;
+	public static TexturedModel cubeWoodUP;
 
 	public static TexturedModel cubeIndesDOWN;
 	public static TexturedModel cubeGrassDOWN;
@@ -47,6 +48,7 @@ public class BlocksResources {
 	public static TexturedModel cubeDirtDOWN;
 	public static TexturedModel cubeDiamondOreDOWN;
 	public static TexturedModel cubeGoldOreDOWN;
+	public static TexturedModel cubeWoodDOWN;
 
 	public static TexturedModel cubeIndesEAST;
 	public static TexturedModel cubeGrassEAST;
@@ -56,6 +58,7 @@ public class BlocksResources {
 	public static TexturedModel cubeDirtEAST;
 	public static TexturedModel cubeDiamondOreEAST;
 	public static TexturedModel cubeGoldOreEAST;
+	public static TexturedModel cubeWoodEAST;
 
 	public static TexturedModel cubeIndesWEST;
 	public static TexturedModel cubeGrassWEST;
@@ -65,6 +68,7 @@ public class BlocksResources {
 	public static TexturedModel cubeDirtWEST;
 	public static TexturedModel cubeDiamondOreWEST;
 	public static TexturedModel cubeGoldOreWEST;
+	public static TexturedModel cubeWoodWEST;
 
 	public static TexturedModel cubeIndesNORTH;
 	public static TexturedModel cubeGrassNORTH;
@@ -74,6 +78,7 @@ public class BlocksResources {
 	public static TexturedModel cubeDirtNORTH;
 	public static TexturedModel cubeDiamondOreNORTH;
 	public static TexturedModel cubeGoldOreNORTH;
+	public static TexturedModel cubeWoodNORTH;
 
 	public static TexturedModel cubeIndesSOUTH;
 	public static TexturedModel cubeGrassSOUTH;
@@ -83,9 +88,11 @@ public class BlocksResources {
 	public static TexturedModel cubeDirtSOUTH;
 	public static TexturedModel cubeDiamondOreSOUTH;
 	public static TexturedModel cubeGoldOreSOUTH;
+	public static TexturedModel cubeWoodSOUTH;
 
 	public static TexturedModel cubeTorch;
 	public static TexturedModel cubePortal;
+	public static TexturedModel cubeLeaves;
 
 	public static void createBlocks(Loader loader) {
 
@@ -97,6 +104,7 @@ public class BlocksResources {
 		RawModel south = loader.getObjLoader().loadObjModel("FACE_SOUTH", loader);
 		RawModel torch = loader.getObjLoader().loadObjModel("Torch", loader);
 		RawModel portal = loader.getObjLoader().loadObjModel("Portal", loader);
+		RawModel leaves = loader.getObjLoader().loadObjModel("Leaves", loader);
 
 		ModelTexture texture0 = new ModelTexture(loader.loadTextureBlocks("Indes"));
 		ModelTexture texture = new ModelTexture(loader.loadTextureBlocks("Grass"));
@@ -109,6 +117,8 @@ public class BlocksResources {
 		ModelTexture texture7 = new ModelTexture(loader.loadTextureBlocks("GrassSide"));
 		ModelTexture texture8 = new ModelTexture(loader.loadTextureBlocks("Torch"));
 		ModelTexture texture9 = new ModelTexture(loader.loadTextureBlocks("Portal"));
+		ModelTexture texture10 = new ModelTexture(loader.loadTextureBlocks("Leaves"));
+		ModelTexture texture11 = new ModelTexture(loader.loadTextureBlocks("Wood"));
 
 		cubeIndesUP = new TexturedModel(up, texture0);
 		cubeGrassUP = new TexturedModel(up, texture);
@@ -118,6 +128,7 @@ public class BlocksResources {
 		cubeDirtUP = new TexturedModel(up, texture4);
 		cubeDiamondOreUP = new TexturedModel(up, texture5);
 		cubeGoldOreUP = new TexturedModel(up, texture6);
+		cubeWoodUP = new TexturedModel(up, texture11);
 
 		cubeIndesDOWN = new TexturedModel(down, texture0);
 		cubeGrassDOWN = new TexturedModel(down, texture4);
@@ -127,6 +138,7 @@ public class BlocksResources {
 		cubeDirtDOWN = new TexturedModel(down, texture4);
 		cubeDiamondOreDOWN = new TexturedModel(down, texture5);
 		cubeGoldOreDOWN = new TexturedModel(down, texture6);
+		cubeWoodDOWN = new TexturedModel(down, texture11);
 
 		cubeIndesEAST = new TexturedModel(east, texture0);
 		cubeGrassEAST = new TexturedModel(east, texture7);
@@ -136,6 +148,7 @@ public class BlocksResources {
 		cubeDirtEAST = new TexturedModel(east, texture4);
 		cubeDiamondOreEAST = new TexturedModel(east, texture5);
 		cubeGoldOreEAST = new TexturedModel(east, texture6);
+		cubeWoodEAST = new TexturedModel(east, texture11);
 
 		cubeIndesWEST = new TexturedModel(west, texture0);
 		cubeGrassWEST = new TexturedModel(west, texture7);
@@ -145,6 +158,7 @@ public class BlocksResources {
 		cubeDirtWEST = new TexturedModel(west, texture4);
 		cubeDiamondOreWEST = new TexturedModel(west, texture5);
 		cubeGoldOreWEST = new TexturedModel(west, texture6);
+		cubeWoodWEST = new TexturedModel(west, texture11);
 
 		cubeIndesNORTH = new TexturedModel(nort, texture0);
 		cubeGrassNORTH = new TexturedModel(nort, texture7);
@@ -154,6 +168,7 @@ public class BlocksResources {
 		cubeDirtNORTH = new TexturedModel(nort, texture4);
 		cubeDiamondOreNORTH = new TexturedModel(nort, texture5);
 		cubeGoldOreNORTH = new TexturedModel(nort, texture6);
+		cubeWoodNORTH = new TexturedModel(nort, texture11);
 
 		cubeIndesSOUTH = new TexturedModel(south, texture0);
 		cubeGrassSOUTH = new TexturedModel(south, texture7);
@@ -163,9 +178,10 @@ public class BlocksResources {
 		cubeDirtSOUTH = new TexturedModel(south, texture4);
 		cubeDiamondOreSOUTH = new TexturedModel(south, texture5);
 		cubeGoldOreSOUTH = new TexturedModel(south, texture6);
+		cubeWoodSOUTH = new TexturedModel(south, texture11);
 
 		cubeTorch = new TexturedModel(torch, texture8);
-
 		cubePortal = new TexturedModel(portal, texture9);
+		cubeLeaves = new TexturedModel(leaves, texture10);
 	}
 }

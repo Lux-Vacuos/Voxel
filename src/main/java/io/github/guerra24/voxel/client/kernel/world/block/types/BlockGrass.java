@@ -38,33 +38,32 @@ public class BlockGrass extends IBlock {
 
 	@Override
 	public BlockEntity getFaceUp(Vector3f pos) {
-		BlockEntity entity = new BlockEntity(BlocksResources.cubeGrassUP, pos, 0, 0, 0, 1);
-		return entity;
+		return new BlockEntity(BlocksResources.cubeGrassUP, pos, 0, 0, 0, 1, "UP");
 	}
 
 	@Override
 	public BlockEntity getFaceDown(Vector3f pos) {
-		return new BlockEntity(BlocksResources.cubeGrassDOWN, pos, 0, 0, 0, 1);
+		return new BlockEntity(BlocksResources.cubeGrassDOWN, pos, 0, 0, 0, 1, "DOWN");
 	}
 
 	@Override
 	public BlockEntity getFaceEast(Vector3f pos) {
-		return new BlockEntity(BlocksResources.cubeGrassEAST, pos, 0, 0, 0, 1);
+		return new BlockEntity(BlocksResources.cubeGrassEAST, pos, 0, 0, 0, 1, "EAST");
 	}
 
 	@Override
 	public BlockEntity getFaceWest(Vector3f pos) {
-		return new BlockEntity(BlocksResources.cubeGrassWEST, pos, 0, 0, 0, 1);
+		return new BlockEntity(BlocksResources.cubeGrassWEST, pos, 0, 0, 0, 1, "WEST");
 	}
 
 	@Override
 	public BlockEntity getFaceNorth(Vector3f pos) {
-		return new BlockEntity(BlocksResources.cubeGrassNORTH, pos, 0, 0, 0, 1);
+		return new BlockEntity(BlocksResources.cubeGrassNORTH, pos, 0, 0, 0, 1, "NORTH");
 	}
 
 	@Override
 	public BlockEntity getFaceSouth(Vector3f pos) {
-		return new BlockEntity(BlocksResources.cubeGrassSOUTH, pos, 0, 0, 0, 1);
+		return new BlockEntity(BlocksResources.cubeGrassSOUTH, pos, 0, 0, 0, 1, "SOUTH");
 	}
 
 	@Override

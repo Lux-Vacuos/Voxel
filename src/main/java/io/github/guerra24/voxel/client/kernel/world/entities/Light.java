@@ -31,6 +31,8 @@ public class Light {
 	private Vector3f position;
 	private Vector3f colour;
 	private Vector3f attenuation = new Vector3f(1, 0, 0);
+	private Vector3f lightVector;
+	private float bright;
 
 	public Light(Vector3f position, Vector3f colour) {
 		this.position = position;
@@ -65,5 +67,21 @@ public class Light {
 
 	public void setAttenuation(Vector3f attenuation) {
 		this.attenuation = attenuation;
+	}
+
+	public Vector3f getLightVector() {
+		return lightVector;
+	}
+
+	public void setLightVector(Vector3f lightVector) {
+		this.lightVector = lightVector;
+	}
+
+	public float getBright() {
+		return bright;
+	}
+
+	public void setBright(float bright) {
+		this.bright = bright;
 	}
 }

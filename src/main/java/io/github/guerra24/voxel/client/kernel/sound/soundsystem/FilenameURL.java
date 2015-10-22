@@ -115,7 +115,7 @@ public class FilenameURL {
 				}
 			} else {
 				try {
-					url = new File(getClass().getClassLoader().getResource(SoundSystemConfig.getSoundFilesPackage() + filename).getPath()).toURI().toURL();
+					url = new File(SoundSystemConfig.getSoundFilesPackage() + filename).toURI().toURL();
 				} catch (MalformedURLException e) {
 					errorMessage("File path error");
 					printStackTrace(e);
