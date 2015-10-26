@@ -2,17 +2,17 @@ apply plugin:'java'
 apply plugin:'eclipse'
 apply plugin:'application'
 
-mainClassName = 'io.github.guerra24.voxel.client.kernel.bootstrap.Bootstrap'
-version = '0.0.4-ALPHA'
+mainClassName = 'net.guerra24.voxel.bootstrap.Bootstrap'
+version = '0.0.6-ALPHA'
 applicationDefaultJvmArgs = ["-Xmx512M"]
 
 jar {
-	include("*io/**")
+	include("*net/**")
 	include("*org/**")
 	include("assets/**")
 	
     manifest {
-        attributes 'Voxel-Branch': 'Client',
+        attributes 'Voxel-Branch': 'Develop',
                    'Voxel-Version': version
     }
 }
@@ -46,7 +46,7 @@ sourceSets {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '2.7'
+    gradleVersion = '2.8'
 }
 
 run {

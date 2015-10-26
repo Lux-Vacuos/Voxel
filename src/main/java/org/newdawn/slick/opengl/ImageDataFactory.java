@@ -1,11 +1,11 @@
 package org.newdawn.slick.opengl;
 
-import io.github.guerra24.voxel.client.kernel.util.Logger;
-
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 
 import org.newdawn.slick.util.Log;
+
+import net.guerra24.voxel.util.Logger;
 
 /**
  * A static utility to create the appropriate image data for a particular
@@ -39,8 +39,7 @@ public class ImageDataFactory {
 						if ("false".equalsIgnoreCase(val)) {
 							usePngLoader = false;
 						}
-
-						Logger.log(Thread.currentThread(),
+						Logger.log(
 								"Using Java PNG Loader: " + usePngLoader);
 						return null;
 					}

@@ -1,7 +1,5 @@
 package org.newdawn.slick.opengl;
 
-import io.github.guerra24.voxel.client.kernel.input.Cursor;
-
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -9,6 +7,8 @@ import java.nio.IntBuffer;
 
 import org.newdawn.slick.util.Log;
 import org.newdawn.slick.util.ResourceLoader;
+
+import net.guerra24.voxel.input.Cursor;
 
 /**
  * A utility to load cursors (thanks go to Kappa for the animated cursor loader)

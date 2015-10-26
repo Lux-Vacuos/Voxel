@@ -1,8 +1,5 @@
 package org.newdawn.slick.openal;
 
-import io.github.guerra24.voxel.client.kernel.sound.openal.AL;
-import io.github.guerra24.voxel.client.kernel.sound.openal.OpenALException;
-
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -18,6 +15,9 @@ import org.lwjgl.Sys;
 import org.lwjgl.openal.AL10;
 import org.newdawn.slick.util.Log;
 import org.newdawn.slick.util.ResourceLoader;
+
+import net.guerra24.voxel.sound.openal.AL;
+import net.guerra24.voxel.sound.openal.OpenALException;
 
 /**
  * Responsible for holding and playing the sounds used in the game.
