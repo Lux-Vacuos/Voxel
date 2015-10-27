@@ -43,14 +43,12 @@ public class VAPI {
 	private static Map<Integer, Mod> mods;
 	private static WorldVAPI worldAPI;
 	private static VModLoader modLoader;
-	private static MobVAPI mobAPI;
 
 	public VAPI() {
 		mods = new HashMap<Integer, Mod>();
 		worldAPI = new WorldVAPI();
 		modLoader = new VModLoader();
 		modLoader.loadMods();
-		mobAPI = new MobVAPI();
 	}
 
 	/**
@@ -61,7 +59,12 @@ public class VAPI {
 	public void preInit() {
 		Logger.log("Pre Initializing Mods");
 		for (int x = 0; x < mods.size(); x++) {
-			mods.get(x).preInit();
+			try {
+				mods.get(x).preInit();
+			} catch (NoSuchMethodError e) {
+				Logger.log("Mod " + mods.get(x).getName() + " has failed to load in PreInit");
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -73,7 +76,12 @@ public class VAPI {
 	public void init() {
 		Logger.log("Initializing Mods");
 		for (int x = 0; x < mods.size(); x++) {
-			mods.get(x).init();
+			try {
+				mods.get(x).init();
+			} catch (NoSuchMethodError e) {
+				Logger.log("Mod " + mods.get(x).getName() + " has failed to load in Init");
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -85,8 +93,13 @@ public class VAPI {
 	public void postInit() {
 		Logger.log("Post Initializing Mods");
 		for (int x = 0; x < mods.size(); x++) {
-			mods.get(x).postInit();
-			Logger.log("Succesfully Loaded: " + mods.get(x).getName() + " ID: " + mods.get(x).getID());
+			try {
+				mods.get(x).postInit();
+				Logger.log("Succesfully Loaded: " + mods.get(x).getName() + " ID: " + mods.get(x).getID());
+			} catch (NoSuchMethodError e) {
+				Logger.warn("Mod " + mods.get(x).getName() + " has failed to load in PostInit");
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -141,10 +154,6 @@ public class VAPI {
 
 	public static VModLoader getModLoader() {
 		return modLoader;
-	}
-
-	public static MobVAPI getMobAPI() {
-		return mobAPI;
 	}
 
 }

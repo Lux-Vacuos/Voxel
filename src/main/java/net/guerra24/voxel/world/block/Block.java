@@ -34,7 +34,6 @@ import net.guerra24.voxel.world.block.types.BlockGoldOre;
 import net.guerra24.voxel.world.block.types.BlockGrass;
 import net.guerra24.voxel.world.block.types.BlockIndes;
 import net.guerra24.voxel.world.block.types.BlockLeaves;
-import net.guerra24.voxel.world.block.types.BlockNull;
 import net.guerra24.voxel.world.block.types.BlockPortal;
 import net.guerra24.voxel.world.block.types.BlockSand;
 import net.guerra24.voxel.world.block.types.BlockStone;
@@ -56,7 +55,6 @@ public abstract class Block {
 
 	public static IBlock Grass = new BlockGrass();
 	public static IBlock Stone = new BlockStone();
-	public static IBlock NULL = new BlockNull();
 	public static IBlock Indes = new BlockIndes();
 	public static IBlock Sand = new BlockSand();
 	public static IBlock Dirt = new BlockDirt();

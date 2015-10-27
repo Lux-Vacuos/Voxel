@@ -36,7 +36,7 @@ public class Physics {
 	/**
 	 * Physics Data
 	 */
-	private DefaultMobManager mobManager;
+	private MobManager mobManager;
 
 	/**
 	 * Constructor
@@ -48,6 +48,10 @@ public class Physics {
 	public Physics(GameResources gm) {
 		mobManager = new VoxelMobManager(gm);
 	}
+	
+	public void dispose(){
+		mobManager.cleanUp();
+	}
 
 	/**
 	 * Default Mob Manager
@@ -55,7 +59,7 @@ public class Physics {
 	 * @return Mob Manager
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public DefaultMobManager getMobManager() {
+	public MobManager getMobManager() {
 		return mobManager;
 	}
 
@@ -66,7 +70,7 @@ public class Physics {
 	 *            Mob Manager
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public void setMobManager(DefaultMobManager mobManager) {
+	public void setMobManager(MobManager mobManager) {
 		this.mobManager = mobManager;
 	}
 }

@@ -35,7 +35,7 @@ import net.guerra24.voxel.world.block.BlocksResources;
 import net.guerra24.voxel.world.entities.IEntity;
 import net.guerra24.voxel.world.entities.Player;
 
-public class DefaultMobManager implements IMobManagerController {
+public abstract class MobManager {
 	private List<IEntity> mobs = new ArrayList<IEntity>();
 	private Player player;
 
@@ -45,38 +45,38 @@ public class DefaultMobManager implements IMobManagerController {
 	 * @param gm
 	 *            GameResources
 	 */
-	public DefaultMobManager(GameResources gm) {
+	public MobManager(GameResources gm) {
 		init(gm);
+		init();
 	}
 
-	@Override
 	public void init(GameResources gm) {
 		player = new Player(BlocksResources.cubeGlassUP, new Vector3f(0, 80, -4), 0, 0, 0, 1);
 	}
+	
+	protected abstract void init();
 
-	@Override
 	public void update(float delta, GameResources gm, GuiResources gi, DimensionalWorld world, VAPI api) {
 		for (int x = 0; x < mobs.size(); x++) {
 			mobs.get(x).update(delta, gm, gi, world, api);
 		}
 	}
 
-	@Override
 	public void registerMob(IEntity entity) {
 		mobs.add(entity);
 	}
 
-	@Override
-	public void dispose() {
+	public void cleanUp() {
 		mobs.clear();
+		dispose();
 	}
+	
+	protected abstract void dispose();
 
-	@Override
 	public List<IEntity> getMobs() {
 		return mobs;
 	}
 
-	@Override
 	public Player getPlayer() {
 		return player;
 	}

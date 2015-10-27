@@ -88,7 +88,7 @@ public class DimensionalWorld {
 		this.name = name;
 		this.seed = seed;
 		this.chunkDim = chunkDim;
-		gm.getCamera().setPosition(new Vector3f(10, 128, 10));
+		gm.getCamera().setPosition(new Vector3f(100, 3, 0));
 		if (existWorld()) {
 			loadWorld(gm);
 		}
@@ -133,20 +133,23 @@ public class DimensionalWorld {
 			int zz = zPlayChunk + zr;
 			for (int xr = -4; xr <= 4; xr++) {
 				int xx = xPlayChunk + xr;
-				if (zr * zr + xr * xr < 4 * 4) {
-					i += 0.00200f;
-					gm.guis3.get(1).setScale(new Vector2f(i, 0.041f));
-					if (i > 0.5060006f) {
-						o -= 0.04f;
-						if (o >= 0)
-							gm.getSoundSystem().setVolume("menu1", o);
-					}
-					if (!hasChunk(chunkDim, xx, 0, zz)) {
-						if (existChunkFile(chunkDim, xx, 0, zz)) {
-							loadChunk(chunkDim, xx, 0, zz, gm);
-						} else {
-							addChunk(new Chunk(chunkDim, xx, 0, zz, this));
-							saveChunk(chunkDim, xx, 0, zz, gm);
+				for (int yr = -4; yr <= 4; yr++) {
+					int yy = yPlayChunk + yr;
+					if (zr * zr + xr * xr + yr * yr < 4 * 4 * 4) {
+						i += 0.00080f;
+						gm.guis3.get(1).setScale(new Vector2f(i, 0.041f));
+						if (i > 0.5060006f) {
+							o -= 0.04f;
+							if (o >= 0)
+								gm.getSoundSystem().setVolume("menu1", o);
+						}
+						if (!hasChunk(chunkDim, xx, yy, zz)) {
+							if (existChunkFile(chunkDim, xx, yy, zz)) {
+								loadChunk(chunkDim, xx, yy, zz, gm);
+							} else {
+								addChunk(new Chunk(chunkDim, xx, yy, zz, this));
+								saveChunk(chunkDim, xx, yy, zz, gm);
+							}
 						}
 					}
 				}
@@ -205,12 +208,15 @@ public class DimensionalWorld {
 							}
 						}
 					}
-					if (zr * zr + xr * xr <= VoxelVariables.genRadius * VoxelVariables.genRadius
-							&& zr * zr + xr * xr >= (VoxelVariables.genRadius - VoxelVariables.radiusLimit + 1)
-									* (VoxelVariables.genRadius - VoxelVariables.radiusLimit + 1)) {
+					if (zr * zr + xr * xr + yr * yr <= VoxelVariables.genRadius * VoxelVariables.genRadius
+							* VoxelVariables.genRadius
+							&& zr * zr + xr * xr
+									+ yr * yr >= (VoxelVariables.genRadius - VoxelVariables.radiusLimit + 1)
+											* (VoxelVariables.genRadius - VoxelVariables.radiusLimit + 1)
+											* (VoxelVariables.genRadius - VoxelVariables.radiusLimit + 1)) {
 						if (hasChunk(getChunkDimension(), xx, yy, zz)) {
 							saveChunk(getChunkDimension(), xx, yy, zz, gm);
-							removeChunk(getChunk(getChunkDimension(), xx, 0, zz));
+							removeChunk(getChunk(getChunkDimension(), xx, yy, zz));
 						}
 					}
 				}
@@ -227,7 +233,7 @@ public class DimensionalWorld {
 	 *            GameResources
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public void updateChunksRender(GameResources gm) {// SOURCE OF LOW FPS
+	public void updateChunksRender(GameResources gm) {
 		for (int zr = -VoxelVariables.radius; zr <= VoxelVariables.radius; zr++) {
 			int zz = zPlayChunk + zr;
 			for (int xr = -VoxelVariables.radius; xr <= VoxelVariables.radius; xr++) {
@@ -574,14 +580,18 @@ public class DimensionalWorld {
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void clearChunkDimension(GameResources gm) {
-		Logger.log(Thread.currentThread(), "Saving World");
+		Logger.log("Saving World");
 		for (int zr = -VoxelVariables.genRadius; zr <= VoxelVariables.genRadius; zr++) {
-			int zz = getzPlayChunk() + zr;
+			int zz = zPlayChunk + zr;
 			for (int xr = -VoxelVariables.genRadius; xr <= VoxelVariables.genRadius; xr++) {
-				int xx = getxPlayChunk() + xr;
-				if (zr * zr + xr * xr <= VoxelVariables.genRadius * VoxelVariables.genRadius) {
-					if (hasChunk(chunkDim, xx, 0, zz)) {
-						saveChunk(chunkDim, xx, 0, zz, gm);
+				int xx = xPlayChunk + xr;
+				for (int yr = -VoxelVariables.genRadius; yr <= VoxelVariables.genRadius; yr++) {
+					int yy = yPlayChunk + yr;
+					if (zr * zr + xr * xr + yr * yr <= VoxelVariables.genRadius * VoxelVariables.genRadius
+							* VoxelVariables.genRadius) {
+						if (hasChunk(chunkDim, xx, yy, zz)) {
+							saveChunk(chunkDim, xx, yy, zz, gm);
+						}
 					}
 				}
 			}
@@ -604,6 +614,10 @@ public class DimensionalWorld {
 
 	public int getChunkDimension() {
 		return chunkDim;
+	}
+
+	public int getyPlayChunk() {
+		return yPlayChunk;
 	}
 
 	public HashMap<ChunkKey, Chunk> getChunks() {

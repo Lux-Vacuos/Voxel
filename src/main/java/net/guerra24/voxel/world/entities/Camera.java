@@ -294,11 +294,15 @@ public class Camera implements IEntity {
 				int zz = world.getzPlayChunk() + zr;
 				for (int xr = -VoxelVariables.genRadius; xr <= VoxelVariables.genRadius; xr++) {
 					int xx = world.getxPlayChunk() + xr;
-					if (zr * zr + xr * xr <= VoxelVariables.genRadius * VoxelVariables.genRadius) {
-						if (world.hasChunk(world.getChunkDimension(), xx,0, zz)) {
-							world.getChunk(world.getChunkDimension(), xx,0, zz).dispose();
-							world.getChunk(world.getChunkDimension(), xx,0, zz).needsRebuild = true;
-							world.setTempRadius(0);
+					for (int yr = -VoxelVariables.genRadius; yr <= VoxelVariables.genRadius; yr++) {
+						int yy = world.getyPlayChunk() + yr;
+						if (zr * zr + xr * xr + yr * yr <= VoxelVariables.genRadius * VoxelVariables.genRadius
+								* VoxelVariables.genRadius) {
+							if (world.hasChunk(world.getChunkDimension(), xx, yy, zz)) {
+								world.getChunk(world.getChunkDimension(), xx, yy, zz).dispose();
+								world.getChunk(world.getChunkDimension(), xx, yy, zz).needsRebuild = true;
+								world.setTempRadius(0);
+							}
 						}
 					}
 				}

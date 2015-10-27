@@ -258,16 +258,15 @@ public class Chunk {
 		blocks[x & 0xF][y & 0xF][z & 0xF] = id;
 	}
 
-	private float getLight(DimensionalWorld world, int x, int blockPos, int z) {
+	private float getLight(DimensionalWorld world, int x, int y, int z) {
 		float result = 1;
-		for (int y = 128; y > blockPos; y--) {
-			if (x > ((cx * sizeX) + 1) && (z > (cz * sizeZ) + 1) && (x < (cx * sizeX) + 15)
-					&& (z < (cz * sizeZ) + 15)) {
-				if (getLocalBlock(x, y, z) != Block.Air.getId())
+		if ((x > (cx * sizeX) + 1) && (z > (cz * sizeZ) + 1) && (x < (cx * sizeX) + 15) && (z < (cz * sizeZ) + 15)) {
+			for (int yo = 16; yo > y; yo--) {
+				if (getLocalBlock(x, yo, z) != Block.Air.getId()) {
 					result -= 0.05f;
-			} else {
-				if (world.getGlobalBlock(dim, x, y, z) != Block.Air.getId())
-					result -= 0.05f;
+				}
+				if (result <= 0.1f)
+					return result;
 			}
 		}
 		return result;

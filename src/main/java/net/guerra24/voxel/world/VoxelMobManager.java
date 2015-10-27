@@ -32,7 +32,7 @@ import net.guerra24.voxel.resources.GameResources;
  * @author Guerra24 <pablo230699@hotmail.com>
  * @category World
  */
-public class VoxelMobManager extends DefaultMobManager {
+public class VoxelMobManager extends MobManager {
 
 	/**
 	 * Constructor
@@ -43,6 +43,14 @@ public class VoxelMobManager extends DefaultMobManager {
 	 */
 	public VoxelMobManager(GameResources gm) {
 		super(gm);
+	}
+
+	@Override
+	public void init() {
+	}
+
+	@Override
+	protected void dispose() {
 	}
 
 }

@@ -7,7 +7,7 @@ public class WorldService {
 	public final ExecutorService es;
 
 	public WorldService() {
-		this.es = Executors.newFixedThreadPool(2);
+		this.es = Executors.newFixedThreadPool(1);
 	}
 
 	public void add_worker(ChunkWorkerMesh worker) {
