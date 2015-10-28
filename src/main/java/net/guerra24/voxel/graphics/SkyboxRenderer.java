@@ -136,7 +136,6 @@ public class SkyboxRenderer {
 	 */
 	public void render(float r, float g, float b, float delta, GameResources gm) {
 		shader.start();
-		shader.loadProjectionMatrix(gm.getRenderer().getProjectionMatrix());
 		shader.loadViewMatrix(gm.getCamera(), delta);
 		shader.loadFog(r, g, b);
 		glBindVertexArray(cube.getVaoID());

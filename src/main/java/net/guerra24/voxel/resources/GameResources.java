@@ -38,8 +38,6 @@ import net.guerra24.voxel.graphics.MasterRenderer;
 import net.guerra24.voxel.graphics.PostProcessingRenderer;
 import net.guerra24.voxel.graphics.SkyboxRenderer;
 import net.guerra24.voxel.graphics.TextRenderer;
-import net.guerra24.voxel.graphics.WaterRenderer;
-import net.guerra24.voxel.graphics.shaders.WaterShader;
 import net.guerra24.voxel.menu.MainMenu;
 import net.guerra24.voxel.particle.ParticleController;
 import net.guerra24.voxel.resources.models.GuiTexture;
@@ -78,8 +76,6 @@ public class GameResources {
 	private Loader loader;
 	private Camera camera;
 	private MasterRenderer renderer;
-	private WaterShader waterShader;
-	private WaterRenderer waterRenderer;
 	private SkyboxRenderer skyboxRenderer;
 	private GuiRenderer guiRenderer;
 	private GameStates gameStates;
@@ -111,9 +107,7 @@ public class GameResources {
 		camera = new Camera();
 		gson = new Gson();
 		renderer = new MasterRenderer(loader);
-		waterShader = new WaterShader();
 		guiRenderer = new GuiRenderer(loader);
-		waterRenderer = new WaterRenderer(loader, waterShader, renderer.getProjectionMatrix());
 		skyboxRenderer = new SkyboxRenderer(loader, renderer.getProjectionMatrix());
 		particleController = new ParticleController(loader);
 		postProcessing = new PostProcessingRenderer(loader);
@@ -162,7 +156,6 @@ public class GameResources {
 	 */
 	public void cleanUp() {
 		particleController.dispose();
-		waterShader.cleanUp();
 		waterFBO.cleanUp();
 		guiRenderer.cleanUp();
 		renderer.cleanUp();
@@ -210,16 +203,8 @@ public class GameResources {
 		return renderer;
 	}
 
-	public WaterShader getWaterShader() {
-		return waterShader;
-	}
-
 	public TextRenderer getTextRenderer() {
 		return textRenderer;
-	}
-
-	public WaterRenderer getWaterRenderer() {
-		return waterRenderer;
 	}
 
 	public SkyboxRenderer getSkyboxRenderer() {

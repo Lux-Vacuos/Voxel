@@ -29,7 +29,7 @@ import net.guerra24.voxel.resources.GameResources;
 import net.guerra24.voxel.resources.GuiResources;
 import net.guerra24.voxel.resources.models.TexturedModel;
 import net.guerra24.voxel.util.vector.Vector3f;
-import net.guerra24.voxel.world.DimensionalWorld;
+import net.guerra24.voxel.world.IWorld;
 
 public class Mob extends Entity implements IEntity {
 
@@ -43,7 +43,7 @@ public class Mob extends Entity implements IEntity {
 	}
 
 	@Override
-	public void update(float delta, GameResources gm, GuiResources gi, DimensionalWorld world, VAPI api) {
+	public void update(float delta, GameResources gm, GuiResources gi, IWorld world, VAPI api) {
 	}
 
 	@Override

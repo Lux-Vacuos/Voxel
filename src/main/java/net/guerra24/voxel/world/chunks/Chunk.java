@@ -29,10 +29,10 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 import net.guerra24.voxel.core.VoxelVariables;
 import net.guerra24.voxel.resources.GameResources;
-import net.guerra24.voxel.resources.models.WaterTile;
 import net.guerra24.voxel.util.Maths;
 import net.guerra24.voxel.util.vector.Vector3f;
-import net.guerra24.voxel.world.DimensionalWorld;
+import net.guerra24.voxel.world.IWorld;
+import net.guerra24.voxel.world.WorldService;
 import net.guerra24.voxel.world.block.Block;
 import net.guerra24.voxel.world.block.BlockEntity;
 
@@ -49,10 +49,8 @@ public class Chunk {
 	 */
 	public int dim, cx, cy, cz, posX, posY, posZ;
 	public byte[][][] blocks;
-	private transient Queue<BlockEntity> cubes;
-	private transient Queue<WaterTile> water;
-	private transient Queue<WaterTile> watertemp;
-	private transient Queue<BlockEntity> cubestemp;
+	private transient Queue<Object> blocksMesh;
+	private transient Queue<Object> blocksMeshtemp;
 	private transient int sizeX, sizeY, sizeZ;
 	private transient boolean readyToRender = true;
 	public transient boolean needsRebuild = true, updated = false, updating = false, empty = true, created = false;
@@ -70,7 +68,7 @@ public class Chunk {
 	 *            Dimensional World
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public Chunk(int dim, int cx, int cy, int cz, DimensionalWorld world) {
+	public Chunk(int dim, int cx, int cy, int cz, IWorld world) {
 		this.dim = dim;
 		this.cx = cx;
 		this.cy = cy;
@@ -88,7 +86,7 @@ public class Chunk {
 	 *            Dimensional World
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public void init(DimensionalWorld world) {
+	public void init(IWorld world) {
 		createList();
 		blocks = new byte[sizeX][sizeY][sizeZ];
 	}
@@ -99,55 +97,46 @@ public class Chunk {
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void createList() {
-		cubes = new ConcurrentLinkedQueue<BlockEntity>();
-		cubestemp = new ConcurrentLinkedQueue<BlockEntity>();
-		water = new ConcurrentLinkedQueue<WaterTile>();
-		watertemp = new ConcurrentLinkedQueue<WaterTile>();
+		blocksMesh = new ConcurrentLinkedQueue<Object>();
+		blocksMeshtemp = new ConcurrentLinkedQueue<Object>();
 		sizeX = VoxelVariables.CHUNK_SIZE;
 		sizeY = VoxelVariables.CHUNK_HEIGHT;
 		sizeZ = VoxelVariables.CHUNK_SIZE;
 	}
 
-	public void rebuild(WorldService server, DimensionalWorld world) {
+	public void rebuild(WorldService server, IWorld world) {
 		if (needsRebuild || !updated && !updating) {
 			updating = true;
 			server.add_worker(new ChunkWorkerMesh(world, this));
 		}
-		empty = cubes.isEmpty();
+		empty = blocksMesh.isEmpty();
 	}
 
-	public void update(DimensionalWorld world) {
-		watertemp.addAll(water);
-		cubestemp.addAll(cubes);
+	public void update(IWorld world) {
+		blocksMeshtemp.addAll(blocksMesh);
 		readyToRender = false;
-		water.clear();
-		cubes.clear();
-		rebuildChunkSection(empty, cubes, water, world);
-		calculateLight(cubes, world);
+		blocksMesh.clear();
+		rebuildChunkSection(empty, blocksMesh, world);
+		calculateLight(blocksMesh, world);
 		readyToRender = true;
-		cubestemp.clear();
-		watertemp.clear();
+		blocksMeshtemp.clear();
 	}
 
-	public void createBasicTerrain(DimensionalWorld world) {
+	public void createBasicTerrain(IWorld world) {
 		for (int x = 0; x < sizeX; x++) {
 			for (int z = 0; z < sizeZ; z++) {
 				for (int y = 0; y < sizeY; y++) {
 					double tempHeight = world.getNoise().getNoise(x + cx * 16, y + cy * 16, z + cz * 16);
-					tempHeight++;
-					if (tempHeight > 0.9) {
-					} else
+					if (tempHeight > 0) {
 						blocks[x][y][z] = Block.Stone.getId();
-					if (cy == 0)
-						if (y == 0)
-							blocks[x][y][z] = Block.Indes.getId();
+					}
 				}
 			}
 		}
 		created = true;
 	}
 
-	private void createStructures(ChunkGenerator generator, DimensionalWorld world) {
+	private void createStructures(ChunkGenerator generator, IWorld world) {
 		// generator.generateCaves(blocks, world, sizeX, sizeZ, sizeY, cx, cz);
 		for (int i = 0; i < 4; i++) {
 			int xx = Maths.randInt(4, 12);
@@ -161,8 +150,7 @@ public class Chunk {
 		}
 	}
 
-	public void rebuildChunkSection(boolean secClear, Queue<BlockEntity> cubes, Queue<WaterTile> water,
-			DimensionalWorld world) {
+	public void rebuildChunkSection(boolean secClear, Queue<Object> cubes, IWorld world) {
 		secClear = false;
 		for (int x = 0; x < sizeX; x++) {
 			for (int z = 0; z < sizeZ; z++) {
@@ -186,12 +174,12 @@ public class Chunk {
 									.getFaceEast(new Vector3f(x + cx * sizeX, y + cy * sizeY, z + cz * sizeZ)));
 							secClear = true;
 						}
-						if (cullFaceDown(x + cx * sizeX, y + cy * sizeY, z + cz * sizeZ)) {
+						if (cullFaceDown(x + cx * sizeX, y + cy * sizeY, z + cz * sizeZ, world)) {
 							cubes.add(Block.getBlock(blocks[x][y][z])
 									.getFaceDown(new Vector3f(x + cx * sizeX, y + cy * sizeY, z + cz * sizeZ)));
 							secClear = true;
 						}
-						if (cullFaceUpSolidBlock(x + cx * sizeX, y + cy * sizeY, z + cz * sizeZ)) {
+						if (cullFaceUpSolidBlock(x + cx * sizeX, y + cy * sizeY, z + cz * sizeZ, world)) {
 							cubes.add(Block.getBlock(blocks[x][y][z])
 									.getFaceUp(new Vector3f(x + cx * sizeX, y + cy * sizeY, z + cz * sizeZ)));
 							secClear = true;
@@ -207,8 +195,8 @@ public class Chunk {
 							secClear = true;
 						}
 					} else if (Block.getBlock(blocks[x][y][z]) == Block.Water) {
-						if (cullFaceUpWater(x + cx * sizeX, y + cy * sizeY, z + cz * sizeZ)) {
-							water.add(Block.Water
+						if (cullFaceUpWater(x + cx * sizeX, y + cy * sizeY, z + cz * sizeZ, world)) {
+							cubes.add(Block.Water
 									.getWaterTitle(new Vector3f(x + cx * sizeX, y + cy * sizeY, z + cz * sizeZ)));
 							secClear = true;
 						}
@@ -218,34 +206,37 @@ public class Chunk {
 		}
 	}
 
-	private void calculateLight(Queue<BlockEntity> cubes, DimensionalWorld world) {
-		for (BlockEntity blockEntity : cubes) {
-			int x, y, z;
-			x = (int) blockEntity.getPosition().x;
-			y = (int) blockEntity.getPosition().y;
-			z = (int) blockEntity.getPosition().z;
-			switch (blockEntity.getSide()) {
-			case "UP":
-				blockEntity.setLocalLight(getLight(world, x, y, z));
-				break;
-			case "DOWN":
-				blockEntity.setLocalLight(getLight(world, x, y, z));
-				break;
-			case "EAST":
-				blockEntity.setLocalLight(getLight(world, x + 1, y, z));
-				break;
-			case "WEST":
-				blockEntity.setLocalLight(getLight(world, x - 1, y, z));
-				break;
-			case "NORTH":
-				blockEntity.setLocalLight(getLight(world, x, y, z - 1));
-				break;
-			case "SOUTH":
-				blockEntity.setLocalLight(getLight(world, x, y, z + 1));
-				break;
-			case "SINGLE MODEL":
-				blockEntity.setLocalLight(getLight(world, x, y, z));
-				break;
+	private void calculateLight(Queue<Object> cubes, IWorld world) {
+		for (Object blockEnt : cubes) {
+			if (blockEnt.getClass().equals(BlockEntity.class)) {
+				BlockEntity blockEntity = (BlockEntity) blockEnt;
+				int x, y, z;
+				x = (int) blockEntity.getPosition().x;
+				y = (int) blockEntity.getPosition().y;
+				z = (int) blockEntity.getPosition().z;
+				switch (blockEntity.getSide()) {
+				case "UP":
+					blockEntity.setLocalLight(getLight(world, x, y, z));
+					break;
+				case "DOWN":
+					blockEntity.setLocalLight(getLight(world, x, y, z));
+					break;
+				case "EAST":
+					blockEntity.setLocalLight(getLight(world, x + 1, y, z));
+					break;
+				case "WEST":
+					blockEntity.setLocalLight(getLight(world, x - 1, y, z));
+					break;
+				case "NORTH":
+					blockEntity.setLocalLight(getLight(world, x, y, z - 1));
+					break;
+				case "SOUTH":
+					blockEntity.setLocalLight(getLight(world, x, y, z + 1));
+					break;
+				case "SINGLE MODEL":
+					blockEntity.setLocalLight(getLight(world, x, y, z));
+					break;
+				}
 			}
 		}
 	}
@@ -258,36 +249,20 @@ public class Chunk {
 		blocks[x & 0xF][y & 0xF][z & 0xF] = id;
 	}
 
-	private float getLight(DimensionalWorld world, int x, int y, int z) {
+	private float getLight(IWorld world, int x, int y, int z) {
 		float result = 1;
-		if ((x > (cx * sizeX) + 1) && (z > (cz * sizeZ) + 1) && (x < (cx * sizeX) + 15) && (z < (cz * sizeZ) + 15)) {
-			for (int yo = 16; yo > y; yo--) {
-				if (getLocalBlock(x, yo, z) != Block.Air.getId()) {
-					result -= 0.05f;
-				}
-				if (result <= 0.1f)
-					return result;
-			}
-		}
 		return result;
 	}
 
-	private boolean cullFaceWest(int x, int y, int z, DimensionalWorld world) {
-		if (x > (cx * sizeX) + 1) {
-			if (z > (cz * sizeZ) + 1) {
-				if (x < (cx * sizeX) + 15) {
-					if (z < (cz * sizeZ) + 15) {
-						if (getLocalBlock(x - 1, y, z) != Block.Air.getId()
-								&& getLocalBlock(x - 1, y, z) != Block.Water.getId()
-								&& getLocalBlock(x - 1, y, z) != Block.Glass.getId()
-								&& getLocalBlock(x - 1, y, z) != Block.Torch.getId()
-								&& getLocalBlock(x - 1, y, z) != Block.Leaves.getId()) {
-							return false;
-						} else {
-							return true;
-						}
-					}
-				}
+	private boolean cullFaceWest(int x, int y, int z, IWorld world) {
+		if (x > (cx * sizeX) + 1 && x < (cx * sizeX) + 16) {
+			if (getLocalBlock(x - 1, y, z) != Block.Air.getId() && getLocalBlock(x - 1, y, z) != Block.Water.getId()
+					&& getLocalBlock(x - 1, y, z) != Block.Glass.getId()
+					&& getLocalBlock(x - 1, y, z) != Block.Torch.getId()
+					&& getLocalBlock(x - 1, y, z) != Block.Leaves.getId()) {
+				return false;
+			} else {
+				return true;
 			}
 		}
 		if (world.getGlobalBlock(dim, x - 1, y, z) != Block.Air.getId()
@@ -301,22 +276,15 @@ public class Chunk {
 		}
 	}
 
-	private boolean cullFaceEast(int x, int y, int z, DimensionalWorld world) {
-		if (x > (cx * sizeX) + 1) {
-			if (z > (cz * sizeZ) + 1) {
-				if (x < (cx * sizeX) + 15) {
-					if (z < (cz * sizeZ) + 15) {
-						if (getLocalBlock(x + 1, y, z) != Block.Air.getId()
-								&& getLocalBlock(x + 1, y, z) != Block.Water.getId()
-								&& getLocalBlock(x + 1, y, z) != Block.Glass.getId()
-								&& getLocalBlock(x + 1, y, z) != Block.Torch.getId()
-								&& getLocalBlock(x + 1, y, z) != Block.Leaves.getId()) {
-							return false;
-						} else {
-							return true;
-						}
-					}
-				}
+	private boolean cullFaceEast(int x, int y, int z, IWorld world) {
+		if (x > (cx * sizeX) && x < (cx * sizeX) + 15) {
+			if (getLocalBlock(x + 1, y, z) != Block.Air.getId() && getLocalBlock(x + 1, y, z) != Block.Water.getId()
+					&& getLocalBlock(x + 1, y, z) != Block.Glass.getId()
+					&& getLocalBlock(x + 1, y, z) != Block.Torch.getId()
+					&& getLocalBlock(x + 1, y, z) != Block.Leaves.getId()) {
+				return false;
+			} else {
+				return true;
 			}
 		}
 		if (world.getGlobalBlock(dim, x + 1, y, z) != Block.Air.getId()
@@ -330,83 +298,77 @@ public class Chunk {
 		}
 	}
 
-	private boolean cullFaceDown(int x, int y, int z) {
-		if (x >= (cx * sizeX)) {
-			if (z >= (cz * sizeZ)) {
-				if (x < (cx * sizeX) + 16) {
-					if (z < (cz * sizeZ) + 16) {
-						if (getLocalBlock(x, y - 1, z) != Block.Air.getId()
-								&& getLocalBlock(x, y - 1, z) != Block.Water.getId()
-								&& getLocalBlock(x, y - 1, z) != Block.Glass.getId()
-								&& getLocalBlock(x, y - 1, z) != Block.Torch.getId()
-								&& getLocalBlock(x, y - 1, z) != Block.Leaves.getId()) {
-							return false;
-						} else {
-							return true;
-						}
-					}
-				}
+	private boolean cullFaceDown(int x, int y, int z, IWorld world) {
+		if (y > (cy * sizeY) + 1 && y < (cy * sizeY) + 16) {
+			if (getLocalBlock(x, y - 1, z) != Block.Air.getId() && getLocalBlock(x, y - 1, z) != Block.Water.getId()
+					&& getLocalBlock(x, y - 1, z) != Block.Glass.getId()
+					&& getLocalBlock(x, y - 1, z) != Block.Torch.getId()
+					&& getLocalBlock(x, y - 1, z) != Block.Leaves.getId()) {
+				return false;
+			} else {
+				return true;
 			}
 		}
-		return false;
+		if (world.getGlobalBlock(dim, x, y - 1, z) != Block.Air.getId()
+				&& world.getGlobalBlock(dim, x, y - 1, z) != Block.Water.getId()
+				&& world.getGlobalBlock(dim, x, y - 1, z) != Block.Glass.getId()
+				&& world.getGlobalBlock(dim, x, y - 1, z) != Block.Torch.getId()
+				&& world.getGlobalBlock(dim, x, y - 1, z) != Block.Leaves.getId()) {
+			return false;
+		} else {
+			return true;
+		}
 	}
 
-	private boolean cullFaceUpSolidBlock(int x, int y, int z) {
-		if (x >= (cx * sizeX)) {
-			if (z >= (cz * sizeZ)) {
-				if (x < (cx * sizeX) + 16) {
-					if (z < (cz * sizeZ) + 16) {
-						if (getLocalBlock(x, y + 1, z) != Block.Air.getId()
-								&& getLocalBlock(x, y + 1, z) != Block.Water.getId()
-								&& getLocalBlock(x, y + 1, z) != Block.Glass.getId()
-								&& getLocalBlock(x, y + 1, z) != Block.Torch.getId()
-								&& getLocalBlock(x, y + 1, z) != Block.Leaves.getId()) {
-							return false;
-						} else {
-							return true;
-						}
-					}
-				}
+	private boolean cullFaceUpSolidBlock(int x, int y, int z, IWorld world) {
+		if (y > (cy * sizeY) && y < (cy * sizeY) + 15) {
+			if (getLocalBlock(x, y + 1, z) != Block.Air.getId() && getLocalBlock(x, y + 1, z) != Block.Water.getId()
+					&& getLocalBlock(x, y + 1, z) != Block.Glass.getId()
+					&& getLocalBlock(x, y + 1, z) != Block.Torch.getId()
+					&& getLocalBlock(x, y + 1, z) != Block.Leaves.getId()) {
+				return false;
+			} else {
+				return true;
 			}
 		}
-		return false;
+		if (world.getGlobalBlock(dim, x, y + 1, z) != Block.Air.getId()
+				&& world.getGlobalBlock(dim, x, y + 1, z) != Block.Water.getId()
+				&& world.getGlobalBlock(dim, x, y + 1, z) != Block.Glass.getId()
+				&& world.getGlobalBlock(dim, x, y + 1, z) != Block.Torch.getId()
+				&& world.getGlobalBlock(dim, x, y + 1, z) != Block.Leaves.getId()) {
+			return false;
+		} else {
+			return true;
+		}
 	}
 
-	private boolean cullFaceUpWater(int x, int y, int z) {
-		if (x >= (cx * sizeX)) {
-			if (z >= (cz * sizeZ)) {
-				if (x < (cx * sizeX) + 16) {
-					if (z < (cz * sizeZ) + 16) {
-						if (getLocalBlock(x, y + 1, z) != Block.Air.getId()
-								&& getLocalBlock(x, y + 1, z) != Block.Glass.getId()
-								&& getLocalBlock(x, y + 1, z) != Block.Leaves.getId()) {
-							return false;
-						} else {
-							return true;
-						}
-					}
-				}
+	private boolean cullFaceUpWater(int x, int y, int z, IWorld world) {
+		if (y > (cy * sizeY) && y < (cy * sizeY) + 15) {
+			if (getLocalBlock(x, y + 1, z) != Block.Air.getId() && getLocalBlock(x, y + 1, z) != Block.Glass.getId()
+					&& getLocalBlock(x, y + 1, z) != Block.Leaves.getId()) {
+				return false;
+			} else {
+				return true;
 			}
 		}
-		return false;
+		if (world.getGlobalBlock(dim, x, y + 1, z) != Block.Air.getId()
+				&& world.getGlobalBlock(dim, x, y + 1, z) != Block.Glass.getId()
+				&& world.getGlobalBlock(dim, x, y + 1, z) != Block.Leaves.getId()) {
+			return false;
+		} else {
+			return true;
+		}
 	}
 
-	private boolean cullFaceNorth(int x, int y, int z, DimensionalWorld world) {
-		if (x > (cx * sizeX) + 1) {
-			if (z > (cz * sizeZ) + 1) {
-				if (x < (cx * sizeX) + 15) {
-					if (z < (cz * sizeZ) + 15) {
-						if (getLocalBlock(x, y, z - 1) != Block.Air.getId()
-								&& getLocalBlock(x, y, z - 1) != Block.Water.getId()
-								&& getLocalBlock(x, y, z - 1) != Block.Glass.getId()
-								&& getLocalBlock(x, y, z - 1) != Block.Torch.getId()
-								&& getLocalBlock(x, y, z - 1) != Block.Leaves.getId()) {
-							return false;
-						} else {
-							return true;
-						}
-					}
-				}
+	private boolean cullFaceNorth(int x, int y, int z, IWorld world) {
+		if (z > (cz * sizeZ) + 1 && z < (cz * sizeZ) + 16) {
+			if (getLocalBlock(x, y, z - 1) != Block.Air.getId() && getLocalBlock(x, y, z - 1) != Block.Water.getId()
+					&& getLocalBlock(x, y, z - 1) != Block.Glass.getId()
+					&& getLocalBlock(x, y, z - 1) != Block.Torch.getId()
+					&& getLocalBlock(x, y, z - 1) != Block.Leaves.getId()) {
+				return false;
+			} else {
+				return true;
 			}
 		}
 		if (world.getGlobalBlock(dim, x, y, z - 1) != Block.Air.getId()
@@ -420,22 +382,15 @@ public class Chunk {
 		}
 	}
 
-	private boolean cullFaceSouth(int x, int y, int z, DimensionalWorld world) {
-		if (x > (cx * sizeX) + 1) {
-			if (z > (cz * sizeZ) + 1) {
-				if (x < (cx * sizeX) + 15) {
-					if (z < (cz * sizeZ) + 15) {
-						if (getLocalBlock(x, y, z + 1) != Block.Air.getId()
-								&& getLocalBlock(x, y, z + 1) != Block.Water.getId()
-								&& getLocalBlock(x, y, z + 1) != Block.Glass.getId()
-								&& getLocalBlock(x, y, z + 1) != Block.Torch.getId()
-								&& getLocalBlock(x, y, z + 1) != Block.Leaves.getId()) {
-							return false;
-						} else {
-							return true;
-						}
-					}
-				}
+	private boolean cullFaceSouth(int x, int y, int z, IWorld world) {
+		if (z > (cz * sizeZ) && z < (cz * sizeZ) + 15) {
+			if (getLocalBlock(x, y, z + 1) != Block.Air.getId() && getLocalBlock(x, y, z + 1) != Block.Water.getId()
+					&& getLocalBlock(x, y, z + 1) != Block.Glass.getId()
+					&& getLocalBlock(x, y, z + 1) != Block.Torch.getId()
+					&& getLocalBlock(x, y, z + 1) != Block.Leaves.getId()) {
+				return false;
+			} else {
+				return true;
 			}
 		}
 		if (world.getGlobalBlock(dim, x, y, z + 1) != Block.Air.getId()
@@ -451,19 +406,15 @@ public class Chunk {
 
 	public void render(GameResources gm) {
 		if (readyToRender) {
-			gm.getRenderer().renderChunk(cubes, gm);
-			gm.getWaterRenderer().render(water, gm);
+			gm.getRenderer().renderChunk(blocksMesh, gm);
 		} else {
-			gm.getRenderer().renderChunk(cubestemp, gm);
-			gm.getWaterRenderer().render(watertemp, gm);
+			gm.getRenderer().renderChunk(blocksMeshtemp, gm);
 		}
 	}
 
 	private void clear() {
-		water.clear();
-		cubes.clear();
-		cubestemp.clear();
-		watertemp.clear();
+		blocksMesh.clear();
+		blocksMeshtemp.clear();
 	}
 
 	public void dispose() {

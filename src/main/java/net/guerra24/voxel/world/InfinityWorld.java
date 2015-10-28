@@ -44,7 +44,6 @@ import net.guerra24.voxel.util.vector.Vector3f;
 import net.guerra24.voxel.world.chunks.Chunk;
 import net.guerra24.voxel.world.chunks.ChunkGenerator;
 import net.guerra24.voxel.world.chunks.ChunkKey;
-import net.guerra24.voxel.world.chunks.WorldService;
 
 /**
  * Dimensional World
@@ -52,7 +51,7 @@ import net.guerra24.voxel.world.chunks.WorldService;
  * @author Guerra24 <pablo230699@hotmail.com>
  * @category World
  */
-public class DimensionalWorld {
+public class InfinityWorld implements IWorld {
 
 	/**
 	 * Dimensional World Data
@@ -70,20 +69,9 @@ public class DimensionalWorld {
 	private int seedi;
 	private ChunkGenerator chunkGenerator;
 	private WorldService service;
+	private String codeName = "Infinity";
 
-	/**
-	 * Start a new World
-	 * 
-	 * @param name
-	 *            World Name
-	 * @param camera
-	 *            Camera
-	 * @param seed
-	 *            Seed
-	 * @param dimension
-	 *            World Dimension
-	 * @author Guerra24 <pablo230699@hotmail.com>
-	 */
+	@Override
 	public void startWorld(String name, Random seed, int chunkDim, VAPI api, GameResources gm) {
 		this.name = name;
 		this.seed = seed;
@@ -93,18 +81,12 @@ public class DimensionalWorld {
 			loadWorld(gm);
 		}
 		saveWorld(gm);
-		initialize(gm);
+		init(gm);
 		createDimension(gm, api);
 	}
 
-	/**
-	 * Initialize the World
-	 * 
-	 * @param gm
-	 *            Game Resources
-	 * @author Guerra24 <pablo230699@hotmail.com>
-	 */
-	private void initialize(GameResources gm) {
+	@Override
+	public void init(GameResources gm) {
 		seedi = seed.nextInt();
 		noise = new SimplexNoise(128, 0.3f, seedi);
 		chunks = new HashMap<ChunkKey, Chunk>();
@@ -113,16 +95,8 @@ public class DimensionalWorld {
 		gm.getPhysics().getMobManager().getPlayer().setPosition(gm.getCamera().getPosition());
 	}
 
-	/**
-	 * Create Dimension
-	 * 
-	 * @param gm
-	 *            Game Resources
-	 * @param api
-	 *            Voxel API
-	 * @author Guerra24 <pablo230699@hotmail.com>
-	 */
-	private void createDimension(GameResources gm, VAPI api) {
+	@Override
+	public void createDimension(GameResources gm, VAPI api) {
 		Logger.log("Generating World");
 		xPlayChunk = (int) (gm.getCamera().getPosition().x / 16);
 		zPlayChunk = (int) (gm.getCamera().getPosition().z / 16);
@@ -157,16 +131,8 @@ public class DimensionalWorld {
 		}
 	}
 
-	/**
-	 * Update Chunk Generation
-	 * 
-	 * @param gm
-	 *            Game Resources
-	 * @param api
-	 *            Voxel API
-	 * @author Guerra24 <pablo230699@hotmail.com>
-	 */
-	public void updateChunkGeneration(GameResources gm, VAPI api) {
+	@Override
+	public void updateChunksGeneration(GameResources gm, VAPI api) {
 		if (gm.getCamera().getPosition().x < 0)
 			xPlayChunk = (int) ((gm.getCamera().getPosition().x - 16) / 16);
 		if (gm.getCamera().getPosition().y < 0)
@@ -226,13 +192,7 @@ public class DimensionalWorld {
 			tempRadius++;
 	}
 
-	/**
-	 * Render Chunks
-	 * 
-	 * @param gm
-	 *            GameResources
-	 * @author Guerra24 <pablo230699@hotmail.com>
-	 */
+	@Override
 	public void updateChunksRender(GameResources gm) {
 		for (int zr = -VoxelVariables.radius; zr <= VoxelVariables.radius; zr++) {
 			int zz = zPlayChunk + zr;
@@ -252,34 +212,18 @@ public class DimensionalWorld {
 
 	}
 
-	/**
-	 * Switch Dimension
-	 * 
-	 * @param id
-	 *            Dimension ID
-	 * @param gm
-	 *            Game Resources
-	 * @param api
-	 *            Voxel API
-	 * @author Guerra24 <pablo230699@hotmail.com>
-	 */
+	@Override
 	public void switchDimension(int id, GameResources gm, VAPI api) {
 		if (id != chunkDim) {
-			clearChunkDimension(gm);
+			clearDimension(gm);
 			chunkDim = id;
-			initialize(gm);
+			init(gm);
 			createDimension(gm, api);
 		}
 	}
 
-	/**
-	 * Save World Data
-	 * 
-	 * @param gm
-	 *            GameResources
-	 * @author Guerra24 <pablo230699@hotmail.com>
-	 */
-	private void saveWorld(GameResources gm) {
+	@Override
+	public void saveWorld(GameResources gm) {
 		if (!existWorld()) {
 			File file = new File(VoxelVariables.worldPath + name + "/");
 			file.mkdirs();
@@ -299,14 +243,8 @@ public class DimensionalWorld {
 		}
 	}
 
-	/**
-	 * Load World Data
-	 * 
-	 * @param gm
-	 *            GameResources
-	 * @author Guerra24 <pablo230699@hotmail.com>
-	 */
-	private void loadWorld(GameResources gm) {
+	@Override
+	public void loadWorld(GameResources gm) {
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(VoxelVariables.worldPath + name + "/world.json"));
 			seed = gm.getGson().fromJson(br, Random.class);
@@ -315,19 +253,7 @@ public class DimensionalWorld {
 		}
 	}
 
-	/**
-	 * Save Chunk Data
-	 * 
-	 * @param chunkDim
-	 *            Chunk Dimension
-	 * @param cx
-	 *            Chunk X
-	 * @param cz
-	 *            Chunk Z
-	 * @param gm
-	 *            GameResources
-	 * @author Guerra24 <pablo230699@hotmail.com>
-	 */
+	@Override
 	public void saveChunk(int chunkDim, int cx, int cy, int cz, GameResources gm) {
 		String json = gm.getGson().toJson(getChunk(chunkDim, cx, cy, cz));
 		try {
@@ -344,19 +270,7 @@ public class DimensionalWorld {
 		}
 	}
 
-	/**
-	 * Load Chunk Data
-	 * 
-	 * @param chunkDim
-	 *            Chunk Dimension
-	 * @param cx
-	 *            Chunk X
-	 * @param cz
-	 *            Chunk Z
-	 * @param gm
-	 *            Game Resources
-	 * @author Guerra24 <pablo230699@hotmail.com>
-	 */
+	@Override
 	public void loadChunk(int chunkDim, int cx, int cy, int cz, GameResources gm) {
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(VoxelVariables.worldPath + name + "/chunks_"
@@ -378,18 +292,7 @@ public class DimensionalWorld {
 		}
 	}
 
-	/**
-	 * Check if exist a chunk file
-	 * 
-	 * @param chunkDim
-	 *            Chunk Dimension
-	 * @param cx
-	 *            Chunk X
-	 * @param cz
-	 *            Chunk Z
-	 * @return true if exist
-	 * @author Guerra24 <pablo230699@hotmail.com>
-	 */
+	@Override
 	public boolean existChunkFile(int chunkDim, int cx, int cy, int cz) {
 		File file = new File(
 				VoxelVariables.worldPath + name + "/chunks_" + chunkDim + "_" + cx + "_" + cy + "_" + cz + ".json");
@@ -402,36 +305,19 @@ public class DimensionalWorld {
 	 * @return true if exist
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	private boolean existWorld() {
+	@Override
+	public boolean existWorld() {
 		File file = new File(VoxelVariables.worldPath + name + "/world.json");
 		return file.exists();
 	}
 
-	/**
-	 * Check if exist a chunk folder
-	 * 
-	 * @param chunkDim
-	 *            Chunk Dimension
-	 * @return true if exist
-	 * @author Guerra24 <pablo230699@hotmail.com>
-	 */
-	private boolean existChunkFolder(int chunkDim) {
+	@Override
+	public boolean existChunkFolder(int chunkDim) {
 		File file = new File(VoxelVariables.worldPath + name + "/chunks_" + chunkDim + "/");
 		return file.exists();
 	}
 
-	/**
-	 * Get Chunk from coords
-	 * 
-	 * @param chunkDim
-	 *            Chunk Dimension
-	 * @param cx
-	 *            Chunk X
-	 * @param cz
-	 *            Chunk Z
-	 * @return Chunk
-	 * @author Guerra24 <pablo230699@hotmail.com>
-	 */
+	@Override
 	public Chunk getChunk(int chunkDim, int cx, int cy, int cz) {
 		ChunkKey key = ChunkKey.alloc(chunkDim, cx, cy, cz);
 		Chunk chunk;
@@ -440,18 +326,7 @@ public class DimensionalWorld {
 		return chunk;
 	}
 
-	/**
-	 * Check if the Map contain a chunk
-	 * 
-	 * @param chunkDim
-	 *            Chunk Dimension
-	 * @param cx
-	 *            Chunk X
-	 * @param cz
-	 *            Chunk Z
-	 * @return true if exist
-	 * @author Guerra24 <pablo230699@hotmail.com>
-	 */
+	@Override
 	public boolean hasChunk(int chunkDim, int cx, int cy, int cz) {
 		ChunkKey key = ChunkKey.alloc(chunkDim, cx, cy, cz);
 		boolean contains;
@@ -460,13 +335,7 @@ public class DimensionalWorld {
 		return contains;
 	}
 
-	/**
-	 * Add a new Chunk
-	 * 
-	 * @param chunk
-	 *            Chunk
-	 * @author Guerra24 <pablo230699@hotmail.com>
-	 */
+	@Override
 	public void addChunk(Chunk chunk) {
 		ChunkKey key = ChunkKey.alloc(chunk.dim, chunk.cx, chunk.cy, chunk.cz);
 		Chunk old = chunks.get(key);
@@ -485,13 +354,7 @@ public class DimensionalWorld {
 		}
 	}
 
-	/**
-	 * Remove Chunk
-	 * 
-	 * @param chunk
-	 *            Chunk
-	 * @author Guerra24 <pablo230699@hotmail.com>
-	 */
+	@Override
 	public void removeChunk(Chunk chunk) {
 		if (chunk != null) {
 			ChunkKey key = ChunkKey.alloc(chunk.dim, chunk.cx, chunk.cy, chunk.cz);
@@ -520,20 +383,7 @@ public class DimensionalWorld {
 		return cnt;
 	}
 
-	/**
-	 * Get a block from global Coords
-	 * 
-	 * @param chunkDim
-	 *            Chunk Dimension
-	 * @param x
-	 *            Postion X
-	 * @param y
-	 *            Postion Y
-	 * @param z
-	 *            Postion Z
-	 * @return block ID
-	 * @author Guerra24 <pablo230699@hotmail.com>
-	 */
+	@Override
 	public byte getGlobalBlock(int chunkDim, int x, int y, int z) {
 		int cx = x >> 4;
 		int cz = z >> 4;
@@ -545,21 +395,7 @@ public class DimensionalWorld {
 			return 0;
 	}
 
-	/**
-	 * Set a block from gloal coords
-	 * 
-	 * @param chunkDim
-	 *            Chunk Dimension
-	 * @param x
-	 *            Position X
-	 * @param y
-	 *            Position Y
-	 * @param z
-	 *            Position Z
-	 * @param id
-	 *            Block ID
-	 * @author Guerra24 <pablo230699@hotmail.com>
-	 */
+	@Override
 	public void setGlobalBlock(int chunkDim, int x, int y, int z, byte id) {
 		int cx = x >> 4;
 		int cz = z >> 4;
@@ -572,14 +408,8 @@ public class DimensionalWorld {
 		}
 	}
 
-	/**
-	 * Clear the chunks of a dimension
-	 * 
-	 * @param gm
-	 *            Game Resources
-	 * @author Guerra24 <pablo230699@hotmail.com>
-	 */
-	public void clearChunkDimension(GameResources gm) {
+	@Override
+	public void clearDimension(GameResources gm) {
 		Logger.log("Saving World");
 		for (int zr = -VoxelVariables.genRadius; zr <= VoxelVariables.genRadius; zr++) {
 			int zz = zPlayChunk + zr;
@@ -600,42 +430,51 @@ public class DimensionalWorld {
 		chunks.clear();
 	}
 
+	@Override
 	public int getzPlayChunk() {
 		return zPlayChunk;
 	}
 
+	@Override
 	public int getxPlayChunk() {
 		return xPlayChunk;
 	}
 
+	@Override
 	public int getWorldID() {
 		return worldID;
 	}
 
+	@Override
 	public int getChunkDimension() {
 		return chunkDim;
 	}
 
+	@Override
 	public int getyPlayChunk() {
 		return yPlayChunk;
 	}
 
-	public HashMap<ChunkKey, Chunk> getChunks() {
-		return chunks;
-	}
-
+	@Override
 	public SimplexNoise getNoise() {
 		return noise;
 	}
 
+	@Override
 	public Random getSeed() {
 		return seed;
 	}
 
+	@Override
 	public ChunkGenerator getChunkGenerator() {
 		return chunkGenerator;
 	}
 
+	public String getCodeName() {
+		return codeName;
+	}
+
+	@Override
 	public void setTempRadius(int tempRadius) {
 		this.tempRadius = tempRadius;
 	}

@@ -37,14 +37,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import net.guerra24.voxel.core.VoxelVariables;
 import net.guerra24.voxel.graphics.opengl.Display;
 import net.guerra24.voxel.graphics.opengl.VoxelGL33;
 import net.guerra24.voxel.graphics.shaders.EntityShader;
+import net.guerra24.voxel.graphics.shaders.WaterShader;
 import net.guerra24.voxel.resources.GameResources;
 import net.guerra24.voxel.resources.Loader;
 import net.guerra24.voxel.resources.models.TexturedModel;
+import net.guerra24.voxel.resources.models.WaterTile;
 import net.guerra24.voxel.util.vector.Matrix4f;
 import net.guerra24.voxel.world.block.BlockEntity;
 import net.guerra24.voxel.world.entities.Entity;
@@ -65,7 +68,10 @@ public class MasterRenderer {
 	private Map<TexturedModel, List<Entity>> entities = new HashMap<TexturedModel, List<Entity>>();
 	private Map<TexturedModel, List<BlockEntity>> blockEntities = new HashMap<TexturedModel, List<BlockEntity>>();
 	private EntityShader shader = new EntityShader();
+	private Queue<WaterTile> waterTiles = new ConcurrentLinkedQueue<>();
 	private EntityRenderer entityRenderer;
+	private WaterShader waterShader;
+	private WaterRenderer waterRenderer;
 	public float aspectRatio;
 
 	/**
@@ -81,6 +87,8 @@ public class MasterRenderer {
 		projectionMatrix = createProjectionMatrix(Display.getWidth(), Display.getHeight(), VoxelVariables.FOV,
 				VoxelVariables.NEAR_PLANE, VoxelVariables.FAR_PLANE);
 		entityRenderer = new EntityRenderer(shader, projectionMatrix);
+		waterShader = new WaterShader();
+		waterRenderer = new WaterRenderer(loader, waterShader, projectionMatrix);
 	}
 
 	/**
@@ -106,11 +114,14 @@ public class MasterRenderer {
 	 *            A Camera
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public void renderChunk(Queue<BlockEntity> cubes, GameResources gm) {
-		for (BlockEntity entity : cubes) {
-			processBlockEntity(entity);
+	public void renderChunk(Queue<Object> cubes, GameResources gm) {
+		for (Object entity : cubes) {
+			if (entity.getClass().equals(BlockEntity.class))
+				processBlockEntity((BlockEntity) entity);
+			if (entity.getClass().equals(WaterTile.class))
+				waterTiles.add((WaterTile) entity);
 		}
-		renderChunk(gm);
+		renderBlocks(gm);
 	}
 
 	/**
@@ -144,9 +155,8 @@ public class MasterRenderer {
 	 *            A Camera
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	private void renderChunk(GameResources gm) {
+	private void renderBlocks(GameResources gm) {
 		shader.start();
-		shader.loadProjectionMatrix(projectionMatrix);
 		shader.loadSkyColour(VoxelVariables.RED, VoxelVariables.GREEN, VoxelVariables.BLUE);
 		shader.loadviewMatrix(gm.getCamera());
 		shader.loadblendFactor(gm.getSkyboxRenderer().getBlendFactor());
@@ -154,6 +164,7 @@ public class MasterRenderer {
 		entityRenderer.renderBlockEntity(blockEntities, gm);
 		shader.stop();
 		blockEntities.clear();
+		waterRenderer.render(waterTiles, gm);
 	}
 
 	/**
@@ -251,6 +262,7 @@ public class MasterRenderer {
 	 */
 	public void cleanUp() {
 		shader.cleanUp();
+		waterShader.cleanUp();
 	}
 
 	/**
@@ -265,5 +277,9 @@ public class MasterRenderer {
 
 	public void setProjectionMatrix(Matrix4f matrix) {
 		projectionMatrix = matrix;
+	}
+
+	public WaterRenderer getWaterRenderer() {
+		return waterRenderer;
 	}
 }

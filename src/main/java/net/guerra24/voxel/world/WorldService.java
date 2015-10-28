@@ -1,13 +1,15 @@
-package net.guerra24.voxel.world.chunks;
+package net.guerra24.voxel.world;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import net.guerra24.voxel.world.chunks.ChunkWorkerMesh;
 
 public class WorldService {
 	public final ExecutorService es;
 
 	public WorldService() {
-		this.es = Executors.newFixedThreadPool(1);
+		this.es = Executors.newWorkStealingPool();
 	}
 
 	public void add_worker(ChunkWorkerMesh worker) {

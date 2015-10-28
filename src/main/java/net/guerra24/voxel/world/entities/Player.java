@@ -29,7 +29,7 @@ import net.guerra24.voxel.resources.GameResources;
 import net.guerra24.voxel.resources.GuiResources;
 import net.guerra24.voxel.resources.models.TexturedModel;
 import net.guerra24.voxel.util.vector.Vector3f;
-import net.guerra24.voxel.world.DimensionalWorld;
+import net.guerra24.voxel.world.IWorld;
 import net.guerra24.voxel.world.block.Block;
 import net.guerra24.voxel.world.physics.AABB;
 import net.guerra24.voxel.world.physics.CollisionType;
@@ -49,7 +49,7 @@ public class Player extends Entity implements IEntity {
 	}
 
 	@Override
-	public void update(float delta, GameResources gm, GuiResources gi, DimensionalWorld world, VAPI api) {
+	public void update(float delta, GameResources gm, GuiResources gi, IWorld world, VAPI api) {
 		aabb.update(getPosition());
 		super.increasePosition(0, upwardsSpeed * delta, 0);
 		if (isCollision(0, world) == CollisionType.FRONT) {
@@ -85,7 +85,7 @@ public class Player extends Entity implements IEntity {
 		return this;
 	}
 
-	private CollisionType isCollision(int direction, DimensionalWorld world) {
+	private CollisionType isCollision(int direction, IWorld world) {
 
 		Vector3f v = this.getPosition();
 

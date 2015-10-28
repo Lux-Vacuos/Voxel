@@ -32,7 +32,7 @@ import net.guerra24.voxel.input.Keyboard;
 import net.guerra24.voxel.menu.LegacyButtons;
 import net.guerra24.voxel.resources.GameResources;
 import net.guerra24.voxel.util.vector.Vector3f;
-import net.guerra24.voxel.world.WorldHandler;
+import net.guerra24.voxel.world.WorldsHandler;
 
 /**
  * Game States
@@ -78,7 +78,7 @@ public class GameStates {
 	 * 
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public void switchStates(GameResources gm, WorldHandler worlds, VAPI api, Display display) {
+	public void switchStates(GameResources gm, WorldsHandler worlds, VAPI api, Display display) {
 		if (state == State.MAINMENU && LegacyButtons.isInButtonPlay()) {
 			state = State.LOADING_WORLD;
 			isPlaying = true;
@@ -88,7 +88,7 @@ public class GameStates {
 			} else {
 				seed = new Random();
 			}
-			worlds.addWorld(0, seed, api, gm);
+			worlds.getActiveWorld().startWorld("World-0", seed, 0, api, gm);
 			gm.getCamera().setMouse();
 			gm.getSoundSystem().stop("menu1");
 			gm.getSoundSystem().rewind("menu1");
@@ -100,7 +100,7 @@ public class GameStates {
 		}
 
 		if (state == State.IN_PAUSE && LegacyButtons.backToMainMenu()) {
-			worlds.removeWorld(worlds.getActiveWorld(), gm);
+			worlds.getActiveWorld().clearDimension(gm);
 			gm.getSoundSystem().play("menu1");
 			gm.getCamera().setPosition(new Vector3f(-2, 0, -1));
 			gm.getCamera().setPitch(0);
@@ -109,7 +109,7 @@ public class GameStates {
 			gm.getSoundSystem().setVolume("menu1", 1f);
 		}
 
-		if (state == State.GAME && !display.isDisplayFocused() && !VoxelVariables.debug) {
+		if (state == State.GAME && !display.isDisplayFocused()) {
 			gm.getCamera().unlockMouse();
 			state = State.IN_PAUSE;
 		}

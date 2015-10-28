@@ -28,7 +28,7 @@ import net.guerra24.voxel.resources.GameResources;
 import net.guerra24.voxel.resources.GuiResources;
 import net.guerra24.voxel.resources.models.TexturedModel;
 import net.guerra24.voxel.util.vector.Vector3f;
-import net.guerra24.voxel.world.DimensionalWorld;
+import net.guerra24.voxel.world.IWorld;
 import net.guerra24.voxel.world.entities.Entity;
 import net.guerra24.voxel.world.physics.AABB;
 import net.guerra24.voxel.world.physics.CollisionType;
@@ -94,7 +94,7 @@ public class Particle extends Entity {
 	 *            DimensionalWorld
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public void update(float delta, GameResources gm, GuiResources gi, DimensionalWorld world) {
+	public void update(float delta, GameResources gm, GuiResources gi, IWorld world) {
 		Vector3f normal = new Vector3f(0, 1, 0);
 		Vector3f dir = Vector3f.sub(
 				new Vector3f(gm.getCamera().getPosition().x, gm.getCamera().getPosition().y,
@@ -120,7 +120,7 @@ public class Particle extends Entity {
 	 *            Dimensional World
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	private void updatePhysics(float delta, DimensionalWorld world) {
+	private void updatePhysics(float delta, IWorld world) {
 		if (xVel > 0)
 			xVel -= friction * delta;
 		else if (xVel < 0)
@@ -147,7 +147,7 @@ public class Particle extends Entity {
 	 * @return Collision Type
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	private CollisionType isCollision(int direction, DimensionalWorld world) {
+	private CollisionType isCollision(int direction, IWorld world) {
 
 		Vector3f v = this.getPosition();
 

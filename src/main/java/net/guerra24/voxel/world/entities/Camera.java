@@ -24,7 +24,28 @@
 
 package net.guerra24.voxel.world.entities;
 
-import static net.guerra24.voxel.input.Keyboard.*;
+import static net.guerra24.voxel.input.Keyboard.KEY_1;
+import static net.guerra24.voxel.input.Keyboard.KEY_2;
+import static net.guerra24.voxel.input.Keyboard.KEY_3;
+import static net.guerra24.voxel.input.Keyboard.KEY_4;
+import static net.guerra24.voxel.input.Keyboard.KEY_5;
+import static net.guerra24.voxel.input.Keyboard.KEY_6;
+import static net.guerra24.voxel.input.Keyboard.KEY_7;
+import static net.guerra24.voxel.input.Keyboard.KEY_8;
+import static net.guerra24.voxel.input.Keyboard.KEY_9;
+import static net.guerra24.voxel.input.Keyboard.KEY_A;
+import static net.guerra24.voxel.input.Keyboard.KEY_D;
+import static net.guerra24.voxel.input.Keyboard.KEY_F3;
+import static net.guerra24.voxel.input.Keyboard.KEY_J;
+import static net.guerra24.voxel.input.Keyboard.KEY_K;
+import static net.guerra24.voxel.input.Keyboard.KEY_LCONTROL;
+import static net.guerra24.voxel.input.Keyboard.KEY_LSHIFT;
+import static net.guerra24.voxel.input.Keyboard.KEY_R;
+import static net.guerra24.voxel.input.Keyboard.KEY_S;
+import static net.guerra24.voxel.input.Keyboard.KEY_SPACE;
+import static net.guerra24.voxel.input.Keyboard.KEY_W;
+import static net.guerra24.voxel.input.Keyboard.KEY_Y;
+import static net.guerra24.voxel.input.Keyboard.isKeyDown;
 import static net.guerra24.voxel.input.Mouse.getDX;
 import static net.guerra24.voxel.input.Mouse.getDY;
 import static net.guerra24.voxel.input.Mouse.isButtonDown;
@@ -38,7 +59,7 @@ import net.guerra24.voxel.resources.GameResources;
 import net.guerra24.voxel.resources.GuiResources;
 import net.guerra24.voxel.util.vector.Vector2f;
 import net.guerra24.voxel.util.vector.Vector3f;
-import net.guerra24.voxel.world.DimensionalWorld;
+import net.guerra24.voxel.world.IWorld;
 import net.guerra24.voxel.world.block.Block;
 
 /**
@@ -46,7 +67,7 @@ import net.guerra24.voxel.world.block.Block;
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
  */
-public class Camera implements IEntity {
+public class Camera {
 
 	private Vector3f position = new Vector3f(-2, 0, -1);
 	private float pitch;
@@ -73,8 +94,7 @@ public class Camera implements IEntity {
 		this.speed = 0.2f;
 	}
 
-	@Override
-	public void update(float delta, GameResources gm, GuiResources gi, DimensionalWorld world, VAPI api) {
+	public void update(float delta, GameResources gm, GuiResources gi, IWorld world, VAPI api) {
 		isMoved = false;
 		float mouseDX = getDX() * delta * mouseSpeed * 0.16f * multiplierMouse;
 		float mouseDY = getDY() * delta * mouseSpeed * 0.16f * multiplierMouse;
@@ -288,7 +308,7 @@ public class Camera implements IEntity {
 		setLife(life, gi);
 	}
 
-	public void updateDebug(DimensionalWorld world) {
+	public void updateDebug(IWorld world) {
 		if (isKeyDown(KEY_F3) && isKeyDown(KEY_R))
 			for (int zr = -VoxelVariables.genRadius; zr <= VoxelVariables.genRadius; zr++) {
 				int zz = world.getzPlayChunk() + zr;
@@ -309,7 +329,7 @@ public class Camera implements IEntity {
 			}
 	}
 
-	private void setBlock(int x, int y, int z, byte block, DimensionalWorld world) {
+	private void setBlock(int x, int y, int z, byte block, IWorld world) {
 		world.setGlobalBlock(world.getChunkDimension(), x, y - 1, z, block);
 	}
 
@@ -320,11 +340,6 @@ public class Camera implements IEntity {
 	public void setMouse() {
 		setCursorPosition(Display.getWidth() / 2, Display.getHeight() / 2);
 		setGrabbed(true);
-	}
-
-	@Override
-	public Entity getEntity() {
-		return null;
 	}
 
 	public void unlockMouse() {

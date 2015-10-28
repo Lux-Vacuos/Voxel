@@ -56,7 +56,7 @@ public abstract class MobManager {
 	
 	protected abstract void init();
 
-	public void update(float delta, GameResources gm, GuiResources gi, DimensionalWorld world, VAPI api) {
+	public void update(float delta, GameResources gm, GuiResources gi, IWorld world, VAPI api) {
 		for (int x = 0; x < mobs.size(); x++) {
 			mobs.get(x).update(delta, gm, gi, world, api);
 		}

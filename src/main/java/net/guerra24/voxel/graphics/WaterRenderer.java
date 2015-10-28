@@ -122,7 +122,6 @@ public class WaterRenderer {
 		shader.start();
 		shader.loadSkyColour(VoxelVariables.RED, VoxelVariables.GREEN, VoxelVariables.BLUE);
 		shader.loadViewMatrix(gm.getCamera());
-		shader.loadProjectionMatrix(gm.getRenderer().getProjectionMatrix());
 		shader.loadMoveFactor(moveFactor);
 		shader.loadDirectLightDirection(new Vector3f(-80, -100, -40));
 		VoxelGL33.glEnable(GL_BLEND);

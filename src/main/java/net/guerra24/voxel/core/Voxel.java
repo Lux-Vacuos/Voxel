@@ -39,7 +39,8 @@ import net.guerra24.voxel.input.Keyboard;
 import net.guerra24.voxel.resources.GameResources;
 import net.guerra24.voxel.resources.GuiResources;
 import net.guerra24.voxel.util.Logger;
-import net.guerra24.voxel.world.WorldHandler;
+import net.guerra24.voxel.world.InfinityWorld;
+import net.guerra24.voxel.world.WorldsHandler;
 import net.guerra24.voxel.world.block.BlocksResources;
 
 /**
@@ -65,7 +66,7 @@ public class Voxel {
 	 */
 	private GameResources gameResources;
 	private GuiResources guiResources;
-	private WorldHandler worlds;
+	private WorldsHandler worldsHandler;
 	private Display display;
 	private VAPI api;
 
@@ -104,11 +105,14 @@ public class Voxel {
 		BlocksResources.createBlocks(gameResources.getLoader());
 		gameResources.addRes();
 		gameResources.music();
-		worlds = new WorldHandler();
+		worldsHandler = new WorldsHandler();
+		InfinityWorld world = new InfinityWorld();
+		worldsHandler.registerWorld(world.getCodeName(), world);
+		worldsHandler.setActiveWorld("Infinity");
 		Logger.log("Initializing Threads");
 		worldThread2 = new WorldThread1();
 		worldThread2.setName("Voxel World 1");
-		worldThread2.setWorldHandler(worlds);
+		worldThread2.setWorldHandler(worldsHandler);
 		worldThread2.setGameResources(gameResources);
 		worldThread2.setKernel(this);
 		worldThread2.setGuiResources(guiResources);
@@ -160,7 +164,7 @@ public class Voxel {
 			break;
 		case IN_PAUSE:
 			gm.getRenderer().prepare();
-			worlds.getWorld(worlds.getActiveWorld()).updateChunksRender(gm);
+			worldsHandler.getActiveWorld().updateChunksRender(gm);
 			gm.getRenderer().renderEntity(gm.getPhysics().getMobManager().getMobs(), gm);
 			gm.getSkyboxRenderer().render(VoxelVariables.RED, VoxelVariables.GREEN, VoxelVariables.BLUE, delta, gm);
 			gm.getParticleController().render(gm);
@@ -168,11 +172,10 @@ public class Voxel {
 			display.updateDisplay(VoxelVariables.FPS, gm);
 			break;
 		case GAME:
-			gm.getCamera().update(delta, gameResources, guiResources, worlds.getWorld(worlds.getActiveWorld()), api);
-			gm.getPhysics().getMobManager().getPlayer().update(delta, gm, guiResources,
-					worlds.getWorld(worlds.getActiveWorld()), api);
+			gm.getCamera().update(delta, gameResources, guiResources, worldsHandler.getActiveWorld(), api);
+			gm.getPhysics().getMobManager().getPlayer().update(delta, gm, guiResources, worldsHandler.getActiveWorld(),
+					api);
 			gm.getFrustum().calculateFrustum(gm);
-			worlds.getWorld(worlds.getActiveWorld()).updateChunkGeneration(gm, api);
 			gm.getWaterFBO().begin(128, 128);
 			gm.getCamera().invertPitch();
 			gm.getRenderer().prepare();
@@ -182,7 +185,7 @@ public class Voxel {
 
 			gm.getPostProcessing().getPost_fbo().begin(Display.getWidth(), Display.getHeight());
 			gm.getRenderer().prepare();
-			worlds.getWorld(worlds.getActiveWorld()).updateChunksRender(gm);
+			worldsHandler.getActiveWorld().updateChunksRender(gm);
 			gm.getSkyboxRenderer().render(VoxelVariables.RED, VoxelVariables.GREEN, VoxelVariables.BLUE, delta, gm);
 			gm.getRenderer().renderEntity(gm.getPhysics().getMobManager().getMobs(), gm);
 			gm.getParticleController().render(gm);
@@ -206,7 +209,7 @@ public class Voxel {
 		}
 	}
 
-	public void update(GameResources gm, GuiResources gi, WorldHandler world, float delta) {
+	public void update(GameResources gm, GuiResources gi, WorldsHandler world, float delta) {
 		Display.upsCount++;
 		switch (gm.getGameStates().state) {
 		case MAINMENU:
@@ -219,11 +222,12 @@ public class Voxel {
 				Bootstrap.config.setVisible(true);
 			break;
 		case GAME:
-			gm.getPhysics().getMobManager().update(delta, gm, gi, worlds.getWorld(worlds.getActiveWorld()), api);
-			gm.getParticleController().update(delta, gm, gi, worlds.getWorld(worlds.getActiveWorld()));
-			gm.getWaterRenderer().update(delta);
+			worldsHandler.getActiveWorld().updateChunksGeneration(gm, api);
+			gm.getPhysics().getMobManager().update(delta, gm, gi, world.getActiveWorld(), api);
+			gm.getParticleController().update(delta, gm, gi, world.getActiveWorld());
+			gm.getRenderer().getWaterRenderer().update(delta);
 			gm.getSkyboxRenderer().update(delta);
-			gm.getParticleController().update(delta, gm, gi, worlds.getWorld(worlds.getActiveWorld()));
+			gm.getParticleController().update(delta, gm, gi, world.getActiveWorld());
 			break;
 		case LOADING_WORLD:
 			break;
@@ -237,7 +241,6 @@ public class Voxel {
 		api.dispose();
 		Bootstrap.config.dispose();
 		display.closeDisplay();
-		System.exit(0);
 	}
 
 	public GameResources getGameResources() {
@@ -246,10 +249,6 @@ public class Voxel {
 
 	public GuiResources getGuiResources() {
 		return guiResources;
-	}
-
-	public WorldHandler getWorldHadler() {
-		return worlds;
 	}
 
 	public VAPI getApi() {

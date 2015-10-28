@@ -27,12 +27,12 @@ package net.guerra24.voxel.core;
 import net.guerra24.voxel.graphics.opengl.Display;
 import net.guerra24.voxel.resources.GameResources;
 import net.guerra24.voxel.resources.GuiResources;
-import net.guerra24.voxel.world.WorldHandler;
+import net.guerra24.voxel.world.WorldsHandler;
 
 public class WorldThread1 extends Thread {
 	private GameResources gameResources;
 	private GuiResources guiResources;
-	private WorldHandler world;
+	private WorldsHandler world;
 	private Voxel kernel;
 	private long variableYieldTime, lastTime;
 	private int fps = 60;
@@ -57,7 +57,7 @@ public class WorldThread1 extends Thread {
 		this.gameResources = gameResources;
 	}
 
-	public void setWorldHandler(WorldHandler dimensionHandler) {
+	public void setWorldHandler(WorldsHandler dimensionHandler) {
 		this.world = dimensionHandler;
 	}
 

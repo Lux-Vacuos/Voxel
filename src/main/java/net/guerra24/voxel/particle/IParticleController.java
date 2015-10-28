@@ -31,7 +31,7 @@ import net.guerra24.voxel.resources.GameResources;
 import net.guerra24.voxel.resources.GuiResources;
 import net.guerra24.voxel.resources.Loader;
 import net.guerra24.voxel.resources.models.TexturedModel;
-import net.guerra24.voxel.world.DimensionalWorld;
+import net.guerra24.voxel.world.IWorld;
 
 /**
  * Particle Controller
@@ -79,7 +79,7 @@ public interface IParticleController {
 	 * @param world
 	 *            Dimensional World
 	 */
-	public void update(float delta, GameResources gm, GuiResources gi, DimensionalWorld world);
+	public void update(float delta, GameResources gm, GuiResources gi, IWorld world);
 
 	/**
 	 * Dispose Particle Data

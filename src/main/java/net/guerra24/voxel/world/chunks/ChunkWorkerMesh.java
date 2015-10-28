@@ -1,12 +1,12 @@
 package net.guerra24.voxel.world.chunks;
 
-import net.guerra24.voxel.world.DimensionalWorld;
+import net.guerra24.voxel.world.IWorld;
 
 public class ChunkWorkerMesh implements Runnable {
-	private final DimensionalWorld world;
+	private final IWorld world;	
 	private Chunk chunk;
 
-	public ChunkWorkerMesh(final DimensionalWorld world, Chunk chunk) {
+	public ChunkWorkerMesh(final IWorld world, Chunk chunk) {
 		this.world = world;
 		this.chunk = chunk;
 	}

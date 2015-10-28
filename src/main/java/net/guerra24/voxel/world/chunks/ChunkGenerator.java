@@ -2,7 +2,7 @@ package net.guerra24.voxel.world.chunks;
 
 import java.util.Random;
 
-import net.guerra24.voxel.world.DimensionalWorld;
+import net.guerra24.voxel.world.InfinityWorld;
 import net.guerra24.voxel.world.block.Block;
 
 public class ChunkGenerator {
@@ -31,7 +31,7 @@ public class ChunkGenerator {
 
 	}
 
-	public void generateCaves(byte[][][] blocks, DimensionalWorld world, int sizeX, int sizeZ, int sizeY, int cx,
+	public void generateCaves(byte[][][] blocks, InfinityWorld world, int sizeX, int sizeZ, int sizeY, int cx,
 			int cz) {
 		for (int x = 0; x < sizeX; x++) {
 			for (int z = 0; z < sizeZ; z++) {
