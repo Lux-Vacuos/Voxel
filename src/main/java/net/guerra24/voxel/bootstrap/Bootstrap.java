@@ -24,11 +24,14 @@
 
 package net.guerra24.voxel.bootstrap;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
+
 import net.guerra24.voxel.core.Voxel;
 import net.guerra24.voxel.core.VoxelVariables;
 import net.guerra24.voxel.menu.ConfigGUI;
-
-import java.io.File;
 
 /**
  * Initialize the basic game code
@@ -111,6 +114,13 @@ public class Bootstrap {
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public static void main(String[] args) {
+		PrintStream out;
+		try {
+			out = new PrintStream(new FileOutputStream("assets/log.txt"));
+			System.setOut(out);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
 		Thread.currentThread().setName("Voxel Main");
 		run();
 		if (VoxelVariables.debug) {

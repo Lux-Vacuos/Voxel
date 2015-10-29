@@ -52,7 +52,6 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import net.guerra24.voxel.core.VoxelVariables;
-import net.guerra24.voxel.graphics.opengl.Display;
 import net.guerra24.voxel.util.Logger;
 
 /**
@@ -185,6 +184,8 @@ public class ConfigGUI extends JFrame implements ItemListener {
 					sendProperties();
 					ready = true;
 					setVisible(false);
+					textWIDTH.setEnabled(false);
+					textHEIGHT.setEnabled(false);
 				} catch (IOException ex) {
 					JOptionPane.showMessageDialog(ConfigGUI.this, "Error saving settings file: " + ex.getMessage());
 				}
@@ -276,8 +277,8 @@ public class ConfigGUI extends JFrame implements ItemListener {
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	private void sendProperties() {
-		Display.setWidth(Integer.parseInt(configProps.getProperty("WIDTH")));
-		Display.setHeight(Integer.parseInt(configProps.getProperty("HEIGHT")));
+		VoxelVariables.WIDTH = Integer.parseInt(configProps.getProperty("WIDTH"));
+		VoxelVariables.HEIGHT = Integer.parseInt(configProps.getProperty("HEIGHT"));
 		VoxelVariables.FOV = Integer.parseInt(configProps.getProperty("FOV"));
 		VoxelVariables.FPS = Integer.parseInt(configProps.getProperty("FPS"));
 		VoxelVariables.VSYNC = Boolean.parseBoolean(configProps.getProperty("VSYNC"));

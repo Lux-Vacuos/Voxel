@@ -150,14 +150,15 @@ public class Display {
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
 
 		window = glfwCreateWindow(displayWidth, displayHeight, VoxelVariables.Title, NULL, NULL);
-		if (window == NULL)
+		if (window == NULL){
 			throw new RuntimeException("Failed to create the GLFW window");
+		}
 		createCallBacks();
 		setCallbacks();
 		vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 		glfwSetWindowPos(window, (vidmode.getWidth() - displayWidth) / 2, (vidmode.getHeight() - displayHeight) / 2);
 		glfwMakeContextCurrent(window);
-		glfwSwapInterval(0);
+		glfwSwapInterval(VoxelVariables.VSYNC ? 1 : 0);
 	}
 
 	/**
@@ -321,11 +322,6 @@ public class Display {
 		int height = h.getInt(0);
 		displayHeight = width;
 		displayHeight = height;
-		if (isDisplayResized()) {
-			VoxelGL33.glViewport(0, 0, width, height);
-			gm.getRenderer().setProjectionMatrix(gm.getRenderer().createProjectionMatrix(Display.getWidth(),
-					Display.getHeight(), VoxelVariables.FOV, VoxelVariables.NEAR_PLANE, VoxelVariables.FAR_PLANE));
-		}
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 		Mouse.poll();

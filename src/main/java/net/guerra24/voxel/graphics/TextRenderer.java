@@ -1,6 +1,14 @@
 package net.guerra24.voxel.graphics;
 
-import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.GL_BLEND;
+import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
+import static org.lwjgl.opengl.GL11.GL_MODELVIEW;
+import static org.lwjgl.opengl.GL11.GL_PROJECTION;
+import static org.lwjgl.opengl.GL11.glDisable;
+import static org.lwjgl.opengl.GL11.glEnable;
+import static org.lwjgl.opengl.GL11.glLoadIdentity;
+import static org.lwjgl.opengl.GL11.glMatrixMode;
+import static org.lwjgl.opengl.GL11.glOrtho;
 
 import java.awt.Font;
 import java.awt.FontFormatException;
@@ -10,8 +18,6 @@ import java.io.InputStream;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.util.ResourceLoader;
-
-import net.guerra24.voxel.graphics.opengl.Display;
 
 public class TextRenderer {
 	private TrueTypeFont font;
@@ -37,11 +43,10 @@ public class TextRenderer {
 	public void begin() {
 		glDisable(GL_DEPTH_TEST);
 		glEnable(GL_BLEND);
-		glViewport(0, 0, Display.getWidth(), Display.getHeight());
 		glMatrixMode(GL_MODELVIEW);
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
-		glOrtho(0, Display.getWidth(), Display.getHeight(), 0, 1, -1);
+		glOrtho(0, 1280, 720, 0, 1, -1);
 		glMatrixMode(GL_MODELVIEW);
 	}
 

@@ -31,6 +31,7 @@ import static org.lwjgl.opengl.GL11.GL_VERSION;
 import static org.lwjgl.opengl.GL11.glGetString;
 
 import org.lwjgl.Sys;
+import org.newdawn.slick.Color;
 
 import net.guerra24.voxel.api.VAPI;
 import net.guerra24.voxel.bootstrap.Bootstrap;
@@ -82,7 +83,7 @@ public class Voxel {
 
 	public void preInit() {
 		display = new Display();
-		display.initDsiplay(1280, 720);
+		display.initDsiplay(VoxelVariables.WIDTH, VoxelVariables.HEIGHT);
 		display.startUp();
 		Logger.log("Loading");
 		Logger.log("Voxel Version: " + VoxelVariables.version);
@@ -158,10 +159,11 @@ public class Voxel {
 			gm.getGuiRenderer().renderGui(gm.guis2);
 			gm.getTextRenderer().begin();
 			if (VoxelVariables.runningOnMac)
-				gm.getTextRenderer().renderString("You are running on a Mac, some things may not work well.", 5, 5);
+				gm.getTextRenderer().renderString("You are running on a Mac, some things may not work well.", 365, 150,
+						Color.red);
 			gm.getTextRenderer().renderString(
-					"Voxel-" + VoxelVariables.version + "-ALPHA-BUILD-" + VoxelVariables.build, 5,
-					Display.getHeight() - 15);
+					"Voxel-" + VoxelVariables.version + "-ALPHA-BUILD-" + VoxelVariables.build, 5, 720 - 15,
+					Color.lightGray);
 			gm.getTextRenderer().end();
 			display.updateDisplay(30, gm);
 			break;
@@ -179,9 +181,9 @@ public class Voxel {
 			gm.getPhysics().getMobManager().getPlayer().update(delta, gm, guiResources, worldsHandler.getActiveWorld(),
 					api);
 			gm.getFrustum().calculateFrustum(gm);
-			
+
 			worldsHandler.getActiveWorld().lighting();
-			
+
 			gm.getWaterFBO().begin(128, 128);
 			gm.getCamera().invertPitch();
 			gm.getRenderer().prepare();

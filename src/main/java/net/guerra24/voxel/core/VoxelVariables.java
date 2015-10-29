@@ -42,8 +42,10 @@ public class VoxelVariables {
 	 */
 	public static boolean debug = true;
 	public static final String version = "0.0.6";
-	public static final int build = 98;
+	public static final int build = 99;
 	public static int FOV = 90;
+	public static int WIDTH = 1280;
+	public static int HEIGHT = 720;
 	public static final float NEAR_PLANE = 0.2f;
 	public static final float FAR_PLANE = 1000f;
 	public static final float RED = 0.375f;
