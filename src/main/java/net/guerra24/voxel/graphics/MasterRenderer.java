@@ -159,8 +159,6 @@ public class MasterRenderer {
 		shader.start();
 		shader.loadSkyColour(VoxelVariables.RED, VoxelVariables.GREEN, VoxelVariables.BLUE);
 		shader.loadviewMatrix(gm.getCamera());
-		shader.loadblendFactor(gm.getSkyboxRenderer().getBlendFactor());
-		shader.loadTime(gm.getSkyboxRenderer().getTime());
 		entityRenderer.renderBlockEntity(blockEntities, gm);
 		shader.stop();
 		blockEntities.clear();

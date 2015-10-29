@@ -18,6 +18,10 @@ public interface IWorld {
 	public void updateChunksGeneration(GameResources gm, VAPI api);
 
 	public void updateChunksRender(GameResources gm);
+	
+	public void setupLight(int x, int y, int z, Chunk chunk, int lightLevel);
+
+	public void lighting();
 
 	public void switchDimension(int id, GameResources gm, VAPI api);
 
@@ -43,9 +47,11 @@ public interface IWorld {
 
 	public void removeChunk(Chunk chunk);
 
-	public byte getGlobalBlock(int chunkDim, int x, int y, int z);
+	public byte getGlobalBlock(int x, int y, int z);
 
-	public void setGlobalBlock(int chunkDim, int x, int y, int z, byte id);
+	public void setGlobalBlock(int x, int y, int z, byte id);
+
+	public void lighting(int x, int y, int z, int val);
 
 	public void clearDimension(GameResources gm);
 

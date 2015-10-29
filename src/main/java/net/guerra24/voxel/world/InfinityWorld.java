@@ -31,6 +31,8 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.Random;
 
 import com.google.gson.JsonSyntaxException;
@@ -44,6 +46,7 @@ import net.guerra24.voxel.util.vector.Vector3f;
 import net.guerra24.voxel.world.chunks.Chunk;
 import net.guerra24.voxel.world.chunks.ChunkGenerator;
 import net.guerra24.voxel.world.chunks.ChunkKey;
+import net.guerra24.voxel.world.chunks.LightNode;
 
 /**
  * Dimensional World
@@ -70,13 +73,14 @@ public class InfinityWorld implements IWorld {
 	private ChunkGenerator chunkGenerator;
 	private WorldService service;
 	private String codeName = "Infinity";
+	private Queue<LightNode> lightNodes;
 
 	@Override
 	public void startWorld(String name, Random seed, int chunkDim, VAPI api, GameResources gm) {
 		this.name = name;
 		this.seed = seed;
 		this.chunkDim = chunkDim;
-		gm.getCamera().setPosition(new Vector3f(100, 3, 0));
+		gm.getCamera().setPosition(new Vector3f(0, 64, 0));
 		if (existWorld()) {
 			loadWorld(gm);
 		}
@@ -89,6 +93,7 @@ public class InfinityWorld implements IWorld {
 	public void init(GameResources gm) {
 		seedi = seed.nextInt();
 		noise = new SimplexNoise(128, 0.3f, seedi);
+		lightNodes = new LinkedList<>();
 		chunks = new HashMap<ChunkKey, Chunk>();
 		chunkGenerator = new ChunkGenerator();
 		service = new WorldService();
@@ -152,37 +157,39 @@ public class InfinityWorld implements IWorld {
 				int xx = xPlayChunk + xr;
 				for (int yr = -tempRadius; yr <= tempRadius; yr++) {
 					int yy = yPlayChunk + yr;
-					if (zr * zr + xr * xr + yr * yr <= (VoxelVariables.genRadius - VoxelVariables.radiusLimit)
-							* (VoxelVariables.genRadius - VoxelVariables.radiusLimit)
-							* (VoxelVariables.genRadius - VoxelVariables.radiusLimit)) {
-						if (!hasChunk(chunkDim, xx, yy, zz)) {
+					if (yy >= 0) {
+						if (zr * zr + xr * xr + yr * yr <= (VoxelVariables.genRadius - VoxelVariables.radiusLimit)
+								* (VoxelVariables.genRadius - VoxelVariables.radiusLimit)
+								* (VoxelVariables.genRadius - VoxelVariables.radiusLimit)) {
 							if (!hasChunk(chunkDim, xx, yy, zz)) {
-								if (existChunkFile(chunkDim, xx, yy, zz)) {
-									loadChunk(chunkDim, xx, yy, zz, gm);
-								} else {
-									addChunk(new Chunk(chunkDim, xx, yy, zz, this));
-									saveChunk(chunkDim, xx, yy, zz, gm);
+								if (!hasChunk(chunkDim, xx, yy, zz)) {
+									if (existChunkFile(chunkDim, xx, yy, zz)) {
+										loadChunk(chunkDim, xx, yy, zz, gm);
+									} else {
+										addChunk(new Chunk(chunkDim, xx, yy, zz, this));
+										saveChunk(chunkDim, xx, yy, zz, gm);
+									}
+								}
+							} else {
+								Chunk chunk = getChunk(chunkDim, xx, yy, zz);
+								if (gm.getFrustum().cubeInFrustum(chunk.posX, chunk.posY, chunk.posZ, chunk.posX + 16,
+										chunk.posY + 16, chunk.posZ + 16)) {
+									if (!chunk.created)
+										chunk.createBasicTerrain(this);
+									chunk.rebuild(service, this);
 								}
 							}
-						} else {
-							Chunk chunk = getChunk(chunkDim, xx, yy, zz);
-							if (gm.getFrustum().cubeInFrustum(chunk.posX, chunk.posY, chunk.posZ, chunk.posX + 16,
-									chunk.posY + 16, chunk.posZ + 16)) {
-								if (!chunk.created)
-									chunk.createBasicTerrain(this);
-								chunk.rebuild(service, this);
-							}
 						}
-					}
-					if (zr * zr + xr * xr + yr * yr <= VoxelVariables.genRadius * VoxelVariables.genRadius
-							* VoxelVariables.genRadius
-							&& zr * zr + xr * xr
-									+ yr * yr >= (VoxelVariables.genRadius - VoxelVariables.radiusLimit + 1)
-											* (VoxelVariables.genRadius - VoxelVariables.radiusLimit + 1)
-											* (VoxelVariables.genRadius - VoxelVariables.radiusLimit + 1)) {
-						if (hasChunk(getChunkDimension(), xx, yy, zz)) {
-							saveChunk(getChunkDimension(), xx, yy, zz, gm);
-							removeChunk(getChunk(getChunkDimension(), xx, yy, zz));
+						if (zr * zr + xr * xr + yr * yr <= VoxelVariables.genRadius * VoxelVariables.genRadius
+								* VoxelVariables.genRadius
+								&& zr * zr + xr * xr
+										+ yr * yr >= (VoxelVariables.genRadius - VoxelVariables.radiusLimit + 1)
+												* (VoxelVariables.genRadius - VoxelVariables.radiusLimit + 1)
+												* (VoxelVariables.genRadius - VoxelVariables.radiusLimit + 1)) {
+							if (hasChunk(getChunkDimension(), xx, yy, zz)) {
+								saveChunk(getChunkDimension(), xx, yy, zz, gm);
+								removeChunk(getChunk(getChunkDimension(), xx, yy, zz));
+							}
 						}
 					}
 				}
@@ -210,6 +217,56 @@ public class InfinityWorld implements IWorld {
 			}
 		}
 
+	}
+
+	@Override
+	public void lighting() {
+		while (!lightNodes.isEmpty()) {
+			LightNode node = lightNodes.poll();
+			int x = node.x;
+			int y = node.y;
+			int z = node.z;
+			Chunk chunk = node.chunk;
+			int lightLevel = (int) chunk.getTorchLight(x, y, z);
+			if (x > chunk.posX + 1 && x < chunk.posX + 16) {
+				if (chunk.getTorchLight(x - 1, y, z) + 2 <= lightLevel) {
+					setupLight(x - 1, y, z, chunk, lightLevel);
+				}
+			}
+			if (x > chunk.posX && x < chunk.posX + 15) {
+				if (chunk.getTorchLight(x + 1, y, z) + 2 <= lightLevel) {
+					setupLight(x + 1, y, z, chunk, lightLevel);
+				}
+			}
+			if (z > chunk.posZ + 1 && z < chunk.posZ + 16) {
+				if (chunk.getTorchLight(x, y, z - 1) + 2 <= lightLevel) {
+					setupLight(x, y, z - 1, chunk, lightLevel);
+				}
+			}
+			if (z > chunk.posZ && z < chunk.posZ + 15) {
+				if (chunk.getTorchLight(x, y, z + 1) + 2 <= lightLevel) {
+					setupLight(x, y, z + 1, chunk, lightLevel);
+				}
+			}
+			if (y > chunk.posY + 1 && y < chunk.posY + 16) {
+				if (chunk.getTorchLight(x, y - 1, z) + 2 <= lightLevel) {
+					setupLight(x, y - 1, z, chunk, lightLevel);
+				}
+			}
+			if (y > chunk.posY && y < chunk.posY + 15) {
+				if (chunk.getTorchLight(x, y + 1, z) + 2 <= lightLevel) {
+					setupLight(x, y + 1, z, chunk, lightLevel);
+				}
+			}
+		}
+	}
+
+	@Override
+	public void setupLight(int x, int y, int z, Chunk chunk, int lightLevel) {
+		if (chunk.getTorchLight(x, y, z) + 2 <= lightLevel) {
+			chunk.setTorchLight(x, y, z, lightLevel - 1);
+			lightNodes.add(new LightNode(x, y, z, chunk));
+		}
 	}
 
 	@Override
@@ -280,12 +337,14 @@ public class InfinityWorld implements IWorld {
 				chunk.createList();
 			else {
 				Logger.warn("Re-Creating Chunk " + chunkDim + " " + cx + " " + cy + " " + cz);
+				Logger.warn("Probably a chunk corruption");
 				chunk = new Chunk(chunkDim, cx, cy, cz, this);
 			}
 			addChunk(chunk);
 		} catch (JsonSyntaxException | FileNotFoundException e) {
 			e.printStackTrace();
 			Logger.warn("Re-Creating Chunk " + chunkDim + " " + cx + " " + cy + " " + cz);
+			Logger.warn("Probably a chunk corruption");
 			Chunk chunk = new Chunk(chunkDim, cx, cy, cz, this);
 			addChunk(chunk);
 			saveChunk(chunkDim, cx, cy, cz, gm);
@@ -294,8 +353,8 @@ public class InfinityWorld implements IWorld {
 
 	@Override
 	public boolean existChunkFile(int chunkDim, int cx, int cy, int cz) {
-		File file = new File(
-				VoxelVariables.worldPath + name + "/chunks_" + chunkDim + "_" + cx + "_" + cy + "_" + cz + ".json");
+		File file = new File(VoxelVariables.worldPath + name + "/chunks_" + chunkDim + "/chunk_" + chunkDim + "_" + cx
+				+ "_" + cy + "_" + cz + ".json");
 		return file.exists();
 	}
 
@@ -384,7 +443,7 @@ public class InfinityWorld implements IWorld {
 	}
 
 	@Override
-	public byte getGlobalBlock(int chunkDim, int x, int y, int z) {
+	public byte getGlobalBlock(int x, int y, int z) {
 		int cx = x >> 4;
 		int cz = z >> 4;
 		int cy = y >> 4;
@@ -396,7 +455,7 @@ public class InfinityWorld implements IWorld {
 	}
 
 	@Override
-	public void setGlobalBlock(int chunkDim, int x, int y, int z, byte id) {
+	public void setGlobalBlock(int x, int y, int z, byte id) {
 		int cx = x >> 4;
 		int cz = z >> 4;
 		int cy = y >> 4;
@@ -406,6 +465,16 @@ public class InfinityWorld implements IWorld {
 			chunk.updated = false;
 			chunk.needsRebuild = true;
 		}
+	}
+
+	@Override
+	public void lighting(int x, int y, int z, int val) {
+		int cx = x >> 4;
+		int cz = z >> 4;
+		int cy = y >> 4;
+		Chunk chunk = getChunk(chunkDim, cx, cy, cz);
+		chunk.setTorchLight(x, y, z, val);
+		lightNodes.add(new LightNode(x, y, z, chunk));
 	}
 
 	@Override

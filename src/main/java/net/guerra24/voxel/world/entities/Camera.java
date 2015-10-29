@@ -141,8 +141,7 @@ public class Camera {
 		if (isKeyDown(KEY_J))
 			id = VoxelVariables.DIM_1;
 
-		if (world.getGlobalBlock(world.getChunkDimension(), bx, by, bz + 1) == Block.Portal.getId()
-				&& teleporting == false) {
+		if (world.getGlobalBlock(bx, by, bz + 1) == Block.Portal.getId() && teleporting == false) {
 			teleporting = true;
 			world.switchDimension(id, gm, api);
 		}
@@ -154,15 +153,15 @@ public class Camera {
 			}
 		}
 
-		if (world.getGlobalBlock(world.getChunkDimension(), bx, by + 1, bz) == Block.Water.getId())
+		if (world.getGlobalBlock(bx, by + 1, bz) == Block.Water.getId())
 			underWater = true;
 		else
 			underWater = false;
 
-		int xa = world.getGlobalBlock(world.getChunkDimension(), bx + 1, by, bz);
-		int xb = world.getGlobalBlock(world.getChunkDimension(), bx - 1, by, bz);
-		int za = world.getGlobalBlock(world.getChunkDimension(), bx, by, bz + 1);
-		int zb = world.getGlobalBlock(world.getChunkDimension(), bx, by, bz - 1);
+		int xa = world.getGlobalBlock(bx + 1, by, bz);
+		int xb = world.getGlobalBlock(bx - 1, by, bz);
+		int za = world.getGlobalBlock(bx, by, bz + 1);
+		int zb = world.getGlobalBlock(bx, by, bz - 1);
 
 		if (isKeyDown(KEY_W)) {
 			if (yaw > 90 && yaw < 270) {
@@ -296,6 +295,8 @@ public class Camera {
 			setBlock(bx, by, bz, (byte) 0, world);
 		} else if (isButtonDown(1)) {
 			setBlock(bx, by, bz, block, world);
+			if (block == 9)
+				world.lighting(bx, by, bz, 14);
 		}
 
 		updatePlayerState(gi);
@@ -330,7 +331,7 @@ public class Camera {
 	}
 
 	private void setBlock(int x, int y, int z, byte block, IWorld world) {
-		world.setGlobalBlock(world.getChunkDimension(), x, y - 1, z, block);
+		world.setGlobalBlock(x, y - 1, z, block);
 	}
 
 	public void invertPitch() {

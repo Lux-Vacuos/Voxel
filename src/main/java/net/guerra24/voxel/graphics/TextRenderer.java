@@ -26,7 +26,7 @@ public class TextRenderer {
 		Font awtFont2;
 		try {
 			awtFont2 = Font.createFont(Font.TRUETYPE_FONT, inputStream);
-			awtFont2 = awtFont2.deriveFont(20f);
+			awtFont2 = awtFont2.deriveFont(12f);
 			font = new TrueTypeFont(awtFont2, false);
 		} catch (FontFormatException | IOException e) {
 			e.printStackTrace();

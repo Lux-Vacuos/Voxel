@@ -39,7 +39,6 @@ uniform mat4 viewMatrix;
 const float density = 0.0023;
 const float gradient = 10.0;
 
-
 void main() {
 
 	vec4 worldPosition = transformationMatrix * vec4(position, 1.0);

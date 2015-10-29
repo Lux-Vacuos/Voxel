@@ -31,17 +31,14 @@ in float visibility;
 out vec4 out_Color;
 
 uniform sampler2D texture0;
-uniform sampler2D depth0;
 uniform vec3 skyColour;
-uniform float time;
-uniform float blendFactor;
 uniform float blockBright;
 
 void main(void) {
 
 	vec4 totalDiffuse = vec4(blockBright);
 	
-	totalDiffuse = clamp(totalDiffuse, 0.0, 1.0);
+	totalDiffuse = clamp(totalDiffuse, 0.2, 1.0);
 	
 	vec4 textureColour = texture(texture0, pass_textureCoords);
 	if(textureColour.a<0.5) {

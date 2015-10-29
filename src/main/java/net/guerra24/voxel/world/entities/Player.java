@@ -113,7 +113,7 @@ public class Player extends Entity implements IEntity {
 		CollisionType collisionType = CollisionType.NONE;
 
 		byte b = -99;
-		b = world.getGlobalBlock(world.getChunkDimension(), bx, by, bz);
+		b = world.getGlobalBlock(bx, by, bz);
 
 		if (b != 0 && b != Block.Water.getId()) {
 			Vector3f playerPosition = new Vector3f();

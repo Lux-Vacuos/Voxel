@@ -158,7 +158,10 @@ public class Voxel {
 			gm.getGuiRenderer().renderGui(gm.guis2);
 			gm.getTextRenderer().begin();
 			if (VoxelVariables.runningOnMac)
-				gm.getTextRenderer().renderString("You are running on a Mac, some things may not work well.", 0, 0);
+				gm.getTextRenderer().renderString("You are running on a Mac, some things may not work well.", 5, 5);
+			gm.getTextRenderer().renderString(
+					"Voxel-" + VoxelVariables.version + "-ALPHA-BUILD-" + VoxelVariables.build, 5,
+					Display.getHeight() - 15);
 			gm.getTextRenderer().end();
 			display.updateDisplay(30, gm);
 			break;
@@ -176,6 +179,9 @@ public class Voxel {
 			gm.getPhysics().getMobManager().getPlayer().update(delta, gm, guiResources, worldsHandler.getActiveWorld(),
 					api);
 			gm.getFrustum().calculateFrustum(gm);
+			
+			worldsHandler.getActiveWorld().lighting();
+			
 			gm.getWaterFBO().begin(128, 128);
 			gm.getCamera().invertPitch();
 			gm.getRenderer().prepare();
@@ -195,9 +201,9 @@ public class Voxel {
 			gm.getPostProcessing().render(gm);
 			gm.getGuiRenderer().renderGui(gm.guis);
 			gm.getTextRenderer().begin();
-			gm.getTextRenderer().renderString("FPS: " + Display.fps, 25, 0);
-			gm.getTextRenderer().renderString("UPS: " + Display.ups, 25, 20);
-			gm.getTextRenderer().renderString("RCPS: " + Voxel.renderCallsPerFrame, 25, 40);
+			gm.getTextRenderer().renderString("FPS: " + Display.fps, 25, 5);
+			gm.getTextRenderer().renderString("UPS: " + Display.ups, 25, 25);
+			gm.getTextRenderer().renderString("RCPS: " + Voxel.renderCallsPerFrame, 25, 45);
 			gm.getTextRenderer().end();
 			display.updateDisplay(VoxelVariables.FPS, gm);
 			break;

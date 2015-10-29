@@ -46,10 +46,7 @@ public class EntityShader extends ShaderProgram {
 	private int loc_viewMatrix;
 	private int loc_skyColour;
 	private int loc_blockBright;
-	private int loc_time;
-	private int loc_blendFactor;
 	private int loc_texture0;
-	private int loc_depth0;
 	
 
 	/**
@@ -74,11 +71,8 @@ public class EntityShader extends ShaderProgram {
 		loc_projectionMatrix = super.getUniformLocation("projectionMatrix");
 		loc_viewMatrix = super.getUniformLocation("viewMatrix");
 		loc_skyColour = super.getUniformLocation("skyColour");
-		loc_blendFactor = super.getUniformLocation("blendFactor");
 		loc_blockBright = super.getUniformLocation("blockBright");
-		loc_time = super.getUniformLocation("time");
 		loc_texture0 = super.getUniformLocation("texture0");
-		loc_depth0 = super.getUniformLocation("depth0");
 
 	}
 
@@ -89,7 +83,6 @@ public class EntityShader extends ShaderProgram {
 	 */
 	public void connectTextureUnits() {
 		super.loadInt(loc_texture0, 0);
-		super.loadInt(loc_depth0, 1);
 	}
 	
 	public void loadBlockBright(float value){
@@ -120,28 +113,6 @@ public class EntityShader extends ShaderProgram {
 	 */
 	public void loadTransformationMatrix(Matrix4f matrix) {
 		super.loadMatrix(loc_transformationMatrix, matrix);
-	}
-
-	/**
-	 * Loads the Day/Night blend factor
-	 * 
-	 * @param time
-	 *            Time
-	 * @author Guerra24 <pablo230699@hotmail.com>
-	 */
-	public void loadblendFactor(float factor) {
-		super.loadFloat(loc_blendFactor, factor);
-	}
-
-	/**
-	 * Loads the World Time
-	 * 
-	 * @param time
-	 *            Time
-	 * @author Guerra24 <pablo230699@hotmail.com>
-	 */
-	public void loadTime(float time) {
-		super.loadFloat(loc_time, time);
 	}
 
 	/**

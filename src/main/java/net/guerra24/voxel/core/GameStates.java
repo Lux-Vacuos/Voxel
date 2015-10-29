@@ -109,7 +109,7 @@ public class GameStates {
 			gm.getSoundSystem().setVolume("menu1", 1f);
 		}
 
-		if (state == State.GAME && !display.isDisplayFocused()) {
+		if (state == State.GAME && !display.isDisplayFocused() && !VoxelVariables.debug) {
 			gm.getCamera().unlockMouse();
 			state = State.IN_PAUSE;
 		}

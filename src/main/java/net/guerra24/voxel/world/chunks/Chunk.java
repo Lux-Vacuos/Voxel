@@ -49,11 +49,13 @@ public class Chunk {
 	 */
 	public int dim, cx, cy, cz, posX, posY, posZ;
 	public byte[][][] blocks;
+	public byte[][][] lightMap;
 	private transient Queue<Object> blocksMesh;
 	private transient Queue<Object> blocksMeshtemp;
 	private transient int sizeX, sizeY, sizeZ;
 	private transient boolean readyToRender = true;
-	public transient boolean needsRebuild = true, updated = false, updating = false, empty = true, created = false;
+	public transient boolean needsRebuild = true, updated = false, updating = false, empty = true;
+	public boolean created = false;
 
 	/**
 	 * Constructor
@@ -89,6 +91,7 @@ public class Chunk {
 	public void init(IWorld world) {
 		createList();
 		blocks = new byte[sizeX][sizeY][sizeZ];
+		lightMap = new byte[sizeX][sizeY][sizeZ];
 	}
 
 	/**
@@ -123,16 +126,14 @@ public class Chunk {
 	}
 
 	public void createBasicTerrain(IWorld world) {
-		for (int x = 0; x < sizeX; x++) {
-			for (int z = 0; z < sizeZ; z++) {
-				for (int y = 0; y < sizeY; y++) {
-					double tempHeight = world.getNoise().getNoise(x + cx * 16, y + cy * 16, z + cz * 16);
-					if (tempHeight > 0) {
+		if (cy == 0)
+			for (int x = 0; x < sizeX; x++) {
+				for (int z = 0; z < sizeZ; z++) {
+					for (int y = 0; y < 8; y++) {
 						blocks[x][y][z] = Block.Stone.getId();
 					}
 				}
 			}
-		}
 		created = true;
 	}
 
@@ -216,25 +217,25 @@ public class Chunk {
 				z = (int) blockEntity.getPosition().z;
 				switch (blockEntity.getSide()) {
 				case "UP":
-					blockEntity.setLocalLight(getLight(world, x, y, z));
+					blockEntity.setLocalLight(getTorchLight(x, y + 1, z) / 15f);
 					break;
 				case "DOWN":
-					blockEntity.setLocalLight(getLight(world, x, y, z));
+					blockEntity.setLocalLight(getTorchLight(x, y - 1, z) / 15f);
 					break;
 				case "EAST":
-					blockEntity.setLocalLight(getLight(world, x + 1, y, z));
+					blockEntity.setLocalLight(getTorchLight(x + 1, y, z) / 15f);
 					break;
 				case "WEST":
-					blockEntity.setLocalLight(getLight(world, x - 1, y, z));
+					blockEntity.setLocalLight(getTorchLight(x - 1, y, z) / 15f);
 					break;
 				case "NORTH":
-					blockEntity.setLocalLight(getLight(world, x, y, z - 1));
+					blockEntity.setLocalLight(getTorchLight(x, y, z - 1) / 15f);
 					break;
 				case "SOUTH":
-					blockEntity.setLocalLight(getLight(world, x, y, z + 1));
+					blockEntity.setLocalLight(getTorchLight(x, y, z + 1) / 15f);
 					break;
 				case "SINGLE MODEL":
-					blockEntity.setLocalLight(getLight(world, x, y, z));
+					blockEntity.setLocalLight(getTorchLight(x, y, z) / 15f);
 					break;
 				}
 			}
@@ -249,9 +250,20 @@ public class Chunk {
 		blocks[x & 0xF][y & 0xF][z & 0xF] = id;
 	}
 
-	private float getLight(IWorld world, int x, int y, int z) {
-		float result = 1;
-		return result;
+	public float getSunLight(int x, int y, int z) {
+		return (lightMap[y & 0xF][z & 0xF][x & 0xF] >> 4) & 0xF;
+	}
+
+	public void setSunLight(int x, int y, int z, int val) {
+		lightMap[x & 0xF][y & 0xF][z & 0xF] = (byte) ((lightMap[x & 0xF][y & 0xF][z & 0xF] & 0xF) | (val << 4));
+	}
+
+	public float getTorchLight(int x, int y, int z) {
+		return lightMap[x & 0xF][y & 0xF][z & 0xF] & 0xF;
+	}
+
+	public void setTorchLight(int x, int y, int z, int val) {
+		lightMap[x & 0xF][y & 0xF][z & 0xF] = (byte) ((lightMap[x & 0xF][y & 0xF][z & 0xF] & 0xF0) | val);
 	}
 
 	private boolean cullFaceWest(int x, int y, int z, IWorld world) {
@@ -265,11 +277,11 @@ public class Chunk {
 				return true;
 			}
 		}
-		if (world.getGlobalBlock(dim, x - 1, y, z) != Block.Air.getId()
-				&& world.getGlobalBlock(dim, x - 1, y, z) != Block.Water.getId()
-				&& world.getGlobalBlock(dim, x - 1, y, z) != Block.Glass.getId()
-				&& world.getGlobalBlock(dim, x - 1, y, z) != Block.Torch.getId()
-				&& world.getGlobalBlock(dim, x - 1, y, z) != Block.Leaves.getId()) {
+		if (world.getGlobalBlock(x - 1, y, z) != Block.Air.getId()
+				&& world.getGlobalBlock(x - 1, y, z) != Block.Water.getId()
+				&& world.getGlobalBlock(x - 1, y, z) != Block.Glass.getId()
+				&& world.getGlobalBlock(x - 1, y, z) != Block.Torch.getId()
+				&& world.getGlobalBlock(x - 1, y, z) != Block.Leaves.getId()) {
 			return false;
 		} else {
 			return true;
@@ -287,11 +299,11 @@ public class Chunk {
 				return true;
 			}
 		}
-		if (world.getGlobalBlock(dim, x + 1, y, z) != Block.Air.getId()
-				&& world.getGlobalBlock(dim, x + 1, y, z) != Block.Water.getId()
-				&& world.getGlobalBlock(dim, x + 1, y, z) != Block.Glass.getId()
-				&& world.getGlobalBlock(dim, x + 1, y, z) != Block.Torch.getId()
-				&& world.getGlobalBlock(dim, x + 1, y, z) != Block.Leaves.getId()) {
+		if (world.getGlobalBlock(x + 1, y, z) != Block.Air.getId()
+				&& world.getGlobalBlock(x + 1, y, z) != Block.Water.getId()
+				&& world.getGlobalBlock(x + 1, y, z) != Block.Glass.getId()
+				&& world.getGlobalBlock(x + 1, y, z) != Block.Torch.getId()
+				&& world.getGlobalBlock(x + 1, y, z) != Block.Leaves.getId()) {
 			return false;
 		} else {
 			return true;
@@ -309,11 +321,11 @@ public class Chunk {
 				return true;
 			}
 		}
-		if (world.getGlobalBlock(dim, x, y - 1, z) != Block.Air.getId()
-				&& world.getGlobalBlock(dim, x, y - 1, z) != Block.Water.getId()
-				&& world.getGlobalBlock(dim, x, y - 1, z) != Block.Glass.getId()
-				&& world.getGlobalBlock(dim, x, y - 1, z) != Block.Torch.getId()
-				&& world.getGlobalBlock(dim, x, y - 1, z) != Block.Leaves.getId()) {
+		if (world.getGlobalBlock(x, y - 1, z) != Block.Air.getId()
+				&& world.getGlobalBlock(x, y - 1, z) != Block.Water.getId()
+				&& world.getGlobalBlock(x, y - 1, z) != Block.Glass.getId()
+				&& world.getGlobalBlock(x, y - 1, z) != Block.Torch.getId()
+				&& world.getGlobalBlock(x, y - 1, z) != Block.Leaves.getId()) {
 			return false;
 		} else {
 			return true;
@@ -331,11 +343,11 @@ public class Chunk {
 				return true;
 			}
 		}
-		if (world.getGlobalBlock(dim, x, y + 1, z) != Block.Air.getId()
-				&& world.getGlobalBlock(dim, x, y + 1, z) != Block.Water.getId()
-				&& world.getGlobalBlock(dim, x, y + 1, z) != Block.Glass.getId()
-				&& world.getGlobalBlock(dim, x, y + 1, z) != Block.Torch.getId()
-				&& world.getGlobalBlock(dim, x, y + 1, z) != Block.Leaves.getId()) {
+		if (world.getGlobalBlock(x, y + 1, z) != Block.Air.getId()
+				&& world.getGlobalBlock(x, y + 1, z) != Block.Water.getId()
+				&& world.getGlobalBlock(x, y + 1, z) != Block.Glass.getId()
+				&& world.getGlobalBlock(x, y + 1, z) != Block.Torch.getId()
+				&& world.getGlobalBlock(x, y + 1, z) != Block.Leaves.getId()) {
 			return false;
 		} else {
 			return true;
@@ -351,9 +363,9 @@ public class Chunk {
 				return true;
 			}
 		}
-		if (world.getGlobalBlock(dim, x, y + 1, z) != Block.Air.getId()
-				&& world.getGlobalBlock(dim, x, y + 1, z) != Block.Glass.getId()
-				&& world.getGlobalBlock(dim, x, y + 1, z) != Block.Leaves.getId()) {
+		if (world.getGlobalBlock(x, y + 1, z) != Block.Air.getId()
+				&& world.getGlobalBlock(x, y + 1, z) != Block.Glass.getId()
+				&& world.getGlobalBlock(x, y + 1, z) != Block.Leaves.getId()) {
 			return false;
 		} else {
 			return true;
@@ -371,11 +383,11 @@ public class Chunk {
 				return true;
 			}
 		}
-		if (world.getGlobalBlock(dim, x, y, z - 1) != Block.Air.getId()
-				&& world.getGlobalBlock(dim, x, y, z - 1) != Block.Water.getId()
-				&& world.getGlobalBlock(dim, x, y, z - 1) != Block.Glass.getId()
-				&& world.getGlobalBlock(dim, x, y, z - 1) != Block.Torch.getId()
-				&& world.getGlobalBlock(dim, x, y, z - 1) != Block.Leaves.getId()) {
+		if (world.getGlobalBlock(x, y, z - 1) != Block.Air.getId()
+				&& world.getGlobalBlock(x, y, z - 1) != Block.Water.getId()
+				&& world.getGlobalBlock(x, y, z - 1) != Block.Glass.getId()
+				&& world.getGlobalBlock(x, y, z - 1) != Block.Torch.getId()
+				&& world.getGlobalBlock(x, y, z - 1) != Block.Leaves.getId()) {
 			return false;
 		} else {
 			return true;
@@ -393,11 +405,11 @@ public class Chunk {
 				return true;
 			}
 		}
-		if (world.getGlobalBlock(dim, x, y, z + 1) != Block.Air.getId()
-				&& world.getGlobalBlock(dim, x, y, z + 1) != Block.Water.getId()
-				&& world.getGlobalBlock(dim, x, y, z + 1) != Block.Glass.getId()
-				&& world.getGlobalBlock(dim, x, y, z + 1) != Block.Torch.getId()
-				&& world.getGlobalBlock(dim, x, y, z + 1) != Block.Leaves.getId()) {
+		if (world.getGlobalBlock(x, y, z + 1) != Block.Air.getId()
+				&& world.getGlobalBlock(x, y, z + 1) != Block.Water.getId()
+				&& world.getGlobalBlock(x, y, z + 1) != Block.Glass.getId()
+				&& world.getGlobalBlock(x, y, z + 1) != Block.Torch.getId()
+				&& world.getGlobalBlock(x, y, z + 1) != Block.Leaves.getId()) {
 			return false;
 		} else {
 			return true;

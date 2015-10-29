@@ -116,7 +116,7 @@ public class GameResources {
 		physics = new Physics(this);
 		frustum = new Frustum();
 		rand = new Random();
-		textRenderer = new TextRenderer("Voxel");
+		textRenderer = new TextRenderer("C64_Pro-STYLE");
 		try {
 			SoundSystemConfig.addLibrary(LibraryLWJGLOpenAL.class);
 			SoundSystemConfig.setCodec("ogg", CodecJOgg.class);
