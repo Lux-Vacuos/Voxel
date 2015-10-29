@@ -12,7 +12,7 @@ jar {
 	include("assets/**")
 	
     manifest {
-        attributes 'Voxel-Branch': 'Develop',
+        attributes 'Voxel-Branch': 'Master',
                    'Voxel-Version': version
     }
 }
@@ -49,6 +49,3 @@ task wrapper(type: Wrapper) {
     gradleVersion = '2.8'
 }
 
-run {
-    systemProperty 'java.library.path', file( 'natives' )
-}
