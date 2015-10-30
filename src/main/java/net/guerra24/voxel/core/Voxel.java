@@ -31,7 +31,6 @@ import static org.lwjgl.opengl.GL11.GL_VERSION;
 import static org.lwjgl.opengl.GL11.glGetString;
 
 import org.lwjgl.Sys;
-import org.newdawn.slick.Color;
 
 import net.guerra24.voxel.api.VAPI;
 import net.guerra24.voxel.bootstrap.Bootstrap;
@@ -157,14 +156,6 @@ public class Voxel {
 			gm.getRenderer().prepare();
 			gm.getRenderer().renderEntity(gm.mainMenuModels, gm);
 			gm.getGuiRenderer().renderGui(gm.guis2);
-			gm.getTextRenderer().begin();
-			if (VoxelVariables.runningOnMac)
-				gm.getTextRenderer().renderString("You are running on a Mac, some things may not work well.", 365, 150,
-						Color.red);
-			gm.getTextRenderer().renderString(
-					"Voxel-" + VoxelVariables.version + "-ALPHA-BUILD-" + VoxelVariables.build, 5, 720 - 15,
-					Color.lightGray);
-			gm.getTextRenderer().end();
 			display.updateDisplay(30, gm);
 			break;
 		case IN_PAUSE:
@@ -202,11 +193,6 @@ public class Voxel {
 			gm.getRenderer().prepare();
 			gm.getPostProcessing().render(gm);
 			gm.getGuiRenderer().renderGui(gm.guis);
-			gm.getTextRenderer().begin();
-			gm.getTextRenderer().renderString("FPS: " + Display.fps, 25, 5);
-			gm.getTextRenderer().renderString("UPS: " + Display.ups, 25, 25);
-			gm.getTextRenderer().renderString("RCPS: " + Voxel.renderCallsPerFrame, 25, 45);
-			gm.getTextRenderer().end();
 			display.updateDisplay(VoxelVariables.FPS, gm);
 			break;
 		case LOADING_WORLD:

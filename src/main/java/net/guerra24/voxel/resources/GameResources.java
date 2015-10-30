@@ -37,7 +37,6 @@ import net.guerra24.voxel.graphics.GuiRenderer;
 import net.guerra24.voxel.graphics.MasterRenderer;
 import net.guerra24.voxel.graphics.PostProcessingRenderer;
 import net.guerra24.voxel.graphics.SkyboxRenderer;
-import net.guerra24.voxel.graphics.TextRenderer;
 import net.guerra24.voxel.menu.MainMenu;
 import net.guerra24.voxel.particle.ParticleController;
 import net.guerra24.voxel.resources.models.GuiTexture;
@@ -79,7 +78,6 @@ public class GameResources {
 	private SkyboxRenderer skyboxRenderer;
 	private GuiRenderer guiRenderer;
 	private GameStates gameStates;
-	private TextRenderer textRenderer;
 
 	private ParticleController particleController;
 	private PostProcessingRenderer postProcessing;
@@ -116,7 +114,6 @@ public class GameResources {
 		physics = new Physics(this);
 		frustum = new Frustum();
 		rand = new Random();
-		textRenderer = new TextRenderer("C64_Pro-STYLE");
 		try {
 			SoundSystemConfig.addLibrary(LibraryLWJGLOpenAL.class);
 			SoundSystemConfig.setCodec("ogg", CodecJOgg.class);
@@ -201,10 +198,6 @@ public class GameResources {
 
 	public MasterRenderer getRenderer() {
 		return renderer;
-	}
-
-	public TextRenderer getTextRenderer() {
-		return textRenderer;
 	}
 
 	public SkyboxRenderer getSkyboxRenderer() {

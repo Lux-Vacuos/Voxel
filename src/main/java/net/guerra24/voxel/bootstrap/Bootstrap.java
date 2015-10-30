@@ -114,18 +114,20 @@ public class Bootstrap {
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public static void main(String[] args) {
-		PrintStream out;
-		try {
-			out = new PrintStream(new FileOutputStream("assets/log.txt"));
-			System.setOut(out);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+		if (VoxelVariables.debug) {
+			System.setProperty("org.lwjgl.librarypath", new File("natives").getAbsolutePath());
+		} else {
+			PrintStream out;
+			try {
+				out = new PrintStream(new FileOutputStream("assets/log.txt"));
+				System.setOut(out);
+				System.setErr(out);
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			}
 		}
 		Thread.currentThread().setName("Voxel Main");
 		run();
-		if (VoxelVariables.debug) {
-			System.setProperty("org.lwjgl.librarypath", new File("natives").getAbsolutePath());
-		}
 		new Voxel();
 	}
 
