@@ -226,47 +226,44 @@ public class InfinityWorld implements IWorld {
 			int x = node.x;
 			int y = node.y;
 			int z = node.z;
-			Chunk chunk = node.chunk;
+			int cx = x >> 4;
+			int cz = z >> 4;
+			int cy = y >> 4;
+			Chunk chunk = getChunk(chunkDim, cx, cy, cz);
 			int lightLevel = (int) chunk.getTorchLight(x, y, z);
-			if (x > chunk.posX + 1 && x < chunk.posX + 16) {
-				if (chunk.getTorchLight(x - 1, y, z) + 2 <= lightLevel) {
-					setupLight(x - 1, y, z, chunk, lightLevel);
-				}
+			if (chunk.getTorchLight(x - 1, y, z) + 2 <= lightLevel) {
+				setupLight(x - 1, y, z, lightLevel);
 			}
-			if (x > chunk.posX && x < chunk.posX + 15) {
-				if (chunk.getTorchLight(x + 1, y, z) + 2 <= lightLevel) {
-					setupLight(x + 1, y, z, chunk, lightLevel);
-				}
+			if (chunk.getTorchLight(x + 1, y, z) + 2 <= lightLevel) {
+				setupLight(x + 1, y, z, lightLevel);
 			}
-			if (z > chunk.posZ + 1 && z < chunk.posZ + 16) {
-				if (chunk.getTorchLight(x, y, z - 1) + 2 <= lightLevel) {
-					setupLight(x, y, z - 1, chunk, lightLevel);
-				}
+			if (chunk.getTorchLight(x, y, z - 1) + 2 <= lightLevel) {
+				setupLight(x, y, z - 1, lightLevel);
 			}
-			if (z > chunk.posZ && z < chunk.posZ + 15) {
-				if (chunk.getTorchLight(x, y, z + 1) + 2 <= lightLevel) {
-					setupLight(x, y, z + 1, chunk, lightLevel);
-				}
+			if (chunk.getTorchLight(x, y, z + 1) + 2 <= lightLevel) {
+				setupLight(x, y, z + 1, lightLevel);
 			}
-			if (y > chunk.posY + 1 && y < chunk.posY + 16) {
-				if (chunk.getTorchLight(x, y - 1, z) + 2 <= lightLevel) {
-					setupLight(x, y - 1, z, chunk, lightLevel);
-				}
+			if (chunk.getTorchLight(x, y - 1, z) + 2 <= lightLevel) {
+				setupLight(x, y - 1, z, lightLevel);
 			}
-			if (y > chunk.posY && y < chunk.posY + 15) {
-				if (chunk.getTorchLight(x, y + 1, z) + 2 <= lightLevel) {
-					setupLight(x, y + 1, z, chunk, lightLevel);
-				}
+			if (chunk.getTorchLight(x, y + 1, z) + 2 <= lightLevel) {
+				setupLight(x, y + 1, z, lightLevel);
 			}
 		}
 	}
 
 	@Override
-	public void setupLight(int x, int y, int z, Chunk chunk, int lightLevel) {
-		if (chunk.getTorchLight(x, y, z) + 2 <= lightLevel) {
-			chunk.setTorchLight(x, y, z, lightLevel - 1);
-			lightNodes.add(new LightNode(x, y, z, chunk));
-		}
+	public void setupLight(int x, int y, int z, int lightLevel) {
+		int cx = x >> 4;
+		int cz = z >> 4;
+		int cy = y >> 4;
+		Chunk chunk = getChunk(chunkDim, cx, cy, cz);
+		if (chunk != null)
+			if (chunk.getTorchLight(x, y, z) + 2 <= lightLevel) {
+				chunk.setTorchLight(x, y, z, lightLevel - 1);
+				chunk.needsRebuild = true;
+				lightNodes.add(new LightNode(x, y, z));
+			}
 	}
 
 	@Override
@@ -474,7 +471,7 @@ public class InfinityWorld implements IWorld {
 		int cy = y >> 4;
 		Chunk chunk = getChunk(chunkDim, cx, cy, cz);
 		chunk.setTorchLight(x, y, z, val);
-		lightNodes.add(new LightNode(x, y, z, chunk));
+		lightNodes.add(new LightNode(x, y, z));
 	}
 
 	@Override

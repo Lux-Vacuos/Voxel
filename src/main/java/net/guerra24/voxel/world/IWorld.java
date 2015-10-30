@@ -18,8 +18,8 @@ public interface IWorld {
 	public void updateChunksGeneration(GameResources gm, VAPI api);
 
 	public void updateChunksRender(GameResources gm);
-	
-	public void setupLight(int x, int y, int z, Chunk chunk, int lightLevel);
+
+	public void setupLight(int x, int y, int z, int lightLevel);
 
 	public void lighting();
 
