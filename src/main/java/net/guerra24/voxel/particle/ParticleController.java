@@ -25,8 +25,8 @@
 package net.guerra24.voxel.particle;
 
 import static org.lwjgl.opengl.GL11.GL_BLEND;
-import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
-import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
+import static org.lwjgl.opengl.GL11.glDisable;
+import static org.lwjgl.opengl.GL11.glEnable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,7 +36,6 @@ import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import net.guerra24.voxel.graphics.ParticleRenderer;
-import net.guerra24.voxel.graphics.opengl.VoxelGL33;
 import net.guerra24.voxel.graphics.shaders.ParticleShader;
 import net.guerra24.voxel.resources.GameResources;
 import net.guerra24.voxel.resources.GuiResources;
@@ -91,15 +90,14 @@ public class ParticleController implements IParticleController {
 
 	@Override
 	public void renderParticles(Map<TexturedModel, List<Particle>> particles, GameResources gm) {
-		VoxelGL33.glEnable(GL_BLEND);
-		VoxelGL33.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glEnable(GL_BLEND);
 		shader.start();
 		shader.loadProjectionMatrix(gm.getRenderer().getProjectionMatrix());
 		shader.loadviewMatrix(gm.getCamera());
 		renderer.render(particles, gm);
 		particleBatcher.clear();
 		shader.stop();
-		VoxelGL33.glDisable(GL_BLEND);
+		glDisable(GL_BLEND);
 	}
 
 	@Override

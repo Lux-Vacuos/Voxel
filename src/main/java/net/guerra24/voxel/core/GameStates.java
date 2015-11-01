@@ -105,6 +105,7 @@ public class GameStates {
 			gm.getCamera().setPosition(new Vector3f(-2, 0, -1));
 			gm.getCamera().setPitch(0);
 			gm.getCamera().setYaw(0);
+			gm.getTextHandler().switchTo(gm.getTextHandler().getMainMenuText(), gm.getTextMasterRenderer());
 			state = State.MAINMENU;
 			gm.getSoundSystem().setVolume("menu1", 1f);
 		}

@@ -29,7 +29,6 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 import net.guerra24.voxel.core.VoxelVariables;
 import net.guerra24.voxel.resources.GameResources;
-import net.guerra24.voxel.util.Maths;
 import net.guerra24.voxel.util.vector.Vector3f;
 import net.guerra24.voxel.world.IWorld;
 import net.guerra24.voxel.world.WorldService;
@@ -135,20 +134,6 @@ public class Chunk {
 				}
 			}
 		created = true;
-	}
-
-	private void createStructures(ChunkGenerator generator, IWorld world) {
-		// generator.generateCaves(blocks, world, sizeX, sizeZ, sizeY, cx, cz);
-		for (int i = 0; i < 4; i++) {
-			int xx = Maths.randInt(4, 12);
-			int zz = Maths.randInt(4, 12);
-			double tempHeight = world.getNoise().getNoise(xx + cx * 16, zz + cz * 16);
-			tempHeight += 1;
-			int height = (int) (64 * Maths.clamp(tempHeight));
-			int h = getLocalBlock(xx, height - 1, zz);
-			if (h == Block.Grass.getId() || h == Block.Dirt.getId())
-				generator.addTree(blocks, xx, height, zz, Maths.randInt(4, 10), world.getSeed());
-		}
 	}
 
 	public void rebuildChunkSection(boolean secClear, Queue<Object> cubes, IWorld world) {

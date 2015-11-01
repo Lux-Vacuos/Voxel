@@ -28,6 +28,7 @@ import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
 import static org.lwjgl.opengl.GL11.GL_UNSIGNED_INT;
 import static org.lwjgl.opengl.GL11.glBindTexture;
+import static org.lwjgl.opengl.GL11.glDrawElements;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
 import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
@@ -37,7 +38,6 @@ import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import java.util.List;
 import java.util.Map;
 
-import net.guerra24.voxel.graphics.opengl.VoxelGL33;
 import net.guerra24.voxel.graphics.shaders.ParticleShader;
 import net.guerra24.voxel.particle.Particle;
 import net.guerra24.voxel.resources.GameResources;
@@ -85,7 +85,7 @@ public class ParticleRenderer {
 			List<Particle> batch = particles.get(model);
 			for (Particle entity : batch) {
 				prepareInstance(entity);
-				VoxelGL33.glDrawElements(GL_TRIANGLES, model.getRawModel().getVertexCount(), GL_UNSIGNED_INT, 0);
+				glDrawElements(GL_TRIANGLES, model.getRawModel().getVertexCount(), GL_UNSIGNED_INT, 0);
 			}
 			unbindTexturedModel();
 		}

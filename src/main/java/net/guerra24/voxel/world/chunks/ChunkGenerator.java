@@ -2,13 +2,14 @@ package net.guerra24.voxel.world.chunks;
 
 import java.util.Random;
 
+import net.guerra24.voxel.world.IWorld;
 import net.guerra24.voxel.world.InfinityWorld;
 import net.guerra24.voxel.world.block.Block;
 
 public class ChunkGenerator {
-	public void addTree(byte[][][] blocks, int xo, int yo, int zo, int treeHeight, Random rand) {
+	public void addTree(IWorld world, int xo, int yo, int zo, int treeHeight, Random rand) {
 		for (int y = 0; y < treeHeight; y++) {
-			blocks[xo][yo + y][zo] = Block.Wood.getId();
+			world.setGlobalBlock(xo, yo + y, zo, Block.Wood.getId());
 		}
 
 		for (int x = 0; x < treeHeight; x++) {
@@ -22,7 +23,7 @@ public class ChunkGenerator {
 					double test = Math.sqrt((double) xx * xx + yy * yy + zz * zz);
 					if (test < (treeHeight - 1) / 2) {
 						if (rand.nextDouble() < 0.8) {
-							blocks[xo + xx][yo + yy + treeHeight - 1][zo + zz] = Block.Leaves.getId();
+							world.setGlobalBlock(xo + xx, yo + yy + treeHeight - 1, zo + zz, Block.Leaves.getId());
 						}
 					}
 				}
@@ -31,8 +32,7 @@ public class ChunkGenerator {
 
 	}
 
-	public void generateCaves(byte[][][] blocks, InfinityWorld world, int sizeX, int sizeZ, int sizeY, int cx,
-			int cz) {
+	public void generateCaves(byte[][][] blocks, InfinityWorld world, int sizeX, int sizeZ, int sizeY, int cx, int cz) {
 		for (int x = 0; x < sizeX; x++) {
 			for (int z = 0; z < sizeZ; z++) {
 				for (int y = 0; y < sizeY; y++) {

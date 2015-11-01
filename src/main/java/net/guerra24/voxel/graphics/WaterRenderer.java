@@ -24,12 +24,7 @@
 
 package net.guerra24.voxel.graphics;
 
-import static org.lwjgl.opengl.GL11.GL_BLEND;
-import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
-import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
-import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
-import static org.lwjgl.opengl.GL11.glBindTexture;
+import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE1;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE2;
@@ -41,7 +36,6 @@ import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import java.util.Queue;
 
 import net.guerra24.voxel.core.VoxelVariables;
-import net.guerra24.voxel.graphics.opengl.VoxelGL33;
 import net.guerra24.voxel.graphics.shaders.WaterShader;
 import net.guerra24.voxel.resources.GameResources;
 import net.guerra24.voxel.resources.Loader;
@@ -106,7 +100,7 @@ public class WaterRenderer {
 			Matrix4f modelMatrix = Maths.createTransformationMatrix(
 					new Vector3f(tile.getX(), tile.getHeight(), tile.getZ()), 0, 0, 0, WaterTile.TILE_SIZE);
 			shader.loadModelMatrix(modelMatrix);
-			VoxelGL33.glDrawArrays(GL_TRIANGLES, 0, quad.getVertexCount());
+			glDrawArrays(GL_TRIANGLES, 0, quad.getVertexCount());
 		}
 		unbind();
 	}
@@ -124,8 +118,8 @@ public class WaterRenderer {
 		shader.loadViewMatrix(gm.getCamera());
 		shader.loadMoveFactor(moveFactor);
 		shader.loadDirectLightDirection(new Vector3f(-80, -100, -40));
-		VoxelGL33.glEnable(GL_BLEND);
-		VoxelGL33.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glBindVertexArray(quad.getVaoID());
 		glEnableVertexAttribArray(0);
 		glActiveTexture(GL_TEXTURE0);
@@ -156,7 +150,7 @@ public class WaterRenderer {
 	private void unbind() {
 		glDisableVertexAttribArray(0);
 		glBindVertexArray(0);
-		VoxelGL33.glDisable(GL_BLEND);
+		glDisable(GL_BLEND);
 		shader.stop();
 	}
 

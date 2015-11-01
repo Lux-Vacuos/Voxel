@@ -37,6 +37,7 @@ import net.guerra24.voxel.graphics.GuiRenderer;
 import net.guerra24.voxel.graphics.MasterRenderer;
 import net.guerra24.voxel.graphics.PostProcessingRenderer;
 import net.guerra24.voxel.graphics.SkyboxRenderer;
+import net.guerra24.voxel.graphics.TextMasterRenderer;
 import net.guerra24.voxel.menu.MainMenu;
 import net.guerra24.voxel.particle.ParticleController;
 import net.guerra24.voxel.resources.models.GuiTexture;
@@ -78,6 +79,8 @@ public class GameResources {
 	private SkyboxRenderer skyboxRenderer;
 	private GuiRenderer guiRenderer;
 	private GameStates gameStates;
+	private TextMasterRenderer textMasterRenderer;
+	private TextHandler textHandler;
 
 	private ParticleController particleController;
 	private PostProcessingRenderer postProcessing;
@@ -107,6 +110,8 @@ public class GameResources {
 		renderer = new MasterRenderer(loader);
 		guiRenderer = new GuiRenderer(loader);
 		skyboxRenderer = new SkyboxRenderer(loader, renderer.getProjectionMatrix());
+		textMasterRenderer = new TextMasterRenderer(loader);
+		textHandler = new TextHandler(loader);
 		particleController = new ParticleController(loader);
 		postProcessing = new PostProcessingRenderer(loader);
 		gameStates = new GameStates();
@@ -153,6 +158,7 @@ public class GameResources {
 	 */
 	public void cleanUp() {
 		particleController.dispose();
+		textMasterRenderer.cleanUp();
 		waterFBO.cleanUp();
 		guiRenderer.cleanUp();
 		renderer.cleanUp();
@@ -228,12 +234,20 @@ public class GameResources {
 		return frustum;
 	}
 
+	public TextMasterRenderer getTextMasterRenderer() {
+		return textMasterRenderer;
+	}
+
 	public Physics getPhysics() {
 		return physics;
 	}
 
 	public FrameBuffer getWaterFBO() {
 		return waterFBO;
+	}
+
+	public TextHandler getTextHandler() {
+		return textHandler;
 	}
 
 }

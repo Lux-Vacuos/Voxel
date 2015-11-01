@@ -123,6 +123,14 @@ public class Loader {
 		return new RawModel(vaoID, indices.length);
 	}
 
+	public int loadToVAO(float[] positions, float[] textureCoords) {
+		int vaoID = createVAO();
+		storeDataInAttributeList(0, 2, positions);
+		storeDataInAttributeList(1, 2, textureCoords);
+		unbindVAO();
+		return vaoID;
+	}
+
 	/**
 	 * Load an array of positions and a dimension
 	 * 
@@ -157,6 +165,21 @@ public class Loader {
 			glGenerateMipmap(GL_TEXTURE_2D);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_LOD_BIAS, -0.4f);
+		} catch (Exception e) {
+			e.printStackTrace();
+			Logger.log("Couldn' load texture file " + fileName);
+		}
+		textures.add(texture.getTextureID());
+		return texture.getTextureID();
+	}
+	
+	public int loadTextureFont(String fileName) {
+		Texture texture = null;
+		try {
+			InputStream file = getClass().getClassLoader()
+					.getResourceAsStream("assets/fonts/" + fileName + ".png");
+			texture = TextureLoader.getTexture("PNG", file, GL_NEAREST);
+			Logger.log("Loading Texture: " + fileName + ".png");
 		} catch (Exception e) {
 			e.printStackTrace();
 			Logger.log("Couldn' load texture file " + fileName);
@@ -206,9 +229,6 @@ public class Loader {
 					.getResourceAsStream("assets/textures/menu/" + fileName + ".png");
 			texture = TextureLoader.getTexture("PNG", file, GL_NEAREST);
 			Logger.log("Loading Texture: " + fileName + ".png");
-			glGenerateMipmap(GL_TEXTURE_2D);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_LOD_BIAS, -0.4f);
 		} catch (Exception e) {
 			e.printStackTrace();
 			Logger.error("Couldn' load texture file" + fileName);

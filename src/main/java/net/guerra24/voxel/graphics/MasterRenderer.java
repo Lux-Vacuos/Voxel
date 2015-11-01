@@ -24,13 +24,7 @@
 
 package net.guerra24.voxel.graphics;
 
-import static org.lwjgl.opengl.GL11.GL_BACK;
-import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11.GL_CULL_FACE;
-import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
-import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
-import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
+import static org.lwjgl.opengl.GL11.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,7 +35,6 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 import net.guerra24.voxel.core.VoxelVariables;
 import net.guerra24.voxel.graphics.opengl.Display;
-import net.guerra24.voxel.graphics.opengl.VoxelGL33;
 import net.guerra24.voxel.graphics.shaders.EntityShader;
 import net.guerra24.voxel.graphics.shaders.WaterShader;
 import net.guerra24.voxel.resources.GameResources;
@@ -97,10 +90,10 @@ public class MasterRenderer {
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void initGL() {
-		VoxelGL33.glEnable(GL_DEPTH_TEST);
-		VoxelGL33.glEnable(GL_CULL_FACE);
-		VoxelGL33.glCullFace(GL_BACK);
-		VoxelGL33.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glEnable(GL_DEPTH_TEST);
+		glEnable(GL_CULL_FACE);
+		glCullFace(GL_BACK);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	}
 
 	/**
@@ -227,8 +220,8 @@ public class MasterRenderer {
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void prepare() {
-		VoxelGL33.glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		VoxelGL33.glClearColor(VoxelVariables.RED, VoxelVariables.GREEN, VoxelVariables.BLUE, 1);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glClearColor(VoxelVariables.RED, VoxelVariables.GREEN, VoxelVariables.BLUE, 1);
 	}
 
 	/**

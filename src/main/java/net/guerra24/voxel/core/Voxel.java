@@ -24,7 +24,6 @@
 
 package net.guerra24.voxel.core;
 
-import static org.lwjgl.glfw.GLFW.glfwShowWindow;
 import static org.lwjgl.opengl.GL11.GL_RENDERER;
 import static org.lwjgl.opengl.GL11.GL_VENDOR;
 import static org.lwjgl.opengl.GL11.GL_VERSION;
@@ -54,7 +53,6 @@ public class Voxel {
 	public static float renderCalls = 0;
 	public static float renderCallsPerFrame = 0;
 	public static float totalRenderCalls = 0;
-	public static int errorTime = 0;
 
 	/**
 	 * Game Threads
@@ -122,7 +120,8 @@ public class Voxel {
 
 	private void postInit() {
 		api.postInit();
-		glfwShowWindow(Display.getWindow());
+		gameResources.getTextHandler().switchTo(gameResources.getTextHandler().getMainMenuText(),
+				gameResources.getTextMasterRenderer());
 		gameResources.getSoundSystem().play("menu1");
 	}
 
@@ -133,6 +132,9 @@ public class Voxel {
 		float delta = 0;
 		while (gameResources.getGameStates().loop) {
 			if (Display.timeCountRender > 1f) {
+				Logger.log("RCPS: " + renderCallsPerFrame);
+				Logger.log("FPS: " + Display.fps);
+				Logger.log("UPS: " + Display.ups);
 				Display.fps = Display.fpsCount;
 				Display.fpsCount = 0;
 				Display.ups = Display.upsCount;
@@ -156,7 +158,6 @@ public class Voxel {
 			gm.getRenderer().prepare();
 			gm.getRenderer().renderEntity(gm.mainMenuModels, gm);
 			gm.getGuiRenderer().renderGui(gm.guis2);
-			display.updateDisplay(30, gm);
 			break;
 		case IN_PAUSE:
 			gm.getRenderer().prepare();
@@ -165,16 +166,13 @@ public class Voxel {
 			gm.getSkyboxRenderer().render(VoxelVariables.RED, VoxelVariables.GREEN, VoxelVariables.BLUE, delta, gm);
 			gm.getParticleController().render(gm);
 			gm.getGuiRenderer().renderGui(gm.guis4);
-			display.updateDisplay(VoxelVariables.FPS, gm);
 			break;
 		case GAME:
 			gm.getCamera().update(delta, gameResources, guiResources, worldsHandler.getActiveWorld(), api);
 			gm.getPhysics().getMobManager().getPlayer().update(delta, gm, guiResources, worldsHandler.getActiveWorld(),
 					api);
 			gm.getFrustum().calculateFrustum(gm);
-
 			worldsHandler.getActiveWorld().lighting();
-
 			gm.getWaterFBO().begin(128, 128);
 			gm.getCamera().invertPitch();
 			gm.getRenderer().prepare();
@@ -193,14 +191,14 @@ public class Voxel {
 			gm.getRenderer().prepare();
 			gm.getPostProcessing().render(gm);
 			gm.getGuiRenderer().renderGui(gm.guis);
-			display.updateDisplay(VoxelVariables.FPS, gm);
 			break;
 		case LOADING_WORLD:
 			gm.getRenderer().prepare();
 			gm.getGuiRenderer().renderGui(gm.guis3);
-			display.updateDisplay(30, gm);
 			break;
 		}
+		gm.getTextMasterRenderer().render();
+		display.updateDisplay(VoxelVariables.FPS, gm);
 	}
 
 	public void update(GameResources gm, GuiResources gi, WorldsHandler world, float delta) {

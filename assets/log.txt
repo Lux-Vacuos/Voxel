@@ -1,0 +1,15 @@
+[INFO 10/31/2015 8:19:01 PM] [Voxel Main] Starting Settings GUI
+Exception in thread "Voxel Main" java.lang.UnsatisfiedLinkError: no lwjgl32 in java.library.path
+	at java.lang.ClassLoader.loadLibrary(Unknown Source)
+	at java.lang.Runtime.loadLibrary0(Unknown Source)
+	at java.lang.System.loadLibrary(Unknown Source)
+	at org.lwjgl.LWJGLUtil.loadLibrarySystem(LWJGLUtil.java:170)
+	at org.lwjgl.Sys.<clinit>(Sys.java:37)
+	at org.lwjgl.LWJGLUtil.initialize(LWJGLUtil.java:140)
+	at org.lwjgl.system.MemoryUtil.<clinit>(MemoryUtil.java:55)
+	at org.lwjgl.system.libffi.Closure.<clinit>(Closure.java:43)
+	at net.guerra24.voxel.graphics.opengl.Display.initDsiplay(Display.java:133)
+	at net.guerra24.voxel.core.Voxel.preInit(Voxel.java:85)
+	at net.guerra24.voxel.core.Voxel.mainLoop(Voxel.java:129)
+	at net.guerra24.voxel.core.Voxel.<init>(Voxel.java:80)
+	at net.guerra24.voxel.bootstrap.Bootstrap.main(Bootstrap.java:131)

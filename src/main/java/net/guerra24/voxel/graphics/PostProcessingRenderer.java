@@ -27,13 +27,14 @@ package net.guerra24.voxel.graphics;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11.GL_TRIANGLE_STRIP;
 import static org.lwjgl.opengl.GL11.glBindTexture;
-import static org.lwjgl.opengl.GL13.*;
+import static org.lwjgl.opengl.GL11.glDrawArrays;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
+import static org.lwjgl.opengl.GL13.glActiveTexture;
 import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
 import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 
 import net.guerra24.voxel.graphics.opengl.Display;
-import net.guerra24.voxel.graphics.opengl.VoxelGL33;
 import net.guerra24.voxel.graphics.shaders.PostProcessingShader;
 import net.guerra24.voxel.resources.GameResources;
 import net.guerra24.voxel.resources.Loader;
@@ -83,7 +84,7 @@ public class PostProcessingRenderer {
 		glEnableVertexAttribArray(0);
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, post_fbo.getTexture());
-		VoxelGL33.glDrawArrays(GL_TRIANGLE_STRIP, 0, quad.getVertexCount());
+		glDrawArrays(GL_TRIANGLE_STRIP, 0, quad.getVertexCount());
 		glDisableVertexAttribArray(0);
 		glBindVertexArray(0);
 		shader.stop();

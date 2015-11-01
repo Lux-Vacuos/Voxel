@@ -24,10 +24,48 @@
 
 package net.guerra24.voxel.graphics.opengl;
 
-import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.glfw.GLFW.GLFW_CONTEXT_VERSION_MAJOR;
+import static org.lwjgl.glfw.GLFW.GLFW_CONTEXT_VERSION_MINOR;
+import static org.lwjgl.glfw.GLFW.GLFW_OPENGL_CORE_PROFILE;
+import static org.lwjgl.glfw.GLFW.GLFW_OPENGL_DEBUG_CONTEXT;
+import static org.lwjgl.glfw.GLFW.GLFW_OPENGL_FORWARD_COMPAT;
+import static org.lwjgl.glfw.GLFW.GLFW_OPENGL_PROFILE;
+import static org.lwjgl.glfw.GLFW.GLFW_RELEASE;
+import static org.lwjgl.glfw.GLFW.GLFW_RESIZABLE;
+import static org.lwjgl.glfw.GLFW.GLFW_VISIBLE;
+import static org.lwjgl.glfw.GLFW.glfwCreateWindow;
+import static org.lwjgl.glfw.GLFW.glfwDefaultWindowHints;
+import static org.lwjgl.glfw.GLFW.glfwDestroyWindow;
+import static org.lwjgl.glfw.GLFW.glfwGetPrimaryMonitor;
+import static org.lwjgl.glfw.GLFW.glfwGetTime;
+import static org.lwjgl.glfw.GLFW.glfwGetVideoMode;
+import static org.lwjgl.glfw.GLFW.glfwGetWindowSize;
+import static org.lwjgl.glfw.GLFW.glfwInit;
+import static org.lwjgl.glfw.GLFW.glfwMakeContextCurrent;
+import static org.lwjgl.glfw.GLFW.glfwPollEvents;
+import static org.lwjgl.glfw.GLFW.glfwSetCharCallback;
+import static org.lwjgl.glfw.GLFW.glfwSetCursorEnterCallback;
+import static org.lwjgl.glfw.GLFW.glfwSetCursorPosCallback;
+import static org.lwjgl.glfw.GLFW.glfwSetErrorCallback;
+import static org.lwjgl.glfw.GLFW.glfwSetFramebufferSizeCallback;
+import static org.lwjgl.glfw.GLFW.glfwSetKeyCallback;
+import static org.lwjgl.glfw.GLFW.glfwSetMouseButtonCallback;
+import static org.lwjgl.glfw.GLFW.glfwSetScrollCallback;
+import static org.lwjgl.glfw.GLFW.glfwSetWindowFocusCallback;
+import static org.lwjgl.glfw.GLFW.glfwSetWindowIconifyCallback;
+import static org.lwjgl.glfw.GLFW.glfwSetWindowPos;
+import static org.lwjgl.glfw.GLFW.glfwSetWindowPosCallback;
+import static org.lwjgl.glfw.GLFW.glfwSetWindowRefreshCallback;
+import static org.lwjgl.glfw.GLFW.glfwSetWindowSizeCallback;
+import static org.lwjgl.glfw.GLFW.glfwSwapBuffers;
+import static org.lwjgl.glfw.GLFW.glfwSwapInterval;
+import static org.lwjgl.glfw.GLFW.glfwTerminate;
+import static org.lwjgl.glfw.GLFW.glfwWindowHint;
+import static org.lwjgl.glfw.GLFW.glfwWindowShouldClose;
 import static org.lwjgl.opengl.GL.createCapabilities;
 import static org.lwjgl.opengl.GL11.GL_FALSE;
 import static org.lwjgl.opengl.GL11.GL_TRUE;
+import static org.lwjgl.opengl.GL11.glViewport;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 import java.io.FileInputStream;
@@ -140,8 +178,9 @@ public class Display {
 			throw new IllegalStateException("Unable to initialize GLFW");
 
 		glfwDefaultWindowHints();
-		glfwWindowHint(GLFW_VISIBLE, GL_FALSE);
-		glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
+		glfwWindowHint(GLFW_VISIBLE, GL_TRUE);
+		if (VoxelVariables.debug)
+			glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
 
 		displayResizable = false;
 		glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
@@ -302,7 +341,7 @@ public class Display {
 			e.printStackTrace();
 		}
 		createCapabilities();
-		VoxelGL33.glViewport(0, 0, displayWidth, displayHeight);
+		glViewport(0, 0, displayWidth, displayHeight);
 		lastLoopTimeUpdate = getTime();
 		lastLoopTimeRender = getTime();
 		displayCreated = true;

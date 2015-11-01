@@ -157,7 +157,7 @@ public class InfinityWorld implements IWorld {
 				int xx = xPlayChunk + xr;
 				for (int yr = -tempRadius; yr <= tempRadius; yr++) {
 					int yy = yPlayChunk + yr;
-					if (yy >= 0) {
+					if (yy >= 0 && yy < 8) {
 						if (zr * zr + xr * xr + yr * yr <= (VoxelVariables.genRadius - VoxelVariables.radiusLimit)
 								* (VoxelVariables.genRadius - VoxelVariables.radiusLimit)
 								* (VoxelVariables.genRadius - VoxelVariables.radiusLimit)) {
@@ -172,10 +172,10 @@ public class InfinityWorld implements IWorld {
 								}
 							} else {
 								Chunk chunk = getChunk(chunkDim, xx, yy, zz);
+								if (!chunk.created)
+									chunk.createBasicTerrain(this);
 								if (gm.getFrustum().cubeInFrustum(chunk.posX, chunk.posY, chunk.posZ, chunk.posX + 16,
 										chunk.posY + 16, chunk.posZ + 16)) {
-									if (!chunk.created)
-										chunk.createBasicTerrain(this);
 									chunk.rebuild(service, this);
 								}
 							}
