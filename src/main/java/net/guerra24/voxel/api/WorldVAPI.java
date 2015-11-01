@@ -52,7 +52,6 @@ public class WorldVAPI {
 	 *            Use APIWorld.getLastId()
 	 * @param handler
 	 *            Handler
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void registerChunkHandler(int id, ChunkHandler handler) {
 		modsWorld.put(id, handler);
@@ -64,7 +63,6 @@ public class WorldVAPI {
 	 * @param id
 	 *            ID
 	 * @return Mod
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 * 
 	 */
 	public ChunkHandler getChunkHandler(int id) {
@@ -78,7 +76,6 @@ public class WorldVAPI {
 	 *            Block id
 	 * @param block
 	 *            Block
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void registerBlock(byte id, IBlock block) {
 		Block.registerBlock(id, block);
@@ -88,7 +85,6 @@ public class WorldVAPI {
 	 * Get last avaiable ID
 	 * 
 	 * @return ID
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public int getLastID() {
 		return modsWorld.size();
@@ -97,7 +93,6 @@ public class WorldVAPI {
 	/**
 	 * Dispose the APIWorld
 	 * 
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void dispose() {
 		modsWorld.clear();

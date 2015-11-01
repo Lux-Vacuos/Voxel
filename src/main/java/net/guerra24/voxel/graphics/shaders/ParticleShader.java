@@ -47,7 +47,6 @@ public class ParticleShader extends ShaderProgram {
 	/**
 	 * Constructor
 	 * 
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public ParticleShader() {
 		super(VoxelVariables.VERTEX_FILE_PARTICLE, VoxelVariables.FRAGMENT_FILE_PARTICLE);
@@ -71,7 +70,6 @@ public class ParticleShader extends ShaderProgram {
 	 * 
 	 * @param matrix
 	 *            Transformation Matrix
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void loadTransformationMatrix(Matrix4f matrix) {
 		super.loadMatrix(loc_transformationMatrix, matrix);
@@ -82,7 +80,6 @@ public class ParticleShader extends ShaderProgram {
 	 * 
 	 * @param camera
 	 *            Camera
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void loadviewMatrix(Camera camera) {
 		Matrix4f viewMatrix = Maths.createViewMatrix(camera);
@@ -93,7 +90,6 @@ public class ParticleShader extends ShaderProgram {
 	 * Loads Projection Matrix to the shader
 	 * 
 	 * @param projection Projection Matrix
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void loadProjectionMatrix(Matrix4f projection) {
 		super.loadMatrix(loc_projectionMatrix, projection);

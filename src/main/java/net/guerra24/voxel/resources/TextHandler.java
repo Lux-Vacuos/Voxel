@@ -15,16 +15,17 @@ public class TextHandler {
 	private FontType font;
 
 	private List<GUIText> mainMenuText;
-	private List<GUIText> activeText;
+	private List<GUIText> gameSPText;
 
 	public TextHandler(Loader loader) {
 		font = new FontType(loader.loadTextureFont("tahoma"), new File("assets/fonts/tahoma.fnt"));
 		mainMenuText = new ArrayList<GUIText>();
-		activeText = new ArrayList<GUIText>();
-		initManMenuText();
+		gameSPText = new ArrayList<GUIText>();
+		initMainMenuText();
+		initGAMESP();
 	}
 
-	private void initManMenuText() {
+	private void initMainMenuText() {
 		GUIText textVersion = new GUIText(
 				"Voxel " + VoxelVariables.version + " " + VoxelVariables.state + " Build " + VoxelVariables.build, 1,
 				font, new Vector2f(0.002f, 0.97f), 1, false);
@@ -47,18 +48,31 @@ public class TextHandler {
 			mainMenuText.add(macWarning);
 	}
 
-	public void switchTo(List<GUIText> source, TextMasterRenderer textMasterRenderer) {
-		for (GUIText text : activeText) {
+	private void initGAMESP() {
+		GUIText textVersion = new GUIText(
+				"Voxel " + VoxelVariables.version + " " + VoxelVariables.state + " Build " + VoxelVariables.build, 1,
+				font, new Vector2f(0.002f, 0.97f), 1, false);
+		textVersion.setColour(0.79f, 0.79f, 0.79f);
+		gameSPText.add(textVersion);
+	}
+
+	public void remove(List<GUIText> source, TextMasterRenderer textMasterRenderer) {
+		for (GUIText text : source) {
 			text.remove(textMasterRenderer);
 		}
-		activeText.clear();
-		activeText.addAll(source);
-		for (GUIText text : activeText) {
+	}
+
+	public void add(List<GUIText> source, TextMasterRenderer textMasterRenderer) {
+		for (GUIText text : source) {
 			text.add(textMasterRenderer);
 		}
 	}
 
 	public List<GUIText> getMainMenuText() {
 		return mainMenuText;
+	}
+
+	public List<GUIText> getGameSPText() {
+		return gameSPText;
 	}
 }

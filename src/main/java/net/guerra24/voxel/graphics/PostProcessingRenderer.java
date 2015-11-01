@@ -57,7 +57,6 @@ public class PostProcessingRenderer {
 	 * 
 	 * @param loader
 	 *            Loader
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public PostProcessingRenderer(Loader loader) {
 		float[] positions = { -1, 1, -1, -1, 1, 1, 1, -1 };
@@ -74,7 +73,6 @@ public class PostProcessingRenderer {
 	/**
 	 * Render the Post Processing Quad
 	 * 
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void render(GameResources gm) {
 		shader.start();
@@ -103,7 +101,6 @@ public class PostProcessingRenderer {
 	 * Post Processing FBO
 	 * 
 	 * @return FrameBuffer
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public FrameBuffer getPost_fbo() {
 		return post_fbo;

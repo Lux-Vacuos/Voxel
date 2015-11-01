@@ -51,7 +51,6 @@ public class SkyboxShader extends ShaderProgram {
 	/**
 	 * Constructor, Create a Skybox Shader
 	 * 
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public SkyboxShader() {
 		super(VoxelVariables.VERTEX_FILE_SKYBOX, VoxelVariables.FRAGMENT_FILE_SKYBOX);
@@ -89,7 +88,6 @@ public class SkyboxShader extends ShaderProgram {
 	 *            Camera
 	 * @param delta
 	 *            Delta
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void loadViewMatrix(Camera camera, float delta) {
 		Matrix4f matrix = Maths.createViewMatrix(camera);
@@ -110,7 +108,6 @@ public class SkyboxShader extends ShaderProgram {
 	 *            Green Value
 	 * @param b
 	 *            Blue Value
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void loadFog(float r, float g, float b) {
 		super.loadVector(loc_fogColour, new Vector3f(r, g, b));
@@ -119,7 +116,6 @@ public class SkyboxShader extends ShaderProgram {
 	/**
 	 * Loads Textures ID
 	 * 
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void connectTextureUnits() {
 		super.loadInt(loc_cubeMap, 0);
@@ -131,7 +127,6 @@ public class SkyboxShader extends ShaderProgram {
 	 * 
 	 * @param blend
 	 *            Value
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void loadBlendFactor(float blend) {
 		super.loadFloat(loc_blendFactor, blend);

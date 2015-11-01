@@ -72,7 +72,6 @@ public class WaterRenderer {
 	 *            Water Shader
 	 * @param projectionMatrix
 	 *            A Matrix4f Projection
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public WaterRenderer(Loader loader, WaterShader shader, Matrix4f projectionMatrix) {
 		this.shader = shader;
@@ -92,7 +91,6 @@ public class WaterRenderer {
 	 *            A list of Water Tiles
 	 * @param camera
 	 *            A Camera
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void render(Queue<WaterTile> waters, GameResources gm) {
 		prepareRender(gm);
@@ -110,7 +108,6 @@ public class WaterRenderer {
 	 * 
 	 * @param camera
 	 *            A Camera
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	private void prepareRender(GameResources gm) {
 		shader.start();
@@ -135,7 +132,6 @@ public class WaterRenderer {
 	 * 
 	 * @param delta
 	 *            Delta
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void update(float delta) {
 		moveFactor += VoxelVariables.WAVE_SPEED * delta;
@@ -145,7 +141,6 @@ public class WaterRenderer {
 	/**
 	 * Unbinds the VAOs
 	 * 
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	private void unbind() {
 		glDisableVertexAttribArray(0);
@@ -159,7 +154,6 @@ public class WaterRenderer {
 	 * 
 	 * @param loader
 	 *            Game Loader
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	private void setUpVAO(Loader loader) {
 		float[] vertices = { -1, -1, -1, 1, 1, -1, 1, -1, -1, 1, 1, 1 };

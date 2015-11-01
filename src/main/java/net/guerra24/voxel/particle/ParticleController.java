@@ -125,7 +125,6 @@ public class ParticleController implements IParticleController {
 	 * 
 	 * @param entity
 	 *            An Entity
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	private void processParticle(Particle particle) {
 		TexturedModel entityModel = particle.getModel();

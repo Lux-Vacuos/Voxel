@@ -99,7 +99,6 @@ public class SkyboxRenderer {
 	 *            Game Loader
 	 * @param projectionMatrix
 	 *            Matrix4f, Projection Matrix
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public SkyboxRenderer(Loader loader, Matrix4f projectionMatrix) {
 		cube = loader.loadToVAO(VERTICES, 3);
@@ -126,7 +125,6 @@ public class SkyboxRenderer {
 	 *            Fog Blue Color
 	 * @param delta
 	 *            Delta
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void render(float r, float g, float b, float delta, GameResources gm) {
 		shader.start();
@@ -146,7 +144,6 @@ public class SkyboxRenderer {
 	 * 
 	 * @param delta
 	 *            Delta
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void update(float delta) {
 		time += delta * 10;
@@ -156,7 +153,6 @@ public class SkyboxRenderer {
 	/**
 	 * Updates the Skybox Textures
 	 * 
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	private void bindTextures() {
 		int texture1;
@@ -190,7 +186,6 @@ public class SkyboxRenderer {
 	 * Get the blend factor
 	 * 
 	 * @return time
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public float getBlendFactor() {
 		return blendFactor;
@@ -200,7 +195,6 @@ public class SkyboxRenderer {
 	 * Get the world time
 	 * 
 	 * @return time
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public float getTime() {
 		return time;

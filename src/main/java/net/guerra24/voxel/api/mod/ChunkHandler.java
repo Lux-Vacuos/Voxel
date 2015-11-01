@@ -37,7 +37,6 @@ public abstract class ChunkHandler {
 	 * 
 	 * @param blocks
 	 *            Blocks
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public abstract void chunkGen(byte[][][] blocks, int x, int y, int z);
 }

@@ -204,7 +204,6 @@ public class Display {
 	/**
 	 * Create the LWJGL CallBacks
 	 * 
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void createCallBacks() {
 		keyCallback = new GLFWKeyCallback() {
@@ -302,7 +301,6 @@ public class Display {
 	/**
 	 * Set the LWJGL CallBacks
 	 * 
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void setCallbacks() {
 		glfwSetKeyCallback(window, keyCallback);
@@ -322,7 +320,6 @@ public class Display {
 	/**
 	 * Creates and Sets the Display
 	 * 
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void startUp() {
 		Logger.log("Creating Display");
@@ -352,7 +349,6 @@ public class Display {
 	 * 
 	 * @param fps
 	 *            Game Max FPS
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void updateDisplay(int fps, GameResources gm) {
 		ByteBuffer w = BufferUtils.createByteBuffer(4);
@@ -371,7 +367,6 @@ public class Display {
 	/**
 	 * Destroy the display
 	 * 
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void closeDisplay() {
 		glfwDestroyWindow(window);
@@ -398,7 +393,6 @@ public class Display {
 	 *            Icon Path
 	 * @return ByteBuffer
 	 * @throws IOException
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	private static ByteBuffer loadIcon(String path) throws IOException {
 		InputStream inputStream = new FileInputStream(path);
@@ -417,7 +411,6 @@ public class Display {
 	 * Get the time
 	 * 
 	 * @return time
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public static double getTime() {
 		return glfwGetTime();
@@ -427,7 +420,6 @@ public class Display {
 	 * Calculates the Delta
 	 * 
 	 * @return Delta
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public static float getDeltaUpdate() {
 		double time = getTime();
@@ -441,7 +433,6 @@ public class Display {
 	 * Calculates the Delta
 	 * 
 	 * @return Delta
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public static float getDeltaRender() {
 		double time = getTime();
@@ -465,7 +456,6 @@ public class Display {
 	 * If a close is requested
 	 * 
 	 * @return Boolean
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public static boolean isCloseRequested() {
 		return glfwWindowShouldClose(window) == GL_TRUE;

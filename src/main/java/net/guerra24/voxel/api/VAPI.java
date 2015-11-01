@@ -54,7 +54,6 @@ public class VAPI {
 	/**
 	 * Pre initialize the mod, load config data
 	 * 
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void preInit() {
 		Logger.log("Pre Initializing Mods");
@@ -71,7 +70,6 @@ public class VAPI {
 	/**
 	 * Initialize the mod, load textures
 	 * 
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void init() {
 		Logger.log("Initializing Mods");
@@ -79,7 +77,12 @@ public class VAPI {
 			try {
 				mods.get(x).init();
 			} catch (NoSuchMethodError e) {
-				Logger.log("Mod " + mods.get(x).getName() + " has failed to load in Init");
+				Logger.warn("Mod " + mods.get(x).getName() + " has failed to load in Init");
+				Logger.warn("Method not found");
+				e.printStackTrace();
+			} catch(NoSuchFieldError e){
+				Logger.warn("Mod " + mods.get(x).getName() + " has failed to load in Init");
+				Logger.warn("Field not found");
 				e.printStackTrace();
 			}
 		}
@@ -88,7 +91,6 @@ public class VAPI {
 	/**
 	 * Post initialize the mod, register all mod data
 	 * 
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void postInit() {
 		Logger.log("Post Initializing Mods");
@@ -98,6 +100,7 @@ public class VAPI {
 				Logger.log("Succesfully Loaded: " + mods.get(x).getName() + " ID: " + mods.get(x).getID());
 			} catch (NoSuchMethodError e) {
 				Logger.warn("Mod " + mods.get(x).getName() + " has failed to load in PostInit");
+				Logger.warn("Method not found");
 				e.printStackTrace();
 			}
 		}
@@ -110,7 +113,6 @@ public class VAPI {
 	 *            Mod ID
 	 * @param result
 	 *            Mod
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public static void registerMod(int id, Mod mod) {
 		mods.put(id, mod);
@@ -122,7 +124,6 @@ public class VAPI {
 	 * @param id
 	 *            ID
 	 * @return Mod
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 * 
 	 */
 	public static Mod getMod(int id) {
@@ -133,7 +134,6 @@ public class VAPI {
 	 * Get last avaiable ID
 	 * 
 	 * @return ID
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public static int getLastID() {
 		return mods.size();
@@ -142,7 +142,6 @@ public class VAPI {
 	/**
 	 * Dispose the API
 	 * 
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void dispose() {
 		mods.clear();

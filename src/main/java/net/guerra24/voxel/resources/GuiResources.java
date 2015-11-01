@@ -51,7 +51,6 @@ public class GuiResources {
 	/**
 	 * Constructor
 	 * 
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public GuiResources(GameResources gm) {
 		loadGuiTexture(gm);
@@ -63,7 +62,6 @@ public class GuiResources {
 	 * 
 	 * @param gm
 	 *            Game Resources
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void loadGuiTexture(GameResources gm) {
 		button = gm.getLoader().loadTextureGui("Button");
@@ -88,7 +86,6 @@ public class GuiResources {
 	 * 
 	 * @param gm
 	 *            Game Resources
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void addGuiTextures(GameResources gm) {
 		gm.guis.add(stats);

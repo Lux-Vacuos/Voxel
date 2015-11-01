@@ -66,7 +66,6 @@ public class EntityRenderer {
 	 *            Entity Shader
 	 * @param projectionMatrix
 	 *            A Matrix4f Projection
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public EntityRenderer(EntityShader shader, Matrix4f projectionMatrix) {
 		this.shader = shader;
@@ -81,7 +80,6 @@ public class EntityRenderer {
 	 * 
 	 * @param blockEntities
 	 *            A List of entity's
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void renderBlockEntity(Map<TexturedModel, List<BlockEntity>> blockEntities, GameResources gm) {
 		for (TexturedModel model : blockEntities.keySet()) {
@@ -101,7 +99,6 @@ public class EntityRenderer {
 	 * 
 	 * @param blockEntities
 	 *            A List of entity's
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void renderEntity(Map<TexturedModel, List<Entity>> blockEntities, GameResources gm) {
 		for (TexturedModel model : blockEntities.keySet()) {
@@ -119,7 +116,6 @@ public class EntityRenderer {
 	 * Prepares the Entity Textured Model and binds the VAOs
 	 * 
 	 * @param model
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	private void prepareTexturedModel(TexturedModel model, GameResources gm) {
 		RawModel rawmodel = model.getRawModel();
@@ -134,7 +130,6 @@ public class EntityRenderer {
 	/**
 	 * UnBinds the VAOs
 	 * 
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	private void unbindTexturedModel() {
 		glDisableVertexAttribArray(0);
@@ -147,7 +142,6 @@ public class EntityRenderer {
 	 * Prepares the Textured Model Translation, Rotation and Scale
 	 * 
 	 * @param entity
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	private void prepareInstance(BlockEntity entity) {
 		Matrix4f transformationMatrix = Maths.createTransformationMatrix(entity.getPosition(), entity.getRotX(),
@@ -160,7 +154,6 @@ public class EntityRenderer {
 	 * Prepares the Textured Model Translation, Rotation and Scale
 	 * 
 	 * @param entity
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	private void prepareInstance(Entity entity) {
 		Matrix4f transformationMatrix = Maths.createTransformationMatrix(entity.getPosition(), entity.getRotX(),

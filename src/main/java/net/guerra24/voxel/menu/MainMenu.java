@@ -1,30 +1,23 @@
 package net.guerra24.voxel.menu;
 
-import net.guerra24.voxel.resources.GameResources;
-import net.guerra24.voxel.resources.models.ModelTexture;
-import net.guerra24.voxel.resources.models.RawModel;
-import net.guerra24.voxel.resources.models.TexturedModel;
+import net.guerra24.voxel.util.vector.Vector2f;
 
-/**
- * Main Menu
- * 
- * @author Guerra24 <pablo230699@hotmail.com>
- * @category Assets
- */
 public class MainMenu {
 
-	public static TexturedModel planet;
+	private Button playButton;
+	private Button exitButton;
 
-	/**
-	 * Loads the Main Menu Models
-	 * 
-	 * @param gm
-	 *            GameResources
-	 * @author Guerra24 <pablo230699@hotmail.com>
-	 */
-	public static void loadModels(GameResources gm) {
-		RawModel planetModel = gm.getLoader().getObjLoader().loadObjModel("Planet", gm.getLoader());
-		ModelTexture planetTexture = new ModelTexture(gm.getLoader().loadTextureEntity("Planet"));
-		planet = new TexturedModel(planetModel, planetTexture);
+	public MainMenu() {
+		playButton = new Button(new Vector2f(20, 436), new Vector2f(320, 528));
+		exitButton = new Button(new Vector2f(20, 324), new Vector2f(320, 416));
 	}
+
+	public Button getPlayButton() {
+		return playButton;
+	}
+
+	public Button getExitButton() {
+		return exitButton;
+	}
+
 }

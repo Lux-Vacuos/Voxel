@@ -24,8 +24,8 @@ public class TextMasterRenderer {
 		this.loader = loader;
 		renderer = new FontRenderer();
 	}
-	
-	public void render(){
+
+	public void render() {
 		renderer.render(texts);
 	}
 
@@ -42,10 +42,10 @@ public class TextMasterRenderer {
 		textBatch.add(text);
 	}
 
-	public void remoteText(GUIText text) {
-		List<GUIText> textBatch = texts.get(text);
+	public void removeText(GUIText text) {
+		List<GUIText> textBatch = texts.get(text.getFont());
 		textBatch.remove(text);
-		if(textBatch.isEmpty()){
+		if (textBatch.isEmpty()) {
 			texts.remove(text.getFont());
 		}
 	}

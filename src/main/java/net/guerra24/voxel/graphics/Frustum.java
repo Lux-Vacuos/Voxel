@@ -66,7 +66,6 @@ public class Frustum {
 	 *            2D float frustum
 	 * @param side
 	 *            side
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void normalizePlane(float[][] frustum, int side) {
 		float magnitude = (float) Math.sqrt(frustum[side][A] * frustum[side][A] + frustum[side][B] * frustum[side][B]
@@ -83,7 +82,6 @@ public class Frustum {
 	 * 
 	 * @param gm
 	 *            GameResources
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void calculateFrustum(GameResources gm) {
 		float[] clip = new float[16];
@@ -137,7 +135,6 @@ public class Frustum {
 	 * @param z
 	 *            Z Position
 	 * @return true if in Frustum
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public boolean pointInFrustum(float x, float y, float z) {
 		for (int i = 0; i < 6; i++) {
@@ -160,7 +157,6 @@ public class Frustum {
 	 * @param radius
 	 *            Sphere Radius
 	 * @return true if in Frustum
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public boolean sphereInFrustum(float x, float y, float z, float radius) {
 		for (int i = 0; i < 6; i++) {
@@ -180,7 +176,6 @@ public class Frustum {
 	 * @param size
 	 *            Size of the cube
 	 * @return true if in Frustum
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public boolean cubeInFrustum(Vector3f center, float size) {
 		return cubeInFrustum(center.x, center.y, center.z, size);
@@ -198,7 +193,6 @@ public class Frustum {
 	 * @param size
 	 *            Size of the cube
 	 * @return true if in Frustum
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public boolean cubeInFrustum(float x, float y, float z, float size) {
 		for (int i = 0; i < 6; i++) {
@@ -248,7 +242,6 @@ public class Frustum {
 	 * @param z2
 	 *            Z2 Position
 	 * @return true if in Frustum
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public boolean cubeInFrustum(float x1, float y1, float z1, float x2, float y2, float z2) {
 		for (int i = 0; i < 6; i++) {
@@ -277,7 +270,6 @@ public class Frustum {
 	/**
 	 * Frustum constructor
 	 * 
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public Frustum() {
 		clip_b = BufferUtils.createFloatBuffer(16);

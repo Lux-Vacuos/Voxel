@@ -64,7 +64,6 @@ public class ParticleRenderer {
 	 * 
 	 * @param shader
 	 *            Particle Shader
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public ParticleRenderer(ParticleShader shader) {
 		this.shader = shader;
@@ -77,7 +76,6 @@ public class ParticleRenderer {
 	 *            Batch of particles
 	 * @param gm
 	 *            GameResources
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void render(Map<TexturedModel, List<Particle>> particles, GameResources gm) {
 		for (TexturedModel model : particles.keySet()) {
@@ -96,7 +94,6 @@ public class ParticleRenderer {
 	 * 
 	 * @param model
 	 *            TexturedModel
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	private void prepareTexturedModel(TexturedModel model, GameResources gm) {
 		RawModel rawmodel = model.getRawModel();
@@ -122,7 +119,6 @@ public class ParticleRenderer {
 	 * Prepares the Textured Model Translation, Rotation and Scale
 	 * 
 	 * @param entity
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	private void prepareInstance(Particle particle) {
 		Matrix4f transformationMatrix = Maths.createTransformationMatrix(particle.getPosition(), particle.getRotX(),

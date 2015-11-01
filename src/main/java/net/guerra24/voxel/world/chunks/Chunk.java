@@ -67,7 +67,6 @@ public class Chunk {
 	 *            Chunk Z
 	 * @param world
 	 *            Dimensional World
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public Chunk(int dim, int cx, int cy, int cz, IWorld world) {
 		this.dim = dim;
@@ -85,7 +84,6 @@ public class Chunk {
 	 * 
 	 * @param world
 	 *            Dimensional World
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void init(IWorld world) {
 		createList();
@@ -96,7 +94,6 @@ public class Chunk {
 	/**
 	 * Initialize List
 	 * 
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void createList() {
 		blocksMesh = new ConcurrentLinkedQueue<Object>();

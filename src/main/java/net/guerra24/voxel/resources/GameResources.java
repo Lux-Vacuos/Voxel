@@ -30,7 +30,7 @@ import java.util.Random;
 
 import com.google.gson.Gson;
 
-import net.guerra24.voxel.core.GameStates;
+import net.guerra24.voxel.core.GlobalStates;
 import net.guerra24.voxel.graphics.FrameBuffer;
 import net.guerra24.voxel.graphics.Frustum;
 import net.guerra24.voxel.graphics.GuiRenderer;
@@ -38,7 +38,6 @@ import net.guerra24.voxel.graphics.MasterRenderer;
 import net.guerra24.voxel.graphics.PostProcessingRenderer;
 import net.guerra24.voxel.graphics.SkyboxRenderer;
 import net.guerra24.voxel.graphics.TextMasterRenderer;
-import net.guerra24.voxel.menu.MainMenu;
 import net.guerra24.voxel.particle.ParticleController;
 import net.guerra24.voxel.resources.models.GuiTexture;
 import net.guerra24.voxel.sound.LibraryLWJGLOpenAL;
@@ -47,12 +46,9 @@ import net.guerra24.voxel.sound.soundsystem.SoundSystemConfig;
 import net.guerra24.voxel.sound.soundsystem.SoundSystemException;
 import net.guerra24.voxel.sound.soundsystem.codecs.CodecJOgg;
 import net.guerra24.voxel.util.Logger;
-import net.guerra24.voxel.util.vector.Vector3f;
 import net.guerra24.voxel.world.Physics;
 import net.guerra24.voxel.world.block.Block;
 import net.guerra24.voxel.world.entities.Camera;
-import net.guerra24.voxel.world.entities.IEntity;
-import net.guerra24.voxel.world.entities.Mob;
 
 /**
  * Game Resources
@@ -70,18 +66,15 @@ public class GameResources {
 	public List<GuiTexture> guis3 = new ArrayList<GuiTexture>();
 	public List<GuiTexture> guis4 = new ArrayList<GuiTexture>();
 
-	public List<IEntity> mainMenuModels = new ArrayList<IEntity>();
-
 	private Random rand;
 	private Loader loader;
 	private Camera camera;
 	private MasterRenderer renderer;
 	private SkyboxRenderer skyboxRenderer;
 	private GuiRenderer guiRenderer;
-	private GameStates gameStates;
 	private TextMasterRenderer textMasterRenderer;
 	private TextHandler textHandler;
-
+	private GlobalStates globalStates;
 	private ParticleController particleController;
 	private PostProcessingRenderer postProcessing;
 	private SoundSystem soundSystem;
@@ -93,7 +86,6 @@ public class GameResources {
 	/**
 	 * Constructor, Create the Game Resources and Init Loader
 	 * 
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public GameResources() {
 	}
@@ -101,7 +93,6 @@ public class GameResources {
 	/**
 	 * Initialize the Game Objects
 	 * 
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void init() {
 		loader = new Loader();
@@ -114,7 +105,6 @@ public class GameResources {
 		textHandler = new TextHandler(loader);
 		particleController = new ParticleController(loader);
 		postProcessing = new PostProcessingRenderer(loader);
-		gameStates = new GameStates();
 		waterFBO = new FrameBuffer(false, false, 128, 128);
 		physics = new Physics(this);
 		frustum = new Frustum();
@@ -126,7 +116,7 @@ public class GameResources {
 			Logger.error("Unable to bind SoundSystem Libs");
 		}
 		soundSystem = new SoundSystem();
-
+		globalStates = new GlobalStates();
 		Block.initBasicBlocks();
 
 	}
@@ -134,7 +124,6 @@ public class GameResources {
 	/**
 	 * Load Music
 	 * 
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void music() {
 		soundSystem.backgroundMusic("menu1", "menu1.ogg", true);
@@ -143,18 +132,13 @@ public class GameResources {
 	/**
 	 * Load Resources like Mobs
 	 * 
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void addRes() {
-		MainMenu.loadModels(this);
-		Mob planet = new Mob(MainMenu.planet, new Vector3f(-1, 0, -3), 0, 90, 0, 1);
-		mainMenuModels.add(planet);
 	}
 
 	/**
 	 * Disposes all objects
 	 * 
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void cleanUp() {
 		particleController.dispose();
@@ -180,10 +164,6 @@ public class GameResources {
 
 	public List<GuiTexture> getGuis4() {
 		return guis4;
-	}
-
-	public List<IEntity> getMainMenuModels() {
-		return mainMenuModels;
 	}
 
 	public Random getRand() {
@@ -212,10 +192,6 @@ public class GameResources {
 
 	public GuiRenderer getGuiRenderer() {
 		return guiRenderer;
-	}
-
-	public GameStates getGameStates() {
-		return gameStates;
 	}
 
 	public SoundSystem getSoundSystem() {
@@ -248,6 +224,10 @@ public class GameResources {
 
 	public TextHandler getTextHandler() {
 		return textHandler;
+	}
+
+	public GlobalStates getGlobalStates() {
+		return globalStates;
 	}
 
 }

@@ -111,7 +111,6 @@ public class Loader {
 	 * @param indices
 	 *            Array of Indices
 	 * @return A RawModel
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public RawModel loadToVAO(float[] positions, float[] textureCoords, float[] normals, int[] indices) {
 		int vaoID = createVAO();
@@ -153,7 +152,6 @@ public class Loader {
 	 * @param fileName
 	 *            Block Texture Name
 	 * @return Texture ID
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public int loadTextureBlocks(String fileName) {
 		Texture texture = null;
@@ -194,7 +192,6 @@ public class Loader {
 	 * @param fileName
 	 *            Block Texture Name
 	 * @return Texture ID
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public int loadTextureEntity(String fileName) {
 		Texture texture = null;
@@ -220,7 +217,6 @@ public class Loader {
 	 * @param fileName
 	 *            Gui Texture Name
 	 * @return Texture ID
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public int loadTextureGui(String fileName) {
 		Texture texture = null;
@@ -240,7 +236,6 @@ public class Loader {
 	/**
 	 * Clear All VAOs, VBOs and Textures
 	 * 
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void cleanUp() {
 		for (int vao : vaos) {
@@ -260,7 +255,6 @@ public class Loader {
 	 * @param textureFiles
 	 *            Array of Texture Names
 	 * @return Texture ID
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public int loadCubeMap(String[] textureFiles) {
 		int texID = glGenTextures();
@@ -287,7 +281,6 @@ public class Loader {
 	 * @param file.
 	 *            Name
 	 * @return EntityTexture
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	private EntityTexture decodeTextureFile(InputStream file) {
 		int width = 0;
@@ -313,7 +306,6 @@ public class Loader {
 	 * Create VAO
 	 * 
 	 * @return VaoID
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	private int createVAO() {
 		int vaoID = glGenVertexArrays();
@@ -331,7 +323,6 @@ public class Loader {
 	 *            Coord Size
 	 * @param data
 	 *            Data
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	private void storeDataInAttributeList(int attributeNumber, int coordinateSize, float[] data) {
 		int vboID = glGenBuffers();
@@ -346,7 +337,6 @@ public class Loader {
 	/**
 	 * Unbids the VAO
 	 * 
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	private void unbindVAO() {
 		glBindVertexArray(0);
@@ -357,7 +347,6 @@ public class Loader {
 	 * 
 	 * @param indices
 	 *            Array of Indices
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	private void bindIndicesBuffer(int[] indices) {
 		int vboID = glGenBuffers();

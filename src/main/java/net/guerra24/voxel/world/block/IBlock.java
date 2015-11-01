@@ -8,7 +8,6 @@ public abstract class IBlock {
 	 * Gets the Block ID
 	 * 
 	 * @return ID
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public abstract byte getId();
 
@@ -18,7 +17,6 @@ public abstract class IBlock {
 	 * @param pos
 	 *            Position
 	 * @return BlockEntity
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public abstract BlockEntity getFaceUp(Vector3f pos);
 
@@ -28,7 +26,6 @@ public abstract class IBlock {
 	 * @param pos
 	 *            Position
 	 * @return Entity
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public abstract BlockEntity getFaceDown(Vector3f pos);
 
@@ -38,7 +35,6 @@ public abstract class IBlock {
 	 * @param pos
 	 *            Position
 	 * @return BlockEntity
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public abstract BlockEntity getFaceEast(Vector3f pos);
 
@@ -57,7 +53,6 @@ public abstract class IBlock {
 	 * @param pos
 	 *            Position
 	 * @return BlockEntity
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public abstract BlockEntity getFaceNorth(Vector3f pos);
 
@@ -67,7 +62,6 @@ public abstract class IBlock {
 	 * @param pos
 	 *            Position
 	 * @return BlockEntity
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public abstract BlockEntity getFaceSouth(Vector3f pos);
 
@@ -77,7 +71,6 @@ public abstract class IBlock {
 	 * @param pos
 	 *            Position
 	 * @return WaterTile
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public abstract WaterTile getWaterTitle(Vector3f pos);
 
@@ -87,7 +80,6 @@ public abstract class IBlock {
 	 * @param pos
 	 *            Position
 	 * @return BlockEntity
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public abstract BlockEntity getSingleModel(Vector3f pos);
 

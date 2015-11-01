@@ -73,7 +73,6 @@ public class MasterRenderer {
 	 * 
 	 * @param loader
 	 *            Game Loader
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public MasterRenderer(Loader loader) {
 		initGL();
@@ -87,7 +86,6 @@ public class MasterRenderer {
 	/**
 	 * Initialize the OpenGL Code
 	 * 
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void initGL() {
 		glEnable(GL_DEPTH_TEST);
@@ -105,7 +103,6 @@ public class MasterRenderer {
 	 *            A list of Lights
 	 * @param camera
 	 *            A Camera
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void renderChunk(Queue<Object> cubes, GameResources gm) {
 		for (Object entity : cubes) {
@@ -126,7 +123,6 @@ public class MasterRenderer {
 	 *            A list of Lights
 	 * @param camera
 	 *            A Camera
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void renderEntity(List<IEntity> list, GameResources gm) {
 		for (IEntity entity : list) {
@@ -146,7 +142,6 @@ public class MasterRenderer {
 	 *            A list of lights
 	 * @param camera
 	 *            A Camera
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	private void renderBlocks(GameResources gm) {
 		shader.start();
@@ -165,7 +160,6 @@ public class MasterRenderer {
 	 *            A list of Lights
 	 * @param camera
 	 *            A Camera
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	private void renderEntity(GameResources gm) {
 		shader.start();
@@ -181,7 +175,6 @@ public class MasterRenderer {
 	 * 
 	 * @param BlockEntity
 	 *            An Entity
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	private void processBlockEntity(BlockEntity entity) {
 		TexturedModel entityModel = entity.getModel();
@@ -200,7 +193,6 @@ public class MasterRenderer {
 	 * 
 	 * @param entity
 	 *            An Entity
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	private void processEntity(Entity entity) {
 		TexturedModel entityModel = entity.getModel();
@@ -217,7 +209,6 @@ public class MasterRenderer {
 	/**
 	 * Clear the OpenGL Buffers
 	 * 
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void prepare() {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -227,7 +218,6 @@ public class MasterRenderer {
 	/**
 	 * Creates the Projection Matrix
 	 * 
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public Matrix4f createProjectionMatrix(int width, int height, float fov, float nearPlane, float farPlane) {
 		aspectRatio = (float) width / (float) height;
@@ -249,7 +239,6 @@ public class MasterRenderer {
 	/**
 	 * Clear the Shader
 	 * 
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void cleanUp() {
 		shader.cleanUp();
@@ -260,7 +249,6 @@ public class MasterRenderer {
 	 * Gets the Projection matrix
 	 * 
 	 * @return A Projection Matrix
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public Matrix4f getProjectionMatrix() {
 		return projectionMatrix;

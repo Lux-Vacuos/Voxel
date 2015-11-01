@@ -51,7 +51,6 @@ public class PostProcessingShader extends ShaderProgram {
 	/**
 	 * Constructor
 	 * 
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public PostProcessingShader() {
 		super(VoxelVariables.VERTEX_FILE_POST, VoxelVariables.FRAGMENT_FILE_POST);
@@ -75,7 +74,6 @@ public class PostProcessingShader extends ShaderProgram {
 	/**
 	 * Loads Textures ID
 	 * 
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void connectTextureUnits() {
 		super.loadInt(loc_texture0, 0);
@@ -92,7 +90,6 @@ public class PostProcessingShader extends ShaderProgram {
 	 * 
 	 * @param res
 	 *            Resolution as Vector2f
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void loadResolution(Vector2f res) {
 		super.load2DVector(loc_resolution, res);
@@ -103,7 +100,6 @@ public class PostProcessingShader extends ShaderProgram {
 	 * 
 	 * @param matrix
 	 *            Transformation Matrix
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void loadTransformation(Matrix4f matrix) {
 		super.loadMatrix(loc_transformationMatrix, matrix);

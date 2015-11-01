@@ -51,7 +51,6 @@ public class Bootstrap {
 	/**
 	 * Initialize the console thread, the settings gui and starts the game
 	 * 
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public static void run() {
 		config = new ConfigGUI();
@@ -69,7 +68,6 @@ public class Bootstrap {
 	 * Gets the OS
 	 * 
 	 * @return The OS and the architecture
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 * 
 	 */
 	public static Platform getPlatform() {
@@ -98,7 +96,6 @@ public class Bootstrap {
 	/**
 	 * Enumerator of the OS
 	 * 
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 *
 	 */
 	public enum Platform {
@@ -111,7 +108,6 @@ public class Bootstrap {
 	 * 
 	 * @param args
 	 *            Not Used
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public static void main(String[] args) {
 		if (VoxelVariables.debug) {

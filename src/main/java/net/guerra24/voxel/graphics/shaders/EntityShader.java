@@ -52,7 +52,6 @@ public class EntityShader extends ShaderProgram {
 	/**
 	 * Constructor, creates an Entity Shader
 	 * 
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public EntityShader() {
 		super(VoxelVariables.VERTEX_FILE_ENTITY, VoxelVariables.FRAGMENT_FILE_ENTITY);
@@ -79,7 +78,6 @@ public class EntityShader extends ShaderProgram {
 	/**
 	 * Loads Textures ID
 	 * 
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void connectTextureUnits() {
 		super.loadInt(loc_texture0, 0);
@@ -98,7 +96,6 @@ public class EntityShader extends ShaderProgram {
 	 *            Green Value
 	 * @param b
 	 *            Blue Value
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void loadSkyColour(float r, float g, float b) {
 		super.loadVector(loc_skyColour, new Vector3f(r, g, b));
@@ -109,7 +106,6 @@ public class EntityShader extends ShaderProgram {
 	 * 
 	 * @param matrix
 	 *            Transformation Matrix
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void loadTransformationMatrix(Matrix4f matrix) {
 		super.loadMatrix(loc_transformationMatrix, matrix);
@@ -120,7 +116,6 @@ public class EntityShader extends ShaderProgram {
 	 * 
 	 * @param camera
 	 *            Camera
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void loadviewMatrix(Camera camera) {
 		Matrix4f viewMatrix = Maths.createViewMatrix(camera);
@@ -132,7 +127,6 @@ public class EntityShader extends ShaderProgram {
 	 * 
 	 * @param projection
 	 *            Projection Matrix
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void loadProjectionMatrix(Matrix4f projection) {
 		super.loadMatrix(loc_projectionMatrix, projection);

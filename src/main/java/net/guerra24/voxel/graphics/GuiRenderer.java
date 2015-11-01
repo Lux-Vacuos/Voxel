@@ -59,7 +59,6 @@ public class GuiRenderer {
 	 * 
 	 * @param loader
 	 *            Game Loader
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public GuiRenderer(Loader loader) {
 		float[] positions = { -1, 1, -1, -1, 1, 1, 1, -1 };
@@ -72,7 +71,6 @@ public class GuiRenderer {
 	 * 
 	 * @param guis
 	 *            A list of Guis
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void renderGui(List<GuiTexture> guis) {
 		glEnable(GL_BLEND);
@@ -94,8 +92,6 @@ public class GuiRenderer {
 
 	/**
 	 * Clear the Shader
-	 * 
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void cleanUp() {
 		shader.cleanUp();

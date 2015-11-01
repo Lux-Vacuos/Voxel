@@ -63,7 +63,6 @@ public interface IParticleController {
 	 *            Batch of particles
 	 * @param gm
 	 *            GameResources
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void renderParticles(Map<TexturedModel, List<Particle>> particles, GameResources gm);
 

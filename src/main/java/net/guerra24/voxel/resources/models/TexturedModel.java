@@ -48,7 +48,6 @@ public class TexturedModel {
 	 *            RawModel
 	 * @param texture
 	 *            ModelTexture
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public TexturedModel(RawModel model, ModelTexture texture) {
 		this.rawModel = model;
@@ -59,7 +58,6 @@ public class TexturedModel {
 	 * Get Raw Model
 	 * 
 	 * @return RawModel
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public RawModel getRawModel() {
 		return rawModel;
@@ -69,7 +67,6 @@ public class TexturedModel {
 	 * Get Model Texture
 	 * 
 	 * @return ModelTexture
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public ModelTexture getTexture() {
 		return texture;
