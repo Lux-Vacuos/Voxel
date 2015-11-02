@@ -1,5 +1,7 @@
 package org.newdawn.slick.opengl;
 
+import net.guerra24.voxel.util.Logger;
+
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.color.ColorSpace;
@@ -26,7 +28,12 @@ import javax.imageio.ImageIO;
  * @author kevin
  */
 public class ImageIOImageData implements LoadableImageData {
-	/** The colour model including alpha for the GL image */
+
+	public ImageIOImageData() {
+
+	}
+
+	/** The colour model including alpha for the GL image *//*
     private static final ColorModel glAlphaColorModel = 
     		new ComponentColorModel(ColorSpace.getInstance(ColorSpace.CS_sRGB),
 	            new int[] {8,8,8,8},
@@ -35,7 +42,7 @@ public class ImageIOImageData implements LoadableImageData {
 	            ComponentColorModel.TRANSLUCENT,
 	            DataBuffer.TYPE_BYTE);
     
-    /** The colour model for the GL image */
+    /** The colour model for the GL image *//*
     private static final  ColorModel glColorModel =
     		new ComponentColorModel(ColorSpace.getInstance(ColorSpace.CS_sRGB),
                 new int[] {8,8,8,0},
@@ -43,7 +50,7 @@ public class ImageIOImageData implements LoadableImageData {
                 false,
                 ComponentColorModel.OPAQUE,
                 DataBuffer.TYPE_BYTE);
-    
+ */
     /** The bit depth of the image */
     private int depth;
     /** The height of the image */
@@ -148,10 +155,24 @@ public class ImageIOImageData implements LoadableImageData {
         if (useAlpha) {
         	depth = 32;
             raster = Raster.createInterleavedRaster(DataBuffer.TYPE_BYTE,texWidth,texHeight,4,null);
+			ColorModel glAlphaColorModel =
+					new ComponentColorModel(ColorSpace.getInstance(ColorSpace.CS_sRGB),
+							new int[] {8,8,8,8},
+							true,
+							false,
+							ComponentColorModel.TRANSLUCENT,
+							DataBuffer.TYPE_BYTE);
             texImage = new BufferedImage(glAlphaColorModel,raster,false,new Hashtable());
         } else {
         	depth = 24;
             raster = Raster.createInterleavedRaster(DataBuffer.TYPE_BYTE,texWidth,texHeight,3,null);
+			ColorModel glColorModel =
+					new ComponentColorModel(ColorSpace.getInstance(ColorSpace.CS_sRGB),
+							new int[] {8,8,8,0},
+							false,
+							false,
+							ComponentColorModel.OPAQUE,
+							DataBuffer.TYPE_BYTE);
             texImage = new BufferedImage(glColorModel,raster,false,new Hashtable());
         }
             
