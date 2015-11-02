@@ -31,7 +31,6 @@ import java.io.PrintStream;
 
 import net.guerra24.voxel.core.Voxel;
 import net.guerra24.voxel.core.VoxelVariables;
-import net.guerra24.voxel.menu.ConfigGUI;
 
 /**
  * Initialize the basic game code
@@ -43,25 +42,6 @@ public class Bootstrap {
 	 * OS info
 	 */
 	private static Platform platform;
-	/**
-	 * Config GUI
-	 */
-	public static ConfigGUI config;
-
-	/**
-	 * Initialize the console thread, the settings gui and starts the game
-	 * 
-	 */
-	public static void run() {
-		config = new ConfigGUI();
-		while (!config.ready) {
-			try {
-				Thread.sleep(100);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
-	}
 
 	/**
 	 * 
@@ -123,7 +103,6 @@ public class Bootstrap {
 			}
 		}
 		Thread.currentThread().setName("Voxel Main");
-		run();
 		new Voxel();
 	}
 

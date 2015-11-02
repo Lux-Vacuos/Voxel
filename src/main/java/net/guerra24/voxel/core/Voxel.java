@@ -202,12 +202,8 @@ public class Voxel {
 		Display.upsCount++;
 		switch (gm.getGlobalStates().getState()) {
 		case MAINMENU:
-			if (Keyboard.isKeyDown(Keyboard.KEY_O))
-				Bootstrap.config.setVisible(true);
 			break;
 		case IN_PAUSE:
-			if (Keyboard.isKeyDown(Keyboard.KEY_O))
-				Bootstrap.config.setVisible(true);
 			break;
 		case GAME_SP:
 			worldsHandler.getActiveWorld().updateChunksGeneration(gm, api);
@@ -227,7 +223,6 @@ public class Voxel {
 		Logger.log("Closing Game");
 		gameResources.cleanUp();
 		api.dispose();
-		Bootstrap.config.dispose();
 		display.closeDisplay();
 	}
 
