@@ -36,14 +36,8 @@ public class TextHandler {
 		GUIText macWarning = new GUIText("Voxel is running in OS X, some things do not work well", 1, font,
 				new Vector2f(0, 0.2f), 1, true);
 		macWarning.setColour(1, 0, 0);
-		GUIText playButton = new GUIText("Play", 3.8f, font, new Vector2f(0, 0.285f), 1, true);
-		playButton.setColour(0.95f, 0.95f, 0.95f);
-		GUIText exitButton = new GUIText("Exit", 3.8f, font, new Vector2f(0, 0.585f), 1, true);
-		exitButton.setColour(0.95f, 0.95f, 0.95f);
 		mainMenuText.add(textVersion);
 		mainMenuText.add(textVersionApi);
-		mainMenuText.add(playButton);
-		mainMenuText.add(exitButton);
 		if (VoxelVariables.runningOnMac)
 			mainMenuText.add(macWarning);
 	}

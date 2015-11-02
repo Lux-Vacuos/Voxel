@@ -39,6 +39,7 @@ import net.guerra24.voxel.graphics.shaders.EntityShader;
 import net.guerra24.voxel.graphics.shaders.WaterShader;
 import net.guerra24.voxel.resources.GameResources;
 import net.guerra24.voxel.resources.Loader;
+import net.guerra24.voxel.resources.models.ButtonModel;
 import net.guerra24.voxel.resources.models.TexturedModel;
 import net.guerra24.voxel.resources.models.WaterTile;
 import net.guerra24.voxel.util.vector.Matrix4f;
@@ -59,6 +60,7 @@ public class MasterRenderer {
 	 */
 	private Matrix4f projectionMatrix;
 	private Map<TexturedModel, List<Entity>> entities = new HashMap<TexturedModel, List<Entity>>();
+	private Map<TexturedModel, List<Entity>> guiModels = new HashMap<TexturedModel, List<Entity>>();
 	private Map<TexturedModel, List<BlockEntity>> blockEntities = new HashMap<TexturedModel, List<BlockEntity>>();
 	private EntityShader shader = new EntityShader();
 	private Queue<WaterTile> waterTiles = new ConcurrentLinkedQueue<>();
@@ -135,6 +137,13 @@ public class MasterRenderer {
 		renderEntity(gm);
 	}
 
+	public void renderGui(List<ButtonModel> list, GameResources gm) {
+		for (IEntity entity : list) {
+			processGuiButton(entity.getEntity());
+		}
+		renderGui(gm);
+	}
+
 	/**
 	 * Chunk Rendering PipeLine
 	 * 
@@ -170,6 +179,15 @@ public class MasterRenderer {
 		entities.clear();
 	}
 
+	private void renderGui(GameResources gm) {
+		shader.start();
+		shader.loadProjectionMatrix(projectionMatrix);
+		shader.loadviewMatrix(gm.getCamera());
+		entityRenderer.renderEntity(guiModels, gm);
+		shader.stop();
+		guiModels.clear();
+	}
+
 	/**
 	 * Add the BlockEntity to the batcher map
 	 * 
@@ -203,6 +221,18 @@ public class MasterRenderer {
 			List<Entity> newBatch = new ArrayList<Entity>();
 			newBatch.add(entity);
 			entities.put(entityModel, newBatch);
+		}
+	}
+
+	private void processGuiButton(Entity entity) {
+		TexturedModel entityModel = entity.getModel();
+		List<Entity> batch = guiModels.get(entityModel);
+		if (batch != null) {
+			batch.add(entity);
+		} else {
+			List<Entity> newBatch = new ArrayList<Entity>();
+			newBatch.add(entity);
+			guiModels.put(entityModel, newBatch);
 		}
 	}
 

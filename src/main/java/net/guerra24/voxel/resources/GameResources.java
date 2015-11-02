@@ -116,7 +116,7 @@ public class GameResources {
 			Logger.error("Unable to bind SoundSystem Libs");
 		}
 		soundSystem = new SoundSystem();
-		globalStates = new GlobalStates();
+		globalStates = new GlobalStates(loader);
 		Block.initBasicBlocks();
 
 	}

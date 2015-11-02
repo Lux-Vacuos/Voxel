@@ -8,6 +8,7 @@ import net.guerra24.voxel.input.Keyboard;
 import net.guerra24.voxel.menu.MainMenu;
 import net.guerra24.voxel.menu.PauseMenu;
 import net.guerra24.voxel.resources.GameResources;
+import net.guerra24.voxel.resources.Loader;
 import net.guerra24.voxel.util.vector.Vector3f;
 import net.guerra24.voxel.world.WorldsHandler;
 
@@ -26,8 +27,8 @@ public class GlobalStates {
 		GAME_SP, MAINMENU, IN_PAUSE, LOADING_WORLD;
 	}
 
-	public GlobalStates() {
-		mainMenu = new MainMenu();
+	public GlobalStates(Loader loader) {
+		mainMenu = new MainMenu(loader);
 		pauseMenu = new PauseMenu();
 		loop = true;
 		state = GameState.MAINMENU;
@@ -58,12 +59,23 @@ public class GlobalStates {
 		if (state == GameState.IN_PAUSE && pauseMenu.getBackToMain().pressed()) {
 			worlds.getActiveWorld().clearDimension(gm);
 			gm.getSoundSystem().play("menu1");
-			gm.getCamera().setPosition(new Vector3f(-2, 0, -1));
+			gm.getCamera().setPosition(new Vector3f(0, 0, 1));
 			gm.getCamera().setPitch(0);
 			gm.getCamera().setYaw(0);
 			removeGameSPText = true;
 			state = GameState.MAINMENU;
 			gm.getSoundSystem().setVolume("menu1", 1f);
+		}
+
+		if (state == GameState.MAINMENU) {
+			if (mainMenu.getPlayButton().insideButton())
+				mainMenu.getList().get(0).changeScale(0.074f);
+			else
+				mainMenu.getList().get(0).changeScale(0.07f);
+			if (mainMenu.getExitButton().insideButton())
+				mainMenu.getList().get(1).changeScale(0.074f);
+			else
+				mainMenu.getList().get(1).changeScale(0.07f);
 		}
 
 		if (state == GameState.GAME_SP && !display.isDisplayFocused() && !VoxelVariables.debug) {
@@ -100,6 +112,10 @@ public class GlobalStates {
 
 	public GameState getState() {
 		return state;
+	}
+
+	public MainMenu getMainMenu() {
+		return mainMenu;
 	}
 
 }

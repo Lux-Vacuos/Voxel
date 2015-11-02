@@ -90,6 +90,13 @@ public class Bootstrap {
 	 *            Not Used
 	 */
 	public static void main(String[] args) {
+
+		VoxelVariables.WIDTH = Integer.parseInt(args[0]);
+		VoxelVariables.HEIGHT = Integer.parseInt(args[1]);
+		VoxelVariables.FOV = Integer.parseInt(args[2]);
+		VoxelVariables.FPS = Integer.parseInt(args[3]);
+		VoxelVariables.radius = Integer.parseInt(args[4]);
+
 		if (VoxelVariables.debug) {
 			System.setProperty("org.lwjgl.librarypath", new File("natives").getAbsolutePath());
 		} else {

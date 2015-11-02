@@ -1,5 +1,5 @@
 /*
- * The MIT License (MIT)
+O * The MIT License (MIT)
  *
  * Copyright (c) 2015 Guerra24
  *
@@ -34,7 +34,7 @@ import org.lwjgl.Sys;
 import net.guerra24.voxel.api.VAPI;
 import net.guerra24.voxel.bootstrap.Bootstrap;
 import net.guerra24.voxel.graphics.opengl.Display;
-import net.guerra24.voxel.input.Keyboard;
+import net.guerra24.voxel.input.Mouse;
 import net.guerra24.voxel.resources.GameResources;
 import net.guerra24.voxel.resources.GuiResources;
 import net.guerra24.voxel.util.Logger;
@@ -49,10 +49,6 @@ import net.guerra24.voxel.world.block.BlocksResources;
  * @category Kernel
  */
 public class Voxel {
-
-	public static float renderCalls = 0;
-	public static float renderCallsPerFrame = 0;
-	public static float totalRenderCalls = 0;
 
 	/**
 	 * Game Threads
@@ -129,7 +125,6 @@ public class Voxel {
 		float delta = 0;
 		while (gameResources.getGlobalStates().loop) {
 			if (Display.timeCountRender > 1f) {
-				Logger.log("RCPS: " + renderCallsPerFrame);
 				Logger.log("FPS: " + Display.fps);
 				Logger.log("UPS: " + Display.ups);
 				Display.fps = Display.fpsCount;
@@ -140,9 +135,6 @@ public class Voxel {
 			}
 			delta = Display.getDeltaRender();
 			render(gameResources, delta);
-			totalRenderCalls += renderCalls;
-			renderCallsPerFrame = renderCalls;
-			renderCalls = 0;
 		}
 		dispose();
 	}
@@ -153,7 +145,10 @@ public class Voxel {
 		case MAINMENU:
 			gm.getFrustum().calculateFrustum(gm);
 			gm.getRenderer().prepare();
+			gm.getRenderer().renderGui(gm.getGlobalStates().getMainMenu().getList(), gm);
 			gm.getGuiRenderer().renderGui(gm.guis2);
+			System.out.println("X:" + Mouse.getX());
+			System.out.println("Y:" + Mouse.getY());
 			break;
 		case IN_PAUSE:
 			gm.getRenderer().prepare();

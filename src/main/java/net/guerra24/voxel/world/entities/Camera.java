@@ -71,7 +71,7 @@ import net.guerra24.voxel.world.block.Block;
  */
 public class Camera {
 
-	private Vector3f position = new Vector3f(-2, 0, -1);
+	private Vector3f position = new Vector3f(0, 0, 1);
 	private float pitch;
 	private float yaw;
 	private float roll;
