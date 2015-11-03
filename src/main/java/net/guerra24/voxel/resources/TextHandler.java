@@ -16,13 +16,19 @@ public class TextHandler {
 
 	private List<GUIText> mainMenuText;
 	private List<GUIText> gameSPText;
+	private List<GUIText> optionsText;
+
+	private List<GUIText> activeText;
 
 	public TextHandler(Loader loader) {
 		font = new FontType(loader.loadTextureFont("tahoma"), new File("assets/fonts/tahoma.fnt"));
 		mainMenuText = new ArrayList<GUIText>();
 		gameSPText = new ArrayList<GUIText>();
+		optionsText = new ArrayList<GUIText>();
+		activeText = new ArrayList<GUIText>();
 		initMainMenuText();
 		initGAMESP();
+		initOptions();
 	}
 
 	private void initMainMenuText() {
@@ -50,15 +56,20 @@ public class TextHandler {
 		gameSPText.add(textVersion);
 	}
 
-	public void remove(List<GUIText> source, TextMasterRenderer textMasterRenderer) {
-		for (GUIText text : source) {
-			text.remove(textMasterRenderer);
-		}
+	private void initOptions() {
+		GUIText textOptions = new GUIText("Options", 1, font, new Vector2f(0, 0), 1, true);
+		textOptions.setColour(0.9f, 0.9f, 0.9f);
+		optionsText.add(textOptions);
 	}
 
-	public void add(List<GUIText> source, TextMasterRenderer textMasterRenderer) {
-		for (GUIText text : source) {
-			text.add(textMasterRenderer);
+	public void switchTo(List<GUIText> dest, TextMasterRenderer textMasterRenderer) {
+		for (GUIText guiText : activeText) {
+			guiText.remove(textMasterRenderer);
+		}
+		activeText.clear();
+		activeText.addAll(dest);
+		for (GUIText guiText : activeText) {
+			guiText.add(textMasterRenderer);
 		}
 	}
 
@@ -68,5 +79,9 @@ public class TextHandler {
 
 	public List<GUIText> getGameSPText() {
 		return gameSPText;
+	}
+
+	public List<GUIText> getOptionsText() {
+		return optionsText;
 	}
 }

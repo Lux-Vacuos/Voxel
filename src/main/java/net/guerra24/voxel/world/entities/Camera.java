@@ -43,7 +43,6 @@ import static net.guerra24.voxel.input.Keyboard.KEY_LSHIFT;
 import static net.guerra24.voxel.input.Keyboard.KEY_R;
 import static net.guerra24.voxel.input.Keyboard.KEY_S;
 import static net.guerra24.voxel.input.Keyboard.KEY_SPACE;
-import static net.guerra24.voxel.input.Keyboard.KEY_T;
 import static net.guerra24.voxel.input.Keyboard.KEY_W;
 import static net.guerra24.voxel.input.Keyboard.KEY_Y;
 import static net.guerra24.voxel.input.Keyboard.isKeyDown;
@@ -56,7 +55,6 @@ import static net.guerra24.voxel.input.Mouse.setGrabbed;
 import net.guerra24.voxel.api.VAPI;
 import net.guerra24.voxel.core.VoxelVariables;
 import net.guerra24.voxel.graphics.opengl.Display;
-import net.guerra24.voxel.input.Mouse;
 import net.guerra24.voxel.resources.GameResources;
 import net.guerra24.voxel.resources.GuiResources;
 import net.guerra24.voxel.util.vector.Vector2f;
@@ -303,6 +301,27 @@ public class Camera {
 
 		updatePlayerState(gi);
 		updateDebug(world);
+	}
+
+	public void moveToPosition(Vector3f pos) {
+		if (pos.getX() > position.getX())
+			increasePosition(0.01f, 0, 0);
+		if (pos.getX() < position.getX())
+			increasePosition(-0.01f, 0, 0);
+		if (pos.getY() > position.getY())
+			increasePosition(0, 0.01f, 0);
+		if (pos.getY() < position.getY())
+			increasePosition(0, -0.01f, 0);
+		if (pos.getZ() > position.getZ())
+			increasePosition(0, 0, 0.01f);
+		if (pos.getZ() < position.getZ())
+			increasePosition(0, 0, -0.01f);
+	}
+
+	public void increasePosition(float dx, float dy, float dz) {
+		this.position.x += dx;
+		this.position.y += dy;
+		this.position.z += dz;
 	}
 
 	public void updatePlayerState(GuiResources gi) {

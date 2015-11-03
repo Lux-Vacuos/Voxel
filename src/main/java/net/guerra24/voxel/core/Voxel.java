@@ -34,7 +34,6 @@ import org.lwjgl.Sys;
 import net.guerra24.voxel.api.VAPI;
 import net.guerra24.voxel.bootstrap.Bootstrap;
 import net.guerra24.voxel.graphics.opengl.Display;
-import net.guerra24.voxel.input.Mouse;
 import net.guerra24.voxel.resources.GameResources;
 import net.guerra24.voxel.resources.GuiResources;
 import net.guerra24.voxel.util.Logger;
@@ -113,7 +112,7 @@ public class Voxel {
 
 	private void postInit() {
 		api.postInit();
-		gameResources.getTextHandler().add(gameResources.getTextHandler().getMainMenuText(),
+		gameResources.getTextHandler().switchTo(gameResources.getTextHandler().getMainMenuText(),
 				gameResources.getTextMasterRenderer());
 		gameResources.getSoundSystem().play("menu1");
 	}
@@ -147,8 +146,6 @@ public class Voxel {
 			gm.getRenderer().prepare();
 			gm.getRenderer().renderGui(gm.getGlobalStates().getMainMenu().getList(), gm);
 			gm.getGuiRenderer().renderGui(gm.guis2);
-			System.out.println("X:" + Mouse.getX());
-			System.out.println("Y:" + Mouse.getY());
 			break;
 		case IN_PAUSE:
 			gm.getRenderer().prepare();
@@ -187,6 +184,12 @@ public class Voxel {
 			gm.getRenderer().prepare();
 			gm.getGuiRenderer().renderGui(gm.guis3);
 			break;
+		case OPTIONS:
+			gm.getFrustum().calculateFrustum(gm);
+			gm.getRenderer().prepare();
+			gm.getRenderer().renderGui(gm.getGlobalStates().getMainMenu().getList(), gm);
+			gm.getGuiRenderer().renderGui(gm.guis2);
+			break;
 		}
 		gm.getTextMasterRenderer().render();
 		gm.getGlobalStates().updateRenderThread(gm, worldsHandler, api, display);
@@ -209,6 +212,8 @@ public class Voxel {
 			gm.getParticleController().update(delta, gm, gi, world.getActiveWorld());
 			break;
 		case LOADING_WORLD:
+			break;
+		case OPTIONS:
 			break;
 		}
 		gm.getGlobalStates().updateUpdateThread(gm, world, api, display);

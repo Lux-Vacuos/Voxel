@@ -6,6 +6,7 @@ import net.guerra24.voxel.api.VAPI;
 import net.guerra24.voxel.graphics.opengl.Display;
 import net.guerra24.voxel.input.Keyboard;
 import net.guerra24.voxel.menu.MainMenu;
+import net.guerra24.voxel.menu.OptionsMenu;
 import net.guerra24.voxel.menu.PauseMenu;
 import net.guerra24.voxel.resources.GameResources;
 import net.guerra24.voxel.resources.Loader;
@@ -19,17 +20,20 @@ public class GlobalStates {
 
 	private MainMenu mainMenu;
 	private PauseMenu pauseMenu;
+	private OptionsMenu optionsMenu;
 
-	private boolean removeMainMenuText = false;
-	private boolean removeGameSPText = false;
+	private boolean switchToMainMenu = false;
+	private boolean switchToGameSP = false;
+	private boolean switchToOptions = false;
 
 	public enum GameState {
-		GAME_SP, MAINMENU, IN_PAUSE, LOADING_WORLD;
+		GAME_SP, MAINMENU, IN_PAUSE, LOADING_WORLD, OPTIONS;
 	}
 
 	public GlobalStates(Loader loader) {
 		mainMenu = new MainMenu(loader);
 		pauseMenu = new PauseMenu();
+		optionsMenu = new OptionsMenu();
 		loop = true;
 		state = GameState.MAINMENU;
 	}
@@ -37,7 +41,7 @@ public class GlobalStates {
 	public void updateUpdateThread(GameResources gm, WorldsHandler worlds, VAPI api, Display display) {
 
 		if (state == GameState.MAINMENU && mainMenu.getPlayButton().pressed()) {
-			removeMainMenuText = true;
+			switchToGameSP = true;
 			state = GameState.LOADING_WORLD;
 			Random seed;
 			if (VoxelVariables.isCustomSeed) {
@@ -62,20 +66,43 @@ public class GlobalStates {
 			gm.getCamera().setPosition(new Vector3f(0, 0, 1));
 			gm.getCamera().setPitch(0);
 			gm.getCamera().setYaw(0);
-			removeGameSPText = true;
+			switchToMainMenu = true;
 			state = GameState.MAINMENU;
 			gm.getSoundSystem().setVolume("menu1", 1f);
 		}
 
+		if (state == GameState.MAINMENU && mainMenu.getOptionsButton().pressed()) {
+			switchToOptions = true;
+			gm.getCamera().setPosition(new Vector3f(-1.4f, -3.4f, 1.4f));
+			state = GameState.OPTIONS;
+		}
+
+		if (state == GameState.OPTIONS && optionsMenu.getExitButton().pressed()) {
+			switchToMainMenu = true;
+			gm.getCamera().setPosition(new Vector3f(0, 0, 1));
+			state = GameState.MAINMENU;
+		}
 		if (state == GameState.MAINMENU) {
 			if (mainMenu.getPlayButton().insideButton())
 				mainMenu.getList().get(0).changeScale(0.074f);
 			else
 				mainMenu.getList().get(0).changeScale(0.07f);
 			if (mainMenu.getExitButton().insideButton())
+				mainMenu.getList().get(2).changeScale(0.074f);
+			else
+				mainMenu.getList().get(2).changeScale(0.07f);
+			if (mainMenu.getOptionsButton().insideButton())
 				mainMenu.getList().get(1).changeScale(0.074f);
 			else
 				mainMenu.getList().get(1).changeScale(0.07f);
+
+		}
+
+		if (state == GameState.OPTIONS) {
+			if (optionsMenu.getExitButton().insideButton())
+				mainMenu.getList().get(3).changeScale(0.074f);
+			else
+				mainMenu.getList().get(3).changeScale(0.07f);
 		}
 
 		if (state == GameState.GAME_SP && !display.isDisplayFocused() && !VoxelVariables.debug) {
@@ -98,15 +125,17 @@ public class GlobalStates {
 	}
 
 	public void updateRenderThread(GameResources gm, WorldsHandler worlds, VAPI api, Display display) {
-		if (removeMainMenuText) {
-			gm.getTextHandler().remove(gm.getTextHandler().getMainMenuText(), gm.getTextMasterRenderer());
-			gm.getTextHandler().add(gm.getTextHandler().getGameSPText(), gm.getTextMasterRenderer());
-			removeMainMenuText = false;
+		if (switchToGameSP) {
+			switchToGameSP = false;
+			gm.getTextHandler().switchTo(gm.getTextHandler().getGameSPText(), gm.getTextMasterRenderer());
 		}
-		if (removeGameSPText) {
-			gm.getTextHandler().remove(gm.getTextHandler().getGameSPText(), gm.getTextMasterRenderer());
-			gm.getTextHandler().add(gm.getTextHandler().getMainMenuText(), gm.getTextMasterRenderer());
-			removeGameSPText = false;
+		if (switchToMainMenu) {
+			switchToMainMenu = false;
+			gm.getTextHandler().switchTo(gm.getTextHandler().getMainMenuText(), gm.getTextMasterRenderer());
+		}
+		if (switchToOptions) {
+			switchToOptions = false;
+			gm.getTextHandler().switchTo(gm.getTextHandler().getOptionsText(), gm.getTextMasterRenderer());
 		}
 	}
 
