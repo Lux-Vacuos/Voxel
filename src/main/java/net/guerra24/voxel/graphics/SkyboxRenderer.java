@@ -26,6 +26,7 @@ package net.guerra24.voxel.graphics;
 
 import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
 import static org.lwjgl.opengl.GL11.glBindTexture;
+import static org.lwjgl.opengl.GL11.glDrawArrays;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE1;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE_CUBE_MAP;
@@ -35,7 +36,6 @@ import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 
 import net.guerra24.voxel.core.VoxelVariables;
-import net.guerra24.voxel.graphics.opengl.VoxelGL33;
 import net.guerra24.voxel.graphics.shaders.SkyboxShader;
 import net.guerra24.voxel.resources.GameResources;
 import net.guerra24.voxel.resources.Loader;
@@ -53,40 +53,34 @@ public class SkyboxRenderer {
 	 * Skybox Data
 	 */
 	private final float[] VERTICES = { -VoxelVariables.SIZE, VoxelVariables.SIZE, -VoxelVariables.SIZE,
-			-VoxelVariables.SIZE, -VoxelVariables.SIZE, -VoxelVariables.SIZE, VoxelVariables.SIZE,
-			-VoxelVariables.SIZE, -VoxelVariables.SIZE, VoxelVariables.SIZE, -VoxelVariables.SIZE,
-			-VoxelVariables.SIZE, VoxelVariables.SIZE, VoxelVariables.SIZE, -VoxelVariables.SIZE,
+			-VoxelVariables.SIZE, -VoxelVariables.SIZE, -VoxelVariables.SIZE, VoxelVariables.SIZE, -VoxelVariables.SIZE,
+			-VoxelVariables.SIZE, VoxelVariables.SIZE, -VoxelVariables.SIZE, -VoxelVariables.SIZE, VoxelVariables.SIZE,
+			VoxelVariables.SIZE, -VoxelVariables.SIZE, -VoxelVariables.SIZE, VoxelVariables.SIZE, -VoxelVariables.SIZE,
+
+			-VoxelVariables.SIZE, -VoxelVariables.SIZE, VoxelVariables.SIZE, -VoxelVariables.SIZE, -VoxelVariables.SIZE,
+			-VoxelVariables.SIZE, -VoxelVariables.SIZE, VoxelVariables.SIZE, -VoxelVariables.SIZE, -VoxelVariables.SIZE,
+			VoxelVariables.SIZE, -VoxelVariables.SIZE, -VoxelVariables.SIZE, VoxelVariables.SIZE, VoxelVariables.SIZE,
+			-VoxelVariables.SIZE, -VoxelVariables.SIZE, VoxelVariables.SIZE,
+
+			VoxelVariables.SIZE, -VoxelVariables.SIZE, -VoxelVariables.SIZE, VoxelVariables.SIZE, -VoxelVariables.SIZE,
+			VoxelVariables.SIZE, VoxelVariables.SIZE, VoxelVariables.SIZE, VoxelVariables.SIZE, VoxelVariables.SIZE,
+			VoxelVariables.SIZE, VoxelVariables.SIZE, VoxelVariables.SIZE, VoxelVariables.SIZE, -VoxelVariables.SIZE,
+			VoxelVariables.SIZE, -VoxelVariables.SIZE, -VoxelVariables.SIZE,
+
+			-VoxelVariables.SIZE, -VoxelVariables.SIZE, VoxelVariables.SIZE, -VoxelVariables.SIZE, VoxelVariables.SIZE,
+			VoxelVariables.SIZE, VoxelVariables.SIZE, VoxelVariables.SIZE, VoxelVariables.SIZE, VoxelVariables.SIZE,
+			VoxelVariables.SIZE, VoxelVariables.SIZE, VoxelVariables.SIZE, -VoxelVariables.SIZE, VoxelVariables.SIZE,
+			-VoxelVariables.SIZE, -VoxelVariables.SIZE, VoxelVariables.SIZE,
+
+			-VoxelVariables.SIZE, VoxelVariables.SIZE, -VoxelVariables.SIZE, VoxelVariables.SIZE, VoxelVariables.SIZE,
+			-VoxelVariables.SIZE, VoxelVariables.SIZE, VoxelVariables.SIZE, VoxelVariables.SIZE, VoxelVariables.SIZE,
+			VoxelVariables.SIZE, VoxelVariables.SIZE, -VoxelVariables.SIZE, VoxelVariables.SIZE, VoxelVariables.SIZE,
 			-VoxelVariables.SIZE, VoxelVariables.SIZE, -VoxelVariables.SIZE,
 
-			-VoxelVariables.SIZE, -VoxelVariables.SIZE, VoxelVariables.SIZE, -VoxelVariables.SIZE,
-			-VoxelVariables.SIZE, -VoxelVariables.SIZE, -VoxelVariables.SIZE, VoxelVariables.SIZE,
-			-VoxelVariables.SIZE, -VoxelVariables.SIZE, VoxelVariables.SIZE, -VoxelVariables.SIZE,
-			-VoxelVariables.SIZE, VoxelVariables.SIZE, VoxelVariables.SIZE, -VoxelVariables.SIZE,
-			-VoxelVariables.SIZE, VoxelVariables.SIZE,
-
-			VoxelVariables.SIZE, -VoxelVariables.SIZE, -VoxelVariables.SIZE, VoxelVariables.SIZE,
-			-VoxelVariables.SIZE, VoxelVariables.SIZE, VoxelVariables.SIZE, VoxelVariables.SIZE,
-			VoxelVariables.SIZE, VoxelVariables.SIZE, VoxelVariables.SIZE, VoxelVariables.SIZE,
-			VoxelVariables.SIZE, VoxelVariables.SIZE, -VoxelVariables.SIZE, VoxelVariables.SIZE,
-			-VoxelVariables.SIZE, -VoxelVariables.SIZE,
-
-			-VoxelVariables.SIZE, -VoxelVariables.SIZE, VoxelVariables.SIZE, -VoxelVariables.SIZE,
-			VoxelVariables.SIZE, VoxelVariables.SIZE, VoxelVariables.SIZE, VoxelVariables.SIZE,
-			VoxelVariables.SIZE, VoxelVariables.SIZE, VoxelVariables.SIZE, VoxelVariables.SIZE,
-			VoxelVariables.SIZE, -VoxelVariables.SIZE, VoxelVariables.SIZE, -VoxelVariables.SIZE,
-			-VoxelVariables.SIZE, VoxelVariables.SIZE,
-
-			-VoxelVariables.SIZE, VoxelVariables.SIZE, -VoxelVariables.SIZE, VoxelVariables.SIZE,
-			VoxelVariables.SIZE, -VoxelVariables.SIZE, VoxelVariables.SIZE, VoxelVariables.SIZE,
-			VoxelVariables.SIZE, VoxelVariables.SIZE, VoxelVariables.SIZE, VoxelVariables.SIZE,
-			-VoxelVariables.SIZE, VoxelVariables.SIZE, VoxelVariables.SIZE, -VoxelVariables.SIZE,
-			VoxelVariables.SIZE, -VoxelVariables.SIZE,
-
 			-VoxelVariables.SIZE, -VoxelVariables.SIZE, -VoxelVariables.SIZE, -VoxelVariables.SIZE,
-			-VoxelVariables.SIZE, VoxelVariables.SIZE, VoxelVariables.SIZE, -VoxelVariables.SIZE,
-			-VoxelVariables.SIZE, VoxelVariables.SIZE, -VoxelVariables.SIZE, -VoxelVariables.SIZE,
-			-VoxelVariables.SIZE, -VoxelVariables.SIZE, VoxelVariables.SIZE, VoxelVariables.SIZE,
-			-VoxelVariables.SIZE, VoxelVariables.SIZE };
+			-VoxelVariables.SIZE, VoxelVariables.SIZE, VoxelVariables.SIZE, -VoxelVariables.SIZE, -VoxelVariables.SIZE,
+			VoxelVariables.SIZE, -VoxelVariables.SIZE, -VoxelVariables.SIZE, -VoxelVariables.SIZE, -VoxelVariables.SIZE,
+			VoxelVariables.SIZE, VoxelVariables.SIZE, -VoxelVariables.SIZE, VoxelVariables.SIZE };
 
 	private String[] TEXTURE_FILES = { "day/right", "day/left", "day/top", "day/bottom", "day/front", "day/back" };
 	private String[] NIGHT_TEXTURE_FILES = { "night/right", "night/left", "night/top", "night/bottom", "night/front",
@@ -105,7 +99,6 @@ public class SkyboxRenderer {
 	 *            Game Loader
 	 * @param projectionMatrix
 	 *            Matrix4f, Projection Matrix
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public SkyboxRenderer(Loader loader, Matrix4f projectionMatrix) {
 		cube = loader.loadToVAO(VERTICES, 3);
@@ -132,7 +125,6 @@ public class SkyboxRenderer {
 	 *            Fog Blue Color
 	 * @param delta
 	 *            Delta
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void render(float r, float g, float b, float delta, GameResources gm) {
 		shader.start();
@@ -141,7 +133,7 @@ public class SkyboxRenderer {
 		glBindVertexArray(cube.getVaoID());
 		glEnableVertexAttribArray(0);
 		bindTextures();
-		VoxelGL33.glDrawArrays(GL_TRIANGLES, 0, cube.getVertexCount());
+		glDrawArrays(GL_TRIANGLES, 0, cube.getVertexCount());
 		glDisableVertexAttribArray(0);
 		glBindVertexArray(0);
 		shader.stop();
@@ -152,7 +144,6 @@ public class SkyboxRenderer {
 	 * 
 	 * @param delta
 	 *            Delta
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void update(float delta) {
 		time += delta * 10;
@@ -162,7 +153,6 @@ public class SkyboxRenderer {
 	/**
 	 * Updates the Skybox Textures
 	 * 
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	private void bindTextures() {
 		int texture1;
@@ -196,7 +186,6 @@ public class SkyboxRenderer {
 	 * Get the blend factor
 	 * 
 	 * @return time
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public float getBlendFactor() {
 		return blendFactor;
@@ -206,7 +195,6 @@ public class SkyboxRenderer {
 	 * Get the world time
 	 * 
 	 * @return time
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public float getTime() {
 		return time;

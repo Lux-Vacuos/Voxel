@@ -32,8 +32,6 @@ package net.guerra24.voxel.resources.models;
  */
 public class WaterTile {
 
-	private RawModel quad;
-
 	/**
 	 * Tile Size
 	 */
@@ -56,7 +54,6 @@ public class WaterTile {
 	 *            Z Coord
 	 * @param height
 	 *            Y Coord
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public WaterTile(float centerX, float centerZ, float height) {
 		this.x = centerX;
@@ -68,7 +65,6 @@ public class WaterTile {
 	 * Get Y Coord
 	 * 
 	 * @return Y Coord
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public float getHeight() {
 		return height;
@@ -78,7 +74,6 @@ public class WaterTile {
 	 * Get X Coord
 	 * 
 	 * @return Z Coord
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public float getX() {
 		return x;
@@ -91,10 +86,6 @@ public class WaterTile {
 	 */
 	public float getZ() {
 		return z;
-	}
-
-	public RawModel getQuad() {
-		return quad;
 	}
 
 	public static float getTileSize() {

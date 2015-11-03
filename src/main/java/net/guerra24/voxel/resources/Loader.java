@@ -111,7 +111,6 @@ public class Loader {
 	 * @param indices
 	 *            Array of Indices
 	 * @return A RawModel
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public RawModel loadToVAO(float[] positions, float[] textureCoords, float[] normals, int[] indices) {
 		int vaoID = createVAO();
@@ -121,6 +120,14 @@ public class Loader {
 		storeDataInAttributeList(2, 3, normals);
 		unbindVAO();
 		return new RawModel(vaoID, indices.length);
+	}
+
+	public int loadToVAO(float[] positions, float[] textureCoords) {
+		int vaoID = createVAO();
+		storeDataInAttributeList(0, 2, positions);
+		storeDataInAttributeList(1, 2, textureCoords);
+		unbindVAO();
+		return vaoID;
 	}
 
 	/**
@@ -145,7 +152,6 @@ public class Loader {
 	 * @param fileName
 	 *            Block Texture Name
 	 * @return Texture ID
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public int loadTextureBlocks(String fileName) {
 		Texture texture = null;
@@ -164,6 +170,21 @@ public class Loader {
 		textures.add(texture.getTextureID());
 		return texture.getTextureID();
 	}
+	
+	public int loadTextureFont(String fileName) {
+		Texture texture = null;
+		try {
+			InputStream file = getClass().getClassLoader()
+					.getResourceAsStream("assets/fonts/" + fileName + ".png");
+			texture = TextureLoader.getTexture("PNG", file, GL_NEAREST);
+			Logger.log("Loading Texture: " + fileName + ".png");
+		} catch (Exception e) {
+			e.printStackTrace();
+			Logger.log("Couldn' load texture file " + fileName);
+		}
+		textures.add(texture.getTextureID());
+		return texture.getTextureID();
+	}
 
 	/**
 	 * Load Block Texture
@@ -171,7 +192,6 @@ public class Loader {
 	 * @param fileName
 	 *            Block Texture Name
 	 * @return Texture ID
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public int loadTextureEntity(String fileName) {
 		Texture texture = null;
@@ -197,7 +217,6 @@ public class Loader {
 	 * @param fileName
 	 *            Gui Texture Name
 	 * @return Texture ID
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public int loadTextureGui(String fileName) {
 		Texture texture = null;
@@ -206,9 +225,6 @@ public class Loader {
 					.getResourceAsStream("assets/textures/menu/" + fileName + ".png");
 			texture = TextureLoader.getTexture("PNG", file, GL_NEAREST);
 			Logger.log("Loading Texture: " + fileName + ".png");
-			glGenerateMipmap(GL_TEXTURE_2D);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_LOD_BIAS, -0.4f);
 		} catch (Exception e) {
 			e.printStackTrace();
 			Logger.error("Couldn' load texture file" + fileName);
@@ -220,7 +236,6 @@ public class Loader {
 	/**
 	 * Clear All VAOs, VBOs and Textures
 	 * 
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void cleanUp() {
 		for (int vao : vaos) {
@@ -240,7 +255,6 @@ public class Loader {
 	 * @param textureFiles
 	 *            Array of Texture Names
 	 * @return Texture ID
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public int loadCubeMap(String[] textureFiles) {
 		int texID = glGenTextures();
@@ -267,7 +281,6 @@ public class Loader {
 	 * @param file.
 	 *            Name
 	 * @return EntityTexture
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	private EntityTexture decodeTextureFile(InputStream file) {
 		int width = 0;
@@ -293,7 +306,6 @@ public class Loader {
 	 * Create VAO
 	 * 
 	 * @return VaoID
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	private int createVAO() {
 		int vaoID = glGenVertexArrays();
@@ -311,7 +323,6 @@ public class Loader {
 	 *            Coord Size
 	 * @param data
 	 *            Data
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	private void storeDataInAttributeList(int attributeNumber, int coordinateSize, float[] data) {
 		int vboID = glGenBuffers();
@@ -326,7 +337,6 @@ public class Loader {
 	/**
 	 * Unbids the VAO
 	 * 
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	private void unbindVAO() {
 		glBindVertexArray(0);
@@ -337,7 +347,6 @@ public class Loader {
 	 * 
 	 * @param indices
 	 *            Array of Indices
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	private void bindIndicesBuffer(int[] indices) {
 		int vboID = glGenBuffers();

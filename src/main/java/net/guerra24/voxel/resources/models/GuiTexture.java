@@ -55,7 +55,6 @@ public class GuiTexture {
 	 *            Position
 	 * @param scale
 	 *            Scale
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public GuiTexture(int texture, Vector2f position, Vector2f scale) {
 		this.texture = texture;
@@ -67,7 +66,6 @@ public class GuiTexture {
 	 * Get Texture ID
 	 * 
 	 * @return Texture ID
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public int getTexture() {
 		return texture;
@@ -81,7 +79,6 @@ public class GuiTexture {
 	 * Get Position
 	 * 
 	 * @return Position
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public Vector2f getPosition() {
 		return position;
@@ -91,7 +88,6 @@ public class GuiTexture {
 	 * Get Scale
 	 * 
 	 * @return Scale
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public Vector2f getScale() {
 		return scale;
@@ -102,7 +98,6 @@ public class GuiTexture {
 	 * 
 	 * @param position
 	 *            Position
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void setPosition(Vector2f position) {
 		this.position = position;
@@ -113,7 +108,6 @@ public class GuiTexture {
 	 * 
 	 * @param position
 	 *            Position
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void setScale(Vector2f scale) {
 		this.scale = scale;

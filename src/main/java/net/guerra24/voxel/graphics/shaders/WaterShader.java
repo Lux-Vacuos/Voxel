@@ -54,7 +54,6 @@ public class WaterShader extends ShaderProgram {
 	/**
 	 * Constructor
 	 * 
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public WaterShader() {
 		super(VoxelVariables.VERTEX_FILE_WATER, VoxelVariables.FRAGMENT_FILE_WATER);
@@ -88,7 +87,6 @@ public class WaterShader extends ShaderProgram {
 	 *            Green Value
 	 * @param b
 	 *            Blue Value
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void loadSkyColour(float r, float g, float b) {
 		super.loadVector(location_skyColour, new Vector3f(r, g, b));
@@ -97,7 +95,6 @@ public class WaterShader extends ShaderProgram {
 	/**
 	 * Loads Textures ID
 	 * 
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void connectTextureUnits() {
 		super.loadInt(location_dudvMap, 0);
@@ -110,7 +107,6 @@ public class WaterShader extends ShaderProgram {
 	 * 
 	 * @param factor
 	 *            Factor
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void loadMoveFactor(float factor) {
 		super.loadFloat(location_moveFactor, factor);
@@ -121,7 +117,6 @@ public class WaterShader extends ShaderProgram {
 	 * 
 	 * @param projection
 	 *            Projection Matrix
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void loadProjectionMatrix(Matrix4f projection) {
 		loadMatrix(location_projectionMatrix, projection);
@@ -132,7 +127,6 @@ public class WaterShader extends ShaderProgram {
 	 * 
 	 * @param direction
 	 *            Light Direction
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void loadDirectLightDirection(Vector3f direction) {
 		super.loadVector(location_directLightDirection, direction);
@@ -143,7 +137,6 @@ public class WaterShader extends ShaderProgram {
 	 * 
 	 * @param camera
 	 *            Camera
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void loadViewMatrix(Camera camera) {
 		Matrix4f viewMatrix = Maths.createViewMatrix(camera);
@@ -156,7 +149,6 @@ public class WaterShader extends ShaderProgram {
 	 * 
 	 * @param modelMatrix
 	 *            Model Matrix
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void loadModelMatrix(Matrix4f modelMatrix) {
 		loadMatrix(location_modelMatrix, modelMatrix);

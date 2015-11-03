@@ -1,5 +1,5 @@
 /*
- * The MIT License (MIT)
+O * The MIT License (MIT)
  *
  * Copyright (c) 2015 Guerra24
  *
@@ -24,7 +24,6 @@
 
 package net.guerra24.voxel.core;
 
-import static org.lwjgl.glfw.GLFW.glfwShowWindow;
 import static org.lwjgl.opengl.GL11.GL_RENDERER;
 import static org.lwjgl.opengl.GL11.GL_VENDOR;
 import static org.lwjgl.opengl.GL11.GL_VERSION;
@@ -35,7 +34,6 @@ import org.lwjgl.Sys;
 import net.guerra24.voxel.api.VAPI;
 import net.guerra24.voxel.bootstrap.Bootstrap;
 import net.guerra24.voxel.graphics.opengl.Display;
-import net.guerra24.voxel.input.Keyboard;
 import net.guerra24.voxel.resources.GameResources;
 import net.guerra24.voxel.resources.GuiResources;
 import net.guerra24.voxel.util.Logger;
@@ -50,11 +48,6 @@ import net.guerra24.voxel.world.block.BlocksResources;
  * @category Kernel
  */
 public class Voxel {
-
-	public static float renderCalls = 0;
-	public static float renderCallsPerFrame = 0;
-	public static float totalRenderCalls = 0;
-	public static int errorTime = 0;
 
 	/**
 	 * Game Threads
@@ -72,9 +65,6 @@ public class Voxel {
 
 	/**
 	 * Constructor of the Kernel, Initializes the Game and starts the loop
-	 * 
-	 * @param errorTest
-	 *            If running JUnit Test
 	 */
 	public Voxel() {
 		mainLoop();
@@ -122,7 +112,8 @@ public class Voxel {
 
 	private void postInit() {
 		api.postInit();
-		glfwShowWindow(Display.getWindow());
+		gameResources.getTextHandler().switchTo(gameResources.getTextHandler().getMainMenuText(),
+				gameResources.getTextMasterRenderer());
 		gameResources.getSoundSystem().play("menu1");
 	}
 
@@ -131,8 +122,10 @@ public class Voxel {
 		init();
 		postInit();
 		float delta = 0;
-		while (gameResources.getGameStates().loop) {
+		while (gameResources.getGlobalStates().loop) {
 			if (Display.timeCountRender > 1f) {
+				Logger.log("FPS: " + Display.fps);
+				Logger.log("UPS: " + Display.ups);
 				Display.fps = Display.fpsCount;
 				Display.fpsCount = 0;
 				Display.ups = Display.upsCount;
@@ -141,22 +134,18 @@ public class Voxel {
 			}
 			delta = Display.getDeltaRender();
 			render(gameResources, delta);
-			totalRenderCalls += renderCalls;
-			renderCallsPerFrame = renderCalls;
-			renderCalls = 0;
 		}
 		dispose();
 	}
 
 	public void render(GameResources gm, float delta) {
 		Display.fpsCount++;
-		switch (gm.getGameStates().state) {
+		switch (gm.getGlobalStates().getState()) {
 		case MAINMENU:
 			gm.getFrustum().calculateFrustum(gm);
 			gm.getRenderer().prepare();
-			gm.getRenderer().renderEntity(gm.mainMenuModels, gm);
+			gm.getRenderer().renderGui(gm.getGlobalStates().getMainMenu().getList(), gm);
 			gm.getGuiRenderer().renderGui(gm.guis2);
-			display.updateDisplay(30, gm);
 			break;
 		case IN_PAUSE:
 			gm.getRenderer().prepare();
@@ -165,16 +154,13 @@ public class Voxel {
 			gm.getSkyboxRenderer().render(VoxelVariables.RED, VoxelVariables.GREEN, VoxelVariables.BLUE, delta, gm);
 			gm.getParticleController().render(gm);
 			gm.getGuiRenderer().renderGui(gm.guis4);
-			display.updateDisplay(VoxelVariables.FPS, gm);
 			break;
-		case GAME:
+		case GAME_SP:
 			gm.getCamera().update(delta, gameResources, guiResources, worldsHandler.getActiveWorld(), api);
 			gm.getPhysics().getMobManager().getPlayer().update(delta, gm, guiResources, worldsHandler.getActiveWorld(),
 					api);
 			gm.getFrustum().calculateFrustum(gm);
-
 			worldsHandler.getActiveWorld().lighting();
-
 			gm.getWaterFBO().begin(128, 128);
 			gm.getCamera().invertPitch();
 			gm.getRenderer().prepare();
@@ -193,29 +179,31 @@ public class Voxel {
 			gm.getRenderer().prepare();
 			gm.getPostProcessing().render(gm);
 			gm.getGuiRenderer().renderGui(gm.guis);
-			display.updateDisplay(VoxelVariables.FPS, gm);
 			break;
 		case LOADING_WORLD:
 			gm.getRenderer().prepare();
 			gm.getGuiRenderer().renderGui(gm.guis3);
-			display.updateDisplay(30, gm);
+			break;
+		case OPTIONS:
+			gm.getFrustum().calculateFrustum(gm);
+			gm.getRenderer().prepare();
+			gm.getRenderer().renderGui(gm.getGlobalStates().getMainMenu().getList(), gm);
+			gm.getGuiRenderer().renderGui(gm.guis2);
 			break;
 		}
+		gm.getTextMasterRenderer().render();
+		gm.getGlobalStates().updateRenderThread(gm, worldsHandler, api, display);
+		display.updateDisplay(VoxelVariables.FPS, gm);
 	}
 
 	public void update(GameResources gm, GuiResources gi, WorldsHandler world, float delta) {
 		Display.upsCount++;
-		switch (gm.getGameStates().state) {
+		switch (gm.getGlobalStates().getState()) {
 		case MAINMENU:
-			if (Keyboard.isKeyDown(Keyboard.KEY_O))
-				Bootstrap.config.setVisible(true);
-			gm.mainMenuModels.get(0).getEntity().increaseRotation(0, 0.1f, 0);
 			break;
 		case IN_PAUSE:
-			if (Keyboard.isKeyDown(Keyboard.KEY_O))
-				Bootstrap.config.setVisible(true);
 			break;
-		case GAME:
+		case GAME_SP:
 			worldsHandler.getActiveWorld().updateChunksGeneration(gm, api);
 			gm.getPhysics().getMobManager().update(delta, gm, gi, world.getActiveWorld(), api);
 			gm.getParticleController().update(delta, gm, gi, world.getActiveWorld());
@@ -225,15 +213,16 @@ public class Voxel {
 			break;
 		case LOADING_WORLD:
 			break;
+		case OPTIONS:
+			break;
 		}
-		gm.getGameStates().switchStates(gm, world, api, display);
+		gm.getGlobalStates().updateUpdateThread(gm, world, api, display);
 	}
 
 	public void dispose() {
 		Logger.log("Closing Game");
 		gameResources.cleanUp();
 		api.dispose();
-		Bootstrap.config.dispose();
 		display.closeDisplay();
 	}
 

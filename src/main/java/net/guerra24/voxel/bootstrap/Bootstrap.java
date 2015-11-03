@@ -31,7 +31,6 @@ import java.io.PrintStream;
 
 import net.guerra24.voxel.core.Voxel;
 import net.guerra24.voxel.core.VoxelVariables;
-import net.guerra24.voxel.menu.ConfigGUI;
 
 /**
  * Initialize the basic game code
@@ -43,33 +42,12 @@ public class Bootstrap {
 	 * OS info
 	 */
 	private static Platform platform;
-	/**
-	 * Config GUI
-	 */
-	public static ConfigGUI config;
-
-	/**
-	 * Initialize the console thread, the settings gui and starts the game
-	 * 
-	 * @author Guerra24 <pablo230699@hotmail.com>
-	 */
-	public static void run() {
-		config = new ConfigGUI();
-		while (!config.ready) {
-			try {
-				Thread.sleep(100);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
-	}
 
 	/**
 	 * 
 	 * Gets the OS
 	 * 
 	 * @return The OS and the architecture
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 * 
 	 */
 	public static Platform getPlatform() {
@@ -98,7 +76,6 @@ public class Bootstrap {
 	/**
 	 * Enumerator of the OS
 	 * 
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 *
 	 */
 	public enum Platform {
@@ -111,7 +88,6 @@ public class Bootstrap {
 	 * 
 	 * @param args
 	 *            Not Used
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public static void main(String[] args) {
 		if (VoxelVariables.debug) {
@@ -126,8 +102,12 @@ public class Bootstrap {
 				e.printStackTrace();
 			}
 		}
+		VoxelVariables.WIDTH = Integer.parseInt(args[0]);
+		VoxelVariables.HEIGHT = Integer.parseInt(args[1]);
+		VoxelVariables.FOV = Integer.parseInt(args[2]);
+		VoxelVariables.FPS = Integer.parseInt(args[3]);
+		VoxelVariables.radius = Integer.parseInt(args[4]);
 		Thread.currentThread().setName("Voxel Main");
-		run();
 		new Voxel();
 	}
 

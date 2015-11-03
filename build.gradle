@@ -3,7 +3,7 @@ apply plugin:'eclipse'
 apply plugin:'application'
 
 mainClassName = 'net.guerra24.voxel.bootstrap.Bootstrap'
-version = '0.0.6-ALPHA'
+version = '0.0.8-ALPHA'
 applicationDefaultJvmArgs = ["-Xmx512M"]
 
 jar {

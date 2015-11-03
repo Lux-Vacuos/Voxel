@@ -47,7 +47,6 @@ public class Maths {
 	 * @param scale
 	 *            Scale
 	 * @return Transformation Matrix 2D
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public static Matrix4f createTransformationMatrix(Vector2f translation, Vector2f scale) {
 		Matrix4f matrix = new Matrix4f();
@@ -71,7 +70,6 @@ public class Maths {
 	 * @param scale
 	 *            Scale
 	 * @return Transformation Matrix 3D
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public static Matrix4f createTransformationMatrix(Vector3f translation, float rx, float ry, float rz, float scale) {
 		Matrix4f matrix = new Matrix4f();
@@ -90,7 +88,6 @@ public class Maths {
 	 * @param camera
 	 *            Camera
 	 * @return View Matrix
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public static Matrix4f createViewMatrix(Camera camera) {
 		Matrix4f viewMatrix = new Matrix4f();
@@ -150,7 +147,6 @@ public class Maths {
 	 * @param max
 	 *            Max Value
 	 * @return Random Int
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public static int randInt(int min, int max) {
 		Random rand = new Random();
@@ -166,7 +162,6 @@ public class Maths {
 	 * @param max
 	 *            Max Value
 	 * @return Random Int
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public static float randFloat() {
 		Random rand = new Random();

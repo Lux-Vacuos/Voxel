@@ -51,7 +51,6 @@ public class OBJLoader {
 	 * @param loader
 	 *            Loader
 	 * @return RawModel
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public RawModel loadObjModel(String fileName, Loader loader) {
 		FileReader fr = null;
@@ -148,7 +147,6 @@ public class OBJLoader {
 	 *            Texture Array
 	 * @param normalsArray
 	 *            Normals Arrays
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	private static void processVertex(String[] vertexData, List<Integer> indices, List<Vector2f> textures,
 			List<Vector3f> normals, float[] textureArrays, float[] normalsArray) {

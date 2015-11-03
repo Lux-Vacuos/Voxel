@@ -34,21 +34,18 @@ public abstract class Mod {
 	/**
 	 * Basic Mod Info
 	 * 
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public abstract void preInit();
 
 	/**
 	 * Mod Textures
 	 * 
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public abstract void init();
 
 	/**
 	 * Final Mod Load
 	 * 
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public abstract void postInit();
 
@@ -56,7 +53,6 @@ public abstract class Mod {
 	 * Mod Name
 	 * 
 	 * @return Name
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public abstract String getName();
 
@@ -64,7 +60,6 @@ public abstract class Mod {
 	 * Mod ID
 	 * 
 	 * @return ID
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public abstract int getID();
 }

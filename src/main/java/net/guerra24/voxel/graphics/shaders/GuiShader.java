@@ -62,7 +62,6 @@ public class GuiShader extends ShaderProgram {
 	 * 
 	 * @param matrix
 	 *            Transformation Matrix
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void loadTransformation(Matrix4f matrix) {
 		super.loadMatrix(loc_transformationMatrix, matrix);

@@ -39,7 +39,6 @@ public class VoxelMobManager extends MobManager {
 	 * 
 	 * @param gm
 	 *            Game Resources
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public VoxelMobManager(GameResources gm) {
 		super(gm);

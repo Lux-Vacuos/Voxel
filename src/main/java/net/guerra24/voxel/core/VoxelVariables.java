@@ -41,8 +41,10 @@ public class VoxelVariables {
 	 * Game Settings
 	 */
 	public static boolean debug = false;
-	public static final String version = "0.0.7";
-	public static final int build = 101;
+	public static final String version = "0.0.8";
+	public static final String apiVersion = "0.0.3";
+	public static final String state = "ALPHA";
+	public static final int build = 108;
 	public static int FOV = 90;
 	public static int WIDTH = 1280;
 	public static int HEIGHT = 720;
@@ -85,6 +87,8 @@ public class VoxelVariables {
 	public static final String FRAGMENT_FILE_PARTICLE = "FragmentParticle.glsl";
 	public static final String VERTEX_FILE_POST = "VertexPost.glsl";
 	public static final String FRAGMENT_FILE_POST = "FragmentPost.glsl";
+	public static final String VERTEX_FILE_FONT = "VertexFont.glsl";
+	public static final String FRAGMENT_FILE_FONT = "FragmentFont.glsl";
 	/**
 	 * World Folder Path
 	 */
@@ -93,8 +97,6 @@ public class VoxelVariables {
 
 	/**
 	 * Update Global Variables
-	 * 
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public static void update() {
 		genRadius = radius + radiusLimit;

@@ -41,7 +41,6 @@ public class ModelTexture {
 	 * 
 	 * @param id
 	 *            Texture ID
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public ModelTexture(int id) {
 		this.textureID = id;
@@ -51,7 +50,6 @@ public class ModelTexture {
 	 * Get Texture ID
 	 * 
 	 * @return Texture ID
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public int getID() {
 		return textureID;

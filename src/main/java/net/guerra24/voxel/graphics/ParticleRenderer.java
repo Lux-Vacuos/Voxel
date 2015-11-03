@@ -28,6 +28,7 @@ import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
 import static org.lwjgl.opengl.GL11.GL_UNSIGNED_INT;
 import static org.lwjgl.opengl.GL11.glBindTexture;
+import static org.lwjgl.opengl.GL11.glDrawElements;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
 import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
@@ -37,7 +38,6 @@ import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import java.util.List;
 import java.util.Map;
 
-import net.guerra24.voxel.graphics.opengl.VoxelGL33;
 import net.guerra24.voxel.graphics.shaders.ParticleShader;
 import net.guerra24.voxel.particle.Particle;
 import net.guerra24.voxel.resources.GameResources;
@@ -64,7 +64,6 @@ public class ParticleRenderer {
 	 * 
 	 * @param shader
 	 *            Particle Shader
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public ParticleRenderer(ParticleShader shader) {
 		this.shader = shader;
@@ -77,7 +76,6 @@ public class ParticleRenderer {
 	 *            Batch of particles
 	 * @param gm
 	 *            GameResources
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void render(Map<TexturedModel, List<Particle>> particles, GameResources gm) {
 		for (TexturedModel model : particles.keySet()) {
@@ -85,7 +83,7 @@ public class ParticleRenderer {
 			List<Particle> batch = particles.get(model);
 			for (Particle entity : batch) {
 				prepareInstance(entity);
-				VoxelGL33.glDrawElements(GL_TRIANGLES, model.getRawModel().getVertexCount(), GL_UNSIGNED_INT, 0);
+				glDrawElements(GL_TRIANGLES, model.getRawModel().getVertexCount(), GL_UNSIGNED_INT, 0);
 			}
 			unbindTexturedModel();
 		}
@@ -96,7 +94,6 @@ public class ParticleRenderer {
 	 * 
 	 * @param model
 	 *            TexturedModel
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	private void prepareTexturedModel(TexturedModel model, GameResources gm) {
 		RawModel rawmodel = model.getRawModel();
@@ -122,7 +119,6 @@ public class ParticleRenderer {
 	 * Prepares the Textured Model Translation, Rotation and Scale
 	 * 
 	 * @param entity
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	private void prepareInstance(Particle particle) {
 		Matrix4f transformationMatrix = Maths.createTransformationMatrix(particle.getPosition(), particle.getRotX(),

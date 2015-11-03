@@ -69,7 +69,7 @@ import net.guerra24.voxel.world.block.Block;
  */
 public class Camera {
 
-	private Vector3f position = new Vector3f(-2, 0, -1);
+	private Vector3f position = new Vector3f(0, 0, 1);
 	private float pitch;
 	private float yaw;
 	private float roll;
@@ -301,6 +301,27 @@ public class Camera {
 
 		updatePlayerState(gi);
 		updateDebug(world);
+	}
+
+	public void moveToPosition(Vector3f pos) {
+		if (pos.getX() > position.getX())
+			increasePosition(0.01f, 0, 0);
+		if (pos.getX() < position.getX())
+			increasePosition(-0.01f, 0, 0);
+		if (pos.getY() > position.getY())
+			increasePosition(0, 0.01f, 0);
+		if (pos.getY() < position.getY())
+			increasePosition(0, -0.01f, 0);
+		if (pos.getZ() > position.getZ())
+			increasePosition(0, 0, 0.01f);
+		if (pos.getZ() < position.getZ())
+			increasePosition(0, 0, -0.01f);
+	}
+
+	public void increasePosition(float dx, float dy, float dz) {
+		this.position.x += dx;
+		this.position.y += dy;
+		this.position.z += dz;
 	}
 
 	public void updatePlayerState(GuiResources gi) {

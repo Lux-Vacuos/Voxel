@@ -71,7 +71,6 @@ public class Particle extends Entity {
 	 *            Particle XVelocity
 	 * @param zVel
 	 *            Particle ZVelocity
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public Particle(TexturedModel model, Vector3f position, float rotX, float rotY, float rotZ, float lifeTime,
 			float scale, float xVel, float zVel) {
@@ -92,7 +91,6 @@ public class Particle extends Entity {
 	 *            GuiResources
 	 * @param world
 	 *            DimensionalWorld
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void update(float delta, GameResources gm, GuiResources gi, IWorld world) {
 		Vector3f normal = new Vector3f(0, 1, 0);
@@ -118,7 +116,6 @@ public class Particle extends Entity {
 	 *            Game Delta
 	 * @param world
 	 *            Dimensional World
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	private void updatePhysics(float delta, IWorld world) {
 		if (xVel > 0)
@@ -145,7 +142,6 @@ public class Particle extends Entity {
 	 * @param world
 	 *            Dimensional World
 	 * @return Collision Type
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	private CollisionType isCollision(int direction, IWorld world) {
 

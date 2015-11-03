@@ -24,27 +24,21 @@
 
 package net.guerra24.voxel.graphics;
 
-import static org.lwjgl.opengl.GL11.GL_BLEND;
-import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
-import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
-import static org.lwjgl.opengl.GL11.GL_TRIANGLE_STRIP;
-import static org.lwjgl.opengl.GL11.glBindTexture;
+import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
 import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
 import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 
-import net.guerra24.voxel.graphics.opengl.VoxelGL33;
+import java.util.List;
+
 import net.guerra24.voxel.graphics.shaders.GuiShader;
 import net.guerra24.voxel.resources.Loader;
 import net.guerra24.voxel.resources.models.GuiTexture;
 import net.guerra24.voxel.resources.models.RawModel;
 import net.guerra24.voxel.util.Maths;
 import net.guerra24.voxel.util.vector.Matrix4f;
-
-import java.util.List;
 
 /**
  * Gui Rendering
@@ -65,7 +59,6 @@ public class GuiRenderer {
 	 * 
 	 * @param loader
 	 *            Game Loader
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public GuiRenderer(Loader loader) {
 		float[] positions = { -1, 1, -1, -1, 1, 1, 1, -1 };
@@ -78,11 +71,9 @@ public class GuiRenderer {
 	 * 
 	 * @param guis
 	 *            A list of Guis
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void renderGui(List<GuiTexture> guis) {
-		VoxelGL33.glEnable(GL_BLEND);
-		VoxelGL33.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glEnable(GL_BLEND);
 		shader.start();
 		glBindVertexArray(quad.getVaoID());
 		glEnableVertexAttribArray(0);
@@ -91,32 +82,16 @@ public class GuiRenderer {
 			glBindTexture(GL_TEXTURE_2D, gui.getTexture());
 			Matrix4f matrix = Maths.createTransformationMatrix(gui.getPosition(), gui.getScale());
 			shader.loadTransformation(matrix);
-			VoxelGL33.glDrawArrays(GL_TRIANGLE_STRIP, 0, quad.getVertexCount());
+			glDrawArrays(GL_TRIANGLE_STRIP, 0, quad.getVertexCount());
 		}
 		glDisableVertexAttribArray(0);
 		glBindVertexArray(0);
 		shader.stop();
-		VoxelGL33.glDisable(GL_BLEND);
-	}
-
-	public void renderGui(GuiTexture guis) {
-		shader.start();
-		glBindVertexArray(quad.getVaoID());
-		glEnableVertexAttribArray(0);
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, guis.getTexture());
-		Matrix4f matrix = Maths.createTransformationMatrix(guis.getPosition(), guis.getScale());
-		shader.loadTransformation(matrix);
-		VoxelGL33.glDrawArrays(GL_TRIANGLE_STRIP, 0, quad.getVertexCount());
-		glDisableVertexAttribArray(0);
-		glBindVertexArray(0);
-		shader.stop();
+		glDisable(GL_BLEND);
 	}
 
 	/**
 	 * Clear the Shader
-	 * 
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void cleanUp() {
 		shader.cleanUp();

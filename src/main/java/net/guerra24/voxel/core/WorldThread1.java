@@ -1,5 +1,5 @@
 /*
- * The MIT License (MIT)
+S * The MIT License (MIT)
  *
  * Copyright (c) 2015 Guerra24
  *
@@ -42,7 +42,7 @@ public class WorldThread1 extends Thread {
 		float delta = 0;
 		float accumulator = 0f;
 		float interval = 1f / fps;
-		while (gameResources.getGameStates().loop) {
+		while (gameResources.getGlobalStates().loop) {
 			delta = Display.getDeltaUpdate();
 			accumulator += delta;
 			while (accumulator >= interval) {

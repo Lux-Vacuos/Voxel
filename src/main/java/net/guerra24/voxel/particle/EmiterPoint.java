@@ -63,7 +63,6 @@ public class EmiterPoint {
 	 *            Origin Y
 	 * @param z
 	 *            Origin Z
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public EmiterPoint(Vector3f origin, Loader loader, float x, float y, float z) {
 		this.origin = origin;
@@ -81,7 +80,6 @@ public class EmiterPoint {
 	 * 
 	 * @param controller
 	 *            ParticleController
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void spawnParticles(ParticleController controller) {
 		origin = new Vector3f(x, y, z);

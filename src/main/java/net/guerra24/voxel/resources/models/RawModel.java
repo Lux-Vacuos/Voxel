@@ -44,7 +44,6 @@ public class RawModel {
 	 * 
 	 * @param vaoID
 	 * @param vertexCount
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public RawModel(int vaoID, int vertexCount) {
 		this.vaoID = vaoID;
@@ -55,7 +54,6 @@ public class RawModel {
 	 * Get VAOid
 	 * 
 	 * @return VAOid
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public int getVaoID() {
 		return vaoID;
@@ -65,7 +63,6 @@ public class RawModel {
 	 * Get Vertex Count
 	 * 
 	 * @return Vertex Count
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public int getVertexCount() {
 		return vertexCount;

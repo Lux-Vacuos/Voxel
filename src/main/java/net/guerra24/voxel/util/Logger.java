@@ -53,7 +53,6 @@ public final class Logger {
 	 *            Thread
 	 * @param messages
 	 *            Message
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public static void log(Object... messages) {
 		for (Object message : messages)
@@ -68,7 +67,6 @@ public final class Logger {
 	 *            Thread
 	 * @param messages
 	 *            Message
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public static void warn(Object... messages) {
 		for (Object message : messages)
@@ -84,7 +82,6 @@ public final class Logger {
 	 *            Thread
 	 * @param messages
 	 *            Message
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public static void error(Object... messages) {
 		for (Object message : messages) {

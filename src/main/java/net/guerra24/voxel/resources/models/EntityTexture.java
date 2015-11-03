@@ -55,7 +55,6 @@ public class EntityTexture {
 	 *            Texture Width
 	 * @param height
 	 *            Texture Height
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public EntityTexture(ByteBuffer buffer, int width, int height) {
 		this.buffer = buffer;
