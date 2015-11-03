@@ -1,6 +1,6 @@
 package net.guerra24.voxel.resources.models;
 
-import net.guerra24.voxel.api.VAPI;
+import net.guerra24.voxel.api.API;
 import net.guerra24.voxel.resources.GameResources;
 import net.guerra24.voxel.resources.GuiResources;
 import net.guerra24.voxel.util.vector.Vector3f;
@@ -24,7 +24,7 @@ public class ButtonModel implements IEntity {
 	}
 
 	@Override
-	public void update(float delta, GameResources gm, GuiResources gi, IWorld world, VAPI api) {
+	public void update(float delta, GameResources gm, GuiResources gi, IWorld world, API api) {
 	}
 
 	@Override

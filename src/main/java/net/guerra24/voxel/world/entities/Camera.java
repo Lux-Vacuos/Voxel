@@ -24,35 +24,14 @@
 
 package net.guerra24.voxel.world.entities;
 
-import static net.guerra24.voxel.input.Keyboard.KEY_1;
-import static net.guerra24.voxel.input.Keyboard.KEY_2;
-import static net.guerra24.voxel.input.Keyboard.KEY_3;
-import static net.guerra24.voxel.input.Keyboard.KEY_4;
-import static net.guerra24.voxel.input.Keyboard.KEY_5;
-import static net.guerra24.voxel.input.Keyboard.KEY_6;
-import static net.guerra24.voxel.input.Keyboard.KEY_7;
-import static net.guerra24.voxel.input.Keyboard.KEY_8;
-import static net.guerra24.voxel.input.Keyboard.KEY_9;
-import static net.guerra24.voxel.input.Keyboard.KEY_A;
-import static net.guerra24.voxel.input.Keyboard.KEY_D;
-import static net.guerra24.voxel.input.Keyboard.KEY_F3;
-import static net.guerra24.voxel.input.Keyboard.KEY_J;
-import static net.guerra24.voxel.input.Keyboard.KEY_K;
-import static net.guerra24.voxel.input.Keyboard.KEY_LCONTROL;
-import static net.guerra24.voxel.input.Keyboard.KEY_LSHIFT;
-import static net.guerra24.voxel.input.Keyboard.KEY_R;
-import static net.guerra24.voxel.input.Keyboard.KEY_S;
-import static net.guerra24.voxel.input.Keyboard.KEY_SPACE;
-import static net.guerra24.voxel.input.Keyboard.KEY_W;
-import static net.guerra24.voxel.input.Keyboard.KEY_Y;
-import static net.guerra24.voxel.input.Keyboard.isKeyDown;
+import static net.guerra24.voxel.input.Keyboard.*;
 import static net.guerra24.voxel.input.Mouse.getDX;
 import static net.guerra24.voxel.input.Mouse.getDY;
 import static net.guerra24.voxel.input.Mouse.isButtonDown;
 import static net.guerra24.voxel.input.Mouse.setCursorPosition;
 import static net.guerra24.voxel.input.Mouse.setGrabbed;
 
-import net.guerra24.voxel.api.VAPI;
+import net.guerra24.voxel.api.API;
 import net.guerra24.voxel.core.VoxelVariables;
 import net.guerra24.voxel.graphics.opengl.Display;
 import net.guerra24.voxel.resources.GameResources;
@@ -94,7 +73,7 @@ public class Camera {
 		this.speed = 0.2f;
 	}
 
-	public void update(float delta, GameResources gm, GuiResources gi, IWorld world, VAPI api) {
+	public void update(float delta, GameResources gm, GuiResources gi, IWorld world, API api) {
 		isMoved = false;
 		float mouseDX = getDX() * delta * mouseSpeed * 0.16f * multiplierMouse;
 		float mouseDY = getDY() * delta * mouseSpeed * 0.16f * multiplierMouse;
@@ -291,6 +270,8 @@ public class Camera {
 			block = 9;
 		else if (isKeyDown(KEY_9))
 			block = 10;
+		else if (isKeyDown(KEY_0))
+			block = 30;
 		if (isButtonDown(0)) {
 			setBlock(bx, by, bz, (byte) 0, world);
 		} else if (isButtonDown(1)) {

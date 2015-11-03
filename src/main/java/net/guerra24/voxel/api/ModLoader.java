@@ -35,9 +35,9 @@ import java.nio.file.Paths;
 
 import net.guerra24.voxel.util.Logger;
 
-public class VModLoader {
+public class ModLoader {
 
-	public VModLoader() {
+	public ModLoader() {
 	}
 
 	public void loadMods() {
@@ -48,7 +48,9 @@ public class VModLoader {
 						if (filePath.toFile().getAbsolutePath().endsWith(".jar")) {
 							URLClassLoader child = new URLClassLoader(new URL[] { filePath.toFile().toURI().toURL() },
 									this.getClass().getClassLoader());
-							Class<?> classToLoad = Class.forName("Loader", true, child);
+							String name = filePath.getFileName().toString();
+							name = name.substring(0, name.lastIndexOf('.'));
+							Class<?> classToLoad = Class.forName("mod_" + name, true, child);
 							Method method = classToLoad.getDeclaredMethod("loadMod");
 							Object instance = classToLoad.newInstance();
 							method.invoke(instance);

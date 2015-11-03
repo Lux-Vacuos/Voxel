@@ -53,4 +53,8 @@ public class TextMasterRenderer {
 	public void cleanUp() {
 		renderer.cleanUp();
 	}
+
+	public FontRenderer getRenderer() {
+		return renderer;
+	}
 }

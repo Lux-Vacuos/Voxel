@@ -31,6 +31,9 @@ package net.guerra24.voxel.api.mod;
  * @category API
  */
 public abstract class Mod {
+	
+	//LIST: Custom Blocks,
+	
 	/**
 	 * Basic Mod Info
 	 * 

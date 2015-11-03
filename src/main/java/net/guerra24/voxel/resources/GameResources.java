@@ -102,7 +102,7 @@ public class GameResources {
 		guiRenderer = new GuiRenderer(loader);
 		skyboxRenderer = new SkyboxRenderer(loader, renderer.getProjectionMatrix());
 		textMasterRenderer = new TextMasterRenderer(loader);
-		textHandler = new TextHandler(loader);
+		textHandler = new TextHandler(this);
 		particleController = new ParticleController(loader);
 		postProcessing = new PostProcessingRenderer(loader);
 		waterFBO = new FrameBuffer(false, false, 128, 128);

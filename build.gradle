@@ -3,8 +3,7 @@ apply plugin:'eclipse'
 apply plugin:'application'
 
 mainClassName = 'net.guerra24.voxel.bootstrap.Bootstrap'
-version = '0.0.8-ALPHA'
-applicationDefaultJvmArgs = ["-Xmx512M"]
+version = '0.0.9-ALPHA'
 
 jar {
 	include("*net/**")
@@ -12,7 +11,7 @@ jar {
 	include("assets/**")
 	
     manifest {
-        attributes 'Voxel-Branch': 'Master',
+        attributes 'Voxel-Branch': 'Develop',
                    'Voxel-Version': version
     }
 }
@@ -44,8 +43,3 @@ sourceSets {
         resources.srcDir("${projectDir}/src/main/resources")
     }
 }
-
-task wrapper(type: Wrapper) {
-    gradleVersion = '2.8'
-}
-

@@ -42,6 +42,7 @@ import net.guerra24.voxel.resources.Loader;
 import net.guerra24.voxel.resources.models.ButtonModel;
 import net.guerra24.voxel.resources.models.TexturedModel;
 import net.guerra24.voxel.resources.models.WaterTile;
+import net.guerra24.voxel.util.Maths;
 import net.guerra24.voxel.util.vector.Matrix4f;
 import net.guerra24.voxel.world.block.BlockEntity;
 import net.guerra24.voxel.world.entities.Entity;
@@ -181,7 +182,7 @@ public class MasterRenderer {
 
 	private void renderGui(GameResources gm) {
 		shader.start();
-		shader.loadProjectionMatrix(projectionMatrix);
+		shader.loadProjectionMatrix(Maths.orthographic(-0.7f * aspectRatio, 0.7f * aspectRatio, -0.7f, 0.7f, -100, 100f));
 		shader.loadviewMatrix(gm.getCamera());
 		entityRenderer.renderEntity(guiModels, gm);
 		shader.stop();

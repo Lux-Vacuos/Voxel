@@ -2,20 +2,20 @@ package net.guerra24.voxel.world;
 
 import java.util.Random;
 
-import net.guerra24.voxel.api.VAPI;
+import net.guerra24.voxel.api.API;
 import net.guerra24.voxel.resources.GameResources;
 import net.guerra24.voxel.world.chunks.Chunk;
 import net.guerra24.voxel.world.chunks.ChunkGenerator;
 
 public interface IWorld {
 
-	public void startWorld(String name, Random seed, int chunkDim, VAPI api, GameResources gm);
+	public void startWorld(String name, Random seed, int chunkDim, API api, GameResources gm);
 
 	public void init(GameResources gm);
 
-	public void createDimension(GameResources gm, VAPI api);
+	public void createDimension(GameResources gm, API api);
 
-	public void updateChunksGeneration(GameResources gm, VAPI api);
+	public void updateChunksGeneration(GameResources gm, API api);
 
 	public void updateChunksRender(GameResources gm);
 
@@ -23,7 +23,7 @@ public interface IWorld {
 
 	public void lighting();
 
-	public void switchDimension(int id, GameResources gm, VAPI api);
+	public void switchDimension(int id, GameResources gm, API api);
 
 	public void saveWorld(GameResources gm);
 

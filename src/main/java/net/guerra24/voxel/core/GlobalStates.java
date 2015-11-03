@@ -2,7 +2,7 @@ package net.guerra24.voxel.core;
 
 import java.util.Random;
 
-import net.guerra24.voxel.api.VAPI;
+import net.guerra24.voxel.api.API;
 import net.guerra24.voxel.graphics.opengl.Display;
 import net.guerra24.voxel.input.Keyboard;
 import net.guerra24.voxel.menu.MainMenu;
@@ -22,10 +22,6 @@ public class GlobalStates {
 	private PauseMenu pauseMenu;
 	private OptionsMenu optionsMenu;
 
-	private boolean switchToMainMenu = false;
-	private boolean switchToGameSP = false;
-	private boolean switchToOptions = false;
-
 	public enum GameState {
 		GAME_SP, MAINMENU, IN_PAUSE, LOADING_WORLD, OPTIONS;
 	}
@@ -38,10 +34,9 @@ public class GlobalStates {
 		state = GameState.MAINMENU;
 	}
 
-	public void updateUpdateThread(GameResources gm, WorldsHandler worlds, VAPI api, Display display) {
+	public void updateUpdateThread(GameResources gm, WorldsHandler worlds, API api, Display display) {
 
 		if (state == GameState.MAINMENU && mainMenu.getPlayButton().pressed()) {
-			switchToGameSP = true;
 			state = GameState.LOADING_WORLD;
 			Random seed;
 			if (VoxelVariables.isCustomSeed) {
@@ -66,19 +61,16 @@ public class GlobalStates {
 			gm.getCamera().setPosition(new Vector3f(0, 0, 1));
 			gm.getCamera().setPitch(0);
 			gm.getCamera().setYaw(0);
-			switchToMainMenu = true;
 			state = GameState.MAINMENU;
 			gm.getSoundSystem().setVolume("menu1", 1f);
 		}
 
 		if (state == GameState.MAINMENU && mainMenu.getOptionsButton().pressed()) {
-			switchToOptions = true;
 			gm.getCamera().setPosition(new Vector3f(-1.4f, -3.4f, 1.4f));
 			state = GameState.OPTIONS;
 		}
 
 		if (state == GameState.OPTIONS && optionsMenu.getExitButton().pressed()) {
-			switchToMainMenu = true;
 			gm.getCamera().setPosition(new Vector3f(0, 0, 1));
 			state = GameState.MAINMENU;
 		}
@@ -124,19 +116,7 @@ public class GlobalStates {
 		}
 	}
 
-	public void updateRenderThread(GameResources gm, WorldsHandler worlds, VAPI api, Display display) {
-		if (switchToGameSP) {
-			switchToGameSP = false;
-			gm.getTextHandler().switchTo(gm.getTextHandler().getGameSPText(), gm.getTextMasterRenderer());
-		}
-		if (switchToMainMenu) {
-			switchToMainMenu = false;
-			gm.getTextHandler().switchTo(gm.getTextHandler().getMainMenuText(), gm.getTextMasterRenderer());
-		}
-		if (switchToOptions) {
-			switchToOptions = false;
-			gm.getTextHandler().switchTo(gm.getTextHandler().getOptionsText(), gm.getTextMasterRenderer());
-		}
+	public void updateRenderThread(GameResources gm, WorldsHandler worlds, API api, Display display) {
 	}
 
 	public GameState getState() {

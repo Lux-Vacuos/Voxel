@@ -27,7 +27,7 @@ package net.guerra24.voxel.world;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.guerra24.voxel.api.VAPI;
+import net.guerra24.voxel.api.API;
 import net.guerra24.voxel.resources.GameResources;
 import net.guerra24.voxel.resources.GuiResources;
 import net.guerra24.voxel.util.vector.Vector3f;
@@ -56,9 +56,9 @@ public abstract class MobManager {
 	
 	protected abstract void init();
 
-	public void update(float delta, GameResources gm, GuiResources gi, IWorld world, VAPI api) {
-		for (int x = 0; x < mobs.size(); x++) {
-			mobs.get(x).update(delta, gm, gi, world, api);
+	public void update(float delta, GameResources gm, GuiResources gi, IWorld world, API api) {
+		for (IEntity iEntity : mobs) {
+			iEntity.update(delta, gm, gi, world, api);
 		}
 	}
 

@@ -37,7 +37,7 @@ import java.util.Random;
 
 import com.google.gson.JsonSyntaxException;
 
-import net.guerra24.voxel.api.VAPI;
+import net.guerra24.voxel.api.API;
 import net.guerra24.voxel.core.VoxelVariables;
 import net.guerra24.voxel.resources.GameResources;
 import net.guerra24.voxel.util.Logger;
@@ -76,7 +76,7 @@ public class InfinityWorld implements IWorld {
 	private Queue<LightNode> lightNodes;
 
 	@Override
-	public void startWorld(String name, Random seed, int chunkDim, VAPI api, GameResources gm) {
+	public void startWorld(String name, Random seed, int chunkDim, API api, GameResources gm) {
 		this.name = name;
 		this.seed = seed;
 		this.chunkDim = chunkDim;
@@ -101,7 +101,7 @@ public class InfinityWorld implements IWorld {
 	}
 
 	@Override
-	public void createDimension(GameResources gm, VAPI api) {
+	public void createDimension(GameResources gm, API api) {
 		Logger.log("Generating World");
 		xPlayChunk = (int) (gm.getCamera().getPosition().x / 16);
 		zPlayChunk = (int) (gm.getCamera().getPosition().z / 16);
@@ -137,7 +137,7 @@ public class InfinityWorld implements IWorld {
 	}
 
 	@Override
-	public void updateChunksGeneration(GameResources gm, VAPI api) {
+	public void updateChunksGeneration(GameResources gm, API api) {
 		if (gm.getCamera().getPosition().x < 0)
 			xPlayChunk = (int) ((gm.getCamera().getPosition().x - 16) / 16);
 		if (gm.getCamera().getPosition().y < 0)
@@ -267,7 +267,7 @@ public class InfinityWorld implements IWorld {
 	}
 
 	@Override
-	public void switchDimension(int id, GameResources gm, VAPI api) {
+	public void switchDimension(int id, GameResources gm, API api) {
 		if (id != chunkDim) {
 			clearDimension(gm);
 			chunkDim = id;
@@ -330,9 +330,10 @@ public class InfinityWorld implements IWorld {
 			BufferedReader br = new BufferedReader(new FileReader(VoxelVariables.worldPath + name + "/chunks_"
 					+ chunkDim + "/chunk_" + chunkDim + "_" + cx + "_" + cy + "_" + cz + ".json"));
 			Chunk chunk = gm.getGson().fromJson(br, Chunk.class);
-			if (chunk != null)
-				chunk.createList();
-			else {
+			if (chunk != null) {
+				chunk.load();
+				chunk.checkForMissingBlocks();
+			} else {
 				Logger.warn("Re-Creating Chunk " + chunkDim + " " + cx + " " + cy + " " + cz);
 				Logger.warn("Probably a chunk corruption");
 				chunk = new Chunk(chunkDim, cx, cy, cz, this);

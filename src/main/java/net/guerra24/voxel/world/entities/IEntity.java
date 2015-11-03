@@ -25,13 +25,13 @@
 
 package net.guerra24.voxel.world.entities;
 
-import net.guerra24.voxel.api.VAPI;
+import net.guerra24.voxel.api.API;
 import net.guerra24.voxel.resources.GameResources;
 import net.guerra24.voxel.resources.GuiResources;
 import net.guerra24.voxel.world.IWorld;
 
 public interface IEntity {
-	public void update(float delta, GameResources gm, GuiResources gi, IWorld world, VAPI api);
+	public void update(float delta, GameResources gm, GuiResources gi, IWorld world, API api);
 
 	public Entity getEntity();
 }

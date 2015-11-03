@@ -29,6 +29,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 import net.guerra24.voxel.core.VoxelVariables;
 import net.guerra24.voxel.resources.GameResources;
+import net.guerra24.voxel.util.Logger;
 import net.guerra24.voxel.util.vector.Vector3f;
 import net.guerra24.voxel.world.IWorld;
 import net.guerra24.voxel.world.WorldService;
@@ -86,7 +87,7 @@ public class Chunk {
 	 *            Dimensional World
 	 */
 	public void init(IWorld world) {
-		createList();
+		load();
 		blocks = new byte[sizeX][sizeY][sizeZ];
 		lightMap = new byte[sizeX][sizeY][sizeZ];
 	}
@@ -95,12 +96,26 @@ public class Chunk {
 	 * Initialize List
 	 * 
 	 */
-	public void createList() {
+	public void load() {
 		blocksMesh = new ConcurrentLinkedQueue<Object>();
 		blocksMeshtemp = new ConcurrentLinkedQueue<Object>();
 		sizeX = VoxelVariables.CHUNK_SIZE;
 		sizeY = VoxelVariables.CHUNK_HEIGHT;
 		sizeZ = VoxelVariables.CHUNK_SIZE;
+	}
+
+	public void checkForMissingBlocks() {
+		for (int x = 0; x < sizeX; x++) {
+			for (int z = 0; z < sizeZ; z++) {
+				for (int y = 0; y < sizeY; y++) {
+					if (Block.getBlock(blocks[x][y][z]) == null) {
+						Logger.warn("Chunk " + cx + " " + cy + " " + cz + " " + dim
+								+ " contains a missing block with ID: " + blocks[x][y][z]);
+						blocks[x][y][z] = 0;
+					}
+				}
+			}
+		}
 	}
 
 	public void rebuild(WorldService server, IWorld world) {

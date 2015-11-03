@@ -43,7 +43,6 @@ public class Physics {
 	 * 
 	 * @param gm
 	 *            Game Resources
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public Physics(GameResources gm) {
 		mobManager = new VoxelMobManager(gm);
@@ -57,7 +56,6 @@ public class Physics {
 	 * Default Mob Manager
 	 * 
 	 * @return Mob Manager
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public MobManager getMobManager() {
 		return mobManager;
@@ -68,7 +66,6 @@ public class Physics {
 	 * 
 	 * @param mobManager
 	 *            Mob Manager
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public void setMobManager(MobManager mobManager) {
 		this.mobManager = mobManager;

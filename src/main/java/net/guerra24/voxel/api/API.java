@@ -29,6 +29,8 @@ import java.util.Map;
 
 import net.guerra24.voxel.api.mod.Mod;
 import net.guerra24.voxel.util.Logger;
+import net.guerra24.voxel.world.MobManager;
+import net.guerra24.voxel.world.entities.IEntity;
 
 /**
  * API
@@ -36,18 +38,17 @@ import net.guerra24.voxel.util.Logger;
  * @author Guerra24 <pablo230699@hotmail.com>
  * @category API
  */
-public class VAPI {
+public class API {
 	/**
 	 * Mods
 	 */
 	private static Map<Integer, Mod> mods;
-	private static WorldVAPI worldAPI;
-	private static VModLoader modLoader;
+	private static ModLoader modLoader;
+	private static MobManager mobManager;
 
-	public VAPI() {
+	public API() {
 		mods = new HashMap<Integer, Mod>();
-		worldAPI = new WorldVAPI();
-		modLoader = new VModLoader();
+		modLoader = new ModLoader();
 		modLoader.loadMods();
 	}
 
@@ -61,7 +62,12 @@ public class VAPI {
 			try {
 				mods.get(x).preInit();
 			} catch (NoSuchMethodError e) {
-				Logger.log("Mod " + mods.get(x).getName() + " has failed to load in PreInit");
+				Logger.warn("Mod " + mods.get(x).getName() + " has failed to load in PreInit");
+				Logger.warn("Method not found");
+				e.printStackTrace();
+			} catch (NoSuchFieldError e) {
+				Logger.warn("Mod " + mods.get(x).getName() + " has failed to load in PreInit");
+				Logger.warn("Field not found");
 				e.printStackTrace();
 			}
 		}
@@ -80,7 +86,7 @@ public class VAPI {
 				Logger.warn("Mod " + mods.get(x).getName() + " has failed to load in Init");
 				Logger.warn("Method not found");
 				e.printStackTrace();
-			} catch(NoSuchFieldError e){
+			} catch (NoSuchFieldError e) {
 				Logger.warn("Mod " + mods.get(x).getName() + " has failed to load in Init");
 				Logger.warn("Field not found");
 				e.printStackTrace();
@@ -114,8 +120,12 @@ public class VAPI {
 	 * @param result
 	 *            Mod
 	 */
-	public static void registerMod(int id, Mod mod) {
-		mods.put(id, mod);
+	public static void registerMod(Mod mod) {
+		mods.put(mod.getID(), mod);
+	}
+
+	public static void registetMob(IEntity mob) {
+		mobManager.registerMob(mob);
 	}
 
 	/**
@@ -147,12 +157,12 @@ public class VAPI {
 		mods.clear();
 	}
 
-	public static WorldVAPI getWorldAPI() {
-		return worldAPI;
+	public static ModLoader getModLoader() {
+		return modLoader;
 	}
 
-	public static VModLoader getModLoader() {
-		return modLoader;
+	public void setMobManager(MobManager mobManager) {
+		API.mobManager = mobManager;
 	}
 
 }

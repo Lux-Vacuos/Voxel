@@ -31,7 +31,7 @@ import static org.lwjgl.opengl.GL11.glGetString;
 
 import org.lwjgl.Sys;
 
-import net.guerra24.voxel.api.VAPI;
+import net.guerra24.voxel.api.API;
 import net.guerra24.voxel.bootstrap.Bootstrap;
 import net.guerra24.voxel.graphics.opengl.Display;
 import net.guerra24.voxel.resources.GameResources;
@@ -61,7 +61,7 @@ public class Voxel {
 	private GuiResources guiResources;
 	private WorldsHandler worldsHandler;
 	private Display display;
-	private VAPI api;
+	private API api;
 
 	/**
 	 * Constructor of the Kernel, Initializes the Game and starts the loop
@@ -85,7 +85,7 @@ public class Voxel {
 		if (Bootstrap.getPlatform() == Bootstrap.Platform.MACOSX)
 			VoxelVariables.runningOnMac = true;
 		gameResources = new GameResources();
-		api = new VAPI();
+		api = new API();
 		api.preInit();
 	}
 
@@ -107,13 +107,12 @@ public class Voxel {
 		worldThread2.setKernel(this);
 		worldThread2.setGuiResources(guiResources);
 		worldThread2.start();
+		api.setMobManager(gameResources.getPhysics().getMobManager());
 		api.init();
 	}
 
 	private void postInit() {
 		api.postInit();
-		gameResources.getTextHandler().switchTo(gameResources.getTextHandler().getMainMenuText(),
-				gameResources.getTextMasterRenderer());
 		gameResources.getSoundSystem().play("menu1");
 	}
 
@@ -234,7 +233,7 @@ public class Voxel {
 		return guiResources;
 	}
 
-	public VAPI getApi() {
+	public API getApi() {
 		return api;
 	}
 
