@@ -37,6 +37,7 @@ import net.guerra24.voxel.graphics.opengl.Display;
 import net.guerra24.voxel.resources.GameResources;
 import net.guerra24.voxel.resources.GuiResources;
 import net.guerra24.voxel.util.Logger;
+import net.guerra24.voxel.util.vector.Vector3f;
 import net.guerra24.voxel.world.InfinityWorld;
 import net.guerra24.voxel.world.WorldsHandler;
 import net.guerra24.voxel.world.block.BlocksResources;
@@ -141,7 +142,7 @@ public class Voxel {
 		Display.fpsCount++;
 		switch (gm.getGlobalStates().getState()) {
 		case MAINMENU:
-			gm.getFrustum().calculateFrustum(gm);
+			gm.getFrustum().calculateFrustum(gm.getRenderer().getProjectionMatrix(), gm.getCamera());
 			gm.getRenderer().prepare();
 			gm.getRenderer().renderGui(gm.getGlobalStates().getMainMenu().getList(), gm);
 			gm.getGuiRenderer().renderGui(gm.guis2);
@@ -158,8 +159,8 @@ public class Voxel {
 			gm.getCamera().update(delta, gameResources, guiResources, worldsHandler.getActiveWorld(), api);
 			gm.getPhysics().getMobManager().getPlayer().update(delta, gm, guiResources, worldsHandler.getActiveWorld(),
 					api);
-			gm.getFrustum().calculateFrustum(gm);
 			worldsHandler.getActiveWorld().lighting();
+
 			gm.getWaterFBO().begin(128, 128);
 			gm.getCamera().invertPitch();
 			gm.getRenderer().prepare();
@@ -167,6 +168,14 @@ public class Voxel {
 			gm.getWaterFBO().end();
 			gm.getCamera().invertPitch();
 
+			gm.getFrustum().calculateFrustum(gm.getMasterShadowRenderer().getProjectionMatrix(), gm.getSun_Camera());
+			gm.getSun_Camera().setPosition(gm.getCamera().getPosition());
+			gm.getMasterShadowRenderer().being();
+			gm.getRenderer().prepare();
+			worldsHandler.getActiveWorld().updateChunksShadow(gm);
+			gm.getMasterShadowRenderer().end();
+
+			gm.getFrustum().calculateFrustum(gm.getRenderer().getProjectionMatrix(), gm.getCamera());
 			gm.getPostProcessing().getPost_fbo().begin(Display.getWidth(), Display.getHeight());
 			gm.getRenderer().prepare();
 			worldsHandler.getActiveWorld().updateChunksRender(gm);
@@ -184,7 +193,7 @@ public class Voxel {
 			gm.getGuiRenderer().renderGui(gm.guis3);
 			break;
 		case OPTIONS:
-			gm.getFrustum().calculateFrustum(gm);
+			gm.getFrustum().calculateFrustum(gm.getRenderer().getProjectionMatrix(), gm.getCamera());
 			gm.getRenderer().prepare();
 			gm.getRenderer().renderGui(gm.getGlobalStates().getMainMenu().getList(), gm);
 			gm.getGuiRenderer().renderGui(gm.guis2);

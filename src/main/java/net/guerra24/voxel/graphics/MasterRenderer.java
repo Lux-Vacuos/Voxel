@@ -24,7 +24,18 @@
 
 package net.guerra24.voxel.graphics;
 
-import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.GL_BACK;
+import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.GL_CULL_FACE;
+import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
+import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
+import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
+import static org.lwjgl.opengl.GL11.glBlendFunc;
+import static org.lwjgl.opengl.GL11.glClear;
+import static org.lwjgl.opengl.GL11.glClearColor;
+import static org.lwjgl.opengl.GL11.glCullFace;
+import static org.lwjgl.opengl.GL11.glEnable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -44,6 +55,7 @@ import net.guerra24.voxel.resources.models.TexturedModel;
 import net.guerra24.voxel.resources.models.WaterTile;
 import net.guerra24.voxel.util.Maths;
 import net.guerra24.voxel.util.vector.Matrix4f;
+import net.guerra24.voxel.util.vector.Vector3f;
 import net.guerra24.voxel.world.block.BlockEntity;
 import net.guerra24.voxel.world.entities.Entity;
 import net.guerra24.voxel.world.entities.IEntity;
@@ -156,7 +168,10 @@ public class MasterRenderer {
 	private void renderBlocks(GameResources gm) {
 		shader.start();
 		shader.loadSkyColour(VoxelVariables.RED, VoxelVariables.GREEN, VoxelVariables.BLUE);
+		shader.loadProjectionMatrix(projectionMatrix);
 		shader.loadviewMatrix(gm.getCamera());
+		shader.loadBiasMatrix(gm);
+		shader.loadLightPosition(new Vector3f(20, -70, -20));
 		entityRenderer.renderBlockEntity(blockEntities, gm);
 		shader.stop();
 		blockEntities.clear();
@@ -182,7 +197,8 @@ public class MasterRenderer {
 
 	private void renderGui(GameResources gm) {
 		shader.start();
-		shader.loadProjectionMatrix(Maths.orthographic(-0.7f * aspectRatio, 0.7f * aspectRatio, -0.7f, 0.7f, -100, 100f));
+		shader.loadProjectionMatrix(
+				Maths.orthographic(-0.7f * aspectRatio, 0.7f * aspectRatio, -0.7f, 0.7f, -100, 100f));
 		shader.loadviewMatrix(gm.getCamera());
 		entityRenderer.renderEntity(guiModels, gm);
 		shader.stop();

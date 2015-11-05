@@ -27,8 +27,9 @@
 /*--------------------------------------------------------*/
 /*-----------------POST PROCESSING CONFIG-----------------*/
 /*--------------------------------------------------------*/
-
+// WARNING ONLY ONE CAN BE ENABLED, FXAA OR DOF.
 #define FXAA
+//#define DOF
 
 /*--------------------------------------------------------*/
 /*----------------------FXAA CONFIG-----------------------*/
@@ -115,6 +116,20 @@ void main(void){
 	#else
 		vec4 textureColour = texture(texture0, texcoord);
 	#endif
-
+	
+	#ifdef DOF
+	vec3 sum = textureColour.rgb;
+	float bias = min(abs(texture(depth0, texcoord).x - texture(depth0, vec2(0.5)).x) * .02, .002);
+	for (int i = -3; i < 3; i++) {
+		for (int j = -3; j < 3; j++) {
+			sum += texture(texture0, texcoord + vec2(j, i) * bias ).rgb;
+		}
+	}
+	sum /= 36.0;
+	out_Color = vec4(sum,1.0);
+	#else
 	out_Color = textureColour;
+	#endif
+	
+
 }

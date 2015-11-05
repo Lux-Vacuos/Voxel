@@ -19,6 +19,8 @@ public interface IWorld {
 
 	public void updateChunksRender(GameResources gm);
 
+	public void updateChunksShadow(GameResources gm);
+
 	public void setupLight(int x, int y, int z, int lightLevel);
 
 	public void lighting();

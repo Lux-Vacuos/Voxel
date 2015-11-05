@@ -28,10 +28,10 @@ import java.nio.FloatBuffer;
 
 import org.lwjgl.BufferUtils;
 
-import net.guerra24.voxel.resources.GameResources;
 import net.guerra24.voxel.util.Maths;
 import net.guerra24.voxel.util.vector.Matrix4f;
 import net.guerra24.voxel.util.vector.Vector3f;
+import net.guerra24.voxel.world.entities.Camera;
 
 /**
  * Frustum Culling
@@ -83,10 +83,10 @@ public class Frustum {
 	 * @param gm
 	 *            GameResources
 	 */
-	public void calculateFrustum(GameResources gm) {
+	public void calculateFrustum(Matrix4f projectionMatrix , Camera camera) {
 		float[] clip = new float[16];
 
-		Matrix4f.mul(gm.getRenderer().getProjectionMatrix(), Maths.createViewMatrix(gm.getCamera()), clip_);
+		Matrix4f.mul(projectionMatrix, Maths.createViewMatrix(camera), clip_);
 		clip_b.rewind();
 		clip_.store(clip_b);
 		clip_b.rewind();

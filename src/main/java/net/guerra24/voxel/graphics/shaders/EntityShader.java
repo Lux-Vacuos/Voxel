@@ -25,6 +25,7 @@
 package net.guerra24.voxel.graphics.shaders;
 
 import net.guerra24.voxel.core.VoxelVariables;
+import net.guerra24.voxel.resources.GameResources;
 import net.guerra24.voxel.util.Maths;
 import net.guerra24.voxel.util.vector.Matrix4f;
 import net.guerra24.voxel.util.vector.Vector3f;
@@ -44,10 +45,14 @@ public class EntityShader extends ShaderProgram {
 	private int loc_transformationMatrix;
 	private int loc_projectionMatrix;
 	private int loc_viewMatrix;
+	private int loc_projectionLightMatrix;
+	private int loc_viewLightMatrix;
+	private int loc_biasMatrix;
 	private int loc_skyColour;
 	private int loc_blockBright;
 	private int loc_texture0;
-	
+	private int loc_depth0;
+	private int loc_lightPosition;
 
 	/**
 	 * Constructor, creates an Entity Shader
@@ -69,9 +74,14 @@ public class EntityShader extends ShaderProgram {
 		loc_transformationMatrix = super.getUniformLocation("transformationMatrix");
 		loc_projectionMatrix = super.getUniformLocation("projectionMatrix");
 		loc_viewMatrix = super.getUniformLocation("viewMatrix");
+		loc_biasMatrix = super.getUniformLocation("biasMatrix");
+		loc_projectionLightMatrix = super.getUniformLocation("projectionLightMatrix");
+		loc_viewLightMatrix = super.getUniformLocation("viewLightMatrix");
 		loc_skyColour = super.getUniformLocation("skyColour");
 		loc_blockBright = super.getUniformLocation("blockBright");
 		loc_texture0 = super.getUniformLocation("texture0");
+		loc_depth0 = super.getUniformLocation("depth0");
+		loc_lightPosition = super.getUniformLocation("lightPosition");
 
 	}
 
@@ -81,9 +91,10 @@ public class EntityShader extends ShaderProgram {
 	 */
 	public void connectTextureUnits() {
 		super.loadInt(loc_texture0, 0);
+		super.loadInt(loc_depth0, 1);
 	}
-	
-	public void loadBlockBright(float value){
+
+	public void loadBlockBright(float value) {
 		super.loadFloat(loc_blockBright, value);
 	}
 
@@ -100,6 +111,10 @@ public class EntityShader extends ShaderProgram {
 	public void loadSkyColour(float r, float g, float b) {
 		super.loadVector(loc_skyColour, new Vector3f(r, g, b));
 	}
+	
+	public void loadLightPosition(Vector3f pos){
+		super.loadVector(loc_lightPosition, pos);
+	}
 
 	/**
 	 * Loads Transformation Matrix to the shader
@@ -109,6 +124,29 @@ public class EntityShader extends ShaderProgram {
 	 */
 	public void loadTransformationMatrix(Matrix4f matrix) {
 		super.loadMatrix(loc_transformationMatrix, matrix);
+	}
+
+	public void loadBiasMatrix(GameResources gm) {
+		Matrix4f biasMatrix = new Matrix4f();
+		biasMatrix.m00 = 0.5f;
+		biasMatrix.m01 = 0;
+		biasMatrix.m02 = 0;
+		biasMatrix.m03 = 0;
+		biasMatrix.m10 = 0;
+		biasMatrix.m11 = 0.5f;
+		biasMatrix.m12 = 0;
+		biasMatrix.m13 = 0;
+		biasMatrix.m20 = 0;
+		biasMatrix.m21 = 0;
+		biasMatrix.m22 = 0.5f;
+		biasMatrix.m23 = 0;
+		biasMatrix.m30 = 0.5f;
+		biasMatrix.m31 = 0.5f;
+		biasMatrix.m32 = 0.5f;
+		biasMatrix.m33 = 1f;
+		super.loadMatrix(loc_biasMatrix, biasMatrix);
+		super.loadMatrix(loc_projectionLightMatrix, gm.getMasterShadowRenderer().getProjectionMatrix());
+		super.loadMatrix(loc_viewLightMatrix, Maths.createViewMatrix(gm.getSun_Camera()));
 	}
 
 	/**

@@ -421,6 +421,10 @@ public class Chunk {
 		}
 	}
 
+	public void renderShadow(GameResources gm) {
+		gm.getMasterShadowRenderer().renderChunk(blocksMesh, gm);
+	}
+
 	private void clear() {
 		blocksMesh.clear();
 		blocksMeshtemp.clear();

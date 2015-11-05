@@ -277,7 +277,7 @@ public class Camera {
 		} else if (isButtonDown(1)) {
 			setBlock(bx, by, bz, block, world);
 			if (block == 9)
-				world.lighting(bx, by, bz, 14);
+				world.lighting(bx, by, bz, 12);
 		}
 
 		updatePlayerState(gi);

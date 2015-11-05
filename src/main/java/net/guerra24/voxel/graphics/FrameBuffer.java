@@ -27,6 +27,7 @@ package net.guerra24.voxel.graphics;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_COMPONENT;
 import static org.lwjgl.opengl.GL11.GL_FLOAT;
 import static org.lwjgl.opengl.GL11.GL_LINEAR;
+import static org.lwjgl.opengl.GL11.GL_NEAREST;
 import static org.lwjgl.opengl.GL11.GL_NONE;
 import static org.lwjgl.opengl.GL11.GL_RGB;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
@@ -79,7 +80,6 @@ public class FrameBuffer {
 
 	private void initialiseFrameBuffer(boolean depth, boolean postProcessing, int width, int height) {
 		FrameBuffer = createFrameBuffer(depth);
-		FrameBuffer = createFrameBuffer(depth);
 
 		if (depth) {
 			Texture = createDepthTextureAttachment(width, height);
@@ -89,8 +89,8 @@ public class FrameBuffer {
 			else
 				Texture = createTextureAttachment(width, height);
 		}
-
-		RenderBuffer = createDepthBufferAttachment(width, height);
+		if (!depth)
+			RenderBuffer = createDepthBufferAttachment(width, height);
 		end();
 	}
 
@@ -146,8 +146,10 @@ public class FrameBuffer {
 		glBindTexture(GL_TEXTURE_2D, texture);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT,
 				(ByteBuffer) null);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, texture, 0);
 		return texture;
 	}

@@ -218,6 +218,26 @@ public class InfinityWorld implements IWorld {
 		}
 
 	}
+	
+	@Override
+	public void updateChunksShadow(GameResources gm) {
+		for (int zr = -VoxelVariables.radius; zr <= VoxelVariables.radius; zr++) {
+			int zz = zPlayChunk + zr;
+			for (int xr = -VoxelVariables.radius; xr <= VoxelVariables.radius; xr++) {
+				int xx = xPlayChunk + xr;
+				for (int yr = -VoxelVariables.radius; yr <= VoxelVariables.radius; yr++) {
+					int yy = yPlayChunk + yr;
+					if (hasChunk(chunkDim, xx, yy, zz)) {
+						Chunk chunk = getChunk(chunkDim, xx, yy, zz);
+						if (gm.getFrustum().cubeInFrustum(chunk.posX, chunk.posY, chunk.posZ, chunk.posX + 16,
+								chunk.posY + 16, chunk.posZ + 16))
+							chunk.renderShadow(gm);
+					}
+				}
+			}
+		}
+		
+	}
 
 	@Override
 	public void lighting() {

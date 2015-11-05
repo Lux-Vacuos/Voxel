@@ -24,15 +24,10 @@
 
 package net.guerra24.voxel.graphics;
 
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
-import static org.lwjgl.opengl.GL11.GL_TRIANGLE_STRIP;
-import static org.lwjgl.opengl.GL11.glBindTexture;
-import static org.lwjgl.opengl.GL11.glDrawArrays;
-import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
-import static org.lwjgl.opengl.GL13.glActiveTexture;
-import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
-import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
-import static org.lwjgl.opengl.GL30.glBindVertexArray;
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL13.*;
+import static org.lwjgl.opengl.GL20.*;
+import static org.lwjgl.opengl.GL30.*;
 
 import net.guerra24.voxel.graphics.opengl.Display;
 import net.guerra24.voxel.graphics.shaders.PostProcessingShader;
@@ -50,6 +45,7 @@ public class PostProcessingRenderer {
 	 */
 	private PostProcessingShader shader;
 	private FrameBuffer post_fbo;
+	private FrameBuffer depth_fbo;
 	private final RawModel quad;
 
 	/**
@@ -68,6 +64,7 @@ public class PostProcessingRenderer {
 		shader.connectTextureUnits();
 		shader.stop();
 		post_fbo = new FrameBuffer(false, true, Display.getWidth(), Display.getHeight());
+		depth_fbo = new FrameBuffer(true, false, Display.getWidth(), Display.getHeight());
 	}
 
 	/**
@@ -75,6 +72,10 @@ public class PostProcessingRenderer {
 	 * 
 	 */
 	public void render(GameResources gm) {
+		glBindFramebuffer(GL_READ_FRAMEBUFFER, post_fbo.getRenderBuffer());
+		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, depth_fbo.getFrameBuffer());
+		glBlitFramebuffer(0, 0, Display.getWidth(), Display.getHeight(), 0, 0, Display.getWidth(), Display.getHeight(), GL_DEPTH_BUFFER_BIT, GL_NEAREST);
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		shader.start();
 		shader.loadResolution(new Vector2f(Display.getWidth(), Display.getHeight()));
 		shader.loadUnderWater(gm.getCamera().isUnderWater());
@@ -82,6 +83,8 @@ public class PostProcessingRenderer {
 		glEnableVertexAttribArray(0);
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, post_fbo.getTexture());
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, depth_fbo.getTexture());
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, quad.getVertexCount());
 		glDisableVertexAttribArray(0);
 		glBindVertexArray(0);

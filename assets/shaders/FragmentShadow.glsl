@@ -24,37 +24,10 @@
 
 #version 330 core
 
-in vec3 position;
-in vec2 textureCoords;
-in vec3 normal;
+out vec4 out_Color;
 
-out vec2 pass_textureCoords;
-out vec3 surfaceNormal;
-out float visibility;
-out vec4 ShadowCoord;
+void main(void) {
 
-uniform mat4 transformationMatrix;
-uniform mat4 projectionMatrix;
-uniform mat4 viewMatrix;
-uniform mat4 projectionLightMatrix;
-uniform mat4 viewLightMatrix;
-uniform mat4 biasMatrix;
+	vec4 totalDiffuse = vec4(1.0);
 
-const float density = 0.0023;
-const float gradient = 10.0;
-
-void main() {
-
-	vec4 worldPosition = transformationMatrix * vec4(position, 1.0);
-	vec4 positionRelativeToCam = viewMatrix * worldPosition;
-	gl_Position = projectionMatrix * positionRelativeToCam;
-	pass_textureCoords = textureCoords;
-	surfaceNormal = (transformationMatrix * vec4(normal, 0.0)).xyz;
-	vec4 posLight = viewLightMatrix * worldPosition;
-	vec4 a = projectionLightMatrix * posLight;
-	ShadowCoord = biasMatrix * a;
-	
-	float distance = length(positionRelativeToCam.xyz);
-	visibility = exp(-pow((distance*density),gradient));
-	visibility = clamp(visibility,0.0,1.1);
 }
