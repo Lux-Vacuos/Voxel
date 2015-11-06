@@ -24,9 +24,10 @@
 
 #version 330 core
 
+in float visibility;
 in vec2 pass_textureCoords;
 in vec3 surfaceNormal;
-in float visibility;
+in vec3 toLightVector;
 in vec4 ShadowCoord;
 
 out vec4 out_Color;
@@ -37,52 +38,51 @@ uniform vec3 skyColour;
 uniform vec3 lightPosition;
 uniform float blockBright;
 
-float CalcDirectionalLightFactor(vec3 lightDirection, vec3 normal) {
-    float DiffuseFactor = dot(normalize(normal), -lightDirection);
-
-    if (DiffuseFactor > 0) {
-        return DiffuseFactor;
-    } else {
-        return 0.0;
-    }
-}
-
-float CalcPointLightFactor(vec3 lightPosition, vec3 normal, vec3 position) {
-    vec3 LightDirection = position - lightPosition;
-	float Distance = length(LightDirection);
-    LightDirection = normalize(LightDirection);
-
-    float Attenuation = 0.1 * Distance + //linear
-                        0.001 * Distance * Distance; //exponential
-
-    return CalcDirectionalLightFactor(LightDirection, normal) / Attenuation;
-}
+vec2 poissonDisk[16] = vec2[]( 
+   vec2( -0.94201624, -0.39906216 ), 
+   vec2( 0.94558609, -0.76890725 ), 
+   vec2( -0.094184101, -0.92938870 ), 
+   vec2( 0.34495938, 0.29387760 ), 
+   vec2( -0.91588581, 0.45771432 ), 
+   vec2( -0.81544232, -0.87912464 ), 
+   vec2( -0.38277543, 0.27676845 ), 
+   vec2( 0.97484398, 0.75648379 ), 
+   vec2( 0.44323325, -0.97511554 ), 
+   vec2( 0.53742981, -0.47373420 ), 
+   vec2( -0.26496911, -0.41893023 ), 
+   vec2( 0.79197514, 0.19090188 ), 
+   vec2( -0.24188840, 0.99706507 ), 
+   vec2( -0.81409955, 0.91437590 ), 
+   vec2( 0.19984126, 0.78641367 ), 
+   vec2( 0.14383161, -0.14100790 ) 
+);
+   
 
 void main(void) {
 
-	struct DirectionalLight {
-        vec3 Color;
-        vec3 DiffuseIntensity;
-        vec3 Direction;
-    } Light0;
- 	vec3 unitNormal = normalize(surfaceNormal);
-    Light0.Direction = lightPosition;
-    Light0.Color = vec3(1.0, 1.0, 1.0);
-    Light0.DiffuseIntensity = vec3(0.8, 0.8, 0.8);
-
-    vec3 DiffuseColor = Light0.Color * Light0.DiffuseIntensity * CalcDirectionalLightFactor(Light0.Direction, unitNormal);
-	vec4 totalDiffuse = vec4(DiffuseColor,1.0);
-	vec4 textureColour = texture(texture0, pass_textureCoords);
+	vec3 unitNormal = normalize(surfaceNormal);
+	vec3 unitLightVector = normalize(toLightVector);
 	
+	float nDotl = dot(unitNormal, unitLightVector);
+	float brightness = max(nDotl, 0.0);
+	vec3 diffuse = vec3(brightness);
+	
+	vec4 totalDiffuse = vec4(diffuse,1.0);
+	vec4 textureColour = texture(texture0, pass_textureCoords);
 	if(textureColour.a<0.5) {
 		discard;
 	}
 	totalDiffuse = clamp(totalDiffuse, 0.2, 1.0);
-
-	float bias = 0.001;
-    	if (texture(depth0, vec3(ShadowCoord.xy, 0.0))  <  ShadowCoord.z-bias ){
-   	 		totalDiffuse.xyz -= 0.8;
-    }
+	vec3 n = unitNormal;
+	vec3 l = unitLightVector;
+	float cosTheta = clamp(dot(n,l),0,1);
+	float bias = 0.005*tan(acos(cosTheta));
+	bias = clamp(bias, 0,0.005);
+	for (int i=0;i<16;i++){
+    	if (texture(depth0, vec3(ShadowCoord.xy + poissonDisk[i]/700.0 , 0.0),16)  <  ShadowCoord.z-bias ){
+   	 		totalDiffuse.xyz -= 0.05;
+    	}
+	}
     
     totalDiffuse.xyz  = totalDiffuse.xyz + blockBright;
 	totalDiffuse = clamp(totalDiffuse, 0.2, 1.0);

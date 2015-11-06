@@ -30,6 +30,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import net.guerra24.voxel.core.VoxelVariables;
 import net.guerra24.voxel.resources.GameResources;
 import net.guerra24.voxel.util.Logger;
+import net.guerra24.voxel.util.Maths;
 import net.guerra24.voxel.util.vector.Vector3f;
 import net.guerra24.voxel.world.IWorld;
 import net.guerra24.voxel.world.WorldService;
@@ -55,7 +56,7 @@ public class Chunk {
 	private transient int sizeX, sizeY, sizeZ;
 	private transient boolean readyToRender = true;
 	public transient boolean needsRebuild = true, updated = false, updating = false, empty = true;
-	public boolean created = false;
+	public boolean created = false, decorated = false;
 
 	/**
 	 * Constructor
@@ -137,15 +138,50 @@ public class Chunk {
 	}
 
 	public void createBasicTerrain(IWorld world) {
-		if (cy == 0)
-			for (int x = 0; x < sizeX; x++) {
-				for (int z = 0; z < sizeZ; z++) {
-					for (int y = 0; y < 8; y++) {
-						blocks[x][y][z] = Block.Stone.getId();
+		for (int x = 0; x < sizeX; x++) {
+			for (int z = 0; z < sizeZ; z++) {
+				for (int y = 0; y < 128; y++) {
+					if (y >= cy * 16 && y < 16 + cy * 16) {
+						if (y <= 64)
+							setLocalBlock(x, y, z, Block.Water.getId());
 					}
 				}
 			}
+		}
+		for (int x = 0; x < sizeX; x++) {
+			for (int z = 0; z < sizeZ; z++) {
+				double tempHeight = world.getNoise().getNoise(x + cx * 16, z + cz * 16);
+				tempHeight += 1;
+				int height = (int) (64 * Maths.clamp(tempHeight));
+				for (int y = 0; y < height; y++) {
+					if (y >= cy * 16 && y < 16 + cy * 16) {
+						if (y == height - 1 && y > 65)
+							setLocalBlock(x, y, z, Block.Grass.getId());
+						else if (y == height - 2 && y > 65)
+							setLocalBlock(x, y, z, Block.Dirt.getId());
+						else if (y == height - 1 && y < 66)
+							setLocalBlock(x, y, z, Block.Sand.getId());
+						else
+							setLocalBlock(x, y, z, Block.Stone.getId());
+					}
+				}
+			}
+		}
 		created = true;
+	}
+
+	public void decorate(IWorld world, ChunkGenerator generator) {
+		for (int i = 0; i < 4; i++) {
+			int xx = Maths.randInt(4, 12);
+			int zz = Maths.randInt(4, 12);
+			double tempHeight = world.getNoise().getNoise(xx + cx * 16, zz + cz * 16);
+			tempHeight += 1;
+			int height = (int) (64 * Maths.clamp(tempHeight));
+			int h = getLocalBlock(xx, height - 1, zz);
+			if (h == Block.Grass.getId() || h == Block.Dirt.getId())
+				generator.addTree(world, xx + cx * 16, height, zz + cz * 16, Maths.randInt(4, 10), world.getSeed());
+		}
+		decorated = true;
 	}
 
 	public void rebuildChunkSection(boolean secClear, Queue<Object> cubes, IWorld world) {
@@ -156,7 +192,6 @@ public class Chunk {
 					if (Block.getBlock(blocks[x][y][z]) == Block.Torch) {
 						cubes.add(Block.getBlock(blocks[x][y][z])
 								.getSingleModel(new Vector3f(x + cx * sizeX, y + cy * sizeY, z + cz * sizeZ)));
-						secClear = true;
 					} else if (Block.getBlock(blocks[x][y][z]).usesSingleModel()) {
 						cubes.add(Block.getBlock(blocks[x][y][z])
 								.getSingleModel(new Vector3f(x + cx * sizeX, y + cy * sizeY, z + cz * sizeZ)));

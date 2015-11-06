@@ -87,6 +87,9 @@ public class GameResources {
 	private FrameBuffer waterFBO;
 	private Physics physics;
 
+	private Vector3f sunRotation = new Vector3f(0, -10, 20);
+	private Vector3f lightPos;
+
 	/**
 	 * Constructor, Create the Game Resources and Init Loader
 	 * 
@@ -102,9 +105,9 @@ public class GameResources {
 		loader = new Loader();
 		camera = new Camera();
 		sun_Camera = new Camera();
-		sun_Camera.setPosition(new Vector3f(0, 70, 0));
-		sun_Camera.setPitch(70);
-		sun_Camera.setYaw(20);
+		sun_Camera.setPosition(new Vector3f(0, 0, 0));
+		sun_Camera.setPitch(sunRotation.y);
+		sun_Camera.setYaw(sunRotation.z);
 		gson = new Gson();
 		renderer = new MasterRenderer(loader);
 		guiRenderer = new GuiRenderer(loader);
@@ -145,6 +148,17 @@ public class GameResources {
 	public void addRes() {
 	}
 
+	public void update(float rot) {
+		sunRotation.setY(rot);
+		sun_Camera.setRoll(sunRotation.z);
+		sun_Camera.setPitch(sunRotation.y);
+		sun_Camera.setYaw(sunRotation.x);
+		lightPos = new Vector3f((float) Math.cos(Math.toRadians(sun_Camera.getYaw())) + 1000,
+				(float) Math.sin(Math.toRadians(sun_Camera.getPitch())) + 1000,
+				(float) Math.sin(Math.toRadians(sun_Camera.getYaw())) + 1000);
+		Vector3f.add(sun_Camera.getPosition(), lightPos, lightPos);
+	}
+
 	/**
 	 * Disposes all objects
 	 * 
@@ -153,6 +167,7 @@ public class GameResources {
 		particleController.dispose();
 		textMasterRenderer.cleanUp();
 		masterShadowRenderer.cleanUp();
+		postProcessing.cleanUp();
 		waterFBO.cleanUp();
 		guiRenderer.cleanUp();
 		renderer.cleanUp();
@@ -246,6 +261,10 @@ public class GameResources {
 
 	public Camera getSun_Camera() {
 		return sun_Camera;
+	}
+
+	public Vector3f getLightPos() {
+		return lightPos;
 	}
 
 }

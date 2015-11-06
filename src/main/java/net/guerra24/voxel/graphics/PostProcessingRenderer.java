@@ -74,7 +74,8 @@ public class PostProcessingRenderer {
 	public void render(GameResources gm) {
 		glBindFramebuffer(GL_READ_FRAMEBUFFER, post_fbo.getRenderBuffer());
 		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, depth_fbo.getFrameBuffer());
-		glBlitFramebuffer(0, 0, Display.getWidth(), Display.getHeight(), 0, 0, Display.getWidth(), Display.getHeight(), GL_DEPTH_BUFFER_BIT, GL_NEAREST);
+		glBlitFramebuffer(0, 0, Display.getWidth(), Display.getHeight(), 0, 0, Display.getWidth(), Display.getHeight(),
+				GL_DEPTH_BUFFER_BIT, GL_NEAREST);
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		shader.start();
 		shader.loadResolution(new Vector2f(Display.getWidth(), Display.getHeight()));
@@ -98,6 +99,8 @@ public class PostProcessingRenderer {
 	 */
 	public void cleanUp() {
 		shader.cleanUp();
+		depth_fbo.cleanUp();
+		post_fbo.cleanUp();
 	}
 
 	/**

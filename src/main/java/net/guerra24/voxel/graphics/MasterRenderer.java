@@ -55,7 +55,6 @@ import net.guerra24.voxel.resources.models.TexturedModel;
 import net.guerra24.voxel.resources.models.WaterTile;
 import net.guerra24.voxel.util.Maths;
 import net.guerra24.voxel.util.vector.Matrix4f;
-import net.guerra24.voxel.util.vector.Vector3f;
 import net.guerra24.voxel.world.block.BlockEntity;
 import net.guerra24.voxel.world.entities.Entity;
 import net.guerra24.voxel.world.entities.IEntity;
@@ -171,11 +170,12 @@ public class MasterRenderer {
 		shader.loadProjectionMatrix(projectionMatrix);
 		shader.loadviewMatrix(gm.getCamera());
 		shader.loadBiasMatrix(gm);
-		shader.loadLightPosition(new Vector3f(20, -70, -20));
+		shader.loadLightPosition(gm.getLightPos());
 		entityRenderer.renderBlockEntity(blockEntities, gm);
 		shader.stop();
 		blockEntities.clear();
 		waterRenderer.render(waterTiles, gm);
+		waterTiles.clear();
 	}
 
 	/**

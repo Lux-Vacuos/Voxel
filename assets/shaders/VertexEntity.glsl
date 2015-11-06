@@ -28,9 +28,10 @@ in vec3 position;
 in vec2 textureCoords;
 in vec3 normal;
 
+out float visibility; 
 out vec2 pass_textureCoords;
 out vec3 surfaceNormal;
-out float visibility;
+out vec3 toLightVector;
 out vec4 ShadowCoord;
 
 uniform mat4 transformationMatrix;
@@ -39,6 +40,7 @@ uniform mat4 viewMatrix;
 uniform mat4 projectionLightMatrix;
 uniform mat4 viewLightMatrix;
 uniform mat4 biasMatrix;
+uniform vec3 lightPosition;
 
 const float density = 0.0023;
 const float gradient = 10.0;
@@ -50,6 +52,7 @@ void main() {
 	gl_Position = projectionMatrix * positionRelativeToCam;
 	pass_textureCoords = textureCoords;
 	surfaceNormal = (transformationMatrix * vec4(normal, 0.0)).xyz;
+	toLightVector = lightPosition - worldPosition.xyz;
 	vec4 posLight = viewLightMatrix * worldPosition;
 	vec4 a = projectionLightMatrix * posLight;
 	ShadowCoord = biasMatrix * a;

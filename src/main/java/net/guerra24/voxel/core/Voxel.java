@@ -37,7 +37,6 @@ import net.guerra24.voxel.graphics.opengl.Display;
 import net.guerra24.voxel.resources.GameResources;
 import net.guerra24.voxel.resources.GuiResources;
 import net.guerra24.voxel.util.Logger;
-import net.guerra24.voxel.util.vector.Vector3f;
 import net.guerra24.voxel.world.InfinityWorld;
 import net.guerra24.voxel.world.WorldsHandler;
 import net.guerra24.voxel.world.block.BlocksResources;
@@ -183,8 +182,8 @@ public class Voxel {
 			gm.getRenderer().renderEntity(gm.getPhysics().getMobManager().getMobs(), gm);
 			gm.getParticleController().render(gm);
 			gm.getPostProcessing().getPost_fbo().end();
-
 			gm.getRenderer().prepare();
+
 			gm.getPostProcessing().render(gm);
 			gm.getGuiRenderer().renderGui(gm.guis);
 			break;
@@ -216,7 +215,7 @@ public class Voxel {
 			gm.getPhysics().getMobManager().update(delta, gm, gi, world.getActiveWorld(), api);
 			gm.getParticleController().update(delta, gm, gi, world.getActiveWorld());
 			gm.getRenderer().getWaterRenderer().update(delta);
-			gm.getSkyboxRenderer().update(delta);
+			gm.update(gm.getSkyboxRenderer().update(delta));
 			gm.getParticleController().update(delta, gm, gi, world.getActiveWorld());
 			break;
 		case LOADING_WORLD:

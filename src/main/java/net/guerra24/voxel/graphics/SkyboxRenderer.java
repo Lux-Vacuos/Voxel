@@ -109,7 +109,7 @@ public class SkyboxRenderer {
 		shader.connectTextureUnits();
 		shader.loadProjectionMatrix(projectionMatrix);
 		shader.stop();
-		time = 5000;
+		time = 8000;
 	}
 
 	/**
@@ -145,9 +145,11 @@ public class SkyboxRenderer {
 	 * @param delta
 	 *            Delta
 	 */
-	public void update(float delta) {
+	public float update(float delta) {
 		time += delta * 10;
 		time %= 24000;
+		float res = time * 0.015f;
+		return res - 90;
 	}
 
 	/**
@@ -165,14 +167,14 @@ public class SkyboxRenderer {
 			texture1 = nightTexture;
 			texture2 = texture;
 			blendFactor = (time - 5000) / (8000 - 5000);
-		} else if (time >= 8000 && time < 21000) {
+		} else if (time >= 8000 && time < 15500) {
 			texture1 = texture;
 			texture2 = texture;
 			blendFactor = 1f;
 		} else {
 			texture1 = texture;
 			texture2 = nightTexture;
-			blendFactor = (time - 21000) / (24000 - 21000);
+			blendFactor = (time - 15500) / (18000 - 15500);
 		}
 
 		glActiveTexture(GL_TEXTURE0);

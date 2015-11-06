@@ -11,7 +11,6 @@ public class ChunkGenerator {
 		for (int y = 0; y < treeHeight; y++) {
 			world.setGlobalBlock(xo, yo + y, zo, Block.Wood.getId());
 		}
-
 		for (int x = 0; x < treeHeight; x++) {
 			for (int z = 0; z < treeHeight; z++) {
 				for (int y = 0; y < treeHeight; y++) {

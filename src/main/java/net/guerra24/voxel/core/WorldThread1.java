@@ -35,7 +35,7 @@ public class WorldThread1 extends Thread {
 	private WorldsHandler world;
 	private Voxel kernel;
 	private long variableYieldTime, lastTime;
-	private int fps = 60;
+	private int fps = 20;
 
 	@Override
 	public void run() {

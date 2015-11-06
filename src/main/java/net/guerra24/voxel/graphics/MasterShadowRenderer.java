@@ -1,7 +1,5 @@
 package net.guerra24.voxel.graphics;
 
-import static org.lwjgl.opengl.GL11.*;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -32,13 +30,13 @@ public class MasterShadowRenderer {
 	 */
 	public MasterShadowRenderer() {
 		shader = new ShadowShader();
-		projectionMatrix = Maths.orthographic(-30, 30, -30, 30, -100, 100);
+		projectionMatrix = Maths.orthographic(-50, 50, -50, 50, -100, 100);
 		renderer = new ShadowRenderer(shader, projectionMatrix);
-		fbo = new FrameBuffer(true, false, 2048, 2048);
+		fbo = new FrameBuffer(true, false, 512, 512);
 	}
 	
 	public void being(){
-		fbo.begin(2048, 2048);
+		fbo.begin(512, 512);
 	}
 	
 	public void end(){

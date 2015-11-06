@@ -52,7 +52,7 @@ void main(void) {
 	
 	textureCoords = vec2(position.x/2.0 + 0.5, position.y/2.0 + 0.5) * tiling;
 	toCameraVector = cameraPosition - worldPosition.xyz;
-	fromLightVector = directLightDirection;
+	fromLightVector = -directLightDirection;
 	
 	float distance = length(positionRelativeToCam.xyz);
 	visibility = exp(-pow((distance*density),gradient));

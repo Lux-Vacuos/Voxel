@@ -28,7 +28,7 @@
 /*-----------------POST PROCESSING CONFIG-----------------*/
 /*--------------------------------------------------------*/
 // WARNING ONLY ONE CAN BE ENABLED, FXAA OR DOF.
-#define FXAA
+//#define FXAA
 //#define DOF
 
 /*--------------------------------------------------------*/

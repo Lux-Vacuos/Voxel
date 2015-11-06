@@ -80,7 +80,7 @@ public class InfinityWorld implements IWorld {
 		this.name = name;
 		this.seed = seed;
 		this.chunkDim = chunkDim;
-		gm.getCamera().setPosition(new Vector3f(0, 64, 0));
+		gm.getCamera().setPosition(new Vector3f(0, 80, 0));
 		if (existWorld()) {
 			loadWorld(gm);
 		}
@@ -174,6 +174,19 @@ public class InfinityWorld implements IWorld {
 								Chunk chunk = getChunk(chunkDim, xx, yy, zz);
 								if (!chunk.created)
 									chunk.createBasicTerrain(this);
+								if (!chunk.decorated) {
+									boolean can = true;
+									for (int jx = chunk.cx - 1; jx < chunk.cx + 1; jx++) {
+										for (int jz = chunk.cz - 1; jz < chunk.cz + 1; jz++) {
+											for (int jy = chunk.cy - 1; jy < chunk.cy + 1; jy++) {
+												if (!hasChunk(chunkDim, jx, jy, jz))
+													can = false;
+											}
+										}
+									}
+									if (can)
+										chunk.decorate(this, chunkGenerator);
+								}
 								if (gm.getFrustum().cubeInFrustum(chunk.posX, chunk.posY, chunk.posZ, chunk.posX + 16,
 										chunk.posY + 16, chunk.posZ + 16)) {
 									chunk.rebuild(service, this);
@@ -218,7 +231,7 @@ public class InfinityWorld implements IWorld {
 		}
 
 	}
-	
+
 	@Override
 	public void updateChunksShadow(GameResources gm) {
 		for (int zr = -VoxelVariables.radius; zr <= VoxelVariables.radius; zr++) {
@@ -236,7 +249,7 @@ public class InfinityWorld implements IWorld {
 				}
 			}
 		}
-		
+
 	}
 
 	@Override
@@ -420,9 +433,9 @@ public class InfinityWorld implements IWorld {
 			removeChunk(old);
 		}
 		chunks.put(key.clone(), chunk);
-		for (int xx = chunk.cx - 2; xx < chunk.cx + 2; xx++) {
-			for (int zz = chunk.cz - 2; zz < chunk.cz + 2; zz++) {
-				for (int yy = chunk.cy - 2; yy < chunk.cy + 2; yy++) {
+		for (int xx = chunk.cx - 1; xx < chunk.cx + 1; xx++) {
+			for (int zz = chunk.cz - 1; zz < chunk.cz + 1; zz++) {
+				for (int yy = chunk.cy - 1; yy < chunk.cy + 1; yy++) {
 					Chunk chunka = getChunk(chunkDim, xx, yy, zz);
 					if (chunka != null)
 						chunka.needsRebuild = true;
@@ -438,9 +451,9 @@ public class InfinityWorld implements IWorld {
 			chunk.dispose();
 			chunks.remove(key);
 			key.free();
-			for (int xx = chunk.cx - 2; xx < chunk.cx + 2; xx++) {
-				for (int zz = chunk.cz - 2; zz < chunk.cz + 2; zz++) {
-					for (int yy = chunk.cy - 2; yy < chunk.cy + 2; yy++) {
+			for (int xx = chunk.cx - 1; xx < chunk.cx + 1; xx++) {
+				for (int zz = chunk.cz - 1; zz < chunk.cz + 1; zz++) {
+					for (int yy = chunk.cy - 1; yy < chunk.cy + 1; yy++) {
 						Chunk chunka = getChunk(chunkDim, xx, yy, zz);
 						if (chunka != null)
 							chunka.needsRebuild = true;
