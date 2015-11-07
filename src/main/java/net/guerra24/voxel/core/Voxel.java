@@ -148,16 +148,15 @@ public class Voxel {
 			break;
 		case IN_PAUSE:
 			gm.getRenderer().prepare();
+			gm.getRenderer().begin(gm);
 			worldsHandler.getActiveWorld().updateChunksRender(gm);
+			gm.getRenderer().end(gm);
 			gm.getRenderer().renderEntity(gm.getPhysics().getMobManager().getMobs(), gm);
 			gm.getSkyboxRenderer().render(VoxelVariables.RED, VoxelVariables.GREEN, VoxelVariables.BLUE, delta, gm);
 			gm.getParticleController().render(gm);
 			gm.getGuiRenderer().renderGui(gm.guis4);
 			break;
 		case GAME_SP:
-			gm.getCamera().update(delta, gameResources, guiResources, worldsHandler.getActiveWorld(), api);
-			gm.getPhysics().getMobManager().getPlayer().update(delta, gm, guiResources, worldsHandler.getActiveWorld(),
-					api);
 			worldsHandler.getActiveWorld().lighting();
 
 			gm.getWaterFBO().begin(128, 128);
@@ -167,7 +166,6 @@ public class Voxel {
 			gm.getWaterFBO().end();
 			gm.getCamera().invertPitch();
 
-			gm.getFrustum().calculateFrustum(gm.getMasterShadowRenderer().getProjectionMatrix(), gm.getSun_Camera());
 			gm.getSun_Camera().setPosition(gm.getCamera().getPosition());
 			gm.getMasterShadowRenderer().being();
 			gm.getRenderer().prepare();
@@ -177,10 +175,15 @@ public class Voxel {
 			gm.getFrustum().calculateFrustum(gm.getRenderer().getProjectionMatrix(), gm.getCamera());
 			gm.getPostProcessing().getPost_fbo().begin(Display.getWidth(), Display.getHeight());
 			gm.getRenderer().prepare();
+			gm.getRenderer().begin(gm);
 			worldsHandler.getActiveWorld().updateChunksRender(gm);
+			gm.getRenderer().end(gm);
 			gm.getSkyboxRenderer().render(VoxelVariables.RED, VoxelVariables.GREEN, VoxelVariables.BLUE, delta, gm);
 			gm.getRenderer().renderEntity(gm.getPhysics().getMobManager().getMobs(), gm);
 			gm.getParticleController().render(gm);
+			gm.getCamera().update(delta, gameResources, guiResources, worldsHandler.getActiveWorld(), api);
+			gm.getPhysics().getMobManager().getPlayer().update(delta, gm, guiResources, worldsHandler.getActiveWorld(),
+					api);
 			gm.getPostProcessing().getPost_fbo().end();
 			gm.getRenderer().prepare();
 

@@ -450,9 +450,9 @@ public class Chunk {
 
 	public void render(GameResources gm) {
 		if (readyToRender) {
-			gm.getRenderer().renderChunk(blocksMesh, gm);
+			gm.getRenderer().processChunk(blocksMesh, gm);
 		} else {
-			gm.getRenderer().renderChunk(blocksMeshtemp, gm);
+			gm.getRenderer().processChunk(blocksMeshtemp, gm);
 		}
 	}
 

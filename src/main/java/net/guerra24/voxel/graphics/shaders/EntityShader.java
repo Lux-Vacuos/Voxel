@@ -53,6 +53,7 @@ public class EntityShader extends ShaderProgram {
 	private int loc_texture0;
 	private int loc_depth0;
 	private int loc_lightPosition;
+	private int loc_lightPitch;
 
 	/**
 	 * Constructor, creates an Entity Shader
@@ -82,6 +83,7 @@ public class EntityShader extends ShaderProgram {
 		loc_texture0 = super.getUniformLocation("texture0");
 		loc_depth0 = super.getUniformLocation("depth0");
 		loc_lightPosition = super.getUniformLocation("lightPosition");
+		loc_lightPitch = super.getUniformLocation("lightPitch");
 
 	}
 
@@ -114,6 +116,10 @@ public class EntityShader extends ShaderProgram {
 	
 	public void loadLightPosition(Vector3f pos){
 		super.loadVector(loc_lightPosition, pos);
+	}
+	
+	public void loadLightPitch(float yaw){
+		super.loadFloat(loc_lightPitch, yaw);
 	}
 
 	/**

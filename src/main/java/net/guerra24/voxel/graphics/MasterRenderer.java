@@ -118,14 +118,13 @@ public class MasterRenderer {
 	 * @param camera
 	 *            A Camera
 	 */
-	public void renderChunk(Queue<Object> cubes, GameResources gm) {
+	public void processChunk(Queue<Object> cubes, GameResources gm) {
 		for (Object entity : cubes) {
 			if (entity.getClass().equals(BlockEntity.class))
 				processBlockEntity((BlockEntity) entity);
 			if (entity.getClass().equals(WaterTile.class))
 				waterTiles.add((WaterTile) entity);
 		}
-		renderBlocks(gm);
 	}
 
 	/**
@@ -156,21 +155,17 @@ public class MasterRenderer {
 		renderGui(gm);
 	}
 
-	/**
-	 * Chunk Rendering PipeLine
-	 * 
-	 * @param lights
-	 *            A list of lights
-	 * @param camera
-	 *            A Camera
-	 */
-	private void renderBlocks(GameResources gm) {
+	public void begin(GameResources gm) {
 		shader.start();
 		shader.loadSkyColour(VoxelVariables.RED, VoxelVariables.GREEN, VoxelVariables.BLUE);
 		shader.loadProjectionMatrix(projectionMatrix);
 		shader.loadviewMatrix(gm.getCamera());
 		shader.loadBiasMatrix(gm);
 		shader.loadLightPosition(gm.getLightPos());
+		shader.loadLightPitch(gm.getSun_Camera().getPitch());
+	}
+
+	public void end(GameResources gm) {
 		entityRenderer.renderBlockEntity(blockEntities, gm);
 		shader.stop();
 		blockEntities.clear();

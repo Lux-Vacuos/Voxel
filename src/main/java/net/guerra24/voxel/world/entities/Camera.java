@@ -24,20 +24,52 @@
 
 package net.guerra24.voxel.world.entities;
 
-import static net.guerra24.voxel.input.Keyboard.*;
+import static net.guerra24.voxel.input.Keyboard.KEY_0;
+import static net.guerra24.voxel.input.Keyboard.KEY_1;
+import static net.guerra24.voxel.input.Keyboard.KEY_2;
+import static net.guerra24.voxel.input.Keyboard.KEY_3;
+import static net.guerra24.voxel.input.Keyboard.KEY_4;
+import static net.guerra24.voxel.input.Keyboard.KEY_5;
+import static net.guerra24.voxel.input.Keyboard.KEY_6;
+import static net.guerra24.voxel.input.Keyboard.KEY_7;
+import static net.guerra24.voxel.input.Keyboard.KEY_8;
+import static net.guerra24.voxel.input.Keyboard.KEY_9;
+import static net.guerra24.voxel.input.Keyboard.KEY_A;
+import static net.guerra24.voxel.input.Keyboard.KEY_D;
+import static net.guerra24.voxel.input.Keyboard.KEY_F3;
+import static net.guerra24.voxel.input.Keyboard.KEY_J;
+import static net.guerra24.voxel.input.Keyboard.KEY_K;
+import static net.guerra24.voxel.input.Keyboard.KEY_LCONTROL;
+import static net.guerra24.voxel.input.Keyboard.KEY_LSHIFT;
+import static net.guerra24.voxel.input.Keyboard.KEY_R;
+import static net.guerra24.voxel.input.Keyboard.KEY_S;
+import static net.guerra24.voxel.input.Keyboard.KEY_SPACE;
+import static net.guerra24.voxel.input.Keyboard.KEY_W;
+import static net.guerra24.voxel.input.Keyboard.KEY_Y;
+import static net.guerra24.voxel.input.Keyboard.isKeyDown;
 import static net.guerra24.voxel.input.Mouse.getDX;
 import static net.guerra24.voxel.input.Mouse.getDY;
 import static net.guerra24.voxel.input.Mouse.isButtonDown;
 import static net.guerra24.voxel.input.Mouse.setCursorPosition;
 import static net.guerra24.voxel.input.Mouse.setGrabbed;
+import static org.lwjgl.opengl.GL11.GL_DEPTH_COMPONENT;
+import static org.lwjgl.opengl.GL11.GL_FLOAT;
+import static org.lwjgl.opengl.GL11.glReadPixels;
+
+import java.nio.FloatBuffer;
+
+import org.lwjgl.BufferUtils;
 
 import net.guerra24.voxel.api.API;
 import net.guerra24.voxel.core.VoxelVariables;
 import net.guerra24.voxel.graphics.opengl.Display;
 import net.guerra24.voxel.resources.GameResources;
 import net.guerra24.voxel.resources.GuiResources;
+import net.guerra24.voxel.util.Maths;
+import net.guerra24.voxel.util.vector.Matrix4f;
 import net.guerra24.voxel.util.vector.Vector2f;
 import net.guerra24.voxel.util.vector.Vector3f;
+import net.guerra24.voxel.util.vector.Vector4f;
 import net.guerra24.voxel.world.IWorld;
 import net.guerra24.voxel.world.block.Block;
 
@@ -273,9 +305,9 @@ public class Camera {
 		else if (isKeyDown(KEY_0))
 			block = 30;
 		if (isButtonDown(0)) {
-			setBlock(bx, by, bz, (byte) 0, world);
+			setBlock(Display.getWidth(), Display.getHeight(), (byte) 0, world, gm);
 		} else if (isButtonDown(1)) {
-			setBlock(bx, by, bz, block, world);
+			setBlock(Display.getWidth(), Display.getHeight(), block, world, gm);
 			if (block == 9)
 				world.lighting(bx, by, bz, 12);
 		}
@@ -332,8 +364,39 @@ public class Camera {
 			}
 	}
 
-	private void setBlock(int x, int y, int z, byte block, IWorld world) {
-		world.setGlobalBlock(x, y - 1, z, block);
+	private void setBlock(int ww, int wh, byte block, IWorld world, GameResources gm) {
+		FloatBuffer p = BufferUtils.createFloatBuffer(1);
+		glReadPixels(ww / 2, wh / 2, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, p);
+
+		Vector4f viewport = new Vector4f(0, 0, ww, wh);
+		Vector3f wincoord = new Vector3f(ww / 2, wh / 2, p.get(0));
+		Vector3f objcoord = new Vector3f();
+		Matrix4f mvp = new Matrix4f();
+		Matrix4f.mul(gm.getRenderer().getProjectionMatrix(), Maths.createViewMatrix(this), mvp);
+		objcoord = mvp.unproject(wincoord, viewport, objcoord);
+		
+		float tempx = (objcoord.x);
+		int tempX = (int) tempx;
+		if (objcoord.x < 0) {
+			tempx = (objcoord.x);
+			tempX = (int) tempx - 1;
+		}
+
+		float tempz = (objcoord.z);
+		int tempZ = (int) tempz;
+		if (objcoord.z > 0) {
+			tempz = (objcoord.z);
+			tempZ = (int) tempz + 1;
+		}
+
+		float tempy = (objcoord.y);
+		int tempY = (int) tempy;
+
+		int bx = (int) tempX;
+		int by = (int) tempY;
+		int bz = (int) tempZ;
+
+		world.setGlobalBlock(bx, by, bz, block);
 	}
 
 	public void invertPitch() {

@@ -131,5 +131,8 @@ void main(void){
 	out_Color = textureColour;
 	#endif
 	
-
+	if(camUnderWater == 1){
+		out_Color = mix(vec4(0.0,0.0,0.3125,1.0),out_Color,0.5);
+	}
+	
 }

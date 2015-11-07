@@ -545,6 +545,51 @@ public class Matrix4f extends Matrix implements Serializable {
 		return dest;
 	}
 
+	public Vector3f unproject(Vector3f winCoords, Vector4f viewport, Vector3f dest) {
+		float winX = winCoords.x;
+		float winY = winCoords.y;
+		float winZ = winCoords.z;
+		float a = m00 * m11 - m01 * m10;
+		float b = m00 * m12 - m02 * m10;
+		float c = m00 * m13 - m03 * m10;
+		float d = m01 * m12 - m02 * m11;
+		float e = m01 * m13 - m03 * m11;
+		float f = m02 * m13 - m03 * m12;
+		float g = m20 * m31 - m21 * m30;
+		float h = m20 * m32 - m22 * m30;
+		float i = m20 * m33 - m23 * m30;
+		float j = m21 * m32 - m22 * m31;
+		float k = m21 * m33 - m23 * m31;
+		float l = m22 * m33 - m23 * m32;
+		float det = a * l - b * k + c * j + d * i - e * h + f * g;
+		det = 1.0f / det;
+		float im00 = (m11 * l - m12 * k + m13 * j) * det;
+		float im01 = (-m01 * l + m02 * k - m03 * j) * det;
+		float im02 = (m31 * f - m32 * e + m33 * d) * det;
+		float im03 = (-m21 * f + m22 * e - m23 * d) * det;
+		float im10 = (-m10 * l + m12 * i - m13 * h) * det;
+		float im11 = (m00 * l - m02 * i + m03 * h) * det;
+		float im12 = (-m30 * f + m32 * c - m33 * b) * det;
+		float im13 = (m20 * f - m22 * c + m23 * b) * det;
+		float im20 = (m10 * k - m11 * i + m13 * g) * det;
+		float im21 = (-m00 * k + m01 * i - m03 * g) * det;
+		float im22 = (m30 * e - m31 * c + m33 * a) * det;
+		float im23 = (-m20 * e + m21 * c - m23 * a) * det;
+		float im30 = (-m10 * j + m11 * h - m12 * g) * det;
+		float im31 = (m00 * j - m01 * h + m02 * g) * det;
+		float im32 = (-m30 * d + m31 * b - m32 * a) * det;
+		float im33 = (m20 * d - m21 * b + m22 * a) * det;
+		float ndcX = (winX - viewport.x) / viewport.z * 2.0f - 1.0f;
+		float ndcY = (winY - viewport.y) / viewport.w * 2.0f - 1.0f;
+		float ndcZ = 2.0f * winZ - 1.0f;
+		dest.x = im00 * ndcX + im10 * ndcY + im20 * ndcZ + im30;
+		dest.y = im01 * ndcX + im11 * ndcY + im21 * ndcZ + im31;
+		dest.z = im02 * ndcX + im12 * ndcY + im22 * ndcZ + im32;
+		float w = im03 * ndcX + im13 * ndcY + im23 * ndcZ + im33;
+		dest.div(w);
+		return dest;
+	}
+
 	/**
 	 * Rotates the matrix around the given axis the specified angle
 	 * 

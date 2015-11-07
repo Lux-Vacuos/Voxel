@@ -315,6 +315,13 @@ public class Vector3f extends Vector implements Serializable, ReadableVector3f, 
 
 		return this;
 	}
+	
+	public Vector3f div(float scalar) {
+        x /= scalar;
+        y /= scalar;
+        z /= scalar;
+        return this;
+    }
 
 	/*
 	 * (non-Javadoc)
@@ -383,4 +390,5 @@ public class Vector3f extends Vector implements Serializable, ReadableVector3f, 
 	public float getZ() {
 		return z;
 	}
+
 }

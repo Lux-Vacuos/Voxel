@@ -87,7 +87,7 @@ public class GameResources {
 	private FrameBuffer waterFBO;
 	private Physics physics;
 
-	private Vector3f sunRotation = new Vector3f(0, -10, 20);
+	private Vector3f sunRotation = new Vector3f(10, 0, 20);
 	private Vector3f lightPos;
 
 	/**
@@ -106,8 +106,9 @@ public class GameResources {
 		camera = new Camera();
 		sun_Camera = new Camera();
 		sun_Camera.setPosition(new Vector3f(0, 0, 0));
+		sun_Camera.setYaw(sunRotation.x);
 		sun_Camera.setPitch(sunRotation.y);
-		sun_Camera.setYaw(sunRotation.z);
+		sun_Camera.setRoll(sunRotation.z);
 		gson = new Gson();
 		renderer = new MasterRenderer(loader);
 		guiRenderer = new GuiRenderer(loader);
@@ -150,13 +151,13 @@ public class GameResources {
 
 	public void update(float rot) {
 		sunRotation.setY(rot);
-		sun_Camera.setRoll(sunRotation.z);
-		sun_Camera.setPitch(sunRotation.y);
 		sun_Camera.setYaw(sunRotation.x);
-		lightPos = new Vector3f((float) Math.cos(Math.toRadians(sun_Camera.getYaw())) + 1000,
-				(float) Math.sin(Math.toRadians(sun_Camera.getPitch())) + 1000,
-				(float) Math.sin(Math.toRadians(sun_Camera.getYaw())) + 1000);
-		Vector3f.add(sun_Camera.getPosition(), lightPos, lightPos);
+		sun_Camera.setPitch(sunRotation.y);
+		sun_Camera.setRoll(sunRotation.z);
+		lightPos = new Vector3f((float) Math.cos(Math.toRadians(sun_Camera.getYaw())),
+				(float) Math.sin(Math.toRadians(sun_Camera.getPitch())),
+				(float) Math.sin(Math.toRadians(sun_Camera.getYaw())));
+		lightPos = new Vector3f(0, 40000, 0);
 	}
 
 	/**

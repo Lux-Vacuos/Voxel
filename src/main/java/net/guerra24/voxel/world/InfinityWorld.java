@@ -157,52 +157,50 @@ public class InfinityWorld implements IWorld {
 				int xx = xPlayChunk + xr;
 				for (int yr = -tempRadius; yr <= tempRadius; yr++) {
 					int yy = yPlayChunk + yr;
-					if (yy >= 0 && yy < 8) {
-						if (zr * zr + xr * xr + yr * yr <= (VoxelVariables.genRadius - VoxelVariables.radiusLimit)
-								* (VoxelVariables.genRadius - VoxelVariables.radiusLimit)
-								* (VoxelVariables.genRadius - VoxelVariables.radiusLimit)) {
+					if (zr * zr + xr * xr + yr * yr <= (VoxelVariables.genRadius - VoxelVariables.radiusLimit)
+							* (VoxelVariables.genRadius - VoxelVariables.radiusLimit)
+							* (VoxelVariables.genRadius - VoxelVariables.radiusLimit)) {
+						if (!hasChunk(chunkDim, xx, yy, zz)) {
 							if (!hasChunk(chunkDim, xx, yy, zz)) {
-								if (!hasChunk(chunkDim, xx, yy, zz)) {
-									if (existChunkFile(chunkDim, xx, yy, zz)) {
-										loadChunk(chunkDim, xx, yy, zz, gm);
-									} else {
-										addChunk(new Chunk(chunkDim, xx, yy, zz, this));
-										saveChunk(chunkDim, xx, yy, zz, gm);
-									}
+								if (existChunkFile(chunkDim, xx, yy, zz)) {
+									loadChunk(chunkDim, xx, yy, zz, gm);
+								} else {
+									addChunk(new Chunk(chunkDim, xx, yy, zz, this));
+									saveChunk(chunkDim, xx, yy, zz, gm);
 								}
-							} else {
-								Chunk chunk = getChunk(chunkDim, xx, yy, zz);
-								if (!chunk.created)
-									chunk.createBasicTerrain(this);
-								if (!chunk.decorated) {
-									boolean can = true;
-									for (int jx = chunk.cx - 1; jx < chunk.cx + 1; jx++) {
-										for (int jz = chunk.cz - 1; jz < chunk.cz + 1; jz++) {
-											for (int jy = chunk.cy - 1; jy < chunk.cy + 1; jy++) {
-												if (!hasChunk(chunkDim, jx, jy, jz))
-													can = false;
-											}
+							}
+						} else {
+							Chunk chunk = getChunk(chunkDim, xx, yy, zz);
+							if (!chunk.created)
+								chunk.createBasicTerrain(this);
+							if (!chunk.decorated) {
+								boolean can = true;
+								for (int jx = chunk.cx - 1; jx < chunk.cx + 1; jx++) {
+									for (int jz = chunk.cz - 1; jz < chunk.cz + 1; jz++) {
+										for (int jy = chunk.cy - 1; jy < chunk.cy + 1; jy++) {
+											if (!hasChunk(chunkDim, jx, jy, jz))
+												can = false;
 										}
 									}
-									if (can)
-										chunk.decorate(this, chunkGenerator);
 								}
-								if (gm.getFrustum().cubeInFrustum(chunk.posX, chunk.posY, chunk.posZ, chunk.posX + 16,
-										chunk.posY + 16, chunk.posZ + 16)) {
-									chunk.rebuild(service, this);
-								}
+								if (can)
+									chunk.decorate(this, chunkGenerator);
+							}
+							if (gm.getFrustum().cubeInFrustum(chunk.posX, chunk.posY, chunk.posZ, chunk.posX + 16,
+									chunk.posY + 16, chunk.posZ + 16)) {
+								chunk.rebuild(service, this);
 							}
 						}
-						if (zr * zr + xr * xr + yr * yr <= VoxelVariables.genRadius * VoxelVariables.genRadius
-								* VoxelVariables.genRadius
-								&& zr * zr + xr * xr
-										+ yr * yr >= (VoxelVariables.genRadius - VoxelVariables.radiusLimit + 1)
-												* (VoxelVariables.genRadius - VoxelVariables.radiusLimit + 1)
-												* (VoxelVariables.genRadius - VoxelVariables.radiusLimit + 1)) {
-							if (hasChunk(getChunkDimension(), xx, yy, zz)) {
-								saveChunk(getChunkDimension(), xx, yy, zz, gm);
-								removeChunk(getChunk(getChunkDimension(), xx, yy, zz));
-							}
+					}
+					if (zr * zr + xr * xr + yr * yr <= VoxelVariables.genRadius * VoxelVariables.genRadius
+							* VoxelVariables.genRadius
+							&& zr * zr + xr * xr
+									+ yr * yr >= (VoxelVariables.genRadius - VoxelVariables.radiusLimit + 1)
+											* (VoxelVariables.genRadius - VoxelVariables.radiusLimit + 1)
+											* (VoxelVariables.genRadius - VoxelVariables.radiusLimit + 1)) {
+						if (hasChunk(getChunkDimension(), xx, yy, zz)) {
+							saveChunk(getChunkDimension(), xx, yy, zz, gm);
+							removeChunk(getChunk(getChunkDimension(), xx, yy, zz));
 						}
 					}
 				}
