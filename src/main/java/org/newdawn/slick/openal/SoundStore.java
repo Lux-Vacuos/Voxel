@@ -16,8 +16,8 @@ import org.lwjgl.openal.AL10;
 import org.newdawn.slick.util.Log;
 import org.newdawn.slick.util.ResourceLoader;
 
-import net.guerra24.voxel.sound.openal.AL;
-import net.guerra24.voxel.sound.openal.OpenALException;
+import net.guerra24.voxel.client.sound.openal.AL;
+import net.guerra24.voxel.client.sound.openal.OpenALException;
 
 /**
  * Responsible for holding and playing the sounds used in the game.

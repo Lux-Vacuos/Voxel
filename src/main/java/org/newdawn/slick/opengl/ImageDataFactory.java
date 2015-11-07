@@ -5,7 +5,7 @@ import java.security.PrivilegedAction;
 
 import org.newdawn.slick.util.Log;
 
-import net.guerra24.voxel.util.Logger;
+import net.guerra24.voxel.client.util.Logger;
 
 /**
  * A static utility to create the appropriate image data for a particular

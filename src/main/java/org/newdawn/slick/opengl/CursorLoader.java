@@ -8,7 +8,7 @@ import java.nio.IntBuffer;
 import org.newdawn.slick.util.Log;
 import org.newdawn.slick.util.ResourceLoader;
 
-import net.guerra24.voxel.input.Cursor;
+import net.guerra24.voxel.client.input.Cursor;
 
 /**
  * A utility to load cursors (thanks go to Kappa for the animated cursor loader)
