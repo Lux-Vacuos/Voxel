@@ -37,7 +37,7 @@ public class Entity extends AABB {
 	private int visibility;
 
 	public Entity(TexturedModel model, Vector3f position, float rotX, float rotY, float rotZ, float scale) {
-		super(position.x, position.y, position.z);
+		super(position.x, position.y, position.z, 1, 1, 1);
 		this.model = model;
 		this.position = position;
 		this.rotX = rotX;

@@ -66,10 +66,10 @@ import net.guerra24.voxel.client.graphics.opengl.Display;
 import net.guerra24.voxel.client.network.DedicatedClient;
 import net.guerra24.voxel.client.resources.GameResources;
 import net.guerra24.voxel.client.resources.GuiResources;
+import net.guerra24.voxel.client.resources.Ray;
 import net.guerra24.voxel.client.util.Maths;
 import net.guerra24.voxel.client.world.IWorld;
 import net.guerra24.voxel.client.world.block.Block;
-import net.guerra24.voxel.universal.network.packets.NetworkPosition;
 import net.guerra24.voxel.universal.util.vector.Matrix4f;
 import net.guerra24.voxel.universal.util.vector.Vector2f;
 import net.guerra24.voxel.universal.util.vector.Vector3f;
@@ -94,10 +94,11 @@ public class Camera {
 	private boolean teleporting = false;
 	private int teleportingTime = 0;
 	private boolean underWater = false;
-
 	private int mouseSpeed = 2;
 	private final int maxLookUp = 90;
 	private final int maxLookDown = -90;
+	private Ray ray;
+	private Vector2f center;
 
 	public boolean isMoved = false;
 
@@ -105,6 +106,12 @@ public class Camera {
 
 	public Camera() {
 		this.speed = 0.2f;
+	}
+
+	public Camera(Matrix4f proj) {
+		this.speed = 0.2f;
+		center = new Vector2f(Display.getWidth() / 2, Display.getHeight() / 2);
+		ray = new Ray(proj, Maths.createViewMatrix(this), center, Display.getWidth(), Display.getHeight());
 	}
 
 	public void update(float delta, GameResources gm, GuiResources gi, IWorld world, API api, DedicatedClient client) {
@@ -286,9 +293,6 @@ public class Camera {
 			System.out.println(position);
 		}
 
-		if (isMoved)
-			client.getClient().getServerConnection().sendUdp(new NetworkPosition(position));
-
 		if (isKeyDown(KEY_1))
 			block = 1;
 		else if (isKeyDown(KEY_2))
@@ -314,11 +318,13 @@ public class Camera {
 		} else if (isButtonDown(1)) {
 			setBlock(Display.getWidth(), Display.getHeight(), block, world, gm);
 			if (block == 9)
-				world.lighting(bx, by, bz, 12);
+				world.lighting(bx, by, bz, 14);
 		}
 
 		updatePlayerState(gi);
 		updateDebug(world);
+		ray = new Ray(gm.getRenderer().getProjectionMatrix(), Maths.createViewMatrix(this), center, Display.getWidth(),
+				Display.getHeight());
 	}
 
 	public void moveToPosition(Vector3f pos) {
@@ -400,8 +406,11 @@ public class Camera {
 		int bx = (int) tempX;
 		int by = (int) tempY;
 		int bz = (int) tempZ;
-
 		world.setGlobalBlock(bx, by, bz, block);
+	}
+
+	private void setBlock(GameResources gm) {
+		// TODO: Face Block Picking
 	}
 
 	public void invertPitch() {
@@ -469,6 +478,10 @@ public class Camera {
 
 	public boolean isUnderWater() {
 		return underWater;
+	}
+
+	public Ray getRay() {
+		return ray;
 	}
 
 }

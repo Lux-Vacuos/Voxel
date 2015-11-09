@@ -416,6 +416,10 @@ public class Display {
 		return glfwGetTime();
 	}
 
+	public static long getNanoTime() {
+		return (long) (glfwGetTime() * (1000L * 1000L * 1000L));
+	}
+
 	/**
 	 * Calculates the Delta
 	 * 

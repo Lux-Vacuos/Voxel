@@ -4,12 +4,6 @@ import org.lwjgl.glfw.GLFW;
 
 import net.guerra24.voxel.client.util.Logger;
 
-/**
- * KeyCodes
- * 
- * @author kappaOne
- * @category Input
- */
 public class KeyCodes {
 
 	public static int toLwjglKey(int glfwKeyCode) {
@@ -255,22 +249,19 @@ public class KeyCodes {
 		// public static final int KEY_COLON = 0x92; /* (NEC PC98) */
 		// public static final int KEY_UNDERLINE = 0x93; /* (NEC PC98) */
 
-		// public static final int KEY_KANA = 0x70; /* (Japanese keyboard)
+		// public static final int KEY_KANA = 0x70; /* (Japanese keyboard) */
+		// public static final int KEY_CONVERT = 0x79; /* (Japanese keyboard) */
+		// public static final int KEY_NOCONVERT = 0x7B; /* (Japanese keyboard)
 		// */
-		// public static final int KEY_CONVERT = 0x79; /* (Japanese
-		// keyboard) */
-		// public static final int KEY_NOCONVERT = 0x7B; /* (Japanese
-		// keyboard) */
 		// public static final int KEY_YEN = 0x7D; /* (Japanese keyboard) */
-		// public static final int KEY_CIRCUMFLEX = 0x90; /* (Japanese
-		// keyboard) */
-		// public static final int KEY_KANJI = 0x94; /* (Japanese keyboard)
+		// public static final int KEY_CIRCUMFLEX = 0x90; /* (Japanese keyboard)
 		// */
+		// public static final int KEY_KANJI = 0x94; /* (Japanese keyboard) */
 		// public static final int KEY_STOP = 0x95; /* (NEC PC98) */
 		// public static final int KEY_AX = 0x96; /* (Japan AX) */
 		// public static final int KEY_UNLABELED = 0x97; /* (J3100) */
-		// public static final int KEY_SECTION = 0xA7; /* Section symbol
-		// (Mac) */
+		// public static final int KEY_SECTION = 0xA7; /* Section symbol (Mac)
+		// */
 		// public static final int KEY_NUMPADCOMMA = 0xB3; /* , on numeric
 		// keypad (NEC PC98) */
 		// public static final int KEY_SYSRQ = 0xB7;
@@ -282,7 +273,7 @@ public class KeyCodes {
 		// public static final int KEY_SLEEP = 0xDF;
 
 		default:
-			Logger.warn("UNKNOWN GLFW KEY CODE: " + glfwKeyCode);
+			Logger.log("UNKNOWN GLFW KEY CODE: " + glfwKeyCode);
 			return Keyboard.KEY_NONE;
 		}
 	}
@@ -530,23 +521,20 @@ public class KeyCodes {
 		// public static final int KEY_COLON = 0x92; /* (NEC PC98) */
 		// public static final int KEY_UNDERLINE = 0x93; /* (NEC PC98) */
 
-		// public static final int KEY_KANA = 0x70; /* (Japanese keyboard)
+		// public static final int KEY_KANA = 0x70; /* (Japanese keyboard) */
+		// public static final int KEY_CONVERT = 0x79; /* (Japanese keyboard) */
+		// public static final int KEY_NOCONVERT = 0x7B; /* (Japanese keyboard)
 		// */
-		// public static final int KEY_CONVERT = 0x79; /* (Japanese
-		// keyboard) */
-		// public static final int KEY_NOCONVERT = 0x7B; /* (Japanese
-		// keyboard) */
 		// public static final int KEY_YEN = 0x7D; /* (Japanese keyboard) */
 
-		// public static final int KEY_CIRCUMFLEX = 0x90; /* (Japanese
-		// keyboard) */
-		// public static final int KEY_KANJI = 0x94; /* (Japanese keyboard)
+		// public static final int KEY_CIRCUMFLEX = 0x90; /* (Japanese keyboard)
 		// */
+		// public static final int KEY_KANJI = 0x94; /* (Japanese keyboard) */
 		// public static final int KEY_STOP = 0x95; /* (NEC PC98) */
 		// public static final int KEY_AX = 0x96; /* (Japan AX) */
 		// public static final int KEY_UNLABELED = 0x97; /* (J3100) */
-		// public static final int KEY_SECTION = 0xA7; /* Section symbol
-		// (Mac) */
+		// public static final int KEY_SECTION = 0xA7; /* Section symbol (Mac)
+		// */
 		// public static final int KEY_NUMPADCOMMA = 0xB3; /* , on numeric
 		// keypad (NEC PC98) */
 		// public static final int KEY_SYSRQ = 0xB7;
@@ -559,7 +547,7 @@ public class KeyCodes {
 		// public static final int KEY_SLEEP = 0xDF;
 
 		default:
-			Logger.warn("UNKNOWN LWJGL KEY CODE: " + lwjglKeyCode);
+			Logger.log("UNKNOWN LWJGL KEY CODE: " + lwjglKeyCode);
 			return GLFW.GLFW_KEY_UNKNOWN;
 		}
 	}

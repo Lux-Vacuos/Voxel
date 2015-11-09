@@ -114,8 +114,7 @@ public class WaterRenderer {
 		shader.loadSkyColour(VoxelVariables.RED, VoxelVariables.GREEN, VoxelVariables.BLUE);
 		shader.loadViewMatrix(gm.getCamera());
 		shader.loadMoveFactor(moveFactor);
-		shader.loadDirectLightDirection(
-				new Vector3f(gm.getLightPos().getX(), gm.getLightPos().getY(), gm.getLightPos().getZ()));
+		shader.loadDirectLightDirection(gm.getLightPos());
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glBindVertexArray(quad.getVaoID());

@@ -8,15 +8,9 @@ import java.util.Map;
 import org.lwjgl.glfw.GLFW;
 
 import net.guerra24.voxel.client.graphics.opengl.Display;
-import net.guerra24.voxel.client.util.Logger;
 
-/**
- * Keyboard
- * 
- * @author kappaOne
- * @category Input
- */
 public class Keyboard {
+
 	/**
 	 * The special character meaning that no character was translated for the
 	 * event.
@@ -170,6 +164,12 @@ public class Keyboard {
 	public static final int KEY_SLEEP = 0xDF;
 
 	private static EventQueue queue = new EventQueue(32);
+	// private static int maxEvents = 32;
+
+	// private static int eventCount = 0;
+	// private static int currentEventPos = -1;
+	// private static int nextEventPos = 0;
+
 	private static int[] keyEvents = new int[queue.getMaxEvents()];
 	private static boolean[] keyEventStates = new boolean[queue.getMaxEvents()];
 	private static long[] nanoTimeEvents = new long[queue.getMaxEvents()];
@@ -181,12 +181,14 @@ public class Keyboard {
 	private static final Map<String, Integer> keyMap = new HashMap<String, Integer>(253);
 
 	static {
+		// Use reflection to find out key names
 		Field[] fields = Keyboard.class.getFields();
 		try {
 			for (Field field : fields) {
 				if (Modifier.isStatic(field.getModifiers()) && Modifier.isPublic(field.getModifiers())
 						&& Modifier.isFinal(field.getModifiers()) && field.getType().equals(int.class)
-						&& field.getName().startsWith("KEY_") && !field.getName().endsWith("WIN")) {
+						&& field.getName().startsWith("KEY_") && !field.getName().endsWith(
+								"WIN")) { /* Don't use deprecated names */
 
 					int key = field.getInt(null);
 					String name = field.getName().substring(4);
@@ -196,21 +198,26 @@ public class Keyboard {
 
 			}
 		} catch (Exception e) {
-			Logger.error(Thread.currentThread(), "Keyboard Error");
-			e.printStackTrace();
 		}
 
 	}
 
 	public static void addKeyEvent(int key, boolean pressed) {
+		// eventCount++;
+		// if (eventCount > maxEvents) eventCount = maxEvents;
 
 		keyEvents[queue.getNextPos()] = KeyCodes.toLwjglKey(key);
 		keyEventStates[queue.getNextPos()] = pressed;
 
-		nanoTimeEvents[queue.getNextPos()] = (long) (GLFW.glfwGetTime() * (1000L * 1000L * 1000L));
+		nanoTimeEvents[queue.getNextPos()] = Display.getNanoTime();
 
 		queue.add();
-
+		/*
+		 * nextEventPos++; if (nextEventPos == maxEvents) nextEventPos = 0;
+		 * 
+		 * if (currentEventPos == nextEventPos) currentEventPos++; if
+		 * (currentEventPos == maxEvents) currentEventPos = 0;
+		 */
 	}
 
 	public static void addCharEvent(int key, char c) {
@@ -224,7 +231,42 @@ public class Keyboard {
 
 	public static boolean next() {
 		return queue.next();
+		/*
+		 * if (eventCount == 0) return false;
+		 * 
+		 * eventCount--; currentEventPos++; if (currentEventPos == maxEvents)
+		 * currentEventPos = 0;
+		 * 
+		 * return true;
+		 */
+	}
 
+	public static int getEventKey() {
+		return keyEvents[queue.getCurrentPos()];
+	}
+
+	public static char getEventCharacter() {
+		return keyEventChars[getEventKey()];
+	}
+
+	public static boolean getEventKeyState() {
+		return keyEventStates[queue.getCurrentPos()];
+	}
+
+	public static long getEventNanoseconds() {
+		return nanoTimeEvents[queue.getCurrentPos()];
+	}
+
+	public static String getKeyName(int key) {
+		return keyName[key];
+	}
+
+	public static int getKeyIndex(java.lang.String keyName) {
+		Integer ret = keyMap.get(keyName);
+		if (ret == null)
+			return KEY_NONE;
+		else
+			return ret;
 	}
 
 }

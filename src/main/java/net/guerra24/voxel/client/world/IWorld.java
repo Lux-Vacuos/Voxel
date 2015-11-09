@@ -19,6 +19,8 @@ public interface IWorld {
 
 	public void updateChunksRender(GameResources gm);
 
+	public void updateChunksOcclusion(GameResources gm);
+
 	public void updateChunksShadow(GameResources gm);
 
 	public void setupLight(int x, int y, int z, int lightLevel);
@@ -56,6 +58,8 @@ public interface IWorld {
 	public void lighting(int x, int y, int z, int val);
 
 	public void clearDimension(GameResources gm);
+
+	public int getChunksCount();
 
 	public int getWorldID();
 

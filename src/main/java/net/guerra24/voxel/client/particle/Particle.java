@@ -180,12 +180,7 @@ public class Particle extends Entity {
 			playerPosition.z = v.z;
 			this.update(playerPosition);
 
-			AABB voxel = new AABB(0.5f, 0.5f, 0.5f);
-			Vector3f voxelPosition = new Vector3f();
-			voxelPosition.x = bx - 1;
-			voxelPosition.y = by;
-			voxelPosition.z = bz;
-			voxel.update(voxelPosition);
+			AABB voxel = new AABB(bx - 1, by, bz, 1, 1, 1);
 
 			if (!AABB.testAABB(this, voxel)) {
 				collisionType = CollisionType.TOP;

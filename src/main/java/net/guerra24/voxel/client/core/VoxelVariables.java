@@ -44,11 +44,12 @@ public class VoxelVariables {
 	public static final String version = "0.0.9";
 	public static final String apiVersion = "0.0.4";
 	public static final String state = "ALPHA";
-	public static final int build = 113;
+	public static final int build = 114;
 	public static int FOV = 90;
 	public static int WIDTH = 1280;
 	public static int HEIGHT = 720;
-	public static final float NEAR_PLANE = 0.2f;
+	public static boolean useShadows = false;
+	public static final float NEAR_PLANE = 0.1f;
 	public static final float FAR_PLANE = 1000f;
 	public static final float RED = 0.375f;
 	public static final float GREEN = 0.555f;
@@ -58,7 +59,7 @@ public class VoxelVariables {
 	 * World Settings
 	 */
 	public static int radius = 2;
-	public static int radiusLimit = 8;
+	public static int radiusLimit = 3;
 	public static int genRadius = radius + radiusLimit;
 	public static boolean isCustomSeed = false;
 	public static String seed = "";

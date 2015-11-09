@@ -22,6 +22,8 @@
 // SOFTWARE.
 //
 
+#define SHADOWS
+
 #version 330 core
 
 in float visibility;
@@ -67,17 +69,17 @@ void main(void) {
 	float nDotl = dot(unitNormal, unitLightVector);
 	float brightness = max(nDotl, 0.0);
 	vec3 diffuse = vec3(brightness);
-	
 	vec4 totalDiffuse = vec4(diffuse,1.0);
+	
 	vec4 textureColour = texture(texture0, pass_textureCoords);
 	if(textureColour.a<0.5) {
 		discard;
 	}
-	totalDiffuse = clamp(totalDiffuse, 0.2, 1.0);
-	//vec3 n = unitNormal;
-	//vec3 l = unitLightVector;
-	//float cosTheta = clamp(dot(n,l),0,1);
-	float bias = 0.005;//*tan(acos(cosTheta));
+	#ifdef SHADOWS
+	vec3 n = unitNormal;
+	vec3 l = unitLightVector;
+	float cosTheta = clamp(dot(n,l),0,1);
+	float bias = 0.005*tan(acos(cosTheta));
 	bias = clamp(bias, 0,0.005);
 
 	if(lightPitch >=0 && lightPitch<= 180){
@@ -86,12 +88,10 @@ void main(void) {
    	 			totalDiffuse.xyz -= 0.05;
     		}
 		}
-	} else {
-   	 	totalDiffuse.xyz -= 0.8;
-   	}
-    
-    totalDiffuse.xyz  = totalDiffuse.xyz + blockBright;
-	totalDiffuse = clamp(totalDiffuse, 0.2, 1.0);
+	}
+   	#endif
+    totalDiffuse.xyz =  clamp(totalDiffuse.xyz, blockBright, 1.0);
+    totalDiffuse.xyz =  clamp(totalDiffuse.xyz, 0.2, 1.0);
 	out_Color = totalDiffuse * textureColour;
 	out_Color = mix(vec4(skyColour,1.0),out_Color,visibility);
 }

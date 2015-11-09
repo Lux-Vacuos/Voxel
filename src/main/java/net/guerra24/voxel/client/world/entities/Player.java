@@ -45,7 +45,7 @@ public class Player extends Entity implements IEntity {
 
 	public Player(TexturedModel model, Vector3f position, float rotX, float rotY, float rotZ, float scale) {
 		super(model, position, rotX, rotY, rotZ, scale);
-		aabb = new AABB(1, 2, 1);
+		aabb = new AABB(position.x, position.y, position.z, 1, 2, 1);
 	}
 
 	@Override
@@ -122,12 +122,7 @@ public class Player extends Entity implements IEntity {
 			playerPosition.z = v.z;
 			aabb.update(playerPosition);
 
-			AABB voxel = new AABB(1f, 1f, 1f);
-			Vector3f voxelPosition = new Vector3f();
-			voxelPosition.x = bx - 1;
-			voxelPosition.y = by;
-			voxelPosition.z = bz;
-			voxel.update(voxelPosition);
+			AABB voxel = new AABB(bx, by, bz, 1f, 1f, 1f);
 
 			if (!AABB.testAABB(aabb, voxel)) {
 				collisionType = CollisionType.TOP;
@@ -139,14 +134,8 @@ public class Player extends Entity implements IEntity {
 			playerPosition.z = v.z;
 			aabb.update(playerPosition);
 
-			AABB voxel = new AABB(1f, 1f, 1f);
-			Vector3f voxelPosition = new Vector3f();
-			voxelPosition.x = bx - 1;
-			voxelPosition.y = by;
-			voxelPosition.z = bz;
-			voxel.update(voxelPosition);
-
-			if (!AABB.testAABB(aabb, voxel)) {
+			AABB voxel = new AABB(bx, by, bz, 1f, 1f, 1f);
+			if (!AABB.testAABB(aabb, aabb)) {
 				collisionType = CollisionType.WATER;
 			}
 		}

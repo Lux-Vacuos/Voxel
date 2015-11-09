@@ -108,6 +108,7 @@ public class Bootstrap {
 		VoxelVariables.FOV = Integer.parseInt(args[2]);
 		VoxelVariables.FPS = Integer.parseInt(args[3]);
 		VoxelVariables.radius = Integer.parseInt(args[4]);
+		VoxelVariables.useShadows = Boolean.parseBoolean(args[5]);
 		new Voxel();
 	}
 

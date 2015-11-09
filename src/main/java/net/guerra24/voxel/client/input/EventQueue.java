@@ -1,10 +1,8 @@
 package net.guerra24.voxel.client.input;
 
 /**
- * EventQueue
- * 
- * @author kappaOne
- * @category Input
+ * Internal utility class to keep track of event positions in an array. When the
+ * array is full the position will wrap to the beginning.
  */
 class EventQueue {
 
@@ -20,14 +18,14 @@ class EventQueue {
 	 * add event to the queue
 	 */
 	void add() {
-		nextEventPos++;
+		nextEventPos++; // increment next event position
 		if (nextEventPos == maxEvents)
-			nextEventPos = 0;
+			nextEventPos = 0; // wrap next event position
 
 		if (nextEventPos == currentEventPos) {
-			currentEventPos++;
+			currentEventPos++; // skip oldest event is queue full
 			if (currentEventPos == maxEvents)
-				currentEventPos = 0;
+				currentEventPos = 0; // wrap current event position
 		}
 	}
 
@@ -42,9 +40,10 @@ class EventQueue {
 		if (nextEventPos == 0 && currentEventPos == maxEvents - 1)
 			return false;
 
-		currentEventPos++;
+		currentEventPos++; // increment current event position
 		if (currentEventPos == maxEvents)
-			currentEventPos = 0;
+			currentEventPos = 0; // wrap current event position
+
 		return true;
 	}
 

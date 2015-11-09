@@ -109,7 +109,7 @@ public class SkyboxRenderer {
 		shader.connectTextureUnits();
 		shader.loadProjectionMatrix(projectionMatrix);
 		shader.stop();
-		time = 12000;
+		time = 5900;
 	}
 
 	/**
@@ -171,10 +171,14 @@ public class SkyboxRenderer {
 			texture1 = texture;
 			texture2 = texture;
 			blendFactor = 1f;
-		} else {
+		} else if (time >= 15500 && time < 18000) {
 			texture1 = texture;
 			texture2 = nightTexture;
 			blendFactor = (time - 15500) / (18000 - 15500);
+		} else {
+			texture1 = nightTexture;
+			texture2 = nightTexture;
+			blendFactor = 1f;
 		}
 
 		glActiveTexture(GL_TEXTURE0);

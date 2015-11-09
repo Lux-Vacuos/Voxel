@@ -28,7 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import com.google.gson.Gson;
+import com.esotericsoftware.kryo.Kryo;
 
 import net.guerra24.voxel.client.core.GlobalStates;
 import net.guerra24.voxel.client.graphics.FrameBuffer;
@@ -36,6 +36,7 @@ import net.guerra24.voxel.client.graphics.Frustum;
 import net.guerra24.voxel.client.graphics.GuiRenderer;
 import net.guerra24.voxel.client.graphics.MasterRenderer;
 import net.guerra24.voxel.client.graphics.MasterShadowRenderer;
+import net.guerra24.voxel.client.graphics.OcclusionRenderer;
 import net.guerra24.voxel.client.graphics.PostProcessingRenderer;
 import net.guerra24.voxel.client.graphics.SkyboxRenderer;
 import net.guerra24.voxel.client.graphics.TextMasterRenderer;
@@ -82,13 +83,14 @@ public class GameResources {
 	private ParticleController particleController;
 	private PostProcessingRenderer postProcessing;
 	private MasterShadowRenderer masterShadowRenderer;
+	private OcclusionRenderer occlusionRenderer;
 	private SoundSystem soundSystem;
 	private Frustum frustum;
-	private Gson gson;
+	private Kryo kryo;
 	private FrameBuffer waterFBO;
 	private Physics physics;
 
-	private Vector3f sunRotation = new Vector3f(10, 0, 20);
+	private Vector3f sunRotation = new Vector3f(0, 0, -30);
 	private Vector3f lightPos;
 
 	/**
@@ -104,14 +106,15 @@ public class GameResources {
 	 */
 	public void init() {
 		loader = new Loader();
-		camera = new Camera();
 		sun_Camera = new Camera();
 		sun_Camera.setPosition(new Vector3f(0, 0, 0));
 		sun_Camera.setYaw(sunRotation.x);
 		sun_Camera.setPitch(sunRotation.y);
 		sun_Camera.setRoll(sunRotation.z);
-		gson = new Gson();
+		kryo = new Kryo();
 		renderer = new MasterRenderer(loader);
+		camera = new Camera(renderer.getProjectionMatrix());
+		occlusionRenderer = new OcclusionRenderer(renderer.getProjectionMatrix());
 		guiRenderer = new GuiRenderer(loader);
 		skyboxRenderer = new SkyboxRenderer(loader, renderer.getProjectionMatrix());
 		textMasterRenderer = new TextMasterRenderer(loader);
@@ -156,10 +159,10 @@ public class GameResources {
 		sun_Camera.setYaw(sunRotation.x);
 		sun_Camera.setPitch(sunRotation.y);
 		sun_Camera.setRoll(sunRotation.z);
-		lightPos = new Vector3f((float) Math.cos(Math.toRadians(sun_Camera.getYaw())),
-				(float) Math.sin(Math.toRadians(sun_Camera.getPitch())),
-				(float) Math.sin(Math.toRadians(sun_Camera.getYaw())));
-		lightPos = new Vector3f(0, 40000, 0);
+		lightPos = new Vector3f(1000 * (float) Math.sin(Math.toRadians(sun_Camera.getRoll())),
+				1000 * (float) Math.sin(Math.toRadians(sun_Camera.getPitch())),
+				1000 * (float) Math.cos(Math.toRadians(sun_Camera.getPitch())));
+		Vector3f.add(sun_Camera.getPosition(), lightPos, lightPos);
 	}
 
 	/**
@@ -170,6 +173,7 @@ public class GameResources {
 		particleController.dispose();
 		textMasterRenderer.cleanUp();
 		masterShadowRenderer.cleanUp();
+		occlusionRenderer.cleanUp();
 		postProcessing.cleanUp();
 		waterFBO.cleanUp();
 		guiRenderer.cleanUp();
@@ -202,8 +206,8 @@ public class GameResources {
 		return loader;
 	}
 
-	public Gson getGson() {
-		return gson;
+	public Kryo getKryo() {
+		return kryo;
 	}
 
 	public Camera getCamera() {
@@ -268,6 +272,10 @@ public class GameResources {
 
 	public Vector3f getLightPos() {
 		return lightPos;
+	}
+
+	public OcclusionRenderer getOcclusionRenderer() {
+		return occlusionRenderer;
 	}
 
 }

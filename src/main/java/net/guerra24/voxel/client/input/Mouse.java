@@ -1,16 +1,9 @@
 package net.guerra24.voxel.client.input;
 
 import org.lwjgl.glfw.GLFW;
-import org.lwjgl.system.MemoryUtil;
 
 import net.guerra24.voxel.client.graphics.opengl.Display;
 
-/**
- * Mouse
- * 
- * @author kappaOne
- * @category Input
- */
 public class Mouse {
 
 	private static boolean grabbed = false;
@@ -56,7 +49,7 @@ public class Mouse {
 
 		wheelEvents[queue.getNextPos()] = 0;
 
-		nanoTimeEvents[queue.getNextPos()] = (long) (GLFW.glfwGetTime() * (1000L * 1000L * 1000L));
+		nanoTimeEvents[queue.getNextPos()] = Display.getNanoTime();
 
 		queue.add();
 	}
@@ -73,7 +66,7 @@ public class Mouse {
 
 		wheelEvents[queue.getNextPos()] = 0;
 
-		nanoTimeEvents[queue.getNextPos()] = (long) (GLFW.glfwGetTime() * (1000L * 1000L * 1000L));
+		nanoTimeEvents[queue.getNextPos()] = Display.getNanoTime();
 
 		queue.add();
 	}
@@ -91,7 +84,7 @@ public class Mouse {
 		wheelEvents[queue.getNextPos()] = wheel;
 		lastDWheel = wheel;
 
-		nanoTimeEvents[queue.getNextPos()] = (long) (GLFW.glfwGetTime() * (1000L * 1000L * 1000L));
+		nanoTimeEvents[queue.getNextPos()] = Display.getNanoTime();
 
 		queue.add();
 	}
@@ -205,16 +198,6 @@ public class Mouse {
 
 	public static void setCursorPosition(int new_x, int new_y) {
 		GLFW.glfwSetCursorPos(Display.getWindow(), new_x, new_y);
-	}
-
-	public static Cursor setNativeCursor(Cursor cursor) {
-		if (cursor == null) {
-			GLFW.glfwSetCursor(Display.getWindow(), MemoryUtil.NULL);
-			return null;
-		}
-
-		GLFW.glfwSetCursor(Display.getWindow(), cursor.getHandle());
-		return cursor;
 	}
 
 }

@@ -48,14 +48,15 @@ public class Chunk {
 	/**
 	 * Chunk Data
 	 */
-	public int dim, cx, cy, cz, posX, posY, posZ;
+	public short dim, cx, cy, cz;
+	public int posX, posY, posZ;
 	public byte[][][] blocks;
 	public byte[][][] lightMap;
 	private transient Queue<Object> blocksMesh;
 	private transient Queue<Object> blocksMeshtemp;
 	private transient int sizeX, sizeY, sizeZ;
 	private transient boolean readyToRender = true;
-	public transient boolean needsRebuild = true, updated = false, updating = false, empty = true;
+	public transient boolean needsRebuild = true, updated = false, updating = false, empty = true, genQuery = false, visible = false;
 	public boolean created = false, decorated = false;
 
 	/**
@@ -71,14 +72,20 @@ public class Chunk {
 	 *            Dimensional World
 	 */
 	public Chunk(int dim, int cx, int cy, int cz, IWorld world) {
-		this.dim = dim;
-		this.cx = cx;
-		this.cy = cy;
-		this.cz = cz;
+		this.dim = (short) dim;
+		this.cx = (short) cx;
+		this.cy = (short) cy;
+		this.cz = (short) cz;
 		this.posX = cx * 16;
 		this.posZ = cz * 16;
 		this.posY = cy * 16;
 		init(world);
+	}
+
+	/**
+	 * Empty Constructor only for load from file
+	 */
+	public Chunk() {
 	}
 
 	/**
@@ -110,7 +117,7 @@ public class Chunk {
 			for (int z = 0; z < sizeZ; z++) {
 				for (int y = 0; y < sizeY; y++) {
 					if (Block.getBlock(blocks[x][y][z]) == null) {
-						Logger.warn("Chunk " + cx + " " + cy + " " + cz + " " + dim
+						Logger.warn("Chunk " + dim + " " + cx + " " + cy + " " + cz
 								+ " contains a missing block with ID: " + blocks[x][y][z]);
 						blocks[x][y][z] = 0;
 					}
@@ -131,7 +138,7 @@ public class Chunk {
 		blocksMeshtemp.addAll(blocksMesh);
 		readyToRender = false;
 		blocksMesh.clear();
-		rebuildChunkSection(empty, blocksMesh, world);
+		rebuildChunkSection(blocksMesh, world);
 		calculateLight(blocksMesh, world);
 		readyToRender = true;
 		blocksMeshtemp.clear();
@@ -184,8 +191,7 @@ public class Chunk {
 		decorated = true;
 	}
 
-	public void rebuildChunkSection(boolean secClear, Queue<Object> cubes, IWorld world) {
-		secClear = false;
+	public void rebuildChunkSection(Queue<Object> cubes, IWorld world) {
 		for (int x = 0; x < sizeX; x++) {
 			for (int z = 0; z < sizeZ; z++) {
 				for (int y = 0; y < sizeY; y++) {
@@ -200,38 +206,31 @@ public class Chunk {
 						if (cullFaceWest(x + cx * sizeX, y + cy * sizeY, z + cz * sizeZ, world)) {
 							cubes.add(Block.getBlock(blocks[x][y][z])
 									.getFaceWest(new Vector3f(x + cx * sizeX, y + cy * sizeY, z + cz * sizeZ)));
-							secClear = true;
 						}
 						if (cullFaceEast(x + cx * sizeX, y + cy * sizeY, z + cz * sizeZ, world)) {
 							cubes.add(Block.getBlock(blocks[x][y][z])
 									.getFaceEast(new Vector3f(x + cx * sizeX, y + cy * sizeY, z + cz * sizeZ)));
-							secClear = true;
 						}
 						if (cullFaceDown(x + cx * sizeX, y + cy * sizeY, z + cz * sizeZ, world)) {
 							cubes.add(Block.getBlock(blocks[x][y][z])
 									.getFaceDown(new Vector3f(x + cx * sizeX, y + cy * sizeY, z + cz * sizeZ)));
-							secClear = true;
 						}
 						if (cullFaceUpSolidBlock(x + cx * sizeX, y + cy * sizeY, z + cz * sizeZ, world)) {
 							cubes.add(Block.getBlock(blocks[x][y][z])
 									.getFaceUp(new Vector3f(x + cx * sizeX, y + cy * sizeY, z + cz * sizeZ)));
-							secClear = true;
 						}
 						if (cullFaceNorth(x + cx * sizeX, y + cy * sizeY, z + cz * sizeZ, world)) {
 							cubes.add(Block.getBlock(blocks[x][y][z])
 									.getFaceNorth(new Vector3f(x + cx * sizeX, y + cy * sizeY, z + cz * sizeZ)));
-							secClear = true;
 						}
 						if (cullFaceSouth(x + cx * sizeX, y + cy * sizeY, z + cz * sizeZ, world)) {
 							cubes.add(Block.getBlock(blocks[x][y][z])
 									.getFaceSouth(new Vector3f(x + cx * sizeX, y + cy * sizeY, z + cz * sizeZ)));
-							secClear = true;
 						}
 					} else if (Block.getBlock(blocks[x][y][z]) == Block.Water) {
 						if (cullFaceUpWater(x + cx * sizeX, y + cy * sizeY, z + cz * sizeZ, world)) {
 							cubes.add(Block.Water
 									.getWaterTitle(new Vector3f(x + cx * sizeX, y + cy * sizeY, z + cz * sizeZ)));
-							secClear = true;
 						}
 					}
 				}
@@ -458,6 +457,10 @@ public class Chunk {
 
 	public void renderShadow(GameResources gm) {
 		gm.getMasterShadowRenderer().renderChunk(blocksMesh, gm);
+	}
+
+	public void renderOcclusion(GameResources gm) {
+		gm.getOcclusionRenderer().renderChunk(blocksMesh, gm);
 	}
 
 	private void clear() {

@@ -30,10 +30,10 @@ repositories {
 }
 
 dependencies {
-	compile 'com.google.code.gson:gson:2.3.+'
 	compile 'org.l33tlabs.twl:pngdecoder:1.+'
 	compile 'de.jarnbjo:j-ogg-all:1.0.+'
 	compile 'org.jcraft:jorbis:0.0.+'
+	compile 'com.esotericsoftware:kryo:3.0.3'
     compile fileTree(dir: "libs", includes: ["*.jar"])
 }
 

@@ -9,17 +9,13 @@ import java.util.Queue;
 import net.guerra24.voxel.client.graphics.shaders.ShadowShader;
 import net.guerra24.voxel.client.resources.GameResources;
 import net.guerra24.voxel.client.resources.models.TexturedModel;
-import net.guerra24.voxel.client.util.Maths;
 import net.guerra24.voxel.client.world.block.BlockEntity;
 import net.guerra24.voxel.universal.util.vector.Matrix4f;
 
-public class MasterShadowRenderer {
-
+public class OcclusionRenderer {
 	private Map<TexturedModel, List<BlockEntity>> blockEntities = new HashMap<TexturedModel, List<BlockEntity>>();
 	private ShadowShader shader;
 	private ShadowRenderer renderer;
-	private FrameBuffer fbo;
-	private Matrix4f projectionMatrix;
 
 	/**
 	 * Constructor, Initializes the OpenGL code, creates the projection matrix,
@@ -28,19 +24,9 @@ public class MasterShadowRenderer {
 	 * @param loader
 	 *            Game Loader
 	 */
-	public MasterShadowRenderer() {
+	public OcclusionRenderer(Matrix4f projectionMatrix) {
 		shader = new ShadowShader();
-		projectionMatrix = Maths.orthographic(-50, 50, -50, 50, -100, 100);
 		renderer = new ShadowRenderer(shader, projectionMatrix);
-		fbo = new FrameBuffer(true, false, 512, 512);
-	}
-	
-	public void being(){
-		fbo.begin(512, 512);
-	}
-	
-	public void end(){
-		fbo.end();
 	}
 
 	/**
@@ -71,7 +57,8 @@ public class MasterShadowRenderer {
 	 */
 	private void renderBlocks(GameResources gm) {
 		shader.start();
-		shader.loadviewMatrix(gm.getSun_Camera());
+		shader.loadviewMatrix(gm.getCamera());
+		shader.loadProjectionMatrix(gm.getRenderer().getProjectionMatrix());
 		renderer.renderBlockEntity(blockEntities, gm);
 		shader.stop();
 		blockEntities.clear();
@@ -95,20 +82,11 @@ public class MasterShadowRenderer {
 		}
 	}
 
-	public FrameBuffer getFbo() {
-		return fbo;
-	}
-
 	/**
 	 * Clear the Shader
 	 */
 	public void cleanUp() {
 		shader.cleanUp();
-		fbo.cleanUp();
-	}
-
-	public Matrix4f getProjectionMatrix() {
-		return projectionMatrix;
 	}
 
 }

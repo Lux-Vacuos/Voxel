@@ -65,12 +65,12 @@ void main(void) {
 	vec3 normal = vec3(normalMapColour.r * 2.0 - 1.0,normalMapColour.b,normalMapColour.g * 2.0 - 1.0);
 	normal = normalize(normal);
 	
-	//vec3 reflectedLight = reflect(normalize(fromLightVector), normal);
-	//float specular = max(dot(reflectedLight, viewVector), 0.0);
-	//specular = pow(specular, shineDamper);
-	//vec3 specularHighlights = vec3(1.0,1.0,1.0) * specular * reflectivity;
+	vec3 reflectedLight = reflect(normalize(fromLightVector), normal);
+	float specular = max(dot(reflectedLight, viewVector), 0.0);
+	specular = pow(specular, shineDamper);
+	vec3 specularHighlights = vec3(1.0,1.0,1.0) * specular * reflectivity;
 	
-	out_Color = mix(out_Color, vec4(0.0, 0.0, 0.2, 1.0), 0.2);// + vec4(specularHighlights,0.0);  
+	out_Color = mix(out_Color, vec4(0.0, 0.0, 0.2, 1.0), 0.2) + vec4(specularHighlights,0.0);  
 	out_Color = mix(reflectionColour, out_Color, refractiveFactor);
 	out_Color = mix(vec4(skyColour,1.0),out_Color,visibility);
 

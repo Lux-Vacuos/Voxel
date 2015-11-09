@@ -109,13 +109,11 @@ public class Voxel {
 		worldThread2.setVoxel(this);
 		worldThread2.setGuiResources(guiResources);
 		worldThread2.start();
-		/*new Thread(new Runnable() {
-			public void run() {
-				Thread.currentThread().setName("Voxel-Client");
-				client = new DedicatedClient(gameResources);
-			}
-		}).start();
-		*/api.setMobManager(gameResources.getPhysics().getMobManager());
+		/*
+		 * new Thread(new Runnable() { public void run() {
+		 * Thread.currentThread().setName("Voxel-Client"); client = new
+		 * DedicatedClient(gameResources); } }).start();
+		 */api.setMobManager(gameResources.getPhysics().getMobManager());
 		api.init();
 	}
 
@@ -175,12 +173,15 @@ public class Voxel {
 			gm.getCamera().invertPitch();
 
 			gm.getSun_Camera().setPosition(gm.getCamera().getPosition());
-			gm.getMasterShadowRenderer().being();
-			gm.getRenderer().prepare();
-			worldsHandler.getActiveWorld().updateChunksShadow(gm);
-			gm.getMasterShadowRenderer().end();
+			if (VoxelVariables.useShadows) {
+				gm.getMasterShadowRenderer().being();
+				gm.getRenderer().prepare();
+				worldsHandler.getActiveWorld().updateChunksShadow(gm);
+				gm.getMasterShadowRenderer().end();
+			}
 
 			gm.getFrustum().calculateFrustum(gm.getRenderer().getProjectionMatrix(), gm.getCamera());
+
 			gm.getPostProcessing().getPost_fbo().begin(Display.getWidth(), Display.getHeight());
 			gm.getRenderer().prepare();
 			gm.getRenderer().begin(gm);
@@ -193,8 +194,8 @@ public class Voxel {
 			gm.getPhysics().getMobManager().getPlayer().update(delta, gm, guiResources, worldsHandler.getActiveWorld(),
 					api);
 			gm.getPostProcessing().getPost_fbo().end();
-			gm.getRenderer().prepare();
 
+			gm.getRenderer().prepare();
 			gm.getPostProcessing().render(gm);
 			gm.getGuiRenderer().renderGui(gm.guis);
 			break;
@@ -242,7 +243,6 @@ public class Voxel {
 		gameResources.cleanUp();
 		api.dispose();
 		display.closeDisplay();
-		System.exit(0);
 	}
 
 	public GameResources getGameResources() {

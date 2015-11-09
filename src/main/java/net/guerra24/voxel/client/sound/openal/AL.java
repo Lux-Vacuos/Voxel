@@ -16,7 +16,7 @@ public class AL {
 	static {
 	}
 
-	public static void create() throws Exception {
+	public static void create() {
 		if (alContext == null) {
 			ALDevice alDevice = ALDevice.create();
 

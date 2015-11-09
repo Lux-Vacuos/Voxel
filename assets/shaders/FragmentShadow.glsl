@@ -24,10 +24,5 @@
 
 #version 330 core
 
-out vec4 out_Color;
-
 void main(void) {
-
-	vec4 totalDiffuse = vec4(1.0);
-
 }

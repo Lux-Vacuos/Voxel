@@ -24,18 +24,19 @@
 
 package net.guerra24.voxel.client.world;
 
-import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Random;
 
-import com.google.gson.JsonSyntaxException;
+import com.esotericsoftware.kryo.KryoException;
+import com.esotericsoftware.kryo.io.Input;
+import com.esotericsoftware.kryo.io.Output;
 
 import net.guerra24.voxel.client.api.API;
 import net.guerra24.voxel.client.core.VoxelVariables;
@@ -220,14 +221,15 @@ public class InfinityWorld implements IWorld {
 					int yy = yPlayChunk + yr;
 					if (hasChunk(chunkDim, xx, yy, zz)) {
 						Chunk chunk = getChunk(chunkDim, xx, yy, zz);
-						if (gm.getFrustum().cubeInFrustum(chunk.posX, chunk.posY, chunk.posZ, chunk.posX + 16,
-								chunk.posY + 16, chunk.posZ + 16))
-							chunk.render(gm);
+						if (chunk != null) {
+							if (gm.getFrustum().cubeInFrustum(chunk.posX, chunk.posY, chunk.posZ, chunk.posX + 16,
+									chunk.posY + 16, chunk.posZ + 16))
+								chunk.render(gm);
+						}
 					}
 				}
 			}
 		}
-
 	}
 
 	@Override
@@ -240,9 +242,31 @@ public class InfinityWorld implements IWorld {
 					int yy = yPlayChunk + yr;
 					if (hasChunk(chunkDim, xx, yy, zz)) {
 						Chunk chunk = getChunk(chunkDim, xx, yy, zz);
-						if (gm.getFrustum().cubeInFrustum(chunk.posX, chunk.posY, chunk.posZ, chunk.posX + 16,
-								chunk.posY + 16, chunk.posZ + 16))
-							chunk.renderShadow(gm);
+						if (chunk != null)
+							if (gm.getFrustum().cubeInFrustum(chunk.posX, chunk.posY, chunk.posZ, chunk.posX + 16,
+									chunk.posY + 16, chunk.posZ + 16))
+								chunk.renderShadow(gm);
+					}
+				}
+			}
+		}
+
+	}
+
+	@Override
+	public void updateChunksOcclusion(GameResources gm) {
+		for (int zr = -VoxelVariables.radius; zr <= VoxelVariables.radius; zr++) {
+			int zz = zPlayChunk + zr;
+			for (int xr = -VoxelVariables.radius; xr <= VoxelVariables.radius; xr++) {
+				int xx = xPlayChunk + xr;
+				for (int yr = -VoxelVariables.radius; yr <= VoxelVariables.radius; yr++) {
+					int yy = yPlayChunk + yr;
+					if (hasChunk(chunkDim, xx, yy, zz)) {
+						Chunk chunk = getChunk(chunkDim, xx, yy, zz);
+						if (chunk != null)
+							if (gm.getFrustum().cubeInFrustum(chunk.posX, chunk.posY, chunk.posZ, chunk.posX + 16,
+									chunk.posY + 16, chunk.posZ + 16))
+								chunk.renderOcclusion(gm);
 					}
 				}
 			}
@@ -317,12 +341,10 @@ public class InfinityWorld implements IWorld {
 			File filec = new File(VoxelVariables.worldPath + name + "/chunks_" + chunkDim + "/");
 			filec.mkdirs();
 		}
-		String jsonwo = gm.getGson().toJson(seed);
 		try {
-			FileWriter file = new FileWriter(VoxelVariables.worldPath + name + "/world.json");
-			file.write(jsonwo);
-			file.flush();
-			file.close();
+			Output output = new Output(new FileOutputStream(VoxelVariables.worldPath + name + "/world.dat"));
+			gm.getKryo().writeObject(output, seed);
+			output.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -331,59 +353,46 @@ public class InfinityWorld implements IWorld {
 	@Override
 	public void loadWorld(GameResources gm) {
 		try {
-			BufferedReader br = new BufferedReader(new FileReader(VoxelVariables.worldPath + name + "/world.json"));
-			seed = gm.getGson().fromJson(br, Random.class);
+			Input input = new Input(new FileInputStream(VoxelVariables.worldPath + name + "/world.dat"));
+			seed = gm.getKryo().readObject(input, Random.class);
+			input.close();
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
 		}
 	}
 
 	@Override
 	public void saveChunk(int chunkDim, int cx, int cy, int cz, GameResources gm) {
-		String json = gm.getGson().toJson(getChunk(chunkDim, cx, cy, cz));
 		try {
-			File chunksFolder = new File(VoxelVariables.worldPath + name + "/chunks_" + chunkDim);
-			if (!chunksFolder.exists())
-				chunksFolder.mkdirs();
-			FileWriter file = new FileWriter(VoxelVariables.worldPath + name + "/chunks_" + chunkDim + "/chunk_"
-					+ chunkDim + "_" + cx + "_" + cy + "_" + cz + ".json");
-			file.write(json);
-			file.flush();
-			file.close();
+			Output output = new Output(new FileOutputStream(VoxelVariables.worldPath + name + "/chunks_" + chunkDim
+					+ "/chunk_" + chunkDim + "_" + cx + "_" + cy + "_" + cz + ".dat"));
+			gm.getKryo().writeObject(output, getChunk(chunkDim, cx, cy, cz));
+			output.close();
 		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (IllegalArgumentException e) {
 		}
 	}
 
 	@Override
 	public void loadChunk(int chunkDim, int cx, int cy, int cz, GameResources gm) {
 		try {
-			BufferedReader br = new BufferedReader(new FileReader(VoxelVariables.worldPath + name + "/chunks_"
-					+ chunkDim + "/chunk_" + chunkDim + "_" + cx + "_" + cy + "_" + cz + ".json"));
-			Chunk chunk = gm.getGson().fromJson(br, Chunk.class);
+			Input input = new Input(new FileInputStream(VoxelVariables.worldPath + name + "/chunks_" + chunkDim
+					+ "/chunk_" + chunkDim + "_" + cx + "_" + cy + "_" + cz + ".dat"));
+			Chunk chunk = gm.getKryo().readObject(input, Chunk.class);
+			input.close();
 			if (chunk != null) {
 				chunk.load();
 				chunk.checkForMissingBlocks();
-			} else {
-				Logger.warn("Re-Creating Chunk " + chunkDim + " " + cx + " " + cy + " " + cz);
-				Logger.warn("Probably a chunk corruption");
-				chunk = new Chunk(chunkDim, cx, cy, cz, this);
 			}
 			addChunk(chunk);
-		} catch (JsonSyntaxException | FileNotFoundException e) {
-			e.printStackTrace();
-			Logger.warn("Re-Creating Chunk " + chunkDim + " " + cx + " " + cy + " " + cz);
-			Logger.warn("Probably a chunk corruption");
-			Chunk chunk = new Chunk(chunkDim, cx, cy, cz, this);
-			addChunk(chunk);
-			saveChunk(chunkDim, cx, cy, cz, gm);
+		} catch (FileNotFoundException e) {
+		} catch (KryoException e) {
 		}
 	}
 
 	@Override
 	public boolean existChunkFile(int chunkDim, int cx, int cy, int cz) {
 		File file = new File(VoxelVariables.worldPath + name + "/chunks_" + chunkDim + "/chunk_" + chunkDim + "_" + cx
-				+ "_" + cy + "_" + cz + ".json");
+				+ "_" + cy + "_" + cz + ".dat");
 		return file.exists();
 	}
 
@@ -395,7 +404,7 @@ public class InfinityWorld implements IWorld {
 	 */
 	@Override
 	public boolean existWorld() {
-		File file = new File(VoxelVariables.worldPath + name + "/world.json");
+		File file = new File(VoxelVariables.worldPath + name + "/world.dat");
 		return file.exists();
 	}
 
@@ -431,12 +440,14 @@ public class InfinityWorld implements IWorld {
 			removeChunk(old);
 		}
 		chunks.put(key.clone(), chunk);
+		key.free();
 		for (int xx = chunk.cx - 1; xx < chunk.cx + 1; xx++) {
 			for (int zz = chunk.cz - 1; zz < chunk.cz + 1; zz++) {
 				for (int yy = chunk.cy - 1; yy < chunk.cy + 1; yy++) {
 					Chunk chunka = getChunk(chunkDim, xx, yy, zz);
-					if (chunka != null)
+					if (chunka != null) {
 						chunka.needsRebuild = true;
+					}
 				}
 			}
 		}
@@ -453,19 +464,17 @@ public class InfinityWorld implements IWorld {
 				for (int zz = chunk.cz - 1; zz < chunk.cz + 1; zz++) {
 					for (int yy = chunk.cy - 1; yy < chunk.cy + 1; yy++) {
 						Chunk chunka = getChunk(chunkDim, xx, yy, zz);
-						if (chunka != null)
+						if (chunka != null) {
 							chunka.needsRebuild = true;
+						}
 					}
 				}
 			}
 		}
 	}
 
-	/**
-	 * @return Chunks in Memory
-	 * @author Guerra24 <pablo230699@hotmail.com>
-	 */
-	public int getCount() {
+	@Override
+	public int getChunksCount() {
 		int cnt;
 		cnt = chunks.size();
 		return cnt;
