@@ -31,6 +31,7 @@ import java.io.PrintStream;
 
 import net.guerra24.voxel.client.core.Voxel;
 import net.guerra24.voxel.client.core.VoxelVariables;
+import net.guerra24.voxel.client.util.Logger;
 
 /**
  * Initialize the basic game code
@@ -103,13 +104,87 @@ public class Bootstrap {
 				e.printStackTrace();
 			}
 		}
-		VoxelVariables.WIDTH = Integer.parseInt(args[0]);
-		VoxelVariables.HEIGHT = Integer.parseInt(args[1]);
-		VoxelVariables.FOV = Integer.parseInt(args[2]);
-		VoxelVariables.FPS = Integer.parseInt(args[3]);
-		VoxelVariables.radius = Integer.parseInt(args[4]);
-		VoxelVariables.useShadows = Boolean.parseBoolean(args[5]);
+		
+		try {
+			parseArgs(args);
+		} catch (ArrayIndexOutOfBoundsException aioe) {
+			Logger.error("Error: Arguments were wrong", aioe);
+			System.exit(1);
+		} catch (Exception ex) {
+			Logger.error(ex);
+			System.exit(1);
+		}
 		new Voxel();
+	}
+
+	private static void parseArgs(String[] args) {
+		boolean gaveWidth = false, gaveHeight = false, gaveFov = false;
+		boolean gaveFps = false, gaveRadius = false, gaveShadows = false;
+		boolean gaveAutostart = false;
+		
+		for (int i = 0; i < args.length; i++) {
+			switch (args[i]) {
+			case "-width":
+				if (gaveWidth)
+					throw new IllegalStateException("Width already given");
+				VoxelVariables.WIDTH = Integer.parseInt(args[++i]);
+				if (VoxelVariables.WIDTH <= 0)
+					throw new IllegalArgumentException("Width must be positive");
+				gaveWidth = true;
+				break;
+			case "-height":
+				if (gaveHeight)
+					throw new IllegalStateException("Height already given");
+				VoxelVariables.HEIGHT = Integer.parseInt(args[++i]);
+				if (VoxelVariables.HEIGHT <= 0)
+					throw new IllegalArgumentException("Height must be positive");
+				gaveHeight = true;
+				break;
+			case "-fov":
+				if (gaveFov)
+					throw new IllegalStateException("FOV already given");
+				VoxelVariables.FOV = Integer.parseInt(args[++i]);
+				if (VoxelVariables.FOV <= 20 || VoxelVariables.FOV >= 120)
+					throw new IllegalArgumentException("FOV must be in (20, 120) range");
+				gaveFov = true;
+				break;
+			case "-fps":
+				if (gaveFps)
+					throw new IllegalStateException("FPS already given");
+				VoxelVariables.FPS = Integer.parseInt(args[++i]);
+				if (VoxelVariables.FPS <= 0) {
+					throw new IllegalArgumentException("FPS must be positive");
+				}
+				gaveFps = true;
+				break;
+			case "-radius":
+				if (gaveRadius)
+					throw new IllegalStateException("Radius already given");
+				VoxelVariables.radius = Integer.parseInt(args[++i]);
+				if (VoxelVariables.radius < 2)
+					throw new IllegalArgumentException("Radius must be equal or greater than 2");
+				gaveRadius = true;
+				break;
+			case "-useShadows":
+				if (gaveShadows)
+					throw new IllegalStateException("Shadows already given");
+				VoxelVariables.useShadows = true;
+				gaveShadows = true;
+				break;
+			case "-autostart":
+				if (gaveAutostart)
+					throw new IllegalStateException("Autostart already given");
+				VoxelVariables.autostart = true;
+				gaveAutostart = true;
+				break;
+			default:
+				if (args[i].startsWith("-")) {
+					throw new IllegalArgumentException("Unknown argument: " + args[i].substring(1));
+				} else {
+					throw new IllegalArgumentException("Unknown token: " + args[i]);
+				}
+			}
+		}
 	}
 
 }

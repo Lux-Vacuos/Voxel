@@ -55,6 +55,7 @@ public class VoxelVariables {
 	public static final float GREEN = 0.555f;
 	public static final float BLUE = 0.655f;
 	public static boolean runningOnMac = false;
+	public static boolean autostart = false;
 	/**
 	 * World Settings
 	 */

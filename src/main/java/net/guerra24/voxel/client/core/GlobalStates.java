@@ -30,7 +30,7 @@ public class GlobalStates {
 
 	public GlobalStates(Loader loader) {
 		loop = true;
-		state = GameState.MAINMENU;
+		state = VoxelVariables.autostart ? GameState.LOADING_WORLD : GameState.MAINMENU;
 	}
 
 	public void doUpdate(Voxel voxel, float delta) {
