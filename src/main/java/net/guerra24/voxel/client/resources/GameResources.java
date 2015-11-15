@@ -40,6 +40,7 @@ import net.guerra24.voxel.client.graphics.OcclusionRenderer;
 import net.guerra24.voxel.client.graphics.PostProcessingRenderer;
 import net.guerra24.voxel.client.graphics.SkyboxRenderer;
 import net.guerra24.voxel.client.graphics.TextMasterRenderer;
+import net.guerra24.voxel.client.menu.Menu;
 import net.guerra24.voxel.client.particle.ParticleController;
 import net.guerra24.voxel.client.resources.models.GuiTexture;
 import net.guerra24.voxel.client.sound.LibraryLWJGLOpenAL;
@@ -89,6 +90,7 @@ public class GameResources {
 	private Kryo kryo;
 	private FrameBuffer waterFBO;
 	private Physics physics;
+	private Menu menuSystem;
 
 	private Vector3f sunRotation = new Vector3f(0, 0, -30);
 	private Vector3f lightPos;
@@ -112,6 +114,7 @@ public class GameResources {
 		sun_Camera.setPitch(sunRotation.y);
 		sun_Camera.setRoll(sunRotation.z);
 		kryo = new Kryo();
+		menuSystem = new Menu(loader);
 		renderer = new MasterRenderer(loader);
 		camera = new Camera(renderer.getProjectionMatrix());
 		occlusionRenderer = new OcclusionRenderer(renderer.getProjectionMatrix());
@@ -276,6 +279,10 @@ public class GameResources {
 
 	public OcclusionRenderer getOcclusionRenderer() {
 		return occlusionRenderer;
+	}
+	
+	public Menu getMenuSystem() {
+		return menuSystem;
 	}
 
 }
