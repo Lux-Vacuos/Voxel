@@ -9,6 +9,12 @@ import net.guerra24.voxel.client.graphics.opengl.Display;
 import net.guerra24.voxel.client.input.Keyboard;
 import net.guerra24.voxel.client.resources.Loader;
 
+/**
+ * States Handler
+ * 
+ * @author danirod
+ * @category Kernel
+ */
 public class GlobalStates {
 
 	public boolean loop = false;

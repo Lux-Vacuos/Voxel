@@ -29,6 +29,7 @@ import static org.lwjgl.opengl.GL13.*;
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL30.*;
 
+import net.guerra24.voxel.client.core.VoxelVariables;
 import net.guerra24.voxel.client.graphics.opengl.Display;
 import net.guerra24.voxel.client.graphics.shaders.PostProcessingShader;
 import net.guerra24.voxel.client.resources.GameResources;
@@ -80,6 +81,7 @@ public class PostProcessingRenderer {
 		shader.start();
 		shader.loadResolution(new Vector2f(Display.getWidth(), Display.getHeight()));
 		shader.loadUnderWater(gm.getCamera().isUnderWater());
+		shader.loadSettings(VoxelVariables.useDOF, VoxelVariables.useFXAA);
 		glBindVertexArray(quad.getVaoID());
 		glEnableVertexAttribArray(0);
 		glActiveTexture(GL_TEXTURE0);

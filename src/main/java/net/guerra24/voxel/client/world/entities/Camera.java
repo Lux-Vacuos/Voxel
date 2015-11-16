@@ -24,29 +24,7 @@
 
 package net.guerra24.voxel.client.world.entities;
 
-import static net.guerra24.voxel.client.input.Keyboard.KEY_0;
-import static net.guerra24.voxel.client.input.Keyboard.KEY_1;
-import static net.guerra24.voxel.client.input.Keyboard.KEY_2;
-import static net.guerra24.voxel.client.input.Keyboard.KEY_3;
-import static net.guerra24.voxel.client.input.Keyboard.KEY_4;
-import static net.guerra24.voxel.client.input.Keyboard.KEY_5;
-import static net.guerra24.voxel.client.input.Keyboard.KEY_6;
-import static net.guerra24.voxel.client.input.Keyboard.KEY_7;
-import static net.guerra24.voxel.client.input.Keyboard.KEY_8;
-import static net.guerra24.voxel.client.input.Keyboard.KEY_9;
-import static net.guerra24.voxel.client.input.Keyboard.KEY_A;
-import static net.guerra24.voxel.client.input.Keyboard.KEY_D;
-import static net.guerra24.voxel.client.input.Keyboard.KEY_F3;
-import static net.guerra24.voxel.client.input.Keyboard.KEY_J;
-import static net.guerra24.voxel.client.input.Keyboard.KEY_K;
-import static net.guerra24.voxel.client.input.Keyboard.KEY_LCONTROL;
-import static net.guerra24.voxel.client.input.Keyboard.KEY_LSHIFT;
-import static net.guerra24.voxel.client.input.Keyboard.KEY_R;
-import static net.guerra24.voxel.client.input.Keyboard.KEY_S;
-import static net.guerra24.voxel.client.input.Keyboard.KEY_SPACE;
-import static net.guerra24.voxel.client.input.Keyboard.KEY_W;
-import static net.guerra24.voxel.client.input.Keyboard.KEY_Y;
-import static net.guerra24.voxel.client.input.Keyboard.isKeyDown;
+import static net.guerra24.voxel.client.input.Keyboard.*;
 import static net.guerra24.voxel.client.input.Mouse.getDX;
 import static net.guerra24.voxel.client.input.Mouse.getDY;
 import static net.guerra24.voxel.client.input.Mouse.isButtonDown;
@@ -373,6 +351,9 @@ public class Camera {
 					}
 				}
 			}
+		if (isKeyDown(KEY_F3) && isKeyDown(KEY_U)) {
+			VoxelVariables.useShadows = !VoxelVariables.useShadows;
+		}
 	}
 
 	private void setBlock(int ww, int wh, byte block, IWorld world, GameResources gm) {

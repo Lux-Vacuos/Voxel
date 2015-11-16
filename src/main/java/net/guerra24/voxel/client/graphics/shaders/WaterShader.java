@@ -51,6 +51,8 @@ public class WaterShader extends ShaderProgram {
 	private int location_directLightDirection;
 	private int location_skyColour;
 
+	private int loc_useHQWater;
+
 	/**
 	 * Constructor
 	 * 
@@ -76,6 +78,17 @@ public class WaterShader extends ShaderProgram {
 		location_cameraPosition = getUniformLocation("cameraPosition");
 		location_directLightDirection = super.getUniformLocation("directLightDirection");
 		location_skyColour = super.getUniformLocation("skyColour");
+		loc_useHQWater = super.getUniformLocation("useHQWater");
+	}
+
+	/**
+	 * Loads Textures ID
+	 * 
+	 */
+	public void connectTextureUnits() {
+		super.loadInt(location_dudvMap, 0);
+		super.loadInt(location_normalMap, 1);
+		super.loadInt(location_texture, 2);
 	}
 
 	/**
@@ -92,14 +105,8 @@ public class WaterShader extends ShaderProgram {
 		super.loadVector(location_skyColour, new Vector3f(r, g, b));
 	}
 
-	/**
-	 * Loads Textures ID
-	 * 
-	 */
-	public void connectTextureUnits() {
-		super.loadInt(location_dudvMap, 0);
-		super.loadInt(location_normalMap, 1);
-		super.loadInt(location_texture, 2);
+	public void loadSettings(boolean useHQWater) {
+		super.loadBoolean(loc_useHQWater, useHQWater);
 	}
 
 	/**

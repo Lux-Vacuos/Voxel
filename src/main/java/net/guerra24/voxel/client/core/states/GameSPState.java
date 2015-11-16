@@ -11,6 +11,12 @@ import net.guerra24.voxel.client.core.State;
 import net.guerra24.voxel.client.core.Voxel;
 import net.guerra24.voxel.client.core.VoxelVariables;
 
+/**
+ * Single Player GameState
+ * 
+ * @author danirod
+ * @category Kernel
+ */
 public class GameSPState implements State {
 
 	@Override
@@ -20,14 +26,14 @@ public class GameSPState implements State {
 		WorldsHandler worlds = voxel.getWorldsHandler();
 		API api = voxel.getApi();
 		Display display = voxel.getDisplay();
-		
+
 		worlds.getActiveWorld().updateChunksGeneration(gm, api);
 		gm.getPhysics().getMobManager().update(delta, gm, gi, worlds.getActiveWorld(), api);
 		gm.getParticleController().update(delta, gm, gi, worlds.getActiveWorld());
 		gm.getRenderer().getWaterRenderer().update(delta);
 		gm.update(gm.getSkyboxRenderer().update(delta));
 		gm.getParticleController().update(delta, gm, gi, worlds.getActiveWorld());
-		
+
 		if (!display.isDisplayFocused() && !VoxelVariables.debug) {
 			gm.getCamera().unlockMouse();
 			states.state = GameState.IN_PAUSE;
@@ -39,15 +45,16 @@ public class GameSPState implements State {
 		GameResources gm = voxel.getGameResources();
 		WorldsHandler worlds = voxel.getWorldsHandler();
 		API api = voxel.getApi();
-		
-		worlds.getActiveWorld().lighting();
 
-		gm.getWaterFBO().begin(128, 128);
-		gm.getCamera().invertPitch();
-		gm.getRenderer().prepare();
-		gm.getSkyboxRenderer().render(VoxelVariables.RED, VoxelVariables.GREEN, VoxelVariables.BLUE, delta, gm);
-		gm.getWaterFBO().end();
-		gm.getCamera().invertPitch();
+		worlds.getActiveWorld().lighting();
+		if (VoxelVariables.useHQWater) {
+			gm.getWaterFBO().begin(128, 128);
+			gm.getCamera().invertPitch();
+			gm.getRenderer().prepare();
+			gm.getSkyboxRenderer().render(VoxelVariables.RED, VoxelVariables.GREEN, VoxelVariables.BLUE, delta, gm);
+			gm.getWaterFBO().end();
+			gm.getCamera().invertPitch();
+		}
 
 		gm.getSun_Camera().setPosition(gm.getCamera().getPosition());
 		if (VoxelVariables.useShadows) {

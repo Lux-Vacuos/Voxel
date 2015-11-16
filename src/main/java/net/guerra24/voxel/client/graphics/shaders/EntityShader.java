@@ -55,6 +55,8 @@ public class EntityShader extends ShaderProgram {
 	private int loc_lightPosition;
 	private int loc_lightPitch;
 
+	private int loc_useShadows;
+
 	/**
 	 * Constructor, creates an Entity Shader
 	 * 
@@ -84,6 +86,7 @@ public class EntityShader extends ShaderProgram {
 		loc_depth0 = super.getUniformLocation("depth0");
 		loc_lightPosition = super.getUniformLocation("lightPosition");
 		loc_lightPitch = super.getUniformLocation("lightPitch");
+		loc_useShadows = super.getUniformLocation("useShadows");
 
 	}
 
@@ -100,6 +103,10 @@ public class EntityShader extends ShaderProgram {
 		super.loadFloat(loc_blockBright, value);
 	}
 
+	public void useShadows(boolean value) {
+		super.loadBoolean(loc_useShadows, value);
+	}
+
 	/**
 	 * Loads the Sky Color to the shader
 	 * 
@@ -113,12 +120,12 @@ public class EntityShader extends ShaderProgram {
 	public void loadSkyColour(float r, float g, float b) {
 		super.loadVector(loc_skyColour, new Vector3f(r, g, b));
 	}
-	
-	public void loadLightPosition(Vector3f pos){
+
+	public void loadLightPosition(Vector3f pos) {
 		super.loadVector(loc_lightPosition, pos);
 	}
-	
-	public void loadLightPitch(float yaw){
+
+	public void loadLightPitch(float yaw) {
 		super.loadFloat(loc_lightPitch, yaw);
 	}
 

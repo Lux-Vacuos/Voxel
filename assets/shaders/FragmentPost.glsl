@@ -25,13 +25,6 @@
 #version 330 core
 
 /*--------------------------------------------------------*/
-/*-----------------POST PROCESSING CONFIG-----------------*/
-/*--------------------------------------------------------*/
-// WARNING ONLY ONE CAN BE ENABLED, FXAA OR DOF.
-//#define FXAA
-//#define DOF
-
-/*--------------------------------------------------------*/
 /*----------------------FXAA CONFIG-----------------------*/
 /*--------------------------------------------------------*/
 
@@ -54,6 +47,9 @@ uniform sampler2D depth0;
 uniform vec2 resolution;
 uniform int camUnderWater;
 uniform float camUnderWaterOffset;
+
+uniform int useFXAA;
+uniform int useDOF;
 
 #define rt_w resolution.x
 #define rt_h resolution.y
@@ -110,26 +106,28 @@ void main(void){
 	if(camUnderWater == 1){
 		texcoord.x += sin(texcoord.y * 4*2*3.14159 + camUnderWaterOffset) / 100;
 	}
-
-	#ifdef FXAA
-		vec4 textureColour = PostFX(texture0, texcoord, 0.0);
-	#else
-		vec4 textureColour = texture(texture0, texcoord);
-	#endif
 	
-	#ifdef DOF
-	vec3 sum = textureColour.rgb;
-	float bias = min(abs(texture(depth0, texcoord).x - texture(depth0, vec2(0.5)).x) * .02, .002);
-	for (int i = -3; i < 3; i++) {
-		for (int j = -3; j < 3; j++) {
-			sum += texture(texture0, texcoord + vec2(j, i) * bias ).rgb;
-		}
+	vec4 textureColour;
+	
+	if(useFXAA == 1){
+		textureColour = PostFX(texture0, texcoord, 0.0);
+	}else{
+		textureColour = texture(texture0, texcoord);
 	}
-	sum /= 36.0;
-	out_Color = vec4(sum,1.0);
-	#else
-	out_Color = textureColour;
-	#endif
+	
+	if(useDOF == 1){
+		vec3 sum = textureColour.rgb;
+		float bias = min(abs(texture(depth0, texcoord).x - texture(depth0, vec2(0.5)).x) * .02, .002);
+		for (int i = -3; i < 3; i++) {
+			for (int j = -3; j < 3; j++) {
+				sum += texture(texture0, texcoord + vec2(j, i) * bias ).rgb;
+			}
+		}
+		sum /= 36.0;
+		out_Color = vec4(sum,1.0);
+	}else{
+		out_Color = textureColour;
+	}
 	
 	if(camUnderWater == 1){
 		out_Color = mix(vec4(0.0,0.0,0.3125,1.0),out_Color,0.5);

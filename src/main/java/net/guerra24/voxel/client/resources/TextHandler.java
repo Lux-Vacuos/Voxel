@@ -31,8 +31,13 @@ public class TextHandler {
 		GUIText textVersionApi = new GUIText("Voxel API " + VoxelVariables.apiVersion, 1, font,
 				new Vector2f(0.002f, 0.94f), 1, false);
 		textVersionApi.setColour(0.79f, 0.79f, 0.79f);
+		GUIText textMAC = new GUIText("Voxel is running on OSX, some things did not work well", 1, font,
+				new Vector2f(0.002f, 0.002f), 1, false);
+		textMAC.setColour(1, 0, 0);
 		activeText.add(textVersion);
 		activeText.add(textVersionApi);
+		if (VoxelVariables.runningOnMac)
+			activeText.add(textMAC);
 	}
 
 	private void loadActiveText(TextMasterRenderer textMasterRenderer) {

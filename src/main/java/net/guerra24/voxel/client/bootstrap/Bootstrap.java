@@ -104,7 +104,7 @@ public class Bootstrap {
 				e.printStackTrace();
 			}
 		}
-		
+
 		try {
 			parseArgs(args);
 		} catch (ArrayIndexOutOfBoundsException aioe) {
@@ -117,11 +117,18 @@ public class Bootstrap {
 		new Voxel();
 	}
 
+	/**
+	 * Handles all Voxel available args
+	 * 
+	 * @param args
+	 *            Array of args
+	 */
 	private static void parseArgs(String[] args) {
 		boolean gaveWidth = false, gaveHeight = false, gaveFov = false;
 		boolean gaveFps = false, gaveRadius = false, gaveShadows = false;
-		boolean gaveAutostart = false;
-		
+		boolean gaveAutostart = false, gaveFXAA = false, gaveDOF = false;
+		boolean gaveHQWater = false;
+
 		for (int i = 0; i < args.length; i++) {
 			switch (args[i]) {
 			case "-width":
@@ -170,6 +177,28 @@ public class Bootstrap {
 					throw new IllegalStateException("Shadows already given");
 				VoxelVariables.useShadows = true;
 				gaveShadows = true;
+				break;
+			case "-useFXAA":
+				if (gaveFXAA)
+					throw new IllegalStateException("FXAA already given");
+				if (VoxelVariables.useDOF)
+					throw new IllegalArgumentException("FXAA only be activated if DOF is disabled");
+				VoxelVariables.useFXAA = true;
+				gaveFXAA = true;
+				break;
+			case "-useDOF":
+				if (gaveDOF)
+					throw new IllegalStateException("DOF already given");
+				if (VoxelVariables.useFXAA)
+					throw new IllegalArgumentException("DOF only be activated if FXAA is disabled");
+				VoxelVariables.useDOF = true;
+				gaveDOF = true;
+				break;
+
+			case "-useHQWater":
+				if (gaveHQWater)
+					throw new IllegalStateException("HQWater already given");
+				VoxelVariables.useHQWater = true;
 				break;
 			case "-autostart":
 				if (gaveAutostart)

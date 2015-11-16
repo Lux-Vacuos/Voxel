@@ -9,6 +9,12 @@ import net.guerra24.voxel.client.menu.PauseMenu;
 import net.guerra24.voxel.client.resources.GameResources;
 import net.guerra24.voxel.universal.util.vector.Vector3f;
 
+/**
+ * In Pause State
+ * 
+ * @author danirod
+ * @category Kernel
+ */
 public class InPauseState implements State {
 
 	private PauseMenu pauseMenu;

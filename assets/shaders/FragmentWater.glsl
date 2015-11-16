@@ -38,6 +38,8 @@ uniform sampler2D reflectionTexture;
 uniform float moveFactor;
 uniform vec3 skyColour;
 
+uniform int useHQWater;
+
 const float waveStrength = 0.02;
 const float shineDamper = 20.0;
 const float reflectivity = 20;
@@ -55,8 +57,6 @@ void main(void) {
 	reflectTexCoords.x = clamp(reflectTexCoords.x, 0.001, 0.999);
 	reflectTexCoords.y = clamp(reflectTexCoords.y, -0.999, -0.001);
 	
-	vec4 reflectionColour = texture(reflectionTexture, reflectTexCoords);
-	
 	vec3 viewVector = normalize(toCameraVector);
 	float refractiveFactor = dot(viewVector, vec3( 0.0, 1.0, 0.0));
 	refractiveFactor = pow(refractiveFactor, 0.8);
@@ -70,8 +70,13 @@ void main(void) {
 	specular = pow(specular, shineDamper);
 	vec3 specularHighlights = vec3(1.0,1.0,1.0) * specular * reflectivity;
 	
-	out_Color = mix(out_Color, vec4(0.0, 0.0, 0.2, 1.0), 0.2) + vec4(specularHighlights,0.0);  
-	out_Color = mix(reflectionColour, out_Color, refractiveFactor);
+	out_Color = mix(out_Color, vec4(0.0, 0.0, 0.4, 1.0), 0.2) + vec4(specularHighlights,0.0);  
+	if(useHQWater == 1){
+		vec4 reflectionColour = texture(reflectionTexture, reflectTexCoords);
+		out_Color = mix(reflectionColour, out_Color, refractiveFactor);
+	} else {
+		out_Color = mix(vec4(out_Color.rgb, 0.8), out_Color, refractiveFactor);
+	}
 	out_Color = mix(vec4(skyColour,1.0),out_Color,visibility);
 
 }

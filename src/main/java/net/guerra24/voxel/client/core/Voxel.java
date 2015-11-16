@@ -1,5 +1,5 @@
 /*
-O * The MIT License (MIT)
+ * The MIT License (MIT)
  *
  * Copyright (c) 2015 Guerra24
  *
@@ -72,6 +72,9 @@ public class Voxel {
 		mainLoop();
 	}
 
+	/**
+	 * PreInit phase, initialize the display and runs the API PreInit
+	 */
 	public void preInit() {
 		display = new Display();
 		display.initDsiplay(VoxelVariables.WIDTH, VoxelVariables.HEIGHT);
@@ -84,13 +87,20 @@ public class Voxel {
 		Logger.log("OpenGL Version: " + glGetString(GL_VERSION));
 		Logger.log("Vendor: " + glGetString(GL_VENDOR));
 		Logger.log("Renderer: " + glGetString(GL_RENDERER));
-		if (Bootstrap.getPlatform() == Bootstrap.Platform.MACOSX)
+		if (Bootstrap.getPlatform() == Bootstrap.Platform.MACOSX) {
 			VoxelVariables.runningOnMac = true;
+			VoxelVariables.useHQWater = false;
+			VoxelVariables.useShadows = false;
+		}
 		gameResources = new GameResources();
 		api = new API();
 		api.preInit();
 	}
 
+	/**
+	 * Init phase, initialize the game data (models,textures,music,etc) and runs
+	 * the API Init
+	 */
 	private void init() {
 		gameResources.init();
 		guiResources = new GuiResources(gameResources);
@@ -113,11 +123,17 @@ public class Voxel {
 		api.init();
 	}
 
+	/**
+	 * PostInit phase, starts music and runs the API PostInit
+	 */
 	private void postInit() {
 		api.postInit();
 		gameResources.getSoundSystem().play("menu1");
 	}
 
+	/**
+	 * Voxel Main Loop
+	 */
 	public void mainLoop() {
 		preInit();
 		init();
@@ -139,6 +155,12 @@ public class Voxel {
 		dispose();
 	}
 
+	/**
+	 * Handles all render calls
+	 * 
+	 * @param delta
+	 *            Delta value from Render Thread
+	 */
 	private void render(float delta) {
 		Display.fpsCount++;
 		gameResources.getGlobalStates().doRender(this, delta);
@@ -146,11 +168,20 @@ public class Voxel {
 		display.updateDisplay(VoxelVariables.FPS, gameResources);
 	}
 
+	/**
+	 * Handles all update calls
+	 * 
+	 * @param delta
+	 *            Delta value from Update Thread
+	 */
 	public void update(float delta) {
 		Display.upsCount++;
 		gameResources.getGlobalStates().doUpdate(this, delta);
 	}
 
+	/**
+	 * Disposes all game data
+	 */
 	public void dispose() {
 		Logger.log("Closing Game");
 		gameResources.cleanUp();
@@ -177,7 +208,7 @@ public class Voxel {
 	public WorldsHandler getWorldsHandler() {
 		return worldsHandler;
 	}
-	
+
 	public Display getDisplay() {
 		return display;
 	}

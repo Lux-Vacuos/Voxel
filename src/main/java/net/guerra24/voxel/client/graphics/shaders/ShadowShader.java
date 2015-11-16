@@ -10,7 +10,7 @@ public class ShadowShader extends ShaderProgram {
 	private int loc_projectionMatrix;
 	private int loc_transformationMatrix;
 	private int loc_viewMatrix;
-
+	
 	public ShadowShader() {
 		super(VoxelVariables.VERTEX_FILE_SHADOW, VoxelVariables.FRAGMENT_FILE_SHADOW);
 	}
@@ -36,7 +36,7 @@ public class ShadowShader extends ShaderProgram {
 	public void loadTransformationMatrix(Matrix4f matrix) {
 		super.loadMatrix(loc_transformationMatrix, matrix);
 	}
-
+	
 	/**
 	 * Loads View Matrix to the shader
 	 * 

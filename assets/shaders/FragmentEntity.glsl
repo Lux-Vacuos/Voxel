@@ -24,8 +24,6 @@
 
 #version 330 core
 
-#define SHADOWS
-
 in float visibility;
 in vec2 pass_textureCoords;
 in vec3 surfaceNormal;
@@ -40,6 +38,8 @@ uniform vec3 skyColour;
 uniform vec3 lightPosition;
 uniform float blockBright;
 uniform float lightPitch;
+
+uniform int useShadows;
 
 vec2 poissonDisk[16] = vec2[]( 
    vec2( -0.94201624, -0.39906216 ), 
@@ -75,21 +75,24 @@ void main(void) {
 	if(textureColour.a<0.5) {
 		discard;
 	}
-	#ifdef SHADOWS
-	vec3 n = unitNormal;
-	vec3 l = unitLightVector;
-	float cosTheta = clamp(dot(n,l),0,1);
-	float bias = 0.005*tan(acos(cosTheta));
-	bias = clamp(bias, 0,0.005);
+	
+	if(useShadows == 1){
+		vec3 n = unitNormal;
+		vec3 l = unitLightVector;
+		float cosTheta = clamp(dot(n,l),0,1);
+		float bias = 0.005*tan(acos(cosTheta));
+		bias = clamp(bias, 0,0.005);
 
-	if(lightPitch >=0 && lightPitch<= 180){
-		for (int i=0;i<16;i++){
-    		if (texture(depth0, vec3(ShadowCoord.xy + poissonDisk[i]/700.0 , 0.0),16)  <  ShadowCoord.z-bias ){
-   	 			totalDiffuse.xyz -= 0.05;
-    		}
-		}
-	}
-   	#endif
+		if(lightPitch >=0 && lightPitch<= 180){
+			for (int i=0;i<16;i++){
+    			if (texture(depth0, vec3(ShadowCoord.xy + poissonDisk[i]/700.0 , 0.0),16)  <  ShadowCoord.z-bias ){
+   		 			totalDiffuse.xyz -= 0.05;
+   	 			}
+			}
+		} else {
+	 	 	totalDiffuse.xyz -= 0.8;
+   		}
+   	}
     totalDiffuse.xyz =  clamp(totalDiffuse.xyz, blockBright, 1.0);
     totalDiffuse.xyz =  clamp(totalDiffuse.xyz, 0.2, 1.0);
 	out_Color = totalDiffuse * textureColour;

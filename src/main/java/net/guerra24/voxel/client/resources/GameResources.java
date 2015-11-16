@@ -96,7 +96,7 @@ public class GameResources {
 	private Vector3f lightPos;
 
 	/**
-	 * Constructor, Create the Game Resources and Init Loader
+	 * Constructor
 	 * 
 	 */
 	public GameResources() {

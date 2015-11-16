@@ -44,11 +44,10 @@ public class VoxelVariables {
 	public static final String version = "0.0.9";
 	public static final String apiVersion = "0.0.4";
 	public static final String state = "ALPHA";
-	public static final int build = 114;
+	public static final int build = 118;
 	public static int FOV = 90;
 	public static int WIDTH = 1280;
 	public static int HEIGHT = 720;
-	public static boolean useShadows = false;
 	public static final float NEAR_PLANE = 0.1f;
 	public static final float FAR_PLANE = 1000f;
 	public static final float RED = 0.375f;
@@ -56,6 +55,13 @@ public class VoxelVariables {
 	public static final float BLUE = 0.655f;
 	public static boolean runningOnMac = false;
 	public static boolean autostart = false;
+	/**
+	 * Graphic Settings
+	 */
+	public static boolean useShadows = false;
+	public static boolean useFXAA = false;
+	public static boolean useDOF = false;
+	public static boolean useHQWater = false;
 	/**
 	 * World Settings
 	 */

@@ -47,6 +47,9 @@ public class PostProcessingShader extends ShaderProgram {
 	private int loc_texture1;
 	private int loc_depth0;
 
+	private int loc_useFXAA;
+	private int loc_useDOF;
+
 	private float time;
 
 	/**
@@ -66,12 +69,16 @@ public class PostProcessingShader extends ShaderProgram {
 		loc_texture0 = super.getUniformLocation("texture0");
 		loc_texture1 = super.getUniformLocation("texture1");
 		loc_depth0 = super.getUniformLocation("depth0");
+
+		loc_useFXAA = super.getUniformLocation("useFXAA");
+		loc_useDOF = super.getUniformLocation("useDOF");
 	}
 
 	@Override
 	protected void bindAttributes() {
 		super.bindAttribute(0, "position");
 	}
+
 
 	/**
 	 * Loads Textures ID
@@ -96,6 +103,11 @@ public class PostProcessingShader extends ShaderProgram {
 	 */
 	public void loadResolution(Vector2f res) {
 		super.load2DVector(loc_resolution, res);
+	}
+
+	public void loadSettings(boolean useDof, boolean useFXAA) {
+		super.loadBoolean(loc_useDOF, useDof);
+		super.loadBoolean(loc_useFXAA, useFXAA);
 	}
 
 	/**

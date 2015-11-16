@@ -8,6 +8,12 @@ import net.guerra24.voxel.client.core.Voxel;
 import net.guerra24.voxel.client.core.VoxelVariables;
 import net.guerra24.voxel.client.core.GlobalStates.GameState;
 
+/**
+ * Loading Screen State
+ * 
+ * @author danirod
+ * @category Kernel
+ */
 public class LoadingState implements State {
 
 	@Override

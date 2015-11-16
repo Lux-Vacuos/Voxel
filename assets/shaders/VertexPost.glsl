@@ -25,12 +25,6 @@
 #version 330 core
 
 /*--------------------------------------------------------*/
-/*-----------------POST PROCESSING CONFIG-----------------*/
-/*--------------------------------------------------------*/
-
-//#define FXAA
-
-/*--------------------------------------------------------*/
 /*----------------------FXAA CONFIG-----------------------*/
 /*--------------------------------------------------------*/
 
@@ -44,14 +38,15 @@ out vec4 posPos;
 uniform mat4 transformationMatrix;
 uniform vec2 resolution;
 
+uniform int useFXAA;
 
 void main(void){
 
 	gl_Position = transformationMatrix * vec4(position, -0.8, 1.0);
 	textureCoords = vec2((position.x+1.0)/2.0, (position.y+1.0)/2.0);
-	#ifdef FXAA
+	if(useFXAA == 1){
 		vec2 rcpFrame = vec2(1.0/resolution.x, 1.0/resolution.y);
 		posPos.xy = textureCoords;
 		posPos.zw = textureCoords - (rcpFrame * (0.5 + FXAA_SUBPIX_SHIFT));
-	#endif
+	}
 }

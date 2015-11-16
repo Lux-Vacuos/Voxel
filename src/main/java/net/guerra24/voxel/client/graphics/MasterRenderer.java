@@ -163,6 +163,7 @@ public class MasterRenderer {
 		shader.loadBiasMatrix(gm);
 		shader.loadLightPosition(gm.getLightPos());
 		shader.loadLightPitch(gm.getSun_Camera().getPitch());
+		shader.useShadows(VoxelVariables.useShadows);
 	}
 
 	public void end(GameResources gm) {

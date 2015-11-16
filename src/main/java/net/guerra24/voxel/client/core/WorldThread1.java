@@ -25,19 +25,14 @@ S * The MIT License (MIT)
 package net.guerra24.voxel.client.core;
 
 import net.guerra24.voxel.client.graphics.opengl.Display;
-import net.guerra24.voxel.client.resources.GameResources;
-import net.guerra24.voxel.client.resources.GuiResources;
-import net.guerra24.voxel.client.world.WorldsHandler;
 
 public class WorldThread1 extends Thread {
-	private final GameResources gameResources;
 	private final Voxel voxel;
 	private long variableYieldTime, lastTime;
 	private int fps = 20;
-	
+
 	public WorldThread1(Voxel voxel) {
 		this.voxel = voxel;
-		this.gameResources = voxel.getGameResources();
 	}
 
 	@Override
@@ -45,7 +40,7 @@ public class WorldThread1 extends Thread {
 		float delta = 0;
 		float accumulator = 0f;
 		float interval = 1f / fps;
-		while (gameResources.getGlobalStates().loop) {
+		while (voxel.getGameResources().getGlobalStates().loop) {
 			delta = Display.getDeltaUpdate();
 			accumulator += delta;
 			while (accumulator >= interval) {
