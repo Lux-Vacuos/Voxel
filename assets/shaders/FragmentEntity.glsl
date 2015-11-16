@@ -22,9 +22,9 @@
 // SOFTWARE.
 //
 
-#define SHADOWS
-
 #version 330 core
+
+#define SHADOWS
 
 in float visibility;
 in vec2 pass_textureCoords;

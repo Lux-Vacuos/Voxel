@@ -102,12 +102,8 @@ public class Voxel {
 		worldsHandler.registerWorld(world.getCodeName(), world);
 		worldsHandler.setActiveWorld("Infinity");
 		Logger.log("Initializing Threads");
-		worldThread2 = new WorldThread1();
+		worldThread2 = new WorldThread1(this);
 		worldThread2.setName("Voxel World 1");
-		worldThread2.setWorldHandler(worldsHandler);
-		worldThread2.setGameResources(gameResources);
-		worldThread2.setVoxel(this);
-		worldThread2.setGuiResources(guiResources);
 		worldThread2.start();
 		/*
 		 * new Thread(new Runnable() { public void run() {
@@ -138,104 +134,21 @@ public class Voxel {
 				Display.timeCountRender -= 1f;
 			}
 			delta = Display.getDeltaRender();
-			render(gameResources, delta);
+			render(delta);
 		}
 		dispose();
 	}
 
-	public void render(GameResources gm, float delta) {
+	private void render(float delta) {
 		Display.fpsCount++;
-		switch (gm.getGlobalStates().getState()) {
-		case MAINMENU:
-			gm.getFrustum().calculateFrustum(gm.getRenderer().getProjectionMatrix(), gm.getCamera());
-			gm.getRenderer().prepare();
-			gm.getRenderer().renderGui(gm.getGlobalStates().getMainMenu().getList(), gm);
-			gm.getGuiRenderer().renderGui(gm.guis2);
-			break;
-		case IN_PAUSE:
-			gm.getRenderer().prepare();
-			gm.getRenderer().begin(gm);
-			worldsHandler.getActiveWorld().updateChunksRender(gm);
-			gm.getRenderer().end(gm);
-			gm.getRenderer().renderEntity(gm.getPhysics().getMobManager().getMobs(), gm);
-			gm.getSkyboxRenderer().render(VoxelVariables.RED, VoxelVariables.GREEN, VoxelVariables.BLUE, delta, gm);
-			gm.getParticleController().render(gm);
-			gm.getGuiRenderer().renderGui(gm.guis4);
-			break;
-		case GAME_SP:
-			worldsHandler.getActiveWorld().lighting();
-
-			gm.getWaterFBO().begin(128, 128);
-			gm.getCamera().invertPitch();
-			gm.getRenderer().prepare();
-			gm.getSkyboxRenderer().render(VoxelVariables.RED, VoxelVariables.GREEN, VoxelVariables.BLUE, delta, gm);
-			gm.getWaterFBO().end();
-			gm.getCamera().invertPitch();
-
-			gm.getSun_Camera().setPosition(gm.getCamera().getPosition());
-			if (VoxelVariables.useShadows) {
-				gm.getMasterShadowRenderer().being();
-				gm.getRenderer().prepare();
-				worldsHandler.getActiveWorld().updateChunksShadow(gm);
-				gm.getMasterShadowRenderer().end();
-			}
-
-			gm.getFrustum().calculateFrustum(gm.getRenderer().getProjectionMatrix(), gm.getCamera());
-
-			gm.getPostProcessing().getPost_fbo().begin(Display.getWidth(), Display.getHeight());
-			gm.getRenderer().prepare();
-			gm.getRenderer().begin(gm);
-			worldsHandler.getActiveWorld().updateChunksRender(gm);
-			gm.getRenderer().end(gm);
-			gm.getSkyboxRenderer().render(VoxelVariables.RED, VoxelVariables.GREEN, VoxelVariables.BLUE, delta, gm);
-			gm.getRenderer().renderEntity(gm.getPhysics().getMobManager().getMobs(), gm);
-			gm.getParticleController().render(gm);
-			gm.getCamera().update(delta, gameResources, guiResources, worldsHandler.getActiveWorld(), api, client);
-			gm.getPhysics().getMobManager().getPlayer().update(delta, gm, guiResources, worldsHandler.getActiveWorld(),
-					api);
-			gm.getPostProcessing().getPost_fbo().end();
-
-			gm.getRenderer().prepare();
-			gm.getPostProcessing().render(gm);
-			gm.getGuiRenderer().renderGui(gm.guis);
-			break;
-		case LOADING_WORLD:
-			gm.getRenderer().prepare();
-			gm.getGuiRenderer().renderGui(gm.guis3);
-			break;
-		case OPTIONS:
-			gm.getFrustum().calculateFrustum(gm.getRenderer().getProjectionMatrix(), gm.getCamera());
-			gm.getRenderer().prepare();
-			gm.getRenderer().renderGui(gm.getGlobalStates().getMainMenu().getList(), gm);
-			gm.getGuiRenderer().renderGui(gm.guis2);
-			break;
-		}
-		gm.getTextMasterRenderer().render();
-		gm.getGlobalStates().updateRenderThread(gm, worldsHandler, api, display);
-		display.updateDisplay(VoxelVariables.FPS, gm);
+		gameResources.getGlobalStates().doRender(this, delta);
+		gameResources.getTextMasterRenderer().render();
+		display.updateDisplay(VoxelVariables.FPS, gameResources);
 	}
 
-	public void update(GameResources gm, GuiResources gi, WorldsHandler world, float delta) {
+	public void update(float delta) {
 		Display.upsCount++;
-		switch (gm.getGlobalStates().getState()) {
-		case MAINMENU:
-			break;
-		case IN_PAUSE:
-			break;
-		case GAME_SP:
-			worldsHandler.getActiveWorld().updateChunksGeneration(gm, api);
-			gm.getPhysics().getMobManager().update(delta, gm, gi, world.getActiveWorld(), api);
-			gm.getParticleController().update(delta, gm, gi, world.getActiveWorld());
-			gm.getRenderer().getWaterRenderer().update(delta);
-			gm.update(gm.getSkyboxRenderer().update(delta));
-			gm.getParticleController().update(delta, gm, gi, world.getActiveWorld());
-			break;
-		case LOADING_WORLD:
-			break;
-		case OPTIONS:
-			break;
-		}
-		gm.getGlobalStates().updateUpdateThread(gm, world, api, display);
+		gameResources.getGlobalStates().doUpdate(this, delta);
 	}
 
 	public void dispose() {
@@ -259,6 +172,14 @@ public class Voxel {
 
 	public DedicatedClient getClient() {
 		return client;
+	}
+
+	public WorldsHandler getWorldsHandler() {
+		return worldsHandler;
+	}
+	
+	public Display getDisplay() {
+		return display;
 	}
 
 }
