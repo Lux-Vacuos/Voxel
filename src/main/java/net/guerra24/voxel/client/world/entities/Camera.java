@@ -295,8 +295,6 @@ public class Camera {
 			setBlock(Display.getWidth(), Display.getHeight(), (byte) 0, world, gm);
 		} else if (isButtonDown(1)) {
 			setBlock(Display.getWidth(), Display.getHeight(), block, world, gm);
-			if (block == 9)
-				world.lighting(bx, by, bz, 14);
 		}
 
 		updatePlayerState(gi);
@@ -354,6 +352,14 @@ public class Camera {
 		if (isKeyDown(KEY_F3) && isKeyDown(KEY_U)) {
 			VoxelVariables.useShadows = !VoxelVariables.useShadows;
 		}
+		if (isKeyDown(KEY_I)) {
+			VoxelVariables.radius++;
+			System.out.println(VoxelVariables.fogDensity);
+		}
+		if (isKeyDown(KEY_O)) {
+			VoxelVariables.radius--;
+			System.out.println(VoxelVariables.fogDensity);
+		}
 	}
 
 	private void setBlock(int ww, int wh, byte block, IWorld world, GameResources gm) {
@@ -388,6 +394,8 @@ public class Camera {
 		int by = (int) tempY;
 		int bz = (int) tempZ;
 		world.setGlobalBlock(bx, by, bz, block);
+		if (block == 9)
+			world.lighting(bx, by, bz, 14);
 	}
 
 	private void setBlock(GameResources gm) {

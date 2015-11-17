@@ -37,10 +37,10 @@ uniform mat4 viewMatrix;
 uniform mat4 modelMatrix;
 uniform vec3 cameraPosition;
 uniform vec3 directLightDirection;
+uniform float fogDensity;
 
 const float tiling = 0.5;
-const float density = 0.0023;
-const float gradient = 10.0;
+const float gradient = 5.0;
 
 void main(void) {
 	vec4 worldPosition = modelMatrix * vec4(position.x, 0.0, position.y, 1.0);
@@ -54,7 +54,7 @@ void main(void) {
 	fromLightVector = -directLightDirection;
 	
 	float distance = length(positionRelativeToCam.xyz);
-	visibility = exp(-pow((distance*density),gradient));
+	visibility = exp(-pow((distance*fogDensity),gradient));
 	visibility = clamp(visibility,0.0,1.1);
  
 }

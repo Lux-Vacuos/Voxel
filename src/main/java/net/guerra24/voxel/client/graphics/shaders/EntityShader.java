@@ -54,6 +54,7 @@ public class EntityShader extends ShaderProgram {
 	private int loc_depth0;
 	private int loc_lightPosition;
 	private int loc_lightPitch;
+	private int loc_fogDensity;
 
 	private int loc_useShadows;
 
@@ -86,6 +87,7 @@ public class EntityShader extends ShaderProgram {
 		loc_depth0 = super.getUniformLocation("depth0");
 		loc_lightPosition = super.getUniformLocation("lightPosition");
 		loc_lightPitch = super.getUniformLocation("lightPitch");
+		loc_fogDensity = super.getUniformLocation("fogDensity");
 		loc_useShadows = super.getUniformLocation("useShadows");
 
 	}
@@ -105,6 +107,10 @@ public class EntityShader extends ShaderProgram {
 
 	public void useShadows(boolean value) {
 		super.loadBoolean(loc_useShadows, value);
+	}
+
+	public void loadFogDensity(float value) {
+		super.loadFloat(loc_fogDensity, value);
 	}
 
 	/**

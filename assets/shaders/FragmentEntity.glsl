@@ -85,7 +85,7 @@ void main(void) {
 
 		if(lightPitch >=0 && lightPitch<= 180){
 			for (int i=0;i<16;i++){
-    			if (texture(depth0, vec3(ShadowCoord.xy + poissonDisk[i]/700.0 , 0.0),16)  <  ShadowCoord.z-bias ){
+    			if (texture(depth0, vec3(ShadowCoord.xy + poissonDisk[i]/700.0 , 0.0), 16)  <  ShadowCoord.z-bias ){
    		 			totalDiffuse.xyz -= 0.05;
    	 			}
 			}

@@ -26,12 +26,12 @@ package net.guerra24.voxel.client.core;
 
 import net.guerra24.voxel.client.graphics.opengl.Display;
 
-public class WorldThread1 extends Thread {
+public class UpdateThread extends Thread {
 	private final Voxel voxel;
 	private long variableYieldTime, lastTime;
 	private int fps = 20;
 
-	public WorldThread1(Voxel voxel) {
+	public UpdateThread(Voxel voxel) {
 		this.voxel = voxel;
 	}
 

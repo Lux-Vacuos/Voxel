@@ -41,9 +41,9 @@ uniform mat4 projectionLightMatrix;
 uniform mat4 viewLightMatrix;
 uniform mat4 biasMatrix;
 uniform vec3 lightPosition;
+uniform float fogDensity;
 
-const float density = 0.0023;
-const float gradient = 10.0;
+const float gradient = 5.0;
 
 void main() {
 
@@ -58,6 +58,6 @@ void main() {
 	ShadowCoord = biasMatrix * a;
 	
 	float distance = length(positionRelativeToCam.xyz);
-	visibility = exp(-pow((distance*density),gradient));
+	visibility = exp(-pow((distance*fogDensity),gradient));
 	visibility = clamp(visibility,0.0,1.1);
 }

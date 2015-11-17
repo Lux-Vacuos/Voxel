@@ -39,17 +39,17 @@ public class MainMenuState implements State {
 		}
 
 		if (gm.getMenuSystem().mainMenu.getPlayButton().insideButton())
-			gm.getMenuSystem().mainMenu.getList().get(0).changeScale(0.074f);
+			gm.getMenuSystem().mainMenu.getList().get(0).changeScale(0.075f);
 		else
 			gm.getMenuSystem().mainMenu.getList().get(0).changeScale(0.07f);
 
 		if (gm.getMenuSystem().mainMenu.getExitButton().insideButton())
-			gm.getMenuSystem().mainMenu.getList().get(2).changeScale(0.074f);
+			gm.getMenuSystem().mainMenu.getList().get(2).changeScale(0.075f);
 		else
 			gm.getMenuSystem().mainMenu.getList().get(2).changeScale(0.07f);
 
 		if (gm.getMenuSystem().mainMenu.getOptionsButton().insideButton())
-			gm.getMenuSystem().mainMenu.getList().get(1).changeScale(0.074f);
+			gm.getMenuSystem().mainMenu.getList().get(1).changeScale(0.075f);
 		else
 			gm.getMenuSystem().mainMenu.getList().get(1).changeScale(0.07f);
 	}

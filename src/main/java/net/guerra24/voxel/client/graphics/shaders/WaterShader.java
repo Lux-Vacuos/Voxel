@@ -50,6 +50,7 @@ public class WaterShader extends ShaderProgram {
 	private int location_cameraPosition;
 	private int location_directLightDirection;
 	private int location_skyColour;
+	private int loc_fogDensity;
 
 	private int loc_useHQWater;
 
@@ -78,6 +79,7 @@ public class WaterShader extends ShaderProgram {
 		location_cameraPosition = getUniformLocation("cameraPosition");
 		location_directLightDirection = super.getUniformLocation("directLightDirection");
 		location_skyColour = super.getUniformLocation("skyColour");
+		loc_fogDensity = super.getUniformLocation("fogDensity");
 		loc_useHQWater = super.getUniformLocation("useHQWater");
 	}
 
@@ -107,6 +109,10 @@ public class WaterShader extends ShaderProgram {
 
 	public void loadSettings(boolean useHQWater) {
 		super.loadBoolean(loc_useHQWater, useHQWater);
+	}
+
+	public void loadFogDensity(float value) {
+		super.loadFloat(loc_fogDensity, value);
 	}
 
 	/**

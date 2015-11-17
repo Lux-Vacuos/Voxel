@@ -43,6 +43,7 @@ in vec4 posPos;
 out vec4 out_Color;
 
 uniform sampler2D texture0;
+uniform sampler2D texture1;
 uniform sampler2D depth0;
 uniform vec2 resolution;
 uniform int camUnderWater;
@@ -117,7 +118,7 @@ void main(void){
 	
 	if(useDOF == 1){
 		vec3 sum = textureColour.rgb;
-		float bias = min(abs(texture(depth0, texcoord).x - texture(depth0, vec2(0.5)).x) * .02, .002);
+		float bias = min(abs(texture(depth0, texcoord).x - texture(depth0, vec2(0.5)).x) * .05, .005);
 		for (int i = -3; i < 3; i++) {
 			for (int j = -3; j < 3; j++) {
 				sum += texture(texture0, texcoord + vec2(j, i) * bias ).rgb;

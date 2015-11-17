@@ -29,7 +29,8 @@ import static org.lwjgl.opengl.GL11.GL_VENDOR;
 import static org.lwjgl.opengl.GL11.GL_VERSION;
 import static org.lwjgl.opengl.GL11.glGetString;
 
-import org.lwjgl.Sys;
+import org.lwjgl.Version;
+import org.lwjgl.glfw.GLFW;
 
 import net.guerra24.voxel.client.api.API;
 import net.guerra24.voxel.client.bootstrap.Bootstrap;
@@ -53,7 +54,7 @@ public class Voxel {
 	/**
 	 * Game Threads
 	 */
-	public static WorldThread1 worldThread2;
+	public static UpdateThread worldThread2;
 
 	/**
 	 * Game Data
@@ -83,7 +84,8 @@ public class Voxel {
 		Logger.log("Voxel Version: " + VoxelVariables.version);
 		Logger.log("Build: " + VoxelVariables.build);
 		Logger.log("Running on: " + Bootstrap.getPlatform());
-		Logger.log("LWJGL Version: " + Sys.getVersion());
+		Logger.log("LWJGL Version: " + Version.getVersion());
+		Logger.log("GLFW Version: " + GLFW.glfwGetVersionString());
 		Logger.log("OpenGL Version: " + glGetString(GL_VERSION));
 		Logger.log("Vendor: " + glGetString(GL_VENDOR));
 		Logger.log("Renderer: " + glGetString(GL_RENDERER));
@@ -112,7 +114,7 @@ public class Voxel {
 		worldsHandler.registerWorld(world.getCodeName(), world);
 		worldsHandler.setActiveWorld("Infinity");
 		Logger.log("Initializing Threads");
-		worldThread2 = new WorldThread1(this);
+		worldThread2 = new UpdateThread(this);
 		worldThread2.setName("Voxel World 1");
 		worldThread2.start();
 		/*

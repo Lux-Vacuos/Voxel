@@ -168,14 +168,10 @@ public class Display {
 	public void initDsiplay(int width, int height) {
 		displayWidth = width;
 		displayHeight = height;
-		errorCallback = new GLFWErrorCallback() {
-			@Override
-			public void invoke(int arg0, long arg1) {
-			}
-		};
-		glfwSetErrorCallback(errorCallback);
 		if (glfwInit() != GL_TRUE)
 			throw new IllegalStateException("Unable to initialize GLFW");
+		errorCallback = GLFWErrorCallback.createPrint(System.err);
+		glfwSetErrorCallback(errorCallback);
 
 		glfwDefaultWindowHints();
 		glfwWindowHint(GLFW_VISIBLE, GL_TRUE);
@@ -196,7 +192,7 @@ public class Display {
 		createCallBacks();
 		setCallbacks();
 		vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-		glfwSetWindowPos(window, (vidmode.getWidth() - displayWidth) / 2, (vidmode.getHeight() - displayHeight) / 2);
+		glfwSetWindowPos(window, (vidmode.width() - displayWidth) / 2, (vidmode.height() - displayHeight) / 2);
 		glfwMakeContextCurrent(window);
 		glfwSwapInterval(VoxelVariables.VSYNC ? 1 : 0);
 	}

@@ -86,7 +86,7 @@ public class PostProcessingRenderer {
 		glEnableVertexAttribArray(0);
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, post_fbo.getTexture());
-		glActiveTexture(GL_TEXTURE1);
+		glActiveTexture(GL_TEXTURE2);
 		glBindTexture(GL_TEXTURE_2D, depth_fbo.getTexture());
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, quad.getVertexCount());
 		glDisableVertexAttribArray(0);

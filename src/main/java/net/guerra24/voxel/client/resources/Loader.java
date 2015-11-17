@@ -29,9 +29,12 @@ import static org.lwjgl.opengl.GL11.GL_LINEAR;
 import static org.lwjgl.opengl.GL11.GL_LINEAR_MIPMAP_LINEAR;
 import static org.lwjgl.opengl.GL11.GL_NEAREST;
 import static org.lwjgl.opengl.GL11.GL_RGBA;
+import static org.lwjgl.opengl.GL11.GL_RGBA8;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_MAG_FILTER;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_MIN_FILTER;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_WRAP_S;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_WRAP_T;
 import static org.lwjgl.opengl.GL11.GL_UNSIGNED_BYTE;
 import static org.lwjgl.opengl.GL11.glBindTexture;
 import static org.lwjgl.opengl.GL11.glDeleteTextures;
@@ -39,6 +42,7 @@ import static org.lwjgl.opengl.GL11.glGenTextures;
 import static org.lwjgl.opengl.GL11.glTexImage2D;
 import static org.lwjgl.opengl.GL11.glTexParameterf;
 import static org.lwjgl.opengl.GL11.glTexParameteri;
+import static org.lwjgl.opengl.GL12.GL_CLAMP_TO_EDGE;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE_CUBE_MAP;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE_CUBE_MAP_POSITIVE_X;
@@ -57,6 +61,8 @@ import static org.lwjgl.opengl.GL30.glDeleteVertexArrays;
 import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 import static org.lwjgl.opengl.GL30.glGenerateMipmap;
 
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
@@ -64,9 +70,9 @@ import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.imageio.ImageIO;
+
 import org.lwjgl.BufferUtils;
-import org.newdawn.slick.opengl.Texture;
-import org.newdawn.slick.opengl.TextureLoader;
 
 import de.matthiasmann.twl.utils.PNGDecoder;
 import de.matthiasmann.twl.utils.PNGDecoder.Format;
@@ -154,36 +160,32 @@ public class Loader {
 	 * @return Texture ID
 	 */
 	public int loadTextureBlocks(String fileName) {
-		Texture texture = null;
+		int texture_id = 0;
 		try {
 			InputStream file = getClass().getClassLoader()
 					.getResourceAsStream("assets/textures/blocks/" + fileName + ".png");
-			texture = TextureLoader.getTexture("PNG", file, GL_NEAREST);
+			texture_id = loadTexture(file, GL_NEAREST);
 			Logger.log("Loading Texture: " + fileName + ".png");
-			glGenerateMipmap(GL_TEXTURE_2D);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_LOD_BIAS, -0.4f);
 		} catch (Exception e) {
 			e.printStackTrace();
 			Logger.log("Couldn' load texture file " + fileName);
 		}
-		textures.add(texture.getTextureID());
-		return texture.getTextureID();
+		textures.add(texture_id);
+		return texture_id;
 	}
-	
+
 	public int loadTextureFont(String fileName) {
-		Texture texture = null;
+		int texture = 0;
 		try {
-			InputStream file = getClass().getClassLoader()
-					.getResourceAsStream("assets/fonts/" + fileName + ".png");
-			texture = TextureLoader.getTexture("PNG", file, GL_NEAREST);
+			InputStream file = getClass().getClassLoader().getResourceAsStream("assets/fonts/" + fileName + ".png");
+			texture = loadTexture(file, GL_NEAREST);
 			Logger.log("Loading Texture: " + fileName + ".png");
 		} catch (Exception e) {
 			e.printStackTrace();
 			Logger.log("Couldn' load texture file " + fileName);
 		}
-		textures.add(texture.getTextureID());
-		return texture.getTextureID();
+		textures.add(texture);
+		return texture;
 	}
 
 	/**
@@ -194,11 +196,11 @@ public class Loader {
 	 * @return Texture ID
 	 */
 	public int loadTextureEntity(String fileName) {
-		Texture texture = null;
+		int texture = 0;
 		try {
 			InputStream file = getClass().getClassLoader()
 					.getResourceAsStream("assets/textures/entity/" + fileName + ".png");
-			texture = TextureLoader.getTexture("PNG", file, GL_NEAREST);
+			texture = loadTexture(file, GL_NEAREST);
 			Logger.log("Loading Texture: " + fileName + ".png");
 			glGenerateMipmap(GL_TEXTURE_2D);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
@@ -207,8 +209,8 @@ public class Loader {
 			e.printStackTrace();
 			Logger.log("Couldn' load texture file" + fileName);
 		}
-		textures.add(texture.getTextureID());
-		return texture.getTextureID();
+		textures.add(texture);
+		return texture;
 	}
 
 	/**
@@ -219,18 +221,49 @@ public class Loader {
 	 * @return Texture ID
 	 */
 	public int loadTextureGui(String fileName) {
-		Texture texture = null;
+		int texture = 0;
 		try {
 			InputStream file = getClass().getClassLoader()
 					.getResourceAsStream("assets/textures/menu/" + fileName + ".png");
-			texture = TextureLoader.getTexture("PNG", file, GL_NEAREST);
+			texture = loadTexture(file, GL_NEAREST);
 			Logger.log("Loading Texture: " + fileName + ".png");
 		} catch (Exception e) {
 			e.printStackTrace();
 			Logger.error("Couldn' load texture file" + fileName);
 		}
-		textures.add(texture.getTextureID());
-		return texture.getTextureID();
+		textures.add(texture);
+		return texture;
+	}
+
+	private int loadTexture(InputStream file, int filter) throws IOException {
+		BufferedImage img = ImageIO.read(file);
+		int[] pixels = new int[img.getWidth() * img.getHeight()];
+		img.getRGB(0, 0, img.getWidth(), img.getHeight(), pixels, 0, img.getWidth());
+		ByteBuffer buffer = BufferUtils.createByteBuffer(img.getWidth() * img.getHeight() * 4);
+		for (int y = 0; y < img.getHeight(); y++) {
+			for (int x = 0; x < img.getWidth(); x++) {
+				int pixel = pixels[y * img.getWidth() + x];
+				buffer.put((byte) ((pixel >> 16) & 0xFF));
+				buffer.put((byte) ((pixel >> 8) & 0xFF));
+				buffer.put((byte) (pixel & 0xFF));
+				buffer.put((byte) ((pixel >> 24) & 0xFF));
+			}
+		}
+		buffer.flip();
+		int texture_id = glGenTextures();
+		glBindTexture(GL_TEXTURE_2D, texture_id);
+
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filter);
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter);
+
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, img.getWidth(), img.getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
+		glGenerateMipmap(GL_TEXTURE_2D);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_LOD_BIAS, -0.4f);
+		return texture_id;
 	}
 
 	/**

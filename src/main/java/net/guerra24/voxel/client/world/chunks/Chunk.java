@@ -48,15 +48,15 @@ public class Chunk {
 	/**
 	 * Chunk Data
 	 */
-	public short dim, cx, cy, cz;
-	public int posX, posY, posZ;
+	public int dim, posX, posY, posZ, cx, cy, cz;
 	public byte[][][] blocks;
 	public byte[][][] lightMap;
 	private transient Queue<Object> blocksMesh;
 	private transient Queue<Object> blocksMeshtemp;
 	private transient int sizeX, sizeY, sizeZ;
 	private transient boolean readyToRender = true;
-	public transient boolean needsRebuild = true, updated = false, updating = false, empty = true, genQuery = false, visible = false;
+	public transient boolean needsRebuild = true, updated = false, updating = false, empty = true, genQuery = false,
+			visible = false;
 	public boolean created = false, decorated = false;
 
 	/**
@@ -72,10 +72,10 @@ public class Chunk {
 	 *            Dimensional World
 	 */
 	public Chunk(int dim, int cx, int cy, int cz, IWorld world) {
-		this.dim = (short) dim;
-		this.cx = (short) cx;
-		this.cy = (short) cy;
-		this.cz = (short) cz;
+		this.dim = dim;
+		this.cx = cx;
+		this.cy = cy;
+		this.cz = cz;
 		this.posX = cx * 16;
 		this.posZ = cz * 16;
 		this.posY = cy * 16;

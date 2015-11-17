@@ -44,7 +44,6 @@ public class GuiResources {
 	public GuiTexture gui;
 	public GuiTexture stats;
 	public GuiTexture life;
-	private int button;
 
 	/**
 	 * Constructor
@@ -62,7 +61,6 @@ public class GuiResources {
 	 *            Game Resources
 	 */
 	public void loadGuiTexture(GameResources gm) {
-		button = gm.getLoader().loadTextureGui("Button");
 		gui = new GuiTexture(gm.getLoader().loadTextureGui("HotBar"), new Vector2f(0.6f, -0.425f),
 				new Vector2f(1.6f, 1.425f));
 		stats = new GuiTexture(gm.getLoader().loadTextureGui("Stats"), new Vector2f(0.6f, -0.425f),

@@ -164,6 +164,7 @@ public class MasterRenderer {
 		shader.loadLightPosition(gm.getLightPos());
 		shader.loadLightPitch(gm.getSun_Camera().getPitch());
 		shader.useShadows(VoxelVariables.useShadows);
+		shader.loadFogDensity(VoxelVariables.fogDensity);
 	}
 
 	public void end(GameResources gm) {

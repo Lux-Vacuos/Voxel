@@ -17,10 +17,7 @@ public class ButtonModel implements IEntity {
 	}
 
 	public void changeScale(float dest) {
-		if (entity.getScale() < dest)
-			entity.setScale(entity.getScale() + 0.0007f);
-		else if (entity.getScale() > dest)
-			entity.setScale(entity.getScale() - 0.0007f);
+		entity.setScale(dest);
 	}
 
 	@Override

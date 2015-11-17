@@ -24,7 +24,6 @@
 
 package net.guerra24.voxel.client.bootstrap;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
@@ -92,9 +91,7 @@ public class Bootstrap {
 	 */
 	public static void main(String[] args) {
 		Thread.currentThread().setName("Voxel Main");
-		if (VoxelVariables.debug) {
-			System.setProperty("org.lwjgl.librarypath", new File("natives").getAbsolutePath());
-		} else {
+		if (!VoxelVariables.debug) {
 			PrintStream out;
 			try {
 				out = new PrintStream(new FileOutputStream("assets/log.txt"));
