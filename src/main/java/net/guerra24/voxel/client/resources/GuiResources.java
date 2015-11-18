@@ -41,9 +41,6 @@ public class GuiResources {
 	private GuiTexture worldLoading;
 	private GuiTexture loadBar;
 	public GuiTexture button5;
-	public GuiTexture gui;
-	public GuiTexture stats;
-	public GuiTexture life;
 
 	/**
 	 * Constructor
@@ -61,12 +58,6 @@ public class GuiResources {
 	 *            Game Resources
 	 */
 	public void loadGuiTexture(GameResources gm) {
-		gui = new GuiTexture(gm.getLoader().loadTextureGui("HotBar"), new Vector2f(0.6f, -0.425f),
-				new Vector2f(1.6f, 1.425f));
-		stats = new GuiTexture(gm.getLoader().loadTextureGui("Stats"), new Vector2f(0.6f, -0.425f),
-				new Vector2f(1.6f, 1.425f));
-		life = new GuiTexture(gm.getLoader().loadTextureGui("Life"), new Vector2f(-0.958f, 0.735f),
-				new Vector2f(0.346f, 0.02f));
 		worldLoading = new GuiTexture(gm.getLoader().loadTextureGui("WorldLoading"), new Vector2f(0.6f, -0.425f),
 				new Vector2f(1.6f, 1.425f));
 		loadBar = new GuiTexture(gm.getLoader().loadTextureGui("LoadBar"), new Vector2f(-0.3f, 0.15f),
@@ -82,9 +73,6 @@ public class GuiResources {
 	 *            Game Resources
 	 */
 	public void addGuiTextures(GameResources gm) {
-		gm.guis.add(stats);
-		gm.guis.add(life);
-		gm.guis.add(gui);
 		gm.guis3.add(worldLoading);
 		gm.guis3.add(loadBar);
 		gm.guis4.add(button5);

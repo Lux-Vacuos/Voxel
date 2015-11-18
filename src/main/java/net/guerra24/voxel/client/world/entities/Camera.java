@@ -24,7 +24,32 @@
 
 package net.guerra24.voxel.client.world.entities;
 
-import static net.guerra24.voxel.client.input.Keyboard.*;
+import static net.guerra24.voxel.client.input.Keyboard.KEY_0;
+import static net.guerra24.voxel.client.input.Keyboard.KEY_1;
+import static net.guerra24.voxel.client.input.Keyboard.KEY_2;
+import static net.guerra24.voxel.client.input.Keyboard.KEY_3;
+import static net.guerra24.voxel.client.input.Keyboard.KEY_4;
+import static net.guerra24.voxel.client.input.Keyboard.KEY_5;
+import static net.guerra24.voxel.client.input.Keyboard.KEY_6;
+import static net.guerra24.voxel.client.input.Keyboard.KEY_7;
+import static net.guerra24.voxel.client.input.Keyboard.KEY_8;
+import static net.guerra24.voxel.client.input.Keyboard.KEY_9;
+import static net.guerra24.voxel.client.input.Keyboard.KEY_A;
+import static net.guerra24.voxel.client.input.Keyboard.KEY_D;
+import static net.guerra24.voxel.client.input.Keyboard.KEY_F3;
+import static net.guerra24.voxel.client.input.Keyboard.KEY_I;
+import static net.guerra24.voxel.client.input.Keyboard.KEY_J;
+import static net.guerra24.voxel.client.input.Keyboard.KEY_K;
+import static net.guerra24.voxel.client.input.Keyboard.KEY_LCONTROL;
+import static net.guerra24.voxel.client.input.Keyboard.KEY_LSHIFT;
+import static net.guerra24.voxel.client.input.Keyboard.KEY_O;
+import static net.guerra24.voxel.client.input.Keyboard.KEY_R;
+import static net.guerra24.voxel.client.input.Keyboard.KEY_S;
+import static net.guerra24.voxel.client.input.Keyboard.KEY_SPACE;
+import static net.guerra24.voxel.client.input.Keyboard.KEY_U;
+import static net.guerra24.voxel.client.input.Keyboard.KEY_W;
+import static net.guerra24.voxel.client.input.Keyboard.KEY_Y;
+import static net.guerra24.voxel.client.input.Keyboard.isKeyDown;
 import static net.guerra24.voxel.client.input.Mouse.getDX;
 import static net.guerra24.voxel.client.input.Mouse.getDY;
 import static net.guerra24.voxel.client.input.Mouse.isButtonDown;
@@ -43,7 +68,6 @@ import net.guerra24.voxel.client.core.VoxelVariables;
 import net.guerra24.voxel.client.graphics.opengl.Display;
 import net.guerra24.voxel.client.network.DedicatedClient;
 import net.guerra24.voxel.client.resources.GameResources;
-import net.guerra24.voxel.client.resources.GuiResources;
 import net.guerra24.voxel.client.resources.Ray;
 import net.guerra24.voxel.client.util.Maths;
 import net.guerra24.voxel.client.world.IWorld;
@@ -67,7 +91,6 @@ public class Camera {
 	private float speed;
 	private float multiplierMouse = 24;
 	private float multiplierMovement = 24;
-	private int life = 0;
 	private byte block = 2;
 	private boolean teleporting = false;
 	private int teleportingTime = 0;
@@ -92,7 +115,7 @@ public class Camera {
 		ray = new Ray(proj, Maths.createViewMatrix(this), center, Display.getWidth(), Display.getHeight());
 	}
 
-	public void update(float delta, GameResources gm, GuiResources gi, IWorld world, API api, DedicatedClient client) {
+	public void update(float delta, GameResources gm, IWorld world, API api, DedicatedClient client) {
 		isMoved = false;
 		float mouseDX = getDX() * delta * mouseSpeed * 0.16f * multiplierMouse;
 		float mouseDY = getDY() * delta * mouseSpeed * 0.16f * multiplierMouse;
@@ -297,7 +320,6 @@ public class Camera {
 			setBlock(Display.getWidth(), Display.getHeight(), block, world, gm);
 		}
 
-		updatePlayerState(gi);
 		updateDebug(world);
 		ray = new Ray(gm.getRenderer().getProjectionMatrix(), Maths.createViewMatrix(this), center, Display.getWidth(),
 				Display.getHeight());
@@ -322,12 +344,6 @@ public class Camera {
 		this.position.x += dx;
 		this.position.y += dy;
 		this.position.z += dz;
-	}
-
-	public void updatePlayerState(GuiResources gi) {
-		if (isKeyDown(KEY_K))
-			life += 1;
-		setLife(life, gi);
 	}
 
 	public void updateDebug(IWorld world) {
@@ -445,20 +461,6 @@ public class Camera {
 
 	public void setRoll(float roll) {
 		this.roll = roll;
-	}
-
-	public float getLife() {
-		return life;
-	}
-
-	public void setLife(int life, GuiResources gi) {
-		if (life >= 0 && life <= 20) {
-			float temp = 0;
-			for (int templ = 0; templ < life; temp += 0.0173f)
-				templ += 1;
-			gi.life.setScale(new Vector2f(temp, 0.02f));
-			this.life = life;
-		}
 	}
 
 	public boolean isTeleporting() {

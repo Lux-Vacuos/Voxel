@@ -38,6 +38,7 @@ import net.guerra24.voxel.client.resources.models.RawModel;
 import net.guerra24.voxel.client.util.Maths;
 import net.guerra24.voxel.universal.util.vector.Matrix4f;
 import net.guerra24.voxel.universal.util.vector.Vector2f;
+import net.guerra24.voxel.universal.util.vector.Vector3f;
 
 public class PostProcessingRenderer {
 
@@ -49,13 +50,16 @@ public class PostProcessingRenderer {
 	private FrameBuffer depth_fbo;
 	private final RawModel quad;
 
+	private Matrix4f previousViewMatrix;
+	private Vector3f previousCameraPosition;
+
 	/**
 	 * Constructor
 	 * 
 	 * @param loader
 	 *            Loader
 	 */
-	public PostProcessingRenderer(Loader loader) {
+	public PostProcessingRenderer(Loader loader, GameResources gm) {
 		float[] positions = { -1, 1, -1, -1, 1, 1, 1, -1 };
 		quad = loader.loadToVAO(positions, 2);
 		shader = new PostProcessingShader();
@@ -66,6 +70,8 @@ public class PostProcessingRenderer {
 		shader.stop();
 		post_fbo = new FrameBuffer(false, true, Display.getWidth(), Display.getHeight());
 		depth_fbo = new FrameBuffer(true, false, Display.getWidth(), Display.getHeight());
+		previousViewMatrix = Maths.createViewMatrix(gm.getCamera());
+		previousCameraPosition = gm.getCamera().getPosition();
 	}
 
 	/**
@@ -81,7 +87,12 @@ public class PostProcessingRenderer {
 		shader.start();
 		shader.loadResolution(new Vector2f(Display.getWidth(), Display.getHeight()));
 		shader.loadUnderWater(gm.getCamera().isUnderWater());
-		shader.loadSettings(VoxelVariables.useDOF, VoxelVariables.useFXAA);
+		shader.loadSettings(VoxelVariables.useDOF, VoxelVariables.useFXAA, VoxelVariables.useMotionBlur,
+				VoxelVariables.useBloom);
+		shader.loadMotionBlurData(gm.getRenderer().getProjectionMatrix(), gm.getCamera(), previousViewMatrix,
+				previousCameraPosition);
+		previousViewMatrix = Maths.createViewMatrix(gm.getCamera());
+		previousCameraPosition = gm.getCamera().getPosition();
 		glBindVertexArray(quad.getVaoID());
 		glEnableVertexAttribArray(0);
 		glActiveTexture(GL_TEXTURE0);

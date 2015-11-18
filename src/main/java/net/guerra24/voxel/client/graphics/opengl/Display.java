@@ -32,6 +32,7 @@ import static org.lwjgl.glfw.GLFW.GLFW_OPENGL_FORWARD_COMPAT;
 import static org.lwjgl.glfw.GLFW.GLFW_OPENGL_PROFILE;
 import static org.lwjgl.glfw.GLFW.GLFW_RELEASE;
 import static org.lwjgl.glfw.GLFW.GLFW_RESIZABLE;
+import static org.lwjgl.glfw.GLFW.GLFW_VERSION_UNAVAILABLE;
 import static org.lwjgl.glfw.GLFW.GLFW_VISIBLE;
 import static org.lwjgl.glfw.GLFW.glfwCreateWindow;
 import static org.lwjgl.glfw.GLFW.glfwDefaultWindowHints;
@@ -166,12 +167,25 @@ public class Display {
 	private static long variableYieldTime, lastTime;
 
 	public void initDsiplay(int width, int height) {
+		glfwSetErrorCallback(errorCallback = new GLFWErrorCallback() {
+			GLFWErrorCallback delegate = GLFWErrorCallback.createPrint(System.err);
+
+			public void invoke(int error, long description) {
+				if (error == GLFW_VERSION_UNAVAILABLE)
+					Logger.error("Voxel requires OpenGL 3.3 or higher");
+				delegate.invoke(error, description);
+			}
+
+			@Override
+			public void release() {
+				delegate.release();
+				super.release();
+			}
+		});
 		displayWidth = width;
 		displayHeight = height;
 		if (glfwInit() != GL_TRUE)
 			throw new IllegalStateException("Unable to initialize GLFW");
-		errorCallback = GLFWErrorCallback.createPrint(System.err);
-		glfwSetErrorCallback(errorCallback);
 
 		glfwDefaultWindowHints();
 		glfwWindowHint(GLFW_VISIBLE, GL_TRUE);

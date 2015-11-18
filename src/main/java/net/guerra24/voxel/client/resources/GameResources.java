@@ -66,7 +66,6 @@ public class GameResources {
 	/**
 	 * GameResources Data
 	 */
-	public List<GuiTexture> guis = new ArrayList<GuiTexture>();
 	public List<GuiTexture> guis2 = new ArrayList<GuiTexture>();
 	public List<GuiTexture> guis3 = new ArrayList<GuiTexture>();
 	public List<GuiTexture> guis4 = new ArrayList<GuiTexture>();
@@ -123,7 +122,7 @@ public class GameResources {
 		textMasterRenderer = new TextMasterRenderer(loader);
 		textHandler = new TextHandler(this);
 		particleController = new ParticleController(loader);
-		postProcessing = new PostProcessingRenderer(loader);
+		postProcessing = new PostProcessingRenderer(loader, this);
 		waterFBO = new FrameBuffer(false, false, 128, 128);
 		masterShadowRenderer = new MasterShadowRenderer();
 		physics = new Physics(this);
@@ -183,10 +182,6 @@ public class GameResources {
 		renderer.cleanUp();
 		loader.cleanUp();
 		soundSystem.cleanup();
-	}
-
-	public List<GuiTexture> getGuis() {
-		return guis;
 	}
 
 	public List<GuiTexture> getGuis2() {
@@ -280,7 +275,7 @@ public class GameResources {
 	public OcclusionRenderer getOcclusionRenderer() {
 		return occlusionRenderer;
 	}
-	
+
 	public Menu getMenuSystem() {
 		return menuSystem;
 	}

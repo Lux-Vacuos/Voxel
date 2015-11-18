@@ -25,8 +25,11 @@
 package net.guerra24.voxel.client.graphics.shaders;
 
 import net.guerra24.voxel.client.core.VoxelVariables;
+import net.guerra24.voxel.client.util.Maths;
+import net.guerra24.voxel.client.world.entities.Camera;
 import net.guerra24.voxel.universal.util.vector.Matrix4f;
 import net.guerra24.voxel.universal.util.vector.Vector2f;
+import net.guerra24.voxel.universal.util.vector.Vector3f;
 
 /**
  * Post Processing Shader
@@ -40,15 +43,23 @@ public class PostProcessingShader extends ShaderProgram {
 	 * Post Processing Shadaer Data
 	 */
 	private int loc_transformationMatrix;
+	private int loc_projectionMatrix;
+	private int loc_inverseProjectionMatrix;
+	private int loc_inverseViewMatrix;
+	private int loc_previousViewMatrix;
 	private int loc_camUnderWater;
 	private int loc_camUnderWaterOffset;
 	private int loc_resolution;
 	private int loc_texture0;
 	private int loc_texture1;
 	private int loc_depth0;
+	private int loc_cameraPosition;
+	private int loc_previousCameraPosition;
 
 	private int loc_useFXAA;
 	private int loc_useDOF;
+	private int loc_useMotionBlur;
+	private int loc_useBloom;
 
 	private float time;
 
@@ -63,6 +74,12 @@ public class PostProcessingShader extends ShaderProgram {
 	@Override
 	protected void getAllUniformLocations() {
 		loc_transformationMatrix = super.getUniformLocation("transformationMatrix");
+		loc_projectionMatrix = super.getUniformLocation("projectionMatrix");
+		loc_inverseProjectionMatrix = super.getUniformLocation("inverseProjectionMatrix");
+		loc_inverseViewMatrix = super.getUniformLocation("inverseViewMatrix");
+		loc_previousViewMatrix = super.getUniformLocation("previousViewMatrix");
+		loc_cameraPosition = super.getUniformLocation("cameraPosition");
+		loc_previousCameraPosition = super.getUniformLocation("previousCameraPosition");
 		loc_camUnderWater = super.getUniformLocation("camUnderWater");
 		loc_camUnderWaterOffset = super.getUniformLocation("camUnderWaterOffset");
 		loc_resolution = super.getUniformLocation("resolution");
@@ -72,13 +89,14 @@ public class PostProcessingShader extends ShaderProgram {
 
 		loc_useFXAA = super.getUniformLocation("useFXAA");
 		loc_useDOF = super.getUniformLocation("useDOF");
+		loc_useMotionBlur = super.getUniformLocation("useMotionBlur");
+		loc_useBloom = super.getUniformLocation("useBloom");
 	}
 
 	@Override
 	protected void bindAttributes() {
 		super.bindAttribute(0, "position");
 	}
-
 
 	/**
 	 * Loads Textures ID
@@ -105,9 +123,21 @@ public class PostProcessingShader extends ShaderProgram {
 		super.load2DVector(loc_resolution, res);
 	}
 
-	public void loadSettings(boolean useDof, boolean useFXAA) {
+	public void loadSettings(boolean useDof, boolean useFXAA, boolean useMotionBlur, boolean useBloom) {
 		super.loadBoolean(loc_useDOF, useDof);
 		super.loadBoolean(loc_useFXAA, useFXAA);
+		super.loadBoolean(loc_useMotionBlur, useMotionBlur);
+		super.loadBoolean(loc_useBloom, useBloom);
+	}
+
+	public void loadMotionBlurData(Matrix4f projectionMatrix, Camera camera, Matrix4f previousViewMatrix,
+			Vector3f previousCameraPosition) {
+		super.loadMatrix(loc_projectionMatrix, projectionMatrix);
+		super.loadMatrix(loc_inverseProjectionMatrix, Matrix4f.invert(projectionMatrix, null));
+		super.loadMatrix(loc_inverseViewMatrix, Matrix4f.invert(Maths.createViewMatrix(camera), null));
+		super.loadMatrix(loc_previousViewMatrix, previousViewMatrix);
+		super.loadVector(loc_cameraPosition, camera.getPosition());
+		super.loadVector(loc_previousCameraPosition, previousCameraPosition);
 	}
 
 	/**

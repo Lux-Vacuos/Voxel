@@ -65,7 +65,6 @@ public class GameSPState implements State {
 		}
 
 		gm.getFrustum().calculateFrustum(gm.getRenderer().getProjectionMatrix(), gm.getCamera());
-
 		gm.getPostProcessing().getPost_fbo().begin(Display.getWidth(), Display.getHeight());
 		gm.getRenderer().prepare();
 		gm.getRenderer().begin(gm);
@@ -74,14 +73,12 @@ public class GameSPState implements State {
 		gm.getSkyboxRenderer().render(VoxelVariables.RED, VoxelVariables.GREEN, VoxelVariables.BLUE, delta, gm);
 		gm.getRenderer().renderEntity(gm.getPhysics().getMobManager().getMobs(), gm);
 		gm.getParticleController().render(gm);
-		gm.getCamera().update(delta, gm, voxel.getGuiResources(), worlds.getActiveWorld(), api, voxel.getClient());
+		gm.getCamera().update(delta, gm, worlds.getActiveWorld(), api, voxel.getClient());
 		gm.getPhysics().getMobManager().getPlayer().update(delta, gm, voxel.getGuiResources(), worlds.getActiveWorld(),
 				api);
 		gm.getPostProcessing().getPost_fbo().end();
-
 		gm.getRenderer().prepare();
 		gm.getPostProcessing().render(gm);
-		gm.getGuiRenderer().renderGui(gm.guis);
 	}
 
 }

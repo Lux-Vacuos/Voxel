@@ -281,14 +281,15 @@ public abstract class ShaderProgram {
 			}
 			reader.close();
 		} catch (IOException e) {
-			Logger.warn("Fail to load shader");
+			Logger.warn("Shader file not found: " + file);
+			e.printStackTrace();
 		}
 		int shaderID = glCreateShader(type);
 		glShaderSource(shaderID, shaderSource);
 		glCompileShader(shaderID);
 		if (glGetShaderi(shaderID, GL_COMPILE_STATUS) == GL_FALSE) {
-			Logger.error(glGetShaderInfoLog(shaderID, 500));
-			Logger.error("Could not compile shader!");
+			System.err.println(glGetShaderInfoLog(shaderID, 500));
+			Logger.error("Could not compile shader");
 		}
 		return shaderID;
 	}

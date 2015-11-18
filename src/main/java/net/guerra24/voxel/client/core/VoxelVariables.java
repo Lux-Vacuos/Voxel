@@ -44,7 +44,7 @@ public class VoxelVariables {
 	public static final String version = "0.0.9";
 	public static final String apiVersion = "0.0.4";
 	public static final String state = "ALPHA";
-	public static final int build = 119;
+	public static final int build = 120;
 	public static int FOV = 90;
 	public static int WIDTH = 1280;
 	public static int HEIGHT = 720;
@@ -62,6 +62,8 @@ public class VoxelVariables {
 	public static boolean useFXAA = false;
 	public static boolean useDOF = false;
 	public static boolean useHQWater = false;
+	public static boolean useMotionBlur = false;
+	public static boolean useBloom = false;
 	public static float fogDensity = 0.02f;
 	/**
 	 * World Settings
