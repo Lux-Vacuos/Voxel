@@ -4,49 +4,30 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.guerra24.voxel.client.core.VoxelVariables;
 import net.guerra24.voxel.client.graphics.TextMasterRenderer;
 import net.guerra24.voxel.client.resources.models.FontType;
 import net.guerra24.voxel.client.resources.models.GUIText;
-import net.guerra24.voxel.universal.util.vector.Vector2f;
 
 public class TextHandler {
 
 	private FontType font;
 
 	private List<GUIText> activeText;
+	private TextMasterRenderer textMasterRenderer;
 
 	public TextHandler(GameResources gm) {
 		font = new FontType(gm.getLoader().loadTextureFont("tahoma"), new File("assets/fonts/tahoma.fnt"));
 		activeText = new ArrayList<GUIText>();
-		init();
-		loadActiveText(gm.getTextMasterRenderer());
+		textMasterRenderer = gm.getTextMasterRenderer();
 	}
 
-	private void init() {
-		GUIText textVersion = new GUIText(
-				"Voxel " + VoxelVariables.version + " " + VoxelVariables.state + " Build " + VoxelVariables.build, 1,
-				font, new Vector2f(0.002f, 0.97f), 1, false);
-		textVersion.setColour(0.79f, 0.79f, 0.79f);
-		GUIText textVersionApi = new GUIText("Voxel API " + VoxelVariables.apiVersion, 1, font,
-				new Vector2f(0.002f, 0.94f), 1, false);
-		textVersionApi.setColour(0.79f, 0.79f, 0.79f);
-		GUIText textMAC = new GUIText("Voxel is running on OSX, some things did not work well", 1, font,
-				new Vector2f(0.002f, 0.002f), 1, false);
-		textMAC.setColour(1, 0, 0);
-		activeText.add(textVersion);
-		activeText.add(textVersionApi);
-		if (VoxelVariables.runningOnMac)
-			activeText.add(textMAC);
-	}
-
-	private void loadActiveText(TextMasterRenderer textMasterRenderer) {
+	public void loadActiveText() {
 		for (GUIText guiText : activeText) {
 			guiText.add(textMasterRenderer);
 		}
 	}
 
-	public void addToActive(List<GUIText> dest, TextMasterRenderer textMasterRenderer) {
+	public void addToActive(List<GUIText> dest) {
 		for (GUIText guiText : activeText) {
 			guiText.remove(textMasterRenderer);
 		}
@@ -56,7 +37,7 @@ public class TextHandler {
 		}
 	}
 
-	public void removeFromActive(List<GUIText> dest, TextMasterRenderer textMasterRenderer) {
+	public void removeFromActive(List<GUIText> dest) {
 		for (GUIText guiText : activeText) {
 			guiText.remove(textMasterRenderer);
 		}
@@ -66,7 +47,7 @@ public class TextHandler {
 		}
 	}
 
-	public void switchTo(List<GUIText> dest, TextMasterRenderer textMasterRenderer) {
+	public void switchTo(List<GUIText> dest) {
 		for (GUIText guiText : activeText) {
 			guiText.remove(textMasterRenderer);
 		}

@@ -370,11 +370,9 @@ public class Camera {
 		}
 		if (isKeyDown(KEY_I)) {
 			VoxelVariables.radius++;
-			System.out.println(VoxelVariables.fogDensity);
 		}
 		if (isKeyDown(KEY_O)) {
 			VoxelVariables.radius--;
-			System.out.println(VoxelVariables.fogDensity);
 		}
 	}
 

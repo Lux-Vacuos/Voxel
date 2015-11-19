@@ -41,7 +41,6 @@ import net.guerra24.voxel.client.graphics.PostProcessingRenderer;
 import net.guerra24.voxel.client.graphics.SkyboxRenderer;
 import net.guerra24.voxel.client.graphics.TextMasterRenderer;
 import net.guerra24.voxel.client.menu.Menu;
-import net.guerra24.voxel.client.particle.ParticleController;
 import net.guerra24.voxel.client.resources.models.GuiTexture;
 import net.guerra24.voxel.client.sound.LibraryLWJGLOpenAL;
 import net.guerra24.voxel.client.sound.soundsystem.SoundSystem;
@@ -80,7 +79,6 @@ public class GameResources {
 	private TextMasterRenderer textMasterRenderer;
 	private TextHandler textHandler;
 	private GlobalStates globalStates;
-	private ParticleController particleController;
 	private PostProcessingRenderer postProcessing;
 	private MasterShadowRenderer masterShadowRenderer;
 	private OcclusionRenderer occlusionRenderer;
@@ -107,32 +105,32 @@ public class GameResources {
 	 */
 	public void init() {
 		loader = new Loader();
+		rand = new Random();
 		sun_Camera = new Camera();
 		sun_Camera.setPosition(new Vector3f(0, 0, 0));
 		sun_Camera.setYaw(sunRotation.x);
 		sun_Camera.setPitch(sunRotation.y);
 		sun_Camera.setRoll(sunRotation.z);
-		kryo = new Kryo();
-		menuSystem = new Menu(loader);
 		renderer = new MasterRenderer(loader);
 		camera = new Camera(renderer.getProjectionMatrix());
-		occlusionRenderer = new OcclusionRenderer(renderer.getProjectionMatrix());
+		kryo = new Kryo();
 		guiRenderer = new GuiRenderer(loader);
+		occlusionRenderer = new OcclusionRenderer(renderer.getProjectionMatrix());
 		skyboxRenderer = new SkyboxRenderer(loader, renderer.getProjectionMatrix());
-		textMasterRenderer = new TextMasterRenderer(loader);
-		textHandler = new TextHandler(this);
-		particleController = new ParticleController(loader);
 		postProcessing = new PostProcessingRenderer(loader, this);
 		waterFBO = new FrameBuffer(false, false, 128, 128);
 		masterShadowRenderer = new MasterShadowRenderer();
 		physics = new Physics(this);
 		frustum = new Frustum();
-		rand = new Random();
+		textMasterRenderer = new TextMasterRenderer(loader);
+		textHandler = new TextHandler(this);
+		menuSystem = new Menu(this);
 		try {
 			SoundSystemConfig.addLibrary(LibraryLWJGLOpenAL.class);
 			SoundSystemConfig.setCodec("ogg", CodecJOgg.class);
 		} catch (SoundSystemException e) {
 			Logger.error("Unable to bind SoundSystem Libs");
+			e.printStackTrace();
 		}
 		soundSystem = new SoundSystem();
 		globalStates = new GlobalStates(loader);
@@ -172,7 +170,6 @@ public class GameResources {
 	 * 
 	 */
 	public void cleanUp() {
-		particleController.dispose();
 		textMasterRenderer.cleanUp();
 		masterShadowRenderer.cleanUp();
 		occlusionRenderer.cleanUp();
@@ -226,10 +223,6 @@ public class GameResources {
 
 	public SoundSystem getSoundSystem() {
 		return soundSystem;
-	}
-
-	public ParticleController getParticleController() {
-		return particleController;
 	}
 
 	public PostProcessingRenderer getPostProcessing() {

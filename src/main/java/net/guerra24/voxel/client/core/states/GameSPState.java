@@ -29,10 +29,8 @@ public class GameSPState implements State {
 
 		worlds.getActiveWorld().updateChunksGeneration(gm, api);
 		gm.getPhysics().getMobManager().update(delta, gm, gi, worlds.getActiveWorld(), api);
-		gm.getParticleController().update(delta, gm, gi, worlds.getActiveWorld());
 		gm.getRenderer().getWaterRenderer().update(delta);
 		gm.update(gm.getSkyboxRenderer().update(delta));
-		gm.getParticleController().update(delta, gm, gi, worlds.getActiveWorld());
 
 		if (!display.isDisplayFocused() && !VoxelVariables.debug) {
 			gm.getCamera().unlockMouse();
@@ -72,7 +70,6 @@ public class GameSPState implements State {
 		gm.getRenderer().end(gm);
 		gm.getSkyboxRenderer().render(VoxelVariables.RED, VoxelVariables.GREEN, VoxelVariables.BLUE, delta, gm);
 		gm.getRenderer().renderEntity(gm.getPhysics().getMobManager().getMobs(), gm);
-		gm.getParticleController().render(gm);
 		gm.getCamera().update(delta, gm, worlds.getActiveWorld(), api, voxel.getClient());
 		gm.getPhysics().getMobManager().getPlayer().update(delta, gm, voxel.getGuiResources(), worlds.getActiveWorld(),
 				api);

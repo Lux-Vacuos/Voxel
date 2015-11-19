@@ -28,8 +28,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.guerra24.voxel.client.core.VoxelVariables;
+import net.guerra24.voxel.client.resources.GameResources;
 import net.guerra24.voxel.client.resources.Loader;
 import net.guerra24.voxel.client.resources.models.ButtonModel;
+import net.guerra24.voxel.client.resources.models.FontType;
+import net.guerra24.voxel.client.resources.models.GUIText;
 import net.guerra24.voxel.client.resources.models.ModelTexture;
 import net.guerra24.voxel.client.resources.models.RawModel;
 import net.guerra24.voxel.client.resources.models.TexturedModel;
@@ -52,7 +55,11 @@ public class MainMenu {
 	private TexturedModel model1Final;
 	private TexturedModel mainMenuBackFinal;
 
-	public MainMenu(Loader loader) {
+	private List<GUIText> texts;
+
+	public MainMenu(GameResources gm) {
+		Loader loader = gm.getLoader();
+		FontType font = gm.getTextHandler().getFont();
 		float width = VoxelVariables.WIDTH;
 		float height = VoxelVariables.HEIGHT;
 		float yScale = height / 720f;
@@ -74,6 +81,23 @@ public class MainMenu {
 		list.add(new ButtonModel(model1Final, new Vector3f(-0.7f, -0.2f, 0), new Vector3f(90, 0, 0), 0.07f));
 		list.add(new ButtonModel(model1Final, new Vector3f(-1.4f, -3.95f, 0), new Vector3f(90, 0, 00), 0.07f));
 		list.add(new ButtonModel(mainMenuBackFinal, new Vector3f(0.1f, -0.92f, -1f), new Vector3f(90, 0, 0), 4));
+
+		texts = new ArrayList<GUIText>();
+		GUIText textVersion = new GUIText(
+				"Voxel " + VoxelVariables.version + " " + VoxelVariables.state + " Build " + VoxelVariables.build, 1,
+				font, new Vector2f(0.002f, 0.97f), 1, false);
+		textVersion.setColour(0.79f, 0.79f, 0.79f);
+		GUIText textVersionApi = new GUIText("Voxel API " + VoxelVariables.apiVersion, 1, font,
+				new Vector2f(0.002f, 0.94f), 1, false);
+		textVersionApi.setColour(0.79f, 0.79f, 0.79f);
+		GUIText textMAC = new GUIText("Voxel is running on OSX, some things did not work well", 1, font,
+				new Vector2f(0.002f, 0.002f), 1, false);
+		textMAC.setColour(1, 0, 0);
+		texts.add(textVersion);
+		texts.add(textVersionApi);
+		if (VoxelVariables.runningOnMac)
+			texts.add(textMAC);
+		gm.getTextHandler().switchTo(texts);
 	}
 
 	public Button getPlayButton() {

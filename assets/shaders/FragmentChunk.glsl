@@ -24,5 +24,16 @@
 
 #version 330 core
 
-void main(void){
+in vec3 color;
+in vec2 passTexCoords;
+in vec2 passTexCoordsOffset;
+
+out vec4 out_Color;
+
+uniform sampler2D texture0;
+
+void main(void) {
+
+	out_Color = texture(texture0, passTexCoords);
+
 }

@@ -48,7 +48,6 @@ public class InPauseState implements State {
 		gm.getRenderer().end(gm);
 		gm.getRenderer().renderEntity(gm.getPhysics().getMobManager().getMobs(), gm);
 		gm.getSkyboxRenderer().render(VoxelVariables.RED, VoxelVariables.GREEN, VoxelVariables.BLUE, delta, gm);
-		gm.getParticleController().render(gm);
 		gm.getGuiRenderer().renderGui(gm.guis4);
 	}
 

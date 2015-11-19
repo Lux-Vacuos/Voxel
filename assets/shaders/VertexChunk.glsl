@@ -24,5 +24,20 @@
 
 #version 330 core
 
-void main(void){
+in vec3 position;
+in vec2 texCoords;
+in vec2 texCoordsOffset;
+
+out passTexCoords;
+out passTexCoordsOffset;
+
+uniform mat4 projectionMatrix;
+uniform mat4 viewMatrix;
+
+void main() {
+	vec4 worldPosition = vec4(position, 1.0);
+	vec4 positionRelativeToCam = viewMatrix * worldPosition;
+	gl_Position = projectionMatrix * positionRelativeToCam;
+	passTexCoords = texCoords;
+	pasTexCoordsOffset = texCoordsOffset;
 }

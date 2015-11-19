@@ -209,6 +209,7 @@ public class Bootstrap {
 				if (gaveHQWater)
 					throw new IllegalStateException("HQWater already given");
 				VoxelVariables.useHQWater = true;
+				gaveHQWater = true;
 				break;
 			case "-autostart":
 				if (gaveAutostart)

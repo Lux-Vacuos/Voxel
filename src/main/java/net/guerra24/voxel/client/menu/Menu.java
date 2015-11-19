@@ -1,6 +1,6 @@
 package net.guerra24.voxel.client.menu;
 
-import net.guerra24.voxel.client.resources.Loader;
+import net.guerra24.voxel.client.resources.GameResources;
 
 /**
  * 
@@ -14,8 +14,8 @@ public class Menu {
 
 	public final OptionsMenu optionsMenu;
 
-	public Menu(Loader loader) {
-		mainMenu = new MainMenu(loader);
+	public Menu(GameResources gm) {
+		mainMenu = new MainMenu(gm);
 		pauseMenu = new PauseMenu();
 		optionsMenu = new OptionsMenu();
 	}

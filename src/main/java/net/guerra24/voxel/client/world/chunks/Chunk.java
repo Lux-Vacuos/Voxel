@@ -131,7 +131,6 @@ public class Chunk {
 			updating = true;
 			server.add_worker(new ChunkWorkerMesh(world, this));
 		}
-		empty = blocksMesh.isEmpty();
 	}
 
 	public void update(IWorld world) {
