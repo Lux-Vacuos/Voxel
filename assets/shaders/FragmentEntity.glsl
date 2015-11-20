@@ -28,9 +28,10 @@ in float visibility;
 in vec2 pass_textureCoords;
 in vec3 surfaceNormal;
 in vec3 toLightVector;
+in vec4 pass_position;
 in vec4 ShadowCoord;
 
-out vec4 out_Color;
+out vec4 [3] out_Color;
 
 uniform sampler2D texture0;
 uniform sampler2DShadow depth0;
@@ -62,7 +63,7 @@ vec2 poissonDisk[16] = vec2[](
    
 
 void main(void) {
-
+	
 	vec3 unitNormal = normalize(surfaceNormal);
 	vec3 unitLightVector = normalize(toLightVector);
 	
@@ -95,6 +96,9 @@ void main(void) {
    	}
     totalDiffuse.xyz =  clamp(totalDiffuse.xyz, blockBright, 1.0);
     totalDiffuse.xyz =  clamp(totalDiffuse.xyz, 0.2, 1.0);
-	out_Color = totalDiffuse * textureColour;
-	out_Color = mix(vec4(skyColour,1.0),out_Color,visibility);
+	out_Color[0] = totalDiffuse * textureColour;
+	out_Color[0] = mix(vec4(skyColour,1.0),out_Color[0],visibility);
+	
+	out_Color[1] = vec4(pass_position.xyz,0);
+	out_Color[2] = vec4(surfaceNormal.xyz,0);
 }

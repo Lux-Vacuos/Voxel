@@ -32,6 +32,7 @@ out float visibility;
 out vec2 pass_textureCoords;
 out vec3 surfaceNormal;
 out vec3 toLightVector;
+out vec4 pass_position;
 out vec4 ShadowCoord;
 
 uniform mat4 transformationMatrix;
@@ -56,8 +57,10 @@ void main() {
 	vec4 posLight = viewLightMatrix * worldPosition;
 	vec4 a = projectionLightMatrix * posLight;
 	ShadowCoord = biasMatrix * a;
+	pass_position = gl_Position;
 	
 	float distance = length(positionRelativeToCam.xyz);
 	visibility = exp(-pow((distance*fogDensity),gradient));
 	visibility = clamp(visibility,0.0,1.1);
+	gl_FrontColor  = vec4(1.0, 1.0, 1.0, 1.0);
 }

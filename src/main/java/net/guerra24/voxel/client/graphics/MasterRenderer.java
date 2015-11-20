@@ -42,17 +42,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 import net.guerra24.voxel.client.core.VoxelVariables;
 import net.guerra24.voxel.client.graphics.opengl.Display;
 import net.guerra24.voxel.client.graphics.shaders.EntityShader;
-import net.guerra24.voxel.client.graphics.shaders.WaterShader;
 import net.guerra24.voxel.client.resources.GameResources;
 import net.guerra24.voxel.client.resources.Loader;
 import net.guerra24.voxel.client.resources.models.ButtonModel;
 import net.guerra24.voxel.client.resources.models.TexturedModel;
-import net.guerra24.voxel.client.resources.models.WaterTile;
 import net.guerra24.voxel.client.util.Maths;
 import net.guerra24.voxel.client.world.block.BlockEntity;
 import net.guerra24.voxel.client.world.entities.Entity;
@@ -66,7 +63,7 @@ import net.guerra24.voxel.universal.util.vector.Matrix4f;
  * @category Rendering
  */
 public class MasterRenderer {
-
+	
 	/**
 	 * Master Renderer Data
 	 */
@@ -75,10 +72,7 @@ public class MasterRenderer {
 	private Map<TexturedModel, List<Entity>> guiModels = new HashMap<TexturedModel, List<Entity>>();
 	private Map<TexturedModel, List<BlockEntity>> blockEntities = new HashMap<TexturedModel, List<BlockEntity>>();
 	private EntityShader shader = new EntityShader();
-	private Queue<WaterTile> waterTiles = new ConcurrentLinkedQueue<>();
 	private EntityRenderer entityRenderer;
-	private WaterShader waterShader;
-	private WaterRenderer waterRenderer;
 	public float aspectRatio;
 
 	/**
@@ -93,8 +87,6 @@ public class MasterRenderer {
 		projectionMatrix = createProjectionMatrix(Display.getWidth(), Display.getHeight(), VoxelVariables.FOV,
 				VoxelVariables.NEAR_PLANE, VoxelVariables.FAR_PLANE);
 		entityRenderer = new EntityRenderer(shader, projectionMatrix);
-		waterShader = new WaterShader();
-		waterRenderer = new WaterRenderer(loader, waterShader, projectionMatrix);
 	}
 
 	/**
@@ -122,8 +114,6 @@ public class MasterRenderer {
 		for (Object entity : cubes) {
 			if (entity instanceof BlockEntity)
 				processBlockEntity((BlockEntity) entity);
-			if (entity instanceof WaterTile)
-				waterTiles.add((WaterTile) entity);
 		}
 	}
 
@@ -171,8 +161,6 @@ public class MasterRenderer {
 		entityRenderer.renderBlockEntity(blockEntities, gm);
 		shader.stop();
 		blockEntities.clear();
-		waterRenderer.render(waterTiles, gm);
-		waterTiles.clear();
 	}
 
 	/**
@@ -286,7 +274,6 @@ public class MasterRenderer {
 	 */
 	public void cleanUp() {
 		shader.cleanUp();
-		waterShader.cleanUp();
 	}
 
 	/**
@@ -302,7 +289,4 @@ public class MasterRenderer {
 		projectionMatrix = matrix;
 	}
 
-	public WaterRenderer getWaterRenderer() {
-		return waterRenderer;
-	}
 }

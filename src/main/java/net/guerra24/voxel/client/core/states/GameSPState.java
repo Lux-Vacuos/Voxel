@@ -29,7 +29,6 @@ public class GameSPState implements State {
 
 		worlds.getActiveWorld().updateChunksGeneration(gm, api);
 		gm.getPhysics().getMobManager().update(delta, gm, gi, worlds.getActiveWorld(), api);
-		gm.getRenderer().getWaterRenderer().update(delta);
 		gm.update(gm.getSkyboxRenderer().update(delta));
 
 		if (!display.isDisplayFocused() && !VoxelVariables.debug) {
@@ -46,12 +45,6 @@ public class GameSPState implements State {
 
 		worlds.getActiveWorld().lighting();
 		if (VoxelVariables.useHQWater) {
-			gm.getWaterFBO().begin(128, 128);
-			gm.getCamera().invertPitch();
-			gm.getRenderer().prepare();
-			gm.getSkyboxRenderer().render(VoxelVariables.RED, VoxelVariables.GREEN, VoxelVariables.BLUE, delta, gm);
-			gm.getWaterFBO().end();
-			gm.getCamera().invertPitch();
 		}
 
 		gm.getSun_Camera().setPosition(gm.getCamera().getPosition());
@@ -63,7 +56,7 @@ public class GameSPState implements State {
 		}
 
 		gm.getFrustum().calculateFrustum(gm.getRenderer().getProjectionMatrix(), gm.getCamera());
-		gm.getPostProcessing().getPost_fbo().begin(Display.getWidth(), Display.getHeight());
+		gm.getPostProcessing().getPost_fbo().begin();
 		gm.getRenderer().prepare();
 		gm.getRenderer().begin(gm);
 		worlds.getActiveWorld().updateChunksRender(gm);

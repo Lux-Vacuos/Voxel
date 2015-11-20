@@ -37,7 +37,7 @@
 #define FXAA_REDUCE_MUL   (1.0/8.0)
 #define FXAA_SPAN_MAX     8.0
 
-float bloom_amount = 1.1;
+float bloom_amount = 2;
 
 in vec2 textureCoords;
 in vec4 posPos;
@@ -53,8 +53,9 @@ uniform mat4 inverseViewMatrix;
 uniform mat4 previousViewMatrix;
 uniform vec3 cameraPosition;
 uniform vec3 previousCameraPosition;
-uniform sampler2D texture0;
-uniform sampler2D texture1;
+uniform sampler2D gDiffuse;
+uniform sampler2D gPosition;
+uniform sampler2D gNormal;
 uniform sampler2D depth0;
 
 uniform int useFXAA;
@@ -111,7 +112,7 @@ vec4 PostFX(sampler2D tex, vec2 uv, float time) {
 	c.a = 1.0;
 	return c;
 }
-
+/*
 void main(void){
 	vec2 texcoord = textureCoords;
 	if(camUnderWater == 1){
@@ -170,12 +171,10 @@ void main(void){
 	
 		for (i = -8; i < 8; i++) {
 			vec2 d = vec2(-i, i), e = vec2(0, i), f = texcoord;
-	
 			clr += texture(texture0, f+( d.yy )*rad)*sc;
 			clr += texture(texture0, f+( d.yx )*rad)*sc;
 			clr += texture(texture0, f+( d.xy )*rad)*sc;
 			clr += texture(texture0, f+( d.xx )*rad)*sc;
-
 			clr += texture(texture0, f+( e.xy )*rad)*sc;
 			clr += texture(texture0, f+(-e.yx )*rad)*sc;
 			clr += texture(texture0, f+(-e.xy )*rad)*sc;
@@ -194,4 +193,12 @@ void main(void){
 		out_Color = textureColour;
 	}
 	
+}
+*/
+void main(void){
+	vec2 texcoord = textureCoords;
+	vec4 image = texture(gDiffuse, texcoord);
+    vec4 position = texture(gPosition,texcoord);
+    vec3 normal = texture(gNormal, texcoord).xyz;
+    out_Color = image;
 }

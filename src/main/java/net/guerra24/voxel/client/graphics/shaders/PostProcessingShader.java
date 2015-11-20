@@ -50,8 +50,9 @@ public class PostProcessingShader extends ShaderProgram {
 	private int loc_camUnderWater;
 	private int loc_camUnderWaterOffset;
 	private int loc_resolution;
-	private int loc_texture0;
-	private int loc_texture1;
+	private int loc_gDiffuse;
+	private int loc_gPosition;
+	private int loc_gNormal;
 	private int loc_depth0;
 	private int loc_cameraPosition;
 	private int loc_previousCameraPosition;
@@ -83,8 +84,9 @@ public class PostProcessingShader extends ShaderProgram {
 		loc_camUnderWater = super.getUniformLocation("camUnderWater");
 		loc_camUnderWaterOffset = super.getUniformLocation("camUnderWaterOffset");
 		loc_resolution = super.getUniformLocation("resolution");
-		loc_texture0 = super.getUniformLocation("texture0");
-		loc_texture1 = super.getUniformLocation("texture1");
+		loc_gDiffuse = super.getUniformLocation("gDiffuse");
+		loc_gPosition = super.getUniformLocation("gPosition");
+		loc_gNormal = super.getUniformLocation("gNormal");
 		loc_depth0 = super.getUniformLocation("depth0");
 
 		loc_useFXAA = super.getUniformLocation("useFXAA");
@@ -103,9 +105,10 @@ public class PostProcessingShader extends ShaderProgram {
 	 * 
 	 */
 	public void connectTextureUnits() {
-		super.loadInt(loc_texture0, 0);
-		super.loadInt(loc_texture1, 1);
-		super.loadInt(loc_depth0, 2);
+		super.loadInt(loc_gDiffuse, 0);
+		super.loadInt(loc_gPosition, 1);
+		super.loadInt(loc_gNormal, 2);
+		super.loadInt(loc_depth0, 3);
 	}
 
 	public void loadUnderWater(boolean value) {

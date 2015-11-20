@@ -70,32 +70,31 @@ import net.guerra24.voxel.client.graphics.opengl.Display;
  * @category Rendering
  */
 public class FrameBuffer {
-	private int FrameBuffer;
-	private int RenderBuffer;
-	private int Texture;
+	private int frameBuffer;
+	private int renderBuffer;
+	private int texture;
 
-	public FrameBuffer(boolean depth, boolean post, int width, int height) {
-		initialiseFrameBuffer(depth, post, width, height);
+	private boolean depth;
+
+	public FrameBuffer(boolean depth, int width, int height) {
+		initialiseFrameBuffer(width, height);
+		this.depth = depth;
 	}
 
-	private void initialiseFrameBuffer(boolean depth, boolean postProcessing, int width, int height) {
-		FrameBuffer = createFrameBuffer(depth);
-
+	private void initialiseFrameBuffer(int width, int height) {
+		frameBuffer = createFrameBuffer();
 		if (depth) {
-			Texture = createDepthTextureAttachment(width, height);
+			texture = createDepthTextureAttachment(width, height);
 		} else {
-			if (postProcessing)
-				Texture = createTextureAttachmentPost(width, height);
-			else
-				Texture = createTextureAttachment(width, height);
+			texture = createTextureAttachment(width, height);
 		}
 		if (!depth)
-			RenderBuffer = createDepthBufferAttachment(width, height);
+			renderBuffer = createDepthBufferAttachment(width, height);
 		end();
 	}
 
 	public void begin(int width, int height) {
-		bindFrameBuffer(FrameBuffer, width, height);
+		bindFrameBuffer(frameBuffer, width, height);
 	}
 
 	public void end() {
@@ -109,7 +108,7 @@ public class FrameBuffer {
 		glViewport(0, 0, width, height);
 	}
 
-	private int createFrameBuffer(boolean depth) {
+	private int createFrameBuffer() {
 		int frameBuffer = glGenFramebuffers();
 		glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
 		if (depth) {
@@ -125,18 +124,6 @@ public class FrameBuffer {
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, (ByteBuffer) null);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texture, 0);
-		return texture;
-	}
-
-	private int createTextureAttachmentPost(int width, int height) {
-		int texture = glGenTextures();
-		glBindTexture(GL_TEXTURE_2D, texture);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, (ByteBuffer) null);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texture, 0);
 		return texture;
 	}
@@ -163,21 +150,21 @@ public class FrameBuffer {
 	}
 
 	public void cleanUp() {
-		glDeleteFramebuffers(FrameBuffer);
-		glDeleteRenderbuffers(RenderBuffer);
-		glDeleteTextures(Texture);
+		glDeleteFramebuffers(frameBuffer);
+		glDeleteRenderbuffers(renderBuffer);
+		glDeleteTextures(texture);
 	}
 
 	public int getFrameBuffer() {
-		return FrameBuffer;
+		return frameBuffer;
 	}
 
 	public int getRenderBuffer() {
-		return RenderBuffer;
+		return renderBuffer;
 	}
 
 	public int getTexture() {
-		return Texture;
+		return texture;
 	}
 
 }

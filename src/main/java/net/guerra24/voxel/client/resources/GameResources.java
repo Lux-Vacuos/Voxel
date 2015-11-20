@@ -31,7 +31,6 @@ import java.util.Random;
 import com.esotericsoftware.kryo.Kryo;
 
 import net.guerra24.voxel.client.core.GlobalStates;
-import net.guerra24.voxel.client.graphics.FrameBuffer;
 import net.guerra24.voxel.client.graphics.Frustum;
 import net.guerra24.voxel.client.graphics.GuiRenderer;
 import net.guerra24.voxel.client.graphics.MasterRenderer;
@@ -85,12 +84,11 @@ public class GameResources {
 	private SoundSystem soundSystem;
 	private Frustum frustum;
 	private Kryo kryo;
-	private FrameBuffer waterFBO;
 	private Physics physics;
 	private Menu menuSystem;
 
 	private Vector3f sunRotation = new Vector3f(0, 0, -30);
-	private Vector3f lightPos;
+	private Vector3f lightPos = new Vector3f(0, 0, 0);
 
 	/**
 	 * Constructor
@@ -118,7 +116,6 @@ public class GameResources {
 		occlusionRenderer = new OcclusionRenderer(renderer.getProjectionMatrix());
 		skyboxRenderer = new SkyboxRenderer(loader, renderer.getProjectionMatrix());
 		postProcessing = new PostProcessingRenderer(loader, this);
-		waterFBO = new FrameBuffer(false, false, 128, 128);
 		masterShadowRenderer = new MasterShadowRenderer();
 		physics = new Physics(this);
 		frustum = new Frustum();
@@ -174,7 +171,6 @@ public class GameResources {
 		masterShadowRenderer.cleanUp();
 		occlusionRenderer.cleanUp();
 		postProcessing.cleanUp();
-		waterFBO.cleanUp();
 		guiRenderer.cleanUp();
 		renderer.cleanUp();
 		loader.cleanUp();
@@ -239,10 +235,6 @@ public class GameResources {
 
 	public Physics getPhysics() {
 		return physics;
-	}
-
-	public FrameBuffer getWaterFBO() {
-		return waterFBO;
 	}
 
 	public TextHandler getTextHandler() {

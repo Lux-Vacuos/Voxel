@@ -46,8 +46,8 @@ public class PostProcessingRenderer {
 	 * post Processing Data
 	 */
 	private PostProcessingShader shader;
-	private FrameBuffer post_fbo;
 	private FrameBuffer depth_fbo;
+	private PostProcessingFBO postProcessingFBO;
 	private final RawModel quad;
 
 	private Matrix4f previousViewMatrix;
@@ -68,8 +68,8 @@ public class PostProcessingRenderer {
 		shader.loadTransformation(matrix);
 		shader.connectTextureUnits();
 		shader.stop();
-		post_fbo = new FrameBuffer(false, true, Display.getWidth(), Display.getHeight());
-		depth_fbo = new FrameBuffer(true, false, Display.getWidth(), Display.getHeight());
+		depth_fbo = new FrameBuffer(true, Display.getWidth(), Display.getHeight());
+		postProcessingFBO = new PostProcessingFBO(Display.getWidth(), Display.getHeight());
 		previousViewMatrix = Maths.createViewMatrix(gm.getCamera());
 		previousCameraPosition = gm.getCamera().getPosition();
 	}
@@ -79,7 +79,7 @@ public class PostProcessingRenderer {
 	 * 
 	 */
 	public void render(GameResources gm) {
-		glBindFramebuffer(GL_READ_FRAMEBUFFER, post_fbo.getRenderBuffer());
+		glBindFramebuffer(GL_READ_FRAMEBUFFER, postProcessingFBO.getDepthBuffer());
 		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, depth_fbo.getFrameBuffer());
 		glBlitFramebuffer(0, 0, Display.getWidth(), Display.getHeight(), 0, 0, Display.getWidth(), Display.getHeight(),
 				GL_DEPTH_BUFFER_BIT, GL_NEAREST);
@@ -96,8 +96,12 @@ public class PostProcessingRenderer {
 		glBindVertexArray(quad.getVaoID());
 		glEnableVertexAttribArray(0);
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, post_fbo.getTexture());
+		glBindTexture(GL_TEXTURE_2D, postProcessingFBO.getDiffuseTex());
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, postProcessingFBO.getPositionTex());
 		glActiveTexture(GL_TEXTURE2);
+		glBindTexture(GL_TEXTURE_2D, postProcessingFBO.getNormalTex());
+		glActiveTexture(GL_TEXTURE3);
 		glBindTexture(GL_TEXTURE_2D, depth_fbo.getTexture());
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, quad.getVertexCount());
 		glDisableVertexAttribArray(0);
@@ -113,7 +117,7 @@ public class PostProcessingRenderer {
 	public void cleanUp() {
 		shader.cleanUp();
 		depth_fbo.cleanUp();
-		post_fbo.cleanUp();
+		postProcessingFBO.cleanUp();
 	}
 
 	/**
@@ -121,8 +125,8 @@ public class PostProcessingRenderer {
 	 * 
 	 * @return FrameBuffer
 	 */
-	public FrameBuffer getPost_fbo() {
-		return post_fbo;
+	public PostProcessingFBO getPost_fbo() {
+		return postProcessingFBO;
 	}
 
 }
