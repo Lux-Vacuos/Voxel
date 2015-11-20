@@ -15,7 +15,7 @@ import static org.lwjgl.opengl.GL11.glGenTextures;
 import static org.lwjgl.opengl.GL11.glTexImage2D;
 import static org.lwjgl.opengl.GL11.glTexParameteri;
 import static org.lwjgl.opengl.GL12.GL_CLAMP_TO_EDGE;
-import static org.lwjgl.opengl.GL14.GL_DEPTH_COMPONENT24;
+import static org.lwjgl.opengl.GL11.GL_DEPTH_COMPONENT;
 import static org.lwjgl.opengl.GL20.glDrawBuffers;
 import static org.lwjgl.opengl.GL30.GL_COLOR_ATTACHMENT0;
 import static org.lwjgl.opengl.GL30.GL_COLOR_ATTACHMENT1;
@@ -36,6 +36,7 @@ import static org.lwjgl.opengl.GL30.glFramebufferTexture2D;
 import static org.lwjgl.opengl.GL30.glGenFramebuffers;
 import static org.lwjgl.opengl.GL30.glGenRenderbuffers;
 import static org.lwjgl.opengl.GL30.glRenderbufferStorage;
+import static org.lwjgl.opengl.GL32.glFramebufferTexture;
 
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
@@ -48,7 +49,7 @@ public class PostProcessingFBO {
 
 	private int fbo, diffuseRT, positionRT, normalRT, depthBuffer;
 
-	private int diffuseTex, positionTex, normalTex;
+	private int diffuseTex, positionTex, normalTex, depthTex;
 
 	public PostProcessingFBO(int width, int height) {
 		init(width, height);
@@ -76,7 +77,7 @@ public class PostProcessingFBO {
 		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, GL_RENDERBUFFER, normalRT);
 
 		glBindRenderbuffer(GL_RENDERBUFFER, depthBuffer);
-		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, width, height);
+		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height);
 		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthBuffer);
 
 		diffuseTex = glGenTextures();
@@ -106,6 +107,16 @@ public class PostProcessingFBO {
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, GL_TEXTURE_2D, normalTex, 0);
 
+		depthTex = glGenTextures();
+		glBindTexture(GL_TEXTURE_2D, depthTex);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT,
+				(ByteBuffer) null);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, depthTex, 0);
+
 		int status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
 		if (status != GL_FRAMEBUFFER_COMPLETE)
 			Logger.error("FBO initialization failed");
@@ -117,16 +128,18 @@ public class PostProcessingFBO {
 		glDeleteTextures(diffuseTex);
 		glDeleteTextures(positionTex);
 		glDeleteTextures(normalTex);
+		glDeleteTextures(depthTex);
 		glDeleteFramebuffers(fbo);
 		glDeleteRenderbuffers(diffuseRT);
 		glDeleteRenderbuffers(positionRT);
 		glDeleteRenderbuffers(normalRT);
+		glDeleteRenderbuffers(depthBuffer);
 	}
 
 	public void begin() {
 		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-		int buffer[] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2 };
-		IntBuffer buffers = BufferUtils.createIntBuffer(3);
+		int buffer[] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2};
+		IntBuffer buffers = BufferUtils.createIntBuffer(buffer.length);
 		buffers.put(buffer);
 		buffers.flip();
 		glDrawBuffers(buffers);
@@ -140,6 +153,18 @@ public class PostProcessingFBO {
 		return depthBuffer;
 	}
 
+	public int getDiffuseRT() {
+		return diffuseRT;
+	}
+
+	public int getPositionRT() {
+		return positionRT;
+	}
+
+	public int getNormalRT() {
+		return normalRT;
+	}
+
 	public int getDiffuseTex() {
 		return diffuseTex;
 	}
@@ -150,5 +175,13 @@ public class PostProcessingFBO {
 
 	public int getNormalTex() {
 		return normalTex;
+	}
+
+	public int getFbo() {
+		return fbo;
+	}
+
+	public int getDepthTex() {
+		return depthTex;
 	}
 }

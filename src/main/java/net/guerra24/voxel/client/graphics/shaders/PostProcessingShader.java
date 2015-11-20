@@ -87,7 +87,7 @@ public class PostProcessingShader extends ShaderProgram {
 		loc_gDiffuse = super.getUniformLocation("gDiffuse");
 		loc_gPosition = super.getUniformLocation("gPosition");
 		loc_gNormal = super.getUniformLocation("gNormal");
-		loc_depth0 = super.getUniformLocation("depth0");
+		loc_depth0 = super.getUniformLocation("gDepth");
 
 		loc_useFXAA = super.getUniformLocation("useFXAA");
 		loc_useDOF = super.getUniformLocation("useDOF");

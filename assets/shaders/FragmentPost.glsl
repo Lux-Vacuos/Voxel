@@ -56,7 +56,7 @@ uniform vec3 previousCameraPosition;
 uniform sampler2D gDiffuse;
 uniform sampler2D gPosition;
 uniform sampler2D gNormal;
-uniform sampler2D depth0;
+uniform sampler2DShadow gDepth;
 
 uniform int useFXAA;
 uniform int useDOF;
@@ -197,8 +197,42 @@ void main(void){
 */
 void main(void){
 	vec2 texcoord = textureCoords;
+	if(camUnderWater == 1){
+		texcoord.x += sin(texcoord.y * 4*2*3.14159 + camUnderWaterOffset) / 100;
+	}
 	vec4 image = texture(gDiffuse, texcoord);
     vec4 position = texture(gPosition,texcoord);
-    vec3 normal = texture(gNormal, texcoord).xyz;
-    out_Color = image;
+    vec4 normal = texture(gNormal, texcoord);
+    float depth = texture(gDepth, vec3(texcoord.xy, 0.0), 16);
+    
+	vec3 light = vec3(0, 8000, -3000);
+    vec3 lightDir = light - position.xyz ;
+    
+    normal = normalize(normal);
+    lightDir = normalize(lightDir);
+    
+    vec3 eyeDir = normalize(cameraPosition-position.xyz);
+    vec3 vHalfVector = normalize(lightDir.xyz+eyeDir);
+    
+    image = max(dot(normal.xyz,lightDir),0.2) * image + 
+                   pow(max(dot(normal.xyz,vHalfVector),0.0), 100) * 1.5;
+    
+    if(useDOF == 1){
+    	vec3 sum = image.rgb;
+		float bias = min(abs(depth -  texture(gDepth, vec3(vec2(0.5),0.0), 16)) * .02, .01);
+		for (int i = -3; i < 3; i++) {
+			for (int j = -3; j < 3; j++) {
+				sum += texture(gDiffuse, texcoord + vec2(j, i) * bias ).rgb;
+			}
+		}
+		sum /= 36.0;
+		image = vec4(sum,1.0);
+	}
+    
+    if(camUnderWater == 1){
+		out_Color = mix(vec4(0.0,0.0,0.3125,1.0),image,0.5);
+	} else {
+		out_Color = image;
+	}
+	
 }

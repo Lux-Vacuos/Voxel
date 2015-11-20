@@ -31,36 +31,21 @@ in vec3 normal;
 out float visibility; 
 out vec2 pass_textureCoords;
 out vec3 surfaceNormal;
-out vec3 toLightVector;
 out vec4 pass_position;
-out vec4 ShadowCoord;
 
 uniform mat4 transformationMatrix;
 uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;
-uniform mat4 projectionLightMatrix;
-uniform mat4 viewLightMatrix;
-uniform mat4 biasMatrix;
-uniform vec3 lightPosition;
 uniform float fogDensity;
 
 const float gradient = 5.0;
 
 void main() {
-
 	vec4 worldPosition = transformationMatrix * vec4(position, 1.0);
 	vec4 positionRelativeToCam = viewMatrix * worldPosition;
 	gl_Position = projectionMatrix * positionRelativeToCam;
 	pass_textureCoords = textureCoords;
 	surfaceNormal = (transformationMatrix * vec4(normal, 0.0)).xyz;
-	toLightVector = lightPosition - worldPosition.xyz;
-	vec4 posLight = viewLightMatrix * worldPosition;
-	vec4 a = projectionLightMatrix * posLight;
-	ShadowCoord = biasMatrix * a;
-	pass_position = gl_Position;
-	
-	float distance = length(positionRelativeToCam.xyz);
-	visibility = exp(-pow((distance*fogDensity),gradient));
-	visibility = clamp(visibility,0.0,1.1);
+	pass_position = projectionMatrix * worldPosition;
 	gl_FrontColor  = vec4(1.0, 1.0, 1.0, 1.0);
 }

@@ -46,7 +46,6 @@ public class PostProcessingRenderer {
 	 * post Processing Data
 	 */
 	private PostProcessingShader shader;
-	private FrameBuffer depth_fbo;
 	private PostProcessingFBO postProcessingFBO;
 	private final RawModel quad;
 
@@ -68,7 +67,6 @@ public class PostProcessingRenderer {
 		shader.loadTransformation(matrix);
 		shader.connectTextureUnits();
 		shader.stop();
-		depth_fbo = new FrameBuffer(true, Display.getWidth(), Display.getHeight());
 		postProcessingFBO = new PostProcessingFBO(Display.getWidth(), Display.getHeight());
 		previousViewMatrix = Maths.createViewMatrix(gm.getCamera());
 		previousCameraPosition = gm.getCamera().getPosition();
@@ -79,11 +77,6 @@ public class PostProcessingRenderer {
 	 * 
 	 */
 	public void render(GameResources gm) {
-		glBindFramebuffer(GL_READ_FRAMEBUFFER, postProcessingFBO.getDepthBuffer());
-		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, depth_fbo.getFrameBuffer());
-		glBlitFramebuffer(0, 0, Display.getWidth(), Display.getHeight(), 0, 0, Display.getWidth(), Display.getHeight(),
-				GL_DEPTH_BUFFER_BIT, GL_NEAREST);
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		shader.start();
 		shader.loadResolution(new Vector2f(Display.getWidth(), Display.getHeight()));
 		shader.loadUnderWater(gm.getCamera().isUnderWater());
@@ -102,7 +95,7 @@ public class PostProcessingRenderer {
 		glActiveTexture(GL_TEXTURE2);
 		glBindTexture(GL_TEXTURE_2D, postProcessingFBO.getNormalTex());
 		glActiveTexture(GL_TEXTURE3);
-		glBindTexture(GL_TEXTURE_2D, depth_fbo.getTexture());
+		glBindTexture(GL_TEXTURE_2D, postProcessingFBO.getDepthTex());
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, quad.getVertexCount());
 		glDisableVertexAttribArray(0);
 		glBindVertexArray(0);
@@ -116,7 +109,6 @@ public class PostProcessingRenderer {
 	 */
 	public void cleanUp() {
 		shader.cleanUp();
-		depth_fbo.cleanUp();
 		postProcessingFBO.cleanUp();
 	}
 
