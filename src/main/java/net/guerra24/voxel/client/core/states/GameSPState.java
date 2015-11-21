@@ -30,6 +30,7 @@ public class GameSPState implements State {
 		worlds.getActiveWorld().updateChunksGeneration(gm, api);
 		gm.getPhysics().getMobManager().update(delta, gm, gi, worlds.getActiveWorld(), api);
 		gm.update(gm.getSkyboxRenderer().update(delta));
+		gm.getRenderer().getWaterRenderer().update(delta);
 
 		if (!display.isDisplayFocused() && !VoxelVariables.debug) {
 			gm.getCamera().unlockMouse();
@@ -55,6 +56,9 @@ public class GameSPState implements State {
 			gm.getMasterShadowRenderer().end();
 		}
 
+		gm.getCamera().update(delta, gm, worlds.getActiveWorld(), api, voxel.getClient());
+		gm.getPhysics().getMobManager().getPlayer().update(delta, gm, voxel.getGuiResources(), worlds.getActiveWorld(),
+				api);
 		gm.getFrustum().calculateFrustum(gm.getRenderer().getProjectionMatrix(), gm.getCamera());
 		gm.getPostProcessing().getPost_fbo().begin();
 		gm.getRenderer().prepare();
@@ -63,9 +67,6 @@ public class GameSPState implements State {
 		gm.getRenderer().end(gm);
 		gm.getSkyboxRenderer().render(VoxelVariables.RED, VoxelVariables.GREEN, VoxelVariables.BLUE, delta, gm);
 		gm.getRenderer().renderEntity(gm.getPhysics().getMobManager().getMobs(), gm);
-		gm.getCamera().update(delta, gm, worlds.getActiveWorld(), api, voxel.getClient());
-		gm.getPhysics().getMobManager().getPlayer().update(delta, gm, voxel.getGuiResources(), worlds.getActiveWorld(),
-				api);
 		gm.getPostProcessing().getPost_fbo().end();
 		gm.getRenderer().prepare();
 		gm.getPostProcessing().render(gm);

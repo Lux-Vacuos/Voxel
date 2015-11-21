@@ -25,7 +25,8 @@
 #version 330 core
 
 in vec3 textureCoords;
-out vec4 out_Color;
+
+out vec4 [1] out_Color;
 
 uniform samplerCube cubeMap;
 uniform samplerCube cubeMap2;
@@ -43,5 +44,5 @@ void main(void){
     
     float factor = (textureCoords.y - lowerLimit) / (upperLimit - lowerLimit);
     factor = clamp(factor, 0.0, 1.0);
-    out_Color = mix(vec4(fogColour,1.0), finalColour, factor);
+    out_Color[0] = mix(vec4(fogColour,1.0), finalColour, factor);
 }

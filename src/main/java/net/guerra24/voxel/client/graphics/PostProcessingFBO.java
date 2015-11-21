@@ -1,5 +1,6 @@
 package net.guerra24.voxel.client.graphics;
 
+import static org.lwjgl.opengl.GL11.GL_DEPTH_COMPONENT;
 import static org.lwjgl.opengl.GL11.GL_FLOAT;
 import static org.lwjgl.opengl.GL11.GL_LINEAR;
 import static org.lwjgl.opengl.GL11.GL_RGBA;
@@ -14,12 +15,13 @@ import static org.lwjgl.opengl.GL11.glDeleteTextures;
 import static org.lwjgl.opengl.GL11.glGenTextures;
 import static org.lwjgl.opengl.GL11.glTexImage2D;
 import static org.lwjgl.opengl.GL11.glTexParameteri;
+import static org.lwjgl.opengl.GL11.GL_REPEAT;
 import static org.lwjgl.opengl.GL12.GL_CLAMP_TO_EDGE;
-import static org.lwjgl.opengl.GL11.GL_DEPTH_COMPONENT;
 import static org.lwjgl.opengl.GL20.glDrawBuffers;
 import static org.lwjgl.opengl.GL30.GL_COLOR_ATTACHMENT0;
 import static org.lwjgl.opengl.GL30.GL_COLOR_ATTACHMENT1;
 import static org.lwjgl.opengl.GL30.GL_COLOR_ATTACHMENT2;
+import static org.lwjgl.opengl.GL30.GL_COLOR_ATTACHMENT3;
 import static org.lwjgl.opengl.GL30.GL_DEPTH_ATTACHMENT;
 import static org.lwjgl.opengl.GL30.GL_FRAMEBUFFER;
 import static org.lwjgl.opengl.GL30.GL_FRAMEBUFFER_COMPLETE;
@@ -47,9 +49,9 @@ import net.guerra24.voxel.client.util.Logger;
 
 public class PostProcessingFBO {
 
-	private int fbo, diffuseRT, positionRT, normalRT, depthBuffer;
+	private int fbo, diffuseRT, positionRT, normalRT, reflectiveRT, depthBuffer;
 
-	private int diffuseTex, positionTex, normalTex, depthTex;
+	private int diffuseTex, positionTex, normalTex, reflectiveTex, depthTex;
 
 	public PostProcessingFBO(int width, int height) {
 		init(width, height);
@@ -76,6 +78,10 @@ public class PostProcessingFBO {
 		glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA16F, width, height);
 		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, GL_RENDERBUFFER, normalRT);
 
+		glBindRenderbuffer(GL_RENDERBUFFER, reflectiveRT);
+		glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA, width, height);
+		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT3, GL_RENDERBUFFER, reflectiveRT);
+
 		glBindRenderbuffer(GL_RENDERBUFFER, depthBuffer);
 		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height);
 		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthBuffer);
@@ -85,8 +91,8 @@ public class PostProcessingFBO {
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, (ByteBuffer) null);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, diffuseTex, 0);
 
 		positionTex = glGenTextures();
@@ -106,6 +112,15 @@ public class PostProcessingFBO {
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, GL_TEXTURE_2D, normalTex, 0);
+
+		reflectiveTex = glGenTextures();
+		glBindTexture(GL_TEXTURE_2D, reflectiveTex);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, (ByteBuffer) null);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT3, GL_TEXTURE_2D, reflectiveTex, 0);
 
 		depthTex = glGenTextures();
 		glBindTexture(GL_TEXTURE_2D, depthTex);
@@ -129,16 +144,18 @@ public class PostProcessingFBO {
 		glDeleteTextures(positionTex);
 		glDeleteTextures(normalTex);
 		glDeleteTextures(depthTex);
+		glDeleteTextures(reflectiveTex);
 		glDeleteFramebuffers(fbo);
 		glDeleteRenderbuffers(diffuseRT);
 		glDeleteRenderbuffers(positionRT);
 		glDeleteRenderbuffers(normalRT);
+		glDeleteRenderbuffers(reflectiveRT);
 		glDeleteRenderbuffers(depthBuffer);
 	}
 
 	public void begin() {
 		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-		int buffer[] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2};
+		int buffer[] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3 };
 		IntBuffer buffers = BufferUtils.createIntBuffer(buffer.length);
 		buffers.put(buffer);
 		buffers.flip();
@@ -165,6 +182,10 @@ public class PostProcessingFBO {
 		return normalRT;
 	}
 
+	public int getReflectiveRT() {
+		return reflectiveRT;
+	}
+
 	public int getDiffuseTex() {
 		return diffuseTex;
 	}
@@ -175,6 +196,10 @@ public class PostProcessingFBO {
 
 	public int getNormalTex() {
 		return normalTex;
+	}
+
+	public int getReflectiveTex() {
+		return reflectiveTex;
 	}
 
 	public int getFbo() {

@@ -146,7 +146,7 @@ public class SkyboxRenderer {
 	 *            Delta
 	 */
 	public float update(float delta) {
-		time += delta * 10;
+		time += delta * 50;
 		time %= 24000;
 		float res = time * 0.015f;
 		return res - 90;

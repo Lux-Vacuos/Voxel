@@ -25,7 +25,38 @@
 #version 330 core
 
 /*--------------------------------------------------------*/
-/*----------------POST PROCESSING CONFIG------------------*/
+/*-----------DEFERRED SHADING IN-OUT-UNIFORMS-------------*/
+/*--------------------------------------------------------*/
+
+in vec2 textureCoords;
+in vec4 posPos;
+
+out vec4 out_Color;
+
+uniform int camUnderWater;
+uniform float camUnderWaterOffset;
+uniform vec2 resolution;
+uniform vec3 cameraPosition;
+uniform vec3 previousCameraPosition;
+uniform vec3 lightPosition;
+uniform mat4 projectionMatrix;
+uniform mat4 viewMatrix;
+uniform mat4 inverseProjectionMatrix;
+uniform mat4 inverseViewMatrix;
+uniform mat4 previousViewMatrix;
+uniform sampler2D gDiffuse;
+uniform sampler2D gPosition;
+uniform sampler2D gNormal;
+uniform sampler2D gReflective;
+uniform sampler2DShadow gDepth;
+
+uniform int useFXAA;
+uniform int useDOF;
+uniform int useMotionBlur;
+uniform int useBloom;
+
+/*--------------------------------------------------------*/
+/*----------------DEFERRED SHADING CONFIG-----------------*/
 /*--------------------------------------------------------*/
 
 #define FxaaInt2 ivec2
@@ -37,31 +68,9 @@
 #define FXAA_REDUCE_MUL   (1.0/8.0)
 #define FXAA_SPAN_MAX     8.0
 
-float bloom_amount = 2;
-
-in vec2 textureCoords;
-in vec4 posPos;
-
-out vec4 out_Color;
-
-uniform int camUnderWater;
-uniform float camUnderWaterOffset;
-uniform vec2 resolution;
-uniform mat4 projectionMatrix;
-uniform mat4 inverseProjectionMatrix;
-uniform mat4 inverseViewMatrix;
-uniform mat4 previousViewMatrix;
-uniform vec3 cameraPosition;
-uniform vec3 previousCameraPosition;
-uniform sampler2D gDiffuse;
-uniform sampler2D gPosition;
-uniform sampler2D gNormal;
-uniform sampler2DShadow gDepth;
-
-uniform int useFXAA;
-uniform int useDOF;
-uniform int useMotionBlur;
-uniform int useBloom;
+const float bloom_amount = 2;
+const int maxf = 4, maxt = 40;				
+const float stp = 1.2, ref = 0.1, inc = 2.2;		
 
 #define rt_w resolution.x
 #define rt_h resolution.y
@@ -112,100 +121,36 @@ vec4 PostFX(sampler2D tex, vec2 uv, float time) {
 	c.a = 1.0;
 	return c;
 }
-/*
-void main(void){
-	vec2 texcoord = textureCoords;
-	if(camUnderWater == 1){
-		texcoord.x += sin(texcoord.y * 4*2*3.14159 + camUnderWaterOffset) / 100;
-	}
-	
-	vec4 textureColour;
-	
-	if(useFXAA == 1){
-		textureColour = PostFX(texture0, texcoord, 0.0);
-	}else{
-		textureColour = texture(texture0, texcoord);
-	}
-	
-	if(useDOF == 1){
-		vec3 sum = textureColour.rgb;
-		float bias = min(abs(texture(depth0, texcoord).x - texture(depth0, vec2(0.5)).x) * .02, .01);
-		for (int i = -3; i < 3; i++) {
-			for (int j = -3; j < 3; j++) {
-				sum += texture(texture0, texcoord + vec2(j, i) * bias ).rgb;
-			}
-		}
-		sum /= 36.0;
-		textureColour = vec4(sum,1.0);
-	}
-	
-	if(useMotionBlur == 1){
-		vec3 sum = textureColour.rgb;
-		vec4 tex = vec4(texcoord, 0.0,0.0);
-		float depth = texture(depth0, texcoord).x;
-		vec4 currentPosition = vec4(tex.x * 2.0 - 1.0, tex.y * 2.0 - 1.0, 2.0 * depth - 1.0, 1.0);
-		vec4 fragposition = inverseProjectionMatrix * currentPosition;
-		fragposition = inverseViewMatrix * fragposition;
-		fragposition /= fragposition.w;
-		fragposition.xyz += cameraPosition;
-	
-		vec4 previousPosition = fragposition;
-		previousPosition.xyz -= previousCameraPosition;
-		previousPosition = previousViewMatrix * previousPosition;
-		previousPosition = projectionMatrix * previousPosition;
-		previousPosition /= previousPosition.w;
-		vec2 velocity = (currentPosition - previousPosition).st * 0.015;
-		int samples = 1;
-		vec2 coord = tex.st + velocity;
-		for (int i = 0; i < 12; ++i, coord += velocity) {
-				sum += texture(texture0, coord).rgb;
-				++samples;
-		}	
-		sum = sum/samples;
-		textureColour = vec4(sum, 1.0);
-	}
-	
-	if(useBloom == 1){
-		float rad = 0.001, sc = 20.0, blm_amount = 0.02*bloom_amount;
-		int i = 0, samples = 1; vec4 clr = vec4(0.0);
-	
-		for (i = -8; i < 8; i++) {
-			vec2 d = vec2(-i, i), e = vec2(0, i), f = texcoord;
-			clr += texture(texture0, f+( d.yy )*rad)*sc;
-			clr += texture(texture0, f+( d.yx )*rad)*sc;
-			clr += texture(texture0, f+( d.xy )*rad)*sc;
-			clr += texture(texture0, f+( d.xx )*rad)*sc;
-			clr += texture(texture0, f+( e.xy )*rad)*sc;
-			clr += texture(texture0, f+(-e.yx )*rad)*sc;
-			clr += texture(texture0, f+(-e.xy )*rad)*sc;
-			clr += texture(texture0, f+( e.yx )*rad)*sc;
 
-			++samples;
-			sc = sc - 1.0;
-		}
-		clr = (clr/8.0)/samples; 
-		textureColour.rgb += clr.rgb*blm_amount;
-	}
-	
-	if(camUnderWater == 1){
-		out_Color = mix(vec4(0.0,0.0,0.3125,1.0),textureColour,0.5);
-	} else {
-		out_Color = textureColour;
-	}
-	
+vec4 rainbow(float x) {
+    float level = x * 2.0;
+    float r, g, b;
+    if (level <= 0) {
+        r = g = b = 0;
+    } else if (level <= 1) {
+        r = mix(1, 0, level);
+        g = mix(0, 1, level);
+        b = 0;
+    } else if (level > 1) {
+        r = 0;
+        g = mix(1, 0, level-1);
+        b = mix(0, 1, level-1);
+    }
+    return vec4(r, g, b, 1);
 }
-*/
+
 void main(void){
 	vec2 texcoord = textureCoords;
 	if(camUnderWater == 1){
 		texcoord.x += sin(texcoord.y * 4*2*3.14159 + camUnderWaterOffset) / 100;
 	}
 	vec4 image = texture(gDiffuse, texcoord);
+	vec4 reflective = texture(gReflective, texcoord);
     vec4 position = texture(gPosition,texcoord);
     vec4 normal = texture(gNormal, texcoord);
     float depth = texture(gDepth, vec3(texcoord.xy, 0.0), 16);
     
-	vec3 light = vec3(0, 8000, -3000);
+	vec3 light = lightPosition;
     vec3 lightDir = light - position.xyz ;
     
     normal = normalize(normal);
@@ -217,18 +162,41 @@ void main(void){
     image = max(dot(normal.xyz,lightDir),0.2) * image + 
                    pow(max(dot(normal.xyz,vHalfVector),0.0), 100) * 1.5;
     
-    if(useDOF == 1){
-    	vec3 sum = image.rgb;
-		float bias = min(abs(depth -  texture(gDepth, vec3(vec2(0.5),0.0), 16)) * .02, .01);
-		for (int i = -3; i < 3; i++) {
-			for (int j = -3; j < 3; j++) {
-				sum += texture(gDiffuse, texcoord + vec2(j, i) * bias ).rgb;
-			}
-		}
-		sum /= 36.0;
-		image = vec4(sum,1.0);
-	}
-    
+    if(reflective == vec4(1.0)){
+    	vec3 worldStartingPos = position.xyz;
+    	vec3 normal = normal.xyz;
+    	vec3 cameraToWorld = worldStartingPos.xyz - cameraPosition.xyz;
+    	float cameraToWorldDist = length(cameraToWorld);
+    	vec3 cameraToWorldNorm = normalize(cameraToWorld);
+    	vec3 refl = normalize(reflect(cameraToWorldNorm, normal));
+    	float cosAngle = abs(dot(normal, cameraToWorldNorm));
+    	float fact = 1 - cosAngle;
+    	fact = min(1, 1.38 - fact*fact);
+    	vec3 newPos;
+    	vec4 newScreen;
+    	float i = 0;
+    	vec3 rayTrace = worldStartingPos;
+    	float currentWorldDist, rayDist;
+    	float incr = 0.4;
+    	do {
+        	i += 0.05;
+        	rayTrace += refl*incr;
+        	incr *= 1.3;
+        	newScreen = projectionMatrix * viewMatrix * vec4(rayTrace, 1);
+        	newScreen /= newScreen.w;
+        	newPos = texture(gPosition, newScreen.xy/2.0+0.5).xyz;
+        	currentWorldDist = length(newPos.xyz - cameraPosition.xyz);
+        	rayDist = length(rayTrace.xyz - cameraPosition.xyz);
+    	} while(rayDist < currentWorldDist);
+ 		vec4 newColor = texture(gDiffuse, newScreen.xy/2.0 + 0.5);
+    	if (dot(refl, cameraToWorldNorm) < 0)
+        	fact = 1.0;
+    	else if (newScreen.x > 1 || newScreen.x < -1 || newScreen.y > 1 || newScreen.y < -1)
+        	fact = 1.0;
+    	else if (cameraToWorldDist > currentWorldDist)
+        	fact = 1.0;
+        image = image*fact + newColor*(1-fact);
+    }
     if(camUnderWater == 1){
 		out_Color = mix(vec4(0.0,0.0,0.3125,1.0),image,0.5);
 	} else {

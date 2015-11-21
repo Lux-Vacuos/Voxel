@@ -35,6 +35,7 @@ import static org.lwjgl.opengl.GL11.glBlendFunc;
 import static org.lwjgl.opengl.GL11.glClear;
 import static org.lwjgl.opengl.GL11.glClearColor;
 import static org.lwjgl.opengl.GL11.glCullFace;
+import static org.lwjgl.opengl.GL11.glDisable;
 import static org.lwjgl.opengl.GL11.glEnable;
 
 import java.util.ArrayList;
@@ -42,14 +43,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import net.guerra24.voxel.client.core.VoxelVariables;
 import net.guerra24.voxel.client.graphics.opengl.Display;
 import net.guerra24.voxel.client.graphics.shaders.EntityShader;
+import net.guerra24.voxel.client.graphics.shaders.WaterShader;
 import net.guerra24.voxel.client.resources.GameResources;
 import net.guerra24.voxel.client.resources.Loader;
 import net.guerra24.voxel.client.resources.models.ButtonModel;
 import net.guerra24.voxel.client.resources.models.TexturedModel;
+import net.guerra24.voxel.client.resources.models.WaterTile;
 import net.guerra24.voxel.client.util.Maths;
 import net.guerra24.voxel.client.world.block.BlockEntity;
 import net.guerra24.voxel.client.world.entities.Entity;
@@ -63,7 +67,7 @@ import net.guerra24.voxel.universal.util.vector.Matrix4f;
  * @category Rendering
  */
 public class MasterRenderer {
-	
+
 	/**
 	 * Master Renderer Data
 	 */
@@ -71,6 +75,9 @@ public class MasterRenderer {
 	private Map<TexturedModel, List<Entity>> entities = new HashMap<TexturedModel, List<Entity>>();
 	private Map<TexturedModel, List<Entity>> guiModels = new HashMap<TexturedModel, List<Entity>>();
 	private Map<TexturedModel, List<BlockEntity>> blockEntities = new HashMap<TexturedModel, List<BlockEntity>>();
+	private Queue<WaterTile> waterTiles = new ConcurrentLinkedQueue<>();
+	private WaterShader waterShader;
+	private WaterRenderer waterRenderer;
 	private EntityShader shader = new EntityShader();
 	private EntityRenderer entityRenderer;
 	public float aspectRatio;
@@ -87,6 +94,8 @@ public class MasterRenderer {
 		projectionMatrix = createProjectionMatrix(Display.getWidth(), Display.getHeight(), VoxelVariables.FOV,
 				VoxelVariables.NEAR_PLANE, VoxelVariables.FAR_PLANE);
 		entityRenderer = new EntityRenderer(shader, projectionMatrix);
+		waterShader = new WaterShader();
+		waterRenderer = new WaterRenderer(loader, waterShader, projectionMatrix);
 	}
 
 	/**
@@ -114,6 +123,8 @@ public class MasterRenderer {
 		for (Object entity : cubes) {
 			if (entity instanceof BlockEntity)
 				processBlockEntity((BlockEntity) entity);
+			if (entity instanceof WaterTile)
+				waterTiles.add((WaterTile) entity);
 		}
 	}
 
@@ -147,20 +158,19 @@ public class MasterRenderer {
 
 	public void begin(GameResources gm) {
 		shader.start();
-		shader.loadSkyColour(VoxelVariables.RED, VoxelVariables.GREEN, VoxelVariables.BLUE);
 		shader.loadProjectionMatrix(projectionMatrix);
 		shader.loadviewMatrix(gm.getCamera());
 		shader.loadBiasMatrix(gm);
-		shader.loadLightPosition(gm.getLightPos());
-		shader.loadLightPitch(gm.getSun_Camera().getPitch());
-		shader.useShadows(VoxelVariables.useShadows);
-		shader.loadFogDensity(VoxelVariables.fogDensity);
 	}
 
 	public void end(GameResources gm) {
 		entityRenderer.renderBlockEntity(blockEntities, gm);
 		shader.stop();
 		blockEntities.clear();
+		glDisable(GL_CULL_FACE);
+		waterRenderer.render(waterTiles, gm);
+		glEnable(GL_CULL_FACE);
+		waterTiles.clear();
 	}
 
 	/**
@@ -274,6 +284,7 @@ public class MasterRenderer {
 	 */
 	public void cleanUp() {
 		shader.cleanUp();
+		waterShader.cleanUp();
 	}
 
 	/**
@@ -287,6 +298,10 @@ public class MasterRenderer {
 
 	public void setProjectionMatrix(Matrix4f matrix) {
 		projectionMatrix = matrix;
+	}
+
+	public WaterRenderer getWaterRenderer() {
+		return waterRenderer;
 	}
 
 }

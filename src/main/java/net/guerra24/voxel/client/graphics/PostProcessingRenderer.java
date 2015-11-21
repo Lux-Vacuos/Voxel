@@ -84,6 +84,8 @@ public class PostProcessingRenderer {
 				VoxelVariables.useBloom);
 		shader.loadMotionBlurData(gm.getRenderer().getProjectionMatrix(), gm.getCamera(), previousViewMatrix,
 				previousCameraPosition);
+		shader.loadLightPosition(gm.getLightPos());
+		shader.loadviewMatrix(gm.getCamera());
 		previousViewMatrix = Maths.createViewMatrix(gm.getCamera());
 		previousCameraPosition = gm.getCamera().getPosition();
 		glBindVertexArray(quad.getVaoID());
@@ -96,6 +98,8 @@ public class PostProcessingRenderer {
 		glBindTexture(GL_TEXTURE_2D, postProcessingFBO.getNormalTex());
 		glActiveTexture(GL_TEXTURE3);
 		glBindTexture(GL_TEXTURE_2D, postProcessingFBO.getDepthTex());
+		glActiveTexture(GL_TEXTURE4);
+		glBindTexture(GL_TEXTURE_2D, postProcessingFBO.getReflectiveTex());
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, quad.getVertexCount());
 		glDisableVertexAttribArray(0);
 		glBindVertexArray(0);

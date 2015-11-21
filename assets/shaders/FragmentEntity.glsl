@@ -29,7 +29,7 @@ in vec2 pass_textureCoords;
 in vec3 surfaceNormal;
 in vec4 pass_position;
 
-out vec4 [3] out_Color;
+out vec4 [4] out_Color;
 
 uniform sampler2D texture0;
 uniform sampler2DShadow depth0;
@@ -99,4 +99,5 @@ void main(void) {
 	out_Color[0] = textureColour;
 	out_Color[1] = vec4(pass_position.xyz,0);
 	out_Color[2] = vec4(surfaceNormal.xyz,0);
+	out_Color[3] = vec4(0.0);
 }

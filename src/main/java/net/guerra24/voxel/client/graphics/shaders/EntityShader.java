@@ -29,7 +29,6 @@ import net.guerra24.voxel.client.resources.GameResources;
 import net.guerra24.voxel.client.util.Maths;
 import net.guerra24.voxel.client.world.entities.Camera;
 import net.guerra24.voxel.universal.util.vector.Matrix4f;
-import net.guerra24.voxel.universal.util.vector.Vector3f;
 
 /**
  * Entity Shader
@@ -48,15 +47,9 @@ public class EntityShader extends ShaderProgram {
 	private int loc_projectionLightMatrix;
 	private int loc_viewLightMatrix;
 	private int loc_biasMatrix;
-	private int loc_skyColour;
 	private int loc_blockBright;
 	private int loc_texture0;
 	private int loc_depth0;
-	private int loc_lightPosition;
-	private int loc_lightPitch;
-	private int loc_fogDensity;
-
-	private int loc_useShadows;
 
 	/**
 	 * Constructor, creates an Entity Shader
@@ -81,14 +74,9 @@ public class EntityShader extends ShaderProgram {
 		loc_biasMatrix = super.getUniformLocation("biasMatrix");
 		loc_projectionLightMatrix = super.getUniformLocation("projectionLightMatrix");
 		loc_viewLightMatrix = super.getUniformLocation("viewLightMatrix");
-		loc_skyColour = super.getUniformLocation("skyColour");
 		loc_blockBright = super.getUniformLocation("blockBright");
 		loc_texture0 = super.getUniformLocation("texture0");
 		loc_depth0 = super.getUniformLocation("depth0");
-		loc_lightPosition = super.getUniformLocation("lightPosition");
-		loc_lightPitch = super.getUniformLocation("lightPitch");
-		loc_fogDensity = super.getUniformLocation("fogDensity");
-		loc_useShadows = super.getUniformLocation("useShadows");
 
 	}
 
@@ -103,36 +91,6 @@ public class EntityShader extends ShaderProgram {
 
 	public void loadBlockBright(float value) {
 		super.loadFloat(loc_blockBright, value);
-	}
-
-	public void useShadows(boolean value) {
-		super.loadBoolean(loc_useShadows, value);
-	}
-
-	public void loadFogDensity(float value) {
-		super.loadFloat(loc_fogDensity, value);
-	}
-
-	/**
-	 * Loads the Sky Color to the shader
-	 * 
-	 * @param r
-	 *            Red Value
-	 * @param g
-	 *            Green Value
-	 * @param b
-	 *            Blue Value
-	 */
-	public void loadSkyColour(float r, float g, float b) {
-		super.loadVector(loc_skyColour, new Vector3f(r, g, b));
-	}
-
-	public void loadLightPosition(Vector3f pos) {
-		super.loadVector(loc_lightPosition, pos);
-	}
-
-	public void loadLightPitch(float yaw) {
-		super.loadFloat(loc_lightPitch, yaw);
 	}
 
 	/**

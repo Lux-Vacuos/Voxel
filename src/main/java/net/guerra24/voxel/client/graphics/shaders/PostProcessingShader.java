@@ -44,6 +44,7 @@ public class PostProcessingShader extends ShaderProgram {
 	 */
 	private int loc_transformationMatrix;
 	private int loc_projectionMatrix;
+	private int loc_viewMatrix;
 	private int loc_inverseProjectionMatrix;
 	private int loc_inverseViewMatrix;
 	private int loc_previousViewMatrix;
@@ -54,8 +55,10 @@ public class PostProcessingShader extends ShaderProgram {
 	private int loc_gPosition;
 	private int loc_gNormal;
 	private int loc_depth0;
+	private int loc_gReflective;
 	private int loc_cameraPosition;
 	private int loc_previousCameraPosition;
+	private int loc_lightPosition;
 
 	private int loc_useFXAA;
 	private int loc_useDOF;
@@ -76,6 +79,7 @@ public class PostProcessingShader extends ShaderProgram {
 	protected void getAllUniformLocations() {
 		loc_transformationMatrix = super.getUniformLocation("transformationMatrix");
 		loc_projectionMatrix = super.getUniformLocation("projectionMatrix");
+		loc_viewMatrix = super.getUniformLocation("viewMatrix");
 		loc_inverseProjectionMatrix = super.getUniformLocation("inverseProjectionMatrix");
 		loc_inverseViewMatrix = super.getUniformLocation("inverseViewMatrix");
 		loc_previousViewMatrix = super.getUniformLocation("previousViewMatrix");
@@ -88,6 +92,8 @@ public class PostProcessingShader extends ShaderProgram {
 		loc_gPosition = super.getUniformLocation("gPosition");
 		loc_gNormal = super.getUniformLocation("gNormal");
 		loc_depth0 = super.getUniformLocation("gDepth");
+		loc_gReflective = super.getUniformLocation("gReflective");
+		loc_lightPosition = super.getUniformLocation("lightPosition");
 
 		loc_useFXAA = super.getUniformLocation("useFXAA");
 		loc_useDOF = super.getUniformLocation("useDOF");
@@ -109,11 +115,16 @@ public class PostProcessingShader extends ShaderProgram {
 		super.loadInt(loc_gPosition, 1);
 		super.loadInt(loc_gNormal, 2);
 		super.loadInt(loc_depth0, 3);
+		super.loadInt(loc_gReflective, 4);
 	}
 
 	public void loadUnderWater(boolean value) {
 		super.loadBoolean(loc_camUnderWater, value);
 		super.loadFloat(loc_camUnderWaterOffset, time += 0.1f);
+	}
+
+	public void loadLightPosition(Vector3f pos) {
+		super.loadVector(loc_lightPosition, pos);
 	}
 
 	/**
@@ -141,6 +152,17 @@ public class PostProcessingShader extends ShaderProgram {
 		super.loadMatrix(loc_previousViewMatrix, previousViewMatrix);
 		super.loadVector(loc_cameraPosition, camera.getPosition());
 		super.loadVector(loc_previousCameraPosition, previousCameraPosition);
+	}
+	
+	/**
+	 * Loads View Matrix to the shader
+	 * 
+	 * @param camera
+	 *            Camera
+	 */
+	public void loadviewMatrix(Camera camera) {
+		Matrix4f viewMatrix = Maths.createViewMatrix(camera);
+		super.loadMatrix(loc_viewMatrix, viewMatrix);
 	}
 
 	/**
