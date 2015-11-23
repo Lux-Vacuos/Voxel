@@ -36,6 +36,7 @@ out vec4 out_Color;
 uniform int camUnderWater;
 uniform float camUnderWaterOffset;
 uniform vec2 resolution;
+uniform vec2 sunPositionInScreen;
 uniform vec3 cameraPosition;
 uniform vec3 previousCameraPosition;
 uniform vec3 lightPosition;
@@ -47,7 +48,7 @@ uniform mat4 previousViewMatrix;
 uniform sampler2D gDiffuse;
 uniform sampler2D gPosition;
 uniform sampler2D gNormal;
-uniform sampler2D gReflective;
+uniform sampler2D gData;
 uniform sampler2DShadow gDepth;
 
 uniform int useFXAA;
@@ -74,6 +75,10 @@ const float stp = 1.2, ref = 0.1, inc = 2.2;
 
 #define rt_w resolution.x
 #define rt_h resolution.y
+
+/*--------------------------------------------------------*/
+/*----------------DEFERRED SHADING CODE-------------------*/
+/*--------------------------------------------------------*/
 
 vec3 FxaaPixelShader(vec4 posPos, sampler2D tex, vec2 rcpFrame) {
     vec3 rgbNW = FxaaTexLod0(tex, posPos.zw).xyz;
@@ -122,81 +127,79 @@ vec4 PostFX(sampler2D tex, vec2 uv, float time) {
 	return c;
 }
 
-vec4 rainbow(float x) {
-    float level = x * 2.0;
-    float r, g, b;
-    if (level <= 0) {
-        r = g = b = 0;
-    } else if (level <= 1) {
-        r = mix(1, 0, level);
-        g = mix(0, 1, level);
-        b = 0;
-    } else if (level > 1) {
-        r = 0;
-        g = mix(1, 0, level-1);
-        b = mix(0, 1, level-1);
-    }
-    return vec4(r, g, b, 1);
-}
-
 void main(void){
 	vec2 texcoord = textureCoords;
 	if(camUnderWater == 1){
 		texcoord.x += sin(texcoord.y * 4*2*3.14159 + camUnderWaterOffset) / 100;
 	}
 	vec4 image = texture(gDiffuse, texcoord);
-	vec4 reflective = texture(gReflective, texcoord);
+	vec4 data = texture(gData, texcoord);
     vec4 position = texture(gPosition,texcoord);
     vec4 normal = texture(gNormal, texcoord);
     float depth = texture(gDepth, vec3(texcoord.xy, 0.0), 16);
     
-	vec3 light = lightPosition;
-    vec3 lightDir = light - position.xyz ;
+    if(data.b != 1) {
+    	if(data.g == 1.0){
+    		image.rgb -= vec3(data.a,data.a,data.a);
+    	}
     
-    normal = normalize(normal);
-    lightDir = normalize(lightDir);
+		vec3 light = lightPosition;
+    	vec3 lightDir = light - position.xyz ;
     
-    vec3 eyeDir = normalize(cameraPosition-position.xyz);
-    vec3 vHalfVector = normalize(lightDir.xyz+eyeDir);
+    	normal = normalize(normal);
+    	lightDir = normalize(lightDir);
     
-    image = max(dot(normal.xyz,lightDir),0.2) * image + 
-                   pow(max(dot(normal.xyz,vHalfVector),0.0), 100) * 1.5;
+    	vec3 eyeDir = normalize(cameraPosition-position.xyz);
+    	vec3 vHalfVector = normalize(lightDir.xyz+eyeDir);
     
-    if(reflective == vec4(1.0)){
-    	vec3 worldStartingPos = position.xyz;
-    	vec3 normal = normal.xyz;
-    	vec3 cameraToWorld = worldStartingPos.xyz - cameraPosition.xyz;
-    	float cameraToWorldDist = length(cameraToWorld);
-    	vec3 cameraToWorldNorm = normalize(cameraToWorld);
-    	vec3 refl = normalize(reflect(cameraToWorldNorm, normal));
-    	float cosAngle = abs(dot(normal, cameraToWorldNorm));
-    	float fact = 1 - cosAngle;
-    	fact = min(1, 1.38 - fact*fact);
-    	vec3 newPos;
-    	vec4 newScreen;
-    	float i = 0;
-    	vec3 rayTrace = worldStartingPos;
-    	float currentWorldDist, rayDist;
-    	float incr = 0.4;
-    	do {
-        	i += 0.05;
-        	rayTrace += refl*incr;
-        	incr *= 1.3;
-        	newScreen = projectionMatrix * viewMatrix * vec4(rayTrace, 1);
-        	newScreen /= newScreen.w;
-        	newPos = texture(gPosition, newScreen.xy/2.0+0.5).xyz;
-        	currentWorldDist = length(newPos.xyz - cameraPosition.xyz);
-        	rayDist = length(rayTrace.xyz - cameraPosition.xyz);
-    	} while(rayDist < currentWorldDist);
- 		vec4 newColor = texture(gDiffuse, newScreen.xy/2.0 + 0.5);
-    	if (dot(refl, cameraToWorldNorm) < 0)
-        	fact = 1.0;
-    	else if (newScreen.x > 1 || newScreen.x < -1 || newScreen.y > 1 || newScreen.y < -1)
-        	fact = 1.0;
-    	else if (cameraToWorldDist > currentWorldDist)
-        	fact = 1.0;
-        image = image*fact + newColor*(1-fact);
+    	image = max(dot(normal.xyz,lightDir),0.2) * image;
+    
+   		if(data.r == 1.0){
+    		vec3 worldStartingPos = position.xyz;
+    		vec3 normal = normal.xyz;
+    		vec3 cameraToWorld = worldStartingPos.xyz - cameraPosition.xyz;
+    		float cameraToWorldDist = length(cameraToWorld);
+    		vec3 cameraToWorldNorm = normalize(cameraToWorld);
+    		vec3 refl = normalize(reflect(cameraToWorldNorm, normal));
+    		float cosAngle = abs(dot(normal, cameraToWorldNorm));
+    		float fact = 1 - cosAngle;
+    		fact = min(1, 1.38 - fact*fact);
+    		vec3 newPos;
+    		vec4 newScreen;
+    		float i = 0;
+    		vec3 rayTrace = worldStartingPos;
+    		float currentWorldDist, rayDist;
+    		float incr = 0.4;
+    		do {
+        		i += 0.05;
+        		rayTrace += refl*incr;
+        		incr *= 1.3;
+        		newScreen = projectionMatrix * viewMatrix * vec4(rayTrace, 1);
+        		newScreen /= newScreen.w;
+        		newPos = texture(gPosition, newScreen.xy/2.0+0.5).xyz;
+        		currentWorldDist = length(newPos.xyz - cameraPosition.xyz);
+        		rayDist = length(rayTrace.xyz - cameraPosition.xyz);
+        		if (newScreen.x > 1 || newScreen.x < -1 || newScreen.y > 1 || newScreen.y < -1 || dot(refl, cameraToWorldNorm) < 0)
+        			break;
+    		} while(rayDist < currentWorldDist);
+ 			vec4 newColor = texture(gDiffuse, newScreen.xy/2.0 + 0.5);
+    		if (dot(refl, cameraToWorldNorm) < 0)
+        		fact = 1.0;
+    		else if (newScreen.x > 1 || newScreen.x < -1 || newScreen.y > 1 || newScreen.y < -1)
+        		fact = 1.0;
+    		else if (cameraToWorldDist > currentWorldDist)
+        		fact = 1.0;
+        	image = image*fact + newColor*(1-fact) + pow(max(dot(normal.xyz,vHalfVector),0.0), 100) * 1.5;
+    	}
+    } else if(data.b == 1){
+    		image+=5;
+    	if(gl_FragCoord.x >= sunPositionInScreen.x + 20 || gl_FragCoord.x <= sunPositionInScreen.x - 20)
+    		image-=5;
+    	else
+    	if(gl_FragCoord.y >= sunPositionInScreen.y + 20 || gl_FragCoord.y <= sunPositionInScreen.y - 20)
+    		image-=5;
     }
+    
     if(camUnderWater == 1){
 		out_Color = mix(vec4(0.0,0.0,0.3125,1.0),image,0.5);
 	} else {

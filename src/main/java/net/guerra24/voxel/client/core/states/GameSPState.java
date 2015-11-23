@@ -45,9 +45,10 @@ public class GameSPState implements State {
 		API api = voxel.getApi();
 
 		worlds.getActiveWorld().lighting();
-		if (VoxelVariables.useHQWater) {
-		}
-
+		gm.getCamera().update(delta, gm, worlds.getActiveWorld(), api, voxel.getClient());
+		gm.getPhysics().getMobManager().getPlayer().update(delta, gm, voxel.getGuiResources(), worlds.getActiveWorld(),
+				api);
+		gm.getFrustum().calculateFrustum(gm.getRenderer().getProjectionMatrix(), gm.getCamera());
 		gm.getSun_Camera().setPosition(gm.getCamera().getPosition());
 		if (VoxelVariables.useShadows) {
 			gm.getMasterShadowRenderer().being();
@@ -55,11 +56,6 @@ public class GameSPState implements State {
 			worlds.getActiveWorld().updateChunksShadow(gm);
 			gm.getMasterShadowRenderer().end();
 		}
-
-		gm.getCamera().update(delta, gm, worlds.getActiveWorld(), api, voxel.getClient());
-		gm.getPhysics().getMobManager().getPlayer().update(delta, gm, voxel.getGuiResources(), worlds.getActiveWorld(),
-				api);
-		gm.getFrustum().calculateFrustum(gm.getRenderer().getProjectionMatrix(), gm.getCamera());
 		gm.getPostProcessing().getPost_fbo().begin();
 		gm.getRenderer().prepare();
 		gm.getRenderer().begin(gm);

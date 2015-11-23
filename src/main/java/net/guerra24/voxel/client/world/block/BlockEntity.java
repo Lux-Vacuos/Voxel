@@ -35,9 +35,10 @@ public class BlockEntity {
 	private float scale;
 	private float localLight;
 	private String side;
+	private int id;
 
 	public BlockEntity(TexturedModel model, Vector3f position, float rotX, float rotY, float rotZ, float scale,
-			String side) {
+			String side, int id) {
 		this.model = model;
 		this.position = position;
 		this.rotX = rotX;
@@ -45,6 +46,7 @@ public class BlockEntity {
 		this.rotZ = rotZ;
 		this.scale = scale;
 		this.side = side;
+		this.id = id;
 	}
 
 	public TexturedModel getModel() {
@@ -105,6 +107,10 @@ public class BlockEntity {
 
 	public String getSide() {
 		return side;
+	}
+
+	public int getId() {
+		return id;
 	}
 
 }

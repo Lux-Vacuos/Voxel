@@ -26,10 +26,12 @@ package net.guerra24.voxel.client.util;
 
 import java.util.Random;
 
+import net.guerra24.voxel.client.graphics.opengl.Display;
 import net.guerra24.voxel.client.world.entities.Camera;
 import net.guerra24.voxel.universal.util.vector.Matrix4f;
 import net.guerra24.voxel.universal.util.vector.Vector2f;
 import net.guerra24.voxel.universal.util.vector.Vector3f;
+import net.guerra24.voxel.universal.util.vector.Vector4f;
 
 /**
  * Maths
@@ -152,6 +154,12 @@ public class Maths {
 		Random rand = new Random();
 		int randomNum = rand.nextInt((max - min) + 1) + min;
 		return randomNum;
+	}
+
+	public static Vector2f convertTo2F(Vector3f pos, Matrix4f projection, Matrix4f viewMatrix,
+			Matrix4f transformationMatrix) {
+		return Matrix4f.Project(pos, projection, viewMatrix,
+				new Vector4f(0, 0, Display.getWidth(), Display.getHeight()));
 	}
 
 	/**

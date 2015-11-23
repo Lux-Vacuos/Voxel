@@ -143,6 +143,14 @@ public class Vector4f extends Vector implements Serializable, ReadableVector4f, 
 		return this;
 	}
 
+	public Vector4f div(float v) {
+		x /= v;
+		y /= v;
+		z /= v;
+		w /= v;
+		return this;
+	}
+
 	/**
 	 * Add a vector to another vector and place the result in a destination
 	 * vector.

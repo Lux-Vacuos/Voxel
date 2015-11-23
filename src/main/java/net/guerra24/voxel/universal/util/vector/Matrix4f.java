@@ -590,6 +590,19 @@ public class Matrix4f extends Matrix implements Serializable {
 		return dest;
 	}
 
+	//
+	public static Vector2f Project(Vector3f pos, Matrix4f projection, Matrix4f view, Vector4f viewport) {
+		Vector4f winCoordsDest = new Vector4f();
+		winCoordsDest.set(pos.x, pos.y, pos.z, 1.0f);
+		Matrix4f.transform(view, winCoordsDest, winCoordsDest);
+		Matrix4f.transform(projection, winCoordsDest, winCoordsDest);
+		winCoordsDest.div(winCoordsDest.w);
+		winCoordsDest.x = (winCoordsDest.x * 0.5f + 0.5f) * viewport.z + viewport.x;
+		winCoordsDest.y = (winCoordsDest.y * 0.5f + 0.5f) * viewport.w + viewport.y;
+		winCoordsDest.z = (1.0f + winCoordsDest.z) * 0.5f;
+		return new Vector2f(winCoordsDest.x, winCoordsDest.y);
+	}
+
 	/**
 	 * Rotates the matrix around the given axis the specified angle
 	 * 

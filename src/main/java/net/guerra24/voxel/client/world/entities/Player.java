@@ -134,7 +134,6 @@ public class Player extends Entity implements IEntity {
 			playerPosition.z = v.z;
 			aabb.update(playerPosition);
 
-			AABB voxel = new AABB(bx, by, bz, 1f, 1f, 1f);
 			if (!AABB.testAABB(aabb, aabb)) {
 				collisionType = CollisionType.WATER;
 			}

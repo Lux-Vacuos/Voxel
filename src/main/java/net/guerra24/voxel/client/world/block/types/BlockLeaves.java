@@ -50,7 +50,7 @@ public class BlockLeaves extends IBlock {
 
 	@Override
 	public BlockEntity getSingleModel(Vector3f pos) {
-		return new BlockEntity(BlocksResources.cubeLeaves, pos, 0, 0, 0, 1, "SINGLE MODEL");
+		return new BlockEntity(BlocksResources.cubeLeaves, pos, 0, 0, 0, 1, "SINGLE MODEL", getId());
 	}
 
 	@Override

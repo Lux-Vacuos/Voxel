@@ -313,7 +313,7 @@ public class Camera {
 		else if (isKeyDown(KEY_9))
 			block = 10;
 		else if (isKeyDown(KEY_0))
-			block = 30;
+			block = 13;
 		if (isButtonDown(0)) {
 			setBlock(Display.getWidth(), Display.getHeight(), (byte) 0, world, gm);
 		} else if (isButtonDown(1)) {

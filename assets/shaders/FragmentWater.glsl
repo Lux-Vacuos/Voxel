@@ -52,6 +52,6 @@ void main(void) {
 	} else {
 		out_Color[2] = vec4(0,1,0,0);
 	}
-	out_Color[3] = vec4(1.0);
+	out_Color[3] = vec4(1.0,0.0,0.0,0.0);
 
 }

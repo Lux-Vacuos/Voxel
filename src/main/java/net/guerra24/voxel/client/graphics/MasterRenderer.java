@@ -161,6 +161,7 @@ public class MasterRenderer {
 		shader.loadProjectionMatrix(projectionMatrix);
 		shader.loadviewMatrix(gm.getCamera());
 		shader.loadBiasMatrix(gm);
+		shader.useShadows(VoxelVariables.useShadows);
 	}
 
 	public void end(GameResources gm) {

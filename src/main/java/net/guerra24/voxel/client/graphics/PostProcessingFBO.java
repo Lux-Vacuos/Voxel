@@ -63,6 +63,7 @@ public class PostProcessingFBO {
 		diffuseRT = glGenRenderbuffers();
 		positionRT = glGenRenderbuffers();
 		normalRT = glGenRenderbuffers();
+		reflectiveRT = glGenRenderbuffers();
 		depthBuffer = glGenRenderbuffers();
 		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 

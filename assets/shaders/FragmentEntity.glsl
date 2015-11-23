@@ -27,13 +27,18 @@
 in float visibility;
 in vec2 pass_textureCoords;
 in vec3 surfaceNormal;
+in vec3 toLightVector;
 in vec4 pass_position;
+in vec4 ShadowCoord;
 
 out vec4 [4] out_Color;
 
 uniform sampler2D texture0;
 uniform sampler2DShadow depth0;
+uniform vec3 skyColour;
+uniform vec3 lightPosition;
 uniform float blockBright;
+uniform int id;
 
 uniform int useShadows;
 
@@ -58,46 +63,32 @@ vec2 poissonDisk[16] = vec2[](
    
 
 void main(void) {
-	/*
-	vec3 unitNormal = normalize(surfaceNormal);
-	vec3 unitLightVector = normalize(toLightVector);
-	
-	float nDotl = dot(unitNormal, unitLightVector);
-	float brightness = max(nDotl, 0.0);
-	vec3 diffuse = vec3(brightness);
-	vec4 totalDiffuse = vec4(diffuse,1.0);
-	
-	vec4 textureColour = texture(texture0, pass_textureCoords);
-	if(textureColour.a<0.5) {
-		discard;
-	}
-	
+    vec4 textureColour = texture(texture0, pass_textureCoords);
+    float shadow = -0.2;
 	if(useShadows == 1){
+		vec3 unitNormal = normalize(surfaceNormal);
+		vec3 unitLightVector = normalize(toLightVector);
 		vec3 n = unitNormal;
 		vec3 l = unitLightVector;
 		float cosTheta = clamp(dot(n,l),0,1);
 		float bias = 0.005*tan(acos(cosTheta));
 		bias = clamp(bias, 0,0.005);
-
-		if(lightPitch >=0 && lightPitch<= 180){
-			for (int i=0;i<16;i++){
-    			if (texture(depth0, vec3(ShadowCoord.xy + poissonDisk[i]/700.0 , 0.0), 16)  <  ShadowCoord.z-bias ){
-   		 			totalDiffuse.xyz -= 0.05;
-   	 			}
-			}
-		} else {
-	 	 	totalDiffuse.xyz -= 0.8;
-   		}
+		for (int i=0;i<16;i++){
+    		if (texture(depth0, vec3(ShadowCoord.xy + poissonDisk[i]/700.0 , 0.0), 16)  <  ShadowCoord.z-bias ){
+   		 		shadow += 0.05;
+   	 		}
+		}
    	}
-    totalDiffuse.xyz =  clamp(totalDiffuse.xyz, blockBright, 1.0);
-    totalDiffuse.xyz =  clamp(totalDiffuse.xyz, 0.2, 1.0);
-    */
-    vec4 textureColour = texture(texture0, pass_textureCoords);
+    
     if(textureColour.a<0.5) {
 		discard;
 	}
+	
 	out_Color[0] = textureColour;
 	out_Color[1] = vec4(pass_position.xyz,0);
 	out_Color[2] = vec4(surfaceNormal.xyz,0);
-	out_Color[3] = vec4(0.0);
+	out_Color[3] = vec4(0.0,1.0,0.0,shadow);
+	if(id == 13 || id == 8){
+		out_Color[3].r = 1.0;
+	}
 }

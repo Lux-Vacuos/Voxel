@@ -32,7 +32,7 @@ public class MasterShadowRenderer {
 		shader = new ShadowShader();
 		projectionMatrix = Maths.orthographic(-50, 50, -50, 50, -100, 100);
 		renderer = new ShadowRenderer(shader, projectionMatrix);
-		fbo = new FrameBuffer(false, 512, 512);
+		fbo = new FrameBuffer(true, 512, 512);
 	}
 
 	public void being() {

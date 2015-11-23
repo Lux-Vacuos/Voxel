@@ -50,6 +50,9 @@ public class EntityShader extends ShaderProgram {
 	private int loc_blockBright;
 	private int loc_texture0;
 	private int loc_depth0;
+	private int loc_id;
+	
+	private int loc_useShadows;
 
 	/**
 	 * Constructor, creates an Entity Shader
@@ -77,6 +80,8 @@ public class EntityShader extends ShaderProgram {
 		loc_blockBright = super.getUniformLocation("blockBright");
 		loc_texture0 = super.getUniformLocation("texture0");
 		loc_depth0 = super.getUniformLocation("depth0");
+		loc_useShadows = super.getUniformLocation("useShadows");
+		loc_id = super.getUniformLocation("id");
 
 	}
 
@@ -88,9 +93,18 @@ public class EntityShader extends ShaderProgram {
 		super.loadInt(loc_texture0, 0);
 		super.loadInt(loc_depth0, 1);
 	}
+	
+	public void loadId(int id){
+		super.loadInt(loc_id, id);
+	}
 
 	public void loadBlockBright(float value) {
 		super.loadFloat(loc_blockBright, value);
+	}
+	
+
+	public void useShadows(boolean value) {
+		super.loadBoolean(loc_useShadows, value);
 	}
 
 	/**

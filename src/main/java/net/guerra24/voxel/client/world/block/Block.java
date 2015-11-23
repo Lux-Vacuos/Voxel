@@ -32,6 +32,7 @@ import net.guerra24.voxel.client.world.block.types.BlockDirt;
 import net.guerra24.voxel.client.world.block.types.BlockGlass;
 import net.guerra24.voxel.client.world.block.types.BlockGoldOre;
 import net.guerra24.voxel.client.world.block.types.BlockGrass;
+import net.guerra24.voxel.client.world.block.types.BlockIce;
 import net.guerra24.voxel.client.world.block.types.BlockIndes;
 import net.guerra24.voxel.client.world.block.types.BlockLeaves;
 import net.guerra24.voxel.client.world.block.types.BlockPortal;
@@ -67,6 +68,7 @@ public abstract class Block {
 	public static IBlock Portal = new BlockPortal();
 	public static IBlock Leaves = new BlockLeaves();
 	public static IBlock Wood = new BlockWood();
+	public static IBlock Ice = new BlockIce();
 
 	/**
 	 * Initialize the basic Block
@@ -74,20 +76,21 @@ public abstract class Block {
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public static void initBasicBlocks() {
-		registerBlock(Indes.getId(), Indes);
-		registerBlock(Air.getId(), Air);
-		registerBlock(Stone.getId(), Stone);
-		registerBlock(Grass.getId(), Grass);
-		registerBlock(Sand.getId(), Sand);
-		registerBlock(Dirt.getId(), Dirt);
-		registerBlock(DiamondOre.getId(), DiamondOre);
-		registerBlock(GoldOre.getId(), GoldOre);
-		registerBlock(Water.getId(), Water);
-		registerBlock(Glass.getId(), Glass);
-		registerBlock(Torch.getId(), Torch);
-		registerBlock(Portal.getId(), Portal);
-		registerBlock(Leaves.getId(), Leaves);
-		registerBlock(Wood.getId(), Wood);
+		registerBlock(Indes);
+		registerBlock(Air);
+		registerBlock(Stone);
+		registerBlock(Grass);
+		registerBlock(Sand);
+		registerBlock(Dirt);
+		registerBlock(DiamondOre);
+		registerBlock(GoldOre);
+		registerBlock(Water);
+		registerBlock(Glass);
+		registerBlock(Torch);
+		registerBlock(Portal);
+		registerBlock(Leaves);
+		registerBlock(Wood);
+		registerBlock(Ice);
 	}
 
 	/**
@@ -99,8 +102,8 @@ public abstract class Block {
 	 *            Block
 	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public static void registerBlock(byte id, IBlock block) {
-		blockMap.put(id, block);
+	public static void registerBlock(IBlock block) {
+		blockMap.put(block.getId(), block);
 	}
 
 	/**

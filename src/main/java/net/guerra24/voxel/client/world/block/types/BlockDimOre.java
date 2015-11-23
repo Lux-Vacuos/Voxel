@@ -39,32 +39,32 @@ public class BlockDimOre extends IBlock {
 
 	@Override
 	public BlockEntity getFaceUp(Vector3f pos) {
-		return new BlockEntity(BlocksResources.cubeDiamondOreUP, pos, 0, 0, 0, 1, "UP");
+		return new BlockEntity(BlocksResources.cubeDiamondOreUP, pos, 0, 0, 0, 1, "UP", getId());
 	}
 
 	@Override
 	public BlockEntity getFaceDown(Vector3f pos) {
-		return new BlockEntity(BlocksResources.cubeDiamondOreDOWN, pos, 0, 0, 0, 1, "DOWN");
+		return new BlockEntity(BlocksResources.cubeDiamondOreDOWN, pos, 0, 0, 0, 1, "DOWN", getId());
 	}
 
 	@Override
 	public BlockEntity getFaceEast(Vector3f pos) {
-		return new BlockEntity(BlocksResources.cubeDiamondOreEAST, pos, 0, 0, 0, 1, "EAST");
+		return new BlockEntity(BlocksResources.cubeDiamondOreEAST, pos, 0, 0, 0, 1, "EAST", getId());
 	}
 
 	@Override
 	public BlockEntity getFaceWest(Vector3f pos) {
-		return new BlockEntity(BlocksResources.cubeDiamondOreWEST, pos, 0, 0, 0, 1, "WEST");
+		return new BlockEntity(BlocksResources.cubeDiamondOreWEST, pos, 0, 0, 0, 1, "WEST", getId());
 	}
 
 	@Override
 	public BlockEntity getFaceNorth(Vector3f pos) {
-		return new BlockEntity(BlocksResources.cubeDiamondOreNORTH, pos, 0, 0, 0, 1, "NORTH");
+		return new BlockEntity(BlocksResources.cubeDiamondOreNORTH, pos, 0, 0, 0, 1, "NORTH", getId());
 	}
 
 	@Override
 	public BlockEntity getFaceSouth(Vector3f pos) {
-		return new BlockEntity(BlocksResources.cubeDiamondOreSOUTH, pos, 0, 0, 0, 1, "SOUTH");
+		return new BlockEntity(BlocksResources.cubeDiamondOreSOUTH, pos, 0, 0, 0, 1, "SOUTH", getId());
 	}
 
 	@Override

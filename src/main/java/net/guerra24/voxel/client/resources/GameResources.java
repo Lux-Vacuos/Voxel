@@ -265,4 +265,8 @@ public class GameResources {
 		return menuSystem;
 	}
 
+	public Vector3f getSunRotation() {
+		return sunRotation;
+	}
+
 }

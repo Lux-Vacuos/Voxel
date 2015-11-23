@@ -59,7 +59,8 @@ public class PostProcessingShader extends ShaderProgram {
 	private int loc_cameraPosition;
 	private int loc_previousCameraPosition;
 	private int loc_lightPosition;
-
+	private int loc_sunPositionInScreen;
+	
 	private int loc_useFXAA;
 	private int loc_useDOF;
 	private int loc_useMotionBlur;
@@ -92,8 +93,9 @@ public class PostProcessingShader extends ShaderProgram {
 		loc_gPosition = super.getUniformLocation("gPosition");
 		loc_gNormal = super.getUniformLocation("gNormal");
 		loc_depth0 = super.getUniformLocation("gDepth");
-		loc_gReflective = super.getUniformLocation("gReflective");
+		loc_gReflective = super.getUniformLocation("gData");
 		loc_lightPosition = super.getUniformLocation("lightPosition");
+		loc_sunPositionInScreen = super.getUniformLocation("sunPositionInScreen");
 
 		loc_useFXAA = super.getUniformLocation("useFXAA");
 		loc_useDOF = super.getUniformLocation("useDOF");
@@ -123,8 +125,9 @@ public class PostProcessingShader extends ShaderProgram {
 		super.loadFloat(loc_camUnderWaterOffset, time += 0.1f);
 	}
 
-	public void loadLightPosition(Vector3f pos) {
+	public void loadLightPosition(Vector3f pos, Vector2f pos1) {
 		super.loadVector(loc_lightPosition, pos);
+		super.load2DVector(loc_sunPositionInScreen, pos1);
 	}
 
 	/**
