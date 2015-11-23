@@ -49,4 +49,5 @@ void main(void){
 		posPos.xy = textureCoords;
 		posPos.zw = textureCoords - (rcpFrame * (0.5 + FXAA_SUBPIX_SHIFT));
 	}
+	
 }

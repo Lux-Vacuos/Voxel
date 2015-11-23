@@ -44,7 +44,7 @@ public class VoxelVariables {
 	public static final String version = "0.0.9";
 	public static final String apiVersion = "0.0.4";
 	public static final String state = "ALPHA";
-	public static final int build = 124;
+	public static final int build = 125;
 	public static int FOV = 90;
 	public static int WIDTH = 1280;
 	public static int HEIGHT = 720;
@@ -64,6 +64,7 @@ public class VoxelVariables {
 	public static boolean useHQWater = false;
 	public static boolean useMotionBlur = false;
 	public static boolean useBloom = false;
+	public static boolean useVolumetricLight = true;
 	public static float fogDensity = 0.02f;
 	/**
 	 * World Settings
@@ -96,14 +97,14 @@ public class VoxelVariables {
 	public static final String FRAGMENT_FILE_WATER = "FragmentWater.glsl";
 	public static final String VERTEX_FILE_PARTICLE = "VertexParticle.glsl";
 	public static final String FRAGMENT_FILE_PARTICLE = "FragmentParticle.glsl";
-	public static final String VERTEX_FILE_POST = "VertexPost.glsl";
-	public static final String FRAGMENT_FILE_POST = "FragmentPost.glsl";
+	public static final String VERTEX_FILE_FINAL = "VertexFinal.glsl";
+	public static final String FRAGMENT_FILE_FINAL = "FragmentFinal.glsl";
 	public static final String VERTEX_FILE_FONT = "VertexFont.glsl";
 	public static final String FRAGMENT_FILE_FONT = "FragmentFont.glsl";
 	public static final String VERTEX_FILE_SHADOW = "VertexShadow.glsl";
 	public static final String FRAGMENT_FILE_SHADOW = "FragmentShadow.glsl";
-	public static final String VERTEX_FILE_CHUNK = "VertexChunk.glsl";
-	public static final String FRAGMENT_FILE_CHUNK = "FragmentChunk.glsl";
+	public static final String VERTEX_FILE_COMPOSITE1 = "VertexComposite1.glsl";
+	public static final String FRAGMENT_FILE_COMPOSITE1 = "FragmentComposite1.glsl";
 	/**
 	 * World Folder Path
 	 */

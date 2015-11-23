@@ -26,7 +26,6 @@ package net.guerra24.voxel.client.util;
 
 import java.util.Random;
 
-import net.guerra24.voxel.client.graphics.opengl.Display;
 import net.guerra24.voxel.client.world.entities.Camera;
 import net.guerra24.voxel.universal.util.vector.Matrix4f;
 import net.guerra24.voxel.universal.util.vector.Vector2f;
@@ -156,10 +155,9 @@ public class Maths {
 		return randomNum;
 	}
 
-	public static Vector2f convertTo2F(Vector3f pos, Matrix4f projection, Matrix4f viewMatrix,
-			Matrix4f transformationMatrix) {
+	public static Vector2f convertTo2F(Vector3f pos, Matrix4f projection, Matrix4f viewMatrix, int width, int height) {
 		return Matrix4f.Project(pos, projection, viewMatrix,
-				new Vector4f(0, 0, Display.getWidth(), Display.getHeight()));
+				new Vector4f(0, 0, width, height));
 	}
 
 	/**

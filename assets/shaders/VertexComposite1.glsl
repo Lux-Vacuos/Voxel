@@ -24,20 +24,13 @@
 
 #version 330 core
 
-in vec3 position;
-in vec2 texCoords;
-in vec2 texCoordsOffset;
+in vec2 position;
 
-out passTexCoords;
-out passTexCoordsOffset;
+out vec2 textureCoords;
 
-uniform mat4 projectionMatrix;
-uniform mat4 viewMatrix;
+uniform mat4 transformationMatrix;
 
-void main() {
-	vec4 worldPosition = vec4(position, 1.0);
-	vec4 positionRelativeToCam = viewMatrix * worldPosition;
-	gl_Position = projectionMatrix * positionRelativeToCam;
-	passTexCoords = texCoords;
-	pasTexCoordsOffset = texCoordsOffset;
+void main(void){
+	gl_Position = transformationMatrix * vec4(position, -0.8, 1.0);
+	textureCoords = vec2((position.x+1.0)/2.0, (position.y+1.0)/2.0);
 }

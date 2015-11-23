@@ -132,6 +132,7 @@ public class Display {
 		glfwSetErrorCallback(errorCallback = new GLFWErrorCallback() {
 			GLFWErrorCallback delegate = GLFWErrorCallback.createPrint(System.err);
 
+			@Override
 			public void invoke(int error, long description) {
 				if (error == GLFW_VERSION_UNAVAILABLE)
 					Logger.error("Voxel requires OpenGL 3.3 or higher");
@@ -334,6 +335,7 @@ public class Display {
 		glfwPollEvents();
 		Mouse.poll();
 		sync(fps);
+		checkVRAM();
 	}
 
 	/**
@@ -390,6 +392,9 @@ public class Display {
 
 	public static long getNanoTime() {
 		return (long) (glfwGetTime() * (1000L * 1000L * 1000L));
+	}
+
+	private void checkVRAM() {
 	}
 
 	/**

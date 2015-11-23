@@ -33,6 +33,7 @@ import static org.lwjgl.opengl.GL13.GL_TEXTURE1;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE2;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE3;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE4;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE5;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
 import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
 import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
@@ -40,6 +41,7 @@ import static org.lwjgl.opengl.GL30.glBindVertexArray;
 
 import net.guerra24.voxel.client.core.VoxelVariables;
 import net.guerra24.voxel.client.graphics.opengl.Display;
+import net.guerra24.voxel.client.graphics.shaders.CompositeShader;
 import net.guerra24.voxel.client.graphics.shaders.PostProcessingShader;
 import net.guerra24.voxel.client.resources.GameResources;
 import net.guerra24.voxel.client.resources.Loader;
@@ -54,8 +56,10 @@ public class PostProcessingRenderer {
 	/**
 	 * post Processing Data
 	 */
-	private PostProcessingShader shader;
-	private PostProcessingFBO postProcessingFBO;
+	private final PostProcessingShader shader;
+	private final CompositeShader composite1;
+	private final PostProcessingFBO postProcessingFBO;
+	private final FrameBuffer composite1FBO;
 	private final RawModel quad;
 
 	private Matrix4f previousViewMatrix;
@@ -71,11 +75,15 @@ public class PostProcessingRenderer {
 		float[] positions = { -1, 1, -1, -1, 1, 1, 1, -1 };
 		quad = loader.loadToVAO(positions, 2);
 		shader = new PostProcessingShader();
+		composite1 = new CompositeShader();
+		composite1.start();
+		composite1.loadTransformation(Maths.createTransformationMatrix(new Vector2f(0, 0), new Vector2f(1, 1)));
+		composite1.stop();
 		shader.start();
-		Matrix4f matrix = Maths.createTransformationMatrix(new Vector2f(0, 0), new Vector2f(1, 1));
-		shader.loadTransformation(matrix);
+		shader.loadTransformation(Maths.createTransformationMatrix(new Vector2f(0, 0), new Vector2f(1, 1)));
 		shader.connectTextureUnits();
 		shader.stop();
+		composite1FBO = new FrameBuffer(false, Display.getWidth(), Display.getHeight());
 		postProcessingFBO = new PostProcessingFBO(Display.getWidth(), Display.getHeight());
 		previousViewMatrix = Maths.createViewMatrix(gm.getCamera());
 		previousCameraPosition = gm.getCamera().getPosition();
@@ -86,18 +94,33 @@ public class PostProcessingRenderer {
 	 * 
 	 */
 	public void render(GameResources gm) {
+		composite1FBO.begin(Display.getWidth(), Display.getHeight());
+		gm.getRenderer().prepare();
+		composite1.start();
+		composite1.loadSunPosition(
+				Maths.convertTo2F(new Vector3f(gm.getLightPos()), gm.getRenderer().getProjectionMatrix(),
+						Maths.createViewMatrix(gm.getCamera()), Display.getWidth(), Display.getHeight()));
+		glBindVertexArray(quad.getVaoID());
+		glEnableVertexAttribArray(0);
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, postProcessingFBO.getReflectiveTex());
+		glDrawArrays(GL_TRIANGLE_STRIP, 0, quad.getVertexCount());
+		glDisableVertexAttribArray(0);
+		glBindVertexArray(0);
+		composite1.stop();
+		composite1FBO.end();
+
 		shader.start();
 		shader.loadResolution(new Vector2f(Display.getWidth(), Display.getHeight()));
 		shader.loadUnderWater(gm.getCamera().isUnderWater());
 		shader.loadSettings(VoxelVariables.useDOF, VoxelVariables.useFXAA, VoxelVariables.useMotionBlur,
-				VoxelVariables.useBloom);
+				VoxelVariables.useBloom, VoxelVariables.useVolumetricLight);
 		shader.loadMotionBlurData(gm.getRenderer().getProjectionMatrix(), gm.getCamera(), previousViewMatrix,
 				previousCameraPosition);
-		shader.loadLightPosition(gm.getLightPos(),
-				Maths.convertTo2F(new Vector3f(gm.getLightPos()), gm.getRenderer().getProjectionMatrix(),
-						Maths.createViewMatrix(gm.getCamera()), Maths.createTransformationMatrix(gm.getLightPos(),
-								gm.getSunRotation().x, gm.getSunRotation().y, gm.getSunRotation().z, 1)));
+		shader.loadLightPosition(gm.getLightPos());
 		shader.loadviewMatrix(gm.getCamera());
+		shader.loadSunPosition(Maths.convertTo2F(new Vector3f(gm.getLightPos()), gm.getRenderer().getProjectionMatrix(),
+				Maths.createViewMatrix(gm.getCamera()), Display.getWidth(), Display.getHeight()));
 		previousViewMatrix = Maths.createViewMatrix(gm.getCamera());
 		previousCameraPosition = gm.getCamera().getPosition();
 		glBindVertexArray(quad.getVaoID());
@@ -112,6 +135,8 @@ public class PostProcessingRenderer {
 		glBindTexture(GL_TEXTURE_2D, postProcessingFBO.getDepthTex());
 		glActiveTexture(GL_TEXTURE4);
 		glBindTexture(GL_TEXTURE_2D, postProcessingFBO.getReflectiveTex());
+		glActiveTexture(GL_TEXTURE5);
+		glBindTexture(GL_TEXTURE_2D, composite1FBO.getTexture());
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, quad.getVertexCount());
 		glDisableVertexAttribArray(0);
 		glBindVertexArray(0);
@@ -125,6 +150,8 @@ public class PostProcessingRenderer {
 	 */
 	public void cleanUp() {
 		shader.cleanUp();
+		composite1.cleanUp();
+		composite1FBO.cleanUp();
 		postProcessingFBO.cleanUp();
 	}
 
