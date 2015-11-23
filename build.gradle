@@ -39,10 +39,10 @@ dependencies {
 	compile 'de.jarnbjo:j-ogg-all:1.0.+'
 	compile 'org.jcraft:jorbis:0.0.+'
 	compile 'com.esotericsoftware:kryo:3.0.3'
-	compile 'org.lwjgl:lwjgl:3.0.0b-SNAPSHOT'
-	compile 'org.lwjgl:lwjgl-platform:3.0.0b-SNAPSHOT:natives-windows'
-	compile 'org.lwjgl:lwjgl-platform:3.0.0b-SNAPSHOT:natives-linux'
-	compile 'org.lwjgl:lwjgl-platform:3.0.0b-SNAPSHOT:natives-osx'
+	compile 'org.lwjgl:lwjgl:3.0.0-SNAPSHOT'
+	compile 'org.lwjgl:lwjgl-platform:3.0.0-SNAPSHOT:natives-windows'
+	compile 'org.lwjgl:lwjgl-platform:3.0.0-SNAPSHOT:natives-linux'
+	compile 'org.lwjgl:lwjgl-platform:3.0.0-SNAPSHOT:natives-osx'
     compile fileTree(dir: "libs", includes: ["*.jar"])
 }
 
