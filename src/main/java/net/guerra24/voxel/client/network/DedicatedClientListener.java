@@ -28,6 +28,8 @@ import com.jmr.wrapper.common.Connection;
 import com.jmr.wrapper.common.listener.SocketListener;
 
 import net.guerra24.voxel.client.resources.GameResources;
+import net.guerra24.voxel.universal.network.packets.NetworkPosition;
+import net.guerra24.voxel.universal.network.packets.WorldTime;
 
 public class DedicatedClientListener implements SocketListener {
 
@@ -43,10 +45,18 @@ public class DedicatedClientListener implements SocketListener {
 
 	@Override
 	public void disconnected(Connection con) {
+		con.close();
 	}
 
 	@Override
 	public void received(Connection con, Object obj) {
+		if (obj instanceof NetworkPosition) {
+			NetworkPosition pos = (NetworkPosition) obj;
+			gm.player.setPosition(pos.getPos());
+		} else if (obj instanceof WorldTime) {
+			WorldTime time = (WorldTime) obj;
+			gm.getSkyboxRenderer().setTime(time.getTime());
+		}
 	}
 
 }

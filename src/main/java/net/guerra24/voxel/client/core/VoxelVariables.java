@@ -64,7 +64,7 @@ public class VoxelVariables {
 	public static boolean useHQWater = false;
 	public static boolean useMotionBlur = false;
 	public static boolean useBloom = false;
-	public static boolean useVolumetricLight = true;
+	public static boolean useVolumetricLight = false;
 	public static float fogDensity = 0.02f;
 	/**
 	 * World Settings

@@ -14,10 +14,13 @@ public class Menu {
 
 	public final OptionsMenu optionsMenu;
 
+	public final GameSP gameSP;
+
 	public Menu(GameResources gm) {
 		mainMenu = new MainMenu(gm);
 		pauseMenu = new PauseMenu();
-		optionsMenu = new OptionsMenu();
+		optionsMenu = new OptionsMenu(gm);
+		gameSP = new GameSP(gm);
 	}
 
 }

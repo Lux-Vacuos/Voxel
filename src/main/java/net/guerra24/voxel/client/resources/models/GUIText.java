@@ -176,8 +176,12 @@ public class GUIText {
 	/**
 	 * @return The string of text.
 	 */
-	protected String getTextString() {
+	public String getTextString() {
 		return textString;
+	}
+
+	public void setTextString(String textString) {
+		this.textString = textString;
 	}
 
 }

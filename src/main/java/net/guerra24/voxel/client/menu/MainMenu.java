@@ -29,13 +29,10 @@ import java.util.List;
 
 import net.guerra24.voxel.client.core.VoxelVariables;
 import net.guerra24.voxel.client.resources.GameResources;
-import net.guerra24.voxel.client.resources.Loader;
+import net.guerra24.voxel.client.resources.MenuResources;
 import net.guerra24.voxel.client.resources.models.ButtonModel;
 import net.guerra24.voxel.client.resources.models.FontType;
 import net.guerra24.voxel.client.resources.models.GUIText;
-import net.guerra24.voxel.client.resources.models.ModelTexture;
-import net.guerra24.voxel.client.resources.models.RawModel;
-import net.guerra24.voxel.client.resources.models.TexturedModel;
 import net.guerra24.voxel.universal.util.vector.Vector2f;
 import net.guerra24.voxel.universal.util.vector.Vector3f;
 
@@ -46,57 +43,56 @@ public class MainMenu {
 	private Button optionsButton;
 	private List<ButtonModel> list;
 
-	private RawModel model1;
-	private int model1Text;
-
-	private RawModel modelBackground;
-	private int modelBackgroundText;
-
-	private TexturedModel model1Final;
-	private TexturedModel mainMenuBackFinal;
-
 	private List<GUIText> texts;
 
 	public MainMenu(GameResources gm) {
-		Loader loader = gm.getLoader();
 		FontType font = gm.getTextHandler().getFont();
 		float width = VoxelVariables.WIDTH;
 		float height = VoxelVariables.HEIGHT;
 		float yScale = height / 720f;
 		float xScale = width / 1280f;
-		playButton = new Button(new Vector2f(177 * xScale, 532 * yScale), new Vector2f(215, 100));
-		exitButton = new Button(new Vector2f(177 * xScale, 224 * yScale), new Vector2f(215, 100));
-		optionsButton = new Button(new Vector2f(177 * xScale, 376 * yScale), new Vector2f(215, 100));
-		model1 = loader.getObjLoader().loadObjModel("button", loader);
-		model1Text = loader.loadTextureGui("button_1");
-		model1Final = new TexturedModel(model1, new ModelTexture(model1Text));
-
-		modelBackground = loader.getObjLoader().loadObjModel("mainMenuBackground", loader);
-		modelBackgroundText = loader.loadTextureGui("mainMenuBackground");
-		mainMenuBackFinal = new TexturedModel(modelBackground, new ModelTexture(modelBackgroundText));
+		playButton = new Button(new Vector2f(177 * xScale, 532 * yScale), new Vector2f(215, 80));
+		exitButton = new Button(new Vector2f(177 * xScale, 224 * yScale), new Vector2f(215, 80));
+		optionsButton = new Button(new Vector2f(177 * xScale, 376 * yScale), new Vector2f(215, 80));
 
 		list = new ArrayList<ButtonModel>();
-		list.add(new ButtonModel(model1Final, new Vector3f(-0.7f, 0.4f, 0), new Vector3f(90, 0, 0), 0.07f));
-		list.add(new ButtonModel(model1Final, new Vector3f(-0.7f, 0.1f, 0), new Vector3f(90, 0, 0), 0.07f));
-		list.add(new ButtonModel(model1Final, new Vector3f(-0.7f, -0.2f, 0), new Vector3f(90, 0, 0), 0.07f));
-		list.add(new ButtonModel(model1Final, new Vector3f(-1.4f, -3.95f, 0), new Vector3f(90, 0, 00), 0.07f));
-		list.add(new ButtonModel(mainMenuBackFinal, new Vector3f(0.1f, -0.92f, -1f), new Vector3f(90, 0, 0), 4));
+		list.add(new ButtonModel(MenuResources.getModel1Final(), new Vector3f(-0.7f, 0.4f, 0), new Vector3f(90, 0, 0),
+				0.07f));
+		list.add(new ButtonModel(MenuResources.getModel1Final(), new Vector3f(-0.7f, 0.1f, 0), new Vector3f(90, 0, 0),
+				0.07f));
+		list.add(new ButtonModel(MenuResources.getModel1Final(), new Vector3f(-0.7f, -0.2f, 0), new Vector3f(90, 0, 0),
+				0.07f));
+		list.add(new ButtonModel(MenuResources.getMainMenuBackFinal(), new Vector3f(0.1f, -0.92f, -1f),
+				new Vector3f(90, 0, 0), 4));
 
 		texts = new ArrayList<GUIText>();
 		GUIText textVersion = new GUIText(
 				"Voxel " + VoxelVariables.version + " " + VoxelVariables.state + " Build " + VoxelVariables.build, 1,
 				font, new Vector2f(0.002f, 0.97f), 1, false);
 		textVersion.setColour(0.79f, 0.79f, 0.79f);
+		texts.add(textVersion);
 		GUIText textVersionApi = new GUIText("Voxel API " + VoxelVariables.apiVersion, 1, font,
 				new Vector2f(0.002f, 0.94f), 1, false);
 		textVersionApi.setColour(0.79f, 0.79f, 0.79f);
+		texts.add(textVersionApi);
 		GUIText textMAC = new GUIText("Voxel is running on OSX, some things did not work well", 1, font,
 				new Vector2f(0.002f, 0.002f), 1, false);
 		textMAC.setColour(1, 0, 0);
-		texts.add(textVersion);
-		texts.add(textVersionApi);
 		if (VoxelVariables.runningOnMac)
 			texts.add(textMAC);
+		GUIText textPlay = new GUIText("Play", 2, font, new Vector2f(0.185f, 0.18f), 1, false);
+		textPlay.setColour(0.79f, 0.79f, 0.79f);
+		texts.add(textPlay);
+		GUIText textOptions = new GUIText("Options", 2, font, new Vector2f(0.167f, 0.395f), 1, false);
+		textOptions.setColour(0.79f, 0.79f, 0.79f);
+		texts.add(textOptions);
+		GUIText textExit = new GUIText("Exit", 2, font, new Vector2f(0.189f, 0.61f), 1, false);
+		textExit.setColour(0.79f, 0.79f, 0.79f);
+		texts.add(textExit);
+	}
+
+	public void load(GameResources gm) {
+		gm.getTextHandler().removeFromActive(gm.getMenuSystem().optionsMenu.getTextsUpdating());
 		gm.getTextHandler().switchTo(texts);
 	}
 

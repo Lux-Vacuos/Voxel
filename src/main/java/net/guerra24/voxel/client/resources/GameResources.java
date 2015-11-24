@@ -50,6 +50,8 @@ import net.guerra24.voxel.client.util.Logger;
 import net.guerra24.voxel.client.world.Physics;
 import net.guerra24.voxel.client.world.block.Block;
 import net.guerra24.voxel.client.world.entities.Camera;
+import net.guerra24.voxel.client.world.entities.Entity;
+import net.guerra24.voxel.client.world.entities.Mob;
 import net.guerra24.voxel.universal.resources.UniversalResources;
 import net.guerra24.voxel.universal.util.vector.Vector3f;
 
@@ -90,6 +92,8 @@ public class GameResources {
 	private Vector3f sunRotation = new Vector3f(0, 0, -30);
 	private Vector3f lightPos = new Vector3f(0, 0, 0);
 
+	public Mob player;
+
 	/**
 	 * Constructor
 	 * 
@@ -121,7 +125,6 @@ public class GameResources {
 		frustum = new Frustum();
 		textMasterRenderer = new TextMasterRenderer(loader);
 		textHandler = new TextHandler(this);
-		menuSystem = new Menu(this);
 		try {
 			SoundSystemConfig.addLibrary(LibraryLWJGLOpenAL.class);
 			SoundSystemConfig.setCodec("ogg", CodecJOgg.class);
@@ -133,7 +136,8 @@ public class GameResources {
 		globalStates = new GlobalStates(loader);
 		Block.initBasicBlocks();
 		UniversalResources.loadUniversalResources(this);
-
+		MenuResources.load(this);
+		menuSystem = new Menu(this);
 	}
 
 	/**
@@ -149,6 +153,8 @@ public class GameResources {
 	 * 
 	 */
 	public void addRes() {
+		player = new Mob(new Entity(UniversalResources.player, new Vector3f(0, 80, 0), 0, 0, 0, 1));
+		physics.getMobManager().registerMob(player);
 	}
 
 	public void update(float rot) {

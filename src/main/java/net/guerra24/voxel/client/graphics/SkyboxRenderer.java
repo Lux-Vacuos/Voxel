@@ -205,4 +205,8 @@ public class SkyboxRenderer {
 	public float getTime() {
 		return time;
 	}
+
+	public void setTime(float time) {
+		this.time = time;
+	}
 }

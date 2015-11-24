@@ -131,6 +131,7 @@ public class Voxel {
 	private void postInit() {
 		api.postInit();
 		gameResources.getSoundSystem().play("menu1");
+		gameResources.getMenuSystem().mainMenu.load(gameResources);
 	}
 
 	/**

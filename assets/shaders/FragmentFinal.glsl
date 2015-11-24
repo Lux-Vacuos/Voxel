@@ -71,9 +71,6 @@ uniform int useVolumetricLight;
 #define FXAA_REDUCE_MUL   (1.0/8.0)
 #define FXAA_SPAN_MAX     8.0
 
-const float bloom_amount = 2;
-const int maxf = 4, maxt = 40;				
-const float stp = 1.2, ref = 0.1, inc = 2.2;
 const int NUM_SAMPLES = 50;		
 
 #define rt_w resolution.x
@@ -196,7 +193,7 @@ void main(void){
     if(useVolumetricLight == 1){
 		if (lightDirDOTviewDir>0.0){
 			float exposure	= 0.1/NUM_SAMPLES;
-			float decay		= 1.0;
+			float decay		= 1.01;
 			float density	= 1;
 			float weight	= 6.0;
 			float illuminationDecay = 1.0;
