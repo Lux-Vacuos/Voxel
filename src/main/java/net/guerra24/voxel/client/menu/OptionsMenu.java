@@ -98,11 +98,11 @@ public class OptionsMenu {
 			textsUpdating.add(textShadows);
 		}
 		if (VoxelVariables.useHQWater) {
-			GUIText textHQWater = new GUIText("HQ Water: ON", 1.3f, font, new Vector2f(0.075f, 0.41f), 1, false);
+			GUIText textHQWater = new GUIText("HQ Water: ON", 1.3f, font, new Vector2f(0.073f, 0.41f), 1, false);
 			textHQWater.setColour(0.79f, 0.79f, 0.79f);
 			textsUpdating.add(textHQWater);
 		} else {
-			GUIText textHQWater = new GUIText("HQ Water: OFF", 1.3f, font, new Vector2f(0.075f, 0.41f), 1, false);
+			GUIText textHQWater = new GUIText("HQ Water: OFF", 1.3f, font, new Vector2f(0.073f, 0.41f), 1, false);
 			textHQWater.setColour(0.79f, 0.79f, 0.79f);
 			textsUpdating.add(textHQWater);
 		}

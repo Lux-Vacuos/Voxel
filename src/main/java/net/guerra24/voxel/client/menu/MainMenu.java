@@ -92,7 +92,6 @@ public class MainMenu {
 	}
 
 	public void load(GameResources gm) {
-		gm.getTextHandler().removeFromActive(gm.getMenuSystem().optionsMenu.getTextsUpdating());
 		gm.getTextHandler().switchTo(texts);
 	}
 

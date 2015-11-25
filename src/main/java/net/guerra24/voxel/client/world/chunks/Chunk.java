@@ -32,7 +32,6 @@ import net.guerra24.voxel.client.resources.GameResources;
 import net.guerra24.voxel.client.util.Logger;
 import net.guerra24.voxel.client.util.Maths;
 import net.guerra24.voxel.client.world.IWorld;
-import net.guerra24.voxel.client.world.WorldService;
 import net.guerra24.voxel.client.world.block.Block;
 import net.guerra24.voxel.client.world.block.BlockEntity;
 import net.guerra24.voxel.universal.util.vector.Vector3f;
@@ -126,10 +125,10 @@ public class Chunk {
 		}
 	}
 
-	public void rebuild(WorldService server, IWorld world) {
+	public void rebuild(IWorld world) {
 		if (needsRebuild || !updated && !updating) {
 			updating = true;
-			server.add_worker(new ChunkWorkerMesh(world, this));
+			new ChunkWorkerMesh(world, this).run();
 		}
 	}
 

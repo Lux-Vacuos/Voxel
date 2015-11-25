@@ -33,6 +33,8 @@ public class LoadingState implements State {
 		voxel.getGameResources().getCamera().setMouse();
 		voxel.getGameResources().getSoundSystem().stop("menu1");
 		voxel.getGameResources().getSoundSystem().rewind("menu1");
+		voxel.getGameResources().getSoundSystem().stop("menu2");
+		voxel.getGameResources().getSoundSystem().rewind("menu2");
 		states.state = GameState.GAME_SP;
 	}
 

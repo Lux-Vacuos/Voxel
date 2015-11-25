@@ -108,7 +108,6 @@ public class Voxel {
 		guiResources = new GuiResources(gameResources);
 		BlocksResources.createBlocks(gameResources.getLoader());
 		gameResources.addRes();
-		gameResources.music();
 		worldsHandler = new WorldsHandler();
 		InfinityWorld world = new InfinityWorld();
 		worldsHandler.registerWorld(world.getCodeName(), world);
@@ -130,7 +129,12 @@ public class Voxel {
 	 */
 	private void postInit() {
 		api.postInit();
-		gameResources.getSoundSystem().play("menu1");
+		gameResources.getSoundSystem().stop("menu1");
+		gameResources.getSoundSystem().stop("menu2");
+		if (gameResources.getRand().nextBoolean())
+			gameResources.getSoundSystem().play("menu1");
+		else
+			gameResources.getSoundSystem().play("menu2");
 		gameResources.getMenuSystem().mainMenu.load(gameResources);
 	}
 

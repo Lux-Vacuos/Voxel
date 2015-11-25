@@ -46,7 +46,6 @@ import net.guerra24.voxel.client.world.chunks.Chunk;
 import net.guerra24.voxel.client.world.chunks.ChunkGenerator;
 import net.guerra24.voxel.client.world.chunks.ChunkKey;
 import net.guerra24.voxel.client.world.chunks.LightNode;
-import net.guerra24.voxel.universal.util.vector.Vector2f;
 import net.guerra24.voxel.universal.util.vector.Vector3f;
 
 /**
@@ -72,7 +71,7 @@ public class InfinityWorld implements IWorld {
 	private int tempRadius = 0;
 	private int seedi;
 	private ChunkGenerator chunkGenerator;
-	private WorldService service;
+	//private WorldService service;
 	private String codeName = "Infinity";
 	private Queue<LightNode> lightNodes;
 
@@ -97,7 +96,7 @@ public class InfinityWorld implements IWorld {
 		lightNodes = new LinkedList<>();
 		chunks = new HashMap<ChunkKey, Chunk>();
 		chunkGenerator = new ChunkGenerator();
-		service = new WorldService();
+		//service = new WorldService();
 		gm.getPhysics().getMobManager().getPlayer().setPosition(gm.getCamera().getPosition());
 	}
 
@@ -107,8 +106,6 @@ public class InfinityWorld implements IWorld {
 		xPlayChunk = (int) (gm.getCamera().getPosition().x / 16);
 		zPlayChunk = (int) (gm.getCamera().getPosition().z / 16);
 		yPlayChunk = (int) (gm.getCamera().getPosition().y / 16);
-		float o = 1f;
-		float i = 0f;
 		for (int zr = -4; zr <= 4; zr++) {
 			int zz = zPlayChunk + zr;
 			for (int xr = -4; xr <= 4; xr++) {
@@ -116,13 +113,6 @@ public class InfinityWorld implements IWorld {
 				for (int yr = -4; yr <= 4; yr++) {
 					int yy = yPlayChunk + yr;
 					if (zr * zr + xr * xr + yr * yr < 4 * 4 * 4) {
-						i += 0.00080f;
-						gm.guis3.get(1).setScale(new Vector2f(i, 0.041f));
-						if (i > 0.5060006f) {
-							o -= 0.04f;
-							if (o >= 0)
-								gm.getSoundSystem().setVolume("menu1", o);
-						}
 						if (!hasChunk(chunkDim, xx, yy, zz)) {
 							if (existChunkFile(chunkDim, xx, yy, zz)) {
 								loadChunk(chunkDim, xx, yy, zz, gm);
@@ -189,7 +179,7 @@ public class InfinityWorld implements IWorld {
 							}
 							if (gm.getFrustum().cubeInFrustum(chunk.posX, chunk.posY, chunk.posZ, chunk.posX + 16,
 									chunk.posY + 16, chunk.posZ + 16)) {
-								chunk.rebuild(service, this);
+								chunk.rebuild(this);
 							}
 						}
 					}
@@ -533,7 +523,7 @@ public class InfinityWorld implements IWorld {
 				}
 			}
 		}
-		service.es.shutdown();
+		//service.es.shutdown();
 		chunks.clear();
 	}
 

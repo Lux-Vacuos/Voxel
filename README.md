@@ -23,3 +23,7 @@ J-OGG:
 
 "This software is based on or using the J-Ogg library available from
 http://www.j-ogg.de and copyrighted by Tor-Einar Jarnbjo."
+
+Music:
+
+Read ./assets/sounds/LICENSE

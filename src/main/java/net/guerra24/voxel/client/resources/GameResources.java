@@ -138,14 +138,16 @@ public class GameResources {
 		UniversalResources.loadUniversalResources(this);
 		MenuResources.load(this);
 		menuSystem = new Menu(this);
+		loadMusic();
 	}
 
 	/**
 	 * Load Music
 	 * 
 	 */
-	public void music() {
-		soundSystem.backgroundMusic("menu1", "menu1.ogg", true);
+	public void loadMusic() {
+		soundSystem.backgroundMusic("menu1", "menu/menu1.ogg", false);
+		soundSystem.backgroundMusic("menu2", "menu/menu2.ogg", false);
 	}
 
 	/**
