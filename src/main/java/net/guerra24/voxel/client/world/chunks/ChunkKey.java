@@ -36,10 +36,12 @@ public class ChunkKey implements Cloneable {
 		this.cz = cz;
 	}
 
+	@Override
 	public int hashCode() {
 		return (dim << 16) ^ (cx << 8) ^ (cy << 4) ^ cz;
 	}
 
+	@Override
 	public boolean equals(Object obj) {
 		ChunkKey key = (ChunkKey) obj;
 		if (key.dim != dim)
@@ -53,6 +55,7 @@ public class ChunkKey implements Cloneable {
 		return true;
 	}
 
+	@Override
 	public ChunkKey clone() {
 		return new ChunkKey(dim, cx, cy, cz);
 	}
@@ -86,4 +89,5 @@ public class ChunkKey implements Cloneable {
 	public void free() {
 		free(this);
 	}
+
 }

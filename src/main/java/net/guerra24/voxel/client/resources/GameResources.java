@@ -36,7 +36,7 @@ import net.guerra24.voxel.client.graphics.GuiRenderer;
 import net.guerra24.voxel.client.graphics.MasterRenderer;
 import net.guerra24.voxel.client.graphics.MasterShadowRenderer;
 import net.guerra24.voxel.client.graphics.OcclusionRenderer;
-import net.guerra24.voxel.client.graphics.PostProcessingRenderer;
+import net.guerra24.voxel.client.graphics.DeferredShadingRenderer;
 import net.guerra24.voxel.client.graphics.SkyboxRenderer;
 import net.guerra24.voxel.client.graphics.TextMasterRenderer;
 import net.guerra24.voxel.client.menu.Menu;
@@ -80,7 +80,7 @@ public class GameResources {
 	private TextMasterRenderer textMasterRenderer;
 	private TextHandler textHandler;
 	private GlobalStates globalStates;
-	private PostProcessingRenderer postProcessing;
+	private DeferredShadingRenderer postProcessing;
 	private MasterShadowRenderer masterShadowRenderer;
 	private OcclusionRenderer occlusionRenderer;
 	private SoundSystem soundSystem;
@@ -119,7 +119,7 @@ public class GameResources {
 		guiRenderer = new GuiRenderer(loader);
 		occlusionRenderer = new OcclusionRenderer(renderer.getProjectionMatrix());
 		skyboxRenderer = new SkyboxRenderer(loader, renderer.getProjectionMatrix());
-		postProcessing = new PostProcessingRenderer(loader, this);
+		postProcessing = new DeferredShadingRenderer(loader, this);
 		masterShadowRenderer = new MasterShadowRenderer();
 		physics = new Physics(this);
 		frustum = new Frustum();
@@ -229,7 +229,7 @@ public class GameResources {
 		return soundSystem;
 	}
 
-	public PostProcessingRenderer getPostProcessing() {
+	public DeferredShadingRenderer getPostProcessing() {
 		return postProcessing;
 	}
 

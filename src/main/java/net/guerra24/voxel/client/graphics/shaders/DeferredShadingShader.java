@@ -37,7 +37,7 @@ import net.guerra24.voxel.universal.util.vector.Vector3f;
  * @author Guerra24 <pablo230699@hotmail.com>
  * @category Rendering
  */
-public class PostProcessingShader extends ShaderProgram {
+public class DeferredShadingShader extends ShaderProgram {
 
 	/**
 	 * Post Processing Shadaer Data
@@ -57,7 +57,7 @@ public class PostProcessingShader extends ShaderProgram {
 	private int loc_gNormal;
 	private int loc_depth0;
 	private int loc_gReflective;
-	private int loc_composite1;
+	private int loc_composite;
 	private int loc_cameraPosition;
 	private int loc_previousCameraPosition;
 	private int loc_lightPosition;
@@ -74,8 +74,9 @@ public class PostProcessingShader extends ShaderProgram {
 	 * Constructor
 	 * 
 	 */
-	public PostProcessingShader() {
-		super(VoxelVariables.VERTEX_FILE_FINAL, VoxelVariables.FRAGMENT_FILE_FINAL);
+	public DeferredShadingShader(String num) {
+		super(VoxelVariables.VERTEX_FILE_COMPOSITE + num + ".glsl",
+				VoxelVariables.FRAGMENT_FILE_COMPOSITE + num + ".glsl");
 	}
 
 	@Override
@@ -97,7 +98,7 @@ public class PostProcessingShader extends ShaderProgram {
 		loc_depth0 = super.getUniformLocation("gDepth");
 		loc_gReflective = super.getUniformLocation("gData");
 		loc_lightPosition = super.getUniformLocation("lightPosition");
-		loc_composite1 = super.getUniformLocation("composite1");
+		loc_composite = super.getUniformLocation("composite");
 		loc_sunPositionInScreen = super.getUniformLocation("sunPositionInScreen");
 
 		loc_useFXAA = super.getUniformLocation("useFXAA");
@@ -122,7 +123,7 @@ public class PostProcessingShader extends ShaderProgram {
 		super.loadInt(loc_gNormal, 2);
 		super.loadInt(loc_depth0, 3);
 		super.loadInt(loc_gReflective, 4);
-		super.loadInt(loc_composite1, 5);
+		super.loadInt(loc_composite, 5);
 	}
 
 	public void loadUnderWater(boolean value) {
@@ -148,7 +149,8 @@ public class PostProcessingShader extends ShaderProgram {
 		super.load2DVector(loc_resolution, res);
 	}
 
-	public void loadSettings(boolean useDof, boolean useFXAA, boolean useMotionBlur, boolean useBloom, boolean useVolumetricLight) {
+	public void loadSettings(boolean useDof, boolean useFXAA, boolean useMotionBlur, boolean useBloom,
+			boolean useVolumetricLight) {
 		super.loadBoolean(loc_useDOF, useDof);
 		super.loadBoolean(loc_useFXAA, useFXAA);
 		super.loadBoolean(loc_useMotionBlur, useMotionBlur);

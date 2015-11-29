@@ -24,6 +24,8 @@
 
 package net.guerra24.voxel.client.api.mod;
 
+import net.guerra24.voxel.client.api.ModKey;
+
 /**
  * Mod
  * 
@@ -31,9 +33,13 @@ package net.guerra24.voxel.client.api.mod;
  * @category API
  */
 public abstract class Mod {
-	
-	//LIST: Custom Blocks,
-	
+
+	private ModKey key;
+
+	public Mod(int id, String name, String version, String apiVersion) {
+		key = new ModKey(id, name, version, apiVersion);
+	}
+
 	/**
 	 * Basic Mod Info
 	 * 
@@ -52,17 +58,7 @@ public abstract class Mod {
 	 */
 	public abstract void postInit();
 
-	/**
-	 * Mod Name
-	 * 
-	 * @return Name
-	 */
-	public abstract String getName();
-
-	/**
-	 * Mod ID
-	 * 
-	 * @return ID
-	 */
-	public abstract int getID();
+	public ModKey getKey() {
+		return key;
+	}
 }

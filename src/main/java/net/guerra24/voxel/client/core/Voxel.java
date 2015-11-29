@@ -33,6 +33,7 @@ import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFW;
 
 import net.guerra24.voxel.client.api.API;
+import net.guerra24.voxel.client.api.VersionException;
 import net.guerra24.voxel.client.bootstrap.Bootstrap;
 import net.guerra24.voxel.client.graphics.opengl.Display;
 import net.guerra24.voxel.client.network.DedicatedClient;
@@ -70,13 +71,19 @@ public class Voxel {
 	 * Constructor of the Kernel, Initializes the Game and starts the loop
 	 */
 	public Voxel() {
-		mainLoop();
+		try {
+			mainLoop();
+		} catch (VersionException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
 	 * PreInit phase, initialize the display and runs the API PreInit
+	 * 
+	 * @throws VersionException
 	 */
-	public void preInit() {
+	public void preInit() throws VersionException {
 		display = new Display();
 		display.initDsiplay(VoxelVariables.WIDTH, VoxelVariables.HEIGHT);
 		display.startUp();
@@ -140,8 +147,10 @@ public class Voxel {
 
 	/**
 	 * Voxel Main Loop
+	 * 
+	 * @throws VersionException
 	 */
-	public void mainLoop() {
+	public void mainLoop() throws VersionException {
 		preInit();
 		init();
 		postInit();

@@ -28,6 +28,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import net.guerra24.voxel.client.api.mod.Mod;
+import net.guerra24.voxel.client.core.VoxelVariables;
 import net.guerra24.voxel.client.util.Logger;
 import net.guerra24.voxel.client.world.MobManager;
 import net.guerra24.voxel.client.world.entities.IEntity;
@@ -42,12 +43,12 @@ public class API {
 	/**
 	 * Mods
 	 */
-	private static Map<Integer, Mod> mods;
+	private static Map<ModKey, Mod> mods;
 	private static ModLoader modLoader;
 	private static MobManager mobManager;
 
 	public API() {
-		mods = new HashMap<Integer, Mod>();
+		mods = new HashMap<ModKey, Mod>();
 		modLoader = new ModLoader();
 		modLoader.loadMods();
 	}
@@ -55,22 +56,19 @@ public class API {
 	/**
 	 * Pre initialize the mod, load config data
 	 * 
+	 * @throws VersionException
+	 * 
 	 */
-	public void preInit() {
+	public void preInit() throws VersionException {
 		Logger.log("Pre Initializing Mods");
 		for (int x = 0; x < mods.size(); x++) {
-			try {
+			if (mods.get(x).getKey().getApiVersion().equals(VoxelVariables.apiVersion))
 				mods.get(x).preInit();
-			} catch (NoSuchMethodError e) {
-				Logger.warn("Mod " + mods.get(x).getName() + " has failed to load in PreInit");
-				Logger.warn("Method not found");
-				e.printStackTrace();
-			} catch (NoSuchFieldError e) {
-				Logger.warn("Mod " + mods.get(x).getName() + " has failed to load in PreInit");
-				Logger.warn("Field not found");
-				e.printStackTrace();
-			}
+			else
+				throw new VersionException("The mod " + mods.get(x).getKey().getName() + " only works in API "
+						+ VoxelVariables.apiVersion);
 		}
+
 	}
 
 	/**
@@ -80,17 +78,7 @@ public class API {
 	public void init() {
 		Logger.log("Initializing Mods");
 		for (int x = 0; x < mods.size(); x++) {
-			try {
-				mods.get(x).init();
-			} catch (NoSuchMethodError e) {
-				Logger.warn("Mod " + mods.get(x).getName() + " has failed to load in Init");
-				Logger.warn("Method not found");
-				e.printStackTrace();
-			} catch (NoSuchFieldError e) {
-				Logger.warn("Mod " + mods.get(x).getName() + " has failed to load in Init");
-				Logger.warn("Field not found");
-				e.printStackTrace();
-			}
+			mods.get(x).init();
 		}
 	}
 
@@ -101,14 +89,7 @@ public class API {
 	public void postInit() {
 		Logger.log("Post Initializing Mods");
 		for (int x = 0; x < mods.size(); x++) {
-			try {
-				mods.get(x).postInit();
-				Logger.log("Succesfully Loaded: " + mods.get(x).getName() + " ID: " + mods.get(x).getID());
-			} catch (NoSuchMethodError e) {
-				Logger.warn("Mod " + mods.get(x).getName() + " has failed to load in PostInit");
-				Logger.warn("Method not found");
-				e.printStackTrace();
-			}
+			mods.get(x).postInit();
 		}
 	}
 
@@ -121,7 +102,7 @@ public class API {
 	 *            Mod
 	 */
 	public static void registerMod(Mod mod) {
-		mods.put(mod.getID(), mod);
+		mods.put(mod.getKey(), mod);
 	}
 
 	public static void registetMob(IEntity mob) {
