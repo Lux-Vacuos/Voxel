@@ -3,13 +3,14 @@ package net.guerra24.voxel.client.core.states;
 import net.guerra24.voxel.client.api.API;
 import net.guerra24.voxel.client.core.GlobalStates;
 import net.guerra24.voxel.client.core.GlobalStates.GameState;
-import net.guerra24.voxel.client.graphics.opengl.Display;
-import net.guerra24.voxel.client.resources.GameResources;
-import net.guerra24.voxel.client.resources.GuiResources;
-import net.guerra24.voxel.client.world.WorldsHandler;
 import net.guerra24.voxel.client.core.State;
 import net.guerra24.voxel.client.core.Voxel;
 import net.guerra24.voxel.client.core.VoxelVariables;
+import net.guerra24.voxel.client.graphics.opengl.Display;
+import net.guerra24.voxel.client.particle.ParticleMaster;
+import net.guerra24.voxel.client.resources.GameResources;
+import net.guerra24.voxel.client.resources.GuiResources;
+import net.guerra24.voxel.client.world.WorldsHandler;
 
 /**
  * Single Player GameState
@@ -27,10 +28,11 @@ public class GameSPState implements State {
 		API api = voxel.getApi();
 		Display display = voxel.getDisplay();
 
-		worlds.getActiveWorld().updateChunksGeneration(gm, api);
+		worlds.getActiveWorld().updateChunksGeneration(gm, api, delta);
 		gm.getPhysics().getMobManager().update(delta, gm, gi, worlds.getActiveWorld(), api);
 		gm.update(gm.getSkyboxRenderer().update(delta));
 		gm.getRenderer().getWaterRenderer().update(delta);
+		ParticleMaster.getInstance().update(delta);
 
 		if (!display.isDisplayFocused() && !VoxelVariables.debug) {
 			gm.getCamera().unlockMouse();
@@ -56,16 +58,18 @@ public class GameSPState implements State {
 			worlds.getActiveWorld().updateChunksShadow(gm);
 			gm.getMasterShadowRenderer().end();
 		}
-		gm.getPostProcessing().getPost_fbo().begin();
+		gm.getDeferredShadingRenderer().getPost_fbo().begin();
 		gm.getRenderer().prepare();
 		gm.getRenderer().begin(gm);
 		worlds.getActiveWorld().updateChunksRender(gm);
 		gm.getRenderer().end(gm);
 		gm.getSkyboxRenderer().render(VoxelVariables.RED, VoxelVariables.GREEN, VoxelVariables.BLUE, delta, gm);
 		gm.getRenderer().renderEntity(gm.getPhysics().getMobManager().getMobs(), gm);
-		gm.getPostProcessing().getPost_fbo().end();
+		ParticleMaster.getInstance().render(gm.getCamera());
+		gm.getDeferredShadingRenderer().getPost_fbo().end();
+
 		gm.getRenderer().prepare();
-		gm.getPostProcessing().render(gm);
+		gm.getDeferredShadingRenderer().render(gm);
 	}
 
 }

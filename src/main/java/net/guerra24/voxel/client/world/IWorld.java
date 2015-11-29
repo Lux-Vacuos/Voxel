@@ -15,7 +15,7 @@ public interface IWorld {
 
 	public void createDimension(GameResources gm, API api);
 
-	public void updateChunksGeneration(GameResources gm, API api);
+	public void updateChunksGeneration(GameResources gm, API api, float delta);
 
 	public void updateChunksRender(GameResources gm);
 

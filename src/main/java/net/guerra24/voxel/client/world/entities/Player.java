@@ -25,6 +25,7 @@
 package net.guerra24.voxel.client.world.entities;
 
 import net.guerra24.voxel.client.api.API;
+import net.guerra24.voxel.client.core.VoxelVariables;
 import net.guerra24.voxel.client.resources.GameResources;
 import net.guerra24.voxel.client.resources.GuiResources;
 import net.guerra24.voxel.client.resources.models.TexturedModel;
@@ -35,7 +36,6 @@ import net.guerra24.voxel.client.world.physics.CollisionType;
 import net.guerra24.voxel.universal.util.vector.Vector3f;
 
 public class Player extends Entity implements IEntity {
-	private final float GRAVITY = -10;
 	private final float JUMP_POWER = 4;
 	private boolean isInWater = false;
 	private float upwardsSpeed = 0;
@@ -65,7 +65,7 @@ public class Player extends Entity implements IEntity {
 			isInWater = true;
 			isInAir = false;
 		} else {
-			upwardsSpeed += GRAVITY * delta;
+			upwardsSpeed += VoxelVariables.GRAVITY * delta;
 			isInAir = true;
 			isInWater = false;
 		}

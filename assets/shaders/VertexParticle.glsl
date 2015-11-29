@@ -24,5 +24,15 @@
 
 #version 330 core
 
+in vec2 position;
+
+out vec3 pass_Position;
+
+uniform mat4 projectionMatrix;
+uniform mat4 modelViewMatrix;
+
 void main(void){
+	vec4 pos = modelViewMatrix * vec4(position, 0.0, 1.0);
+	gl_Position = projectionMatrix * pos;
+	pass_Position = pos.xyz;
 }

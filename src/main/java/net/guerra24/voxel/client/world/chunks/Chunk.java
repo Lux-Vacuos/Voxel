@@ -28,6 +28,7 @@ import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import net.guerra24.voxel.client.core.VoxelVariables;
+import net.guerra24.voxel.client.particle.ParticlePoint;
 import net.guerra24.voxel.client.resources.GameResources;
 import net.guerra24.voxel.client.util.Logger;
 import net.guerra24.voxel.client.util.Maths;
@@ -52,6 +53,7 @@ public class Chunk {
 	public byte[][][] lightMap;
 	private transient Queue<Object> blocksMesh;
 	private transient Queue<Object> blocksMeshtemp;
+	private transient Queue<ParticlePoint> particlePoints;
 	private transient int sizeX, sizeY, sizeZ;
 	private transient boolean readyToRender = true;
 	public transient boolean needsRebuild = true, updated = false, updating = false, empty = true, genQuery = false,
@@ -106,6 +108,7 @@ public class Chunk {
 	public void load() {
 		blocksMesh = new ConcurrentLinkedQueue<Object>();
 		blocksMeshtemp = new ConcurrentLinkedQueue<Object>();
+		particlePoints = new ConcurrentLinkedQueue<ParticlePoint>();
 		sizeX = VoxelVariables.CHUNK_SIZE;
 		sizeY = VoxelVariables.CHUNK_HEIGHT;
 		sizeZ = VoxelVariables.CHUNK_SIZE;
@@ -136,6 +139,7 @@ public class Chunk {
 		blocksMeshtemp.addAll(blocksMesh);
 		readyToRender = false;
 		blocksMesh.clear();
+		particlePoints.clear();
 		rebuildChunkSection(blocksMesh, world);
 		calculateLight(blocksMesh, world);
 		readyToRender = true;
@@ -196,6 +200,8 @@ public class Chunk {
 					if (Block.getBlock(blocks[x][y][z]) == Block.Torch) {
 						cubes.add(Block.getBlock(blocks[x][y][z])
 								.getSingleModel(new Vector3f(x + cx * sizeX, y + cy * sizeY, z + cz * sizeZ)));
+						particlePoints.add(new ParticlePoint(new Vector3f((x + cx * sizeX) + 0.5f,
+								(y + cy * sizeY) + 0.8f, (z + cz * sizeZ) - 0.5f)));
 					} else if (Block.getBlock(blocks[x][y][z]).usesSingleModel()) {
 						cubes.add(Block.getBlock(blocks[x][y][z])
 								.getSingleModel(new Vector3f(x + cx * sizeX, y + cy * sizeY, z + cz * sizeZ)));
@@ -293,6 +299,10 @@ public class Chunk {
 
 	public void setTorchLight(int x, int y, int z, int val) {
 		lightMap[x & 0xF][y & 0xF][z & 0xF] = (byte) ((lightMap[x & 0xF][y & 0xF][z & 0xF] & 0xF0) | val);
+	}
+
+	public Queue<ParticlePoint> getParticlePoints() {
+		return particlePoints;
 	}
 
 	private boolean cullFaceWest(int x, int y, int z, IWorld world) {

@@ -40,6 +40,7 @@ import net.guerra24.voxel.client.graphics.DeferredShadingRenderer;
 import net.guerra24.voxel.client.graphics.SkyboxRenderer;
 import net.guerra24.voxel.client.graphics.TextMasterRenderer;
 import net.guerra24.voxel.client.menu.Menu;
+import net.guerra24.voxel.client.particle.ParticleMaster;
 import net.guerra24.voxel.client.resources.models.GuiTexture;
 import net.guerra24.voxel.client.sound.LibraryLWJGLOpenAL;
 import net.guerra24.voxel.client.sound.soundsystem.SoundSystem;
@@ -80,7 +81,7 @@ public class GameResources {
 	private TextMasterRenderer textMasterRenderer;
 	private TextHandler textHandler;
 	private GlobalStates globalStates;
-	private DeferredShadingRenderer postProcessing;
+	private DeferredShadingRenderer deferredShadingRenderer;
 	private MasterShadowRenderer masterShadowRenderer;
 	private OcclusionRenderer occlusionRenderer;
 	private SoundSystem soundSystem;
@@ -119,8 +120,9 @@ public class GameResources {
 		guiRenderer = new GuiRenderer(loader);
 		occlusionRenderer = new OcclusionRenderer(renderer.getProjectionMatrix());
 		skyboxRenderer = new SkyboxRenderer(loader, renderer.getProjectionMatrix());
-		postProcessing = new DeferredShadingRenderer(loader, this);
+		deferredShadingRenderer = new DeferredShadingRenderer(loader, this);
 		masterShadowRenderer = new MasterShadowRenderer();
+		ParticleMaster.getInstance().init(loader, renderer.getProjectionMatrix());
 		physics = new Physics(this);
 		frustum = new Frustum();
 		textMasterRenderer = new TextMasterRenderer(loader);
@@ -178,7 +180,8 @@ public class GameResources {
 		textMasterRenderer.cleanUp();
 		masterShadowRenderer.cleanUp();
 		occlusionRenderer.cleanUp();
-		postProcessing.cleanUp();
+		ParticleMaster.getInstance().cleanUp();
+		deferredShadingRenderer.cleanUp();
 		guiRenderer.cleanUp();
 		renderer.cleanUp();
 		loader.cleanUp();
@@ -229,8 +232,8 @@ public class GameResources {
 		return soundSystem;
 	}
 
-	public DeferredShadingRenderer getPostProcessing() {
-		return postProcessing;
+	public DeferredShadingRenderer getDeferredShadingRenderer() {
+		return deferredShadingRenderer;
 	}
 
 	public Frustum getFrustum() {

@@ -40,6 +40,8 @@ import com.esotericsoftware.kryo.io.Output;
 
 import net.guerra24.voxel.client.api.API;
 import net.guerra24.voxel.client.core.VoxelVariables;
+import net.guerra24.voxel.client.particle.ParticlePoint;
+import net.guerra24.voxel.client.particle.ParticleSystem;
 import net.guerra24.voxel.client.resources.GameResources;
 import net.guerra24.voxel.client.util.Logger;
 import net.guerra24.voxel.client.world.chunks.Chunk;
@@ -71,9 +73,10 @@ public class InfinityWorld implements IWorld {
 	private int tempRadius = 0;
 	private int seedi;
 	private ChunkGenerator chunkGenerator;
-	//private WorldService service;
+	// private WorldService service;
 	private String codeName = "Infinity";
 	private Queue<LightNode> lightNodes;
+	private ParticleSystem particleSystem;
 
 	@Override
 	public void startWorld(String name, Random seed, int chunkDim, API api, GameResources gm) {
@@ -91,12 +94,17 @@ public class InfinityWorld implements IWorld {
 
 	@Override
 	public void init(GameResources gm) {
+		particleSystem = new ParticleSystem(20, 1, -0.01f, 4, 0.2f);
+		particleSystem.setDirection(new Vector3f(0, 1, 0), 0.1f);
+		particleSystem.setLifeError(0.8f);
+		particleSystem.setScaleError(0.2f);
+		particleSystem.setSpeedError(0.2f);
 		seedi = seed.nextInt();
 		noise = new SimplexNoise(128, 0.3f, seedi);
 		lightNodes = new LinkedList<>();
 		chunks = new HashMap<ChunkKey, Chunk>();
 		chunkGenerator = new ChunkGenerator();
-		//service = new WorldService();
+		// service = new WorldService();
 		gm.getPhysics().getMobManager().getPlayer().setPosition(gm.getCamera().getPosition());
 	}
 
@@ -128,7 +136,7 @@ public class InfinityWorld implements IWorld {
 	}
 
 	@Override
-	public void updateChunksGeneration(GameResources gm, API api) {
+	public void updateChunksGeneration(GameResources gm, API api, float delta) {
 		if (gm.getCamera().getPosition().x < 0)
 			xPlayChunk = (int) ((gm.getCamera().getPosition().x - 16) / 16);
 		if (gm.getCamera().getPosition().y < 0)
@@ -162,6 +170,9 @@ public class InfinityWorld implements IWorld {
 							}
 						} else {
 							Chunk chunk = getChunk(chunkDim, xx, yy, zz);
+							for (ParticlePoint particlePoint : chunk.getParticlePoints()) {
+								particleSystem.generateParticles(particlePoint, delta);
+							}
 							if (!chunk.created)
 								chunk.createBasicTerrain(this);
 							if (!chunk.decorated) {
@@ -523,7 +534,7 @@ public class InfinityWorld implements IWorld {
 				}
 			}
 		}
-		//service.es.shutdown();
+		// service.es.shutdown();
 		chunks.clear();
 	}
 
