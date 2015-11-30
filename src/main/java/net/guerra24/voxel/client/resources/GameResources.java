@@ -31,12 +31,12 @@ import java.util.Random;
 import com.esotericsoftware.kryo.Kryo;
 
 import net.guerra24.voxel.client.core.GlobalStates;
+import net.guerra24.voxel.client.graphics.DeferredShadingRenderer;
 import net.guerra24.voxel.client.graphics.Frustum;
 import net.guerra24.voxel.client.graphics.GuiRenderer;
 import net.guerra24.voxel.client.graphics.MasterRenderer;
 import net.guerra24.voxel.client.graphics.MasterShadowRenderer;
 import net.guerra24.voxel.client.graphics.OcclusionRenderer;
-import net.guerra24.voxel.client.graphics.DeferredShadingRenderer;
 import net.guerra24.voxel.client.graphics.SkyboxRenderer;
 import net.guerra24.voxel.client.graphics.TextMasterRenderer;
 import net.guerra24.voxel.client.menu.Menu;
@@ -90,7 +90,7 @@ public class GameResources {
 	private Physics physics;
 	private Menu menuSystem;
 
-	private Vector3f sunRotation = new Vector3f(0, 0, 0);
+	private Vector3f sunRotation = new Vector3f(0, 0, -45);
 	private Vector3f lightPos = new Vector3f(0, 0, 0);
 
 	public Mob player;
@@ -109,12 +109,12 @@ public class GameResources {
 	public void init() {
 		loader = new Loader();
 		rand = new Random();
-		sun_Camera = new Camera();
+		renderer = new MasterRenderer(loader);
+		sun_Camera = new Camera(renderer.getProjectionMatrix());
 		sun_Camera.setPosition(new Vector3f(0, 0, 0));
 		sun_Camera.setYaw(sunRotation.x);
 		sun_Camera.setPitch(sunRotation.y);
 		sun_Camera.setRoll(sunRotation.z);
-		renderer = new MasterRenderer(loader);
 		camera = new Camera(renderer.getProjectionMatrix());
 		kryo = new Kryo();
 		guiRenderer = new GuiRenderer(loader);
@@ -166,9 +166,9 @@ public class GameResources {
 		sun_Camera.setYaw(sunRotation.x);
 		sun_Camera.setPitch(sunRotation.y);
 		sun_Camera.setRoll(sunRotation.z);
-		lightPos = new Vector3f(1000 * (float) Math.sin(Math.toRadians(sun_Camera.getRoll())),
-				1000 * (float) Math.sin(Math.toRadians(sun_Camera.getPitch())),
-				1000 * (float) Math.cos(Math.toRadians(sun_Camera.getPitch())));
+		sun_Camera.updateRay(this);
+		lightPos = new Vector3f(1000 * sun_Camera.getRay().direction.x, 1000 * sun_Camera.getRay().direction.y,
+				1000 * sun_Camera.getRay().direction.z);
 		Vector3f.add(sun_Camera.getPosition(), lightPos, lightPos);
 	}
 

@@ -40,19 +40,19 @@ const float waveStrength = 0.02;
 
 void main(void) {
 	
-	out_Color[0] = vec4(0.0, 0.266, 0.635, 0);  
-	out_Color[1] = vec4(pass_position.xyz,0);
+	out_Color[0] = vec4(0.0, 0.266, 0.635, 0.2);  
+	out_Color[1] = vec4(pass_position.xyz,1);
 	if(useHQWater == 1){
 		vec2 distortedTexCoords = texture(dudvMap, vec2(textureCoords.x + moveFactor, textureCoords.y)).rg*0.1;
 		distortedTexCoords = textureCoords + vec2(distortedTexCoords.x, distortedTexCoords.y+moveFactor);
 		vec2 totalDistortion = (texture(dudvMap, distortedTexCoords).rg * 2.0 - 1.0) * waveStrength;
 		vec4 normalMapColour = texture(normalMap, totalDistortion);
 		vec3 normal = vec3(normalMapColour.r * 2.0 - 1.0,normalMapColour.b,normalMapColour.g * 2.0 - 1.0);
-		out_Color[2] = vec4(normal.xyz,0);
+		out_Color[2] = vec4(normal.xyz, 1.0);
 	} else {
-		out_Color[2] = vec4(0,1,0,0);
+		out_Color[2] = vec4(0.0, 1.0, 0.0, 1.0);
 	}
-	out_Color[3] = vec4(1.0,0.0,0.0,0.0);
+	out_Color[3] = vec4(1.0, 0.0, 0.0, 1.0);
 	out_Color[4] = vec4(0.0);
 
 }

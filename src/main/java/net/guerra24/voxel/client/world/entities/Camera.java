@@ -99,10 +99,6 @@ public class Camera {
 
 	int id = 0;
 
-	public Camera() {
-		this.speed = 0.2f;
-	}
-
 	public Camera(Matrix4f proj) {
 		this.speed = 0.2f;
 		center = new Vector2f(Display.getWidth() / 2, Display.getHeight() / 2);
@@ -315,6 +311,10 @@ public class Camera {
 		}
 
 		updateDebug(world);
+		updateRay(gm);
+	}
+
+	public void updateRay(GameResources gm) {
 		ray = new Ray(gm.getRenderer().getProjectionMatrix(), Maths.createViewMatrix(this), center, Display.getWidth(),
 				Display.getHeight());
 	}
