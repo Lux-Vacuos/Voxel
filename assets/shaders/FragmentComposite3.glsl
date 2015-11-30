@@ -34,7 +34,7 @@ in vec4 posPos;
 out vec4 out_Color;
 
 uniform vec2 sunPositionInScreen;
-uniform sampler2D gData;
+uniform sampler2D gData0;
 
 /*--------------------------------------------------------*/
 /*------------------COMPOSITE 3 CONFIG--------------------*/
@@ -48,7 +48,7 @@ uniform sampler2D gData;
 void main(void){
 	vec2 texcoord = textureCoords;
 	vec4 image = vec4(0.0);
-	vec4 data = texture(gData, texcoord);
+	vec4 data = texture(gData0, texcoord);
 
     if(data.b == 1){
     	if(gl_FragCoord.x <= sunPositionInScreen.x + 60 && gl_FragCoord.x >= sunPositionInScreen.x - 60 && gl_FragCoord.y <= sunPositionInScreen.y + 60 && gl_FragCoord.y >= sunPositionInScreen.y - 60){

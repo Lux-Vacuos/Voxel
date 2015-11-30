@@ -48,7 +48,8 @@ uniform mat4 previousViewMatrix;
 uniform sampler2D gDiffuse;
 uniform sampler2D gPosition;
 uniform sampler2D gNormal;
-uniform sampler2D gData;
+uniform sampler2D gData0;
+uniform sampler2D gData1;
 uniform sampler2D composite;
 uniform sampler2DShadow gDepth;
 
@@ -74,7 +75,8 @@ void main(void){
 		texcoord.x += sin(texcoord.y * 4*2*3.14159 + camUnderWaterOffset) / 100;
 	}
 	vec4 image = texture(gDiffuse, texcoord);
-	vec4 data = texture(gData, texcoord);
+	vec4 data = texture(gData0, texcoord);
+	vec4 data1 = texture(gData1, texcoord);
     vec4 position = texture(gPosition,texcoord);
     vec4 normal = texture(gNormal, texcoord);
     float depth = texture(gDepth, vec3(texcoord.xy, 0.0), 16);
@@ -84,16 +86,17 @@ void main(void){
     vec3 eyeDir = normalize(cameraPosition-position.xyz);
     float lightDirDOTviewDir = dot(-lightDir,eyeDir);
     if(data.b != 1) {
+    	normal = normalize(normal);
+    	vec3 vHalfVector = normalize(lightDir.xyz+eyeDir);
+    	image = (max(dot(normal.xyz,lightDir),0.2) + data1.a) * image;
     	if(data.g == 1.0){
     		image.rgb -= vec3(data.a,data.a,data.a);
     	}
-    	normal = normalize(normal);
-    	vec3 vHalfVector = normalize(lightDir.xyz+eyeDir);
-    	image = max(dot(normal.xyz,lightDir),0.2) * image;
     	if(data.r == 1){
     		image += pow(max(dot(normal.xyz,vHalfVector),0.0), 100) * 8;
     	}
     }
+    
 	vec4 raysColor = texture(composite, texcoord);
     image.rgb = mix(image.rgb, raysColor.rgb, raysColor.a);
     if(useVolumetricLight == 1){

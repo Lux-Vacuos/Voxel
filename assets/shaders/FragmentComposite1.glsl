@@ -48,7 +48,8 @@ uniform mat4 previousViewMatrix;
 uniform sampler2D gDiffuse;
 uniform sampler2D gPosition;
 uniform sampler2D gNormal;
-uniform sampler2D gData;
+uniform sampler2D gData0;
+uniform sampler2D gData1;
 uniform sampler2D composite;
 uniform sampler2DShadow gDepth;
 
@@ -74,7 +75,7 @@ void main(void){
 		texcoord.x += sin(texcoord.y * 4*2*3.14159 + camUnderWaterOffset) / 100;
 	}
 	vec4 image = texture(composite, texcoord);
-	vec4 data = texture(gData, texcoord);
+	vec4 data = texture(gData0, texcoord);
     vec4 position = texture(gPosition,texcoord);
     vec4 normal = texture(gNormal, texcoord);
     float depth = texture(gDepth, vec3(texcoord.xy, 0.0), 16);

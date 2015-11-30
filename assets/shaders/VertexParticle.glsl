@@ -27,12 +27,16 @@
 in vec2 position;
 
 out vec3 pass_Position;
+out vec4 pass_Normal;
 
 uniform mat4 projectionMatrix;
-uniform mat4 modelViewMatrix;
+uniform mat4 viewMatrix;
+uniform mat4 transformationMatrix;
 
 void main(void){
-	vec4 pos = modelViewMatrix * vec4(position, 0.0, 1.0);
-	gl_Position = projectionMatrix * pos;
-	pass_Position = pos.xyz;
+	vec4 worldPosition = transformationMatrix * vec4(position, 0.0, 1.0);
+	vec4 positionRelativeToCam = viewMatrix * worldPosition;
+	gl_Position = projectionMatrix * positionRelativeToCam;
+	pass_Position = worldPosition.xyz;
+	pass_Normal = vec4(0,1,0,0);
 }

@@ -90,7 +90,7 @@ public class GameResources {
 	private Physics physics;
 	private Menu menuSystem;
 
-	private Vector3f sunRotation = new Vector3f(0, 0, -30);
+	private Vector3f sunRotation = new Vector3f(0, 0, 0);
 	private Vector3f lightPos = new Vector3f(0, 0, 0);
 
 	public Mob player;

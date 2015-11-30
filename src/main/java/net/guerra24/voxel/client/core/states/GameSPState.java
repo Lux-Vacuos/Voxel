@@ -1,5 +1,13 @@
 package net.guerra24.voxel.client.core.states;
 
+import static org.lwjgl.opengl.GL11.GL_DEPTH_COMPONENT;
+import static org.lwjgl.opengl.GL11.GL_FLOAT;
+import static org.lwjgl.opengl.GL11.glReadPixels;
+
+import java.nio.FloatBuffer;
+
+import org.lwjgl.BufferUtils;
+
 import net.guerra24.voxel.client.api.API;
 import net.guerra24.voxel.client.core.GlobalStates;
 import net.guerra24.voxel.client.core.GlobalStates.GameState;
@@ -63,6 +71,9 @@ public class GameSPState implements State {
 		gm.getRenderer().begin(gm);
 		worlds.getActiveWorld().updateChunksRender(gm);
 		gm.getRenderer().end(gm);
+		FloatBuffer p = BufferUtils.createFloatBuffer(1);
+		glReadPixels(Display.getWidth() / 2, Display.getHeight() / 2, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, p);
+		gm.getCamera().depth = p.get(0);
 		gm.getSkyboxRenderer().render(VoxelVariables.RED, VoxelVariables.GREEN, VoxelVariables.BLUE, delta, gm);
 		gm.getRenderer().renderEntity(gm.getPhysics().getMobManager().getMobs(), gm);
 		ParticleMaster.getInstance().render(gm.getCamera());

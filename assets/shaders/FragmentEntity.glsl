@@ -31,7 +31,7 @@ in vec3 toLightVector;
 in vec4 pass_position;
 in vec4 ShadowCoord;
 
-out vec4 [4] out_Color;
+out vec4 [5] out_Color;
 
 uniform sampler2D texture0;
 uniform sampler2DShadow depth0;
@@ -74,7 +74,7 @@ void main(void) {
 		float bias = 0.005*tan(acos(cosTheta));
 		bias = clamp(bias, 0,0.005);
 		for (int i=0;i<16;i++){
-    		if (texture(depth0, vec3(ShadowCoord.xy + poissonDisk[i]/700.0 , 0.0), 16)  <  ShadowCoord.z-bias ){
+    		if (texture(depth0, vec3(ShadowCoord.xy + poissonDisk[i]/1000.0 , 0.0), 0)  <  ShadowCoord.z-bias ){
    		 		shadow += 0.05;
    	 		}
 		}
@@ -88,6 +88,7 @@ void main(void) {
 	out_Color[1] = vec4(pass_position.xyz,0);
 	out_Color[2] = vec4(surfaceNormal.xyz,0);
 	out_Color[3] = vec4(0.0,1.0,0.0,shadow);
+	out_Color[4] = vec4(1.0,0.0,0.0,blockBright);
 	if(id == 13 || id == 8){
 		out_Color[3].r = 1.0;
 	}

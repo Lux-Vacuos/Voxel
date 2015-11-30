@@ -27,7 +27,7 @@
 in vec2 textureCoords;
 in vec4 pass_position;
 
-out vec4 [4] out_Color;
+out vec4 [5] out_Color;
 
 uniform sampler2D dudvMap;
 uniform sampler2D normalMap;
@@ -53,5 +53,6 @@ void main(void) {
 		out_Color[2] = vec4(0,1,0,0);
 	}
 	out_Color[3] = vec4(1.0,0.0,0.0,0.0);
+	out_Color[4] = vec4(0.0);
 
 }

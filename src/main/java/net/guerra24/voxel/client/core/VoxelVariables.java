@@ -108,7 +108,6 @@ public class VoxelVariables {
 	 * World Folder Path
 	 */
 	public static final String worldPath = "assets/game/world/";
-	public static final String blockPath = "assets/blocks/";
 
 	/**
 	 * Update Global Variables

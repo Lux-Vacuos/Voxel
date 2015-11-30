@@ -55,13 +55,6 @@ import static net.guerra24.voxel.client.input.Mouse.getDY;
 import static net.guerra24.voxel.client.input.Mouse.isButtonDown;
 import static net.guerra24.voxel.client.input.Mouse.setCursorPosition;
 import static net.guerra24.voxel.client.input.Mouse.setGrabbed;
-import static org.lwjgl.opengl.GL11.GL_DEPTH_COMPONENT;
-import static org.lwjgl.opengl.GL11.GL_FLOAT;
-import static org.lwjgl.opengl.GL11.glReadPixels;
-
-import java.nio.FloatBuffer;
-
-import org.lwjgl.BufferUtils;
 
 import net.guerra24.voxel.client.api.API;
 import net.guerra24.voxel.client.core.VoxelVariables;
@@ -102,6 +95,7 @@ public class Camera {
 	private Vector2f center;
 
 	public boolean isMoved = false;
+	public float depth = 0;
 
 	int id = 0;
 
@@ -377,11 +371,8 @@ public class Camera {
 	}
 
 	private void setBlock(int ww, int wh, byte block, IWorld world, GameResources gm) {
-		FloatBuffer p = BufferUtils.createFloatBuffer(1);
-		glReadPixels(ww / 2, wh / 2, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, p);
-
 		Vector4f viewport = new Vector4f(0, 0, ww, wh);
-		Vector3f wincoord = new Vector3f(ww / 2, wh / 2, p.get(0));
+		Vector3f wincoord = new Vector3f(ww / 2, wh / 2, depth);
 		Vector3f objcoord = new Vector3f();
 		Matrix4f mvp = new Matrix4f();
 		Matrix4f.mul(gm.getRenderer().getProjectionMatrix(), Maths.createViewMatrix(this), mvp);
