@@ -62,6 +62,7 @@ public class DeferredShadingShader extends ShaderProgram {
 	private int loc_cameraPosition;
 	private int loc_previousCameraPosition;
 	private int loc_lightPosition;
+	private int loc_skyColor;
 
 	private int loc_useFXAA;
 	private int loc_useDOF;
@@ -102,6 +103,7 @@ public class DeferredShadingShader extends ShaderProgram {
 		loc_lightPosition = super.getUniformLocation("lightPosition");
 		loc_composite = super.getUniformLocation("composite");
 		loc_sunPositionInScreen = super.getUniformLocation("sunPositionInScreen");
+		loc_skyColor = super.getUniformLocation("skyColor");
 
 		loc_useFXAA = super.getUniformLocation("useFXAA");
 		loc_useDOF = super.getUniformLocation("useDOF");
@@ -132,6 +134,10 @@ public class DeferredShadingShader extends ShaderProgram {
 	public void loadUnderWater(boolean value) {
 		super.loadBoolean(loc_camUnderWater, value);
 		super.loadFloat(loc_camUnderWaterOffset, time += 0.1f);
+	}
+
+	public void loadSkyColor(Vector3f color) {
+		super.loadVector(loc_skyColor, color);
 	}
 
 	public void loadLightPosition(Vector3f pos) {

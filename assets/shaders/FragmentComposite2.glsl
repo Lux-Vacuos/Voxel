@@ -36,10 +36,11 @@ out vec4 out_Color;
 uniform int camUnderWater;
 uniform float camUnderWaterOffset;
 uniform vec2 resolution;
+uniform vec2 sunPositionInScreen;
 uniform vec3 cameraPosition;
 uniform vec3 previousCameraPosition;
 uniform vec3 lightPosition;
-uniform vec2 sunPositionInScreen;
+uniform vec3 skyColor;
 uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;
 uniform mat4 inverseProjectionMatrix;
@@ -63,7 +64,9 @@ uniform int useVolumetricLight;
 /*------------------COMPOSITE 2 CONFIG--------------------*/
 /*--------------------------------------------------------*/
 
-const int NUM_SAMPLES = 50;		
+const int NUM_SAMPLES = 50;
+const float density = 0.023;
+const float gradient = 10.0;
 
 /*--------------------------------------------------------*/
 /*------------------COMPOSITE 2 CODE----------------------*/
@@ -122,6 +125,12 @@ void main(void){
 			raysColor *= exposure * lightDirDOTviewDir;
 			image +=  raysColor;
 		}
+	}
+	if(data.b != 1) {
+		float distance = length(cameraPosition-position.xyz);
+		float visibility = exp(-pow((distance*density),gradient));
+		visibility = clamp(visibility,0.0,1.1);
+    	image.rgb = mix(skyColor.rgb, image.rgb, visibility);
 	}
     
     if(camUnderWater == 1){

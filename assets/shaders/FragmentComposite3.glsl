@@ -49,7 +49,6 @@ void main(void){
 	vec2 texcoord = textureCoords;
 	vec4 image = vec4(0.0);
 	vec4 data = texture(gData0, texcoord);
-
     if(data.b == 1){
     	if(gl_FragCoord.x <= sunPositionInScreen.x + 60 && gl_FragCoord.x >= sunPositionInScreen.x - 60 && gl_FragCoord.y <= sunPositionInScreen.y + 60 && gl_FragCoord.y >= sunPositionInScreen.y - 60){
     		image.rgb = mix(image.rgb,vec3(1, 0.870588, 0.678431),0.5);

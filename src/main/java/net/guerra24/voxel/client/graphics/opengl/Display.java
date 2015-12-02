@@ -152,8 +152,6 @@ public class Display {
 
 		glfwDefaultWindowHints();
 		glfwWindowHint(GLFW_VISIBLE, GL_TRUE);
-		if (VoxelVariables.debug)
-			glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
 
 		displayResizable = false;
 		glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);

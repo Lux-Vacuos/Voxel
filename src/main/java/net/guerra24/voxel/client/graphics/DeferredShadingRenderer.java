@@ -69,6 +69,8 @@ public class DeferredShadingRenderer {
 	private Matrix4f previousViewMatrix;
 	private Vector3f previousCameraPosition;
 
+	private Vector3f skyColor = new Vector3f(VoxelVariables.RED, VoxelVariables.GREEN, VoxelVariables.BLUE);
+
 	/**
 	 * Constructor
 	 * 
@@ -82,21 +84,25 @@ public class DeferredShadingRenderer {
 		shader0.start();
 		shader0.loadTransformation(Maths.createTransformationMatrix(new Vector2f(0, 0), new Vector2f(1, 1)));
 		shader0.connectTextureUnits();
+		shader0.loadSkyColor(skyColor);
 		shader0.stop();
 		shader1 = new DeferredShadingShader("1");
 		shader1.start();
 		shader1.loadTransformation(Maths.createTransformationMatrix(new Vector2f(0, 0), new Vector2f(1, 1)));
 		shader1.connectTextureUnits();
+		shader1.loadSkyColor(skyColor);
 		shader1.stop();
 		shader2 = new DeferredShadingShader("2");
 		shader2.start();
 		shader2.loadTransformation(Maths.createTransformationMatrix(new Vector2f(0, 0), new Vector2f(1, 1)));
 		shader2.connectTextureUnits();
+		shader2.loadSkyColor(skyColor);
 		shader2.stop();
 		shader3 = new DeferredShadingShader("3");
 		shader3.start();
 		shader3.loadTransformation(Maths.createTransformationMatrix(new Vector2f(0, 0), new Vector2f(1, 1)));
 		shader3.connectTextureUnits();
+		shader3.loadSkyColor(skyColor);
 		shader3.stop();
 		aux0FBO = new FrameBuffer(false, Display.getWidth(), Display.getHeight());
 		aux1FBO = new FrameBuffer(false, Display.getWidth(), Display.getHeight());
@@ -125,8 +131,6 @@ public class DeferredShadingRenderer {
 		shader3.loadSunPosition(
 				Maths.convertTo2F(new Vector3f(gm.getLightPos()), gm.getRenderer().getProjectionMatrix(),
 						Maths.createViewMatrix(gm.getCamera()), Display.getWidth(), Display.getHeight()));
-		previousViewMatrix = Maths.createViewMatrix(gm.getCamera());
-		previousCameraPosition = gm.getCamera().getPosition();
 		glBindVertexArray(quad.getVaoID());
 		glEnableVertexAttribArray(0);
 		glActiveTexture(GL_TEXTURE0);
@@ -161,8 +165,6 @@ public class DeferredShadingRenderer {
 		shader2.loadSunPosition(
 				Maths.convertTo2F(new Vector3f(gm.getLightPos()), gm.getRenderer().getProjectionMatrix(),
 						Maths.createViewMatrix(gm.getCamera()), Display.getWidth(), Display.getHeight()));
-		previousViewMatrix = Maths.createViewMatrix(gm.getCamera());
-		previousCameraPosition = gm.getCamera().getPosition();
 		glBindVertexArray(quad.getVaoID());
 		glEnableVertexAttribArray(0);
 		glActiveTexture(GL_TEXTURE0);
@@ -199,8 +201,6 @@ public class DeferredShadingRenderer {
 		shader1.loadSunPosition(
 				Maths.convertTo2F(new Vector3f(gm.getLightPos()), gm.getRenderer().getProjectionMatrix(),
 						Maths.createViewMatrix(gm.getCamera()), Display.getWidth(), Display.getHeight()));
-		previousViewMatrix = Maths.createViewMatrix(gm.getCamera());
-		previousCameraPosition = gm.getCamera().getPosition();
 		glBindVertexArray(quad.getVaoID());
 		glEnableVertexAttribArray(0);
 		glActiveTexture(GL_TEXTURE0);

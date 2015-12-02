@@ -12,10 +12,9 @@ import static org.lwjgl.openal.ALC11.ALC_MONO_SOURCES;
 import static org.lwjgl.openal.ALC11.ALC_STEREO_SOURCES;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
-import java.nio.IntBuffer;
+import java.nio.ByteBuffer;
 import java.util.List;
 
-import org.lwjgl.BufferUtils;
 import org.lwjgl.openal.ALCCapabilities;
 import org.lwjgl.openal.ALContext;
 import org.lwjgl.openal.ALDevice;
@@ -31,25 +30,8 @@ public class AL {
 
 	private static boolean created = false;
 
-	static {
-	}
-
 	public static void create() {
 		if (alContext == null) {
-
-			IntBuffer attribs = BufferUtils.createIntBuffer(16);
-
-			attribs.put(org.lwjgl.openal.ALC10.ALC_FREQUENCY);
-			attribs.put(44100);
-
-			attribs.put(org.lwjgl.openal.ALC10.ALC_REFRESH);
-			attribs.put(60);
-
-			attribs.put(org.lwjgl.openal.ALC10.ALC_SYNC);
-			attribs.put(org.lwjgl.openal.ALC10.ALC_FALSE);
-
-			attribs.put(0);
-			attribs.flip();
 
 			alDevice = ALDevice.create(null);
 			if (alDevice == null)
@@ -59,7 +41,7 @@ public class AL {
 
 			Logger.log("OpenALC10: " + caps.OpenALC10);
 			Logger.log("OpenALC11: " + caps.OpenALC11);
-			Logger.log("caps.ALC_EXT_EFX = " + caps.ALC_EXT_EFX);
+			Logger.log("ALC_EXT_EFX: " + caps.ALC_EXT_EFX);
 
 			if (caps.OpenALC11) {
 				List<String> devices = ALUtil.getStringList(NULL, ALC_ALL_DEVICES_SPECIFIER);
@@ -67,14 +49,14 @@ public class AL {
 					ALUtil.checkALCError(NULL);
 				else {
 					for (int i = 0; i < devices.size(); i++)
-						Logger.log(i + ": " + devices.get(i));
+						Logger.log("Device " + i + ": " + devices.get(i));
 				}
 			}
 
 			String defaultDeviceSpecifier = alcGetString(0L, ALC_DEFAULT_DEVICE_SPECIFIER);
 			Logger.log("Default device: " + defaultDeviceSpecifier);
 
-			long contextHandle = org.lwjgl.openal.ALC10.alcCreateContext(alDevice.address(), attribs);
+			long contextHandle = org.lwjgl.openal.ALC10.alcCreateContext(alDevice.address(), (ByteBuffer) null);
 			alContext = ALContext.create(alDevice);
 			alcDevice = new ALCdevice(contextHandle);
 
