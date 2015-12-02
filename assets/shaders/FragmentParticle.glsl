@@ -35,6 +35,6 @@ void main(void){
 	out_Color[1] = vec4(pass_Position.xyz,0);
 	out_Color[2] = vec4(pass_Normal.xyz,0);
 	out_Color[3] = vec4(0.0);
-	out_Color[4] = vec4(0.0);
+	out_Color[4] = vec4(0.0,1.0,0.0,0.0);
 
 }

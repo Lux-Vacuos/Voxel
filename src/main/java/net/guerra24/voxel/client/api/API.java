@@ -62,10 +62,10 @@ public class API {
 	public void preInit() throws VersionException {
 		Logger.log("Pre Initializing Mods");
 		for (int x = 0; x < mods.size(); x++) {
-			if (mods.get(x).getKey().getApiVersion().equals(VoxelVariables.apiVersion))
+			if (mods.get(x).getKey().getApiVersion() >= VoxelVariables.apiVersionNum)
 				mods.get(x).preInit();
 			else
-				throw new VersionException("The mod " + mods.get(x).getKey().getName() + " only works in API "
+				throw new VersionException("The mod " + mods.get(x).getKey().getName() + " only works in a version equals or more that "
 						+ VoxelVariables.apiVersion);
 		}
 

@@ -27,6 +27,7 @@ package net.guerra24.voxel.client.bootstrap;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
+import java.util.Calendar;
 
 import net.guerra24.voxel.client.core.Voxel;
 import net.guerra24.voxel.client.core.VoxelVariables;
@@ -111,7 +112,18 @@ public class Bootstrap {
 			Logger.error(ex);
 			System.exit(1);
 		}
+		checkSomeValues();
 		new Voxel();
+	}
+
+	private static void checkSomeValues() {
+		Calendar christmas = Calendar.getInstance();
+		if (christmas.get(Calendar.MONTH) == Calendar.DECEMBER) {
+			VoxelVariables.christmas = true;
+			VoxelVariables.RED = 0.882f;
+			VoxelVariables.GREEN = 1;
+			VoxelVariables.BLUE = 1;
+		}
 	}
 
 	/**

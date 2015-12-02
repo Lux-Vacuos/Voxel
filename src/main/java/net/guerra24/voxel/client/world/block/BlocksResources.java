@@ -24,6 +24,7 @@
 
 package net.guerra24.voxel.client.world.block;
 
+import net.guerra24.voxel.client.core.VoxelVariables;
 import net.guerra24.voxel.client.resources.Loader;
 import net.guerra24.voxel.client.resources.models.ModelTexture;
 import net.guerra24.voxel.client.resources.models.RawModel;
@@ -112,18 +113,31 @@ public class BlocksResources {
 		RawModel portal = loader.getObjLoader().loadObjModel("Portal", loader);
 		RawModel leaves = loader.getObjLoader().loadObjModel("Leaves", loader);
 
+		ModelTexture texture7 = null;
+		ModelTexture texture = null;
+		ModelTexture texture2 = null;
+		ModelTexture texture10 = null;
+
+		if (VoxelVariables.christmas) {
+			texture7 = new ModelTexture(loader.loadTextureBlocks("GrassSideSnow"));
+			texture = new ModelTexture(loader.loadTextureBlocks("GrassSnow"));
+			texture2 = new ModelTexture(loader.loadTextureBlocks("SandSnow"));
+			texture10 = new ModelTexture(loader.loadTextureBlocks("LeavesSnow"));
+		} else {
+			texture7 = new ModelTexture(loader.loadTextureBlocks("GrassSide"));
+			texture = new ModelTexture(loader.loadTextureBlocks("Grass"));
+			texture2 = new ModelTexture(loader.loadTextureBlocks("Sand"));
+			texture10 = new ModelTexture(loader.loadTextureBlocks("Leaves"));
+		}
+
 		ModelTexture texture0 = new ModelTexture(loader.loadTextureBlocks("Indes"));
-		ModelTexture texture = new ModelTexture(loader.loadTextureBlocks("Grass"));
 		ModelTexture texture1 = new ModelTexture(loader.loadTextureBlocks("Stone"));
-		ModelTexture texture2 = new ModelTexture(loader.loadTextureBlocks("Sand"));
 		ModelTexture texture3 = new ModelTexture(loader.loadTextureBlocks("Glass"));
 		ModelTexture texture4 = new ModelTexture(loader.loadTextureBlocks("Dirt"));
 		ModelTexture texture5 = new ModelTexture(loader.loadTextureBlocks("Diamond-Ore"));
 		ModelTexture texture6 = new ModelTexture(loader.loadTextureBlocks("Gold-Ore"));
-		ModelTexture texture7 = new ModelTexture(loader.loadTextureBlocks("GrassSide"));
 		ModelTexture texture8 = new ModelTexture(loader.loadTextureBlocks("Torch"));
 		ModelTexture texture9 = new ModelTexture(loader.loadTextureBlocks("Portal"));
-		ModelTexture texture10 = new ModelTexture(loader.loadTextureBlocks("Leaves"));
 		ModelTexture texture11 = new ModelTexture(loader.loadTextureBlocks("Wood"));
 		ModelTexture texture12 = new ModelTexture(loader.loadTextureBlocks("Ice"));
 
@@ -197,4 +211,5 @@ public class BlocksResources {
 		cubePortal = new TexturedModel(portal, texture9);
 		cubeLeaves = new TexturedModel(leaves, texture10);
 	}
+
 }

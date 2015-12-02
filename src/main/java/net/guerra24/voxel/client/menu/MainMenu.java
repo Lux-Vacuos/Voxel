@@ -71,7 +71,7 @@ public class MainMenu {
 				font, new Vector2f(0.002f, 0.97f), 1, false);
 		textVersion.setColour(0.79f, 0.79f, 0.79f);
 		texts.add(textVersion);
-		GUIText textVersionApi = new GUIText("Voxel API " + VoxelVariables.apiVersion, 1, font,
+		GUIText textVersionApi = new GUIText("Molten API " + VoxelVariables.apiVersion, 1, font,
 				new Vector2f(0.002f, 0.94f), 1, false);
 		textVersionApi.setColour(0.79f, 0.79f, 0.79f);
 		texts.add(textVersionApi);

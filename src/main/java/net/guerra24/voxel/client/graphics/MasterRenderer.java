@@ -25,7 +25,6 @@
 package net.guerra24.voxel.client.graphics;
 
 import static org.lwjgl.opengl.GL11.GL_BACK;
-import static org.lwjgl.opengl.GL11.GL_BLEND;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_CULL_FACE;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
@@ -170,9 +169,7 @@ public class MasterRenderer {
 		shader.stop();
 		blockEntities.clear();
 		glDisable(GL_CULL_FACE);
-		glEnable(GL_BLEND);
 		waterRenderer.render(waterTiles, gm);
-		glDisable(GL_BLEND);
 		glEnable(GL_CULL_FACE);
 		waterTiles.clear();
 	}

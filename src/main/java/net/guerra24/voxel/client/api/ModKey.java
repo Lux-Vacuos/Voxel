@@ -1,10 +1,10 @@
 package net.guerra24.voxel.client.api;
 
 public class ModKey implements Cloneable {
-	private int id;
-	private String name, version, apiVersion;
+	private int id, apiVersion;
+	private String name, version;
 
-	public ModKey(int id, String name, String version, String apiVersion) {
+	public ModKey(int id, String name, String version, int apiVersion) {
 		this.id = id;
 		this.name = name;
 		this.version = version;
@@ -13,7 +13,7 @@ public class ModKey implements Cloneable {
 
 	@Override
 	public int hashCode() {
-		return id + name.hashCode() + version.hashCode() + apiVersion.hashCode();
+		return id + name.hashCode() + version.hashCode() + apiVersion;
 	}
 
 	@Override
@@ -25,7 +25,7 @@ public class ModKey implements Cloneable {
 			return false;
 		if (!key.version.equals(version))
 			return false;
-		if (!key.apiVersion.equals(apiVersion))
+		if (key.apiVersion != apiVersion)
 			return false;
 		return true;
 	}
@@ -47,7 +47,7 @@ public class ModKey implements Cloneable {
 		return version;
 	}
 
-	public String getApiVersion() {
+	public int getApiVersion() {
 		return apiVersion;
 	}
 }

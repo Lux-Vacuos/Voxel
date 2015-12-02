@@ -36,7 +36,7 @@ public class MasterShadowRenderer {
 	}
 
 	public void being() {
-		fbo.begin(2048, 2048);
+		fbo.begin(2048,2048);
 	}
 
 	public void end() {

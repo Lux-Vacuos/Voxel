@@ -72,7 +72,7 @@ public class Voxel {
 	private Display display;
 	private API api;
 	private DedicatedClient client;
-	
+
 	private IntBuffer maxVram = BufferUtils.createIntBuffer(1);
 	private IntBuffer usedVram = BufferUtils.createIntBuffer(1);
 	private boolean nvidia = false;
@@ -108,6 +108,7 @@ public class Voxel {
 			glGetIntegerv(WGLAMDGPUAssociation.WGL_GPU_RAM_AMD, maxVram);
 		Logger.log("Loading");
 		Logger.log("Voxel Version: " + VoxelVariables.version);
+		Logger.log("Molten API Version: " + VoxelVariables.apiVersion);
 		Logger.log("Build: " + VoxelVariables.build);
 		Logger.log("Running on: " + Bootstrap.getPlatform());
 		Logger.log("LWJGL Version: " + Version.getVersion());

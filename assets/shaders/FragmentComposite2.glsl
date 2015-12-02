@@ -65,8 +65,8 @@ uniform int useVolumetricLight;
 /*--------------------------------------------------------*/
 
 const int NUM_SAMPLES = 50;
-const float density = 0.023;
-const float gradient = 10.0;
+const float density = 0.013;
+const float gradient = 2.0;
 
 /*--------------------------------------------------------*/
 /*------------------COMPOSITE 2 CODE----------------------*/
@@ -88,42 +88,42 @@ void main(void){
     lightDir = normalize(lightDir);
     vec3 eyeDir = normalize(cameraPosition-position.xyz);
     float lightDirDOTviewDir = dot(-lightDir,eyeDir);
-    if(data.b != 1) {
-    	normal = normalize(normal);
-    	vec3 vHalfVector = normalize(lightDir.xyz+eyeDir);
-    	image = (max(dot(normal.xyz,lightDir),0.2) + data1.a) * image;
-    	if(data.g == 1.0){
-    		image.rgb -= vec3(data.a,data.a,data.a);
+    if(data1.g != 1){
+    	if(data.b != 1) {
+    		normal = normalize(normal);
+    		vec3 vHalfVector = normalize(lightDir.xyz+eyeDir);
+    		image = ((max(dot(normal.xyz,lightDir),0.2) + data1.a) - data.a) * image;
+    		if(data.r == 1){
+    			if(data.a <= 0)
+	    			image += pow(max(dot(normal.xyz,vHalfVector),0.0), 100) * 8;
+    		}
     	}
-    	if(data.r == 1){
-    		image += pow(max(dot(normal.xyz,vHalfVector),0.0), 100) * 8;
-    	}
-    }
-    
-	vec4 raysColor = texture(composite, texcoord);
-    image.rgb = mix(image.rgb, raysColor.rgb, raysColor.a);
-    if(useVolumetricLight == 1){
-		if (lightDirDOTviewDir>0.0){
-			float exposure	= 0.1/NUM_SAMPLES;
-			float decay		= 1.01;
-			float density	= 1;
-			float weight	= 6.0;
-			float illuminationDecay = 1.0;
-			vec2 pos = vec2(0.0);
-			pos.x = (sunPositionInScreen.x) / resolution.x;
-			pos.y = (sunPositionInScreen.y) / resolution.y;
-			vec2 deltaTextCoord = vec2( texcoord - pos);
-			vec2 textCoo = texcoord;
-			deltaTextCoord *= 1.0 / float(NUM_SAMPLES) * density;
-			for(int i=0; i < NUM_SAMPLES ; i++) {
-				textCoo -= deltaTextCoord;
-				vec4 tsample = texture(composite, textCoo );
-				tsample *= illuminationDecay * weight;
-				raysColor += tsample;
-				illuminationDecay *= decay;
+	    
+		vec4 raysColor = texture(composite, texcoord);
+	    image.rgb = mix(image.rgb, raysColor.rgb, raysColor.a);
+    	if(useVolumetricLight == 1){
+			if (lightDirDOTviewDir>0.0){
+				float exposure	= 0.1/NUM_SAMPLES;
+				float decay		= 1.01;
+				float density	= 1;
+				float weight	= 6.0;
+				float illuminationDecay = 1.0;
+				vec2 pos = vec2(0.0);
+				pos.x = (sunPositionInScreen.x) / resolution.x;
+				pos.y = (sunPositionInScreen.y) / resolution.y;
+				vec2 deltaTextCoord = vec2( texcoord - pos);
+				vec2 textCoo = texcoord;
+				deltaTextCoord *= 1.0 / float(NUM_SAMPLES) * density;
+				for(int i=0; i < NUM_SAMPLES ; i++) {
+					textCoo -= deltaTextCoord;
+					vec4 tsample = texture(composite, textCoo );
+					tsample *= illuminationDecay * weight;
+					raysColor += tsample;
+					illuminationDecay *= decay;
+				}
+				raysColor *= exposure * lightDirDOTviewDir;
+				image +=  raysColor;
 			}
-			raysColor *= exposure * lightDirDOTviewDir;
-			image +=  raysColor;
 		}
 	}
 	if(data.b != 1) {

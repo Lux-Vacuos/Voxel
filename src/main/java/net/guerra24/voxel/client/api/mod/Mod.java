@@ -36,7 +36,7 @@ public abstract class Mod {
 
 	private ModKey key;
 
-	public Mod(int id, String name, String version, String apiVersion) {
+	public Mod(int id, String name, String version, int apiVersion) {
 		key = new ModKey(id, name, version, apiVersion);
 	}
 

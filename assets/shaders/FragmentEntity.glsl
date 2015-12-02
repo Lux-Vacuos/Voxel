@@ -64,7 +64,7 @@ vec2 poissonDisk[16] = vec2[](
 
 void main(void) {
     vec4 textureColour = texture(texture0, pass_textureCoords);
-    float shadow = -0.2;
+    float shadow = -0.6;
 	if(useShadows == 1){
 		vec3 unitNormal = normalize(surfaceNormal);
 		vec3 unitLightVector = normalize(toLightVector);
@@ -74,7 +74,7 @@ void main(void) {
 		float bias = 0.005*tan(acos(cosTheta));
 		bias = clamp(bias, 0,0.005);
 		for (int i=0;i<16;i++){
-    		if (texture(depth0, vec3(ShadowCoord.xy + poissonDisk[i]/1000.0 , 0.0), 0)  <  ShadowCoord.z-bias ){
+    		if (texture(depth0, vec3(ShadowCoord.xy + poissonDisk[i]/1600.0 , 0.0), 0)  <  ShadowCoord.z-bias ){
    		 		shadow += 0.05;
    	 		}
 		}
