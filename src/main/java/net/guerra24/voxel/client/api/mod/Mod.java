@@ -24,7 +24,12 @@
 
 package net.guerra24.voxel.client.api.mod;
 
+import com.jmr.wrapper.common.Connection;
+
+import net.guerra24.voxel.client.api.API;
 import net.guerra24.voxel.client.api.ModKey;
+import net.guerra24.voxel.client.core.Voxel;
+import net.guerra24.voxel.client.world.chunks.Chunk;
 
 /**
  * Mod
@@ -35,6 +40,7 @@ import net.guerra24.voxel.client.api.ModKey;
 public abstract class Mod {
 
 	private ModKey key;
+	private API api;
 
 	public Mod(int id, String name, String version, int apiVersion) {
 		key = new ModKey(id, name, version, apiVersion);
@@ -44,6 +50,11 @@ public abstract class Mod {
 	 * Basic Mod Info
 	 * 
 	 */
+
+	public void setAPI(API api) {
+		this.api = api;
+	}
+
 	public abstract void preInit();
 
 	/**
@@ -58,7 +69,23 @@ public abstract class Mod {
 	 */
 	public abstract void postInit();
 
+	public abstract void generateChunk(Chunk chunk, int x, int y, int z);
+
+	public abstract void updateKeyboard();
+
+	public abstract void updateInGame(float delta, Voxel voxel);
+
+	public abstract void clientConnect(Connection con);
+
+	public abstract void clientUpdate(Connection con);
+
+	public abstract void clientDisconnect(Connection con);
+
 	public ModKey getKey() {
 		return key;
+	}
+
+	public API getApi() {
+		return api;
 	}
 }

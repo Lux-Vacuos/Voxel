@@ -73,7 +73,6 @@ public class InfinityWorld implements IWorld {
 	private int tempRadius = 0;
 	private int seedi;
 	private ChunkGenerator chunkGenerator;
-	// private WorldService service;
 	private String codeName = "Infinity";
 	private Queue<LightNode> lightNodes;
 	private ParticleSystem particleSystem;
@@ -104,7 +103,6 @@ public class InfinityWorld implements IWorld {
 		lightNodes = new LinkedList<>();
 		chunks = new HashMap<ChunkKey, Chunk>();
 		chunkGenerator = new ChunkGenerator();
-		// service = new WorldService();
 		gm.getPhysics().getMobManager().getPlayer().setPosition(gm.getCamera().getPosition());
 	}
 
@@ -164,8 +162,10 @@ public class InfinityWorld implements IWorld {
 								if (existChunkFile(chunkDim, xx, yy, zz)) {
 									loadChunk(chunkDim, xx, yy, zz, gm);
 								} else {
-									addChunk(new Chunk(chunkDim, xx, yy, zz, this));
-									saveChunk(chunkDim, xx, yy, zz, gm);
+									if (VoxelVariables.generateChunks) {
+										addChunk(new Chunk(chunkDim, xx, yy, zz, this));
+										saveChunk(chunkDim, xx, yy, zz, gm);
+									}
 								}
 							}
 						} else {
@@ -256,23 +256,6 @@ public class InfinityWorld implements IWorld {
 
 	@Override
 	public void updateChunksOcclusion(GameResources gm) {
-		for (int zr = -VoxelVariables.radius; zr <= VoxelVariables.radius; zr++) {
-			int zz = zPlayChunk + zr;
-			for (int xr = -VoxelVariables.radius; xr <= VoxelVariables.radius; xr++) {
-				int xx = xPlayChunk + xr;
-				for (int yr = -VoxelVariables.radius; yr <= VoxelVariables.radius; yr++) {
-					int yy = yPlayChunk + yr;
-					if (hasChunk(chunkDim, xx, yy, zz)) {
-						Chunk chunk = getChunk(chunkDim, xx, yy, zz);
-						if (chunk != null)
-							if (gm.getFrustum().cubeInFrustum(chunk.posX, chunk.posY, chunk.posZ, chunk.posX + 16,
-									chunk.posY + 16, chunk.posZ + 16))
-								chunk.renderOcclusion(gm);
-					}
-				}
-			}
-		}
-
 	}
 
 	@Override
@@ -471,6 +454,7 @@ public class InfinityWorld implements IWorld {
 					}
 				}
 			}
+			chunk = null;
 		}
 	}
 
@@ -536,7 +520,6 @@ public class InfinityWorld implements IWorld {
 				}
 			}
 		}
-		// service.es.shutdown();
 		chunks.clear();
 	}
 

@@ -35,7 +35,7 @@ public class VoxelVariables {
 	 * Display Data
 	 */
 	public static int FPS = 60;
-	public static boolean VSYNC = false;
+	public static boolean VSYNC = true;
 	public static final String Title = "Voxel";
 	/**
 	 * Game Settings
@@ -57,6 +57,7 @@ public class VoxelVariables {
 	public static boolean runningOnMac = false;
 	public static boolean autostart = false;
 	public static boolean christmas = false;
+	public static final String settings = "assets/game/settings.conf";
 	/**
 	 * Graphic Settings
 	 */
@@ -76,6 +77,7 @@ public class VoxelVariables {
 	public static int genRadius = radius + radiusLimit;
 	public static boolean isCustomSeed = false;
 	public static String seed = "";
+	public static boolean generateChunks = true;
 	public static final int CHUNK_SIZE = 16;
 	public static final int CHUNK_HEIGHT = 16;
 	public static final int DIM_0 = 0;

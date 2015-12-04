@@ -26,7 +26,7 @@ package net.guerra24.voxel.client.network;
 
 import com.jmr.wrapper.client.Client;
 
-import net.guerra24.voxel.client.resources.GameResources;
+import net.guerra24.voxel.client.core.Voxel;
 import net.guerra24.voxel.client.util.Logger;
 
 public class DedicatedClient {
@@ -34,8 +34,8 @@ public class DedicatedClient {
 	private Client client;
 	private DedicatedClientListener dedicatedClientListener;
 
-	public DedicatedClient(GameResources gm) {
-		dedicatedClientListener = new DedicatedClientListener(gm);
+	public DedicatedClient(Voxel voxel) {
+		dedicatedClientListener = new DedicatedClientListener(voxel);
 		client = new Client("localhost", 4059, 4059);
 		client.setListener(dedicatedClientListener);
 		client.connect();

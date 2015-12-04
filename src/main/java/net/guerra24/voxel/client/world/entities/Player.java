@@ -28,10 +28,10 @@ import net.guerra24.voxel.client.api.API;
 import net.guerra24.voxel.client.core.VoxelVariables;
 import net.guerra24.voxel.client.resources.GameResources;
 import net.guerra24.voxel.client.resources.GuiResources;
+import net.guerra24.voxel.client.resources.models.AABB;
 import net.guerra24.voxel.client.resources.models.TexturedModel;
 import net.guerra24.voxel.client.world.IWorld;
 import net.guerra24.voxel.client.world.block.Block;
-import net.guerra24.voxel.client.world.physics.AABB;
 import net.guerra24.voxel.client.world.physics.CollisionType;
 import net.guerra24.voxel.universal.util.vector.Vector3f;
 

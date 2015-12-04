@@ -25,6 +25,8 @@ public class OptionsState implements State {
 
 		if (gm.getMenuSystem().optionsMenu.getExitButton().pressed()) {
 			switchToManMenu = true;
+			gm.getGameSettings().updateSetting();
+			gm.getGameSettings().save();
 			try {
 				Thread.sleep(100);
 			} catch (InterruptedException e) {
@@ -73,7 +75,7 @@ public class OptionsState implements State {
 	@Override
 	public void render(Voxel voxel, GlobalStates states, float delta) {
 		GameResources gm = voxel.getGameResources();
-		gm.getMenuSystem().optionsMenu.update(gm); 
+		gm.getMenuSystem().optionsMenu.update(gm);
 		if (switchToManMenu) {
 			gm.getMenuSystem().mainMenu.load(gm);
 			switchToManMenu = false;

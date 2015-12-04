@@ -156,8 +156,7 @@ public class Maths {
 	}
 
 	public static Vector2f convertTo2F(Vector3f pos, Matrix4f projection, Matrix4f viewMatrix, int width, int height) {
-		return Matrix4f.Project(pos, projection, viewMatrix,
-				new Vector4f(0, 0, width, height));
+		return Matrix4f.Project(pos, projection, viewMatrix, new Vector4f(0, 0, width, height));
 	}
 
 	/**

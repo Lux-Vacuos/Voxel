@@ -127,7 +127,7 @@ public class Voxel {
 			VoxelVariables.useShadows = false;
 		}
 		gameResources = new GameResources();
-		api = new API();
+		api = new API(gameResources.getGameSettings());
 		api.preInit();
 	}
 

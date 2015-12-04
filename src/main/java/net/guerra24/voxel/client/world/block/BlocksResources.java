@@ -211,5 +211,9 @@ public class BlocksResources {
 		cubePortal = new TexturedModel(portal, texture9);
 		cubeLeaves = new TexturedModel(leaves, texture10);
 	}
+	
+	public static void loadTexCoords(){
+		
+	}
 
 }

@@ -13,9 +13,5 @@ public class ChunkWorkerMesh implements Runnable {
 
 	@Override
 	public void run() {
-		chunk.update(world);
-		chunk.needsRebuild = false;
-		chunk.updated = true;
-		chunk.updating = false;
 	}
 }

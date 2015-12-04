@@ -1,6 +1,6 @@
 package net.guerra24.voxel.client.resources;
 
-import net.guerra24.voxel.client.world.physics.AABB;
+import net.guerra24.voxel.client.resources.models.AABB;
 import net.guerra24.voxel.universal.util.vector.Matrix4f;
 import net.guerra24.voxel.universal.util.vector.Vector2f;
 import net.guerra24.voxel.universal.util.vector.Vector3f;

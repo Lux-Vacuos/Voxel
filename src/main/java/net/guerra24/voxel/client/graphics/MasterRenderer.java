@@ -160,6 +160,7 @@ public class MasterRenderer {
 		shader.start();
 		shader.loadProjectionMatrix(projectionMatrix);
 		shader.loadviewMatrix(gm.getCamera());
+		shader.loadCameraPosition(gm.getCamera().getPosition());
 		shader.loadBiasMatrix(gm);
 		shader.useShadows(VoxelVariables.useShadows);
 	}
@@ -186,6 +187,7 @@ public class MasterRenderer {
 		shader.start();
 		shader.loadProjectionMatrix(projectionMatrix);
 		shader.loadviewMatrix(gm.getCamera());
+		shader.loadCameraPosition(gm.getCamera().getPosition());
 		entityRenderer.renderEntity(entities, gm);
 		shader.stop();
 		entities.clear();
@@ -196,6 +198,7 @@ public class MasterRenderer {
 		shader.loadProjectionMatrix(
 				Maths.orthographic(-0.7f * aspectRatio, 0.7f * aspectRatio, -0.7f, 0.7f, -100, 100f));
 		shader.loadviewMatrix(gm.getCamera());
+		shader.loadCameraPosition(gm.getCamera().getPosition());
 		entityRenderer.renderEntity(guiModels, gm);
 		shader.stop();
 		guiModels.clear();

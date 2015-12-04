@@ -27,16 +27,16 @@ package net.guerra24.voxel.client.network;
 import com.jmr.wrapper.common.Connection;
 import com.jmr.wrapper.common.listener.SocketListener;
 
-import net.guerra24.voxel.client.resources.GameResources;
+import net.guerra24.voxel.client.core.Voxel;
 import net.guerra24.voxel.universal.network.packets.NetworkPosition;
 import net.guerra24.voxel.universal.network.packets.WorldTime;
 
 public class DedicatedClientListener implements SocketListener {
 
-	private final GameResources gm;
+	private final Voxel voxel;
 
-	public DedicatedClientListener(GameResources gm) {
-		this.gm = gm;
+	public DedicatedClientListener(Voxel voxel) {
+		this.voxel = voxel;
 	}
 
 	@Override
@@ -52,10 +52,10 @@ public class DedicatedClientListener implements SocketListener {
 	public void received(Connection con, Object obj) {
 		if (obj instanceof NetworkPosition) {
 			NetworkPosition pos = (NetworkPosition) obj;
-			gm.player.setPosition(pos.getPos());
+			voxel.getGameResources().player.setPosition(pos.getPos());
 		} else if (obj instanceof WorldTime) {
 			WorldTime time = (WorldTime) obj;
-			gm.getSkyboxRenderer().setTime(time.getTime());
+			voxel.getGameResources().getSkyboxRenderer().setTime(time.getTime());
 		}
 	}
 

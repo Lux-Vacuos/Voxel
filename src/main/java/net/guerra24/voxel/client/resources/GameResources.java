@@ -30,6 +30,7 @@ import java.util.Random;
 
 import com.esotericsoftware.kryo.Kryo;
 
+import net.guerra24.voxel.client.core.GameSettings;
 import net.guerra24.voxel.client.core.GlobalStates;
 import net.guerra24.voxel.client.graphics.DeferredShadingRenderer;
 import net.guerra24.voxel.client.graphics.Frustum;
@@ -89,6 +90,7 @@ public class GameResources {
 	private Kryo kryo;
 	private Physics physics;
 	private Menu menuSystem;
+	private GameSettings gameSettings;
 
 	private Vector3f sunRotation = new Vector3f(5, 0, -45);
 	private Vector3f lightPos = new Vector3f(0, 0, 0);
@@ -100,6 +102,7 @@ public class GameResources {
 	 * 
 	 */
 	public GameResources() {
+		gameSettings = new GameSettings();
 	}
 
 	/**
@@ -266,6 +269,10 @@ public class GameResources {
 
 	public Vector3f getLightPos() {
 		return lightPos;
+	}
+
+	public GameSettings getGameSettings() {
+		return gameSettings;
 	}
 
 	public OcclusionRenderer getOcclusionRenderer() {

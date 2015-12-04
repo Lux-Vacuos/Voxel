@@ -28,6 +28,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import net.guerra24.voxel.client.api.mod.Mod;
+import net.guerra24.voxel.client.core.GameSettings;
 import net.guerra24.voxel.client.core.VoxelVariables;
 import net.guerra24.voxel.client.util.Logger;
 import net.guerra24.voxel.client.world.MobManager;
@@ -43,14 +44,16 @@ public class API {
 	/**
 	 * Mods
 	 */
-	private static Map<ModKey, Mod> mods;
-	private static ModLoader modLoader;
-	private static MobManager mobManager;
+	private Map<Integer, Mod> mods;
+	private ModLoader modLoader;
+	private MobManager mobManager;
+	private GameSettings gameSettings;
 
-	public API() {
-		mods = new HashMap<ModKey, Mod>();
+	public API(GameSettings gameSettings) {
+		mods = new HashMap<Integer, Mod>();
 		modLoader = new ModLoader();
 		modLoader.loadMods();
+		this.gameSettings = gameSettings;
 	}
 
 	/**
@@ -62,11 +65,12 @@ public class API {
 	public void preInit() throws VersionException {
 		Logger.log("Pre Initializing Mods");
 		for (int x = 0; x < mods.size(); x++) {
+			mods.get(x).setAPI(this);
 			if (mods.get(x).getKey().getApiVersion() >= VoxelVariables.apiVersionNum)
 				mods.get(x).preInit();
 			else
-				throw new VersionException("The mod " + mods.get(x).getKey().getName() + " only works in a version equals or more that "
-						+ VoxelVariables.apiVersion);
+				throw new VersionException("The mod " + mods.get(x).getKey().getName()
+						+ " only works in a version equals or more that " + VoxelVariables.apiVersion);
 		}
 
 	}
@@ -101,12 +105,16 @@ public class API {
 	 * @param result
 	 *            Mod
 	 */
-	public static void registerMod(Mod mod) {
-		mods.put(mod.getKey(), mod);
+	public void registerMod(Mod mod) {
+		mods.put(mod.getKey().getId(), mod);
 	}
 
-	public static void registetMob(IEntity mob) {
+	public void registetMob(IEntity mob) {
 		mobManager.registerMob(mob);
+	}
+
+	public void registerSaveData(String key, String value) {
+		gameSettings.registerValue(key, value);
 	}
 
 	/**
@@ -117,16 +125,15 @@ public class API {
 	 * @return Mod
 	 * 
 	 */
-	public static Mod getMod(int id) {
+	public Mod getMod(ModKey id) {
 		return mods.get(id);
 	}
 
 	/**
-	 * Get last avaiable ID
 	 * 
 	 * @return ID
 	 */
-	public static int getLastID() {
+	public int getTotalMods() {
 		return mods.size();
 	}
 
@@ -138,12 +145,8 @@ public class API {
 		mods.clear();
 	}
 
-	public static ModLoader getModLoader() {
-		return modLoader;
-	}
-
 	public void setMobManager(MobManager mobManager) {
-		API.mobManager = mobManager;
+		this.mobManager = mobManager;
 	}
 
 }

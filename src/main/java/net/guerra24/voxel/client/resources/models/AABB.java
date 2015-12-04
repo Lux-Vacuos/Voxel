@@ -22,11 +22,12 @@
  * SOFTWARE.
  */
 
-package net.guerra24.voxel.client.world.physics;
+package net.guerra24.voxel.client.resources.models;
 
 import net.guerra24.voxel.universal.util.vector.Vector3f;
 
 public class AABB {
+
 	public Vector3f[] corners;
 
 	public AABB(float x, float y, float z, float width, float height, float length) {

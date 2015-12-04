@@ -41,6 +41,8 @@ uniform mat4 projectionLightMatrix;
 uniform mat4 viewLightMatrix;
 uniform mat4 biasMatrix;
 uniform vec3 lightPosition;
+uniform vec3 cameraPosition;
+uniform int translate;
 
 const float gradient = 5.0;
 

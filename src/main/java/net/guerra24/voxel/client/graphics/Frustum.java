@@ -83,7 +83,7 @@ public class Frustum {
 	 * @param gm
 	 *            GameResources
 	 */
-	public void calculateFrustum(Matrix4f projectionMatrix , Camera camera) {
+	public void calculateFrustum(Matrix4f projectionMatrix, Camera camera) {
 		float[] clip = new float[16];
 
 		Matrix4f.mul(projectionMatrix, Maths.createViewMatrix(camera), clip_);

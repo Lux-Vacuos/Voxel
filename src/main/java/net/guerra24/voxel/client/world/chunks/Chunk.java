@@ -129,9 +129,12 @@ public class Chunk {
 	}
 
 	public void rebuild(IWorld world) {
-		if (needsRebuild || !updated && !updating) {
+		if ((needsRebuild || !updated) && !updating) {
 			updating = true;
-			new ChunkWorkerMesh(world, this).run();
+			update(world);
+			needsRebuild = false;
+			updated = true;
+			updating = false;
 		}
 	}
 
@@ -474,13 +477,10 @@ public class Chunk {
 		gm.getMasterShadowRenderer().renderChunk(blocksMesh, gm);
 	}
 
-	public void renderOcclusion(GameResources gm) {
-		gm.getOcclusionRenderer().renderChunk(blocksMesh, gm);
-	}
-
 	private void clear() {
 		blocksMesh.clear();
 		blocksMeshtemp.clear();
+		particlePoints.clear();
 	}
 
 	public void dispose() {

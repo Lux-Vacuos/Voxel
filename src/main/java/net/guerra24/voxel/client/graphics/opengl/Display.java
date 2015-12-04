@@ -152,9 +152,9 @@ public class Display {
 
 		glfwDefaultWindowHints();
 		glfwWindowHint(GLFW_VISIBLE, GL_TRUE);
-
 		displayResizable = false;
 		glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
+
 		glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);

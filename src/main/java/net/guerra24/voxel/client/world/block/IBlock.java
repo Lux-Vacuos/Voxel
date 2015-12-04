@@ -3,14 +3,10 @@ package net.guerra24.voxel.client.world.block;
 import net.guerra24.voxel.client.resources.models.WaterTile;
 import net.guerra24.voxel.universal.util.vector.Vector3f;
 
-public abstract class IBlock {
-	/**
-	 * Gets the Block ID
-	 * 
-	 * @return ID
-	 */
+public abstract class IBlock  {
+	
 	public abstract byte getId();
-
+	
 	/**
 	 * Get the Face Up of the Block
 	 * 

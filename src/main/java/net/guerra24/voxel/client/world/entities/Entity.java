@@ -24,8 +24,8 @@
 
 package net.guerra24.voxel.client.world.entities;
 
+import net.guerra24.voxel.client.resources.models.AABB;
 import net.guerra24.voxel.client.resources.models.TexturedModel;
-import net.guerra24.voxel.client.world.physics.AABB;
 import net.guerra24.voxel.universal.util.vector.Vector3f;
 
 public class Entity extends AABB {

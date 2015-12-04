@@ -302,7 +302,7 @@ public class Loader {
 	 * 
 	 * @return VaoID
 	 */
-	private int createVAO() {
+	public int createVAO() {
 		int vaoID = glGenVertexArrays();
 		vaos.add(vaoID);
 		glBindVertexArray(vaoID);
