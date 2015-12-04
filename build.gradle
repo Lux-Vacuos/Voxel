@@ -5,6 +5,10 @@ apply plugin:'application'
 mainClassName = 'net.guerra24.voxel.client.bootstrap.Bootstrap'
 version = '0.0.9-ALPHA'
 
+if (System.getProperty("os.name").toLowerCase().contains("mac os x")) {
+  applicationDefaultJvmArgs = ["-XstartOnFirstThread"]
+}
+
 jar {
 	include("*net/**")
 	include("*org/**")
