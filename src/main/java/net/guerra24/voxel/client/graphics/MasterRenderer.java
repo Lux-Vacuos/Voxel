@@ -126,6 +126,7 @@ public class MasterRenderer {
 			if (entity instanceof WaterTile)
 				waterTiles.add((WaterTile) entity);
 		}
+		renderChunk(gm);
 	}
 
 	/**
@@ -155,17 +156,13 @@ public class MasterRenderer {
 		}
 		renderGui(gm);
 	}
-
-	public void begin(GameResources gm) {
+	
+	public void renderChunk(GameResources gm){
 		shader.start();
 		shader.loadProjectionMatrix(projectionMatrix);
 		shader.loadviewMatrix(gm.getCamera());
-		shader.loadCameraPosition(gm.getCamera().getPosition());
 		shader.loadBiasMatrix(gm);
 		shader.useShadows(VoxelVariables.useShadows);
-	}
-
-	public void end(GameResources gm) {
 		entityRenderer.renderBlockEntity(blockEntities, gm);
 		shader.stop();
 		blockEntities.clear();
@@ -173,6 +170,12 @@ public class MasterRenderer {
 		waterRenderer.render(waterTiles, gm);
 		glEnable(GL_CULL_FACE);
 		waterTiles.clear();
+	}
+
+	public void begin(GameResources gm) {
+	}
+
+	public void end(GameResources gm) {
 	}
 
 	/**
@@ -187,7 +190,6 @@ public class MasterRenderer {
 		shader.start();
 		shader.loadProjectionMatrix(projectionMatrix);
 		shader.loadviewMatrix(gm.getCamera());
-		shader.loadCameraPosition(gm.getCamera().getPosition());
 		entityRenderer.renderEntity(entities, gm);
 		shader.stop();
 		entities.clear();
@@ -198,7 +200,6 @@ public class MasterRenderer {
 		shader.loadProjectionMatrix(
 				Maths.orthographic(-0.7f * aspectRatio, 0.7f * aspectRatio, -0.7f, 0.7f, -100, 100f));
 		shader.loadviewMatrix(gm.getCamera());
-		shader.loadCameraPosition(gm.getCamera().getPosition());
 		entityRenderer.renderEntity(guiModels, gm);
 		shader.stop();
 		guiModels.clear();

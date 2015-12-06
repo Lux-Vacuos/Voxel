@@ -45,7 +45,7 @@ public class VoxelVariables {
 	public static final String apiVersion = "0.0.5";
 	public static final int apiVersionNum = 000005;
 	public static final String state = "ALPHA";
-	public static final int build = 129;
+	public static final int build = 130;
 	public static int FOV = 90;
 	public static int WIDTH = 1280;
 	public static int HEIGHT = 720;
@@ -108,6 +108,8 @@ public class VoxelVariables {
 	public static final String FRAGMENT_FILE_SHADOW = "FragmentShadow.glsl";
 	public static final String VERTEX_FILE_COMPOSITE = "VertexComposite";
 	public static final String FRAGMENT_FILE_COMPOSITE = "FragmentComposite";
+	public static final String VERTEX_FILE_TESSELLATOR = "VertexTessellator.glsl";
+	public static final String FRAGMENT_FILE_TESSELLATOR = "FragmentTessellator.glsl";
 	/**
 	 * World Folder Path
 	 */

@@ -43,6 +43,7 @@ import net.guerra24.voxel.client.graphics.TextMasterRenderer;
 import net.guerra24.voxel.client.menu.Menu;
 import net.guerra24.voxel.client.particle.ParticleMaster;
 import net.guerra24.voxel.client.resources.models.GuiTexture;
+import net.guerra24.voxel.client.resources.models.Tessellator;
 import net.guerra24.voxel.client.sound.LibraryLWJGLOpenAL;
 import net.guerra24.voxel.client.sound.soundsystem.SoundSystem;
 import net.guerra24.voxel.client.sound.soundsystem.SoundSystemConfig;
@@ -55,6 +56,7 @@ import net.guerra24.voxel.client.world.entities.Camera;
 import net.guerra24.voxel.client.world.entities.Entity;
 import net.guerra24.voxel.client.world.entities.Mob;
 import net.guerra24.voxel.universal.resources.UniversalResources;
+import net.guerra24.voxel.universal.util.vector.Vector2f;
 import net.guerra24.voxel.universal.util.vector.Vector3f;
 
 /**
@@ -95,7 +97,9 @@ public class GameResources {
 	private Vector3f sunRotation = new Vector3f(5, 0, -45);
 	private Vector3f lightPos = new Vector3f(0, 0, 0);
 
+	public Tessellator tessellator;
 	public Mob player;
+	public int testing;
 
 	/**
 	 * Constructor
@@ -130,6 +134,7 @@ public class GameResources {
 		frustum = new Frustum();
 		textMasterRenderer = new TextMasterRenderer(loader);
 		textHandler = new TextHandler(this);
+		tessellator = new Tessellator(renderer);
 		try {
 			SoundSystemConfig.addLibrary(LibraryLWJGLOpenAL.class);
 			SoundSystemConfig.setCodec("ogg", CodecJOgg.class);
@@ -162,6 +167,7 @@ public class GameResources {
 	public void addRes() {
 		player = new Mob(new Entity(UniversalResources.player, new Vector3f(0, 80, 0), 0, 0, 0, 1));
 		physics.getMobManager().registerMob(player);
+		testing = loader.loadTextureBlocks("WIP");
 	}
 
 	public void update(float rot) {
@@ -173,6 +179,115 @@ public class GameResources {
 		lightPos = new Vector3f(1000 * sun_Camera.getRay().direction.x, 1000 * sun_Camera.getRay().direction.y,
 				1000 * sun_Camera.getRay().direction.z);
 		Vector3f.add(sun_Camera.getPosition(), lightPos, lightPos);
+
+		int size = 16;
+		int x = 0, y = 66, z = 0;
+
+		tessellator.begin(testing);
+		// top face
+		tessellator.vertex3f(new Vector3f(x, y + size, z + size));
+		tessellator.texture2f(new Vector2f(0, 1));
+		tessellator.normal3f(new Vector3f(0, 1, 0));
+
+		tessellator.vertex3f(new Vector3f(x + size, y + size, z + size));
+		tessellator.texture2f(new Vector2f(1, 1));
+		tessellator.normal3f(new Vector3f(0, 1, 0));
+
+		tessellator.vertex3f(new Vector3f(x + size, y + size, z));
+		tessellator.texture2f(new Vector2f(1, 0));
+		tessellator.normal3f(new Vector3f(0, 1, 0));
+
+		tessellator.vertex3f(new Vector3f(x, y + size, 0));
+		tessellator.texture2f(new Vector2f(0, 0));
+		tessellator.normal3f(new Vector3f(0, 1, 0));
+
+		// bottom face
+		tessellator.vertex3f(new Vector3f(x, y, z));
+		tessellator.texture2f(new Vector2f(0, 1));
+		tessellator.normal3f(new Vector3f(0, -1, 0));
+
+		tessellator.vertex3f(new Vector3f(x + size, y, z));
+		tessellator.texture2f(new Vector2f(1, 1));
+		tessellator.normal3f(new Vector3f(0, -1, 0));
+
+		tessellator.vertex3f(new Vector3f(x + size, y, z + size));
+		tessellator.texture2f(new Vector2f(1, 0));
+		tessellator.normal3f(new Vector3f(0, -1, 0));
+
+		tessellator.vertex3f(new Vector3f(x, y, z + size));
+		tessellator.texture2f(new Vector2f(0, 0));
+		tessellator.normal3f(new Vector3f(0, -1, 0));
+
+		// back face
+		tessellator.vertex3f(new Vector3f(x, y, z + size));
+		tessellator.texture2f(new Vector2f(0, 1));
+		tessellator.normal3f(new Vector3f(0, 0, 1));
+
+		tessellator.vertex3f(new Vector3f(x + size, y, z + size));
+		tessellator.texture2f(new Vector2f(1, 1));
+		tessellator.normal3f(new Vector3f(0, 0, 1));
+
+		tessellator.vertex3f(new Vector3f(x + size, y + size, z + size));
+		tessellator.texture2f(new Vector2f(1, 0));
+		tessellator.normal3f(new Vector3f(0, 0, 1));
+
+		tessellator.vertex3f(new Vector3f(x, y + size, z + size));
+		tessellator.texture2f(new Vector2f(0, 0));
+		tessellator.normal3f(new Vector3f(0, 0, 1));
+
+		// front face
+		tessellator.vertex3f(new Vector3f(x, y + size, z));
+		tessellator.texture2f(new Vector2f(1, 0));
+		tessellator.normal3f(new Vector3f(0, 0, -1));
+
+		tessellator.vertex3f(new Vector3f(x + size, y + size, z));
+		tessellator.texture2f(new Vector2f(0, 0));
+		tessellator.normal3f(new Vector3f(0, 0, -1));
+
+		tessellator.vertex3f(new Vector3f(x + size, y, z));
+		tessellator.texture2f(new Vector2f(0, 1));
+		tessellator.normal3f(new Vector3f(0, 0, -1));
+
+		tessellator.vertex3f(new Vector3f(x, y, z));
+		tessellator.texture2f(new Vector2f(1, 1));
+		tessellator.normal3f(new Vector3f(0, 0, -1));
+
+		// right face
+		tessellator.vertex3f(new Vector3f(x, y, z));
+		tessellator.texture2f(new Vector2f(0, 1));
+		tessellator.normal3f(new Vector3f(-1, 0, 0));
+		
+		tessellator.vertex3f(new Vector3f(x, y, z + size));
+		tessellator.texture2f(new Vector2f(1,1));
+		tessellator.normal3f(new Vector3f(-1, 0, 0));
+		
+		tessellator.vertex3f(new Vector3f(x, y + size, z + size));
+		tessellator.texture2f(new Vector2f(1, 0));
+		tessellator.normal3f(new Vector3f(-1, 0, 0));
+		
+		tessellator.vertex3f(new Vector3f(x, y + size, z));
+		tessellator.texture2f(new Vector2f(0, 0));
+		tessellator.normal3f(new Vector3f(-1, 0, 0));
+
+		// left face
+		tessellator.vertex3f(new Vector3f(x + size, y, z + size));
+		tessellator.texture2f(new Vector2f(0, 1));
+		tessellator.normal3f(new Vector3f(1, 0, 0));
+		
+		tessellator.vertex3f(new Vector3f(x + size, y, z));
+		tessellator.texture2f(new Vector2f(1, 1));
+		tessellator.normal3f(new Vector3f(1, 0, 0));
+		
+		tessellator.vertex3f(new Vector3f(x + size, y + size, z));
+		tessellator.texture2f(new Vector2f(1, 0));
+		tessellator.normal3f(new Vector3f(1, 0, 0));
+		
+		tessellator.vertex3f(new Vector3f(x + size, y + size, z + size));
+		tessellator.texture2f(new Vector2f(0, 0));
+		tessellator.normal3f(new Vector3f(1, 0, 0));
+
+		tessellator.end();
+
 	}
 
 	/**
@@ -180,6 +295,7 @@ public class GameResources {
 	 * 
 	 */
 	public void cleanUp() {
+		tessellator.cleanUp();
 		textMasterRenderer.cleanUp();
 		masterShadowRenderer.cleanUp();
 		occlusionRenderer.cleanUp();

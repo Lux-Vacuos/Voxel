@@ -100,7 +100,7 @@ public class BlocksResources {
 	public static TexturedModel cubeTorch;
 	public static TexturedModel cubePortal;
 	public static TexturedModel cubeLeaves;
-
+	
 	public static void createBlocks(Loader loader) {
 
 		RawModel up = loader.getObjLoader().loadObjModel("FACE_UP", loader);

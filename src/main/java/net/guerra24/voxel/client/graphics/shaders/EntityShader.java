@@ -29,7 +29,6 @@ import net.guerra24.voxel.client.resources.GameResources;
 import net.guerra24.voxel.client.util.Maths;
 import net.guerra24.voxel.client.world.entities.Camera;
 import net.guerra24.voxel.universal.util.vector.Matrix4f;
-import net.guerra24.voxel.universal.util.vector.Vector3f;
 
 /**
  * Entity Shader
@@ -52,7 +51,6 @@ public class EntityShader extends ShaderProgram {
 	private int loc_texture0;
 	private int loc_depth0;
 	private int loc_id;
-	private int loc_cameraPosition;
 
 	private int loc_useShadows;
 
@@ -84,7 +82,6 @@ public class EntityShader extends ShaderProgram {
 		loc_depth0 = super.getUniformLocation("depth0");
 		loc_useShadows = super.getUniformLocation("useShadows");
 		loc_id = super.getUniformLocation("id");
-		loc_cameraPosition = super.getUniformLocation("cameraPosition");
 	}
 
 	/**
@@ -102,10 +99,6 @@ public class EntityShader extends ShaderProgram {
 
 	public void loadBlockBright(float value) {
 		super.loadFloat(loc_blockBright, value);
-	}
-
-	public void loadCameraPosition(Vector3f pos) {
-		super.loadVector(loc_cameraPosition, pos);
 	}
 
 	public void useShadows(boolean value) {

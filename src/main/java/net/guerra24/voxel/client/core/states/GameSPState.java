@@ -76,6 +76,7 @@ public class GameSPState implements State {
 		gm.getCamera().depth = p.get(0);
 		gm.getSkyboxRenderer().render(VoxelVariables.RED, VoxelVariables.GREEN, VoxelVariables.BLUE, delta, gm);
 		gm.getRenderer().renderEntity(gm.getPhysics().getMobManager().getMobs(), gm);
+		gm.tessellator.draw(gm.getCamera());
 		ParticleMaster.getInstance().render(gm.getCamera());
 		gm.getDeferredShadingRenderer().getPost_fbo().end();
 

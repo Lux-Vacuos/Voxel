@@ -24,37 +24,19 @@
 
 #version 330 core
 
-in vec3 position;
-in vec2 textureCoords;
-in vec3 normal;
+in vec2 pass_textureCoords;
+in vec3 surfaceNormal;
+in vec4 pass_position;
 
-out vec2 pass_textureCoords;
-out vec3 surfaceNormal;
-out vec3 toLightVector;
-out vec4 pass_position;
-out vec4 ShadowCoord;
+out vec4 [5] out_Color;
 
-uniform mat4 transformationMatrix;
-uniform mat4 projectionMatrix;
-uniform mat4 viewMatrix;
-uniform mat4 projectionLightMatrix;
-uniform mat4 viewLightMatrix;
-uniform mat4 biasMatrix;
-uniform vec3 lightPosition;
+uniform sampler2D texture0;
 
-const float gradient = 5.0;
-
-void main() {
-	vec4 worldPosition = transformationMatrix * vec4(position, 1.0);
-	vec4 positionRelativeToCam = viewMatrix * worldPosition;
-	gl_Position = projectionMatrix * positionRelativeToCam;
-	toLightVector = lightPosition - worldPosition.xyz;
-	pass_textureCoords = textureCoords;
-	surfaceNormal = (transformationMatrix * vec4(normal, 0.0)).xyz;
-	pass_position = worldPosition;
-	
-	vec4 posLight = viewLightMatrix * worldPosition;
-	vec4 a = projectionLightMatrix * posLight;
-	ShadowCoord = biasMatrix * a;
-	
+void main(void) {
+    vec4 textureColour = texture(texture0, pass_textureCoords);
+	out_Color[0] = textureColour;
+	out_Color[1] = vec4(pass_position.xyz,0);
+	out_Color[2] = vec4(surfaceNormal.xyz,0);
+	out_Color[3] = vec4(1.0, 0.0, 0.0, 0.0);
+	out_Color[4] = vec4(0.0,0.0,0.0,0.0);
 }
