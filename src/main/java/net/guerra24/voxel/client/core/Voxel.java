@@ -83,11 +83,7 @@ public class Voxel {
 	 * Constructor of the Kernel, Initializes the Game and starts the loop
 	 */
 	public Voxel() {
-		try {
-			mainLoop();
-		} catch (VersionException e) {
-			e.printStackTrace();
-		}
+		mainLoop();
 	}
 
 	/**
@@ -95,7 +91,7 @@ public class Voxel {
 	 * 
 	 * @throws VersionException
 	 */
-	public void preInit() throws VersionException {
+	public void preInit() {
 		display = new Display();
 		display.initDsiplay(VoxelVariables.WIDTH, VoxelVariables.HEIGHT);
 		display.startUp();
@@ -127,7 +123,11 @@ public class Voxel {
 		}
 		gameResources = new GameResources();
 		api = new API(gameResources.getGameSettings());
-		api.preInit();
+		try {
+			api.preInit();
+		} catch (VersionException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -152,14 +152,22 @@ public class Voxel {
 			 * Thread.currentThread().setName("Voxel-Client"); client = new
 			 * DedicatedClient(gameResources); } }).start();
 			 */api.setMobManager(gameResources.getPhysics().getMobManager());
-		api.init();
+		try {
+			api.init();
+		} catch (VersionException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
 	 * PostInit phase, starts music and runs the API PostInit
 	 */
 	private void postInit() {
-		api.postInit();
+		try {
+			api.postInit();
+		} catch (VersionException e) {
+			e.printStackTrace();
+		}
 		gameResources.getSoundSystem().stop("menu1");
 		gameResources.getSoundSystem().stop("menu2");
 		if (gameResources.getRand().nextBoolean())
@@ -174,7 +182,7 @@ public class Voxel {
 	 * 
 	 * @throws VersionException
 	 */
-	public void mainLoop() throws VersionException {
+	public void mainLoop() {
 		preInit();
 		init();
 		postInit();

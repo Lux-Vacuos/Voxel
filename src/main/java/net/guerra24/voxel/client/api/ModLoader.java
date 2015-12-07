@@ -25,19 +25,23 @@
 package net.guerra24.voxel.client.api;
 
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
+import net.guerra24.voxel.client.api.mod.MoltenAPIMod;
 import net.guerra24.voxel.client.util.Logger;
 
 public class ModLoader {
 
+	private List<Class<?>> modsClass;
+
 	public ModLoader() {
+		modsClass = new ArrayList<Class<?>>();
 	}
 
 	public void loadMods() {
@@ -51,13 +55,12 @@ public class ModLoader {
 							String name = filePath.getFileName().toString();
 							name = name.substring(0, name.lastIndexOf('.'));
 							Class<?> classToLoad = Class.forName("mod_" + name, true, child);
-							Method method = classToLoad.getDeclaredMethod("loadMod");
-							Object instance = classToLoad.newInstance();
-							method.invoke(instance);
+							if (classToLoad.isAnnotationPresent(MoltenAPIMod.class)) {
+								modsClass.add(classToLoad);
+							}
 						}
-					} catch (MalformedURLException | ClassNotFoundException | NoSuchMethodException | SecurityException
-							| InstantiationException | IllegalAccessException | IllegalArgumentException
-							| InvocationTargetException e) {
+					} catch (MalformedURLException | ClassNotFoundException | SecurityException
+							| IllegalArgumentException e) {
 						Logger.error("Error Loading Mod");
 						e.printStackTrace();
 					}
@@ -66,5 +69,10 @@ public class ModLoader {
 		} catch (IOException e) {
 			Logger.error("Invalid Mod File: " + e.getMessage());
 		}
+
+	}
+
+	public List<Class<?>> getModsClass() {
+		return modsClass;
 	}
 }

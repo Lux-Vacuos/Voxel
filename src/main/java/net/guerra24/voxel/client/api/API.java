@@ -24,10 +24,12 @@
 
 package net.guerra24.voxel.client.api;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
-import net.guerra24.voxel.client.api.mod.Mod;
+import net.guerra24.voxel.client.api.mod.MoltenAPIInitPhase;
+import net.guerra24.voxel.client.api.mod.MoltenAPIMod;
 import net.guerra24.voxel.client.core.GameSettings;
 import net.guerra24.voxel.client.core.VoxelVariables;
 import net.guerra24.voxel.client.util.Logger;
@@ -44,13 +46,11 @@ public class API {
 	/**
 	 * Mods
 	 */
-	private Map<Integer, Mod> mods;
 	private ModLoader modLoader;
 	private MobManager mobManager;
 	private GameSettings gameSettings;
 
 	public API(GameSettings gameSettings) {
-		mods = new HashMap<Integer, Mod>();
 		modLoader = new ModLoader();
 		modLoader.loadMods();
 		this.gameSettings = gameSettings;
@@ -63,26 +63,54 @@ public class API {
 	 * 
 	 */
 	public void preInit() throws VersionException {
-		Logger.log("Pre Initializing Mods");
-		for (int x = 0; x < mods.size(); x++) {
-			mods.get(x).setAPI(this);
-			if (mods.get(x).getKey().getApiVersion() >= VoxelVariables.apiVersionNum)
-				mods.get(x).preInit();
-			else
-				throw new VersionException("The mod " + mods.get(x).getKey().getName()
-						+ " only works in a version equals or more that " + VoxelVariables.apiVersion);
+		for (Class<?> mod : modLoader.getModsClass()) {
+			Annotation annotation = mod.getAnnotation(MoltenAPIMod.class);
+			MoltenAPIMod info = (MoltenAPIMod) annotation;
+			Logger.log("Mod: " + info.name());
+			Logger.log("Author: " + info.createdBy());
+			Logger.log("Required Molten API Verion: " + info.requiredAPIVersion());
+			if (info.requiredAPIVersion() < VoxelVariables.apiVersionNum)
+				throw new VersionException("THE MOD " + info.name() + " REQUIRES AN API VERSION EQUAL OR MORE THAT "
+						+ info.requiredAPIVersion());
+			Method method;
+			try {
+				method = mod.getDeclaredMethod("preInit", API.class);
+				if (method.isAnnotationPresent(MoltenAPIInitPhase.class)) {
+					Annotation annotation_ = method.getAnnotation(MoltenAPIInitPhase.class);
+					MoltenAPIInitPhase phase = (MoltenAPIInitPhase) annotation_;
+					if (phase.enabled()) {
+						Object instance = mod.newInstance();
+						method.invoke(instance, this);
+					}
+				}
+			} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException
+					| InvocationTargetException | InstantiationException e) {
+				e.printStackTrace();
+			}
 		}
-
 	}
 
 	/**
 	 * Initialize the mod, load textures
 	 * 
 	 */
-	public void init() {
-		Logger.log("Initializing Mods");
-		for (int x = 0; x < mods.size(); x++) {
-			mods.get(x).init();
+	public void init() throws VersionException {
+		for (Class<?> mod : modLoader.getModsClass()) {
+			Method method;
+			try {
+				method = mod.getDeclaredMethod("init", API.class);
+				if (method.isAnnotationPresent(MoltenAPIInitPhase.class)) {
+					Annotation annotation_ = method.getAnnotation(MoltenAPIInitPhase.class);
+					MoltenAPIInitPhase test = (MoltenAPIInitPhase) annotation_;
+					if (test.enabled()) {
+						Object instance = mod.newInstance();
+						method.invoke(instance, this);
+					}
+				}
+			} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException
+					| InvocationTargetException | InstantiationException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -90,23 +118,24 @@ public class API {
 	 * Post initialize the mod, register all mod data
 	 * 
 	 */
-	public void postInit() {
-		Logger.log("Post Initializing Mods");
-		for (int x = 0; x < mods.size(); x++) {
-			mods.get(x).postInit();
+	public void postInit() throws VersionException {
+		for (Class<?> mod : modLoader.getModsClass()) {
+			Method method;
+			try {
+				method = mod.getDeclaredMethod("postInit", API.class);
+				if (method.isAnnotationPresent(MoltenAPIInitPhase.class)) {
+					Annotation annotation_ = method.getAnnotation(MoltenAPIInitPhase.class);
+					MoltenAPIInitPhase test = (MoltenAPIInitPhase) annotation_;
+					if (test.enabled()) {
+						Object instance = mod.newInstance();
+						method.invoke(instance, this);
+					}
+				}
+			} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException
+					| InvocationTargetException | InstantiationException e) {
+				e.printStackTrace();
+			}
 		}
-	}
-
-	/**
-	 * Registers the mod to the code
-	 * 
-	 * @param id
-	 *            Mod ID
-	 * @param result
-	 *            Mod
-	 */
-	public void registerMod(Mod mod) {
-		mods.put(mod.getKey().getId(), mod);
 	}
 
 	public void registetMob(IEntity mob) {
@@ -118,31 +147,10 @@ public class API {
 	}
 
 	/**
-	 * Gets the Mod from ID
-	 * 
-	 * @param id
-	 *            ID
-	 * @return Mod
-	 * 
-	 */
-	public Mod getMod(ModKey id) {
-		return mods.get(id);
-	}
-
-	/**
-	 * 
-	 * @return ID
-	 */
-	public int getTotalMods() {
-		return mods.size();
-	}
-
-	/**
 	 * Dispose the API
 	 * 
 	 */
 	public void dispose() {
-		mods.clear();
 	}
 
 	public void setMobManager(MobManager mobManager) {

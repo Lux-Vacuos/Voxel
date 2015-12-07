@@ -24,12 +24,12 @@
 
 package net.guerra24.voxel.client.api.mod;
 
-import com.jmr.wrapper.common.Connection;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-import net.guerra24.voxel.client.api.API;
-import net.guerra24.voxel.client.api.ModKey;
-import net.guerra24.voxel.client.core.Voxel;
-import net.guerra24.voxel.client.world.chunks.Chunk;
+import net.guerra24.voxel.client.core.VoxelVariables;
 
 /**
  * Mod
@@ -37,55 +37,14 @@ import net.guerra24.voxel.client.world.chunks.Chunk;
  * @author Guerra24 <pablo230699@hotmail.com>
  * @category API
  */
-public abstract class Mod {
+@Target(ElementType.TYPE)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface MoltenAPIMod {
 
-	private ModKey key;
-	private API api;
+	public String createdBy() default "";
 
-	public Mod(int id, String name, String version, int apiVersion) {
-		key = new ModKey(id, name, version, apiVersion);
-	}
+	public String name() default "";
 
-	/**
-	 * Basic Mod Info
-	 * 
-	 */
+	public int requiredAPIVersion() default VoxelVariables.apiVersionNum;
 
-	public void setAPI(API api) {
-		this.api = api;
-	}
-
-	public abstract void preInit();
-
-	/**
-	 * Mod Textures
-	 * 
-	 */
-	public abstract void init();
-
-	/**
-	 * Final Mod Load
-	 * 
-	 */
-	public abstract void postInit();
-
-	public abstract void generateChunk(Chunk chunk, int x, int y, int z);
-
-	public abstract void updateKeyboard();
-
-	public abstract void updateInGame(float delta, Voxel voxel);
-
-	public abstract void clientConnect(Connection con);
-
-	public abstract void clientUpdate(Connection con);
-
-	public abstract void clientDisconnect(Connection con);
-
-	public ModKey getKey() {
-		return key;
-	}
-
-	public API getApi() {
-		return api;
-	}
 }
