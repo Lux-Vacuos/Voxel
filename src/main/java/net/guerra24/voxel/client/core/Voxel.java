@@ -41,6 +41,7 @@ import org.lwjgl.opengl.WGLAMDGPUAssociation;
 import net.guerra24.voxel.client.api.API;
 import net.guerra24.voxel.client.api.VersionException;
 import net.guerra24.voxel.client.bootstrap.Bootstrap;
+import net.guerra24.voxel.client.graphics.TextMasterRenderer;
 import net.guerra24.voxel.client.graphics.opengl.Display;
 import net.guerra24.voxel.client.network.DedicatedClient;
 import net.guerra24.voxel.client.resources.GameResources;
@@ -123,8 +124,6 @@ public class Voxel {
 
 		if (Bootstrap.getPlatform() == Bootstrap.Platform.MACOSX) {
 			VoxelVariables.runningOnMac = true;
-			VoxelVariables.useHQWater = false;
-			VoxelVariables.useShadows = false;
 		}
 		gameResources = new GameResources();
 		api = new API(gameResources.getGameSettings());
@@ -145,14 +144,14 @@ public class Voxel {
 		worldsHandler.registerWorld(world.getCodeName(), world);
 		worldsHandler.setActiveWorld("Infinity");
 		Logger.log("Initializing Threads");
-		worldThread2 = new UpdateThread(this);
-		worldThread2.setName("Voxel World 1");
-		worldThread2.start();
 		/*
-		 * new Thread(new Runnable() { public void run() {
-		 * Thread.currentThread().setName("Voxel-Client"); client = new
-		 * DedicatedClient(gameResources); } }).start();
-		 */api.setMobManager(gameResources.getPhysics().getMobManager());
+		 * worldThread2 = new UpdateThread(this); worldThread2.setName(
+		 * "Voxel World 1"); worldThread2.start();
+		 *//*
+			 * new Thread(new Runnable() { public void run() {
+			 * Thread.currentThread().setName("Voxel-Client"); client = new
+			 * DedicatedClient(gameResources); } }).start();
+			 */api.setMobManager(gameResources.getPhysics().getMobManager());
 		api.init();
 	}
 
@@ -196,6 +195,7 @@ public class Voxel {
 			}
 			delta = Display.getDeltaRender();
 			render(delta);
+			update(delta);
 		}
 		dispose();
 	}
@@ -209,7 +209,7 @@ public class Voxel {
 	private void render(float delta) {
 		Display.fpsCount++;
 		gameResources.getGlobalStates().doRender(this, delta);
-		gameResources.getTextMasterRenderer().render();
+		TextMasterRenderer.getInstance().render();
 		display.updateDisplay(VoxelVariables.FPS, gameResources);
 	}
 

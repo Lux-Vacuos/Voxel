@@ -19,8 +19,6 @@ import net.guerra24.voxel.universal.util.vector.Vector3f;
  */
 public class InPauseState implements State {
 
-	private boolean switchToMainMenu = false;
-
 	private PauseMenu pauseMenu;
 
 	public InPauseState() {
@@ -32,7 +30,7 @@ public class InPauseState implements State {
 		GameResources gm = voxel.getGameResources();
 
 		if (pauseMenu.getBackToMain().pressed()) {
-			switchToMainMenu = true;
+			gm.getMenuSystem().mainMenu.load(gm);
 			voxel.getWorldsHandler().getActiveWorld().clearDimension(gm);
 			if (gm.getRand().nextBoolean())
 				gm.getSoundSystem().play("menu1");
@@ -49,10 +47,6 @@ public class InPauseState implements State {
 	public void render(Voxel voxel, GlobalStates states, float delta) {
 		GameResources gm = voxel.getGameResources();
 		WorldsHandler worlds = voxel.getWorldsHandler();
-		if (switchToMainMenu) {
-			gm.getMenuSystem().mainMenu.load(gm);
-			switchToMainMenu = false;
-		}
 		worlds.getActiveWorld().lighting();
 		gm.getFrustum().calculateFrustum(gm.getRenderer().getProjectionMatrix(), gm.getCamera());
 		if (VoxelVariables.useShadows) {

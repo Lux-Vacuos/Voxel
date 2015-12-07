@@ -17,11 +17,10 @@ import net.guerra24.voxel.client.core.GlobalStates.GameState;
  */
 public class LoadingState implements State {
 
-	private boolean switchToGameSP = false;
-
 	@Override
 	public void update(Voxel voxel, GlobalStates states, float delta) {
-		switchToGameSP = true;
+		GameResources gm = voxel.getGameResources();
+		gm.getMenuSystem().gameSP.load(gm);
 		Random seed;
 		if (VoxelVariables.isCustomSeed) {
 			seed = new Random(VoxelVariables.seed.hashCode());
@@ -30,11 +29,11 @@ public class LoadingState implements State {
 		}
 		voxel.getWorldsHandler().getActiveWorld().startWorld("World-0", seed, 0, voxel.getApi(),
 				voxel.getGameResources());
-		voxel.getGameResources().getCamera().setMouse();
-		voxel.getGameResources().getSoundSystem().stop("menu1");
-		voxel.getGameResources().getSoundSystem().rewind("menu1");
-		voxel.getGameResources().getSoundSystem().stop("menu2");
-		voxel.getGameResources().getSoundSystem().rewind("menu2");
+		gm.getCamera().setMouse();
+		gm.getSoundSystem().stop("menu1");
+		gm.getSoundSystem().rewind("menu1");
+		gm.getSoundSystem().stop("menu2");
+		gm.getSoundSystem().rewind("menu2");
 		states.state = GameState.GAME_SP;
 	}
 
@@ -43,10 +42,6 @@ public class LoadingState implements State {
 		GameResources gm = voxel.getGameResources();
 		gm.getRenderer().prepare();
 		gm.getGuiRenderer().renderGui(gm.guis3);
-		if (switchToGameSP) {
-			gm.getMenuSystem().gameSP.load(gm);
-			switchToGameSP = false;
-		}
 	}
 
 }

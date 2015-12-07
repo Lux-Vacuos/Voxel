@@ -56,7 +56,6 @@ import net.guerra24.voxel.client.world.entities.Camera;
 import net.guerra24.voxel.client.world.entities.Entity;
 import net.guerra24.voxel.client.world.entities.Mob;
 import net.guerra24.voxel.universal.resources.UniversalResources;
-import net.guerra24.voxel.universal.util.vector.Vector2f;
 import net.guerra24.voxel.universal.util.vector.Vector3f;
 
 /**
@@ -81,7 +80,6 @@ public class GameResources {
 	private MasterRenderer renderer;
 	private SkyboxRenderer skyboxRenderer;
 	private GuiRenderer guiRenderer;
-	private TextMasterRenderer textMasterRenderer;
 	private TextHandler textHandler;
 	private GlobalStates globalStates;
 	private DeferredShadingRenderer deferredShadingRenderer;
@@ -132,7 +130,7 @@ public class GameResources {
 		ParticleMaster.getInstance().init(loader, renderer.getProjectionMatrix());
 		physics = new Physics(this);
 		frustum = new Frustum();
-		textMasterRenderer = new TextMasterRenderer(loader);
+		TextMasterRenderer.getInstance().init(loader);
 		textHandler = new TextHandler(this);
 		tessellator = new Tessellator(renderer);
 		try {
@@ -184,108 +182,7 @@ public class GameResources {
 		int x = 0, y = 66, z = 0;
 
 		tessellator.begin(testing);
-		// top face
-		tessellator.vertex3f(new Vector3f(x, y + size, z + size));
-		tessellator.texture2f(new Vector2f(0, 1));
-		tessellator.normal3f(new Vector3f(0, 1, 0));
-
-		tessellator.vertex3f(new Vector3f(x + size, y + size, z + size));
-		tessellator.texture2f(new Vector2f(1, 1));
-		tessellator.normal3f(new Vector3f(0, 1, 0));
-
-		tessellator.vertex3f(new Vector3f(x + size, y + size, z));
-		tessellator.texture2f(new Vector2f(1, 0));
-		tessellator.normal3f(new Vector3f(0, 1, 0));
-
-		tessellator.vertex3f(new Vector3f(x, y + size, 0));
-		tessellator.texture2f(new Vector2f(0, 0));
-		tessellator.normal3f(new Vector3f(0, 1, 0));
-
-		// bottom face
-		tessellator.vertex3f(new Vector3f(x, y, z));
-		tessellator.texture2f(new Vector2f(0, 1));
-		tessellator.normal3f(new Vector3f(0, -1, 0));
-
-		tessellator.vertex3f(new Vector3f(x + size, y, z));
-		tessellator.texture2f(new Vector2f(1, 1));
-		tessellator.normal3f(new Vector3f(0, -1, 0));
-
-		tessellator.vertex3f(new Vector3f(x + size, y, z + size));
-		tessellator.texture2f(new Vector2f(1, 0));
-		tessellator.normal3f(new Vector3f(0, -1, 0));
-
-		tessellator.vertex3f(new Vector3f(x, y, z + size));
-		tessellator.texture2f(new Vector2f(0, 0));
-		tessellator.normal3f(new Vector3f(0, -1, 0));
-
-		// back face
-		tessellator.vertex3f(new Vector3f(x, y, z + size));
-		tessellator.texture2f(new Vector2f(0, 1));
-		tessellator.normal3f(new Vector3f(0, 0, 1));
-
-		tessellator.vertex3f(new Vector3f(x + size, y, z + size));
-		tessellator.texture2f(new Vector2f(1, 1));
-		tessellator.normal3f(new Vector3f(0, 0, 1));
-
-		tessellator.vertex3f(new Vector3f(x + size, y + size, z + size));
-		tessellator.texture2f(new Vector2f(1, 0));
-		tessellator.normal3f(new Vector3f(0, 0, 1));
-
-		tessellator.vertex3f(new Vector3f(x, y + size, z + size));
-		tessellator.texture2f(new Vector2f(0, 0));
-		tessellator.normal3f(new Vector3f(0, 0, 1));
-
-		// front face
-		tessellator.vertex3f(new Vector3f(x, y + size, z));
-		tessellator.texture2f(new Vector2f(1, 0));
-		tessellator.normal3f(new Vector3f(0, 0, -1));
-
-		tessellator.vertex3f(new Vector3f(x + size, y + size, z));
-		tessellator.texture2f(new Vector2f(0, 0));
-		tessellator.normal3f(new Vector3f(0, 0, -1));
-
-		tessellator.vertex3f(new Vector3f(x + size, y, z));
-		tessellator.texture2f(new Vector2f(0, 1));
-		tessellator.normal3f(new Vector3f(0, 0, -1));
-
-		tessellator.vertex3f(new Vector3f(x, y, z));
-		tessellator.texture2f(new Vector2f(1, 1));
-		tessellator.normal3f(new Vector3f(0, 0, -1));
-
-		// right face
-		tessellator.vertex3f(new Vector3f(x, y, z));
-		tessellator.texture2f(new Vector2f(0, 1));
-		tessellator.normal3f(new Vector3f(-1, 0, 0));
-		
-		tessellator.vertex3f(new Vector3f(x, y, z + size));
-		tessellator.texture2f(new Vector2f(1,1));
-		tessellator.normal3f(new Vector3f(-1, 0, 0));
-		
-		tessellator.vertex3f(new Vector3f(x, y + size, z + size));
-		tessellator.texture2f(new Vector2f(1, 0));
-		tessellator.normal3f(new Vector3f(-1, 0, 0));
-		
-		tessellator.vertex3f(new Vector3f(x, y + size, z));
-		tessellator.texture2f(new Vector2f(0, 0));
-		tessellator.normal3f(new Vector3f(-1, 0, 0));
-
-		// left face
-		tessellator.vertex3f(new Vector3f(x + size, y, z + size));
-		tessellator.texture2f(new Vector2f(0, 1));
-		tessellator.normal3f(new Vector3f(1, 0, 0));
-		
-		tessellator.vertex3f(new Vector3f(x + size, y, z));
-		tessellator.texture2f(new Vector2f(1, 1));
-		tessellator.normal3f(new Vector3f(1, 0, 0));
-		
-		tessellator.vertex3f(new Vector3f(x + size, y + size, z));
-		tessellator.texture2f(new Vector2f(1, 0));
-		tessellator.normal3f(new Vector3f(1, 0, 0));
-		
-		tessellator.vertex3f(new Vector3f(x + size, y + size, z + size));
-		tessellator.texture2f(new Vector2f(0, 0));
-		tessellator.normal3f(new Vector3f(1, 0, 0));
-
+		tessellator.generateCube(x, y, z, size, true, true, true, true, true, true);
 		tessellator.end();
 
 	}
@@ -296,7 +193,7 @@ public class GameResources {
 	 */
 	public void cleanUp() {
 		tessellator.cleanUp();
-		textMasterRenderer.cleanUp();
+		TextMasterRenderer.getInstance().cleanUp();
 		masterShadowRenderer.cleanUp();
 		occlusionRenderer.cleanUp();
 		ParticleMaster.getInstance().cleanUp();
@@ -357,10 +254,6 @@ public class GameResources {
 
 	public Frustum getFrustum() {
 		return frustum;
-	}
-
-	public TextMasterRenderer getTextMasterRenderer() {
-		return textMasterRenderer;
 	}
 
 	public Physics getPhysics() {

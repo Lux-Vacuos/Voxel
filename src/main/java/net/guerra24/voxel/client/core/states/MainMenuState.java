@@ -15,15 +15,9 @@ import net.guerra24.voxel.universal.util.vector.Vector3f;
  */
 public class MainMenuState implements State {
 
-	private boolean switchToOptions = false;
-
 	@Override
 	public void render(Voxel voxel, GlobalStates states, float delta) {
 		GameResources gm = voxel.getGameResources();
-		if (switchToOptions) {
-			gm.getMenuSystem().optionsMenu.load(gm);
-			switchToOptions = false;
-		}
 		gm.getFrustum().calculateFrustum(gm.getRenderer().getProjectionMatrix(), gm.getCamera());
 		gm.getRenderer().prepare();
 		gm.getRenderer().renderGui(gm.getMenuSystem().mainMenu.getList(), gm);
@@ -53,13 +47,12 @@ public class MainMenuState implements State {
 		} else if (gm.getMenuSystem().mainMenu.getExitButton().pressed()) {
 			states.loop = false;
 		} else if (gm.getMenuSystem().mainMenu.getOptionsButton().pressed()) {
-			switchToOptions = true;
+			gm.getMenuSystem().optionsMenu.load(gm);
+			gm.getCamera().setPosition(new Vector3f(-1.4f, -3.4f, 1.4f));
 			try {
 				Thread.sleep(100);
 			} catch (InterruptedException e) {
-				e.printStackTrace();
 			}
-			gm.getCamera().setPosition(new Vector3f(-1.4f, -3.4f, 1.4f));
 			states.state = GameState.OPTIONS;
 		}
 	}

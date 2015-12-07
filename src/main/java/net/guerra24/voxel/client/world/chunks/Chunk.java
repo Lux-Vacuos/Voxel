@@ -30,6 +30,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import net.guerra24.voxel.client.core.VoxelVariables;
 import net.guerra24.voxel.client.particle.ParticlePoint;
 import net.guerra24.voxel.client.resources.GameResources;
+import net.guerra24.voxel.client.resources.models.Tessellator;
 import net.guerra24.voxel.client.util.Logger;
 import net.guerra24.voxel.client.util.Maths;
 import net.guerra24.voxel.client.world.IWorld;
@@ -56,6 +57,7 @@ public class Chunk {
 	private transient Queue<ParticlePoint> particlePoints;
 	private transient int sizeX, sizeY, sizeZ;
 	private transient boolean readyToRender = true;
+	private transient Tessellator tess;
 	public transient boolean needsRebuild = true, updated = false, updating = false, empty = true, genQuery = false,
 			visible = false;
 	public boolean created = false, decorated = false;
@@ -72,7 +74,7 @@ public class Chunk {
 	 * @param world
 	 *            Dimensional World
 	 */
-	public Chunk(int dim, int cx, int cy, int cz, IWorld world) {
+	public Chunk(int dim, int cx, int cy, int cz, IWorld world, GameResources gm) {
 		this.dim = dim;
 		this.cx = cx;
 		this.cy = cy;
@@ -80,7 +82,7 @@ public class Chunk {
 		this.posX = cx * 16;
 		this.posZ = cz * 16;
 		this.posY = cy * 16;
-		init(world);
+		init(world, gm);
 	}
 
 	/**
@@ -95,8 +97,8 @@ public class Chunk {
 	 * @param world
 	 *            Dimensional World
 	 */
-	public void init(IWorld world) {
-		load();
+	public void init(IWorld world, GameResources gm) {
+		load(gm);
 		blocks = new byte[sizeX][sizeY][sizeZ];
 		lightMap = new byte[sizeX][sizeY][sizeZ];
 	}
@@ -105,13 +107,14 @@ public class Chunk {
 	 * Initialize List
 	 * 
 	 */
-	public void load() {
+	public void load(GameResources gm) {
 		blocksMesh = new ConcurrentLinkedQueue<Object>();
 		blocksMeshtemp = new ConcurrentLinkedQueue<Object>();
 		particlePoints = new ConcurrentLinkedQueue<ParticlePoint>();
 		sizeX = VoxelVariables.CHUNK_SIZE;
 		sizeY = VoxelVariables.CHUNK_HEIGHT;
 		sizeZ = VoxelVariables.CHUNK_SIZE;
+		tess = new Tessellator(gm.getRenderer());
 	}
 
 	public void checkForMissingBlocks() {
@@ -143,8 +146,9 @@ public class Chunk {
 		readyToRender = false;
 		blocksMesh.clear();
 		particlePoints.clear();
-		rebuildChunkSection(blocksMesh, world);
 		calculateLight(blocksMesh, world);
+		rebuildChunkSection(blocksMesh, world);
+		rebuildChunkSection(world);
 		readyToRender = true;
 		blocksMeshtemp.clear();
 	}
@@ -217,14 +221,6 @@ public class Chunk {
 								.getSingleModel(new Vector3f(x + cx * sizeX, y + cy * sizeY, z + cz * sizeZ)));
 					} else if (Block.getBlock(blocks[x][y][z]) != Block.Air
 							&& Block.getBlock(blocks[x][y][z]) != Block.Water) {
-						if (cullFaceWest(x + cx * sizeX, y + cy * sizeY, z + cz * sizeZ, world)) {
-							cubes.add(Block.getBlock(blocks[x][y][z])
-									.getFaceWest(new Vector3f(x + cx * sizeX, y + cy * sizeY, z + cz * sizeZ)));
-						}
-						if (cullFaceEast(x + cx * sizeX, y + cy * sizeY, z + cz * sizeZ, world)) {
-							cubes.add(Block.getBlock(blocks[x][y][z])
-									.getFaceEast(new Vector3f(x + cx * sizeX, y + cy * sizeY, z + cz * sizeZ)));
-						}
 						if (cullFaceDown(x + cx * sizeX, y + cy * sizeY, z + cz * sizeZ, world)) {
 							cubes.add(Block.getBlock(blocks[x][y][z])
 									.getFaceDown(new Vector3f(x + cx * sizeX, y + cy * sizeY, z + cz * sizeZ)));
@@ -232,14 +228,6 @@ public class Chunk {
 						if (cullFaceUpSolidBlock(x + cx * sizeX, y + cy * sizeY, z + cz * sizeZ, world)) {
 							cubes.add(Block.getBlock(blocks[x][y][z])
 									.getFaceUp(new Vector3f(x + cx * sizeX, y + cy * sizeY, z + cz * sizeZ)));
-						}
-						if (cullFaceNorth(x + cx * sizeX, y + cy * sizeY, z + cz * sizeZ, world)) {
-							cubes.add(Block.getBlock(blocks[x][y][z])
-									.getFaceNorth(new Vector3f(x + cx * sizeX, y + cy * sizeY, z + cz * sizeZ)));
-						}
-						if (cullFaceSouth(x + cx * sizeX, y + cy * sizeY, z + cz * sizeZ, world)) {
-							cubes.add(Block.getBlock(blocks[x][y][z])
-									.getFaceSouth(new Vector3f(x + cx * sizeX, y + cy * sizeY, z + cz * sizeZ)));
 						}
 					} else if (Block.getBlock(blocks[x][y][z]) == Block.Water) {
 						if (cullFaceUpWater(x + cx * sizeX, y + cy * sizeY, z + cz * sizeZ, world)) {
@@ -250,6 +238,30 @@ public class Chunk {
 				}
 			}
 		}
+	}
+
+	public void rebuildChunkSection(IWorld world) {
+		tess.begin(16);
+		for (int x = 0; x < sizeX; x++) {
+			for (int z = 0; z < sizeZ; z++) {
+				for (int y = 0; y < sizeY; y++) {
+					if (Block.getBlock(blocks[x][y][z]) == Block.Torch) {
+					} else if (Block.getBlock(blocks[x][y][z]).usesSingleModel()) {
+					} else if (Block.getBlock(blocks[x][y][z]) != Block.Air
+							&& Block.getBlock(blocks[x][y][z]) != Block.Water) {
+						tess.generateCube(x + cx * sizeX, y + cy * sizeY, (z + cz * sizeZ) -1, 1,
+								cullFaceUpSolidBlock(x + cx * sizeX, y + cy * sizeY, z + cz * sizeZ, world),
+								cullFaceDown(x + cx * sizeX, y + cy * sizeY, z + cz * sizeZ, world),
+								cullFaceEast(x + cx * sizeX, y + cy * sizeY, z + cz * sizeZ, world),
+								cullFaceWest(x + cx * sizeX, y + cy * sizeY, z + cz * sizeZ, world),
+								cullFaceNorth(x + cx * sizeX, y + cy * sizeY, z + cz * sizeZ, world),
+								cullFaceSouth(x + cx * sizeX, y + cy * sizeY, z + cz * sizeZ, world));
+					} else if (Block.getBlock(blocks[x][y][z]) == Block.Water) {
+					}
+				}
+			}
+		}
+		tess.end();
 	}
 
 	private void calculateLight(Queue<Object> cubes, IWorld world) {
@@ -467,6 +479,7 @@ public class Chunk {
 
 	public void render(GameResources gm) {
 		if (readyToRender) {
+			tess.draw(gm.getCamera());
 			gm.getRenderer().processChunk(blocksMesh, gm);
 		} else {
 			gm.getRenderer().processChunk(blocksMeshtemp, gm);
@@ -481,6 +494,7 @@ public class Chunk {
 		blocksMesh.clear();
 		blocksMeshtemp.clear();
 		particlePoints.clear();
+		tess.cleanUp();
 	}
 
 	public void dispose() {

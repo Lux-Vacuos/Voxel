@@ -123,7 +123,7 @@ public class InfinityWorld implements IWorld {
 							if (existChunkFile(chunkDim, xx, yy, zz)) {
 								loadChunk(chunkDim, xx, yy, zz, gm);
 							} else {
-								addChunk(new Chunk(chunkDim, xx, yy, zz, this));
+								addChunk(new Chunk(chunkDim, xx, yy, zz, this, gm));
 								saveChunk(chunkDim, xx, yy, zz, gm);
 							}
 						}
@@ -163,7 +163,7 @@ public class InfinityWorld implements IWorld {
 									loadChunk(chunkDim, xx, yy, zz, gm);
 								} else {
 									if (VoxelVariables.generateChunks) {
-										addChunk(new Chunk(chunkDim, xx, yy, zz, this));
+										addChunk(new Chunk(chunkDim, xx, yy, zz, this, gm));
 										saveChunk(chunkDim, xx, yy, zz, gm);
 									}
 								}
@@ -364,7 +364,7 @@ public class InfinityWorld implements IWorld {
 			Chunk chunk = gm.getKryo().readObject(input, Chunk.class);
 			input.close();
 			if (chunk != null) {
-				chunk.load();
+				chunk.load(gm);
 				chunk.checkForMissingBlocks();
 			}
 			addChunk(chunk);

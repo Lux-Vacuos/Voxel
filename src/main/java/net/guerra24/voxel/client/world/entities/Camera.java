@@ -36,17 +36,14 @@ import static net.guerra24.voxel.client.input.Keyboard.KEY_8;
 import static net.guerra24.voxel.client.input.Keyboard.KEY_9;
 import static net.guerra24.voxel.client.input.Keyboard.KEY_A;
 import static net.guerra24.voxel.client.input.Keyboard.KEY_D;
-import static net.guerra24.voxel.client.input.Keyboard.KEY_F3;
 import static net.guerra24.voxel.client.input.Keyboard.KEY_I;
 import static net.guerra24.voxel.client.input.Keyboard.KEY_J;
 import static net.guerra24.voxel.client.input.Keyboard.KEY_K;
 import static net.guerra24.voxel.client.input.Keyboard.KEY_LCONTROL;
 import static net.guerra24.voxel.client.input.Keyboard.KEY_LSHIFT;
 import static net.guerra24.voxel.client.input.Keyboard.KEY_O;
-import static net.guerra24.voxel.client.input.Keyboard.KEY_R;
 import static net.guerra24.voxel.client.input.Keyboard.KEY_S;
 import static net.guerra24.voxel.client.input.Keyboard.KEY_SPACE;
-import static net.guerra24.voxel.client.input.Keyboard.KEY_U;
 import static net.guerra24.voxel.client.input.Keyboard.KEY_W;
 import static net.guerra24.voxel.client.input.Keyboard.KEY_Y;
 import static net.guerra24.voxel.client.input.Keyboard.isKeyDown;
@@ -341,27 +338,6 @@ public class Camera {
 	}
 
 	public void updateDebug(IWorld world) {
-		if (isKeyDown(KEY_F3) && isKeyDown(KEY_R))
-			for (int zr = -VoxelVariables.genRadius; zr <= VoxelVariables.genRadius; zr++) {
-				int zz = world.getzPlayChunk() + zr;
-				for (int xr = -VoxelVariables.genRadius; xr <= VoxelVariables.genRadius; xr++) {
-					int xx = world.getxPlayChunk() + xr;
-					for (int yr = -VoxelVariables.genRadius; yr <= VoxelVariables.genRadius; yr++) {
-						int yy = world.getyPlayChunk() + yr;
-						if (zr * zr + xr * xr + yr * yr <= VoxelVariables.genRadius * VoxelVariables.genRadius
-								* VoxelVariables.genRadius) {
-							if (world.hasChunk(world.getChunkDimension(), xx, yy, zz)) {
-								world.getChunk(world.getChunkDimension(), xx, yy, zz).dispose();
-								world.getChunk(world.getChunkDimension(), xx, yy, zz).needsRebuild = true;
-								world.setTempRadius(0);
-							}
-						}
-					}
-				}
-			}
-		if (isKeyDown(KEY_F3) && isKeyDown(KEY_U)) {
-			VoxelVariables.useShadows = !VoxelVariables.useShadows;
-		}
 		if (isKeyDown(KEY_I)) {
 			VoxelVariables.radius++;
 		}

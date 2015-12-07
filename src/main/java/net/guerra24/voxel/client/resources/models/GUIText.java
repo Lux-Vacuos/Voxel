@@ -56,15 +56,15 @@ public class GUIText {
 		this.centerText = centered;
 	}
 
-	public void add(TextMasterRenderer textMasterRenderer) {
-		textMasterRenderer.loadText(this);
+	public void add() {
+		TextMasterRenderer.getInstance().loadText(this);
 	}
 
 	/**
 	 * Remove the text from the screen.
 	 */
-	public void remove(TextMasterRenderer textMasterRenderer) {
-		textMasterRenderer.removeText(this);
+	public void remove() {
+		TextMasterRenderer.getInstance().removeText(this);
 	}
 
 	/**

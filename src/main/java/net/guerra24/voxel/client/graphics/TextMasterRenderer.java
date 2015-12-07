@@ -12,15 +12,23 @@ import net.guerra24.voxel.client.resources.models.TextMeshData;
 
 public class TextMasterRenderer {
 
+	private static TextMasterRenderer instance = null;
+
+	public static TextMasterRenderer getInstance() {
+		if (instance == null) {
+			instance = new TextMasterRenderer();
+		}
+		return instance;
+	}
+
 	private Loader loader;
 	private Map<FontType, List<GUIText>> texts = new HashMap<FontType, List<GUIText>>();
 	private FontRenderer renderer;
 
-	public TextMasterRenderer(Loader loader) {
-		init(loader);
+	private TextMasterRenderer() {
 	}
 
-	private void init(Loader loader) {
+	public void init(Loader loader) {
 		this.loader = loader;
 		renderer = new FontRenderer();
 	}

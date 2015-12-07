@@ -21,18 +21,17 @@ import net.guerra24.voxel.universal.util.vector.Vector3f;
 
 public class Tessellator {
 
-	private int vaoID, vboID0, vboID1, vboID2, iboID, vboCap0 = 512, vboCap1 = 512, vboCap2 = 512, indicesCounter,
-			iboCapacity = 512;
+	private int vaoID, vboID0, vboID1, vboID2, iboID, vboCap0 = 64, vboCap1 = 64, vboCap2 = 64, indicesCounter,
+			iboCapacity = 64;
 
 	private ByteBuffer buffer0, buffer1, buffer2, ibo;
 
 	private List<Vector3f> pos, normals;
 	private List<Vector2f> texcoords;
+	private List<Integer> indices;
 	private int texture;
 
 	private TessellatorShader shader;
-
-	private boolean update = false;
 
 	public Tessellator(MasterRenderer renderer) {
 		init(renderer);
@@ -42,6 +41,7 @@ public class Tessellator {
 		pos = new ArrayList<Vector3f>();
 		texcoords = new ArrayList<Vector2f>();
 		normals = new ArrayList<Vector3f>();
+		indices = new ArrayList<Integer>();
 		shader = TessellatorShader.getInstance();
 		shader.start();
 		shader.loadProjectionMatrix(renderer.getProjectionMatrix());
@@ -52,7 +52,6 @@ public class Tessellator {
 		iboID = glGenBuffers();
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, iboID);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, iboCapacity, null, GL_DYNAMIC_DRAW);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 		vboID0 = glGenBuffers();
 		glBindBuffer(GL_ARRAY_BUFFER, vboID0);
 		glBufferData(GL_ARRAY_BUFFER, vboCap0, null, GL_DYNAMIC_DRAW);
@@ -71,7 +70,6 @@ public class Tessellator {
 		glEnableVertexAttribArray(2);
 		glVertexAttribPointer(2, 3, GL_FLOAT, false, 0, 0);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, iboID);
 		glBindVertexArray(0);
 	}
 
@@ -94,19 +92,19 @@ public class Tessellator {
 		this.normals.add(normals);
 	}
 
+	public void indice(int ind) {
+		this.indices.add(ind);
+	}
+
 	public void end() {
 		loadData(pos, texcoords, normals);
-		update = true;
+		updateGlBuffers(vboID0, vboCap0, buffer0);
+		updateGlBuffers(vboID1, vboCap1, buffer1);
+		updateGlBuffers(vboID2, vboCap2, buffer2);
+		updateGLIBOBuffer();
 	}
 
 	public void draw(Camera camera) {
-		if (update) {
-			updateGlBuffers(vboID0, vboCap0, buffer0);
-			updateGlBuffers(vboID1, vboCap1, buffer1);
-			updateGlBuffers(vboID2, vboCap2, buffer2);
-			updateGLIBOBuffer();
-			update = false;
-		}
 		shader.start();
 		shader.loadviewMatrix(camera);
 		glBindVertexArray(vaoID);
@@ -162,38 +160,135 @@ public class Tessellator {
 	}
 
 	public void updateGlBuffers(int vbo, int vboCapacity, ByteBuffer data) {
-		int vbo_data_size = data.capacity();
-		boolean vbo_orphan = false;
-		while (vbo_data_size > vboCapacity) {
-			vboCapacity *= 2;
-			vbo_orphan = true;
-		}
-		if (vbo_orphan) {
-			glBindBuffer(GL_ARRAY_BUFFER, vbo);
-			glBufferData(GL_ARRAY_BUFFER, vboCapacity, null, GL_DYNAMIC_DRAW);
-			glBindBuffer(GL_ARRAY_BUFFER, 0);
-		}
+		vboCapacity = data.capacity();
 		glBindBuffer(GL_ARRAY_BUFFER, vbo);
-		glMapBufferRange(GL_ARRAY_BUFFER, 0, vbo_data_size, GL_MAP_WRITE_BIT).put(data);
-		glUnmapBuffer(GL_ARRAY_BUFFER);
+		glBufferData(GL_ARRAY_BUFFER, vboCapacity, data, GL_DYNAMIC_DRAW);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
 
 	public void updateGLIBOBuffer() {
-		int ibo_data_size = ibo.capacity();
-		boolean ibo_orphan = false;
-		while (ibo_data_size > iboCapacity) {
-			iboCapacity *= 2;
-			ibo_orphan = true;
+		iboCapacity = ibo.capacity();
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, iboID);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, iboCapacity, ibo, GL_DYNAMIC_DRAW);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+	}
+
+	public void generateCube(int x, int y, int z, int size, boolean top, boolean bottom, boolean left, boolean right,
+			boolean front, boolean back) {
+		// TODO: FIX THIS
+		if (false) {
+			// top face
+			vertex3f(new Vector3f(x, y + size, z + size));
+			texture2f(new Vector2f(0, 1));
+			normal3f(new Vector3f(0, 1, 0));
+
+			vertex3f(new Vector3f(x + size, y + size, z + size));
+			texture2f(new Vector2f(1, 1));
+			normal3f(new Vector3f(0, 1, 0));
+
+			vertex3f(new Vector3f(x + size, y + size, z));
+			texture2f(new Vector2f(1, 0));
+			normal3f(new Vector3f(0, 1, 0));
+
+			vertex3f(new Vector3f(x, y + size, 0));
+			texture2f(new Vector2f(0, 0));
+			normal3f(new Vector3f(0, 1, 0));
+
 		}
-		if (ibo_orphan) {
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, iboID);
-			glBufferData(GL_ELEMENT_ARRAY_BUFFER, iboCapacity, null, GL_DYNAMIC_DRAW);
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+		// TODO: FIX THIS
+		if (false) {
+			// bottom face
+			vertex3f(new Vector3f(x, y, z));
+			texture2f(new Vector2f(0, 1));
+			normal3f(new Vector3f(0, -1, 0));
+
+			vertex3f(new Vector3f(x + size, y, z));
+			texture2f(new Vector2f(1, 1));
+			normal3f(new Vector3f(0, -1, 0));
+
+			vertex3f(new Vector3f(x + size, y, z + size));
+			texture2f(new Vector2f(1, 0));
+			normal3f(new Vector3f(0, -1, 0));
+
+			vertex3f(new Vector3f(x, y, z + size));
+			texture2f(new Vector2f(0, 0));
+			normal3f(new Vector3f(0, -1, 0));
 		}
 
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, iboID);
-		glMapBufferRange(GL_ELEMENT_ARRAY_BUFFER, 0, ibo_data_size, GL_MAP_WRITE_BIT).put(ibo);
-		glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER);
+		if (back) {
+			// back face
+			vertex3f(new Vector3f(x, y, z + size));
+			texture2f(new Vector2f(0, 1));
+			normal3f(new Vector3f(0, 0, 1));
+
+			vertex3f(new Vector3f(x + size, y, z + size));
+			texture2f(new Vector2f(1, 1));
+			normal3f(new Vector3f(0, 0, 1));
+
+			vertex3f(new Vector3f(x + size, y + size, z + size));
+			texture2f(new Vector2f(1, 0));
+			normal3f(new Vector3f(0, 0, 1));
+
+			vertex3f(new Vector3f(x, y + size, z + size));
+			texture2f(new Vector2f(0, 0));
+			normal3f(new Vector3f(0, 0, 1));
+		}
+		if (front) {
+			// front face
+			vertex3f(new Vector3f(x, y + size, z));
+			texture2f(new Vector2f(1, 0));
+			normal3f(new Vector3f(0, 0, -1));
+
+			vertex3f(new Vector3f(x + size, y + size, z));
+			texture2f(new Vector2f(0, 0));
+			normal3f(new Vector3f(0, 0, -1));
+
+			vertex3f(new Vector3f(x + size, y, z));
+			texture2f(new Vector2f(0, 1));
+			normal3f(new Vector3f(0, 0, -1));
+
+			vertex3f(new Vector3f(x, y, z));
+			texture2f(new Vector2f(1, 1));
+			normal3f(new Vector3f(0, 0, -1));
+		}
+		if (right) {
+			// right face
+			vertex3f(new Vector3f(x, y, z));
+			texture2f(new Vector2f(0, 1));
+			normal3f(new Vector3f(-1, 0, 0));
+
+			vertex3f(new Vector3f(x, y, z + size));
+			texture2f(new Vector2f(1, 1));
+			normal3f(new Vector3f(-1, 0, 0));
+
+			vertex3f(new Vector3f(x, y + size, z + size));
+			texture2f(new Vector2f(1, 0));
+			normal3f(new Vector3f(-1, 0, 0));
+
+			vertex3f(new Vector3f(x, y + size, z));
+			texture2f(new Vector2f(0, 0));
+			normal3f(new Vector3f(-1, 0, 0));
+		}
+		if (left) {
+
+			// left face
+			vertex3f(new Vector3f(x + size, y, z + size));
+			texture2f(new Vector2f(0, 1));
+			normal3f(new Vector3f(1, 0, 0));
+
+			vertex3f(new Vector3f(x + size, y, z));
+			texture2f(new Vector2f(1, 1));
+			normal3f(new Vector3f(1, 0, 0));
+
+			vertex3f(new Vector3f(x + size, y + size, z));
+			texture2f(new Vector2f(1, 0));
+			normal3f(new Vector3f(1, 0, 0));
+
+			vertex3f(new Vector3f(x + size, y + size, z + size));
+			texture2f(new Vector2f(0, 0));
+			normal3f(new Vector3f(1, 0, 0));
+		}
 	}
 
 	public void cleanUp() {
