@@ -34,14 +34,16 @@ out vec4 pass_position;
 
 uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;
+uniform vec3 cameraPos;
 
 const float gradient = 5.0;
 
 void main() {
-	vec4 worldPosition = vec4(position, 1.0);
+	vec3 pos = position - cameraPos;
+	vec4 worldPosition = vec4(pos, 1.0);
 	vec4 positionRelativeToCam = viewMatrix * worldPosition;
 	gl_Position = projectionMatrix * positionRelativeToCam;
 	pass_textureCoords = textureCoords;
-	pass_position = worldPosition;
+	pass_position = vec4(position, 1.0);
 	surfaceNormal = normal;
 }

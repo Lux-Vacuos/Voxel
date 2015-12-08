@@ -89,7 +89,4 @@ void main(void) {
 	out_Color[2] = vec4(surfaceNormal.xyz,0);
 	out_Color[3] = vec4(0.0,1.0,0.0,shadow);
 	out_Color[4] = vec4(1.0,0.0,0.0,blockBright);
-	if(id == 13 || id == 8){
-		out_Color[3].r = 1.0;
-	}
 }

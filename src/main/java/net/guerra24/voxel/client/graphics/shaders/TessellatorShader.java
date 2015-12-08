@@ -18,6 +18,7 @@ public class TessellatorShader extends ShaderProgram {
 
 	private int loc_projectionMatrix;
 	private int loc_viewMatrix;
+	private int loc_cameraPos;
 
 	public TessellatorShader() {
 		super(VoxelVariables.VERTEX_FILE_TESSELLATOR, VoxelVariables.FRAGMENT_FILE_TESSELLATOR);
@@ -27,6 +28,7 @@ public class TessellatorShader extends ShaderProgram {
 	protected void getAllUniformLocations() {
 		loc_projectionMatrix = super.getUniformLocation("projectionMatrix");
 		loc_viewMatrix = super.getUniformLocation("viewMatrix");
+		loc_cameraPos = super.getUniformLocation("cameraPos");
 	}
 
 	@Override
@@ -43,8 +45,12 @@ public class TessellatorShader extends ShaderProgram {
 	 *            Camera
 	 */
 	public void loadviewMatrix(Camera camera) {
-		Matrix4f viewMatrix = Maths.createViewMatrix(camera);
-		super.loadMatrix(loc_viewMatrix, viewMatrix);
+		Matrix4f matrix = Maths.createViewMatrix(camera);
+		matrix.m30 = 0;
+		matrix.m31 = 0;
+		matrix.m32 = 0;
+		super.loadMatrix(loc_viewMatrix, matrix);
+		super.loadVector(loc_cameraPos, camera.getPosition());
 	}
 
 	/**
