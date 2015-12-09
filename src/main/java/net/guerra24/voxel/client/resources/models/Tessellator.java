@@ -1,11 +1,26 @@
 package net.guerra24.voxel.client.resources.models;
 
-import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.GL_FLOAT;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
+import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
+import static org.lwjgl.opengl.GL11.GL_UNSIGNED_INT;
+import static org.lwjgl.opengl.GL11.glBindTexture;
+import static org.lwjgl.opengl.GL11.glDrawElements;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
-import static org.lwjgl.opengl.GL15.*;
-import static org.lwjgl.opengl.GL20.*;
-import static org.lwjgl.opengl.GL30.*;
+import static org.lwjgl.opengl.GL15.GL_ARRAY_BUFFER;
+import static org.lwjgl.opengl.GL15.GL_DYNAMIC_DRAW;
+import static org.lwjgl.opengl.GL15.GL_ELEMENT_ARRAY_BUFFER;
+import static org.lwjgl.opengl.GL15.glBindBuffer;
+import static org.lwjgl.opengl.GL15.glBufferData;
+import static org.lwjgl.opengl.GL15.glDeleteBuffers;
+import static org.lwjgl.opengl.GL15.glGenBuffers;
+import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
+import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
+import static org.lwjgl.opengl.GL20.glVertexAttribPointer;
+import static org.lwjgl.opengl.GL30.glBindVertexArray;
+import static org.lwjgl.opengl.GL30.glDeleteVertexArrays;
+import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
@@ -15,9 +30,11 @@ import org.lwjgl.BufferUtils;
 
 import net.guerra24.voxel.client.graphics.MasterRenderer;
 import net.guerra24.voxel.client.graphics.shaders.TessellatorShader;
+import net.guerra24.voxel.client.world.block.IBlock;
 import net.guerra24.voxel.client.world.entities.Camera;
 import net.guerra24.voxel.universal.util.vector.Vector2f;
 import net.guerra24.voxel.universal.util.vector.Vector3f;
+import net.guerra24.voxel.universal.util.vector.Vector8f;
 
 public class Tessellator {
 
@@ -30,6 +47,7 @@ public class Tessellator {
 	private List<Vector2f> texcoords;
 	private List<Integer> indices;
 	private int texture;
+	private boolean updated = false;
 
 	private TessellatorShader shader;
 
@@ -98,13 +116,17 @@ public class Tessellator {
 
 	public void end() {
 		loadData(pos, texcoords, normals);
-		updateGlBuffers(vboID0, vboCap0, buffer0);
-		updateGlBuffers(vboID1, vboCap1, buffer1);
-		updateGlBuffers(vboID2, vboCap2, buffer2);
-		updateGLIBOBuffer();
+		updated = true;
 	}
 
 	public void draw(Camera camera) {
+		if (updated) {
+			updateGlBuffers(vboID0, vboCap0, buffer0);
+			updateGlBuffers(vboID1, vboCap1, buffer1);
+			updateGlBuffers(vboID2, vboCap2, buffer2);
+			updateGLIBOBuffer();
+			updated = false;
+		}
 		shader.start();
 		shader.loadviewMatrix(camera);
 		glBindVertexArray(vaoID);
@@ -175,120 +197,224 @@ public class Tessellator {
 	}
 
 	public void generateCube(int x, int y, int z, int size, boolean top, boolean bottom, boolean left, boolean right,
-			boolean front, boolean back) {
-		// TODO: FIX THIS
-		if (false) {
+			boolean front, boolean back, IBlock block) {
+		if (top) {
+			Vector8f texcoords = block.texCoordsUp();
 			// top face
 			vertex3f(new Vector3f(x, y + size, z + size));
-			texture2f(new Vector2f(0, 1));
+			texture2f(new Vector2f(texcoords.getZ(), texcoords.getW()));
 			normal3f(new Vector3f(0, 1, 0));
 
 			vertex3f(new Vector3f(x + size, y + size, z + size));
-			texture2f(new Vector2f(1, 1));
+			texture2f(new Vector2f(texcoords.getI(), texcoords.getJ()));
 			normal3f(new Vector3f(0, 1, 0));
 
 			vertex3f(new Vector3f(x + size, y + size, z));
-			texture2f(new Vector2f(1, 0));
+			texture2f(new Vector2f(texcoords.getK(), texcoords.getL()));
 			normal3f(new Vector3f(0, 1, 0));
 
-			vertex3f(new Vector3f(x, y + size, 0));
-			texture2f(new Vector2f(0, 0));
+			vertex3f(new Vector3f(x, y + size, z));
+			texture2f(new Vector2f(texcoords.getX(), texcoords.getY()));
 			normal3f(new Vector3f(0, 1, 0));
 
 		}
-		// TODO: FIX THIS
-		if (false) {
+		if (bottom) {
+			Vector8f texcoords = block.texCoordsDown();
 			// bottom face
 			vertex3f(new Vector3f(x, y, z));
-			texture2f(new Vector2f(0, 1));
+			texture2f(new Vector2f(texcoords.getZ(), texcoords.getW()));
 			normal3f(new Vector3f(0, -1, 0));
 
 			vertex3f(new Vector3f(x + size, y, z));
-			texture2f(new Vector2f(1, 1));
+			texture2f(new Vector2f(texcoords.getI(), texcoords.getJ()));
 			normal3f(new Vector3f(0, -1, 0));
 
 			vertex3f(new Vector3f(x + size, y, z + size));
-			texture2f(new Vector2f(1, 0));
+			texture2f(new Vector2f(texcoords.getK(), texcoords.getL()));
 			normal3f(new Vector3f(0, -1, 0));
 
 			vertex3f(new Vector3f(x, y, z + size));
-			texture2f(new Vector2f(0, 0));
+			texture2f(new Vector2f(texcoords.getX(), texcoords.getY()));
 			normal3f(new Vector3f(0, -1, 0));
 		}
 
 		if (back) {
+			Vector8f texcoords = block.texCoordsBack();
 			// back face
 			vertex3f(new Vector3f(x, y, z + size));
-			texture2f(new Vector2f(0, 1));
+			texture2f(new Vector2f(texcoords.getX(), texcoords.getY()));
 			normal3f(new Vector3f(0, 0, 1));
 
 			vertex3f(new Vector3f(x + size, y, z + size));
-			texture2f(new Vector2f(1, 1));
+			texture2f(new Vector2f(texcoords.getK(), texcoords.getL()));
 			normal3f(new Vector3f(0, 0, 1));
 
 			vertex3f(new Vector3f(x + size, y + size, z + size));
-			texture2f(new Vector2f(1, 0));
+			texture2f(new Vector2f(texcoords.getI(), texcoords.getJ()));
 			normal3f(new Vector3f(0, 0, 1));
 
 			vertex3f(new Vector3f(x, y + size, z + size));
-			texture2f(new Vector2f(0, 0));
+			texture2f(new Vector2f(texcoords.getZ(), texcoords.getW()));
 			normal3f(new Vector3f(0, 0, 1));
 		}
 		if (front) {
 			// front face
+			Vector8f texcoords = block.texCoordsFront();
 			vertex3f(new Vector3f(x, y + size, z));
-			texture2f(new Vector2f(1, 0));
+			texture2f(new Vector2f(texcoords.getZ(), texcoords.getW()));
 			normal3f(new Vector3f(0, 0, -1));
 
 			vertex3f(new Vector3f(x + size, y + size, z));
-			texture2f(new Vector2f(0, 0));
+			texture2f(new Vector2f(texcoords.getI(), texcoords.getJ()));
 			normal3f(new Vector3f(0, 0, -1));
 
 			vertex3f(new Vector3f(x + size, y, z));
-			texture2f(new Vector2f(0, 1));
+			texture2f(new Vector2f(texcoords.getK(), texcoords.getL()));
 			normal3f(new Vector3f(0, 0, -1));
 
 			vertex3f(new Vector3f(x, y, z));
-			texture2f(new Vector2f(1, 1));
+			texture2f(new Vector2f(texcoords.getX(), texcoords.getY()));
 			normal3f(new Vector3f(0, 0, -1));
 		}
 		if (right) {
+			Vector8f texcoords = block.texCoordsRight();
 			// right face
 			vertex3f(new Vector3f(x, y, z));
-			texture2f(new Vector2f(0, 1));
+			texture2f(new Vector2f(texcoords.getK(), texcoords.getL()));
 			normal3f(new Vector3f(-1, 0, 0));
 
 			vertex3f(new Vector3f(x, y, z + size));
-			texture2f(new Vector2f(1, 1));
+			texture2f(new Vector2f(texcoords.getX(), texcoords.getY()));
 			normal3f(new Vector3f(-1, 0, 0));
 
 			vertex3f(new Vector3f(x, y + size, z + size));
-			texture2f(new Vector2f(1, 0));
+			texture2f(new Vector2f(texcoords.getZ(), texcoords.getW()));
 			normal3f(new Vector3f(-1, 0, 0));
 
 			vertex3f(new Vector3f(x, y + size, z));
-			texture2f(new Vector2f(0, 0));
+			texture2f(new Vector2f(texcoords.getI(), texcoords.getJ()));
 			normal3f(new Vector3f(-1, 0, 0));
 		}
 		if (left) {
-
+			Vector8f texcoords = block.texCoordsLeft();
 			// left face
 			vertex3f(new Vector3f(x + size, y, z + size));
-			texture2f(new Vector2f(0, 1));
+			texture2f(new Vector2f(texcoords.getK(), texcoords.getL()));
 			normal3f(new Vector3f(1, 0, 0));
 
 			vertex3f(new Vector3f(x + size, y, z));
-			texture2f(new Vector2f(1, 1));
+			texture2f(new Vector2f(texcoords.getX(), texcoords.getY()));
 			normal3f(new Vector3f(1, 0, 0));
 
 			vertex3f(new Vector3f(x + size, y + size, z));
-			texture2f(new Vector2f(1, 0));
+			texture2f(new Vector2f(texcoords.getZ(), texcoords.getW()));
 			normal3f(new Vector3f(1, 0, 0));
 
 			vertex3f(new Vector3f(x + size, y + size, z + size));
-			texture2f(new Vector2f(0, 0));
+			texture2f(new Vector2f(texcoords.getI(), texcoords.getJ()));
 			normal3f(new Vector3f(1, 0, 0));
 		}
+	}
+
+	public void generateCube(int x, int y, int z, int size) {
+		// top face
+		vertex3f(new Vector3f(x, y + size, z + size));
+		texture2f(new Vector2f(0, 1));
+		normal3f(new Vector3f(0, 1, 0));
+
+		vertex3f(new Vector3f(x + size, y + size, z + size));
+		texture2f(new Vector2f(1, 1));
+		normal3f(new Vector3f(0, 1, 0));
+
+		vertex3f(new Vector3f(x + size, y + size, z));
+		texture2f(new Vector2f(1, 0));
+		normal3f(new Vector3f(0, 1, 0));
+
+		vertex3f(new Vector3f(x, y + size, 0));
+		texture2f(new Vector2f(0, 0));
+		normal3f(new Vector3f(0, 1, 0));
+
+		// bottom face
+		vertex3f(new Vector3f(x, y, z));
+		texture2f(new Vector2f(0, 1));
+		normal3f(new Vector3f(0, -1, 0));
+
+		vertex3f(new Vector3f(x + size, y, z));
+		texture2f(new Vector2f(1, 1));
+		normal3f(new Vector3f(0, -1, 0));
+
+		vertex3f(new Vector3f(x + size, y, z + size));
+		texture2f(new Vector2f(1, 0));
+		normal3f(new Vector3f(0, -1, 0));
+
+		vertex3f(new Vector3f(x, y, z + size));
+		texture2f(new Vector2f(0, 0));
+		normal3f(new Vector3f(0, -1, 0));
+		// back face
+		vertex3f(new Vector3f(x, y, z + size));
+		texture2f(new Vector2f(0, 1));
+		normal3f(new Vector3f(0, 0, 1));
+
+		vertex3f(new Vector3f(x + size, y, z + size));
+		texture2f(new Vector2f(1, 1));
+		normal3f(new Vector3f(0, 0, 1));
+
+		vertex3f(new Vector3f(x + size, y + size, z + size));
+		texture2f(new Vector2f(1, 0));
+		normal3f(new Vector3f(0, 0, 1));
+
+		vertex3f(new Vector3f(x, y + size, z + size));
+		texture2f(new Vector2f(0, 0));
+		normal3f(new Vector3f(0, 0, 1));
+		// front face
+		vertex3f(new Vector3f(x, y + size, z));
+		texture2f(new Vector2f(1, 0));
+		normal3f(new Vector3f(0, 0, -1));
+
+		vertex3f(new Vector3f(x + size, y + size, z));
+		texture2f(new Vector2f(0, 0));
+		normal3f(new Vector3f(0, 0, -1));
+
+		vertex3f(new Vector3f(x + size, y, z));
+		texture2f(new Vector2f(0, 1));
+		normal3f(new Vector3f(0, 0, -1));
+
+		vertex3f(new Vector3f(x, y, z));
+		texture2f(new Vector2f(1, 1));
+		normal3f(new Vector3f(0, 0, -1));
+		// right face
+		vertex3f(new Vector3f(x, y, z));
+		texture2f(new Vector2f(0, 1));
+		normal3f(new Vector3f(-1, 0, 0));
+
+		vertex3f(new Vector3f(x, y, z + size));
+		texture2f(new Vector2f(1, 1));
+		normal3f(new Vector3f(-1, 0, 0));
+
+		vertex3f(new Vector3f(x, y + size, z + size));
+		texture2f(new Vector2f(1, 0));
+		normal3f(new Vector3f(-1, 0, 0));
+
+		vertex3f(new Vector3f(x, y + size, z));
+		texture2f(new Vector2f(0, 0));
+		normal3f(new Vector3f(-1, 0, 0));
+
+		// left face
+		vertex3f(new Vector3f(x + size, y, z + size));
+		texture2f(new Vector2f(0, 1));
+		normal3f(new Vector3f(1, 0, 0));
+
+		vertex3f(new Vector3f(x + size, y, z));
+		texture2f(new Vector2f(1, 1));
+		normal3f(new Vector3f(1, 0, 0));
+
+		vertex3f(new Vector3f(x + size, y + size, z));
+		texture2f(new Vector2f(1, 0));
+		normal3f(new Vector3f(1, 0, 0));
+
+		vertex3f(new Vector3f(x + size, y + size, z + size));
+		texture2f(new Vector2f(0, 0));
+		normal3f(new Vector3f(1, 0, 0));
 	}
 
 	public void cleanUp() {

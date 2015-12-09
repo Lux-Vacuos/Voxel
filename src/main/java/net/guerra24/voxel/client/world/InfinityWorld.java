@@ -38,7 +38,7 @@ import com.esotericsoftware.kryo.KryoException;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 
-import net.guerra24.voxel.client.api.API;
+import net.guerra24.voxel.client.api.ModInitialization;
 import net.guerra24.voxel.client.core.VoxelVariables;
 import net.guerra24.voxel.client.particle.ParticlePoint;
 import net.guerra24.voxel.client.particle.ParticleSystem;
@@ -76,9 +76,10 @@ public class InfinityWorld implements IWorld {
 	private String codeName = "Infinity";
 	private Queue<LightNode> lightNodes;
 	private ParticleSystem particleSystem;
+	private WorldService worldService;
 
 	@Override
-	public void startWorld(String name, Random seed, int chunkDim, API api, GameResources gm) {
+	public void startWorld(String name, Random seed, int chunkDim, ModInitialization api, GameResources gm) {
 		this.name = name;
 		this.seed = seed;
 		this.chunkDim = chunkDim;
@@ -103,11 +104,12 @@ public class InfinityWorld implements IWorld {
 		lightNodes = new LinkedList<>();
 		chunks = new HashMap<ChunkKey, Chunk>();
 		chunkGenerator = new ChunkGenerator();
+		worldService = new WorldService();
 		gm.getPhysics().getMobManager().getPlayer().setPosition(gm.getCamera().getPosition());
 	}
 
 	@Override
-	public void createDimension(GameResources gm, API api) {
+	public void createDimension(GameResources gm, ModInitialization api) {
 		Logger.log("Generating World");
 		xPlayChunk = (int) (gm.getCamera().getPosition().x / 16);
 		zPlayChunk = (int) (gm.getCamera().getPosition().z / 16);
@@ -134,7 +136,7 @@ public class InfinityWorld implements IWorld {
 	}
 
 	@Override
-	public void updateChunksGeneration(GameResources gm, API api, float delta) {
+	public void updateChunksGeneration(GameResources gm, ModInitialization api, float delta) {
 		if (gm.getCamera().getPosition().x < 0)
 			xPlayChunk = (int) ((gm.getCamera().getPosition().x - 16) / 16);
 		if (gm.getCamera().getPosition().y < 0)
@@ -190,7 +192,7 @@ public class InfinityWorld implements IWorld {
 							}
 							if (gm.getFrustum().cubeInFrustum(chunk.posX, chunk.posY, chunk.posZ, chunk.posX + 16,
 									chunk.posY + 16, chunk.posZ + 16)) {
-								chunk.rebuild(this);
+								chunk.rebuild(worldService, this);
 							}
 						}
 					}
@@ -306,7 +308,7 @@ public class InfinityWorld implements IWorld {
 	}
 
 	@Override
-	public void switchDimension(int id, GameResources gm, API api) {
+	public void switchDimension(int id, GameResources gm, ModInitialization api) {
 		if (id != chunkDim) {
 			clearDimension(gm);
 			chunkDim = id;
@@ -520,6 +522,7 @@ public class InfinityWorld implements IWorld {
 				}
 			}
 		}
+		worldService.es.shutdown();
 		chunks.clear();
 	}
 

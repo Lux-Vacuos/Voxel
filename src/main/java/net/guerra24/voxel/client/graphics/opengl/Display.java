@@ -28,6 +28,9 @@ import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL.createCapabilities;
 import static org.lwjgl.opengl.GL11.GL_FALSE;
 import static org.lwjgl.opengl.GL11.GL_TRUE;
+import static org.lwjgl.opengl.GL11.GL_VENDOR;
+import static org.lwjgl.opengl.GL11.glGetIntegerv;
+import static org.lwjgl.opengl.GL11.glGetString;
 import static org.lwjgl.opengl.GL11.glViewport;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
@@ -35,6 +38,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFW;
@@ -52,6 +56,8 @@ import org.lwjgl.glfw.GLFWWindowIconifyCallback;
 import org.lwjgl.glfw.GLFWWindowPosCallback;
 import org.lwjgl.glfw.GLFWWindowRefreshCallback;
 import org.lwjgl.glfw.GLFWWindowSizeCallback;
+import org.lwjgl.opengl.NVXGPUMemoryInfo;
+import org.lwjgl.opengl.WGLAMDGPUAssociation;
 
 import de.matthiasmann.twl.utils.PNGDecoder;
 import net.guerra24.voxel.client.core.VoxelVariables;
@@ -125,6 +131,11 @@ public class Display {
 	private boolean latestResized = false;
 	private int latestWidth = 0;
 	private int latestHeight = 0;
+
+	private static IntBuffer maxVram = BufferUtils.createIntBuffer(1);
+	private static IntBuffer usedVram = BufferUtils.createIntBuffer(1);
+	private static boolean nvidia = false;
+	private static boolean amd = false;
 
 	private static long variableYieldTime, lastTime;
 
@@ -319,6 +330,18 @@ public class Display {
 		int height = h.getInt(0);
 		displayHeight = width;
 		displayHeight = height;
+		if (glGetString(GL_VENDOR).contains("NVIDIA"))
+			nvidia = true;
+		else if (glGetString(GL_VENDOR).contains("AMD"))
+			amd = true;
+		if (nvidia)
+			glGetIntegerv(NVXGPUMemoryInfo.GL_GPU_MEMORY_INFO_DEDICATED_VIDMEM_NVX, maxVram);
+		else if (amd)
+			glGetIntegerv(WGLAMDGPUAssociation.WGL_GPU_RAM_AMD, maxVram);
+		if (nvidia)
+			Logger.log("Max VRam: " + maxVram.get(0) + "KB");
+		else if (amd)
+			Logger.log("Max VRam: " + maxVram.get(0) + "MB");
 		displayCreated = true;
 	}
 
@@ -333,7 +356,6 @@ public class Display {
 		glfwPollEvents();
 		Mouse.poll();
 		sync(fps);
-		checkVRAM();
 	}
 
 	/**
@@ -392,7 +414,11 @@ public class Display {
 		return (long) (glfwGetTime() * (1000L * 1000L * 1000L));
 	}
 
-	private void checkVRAM() {
+	public static void checkVRAM() {
+		if (nvidia)
+			glGetIntegerv(NVXGPUMemoryInfo.GL_GPU_MEMORY_INFO_CURRENT_AVAILABLE_VIDMEM_NVX, usedVram);
+		int res = maxVram.get(0) - usedVram.get(0);
+		Logger.log("Used VRam: " + res + "KB");
 	}
 
 	/**

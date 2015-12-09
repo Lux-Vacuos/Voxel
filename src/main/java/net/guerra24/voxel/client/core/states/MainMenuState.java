@@ -43,6 +43,7 @@ public class MainMenuState implements State {
 		else
 			gm.getMenuSystem().mainMenu.getList().get(1).changeScale(0.07f);
 		if (gm.getMenuSystem().mainMenu.getPlayButton().pressed()) {
+			gm.getMenuSystem().gameSP.load(gm);
 			states.state = GameState.LOADING_WORLD;
 		} else if (gm.getMenuSystem().mainMenu.getExitButton().pressed()) {
 			states.loop = false;

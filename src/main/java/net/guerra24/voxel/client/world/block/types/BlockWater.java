@@ -28,42 +28,13 @@ import net.guerra24.voxel.client.resources.models.WaterTile;
 import net.guerra24.voxel.client.world.block.BlockEntity;
 import net.guerra24.voxel.client.world.block.IBlock;
 import net.guerra24.voxel.universal.util.vector.Vector3f;
+import net.guerra24.voxel.universal.util.vector.Vector8f;
 
 public class BlockWater extends IBlock {
 
 	@Override
 	public byte getId() {
 		return 7;
-	}
-
-	@Override
-	public BlockEntity getFaceUp(Vector3f pos) {
-		return null;
-	}
-
-	@Override
-	public BlockEntity getFaceDown(Vector3f pos) {
-		return null;
-	}
-
-	@Override
-	public BlockEntity getFaceEast(Vector3f pos) {
-		return null;
-	}
-
-	@Override
-	public BlockEntity getFaceWest(Vector3f pos) {
-		return null;
-	}
-
-	@Override
-	public BlockEntity getFaceNorth(Vector3f pos) {
-		return null;
-	}
-
-	@Override
-	public BlockEntity getFaceSouth(Vector3f pos) {
-		return null;
 	}
 
 	@Override
@@ -79,6 +50,36 @@ public class BlockWater extends IBlock {
 	@Override
 	public boolean usesSingleModel() {
 		return false;
+	}
+
+	@Override
+	public Vector8f texCoordsUp() {
+		return null;
+	}
+
+	@Override
+	public Vector8f texCoordsDown() {
+		return null;
+	}
+
+	@Override
+	public Vector8f texCoordsFront() {
+		return null;
+	}
+
+	@Override
+	public Vector8f texCoordsBack() {
+		return null;
+	}
+
+	@Override
+	public Vector8f texCoordsRight() {
+		return null;
+	}
+
+	@Override
+	public Vector8f texCoordsLeft() {
+		return null;
 	}
 
 }

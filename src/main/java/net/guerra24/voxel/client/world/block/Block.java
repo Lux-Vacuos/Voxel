@@ -117,5 +117,5 @@ public abstract class Block {
 	public static IBlock getBlock(byte id) {
 		return blockMap.get(id);
 	}
-
+	
 }

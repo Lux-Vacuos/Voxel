@@ -40,10 +40,10 @@ import net.guerra24.voxel.client.graphics.MasterShadowRenderer;
 import net.guerra24.voxel.client.graphics.OcclusionRenderer;
 import net.guerra24.voxel.client.graphics.SkyboxRenderer;
 import net.guerra24.voxel.client.graphics.TextMasterRenderer;
+import net.guerra24.voxel.client.graphics.shaders.TessellatorShader;
 import net.guerra24.voxel.client.menu.Menu;
 import net.guerra24.voxel.client.particle.ParticleMaster;
 import net.guerra24.voxel.client.resources.models.GuiTexture;
-import net.guerra24.voxel.client.resources.models.Tessellator;
 import net.guerra24.voxel.client.sound.LibraryLWJGLOpenAL;
 import net.guerra24.voxel.client.sound.soundsystem.SoundSystem;
 import net.guerra24.voxel.client.sound.soundsystem.SoundSystemConfig;
@@ -95,9 +95,7 @@ public class GameResources {
 	private Vector3f sunRotation = new Vector3f(5, 0, -45);
 	private Vector3f lightPos = new Vector3f(0, 0, 0);
 
-	public Tessellator tessellator;
 	public Mob player;
-	public int testing;
 
 	/**
 	 * Constructor
@@ -127,12 +125,12 @@ public class GameResources {
 		skyboxRenderer = new SkyboxRenderer(loader, renderer.getProjectionMatrix());
 		deferredShadingRenderer = new DeferredShadingRenderer(loader, this);
 		masterShadowRenderer = new MasterShadowRenderer();
+		TessellatorShader.getInstance();
 		ParticleMaster.getInstance().init(loader, renderer.getProjectionMatrix());
 		physics = new Physics(this);
 		frustum = new Frustum();
 		TextMasterRenderer.getInstance().init(loader);
 		textHandler = new TextHandler(this);
-		tessellator = new Tessellator(renderer);
 		try {
 			SoundSystemConfig.addLibrary(LibraryLWJGLOpenAL.class);
 			SoundSystemConfig.setCodec("ogg", CodecJOgg.class);
@@ -165,7 +163,6 @@ public class GameResources {
 	public void addRes() {
 		player = new Mob(new Entity(UniversalResources.player, new Vector3f(0, 80, 0), 0, 0, 0, 1));
 		physics.getMobManager().registerMob(player);
-		testing = loader.loadTextureBlocks("WIP");
 	}
 
 	public void update(float rot) {
@@ -177,14 +174,6 @@ public class GameResources {
 		lightPos = new Vector3f(1000 * sun_Camera.getRay().direction.x, 1000 * sun_Camera.getRay().direction.y,
 				1000 * sun_Camera.getRay().direction.z);
 		Vector3f.add(sun_Camera.getPosition(), lightPos, lightPos);
-
-		int size = 16;
-		int x = 0, y = 66, z = 0;
-
-		tessellator.begin(testing);
-		tessellator.generateCube(x, y, z, size, true, true, true, true, true, true);
-		tessellator.end();
-
 	}
 
 	/**
@@ -192,7 +181,7 @@ public class GameResources {
 	 * 
 	 */
 	public void cleanUp() {
-		tessellator.cleanUp();
+		gameSettings.save();
 		TextMasterRenderer.getInstance().cleanUp();
 		masterShadowRenderer.cleanUp();
 		occlusionRenderer.cleanUp();

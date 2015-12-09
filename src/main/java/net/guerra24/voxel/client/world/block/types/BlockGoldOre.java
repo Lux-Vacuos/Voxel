@@ -29,42 +29,13 @@ import net.guerra24.voxel.client.world.block.BlockEntity;
 import net.guerra24.voxel.client.world.block.BlocksResources;
 import net.guerra24.voxel.client.world.block.IBlock;
 import net.guerra24.voxel.universal.util.vector.Vector3f;
+import net.guerra24.voxel.universal.util.vector.Vector8f;
 
 public class BlockGoldOre extends IBlock {
 
 	@Override
 	public byte getId() {
 		return 6;
-	}
-
-	@Override
-	public BlockEntity getFaceUp(Vector3f pos) {
-		return new BlockEntity(BlocksResources.cubeGoldOreUP, pos, 0, 0, 0, 1, "UP", getId());
-	}
-
-	@Override
-	public BlockEntity getFaceDown(Vector3f pos) {
-		return new BlockEntity(BlocksResources.cubeGoldOreDOWN, pos, 0, 0, 0, 1, "DOWN", getId());
-	}
-
-	@Override
-	public BlockEntity getFaceEast(Vector3f pos) {
-		return new BlockEntity(BlocksResources.cubeGoldOreEAST, pos, 0, 0, 0, 1, "EAST", getId());
-	}
-
-	@Override
-	public BlockEntity getFaceWest(Vector3f pos) {
-		return new BlockEntity(BlocksResources.cubeGoldOreWEST, pos, 0, 0, 0, 1, "WEST", getId());
-	}
-
-	@Override
-	public BlockEntity getFaceNorth(Vector3f pos) {
-		return new BlockEntity(BlocksResources.cubeGoldOreNORTH, pos, 0, 0, 0, 1, "NORTH", getId());
-	}
-
-	@Override
-	public BlockEntity getFaceSouth(Vector3f pos) {
-		return new BlockEntity(BlocksResources.cubeGoldOreSOUTH, pos, 0, 0, 0, 1, "SOUTH", getId());
 	}
 
 	@Override
@@ -80,6 +51,36 @@ public class BlockGoldOre extends IBlock {
 	@Override
 	public boolean usesSingleModel() {
 		return false;
+	}
+
+	@Override
+	public Vector8f texCoordsUp() {
+		return BlocksResources.tessellatorTextureAtlas.getTextureCoords("GoldOre");
+	}
+
+	@Override
+	public Vector8f texCoordsDown() {
+		return BlocksResources.tessellatorTextureAtlas.getTextureCoords("GoldOre");
+	}
+
+	@Override
+	public Vector8f texCoordsFront() {
+		return BlocksResources.tessellatorTextureAtlas.getTextureCoords("GoldOre");
+	}
+
+	@Override
+	public Vector8f texCoordsBack() {
+		return BlocksResources.tessellatorTextureAtlas.getTextureCoords("GoldOre");
+	}
+
+	@Override
+	public Vector8f texCoordsRight() {
+		return BlocksResources.tessellatorTextureAtlas.getTextureCoords("GoldOre");
+	}
+
+	@Override
+	public Vector8f texCoordsLeft() {
+		return BlocksResources.tessellatorTextureAtlas.getTextureCoords("GoldOre");
 	}
 
 }

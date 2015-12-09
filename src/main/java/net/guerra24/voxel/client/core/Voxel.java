@@ -27,18 +27,12 @@ package net.guerra24.voxel.client.core;
 import static org.lwjgl.opengl.GL11.GL_RENDERER;
 import static org.lwjgl.opengl.GL11.GL_VENDOR;
 import static org.lwjgl.opengl.GL11.GL_VERSION;
-import static org.lwjgl.opengl.GL11.glGetIntegerv;
 import static org.lwjgl.opengl.GL11.glGetString;
 
-import java.nio.IntBuffer;
-
-import org.lwjgl.BufferUtils;
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFW;
-import org.lwjgl.opengl.NVXGPUMemoryInfo;
-import org.lwjgl.opengl.WGLAMDGPUAssociation;
 
-import net.guerra24.voxel.client.api.API;
+import net.guerra24.voxel.client.api.ModInitialization;
 import net.guerra24.voxel.client.api.VersionException;
 import net.guerra24.voxel.client.bootstrap.Bootstrap;
 import net.guerra24.voxel.client.graphics.TextMasterRenderer;
@@ -71,13 +65,8 @@ public class Voxel {
 	private GuiResources guiResources;
 	private WorldsHandler worldsHandler;
 	private Display display;
-	private API api;
+	private ModInitialization api;
 	private DedicatedClient client;
-
-	private IntBuffer maxVram = BufferUtils.createIntBuffer(1);
-	private IntBuffer usedVram = BufferUtils.createIntBuffer(1);
-	private boolean nvidia = false;
-	private boolean amd = false;
 
 	/**
 	 * Constructor of the Kernel, Initializes the Game and starts the loop
@@ -95,14 +84,6 @@ public class Voxel {
 		display = new Display();
 		display.initDsiplay(VoxelVariables.WIDTH, VoxelVariables.HEIGHT);
 		display.startUp();
-		if (glGetString(GL_VENDOR).contains("NVIDIA"))
-			nvidia = true;
-		else if (glGetString(GL_VENDOR).contains("AMD"))
-			amd = true;
-		if (nvidia)
-			glGetIntegerv(NVXGPUMemoryInfo.GL_GPU_MEMORY_INFO_DEDICATED_VIDMEM_NVX, maxVram);
-		else if (amd)
-			glGetIntegerv(WGLAMDGPUAssociation.WGL_GPU_RAM_AMD, maxVram);
 		Logger.log("Loading");
 		Logger.log("Voxel Version: " + VoxelVariables.version);
 		Logger.log("Molten API Version: " + VoxelVariables.apiVersion);
@@ -113,16 +94,12 @@ public class Voxel {
 		Logger.log("OpenGL Version: " + glGetString(GL_VERSION));
 		Logger.log("Vendor: " + glGetString(GL_VENDOR));
 		Logger.log("Renderer: " + glGetString(GL_RENDERER));
-		if (nvidia)
-			Logger.log("Max VRam: " + maxVram.get(0) + "KB");
-		else if (amd)
-			Logger.log("Max VRam: " + maxVram.get(0) + "MB");
 
 		if (Bootstrap.getPlatform() == Bootstrap.Platform.MACOSX) {
 			VoxelVariables.runningOnMac = true;
 		}
 		gameResources = new GameResources();
-		api = new API(gameResources.getGameSettings());
+		api = new ModInitialization(gameResources.getGameSettings());
 		try {
 			api.preInit();
 		} catch (VersionException e) {
@@ -151,7 +128,7 @@ public class Voxel {
 			 * new Thread(new Runnable() { public void run() {
 			 * Thread.currentThread().setName("Voxel-Client"); client = new
 			 * DedicatedClient(gameResources); } }).start();
-			 */api.setMobManager(gameResources.getPhysics().getMobManager());
+			 */api.getMoltenAPI().setMobManager(gameResources.getPhysics().getMobManager());
 		try {
 			api.init();
 		} catch (VersionException e) {
@@ -189,12 +166,9 @@ public class Voxel {
 		float delta = 0;
 		while (gameResources.getGlobalStates().loop) {
 			if (Display.timeCountRender > 1f) {
-				if (nvidia)
-					glGetIntegerv(NVXGPUMemoryInfo.GL_GPU_MEMORY_INFO_CURRENT_AVAILABLE_VIDMEM_NVX, usedVram);
 				Logger.log("FPS: " + Display.fps);
 				Logger.log("UPS: " + Display.ups);
-				int res = maxVram.get(0) - usedVram.get(0);
-				Logger.log("Used VRam: " + res + "KB");
+				Display.checkVRAM();
 				Display.fps = Display.fpsCount;
 				Display.fpsCount = 0;
 				Display.ups = Display.upsCount;
@@ -202,8 +176,8 @@ public class Voxel {
 				Display.timeCountRender -= 1f;
 			}
 			delta = Display.getDeltaRender();
-			render(delta);
 			update(delta);
+			render(delta);
 		}
 		dispose();
 	}
@@ -250,7 +224,7 @@ public class Voxel {
 		return guiResources;
 	}
 
-	public API getApi() {
+	public ModInitialization getApi() {
 		return api;
 	}
 

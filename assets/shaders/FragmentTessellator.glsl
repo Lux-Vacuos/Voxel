@@ -34,6 +34,8 @@ uniform sampler2D texture0;
 
 void main(void) {
     vec4 textureColour = texture(texture0, pass_textureCoords);
+    if(textureColour.a < 0.5)
+    	discard;
 	out_Color[0] = textureColour;
 	out_Color[1] = vec4(pass_position.xyz,0);
 	out_Color[2] = vec4(surfaceNormal.xyz,0);

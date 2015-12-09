@@ -24,7 +24,7 @@
 
 package net.guerra24.voxel.client.world.entities;
 
-import net.guerra24.voxel.client.api.API;
+import net.guerra24.voxel.client.api.ModInitialization;
 import net.guerra24.voxel.client.core.VoxelVariables;
 import net.guerra24.voxel.client.resources.GameResources;
 import net.guerra24.voxel.client.resources.GuiResources;
@@ -49,7 +49,7 @@ public class Player extends Entity implements IEntity {
 	}
 
 	@Override
-	public void update(float delta, GameResources gm, GuiResources gi, IWorld world, API api) {
+	public void update(float delta, GameResources gm, GuiResources gi, IWorld world, ModInitialization api) {
 		aabb.update(getPosition());
 		super.increasePosition(0, upwardsSpeed * delta, 0);
 		if (isCollision(0, world) == CollisionType.FRONT) {

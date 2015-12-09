@@ -53,7 +53,7 @@ import static net.guerra24.voxel.client.input.Mouse.isButtonDown;
 import static net.guerra24.voxel.client.input.Mouse.setCursorPosition;
 import static net.guerra24.voxel.client.input.Mouse.setGrabbed;
 
-import net.guerra24.voxel.client.api.API;
+import net.guerra24.voxel.client.api.ModInitialization;
 import net.guerra24.voxel.client.core.VoxelVariables;
 import net.guerra24.voxel.client.graphics.opengl.Display;
 import net.guerra24.voxel.client.network.DedicatedClient;
@@ -102,7 +102,7 @@ public class Camera {
 		ray = new Ray(proj, Maths.createViewMatrix(this), center, Display.getWidth(), Display.getHeight());
 	}
 
-	public void update(float delta, GameResources gm, IWorld world, API api, DedicatedClient client) {
+	public void update(float delta, GameResources gm, IWorld world, ModInitialization api, DedicatedClient client) {
 		isMoved = false;
 		float mouseDX = getDX() * delta * mouseSpeed * 0.16f * multiplierMouse;
 		float mouseDY = getDY() * delta * mouseSpeed * 0.16f * multiplierMouse;

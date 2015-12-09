@@ -8,7 +8,7 @@ import java.nio.FloatBuffer;
 
 import org.lwjgl.BufferUtils;
 
-import net.guerra24.voxel.client.api.API;
+import net.guerra24.voxel.client.api.ModInitialization;
 import net.guerra24.voxel.client.core.GlobalStates;
 import net.guerra24.voxel.client.core.GlobalStates.GameState;
 import net.guerra24.voxel.client.core.State;
@@ -33,7 +33,7 @@ public class GameSPState implements State {
 		GameResources gm = voxel.getGameResources();
 		GuiResources gi = voxel.getGuiResources();
 		WorldsHandler worlds = voxel.getWorldsHandler();
-		API api = voxel.getApi();
+		ModInitialization api = voxel.getApi();
 		Display display = voxel.getDisplay();
 
 		worlds.getActiveWorld().updateChunksGeneration(gm, api, delta);
@@ -52,7 +52,7 @@ public class GameSPState implements State {
 	public void render(Voxel voxel, GlobalStates states, float delta) {
 		GameResources gm = voxel.getGameResources();
 		WorldsHandler worlds = voxel.getWorldsHandler();
-		API api = voxel.getApi();
+		ModInitialization api = voxel.getApi();
 
 		worlds.getActiveWorld().lighting();
 		gm.getCamera().update(delta, gm, worlds.getActiveWorld(), api, voxel.getClient());
@@ -76,7 +76,6 @@ public class GameSPState implements State {
 		gm.getCamera().depth = p.get(0);
 		gm.getSkyboxRenderer().render(VoxelVariables.RED, VoxelVariables.GREEN, VoxelVariables.BLUE, delta, gm);
 		gm.getRenderer().renderEntity(gm.getPhysics().getMobManager().getMobs(), gm);
-		gm.tessellator.draw(gm.getCamera());
 		ParticleMaster.getInstance().render(gm.getCamera());
 		gm.getDeferredShadingRenderer().getPost_fbo().end();
 

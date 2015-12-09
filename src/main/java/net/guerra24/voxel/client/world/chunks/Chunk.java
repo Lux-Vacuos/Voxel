@@ -34,8 +34,10 @@ import net.guerra24.voxel.client.resources.models.Tessellator;
 import net.guerra24.voxel.client.util.Logger;
 import net.guerra24.voxel.client.util.Maths;
 import net.guerra24.voxel.client.world.IWorld;
+import net.guerra24.voxel.client.world.WorldService;
 import net.guerra24.voxel.client.world.block.Block;
 import net.guerra24.voxel.client.world.block.BlockEntity;
+import net.guerra24.voxel.client.world.block.BlocksResources;
 import net.guerra24.voxel.universal.util.vector.Vector3f;
 
 /**
@@ -131,13 +133,10 @@ public class Chunk {
 		}
 	}
 
-	public void rebuild(IWorld world) {
+	public void rebuild(WorldService service, IWorld world) {
 		if ((needsRebuild || !updated) && !updating) {
 			updating = true;
-			update(world);
-			needsRebuild = false;
-			updated = true;
-			updating = false;
+			service.add_worker(new ChunkWorkerMesh(world, this));
 		}
 	}
 
@@ -221,14 +220,6 @@ public class Chunk {
 								.getSingleModel(new Vector3f(x + cx * sizeX, y + cy * sizeY, z + cz * sizeZ)));
 					} else if (Block.getBlock(blocks[x][y][z]) != Block.Air
 							&& Block.getBlock(blocks[x][y][z]) != Block.Water) {
-						if (cullFaceDown(x + cx * sizeX, y + cy * sizeY, z + cz * sizeZ, world)) {
-							cubes.add(Block.getBlock(blocks[x][y][z])
-									.getFaceDown(new Vector3f(x + cx * sizeX, y + cy * sizeY, z + cz * sizeZ)));
-						}
-						if (cullFaceUpSolidBlock(x + cx * sizeX, y + cy * sizeY, z + cz * sizeZ, world)) {
-							cubes.add(Block.getBlock(blocks[x][y][z])
-									.getFaceUp(new Vector3f(x + cx * sizeX, y + cy * sizeY, z + cz * sizeZ)));
-						}
 					} else if (Block.getBlock(blocks[x][y][z]) == Block.Water) {
 						if (cullFaceUpWater(x + cx * sizeX, y + cy * sizeY, z + cz * sizeZ, world)) {
 							cubes.add(Block.Water
@@ -241,7 +232,7 @@ public class Chunk {
 	}
 
 	public void rebuildChunkSection(IWorld world) {
-		tess.begin(16);
+		tess.begin(BlocksResources.tessellatorTextureAtlas.getTexture());
 		for (int x = 0; x < sizeX; x++) {
 			for (int z = 0; z < sizeZ; z++) {
 				for (int y = 0; y < sizeY; y++) {
@@ -249,13 +240,14 @@ public class Chunk {
 					} else if (Block.getBlock(blocks[x][y][z]).usesSingleModel()) {
 					} else if (Block.getBlock(blocks[x][y][z]) != Block.Air
 							&& Block.getBlock(blocks[x][y][z]) != Block.Water) {
-						tess.generateCube(x + cx * sizeX, y + cy * sizeY, (z + cz * sizeZ) -1, 1,
+						tess.generateCube(x + cx * sizeX, y + cy * sizeY, (z + cz * sizeZ) - 1, 1,
 								cullFaceUpSolidBlock(x + cx * sizeX, y + cy * sizeY, z + cz * sizeZ, world),
 								cullFaceDown(x + cx * sizeX, y + cy * sizeY, z + cz * sizeZ, world),
 								cullFaceEast(x + cx * sizeX, y + cy * sizeY, z + cz * sizeZ, world),
 								cullFaceWest(x + cx * sizeX, y + cy * sizeY, z + cz * sizeZ, world),
 								cullFaceNorth(x + cx * sizeX, y + cy * sizeY, z + cz * sizeZ, world),
-								cullFaceSouth(x + cx * sizeX, y + cy * sizeY, z + cz * sizeZ, world));
+								cullFaceSouth(x + cx * sizeX, y + cy * sizeY, z + cz * sizeZ, world),
+								Block.getBlock(blocks[x][y][z]));
 					} else if (Block.getBlock(blocks[x][y][z]) == Block.Water) {
 					}
 				}

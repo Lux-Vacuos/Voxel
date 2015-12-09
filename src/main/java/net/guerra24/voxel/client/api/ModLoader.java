@@ -61,13 +61,14 @@ public class ModLoader {
 						}
 					} catch (MalformedURLException | ClassNotFoundException | SecurityException
 							| IllegalArgumentException e) {
-						Logger.error("Error Loading Mod");
+						Logger.error("Error Loading Mod: " + filePath.getFileName().toString());
 						e.printStackTrace();
 					}
 				}
 			});
 		} catch (IOException e) {
-			Logger.error("Invalid Mod File: " + e.getMessage());
+			Logger.error("Invalid Mod File");
+			e.printStackTrace();
 		}
 
 	}

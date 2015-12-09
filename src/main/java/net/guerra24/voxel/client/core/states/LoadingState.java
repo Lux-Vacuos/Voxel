@@ -20,7 +20,6 @@ public class LoadingState implements State {
 	@Override
 	public void update(Voxel voxel, GlobalStates states, float delta) {
 		GameResources gm = voxel.getGameResources();
-		gm.getMenuSystem().gameSP.load(gm);
 		Random seed;
 		if (VoxelVariables.isCustomSeed) {
 			seed = new Random(VoxelVariables.seed.hashCode());

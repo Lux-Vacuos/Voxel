@@ -35,7 +35,7 @@ public class VoxelVariables {
 	 * Display Data
 	 */
 	public static int FPS = 60;
-	public static boolean VSYNC = true;
+	public static boolean VSYNC = false;
 	public static final String Title = "Voxel";
 	/**
 	 * Game Settings
