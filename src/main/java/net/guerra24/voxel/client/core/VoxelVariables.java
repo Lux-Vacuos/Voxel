@@ -45,7 +45,7 @@ public class VoxelVariables {
 	public static final String apiVersion = "0.0.6";
 	public static final int apiVersionNum = 000006;
 	public static final String state = "ALPHA";
-	public static final int build = 132;
+	public static final int build = 133;
 	public static int FOV = 90;
 	public static int WIDTH = 1280;
 	public static int HEIGHT = 720;

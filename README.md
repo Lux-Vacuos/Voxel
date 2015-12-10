@@ -2,7 +2,9 @@
 
 #### In Refactor/Re-Write
 
-This is a voxel engine type that is programmed in Java, using LWJGL and OpenGL3.3+ . Is designed to be scalable and modular, allowing you to modify specific parts of the code and improve it, it is in a very early stage of development. Any help is greatly appreciated.
+Voxel is a Minecraft inspired game using LWJGL 3, OpenGL 3.3 with its own game engine. The engine is builded in a very modified version of ThinMatrix engine to support Deferred Shading/Lighting, some fixes or improvements has been applied to the original code, like screen space reflections, motion blur, bloom, dof, etc.
+
+Right now supports simple modding based on Java annotations and reflections, but still needs more features.
 
 # Build Status
 [![Build Status](https://travis-ci.org/Guerra24/Voxel.svg?branch=develop)](https://travis-ci.org/Guerra24/Voxel)
