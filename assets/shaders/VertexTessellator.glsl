@@ -27,16 +27,16 @@
 in vec3 position;
 in vec2 textureCoords;
 in vec3 normal;
+in vec4 data;
 
 out vec2 pass_textureCoords;
 out vec3 surfaceNormal;
 out vec4 pass_position;
+out vec4 pass_Data;
 
 uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;
 uniform vec3 cameraPos;
-
-const float gradient = 5.0;
 
 void main() {
 	vec3 pos = position - cameraPos;
@@ -46,4 +46,5 @@ void main() {
 	pass_textureCoords = textureCoords;
 	pass_position = vec4(position, 1.0);
 	surfaceNormal = normal;
+	pass_Data = data;
 }

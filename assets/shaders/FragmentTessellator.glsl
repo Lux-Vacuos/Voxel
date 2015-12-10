@@ -27,12 +27,17 @@
 in vec2 pass_textureCoords;
 in vec3 surfaceNormal;
 in vec4 pass_position;
+in vec4 pass_Data;
 
 out vec4 [5] out_Color;
 
 uniform sampler2D texture0;
 
 void main(void) {
+	vec4 data = pass_Data;
+	float id = data.x;
+	float bright = data.y;
+
     vec4 textureColour = texture(texture0, pass_textureCoords);
     if(textureColour.a < 0.5)
     	discard;
@@ -40,5 +45,8 @@ void main(void) {
 	out_Color[1] = vec4(pass_position.xyz,0);
 	out_Color[2] = vec4(surfaceNormal.xyz,0);
 	out_Color[3] = vec4(0.0, 0.0, 0.0, 0.0);
-	out_Color[4] = vec4(0.0,0.0,0.0,0.0);
+	out_Color[4] = vec4(0.0, 0.0, 0.0, bright);
+	if(abs(id - 13) < 0.01 || abs(id - 8) < 0.01) 
+		out_Color[3].r = 1.0;
+	
 }

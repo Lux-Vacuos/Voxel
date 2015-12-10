@@ -153,19 +153,12 @@ public class Chunk {
 	}
 
 	public void createBasicTerrain(IWorld world) {
-
-		byte a = 0;
-		if (VoxelVariables.christmas)
-			a = Block.Ice.getId();
-		else
-			a = Block.Water.getId();
-
 		for (int x = 0; x < sizeX; x++) {
 			for (int z = 0; z < sizeZ; z++) {
 				for (int y = 0; y < 128; y++) {
 					if (y >= cy * 16 && y < 16 + cy * 16) {
 						if (y <= 64)
-							setLocalBlock(x, y, z, a);
+							setLocalBlock(x, y, z, Block.Water.getId());
 					}
 				}
 			}
@@ -247,7 +240,7 @@ public class Chunk {
 								cullFaceWest(x + cx * sizeX, y + cy * sizeY, z + cz * sizeZ, world),
 								cullFaceNorth(x + cx * sizeX, y + cy * sizeY, z + cz * sizeZ, world),
 								cullFaceSouth(x + cx * sizeX, y + cy * sizeY, z + cz * sizeZ, world),
-								Block.getBlock(blocks[x][y][z]));
+								Block.getBlock(blocks[x][y][z]), getTorchLight(x, y, z));
 					} else if (Block.getBlock(blocks[x][y][z]) == Block.Water) {
 					}
 				}

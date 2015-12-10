@@ -36,7 +36,7 @@ uniform vec3 skyColour;
 
 uniform int useHQWater;
 
-const float waveStrength = 0.02;
+const float waveStrength = 0.01;
 
 void main(void) {
 	

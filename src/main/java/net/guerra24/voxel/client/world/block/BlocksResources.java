@@ -24,7 +24,6 @@
 
 package net.guerra24.voxel.client.world.block;
 
-import net.guerra24.voxel.client.core.VoxelVariables;
 import net.guerra24.voxel.client.resources.Loader;
 import net.guerra24.voxel.client.resources.models.ModelTexture;
 import net.guerra24.voxel.client.resources.models.RawModel;
@@ -46,19 +45,12 @@ public class BlocksResources {
 		RawModel portal = loader.getObjLoader().loadObjModel("Portal", loader);
 		RawModel leaves = loader.getObjLoader().loadObjModel("Leaves", loader);
 
-		ModelTexture texture10 = null;
-
-		if (VoxelVariables.christmas) {
-			texture10 = new ModelTexture(loader.loadTextureBlocks("LeavesSnow"));
-		} else {
-			texture10 = new ModelTexture(loader.loadTextureBlocks("Leaves"));
-		}
+		ModelTexture texture10 = new ModelTexture(loader.loadTextureBlocks("Leaves"));
 
 		tessellatorTextureAtlas = new TessellatorTextureAtlas(256, 256, loader.loadTextureBlocks("blocks"));
 
 		ModelTexture texture8 = new ModelTexture(loader.loadTextureBlocks("Torch"));
 		ModelTexture texture9 = new ModelTexture(loader.loadTextureBlocks("Portal"));
-
 		cubeTorch = new TexturedModel(torch, texture8);
 		cubePortal = new TexturedModel(portal, texture9);
 		cubeLeaves = new TexturedModel(leaves, texture10);

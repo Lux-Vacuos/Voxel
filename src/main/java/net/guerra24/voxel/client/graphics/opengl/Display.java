@@ -320,7 +320,7 @@ public class Display {
 			e.printStackTrace();
 		}
 		createCapabilities();
-		glViewport(0, 0, displayWidth, displayHeight);
+		glViewport(0, 0, displayFramebufferWidth, displayFramebufferHeight);
 		lastLoopTimeUpdate = getTime();
 		lastLoopTimeRender = getTime();
 		ByteBuffer w = BufferUtils.createByteBuffer(4);

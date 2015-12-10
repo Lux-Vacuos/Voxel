@@ -177,7 +177,7 @@ public class Loader {
 		try {
 			InputStream file = getClass().getClassLoader()
 					.getResourceAsStream("assets/textures/entity/" + fileName + ".png");
-			texture = loadTexture(file, GL_NEAREST, GL_CLAMP_TO_EDGE);
+			texture = loadTexture(file, GL_NEAREST, GL_REPEAT);
 			Logger.log("Loading Texture: " + fileName + ".png");
 			glGenerateMipmap(GL_TEXTURE_2D);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
