@@ -48,13 +48,13 @@ import org.lwjgl.BufferUtils;
 
 import net.guerra24.voxel.client.util.Logger;
 
-public class PostProcessingFBO {
+public class DeferredShadingFBO {
 
 	private int fbo, diffuseRT, positionRT, normalRT, data0RT, data1RT, depthBuffer;
 
 	private int diffuseTex, positionTex, normalTex, data0Tex, data1Tex, depthTex;
 
-	public PostProcessingFBO(int width, int height) {
+	public DeferredShadingFBO(int width, int height) {
 		init(width, height);
 	}
 

@@ -87,8 +87,7 @@ public class EntityRenderer {
 			prepareTexturedModel(model, gm);
 			List<BlockEntity> batch = blockEntities.get(model);
 			for (BlockEntity entity : batch) {
-				shader.loadId(entity.getId());
-				shader.loadBlockBright(entity.getLocalLight());
+				shader.loadEntityLight(entity.getLocalLight());
 				prepareInstance(entity);
 				glDrawElements(GL_TRIANGLES, model.getRawModel().getVertexCount(), GL_UNSIGNED_INT, 0);
 			}
@@ -107,7 +106,7 @@ public class EntityRenderer {
 			prepareTexturedModel(model, gm);
 			List<Entity> batch = blockEntities.get(model);
 			for (Entity entity : batch) {
-				shader.loadBlockBright(1);
+				shader.loadEntityLight(1);
 				prepareInstance(entity);
 				glDrawElements(GL_TRIANGLES, model.getRawModel().getVertexCount(), GL_UNSIGNED_INT, 0);
 			}

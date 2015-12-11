@@ -37,8 +37,7 @@ uniform sampler2D texture0;
 uniform sampler2DShadow depth0;
 uniform vec3 skyColour;
 uniform vec3 lightPosition;
-uniform float blockBright;
-uniform int id;
+uniform float entityLight;
 
 uniform int useShadows;
 
@@ -60,7 +59,6 @@ vec2 poissonDisk[16] = vec2[](
    vec2( 0.19984126, 0.78641367 ), 
    vec2( 0.14383161, -0.14100790 ) 
 );
-   
 
 void main(void) {
     vec4 textureColour = texture(texture0, pass_textureCoords);
@@ -81,8 +79,5 @@ void main(void) {
 	out_Color[1] = vec4(pass_position.xyz,0);
 	out_Color[2] = vec4(surfaceNormal.xyz,0);
 	out_Color[3] = vec4(0.0,1.0,0.0,shadow);
-	out_Color[4] = vec4(0.0,0.0,0.0,blockBright);
-	if(id == 13 || id == 8){
-		out_Color[3].r = 1.0;
-	}
+	out_Color[4] = vec4(0.0,0.0,0.0,entityLight);
 }

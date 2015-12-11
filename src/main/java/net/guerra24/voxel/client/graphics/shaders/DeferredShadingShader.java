@@ -158,13 +158,12 @@ public class DeferredShadingShader extends ShaderProgram {
 		super.load2DVector(loc_resolution, res);
 	}
 
-	public void loadSettings(boolean useDof, boolean useFXAA, boolean useMotionBlur, boolean useBloom,
-			boolean useVolumetricLight) {
-		super.loadBoolean(loc_useDOF, useDof);
-		super.loadBoolean(loc_useFXAA, useFXAA);
-		super.loadBoolean(loc_useMotionBlur, useMotionBlur);
-		super.loadBoolean(loc_useBloom, useBloom);
-		super.loadBoolean(loc_useVolumetricLight, useVolumetricLight);
+	public void loadSettings() {
+		super.loadBoolean(loc_useDOF, VoxelVariables.useDOF);
+		super.loadBoolean(loc_useFXAA, VoxelVariables.useFXAA);
+		super.loadBoolean(loc_useMotionBlur, VoxelVariables.useMotionBlur);
+		super.loadBoolean(loc_useBloom, VoxelVariables.useBloom);
+		super.loadBoolean(loc_useVolumetricLight, VoxelVariables.useVolumetricLight);
 	}
 
 	public void loadMotionBlurData(Matrix4f projectionMatrix, Camera camera, Matrix4f previousViewMatrix,

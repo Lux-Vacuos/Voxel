@@ -286,6 +286,7 @@ public abstract class ShaderProgram {
 		} catch (IOException e) {
 			Logger.warn("Shader file not found: " + file);
 			e.printStackTrace();
+			System.exit(0);
 		}
 		int shaderID = glCreateShader(type);
 		glShaderSource(shaderID, shaderSource);

@@ -320,7 +320,7 @@ public class Display {
 			e.printStackTrace();
 		}
 		createCapabilities();
-		glViewport(0, 0, displayFramebufferWidth, displayFramebufferHeight);
+		glViewport(0, 0, displayWidth, displayHeight);
 		lastLoopTimeUpdate = getTime();
 		lastLoopTimeRender = getTime();
 		ByteBuffer w = BufferUtils.createByteBuffer(4);
@@ -328,7 +328,7 @@ public class Display {
 		glfwGetWindowSize(window, w, h);
 		int width = w.getInt(0);
 		int height = h.getInt(0);
-		displayHeight = width;
+		displayWidth = width;
 		displayHeight = height;
 		if (glGetString(GL_VENDOR).contains("NVIDIA"))
 			nvidia = true;
