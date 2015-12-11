@@ -13,7 +13,11 @@ import net.guerra24.voxel.universal.util.vector.Vector3f;
  * @author danirod
  * @category Kernel
  */
-public class MainMenuState implements State {
+public class MainMenuState extends State {
+
+	public MainMenuState() {
+		super(1);
+	}
 
 	@Override
 	public void render(Voxel voxel, GlobalStates states, float delta) {
@@ -44,7 +48,7 @@ public class MainMenuState implements State {
 			gm.getMenuSystem().mainMenu.getList().get(1).changeScale(0.07f);
 		if (gm.getMenuSystem().mainMenu.getPlayButton().pressed()) {
 			gm.getMenuSystem().gameSP.load(gm);
-			states.state = GameState.LOADING_WORLD;
+			states.setState(GameState.LOADING_WORLD);
 		} else if (gm.getMenuSystem().mainMenu.getExitButton().pressed()) {
 			states.loop = false;
 		} else if (gm.getMenuSystem().mainMenu.getOptionsButton().pressed()) {
@@ -54,7 +58,7 @@ public class MainMenuState implements State {
 				Thread.sleep(100);
 			} catch (InterruptedException e) {
 			}
-			states.state = GameState.OPTIONS;
+			states.setState(GameState.OPTIONS);
 		}
 	}
 

@@ -15,7 +15,11 @@ import net.guerra24.voxel.client.core.GlobalStates.GameState;
  * @author danirod
  * @category Kernel
  */
-public class LoadingState implements State {
+public class LoadingState extends State {
+
+	public LoadingState() {
+		super(5);
+	}
 
 	@Override
 	public void update(Voxel voxel, GlobalStates states, float delta) {
@@ -33,7 +37,7 @@ public class LoadingState implements State {
 		gm.getSoundSystem().rewind("menu1");
 		gm.getSoundSystem().stop("menu2");
 		gm.getSoundSystem().rewind("menu2");
-		states.state = GameState.GAME_SP;
+		states.setState(GameState.GAME_SP);
 	}
 
 	@Override

@@ -79,6 +79,7 @@ public class Voxel {
 	 * @throws VersionException
 	 */
 	public void preInit() {
+		gameResources = new GameResources();
 		display = new Display();
 		display.initDsiplay(VoxelVariables.WIDTH, VoxelVariables.HEIGHT);
 		display.startUp();
@@ -96,7 +97,6 @@ public class Voxel {
 		if (Bootstrap.getPlatform() == Bootstrap.Platform.MACOSX) {
 			VoxelVariables.runningOnMac = true;
 		}
-		gameResources = new GameResources();
 		api = new ModInitialization(gameResources.getGameSettings());
 		try {
 			api.preInit();

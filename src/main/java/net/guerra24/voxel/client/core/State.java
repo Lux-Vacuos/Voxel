@@ -6,10 +6,20 @@ package net.guerra24.voxel.client.core;
  * @author danirod
  * @category Kernel
  */
-public interface State {
+public abstract class State {
 
-	void update(Voxel voxel, GlobalStates states, float delta);
+	private int id;
 
-	void render(Voxel voxel, GlobalStates states, float delta);
+	public State(int id) {
+		this.id = id;
+	}
+
+	public abstract void update(Voxel voxel, GlobalStates states, float delta);
+
+	public abstract void render(Voxel voxel, GlobalStates states, float delta);
+
+	public int getId() {
+		return id;
+	}
 
 }

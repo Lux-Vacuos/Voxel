@@ -18,19 +18,19 @@ import net.guerra24.voxel.client.resources.Loader;
 public class GlobalStates {
 
 	public boolean loop = false;
-	public GameState state;
+
+	private GameState state;
+
+	private GameState oldState;
 
 	public enum GameState {
-		GAME_SP(new GameSPState()),
-		MAINMENU(new MainMenuState()),
-		IN_PAUSE(new InPauseState()),
-		LOADING_WORLD(new LoadingState()),
-		OPTIONS(new OptionsState());
-		
+		GAME_SP(new GameSPState()), MAINMENU(new MainMenuState()), IN_PAUSE(new InPauseState()), LOADING_WORLD(
+				new LoadingState()), OPTIONS(new OptionsState());
+
 		GameState(State state) {
 			this.state = state;
 		}
-		
+
 		State state;
 	}
 
@@ -40,9 +40,9 @@ public class GlobalStates {
 	}
 
 	public void doUpdate(Voxel voxel, float delta) {
-		
+
 		state.state.update(voxel, this, delta);
-		
+
 		if (Display.isCloseRequested())
 			loop = false;
 
@@ -63,5 +63,14 @@ public class GlobalStates {
 
 	public GameState getState() {
 		return state;
+	}
+
+	public void setState(GameState state) {
+		this.oldState = this.state;
+		this.state = state;
+	}
+	
+	public GameState getOldState(){
+		return oldState;
 	}
 }

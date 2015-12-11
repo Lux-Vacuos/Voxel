@@ -26,7 +26,11 @@ import net.guerra24.voxel.client.world.WorldsHandler;
  * @author danirod
  * @category Kernel
  */
-public class GameSPState implements State {
+public class GameSPState extends State {
+	
+	public GameSPState() {
+		super(2);
+	}
 
 	@Override
 	public void update(Voxel voxel, GlobalStates states, float delta) {
@@ -44,7 +48,7 @@ public class GameSPState implements State {
 
 		if (!display.isDisplayFocused() && !VoxelVariables.debug) {
 			gm.getCamera().unlockMouse();
-			states.state = GameState.IN_PAUSE;
+			states.setState(GameState.IN_PAUSE);
 		}
 	}
 

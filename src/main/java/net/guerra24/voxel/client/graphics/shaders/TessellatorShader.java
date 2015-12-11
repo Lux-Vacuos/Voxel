@@ -27,6 +27,8 @@ public class TessellatorShader extends ShaderProgram {
 	private int loc_texture;
 	private int loc_depth;
 
+	private int loc_useShadows;
+
 	public TessellatorShader() {
 		super(VoxelVariables.VERTEX_FILE_TESSELLATOR, VoxelVariables.FRAGMENT_FILE_TESSELLATOR);
 	}
@@ -46,6 +48,7 @@ public class TessellatorShader extends ShaderProgram {
 		loc_cameraPos = super.getUniformLocation("cameraPos");
 		loc_texture = super.getUniformLocation("texture0");
 		loc_depth = super.getUniformLocation("depth");
+		loc_useShadows = super.getUniformLocation("useShadows");
 	}
 
 	@Override
@@ -54,6 +57,10 @@ public class TessellatorShader extends ShaderProgram {
 		super.bindAttribute(1, "textureCoords");
 		super.bindAttribute(2, "normal");
 		super.bindAttribute(3, "data");
+	}
+
+	public void loadSettings(boolean useShadows) {
+		super.loadBoolean(loc_useShadows, useShadows);
 	}
 
 	/**

@@ -12,6 +12,8 @@ public class GameSettings {
 	private Properties prop;
 	private File settings;
 
+	private int version = 2;
+
 	public GameSettings() {
 		settings = new File(VoxelVariables.settings);
 		prop = new Properties();
@@ -23,10 +25,21 @@ public class GameSettings {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+		}
+		if (getVersion() == 1) {
 			VoxelVariables.useShadows = Boolean.parseBoolean(getValue("useShadows"));
 			VoxelVariables.useVolumetricLight = Boolean.parseBoolean(getValue("useVolumetricLight"));
 			VoxelVariables.useHQWater = Boolean.parseBoolean(getValue("useHQWater"));
 			VoxelVariables.useFXAA = Boolean.parseBoolean(getValue("useFXAA"));
+		} else if (getVersion() == 2) {
+			VoxelVariables.useShadows = Boolean.parseBoolean(getValue("useShadows"));
+			VoxelVariables.useVolumetricLight = Boolean.parseBoolean(getValue("useVolumetricLight"));
+			VoxelVariables.useHQWater = Boolean.parseBoolean(getValue("useHQWater"));
+			VoxelVariables.useFXAA = Boolean.parseBoolean(getValue("useFXAA"));
+			VoxelVariables.VSYNC = Boolean.parseBoolean(getValue("VSYNC"));
+			VoxelVariables.FPS = Integer.parseInt(getValue("FPS"));
+			VoxelVariables.UPS = Integer.parseInt(getValue("UPS"));
+			VoxelVariables.radius = Integer.parseInt(getValue("DrawDistance"));
 		} else {
 			updateSetting();
 			save();
@@ -38,7 +51,19 @@ public class GameSettings {
 	}
 
 	public String getValue(String key) {
-		return prop.getProperty(key);
+		String res = prop.getProperty(key);
+		if (res == null)
+			return "1";
+		else
+			return res;
+	}
+
+	private int getVersion() {
+		String b = getValue("SettingsVersion");
+		if (b == null)
+			b = "1";
+		int a = Integer.parseInt(b);
+		return a;
 	}
 
 	public void save() {
@@ -52,10 +77,15 @@ public class GameSettings {
 	}
 
 	public void updateSetting() {
+		registerValue("SettingsVersion", Integer.toString(version));
 		registerValue("useShadows", Boolean.toString(VoxelVariables.useShadows));
 		registerValue("useVolumetricLight", Boolean.toString(VoxelVariables.useVolumetricLight));
 		registerValue("useHQWater", Boolean.toString(VoxelVariables.useHQWater));
 		registerValue("useFXAA", Boolean.toString(VoxelVariables.useFXAA));
+		registerValue("VSYNC", Boolean.toString(VoxelVariables.VSYNC));
+		registerValue("FPS", Integer.toString(VoxelVariables.FPS));
+		registerValue("UPS", Integer.toString(VoxelVariables.UPS));
+		registerValue("DrawDistance", Integer.toString(VoxelVariables.radius));
 	}
 
 }

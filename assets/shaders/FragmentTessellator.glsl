@@ -35,6 +35,8 @@ out vec4 [5] out_Color;
 uniform sampler2D texture0;
 uniform sampler2DShadow depth;
 
+uniform int useShadows;
+
 vec2 poissonDisk[16] = vec2[]( 
    vec2( -0.94201624, -0.39906216 ), 
    vec2( 0.94558609, -0.76890725 ), 
@@ -59,12 +61,13 @@ void main(void) {
 	float bright = data.y;
 	int id = int(data.x + 0.5f);
 	
-	float shadow = -0.4;
-	float bias = 0.0001;
-	for (int i=0;i<16;i++){
-    	if (texture(depth, vec3(ShadowCoord.xy + poissonDisk[i]/1600.0 , 128.0), 0)  <  ShadowCoord.z-bias ){
-   		 	shadow += 0.05;
-   	 	}
+	float shadow = 0;
+	if(useShadows == 1){
+		for (int i=0;i<16;i++){
+	    	if (texture(depth, vec3(ShadowCoord.xy + poissonDisk[i]/1600.0 , 0.0), 0)  <  ShadowCoord.z){
+   		 		shadow += 0.05;
+   	 		}
+		}
 	}
 
     vec4 textureColour = texture(texture0, pass_textureCoords);

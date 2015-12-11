@@ -1,11 +1,6 @@
 package net.guerra24.voxel.client.resources.models;
 
-import static org.lwjgl.opengl.GL11.GL_FLOAT;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
-import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
-import static org.lwjgl.opengl.GL11.GL_UNSIGNED_INT;
-import static org.lwjgl.opengl.GL11.glBindTexture;
-import static org.lwjgl.opengl.GL11.glDrawElements;
+import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE1;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
@@ -29,6 +24,7 @@ import java.util.List;
 
 import org.lwjgl.BufferUtils;
 
+import net.guerra24.voxel.client.core.VoxelVariables;
 import net.guerra24.voxel.client.graphics.shaders.TessellatorShader;
 import net.guerra24.voxel.client.graphics.shaders.TessellatorShadowShader;
 import net.guerra24.voxel.client.resources.GameResources;
@@ -153,6 +149,7 @@ public class Tessellator {
 		shader.start();
 		shader.loadviewMatrix(gm.getCamera());
 		shader.loadBiasMatrix(gm);
+		shader.loadSettings(VoxelVariables.useShadows);
 		glBindVertexArray(vaoID);
 		glEnableVertexAttribArray(0);
 		glEnableVertexAttribArray(1);
@@ -172,6 +169,7 @@ public class Tessellator {
 	}
 
 	public void drawShadow(Camera camera) {
+		glCullFace(GL_FRONT);
 		shadowShader.start();
 		shadowShader.loadviewMatrix(camera);
 		glBindVertexArray(vaoID);
@@ -180,6 +178,7 @@ public class Tessellator {
 		glDisableVertexAttribArray(0);
 		glBindVertexArray(0);
 		shadowShader.stop();
+		glCullFace(GL_BACK);
 	}
 
 	public void loadData(List<Vector3f> pos, List<Vector2f> texcoords, List<Vector3f> normals, List<Vector4f> data) {

@@ -109,7 +109,7 @@ public class SkyboxRenderer {
 		shader.connectTextureUnits();
 		shader.loadProjectionMatrix(projectionMatrix);
 		shader.stop();
-		time = 14000;
+		time = 6000;
 	}
 
 	/**
@@ -146,7 +146,7 @@ public class SkyboxRenderer {
 	 *            Delta
 	 */
 	public float update(float delta) {
-		time += delta * 10;
+		time += delta * 100;
 		time %= 24000;
 		float res = time * 0.015f;
 		return res - 90;
