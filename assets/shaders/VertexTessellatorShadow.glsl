@@ -25,34 +25,14 @@
 #version 330 core
 
 in vec3 position;
-in vec2 textureCoords;
-in vec3 normal;
-in vec4 data;
-
-out vec2 pass_textureCoords;
-out vec3 surfaceNormal;
-out vec4 pass_position;
-out vec4 pass_Data;
-out vec4 ShadowCoord;
 
 uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;
 uniform vec3 cameraPos;
-uniform mat4 projectionLightMatrix;
-uniform mat4 viewLightMatrix;
-uniform mat4 biasMatrix;
 
 void main() {
 	vec3 pos = position - cameraPos;
 	vec4 worldPosition = vec4(pos, 1.0);
 	vec4 positionRelativeToCam = viewMatrix * worldPosition;
 	gl_Position = projectionMatrix * positionRelativeToCam;
-	pass_textureCoords = textureCoords;
-	pass_position = vec4(position, 1.0);
-	surfaceNormal = normal;
-	pass_Data = data;
-	
-	vec4 posLight = viewLightMatrix * vec4(position, 1.0);
-	vec4 a = projectionLightMatrix * posLight;
-	ShadowCoord = biasMatrix * a;
 }

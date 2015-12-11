@@ -81,6 +81,7 @@ public class GameSPState implements State {
 
 		gm.getRenderer().prepare();
 		gm.getDeferredShadingRenderer().render(gm);
+
 	}
 
 }

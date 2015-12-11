@@ -56,8 +56,6 @@ public class Voxel {
 	/**
 	 * Game Threads
 	 */
-	public static UpdateThread worldThread2;
-
 	/**
 	 * Game Data
 	 */
@@ -122,13 +120,10 @@ public class Voxel {
 		worldsHandler.setActiveWorld("Infinity");
 		Logger.log("Initializing Threads");
 		/*
-		 * worldThread2 = new UpdateThread(this); worldThread2.setName(
-		 * "Voxel World 1"); worldThread2.start();
-		 *//*
-			 * new Thread(new Runnable() { public void run() {
-			 * Thread.currentThread().setName("Voxel-Client"); client = new
-			 * DedicatedClient(gameResources); } }).start();
-			 */api.getMoltenAPI().setMobManager(gameResources.getPhysics().getMobManager());
+		 * new Thread(new Runnable() { public void run() {
+		 * Thread.currentThread().setName("Voxel-Client"); client = new
+		 * DedicatedClient(gameResources); } }).start();
+		 */api.getMoltenAPI().setMobManager(gameResources.getPhysics().getMobManager());
 		try {
 			api.init();
 		} catch (VersionException e) {
@@ -164,6 +159,8 @@ public class Voxel {
 		init();
 		postInit();
 		float delta = 0;
+		float accumulator = 0f;
+		float interval = 1f / VoxelVariables.UPS;
 		while (gameResources.getGlobalStates().loop) {
 			if (Display.timeCountRender > 1f) {
 				Logger.log("FPS: " + Display.fps);
@@ -176,7 +173,11 @@ public class Voxel {
 				Display.timeCountRender -= 1f;
 			}
 			delta = Display.getDeltaRender();
-			update(delta);
+			accumulator += delta;
+			while (accumulator >= interval) {
+				update(interval);
+				accumulator -= interval;
+			}
 			render(delta);
 		}
 		dispose();

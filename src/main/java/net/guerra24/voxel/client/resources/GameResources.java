@@ -41,6 +41,7 @@ import net.guerra24.voxel.client.graphics.OcclusionRenderer;
 import net.guerra24.voxel.client.graphics.SkyboxRenderer;
 import net.guerra24.voxel.client.graphics.TextMasterRenderer;
 import net.guerra24.voxel.client.graphics.shaders.TessellatorShader;
+import net.guerra24.voxel.client.graphics.shaders.TessellatorShadowShader;
 import net.guerra24.voxel.client.menu.Menu;
 import net.guerra24.voxel.client.particle.ParticleMaster;
 import net.guerra24.voxel.client.resources.models.GuiTexture;
@@ -126,6 +127,7 @@ public class GameResources {
 		deferredShadingRenderer = new DeferredShadingRenderer(loader, this);
 		masterShadowRenderer = new MasterShadowRenderer();
 		TessellatorShader.getInstance();
+		TessellatorShadowShader.getInstance();
 		ParticleMaster.getInstance().init(loader, renderer.getProjectionMatrix());
 		physics = new Physics(this);
 		frustum = new Frustum();
@@ -183,6 +185,8 @@ public class GameResources {
 	public void cleanUp() {
 		gameSettings.save();
 		TextMasterRenderer.getInstance().cleanUp();
+		TessellatorShader.getInstance().cleanUp();
+		TessellatorShadowShader.getInstance().cleanUp();
 		masterShadowRenderer.cleanUp();
 		occlusionRenderer.cleanUp();
 		ParticleMaster.getInstance().cleanUp();

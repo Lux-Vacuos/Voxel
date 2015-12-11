@@ -50,7 +50,6 @@ public class Player extends Entity implements IEntity {
 
 	@Override
 	public void update(float delta, GameResources gm, GuiResources gi, IWorld world, ModInitialization api) {
-		aabb.update(getPosition());
 		super.increasePosition(0, upwardsSpeed * delta, 0);
 		if (isCollision(0, world) == CollisionType.FRONT) {
 			super.increasePosition(0.1f, 0, 0);
@@ -104,7 +103,7 @@ public class Player extends Entity implements IEntity {
 		}
 
 		float tempy = (v.y);
-		int tempY = (int) tempy - 2;
+		int tempY = (int) (tempy - 1.8f);
 
 		int bx = (int) tempX;
 		int by = (int) tempY;

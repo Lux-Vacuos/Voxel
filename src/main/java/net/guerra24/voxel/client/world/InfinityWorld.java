@@ -175,21 +175,7 @@ public class InfinityWorld implements IWorld {
 							for (ParticlePoint particlePoint : chunk.getParticlePoints()) {
 								particleSystem.generateParticles(particlePoint, delta);
 							}
-							if (!chunk.created)
-								chunk.createBasicTerrain(this);
-							if (!chunk.decorated) {
-								boolean can = true;
-								for (int jx = chunk.cx - 1; jx < chunk.cx + 1; jx++) {
-									for (int jz = chunk.cz - 1; jz < chunk.cz + 1; jz++) {
-										for (int jy = chunk.cy - 1; jy < chunk.cy + 1; jy++) {
-											if (!hasChunk(chunkDim, jx, jy, jz))
-												can = false;
-										}
-									}
-								}
-								if (can)
-									chunk.decorate(this, chunkGenerator);
-							}
+							chunk.update(this, chunkGenerator, worldService);
 							if (gm.getFrustum().cubeInFrustum(chunk.posX, chunk.posY, chunk.posZ, chunk.posX + 16,
 									chunk.posY + 16, chunk.posZ + 16)) {
 								chunk.rebuild(worldService, this);

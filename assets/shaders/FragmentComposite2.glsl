@@ -92,7 +92,9 @@ void main(void){
     	if(data.b != 1) {
     		normal = normalize(normal);
     		vec3 vHalfVector = normalize(lightDir.xyz+eyeDir);
-    		image = ((max(dot(normal.xyz,lightDir),0.2) + data1.a) - data.a) * image;
+    		float b = ((max(dot(normal.xyz,lightDir),0.2) + data1.a) - data.a);
+    		b = clamp(b,0.2,1.0);
+    		image = b * image;
     		if(data.r == 1){
     			if(data.a <= 0)
 	    			image += pow(max(dot(normal.xyz,vHalfVector),0.0), 100) * 8;

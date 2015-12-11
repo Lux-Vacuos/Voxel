@@ -35,6 +35,7 @@ public class VoxelVariables {
 	 * Display Data
 	 */
 	public static int FPS = 60;
+	public static int UPS = 30;
 	public static boolean VSYNC = false;
 	public static final String Title = "Voxel";
 	/**
@@ -110,6 +111,8 @@ public class VoxelVariables {
 	public static final String FRAGMENT_FILE_COMPOSITE = "FragmentComposite";
 	public static final String VERTEX_FILE_TESSELLATOR = "VertexTessellator.glsl";
 	public static final String FRAGMENT_FILE_TESSELLATOR = "FragmentTessellator.glsl";
+	public static final String VERTEX_FILE_TESSELLATOR_SHADOW = "VertexTessellatorShadow.glsl";
+	public static final String FRAGMENT_FILE_TESSELLATOR_SHADOW = "FragmentTessellatorShadow.glsl";
 	/**
 	 * World Folder Path
 	 */

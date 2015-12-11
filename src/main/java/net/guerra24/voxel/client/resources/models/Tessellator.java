@@ -7,6 +7,7 @@ import static org.lwjgl.opengl.GL11.GL_UNSIGNED_INT;
 import static org.lwjgl.opengl.GL11.glBindTexture;
 import static org.lwjgl.opengl.GL11.glDrawElements;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE1;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
 import static org.lwjgl.opengl.GL15.GL_ARRAY_BUFFER;
 import static org.lwjgl.opengl.GL15.GL_DYNAMIC_DRAW;
@@ -28,8 +29,9 @@ import java.util.List;
 
 import org.lwjgl.BufferUtils;
 
-import net.guerra24.voxel.client.graphics.MasterRenderer;
 import net.guerra24.voxel.client.graphics.shaders.TessellatorShader;
+import net.guerra24.voxel.client.graphics.shaders.TessellatorShadowShader;
+import net.guerra24.voxel.client.resources.GameResources;
 import net.guerra24.voxel.client.world.block.IBlock;
 import net.guerra24.voxel.client.world.entities.Camera;
 import net.guerra24.voxel.universal.util.vector.Vector2f;
@@ -52,12 +54,13 @@ public class Tessellator {
 	private boolean updated = false;
 
 	private TessellatorShader shader;
+	private TessellatorShadowShader shadowShader;
 
-	public Tessellator(MasterRenderer renderer) {
-		init(renderer);
+	public Tessellator(GameResources gm) {
+		init(gm);
 	}
 
-	private void init(MasterRenderer renderer) {
+	private void init(GameResources gm) {
 		pos = new ArrayList<Vector3f>();
 		texcoords = new ArrayList<Vector2f>();
 		normals = new ArrayList<Vector3f>();
@@ -65,8 +68,13 @@ public class Tessellator {
 		indices = new ArrayList<Integer>();
 		shader = TessellatorShader.getInstance();
 		shader.start();
-		shader.loadProjectionMatrix(renderer.getProjectionMatrix());
+		shader.conectTextureUnits();
+		shader.loadProjectionMatrix(gm.getRenderer().getProjectionMatrix());
 		shader.stop();
+		shadowShader = TessellatorShadowShader.getInstance();
+		shadowShader.start();
+		shadowShader.loadProjectionMatrix(gm.getMasterShadowRenderer().getProjectionMatrix());
+		shadowShader.stop();
 
 		vaoID = glGenVertexArrays();
 		glBindVertexArray(vaoID);
@@ -133,7 +141,7 @@ public class Tessellator {
 		updated = true;
 	}
 
-	public void draw(Camera camera) {
+	public void draw(GameResources gm) {
 		if (updated) {
 			updateGlBuffers(vboID0, vboCap0, buffer0);
 			updateGlBuffers(vboID1, vboCap1, buffer1);
@@ -143,7 +151,8 @@ public class Tessellator {
 			updated = false;
 		}
 		shader.start();
-		shader.loadviewMatrix(camera);
+		shader.loadviewMatrix(gm.getCamera());
+		shader.loadBiasMatrix(gm);
 		glBindVertexArray(vaoID);
 		glEnableVertexAttribArray(0);
 		glEnableVertexAttribArray(1);
@@ -151,6 +160,8 @@ public class Tessellator {
 		glEnableVertexAttribArray(3);
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, texture);
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, gm.getMasterShadowRenderer().getFbo().getTexture());
 		glDrawElements(GL_TRIANGLES, indicesCounter, GL_UNSIGNED_INT, 0);
 		glDisableVertexAttribArray(0);
 		glDisableVertexAttribArray(1);
@@ -158,6 +169,17 @@ public class Tessellator {
 		glDisableVertexAttribArray(3);
 		glBindVertexArray(0);
 		shader.stop();
+	}
+
+	public void drawShadow(Camera camera) {
+		shadowShader.start();
+		shadowShader.loadviewMatrix(camera);
+		glBindVertexArray(vaoID);
+		glEnableVertexAttribArray(0);
+		glDrawElements(GL_TRIANGLES, indicesCounter, GL_UNSIGNED_INT, 0);
+		glDisableVertexAttribArray(0);
+		glBindVertexArray(0);
+		shadowShader.stop();
 	}
 
 	public void loadData(List<Vector3f> pos, List<Vector2f> texcoords, List<Vector3f> normals, List<Vector4f> data) {

@@ -61,7 +61,7 @@ public class Chunk {
 	private transient boolean readyToRender = true;
 	private transient Tessellator tess;
 	public transient boolean needsRebuild = true, updated = false, updating = false, empty = true, genQuery = false,
-			visible = false;
+			visible = false, creating = false, decorating = false;
 	public boolean created = false, decorated = false;
 
 	/**
@@ -116,7 +116,7 @@ public class Chunk {
 		sizeX = VoxelVariables.CHUNK_SIZE;
 		sizeY = VoxelVariables.CHUNK_HEIGHT;
 		sizeZ = VoxelVariables.CHUNK_SIZE;
-		tess = new Tessellator(gm.getRenderer());
+		tess = new Tessellator(gm);
 	}
 
 	public void checkForMissingBlocks() {
@@ -140,19 +140,37 @@ public class Chunk {
 		}
 	}
 
-	public void update(IWorld world) {
+	public void update(IWorld world, ChunkGenerator chunkGenerator, WorldService service) {
+		if (!created && !creating) {
+			creating = true;
+			service.add_worker(new ChunkWorkerGenerator(world, this));
+		}
+		if (!decorated) {
+			boolean can = true;
+			for (int jx = cx - 1; jx < cx + 1; jx++) {
+				for (int jz = cz - 1; jz < cz + 1; jz++) {
+					for (int jy = cy - 1; jy < cy + 1; jy++) {
+						if (!world.hasChunk(dim, jx, jy, jz))
+							can = false;
+					}
+				}
+			}
+			if (can)
+				decorate(world, chunkGenerator);
+		}
+	}
+
+	protected void update(IWorld world) {
 		blocksMeshtemp.addAll(blocksMesh);
-		readyToRender = false;
 		blocksMesh.clear();
 		particlePoints.clear();
 		calculateLight(blocksMesh, world);
 		rebuildChunkSection(blocksMesh, world);
 		rebuildChunkSection(world);
-		readyToRender = true;
 		blocksMeshtemp.clear();
 	}
 
-	public void createBasicTerrain(IWorld world) {
+	protected void createBasicTerrain(IWorld world) {
 		for (int x = 0; x < sizeX; x++) {
 			for (int z = 0; z < sizeZ; z++) {
 				for (int y = 0; y < 128; y++) {
@@ -185,10 +203,10 @@ public class Chunk {
 		created = true;
 	}
 
-	public void decorate(IWorld world, ChunkGenerator generator) {
+	protected void decorate(IWorld world, ChunkGenerator generator) {
 		for (int i = 0; i < 4; i++) {
-			int xx = Maths.randInt(4, 12);
-			int zz = Maths.randInt(4, 12);
+			int xx = Maths.randInt(0, 15);
+			int zz = Maths.randInt(0, 15);
 			double tempHeight = world.getNoise().getNoise(xx + cx * 16, zz + cz * 16);
 			tempHeight += 1;
 			int height = (int) (64 * Maths.clamp(tempHeight));
@@ -199,7 +217,7 @@ public class Chunk {
 		decorated = true;
 	}
 
-	public void rebuildChunkSection(Queue<Object> cubes, IWorld world) {
+	private void rebuildChunkSection(Queue<Object> cubes, IWorld world) {
 		for (int x = 0; x < sizeX; x++) {
 			for (int z = 0; z < sizeZ; z++) {
 				for (int y = 0; y < sizeY; y++) {
@@ -224,7 +242,7 @@ public class Chunk {
 		}
 	}
 
-	public void rebuildChunkSection(IWorld world) {
+	private void rebuildChunkSection(IWorld world) {
 		tess.begin(BlocksResources.tessellatorTextureAtlas.getTexture());
 		for (int x = 0; x < sizeX; x++) {
 			for (int z = 0; z < sizeZ; z++) {
@@ -464,7 +482,7 @@ public class Chunk {
 
 	public void render(GameResources gm) {
 		if (readyToRender) {
-			tess.draw(gm.getCamera());
+			tess.draw(gm);
 			gm.getRenderer().processChunk(blocksMesh, gm);
 		} else {
 			gm.getRenderer().processChunk(blocksMeshtemp, gm);
@@ -473,6 +491,7 @@ public class Chunk {
 
 	public void renderShadow(GameResources gm) {
 		gm.getMasterShadowRenderer().renderChunk(blocksMesh, gm);
+		tess.drawShadow(gm.getSun_Camera());
 	}
 
 	private void clear() {
