@@ -25,35 +25,48 @@
 #version 330 core
 
 /*--------------------------------------------------------*/
-/*--------------COMPOSITE 3 IN-OUT-UNIFORMS---------------*/
+/*--------------COMPOSITE 5 IN-OUT-UNIFORMS---------------*/
 /*--------------------------------------------------------*/
 
 in vec2 textureCoords;
+in vec4 posPos;
 
 out vec4 out_Color;
 
-uniform sampler2D composite0;
+uniform vec2 sunPositionInScreen;
 uniform sampler2D gData0;
 
 /*--------------------------------------------------------*/
-/*------------------COMPOSITE 3 CONFIG--------------------*/
+/*------------------COMPOSITE 5 CONFIG--------------------*/
 /*--------------------------------------------------------*/
 
 /*--------------------------------------------------------*/
-/*------------------COMPOSITE 3 CODE----------------------*/
+/*------------------COMPOSITE 5 CODE----------------------*/
 /*--------------------------------------------------------*/
 
 
 void main(void){
 	vec2 texcoord = textureCoords;
 	vec4 image = vec4(0.0);
-	vec4 result = vec4(0.0);
-	vec4 data0 = texture(gData0, texcoord);
-	if(data0.b != 1){
-	image = texture(composite0, texcoord);
-	float brightness = dot(image.rgb, vec3(0.2126, 0.7152, 0.0722));
-    	if(brightness > 0.8)
-    	    result = vec4(image.rgb, 1.0);
-		out_Color = result;
-	}
+	vec4 data = texture(gData0, texcoord);
+    if(data.b == 1){
+    	if(gl_FragCoord.x <= sunPositionInScreen.x + 60 && gl_FragCoord.x >= sunPositionInScreen.x - 60 && gl_FragCoord.y <= sunPositionInScreen.y + 60 && gl_FragCoord.y >= sunPositionInScreen.y - 60){
+    		image.rgb = mix(image.rgb,vec3(1, 0.870588, 0.678431),0.5);
+    		image.a = 0.2;
+    	}
+    	if(gl_FragCoord.x <= sunPositionInScreen.x + 40 && gl_FragCoord.x >= sunPositionInScreen.x - 40 && gl_FragCoord.y <= sunPositionInScreen.y + 40 && gl_FragCoord.y >= sunPositionInScreen.y - 40){
+    		image.rgb = mix(image.rgb,vec3(1, 0.870588, 0.678431),0.8);
+    		image.a = 0.5;
+    	}
+    	if(gl_FragCoord.x <= sunPositionInScreen.x + 30 && gl_FragCoord.x >= sunPositionInScreen.x - 30 && gl_FragCoord.y <= sunPositionInScreen.y + 30 && gl_FragCoord.y >= sunPositionInScreen.y - 30){
+    		image.rgb = vec3(1, 0.870588, 0.678431);
+    		image.a = 1;
+    	}
+    	if(gl_FragCoord.x <= sunPositionInScreen.x + 20 && gl_FragCoord.x >= sunPositionInScreen.x - 20 && gl_FragCoord.y <= sunPositionInScreen.y + 20 && gl_FragCoord.y >= sunPositionInScreen.y - 20){
+    		image.rgb = vec3(1,1,1);
+    		image.a = 1;
+    	}
+    }
+    out_Color = image;
+
 }

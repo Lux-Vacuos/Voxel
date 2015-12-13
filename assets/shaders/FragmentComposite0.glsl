@@ -34,7 +34,7 @@ in vec4 posPos;
 out vec4 out_Color;
 
 uniform vec2 sunPositionInScreen;
-uniform sampler2D composite;
+uniform sampler2D composite0;
 uniform vec2 resolution;
 
 uniform int useFXAA;
@@ -110,9 +110,9 @@ void main(void){
 	vec2 texcoord = textureCoords;
 	vec4 data = vec4(0.0);
 	if (useFXAA == 1) {
-		data = PostFX(composite, texcoord, 0);
+		data = PostFX(composite0, texcoord, 0);
 	} else {
-		data = texture(composite,texcoord);
+		data = texture(composite0,texcoord);
 	}
     out_Color = data;
 

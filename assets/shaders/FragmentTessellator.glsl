@@ -67,6 +67,10 @@ void main(void) {
 	    	if (texture(depth, vec3(ShadowCoord.xy + poissonDisk[i]/1600.0 , 0.0), 0)  <  ShadowCoord.z){
    		 		shadow += 0.05;
    	 		}
+   	 		if(ShadowCoord.z > 1.0){
+       			shadow = 0.0;
+       			break;
+       		}
 		}
 	}
 

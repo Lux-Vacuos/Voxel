@@ -25,7 +25,7 @@
 #version 330 core
 
 /*--------------------------------------------------------*/
-/*--------------COMPOSITE 1 IN-OUT-UNIFORMS---------------*/
+/*--------------COMPOSITE 4 IN-OUT-UNIFORMS---------------*/
 /*--------------------------------------------------------*/
 
 in vec2 textureCoords;
@@ -36,10 +36,11 @@ out vec4 out_Color;
 uniform int camUnderWater;
 uniform float camUnderWaterOffset;
 uniform vec2 resolution;
+uniform vec2 sunPositionInScreen;
 uniform vec3 cameraPosition;
 uniform vec3 previousCameraPosition;
 uniform vec3 lightPosition;
-uniform vec2 sunPositionInScreen;
+uniform vec3 skyColor;
 uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;
 uniform mat4 inverseProjectionMatrix;
@@ -60,13 +61,15 @@ uniform int useBloom;
 uniform int useVolumetricLight;
 
 /*--------------------------------------------------------*/
-/*------------------COMPOSITE 1 CONFIG--------------------*/
+/*------------------COMPOSITE 4 CONFIG--------------------*/
 /*--------------------------------------------------------*/
 
-const int NUM_SAMPLES = 50;		
+const int NUM_SAMPLES = 50;
+const float density = 0.013;
+const float gradient = 2.0;
 
 /*--------------------------------------------------------*/
-/*------------------COMPOSITE 1 CODE----------------------*/
+/*------------------COMPOSITE 4 CODE----------------------*/
 /*--------------------------------------------------------*/
 
 void main(void){
@@ -74,50 +77,63 @@ void main(void){
 	if(camUnderWater == 1){
 		texcoord.x += sin(texcoord.y * 4*2*3.14159 + camUnderWaterOffset) / 100;
 	}
-	vec4 image = texture(composite0, texcoord);
+	vec4 image = texture(gDiffuse, texcoord);
 	vec4 data = texture(gData0, texcoord);
+	vec4 data1 = texture(gData1, texcoord);
     vec4 position = texture(gPosition,texcoord);
     vec4 normal = texture(gNormal, texcoord);
     float depth = texture(gDepth, vec3(texcoord.xy, 0.0), 16);
-    if(data.b != 1) {
-   		if(data.r == 1.0){
-    		vec3 worldStartingPos = position.xyz;
-    		vec3 normal = normal.xyz;
-    		vec3 cameraToWorld = worldStartingPos.xyz - cameraPosition.xyz;
-    		float cameraToWorldDist = length(cameraToWorld);
-    		vec3 cameraToWorldNorm = normalize(cameraToWorld);
-    		vec3 refl = normalize(reflect(cameraToWorldNorm, normal));
-    		float cosAngle = abs(dot(normal, cameraToWorldNorm));
-    		float fact = 1 - cosAngle;
-    		fact = min(1, 1.38 - fact*fact);
-    		vec3 newPos;
-    		vec4 newScreen;
-    		float i = 0;
-    		vec3 rayTrace = worldStartingPos;
-    		float currentWorldDist, rayDist;
-    		float incr = 0.4;
-    		do {
-        		i += 0.05;
-        		rayTrace += refl*incr;
-        		incr *= 1.3;
-        		newScreen = projectionMatrix * viewMatrix * vec4(rayTrace, 1);
-        		newScreen /= newScreen.w;
-        		newPos = texture(gPosition, newScreen.xy/2.0+0.5).xyz;
-        		currentWorldDist = length(newPos.xyz - cameraPosition.xyz);
-        		rayDist = length(rayTrace.xyz - cameraPosition.xyz);
-        		if (newScreen.x > 1 || newScreen.x < -1 || newScreen.y > 1 || newScreen.y < -1 || dot(refl, cameraToWorldNorm) < 0)
-        			break;
-    		} while(rayDist < currentWorldDist);
- 			vec4 newColor = texture(composite0, newScreen.xy/2.0 + 0.5);
-    		if (dot(refl, cameraToWorldNorm) < 0)
-        		fact = 1.0;
-    		else if (newScreen.x > 1 || newScreen.x < -1 || newScreen.y > 1 || newScreen.y < -1)
-        		fact = 1.0;
-    		else if (cameraToWorldDist > currentWorldDist)
-        		fact = 1.0;
-        	image = image*fact + newColor*(1-fact);
+	vec3 light = lightPosition;
+    vec3 lightDir = light - position.xyz ;
+    lightDir = normalize(lightDir);
+    vec3 eyeDir = normalize(cameraPosition-position.xyz);
+    float lightDirDOTviewDir = dot(-lightDir,eyeDir);
+    if(data1.g != 1){
+    	if(data.b != 1) {
+    		normal = normalize(normal);
+    		vec3 vHalfVector = normalize(lightDir.xyz+eyeDir);
+    		float b = ((max(dot(normal.xyz,lightDir),0.2) + data1.a) - data.a);
+    		b = clamp(b,0.2,1.0);
+    		image = b * image;
+    		if(data.r == 1)
+    			if(data.a <= 0)
+	    			image += pow(max(dot(normal.xyz,vHalfVector),0.0), 100) * 8;
+	    		
+    		
     	}
-    }
+		vec4 raysColor = texture(composite0, texcoord);
+	    image.rgb = mix(image.rgb, raysColor.rgb, raysColor.a);
+    	if(useVolumetricLight == 1){
+			if (lightDirDOTviewDir>0.0){
+				float exposure	= 0.1/NUM_SAMPLES;
+				float decay		= 1.01;
+				float density	= 1;
+				float weight	= 6.0;
+				float illuminationDecay = 1.0;
+				vec2 pos = vec2(0.0);
+				pos.x = (sunPositionInScreen.x) / resolution.x;
+				pos.y = (sunPositionInScreen.y) / resolution.y;
+				vec2 deltaTextCoord = vec2( texcoord - pos);
+				vec2 textCoo = texcoord;
+				deltaTextCoord *= 1.0 / float(NUM_SAMPLES) * density;
+				for(int i=0; i < NUM_SAMPLES ; i++) {
+					textCoo -= deltaTextCoord;
+					vec4 tsample = texture(composite0, textCoo );
+					tsample *= illuminationDecay * weight;
+					raysColor += tsample;
+					illuminationDecay *= decay;
+				}
+				raysColor *= exposure * lightDirDOTviewDir;
+				image +=  raysColor;
+			}
+		}
+	}
+	if(data.b != 1) {
+		float distance = length(cameraPosition-position.xyz);
+		float visibility = exp(-pow((distance*density),gradient));
+		visibility = clamp(visibility,0.0,1.1);
+    	image.rgb = mix(skyColor.rgb, image.rgb, visibility);
+	}
     
     if(camUnderWater == 1){
 		out_Color = mix(vec4(0.0,0.0,0.3125,1.0),image,0.5);

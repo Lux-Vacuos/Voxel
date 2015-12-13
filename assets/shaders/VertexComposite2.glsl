@@ -42,6 +42,8 @@ uniform mat4 transformationMatrix;
 /*------------------COMPOSITE 2 CODE----------------------*/
 /*--------------------------------------------------------*/
 
+
+
 void main(void){
 	gl_Position = transformationMatrix * vec4(position, -0.8, 1.0);
 	textureCoords = vec2((position.x+1.0)/2.0, (position.y+1.0)/2.0);

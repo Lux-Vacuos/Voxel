@@ -58,7 +58,8 @@ public class DeferredShadingShader extends ShaderProgram {
 	private int loc_depth0;
 	private int loc_gData0;
 	private int loc_gData1;
-	private int loc_composite;
+	private int loc_composite0;
+	private int loc_composite1;
 	private int loc_cameraPosition;
 	private int loc_previousCameraPosition;
 	private int loc_lightPosition;
@@ -101,7 +102,8 @@ public class DeferredShadingShader extends ShaderProgram {
 		loc_gData0 = super.getUniformLocation("gData0");
 		loc_gData1 = super.getUniformLocation("gData1");
 		loc_lightPosition = super.getUniformLocation("lightPosition");
-		loc_composite = super.getUniformLocation("composite");
+		loc_composite0 = super.getUniformLocation("composite0");
+		loc_composite1 = super.getUniformLocation("composite1");
 		loc_sunPositionInScreen = super.getUniformLocation("sunPositionInScreen");
 		loc_skyColor = super.getUniformLocation("skyColor");
 
@@ -128,7 +130,8 @@ public class DeferredShadingShader extends ShaderProgram {
 		super.loadInt(loc_depth0, 3);
 		super.loadInt(loc_gData0, 4);
 		super.loadInt(loc_gData1, 5);
-		super.loadInt(loc_composite, 6);
+		super.loadInt(loc_composite0, 6);
+		super.loadInt(loc_composite1, 7);
 	}
 
 	public void loadUnderWater(boolean value) {
