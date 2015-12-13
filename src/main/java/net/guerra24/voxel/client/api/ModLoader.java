@@ -24,6 +24,7 @@
 
 package net.guerra24.voxel.client.api;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -39,14 +40,16 @@ import net.guerra24.voxel.client.util.Logger;
 public class ModLoader {
 
 	private List<Class<?>> modsClass;
+	private File modsFolder;
 
 	public ModLoader() {
 		modsClass = new ArrayList<Class<?>>();
 	}
 
 	public void loadMods() {
+		modsFolder = new File("assets/mods");
 		try {
-			Files.walk(Paths.get("assets/mods")).forEach(filePath -> {
+			Files.walk(Paths.get(modsFolder.toURI())).forEach(filePath -> {
 				if (Files.isRegularFile(filePath)) {
 					try {
 						if (filePath.toFile().getAbsolutePath().endsWith(".jar")) {
@@ -67,7 +70,6 @@ public class ModLoader {
 				}
 			});
 		} catch (IOException e) {
-			Logger.error("Invalid Mod File");
 			e.printStackTrace();
 		}
 
