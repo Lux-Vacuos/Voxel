@@ -42,7 +42,7 @@ public class VoxelVariables {
 	 * Game Settings
 	 */
 	public static final boolean debug = false;
-	public static final String version = "0.0.9";
+	public static final String version = "0.0.9 Pre Release 1";
 	public static final String apiVersion = "0.0.6";
 	public static final int apiVersionNum = 000006;
 	public static final String state = "ALPHA";
