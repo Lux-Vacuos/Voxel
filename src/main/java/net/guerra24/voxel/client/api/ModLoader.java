@@ -48,6 +48,8 @@ public class ModLoader {
 
 	public void loadMods() {
 		modsFolder = new File("assets/mods");
+		if(!modsFolder.exists())
+			modsFolder.mkdirs();
 		try {
 			Files.walk(Paths.get(modsFolder.toURI())).forEach(filePath -> {
 				if (Files.isRegularFile(filePath)) {

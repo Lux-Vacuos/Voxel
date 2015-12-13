@@ -26,7 +26,7 @@ public class GameSettings {
 				e.printStackTrace();
 			}
 		} else {
-			settings.mkdirs();
+			new File("assets/game/").mkdirs();
 		}
 		if (getVersion() == 1) {
 			VoxelVariables.useShadows = Boolean.parseBoolean(getValue("useShadows"));
