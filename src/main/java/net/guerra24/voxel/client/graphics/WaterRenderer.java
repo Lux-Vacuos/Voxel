@@ -135,7 +135,7 @@ public class WaterRenderer {
 	 */
 	public void update(float delta) {
 		moveFactor += VoxelVariables.WAVE_SPEED * delta;
-		moveFactor %= 1;
+		moveFactor %= 6.3f;
 	}
 
 	/**

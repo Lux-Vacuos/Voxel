@@ -1,5 +1,9 @@
 package net.guerra24.voxel.client.graphics;
 
+import static org.lwjgl.opengl.GL11.GL_BACK;
+import static org.lwjgl.opengl.GL11.GL_FRONT;
+import static org.lwjgl.opengl.GL11.glCullFace;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -32,11 +36,11 @@ public class MasterShadowRenderer {
 		shader = new ShadowShader();
 		projectionMatrix = Maths.orthographic(-30, 30, -30, 30, -100, 100);
 		renderer = new ShadowRenderer(shader, projectionMatrix);
-		fbo = new FrameBuffer(true, 2048, 2048);
+		fbo = new FrameBuffer(true, 4096, 4096);
 	}
 
 	public void being() {
-		fbo.begin(2048,2048);
+		fbo.begin(4096, 4096);
 	}
 
 	public void end() {
@@ -70,11 +74,13 @@ public class MasterShadowRenderer {
 	 *            A Camera
 	 */
 	private void renderBlocks(GameResources gm) {
+		glCullFace(GL_FRONT);
 		shader.start();
 		shader.loadviewMatrix(gm.getSun_Camera());
 		renderer.renderBlockEntity(blockEntities, gm);
 		shader.stop();
 		blockEntities.clear();
+		glCullFace(GL_BACK);
 	}
 
 	/**

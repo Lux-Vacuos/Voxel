@@ -12,7 +12,7 @@ public class GameSettings {
 	private Properties prop;
 	private File settings;
 
-	private int version = 2;
+	private int version = 3;
 
 	public GameSettings() {
 		settings = new File(VoxelVariables.settings);
@@ -36,6 +36,17 @@ public class GameSettings {
 			VoxelVariables.useVolumetricLight = Boolean.parseBoolean(getValue("useVolumetricLight"));
 			VoxelVariables.useHQWater = Boolean.parseBoolean(getValue("useHQWater"));
 			VoxelVariables.useFXAA = Boolean.parseBoolean(getValue("useFXAA"));
+			VoxelVariables.VSYNC = Boolean.parseBoolean(getValue("VSYNC"));
+			VoxelVariables.FPS = Integer.parseInt(getValue("FPS"));
+			VoxelVariables.UPS = Integer.parseInt(getValue("UPS"));
+			VoxelVariables.radius = Integer.parseInt(getValue("DrawDistance"));
+		} else if (getVersion() == 3) {
+			VoxelVariables.useShadows = Boolean.parseBoolean(getValue("useShadows"));
+			VoxelVariables.useVolumetricLight = Boolean.parseBoolean(getValue("useVolumetricLight"));
+			VoxelVariables.useHQWater = Boolean.parseBoolean(getValue("useHQWater"));
+			VoxelVariables.useFXAA = Boolean.parseBoolean(getValue("useFXAA"));
+			VoxelVariables.useMotionBlur = Boolean.parseBoolean(getValue("useMotionBlur"));
+			VoxelVariables.useDOF = Boolean.parseBoolean(getValue("useDOF"));
 			VoxelVariables.VSYNC = Boolean.parseBoolean(getValue("VSYNC"));
 			VoxelVariables.FPS = Integer.parseInt(getValue("FPS"));
 			VoxelVariables.UPS = Integer.parseInt(getValue("UPS"));
@@ -82,6 +93,8 @@ public class GameSettings {
 		registerValue("useVolumetricLight", Boolean.toString(VoxelVariables.useVolumetricLight));
 		registerValue("useHQWater", Boolean.toString(VoxelVariables.useHQWater));
 		registerValue("useFXAA", Boolean.toString(VoxelVariables.useFXAA));
+		registerValue("useMotionBlur", Boolean.toString(VoxelVariables.useMotionBlur));
+		registerValue("useDOF", Boolean.toString(VoxelVariables.useDOF));
 		registerValue("VSYNC", Boolean.toString(VoxelVariables.VSYNC));
 		registerValue("FPS", Integer.toString(VoxelVariables.FPS));
 		registerValue("UPS", Integer.toString(VoxelVariables.UPS));

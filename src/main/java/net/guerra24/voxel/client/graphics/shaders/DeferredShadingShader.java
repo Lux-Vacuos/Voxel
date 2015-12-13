@@ -134,6 +134,7 @@ public class DeferredShadingShader extends ShaderProgram {
 	public void loadUnderWater(boolean value) {
 		super.loadBoolean(loc_camUnderWater, value);
 		super.loadFloat(loc_camUnderWaterOffset, time += 0.1f);
+		time %= 10;
 	}
 
 	public void loadSkyColor(Vector3f color) {

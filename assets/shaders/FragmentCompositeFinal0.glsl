@@ -43,6 +43,7 @@ uniform mat4 inverseViewMatrix;
 uniform mat4 previousViewMatrix;
 uniform sampler2D composite;
 uniform sampler2D gDepth;
+uniform sampler2D gData0;
 
 uniform int useDOF;
 uniform int useMotionBlur;
@@ -58,6 +59,7 @@ uniform int useMotionBlur;
 void main(void){
 	vec2 texcoord = textureCoords;
 	vec4 textureColour = texture(composite, texcoord);
+	vec4 data = texture(gData0, texcoord);
 	if(useDOF == 1){
 		vec3 sum = textureColour.rgb;
 		float bias = min(abs(texture(gDepth, texcoord).x - texture(gDepth, vec2(0.5)).x) * .02, .01);
@@ -95,5 +97,6 @@ void main(void){
 		sum = sum/samples;
 		textureColour = vec4(sum, 1.0);
 	}
+	
     out_Color = textureColour;
 }

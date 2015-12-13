@@ -95,12 +95,12 @@ void main(void){
     		float b = ((max(dot(normal.xyz,lightDir),0.2) + data1.a) - data.a);
     		b = clamp(b,0.2,1.0);
     		image = b * image;
-    		if(data.r == 1){
+    		if(data.r == 1)
     			if(data.a <= 0)
 	    			image += pow(max(dot(normal.xyz,vHalfVector),0.0), 100) * 8;
-    		}
+	    		
+    		
     	}
-	    
 		vec4 raysColor = texture(composite, texcoord);
 	    image.rgb = mix(image.rgb, raysColor.rgb, raysColor.a);
     	if(useVolumetricLight == 1){

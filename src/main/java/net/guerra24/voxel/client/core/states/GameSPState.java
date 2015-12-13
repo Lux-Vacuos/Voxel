@@ -27,7 +27,7 @@ import net.guerra24.voxel.client.world.WorldsHandler;
  * @category Kernel
  */
 public class GameSPState extends State {
-	
+
 	public GameSPState() {
 		super(2);
 	}
@@ -40,6 +40,9 @@ public class GameSPState extends State {
 		ModInitialization api = voxel.getApi();
 		Display display = voxel.getDisplay();
 
+		gm.getCamera().update(delta, gm, worlds.getActiveWorld(), api, voxel.getClient());
+		gm.getPhysics().getMobManager().getPlayer().update(delta, gm, voxel.getGuiResources(), worlds.getActiveWorld(),
+				api);
 		worlds.getActiveWorld().updateChunksGeneration(gm, api, delta);
 		gm.getPhysics().getMobManager().update(delta, gm, gi, worlds.getActiveWorld(), api);
 		gm.update(gm.getSkyboxRenderer().update(delta));
@@ -59,9 +62,6 @@ public class GameSPState extends State {
 		ModInitialization api = voxel.getApi();
 
 		worlds.getActiveWorld().lighting();
-		gm.getCamera().update(delta, gm, worlds.getActiveWorld(), api, voxel.getClient());
-		gm.getPhysics().getMobManager().getPlayer().update(delta, gm, voxel.getGuiResources(), worlds.getActiveWorld(),
-				api);
 		gm.getFrustum().calculateFrustum(gm.getRenderer().getProjectionMatrix(), gm.getCamera());
 		gm.getSun_Camera().setPosition(gm.getCamera().getPosition());
 		if (VoxelVariables.useShadows) {

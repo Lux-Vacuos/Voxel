@@ -190,24 +190,22 @@ public class Bootstrap {
 			case "-useFXAA":
 				if (gaveFXAA)
 					throw new IllegalStateException("FXAA already given");
-				if (VoxelVariables.useDOF || VoxelVariables.useMotionBlur)
-					throw new IllegalArgumentException("FXAA only be activated if DOF and Motion Blur is disabled");
 				VoxelVariables.useFXAA = true;
 				gaveFXAA = true;
 				break;
 			case "-useDOF":
 				if (gaveDOF)
 					throw new IllegalStateException("DOF already given");
-				if (VoxelVariables.useFXAA || VoxelVariables.useMotionBlur)
-					throw new IllegalArgumentException("DOF only be activated if FXAA and Motion Blur is disabled");
+				if (VoxelVariables.useMotionBlur)
+					throw new IllegalArgumentException("DOF only be activated if Motion Blur is disabled");
 				VoxelVariables.useDOF = true;
 				gaveDOF = true;
 				break;
 			case "-useMotionBlur":
 				if (gaveMotionBlur)
 					throw new IllegalStateException("Motion Blur already given");
-				if (VoxelVariables.useDOF || VoxelVariables.useFXAA)
-					throw new IllegalArgumentException("Motion Blur only be activated if DOF and FXAA is disabled");
+				if (VoxelVariables.useDOF)
+					throw new IllegalArgumentException("Motion Blur only be activated if DOF is disabled");
 				VoxelVariables.useMotionBlur = true;
 				gaveMotionBlur = true;
 				break;

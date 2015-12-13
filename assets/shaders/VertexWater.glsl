@@ -37,11 +37,15 @@ uniform mat4 modelMatrix;
 uniform vec3 cameraPosition;
 uniform vec3 directLightDirection;
 uniform float fogDensity;
+uniform float moveFactor;
 
 const float tiling = 0.5;
 
 void main(void) {
 	vec4 worldPosition = modelMatrix * vec4(position.x, 0.0, position.y, 1.0);
+	float sina = sin(worldPosition.x + moveFactor) * 0.05;
+	float sinb = cos(worldPosition.z + moveFactor) * 0.02;
+	worldPosition += vec4(0.0, sina + sinb, 0.0, 0.0);
 	clipSpace = projectionMatrix * viewMatrix * worldPosition;
 	gl_Position = clipSpace;
 	pass_position = worldPosition.xyz;
