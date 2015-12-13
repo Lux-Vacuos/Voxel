@@ -66,6 +66,7 @@ public class Tessellator {
 		shader.start();
 		shader.conectTextureUnits();
 		shader.loadProjectionMatrix(gm.getRenderer().getProjectionMatrix());
+		shader.loadBiasMatrix(gm);
 		shader.stop();
 		shadowShader = TessellatorShadowShader.getInstance();
 		shadowShader.start();
@@ -148,7 +149,7 @@ public class Tessellator {
 		}
 		shader.start();
 		shader.loadviewMatrix(gm.getCamera());
-		shader.loadBiasMatrix(gm);
+		shader.loadLightMatrix(gm);
 		shader.loadSettings(VoxelVariables.useShadows);
 		glBindVertexArray(vaoID);
 		glEnableVertexAttribArray(0);

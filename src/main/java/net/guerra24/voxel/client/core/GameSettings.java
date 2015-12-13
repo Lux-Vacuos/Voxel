@@ -29,12 +29,10 @@ public class GameSettings {
 		if (getVersion() == 1) {
 			VoxelVariables.useShadows = Boolean.parseBoolean(getValue("useShadows"));
 			VoxelVariables.useVolumetricLight = Boolean.parseBoolean(getValue("useVolumetricLight"));
-			VoxelVariables.useHQWater = Boolean.parseBoolean(getValue("useHQWater"));
 			VoxelVariables.useFXAA = Boolean.parseBoolean(getValue("useFXAA"));
 		} else if (getVersion() == 2) {
 			VoxelVariables.useShadows = Boolean.parseBoolean(getValue("useShadows"));
 			VoxelVariables.useVolumetricLight = Boolean.parseBoolean(getValue("useVolumetricLight"));
-			VoxelVariables.useHQWater = Boolean.parseBoolean(getValue("useHQWater"));
 			VoxelVariables.useFXAA = Boolean.parseBoolean(getValue("useFXAA"));
 			VoxelVariables.VSYNC = Boolean.parseBoolean(getValue("VSYNC"));
 			VoxelVariables.FPS = Integer.parseInt(getValue("FPS"));
@@ -43,7 +41,6 @@ public class GameSettings {
 		} else if (getVersion() == 3) {
 			VoxelVariables.useShadows = Boolean.parseBoolean(getValue("useShadows"));
 			VoxelVariables.useVolumetricLight = Boolean.parseBoolean(getValue("useVolumetricLight"));
-			VoxelVariables.useHQWater = Boolean.parseBoolean(getValue("useHQWater"));
 			VoxelVariables.useFXAA = Boolean.parseBoolean(getValue("useFXAA"));
 			VoxelVariables.useMotionBlur = Boolean.parseBoolean(getValue("useMotionBlur"));
 			VoxelVariables.useDOF = Boolean.parseBoolean(getValue("useDOF"));
@@ -91,7 +88,6 @@ public class GameSettings {
 		registerValue("SettingsVersion", Integer.toString(version));
 		registerValue("useShadows", Boolean.toString(VoxelVariables.useShadows));
 		registerValue("useVolumetricLight", Boolean.toString(VoxelVariables.useVolumetricLight));
-		registerValue("useHQWater", Boolean.toString(VoxelVariables.useHQWater));
 		registerValue("useFXAA", Boolean.toString(VoxelVariables.useFXAA));
 		registerValue("useMotionBlur", Boolean.toString(VoxelVariables.useMotionBlur));
 		registerValue("useDOF", Boolean.toString(VoxelVariables.useDOF));

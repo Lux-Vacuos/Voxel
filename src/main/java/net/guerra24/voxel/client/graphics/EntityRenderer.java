@@ -68,11 +68,12 @@ public class EntityRenderer {
 	 * @param projectionMatrix
 	 *            A Matrix4f Projection
 	 */
-	public EntityRenderer(EntityShader shader, Matrix4f projectionMatrix) {
+	public EntityRenderer(EntityShader shader, GameResources gm, Matrix4f projectionMatrix) {
 		this.shader = shader;
 		shader.start();
 		shader.loadProjectionMatrix(projectionMatrix);
 		shader.connectTextureUnits();
+		shader.loadBiasMatrix(gm);
 		shader.stop();
 	}
 

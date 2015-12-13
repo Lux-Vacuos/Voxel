@@ -24,13 +24,8 @@
 
 package net.guerra24.voxel.client.graphics;
 
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
-import static org.lwjgl.opengl.GL11.glBindTexture;
 import static org.lwjgl.opengl.GL11.glDrawArrays;
-import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
-import static org.lwjgl.opengl.GL13.GL_TEXTURE1;
-import static org.lwjgl.opengl.GL13.glActiveTexture;
 import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
 import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
@@ -57,13 +52,9 @@ public class WaterRenderer {
 	/**
 	 * Water Data
 	 */
-	private final String DUDV_MAP = "dudvMap";
-	private final String NORMAL_MAP = "normalMap";
 	private RawModel quad;
 	private WaterShader shader;
 	private float moveFactor = 0;
-	private int dudvTexture;
-	private int normalTexture;
 
 	/**
 	 * Constructor, Initializes the Water Shaders, Textures and VAOs
@@ -77,10 +68,7 @@ public class WaterRenderer {
 	 */
 	public WaterRenderer(Loader loader, WaterShader shader, Matrix4f projectionMatrix) {
 		this.shader = shader;
-		dudvTexture = loader.loadTextureBlocks(DUDV_MAP);
-		normalTexture = loader.loadTextureBlocks(NORMAL_MAP);
 		shader.start();
-		shader.connectTextureUnits();
 		shader.loadProjectionMatrix(projectionMatrix);
 		shader.stop();
 		setUpVAO(loader);
@@ -113,18 +101,10 @@ public class WaterRenderer {
 	 */
 	private void prepareRender(GameResources gm) {
 		shader.start();
-		shader.loadSkyColour(VoxelVariables.RED, VoxelVariables.GREEN, VoxelVariables.BLUE);
 		shader.loadViewMatrix(gm.getCamera());
 		shader.loadMoveFactor(moveFactor);
-		shader.loadDirectLightDirection(gm.getLightPos());
-		shader.loadSettings(VoxelVariables.useHQWater);
-		shader.loadFogDensity(VoxelVariables.fogDensity);
 		glBindVertexArray(quad.getVaoID());
 		glEnableVertexAttribArray(0);
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, dudvTexture);
-		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_2D, normalTexture);
 	}
 
 	/**

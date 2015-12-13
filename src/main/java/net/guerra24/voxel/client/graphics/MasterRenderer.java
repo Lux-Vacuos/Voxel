@@ -50,7 +50,6 @@ import net.guerra24.voxel.client.graphics.opengl.Display;
 import net.guerra24.voxel.client.graphics.shaders.EntityShader;
 import net.guerra24.voxel.client.graphics.shaders.WaterShader;
 import net.guerra24.voxel.client.resources.GameResources;
-import net.guerra24.voxel.client.resources.Loader;
 import net.guerra24.voxel.client.resources.models.ButtonModel;
 import net.guerra24.voxel.client.resources.models.TexturedModel;
 import net.guerra24.voxel.client.resources.models.WaterTile;
@@ -89,13 +88,13 @@ public class MasterRenderer {
 	 * @param loader
 	 *            Game Loader
 	 */
-	public MasterRenderer(Loader loader) {
+	public MasterRenderer(GameResources gm) {
 		initGL();
 		projectionMatrix = createProjectionMatrix(Display.getWidth(), Display.getHeight(), VoxelVariables.FOV,
 				VoxelVariables.NEAR_PLANE, VoxelVariables.FAR_PLANE);
-		entityRenderer = new EntityRenderer(shader, projectionMatrix);
+		entityRenderer = new EntityRenderer(shader,gm, projectionMatrix);
 		waterShader = new WaterShader();
-		waterRenderer = new WaterRenderer(loader, waterShader, projectionMatrix);
+		waterRenderer = new WaterRenderer(gm.getLoader(), waterShader, projectionMatrix);
 	}
 
 	/**
@@ -161,7 +160,7 @@ public class MasterRenderer {
 		shader.start();
 		shader.loadProjectionMatrix(projectionMatrix);
 		shader.loadviewMatrix(gm.getCamera());
-		shader.loadBiasMatrix(gm);
+		shader.loadLightMatrix(gm);
 		shader.useShadows(VoxelVariables.useShadows);
 		entityRenderer.renderBlockEntity(blockEntities, gm);
 		shader.stop();

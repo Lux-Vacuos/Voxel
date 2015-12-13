@@ -97,14 +97,14 @@ public class OptionsMenu {
 			textShadows.setColour(0.79f, 0.79f, 0.79f);
 			textsUpdating.add(textShadows);
 		}
-		if (VoxelVariables.useHQWater) {
-			GUIText textHQWater = new GUIText("HQ Water: ON", 1.3f, font, new Vector2f(0.073f, 0.41f), 1, false);
-			textHQWater.setColour(0.79f, 0.79f, 0.79f);
-			textsUpdating.add(textHQWater);
+		if (VoxelVariables.useDOF) {
+			GUIText textDOF = new GUIText("DoF: ON", 1.3f, font, new Vector2f(0.098f, 0.41f), 1, false);
+			textDOF.setColour(0.79f, 0.79f, 0.79f);
+			textsUpdating.add(textDOF);
 		} else {
-			GUIText textHQWater = new GUIText("HQ Water: OFF", 1.3f, font, new Vector2f(0.073f, 0.41f), 1, false);
-			textHQWater.setColour(0.79f, 0.79f, 0.79f);
-			textsUpdating.add(textHQWater);
+			GUIText textDOF = new GUIText("DoF: OFF", 1.3f, font, new Vector2f(0.098f, 0.41f), 1, false);
+			textDOF.setColour(0.79f, 0.79f, 0.79f);
+			textsUpdating.add(textDOF);
 		}
 		gm.getTextHandler().addToActive(textsUpdating);
 	}

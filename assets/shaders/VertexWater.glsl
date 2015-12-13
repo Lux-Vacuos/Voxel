@@ -26,28 +26,18 @@
 
 in vec2 position;
 
-out vec4 clipSpace;
-out vec2 textureCoords;
-out vec3 toCameraVector;
 out vec3 pass_position;
 
 uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;
 uniform mat4 modelMatrix;
-uniform vec3 cameraPosition;
-uniform vec3 directLightDirection;
-uniform float fogDensity;
 uniform float moveFactor;
-
-const float tiling = 0.5;
 
 void main(void) {
 	vec4 worldPosition = modelMatrix * vec4(position.x, 0.0, position.y, 1.0);
 	float sina = sin(worldPosition.x + moveFactor) * 0.05;
 	float sinb = cos(worldPosition.z + moveFactor) * 0.02;
 	worldPosition += vec4(0.0, sina + sinb, 0.0, 0.0);
-	clipSpace = projectionMatrix * viewMatrix * worldPosition;
-	gl_Position = clipSpace;
+	gl_Position = projectionMatrix * viewMatrix * worldPosition;
 	pass_position = worldPosition.xyz;
-	textureCoords = vec2(position.x/2.0 + 0.5, position.y/2.0 + 0.5) * tiling;
 }

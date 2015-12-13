@@ -136,7 +136,7 @@ public class Bootstrap {
 		boolean gaveWidth = false, gaveHeight = false, gaveFov = false;
 		boolean gaveFps = false, gaveRadius = false, gaveShadows = false;
 		boolean gaveAutostart = false, gaveFXAA = false, gaveDOF = false;
-		boolean gaveHQWater = false, gaveMotionBlur = false, gaveBloom = false;
+		boolean gaveMotionBlur = false, gaveBloom = false;
 
 		for (int i = 0; i < args.length; i++) {
 			switch (args[i]) {
@@ -214,12 +214,6 @@ public class Bootstrap {
 					throw new IllegalStateException("Bloom already given");
 				VoxelVariables.useBloom = true;
 				gaveBloom = true;
-				break;
-			case "-useHQWater":
-				if (gaveHQWater)
-					throw new IllegalStateException("HQWater already given");
-				VoxelVariables.useHQWater = true;
-				gaveHQWater = true;
 				break;
 			case "-autostart":
 				if (gaveAutostart)

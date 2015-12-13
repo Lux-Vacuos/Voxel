@@ -36,7 +36,7 @@ public class OptionsState extends State {
 			if (gm.getMenuSystem().optionsMenu.getShadowsButton().pressed())
 				VoxelVariables.useShadows = !VoxelVariables.useShadows;
 			if (gm.getMenuSystem().optionsMenu.getWaterButton().pressed())
-				VoxelVariables.useHQWater = !VoxelVariables.useHQWater;
+				VoxelVariables.useDOF = !VoxelVariables.useDOF;
 			if (gm.getMenuSystem().optionsMenu.getGodraysButton().pressed())
 				VoxelVariables.useVolumetricLight = !VoxelVariables.useVolumetricLight;
 		}
@@ -51,7 +51,7 @@ public class OptionsState extends State {
 			gm.getMenuSystem().optionsMenu.getList().get(1).changeScale(0.078f);
 		if (VoxelVariables.useShadows)
 			gm.getMenuSystem().optionsMenu.getList().get(2).changeScale(0.078f);
-		if (VoxelVariables.useHQWater)
+		if (VoxelVariables.useDOF)
 			gm.getMenuSystem().optionsMenu.getList().get(3).changeScale(0.078f);
 
 	}

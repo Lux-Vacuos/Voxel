@@ -113,7 +113,8 @@ public class GameResources {
 	public void init() {
 		loader = new Loader();
 		rand = new Random();
-		renderer = new MasterRenderer(loader);
+		masterShadowRenderer = new MasterShadowRenderer();
+		renderer = new MasterRenderer(this);
 		sun_Camera = new Camera(renderer.getProjectionMatrix());
 		sun_Camera.setPosition(new Vector3f(0, 0, 0));
 		sun_Camera.setYaw(sunRotation.x);
@@ -125,7 +126,6 @@ public class GameResources {
 		occlusionRenderer = new OcclusionRenderer(renderer.getProjectionMatrix());
 		skyboxRenderer = new SkyboxRenderer(loader, renderer.getProjectionMatrix());
 		deferredShadingRenderer = new DeferredShadingRenderer(loader, this);
-		masterShadowRenderer = new MasterShadowRenderer();
 		TessellatorShader.getInstance();
 		TessellatorShadowShader.getInstance();
 		ParticleMaster.getInstance().init(loader, renderer.getProjectionMatrix());

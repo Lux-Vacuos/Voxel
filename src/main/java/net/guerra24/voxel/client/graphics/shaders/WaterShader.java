@@ -28,7 +28,6 @@ import net.guerra24.voxel.client.core.VoxelVariables;
 import net.guerra24.voxel.client.util.Maths;
 import net.guerra24.voxel.client.world.entities.Camera;
 import net.guerra24.voxel.universal.util.vector.Matrix4f;
-import net.guerra24.voxel.universal.util.vector.Vector3f;
 
 /**
  * Water Shader
@@ -43,16 +42,7 @@ public class WaterShader extends ShaderProgram {
 	private int location_modelMatrix;
 	private int location_viewMatrix;
 	private int location_projectionMatrix;
-	private int location_dudvMap;
-	private int location_normalMap;
 	private int location_moveFactor;
-	private int location_cameraPosition;
-	private int location_directLightDirection;
-	private int location_skyColour;
-	private int loc_fogDensity;
-
-	private int loc_useHQWater;
-
 	/**
 	 * Constructor
 	 * 
@@ -71,46 +61,9 @@ public class WaterShader extends ShaderProgram {
 		location_projectionMatrix = getUniformLocation("projectionMatrix");
 		location_viewMatrix = getUniformLocation("viewMatrix");
 		location_modelMatrix = getUniformLocation("modelMatrix");
-		location_dudvMap = getUniformLocation("dudvMap");
-		location_normalMap = getUniformLocation("normalMap");
 		location_moveFactor = getUniformLocation("moveFactor");
-		location_cameraPosition = getUniformLocation("cameraPosition");
-		location_directLightDirection = super.getUniformLocation("directLightDirection");
-		location_skyColour = super.getUniformLocation("skyColour");
-		loc_fogDensity = super.getUniformLocation("fogDensity");
-		loc_useHQWater = super.getUniformLocation("useHQWater");
 	}
 
-	/**
-	 * Loads Textures ID
-	 * 
-	 */
-	public void connectTextureUnits() {
-		super.loadInt(location_dudvMap, 0);
-		super.loadInt(location_normalMap, 1);
-	}
-
-	/**
-	 * Loads the Sky Color to the shader
-	 * 
-	 * @param r
-	 *            Red Value
-	 * @param g
-	 *            Green Value
-	 * @param b
-	 *            Blue Value
-	 */
-	public void loadSkyColour(float r, float g, float b) {
-		super.loadVector(location_skyColour, new Vector3f(r, g, b));
-	}
-
-	public void loadSettings(boolean useHQWater) {
-		super.loadBoolean(loc_useHQWater, useHQWater);
-	}
-
-	public void loadFogDensity(float value) {
-		super.loadFloat(loc_fogDensity, value);
-	}
 
 	/**
 	 * Loads the Move Factor
@@ -133,16 +86,6 @@ public class WaterShader extends ShaderProgram {
 	}
 
 	/**
-	 * Load Directional Light Direction
-	 * 
-	 * @param direction
-	 *            Light Direction
-	 */
-	public void loadDirectLightDirection(Vector3f direction) {
-		super.loadVector(location_directLightDirection, direction);
-	}
-
-	/**
 	 * Load View Matrix
 	 * 
 	 * @param camera
@@ -151,7 +94,6 @@ public class WaterShader extends ShaderProgram {
 	public void loadViewMatrix(Camera camera) {
 		Matrix4f viewMatrix = Maths.createViewMatrix(camera);
 		loadMatrix(location_viewMatrix, viewMatrix);
-		super.loadVector(location_cameraPosition, camera.getPosition());
 	}
 
 	/**

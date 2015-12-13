@@ -77,8 +77,8 @@ public class TessellatorShader extends ShaderProgram {
 		super.loadMatrix(loc_viewMatrix, matrix);
 		super.loadVector(loc_cameraPos, camera.getPosition());
 	}
-
-	public void loadBiasMatrix(GameResources gm) {
+	
+	public void loadBiasMatrix(GameResources gm){
 		Matrix4f biasMatrix = new Matrix4f();
 		biasMatrix.m00 = 0.5f;
 		biasMatrix.m01 = 0;
@@ -98,6 +98,9 @@ public class TessellatorShader extends ShaderProgram {
 		biasMatrix.m33 = 1f;
 		super.loadMatrix(loc_biasMatrix, biasMatrix);
 		super.loadMatrix(loc_projectionLightMatrix, gm.getMasterShadowRenderer().getProjectionMatrix());
+	}
+
+	public void loadLightMatrix(GameResources gm) {
 		super.loadMatrix(loc_viewLightMatrix, Maths.createViewMatrix(gm.getSun_Camera()));
 	}
 

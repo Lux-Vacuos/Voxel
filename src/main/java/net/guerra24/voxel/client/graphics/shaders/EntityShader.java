@@ -108,8 +108,8 @@ public class EntityShader extends ShaderProgram {
 	public void loadTransformationMatrix(Matrix4f matrix) {
 		super.loadMatrix(loc_transformationMatrix, matrix);
 	}
-
-	public void loadBiasMatrix(GameResources gm) {
+	
+	public void loadBiasMatrix(GameResources gm){
 		Matrix4f biasMatrix = new Matrix4f();
 		biasMatrix.m00 = 0.5f;
 		biasMatrix.m01 = 0;
@@ -129,6 +129,9 @@ public class EntityShader extends ShaderProgram {
 		biasMatrix.m33 = 1f;
 		super.loadMatrix(loc_biasMatrix, biasMatrix);
 		super.loadMatrix(loc_projectionLightMatrix, gm.getMasterShadowRenderer().getProjectionMatrix());
+	}
+
+	public void loadLightMatrix(GameResources gm) {
 		super.loadMatrix(loc_viewLightMatrix, Maths.createViewMatrix(gm.getSun_Camera()));
 	}
 
