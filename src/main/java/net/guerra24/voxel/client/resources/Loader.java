@@ -150,13 +150,34 @@ public class Loader {
 		textures.add(texture_id);
 		return texture_id;
 	}
+	/**
+	 * Load Particle Texture
+	 * 
+	 * @param fileName
+	 *            Particle Texture Name
+	 * @return Texture ID
+	 */
+	public int loadTextureParticle(String fileName) {
+		int texture_id = 0;
+		try {
+			InputStream file = getClass().getClassLoader()
+					.getResourceAsStream("assets/textures/particles/" + fileName + ".png");
+			Logger.log("Loading Texture: " + fileName + ".png");
+			texture_id = loadTexture(file, GL_NEAREST, GL_REPEAT);
+		} catch (Exception e) {
+			e.printStackTrace();
+			Logger.log("Couldn' load texture file " + fileName);
+		}
+		textures.add(texture_id);
+		return texture_id;
+	}
 
 	public int loadTextureFont(String fileName) {
 		int texture = 0;
 		try {
 			InputStream file = getClass().getClassLoader().getResourceAsStream("assets/fonts/" + fileName + ".png");
-			texture = loadTexture(file, GL_NEAREST, GL_CLAMP_TO_EDGE);
 			Logger.log("Loading Texture: " + fileName + ".png");
+			texture = loadTexture(file, GL_NEAREST, GL_CLAMP_TO_EDGE);
 		} catch (Exception e) {
 			e.printStackTrace();
 			Logger.log("Couldn' load texture file " + fileName);
@@ -177,8 +198,8 @@ public class Loader {
 		try {
 			InputStream file = getClass().getClassLoader()
 					.getResourceAsStream("assets/textures/entity/" + fileName + ".png");
-			texture = loadTexture(file, GL_NEAREST, GL_REPEAT);
 			Logger.log("Loading Texture: " + fileName + ".png");
+			texture = loadTexture(file, GL_NEAREST, GL_REPEAT);
 			glGenerateMipmap(GL_TEXTURE_2D);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_LOD_BIAS, -0.4f);
@@ -202,8 +223,8 @@ public class Loader {
 		try {
 			InputStream file = getClass().getClassLoader()
 					.getResourceAsStream("assets/textures/menu/" + fileName + ".png");
-			texture = loadTexture(file, GL_NEAREST, GL_REPEAT);
 			Logger.log("Loading Texture: " + fileName + ".png");
+			texture = loadTexture(file, GL_NEAREST, GL_REPEAT);
 		} catch (Exception e) {
 			e.printStackTrace();
 			Logger.error("Couldn' load texture file" + fileName);
@@ -222,9 +243,6 @@ public class Loader {
 		EntityTexture data = decodeTextureFile(file);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, data.getWidth(), data.getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE,
 				data.getBuffer());
-		glGenerateMipmap(GL_TEXTURE_2D);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_LOD_BIAS, -0.4f);
 		return texture_id;
 	}
 

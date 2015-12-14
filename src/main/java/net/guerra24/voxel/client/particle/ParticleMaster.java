@@ -1,8 +1,11 @@
 package net.guerra24.voxel.client.particle;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import net.guerra24.voxel.client.graphics.ParticleRenderer;
 import net.guerra24.voxel.client.resources.Loader;
@@ -20,26 +23,33 @@ public class ParticleMaster {
 		return instance;
 	}
 
-	private Queue<Particle> particles;
+	private Map<ParticleTexture, List<Particle>> particles;
 	private ParticleRenderer renderer;
 
 	private ParticleMaster() {
 	}
 
 	public void init(Loader loader, Matrix4f projectionMatrix) {
-		particles = new ConcurrentLinkedQueue<Particle>();
+		particles = new HashMap<ParticleTexture, List<Particle>>();
 		renderer = new ParticleRenderer(loader, projectionMatrix);
 	}
 
-	public void update(float delta) {
-		Iterator<Particle> iterator = particles.iterator();
-		while (iterator.hasNext()) {
-			Particle p = iterator.next();
-			boolean stillAlive = p.update(delta);
-			if (!stillAlive)
-				iterator.remove();
+	public void update(float delta, Camera camera) {
+		Iterator<Entry<ParticleTexture, List<Particle>>> mapIterator = particles.entrySet().iterator();
+		while (mapIterator.hasNext()) {
+			List<Particle> list = mapIterator.next().getValue();
+			Iterator<Particle> iterator = list.iterator();
+			while (iterator.hasNext()) {
+				Particle p = iterator.next();
+				boolean stillAlive = p.update(delta, camera);
+				if (!stillAlive) {
+					iterator.remove();
+					if (list.isEmpty())
+						mapIterator.remove();
+				}
+			}
+			InsertionSort.sortHighToLow(list);
 		}
-
 	}
 
 	public void render(Camera camera) {
@@ -51,7 +61,13 @@ public class ParticleMaster {
 	}
 
 	public void addParticle(Particle particle) {
-		particles.add(particle);
+		List<Particle> list = particles.get(particle.getTexture());
+		if (list == null) {
+			list = new ArrayList<Particle>();
+			particles.put(particle.getTexture(), list);
+
+		}
+		list.add(particle);
 	}
 
 }

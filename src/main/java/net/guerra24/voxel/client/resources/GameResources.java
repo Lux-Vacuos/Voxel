@@ -44,6 +44,7 @@ import net.guerra24.voxel.client.graphics.shaders.TessellatorShader;
 import net.guerra24.voxel.client.graphics.shaders.TessellatorShadowShader;
 import net.guerra24.voxel.client.menu.Menu;
 import net.guerra24.voxel.client.particle.ParticleMaster;
+import net.guerra24.voxel.client.particle.ParticleTexture;
 import net.guerra24.voxel.client.resources.models.GuiTexture;
 import net.guerra24.voxel.client.sound.LibraryLWJGLOpenAL;
 import net.guerra24.voxel.client.sound.soundsystem.SoundSystem;
@@ -95,6 +96,7 @@ public class GameResources {
 
 	private Vector3f sunRotation = new Vector3f(5, 0, -45);
 	private Vector3f lightPos = new Vector3f(0, 0, 0);
+	private ParticleTexture torchTexture;
 
 	public Mob player;
 
@@ -162,9 +164,10 @@ public class GameResources {
 	 * Load Resources like Mobs
 	 * 
 	 */
-	public void addRes() {
+	public void loadResources() {
 		player = new Mob(new Entity(UniversalResources.player, new Vector3f(0, 80, 0), 0, 0, 0, 1));
 		physics.getMobManager().registerMob(player);
+		torchTexture = new ParticleTexture(loader.loadTextureParticle("fire0"), 4);
 	}
 
 	public void update(float rot) {
@@ -283,6 +286,10 @@ public class GameResources {
 
 	public Menu getMenuSystem() {
 		return menuSystem;
+	}
+
+	public ParticleTexture getTorchTexture() {
+		return torchTexture;
 	}
 
 	public Vector3f getSunRotation() {

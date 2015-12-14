@@ -94,7 +94,7 @@ public class InfinityWorld implements IWorld {
 
 	@Override
 	public void init(GameResources gm) {
-		particleSystem = new ParticleSystem(5, 1, -0.01f, 4, 0.2f);
+		particleSystem = new ParticleSystem(gm.getTorchTexture(), 5, 1, -0.01f, 4, 0.5f);
 		particleSystem.setDirection(new Vector3f(0, 1, 0), 0.1f);
 		particleSystem.setLifeError(0.8f);
 		particleSystem.setScaleError(0.2f);

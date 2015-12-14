@@ -113,7 +113,7 @@ public class Voxel {
 		gameResources.init();
 		guiResources = new GuiResources(gameResources);
 		BlocksResources.createBlocks(gameResources.getLoader());
-		gameResources.addRes();
+		gameResources.loadResources();
 		worldsHandler = new WorldsHandler();
 		InfinityWorld world = new InfinityWorld();
 		worldsHandler.registerWorld(world.getCodeName(), world);

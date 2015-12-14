@@ -41,8 +41,8 @@ public class VoxelVariables {
 	/**
 	 * Game Settings
 	 */
-	public static final boolean debug = false;
-	public static final String version = "0.0.9 Pre Release 1";
+	public static final boolean debug = true;
+	public static final String version = "0.0.9";
 	public static final String apiVersion = "0.0.6";
 	public static final int apiVersionNum = 000006;
 	public static final String state = "ALPHA";
@@ -112,6 +112,7 @@ public class VoxelVariables {
 	public static final String FRAGMENT_FILE_TESSELLATOR = "FragmentTessellator.glsl";
 	public static final String VERTEX_FILE_TESSELLATOR_SHADOW = "VertexTessellatorShadow.glsl";
 	public static final String FRAGMENT_FILE_TESSELLATOR_SHADOW = "FragmentTessellatorShadow.glsl";
+	public static boolean binded = false;
 	/**
 	 * World Folder Path
 	 */

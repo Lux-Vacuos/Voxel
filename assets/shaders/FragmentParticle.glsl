@@ -25,15 +25,22 @@
 #version 330 core
 
 in vec3 pass_Position;
-in vec4 pass_Normal;
+in vec2 textureCoords0;
+in vec2 textureCoords1;
+in float blend;
 
 out vec4 [5] out_Color;
 
+uniform sampler2D particleTexture;
+
 void main(void){
 
-	out_Color[0] = vec4(1.0);
+	vec4 colour0 = texture(particleTexture, textureCoords0);
+	vec4 colour1 = texture(particleTexture, textureCoords1);
+
+	out_Color[0] = mix(colour0, colour1, blend);
 	out_Color[1] = vec4(pass_Position.xyz,0);
-	out_Color[2] = vec4(pass_Normal.xyz,0);
+	out_Color[2] = vec4(0,0,0,0);
 	out_Color[3] = vec4(0.0);
 	out_Color[4] = vec4(0.0,1.0,0.0,0.0);
 

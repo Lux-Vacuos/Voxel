@@ -47,7 +47,7 @@ public class GameSPState extends State {
 		gm.getPhysics().getMobManager().update(delta, gm, gi, worlds.getActiveWorld(), api);
 		gm.update(gm.getSkyboxRenderer().update(delta));
 		gm.getRenderer().getWaterRenderer().update(delta);
-		ParticleMaster.getInstance().update(delta);
+		ParticleMaster.getInstance().update(delta, gm.getCamera());
 
 		if (!display.isDisplayFocused() && !VoxelVariables.debug) {
 			gm.getCamera().unlockMouse();

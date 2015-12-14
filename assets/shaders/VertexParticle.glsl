@@ -27,16 +27,28 @@
 in vec2 position;
 
 out vec3 pass_Position;
-out vec4 pass_Normal;
+out vec2 textureCoords0;
+out vec2 textureCoords1;
+out float blend;
 
 uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;
 uniform mat4 transformationMatrix;
+uniform vec2 texOffset0;
+uniform vec2 texOffset1;
+uniform vec2 texCoordInfo;
 
 void main(void){
+
+	vec2 textureCoords = position + vec2(0.5,0.5);
+	textureCoords.y = 1.0 - textureCoords.y;
+	textureCoords/= texCoordInfo.x;
+	textureCoords0 = textureCoords + texOffset0;
+	textureCoords1 = textureCoords + texOffset1;
+	blend = texCoordInfo.y;
+
 	vec4 worldPosition = transformationMatrix * vec4(position, 0.0, 1.0);
 	vec4 positionRelativeToCam = viewMatrix * worldPosition;
 	gl_Position = projectionMatrix * positionRelativeToCam;
 	pass_Position = worldPosition.xyz;
-	pass_Normal = vec4(0,1,0,0);
 }
