@@ -24,13 +24,17 @@
 
 package net.guerra24.voxel.client.world;
 
+import static org.lwjgl.opengl.GL15.*;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 import java.util.Random;
 
@@ -44,6 +48,7 @@ import net.guerra24.voxel.client.particle.ParticlePoint;
 import net.guerra24.voxel.client.particle.ParticleSystem;
 import net.guerra24.voxel.client.resources.GameResources;
 import net.guerra24.voxel.client.util.Logger;
+import net.guerra24.voxel.client.util.Maths;
 import net.guerra24.voxel.client.world.chunks.Chunk;
 import net.guerra24.voxel.client.world.chunks.ChunkGenerator;
 import net.guerra24.voxel.client.world.chunks.ChunkKey;
@@ -175,7 +180,7 @@ public class InfinityWorld implements IWorld {
 							for (ParticlePoint particlePoint : chunk.getParticlePoints()) {
 								particleSystem.generateParticles(particlePoint, delta);
 							}
-							chunk.update(this, chunkGenerator, worldService);
+							chunk.update(this, chunkGenerator, worldService, gm.getCamera());
 							if (gm.getFrustum().cubeInFrustum(chunk.posX, chunk.posY, chunk.posZ, chunk.posX + 16,
 									chunk.posY + 16, chunk.posZ + 16)) {
 								chunk.rebuild(worldService, this);
@@ -212,8 +217,11 @@ public class InfinityWorld implements IWorld {
 						Chunk chunk = getChunk(chunkDim, xx, yy, zz);
 						if (chunk != null) {
 							if (gm.getFrustum().cubeInFrustum(chunk.posX, chunk.posY, chunk.posZ, chunk.posX + 16,
-									chunk.posY + 16, chunk.posZ + 16))
-								chunk.render(gm);
+									chunk.posY + 16, chunk.posZ + 16)) {
+								int res = glGetQueryObjectui(chunk.getTess().getOcclusion(), GL_QUERY_RESULT);
+								if (res > 0)
+									chunk.render(gm);
+							}
 						}
 					}
 				}
@@ -239,11 +247,31 @@ public class InfinityWorld implements IWorld {
 				}
 			}
 		}
-
 	}
 
 	@Override
 	public void updateChunksOcclusion(GameResources gm) {
+		List<Chunk> chunks = new ArrayList<Chunk>();
+		for (int zr = -VoxelVariables.radius; zr <= VoxelVariables.radius; zr++) {
+			int zz = zPlayChunk + zr;
+			for (int xr = -VoxelVariables.radius; xr <= VoxelVariables.radius; xr++) {
+				int xx = xPlayChunk + xr;
+				for (int yr = -VoxelVariables.radius; yr <= VoxelVariables.radius; yr++) {
+					int yy = yPlayChunk + yr;
+					if (hasChunk(chunkDim, xx, yy, zz)) {
+						Chunk chunk = getChunk(chunkDim, xx, yy, zz);
+						if (chunk != null)
+							if (gm.getFrustum().cubeInFrustum(chunk.posX, chunk.posY, chunk.posZ, chunk.posX + 16,
+									chunk.posY + 16, chunk.posZ + 16))
+								chunks.add(chunk);
+					}
+				}
+			}
+		}
+		Maths.sortLowToHigh(chunks);
+		for (Chunk chunk : chunks) {
+			chunk.renderOcclusion(gm);
+		}
 	}
 
 	@Override

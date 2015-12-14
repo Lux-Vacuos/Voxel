@@ -38,6 +38,7 @@ import net.guerra24.voxel.client.world.WorldService;
 import net.guerra24.voxel.client.world.block.Block;
 import net.guerra24.voxel.client.world.block.BlockEntity;
 import net.guerra24.voxel.client.world.block.BlocksResources;
+import net.guerra24.voxel.client.world.entities.Camera;
 import net.guerra24.voxel.universal.util.vector.Vector3f;
 
 /**
@@ -60,8 +61,9 @@ public class Chunk {
 	private transient int sizeX, sizeY, sizeZ;
 	private transient boolean readyToRender = true;
 	private transient Tessellator tess;
-	public transient boolean needsRebuild = true, updated = false, updating = false, empty = true, genQuery = false,
-			visible = false, creating = false, decorating = false;
+	private transient float distance;
+	public transient boolean needsRebuild = true, updated = false, updating = false, empty = true, visible = false,
+			creating = false, decorating = false;
 	public boolean created = false, decorated = false;
 
 	/**
@@ -140,7 +142,10 @@ public class Chunk {
 		}
 	}
 
-	public void update(IWorld world, ChunkGenerator chunkGenerator, WorldService service) {
+	public void update(IWorld world, ChunkGenerator chunkGenerator, WorldService service, Camera camera) {
+
+		distance = Vector3f.sub(camera.getPosition(), new Vector3f(posX, posY, posZ), null).lengthSquared();
+
 		if (!created && !creating) {
 			creating = true;
 			service.add_worker(new ChunkWorkerGenerator(world, this));
@@ -330,6 +335,10 @@ public class Chunk {
 		return particlePoints;
 	}
 
+	public float getDistance() {
+		return distance;
+	}
+
 	private boolean cullFaceWest(int x, int y, int z, IWorld world) {
 		if (x > (cx * sizeX) + 1 && x < (cx * sizeX) + 16) {
 			if (getLocalBlock(x - 1, y, z) != Block.Air.getId() && getLocalBlock(x - 1, y, z) != Block.Water.getId()
@@ -490,8 +499,16 @@ public class Chunk {
 	}
 
 	public void renderShadow(GameResources gm) {
-		gm.getMasterShadowRenderer().renderChunk(blocksMesh, gm);
-		tess.drawShadow(gm.getSun_Camera());
+		if (readyToRender) {
+			gm.getMasterShadowRenderer().renderChunk(blocksMesh, gm);
+			tess.drawShadow(gm.getSun_Camera());
+		}
+	}
+
+	public void renderOcclusion(GameResources gm) {
+		if (readyToRender) {
+			tess.drawOcclusion(gm.getCamera(), gm.getRenderer().getProjectionMatrix());
+		}
 	}
 
 	private void clear() {
@@ -503,6 +520,10 @@ public class Chunk {
 
 	public void dispose() {
 		clear();
+	}
+
+	public Tessellator getTess() {
+		return tess;
 	}
 
 }

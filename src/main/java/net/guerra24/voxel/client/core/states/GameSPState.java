@@ -64,6 +64,8 @@ public class GameSPState extends State {
 		worlds.getActiveWorld().lighting();
 		gm.getFrustum().calculateFrustum(gm.getRenderer().getProjectionMatrix(), gm.getCamera());
 		gm.getSun_Camera().setPosition(gm.getCamera().getPosition());
+		gm.getRenderer().prepare();
+		worlds.getActiveWorld().updateChunksOcclusion(gm);
 		if (VoxelVariables.useShadows) {
 			gm.getMasterShadowRenderer().being();
 			gm.getRenderer().prepare();

@@ -24,8 +24,10 @@
 
 package net.guerra24.voxel.client.util;
 
+import java.util.List;
 import java.util.Random;
 
+import net.guerra24.voxel.client.world.chunks.Chunk;
 import net.guerra24.voxel.client.world.entities.Camera;
 import net.guerra24.voxel.universal.util.vector.Matrix4f;
 import net.guerra24.voxel.universal.util.vector.Vector2f;
@@ -172,6 +174,25 @@ public class Maths {
 		Random rand = new Random();
 		float randomNum = (rand.nextFloat() - 0.5f) / 16;
 		return randomNum;
+	}
+	
+	public static void sortLowToHigh(List<Chunk> list) {
+		for (int i = 1; i < list.size(); i++) {
+			Chunk item = list.get(i);
+			if (item.getDistance() < list.get(i - 1).getDistance()) {
+				sortUpHighToLow(list, i);
+			}
+		}
+	}
+
+	private static void sortUpHighToLow(List<Chunk> list, int i) {
+		Chunk item = list.get(i);
+		int attemptPos = i - 1;
+		while (attemptPos != 0 && list.get(attemptPos - 1).getDistance() > item.getDistance()) {
+			attemptPos--;
+		}
+		list.remove(i);
+		list.add(attemptPos, item);
 	}
 
 }

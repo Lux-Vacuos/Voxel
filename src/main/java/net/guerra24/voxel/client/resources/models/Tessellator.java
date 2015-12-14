@@ -1,16 +1,29 @@
 package net.guerra24.voxel.client.resources.models;
 
-import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.GL_BACK;
+import static org.lwjgl.opengl.GL11.GL_FLOAT;
+import static org.lwjgl.opengl.GL11.GL_FRONT;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
+import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
+import static org.lwjgl.opengl.GL11.GL_UNSIGNED_INT;
+import static org.lwjgl.opengl.GL11.glBindTexture;
+import static org.lwjgl.opengl.GL11.glCullFace;
+import static org.lwjgl.opengl.GL11.glDrawElements;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE1;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
 import static org.lwjgl.opengl.GL15.GL_ARRAY_BUFFER;
 import static org.lwjgl.opengl.GL15.GL_DYNAMIC_DRAW;
 import static org.lwjgl.opengl.GL15.GL_ELEMENT_ARRAY_BUFFER;
+import static org.lwjgl.opengl.GL15.GL_SAMPLES_PASSED;
+import static org.lwjgl.opengl.GL15.glBeginQuery;
 import static org.lwjgl.opengl.GL15.glBindBuffer;
 import static org.lwjgl.opengl.GL15.glBufferData;
 import static org.lwjgl.opengl.GL15.glDeleteBuffers;
+import static org.lwjgl.opengl.GL15.glDeleteQueries;
+import static org.lwjgl.opengl.GL15.glEndQuery;
 import static org.lwjgl.opengl.GL15.glGenBuffers;
+import static org.lwjgl.opengl.GL15.glGenQueries;
 import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
 import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
 import static org.lwjgl.opengl.GL20.glVertexAttribPointer;
@@ -30,6 +43,7 @@ import net.guerra24.voxel.client.graphics.shaders.TessellatorShadowShader;
 import net.guerra24.voxel.client.resources.GameResources;
 import net.guerra24.voxel.client.world.block.IBlock;
 import net.guerra24.voxel.client.world.entities.Camera;
+import net.guerra24.voxel.universal.util.vector.Matrix4f;
 import net.guerra24.voxel.universal.util.vector.Vector2f;
 import net.guerra24.voxel.universal.util.vector.Vector3f;
 import net.guerra24.voxel.universal.util.vector.Vector4f;
@@ -47,10 +61,13 @@ public class Tessellator {
 	private List<Integer> indices;
 	private List<Vector4f> data;
 	private int texture;
+	private int occlusion;
 	private boolean updated = false;
 
 	private TessellatorShader shader;
 	private TessellatorShadowShader shadowShader;
+
+	private Matrix4f orthoProjectionMatrix;
 
 	public Tessellator(GameResources gm) {
 		init(gm);
@@ -62,16 +79,19 @@ public class Tessellator {
 		normals = new ArrayList<Vector3f>();
 		data = new ArrayList<Vector4f>();
 		indices = new ArrayList<Integer>();
+		this.orthoProjectionMatrix = gm.getRenderer().getProjectionMatrix();
 		shader = TessellatorShader.getInstance();
 		shader.start();
 		shader.conectTextureUnits();
-		shader.loadProjectionMatrix(gm.getRenderer().getProjectionMatrix());
+		shader.loadProjectionMatrix(orthoProjectionMatrix);
 		shader.loadBiasMatrix(gm);
 		shader.stop();
 		shadowShader = TessellatorShadowShader.getInstance();
 		shadowShader.start();
 		shadowShader.loadProjectionMatrix(gm.getMasterShadowRenderer().getProjectionMatrix());
 		shadowShader.stop();
+
+		occlusion = glGenQueries();
 
 		vaoID = glGenVertexArrays();
 		glBindVertexArray(vaoID);
@@ -173,6 +193,7 @@ public class Tessellator {
 		glCullFace(GL_FRONT);
 		shadowShader.start();
 		shadowShader.loadviewMatrix(camera);
+		shadowShader.loadProjectionMatrix(orthoProjectionMatrix);
 		glBindVertexArray(vaoID);
 		glEnableVertexAttribArray(0);
 		glDrawElements(GL_TRIANGLES, indicesCounter, GL_UNSIGNED_INT, 0);
@@ -180,6 +201,30 @@ public class Tessellator {
 		glBindVertexArray(0);
 		shadowShader.stop();
 		glCullFace(GL_BACK);
+	}
+
+	public void drawOcclusion(Camera camera, Matrix4f projectionMatrix) {
+		if (updated) {
+			updateGlBuffers(vboID0, vboCap0, buffer0);
+			updateGlBuffers(vboID1, vboCap1, buffer1);
+			updateGlBuffers(vboID2, vboCap2, buffer2);
+			updateGlBuffers(vboID3, vboCap3, buffer3);
+			updateGLIBOBuffer();
+			updated = false;
+		}
+		shadowShader.start();
+		shadowShader.loadviewMatrix(camera);
+		shadowShader.loadProjectionMatrix(projectionMatrix);
+		
+		glBeginQuery(GL_SAMPLES_PASSED, occlusion);
+		glBindVertexArray(vaoID);
+		glEnableVertexAttribArray(0);
+		glDrawElements(GL_TRIANGLES, indicesCounter, GL_UNSIGNED_INT, 0);
+		glDisableVertexAttribArray(0);
+		glBindVertexArray(0);
+		glEndQuery(GL_SAMPLES_PASSED);
+		
+		shadowShader.stop();
 	}
 
 	public void loadData(List<Vector3f> pos, List<Vector2f> texcoords, List<Vector3f> normals, List<Vector4f> data) {
@@ -396,6 +441,11 @@ public class Tessellator {
 		glDeleteBuffers(vboID2);
 		glDeleteBuffers(vboID3);
 		glDeleteBuffers(iboID);
+		glDeleteQueries(occlusion);
+	}
+
+	public int getOcclusion() {
+		return occlusion;
 	}
 
 }
