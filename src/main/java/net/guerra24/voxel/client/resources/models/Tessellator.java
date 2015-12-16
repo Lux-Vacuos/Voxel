@@ -79,11 +79,11 @@ public class Tessellator {
 		normals = new ArrayList<Vector3f>();
 		data = new ArrayList<Vector4f>();
 		indices = new ArrayList<Integer>();
-		this.orthoProjectionMatrix = gm.getRenderer().getProjectionMatrix();
+		this.orthoProjectionMatrix = gm.getMasterShadowRenderer().getProjectionMatrix();
 		shader = TessellatorShader.getInstance();
 		shader.start();
 		shader.conectTextureUnits();
-		shader.loadProjectionMatrix(orthoProjectionMatrix);
+		shader.loadProjectionMatrix(gm.getRenderer().getProjectionMatrix());
 		shader.loadBiasMatrix(gm);
 		shader.stop();
 		shadowShader = TessellatorShadowShader.getInstance();
