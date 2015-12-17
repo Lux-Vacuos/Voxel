@@ -27,28 +27,13 @@
 in vec2 position;
 
 out vec3 pass_position;
-out vec4 ShadowCoord;
 
-uniform float moveFactor;
 uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;
 uniform mat4 modelMatrix;
-uniform mat4 projectionLightMatrix;
-uniform mat4 viewLightMatrix;
-uniform mat4 biasMatrix;
-
-uniform int useShadows;
 
 void main(void) {
 	vec4 worldPosition = modelMatrix * vec4(position.x, 0.0, position.y, 1.0);
-	float sina = sin(worldPosition.x + moveFactor) * 0.05;
-	float sinb = cos(worldPosition.z + moveFactor) * 0.02;
-	worldPosition += vec4(0.0, sina + sinb, 0.0, 0.0);
 	gl_Position = projectionMatrix * viewMatrix * worldPosition;
 	pass_position = worldPosition.xyz;
-	if(useShadows == 1){
-		vec4 posLight = viewLightMatrix * worldPosition;
-		vec4 a = projectionLightMatrix * posLight;
-		ShadowCoord = biasMatrix * a;
-	}
 }

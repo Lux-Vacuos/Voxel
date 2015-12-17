@@ -17,7 +17,6 @@ import net.guerra24.voxel.client.core.VoxelVariables;
 import net.guerra24.voxel.client.graphics.opengl.Display;
 import net.guerra24.voxel.client.particle.ParticleMaster;
 import net.guerra24.voxel.client.resources.GameResources;
-import net.guerra24.voxel.client.resources.GuiResources;
 import net.guerra24.voxel.client.world.WorldsHandler;
 
 /**
@@ -35,16 +34,14 @@ public class GameSPState extends State {
 	@Override
 	public void update(Voxel voxel, GlobalStates states, float delta) {
 		GameResources gm = voxel.getGameResources();
-		GuiResources gi = voxel.getGuiResources();
 		WorldsHandler worlds = voxel.getWorldsHandler();
 		ModInitialization api = voxel.getApi();
 		Display display = voxel.getDisplay();
 
 		gm.getCamera().update(delta, gm, worlds.getActiveWorld(), api, voxel.getClient());
-		gm.getPhysics().getMobManager().getPlayer().update(delta, gm, voxel.getGuiResources(), worlds.getActiveWorld(),
-				api);
+		gm.getPhysics().getMobManager().getPlayer().update(delta, gm, worlds.getActiveWorld(), api);
 		worlds.getActiveWorld().updateChunksGeneration(gm, api, delta);
-		gm.getPhysics().getMobManager().update(delta, gm, gi, worlds.getActiveWorld(), api);
+		gm.getPhysics().getMobManager().update(delta, gm, worlds.getActiveWorld(), api);
 		gm.update(gm.getSkyboxRenderer().update(delta));
 		gm.getRenderer().getWaterRenderer().update(delta);
 		ParticleMaster.getInstance().update(delta, gm.getCamera());
@@ -74,9 +71,7 @@ public class GameSPState extends State {
 		}
 		gm.getDeferredShadingRenderer().getPost_fbo().begin();
 		gm.getRenderer().prepare();
-		gm.getRenderer().begin(gm);
 		worlds.getActiveWorld().updateChunksRender(gm);
-		gm.getRenderer().end(gm);
 		FloatBuffer p = BufferUtils.createFloatBuffer(1);
 		glReadPixels(Display.getWidth() / 2, Display.getHeight() / 2, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, p);
 		gm.getCamera().depth = p.get(0);

@@ -15,13 +15,10 @@ import static org.lwjgl.opengl.GL13.glActiveTexture;
 import static org.lwjgl.opengl.GL15.GL_ARRAY_BUFFER;
 import static org.lwjgl.opengl.GL15.GL_DYNAMIC_DRAW;
 import static org.lwjgl.opengl.GL15.GL_ELEMENT_ARRAY_BUFFER;
-import static org.lwjgl.opengl.GL15.GL_SAMPLES_PASSED;
-import static org.lwjgl.opengl.GL15.glBeginQuery;
 import static org.lwjgl.opengl.GL15.glBindBuffer;
 import static org.lwjgl.opengl.GL15.glBufferData;
 import static org.lwjgl.opengl.GL15.glDeleteBuffers;
 import static org.lwjgl.opengl.GL15.glDeleteQueries;
-import static org.lwjgl.opengl.GL15.glEndQuery;
 import static org.lwjgl.opengl.GL15.glGenBuffers;
 import static org.lwjgl.opengl.GL15.glGenQueries;
 import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
@@ -37,9 +34,8 @@ import java.util.List;
 
 import org.lwjgl.BufferUtils;
 
-import net.guerra24.voxel.client.core.VoxelVariables;
+import net.guerra24.voxel.client.graphics.shaders.TessellatorBasicShader;
 import net.guerra24.voxel.client.graphics.shaders.TessellatorShader;
-import net.guerra24.voxel.client.graphics.shaders.TessellatorShadowShader;
 import net.guerra24.voxel.client.resources.GameResources;
 import net.guerra24.voxel.client.world.block.IBlock;
 import net.guerra24.voxel.client.world.entities.Camera;
@@ -65,7 +61,7 @@ public class Tessellator {
 	private boolean updated = false;
 
 	private TessellatorShader shader;
-	private TessellatorShadowShader shadowShader;
+	private TessellatorBasicShader basicShader;
 
 	private Matrix4f orthoProjectionMatrix;
 
@@ -86,10 +82,10 @@ public class Tessellator {
 		shader.loadProjectionMatrix(gm.getRenderer().getProjectionMatrix());
 		shader.loadBiasMatrix(gm);
 		shader.stop();
-		shadowShader = TessellatorShadowShader.getInstance();
-		shadowShader.start();
-		shadowShader.loadProjectionMatrix(gm.getMasterShadowRenderer().getProjectionMatrix());
-		shadowShader.stop();
+		basicShader = TessellatorBasicShader.getInstance();
+		basicShader.start();
+		basicShader.loadProjectionMatrix(gm.getMasterShadowRenderer().getProjectionMatrix());
+		basicShader.stop();
 
 		occlusion = glGenQueries();
 
@@ -170,7 +166,6 @@ public class Tessellator {
 		shader.start();
 		shader.loadviewMatrix(gm.getCamera());
 		shader.loadLightMatrix(gm);
-		shader.loadSettings(VoxelVariables.useShadows);
 		glBindVertexArray(vaoID);
 		glEnableVertexAttribArray(0);
 		glEnableVertexAttribArray(1);
@@ -191,15 +186,15 @@ public class Tessellator {
 
 	public void drawShadow(Camera camera) {
 		glCullFace(GL_FRONT);
-		shadowShader.start();
-		shadowShader.loadviewMatrix(camera);
-		shadowShader.loadProjectionMatrix(orthoProjectionMatrix);
+		basicShader.start();
+		basicShader.loadviewMatrix(camera);
+		basicShader.loadProjectionMatrix(orthoProjectionMatrix);
 		glBindVertexArray(vaoID);
 		glEnableVertexAttribArray(0);
 		glDrawElements(GL_TRIANGLES, indicesCounter, GL_UNSIGNED_INT, 0);
 		glDisableVertexAttribArray(0);
 		glBindVertexArray(0);
-		shadowShader.stop();
+		basicShader.stop();
 		glCullFace(GL_BACK);
 	}
 
@@ -212,19 +207,15 @@ public class Tessellator {
 			updateGLIBOBuffer();
 			updated = false;
 		}
-		shadowShader.start();
-		shadowShader.loadviewMatrix(camera);
-		shadowShader.loadProjectionMatrix(projectionMatrix);
-		
-		glBeginQuery(GL_SAMPLES_PASSED, occlusion);
+		basicShader.start();
+		basicShader.loadviewMatrix(camera);
+		basicShader.loadProjectionMatrix(projectionMatrix);
 		glBindVertexArray(vaoID);
 		glEnableVertexAttribArray(0);
 		glDrawElements(GL_TRIANGLES, indicesCounter, GL_UNSIGNED_INT, 0);
 		glDisableVertexAttribArray(0);
 		glBindVertexArray(0);
-		glEndQuery(GL_SAMPLES_PASSED);
-		
-		shadowShader.stop();
+		basicShader.stop();
 	}
 
 	public void loadData(List<Vector3f> pos, List<Vector2f> texcoords, List<Vector3f> normals, List<Vector4f> data) {

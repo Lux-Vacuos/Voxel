@@ -24,8 +24,31 @@
 
 package net.guerra24.voxel.client.graphics.shaders;
 
-import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL20.*;
+import static org.lwjgl.opengl.GL11.GL_FALSE;
+import static org.lwjgl.opengl.GL20.GL_COMPILE_STATUS;
+import static org.lwjgl.opengl.GL20.GL_FRAGMENT_SHADER;
+import static org.lwjgl.opengl.GL20.GL_VERTEX_SHADER;
+import static org.lwjgl.opengl.GL20.glAttachShader;
+import static org.lwjgl.opengl.GL20.glBindAttribLocation;
+import static org.lwjgl.opengl.GL20.glCompileShader;
+import static org.lwjgl.opengl.GL20.glCreateProgram;
+import static org.lwjgl.opengl.GL20.glCreateShader;
+import static org.lwjgl.opengl.GL20.glDeleteProgram;
+import static org.lwjgl.opengl.GL20.glDeleteShader;
+import static org.lwjgl.opengl.GL20.glDetachShader;
+import static org.lwjgl.opengl.GL20.glGetShaderInfoLog;
+import static org.lwjgl.opengl.GL20.glGetShaderi;
+import static org.lwjgl.opengl.GL20.glGetUniformLocation;
+import static org.lwjgl.opengl.GL20.glLinkProgram;
+import static org.lwjgl.opengl.GL20.glShaderSource;
+import static org.lwjgl.opengl.GL20.glUniform1f;
+import static org.lwjgl.opengl.GL20.glUniform1i;
+import static org.lwjgl.opengl.GL20.glUniform2f;
+import static org.lwjgl.opengl.GL20.glUniform3f;
+import static org.lwjgl.opengl.GL20.glUniform4f;
+import static org.lwjgl.opengl.GL20.glUniformMatrix4fv;
+import static org.lwjgl.opengl.GL20.glUseProgram;
+import static org.lwjgl.opengl.GL20.glValidateProgram;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -34,7 +57,6 @@ import java.nio.FloatBuffer;
 
 import org.lwjgl.BufferUtils;
 
-import net.guerra24.voxel.client.core.VoxelVariables;
 import net.guerra24.voxel.client.util.Logger;
 import net.guerra24.voxel.universal.util.vector.Matrix4f;
 import net.guerra24.voxel.universal.util.vector.Vector2f;
@@ -60,6 +82,10 @@ public abstract class ShaderProgram {
 	 * Fragment Shader ID
 	 */
 	private int fragmentShaderID;
+	/**
+	 * Shader bind status
+	 */
+	private boolean binded = false;
 	/**
 	 * Used to Load Matrix to shader
 	 */
@@ -108,14 +134,14 @@ public abstract class ShaderProgram {
 	 */
 	public void start() {
 		try {
-			if (VoxelVariables.binded)
-				throw new RuntimeException("One Shader is already binded");
+			if (binded)
+				throw new RuntimeException("A Shader is already binded");
 		} catch (RuntimeException e) {
 			e.printStackTrace();
 			System.exit(-1);
 		}
 		glUseProgram(programID);
-		VoxelVariables.binded = true;
+		binded = true;
 	}
 
 	/**
@@ -124,7 +150,7 @@ public abstract class ShaderProgram {
 	 */
 	public void stop() {
 		glUseProgram(0);
-		VoxelVariables.binded = false;
+		binded = false;
 	}
 
 	/**

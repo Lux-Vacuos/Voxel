@@ -8,9 +8,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Queue;
 
-import net.guerra24.voxel.client.graphics.shaders.ShadowShader;
+import net.guerra24.voxel.client.graphics.shaders.EntityBasicShader;
 import net.guerra24.voxel.client.resources.GameResources;
 import net.guerra24.voxel.client.resources.models.TexturedModel;
 import net.guerra24.voxel.client.util.Maths;
@@ -20,7 +19,7 @@ import net.guerra24.voxel.universal.util.vector.Matrix4f;
 public class MasterShadowRenderer {
 
 	private Map<TexturedModel, List<BlockEntity>> blockEntities = new HashMap<TexturedModel, List<BlockEntity>>();
-	private ShadowShader shader;
+	private EntityBasicShader shader;
 	private ShadowRenderer renderer;
 	private FrameBuffer fbo;
 	private Matrix4f projectionMatrix;
@@ -33,7 +32,7 @@ public class MasterShadowRenderer {
 	 *            Game Loader
 	 */
 	public MasterShadowRenderer() {
-		shader = new ShadowShader();
+		shader = new EntityBasicShader();
 		projectionMatrix = Maths.orthographic(-30, 30, -30, 30, -100, 100);
 		renderer = new ShadowRenderer(shader, projectionMatrix);
 		fbo = new FrameBuffer(true, 4096, 4096);
@@ -57,7 +56,7 @@ public class MasterShadowRenderer {
 	 * @param camera
 	 *            A Camera
 	 */
-	public void renderChunk(Queue<Object> cubes, GameResources gm) {
+	public void renderChunk(List<Object> cubes, GameResources gm) {
 		for (Object entity : cubes) {
 			if (entity instanceof BlockEntity)
 				processBlockEntity((BlockEntity) entity);

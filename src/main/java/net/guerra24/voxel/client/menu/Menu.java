@@ -18,7 +18,7 @@ public class Menu {
 	
 	public Menu(GameResources gm) {
 		mainMenu = new MainMenu(gm);
-		pauseMenu = new PauseMenu();
+		pauseMenu = new PauseMenu(gm);
 		optionsMenu = new OptionsMenu(gm);
 		gameSP = new GameSP(gm);
 	}

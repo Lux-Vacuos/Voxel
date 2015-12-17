@@ -29,20 +29,15 @@ import java.util.List;
 
 import net.guerra24.voxel.client.core.VoxelVariables;
 import net.guerra24.voxel.client.resources.GameResources;
-import net.guerra24.voxel.client.resources.MenuResources;
-import net.guerra24.voxel.client.resources.models.ButtonModel;
 import net.guerra24.voxel.client.resources.models.FontType;
 import net.guerra24.voxel.client.resources.models.GUIText;
 import net.guerra24.voxel.universal.util.vector.Vector2f;
-import net.guerra24.voxel.universal.util.vector.Vector3f;
 
 public class MainMenu {
 
 	private Button playButton;
 	private Button exitButton;
 	private Button optionsButton;
-	private List<ButtonModel> list;
-
 	private List<GUIText> texts;
 
 	public MainMenu(GameResources gm) {
@@ -54,16 +49,6 @@ public class MainMenu {
 		playButton = new Button(new Vector2f(177 * xScale, 532 * yScale), new Vector2f(215, 80));
 		exitButton = new Button(new Vector2f(177 * xScale, 224 * yScale), new Vector2f(215, 80));
 		optionsButton = new Button(new Vector2f(177 * xScale, 376 * yScale), new Vector2f(215, 80));
-
-		list = new ArrayList<ButtonModel>();
-		list.add(new ButtonModel(MenuResources.getModel1Final(), new Vector3f(-0.7f, 0.4f, 0), new Vector3f(90, 0, 0),
-				0.07f));
-		list.add(new ButtonModel(MenuResources.getModel1Final(), new Vector3f(-0.7f, 0.1f, 0), new Vector3f(90, 0, 0),
-				0.07f));
-		list.add(new ButtonModel(MenuResources.getModel1Final(), new Vector3f(-0.7f, -0.2f, 0), new Vector3f(90, 0, 0),
-				0.07f));
-		list.add(new ButtonModel(MenuResources.getMainMenuBackFinal(), new Vector3f(0.1f, -0.92f, -1f),
-				new Vector3f(90, 0, 0), 4));
 
 		texts = new ArrayList<GUIText>();
 		GUIText textVersion = new GUIText(
@@ -101,10 +86,6 @@ public class MainMenu {
 
 	public Button getExitButton() {
 		return exitButton;
-	}
-
-	public List<ButtonModel> getList() {
-		return list;
 	}
 
 	public Button getOptionsButton() {

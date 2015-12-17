@@ -35,25 +35,19 @@ import static org.lwjgl.opengl.GL11.glBlendFunc;
 import static org.lwjgl.opengl.GL11.glClear;
 import static org.lwjgl.opengl.GL11.glClearColor;
 import static org.lwjgl.opengl.GL11.glCullFace;
-import static org.lwjgl.opengl.GL11.glDisable;
 import static org.lwjgl.opengl.GL11.glEnable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 import net.guerra24.voxel.client.core.VoxelVariables;
 import net.guerra24.voxel.client.graphics.opengl.Display;
 import net.guerra24.voxel.client.graphics.shaders.EntityShader;
 import net.guerra24.voxel.client.graphics.shaders.WaterShader;
 import net.guerra24.voxel.client.resources.GameResources;
-import net.guerra24.voxel.client.resources.models.ButtonModel;
 import net.guerra24.voxel.client.resources.models.TexturedModel;
-import net.guerra24.voxel.client.resources.models.WaterTile;
-import net.guerra24.voxel.client.util.Maths;
 import net.guerra24.voxel.client.world.block.BlockEntity;
 import net.guerra24.voxel.client.world.entities.Entity;
 import net.guerra24.voxel.client.world.entities.IEntity;
@@ -72,9 +66,7 @@ public class MasterRenderer {
 	 */
 	private Matrix4f projectionMatrix;
 	private Map<TexturedModel, List<Entity>> entities = new HashMap<TexturedModel, List<Entity>>();
-	private Map<TexturedModel, List<Entity>> guiModels = new HashMap<TexturedModel, List<Entity>>();
 	private Map<TexturedModel, List<BlockEntity>> blockEntities = new HashMap<TexturedModel, List<BlockEntity>>();
-	private Queue<WaterTile> waterTiles = new ConcurrentLinkedQueue<>();
 	private WaterShader waterShader;
 	private WaterRenderer waterRenderer;
 	private EntityShader shader = new EntityShader();
@@ -92,9 +84,9 @@ public class MasterRenderer {
 		initGL();
 		projectionMatrix = createProjectionMatrix(Display.getWidth(), Display.getHeight(), VoxelVariables.FOV,
 				VoxelVariables.NEAR_PLANE, VoxelVariables.FAR_PLANE);
-		entityRenderer = new EntityRenderer(shader,gm, projectionMatrix);
+		entityRenderer = new EntityRenderer(shader, gm, projectionMatrix);
 		waterShader = new WaterShader();
-		waterRenderer = new WaterRenderer(gm.getLoader(), waterShader, projectionMatrix);
+		waterRenderer = new WaterRenderer(gm, projectionMatrix);
 	}
 
 	/**
@@ -118,12 +110,10 @@ public class MasterRenderer {
 	 * @param camera
 	 *            A Camera
 	 */
-	public void processChunk(Queue<Object> cubes, GameResources gm) {
+	public void processChunk(List<Object> cubes, GameResources gm) {
 		for (Object entity : cubes) {
 			if (entity instanceof BlockEntity)
 				processBlockEntity((BlockEntity) entity);
-			if (entity instanceof WaterTile)
-				waterTiles.add((WaterTile) entity);
 		}
 		renderChunk(gm);
 	}
@@ -149,14 +139,7 @@ public class MasterRenderer {
 		renderEntity(gm);
 	}
 
-	public void renderGui(List<ButtonModel> list, GameResources gm) {
-		for (IEntity entity : list) {
-			processGuiButton(entity.getEntity());
-		}
-		renderGui(gm);
-	}
-	
-	public void renderChunk(GameResources gm){
+	public void renderChunk(GameResources gm) {
 		shader.start();
 		shader.loadProjectionMatrix(projectionMatrix);
 		shader.loadviewMatrix(gm.getCamera());
@@ -165,16 +148,6 @@ public class MasterRenderer {
 		entityRenderer.renderBlockEntity(blockEntities, gm);
 		shader.stop();
 		blockEntities.clear();
-		glDisable(GL_CULL_FACE);
-		waterRenderer.render(waterTiles, gm);
-		glEnable(GL_CULL_FACE);
-		waterTiles.clear();
-	}
-
-	public void begin(GameResources gm) {
-	}
-
-	public void end(GameResources gm) {
 	}
 
 	/**
@@ -192,16 +165,6 @@ public class MasterRenderer {
 		entityRenderer.renderEntity(entities, gm);
 		shader.stop();
 		entities.clear();
-	}
-
-	private void renderGui(GameResources gm) {
-		shader.start();
-		shader.loadProjectionMatrix(
-				Maths.orthographic(-0.7f * aspectRatio, 0.7f * aspectRatio, -0.7f, 0.7f, -100, 100f));
-		shader.loadviewMatrix(gm.getCamera());
-		entityRenderer.renderEntity(guiModels, gm);
-		shader.stop();
-		guiModels.clear();
 	}
 
 	/**
@@ -237,18 +200,6 @@ public class MasterRenderer {
 			List<Entity> newBatch = new ArrayList<Entity>();
 			newBatch.add(entity);
 			entities.put(entityModel, newBatch);
-		}
-	}
-
-	private void processGuiButton(Entity entity) {
-		TexturedModel entityModel = entity.getModel();
-		List<Entity> batch = guiModels.get(entityModel);
-		if (batch != null) {
-			batch.add(entity);
-		} else {
-			List<Entity> newBatch = new ArrayList<Entity>();
-			newBatch.add(entity);
-			guiModels.put(entityModel, newBatch);
 		}
 	}
 

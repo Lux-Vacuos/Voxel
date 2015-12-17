@@ -24,15 +24,16 @@
 
 package net.guerra24.voxel.client.graphics;
 
-import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
-import static org.lwjgl.opengl.GL11.glDrawArrays;
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL13.*;
 import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
 import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 
-import java.util.Queue;
+import java.util.List;
 
 import net.guerra24.voxel.client.core.VoxelVariables;
+import net.guerra24.voxel.client.graphics.shaders.WaterBasicShader;
 import net.guerra24.voxel.client.graphics.shaders.WaterShader;
 import net.guerra24.voxel.client.resources.GameResources;
 import net.guerra24.voxel.client.resources.Loader;
@@ -54,6 +55,7 @@ public class WaterRenderer {
 	 */
 	private RawModel quad;
 	private WaterShader shader;
+	private WaterBasicShader basicShader;
 	private float moveFactor = 0;
 
 	/**
@@ -66,12 +68,17 @@ public class WaterRenderer {
 	 * @param projectionMatrix
 	 *            A Matrix4f Projection
 	 */
-	public WaterRenderer(Loader loader, WaterShader shader, Matrix4f projectionMatrix) {
-		this.shader = shader;
+	public WaterRenderer(GameResources gm, Matrix4f projectionMatrix) {
+		shader = new WaterShader();
 		shader.start();
 		shader.loadProjectionMatrix(projectionMatrix);
+		shader.loadBiasMatrix(gm);
 		shader.stop();
-		setUpVAO(loader);
+		basicShader = new WaterBasicShader();
+		basicShader.start();
+		basicShader.loadProjectionMatrix(projectionMatrix);
+		basicShader.stop();
+		setUpVAO(gm.getLoader());
 	}
 
 	/**
@@ -82,7 +89,7 @@ public class WaterRenderer {
 	 * @param camera
 	 *            A Camera
 	 */
-	public void render(Queue<WaterTile> waters, GameResources gm) {
+	public void render(List<WaterTile> waters, GameResources gm) {
 		prepareRender(gm);
 		for (WaterTile tile : waters) {
 			Matrix4f modelMatrix = Maths.createTransformationMatrix(
@@ -91,6 +98,25 @@ public class WaterRenderer {
 			glDrawArrays(GL_TRIANGLES, 0, quad.getVertexCount());
 		}
 		unbind();
+	}
+
+	/**
+	 * Renders the Water Tiles in the List
+	 * 
+	 * @param waters
+	 *            A list of Water Tiles
+	 * @param camera
+	 *            A Camera
+	 */
+	public void renderOcclusion(List<WaterTile> waters, GameResources gm) {
+		prepareRenderOcclusion(gm);
+		for (WaterTile tile : waters) {
+			Matrix4f modelMatrix = Maths.createTransformationMatrix(
+					new Vector3f(tile.getX(), tile.getHeight(), tile.getZ()), 0, 0, 0, WaterTile.TILE_SIZE);
+			basicShader.loadModelMatrix(modelMatrix);
+			glDrawArrays(GL_TRIANGLES, 0, quad.getVertexCount());
+		}
+		unbindOcclusion();
 	}
 
 	/**
@@ -103,6 +129,23 @@ public class WaterRenderer {
 		shader.start();
 		shader.loadViewMatrix(gm.getCamera());
 		shader.loadMoveFactor(moveFactor);
+		shader.loadLightMatrix(gm);
+		glBindVertexArray(quad.getVaoID());
+		glEnableVertexAttribArray(0);
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, gm.getMasterShadowRenderer().getFbo().getTexture());
+
+	}
+
+	/**
+	 * Water Tile Prepare PipeLine
+	 * 
+	 * @param camera
+	 *            A Camera
+	 */
+	private void prepareRenderOcclusion(GameResources gm) {
+		basicShader.start();
+		basicShader.loadViewMatrix(gm.getCamera());
 		glBindVertexArray(quad.getVaoID());
 		glEnableVertexAttribArray(0);
 	}
@@ -126,6 +169,12 @@ public class WaterRenderer {
 		glDisableVertexAttribArray(0);
 		glBindVertexArray(0);
 		shader.stop();
+	}
+
+	private void unbindOcclusion() {
+		glDisableVertexAttribArray(0);
+		glBindVertexArray(0);
+		basicShader.stop();
 	}
 
 	/**

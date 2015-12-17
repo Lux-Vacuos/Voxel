@@ -10,7 +10,7 @@ import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import java.util.List;
 import java.util.Map;
 
-import net.guerra24.voxel.client.graphics.shaders.ShadowShader;
+import net.guerra24.voxel.client.graphics.shaders.EntityBasicShader;
 import net.guerra24.voxel.client.resources.GameResources;
 import net.guerra24.voxel.client.resources.models.RawModel;
 import net.guerra24.voxel.client.resources.models.TexturedModel;
@@ -20,7 +20,7 @@ import net.guerra24.voxel.universal.util.vector.Matrix4f;
 
 public class ShadowRenderer {
 
-	private ShadowShader shader;
+	private EntityBasicShader shader;
 
 	/**
 	 * Constructor, initializes the shaders and the projection matrix
@@ -30,7 +30,7 @@ public class ShadowRenderer {
 	 * @param projectionMatrix
 	 *            A Matrix4f Projection
 	 */
-	public ShadowRenderer(ShadowShader shader, Matrix4f projectionMatrix) {
+	public ShadowRenderer(EntityBasicShader shader, Matrix4f projectionMatrix) {
 		this.shader = shader;
 		shader.start();
 		shader.loadProjectionMatrix(projectionMatrix);

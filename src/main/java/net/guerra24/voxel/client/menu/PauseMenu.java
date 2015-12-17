@@ -24,22 +24,40 @@
 
 package net.guerra24.voxel.client.menu;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import net.guerra24.voxel.client.core.VoxelVariables;
+import net.guerra24.voxel.client.resources.GameResources;
+import net.guerra24.voxel.client.resources.models.FontType;
+import net.guerra24.voxel.client.resources.models.GUIText;
 import net.guerra24.voxel.universal.util.vector.Vector2f;
 
 public class PauseMenu {
 	private Button backToMain;
 
-	public PauseMenu() {
+	private List<GUIText> texts;
+	private FontType font;
+
+	public PauseMenu(GameResources gm) {
+		this.font = gm.getTextHandler().getFont();
 		float width = VoxelVariables.WIDTH;
 		float height = VoxelVariables.HEIGHT;
 		float yScale = height / 720f;
 		float xScale = width / 1280f;
+		texts = new ArrayList<GUIText>();
 		backToMain = new Button(new Vector2f(537 * xScale, 35 * yScale), new Vector2f(215, 100));
+		GUIText textBack = new GUIText("Back", 2, font, new Vector2f(0.467f, 0.86f), 1, false);
+		textBack.setColour(0.79f, 0.79f, 0.79f);
+		texts.add(textBack);
 	}
 
 	public Button getBackToMain() {
 		return backToMain;
+	}
+
+	public List<GUIText> getTexts() {
+		return texts;
 	}
 
 }

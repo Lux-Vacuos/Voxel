@@ -24,13 +24,21 @@
 
 package net.guerra24.voxel.client.world.chunks;
 
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
+import static org.lwjgl.opengl.GL11.GL_CULL_FACE;
+import static org.lwjgl.opengl.GL11.glDisable;
+import static org.lwjgl.opengl.GL11.glEnable;
+import static org.lwjgl.opengl.GL15.GL_SAMPLES_PASSED;
+import static org.lwjgl.opengl.GL15.glBeginQuery;
+import static org.lwjgl.opengl.GL15.glEndQuery;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import net.guerra24.voxel.client.core.VoxelVariables;
 import net.guerra24.voxel.client.particle.ParticlePoint;
 import net.guerra24.voxel.client.resources.GameResources;
 import net.guerra24.voxel.client.resources.models.Tessellator;
+import net.guerra24.voxel.client.resources.models.WaterTile;
 import net.guerra24.voxel.client.util.Logger;
 import net.guerra24.voxel.client.util.Maths;
 import net.guerra24.voxel.client.world.IWorld;
@@ -55,9 +63,10 @@ public class Chunk {
 	public int dim, posX, posY, posZ, cx, cy, cz;
 	public byte[][][] blocks;
 	public byte[][][] lightMap;
-	private transient Queue<Object> blocksMesh;
-	private transient Queue<Object> blocksMeshtemp;
-	private transient Queue<ParticlePoint> particlePoints;
+	private transient List<Object> blocksMesh;
+	private transient List<Object> blocksMeshtemp;
+	private transient List<ParticlePoint> particlePoints;
+	private transient List<WaterTile> waterTiles;
 	private transient int sizeX, sizeY, sizeZ;
 	private transient boolean readyToRender = true;
 	private transient Tessellator tess;
@@ -112,9 +121,10 @@ public class Chunk {
 	 * 
 	 */
 	public void load(GameResources gm) {
-		blocksMesh = new ConcurrentLinkedQueue<Object>();
-		blocksMeshtemp = new ConcurrentLinkedQueue<Object>();
-		particlePoints = new ConcurrentLinkedQueue<ParticlePoint>();
+		blocksMesh = new ArrayList<Object>();
+		blocksMeshtemp = new ArrayList<Object>();
+		particlePoints = new ArrayList<ParticlePoint>();
+		waterTiles = new ArrayList<WaterTile>();
 		sizeX = VoxelVariables.CHUNK_SIZE;
 		sizeY = VoxelVariables.CHUNK_HEIGHT;
 		sizeZ = VoxelVariables.CHUNK_SIZE;
@@ -222,7 +232,7 @@ public class Chunk {
 		decorated = true;
 	}
 
-	private void rebuildChunkSection(Queue<Object> cubes, IWorld world) {
+	private void rebuildChunkSection(List<Object> cubes, IWorld world) {
 		for (int x = 0; x < sizeX; x++) {
 			for (int z = 0; z < sizeZ; z++) {
 				for (int y = 0; y < sizeY; y++) {
@@ -238,7 +248,7 @@ public class Chunk {
 							&& Block.getBlock(blocks[x][y][z]) != Block.Water) {
 					} else if (Block.getBlock(blocks[x][y][z]) == Block.Water) {
 						if (cullFaceUpWater(x + cx * sizeX, y + cy * sizeY, z + cz * sizeZ, world)) {
-							cubes.add(Block.Water
+							waterTiles.add(Block.Water
 									.getWaterTitle(new Vector3f(x + cx * sizeX, y + cy * sizeY, z + cz * sizeZ)));
 						}
 					}
@@ -272,7 +282,7 @@ public class Chunk {
 		tess.end();
 	}
 
-	private void calculateLight(Queue<Object> cubes, IWorld world) {
+	private void calculateLight(List<Object> cubes, IWorld world) {
 		for (Object blockEnt : cubes) {
 			if (blockEnt.getClass().equals(BlockEntity.class)) {
 				BlockEntity blockEntity = (BlockEntity) blockEnt;
@@ -331,7 +341,7 @@ public class Chunk {
 		lightMap[x & 0xF][y & 0xF][z & 0xF] = (byte) ((lightMap[x & 0xF][y & 0xF][z & 0xF] & 0xF0) | val);
 	}
 
-	public Queue<ParticlePoint> getParticlePoints() {
+	public List<ParticlePoint> getParticlePoints() {
 		return particlePoints;
 	}
 
@@ -493,6 +503,9 @@ public class Chunk {
 		if (readyToRender) {
 			tess.draw(gm);
 			gm.getRenderer().processChunk(blocksMesh, gm);
+			glDisable(GL_CULL_FACE);
+			gm.getRenderer().getWaterRenderer().render(waterTiles, gm);
+			glEnable(GL_CULL_FACE);
 		} else {
 			gm.getRenderer().processChunk(blocksMeshtemp, gm);
 		}
@@ -507,7 +520,12 @@ public class Chunk {
 
 	public void renderOcclusion(GameResources gm) {
 		if (readyToRender) {
+			glBeginQuery(GL_SAMPLES_PASSED, tess.getOcclusion());
 			tess.drawOcclusion(gm.getCamera(), gm.getRenderer().getProjectionMatrix());
+			glDisable(GL_CULL_FACE);
+			gm.getRenderer().getWaterRenderer().renderOcclusion(waterTiles, gm);
+			glEnable(GL_CULL_FACE);
+			glEndQuery(GL_SAMPLES_PASSED);
 		}
 	}
 
@@ -515,6 +533,7 @@ public class Chunk {
 		blocksMesh.clear();
 		blocksMeshtemp.clear();
 		particlePoints.clear();
+		waterTiles.clear();
 		tess.cleanUp();
 	}
 

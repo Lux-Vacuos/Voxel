@@ -94,25 +94,26 @@ public class VoxelVariables {
 	 */
 	public static final String VERTEX_FILE_ENTITY = "VertexEntity.glsl";
 	public static final String FRAGMENT_FILE_ENTITY = "FragmentEntity.glsl";
+	public static final String VERTEX_FILE_ENTITY_BASIC = "VertexEntityBasic.glsl";
+	public static final String FRAGMENT_FILE_ENTITY_BASIC = "FragmentEntityBasic.glsl";
 	public static final String VERTEX_FILE_GUI = "VertexGui.glsl";
 	public static final String FRAGMENT_FILE_GUI = "FragmentGui.glsl";
 	public static final String VERTEX_FILE_SKYBOX = "VertexSkybox.glsl";
 	public static final String FRAGMENT_FILE_SKYBOX = "FragmentSkybox.glsl";
 	public static final String VERTEX_FILE_WATER = "VertexWater.glsl";
 	public static final String FRAGMENT_FILE_WATER = "FragmentWater.glsl";
+	public static final String VERTEX_FILE_WATER_BASIC = "VertexWaterBasic.glsl";
+	public static final String FRAGMENT_FILE_WATER_BASIC = "FragmentWaterBasic.glsl";
 	public static final String VERTEX_FILE_PARTICLE = "VertexParticle.glsl";
 	public static final String FRAGMENT_FILE_PARTICLE = "FragmentParticle.glsl";
 	public static final String VERTEX_FILE_FONT = "VertexFont.glsl";
 	public static final String FRAGMENT_FILE_FONT = "FragmentFont.glsl";
-	public static final String VERTEX_FILE_SHADOW = "VertexShadow.glsl";
-	public static final String FRAGMENT_FILE_SHADOW = "FragmentShadow.glsl";
 	public static final String VERTEX_FILE_COMPOSITE = "VertexComposite";
 	public static final String FRAGMENT_FILE_COMPOSITE = "FragmentComposite";
 	public static final String VERTEX_FILE_TESSELLATOR = "VertexTessellator.glsl";
 	public static final String FRAGMENT_FILE_TESSELLATOR = "FragmentTessellator.glsl";
-	public static final String VERTEX_FILE_TESSELLATOR_SHADOW = "VertexTessellatorShadow.glsl";
-	public static final String FRAGMENT_FILE_TESSELLATOR_SHADOW = "FragmentTessellatorShadow.glsl";
-	public static boolean binded = false;
+	public static final String VERTEX_FILE_TESSELLATOR_BASIC = "VertexTessellatorBasic.glsl";
+	public static final String FRAGMENT_FILE_TESSELLATOR_BASIC = "FragmentTessellatorBasic.glsl";
 	/**
 	 * World Folder Path
 	 */

@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 
-import net.guerra24.voxel.client.graphics.shaders.ShadowShader;
+import net.guerra24.voxel.client.graphics.shaders.EntityBasicShader;
 import net.guerra24.voxel.client.resources.GameResources;
 import net.guerra24.voxel.client.resources.models.TexturedModel;
 import net.guerra24.voxel.client.world.block.BlockEntity;
@@ -14,7 +14,7 @@ import net.guerra24.voxel.universal.util.vector.Matrix4f;
 
 public class OcclusionRenderer {
 	private Map<TexturedModel, List<BlockEntity>> blockEntities = new HashMap<TexturedModel, List<BlockEntity>>();
-	private ShadowShader shader;
+	private EntityBasicShader shader;
 	private ShadowRenderer renderer;
 
 	/**
@@ -25,7 +25,7 @@ public class OcclusionRenderer {
 	 *            Game Loader
 	 */
 	public OcclusionRenderer(Matrix4f projectionMatrix) {
-		shader = new ShadowShader();
+		shader = new EntityBasicShader();
 		renderer = new ShadowRenderer(shader, projectionMatrix);
 	}
 

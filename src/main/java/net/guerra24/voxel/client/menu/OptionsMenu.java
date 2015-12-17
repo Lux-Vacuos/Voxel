@@ -29,20 +29,16 @@ import java.util.List;
 
 import net.guerra24.voxel.client.core.VoxelVariables;
 import net.guerra24.voxel.client.resources.GameResources;
-import net.guerra24.voxel.client.resources.MenuResources;
-import net.guerra24.voxel.client.resources.models.ButtonModel;
 import net.guerra24.voxel.client.resources.models.FontType;
 import net.guerra24.voxel.client.resources.models.GUIText;
 import net.guerra24.voxel.universal.util.vector.Vector2f;
-import net.guerra24.voxel.universal.util.vector.Vector3f;
 
 public class OptionsMenu {
 
 	private Button exitButton;
-	private Button waterButton;
+	private Button dofButton;
 	private Button shadowsButton;
 	private Button godraysButton;
-	private List<ButtonModel> list;
 
 	private List<GUIText> texts;
 	private List<GUIText> textsUpdating;
@@ -59,18 +55,7 @@ public class OptionsMenu {
 		exitButton = new Button(new Vector2f(530 * xScale, 35 * yScale), new Vector2f(215, 80));
 		godraysButton = new Button(new Vector2f(74 * xScale, 582 * yScale), new Vector2f(215, 80));
 		shadowsButton = new Button(new Vector2f(74 * xScale, 480 * yScale), new Vector2f(215, 80));
-		waterButton = new Button(new Vector2f(74 * xScale, 378 * yScale), new Vector2f(215, 80));
-		list = new ArrayList<ButtonModel>();
-		list.add(new ButtonModel(MenuResources.getModel1Final(), new Vector3f(-1.4f, -3.95f, 0),
-				new Vector3f(90, 0, 00), 0.07f));
-		list.add(new ButtonModel(MenuResources.getModel1Final(), new Vector3f(-2.3f, -2.9f, 0), new Vector3f(90, 0, 00),
-				0.07f));
-		list.add(new ButtonModel(MenuResources.getModel1Final(), new Vector3f(-2.3f, -3.1f, 0), new Vector3f(90, 0, 00),
-				0.07f));
-		list.add(new ButtonModel(MenuResources.getModel1Final(), new Vector3f(-2.3f, -3.3f, 0), new Vector3f(90, 0, 00),
-				0.07f));
-		list.add(new ButtonModel(MenuResources.getMainMenuBackFinal(), new Vector3f(0.1f, -0.92f, -1f),
-				new Vector3f(90, 0, 0), 4));
+		dofButton = new Button(new Vector2f(74 * xScale, 378 * yScale), new Vector2f(215, 80));
 		GUIText textOptions = new GUIText("Back", 2, font, new Vector2f(0.467f, 0.86f), 1, false);
 		textOptions.setColour(0.79f, 0.79f, 0.79f);
 		texts.add(textOptions);
@@ -117,12 +102,8 @@ public class OptionsMenu {
 		return exitButton;
 	}
 
-	public List<ButtonModel> getList() {
-		return list;
-	}
-
-	public Button getWaterButton() {
-		return waterButton;
+	public Button getDofButton() {
+		return dofButton;
 	}
 
 	public Button getShadowsButton() {

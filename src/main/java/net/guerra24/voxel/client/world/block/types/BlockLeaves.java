@@ -21,42 +21,42 @@ public class BlockLeaves extends IBlock {
 
 	@Override
 	public BlockEntity getSingleModel(Vector3f pos) {
-		return new BlockEntity(BlocksResources.cubeLeaves, pos, 0, 0, 0, 1, "SINGLE MODEL", getId());
+		return null;
 	}
 
 	@Override
 	public boolean usesSingleModel() {
-		return true;
+		return false;
 	}
 
 	@Override
 	public Vector8f texCoordsUp() {
-		return null;
+		return BlocksResources.tessellatorTextureAtlas.getTextureCoords("Leaves");
 	}
 
 	@Override
 	public Vector8f texCoordsDown() {
-		return null;
+		return BlocksResources.tessellatorTextureAtlas.getTextureCoords("Leaves");
 	}
 
 	@Override
 	public Vector8f texCoordsFront() {
-		return null;
+		return BlocksResources.tessellatorTextureAtlas.getTextureCoords("Leaves");
 	}
 
 	@Override
 	public Vector8f texCoordsBack() {
-		return null;
+		return BlocksResources.tessellatorTextureAtlas.getTextureCoords("Leaves");
 	}
 
 	@Override
 	public Vector8f texCoordsRight() {
-		return null;
+		return BlocksResources.tessellatorTextureAtlas.getTextureCoords("Leaves");
 	}
 
 	@Override
 	public Vector8f texCoordsLeft() {
-		return null;
+		return BlocksResources.tessellatorTextureAtlas.getTextureCoords("Leaves");
 	}
 
 }

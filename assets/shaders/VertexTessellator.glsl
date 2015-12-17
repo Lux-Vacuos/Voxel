@@ -41,6 +41,7 @@ uniform vec3 cameraPos;
 uniform mat4 projectionLightMatrix;
 uniform mat4 viewLightMatrix;
 uniform mat4 biasMatrix;
+uniform int useShadows;
 
 void main() {
 	vec3 pos = position - cameraPos;
@@ -51,8 +52,9 @@ void main() {
 	pass_position = vec4(position, 1.0);
 	surfaceNormal = normal;
 	pass_Data = data;
-	
-	vec4 posLight = viewLightMatrix * vec4(position, 1.0);
-	vec4 a = projectionLightMatrix * posLight;
-	ShadowCoord = biasMatrix * a;
+	if(useShadows == 1){
+		vec4 posLight = viewLightMatrix * vec4(position, 1.0);
+		vec4 a = projectionLightMatrix * posLight;
+		ShadowCoord = biasMatrix * a;
+	}
 }

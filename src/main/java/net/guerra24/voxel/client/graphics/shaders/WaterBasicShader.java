@@ -25,7 +25,6 @@
 package net.guerra24.voxel.client.graphics.shaders;
 
 import net.guerra24.voxel.client.core.VoxelVariables;
-import net.guerra24.voxel.client.resources.GameResources;
 import net.guerra24.voxel.client.util.Maths;
 import net.guerra24.voxel.client.world.entities.Camera;
 import net.guerra24.voxel.universal.util.vector.Matrix4f;
@@ -36,25 +35,20 @@ import net.guerra24.voxel.universal.util.vector.Matrix4f;
  * @author Guerra24 <pablo230699@hotmail.com>
  * @category Rendering
  */
-public class WaterShader extends ShaderProgram {
+public class WaterBasicShader extends ShaderProgram {
 	/**
 	 * Water Shader Data
 	 */
 	private int location_modelMatrix;
 	private int location_viewMatrix;
 	private int location_projectionMatrix;
-	private int location_moveFactor;
-	private int loc_projectionLightMatrix;
-	private int loc_viewLightMatrix;
-	private int loc_biasMatrix;
-	private int loc_useShadows;
 
 	/**
 	 * Constructor
 	 * 
 	 */
-	public WaterShader() {
-		super(VoxelVariables.VERTEX_FILE_WATER, VoxelVariables.FRAGMENT_FILE_WATER);
+	public WaterBasicShader() {
+		super(VoxelVariables.VERTEX_FILE_WATER_BASIC, VoxelVariables.FRAGMENT_FILE_WATER_BASIC);
 	}
 
 	@Override
@@ -67,47 +61,6 @@ public class WaterShader extends ShaderProgram {
 		location_projectionMatrix = getUniformLocation("projectionMatrix");
 		location_viewMatrix = getUniformLocation("viewMatrix");
 		location_modelMatrix = getUniformLocation("modelMatrix");
-		location_moveFactor = getUniformLocation("moveFactor");
-		loc_projectionLightMatrix = super.getUniformLocation("projectionLightMatrix");
-		loc_viewLightMatrix = super.getUniformLocation("viewLightMatrix");
-		loc_useShadows = super.getUniformLocation("useShadows");
-	}
-
-	/**
-	 * Loads the Move Factor
-	 * 
-	 * @param factor
-	 *            Factor
-	 */
-	public void loadMoveFactor(float factor) {
-		super.loadFloat(location_moveFactor, factor);
-	}
-
-	public void loadBiasMatrix(GameResources gm) {
-		Matrix4f biasMatrix = new Matrix4f();
-		biasMatrix.m00 = 0.5f;
-		biasMatrix.m01 = 0;
-		biasMatrix.m02 = 0;
-		biasMatrix.m03 = 0;
-		biasMatrix.m10 = 0;
-		biasMatrix.m11 = 0.5f;
-		biasMatrix.m12 = 0;
-		biasMatrix.m13 = 0;
-		biasMatrix.m20 = 0;
-		biasMatrix.m21 = 0;
-		biasMatrix.m22 = 0.5f;
-		biasMatrix.m23 = 0;
-		biasMatrix.m30 = 0.5f;
-		biasMatrix.m31 = 0.5f;
-		biasMatrix.m32 = 0.5f;
-		biasMatrix.m33 = 1f;
-		super.loadMatrix(loc_biasMatrix, biasMatrix);
-		super.loadMatrix(loc_projectionLightMatrix, gm.getMasterShadowRenderer().getProjectionMatrix());
-	}
-
-	public void loadLightMatrix(GameResources gm) {
-		super.loadBoolean(loc_useShadows, VoxelVariables.useShadows);
-		super.loadMatrix(loc_viewLightMatrix, Maths.createViewMatrix(gm.getSun_Camera()));
 	}
 
 	/**
@@ -117,7 +70,7 @@ public class WaterShader extends ShaderProgram {
 	 *            Projection Matrix
 	 */
 	public void loadProjectionMatrix(Matrix4f projection) {
-		super.loadMatrix(location_projectionMatrix, projection);
+		loadMatrix(location_projectionMatrix, projection);
 	}
 
 	/**
@@ -128,7 +81,7 @@ public class WaterShader extends ShaderProgram {
 	 */
 	public void loadViewMatrix(Camera camera) {
 		Matrix4f viewMatrix = Maths.createViewMatrix(camera);
-		super.loadMatrix(location_viewMatrix, viewMatrix);
+		loadMatrix(location_viewMatrix, viewMatrix);
 	}
 
 	/**
@@ -138,7 +91,7 @@ public class WaterShader extends ShaderProgram {
 	 *            Model Matrix
 	 */
 	public void loadModelMatrix(Matrix4f modelMatrix) {
-		super.loadMatrix(location_modelMatrix, modelMatrix);
+		loadMatrix(location_modelMatrix, modelMatrix);
 	}
 
 }

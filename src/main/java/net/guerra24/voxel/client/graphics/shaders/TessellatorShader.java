@@ -59,10 +59,6 @@ public class TessellatorShader extends ShaderProgram {
 		super.bindAttribute(3, "data");
 	}
 
-	public void loadSettings(boolean useShadows) {
-		super.loadBoolean(loc_useShadows, useShadows);
-	}
-
 	/**
 	 * Loads View Matrix to the shader
 	 * 
@@ -101,6 +97,7 @@ public class TessellatorShader extends ShaderProgram {
 	}
 
 	public void loadLightMatrix(GameResources gm) {
+		super.loadBoolean(loc_useShadows, VoxelVariables.useShadows);
 		super.loadMatrix(loc_viewLightMatrix, Maths.createViewMatrix(gm.getSun_Camera()));
 	}
 

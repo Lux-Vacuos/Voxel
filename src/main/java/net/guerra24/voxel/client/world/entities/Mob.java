@@ -26,7 +26,6 @@ package net.guerra24.voxel.client.world.entities;
 
 import net.guerra24.voxel.client.api.ModInitialization;
 import net.guerra24.voxel.client.resources.GameResources;
-import net.guerra24.voxel.client.resources.GuiResources;
 import net.guerra24.voxel.client.resources.models.TexturedModel;
 import net.guerra24.voxel.client.world.IWorld;
 import net.guerra24.voxel.universal.util.vector.Vector3f;
@@ -43,7 +42,7 @@ public class Mob extends Entity implements IEntity {
 	}
 
 	@Override
-	public void update(float delta, GameResources gm, GuiResources gi, IWorld world, ModInitialization api) {
+	public void update(float delta, GameResources gm, IWorld world, ModInitialization api) {
 	}
 
 	@Override

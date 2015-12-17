@@ -5,36 +5,35 @@ import net.guerra24.voxel.client.util.Maths;
 import net.guerra24.voxel.client.world.entities.Camera;
 import net.guerra24.voxel.universal.util.vector.Matrix4f;
 
-public class ShadowShader extends ShaderProgram {
+public class TessellatorBasicShader extends ShaderProgram {
+
+	private static TessellatorBasicShader instance = null;
+
+	public static TessellatorBasicShader getInstance() {
+		if (instance == null) {
+			instance = new TessellatorBasicShader();
+		}
+		return instance;
+	}
 
 	private int loc_projectionMatrix;
-	private int loc_transformationMatrix;
 	private int loc_viewMatrix;
+	private int loc_cameraPos;
 
-	public ShadowShader() {
-		super(VoxelVariables.VERTEX_FILE_SHADOW, VoxelVariables.FRAGMENT_FILE_SHADOW);
+	public TessellatorBasicShader() {
+		super(VoxelVariables.VERTEX_FILE_TESSELLATOR_BASIC, VoxelVariables.FRAGMENT_FILE_TESSELLATOR_BASIC);
 	}
 
 	@Override
 	protected void getAllUniformLocations() {
-		loc_transformationMatrix = super.getUniformLocation("transformationMatrix");
 		loc_projectionMatrix = super.getUniformLocation("projectionMatrix");
 		loc_viewMatrix = super.getUniformLocation("viewMatrix");
+		loc_cameraPos = super.getUniformLocation("cameraPos");
 	}
 
 	@Override
 	protected void bindAttributes() {
 		super.bindAttribute(0, "position");
-	}
-
-	/**
-	 * Loads Transformation Matrix to the shader
-	 * 
-	 * @param matrix
-	 *            Transformation Matrix
-	 */
-	public void loadTransformationMatrix(Matrix4f matrix) {
-		super.loadMatrix(loc_transformationMatrix, matrix);
 	}
 
 	/**
@@ -44,8 +43,12 @@ public class ShadowShader extends ShaderProgram {
 	 *            Camera
 	 */
 	public void loadviewMatrix(Camera camera) {
-		Matrix4f viewMatrix = Maths.createViewMatrix(camera);
-		super.loadMatrix(loc_viewMatrix, viewMatrix);
+		Matrix4f matrix = Maths.createViewMatrix(camera);
+		matrix.m30 = 0;
+		matrix.m31 = 0;
+		matrix.m32 = 0;
+		super.loadMatrix(loc_viewMatrix, matrix);
+		super.loadVector(loc_cameraPos, camera.getPosition());
 	}
 
 	/**

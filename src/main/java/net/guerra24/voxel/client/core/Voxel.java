@@ -39,7 +39,6 @@ import net.guerra24.voxel.client.graphics.TextMasterRenderer;
 import net.guerra24.voxel.client.graphics.opengl.Display;
 import net.guerra24.voxel.client.network.DedicatedClient;
 import net.guerra24.voxel.client.resources.GameResources;
-import net.guerra24.voxel.client.resources.GuiResources;
 import net.guerra24.voxel.client.util.Logger;
 import net.guerra24.voxel.client.world.InfinityWorld;
 import net.guerra24.voxel.client.world.WorldsHandler;
@@ -60,7 +59,6 @@ public class Voxel {
 	 * Game Data
 	 */
 	private GameResources gameResources;
-	private GuiResources guiResources;
 	private WorldsHandler worldsHandler;
 	private Display display;
 	private ModInitialization api;
@@ -111,7 +109,6 @@ public class Voxel {
 	 */
 	private void init() {
 		gameResources.init();
-		guiResources = new GuiResources(gameResources);
 		BlocksResources.createBlocks(gameResources.getLoader());
 		gameResources.loadResources();
 		worldsHandler = new WorldsHandler();
@@ -219,10 +216,6 @@ public class Voxel {
 
 	public GameResources getGameResources() {
 		return gameResources;
-	}
-
-	public GuiResources getGuiResources() {
-		return guiResources;
 	}
 
 	public ModInitialization getApi() {

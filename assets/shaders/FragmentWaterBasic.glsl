@@ -24,39 +24,5 @@
 
 #version 330 core
 
-in vec3 position;
-in vec2 textureCoords;
-in vec3 normal;
-
-out vec2 pass_textureCoords;
-out vec3 surfaceNormal;
-out vec3 toLightVector;
-out vec4 pass_position;
-out vec4 ShadowCoord;
-
-uniform mat4 transformationMatrix;
-uniform mat4 projectionMatrix;
-uniform mat4 viewMatrix;
-uniform mat4 projectionLightMatrix;
-uniform mat4 viewLightMatrix;
-uniform mat4 biasMatrix;
-uniform vec3 lightPosition;
-
-uniform int useShadows;
-
-const float gradient = 5.0;
-
-void main() {
-	vec4 worldPosition = transformationMatrix * vec4(position, 1.0);
-	vec4 positionRelativeToCam = viewMatrix * worldPosition;
-	gl_Position = projectionMatrix * positionRelativeToCam;
-	toLightVector = lightPosition - worldPosition.xyz;
-	pass_textureCoords = textureCoords;
-	surfaceNormal = (transformationMatrix * vec4(normal, 0.0)).xyz;
-	pass_position = worldPosition;
-	if(useShadows == 1){
-		vec4 posLight = viewLightMatrix * worldPosition;
-		vec4 a = projectionLightMatrix * posLight;
-		ShadowCoord = biasMatrix * a;
-	}
+void main(void) {
 }

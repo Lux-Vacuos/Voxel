@@ -24,8 +24,6 @@
 
 package net.guerra24.voxel.client.resources;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 import com.esotericsoftware.kryo.Kryo;
@@ -41,11 +39,10 @@ import net.guerra24.voxel.client.graphics.OcclusionRenderer;
 import net.guerra24.voxel.client.graphics.SkyboxRenderer;
 import net.guerra24.voxel.client.graphics.TextMasterRenderer;
 import net.guerra24.voxel.client.graphics.shaders.TessellatorShader;
-import net.guerra24.voxel.client.graphics.shaders.TessellatorShadowShader;
+import net.guerra24.voxel.client.graphics.shaders.TessellatorBasicShader;
 import net.guerra24.voxel.client.menu.Menu;
 import net.guerra24.voxel.client.particle.ParticleMaster;
 import net.guerra24.voxel.client.particle.ParticleTexture;
-import net.guerra24.voxel.client.resources.models.GuiTexture;
 import net.guerra24.voxel.client.sound.LibraryLWJGLOpenAL;
 import net.guerra24.voxel.client.sound.soundsystem.SoundSystem;
 import net.guerra24.voxel.client.sound.soundsystem.SoundSystemConfig;
@@ -71,10 +68,6 @@ public class GameResources {
 	/**
 	 * GameResources Data
 	 */
-	public List<GuiTexture> guis2 = new ArrayList<GuiTexture>();
-	public List<GuiTexture> guis3 = new ArrayList<GuiTexture>();
-	public List<GuiTexture> guis4 = new ArrayList<GuiTexture>();
-
 	private Random rand;
 	private Loader loader;
 	private Camera camera;
@@ -129,7 +122,7 @@ public class GameResources {
 		skyboxRenderer = new SkyboxRenderer(loader, renderer.getProjectionMatrix());
 		deferredShadingRenderer = new DeferredShadingRenderer(loader, this);
 		TessellatorShader.getInstance();
-		TessellatorShadowShader.getInstance();
+		TessellatorBasicShader.getInstance();
 		ParticleMaster.getInstance().init(loader, renderer.getProjectionMatrix());
 		physics = new Physics(this);
 		frustum = new Frustum();
@@ -146,7 +139,6 @@ public class GameResources {
 		globalStates = new GlobalStates(loader);
 		Block.initBasicBlocks();
 		UniversalResources.loadUniversalResources(this);
-		MenuResources.load(this);
 		menuSystem = new Menu(this);
 		loadMusic();
 	}
@@ -189,7 +181,7 @@ public class GameResources {
 		gameSettings.save();
 		TextMasterRenderer.getInstance().cleanUp();
 		TessellatorShader.getInstance().cleanUp();
-		TessellatorShadowShader.getInstance().cleanUp();
+		TessellatorBasicShader.getInstance().cleanUp();
 		masterShadowRenderer.cleanUp();
 		occlusionRenderer.cleanUp();
 		ParticleMaster.getInstance().cleanUp();
@@ -198,18 +190,6 @@ public class GameResources {
 		renderer.cleanUp();
 		loader.cleanUp();
 		soundSystem.cleanup();
-	}
-
-	public List<GuiTexture> getGuis2() {
-		return guis2;
-	}
-
-	public List<GuiTexture> getGuis3() {
-		return guis3;
-	}
-
-	public List<GuiTexture> getGuis4() {
-		return guis4;
 	}
 
 	public Random getRand() {

@@ -33,10 +33,10 @@ public class LoadingState extends State {
 		voxel.getWorldsHandler().getActiveWorld().startWorld("World-0", seed, 0, voxel.getApi(),
 				voxel.getGameResources());
 		gm.getCamera().setMouse();
-		gm.getSoundSystem().stop("menu1");
 		gm.getSoundSystem().rewind("menu1");
-		gm.getSoundSystem().stop("menu2");
+		gm.getSoundSystem().stop("menu1");
 		gm.getSoundSystem().rewind("menu2");
+		gm.getSoundSystem().stop("menu2");
 		states.setState(GameState.GAME_SP);
 	}
 
@@ -44,7 +44,6 @@ public class LoadingState extends State {
 	public void render(Voxel voxel, GlobalStates states, float delta) {
 		GameResources gm = voxel.getGameResources();
 		gm.getRenderer().prepare();
-		gm.getGuiRenderer().renderGui(gm.guis3);
 	}
 
 }

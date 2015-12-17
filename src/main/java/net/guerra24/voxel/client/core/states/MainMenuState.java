@@ -24,28 +24,12 @@ public class MainMenuState extends State {
 		GameResources gm = voxel.getGameResources();
 		gm.getFrustum().calculateFrustum(gm.getRenderer().getProjectionMatrix(), gm.getCamera());
 		gm.getRenderer().prepare();
-		gm.getRenderer().renderGui(gm.getMenuSystem().mainMenu.getList(), gm);
-		gm.getGuiRenderer().renderGui(gm.guis2);
 	}
 
 	@Override
 	public void update(Voxel voxel, GlobalStates states, float delta) {
 		GameResources gm = voxel.getGameResources();
 
-		if (gm.getMenuSystem().mainMenu.getPlayButton().insideButton())
-			gm.getMenuSystem().mainMenu.getList().get(0).changeScale(0.075f);
-		else
-			gm.getMenuSystem().mainMenu.getList().get(0).changeScale(0.07f);
-
-		if (gm.getMenuSystem().mainMenu.getExitButton().insideButton())
-			gm.getMenuSystem().mainMenu.getList().get(2).changeScale(0.075f);
-		else
-			gm.getMenuSystem().mainMenu.getList().get(2).changeScale(0.07f);
-
-		if (gm.getMenuSystem().mainMenu.getOptionsButton().insideButton())
-			gm.getMenuSystem().mainMenu.getList().get(1).changeScale(0.075f);
-		else
-			gm.getMenuSystem().mainMenu.getList().get(1).changeScale(0.07f);
 		if (gm.getMenuSystem().mainMenu.getPlayButton().pressed()) {
 			gm.getMenuSystem().gameSP.load(gm);
 			states.setState(GameState.LOADING_WORLD);

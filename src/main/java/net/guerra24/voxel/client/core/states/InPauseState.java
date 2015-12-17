@@ -48,6 +48,8 @@ public class InPauseState extends State {
 		WorldsHandler worlds = voxel.getWorldsHandler();
 		worlds.getActiveWorld().lighting();
 		gm.getFrustum().calculateFrustum(gm.getRenderer().getProjectionMatrix(), gm.getCamera());
+		gm.getRenderer().prepare();
+		worlds.getActiveWorld().updateChunksOcclusion(gm);
 		if (VoxelVariables.useShadows) {
 			gm.getMasterShadowRenderer().being();
 			gm.getRenderer().prepare();
@@ -56,16 +58,13 @@ public class InPauseState extends State {
 		}
 		gm.getDeferredShadingRenderer().getPost_fbo().begin();
 		gm.getRenderer().prepare();
-		gm.getRenderer().begin(gm);
 		worlds.getActiveWorld().updateChunksRender(gm);
-		gm.getRenderer().end(gm);
 		gm.getSkyboxRenderer().render(VoxelVariables.RED, VoxelVariables.GREEN, VoxelVariables.BLUE, delta, gm);
 		gm.getRenderer().renderEntity(gm.getPhysics().getMobManager().getMobs(), gm);
 		ParticleMaster.getInstance().render(gm.getCamera());
 		gm.getDeferredShadingRenderer().getPost_fbo().end();
 		gm.getRenderer().prepare();
 		gm.getDeferredShadingRenderer().render(gm);
-		gm.getGuiRenderer().renderGui(gm.guis4);
 	}
 
 }
