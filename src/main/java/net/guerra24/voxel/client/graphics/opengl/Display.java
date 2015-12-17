@@ -25,6 +25,8 @@
 package net.guerra24.voxel.client.graphics.opengl;
 
 import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.nanovg.NanoVG.*;
+import static org.lwjgl.nanovg.NanoVGGL3.*;
 import static org.lwjgl.opengl.GL.createCapabilities;
 import static org.lwjgl.opengl.GL11.GL_FALSE;
 import static org.lwjgl.opengl.GL11.GL_TRUE;
@@ -78,6 +80,7 @@ public class Display {
 	 * LWJGL Window
 	 */
 	private static long window;
+	private static long vg;
 
 	/**
 	 * Display VidMode
@@ -131,6 +134,7 @@ public class Display {
 	private boolean latestResized = false;
 	private int latestWidth = 0;
 	private int latestHeight = 0;
+	private float pixelRatio;
 
 	private static IntBuffer maxVram = BufferUtils.createIntBuffer(1);
 	private static IntBuffer usedVram = BufferUtils.createIntBuffer(1);
@@ -320,16 +324,21 @@ public class Display {
 			e.printStackTrace();
 		}
 		createCapabilities();
-		glViewport(0, 0, displayWidth, displayHeight);
+		vg = nvgCreateGL3(NVG_STENCIL_STROKES | NVG_DEBUG);
+		if (vg == NULL)
+			throw new RuntimeException("Fail to create NanoVG");
 		lastLoopTimeUpdate = getTime();
 		lastLoopTimeRender = getTime();
 		ByteBuffer w = BufferUtils.createByteBuffer(4);
 		ByteBuffer h = BufferUtils.createByteBuffer(4);
-		glfwGetWindowSize(window, w, h);
+		glfwGetFramebufferSize(window, w, h);
 		int width = w.getInt(0);
 		int height = h.getInt(0);
 		displayWidth = width;
 		displayHeight = height;
+		pixelRatio = (float) displayWidth / (float) displayHeight;
+		glViewport(0, 0, displayWidth, displayHeight);
+
 		if (glGetString(GL_VENDOR).contains("NVIDIA"))
 			nvidia = true;
 		else if (glGetString(GL_VENDOR).contains("AMD"))
@@ -359,10 +368,27 @@ public class Display {
 	}
 
 	/**
+	 * Call this before any NanoVG call
+	 * 
+	 */
+	public void beingNVGFrame() {
+		nvgBeginFrame(vg, displayWidth, displayHeight, pixelRatio);
+	}
+
+	/**
+	 * Ends the actual NVGFrame
+	 */
+	public void endNVGFrame() {
+		nvgEndFrame(vg);
+	}
+
+	/**
 	 * Destroy the display
 	 * 
 	 */
 	public void closeDisplay() {
+		nvgDeleteGL3(vg);
+
 		glfwDestroyWindow(window);
 		glfwTerminate();
 		errorCallback.release();
@@ -455,6 +481,10 @@ public class Display {
 	 */
 	public static long getWindow() {
 		return window;
+	}
+
+	public static long getVg() {
+		return vg;
 	}
 
 	/**

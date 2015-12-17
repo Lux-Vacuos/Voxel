@@ -1,9 +1,16 @@
 package net.guerra24.voxel.client.core.states;
 
+import java.nio.ByteBuffer;
+
+import org.lwjgl.nanovg.NVGColor;
+import org.lwjgl.nanovg.NanoVG;
+
 import net.guerra24.voxel.client.core.GlobalStates;
+import net.guerra24.voxel.client.core.GlobalStates.GameState;
 import net.guerra24.voxel.client.core.State;
 import net.guerra24.voxel.client.core.Voxel;
-import net.guerra24.voxel.client.core.GlobalStates.GameState;
+import net.guerra24.voxel.client.graphics.MenuRendering;
+import net.guerra24.voxel.client.graphics.opengl.Display;
 import net.guerra24.voxel.client.resources.GameResources;
 import net.guerra24.voxel.universal.util.vector.Vector3f;
 
@@ -22,8 +29,12 @@ public class MainMenuState extends State {
 	@Override
 	public void render(Voxel voxel, GlobalStates states, float delta) {
 		GameResources gm = voxel.getGameResources();
+		Display display = voxel.getDisplay();
 		gm.getFrustum().calculateFrustum(gm.getRenderer().getProjectionMatrix(), gm.getCamera());
 		gm.getRenderer().prepare();
+		display.beingNVGFrame();
+		gm.getMenuSystem().mainMenu.render();
+		display.endNVGFrame();
 	}
 
 	@Override

@@ -24,10 +24,14 @@
 
 package net.guerra24.voxel.client.menu;
 
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.lwjgl.nanovg.NVGColor;
+
 import net.guerra24.voxel.client.core.VoxelVariables;
+import net.guerra24.voxel.client.graphics.MenuRendering;
 import net.guerra24.voxel.client.resources.GameResources;
 import net.guerra24.voxel.client.resources.models.FontType;
 import net.guerra24.voxel.client.resources.models.GUIText;
@@ -40,12 +44,14 @@ public class MainMenu {
 	private Button optionsButton;
 	private List<GUIText> texts;
 
+	private float xScale, yScale;
+
 	public MainMenu(GameResources gm) {
 		FontType font = gm.getTextHandler().getFont();
 		float width = VoxelVariables.WIDTH;
 		float height = VoxelVariables.HEIGHT;
-		float yScale = height / 720f;
-		float xScale = width / 1280f;
+		yScale = height / 720f;
+		xScale = width / 1280f;
 		playButton = new Button(new Vector2f(177 * xScale, 532 * yScale), new Vector2f(215, 80));
 		exitButton = new Button(new Vector2f(177 * xScale, 224 * yScale), new Vector2f(215, 80));
 		optionsButton = new Button(new Vector2f(177 * xScale, 376 * yScale), new Vector2f(215, 80));
@@ -74,6 +80,15 @@ public class MainMenu {
 		GUIText textExit = new GUIText("Exit", 2, font, new Vector2f(0.189f, 0.61f), 1, false);
 		textExit.setColour(0.79f, 0.79f, 0.79f);
 		texts.add(textExit);
+	}
+
+	public void render() {
+		MenuRendering.renderButton((ByteBuffer) null, "Play", 177 * xScale, 100 * yScale, 215, 80,
+				MenuRendering.rgba(255, 255, 255, 255, NVGColor.create()));
+		MenuRendering.renderButton((ByteBuffer) null, "Options", 200, 200, 200, 200,
+				MenuRendering.rgba(255, 255, 255, 255, NVGColor.create()));
+		MenuRendering.renderButton((ByteBuffer) null, "Exit", 200, 200, 200, 200,
+				MenuRendering.rgba(255, 255, 255, 255, NVGColor.create()));
 	}
 
 	public void load(GameResources gm) {

@@ -24,10 +24,34 @@
 
 package net.guerra24.voxel.client.resources;
 
-import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL12.*;
-import static org.lwjgl.opengl.GL13.*;
-import static org.lwjgl.opengl.GL14.*;
+import static org.lwjgl.nanovg.NanoVG.nvgCreateFontMem;
+import static org.lwjgl.nanovg.NanoVG.nvgCreateImageMem;
+import static org.lwjgl.nanovg.NanoVG.nvgDeleteImage;
+import static org.lwjgl.opengl.GL11.GL_FLOAT;
+import static org.lwjgl.opengl.GL11.GL_LINEAR;
+import static org.lwjgl.opengl.GL11.GL_LINEAR_MIPMAP_LINEAR;
+import static org.lwjgl.opengl.GL11.GL_NEAREST;
+import static org.lwjgl.opengl.GL11.GL_REPEAT;
+import static org.lwjgl.opengl.GL11.GL_RGBA;
+import static org.lwjgl.opengl.GL11.GL_RGBA8;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_MAG_FILTER;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_MIN_FILTER;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_WRAP_S;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_WRAP_T;
+import static org.lwjgl.opengl.GL11.GL_UNSIGNED_BYTE;
+import static org.lwjgl.opengl.GL11.glBindTexture;
+import static org.lwjgl.opengl.GL11.glDeleteTextures;
+import static org.lwjgl.opengl.GL11.glGenTextures;
+import static org.lwjgl.opengl.GL11.glTexImage2D;
+import static org.lwjgl.opengl.GL11.glTexParameterf;
+import static org.lwjgl.opengl.GL11.glTexParameteri;
+import static org.lwjgl.opengl.GL12.GL_CLAMP_TO_EDGE;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE_CUBE_MAP;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE_CUBE_MAP_POSITIVE_X;
+import static org.lwjgl.opengl.GL13.glActiveTexture;
+import static org.lwjgl.opengl.GL14.GL_TEXTURE_LOD_BIAS;
 import static org.lwjgl.opengl.GL15.GL_ARRAY_BUFFER;
 import static org.lwjgl.opengl.GL15.GL_ELEMENT_ARRAY_BUFFER;
 import static org.lwjgl.opengl.GL15.GL_STATIC_DRAW;
@@ -41,11 +65,17 @@ import static org.lwjgl.opengl.GL30.glDeleteVertexArrays;
 import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 import static org.lwjgl.opengl.GL30.glGenerateMipmap;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
+import java.nio.channels.Channels;
+import java.nio.channels.FileChannel;
+import java.nio.channels.ReadableByteChannel;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,6 +83,7 @@ import org.lwjgl.BufferUtils;
 
 import de.matthiasmann.twl.utils.PNGDecoder;
 import de.matthiasmann.twl.utils.PNGDecoder.Format;
+import net.guerra24.voxel.client.graphics.opengl.Display;
 import net.guerra24.voxel.client.resources.models.EntityTexture;
 import net.guerra24.voxel.client.resources.models.RawModel;
 import net.guerra24.voxel.client.util.Logger;
@@ -72,6 +103,10 @@ public class Loader {
 	 * VBOs List
 	 */
 	private List<Integer> vbos = new ArrayList<Integer>();
+	/**
+	 * NanoVG Data
+	 */
+	private List<Integer> nvgData = new ArrayList<Integer>();
 	/**
 	 * Texture List
 	 */
@@ -150,6 +185,7 @@ public class Loader {
 		textures.add(texture_id);
 		return texture_id;
 	}
+
 	/**
 	 * Load Particle Texture
 	 * 
@@ -246,6 +282,43 @@ public class Loader {
 		return texture_id;
 	}
 
+	public void loadNVGFont(String filename, String name) {
+		Logger.log("Loading NVGFont: " + filename + ".ttf");
+		int font = 0;
+		try {
+			font = nvgCreateFontMem(Display.getVg(), name,
+					ioResourceToByteBuffer("assets/fonts/" + filename + ".ttf", 150 * 1024), 0);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		if (font == -1)
+			Logger.error("Fail to load Font");
+	}
+
+	public int loadNVGTexture(String file) {
+		int width = 0;
+		int height = 0;
+		ByteBuffer buffer = null;
+		int tex = 0;
+		try {
+			Logger.log("Loading NVGTexture: " + file + ".png");
+			InputStream in = getClass().getClassLoader().getResourceAsStream("assets/textures/menu/" + file + ".png");
+			PNGDecoder decoder = new PNGDecoder(in);
+			width = decoder.getWidth();
+			height = decoder.getHeight();
+			buffer = ByteBuffer.allocateDirect(4 * width * height);
+			decoder.decode(buffer, width * 4, Format.RGBA);
+			buffer.flip();
+			in.close();
+			tex = nvgCreateImageMem(Display.getVg(), 0, buffer);
+		} catch (Exception e) {
+			e.printStackTrace();
+			Logger.error("Tried to load texture " + file + ", didn't work");
+		}
+		nvgData.add(tex);
+		return tex;
+	}
+
 	/**
 	 * Clear All VAOs, VBOs and Textures
 	 * 
@@ -259,6 +332,9 @@ public class Loader {
 		}
 		for (int texture : textures) {
 			glDeleteTextures(texture);
+		}
+		for (Integer texture : nvgData) {
+			nvgDeleteImage(Display.getVg(), texture);
 		}
 	}
 
@@ -313,6 +389,70 @@ public class Loader {
 			Logger.error("Tried to load texture " + file + ", didn't work");
 		}
 		return new EntityTexture(buffer, width, height);
+	}
+
+	/**
+	 * Reads the specified resource and returns the raw data as a ByteBuffer.
+	 *
+	 * @param resource
+	 *            the resource to read
+	 * @param bufferSize
+	 *            the initial buffer size
+	 *
+	 * @return the resource data
+	 *
+	 * @throws IOException
+	 *             if an IO error occurs
+	 */
+	public static ByteBuffer ioResourceToByteBuffer(String resource, int bufferSize) throws IOException {
+		ByteBuffer buffer;
+
+		File file = new File(resource);
+		if (file.isFile()) {
+			FileInputStream fis = new FileInputStream(file);
+			FileChannel fc = fis.getChannel();
+
+			buffer = BufferUtils.createByteBuffer((int) fc.size() + 1);
+
+			while (fc.read(buffer) != -1)
+				;
+
+			fis.close();
+			fc.close();
+		} else {
+			buffer = BufferUtils.createByteBuffer(bufferSize);
+
+			InputStream source = Thread.currentThread().getContextClassLoader().getResourceAsStream(resource);
+			if (source == null)
+				throw new FileNotFoundException(resource);
+
+			try {
+				ReadableByteChannel rbc = Channels.newChannel(source);
+				try {
+					while (true) {
+						int bytes = rbc.read(buffer);
+						if (bytes == -1)
+							break;
+						if (buffer.remaining() == 0)
+							buffer = resizeBuffer(buffer, buffer.capacity() * 2);
+					}
+				} finally {
+					rbc.close();
+				}
+			} finally {
+				source.close();
+			}
+		}
+
+		buffer.flip();
+		return buffer;
+	}
+
+	private static ByteBuffer resizeBuffer(ByteBuffer buffer, int newCapacity) {
+		ByteBuffer newBuffer = BufferUtils.createByteBuffer(newCapacity);
+		buffer.flip();
+		newBuffer.put(buffer);
+		return newBuffer;
 	}
 
 	/**
