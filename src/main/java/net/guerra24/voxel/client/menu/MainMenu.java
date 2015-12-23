@@ -24,17 +24,9 @@
 
 package net.guerra24.voxel.client.menu;
 
-import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.lwjgl.nanovg.NVGColor;
-
 import net.guerra24.voxel.client.core.VoxelVariables;
 import net.guerra24.voxel.client.graphics.MenuRendering;
 import net.guerra24.voxel.client.resources.GameResources;
-import net.guerra24.voxel.client.resources.models.FontType;
-import net.guerra24.voxel.client.resources.models.GUIText;
 import net.guerra24.voxel.universal.util.vector.Vector2f;
 
 public class MainMenu {
@@ -42,57 +34,29 @@ public class MainMenu {
 	private Button playButton;
 	private Button exitButton;
 	private Button optionsButton;
-	private List<GUIText> texts;
 
 	private float xScale, yScale;
 
 	public MainMenu(GameResources gm) {
-		FontType font = gm.getTextHandler().getFont();
 		float width = VoxelVariables.WIDTH;
 		float height = VoxelVariables.HEIGHT;
 		yScale = height / 720f;
 		xScale = width / 1280f;
-		playButton = new Button(new Vector2f(177 * xScale, 532 * yScale), new Vector2f(215, 80));
-		exitButton = new Button(new Vector2f(177 * xScale, 224 * yScale), new Vector2f(215, 80));
-		optionsButton = new Button(new Vector2f(177 * xScale, 376 * yScale), new Vector2f(215, 80));
-
-		texts = new ArrayList<GUIText>();
-		GUIText textVersion = new GUIText(
-				"Voxel " + VoxelVariables.version + " " + VoxelVariables.state + " Build " + VoxelVariables.build, 1,
-				font, new Vector2f(0.002f, 0.97f), 1, false);
-		textVersion.setColour(0.79f, 0.79f, 0.79f);
-		texts.add(textVersion);
-		GUIText textVersionApi = new GUIText("Molten API " + VoxelVariables.apiVersion, 1, font,
-				new Vector2f(0.002f, 0.94f), 1, false);
-		textVersionApi.setColour(0.79f, 0.79f, 0.79f);
-		texts.add(textVersionApi);
-		GUIText textMAC = new GUIText("Voxel is running on OSX, some things did not work well", 1, font,
-				new Vector2f(0.002f, 0.002f), 1, false);
-		textMAC.setColour(1, 0, 0);
-		if (VoxelVariables.runningOnMac)
-			texts.add(textMAC);
-		GUIText textPlay = new GUIText("Play", 2, font, new Vector2f(0.185f, 0.18f), 1, false);
-		textPlay.setColour(0.79f, 0.79f, 0.79f);
-		texts.add(textPlay);
-		GUIText textOptions = new GUIText("Options", 2, font, new Vector2f(0.167f, 0.395f), 1, false);
-		textOptions.setColour(0.79f, 0.79f, 0.79f);
-		texts.add(textOptions);
-		GUIText textExit = new GUIText("Exit", 2, font, new Vector2f(0.189f, 0.61f), 1, false);
-		textExit.setColour(0.79f, 0.79f, 0.79f);
-		texts.add(textExit);
+		playButton = new Button(new Vector2f(177 * xScale, 532 * yScale), new Vector2f(215 * xScale, 80 * yScale));
+		exitButton = new Button(new Vector2f(177 * xScale, 224 * yScale), new Vector2f(215 * xScale, 80 * yScale));
+		optionsButton = new Button(new Vector2f(177 * xScale, 376 * yScale), new Vector2f(215 * xScale, 80 * yScale));
 	}
 
 	public void render() {
-		MenuRendering.renderButton((ByteBuffer) null, "Play", 177 * xScale, 100 * yScale, 215, 80,
-				MenuRendering.rgba(255, 255, 255, 255, NVGColor.create()));
-		MenuRendering.renderButton((ByteBuffer) null, "Options", 200, 200, 200, 200,
-				MenuRendering.rgba(255, 255, 255, 255, NVGColor.create()));
-		MenuRendering.renderButton((ByteBuffer) null, "Exit", 200, 200, 200, 200,
-				MenuRendering.rgba(255, 255, 255, 255, NVGColor.create()));
-	}
-
-	public void load(GameResources gm) {
-		gm.getTextHandler().switchTo(texts);
+		MenuRendering.renderButton(null, "Play", "Roboto-Bold", 170 * xScale, 112 * yScale, 215 * xScale, 80 * yScale,
+				MenuRendering.rgba(255, 255, 255, 255, MenuRendering.colorA), playButton.insideButton());
+		MenuRendering.renderButton(null, "Options", "Roboto-Bold", 170 * xScale, 270 * yScale, 215 * xScale,
+				80 * yScale, MenuRendering.rgba(255, 255, 255, 255, MenuRendering.colorA),
+				optionsButton.insideButton());
+		MenuRendering.renderButton(null, "Exit", "Roboto-Bold", 170 * xScale, 425 * yScale, 215 * xScale, 80 * yScale,
+				MenuRendering.rgba(255, 255, 255, 255, MenuRendering.colorA), exitButton.insideButton());
+		MenuRendering.renderText("Voxel " + VoxelVariables.version + " " + VoxelVariables.state
+				+ " Build " + VoxelVariables.build, "Roboto-Bold", 0, 710 * yScale, 20);
 	}
 
 	public Button getPlayButton() {

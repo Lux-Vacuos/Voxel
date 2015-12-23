@@ -24,13 +24,9 @@
 
 package net.guerra24.voxel.client.menu;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import net.guerra24.voxel.client.core.VoxelVariables;
+import net.guerra24.voxel.client.graphics.MenuRendering;
 import net.guerra24.voxel.client.resources.GameResources;
-import net.guerra24.voxel.client.resources.models.FontType;
-import net.guerra24.voxel.client.resources.models.GUIText;
 import net.guerra24.voxel.universal.util.vector.Vector2f;
 
 public class OptionsMenu {
@@ -40,62 +36,49 @@ public class OptionsMenu {
 	private Button shadowsButton;
 	private Button godraysButton;
 
-	private List<GUIText> texts;
-	private List<GUIText> textsUpdating;
-	private FontType font;
+	private float xScale, yScale;
 
 	public OptionsMenu(GameResources gm) {
-		this.font = gm.getTextHandler().getFont();
 		float width = VoxelVariables.WIDTH;
 		float height = VoxelVariables.HEIGHT;
-		float yScale = height / 720f;
-		float xScale = width / 1280f;
-		texts = new ArrayList<GUIText>();
-		textsUpdating = new ArrayList<GUIText>();
-		exitButton = new Button(new Vector2f(530 * xScale, 35 * yScale), new Vector2f(215, 80));
-		godraysButton = new Button(new Vector2f(74 * xScale, 582 * yScale), new Vector2f(215, 80));
-		shadowsButton = new Button(new Vector2f(74 * xScale, 480 * yScale), new Vector2f(215, 80));
-		dofButton = new Button(new Vector2f(74 * xScale, 378 * yScale), new Vector2f(215, 80));
-		GUIText textOptions = new GUIText("Back", 2, font, new Vector2f(0.467f, 0.86f), 1, false);
-		textOptions.setColour(0.79f, 0.79f, 0.79f);
-		texts.add(textOptions);
+		yScale = height / 720f;
+		xScale = width / 1280f;
+		exitButton = new Button(new Vector2f(530 * xScale, 35 * yScale), new Vector2f(215 * xScale, 80 * yScale));
+		godraysButton = new Button(new Vector2f(74 * xScale, 582 * yScale), new Vector2f(215 * xScale, 80 * yScale));
+		shadowsButton = new Button(new Vector2f(74 * xScale, 480 * yScale), new Vector2f(215 * xScale, 80 * yScale));
+		dofButton = new Button(new Vector2f(74 * xScale, 378 * yScale), new Vector2f(215 * xScale, 80 * yScale));
 	}
 
-	public void update(GameResources gm) {
-		gm.getTextHandler().removeFromActive(textsUpdating);
-		textsUpdating.clear();
+	public void render() {
 		if (VoxelVariables.useVolumetricLight) {
-			GUIText textGodRays = new GUIText("Light Rays: ON", 1.3f, font, new Vector2f(0.067f, 0.12f), 1, false);
-			textGodRays.setColour(0.79f, 0.79f, 0.79f);
-			textsUpdating.add(textGodRays);
+			MenuRendering.renderButton(null, "Light Rays: ON", "Roboto-Bold", 75 * xScale, 60 * yScale, 215 * xScale,
+					80 * yScale, MenuRendering.rgba(255, 255, 255, 255, MenuRendering.colorA),
+					godraysButton.insideButton());
 		} else {
-			GUIText textGodRays = new GUIText("Light Rays: OFF", 1.3f, font, new Vector2f(0.067f, 0.12f), 1, false);
-			textGodRays.setColour(0.79f, 0.79f, 0.79f);
-			textsUpdating.add(textGodRays);
+			MenuRendering.renderButton(null, "Light Rays: OFF", "Roboto-Bold", 75 * xScale, 60 * yScale, 215 * xScale,
+					80 * yScale, MenuRendering.rgba(255, 255, 255, 255, MenuRendering.colorA),
+					godraysButton.insideButton());
 		}
 		if (VoxelVariables.useShadows) {
-			GUIText textShadows = new GUIText("Shadows: ON", 1.3f, font, new Vector2f(0.075f, 0.265f), 1, false);
-			textShadows.setColour(0.79f, 0.79f, 0.79f);
-			textsUpdating.add(textShadows);
+			MenuRendering.renderButton(null, "Shadows: ON", "Roboto-Bold", 75 * xScale, 160 * yScale, 215 * xScale,
+					80 * yScale, MenuRendering.rgba(255, 255, 255, 255, MenuRendering.colorA),
+					shadowsButton.insideButton());
 		} else {
-			GUIText textShadows = new GUIText("Shadows: OFF", 1.3f, font, new Vector2f(0.075f, 0.265f), 1, false);
-			textShadows.setColour(0.79f, 0.79f, 0.79f);
-			textsUpdating.add(textShadows);
+			MenuRendering.renderButton(null, "Shadows: OFF", "Roboto-Bold", 75 * xScale, 160 * yScale, 215 * xScale,
+					80 * yScale, MenuRendering.rgba(255, 255, 255, 255, MenuRendering.colorA),
+					shadowsButton.insideButton());
 		}
 		if (VoxelVariables.useDOF) {
-			GUIText textDOF = new GUIText("DoF: ON", 1.3f, font, new Vector2f(0.098f, 0.41f), 1, false);
-			textDOF.setColour(0.79f, 0.79f, 0.79f);
-			textsUpdating.add(textDOF);
+			MenuRendering.renderButton(null, "DoF: ON", "Roboto-Bold", 75 * xScale, 260 * yScale, 215 * xScale,
+					80 * yScale, MenuRendering.rgba(255, 255, 255, 255, MenuRendering.colorA),
+					dofButton.insideButton());
 		} else {
-			GUIText textDOF = new GUIText("DoF: OFF", 1.3f, font, new Vector2f(0.098f, 0.41f), 1, false);
-			textDOF.setColour(0.79f, 0.79f, 0.79f);
-			textsUpdating.add(textDOF);
+			MenuRendering.renderButton(null, "DoF: OFF", "Roboto-Bold", 75 * xScale, 260 * yScale, 215 * xScale,
+					80 * yScale, MenuRendering.rgba(255, 255, 255, 255, MenuRendering.colorA),
+					dofButton.insideButton());
 		}
-		gm.getTextHandler().addToActive(textsUpdating);
-	}
-
-	public void load(GameResources gm) {
-		gm.getTextHandler().switchTo(texts);
+		MenuRendering.renderButton(null, "Back", "Roboto-Bold", 528 * xScale, 607 * yScale, 215 * xScale, 80 * yScale,
+				MenuRendering.rgba(255, 255, 255, 255, MenuRendering.colorA), exitButton.insideButton());
 	}
 
 	public Button getExitButton() {
@@ -114,7 +97,4 @@ public class OptionsMenu {
 		return godraysButton;
 	}
 
-	public List<GUIText> getTextsUpdating() {
-		return textsUpdating;
-	}
 }

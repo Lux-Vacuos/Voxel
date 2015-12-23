@@ -65,7 +65,7 @@ uniform int useVolumetricLight;
 /*--------------------------------------------------------*/
 
 const int NUM_SAMPLES = 50;
-const float density = 0.013;
+const float density = 0.005;
 const float gradient = 2.0;
 
 /*--------------------------------------------------------*/
@@ -87,7 +87,9 @@ void main(void){
     vec3 lightDir = light - position.xyz ;
     lightDir = normalize(lightDir);
     vec3 eyeDir = normalize(cameraPosition-position.xyz);
-    float lightDirDOTviewDir = dot(-lightDir,eyeDir);
+    float lightDirDOTviewDir = 1;
+    lightDirDOTviewDir = lightDir.y;
+    
     if(data1.g != 1){
     	if(data.b != 1) {
     		normal = normalize(normal);

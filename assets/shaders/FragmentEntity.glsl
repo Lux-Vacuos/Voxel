@@ -37,7 +37,6 @@ uniform sampler2D texture0;
 uniform sampler2DShadow depth0;
 uniform vec3 skyColour;
 uniform vec3 lightPosition;
-uniform float entityLight;
 
 uniform int useShadows;
 
@@ -68,6 +67,10 @@ void main(void) {
     		if (texture(depth0, vec3(ShadowCoord.xy + poissonDisk[i]/1600.0 , 0.0), 0)  <  ShadowCoord.z){
    		 		shadow += 0.05;
    	 		}
+   	 		if(ShadowCoord.z > 1.0){
+       			shadow = 0.0;
+       			break;
+       		}
 		}
    	}
     
@@ -79,5 +82,5 @@ void main(void) {
 	out_Color[1] = vec4(pass_position.xyz,0);
 	out_Color[2] = vec4(surfaceNormal.xyz,0);
 	out_Color[3] = vec4(0.0,1.0,0.0,shadow);
-	out_Color[4] = vec4(0.0,0.0,0.0,entityLight);
+	out_Color[4] = vec4(0.0,0.0,0.0,0.0);
 }

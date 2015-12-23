@@ -64,6 +64,9 @@ public class DeferredShadingShader extends ShaderProgram {
 	private int loc_previousCameraPosition;
 	private int loc_lightPosition;
 	private int loc_skyColor;
+	private int loc_skyboxDay;
+	private int loc_skyboxNight;
+	private int loc_skyboxBlendFactor;
 
 	private int loc_useFXAA;
 	private int loc_useDOF;
@@ -106,6 +109,9 @@ public class DeferredShadingShader extends ShaderProgram {
 		loc_composite1 = super.getUniformLocation("composite1");
 		loc_sunPositionInScreen = super.getUniformLocation("sunPositionInScreen");
 		loc_skyColor = super.getUniformLocation("skyColor");
+		loc_skyboxDay = super.getUniformLocation("skyboxDay");
+		loc_skyboxNight = super.getUniformLocation("skyboxNight");
+		loc_skyboxBlendFactor = super.getUniformLocation("skyboxBlendFactor");
 
 		loc_useFXAA = super.getUniformLocation("useFXAA");
 		loc_useDOF = super.getUniformLocation("useDOF");
@@ -132,6 +138,8 @@ public class DeferredShadingShader extends ShaderProgram {
 		super.loadInt(loc_gData1, 5);
 		super.loadInt(loc_composite0, 6);
 		super.loadInt(loc_composite1, 7);
+		super.loadInt(loc_skyboxDay, 8);
+		super.loadInt(loc_skyboxNight, 9);
 	}
 
 	public void loadUnderWater(boolean value) {
@@ -178,6 +186,10 @@ public class DeferredShadingShader extends ShaderProgram {
 		super.loadMatrix(loc_previousViewMatrix, previousViewMatrix);
 		super.loadVector(loc_cameraPosition, camera.getPosition());
 		super.loadVector(loc_previousCameraPosition, previousCameraPosition);
+	}
+
+	public void loadSkyBoxBlending(float val) {
+		super.loadFloat(loc_skyboxBlendFactor, val);
 	}
 
 	/**

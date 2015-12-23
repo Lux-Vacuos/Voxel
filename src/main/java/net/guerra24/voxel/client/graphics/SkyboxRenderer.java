@@ -92,6 +92,8 @@ public class SkyboxRenderer {
 	private float time = 0;
 	private float blendFactor = 0;
 
+	private int dayTex, nightTex;
+
 	/**
 	 * Constructor, Initializes the Skybox model, Textures and Shader
 	 * 
@@ -109,7 +111,7 @@ public class SkyboxRenderer {
 		shader.connectTextureUnits();
 		shader.loadProjectionMatrix(projectionMatrix);
 		shader.stop();
-		time = 9000;
+		time = 10000;
 	}
 
 	/**
@@ -157,34 +159,32 @@ public class SkyboxRenderer {
 	 * 
 	 */
 	private void bindTextures() {
-		int texture1;
-		int texture2;
 		if (time >= 0 && time < 5000) {
-			texture1 = nightTexture;
-			texture2 = nightTexture;
+			dayTex = nightTexture;
+			nightTex = nightTexture;
 			blendFactor = (time - 0) / (5000 - 0);
 		} else if (time >= 5000 && time < 8000) {
-			texture1 = nightTexture;
-			texture2 = texture;
+			dayTex = nightTexture;
+			nightTex = texture;
 			blendFactor = (time - 5000) / (8000 - 5000);
 		} else if (time >= 8000 && time < 15500) {
-			texture1 = texture;
-			texture2 = texture;
+			dayTex = texture;
+			nightTex = texture;
 			blendFactor = 1f;
 		} else if (time >= 15500 && time < 18000) {
-			texture1 = texture;
-			texture2 = nightTexture;
+			dayTex = texture;
+			nightTex = nightTexture;
 			blendFactor = (time - 15500) / (18000 - 15500);
 		} else {
-			texture1 = nightTexture;
-			texture2 = nightTexture;
+			dayTex = nightTexture;
+			nightTex = nightTexture;
 			blendFactor = 1f;
 		}
 
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_CUBE_MAP, texture1);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, dayTex);
 		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_CUBE_MAP, texture2);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, nightTex);
 		shader.loadBlendFactor(blendFactor);
 	}
 
@@ -209,4 +209,13 @@ public class SkyboxRenderer {
 	public void setTime(float time) {
 		this.time = time;
 	}
+
+	public int getDayTexture() {
+		return dayTex;
+	}
+
+	public int getNightTexture() {
+		return nightTex;
+	}
+
 }

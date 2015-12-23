@@ -35,6 +35,7 @@ out vec4 out_Color;
 
 uniform int camUnderWater;
 uniform float camUnderWaterOffset;
+uniform float skyboxBlendFactor;
 uniform vec2 resolution;
 uniform vec3 cameraPosition;
 uniform vec3 previousCameraPosition;
@@ -52,6 +53,8 @@ uniform sampler2D gData0;
 uniform sampler2D gData1;
 uniform sampler2D composite0;
 uniform sampler2DShadow gDepth;
+uniform samplerCube skyboxDay;
+uniform samplerCube skyboxNight;
 
 uniform int useFXAA;
 uniform int useDOF;
@@ -115,7 +118,16 @@ void main(void){
         		fact = 1.0;
     		else if (cameraToWorldDist > currentWorldDist)
         		fact = 1.0;
-        	image = image*fact + newColor*(1-fact);
+        	if(fact != 1.0){
+        		image = image*fact + newColor;
+        	} else {
+        		vec3 I = normalize(position.xyz - cameraPosition);
+    			vec3 R = reflect(I, normalize(normal.xyz));
+   				vec4 imageDay = texture(skyboxDay, R);
+   				vec4 imageNight = texture(skyboxNight, R);
+    			image += mix(imageDay, imageNight, skyboxBlendFactor);
+        	}
+        		
     	}
     }
     

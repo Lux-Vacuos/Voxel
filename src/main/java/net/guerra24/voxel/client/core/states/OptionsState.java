@@ -5,6 +5,7 @@ import net.guerra24.voxel.client.core.GlobalStates.GameState;
 import net.guerra24.voxel.client.core.State;
 import net.guerra24.voxel.client.core.Voxel;
 import net.guerra24.voxel.client.core.VoxelVariables;
+import net.guerra24.voxel.client.graphics.opengl.Display;
 import net.guerra24.voxel.client.input.Mouse;
 import net.guerra24.voxel.client.resources.GameResources;
 import net.guerra24.voxel.universal.util.vector.Vector3f;
@@ -34,7 +35,6 @@ public class OptionsState extends State {
 				VoxelVariables.useVolumetricLight = !VoxelVariables.useVolumetricLight;
 		}
 		if (gm.getMenuSystem().optionsMenu.getExitButton().pressed()) {
-			gm.getMenuSystem().mainMenu.load(gm);
 			gm.getCamera().setPosition(new Vector3f(0, 0, 1));
 			gm.getGameSettings().updateSetting();
 			gm.getGameSettings().save();
@@ -45,9 +45,11 @@ public class OptionsState extends State {
 	@Override
 	public void render(Voxel voxel, GlobalStates states, float delta) {
 		GameResources gm = voxel.getGameResources();
-		gm.getMenuSystem().optionsMenu.update(gm);
 		gm.getFrustum().calculateFrustum(gm.getRenderer().getProjectionMatrix(), gm.getCamera());
 		gm.getRenderer().prepare();
+		Display.beingNVGFrame();
+		gm.getMenuSystem().optionsMenu.render();
+		Display.endNVGFrame();
 	}
 
 }

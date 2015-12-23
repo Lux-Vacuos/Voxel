@@ -2,10 +2,11 @@ package net.guerra24.voxel.client.core.states;
 
 import net.guerra24.voxel.client.core.GlobalStates;
 import net.guerra24.voxel.client.core.GlobalStates.GameState;
-import net.guerra24.voxel.client.input.Mouse;
 import net.guerra24.voxel.client.core.State;
 import net.guerra24.voxel.client.core.Voxel;
 import net.guerra24.voxel.client.core.VoxelVariables;
+import net.guerra24.voxel.client.graphics.opengl.Display;
+import net.guerra24.voxel.client.input.Mouse;
 import net.guerra24.voxel.client.particle.ParticleMaster;
 import net.guerra24.voxel.client.resources.GameResources;
 import net.guerra24.voxel.client.world.WorldsHandler;
@@ -27,8 +28,7 @@ public class InPauseState extends State {
 	public void update(Voxel voxel, GlobalStates states, float delta) {
 		GameResources gm = voxel.getGameResources();
 		while (Mouse.next()) {
-			if (gm.getMenuSystem().pauseMenu.getBackToMain().pressed()) {
-				gm.getMenuSystem().mainMenu.load(gm);
+			if (gm.getMenuSystem().pauseMenu.getExitButton().pressed()) {
 				voxel.getWorldsHandler().getActiveWorld().clearDimension(gm);
 				if (gm.getRand().nextBoolean())
 					gm.getSoundSystem().play("menu1");
@@ -49,22 +49,9 @@ public class InPauseState extends State {
 		worlds.getActiveWorld().lighting();
 		gm.getFrustum().calculateFrustum(gm.getRenderer().getProjectionMatrix(), gm.getCamera());
 		gm.getRenderer().prepare();
-		worlds.getActiveWorld().updateChunksOcclusion(gm);
-		if (VoxelVariables.useShadows) {
-			gm.getMasterShadowRenderer().being();
-			gm.getRenderer().prepare();
-			worlds.getActiveWorld().updateChunksShadow(gm);
-			gm.getMasterShadowRenderer().end();
-		}
-		gm.getDeferredShadingRenderer().getPost_fbo().begin();
-		gm.getRenderer().prepare();
-		worlds.getActiveWorld().updateChunksRender(gm);
-		gm.getSkyboxRenderer().render(VoxelVariables.RED, VoxelVariables.GREEN, VoxelVariables.BLUE, delta, gm);
-		gm.getRenderer().renderEntity(gm.getPhysics().getMobManager().getMobs(), gm);
-		ParticleMaster.getInstance().render(gm.getCamera());
-		gm.getDeferredShadingRenderer().getPost_fbo().end();
-		gm.getRenderer().prepare();
-		gm.getDeferredShadingRenderer().render(gm);
+		Display.beingNVGFrame();
+		gm.getMenuSystem().pauseMenu.render();
+		Display.endNVGFrame();
 	}
 
 }

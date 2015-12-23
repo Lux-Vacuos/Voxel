@@ -33,7 +33,7 @@ public class MasterShadowRenderer {
 	 */
 	public MasterShadowRenderer() {
 		shader = new EntityBasicShader();
-		projectionMatrix = Maths.orthographic(-30, 30, -30, 30, -100, 100);
+		projectionMatrix = Maths.orthographic(-80, 80, -80, 80, -100, 100);
 		renderer = new ShadowRenderer(shader, projectionMatrix);
 		fbo = new FrameBuffer(true, 4096, 4096);
 	}

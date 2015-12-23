@@ -143,7 +143,6 @@ public class Voxel {
 			gameResources.getSoundSystem().play("menu1");
 		else
 			gameResources.getSoundSystem().play("menu2");
-		gameResources.getMenuSystem().mainMenu.load(gameResources);
 	}
 
 	/**

@@ -36,6 +36,9 @@ import static org.lwjgl.opengl.GL13.GL_TEXTURE4;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE5;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE6;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE7;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE8;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE9;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE_CUBE_MAP;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
 import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
 import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
@@ -222,7 +225,7 @@ public class DeferredShadingRenderer {
 				previousCameraPosition);
 		shader3.loadLightPosition(gm.getLightPos());
 		shader3.loadviewMatrix(gm.getCamera());
-		shader3.loadResolution(new Vector2f(Display.getWidth() / 2, Display.getHeight() / 2));
+		shader3.loadResolution(new Vector2f(Display.getWidth(), Display.getHeight()));
 		shader3.loadSettings();
 		shader3.loadSunPosition(
 				Maths.convertTo2F(new Vector3f(gm.getLightPos()), gm.getRenderer().getProjectionMatrix(),
@@ -299,6 +302,7 @@ public class DeferredShadingRenderer {
 		shader1.loadSunPosition(
 				Maths.convertTo2F(new Vector3f(gm.getLightPos()), gm.getRenderer().getProjectionMatrix(),
 						Maths.createViewMatrix(gm.getCamera()), Display.getWidth(), Display.getHeight()));
+		shader1.loadSkyBoxBlending(gm.getSkyboxRenderer().getBlendFactor());
 		glBindVertexArray(quad.getVaoID());
 		glEnableVertexAttribArray(0);
 		glActiveTexture(GL_TEXTURE0);
@@ -315,6 +319,10 @@ public class DeferredShadingRenderer {
 		glBindTexture(GL_TEXTURE_2D, postProcessingFBO.getData1Tex());
 		glActiveTexture(GL_TEXTURE6);
 		glBindTexture(GL_TEXTURE_2D, aux1FBO.getTexture());
+		glActiveTexture(GL_TEXTURE8);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, gm.getSkyboxRenderer().getDayTexture());
+		glActiveTexture(GL_TEXTURE9);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, gm.getSkyboxRenderer().getNightTexture());
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, quad.getVertexCount());
 		glDisableVertexAttribArray(0);
 		glBindVertexArray(0);

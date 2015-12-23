@@ -52,7 +52,7 @@ void main(void){
 	if(data0.b != 1){
 	image = texture(composite0, texcoord);
 	float brightness = dot(image.rgb, vec3(0.2126, 0.7152, 0.0722));
-    	if(brightness > 0.8)
+    	if(brightness > 0.99)
     	    result = vec4(image.rgb, 1.0);
 		out_Color = result;
 	}

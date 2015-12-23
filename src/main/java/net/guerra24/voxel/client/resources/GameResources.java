@@ -141,7 +141,7 @@ public class GameResources {
 		UniversalResources.loadUniversalResources(this);
 		menuSystem = new Menu(this);
 		loadMusic();
-		loader.loadNVGFont("Tahoma", "sans-bold");
+		loader.loadNVGFont("Roboto-Bold", "Roboto-Bold");
 	}
 
 	/**

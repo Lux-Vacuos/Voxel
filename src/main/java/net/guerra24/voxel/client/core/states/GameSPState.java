@@ -57,6 +57,7 @@ public class GameSPState extends State {
 		GameResources gm = voxel.getGameResources();
 		WorldsHandler worlds = voxel.getWorldsHandler();
 		ModInitialization api = voxel.getApi();
+		Display display  = voxel.getDisplay();
 
 		worlds.getActiveWorld().lighting();
 		gm.getFrustum().calculateFrustum(gm.getRenderer().getProjectionMatrix(), gm.getCamera());
