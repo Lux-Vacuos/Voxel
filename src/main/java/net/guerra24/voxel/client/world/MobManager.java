@@ -53,7 +53,7 @@ public abstract class MobManager {
 
 	public void init(GameResources gm) {
 		ModelTexture texture = new ModelTexture(gm.getLoader().loadTextureEntity("player"));
-		RawModel model = gm.getLoader().getObjLoader().loadObjModel("player", gm.getLoader());
+		RawModel model = gm.getLoader().getObjLoader().loadObjModel("player");
 		player = new Player(new TexturedModel(model, texture), new Vector3f(0, 0, 0), 0, 0, 0, 1);
 	}
 

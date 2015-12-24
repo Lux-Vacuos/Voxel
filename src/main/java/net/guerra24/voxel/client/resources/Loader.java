@@ -114,7 +114,7 @@ public class Loader {
 	private OBJLoader objLoader;
 
 	public Loader() {
-		objLoader = new OBJLoader();
+		objLoader = new OBJLoader(this);
 	}
 
 	/**

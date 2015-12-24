@@ -39,19 +39,24 @@ public class PauseMenu {
 		float height = VoxelVariables.HEIGHT;
 		yScale = height / 720f;
 		xScale = width / 1280f;
-		exitButton = new Button(new Vector2f(530 * xScale, 35 * yScale), new Vector2f(215 * xScale, 80 * yScale));
-		optionsButton = new Button(new Vector2f(530 * xScale, 135 * yScale), new Vector2f(215 * xScale, 80 * yScale));
+		exitButton = new Button(new Vector2f(500 * xScale, 35 * yScale), new Vector2f(280 * xScale, 80 * yScale));
+		optionsButton = new Button(new Vector2f(500 * xScale, 135 * yScale), new Vector2f(280 * xScale, 80 * yScale));
 	}
 
 	public void render() {
-		MenuRendering.renderButton(null, "Back to Main Menu", "Roboto-Bold", 528 * xScale, 607 * yScale, 280 * xScale,
+		MenuRendering.renderButton(null, "Back to Main Menu", "Roboto-Bold", 500 * xScale, 607 * yScale, 280 * xScale,
 				80 * yScale, MenuRendering.rgba(255, 255, 255, 255, MenuRendering.colorA), exitButton.insideButton());
-		MenuRendering.renderButton(null, "Options", "Roboto-Bold", 528 * xScale, 502 * yScale, 280 * xScale,
-				80 * yScale, MenuRendering.rgba(255, 255, 255, 255, MenuRendering.colorA), optionsButton.insideButton());
+		MenuRendering.renderButton(null, "Options", "Roboto-Bold", 500 * xScale, 502 * yScale, 280 * xScale,
+				80 * yScale, MenuRendering.rgba(255, 255, 255, 255, MenuRendering.colorA),
+				optionsButton.insideButton());
 	}
 
 	public Button getExitButton() {
 		return exitButton;
+	}
+
+	public Button getOptionsButton() {
+		return optionsButton;
 	}
 
 }

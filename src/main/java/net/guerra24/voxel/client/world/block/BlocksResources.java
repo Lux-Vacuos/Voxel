@@ -41,9 +41,9 @@ public class BlocksResources {
 
 	public static void createBlocks(Loader loader) {
 
-		RawModel torch = loader.getObjLoader().loadObjModel("Torch", loader);
-		RawModel portal = loader.getObjLoader().loadObjModel("Portal", loader);
-		RawModel leaves = loader.getObjLoader().loadObjModel("Leaves", loader);
+		RawModel torch = loader.getObjLoader().loadObjModel("Torch");
+		RawModel portal = loader.getObjLoader().loadObjModel("Portal");
+		RawModel leaves = loader.getObjLoader().loadObjModel("Leaves");
 
 		ModelTexture texture10 = new ModelTexture(loader.loadTextureBlocks("Leaves"));
 

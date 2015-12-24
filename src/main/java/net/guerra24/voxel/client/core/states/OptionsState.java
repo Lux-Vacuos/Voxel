@@ -1,14 +1,47 @@
+/*
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2015 Guerra24
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
 package net.guerra24.voxel.client.core.states;
 
+import static org.lwjgl.opengl.GL11.GL_DEPTH_COMPONENT;
+import static org.lwjgl.opengl.GL11.GL_FLOAT;
+import static org.lwjgl.opengl.GL11.glReadPixels;
+
+import java.nio.FloatBuffer;
+
+import org.lwjgl.BufferUtils;
+
 import net.guerra24.voxel.client.core.GlobalStates;
-import net.guerra24.voxel.client.core.GlobalStates.GameState;
 import net.guerra24.voxel.client.core.State;
 import net.guerra24.voxel.client.core.Voxel;
 import net.guerra24.voxel.client.core.VoxelVariables;
+import net.guerra24.voxel.client.core.GlobalStates.GameState;
 import net.guerra24.voxel.client.graphics.opengl.Display;
 import net.guerra24.voxel.client.input.Mouse;
+import net.guerra24.voxel.client.particle.ParticleMaster;
 import net.guerra24.voxel.client.resources.GameResources;
-import net.guerra24.voxel.universal.util.vector.Vector3f;
+import net.guerra24.voxel.client.world.WorldsHandler;
 
 /**
  * Options Menu State
@@ -33,20 +66,47 @@ public class OptionsState extends State {
 				VoxelVariables.useDOF = !VoxelVariables.useDOF;
 			if (gm.getMenuSystem().optionsMenu.getGodraysButton().pressed())
 				VoxelVariables.useVolumetricLight = !VoxelVariables.useVolumetricLight;
-		}
-		if (gm.getMenuSystem().optionsMenu.getExitButton().pressed()) {
-			gm.getCamera().setPosition(new Vector3f(0, 0, 1));
-			gm.getGameSettings().updateSetting();
-			gm.getGameSettings().save();
-			states.setState(GameState.MAINMENU);
+			if (gm.getMenuSystem().optionsMenu.getExitButton().pressed()) {
+				gm.getGameSettings().updateSetting();
+				gm.getGameSettings().save();
+				states.setState(states.getOldState());
+			}
 		}
 	}
 
 	@Override
 	public void render(Voxel voxel, GlobalStates states, float delta) {
 		GameResources gm = voxel.getGameResources();
-		gm.getFrustum().calculateFrustum(gm.getRenderer().getProjectionMatrix(), gm.getCamera());
-		gm.getRenderer().prepare();
+		WorldsHandler worlds = voxel.getWorldsHandler();
+		if (states.getOldState().equals(GameState.IN_PAUSE)) {
+			worlds.getActiveWorld().lighting();
+			gm.getFrustum().calculateFrustum(gm.getRenderer().getProjectionMatrix(), gm.getCamera());
+			gm.getSun_Camera().setPosition(gm.getCamera().getPosition());
+			gm.getRenderer().prepare();
+			worlds.getActiveWorld().updateChunksOcclusion(gm);
+			if (VoxelVariables.useShadows) {
+				gm.getMasterShadowRenderer().being();
+				gm.getRenderer().prepare();
+				worlds.getActiveWorld().updateChunksShadow(gm);
+				gm.getMasterShadowRenderer().end();
+			}
+			gm.getDeferredShadingRenderer().getPost_fbo().begin();
+			gm.getRenderer().prepare();
+			worlds.getActiveWorld().updateChunksRender(gm);
+			FloatBuffer p = BufferUtils.createFloatBuffer(1);
+			glReadPixels(Display.getWidth() / 2, Display.getHeight() / 2, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, p);
+			gm.getCamera().depth = p.get(0);
+			gm.getSkyboxRenderer().render(VoxelVariables.RED, VoxelVariables.GREEN, VoxelVariables.BLUE, delta, gm);
+			gm.getRenderer().renderEntity(gm.getPhysics().getMobManager().getMobs(), gm);
+			ParticleMaster.getInstance().render(gm.getCamera());
+			gm.getDeferredShadingRenderer().getPost_fbo().end();
+
+			gm.getRenderer().prepare();
+			gm.getDeferredShadingRenderer().render(gm);
+		} else {
+			gm.getRenderer().prepare();
+		}
+
 		Display.beingNVGFrame();
 		gm.getMenuSystem().optionsMenu.render();
 		Display.endNVGFrame();

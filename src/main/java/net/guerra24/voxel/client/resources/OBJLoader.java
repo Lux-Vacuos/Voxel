@@ -43,6 +43,13 @@ import net.guerra24.voxel.universal.util.vector.Vector3f;
  * @category Assets
  */
 public class OBJLoader {
+
+	private Loader loader;
+
+	public OBJLoader(Loader loader) {
+		this.loader = loader;
+	}
+
 	/**
 	 * Load an ObjModel
 	 * 
@@ -52,7 +59,7 @@ public class OBJLoader {
 	 *            Loader
 	 * @return RawModel
 	 */
-	public RawModel loadObjModel(String fileName, Loader loader) {
+	public RawModel loadObjModel(String fileName) {
 		FileReader fr = null;
 		try {
 			String file = "assets/models/" + fileName + ".obj";

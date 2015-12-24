@@ -41,6 +41,7 @@ import net.guerra24.voxel.client.resources.models.Tessellator;
 import net.guerra24.voxel.client.resources.models.WaterTile;
 import net.guerra24.voxel.client.util.Logger;
 import net.guerra24.voxel.client.util.Maths;
+import net.guerra24.voxel.client.world.Biomes;
 import net.guerra24.voxel.client.world.IWorld;
 import net.guerra24.voxel.client.world.WorldService;
 import net.guerra24.voxel.client.world.block.Block;
@@ -68,7 +69,7 @@ public class Chunk {
 	private transient List<ParticlePoint> particlePoints;
 	private transient List<WaterTile> waterTiles;
 	private transient int sizeX, sizeY, sizeZ;
-	private transient boolean readyToRender = true;
+	transient boolean readyToRender = true;
 	private transient Tessellator tess;
 	private transient float distance;
 	public transient boolean needsRebuild = true, updated = false, updating = false, empty = true, visible = false,
@@ -198,7 +199,9 @@ public class Chunk {
 		}
 		for (int x = 0; x < sizeX; x++) {
 			for (int z = 0; z < sizeZ; z++) {
-				double tempHeight = world.getNoise().getNoise(x + cx * 16, z + cz * 16);
+				double tempHeight = world.getNoise().getNoise(
+						(int) ((x + cx * 16) / Biomes.OCEAN.getMultiplier()),
+						(int) ((z + cz * 16) / Biomes.OCEAN.getMultiplier()));
 				tempHeight += 1;
 				int height = (int) (64 * Maths.clamp(tempHeight));
 				for (int y = 0; y < height; y++) {
@@ -222,7 +225,9 @@ public class Chunk {
 		for (int i = 0; i < 4; i++) {
 			int xx = Maths.randInt(0, 15);
 			int zz = Maths.randInt(0, 15);
-			double tempHeight = world.getNoise().getNoise(xx + cx * 16, zz + cz * 16);
+			double tempHeight = world.getNoise().getNoise(
+					(int) ((xx + cx * 16) / Biomes.OCEAN.getMultiplier()),
+					(int) ((zz + cz * 16) / Biomes.OCEAN.getMultiplier()));
 			tempHeight += 1;
 			int height = (int) (64 * Maths.clamp(tempHeight));
 			int h = getLocalBlock(xx, height - 1, zz);
