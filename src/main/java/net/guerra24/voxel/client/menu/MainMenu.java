@@ -55,8 +55,12 @@ public class MainMenu {
 				optionsButton.insideButton());
 		MenuRendering.renderButton(null, "Exit", "Roboto-Bold", 170 * xScale, 425 * yScale, 215 * xScale, 80 * yScale,
 				MenuRendering.rgba(255, 255, 255, 255, MenuRendering.colorA), exitButton.insideButton());
-		MenuRendering.renderText("Voxel " + VoxelVariables.version + " " + VoxelVariables.state
-				+ " Build " + VoxelVariables.build, "Roboto-Bold", 0, 710 * yScale, 20);
+		MenuRendering.renderText(
+				"Voxel " + VoxelVariables.version + " " + VoxelVariables.state + " Build " + VoxelVariables.build,
+				"Roboto-Bold", 0, 710 * yScale, 20);
+		MenuRendering.renderWindow("Voxel Develop News", "Roboto-Bold", 450 * xScale, 50 * yScale, 750 * xScale, 600 * yScale);
+		MenuRendering.renderText("- Voxel 0.0.9 ALPHA DevLog", "Roboto-Bold", 460 * xScale, 120 * yScale, 25);
+		MenuRendering.renderText("NanoVG crashes are delaying the official launch of the update, Im searching for fixes.", "Roboto-Bold", 460 * xScale, 150 * yScale, 15);
 	}
 
 	public Button getPlayButton() {

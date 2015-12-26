@@ -200,8 +200,11 @@ public class Display {
 
 			@Override
 			public void invoke(int error, long description) {
-				if (error == GLFW_VERSION_UNAVAILABLE)
+				switch (error) {
+				case GLFW_VERSION_UNAVAILABLE:
 					Logger.error("Voxel requires OpenGL 3.3 or higher");
+					break;
+				}
 				delegate.invoke(error, description);
 			}
 
@@ -418,7 +421,7 @@ public class Display {
 		glfwPollEvents();
 		Mouse.poll();
 		sync(fps);
-		checkErrors();
+		//checkErrors();
 	}
 
 	/**
@@ -441,19 +444,19 @@ public class Display {
 		case GL_NO_ERROR:
 			break;
 		case GL_INVALID_ENUM:
-			throw new RuntimeException("Opengl: Invalid Enum");
+			throw new RuntimeException("OpenGL: Invalid Enum");
 		case GL_INVALID_VALUE:
-			throw new RuntimeException("Opengl: Invalid Value");
+			throw new RuntimeException("OpenGL: Invalid Value");
 		case GL_INVALID_OPERATION:
-			throw new RuntimeException("Opengl: Invalid Operation");
+			throw new RuntimeException("OpenGL: Invalid Operation");
 		case GL_INVALID_FRAMEBUFFER_OPERATION:
 			throw new RuntimeException("OpenGL: Invalid FrameBuffer Operation");
 		case GL_OUT_OF_MEMORY:
 			throw new RuntimeException("OpenGL: Out of Memory");
 		case GL_STACK_UNDERFLOW:
-			throw new RuntimeException("Opengl: Underflow");
+			throw new RuntimeException("OpenGL: Underflow");
 		case GL_STACK_OVERFLOW:
-			throw new RuntimeException("Opengl: Overflow");
+			throw new RuntimeException("OpenGL: Overflow");
 		}
 	}
 

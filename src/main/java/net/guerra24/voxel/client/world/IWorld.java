@@ -94,7 +94,7 @@ public interface IWorld {
 	public int getxPlayChunk();
 
 	public int getyPlayChunk();
-
+	
 	public SimplexNoise getNoise();
 
 	public Random getSeed();

@@ -56,6 +56,63 @@ public class MenuRendering {
 		return color;
 	}
 
+	public static void renderWindow(String title, String font, float x, float y, float w, float h) {
+		float cornerRadius = 3.0f;
+		NVGPaint shadowPaint = paintA;
+		NVGPaint headerPaint = paintB;
+		long vg = Display.getVg();
+
+		nvgSave(vg);
+		// nvgClearState(vg);
+
+		// Window
+		nvgBeginPath(vg);
+		nvgRoundedRect(vg, x, y, w, h, cornerRadius);
+		nvgFillColor(vg, rgba(28, 30, 34, 192, colorA));
+		// nvgFillColor(vg, rgba(0,0,0,128, color));
+		nvgFill(vg);
+
+		// Drop shadow
+		nvgBoxGradient(vg, x, y + 2, w, h, cornerRadius * 2, 10, rgba(0, 0, 0, 128, colorA), rgba(0, 0, 0, 0, colorB),
+				shadowPaint);
+		nvgBeginPath(vg);
+		nvgRect(vg, x - 10, y - 10, w + 20, h + 30);
+		nvgRoundedRect(vg, x, y, w, h, cornerRadius);
+		nvgPathWinding(vg, NVG_HOLE);
+		nvgFillPaint(vg, shadowPaint);
+		nvgFill(vg);
+
+		// Header
+		nvgLinearGradient(vg, x, y, x, y + 15, rgba(255, 255, 255, 8, colorA), rgba(0, 0, 0, 16, colorB), headerPaint);
+		nvgBeginPath(vg);
+		nvgRoundedRect(vg, x + 1, y + 1, w - 2, 30, cornerRadius - 1);
+		nvgFillPaint(vg, headerPaint);
+		nvgFill(vg);
+		nvgBeginPath(vg);
+		nvgMoveTo(vg, x + 0.5f, y + 0.5f + 30);
+		nvgLineTo(vg, x + 0.5f + w - 1, y + 0.5f + 30);
+		nvgStrokeColor(vg, rgba(0, 0, 0, 32, colorA));
+		nvgStroke(vg);
+
+		nvgFontSize(vg, 18.0f);
+		nvgFontFace(vg, font);
+		nvgTextAlign(vg, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
+
+		ByteBuffer titleText = memEncodeASCII(title, BufferAllocator.MALLOC);
+
+		nvgFontBlur(vg, 2);
+		nvgFillColor(vg, rgba(0, 0, 0, 128, colorA));
+		nvgText(vg, x + w / 2, y + 16 + 1, titleText, NULL);
+
+		nvgFontBlur(vg, 0);
+		nvgFillColor(vg, rgba(220, 220, 220, 160, colorA));
+		nvgText(vg, x + w / 2, y + 16, titleText, NULL);
+
+		memFree(titleText);
+
+		nvgRestore(vg);
+	}
+
 	public static void renderText(String text, String font, float x, float y, float fontSize) {
 		ByteBuffer textEncoded = memEncodeASCII(text, BufferAllocator.MALLOC);
 		long vg = Display.getVg();

@@ -134,9 +134,7 @@ public class Bootstrap {
 	 */
 	private static void parseArgs(String[] args) {
 		boolean gaveWidth = false, gaveHeight = false, gaveFov = false;
-		boolean gaveFps = false, gaveRadius = false, gaveShadows = false;
-		boolean gaveAutostart = false, gaveFXAA = false, gaveDOF = false;
-		boolean gaveMotionBlur = false, gaveBloom = false;
+		boolean gaveFps = false, gaveAutostart = false;
 
 		for (int i = 0; i < args.length; i++) {
 			switch (args[i]) {
@@ -172,48 +170,6 @@ public class Bootstrap {
 					throw new IllegalArgumentException("FPS must be positive");
 				}
 				gaveFps = true;
-				break;
-			case "-radius":
-				if (gaveRadius)
-					throw new IllegalStateException("Radius already given");
-				VoxelVariables.radius = Integer.parseInt(args[++i]);
-				if (VoxelVariables.radius < 2)
-					throw new IllegalArgumentException("Radius must be equal or greater than 2");
-				gaveRadius = true;
-				break;
-			case "-useShadows":
-				if (gaveShadows)
-					throw new IllegalStateException("Shadows already given");
-				VoxelVariables.useShadows = true;
-				gaveShadows = true;
-				break;
-			case "-useFXAA":
-				if (gaveFXAA)
-					throw new IllegalStateException("FXAA already given");
-				VoxelVariables.useFXAA = true;
-				gaveFXAA = true;
-				break;
-			case "-useDOF":
-				if (gaveDOF)
-					throw new IllegalStateException("DOF already given");
-				if (VoxelVariables.useMotionBlur)
-					throw new IllegalArgumentException("DOF only be activated if Motion Blur is disabled");
-				VoxelVariables.useDOF = true;
-				gaveDOF = true;
-				break;
-			case "-useMotionBlur":
-				if (gaveMotionBlur)
-					throw new IllegalStateException("Motion Blur already given");
-				if (VoxelVariables.useDOF)
-					throw new IllegalArgumentException("Motion Blur only be activated if DOF is disabled");
-				VoxelVariables.useMotionBlur = true;
-				gaveMotionBlur = true;
-				break;
-			case "-useBloom":
-				if (gaveBloom)
-					throw new IllegalStateException("Bloom already given");
-				VoxelVariables.useBloom = true;
-				gaveBloom = true;
 				break;
 			case "-autostart":
 				if (gaveAutostart)

@@ -59,7 +59,7 @@ public class ModInitialization {
 	 */
 	public void preInit() throws VersionException {
 		Logger.log("Starting Mods Load");
-		Logger.log("Starting Pre Init phase");
+		Logger.log("Starting ModLoader Pre Init phase");
 		for (Class<?> mod : modLoader.getModsClass()) {
 			Annotation annotation = mod.getAnnotation(MoltenAPIMod.class);
 			MoltenAPIMod info = (MoltenAPIMod) annotation;
@@ -96,7 +96,7 @@ public class ModInitialization {
 	 * 
 	 */
 	public void init() throws VersionException {
-		Logger.log("Starting Init phase");
+		Logger.log("Starting ModLoader Init phase");
 		for (Class<?> mod : modLoader.getModsClass()) {
 			Method method;
 			try {
@@ -125,7 +125,7 @@ public class ModInitialization {
 	 * 
 	 */
 	public void postInit() throws VersionException {
-		Logger.log("Starting Post Init phase");
+		Logger.log("Starting ModLoader Post Init phase");
 		for (Class<?> mod : modLoader.getModsClass()) {
 			Method method;
 			try {

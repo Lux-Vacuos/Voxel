@@ -74,7 +74,8 @@ public class Chunk {
 	private transient float distance;
 	public transient boolean needsRebuild = true, updated = false, updating = false, empty = true, visible = false,
 			creating = false, decorating = false;
-	public boolean created = false, decorated = false;
+	public boolean created = false, decorated = false, cavesGenerated = false;
+	public int version = 1;
 
 	/**
 	 * Constructor
@@ -161,6 +162,7 @@ public class Chunk {
 			creating = true;
 			service.add_worker(new ChunkWorkerGenerator(world, this));
 		}
+
 		if (!decorated) {
 			boolean can = true;
 			for (int jx = cx - 1; jx < cx + 1; jx++) {
@@ -174,11 +176,16 @@ public class Chunk {
 			if (can)
 				decorate(world, chunkGenerator);
 		}
+		if (!cavesGenerated) {
+			world.getChunkGenerator().generateCaves(world, this, world.getNoise());
+			cavesGenerated = true;
+		}
 	}
 
 	protected void update(IWorld world) {
 		blocksMeshtemp.addAll(blocksMesh);
 		blocksMesh.clear();
+		waterTiles.clear();
 		particlePoints.clear();
 		calculateLight(blocksMesh, world);
 		rebuildChunkSection(blocksMesh, world);
@@ -199,8 +206,7 @@ public class Chunk {
 		}
 		for (int x = 0; x < sizeX; x++) {
 			for (int z = 0; z < sizeZ; z++) {
-				double tempHeight = world.getNoise().getNoise(
-						(int) ((x + cx * 16) / Biomes.OCEAN.getMultiplier()),
+				double tempHeight = world.getNoise().getNoise((int) ((x + cx * 16) / Biomes.OCEAN.getMultiplier()),
 						(int) ((z + cz * 16) / Biomes.OCEAN.getMultiplier()));
 				tempHeight += 1;
 				int height = (int) (64 * Maths.clamp(tempHeight));
@@ -225,8 +231,7 @@ public class Chunk {
 		for (int i = 0; i < 4; i++) {
 			int xx = Maths.randInt(0, 15);
 			int zz = Maths.randInt(0, 15);
-			double tempHeight = world.getNoise().getNoise(
-					(int) ((xx + cx * 16) / Biomes.OCEAN.getMultiplier()),
+			double tempHeight = world.getNoise().getNoise((int) ((xx + cx * 16) / Biomes.OCEAN.getMultiplier()),
 					(int) ((zz + cz * 16) / Biomes.OCEAN.getMultiplier()));
 			tempHeight += 1;
 			int height = (int) (64 * Maths.clamp(tempHeight));
@@ -249,8 +254,6 @@ public class Chunk {
 					} else if (Block.getBlock(blocks[x][y][z]).usesSingleModel()) {
 						cubes.add(Block.getBlock(blocks[x][y][z])
 								.getSingleModel(new Vector3f(x + cx * sizeX, y + cy * sizeY, z + cz * sizeZ)));
-					} else if (Block.getBlock(blocks[x][y][z]) != Block.Air
-							&& Block.getBlock(blocks[x][y][z]) != Block.Water) {
 					} else if (Block.getBlock(blocks[x][y][z]) == Block.Water) {
 						if (cullFaceUpWater(x + cx * sizeX, y + cy * sizeY, z + cz * sizeZ, world)) {
 							waterTiles.add(Block.Water
@@ -268,7 +271,6 @@ public class Chunk {
 			for (int z = 0; z < sizeZ; z++) {
 				for (int y = 0; y < sizeY; y++) {
 					if (Block.getBlock(blocks[x][y][z]) == Block.Torch) {
-					} else if (Block.getBlock(blocks[x][y][z]).usesSingleModel()) {
 					} else if (Block.getBlock(blocks[x][y][z]) != Block.Air
 							&& Block.getBlock(blocks[x][y][z]) != Block.Water) {
 						tess.generateCube(x + cx * sizeX, y + cy * sizeY, (z + cz * sizeZ) - 1, 1,
@@ -279,6 +281,7 @@ public class Chunk {
 								cullFaceNorth(x + cx * sizeX, y + cy * sizeY, z + cz * sizeZ, world),
 								cullFaceSouth(x + cx * sizeX, y + cy * sizeY, z + cz * sizeZ, world),
 								Block.getBlock(blocks[x][y][z]), getTorchLight(x, y, z));
+					} else if (Block.getBlock(blocks[x][y][z]).usesSingleModel()) {
 					} else if (Block.getBlock(blocks[x][y][z]) == Block.Water) {
 					}
 				}

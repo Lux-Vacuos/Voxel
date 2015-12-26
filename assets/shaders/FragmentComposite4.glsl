@@ -40,6 +40,7 @@ uniform vec2 sunPositionInScreen;
 uniform vec3 cameraPosition;
 uniform vec3 previousCameraPosition;
 uniform vec3 lightPosition;
+uniform vec3 invertedLightPosition;
 uniform vec3 skyColor;
 uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;
@@ -87,14 +88,18 @@ void main(void){
     vec3 lightDir = light - position.xyz ;
     lightDir = normalize(lightDir);
     vec3 eyeDir = normalize(cameraPosition-position.xyz);
-    float lightDirDOTviewDir = 1;
-    lightDirDOTviewDir = lightDir.y;
+	vec3 invertedLight = invertedLightPosition;
+    vec3 invertedlightDir = invertedLight - position.xyz ;
+    invertedlightDir = normalize(invertedlightDir);
+    float lightDirDOTviewDir = dot(invertedlightDir,eyeDir);
     
     if(data1.g != 1){
     	if(data.b != 1) {
     		normal = normalize(normal);
     		vec3 vHalfVector = normalize(lightDir.xyz+eyeDir);
-    		float b = ((max(dot(normal.xyz,lightDir),0.2) + data1.a) - data.a);
+    		float b = ((max(dot(normal.xyz,lightDir),0.0)) - data.a);
+    		if(b <= data1.a)
+    			b = data1.a;
     		b = clamp(b,0.2,1.0);
     		image = b * image;
     		if(data.r == 1)
@@ -108,7 +113,7 @@ void main(void){
     	if(useVolumetricLight == 1){
 			if (lightDirDOTviewDir>0.0){
 				float exposure	= 0.1/NUM_SAMPLES;
-				float decay		= 1.01;
+				float decay		= 1.02;
 				float density	= 1;
 				float weight	= 6.0;
 				float illuminationDecay = 1.0;

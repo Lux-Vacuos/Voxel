@@ -63,6 +63,7 @@ public class DeferredShadingShader extends ShaderProgram {
 	private int loc_cameraPosition;
 	private int loc_previousCameraPosition;
 	private int loc_lightPosition;
+	private int loc_invertedLightPosition;
 	private int loc_skyColor;
 	private int loc_skyboxDay;
 	private int loc_skyboxNight;
@@ -105,6 +106,7 @@ public class DeferredShadingShader extends ShaderProgram {
 		loc_gData0 = super.getUniformLocation("gData0");
 		loc_gData1 = super.getUniformLocation("gData1");
 		loc_lightPosition = super.getUniformLocation("lightPosition");
+		loc_invertedLightPosition = super.getUniformLocation("invertedLightPosition");
 		loc_composite0 = super.getUniformLocation("composite0");
 		loc_composite1 = super.getUniformLocation("composite1");
 		loc_sunPositionInScreen = super.getUniformLocation("sunPositionInScreen");
@@ -152,8 +154,9 @@ public class DeferredShadingShader extends ShaderProgram {
 		super.loadVector(loc_skyColor, color);
 	}
 
-	public void loadLightPosition(Vector3f pos) {
+	public void loadLightPosition(Vector3f pos, Vector3f invertPos) {
 		super.loadVector(loc_lightPosition, pos);
+		super.loadVector(loc_invertedLightPosition, invertPos);
 	}
 
 	public void loadSunPosition(Vector2f pos) {

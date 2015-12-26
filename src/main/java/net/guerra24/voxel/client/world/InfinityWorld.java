@@ -68,6 +68,7 @@ public class InfinityWorld implements IWorld {
 	 */
 	private int chunkDim;
 	private int worldID;
+	private int version = 1;
 	private HashMap<ChunkKey, Chunk> chunks;
 	private Random seed;
 	private SimplexNoise noise;
@@ -382,8 +383,13 @@ public class InfinityWorld implements IWorld {
 			if (chunk != null) {
 				chunk.load(gm);
 				chunk.checkForMissingBlocks();
+				if (chunk.version != this.version) {
+					Logger.warn("An invalid chunk has been detected in: " + cx + " " + cy + " " + cz);
+					chunk = new Chunk(chunkDim, cx, cy, cz, this, gm);
+				}
+				addChunk(chunk);
 			}
-			addChunk(chunk);
+
 		} catch (FileNotFoundException e) {
 		} catch (KryoException e) {
 		}

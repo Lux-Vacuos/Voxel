@@ -308,12 +308,16 @@ public class Camera {
 		}
 
 		updateDebug(world);
-		updateRay(gm);
+		updateRay(gm,false);
 	}
 
-	public void updateRay(GameResources gm) {
-		ray = new Ray(gm.getRenderer().getProjectionMatrix(), Maths.createViewMatrix(this), center, Display.getWidth(),
-				Display.getHeight());
+	public void updateRay(GameResources gm, boolean invert) {
+		if (invert)
+			ray = new Ray(gm.getRenderer().getProjectionMatrix(), Matrix4f.invert(Maths.createViewMatrix(this), null),
+					center, Display.getWidth(), Display.getHeight());
+		else
+			ray = new Ray(gm.getRenderer().getProjectionMatrix(), Maths.createViewMatrix(this), center,
+					Display.getWidth(), Display.getHeight());
 	}
 
 	public void moveToPosition(Vector3f pos) {

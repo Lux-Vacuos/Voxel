@@ -80,16 +80,18 @@ public class OptionsState extends State {
 		WorldsHandler worlds = voxel.getWorldsHandler();
 		if (states.getOldState().equals(GameState.IN_PAUSE)) {
 			worlds.getActiveWorld().lighting();
-			gm.getFrustum().calculateFrustum(gm.getRenderer().getProjectionMatrix(), gm.getCamera());
-			gm.getSun_Camera().setPosition(gm.getCamera().getPosition());
-			gm.getRenderer().prepare();
-			worlds.getActiveWorld().updateChunksOcclusion(gm);
+			gm.getFrustum().calculateFrustum(gm.getMasterShadowRenderer().getProjectionMatrix(), gm.getSun_Camera());
 			if (VoxelVariables.useShadows) {
 				gm.getMasterShadowRenderer().being();
 				gm.getRenderer().prepare();
 				worlds.getActiveWorld().updateChunksShadow(gm);
+				gm.getMasterShadowRenderer().renderEntity(gm.getPhysics().getMobManager().getMobs(), gm);
 				gm.getMasterShadowRenderer().end();
 			}
+			gm.getFrustum().calculateFrustum(gm.getRenderer().getProjectionMatrix(), gm.getCamera());
+			gm.getRenderer().prepare();
+			worlds.getActiveWorld().updateChunksOcclusion(gm);
+			
 			gm.getDeferredShadingRenderer().getPost_fbo().begin();
 			gm.getRenderer().prepare();
 			worlds.getActiveWorld().updateChunksRender(gm);

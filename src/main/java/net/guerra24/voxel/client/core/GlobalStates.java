@@ -73,10 +73,10 @@ public class GlobalStates {
 		while (Keyboard.next()) {
 			if (state == GameState.GAME_SP && Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
 				voxel.getGameResources().getCamera().unlockMouse();
-				state = GameState.IN_PAUSE;
+				setState(GameState.IN_PAUSE);
 			} else if (state == GameState.IN_PAUSE && Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
 				voxel.getGameResources().getCamera().setMouse();
-				state = GameState.GAME_SP;
+				setState(GameState.GAME_SP);
 			}
 		}
 	}
@@ -93,8 +93,8 @@ public class GlobalStates {
 		this.oldState = this.state;
 		this.state = state;
 	}
-	
-	public GameState getOldState(){
+
+	public GameState getOldState() {
 		return oldState;
 	}
 }

@@ -89,6 +89,7 @@ public class GameResources {
 
 	private Vector3f sunRotation = new Vector3f(5, 0, -45);
 	private Vector3f lightPos = new Vector3f(0, 0, 0);
+	private Vector3f invertedLightPosition = new Vector3f(0, 0, 0);
 	private ParticleTexture torchTexture;
 
 	public Mob player;
@@ -168,10 +169,15 @@ public class GameResources {
 		sun_Camera.setYaw(sunRotation.x);
 		sun_Camera.setPitch(sunRotation.y);
 		sun_Camera.setRoll(sunRotation.z);
-		sun_Camera.updateRay(this);
+		sun_Camera.updateRay(this, false);
 		lightPos = new Vector3f(1000 * sun_Camera.getRay().direction.x, 1000 * sun_Camera.getRay().direction.y,
 				1000 * sun_Camera.getRay().direction.z);
 		Vector3f.add(sun_Camera.getPosition(), lightPos, lightPos);
+
+		sun_Camera.updateRay(this, true);
+		invertedLightPosition = new Vector3f(1000 * sun_Camera.getRay().direction.x,
+				1000 * sun_Camera.getRay().direction.y, 1000 * sun_Camera.getRay().direction.z);
+		Vector3f.add(sun_Camera.getPosition(), invertedLightPosition, invertedLightPosition);
 	}
 
 	/**
@@ -255,6 +261,10 @@ public class GameResources {
 
 	public Vector3f getLightPos() {
 		return lightPos;
+	}
+
+	public Vector3f getInvertedLightPosition() {
+		return invertedLightPosition;
 	}
 
 	public GameSettings getGameSettings() {
