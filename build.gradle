@@ -26,6 +26,7 @@ buildscript {
     	maven {
      	 url "https://plugins.gradle.org/m2/"
      	 url "https://oss.sonatype.org/content/repositories/snapshots/"
+     	 url "https://oss.sonatype.org/content/repositories/releases/" 
     	}
   	}
 }
@@ -39,6 +40,7 @@ repositories {
 }
 
 dependencies {
+	compile "com.badlogicgames.ashley:ashley:1.6.0"
 	compile 'org.l33tlabs.twl:pngdecoder:1.+'
 	compile 'de.jarnbjo:j-ogg-all:1.0.+'
 	compile 'org.jcraft:jorbis:0.0.+'

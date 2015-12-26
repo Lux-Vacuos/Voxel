@@ -56,14 +56,13 @@ public class ChunkGenerator {
 
 	}
 
-	public void generateCaves(IWorld world, Chunk chunk, SimplexNoise noise) {
+	public void generateCaves(Chunk chunk, SimplexNoise noise) {
 		for (int x = 0; x < VoxelVariables.CHUNK_SIZE; x++) {
 			for (int z = 0; z < VoxelVariables.CHUNK_SIZE; z++) {
 				for (int y = 0; y < VoxelVariables.CHUNK_HEIGHT; y++) {
 					if (noise.getNoise((int) (x + chunk.posX), (int) (y + chunk.posY), (int) (z + chunk.posZ)) > 0.18
-							&& world.getGlobalBlock(x + chunk.posX, y + chunk.posY, z + chunk.posZ) != Block.Water
-									.getId())
-						world.setGlobalBlock(x + chunk.posX, y + chunk.posY, z + chunk.posZ, Block.Air.getId());
+							&& chunk.getLocalBlock(x, y, z) != Block.Water.getId())
+						chunk.setLocalBlock(x, y, z, Block.Air.getId());
 				}
 			}
 		}

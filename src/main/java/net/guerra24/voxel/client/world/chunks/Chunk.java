@@ -154,7 +154,7 @@ public class Chunk {
 		}
 	}
 
-	public void update(IWorld world, ChunkGenerator chunkGenerator, WorldService service, Camera camera) {
+	public void update(IWorld world, WorldService service, Camera camera) {
 
 		distance = Vector3f.sub(camera.getPosition(), new Vector3f(posX, posY, posZ), null).lengthSquared();
 
@@ -174,11 +174,7 @@ public class Chunk {
 				}
 			}
 			if (can)
-				decorate(world, chunkGenerator);
-		}
-		if (!cavesGenerated) {
-			world.getChunkGenerator().generateCaves(world, this, world.getNoise());
-			cavesGenerated = true;
+				decorate(world);
 		}
 	}
 
@@ -224,10 +220,11 @@ public class Chunk {
 				}
 			}
 		}
+		world.getChunkGenerator().generateCaves(this, world.getNoise());
 		created = true;
 	}
 
-	protected void decorate(IWorld world, ChunkGenerator generator) {
+	protected void decorate(IWorld world) {
 		for (int i = 0; i < 4; i++) {
 			int xx = Maths.randInt(0, 15);
 			int zz = Maths.randInt(0, 15);
@@ -237,7 +234,7 @@ public class Chunk {
 			int height = (int) (64 * Maths.clamp(tempHeight));
 			int h = getLocalBlock(xx, height - 1, zz);
 			if (h == Block.Grass.getId() || h == Block.Dirt.getId())
-				generator.addTree(world, xx + cx * 16, height, zz + cz * 16, Maths.randInt(4, 10), world.getSeed());
+				world.getChunkGenerator().addTree(world, xx + cx * 16, height, zz + cz * 16, Maths.randInt(4, 10), world.getSeed());
 		}
 		decorated = true;
 	}

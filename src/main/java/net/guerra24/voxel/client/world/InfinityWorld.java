@@ -181,7 +181,7 @@ public class InfinityWorld implements IWorld {
 							for (ParticlePoint particlePoint : chunk.getParticlePoints()) {
 								particleSystem.generateParticles(particlePoint, delta);
 							}
-							chunk.update(this, chunkGenerator, worldService, gm.getCamera());
+							chunk.update(this, worldService, gm.getCamera());
 							if (gm.getFrustum().cubeInFrustum(chunk.posX, chunk.posY, chunk.posZ, chunk.posX + 16,
 									chunk.posY + 16, chunk.posZ + 16)) {
 								chunk.rebuild(worldService, this);
