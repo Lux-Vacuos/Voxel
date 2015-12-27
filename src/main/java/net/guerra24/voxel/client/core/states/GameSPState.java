@@ -59,13 +59,13 @@ public class GameSPState extends State {
 	public void update(Voxel voxel, GlobalStates states, float delta) {
 		GameResources gm = voxel.getGameResources();
 		WorldsHandler worlds = voxel.getWorldsHandler();
-		ModInitialization api = voxel.getApi();
 		Display display = voxel.getDisplay();
 
-		gm.getCamera().update(delta, gm, worlds.getActiveWorld(), api, voxel.getClient());
-		gm.getPhysics().getMobManager().getPlayer().update(delta, gm, worlds.getActiveWorld(), api);
-		worlds.getActiveWorld().updateChunksGeneration(gm, api, delta);
-		gm.getPhysics().getMobManager().update(delta, gm, worlds.getActiveWorld(), api);
+		gm.getCamera().update(delta, gm, worlds.getActiveWorld(), voxel.getClient());
+		worlds.getActiveWorld().updateChunksGeneration(gm, delta);
+
+		gm.getEngine().update(delta);
+
 		gm.update(gm.getSkyboxRenderer().update(delta));
 		gm.getRenderer().getWaterRenderer().update(delta);
 		ParticleMaster.getInstance().update(delta, gm.getCamera());
@@ -88,21 +88,21 @@ public class GameSPState extends State {
 			gm.getMasterShadowRenderer().being();
 			gm.getRenderer().prepare();
 			worlds.getActiveWorld().updateChunksShadow(gm);
-			gm.getMasterShadowRenderer().renderEntity(gm.getPhysics().getMobManager().getMobs(), gm);
+			gm.getMasterShadowRenderer().renderEntity(gm.getEngine().getEntities(), gm);
 			gm.getMasterShadowRenderer().end();
 		}
 		gm.getFrustum().calculateFrustum(gm.getRenderer().getProjectionMatrix(), gm.getCamera());
 		gm.getRenderer().prepare();
 		worlds.getActiveWorld().updateChunksOcclusion(gm);
-		
+
 		gm.getDeferredShadingRenderer().getPost_fbo().begin();
 		gm.getRenderer().prepare();
+		gm.getSkyboxRenderer().render(VoxelVariables.RED, VoxelVariables.GREEN, VoxelVariables.BLUE, delta, gm);
 		worlds.getActiveWorld().updateChunksRender(gm);
 		FloatBuffer p = BufferUtils.createFloatBuffer(1);
 		glReadPixels(Display.getWidth() / 2, Display.getHeight() / 2, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, p);
 		gm.getCamera().depth = p.get(0);
-		gm.getSkyboxRenderer().render(VoxelVariables.RED, VoxelVariables.GREEN, VoxelVariables.BLUE, delta, gm);
-		gm.getRenderer().renderEntity(gm.getPhysics().getMobManager().getMobs(), gm);
+		gm.getRenderer().renderEntity(gm.getEngine().getEntities(), gm);
 		ParticleMaster.getInstance().render(gm.getCamera());
 		gm.getDeferredShadingRenderer().getPost_fbo().end();
 

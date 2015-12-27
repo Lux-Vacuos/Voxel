@@ -24,12 +24,27 @@
 
 package net.guerra24.voxel.client.graphics;
 
-import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.GL_BACK;
+import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.GL_CULL_FACE;
+import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
+import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
+import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
+import static org.lwjgl.opengl.GL11.GL_STENCIL_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.glBlendFunc;
+import static org.lwjgl.opengl.GL11.glClear;
+import static org.lwjgl.opengl.GL11.glClearColor;
+import static org.lwjgl.opengl.GL11.glCullFace;
+import static org.lwjgl.opengl.GL11.glEnable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.badlogic.ashley.core.Entity;
+import com.badlogic.ashley.utils.ImmutableArray;
 
 import net.guerra24.voxel.client.core.VoxelVariables;
 import net.guerra24.voxel.client.graphics.opengl.Display;
@@ -38,8 +53,7 @@ import net.guerra24.voxel.client.graphics.shaders.WaterShader;
 import net.guerra24.voxel.client.resources.GameResources;
 import net.guerra24.voxel.client.resources.models.TexturedModel;
 import net.guerra24.voxel.client.world.block.BlockEntity;
-import net.guerra24.voxel.client.world.entities.Entity;
-import net.guerra24.voxel.client.world.entities.IEntity;
+import net.guerra24.voxel.client.world.entities.GameEntity;
 import net.guerra24.voxel.universal.util.vector.Matrix4f;
 
 /**
@@ -54,7 +68,7 @@ public class MasterRenderer {
 	 * Master Renderer Data
 	 */
 	private Matrix4f projectionMatrix;
-	private Map<TexturedModel, List<Entity>> entities = new HashMap<TexturedModel, List<Entity>>();
+	private Map<TexturedModel, List<GameEntity>> entities = new HashMap<TexturedModel, List<GameEntity>>();
 	private Map<TexturedModel, List<BlockEntity>> blockEntities = new HashMap<TexturedModel, List<BlockEntity>>();
 	private WaterShader waterShader;
 	private WaterRenderer waterRenderer;
@@ -117,13 +131,13 @@ public class MasterRenderer {
 	 * @param camera
 	 *            A Camera
 	 */
-	public void renderEntity(List<IEntity> list, GameResources gm) {
-		for (IEntity entity : list) {
-			if (entity != null)
-				if (entity.getEntity() != null)
-					if (gm.getFrustum().pointInFrustum(entity.getEntity().getPosition().x,
-							entity.getEntity().getPosition().y, entity.getEntity().getPosition().z))
-						processEntity(entity.getEntity());
+	public void renderEntity(ImmutableArray<Entity> immutableArray, GameResources gm) {
+		for (Entity entity : immutableArray) {
+			if (entity instanceof GameEntity) {
+				GameEntity ent = (GameEntity) entity;
+				if (gm.getFrustum().pointInFrustum(ent.getPosition().x, ent.getPosition().y, ent.getPosition().z))
+					processEntity(ent);
+			}
 		}
 		renderEntity(gm);
 	}
@@ -180,13 +194,13 @@ public class MasterRenderer {
 	 * @param entity
 	 *            An Entity
 	 */
-	private void processEntity(Entity entity) {
+	private void processEntity(GameEntity entity) {
 		TexturedModel entityModel = entity.getModel();
-		List<Entity> batch = entities.get(entityModel);
+		List<GameEntity> batch = entities.get(entityModel);
 		if (batch != null) {
 			batch.add(entity);
 		} else {
-			List<Entity> newBatch = new ArrayList<Entity>();
+			List<GameEntity> newBatch = new ArrayList<GameEntity>();
 			newBatch.add(entity);
 			entities.put(entityModel, newBatch);
 		}

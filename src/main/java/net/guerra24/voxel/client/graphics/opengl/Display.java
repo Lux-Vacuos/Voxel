@@ -116,7 +116,6 @@ import de.matthiasmann.twl.utils.PNGDecoder;
 import net.guerra24.voxel.client.core.VoxelVariables;
 import net.guerra24.voxel.client.input.Keyboard;
 import net.guerra24.voxel.client.input.Mouse;
-import net.guerra24.voxel.client.resources.GameResources;
 import net.guerra24.voxel.client.util.Logger;
 
 /**
@@ -416,7 +415,7 @@ public class Display {
 	 * @param fps
 	 *            Game Max FPS
 	 */
-	public void updateDisplay(int fps, GameResources gm) {
+	public void updateDisplay(int fps) {	
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 		Mouse.poll();

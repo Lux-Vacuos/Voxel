@@ -97,8 +97,8 @@ public class TessellatorShader extends ShaderProgram {
 		super.loadMatrix(loc_viewMatrix, matrix);
 		super.loadVector(loc_cameraPos, camera.getPosition());
 	}
-	
-	public void loadBiasMatrix(GameResources gm){
+
+	public void loadBiasMatrix(GameResources gm) {
 		Matrix4f biasMatrix = new Matrix4f();
 		biasMatrix.m00 = 0.5f;
 		biasMatrix.m01 = 0;

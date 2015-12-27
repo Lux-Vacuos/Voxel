@@ -33,18 +33,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.badlogic.ashley.core.Entity;
+import com.badlogic.ashley.utils.ImmutableArray;
+
 import net.guerra24.voxel.client.graphics.shaders.EntityBasicShader;
 import net.guerra24.voxel.client.resources.GameResources;
 import net.guerra24.voxel.client.resources.models.TexturedModel;
 import net.guerra24.voxel.client.util.Maths;
 import net.guerra24.voxel.client.world.block.BlockEntity;
-import net.guerra24.voxel.client.world.entities.Entity;
-import net.guerra24.voxel.client.world.entities.IEntity;
+import net.guerra24.voxel.client.world.entities.GameEntity;
 import net.guerra24.voxel.universal.util.vector.Matrix4f;
 
 public class MasterShadowRenderer {
 
-	private Map<TexturedModel, List<Entity>> entities = new HashMap<TexturedModel, List<Entity>>();
+	private Map<TexturedModel, List<GameEntity>> entities = new HashMap<TexturedModel, List<GameEntity>>();
 	private Map<TexturedModel, List<BlockEntity>> blockEntities = new HashMap<TexturedModel, List<BlockEntity>>();
 	private EntityBasicShader shader;
 	private ShadowRenderer renderer;
@@ -90,12 +92,11 @@ public class MasterShadowRenderer {
 		}
 		renderBlocks(gm);
 	}
-	
-	public void renderEntity(List<IEntity> list, GameResources gm) {
-		for (IEntity entity : list) {
-			if (entity != null)
-				if (entity.getEntity() != null)
-					processEntity(entity.getEntity());
+
+	public void renderEntity(ImmutableArray<Entity> immutableArray, GameResources gm) {
+		for (Entity entity : immutableArray) {
+			if (entity instanceof GameEntity)
+				processEntity((GameEntity) entity);
 		}
 		renderEntity(gm);
 	}
@@ -117,7 +118,7 @@ public class MasterShadowRenderer {
 		blockEntities.clear();
 		glCullFace(GL_BACK);
 	}
-	
+
 	private void renderEntity(GameResources gm) {
 		glCullFace(GL_FRONT);
 		shader.start();
@@ -145,20 +146,20 @@ public class MasterShadowRenderer {
 			blockEntities.put(entityModel, newBatch);
 		}
 	}
-	
+
 	/**
 	 * Add the Entity to the batcher map
 	 * 
 	 * @param entity
 	 *            An Entity
 	 */
-	private void processEntity(Entity entity) {
+	private void processEntity(GameEntity entity) {
 		TexturedModel entityModel = entity.getModel();
-		List<Entity> batch = entities.get(entityModel);
+		List<GameEntity> batch = entities.get(entityModel);
 		if (batch != null) {
 			batch.add(entity);
 		} else {
-			List<Entity> newBatch = new ArrayList<Entity>();
+			List<GameEntity> newBatch = new ArrayList<GameEntity>();
 			newBatch.add(entity);
 			entities.put(entityModel, newBatch);
 		}

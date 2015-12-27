@@ -25,20 +25,17 @@
 package net.guerra24.voxel.client.api;
 
 import net.guerra24.voxel.client.core.GameSettings;
-import net.guerra24.voxel.client.world.MobManager;
-import net.guerra24.voxel.client.world.entities.IEntity;
+import net.guerra24.voxel.client.world.entities.GameEntity;
 
 public class MoltenAPI {
 
-	private MobManager mobManager;
 	private GameSettings gameSettings;
 
 	public MoltenAPI(GameSettings gameSettings) {
 		this.gameSettings = gameSettings;
 	}
 
-	public void registetMob(IEntity mob) {
-		mobManager.registerMob(mob);
+	public void registetMob(GameEntity mob) {
 	}
 
 	public void registerSaveData(String key, String value) {
@@ -47,10 +44,6 @@ public class MoltenAPI {
 	
 	public String getSaveData(String key){
 		return gameSettings.getValue(key);
-	}
-
-	public void setMobManager(MobManager mobManager) {
-		this.mobManager = mobManager;
 	}
 
 }

@@ -40,7 +40,7 @@ import net.guerra24.voxel.client.resources.models.RawModel;
 import net.guerra24.voxel.client.resources.models.TexturedModel;
 import net.guerra24.voxel.client.util.Maths;
 import net.guerra24.voxel.client.world.block.BlockEntity;
-import net.guerra24.voxel.client.world.entities.Entity;
+import net.guerra24.voxel.client.world.entities.GameEntity;
 import net.guerra24.voxel.universal.util.vector.Matrix4f;
 
 public class ShadowRenderer {
@@ -80,11 +80,11 @@ public class ShadowRenderer {
 		}
 	}
 	
-	public void renderEntity(Map<TexturedModel, List<Entity>> blockEntities, GameResources gm) {
+	public void renderEntity(Map<TexturedModel, List<GameEntity>> blockEntities, GameResources gm) {
 		for (TexturedModel model : blockEntities.keySet()) {
 			prepareTexturedModel(model, gm);
-			List<Entity> batch = blockEntities.get(model);
-			for (Entity entity : batch) {
+			List<GameEntity> batch = blockEntities.get(model);
+			for (GameEntity entity : batch) {
 				prepareInstance(entity);
 				glDrawElements(GL_TRIANGLES, model.getRawModel().getVertexCount(), GL_UNSIGNED_INT, 0);
 			}
@@ -129,7 +129,7 @@ public class ShadowRenderer {
 	 * 
 	 * @param entity
 	 */
-	private void prepareInstance(Entity entity) {
+	private void prepareInstance(GameEntity entity) {
 		Matrix4f transformationMatrix = Maths.createTransformationMatrix(entity.getPosition(), entity.getRotX(),
 				entity.getRotY(), entity.getRotZ(), entity.getScale());
 		shader.loadTransformationMatrix(transformationMatrix);

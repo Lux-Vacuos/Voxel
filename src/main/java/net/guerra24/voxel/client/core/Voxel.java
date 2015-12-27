@@ -108,19 +108,19 @@ public class Voxel {
 	 * the API Init
 	 */
 	private void init() {
-		gameResources.init();
-		BlocksResources.createBlocks(gameResources.getLoader());
-		gameResources.loadResources();
 		worldsHandler = new WorldsHandler();
 		InfinityWorld world = new InfinityWorld();
 		worldsHandler.registerWorld(world.getCodeName(), world);
 		worldsHandler.setActiveWorld("Infinity");
+		gameResources.init(this);
+		BlocksResources.createBlocks(gameResources.getLoader());
+		gameResources.loadResources();
 		Logger.log("Initializing Threads");
 		/*
 		 * new Thread(new Runnable() { public void run() {
 		 * Thread.currentThread().setName("Voxel-Client"); client = new
 		 * DedicatedClient(gameResources); } }).start();
-		 */api.getMoltenAPI().setMobManager(gameResources.getPhysics().getMobManager());
+		 */
 		try {
 			api.init();
 		} catch (VersionException e) {
@@ -189,7 +189,7 @@ public class Voxel {
 		Display.fpsCount++;
 		gameResources.getGlobalStates().doRender(this, delta);
 		TextMasterRenderer.getInstance().render();
-		display.updateDisplay(VoxelVariables.FPS, gameResources);
+		display.updateDisplay(VoxelVariables.FPS);
 	}
 
 	/**

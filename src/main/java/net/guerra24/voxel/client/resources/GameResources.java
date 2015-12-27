@@ -26,10 +26,12 @@ package net.guerra24.voxel.client.resources;
 
 import java.util.Random;
 
+import com.badlogic.ashley.core.Engine;
 import com.esotericsoftware.kryo.Kryo;
 
 import net.guerra24.voxel.client.core.GameSettings;
 import net.guerra24.voxel.client.core.GlobalStates;
+import net.guerra24.voxel.client.core.Voxel;
 import net.guerra24.voxel.client.graphics.DeferredShadingRenderer;
 import net.guerra24.voxel.client.graphics.Frustum;
 import net.guerra24.voxel.client.graphics.GuiRenderer;
@@ -38,8 +40,8 @@ import net.guerra24.voxel.client.graphics.MasterShadowRenderer;
 import net.guerra24.voxel.client.graphics.OcclusionRenderer;
 import net.guerra24.voxel.client.graphics.SkyboxRenderer;
 import net.guerra24.voxel.client.graphics.TextMasterRenderer;
-import net.guerra24.voxel.client.graphics.shaders.TessellatorShader;
 import net.guerra24.voxel.client.graphics.shaders.TessellatorBasicShader;
+import net.guerra24.voxel.client.graphics.shaders.TessellatorShader;
 import net.guerra24.voxel.client.menu.Menu;
 import net.guerra24.voxel.client.particle.ParticleMaster;
 import net.guerra24.voxel.client.particle.ParticleTexture;
@@ -49,11 +51,9 @@ import net.guerra24.voxel.client.sound.soundsystem.SoundSystemConfig;
 import net.guerra24.voxel.client.sound.soundsystem.SoundSystemException;
 import net.guerra24.voxel.client.sound.soundsystem.codecs.CodecJOgg;
 import net.guerra24.voxel.client.util.Logger;
-import net.guerra24.voxel.client.world.Physics;
+import net.guerra24.voxel.client.world.PhysicsSystem;
 import net.guerra24.voxel.client.world.block.Block;
 import net.guerra24.voxel.client.world.entities.Camera;
-import net.guerra24.voxel.client.world.entities.Entity;
-import net.guerra24.voxel.client.world.entities.Mob;
 import net.guerra24.voxel.universal.resources.UniversalResources;
 import net.guerra24.voxel.universal.util.vector.Vector3f;
 
@@ -80,10 +80,13 @@ public class GameResources {
 	private DeferredShadingRenderer deferredShadingRenderer;
 	private MasterShadowRenderer masterShadowRenderer;
 	private OcclusionRenderer occlusionRenderer;
+
+	private Engine engine;
+	private PhysicsSystem physicsSystem;
+
 	private SoundSystem soundSystem;
 	private Frustum frustum;
 	private Kryo kryo;
-	private Physics physics;
 	private Menu menuSystem;
 	private GameSettings gameSettings;
 
@@ -91,8 +94,6 @@ public class GameResources {
 	private Vector3f lightPos = new Vector3f(0, 0, 0);
 	private Vector3f invertedLightPosition = new Vector3f(0, 0, 0);
 	private ParticleTexture torchTexture;
-
-	public Mob player;
 
 	/**
 	 * Constructor
@@ -106,7 +107,7 @@ public class GameResources {
 	 * Initialize the Game Objects
 	 * 
 	 */
-	public void init() {
+	public void init(Voxel voxel) {
 		loader = new Loader();
 		rand = new Random();
 		masterShadowRenderer = new MasterShadowRenderer();
@@ -125,10 +126,15 @@ public class GameResources {
 		TessellatorShader.getInstance();
 		TessellatorBasicShader.getInstance();
 		ParticleMaster.getInstance().init(loader, renderer.getProjectionMatrix());
-		physics = new Physics(this);
 		frustum = new Frustum();
 		TextMasterRenderer.getInstance().init(loader);
 		textHandler = new TextHandler(this);
+
+		engine = new Engine();
+		physicsSystem = new PhysicsSystem(voxel.getWorldsHandler().getActiveWorld());
+		engine.addSystem(physicsSystem);
+		engine.addEntity(camera);
+
 		try {
 			SoundSystemConfig.addLibrary(LibraryLWJGLOpenAL.class);
 			SoundSystemConfig.setCodec("ogg", CodecJOgg.class);
@@ -159,8 +165,6 @@ public class GameResources {
 	 * 
 	 */
 	public void loadResources() {
-		player = new Mob(new Entity(UniversalResources.player, new Vector3f(0, 80, 0), 0, 0, 0, 1));
-		physics.getMobManager().registerMob(player);
 		torchTexture = new ParticleTexture(loader.loadTextureParticle("fire0"), 4);
 	}
 
@@ -239,10 +243,6 @@ public class GameResources {
 		return frustum;
 	}
 
-	public Physics getPhysics() {
-		return physics;
-	}
-
 	public TextHandler getTextHandler() {
 		return textHandler;
 	}
@@ -285,6 +285,10 @@ public class GameResources {
 
 	public Vector3f getSunRotation() {
 		return sunRotation;
+	}
+
+	public Engine getEngine() {
+		return engine;
 	}
 
 }

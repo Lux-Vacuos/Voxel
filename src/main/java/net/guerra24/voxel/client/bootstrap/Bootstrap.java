@@ -24,9 +24,7 @@
 
 package net.guerra24.voxel.client.bootstrap;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.PrintStream;
+import java.io.File;
 import java.util.Calendar;
 
 import net.guerra24.voxel.client.core.Voxel;
@@ -83,6 +81,12 @@ public class Bootstrap {
 		WINDOWS_32, WINDOWS_64, MACOSX, LINUX_32, LINUX_64, UNKNOWN;
 
 	}
+	
+	static {
+		File file = new File("assets/game/logs");
+		if(!file.exists())
+			file.mkdirs();
+	}
 
 	/**
 	 * Launcher main function
@@ -92,17 +96,6 @@ public class Bootstrap {
 	 */
 	public static void main(String[] args) {
 		Thread.currentThread().setName("Voxel Main");
-		if (!VoxelVariables.debug) {
-			PrintStream out;
-			try {
-				out = new PrintStream(new FileOutputStream("assets/log.txt"));
-				System.setOut(out);
-				System.setErr(out);
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			}
-		}
-
 		try {
 			parseArgs(args);
 		} catch (ArrayIndexOutOfBoundsException aioe) {
@@ -113,6 +106,8 @@ public class Bootstrap {
 			System.exit(1);
 		}
 		checkSomeValues();
+		
+		
 		new Voxel();
 	}
 

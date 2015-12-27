@@ -52,7 +52,6 @@ public class DedicatedClientListener implements SocketListener {
 	public void received(Connection con, Object obj) {
 		if (obj instanceof NetworkPosition) {
 			NetworkPosition pos = (NetworkPosition) obj;
-			voxel.getGameResources().player.setPosition(pos.getPos());
 		} else if (obj instanceof WorldTime) {
 			WorldTime time = (WorldTime) obj;
 			voxel.getGameResources().getSkyboxRenderer().setTime(time.getTime());

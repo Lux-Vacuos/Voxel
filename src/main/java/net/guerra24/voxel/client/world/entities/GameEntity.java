@@ -24,22 +24,43 @@
 
 package net.guerra24.voxel.client.world.entities;
 
-import net.guerra24.voxel.client.resources.models.AABB;
+import com.badlogic.ashley.core.Entity;
+
 import net.guerra24.voxel.client.resources.models.TexturedModel;
 import net.guerra24.voxel.universal.util.vector.Vector3f;
 
-public class Entity extends AABB {
+public class GameEntity extends Entity {
 
 	private TexturedModel model;
-	private Vector3f position;
+	private PositionComponent positionComponent;
+	private VelocityComponent velocityComponent;
 	private float rotX, rotY, rotZ;
 	private float scale;
 	private int visibility;
 
-	public Entity(TexturedModel model, Vector3f position, float rotX, float rotY, float rotZ, float scale) {
-		super(position.x, position.y, position.z, 1, 1, 1);
+	public GameEntity(TexturedModel model, Vector3f position, float rotX, float rotY, float rotZ, float scale) {
+		velocityComponent = new VelocityComponent();
+		positionComponent = new PositionComponent();
+		positionComponent.position = new Vector3f(position);
+		this.add(positionComponent);
+		this.add(velocityComponent);
 		this.model = model;
-		this.position = position;
+		this.rotX = rotX;
+		this.rotY = rotY;
+		this.rotZ = rotZ;
+		this.scale = scale;
+	}
+	
+	public GameEntity(TexturedModel model, Vector3f position,float vx, float vy, float vz, float rotX, float rotY, float rotZ, float scale) {
+		velocityComponent = new VelocityComponent();
+		positionComponent = new PositionComponent();
+		positionComponent.position = new Vector3f(position);
+		velocityComponent.x = vx;
+		velocityComponent.y = vy;
+		velocityComponent.z = vz;
+		this.add(positionComponent);
+		this.add(velocityComponent);
+		this.model = model;
 		this.rotX = rotX;
 		this.rotY = rotY;
 		this.rotZ = rotZ;
@@ -47,9 +68,9 @@ public class Entity extends AABB {
 	}
 
 	public void increasePosition(float dx, float dy, float dz) {
-		this.position.x += dx;
-		this.position.y += dy;
-		this.position.z += dz;
+		this.positionComponent.position.x += dx;
+		this.positionComponent.position.y += dy;
+		this.positionComponent.position.z += dz;
 	}
 
 	public void increaseRotation(float dx, float dy, float dz) {
@@ -67,11 +88,11 @@ public class Entity extends AABB {
 	}
 
 	public Vector3f getPosition() {
-		return position;
+		return positionComponent.position;
 	}
 
 	public void setPosition(Vector3f position) {
-		this.position = position;
+		this.positionComponent.position = position;
 	}
 
 	public float getRotX() {

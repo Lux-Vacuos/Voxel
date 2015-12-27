@@ -61,6 +61,7 @@ import org.lwjgl.BufferUtils;
 import net.guerra24.voxel.client.graphics.shaders.TessellatorBasicShader;
 import net.guerra24.voxel.client.graphics.shaders.TessellatorShader;
 import net.guerra24.voxel.client.resources.GameResources;
+import net.guerra24.voxel.client.world.block.Block;
 import net.guerra24.voxel.client.world.block.IBlock;
 import net.guerra24.voxel.client.world.entities.Camera;
 import net.guerra24.voxel.universal.util.vector.Matrix4f;
@@ -307,145 +308,147 @@ public class Tessellator {
 			boolean front, boolean back, IBlock block, float light) {
 		int id = block.getId();
 		float l = light / 15f;
-		if (top) {
-			Vector8f texcoords = block.texCoordsUp();
-			// top face
-			vertex3f(new Vector3f(x, y + size, z + size));
-			texture2f(new Vector2f(texcoords.getZ(), texcoords.getW()));
-			normal3f(new Vector3f(0, 1, 0));
-			data4f(new Vector4f(id, l, 0, 0));
+		if (id != Block.Air.getId()) {
+			if (top) {
+				Vector8f texcoords = block.texCoordsUp();
+				// top face
+				vertex3f(new Vector3f(x, y + size, z + size));
+				texture2f(new Vector2f(texcoords.getZ(), texcoords.getW()));
+				normal3f(new Vector3f(0, 1, 0));
+				data4f(new Vector4f(id, l, 0, 0));
 
-			vertex3f(new Vector3f(x + size, y + size, z + size));
-			texture2f(new Vector2f(texcoords.getI(), texcoords.getJ()));
-			normal3f(new Vector3f(0, 1, 0));
-			data4f(new Vector4f(id, l, 0, 0));
+				vertex3f(new Vector3f(x + size, y + size, z + size));
+				texture2f(new Vector2f(texcoords.getI(), texcoords.getJ()));
+				normal3f(new Vector3f(0, 1, 0));
+				data4f(new Vector4f(id, l, 0, 0));
 
-			vertex3f(new Vector3f(x + size, y + size, z));
-			texture2f(new Vector2f(texcoords.getK(), texcoords.getL()));
-			normal3f(new Vector3f(0, 1, 0));
-			data4f(new Vector4f(id, l, 0, 0));
+				vertex3f(new Vector3f(x + size, y + size, z));
+				texture2f(new Vector2f(texcoords.getK(), texcoords.getL()));
+				normal3f(new Vector3f(0, 1, 0));
+				data4f(new Vector4f(id, l, 0, 0));
 
-			vertex3f(new Vector3f(x, y + size, z));
-			texture2f(new Vector2f(texcoords.getX(), texcoords.getY()));
-			normal3f(new Vector3f(0, 1, 0));
-			data4f(new Vector4f(id, l, 0, 0));
+				vertex3f(new Vector3f(x, y + size, z));
+				texture2f(new Vector2f(texcoords.getX(), texcoords.getY()));
+				normal3f(new Vector3f(0, 1, 0));
+				data4f(new Vector4f(id, l, 0, 0));
 
-		}
-		if (bottom) {
-			Vector8f texcoords = block.texCoordsDown();
-			// bottom face
-			vertex3f(new Vector3f(x, y, z));
-			texture2f(new Vector2f(texcoords.getZ(), texcoords.getW()));
-			normal3f(new Vector3f(0, -1, 0));
-			data4f(new Vector4f(id, l, 0, 0));
+			}
+			if (bottom) {
+				Vector8f texcoords = block.texCoordsDown();
+				// bottom face
+				vertex3f(new Vector3f(x, y, z));
+				texture2f(new Vector2f(texcoords.getZ(), texcoords.getW()));
+				normal3f(new Vector3f(0, -1, 0));
+				data4f(new Vector4f(id, l, 0, 0));
 
-			vertex3f(new Vector3f(x + size, y, z));
-			texture2f(new Vector2f(texcoords.getI(), texcoords.getJ()));
-			normal3f(new Vector3f(0, -1, 0));
-			data4f(new Vector4f(id, l, 0, 0));
+				vertex3f(new Vector3f(x + size, y, z));
+				texture2f(new Vector2f(texcoords.getI(), texcoords.getJ()));
+				normal3f(new Vector3f(0, -1, 0));
+				data4f(new Vector4f(id, l, 0, 0));
 
-			vertex3f(new Vector3f(x + size, y, z + size));
-			texture2f(new Vector2f(texcoords.getK(), texcoords.getL()));
-			normal3f(new Vector3f(0, -1, 0));
-			data4f(new Vector4f(id, l, 0, 0));
+				vertex3f(new Vector3f(x + size, y, z + size));
+				texture2f(new Vector2f(texcoords.getK(), texcoords.getL()));
+				normal3f(new Vector3f(0, -1, 0));
+				data4f(new Vector4f(id, l, 0, 0));
 
-			vertex3f(new Vector3f(x, y, z + size));
-			texture2f(new Vector2f(texcoords.getX(), texcoords.getY()));
-			normal3f(new Vector3f(0, -1, 0));
-			data4f(new Vector4f(id, l, 0, 0));
-		}
+				vertex3f(new Vector3f(x, y, z + size));
+				texture2f(new Vector2f(texcoords.getX(), texcoords.getY()));
+				normal3f(new Vector3f(0, -1, 0));
+				data4f(new Vector4f(id, l, 0, 0));
+			}
 
-		if (back) {
-			Vector8f texcoords = block.texCoordsBack();
-			// back face
-			vertex3f(new Vector3f(x, y, z + size));
-			texture2f(new Vector2f(texcoords.getX(), texcoords.getY()));
-			normal3f(new Vector3f(0, 0, 1));
-			data4f(new Vector4f(id, l, 0, 0));
+			if (back) {
+				Vector8f texcoords = block.texCoordsBack();
+				// back face
+				vertex3f(new Vector3f(x, y, z + size));
+				texture2f(new Vector2f(texcoords.getX(), texcoords.getY()));
+				normal3f(new Vector3f(0, 0, 1));
+				data4f(new Vector4f(id, l, 0, 0));
 
-			vertex3f(new Vector3f(x + size, y, z + size));
-			texture2f(new Vector2f(texcoords.getK(), texcoords.getL()));
-			normal3f(new Vector3f(0, 0, 1));
-			data4f(new Vector4f(id, l, 0, 0));
+				vertex3f(new Vector3f(x + size, y, z + size));
+				texture2f(new Vector2f(texcoords.getK(), texcoords.getL()));
+				normal3f(new Vector3f(0, 0, 1));
+				data4f(new Vector4f(id, l, 0, 0));
 
-			vertex3f(new Vector3f(x + size, y + size, z + size));
-			texture2f(new Vector2f(texcoords.getI(), texcoords.getJ()));
-			normal3f(new Vector3f(0, 0, 1));
-			data4f(new Vector4f(id, l, 0, 0));
+				vertex3f(new Vector3f(x + size, y + size, z + size));
+				texture2f(new Vector2f(texcoords.getI(), texcoords.getJ()));
+				normal3f(new Vector3f(0, 0, 1));
+				data4f(new Vector4f(id, l, 0, 0));
 
-			vertex3f(new Vector3f(x, y + size, z + size));
-			texture2f(new Vector2f(texcoords.getZ(), texcoords.getW()));
-			normal3f(new Vector3f(0, 0, 1));
-			data4f(new Vector4f(id, l, 0, 0));
-		}
-		if (front) {
-			// front face
-			Vector8f texcoords = block.texCoordsFront();
-			vertex3f(new Vector3f(x, y + size, z));
-			texture2f(new Vector2f(texcoords.getZ(), texcoords.getW()));
-			normal3f(new Vector3f(0, 0, -1));
-			data4f(new Vector4f(id, l, 0, 0));
+				vertex3f(new Vector3f(x, y + size, z + size));
+				texture2f(new Vector2f(texcoords.getZ(), texcoords.getW()));
+				normal3f(new Vector3f(0, 0, 1));
+				data4f(new Vector4f(id, l, 0, 0));
+			}
+			if (front) {
+				// front face
+				Vector8f texcoords = block.texCoordsFront();
+				vertex3f(new Vector3f(x, y + size, z));
+				texture2f(new Vector2f(texcoords.getZ(), texcoords.getW()));
+				normal3f(new Vector3f(0, 0, -1));
+				data4f(new Vector4f(id, l, 0, 0));
 
-			vertex3f(new Vector3f(x + size, y + size, z));
-			texture2f(new Vector2f(texcoords.getI(), texcoords.getJ()));
-			normal3f(new Vector3f(0, 0, -1));
-			data4f(new Vector4f(id, l, 0, 0));
+				vertex3f(new Vector3f(x + size, y + size, z));
+				texture2f(new Vector2f(texcoords.getI(), texcoords.getJ()));
+				normal3f(new Vector3f(0, 0, -1));
+				data4f(new Vector4f(id, l, 0, 0));
 
-			vertex3f(new Vector3f(x + size, y, z));
-			texture2f(new Vector2f(texcoords.getK(), texcoords.getL()));
-			normal3f(new Vector3f(0, 0, -1));
-			data4f(new Vector4f(id, l, 0, 0));
+				vertex3f(new Vector3f(x + size, y, z));
+				texture2f(new Vector2f(texcoords.getK(), texcoords.getL()));
+				normal3f(new Vector3f(0, 0, -1));
+				data4f(new Vector4f(id, l, 0, 0));
 
-			vertex3f(new Vector3f(x, y, z));
-			texture2f(new Vector2f(texcoords.getX(), texcoords.getY()));
-			normal3f(new Vector3f(0, 0, -1));
-			data4f(new Vector4f(id, l, 0, 0));
-		}
-		if (right) {
-			Vector8f texcoords = block.texCoordsRight();
-			// right face
-			vertex3f(new Vector3f(x, y, z));
-			texture2f(new Vector2f(texcoords.getK(), texcoords.getL()));
-			normal3f(new Vector3f(-1, 0, 0));
-			data4f(new Vector4f(id, l, 0, 0));
+				vertex3f(new Vector3f(x, y, z));
+				texture2f(new Vector2f(texcoords.getX(), texcoords.getY()));
+				normal3f(new Vector3f(0, 0, -1));
+				data4f(new Vector4f(id, l, 0, 0));
+			}
+			if (right) {
+				Vector8f texcoords = block.texCoordsRight();
+				// right face
+				vertex3f(new Vector3f(x, y, z));
+				texture2f(new Vector2f(texcoords.getK(), texcoords.getL()));
+				normal3f(new Vector3f(-1, 0, 0));
+				data4f(new Vector4f(id, l, 0, 0));
 
-			vertex3f(new Vector3f(x, y, z + size));
-			texture2f(new Vector2f(texcoords.getX(), texcoords.getY()));
-			normal3f(new Vector3f(-1, 0, 0));
-			data4f(new Vector4f(id, l, 0, 0));
+				vertex3f(new Vector3f(x, y, z + size));
+				texture2f(new Vector2f(texcoords.getX(), texcoords.getY()));
+				normal3f(new Vector3f(-1, 0, 0));
+				data4f(new Vector4f(id, l, 0, 0));
 
-			vertex3f(new Vector3f(x, y + size, z + size));
-			texture2f(new Vector2f(texcoords.getZ(), texcoords.getW()));
-			normal3f(new Vector3f(-1, 0, 0));
-			data4f(new Vector4f(id, l, 0, 0));
+				vertex3f(new Vector3f(x, y + size, z + size));
+				texture2f(new Vector2f(texcoords.getZ(), texcoords.getW()));
+				normal3f(new Vector3f(-1, 0, 0));
+				data4f(new Vector4f(id, l, 0, 0));
 
-			vertex3f(new Vector3f(x, y + size, z));
-			texture2f(new Vector2f(texcoords.getI(), texcoords.getJ()));
-			normal3f(new Vector3f(-1, 0, 0));
-			data4f(new Vector4f(id, l, 0, 0));
-		}
-		if (left) {
-			Vector8f texcoords = block.texCoordsLeft();
-			// left face
-			vertex3f(new Vector3f(x + size, y, z + size));
-			texture2f(new Vector2f(texcoords.getK(), texcoords.getL()));
-			normal3f(new Vector3f(1, 0, 0));
-			data4f(new Vector4f(id, l, 0, 0));
+				vertex3f(new Vector3f(x, y + size, z));
+				texture2f(new Vector2f(texcoords.getI(), texcoords.getJ()));
+				normal3f(new Vector3f(-1, 0, 0));
+				data4f(new Vector4f(id, l, 0, 0));
+			}
+			if (left) {
+				Vector8f texcoords = block.texCoordsLeft();
+				// left face
+				vertex3f(new Vector3f(x + size, y, z + size));
+				texture2f(new Vector2f(texcoords.getK(), texcoords.getL()));
+				normal3f(new Vector3f(1, 0, 0));
+				data4f(new Vector4f(id, l, 0, 0));
 
-			vertex3f(new Vector3f(x + size, y, z));
-			texture2f(new Vector2f(texcoords.getX(), texcoords.getY()));
-			normal3f(new Vector3f(1, 0, 0));
-			data4f(new Vector4f(id, l, 0, 0));
+				vertex3f(new Vector3f(x + size, y, z));
+				texture2f(new Vector2f(texcoords.getX(), texcoords.getY()));
+				normal3f(new Vector3f(1, 0, 0));
+				data4f(new Vector4f(id, l, 0, 0));
 
-			vertex3f(new Vector3f(x + size, y + size, z));
-			texture2f(new Vector2f(texcoords.getZ(), texcoords.getW()));
-			normal3f(new Vector3f(1, 0, 0));
-			data4f(new Vector4f(id, l, 0, 0));
+				vertex3f(new Vector3f(x + size, y + size, z));
+				texture2f(new Vector2f(texcoords.getZ(), texcoords.getW()));
+				normal3f(new Vector3f(1, 0, 0));
+				data4f(new Vector4f(id, l, 0, 0));
 
-			vertex3f(new Vector3f(x + size, y + size, z + size));
-			texture2f(new Vector2f(texcoords.getI(), texcoords.getJ()));
-			normal3f(new Vector3f(1, 0, 0));
-			data4f(new Vector4f(id, l, 0, 0));
+				vertex3f(new Vector3f(x + size, y + size, z + size));
+				texture2f(new Vector2f(texcoords.getI(), texcoords.getJ()));
+				normal3f(new Vector3f(1, 0, 0));
+				data4f(new Vector4f(id, l, 0, 0));
+			}
 		}
 	}
 

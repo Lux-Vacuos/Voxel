@@ -24,9 +24,6 @@
 
 package net.guerra24.voxel.client.util;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 /**
  * Logger
  * 
@@ -34,17 +31,8 @@ import java.util.Date;
  * @category Util
  */
 public final class Logger {
-	private static boolean printTimeStamps;
-	private static SimpleDateFormat timeStampFormat;
 
-	static {
-		setPrintTimeStamps(true);
-		setTimeStampFormat(new SimpleDateFormat("MM/dd/yyyy h:mm:ss a"));
-	}
-
-	public static String getTimeStamp() {
-		return timeStampFormat.format(new Date());
-	}
+	private static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger("Voxel");
 
 	/**
 	 * Prints to the Log
@@ -55,9 +43,9 @@ public final class Logger {
 	 *            Message
 	 */
 	public static void log(Object... messages) {
-		for (Object message : messages)
-			System.out.println((printTimeStamps
-					? "[INFO " + getTimeStamp() + "] " + "[" + Thread.currentThread().getName() + "] " : "") + message);
+		for (Object object : messages)
+			log.info(object);
+
 	}
 
 	/**
@@ -69,10 +57,8 @@ public final class Logger {
 	 *            Message
 	 */
 	public static void warn(Object... messages) {
-		for (Object message : messages)
-			System.err.println((printTimeStamps
-					? "[WARNING " + getTimeStamp() + "] " + "[" + Thread.currentThread().getName() + "] " : "")
-					+ message);
+		for (Object object : messages)
+			log.error(object);
 	}
 
 	/**
@@ -84,19 +70,7 @@ public final class Logger {
 	 *            Message
 	 */
 	public static void error(Object... messages) {
-		for (Object message : messages) {
-			System.err.println((printTimeStamps
-					? "[FATAL ERROR " + getTimeStamp() + "] " + "[" + Thread.currentThread().getName() + "] " : "")
-					+ message);
-		}
+		for (Object object : messages)
+			log.fatal(object);
 	}
-
-	public static void setTimeStampFormat(SimpleDateFormat timeStampFormat) {
-		Logger.timeStampFormat = timeStampFormat;
-	}
-
-	public static void setPrintTimeStamps(boolean printTimeStamps) {
-		Logger.printTimeStamps = printTimeStamps;
-	}
-
 }

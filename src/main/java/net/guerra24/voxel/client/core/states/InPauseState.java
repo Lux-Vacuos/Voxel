@@ -88,7 +88,7 @@ public class InPauseState extends State {
 			gm.getMasterShadowRenderer().being();
 			gm.getRenderer().prepare();
 			worlds.getActiveWorld().updateChunksShadow(gm);
-			gm.getMasterShadowRenderer().renderEntity(gm.getPhysics().getMobManager().getMobs(), gm);
+			gm.getMasterShadowRenderer().renderEntity(gm.getEngine().getEntities(), gm);
 			gm.getMasterShadowRenderer().end();
 		}
 		gm.getFrustum().calculateFrustum(gm.getRenderer().getProjectionMatrix(), gm.getCamera());
@@ -97,12 +97,12 @@ public class InPauseState extends State {
 		
 		gm.getDeferredShadingRenderer().getPost_fbo().begin();
 		gm.getRenderer().prepare();
+		gm.getSkyboxRenderer().render(VoxelVariables.RED, VoxelVariables.GREEN, VoxelVariables.BLUE, delta, gm);
 		worlds.getActiveWorld().updateChunksRender(gm);
 		FloatBuffer p = BufferUtils.createFloatBuffer(1);
 		glReadPixels(Display.getWidth() / 2, Display.getHeight() / 2, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, p);
 		gm.getCamera().depth = p.get(0);
-		gm.getSkyboxRenderer().render(VoxelVariables.RED, VoxelVariables.GREEN, VoxelVariables.BLUE, delta, gm);
-		gm.getRenderer().renderEntity(gm.getPhysics().getMobManager().getMobs(), gm);
+		gm.getRenderer().renderEntity(gm.getEngine().getEntities(), gm);
 		ParticleMaster.getInstance().render(gm.getCamera());
 		gm.getDeferredShadingRenderer().getPost_fbo().end();
 

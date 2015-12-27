@@ -54,8 +54,7 @@ public class LoadingState extends State {
 		} else {
 			seed = new Random();
 		}
-		voxel.getWorldsHandler().getActiveWorld().startWorld("World-0", seed, 0, voxel.getApi(),
-				voxel.getGameResources());
+		voxel.getWorldsHandler().getActiveWorld().startWorld("World-0", seed, 0, voxel.getGameResources());
 		gm.getCamera().setMouse();
 		gm.getSoundSystem().rewind("menu1");
 		gm.getSoundSystem().stop("menu1");

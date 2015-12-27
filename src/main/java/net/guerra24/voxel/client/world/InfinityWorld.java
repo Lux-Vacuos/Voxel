@@ -24,7 +24,8 @@
 
 package net.guerra24.voxel.client.world;
 
-import static org.lwjgl.opengl.GL15.*;
+import static org.lwjgl.opengl.GL15.GL_QUERY_RESULT;
+import static org.lwjgl.opengl.GL15.glGetQueryObjectui;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -42,7 +43,6 @@ import com.esotericsoftware.kryo.KryoException;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 
-import net.guerra24.voxel.client.api.ModInitialization;
 import net.guerra24.voxel.client.core.VoxelVariables;
 import net.guerra24.voxel.client.particle.ParticlePoint;
 import net.guerra24.voxel.client.particle.ParticleSystem;
@@ -85,7 +85,7 @@ public class InfinityWorld implements IWorld {
 	private WorldService worldService;
 
 	@Override
-	public void startWorld(String name, Random seed, int chunkDim, ModInitialization api, GameResources gm) {
+	public void startWorld(String name, Random seed, int chunkDim, GameResources gm) {
 		this.name = name;
 		this.seed = seed;
 		this.chunkDim = chunkDim;
@@ -95,7 +95,7 @@ public class InfinityWorld implements IWorld {
 		}
 		saveWorld(gm);
 		init(gm);
-		createDimension(gm, api);
+		createDimension(gm);
 	}
 
 	@Override
@@ -111,11 +111,10 @@ public class InfinityWorld implements IWorld {
 		chunks = new HashMap<ChunkKey, Chunk>();
 		chunkGenerator = new ChunkGenerator();
 		worldService = new WorldService();
-		gm.getPhysics().getMobManager().getPlayer().setPosition(gm.getCamera().getPosition());
 	}
 
 	@Override
-	public void createDimension(GameResources gm, ModInitialization api) {
+	public void createDimension(GameResources gm) {
 		Logger.log("Generating World");
 		xPlayChunk = (int) (gm.getCamera().getPosition().x / 16);
 		zPlayChunk = (int) (gm.getCamera().getPosition().z / 16);
@@ -142,7 +141,7 @@ public class InfinityWorld implements IWorld {
 	}
 
 	@Override
-	public void updateChunksGeneration(GameResources gm, ModInitialization api, float delta) {
+	public void updateChunksGeneration(GameResources gm, float delta) {
 		if (gm.getCamera().getPosition().x < 0)
 			xPlayChunk = (int) ((gm.getCamera().getPosition().x - 16) / 16);
 		if (gm.getCamera().getPosition().y < 0)
@@ -323,12 +322,12 @@ public class InfinityWorld implements IWorld {
 	}
 
 	@Override
-	public void switchDimension(int id, GameResources gm, ModInitialization api) {
+	public void switchDimension(int id, GameResources gm) {
 		if (id != chunkDim) {
 			clearDimension(gm);
 			chunkDim = id;
 			init(gm);
-			createDimension(gm, api);
+			createDimension(gm);
 		}
 	}
 
