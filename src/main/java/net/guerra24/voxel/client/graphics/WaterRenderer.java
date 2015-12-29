@@ -184,7 +184,40 @@ public class WaterRenderer {
 	 *            Game Loader
 	 */
 	private void setUpVAO(Loader loader) {
-		float[] vertices = { -1, -1, -1, 1, 1, -1, 1, -1, -1, 1, 1, 1 };
+		float[] vertices = {
+				-1,-1,
+				-1,0,
+				0,-1,
+				
+				-1,0,
+				0,0,
+				0,-1,
+				
+				-1,0,
+				-1,1,
+				0,0,
+				
+				-1,1,
+				0,1,
+				0,0,
+				
+				0,0,
+				0,1,
+				1,0,
+				
+				0,1,
+				1,1,
+				1,0,
+				
+				0,-1,
+				0,0,
+				1,-1,
+				
+				0,0,
+				1,0,
+				1,-1
+				
+		};
 		quad = loader.loadToVAO(vertices, 2);
 	}
 

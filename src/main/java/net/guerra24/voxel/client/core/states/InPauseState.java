@@ -37,6 +37,7 @@ import net.guerra24.voxel.client.core.GlobalStates.GameState;
 import net.guerra24.voxel.client.core.State;
 import net.guerra24.voxel.client.core.Voxel;
 import net.guerra24.voxel.client.core.VoxelVariables;
+import net.guerra24.voxel.client.graphics.MenuRendering;
 import net.guerra24.voxel.client.graphics.opengl.Display;
 import net.guerra24.voxel.client.input.Mouse;
 import net.guerra24.voxel.client.particle.ParticleMaster;
@@ -70,8 +71,7 @@ public class InPauseState extends State {
 				gm.getCamera().setPitch(0);
 				gm.getCamera().setYaw(0);
 				states.setState(GameState.MAINMENU);
-			}
-			if(gm.getMenuSystem().pauseMenu.getOptionsButton().pressed()){
+			} else if (gm.getMenuSystem().pauseMenu.getOptionsButton().pressed()) {
 				states.setState(GameState.OPTIONS);
 			}
 		}
@@ -81,7 +81,7 @@ public class InPauseState extends State {
 	public void render(Voxel voxel, GlobalStates states, float delta) {
 		GameResources gm = voxel.getGameResources();
 		WorldsHandler worlds = voxel.getWorldsHandler();
-		
+
 		worlds.getActiveWorld().lighting();
 		gm.getFrustum().calculateFrustum(gm.getMasterShadowRenderer().getProjectionMatrix(), gm.getSun_Camera());
 		if (VoxelVariables.useShadows) {
@@ -94,7 +94,7 @@ public class InPauseState extends State {
 		gm.getFrustum().calculateFrustum(gm.getRenderer().getProjectionMatrix(), gm.getCamera());
 		gm.getRenderer().prepare();
 		worlds.getActiveWorld().updateChunksOcclusion(gm);
-		
+
 		gm.getDeferredShadingRenderer().getPost_fbo().begin();
 		gm.getRenderer().prepare();
 		gm.getSkyboxRenderer().render(VoxelVariables.RED, VoxelVariables.GREEN, VoxelVariables.BLUE, delta, gm);
@@ -108,9 +108,10 @@ public class InPauseState extends State {
 
 		gm.getRenderer().prepare();
 		gm.getDeferredShadingRenderer().render(gm);
-		
+
 		Display.beingNVGFrame();
 		gm.getMenuSystem().pauseMenu.render();
+		MenuRendering.renderMouse();
 		Display.endNVGFrame();
 	}
 

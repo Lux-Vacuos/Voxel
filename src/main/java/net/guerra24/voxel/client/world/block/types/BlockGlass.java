@@ -52,7 +52,7 @@ public class BlockGlass extends IBlock {
 	public boolean usesSingleModel() {
 		return false;
 	}
-	
+
 	@Override
 	public Vector8f texCoordsUp() {
 		return BlocksResources.tessellatorTextureAtlas.getTextureCoords("Glass");

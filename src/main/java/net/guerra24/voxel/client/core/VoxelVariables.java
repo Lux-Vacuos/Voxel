@@ -46,7 +46,7 @@ public class VoxelVariables {
 	public static final String apiVersion = "0.0.6";
 	public static final int apiVersionNum = 000006;
 	public static final String state = "ALPHA";
-	public static final int build = 140;
+	public static final int build = 141;
 	public static int FOV = 90;
 	public static int WIDTH = 1280;
 	public static int HEIGHT = 720;
@@ -59,6 +59,11 @@ public class VoxelVariables {
 	public static boolean autostart = false;
 	public static boolean christmas = false;
 	public static final String settings = "assets/game/settings.conf";
+	
+	/**
+	 * External Data
+	 */
+	public static final String web = "http://guerra24.net/";
 	/**
 	 * Graphic Settings
 	 */

@@ -82,5 +82,4 @@ public class BlockStone extends IBlock {
 	public Vector8f texCoordsLeft() {
 		return BlocksResources.tessellatorTextureAtlas.getTextureCoords("Stone");
 	}
-
 }

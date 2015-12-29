@@ -70,7 +70,7 @@ void main(void) {
 	
 	out_Color[0] = vec4(0.0, 0.266, 0.635, 0.0);  
 	out_Color[1] = vec4(pass_position.xyz, 0.0);
-	out_Color[2] = vec4(sin(pass_position.x + moveFactor) * 0.05, 1.0, cos(pass_position.z + moveFactor) * 0.02, 0.0);
+	out_Color[2] = vec4(sin(pass_position.x + moveFactor) * 0.05, 1.0, cos(pass_position.z - moveFactor) * 0.02, 0.0);
 	out_Color[3] = vec4(1.0,1.0,0.0,shadow);
 	out_Color[4] = vec4(0.0,0.0,0.0,0.0);
 

@@ -175,7 +175,7 @@ public class Maths {
 		float randomNum = (rand.nextFloat() - 0.5f) / 16;
 		return randomNum;
 	}
-	
+
 	public static void sortLowToHigh(List<Chunk> list) {
 		for (int i = 1; i < list.size(); i++) {
 			Chunk item = list.get(i);

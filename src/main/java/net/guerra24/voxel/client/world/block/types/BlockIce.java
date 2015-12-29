@@ -82,5 +82,4 @@ public class BlockIce extends IBlock {
 	public Vector8f texCoordsLeft() {
 		return BlocksResources.tessellatorTextureAtlas.getTextureCoords("Ice");
 	}
-
 }

@@ -82,4 +82,5 @@ public class BlockTorch extends IBlock {
 	public Vector8f texCoordsLeft() {
 		return null;
 	}
+
 }

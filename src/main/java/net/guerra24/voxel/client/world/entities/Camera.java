@@ -79,7 +79,7 @@ public class Camera extends Entity {
 	int id = 0;
 
 	public Camera(Matrix4f proj) {
-		this.speed = 1f;
+		this.speed = 3f;
 		center = new Vector2f(Display.getWidth() / 2, Display.getHeight() / 2);
 		velocityComponent = new VelocityComponent();
 		velocityComponent.y = -9.8f;

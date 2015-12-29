@@ -30,6 +30,7 @@ import org.lwjgl.nanovg.NVGColor;
 import org.lwjgl.nanovg.NVGPaint;
 
 import net.guerra24.voxel.client.graphics.opengl.Display;
+import net.guerra24.voxel.client.input.Mouse;
 
 import static org.lwjgl.system.MemoryUtil.*;
 
@@ -54,6 +55,16 @@ public class MenuRendering {
 		color.b(b / 255.0f);
 		color.a(a / 255.0f);
 		return color;
+	}
+
+	public static void renderLabel(String text, String font, float x, float y, float w, float h, float fontSize) {
+		long vg = Display.getVg();
+		nvgFontSize(vg, fontSize);
+		nvgFontFace(vg, font);
+		nvgFillColor(vg, rgba(255, 255, 255, 128, colorA));
+
+		nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
+		nvgText(vg, x, y + h * 0.5f, text, NULL);
 	}
 
 	public static void renderWindow(String title, String font, float x, float y, float w, float h) {
@@ -113,18 +124,79 @@ public class MenuRendering {
 		nvgRestore(vg);
 	}
 
+	public static void renderMouse() {
+		float x = Mouse.getX() - 8;
+		float y = -Mouse.getY() - 8 + Display.getHeight();
+		float w = 16;
+		float h = 16;
+		NVGPaint bg = paintA;
+		long vg = Display.getVg();
+		nvgBoxGradient(vg, x + 1, y + 1 + 1.5f, w - 2, h - 2, 3, 4, rgba(255, 255, 255, 200, colorA),
+				rgba(32, 32, 32, 32, colorB), bg);
+		nvgBeginPath(vg);
+		nvgRoundedRect(vg, x + 1, y + 1, w - 2, h - 2, 4 - 1);
+		nvgFillPaint(vg, bg);
+		nvgFill(vg);
+
+		nvgBeginPath(vg);
+		nvgRoundedRect(vg, x + 0.5f, y + 0.5f, w - 1, h - 1, 4 - 0.5f);
+		nvgStrokeColor(vg, rgba(0, 0, 0, 48, colorA));
+		nvgStroke(vg);
+	}
+
+	public static void renderSlider(float pos, float x, float y, float w, float h) {
+		NVGPaint bg = paintA, knob = paintB;
+		float cy = y + (int) (h * 0.5f);
+		float kr = (int) (h * 0.25f);
+		long vg = Display.getVg();
+
+		nvgSave(vg);
+		// nvgClearState(vg);
+
+		// Slot
+		nvgBoxGradient(vg, x, cy - 2 + 1, w, 4, 2, 2, rgba(0, 0, 0, 32, colorA), rgba(0, 0, 0, 128, colorB), bg);
+		nvgBeginPath(vg);
+		nvgRoundedRect(vg, x, cy - 2, w, 4, 2);
+		nvgFillPaint(vg, bg);
+		nvgFill(vg);
+
+		// Knob Shadow
+		nvgRadialGradient(vg, x + (int) (pos * w), cy + 1, kr - 3, kr + 3, rgba(0, 0, 0, 64, colorA),
+				rgba(0, 0, 0, 0, colorB), bg);
+		nvgBeginPath(vg);
+		nvgRect(vg, x + (int) (pos * w) - kr - 5, cy - kr - 5, kr * 2 + 5 + 5, kr * 2 + 5 + 5 + 3);
+		nvgCircle(vg, x + (int) (pos * w), cy, kr);
+		nvgPathWinding(vg, NVG_HOLE);
+		nvgFillPaint(vg, bg);
+		nvgFill(vg);
+
+		// Knob
+		nvgLinearGradient(vg, x, cy - kr, x, cy + kr, rgba(255, 255, 255, 255, colorA),
+				rgba(100, 100, 100, 255, colorB), knob);
+		nvgBeginPath(vg);
+		nvgCircle(vg, x + (int) (pos * w), cy, kr - 1);
+		nvgFillColor(vg, rgba(40, 43, 48, 255, colorA));
+		nvgFill(vg);
+		nvgFillPaint(vg, knob);
+		nvgFill(vg);
+
+		nvgBeginPath(vg);
+		nvgCircle(vg, x + (int) (pos * w), cy, kr - 0.5f);
+		nvgStrokeColor(vg, rgba(0, 0, 0, 92, colorA));
+		nvgStroke(vg);
+
+		nvgRestore(vg);
+	}
+
 	public static void renderText(String text, String font, float x, float y, float fontSize) {
-		ByteBuffer textEncoded = memEncodeASCII(text, BufferAllocator.MALLOC);
 		long vg = Display.getVg();
 		nvgFontSize(vg, fontSize);
 		nvgFontFace(vg, font);
 		nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
 		nvgFillColor(vg, rgba(0, 0, 0, 160, colorA));
-		nvgText(vg, x, y, textEncoded, NULL);
+		nvgText(vg, x, y, text, NULL);
 		nvgFillColor(vg, rgba(255, 255, 255, 160, colorA));
-		nvgText(vg, x, y, textEncoded, NULL);
-
-		memFree(textEncoded);
+		nvgText(vg, x, y, text, NULL);
 	}
 
 	public static void renderButton(ByteBuffer preicon, String text, String font, float x, float y, float w, float h,

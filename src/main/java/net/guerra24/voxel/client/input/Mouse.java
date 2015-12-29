@@ -114,8 +114,13 @@ public class Mouse {
 
 	public static void setGrabbed(boolean grab) {
 		GLFW.glfwSetInputMode(Display.getWindow(), GLFW.GLFW_CURSOR,
-				grab ? GLFW.GLFW_CURSOR_DISABLED : GLFW.GLFW_CURSOR_NORMAL);
+				grab ? GLFW.GLFW_CURSOR_DISABLED : GLFW.GLFW_CURSOR_HIDDEN);
 		grabbed = grab;
+	}
+	
+	public static void setHidden(boolean hidden){
+		GLFW.glfwSetInputMode(Display.getWindow(), GLFW.GLFW_CURSOR,
+				hidden ? GLFW.GLFW_CURSOR_HIDDEN : GLFW.GLFW_CURSOR_NORMAL);
 	}
 
 	public static boolean isGrabbed() {

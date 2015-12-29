@@ -37,6 +37,7 @@ import net.guerra24.voxel.client.api.VersionException;
 import net.guerra24.voxel.client.bootstrap.Bootstrap;
 import net.guerra24.voxel.client.graphics.TextMasterRenderer;
 import net.guerra24.voxel.client.graphics.opengl.Display;
+import net.guerra24.voxel.client.input.Mouse;
 import net.guerra24.voxel.client.network.DedicatedClient;
 import net.guerra24.voxel.client.resources.GameResources;
 import net.guerra24.voxel.client.util.Logger;
@@ -143,6 +144,7 @@ public class Voxel {
 			gameResources.getSoundSystem().play("menu1");
 		else
 			gameResources.getSoundSystem().play("menu2");
+		Mouse.setHidden(true);
 	}
 
 	/**

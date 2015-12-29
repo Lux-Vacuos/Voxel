@@ -111,6 +111,10 @@ public class Loader {
 	 * Texture List
 	 */
 	private List<Integer> textures = new ArrayList<Integer>();
+	/*
+	 * NanoVG Fonts
+	 */
+	private List<ByteBuffer> nvgFont = new ArrayList<ByteBuffer>();
 	private OBJLoader objLoader;
 
 	public Loader() {
@@ -286,8 +290,9 @@ public class Loader {
 		Logger.log("Loading NVGFont: " + filename + ".ttf");
 		int font = 0;
 		try {
-			font = nvgCreateFontMem(Display.getVg(), name,
-					ioResourceToByteBuffer("assets/fonts/" + filename + ".ttf", 150 * 1024), 0);
+			ByteBuffer buffer = ioResourceToByteBuffer("assets/fonts/" + filename + ".ttf", 150 * 1024);
+			nvgFont.add(buffer);
+			font = nvgCreateFontMem(Display.getVg(), name, buffer, 0);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
