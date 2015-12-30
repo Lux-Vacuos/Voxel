@@ -73,6 +73,7 @@ public class OptionsState extends State {
 				states.setState(states.getOldState());
 			}
 		}
+		gm.getMenuSystem().optionsMenu.update();
 	}
 
 	@Override

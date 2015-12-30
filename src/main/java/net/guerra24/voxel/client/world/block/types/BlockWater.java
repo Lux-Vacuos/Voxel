@@ -24,6 +24,8 @@
 
 package net.guerra24.voxel.client.world.block.types;
 
+import com.badlogic.gdx.math.collision.BoundingBox;
+
 import net.guerra24.voxel.client.resources.models.WaterTile;
 import net.guerra24.voxel.client.world.block.BlockEntity;
 import net.guerra24.voxel.client.world.block.BlocksResources;
@@ -81,6 +83,11 @@ public class BlockWater extends IBlock {
 	@Override
 	public Vector8f texCoordsLeft() {
 		return BlocksResources.tessellatorTextureAtlas.getTextureCoords("Water");
+	}
+
+	@Override
+	public BoundingBox getBoundingBox(Vector3f pos) {
+		return null;
 	}
 
 }

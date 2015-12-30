@@ -34,6 +34,7 @@ public class GameEntity extends Entity {
 	private TexturedModel model;
 	private PositionComponent positionComponent;
 	private VelocityComponent velocityComponent;
+	private CollisionComponent collisionComponent;
 	private float rotX, rotY, rotZ;
 	private float scale;
 	private int visibility;
@@ -42,24 +43,29 @@ public class GameEntity extends Entity {
 		velocityComponent = new VelocityComponent();
 		positionComponent = new PositionComponent();
 		positionComponent.position = new Vector3f(position);
+		collisionComponent = new CollisionComponent();
 		this.add(positionComponent);
 		this.add(velocityComponent);
+		this.add(collisionComponent);
 		this.model = model;
 		this.rotX = rotX;
 		this.rotY = rotY;
 		this.rotZ = rotZ;
 		this.scale = scale;
 	}
-	
-	public GameEntity(TexturedModel model, Vector3f position,float vx, float vy, float vz, float rotX, float rotY, float rotZ, float scale) {
+
+	public GameEntity(TexturedModel model, Vector3f position, float vx, float vy, float vz, float rotX, float rotY,
+			float rotZ, float scale) {
 		velocityComponent = new VelocityComponent();
 		positionComponent = new PositionComponent();
+		collisionComponent = new CollisionComponent();
 		positionComponent.position = new Vector3f(position);
 		velocityComponent.x = vx;
 		velocityComponent.y = vy;
 		velocityComponent.z = vz;
 		this.add(positionComponent);
 		this.add(velocityComponent);
+		this.add(collisionComponent);
 		this.model = model;
 		this.rotX = rotX;
 		this.rotY = rotY;

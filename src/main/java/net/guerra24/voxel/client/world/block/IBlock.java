@@ -24,6 +24,8 @@
 
 package net.guerra24.voxel.client.world.block;
 
+import com.badlogic.gdx.math.collision.BoundingBox;
+
 import net.guerra24.voxel.client.resources.models.WaterTile;
 import net.guerra24.voxel.universal.util.vector.Vector3f;
 import net.guerra24.voxel.universal.util.vector.Vector8f;
@@ -43,7 +45,9 @@ public abstract class IBlock {
 	public abstract Vector8f texCoordsRight();
 
 	public abstract Vector8f texCoordsLeft();
-
+	
+	public abstract BoundingBox getBoundingBox(Vector3f pos);
+	
 	/**
 	 * Get the WaterTile of the Block
 	 * 

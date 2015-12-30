@@ -48,7 +48,7 @@ import net.guerra24.voxel.client.world.block.types.BlockWood;
  * @author Guerra24 <pablo230699@hotmail.com>
  * @category World
  */
-public abstract class Block {
+public class Block {
 	/**
 	 * Blocks Data
 	 */

@@ -51,9 +51,9 @@ import net.guerra24.voxel.client.sound.soundsystem.SoundSystemConfig;
 import net.guerra24.voxel.client.sound.soundsystem.SoundSystemException;
 import net.guerra24.voxel.client.sound.soundsystem.codecs.CodecJOgg;
 import net.guerra24.voxel.client.util.Logger;
-import net.guerra24.voxel.client.world.PhysicsSystem;
 import net.guerra24.voxel.client.world.block.Block;
 import net.guerra24.voxel.client.world.entities.Camera;
+import net.guerra24.voxel.client.world.physics.PhysicsSystem;
 import net.guerra24.voxel.universal.resources.UniversalResources;
 import net.guerra24.voxel.universal.util.vector.Vector3f;
 

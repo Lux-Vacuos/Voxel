@@ -24,7 +24,27 @@
 
 package net.guerra24.voxel.client.world.entities;
 
-import static net.guerra24.voxel.client.input.Keyboard.*;
+import static net.guerra24.voxel.client.input.Keyboard.KEY_0;
+import static net.guerra24.voxel.client.input.Keyboard.KEY_1;
+import static net.guerra24.voxel.client.input.Keyboard.KEY_2;
+import static net.guerra24.voxel.client.input.Keyboard.KEY_3;
+import static net.guerra24.voxel.client.input.Keyboard.KEY_4;
+import static net.guerra24.voxel.client.input.Keyboard.KEY_5;
+import static net.guerra24.voxel.client.input.Keyboard.KEY_6;
+import static net.guerra24.voxel.client.input.Keyboard.KEY_7;
+import static net.guerra24.voxel.client.input.Keyboard.KEY_8;
+import static net.guerra24.voxel.client.input.Keyboard.KEY_9;
+import static net.guerra24.voxel.client.input.Keyboard.KEY_A;
+import static net.guerra24.voxel.client.input.Keyboard.KEY_D;
+import static net.guerra24.voxel.client.input.Keyboard.KEY_I;
+import static net.guerra24.voxel.client.input.Keyboard.KEY_LCONTROL;
+import static net.guerra24.voxel.client.input.Keyboard.KEY_LSHIFT;
+import static net.guerra24.voxel.client.input.Keyboard.KEY_O;
+import static net.guerra24.voxel.client.input.Keyboard.KEY_S;
+import static net.guerra24.voxel.client.input.Keyboard.KEY_SPACE;
+import static net.guerra24.voxel.client.input.Keyboard.KEY_T;
+import static net.guerra24.voxel.client.input.Keyboard.KEY_W;
+import static net.guerra24.voxel.client.input.Keyboard.isKeyDown;
 import static net.guerra24.voxel.client.input.Mouse.getDX;
 import static net.guerra24.voxel.client.input.Mouse.getDY;
 import static net.guerra24.voxel.client.input.Mouse.isButtonDown;
@@ -35,6 +55,7 @@ import com.badlogic.ashley.core.Entity;
 
 import net.guerra24.voxel.client.core.VoxelVariables;
 import net.guerra24.voxel.client.graphics.opengl.Display;
+import net.guerra24.voxel.client.input.Keyboard;
 import net.guerra24.voxel.client.network.DedicatedClient;
 import net.guerra24.voxel.client.resources.GameResources;
 import net.guerra24.voxel.client.resources.Ray;
@@ -72,6 +93,7 @@ public class Camera extends Entity {
 
 	private VelocityComponent velocityComponent;
 	private PositionComponent positionComponent;
+	private CollisionComponent collisionComponent;
 
 	public boolean isMoved = false;
 	public float depth = 0;
@@ -84,8 +106,10 @@ public class Camera extends Entity {
 		velocityComponent = new VelocityComponent();
 		velocityComponent.y = -9.8f;
 		positionComponent = new PositionComponent();
+		collisionComponent = new CollisionComponent();
 		this.add(velocityComponent);
 		this.add(positionComponent);
+		this.add(collisionComponent);
 		ray = new Ray(proj, Maths.createViewMatrix(this), center, Display.getWidth(), Display.getHeight());
 	}
 
@@ -169,7 +193,7 @@ public class Camera extends Entity {
 			isMoved = true;
 		}
 		if (isKeyDown(KEY_SPACE)) {
-			velocityComponent.y = 16;
+			velocityComponent.y = 12;
 		}
 		if (isKeyDown(KEY_LSHIFT)) {
 			multiplierMovement = 1;
@@ -181,6 +205,9 @@ public class Camera extends Entity {
 		} else {
 			multiplierMovement = 5;
 		}
+
+		if (isKeyDown(Keyboard.KEY_Y))
+			System.out.println(positionComponent.position);
 
 		if (isKeyDown(KEY_T)) {
 			gm.getEngine()
@@ -217,7 +244,6 @@ public class Camera extends Entity {
 
 		updateDebug(world);
 		updateRay(gm, false);
-
 	}
 
 	public void updateRay(GameResources gm, boolean invert) {
@@ -326,6 +352,10 @@ public class Camera extends Entity {
 
 	public Ray getRay() {
 		return ray;
+	}
+
+	public CollisionComponent getCollisionComponent() {
+		return collisionComponent;
 	}
 
 }

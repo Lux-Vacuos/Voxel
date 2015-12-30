@@ -34,6 +34,9 @@ import static org.lwjgl.opengl.GL15.glEndQuery;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.math.collision.BoundingBox;
+
 import net.guerra24.voxel.client.core.VoxelVariables;
 import net.guerra24.voxel.client.particle.ParticlePoint;
 import net.guerra24.voxel.client.resources.GameResources;
@@ -68,6 +71,7 @@ public class Chunk {
 	private transient List<Object> blocksMeshtemp;
 	private transient List<ParticlePoint> particlePoints;
 	private transient List<WaterTile> waterTiles;
+	private transient List<BoundingBox> boundingBoxs;
 	private transient int sizeX, sizeY, sizeZ;
 	transient boolean readyToRender = true;
 	private transient Tessellator tess;
@@ -127,6 +131,7 @@ public class Chunk {
 		blocksMeshtemp = new ArrayList<Object>();
 		particlePoints = new ArrayList<ParticlePoint>();
 		waterTiles = new ArrayList<WaterTile>();
+		boundingBoxs = new ArrayList<BoundingBox>();
 		sizeX = VoxelVariables.CHUNK_SIZE;
 		sizeY = VoxelVariables.CHUNK_HEIGHT;
 		sizeZ = VoxelVariables.CHUNK_SIZE;
@@ -234,7 +239,8 @@ public class Chunk {
 			int height = (int) (64 * Maths.clamp(tempHeight));
 			int h = getLocalBlock(xx, height - 1, zz);
 			if (h == Block.Grass.getId() || h == Block.Dirt.getId())
-				world.getChunkGenerator().addTree(world, xx + cx * 16, height, zz + cz * 16, Maths.randInt(4, 10), world.getSeed());
+				world.getChunkGenerator().addTree(world, xx + cx * 16, height, zz + cz * 16, Maths.randInt(4, 10),
+						world.getSeed());
 		}
 		decorated = true;
 	}
@@ -278,6 +284,8 @@ public class Chunk {
 								cullFaceNorth(x + cx * sizeX, y + cy * sizeY, z + cz * sizeZ, world),
 								cullFaceSouth(x + cx * sizeX, y + cy * sizeY, z + cz * sizeZ, world),
 								Block.getBlock(blocks[x][y][z]), getTorchLight(x, y, z));
+						boundingBoxs.add(new BoundingBox(new Vector3(x + cx * sizeX, y + cy * sizeY, z + cz * sizeZ),
+								new Vector3(x + 1f + cx * sizeX, y + 1f + cy * sizeY, z + 1f + cz * sizeZ)));
 					} else if (Block.getBlock(blocks[x][y][z]).usesSingleModel()) {
 					} else if (Block.getBlock(blocks[x][y][z]) == Block.Water) {
 					}
@@ -532,6 +540,10 @@ public class Chunk {
 			glEnable(GL_CULL_FACE);
 			glEndQuery(GL_SAMPLES_PASSED);
 		}
+	}
+
+	public List<BoundingBox> getBoundingBoxs() {
+		return boundingBoxs;
 	}
 
 	private void clear() {

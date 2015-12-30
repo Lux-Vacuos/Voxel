@@ -36,6 +36,8 @@ public class OptionsMenu {
 	private Button shadowsButton;
 	private Button godraysButton;
 
+	private Slider slider;
+
 	private float xScale, yScale;
 
 	public OptionsMenu(GameResources gm) {
@@ -43,10 +45,16 @@ public class OptionsMenu {
 		float height = VoxelVariables.HEIGHT;
 		yScale = height / 720f;
 		xScale = width / 1280f;
+		slider = new Slider(900 * xScale, 540 * yScale, 315 * xScale, 80 * yScale);
 		exitButton = new Button(new Vector2f(530 * xScale, 35 * yScale), new Vector2f(215 * xScale, 80 * yScale));
 		godraysButton = new Button(new Vector2f(32 * xScale, 560 * yScale), new Vector2f(215 * xScale, 80 * yScale));
 		shadowsButton = new Button(new Vector2f(32 * xScale, 460 * yScale), new Vector2f(215 * xScale, 80 * yScale));
 		dofButton = new Button(new Vector2f(32 * xScale, 360 * yScale), new Vector2f(215 * xScale, 80 * yScale));
+	}
+
+	public void update() {
+		slider.setPos(VoxelVariables.radius / 32f);
+		slider.update();
 	}
 
 	public void render() {
@@ -80,8 +88,12 @@ public class OptionsMenu {
 		}
 		MenuRendering.renderButton(null, "Back", "Roboto-Bold", 528 * xScale, 607 * yScale, 215 * xScale, 80 * yScale,
 				MenuRendering.rgba(255, 255, 255, 255, MenuRendering.colorA), exitButton.insideButton());
-		MenuRendering.renderLabel("Draw Distance: " + VoxelVariables.radius, "Roboto-Bold", 970 * xScale, 90 * yScale, 315 * xScale, 20 * yScale,
-				25f * yScale);
+		MenuRendering.renderLabel("Draw Distance: " + VoxelVariables.radius, "Roboto-Bold", 970 * xScale, 90 * yScale,
+				315 * xScale, 20 * yScale, 25f * yScale);
+		int r = (int) (slider.getPos() * 32f);
+		if (r < 2)
+			r = 2;
+		VoxelVariables.radius = r;
 		MenuRendering.renderSlider(VoxelVariables.radius / 32f, 900 * xScale, 100 * yScale, 315 * xScale, 80 * yScale);
 	}
 
