@@ -25,33 +25,49 @@
 #version 330 core
 
 /*--------------------------------------------------------*/
-/*--------------COMPOSITE 3 IN-OUT-UNIFORMS---------------*/
+/*--------------COMPOSITE 6 IN-OUT-UNIFORMS---------------*/
 /*--------------------------------------------------------*/
 
 in vec2 textureCoords;
+in vec4 posPos;
 
 out vec4 out_Color;
 
+uniform vec2 sunPositionInScreen;
 uniform vec2 resolution;
-uniform sampler2D composite0;
+uniform sampler2D gData0;
 
 /*--------------------------------------------------------*/
-/*------------------COMPOSITE 3 CONFIG--------------------*/
+/*------------------COMPOSITE 6 CONFIG--------------------*/
 /*--------------------------------------------------------*/
 
 /*--------------------------------------------------------*/
-/*------------------COMPOSITE 3 CODE----------------------*/
+/*------------------COMPOSITE 6 CODE----------------------*/
 /*--------------------------------------------------------*/
 
-const float weight[4] = float[] (0.227027, 0.1945946, 0.1216216, 0.154054);
 
 void main(void){
 	vec2 texcoord = textureCoords;
-	vec2 tex_offset = 1.0 / (resolution/4);
-    vec3 result = texture(composite0, texcoord).rgb * weight[0];
-    for(int i = 1; i < 4; ++i) {
-        result += texture(composite0, texcoord + vec2(tex_offset.x * i, 0.0)).rgb * weight[i];
-        result += texture(composite0, texcoord - vec2(tex_offset.x * i, 0.0)).rgb * weight[i];
+	vec4 image = vec4(0.0);
+	vec4 data = texture(gData0, texcoord);
+    if(data.b == 1){
+    	if(gl_FragCoord.x <= sunPositionInScreen.x + 60 && gl_FragCoord.x >= sunPositionInScreen.x - 60 && gl_FragCoord.y <= sunPositionInScreen.y + 60 && gl_FragCoord.y >= sunPositionInScreen.y - 60){
+    		image.rgb = mix(image.rgb,vec3(1, 0.870588, 0.678431),0.5);
+	    	image.a = 0.2;
+    	}
+    	if(gl_FragCoord.x <= sunPositionInScreen.x + 40 && gl_FragCoord.x >= sunPositionInScreen.x - 40 && gl_FragCoord.y <= sunPositionInScreen.y + 40 && gl_FragCoord.y >= sunPositionInScreen.y - 40){
+    		image.rgb = mix(image.rgb,vec3(1, 0.870588, 0.678431),0.8);
+	    	image.a = 0.5;
+    	}
+    	if(gl_FragCoord.x <= sunPositionInScreen.x + 30 && gl_FragCoord.x >= sunPositionInScreen.x - 30 && gl_FragCoord.y <= sunPositionInScreen.y + 30 && gl_FragCoord.y >= sunPositionInScreen.y - 30){
+    		image.rgb = vec3(1, 0.870588, 0.678431);
+	    	image.a = 1;
+    	}
+    	if(gl_FragCoord.x <= sunPositionInScreen.x + 20 && gl_FragCoord.x >= sunPositionInScreen.x - 20 && gl_FragCoord.y <= sunPositionInScreen.y + 20 && gl_FragCoord.y >= sunPositionInScreen.y - 20){
+    		image.rgb = vec3(1,1,1);
+    		image.a = 1;
+    	}
     }
-    out_Color.rgb = result;
+    out_Color = image;
+
 }

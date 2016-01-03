@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015 Guerra24
+ * Copyright (c) 2015-2016 Guerra24
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,13 +24,19 @@
 
 package net.guerra24.voxel.client.graphics;
 
-import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL13.*;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
+import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
+import static org.lwjgl.opengl.GL11.glBindTexture;
+import static org.lwjgl.opengl.GL11.glDrawArrays;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
+import static org.lwjgl.opengl.GL13.glActiveTexture;
 import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
 import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 
 import java.util.List;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import net.guerra24.voxel.client.core.VoxelVariables;
 import net.guerra24.voxel.client.graphics.shaders.WaterBasicShader;
@@ -58,6 +64,8 @@ public class WaterRenderer {
 	private WaterBasicShader basicShader;
 	private float moveFactor = 0;
 
+	private Queue<WaterTile> tempQueue;
+
 	/**
 	 * Constructor, Initializes the Water Shaders, Textures and VAOs
 	 * 
@@ -79,6 +87,7 @@ public class WaterRenderer {
 		basicShader.loadProjectionMatrix(projectionMatrix);
 		basicShader.stop();
 		setUpVAO(gm.getLoader());
+		tempQueue = new ConcurrentLinkedQueue<>();
 	}
 
 	/**
@@ -91,12 +100,14 @@ public class WaterRenderer {
 	 */
 	public void render(List<WaterTile> waters, GameResources gm) {
 		prepareRender(gm);
-		for (WaterTile tile : waters) {
+		tempQueue.addAll(waters);
+		for (WaterTile tile : tempQueue) {
 			Matrix4f modelMatrix = Maths.createTransformationMatrix(
 					new Vector3f(tile.getX(), tile.getHeight(), tile.getZ()), 0, 0, 0, WaterTile.TILE_SIZE);
 			shader.loadModelMatrix(modelMatrix);
 			glDrawArrays(GL_TRIANGLES, 0, quad.getVertexCount());
 		}
+		tempQueue.clear();
 		unbind();
 	}
 
@@ -110,12 +121,14 @@ public class WaterRenderer {
 	 */
 	public void renderOcclusion(List<WaterTile> waters, GameResources gm) {
 		prepareRenderOcclusion(gm);
-		for (WaterTile tile : waters) {
+		tempQueue.addAll(waters);
+		for (WaterTile tile : tempQueue) {
 			Matrix4f modelMatrix = Maths.createTransformationMatrix(
 					new Vector3f(tile.getX(), tile.getHeight(), tile.getZ()), 0, 0, 0, WaterTile.TILE_SIZE);
 			basicShader.loadModelMatrix(modelMatrix);
 			glDrawArrays(GL_TRIANGLES, 0, quad.getVertexCount());
 		}
+		tempQueue.clear();
 		unbindOcclusion();
 	}
 
@@ -184,39 +197,22 @@ public class WaterRenderer {
 	 *            Game Loader
 	 */
 	private void setUpVAO(Loader loader) {
-		float[] vertices = {
-				-1,-1,
-				-1,0,
-				0,-1,
-				
-				-1,0,
-				0,0,
-				0,-1,
-				
-				-1,0,
-				-1,1,
-				0,0,
-				
-				-1,1,
-				0,1,
-				0,0,
-				
-				0,0,
-				0,1,
-				1,0,
-				
-				0,1,
-				1,1,
-				1,0,
-				
-				0,-1,
-				0,0,
-				1,-1,
-				
-				0,0,
-				1,0,
-				1,-1
-				
+		float[] vertices = { -1, -1, -1, 0, 0, -1,
+
+				-1, 0, 0, 0, 0, -1,
+
+				-1, 0, -1, 1, 0, 0,
+
+				-1, 1, 0, 1, 0, 0,
+
+				0, 0, 0, 1, 1, 0,
+
+				0, 1, 1, 1, 1, 0,
+
+				0, -1, 0, 0, 1, -1,
+
+				0, 0, 1, 0, 1, -1
+
 		};
 		quad = loader.loadToVAO(vertices, 2);
 	}

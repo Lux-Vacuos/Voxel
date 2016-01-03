@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015 Guerra24
+ * Copyright (c) 2015-2016 Guerra24
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -73,6 +73,7 @@ public class DeferredShadingRenderer {
 	private final DeferredShadingShader shader3;
 	private final DeferredShadingShader shader4;
 	private final DeferredShadingShader shader5;
+	private final DeferredShadingShader shader6;
 	private final DeferredShadingShader shaderFinal0;
 	private final DeferredShadingFBO postProcessingFBO;
 	private final FrameBuffer aux0FBO;
@@ -133,6 +134,12 @@ public class DeferredShadingRenderer {
 		shader5.connectTextureUnits();
 		shader5.loadSkyColor(skyColor);
 		shader5.stop();
+		shader6 = new DeferredShadingShader("6");
+		shader6.start();
+		shader6.loadTransformation(Maths.createTransformationMatrix(new Vector2f(0, 0), new Vector2f(1, 1)));
+		shader6.connectTextureUnits();
+		shader6.loadSkyColor(skyColor);
+		shader6.stop();
 		shaderFinal0 = new DeferredShadingShader("Final0");
 		shaderFinal0.start();
 		shaderFinal0.loadTransformation(Maths.createTransformationMatrix(new Vector2f(0, 0), new Vector2f(1, 1)));
@@ -158,15 +165,15 @@ public class DeferredShadingRenderer {
 	public void render(GameResources gm) {
 		aux4FBO.begin(Display.getWidth(), Display.getHeight());
 		gm.getRenderer().prepare();
-		shader5.start();
-		shader5.loadSettings();
-		shader5.loadUnderWater(gm.getCamera().isUnderWater());
-		shader5.loadMotionBlurData(gm.getRenderer().getProjectionMatrix(), gm.getCamera(), previousViewMatrix,
+		shader6.start();
+		shader6.loadSettings();
+		shader6.loadUnderWater(gm.getCamera().isUnderWater());
+		shader6.loadMotionBlurData(gm.getRenderer().getProjectionMatrix(), gm.getCamera(), previousViewMatrix,
 				previousCameraPosition);
-		shader5.loadResolution(new Vector2f(Display.getWidth(), Display.getHeight()));
-		shader5.loadLightPosition(gm.getLightPos(), gm.getInvertedLightPosition());
-		shader5.loadviewMatrix(gm.getCamera());
-		shader5.loadSunPosition(
+		shader6.loadResolution(new Vector2f(Display.getWidth(), Display.getHeight()));
+		shader6.loadLightPosition(gm.getLightPos(), gm.getInvertedLightPosition());
+		shader6.loadviewMatrix(gm.getCamera());
+		shader6.loadSunPosition(
 				Maths.convertTo2F(new Vector3f(gm.getLightPos()), gm.getRenderer().getProjectionMatrix(),
 						Maths.createViewMatrix(gm.getCamera()), Display.getWidth(), Display.getHeight()));
 		glBindVertexArray(quad.getVaoID());
@@ -186,10 +193,45 @@ public class DeferredShadingRenderer {
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, quad.getVertexCount());
 		glDisableVertexAttribArray(0);
 		glBindVertexArray(0);
-		shader5.stop();
+		shader6.stop();
 		aux4FBO.end();
 
 		aux3FBO.begin(Display.getWidth(), Display.getHeight());
+		gm.getRenderer().prepare();
+		shader5.start();
+		shader5.loadUnderWater(gm.getCamera().isUnderWater());
+		shader5.loadMotionBlurData(gm.getRenderer().getProjectionMatrix(), gm.getCamera(), previousViewMatrix,
+				previousCameraPosition);
+		shader5.loadLightPosition(gm.getLightPos(), gm.getInvertedLightPosition());
+		shader5.loadviewMatrix(gm.getCamera());
+		shader5.loadResolution(new Vector2f(Display.getWidth(), Display.getHeight()));
+		shader5.loadSettings();
+		shader5.loadSunPosition(
+				Maths.convertTo2F(new Vector3f(gm.getLightPos()), gm.getRenderer().getProjectionMatrix(),
+						Maths.createViewMatrix(gm.getCamera()), Display.getWidth(), Display.getHeight()));
+		glBindVertexArray(quad.getVaoID());
+		glEnableVertexAttribArray(0);
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, postProcessingFBO.getDiffuseTex());
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, postProcessingFBO.getPositionTex());
+		glActiveTexture(GL_TEXTURE2);
+		glBindTexture(GL_TEXTURE_2D, postProcessingFBO.getNormalTex());
+		glActiveTexture(GL_TEXTURE3);
+		glBindTexture(GL_TEXTURE_2D, postProcessingFBO.getDepthTex());
+		glActiveTexture(GL_TEXTURE4);
+		glBindTexture(GL_TEXTURE_2D, postProcessingFBO.getData0Tex());
+		glActiveTexture(GL_TEXTURE5);
+		glBindTexture(GL_TEXTURE_2D, postProcessingFBO.getData1Tex());
+		glActiveTexture(GL_TEXTURE6);
+		glBindTexture(GL_TEXTURE_2D, aux4FBO.getTexture());
+		glDrawArrays(GL_TRIANGLE_STRIP, 0, quad.getVertexCount());
+		glDisableVertexAttribArray(0);
+		glBindVertexArray(0);
+		shader5.stop();
+		aux3FBO.end();
+
+		aux2FBO.begin(Display.getWidth(), Display.getHeight());
 		gm.getRenderer().prepare();
 		shader4.start();
 		shader4.loadUnderWater(gm.getCamera().isUnderWater());
@@ -217,14 +259,14 @@ public class DeferredShadingRenderer {
 		glActiveTexture(GL_TEXTURE5);
 		glBindTexture(GL_TEXTURE_2D, postProcessingFBO.getData1Tex());
 		glActiveTexture(GL_TEXTURE6);
-		glBindTexture(GL_TEXTURE_2D, aux4FBO.getTexture());
+		glBindTexture(GL_TEXTURE_2D, aux3FBO.getTexture());
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, quad.getVertexCount());
 		glDisableVertexAttribArray(0);
 		glBindVertexArray(0);
 		shader4.stop();
-		aux3FBO.end();
+		aux2FBO.end();
 
-		aux2FBO.begin(Display.getWidth(), Display.getHeight());
+		aux4FBO.begin(Display.getWidth(), Display.getHeight());
 		gm.getRenderer().prepare();
 		shader3.start();
 		shader3.loadUnderWater(gm.getCamera().isUnderWater());
@@ -252,12 +294,12 @@ public class DeferredShadingRenderer {
 		glActiveTexture(GL_TEXTURE5);
 		glBindTexture(GL_TEXTURE_2D, postProcessingFBO.getData1Tex());
 		glActiveTexture(GL_TEXTURE6);
-		glBindTexture(GL_TEXTURE_2D, aux3FBO.getTexture());
+		glBindTexture(GL_TEXTURE_2D, aux2FBO.getTexture());
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, quad.getVertexCount());
 		glDisableVertexAttribArray(0);
 		glBindVertexArray(0);
 		shader3.stop();
-		aux2FBO.end();
+		aux4FBO.end();
 
 		aux1FBO.begin(Display.getWidth(), Display.getHeight());
 		gm.getRenderer().prepare();
@@ -287,7 +329,7 @@ public class DeferredShadingRenderer {
 		glActiveTexture(GL_TEXTURE5);
 		glBindTexture(GL_TEXTURE_2D, postProcessingFBO.getData1Tex());
 		glActiveTexture(GL_TEXTURE6);
-		glBindTexture(GL_TEXTURE_2D, aux2FBO.getTexture());
+		glBindTexture(GL_TEXTURE_2D, aux4FBO.getTexture());
 		glActiveTexture(GL_TEXTURE7);
 		glBindTexture(GL_TEXTURE_2D, aux3FBO.getTexture());
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, quad.getVertexCount());

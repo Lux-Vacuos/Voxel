@@ -1,7 +1,7 @@
 //
 // The MIT License (MIT)
 //
-// Copyright (c) 2015 Guerra24
+// Copyright (c) 2015-2016 Guerra24
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -25,38 +25,35 @@
 #version 330 core
 
 /*--------------------------------------------------------*/
-/*--------------COMPOSITE 0 IN-OUT-UNIFORMS---------------*/
+/*--------------COMPOSITE 2 IN-OUT-UNIFORMS---------------*/
 /*--------------------------------------------------------*/
 
 in vec2 textureCoords;
 
 out vec4 out_Color;
 
+uniform vec2 resolution;
 uniform sampler2D composite0;
 uniform sampler2D composite1;
 
 /*--------------------------------------------------------*/
-/*------------------COMPOSITE 0 CONFIG--------------------*/
+/*------------------COMPOSITE 2 CONFIG--------------------*/
 /*--------------------------------------------------------*/
 
 /*--------------------------------------------------------*/
-/*------------------COMPOSITE 0 CODE----------------------*/
+/*------------------COMPOSITE 2 CODE----------------------*/
 /*--------------------------------------------------------*/
 
-const float weight[8] = float[] (0.227027, 0.1945946, 0.1216216, 0.154054, 0.116216, 0.131548, 0.186473, 0.245784);
+const float weight[4] = float[] (0.116216, 0.131548, 0.186473, 0.245784);
 
 void main(void){
 	vec2 texcoord = textureCoords;
 	vec4 image0 = vec4(0.0);
 	
-	vec2 tex_offset = 1.0 / textureSize(composite0, 0);
+	vec2 tex_offset = 1.0 / (resolution/4);
     vec3 result = texture(composite0, texcoord).rgb * weight[0];
     
-    for(int i = 1; i < 8; ++i) {
-        result += texture(composite0, texcoord + vec2(tex_offset.x * i, 0.0)).rgb * weight[i];
-        result += texture(composite0, texcoord - vec2(tex_offset.x * i, 0.0)).rgb * weight[i];
-    }
-    for(int i = 1; i < 8; ++i) {
+    for(int i = 1; i < 4; ++i) {
         result += texture(composite0, texcoord + vec2(0.0, tex_offset.y * i)).rgb * weight[i];
         result += texture(composite0, texcoord - vec2(0.0, tex_offset.y * i)).rgb * weight[i];
     }
