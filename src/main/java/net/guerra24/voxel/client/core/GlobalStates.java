@@ -90,8 +90,10 @@ public class GlobalStates {
 	}
 
 	public void setState(GameState state) {
-		this.oldState = this.state;
-		this.state = state;
+		if (!state.equals(this.state)) {
+			this.oldState = this.state;
+			this.state = state;
+		}
 	}
 
 	public GameState getOldState() {

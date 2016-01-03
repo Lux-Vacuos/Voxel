@@ -52,18 +52,13 @@ import static org.lwjgl.opengl.GL13.GL_TEXTURE_CUBE_MAP;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE_CUBE_MAP_POSITIVE_X;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
 import static org.lwjgl.opengl.GL14.GL_TEXTURE_LOD_BIAS;
-import static org.lwjgl.opengl.GL15.GL_ARRAY_BUFFER;
-import static org.lwjgl.opengl.GL15.GL_ELEMENT_ARRAY_BUFFER;
-import static org.lwjgl.opengl.GL15.GL_STATIC_DRAW;
-import static org.lwjgl.opengl.GL15.glBindBuffer;
-import static org.lwjgl.opengl.GL15.glBufferData;
-import static org.lwjgl.opengl.GL15.glDeleteBuffers;
-import static org.lwjgl.opengl.GL15.glGenBuffers;
+import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.glVertexAttribPointer;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import static org.lwjgl.opengl.GL30.glDeleteVertexArrays;
 import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 import static org.lwjgl.opengl.GL30.glGenerateMipmap;
+import static org.lwjgl.opengl.GL33.*;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -166,6 +161,35 @@ public class Loader {
 		this.storeDataInAttributeList(0, dimensions, positions);
 		unbindVAO();
 		return new RawModel(vaoID, positions.length / dimensions);
+	}
+
+	public int createEmptyVBO(int floatCount) {
+		int vbo = glGenBuffers();
+		vbos.add(vbo);
+		glBindBuffer(GL_ARRAY_BUFFER, vbo);
+		glBufferData(GL_ARRAY_BUFFER, floatCount * 4, GL_STREAM_DRAW);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		return vbo;
+	}
+	
+	public void updateVBO(int vbo, float[] data, FloatBuffer buffer){
+		buffer.clear();
+		buffer.put(data);
+		buffer.flip();
+		glBindBuffer(GL_ARRAY_BUFFER, vbo);
+		glBufferData(GL_ARRAY_BUFFER, buffer.capacity() * 4, GL_STREAM_DRAW);
+		glBufferSubData(GL_ARRAY_BUFFER, 0, buffer);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+	}
+	
+	public void addInstacedAttribute(int vao, int vbo, int attribute, int dataSize, int instancedDataLenght,
+			int offset) {
+		glBindBuffer(GL_ARRAY_BUFFER, vbo);
+		glBindVertexArray(vao);
+		glVertexAttribPointer(attribute, dataSize, GL_FLOAT, false, instancedDataLenght * 4, offset * 4);
+		glVertexAttribDivisor(attribute, 1);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glBindVertexArray(0);
 	}
 
 	/**
