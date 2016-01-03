@@ -41,6 +41,7 @@ import static org.lwjgl.opengl.GL15.GL_DYNAMIC_DRAW;
 import static org.lwjgl.opengl.GL15.GL_ELEMENT_ARRAY_BUFFER;
 import static org.lwjgl.opengl.GL15.glBindBuffer;
 import static org.lwjgl.opengl.GL15.glBufferData;
+import static org.lwjgl.opengl.GL15.glBufferSubData;
 import static org.lwjgl.opengl.GL15.glDeleteBuffers;
 import static org.lwjgl.opengl.GL15.glDeleteQueries;
 import static org.lwjgl.opengl.GL15.glGenBuffers;
@@ -292,14 +293,16 @@ public class Tessellator {
 	public void updateGlBuffers(int vbo, int vboCapacity, ByteBuffer data) {
 		vboCapacity = data.capacity();
 		glBindBuffer(GL_ARRAY_BUFFER, vbo);
-		glBufferData(GL_ARRAY_BUFFER, vboCapacity, data, GL_DYNAMIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, vboCapacity, GL_DYNAMIC_DRAW);
+		glBufferSubData(GL_ARRAY_BUFFER, 0, data);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
 
 	public void updateGLIBOBuffer() {
 		iboCapacity = ibo.capacity();
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, iboID);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, iboCapacity, ibo, GL_DYNAMIC_DRAW);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, iboCapacity, GL_DYNAMIC_DRAW);
+		glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, ibo);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
 	}

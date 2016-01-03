@@ -25,30 +25,26 @@
 #version 330 core
 
 in vec2 position;
+in mat4 modelViewMatrix;
+in vec4 texOffsets;
+in float blendFactor;
 
-out vec3 pass_Position;
 out vec2 textureCoords0;
 out vec2 textureCoords1;
 out float blend;
 
 uniform mat4 projectionMatrix;
-uniform mat4 viewMatrix;
-uniform mat4 transformationMatrix;
-uniform vec2 texOffset0;
-uniform vec2 texOffset1;
-uniform vec2 texCoordInfo;
+uniform float numberOfRows;
 
 void main(void){
 
 	vec2 textureCoords = position + vec2(0.5,0.5);
 	textureCoords.y = 1.0 - textureCoords.y;
-	textureCoords/= texCoordInfo.x;
-	textureCoords0 = textureCoords + texOffset0;
-	textureCoords1 = textureCoords + texOffset1;
-	blend = texCoordInfo.y;
+	textureCoords /= numberOfRows;
+	textureCoords0 = textureCoords + texOffsets.xy;
+	textureCoords1 = textureCoords + texOffsets.zw;
+	blend = blendFactor;
 
-	vec4 worldPosition = transformationMatrix * vec4(position, 0.0, 1.0);
-	vec4 positionRelativeToCam = viewMatrix * worldPosition;
-	gl_Position = projectionMatrix * positionRelativeToCam;
-	pass_Position = worldPosition.xyz;
+	vec4 worldPosition = modelViewMatrix * vec4(position, 0.0, 1.0);
+	gl_Position = projectionMatrix * worldPosition;
 }

@@ -103,11 +103,11 @@ public class GameSPState extends State {
 		glReadPixels(Display.getWidth() / 2, Display.getHeight() / 2, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, p);
 		gm.getCamera().depth = p.get(0);
 		gm.getRenderer().renderEntity(gm.getEngine().getEntities(), gm);
-		ParticleMaster.getInstance().render(gm.getCamera());
 		gm.getDeferredShadingRenderer().getPost_fbo().end();
 
 		gm.getRenderer().prepare();
 		gm.getDeferredShadingRenderer().render(gm);
+		ParticleMaster.getInstance().render(gm.getCamera());
 
 	}
 
