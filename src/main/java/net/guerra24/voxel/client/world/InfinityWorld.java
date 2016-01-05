@@ -522,6 +522,18 @@ public class InfinityWorld implements IWorld {
 			lightNodes.add(new LightNode(x, y, z));
 		}
 	}
+	
+	@Override
+	public float getLight(int x, int y, int z) {
+		int cx = x >> 4;
+		int cz = z >> 4;
+		int cy = y >> 4;
+		Chunk chunk = getChunk(chunkDim, cx, cy, cz);
+		if (chunk != null) {
+			return chunk.getTorchLight(x, y, z);
+		}
+		return 0;
+	}
 
 	@Override
 	public void clearDimension(GameResources gm) {

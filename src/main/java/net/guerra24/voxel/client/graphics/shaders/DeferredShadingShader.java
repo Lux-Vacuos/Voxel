@@ -68,6 +68,7 @@ public class DeferredShadingShader extends ShaderProgram {
 	private int loc_skyboxDay;
 	private int loc_skyboxNight;
 	private int loc_skyboxBlendFactor;
+	private int loc_exposure;
 
 	private int loc_useFXAA;
 	private int loc_useDOF;
@@ -114,6 +115,7 @@ public class DeferredShadingShader extends ShaderProgram {
 		loc_skyboxDay = super.getUniformLocation("skyboxDay");
 		loc_skyboxNight = super.getUniformLocation("skyboxNight");
 		loc_skyboxBlendFactor = super.getUniformLocation("skyboxBlendFactor");
+		loc_exposure = super.getUniformLocation("exposure");
 
 		loc_useFXAA = super.getUniformLocation("useFXAA");
 		loc_useDOF = super.getUniformLocation("useDOF");
@@ -148,6 +150,10 @@ public class DeferredShadingShader extends ShaderProgram {
 		super.loadBoolean(loc_camUnderWater, value);
 		super.loadFloat(loc_camUnderWaterOffset, time += 0.1f);
 		time %= 10;
+	}
+
+	public void loadExposure(float bright) {
+		super.loadFloat(loc_exposure, bright);
 	}
 
 	public void loadSkyColor(Vector3f color) {

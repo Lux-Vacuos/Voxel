@@ -314,6 +314,7 @@ public class DeferredShadingRenderer {
 		shader2.loadSunPosition(
 				Maths.convertTo2F(new Vector3f(gm.getLightPos()), gm.getRenderer().getProjectionMatrix(),
 						Maths.createViewMatrix(gm.getCamera()), Display.getWidth(), Display.getHeight()));
+		shader2.loadExposure(4f);
 		glBindVertexArray(quad.getVaoID());
 		glEnableVertexAttribArray(0);
 		glActiveTexture(GL_TEXTURE0);

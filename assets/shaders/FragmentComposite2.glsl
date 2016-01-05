@@ -35,30 +35,35 @@ out vec4 out_Color;
 uniform vec2 resolution;
 uniform sampler2D composite0;
 uniform sampler2D composite1;
+uniform float exposure;
 
 /*--------------------------------------------------------*/
 /*------------------COMPOSITE 2 CONFIG--------------------*/
 /*--------------------------------------------------------*/
 
+const float weight[5] = float[] (0.227027, 0.1945946, 0.1216216, 0.054054, 0.016216);
+
+const float gamma = 1.2;
+
 /*--------------------------------------------------------*/
 /*------------------COMPOSITE 2 CODE----------------------*/
 /*--------------------------------------------------------*/
 
-const float weight[4] = float[] (0.116216, 0.131548, 0.186473, 0.245784);
 
 void main(void){
 	vec2 texcoord = textureCoords;
 	vec4 image0 = vec4(0.0);
-	
 	vec2 tex_offset = 1.0 / (resolution/4);
     vec3 result = texture(composite0, texcoord).rgb * weight[0];
     
-    for(int i = 1; i < 4; ++i) {
+    for(int i = 1; i < 5; ++i) {
         result += texture(composite0, texcoord + vec2(0.0, tex_offset.y * i)).rgb * weight[i];
         result += texture(composite0, texcoord - vec2(0.0, tex_offset.y * i)).rgb * weight[i];
     }
-	
-	image0 = texture(composite1, texcoord);
-	image0.rgb += result.rgb;
-    out_Color = image0;
+    vec3 hdrColor = texture(composite1, texcoord).rgb;      
+    vec3 bloomColor = result.rgb;
+    hdrColor += bloomColor;
+    vec3 final = vec3(1.0) - exp(-hdrColor * exposure);
+    final = pow(final, vec3(1.0 / gamma));
+    out_Color.xyz = final.xyz;
 }
