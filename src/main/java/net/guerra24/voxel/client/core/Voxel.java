@@ -117,6 +117,8 @@ public class Voxel {
 		BlocksResources.createBlocks(gameResources.getLoader());
 		gameResources.loadResources();
 		Logger.log("Initializing Threads");
+		gameResources.getRenderer().prepare();
+
 		/*
 		 * new Thread(new Runnable() { public void run() {
 		 * Thread.currentThread().setName("Voxel-Client"); client = new

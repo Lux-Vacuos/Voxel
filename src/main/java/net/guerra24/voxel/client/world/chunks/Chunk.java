@@ -199,8 +199,7 @@ public class Chunk {
 			for (int z = 0; z < sizeZ; z++) {
 				for (int y = 0; y < 128; y++) {
 					if (y >= cy * 16 && y < 16 + cy * 16) {
-						if (y <= 64)
-							setLocalBlock(x, y, z, Block.Water.getId());
+						setLocalBlock(x, y, z, Block.Water.getId());
 					}
 				}
 			}
@@ -210,14 +209,14 @@ public class Chunk {
 				double tempHeight = world.getNoise().getNoise((int) ((x + cx * 16) / Biomes.OCEAN.getMultiplier()),
 						(int) ((z + cz * 16) / Biomes.OCEAN.getMultiplier()));
 				tempHeight += 1;
-				int height = (int) (64 * Maths.clamp(tempHeight));
+				int height = (int) (128 * Maths.clamp(tempHeight));
 				for (int y = 0; y < height; y++) {
 					if (y >= cy * 16 && y < 16 + cy * 16) {
-						if (y == height - 1 && y > 65)
+						if (y == height - 1 && y > 128)
 							setLocalBlock(x, y, z, Block.Grass.getId());
-						else if (y == height - 2 && y > 65)
+						else if (y == height - 2 && y > 128)
 							setLocalBlock(x, y, z, Block.Dirt.getId());
-						else if (y == height - 1 && y < 66)
+						else if (y == height - 1 && y < 129)
 							setLocalBlock(x, y, z, Block.Sand.getId());
 						else
 							setLocalBlock(x, y, z, Block.Stone.getId());
@@ -236,7 +235,7 @@ public class Chunk {
 			double tempHeight = world.getNoise().getNoise((int) ((xx + cx * 16) / Biomes.OCEAN.getMultiplier()),
 					(int) ((zz + cz * 16) / Biomes.OCEAN.getMultiplier()));
 			tempHeight += 1;
-			int height = (int) (64 * Maths.clamp(tempHeight));
+			int height = (int) (128 * Maths.clamp(tempHeight));
 			int h = getLocalBlock(xx, height - 1, zz);
 			if (h == Block.Grass.getId() || h == Block.Dirt.getId())
 				world.getChunkGenerator().addTree(world, xx + cx * 16, height, zz + cz * 16, Maths.randInt(4, 10),
@@ -275,7 +274,8 @@ public class Chunk {
 				for (int y = 0; y < sizeY; y++) {
 					if (Block.getBlock(blocks[x][y][z]) == Block.Torch) {
 					} else if (Block.getBlock(blocks[x][y][z]) != Block.Air
-							&& Block.getBlock(blocks[x][y][z]) != Block.Water) {
+							&& Block.getBlock(blocks[x][y][z]) != Block.Water
+							&& !Block.getBlock(blocks[x][y][z]).usesSingleModel()) {
 						tess.generateCube(x + cx * sizeX, y + cy * sizeY, (z + cz * sizeZ) - 1, 1,
 								cullFaceUpSolidBlock(x + cx * sizeX, y + cy * sizeY, z + cz * sizeZ, world),
 								cullFaceDown(x + cx * sizeX, y + cy * sizeY, z + cz * sizeZ, world),

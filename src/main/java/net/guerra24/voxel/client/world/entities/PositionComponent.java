@@ -30,4 +30,9 @@ import net.guerra24.voxel.universal.util.vector.Vector3f;
 
 public class PositionComponent implements Component {
 	public Vector3f position = new Vector3f();
+
+	@Override
+	public String toString() {
+		return "[x:" + position.x + "]" + "[y:" + position.y + "]" + "[z:" + position.z + "]";
+	}
 }

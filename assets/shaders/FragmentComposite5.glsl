@@ -66,7 +66,7 @@ uniform int useVolumetricLight;
 /*--------------------------------------------------------*/
 
 const int NUM_SAMPLES = 50;
-const float density = 0.005;
+const float density = 0.01;
 const float gradient = 2.0;
 
 /*--------------------------------------------------------*/

@@ -32,7 +32,6 @@ import java.nio.FloatBuffer;
 
 import org.lwjgl.BufferUtils;
 
-import net.guerra24.voxel.client.api.ModInitialization;
 import net.guerra24.voxel.client.core.GlobalStates;
 import net.guerra24.voxel.client.core.GlobalStates.GameState;
 import net.guerra24.voxel.client.core.State;
@@ -70,10 +69,10 @@ public class GameSPState extends State {
 		gm.getRenderer().getWaterRenderer().update(delta);
 		ParticleMaster.getInstance().update(delta, gm.getCamera());
 
-		if (!display.isDisplayFocused() && !VoxelVariables.debug) {
-			gm.getCamera().unlockMouse();
-			states.setState(GameState.IN_PAUSE);
-		}
+		//if (!display.isDisplayFocused()) {
+		//	gm.getCamera().unlockMouse();
+		//	states.setState(GameState.IN_PAUSE);
+		//}
 	}
 
 	@Override

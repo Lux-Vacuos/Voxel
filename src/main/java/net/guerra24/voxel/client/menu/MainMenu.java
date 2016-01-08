@@ -54,6 +54,8 @@ public class MainMenu {
 		webRenderer.update();
 	}
 
+	float b = 0;
+
 	public void render() {
 		MenuRendering.renderButton(null, "Play", "Roboto-Bold", 170 * xScale, 112 * yScale, 215 * xScale, 80 * yScale,
 				MenuRendering.rgba(255, 255, 255, 255, MenuRendering.colorA), playButton.insideButton());
@@ -65,15 +67,14 @@ public class MainMenu {
 		MenuRendering.renderButton(null, "Exit", "Roboto-Bold", 170 * xScale, 425 * yScale, 215 * xScale, 80 * yScale,
 				MenuRendering.rgba(255, 255, 255, 255, MenuRendering.colorA), exitButton.insideButton());
 
-
 		MenuRendering.renderText(
 				"Voxel " + VoxelVariables.version + " " + VoxelVariables.state + " Build " + VoxelVariables.build,
 				"Roboto-Bold", 0, 710 * yScale, 20);
 		MenuRendering.renderWindow("Voxel News", "Roboto-Bold", 450 * xScale, 50 * yScale, 750 * xScale, 600 * yScale);
 		webRenderer.render();
-		MenuRendering.renderButton(null, "Reload", "Roboto-Bold", 1096 * xScale, 53 * yScale, 100 * xScale,
-				40 * yScale, MenuRendering.rgba(80, 80, 80, 80, MenuRendering.colorA),
-				newsRefreshButton.insideButton());
+		MenuRendering.renderButton(null, "Reload", "Roboto-Bold", 1096 * xScale, 53 * yScale, 100 * xScale, 40 * yScale,
+				MenuRendering.rgba(80, 80, 80, 80, MenuRendering.colorA), newsRefreshButton.insideButton());
+
 	}
 
 	public void update() {

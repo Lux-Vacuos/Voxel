@@ -89,7 +89,7 @@ public class InfinityWorld implements IWorld {
 		this.name = name;
 		this.seed = seed;
 		this.chunkDim = chunkDim;
-		gm.getCamera().setPosition(new Vector3f(0, 80, 0));
+		gm.getCamera().setPosition(new Vector3f(0, 256, 0));
 		if (existWorld()) {
 			loadWorld(gm);
 		}
@@ -100,13 +100,13 @@ public class InfinityWorld implements IWorld {
 
 	@Override
 	public void init(GameResources gm) {
-		particleSystem = new ParticleSystem(gm.getTorchTexture(), 5, 1, -0.01f, 4, 0.5f);
+		particleSystem = new ParticleSystem(gm.getTorchTexture(), 2, 1, -0.01f, 4, 0.5f);
 		particleSystem.setDirection(new Vector3f(0, 1, 0), 0.1f);
 		particleSystem.setLifeError(0.8f);
 		particleSystem.setScaleError(0.2f);
 		particleSystem.setSpeedError(0.2f);
 		seedi = seed.nextInt();
-		noise = new SimplexNoise(128, 0.3f, seedi);
+		noise = new SimplexNoise(256, 0.3f, seedi);
 		lightNodes = new LinkedList<>();
 		chunks = new HashMap<ChunkKey, Chunk>();
 		chunkGenerator = new ChunkGenerator();
@@ -171,19 +171,19 @@ public class InfinityWorld implements IWorld {
 								} else {
 									if (VoxelVariables.generateChunks) {
 										addChunk(new Chunk(chunkDim, xx, yy, zz, this, gm));
-										saveChunk(chunkDim, xx, yy, zz, gm);
+										//saveChunk(chunkDim, xx, yy, zz, gm);
 									}
 								}
 							}
 						} else {
 							Chunk chunk = getChunk(chunkDim, xx, yy, zz);
-							for (ParticlePoint particlePoint : chunk.getParticlePoints()) {
-								particleSystem.generateParticles(particlePoint, delta);
-							}
 							chunk.update(this, worldService, gm.getCamera());
 							if (gm.getFrustum().cubeInFrustum(chunk.posX, chunk.posY, chunk.posZ, chunk.posX + 16,
 									chunk.posY + 16, chunk.posZ + 16)) {
 								chunk.rebuild(worldService, this);
+							}
+							for (ParticlePoint particlePoint : chunk.getParticlePoints()) {
+								particleSystem.generateParticles(particlePoint, delta);
 							}
 						}
 					}
@@ -522,7 +522,7 @@ public class InfinityWorld implements IWorld {
 			lightNodes.add(new LightNode(x, y, z));
 		}
 	}
-	
+
 	@Override
 	public float getLight(int x, int y, int z) {
 		int cx = x >> 4;

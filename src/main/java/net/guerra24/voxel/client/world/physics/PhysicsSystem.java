@@ -24,6 +24,9 @@
 
 package net.guerra24.voxel.client.world.physics;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
@@ -31,9 +34,11 @@ import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.math.collision.BoundingBox;
 
 import net.guerra24.voxel.client.world.IWorld;
 import net.guerra24.voxel.client.world.block.Block;
+import net.guerra24.voxel.client.world.entities.Camera;
 import net.guerra24.voxel.client.world.entities.CollisionComponent;
 import net.guerra24.voxel.client.world.entities.PositionComponent;
 import net.guerra24.voxel.client.world.entities.VelocityComponent;
@@ -103,9 +108,18 @@ public class PhysicsSystem extends EntitySystem {
 				else if (velocity.y > 2)
 					velocity.y = 2;
 
-			collison.boundingBox.set(new Vector3(position.position.x, position.position.y, position.position.z),
-					new Vector3(position.position.x + 1f, position.position.y + 0.1f, position.position.z + 1f));
+			if (yb != 0 && !(entity instanceof Camera)) {
+				velocity.x *= 0.8f;
+				velocity.z *= 0.8f;
+			} else if (yb != 0 && entity instanceof Camera) {
+				if (!((Camera) entity).isMoved) {
+					velocity.x *= 0.8f;
+					velocity.z *= 0.8f;
+				}
+			}
 
+			collison.boundingBox.set(new Vector3(position.position.x, position.position.y, position.position.z),
+					new Vector3(position.position.x + 1f, position.position.y + 1f, position.position.z + 1f));
 			if (velocity.y < 0)
 				if (yb != Block.Air.getId() && yb != Block.Water.getId())
 					if (entity.getComponent(CollisionComponent.class).boundingBox

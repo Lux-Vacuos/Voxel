@@ -50,6 +50,7 @@ public class OptionsMenu {
 		godraysButton = new Button(new Vector2f(32 * xScale, 560 * yScale), new Vector2f(215 * xScale, 80 * yScale));
 		shadowsButton = new Button(new Vector2f(32 * xScale, 460 * yScale), new Vector2f(215 * xScale, 80 * yScale));
 		dofButton = new Button(new Vector2f(32 * xScale, 360 * yScale), new Vector2f(215 * xScale, 80 * yScale));
+		slider.setPos(VoxelVariables.radius / 32f);
 	}
 
 	public void update() {

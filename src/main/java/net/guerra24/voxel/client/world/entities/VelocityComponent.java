@@ -30,4 +30,9 @@ public class VelocityComponent implements Component {
 	public float x = 0.0f;
 	public float y = 0.0f;
 	public float z = 0.0f;
+
+	@Override
+	public String toString() {
+		return "[x:" + x + "]" + "[y:" + y + "]" + "[z:" + z + "]";
+	}
 }

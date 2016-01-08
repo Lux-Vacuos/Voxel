@@ -143,6 +143,19 @@ public class Maths {
 	}
 
 	/**
+	 * 
+	 * Clamp a value
+	 * 
+	 * @param d
+	 *            Value
+	 * @return Clamped Value
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 */
+	public static float clamp(double d, double min, double max) {
+		return (float) Math.max(min, Math.min(max, d));
+	}
+
+	/**
 	 * Gets a Random int from Range
 	 * 
 	 * @param min

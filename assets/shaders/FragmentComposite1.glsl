@@ -102,7 +102,7 @@ void main(void){
     		do {
         		i += 0.05;
         		rayTrace += refl*incr;
-        		incr *= 1.3;
+        		incr *= 1.4;
         		newScreen = projectionMatrix * viewMatrix * vec4(rayTrace, 1);
         		newScreen /= newScreen.w;
         		newPos = texture(gPosition, newScreen.xy/2.0+0.5).xyz;

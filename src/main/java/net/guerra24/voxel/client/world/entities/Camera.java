@@ -193,21 +193,26 @@ public class Camera extends Entity {
 			isMoved = true;
 		}
 		if (isKeyDown(KEY_SPACE)) {
-			velocityComponent.y = 12;
+			velocityComponent.y = 200 * delta;
 		}
 		if (isKeyDown(KEY_LSHIFT)) {
-			multiplierMovement = 1;
+			multiplierMovement = 1 * delta;
 		} else {
-			multiplierMovement = 5;
+			multiplierMovement = 120 * delta;
 		}
 		if (isKeyDown(KEY_LCONTROL)) {
-			multiplierMovement = 12;
+			multiplierMovement = 200 * delta;
 		} else {
-			multiplierMovement = 5;
+			multiplierMovement = 120 * delta;
 		}
 
-		if (isKeyDown(Keyboard.KEY_Y))
-			System.out.println(positionComponent.position);
+		velocityComponent.x = Maths.clamp(velocityComponent.x, -2, 2);
+		velocityComponent.z = Maths.clamp(velocityComponent.z, -2, 2);
+
+		if (isKeyDown(Keyboard.KEY_Y)) {
+			System.out.println(positionComponent.toString());
+			System.out.println(velocityComponent.toString());
+		}
 
 		if (isKeyDown(KEY_T)) {
 			gm.getEngine()
