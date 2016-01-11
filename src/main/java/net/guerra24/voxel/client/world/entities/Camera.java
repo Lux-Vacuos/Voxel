@@ -56,7 +56,6 @@ import com.badlogic.ashley.core.Entity;
 import net.guerra24.voxel.client.core.VoxelVariables;
 import net.guerra24.voxel.client.graphics.opengl.Display;
 import net.guerra24.voxel.client.input.Keyboard;
-import net.guerra24.voxel.client.network.DedicatedClient;
 import net.guerra24.voxel.client.resources.GameResources;
 import net.guerra24.voxel.client.resources.Ray;
 import net.guerra24.voxel.client.util.Maths;
@@ -113,7 +112,7 @@ public class Camera extends Entity {
 		ray = new Ray(proj, Maths.createViewMatrix(this), center, Display.getWidth(), Display.getHeight());
 	}
 
-	public void update(float delta, GameResources gm, IWorld world, DedicatedClient client) {
+	public void update(float delta, GameResources gm, IWorld world) {
 		isMoved = false;
 		float mouseDX = getDX() * delta * mouseSpeed * 0.16f * multiplierMouse;
 		float mouseDY = getDY() * delta * mouseSpeed * 0.16f * multiplierMouse;
@@ -215,7 +214,7 @@ public class Camera extends Entity {
 		}
 
 		if (isKeyDown(KEY_T)) {
-			gm.getEngine()
+			gm.getPhysicsEngine()
 					.addEntity(new GameEntity(UniversalResources.player,
 							new Vector3f(this.getPosition().x, this.getPosition().y + 2, this.getPosition().z),
 							velocityComponent.x, velocityComponent.y, velocityComponent.z, 0, 0, 0, 1));

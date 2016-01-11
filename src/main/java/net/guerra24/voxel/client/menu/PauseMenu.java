@@ -25,7 +25,6 @@
 package net.guerra24.voxel.client.menu;
 
 import net.guerra24.voxel.client.core.VoxelVariables;
-import net.guerra24.voxel.client.graphics.MenuRendering;
 import net.guerra24.voxel.client.resources.GameResources;
 import net.guerra24.voxel.universal.util.vector.Vector2f;
 
@@ -39,16 +38,13 @@ public class PauseMenu {
 		float height = VoxelVariables.HEIGHT;
 		yScale = height / 720f;
 		xScale = width / 1280f;
-		exitButton = new Button(new Vector2f(500 * xScale, 35 * yScale), new Vector2f(280 * xScale, 80 * yScale));
-		optionsButton = new Button(new Vector2f(500 * xScale, 135 * yScale), new Vector2f(280 * xScale, 80 * yScale));
+		exitButton = new Button(new Vector2f(500, 35), new Vector2f(280, 80), xScale, yScale);
+		optionsButton = new Button(new Vector2f(500, 135), new Vector2f(280, 80), xScale, yScale);
 	}
 
 	public void render() {
-		MenuRendering.renderButton(null, "Back to Main Menu", "Roboto-Bold", 500 * xScale, 607 * yScale, 280 * xScale,
-				80 * yScale, MenuRendering.rgba(255, 255, 255, 255, MenuRendering.colorA), exitButton.insideButton());
-		MenuRendering.renderButton(null, "Options", "Roboto-Bold", 500 * xScale, 502 * yScale, 280 * xScale,
-				80 * yScale, MenuRendering.rgba(255, 255, 255, 255, MenuRendering.colorA),
-				optionsButton.insideButton());
+		exitButton.render("Back to Main Menu");
+		optionsButton.render("Options");
 	}
 
 	public Button getExitButton() {

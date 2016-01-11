@@ -39,11 +39,7 @@ import net.guerra24.voxel.client.core.GlobalStates.GameState;
  * @author danirod
  * @category Kernel
  */
-public class LoadingState extends State {
-
-	public LoadingState() {
-		super(5);
-	}
+public class LoadingSPState implements State {
 
 	@Override
 	public void update(Voxel voxel, GlobalStates states, float delta) {

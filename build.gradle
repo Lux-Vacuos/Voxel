@@ -13,6 +13,7 @@ jar {
 	include("*net/**")
 	include("*org/**")
 	include("assets/**")
+	include("log4j.properties")
 	
     manifest {
         attributes 'Voxel-Branch': 'Develop',
@@ -50,7 +51,7 @@ dependencies {
 	compile 'org.lwjgl:lwjgl-platform:3.0.0-SNAPSHOT:natives-windows'
 	compile 'org.lwjgl:lwjgl-platform:3.0.0-SNAPSHOT:natives-linux'
 	compile 'org.lwjgl:lwjgl-platform:3.0.0-SNAPSHOT:natives-osx'
-    compile fileTree(dir: "libs", includes: ["*.jar"])
+	compile 'io.netty:netty-all:5.0.0.Alpha2'
 }
 
 sourceSets {

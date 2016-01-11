@@ -39,12 +39,15 @@ public class Menu {
 	public final OptionsMenu optionsMenu;
 
 	public final GameSP gameSP;
-	
+
+	public final WorldSelectionMenu worldSelectionMenu;
+
 	public Menu(GameResources gm) {
 		mainMenu = new MainMenu(gm);
 		pauseMenu = new PauseMenu(gm);
 		optionsMenu = new OptionsMenu(gm);
 		gameSP = new GameSP(gm);
+		worldSelectionMenu = new WorldSelectionMenu(gm);
 	}
 
 }

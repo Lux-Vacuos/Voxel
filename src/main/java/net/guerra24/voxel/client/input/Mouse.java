@@ -204,5 +204,5 @@ public class Mouse {
 	public static void setCursorPosition(int new_x, int new_y) {
 		GLFW.glfwSetCursorPos(Display.getWindow(), new_x, new_y);
 	}
-
+	
 }

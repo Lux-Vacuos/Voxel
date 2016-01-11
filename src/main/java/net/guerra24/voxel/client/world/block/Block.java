@@ -52,23 +52,23 @@ public class Block {
 	/**
 	 * Blocks Data
 	 */
-	public static HashMap<Byte, IBlock> blockMap = new HashMap<Byte, IBlock>();
+	public static final HashMap<Byte, IBlock> blockMap = new HashMap<Byte, IBlock>();
 
-	public static IBlock Grass = new BlockGrass();
-	public static IBlock Stone = new BlockStone();
-	public static IBlock Indes = new BlockIndes();
-	public static IBlock Sand = new BlockSand();
-	public static IBlock Dirt = new BlockDirt();
-	public static IBlock DiamondOre = new BlockDimOre();
-	public static IBlock GoldOre = new BlockGoldOre();
-	public static IBlock Water = new BlockWater();
-	public static IBlock Glass = new BlockGlass();
-	public static IBlock Air = new BlockAir();
-	public static IBlock Torch = new BlockTorch();
-	public static IBlock Portal = new BlockPortal();
-	public static IBlock Leaves = new BlockLeaves();
-	public static IBlock Wood = new BlockWood();
-	public static IBlock Ice = new BlockIce();
+	public static final IBlock Grass = new BlockGrass();
+	public static final IBlock Stone = new BlockStone();
+	public static final IBlock Indes = new BlockIndes();
+	public static final IBlock Sand = new BlockSand();
+	public static final IBlock Dirt = new BlockDirt();
+	public static final IBlock DiamondOre = new BlockDimOre();
+	public static final IBlock GoldOre = new BlockGoldOre();
+	public static final IBlock Water = new BlockWater();
+	public static final IBlock Glass = new BlockGlass();
+	public static final IBlock Air = new BlockAir();
+	public static final IBlock Torch = new BlockTorch();
+	public static final IBlock Portal = new BlockPortal();
+	public static final IBlock Leaves = new BlockLeaves();
+	public static final IBlock Wood = new BlockWood();
+	public static final IBlock Ice = new BlockIce();
 
 	/**
 	 * Initialize the basic Block
@@ -117,5 +117,5 @@ public class Block {
 	public static IBlock getBlock(byte id) {
 		return blockMap.get(id);
 	}
-	
+
 }

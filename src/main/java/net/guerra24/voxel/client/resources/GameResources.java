@@ -81,7 +81,7 @@ public class GameResources {
 	private MasterShadowRenderer masterShadowRenderer;
 	private OcclusionRenderer occlusionRenderer;
 
-	private Engine engine;
+	private Engine physicsEngine;
 	private PhysicsSystem physicsSystem;
 
 	private SoundSystem soundSystem;
@@ -130,10 +130,10 @@ public class GameResources {
 		TextMasterRenderer.getInstance().init(loader);
 		textHandler = new TextHandler(this);
 
-		engine = new Engine();
+		physicsEngine = new Engine();
 		physicsSystem = new PhysicsSystem(voxel.getWorldsHandler().getActiveWorld());
-		engine.addSystem(physicsSystem);
-		engine.addEntity(camera);
+		physicsEngine.addSystem(physicsSystem);
+		physicsEngine.addEntity(camera);
 
 		try {
 			SoundSystemConfig.addLibrary(LibraryLWJGLOpenAL.class);
@@ -287,8 +287,8 @@ public class GameResources {
 		return sunRotation;
 	}
 
-	public Engine getEngine() {
-		return engine;
+	public Engine getPhysicsEngine() {
+		return physicsEngine;
 	}
 
 }

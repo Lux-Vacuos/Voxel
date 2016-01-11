@@ -24,24 +24,42 @@
 
 package net.guerra24.voxel.client.menu;
 
+import org.lwjgl.nanovg.NVGColor;
+
+import net.guerra24.voxel.client.graphics.MenuRendering;
 import net.guerra24.voxel.client.input.Mouse;
 import net.guerra24.voxel.universal.util.vector.Vector2f;
 
 public class Button {
-	private Vector2f bottom_left_pos;
-	private Vector2f top_left_max;
+	private Vector2f pos, renderPos;
+	private Vector2f size, renderSize;
+	private float xScale, yScale;
 
-	public Button(Vector2f bottom_left, Vector2f top_right) {
-		this.bottom_left_pos = bottom_left;
-		this.top_left_max = new Vector2f(bottom_left.x + top_right.x, bottom_left.y + top_right.y);
+	public Button(Vector2f pos, Vector2f size, float xScale, float yScale) {
+		this.pos = new Vector2f(pos.x * xScale, pos.y * yScale);
+		this.size = new Vector2f((pos.x + size.x) * xScale, (pos.y + size.y) * yScale);
+		renderPos = pos;
+		renderSize = size;
+		this.xScale = xScale;
+		this.yScale = yScale;
 	}
 
 	public boolean insideButton() {
-		if (Mouse.getX() > bottom_left_pos.getX() && Mouse.getY() > bottom_left_pos.getY()
-				&& Mouse.getX() < top_left_max.getX() && Mouse.getY() < top_left_max.getY())
+		if (Mouse.getX() > pos.getX() && Mouse.getY() > pos.getY() && Mouse.getX() < size.getX()
+				&& Mouse.getY() < size.getY())
 			return true;
 		else
 			return false;
+	}
+
+	public void render(String text) {
+		this.render(text, MenuRendering.rgba(255, 255, 255, 255, MenuRendering.colorA));
+	}
+
+	public void render(String text, NVGColor color) {
+		MenuRendering.renderButton(null, text, "Roboto-Bold", renderPos.x * xScale,
+				(720f - renderPos.y - renderSize.y) * yScale, renderSize.x * xScale, renderSize.y * yScale, color,
+				this.insideButton());
 	}
 
 	public boolean pressed() {

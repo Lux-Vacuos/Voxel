@@ -30,20 +30,18 @@ package net.guerra24.voxel.client.core;
  * @author danirod
  * @category Kernel
  */
-public abstract class State {
+public interface State {
 
-	private int id;
+	/**
+	 * 
+	 * This method is called every time in the game loop, it applies update
+	 * 
+	 * @param voxel
+	 * @param states
+	 * @param delta
+	 */
+	public void update(Voxel voxel, GlobalStates states, float delta);
 
-	public State(int id) {
-		this.id = id;
-	}
-
-	public abstract void update(Voxel voxel, GlobalStates states, float delta);
-
-	public abstract void render(Voxel voxel, GlobalStates states, float delta);
-
-	public int getId() {
-		return id;
-	}
+	public void render(Voxel voxel, GlobalStates states, float alpha);
 
 }

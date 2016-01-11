@@ -46,10 +46,10 @@ public class OptionsMenu {
 		yScale = height / 720f;
 		xScale = width / 1280f;
 		slider = new Slider(900 * xScale, 540 * yScale, 315 * xScale, 80 * yScale);
-		exitButton = new Button(new Vector2f(530 * xScale, 35 * yScale), new Vector2f(215 * xScale, 80 * yScale));
-		godraysButton = new Button(new Vector2f(32 * xScale, 560 * yScale), new Vector2f(215 * xScale, 80 * yScale));
-		shadowsButton = new Button(new Vector2f(32 * xScale, 460 * yScale), new Vector2f(215 * xScale, 80 * yScale));
-		dofButton = new Button(new Vector2f(32 * xScale, 360 * yScale), new Vector2f(215 * xScale, 80 * yScale));
+		exitButton = new Button(new Vector2f(530, 35), new Vector2f(215, 80), xScale, yScale);
+		godraysButton = new Button(new Vector2f(32, 560), new Vector2f(215, 80), xScale, yScale);
+		shadowsButton = new Button(new Vector2f(32, 460), new Vector2f(215, 80), xScale, yScale);
+		dofButton = new Button(new Vector2f(32, 360), new Vector2f(215, 80), xScale, yScale);
 		slider.setPos(VoxelVariables.radius / 32f);
 	}
 
@@ -61,34 +61,21 @@ public class OptionsMenu {
 	public void render() {
 		MenuRendering.renderWindow("Options", "Roboto-Bold", 20 * xScale, 20 * yScale, 1240 * xScale, 680 * yScale);
 		if (VoxelVariables.useVolumetricLight) {
-			MenuRendering.renderButton(null, "Light Rays: ON", "Roboto-Bold", 32 * xScale, 80 * yScale, 215 * xScale,
-					80 * yScale, MenuRendering.rgba(100, 255, 100, 255, MenuRendering.colorA),
-					godraysButton.insideButton());
+			godraysButton.render("Light Rays: ON", MenuRendering.rgba(100, 255, 100, 255, MenuRendering.colorA));
 		} else {
-			MenuRendering.renderButton(null, "Light Rays: OFF", "Roboto-Bold", 32 * xScale, 80 * yScale, 215 * xScale,
-					80 * yScale, MenuRendering.rgba(255, 100, 100, 255, MenuRendering.colorA),
-					godraysButton.insideButton());
+			godraysButton.render("Light Rays: OFF", MenuRendering.rgba(255, 100, 100, 255, MenuRendering.colorA));
 		}
 		if (VoxelVariables.useShadows) {
-			MenuRendering.renderButton(null, "Shadows: ON", "Roboto-Bold", 32 * xScale, 180 * yScale, 215 * xScale,
-					80 * yScale, MenuRendering.rgba(100, 255, 100, 255, MenuRendering.colorA),
-					shadowsButton.insideButton());
+			shadowsButton.render("Shadows: ON", MenuRendering.rgba(100, 255, 100, 255, MenuRendering.colorA));
 		} else {
-			MenuRendering.renderButton(null, "Shadows: OFF", "Roboto-Bold", 32 * xScale, 180 * yScale, 215 * xScale,
-					80 * yScale, MenuRendering.rgba(255, 100, 100, 255, MenuRendering.colorA),
-					shadowsButton.insideButton());
+			shadowsButton.render("Shadows: OFF", MenuRendering.rgba(255, 100, 100, 255, MenuRendering.colorA));
 		}
 		if (VoxelVariables.useDOF) {
-			MenuRendering.renderButton(null, "DoF: ON", "Roboto-Bold", 32 * xScale, 280 * yScale, 215 * xScale,
-					80 * yScale, MenuRendering.rgba(100, 255, 100, 255, MenuRendering.colorA),
-					dofButton.insideButton());
+			dofButton.render("DoF: ON", MenuRendering.rgba(100, 255, 100, 255, MenuRendering.colorA));
 		} else {
-			MenuRendering.renderButton(null, "DoF: OFF", "Roboto-Bold", 32 * xScale, 280 * yScale, 215 * xScale,
-					80 * yScale, MenuRendering.rgba(255, 100, 100, 255, MenuRendering.colorA),
-					dofButton.insideButton());
+			dofButton.render("DoF: OFF", MenuRendering.rgba(255, 100, 100, 255, MenuRendering.colorA));
 		}
-		MenuRendering.renderButton(null, "Back", "Roboto-Bold", 528 * xScale, 607 * yScale, 215 * xScale, 80 * yScale,
-				MenuRendering.rgba(255, 255, 255, 255, MenuRendering.colorA), exitButton.insideButton());
+		exitButton.render("Back");
 		MenuRendering.renderLabel("Draw Distance: " + VoxelVariables.radius, "Roboto-Bold", 970 * xScale, 90 * yScale,
 				315 * xScale, 20 * yScale, 25f * yScale);
 		int r = (int) (slider.getPos() * 32f);

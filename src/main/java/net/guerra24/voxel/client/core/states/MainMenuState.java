@@ -38,16 +38,11 @@ import net.guerra24.voxel.client.resources.GameResources;
  * @author danirod
  * @category Kernel
  */
-public class MainMenuState extends State {
-
-	public MainMenuState() {
-		super(1);
-	}
+public class MainMenuState implements State {
 
 	@Override
 	public void render(Voxel voxel, GlobalStates states, float delta) {
 		GameResources gm = voxel.getGameResources();
-		gm.getFrustum().calculateFrustum(gm.getRenderer().getProjectionMatrix(), gm.getCamera());
 		gm.getRenderer().prepare();
 		Display.beingNVGFrame();
 		gm.getMenuSystem().mainMenu.render();
@@ -60,7 +55,7 @@ public class MainMenuState extends State {
 		GameResources gm = voxel.getGameResources();
 
 		if (gm.getMenuSystem().mainMenu.getPlayButton().pressed()) {
-			states.setState(GameState.LOADING_WORLD);
+			states.setState(GameState.WORLD_SELECTION);
 		} else if (gm.getMenuSystem().mainMenu.getExitButton().pressed()) {
 			states.loop = false;
 		} else if (gm.getMenuSystem().mainMenu.getOptionsButton().pressed()) {

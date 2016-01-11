@@ -33,7 +33,6 @@ import java.nio.FloatBuffer;
 import org.lwjgl.BufferUtils;
 
 import net.guerra24.voxel.client.core.GlobalStates;
-import net.guerra24.voxel.client.core.GlobalStates.GameState;
 import net.guerra24.voxel.client.core.State;
 import net.guerra24.voxel.client.core.Voxel;
 import net.guerra24.voxel.client.core.VoxelVariables;
@@ -48,31 +47,26 @@ import net.guerra24.voxel.client.world.WorldsHandler;
  * @author danirod
  * @category Kernel
  */
-public class GameSPState extends State {
-
-	public GameSPState() {
-		super(2);
-	}
+public class GameSPState implements State {
 
 	@Override
 	public void update(Voxel voxel, GlobalStates states, float delta) {
 		GameResources gm = voxel.getGameResources();
 		WorldsHandler worlds = voxel.getWorldsHandler();
-		Display display = voxel.getDisplay();
 
-		gm.getCamera().update(delta, gm, worlds.getActiveWorld(), voxel.getClient());
+		gm.getCamera().update(delta, gm, worlds.getActiveWorld());
 		worlds.getActiveWorld().updateChunksGeneration(gm, delta);
 
-		gm.getEngine().update(delta);
+		gm.getPhysicsEngine().update(delta);
 
 		gm.update(gm.getSkyboxRenderer().update(delta));
 		gm.getRenderer().getWaterRenderer().update(delta);
 		ParticleMaster.getInstance().update(delta, gm.getCamera());
 
-		//if (!display.isDisplayFocused()) {
-		//	gm.getCamera().unlockMouse();
-		//	states.setState(GameState.IN_PAUSE);
-		//}
+		// if (!display.isDisplayFocused()) {
+		// gm.getCamera().unlockMouse();
+		// states.setState(GameState.IN_PAUSE);
+		// }
 	}
 
 	@Override
@@ -87,7 +81,7 @@ public class GameSPState extends State {
 			gm.getMasterShadowRenderer().being();
 			gm.getRenderer().prepare();
 			worlds.getActiveWorld().updateChunksShadow(gm);
-			gm.getMasterShadowRenderer().renderEntity(gm.getEngine().getEntities(), gm);
+			gm.getMasterShadowRenderer().renderEntity(gm.getPhysicsEngine().getEntities(), gm);
 			gm.getMasterShadowRenderer().end();
 		}
 		gm.getFrustum().calculateFrustum(gm.getRenderer().getProjectionMatrix(), gm.getCamera());
@@ -101,7 +95,7 @@ public class GameSPState extends State {
 		FloatBuffer p = BufferUtils.createFloatBuffer(1);
 		glReadPixels(Display.getWidth() / 2, Display.getHeight() / 2, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, p);
 		gm.getCamera().depth = p.get(0);
-		gm.getRenderer().renderEntity(gm.getEngine().getEntities(), gm);
+		gm.getRenderer().renderEntity(gm.getPhysicsEngine().getEntities(), gm);
 		gm.getDeferredShadingRenderer().getPost_fbo().end();
 
 		gm.getRenderer().prepare();

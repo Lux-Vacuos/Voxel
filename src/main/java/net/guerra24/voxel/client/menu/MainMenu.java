@@ -45,11 +45,10 @@ public class MainMenu {
 		float height = VoxelVariables.HEIGHT;
 		yScale = height / 720f;
 		xScale = width / 1280f;
-		playButton = new Button(new Vector2f(177 * xScale, 532 * yScale), new Vector2f(215 * xScale, 80 * yScale));
-		exitButton = new Button(new Vector2f(177 * xScale, 224 * yScale), new Vector2f(215 * xScale, 80 * yScale));
-		optionsButton = new Button(new Vector2f(177 * xScale, 376 * yScale), new Vector2f(215 * xScale, 80 * yScale));
-		newsRefreshButton = new Button(new Vector2f(1096 * xScale, 627 * yScale),
-				new Vector2f(100 * xScale, 40 * yScale));
+		playButton = new Button(new Vector2f(177, 532), new Vector2f(215, 80), xScale, yScale);
+		exitButton = new Button(new Vector2f(177, 224), new Vector2f(215, 80), xScale, yScale);
+		optionsButton = new Button(new Vector2f(177, 376), new Vector2f(215, 80), xScale, yScale);
+		newsRefreshButton = new Button(new Vector2f(1096, 627), new Vector2f(100, 40), xScale, yScale);
 		webRenderer = new WebRenderer(VoxelVariables.web + "news/menu.webtag", 460 * xScale, 120 * yScale);
 		webRenderer.update();
 	}
@@ -57,21 +56,18 @@ public class MainMenu {
 	float b = 0;
 
 	public void render() {
-		MenuRendering.renderButton(null, "Play", "Roboto-Bold", 170 * xScale, 112 * yScale, 215 * xScale, 80 * yScale,
-				MenuRendering.rgba(255, 255, 255, 255, MenuRendering.colorA), playButton.insideButton());
-
-		MenuRendering.renderButton(null, "Options", "Roboto-Bold", 170 * xScale, 270 * yScale, 215 * xScale,
-				80 * yScale, MenuRendering.rgba(255, 255, 255, 255, MenuRendering.colorA),
-				optionsButton.insideButton());
-
-		MenuRendering.renderButton(null, "Exit", "Roboto-Bold", 170 * xScale, 425 * yScale, 215 * xScale, 80 * yScale,
-				MenuRendering.rgba(255, 255, 255, 255, MenuRendering.colorA), exitButton.insideButton());
+		playButton.render("Play");
+		optionsButton.render("Options");
+		exitButton.render("Exit");
 
 		MenuRendering.renderText(
 				"Voxel " + VoxelVariables.version + " " + VoxelVariables.state + " Build " + VoxelVariables.build,
 				"Roboto-Bold", 0, 710 * yScale, 20);
 		MenuRendering.renderWindow("Voxel News", "Roboto-Bold", 450 * xScale, 50 * yScale, 750 * xScale, 600 * yScale);
 		webRenderer.render();
+		
+		newsRefreshButton.render("Reload", MenuRendering.rgba(80, 80, 80, 80, MenuRendering.colorA));
+		
 		MenuRendering.renderButton(null, "Reload", "Roboto-Bold", 1096 * xScale, 53 * yScale, 100 * xScale, 40 * yScale,
 				MenuRendering.rgba(80, 80, 80, 80, MenuRendering.colorA), newsRefreshButton.insideButton());
 

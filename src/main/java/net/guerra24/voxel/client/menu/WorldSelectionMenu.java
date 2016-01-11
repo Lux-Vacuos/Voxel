@@ -22,40 +22,40 @@
  * SOFTWARE.
  */
 
-package net.guerra24.voxel.client.network;
+package net.guerra24.voxel.client.menu;
 
-import com.jmr.wrapper.common.Connection;
-import com.jmr.wrapper.common.listener.SocketListener;
+import net.guerra24.voxel.client.core.VoxelVariables;
+import net.guerra24.voxel.client.graphics.MenuRendering;
+import net.guerra24.voxel.client.resources.GameResources;
+import net.guerra24.voxel.universal.util.vector.Vector2f;
 
-import net.guerra24.voxel.client.core.Voxel;
-import net.guerra24.voxel.universal.network.packets.NetworkPosition;
-import net.guerra24.voxel.universal.network.packets.WorldTime;
+public class WorldSelectionMenu {
 
-public class DedicatedClientListener implements SocketListener {
+	private float xScale, yScale;
 
-	private final Voxel voxel;
+	private Button exitButton;
 
-	public DedicatedClientListener(Voxel voxel) {
-		this.voxel = voxel;
+	public WorldSelectionMenu(GameResources gm) {
+		float width = VoxelVariables.WIDTH;
+		float height = VoxelVariables.HEIGHT;
+		yScale = height / 720f;
+		xScale = width / 1280f;
+		exitButton = new Button(new Vector2f(1035, 30), new Vector2f(215, 80), xScale, yScale);
 	}
 
-	@Override
-	public void connected(Connection con) {
+	float b = 0;
+
+	public void render() {
+		MenuRendering.renderWindow("Worlds", "Roboto-Bold", 20 * xScale, 20 * yScale, 1240 * xScale, 540 * yScale);
+		MenuRendering.renderWindow(20 * xScale, 570 * yScale, 1240 * xScale, 130 * yScale);
+		exitButton.render("Back");
 	}
 
-	@Override
-	public void disconnected(Connection con) {
-		con.close();
+	public void update() {
 	}
 
-	@Override
-	public void received(Connection con, Object obj) {
-		if (obj instanceof NetworkPosition) {
-			NetworkPosition pos = (NetworkPosition) obj;
-		} else if (obj instanceof WorldTime) {
-			WorldTime time = (WorldTime) obj;
-			voxel.getGameResources().getSkyboxRenderer().setTime(time.getTime());
-		}
+	public Button getExitButton() {
+		return exitButton;
 	}
 
 }

@@ -24,26 +24,38 @@
 
 package net.guerra24.voxel.client.api;
 
-import net.guerra24.voxel.client.core.GameSettings;
-import net.guerra24.voxel.client.world.entities.GameEntity;
+import com.badlogic.ashley.core.Entity;
+
+import net.guerra24.voxel.client.resources.GameResources;
+import net.guerra24.voxel.client.world.block.Block;
+import net.guerra24.voxel.client.world.block.IBlock;
 
 public class MoltenAPI {
 
-	private GameSettings gameSettings;
+	private GameResources gm;
 
-	public MoltenAPI(GameSettings gameSettings) {
-		this.gameSettings = gameSettings;
+	public MoltenAPI(GameResources gm) {
+		this.gm = gm;
 	}
 
-	public void registetMob(GameEntity mob) {
+	public void registetEntity(Entity mob) {
+		gm.getPhysicsEngine().addEntity(mob);
 	}
 
-	public void registerSaveData(String key, String value) {
-		gameSettings.registerValue(key, value);
+	public void removeEntity(Entity entity) {
+		gm.getPhysicsEngine().removeEntity(entity);
+	}
+
+	public void registerBlock(IBlock block) {
+		Block.registerBlock(block);
 	}
 	
-	public String getSaveData(String key){
-		return gameSettings.getValue(key);
+	public void registerSaveData(String key, String value) {
+		gm.getGameSettings().registerValue(key, value);
+	}
+
+	public String getSaveData(String key) {
+		return gm.getGameSettings().getValue(key);
 	}
 
 }

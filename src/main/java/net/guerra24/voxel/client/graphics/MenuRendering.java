@@ -144,6 +144,34 @@ public class MenuRendering {
 
 		nvgRestore(vg);
 	}
+	
+	public static void renderWindow(float x, float y, float w, float h) {
+		float cornerRadius = 3.0f;
+		NVGPaint shadowPaint = paintA;
+		long vg = Display.getVg();
+		
+		nvgSave(vg);
+		// nvgClearState(vg);
+		
+		// Window
+		nvgBeginPath(vg);
+		nvgRoundedRect(vg, x, y, w, h, cornerRadius);
+		nvgFillColor(vg, rgba(28, 30, 34, 192, colorA));
+		// nvgFillColor(vg, rgba(0,0,0,128, color));
+		nvgFill(vg);
+		
+		// Drop shadow
+		nvgBoxGradient(vg, x, y + 2, w, h, cornerRadius * 2, 10, rgba(0, 0, 0, 128, colorA), rgba(0, 0, 0, 0, colorB),
+				shadowPaint);
+		nvgBeginPath(vg);
+		nvgRect(vg, x - 10, y - 10, w + 20, h + 30);
+		nvgRoundedRect(vg, x, y, w, h, cornerRadius);
+		nvgPathWinding(vg, NVG_HOLE);
+		nvgFillPaint(vg, shadowPaint);
+		nvgFill(vg);
+		
+		nvgRestore(vg);
+	}
 
 	public static void renderMouse() {
 		float x = Mouse.getX() - 8;

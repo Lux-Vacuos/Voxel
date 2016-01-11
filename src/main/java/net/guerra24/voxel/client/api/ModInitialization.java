@@ -30,8 +30,8 @@ import java.lang.reflect.Method;
 
 import net.guerra24.voxel.client.api.mod.MoltenAPIInitPhase;
 import net.guerra24.voxel.client.api.mod.MoltenAPIMod;
-import net.guerra24.voxel.client.core.GameSettings;
 import net.guerra24.voxel.client.core.VoxelVariables;
+import net.guerra24.voxel.client.resources.GameResources;
 import net.guerra24.voxel.client.util.Logger;
 
 /**
@@ -45,10 +45,10 @@ public class ModInitialization {
 	private ModLoader modLoader;
 	private MoltenAPI moltenAPI;
 
-	public ModInitialization(GameSettings gameSettings) {
+	public ModInitialization(GameResources gm) {
 		modLoader = new ModLoader();
 		modLoader.loadMods();
-		moltenAPI = new MoltenAPI(gameSettings);
+		moltenAPI = new MoltenAPI(gm);
 	}
 
 	/**

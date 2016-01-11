@@ -50,11 +50,7 @@ import net.guerra24.voxel.client.world.WorldsHandler;
  * @author danirod
  * @category Kernel
  */
-public class OptionsState extends State {
-
-	public OptionsState() {
-		super(3);
-	}
+public class OptionsState implements State {
 
 	@Override
 	public void update(Voxel voxel, GlobalStates states, float delta) {
@@ -87,13 +83,13 @@ public class OptionsState extends State {
 				gm.getMasterShadowRenderer().being();
 				gm.getRenderer().prepare();
 				worlds.getActiveWorld().updateChunksShadow(gm);
-				gm.getMasterShadowRenderer().renderEntity(gm.getEngine().getEntities(), gm);
+				gm.getMasterShadowRenderer().renderEntity(gm.getPhysicsEngine().getEntities(), gm);
 				gm.getMasterShadowRenderer().end();
 			}
 			gm.getFrustum().calculateFrustum(gm.getRenderer().getProjectionMatrix(), gm.getCamera());
 			gm.getRenderer().prepare();
 			worlds.getActiveWorld().updateChunksOcclusion(gm);
-			
+
 			gm.getDeferredShadingRenderer().getPost_fbo().begin();
 			gm.getRenderer().prepare();
 			gm.getSkyboxRenderer().render(VoxelVariables.RED, VoxelVariables.GREEN, VoxelVariables.BLUE, delta, gm);
@@ -101,7 +97,7 @@ public class OptionsState extends State {
 			FloatBuffer p = BufferUtils.createFloatBuffer(1);
 			glReadPixels(Display.getWidth() / 2, Display.getHeight() / 2, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, p);
 			gm.getCamera().depth = p.get(0);
-			gm.getRenderer().renderEntity(gm.getEngine().getEntities(), gm);
+			gm.getRenderer().renderEntity(gm.getPhysicsEngine().getEntities(), gm);
 			gm.getDeferredShadingRenderer().getPost_fbo().end();
 
 			gm.getRenderer().prepare();

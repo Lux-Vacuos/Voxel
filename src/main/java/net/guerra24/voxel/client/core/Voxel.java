@@ -38,7 +38,6 @@ import net.guerra24.voxel.client.bootstrap.Bootstrap;
 import net.guerra24.voxel.client.graphics.TextMasterRenderer;
 import net.guerra24.voxel.client.graphics.opengl.Display;
 import net.guerra24.voxel.client.input.Mouse;
-import net.guerra24.voxel.client.network.DedicatedClient;
 import net.guerra24.voxel.client.resources.GameResources;
 import net.guerra24.voxel.client.util.Logger;
 import net.guerra24.voxel.client.world.InfinityWorld;
@@ -63,7 +62,6 @@ public class Voxel {
 	private WorldsHandler worldsHandler;
 	private Display display;
 	private ModInitialization api;
-	private DedicatedClient client;
 
 	/**
 	 * Constructor of the Kernel, Initializes the Game and starts the loop
@@ -96,7 +94,7 @@ public class Voxel {
 		if (Bootstrap.getPlatform() == Bootstrap.Platform.MACOSX) {
 			VoxelVariables.runningOnMac = true;
 		}
-		api = new ModInitialization(gameResources.getGameSettings());
+		api = new ModInitialization(gameResources);
 		try {
 			api.preInit();
 		} catch (VersionException e) {
@@ -119,11 +117,6 @@ public class Voxel {
 		Logger.log("Initializing Threads");
 		gameResources.getRenderer().prepare();
 
-		/*
-		 * new Thread(new Runnable() { public void run() {
-		 * Thread.currentThread().setName("Voxel-Client"); client = new
-		 * DedicatedClient(gameResources); } }).start();
-		 */
 		try {
 			api.init();
 		} catch (VersionException e) {
@@ -161,6 +154,7 @@ public class Voxel {
 		float delta = 0;
 		float accumulator = 0f;
 		float interval = 1f / VoxelVariables.UPS;
+		float alpha = 0;
 		while (gameResources.getGlobalStates().loop) {
 			if (Display.timeCountRender > 1f) {
 				Logger.log("FPS: " + Display.fps);
@@ -178,7 +172,8 @@ public class Voxel {
 				update(interval);
 				accumulator -= interval;
 			}
-			render(delta);
+			alpha = accumulator / interval;
+			render(alpha);
 		}
 		dispose();
 	}
@@ -223,10 +218,6 @@ public class Voxel {
 
 	public ModInitialization getApi() {
 		return api;
-	}
-
-	public DedicatedClient getClient() {
-		return client;
 	}
 
 	public WorldsHandler getWorldsHandler() {
