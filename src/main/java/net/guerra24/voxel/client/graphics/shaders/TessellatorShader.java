@@ -50,8 +50,11 @@ public class TessellatorShader extends ShaderProgram {
 
 	private int loc_texture;
 	private int loc_depth;
+	private int loc_normalMap;
+	private int loc_heightMap;
 
 	private int loc_useShadows;
+	private int loc_useParallax;
 
 	public TessellatorShader() {
 		super(VoxelVariables.VERTEX_FILE_TESSELLATOR, VoxelVariables.FRAGMENT_FILE_TESSELLATOR);
@@ -60,6 +63,8 @@ public class TessellatorShader extends ShaderProgram {
 	public void conectTextureUnits() {
 		super.loadInt(loc_texture, 0);
 		super.loadInt(loc_depth, 1);
+		super.loadInt(loc_normalMap, 2);
+		super.loadInt(loc_heightMap, 3);
 	}
 
 	@Override
@@ -73,6 +78,9 @@ public class TessellatorShader extends ShaderProgram {
 		loc_texture = super.getUniformLocation("texture0");
 		loc_depth = super.getUniformLocation("depth");
 		loc_useShadows = super.getUniformLocation("useShadows");
+		loc_normalMap = super.getUniformLocation("normalMap");
+		loc_heightMap = super.getUniformLocation("heightMap");
+		loc_useParallax = super.getUniformLocation("useParallax");
 	}
 
 	@Override
@@ -81,6 +89,8 @@ public class TessellatorShader extends ShaderProgram {
 		super.bindAttribute(1, "textureCoords");
 		super.bindAttribute(2, "normal");
 		super.bindAttribute(3, "data");
+		super.bindAttribute(4, "tangent");
+		super.bindAttribute(5, "bitangent");
 	}
 
 	/**
@@ -121,8 +131,12 @@ public class TessellatorShader extends ShaderProgram {
 	}
 
 	public void loadLightMatrix(GameResources gm) {
-		super.loadBoolean(loc_useShadows, VoxelVariables.useShadows);
 		super.loadMatrix(loc_viewLightMatrix, Maths.createViewMatrix(gm.getSun_Camera()));
+	}
+
+	public void loadSettings(boolean useShadows, boolean useParallax) {
+		super.loadBoolean(loc_useShadows, useShadows);
+		super.loadBoolean(loc_useParallax, useParallax);
 	}
 
 	/**

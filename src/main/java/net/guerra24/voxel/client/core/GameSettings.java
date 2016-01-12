@@ -74,6 +74,18 @@ public class GameSettings {
 			VoxelVariables.FPS = Integer.parseInt(getValue("FPS"));
 			VoxelVariables.UPS = Integer.parseInt(getValue("UPS"));
 			VoxelVariables.radius = Integer.parseInt(getValue("DrawDistance"));
+		} else if (getVersion() == 4) {
+			VoxelVariables.useShadows = Boolean.parseBoolean(getValue("useShadows"));
+			VoxelVariables.useVolumetricLight = Boolean.parseBoolean(getValue("useVolumetricLight"));
+			VoxelVariables.useFXAA = Boolean.parseBoolean(getValue("useFXAA"));
+			VoxelVariables.useMotionBlur = Boolean.parseBoolean(getValue("useMotionBlur"));
+			VoxelVariables.useDOF = Boolean.parseBoolean(getValue("useDOF"));
+			VoxelVariables.useReflections = Boolean.parseBoolean(getValue("useReflections"));
+			VoxelVariables.useParallax = Boolean.parseBoolean(getValue("useParallax"));
+			VoxelVariables.VSYNC = Boolean.parseBoolean(getValue("VSYNC"));
+			VoxelVariables.FPS = Integer.parseInt(getValue("FPS"));
+			VoxelVariables.UPS = Integer.parseInt(getValue("UPS"));
+			VoxelVariables.radius = Integer.parseInt(getValue("DrawDistance"));
 		} else {
 			updateSetting();
 			save();
@@ -117,6 +129,8 @@ public class GameSettings {
 		registerValue("useFXAA", Boolean.toString(VoxelVariables.useFXAA));
 		registerValue("useMotionBlur", Boolean.toString(VoxelVariables.useMotionBlur));
 		registerValue("useDOF", Boolean.toString(VoxelVariables.useDOF));
+		registerValue("useReflections", Boolean.toString(VoxelVariables.useReflections));
+		registerValue("useParallax", Boolean.toString(VoxelVariables.useParallax));
 		registerValue("VSYNC", Boolean.toString(VoxelVariables.VSYNC));
 		registerValue("FPS", Integer.toString(VoxelVariables.FPS));
 		registerValue("UPS", Integer.toString(VoxelVariables.UPS));

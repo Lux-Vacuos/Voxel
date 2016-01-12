@@ -1,7 +1,7 @@
 //
 // The MIT License (MIT)
 //
-// Copyright (c) 2015 Guerra24
+// Copyright (c) 2015-2016 Guerra24
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -59,8 +59,8 @@ uniform samplerCube skyboxNight;
 uniform int useFXAA;
 uniform int useDOF;
 uniform int useMotionBlur;
-uniform int useBloom;
 uniform int useVolumetricLight;
+uniform int useReflections;
 
 /*--------------------------------------------------------*/
 /*------------------COMPOSITE 1 CONFIG--------------------*/
@@ -84,50 +84,49 @@ void main(void){
     float depth = texture(gDepth, vec3(texcoord.xy, 0.0), 16);
     if(data.b != 1) {
    		if(data.r == 1.0){
-    		vec3 worldStartingPos = position.xyz;
-    		vec3 normal = normal.xyz;
-    		vec3 cameraToWorld = worldStartingPos.xyz - cameraPosition.xyz;
-    		float cameraToWorldDist = length(cameraToWorld);
-    		vec3 cameraToWorldNorm = normalize(cameraToWorld);
-    		vec3 refl = normalize(reflect(cameraToWorldNorm, normal));
-    		float cosAngle = abs(dot(normal, cameraToWorldNorm));
-    		float fact = 1 - cosAngle;
-    		fact = min(1, 1.38 - fact*fact);
-    		vec3 newPos;
-    		vec4 newScreen;
-    		float i = 0;
-    		vec3 rayTrace = worldStartingPos;
-    		float currentWorldDist, rayDist;
-    		float incr = 0.4;
-    		do {
-        		i += 0.05;
-        		rayTrace += refl*incr;
-        		incr *= 1.4;
-        		newScreen = projectionMatrix * viewMatrix * vec4(rayTrace, 1);
-        		newScreen /= newScreen.w;
-        		newPos = texture(gPosition, newScreen.xy/2.0+0.5).xyz;
-        		currentWorldDist = length(newPos.xyz - cameraPosition.xyz);
-        		rayDist = length(rayTrace.xyz - cameraPosition.xyz);
-        		if (newScreen.x > 1 || newScreen.x < -1 || newScreen.y > 1 || newScreen.y < -1 || dot(refl, cameraToWorldNorm) < 0)
-        			break;
-    		} while(rayDist < currentWorldDist);
- 			vec4 newColor = texture(composite0, newScreen.xy/2.0 + 0.5);
-    		if (dot(refl, cameraToWorldNorm) < 0)
-        		fact = 1.0;
-    		else if (newScreen.x > 1 || newScreen.x < -1 || newScreen.y > 1 || newScreen.y < -1)
-        		fact = 1.0;
-    		else if (cameraToWorldDist > currentWorldDist)
-        		fact = 1.0;
-        	if(fact != 1.0){
-        		image = image*fact + newColor;
-        	} else {
-        		vec3 I = normalize(position.xyz - cameraPosition);
-    			vec3 R = reflect(I, normalize(normal.xyz));
-   				vec4 imageDay = texture(skyboxDay, R);
-   				vec4 imageNight = texture(skyboxNight, R);
-    			image += mix(imageDay, imageNight, skyboxBlendFactor);
+   			if(useReflections == 1){
+    			vec3 worldStartingPos = position.xyz;
+    			vec3 normal = normal.xyz;
+    			vec3 cameraToWorld = worldStartingPos.xyz - cameraPosition.xyz;
+    			float cameraToWorldDist = length(cameraToWorld);
+    			vec3 cameraToWorldNorm = normalize(cameraToWorld);
+    			vec3 refl = normalize(reflect(cameraToWorldNorm, normal));
+    			float cosAngle = abs(dot(normal, cameraToWorldNorm));
+    			float fact = 1 - cosAngle;
+    			fact = min(1, 1.38 - fact*fact);
+    			vec3 newPos;
+    			vec4 newScreen;
+    			float i = 0;
+    			vec3 rayTrace = worldStartingPos;
+    			float currentWorldDist, rayDist;
+    			float incr = 0.4;
+    			do {
+	        		i += 0.05;
+        			rayTrace += refl*incr;
+        			incr *= 1.4;
+        			newScreen = projectionMatrix * viewMatrix * vec4(rayTrace, 1);
+        			newScreen /= newScreen.w;
+        			newPos = texture(gPosition, newScreen.xy/2.0+0.5).xyz;
+        			currentWorldDist = length(newPos.xyz - cameraPosition.xyz);
+        			rayDist = length(rayTrace.xyz - cameraPosition.xyz);
+        			if (newScreen.x > 1 || newScreen.x < -1 || newScreen.y > 1 || newScreen.y < -1 || dot(refl, cameraToWorldNorm) < 0 || cameraToWorldDist > currentWorldDist)
+	        			break;
+    			} while(rayDist < currentWorldDist);
+ 				vec4 newColor = texture(composite0, newScreen.xy/2.0 + 0.5);
+    			if (dot(refl, cameraToWorldNorm) < 0)
+	        		fact = 1.0;
+    			else if (newScreen.x > 1 || newScreen.x < -1 || newScreen.y > 1 || newScreen.y < -1)
+	        		fact = 1.0;
+    			else if (cameraToWorldDist > currentWorldDist)
+	        		fact = 1.0;
+        			
+        		//vec3 I = normalize(position.xyz - cameraPosition);
+    			//vec3 R = reflect(I, normalize(normal.xyz));
+   				//vec4 imageDay = texture(skyboxDay, R);
+   				//vec4 imageNight = texture(skyboxNight, R);
+    			//vec4 fakeRelf = mix(imageDay, imageNight, skyboxBlendFactor);
+        		image = image*fact + newColor *(1-fact);
         	}
-        		
     	}
     }
     

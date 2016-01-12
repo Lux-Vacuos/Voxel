@@ -1,7 +1,7 @@
 //
 // The MIT License (MIT)
 //
-// Copyright (c) 2015 Guerra24
+// Copyright (c) 2015-2016 Guerra24
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -25,17 +25,22 @@
 #version 330 core
 
 in vec2 pass_textureCoords;
-in vec3 surfaceNormal;
-in vec4 pass_position;
+in mat3 TBN;
+in vec3 pass_normal;
+in vec3 pass_position;
 in vec4 pass_Data;
 in vec4 ShadowCoord;
+in vec3 posInTangent;
 
 out vec4 [5] out_Color;
 
 uniform sampler2D texture0;
 uniform sampler2DShadow depth;
+uniform sampler2D normalMap;
+uniform sampler2D heightMap;
 
 uniform int useShadows;
+uniform int useParallax;
 
 vec2 poissonDisk[16] = vec2[]( 
    vec2( -0.94201624, -0.39906216 ), 
@@ -56,10 +61,53 @@ vec2 poissonDisk[16] = vec2[](
    vec2( 0.14383161, -0.14100790 ) 
 );
 
+const float heightScale = 0.01f;
+
+vec2 ParallaxMapping(vec2 texCoords, vec3 viewDir) { 
+
+	const float minLayers = 8;
+	const float maxLayers = 32;
+	float numLayers = mix(maxLayers, minLayers, abs(dot(vec3(0.0, 0.0, 1.0), viewDir)));  
+    // calculate the size of each layer
+    float layerDepth = 1.0 / numLayers;
+    // depth of current layer
+    float currentLayerDepth = 0.0;
+    vec2 P = viewDir.xy * heightScale; 
+    float deltaTexCoords = P / numLayers;
+    
+    vec2 currentTexCoords = texCoords;
+	float currentDepthMapValue = texture(heightMap, currentTexCoords).r;
+  
+	while(currentLayerDepth < currentDepthMapValue) {
+    	// shift texture coordinates along direction of P
+    	currentTexCoords -= deltaTexCoords;
+    	// get depthmap value at current texture coordinates
+    	currentDepthMapValue = texture(heightMap, currentTexCoords).r;  
+    	// get depth of next layer
+   		currentLayerDepth += layerDepth;  
+	}
+	vec2 prevTexCoords = currentTexCoords + deltaTexCoords;
+
+	// get depth after and before collision for linear interpolation
+	float afterDepth  = currentDepthMapValue - currentLayerDepth;
+	float beforeDepth = texture(heightMap, prevTexCoords).r - currentLayerDepth + layerDepth;
+ 
+	// interpolation of texture coordinates
+	float weight = afterDepth / (afterDepth - beforeDepth);
+	vec2 finalTexCoords = prevTexCoords * weight + currentTexCoords * (1.0 - weight);
+
+	return finalTexCoords;
+} 
+
 void main(void) {
 	vec4 data = pass_Data;
 	float bright = data.y;
 	int id = int(data.x + 0.5f);
+
+	vec3 eyeDir = normalize(posInTangent);
+	vec2 texcoords = pass_textureCoords;
+	if(useParallax == 1)
+		texcoords = ParallaxMapping(texcoords, eyeDir);
 	
 	float shadow = 0;
 	if(useShadows == 1){
@@ -74,15 +122,19 @@ void main(void) {
 		}
 	}
 
-    vec4 textureColour = texture(texture0, pass_textureCoords);
+    vec4 textureColour = texture(texture0, texcoords);
     if(textureColour.a < 0.5)
     	discard;
+    	
+	vec3 normal = texture(normalMap, texcoords).rgb;
+	normal = normalize(normal * 2.0 - 1.0);   
+	normal = normalize(TBN * normal);
+    	
 	out_Color[0] = textureColour;
 	out_Color[1] = vec4(pass_position.xyz,0);
-	out_Color[2] = vec4(surfaceNormal.xyz,0);
+	out_Color[2] = vec4(normal,0.0);
 	out_Color[3] = vec4(0.0,1.0,0.0,shadow);
 	out_Color[4] = vec4(0.0, 0.0, 0.0, bright);
-	if(id == 8 || id == 13) 
+	if(id == 8 || id == 13)
 		out_Color[3].r = 1.0;
-	
 }

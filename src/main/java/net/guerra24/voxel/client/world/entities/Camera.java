@@ -205,8 +205,6 @@ public class Camera extends Entity {
 			multiplierMovement = 120 * delta;
 		}
 
-		velocityComponent.x = Maths.clamp(velocityComponent.x, -2, 2);
-		velocityComponent.z = Maths.clamp(velocityComponent.z, -2, 2);
 
 		if (isKeyDown(Keyboard.KEY_Y)) {
 			System.out.println(positionComponent.toString());

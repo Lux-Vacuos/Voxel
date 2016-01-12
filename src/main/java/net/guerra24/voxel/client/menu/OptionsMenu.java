@@ -35,6 +35,10 @@ public class OptionsMenu {
 	private Button dofButton;
 	private Button shadowsButton;
 	private Button godraysButton;
+	private Button fxaaButton;
+	private Button motionBlurButton;
+	private Button reflectionsButton;
+	private Button parallaxButton;
 
 	private Slider slider;
 
@@ -46,10 +50,16 @@ public class OptionsMenu {
 		yScale = height / 720f;
 		xScale = width / 1280f;
 		slider = new Slider(900 * xScale, 540 * yScale, 315 * xScale, 80 * yScale);
-		exitButton = new Button(new Vector2f(530, 35), new Vector2f(215, 80), xScale, yScale);
-		godraysButton = new Button(new Vector2f(32, 560), new Vector2f(215, 80), xScale, yScale);
-		shadowsButton = new Button(new Vector2f(32, 460), new Vector2f(215, 80), xScale, yScale);
-		dofButton = new Button(new Vector2f(32, 360), new Vector2f(215, 80), xScale, yScale);
+		exitButton = new Button(new Vector2f(530, 35), new Vector2f(230, 80), xScale, yScale);
+		godraysButton = new Button(new Vector2f(40, 560), new Vector2f(230, 80), xScale, yScale);
+		shadowsButton = new Button(new Vector2f(40, 460), new Vector2f(230, 80), xScale, yScale);
+		dofButton = new Button(new Vector2f(40, 360), new Vector2f(230, 80), xScale, yScale);
+		fxaaButton = new Button(new Vector2f(40, 260), new Vector2f(230, 80), xScale, yScale);
+		motionBlurButton = new Button(new Vector2f(40, 160), new Vector2f(230, 80), xScale, yScale);
+
+		reflectionsButton = new Button(new Vector2f(290, 560), new Vector2f(230, 80), xScale, yScale);
+		parallaxButton = new Button(new Vector2f(290, 460), new Vector2f(230, 80), xScale, yScale);
+
 		slider.setPos(VoxelVariables.radius / 32f);
 	}
 
@@ -60,21 +70,42 @@ public class OptionsMenu {
 
 	public void render() {
 		MenuRendering.renderWindow("Options", "Roboto-Bold", 20 * xScale, 20 * yScale, 1240 * xScale, 680 * yScale);
-		if (VoxelVariables.useVolumetricLight) {
+
+		if (VoxelVariables.useVolumetricLight)
 			godraysButton.render("Light Rays: ON", MenuRendering.rgba(100, 255, 100, 255, MenuRendering.colorA));
-		} else {
+		else
 			godraysButton.render("Light Rays: OFF", MenuRendering.rgba(255, 100, 100, 255, MenuRendering.colorA));
-		}
-		if (VoxelVariables.useShadows) {
+
+		if (VoxelVariables.useShadows)
 			shadowsButton.render("Shadows: ON", MenuRendering.rgba(100, 255, 100, 255, MenuRendering.colorA));
-		} else {
+		else
 			shadowsButton.render("Shadows: OFF", MenuRendering.rgba(255, 100, 100, 255, MenuRendering.colorA));
-		}
-		if (VoxelVariables.useDOF) {
+
+		if (VoxelVariables.useDOF)
 			dofButton.render("DoF: ON", MenuRendering.rgba(100, 255, 100, 255, MenuRendering.colorA));
-		} else {
+		else
 			dofButton.render("DoF: OFF", MenuRendering.rgba(255, 100, 100, 255, MenuRendering.colorA));
-		}
+
+		if (VoxelVariables.useFXAA)
+			fxaaButton.render("FXAA: ON", MenuRendering.rgba(100, 255, 100, 255, MenuRendering.colorA));
+		else
+			fxaaButton.render("FXAA: OFF", MenuRendering.rgba(255, 100, 100, 255, MenuRendering.colorA));
+
+		if (VoxelVariables.useMotionBlur)
+			motionBlurButton.render("Motion Blur: ON", MenuRendering.rgba(100, 255, 100, 255, MenuRendering.colorA));
+		else
+			motionBlurButton.render("Motion Blur: OFF", MenuRendering.rgba(255, 100, 100, 255, MenuRendering.colorA));
+		
+		if (VoxelVariables.useReflections)
+			reflectionsButton.render("Reflections: ON", MenuRendering.rgba(100, 255, 100, 255, MenuRendering.colorA));
+		else
+			reflectionsButton.render("Reflections: OFF", MenuRendering.rgba(255, 100, 100, 255, MenuRendering.colorA));
+		
+		if(VoxelVariables.useParallax)
+			parallaxButton.render("Parallax: ON", MenuRendering.rgba(100, 255, 100, 255, MenuRendering.colorA));
+		else
+			parallaxButton.render("Parallax: OFF", MenuRendering.rgba(255, 100, 100, 255, MenuRendering.colorA));
+
 		exitButton.render("Back");
 		MenuRendering.renderLabel("Draw Distance: " + VoxelVariables.radius, "Roboto-Bold", 970 * xScale, 90 * yScale,
 				315 * xScale, 20 * yScale, 25f * yScale);
@@ -99,6 +130,22 @@ public class OptionsMenu {
 
 	public Button getGodraysButton() {
 		return godraysButton;
+	}
+
+	public Button getFxaaButton() {
+		return fxaaButton;
+	}
+
+	public Button getMotionBlurButton() {
+		return motionBlurButton;
+	}
+
+	public Button getParallaxButton() {
+		return parallaxButton;
+	}
+
+	public Button getReflectionsButton() {
+		return reflectionsButton;
 	}
 
 }

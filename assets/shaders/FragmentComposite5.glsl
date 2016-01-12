@@ -1,7 +1,7 @@
 //
 // The MIT License (MIT)
 //
-// Copyright (c) 2015 Guerra24
+// Copyright (c) 2015-2016 Guerra24
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -58,7 +58,6 @@ uniform sampler2DShadow gDepth;
 uniform int useFXAA;
 uniform int useDOF;
 uniform int useMotionBlur;
-uniform int useBloom;
 uniform int useVolumetricLight;
 
 /*--------------------------------------------------------*/

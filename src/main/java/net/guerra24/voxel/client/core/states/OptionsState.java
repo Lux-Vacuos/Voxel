@@ -63,6 +63,18 @@ public class OptionsState implements State {
 				VoxelVariables.useDOF = !VoxelVariables.useDOF;
 			if (gm.getMenuSystem().optionsMenu.getGodraysButton().pressed())
 				VoxelVariables.useVolumetricLight = !VoxelVariables.useVolumetricLight;
+			if (gm.getMenuSystem().optionsMenu.getFxaaButton().pressed())
+				VoxelVariables.useFXAA = !VoxelVariables.useFXAA;
+
+			if (gm.getMenuSystem().optionsMenu.getParallaxButton().pressed())
+				VoxelVariables.useParallax = !VoxelVariables.useParallax;
+
+			if (gm.getMenuSystem().optionsMenu.getMotionBlurButton().pressed())
+				VoxelVariables.useMotionBlur = !VoxelVariables.useMotionBlur;
+
+			if (gm.getMenuSystem().optionsMenu.getReflectionsButton().pressed())
+				VoxelVariables.useReflections = !VoxelVariables.useReflections;
+
 			if (gm.getMenuSystem().optionsMenu.getExitButton().pressed()) {
 				gm.getGameSettings().updateSetting();
 				gm.getGameSettings().save();

@@ -39,6 +39,9 @@ public class BlocksResources {
 
 	public static TessellatorTextureAtlas tessellatorTextureAtlas;
 
+	public static int normalMap;
+	public static int heightMap;
+
 	public static void createBlocks(Loader loader) {
 
 		RawModel torch = loader.getObjLoader().loadObjModel("Torch");
@@ -48,6 +51,8 @@ public class BlocksResources {
 		ModelTexture texture10 = new ModelTexture(loader.loadTextureBlocks("Leaves"));
 
 		tessellatorTextureAtlas = new TessellatorTextureAtlas(256, 256, loader.loadTextureBlocks("blocks"));
+		normalMap = loader.loadTextureBlocks("blocks_normal");
+		heightMap = loader.loadTextureBlocks("blocks_height");
 
 		ModelTexture texture8 = new ModelTexture(loader.loadTextureBlocks("Torch"));
 		ModelTexture texture9 = new ModelTexture(loader.loadTextureBlocks("Portal"));

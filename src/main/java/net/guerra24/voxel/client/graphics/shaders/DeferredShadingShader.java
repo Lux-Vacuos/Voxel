@@ -73,8 +73,8 @@ public class DeferredShadingShader extends ShaderProgram {
 	private int loc_useFXAA;
 	private int loc_useDOF;
 	private int loc_useMotionBlur;
-	private int loc_useBloom;
 	private int loc_useVolumetricLight;
+	private int loc_useReflections;
 
 	private float time;
 
@@ -120,7 +120,7 @@ public class DeferredShadingShader extends ShaderProgram {
 		loc_useFXAA = super.getUniformLocation("useFXAA");
 		loc_useDOF = super.getUniformLocation("useDOF");
 		loc_useMotionBlur = super.getUniformLocation("useMotionBlur");
-		loc_useBloom = super.getUniformLocation("useBloom");
+		loc_useReflections = super.getUniformLocation("useReflections");
 		loc_useVolumetricLight = super.getUniformLocation("useVolumetricLight");
 	}
 
@@ -179,12 +179,13 @@ public class DeferredShadingShader extends ShaderProgram {
 		super.load2DVector(loc_resolution, res);
 	}
 
-	public void loadSettings() {
-		super.loadBoolean(loc_useDOF, VoxelVariables.useDOF);
-		super.loadBoolean(loc_useFXAA, VoxelVariables.useFXAA);
-		super.loadBoolean(loc_useMotionBlur, VoxelVariables.useMotionBlur);
-		super.loadBoolean(loc_useBloom, VoxelVariables.useBloom);
-		super.loadBoolean(loc_useVolumetricLight, VoxelVariables.useVolumetricLight);
+	public void loadSettings(boolean useDOF, boolean useFXAA, boolean useMotionBlur, boolean useVolumetricLight,
+			boolean useReflections) {
+		super.loadBoolean(loc_useDOF, useDOF);
+		super.loadBoolean(loc_useFXAA, useFXAA);
+		super.loadBoolean(loc_useMotionBlur, useMotionBlur);
+		super.loadBoolean(loc_useVolumetricLight, useVolumetricLight);
+		super.loadBoolean(loc_useReflections, useReflections);
 	}
 
 	public void loadMotionBlurData(Matrix4f projectionMatrix, Camera camera, Matrix4f previousViewMatrix,

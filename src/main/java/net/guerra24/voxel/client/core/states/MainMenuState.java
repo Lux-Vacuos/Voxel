@@ -55,7 +55,7 @@ public class MainMenuState implements State {
 		GameResources gm = voxel.getGameResources();
 
 		if (gm.getMenuSystem().mainMenu.getPlayButton().pressed()) {
-			states.setState(GameState.WORLD_SELECTION);
+			states.setState(GameState.LOADING_WORLD);
 		} else if (gm.getMenuSystem().mainMenu.getExitButton().pressed()) {
 			states.loop = false;
 		} else if (gm.getMenuSystem().mainMenu.getOptionsButton().pressed()) {

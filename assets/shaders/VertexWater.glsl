@@ -1,7 +1,7 @@
 //
 // The MIT License (MIT)
 //
-// Copyright (c) 2015 Guerra24
+// Copyright (c) 2015-2016 Guerra24
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -27,6 +27,7 @@
 in vec2 position;
 
 out vec3 pass_position;
+out vec3 normal;
 out vec4 ShadowCoord;
 
 uniform float moveFactor;
@@ -41,9 +42,10 @@ uniform int useShadows;
 
 void main(void) {
 	vec4 worldPosition = modelMatrix * vec4(position.x, 0.0, position.y, 1.0);
-	float sina = sin(worldPosition.x + moveFactor) * 0.05;
-	float sinb = cos(worldPosition.z - moveFactor) * 0.02;
+	float sina = sin((worldPosition.x + moveFactor) * 2) * 0.05;
+	float sinb = cos((worldPosition.z - moveFactor) * 2) * 0.02;
 	worldPosition += vec4(0.0, sina + sinb, 0.0, 0.0);
+	normal = vec3(sina, 1.0, sinb);
 	gl_Position = projectionMatrix * viewMatrix * worldPosition;
 	pass_position = worldPosition.xyz;
 	if(useShadows == 1){

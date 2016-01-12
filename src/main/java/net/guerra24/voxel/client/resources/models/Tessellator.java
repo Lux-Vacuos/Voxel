@@ -35,6 +35,8 @@ import static org.lwjgl.opengl.GL11.glCullFace;
 import static org.lwjgl.opengl.GL11.glDrawElements;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE1;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE2;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE3;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
 import static org.lwjgl.opengl.GL15.GL_ARRAY_BUFFER;
 import static org.lwjgl.opengl.GL15.GL_DYNAMIC_DRAW;
@@ -59,6 +61,7 @@ import java.util.List;
 
 import org.lwjgl.BufferUtils;
 
+import net.guerra24.voxel.client.core.VoxelVariables;
 import net.guerra24.voxel.client.graphics.shaders.TessellatorBasicShader;
 import net.guerra24.voxel.client.graphics.shaders.TessellatorShader;
 import net.guerra24.voxel.client.resources.GameResources;
@@ -73,16 +76,20 @@ import net.guerra24.voxel.universal.util.vector.Vector8f;
 
 public class Tessellator {
 
-	private int vaoID, vboID0, vboID1, vboID2, vboID3, iboID, vboCap0 = 64, vboCap1 = 64, vboCap2 = 64, vboCap3 = 64,
-			indicesCounter, iboCapacity = 64;
+	private int vaoID, vboID0, vboID1, vboID2, vboID3, vboID4, vboID5, iboID, vboCapacity = 64, indicesCounter,
+			iboCapacity = 64;
 
-	private ByteBuffer buffer0, buffer1, buffer2, buffer3, ibo;
+	private ByteBuffer buffer0, buffer1, buffer2, buffer3, buffer4, buffer5, ibo;
 
 	private List<Vector3f> pos, normals;
 	private List<Vector2f> texcoords;
 	private List<Integer> indices;
 	private List<Vector4f> data;
+	private List<Vector3f> tangent;
+	private List<Vector3f> bitangent;
 	private int texture;
+	private int normalMap;
+	private int heightMap;
 	private int occlusion;
 	private boolean updated = false;
 
@@ -101,6 +108,8 @@ public class Tessellator {
 		normals = new ArrayList<Vector3f>();
 		data = new ArrayList<Vector4f>();
 		indices = new ArrayList<Integer>();
+		tangent = new ArrayList<Vector3f>();
+		bitangent = new ArrayList<Vector3f>();
 		this.orthoProjectionMatrix = gm.getMasterShadowRenderer().getProjectionMatrix();
 		shader = TessellatorShader.getInstance();
 		shader.start();
@@ -120,39 +129,61 @@ public class Tessellator {
 		iboID = glGenBuffers();
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, iboID);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, iboCapacity, null, GL_DYNAMIC_DRAW);
+
 		vboID0 = glGenBuffers();
 		glBindBuffer(GL_ARRAY_BUFFER, vboID0);
-		glBufferData(GL_ARRAY_BUFFER, vboCap0, null, GL_DYNAMIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, vboCapacity, null, GL_DYNAMIC_DRAW);
 		glEnableVertexAttribArray(0);
 		glVertexAttribPointer(0, 3, GL_FLOAT, false, 0, 0);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
+
 		vboID1 = glGenBuffers();
 		glBindBuffer(GL_ARRAY_BUFFER, vboID1);
-		glBufferData(GL_ARRAY_BUFFER, vboCap1, null, GL_DYNAMIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, vboCapacity, null, GL_DYNAMIC_DRAW);
 		glEnableVertexAttribArray(1);
 		glVertexAttribPointer(1, 2, GL_FLOAT, false, 0, 0);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
+
 		vboID2 = glGenBuffers();
 		glBindBuffer(GL_ARRAY_BUFFER, vboID2);
-		glBufferData(GL_ARRAY_BUFFER, vboCap2, null, GL_DYNAMIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, vboCapacity, null, GL_DYNAMIC_DRAW);
 		glEnableVertexAttribArray(2);
 		glVertexAttribPointer(2, 3, GL_FLOAT, false, 0, 0);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
+
 		vboID3 = glGenBuffers();
 		glBindBuffer(GL_ARRAY_BUFFER, vboID3);
-		glBufferData(GL_ARRAY_BUFFER, vboCap3, null, GL_DYNAMIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, vboCapacity, null, GL_DYNAMIC_DRAW);
 		glEnableVertexAttribArray(3);
 		glVertexAttribPointer(3, 4, GL_FLOAT, false, 0, 0);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+		vboID4 = glGenBuffers();
+		glBindBuffer(GL_ARRAY_BUFFER, vboID4);
+		glBufferData(GL_ARRAY_BUFFER, vboCapacity, null, GL_DYNAMIC_DRAW);
+		glEnableVertexAttribArray(4);
+		glVertexAttribPointer(4, 3, GL_FLOAT, false, 0, 0);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+		vboID5 = glGenBuffers();
+		glBindBuffer(GL_ARRAY_BUFFER, vboID5);
+		glBufferData(GL_ARRAY_BUFFER, vboCapacity, null, GL_DYNAMIC_DRAW);
+		glEnableVertexAttribArray(5);
+		glVertexAttribPointer(5, 3, GL_FLOAT, false, 0, 0);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glBindVertexArray(0);
 	}
 
-	public void begin(int texture) {
+	public void begin(int texture, int normalMap, int heightMap) {
 		this.texture = texture;
+		this.normalMap = normalMap;
+		this.heightMap = heightMap;
 		pos.clear();
 		texcoords.clear();
 		normals.clear();
 		data.clear();
+		tangent.clear();
+		bitangent.clear();
 	}
 
 	public void vertex3f(Vector3f pos) {
@@ -167,6 +198,14 @@ public class Tessellator {
 		this.normals.add(normals);
 	}
 
+	public void tangent3f(Vector3f tangent) {
+		this.tangent.add(tangent);
+	}
+
+	public void bitangent3f(Vector3f bitangent) {
+		this.bitangent.add(bitangent);
+	}
+
 	public void indice(int ind) {
 		this.indices.add(ind);
 	}
@@ -176,36 +215,47 @@ public class Tessellator {
 	}
 
 	public void end() {
-		loadData(pos, texcoords, normals, data);
+		loadData(pos, texcoords, normals, data, tangent, bitangent);
 		updated = true;
 	}
 
 	public void draw(GameResources gm) {
 		if (updated) {
-			updateGlBuffers(vboID0, vboCap0, buffer0);
-			updateGlBuffers(vboID1, vboCap1, buffer1);
-			updateGlBuffers(vboID2, vboCap2, buffer2);
-			updateGlBuffers(vboID3, vboCap3, buffer3);
+			updateGlBuffers(vboID0, vboCapacity, buffer0);
+			updateGlBuffers(vboID1, vboCapacity, buffer1);
+			updateGlBuffers(vboID2, vboCapacity, buffer2);
+			updateGlBuffers(vboID3, vboCapacity, buffer3);
+			updateGlBuffers(vboID4, vboCapacity, buffer4);
+			updateGlBuffers(vboID5, vboCapacity, buffer5);
 			updateGLIBOBuffer();
 			updated = false;
 		}
 		shader.start();
 		shader.loadviewMatrix(gm.getCamera());
 		shader.loadLightMatrix(gm);
+		shader.loadSettings(VoxelVariables.useShadows, VoxelVariables.useParallax);
 		glBindVertexArray(vaoID);
 		glEnableVertexAttribArray(0);
 		glEnableVertexAttribArray(1);
 		glEnableVertexAttribArray(2);
 		glEnableVertexAttribArray(3);
+		glEnableVertexAttribArray(4);
+		glEnableVertexAttribArray(5);
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, texture);
 		glActiveTexture(GL_TEXTURE1);
 		glBindTexture(GL_TEXTURE_2D, gm.getMasterShadowRenderer().getFbo().getTexture());
+		glActiveTexture(GL_TEXTURE2);
+		glBindTexture(GL_TEXTURE_2D, normalMap);
+		glActiveTexture(GL_TEXTURE3);
+		glBindTexture(GL_TEXTURE_2D, heightMap);
 		glDrawElements(GL_TRIANGLES, indicesCounter, GL_UNSIGNED_INT, 0);
 		glDisableVertexAttribArray(0);
 		glDisableVertexAttribArray(1);
 		glDisableVertexAttribArray(2);
 		glDisableVertexAttribArray(3);
+		glDisableVertexAttribArray(4);
+		glDisableVertexAttribArray(5);
 		glBindVertexArray(0);
 		shader.stop();
 	}
@@ -226,10 +276,12 @@ public class Tessellator {
 
 	public void drawOcclusion(Camera camera, Matrix4f projectionMatrix) {
 		if (updated) {
-			updateGlBuffers(vboID0, vboCap0, buffer0);
-			updateGlBuffers(vboID1, vboCap1, buffer1);
-			updateGlBuffers(vboID2, vboCap2, buffer2);
-			updateGlBuffers(vboID3, vboCap3, buffer3);
+			updateGlBuffers(vboID0, vboCapacity, buffer0);
+			updateGlBuffers(vboID1, vboCapacity, buffer1);
+			updateGlBuffers(vboID2, vboCapacity, buffer2);
+			updateGlBuffers(vboID3, vboCapacity, buffer3);
+			updateGlBuffers(vboID4, vboCapacity, buffer4);
+			updateGlBuffers(vboID5, vboCapacity, buffer5);
 			updateGLIBOBuffer();
 			updated = false;
 		}
@@ -244,11 +296,14 @@ public class Tessellator {
 		basicShader.stop();
 	}
 
-	public void loadData(List<Vector3f> pos, List<Vector2f> texcoords, List<Vector3f> normals, List<Vector4f> data) {
+	public void loadData(List<Vector3f> pos, List<Vector2f> texcoords, List<Vector3f> normals, List<Vector4f> data,
+			List<Vector3f> tangent, List<Vector3f> bitangent) {
 		buffer0 = BufferUtils.createByteBuffer((pos.size() * 3) * 4);
 		buffer1 = BufferUtils.createByteBuffer((texcoords.size() * 2) * 4);
 		buffer2 = BufferUtils.createByteBuffer((normals.size() * 3) * 4);
 		buffer3 = BufferUtils.createByteBuffer((data.size() * 4) * 4);
+		buffer4 = BufferUtils.createByteBuffer((tangent.size() * 3) * 4);
+		buffer5 = BufferUtils.createByteBuffer((bitangent.size() * 3) * 4);
 		for (int i = 0; i < pos.size(); i++) {
 			buffer0.putFloat(pos.get(i).x);
 			buffer0.putFloat(pos.get(i).y);
@@ -269,10 +324,22 @@ public class Tessellator {
 			buffer3.putFloat(data.get(i).z);
 			buffer3.putFloat(data.get(i).w);
 		}
+		for (int i = 0; i < tangent.size(); i++) {
+			buffer4.putFloat(tangent.get(i).x);
+			buffer4.putFloat(tangent.get(i).y);
+			buffer4.putFloat(tangent.get(i).z);
+		}
+		for (int i = 0; i < bitangent.size(); i++) {
+			buffer5.putFloat(bitangent.get(i).x);
+			buffer5.putFloat(bitangent.get(i).y);
+			buffer5.putFloat(bitangent.get(i).z);
+		}
 		buffer0.flip();
 		buffer1.flip();
 		buffer2.flip();
 		buffer3.flip();
+		buffer4.flip();
+		buffer5.flip();
 		updateIBO((pos.size() * 3) / 2);
 	}
 
@@ -335,6 +402,41 @@ public class Tessellator {
 				normal3f(new Vector3f(0, 1, 0));
 				data4f(new Vector4f(id, l, 0, 0));
 
+				Vector3f edge1 = Vector3f.sub(new Vector3f(x + size, y + size, z + size),
+						new Vector3f(x, y + size, z + size), null);
+				Vector3f edge2 = Vector3f.sub(new Vector3f(x + size, y + size, z), new Vector3f(x, y + size, z + size),
+						null);
+				Vector2f deltaUV1 = Vector2f.sub(new Vector2f(texcoords.getI(), texcoords.getJ()),
+						new Vector2f(texcoords.getZ(), texcoords.getW()), null);
+				Vector2f deltaUV2 = Vector2f.sub(new Vector2f(texcoords.getK(), texcoords.getL()),
+						new Vector2f(texcoords.getZ(), texcoords.getW()), null);
+
+				float f = 1.0f / (deltaUV1.x * deltaUV2.y - deltaUV2.x * deltaUV1.y);
+
+				Vector3f tangent = new Vector3f();
+
+				tangent.x = f * (deltaUV2.y * edge1.x - deltaUV1.y * edge2.x);
+				tangent.y = f * (deltaUV2.y * edge1.y - deltaUV1.y * edge2.y);
+				tangent.z = f * (deltaUV2.y * edge1.z - deltaUV1.y * edge2.z);
+				tangent.normalise();
+
+				tangent3f(tangent);
+				tangent3f(tangent);
+				tangent3f(tangent);
+				tangent3f(tangent);
+
+				Vector3f bitangent = new Vector3f();
+
+				bitangent.x = f * (-deltaUV2.x * edge1.x + deltaUV1.x * edge2.x);
+				bitangent.y = f * (-deltaUV2.x * edge1.y + deltaUV1.x * edge2.y);
+				bitangent.z = f * (-deltaUV2.x * edge1.z + deltaUV1.x * edge2.z);
+				bitangent.normalise();
+
+				bitangent3f(bitangent);
+				bitangent3f(bitangent);
+				bitangent3f(bitangent);
+				bitangent3f(bitangent);
+
 			}
 			if (bottom) {
 				Vector8f texcoords = block.texCoordsDown();
@@ -358,6 +460,42 @@ public class Tessellator {
 				texture2f(new Vector2f(texcoords.getX(), texcoords.getY()));
 				normal3f(new Vector3f(0, -1, 0));
 				data4f(new Vector4f(id, l, 0, 0));
+
+				Vector3f edge1 = Vector3f.sub(new Vector3f(x + size, y, z), new Vector3f(x, y, z), null);
+
+				Vector3f edge2 = Vector3f.sub(new Vector3f(x + size, y, z + size), new Vector3f(x, y, z), null);
+
+				Vector2f deltaUV1 = Vector2f.sub(new Vector2f(texcoords.getI(), texcoords.getJ()),
+						new Vector2f(texcoords.getZ(), texcoords.getW()), null);
+
+				Vector2f deltaUV2 = Vector2f.sub(new Vector2f(texcoords.getK(), texcoords.getL()),
+						new Vector2f(texcoords.getZ(), texcoords.getW()), null);
+
+				float f = 1.0f / (deltaUV1.x * deltaUV2.y - deltaUV2.x * deltaUV1.y);
+
+				Vector3f tangent = new Vector3f();
+
+				tangent.x = f * (deltaUV2.y * edge1.x - deltaUV1.y * edge2.x);
+				tangent.y = f * (deltaUV2.y * edge1.y - deltaUV1.y * edge2.y);
+				tangent.z = f * (deltaUV2.y * edge1.z - deltaUV1.y * edge2.z);
+				tangent.normalise();
+
+				tangent3f(tangent);
+				tangent3f(tangent);
+				tangent3f(tangent);
+				tangent3f(tangent);
+
+				Vector3f bitangent = new Vector3f();
+
+				bitangent.x = f * (-deltaUV2.x * edge1.x + deltaUV1.x * edge2.x);
+				bitangent.y = f * (-deltaUV2.x * edge1.y + deltaUV1.x * edge2.y);
+				bitangent.z = f * (-deltaUV2.x * edge1.z + deltaUV1.x * edge2.z);
+				bitangent.normalise();
+
+				bitangent3f(bitangent);
+				bitangent3f(bitangent);
+				bitangent3f(bitangent);
+				bitangent3f(bitangent);
 			}
 
 			if (back) {
@@ -382,6 +520,44 @@ public class Tessellator {
 				texture2f(new Vector2f(texcoords.getZ(), texcoords.getW()));
 				normal3f(new Vector3f(0, 0, 1));
 				data4f(new Vector4f(id, l, 0, 0));
+
+				Vector3f edge1 = Vector3f.sub(new Vector3f(x + size, y, z + size), new Vector3f(x, y, z + size), null);
+
+				Vector3f edge2 = Vector3f.sub(new Vector3f(x + size, y + size, z + size), new Vector3f(x, y, z + size),
+						null);
+
+				Vector2f deltaUV1 = Vector2f.sub(new Vector2f(texcoords.getK(), texcoords.getL()),
+						new Vector2f(texcoords.getX(), texcoords.getY()), null);
+
+				Vector2f deltaUV2 = Vector2f.sub(new Vector2f(texcoords.getI(), texcoords.getJ()),
+						new Vector2f(texcoords.getX(), texcoords.getY()), null);
+
+				float f = 1.0f / (deltaUV1.x * deltaUV2.y - deltaUV2.x * deltaUV1.y);
+
+				Vector3f tangent = new Vector3f();
+
+				tangent.x = f * (deltaUV2.y * edge1.x - deltaUV1.y * edge2.x);
+				tangent.y = f * (deltaUV2.y * edge1.y - deltaUV1.y * edge2.y);
+				tangent.z = f * (deltaUV2.y * edge1.z - deltaUV1.y * edge2.z);
+				tangent.normalise();
+
+				tangent3f(tangent);
+				tangent3f(tangent);
+				tangent3f(tangent);
+				tangent3f(tangent);
+
+				Vector3f bitangent = new Vector3f();
+
+				bitangent.x = f * (-deltaUV2.x * edge1.x + deltaUV1.x * edge2.x);
+				bitangent.y = f * (-deltaUV2.x * edge1.y + deltaUV1.x * edge2.y);
+				bitangent.z = f * (-deltaUV2.x * edge1.z + deltaUV1.x * edge2.z);
+				bitangent.normalise();
+
+				bitangent3f(bitangent);
+				bitangent3f(bitangent);
+				bitangent3f(bitangent);
+				bitangent3f(bitangent);
+
 			}
 			if (front) {
 				// front face
@@ -405,6 +581,43 @@ public class Tessellator {
 				texture2f(new Vector2f(texcoords.getX(), texcoords.getY()));
 				normal3f(new Vector3f(0, 0, -1));
 				data4f(new Vector4f(id, l, 0, 0));
+
+				Vector3f edge1 = Vector3f.sub(new Vector3f(x + size, y + size, z), new Vector3f(x, y + size, z), null);
+
+				Vector3f edge2 = Vector3f.sub(new Vector3f(x + size, y, z), new Vector3f(x, y + size, z), null);
+
+				Vector2f deltaUV1 = Vector2f.sub(new Vector2f(texcoords.getI(), texcoords.getJ()),
+						new Vector2f(texcoords.getZ(), texcoords.getW()), null);
+
+				Vector2f deltaUV2 = Vector2f.sub(new Vector2f(texcoords.getK(), texcoords.getL()),
+						new Vector2f(texcoords.getZ(), texcoords.getW()), null);
+
+				float f = 1.0f / (deltaUV1.x * deltaUV2.y - deltaUV2.x * deltaUV1.y);
+
+				Vector3f tangent = new Vector3f();
+
+				tangent.x = f * (deltaUV2.y * edge1.x - deltaUV1.y * edge2.x);
+				tangent.y = f * (deltaUV2.y * edge1.y - deltaUV1.y * edge2.y);
+				tangent.z = f * (deltaUV2.y * edge1.z - deltaUV1.y * edge2.z);
+				tangent.normalise();
+
+				tangent3f(tangent);
+				tangent3f(tangent);
+				tangent3f(tangent);
+				tangent3f(tangent);
+
+				Vector3f bitangent = new Vector3f();
+
+				bitangent.x = f * (-deltaUV2.x * edge1.x + deltaUV1.x * edge2.x);
+				bitangent.y = f * (-deltaUV2.x * edge1.y + deltaUV1.x * edge2.y);
+				bitangent.z = f * (-deltaUV2.x * edge1.z + deltaUV1.x * edge2.z);
+				bitangent.normalise();
+
+				bitangent3f(bitangent);
+				bitangent3f(bitangent);
+				bitangent3f(bitangent);
+				bitangent3f(bitangent);
+
 			}
 			if (right) {
 				Vector8f texcoords = block.texCoordsRight();
@@ -428,6 +641,43 @@ public class Tessellator {
 				texture2f(new Vector2f(texcoords.getI(), texcoords.getJ()));
 				normal3f(new Vector3f(-1, 0, 0));
 				data4f(new Vector4f(id, l, 0, 0));
+
+				Vector3f edge1 = Vector3f.sub(new Vector3f(x, y, z + size), new Vector3f(x, y, z), null);
+
+				Vector3f edge2 = Vector3f.sub(new Vector3f(x, y + size, z + size), new Vector3f(x, y, z), null);
+
+				Vector2f deltaUV1 = Vector2f.sub(new Vector2f(texcoords.getX(), texcoords.getY()),
+						new Vector2f(texcoords.getK(), texcoords.getL()), null);
+
+				Vector2f deltaUV2 = Vector2f.sub(new Vector2f(texcoords.getZ(), texcoords.getW()),
+						new Vector2f(texcoords.getK(), texcoords.getL()), null);
+
+				float f = 1.0f / (deltaUV1.x * deltaUV2.y - deltaUV2.x * deltaUV1.y);
+
+				Vector3f tangent = new Vector3f();
+
+				tangent.x = f * (deltaUV2.y * edge1.x - deltaUV1.y * edge2.x);
+				tangent.y = f * (deltaUV2.y * edge1.y - deltaUV1.y * edge2.y);
+				tangent.z = f * (deltaUV2.y * edge1.z - deltaUV1.y * edge2.z);
+				tangent.normalise();
+
+				tangent3f(tangent);
+				tangent3f(tangent);
+				tangent3f(tangent);
+				tangent3f(tangent);
+
+				Vector3f bitangent = new Vector3f();
+
+				bitangent.x = f * (-deltaUV2.x * edge1.x + deltaUV1.x * edge2.x);
+				bitangent.y = f * (-deltaUV2.x * edge1.y + deltaUV1.x * edge2.y);
+				bitangent.z = f * (-deltaUV2.x * edge1.z + deltaUV1.x * edge2.z);
+				bitangent.normalise();
+
+				bitangent3f(bitangent);
+				bitangent3f(bitangent);
+				bitangent3f(bitangent);
+				bitangent3f(bitangent);
+
 			}
 			if (left) {
 				Vector8f texcoords = block.texCoordsLeft();
@@ -451,6 +701,44 @@ public class Tessellator {
 				texture2f(new Vector2f(texcoords.getI(), texcoords.getJ()));
 				normal3f(new Vector3f(1, 0, 0));
 				data4f(new Vector4f(id, l, 0, 0));
+
+				Vector3f edge1 = Vector3f.sub(new Vector3f(x + size, y, z), new Vector3f(x + size, y, z + size), null);
+
+				Vector3f edge2 = Vector3f.sub(new Vector3f(x + size, y + size, z), new Vector3f(x + size, y, z + size),
+						null);
+
+				Vector2f deltaUV1 = Vector2f.sub(new Vector2f(texcoords.getX(), texcoords.getY()),
+						new Vector2f(texcoords.getK(), texcoords.getL()), null);
+
+				Vector2f deltaUV2 = Vector2f.sub(new Vector2f(texcoords.getZ(), texcoords.getW()),
+						new Vector2f(texcoords.getK(), texcoords.getL()), null);
+
+				float f = 1.0f / (deltaUV1.x * deltaUV2.y - deltaUV2.x * deltaUV1.y);
+
+				Vector3f tangent = new Vector3f();
+
+				tangent.x = f * (deltaUV2.y * edge1.x - deltaUV1.y * edge2.x);
+				tangent.y = f * (deltaUV2.y * edge1.y - deltaUV1.y * edge2.y);
+				tangent.z = f * (deltaUV2.y * edge1.z - deltaUV1.y * edge2.z);
+				tangent.normalise();
+
+				tangent3f(tangent);
+				tangent3f(tangent);
+				tangent3f(tangent);
+				tangent3f(tangent);
+
+				Vector3f bitangent = new Vector3f();
+
+				bitangent.x = f * (-deltaUV2.x * edge1.x + deltaUV1.x * edge2.x);
+				bitangent.y = f * (-deltaUV2.x * edge1.y + deltaUV1.x * edge2.y);
+				bitangent.z = f * (-deltaUV2.x * edge1.z + deltaUV1.x * edge2.z);
+				bitangent.normalise();
+
+				bitangent3f(bitangent);
+				bitangent3f(bitangent);
+				bitangent3f(bitangent);
+				bitangent3f(bitangent);
+
 			}
 		}
 	}
@@ -461,8 +749,16 @@ public class Tessellator {
 		glDeleteBuffers(vboID1);
 		glDeleteBuffers(vboID2);
 		glDeleteBuffers(vboID3);
+		glDeleteBuffers(vboID4);
+		glDeleteBuffers(vboID5);
 		glDeleteBuffers(iboID);
 		glDeleteQueries(occlusion);
+		pos.clear();
+		texcoords.clear();
+		normals.clear();
+		data.clear();
+		tangent.clear();
+		bitangent.clear();
 	}
 
 	public int getOcclusion() {
