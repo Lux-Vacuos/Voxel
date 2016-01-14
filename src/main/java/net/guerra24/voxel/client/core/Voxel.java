@@ -77,7 +77,6 @@ public class Voxel {
 	/**
 	 * PreInit phase, initialize the display and runs the API PreInit
 	 * 
-	 * @throws VersionException
 	 */
 	public void preInit() {
 		Logger.log("Loading");
