@@ -181,7 +181,7 @@ public class Display {
 			throw new IllegalStateException("Unable to initialize GLFW");
 
 		glfwDefaultWindowHints();
-		glfwWindowHint(GLFW_VISIBLE, GL_FALSE);
+		glfwWindowHint(GLFW_VISIBLE, GL_TRUE);
 		displayResizable = false;
 		glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 
