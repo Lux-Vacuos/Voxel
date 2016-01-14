@@ -25,7 +25,8 @@
 package net.guerra24.voxel.client.menu;
 
 import net.guerra24.voxel.client.core.VoxelVariables;
-import net.guerra24.voxel.client.graphics.MenuRendering;
+import net.guerra24.voxel.client.graphics.VectorsRendering;
+import net.guerra24.voxel.client.graphics.nanovg.Timers;
 import net.guerra24.voxel.client.graphics.opengl.Display;
 import net.guerra24.voxel.client.resources.GameResources;
 import net.guerra24.voxel.client.world.IWorld;
@@ -42,32 +43,34 @@ public class GameSP {
 
 	public void render(GameResources gm, IWorld world) {
 		if (VoxelVariables.debug) {
-			MenuRendering.renderText(
+			VectorsRendering.renderText(
 					"Voxel " + VoxelVariables.version + " (" + VoxelVariables.state + "-Build " + VoxelVariables.build
 							+ ")",
-					"Roboto-Bold", 5 * xScale, 12 * yScale, 20,
-					MenuRendering.rgba(160, 160, 160, 200, MenuRendering.colorA),
-					MenuRendering.rgba(255, 255, 255, 255, MenuRendering.colorB));
-			MenuRendering.renderText("FPS: " + Display.fps + " UPS: " + Display.ups, "Roboto-Bold", 5 * xScale,
-					32 * yScale, 20, MenuRendering.rgba(160, 160, 160, 200, MenuRendering.colorA),
-					MenuRendering.rgba(255, 255, 255, 255, MenuRendering.colorB));
-			MenuRendering.renderText(
-					"Loaded Chunks: " + world.getLoadedChunks() + " Rendered Chunks: " + world.getRenderedChunks(),
-					"Roboto-Bold", 5 * xScale, 52 * yScale, 20,
-					MenuRendering.rgba(160, 160, 160, 200, MenuRendering.colorA),
-					MenuRendering.rgba(255, 255, 255, 255, MenuRendering.colorB));
-			MenuRendering.renderText(
-					"Position XYZ: " + gm.getCamera().getPosition().getX() + " " + gm.getCamera().getPosition().getY()
-							+ " " + gm.getCamera().getPosition().getZ(),
-					"Roboto-Bold", 5 * xScale, 142 * yScale, 20,
-					MenuRendering.rgba(160, 160, 160, 200, MenuRendering.colorA),
-					MenuRendering.rgba(255, 255, 255, 255, MenuRendering.colorB));
-			MenuRendering.renderText(
-					"Pitch: " + gm.getCamera().getPitch() + " Yaw: " + gm.getCamera().getYaw() + " Roll: "
+					"Roboto-Bold", 5 * xScale, 12 * yScale, 25 * yScale,
+					VectorsRendering.rgba(160, 160, 160, 200, VectorsRendering.colorA),
+					VectorsRendering.rgba(255, 255, 255, 255, VectorsRendering.colorB));
+			VectorsRendering.renderText("Used VRam: " + Display.checkVRAM() + "KB " + " UPS: " + Display.ups,
+					"Roboto-Bold", 5 * xScale, 100 * yScale, 25 * yScale,
+					VectorsRendering.rgba(160, 160, 160, 200, VectorsRendering.colorA),
+					VectorsRendering.rgba(255, 255, 255, 255, VectorsRendering.colorB));
+			VectorsRendering.renderText(
+					"Loaded Chunks: " + world.getLoadedChunks() + "   Rendered Chunks: " + world.getRenderedChunks(),
+					"Roboto-Bold", 5 * xScale, 120 * yScale, 25 * yScale,
+					VectorsRendering.rgba(160, 160, 160, 200, VectorsRendering.colorA),
+					VectorsRendering.rgba(255, 255, 255, 255, VectorsRendering.colorB));
+			VectorsRendering.renderText(
+					"Position XYZ:  " + gm.getCamera().getPosition().getX() + "  " + gm.getCamera().getPosition().getY()
+							+ "  " + gm.getCamera().getPosition().getZ(),
+					"Roboto-Bold", 5 * xScale, 142 * yScale, 25 * yScale,
+					VectorsRendering.rgba(160, 160, 160, 200, VectorsRendering.colorA),
+					VectorsRendering.rgba(255, 255, 255, 255, VectorsRendering.colorB));
+			VectorsRendering.renderText(
+					"Pitch:  " + gm.getCamera().getPitch() + "   Yaw: " + gm.getCamera().getYaw() + "   Roll: "
 							+ gm.getCamera().getRoll(),
-					"Roboto-Bold", 5 * xScale, 164 * yScale, 20,
-					MenuRendering.rgba(160, 160, 160, 200, MenuRendering.colorA),
-					MenuRendering.rgba(255, 255, 255, 255, MenuRendering.colorB));
+					"Roboto-Bold", 5 * xScale, 164 * yScale, 25 * yScale,
+					VectorsRendering.rgba(160, 160, 160, 200, VectorsRendering.colorA),
+					VectorsRendering.rgba(255, 255, 255, 255, VectorsRendering.colorB));
+			Timers.renderDebugDisplay(5 * xScale, 24 * yScale, 300 * xScale, 55 * yScale);
 		}
 	}
 

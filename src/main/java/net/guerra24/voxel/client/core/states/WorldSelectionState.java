@@ -4,7 +4,7 @@ import net.guerra24.voxel.client.core.GlobalStates;
 import net.guerra24.voxel.client.core.GlobalStates.GameState;
 import net.guerra24.voxel.client.core.State;
 import net.guerra24.voxel.client.core.Voxel;
-import net.guerra24.voxel.client.graphics.MenuRendering;
+import net.guerra24.voxel.client.graphics.VectorsRendering;
 import net.guerra24.voxel.client.graphics.opengl.Display;
 import net.guerra24.voxel.client.resources.GameResources;
 
@@ -23,7 +23,7 @@ public class WorldSelectionState implements State {
 		gm.getRenderer().prepare();
 		Display.beingNVGFrame();
 		gm.getMenuSystem().worldSelectionMenu.render();
-		MenuRendering.renderMouse();
+		VectorsRendering.renderMouse();
 		Display.endNVGFrame();
 	}
 

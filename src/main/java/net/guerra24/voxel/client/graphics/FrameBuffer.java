@@ -82,7 +82,7 @@ public class FrameBuffer {
 	private int texture;
 
 	public FrameBuffer(boolean depth, int width, int height) {
-		initialiseFrameBuffer(depth,width, height);
+		initialiseFrameBuffer(depth, width, height);
 	}
 
 	private void initialiseFrameBuffer(boolean depth, int width, int height) {
@@ -103,7 +103,8 @@ public class FrameBuffer {
 
 	public void end() {
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-		glViewport(0, 0, Display.getWidth(), Display.getHeight());
+		glViewport(0, 0, (int) (Display.getWidth() * Display.pixelRatio),
+				(int) (Display.getHeight() * Display.pixelRatio));
 	}
 
 	private void bindFrameBuffer(int frameBuffer, int width, int height) {

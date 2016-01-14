@@ -25,7 +25,7 @@
 package net.guerra24.voxel.client.menu;
 
 import net.guerra24.voxel.client.core.VoxelVariables;
-import net.guerra24.voxel.client.graphics.MenuRendering;
+import net.guerra24.voxel.client.graphics.VectorsRendering;
 import net.guerra24.voxel.client.resources.GameResources;
 import net.guerra24.voxel.universal.util.vector.Vector2f;
 
@@ -46,8 +46,8 @@ public class WorldSelectionMenu {
 	float b = 0;
 
 	public void render() {
-		MenuRendering.renderWindow("Worlds", "Roboto-Bold", 20 * xScale, 20 * yScale, 1240 * xScale, 540 * yScale);
-		MenuRendering.renderWindow(20 * xScale, 570 * yScale, 1240 * xScale, 130 * yScale);
+		VectorsRendering.renderWindow("Worlds", "Roboto-Bold", 20 * xScale, 20 * yScale, 1240 * xScale, 540 * yScale);
+		VectorsRendering.renderWindow(20 * xScale, 570 * yScale, 1240 * xScale, 130 * yScale);
 		exitButton.render("Back");
 	}
 

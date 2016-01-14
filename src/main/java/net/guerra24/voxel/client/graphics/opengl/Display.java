@@ -24,9 +24,48 @@
 
 package net.guerra24.voxel.client.graphics.opengl;
 
-import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.glfw.GLFW.GLFW_CONTEXT_VERSION_MAJOR;
+import static org.lwjgl.glfw.GLFW.GLFW_CONTEXT_VERSION_MINOR;
+import static org.lwjgl.glfw.GLFW.GLFW_OPENGL_CORE_PROFILE;
+import static org.lwjgl.glfw.GLFW.GLFW_OPENGL_FORWARD_COMPAT;
+import static org.lwjgl.glfw.GLFW.GLFW_OPENGL_PROFILE;
+import static org.lwjgl.glfw.GLFW.GLFW_RELEASE;
+import static org.lwjgl.glfw.GLFW.GLFW_RESIZABLE;
+import static org.lwjgl.glfw.GLFW.GLFW_VERSION_UNAVAILABLE;
+import static org.lwjgl.glfw.GLFW.GLFW_VISIBLE;
+import static org.lwjgl.glfw.GLFW.glfwCreateWindow;
+import static org.lwjgl.glfw.GLFW.glfwDefaultWindowHints;
+import static org.lwjgl.glfw.GLFW.glfwDestroyWindow;
+import static org.lwjgl.glfw.GLFW.glfwGetFramebufferSize;
+import static org.lwjgl.glfw.GLFW.glfwGetPrimaryMonitor;
+import static org.lwjgl.glfw.GLFW.glfwGetTime;
+import static org.lwjgl.glfw.GLFW.glfwGetVideoMode;
+import static org.lwjgl.glfw.GLFW.glfwGetWindowSize;
+import static org.lwjgl.glfw.GLFW.glfwInit;
+import static org.lwjgl.glfw.GLFW.glfwMakeContextCurrent;
+import static org.lwjgl.glfw.GLFW.glfwPollEvents;
+import static org.lwjgl.glfw.GLFW.glfwSetCharCallback;
+import static org.lwjgl.glfw.GLFW.glfwSetCursorEnterCallback;
+import static org.lwjgl.glfw.GLFW.glfwSetCursorPosCallback;
+import static org.lwjgl.glfw.GLFW.glfwSetErrorCallback;
+import static org.lwjgl.glfw.GLFW.glfwSetFramebufferSizeCallback;
+import static org.lwjgl.glfw.GLFW.glfwSetKeyCallback;
+import static org.lwjgl.glfw.GLFW.glfwSetMouseButtonCallback;
+import static org.lwjgl.glfw.GLFW.glfwSetScrollCallback;
+import static org.lwjgl.glfw.GLFW.glfwSetWindowFocusCallback;
+import static org.lwjgl.glfw.GLFW.glfwSetWindowIconifyCallback;
+import static org.lwjgl.glfw.GLFW.glfwSetWindowPos;
+import static org.lwjgl.glfw.GLFW.glfwSetWindowPosCallback;
+import static org.lwjgl.glfw.GLFW.glfwSetWindowRefreshCallback;
+import static org.lwjgl.glfw.GLFW.glfwSetWindowSizeCallback;
+import static org.lwjgl.glfw.GLFW.glfwSwapBuffers;
+import static org.lwjgl.glfw.GLFW.glfwSwapInterval;
+import static org.lwjgl.glfw.GLFW.glfwTerminate;
+import static org.lwjgl.glfw.GLFW.glfwWindowHint;
+import static org.lwjgl.glfw.GLFW.glfwWindowShouldClose;
 import static org.lwjgl.nanovg.NanoVG.nvgBeginFrame;
 import static org.lwjgl.nanovg.NanoVG.nvgEndFrame;
+import static org.lwjgl.nanovg.NanoVGGL3.NVG_ANTIALIAS;
 import static org.lwjgl.nanovg.NanoVGGL3.NVG_DEBUG;
 import static org.lwjgl.nanovg.NanoVGGL3.NVG_STENCIL_STROKES;
 import static org.lwjgl.nanovg.NanoVGGL3.nvgCreateGL3;
@@ -105,8 +144,6 @@ public class Display {
 	public static float timeCountUpdate;
 	private static double lastLoopTimeRender;
 	public static float timeCountRender;
-	public static int fps;
-	public static int fpsCount;
 	public static int ups;
 	public static int upsCount;
 
@@ -146,7 +183,7 @@ public class Display {
 	private boolean latestResized = false;
 	private int latestWidth = 0;
 	private int latestHeight = 0;
-	private static float pixelRatio;
+	public static float pixelRatio;
 
 	private static IntBuffer maxVram = BufferUtils.createIntBuffer(1);
 	private static IntBuffer usedVram = BufferUtils.createIntBuffer(1);
@@ -338,7 +375,7 @@ public class Display {
 			e.printStackTrace();
 		}
 		createCapabilities();
-		vg = nvgCreateGL3(NVG_STENCIL_STROKES | NVG_DEBUG);
+		vg = nvgCreateGL3(NVG_ANTIALIAS | NVG_STENCIL_STROKES | NVG_DEBUG);
 		if (vg == NULL)
 			throw new RuntimeException("Fail to create NanoVG");
 		lastLoopTimeUpdate = getTime();
@@ -376,12 +413,12 @@ public class Display {
 	 * @param fps
 	 *            Game Max FPS
 	 */
-	public void updateDisplay(int fps) {	
+	public void updateDisplay(int fps) {
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 		Mouse.poll();
 		sync(fps);
-		//checkErrors();
+		// checkErrors();
 	}
 
 	/**
@@ -478,11 +515,10 @@ public class Display {
 		return (long) (glfwGetTime() * (1000L * 1000L * 1000L));
 	}
 
-	public static void checkVRAM() {
+	public static int checkVRAM() {
 		if (nvidia)
 			glGetIntegerv(NVXGPUMemoryInfo.GL_GPU_MEMORY_INFO_CURRENT_AVAILABLE_VIDMEM_NVX, usedVram);
-		int res = maxVram.get(0) - usedVram.get(0);
-		Logger.log("Used VRam: " + res + "KB");
+		return maxVram.get(0) - usedVram.get(0);
 	}
 
 	/**

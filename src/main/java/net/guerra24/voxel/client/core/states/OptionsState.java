@@ -37,7 +37,7 @@ import net.guerra24.voxel.client.core.State;
 import net.guerra24.voxel.client.core.Voxel;
 import net.guerra24.voxel.client.core.VoxelVariables;
 import net.guerra24.voxel.client.core.GlobalStates.GameState;
-import net.guerra24.voxel.client.graphics.MenuRendering;
+import net.guerra24.voxel.client.graphics.VectorsRendering;
 import net.guerra24.voxel.client.graphics.opengl.Display;
 import net.guerra24.voxel.client.input.Mouse;
 import net.guerra24.voxel.client.particle.ParticleMaster;
@@ -121,7 +121,7 @@ public class OptionsState implements State {
 
 		Display.beingNVGFrame();
 		gm.getMenuSystem().optionsMenu.render();
-		MenuRendering.renderMouse();
+		VectorsRendering.renderMouse();
 		Display.endNVGFrame();
 	}
 

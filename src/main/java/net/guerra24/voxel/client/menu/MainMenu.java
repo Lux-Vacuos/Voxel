@@ -25,7 +25,7 @@
 package net.guerra24.voxel.client.menu;
 
 import net.guerra24.voxel.client.core.VoxelVariables;
-import net.guerra24.voxel.client.graphics.MenuRendering;
+import net.guerra24.voxel.client.graphics.VectorsRendering;
 import net.guerra24.voxel.client.resources.GameResources;
 import net.guerra24.voxel.universal.util.vector.Vector2f;
 
@@ -60,17 +60,17 @@ public class MainMenu {
 		optionsButton.render("Options");
 		exitButton.render("Exit");
 
-		MenuRendering.renderText(
+		VectorsRendering.renderText(
 				"Voxel " + VoxelVariables.version + " " + VoxelVariables.state + " Build " + VoxelVariables.build,
-				"Roboto-Bold", 0, 710 * yScale, 20, MenuRendering.rgba(255, 255, 255, 160, MenuRendering.colorA),
-				MenuRendering.rgba(255, 255, 255, 160, MenuRendering.colorB));
-		MenuRendering.renderWindow("Voxel News", "Roboto-Bold", 450 * xScale, 50 * yScale, 750 * xScale, 600 * yScale);
+				"Roboto-Bold", 0, 710 * yScale, 20, VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorA),
+				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorB));
+		VectorsRendering.renderWindow("Voxel News", "Roboto-Bold", 450 * xScale, 50 * yScale, 750 * xScale, 600 * yScale);
 		webRenderer.render();
 
-		newsRefreshButton.render("Reload", MenuRendering.rgba(80, 80, 80, 80, MenuRendering.colorA));
+		newsRefreshButton.render("Reload", VectorsRendering.rgba(80, 80, 80, 80, VectorsRendering.colorA));
 
-		MenuRendering.renderButton(null, "Reload", "Roboto-Bold", 1096 * xScale, 53 * yScale, 100 * xScale, 40 * yScale,
-				MenuRendering.rgba(80, 80, 80, 80, MenuRendering.colorA), newsRefreshButton.insideButton());
+		VectorsRendering.renderButton(null, "Reload", "Roboto-Bold", 1096 * xScale, 53 * yScale, 100 * xScale, 40 * yScale,
+				VectorsRendering.rgba(80, 80, 80, 80, VectorsRendering.colorA), newsRefreshButton.insideButton());
 
 	}
 

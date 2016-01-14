@@ -34,7 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.guerra24.voxel.client.core.VoxelVariables;
-import net.guerra24.voxel.client.graphics.MenuRendering;
+import net.guerra24.voxel.client.graphics.VectorsRendering;
 
 public class WebRenderer {
 
@@ -58,9 +58,9 @@ public class WebRenderer {
 	public void render() {
 		float ypos = 0;
 		for (int y = 0; y < texts.size(); y++) {
-			MenuRendering.renderText(texts.get(y).getText(), "Roboto-Bold", this.x, (this.y + ypos),
-					texts.get(y).getFontSize(), MenuRendering.rgba(255, 255, 255, 160, MenuRendering.colorA),
-					MenuRendering.rgba(255, 255, 255, 160, MenuRendering.colorB));
+			VectorsRendering.renderText(texts.get(y).getText(), "Roboto-Bold", this.x, (this.y + ypos),
+					texts.get(y).getFontSize(), VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorA),
+					VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorB));
 			ypos += texts.get(y).getFontSize();
 			if (texts.get(y).isTitle())
 				ypos += 5;

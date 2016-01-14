@@ -25,7 +25,7 @@
 package net.guerra24.voxel.client.menu;
 
 import net.guerra24.voxel.client.core.VoxelVariables;
-import net.guerra24.voxel.client.graphics.MenuRendering;
+import net.guerra24.voxel.client.graphics.VectorsRendering;
 import net.guerra24.voxel.client.resources.GameResources;
 import net.guerra24.voxel.universal.util.vector.Vector2f;
 
@@ -69,51 +69,51 @@ public class OptionsMenu {
 	}
 
 	public void render() {
-		MenuRendering.renderWindow("Options", "Roboto-Bold", 20 * xScale, 20 * yScale, 1240 * xScale, 680 * yScale);
+		VectorsRendering.renderWindow("Options", "Roboto-Bold", 20 * xScale, 20 * yScale, 1240 * xScale, 680 * yScale);
 
 		if (VoxelVariables.useVolumetricLight)
-			godraysButton.render("Light Rays: ON", MenuRendering.rgba(100, 255, 100, 255, MenuRendering.colorA));
+			godraysButton.render("Light Rays: ON", VectorsRendering.rgba(100, 255, 100, 255, VectorsRendering.colorA));
 		else
-			godraysButton.render("Light Rays: OFF", MenuRendering.rgba(255, 100, 100, 255, MenuRendering.colorA));
+			godraysButton.render("Light Rays: OFF", VectorsRendering.rgba(255, 100, 100, 255, VectorsRendering.colorA));
 
 		if (VoxelVariables.useShadows)
-			shadowsButton.render("Shadows: ON", MenuRendering.rgba(100, 255, 100, 255, MenuRendering.colorA));
+			shadowsButton.render("Shadows: ON", VectorsRendering.rgba(100, 255, 100, 255, VectorsRendering.colorA));
 		else
-			shadowsButton.render("Shadows: OFF", MenuRendering.rgba(255, 100, 100, 255, MenuRendering.colorA));
+			shadowsButton.render("Shadows: OFF", VectorsRendering.rgba(255, 100, 100, 255, VectorsRendering.colorA));
 
 		if (VoxelVariables.useDOF)
-			dofButton.render("DoF: ON", MenuRendering.rgba(100, 255, 100, 255, MenuRendering.colorA));
+			dofButton.render("DoF: ON", VectorsRendering.rgba(100, 255, 100, 255, VectorsRendering.colorA));
 		else
-			dofButton.render("DoF: OFF", MenuRendering.rgba(255, 100, 100, 255, MenuRendering.colorA));
+			dofButton.render("DoF: OFF", VectorsRendering.rgba(255, 100, 100, 255, VectorsRendering.colorA));
 
 		if (VoxelVariables.useFXAA)
-			fxaaButton.render("FXAA: ON", MenuRendering.rgba(100, 255, 100, 255, MenuRendering.colorA));
+			fxaaButton.render("FXAA: ON", VectorsRendering.rgba(100, 255, 100, 255, VectorsRendering.colorA));
 		else
-			fxaaButton.render("FXAA: OFF", MenuRendering.rgba(255, 100, 100, 255, MenuRendering.colorA));
+			fxaaButton.render("FXAA: OFF", VectorsRendering.rgba(255, 100, 100, 255, VectorsRendering.colorA));
 
 		if (VoxelVariables.useMotionBlur)
-			motionBlurButton.render("Motion Blur: ON", MenuRendering.rgba(100, 255, 100, 255, MenuRendering.colorA));
+			motionBlurButton.render("Motion Blur: ON", VectorsRendering.rgba(100, 255, 100, 255, VectorsRendering.colorA));
 		else
-			motionBlurButton.render("Motion Blur: OFF", MenuRendering.rgba(255, 100, 100, 255, MenuRendering.colorA));
+			motionBlurButton.render("Motion Blur: OFF", VectorsRendering.rgba(255, 100, 100, 255, VectorsRendering.colorA));
 		
 		if (VoxelVariables.useReflections)
-			reflectionsButton.render("Reflections: ON", MenuRendering.rgba(100, 255, 100, 255, MenuRendering.colorA));
+			reflectionsButton.render("Reflections: ON", VectorsRendering.rgba(100, 255, 100, 255, VectorsRendering.colorA));
 		else
-			reflectionsButton.render("Reflections: OFF", MenuRendering.rgba(255, 100, 100, 255, MenuRendering.colorA));
+			reflectionsButton.render("Reflections: OFF", VectorsRendering.rgba(255, 100, 100, 255, VectorsRendering.colorA));
 		
 		if(VoxelVariables.useParallax)
-			parallaxButton.render("Parallax: ON", MenuRendering.rgba(100, 255, 100, 255, MenuRendering.colorA));
+			parallaxButton.render("Parallax: ON", VectorsRendering.rgba(100, 255, 100, 255, VectorsRendering.colorA));
 		else
-			parallaxButton.render("Parallax: OFF", MenuRendering.rgba(255, 100, 100, 255, MenuRendering.colorA));
+			parallaxButton.render("Parallax: OFF", VectorsRendering.rgba(255, 100, 100, 255, VectorsRendering.colorA));
 
 		exitButton.render("Back");
-		MenuRendering.renderLabel("Draw Distance: " + VoxelVariables.radius, "Roboto-Bold", 970 * xScale, 90 * yScale,
+		VectorsRendering.renderLabel("Draw Distance: " + VoxelVariables.radius, "Roboto-Bold", 970 * xScale, 90 * yScale,
 				315 * xScale, 20 * yScale, 25f * yScale);
 		int r = (int) (slider.getPos() * 32f);
 		if (r < 2)
 			r = 2;
 		VoxelVariables.radius = r;
-		MenuRendering.renderSlider(VoxelVariables.radius / 32f, 900 * xScale, 100 * yScale, 315 * xScale, 80 * yScale);
+		VectorsRendering.renderSlider(VoxelVariables.radius / 32f, 900 * xScale, 100 * yScale, 315 * xScale, 80 * yScale);
 	}
 
 	public Button getExitButton() {

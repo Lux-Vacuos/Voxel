@@ -35,8 +35,13 @@ import net.guerra24.voxel.client.input.Mouse;
 import static org.lwjgl.system.MemoryUtil.*;
 
 import java.nio.ByteBuffer;
-
-public class MenuRendering {
+/**
+ * This class contains basic rendering methods using NanoVG
+ * 
+ * @author pablo
+ *
+ */
+public class VectorsRendering {
 
 	public static final NVGPaint paintA = NVGPaint.create();
 	public static final NVGPaint paintB = NVGPaint.create();

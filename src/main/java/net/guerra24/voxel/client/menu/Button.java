@@ -26,7 +26,7 @@ package net.guerra24.voxel.client.menu;
 
 import org.lwjgl.nanovg.NVGColor;
 
-import net.guerra24.voxel.client.graphics.MenuRendering;
+import net.guerra24.voxel.client.graphics.VectorsRendering;
 import net.guerra24.voxel.client.input.Mouse;
 import net.guerra24.voxel.universal.util.vector.Vector2f;
 
@@ -53,11 +53,11 @@ public class Button {
 	}
 
 	public void render(String text) {
-		this.render(text, MenuRendering.rgba(255, 255, 255, 255, MenuRendering.colorA));
+		this.render(text, VectorsRendering.rgba(255, 255, 255, 255, VectorsRendering.colorA));
 	}
 
 	public void render(String text, NVGColor color) {
-		MenuRendering.renderButton(null, text, "Roboto-Bold", renderPos.x * xScale,
+		VectorsRendering.renderButton(null, text, "Roboto-Bold", renderPos.x * xScale,
 				(720f - renderPos.y - renderSize.y) * yScale, renderSize.x * xScale, renderSize.y * yScale, color,
 				this.insideButton());
 	}

@@ -84,7 +84,8 @@ import net.guerra24.voxel.client.resources.models.RawModel;
 import net.guerra24.voxel.client.util.Logger;
 
 /**
- * Loader
+ * This objects handles all loading methods from any type of data, models,
+ * textures, fonts, etc.
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
  * @category Assets
@@ -171,8 +172,8 @@ public class Loader {
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		return vbo;
 	}
-	
-	public void updateVBO(int vbo, float[] data, FloatBuffer buffer){
+
+	public void updateVBO(int vbo, float[] data, FloatBuffer buffer) {
 		buffer.clear();
 		buffer.put(data);
 		buffer.flip();
@@ -181,7 +182,7 @@ public class Loader {
 		glBufferSubData(GL_ARRAY_BUFFER, 0, buffer);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
-	
+
 	public void addInstacedAttribute(int vao, int vbo, int attribute, int dataSize, int instancedDataLenght,
 			int offset) {
 		glBindBuffer(GL_ARRAY_BUFFER, vbo);
@@ -362,7 +363,7 @@ public class Loader {
 		for (int texture : textures) {
 			glDeleteTextures(texture);
 		}
-		for (Integer texture : nvgData) {
+		for (int texture : nvgData) {
 			nvgDeleteImage(Display.getVg(), texture);
 		}
 	}

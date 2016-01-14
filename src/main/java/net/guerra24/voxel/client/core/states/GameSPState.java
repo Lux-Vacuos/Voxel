@@ -67,7 +67,7 @@ public class GameSPState implements State {
 		gm.getRenderer().getWaterRenderer().update(delta);
 		ParticleMaster.getInstance().update(delta, gm.getCamera());
 		while (next()) {
-			if (isKeyDown(KEY_F3))
+			if (isKeyDown(KEY_F1))
 				VoxelVariables.debug = !VoxelVariables.debug;
 			if (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
 				voxel.getGameResources().getCamera().unlockMouse();
@@ -113,7 +113,7 @@ public class GameSPState implements State {
 		gm.getDeferredShadingRenderer().render(gm);
 		ParticleMaster.getInstance().render(gm.getCamera());
 		Display.beingNVGFrame();
-		gm.getMenuSystem().gameSP.render(gm,worlds.getActiveWorld());
+		gm.getMenuSystem().gameSP.render(gm, worlds.getActiveWorld());
 		Display.endNVGFrame();
 
 	}

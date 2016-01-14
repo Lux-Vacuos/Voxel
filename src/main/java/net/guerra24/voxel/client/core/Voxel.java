@@ -36,6 +36,7 @@ import net.guerra24.voxel.client.api.ModInitialization;
 import net.guerra24.voxel.client.api.VersionException;
 import net.guerra24.voxel.client.bootstrap.Bootstrap;
 import net.guerra24.voxel.client.graphics.TextMasterRenderer;
+import net.guerra24.voxel.client.graphics.nanovg.Timers;
 import net.guerra24.voxel.client.graphics.opengl.Display;
 import net.guerra24.voxel.client.input.Mouse;
 import net.guerra24.voxel.client.resources.GameResources;
@@ -143,6 +144,7 @@ public class Voxel {
 		else
 			gameResources.getSoundSystem().play("menu2");
 		Mouse.setHidden(true);
+		Timers.initDebugDisplay();
 	}
 
 	/**
@@ -159,12 +161,8 @@ public class Voxel {
 		float interval = 1f / VoxelVariables.UPS;
 		float alpha = 0;
 		while (gameResources.getGlobalStates().loop) {
+			Timers.startCPUTimer();
 			if (Display.timeCountRender > 1f) {
-				Logger.log("FPS: " + Display.fps);
-				Logger.log("UPS: " + Display.ups);
-				Display.checkVRAM();
-				Display.fps = Display.fpsCount;
-				Display.fpsCount = 0;
 				Display.ups = Display.upsCount;
 				Display.upsCount = 0;
 				Display.timeCountRender -= 1f;
@@ -176,7 +174,12 @@ public class Voxel {
 				accumulator -= interval;
 			}
 			alpha = accumulator / interval;
+			Timers.stopCPUTimer();
+			Timers.startGPUTimer();
 			render(alpha);
+			Timers.stopGPUTimer();
+			Timers.update();
+			display.updateDisplay(VoxelVariables.FPS);
 		}
 		dispose();
 	}
@@ -188,10 +191,9 @@ public class Voxel {
 	 *            Delta value from Render Thread
 	 */
 	private void render(float delta) {
-		Display.fpsCount++;
 		gameResources.getGlobalStates().doRender(this, delta);
 		TextMasterRenderer.getInstance().render();
-		display.updateDisplay(VoxelVariables.FPS);
+
 	}
 
 	/**
