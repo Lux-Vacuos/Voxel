@@ -36,7 +36,11 @@ import net.guerra24.voxel.client.core.GlobalStates;
 import net.guerra24.voxel.client.core.State;
 import net.guerra24.voxel.client.core.Voxel;
 import net.guerra24.voxel.client.core.VoxelVariables;
+import net.guerra24.voxel.client.core.GlobalStates.GameState;
 import net.guerra24.voxel.client.graphics.opengl.Display;
+import net.guerra24.voxel.client.input.Keyboard;
+
+import static net.guerra24.voxel.client.input.Keyboard.*;
 import net.guerra24.voxel.client.particle.ParticleMaster;
 import net.guerra24.voxel.client.resources.GameResources;
 import net.guerra24.voxel.client.world.WorldsHandler;
@@ -62,7 +66,14 @@ public class GameSPState implements State {
 		gm.update(gm.getSkyboxRenderer().update(delta));
 		gm.getRenderer().getWaterRenderer().update(delta);
 		ParticleMaster.getInstance().update(delta, gm.getCamera());
-
+		while (next()) {
+			if (isKeyDown(KEY_F3))
+				VoxelVariables.debug = !VoxelVariables.debug;
+			if (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
+				voxel.getGameResources().getCamera().unlockMouse();
+				gm.getGlobalStates().setState(GameState.IN_PAUSE);
+			}
+		}
 		// if (!display.isDisplayFocused()) {
 		// gm.getCamera().unlockMouse();
 		// states.setState(GameState.IN_PAUSE);
@@ -101,6 +112,9 @@ public class GameSPState implements State {
 		gm.getRenderer().prepare();
 		gm.getDeferredShadingRenderer().render(gm);
 		ParticleMaster.getInstance().render(gm.getCamera());
+		Display.beingNVGFrame();
+		gm.getMenuSystem().gameSP.render(gm,worlds.getActiveWorld());
+		Display.endNVGFrame();
 
 	}
 

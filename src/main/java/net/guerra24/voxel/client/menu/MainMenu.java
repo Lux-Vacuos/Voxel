@@ -62,12 +62,13 @@ public class MainMenu {
 
 		MenuRendering.renderText(
 				"Voxel " + VoxelVariables.version + " " + VoxelVariables.state + " Build " + VoxelVariables.build,
-				"Roboto-Bold", 0, 710 * yScale, 20);
+				"Roboto-Bold", 0, 710 * yScale, 20, MenuRendering.rgba(255, 255, 255, 160, MenuRendering.colorA),
+				MenuRendering.rgba(255, 255, 255, 160, MenuRendering.colorB));
 		MenuRendering.renderWindow("Voxel News", "Roboto-Bold", 450 * xScale, 50 * yScale, 750 * xScale, 600 * yScale);
 		webRenderer.render();
-		
+
 		newsRefreshButton.render("Reload", MenuRendering.rgba(80, 80, 80, 80, MenuRendering.colorA));
-		
+
 		MenuRendering.renderButton(null, "Reload", "Roboto-Bold", 1096 * xScale, 53 * yScale, 100 * xScale, 40 * yScale,
 				MenuRendering.rgba(80, 80, 80, 80, MenuRendering.colorA), newsRefreshButton.insideButton());
 

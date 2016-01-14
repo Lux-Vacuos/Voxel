@@ -21,9 +21,10 @@ public class BasicTests {
 	public void testRun() {
 
 		Voxel voxel = new Voxel("test");
+
+		assertNotNull(voxel);
 		/*
-		 * assertNotNull(voxel); voxel.preInit(); voxel.init();
-		 * voxel.postInit();
+		 * voxel.preInit(); voxel.init(); voxel.postInit();
 		 * assertFalse(voxel.getGameResources().getCamera().isUnderWater());
 		 * assertFalse(voxel.getGameResources().getCamera().isMoved);
 		 * assertNotNull(voxel.getGameResources().getRand());

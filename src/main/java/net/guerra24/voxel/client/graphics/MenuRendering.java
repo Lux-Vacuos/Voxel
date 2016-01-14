@@ -144,22 +144,22 @@ public class MenuRendering {
 
 		nvgRestore(vg);
 	}
-	
+
 	public static void renderWindow(float x, float y, float w, float h) {
 		float cornerRadius = 3.0f;
 		NVGPaint shadowPaint = paintA;
 		long vg = Display.getVg();
-		
+
 		nvgSave(vg);
 		// nvgClearState(vg);
-		
+
 		// Window
 		nvgBeginPath(vg);
 		nvgRoundedRect(vg, x, y, w, h, cornerRadius);
 		nvgFillColor(vg, rgba(28, 30, 34, 192, colorA));
 		// nvgFillColor(vg, rgba(0,0,0,128, color));
 		nvgFill(vg);
-		
+
 		// Drop shadow
 		nvgBoxGradient(vg, x, y + 2, w, h, cornerRadius * 2, 10, rgba(0, 0, 0, 128, colorA), rgba(0, 0, 0, 0, colorB),
 				shadowPaint);
@@ -169,7 +169,7 @@ public class MenuRendering {
 		nvgPathWinding(vg, NVG_HOLE);
 		nvgFillPaint(vg, shadowPaint);
 		nvgFill(vg);
-		
+
 		nvgRestore(vg);
 	}
 
@@ -237,14 +237,15 @@ public class MenuRendering {
 		nvgRestore(vg);
 	}
 
-	public static void renderText(String text, String font, float x, float y, float fontSize) {
+	public static void renderText(String text, String font, float x, float y, float fontSize, NVGColor colort,
+			NVGColor colorg) {
 		long vg = Display.getVg();
 		nvgFontSize(vg, fontSize);
 		nvgFontFace(vg, font);
 		nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
-		nvgFillColor(vg, rgba(0, 0, 0, 160, colorA));
+		nvgFillColor(vg, colort);
 		nvgText(vg, x, y, text, NULL);
-		nvgFillColor(vg, rgba(255, 255, 255, 160, colorA));
+		nvgFillColor(vg, colorg);
 		nvgText(vg, x, y, text, NULL);
 	}
 

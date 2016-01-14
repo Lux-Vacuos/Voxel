@@ -83,6 +83,7 @@ public class InfinityWorld implements IWorld {
 	private Queue<LightNode> lightNodes;
 	private ParticleSystem particleSystem;
 	private WorldService worldService;
+	private int renderedChunks = 0;
 
 	@Override
 	public void startWorld(String name, Random seed, int chunkDim, GameResources gm) {
@@ -164,7 +165,7 @@ public class InfinityWorld implements IWorld {
 					if (zr * zr + xr * xr + yr * yr <= (VoxelVariables.genRadius - VoxelVariables.radiusLimit)
 							* (VoxelVariables.genRadius - VoxelVariables.radiusLimit)
 							* (VoxelVariables.genRadius - VoxelVariables.radiusLimit)) {
-						
+
 						if (!hasChunk(chunkDim, xx, yy, zz)) {
 							if (!hasChunk(chunkDim, xx, yy, zz)) {
 								if (existChunkFile(chunkDim, xx, yy, zz)) {
@@ -172,7 +173,7 @@ public class InfinityWorld implements IWorld {
 								} else {
 									if (VoxelVariables.generateChunks) {
 										addChunk(new Chunk(chunkDim, xx, yy, zz, this, gm));
-										//saveChunk(chunkDim, xx, yy, zz, gm);
+										// saveChunk(chunkDim, xx, yy, zz, gm);
 									}
 								}
 							}
@@ -194,12 +195,12 @@ public class InfinityWorld implements IWorld {
 									+ yr * yr >= (VoxelVariables.genRadius - VoxelVariables.radiusLimit + 1)
 											* (VoxelVariables.genRadius - VoxelVariables.radiusLimit + 1)
 											* (VoxelVariables.genRadius - VoxelVariables.radiusLimit + 1)) {
-						
+
 						if (hasChunk(getChunkDimension(), xx, yy, zz)) {
 							saveChunk(getChunkDimension(), xx, yy, zz, gm);
 							removeChunk(getChunk(getChunkDimension(), xx, yy, zz));
 						}
-						
+
 					}
 				}
 			}
@@ -210,6 +211,7 @@ public class InfinityWorld implements IWorld {
 
 	@Override
 	public void updateChunksRender(GameResources gm) {
+		renderedChunks = 0;
 		for (int zr = -VoxelVariables.radius; zr <= VoxelVariables.radius; zr++) {
 			int zz = zPlayChunk + zr;
 			for (int xr = -VoxelVariables.radius; xr <= VoxelVariables.radius; xr++) {
@@ -222,8 +224,10 @@ public class InfinityWorld implements IWorld {
 							if (gm.getFrustum().cubeInFrustum(chunk.posX, chunk.posY, chunk.posZ, chunk.posX + 16,
 									chunk.posY + 16, chunk.posZ + 16)) {
 								int res = glGetQueryObjectui(chunk.getTess().getOcclusion(), GL_QUERY_RESULT);
-								if (res > 0)
+								if (res > 0) {
 									chunk.render(gm);
+									renderedChunks++;
+								}
 							}
 						}
 					}
@@ -483,10 +487,13 @@ public class InfinityWorld implements IWorld {
 	}
 
 	@Override
-	public int getChunksCount() {
-		int cnt;
-		cnt = chunks.size();
-		return cnt;
+	public int getLoadedChunks() {
+		return chunks.size();
+	}
+
+	@Override
+	public int getRenderedChunks() {
+		return renderedChunks;
 	}
 
 	@Override

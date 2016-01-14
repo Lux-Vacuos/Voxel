@@ -59,7 +59,8 @@ public class WebRenderer {
 		float ypos = 0;
 		for (int y = 0; y < texts.size(); y++) {
 			MenuRendering.renderText(texts.get(y).getText(), "Roboto-Bold", this.x, (this.y + ypos),
-					texts.get(y).getFontSize());
+					texts.get(y).getFontSize(), MenuRendering.rgba(255, 255, 255, 160, MenuRendering.colorA),
+					MenuRendering.rgba(255, 255, 255, 160, MenuRendering.colorB));
 			ypos += texts.get(y).getFontSize();
 			if (texts.get(y).isTitle())
 				ypos += 5;

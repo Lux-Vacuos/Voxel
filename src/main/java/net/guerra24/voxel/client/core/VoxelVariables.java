@@ -41,12 +41,12 @@ public class VoxelVariables {
 	/**
 	 * Game Settings
 	 */
-	public static final boolean debug = true;
+	public static boolean debug = false;
 	public static final String version = "0.0.9";
 	public static final String apiVersion = "0.0.6";
 	public static final int apiVersionNum = 000006;
 	public static final String state = "ALPHA";
-	public static final int build = 148;
+	public static final int build = 149;
 	public static int FOV = 90;
 	public static int WIDTH = 1280;
 	public static int HEIGHT = 720;

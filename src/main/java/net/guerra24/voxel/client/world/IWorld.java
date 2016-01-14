@@ -79,12 +79,14 @@ public interface IWorld {
 	public void setGlobalBlock(int x, int y, int z, byte id);
 
 	public void lighting(int x, int y, int z, int val);
-	
+
 	public float getLight(int x, int y, int z);
 
 	public void clearDimension(GameResources gm);
 
-	public int getChunksCount();
+	public int getLoadedChunks();
+
+	public int getRenderedChunks();
 
 	public int getWorldID();
 
@@ -95,7 +97,7 @@ public interface IWorld {
 	public int getxPlayChunk();
 
 	public int getyPlayChunk();
-	
+
 	public SimplexNoise getNoise();
 
 	public Random getSeed();

@@ -31,7 +31,6 @@ import net.guerra24.voxel.client.core.states.MainMenuState;
 import net.guerra24.voxel.client.core.states.OptionsState;
 import net.guerra24.voxel.client.core.states.WorldSelectionState;
 import net.guerra24.voxel.client.graphics.opengl.Display;
-import net.guerra24.voxel.client.input.Keyboard;
 import net.guerra24.voxel.client.resources.Loader;
 
 /**
@@ -71,15 +70,6 @@ public class GlobalStates {
 		if (Display.isCloseRequested())
 			loop = false;
 
-		while (Keyboard.next()) {
-			if (state == GameState.GAME_SP && Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
-				voxel.getGameResources().getCamera().unlockMouse();
-				setState(GameState.IN_PAUSE);
-			} else if (state == GameState.IN_PAUSE && Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
-				voxel.getGameResources().getCamera().setMouse();
-				setState(GameState.GAME_SP);
-			}
-		}
 	}
 
 	public void doRender(Voxel voxel, float delta) {
