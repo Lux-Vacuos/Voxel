@@ -22,7 +22,6 @@
  * SOFTWARE.
  */
 
-
 package net.guerra24.voxel.client.resources;
 
 import java.io.File;
@@ -32,6 +31,11 @@ import java.util.List;
 import net.guerra24.voxel.client.resources.models.FontType;
 import net.guerra24.voxel.client.resources.models.GUIText;
 
+/**
+ * 
+ * @author pablo
+ * @deprecated Use NanoVG
+ */
 public class TextHandler {
 
 	private FontType font;

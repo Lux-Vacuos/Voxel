@@ -164,6 +164,7 @@ public class InfinityWorld implements IWorld {
 					if (zr * zr + xr * xr + yr * yr <= (VoxelVariables.genRadius - VoxelVariables.radiusLimit)
 							* (VoxelVariables.genRadius - VoxelVariables.radiusLimit)
 							* (VoxelVariables.genRadius - VoxelVariables.radiusLimit)) {
+						
 						if (!hasChunk(chunkDim, xx, yy, zz)) {
 							if (!hasChunk(chunkDim, xx, yy, zz)) {
 								if (existChunkFile(chunkDim, xx, yy, zz)) {
@@ -193,10 +194,12 @@ public class InfinityWorld implements IWorld {
 									+ yr * yr >= (VoxelVariables.genRadius - VoxelVariables.radiusLimit + 1)
 											* (VoxelVariables.genRadius - VoxelVariables.radiusLimit + 1)
 											* (VoxelVariables.genRadius - VoxelVariables.radiusLimit + 1)) {
+						
 						if (hasChunk(getChunkDimension(), xx, yy, zz)) {
 							saveChunk(getChunkDimension(), xx, yy, zz, gm);
 							removeChunk(getChunk(getChunkDimension(), xx, yy, zz));
 						}
+						
 					}
 				}
 			}

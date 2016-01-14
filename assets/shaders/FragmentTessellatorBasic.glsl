@@ -24,5 +24,11 @@
 
 #version 330 core
 
+in vec2 pass_textureCoords;
+
+uniform sampler2D alpha;
+
 void main(void) {
+	if(texture(alpha,pass_textureCoords).a < 0.5)
+		discard;
 }

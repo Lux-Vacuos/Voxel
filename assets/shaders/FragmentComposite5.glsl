@@ -93,15 +93,16 @@ void main(void){
     float lightDirDOTviewDir = dot(invertedlightDir,eyeDir);
     if(data.b != 1) {
     	normal = normalize(normal);
-    	vec3 vHalfVector = normalize(lightDir.xyz+eyeDir);
-    	float b = ((max(dot(normal.xyz,lightDir),0.0)) - data.a);
+    	float b = ((max(dot(normal.xyz,lightDir),-1.0)) - data.a);
     	if(b <= data1.a)
     		b = data1.a;
-    	b = clamp(b,0.2,1.0);
+    	b = clamp(b,0.02,1.0);
     	image = b * image;
     	if(data.r == 1)
-    		if(data.a <= 0)
+    		if(data.a <= 0){
+    			vec3 vHalfVector = normalize(lightDir.xyz+eyeDir);
 	   			image += pow(max(dot(normal.xyz,vHalfVector),0.0), 100) * 1.5;
+	   		}
     }
 	vec4 raysColor = texture(composite0, texcoord);
 	image.rgb = mix(image.rgb, raysColor.rgb, raysColor.a);

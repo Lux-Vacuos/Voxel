@@ -70,6 +70,10 @@ public class Voxel {
 		mainLoop();
 	}
 
+	public Voxel(String test) {
+		Logger.log("Running voxel in test mode");
+	}
+
 	/**
 	 * PreInit phase, initialize the display and runs the API PreInit
 	 * 
@@ -106,7 +110,7 @@ public class Voxel {
 	 * Init phase, initialize the game data (models,textures,music,etc) and runs
 	 * the API Init
 	 */
-	private void init() {
+	public void init() {
 		worldsHandler = new WorldsHandler();
 		InfinityWorld world = new InfinityWorld();
 		worldsHandler.registerWorld(world.getCodeName(), world);
@@ -127,7 +131,7 @@ public class Voxel {
 	/**
 	 * PostInit phase, starts music and runs the API PostInit
 	 */
-	private void postInit() {
+	public void postInit() {
 		try {
 			api.postInit();
 		} catch (VersionException e) {
@@ -197,7 +201,7 @@ public class Voxel {
 	 * @param delta
 	 *            Delta value from Update Thread
 	 */
-	public void update(float delta) {
+	private void update(float delta) {
 		Display.upsCount++;
 		gameResources.getGlobalStates().doUpdate(this, delta);
 	}

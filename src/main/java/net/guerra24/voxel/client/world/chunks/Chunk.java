@@ -33,8 +33,9 @@ import static org.lwjgl.opengl.GL15.glEndQuery;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 
 import net.guerra24.voxel.client.core.VoxelVariables;
@@ -44,7 +45,6 @@ import net.guerra24.voxel.client.resources.models.Tessellator;
 import net.guerra24.voxel.client.resources.models.WaterTile;
 import net.guerra24.voxel.client.util.Logger;
 import net.guerra24.voxel.client.util.Maths;
-import net.guerra24.voxel.client.world.Biomes;
 import net.guerra24.voxel.client.world.IWorld;
 import net.guerra24.voxel.client.world.WorldService;
 import net.guerra24.voxel.client.world.block.Block;
@@ -71,7 +71,7 @@ public class Chunk {
 	private transient List<Object> blocksMeshtemp;
 	private transient List<ParticlePoint> particlePoints;
 	private transient List<WaterTile> waterTiles;
-	private transient List<BoundingBox> boundingBoxs;
+	private transient Queue<BoundingBox> boundingBoxs;
 	private transient int sizeX, sizeY, sizeZ;
 	transient boolean readyToRender = true;
 	private transient Tessellator tess;
@@ -131,7 +131,7 @@ public class Chunk {
 		blocksMeshtemp = new ArrayList<Object>();
 		particlePoints = new ArrayList<ParticlePoint>();
 		waterTiles = new ArrayList<WaterTile>();
-		boundingBoxs = new ArrayList<BoundingBox>();
+		boundingBoxs = new ConcurrentLinkedQueue<BoundingBox>();
 		sizeX = VoxelVariables.CHUNK_SIZE;
 		sizeY = VoxelVariables.CHUNK_HEIGHT;
 		sizeZ = VoxelVariables.CHUNK_SIZE;
@@ -188,6 +188,7 @@ public class Chunk {
 		blocksMesh.clear();
 		waterTiles.clear();
 		particlePoints.clear();
+		boundingBoxs.clear();
 		calculateLight(blocksMesh, world);
 		rebuildChunkSection(blocksMesh, world);
 		rebuildChunkSection(world);
@@ -206,8 +207,7 @@ public class Chunk {
 		}
 		for (int x = 0; x < sizeX; x++) {
 			for (int z = 0; z < sizeZ; z++) {
-				double tempHeight = world.getNoise().getNoise((int) ((x + cx * 16) / Biomes.OCEAN.getMultiplier()),
-						(int) ((z + cz * 16) / Biomes.OCEAN.getMultiplier()));
+				double tempHeight = world.getNoise().getNoise((int) ((x + cx * 16)), (int) ((z + cz * 16)));
 				tempHeight += 1;
 				int height = (int) (128 * Maths.clamp(tempHeight));
 				for (int y = 0; y < height; y++) {
@@ -232,8 +232,7 @@ public class Chunk {
 		for (int i = 0; i < 4; i++) {
 			int xx = Maths.randInt(0, 15);
 			int zz = Maths.randInt(0, 15);
-			double tempHeight = world.getNoise().getNoise((int) ((xx + cx * 16) / Biomes.OCEAN.getMultiplier()),
-					(int) ((zz + cz * 16) / Biomes.OCEAN.getMultiplier()));
+			double tempHeight = world.getNoise().getNoise((int) ((xx + cx * 16)), (int) ((zz + cz * 16)));
 			tempHeight += 1;
 			int height = (int) (128 * Maths.clamp(tempHeight));
 			int h = getLocalBlock(xx, height - 1, zz);
@@ -285,8 +284,8 @@ public class Chunk {
 								cullFaceNorth(x + cx * sizeX, y + cy * sizeY, z + cz * sizeZ, world),
 								cullFaceSouth(x + cx * sizeX, y + cy * sizeY, z + cz * sizeZ, world),
 								Block.getBlock(blocks[x][y][z]), getTorchLight(x, y, z));
-						boundingBoxs.add(new BoundingBox(new Vector3(x + cx * sizeX, y + cy * sizeY, z + cz * sizeZ),
-								new Vector3(x + 1f + cx * sizeX, y + 1f + cy * sizeY, z + 1f + cz * sizeZ)));
+						boundingBoxs.add(Block.getBlock(blocks[x][y][z])
+								.getBoundingBox(new Vector3f(x + cx * sizeX, y + cy * sizeY, z + cz * sizeZ)));
 					} else if (Block.getBlock(blocks[x][y][z]).usesSingleModel()) {
 					} else if (Block.getBlock(blocks[x][y][z]) == Block.Water) {
 					}
@@ -543,7 +542,7 @@ public class Chunk {
 		}
 	}
 
-	public List<BoundingBox> getBoundingBoxs() {
+	public Queue<BoundingBox> getBoundingBoxs() {
 		return boundingBoxs;
 	}
 
@@ -552,6 +551,7 @@ public class Chunk {
 		blocksMeshtemp.clear();
 		particlePoints.clear();
 		waterTiles.clear();
+		boundingBoxs.clear();
 		tess.cleanUp();
 	}
 

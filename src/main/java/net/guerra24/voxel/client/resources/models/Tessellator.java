@@ -267,8 +267,12 @@ public class Tessellator {
 		basicShader.loadProjectionMatrix(orthoProjectionMatrix);
 		glBindVertexArray(vaoID);
 		glEnableVertexAttribArray(0);
+		glEnableVertexAttribArray(1);
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, texture);
 		glDrawElements(GL_TRIANGLES, indicesCounter, GL_UNSIGNED_INT, 0);
 		glDisableVertexAttribArray(0);
+		glDisableVertexAttribArray(1);
 		glBindVertexArray(0);
 		basicShader.stop();
 		glCullFace(GL_BACK);
@@ -290,8 +294,12 @@ public class Tessellator {
 		basicShader.loadProjectionMatrix(projectionMatrix);
 		glBindVertexArray(vaoID);
 		glEnableVertexAttribArray(0);
+		glEnableVertexAttribArray(1);
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, texture);
 		glDrawElements(GL_TRIANGLES, indicesCounter, GL_UNSIGNED_INT, 0);
 		glDisableVertexAttribArray(0);
+		glDisableVertexAttribArray(1);
 		glBindVertexArray(0);
 		basicShader.stop();
 	}

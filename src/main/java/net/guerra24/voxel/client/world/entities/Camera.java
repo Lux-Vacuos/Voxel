@@ -81,14 +81,13 @@ public class Camera extends Entity {
 	private float multiplierMouse = 24;
 	private float multiplierMovement = 1;
 	private byte block = 2;
-	private boolean teleporting = false;
-	private int teleportingTime = 0;
 	private boolean underWater = false;
 	private int mouseSpeed = 2;
 	private final int maxLookUp = 90;
 	private final int maxLookDown = -90;
 	private Ray ray;
 	private Vector2f center;
+	private boolean jump = false;
 
 	private VelocityComponent velocityComponent;
 	private PositionComponent positionComponent;
@@ -154,18 +153,6 @@ public class Camera extends Entity {
 		int by = (int) tempY;
 		int bz = (int) tempZ;
 
-		if (world.getGlobalBlock(bx, by, bz + 1) == Block.Portal.getId() && teleporting == false) {
-			teleporting = true;
-			world.switchDimension(id, gm);
-		}
-		if (teleporting) {
-			teleportingTime++;
-			if (teleportingTime >= 100) {
-				teleporting = false;
-				teleportingTime = 0;
-			}
-		}
-
 		if (world.getGlobalBlock(bx, by + 1, bz) == Block.Water.getId())
 			underWater = true;
 		else
@@ -191,9 +178,12 @@ public class Camera extends Entity {
 			velocityComponent.x -= Math.cos(Math.toRadians(yaw)) * delta * speed * multiplierMovement;
 			isMoved = true;
 		}
-		if (isKeyDown(KEY_SPACE)) {
+		if (isKeyDown(KEY_SPACE) && !jump) {
 			velocityComponent.y = 200 * delta;
+			jump = true;
 		}
+		if (velocityComponent.y == 0)
+			jump = false;
 		if (isKeyDown(KEY_LSHIFT)) {
 			multiplierMovement = 1 * delta;
 		} else {
@@ -204,7 +194,6 @@ public class Camera extends Entity {
 		} else {
 			multiplierMovement = 120 * delta;
 		}
-
 
 		if (isKeyDown(Keyboard.KEY_Y)) {
 			System.out.println(positionComponent.toString());
@@ -342,10 +331,6 @@ public class Camera extends Entity {
 
 	public void setRoll(float roll) {
 		this.roll = roll;
-	}
-
-	public boolean isTeleporting() {
-		return teleporting;
 	}
 
 	public boolean isUnderWater() {

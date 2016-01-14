@@ -74,7 +74,6 @@ public class MasterRenderer {
 	private WaterRenderer waterRenderer;
 	private EntityShader shader = new EntityShader();
 	private EntityRenderer entityRenderer;
-	public float aspectRatio;
 
 	/**
 	 * Constructor, Initializes the OpenGL code, creates the projection matrix,
@@ -221,8 +220,8 @@ public class MasterRenderer {
 	 * Creates the Projection Matrix
 	 * 
 	 */
-	public Matrix4f createProjectionMatrix(int width, int height, float fov, float nearPlane, float farPlane) {
-		aspectRatio = (float) width / (float) height;
+	public static Matrix4f createProjectionMatrix(int width, int height, float fov, float nearPlane, float farPlane) {
+		float aspectRatio = (float) width / (float) height;
 		float y_scale = (float) ((1f / Math.tan(Math.toRadians(fov / 2f))) * aspectRatio);
 		float x_scale = y_scale / aspectRatio;
 		float frustrum_length = farPlane - nearPlane;

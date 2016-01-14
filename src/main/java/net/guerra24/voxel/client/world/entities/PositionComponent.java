@@ -29,7 +29,7 @@ import com.badlogic.ashley.core.Component;
 import net.guerra24.voxel.universal.util.vector.Vector3f;
 
 public class PositionComponent implements Component {
-	public Vector3f position = new Vector3f();
+	public Vector3f position = new Vector3f(0, 0, 0);
 
 	@Override
 	public String toString() {

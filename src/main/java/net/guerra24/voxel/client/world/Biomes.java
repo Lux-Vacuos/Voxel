@@ -26,7 +26,7 @@
 package net.guerra24.voxel.client.world;
 
 public enum Biomes {
-	OCEAN(1f), HILLS(1.2f), MOUNTAIN_CANYON(8f);
+	FOREST(1f);
 
 	private final float multiplier;
 

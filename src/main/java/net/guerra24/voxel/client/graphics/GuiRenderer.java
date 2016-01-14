@@ -45,6 +45,7 @@ import net.guerra24.voxel.universal.util.vector.Matrix4f;
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
  * @category Rendering
+ * @deprecated Use NanoVG
  */
 public class GuiRenderer {
 

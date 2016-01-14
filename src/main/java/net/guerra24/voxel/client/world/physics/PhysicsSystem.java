@@ -24,9 +24,6 @@
 
 package net.guerra24.voxel.client.world.physics;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
@@ -34,7 +31,6 @@ import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.math.collision.BoundingBox;
 
 import net.guerra24.voxel.client.world.IWorld;
 import net.guerra24.voxel.client.world.block.Block;
