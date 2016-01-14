@@ -80,11 +80,11 @@ public class Voxel {
 	 * @throws VersionException
 	 */
 	public void preInit() {
+		Logger.log("Loading");
 		gameResources = new GameResources();
 		display = new Display();
 		display.initDsiplay(VoxelVariables.WIDTH, VoxelVariables.HEIGHT);
 		display.startUp();
-		Logger.log("Loading");
 		Logger.log("Voxel Version: " + VoxelVariables.version);
 		Logger.log("Molten API Version: " + VoxelVariables.apiVersion);
 		Logger.log("Build: " + VoxelVariables.build);
