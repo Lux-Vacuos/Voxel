@@ -81,7 +81,7 @@ public class Voxel {
 	 */
 	public void preInit() {
 		Logger.log("Loading");
-		gameResources = new GameResources();
+		gameResources = GameResources.instance();
 		display = new Display();
 		display.initDsiplay(VoxelVariables.WIDTH, VoxelVariables.HEIGHT);
 		display.startUp();

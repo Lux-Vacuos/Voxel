@@ -69,7 +69,7 @@ public class Chunk {
 	public byte[][][] lightMap;
 	private transient List<Object> blocksMesh;
 	private transient List<Object> blocksMeshtemp;
-	private transient List<ParticlePoint> particlePoints;
+	private transient Queue<ParticlePoint> particlePoints;
 	private transient List<WaterTile> waterTiles;
 	private transient Queue<BoundingBox> boundingBoxs;
 	private transient int sizeX, sizeY, sizeZ;
@@ -129,7 +129,7 @@ public class Chunk {
 	public void load(GameResources gm) {
 		blocksMesh = new ArrayList<Object>();
 		blocksMeshtemp = new ArrayList<Object>();
-		particlePoints = new ArrayList<ParticlePoint>();
+		particlePoints = new ConcurrentLinkedQueue<ParticlePoint>();
 		waterTiles = new ArrayList<WaterTile>();
 		boundingBoxs = new ConcurrentLinkedQueue<BoundingBox>();
 		sizeX = VoxelVariables.CHUNK_SIZE;
@@ -354,7 +354,7 @@ public class Chunk {
 		lightMap[x & 0xF][y & 0xF][z & 0xF] = (byte) ((lightMap[x & 0xF][y & 0xF][z & 0xF] & 0xF0) | val);
 	}
 
-	public List<ParticlePoint> getParticlePoints() {
+	public Queue<ParticlePoint> getParticlePoints() {
 		return particlePoints;
 	}
 

@@ -65,6 +65,14 @@ import net.guerra24.voxel.universal.util.vector.Vector3f;
  */
 public class GameResources {
 
+	private static GameResources instance = null;
+	
+	public static GameResources instance() {
+		if (instance == null)
+			instance = new GameResources();
+		return instance;
+	}
+	
 	/**
 	 * GameResources Data
 	 */
@@ -99,7 +107,7 @@ public class GameResources {
 	 * Constructor
 	 * 
 	 */
-	public GameResources() {
+	private GameResources() {
 		gameSettings = new GameSettings();
 	}
 
