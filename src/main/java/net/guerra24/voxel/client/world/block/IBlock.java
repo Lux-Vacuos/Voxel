@@ -45,9 +45,9 @@ public abstract class IBlock {
 	public abstract Vector8f texCoordsRight();
 
 	public abstract Vector8f texCoordsLeft();
-	
+
 	public abstract BoundingBox getBoundingBox(Vector3f pos);
-	
+
 	/**
 	 * Get the WaterTile of the Block
 	 * 
@@ -72,4 +72,6 @@ public abstract class IBlock {
 	 * @return Uses single model
 	 */
 	public abstract boolean usesSingleModel();
+
+	public abstract boolean isTransparent();
 }

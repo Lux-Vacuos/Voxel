@@ -89,4 +89,9 @@ public class BlockAir extends IBlock {
 		return null;
 	}
 
+	@Override
+	public boolean isTransparent() {
+		return true;
+	}
+
 }

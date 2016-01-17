@@ -36,8 +36,6 @@ import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import com.badlogic.gdx.math.collision.BoundingBox;
-
 import net.guerra24.voxel.client.core.VoxelVariables;
 import net.guerra24.voxel.client.particle.ParticlePoint;
 import net.guerra24.voxel.client.resources.GameResources;
@@ -71,7 +69,6 @@ public class Chunk {
 	private transient List<Object> blocksMeshtemp;
 	private transient Queue<ParticlePoint> particlePoints;
 	private transient List<WaterTile> waterTiles;
-	private transient Queue<BoundingBox> boundingBoxs;
 	private transient int sizeX, sizeY, sizeZ;
 	transient boolean readyToRender = true;
 	private transient Tessellator tess;
@@ -131,7 +128,6 @@ public class Chunk {
 		blocksMeshtemp = new ArrayList<Object>();
 		particlePoints = new ConcurrentLinkedQueue<ParticlePoint>();
 		waterTiles = new ArrayList<WaterTile>();
-		boundingBoxs = new ConcurrentLinkedQueue<BoundingBox>();
 		sizeX = VoxelVariables.CHUNK_SIZE;
 		sizeY = VoxelVariables.CHUNK_HEIGHT;
 		sizeZ = VoxelVariables.CHUNK_SIZE;
@@ -188,7 +184,6 @@ public class Chunk {
 		blocksMesh.clear();
 		waterTiles.clear();
 		particlePoints.clear();
-		boundingBoxs.clear();
 		calculateLight(blocksMesh, world);
 		rebuildChunkSection(blocksMesh, world);
 		rebuildChunkSection(world);
@@ -284,8 +279,6 @@ public class Chunk {
 								cullFaceNorth(x + cx * sizeX, y + cy * sizeY, z + cz * sizeZ, world),
 								cullFaceSouth(x + cx * sizeX, y + cy * sizeY, z + cz * sizeZ, world),
 								Block.getBlock(blocks[x][y][z]), getTorchLight(x, y, z));
-						boundingBoxs.add(Block.getBlock(blocks[x][y][z])
-								.getBoundingBox(new Vector3f(x + cx * sizeX, y + cy * sizeY, z + cz * sizeZ)));
 					} else if (Block.getBlock(blocks[x][y][z]).usesSingleModel()) {
 					} else if (Block.getBlock(blocks[x][y][z]) == Block.Water) {
 					}
@@ -364,20 +357,13 @@ public class Chunk {
 
 	private boolean cullFaceWest(int x, int y, int z, IWorld world) {
 		if (x > (cx * sizeX) + 1 && x < (cx * sizeX) + 16) {
-			if (getLocalBlock(x - 1, y, z) != Block.Air.getId() && getLocalBlock(x - 1, y, z) != Block.Water.getId()
-					&& getLocalBlock(x - 1, y, z) != Block.Glass.getId()
-					&& getLocalBlock(x - 1, y, z) != Block.Torch.getId()
-					&& getLocalBlock(x - 1, y, z) != Block.Leaves.getId()) {
+			if (!Block.getBlock(getLocalBlock(x - 1, y, z)).isTransparent()) {
 				return false;
 			} else {
 				return true;
 			}
 		}
-		if (world.getGlobalBlock(x - 1, y, z) != Block.Air.getId()
-				&& world.getGlobalBlock(x - 1, y, z) != Block.Water.getId()
-				&& world.getGlobalBlock(x - 1, y, z) != Block.Glass.getId()
-				&& world.getGlobalBlock(x - 1, y, z) != Block.Torch.getId()
-				&& world.getGlobalBlock(x - 1, y, z) != Block.Leaves.getId()) {
+		if (!Block.getBlock(world.getGlobalBlock(x - 1, y, z)).isTransparent()) {
 			return false;
 		} else {
 			return true;
@@ -386,20 +372,13 @@ public class Chunk {
 
 	private boolean cullFaceEast(int x, int y, int z, IWorld world) {
 		if (x > (cx * sizeX) && x < (cx * sizeX) + 15) {
-			if (getLocalBlock(x + 1, y, z) != Block.Air.getId() && getLocalBlock(x + 1, y, z) != Block.Water.getId()
-					&& getLocalBlock(x + 1, y, z) != Block.Glass.getId()
-					&& getLocalBlock(x + 1, y, z) != Block.Torch.getId()
-					&& getLocalBlock(x + 1, y, z) != Block.Leaves.getId()) {
+			if (!Block.getBlock(getLocalBlock(x + 1, y, z)).isTransparent()) {
 				return false;
 			} else {
 				return true;
 			}
 		}
-		if (world.getGlobalBlock(x + 1, y, z) != Block.Air.getId()
-				&& world.getGlobalBlock(x + 1, y, z) != Block.Water.getId()
-				&& world.getGlobalBlock(x + 1, y, z) != Block.Glass.getId()
-				&& world.getGlobalBlock(x + 1, y, z) != Block.Torch.getId()
-				&& world.getGlobalBlock(x + 1, y, z) != Block.Leaves.getId()) {
+		if (!Block.getBlock(world.getGlobalBlock(x + 1, y, z)).isTransparent()) {
 			return false;
 		} else {
 			return true;
@@ -408,20 +387,13 @@ public class Chunk {
 
 	private boolean cullFaceDown(int x, int y, int z, IWorld world) {
 		if (y > (cy * sizeY) + 1 && y < (cy * sizeY) + 16) {
-			if (getLocalBlock(x, y - 1, z) != Block.Air.getId() && getLocalBlock(x, y - 1, z) != Block.Water.getId()
-					&& getLocalBlock(x, y - 1, z) != Block.Glass.getId()
-					&& getLocalBlock(x, y - 1, z) != Block.Torch.getId()
-					&& getLocalBlock(x, y - 1, z) != Block.Leaves.getId()) {
+			if (!Block.getBlock(getLocalBlock(x, y - 1, z)).isTransparent()) {
 				return false;
 			} else {
 				return true;
 			}
 		}
-		if (world.getGlobalBlock(x, y - 1, z) != Block.Air.getId()
-				&& world.getGlobalBlock(x, y - 1, z) != Block.Water.getId()
-				&& world.getGlobalBlock(x, y - 1, z) != Block.Glass.getId()
-				&& world.getGlobalBlock(x, y - 1, z) != Block.Torch.getId()
-				&& world.getGlobalBlock(x, y - 1, z) != Block.Leaves.getId()) {
+		if (!Block.getBlock(world.getGlobalBlock(x, y - 1, z)).isTransparent()) {
 			return false;
 		} else {
 			return true;
@@ -430,20 +402,13 @@ public class Chunk {
 
 	private boolean cullFaceUpSolidBlock(int x, int y, int z, IWorld world) {
 		if (y > (cy * sizeY) && y < (cy * sizeY) + 15) {
-			if (getLocalBlock(x, y + 1, z) != Block.Air.getId() && getLocalBlock(x, y + 1, z) != Block.Water.getId()
-					&& getLocalBlock(x, y + 1, z) != Block.Glass.getId()
-					&& getLocalBlock(x, y + 1, z) != Block.Torch.getId()
-					&& getLocalBlock(x, y + 1, z) != Block.Leaves.getId()) {
+			if (!Block.getBlock(getLocalBlock(x, y + 1, z)).isTransparent()) {
 				return false;
 			} else {
 				return true;
 			}
 		}
-		if (world.getGlobalBlock(x, y + 1, z) != Block.Air.getId()
-				&& world.getGlobalBlock(x, y + 1, z) != Block.Water.getId()
-				&& world.getGlobalBlock(x, y + 1, z) != Block.Glass.getId()
-				&& world.getGlobalBlock(x, y + 1, z) != Block.Torch.getId()
-				&& world.getGlobalBlock(x, y + 1, z) != Block.Leaves.getId()) {
+		if (!Block.getBlock(world.getGlobalBlock(x, y + 1, z)).isTransparent()) {
 			return false;
 		} else {
 			return true;
@@ -470,20 +435,13 @@ public class Chunk {
 
 	private boolean cullFaceNorth(int x, int y, int z, IWorld world) {
 		if (z > (cz * sizeZ) + 1 && z < (cz * sizeZ) + 16) {
-			if (getLocalBlock(x, y, z - 1) != Block.Air.getId() && getLocalBlock(x, y, z - 1) != Block.Water.getId()
-					&& getLocalBlock(x, y, z - 1) != Block.Glass.getId()
-					&& getLocalBlock(x, y, z - 1) != Block.Torch.getId()
-					&& getLocalBlock(x, y, z - 1) != Block.Leaves.getId()) {
+			if (!Block.getBlock(getLocalBlock(x, y, z - 1)).isTransparent()) {
 				return false;
 			} else {
 				return true;
 			}
 		}
-		if (world.getGlobalBlock(x, y, z - 1) != Block.Air.getId()
-				&& world.getGlobalBlock(x, y, z - 1) != Block.Water.getId()
-				&& world.getGlobalBlock(x, y, z - 1) != Block.Glass.getId()
-				&& world.getGlobalBlock(x, y, z - 1) != Block.Torch.getId()
-				&& world.getGlobalBlock(x, y, z - 1) != Block.Leaves.getId()) {
+		if (!Block.getBlock(world.getGlobalBlock(x, y, z - 1)).isTransparent()) {
 			return false;
 		} else {
 			return true;
@@ -491,25 +449,13 @@ public class Chunk {
 	}
 
 	private boolean cullFaceSouth(int x, int y, int z, IWorld world) {
-		if (z > (cz * sizeZ) && z < (cz * sizeZ) + 15) {
-			if (getLocalBlock(x, y, z + 1) != Block.Air.getId() && getLocalBlock(x, y, z + 1) != Block.Water.getId()
-					&& getLocalBlock(x, y, z + 1) != Block.Glass.getId()
-					&& getLocalBlock(x, y, z + 1) != Block.Torch.getId()
-					&& getLocalBlock(x, y, z + 1) != Block.Leaves.getId()) {
-				return false;
-			} else {
+		if (z > (cz * sizeZ) && z < (cz * sizeZ) + 15)
+			if (Block.getBlock(getLocalBlock(x, y, z + 1)).isTransparent())
 				return true;
-			}
-		}
-		if (world.getGlobalBlock(x, y, z + 1) != Block.Air.getId()
-				&& world.getGlobalBlock(x, y, z + 1) != Block.Water.getId()
-				&& world.getGlobalBlock(x, y, z + 1) != Block.Glass.getId()
-				&& world.getGlobalBlock(x, y, z + 1) != Block.Torch.getId()
-				&& world.getGlobalBlock(x, y, z + 1) != Block.Leaves.getId()) {
-			return false;
-		} else {
+
+		if (Block.getBlock(world.getGlobalBlock(x, y, z + 1)).isTransparent())
 			return true;
-		}
+		return false;
 	}
 
 	public void render(GameResources gm) {
@@ -542,16 +488,11 @@ public class Chunk {
 		}
 	}
 
-	public Queue<BoundingBox> getBoundingBoxs() {
-		return boundingBoxs;
-	}
-
 	private void clear() {
 		blocksMesh.clear();
 		blocksMeshtemp.clear();
 		particlePoints.clear();
 		waterTiles.clear();
-		boundingBoxs.clear();
 		tess.cleanUp();
 	}
 

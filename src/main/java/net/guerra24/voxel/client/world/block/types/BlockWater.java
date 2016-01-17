@@ -89,5 +89,10 @@ public class BlockWater extends IBlock {
 	public BoundingBox getBoundingBox(Vector3f pos) {
 		return null;
 	}
+	
+	@Override
+	public boolean isTransparent() {
+		return true;
+	}
 
 }

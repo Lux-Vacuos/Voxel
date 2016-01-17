@@ -216,6 +216,12 @@ public class Tessellator {
 
 	public void end() {
 		loadData(pos, texcoords, normals, data, tangent, bitangent);
+		pos.clear();
+		texcoords.clear();
+		normals.clear();
+		data.clear();
+		tangent.clear();
+		bitangent.clear();
 		updated = true;
 	}
 

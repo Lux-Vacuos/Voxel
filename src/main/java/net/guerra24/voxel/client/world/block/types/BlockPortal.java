@@ -91,4 +91,9 @@ public class BlockPortal extends IBlock {
 		return new BoundingBox(new Vector3(pos.x, pos.y + 0.2f, pos.z),
 				new Vector3(pos.x + 1, pos.y + 0.8f, pos.z + 1));
 	}
+	
+	@Override
+	public boolean isTransparent() {
+		return true;
+	}
 }

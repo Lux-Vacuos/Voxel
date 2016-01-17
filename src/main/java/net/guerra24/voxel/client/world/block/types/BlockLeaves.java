@@ -90,4 +90,9 @@ public class BlockLeaves extends IBlock {
 	public BoundingBox getBoundingBox(Vector3f pos) {
 		return new BoundingBox(new Vector3(pos.x, pos.y, pos.z), new Vector3(pos.x + 1, pos.y + 1, pos.z + 1));
 	}
+	
+	@Override
+	public boolean isTransparent() {
+		return true;
+	}
 }

@@ -44,6 +44,8 @@ public class WebRenderer {
 
 	private float yScale, xScale, x, y;
 
+	private boolean updating = false;
+
 	public WebRenderer(String webpage, float x, float y) {
 		this.webpage = webpage;
 		texts = new ArrayList<WebText>();
@@ -57,52 +59,67 @@ public class WebRenderer {
 
 	public void render() {
 		float ypos = 0;
-		for (int y = 0; y < texts.size(); y++) {
-			VectorsRendering.renderText(texts.get(y).getText(), "Roboto-Bold", this.x, (this.y + ypos),
-					texts.get(y).getFontSize(), VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorA),
-					VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorB));
-			ypos += texts.get(y).getFontSize();
-			if (texts.get(y).isTitle())
-				ypos += 5;
-		}
+		if (!updating)
+			for (int y = 0; y < texts.size(); y++) {
+				VectorsRendering.renderText(texts.get(y).getText(), "Roboto-Bold", this.x, (this.y + ypos),
+						texts.get(y).getFontSize(), VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorA),
+						VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorB));
+				ypos += texts.get(y).getFontSize();
+				if (texts.get(y).isTitle())
+					ypos += 5;
+			}
+		if (updating)
+			VectorsRendering.renderText("Updating... Please Wait", "Roboto-Bold", x + ((375 - 100) * xScale),
+					y + 200 * yScale, 20 * yScale, VectorsRendering.rgba(255, 255, 255, 255, VectorsRendering.colorA),
+					VectorsRendering.rgba(255, 255, 255, 255, VectorsRendering.colorA));
 	}
 
 	public void update() {
-		texts.clear();
-		URL url;
-		try {
-			url = new URL(webpage);
-			URLConnection conn = url.openConnection();
-			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-			float font = 0;
-			while (true) {
-				String text = bufferedReader.readLine();
-				String[] currentLine = text.split(" ");
-				if (text.startsWith("#TITLE ")) {
-					String textFinal = "";
-					for (int i = 1; i < currentLine.length; i++) {
-						textFinal += currentLine[i] + " ";
+		if (!updating) {
+			updating = true;
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					texts.clear();
+					URL url;
+					try {
+						url = new URL(webpage);
+						URLConnection conn = url.openConnection();
+						BufferedReader bufferedReader = new BufferedReader(
+								new InputStreamReader(conn.getInputStream()));
+						float font = 0;
+						while (true) {
+							String text = bufferedReader.readLine();
+							String[] currentLine = text.split(" ");
+							if (text.startsWith("#TITLE ")) {
+								String textFinal = "";
+								for (int i = 1; i < currentLine.length; i++) {
+									textFinal += currentLine[i] + " ";
+								}
+								texts.add(new WebText(textFinal, font, true));
+							} else if (text.startsWith("#FONT ")) {
+								font = Float.parseFloat(currentLine[1]) * yScale;
+							} else if (text.startsWith("#TEXT ")) {
+								String textFinal = "";
+								for (int i = 1; i < currentLine.length; i++) {
+									textFinal += currentLine[i] + " ";
+								}
+								texts.add(new WebText(textFinal, font, false));
+							} else if (text.contains("#END")) {
+								break;
+							}
+						}
+						bufferedReader.close();
+					} catch (MalformedURLException e) {
+						texts.add(new WebText("Unable to get data.", 20, false));
+						e.printStackTrace();
+					} catch (IOException e) {
+						texts.add(new WebText("Unable to get data.", 20, false));
+						e.printStackTrace();
 					}
-					texts.add(new WebText(textFinal, font, true));
-				} else if (text.startsWith("#FONT ")) {
-					font = Float.parseFloat(currentLine[1]) * yScale;
-				} else if (text.startsWith("#TEXT ")) {
-					String textFinal = "";
-					for (int i = 1; i < currentLine.length; i++) {
-						textFinal += currentLine[i] + " ";
-					}
-					texts.add(new WebText(textFinal, font, false));
-				} else if (text.contains("#END")) {
-					break;
+					updating = false;
 				}
-			}
-			bufferedReader.close();
-		} catch (MalformedURLException e) {
-			texts.add(new WebText("Unable to get data.", 20, false));
-			e.printStackTrace();
-		} catch (IOException e) {
-			texts.add(new WebText("Unable to get data.", 20, false));
-			e.printStackTrace();
+			}).start();
 		}
 	}
 

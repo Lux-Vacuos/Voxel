@@ -34,12 +34,10 @@ import net.guerra24.voxel.client.core.GlobalStates;
 import net.guerra24.voxel.client.core.Voxel;
 import net.guerra24.voxel.client.graphics.DeferredShadingRenderer;
 import net.guerra24.voxel.client.graphics.Frustum;
-import net.guerra24.voxel.client.graphics.GuiRenderer;
 import net.guerra24.voxel.client.graphics.MasterRenderer;
 import net.guerra24.voxel.client.graphics.MasterShadowRenderer;
 import net.guerra24.voxel.client.graphics.OcclusionRenderer;
 import net.guerra24.voxel.client.graphics.SkyboxRenderer;
-import net.guerra24.voxel.client.graphics.TextMasterRenderer;
 import net.guerra24.voxel.client.graphics.shaders.TessellatorBasicShader;
 import net.guerra24.voxel.client.graphics.shaders.TessellatorShader;
 import net.guerra24.voxel.client.menu.Menu;
@@ -66,13 +64,13 @@ import net.guerra24.voxel.universal.util.vector.Vector3f;
 public class GameResources {
 
 	private static GameResources instance = null;
-	
+
 	public static GameResources instance() {
 		if (instance == null)
 			instance = new GameResources();
 		return instance;
 	}
-	
+
 	/**
 	 * GameResources Data
 	 */
@@ -82,8 +80,6 @@ public class GameResources {
 	private Camera sun_Camera;
 	private MasterRenderer renderer;
 	private SkyboxRenderer skyboxRenderer;
-	private GuiRenderer guiRenderer;
-	private TextHandler textHandler;
 	private GlobalStates globalStates;
 	private DeferredShadingRenderer deferredShadingRenderer;
 	private MasterShadowRenderer masterShadowRenderer;
@@ -127,7 +123,6 @@ public class GameResources {
 		sun_Camera.setRoll(sunRotation.z);
 		camera = new Camera(renderer.getProjectionMatrix());
 		kryo = new Kryo();
-		guiRenderer = new GuiRenderer(loader);
 		occlusionRenderer = new OcclusionRenderer(renderer.getProjectionMatrix());
 		skyboxRenderer = new SkyboxRenderer(loader, renderer.getProjectionMatrix());
 		deferredShadingRenderer = new DeferredShadingRenderer(loader, this);
@@ -135,8 +130,6 @@ public class GameResources {
 		TessellatorBasicShader.getInstance();
 		ParticleMaster.getInstance().init(loader, renderer.getProjectionMatrix());
 		frustum = new Frustum();
-		TextMasterRenderer.getInstance().init(loader);
-		textHandler = new TextHandler(this);
 
 		physicsEngine = new Engine();
 		physicsSystem = new PhysicsSystem(voxel.getWorldsHandler().getActiveWorld());
@@ -198,14 +191,12 @@ public class GameResources {
 	 */
 	public void cleanUp() {
 		gameSettings.save();
-		TextMasterRenderer.getInstance().cleanUp();
 		TessellatorShader.getInstance().cleanUp();
 		TessellatorBasicShader.getInstance().cleanUp();
 		masterShadowRenderer.cleanUp();
 		occlusionRenderer.cleanUp();
 		ParticleMaster.getInstance().cleanUp();
 		deferredShadingRenderer.cleanUp();
-		guiRenderer.cleanUp();
 		renderer.cleanUp();
 		loader.cleanUp();
 		soundSystem.cleanup();
@@ -235,10 +226,6 @@ public class GameResources {
 		return skyboxRenderer;
 	}
 
-	public GuiRenderer getGuiRenderer() {
-		return guiRenderer;
-	}
-
 	public SoundSystem getSoundSystem() {
 		return soundSystem;
 	}
@@ -249,10 +236,6 @@ public class GameResources {
 
 	public Frustum getFrustum() {
 		return frustum;
-	}
-
-	public TextHandler getTextHandler() {
-		return textHandler;
 	}
 
 	public GlobalStates getGlobalStates() {

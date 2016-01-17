@@ -70,7 +70,7 @@ public class GameSPState implements State {
 			if (isKeyDown(KEY_F1))
 				VoxelVariables.debug = !VoxelVariables.debug;
 			if (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
-				voxel.getGameResources().getCamera().unlockMouse();
+				gm.getCamera().unlockMouse();
 				gm.getGlobalStates().setState(GameState.IN_PAUSE);
 			}
 		}

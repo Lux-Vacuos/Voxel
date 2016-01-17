@@ -35,7 +35,6 @@ import org.lwjgl.glfw.GLFW;
 import net.guerra24.voxel.client.api.ModInitialization;
 import net.guerra24.voxel.client.api.VersionException;
 import net.guerra24.voxel.client.bootstrap.Bootstrap;
-import net.guerra24.voxel.client.graphics.TextMasterRenderer;
 import net.guerra24.voxel.client.graphics.nanovg.Timers;
 import net.guerra24.voxel.client.graphics.opengl.Display;
 import net.guerra24.voxel.client.input.Mouse;
@@ -192,7 +191,6 @@ public class Voxel {
 	 */
 	private void render(float delta) {
 		gameResources.getGlobalStates().doRender(this, delta);
-		TextMasterRenderer.getInstance().render();
 
 	}
 
