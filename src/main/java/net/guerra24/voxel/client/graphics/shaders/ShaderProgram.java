@@ -51,12 +51,14 @@ import static org.lwjgl.opengl.GL20.glUseProgram;
 import static org.lwjgl.opengl.GL20.glValidateProgram;
 
 import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.FloatBuffer;
 
 import org.lwjgl.BufferUtils;
 
+import net.guerra24.voxel.client.graphics.opengl.Display;
 import net.guerra24.voxel.client.util.Logger;
 import net.guerra24.voxel.universal.util.vector.Matrix4f;
 import net.guerra24.voxel.universal.util.vector.Vector2f;
@@ -133,13 +135,8 @@ public abstract class ShaderProgram {
 	 * 
 	 */
 	public void start() {
-		try {
-			if (binded)
-				throw new RuntimeException("A Shader is already binded");
-		} catch (RuntimeException e) {
-			e.printStackTrace();
-			System.exit(-1);
-		}
+		if (binded)
+			throw new RuntimeException("A Shader is already binded");
 		glUseProgram(programID);
 		binded = true;
 	}
@@ -287,19 +284,23 @@ public abstract class ShaderProgram {
 	 */
 	private int loadShader(String file, int type) throws IllegalStateException {
 		StringBuilder shaderSource = new StringBuilder();
-		String sfile = "assets/shaders/" + file;
+		InputStream filet = getClass().getClassLoader().getResourceAsStream("assets/shaders/" + file);
 		try {
-			BufferedReader reader = new BufferedReader(new FileReader(sfile));
+			BufferedReader reader = new BufferedReader(new InputStreamReader(filet));
 			Logger.log("Loading Shader: " + file);
 			String line;
 			while ((line = reader.readLine()) != null) {
 				shaderSource.append(line).append("//\n");
 			}
 			reader.close();
+			if (Display.isNvidia())
+				shaderSource.insert(0, "#define NVIDIA//\n");// TEMPORAL FIX
+			else if (Display.isAmd())
+				shaderSource.insert(0, "#define AMD//\n");// TEMPORAL FIX
 		} catch (IOException e) {
 			Logger.warn("Shader file not found: " + file);
 			e.printStackTrace();
-			System.exit(0);
+			System.exit(-1);
 		}
 		int shaderID = glCreateShader(type);
 		glShaderSource(shaderID, shaderSource);

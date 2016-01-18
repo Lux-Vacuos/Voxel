@@ -267,6 +267,16 @@ public class Tessellator {
 	}
 
 	public void drawShadow(Camera camera) {
+		if (updated) {
+			updateGlBuffers(vboID0, vboCapacity, buffer0);
+			updateGlBuffers(vboID1, vboCapacity, buffer1);
+			updateGlBuffers(vboID2, vboCapacity, buffer2);
+			updateGlBuffers(vboID3, vboCapacity, buffer3);
+			updateGlBuffers(vboID4, vboCapacity, buffer4);
+			updateGlBuffers(vboID5, vboCapacity, buffer5);
+			updateGLIBOBuffer();
+			updated = false;
+		}
 		glCullFace(GL_FRONT);
 		basicShader.start();
 		basicShader.loadviewMatrix(camera);

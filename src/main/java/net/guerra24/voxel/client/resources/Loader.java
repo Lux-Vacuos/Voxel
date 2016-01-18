@@ -52,13 +52,21 @@ import static org.lwjgl.opengl.GL13.GL_TEXTURE_CUBE_MAP;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE_CUBE_MAP_POSITIVE_X;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
 import static org.lwjgl.opengl.GL14.GL_TEXTURE_LOD_BIAS;
-import static org.lwjgl.opengl.GL15.*;
+import static org.lwjgl.opengl.GL15.GL_ARRAY_BUFFER;
+import static org.lwjgl.opengl.GL15.GL_ELEMENT_ARRAY_BUFFER;
+import static org.lwjgl.opengl.GL15.GL_STATIC_DRAW;
+import static org.lwjgl.opengl.GL15.GL_STREAM_DRAW;
+import static org.lwjgl.opengl.GL15.glBindBuffer;
+import static org.lwjgl.opengl.GL15.glBufferData;
+import static org.lwjgl.opengl.GL15.glBufferSubData;
+import static org.lwjgl.opengl.GL15.glDeleteBuffers;
+import static org.lwjgl.opengl.GL15.glGenBuffers;
 import static org.lwjgl.opengl.GL20.glVertexAttribPointer;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import static org.lwjgl.opengl.GL30.glDeleteVertexArrays;
 import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 import static org.lwjgl.opengl.GL30.glGenerateMipmap;
-import static org.lwjgl.opengl.GL33.*;
+import static org.lwjgl.opengl.GL33.glVertexAttribDivisor;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -78,6 +86,7 @@ import org.lwjgl.BufferUtils;
 
 import de.matthiasmann.twl.utils.PNGDecoder;
 import de.matthiasmann.twl.utils.PNGDecoder.Format;
+import net.guerra24.voxel.client.graphics.VectorsRendering;
 import net.guerra24.voxel.client.graphics.opengl.Display;
 import net.guerra24.voxel.client.resources.models.EntityTexture;
 import net.guerra24.voxel.client.resources.models.RawModel;
@@ -237,6 +246,14 @@ public class Loader {
 		return texture_id;
 	}
 
+	/**
+	 * 
+	 * @param fileName
+	 *            Name of the file to load
+	 * @return Texture ID
+	 * @deprecated Use {@link Loader#loadNVGFont(String, String)} due to there
+	 *             is no more FontRenderer
+	 */
 	public int loadTextureFont(String fileName) {
 		int texture = 0;
 		try {
@@ -282,6 +299,11 @@ public class Loader {
 	 * @param fileName
 	 *            Gui Texture Name
 	 * @return Texture ID
+	 * @deprecated Use
+	 *             {@link VectorsRendering#renderWindow(float, float, float, float)}
+	 *             or
+	 *             {@link VectorsRendering#renderWindow(String, String, float, float, float, float)}
+	 *             due to there is no more GuiRenderer
 	 */
 	public int loadTextureGui(String fileName) {
 		int texture = 0;

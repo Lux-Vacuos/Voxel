@@ -49,6 +49,7 @@ import net.guerra24.voxel.client.sound.soundsystem.SoundSystemConfig;
 import net.guerra24.voxel.client.sound.soundsystem.SoundSystemException;
 import net.guerra24.voxel.client.sound.soundsystem.codecs.CodecJOgg;
 import net.guerra24.voxel.client.util.Logger;
+import net.guerra24.voxel.client.util.LoggerSoundSystem;
 import net.guerra24.voxel.client.world.block.Block;
 import net.guerra24.voxel.client.world.entities.Camera;
 import net.guerra24.voxel.client.world.physics.PhysicsSystem;
@@ -139,9 +140,12 @@ public class GameResources {
 		try {
 			SoundSystemConfig.addLibrary(LibraryLWJGLOpenAL.class);
 			SoundSystemConfig.setCodec("ogg", CodecJOgg.class);
+			SoundSystemConfig.setSoundFilesPackage("assets/sounds/");
+			SoundSystemConfig.setLogger(new LoggerSoundSystem());
 		} catch (SoundSystemException e) {
-			Logger.error("Unable to bind SoundSystem Libs");
+			Logger.error("Unable to setting up Sound System Configuration");
 			e.printStackTrace();
+			System.exit(-1);
 		}
 		soundSystem = new SoundSystem();
 		globalStates = new GlobalStates(loader);

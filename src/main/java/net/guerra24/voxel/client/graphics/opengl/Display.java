@@ -88,7 +88,6 @@ import static org.lwjgl.opengl.GL11.glViewport;
 import static org.lwjgl.opengl.GL30.GL_INVALID_FRAMEBUFFER_OPERATION;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
@@ -489,17 +488,13 @@ public class Display {
 	 * @return ByteBuffer
 	 * @throws IOException
 	 */
-	private static ByteBuffer loadIcon(String path) throws IOException {
-		InputStream inputStream = new FileInputStream(path);
-		try {
-			PNGDecoder decoder = new PNGDecoder(inputStream);
-			ByteBuffer bytebuf = ByteBuffer.allocateDirect(decoder.getWidth() * decoder.getHeight() * 4);
-			decoder.decode(bytebuf, decoder.getWidth() * 4, PNGDecoder.Format.RGBA);
-			bytebuf.flip();
-			return bytebuf;
-		} finally {
-			inputStream.close();
-		}
+	private ByteBuffer loadIcon(String path) throws IOException {
+		InputStream file = getClass().getClassLoader().getResourceAsStream(path);
+		PNGDecoder decoder = new PNGDecoder(file);
+		ByteBuffer bytebuf = ByteBuffer.allocateDirect(decoder.getWidth() * decoder.getHeight() * 4);
+		decoder.decode(bytebuf, decoder.getWidth() * 4, PNGDecoder.Format.RGBA);
+		bytebuf.flip();
+		return bytebuf;
 	}
 
 	/**
@@ -682,6 +677,14 @@ public class Display {
 				variableYieldTime = Math.max(variableYieldTime - 2 * 1000, 0);
 			}
 		}
+	}
+
+	public static boolean isNvidia() {
+		return nvidia;
+	}
+
+	public static boolean isAmd() {
+		return amd;
 	}
 
 }

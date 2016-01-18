@@ -42,6 +42,11 @@ uniform sampler2D heightMap;
 uniform int useShadows;
 uniform int useParallax;
 
+
+//Dynamic Data to be imported on load like "#define x"
+
+//DEFINE
+
 vec2 poissonDisk[16] = vec2[]( 
    vec2( -0.94201624, -0.39906216 ), 
    vec2( 0.94558609, -0.76890725 ), 
@@ -61,6 +66,8 @@ vec2 poissonDisk[16] = vec2[](
    vec2( 0.14383161, -0.14100790 ) 
 );
 
+
+#ifdef NVIDIA
 const float heightScale = 0.01f;
 
 vec2 ParallaxMapping(vec2 texCoords, vec3 viewDir) { 
@@ -87,6 +94,7 @@ vec2 ParallaxMapping(vec2 texCoords, vec3 viewDir) {
 	vec2 finalTexCoords = prevTexCoords * weight + currentTexCoords * (1.0 - weight);
 	return finalTexCoords;
 } 
+#endif
 
 void main(void) {
 	vec4 data = pass_Data;
@@ -95,8 +103,10 @@ void main(void) {
 
 	vec3 eyeDir = normalize(posInTangent);
 	vec2 texcoords = pass_textureCoords;
+	#ifdef NVIDIA
 	if(useParallax == 1)
 		texcoords = ParallaxMapping(texcoords, eyeDir);
+	#endif
 	
 	float shadow = 0;
 	if(useShadows == 1){

@@ -60,6 +60,10 @@ public class SimpleThread extends Thread {
 	 */
 	private boolean kill = false;
 
+	public SimpleThread(String name) {
+		this.setName(name);
+	}
+
 	/**
 	 * Removes all references to instantiated objects, and changes the thread's
 	 * state to "not alive". Method alive() returns false when this method has

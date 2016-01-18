@@ -25,9 +25,8 @@
 package net.guerra24.voxel.client.resources;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,22 +53,13 @@ public class OBJLoader {
 	 * Load an ObjModel
 	 * 
 	 * @param fileName
-	 *            File Name
-	 * @param loader
-	 *            Loader
-	 * @return RawModel
+	 *            OBJ File name
+	 * @return RawModel that contains all the data loaded to the GPU
 	 */
 	public RawModel loadObjModel(String fileName) {
-		FileReader fr = null;
-		try {
-			String file = "assets/models/" + fileName + ".obj";
-			fr = new FileReader(new File(file));
-			Logger.log("Loading Model: " + fileName + ".obj");
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-			Logger.error("Couldn' load model file");
-		}
-		BufferedReader reader = new BufferedReader(fr);
+		InputStream file = getClass().getClassLoader().getResourceAsStream("assets/models/" + fileName + ".obj");
+		Logger.log("Loading Model: " + fileName + ".obj");
+		BufferedReader reader = new BufferedReader(new InputStreamReader(file));
 		String line;
 		List<Vector3f> vertices = new ArrayList<Vector3f>();
 		List<Vector2f> textures = new ArrayList<Vector2f>();
