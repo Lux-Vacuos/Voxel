@@ -36,7 +36,7 @@ public class GameSettings {
 	private Properties prop;
 	private File settings;
 
-	private int version = 3;
+	private int version = 4;
 
 	public GameSettings() {
 		settings = new File(VoxelVariables.settings);
@@ -98,10 +98,7 @@ public class GameSettings {
 
 	public String getValue(String key) {
 		String res = prop.getProperty(key);
-		if (res == null)
-			return "1";
-		else
-			return res;
+		return res;
 	}
 
 	private int getVersion() {

@@ -34,7 +34,6 @@ import com.badlogic.gdx.math.Vector3;
 
 import net.guerra24.voxel.client.world.IWorld;
 import net.guerra24.voxel.client.world.block.Block;
-import net.guerra24.voxel.client.world.entities.Camera;
 import net.guerra24.voxel.client.world.entities.CollisionComponent;
 import net.guerra24.voxel.client.world.entities.PositionComponent;
 import net.guerra24.voxel.client.world.entities.VelocityComponent;
@@ -101,17 +100,13 @@ public class PhysicsSystem extends EntitySystem {
 			if (ya == Block.Water.getId())
 				if (velocity.y < 2)
 					velocity.y = -2;
-				else if (velocity.y > 2)
-					velocity.y = 2;
 
-			if (yb != 0 && !(entity instanceof Camera)) {
+			if (yb != 0 && yb != Block.Ice.getId()) {
 				velocity.x *= 0.8f;
 				velocity.z *= 0.8f;
-			} else if (yb != 0 && entity instanceof Camera) {
-				if (!((Camera) entity).isMoved) {
-					velocity.x *= 0.8f;
-					velocity.z *= 0.8f;
-				}
+			} else if (yb == Block.Ice.getId()) {
+				velocity.x *= 0.95f;
+				velocity.z *= 0.95f;
 			}
 
 			collison.boundingBox.set(new Vector3(position.position.x, position.position.y, position.position.z),

@@ -56,6 +56,10 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.+'
 }
 
+task generateJavaDoc(type: Javadoc) {
+	failOnError = false
+}
+
 sourceSets {
     main {
         java.srcDir("${projectDir}/src/main/java/")

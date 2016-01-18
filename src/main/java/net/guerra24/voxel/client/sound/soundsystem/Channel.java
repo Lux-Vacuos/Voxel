@@ -44,7 +44,7 @@ public class Channel {
 	/**
 	 * Global identifier for the type of channel (normal or streaming). Possible
 	 * values for this varriable can be found in the
-	 * {@link paulscode.sound.SoundSystemConfig SoundSystemConfig} class.
+	 * {@link net.guerra24.voxel.client.sound.SoundSystemConfig SoundSystemConfig} class.
 	 */
 	public int channelType;
 
