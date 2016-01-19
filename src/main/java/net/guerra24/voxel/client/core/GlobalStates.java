@@ -30,8 +30,6 @@ import net.guerra24.voxel.client.core.states.LoadingSPState;
 import net.guerra24.voxel.client.core.states.MainMenuState;
 import net.guerra24.voxel.client.core.states.OptionsState;
 import net.guerra24.voxel.client.core.states.WorldSelectionState;
-import net.guerra24.voxel.client.graphics.opengl.Display;
-import net.guerra24.voxel.client.resources.Loader;
 
 /**
  * States Handler
@@ -58,18 +56,15 @@ public class GlobalStates {
 		State state;
 	}
 
-	public GlobalStates(Loader loader) {
+	public GlobalStates() {
 		loop = true;
 		state = VoxelVariables.autostart ? GameState.LOADING_WORLD : GameState.MAINMENU;
 	}
 
 	public void doUpdate(Voxel voxel, float delta) {
-
 		state.state.update(voxel, this, delta);
-
-		if (Display.isCloseRequested())
+		if (voxel.getGameResources().getDisplay().isCloseRequested())
 			loop = false;
-
 	}
 
 	public void doRender(Voxel voxel, float delta) {

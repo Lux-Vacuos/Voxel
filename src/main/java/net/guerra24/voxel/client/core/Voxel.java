@@ -36,7 +36,6 @@ import net.guerra24.voxel.client.api.ModInitialization;
 import net.guerra24.voxel.client.api.VersionException;
 import net.guerra24.voxel.client.bootstrap.Bootstrap;
 import net.guerra24.voxel.client.graphics.nanovg.Timers;
-import net.guerra24.voxel.client.graphics.opengl.Display;
 import net.guerra24.voxel.client.input.Mouse;
 import net.guerra24.voxel.client.resources.GameResources;
 import net.guerra24.voxel.client.util.Logger;
@@ -60,7 +59,6 @@ public class Voxel {
 	 */
 	private GameResources gameResources;
 	private WorldsHandler worldsHandler;
-	private Display display;
 	private ModInitialization api;
 
 	/**
@@ -81,9 +79,6 @@ public class Voxel {
 	public void preInit() {
 		Logger.log("Loading");
 		gameResources = GameResources.instance();
-		display = new Display();
-		display.initDsiplay(VoxelVariables.WIDTH, VoxelVariables.HEIGHT);
-		display.startUp();
 		Logger.log("Voxel Version: " + VoxelVariables.version);
 		Logger.log("Molten API Version: " + VoxelVariables.apiVersion);
 		Logger.log("Build: " + VoxelVariables.build);
@@ -93,6 +88,7 @@ public class Voxel {
 		Logger.log("OpenGL Version: " + glGetString(GL_VERSION));
 		Logger.log("Vendor: " + glGetString(GL_VENDOR));
 		Logger.log("Renderer: " + glGetString(GL_RENDERER));
+		gameResources.getDisplay().setVisible();
 
 		if (Bootstrap.getPlatform() == Bootstrap.Platform.MACOSX) {
 			VoxelVariables.runningOnMac = true;
@@ -149,7 +145,6 @@ public class Voxel {
 	/**
 	 * Voxel Main Loop
 	 * 
-	 * @throws VersionException
 	 */
 	public void mainLoop() {
 		preInit();
@@ -161,12 +156,12 @@ public class Voxel {
 		float alpha = 0;
 		while (gameResources.getGlobalStates().loop) {
 			Timers.startCPUTimer();
-			if (Display.timeCountRender > 1f) {
-				Display.ups = Display.upsCount;
-				Display.upsCount = 0;
-				Display.timeCountRender -= 1f;
+			if (gameResources.getDisplay().getTimeCount() > 1f) {
+				CoreInfo.ups = CoreInfo.upsCount;
+				CoreInfo.upsCount = 0;
+				gameResources.getDisplay().setTimeCount(gameResources.getDisplay().getTimeCount() - 1);
 			}
-			delta = Display.getDeltaRender();
+			delta = gameResources.getDisplay().getDelta();
 			accumulator += delta;
 			while (accumulator >= interval) {
 				update(interval);
@@ -178,7 +173,7 @@ public class Voxel {
 			render(alpha);
 			Timers.stopGPUTimer();
 			Timers.update();
-			display.updateDisplay(VoxelVariables.FPS);
+			gameResources.getDisplay().updateDisplay(VoxelVariables.FPS);
 		}
 		dispose();
 	}
@@ -201,7 +196,7 @@ public class Voxel {
 	 *            Delta value from Update Thread
 	 */
 	private void update(float delta) {
-		Display.upsCount++;
+		CoreInfo.upsCount++;
 		gameResources.getGlobalStates().doUpdate(this, delta);
 	}
 
@@ -212,7 +207,7 @@ public class Voxel {
 		Logger.log("Closing Game");
 		gameResources.cleanUp();
 		api.dispose();
-		display.closeDisplay();
+		gameResources.getDisplay().closeDisplay();
 	}
 
 	public GameResources getGameResources() {
@@ -225,10 +220,6 @@ public class Voxel {
 
 	public WorldsHandler getWorldsHandler() {
 		return worldsHandler;
-	}
-
-	public Display getDisplay() {
-		return display;
 	}
 
 }

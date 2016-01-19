@@ -98,9 +98,9 @@ public class Camera extends Entity {
 
 	int id = 0;
 
-	public Camera(Matrix4f proj) {
+	public Camera(Matrix4f proj, Display display) {
 		this.speed = 3f;
-		center = new Vector2f(Display.getWidth() / 2, Display.getHeight() / 2);
+		center = new Vector2f(display.getDisplayWidth() / 2, display.getDisplayHeight() / 2);
 		velocityComponent = new VelocityComponent();
 		velocityComponent.y = -9.8f;
 		positionComponent = new PositionComponent();
@@ -108,7 +108,8 @@ public class Camera extends Entity {
 		this.add(velocityComponent);
 		this.add(positionComponent);
 		this.add(collisionComponent);
-		ray = new Ray(proj, Maths.createViewMatrix(this), center, Display.getWidth(), Display.getHeight());
+		ray = new Ray(proj, Maths.createViewMatrix(this), center, display.getDisplayWidth(),
+				display.getDisplayHeight());
 	}
 
 	public void update(float delta, GameResources gm, IWorld world) {
@@ -231,9 +232,9 @@ public class Camera extends Entity {
 		else if (isKeyDown(KEY_0))
 			block = 13;
 		if (isButtonDown(0)) {
-			setBlock(Display.getWidth(), Display.getHeight(), (byte) 0, world, gm);
+			setBlock(gm.getDisplay().getDisplayWidth(), gm.getDisplay().getDisplayHeight(), (byte) 0, world, gm);
 		} else if (isButtonDown(1)) {
-			setBlock(Display.getWidth(), Display.getHeight(), block, world, gm);
+			setBlock(gm.getDisplay().getDisplayWidth(), gm.getDisplay().getDisplayHeight(), block, world, gm);
 		}
 
 		updateDebug(world);
@@ -243,10 +244,10 @@ public class Camera extends Entity {
 	public void updateRay(GameResources gm, boolean invert) {
 		if (invert)
 			ray = new Ray(gm.getRenderer().getProjectionMatrix(), Matrix4f.invert(Maths.createViewMatrix(this), null),
-					center, Display.getWidth(), Display.getHeight());
+					center, gm.getDisplay().getDisplayWidth(), gm.getDisplay().getDisplayHeight());
 		else
 			ray = new Ray(gm.getRenderer().getProjectionMatrix(), Maths.createViewMatrix(this), center,
-					Display.getWidth(), Display.getHeight());
+					gm.getDisplay().getDisplayWidth(), gm.getDisplay().getDisplayHeight());
 	}
 
 	public void updateDebug(IWorld world) {
@@ -295,8 +296,8 @@ public class Camera extends Entity {
 		pitch = -pitch;
 	}
 
-	public void setMouse() {
-		setCursorPosition(Display.getWidth() / 2, Display.getHeight() / 2);
+	public void setMouse(Display display) {
+		setCursorPosition(display.getDisplayWidth() / 2, display.getDisplayHeight() / 2);
 		setGrabbed(true);
 	}
 

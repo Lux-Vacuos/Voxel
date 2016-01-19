@@ -33,12 +33,11 @@ import java.nio.FloatBuffer;
 import org.lwjgl.BufferUtils;
 
 import net.guerra24.voxel.client.core.GlobalStates;
+import net.guerra24.voxel.client.core.GlobalStates.GameState;
 import net.guerra24.voxel.client.core.State;
 import net.guerra24.voxel.client.core.Voxel;
 import net.guerra24.voxel.client.core.VoxelVariables;
-import net.guerra24.voxel.client.core.GlobalStates.GameState;
 import net.guerra24.voxel.client.graphics.VectorsRendering;
-import net.guerra24.voxel.client.graphics.opengl.Display;
 import net.guerra24.voxel.client.input.Mouse;
 import net.guerra24.voxel.client.particle.ParticleMaster;
 import net.guerra24.voxel.client.resources.GameResources;
@@ -107,7 +106,8 @@ public class OptionsState implements State {
 			gm.getSkyboxRenderer().render(VoxelVariables.RED, VoxelVariables.GREEN, VoxelVariables.BLUE, delta, gm);
 			worlds.getActiveWorld().updateChunksRender(gm);
 			FloatBuffer p = BufferUtils.createFloatBuffer(1);
-			glReadPixels(Display.getWidth() / 2, Display.getHeight() / 2, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, p);
+			glReadPixels(gm.getDisplay().getDisplayWidth() / 2, gm.getDisplay().getDisplayHeight() / 2, 1, 1,
+					GL_DEPTH_COMPONENT, GL_FLOAT, p);
 			gm.getCamera().depth = p.get(0);
 			gm.getRenderer().renderEntity(gm.getPhysicsEngine().getEntities(), gm);
 			gm.getDeferredShadingRenderer().getPost_fbo().end();
@@ -119,10 +119,10 @@ public class OptionsState implements State {
 			gm.getRenderer().prepare();
 		}
 
-		Display.beingNVGFrame();
+		gm.getDisplay().beingNVGFrame();
 		gm.getMenuSystem().optionsMenu.render();
 		VectorsRendering.renderMouse();
-		Display.endNVGFrame();
+		gm.getDisplay().endNVGFrame();
 	}
 
 }

@@ -24,10 +24,10 @@
 
 package net.guerra24.voxel.client.menu;
 
+import net.guerra24.voxel.client.core.CoreInfo;
 import net.guerra24.voxel.client.core.VoxelVariables;
 import net.guerra24.voxel.client.graphics.VectorsRendering;
 import net.guerra24.voxel.client.graphics.nanovg.Timers;
-import net.guerra24.voxel.client.graphics.opengl.Display;
 import net.guerra24.voxel.client.resources.GameResources;
 import net.guerra24.voxel.client.world.IWorld;
 
@@ -49,7 +49,7 @@ public class GameSP {
 					"Roboto-Bold", 5 * xScale, 12 * yScale, 25 * yScale,
 					VectorsRendering.rgba(160, 160, 160, 200, VectorsRendering.colorA),
 					VectorsRendering.rgba(255, 255, 255, 255, VectorsRendering.colorB));
-			VectorsRendering.renderText("Used VRam: " + Display.checkVRAM() + "KB " + " UPS: " + Display.ups,
+			VectorsRendering.renderText("Used VRam: " + gm.getDisplay().getUsedVRAM() + "KB " + " UPS: " + CoreInfo.ups,
 					"Roboto-Bold", 5 * xScale, 100 * yScale, 25 * yScale,
 					VectorsRendering.rgba(160, 160, 160, 200, VectorsRendering.colorA),
 					VectorsRendering.rgba(255, 255, 255, 255, VectorsRendering.colorB));

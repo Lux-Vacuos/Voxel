@@ -91,7 +91,13 @@ public abstract class ShaderProgram {
 	/**
 	 * Used to Load Matrix to shader
 	 */
-	private static FloatBuffer matrixBuffer = BufferUtils.createFloatBuffer(16);
+	private FloatBuffer matrixBuffer = BufferUtils.createFloatBuffer(16);
+
+	private static Display display;
+
+	public static void setDisplay(Display display) {
+		ShaderProgram.display = display;
+	}
 
 	/**
 	 * Constructor, Creates a Shader Program Using a Vertex Shader and a
@@ -293,9 +299,9 @@ public abstract class ShaderProgram {
 				shaderSource.append(line).append("//\n");
 			}
 			reader.close();
-			if (Display.isNvidia())
+			if (display.isNvidia())
 				shaderSource.insert(0, "#define NVIDIA//\n");// TEMPORAL FIX
-			else if (Display.isAmd())
+			else if (display.isAmd())
 				shaderSource.insert(0, "#define AMD//\n");// TEMPORAL FIX
 		} catch (IOException e) {
 			Logger.warn("Shader file not found: " + file);

@@ -38,7 +38,6 @@ import net.guerra24.voxel.client.core.State;
 import net.guerra24.voxel.client.core.Voxel;
 import net.guerra24.voxel.client.core.VoxelVariables;
 import net.guerra24.voxel.client.graphics.VectorsRendering;
-import net.guerra24.voxel.client.graphics.opengl.Display;
 import net.guerra24.voxel.client.input.Keyboard;
 import net.guerra24.voxel.client.input.Mouse;
 import net.guerra24.voxel.client.particle.ParticleMaster;
@@ -74,7 +73,7 @@ public class InPauseState implements State {
 		}
 		while (Keyboard.next()) {
 			if (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
-				voxel.getGameResources().getCamera().setMouse();
+				voxel.getGameResources().getCamera().setMouse(gm.getDisplay());
 				gm.getGlobalStates().setState(GameState.GAME_SP);
 			}
 		}
@@ -103,7 +102,8 @@ public class InPauseState implements State {
 		gm.getSkyboxRenderer().render(VoxelVariables.RED, VoxelVariables.GREEN, VoxelVariables.BLUE, delta, gm);
 		worlds.getActiveWorld().updateChunksRender(gm);
 		FloatBuffer p = BufferUtils.createFloatBuffer(1);
-		glReadPixels(Display.getWidth() / 2, Display.getHeight() / 2, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, p);
+		glReadPixels(gm.getDisplay().getDisplayWidth() / 2, gm.getDisplay().getDisplayHeight() / 2, 1, 1,
+				GL_DEPTH_COMPONENT, GL_FLOAT, p);
 		gm.getCamera().depth = p.get(0);
 		gm.getRenderer().renderEntity(gm.getPhysicsEngine().getEntities(), gm);
 		gm.getDeferredShadingRenderer().getPost_fbo().end();
@@ -112,10 +112,10 @@ public class InPauseState implements State {
 		gm.getDeferredShadingRenderer().render(gm);
 		ParticleMaster.getInstance().render(gm.getCamera());
 
-		Display.beingNVGFrame();
+		gm.getDisplay().beingNVGFrame();
 		gm.getMenuSystem().pauseMenu.render();
 		VectorsRendering.renderMouse();
-		Display.endNVGFrame();
+		gm.getDisplay().endNVGFrame();
 	}
 
 }

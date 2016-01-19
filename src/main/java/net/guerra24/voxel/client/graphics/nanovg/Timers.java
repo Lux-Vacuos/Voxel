@@ -58,8 +58,14 @@ public class Timers {
 	private static final int GRAPH_HISTORY_COUNT = 200;
 	private static final int GPU_QUERY_COUNT = 5;
 
+	private static Display display;
+
+	public static void setDisplay(Display display) {
+		Timers.display = display;
+	}
+
 	public static void initDebugDisplay() {
-		vg = Display.getVg();
+		vg = display.getVg();
 
 		gpuTimer = new GPUtimer();
 		fps = new PerfGraph();

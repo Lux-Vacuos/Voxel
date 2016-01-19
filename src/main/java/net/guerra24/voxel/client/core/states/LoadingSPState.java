@@ -51,7 +51,7 @@ public class LoadingSPState implements State {
 			seed = new Random();
 		}
 		voxel.getWorldsHandler().getActiveWorld().startWorld("World-0", seed, 0, voxel.getGameResources());
-		gm.getCamera().setMouse();
+		gm.getCamera().setMouse(gm.getDisplay());
 		gm.getSoundSystem().rewind("menu1");
 		gm.getSoundSystem().stop("menu1");
 		gm.getSoundSystem().rewind("menu2");

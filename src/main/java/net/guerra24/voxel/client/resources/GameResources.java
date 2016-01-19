@@ -24,6 +24,9 @@
 
 package net.guerra24.voxel.client.resources;
 
+import static org.lwjgl.glfw.GLFW.GLFW_OPENGL_API;
+import static org.lwjgl.glfw.GLFW.GLFW_OPENGL_CORE_PROFILE;
+
 import java.util.Random;
 
 import com.badlogic.ashley.core.Engine;
@@ -32,14 +35,22 @@ import com.esotericsoftware.kryo.Kryo;
 import net.guerra24.voxel.client.core.GameSettings;
 import net.guerra24.voxel.client.core.GlobalStates;
 import net.guerra24.voxel.client.core.Voxel;
+import net.guerra24.voxel.client.core.VoxelVariables;
 import net.guerra24.voxel.client.graphics.DeferredShadingRenderer;
 import net.guerra24.voxel.client.graphics.Frustum;
 import net.guerra24.voxel.client.graphics.MasterRenderer;
 import net.guerra24.voxel.client.graphics.MasterShadowRenderer;
 import net.guerra24.voxel.client.graphics.OcclusionRenderer;
 import net.guerra24.voxel.client.graphics.SkyboxRenderer;
+import net.guerra24.voxel.client.graphics.VectorsRendering;
+import net.guerra24.voxel.client.graphics.nanovg.Timers;
+import net.guerra24.voxel.client.graphics.opengl.ContextFormat;
+import net.guerra24.voxel.client.graphics.opengl.Display;
+import net.guerra24.voxel.client.graphics.shaders.ShaderProgram;
 import net.guerra24.voxel.client.graphics.shaders.TessellatorBasicShader;
 import net.guerra24.voxel.client.graphics.shaders.TessellatorShader;
+import net.guerra24.voxel.client.input.Keyboard;
+import net.guerra24.voxel.client.input.Mouse;
 import net.guerra24.voxel.client.menu.Menu;
 import net.guerra24.voxel.client.particle.ParticleMaster;
 import net.guerra24.voxel.client.particle.ParticleTexture;
@@ -75,6 +86,7 @@ public class GameResources {
 	/**
 	 * GameResources Data
 	 */
+	private Display display;
 	private Random rand;
 	private Loader loader;
 	private Camera camera;
@@ -106,6 +118,15 @@ public class GameResources {
 	 */
 	private GameResources() {
 		gameSettings = new GameSettings();
+		display = new Display();
+		display.create(VoxelVariables.WIDTH, VoxelVariables.HEIGHT, "Voxel", VoxelVariables.VSYNC, false, false,
+				new ContextFormat(3, 3, GLFW_OPENGL_API, GLFW_OPENGL_CORE_PROFILE, true),
+				new String[] { "assets/icon/icon32.png", "assets/icon/icon64.png" });
+		Keyboard.setDisplay(display);
+		Mouse.setDisplay(display);
+		VectorsRendering.setDisplay(display);
+		Timers.setDisplay(display);
+		ShaderProgram.setDisplay(display);
 	}
 
 	/**
@@ -113,20 +134,20 @@ public class GameResources {
 	 * 
 	 */
 	public void init(Voxel voxel) {
-		loader = new Loader();
+		loader = new Loader(display);
 		rand = new Random();
-		masterShadowRenderer = new MasterShadowRenderer();
+		masterShadowRenderer = new MasterShadowRenderer(display);
 		renderer = new MasterRenderer(this);
-		sun_Camera = new Camera(renderer.getProjectionMatrix());
+		sun_Camera = new Camera(renderer.getProjectionMatrix(), display);
 		sun_Camera.setPosition(new Vector3f(0, 0, 0));
 		sun_Camera.setYaw(sunRotation.x);
 		sun_Camera.setPitch(sunRotation.y);
 		sun_Camera.setRoll(sunRotation.z);
-		camera = new Camera(renderer.getProjectionMatrix());
+		camera = new Camera(renderer.getProjectionMatrix(), display);
 		kryo = new Kryo();
 		occlusionRenderer = new OcclusionRenderer(renderer.getProjectionMatrix());
 		skyboxRenderer = new SkyboxRenderer(loader, renderer.getProjectionMatrix());
-		deferredShadingRenderer = new DeferredShadingRenderer(loader, this);
+		deferredShadingRenderer = new DeferredShadingRenderer(this);
 		TessellatorShader.getInstance();
 		TessellatorBasicShader.getInstance();
 		ParticleMaster.getInstance().init(loader, renderer.getProjectionMatrix());
@@ -148,7 +169,7 @@ public class GameResources {
 			System.exit(-1);
 		}
 		soundSystem = new SoundSystem();
-		globalStates = new GlobalStates(loader);
+		globalStates = new GlobalStates();
 		Block.initBasicBlocks();
 		UniversalResources.loadUniversalResources(this);
 		menuSystem = new Menu(this);
@@ -284,6 +305,10 @@ public class GameResources {
 
 	public Engine getPhysicsEngine() {
 		return physicsEngine;
+	}
+
+	public Display getDisplay() {
+		return display;
 	}
 
 }

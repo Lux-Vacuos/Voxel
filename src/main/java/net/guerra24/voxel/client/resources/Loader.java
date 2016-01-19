@@ -121,9 +121,11 @@ public class Loader {
 	 */
 	private List<ByteBuffer> nvgFont = new ArrayList<ByteBuffer>();
 	private OBJLoader objLoader;
+	private Display display;
 
-	public Loader() {
+	public Loader(Display display) {
 		objLoader = new OBJLoader(this);
+		this.display = display;
 	}
 
 	/**
@@ -339,7 +341,7 @@ public class Loader {
 		try {
 			ByteBuffer buffer = ioResourceToByteBuffer("assets/fonts/" + filename + ".ttf", 150 * 1024);
 			nvgFont.add(buffer);
-			font = nvgCreateFontMem(Display.getVg(), name, buffer, 0);
+			font = nvgCreateFontMem(display.getVg(), name, buffer, 0);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -362,7 +364,7 @@ public class Loader {
 			decoder.decode(buffer, width * 4, Format.RGBA);
 			buffer.flip();
 			in.close();
-			tex = nvgCreateImageMem(Display.getVg(), 0, buffer);
+			tex = nvgCreateImageMem(display.getVg(), 0, buffer);
 		} catch (Exception e) {
 			e.printStackTrace();
 			Logger.error("Tried to load texture " + file + ", didn't work");
@@ -386,7 +388,7 @@ public class Loader {
 			glDeleteTextures(texture);
 		}
 		for (int texture : nvgData) {
-			nvgDeleteImage(Display.getVg(), texture);
+			nvgDeleteImage(display.getVg(), texture);
 		}
 	}
 

@@ -49,7 +49,6 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.utils.ImmutableArray;
 
 import net.guerra24.voxel.client.core.VoxelVariables;
-import net.guerra24.voxel.client.graphics.opengl.Display;
 import net.guerra24.voxel.client.graphics.shaders.EntityShader;
 import net.guerra24.voxel.client.graphics.shaders.WaterShader;
 import net.guerra24.voxel.client.resources.GameResources;
@@ -86,8 +85,8 @@ public class MasterRenderer {
 	 */
 	public MasterRenderer(GameResources gm) {
 		initGL();
-		projectionMatrix = createProjectionMatrix(Display.getWidth(), Display.getHeight(), VoxelVariables.FOV,
-				VoxelVariables.NEAR_PLANE, VoxelVariables.FAR_PLANE);
+		projectionMatrix = createProjectionMatrix(gm.getDisplay().getDisplayWidth(), gm.getDisplay().getDisplayHeight(),
+				VoxelVariables.FOV, VoxelVariables.NEAR_PLANE, VoxelVariables.FAR_PLANE);
 		entityRenderer = new EntityRenderer(shader, gm, projectionMatrix);
 		waterShader = new WaterShader();
 		waterRenderer = new WaterRenderer(gm, projectionMatrix);

@@ -24,17 +24,46 @@
 
 package net.guerra24.voxel.client.graphics;
 
-import static org.lwjgl.nanovg.NanoVG.*;
+import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_CENTER;
+import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_LEFT;
+import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_MIDDLE;
+import static org.lwjgl.nanovg.NanoVG.NVG_HOLE;
+import static org.lwjgl.nanovg.NanoVG.nvgBeginPath;
+import static org.lwjgl.nanovg.NanoVG.nvgBoxGradient;
+import static org.lwjgl.nanovg.NanoVG.nvgCircle;
+import static org.lwjgl.nanovg.NanoVG.nvgFill;
+import static org.lwjgl.nanovg.NanoVG.nvgFillColor;
+import static org.lwjgl.nanovg.NanoVG.nvgFillPaint;
+import static org.lwjgl.nanovg.NanoVG.nvgFontBlur;
+import static org.lwjgl.nanovg.NanoVG.nvgFontFace;
+import static org.lwjgl.nanovg.NanoVG.nvgFontSize;
+import static org.lwjgl.nanovg.NanoVG.nvgLineTo;
+import static org.lwjgl.nanovg.NanoVG.nvgLinearGradient;
+import static org.lwjgl.nanovg.NanoVG.nvgMoveTo;
+import static org.lwjgl.nanovg.NanoVG.nvgPathWinding;
+import static org.lwjgl.nanovg.NanoVG.nvgRadialGradient;
+import static org.lwjgl.nanovg.NanoVG.nvgRect;
+import static org.lwjgl.nanovg.NanoVG.nvgRestore;
+import static org.lwjgl.nanovg.NanoVG.nvgRoundedRect;
+import static org.lwjgl.nanovg.NanoVG.nvgSave;
+import static org.lwjgl.nanovg.NanoVG.nvgStroke;
+import static org.lwjgl.nanovg.NanoVG.nvgStrokeColor;
+import static org.lwjgl.nanovg.NanoVG.nvgText;
+import static org.lwjgl.nanovg.NanoVG.nvgTextAlign;
+import static org.lwjgl.nanovg.NanoVG.nvgTextBounds;
+import static org.lwjgl.system.MemoryUtil.NULL;
+import static org.lwjgl.system.MemoryUtil.memEncodeASCII;
+import static org.lwjgl.system.MemoryUtil.memFree;
+
+import java.nio.ByteBuffer;
 
 import org.lwjgl.nanovg.NVGColor;
 import org.lwjgl.nanovg.NVGPaint;
+import org.lwjgl.system.MemoryUtil.BufferAllocator;
 
 import net.guerra24.voxel.client.graphics.opengl.Display;
 import net.guerra24.voxel.client.input.Mouse;
 
-import static org.lwjgl.system.MemoryUtil.*;
-
-import java.nio.ByteBuffer;
 /**
  * This class contains basic rendering methods using NanoVG
  * 
@@ -50,6 +79,12 @@ public class VectorsRendering {
 	public static final NVGColor colorB = NVGColor.create();
 	public static final NVGColor colorC = NVGColor.create();
 
+	private static Display display;
+
+	public static void setDisplay(Display display) {
+		VectorsRendering.display = display;
+	}
+
 	private static boolean isBlack(NVGColor col) {
 		return col.r() == 0.0f && col.g() == 0.0f && col.b() == 0.0f && col.a() == 0.0f;
 	}
@@ -63,7 +98,7 @@ public class VectorsRendering {
 	}
 
 	public static void renderLabel(String text, String font, float x, float y, float w, float h, float fontSize) {
-		long vg = Display.getVg();
+		long vg = display.getVg();
 		nvgFontSize(vg, fontSize);
 		nvgFontFace(vg, font);
 		nvgFillColor(vg, rgba(255, 255, 255, 128, colorA));
@@ -73,7 +108,7 @@ public class VectorsRendering {
 	}
 
 	public static void renderProgressBar(float x, float y, float w, float h, float pos) {
-		long vg = Display.getVg();
+		long vg = display.getVg();
 		nvgBoxGradient(vg, x + 1, y + 1, w - 2, h, 3, 4, rgba(32, 32, 32, 255, colorA), rgba(92, 92, 92, 255, colorB),
 				paintA);
 		nvgBeginPath(vg);
@@ -97,7 +132,7 @@ public class VectorsRendering {
 		float cornerRadius = 3.0f;
 		NVGPaint shadowPaint = paintA;
 		NVGPaint headerPaint = paintB;
-		long vg = Display.getVg();
+		long vg = display.getVg();
 
 		nvgSave(vg);
 		// nvgClearState(vg);
@@ -153,7 +188,7 @@ public class VectorsRendering {
 	public static void renderWindow(float x, float y, float w, float h) {
 		float cornerRadius = 3.0f;
 		NVGPaint shadowPaint = paintA;
-		long vg = Display.getVg();
+		long vg = display.getVg();
 
 		nvgSave(vg);
 		// nvgClearState(vg);
@@ -180,11 +215,11 @@ public class VectorsRendering {
 
 	public static void renderMouse() {
 		float x = Mouse.getX() - 8;
-		float y = -Mouse.getY() - 8 + Display.getHeight();
+		float y = -Mouse.getY() - 8 + display.getDisplayHeight();
 		float w = 16;
 		float h = 16;
 		NVGPaint bg = paintA;
-		long vg = Display.getVg();
+		long vg = display.getVg();
 		nvgBoxGradient(vg, x + 1, y + 1 + 1.5f, w - 2, h - 2, 3, 4, rgba(255, 255, 255, 200, colorA),
 				rgba(32, 32, 32, 32, colorB), bg);
 		nvgBeginPath(vg);
@@ -202,7 +237,7 @@ public class VectorsRendering {
 		NVGPaint bg = paintA, knob = paintB;
 		float cy = y + (int) (h * 0.5f);
 		float kr = (int) (h * 0.25f);
-		long vg = Display.getVg();
+		long vg = display.getVg();
 
 		nvgSave(vg);
 		// nvgClearState(vg);
@@ -244,7 +279,7 @@ public class VectorsRendering {
 
 	public static void renderText(String text, String font, float x, float y, float fontSize, NVGColor colort,
 			NVGColor colorg) {
-		long vg = Display.getVg();
+		long vg = display.getVg();
 		nvgFontSize(vg, fontSize);
 		nvgFontFace(vg, font);
 		nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
@@ -256,7 +291,7 @@ public class VectorsRendering {
 
 	public static void renderButton(ByteBuffer preicon, String text, String font, float x, float y, float w, float h,
 			NVGColor color, boolean mouseInside) {
-		long vg = Display.getVg();
+		long vg = display.getVg();
 		NVGPaint bg = paintA;
 		float cornerRadius = 4.0f;
 		float tw, iw = 0;

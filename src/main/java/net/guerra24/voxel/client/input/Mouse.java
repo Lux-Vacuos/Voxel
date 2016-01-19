@@ -34,9 +34,11 @@ public class Mouse {
 
 	private static boolean isMouseInsideWindow = true;
 
+	private static Display display;
+
 	public static void addMoveEvent(double mouseX, double mouseY) {
 		latestX = (int) mouseX;
-		latestY = Display.getHeight() - (int) mouseY;
+		latestY = display.getDisplayHeight() - (int) mouseY;
 
 		lastxEvents[queue.getNextPos()] = xEvents[queue.getNextPos()];
 		lastyEvents[queue.getNextPos()] = yEvents[queue.getNextPos()];
@@ -102,10 +104,10 @@ public class Mouse {
 				latestX = 0;
 			if (latestY < 0)
 				latestY = 0;
-			if (latestX > Display.getWidth() - 1)
-				latestX = Display.getWidth() - 1;
-			if (latestY > Display.getHeight() - 1)
-				latestY = Display.getHeight() - 1;
+			if (latestX > display.getDisplayWidth() - 1)
+				latestX = display.getDisplayWidth() - 1;
+			if (latestY > display.getDisplayHeight() - 1)
+				latestY = display.getDisplayHeight() - 1;
 		}
 
 		x = latestX;
@@ -113,14 +115,18 @@ public class Mouse {
 	}
 
 	public static void setGrabbed(boolean grab) {
-		GLFW.glfwSetInputMode(Display.getWindow(), GLFW.GLFW_CURSOR,
+		GLFW.glfwSetInputMode(display.getWindow(), GLFW.GLFW_CURSOR,
 				grab ? GLFW.GLFW_CURSOR_DISABLED : GLFW.GLFW_CURSOR_HIDDEN);
 		grabbed = grab;
 	}
-	
-	public static void setHidden(boolean hidden){
-		GLFW.glfwSetInputMode(Display.getWindow(), GLFW.GLFW_CURSOR,
+
+	public static void setHidden(boolean hidden) {
+		GLFW.glfwSetInputMode(display.getWindow(), GLFW.GLFW_CURSOR,
 				hidden ? GLFW.GLFW_CURSOR_HIDDEN : GLFW.GLFW_CURSOR_NORMAL);
+	}
+
+	public static void setDisplay(Display display) {
+		Mouse.display = display;
 	}
 
 	public static boolean isGrabbed() {
@@ -128,7 +134,7 @@ public class Mouse {
 	}
 
 	public static boolean isButtonDown(int button) {
-		return GLFW.glfwGetMouseButton(Display.getWindow(), button) == GLFW.GLFW_PRESS;
+		return GLFW.glfwGetMouseButton(display.getWindow(), button) == GLFW.GLFW_PRESS;
 	}
 
 	public static boolean next() {
@@ -202,7 +208,7 @@ public class Mouse {
 	}
 
 	public static void setCursorPosition(int new_x, int new_y) {
-		GLFW.glfwSetCursorPos(Display.getWindow(), new_x, new_y);
+		GLFW.glfwSetCursorPos(display.getWindow(), new_x, new_y);
 	}
-	
+
 }
