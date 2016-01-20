@@ -186,7 +186,6 @@ public class Voxel {
 	 */
 	private void render(float delta) {
 		gameResources.getGlobalStates().doRender(this, delta);
-
 	}
 
 	/**

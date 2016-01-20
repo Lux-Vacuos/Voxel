@@ -130,6 +130,10 @@ public class Maths {
 		return matrix;
 	}
 
+	public static Matrix4f invert(Matrix4f viewMatrix) {
+		return Matrix4f.rotate(180, new Vector3f(1, 0, 0), viewMatrix, null);
+	}
+
 	/**
 	 * Clamp the value to Generation Terrain
 	 * 

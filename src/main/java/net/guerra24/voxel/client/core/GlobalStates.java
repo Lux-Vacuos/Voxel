@@ -24,6 +24,7 @@
 
 package net.guerra24.voxel.client.core;
 
+import net.guerra24.voxel.client.api.mod.ModStateLoop;
 import net.guerra24.voxel.client.core.states.GameSPState;
 import net.guerra24.voxel.client.core.states.InPauseState;
 import net.guerra24.voxel.client.core.states.LoadingSPState;
@@ -63,12 +64,18 @@ public class GlobalStates {
 
 	public void doUpdate(Voxel voxel, float delta) {
 		state.state.update(voxel, this, delta);
+		for (ModStateLoop modStateLoop : voxel.getApi().getMoltenAPI().getModStateLoops()) {
+			modStateLoop.update(this.state.state, delta);
+		}
 		if (voxel.getGameResources().getDisplay().isCloseRequested())
 			loop = false;
 	}
 
-	public void doRender(Voxel voxel, float delta) {
-		state.state.render(voxel, this, delta);
+	public void doRender(Voxel voxel, float alpha) {
+		state.state.render(voxel, this, alpha);
+		for (ModStateLoop modStateLoop : voxel.getApi().getMoltenAPI().getModStateLoops()) {
+			modStateLoop.render(state.state, alpha);
+		}
 	}
 
 	public GameState getState() {

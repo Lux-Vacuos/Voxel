@@ -234,16 +234,21 @@ public class Camera extends Entity {
 		}
 
 		updateDebug(world);
-		updateRay(gm, false);
+		updateRay(gm);
 	}
 
-	public void updateRay(GameResources gm, boolean invert) {
-		if (invert)
-			ray = new Ray(gm.getRenderer().getProjectionMatrix(), Matrix4f.invert(Maths.createViewMatrix(this), null),
-					center, gm.getDisplay().getDisplayWidth(), gm.getDisplay().getDisplayHeight());
+	public void updateRay(GameResources gm) {
+		ray = new Ray(gm.getRenderer().getProjectionMatrix(), Maths.createViewMatrix(this), center,
+				gm.getDisplay().getDisplayWidth(), gm.getDisplay().getDisplayHeight());
+	}
+
+	public void updateShadowRay(GameResources gm, boolean inverted) {
+		if (inverted)
+			ray = new Ray(gm.getMasterShadowRenderer().getProjectionMatrix(),
+					Maths.invert(Maths.createViewMatrix(this)), new Vector2f(2048, 2048), 4096, 4096);
 		else
-			ray = new Ray(gm.getRenderer().getProjectionMatrix(), Maths.createViewMatrix(this), center,
-					gm.getDisplay().getDisplayWidth(), gm.getDisplay().getDisplayHeight());
+			ray = new Ray(gm.getMasterShadowRenderer().getProjectionMatrix(), Maths.createViewMatrix(this),
+					new Vector2f(2048, 2048), 4096, 4096);
 	}
 
 	public void updateDebug(IWorld world) {

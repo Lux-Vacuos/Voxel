@@ -92,7 +92,7 @@ public class InfinityWorld implements IWorld {
 		this.name = name;
 		this.seed = seed;
 		this.chunkDim = chunkDim;
-		gm.getCamera().setPosition(new Vector3f(0, 256, 0));
+		gm.getCamera().setPosition(new Vector3f(0, 140, 0));
 		if (existWorld()) {
 			loadWorld(gm);
 		}

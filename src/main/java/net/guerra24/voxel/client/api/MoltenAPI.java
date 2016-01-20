@@ -24,8 +24,12 @@
 
 package net.guerra24.voxel.client.api;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.badlogic.ashley.core.Entity;
 
+import net.guerra24.voxel.client.api.mod.ModStateLoop;
 import net.guerra24.voxel.client.resources.GameResources;
 import net.guerra24.voxel.client.world.block.Block;
 import net.guerra24.voxel.client.world.block.IBlock;
@@ -33,9 +37,11 @@ import net.guerra24.voxel.client.world.block.IBlock;
 public class MoltenAPI {
 
 	private GameResources gm;
+	private List<ModStateLoop> modStateLoops;
 
 	public MoltenAPI(GameResources gm) {
 		this.gm = gm;
+		modStateLoops = new ArrayList<>();
 	}
 
 	public void registetEntity(Entity mob) {
@@ -49,13 +55,30 @@ public class MoltenAPI {
 	public void registerBlock(IBlock block) {
 		Block.registerBlock(block);
 	}
-	
+
 	public void registerSaveData(String key, String value) {
 		gm.getGameSettings().registerValue(key, value);
 	}
 
 	public String getSaveData(String key) {
 		return gm.getGameSettings().getValue(key);
+	}
+
+	public void registerModStateLoop(ModStateLoop modStateLoop) {
+		modStateLoops.add(modStateLoop);
+	}
+
+	/**
+	 * NOT USE THIS!!!!!!
+	 * 
+	 * <p>
+	 * This is used internally for calling all modStates
+	 * </p>
+	 * 
+	 * @return
+	 */
+	public List<ModStateLoop> getModStateLoops() {
+		return modStateLoops;
 	}
 
 }

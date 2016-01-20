@@ -27,6 +27,8 @@ package net.guerra24.voxel.client.api;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
 
 import net.guerra24.voxel.client.api.mod.MoltenAPIInitPhase;
 import net.guerra24.voxel.client.api.mod.MoltenAPIMod;
@@ -45,10 +47,13 @@ public class ModInitialization {
 	private ModLoader modLoader;
 	private MoltenAPI moltenAPI;
 
+	private Map<Class<?>, Object> instances;
+
 	public ModInitialization(GameResources gm) {
 		modLoader = new ModLoader();
 		modLoader.loadMods();
 		moltenAPI = new MoltenAPI(gm);
+		instances = new HashMap<>();
 	}
 
 	/**
@@ -78,6 +83,7 @@ public class ModInitialization {
 					if (phase.enabled()) {
 						Object instance = mod.newInstance();
 						method.invoke(instance, moltenAPI);
+						instances.put(mod, instance);
 					}
 				}
 			} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException
@@ -105,12 +111,12 @@ public class ModInitialization {
 					Annotation annotation_ = method.getAnnotation(MoltenAPIInitPhase.class);
 					MoltenAPIInitPhase test = (MoltenAPIInitPhase) annotation_;
 					if (test.enabled()) {
-						Object instance = mod.newInstance();
+						Object instance = instances.get(mod);
 						method.invoke(instance, moltenAPI);
 					}
 				}
 			} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException
-					| InvocationTargetException | InstantiationException | NoClassDefFoundError e) {
+					| InvocationTargetException | NoClassDefFoundError e) {
 				Logger.error("Error in Init phase");
 				e.printStackTrace();
 				System.exit(-1);
@@ -134,12 +140,12 @@ public class ModInitialization {
 					Annotation annotation_ = method.getAnnotation(MoltenAPIInitPhase.class);
 					MoltenAPIInitPhase test = (MoltenAPIInitPhase) annotation_;
 					if (test.enabled()) {
-						Object instance = mod.newInstance();
+						Object instance = instances.get(mod);
 						method.invoke(instance, moltenAPI);
 					}
 				}
 			} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException
-					| InvocationTargetException | InstantiationException | NoClassDefFoundError e) {
+					| InvocationTargetException | NoClassDefFoundError e) {
 				Logger.error("Error in PostInit phase");
 				e.printStackTrace();
 				System.exit(-1);

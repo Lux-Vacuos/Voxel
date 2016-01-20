@@ -40,8 +40,8 @@ public interface State {
 	 * @param states
 	 * @param delta
 	 */
-	public void update(Voxel voxel, GlobalStates states, float delta);
+	void update(Voxel voxel, GlobalStates states, float delta);
 
-	public void render(Voxel voxel, GlobalStates states, float alpha);
+	void render(Voxel voxel, GlobalStates states, float alpha);
 
 }
