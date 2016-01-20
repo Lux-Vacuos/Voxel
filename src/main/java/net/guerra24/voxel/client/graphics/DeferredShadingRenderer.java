@@ -74,6 +74,7 @@ public class DeferredShadingRenderer {
 	private final DeferredShadingShader shader5;
 	private final DeferredShadingShader shader6;
 	private final DeferredShadingShader shaderFinal0;
+	private final DeferredShadingShader shaderFinal1;
 	private final DeferredShadingFBO postProcessingFBO;
 	private final FrameBuffer aux0FBO;
 	private final FrameBuffer aux1FBO;
@@ -81,6 +82,7 @@ public class DeferredShadingRenderer {
 	private final FrameBuffer aux3FBO;
 	private final FrameBuffer aux4FBO;
 	private final FrameBuffer auxFinal0FBO;
+	private final FrameBuffer auxFinal1FBO;
 	private final RawModel quad;
 
 	private Matrix4f previousViewMatrix;
@@ -149,12 +151,20 @@ public class DeferredShadingRenderer {
 		shaderFinal0.loadResolution(new Vector2f(display.getDisplayWidth(), display.getDisplayHeight()));
 		shaderFinal0.loadSkyColor(skyColor);
 		shaderFinal0.stop();
+		shaderFinal1 = new DeferredShadingShader("Final1");
+		shaderFinal1.start();
+		shaderFinal1.loadTransformation(Maths.createTransformationMatrix(new Vector2f(0, 0), new Vector2f(1, 1)));
+		shaderFinal1.connectTextureUnits();
+		shaderFinal1.loadResolution(new Vector2f(display.getDisplayWidth(), display.getDisplayHeight()));
+		shaderFinal1.loadSkyColor(skyColor);
+		shaderFinal1.stop();
 		aux0FBO = new FrameBuffer(false, display.getDisplayWidth(), display.getDisplayHeight(), display);
 		aux1FBO = new FrameBuffer(false, display.getDisplayWidth(), display.getDisplayHeight(), display);
 		aux2FBO = new FrameBuffer(false, display.getDisplayWidth(), display.getDisplayHeight(), display);
 		aux3FBO = new FrameBuffer(false, display.getDisplayWidth(), display.getDisplayHeight(), display);
 		aux4FBO = new FrameBuffer(false, display.getDisplayWidth(), display.getDisplayHeight(), display);
 		auxFinal0FBO = new FrameBuffer(false, display.getDisplayWidth(), display.getDisplayHeight(), display);
+		auxFinal1FBO = new FrameBuffer(false, display.getDisplayWidth(), display.getDisplayHeight(), display);
 		postProcessingFBO = new DeferredShadingFBO(display.getDisplayWidth(), display.getDisplayHeight());
 		previousViewMatrix = Maths.createViewMatrix(gm.getCamera());
 		previousCameraPosition = gm.getCamera().getPosition();
@@ -387,7 +397,7 @@ public class DeferredShadingRenderer {
 		shader1.stop();
 		aux0FBO.end(display);
 
-		auxFinal0FBO.begin(display.getDisplayWidth(), display.getDisplayHeight());
+		auxFinal1FBO.begin(display.getDisplayWidth(), display.getDisplayHeight());
 		gm.getRenderer().prepare();
 		shader0.start();
 		shader0.loadSettings(VoxelVariables.useDOF, VoxelVariables.useFXAA, VoxelVariables.useMotionBlur,
@@ -421,8 +431,45 @@ public class DeferredShadingRenderer {
 		glDisableVertexAttribArray(0);
 		glBindVertexArray(0);
 		shader0.stop();
+		auxFinal1FBO.end(display);
+
+		auxFinal0FBO.begin(display.getDisplayWidth(), display.getDisplayHeight());
+		gm.getRenderer().prepare();
+		shaderFinal1.start();
+		shaderFinal1.loadUnderWater(gm.getCamera().isUnderWater());
+		shaderFinal1.loadMotionBlurData(gm.getRenderer().getProjectionMatrix(), gm.getCamera(), previousViewMatrix,
+				previousCameraPosition);
+		shaderFinal1.loadLightPosition(gm.getLightPos(), gm.getInvertedLightPosition());
+		shaderFinal1.loadviewMatrix(gm.getCamera());
+		shaderFinal1.loadResolution(new Vector2f(display.getDisplayWidth(), display.getDisplayHeight()));
+		shaderFinal1.loadSunPosition(
+				Maths.convertTo2F(new Vector3f(gm.getLightPos()), gm.getRenderer().getProjectionMatrix(),
+						Maths.createViewMatrix(gm.getCamera()), display.getDisplayWidth(), display.getDisplayHeight()));
+		shaderFinal1.loadSettings(VoxelVariables.useDOF, VoxelVariables.useFXAA, VoxelVariables.useMotionBlur,
+				VoxelVariables.useVolumetricLight, VoxelVariables.useReflections);
+		glBindVertexArray(quad.getVaoID());
+		glEnableVertexAttribArray(0);
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, postProcessingFBO.getDiffuseTex());
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, postProcessingFBO.getPositionTex());
+		glActiveTexture(GL_TEXTURE2);
+		glBindTexture(GL_TEXTURE_2D, postProcessingFBO.getNormalTex());
+		glActiveTexture(GL_TEXTURE3);
+		glBindTexture(GL_TEXTURE_2D, postProcessingFBO.getDepthTex());
+		glActiveTexture(GL_TEXTURE4);
+		glBindTexture(GL_TEXTURE_2D, postProcessingFBO.getData0Tex());
+		glActiveTexture(GL_TEXTURE5);
+		glBindTexture(GL_TEXTURE_2D, postProcessingFBO.getData1Tex());
+		glActiveTexture(GL_TEXTURE6);
+		glBindTexture(GL_TEXTURE_2D, auxFinal1FBO.getTexture());
+		glDrawArrays(GL_TRIANGLE_STRIP, 0, quad.getVertexCount());
+		glDisableVertexAttribArray(0);
+		glBindVertexArray(0);
+		shaderFinal1.stop();
 		auxFinal0FBO.end(display);
 
+		gm.getRenderer().prepare();
 		shaderFinal0.start();
 		shaderFinal0.loadUnderWater(gm.getCamera().isUnderWater());
 		shaderFinal0.loadMotionBlurData(gm.getRenderer().getProjectionMatrix(), gm.getCamera(), previousViewMatrix,
@@ -435,8 +482,6 @@ public class DeferredShadingRenderer {
 						Maths.createViewMatrix(gm.getCamera()), display.getDisplayWidth(), display.getDisplayHeight()));
 		shaderFinal0.loadSettings(VoxelVariables.useDOF, VoxelVariables.useFXAA, VoxelVariables.useMotionBlur,
 				VoxelVariables.useVolumetricLight, VoxelVariables.useReflections);
-		previousViewMatrix = Maths.createViewMatrix(gm.getCamera());
-		previousCameraPosition = gm.getCamera().getPosition();
 		glBindVertexArray(quad.getVaoID());
 		glEnableVertexAttribArray(0);
 		glActiveTexture(GL_TEXTURE0);
@@ -457,11 +502,15 @@ public class DeferredShadingRenderer {
 		glDisableVertexAttribArray(0);
 		glBindVertexArray(0);
 		shaderFinal0.stop();
+		
 		glBindFramebuffer(GL_READ_FRAMEBUFFER, postProcessingFBO.getFbo());
 		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 		glBlitFramebuffer(0, 0, display.getDisplayWidth(), display.getDisplayHeight(), 0, 0, display.getDisplayWidth(),
 				display.getDisplayHeight(), GL_DEPTH_BUFFER_BIT, GL_NEAREST);
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		
+		previousViewMatrix = Maths.createViewMatrix(gm.getCamera());
+		previousCameraPosition = gm.getCamera().getPosition();
 	}
 
 	/**
@@ -477,12 +526,14 @@ public class DeferredShadingRenderer {
 		shader4.cleanUp();
 		shader5.cleanUp();
 		shaderFinal0.cleanUp();
+		shaderFinal1.cleanUp();
 		aux0FBO.cleanUp();
 		aux1FBO.cleanUp();
 		aux2FBO.cleanUp();
 		aux3FBO.cleanUp();
 		aux4FBO.cleanUp();
 		auxFinal0FBO.cleanUp();
+		auxFinal1FBO.cleanUp();
 		postProcessingFBO.cleanUp();
 	}
 

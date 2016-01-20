@@ -82,7 +82,7 @@ void main(void){
 	vec4 data1 = texture(gData1, texcoord);
     vec4 position = texture(gPosition,texcoord);
     vec4 normal = texture(gNormal, texcoord);
-    float depth = texture(gDepth, vec3(texcoord.xy, 0.0), 16);
+    float depth = texture(gDepth, vec3(texcoord.xy, 0.0), 0);
 	vec3 light = lightPosition;
     vec3 lightDir = light - position.xyz ;
     lightDir = normalize(lightDir);

@@ -60,17 +60,6 @@ void main(void){
 	vec2 texcoord = textureCoords;
 	vec4 textureColour = texture(composite0, texcoord);
 	vec4 data = texture(gData0, texcoord);
-	if(useDOF == 1){
-		vec3 sum = textureColour.rgb;
-		float bias = min(abs(texture(gDepth, texcoord).x - texture(gDepth, vec2(0.5)).x) * .02, .01);
-		for (int i = -3; i < 3; i++) {
-			for (int j = -3; j < 3; j++) {
-				sum += texture(composite0, texcoord + vec2(j, i) * bias ).rgb;
-			}
-		}
-		sum /= 36.0;
-		textureColour = vec4(sum,1.0);
-	}
 	
 	if(useMotionBlur == 1){
 		vec3 sum = textureColour.rgb;

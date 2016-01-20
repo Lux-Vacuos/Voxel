@@ -79,7 +79,6 @@ public class Camera extends Entity {
 	private float roll;
 	private float speed;
 	private float multiplierMouse = 24;
-	private float multiplierMovement = 1;
 	private byte block = 2;
 	private boolean underWater = false;
 	private int mouseSpeed = 2;
@@ -102,7 +101,6 @@ public class Camera extends Entity {
 		this.speed = 3f;
 		center = new Vector2f(display.getDisplayWidth() / 2, display.getDisplayHeight() / 2);
 		velocityComponent = new VelocityComponent();
-		velocityComponent.y = -9.8f;
 		positionComponent = new PositionComponent();
 		collisionComponent = new CollisionComponent();
 		this.add(velocityComponent);
@@ -160,44 +158,41 @@ public class Camera extends Entity {
 			underWater = false;
 
 		if (isKeyDown(KEY_W)) {
-			velocityComponent.z += -Math.cos(Math.toRadians(yaw)) * delta * speed * multiplierMovement;
-			velocityComponent.x += Math.sin(Math.toRadians(yaw)) * delta * speed * multiplierMovement;
+			velocityComponent.velocity.z += -Math.cos(Math.toRadians(yaw)) * speed;
+			velocityComponent.velocity.x += Math.sin(Math.toRadians(yaw)) * speed;
 			isMoved = true;
 
 		} else if (isKeyDown(KEY_S)) {
-			velocityComponent.z -= -Math.cos(Math.toRadians(yaw)) * delta * speed * multiplierMovement;
-			velocityComponent.x -= Math.sin(Math.toRadians(yaw)) * delta * speed * multiplierMovement;
+			velocityComponent.velocity.z -= -Math.cos(Math.toRadians(yaw)) * speed;
+			velocityComponent.velocity.x -= Math.sin(Math.toRadians(yaw)) * speed;
 			isMoved = true;
 		}
 
 		if (isKeyDown(KEY_D)) {
-			velocityComponent.z += Math.sin(Math.toRadians(yaw)) * delta * speed * multiplierMovement;
-			velocityComponent.x += Math.cos(Math.toRadians(yaw)) * delta * speed * multiplierMovement;
+			velocityComponent.velocity.z += Math.sin(Math.toRadians(yaw)) * speed;
+			velocityComponent.velocity.x += Math.cos(Math.toRadians(yaw)) * speed;
 			isMoved = true;
 		} else if (isKeyDown(KEY_A)) {
-			velocityComponent.z -= Math.sin(Math.toRadians(yaw)) * delta * speed * multiplierMovement;
-			velocityComponent.x -= Math.cos(Math.toRadians(yaw)) * delta * speed * multiplierMovement;
+			velocityComponent.velocity.z -= Math.sin(Math.toRadians(yaw)) * speed;
+			velocityComponent.velocity.x -= Math.cos(Math.toRadians(yaw)) * speed;
 			isMoved = true;
 		}
 		if (isKeyDown(KEY_SPACE) && !jump) {
-			velocityComponent.y = 200 * delta;
+			velocityComponent.velocity.y = 5;
 			jump = true;
 		}
-		if (velocityComponent.y == 0)
+		if (velocityComponent.velocity.y == 0)
 			jump = false;
 		if (isKeyDown(KEY_LSHIFT)) {
-			multiplierMovement = 1 * delta;
+			speed = 0.5f;
 		} else {
-			multiplierMovement = 120 * delta;
+			speed = 3;
 		}
 		if (isKeyDown(KEY_LCONTROL)) {
-			multiplierMovement = 200 * delta;
+			speed = 10;
 		} else {
-			multiplierMovement = 120 * delta;
+			speed = 3;
 		}
-
-		velocityComponent.x = Maths.clamp(velocityComponent.x, -2, 2);
-		velocityComponent.z = Maths.clamp(velocityComponent.z, -2, 2);
 
 		if (isKeyDown(Keyboard.KEY_Y)) {
 			System.out.println(positionComponent.toString());
@@ -208,7 +203,8 @@ public class Camera extends Entity {
 			gm.getPhysicsEngine()
 					.addEntity(new GameEntity(UniversalResources.player,
 							new Vector3f(this.getPosition().x, this.getPosition().y + 2, this.getPosition().z),
-							velocityComponent.x, velocityComponent.y, velocityComponent.z, 0, 0, 0, 1));
+							velocityComponent.velocity.x, velocityComponent.velocity.y, velocityComponent.velocity.z, 0,
+							0, 0, 1));
 		}
 
 		if (isKeyDown(KEY_1))
@@ -226,7 +222,7 @@ public class Camera extends Entity {
 		else if (isKeyDown(KEY_7))
 			block = 8;
 		else if (isKeyDown(KEY_8))
-			block = 9;
+			block = Block.Indes.getId();
 		else if (isKeyDown(KEY_9))
 			block = 10;
 		else if (isKeyDown(KEY_0))

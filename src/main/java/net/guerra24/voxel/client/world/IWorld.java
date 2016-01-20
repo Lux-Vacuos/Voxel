@@ -24,14 +24,24 @@
 
 package net.guerra24.voxel.client.world;
 
+import java.util.List;
 import java.util.Random;
+
+import com.badlogic.gdx.math.collision.BoundingBox;
 
 import net.guerra24.voxel.client.resources.GameResources;
 import net.guerra24.voxel.client.world.chunks.Chunk;
 import net.guerra24.voxel.client.world.chunks.ChunkGenerator;
 
+/**
+ * 
+ * Interface of World, this is used as template for all worlds
+ * 
+ * @author pablo
+ *
+ */
 public interface IWorld {
-
+	
 	public void startWorld(String name, Random seed, int chunkDim, GameResources gm);
 
 	public void init(GameResources gm);
@@ -97,6 +107,8 @@ public interface IWorld {
 	public int getxPlayChunk();
 
 	public int getyPlayChunk();
+
+	public List<BoundingBox> getGlobalBoundingBox(BoundingBox box);
 
 	public SimplexNoise getNoise();
 

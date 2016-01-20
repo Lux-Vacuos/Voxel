@@ -34,6 +34,8 @@ package net.guerra24.voxel.universal.util.vector;
 import java.io.Serializable;
 import java.nio.FloatBuffer;
 
+import com.badlogic.gdx.math.Vector3;
+
 /**
  *
  * Holds a 3-tuple vector.
@@ -68,6 +70,13 @@ public class Vector3f extends Vector implements Serializable, ReadableVector3f, 
 	 */
 	public Vector3f(float x, float y, float z) {
 		set(x, y, z);
+	}
+
+	/**
+	 * Constructor
+	 */
+	public Vector3f(Vector3 src) {
+		set(src.x, src.y, src.z);
 	}
 
 	/*
@@ -315,13 +324,13 @@ public class Vector3f extends Vector implements Serializable, ReadableVector3f, 
 
 		return this;
 	}
-	
+
 	public Vector3f div(float scalar) {
-        x /= scalar;
-        y /= scalar;
-        z /= scalar;
-        return this;
-    }
+		x /= scalar;
+		y /= scalar;
+		z /= scalar;
+		return this;
+	}
 
 	/*
 	 * (non-Javadoc)

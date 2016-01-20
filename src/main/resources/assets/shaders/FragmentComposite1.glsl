@@ -81,7 +81,7 @@ void main(void){
 	vec4 data = texture(gData0, texcoord);
     vec4 position = texture(gPosition,texcoord);
     vec4 normal = texture(gNormal, texcoord);
-    float depth = texture(gDepth, vec3(texcoord.xy, 0.0), 16);
+    float depth = texture(gDepth, vec3(texcoord.xy, 0.0), 0);
     if(data.b != 1) {
    		if(data.r == 1.0){
    			if(useReflections == 1){
@@ -93,7 +93,9 @@ void main(void){
     			vec3 refl = normalize(reflect(cameraToWorldNorm, normal));
     			float cosAngle = abs(dot(normal, cameraToWorldNorm));
     			float fact = 1 - cosAngle;
+    			//float factt = 1 - cosAngle;
     			fact = min(1, 1.38 - fact*fact);
+    			//factt = min(1, 1.38 - factt*factt);
     			vec3 newPos;
     			vec4 newScreen;
     			float i = 0;
@@ -119,12 +121,13 @@ void main(void){
 	        		fact = 1.0;
     			else if (cameraToWorldDist > currentWorldDist)
 	        		fact = 1.0;
-        			
+	        	// FAKE CUBE REFLECTION
         		//vec3 I = normalize(position.xyz - cameraPosition);
     			//vec3 R = reflect(I, normalize(normal.xyz));
    				//vec4 imageDay = texture(skyboxDay, R);
    				//vec4 imageNight = texture(skyboxNight, R);
     			//vec4 fakeRelf = mix(imageDay, imageNight, skyboxBlendFactor);
+    			//image = mix(image,fakeRelf, 1-factt);
         		image = image*fact + newColor *(1-fact);
         	}
     	}

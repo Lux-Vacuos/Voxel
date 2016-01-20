@@ -26,13 +26,13 @@ package net.guerra24.voxel.client.world.entities;
 
 import com.badlogic.ashley.core.Component;
 
+import net.guerra24.voxel.universal.util.vector.Vector3f;
+
 public class VelocityComponent implements Component {
-	public float x = 0.0f;
-	public float y = 0.0f;
-	public float z = 0.0f;
+	public Vector3f velocity = new Vector3f();
 
 	@Override
 	public String toString() {
-		return "[x:" + x + "]" + "[y:" + y + "]" + "[z:" + z + "]";
+		return "[x:" + velocity.x + "]" + "[y:" + velocity.y + "]" + "[z:" + velocity.z + "]";
 	}
 }

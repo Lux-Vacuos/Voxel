@@ -244,16 +244,15 @@ public class Chunk {
 				for (int y = 0; y < sizeY; y++) {
 					if (Block.getBlock(blocks[x][y][z]) == Block.Torch) {
 						cubes.add(Block.getBlock(blocks[x][y][z])
-								.getSingleModel(new Vector3f(x + cx * sizeX, y + cy * sizeY, z + cz * sizeZ)));
-						particlePoints.add(new ParticlePoint(new Vector3f((x + cx * sizeX) + 0.5f,
-								(y + cy * sizeY) + 0.8f, (z + cz * sizeZ) - 0.5f)));
+								.getSingleModel(new Vector3f(x + posX, y + posY, z + posZ)));
+						particlePoints.add(new ParticlePoint(
+								new Vector3f((x + posX) + 0.5f, (y + posY) + 0.8f, (z + posZ) - 0.5f)));
 					} else if (Block.getBlock(blocks[x][y][z]).usesSingleModel()) {
 						cubes.add(Block.getBlock(blocks[x][y][z])
-								.getSingleModel(new Vector3f(x + cx * sizeX, y + cy * sizeY, z + cz * sizeZ)));
+								.getSingleModel(new Vector3f(x + posX, y + posY, z + posZ)));
 					} else if (Block.getBlock(blocks[x][y][z]) == Block.Water) {
-						if (cullFaceUpWater(x + cx * sizeX, y + cy * sizeY, z + cz * sizeZ, world)) {
-							waterTiles.add(Block.Water
-									.getWaterTitle(new Vector3f(x + cx * sizeX, y + cy * sizeY, z + cz * sizeZ)));
+						if (cullFaceUpWater(x + posX, y + posY, z + posZ, world)) {
+							waterTiles.add(Block.Water.getWaterTitle(new Vector3f(x + posX, y + posY, z + posZ)));
 						}
 					}
 				}
@@ -271,14 +270,14 @@ public class Chunk {
 					} else if (Block.getBlock(blocks[x][y][z]) != Block.Air
 							&& Block.getBlock(blocks[x][y][z]) != Block.Water
 							&& !Block.getBlock(blocks[x][y][z]).usesSingleModel()) {
-						tess.generateCube(x + cx * sizeX, y + cy * sizeY, (z + cz * sizeZ) - 1, 1,
-								cullFaceUpSolidBlock(x + cx * sizeX, y + cy * sizeY, z + cz * sizeZ, world),
-								cullFaceDown(x + cx * sizeX, y + cy * sizeY, z + cz * sizeZ, world),
-								cullFaceEast(x + cx * sizeX, y + cy * sizeY, z + cz * sizeZ, world),
-								cullFaceWest(x + cx * sizeX, y + cy * sizeY, z + cz * sizeZ, world),
-								cullFaceNorth(x + cx * sizeX, y + cy * sizeY, z + cz * sizeZ, world),
-								cullFaceSouth(x + cx * sizeX, y + cy * sizeY, z + cz * sizeZ, world),
-								Block.getBlock(blocks[x][y][z]), getTorchLight(x, y, z));
+						tess.generateCube(x + posX, y + posY, (z + posZ) - 1, 1,
+								cullFaceUpSolidBlock(x + posX, y + posY, z + posZ, world),
+								cullFaceDown(x + posX, y + posY, z + posZ, world),
+								cullFaceEast(x + posX, y + posY, z + posZ, world),
+								cullFaceWest(x + posX, y + posY, z + posZ, world),
+								cullFaceNorth(x + posX, y + posY, z + posZ, world),
+								cullFaceSouth(x + posX, y + posY, z + posZ, world), Block.getBlock(blocks[x][y][z]),
+								getTorchLight(x, y, z));
 					} else if (Block.getBlock(blocks[x][y][z]).usesSingleModel()) {
 					} else if (Block.getBlock(blocks[x][y][z]) == Block.Water) {
 					}
@@ -356,7 +355,7 @@ public class Chunk {
 	}
 
 	private boolean cullFaceWest(int x, int y, int z, IWorld world) {
-		if (x > (cx * sizeX) + 1 && x < (cx * sizeX) + 16) {
+		if (x > (posX) + 1 && x < (posX) + 16) {
 			if (!Block.getBlock(getLocalBlock(x - 1, y, z)).isTransparent()) {
 				return false;
 			} else {
@@ -371,7 +370,7 @@ public class Chunk {
 	}
 
 	private boolean cullFaceEast(int x, int y, int z, IWorld world) {
-		if (x > (cx * sizeX) && x < (cx * sizeX) + 15) {
+		if (x > (posX) && x < (posX) + 15) {
 			if (!Block.getBlock(getLocalBlock(x + 1, y, z)).isTransparent()) {
 				return false;
 			} else {
@@ -386,7 +385,7 @@ public class Chunk {
 	}
 
 	private boolean cullFaceDown(int x, int y, int z, IWorld world) {
-		if (y > (cy * sizeY) + 1 && y < (cy * sizeY) + 16) {
+		if (y > (posY) + 1 && y < (posY) + 16) {
 			if (!Block.getBlock(getLocalBlock(x, y - 1, z)).isTransparent()) {
 				return false;
 			} else {
@@ -401,7 +400,7 @@ public class Chunk {
 	}
 
 	private boolean cullFaceUpSolidBlock(int x, int y, int z, IWorld world) {
-		if (y > (cy * sizeY) && y < (cy * sizeY) + 15) {
+		if (y > (posY) && y < (posY) + 15) {
 			if (!Block.getBlock(getLocalBlock(x, y + 1, z)).isTransparent()) {
 				return false;
 			} else {
@@ -416,7 +415,7 @@ public class Chunk {
 	}
 
 	private boolean cullFaceUpWater(int x, int y, int z, IWorld world) {
-		if (y > (cy * sizeY) && y < (cy * sizeY) + 15) {
+		if (y > (posY) && y < (posY) + 15) {
 			if (getLocalBlock(x, y + 1, z) != Block.Air.getId() && getLocalBlock(x, y + 1, z) != Block.Glass.getId()
 					&& getLocalBlock(x, y + 1, z) != Block.Leaves.getId()) {
 				return false;
@@ -434,7 +433,7 @@ public class Chunk {
 	}
 
 	private boolean cullFaceNorth(int x, int y, int z, IWorld world) {
-		if (z > (cz * sizeZ) + 1 && z < (cz * sizeZ) + 16) {
+		if (z > (posZ) + 1 && z < (posZ) + 16) {
 			if (!Block.getBlock(getLocalBlock(x, y, z - 1)).isTransparent()) {
 				return false;
 			} else {
@@ -449,7 +448,7 @@ public class Chunk {
 	}
 
 	private boolean cullFaceSouth(int x, int y, int z, IWorld world) {
-		if (z > (cz * sizeZ) && z < (cz * sizeZ) + 15)
+		if (z > (posZ) && z < (posZ) + 15)
 			if (Block.getBlock(getLocalBlock(x, y, z + 1)).isTransparent())
 				return true;
 

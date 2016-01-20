@@ -30,6 +30,7 @@ import net.guerra24.voxel.client.core.GlobalStates;
 import net.guerra24.voxel.client.core.State;
 import net.guerra24.voxel.client.core.Voxel;
 import net.guerra24.voxel.client.core.VoxelVariables;
+import net.guerra24.voxel.client.graphics.VectorsRendering;
 import net.guerra24.voxel.client.resources.GameResources;
 import net.guerra24.voxel.client.core.GlobalStates.GameState;
 
@@ -41,9 +42,19 @@ import net.guerra24.voxel.client.core.GlobalStates.GameState;
  */
 public class LoadingSPState implements State {
 
+	private float xScale, yScale;
+
+	public LoadingSPState() {
+		float width = VoxelVariables.WIDTH;
+		float height = VoxelVariables.HEIGHT;
+		yScale = height / 720f;
+		xScale = width / 1280f;
+	}
+
 	@Override
 	public void update(Voxel voxel, GlobalStates states, float delta) {
 		GameResources gm = voxel.getGameResources();
+
 		Random seed;
 		if (VoxelVariables.isCustomSeed) {
 			seed = new Random(VoxelVariables.seed.hashCode());
@@ -57,12 +68,18 @@ public class LoadingSPState implements State {
 		gm.getSoundSystem().rewind("menu2");
 		gm.getSoundSystem().stop("menu2");
 		states.setState(GameState.GAME_SP);
+
 	}
 
 	@Override
 	public void render(Voxel voxel, GlobalStates states, float delta) {
 		GameResources gm = voxel.getGameResources();
 		gm.getRenderer().prepare();
+		gm.getDisplay().beingNVGFrame();
+		VectorsRendering.renderText("Loading World...", "Roboto-Bold", 530 * xScale, 358 * yScale, 40 * yScale,
+				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorA),
+				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorB));
+		gm.getDisplay().endNVGFrame();
 	}
 
 }

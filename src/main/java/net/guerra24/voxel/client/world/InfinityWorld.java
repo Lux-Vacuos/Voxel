@@ -39,6 +39,7 @@ import java.util.List;
 import java.util.Queue;
 import java.util.Random;
 
+import com.badlogic.gdx.math.collision.BoundingBox;
 import com.esotericsoftware.kryo.KryoException;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
@@ -49,6 +50,7 @@ import net.guerra24.voxel.client.particle.ParticleSystem;
 import net.guerra24.voxel.client.resources.GameResources;
 import net.guerra24.voxel.client.util.Logger;
 import net.guerra24.voxel.client.util.Maths;
+import net.guerra24.voxel.client.world.block.Block;
 import net.guerra24.voxel.client.world.chunks.Chunk;
 import net.guerra24.voxel.client.world.chunks.ChunkGenerator;
 import net.guerra24.voxel.client.world.chunks.ChunkKey;
@@ -412,7 +414,6 @@ public class InfinityWorld implements IWorld {
 	 * Check if exist a world file
 	 * 
 	 * @return true if exist
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	@Override
 	public boolean existWorld() {
@@ -506,6 +507,25 @@ public class InfinityWorld implements IWorld {
 			return chunk.getLocalBlock(x, y, z);
 		else
 			return 0;
+	}
+
+	@Override
+	public List<BoundingBox> getGlobalBoundingBox(BoundingBox box) {
+		List<BoundingBox> array = new ArrayList<>();
+		Vector3f vec = new Vector3f(0, 0, 0);
+
+		for (int i = (int) Math.floor(box.min.x); i < (int) Math.ceil(box.max.x); i++) {
+			for (int j = (int) Math.floor(box.min.y); j < (int) Math.ceil(box.max.y); j++) {
+				for (int k = (int) Math.floor(box.min.z); k < (int) Math.ceil(box.max.z); k++) {
+					vec.set(i, j, k);
+					BoundingBox cmp = Block.getBlock(getGlobalBlock(i, j, k)).getBoundingBox(vec);
+					if (cmp != null) {
+						array.add(cmp);
+					}
+				}
+			}
+		}
+		return array;
 	}
 
 	@Override

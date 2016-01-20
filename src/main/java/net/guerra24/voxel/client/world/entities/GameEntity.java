@@ -60,9 +60,9 @@ public class GameEntity extends Entity {
 		positionComponent = new PositionComponent();
 		collisionComponent = new CollisionComponent();
 		positionComponent.position = new Vector3f(position);
-		velocityComponent.x = vx;
-		velocityComponent.y = vy;
-		velocityComponent.z = vz;
+		velocityComponent.velocity.x = vx;
+		velocityComponent.velocity.y = vy;
+		velocityComponent.velocity.z = vz;
 		this.add(positionComponent);
 		this.add(velocityComponent);
 		this.add(collisionComponent);

@@ -42,11 +42,6 @@ uniform sampler2D heightMap;
 uniform int useShadows;
 uniform int useParallax;
 
-
-//Dynamic Data to be imported on load like "#define x"
-
-//DEFINE
-
 vec2 poissonDisk[16] = vec2[]( 
    vec2( -0.94201624, -0.39906216 ), 
    vec2( 0.94558609, -0.76890725 ), 

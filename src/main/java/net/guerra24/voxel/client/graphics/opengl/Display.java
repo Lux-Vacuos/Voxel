@@ -81,7 +81,7 @@ public class Display extends Window {
 		glfwDefaultWindowHints();
 		glfwWindowHint(GLFW_VISIBLE, visible ? 1 : 0);
 		super.displayResizable = resizable;
-		glfwWindowHint(GLFW_RESIZABLE, resizable ? 0 : 1);
+		glfwWindowHint(GLFW_RESIZABLE, resizable ? 1 : 0);
 
 		format.create();
 

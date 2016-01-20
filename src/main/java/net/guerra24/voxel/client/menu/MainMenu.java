@@ -62,7 +62,7 @@ public class MainMenu {
 
 		VectorsRendering.renderText(
 				"Voxel " + VoxelVariables.version + " " + VoxelVariables.state + " Build " + VoxelVariables.build,
-				"Roboto-Bold", 0, 710 * yScale, 20, VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorA),
+				"Roboto-Bold", 0, 710 * yScale, 20 * yScale, VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorA),
 				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorB));
 		VectorsRendering.renderWindow("Voxel News", "Roboto-Bold", 450 * xScale, 50 * yScale, 750 * xScale, 600 * yScale);
 		webRenderer.render();

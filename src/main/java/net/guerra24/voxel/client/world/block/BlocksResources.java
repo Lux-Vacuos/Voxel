@@ -35,7 +35,6 @@ public class BlocksResources {
 
 	public static TexturedModel cubeTorch;
 	public static TexturedModel cubePortal;
-	public static TexturedModel cubeLeaves;
 
 	public static TessellatorTextureAtlas tessellatorTextureAtlas;
 
@@ -46,9 +45,6 @@ public class BlocksResources {
 
 		RawModel torch = loader.getObjLoader().loadObjModel("Torch");
 		RawModel portal = loader.getObjLoader().loadObjModel("Portal");
-		RawModel leaves = loader.getObjLoader().loadObjModel("Leaves");
-
-		ModelTexture texture10 = new ModelTexture(loader.loadTextureBlocks("Leaves"));
 
 		tessellatorTextureAtlas = new TessellatorTextureAtlas(256, 256, loader.loadTextureBlocks("blocks"));
 		normalMap = loader.loadTextureBlocks("blocks_normal");
@@ -58,7 +54,6 @@ public class BlocksResources {
 		ModelTexture texture9 = new ModelTexture(loader.loadTextureBlocks("Portal"));
 		cubeTorch = new TexturedModel(torch, texture8);
 		cubePortal = new TexturedModel(portal, texture9);
-		cubeLeaves = new TexturedModel(leaves, texture10);
 		loadTexCoords();
 	}
 
