@@ -24,6 +24,8 @@
 
 package net.guerra24.voxel.client.core;
 
+import net.guerra24.voxel.client.bootstrap.Bootstrap;
+
 /**
  * Locations of all global variables
  * 
@@ -46,7 +48,7 @@ public class VoxelVariables {
 	public static final String apiVersion = "0.0.6";
 	public static final int apiVersionNum = 000006;
 	public static final String state = "ALPHA";
-	public static final int build = 157;
+	public static final int build = 158;
 	public static int FOV = 90;
 	public static int WIDTH = 1280;
 	public static int HEIGHT = 720;
@@ -58,7 +60,7 @@ public class VoxelVariables {
 	public static boolean runningOnMac = false;
 	public static boolean autostart = false;
 	public static boolean christmas = false;
-	public static final String settings = "assets/game/settings.conf";
+	public static final String settings = Bootstrap.getPrefix() + "voxel/assets/game/settings.conf";
 
 	/**
 	 * External Data
@@ -123,7 +125,7 @@ public class VoxelVariables {
 	/**
 	 * World Folder Path
 	 */
-	public static final String worldPath = "assets/game/world/";
+	public static final String worldPath = Bootstrap.getPrefix() + "voxel/assets/game/world/";
 
 	/**
 	 * Update Global Variables

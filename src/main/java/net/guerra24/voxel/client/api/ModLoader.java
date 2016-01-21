@@ -35,6 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.guerra24.voxel.client.api.mod.MoltenAPIMod;
+import net.guerra24.voxel.client.bootstrap.Bootstrap;
 import net.guerra24.voxel.client.util.Logger;
 
 public class ModLoader {
@@ -47,7 +48,7 @@ public class ModLoader {
 	}
 
 	public void loadMods() {
-		modsFolder = new File("assets/mods");
+		modsFolder = new File(Bootstrap.getPrefix() +"voxel/assets/mods");
 		if(!modsFolder.exists())
 			modsFolder.mkdirs();
 		try {

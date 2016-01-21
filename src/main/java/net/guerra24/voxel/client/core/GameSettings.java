@@ -31,6 +31,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Properties;
 
+import net.guerra24.voxel.client.bootstrap.Bootstrap;
+
 public class GameSettings {
 
 	private Properties prop;
@@ -50,7 +52,7 @@ public class GameSettings {
 				e.printStackTrace();
 			}
 		} else {
-			new File("assets/game/").mkdirs();
+			new File(Bootstrap.getPrefix() + "voxel/assets/game/").mkdirs();
 		}
 		if (getVersion() == 1) {
 			VoxelVariables.useShadows = Boolean.parseBoolean(getValue("useShadows"));

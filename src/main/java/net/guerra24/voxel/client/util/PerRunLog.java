@@ -33,6 +33,8 @@ import org.apache.log4j.FileAppender;
 import org.apache.log4j.Layout;
 import org.apache.log4j.spi.ErrorCode;
 
+import net.guerra24.voxel.client.bootstrap.Bootstrap;
+
 public class PerRunLog extends FileAppender {
 
 	private static SimpleDateFormat timeStampFormat;
@@ -84,7 +86,7 @@ public class PerRunLog extends FileAppender {
 			} else {
 				newFileName = fileName + HIPHEN + timeStampFormat.format(new Date());
 			}
-			return logFile.getParent() + File.separator + newFileName;
+			return Bootstrap.getPrefix() + "voxel/" + logFile.getParent() + File.separator + newFileName;
 		}
 		return null;
 	}

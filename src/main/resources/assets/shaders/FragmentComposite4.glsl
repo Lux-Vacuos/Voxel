@@ -51,8 +51,8 @@ void main(void){
 	vec4 data0 = texture(gData0, texcoord);
 	if(data0.b != 1){
 	image = texture(composite0, texcoord);
-	float brightness = dot(image.rgb, vec3(0.9126, 0.9152, 0.9722));
-    	if(brightness > 0.9)
+	float brightness = dot(image.rgb, vec3(0.9, 0.9, 0.9));
+    	if(brightness > 1)
     	    result = vec4(image.rgb, 1.0);
 		out_Color = result;
 	}

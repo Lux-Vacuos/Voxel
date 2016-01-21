@@ -37,6 +37,21 @@ import net.guerra24.voxel.client.util.Logger;
  * @author Guerra24 <pablo230699@hotmail.com>
  */
 public class Bootstrap {
+
+	private static String prefix;
+
+	static {
+		if (getPlatform().equals(Platform.WINDOWS_32) || getPlatform().equals(Platform.WINDOWS_64))
+			prefix = System.getenv("AppData");
+		else if (getPlatform().equals(Platform.LINUX_32) || getPlatform().equals(Platform.LINUX_64))
+			prefix = System.getProperty("user.home");
+		else if (getPlatform().equals(Platform.MACOSX)) {
+			prefix = System.getProperty("user.home");
+			prefix += "/Library/Application Support";
+		}
+		prefix += "/.";
+	}
+
 	/**
 	 * OS info
 	 */
@@ -81,10 +96,10 @@ public class Bootstrap {
 		WINDOWS_32, WINDOWS_64, MACOSX, LINUX_32, LINUX_64, UNKNOWN;
 
 	}
-	
+
 	static {
-		File file = new File("assets/game/logs");
-		if(!file.exists())
+		File file = new File(Bootstrap.getPrefix() + "voxel/assets/game/logs");
+		if (!file.exists())
 			file.mkdirs();
 	}
 
@@ -106,8 +121,7 @@ public class Bootstrap {
 			System.exit(1);
 		}
 		checkSomeValues();
-		
-		
+
 		new Voxel();
 	}
 
@@ -180,6 +194,10 @@ public class Bootstrap {
 				}
 			}
 		}
+	}
+
+	public static String getPrefix() {
+		return prefix;
 	}
 
 }
