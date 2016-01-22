@@ -24,16 +24,6 @@
 
 package net.guerra24.voxel.client.world.entities;
 
-import static net.guerra24.voxel.client.input.Keyboard.KEY_0;
-import static net.guerra24.voxel.client.input.Keyboard.KEY_1;
-import static net.guerra24.voxel.client.input.Keyboard.KEY_2;
-import static net.guerra24.voxel.client.input.Keyboard.KEY_3;
-import static net.guerra24.voxel.client.input.Keyboard.KEY_4;
-import static net.guerra24.voxel.client.input.Keyboard.KEY_5;
-import static net.guerra24.voxel.client.input.Keyboard.KEY_6;
-import static net.guerra24.voxel.client.input.Keyboard.KEY_7;
-import static net.guerra24.voxel.client.input.Keyboard.KEY_8;
-import static net.guerra24.voxel.client.input.Keyboard.KEY_9;
 import static net.guerra24.voxel.client.input.Keyboard.KEY_A;
 import static net.guerra24.voxel.client.input.Keyboard.KEY_D;
 import static net.guerra24.voxel.client.input.Keyboard.KEY_I;
@@ -207,26 +197,8 @@ public class Camera extends Entity {
 							0, 0, 1));
 		}
 
-		if (isKeyDown(KEY_1))
-			block = 1;
-		else if (isKeyDown(KEY_2))
-			block = 2;
-		else if (isKeyDown(KEY_3))
-			block = 3;
-		else if (isKeyDown(KEY_4))
-			block = 4;
-		else if (isKeyDown(KEY_5))
-			block = 5;
-		else if (isKeyDown(KEY_6))
-			block = 6;
-		else if (isKeyDown(KEY_7))
-			block = 8;
-		else if (isKeyDown(KEY_8))
-			block = Block.Indes.getId();
-		else if (isKeyDown(KEY_9))
-			block = 10;
-		else if (isKeyDown(KEY_0))
-			block = 13;
+		block = gm.getMenuSystem().gameSP.getBlock();
+
 		if (isButtonDown(0)) {
 			setBlock(gm.getDisplay().getDisplayWidth(), gm.getDisplay().getDisplayHeight(), (byte) 0, world, gm);
 		} else if (isButtonDown(1)) {

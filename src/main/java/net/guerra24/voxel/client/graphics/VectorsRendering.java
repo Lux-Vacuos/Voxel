@@ -28,6 +28,7 @@ import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_CENTER;
 import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_LEFT;
 import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_MIDDLE;
 import static org.lwjgl.nanovg.NanoVG.NVG_HOLE;
+import static org.lwjgl.nanovg.NanoVG.NVG_PI;
 import static org.lwjgl.nanovg.NanoVG.nvgBeginPath;
 import static org.lwjgl.nanovg.NanoVG.nvgBoxGradient;
 import static org.lwjgl.nanovg.NanoVG.nvgCircle;
@@ -37,6 +38,8 @@ import static org.lwjgl.nanovg.NanoVG.nvgFillPaint;
 import static org.lwjgl.nanovg.NanoVG.nvgFontBlur;
 import static org.lwjgl.nanovg.NanoVG.nvgFontFace;
 import static org.lwjgl.nanovg.NanoVG.nvgFontSize;
+import static org.lwjgl.nanovg.NanoVG.nvgImagePattern;
+import static org.lwjgl.nanovg.NanoVG.nvgImageSize;
 import static org.lwjgl.nanovg.NanoVG.nvgLineTo;
 import static org.lwjgl.nanovg.NanoVG.nvgLinearGradient;
 import static org.lwjgl.nanovg.NanoVG.nvgMoveTo;
@@ -52,10 +55,12 @@ import static org.lwjgl.nanovg.NanoVG.nvgText;
 import static org.lwjgl.nanovg.NanoVG.nvgTextAlign;
 import static org.lwjgl.nanovg.NanoVG.nvgTextBounds;
 import static org.lwjgl.system.MemoryUtil.NULL;
+import static org.lwjgl.system.MemoryUtil.memAllocInt;
 import static org.lwjgl.system.MemoryUtil.memEncodeASCII;
 import static org.lwjgl.system.MemoryUtil.memFree;
 
 import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
 
 import org.lwjgl.nanovg.NVGColor;
 import org.lwjgl.nanovg.NVGPaint;
@@ -105,6 +110,22 @@ public class VectorsRendering {
 
 		nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
 		nvgText(vg, x, y + h * 0.5f, text, NULL);
+	}
+
+	public static void renderImage(float x, float y, float w, float h, int image, float alpha) {
+		NVGPaint imgPaint = paintB;
+		IntBuffer imgw = memAllocInt(1), imgh = memAllocInt(1);
+		long vg = display.getVg();
+		nvgSave(vg);
+		nvgImageSize(vg, image, imgw, imgh);
+		nvgImagePattern(vg, x, y, w, h, 0.0f / 180.0f * NVG_PI, image, alpha, imgPaint);
+		nvgBeginPath(vg);
+		nvgRoundedRect(vg, x, y, w, h, 5);
+		nvgFillPaint(vg, imgPaint);
+		nvgFill(vg);
+		nvgRestore(vg);
+		memFree(imgh);
+		memFree(imgw);
 	}
 
 	public static void renderProgressBar(float x, float y, float w, float h, float pos) {
@@ -230,6 +251,22 @@ public class VectorsRendering {
 		nvgBeginPath(vg);
 		nvgRoundedRect(vg, x + 0.5f, y + 0.5f, w - 1, h - 1, 4 - 0.5f);
 		nvgStrokeColor(vg, rgba(0, 0, 0, 48, colorA));
+		nvgStroke(vg);
+	}
+
+	public static void renderBox(float x, float y, float w, float h, NVGColor color1, NVGColor color2,
+			NVGColor color3) {
+		NVGPaint bg = paintA;
+		long vg = display.getVg();
+		nvgBoxGradient(vg, x + 1, y + 1 + 1.5f, w - 2, h - 2, 3, 4, color1, color2, bg);
+		nvgBeginPath(vg);
+		nvgRoundedRect(vg, x + 1, y + 1, w - 2, h - 2, 4 - 1);
+		nvgFillPaint(vg, bg);
+		nvgFill(vg);
+
+		nvgBeginPath(vg);
+		nvgRoundedRect(vg, x + 0.5f, y + 0.5f, w - 1, h - 1, 4 - 0.5f);
+		nvgStrokeColor(vg, color3);
 		nvgStroke(vg);
 	}
 

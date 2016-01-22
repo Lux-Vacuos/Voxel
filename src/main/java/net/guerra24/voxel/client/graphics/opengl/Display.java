@@ -23,6 +23,7 @@ import static org.lwjgl.glfw.GLFW.glfwWindowHint;
 import static org.lwjgl.nanovg.NanoVG.nvgBeginFrame;
 import static org.lwjgl.nanovg.NanoVG.nvgEndFrame;
 import static org.lwjgl.nanovg.NanoVGGL3.NVG_ANTIALIAS;
+import static org.lwjgl.nanovg.NanoVGGL3.NVG_DEBUG;
 import static org.lwjgl.nanovg.NanoVGGL3.NVG_STENCIL_STROKES;
 import static org.lwjgl.nanovg.NanoVGGL3.nvgCreateGL3;
 import static org.lwjgl.nanovg.NanoVGGL3.nvgDeleteGL3;
@@ -110,7 +111,7 @@ public class Display extends Window {
 			System.exit(-1);
 		}
 		createCapabilities();
-		super.vg = nvgCreateGL3(NVG_ANTIALIAS | NVG_STENCIL_STROKES);
+		super.vg = nvgCreateGL3(NVG_ANTIALIAS | NVG_STENCIL_STROKES | NVG_DEBUG);
 		if (vg == NULL)
 			throw new RuntimeException("Fail to create NanoVG");
 

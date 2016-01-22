@@ -350,20 +350,11 @@ public class Loader {
 	}
 
 	public int loadNVGTexture(String file) {
-		int width = 0;
-		int height = 0;
 		ByteBuffer buffer = null;
 		int tex = 0;
 		try {
 			Logger.log("Loading NVGTexture: " + file + ".png");
-			InputStream in = getClass().getClassLoader().getResourceAsStream("assets/textures/menu/" + file + ".png");
-			PNGDecoder decoder = new PNGDecoder(in);
-			width = decoder.getWidth();
-			height = decoder.getHeight();
-			buffer = ByteBuffer.allocateDirect(4 * width * height);
-			decoder.decode(buffer, width * 4, Format.RGBA);
-			buffer.flip();
-			in.close();
+			buffer = ioResourceToByteBuffer("assets/textures/menu/" + file + ".png", 32 * 1024);
 			tex = nvgCreateImageMem(display.getVg(), 0, buffer);
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -398,8 +398,8 @@ public class Tessellator {
 
 	}
 
-	public void generateCube(int x, int y, int z, int size, boolean top, boolean bottom, boolean left, boolean right,
-			boolean front, boolean back, IBlock block, float light) {
+	public void generateCube(float x, float y, float z, float size, boolean top, boolean bottom, boolean left,
+			boolean right, boolean front, boolean back, IBlock block, float light) {
 		int id = block.getId();
 		float l = light / 15f;
 		if (id != Block.Air.getId()) {

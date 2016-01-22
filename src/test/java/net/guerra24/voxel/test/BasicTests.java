@@ -16,7 +16,6 @@ public class BasicTests {
 	public void testVariables() {
 		assertEquals(0.1f, VoxelVariables.NEAR_PLANE, 0.0001);
 		assertEquals(1000f, VoxelVariables.FAR_PLANE, 0.0001);
-		assertEquals("assets/game/settings.conf", VoxelVariables.settings);
 		assertEquals("https://guerra24.github.io/", VoxelVariables.web);
 	}
 

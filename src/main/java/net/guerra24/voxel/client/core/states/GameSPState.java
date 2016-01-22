@@ -68,9 +68,13 @@ public class GameSPState implements State {
 		while (next()) {
 			if (isKeyDown(KEY_F1))
 				VoxelVariables.debug = !VoxelVariables.debug;
+			if (isKeyDown(KEY_F2))
+				VoxelVariables.hideHud = !VoxelVariables.hideHud;
 			if (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
-				gm.getCamera().unlockMouse();
-				gm.getGlobalStates().setState(GameState.IN_PAUSE);
+				if (isKeyDown(KEY_ESCAPE)) {
+					gm.getCamera().unlockMouse();
+					gm.getGlobalStates().setState(GameState.IN_PAUSE);
+				}
 			}
 		}
 		// if (!display.isDisplayFocused()) {
