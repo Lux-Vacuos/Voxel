@@ -43,6 +43,7 @@ import net.guerra24.voxel.client.input.Mouse;
 import net.guerra24.voxel.client.particle.ParticleMaster;
 import net.guerra24.voxel.client.resources.GameResources;
 import net.guerra24.voxel.client.world.WorldsHandler;
+import net.guerra24.voxel.client.world.entities.PlayerCamera;
 import net.guerra24.voxel.universal.util.vector.Vector3f;
 
 /**
@@ -73,7 +74,7 @@ public class InPauseState implements State {
 		}
 		while (Keyboard.next()) {
 			if (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
-				voxel.getGameResources().getCamera().setMouse(gm.getDisplay());
+				((PlayerCamera) gm.getCamera()).setMouse(gm.getDisplay());
 				gm.getGlobalStates().setState(GameState.GAME_SP);
 			}
 		}

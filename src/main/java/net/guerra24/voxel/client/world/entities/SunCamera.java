@@ -22,20 +22,30 @@
  * SOFTWARE.
  */
 
-package net.guerra24.voxel.client.core.states;
+package net.guerra24.voxel.client.world.entities;
 
-import net.guerra24.voxel.client.core.GlobalStates;
-import net.guerra24.voxel.client.core.State;
-import net.guerra24.voxel.client.core.Voxel;
+import net.guerra24.voxel.client.resources.GameResources;
+import net.guerra24.voxel.client.resources.Ray;
+import net.guerra24.voxel.client.util.Maths;
+import net.guerra24.voxel.universal.util.vector.Matrix4f;
+import net.guerra24.voxel.universal.util.vector.Vector2f;
 
-public class LoadingMPState implements State {
+public class SunCamera extends Camera {
 
-	@Override
-	public void update(Voxel voxel, GlobalStates states, float delta) {
+	private Vector2f center;
+
+	public SunCamera(Matrix4f proj) {
+		super(proj);
+		center = new Vector2f(2048, 2048);
 	}
 
-	@Override
-	public void render(Voxel voxel, GlobalStates states, float delta) {
+	public void updateShadowRay(GameResources gm, boolean inverted) {
+		if (inverted)
+			ray = new Ray(gm.getMasterShadowRenderer().getProjectionMatrix(),
+					Maths.invert(Maths.createViewMatrix(this)), center, 4096, 4096);
+		else
+			ray = new Ray(gm.getMasterShadowRenderer().getProjectionMatrix(), Maths.createViewMatrix(this), center,
+					4096, 4096);
 	}
 
 }

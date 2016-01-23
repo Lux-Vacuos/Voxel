@@ -43,6 +43,7 @@ import static net.guerra24.voxel.client.input.Keyboard.*;
 import net.guerra24.voxel.client.particle.ParticleMaster;
 import net.guerra24.voxel.client.resources.GameResources;
 import net.guerra24.voxel.client.world.WorldsHandler;
+import net.guerra24.voxel.client.world.entities.PlayerCamera;
 
 /**
  * Single Player GameState
@@ -57,7 +58,7 @@ public class GameSPState implements State {
 		GameResources gm = voxel.getGameResources();
 		WorldsHandler worlds = voxel.getWorldsHandler();
 
-		gm.getCamera().update(delta, gm, worlds.getActiveWorld());
+		((PlayerCamera) gm.getCamera()).update(delta, gm, worlds.getActiveWorld());
 		worlds.getActiveWorld().updateChunksGeneration(gm, delta);
 
 		gm.getPhysicsEngine().update(delta);
@@ -72,7 +73,7 @@ public class GameSPState implements State {
 				VoxelVariables.hideHud = !VoxelVariables.hideHud;
 			if (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
 				if (isKeyDown(KEY_ESCAPE)) {
-					gm.getCamera().unlockMouse();
+					((PlayerCamera) gm.getCamera()).unlockMouse();
 					gm.getGlobalStates().setState(GameState.IN_PAUSE);
 				}
 			}

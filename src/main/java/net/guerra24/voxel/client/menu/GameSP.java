@@ -108,10 +108,8 @@ public class GameSP {
 				VectorsRendering.renderImage(5 * xScale, 5 + i * 64 * yScale, 60 * xScale, 60 * yScale,
 						blocks[i].getTex(), 1f);
 		}
-		if (Mouse.getDWheel() > 0)
-			ypos++;
-		if (Mouse.getDWheel() < 0)
-			ypos--;
+		ypos += Mouse.getDWheel();
+
 		if (ypos > 9)
 			ypos = 0;
 		if (ypos < 0)

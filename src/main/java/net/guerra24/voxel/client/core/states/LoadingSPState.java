@@ -32,6 +32,7 @@ import net.guerra24.voxel.client.core.Voxel;
 import net.guerra24.voxel.client.core.VoxelVariables;
 import net.guerra24.voxel.client.graphics.VectorsRendering;
 import net.guerra24.voxel.client.resources.GameResources;
+import net.guerra24.voxel.client.world.entities.PlayerCamera;
 import net.guerra24.voxel.client.core.GlobalStates.GameState;
 
 /**
@@ -62,7 +63,7 @@ public class LoadingSPState implements State {
 			seed = new Random();
 		}
 		voxel.getWorldsHandler().getActiveWorld().startWorld("World-0", seed, 0, voxel.getGameResources());
-		gm.getCamera().setMouse(gm.getDisplay());
+		((PlayerCamera) gm.getCamera()).setMouse(gm.getDisplay());
 		gm.getSoundSystem().rewind("menu1");
 		gm.getSoundSystem().stop("menu1");
 		gm.getSoundSystem().rewind("menu2");

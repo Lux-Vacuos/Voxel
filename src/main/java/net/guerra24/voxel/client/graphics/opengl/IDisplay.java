@@ -22,20 +22,24 @@
  * SOFTWARE.
  */
 
-package net.guerra24.voxel.client.core.states;
+package net.guerra24.voxel.client.graphics.opengl;
 
-import net.guerra24.voxel.client.core.GlobalStates;
-import net.guerra24.voxel.client.core.State;
-import net.guerra24.voxel.client.core.Voxel;
+public interface IDisplay {
+	public void create(int width, int height, String title, boolean vsync, boolean visible, boolean resizable,
+			ContextFormat format, String[] icons);
 
-public class LoadingMPState implements State {
+	public void beingNVGFrame();
 
-	@Override
-	public void update(Voxel voxel, GlobalStates states, float delta) {
-	}
+	public void endNVGFrame();
 
-	@Override
-	public void render(Voxel voxel, GlobalStates states, float delta) {
-	}
+	public void updateDisplay(int fps);
+
+	public void closeDisplay();
+
+	public void setVisible();
+
+	public void setInvisible();
+
+	public float getDelta();
 
 }

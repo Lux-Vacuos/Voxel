@@ -63,6 +63,8 @@ import net.guerra24.voxel.client.util.Logger;
 import net.guerra24.voxel.client.util.LoggerSoundSystem;
 import net.guerra24.voxel.client.world.block.Block;
 import net.guerra24.voxel.client.world.entities.Camera;
+import net.guerra24.voxel.client.world.entities.PlayerCamera;
+import net.guerra24.voxel.client.world.entities.SunCamera;
 import net.guerra24.voxel.client.world.physics.PhysicsSystem;
 import net.guerra24.voxel.universal.resources.UniversalResources;
 import net.guerra24.voxel.universal.util.vector.Vector3f;
@@ -138,12 +140,12 @@ public class GameResources {
 		rand = new Random();
 		masterShadowRenderer = new MasterShadowRenderer(display);
 		renderer = new MasterRenderer(this);
-		sun_Camera = new Camera(renderer.getProjectionMatrix(), display);
+		sun_Camera = new SunCamera(masterShadowRenderer.getProjectionMatrix());
 		sun_Camera.setPosition(new Vector3f(0, 0, 0));
 		sun_Camera.setYaw(sunRotation.x);
 		sun_Camera.setPitch(sunRotation.y);
 		sun_Camera.setRoll(sunRotation.z);
-		camera = new Camera(renderer.getProjectionMatrix(), display);
+		camera = new PlayerCamera(renderer.getProjectionMatrix(), display);
 		kryo = new Kryo();
 		occlusionRenderer = new OcclusionRenderer(renderer.getProjectionMatrix());
 		skyboxRenderer = new SkyboxRenderer(loader, renderer.getProjectionMatrix());
@@ -173,24 +175,16 @@ public class GameResources {
 		Block.initBasicBlocks();
 		UniversalResources.loadUniversalResources(this);
 		menuSystem = new Menu(this);
-		loadMusic();
-		loader.loadNVGFont("Roboto-Bold", "Roboto-Bold");
 	}
 
 	/**
-	 * Load Music
-	 * 
-	 */
-	public void loadMusic() {
-		soundSystem.backgroundMusic("menu1", "menu/menu1.ogg", false);
-		soundSystem.backgroundMusic("menu2", "menu/menu2.ogg", false);
-	}
-
-	/**
-	 * Load Resources like Mobs
+	 * Load Resources
 	 * 
 	 */
 	public void loadResources() {
+		soundSystem.backgroundMusic("menu1", "menu/menu1.ogg", false);
+		soundSystem.backgroundMusic("menu2", "menu/menu2.ogg", false);
+		loader.loadNVGFont("Roboto-Bold", "Roboto-Bold");
 		torchTexture = new ParticleTexture(loader.loadTextureParticle("fire0"), 4);
 	}
 
@@ -199,15 +193,21 @@ public class GameResources {
 		sun_Camera.setYaw(sunRotation.x);
 		sun_Camera.setPitch(sunRotation.y);
 		sun_Camera.setRoll(sunRotation.z);
-		sun_Camera.updateShadowRay(this, false);
+		((SunCamera) sun_Camera).updateShadowRay(this, false);
 		lightPos = new Vector3f(1000 * sun_Camera.getRay().direction.x, 1000 * sun_Camera.getRay().direction.y,
 				1000 * sun_Camera.getRay().direction.z);
 		Vector3f.add(sun_Camera.getPosition(), lightPos, lightPos);
 
-		sun_Camera.updateShadowRay(this, true);
+		((SunCamera) sun_Camera).updateShadowRay(this, true);
 		invertedLightPosition = new Vector3f(1000 * sun_Camera.getRay().direction.x,
 				1000 * sun_Camera.getRay().direction.y, 1000 * sun_Camera.getRay().direction.z);
 		Vector3f.add(sun_Camera.getPosition(), invertedLightPosition, invertedLightPosition);
+	}
+
+	public void reload(Voxel voxel) {
+		cleanUp();
+		init(voxel);
+		loadResources();
 	}
 
 	/**

@@ -1,3 +1,27 @@
+/*
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2015-2016 Guerra24
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
 package net.guerra24.voxel.client.graphics.opengl;
 
 import static org.lwjgl.glfw.GLFW.GLFW_RESIZABLE;
@@ -71,6 +95,7 @@ public class Display extends Window {
 		displayUtils = new DisplayUtils();
 	}
 
+	@Override
 	public void create(int width, int height, String title, boolean vsync, boolean visible, boolean resizable,
 			ContextFormat format, String[] icons) {
 		Logger.log("Creating Window");
@@ -143,14 +168,17 @@ public class Display extends Window {
 		super.displayCreated = true;
 	}
 
+	@Override
 	public void beingNVGFrame() {
 		nvgBeginFrame(super.vg, super.displayWidth, super.displayHeight, super.pixelRatio);
 	}
 
+	@Override
 	public void endNVGFrame() {
 		nvgEndFrame(super.vg);
 	}
 
+	@Override
 	public void updateDisplay(int fps) {
 		glfwSwapBuffers(super.window);
 		glfwPollEvents();
@@ -158,6 +186,7 @@ public class Display extends Window {
 		displayUtils.sync(fps);
 	}
 
+	@Override
 	public void closeDisplay() {
 		nvgDeleteGL3(super.vg);
 		releaseCallbacks();
@@ -165,10 +194,12 @@ public class Display extends Window {
 		glfwTerminate();
 	}
 
+	@Override
 	public void setVisible() {
 		glfwShowWindow(window);
 	}
 
+	@Override
 	public void setInvisible() {
 		glfwHideWindow(super.window);
 	}
@@ -181,6 +212,7 @@ public class Display extends Window {
 		return (long) (glfwGetTime() * (1000L * 1000L * 1000L));
 	}
 
+	@Override
 	public float getDelta() {
 		double time = getTime();
 		float delta = (float) (time - lastLoopTime);
