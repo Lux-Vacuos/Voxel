@@ -59,6 +59,7 @@ public class GameSPState implements State {
 		WorldsHandler worlds = voxel.getWorldsHandler();
 
 		((PlayerCamera) gm.getCamera()).update(delta, gm, worlds.getActiveWorld());
+		gm.getMenuSystem().gameSP.update();
 		worlds.getActiveWorld().updateChunksGeneration(gm, delta);
 
 		gm.getPhysicsEngine().update(delta);

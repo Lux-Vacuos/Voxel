@@ -40,7 +40,7 @@ public class GameSP {
 
 	private BlockGui[] blocks;
 
-	private byte block;
+	private BlockGui block;
 
 	private float x, y, w, h;
 
@@ -50,12 +50,12 @@ public class GameSP {
 		yScale = height / 720f;
 		xScale = width / 1280f;
 		blocks = new BlockGui[10];
-		blocks[0] = new BlockGui(Block.Stone.getId(), gm.getLoader().loadNVGTexture("Stone"));
-		blocks[1] = new BlockGui(Block.Dirt.getId(), gm.getLoader().loadNVGTexture("Dirt"));
-		blocks[3] = new BlockGui(Block.Glass.getId(), gm.getLoader().loadNVGTexture("Glass"));
-		blocks[4] = new BlockGui(Block.Torch.getId(), gm.getLoader().loadNVGTexture("Torch"));
-		blocks[5] = new BlockGui(Block.Water.getId(), gm.getLoader().loadNVGTexture("Water"));
-		blocks[6] = new BlockGui(Block.Cobblestone.getId(), gm.getLoader().loadNVGTexture("Cobblestone"));
+		blocks[0] = new BlockGui(Block.Stone.getId(), gm.getLoader().loadNVGTexture("Stone"), 100);
+		blocks[1] = new BlockGui(Block.Dirt.getId(), gm.getLoader().loadNVGTexture("Dirt"), 100);
+		blocks[3] = new BlockGui(Block.Glass.getId(), gm.getLoader().loadNVGTexture("Glass"), 100);
+		blocks[4] = new BlockGui(Block.Torch.getId(), gm.getLoader().loadNVGTexture("Torch"), 100);
+		blocks[5] = new BlockGui(Block.Water.getId(), gm.getLoader().loadNVGTexture("Water"), 100);
+		blocks[6] = new BlockGui(Block.Cobblestone.getId(), gm.getLoader().loadNVGTexture("Cobblestone"), 100);
 		x = gm.getDisplay().getDisplayWidth() / 2;
 		y = gm.getDisplay().getDisplayHeight() / 2;
 		w = 16;
@@ -104,31 +104,39 @@ public class GameSP {
 					VectorsRendering.rgba(255, 255, 255, 100, VectorsRendering.colorA),
 					VectorsRendering.rgba(255, 255, 255, 255, VectorsRendering.colorB),
 					VectorsRendering.rgba(0, 0, 0, 255, VectorsRendering.colorC));
-			if (blocks[i] != null)
+			if (blocks[i] != null) {
 				VectorsRendering.renderImage(5 * xScale, 5 + i * 64 * yScale, 60 * xScale, 60 * yScale,
 						blocks[i].getTex(), 1f);
+				VectorsRendering.renderText("" + blocks[i].getTotal(), "Roboto-Bold", 10 * xScale, 39 + i * 64 * yScale,
+						20 * yScale, VectorsRendering.rgba(255, 255, 255, 255, VectorsRendering.colorA),
+						VectorsRendering.rgba(255, 255, 255, 255, VectorsRendering.colorB));
+			}
 		}
-		ypos -= Mouse.getDWheel();
-
-		if (ypos > 9)
-			ypos = 0;
-		if (ypos < 0)
-			ypos = 9;
 		VectorsRendering.renderBox(5 * xScale, 5 + ypos * 64 * yScale, 60 * xScale, 60 * yScale,
 				VectorsRendering.rgba(255, 255, 255, 100, VectorsRendering.colorA),
 				VectorsRendering.rgba(255, 255, 255, 100, VectorsRendering.colorB),
 				VectorsRendering.rgba(0, 0, 0, 100, VectorsRendering.colorC));
-		if (blocks[ypos] != null)
-			block = blocks[ypos].getId();
-		else
-			block = 0;
 		VectorsRendering.renderBox(x - 8, y - 8, w, h,
 				VectorsRendering.rgba(255, 255, 255, 255, VectorsRendering.colorA),
 				VectorsRendering.rgba(255, 255, 255, 255, VectorsRendering.colorB),
 				VectorsRendering.rgba(0, 0, 0, 255, VectorsRendering.colorC));
 	}
 
-	public byte getBlock() {
+	public void update() {
+		ypos -= Mouse.getDWheel();
+		if (ypos > 9)
+			ypos = 0;
+		if (ypos < 0)
+			ypos = 9;
+		if (blocks[ypos] != null) {
+			block = blocks[ypos];
+			if (blocks[ypos].getTotal() < 0)
+				blocks[ypos] = null;
+		} else
+			block = null;
+	}
+
+	public BlockGui getBlock() {
 		return block;
 	}
 

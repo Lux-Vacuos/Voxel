@@ -44,6 +44,7 @@ import static net.guerra24.voxel.client.input.Mouse.setGrabbed;
 import net.guerra24.voxel.client.core.VoxelVariables;
 import net.guerra24.voxel.client.graphics.opengl.Display;
 import net.guerra24.voxel.client.input.Keyboard;
+import net.guerra24.voxel.client.menu.BlockGui;
 import net.guerra24.voxel.client.resources.GameResources;
 import net.guerra24.voxel.client.util.Maths;
 import net.guerra24.voxel.client.world.IWorld;
@@ -58,17 +59,18 @@ public class PlayerCamera extends Camera {
 
 	private float speed;
 	private float multiplierMouse = 24;
-	private byte block = 2;
 	private boolean underWater = false;
 	private int mouseSpeed = 2;
 	private final int maxLookUp = 90;
 	private final int maxLookDown = -90;
 	private Vector2f center;
+	private BlockGui air;
 
 	public PlayerCamera(Matrix4f proj, Display display) {
 		super(proj);
 		center = new Vector2f(display.getDisplayWidth() / 2, display.getDisplayHeight() / 2);
 		this.speed = 3f;
+		air = new BlockGui((byte) 0, 0, 0);
 	}
 
 	public void update(float delta, GameResources gm, IWorld world) {
@@ -168,10 +170,10 @@ public class PlayerCamera extends Camera {
 							0, 0, 1));
 		}
 
-		block = gm.getMenuSystem().gameSP.getBlock();
+		BlockGui block = gm.getMenuSystem().gameSP.getBlock();
 
 		if (isButtonDown(0)) {
-			setBlock(gm.getDisplay().getDisplayWidth(), gm.getDisplay().getDisplayHeight(), (byte) 0, world, gm);
+			setBlock(gm.getDisplay().getDisplayWidth(), gm.getDisplay().getDisplayHeight(), air, world, gm);
 		} else if (isButtonDown(1)) {
 			setBlock(gm.getDisplay().getDisplayWidth(), gm.getDisplay().getDisplayHeight(), block, world, gm);
 		}
@@ -190,7 +192,9 @@ public class PlayerCamera extends Camera {
 		}
 	}
 
-	private void setBlock(int ww, int wh, byte block, IWorld world, GameResources gm) {
+	private void setBlock(int ww, int wh, BlockGui block, IWorld world, GameResources gm) {
+		if (block == null)
+			return;
 		Vector4f viewport = new Vector4f(0, 0, ww, wh);
 		Vector3f wincoord = new Vector3f(ww / 2, wh / 2, depth);
 		Vector3f objcoord = new Vector3f();
@@ -218,9 +222,10 @@ public class PlayerCamera extends Camera {
 		int bx = (int) tempX;
 		int by = (int) tempY;
 		int bz = (int) tempZ;
-		world.setGlobalBlock(bx, by, bz, block);
-		if (block == 9)
+		world.setGlobalBlock(bx, by, bz, block.getId());
+		if (block.getId() == Block.Torch.getId())
 			world.lighting(bx, by, bz, 14);
+		block.setTotal(block.getTotal() - 1);
 	}
 
 	public void invertPitch() {

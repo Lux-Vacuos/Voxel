@@ -40,7 +40,6 @@ import java.util.Queue;
 import java.util.Random;
 
 import com.badlogic.gdx.math.collision.BoundingBox;
-import com.esotericsoftware.kryo.KryoException;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 
@@ -376,8 +375,9 @@ public class InfinityWorld implements IWorld {
 					+ "/chunk_" + chunkDim + "_" + cx + "_" + cy + "_" + cz + ".dat"));
 			gm.getKryo().writeObject(output, getChunk(chunkDim, cx, cy, cz));
 			output.close();
-		} catch (IOException e) {
-		} catch (IllegalArgumentException e) {
+		}  catch (Exception e) {
+			Logger.warn("Error Saving Chunk " + chunkDim + " " + cx + " " + cy + " " + cz);
+			e.printStackTrace();
 		}
 	}
 
@@ -398,8 +398,9 @@ public class InfinityWorld implements IWorld {
 				addChunk(chunk);
 			}
 
-		} catch (FileNotFoundException e) {
-		} catch (KryoException e) {
+		} catch (Exception e) {
+			Logger.warn("Error Loading Chunk " + chunkDim + " " + cx + " " + cy + " " + cz);
+			e.printStackTrace();
 		}
 	}
 
