@@ -38,7 +38,7 @@ public class GameSettings {
 	private Properties prop;
 	private File settings;
 
-	private int version = 4;
+	private int version = 5;
 
 	public GameSettings() {
 		settings = new File(VoxelVariables.settings);
@@ -88,6 +88,19 @@ public class GameSettings {
 			VoxelVariables.FPS = Integer.parseInt(getValue("FPS"));
 			VoxelVariables.UPS = Integer.parseInt(getValue("UPS"));
 			VoxelVariables.radius = Integer.parseInt(getValue("DrawDistance"));
+		} else if (getVersion() == 5) {
+			VoxelVariables.useShadows = Boolean.parseBoolean(getValue("useShadows"));
+			VoxelVariables.useVolumetricLight = Boolean.parseBoolean(getValue("useVolumetricLight"));
+			VoxelVariables.useFXAA = Boolean.parseBoolean(getValue("useFXAA"));
+			VoxelVariables.useMotionBlur = Boolean.parseBoolean(getValue("useMotionBlur"));
+			VoxelVariables.useDOF = Boolean.parseBoolean(getValue("useDOF"));
+			VoxelVariables.useReflections = Boolean.parseBoolean(getValue("useReflections"));
+			VoxelVariables.useParallax = Boolean.parseBoolean(getValue("useParallax"));
+			VoxelVariables.VSYNC = Boolean.parseBoolean(getValue("VSYNC"));
+			VoxelVariables.FPS = Integer.parseInt(getValue("FPS"));
+			VoxelVariables.UPS = Integer.parseInt(getValue("UPS"));
+			VoxelVariables.radius = Integer.parseInt(getValue("DrawDistance"));
+			VoxelVariables.FOV = Integer.parseInt(getValue("FOV"));
 		} else {
 			updateSetting();
 			save();
@@ -134,6 +147,7 @@ public class GameSettings {
 		registerValue("FPS", Integer.toString(VoxelVariables.FPS));
 		registerValue("UPS", Integer.toString(VoxelVariables.UPS));
 		registerValue("DrawDistance", Integer.toString(VoxelVariables.radius));
+		registerValue("FOV", Integer.toString(VoxelVariables.FOV));
 	}
 
 }

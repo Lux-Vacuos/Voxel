@@ -36,10 +36,10 @@ public class BlocksResources {
 	public static TexturedModel cubeTorch;
 	public static TexturedModel cubePortal;
 
-	public static TessellatorTextureAtlas tessellatorTextureAtlas;
+	private static TessellatorTextureAtlas tessellatorTextureAtlas;
 
-	public static int normalMap;
-	public static int heightMap;
+	private static int normalMap;
+	private static int heightMap;
 
 	public static void createBlocks(Loader loader) {
 
@@ -75,6 +75,18 @@ public class BlocksResources {
 		tessellatorTextureAtlas.registerTextureCoords("DimOre", new Vector2f(240, 0));
 		tessellatorTextureAtlas.registerTextureCoords("Glass", new Vector2f(0, 16));
 		tessellatorTextureAtlas.registerTextureCoords("GoldOre", new Vector2f(16, 16));
+	}
+
+	public static TessellatorTextureAtlas getTessellatorTextureAtlas() {
+		return tessellatorTextureAtlas;
+	}
+
+	public static int getHeightMap() {
+		return heightMap;
+	}
+
+	public static int getNormalMap() {
+		return normalMap;
 	}
 
 }

@@ -66,7 +66,7 @@ import net.guerra24.voxel.client.graphics.shaders.TessellatorBasicShader;
 import net.guerra24.voxel.client.graphics.shaders.TessellatorShader;
 import net.guerra24.voxel.client.resources.GameResources;
 import net.guerra24.voxel.client.world.block.Block;
-import net.guerra24.voxel.client.world.block.IBlock;
+import net.guerra24.voxel.client.world.block.BlockBase;
 import net.guerra24.voxel.client.world.entities.Camera;
 import net.guerra24.voxel.universal.util.vector.Matrix4f;
 import net.guerra24.voxel.universal.util.vector.Vector2f;
@@ -399,7 +399,7 @@ public class Tessellator {
 	}
 
 	public void generateCube(float x, float y, float z, float size, boolean top, boolean bottom, boolean left,
-			boolean right, boolean front, boolean back, IBlock block, float light) {
+			boolean right, boolean front, boolean back, BlockBase block, float light) {
 		int id = block.getId();
 		float l = light / 15f;
 		if (id != Block.Air.getId()) {

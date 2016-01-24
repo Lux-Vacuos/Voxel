@@ -26,7 +26,6 @@ package net.guerra24.voxel.client.world.chunks;
 
 import java.util.Random;
 
-import net.guerra24.voxel.client.core.VoxelVariables;
 import net.guerra24.voxel.client.world.IWorld;
 import net.guerra24.voxel.client.world.SimplexNoise;
 import net.guerra24.voxel.client.world.block.Block;
@@ -57,14 +56,5 @@ public class ChunkGenerator {
 	}
 
 	public void generateCaves(Chunk chunk, SimplexNoise noise) {
-		for (int x = 0; x < VoxelVariables.CHUNK_SIZE; x++) {
-			for (int z = 0; z < VoxelVariables.CHUNK_SIZE; z++) {
-				for (int y = 0; y < VoxelVariables.CHUNK_HEIGHT; y++) {
-					if (noise.getNoise((int) (x + chunk.posX), (int) (y + chunk.posY), (int) (z + chunk.posZ)) > 0.18
-							&& chunk.getLocalBlock(x, y, z) != Block.Water.getId())
-						chunk.setLocalBlock(x, y, z, Block.Air.getId());
-				}
-			}
-		}
 	}
 }

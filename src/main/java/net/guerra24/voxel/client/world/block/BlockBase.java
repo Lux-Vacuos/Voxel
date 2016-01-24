@@ -30,7 +30,7 @@ import net.guerra24.voxel.client.resources.models.WaterTile;
 import net.guerra24.voxel.universal.util.vector.Vector3f;
 import net.guerra24.voxel.universal.util.vector.Vector8f;
 
-public abstract class IBlock {
+public abstract class BlockBase {
 
 	public abstract byte getId();
 
@@ -63,6 +63,7 @@ public abstract class IBlock {
 	 * @param pos
 	 *            Position
 	 * @return BlockEntity
+	 * @deprecated
 	 */
 	public abstract BlockEntity getSingleModel(Vector3f pos);
 
@@ -70,6 +71,7 @@ public abstract class IBlock {
 	 * Check if uses single model
 	 * 
 	 * @return Uses single model
+	 * @deprecated
 	 */
 	public abstract boolean usesSingleModel();
 

@@ -55,7 +55,7 @@ public class GameSP {
 		blocks[3] = new BlockGui(Block.Glass.getId(), gm.getLoader().loadNVGTexture("Glass"));
 		blocks[4] = new BlockGui(Block.Torch.getId(), gm.getLoader().loadNVGTexture("Torch"));
 		blocks[5] = new BlockGui(Block.Water.getId(), gm.getLoader().loadNVGTexture("Water"));
-		blocks[6] = new BlockGui(Block.Stone.getId(), gm.getLoader().loadNVGTexture("Cobblestone"));
+		blocks[6] = new BlockGui(Block.Cobblestone.getId(), gm.getLoader().loadNVGTexture("Cobblestone"));
 		x = gm.getDisplay().getDisplayWidth() / 2;
 		y = gm.getDisplay().getDisplayHeight() / 2;
 		w = 16;
@@ -108,7 +108,7 @@ public class GameSP {
 				VectorsRendering.renderImage(5 * xScale, 5 + i * 64 * yScale, 60 * xScale, 60 * yScale,
 						blocks[i].getTex(), 1f);
 		}
-		ypos += Mouse.getDWheel();
+		ypos -= Mouse.getDWheel();
 
 		if (ypos > 9)
 			ypos = 0;

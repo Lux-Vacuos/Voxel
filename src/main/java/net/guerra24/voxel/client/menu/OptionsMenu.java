@@ -40,7 +40,8 @@ public class OptionsMenu {
 	private Button reflectionsButton;
 	private Button parallaxButton;
 
-	private Slider slider;
+	private Slider drawDistanceSlider;
+	private Slider fovSlider;
 
 	private float xScale, yScale;
 
@@ -49,7 +50,8 @@ public class OptionsMenu {
 		float height = VoxelVariables.HEIGHT;
 		yScale = height / 720f;
 		xScale = width / 1280f;
-		slider = new Slider(900 * xScale, 540 * yScale, 315 * xScale, 80 * yScale);
+		drawDistanceSlider = new Slider(900 * xScale, 540 * yScale, 315 * xScale, 80 * yScale);
+		fovSlider = new Slider(900 * xScale, 440 * yScale, 315 * xScale, 80 * yScale);
 		exitButton = new Button(new Vector2f(530, 35), new Vector2f(230, 80), xScale, yScale);
 		godraysButton = new Button(new Vector2f(40, 560), new Vector2f(230, 80), xScale, yScale);
 		shadowsButton = new Button(new Vector2f(40, 460), new Vector2f(230, 80), xScale, yScale);
@@ -60,12 +62,15 @@ public class OptionsMenu {
 		reflectionsButton = new Button(new Vector2f(290, 560), new Vector2f(230, 80), xScale, yScale);
 		parallaxButton = new Button(new Vector2f(290, 460), new Vector2f(230, 80), xScale, yScale);
 
-		slider.setPos(VoxelVariables.radius / 32f);
+		drawDistanceSlider.setPos(VoxelVariables.radius / 32f);
+		fovSlider.setPos(VoxelVariables.FOV / 140f);
 	}
 
 	public void update() {
-		slider.setPos(VoxelVariables.radius / 32f);
-		slider.update();
+		drawDistanceSlider.setPos(VoxelVariables.radius / 32f);
+		drawDistanceSlider.update();
+		fovSlider.setPos(VoxelVariables.FOV / 140f);
+		fovSlider.update();
 	}
 
 	public void render() {
@@ -92,28 +97,45 @@ public class OptionsMenu {
 			fxaaButton.render("FXAA: OFF", VectorsRendering.rgba(255, 100, 100, 255, VectorsRendering.colorA));
 
 		if (VoxelVariables.useMotionBlur)
-			motionBlurButton.render("Motion Blur: ON", VectorsRendering.rgba(100, 255, 100, 255, VectorsRendering.colorA));
+			motionBlurButton.render("Motion Blur: ON",
+					VectorsRendering.rgba(100, 255, 100, 255, VectorsRendering.colorA));
 		else
-			motionBlurButton.render("Motion Blur: OFF", VectorsRendering.rgba(255, 100, 100, 255, VectorsRendering.colorA));
-		
+			motionBlurButton.render("Motion Blur: OFF",
+					VectorsRendering.rgba(255, 100, 100, 255, VectorsRendering.colorA));
+
 		if (VoxelVariables.useReflections)
-			reflectionsButton.render("Reflections: ON", VectorsRendering.rgba(100, 255, 100, 255, VectorsRendering.colorA));
+			reflectionsButton.render("Reflections: ON",
+					VectorsRendering.rgba(100, 255, 100, 255, VectorsRendering.colorA));
 		else
-			reflectionsButton.render("Reflections: OFF", VectorsRendering.rgba(255, 100, 100, 255, VectorsRendering.colorA));
-		
-		if(VoxelVariables.useParallax)
+			reflectionsButton.render("Reflections: OFF",
+					VectorsRendering.rgba(255, 100, 100, 255, VectorsRendering.colorA));
+
+		if (VoxelVariables.useParallax)
 			parallaxButton.render("Parallax: ON", VectorsRendering.rgba(100, 255, 100, 255, VectorsRendering.colorA));
 		else
 			parallaxButton.render("Parallax: OFF", VectorsRendering.rgba(255, 100, 100, 255, VectorsRendering.colorA));
 
 		exitButton.render("Back");
-		VectorsRendering.renderLabel("Draw Distance: " + VoxelVariables.radius, "Roboto-Bold", 970 * xScale, 90 * yScale,
-				315 * xScale, 20 * yScale, 25f * yScale);
-		int r = (int) (slider.getPos() * 32f);
+		VectorsRendering.renderLabel("Draw Distance: " + VoxelVariables.radius, "Roboto-Bold", 970 * xScale,
+				90 * yScale, 315 * xScale, 20 * yScale, 25f * yScale);
+		int r = (int) (drawDistanceSlider.getPos() * 32f);
 		if (r < 2)
 			r = 2;
 		VoxelVariables.radius = r;
-		VectorsRendering.renderSlider(VoxelVariables.radius / 32f, 900 * xScale, 100 * yScale, 315 * xScale, 80 * yScale);
+		VectorsRendering.renderSlider(VoxelVariables.radius / 32f, 900 * xScale, 100 * yScale, 315 * xScale,
+				80 * yScale);
+
+		VectorsRendering.renderLabel("Field of View: " + VoxelVariables.FOV, "Roboto-Bold", 970 * xScale, 190 * yScale,
+				315 * xScale, 20 * yScale, 25f * yScale);
+		VectorsRendering.renderLabel("This requires restart", "Roboto-Bold", 970 * xScale, 165 * yScale, 315 * xScale,
+				20 * yScale, 25f * yScale);
+		int t = (int) (fovSlider.getPos() * 140f);
+		if (t < 20)
+			t = 20;
+		else if (t > 140)
+			t = 140;
+		VoxelVariables.FOV = t;
+		VectorsRendering.renderSlider(VoxelVariables.FOV / 140f, 900 * xScale, 200 * yScale, 315 * xScale, 80 * yScale);
 	}
 
 	public Button getExitButton() {

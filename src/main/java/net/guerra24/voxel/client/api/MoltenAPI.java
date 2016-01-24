@@ -32,7 +32,7 @@ import com.badlogic.ashley.core.Entity;
 import net.guerra24.voxel.client.api.mod.ModStateLoop;
 import net.guerra24.voxel.client.resources.GameResources;
 import net.guerra24.voxel.client.world.block.Block;
-import net.guerra24.voxel.client.world.block.IBlock;
+import net.guerra24.voxel.client.world.block.BlockBase;
 
 public class MoltenAPI {
 
@@ -52,7 +52,7 @@ public class MoltenAPI {
 		gm.getPhysicsEngine().removeEntity(entity);
 	}
 
-	public void registerBlock(IBlock block) {
+	public void registerBlock(BlockBase block) {
 		Block.registerBlock(block);
 	}
 

@@ -27,6 +27,7 @@ package net.guerra24.voxel.client.world.block;
 import java.util.HashMap;
 
 import net.guerra24.voxel.client.world.block.types.BlockAir;
+import net.guerra24.voxel.client.world.block.types.BlockCobblestone;
 import net.guerra24.voxel.client.world.block.types.BlockDimOre;
 import net.guerra24.voxel.client.world.block.types.BlockDirt;
 import net.guerra24.voxel.client.world.block.types.BlockGlass;
@@ -52,23 +53,24 @@ public class Block {
 	/**
 	 * Blocks Data
 	 */
-	public static final HashMap<Byte, IBlock> blockMap = new HashMap<Byte, IBlock>();
+	public static final HashMap<Byte, BlockBase> blockMap = new HashMap<Byte, BlockBase>();
 
-	public static final IBlock Grass = new BlockGrass();
-	public static final IBlock Stone = new BlockStone();
-	public static final IBlock Indes = new BlockIndes();
-	public static final IBlock Sand = new BlockSand();
-	public static final IBlock Dirt = new BlockDirt();
-	public static final IBlock DiamondOre = new BlockDimOre();
-	public static final IBlock GoldOre = new BlockGoldOre();
-	public static final IBlock Water = new BlockWater();
-	public static final IBlock Glass = new BlockGlass();
-	public static final IBlock Air = new BlockAir();
-	public static final IBlock Torch = new BlockTorch();
-	public static final IBlock Portal = new BlockPortal();
-	public static final IBlock Leaves = new BlockLeaves();
-	public static final IBlock Wood = new BlockWood();
-	public static final IBlock Ice = new BlockIce();
+	public static final BlockBase Air = new BlockAir();
+	public static final BlockBase Stone = new BlockStone();
+	public static final BlockBase Grass = new BlockGrass();
+	public static final BlockBase Sand = new BlockSand();
+	public static final BlockBase Dirt = new BlockDirt();
+	public static final BlockBase DiamondOre = new BlockDimOre();
+	public static final BlockBase GoldOre = new BlockGoldOre();
+	public static final BlockBase Water = new BlockWater();
+	public static final BlockBase Glass = new BlockGlass();
+	public static final BlockBase Torch = new BlockTorch();
+	public static final BlockBase Portal = new BlockPortal();
+	public static final BlockBase Leaves = new BlockLeaves();
+	public static final BlockBase Wood = new BlockWood();
+	public static final BlockBase Ice = new BlockIce();
+	public static final BlockBase Indes = new BlockIndes();
+	public static final BlockBase Cobblestone = new BlockCobblestone();
 
 	/**
 	 * Initialize the basic Block
@@ -91,6 +93,7 @@ public class Block {
 		registerBlock(Leaves);
 		registerBlock(Wood);
 		registerBlock(Ice);
+		registerBlock(Cobblestone);
 	}
 
 	/**
@@ -100,9 +103,8 @@ public class Block {
 	 *            Block ID
 	 * @param block
 	 *            Block
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public static void registerBlock(IBlock block) {
+	public static void registerBlock(BlockBase block) {
 		blockMap.put(block.getId(), block);
 	}
 
@@ -112,9 +114,8 @@ public class Block {
 	 * @param id
 	 *            Block ID
 	 * @return Block
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
-	public static IBlock getBlock(byte id) {
+	public static BlockBase getBlock(byte id) {
 		return blockMap.get(id);
 	}
 

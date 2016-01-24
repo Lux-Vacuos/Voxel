@@ -261,8 +261,8 @@ public class Chunk {
 	}
 
 	private void rebuildChunkSection(IWorld world) {
-		tess.begin(BlocksResources.tessellatorTextureAtlas.getTexture(), BlocksResources.normalMap,
-				BlocksResources.heightMap);
+		tess.begin(BlocksResources.getTessellatorTextureAtlas().getTexture(), BlocksResources.getNormalMap(),
+				BlocksResources.getHeightMap());
 		for (int x = 0; x < sizeX; x++) {
 			for (int z = 0; z < sizeZ; z++) {
 				for (int y = 0; y < sizeY; y++) {

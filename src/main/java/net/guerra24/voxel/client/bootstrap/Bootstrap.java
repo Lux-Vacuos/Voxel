@@ -167,8 +167,8 @@ public class Bootstrap {
 				if (gaveFov)
 					throw new IllegalStateException("FOV already given");
 				VoxelVariables.FOV = Integer.parseInt(args[++i]);
-				if (VoxelVariables.FOV <= 20 || VoxelVariables.FOV >= 120)
-					throw new IllegalArgumentException("FOV must be in (20, 120) range");
+				if (VoxelVariables.FOV <= 20 || VoxelVariables.FOV >= 140)
+					throw new IllegalArgumentException("FOV must be in (20, 140) range");
 				gaveFov = true;
 				break;
 			case "-fps":

@@ -30,11 +30,11 @@ import com.badlogic.gdx.math.collision.BoundingBox;
 import net.guerra24.voxel.client.resources.models.WaterTile;
 import net.guerra24.voxel.client.world.block.BlockEntity;
 import net.guerra24.voxel.client.world.block.BlocksResources;
-import net.guerra24.voxel.client.world.block.IBlock;
+import net.guerra24.voxel.client.world.block.BlockBase;
 import net.guerra24.voxel.universal.util.vector.Vector3f;
 import net.guerra24.voxel.universal.util.vector.Vector8f;
 
-public class BlockIce extends IBlock {
+public class BlockIce extends BlockBase {
 
 	@Override
 	public byte getId() {
@@ -58,32 +58,32 @@ public class BlockIce extends IBlock {
 
 	@Override
 	public Vector8f texCoordsUp() {
-		return BlocksResources.tessellatorTextureAtlas.getTextureCoords("Ice");
+		return BlocksResources.getTessellatorTextureAtlas().getTextureCoords("Ice");
 	}
 
 	@Override
 	public Vector8f texCoordsDown() {
-		return BlocksResources.tessellatorTextureAtlas.getTextureCoords("Ice");
+		return BlocksResources.getTessellatorTextureAtlas().getTextureCoords("Ice");
 	}
 
 	@Override
 	public Vector8f texCoordsFront() {
-		return BlocksResources.tessellatorTextureAtlas.getTextureCoords("Ice");
+		return BlocksResources.getTessellatorTextureAtlas().getTextureCoords("Ice");
 	}
 
 	@Override
 	public Vector8f texCoordsBack() {
-		return BlocksResources.tessellatorTextureAtlas.getTextureCoords("Ice");
+		return BlocksResources.getTessellatorTextureAtlas().getTextureCoords("Ice");
 	}
 
 	@Override
 	public Vector8f texCoordsRight() {
-		return BlocksResources.tessellatorTextureAtlas.getTextureCoords("Ice");
+		return BlocksResources.getTessellatorTextureAtlas().getTextureCoords("Ice");
 	}
 
 	@Override
 	public Vector8f texCoordsLeft() {
-		return BlocksResources.tessellatorTextureAtlas.getTextureCoords("Ice");
+		return BlocksResources.getTessellatorTextureAtlas().getTextureCoords("Ice");
 	}
 
 	@Override
