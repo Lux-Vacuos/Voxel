@@ -133,7 +133,6 @@ public class Display extends Window {
 		} catch (IOException e) {
 			Logger.error("Failed to load icons");
 			e.printStackTrace();
-			System.exit(-1);
 		}
 		createCapabilities();
 		super.vg = nvgCreateGL3(NVG_ANTIALIAS | NVG_STENCIL_STROKES | NVG_DEBUG);

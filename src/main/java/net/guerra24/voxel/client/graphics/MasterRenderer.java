@@ -220,25 +220,31 @@ public class MasterRenderer {
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	}
 
-	/**
-	 * Creates the Projection Matrix
-	 * 
-	 */
+	public void update(GameResources gm) {
+		projectionMatrix = createProjectionMatrix(projectionMatrix, gm.getDisplay().getDisplayWidth(),
+				gm.getDisplay().getDisplayHeight(), VoxelVariables.FOV, VoxelVariables.NEAR_PLANE,
+				VoxelVariables.FAR_PLANE);
+	}
+
 	public static Matrix4f createProjectionMatrix(int width, int height, float fov, float nearPlane, float farPlane) {
+		return createProjectionMatrix(new Matrix4f(), width, height, fov, nearPlane, farPlane);
+	}
+
+	public static Matrix4f createProjectionMatrix(Matrix4f proj, int width, int height, float fov, float nearPlane,
+			float farPlane) {
 		float aspectRatio = (float) width / (float) height;
-		float y_scale = (float) ((1f / Math.tan(Math.toRadians(fov / 2f))) * aspectRatio);
+		float y_scale = (float) ((1f / Math.tan(Math.toRadians(fov / 2f))));
 		float x_scale = y_scale / aspectRatio;
 		float frustrum_length = farPlane - nearPlane;
 
-		Matrix4f projectionMatrix = new Matrix4f();
-		projectionMatrix.setIdentity();
-		projectionMatrix.m00 = x_scale;
-		projectionMatrix.m11 = y_scale;
-		projectionMatrix.m22 = -((farPlane + nearPlane) / frustrum_length);
-		projectionMatrix.m23 = -1;
-		projectionMatrix.m32 = -((2 * nearPlane * farPlane) / frustrum_length);
-		projectionMatrix.m33 = 0;
-		return projectionMatrix;
+		proj.setIdentity();
+		proj.m00 = x_scale;
+		proj.m11 = y_scale;
+		proj.m22 = -((farPlane + nearPlane) / frustrum_length);
+		proj.m23 = -1;
+		proj.m32 = -((2 * nearPlane * farPlane) / frustrum_length);
+		proj.m33 = 0;
+		return proj;
 	}
 
 	/**

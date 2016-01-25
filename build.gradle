@@ -61,6 +61,10 @@ task generateJavaDoc(type: Javadoc) {
 	failOnError = false
 }
 
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.10'
+}
+
 sourceSets {
     main {
         java.srcDir("${projectDir}/src/main/java/")

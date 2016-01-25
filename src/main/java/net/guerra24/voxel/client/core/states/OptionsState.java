@@ -81,6 +81,7 @@ public class OptionsState implements State {
 			}
 		}
 		gm.getMenuSystem().optionsMenu.update();
+		gm.getRenderer().update(gm);
 	}
 
 	@Override
@@ -114,7 +115,7 @@ public class OptionsState implements State {
 
 			gm.getRenderer().prepare();
 			gm.getDeferredShadingRenderer().render(gm);
-			ParticleMaster.getInstance().render(gm.getCamera());
+			ParticleMaster.getInstance().render(gm.getCamera(), gm.getRenderer().getProjectionMatrix());
 		} else {
 			gm.getRenderer().prepare();
 		}

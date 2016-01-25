@@ -79,9 +79,10 @@ public class ParticleRenderer {
 		shader.stop();
 	}
 
-	public void render(Map<ParticleTexture, List<Particle>> particles, Camera camera) {
+	public void render(Map<ParticleTexture, List<Particle>> particles, Camera camera, Matrix4f projectionMatrix) {
 		Matrix4f viewMatrix = Maths.createViewMatrix(camera);
 		prepare();
+		shader.loadProjectionMatrix(projectionMatrix);
 		for (ParticleTexture texture : particles.keySet()) {
 			bindTexture(texture);
 			List<Particle> particleList = particles.get(texture);

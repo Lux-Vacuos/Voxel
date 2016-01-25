@@ -76,8 +76,8 @@ public class ParticleMaster {
 		}
 	}
 
-	public void render(Camera camera) {
-		renderer.render(particles, camera);
+	public void render(Camera camera, Matrix4f proj) {
+		renderer.render(particles, camera, proj);
 	}
 
 	public void cleanUp() {

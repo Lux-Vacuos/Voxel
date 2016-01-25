@@ -111,7 +111,7 @@ public class InPauseState implements State {
 
 		gm.getRenderer().prepare();
 		gm.getDeferredShadingRenderer().render(gm);
-		ParticleMaster.getInstance().render(gm.getCamera());
+		ParticleMaster.getInstance().render(gm.getCamera(), gm.getRenderer().getProjectionMatrix());
 
 		gm.getDisplay().beingNVGFrame();
 		gm.getMenuSystem().pauseMenu.render();

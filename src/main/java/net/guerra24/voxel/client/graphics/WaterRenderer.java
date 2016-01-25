@@ -140,6 +140,7 @@ public class WaterRenderer {
 	 */
 	private void prepareRender(GameResources gm) {
 		shader.start();
+		shader.loadProjectionMatrix(gm.getRenderer().getProjectionMatrix());
 		shader.loadViewMatrix(gm.getCamera());
 		shader.loadMoveFactor(moveFactor);
 		shader.loadLightMatrix(gm);

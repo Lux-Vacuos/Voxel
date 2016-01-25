@@ -127,8 +127,6 @@ public class OptionsMenu {
 
 		VectorsRendering.renderLabel("Field of View: " + VoxelVariables.FOV, "Roboto-Bold", 970 * xScale, 190 * yScale,
 				315 * xScale, 20 * yScale, 25f * yScale);
-		VectorsRendering.renderLabel("This requires restart", "Roboto-Bold", 970 * xScale, 165 * yScale, 315 * xScale,
-				20 * yScale, 25f * yScale);
 		int t = (int) (fovSlider.getPos() * 140f);
 		if (t < 20)
 			t = 20;

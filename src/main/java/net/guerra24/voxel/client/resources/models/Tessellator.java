@@ -237,6 +237,7 @@ public class Tessellator {
 			updated = false;
 		}
 		shader.start();
+		shader.loadProjectionMatrix(gm.getRenderer().getProjectionMatrix());
 		shader.loadviewMatrix(gm.getCamera());
 		shader.loadLightMatrix(gm);
 		shader.loadSettings(VoxelVariables.useShadows, VoxelVariables.useParallax);
