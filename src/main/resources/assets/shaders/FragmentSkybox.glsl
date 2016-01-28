@@ -37,7 +37,6 @@ uniform vec3 fogColour;
 const float lowerLimit = -20.0;
 const float upperLimit =  5.0;
 
-
 void main(void){
 	vec4 texture1 = texture(cubeMap, textureCoords);
 	vec4 texture2 = texture(cubeMap2, textureCoords);
@@ -45,7 +44,7 @@ void main(void){
     
     float factor = (textureCoords.y - lowerLimit) / (upperLimit - lowerLimit);
     factor = clamp(factor, 0.0, 1.0);
-    out_Color[0] = mix(vec4(fogColour,1.0), finalColour, factor);
+    out_Color[0] = finalColour;
     out_Color[1] = vec4(pass_position.xyz,0);
     out_Color[2] = vec4(0.0);
     out_Color[3] = vec4(0,0,1,0);

@@ -65,6 +65,7 @@ public class PlayerCamera extends Camera {
 	private final int maxLookDown = -90;
 	private Vector2f center;
 	private BlockGui air;
+	private int clickTime;
 
 	public PlayerCamera(Matrix4f proj, Display display) {
 		super(proj);
@@ -171,12 +172,17 @@ public class PlayerCamera extends Camera {
 		}
 
 		BlockGui block = gm.getMenuSystem().gameSP.getBlock();
+		if (clickTime > 0)
+			clickTime--;
 
-		if (isButtonDown(0)) {
-			setBlock(gm.getDisplay().getDisplayWidth(), gm.getDisplay().getDisplayHeight(), air, world, gm);
-		} else if (isButtonDown(1)) {
-			setBlock(gm.getDisplay().getDisplayWidth(), gm.getDisplay().getDisplayHeight(), block, world, gm);
-		}
+		if (clickTime == 0)
+			if (isButtonDown(0)) {
+				clickTime = 10;
+				setBlock(gm.getDisplay().getDisplayWidth(), gm.getDisplay().getDisplayHeight(), air, world, gm);
+			} else if (isButtonDown(1)) {
+				clickTime = 10;
+				setBlock(gm.getDisplay().getDisplayWidth(), gm.getDisplay().getDisplayHeight(), block, world, gm);
+			}
 
 		updateDebug(world);
 		updateRay(gm.getRenderer().getProjectionMatrix(), gm.getDisplay().getDisplayWidth(),

@@ -37,6 +37,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.utils.ImmutableArray;
 
 import net.guerra24.voxel.client.graphics.opengl.Display;
+import net.guerra24.voxel.client.graphics.opengl.GLUtil;
 import net.guerra24.voxel.client.graphics.shaders.EntityBasicShader;
 import net.guerra24.voxel.client.resources.GameResources;
 import net.guerra24.voxel.client.resources.models.TexturedModel;
@@ -54,6 +55,7 @@ public class MasterShadowRenderer {
 	private FrameBuffer fbo;
 	private Matrix4f projectionMatrix;
 	private Display display;
+	private int textureSize = 4096;
 
 	/**
 	 * Constructor, Initializes the OpenGL code, creates the projection matrix,
@@ -67,11 +69,13 @@ public class MasterShadowRenderer {
 		shader = new EntityBasicShader();
 		projectionMatrix = Maths.orthographic(-80, 80, -80, 80, -100, 100);
 		renderer = new ShadowRenderer(shader, projectionMatrix);
-		fbo = new FrameBuffer(true, 4096, 4096, display);
+		if (textureSize > GLUtil.getTextureMaxSize())
+			textureSize = GLUtil.getTextureMaxSize();
+		fbo = new FrameBuffer(true, textureSize, textureSize, display);
 	}
 
 	public void being() {
-		fbo.begin(4096, 4096);
+		fbo.begin(textureSize, textureSize);
 	}
 
 	public void end() {

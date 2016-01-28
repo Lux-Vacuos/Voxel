@@ -182,6 +182,7 @@ public class Display extends Window {
 		glfwSwapBuffers(super.window);
 		glfwPollEvents();
 		Mouse.poll();
+		displayUtils.checkErrors();
 		displayUtils.sync(fps);
 	}
 

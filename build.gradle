@@ -11,8 +11,6 @@ if (System.getProperty("os.name").toLowerCase().contains("mac os x")) {
 
 jar {
 	include("*net/**")
-	include("*org/**")
-	include("*org/**")
 	include("*assets/**") 
 	include("log4j.properties")
 	

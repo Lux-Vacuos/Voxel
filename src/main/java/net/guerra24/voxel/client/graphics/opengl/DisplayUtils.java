@@ -24,15 +24,7 @@
 
 package net.guerra24.voxel.client.graphics.opengl;
 
-import static org.lwjgl.opengl.GL11.GL_INVALID_ENUM;
-import static org.lwjgl.opengl.GL11.GL_INVALID_OPERATION;
-import static org.lwjgl.opengl.GL11.GL_INVALID_VALUE;
-import static org.lwjgl.opengl.GL11.GL_NO_ERROR;
-import static org.lwjgl.opengl.GL11.GL_OUT_OF_MEMORY;
-import static org.lwjgl.opengl.GL11.GL_STACK_OVERFLOW;
-import static org.lwjgl.opengl.GL11.GL_STACK_UNDERFLOW;
-import static org.lwjgl.opengl.GL11.glGetError;
-import static org.lwjgl.opengl.GL30.GL_INVALID_FRAMEBUFFER_OPERATION;
+import static org.lwjgl.opengl.GLUtil.*;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -54,24 +46,7 @@ public class DisplayUtils {
 	}
 
 	public void checkErrors() {
-		switch (glGetError()) {
-		case GL_NO_ERROR:
-			break;
-		case GL_INVALID_ENUM:
-			throw new RuntimeException("OpenGL: Invalid Enum");
-		case GL_INVALID_VALUE:
-			throw new RuntimeException("OpenGL: Invalid Value");
-		case GL_INVALID_OPERATION:
-			throw new RuntimeException("OpenGL: Invalid Operation");
-		case GL_INVALID_FRAMEBUFFER_OPERATION:
-			throw new RuntimeException("OpenGL: Invalid FrameBuffer Operation");
-		case GL_OUT_OF_MEMORY:
-			throw new RuntimeException("OpenGL: Out of Memory");
-		case GL_STACK_UNDERFLOW:
-			throw new RuntimeException("OpenGL: Underflow");
-		case GL_STACK_OVERFLOW:
-			throw new RuntimeException("OpenGL: Overflow");
-		}
+		checkGLError();
 	}
 
 	public void sync(int fps) {
