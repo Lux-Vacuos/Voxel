@@ -330,7 +330,7 @@ public class VectorsRendering {
 			NVGColor color, boolean mouseInside) {
 		long vg = display.getVg();
 		NVGPaint bg = paintA;
-		float cornerRadius = 4.0f;
+		float cornerRadius = 10.0f;
 		float tw, iw = 0;
 
 		if (mouseInside) {

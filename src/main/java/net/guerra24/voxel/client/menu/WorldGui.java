@@ -24,32 +24,37 @@
 
 package net.guerra24.voxel.client.menu;
 
-public class BlockGui {
+public class WorldGui {
 
-	private byte id;
-	private int tex;
-	private int total;
+	private String name;
+	private String toRender;
+	private long size;
+	private boolean selected;
 
-	public BlockGui(byte id, int tex, int total) {
-		this.id = id;
-		this.tex = tex;
-		this.total = total;
+	public WorldGui(String name, String toRender, long size, boolean selected) {
+		this.name = name;
+		this.toRender = toRender;
+		this.size = size;
+		this.selected = selected;
 	}
 
-	public byte getId() {
-		return id;
+	public long getSize() {
+		return size;
 	}
 
-	public int getTex() {
-		return tex;
+	public void setSelected(boolean selected) {
+		this.selected = selected;
 	}
 
-	public int getTotal() {
-		return total;
-	}
-	
-	public void setTotal(int total) {
-		this.total = total;
+	public boolean isSelected() {
+		return selected;
 	}
 
+	public String getName() {
+		return name;
+	}
+
+	public String getToRender() {
+		return toRender;
+	}
 }

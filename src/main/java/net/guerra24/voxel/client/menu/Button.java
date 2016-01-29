@@ -53,11 +53,15 @@ public class Button {
 	}
 
 	public void render(String text) {
-		this.render(text, VectorsRendering.rgba(255, 255, 255, 255, VectorsRendering.colorA));
+		this.render(text, "Roboto-Regular", VectorsRendering.rgba(255, 255, 255, 255, VectorsRendering.colorA));
 	}
 
 	public void render(String text, NVGColor color) {
-		VectorsRendering.renderButton(null, text, "Roboto-Bold", renderPos.x * xScale,
+		this.render(text, "Roboto-Regular", color);
+	}
+
+	public void render(String text, String font, NVGColor color) {
+		VectorsRendering.renderButton(null, text, font, renderPos.x * xScale,
 				(720f - renderPos.y - renderSize.y) * yScale, renderSize.x * xScale, renderSize.y * yScale, color,
 				this.insideButton());
 	}

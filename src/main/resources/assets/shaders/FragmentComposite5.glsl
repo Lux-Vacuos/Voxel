@@ -131,11 +131,10 @@ void main(void){
 		}
 	}
 	if(data.b != 1) {
-		//FOG
-		//float distance = length(cameraPosition-position.xyz);
-		//float visibility = exp(-pow((distance*density),gradient));
-		//visibility = clamp(visibility,0.0,1.1);
-    	//image.rgb = mix(skyColor.rgb, image.rgb, visibility);
+		float distance = length(cameraPosition-position.xyz);
+		float visibility = exp(-pow((distance*density),gradient));
+		visibility = clamp(visibility,0.4,1.1);
+    	image.rgb = mix(skyColor.rgb, image.rgb, visibility);
 	}
     
     if(camUnderWater == 1){

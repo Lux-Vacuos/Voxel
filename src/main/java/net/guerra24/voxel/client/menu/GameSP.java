@@ -52,6 +52,7 @@ public class GameSP {
 		blocks = new BlockGui[10];
 		blocks[0] = new BlockGui(Block.Stone.getId(), gm.getLoader().loadNVGTexture("Stone"), 100);
 		blocks[1] = new BlockGui(Block.Dirt.getId(), gm.getLoader().loadNVGTexture("Dirt"), 100);
+		blocks[2] = new BlockGui(Block.Ice.getId(), gm.getLoader().loadNVGTexture("Ice"), 100);
 		blocks[3] = new BlockGui(Block.Glass.getId(), gm.getLoader().loadNVGTexture("Glass"), 100);
 		blocks[4] = new BlockGui(Block.Torch.getId(), gm.getLoader().loadNVGTexture("Torch"), 100);
 		blocks[5] = new BlockGui(Block.Water.getId(), gm.getLoader().loadNVGTexture("Water"), 100);

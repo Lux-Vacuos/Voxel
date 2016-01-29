@@ -36,8 +36,11 @@ public class WorldSelectionState implements State {
 	@Override
 	public void update(Voxel voxel, GlobalStates states, float delta) {
 		GameResources gm = voxel.getGameResources();
+		gm.getMenuSystem().worldSelectionMenu.update();
 		if (gm.getMenuSystem().worldSelectionMenu.getExitButton().pressed())
 			gm.getGlobalStates().setState(GameState.MAINMENU);
+		else if(gm.getMenuSystem().worldSelectionMenu.getPlayButton().pressed())
+			gm.getGlobalStates().setState(GameState.LOADING_WORLD);
 	}
 
 	@Override

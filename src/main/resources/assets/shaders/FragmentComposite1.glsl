@@ -92,7 +92,7 @@ void main(void){
     			float cosAngle = abs(dot(normal, cameraToWorldNorm));
     			float fact = 1 - cosAngle;
     			//float factt = 1 - cosAngle;
-    			fact = min(1, 1.38 - fact*fact);
+    			fact = min(1, 1.3333 - fact*fact);
     			//factt = min(1, 1.38 - factt*factt);
     			vec3 newPos;
     			vec4 newScreen;

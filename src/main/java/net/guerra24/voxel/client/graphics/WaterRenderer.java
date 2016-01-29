@@ -34,9 +34,7 @@ import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
 import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 
-import java.util.List;
 import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 import net.guerra24.voxel.client.core.VoxelVariables;
 import net.guerra24.voxel.client.graphics.shaders.WaterBasicShader;
@@ -64,8 +62,6 @@ public class WaterRenderer {
 	private WaterBasicShader basicShader;
 	private float moveFactor = 0;
 
-	private Queue<WaterTile> tempQueue;
-
 	/**
 	 * Constructor, Initializes the Water Shaders, Textures and VAOs
 	 * 
@@ -87,7 +83,6 @@ public class WaterRenderer {
 		basicShader.loadProjectionMatrix(projectionMatrix);
 		basicShader.stop();
 		setUpVAO(gm.getLoader());
-		tempQueue = new ConcurrentLinkedQueue<>();
 	}
 
 	/**
@@ -98,16 +93,14 @@ public class WaterRenderer {
 	 * @param camera
 	 *            A Camera
 	 */
-	public void render(List<WaterTile> waters, GameResources gm) {
+	public void render(Queue<WaterTile> waters, GameResources gm) {
 		prepareRender(gm);
-		tempQueue.addAll(waters);
-		for (WaterTile tile : tempQueue) {
+		for (WaterTile tile : waters) {
 			Matrix4f modelMatrix = Maths.createTransformationMatrix(
 					new Vector3f(tile.getX(), tile.getHeight(), tile.getZ()), 0, 0, 0, WaterTile.TILE_SIZE);
 			shader.loadModelMatrix(modelMatrix);
 			glDrawArrays(GL_TRIANGLES, 0, quad.getVertexCount());
 		}
-		tempQueue.clear();
 		unbind();
 	}
 
@@ -119,16 +112,14 @@ public class WaterRenderer {
 	 * @param camera
 	 *            A Camera
 	 */
-	public void renderOcclusion(List<WaterTile> waters, GameResources gm) {
+	public void renderOcclusion(Queue<WaterTile> waters, GameResources gm) {
 		prepareRenderOcclusion(gm);
-		tempQueue.addAll(waters);
-		for (WaterTile tile : tempQueue) {
+		for (WaterTile tile : waters) {
 			Matrix4f modelMatrix = Maths.createTransformationMatrix(
 					new Vector3f(tile.getX(), tile.getHeight(), tile.getZ()), 0, 0, 0, WaterTile.TILE_SIZE);
 			basicShader.loadModelMatrix(modelMatrix);
 			glDrawArrays(GL_TRIANGLES, 0, quad.getVertexCount());
 		}
-		tempQueue.clear();
 		unbindOcclusion();
 	}
 
