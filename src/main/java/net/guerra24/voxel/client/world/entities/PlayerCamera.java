@@ -27,7 +27,6 @@ package net.guerra24.voxel.client.world.entities;
 import static net.guerra24.voxel.client.input.Keyboard.KEY_A;
 import static net.guerra24.voxel.client.input.Keyboard.KEY_D;
 import static net.guerra24.voxel.client.input.Keyboard.KEY_I;
-import static net.guerra24.voxel.client.input.Keyboard.KEY_LCONTROL;
 import static net.guerra24.voxel.client.input.Keyboard.KEY_LSHIFT;
 import static net.guerra24.voxel.client.input.Keyboard.KEY_O;
 import static net.guerra24.voxel.client.input.Keyboard.KEY_S;
@@ -58,7 +57,7 @@ import net.guerra24.voxel.universal.util.vector.Vector4f;
 public class PlayerCamera extends Camera {
 
 	private float speed;
-	private float multiplierMouse = 24;
+	private float multiplierMouse = 14;
 	private boolean underWater = false;
 	private int mouseSpeed = 2;
 	private final int maxLookUp = 90;
@@ -149,11 +148,6 @@ public class PlayerCamera extends Camera {
 			jump = false;
 		if (isKeyDown(KEY_LSHIFT)) {
 			speed = 0.5f;
-		} else {
-			speed = 3;
-		}
-		if (isKeyDown(KEY_LCONTROL)) {
-			speed = 10;
 		} else {
 			speed = 3;
 		}

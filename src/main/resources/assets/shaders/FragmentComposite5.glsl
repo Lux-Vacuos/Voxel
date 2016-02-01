@@ -109,7 +109,7 @@ void main(void){
 	if(useVolumetricLight == 1){
 		if (lightDirDOTviewDir>0.0){
 			float exposure	= 0.1/NUM_SAMPLES;
-			float decay		= 1.02;
+			float decay		= 1.0;
 			float density	= 1;
 			float weight	= 6.0;
 			float illuminationDecay = 1.0;

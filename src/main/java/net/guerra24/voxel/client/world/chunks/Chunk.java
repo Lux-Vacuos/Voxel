@@ -75,7 +75,6 @@ public class Chunk {
 	private transient float distance;
 	public transient boolean needsRebuild = true, updated = false, updating = false, empty = true, visible = false,
 			creating = false, decorating = false;
-	private transient int time;
 	public boolean created = false, decorated = false, cavesGenerated = false;
 	public int version = 1;
 
@@ -118,7 +117,6 @@ public class Chunk {
 		load(gm);
 		blocks = new byte[sizeX][sizeY][sizeZ];
 		lightMap = new byte[sizeX][sizeY][sizeZ];
-		time = Maths.randInt(0, 32);
 	}
 
 	/**
@@ -158,12 +156,6 @@ public class Chunk {
 	}
 
 	public void update(IWorld world, WorldService service, Camera camera) {
-		time++;
-		if (time > 64) {
-			time = 0;
-			needsRebuild = true;
-		}
-
 		distance = Vector3f.sub(camera.getPosition(), new Vector3f(posX, posY, posZ), null).lengthSquared();
 
 		if (!created && !creating) {

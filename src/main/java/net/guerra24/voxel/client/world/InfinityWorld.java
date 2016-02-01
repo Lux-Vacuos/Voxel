@@ -29,9 +29,7 @@ import static org.lwjgl.opengl.GL15.glGetQueryObjectui;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -353,7 +351,7 @@ public class InfinityWorld implements IWorld {
 			Output output = new Output(new FileOutputStream(VoxelVariables.worldPath + name + "/world.dat"));
 			gm.getKryo().writeObject(output, seed);
 			output.close();
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
@@ -364,7 +362,8 @@ public class InfinityWorld implements IWorld {
 			Input input = new Input(new FileInputStream(VoxelVariables.worldPath + name + "/world.dat"));
 			seed = gm.getKryo().readObject(input, Random.class);
 			input.close();
-		} catch (FileNotFoundException e) {
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -375,7 +374,7 @@ public class InfinityWorld implements IWorld {
 					+ "/chunk_" + chunkDim + "_" + cx + "_" + cy + "_" + cz + ".dat"));
 			gm.getKryo().writeObject(output, getChunk(chunkDim, cx, cy, cz));
 			output.close();
-		}  catch (Exception e) {
+		} catch (Exception e) {
 			Logger.warn("Error Saving Chunk " + chunkDim + " " + cx + " " + cy + " " + cz);
 			e.printStackTrace();
 		}
@@ -586,6 +585,7 @@ public class InfinityWorld implements IWorld {
 		}
 		worldService.es.shutdown();
 		chunks.clear();
+		saveWorld(gm);
 	}
 
 	@Override

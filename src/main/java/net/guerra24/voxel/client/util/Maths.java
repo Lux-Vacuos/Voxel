@@ -86,7 +86,7 @@ public class Maths {
 	}
 
 	/**
-	 * Create a View Matrix
+	 * Create a View Matrix applying position and rotation
 	 * 
 	 * @param camera
 	 *            Camera
@@ -95,12 +95,46 @@ public class Maths {
 	public static Matrix4f createViewMatrix(Camera camera) {
 		Matrix4f viewMatrix = new Matrix4f();
 		viewMatrix.setIdentity();
-		Matrix4f.rotate((float) Math.toRadians(camera.getPitch()), new Vector3f(1, 0, 0), viewMatrix, viewMatrix);
-		Matrix4f.rotate((float) Math.toRadians(camera.getYaw()), new Vector3f(0, 1, 0), viewMatrix, viewMatrix);
-		Matrix4f.rotate((float) Math.toRadians(camera.getRoll()), new Vector3f(0, 0, 1), viewMatrix, viewMatrix);
-		Vector3f cameraPost = camera.getPosition();
+		createViewMatrixRot(camera.getPitch(), camera.getYaw(), camera.getRoll(), viewMatrix);
+		createViewMatrixPos(camera.getPosition(), viewMatrix);
+		return viewMatrix;
+	}
+
+	/**
+	 * Create a View Matrix applying position
+	 * 
+	 * @param camera
+	 *            Camera
+	 * @param viewMatrix
+	 *            View Matrix Pass an already created matrix or null for
+	 *            creating a new one
+	 * @return The composed matrix
+	 */
+	public static Matrix4f createViewMatrixPos(Vector3f pos, Matrix4f viewMatrix) {
+		if (viewMatrix == null)
+			viewMatrix = new Matrix4f();
+		Vector3f cameraPost = pos;
 		Vector3f negativeCameraPos = new Vector3f(-cameraPost.x, -cameraPost.y, -cameraPost.z);
 		Matrix4f.translate(negativeCameraPos, viewMatrix, viewMatrix);
+		return viewMatrix;
+	}
+
+	/**
+	 * Create a View Matrix applying rotation
+	 * 
+	 * @param camera
+	 *            Camera
+	 * @param viewMatrix
+	 *            View Matrix Pass an already created matrix or null for
+	 *            creating a new one
+	 * @return The composed matrix
+	 */
+	public static Matrix4f createViewMatrixRot(float pitch, float yaw, float roll, Matrix4f viewMatrix) {
+		if (viewMatrix == null)
+			viewMatrix = new Matrix4f();
+		Matrix4f.rotate((float) Math.toRadians(pitch), new Vector3f(1, 0, 0), viewMatrix, viewMatrix);
+		Matrix4f.rotate((float) Math.toRadians(yaw), new Vector3f(0, 1, 0), viewMatrix, viewMatrix);
+		Matrix4f.rotate((float) Math.toRadians(roll), new Vector3f(0, 0, 1), viewMatrix, viewMatrix);
 		return viewMatrix;
 	}
 
@@ -128,10 +162,6 @@ public class Maths {
 		matrix.m33 = 1.0f;
 
 		return matrix;
-	}
-
-	public static Matrix4f invert(Matrix4f viewMatrix) {
-		return Matrix4f.rotate(180, new Vector3f(1, 0, 0), viewMatrix, null);
 	}
 
 	/**

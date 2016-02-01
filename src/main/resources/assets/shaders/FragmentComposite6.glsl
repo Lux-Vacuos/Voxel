@@ -51,6 +51,16 @@ void main(void){
 	vec4 image = vec4(0.0);
 	vec4 data = texture(gData0, texcoord);
     if(data.b == 1){
+    	vec2 midpoint = sunPositionInScreen.xy;
+		float radius = min(resolution.x, resolution.y) * 0.1;
+		float dist = length(gl_FragCoord.xy - midpoint);
+		float circle = 1 - smoothstep(radius-1.0, radius+1.0, dist);
+		image.rgb = vec3(circle,circle,circle);
+		if(circle > 0.5)
+			image.a = 1;
+		
+	// OLD CUBE SUN GENERATION
+    /* 
     	if(gl_FragCoord.x <= sunPositionInScreen.x + 60 && gl_FragCoord.x >= sunPositionInScreen.x - 60 && gl_FragCoord.y <= sunPositionInScreen.y + 60 && gl_FragCoord.y >= sunPositionInScreen.y - 60){
     		image.rgb = mix(image.rgb,vec3(1, 0.870588, 0.678431),0.5);
 	    	image.a = 0.2;
@@ -67,6 +77,7 @@ void main(void){
     		image.rgb = vec3(1,1,1);
     		image.a = 1;
     	}
+    	*/
     }
     out_Color = image;
 

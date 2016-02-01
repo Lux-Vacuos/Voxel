@@ -1,6 +1,13 @@
 package net.guerra24.voxel.universal.util.vector;
 
-public class Vector8f {
+import java.io.Serializable;
+import java.nio.FloatBuffer;
+
+/**
+ * @author Guerra24 <pablo230699@hotmail.com>
+ */
+public class Vector8f extends Vector implements Serializable {
+	private static final long serialVersionUID = 1L;
 	private float x, y, z, w, i, j, k, l;
 
 	public Vector8f(float x, float y, float z, float w, float i, float j, float k, float l) {
@@ -76,6 +83,31 @@ public class Vector8f {
 
 	public void setL(float l) {
 		this.l = l;
+	}
+
+	@Override
+	public float lengthSquared() {
+		return x * x + y * y + z * z + w * w + i * i + j * j + k * k + l * l;
+	}
+
+	@Override
+	public Vector load(FloatBuffer buf) {
+		return null;
+	}
+
+	@Override
+	public Vector negate() {
+		return null;
+	}
+
+	@Override
+	public Vector store(FloatBuffer buf) {
+		return null;
+	}
+
+	@Override
+	public Vector scale(float scale) {
+		return null;
 	}
 
 }

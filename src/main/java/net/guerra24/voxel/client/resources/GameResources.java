@@ -195,13 +195,13 @@ public class GameResources {
 		sun_Camera.setPitch(sunRotation.y);
 		sun_Camera.setRoll(sunRotation.z);
 		((SunCamera) sun_Camera).updateShadowRay(this, false);
-		lightPos = new Vector3f(1000 * sun_Camera.getRay().direction.x, 1000 * sun_Camera.getRay().direction.y,
-				1000 * sun_Camera.getRay().direction.z);
+		lightPos = new Vector3f(sun_Camera.getRay().direction.x * 1000, sun_Camera.getRay().direction.y * 1000,
+				sun_Camera.getRay().direction.z * 1000);
 		Vector3f.add(sun_Camera.getPosition(), lightPos, lightPos);
 
 		((SunCamera) sun_Camera).updateShadowRay(this, true);
-		invertedLightPosition = new Vector3f(1000 * sun_Camera.getRay().direction.x,
-				1000 * sun_Camera.getRay().direction.y, 1000 * sun_Camera.getRay().direction.z);
+		invertedLightPosition = new Vector3f(sun_Camera.getRay().direction.x * 1000,
+				sun_Camera.getRay().direction.y * 1000, sun_Camera.getRay().direction.z * 1000);
 		Vector3f.add(sun_Camera.getPosition(), invertedLightPosition, invertedLightPosition);
 	}
 

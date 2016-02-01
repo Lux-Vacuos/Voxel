@@ -42,7 +42,9 @@ public class SunCamera extends Camera {
 	public void updateShadowRay(GameResources gm, boolean inverted) {
 		if (inverted)
 			ray = new Ray(gm.getMasterShadowRenderer().getProjectionMatrix(),
-					Maths.invert(Maths.createViewMatrix(this)), center, 4096, 4096);
+					Maths.createViewMatrixPos(positionComponent.position,
+							Maths.createViewMatrixRot(pitch + 180, yaw, roll, null)),
+					center, 4096, 4096);
 		else
 			ray = new Ray(gm.getMasterShadowRenderer().getProjectionMatrix(), Maths.createViewMatrix(this), center,
 					4096, 4096);
