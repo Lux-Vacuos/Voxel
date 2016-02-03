@@ -35,6 +35,7 @@ out vec4 out_Color;
 
 uniform int camUnderWater;
 uniform float camUnderWaterOffset;
+uniform float time;
 uniform vec2 resolution;
 uniform vec2 sunPositionInScreen;
 uniform vec3 cameraPosition;
@@ -72,6 +73,7 @@ const float gradient = 2.0;
 /*------------------COMPOSITE 5 CODE----------------------*/
 /*--------------------------------------------------------*/
 
+
 void main(void){
 	vec2 texcoord = textureCoords;
 	if(camUnderWater == 1){
@@ -96,7 +98,7 @@ void main(void){
     	float b = ((max(dot(normal.xyz,lightDir),-1.0)) - data.a);
     	if(b <= data1.a)
     		b = data1.a;
-    	b = clamp(b,0.04,1.0);
+    	b = clamp(b,0.02,1.0);
     	image = b * image;
     	if(data.r == 1)
     		if(data.a <= 0){

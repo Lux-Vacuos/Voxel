@@ -31,9 +31,10 @@ out vec3 pass_position;
 
 uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;
+uniform mat4 transformationMatrix;
 
 void main(void){
-	vec4 worldPosition = vec4(position, 1.0);
+	vec4 worldPosition = transformationMatrix * vec4(position, 1.0);
 	gl_Position = projectionMatrix * viewMatrix * worldPosition; 
 	textureCoords = position;
 	pass_position = worldPosition.xyz;

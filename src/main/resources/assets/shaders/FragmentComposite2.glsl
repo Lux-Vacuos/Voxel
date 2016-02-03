@@ -53,7 +53,7 @@ const float gamma = 1.2;
 void main(void){
 	vec2 texcoord = textureCoords;
 	vec4 image0 = vec4(0.0);
-	vec2 tex_offset = 1.0 / (resolution/4);
+	vec2 tex_offset = 1.0 / (resolution / 2);
     vec3 result = texture(composite0, texcoord).rgb * weight[0];
     
     for(int i = 1; i < 5; ++i) {

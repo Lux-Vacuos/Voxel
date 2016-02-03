@@ -49,15 +49,15 @@ public class VoxelVariables {
 	public static final String apiVersion = "0.0.6";
 	public static final int apiVersionNum = 000006;
 	public static final String state = "ALPHA";
-	public static final int build = 166;
+	public static final int build = 167;
 	public static int FOV = 90;
 	public static int WIDTH = 1280;
 	public static int HEIGHT = 720;
 	public static final float NEAR_PLANE = 0.1f;
 	public static final float FAR_PLANE = 1000f;
-	public static float RED = 0.375f;
-	public static float GREEN = 0.555f;
-	public static float BLUE = 0.655f;
+	public static float RED = 0.52f;
+	public static float GREEN = 0.8f;
+	public static float BLUE = 0.92f;
 	public static boolean runningOnMac = false;
 	public static boolean autostart = false;
 	public static boolean christmas = false;
@@ -96,8 +96,6 @@ public class VoxelVariables {
 	 * Graphics Settings
 	 */
 	public static final float WAVE_SPEED = 4f;
-	public static final float SIZE = 500f;
-	public static final float ROTATE_SPEED = 0.02f;
 	/**
 	 * Shader Files
 	 */

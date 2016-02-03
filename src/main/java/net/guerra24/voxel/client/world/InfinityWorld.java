@@ -106,7 +106,7 @@ public class InfinityWorld implements IWorld {
 		particleSystem.setScaleError(0.2f);
 		particleSystem.setSpeedError(0.2f);
 		seedi = seed.nextInt();
-		noise = new SimplexNoise(256, 0.3f, seedi);
+		noise = new SimplexNoise(256, 0.15f, seedi);
 		lightNodes = new LinkedList<>();
 		chunks = new HashMap<ChunkKey, Chunk>();
 		chunkGenerator = new ChunkGenerator();

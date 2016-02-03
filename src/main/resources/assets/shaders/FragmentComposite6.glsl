@@ -56,8 +56,7 @@ void main(void){
 		float dist = length(gl_FragCoord.xy - midpoint);
 		float circle = 1 - smoothstep(radius-1.0, radius+1.0, dist);
 		image.rgb = vec3(circle,circle,circle);
-		if(circle > 0.5)
-			image.a = 1;
+		image.a = circle;
 		
 	// OLD CUBE SUN GENERATION
     /* 

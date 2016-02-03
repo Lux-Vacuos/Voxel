@@ -41,12 +41,10 @@ public class SkyboxShader extends ShaderProgram {
 	 * Skybox Shader Data
 	 */
 	private int loc_projectionMatrix;
+	private int loc_transformationMatrix;
 	private int loc_viewMatrix;
+	private int loc_time;
 	private int loc_fogColour;
-	private int loc_cubeMap;
-	private int loc_cubeMap2;
-	private int loc_blendFactor;
-	private float rotation = 0;
 
 	/**
 	 * Constructor, Create a Skybox Shader
@@ -64,11 +62,10 @@ public class SkyboxShader extends ShaderProgram {
 	@Override
 	protected void getAllUniformLocations() {
 		loc_projectionMatrix = super.getUniformLocation("projectionMatrix");
+		loc_transformationMatrix = super.getUniformLocation("transformationMatrix");
 		loc_viewMatrix = super.getUniformLocation("viewMatrix");
 		loc_fogColour = super.getUniformLocation("fogColour");
-		loc_blendFactor = super.getUniformLocation("blendFactor");
-		loc_cubeMap = super.getUniformLocation("cubeMap");
-		loc_cubeMap2 = super.getUniformLocation("cubeMap2");
+		loc_time = super.getUniformLocation("time");
 	}
 
 	/**
@@ -89,14 +86,13 @@ public class SkyboxShader extends ShaderProgram {
 	 * @param delta
 	 *            Delta
 	 */
-	public void loadViewMatrix(Camera camera, float delta) {
+	public void loadViewMatrix(Camera camera) {
 		Matrix4f matrix = Maths.createViewMatrix(camera);
-		matrix.m30 = 0;
-		matrix.m31 = 0;
-		matrix.m32 = 0;
-		rotation += VoxelVariables.ROTATE_SPEED * delta;
-		Matrix4f.rotate((float) Math.toRadians(rotation), new Vector3f(0, 1, 0), matrix, matrix);
 		super.loadMatrix(loc_viewMatrix, matrix);
+	}
+
+	public void loadTransformationMatrix(Matrix4f mat) {
+		super.loadMatrix(loc_transformationMatrix, mat);
 	}
 
 	/**
@@ -113,23 +109,8 @@ public class SkyboxShader extends ShaderProgram {
 		super.loadVector(loc_fogColour, new Vector3f(r, g, b));
 	}
 
-	/**
-	 * Loads Textures ID
-	 * 
-	 */
-	public void connectTextureUnits() {
-		super.loadInt(loc_cubeMap, 0);
-		super.loadInt(loc_cubeMap2, 1);
-	}
-
-	/**
-	 * Loads Blend Factor
-	 * 
-	 * @param blend
-	 *            Value
-	 */
-	public void loadBlendFactor(float blend) {
-		super.loadFloat(loc_blendFactor, blend);
+	public void loadTime(float time) {
+		super.loadFloat(loc_time, time);
 	}
 
 }

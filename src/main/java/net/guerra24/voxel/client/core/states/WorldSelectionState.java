@@ -39,7 +39,8 @@ public class WorldSelectionState implements State {
 		gm.getMenuSystem().worldSelectionMenu.update();
 		if (gm.getMenuSystem().worldSelectionMenu.getExitButton().pressed())
 			gm.getGlobalStates().setState(GameState.MAINMENU);
-		else if(gm.getMenuSystem().worldSelectionMenu.getPlayButton().pressed())
+		else if (gm.getMenuSystem().worldSelectionMenu.getPlayButton().pressed()
+				&& gm.getMenuSystem().worldSelectionMenu.getWorldName() != "")
 			gm.getGlobalStates().setState(GameState.LOADING_WORLD);
 	}
 

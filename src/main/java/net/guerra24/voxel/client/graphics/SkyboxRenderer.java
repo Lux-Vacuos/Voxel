@@ -25,22 +25,20 @@
 package net.guerra24.voxel.client.graphics;
 
 import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
-import static org.lwjgl.opengl.GL11.glBindTexture;
-import static org.lwjgl.opengl.GL11.glDrawArrays;
-import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
-import static org.lwjgl.opengl.GL13.GL_TEXTURE1;
-import static org.lwjgl.opengl.GL13.GL_TEXTURE_CUBE_MAP;
-import static org.lwjgl.opengl.GL13.glActiveTexture;
+import static org.lwjgl.opengl.GL11.GL_UNSIGNED_INT;
+import static org.lwjgl.opengl.GL11.glDepthMask;
+import static org.lwjgl.opengl.GL11.glDrawElements;
 import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
 import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 
-import net.guerra24.voxel.client.core.VoxelVariables;
 import net.guerra24.voxel.client.graphics.shaders.SkyboxShader;
 import net.guerra24.voxel.client.resources.GameResources;
 import net.guerra24.voxel.client.resources.Loader;
 import net.guerra24.voxel.client.resources.models.RawModel;
+import net.guerra24.voxel.client.util.Maths;
 import net.guerra24.voxel.universal.util.vector.Matrix4f;
+import net.guerra24.voxel.universal.util.vector.Vector3f;
 
 /**
  * Skybox Rendering
@@ -49,50 +47,10 @@ import net.guerra24.voxel.universal.util.vector.Matrix4f;
  * @category Rendering
  */
 public class SkyboxRenderer {
-	/**
-	 * Skybox Data
-	 */
-	private final float[] VERTICES = { -VoxelVariables.SIZE, VoxelVariables.SIZE, -VoxelVariables.SIZE,
-			-VoxelVariables.SIZE, -VoxelVariables.SIZE, -VoxelVariables.SIZE, VoxelVariables.SIZE, -VoxelVariables.SIZE,
-			-VoxelVariables.SIZE, VoxelVariables.SIZE, -VoxelVariables.SIZE, -VoxelVariables.SIZE, VoxelVariables.SIZE,
-			VoxelVariables.SIZE, -VoxelVariables.SIZE, -VoxelVariables.SIZE, VoxelVariables.SIZE, -VoxelVariables.SIZE,
 
-			-VoxelVariables.SIZE, -VoxelVariables.SIZE, VoxelVariables.SIZE, -VoxelVariables.SIZE, -VoxelVariables.SIZE,
-			-VoxelVariables.SIZE, -VoxelVariables.SIZE, VoxelVariables.SIZE, -VoxelVariables.SIZE, -VoxelVariables.SIZE,
-			VoxelVariables.SIZE, -VoxelVariables.SIZE, -VoxelVariables.SIZE, VoxelVariables.SIZE, VoxelVariables.SIZE,
-			-VoxelVariables.SIZE, -VoxelVariables.SIZE, VoxelVariables.SIZE,
-
-			VoxelVariables.SIZE, -VoxelVariables.SIZE, -VoxelVariables.SIZE, VoxelVariables.SIZE, -VoxelVariables.SIZE,
-			VoxelVariables.SIZE, VoxelVariables.SIZE, VoxelVariables.SIZE, VoxelVariables.SIZE, VoxelVariables.SIZE,
-			VoxelVariables.SIZE, VoxelVariables.SIZE, VoxelVariables.SIZE, VoxelVariables.SIZE, -VoxelVariables.SIZE,
-			VoxelVariables.SIZE, -VoxelVariables.SIZE, -VoxelVariables.SIZE,
-
-			-VoxelVariables.SIZE, -VoxelVariables.SIZE, VoxelVariables.SIZE, -VoxelVariables.SIZE, VoxelVariables.SIZE,
-			VoxelVariables.SIZE, VoxelVariables.SIZE, VoxelVariables.SIZE, VoxelVariables.SIZE, VoxelVariables.SIZE,
-			VoxelVariables.SIZE, VoxelVariables.SIZE, VoxelVariables.SIZE, -VoxelVariables.SIZE, VoxelVariables.SIZE,
-			-VoxelVariables.SIZE, -VoxelVariables.SIZE, VoxelVariables.SIZE,
-
-			-VoxelVariables.SIZE, VoxelVariables.SIZE, -VoxelVariables.SIZE, VoxelVariables.SIZE, VoxelVariables.SIZE,
-			-VoxelVariables.SIZE, VoxelVariables.SIZE, VoxelVariables.SIZE, VoxelVariables.SIZE, VoxelVariables.SIZE,
-			VoxelVariables.SIZE, VoxelVariables.SIZE, -VoxelVariables.SIZE, VoxelVariables.SIZE, VoxelVariables.SIZE,
-			-VoxelVariables.SIZE, VoxelVariables.SIZE, -VoxelVariables.SIZE,
-
-			-VoxelVariables.SIZE, -VoxelVariables.SIZE, -VoxelVariables.SIZE, -VoxelVariables.SIZE,
-			-VoxelVariables.SIZE, VoxelVariables.SIZE, VoxelVariables.SIZE, -VoxelVariables.SIZE, -VoxelVariables.SIZE,
-			VoxelVariables.SIZE, -VoxelVariables.SIZE, -VoxelVariables.SIZE, -VoxelVariables.SIZE, -VoxelVariables.SIZE,
-			VoxelVariables.SIZE, VoxelVariables.SIZE, -VoxelVariables.SIZE, VoxelVariables.SIZE };
-
-	private String[] TEXTURE_FILES = { "day/right", "day/left", "day/top", "day/bottom", "day/front", "day/back" };
-	private String[] NIGHT_TEXTURE_FILES = { "night/right", "night/left", "night/top", "night/bottom", "night/front",
-			"night/back" };
-	private RawModel cube;
-	private int texture;
-	private int nightTexture;
+	private RawModel dome;
 	private SkyboxShader shader;
 	private float time = 0;
-	private float blendFactor = 0;
-
-	private int dayTex, nightTex;
 
 	/**
 	 * Constructor, Initializes the Skybox model, Textures and Shader
@@ -103,13 +61,11 @@ public class SkyboxRenderer {
 	 *            Matrix4f, Projection Matrix
 	 */
 	public SkyboxRenderer(Loader loader, Matrix4f projectionMatrix) {
-		cube = loader.loadToVAO(VERTICES, 3);
-		texture = loader.loadCubeMap(TEXTURE_FILES);
-		nightTexture = loader.loadCubeMap(NIGHT_TEXTURE_FILES);
+		dome = loader.getObjLoader().loadObjModel("SkyDome");
 		shader = new SkyboxShader();
 		shader.start();
-		shader.connectTextureUnits();
 		shader.loadProjectionMatrix(projectionMatrix);
+		shader.loadTransformationMatrix(Maths.createTransformationMatrix(new Vector3f(), 0, 0, 0, 360));
 		shader.stop();
 		time = 8000;
 	}
@@ -129,17 +85,20 @@ public class SkyboxRenderer {
 	 *            Delta
 	 */
 	public void render(float r, float g, float b, float delta, GameResources gm) {
+		glDepthMask(false);
 		shader.start();
 		shader.loadProjectionMatrix(gm.getRenderer().getProjectionMatrix());
-		shader.loadViewMatrix(gm.getCamera(), delta);
+		shader.loadTransformationMatrix(Maths.createTransformationMatrix(gm.getCamera().getPosition(), 0, 0, 0, 370));
+		shader.loadViewMatrix(gm.getCamera());
 		shader.loadFog(r, g, b);
-		glBindVertexArray(cube.getVaoID());
+		shader.loadTime(time);
+		glBindVertexArray(dome.getVaoID());
 		glEnableVertexAttribArray(0);
-		bindTextures();
-		glDrawArrays(GL_TRIANGLES, 0, cube.getVertexCount());
+		glDrawElements(GL_TRIANGLES, dome.getVertexCount(), GL_UNSIGNED_INT, 0);
 		glDisableVertexAttribArray(0);
 		glBindVertexArray(0);
 		shader.stop();
+		glDepthMask(true);
 	}
 
 	/**
@@ -156,49 +115,6 @@ public class SkyboxRenderer {
 	}
 
 	/**
-	 * Updates the Skybox Textures
-	 * 
-	 */
-	private void bindTextures() {
-		if (time >= 0 && time < 5000) {
-			dayTex = nightTexture;
-			nightTex = nightTexture;
-			blendFactor = (time - 0) / (5000 - 0);
-		} else if (time >= 5000 && time < 8000) {
-			dayTex = nightTexture;
-			nightTex = texture;
-			blendFactor = (time - 5000) / (8000 - 5000);
-		} else if (time >= 8000 && time < 15500) {
-			dayTex = texture;
-			nightTex = texture;
-			blendFactor = 1f;
-		} else if (time >= 15500 && time < 18000) {
-			dayTex = texture;
-			nightTex = nightTexture;
-			blendFactor = (time - 15500) / (18000 - 15500);
-		} else {
-			dayTex = nightTexture;
-			nightTex = nightTexture;
-			blendFactor = 1f;
-		}
-
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_CUBE_MAP, dayTex);
-		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_CUBE_MAP, nightTex);
-		shader.loadBlendFactor(blendFactor);
-	}
-
-	/**
-	 * Get the blend factor
-	 * 
-	 * @return time
-	 */
-	public float getBlendFactor() {
-		return blendFactor;
-	}
-
-	/**
 	 * Get the world time
 	 * 
 	 * @return time
@@ -209,14 +125,6 @@ public class SkyboxRenderer {
 
 	public void setTime(float time) {
 		this.time = time;
-	}
-
-	public int getDayTexture() {
-		return dayTex;
-	}
-
-	public int getNightTexture() {
-		return nightTex;
 	}
 
 }
