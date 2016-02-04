@@ -31,13 +31,13 @@ out vec4 [5] out_Color;
 
 uniform float time;
 uniform vec3 fogColour;
+uniform vec3 lightPosition;
 
 const float lowerLimit = -0.0;
 const float upperLimit =  0.6;
 
-
 #define CLOUD_COVER		0.55
-#define CLOUD_SHARPNESS		0.015
+#define CLOUD_SHARPNESS		0.005
 
 float hash( float n )
 {
@@ -74,7 +74,7 @@ void main(void){
 	vec2 q = (textureCoords.xz);
 	vec2 p = -1.0 + 3.0 * q + wind_vec;
 	
-	float f = fbm( 4.0*p );
+	float f = fbm( 2.0*p );
 
 	float cover = CLOUD_COVER;
 	float sharpness = CLOUD_SHARPNESS;
@@ -82,10 +82,13 @@ void main(void){
 	float c = f - (1.0 - cover);
 	if ( c < 0.0 )
 		c = 0.0;
-	
 	f = 1.0 - (pow(sharpness, c));
+	
+	float fac = max(dot(vec3(0,1,0),normalize(lightPosition)),-1.0);
+	fac = clamp(fac,0.1,1.0);
 
     vec4 finalColour = vec4(fogColour,1.0);
+    finalColour.rgb *= fac;
     float factor = (textureCoords.y - lowerLimit) / (upperLimit - lowerLimit);
     factor = clamp(factor, 0.0, 1.0);
     finalColour = mix(finalColour, vec4(f,f,f,1.0), factor);
@@ -93,5 +96,8 @@ void main(void){
     out_Color[1] = vec4(pass_position.xyz,0);
     out_Color[2] = vec4(0.0);
     out_Color[3] = vec4(0,0,1,0);
-    out_Color[4] = vec4(0.0);
+    out_Color[4] = vec4(1.0 - f,0,0,0);
+    
+    if(factor < 0.01)
+    	out_Color[4].r = 0;
 }

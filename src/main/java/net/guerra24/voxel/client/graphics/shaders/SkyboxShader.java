@@ -44,6 +44,7 @@ public class SkyboxShader extends ShaderProgram {
 	private int loc_transformationMatrix;
 	private int loc_viewMatrix;
 	private int loc_time;
+	private int loc_lightPosition;
 	private int loc_fogColour;
 
 	/**
@@ -66,6 +67,7 @@ public class SkyboxShader extends ShaderProgram {
 		loc_viewMatrix = super.getUniformLocation("viewMatrix");
 		loc_fogColour = super.getUniformLocation("fogColour");
 		loc_time = super.getUniformLocation("time");
+		loc_lightPosition = super.getUniformLocation("lightPosition");
 	}
 
 	/**
@@ -93,6 +95,10 @@ public class SkyboxShader extends ShaderProgram {
 
 	public void loadTransformationMatrix(Matrix4f mat) {
 		super.loadMatrix(loc_transformationMatrix, mat);
+	}
+
+	public void loadLightPosition(Vector3f pos) {
+		super.loadVector(loc_lightPosition, pos);
 	}
 
 	/**

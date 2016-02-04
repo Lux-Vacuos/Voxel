@@ -104,10 +104,10 @@ public class DeferredShadingShader extends ShaderProgram {
 		loc_depth0 = super.getUniformLocation("gDepth");
 		loc_gData0 = super.getUniformLocation("gData0");
 		loc_gData1 = super.getUniformLocation("gData1");
-		loc_lightPosition = super.getUniformLocation("lightPosition");
-		loc_invertedLightPosition = super.getUniformLocation("invertedLightPosition");
 		loc_composite0 = super.getUniformLocation("composite0");
 		loc_composite1 = super.getUniformLocation("composite1");
+		loc_lightPosition = super.getUniformLocation("lightPosition");
+		loc_invertedLightPosition = super.getUniformLocation("invertedLightPosition");
 		loc_sunPositionInScreen = super.getUniformLocation("sunPositionInScreen");
 		loc_skyColor = super.getUniformLocation("skyColor");
 		loc_exposure = super.getUniformLocation("exposure");

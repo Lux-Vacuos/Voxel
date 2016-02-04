@@ -86,7 +86,7 @@ void main(void){
     vec4 normal = texture(gNormal, texcoord);
     float depth = texture(gDepth, vec3(texcoord.xy, 0.0), 0);
 	vec3 light = lightPosition;
-    vec3 lightDir = light - position.xyz ;
+    vec3 lightDir = light - position.xyz;
     lightDir = normalize(lightDir);
     vec3 eyeDir = normalize(cameraPosition-position.xyz);
 	vec3 invertedLight = invertedLightPosition;
@@ -95,7 +95,7 @@ void main(void){
     float lightDirDOTviewDir = dot(invertedlightDir,eyeDir);
     if(data.b != 1) {
     	normal = normalize(normal);
-    	float b = ((max(dot(normal.xyz,lightDir),-1.0)) - data.a);
+    	float b = (max(dot(normal.xyz,lightDir),-1.0) - data.a);
     	if(b <= data1.a)
     		b = data1.a;
     	b = clamp(b,0.02,1.0);
@@ -135,7 +135,7 @@ void main(void){
 	if(data.b != 1) {
 		float distance = length(cameraPosition-position.xyz);
 		float visibility = exp(-pow((distance*density),gradient));
-		visibility = clamp(visibility,0.4,1.1);
+		visibility = clamp(visibility,0.8,1.1);
     	image.rgb = mix(skyColor.rgb, image.rgb, visibility);
 	}
     

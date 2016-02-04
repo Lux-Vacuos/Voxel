@@ -41,7 +41,7 @@ import net.guerra24.voxel.client.world.chunks.ChunkGenerator;
  *
  */
 public interface IWorld {
-	
+
 	public void startWorld(String name, Random seed, int chunkDim, GameResources gm);
 
 	public void init(GameResources gm);

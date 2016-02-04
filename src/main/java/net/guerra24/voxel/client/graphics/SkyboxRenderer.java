@@ -51,6 +51,9 @@ public class SkyboxRenderer {
 	private RawModel dome;
 	private SkyboxShader shader;
 	private float time = 0;
+	private float globalTime = 0;
+	
+	private static final float TIME_MULTIPLIER = 50;
 
 	/**
 	 * Constructor, Initializes the Skybox model, Textures and Shader
@@ -67,7 +70,7 @@ public class SkyboxRenderer {
 		shader.loadProjectionMatrix(projectionMatrix);
 		shader.loadTransformationMatrix(Maths.createTransformationMatrix(new Vector3f(), 0, 0, 0, 360));
 		shader.stop();
-		time = 8000;
+		time = 6000;
 	}
 
 	/**
@@ -91,7 +94,8 @@ public class SkyboxRenderer {
 		shader.loadTransformationMatrix(Maths.createTransformationMatrix(gm.getCamera().getPosition(), 0, 0, 0, 370));
 		shader.loadViewMatrix(gm.getCamera());
 		shader.loadFog(r, g, b);
-		shader.loadTime(time);
+		shader.loadTime(globalTime);
+		shader.loadLightPosition(gm.getLightPos());
 		glBindVertexArray(dome.getVaoID());
 		glEnableVertexAttribArray(0);
 		glDrawElements(GL_TRIANGLES, dome.getVertexCount(), GL_UNSIGNED_INT, 0);
@@ -108,7 +112,8 @@ public class SkyboxRenderer {
 	 *            Delta
 	 */
 	public float update(float delta) {
-		time += delta * 10;
+		time += delta * TIME_MULTIPLIER;
+		globalTime += delta * TIME_MULTIPLIER;
 		time %= 24000;
 		float res = time * 0.015f;
 		return res - 90;

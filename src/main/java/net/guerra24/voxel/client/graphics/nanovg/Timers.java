@@ -254,10 +254,10 @@ public class Timers {
 			for (int i = 0; i < GRAPH_HISTORY_COUNT; i++) {
 				float v = fps.values[(fps.head + i) % GRAPH_HISTORY_COUNT] * 1000.0f;
 				float vx, vy;
-				if (v > 4.0f)
-					v = 4.0f;
+				if (v > 20.0f)
+					v = 20.0f;
 				vx = x + ((float) i / (GRAPH_HISTORY_COUNT - 1)) * w;
-				vy = y + h - ((v / 4.0f) * h);
+				vy = y + h - ((v / 20.0f) * h);
 				nvgLineTo(vg, vx, vy);
 			}
 		}

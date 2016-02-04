@@ -39,6 +39,7 @@ import static org.lwjgl.opengl.GL11.glDeleteTextures;
 import static org.lwjgl.opengl.GL11.glGenTextures;
 import static org.lwjgl.opengl.GL11.glTexImage2D;
 import static org.lwjgl.opengl.GL11.glTexParameteri;
+import static org.lwjgl.opengl.GL11.glViewport;
 import static org.lwjgl.opengl.GL12.GL_CLAMP_TO_EDGE;
 import static org.lwjgl.opengl.GL20.glDrawBuffers;
 import static org.lwjgl.opengl.GL30.GL_COLOR_ATTACHMENT0;
@@ -77,7 +78,11 @@ public class DeferredShadingFBO {
 
 	private int diffuseTex, positionTex, normalTex, data0Tex, data1Tex, depthTex;
 
+	private int width, height;
+
 	public DeferredShadingFBO(int width, int height) {
+		this.width = width;
+		this.height = height;
 		init(width, height);
 	}
 
@@ -202,6 +207,7 @@ public class DeferredShadingFBO {
 		buffers.put(buffer);
 		buffers.flip();
 		glDrawBuffers(buffers);
+		glViewport(0, 0, width, height);
 	}
 
 	public void end() {

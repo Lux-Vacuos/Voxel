@@ -50,6 +50,7 @@ import static org.lwjgl.opengl.GL30.glBlitFramebuffer;
 
 import net.guerra24.voxel.client.core.VoxelVariables;
 import net.guerra24.voxel.client.graphics.opengl.Display;
+import net.guerra24.voxel.client.graphics.opengl.GLUtil;
 import net.guerra24.voxel.client.graphics.shaders.DeferredShadingShader;
 import net.guerra24.voxel.client.resources.GameResources;
 import net.guerra24.voxel.client.resources.models.RawModel;
@@ -83,6 +84,8 @@ public class DeferredShadingRenderer {
 	private final FrameBuffer auxFinal1FBO;
 	private final RawModel quad;
 
+	private int width, height;
+
 	private Matrix4f previousViewMatrix;
 	private Vector3f previousCameraPosition;
 
@@ -98,6 +101,12 @@ public class DeferredShadingRenderer {
 	 */
 	public DeferredShadingRenderer(GameResources gm) {
 		this.display = gm.getDisplay();
+		width = (int) (display.getDisplayWidth() * display.getPixelRatio());
+		height = (int) (display.getDisplayHeight() * display.getPixelRatio());
+		if (width > GLUtil.getTextureMaxSize())
+			width = GLUtil.getTextureMaxSize();
+		if (height > GLUtil.getTextureMaxSize())
+			height = GLUtil.getTextureMaxSize();
 		float[] positions = { -1, 1, -1, -1, 1, 1, 1, -1 };
 		quad = gm.getLoader().loadToVAO(positions, 2);
 		shader0 = new DeferredShadingShader("0");
@@ -105,65 +114,72 @@ public class DeferredShadingRenderer {
 		shader0.loadTransformation(Maths.createTransformationMatrix(new Vector2f(0, 0), new Vector2f(1, 1)));
 		shader0.connectTextureUnits();
 		shader0.loadSkyColor(skyColor);
+		shader0.loadResolution(new Vector2f(width, height));
 		shader0.stop();
 		shader1 = new DeferredShadingShader("1");
 		shader1.start();
 		shader1.loadTransformation(Maths.createTransformationMatrix(new Vector2f(0, 0), new Vector2f(1, 1)));
 		shader1.connectTextureUnits();
 		shader1.loadSkyColor(skyColor);
+		shader1.loadResolution(new Vector2f(width, height));
 		shader1.stop();
 		shader2 = new DeferredShadingShader("2");
 		shader2.start();
 		shader2.loadTransformation(Maths.createTransformationMatrix(new Vector2f(0, 0), new Vector2f(1, 1)));
 		shader2.connectTextureUnits();
 		shader2.loadSkyColor(skyColor);
+		shader2.loadResolution(new Vector2f(width, height));
 		shader2.stop();
 		shader3 = new DeferredShadingShader("3");
 		shader3.start();
 		shader3.loadTransformation(Maths.createTransformationMatrix(new Vector2f(0, 0), new Vector2f(1, 1)));
 		shader3.connectTextureUnits();
 		shader3.loadSkyColor(skyColor);
+		shader3.loadResolution(new Vector2f(width, height));
 		shader3.stop();
 		shader4 = new DeferredShadingShader("4");
 		shader4.start();
 		shader4.loadTransformation(Maths.createTransformationMatrix(new Vector2f(0, 0), new Vector2f(1, 1)));
 		shader4.connectTextureUnits();
 		shader4.loadSkyColor(skyColor);
+		shader4.loadResolution(new Vector2f(width, height));
 		shader4.stop();
 		shader5 = new DeferredShadingShader("5");
 		shader5.start();
 		shader5.loadTransformation(Maths.createTransformationMatrix(new Vector2f(0, 0), new Vector2f(1, 1)));
 		shader5.connectTextureUnits();
+		shader5.loadResolution(new Vector2f(width, height));
 		shader5.loadSkyColor(skyColor);
 		shader5.stop();
 		shader6 = new DeferredShadingShader("6");
 		shader6.start();
 		shader6.loadTransformation(Maths.createTransformationMatrix(new Vector2f(0, 0), new Vector2f(1, 1)));
 		shader6.connectTextureUnits();
+		shader6.loadResolution(new Vector2f(width, height));
 		shader6.loadSkyColor(skyColor);
 		shader6.stop();
 		shaderFinal0 = new DeferredShadingShader("Final0");
 		shaderFinal0.start();
 		shaderFinal0.loadTransformation(Maths.createTransformationMatrix(new Vector2f(0, 0), new Vector2f(1, 1)));
 		shaderFinal0.connectTextureUnits();
-		shaderFinal0.loadResolution(new Vector2f(display.getDisplayWidth(), display.getDisplayHeight()));
+		shaderFinal0.loadResolution(new Vector2f(width, height));
 		shaderFinal0.loadSkyColor(skyColor);
 		shaderFinal0.stop();
 		shaderFinal1 = new DeferredShadingShader("Final1");
 		shaderFinal1.start();
 		shaderFinal1.loadTransformation(Maths.createTransformationMatrix(new Vector2f(0, 0), new Vector2f(1, 1)));
 		shaderFinal1.connectTextureUnits();
-		shaderFinal1.loadResolution(new Vector2f(display.getDisplayWidth(), display.getDisplayHeight()));
+		shaderFinal1.loadResolution(new Vector2f(width, height));
 		shaderFinal1.loadSkyColor(skyColor);
 		shaderFinal1.stop();
-		aux0FBO = new FrameBuffer(false, display.getDisplayWidth(), display.getDisplayHeight(), display);
-		aux1FBO = new FrameBuffer(false, display.getDisplayWidth(), display.getDisplayHeight(), display);
-		aux2FBO = new FrameBuffer(false, display.getDisplayWidth(), display.getDisplayHeight(), display);
-		aux3FBO = new FrameBuffer(false, display.getDisplayWidth(), display.getDisplayHeight(), display);
-		aux4FBO = new FrameBuffer(false, display.getDisplayWidth(), display.getDisplayHeight(), display);
-		auxFinal0FBO = new FrameBuffer(false, display.getDisplayWidth(), display.getDisplayHeight(), display);
-		auxFinal1FBO = new FrameBuffer(false, display.getDisplayWidth(), display.getDisplayHeight(), display);
-		postProcessingFBO = new DeferredShadingFBO(display.getDisplayWidth(), display.getDisplayHeight());
+		aux0FBO = new FrameBuffer(false, width, height, display);
+		aux1FBO = new FrameBuffer(false, width, height, display);
+		aux2FBO = new FrameBuffer(false, width, height, display);
+		aux3FBO = new FrameBuffer(false, width, height, display);
+		aux4FBO = new FrameBuffer(false, width, height, display);
+		auxFinal0FBO = new FrameBuffer(false, width, height, display);
+		auxFinal1FBO = new FrameBuffer(false, width, height, display);
+		postProcessingFBO = new DeferredShadingFBO(width, height);
 		previousViewMatrix = new Matrix4f();
 		previousCameraPosition = new Vector3f();
 	}
@@ -173,7 +189,7 @@ public class DeferredShadingRenderer {
 	 * 
 	 */
 	public void render(GameResources gm) {
-		aux4FBO.begin(display.getDisplayWidth(), display.getDisplayHeight());
+		aux4FBO.begin(width, height);
 		gm.getRenderer().prepare();
 		shader6.start();
 		shader6.loadSettings(VoxelVariables.useDOF, VoxelVariables.useFXAA, VoxelVariables.useMotionBlur,
@@ -181,12 +197,10 @@ public class DeferredShadingRenderer {
 		shader6.loadUnderWater(((PlayerCamera) ((PlayerCamera) gm.getCamera())).isUnderWater());
 		shader6.loadMotionBlurData(gm.getRenderer().getProjectionMatrix(), ((PlayerCamera) gm.getCamera()),
 				previousViewMatrix, previousCameraPosition);
-		shader6.loadResolution(new Vector2f(display.getDisplayWidth(), display.getDisplayHeight()));
 		shader6.loadLightPosition(gm.getLightPos(), gm.getInvertedLightPosition());
 		shader6.loadviewMatrix(((PlayerCamera) gm.getCamera()));
-		shader6.loadSunPosition(
-				Maths.convertTo2F(new Vector3f(gm.getLightPos()), gm.getRenderer().getProjectionMatrix(),
-						Maths.createViewMatrix(gm.getCamera()), display.getDisplayWidth(), display.getDisplayHeight()));
+		shader6.loadSunPosition(Maths.convertTo2F(new Vector3f(gm.getLightPos()),
+				gm.getRenderer().getProjectionMatrix(), Maths.createViewMatrix(gm.getCamera()), width, height));
 		shader6.loadTime(gm.getSkyboxRenderer().getTime());
 		glBindVertexArray(quad.getVaoID());
 		glEnableVertexAttribArray(0);
@@ -208,7 +222,7 @@ public class DeferredShadingRenderer {
 		shader6.stop();
 		aux4FBO.end(display);
 
-		aux3FBO.begin(display.getDisplayWidth(), display.getDisplayHeight());
+		aux3FBO.begin(width, height);
 		gm.getRenderer().prepare();
 		shader5.start();
 		shader5.loadUnderWater(((PlayerCamera) gm.getCamera()).isUnderWater());
@@ -216,12 +230,10 @@ public class DeferredShadingRenderer {
 				previousViewMatrix, previousCameraPosition);
 		shader5.loadLightPosition(gm.getLightPos(), gm.getInvertedLightPosition());
 		shader5.loadviewMatrix(((PlayerCamera) gm.getCamera()));
-		shader5.loadResolution(new Vector2f(display.getDisplayWidth(), display.getDisplayHeight()));
 		shader5.loadSettings(VoxelVariables.useDOF, VoxelVariables.useFXAA, VoxelVariables.useMotionBlur,
 				VoxelVariables.useVolumetricLight, VoxelVariables.useReflections);
-		shader5.loadSunPosition(
-				Maths.convertTo2F(new Vector3f(gm.getLightPos()), gm.getRenderer().getProjectionMatrix(),
-						Maths.createViewMatrix(gm.getCamera()), display.getDisplayWidth(), display.getDisplayHeight()));
+		shader5.loadSunPosition(Maths.convertTo2F(new Vector3f(gm.getLightPos()),
+				gm.getRenderer().getProjectionMatrix(), Maths.createViewMatrix(gm.getCamera()), width, height));
 		shader5.loadTime(gm.getSkyboxRenderer().getTime());
 		glBindVertexArray(quad.getVaoID());
 		glEnableVertexAttribArray(0);
@@ -245,7 +257,7 @@ public class DeferredShadingRenderer {
 		shader5.stop();
 		aux3FBO.end(display);
 
-		aux2FBO.begin(display.getDisplayWidth(), display.getDisplayHeight());
+		aux2FBO.begin(width, height);
 		gm.getRenderer().prepare();
 		shader4.start();
 		shader4.loadUnderWater(((PlayerCamera) gm.getCamera()).isUnderWater());
@@ -253,12 +265,10 @@ public class DeferredShadingRenderer {
 				previousViewMatrix, previousCameraPosition);
 		shader4.loadLightPosition(gm.getLightPos(), gm.getInvertedLightPosition());
 		shader4.loadviewMatrix(((PlayerCamera) gm.getCamera()));
-		shader4.loadResolution(new Vector2f(display.getDisplayWidth(), display.getDisplayHeight()));
 		shader4.loadSettings(VoxelVariables.useDOF, VoxelVariables.useFXAA, VoxelVariables.useMotionBlur,
 				VoxelVariables.useVolumetricLight, VoxelVariables.useReflections);
-		shader4.loadSunPosition(
-				Maths.convertTo2F(new Vector3f(gm.getLightPos()), gm.getRenderer().getProjectionMatrix(),
-						Maths.createViewMatrix(gm.getCamera()), display.getDisplayWidth(), display.getDisplayHeight()));
+		shader4.loadSunPosition(Maths.convertTo2F(new Vector3f(gm.getLightPos()),
+				gm.getRenderer().getProjectionMatrix(), Maths.createViewMatrix(gm.getCamera()), width, height));
 		shader4.loadTime(gm.getSkyboxRenderer().getTime());
 		glBindVertexArray(quad.getVaoID());
 		glEnableVertexAttribArray(0);
@@ -282,7 +292,7 @@ public class DeferredShadingRenderer {
 		shader4.stop();
 		aux2FBO.end(display);
 
-		aux4FBO.begin(display.getDisplayWidth(), display.getDisplayHeight());
+		aux4FBO.begin(width, height);
 		gm.getRenderer().prepare();
 		shader3.start();
 		shader3.loadUnderWater(((PlayerCamera) gm.getCamera()).isUnderWater());
@@ -290,12 +300,10 @@ public class DeferredShadingRenderer {
 				previousViewMatrix, previousCameraPosition);
 		shader3.loadLightPosition(gm.getLightPos(), gm.getInvertedLightPosition());
 		shader3.loadviewMatrix(((PlayerCamera) gm.getCamera()));
-		shader3.loadResolution(new Vector2f(display.getDisplayWidth(), display.getDisplayHeight()));
 		shader3.loadSettings(VoxelVariables.useDOF, VoxelVariables.useFXAA, VoxelVariables.useMotionBlur,
 				VoxelVariables.useVolumetricLight, VoxelVariables.useReflections);
-		shader3.loadSunPosition(
-				Maths.convertTo2F(new Vector3f(gm.getLightPos()), gm.getRenderer().getProjectionMatrix(),
-						Maths.createViewMatrix(gm.getCamera()), display.getDisplayWidth(), display.getDisplayHeight()));
+		shader3.loadSunPosition(Maths.convertTo2F(new Vector3f(gm.getLightPos()),
+				gm.getRenderer().getProjectionMatrix(), Maths.createViewMatrix(gm.getCamera()), width, height));
 		shader3.loadTime(gm.getSkyboxRenderer().getTime());
 		glBindVertexArray(quad.getVaoID());
 		glEnableVertexAttribArray(0);
@@ -319,7 +327,7 @@ public class DeferredShadingRenderer {
 		shader3.stop();
 		aux4FBO.end(display);
 
-		aux1FBO.begin(display.getDisplayWidth(), display.getDisplayHeight());
+		aux1FBO.begin(width, height);
 		gm.getRenderer().prepare();
 		shader2.start();
 		shader2.loadUnderWater(((PlayerCamera) gm.getCamera()).isUnderWater());
@@ -327,12 +335,10 @@ public class DeferredShadingRenderer {
 				previousViewMatrix, previousCameraPosition);
 		shader2.loadLightPosition(gm.getLightPos(), gm.getInvertedLightPosition());
 		shader2.loadviewMatrix(((PlayerCamera) gm.getCamera()));
-		shader2.loadResolution(new Vector2f(display.getDisplayWidth(), display.getDisplayHeight()));
 		shader2.loadSettings(VoxelVariables.useDOF, VoxelVariables.useFXAA, VoxelVariables.useMotionBlur,
 				VoxelVariables.useVolumetricLight, VoxelVariables.useReflections);
-		shader2.loadSunPosition(
-				Maths.convertTo2F(new Vector3f(gm.getLightPos()), gm.getRenderer().getProjectionMatrix(),
-						Maths.createViewMatrix(gm.getCamera()), display.getDisplayWidth(), display.getDisplayHeight()));
+		shader2.loadSunPosition(Maths.convertTo2F(new Vector3f(gm.getLightPos()),
+				gm.getRenderer().getProjectionMatrix(), Maths.createViewMatrix(gm.getCamera()), width, height));
 		shader2.loadExposure(4f);
 		shader2.loadTime(gm.getSkyboxRenderer().getTime());
 		glBindVertexArray(quad.getVaoID());
@@ -359,7 +365,7 @@ public class DeferredShadingRenderer {
 		shader2.stop();
 		aux1FBO.end(display);
 
-		aux0FBO.begin(display.getDisplayWidth(), display.getDisplayHeight());
+		aux0FBO.begin(width, height);
 		gm.getRenderer().prepare();
 		shader1.start();
 		shader1.loadSettings(VoxelVariables.useDOF, VoxelVariables.useFXAA, VoxelVariables.useMotionBlur,
@@ -369,10 +375,8 @@ public class DeferredShadingRenderer {
 				previousViewMatrix, previousCameraPosition);
 		shader1.loadLightPosition(gm.getLightPos(), gm.getInvertedLightPosition());
 		shader1.loadviewMatrix(((PlayerCamera) gm.getCamera()));
-		shader1.loadResolution(new Vector2f(display.getDisplayWidth(), display.getDisplayHeight()));
-		shader1.loadSunPosition(
-				Maths.convertTo2F(new Vector3f(gm.getLightPos()), gm.getRenderer().getProjectionMatrix(),
-						Maths.createViewMatrix(gm.getCamera()), display.getDisplayWidth(), display.getDisplayHeight()));
+		shader1.loadSunPosition(Maths.convertTo2F(new Vector3f(gm.getLightPos()),
+				gm.getRenderer().getProjectionMatrix(), Maths.createViewMatrix(gm.getCamera()), width, height));
 		shader1.loadTime(gm.getSkyboxRenderer().getTime());
 		glBindVertexArray(quad.getVaoID());
 		glEnableVertexAttribArray(0);
@@ -396,7 +400,7 @@ public class DeferredShadingRenderer {
 		shader1.stop();
 		aux0FBO.end(display);
 
-		auxFinal1FBO.begin(display.getDisplayWidth(), display.getDisplayHeight());
+		auxFinal1FBO.begin(width, height);
 		gm.getRenderer().prepare();
 		shader0.start();
 		shader0.loadSettings(VoxelVariables.useDOF, VoxelVariables.useFXAA, VoxelVariables.useMotionBlur,
@@ -406,10 +410,8 @@ public class DeferredShadingRenderer {
 				previousViewMatrix, previousCameraPosition);
 		shader0.loadLightPosition(gm.getLightPos(), gm.getInvertedLightPosition());
 		shader0.loadviewMatrix(((PlayerCamera) gm.getCamera()));
-		shader0.loadResolution(new Vector2f(display.getDisplayWidth(), display.getDisplayHeight()));
-		shader0.loadSunPosition(
-				Maths.convertTo2F(new Vector3f(gm.getLightPos()), gm.getRenderer().getProjectionMatrix(),
-						Maths.createViewMatrix(gm.getCamera()), display.getDisplayWidth(), display.getDisplayHeight()));
+		shader0.loadSunPosition(Maths.convertTo2F(new Vector3f(gm.getLightPos()),
+				gm.getRenderer().getProjectionMatrix(), Maths.createViewMatrix(gm.getCamera()), width, height));
 		shader0.loadTime(gm.getSkyboxRenderer().getTime());
 		glBindVertexArray(quad.getVaoID());
 		glEnableVertexAttribArray(0);
@@ -433,7 +435,7 @@ public class DeferredShadingRenderer {
 		shader0.stop();
 		auxFinal1FBO.end(display);
 
-		auxFinal0FBO.begin(display.getDisplayWidth(), display.getDisplayHeight());
+		auxFinal0FBO.begin(width, height);
 		gm.getRenderer().prepare();
 		shaderFinal1.start();
 		shaderFinal1.loadUnderWater(((PlayerCamera) gm.getCamera()).isUnderWater());
@@ -441,10 +443,8 @@ public class DeferredShadingRenderer {
 				previousViewMatrix, previousCameraPosition);
 		shaderFinal1.loadLightPosition(gm.getLightPos(), gm.getInvertedLightPosition());
 		shaderFinal1.loadviewMatrix(((PlayerCamera) gm.getCamera()));
-		shaderFinal1.loadResolution(new Vector2f(display.getDisplayWidth(), display.getDisplayHeight()));
-		shaderFinal1.loadSunPosition(
-				Maths.convertTo2F(new Vector3f(gm.getLightPos()), gm.getRenderer().getProjectionMatrix(),
-						Maths.createViewMatrix(gm.getCamera()), display.getDisplayWidth(), display.getDisplayHeight()));
+		shaderFinal1.loadSunPosition(Maths.convertTo2F(new Vector3f(gm.getLightPos()),
+				gm.getRenderer().getProjectionMatrix(), Maths.createViewMatrix(gm.getCamera()), width, height));
 		shaderFinal1.loadSettings(VoxelVariables.useDOF, VoxelVariables.useFXAA, VoxelVariables.useMotionBlur,
 				VoxelVariables.useVolumetricLight, VoxelVariables.useReflections);
 		glBindVertexArray(quad.getVaoID());
@@ -476,10 +476,8 @@ public class DeferredShadingRenderer {
 				previousViewMatrix, previousCameraPosition);
 		shaderFinal0.loadLightPosition(gm.getLightPos(), gm.getInvertedLightPosition());
 		shaderFinal0.loadviewMatrix(((PlayerCamera) gm.getCamera()));
-		shaderFinal0.loadResolution(new Vector2f(display.getDisplayWidth(), display.getDisplayHeight()));
-		shaderFinal0.loadSunPosition(
-				Maths.convertTo2F(new Vector3f(gm.getLightPos()), gm.getRenderer().getProjectionMatrix(),
-						Maths.createViewMatrix(gm.getCamera()), display.getDisplayWidth(), display.getDisplayHeight()));
+		shaderFinal0.loadSunPosition(Maths.convertTo2F(new Vector3f(gm.getLightPos()),
+				gm.getRenderer().getProjectionMatrix(), Maths.createViewMatrix(gm.getCamera()), width, height));
 		shaderFinal0.loadSettings(VoxelVariables.useDOF, VoxelVariables.useFXAA, VoxelVariables.useMotionBlur,
 				VoxelVariables.useVolumetricLight, VoxelVariables.useReflections);
 		glBindVertexArray(quad.getVaoID());
@@ -505,8 +503,7 @@ public class DeferredShadingRenderer {
 
 		glBindFramebuffer(GL_READ_FRAMEBUFFER, postProcessingFBO.getFbo());
 		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
-		glBlitFramebuffer(0, 0, display.getDisplayWidth(), display.getDisplayHeight(), 0, 0, display.getDisplayWidth(),
-				display.getDisplayHeight(), GL_DEPTH_BUFFER_BIT, GL_NEAREST);
+		glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_DEPTH_BUFFER_BIT, GL_NEAREST);
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 		previousViewMatrix = Maths.createViewMatrix(gm.getCamera());
