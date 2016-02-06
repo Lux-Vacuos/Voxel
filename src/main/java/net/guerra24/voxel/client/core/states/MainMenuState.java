@@ -63,6 +63,8 @@ public class MainMenuState implements State {
 			} catch (InterruptedException e) {
 			}
 			states.setState(GameState.OPTIONS);
+		} else if (gm.getMenuSystem().mainMenu.getAboutButton().pressed()) {
+			states.setState(GameState.ABOUT);
 		}
 		gm.getMenuSystem().mainMenu.update();
 	}

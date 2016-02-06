@@ -35,6 +35,7 @@ public class MainMenu {
 	private Button exitButton;
 	private Button optionsButton;
 	private Button newsRefreshButton;
+	private Button aboutButton;
 
 	private WebRenderer webRenderer;
 
@@ -45,33 +46,27 @@ public class MainMenu {
 		float height = VoxelVariables.HEIGHT;
 		yScale = height / 720f;
 		xScale = width / 1280f;
-		playButton = new Button(new Vector2f(177, 532), new Vector2f(215, 80), xScale, yScale);
-		exitButton = new Button(new Vector2f(177, 224), new Vector2f(215, 80), xScale, yScale);
-		optionsButton = new Button(new Vector2f(177, 376), new Vector2f(215, 80), xScale, yScale);
+		playButton = new Button(new Vector2f(177, 568), new Vector2f(215, 80), xScale, yScale);
+		optionsButton = new Button(new Vector2f(177, 468), new Vector2f(215, 80), xScale, yScale);
+		aboutButton = new Button(new Vector2f(177, 368), new Vector2f(215, 80), xScale, yScale);
+		exitButton = new Button(new Vector2f(177, 268), new Vector2f(215, 80), xScale, yScale);
 		newsRefreshButton = new Button(new Vector2f(1096, 627), new Vector2f(100, 40), xScale, yScale);
 		webRenderer = new WebRenderer(VoxelVariables.web + "news/menu.webtag", 460 * xScale, 120 * yScale);
 		webRenderer.update();
 	}
 
-	float b = 0;
-
 	public void render() {
-		playButton.render("Play");
-		optionsButton.render("Options");
-		exitButton.render("Exit");
+		VectorsRendering.renderWindow(160 * xScale, 50 * yScale, 250 * xScale, 600 * yScale);
+		playButton.render("Play", VectorsRendering.ICON_BLACK_RIGHT_POINTING_TRIANGLE);
+		optionsButton.render("Options", VectorsRendering.ICON_GEAR);
+		aboutButton.render("About", VectorsRendering.ICON_INFORMATION_SOURCE);
+		exitButton.render("Exit", VectorsRendering.ICON_LOGIN);
 
-		VectorsRendering.renderText(
-				"Voxel " + VoxelVariables.version + " " + VoxelVariables.state + " Build " + VoxelVariables.build,
-				"Roboto-Bold", 0, 710 * yScale, 20 * yScale, VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorA),
-				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorB));
-		VectorsRendering.renderWindow("Voxel News", "Roboto-Bold", 450 * xScale, 50 * yScale, 750 * xScale, 600 * yScale);
+		VectorsRendering.renderWindow("Voxel News", "Roboto-Bold", 450 * xScale, 50 * yScale, 750 * xScale,
+				600 * yScale);
 		webRenderer.render();
 
 		newsRefreshButton.render("Reload", VectorsRendering.rgba(80, 80, 80, 80, VectorsRendering.colorA));
-
-		VectorsRendering.renderButton(null, "Reload", "Roboto-Bold", 1096 * xScale, 53 * yScale, 100 * xScale, 40 * yScale,
-				VectorsRendering.rgba(80, 80, 80, 80, VectorsRendering.colorA), newsRefreshButton.insideButton());
-
 	}
 
 	public void update() {
@@ -89,6 +84,10 @@ public class MainMenu {
 
 	public Button getOptionsButton() {
 		return optionsButton;
+	}
+
+	public Button getAboutButton() {
+		return aboutButton;
 	}
 
 }

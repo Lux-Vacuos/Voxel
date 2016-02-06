@@ -186,6 +186,7 @@ public class GameResources {
 		soundSystem.backgroundMusic("menu2", "menu/menu2.ogg", false);
 		loader.loadNVGFont("Roboto-Bold", "Roboto-Bold");
 		loader.loadNVGFont("Roboto-Regular", "Roboto-Regular");
+		loader.loadNVGFont("Entypo", "Entypo", 40);
 		torchTexture = new ParticleTexture(loader.loadTextureParticle("fire0"), 4);
 	}
 

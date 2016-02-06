@@ -24,6 +24,8 @@
 
 package net.guerra24.voxel.client.menu;
 
+import java.nio.ByteBuffer;
+
 import org.lwjgl.nanovg.NVGColor;
 
 import net.guerra24.voxel.client.graphics.VectorsRendering;
@@ -53,15 +55,25 @@ public class Button {
 	}
 
 	public void render(String text) {
-		this.render(text, "Roboto-Regular", VectorsRendering.rgba(255, 255, 255, 255, VectorsRendering.colorA));
+		this.render(text, "Roboto-Regular", "Entypo", null,
+				VectorsRendering.rgba(255, 255, 255, 255, VectorsRendering.colorA));
+	}
+
+	public void render(String text, ByteBuffer preicon) {
+		this.render(text, "Roboto-Regular", "Entypo", preicon,
+				VectorsRendering.rgba(255, 255, 255, 255, VectorsRendering.colorA));
 	}
 
 	public void render(String text, NVGColor color) {
-		this.render(text, "Roboto-Regular", color);
+		this.render(text, "Roboto-Regular", "Entypo", null, color);
 	}
 
-	public void render(String text, String font, NVGColor color) {
-		VectorsRendering.renderButton(null, text, font, renderPos.x * xScale,
+	public void render(String text, ByteBuffer preicon, NVGColor color) {
+		this.render(text, "Roboto-Regular", "Entypo", preicon, color);
+	}
+
+	public void render(String text, String font, String entypo, ByteBuffer preicon, NVGColor color) {
+		VectorsRendering.renderButton(preicon, text, font, entypo, renderPos.x * xScale,
 				(720f - renderPos.y - renderSize.y) * yScale, renderSize.x * xScale, renderSize.y * yScale, color,
 				this.insideButton());
 	}

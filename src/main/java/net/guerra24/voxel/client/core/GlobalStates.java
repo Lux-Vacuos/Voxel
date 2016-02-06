@@ -25,6 +25,7 @@
 package net.guerra24.voxel.client.core;
 
 import net.guerra24.voxel.client.api.mod.ModStateLoop;
+import net.guerra24.voxel.client.core.states.AboutState;
 import net.guerra24.voxel.client.core.states.GameSPState;
 import net.guerra24.voxel.client.core.states.InPauseState;
 import net.guerra24.voxel.client.core.states.LoadingSPState;
@@ -48,7 +49,8 @@ public class GlobalStates {
 
 	public enum GameState {
 		GAME_SP(new GameSPState()), MAINMENU(new MainMenuState()), IN_PAUSE(new InPauseState()), LOADING_WORLD(
-				new LoadingSPState()), OPTIONS(new OptionsState()), WORLD_SELECTION(new WorldSelectionState());
+				new LoadingSPState()), OPTIONS(new OptionsState()), WORLD_SELECTION(new WorldSelectionState()), ABOUT(
+						new AboutState());
 
 		GameState(State state) {
 			this.state = state;

@@ -57,6 +57,7 @@ import static org.lwjgl.nanovg.NanoVG.nvgTextBounds;
 import static org.lwjgl.system.MemoryUtil.NULL;
 import static org.lwjgl.system.MemoryUtil.memAllocInt;
 import static org.lwjgl.system.MemoryUtil.memEncodeASCII;
+import static org.lwjgl.system.MemoryUtil.memEncodeUTF8;
 import static org.lwjgl.system.MemoryUtil.memFree;
 
 import java.nio.ByteBuffer;
@@ -83,6 +84,16 @@ public class VectorsRendering {
 	public static final NVGColor colorA = NVGColor.create();
 	public static final NVGColor colorB = NVGColor.create();
 	public static final NVGColor colorC = NVGColor.create();
+
+	public static final ByteBuffer ICON_SEARCH = cpToUTF8(0x1F50D);
+	public static final ByteBuffer ICON_CIRCLED_CROSS = cpToUTF8(0x2716);
+	public static final ByteBuffer ICON_CHEVRON_RIGHT = cpToUTF8(0xE75E);
+	public static final ByteBuffer ICON_CHECK = cpToUTF8(0x2713);
+	public static final ByteBuffer ICON_LOGIN = cpToUTF8(0xE740);
+	public static final ByteBuffer ICON_TRASH = cpToUTF8(0xE729);
+	public static final ByteBuffer ICON_INFORMATION_SOURCE = cpToUTF8(0x2139);
+	public static final ByteBuffer ICON_GEAR = cpToUTF8(0x2699);
+	public static final ByteBuffer ICON_BLACK_RIGHT_POINTING_TRIANGLE = cpToUTF8(0x25B6);
 
 	private static Display display;
 
@@ -316,18 +327,23 @@ public class VectorsRendering {
 
 	public static void renderText(String text, String font, float x, float y, float fontSize, NVGColor colort,
 			NVGColor colorg) {
+		renderText(text, font, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE, x, y, fontSize, colort, colorg);
+	}
+
+	public static void renderText(String text, String font, int align, float x, float y, float fontSize,
+			NVGColor colort, NVGColor colorg) {
 		long vg = display.getVg();
 		nvgFontSize(vg, fontSize);
 		nvgFontFace(vg, font);
-		nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
+		nvgTextAlign(vg, align);
 		nvgFillColor(vg, colort);
 		nvgText(vg, x, y, text, NULL);
 		nvgFillColor(vg, colorg);
 		nvgText(vg, x, y, text, NULL);
 	}
 
-	public static void renderButton(ByteBuffer preicon, String text, String font, float x, float y, float w, float h,
-			NVGColor color, boolean mouseInside) {
+	public static void renderButton(ByteBuffer preicon, String text, String font, String entypo, float x, float y,
+			float w, float h, NVGColor color, boolean mouseInside) {
 		long vg = display.getVg();
 		NVGPaint bg = paintA;
 		float cornerRadius = 10.0f;
@@ -364,15 +380,15 @@ public class VectorsRendering {
 		tw = nvgTextBounds(vg, 0, 0, textEncoded, NULL, (ByteBuffer) null);
 		if (preicon != null) {
 			nvgFontSize(vg, h * 1.3f);
-			nvgFontFace(vg, "icons");
+			nvgFontFace(vg, entypo);
 			iw = nvgTextBounds(vg, 0, 0, preicon, NULL, (ByteBuffer) null);
 			iw += h * 0.15f;
 		}
 
 		if (preicon != null) {
 			nvgFontSize(vg, h * 1.3f);
-			nvgFontFace(vg, "icons");
-			nvgFillColor(vg, rgba(255, 255, 255, 96, colorA));
+			nvgFontFace(vg, entypo);
+			nvgFillColor(vg, rgba(100, 100, 100, 96, colorA));
 			nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
 			nvgText(vg, x + w * 0.5f - tw * 0.5f - iw * 0.75f, y + h * 0.5f, preicon, NULL);
 		}
@@ -386,6 +402,10 @@ public class VectorsRendering {
 		nvgText(vg, x + w * 0.5f - tw * 0.5f + iw * 0.25f, y + h * 0.5f, textEncoded, NULL);
 
 		memFree(textEncoded);
+	}
+
+	public static ByteBuffer cpToUTF8(int cp) {
+		return memEncodeUTF8(new String(Character.toChars(cp)), true);
 	}
 
 }

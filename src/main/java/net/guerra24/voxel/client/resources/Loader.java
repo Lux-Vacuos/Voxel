@@ -336,10 +336,14 @@ public class Loader {
 	}
 
 	public void loadNVGFont(String filename, String name) {
+		loadNVGFont(filename, name, 150);
+	}
+	
+	public void loadNVGFont(String filename, String name, int size) {
 		Logger.log("Loading NVGFont: " + filename + ".ttf");
 		int font = 0;
 		try {
-			ByteBuffer buffer = ioResourceToByteBuffer("assets/fonts/" + filename + ".ttf", 150 * 1024);
+			ByteBuffer buffer = ioResourceToByteBuffer("assets/fonts/" + filename + ".ttf", size * 1024);
 			nvgFont.add(buffer);
 			font = nvgCreateFontMem(display.getVg(), name, buffer, 0);
 		} catch (IOException e) {

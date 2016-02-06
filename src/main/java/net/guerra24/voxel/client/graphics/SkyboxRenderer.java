@@ -53,7 +53,7 @@ public class SkyboxRenderer {
 	private float time = 0;
 	private float globalTime = 0;
 	
-	private static final float TIME_MULTIPLIER = 50;
+	private static final float TIME_MULTIPLIER = 10;
 
 	/**
 	 * Constructor, Initializes the Skybox model, Textures and Shader

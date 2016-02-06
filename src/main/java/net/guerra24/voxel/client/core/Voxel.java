@@ -88,6 +88,12 @@ public class Voxel {
 		Logger.log("OpenGL Version: " + glGetString(GL_VERSION));
 		Logger.log("Vendor: " + glGetString(GL_VENDOR));
 		Logger.log("Renderer: " + glGetString(GL_RENDERER));
+		CoreInfo.platform = Bootstrap.getPlatform();
+		CoreInfo.LWJGLVer = Version.getVersion();
+		CoreInfo.GLFWVer = GLFW.glfwGetVersionString();
+		CoreInfo.OpenGLVer = glGetString(GL_VERSION);
+		CoreInfo.Vendor = glGetString(GL_VENDOR);
+		CoreInfo.Renderer = glGetString(GL_RENDERER);
 		gameResources.getDisplay().setVisible();
 
 		if (Bootstrap.getPlatform() == Bootstrap.Platform.MACOSX) {

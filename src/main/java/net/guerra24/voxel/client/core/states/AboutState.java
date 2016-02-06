@@ -22,35 +22,39 @@
  * SOFTWARE.
  */
 
-package net.guerra24.voxel.client.menu;
+package net.guerra24.voxel.client.core.states;
 
+import net.guerra24.voxel.client.core.GlobalStates;
+import net.guerra24.voxel.client.core.GlobalStates.GameState;
+import net.guerra24.voxel.client.core.State;
+import net.guerra24.voxel.client.core.Voxel;
+import net.guerra24.voxel.client.graphics.VectorsRendering;
 import net.guerra24.voxel.client.resources.GameResources;
 
 /**
+ * Main Menu State
  * 
  * @author danirod
+ * @category Kernel
  */
-public class Menu {
+public class AboutState implements State {
 
-	public final MainMenu mainMenu;
+	@Override
+	public void render(Voxel voxel, GlobalStates states, float delta) {
+		GameResources gm = voxel.getGameResources();
+		gm.getRenderer().prepare();
+		gm.getDisplay().beingNVGFrame();
+		gm.getMenuSystem().aboutMenu.render();
+		VectorsRendering.renderMouse();
+		gm.getDisplay().endNVGFrame();
+	}
 
-	public final PauseMenu pauseMenu;
-
-	public final OptionsMenu optionsMenu;
-
-	public final GameSP gameSP;
-
-	public final WorldSelectionMenu worldSelectionMenu;
-
-	public final AboutMenu aboutMenu;
-
-	public Menu(GameResources gm) {
-		mainMenu = new MainMenu(gm);
-		pauseMenu = new PauseMenu(gm);
-		optionsMenu = new OptionsMenu(gm);
-		gameSP = new GameSP(gm);
-		worldSelectionMenu = new WorldSelectionMenu(gm);
-		aboutMenu = new AboutMenu(gm);
+	@Override
+	public void update(Voxel voxel, GlobalStates states, float delta) {
+		GameResources gm = voxel.getGameResources();
+		if (gm.getMenuSystem().aboutMenu.getBackButton().pressed())
+			states.setState(GameState.MAINMENU);
+		gm.getMenuSystem().aboutMenu.update();
 	}
 
 }

@@ -42,8 +42,8 @@ uniform int useShadows;
 
 void main(void) {
 	vec4 worldPosition = modelMatrix * vec4(position.x, 0.0, position.y, 1.0);
-	float sina = sin((worldPosition.x + moveFactor) * 2) * 0.02;
-	float sinb = cos((worldPosition.z - moveFactor) * 2) * 0.008;
+	float sina = sin(worldPosition.x + moveFactor) * 0.02;
+	float sinb = cos(worldPosition.z - moveFactor) * 0.008;
 	worldPosition += vec4(0.0, sina + sinb, 0.0, 0.0);
 	normal = vec3(sina, 1.0, sinb);
 	gl_Position = projectionMatrix * viewMatrix * worldPosition;
