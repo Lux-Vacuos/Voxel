@@ -52,6 +52,7 @@ import net.guerra24.voxel.client.graphics.shaders.TessellatorShader;
 import net.guerra24.voxel.client.input.Keyboard;
 import net.guerra24.voxel.client.input.Mouse;
 import net.guerra24.voxel.client.menu.Menu;
+import net.guerra24.voxel.client.network.VoxelClient;
 import net.guerra24.voxel.client.particle.ParticleMaster;
 import net.guerra24.voxel.client.particle.ParticleTexture;
 import net.guerra24.voxel.client.sound.LibraryLWJGLOpenAL;
@@ -102,6 +103,7 @@ public class GameResources {
 
 	private Engine physicsEngine;
 	private PhysicsSystem physicsSystem;
+	private VoxelClient voxelClient;
 
 	private SoundSystem soundSystem;
 	private Frustum frustum;
@@ -159,6 +161,7 @@ public class GameResources {
 		physicsSystem = new PhysicsSystem(voxel.getWorldsHandler().getActiveWorld());
 		physicsEngine.addSystem(physicsSystem);
 		physicsEngine.addEntity(camera);
+		voxelClient = new VoxelClient(this);
 
 		try {
 			SoundSystemConfig.addLibrary(LibraryLWJGLOpenAL.class);
@@ -227,6 +230,7 @@ public class GameResources {
 		renderer.cleanUp();
 		loader.cleanUp();
 		soundSystem.cleanup();
+		voxelClient.dispose();
 	}
 
 	public Random getRand() {
@@ -311,6 +315,10 @@ public class GameResources {
 
 	public Display getDisplay() {
 		return display;
+	}
+
+	public VoxelClient getVoxelClient() {
+		return voxelClient;
 	}
 
 }

@@ -32,6 +32,7 @@ import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
 import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 
+import net.guerra24.voxel.client.core.VoxelVariables;
 import net.guerra24.voxel.client.graphics.shaders.SkyboxShader;
 import net.guerra24.voxel.client.resources.GameResources;
 import net.guerra24.voxel.client.resources.Loader;
@@ -52,7 +53,7 @@ public class SkyboxRenderer {
 	private SkyboxShader shader;
 	private float time = 0;
 	private float globalTime = 0;
-	
+
 	private static final float TIME_MULTIPLIER = 10;
 
 	/**
@@ -112,9 +113,11 @@ public class SkyboxRenderer {
 	 *            Delta
 	 */
 	public float update(float delta) {
-		time += delta * TIME_MULTIPLIER;
+		if (!VoxelVariables.onServer) {
+			time += delta * TIME_MULTIPLIER;
+			time %= 24000;
+		}
 		globalTime += delta * TIME_MULTIPLIER;
-		time %= 24000;
 		float res = time * 0.015f;
 		return res - 90;
 	}

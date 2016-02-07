@@ -28,15 +28,17 @@ import java.io.Serializable;
 
 public class WorldTime implements Serializable {
 
-	private static final long serialVersionUID = 2817182605309483282L;
+	private static final long serialVersionUID = -1138644153739323288L;
+	private float time;
 
-	private int time;
+	public WorldTime() {
+	}
 
-	public WorldTime(int time) {
+	public WorldTime(float time) {
 		this.time = time;
 	}
 
-	public int getTime() {
+	public float getTime() {
 		return time;
 	}
 

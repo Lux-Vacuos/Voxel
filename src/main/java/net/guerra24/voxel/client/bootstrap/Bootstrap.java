@@ -27,6 +27,8 @@ package net.guerra24.voxel.client.bootstrap;
 import java.io.File;
 import java.util.Calendar;
 
+import com.esotericsoftware.minlog.Log;
+
 import net.guerra24.voxel.client.core.Voxel;
 import net.guerra24.voxel.client.core.VoxelVariables;
 import net.guerra24.voxel.client.util.Logger;
@@ -109,6 +111,7 @@ public class Bootstrap {
 	 *            Not Used
 	 */
 	public static void main(String[] args) {
+		Log.set(Log.LEVEL_DEBUG);
 		Thread.currentThread().setName("Voxel Main");
 		try {
 			parseArgs(args);

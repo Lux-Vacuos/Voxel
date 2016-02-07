@@ -15,8 +15,8 @@ jar {
 	include("log4j.properties")
 	
     manifest {
-        attributes 'Voxel-Branch': 'Develop',
-                   'Voxel-Version': version
+        attributes 'Voxel-Client-Branch': 'Develop',
+                   'Voxel-Client-Version': version
     }
 }
 
