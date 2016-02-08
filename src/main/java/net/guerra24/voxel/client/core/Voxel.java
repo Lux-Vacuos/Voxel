@@ -42,7 +42,6 @@ import net.guerra24.voxel.client.util.Logger;
 import net.guerra24.voxel.client.world.InfinityWorld;
 import net.guerra24.voxel.client.world.WorldsHandler;
 import net.guerra24.voxel.client.world.block.BlocksResources;
-import net.guerra24.voxel.universal.util.vector.Vector3f;
 
 /**
  * The Kernel, Game Engine Core
@@ -148,7 +147,6 @@ public class Voxel {
 		Mouse.setHidden(true);
 		Timers.initDebugDisplay();
 		gameResources.getVoxelClient().connect(4059, "localhost");
-		gameResources.getVoxelClient().getClient().sendTCP(new Vector3f(100, 100, 100));
 	}
 
 	/**

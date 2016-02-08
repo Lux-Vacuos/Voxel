@@ -31,13 +31,14 @@ in vec4 data;
 in vec3 tangent;
 in vec3 bitangent;
 
+out float fadeOut;
 out vec2 pass_textureCoords;
-out mat3 TBN;
 out vec3 pass_normal;
 out vec3 pass_position;
 out vec4 pass_Data;
 out vec4 ShadowCoord;
 out vec3 posInTangent;
+out mat3 TBN;
 
 uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;

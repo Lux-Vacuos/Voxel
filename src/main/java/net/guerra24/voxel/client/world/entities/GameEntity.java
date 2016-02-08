@@ -27,6 +27,9 @@ package net.guerra24.voxel.client.world.entities;
 import com.badlogic.ashley.core.Entity;
 
 import net.guerra24.voxel.client.resources.models.TexturedModel;
+import net.guerra24.voxel.client.world.physics.CollisionComponent;
+import net.guerra24.voxel.client.world.physics.PositionComponent;
+import net.guerra24.voxel.client.world.physics.VelocityComponent;
 import net.guerra24.voxel.universal.util.vector.Vector3f;
 
 public class GameEntity extends Entity {

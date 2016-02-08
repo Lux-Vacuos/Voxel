@@ -68,6 +68,8 @@ uniform int useVolumetricLight;
 const int NUM_SAMPLES = 50;
 const float density = 0.01;
 const float gradient = 2.0;
+const float transitionDistance = 5;
+const float shadowDistance = 80;
 
 /*--------------------------------------------------------*/
 /*------------------COMPOSITE 5 CODE----------------------*/
@@ -93,9 +95,13 @@ void main(void){
     vec3 invertedlightDir = invertedLight - position.xyz ;
     invertedlightDir = normalize(invertedlightDir);
     float lightDirDOTviewDir = dot(invertedlightDir,eyeDir);
+	float distance = length(cameraPosition-position.xyz);
     if(data.b != 1) {
     	normal = normalize(normal);
-    	float b = (max(dot(normal.xyz,lightDir),-1.0) - data.a);
+    	float shadowDist = distance - (shadowDistance - transitionDistance);
+		shadowDist = shadowDist / transitionDistance;
+		float fadeOut = clamp(1.0-shadowDist, 0.0, 1.0);
+    	float b = (max(dot(normal.xyz,lightDir),-1.0) - (data.a * fadeOut));
     	if(b <= data1.a)
     		b = data1.a;
     	b = clamp(b,0.02,1.0);
@@ -133,7 +139,6 @@ void main(void){
 		}
 	}
 	if(data.b != 1) {
-		float distance = length(cameraPosition-position.xyz);
 		float visibility = exp(-pow((distance*density),gradient));
 		visibility = clamp(visibility,0.8,1.1);
     	image.rgb = mix(skyColor.rgb, image.rgb, visibility);

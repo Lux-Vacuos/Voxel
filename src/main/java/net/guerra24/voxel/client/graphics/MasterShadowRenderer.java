@@ -67,7 +67,7 @@ public class MasterShadowRenderer {
 	public MasterShadowRenderer(Display display) {
 		this.display = display;
 		shader = new EntityBasicShader();
-		projectionMatrix = Maths.orthographic(-80, 80, -80, 80, -100, 100);
+		projectionMatrix = Maths.orthographic(-80, 80, -80, 80, -80, 80);
 		renderer = new ShadowRenderer(shader, projectionMatrix);
 		if (textureSize > GLUtil.getTextureMaxSize())
 			textureSize = GLUtil.getTextureMaxSize();

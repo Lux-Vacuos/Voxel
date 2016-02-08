@@ -25,12 +25,12 @@
 #version 330 core
 
 in vec2 pass_textureCoords;
-in mat3 TBN;
 in vec3 pass_normal;
 in vec3 pass_position;
 in vec4 pass_Data;
 in vec4 ShadowCoord;
 in vec3 posInTangent;
+in mat3 TBN;
 
 out vec4 [5] out_Color;
 

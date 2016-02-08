@@ -34,9 +34,6 @@ import com.badlogic.gdx.math.Vector3;
 
 import net.guerra24.voxel.client.world.IWorld;
 import net.guerra24.voxel.client.world.block.Block;
-import net.guerra24.voxel.client.world.entities.CollisionComponent;
-import net.guerra24.voxel.client.world.entities.PositionComponent;
-import net.guerra24.voxel.client.world.entities.VelocityComponent;
 import net.guerra24.voxel.universal.util.vector.Vector3f;
 
 public class PhysicsSystem extends EntitySystem {

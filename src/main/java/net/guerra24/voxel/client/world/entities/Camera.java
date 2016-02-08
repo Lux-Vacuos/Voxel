@@ -28,6 +28,9 @@ import com.badlogic.ashley.core.Entity;
 
 import net.guerra24.voxel.client.resources.Ray;
 import net.guerra24.voxel.client.util.Maths;
+import net.guerra24.voxel.client.world.physics.CollisionComponent;
+import net.guerra24.voxel.client.world.physics.PositionComponent;
+import net.guerra24.voxel.client.world.physics.VelocityComponent;
 import net.guerra24.voxel.universal.util.vector.Matrix4f;
 import net.guerra24.voxel.universal.util.vector.Vector2f;
 import net.guerra24.voxel.universal.util.vector.Vector3f;

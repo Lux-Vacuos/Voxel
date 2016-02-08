@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package net.guerra24.voxel.client.world.entities;
+package net.guerra24.voxel.client.world.physics;
 
 import com.badlogic.ashley.core.Component;
 

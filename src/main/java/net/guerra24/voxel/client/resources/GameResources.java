@@ -60,6 +60,7 @@ import net.guerra24.voxel.client.sound.soundsystem.SoundSystem;
 import net.guerra24.voxel.client.sound.soundsystem.SoundSystemConfig;
 import net.guerra24.voxel.client.sound.soundsystem.SoundSystemException;
 import net.guerra24.voxel.client.sound.soundsystem.codecs.CodecJOgg;
+import net.guerra24.voxel.client.util.CustomLog;
 import net.guerra24.voxel.client.util.Logger;
 import net.guerra24.voxel.client.util.LoggerSoundSystem;
 import net.guerra24.voxel.client.world.block.Block;
@@ -161,6 +162,7 @@ public class GameResources {
 		physicsSystem = new PhysicsSystem(voxel.getWorldsHandler().getActiveWorld());
 		physicsEngine.addSystem(physicsSystem);
 		physicsEngine.addEntity(camera);
+		CustomLog.getInstance();
 		voxelClient = new VoxelClient(this);
 
 		try {
