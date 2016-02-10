@@ -126,7 +126,7 @@ public class GameResources {
 		display = new Display();
 		display.create(VoxelVariables.WIDTH, VoxelVariables.HEIGHT, "Voxel", VoxelVariables.VSYNC, false, false,
 				new ContextFormat(3, 3, GLFW_OPENGL_API, GLFW_OPENGL_CORE_PROFILE, true),
-				new String[] { "assets/icon/icon32.png", "assets/icon/icon64.png" });
+				new String[] { "assets/icons/icon32.png", "assets/icons/icon64.png" });
 		Keyboard.setDisplay(display);
 		Mouse.setDisplay(display);
 		VectorsRendering.setDisplay(display);

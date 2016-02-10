@@ -111,7 +111,7 @@ public class Bootstrap {
 	 *            Not Used
 	 */
 	public static void main(String[] args) {
-		Log.set(Log.LEVEL_DEBUG);
+		Log.set(Log.LEVEL_INFO);
 		Thread.currentThread().setName("Voxel Main");
 		try {
 			parseArgs(args);

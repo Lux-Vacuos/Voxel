@@ -39,18 +39,17 @@ repositories {
 }
 
 dependencies {
-	compile 'log4j:log4j:1.2.+'
-	compile 'com.badlogicgames.ashley:ashley:1.6.+'
-	compile 'org.l33tlabs.twl:pngdecoder:1.+'
-	compile 'de.jarnbjo:j-ogg-all:1.0.+'
-	compile 'org.jcraft:jorbis:0.0.+'
+	compile 'log4j:log4j:1.2.17'
+	compile 'com.badlogicgames.ashley:ashley:1.7.1'
+	compile 'org.l33tlabs.twl:pngdecoder:1.0'
+	compile 'de.jarnbjo:j-ogg-all:1.0.0'
+	compile 'org.jcraft:jorbis:0.0.17'
 	compile 'com.esotericsoftware:kryonet:2.22.+'
 	compile 'org.lwjgl:lwjgl:3.0.0-SNAPSHOT'
 	compile 'org.lwjgl:lwjgl-platform:3.0.0-SNAPSHOT:natives-windows'
 	compile 'org.lwjgl:lwjgl-platform:3.0.0-SNAPSHOT:natives-linux'
 	compile 'org.lwjgl:lwjgl-platform:3.0.0-SNAPSHOT:natives-osx'
-	compile group: 'commons-collections', name: 'commons-collections', version: '3.+'
-    testCompile group: 'junit', name: 'junit', version: '4.+'
+    testCompile group: 'junit', name: 'junit', version: '4.12'
 }
 
 task generateJavaDoc(type: Javadoc) {
