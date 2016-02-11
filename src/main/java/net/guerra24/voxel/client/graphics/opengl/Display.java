@@ -47,7 +47,6 @@ import static org.lwjgl.glfw.GLFW.glfwWindowHint;
 import static org.lwjgl.nanovg.NanoVG.nvgBeginFrame;
 import static org.lwjgl.nanovg.NanoVG.nvgEndFrame;
 import static org.lwjgl.nanovg.NanoVGGL3.NVG_ANTIALIAS;
-import static org.lwjgl.nanovg.NanoVGGL3.NVG_DEBUG;
 import static org.lwjgl.nanovg.NanoVGGL3.NVG_STENCIL_STROKES;
 import static org.lwjgl.nanovg.NanoVGGL3.nvgCreateGL3;
 import static org.lwjgl.nanovg.NanoVGGL3.nvgDeleteGL3;
@@ -65,6 +64,7 @@ import java.nio.IntBuffer;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFWVidMode;
+import org.lwjgl.opengl.GLCapabilities;
 import org.lwjgl.opengl.NVXGPUMemoryInfo;
 import org.lwjgl.opengl.WGLAMDGPUAssociation;
 
@@ -81,6 +81,7 @@ import net.guerra24.voxel.client.util.Logger;
 public class Display extends Window {
 
 	private GLFWVidMode vidmode;
+	private GLCapabilities capabilities;
 	private double lastLoopTime;
 	private float timeCount;
 
@@ -134,8 +135,8 @@ public class Display extends Window {
 			Logger.error("Failed to load icons");
 			e.printStackTrace();
 		}
-		createCapabilities();
-		super.vg = nvgCreateGL3(NVG_ANTIALIAS | NVG_STENCIL_STROKES | NVG_DEBUG);
+		capabilities = createCapabilities();
+		super.vg = nvgCreateGL3(NVG_ANTIALIAS | NVG_STENCIL_STROKES);
 		if (vg == NULL)
 			throw new RuntimeException("Fail to create NanoVG");
 
@@ -233,6 +234,10 @@ public class Display extends Window {
 
 	public boolean isAmd() {
 		return amd;
+	}
+
+	public GLCapabilities getCapabilities() {
+		return capabilities;
 	}
 
 	public float getTimeCount() {

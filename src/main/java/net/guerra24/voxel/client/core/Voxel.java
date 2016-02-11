@@ -77,7 +77,7 @@ public class Voxel {
 	 * 
 	 */
 	public void preInit() {
-		Logger.log("Loading");
+		Logger.log("Starting Client");
 		gameResources = GameResources.instance();
 		Logger.log("Voxel Version: " + VoxelVariables.version);
 		Logger.log("Molten API Version: " + VoxelVariables.apiVersion);
@@ -153,7 +153,7 @@ public class Voxel {
 	 * Voxel Main Loop
 	 * 
 	 */
-	public void mainLoop() {
+	private void mainLoop() {
 		preInit();
 		init();
 		postInit();
