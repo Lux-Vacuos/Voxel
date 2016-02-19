@@ -86,8 +86,8 @@ import org.lwjgl.BufferUtils;
 
 import de.matthiasmann.twl.utils.PNGDecoder;
 import de.matthiasmann.twl.utils.PNGDecoder.Format;
-import net.guerra24.voxel.client.graphics.VectorsRendering;
-import net.guerra24.voxel.client.graphics.opengl.Display;
+import net.guerra24.voxel.client.nanovg.rendering.VectorsRendering;
+import net.guerra24.voxel.client.opengl.Display;
 import net.guerra24.voxel.client.resources.models.EntityTexture;
 import net.guerra24.voxel.client.resources.models.RawModel;
 import net.guerra24.voxel.client.util.Logger;

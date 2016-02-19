@@ -26,9 +26,9 @@ package net.guerra24.voxel.client.core.states;
 
 import net.guerra24.voxel.client.core.GlobalStates;
 import net.guerra24.voxel.client.core.GlobalStates.GameState;
+import net.guerra24.voxel.client.nanovg.rendering.VectorsRendering;
 import net.guerra24.voxel.client.core.State;
 import net.guerra24.voxel.client.core.Voxel;
-import net.guerra24.voxel.client.graphics.VectorsRendering;
 import net.guerra24.voxel.client.resources.GameResources;
 
 public class WorldSelectionState implements State {

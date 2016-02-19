@@ -144,8 +144,8 @@ public class Bootstrap {
 	 *            Array of args
 	 */
 	private static void parseArgs(String[] args) {
-		boolean gaveWidth = false, gaveHeight = false, gaveFov = false;
-		boolean gaveFps = false, gaveAutostart = false;
+		boolean gaveWidth = false, gaveHeight = false;
+		boolean gaveAutostart = false;
 
 		for (int i = 0; i < args.length; i++) {
 			switch (args[i]) {
@@ -165,28 +165,14 @@ public class Bootstrap {
 					throw new IllegalArgumentException("Height must be positive");
 				gaveHeight = true;
 				break;
-			case "-fov":
-				if (gaveFov)
-					throw new IllegalStateException("FOV already given");
-				VoxelVariables.FOV = Integer.parseInt(args[++i]);
-				if (VoxelVariables.FOV <= 20 || VoxelVariables.FOV >= 140)
-					throw new IllegalArgumentException("FOV must be in (20, 140) range");
-				gaveFov = true;
-				break;
-			case "-fps":
-				if (gaveFps)
-					throw new IllegalStateException("FPS already given");
-				VoxelVariables.FPS = Integer.parseInt(args[++i]);
-				if (VoxelVariables.FPS <= 0) {
-					throw new IllegalArgumentException("FPS must be positive");
-				}
-				gaveFps = true;
-				break;
 			case "-autostart":
 				if (gaveAutostart)
 					throw new IllegalStateException("Autostart already given");
 				VoxelVariables.autostart = true;
 				gaveAutostart = true;
+				break;
+			case "-username":
+				System.out.println(args[++i]);
 				break;
 			default:
 				if (args[i].startsWith("-")) {

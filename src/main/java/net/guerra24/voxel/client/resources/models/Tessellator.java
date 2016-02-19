@@ -37,6 +37,7 @@ import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE1;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE2;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE3;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE4;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
 import static org.lwjgl.opengl.GL15.GL_ARRAY_BUFFER;
 import static org.lwjgl.opengl.GL15.GL_DYNAMIC_DRAW;
@@ -62,8 +63,8 @@ import java.util.List;
 import org.lwjgl.BufferUtils;
 
 import net.guerra24.voxel.client.core.VoxelVariables;
-import net.guerra24.voxel.client.graphics.shaders.TessellatorBasicShader;
-import net.guerra24.voxel.client.graphics.shaders.TessellatorShader;
+import net.guerra24.voxel.client.opengl.rendering.shaders.TessellatorBasicShader;
+import net.guerra24.voxel.client.opengl.rendering.shaders.TessellatorShader;
 import net.guerra24.voxel.client.resources.GameResources;
 import net.guerra24.voxel.client.world.block.Block;
 import net.guerra24.voxel.client.world.block.BlockBase;
@@ -90,6 +91,7 @@ public class Tessellator {
 	private int texture;
 	private int normalMap;
 	private int heightMap;
+	private int specularMap;
 	private int occlusion;
 	private boolean updated = false;
 
@@ -174,10 +176,11 @@ public class Tessellator {
 		glBindVertexArray(0);
 	}
 
-	public void begin(int texture, int normalMap, int heightMap) {
+	public void begin(int texture, int normalMap, int heightMap, int specularMap) {
 		this.texture = texture;
 		this.normalMap = normalMap;
 		this.heightMap = heightMap;
+		this.specularMap = specularMap;
 		pos.clear();
 		texcoords.clear();
 		normals.clear();
@@ -256,6 +259,8 @@ public class Tessellator {
 		glBindTexture(GL_TEXTURE_2D, normalMap);
 		glActiveTexture(GL_TEXTURE3);
 		glBindTexture(GL_TEXTURE_2D, heightMap);
+		glActiveTexture(GL_TEXTURE4);
+		glBindTexture(GL_TEXTURE_2D, specularMap);
 		glDrawElements(GL_TRIANGLES, indicesCounter, GL_UNSIGNED_INT, 0);
 		glDisableVertexAttribArray(0);
 		glDisableVertexAttribArray(1);

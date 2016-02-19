@@ -36,25 +36,26 @@ import net.guerra24.voxel.client.core.GameSettings;
 import net.guerra24.voxel.client.core.GlobalStates;
 import net.guerra24.voxel.client.core.Voxel;
 import net.guerra24.voxel.client.core.VoxelVariables;
-import net.guerra24.voxel.client.graphics.DeferredShadingRenderer;
-import net.guerra24.voxel.client.graphics.Frustum;
-import net.guerra24.voxel.client.graphics.MasterRenderer;
-import net.guerra24.voxel.client.graphics.MasterShadowRenderer;
-import net.guerra24.voxel.client.graphics.OcclusionRenderer;
-import net.guerra24.voxel.client.graphics.SkyboxRenderer;
-import net.guerra24.voxel.client.graphics.VectorsRendering;
-import net.guerra24.voxel.client.graphics.nanovg.Timers;
-import net.guerra24.voxel.client.graphics.opengl.ContextFormat;
-import net.guerra24.voxel.client.graphics.opengl.Display;
-import net.guerra24.voxel.client.graphics.shaders.ShaderProgram;
-import net.guerra24.voxel.client.graphics.shaders.TessellatorBasicShader;
-import net.guerra24.voxel.client.graphics.shaders.TessellatorShader;
 import net.guerra24.voxel.client.input.Keyboard;
 import net.guerra24.voxel.client.input.Mouse;
 import net.guerra24.voxel.client.menu.Menu;
+import net.guerra24.voxel.client.nanovg.Timers;
+import net.guerra24.voxel.client.nanovg.rendering.VectorsRendering;
 import net.guerra24.voxel.client.network.VoxelClient;
+import net.guerra24.voxel.client.opengl.ContextFormat;
+import net.guerra24.voxel.client.opengl.Display;
+import net.guerra24.voxel.client.opengl.rendering.DeferredShadingRenderer;
+import net.guerra24.voxel.client.opengl.rendering.Frustum;
+import net.guerra24.voxel.client.opengl.rendering.GLMasterRenderer;
+import net.guerra24.voxel.client.opengl.rendering.MasterShadowRenderer;
+import net.guerra24.voxel.client.opengl.rendering.OcclusionRenderer;
+import net.guerra24.voxel.client.opengl.rendering.SkyboxRenderer;
+import net.guerra24.voxel.client.opengl.rendering.shaders.ShaderProgram;
+import net.guerra24.voxel.client.opengl.rendering.shaders.TessellatorBasicShader;
+import net.guerra24.voxel.client.opengl.rendering.shaders.TessellatorShader;
 import net.guerra24.voxel.client.particle.ParticleMaster;
 import net.guerra24.voxel.client.particle.ParticleTexture;
+import net.guerra24.voxel.client.rendering.MasterRenderer;
 import net.guerra24.voxel.client.sound.LibraryLWJGLOpenAL;
 import net.guerra24.voxel.client.sound.soundsystem.SoundSystem;
 import net.guerra24.voxel.client.sound.soundsystem.SoundSystemConfig;
@@ -139,10 +140,19 @@ public class GameResources {
 	 * 
 	 */
 	public void init(Voxel voxel) {
-		loader = new Loader(display);
 		rand = new Random();
-		masterShadowRenderer = new MasterShadowRenderer(display);
-		renderer = new MasterRenderer(this);
+		if (display.isVk()) {
+		} else {
+			loader = new Loader(display);
+			masterShadowRenderer = new MasterShadowRenderer(display);
+			renderer = new GLMasterRenderer(this);
+			occlusionRenderer = new OcclusionRenderer(renderer.getProjectionMatrix());
+			skyboxRenderer = new SkyboxRenderer(loader, renderer.getProjectionMatrix());
+			deferredShadingRenderer = new DeferredShadingRenderer(this);
+			TessellatorShader.getInstance();
+			TessellatorBasicShader.getInstance();
+			ParticleMaster.getInstance().init(loader, renderer.getProjectionMatrix());
+		}
 		sun_Camera = new SunCamera(masterShadowRenderer.getProjectionMatrix());
 		sun_Camera.setPosition(new Vector3f(0, 0, 0));
 		sun_Camera.setYaw(sunRotation.x);
@@ -150,12 +160,6 @@ public class GameResources {
 		sun_Camera.setRoll(sunRotation.z);
 		camera = new PlayerCamera(renderer.getProjectionMatrix(), display);
 		kryo = new Kryo();
-		occlusionRenderer = new OcclusionRenderer(renderer.getProjectionMatrix());
-		skyboxRenderer = new SkyboxRenderer(loader, renderer.getProjectionMatrix());
-		deferredShadingRenderer = new DeferredShadingRenderer(this);
-		TessellatorShader.getInstance();
-		TessellatorBasicShader.getInstance();
-		ParticleMaster.getInstance().init(loader, renderer.getProjectionMatrix());
 		frustum = new Frustum();
 
 		physicsEngine = new Engine();

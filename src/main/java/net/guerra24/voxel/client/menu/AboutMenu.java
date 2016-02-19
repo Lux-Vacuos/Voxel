@@ -5,8 +5,8 @@ import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_MIDDLE;
 
 import net.guerra24.voxel.client.core.CoreInfo;
 import net.guerra24.voxel.client.core.VoxelVariables;
-import net.guerra24.voxel.client.graphics.VectorsRendering;
 import net.guerra24.voxel.client.input.Mouse;
+import net.guerra24.voxel.client.nanovg.rendering.VectorsRendering;
 import net.guerra24.voxel.client.resources.GameResources;
 import net.guerra24.voxel.universal.util.vector.Vector2f;
 

@@ -78,7 +78,7 @@ void main(void){
     vec4 normal = texture(gNormal, texcoord);
     float depth = texture(gDepth, vec3(texcoord.xy, 0.0), 0);
     if(data.b != 1) {
-   		if(data.r == 1.0){
+   		if(data.r > 0.0){
    			if(useReflections == 1){
     			vec3 worldStartingPos = position.xyz;
     			vec3 normal = normal.xyz;
@@ -116,7 +116,7 @@ void main(void){
 	        		fact = 1.0;
     			else if (cameraToWorldDist > currentWorldDist)
 	        		fact = 1.0;
-        		image = image*fact + newColor *(1-fact);
+        		image = image*fact + newColor *(1-fact) * data.r;
         	}
     	}
     }

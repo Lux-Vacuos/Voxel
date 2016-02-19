@@ -38,6 +38,7 @@ uniform sampler2D texture0;
 uniform sampler2DShadow depth;
 uniform sampler2D normalMap;
 uniform sampler2D heightMap;
+uniform sampler2D specularMap;
 
 uniform int useShadows;
 uniform int useParallax;
@@ -113,8 +114,8 @@ void main(void) {
 	out_Color[0] = textureColour;
 	out_Color[1] = vec4(pass_position.xyz,0);
 	out_Color[2] = vec4(normal,0.0);
-	out_Color[3] = vec4(0.0,1.0,0.0,shadow);
+	out_Color[3] = vec4(texture(specularMap, texcoords).r,1.0,0.0,shadow);
 	out_Color[4] = vec4(0.0, 0.0, 0.0, bright);
-	if(id == 8 || id == 13)
-		out_Color[3].r = 1.0;
+		
+		
 }

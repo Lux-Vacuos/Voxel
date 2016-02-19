@@ -40,6 +40,7 @@ public class BlocksResources {
 
 	private static int normalMap;
 	private static int heightMap;
+	private static int specularMap;
 
 	public static void createBlocks(Loader loader) {
 
@@ -49,6 +50,7 @@ public class BlocksResources {
 		tessellatorTextureAtlas = new TessellatorTextureAtlas(256, 256, loader.loadTextureBlocks("blocks"));
 		normalMap = loader.loadTextureBlocks("blocks_normal");
 		heightMap = loader.loadTextureBlocks("blocks_height");
+		specularMap = loader.loadTextureBlocks("blocks_specular");
 
 		ModelTexture texture8 = new ModelTexture(loader.loadTextureBlocks("Torch"));
 		ModelTexture texture9 = new ModelTexture(loader.loadTextureBlocks("Portal"));
@@ -87,6 +89,10 @@ public class BlocksResources {
 
 	public static int getNormalMap() {
 		return normalMap;
+	}
+
+	public static int getSpecularMap() {
+		return specularMap;
 	}
 
 }

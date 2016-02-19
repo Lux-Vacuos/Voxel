@@ -41,9 +41,9 @@ import static net.guerra24.voxel.client.input.Mouse.setCursorPosition;
 import static net.guerra24.voxel.client.input.Mouse.setGrabbed;
 
 import net.guerra24.voxel.client.core.VoxelVariables;
-import net.guerra24.voxel.client.graphics.opengl.Display;
 import net.guerra24.voxel.client.input.Keyboard;
 import net.guerra24.voxel.client.menu.BlockGui;
+import net.guerra24.voxel.client.opengl.Display;
 import net.guerra24.voxel.client.resources.GameResources;
 import net.guerra24.voxel.client.util.Maths;
 import net.guerra24.voxel.client.world.IWorld;
@@ -177,6 +177,8 @@ public class PlayerCamera extends Camera {
 				clickTime = 10;
 				setBlock(gm.getDisplay().getDisplayWidth(), gm.getDisplay().getDisplayHeight(), block, world, gm);
 			}
+		if(isKeyDown(Keyboard.KEY_Y))
+		world.setGlobalBlock(bx, by-1, bz, Block.GoldOre.getId());
 
 		updateDebug(world);
 		updateRay(gm.getRenderer().getProjectionMatrix(), gm.getDisplay().getDisplayWidth(),

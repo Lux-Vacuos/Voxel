@@ -26,9 +26,9 @@ package net.guerra24.voxel.client.menu;
 
 import net.guerra24.voxel.client.core.CoreInfo;
 import net.guerra24.voxel.client.core.VoxelVariables;
-import net.guerra24.voxel.client.graphics.VectorsRendering;
-import net.guerra24.voxel.client.graphics.nanovg.Timers;
 import net.guerra24.voxel.client.input.Mouse;
+import net.guerra24.voxel.client.nanovg.Timers;
+import net.guerra24.voxel.client.nanovg.rendering.VectorsRendering;
 import net.guerra24.voxel.client.resources.GameResources;
 import net.guerra24.voxel.client.world.IWorld;
 import net.guerra24.voxel.client.world.block.Block;

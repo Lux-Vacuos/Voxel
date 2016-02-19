@@ -30,10 +30,10 @@ import net.guerra24.voxel.client.core.GlobalStates;
 import net.guerra24.voxel.client.core.State;
 import net.guerra24.voxel.client.core.Voxel;
 import net.guerra24.voxel.client.core.VoxelVariables;
-import net.guerra24.voxel.client.graphics.VectorsRendering;
 import net.guerra24.voxel.client.resources.GameResources;
 import net.guerra24.voxel.client.world.entities.PlayerCamera;
 import net.guerra24.voxel.client.core.GlobalStates.GameState;
+import net.guerra24.voxel.client.nanovg.rendering.VectorsRendering;
 
 /**
  * Loading Screen State
