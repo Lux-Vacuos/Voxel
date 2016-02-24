@@ -46,7 +46,6 @@ import static org.lwjgl.opengl.GL11.glGenTextures;
 import static org.lwjgl.opengl.GL11.glTexImage2D;
 import static org.lwjgl.opengl.GL11.glTexParameterf;
 import static org.lwjgl.opengl.GL11.glTexParameteri;
-import static org.lwjgl.opengl.GL12.GL_CLAMP_TO_EDGE;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE_CUBE_MAP;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE_CUBE_MAP_POSITIVE_X;
@@ -86,8 +85,7 @@ import org.lwjgl.BufferUtils;
 
 import de.matthiasmann.twl.utils.PNGDecoder;
 import de.matthiasmann.twl.utils.PNGDecoder.Format;
-import net.guerra24.voxel.client.nanovg.rendering.VectorsRendering;
-import net.guerra24.voxel.client.opengl.Display;
+import net.guerra24.voxel.client.rendering.api.glfw.Display;
 import net.guerra24.voxel.client.resources.models.EntityTexture;
 import net.guerra24.voxel.client.resources.models.RawModel;
 import net.guerra24.voxel.client.util.Logger;
@@ -249,29 +247,7 @@ public class Loader {
 	}
 
 	/**
-	 * 
-	 * @param fileName
-	 *            Name of the file to load
-	 * @return Texture ID
-	 * @deprecated Use {@link Loader#loadNVGFont(String, String)} due to there
-	 *             is no more FontRenderer
-	 */
-	public int loadTextureFont(String fileName) {
-		int texture = 0;
-		try {
-			InputStream file = getClass().getClassLoader().getResourceAsStream("assets/fonts/" + fileName + ".png");
-			Logger.log("Loading Texture: " + fileName + ".png");
-			texture = loadTexture(file, GL_NEAREST, GL_CLAMP_TO_EDGE);
-		} catch (Exception e) {
-			e.printStackTrace();
-			Logger.log("Couldn' load texture file " + fileName);
-		}
-		textures.add(texture);
-		return texture;
-	}
-
-	/**
-	 * Load Block Texture
+	 * Load Entity Texture
 	 * 
 	 * @param fileName
 	 *            Block Texture Name
@@ -290,33 +266,6 @@ public class Loader {
 		} catch (Exception e) {
 			e.printStackTrace();
 			Logger.log("Couldn' load texture file" + fileName);
-		}
-		textures.add(texture);
-		return texture;
-	}
-
-	/**
-	 * Load Gui Texture
-	 * 
-	 * @param fileName
-	 *            Gui Texture Name
-	 * @return Texture ID
-	 * @deprecated Use
-	 *             {@link VectorsRendering#renderWindow(float, float, float, float)}
-	 *             or
-	 *             {@link VectorsRendering#renderWindow(String, String, float, float, float, float)}
-	 *             due to there is no more GuiRenderer
-	 */
-	public int loadTextureGui(String fileName) {
-		int texture = 0;
-		try {
-			InputStream file = getClass().getClassLoader()
-					.getResourceAsStream("assets/textures/menu/" + fileName + ".png");
-			Logger.log("Loading Texture: " + fileName + ".png");
-			texture = loadTexture(file, GL_NEAREST, GL_REPEAT);
-		} catch (Exception e) {
-			e.printStackTrace();
-			Logger.error("Couldn' load texture file" + fileName);
 		}
 		textures.add(texture);
 		return texture;

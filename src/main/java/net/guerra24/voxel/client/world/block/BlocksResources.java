@@ -34,7 +34,6 @@ import net.guerra24.voxel.universal.util.vector.Vector2f;
 public class BlocksResources {
 
 	public static TexturedModel cubeTorch;
-	public static TexturedModel cubePortal;
 
 	private static TessellatorTextureAtlas tessellatorTextureAtlas;
 
@@ -45,7 +44,6 @@ public class BlocksResources {
 	public static void createBlocks(Loader loader) {
 
 		RawModel torch = loader.getObjLoader().loadObjModel("Torch");
-		RawModel portal = loader.getObjLoader().loadObjModel("Portal");
 
 		tessellatorTextureAtlas = new TessellatorTextureAtlas(256, 256, loader.loadTextureBlocks("blocks"));
 		normalMap = loader.loadTextureBlocks("blocks_normal");
@@ -53,9 +51,7 @@ public class BlocksResources {
 		specularMap = loader.loadTextureBlocks("blocks_specular");
 
 		ModelTexture texture8 = new ModelTexture(loader.loadTextureBlocks("Torch"));
-		ModelTexture texture9 = new ModelTexture(loader.loadTextureBlocks("Portal"));
 		cubeTorch = new TexturedModel(torch, texture8);
-		cubePortal = new TexturedModel(portal, texture9);
 		loadTexCoords();
 	}
 
@@ -77,6 +73,8 @@ public class BlocksResources {
 		tessellatorTextureAtlas.registerTextureCoords("DimOre", new Vector2f(240, 0));
 		tessellatorTextureAtlas.registerTextureCoords("Glass", new Vector2f(0, 16));
 		tessellatorTextureAtlas.registerTextureCoords("GoldOre", new Vector2f(16, 16));
+		tessellatorTextureAtlas.registerTextureCoords("Lava", new Vector2f(32, 16));
+		tessellatorTextureAtlas.registerTextureCoords("LavaSide", new Vector2f(48, 16));
 	}
 
 	public static TessellatorTextureAtlas getTessellatorTextureAtlas() {

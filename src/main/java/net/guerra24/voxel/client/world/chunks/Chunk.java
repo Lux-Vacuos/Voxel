@@ -46,6 +46,7 @@ import net.guerra24.voxel.client.util.Maths;
 import net.guerra24.voxel.client.world.IWorld;
 import net.guerra24.voxel.client.world.WorldService;
 import net.guerra24.voxel.client.world.block.Block;
+import net.guerra24.voxel.client.world.block.BlockBase;
 import net.guerra24.voxel.client.world.block.BlockEntity;
 import net.guerra24.voxel.client.world.block.BlocksResources;
 import net.guerra24.voxel.client.world.entities.Camera;
@@ -237,6 +238,7 @@ public class Chunk {
 		decorated = true;
 	}
 
+	@Deprecated
 	private void rebuildChunkSection(List<Object> cubes, IWorld world) {
 		for (int x = 0; x < sizeX; x++) {
 			for (int z = 0; z < sizeZ; z++) {
@@ -265,20 +267,29 @@ public class Chunk {
 		for (int x = 0; x < sizeX; x++) {
 			for (int z = 0; z < sizeZ; z++) {
 				for (int y = 0; y < sizeY; y++) {
-					if (Block.getBlock(blocks[x][y][z]) == Block.Torch) {
-					} else if (Block.getBlock(blocks[x][y][z]) != Block.Air
-							&& Block.getBlock(blocks[x][y][z]) != Block.Water
-							&& !Block.getBlock(blocks[x][y][z]).usesSingleModel()) {
+					BlockBase block = Block.getBlock(blocks[x][y][z]);
+					if (block == Block.Torch) {
+					} else if (block != Block.Air && block != Block.Water && !block.usesSingleModel()
+							&& !block.isCustomModel()) {
 						tess.generateCube(x + posX, y + posY, (z + posZ) - 1, 1,
-								cullFaceUpSolidBlock(x + posX, y + posY, z + posZ, world),
-								cullFaceDown(x + posX, y + posY, z + posZ, world),
-								cullFaceEast(x + posX, y + posY, z + posZ, world),
-								cullFaceWest(x + posX, y + posY, z + posZ, world),
-								cullFaceNorth(x + posX, y + posY, z + posZ, world),
-								cullFaceSouth(x + posX, y + posY, z + posZ, world), Block.getBlock(blocks[x][y][z]),
+								cullFaceUpSolidBlock(block.getId(), x + posX, y + posY, z + posZ, world),
+								cullFaceDown(block.getId(), x + posX, y + posY, z + posZ, world),
+								cullFaceEast(block.getId(), x + posX, y + posY, z + posZ, world),
+								cullFaceWest(block.getId(), x + posX, y + posY, z + posZ, world),
+								cullFaceNorth(block.getId(), x + posX, y + posY, z + posZ, world),
+								cullFaceSouth(block.getId(), x + posX, y + posY, z + posZ, world), block,
 								getTorchLight(x, y, z));
-					} else if (Block.getBlock(blocks[x][y][z]).usesSingleModel()) {
-					} else if (Block.getBlock(blocks[x][y][z]) == Block.Water) {
+					} else if (block.isCustomModel()) {
+						block.generateCustomModel(tess, x + posX, y + posY, (z + posZ) - 1,
+								cullFaceUpSolidBlock(block.getId(), x + posX, y + posY, z + posZ, world),
+								cullFaceDown(block.getId(), x + posX, y + posY, z + posZ, world),
+								cullFaceEast(block.getId(), x + posX, y + posY, z + posZ, world),
+								cullFaceWest(block.getId(), x + posX, y + posY, z + posZ, world),
+								cullFaceNorth(block.getId(), x + posX, y + posY, z + posZ, world),
+								cullFaceSouth(block.getId(), x + posX, y + posY, z + posZ, world),
+								getTorchLight(x, y, z));
+					} else if (block.usesSingleModel() && !block.isCustomModel()) {
+					} else if (block == Block.Water) {
 					}
 				}
 			}
@@ -286,6 +297,7 @@ public class Chunk {
 		tess.end();
 	}
 
+	@Deprecated
 	private void calculateLight(List<Object> cubes, IWorld world) {
 		for (Object blockEnt : cubes) {
 			if (blockEnt.getClass().equals(BlockEntity.class)) {
@@ -353,64 +365,60 @@ public class Chunk {
 		return distance;
 	}
 
-	private boolean cullFaceWest(int x, int y, int z, IWorld world) {
+	private boolean cullFaceWest(byte block, int x, int y, int z, IWorld world) {
 		if (x > (posX) + 1 && x < (posX) + 16) {
-			if (!Block.getBlock(getLocalBlock(x - 1, y, z)).isTransparent()) {
+			if (getLocalBlock(x - 1, y, z) == block)
 				return false;
-			} else {
+			if (Block.getBlock(getLocalBlock(x - 1, y, z)).isTransparent())
 				return true;
-			}
 		}
-		if (!Block.getBlock(world.getGlobalBlock(x - 1, y, z)).isTransparent()) {
+		if (world.getGlobalBlock(x - 1, y, z) == block)
 			return false;
-		} else {
+		if (Block.getBlock(world.getGlobalBlock(x - 1, y, z)).isTransparent())
 			return true;
-		}
+		return false;
 	}
 
-	private boolean cullFaceEast(int x, int y, int z, IWorld world) {
+	private boolean cullFaceEast(byte block, int x, int y, int z, IWorld world) {
 		if (x > (posX) && x < (posX) + 15) {
-			if (!Block.getBlock(getLocalBlock(x + 1, y, z)).isTransparent()) {
+			if (getLocalBlock(x + 1, y, z) == block)
 				return false;
-			} else {
+			if (Block.getBlock(getLocalBlock(x + 1, y, z)).isTransparent())
 				return true;
-			}
 		}
-		if (!Block.getBlock(world.getGlobalBlock(x + 1, y, z)).isTransparent()) {
+		if (world.getGlobalBlock(x + 1, y, z) == block)
 			return false;
-		} else {
+		if (Block.getBlock(world.getGlobalBlock(x + 1, y, z)).isTransparent())
 			return true;
-		}
+		return false;
 	}
 
-	private boolean cullFaceDown(int x, int y, int z, IWorld world) {
+	private boolean cullFaceDown(byte block, int x, int y, int z, IWorld world) {
 		if (y > (posY) + 1 && y < (posY) + 16) {
-			if (!Block.getBlock(getLocalBlock(x, y - 1, z)).isTransparent()) {
+			if (getLocalBlock(x, y - 1, z) == block)
 				return false;
-			} else {
+			if (Block.getBlock(getLocalBlock(x, y - 1, z)).isTransparent())
 				return true;
-			}
 		}
-		if (!Block.getBlock(world.getGlobalBlock(x, y - 1, z)).isTransparent()) {
+		if (world.getGlobalBlock(x, y - 1, z) == block)
 			return false;
-		} else {
+		if (Block.getBlock(world.getGlobalBlock(x, y - 1, z)).isTransparent())
 			return true;
-		}
+		return false;
 	}
 
-	private boolean cullFaceUpSolidBlock(int x, int y, int z, IWorld world) {
+	private boolean cullFaceUpSolidBlock(byte block, int x, int y, int z, IWorld world) {
 		if (y > (posY) && y < (posY) + 15) {
-			if (!Block.getBlock(getLocalBlock(x, y + 1, z)).isTransparent()) {
+			if (getLocalBlock(x, y + 1, z) == block)
 				return false;
-			} else {
+			if (Block.getBlock(getLocalBlock(x, y + 1, z)).isTransparent())
 				return true;
-			}
 		}
-		if (!Block.getBlock(world.getGlobalBlock(x, y + 1, z)).isTransparent()) {
+		if (world.getGlobalBlock(x, y + 1, z) == block)
 			return false;
-		} else {
+		if (Block.getBlock(world.getGlobalBlock(x, y + 1, z)).isTransparent())
 			return true;
-		}
+		return false;
 	}
 
 	private boolean cullFaceUpWater(int x, int y, int z, IWorld world) {
@@ -431,25 +439,29 @@ public class Chunk {
 		}
 	}
 
-	private boolean cullFaceNorth(int x, int y, int z, IWorld world) {
+	private boolean cullFaceNorth(byte block, int x, int y, int z, IWorld world) {
 		if (z > (posZ) + 1 && z < (posZ) + 16) {
-			if (!Block.getBlock(getLocalBlock(x, y, z - 1)).isTransparent()) {
+			if (getLocalBlock(x, y, z - 1) == block)
 				return false;
-			} else {
+			if (Block.getBlock(getLocalBlock(x, y, z - 1)).isTransparent())
 				return true;
-			}
 		}
-		if (!Block.getBlock(world.getGlobalBlock(x, y, z - 1)).isTransparent()) {
+		if (world.getGlobalBlock(x, y, z - 1) == block)
 			return false;
-		} else {
+		if (Block.getBlock(world.getGlobalBlock(x, y, z - 1)).isTransparent())
 			return true;
-		}
+		return false;
 	}
 
-	private boolean cullFaceSouth(int x, int y, int z, IWorld world) {
-		if (z > (posZ) && z < (posZ) + 15)
+	private boolean cullFaceSouth(byte block, int x, int y, int z, IWorld world) {
+		if (z > (posZ) && z < (posZ) + 15) {
+			if (getLocalBlock(x, y, z + 1) == block)
+				return false;
 			if (Block.getBlock(getLocalBlock(x, y, z + 1)).isTransparent())
 				return true;
+		}
+		if (world.getGlobalBlock(x, y, z + 1) == block)
+			return false;
 
 		if (Block.getBlock(world.getGlobalBlock(x, y, z + 1)).isTransparent())
 			return true;

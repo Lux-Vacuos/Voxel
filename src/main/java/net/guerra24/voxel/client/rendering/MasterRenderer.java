@@ -8,7 +8,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.utils.ImmutableArray;
 
 import net.guerra24.voxel.client.core.VoxelVariables;
-import net.guerra24.voxel.client.opengl.rendering.WaterRenderer;
+import net.guerra24.voxel.client.rendering.api.opengl.WaterRenderer;
 import net.guerra24.voxel.client.resources.GameResources;
 import net.guerra24.voxel.client.resources.models.TexturedModel;
 import net.guerra24.voxel.client.world.block.BlockEntity;

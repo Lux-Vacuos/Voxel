@@ -28,13 +28,20 @@ import net.guerra24.voxel.client.bootstrap.Bootstrap.Platform;
 
 public class CoreInfo {
 
+	static {
+		String os = System.getProperty("os.name");
+		OS = os + " "+ System.getProperty("os.arch").toUpperCase();
+	}
+
 	public static int ups;
 	public static int upsCount;
 
 	public static Platform platform;
+	public static String OS;
 	public static String LWJGLVer;
 	public static String GLFWVer;
 	public static String OpenGLVer;
 	public static String Vendor;
 	public static String Renderer;
+	public static String VkVersion = "No Available";
 }

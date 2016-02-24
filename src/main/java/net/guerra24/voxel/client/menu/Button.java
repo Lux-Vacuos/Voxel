@@ -29,7 +29,7 @@ import java.nio.ByteBuffer;
 import org.lwjgl.nanovg.NVGColor;
 
 import net.guerra24.voxel.client.input.Mouse;
-import net.guerra24.voxel.client.nanovg.rendering.VectorsRendering;
+import net.guerra24.voxel.client.rendering.api.nanovg.VectorsRendering;
 import net.guerra24.voxel.universal.util.vector.Vector2f;
 
 public class Button {

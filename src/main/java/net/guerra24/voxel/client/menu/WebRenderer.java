@@ -34,7 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.guerra24.voxel.client.core.VoxelVariables;
-import net.guerra24.voxel.client.nanovg.rendering.VectorsRendering;
+import net.guerra24.voxel.client.rendering.api.nanovg.VectorsRendering;
 
 public class WebRenderer {
 

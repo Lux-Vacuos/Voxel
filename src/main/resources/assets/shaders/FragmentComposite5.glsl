@@ -106,7 +106,7 @@ void main(void){
     		b = data1.a;
     	b = clamp(b,0.02,1.0);
     	image = b * image;
-    	if(data.r == 1)
+    	if(data.r> 0.0)
     		if(data.a <= 0){
     			vec3 vHalfVector = normalize(lightDir.xyz+eyeDir);
 	   			image += pow(max(dot(normal.xyz,vHalfVector),0.0), 100) * 1.5;

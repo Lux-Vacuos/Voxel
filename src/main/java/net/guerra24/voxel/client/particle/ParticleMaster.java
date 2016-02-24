@@ -31,7 +31,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import net.guerra24.voxel.client.opengl.rendering.ParticleRenderer;
+import net.guerra24.voxel.client.rendering.api.opengl.ParticleRenderer;
 import net.guerra24.voxel.client.resources.Loader;
 import net.guerra24.voxel.client.world.entities.Camera;
 import net.guerra24.voxel.universal.util.vector.Matrix4f;

@@ -38,8 +38,8 @@ import net.guerra24.voxel.client.core.State;
 import net.guerra24.voxel.client.core.Voxel;
 import net.guerra24.voxel.client.core.VoxelVariables;
 import net.guerra24.voxel.client.input.Mouse;
-import net.guerra24.voxel.client.nanovg.rendering.VectorsRendering;
 import net.guerra24.voxel.client.particle.ParticleMaster;
+import net.guerra24.voxel.client.rendering.api.nanovg.VectorsRendering;
 import net.guerra24.voxel.client.resources.GameResources;
 import net.guerra24.voxel.client.world.WorldsHandler;
 

@@ -25,7 +25,7 @@
 package net.guerra24.voxel.client.menu;
 
 import net.guerra24.voxel.client.core.VoxelVariables;
-import net.guerra24.voxel.client.nanovg.rendering.VectorsRendering;
+import net.guerra24.voxel.client.rendering.api.nanovg.VectorsRendering;
 import net.guerra24.voxel.client.resources.GameResources;
 import net.guerra24.voxel.universal.util.vector.Vector2f;
 

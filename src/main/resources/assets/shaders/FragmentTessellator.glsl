@@ -34,6 +34,7 @@ in mat3 TBN;
 
 out vec4 [5] out_Color;
 
+uniform vec3 cameraPos;
 uniform sampler2D texture0;
 uniform sampler2DShadow depth;
 uniform sampler2D normalMap;
@@ -47,7 +48,7 @@ const float xPixelOffset = 0.0005;
 const float yPixelOffset = 0.0005;
 
 #ifdef NVIDIA
-const float heightScale = 0.01f;
+const float heightScale = 0.02f;
 
 vec2 ParallaxMapping(vec2 texCoords, vec3 viewDir) { 
 
@@ -76,7 +77,7 @@ vec2 ParallaxMapping(vec2 texCoords, vec3 viewDir) {
 #endif
 
 float lookup( vec2 offSet){
-	return texture(depth, ShadowCoord.xyz + vec3(offSet.x * xPixelOffset * ShadowCoord.w, offSet.y * yPixelOffset * ShadowCoord.w, 0.0) );
+	return texture(depth, ShadowCoord.xyz + vec3(offSet.x * xPixelOffset, offSet.y * yPixelOffset, 0.0) );
 }
 
 void main(void) {
@@ -84,7 +85,7 @@ void main(void) {
 	float bright = data.y;
 	int id = int(data.x + 0.5f);
 
-	vec3 eyeDir = normalize(posInTangent);
+	vec3 eyeDir = normalize(TBN * (cameraPos - pass_position));
 	vec2 texcoords = pass_textureCoords;
 	#ifdef NVIDIA
 	if(useParallax == 1)

@@ -36,7 +36,7 @@ import net.guerra24.voxel.client.api.ModInitialization;
 import net.guerra24.voxel.client.api.VersionException;
 import net.guerra24.voxel.client.bootstrap.Bootstrap;
 import net.guerra24.voxel.client.input.Mouse;
-import net.guerra24.voxel.client.nanovg.Timers;
+import net.guerra24.voxel.client.rendering.api.nanovg.Timers;
 import net.guerra24.voxel.client.resources.GameResources;
 import net.guerra24.voxel.client.util.Logger;
 import net.guerra24.voxel.client.world.InfinityWorld;

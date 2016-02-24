@@ -2,7 +2,7 @@ package net.guerra24.voxel.client.input;
 
 import org.lwjgl.glfw.GLFW;
 
-import net.guerra24.voxel.client.opengl.Display;
+import net.guerra24.voxel.client.rendering.api.glfw.Display;
 
 public class Mouse {
 

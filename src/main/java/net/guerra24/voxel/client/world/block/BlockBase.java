@@ -24,29 +24,49 @@
 
 package net.guerra24.voxel.client.world.block;
 
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 
+import net.guerra24.voxel.client.resources.models.Tessellator;
 import net.guerra24.voxel.client.resources.models.WaterTile;
 import net.guerra24.voxel.universal.util.vector.Vector3f;
 import net.guerra24.voxel.universal.util.vector.Vector8f;
 
 public abstract class BlockBase {
+	@Deprecated
+	protected boolean usesSingleModel = false;
+	protected boolean transparent = false;
+	protected boolean customModel = false;
 
 	public abstract byte getId();
 
-	public abstract Vector8f texCoordsUp();
+	public Vector8f texCoordsUp() {
+		return null;
+	}
 
-	public abstract Vector8f texCoordsDown();
+	public Vector8f texCoordsDown() {
+		return null;
+	}
 
-	public abstract Vector8f texCoordsFront();
+	public Vector8f texCoordsFront() {
+		return null;
+	}
 
-	public abstract Vector8f texCoordsBack();
+	public Vector8f texCoordsBack() {
+		return null;
+	}
 
-	public abstract Vector8f texCoordsRight();
+	public Vector8f texCoordsRight() {
+		return null;
+	}
 
-	public abstract Vector8f texCoordsLeft();
+	public Vector8f texCoordsLeft() {
+		return null;
+	}
 
-	public abstract BoundingBox getBoundingBox(Vector3f pos);
+	public BoundingBox getBoundingBox(Vector3f pos) {
+		return new BoundingBox(new Vector3(pos.x, pos.y, pos.z), new Vector3(pos.x + 1, pos.y + 1, pos.z + 1));
+	}
 
 	/**
 	 * Get the WaterTile of the Block
@@ -55,7 +75,9 @@ public abstract class BlockBase {
 	 *            Position
 	 * @return WaterTile
 	 */
-	public abstract WaterTile getWaterTitle(Vector3f pos);
+	public WaterTile getWaterTitle(Vector3f pos) {
+		return null;
+	}
 
 	/**
 	 * Get a single model
@@ -65,7 +87,13 @@ public abstract class BlockBase {
 	 * @return BlockEntity
 	 * @deprecated
 	 */
-	public abstract BlockEntity getSingleModel(Vector3f pos);
+	public BlockEntity getSingleModel(Vector3f pos) {
+		return null;
+	}
+
+	public void generateCustomModel(Tessellator tess, float x, float y, float z, boolean top, boolean bottom,
+			boolean left, boolean right, boolean front, boolean back, float light) {
+	}
 
 	/**
 	 * Check if uses single model
@@ -73,7 +101,15 @@ public abstract class BlockBase {
 	 * @return Uses single model
 	 * @deprecated
 	 */
-	public abstract boolean usesSingleModel();
+	public boolean usesSingleModel() {
+		return usesSingleModel;
+	}
 
-	public abstract boolean isTransparent();
+	public boolean isTransparent() {
+		return transparent;
+	}
+
+	public boolean isCustomModel() {
+		return customModel;
+	}
 }

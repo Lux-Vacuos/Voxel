@@ -6,7 +6,7 @@ import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_MIDDLE;
 import net.guerra24.voxel.client.core.CoreInfo;
 import net.guerra24.voxel.client.core.VoxelVariables;
 import net.guerra24.voxel.client.input.Mouse;
-import net.guerra24.voxel.client.nanovg.rendering.VectorsRendering;
+import net.guerra24.voxel.client.rendering.api.nanovg.VectorsRendering;
 import net.guerra24.voxel.client.resources.GameResources;
 import net.guerra24.voxel.universal.util.vector.Vector2f;
 
@@ -54,24 +54,24 @@ public class AboutMenu {
 				"Roboto-Regular", 100 * xScale, (1080 + globalY) * yScale, 40 * yScale,
 				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorA),
 				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorB));
-		VectorsRendering.renderText("Ashley - Ashley is license under the Apache2 License.",
-				"Roboto-Regular", 100 * xScale, (1280 + globalY) * yScale, 40 * yScale,
+		VectorsRendering.renderText("Ashley - Ashley is license under the Apache2 License.", "Roboto-Regular",
+				100 * xScale, (1280 + globalY) * yScale, 40 * yScale,
 				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorA),
 				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorB));
 		VectorsRendering.renderText("Sound System - Sound System is license under the Sound System License.",
 				"Roboto-Regular", 100 * xScale, (1480 + globalY) * yScale, 40 * yScale,
 				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorA),
-				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorB));		
-		VectorsRendering.renderText("Log4J - Log4j is license under the Apache2.",
-				"Roboto-Regular", 100 * xScale, (1680 + globalY) * yScale, 40 * yScale,
+				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorB));
+		VectorsRendering.renderText("Log4J - Log4j is license under the Apache2.", "Roboto-Regular", 100 * xScale,
+				(1680 + globalY) * yScale, 40 * yScale,
 				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorA),
 				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorB));
-		VectorsRendering.renderText("Kryo - Kryo is license under the BSD License.",
-				"Roboto-Regular", 100 * xScale, (1880 + globalY) * yScale, 40 * yScale,
+		VectorsRendering.renderText("Kryo - Kryo is license under the BSD License.", "Roboto-Regular", 100 * xScale,
+				(1880 + globalY) * yScale, 40 * yScale,
 				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorA),
 				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorB));
-		VectorsRendering.renderText("KryoNet - KryoNet is license under the BSD License.",
-				"Roboto-Regular", 100 * xScale, (2080 + globalY) * yScale, 40 * yScale,
+		VectorsRendering.renderText("KryoNet - KryoNet is license under the BSD License.", "Roboto-Regular",
+				100 * xScale, (2080 + globalY) * yScale, 40 * yScale,
 				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorA),
 				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorB));
 
@@ -87,10 +87,11 @@ public class AboutMenu {
 		VectorsRendering.renderText("OS ", "Roboto-Bold", 100 * xScale, (330 + globalY) * yScale, 40 * yScale,
 				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorA),
 				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorB));
-		VectorsRendering.renderText(CoreInfo.platform.toString(), "Roboto-Regular", NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE,
-				1180 * xScale, (330 + globalY) * yScale, 40 * yScale,
+		VectorsRendering.renderText(CoreInfo.OS, "Roboto-Regular", NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE, 1180 * xScale,
+				(330 + globalY) * yScale, 40 * yScale,
 				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorA),
 				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorB));
+
 		VectorsRendering.renderText("LWJGL Version ", "Roboto-Bold", 100 * xScale, (360 + globalY) * yScale,
 				40 * yScale, VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorA),
 				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorB));
@@ -98,6 +99,7 @@ public class AboutMenu {
 				1180 * xScale, (360 + globalY) * yScale, 40 * yScale,
 				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorA),
 				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorB));
+
 		VectorsRendering.renderText("GLFW Version ", "Roboto-Bold", 100 * xScale, (390 + globalY) * yScale, 40 * yScale,
 				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorA),
 				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorB));
@@ -105,6 +107,7 @@ public class AboutMenu {
 				1180 * xScale, (390 + globalY) * yScale, 40 * yScale,
 				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorA),
 				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorB));
+
 		VectorsRendering.renderText("OpenGL Version ", "Roboto-Bold", 100 * xScale, (420 + globalY) * yScale,
 				40 * yScale, VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorA),
 				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorB));
@@ -112,18 +115,29 @@ public class AboutMenu {
 				1180 * xScale, (420 + globalY) * yScale, 40 * yScale,
 				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorA),
 				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorB));
-		VectorsRendering.renderText("Vendor ", "Roboto-Bold", 100 * xScale, (450 + globalY) * yScale, 40 * yScale,
-				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorA),
+
+		VectorsRendering.renderText("Vulkan Version ", "Roboto-Bold", 100 * xScale, (450 + globalY) * yScale,
+				40 * yScale, VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorA),
 				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorB));
-		VectorsRendering.renderText(CoreInfo.Vendor, "Roboto-Regular", NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE,
+
+		VectorsRendering.renderText(CoreInfo.VkVersion, "Roboto-Regular", NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE,
 				1180 * xScale, (450 + globalY) * yScale, 40 * yScale,
 				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorA),
 				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorB));
-		VectorsRendering.renderText("Renderer ", "Roboto-Bold", 100 * xScale, (480 + globalY) * yScale, 40 * yScale,
+
+		VectorsRendering.renderText("Vendor ", "Roboto-Bold", 100 * xScale, (480 + globalY) * yScale, 40 * yScale,
+				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorA),
+				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorB));
+		VectorsRendering.renderText(CoreInfo.Vendor, "Roboto-Regular", NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE,
+				1180 * xScale, (480 + globalY) * yScale, 40 * yScale,
+				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorA),
+				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorB));
+
+		VectorsRendering.renderText("Renderer ", "Roboto-Bold", 100 * xScale, (510 + globalY) * yScale, 40 * yScale,
 				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorA),
 				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorB));
 		VectorsRendering.renderText(CoreInfo.Renderer, "Roboto-Regular", NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE,
-				1180 * xScale, (480 + globalY) * yScale, 40 * yScale,
+				1180 * xScale, (510 + globalY) * yScale, 40 * yScale,
 				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorA),
 				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorB));
 		backButton.render("Back");

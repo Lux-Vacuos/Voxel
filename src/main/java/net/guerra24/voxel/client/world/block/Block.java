@@ -28,15 +28,15 @@ import java.util.HashMap;
 
 import net.guerra24.voxel.client.world.block.types.BlockAir;
 import net.guerra24.voxel.client.world.block.types.BlockCobblestone;
-import net.guerra24.voxel.client.world.block.types.BlockDimOre;
+import net.guerra24.voxel.client.world.block.types.BlockDiamondOre;
 import net.guerra24.voxel.client.world.block.types.BlockDirt;
 import net.guerra24.voxel.client.world.block.types.BlockGlass;
 import net.guerra24.voxel.client.world.block.types.BlockGoldOre;
 import net.guerra24.voxel.client.world.block.types.BlockGrass;
 import net.guerra24.voxel.client.world.block.types.BlockIce;
 import net.guerra24.voxel.client.world.block.types.BlockIndes;
+import net.guerra24.voxel.client.world.block.types.BlockLava;
 import net.guerra24.voxel.client.world.block.types.BlockLeaves;
-import net.guerra24.voxel.client.world.block.types.BlockPortal;
 import net.guerra24.voxel.client.world.block.types.BlockSand;
 import net.guerra24.voxel.client.world.block.types.BlockStone;
 import net.guerra24.voxel.client.world.block.types.BlockTorch;
@@ -60,17 +60,17 @@ public class Block {
 	public static final BlockBase Grass = new BlockGrass();
 	public static final BlockBase Sand = new BlockSand();
 	public static final BlockBase Dirt = new BlockDirt();
-	public static final BlockBase DiamondOre = new BlockDimOre();
+	public static final BlockBase DiamondOre = new BlockDiamondOre();
 	public static final BlockBase GoldOre = new BlockGoldOre();
 	public static final BlockBase Water = new BlockWater();
 	public static final BlockBase Glass = new BlockGlass();
 	public static final BlockBase Torch = new BlockTorch();
-	public static final BlockBase Portal = new BlockPortal();
 	public static final BlockBase Leaves = new BlockLeaves();
 	public static final BlockBase Wood = new BlockWood();
 	public static final BlockBase Ice = new BlockIce();
 	public static final BlockBase Indes = new BlockIndes();
 	public static final BlockBase Cobblestone = new BlockCobblestone();
+	public static final BlockBase Lava = new BlockLava();
 
 	/**
 	 * Initialize the basic Block
@@ -89,7 +89,7 @@ public class Block {
 		registerBlock(Water);
 		registerBlock(Glass);
 		registerBlock(Torch);
-		registerBlock(Portal);
+		registerBlock(Lava);
 		registerBlock(Leaves);
 		registerBlock(Wood);
 		registerBlock(Ice);
