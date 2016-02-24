@@ -2,7 +2,7 @@ apply plugin:'java'
 apply plugin:'eclipse'
 apply plugin:'application'
 
-mainClassName = 'net.guerra24.voxel.client.bootstrap.Bootstrap'
+mainClassName = 'net.luxvacuos.voxel.client.bootstrap.Bootstrap'
 version = '0.0.10-ALPHA'
 
 if (System.getProperty("os.name").toLowerCase().contains("mac os x")) {
