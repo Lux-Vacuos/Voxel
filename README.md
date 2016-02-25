@@ -9,7 +9,7 @@ Voxel is a Minecraft inspired game using LWJGL 3, OpenGL 3.3 with its own game e
 Right now supports simple modding based on Java annotations and reflections, but still needs more features.
 
 # Build Status
-[![Build Status](https://travis-ci.org/Guerra24/Voxel.svg?branch=develop)](https://travis-ci.org/Guerra24/Voxel)
+[![Build Status](https://travis-ci.org/Lux-Vacuos/Voxel.svg?branch=develop)](https://travis-ci.org/Lux-Vacuos/Voxel)
 
 # Credits
 - ThinMatrix: Rendering System
