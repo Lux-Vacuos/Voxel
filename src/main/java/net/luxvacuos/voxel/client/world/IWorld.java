@@ -116,8 +116,4 @@ public interface IWorld {
 
 	public ChunkGenerator getChunkGenerator();
 
-	public void setTempRadius(int tempRadius);
-
-	public int getTempRadius();
-
 }

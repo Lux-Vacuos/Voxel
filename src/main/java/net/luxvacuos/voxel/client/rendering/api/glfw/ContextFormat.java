@@ -24,8 +24,6 @@
 
 package net.luxvacuos.voxel.client.rendering.api.glfw;
 
-import static org.lwjgl.vulkan.VKUtil.*;
-import static net.luxvacuos.voxel.client.rendering.api.vulkan.VkUtil.*;
 import static org.lwjgl.glfw.GLFW.GLFW_CLIENT_API;
 import static org.lwjgl.glfw.GLFW.GLFW_CONTEXT_VERSION_MAJOR;
 import static org.lwjgl.glfw.GLFW.GLFW_CONTEXT_VERSION_MINOR;
@@ -41,6 +39,8 @@ import static org.lwjgl.vulkan.VK10.VK_STRUCTURE_TYPE_APPLICATION_INFO;
 import static org.lwjgl.vulkan.VK10.VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
 import static org.lwjgl.vulkan.VK10.VK_SUCCESS;
 import static org.lwjgl.vulkan.VK10.vkCreateInstance;
+import static org.lwjgl.vulkan.VKUtil.VK_MAKE_VERSION;
+import static org.lwjgl.vulkan.VKUtil.translateVulkanResult;
 
 import java.nio.ByteBuffer;
 
@@ -137,42 +137,36 @@ public class ContextFormat {
 	}
 
 	public VkInstance createVulkan(PointerBuffer requiredExtensions) {
-		VkApplicationInfo appInfo = VkApplicationInfo.calloc();
-		appInfo.sType(VK_STRUCTURE_TYPE_APPLICATION_INFO);
-		appInfo.pApplicationName("Voxel");
-		appInfo.pEngineName("Infinity");
-		appInfo.apiVersion(VK_MAKE_VERSION(1, 0, 2));
-		PointerBuffer ppEnabledExtensionNames = memAllocPointer(requiredExtensions.remaining() + 1);
-		ppEnabledExtensionNames.put(requiredExtensions);
+		VkApplicationInfo appInfo = VkApplicationInfo.calloc().sType(VK_STRUCTURE_TYPE_APPLICATION_INFO)
+				.pApplicationName("Voxel").pEngineName("Infinity").apiVersion(VK_MAKE_VERSION(1, 0, 2));
 		ByteBuffer VK_EXT_DEBUG_REPORT_EXTENSION = memEncodeASCII(VK_EXT_DEBUG_REPORT_EXTENSION_NAME,
 				BufferAllocator.MALLOC);
-		ppEnabledExtensionNames.put(VK_EXT_DEBUG_REPORT_EXTENSION);
-		ppEnabledExtensionNames.flip();
+		PointerBuffer ppEnabledExtensionNames = memAllocPointer(requiredExtensions.remaining() + 1);
+		ppEnabledExtensionNames.put(requiredExtensions).put(VK_EXT_DEBUG_REPORT_EXTENSION).flip();
+
 		PointerBuffer ppEnabledLayerNames = memAllocPointer(layers.length);
 		for (int i = 0; validation && i < layers.length; i++)
 			ppEnabledLayerNames.put(layers[i]);
 		ppEnabledLayerNames.flip();
-		VkInstanceCreateInfo pCreateInfo = VkInstanceCreateInfo.calloc();
-		pCreateInfo.sType(VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO);
-		pCreateInfo.pNext(NULL);
-		pCreateInfo.pApplicationInfo(appInfo);
-		pCreateInfo.enabledExtensionCount(ppEnabledExtensionNames.remaining());
-		pCreateInfo.ppEnabledExtensionNames(ppEnabledExtensionNames);
-		pCreateInfo.enabledLayerCount(ppEnabledLayerNames.remaining());
-		pCreateInfo.ppEnabledLayerNames(ppEnabledLayerNames);
+
+		VkInstanceCreateInfo pCreateInfo = VkInstanceCreateInfo.calloc().sType(VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO)
+				.pNext(NULL).pApplicationInfo(appInfo).ppEnabledExtensionNames(ppEnabledExtensionNames)
+				.ppEnabledLayerNames(ppEnabledLayerNames);
 		PointerBuffer pInstance = memAllocPointer(1);
 		int err = vkCreateInstance(pCreateInfo, null, pInstance);
 		long instance = pInstance.get(0);
 		memFree(pInstance);
+		if (err != VK_SUCCESS) {
+			throw new AssertionError("Failed to create VkInstance: " + translateVulkanResult(err));
+		}
+		VkInstance ret = new VkInstance(instance, pCreateInfo);
+
 		pCreateInfo.free();
+		memFree(ppEnabledLayerNames);
 		memFree(VK_EXT_DEBUG_REPORT_EXTENSION);
 		memFree(ppEnabledExtensionNames);
-		memFree(ppEnabledLayerNames);
 		appInfo.free();
-		if (err != VK_SUCCESS) {
-			throw new AssertionError("Failed to create VkInstance: " + translateVulkanError(err));
-		}
-		return new VkInstance(instance, pCreateInfo);
+		return ret;
 	}
 
 }

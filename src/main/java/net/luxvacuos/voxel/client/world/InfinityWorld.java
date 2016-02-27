@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Queue;
 import java.util.Random;
 
@@ -68,7 +69,7 @@ public class InfinityWorld implements IWorld {
 	private int chunkDim;
 	private int worldID;
 	private int version = 1;
-	private HashMap<ChunkKey, Chunk> chunks;
+	private Map<ChunkKey, Chunk> chunks;
 	private Random seed;
 	private SimplexNoise noise;
 	private String name;
@@ -164,16 +165,13 @@ public class InfinityWorld implements IWorld {
 					if (zr * zr + xr * xr + yr * yr <= (VoxelVariables.genRadius - VoxelVariables.radiusLimit)
 							* (VoxelVariables.genRadius - VoxelVariables.radiusLimit)
 							* (VoxelVariables.genRadius - VoxelVariables.radiusLimit)) {
-
 						if (!hasChunk(chunkDim, xx, yy, zz)) {
-							if (!hasChunk(chunkDim, xx, yy, zz)) {
-								if (existChunkFile(chunkDim, xx, yy, zz)) {
-									loadChunk(chunkDim, xx, yy, zz, gm);
-								} else {
-									if (VoxelVariables.generateChunks) {
-										addChunk(new Chunk(chunkDim, xx, yy, zz, this, gm));
-										// saveChunk(chunkDim, xx, yy, zz, gm);
-									}
+							if (existChunkFile(chunkDim, xx, yy, zz)) {
+								loadChunk(chunkDim, xx, yy, zz, gm);
+							} else {
+								if (VoxelVariables.generateChunks) {
+									addChunk(new Chunk(chunkDim, xx, yy, zz, this, gm));
+									// saveChunk(chunkDim, xx, yy, zz, gm);
 								}
 							}
 						} else {
@@ -195,9 +193,9 @@ public class InfinityWorld implements IWorld {
 											* (VoxelVariables.genRadius - VoxelVariables.radiusLimit + 1)
 											* (VoxelVariables.genRadius - VoxelVariables.radiusLimit + 1)) {
 
-						if (hasChunk(getChunkDimension(), xx, yy, zz)) {
-							saveChunk(getChunkDimension(), xx, yy, zz, gm);
-							removeChunk(getChunk(getChunkDimension(), xx, yy, zz));
+						if (hasChunk(chunkDim, xx, yy, zz)) {
+							saveChunk(chunkDim, xx, yy, zz, gm);
+							removeChunk(getChunk(chunkDim, xx, yy, zz));
 						}
 
 					}
@@ -630,15 +628,6 @@ public class InfinityWorld implements IWorld {
 
 	public String getCodeName() {
 		return codeName;
-	}
-
-	@Override
-	public void setTempRadius(int tempRadius) {
-		this.tempRadius = tempRadius;
-	}
-
-	public int getTempRadius() {
-		return tempRadius;
 	}
 
 }

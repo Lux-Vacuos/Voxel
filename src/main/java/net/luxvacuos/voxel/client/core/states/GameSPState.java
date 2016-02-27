@@ -24,7 +24,11 @@
 
 package net.luxvacuos.voxel.client.core.states;
 
-import static net.luxvacuos.voxel.client.input.Keyboard.*;
+import static net.luxvacuos.voxel.client.input.Keyboard.KEY_ESCAPE;
+import static net.luxvacuos.voxel.client.input.Keyboard.KEY_F1;
+import static net.luxvacuos.voxel.client.input.Keyboard.KEY_F2;
+import static net.luxvacuos.voxel.client.input.Keyboard.isKeyDown;
+import static net.luxvacuos.voxel.client.input.Keyboard.next;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_COMPONENT;
 import static org.lwjgl.opengl.GL11.GL_FLOAT;
 import static org.lwjgl.opengl.GL11.glReadPixels;
@@ -34,11 +38,10 @@ import java.nio.FloatBuffer;
 import org.lwjgl.BufferUtils;
 
 import net.luxvacuos.voxel.client.core.GlobalStates;
+import net.luxvacuos.voxel.client.core.GlobalStates.GameState;
 import net.luxvacuos.voxel.client.core.State;
 import net.luxvacuos.voxel.client.core.Voxel;
 import net.luxvacuos.voxel.client.core.VoxelVariables;
-import net.luxvacuos.voxel.client.core.GlobalStates.GameState;
-import net.luxvacuos.voxel.client.input.Keyboard;
 import net.luxvacuos.voxel.client.particle.ParticleMaster;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.world.WorldsHandler;
@@ -71,11 +74,9 @@ public class GameSPState implements State {
 				VoxelVariables.debug = !VoxelVariables.debug;
 			if (isKeyDown(KEY_F2))
 				VoxelVariables.hideHud = !VoxelVariables.hideHud;
-			if (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
-				if (isKeyDown(KEY_ESCAPE)) {
-					((PlayerCamera) gm.getCamera()).unlockMouse();
-					gm.getGlobalStates().setState(GameState.IN_PAUSE);
-				}
+			if (isKeyDown(KEY_ESCAPE)) {
+				((PlayerCamera) gm.getCamera()).unlockMouse();
+				gm.getGlobalStates().setState(GameState.IN_PAUSE);
 			}
 		}
 		// if (!display.isDisplayFocused()) {
