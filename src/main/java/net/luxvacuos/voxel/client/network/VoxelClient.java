@@ -64,16 +64,11 @@ public class VoxelClient {
 		kryo.register(ArrayList.class);
 	}
 
-	public void connect(int port, String url) {
+	public void connect(int port, String url) throws IOException {
 		this.port = port;
 		this.url = url;
-		try {
-			VoxelVariables.onServer = true;
-			client.connect(1000, this.url, this.port, this.port);
-		} catch (IOException e) {
-			VoxelVariables.onServer = false;
-			e.printStackTrace();
-		}
+		VoxelVariables.onServer = true;
+		client.connect(1000, this.url, this.port, this.port);
 	}
 
 	public void dispose() {

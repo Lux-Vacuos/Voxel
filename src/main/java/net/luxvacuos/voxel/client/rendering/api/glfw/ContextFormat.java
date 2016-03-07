@@ -138,7 +138,7 @@ public class ContextFormat {
 
 	public VkInstance createVulkan(PointerBuffer requiredExtensions) {
 		VkApplicationInfo appInfo = VkApplicationInfo.calloc().sType(VK_STRUCTURE_TYPE_APPLICATION_INFO)
-				.pApplicationName("Voxel").pEngineName("Infinity").apiVersion(VK_MAKE_VERSION(1, 0, 2));
+				.pApplicationName("Voxel").pEngineName("Infinity").apiVersion(VK_MAKE_VERSION(1, 0, 5));
 		ByteBuffer VK_EXT_DEBUG_REPORT_EXTENSION = memEncodeASCII(VK_EXT_DEBUG_REPORT_EXTENSION_NAME,
 				BufferAllocator.MALLOC);
 		PointerBuffer ppEnabledExtensionNames = memAllocPointer(requiredExtensions.remaining() + 1);

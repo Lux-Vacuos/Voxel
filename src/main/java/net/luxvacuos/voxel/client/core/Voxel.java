@@ -146,7 +146,6 @@ public class Voxel {
 			gameResources.getSoundSystem().play("menu2");
 		Mouse.setHidden(true);
 		Timers.initDebugDisplay();
-		gameResources.getVoxelClient().connect(4059, "localhost");
 	}
 
 	/**

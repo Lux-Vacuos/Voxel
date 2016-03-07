@@ -111,9 +111,9 @@ public abstract class Window implements IDisplay {
 			}
 
 			@Override
-			public void release() {
-				delegate.release();
-				super.release();
+			public void free() {
+				delegate.free();
+				super.free();
 			}
 		});
 		keyCallback = new GLFWKeyCallback() {
@@ -226,19 +226,19 @@ public abstract class Window implements IDisplay {
 	}
 
 	public void releaseCallbacks() {
-		errorCallback.release();
-		keyCallback.release();
-		charCallback.release();
-		cursorEnterCallback.release();
-		cursorPosCallback.release();
-		mouseButtonCallback.release();
-		windowFocusCallback.release();
-		windowIconifyCallback.release();
-		windowSizeCallback.release();
-		windowPosCallback.release();
-		windowRefreshCallback.release();
-		framebufferSizeCallback.release();
-		scrollCallback.release();
+		errorCallback.free();
+		keyCallback.free();
+		charCallback.free();
+		cursorEnterCallback.free();
+		cursorPosCallback.free();
+		mouseButtonCallback.free();
+		windowFocusCallback.free();
+		windowIconifyCallback.free();
+		windowSizeCallback.free();
+		windowPosCallback.free();
+		windowRefreshCallback.free();
+		framebufferSizeCallback.free();
+		scrollCallback.free();
 	}
 
 	public GLFWErrorCallback getErrorCallback() {

@@ -43,6 +43,8 @@ public class Menu {
 	public final WorldSelectionMenu worldSelectionMenu;
 
 	public final AboutMenu aboutMenu;
+	
+	public final MPSelectionMenu mpSelectionMenu;
 
 	public Menu(GameResources gm) {
 		mainMenu = new MainMenu(gm);
@@ -51,6 +53,7 @@ public class Menu {
 		gameSP = new GameSP(gm);
 		worldSelectionMenu = new WorldSelectionMenu(gm);
 		aboutMenu = new AboutMenu(gm);
+		mpSelectionMenu = new MPSelectionMenu(gm);
 	}
 
 }

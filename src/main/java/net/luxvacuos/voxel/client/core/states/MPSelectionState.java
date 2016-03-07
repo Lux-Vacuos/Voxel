@@ -24,51 +24,46 @@
 
 package net.luxvacuos.voxel.client.core.states;
 
+import java.io.IOException;
+
 import net.luxvacuos.voxel.client.core.GlobalStates;
 import net.luxvacuos.voxel.client.core.State;
 import net.luxvacuos.voxel.client.core.Voxel;
+import net.luxvacuos.voxel.client.core.VoxelVariables;
 import net.luxvacuos.voxel.client.core.GlobalStates.GameState;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.VectorsRendering;
 import net.luxvacuos.voxel.client.resources.GameResources;
 
-/**
- * Main Menu State
- * 
- * @author danirod
- * @category Kernel
- */
-public class MainMenuState implements State {
-
-	@Override
-	public void render(Voxel voxel, GlobalStates states, float delta) {
-		GameResources gm = voxel.getGameResources();
-		gm.getRenderer().prepare();
-		gm.getDisplay().beingNVGFrame();
-		gm.getMenuSystem().mainMenu.render();
-		VectorsRendering.renderMouse();
-		gm.getDisplay().endNVGFrame();
-	}
+public class MPSelectionState implements State {
 
 	@Override
 	public void update(Voxel voxel, GlobalStates states, float delta) {
 		GameResources gm = voxel.getGameResources();
-
-		if (gm.getMenuSystem().mainMenu.getPlayButton().pressed()) {
-			states.setState(GameState.WORLD_SELECTION);
-		} else if (gm.getMenuSystem().mainMenu.getPlayMPButton().pressed()) {
-			states.setState(GameState.MP_SELECTION);
-		} else if (gm.getMenuSystem().mainMenu.getExitButton().pressed()) {
-			states.loop = false;
-		} else if (gm.getMenuSystem().mainMenu.getOptionsButton().pressed()) {
+		if (gm.getMenuSystem().mpSelectionMenu.getExitButton().pressed())
+			gm.getGlobalStates().setState(GameState.MAINMENU);
+		else if (gm.getMenuSystem().mpSelectionMenu.getPlayButton().pressed()) {
 			try {
-				Thread.sleep(100);
-			} catch (InterruptedException e) {
+				gm.getVoxelClient().connect(4059, gm.getMenuSystem().mpSelectionMenu.getIP());
+				VoxelVariables.onServer = true;
+			} catch (IOException e) {
+				VoxelVariables.onServer = false;
+				e.printStackTrace();
 			}
-			states.setState(GameState.OPTIONS);
-		} else if (gm.getMenuSystem().mainMenu.getAboutButton().pressed()) {
-			states.setState(GameState.ABOUT);
+			if (VoxelVariables.onServer) {
+				gm.getGlobalStates().setState(GameState.LOADING_WORLD);
+			}
+
 		}
-		gm.getMenuSystem().mainMenu.update();
+	}
+
+	@Override
+	public void render(Voxel voxel, GlobalStates states, float alpha) {
+		GameResources gm = voxel.getGameResources();
+		gm.getRenderer().prepare();
+		gm.getDisplay().beingNVGFrame();
+		gm.getMenuSystem().mpSelectionMenu.render();
+		VectorsRendering.renderMouse();
+		gm.getDisplay().endNVGFrame();
 	}
 
 }

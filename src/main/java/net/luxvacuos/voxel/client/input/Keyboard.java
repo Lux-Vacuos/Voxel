@@ -275,4 +275,88 @@ public class Keyboard {
 			return ret;
 	}
 
+	public static String keyWritten(String str) {
+		if (isKeyDown(KEY_0))
+			str += "0";
+		else if (isKeyDown(KEY_1))
+			str += "1";
+		else if (isKeyDown(KEY_2))
+			str += "2";
+		else if (isKeyDown(KEY_3))
+			str += "3";
+		else if (isKeyDown(KEY_4))
+			str += "4";
+		else if (isKeyDown(KEY_5))
+			str += "5";
+		else if (isKeyDown(KEY_6))
+			str += "6";
+		else if (isKeyDown(KEY_7))
+			str += "7";
+		else if (isKeyDown(KEY_8))
+			str += "8";
+		else if (isKeyDown(KEY_9))
+			str += "9";
+		else if (isKeyDown(KEY_A))
+			str += "a";
+		else if (isKeyDown(KEY_B))
+			str += "b";
+		else if (isKeyDown(KEY_C))
+			str += "c";
+		else if (isKeyDown(KEY_D))
+			str += "d";
+		else if (isKeyDown(KEY_E))
+			str += "e";
+		else if (isKeyDown(KEY_F))
+			str += "f";
+		else if (isKeyDown(KEY_G))
+			str += "g";
+		else if (isKeyDown(KEY_H))
+			str += "h";
+		else if (isKeyDown(KEY_I))
+			str += "i";
+		else if (isKeyDown(KEY_J))
+			str += "j";
+		else if (isKeyDown(KEY_K))
+			str += "k";
+		else if (isKeyDown(KEY_L))
+			str += "l";
+		else if (isKeyDown(KEY_M))
+			str += "m";
+		else if (isKeyDown(KEY_N))
+			str += "n";
+		else if (isKeyDown(KEY_O))
+			str += "o";
+		else if (isKeyDown(KEY_P))
+			str += "p";
+		else if (isKeyDown(KEY_Q))
+			str += "q";
+		else if (isKeyDown(KEY_R))
+			str += "r";
+		else if (isKeyDown(KEY_S))
+			str += "s";
+		else if (isKeyDown(KEY_T))
+			str += "t";
+		else if (isKeyDown(KEY_U))
+			str += "u";
+		else if (isKeyDown(KEY_V))
+			str += "v";
+		else if (isKeyDown(KEY_W))
+			str += "w";
+		else if (isKeyDown(KEY_X))
+			str += "x";
+		else if (isKeyDown(KEY_Y))
+			str += "y";
+		else if (isKeyDown(KEY_Z))
+			str += "z";
+		else if (isKeyDown(KEY_SPACE))
+			str += " ";
+		else if (isKeyDown(KEY_PERIOD))
+			str += ".";
+		else if (isKeyDown(KEY_BACK)) {
+			if (str.length() > 0)
+				str = str.substring(0, str.length() - 1);
+		}
+		return str;
+	}
+
 }

@@ -32,7 +32,6 @@ import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
 import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 
-import net.luxvacuos.voxel.client.core.VoxelVariables;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.SkyboxShader;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.resources.Loader;
@@ -113,10 +112,8 @@ public class SkyboxRenderer {
 	 *            Delta
 	 */
 	public float update(float delta) {
-		if (!VoxelVariables.onServer) {
-			time += delta * TIME_MULTIPLIER;
-			time %= 24000;
-		}
+		time += delta * TIME_MULTIPLIER;
+		time %= 24000;
 		globalTime += delta * TIME_MULTIPLIER;
 		float res = time * 0.015f;
 		return res - 90;

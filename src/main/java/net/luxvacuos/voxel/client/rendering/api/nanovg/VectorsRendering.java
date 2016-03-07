@@ -123,6 +123,43 @@ public class VectorsRendering {
 		nvgText(vg, x, y + h * 0.5f, text, NULL);
 	}
 
+	public static void renderSearchBox(String text, String font, String entypo, float x, float y, float w, float h) {
+		long vg = display.getVg();
+		NVGPaint bg = paintA;
+		float cornerRadius = h / 2 - 1;
+
+		// Edit
+		nvgBoxGradient(vg, x, y + 1.5f, w, h, h / 2, 5, rgba(0, 0, 0, 80, colorA), rgba(0, 0, 0, 120, colorB), bg);
+		nvgBeginPath(vg);
+		nvgRoundedRect(vg, x, y, w, h, cornerRadius);
+		nvgFillPaint(vg, bg);
+		nvgFill(vg);
+
+		nvgBeginPath(vg);
+		nvgRoundedRect(vg, x + 0.5f, y + 0.5f, w - 1, h - 1, cornerRadius - 0.5f);
+		nvgStrokeColor(vg, rgba(0, 0, 0, 140, colorA));
+		nvgStroke(vg);
+
+		nvgFontSize(vg, h * 1.3f);
+		nvgFontFace(vg, entypo);
+		nvgFillColor(vg, rgba(255, 255, 255, 0, colorA));
+		nvgTextAlign(vg, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
+		nvgText(vg, x + h * 0.55f, y + h * 0.55f, ICON_SEARCH, NULL);
+
+		nvgFontSize(vg, h * 1.3f);
+		nvgFontFace(vg, font);
+		nvgFillColor(vg, rgba(255, 255, 255, 140, colorA));
+
+		nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
+		nvgText(vg, x + h * 1.05f, y + h * 0.5f, text, NULL);
+
+		nvgFontSize(vg, h * 1.3f);
+		nvgFontFace(vg, entypo);
+		nvgFillColor(vg, rgba(255, 255, 255, 0, colorA));
+		nvgTextAlign(vg, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
+		nvgText(vg, x + w - h * 0.55f, y + h * 0.55f, ICON_CIRCLED_CROSS, NULL);
+	}
+
 	public static void renderImage(float x, float y, float w, float h, int image, float alpha) {
 		NVGPaint imgPaint = paintB;
 		IntBuffer imgw = memAllocInt(1), imgh = memAllocInt(1);

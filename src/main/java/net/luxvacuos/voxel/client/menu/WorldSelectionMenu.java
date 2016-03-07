@@ -51,8 +51,8 @@ public class WorldSelectionMenu {
 		float height = VoxelVariables.HEIGHT;
 		yScale = height / 720f;
 		xScale = width / 1280f;
-		exitButton = new Button(new Vector2f(1035, 30), new Vector2f(215, 80), xScale, yScale);
-		playButton = new Button(new Vector2f(800, 30), new Vector2f(215, 80), xScale, yScale);
+		exitButton = new Button(new Vector2f(655, 30), new Vector2f(215, 80), xScale, yScale);
+		playButton = new Button(new Vector2f(410, 30), new Vector2f(215, 80), xScale, yScale);
 		// worldsNumber = new File(VoxelVariables.worldPath).list().length;
 		worldsNumber = 5;
 		worlds = new WorldGui[worldsNumber];

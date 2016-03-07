@@ -79,6 +79,7 @@ public class GameSPState implements State {
 				gm.getGlobalStates().setState(GameState.IN_PAUSE);
 			}
 		}
+
 		// if (!display.isDisplayFocused()) {
 		// gm.getCamera().unlockMouse();
 		// states.setState(GameState.IN_PAUSE);
