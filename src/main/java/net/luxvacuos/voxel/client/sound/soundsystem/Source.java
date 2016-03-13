@@ -50,7 +50,7 @@ public class Source
 /**
  * The library class associated with this type of channel.
  */
-    protected Class libraryType = Library.class;
+    protected Class<?> libraryType = Library.class;
 
 /**
  * Used to return a current value from one of the synchronized 

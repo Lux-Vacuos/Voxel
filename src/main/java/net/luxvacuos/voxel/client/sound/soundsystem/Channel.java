@@ -48,7 +48,7 @@ public class Channel
 /**
  * The library class associated with this type of channel.
  */
-    protected Class libraryType = Library.class;
+    protected Class<?> libraryType = Library.class;
     
 /**
  * Global identifier for the type of channel (normal or streaming).  Possible 

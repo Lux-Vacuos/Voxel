@@ -231,7 +231,7 @@ public class CommandObject
 /**
  * Any Class arguments required for a command.
  */
-    public Class[]        classArgs;
+    public Class<?>[]        classArgs;
 
 /**
  * Any Object arguments required for a command.
@@ -268,7 +268,7 @@ public class CommandObject
  * @param cmd Which command to execute.
  * @param c The Library Class argument needed to execute this command.
  */
-    public CommandObject( int cmd, Class c )
+    public CommandObject( int cmd, Class<?> c )
     {
         Command = cmd;
         classArgs = new Class[1];

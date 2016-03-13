@@ -50,7 +50,7 @@ public interface PhysicalOggStream {
 	 * @see LogicalOggStream
 	 */
 
-	public Collection getLogicalStreams();
+	public Collection<?> getLogicalStreams();
 
 	/**
 	 * Return the Ogg page with the absolute index <code>index</code>,

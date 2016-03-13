@@ -18,29 +18,17 @@
  * 
  */
 
-package net.luxvacuos.voxel.client.api.mod;
+package net.luxvacuos.voxel.client.rendering.api.opengl;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import org.lwjgl.opengl.GL11;
 
-import net.luxvacuos.voxel.client.core.VoxelVariables;
+public class GLUtil {
 
-/**
- * Mod
- * 
- * @author Guerra24 <pablo230699@hotmail.com>
- * @category API
- */
-@Target(ElementType.TYPE)
-@Retention(RetentionPolicy.RUNTIME)
-public @interface MoltenAPIMod {
+	private GLUtil() {
+	}
 
-	public String createdBy() default "";
-
-	public String name() default "";
-
-	public int requiredAPIVersion() default VoxelVariables.apiVersionNum;
+	public static int getTextureMaxSize() {
+		return GL11.glGetInteger(GL11.GL_MAX_TEXTURE_SIZE);
+	}
 
 }

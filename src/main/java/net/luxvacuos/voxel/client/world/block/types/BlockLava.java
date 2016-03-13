@@ -1,25 +1,21 @@
 /*
- * The MIT License (MIT)
+ * This file is part of Voxel
+ * 
+ * Copyright (C) 2016 Lux Vacuos
  *
- * Copyright (c) 2015-2016 Lux Vacuos
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * 
  */
 
 package net.luxvacuos.voxel.client.world.block.types;
@@ -27,61 +23,14 @@ package net.luxvacuos.voxel.client.world.block.types;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 
-import net.luxvacuos.voxel.client.rendering.api.opengl.Tessellator;
 import net.luxvacuos.voxel.client.world.block.BlockBase;
-import net.luxvacuos.voxel.client.world.block.BlocksResources;
 import net.luxvacuos.voxel.universal.util.vector.Vector3f;
-import net.luxvacuos.voxel.universal.util.vector.Vector8f;
 
 public class BlockLava extends BlockBase {
-
-	public BlockLava() {
-		transparent = true;
-		customModel = true;
-	}
 
 	@Override
 	public byte getId() {
 		return 10;
-	}
-
-	@Override
-	public Vector8f texCoordsUp() {
-		return BlocksResources.getTessellatorTextureAtlas().getTextureCoords("Lava");
-	}
-
-	@Override
-	public Vector8f texCoordsDown() {
-		return BlocksResources.getTessellatorTextureAtlas().getTextureCoords("Lava");
-	}
-
-	@Override
-	public Vector8f texCoordsFront() {
-		return BlocksResources.getTessellatorTextureAtlas().getTextureCoords("LavaSide");
-	}
-
-	@Override
-	public Vector8f texCoordsBack() {
-		return BlocksResources.getTessellatorTextureAtlas().getTextureCoords("LavaSide");
-	}
-
-	@Override
-	public Vector8f texCoordsRight() {
-		return BlocksResources.getTessellatorTextureAtlas().getTextureCoords("LavaSide");
-	}
-
-	@Override
-	public Vector8f texCoordsLeft() {
-		return BlocksResources.getTessellatorTextureAtlas().getTextureCoords("LavaSide");
-	}
-
-	@Override
-	public void generateCustomModel(Tessellator tess, float x, float y, float z, boolean top, boolean bottom,
-			boolean left, boolean right, boolean front, boolean back, float light) {
-		if (!top)
-			tess.generateCube(x, y, z, 1f, 1f, 1f, top, bottom, left, right, front, back, this, light);
-		else
-			tess.generateCube(x, y, z, 1f, 0.8f, 1f, top, bottom, left, right, front, back, this, light);
 	}
 
 	@Override

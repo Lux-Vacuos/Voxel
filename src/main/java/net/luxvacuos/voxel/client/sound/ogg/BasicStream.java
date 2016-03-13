@@ -38,11 +38,11 @@ public class BasicStream implements PhysicalOggStream {
 	private boolean closed = false;
 	private InputStream sourceStream;
 	private Object drainLock = new Object();
-	private LinkedList pageCache = new LinkedList();
+	private LinkedList<?> pageCache = new LinkedList<Object>();
 	private long numberOfSamples = -1;
 	private int position = 0;
 
-	private HashMap logicalStreams = new HashMap();
+	private HashMap<Integer, LogicalOggStreamImpl> logicalStreams = new HashMap<Integer, LogicalOggStreamImpl>();
 	private OggPage firstPage;
 
 	public BasicStream(InputStream sourceStream) throws OggFormatException, IOException {
@@ -53,7 +53,7 @@ public class BasicStream implements PhysicalOggStream {
 		los.checkFormat(firstPage);
 	}
 
-	public Collection getLogicalStreams() {
+	public Collection<LogicalOggStreamImpl> getLogicalStreams() {
 		return logicalStreams.values();
 	}
 

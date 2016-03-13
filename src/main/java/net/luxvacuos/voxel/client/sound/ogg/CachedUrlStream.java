@@ -48,12 +48,12 @@ public class CachedUrlStream implements PhysicalOggStream {
 	private Object drainLock = new Object();
 	private RandomAccessFile drain;
 	private byte[] memoryCache;
-	private ArrayList pageOffsets = new ArrayList();
-	private ArrayList pageLengths = new ArrayList();
+	private ArrayList<Long> pageOffsets = new ArrayList<Long>();
+	private ArrayList<Long> pageLengths = new ArrayList<Long>();
 	private long numberOfSamples = -1;
 	private long cacheLength;
 
-	private HashMap logicalStreams = new HashMap();
+	private HashMap<Integer, LogicalOggStreamImpl> logicalStreams = new HashMap<Integer, LogicalOggStreamImpl>();
 
 	private LoaderThread loaderThread;
 
@@ -100,7 +100,7 @@ public class CachedUrlStream implements PhysicalOggStream {
 		System.out.println("caching " + pageOffsets.size() + "/20 pages\r");
 	}
 
-	public Collection getLogicalStreams() {
+	public Collection<LogicalOggStreamImpl> getLogicalStreams() {
 		return logicalStreams.values();
 	}
 
@@ -150,7 +150,7 @@ public class CachedUrlStream implements PhysicalOggStream {
 	}
 
 	public void setTime(long granulePosition) throws IOException {
-		for (Iterator iter = logicalStreams.values().iterator(); iter.hasNext();) {
+		for (Iterator<LogicalOggStreamImpl> iter = logicalStreams.values().iterator(); iter.hasNext();) {
 			LogicalOggStream los = (LogicalOggStream) iter.next();
 			los.setTime(granulePosition);
 		}

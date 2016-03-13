@@ -46,12 +46,12 @@ public class OnDemandUrlStream implements PhysicalOggStream {
 	private URLConnection source;
 	private InputStream sourceStream;
 	private Object drainLock = new Object();
-	private LinkedList pageCache = new LinkedList();
+	private LinkedList<?> pageCache = new LinkedList<Object>();
 	private long numberOfSamples = -1;
 	private int contentLength = 0;
 	private int position = 0;
 
-	private HashMap logicalStreams = new HashMap();
+	private HashMap<Integer, LogicalOggStreamImpl> logicalStreams = new HashMap<Integer, LogicalOggStreamImpl>();
 	private OggPage firstPage;
 
 	private static final int PAGECACHE_SIZE = 20;
@@ -69,7 +69,7 @@ public class OnDemandUrlStream implements PhysicalOggStream {
 		los.checkFormat(firstPage);
 	}
 
-	public Collection getLogicalStreams() {
+	public Collection<LogicalOggStreamImpl> getLogicalStreams() {
 		return logicalStreams.values();
 	}
 

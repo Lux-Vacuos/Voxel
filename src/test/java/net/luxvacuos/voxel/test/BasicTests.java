@@ -1,3 +1,23 @@
+/*
+ * This file is part of Voxel
+ * 
+ * Copyright (C) 2016 Lux Vacuos
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * 
+ */
+
 package net.luxvacuos.voxel.test;
 
 import static net.luxvacuos.voxel.client.input.Keyboard.*;
@@ -148,32 +168,7 @@ public class BasicTests {
 
 	@Test
 	public void testRun() {
-
 		Voxel voxel = new Voxel("test");
-
 		assertNotNull(voxel);
-		/*
-		 * voxel.preInit(); voxel.init(); voxel.postInit();
-		 * assertFalse(voxel.getGameResources().getCamera().isUnderWater());
-		 * assertFalse(voxel.getGameResources().getCamera().isMoved);
-		 * assertNotNull(voxel.getGameResources().getRand());
-		 * assertNotNull(voxel.getGameResources().getLoader());
-		 * assertNotNull(voxel.getGameResources().getCamera());
-		 * assertNotNull(voxel.getGameResources().getSun_Camera());
-		 * assertNotNull(voxel.getGameResources().getRenderer());
-		 * assertNotNull(voxel.getGameResources().getSkyboxRenderer());
-		 * assertNotNull(voxel.getGameResources().getGlobalStates());
-		 * assertNotNull(voxel.getGameResources().getDeferredShadingRenderer());
-		 * assertNotNull(voxel.getGameResources().getMasterShadowRenderer());
-		 * assertNotNull(voxel.getGameResources().getOcclusionRenderer());
-		 * assertNotNull(voxel.getGameResources().getPhysicsEngine());
-		 * assertNotNull(voxel.getGameResources().getSoundSystem());
-		 * assertNotNull(voxel.getGameResources().getFrustum());
-		 * assertNotNull(voxel.getGameResources().getKryo());
-		 * assertNotNull(voxel.getGameResources().getMenuSystem());
-		 * assertNotNull(voxel.getGameResources().getGameSettings());
-		 * 
-		 * voxel.dispose();
-		 */
 	}
 }

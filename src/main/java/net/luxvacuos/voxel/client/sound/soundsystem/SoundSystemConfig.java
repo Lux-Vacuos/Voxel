@@ -225,7 +225,7 @@ public class SoundSystemConfig
  * load libraries in the order that they were entered into the list.
  * @param libraryClass Derivitive of class 'Library'.
 */
-    public static void addLibrary( Class libraryClass )
+    public static void addLibrary( Class<?> libraryClass )
                                                      throws SoundSystemException
     {
         if( libraryClass == null )
@@ -247,7 +247,7 @@ public class SoundSystemConfig
  * Removes the specified library from the list of library types.
  * @param libraryClass Derivitive of class 'Library'.
 */
-    public static void removeLibrary( Class libraryClass )
+    public static void removeLibrary( Class<?> libraryClass )
                                                      throws SoundSystemException
     {
         if( libraries == null || libraryClass == null )
@@ -270,7 +270,7 @@ public class SoundSystemConfig
  * @param libraryClass Library type to check.
  * @return True or false.
 */
-    public static boolean libraryCompatible( Class libraryClass )
+    public static boolean libraryCompatible( Class<?> libraryClass )
     {
         if( libraryClass == null )
         {
@@ -303,7 +303,7 @@ public class SoundSystemConfig
  * @param libraryClass Derivitive of class 'Library'.
  * @return String containing the library title.
 */
-    public static String getLibraryTitle( Class libraryClass )
+    public static String getLibraryTitle( Class<?> libraryClass )
     {
         if( libraryClass == null )
         {
@@ -335,7 +335,7 @@ public class SoundSystemConfig
  * @param libraryClass Derivitive of class 'Library'.
  * @return String containing the library title.
 */
-    public static String getLibraryDescription( Class libraryClass )
+    public static String getLibraryDescription( Class<?> libraryClass )
     {
         if( libraryClass == null )
         {
@@ -367,7 +367,7 @@ public class SoundSystemConfig
  * @param libraryClass Derivitive of class 'Library'.
  * @return True if byte-order reversal is required.
 */
-    public static boolean reverseByteOrder( Class libraryClass )
+    public static boolean reverseByteOrder( Class<?> libraryClass )
     {
         if( libraryClass == null )
         {
@@ -721,7 +721,7 @@ public class SoundSystemConfig
  * @param iCodecClass Codec type to use for files with the specified extension.
  */
     public static synchronized void setCodec( String extension,
-                                              Class iCodecClass )
+                                              Class<?> iCodecClass )
                                                      throws SoundSystemException
     {
         if( extension == null )
@@ -891,7 +891,7 @@ public class SoundSystemConfig
  * @param params Actual parameters to pass to the method.
  * @return Specified method's return value, or null if error or void.
 */
-    private static Object runMethod( Class c, String method, Class[] paramTypes,
+    private static Object runMethod( Class<?> c, String method, Class[] paramTypes,
                                      Object[] params )
     {
         Method m = null;
@@ -991,14 +991,14 @@ public class SoundSystemConfig
 /**
  * Codec used to load audio data from this file format.
  */
-        public Class iCodecClass;
+        public Class<?> iCodecClass;
 /**
  * Constructor:  Converts the specified extension string into a regular
  * expression, and associates that with the specified codec.
  * @param extension File extension to be associated with the specified codec.
  * @param iCodec Codec to use for files with the specified extension.
  */
-        public Codec( String extension, Class iCodecClass )
+        public Codec( String extension, Class<?> iCodecClass )
         {
             extensionRegX = "";
             // Make sure an extension was specified:

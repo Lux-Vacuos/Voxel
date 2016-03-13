@@ -38,6 +38,7 @@ package net.luxvacuos.voxel.client.sound.soundsystem;
  */
 public class SoundSystemException extends Exception
 {
+	private static final long serialVersionUID = 3625364983480539779L;
 /**
  * Global identifier for no problem.
  */
