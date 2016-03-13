@@ -223,6 +223,13 @@ public class Maths {
 		return randomNum;
 	}
 
+	public static boolean getRandomBoolean(int chanceOfTrue) {
+		Random random = new Random();
+		if (random.nextInt(chanceOfTrue) == 0)
+			return true;
+		return false;
+	}
+
 	public static void sortLowToHigh(List<Chunk> list) {
 		for (int i = 1; i < list.size(); i++) {
 			Chunk item = list.get(i);

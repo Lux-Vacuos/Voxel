@@ -24,18 +24,49 @@
 
 package net.luxvacuos.voxel.client.core.states;
 
+import java.io.IOException;
+
 import net.luxvacuos.voxel.client.core.GlobalStates;
 import net.luxvacuos.voxel.client.core.State;
 import net.luxvacuos.voxel.client.core.Voxel;
+import net.luxvacuos.voxel.client.core.VoxelVariables;
+import net.luxvacuos.voxel.client.rendering.api.nanovg.VectorsRendering;
+import net.luxvacuos.voxel.client.resources.GameResources;
 
 public class LoadingMPState implements State {
 
+	private boolean trying = false;
+	private String message = "Connecting...";
+
 	@Override
 	public void update(Voxel voxel, GlobalStates states, float delta) {
+
+		GameResources gm = voxel.getGameResources();
+		if (!trying) {
+			try {
+				trying = true;
+				gm.getVoxelClient().connect(4059, gm.getMenuSystem().mpSelectionMenu.getIP());
+			} catch (IOException e) {
+				VoxelVariables.onServer = false;
+				message = e.getMessage();
+				e.printStackTrace();
+			}
+		}
+		if (gm.getMenuSystem().mpLoadingWorld.getExitButton().pressed()) {
+			trying = false;
+			message = "Connecting...";
+			gm.getGlobalStates().setState(gm.getGlobalStates().getOldState());
+		}
 	}
 
 	@Override
 	public void render(Voxel voxel, GlobalStates states, float delta) {
+		GameResources gm = voxel.getGameResources();
+		gm.getRenderer().prepare();
+		gm.getDisplay().beingNVGFrame();
+		gm.getMenuSystem().mpLoadingWorld.render(message);
+		VectorsRendering.renderMouse();
+		gm.getDisplay().endNVGFrame();
 	}
 
 }

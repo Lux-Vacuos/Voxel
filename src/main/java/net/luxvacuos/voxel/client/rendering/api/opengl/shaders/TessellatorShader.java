@@ -58,6 +58,8 @@ public class TessellatorShader extends ShaderProgram {
 	private int loc_useShadows;
 	private int loc_useParallax;
 
+	private int loc_rainFactor;
+
 	public TessellatorShader() {
 		super(VoxelVariables.VERTEX_FILE_TESSELLATOR, VoxelVariables.FRAGMENT_FILE_TESSELLATOR);
 	}
@@ -85,7 +87,8 @@ public class TessellatorShader extends ShaderProgram {
 		loc_heightMap = super.getUniformLocation("heightMap");
 		loc_specularMap = super.getUniformLocation("specularMap");
 		loc_useParallax = super.getUniformLocation("useParallax");
-		loc_moveFactor = getUniformLocation("moveFactor");
+		loc_moveFactor = super.getUniformLocation("moveFactor");
+		loc_rainFactor = super.getUniformLocation("rainFactor");
 	}
 
 	@Override
@@ -138,9 +141,13 @@ public class TessellatorShader extends ShaderProgram {
 	public void loadLightMatrix(GameResources gm) {
 		super.loadMatrix(loc_viewLightMatrix, Maths.createViewMatrix(gm.getSun_Camera()));
 	}
-	
+
 	public void loadMoveFactor(float factor) {
 		super.loadFloat(loc_moveFactor, factor);
+	}
+
+	public void loadRainFactor(float factor) {
+		super.loadFloat(loc_rainFactor, factor);
 	}
 
 	public void loadSettings(boolean useShadows, boolean useParallax) {

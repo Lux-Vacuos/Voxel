@@ -118,9 +118,8 @@ public class VectorsRendering {
 		nvgFontSize(vg, fontSize);
 		nvgFontFace(vg, font);
 		nvgFillColor(vg, rgba(255, 255, 255, 128, colorA));
-
 		nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
-		nvgText(vg, x, y + h * 0.5f, text, NULL);
+		nvgText(vg, x, y, text, NULL);
 	}
 
 	public static void renderSearchBox(String text, String font, String entypo, float x, float y, float w, float h) {

@@ -38,8 +38,8 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 import net.luxvacuos.voxel.client.core.VoxelVariables;
 import net.luxvacuos.voxel.client.particle.ParticlePoint;
+import net.luxvacuos.voxel.client.rendering.api.opengl.Tessellator;
 import net.luxvacuos.voxel.client.resources.GameResources;
-import net.luxvacuos.voxel.client.resources.models.Tessellator;
 import net.luxvacuos.voxel.client.resources.models.WaterTile;
 import net.luxvacuos.voxel.client.util.Logger;
 import net.luxvacuos.voxel.client.util.Maths;

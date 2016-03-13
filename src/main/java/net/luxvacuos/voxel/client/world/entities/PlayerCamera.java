@@ -177,8 +177,8 @@ public class PlayerCamera extends Camera {
 				clickTime = 10;
 				setBlock(gm.getDisplay().getDisplayWidth(), gm.getDisplay().getDisplayHeight(), block, world, gm);
 			}
-		if(isKeyDown(Keyboard.KEY_Y))
-		world.setGlobalBlock(bx, by-1, bz, Block.Lava.getId());
+		if (isKeyDown(Keyboard.KEY_Y))
+			world.setGlobalBlock(bx, by - 1, bz, Block.Lava.getId());
 
 		updateDebug(world);
 		updateRay(gm.getRenderer().getProjectionMatrix(), gm.getDisplay().getDisplayWidth(),
@@ -224,9 +224,13 @@ public class PlayerCamera extends Camera {
 		int bx = (int) tempX;
 		int by = (int) tempY;
 		int bz = (int) tempZ;
-		world.setGlobalBlock(bx, by, bz, block.getId());
+
 		if (block.getId() == Block.Torch.getId())
 			world.lighting(bx, by, bz, 14);
+		if (block.getId() == Block.Air.getId() && world.getGlobalBlock(bx, by, bz) != Block.Air.getId())
+			gm.getPhysicsEngine().addEntity(Block.getBlock(world.getGlobalBlock(bx, by, bz)).getDrop(gm,
+					new Vector3f(bx + 0.5f, by + 0.5f, bz - 0.5f)));
+		world.setGlobalBlock(bx, by, bz, block.getId());
 		block.setTotal(block.getTotal() - 1);
 	}
 

@@ -50,7 +50,7 @@ public class VoxelVariables {
 	public static final String apiVersion = "0.0.6";
 	public static final int apiVersionNum = 000006;
 	public static final String state = "ALPHA";
-	public static final int build = 178;
+	public static final int build = 179;
 	public static int FOV = 90;
 	public static int WIDTH = 1280;
 	public static int HEIGHT = 720;
@@ -62,6 +62,7 @@ public class VoxelVariables {
 	public static boolean runningOnMac = false;
 	public static boolean autostart = false;
 	public static boolean christmas = false;
+	public static boolean raining = false;
 	public static final String settings = Bootstrap.getPrefix() + "voxel/assets/game/settings.conf";
 
 	/**

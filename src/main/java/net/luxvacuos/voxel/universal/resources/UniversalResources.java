@@ -35,7 +35,7 @@ public class UniversalResources {
 
 	public static void loadUniversalResources(GameResources gm) {
 		ModelTexture texture = new ModelTexture(gm.getLoader().loadTextureEntity("player"));
-		RawModel model = gm.getLoader().getObjLoader().loadObjModel("player");
+		RawModel model = gm.getLoader().getObjLoader().loadObjModel("cube");
 		player = new TexturedModel(model, texture);
 	}
 

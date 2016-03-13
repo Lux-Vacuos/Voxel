@@ -1,7 +1,7 @@
 //
 // The MIT License (MIT)
 //
-// Copyright (c) 2015-2016 Guerra24
+// Copyright (c) 2015-2016 Lux Vacuos
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -43,6 +43,7 @@ uniform sampler2D specularMap;
 
 uniform int useShadows;
 uniform int useParallax;
+uniform float rainFactor;
 
 const float xPixelOffset = 0.0005;
 const float yPixelOffset = 0.0005;
@@ -111,11 +112,15 @@ void main(void) {
 	vec3 normal = texture(normalMap, texcoords).rgb;
 	normal = normalize(normal * 2.0 - 1.0);   
 	normal = normalize(TBN * normal);
+	
+	float reflectionFactor = rainFactor;
+	reflectionFactor += texture(specularMap, texcoords).r;
+	reflectionFactor = clamp(reflectionFactor,0,1);
     	
 	out_Color[0] = textureColour;
 	out_Color[1] = vec4(pass_position.xyz,0);
 	out_Color[2] = vec4(normal,0.0);
-	out_Color[3] = vec4(texture(specularMap, texcoords).r,1.0,0.0,shadow);
+	out_Color[3] = vec4(reflectionFactor,1.0,0.0,shadow);
 	out_Color[4] = vec4(0.0, 0.0, 0.0, bright);
 		
 		

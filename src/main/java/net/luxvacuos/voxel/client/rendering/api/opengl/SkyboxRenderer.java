@@ -32,6 +32,8 @@ import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
 import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 
+import net.luxvacuos.voxel.client.core.VoxelVariables;
+import net.luxvacuos.voxel.client.input.Keyboard;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.SkyboxShader;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.resources.Loader;
@@ -52,6 +54,8 @@ public class SkyboxRenderer {
 	private SkyboxShader shader;
 	private float time = 0;
 	private float globalTime = 0;
+	private float accTime = 0;
+	private float rainFactor;
 
 	private static final float TIME_MULTIPLIER = 10;
 
@@ -116,6 +120,14 @@ public class SkyboxRenderer {
 		time %= 24000;
 		globalTime += delta * TIME_MULTIPLIER;
 		float res = time * 0.015f;
+
+		if (VoxelVariables.raining) {
+			rainFactor += 0.5f * delta;
+		} else
+			rainFactor -= 0.5f * delta;
+
+		rainFactor = Maths.clamp(rainFactor, 0f, 1f);
+
 		return res - 90;
 	}
 
@@ -130,6 +142,10 @@ public class SkyboxRenderer {
 
 	public void setTime(float time) {
 		this.time = time;
+	}
+
+	public float getRainFactor() {
+		return rainFactor;
 	}
 
 }

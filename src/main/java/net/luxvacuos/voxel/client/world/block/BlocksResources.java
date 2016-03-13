@@ -35,6 +35,8 @@ public class BlocksResources {
 
 	public static TexturedModel cubeTorch;
 
+	public static TexturedModel missingDrop;
+
 	private static TessellatorTextureAtlas tessellatorTextureAtlas;
 
 	private static int normalMap;
@@ -44,14 +46,17 @@ public class BlocksResources {
 	public static void createBlocks(Loader loader) {
 
 		RawModel torch = loader.getObjLoader().loadObjModel("Torch");
+		RawModel missing = loader.getObjLoader().loadObjModel("cube");
 
 		tessellatorTextureAtlas = new TessellatorTextureAtlas(256, 256, loader.loadTextureBlocks("blocks"));
 		normalMap = loader.loadTextureBlocks("blocks_normal");
 		heightMap = loader.loadTextureBlocks("blocks_height");
 		specularMap = loader.loadTextureBlocks("blocks_specular");
 
-		ModelTexture texture8 = new ModelTexture(loader.loadTextureBlocks("Torch"));
-		cubeTorch = new TexturedModel(torch, texture8);
+		ModelTexture torchTex = new ModelTexture(loader.loadTextureBlocks("Torch"));
+		ModelTexture missingTex = new ModelTexture(loader.loadTextureBlocks("Missing"));
+		cubeTorch = new TexturedModel(torch, torchTex);
+		missingDrop = new TexturedModel(missing, missingTex);
 		loadTexCoords();
 	}
 

@@ -27,7 +27,6 @@ package net.luxvacuos.voxel.client.world.block.types;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 
-import net.luxvacuos.voxel.client.resources.models.Tessellator;
 import net.luxvacuos.voxel.client.world.block.BlockBase;
 import net.luxvacuos.voxel.client.world.block.BlockEntity;
 import net.luxvacuos.voxel.client.world.block.BlocksResources;
@@ -44,7 +43,7 @@ public class BlockTorch extends BlockBase {
 	public byte getId() {
 		return 9;
 	}
-	
+
 	@Override
 	public BlockEntity getSingleModel(Vector3f pos) {
 		return new BlockEntity(BlocksResources.cubeTorch, pos, 0, 0, 0, 1, "SINGLE MODEL", getId());

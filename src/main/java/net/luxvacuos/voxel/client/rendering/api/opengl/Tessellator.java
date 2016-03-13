@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package net.luxvacuos.voxel.client.resources.models;
+package net.luxvacuos.voxel.client.rendering.api.opengl;
 
 import static org.lwjgl.opengl.GL11.GL_BACK;
 import static org.lwjgl.opengl.GL11.GL_FLOAT;
@@ -245,6 +245,7 @@ public class Tessellator {
 		shader.loadLightMatrix(gm);
 		shader.loadSettings(VoxelVariables.useShadows, VoxelVariables.useParallax);
 		shader.loadMoveFactor(gm.getRenderer().getWaterRenderer().getMoveFactor());
+		shader.loadRainFactor(gm.getSkyboxRenderer().getRainFactor());
 		glBindVertexArray(vaoID);
 		glEnableVertexAttribArray(0);
 		glEnableVertexAttribArray(1);

@@ -1,7 +1,7 @@
 //
 // The MIT License (MIT)
 //
-// Copyright (c) 2015-2016 Guerra24
+// Copyright (c) 2015-2016 Lux Vacuos
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -78,9 +78,6 @@ const float shadowDistance = 80;
 
 void main(void){
 	vec2 texcoord = textureCoords;
-	if(camUnderWater == 1){
-		texcoord.x += sin(texcoord.y * 4*2*3.14159 + camUnderWaterOffset) / 100;
-	}
 	vec4 image = texture(gDiffuse, texcoord);
 	vec4 data = texture(gData0, texcoord);
 	vec4 data1 = texture(gData1, texcoord);
@@ -110,7 +107,7 @@ void main(void){
     	if(data.r> 0.0)
     		if(data.a <= 0){
     			vec3 vHalfVector = normalize(lightDir.xyz+eyeDir);
-	   			image += pow(max(dot(normal.xyz,vHalfVector),0.0), 100) * 1.5;
+	   			image += pow(max(dot(normal.xyz,vHalfVector),0.0), 100) * data.r * 1.5;
 	   		}
     }
 	vec4 raysColor = texture(composite0, texcoord);

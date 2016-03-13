@@ -54,6 +54,9 @@ public class Bootstrap {
 		prefix += "/.";
 	}
 
+	private Bootstrap() {
+	}
+
 	/**
 	 * OS info
 	 */

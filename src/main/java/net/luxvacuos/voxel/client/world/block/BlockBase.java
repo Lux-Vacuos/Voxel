@@ -27,8 +27,11 @@ package net.luxvacuos.voxel.client.world.block;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 
-import net.luxvacuos.voxel.client.resources.models.Tessellator;
+import net.luxvacuos.voxel.client.rendering.api.opengl.Tessellator;
+import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.resources.models.WaterTile;
+import net.luxvacuos.voxel.client.world.items.ItemDropBase;
+import net.luxvacuos.voxel.client.world.items.ItemDropMissing;
 import net.luxvacuos.voxel.universal.util.vector.Vector3f;
 import net.luxvacuos.voxel.universal.util.vector.Vector8f;
 
@@ -66,6 +69,10 @@ public abstract class BlockBase {
 
 	public BoundingBox getBoundingBox(Vector3f pos) {
 		return new BoundingBox(new Vector3(pos.x, pos.y, pos.z), new Vector3(pos.x + 1, pos.y + 1, pos.z + 1));
+	}
+
+	public ItemDropBase getDrop(GameResources gm, Vector3f pos) {
+		return new ItemDropMissing(BlocksResources.missingDrop, pos, this, 0, 0, 0, 0.2f);
 	}
 
 	/**

@@ -1,7 +1,7 @@
 //
 // The MIT License (MIT)
 //
-// Copyright (c) 2015-2016 Guerra24
+// Copyright (c) 2015-2016 Lux Vacuos
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -93,7 +93,9 @@ void main(void){
 	vec2 texcoord = textureCoords;
 	vec4 textureColour = vec4(0.0);
 	vec4 data = texture(gData0, texcoord);
-	
+	textureColour = texture(composite0, texcoord);
+	// CHROMATIC ABERRATION - DISABLED - Needs own FBO/Shader
+	/*
 	vec2 uv=(gl_FragCoord.xy/resolution.xy);
 	vec4 sumcol = vec4(0.0);
 	vec4 sumw = vec4(0.0);	
@@ -106,7 +108,7 @@ void main(void){
 	}
 		
 	textureColour = sumcol / sumw;
-	
+	*/
 	if(useMotionBlur == 1){
 		vec3 sum = textureColour.rgb;
 		vec4 tex = vec4(texcoord, 0.0,0.0);

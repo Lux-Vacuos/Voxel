@@ -72,11 +72,6 @@ public class Block {
 	public static final BlockBase Cobblestone = new BlockCobblestone();
 	public static final BlockBase Lava = new BlockLava();
 
-	/**
-	 * Initialize the basic Block
-	 * 
-	 * @author Guerra24 <pablo230699@hotmail.com>
-	 */
 	public static void initBasicBlocks() {
 		registerBlock(Indes);
 		registerBlock(Air);

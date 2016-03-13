@@ -27,7 +27,7 @@ package net.luxvacuos.voxel.client.world.block.types;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 
-import net.luxvacuos.voxel.client.resources.models.Tessellator;
+import net.luxvacuos.voxel.client.rendering.api.opengl.Tessellator;
 import net.luxvacuos.voxel.client.world.block.BlockBase;
 import net.luxvacuos.voxel.client.world.block.BlocksResources;
 import net.luxvacuos.voxel.universal.util.vector.Vector3f;

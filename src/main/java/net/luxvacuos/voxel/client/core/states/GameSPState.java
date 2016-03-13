@@ -39,6 +39,7 @@ import org.lwjgl.BufferUtils;
 
 import net.luxvacuos.voxel.client.core.GlobalStates;
 import net.luxvacuos.voxel.client.core.GlobalStates.GameState;
+import net.luxvacuos.voxel.client.input.Keyboard;
 import net.luxvacuos.voxel.client.core.State;
 import net.luxvacuos.voxel.client.core.Voxel;
 import net.luxvacuos.voxel.client.core.VoxelVariables;
@@ -78,6 +79,8 @@ public class GameSPState implements State {
 				((PlayerCamera) gm.getCamera()).unlockMouse();
 				gm.getGlobalStates().setState(GameState.IN_PAUSE);
 			}
+			if (Keyboard.isKeyDown(Keyboard.KEY_R))
+				VoxelVariables.raining = !VoxelVariables.raining;
 		}
 
 		// if (!display.isDisplayFocused()) {

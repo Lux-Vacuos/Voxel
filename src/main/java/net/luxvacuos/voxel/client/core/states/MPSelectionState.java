@@ -24,13 +24,10 @@
 
 package net.luxvacuos.voxel.client.core.states;
 
-import java.io.IOException;
-
 import net.luxvacuos.voxel.client.core.GlobalStates;
+import net.luxvacuos.voxel.client.core.GlobalStates.GameState;
 import net.luxvacuos.voxel.client.core.State;
 import net.luxvacuos.voxel.client.core.Voxel;
-import net.luxvacuos.voxel.client.core.VoxelVariables;
-import net.luxvacuos.voxel.client.core.GlobalStates.GameState;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.VectorsRendering;
 import net.luxvacuos.voxel.client.resources.GameResources;
 
@@ -42,17 +39,7 @@ public class MPSelectionState implements State {
 		if (gm.getMenuSystem().mpSelectionMenu.getExitButton().pressed())
 			gm.getGlobalStates().setState(GameState.MAINMENU);
 		else if (gm.getMenuSystem().mpSelectionMenu.getPlayButton().pressed()) {
-			try {
-				gm.getVoxelClient().connect(4059, gm.getMenuSystem().mpSelectionMenu.getIP());
-				VoxelVariables.onServer = true;
-			} catch (IOException e) {
-				VoxelVariables.onServer = false;
-				e.printStackTrace();
-			}
-			if (VoxelVariables.onServer) {
-				gm.getGlobalStates().setState(GameState.LOADING_WORLD);
-			}
-
+			gm.getGlobalStates().setState(GameState.LOADING_MP_WORLD);
 		}
 	}
 

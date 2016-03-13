@@ -1,7 +1,7 @@
 //
 // The MIT License (MIT)
 //
-// Copyright (c) 2015-2016 Guerra24
+// Copyright (c) 2015-2016 Lux Vacuos
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -69,9 +69,6 @@ uniform int useReflections;
 
 void main(void){
 	vec2 texcoord = textureCoords;
-	if(camUnderWater == 1){
-		texcoord.x += sin(texcoord.y * 4*2*3.14159 + camUnderWaterOffset) / 100;
-	}
 	vec4 image = texture(composite0, texcoord);
 	vec4 data = texture(gData0, texcoord);
     vec4 position = texture(gPosition,texcoord);
