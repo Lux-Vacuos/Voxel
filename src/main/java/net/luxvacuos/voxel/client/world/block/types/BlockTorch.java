@@ -23,10 +23,10 @@ package net.luxvacuos.voxel.client.world.block.types;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 
+import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.voxel.client.world.block.BlockBase;
 import net.luxvacuos.voxel.client.world.block.BlockEntity;
 import net.luxvacuos.voxel.client.world.block.BlocksResources;
-import net.luxvacuos.voxel.universal.util.vector.Vector3f;
 
 public class BlockTorch extends BlockBase {
 

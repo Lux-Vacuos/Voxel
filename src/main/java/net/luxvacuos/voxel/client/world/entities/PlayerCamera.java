@@ -36,6 +36,10 @@ import static net.luxvacuos.voxel.client.input.Mouse.isButtonDown;
 import static net.luxvacuos.voxel.client.input.Mouse.setCursorPosition;
 import static net.luxvacuos.voxel.client.input.Mouse.setGrabbed;
 
+import net.luxvacuos.igl.vector.Matrix4f;
+import net.luxvacuos.igl.vector.Vector2f;
+import net.luxvacuos.igl.vector.Vector3f;
+import net.luxvacuos.igl.vector.Vector4f;
 import net.luxvacuos.voxel.client.core.VoxelVariables;
 import net.luxvacuos.voxel.client.input.Keyboard;
 import net.luxvacuos.voxel.client.menu.BlockGui;
@@ -45,10 +49,6 @@ import net.luxvacuos.voxel.client.util.Maths;
 import net.luxvacuos.voxel.client.world.IWorld;
 import net.luxvacuos.voxel.client.world.block.Block;
 import net.luxvacuos.voxel.universal.resources.UniversalResources;
-import net.luxvacuos.voxel.universal.util.vector.Matrix4f;
-import net.luxvacuos.voxel.universal.util.vector.Vector2f;
-import net.luxvacuos.voxel.universal.util.vector.Vector3f;
-import net.luxvacuos.voxel.universal.util.vector.Vector4f;
 
 public class PlayerCamera extends Camera {
 

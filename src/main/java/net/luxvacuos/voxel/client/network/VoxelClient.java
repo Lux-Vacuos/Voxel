@@ -27,13 +27,13 @@ import java.util.List;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Client;
 
+import net.luxvacuos.igl.vector.Vector2f;
+import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.voxel.client.core.VoxelVariables;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.universal.network.packets.UpdateNames;
 import net.luxvacuos.voxel.universal.network.packets.Username;
 import net.luxvacuos.voxel.universal.network.packets.WorldTime;
-import net.luxvacuos.voxel.universal.util.vector.Vector2f;
-import net.luxvacuos.voxel.universal.util.vector.Vector3f;
 
 public class VoxelClient {
 

@@ -81,10 +81,10 @@ import org.lwjgl.BufferUtils;
 
 import de.matthiasmann.twl.utils.PNGDecoder;
 import de.matthiasmann.twl.utils.PNGDecoder.Format;
+import net.luxvacuos.igl.Logger;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Display;
 import net.luxvacuos.voxel.client.resources.models.EntityTexture;
 import net.luxvacuos.voxel.client.resources.models.RawModel;
-import net.luxvacuos.voxel.client.util.Logger;
 
 /**
  * This objects handles all loading methods from any type of data, models,

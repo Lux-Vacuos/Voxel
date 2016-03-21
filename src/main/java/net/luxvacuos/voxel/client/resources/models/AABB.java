@@ -20,7 +20,7 @@
 
 package net.luxvacuos.voxel.client.resources.models;
 
-import net.luxvacuos.voxel.universal.util.vector.Vector3f;
+import net.luxvacuos.igl.vector.Vector3f;
 
 public class AABB {
 

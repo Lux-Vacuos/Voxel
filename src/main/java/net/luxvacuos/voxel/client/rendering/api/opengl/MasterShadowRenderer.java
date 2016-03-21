@@ -32,6 +32,7 @@ import java.util.Map;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.utils.ImmutableArray;
 
+import net.luxvacuos.igl.vector.Matrix4f;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Display;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.EntityBasicShader;
 import net.luxvacuos.voxel.client.resources.GameResources;
@@ -39,7 +40,6 @@ import net.luxvacuos.voxel.client.resources.models.TexturedModel;
 import net.luxvacuos.voxel.client.util.Maths;
 import net.luxvacuos.voxel.client.world.block.BlockEntity;
 import net.luxvacuos.voxel.client.world.entities.GameEntity;
-import net.luxvacuos.voxel.universal.util.vector.Matrix4f;
 
 public class MasterShadowRenderer {
 

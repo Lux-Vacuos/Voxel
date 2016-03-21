@@ -20,10 +20,10 @@
 
 package net.luxvacuos.voxel.client.resources;
 
+import net.luxvacuos.igl.vector.Matrix4f;
+import net.luxvacuos.igl.vector.Vector2f;
+import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.voxel.client.resources.models.AABB;
-import net.luxvacuos.voxel.universal.util.vector.Matrix4f;
-import net.luxvacuos.voxel.universal.util.vector.Vector2f;
-import net.luxvacuos.voxel.universal.util.vector.Vector3f;
 
 public class Ray {
 	public Vector3f origin;

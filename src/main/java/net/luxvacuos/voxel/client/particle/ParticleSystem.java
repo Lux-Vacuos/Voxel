@@ -22,9 +22,9 @@ package net.luxvacuos.voxel.client.particle;
 
 import java.util.Random;
 
-import net.luxvacuos.voxel.universal.util.vector.Matrix4f;
-import net.luxvacuos.voxel.universal.util.vector.Vector3f;
-import net.luxvacuos.voxel.universal.util.vector.Vector4f;
+import net.luxvacuos.igl.vector.Matrix4f;
+import net.luxvacuos.igl.vector.Vector3f;
+import net.luxvacuos.igl.vector.Vector4f;
 
 public class ParticleSystem {
 

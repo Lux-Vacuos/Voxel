@@ -24,10 +24,10 @@ import java.nio.FloatBuffer;
 
 import org.lwjgl.BufferUtils;
 
+import net.luxvacuos.igl.vector.Matrix4f;
+import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.voxel.client.util.Maths;
 import net.luxvacuos.voxel.client.world.entities.Camera;
-import net.luxvacuos.voxel.universal.util.vector.Matrix4f;
-import net.luxvacuos.voxel.universal.util.vector.Vector3f;
 
 /**
  * Frustum Culling

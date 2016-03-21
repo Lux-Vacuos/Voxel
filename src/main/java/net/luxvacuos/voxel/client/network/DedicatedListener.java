@@ -23,8 +23,8 @@ package net.luxvacuos.voxel.client.network;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 
+import net.luxvacuos.igl.Logger;
 import net.luxvacuos.voxel.client.resources.GameResources;
-import net.luxvacuos.voxel.client.util.Logger;
 import net.luxvacuos.voxel.universal.network.packets.UpdateNames;
 import net.luxvacuos.voxel.universal.network.packets.Username;
 import net.luxvacuos.voxel.universal.network.packets.WorldTime;

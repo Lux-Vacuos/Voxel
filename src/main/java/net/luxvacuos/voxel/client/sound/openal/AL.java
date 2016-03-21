@@ -24,7 +24,7 @@ import org.lwjgl.openal.ALC;
 import org.lwjgl.openal.ALCCapabilities;
 import org.lwjgl.openal.ALUtil;
 
-import net.luxvacuos.voxel.client.util.Logger;
+import net.luxvacuos.igl.Logger;
 
 public class AL {
 

@@ -28,6 +28,9 @@ import java.util.Random;
 import com.badlogic.ashley.core.Engine;
 import com.esotericsoftware.kryo.Kryo;
 
+import net.luxvacuos.igl.CustomLog;
+import net.luxvacuos.igl.Logger;
+import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.voxel.client.core.GameSettings;
 import net.luxvacuos.voxel.client.core.GlobalStates;
 import net.luxvacuos.voxel.client.core.Voxel;
@@ -57,8 +60,6 @@ import net.luxvacuos.voxel.client.sound.soundsystem.SoundSystem;
 import net.luxvacuos.voxel.client.sound.soundsystem.SoundSystemConfig;
 import net.luxvacuos.voxel.client.sound.soundsystem.SoundSystemException;
 import net.luxvacuos.voxel.client.sound.soundsystem.codecs.CodecJOgg;
-import net.luxvacuos.voxel.client.util.CustomLog;
-import net.luxvacuos.voxel.client.util.Logger;
 import net.luxvacuos.voxel.client.util.LoggerSoundSystem;
 import net.luxvacuos.voxel.client.world.block.Block;
 import net.luxvacuos.voxel.client.world.entities.Camera;
@@ -66,7 +67,6 @@ import net.luxvacuos.voxel.client.world.entities.PlayerCamera;
 import net.luxvacuos.voxel.client.world.entities.SunCamera;
 import net.luxvacuos.voxel.client.world.physics.PhysicsSystem;
 import net.luxvacuos.voxel.universal.resources.UniversalResources;
-import net.luxvacuos.voxel.universal.util.vector.Vector3f;
 
 /**
  * Game Resources

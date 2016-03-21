@@ -34,6 +34,8 @@ import java.util.Map;
 
 import org.lwjgl.BufferUtils;
 
+import net.luxvacuos.igl.vector.Matrix4f;
+import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.voxel.client.particle.Particle;
 import net.luxvacuos.voxel.client.particle.ParticleTexture;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.ParticleShader;
@@ -41,8 +43,6 @@ import net.luxvacuos.voxel.client.resources.Loader;
 import net.luxvacuos.voxel.client.resources.models.RawModel;
 import net.luxvacuos.voxel.client.util.Maths;
 import net.luxvacuos.voxel.client.world.entities.Camera;
-import net.luxvacuos.voxel.universal.util.vector.Matrix4f;
-import net.luxvacuos.voxel.universal.util.vector.Vector3f;
 
 public class ParticleRenderer {
 

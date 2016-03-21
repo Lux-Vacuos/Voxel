@@ -58,6 +58,11 @@ import java.util.List;
 
 import org.lwjgl.BufferUtils;
 
+import net.luxvacuos.igl.vector.Matrix4f;
+import net.luxvacuos.igl.vector.Vector2f;
+import net.luxvacuos.igl.vector.Vector3f;
+import net.luxvacuos.igl.vector.Vector4f;
+import net.luxvacuos.igl.vector.Vector8f;
 import net.luxvacuos.voxel.client.core.VoxelVariables;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.TessellatorBasicShader;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.TessellatorShader;
@@ -65,11 +70,6 @@ import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.world.block.Block;
 import net.luxvacuos.voxel.client.world.block.BlockBase;
 import net.luxvacuos.voxel.client.world.entities.Camera;
-import net.luxvacuos.voxel.universal.util.vector.Matrix4f;
-import net.luxvacuos.voxel.universal.util.vector.Vector2f;
-import net.luxvacuos.voxel.universal.util.vector.Vector3f;
-import net.luxvacuos.voxel.universal.util.vector.Vector4f;
-import net.luxvacuos.voxel.universal.util.vector.Vector8f;
 
 public class Tessellator {
 

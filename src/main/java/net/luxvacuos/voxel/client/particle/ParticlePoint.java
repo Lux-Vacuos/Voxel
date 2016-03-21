@@ -20,7 +20,7 @@
 
 package net.luxvacuos.voxel.client.particle;
 
-import net.luxvacuos.voxel.universal.util.vector.Vector3f;
+import net.luxvacuos.igl.vector.Vector3f;
 
 public class ParticlePoint {
 	private Vector3f pos;

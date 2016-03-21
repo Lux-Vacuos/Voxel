@@ -28,6 +28,7 @@ import java.nio.FloatBuffer;
 
 import org.lwjgl.BufferUtils;
 
+import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.voxel.client.core.GlobalStates;
 import net.luxvacuos.voxel.client.core.State;
 import net.luxvacuos.voxel.client.core.Voxel;
@@ -40,7 +41,6 @@ import net.luxvacuos.voxel.client.rendering.api.nanovg.VectorsRendering;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.world.WorldsHandler;
 import net.luxvacuos.voxel.client.world.entities.PlayerCamera;
-import net.luxvacuos.voxel.universal.util.vector.Vector3f;
 
 /**
  * In Pause State

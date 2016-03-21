@@ -26,10 +26,10 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.luxvacuos.igl.Logger;
+import net.luxvacuos.igl.vector.Vector2f;
+import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.voxel.client.resources.models.RawModel;
-import net.luxvacuos.voxel.client.util.Logger;
-import net.luxvacuos.voxel.universal.util.vector.Vector2f;
-import net.luxvacuos.voxel.universal.util.vector.Vector3f;
 
 /**
  * OBJLoader

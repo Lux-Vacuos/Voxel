@@ -22,7 +22,7 @@ package net.luxvacuos.voxel.client.input;
 
 import org.lwjgl.glfw.GLFW;
 
-import net.luxvacuos.voxel.client.util.Logger;
+import net.luxvacuos.igl.Logger;
 
 public class KeyCodes {
 

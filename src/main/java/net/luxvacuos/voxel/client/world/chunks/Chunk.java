@@ -32,12 +32,13 @@ import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import net.luxvacuos.igl.Logger;
+import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.voxel.client.core.VoxelVariables;
 import net.luxvacuos.voxel.client.particle.ParticlePoint;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Tessellator;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.resources.models.WaterTile;
-import net.luxvacuos.voxel.client.util.Logger;
 import net.luxvacuos.voxel.client.util.Maths;
 import net.luxvacuos.voxel.client.world.IWorld;
 import net.luxvacuos.voxel.client.world.WorldService;
@@ -46,7 +47,6 @@ import net.luxvacuos.voxel.client.world.block.BlockBase;
 import net.luxvacuos.voxel.client.world.block.BlockEntity;
 import net.luxvacuos.voxel.client.world.block.BlocksResources;
 import net.luxvacuos.voxel.client.world.entities.Camera;
-import net.luxvacuos.voxel.universal.util.vector.Vector3f;
 
 /**
  * Chunk

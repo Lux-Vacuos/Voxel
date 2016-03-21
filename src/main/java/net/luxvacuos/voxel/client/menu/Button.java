@@ -24,9 +24,9 @@ import java.nio.ByteBuffer;
 
 import org.lwjgl.nanovg.NVGColor;
 
+import net.luxvacuos.igl.vector.Vector2f;
 import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.VectorsRendering;
-import net.luxvacuos.voxel.universal.util.vector.Vector2f;
 
 public class Button {
 	private Vector2f pos, renderPos;

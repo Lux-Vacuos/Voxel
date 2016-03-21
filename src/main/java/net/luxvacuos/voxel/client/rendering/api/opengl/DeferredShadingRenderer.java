@@ -44,6 +44,9 @@ import static org.lwjgl.opengl.GL30.glBindFramebuffer;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import static org.lwjgl.opengl.GL30.glBlitFramebuffer;
 
+import net.luxvacuos.igl.vector.Matrix4f;
+import net.luxvacuos.igl.vector.Vector2f;
+import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.voxel.client.core.VoxelVariables;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Display;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.DeferredShadingShader;
@@ -51,9 +54,6 @@ import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.resources.models.RawModel;
 import net.luxvacuos.voxel.client.util.Maths;
 import net.luxvacuos.voxel.client.world.entities.PlayerCamera;
-import net.luxvacuos.voxel.universal.util.vector.Matrix4f;
-import net.luxvacuos.voxel.universal.util.vector.Vector2f;
-import net.luxvacuos.voxel.universal.util.vector.Vector3f;
 
 public class DeferredShadingRenderer {
 

@@ -23,13 +23,13 @@ package net.luxvacuos.voxel.client.world.block;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 
+import net.luxvacuos.igl.vector.Vector3f;
+import net.luxvacuos.igl.vector.Vector8f;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Tessellator;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.resources.models.WaterTile;
 import net.luxvacuos.voxel.client.world.items.ItemDropBase;
 import net.luxvacuos.voxel.client.world.items.ItemDropMissing;
-import net.luxvacuos.voxel.universal.util.vector.Vector3f;
-import net.luxvacuos.voxel.universal.util.vector.Vector8f;
 
 public abstract class BlockBase {
 	@Deprecated

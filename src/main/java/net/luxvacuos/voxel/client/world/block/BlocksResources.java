@@ -20,12 +20,12 @@
 
 package net.luxvacuos.voxel.client.world.block;
 
+import net.luxvacuos.igl.vector.Vector2f;
 import net.luxvacuos.voxel.client.resources.Loader;
 import net.luxvacuos.voxel.client.resources.models.ModelTexture;
 import net.luxvacuos.voxel.client.resources.models.RawModel;
 import net.luxvacuos.voxel.client.resources.models.TessellatorTextureAtlas;
 import net.luxvacuos.voxel.client.resources.models.TexturedModel;
-import net.luxvacuos.voxel.universal.util.vector.Vector2f;
 
 public class BlocksResources {
 

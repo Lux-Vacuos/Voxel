@@ -20,8 +20,8 @@
 
 package net.luxvacuos.voxel.client.rendering.api.opengl.shaders;
 
+import net.luxvacuos.igl.vector.Matrix4f;
 import net.luxvacuos.voxel.client.core.VoxelVariables;
-import net.luxvacuos.voxel.universal.util.vector.Matrix4f;
 
 public class ParticleShader extends ShaderProgram {
 

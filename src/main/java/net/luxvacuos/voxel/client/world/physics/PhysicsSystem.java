@@ -28,9 +28,9 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.math.Vector3;
 
+import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.voxel.client.world.IWorld;
 import net.luxvacuos.voxel.client.world.block.Block;
-import net.luxvacuos.voxel.universal.util.vector.Vector3f;
 
 public class PhysicsSystem extends EntitySystem {
 	private ImmutableArray<Entity> entities;

@@ -20,9 +20,9 @@
 
 package net.luxvacuos.voxel.client.menu;
 
+import net.luxvacuos.igl.vector.Vector2f;
 import net.luxvacuos.voxel.client.core.VoxelVariables;
 import net.luxvacuos.voxel.client.resources.GameResources;
-import net.luxvacuos.voxel.universal.util.vector.Vector2f;
 
 public class PauseMenu {
 	private Button exitButton;

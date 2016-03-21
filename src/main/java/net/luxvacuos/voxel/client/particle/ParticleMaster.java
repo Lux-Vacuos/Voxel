@@ -27,10 +27,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import net.luxvacuos.igl.vector.Matrix4f;
 import net.luxvacuos.voxel.client.rendering.api.opengl.ParticleRenderer;
 import net.luxvacuos.voxel.client.resources.Loader;
 import net.luxvacuos.voxel.client.world.entities.Camera;
-import net.luxvacuos.voxel.universal.util.vector.Matrix4f;
 
 public class ParticleMaster {
 

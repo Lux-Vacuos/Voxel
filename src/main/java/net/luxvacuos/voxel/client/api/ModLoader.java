@@ -30,9 +30,9 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.luxvacuos.igl.Logger;
 import net.luxvacuos.voxel.client.api.mod.MoltenAPIMod;
 import net.luxvacuos.voxel.client.bootstrap.Bootstrap;
-import net.luxvacuos.voxel.client.util.Logger;
 
 public class ModLoader {
 

@@ -20,11 +20,11 @@
 
 package net.luxvacuos.voxel.client.world.entities;
 
+import net.luxvacuos.igl.vector.Matrix4f;
+import net.luxvacuos.igl.vector.Vector2f;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.resources.Ray;
 import net.luxvacuos.voxel.client.util.Maths;
-import net.luxvacuos.voxel.universal.util.vector.Matrix4f;
-import net.luxvacuos.voxel.universal.util.vector.Vector2f;
 
 public class SunCamera extends Camera {
 

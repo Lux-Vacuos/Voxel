@@ -67,9 +67,9 @@ import org.lwjgl.opengl.NVXGPUMemoryInfo;
 import org.lwjgl.opengl.WGLAMDGPUAssociation;
 import org.lwjgl.vulkan.VkInstance;
 
+import net.luxvacuos.igl.Logger;
 import net.luxvacuos.voxel.client.core.CoreInfo;
 import net.luxvacuos.voxel.client.input.Mouse;
-import net.luxvacuos.voxel.client.util.Logger;
 
 /**
  * 

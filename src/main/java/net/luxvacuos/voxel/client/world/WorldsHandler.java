@@ -23,7 +23,7 @@ package net.luxvacuos.voxel.client.world;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.luxvacuos.voxel.client.util.Logger;
+import net.luxvacuos.igl.Logger;
 
 public class WorldsHandler {
 

@@ -22,14 +22,14 @@ package net.luxvacuos.voxel.client.world.entities;
 
 import com.badlogic.ashley.core.Entity;
 
+import net.luxvacuos.igl.vector.Matrix4f;
+import net.luxvacuos.igl.vector.Vector2f;
+import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.voxel.client.resources.Ray;
 import net.luxvacuos.voxel.client.util.Maths;
 import net.luxvacuos.voxel.client.world.physics.CollisionComponent;
 import net.luxvacuos.voxel.client.world.physics.PositionComponent;
 import net.luxvacuos.voxel.client.world.physics.VelocityComponent;
-import net.luxvacuos.voxel.universal.util.vector.Matrix4f;
-import net.luxvacuos.voxel.universal.util.vector.Vector2f;
-import net.luxvacuos.voxel.universal.util.vector.Vector3f;
 
 /**
  * Camera

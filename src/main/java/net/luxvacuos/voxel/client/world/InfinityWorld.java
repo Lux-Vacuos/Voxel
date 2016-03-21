@@ -38,18 +38,18 @@ import com.badlogic.gdx.math.collision.BoundingBox;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 
+import net.luxvacuos.igl.Logger;
+import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.voxel.client.core.VoxelVariables;
 import net.luxvacuos.voxel.client.particle.ParticlePoint;
 import net.luxvacuos.voxel.client.particle.ParticleSystem;
 import net.luxvacuos.voxel.client.resources.GameResources;
-import net.luxvacuos.voxel.client.util.Logger;
 import net.luxvacuos.voxel.client.util.Maths;
 import net.luxvacuos.voxel.client.world.block.Block;
 import net.luxvacuos.voxel.client.world.chunks.Chunk;
 import net.luxvacuos.voxel.client.world.chunks.ChunkGenerator;
 import net.luxvacuos.voxel.client.world.chunks.ChunkKey;
 import net.luxvacuos.voxel.client.world.chunks.LightNode;
-import net.luxvacuos.voxel.universal.util.vector.Vector3f;
 
 /**
  * Dimensional World

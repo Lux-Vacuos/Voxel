@@ -20,11 +20,11 @@
 
 package net.luxvacuos.voxel.client.world.block.types;
 
+import net.luxvacuos.igl.vector.Vector3f;
+import net.luxvacuos.igl.vector.Vector8f;
 import net.luxvacuos.voxel.client.resources.models.WaterTile;
 import net.luxvacuos.voxel.client.world.block.BlockBase;
 import net.luxvacuos.voxel.client.world.block.BlocksResources;
-import net.luxvacuos.voxel.universal.util.vector.Vector3f;
-import net.luxvacuos.voxel.universal.util.vector.Vector8f;
 
 public class BlockWater extends BlockBase {
 

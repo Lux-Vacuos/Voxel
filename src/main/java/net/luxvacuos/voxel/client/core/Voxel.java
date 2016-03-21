@@ -28,13 +28,13 @@ import static org.lwjgl.opengl.GL11.glGetString;
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFW;
 
+import net.luxvacuos.igl.Logger;
 import net.luxvacuos.voxel.client.api.ModInitialization;
 import net.luxvacuos.voxel.client.api.VersionException;
 import net.luxvacuos.voxel.client.bootstrap.Bootstrap;
 import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.Timers;
 import net.luxvacuos.voxel.client.resources.GameResources;
-import net.luxvacuos.voxel.client.util.Logger;
 import net.luxvacuos.voxel.client.world.InfinityWorld;
 import net.luxvacuos.voxel.client.world.WorldsHandler;
 import net.luxvacuos.voxel.client.world.block.BlocksResources;

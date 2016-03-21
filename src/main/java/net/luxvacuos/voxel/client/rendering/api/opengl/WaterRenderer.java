@@ -32,6 +32,8 @@ import static org.lwjgl.opengl.GL30.glBindVertexArray;
 
 import java.util.Queue;
 
+import net.luxvacuos.igl.vector.Matrix4f;
+import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.voxel.client.core.VoxelVariables;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.WaterBasicShader;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.WaterShader;
@@ -40,8 +42,6 @@ import net.luxvacuos.voxel.client.resources.Loader;
 import net.luxvacuos.voxel.client.resources.models.RawModel;
 import net.luxvacuos.voxel.client.resources.models.WaterTile;
 import net.luxvacuos.voxel.client.util.Maths;
-import net.luxvacuos.voxel.universal.util.vector.Matrix4f;
-import net.luxvacuos.voxel.universal.util.vector.Vector3f;
 
 /**
  * Water Renderer

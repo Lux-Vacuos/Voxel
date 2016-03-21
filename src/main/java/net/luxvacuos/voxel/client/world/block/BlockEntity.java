@@ -20,8 +20,8 @@
 
 package net.luxvacuos.voxel.client.world.block;
 
+import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.voxel.client.resources.models.TexturedModel;
-import net.luxvacuos.voxel.universal.util.vector.Vector3f;
 
 public class BlockEntity {
 

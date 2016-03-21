@@ -26,11 +26,11 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
+import net.luxvacuos.igl.Logger;
 import net.luxvacuos.voxel.client.api.mod.MoltenAPIInitPhase;
 import net.luxvacuos.voxel.client.api.mod.MoltenAPIMod;
 import net.luxvacuos.voxel.client.core.VoxelVariables;
 import net.luxvacuos.voxel.client.resources.GameResources;
-import net.luxvacuos.voxel.client.util.Logger;
 
 /**
  * @author Guerra24 <pablo230699@hotmail.com>

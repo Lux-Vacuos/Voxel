@@ -23,8 +23,8 @@ package net.luxvacuos.voxel.client.resources.models;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.luxvacuos.voxel.universal.util.vector.Vector2f;
-import net.luxvacuos.voxel.universal.util.vector.Vector8f;
+import net.luxvacuos.igl.vector.Vector2f;
+import net.luxvacuos.igl.vector.Vector8f;
 
 public class TessellatorTextureAtlas {
 

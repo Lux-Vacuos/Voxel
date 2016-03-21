@@ -22,7 +22,7 @@ package net.luxvacuos.voxel.universal.network.packets;
 
 import java.io.Serializable;
 
-import net.luxvacuos.voxel.universal.util.vector.Vector3f;
+import net.luxvacuos.igl.vector.Vector3f;
 
 public class NetworkPosition implements Serializable {
 	

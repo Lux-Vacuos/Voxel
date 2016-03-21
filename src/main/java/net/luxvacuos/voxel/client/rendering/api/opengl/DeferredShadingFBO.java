@@ -66,7 +66,7 @@ import java.nio.IntBuffer;
 
 import org.lwjgl.BufferUtils;
 
-import net.luxvacuos.voxel.client.util.Logger;
+import net.luxvacuos.igl.Logger;
 
 public class DeferredShadingFBO {
 

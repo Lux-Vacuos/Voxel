@@ -21,10 +21,10 @@
 
 package net.luxvacuos.voxel.client.world.items;
 
+import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.voxel.client.resources.models.TexturedModel;
 import net.luxvacuos.voxel.client.world.block.BlockBase;
 import net.luxvacuos.voxel.client.world.entities.GameEntity;
-import net.luxvacuos.voxel.universal.util.vector.Vector3f;
 
 public abstract class ItemDropBase extends GameEntity {
 

@@ -54,12 +54,12 @@ import java.nio.FloatBuffer;
 
 import org.lwjgl.BufferUtils;
 
+import net.luxvacuos.igl.Logger;
+import net.luxvacuos.igl.vector.Matrix4f;
+import net.luxvacuos.igl.vector.Vector2f;
+import net.luxvacuos.igl.vector.Vector3f;
+import net.luxvacuos.igl.vector.Vector4f;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Display;
-import net.luxvacuos.voxel.client.util.Logger;
-import net.luxvacuos.voxel.universal.util.vector.Matrix4f;
-import net.luxvacuos.voxel.universal.util.vector.Vector2f;
-import net.luxvacuos.voxel.universal.util.vector.Vector3f;
-import net.luxvacuos.voxel.universal.util.vector.Vector4f;
 
 /**
  * Shader Program, Use to create shaders
