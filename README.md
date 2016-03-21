@@ -2,8 +2,6 @@
 
 ![Voxel](/docs/images/Voxel-Logo.png?raw=true)
 
-#### In Refactor/Re-Write
-
 Voxel is a Minecraft inspired game using LWJGL 3, OpenGL 3.3 with its own game engine. The engine is builded in a very modified version of ThinMatrix engine to support Deferred Shading/Lighting, some fixes or improvements has been applied to the original code, like screen space reflections, motion blur, bloom, dof, etc.
 
 Right now supports simple modding based on Java annotations and reflections, but still needs more features.
