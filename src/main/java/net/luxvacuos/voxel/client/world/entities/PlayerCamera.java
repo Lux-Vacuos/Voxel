@@ -42,7 +42,6 @@ import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.igl.vector.Vector4f;
 import net.luxvacuos.voxel.client.core.VoxelVariables;
 import net.luxvacuos.voxel.client.input.Keyboard;
-import net.luxvacuos.voxel.client.menu.BlockGui;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Display;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.util.Maths;
@@ -59,14 +58,12 @@ public class PlayerCamera extends Camera {
 	private final int maxLookUp = 90;
 	private final int maxLookDown = -90;
 	private Vector2f center;
-	private BlockGui air;
 	private int clickTime;
 
 	public PlayerCamera(Matrix4f proj, Display display) {
 		super(proj);
 		center = new Vector2f(display.getDisplayWidth() / 2, display.getDisplayHeight() / 2);
 		this.speed = 3f;
-		air = new BlockGui((byte) 0, 0, 0);
 	}
 
 	public void update(float delta, GameResources gm, IWorld world) {
@@ -161,17 +158,16 @@ public class PlayerCamera extends Camera {
 							0, 0, 1));
 		}
 
-		BlockGui block = gm.getMenuSystem().gameSP.getBlock();
 		if (clickTime > 0)
 			clickTime--;
 
 		if (clickTime == 0)
 			if (isButtonDown(0)) {
 				clickTime = 10;
-				setBlock(gm.getDisplay().getDisplayWidth(), gm.getDisplay().getDisplayHeight(), air, world, gm);
+				setBlock(gm.getDisplay().getDisplayWidth(), gm.getDisplay().getDisplayHeight(), (byte) 0, world, gm);
 			} else if (isButtonDown(1)) {
 				clickTime = 10;
-				setBlock(gm.getDisplay().getDisplayWidth(), gm.getDisplay().getDisplayHeight(), block, world, gm);
+				setBlock(gm.getDisplay().getDisplayWidth(), gm.getDisplay().getDisplayHeight(), (byte) 9, world, gm);
 			}
 		if (isKeyDown(Keyboard.KEY_Y))
 			world.setGlobalBlock(bx, by - 1, bz, Block.Lava.getId());
@@ -190,9 +186,7 @@ public class PlayerCamera extends Camera {
 		}
 	}
 
-	private void setBlock(int ww, int wh, BlockGui block, IWorld world, GameResources gm) {
-		if (block == null)
-			return;
+	private void setBlock(int ww, int wh, byte block, IWorld world, GameResources gm) {
 		Vector4f viewport = new Vector4f(0, 0, ww, wh);
 		Vector3f wincoord = new Vector3f(ww / 2, wh / 2, depth);
 		Vector3f objcoord = new Vector3f();
@@ -221,13 +215,12 @@ public class PlayerCamera extends Camera {
 		int by = (int) tempY;
 		int bz = (int) tempZ;
 
-		if (block.getId() == Block.Torch.getId())
+		if (block == Block.Torch.getId())
 			world.lighting(bx, by, bz, 14);
-		if (block.getId() == Block.Air.getId() && world.getGlobalBlock(bx, by, bz) != Block.Air.getId())
+		if (block == Block.Air.getId() && world.getGlobalBlock(bx, by, bz) != Block.Air.getId())
 			gm.getPhysicsEngine().addEntity(Block.getBlock(world.getGlobalBlock(bx, by, bz)).getDrop(gm,
 					new Vector3f(bx + 0.5f, by + 0.5f, bz - 0.5f)));
-		world.setGlobalBlock(bx, by, bz, block.getId());
-		block.setTotal(block.getTotal() - 1);
+		world.setGlobalBlock(bx, by, bz, block);
 	}
 
 	public void invertPitch() {

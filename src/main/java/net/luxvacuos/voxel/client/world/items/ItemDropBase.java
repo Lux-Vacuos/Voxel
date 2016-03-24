@@ -18,26 +18,49 @@
  * 
  */
 
-
 package net.luxvacuos.voxel.client.world.items;
 
-import net.luxvacuos.igl.vector.Vector3f;
-import net.luxvacuos.voxel.client.resources.models.TexturedModel;
-import net.luxvacuos.voxel.client.world.block.BlockBase;
-import net.luxvacuos.voxel.client.world.entities.GameEntity;
+import com.badlogic.ashley.core.Entity;
 
-public abstract class ItemDropBase extends GameEntity {
+import net.luxvacuos.igl.vector.Vector3f;
+import net.luxvacuos.voxel.client.rendering.api.opengl.Tessellator;
+import net.luxvacuos.voxel.client.world.block.BlockBase;
+import net.luxvacuos.voxel.client.world.physics.CollisionComponent;
+import net.luxvacuos.voxel.client.world.physics.PositionComponent;
+import net.luxvacuos.voxel.client.world.physics.VelocityComponent;
+
+public abstract class ItemDropBase extends Entity {
 
 	private BlockBase block;
+	private PositionComponent positionComponent;
+	private VelocityComponent velocityComponent;
+	private CollisionComponent collisionComponent;
 
-	public ItemDropBase(TexturedModel model, Vector3f position, BlockBase block, float rotX, float rotY, float rotZ,
-			float scale) {
-		super(model, position, rotX, rotY, rotZ, scale);
+	private float scale;
+
+	public ItemDropBase(Vector3f pos, BlockBase block, float scale) {
+		velocityComponent = new VelocityComponent();
+		positionComponent = new PositionComponent();
+		positionComponent.position = new Vector3f(pos);
+		collisionComponent = new CollisionComponent();
+		this.add(positionComponent);
+		this.add(velocityComponent);
+		this.add(collisionComponent);
 		this.block = block;
+		this.scale = scale;
 	}
 
-	public BlockBase getBlock() {
-		return block;
+	public void generateModel(Tessellator tess) {
+		if (block.isCustomModel())
+			block.generateCustomModel(tess, positionComponent.position.x - 0.15f, positionComponent.position.y - 0.15f,
+					positionComponent.position.z - 0.15f, 0.3f, true, true, true, true, true, true, 0);
+		else
+			tess.generateCube(positionComponent.position.x - 0.15f, positionComponent.position.y - 0.15f,
+					positionComponent.position.z - 0.15f, 0.3f, true, true, true, true, true, true, block, 0);
+	}
+
+	public float getScale() {
+		return scale;
 	}
 
 }

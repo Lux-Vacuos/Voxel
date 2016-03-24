@@ -107,11 +107,12 @@ public class Bootstrap {
 	 * Launcher main function
 	 * 
 	 * @param args
-	 *            Not Used
+	 *            Args
 	 */
 	public static void main(String[] args) {
 		Log.set(Log.LEVEL_INFO);
 		Thread.currentThread().setName("Voxel Main");
+
 		try {
 			parseArgs(args);
 		} catch (ArrayIndexOutOfBoundsException aioe) {
@@ -171,7 +172,7 @@ public class Bootstrap {
 				gaveAutostart = true;
 				break;
 			case "-username":
-				System.out.println(args[++i]);
+				VoxelVariables.username = args[++i];
 				break;
 			default:
 				if (args[i].startsWith("-")) {

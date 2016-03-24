@@ -80,6 +80,7 @@ public class InfinityWorld implements IWorld {
 	private ParticleSystem particleSystem;
 	private WorldService worldService;
 	private int renderedChunks = 0;
+	private boolean saving;
 
 	@Override
 	public void startWorld(String name, Random seed, int chunkDim, GameResources gm) {
@@ -561,25 +562,28 @@ public class InfinityWorld implements IWorld {
 
 	@Override
 	public void clearDimension(GameResources gm) {
-		Logger.log("Saving World");
-		for (int zr = -VoxelVariables.genRadius; zr <= VoxelVariables.genRadius; zr++) {
-			int zz = zPlayChunk + zr;
-			for (int xr = -VoxelVariables.genRadius; xr <= VoxelVariables.genRadius; xr++) {
-				int xx = xPlayChunk + xr;
-				for (int yr = -VoxelVariables.genRadius; yr <= VoxelVariables.genRadius; yr++) {
-					int yy = yPlayChunk + yr;
-					if (zr * zr + xr * xr + yr * yr <= VoxelVariables.genRadius * VoxelVariables.genRadius
-							* VoxelVariables.genRadius) {
-						if (hasChunk(chunkDim, xx, yy, zz)) {
-							saveChunk(chunkDim, xx, yy, zz, gm);
+		if (!saving) {
+			saving = true;
+			Logger.log("Saving World");
+			for (int zr = -VoxelVariables.genRadius; zr <= VoxelVariables.genRadius; zr++) {
+				int zz = zPlayChunk + zr;
+				for (int xr = -VoxelVariables.genRadius; xr <= VoxelVariables.genRadius; xr++) {
+					int xx = xPlayChunk + xr;
+					for (int yr = -VoxelVariables.genRadius; yr <= VoxelVariables.genRadius; yr++) {
+						int yy = yPlayChunk + yr;
+						if (zr * zr + xr * xr + yr * yr <= VoxelVariables.genRadius * VoxelVariables.genRadius
+								* VoxelVariables.genRadius) {
+							if (hasChunk(chunkDim, xx, yy, zz)) {
+								saveChunk(chunkDim, xx, yy, zz, gm);
+							}
 						}
 					}
 				}
 			}
+			worldService.es.shutdown();
+			chunks.clear();
+			saveWorld(gm);
 		}
-		worldService.es.shutdown();
-		chunks.clear();
-		saveWorld(gm);
 	}
 
 	@Override

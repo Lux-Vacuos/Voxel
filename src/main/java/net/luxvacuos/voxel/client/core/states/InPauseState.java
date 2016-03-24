@@ -56,10 +56,6 @@ public class InPauseState implements State {
 		while (Mouse.next()) {
 			if (gm.getMenuSystem().pauseMenu.getExitButton().pressed()) {
 				voxel.getWorldsHandler().getActiveWorld().clearDimension(gm);
-				if (gm.getRand().nextBoolean())
-					gm.getSoundSystem().play("menu1");
-				else
-					gm.getSoundSystem().play("menu2");
 				gm.getCamera().setPosition(new Vector3f(0, 0, 1));
 				gm.getCamera().setPitch(0);
 				gm.getCamera().setYaw(0);
@@ -103,6 +99,7 @@ public class InPauseState implements State {
 				GL_DEPTH_COMPONENT, GL_FLOAT, p);
 		gm.getCamera().depth = p.get(0);
 		gm.getRenderer().renderEntity(gm.getPhysicsEngine().getEntities(), gm);
+		gm.getItemsDropRenderer().render(gm);
 		gm.getDeferredShadingRenderer().getPost_fbo().end();
 
 		gm.getRenderer().prepare();

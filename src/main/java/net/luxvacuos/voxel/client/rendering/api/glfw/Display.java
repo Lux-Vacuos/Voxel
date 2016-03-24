@@ -34,13 +34,15 @@ import static org.lwjgl.glfw.GLFW.glfwHideWindow;
 import static org.lwjgl.glfw.GLFW.glfwInit;
 import static org.lwjgl.glfw.GLFW.glfwMakeContextCurrent;
 import static org.lwjgl.glfw.GLFW.glfwPollEvents;
+import static org.lwjgl.glfw.GLFW.glfwSetWindowIcon;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowPos;
 import static org.lwjgl.glfw.GLFW.glfwShowWindow;
 import static org.lwjgl.glfw.GLFW.glfwSwapBuffers;
 import static org.lwjgl.glfw.GLFW.glfwSwapInterval;
 import static org.lwjgl.glfw.GLFW.glfwTerminate;
-import static org.lwjgl.glfw.GLFWVulkan.*;
 import static org.lwjgl.glfw.GLFW.glfwWindowHint;
+import static org.lwjgl.glfw.GLFWVulkan.glfwGetRequiredInstanceExtensions;
+import static org.lwjgl.glfw.GLFWVulkan.glfwVulkanSupported;
 import static org.lwjgl.nanovg.NanoVG.nvgBeginFrame;
 import static org.lwjgl.nanovg.NanoVG.nvgEndFrame;
 import static org.lwjgl.nanovg.NanoVGGL3.NVG_ANTIALIAS;
@@ -56,17 +58,20 @@ import static org.lwjgl.opengl.GL11.glViewport;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.PointerBuffer;
+import org.lwjgl.glfw.GLFWImage;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GLCapabilities;
 import org.lwjgl.opengl.NVXGPUMemoryInfo;
 import org.lwjgl.opengl.WGLAMDGPUAssociation;
 import org.lwjgl.vulkan.VkInstance;
 
+import de.matthiasmann.twl.utils.PNGDecoder;
 import net.luxvacuos.igl.Logger;
 import net.luxvacuos.voxel.client.core.CoreInfo;
 import net.luxvacuos.voxel.client.input.Mouse;
@@ -137,12 +142,21 @@ public class Display extends Window {
 		glfwSwapInterval(vsync ? 1 : 0);
 
 		try {
-			ByteBuffer[] icon_array = new ByteBuffer[icons.length];
+			GLFWImage.Buffer iconsbuff = GLFWImage.malloc(2);
 			for (int i = 0; i < icons.length; i++) {
-				icon_array[i] = ByteBuffer.allocateDirect(1);
 				String path = icons[i];
-				icon_array[i] = displayUtils.loadIcon(path);
+				InputStream file = getClass().getClassLoader().getResourceAsStream(path);
+				PNGDecoder decoder = new PNGDecoder(file);
+				ByteBuffer bytebuf = ByteBuffer.allocateDirect(decoder.getWidth() * decoder.getHeight() * 4);
+				decoder.decode(bytebuf, decoder.getWidth() * 4, PNGDecoder.Format.RGBA);
+				bytebuf.flip();
+				iconsbuff.position(i).width(decoder.getWidth()).height(decoder.getHeight()).pixels(bytebuf);
 			}
+
+			iconsbuff.position(0);
+			glfwSetWindowIcon(super.window, iconsbuff);
+			iconsbuff.free();
+
 		} catch (IOException e) {
 			Logger.error("Failed to load icons");
 			e.printStackTrace();

@@ -25,6 +25,7 @@ package net.luxvacuos.voxel.client.resources.models;
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
  * @category Assets
+ * @deprecated Tessellator now handles water rendering
  */
 public class WaterTile {
 

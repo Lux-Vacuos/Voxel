@@ -113,6 +113,7 @@ public class GameSPState implements State {
 				GL_DEPTH_COMPONENT, GL_FLOAT, p);
 		gm.getCamera().depth = p.get(0);
 		gm.getRenderer().renderEntity(gm.getPhysicsEngine().getEntities(), gm);
+		gm.getItemsDropRenderer().render(gm);
 		gm.getDeferredShadingRenderer().getPost_fbo().end();
 
 		gm.getRenderer().prepare();

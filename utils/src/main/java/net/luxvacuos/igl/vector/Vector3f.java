@@ -34,6 +34,8 @@ package net.luxvacuos.igl.vector;
 import java.io.Serializable;
 import java.nio.FloatBuffer;
 
+import com.badlogic.gdx.math.Vector3;
+
 /**
  *
  * Holds a 3-tuple vector.
@@ -70,6 +72,10 @@ public class Vector3f extends Vector implements Serializable, ReadableVector3f, 
 		set(x, y, z);
 	}
 
+	public Vector3f(Vector3 src) {
+		set(src);
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -89,6 +95,12 @@ public class Vector3f extends Vector implements Serializable, ReadableVector3f, 
 		this.x = x;
 		this.y = y;
 		this.z = z;
+	}
+
+	public void set(Vector3 src) {
+		this.x = src.x;
+		this.y = src.y;
+		this.z = src.z;
 	}
 
 	/**

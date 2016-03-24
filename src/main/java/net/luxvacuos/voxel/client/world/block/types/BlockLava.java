@@ -24,9 +24,47 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 
 import net.luxvacuos.igl.vector.Vector3f;
+import net.luxvacuos.igl.vector.Vector8f;
+import net.luxvacuos.voxel.client.rendering.api.opengl.Tessellator;
 import net.luxvacuos.voxel.client.world.block.BlockBase;
+import net.luxvacuos.voxel.client.world.block.BlocksResources;
 
 public class BlockLava extends BlockBase {
+
+	public BlockLava() {
+		customModel = true;
+		transparent = true;
+	}
+
+	@Override
+	public Vector8f texCoordsUp() {
+		return BlocksResources.getTessellatorTextureAtlas().getTextureCoords("Lava");
+	}
+
+	@Override
+	public Vector8f texCoordsDown() {
+		return BlocksResources.getTessellatorTextureAtlas().getTextureCoords("Lava");
+	}
+
+	@Override
+	public Vector8f texCoordsFront() {
+		return BlocksResources.getTessellatorTextureAtlas().getTextureCoords("LavaSide");
+	}
+
+	@Override
+	public Vector8f texCoordsBack() {
+		return BlocksResources.getTessellatorTextureAtlas().getTextureCoords("LavaSide");
+	}
+
+	@Override
+	public Vector8f texCoordsRight() {
+		return BlocksResources.getTessellatorTextureAtlas().getTextureCoords("LavaSide");
+	}
+
+	@Override
+	public Vector8f texCoordsLeft() {
+		return BlocksResources.getTessellatorTextureAtlas().getTextureCoords("LavaSide");
+	}
 
 	@Override
 	public byte getId() {
@@ -36,6 +74,17 @@ public class BlockLava extends BlockBase {
 	@Override
 	public BoundingBox getBoundingBox(Vector3f pos) {
 		return new BoundingBox(new Vector3(pos.x, pos.y, pos.z), new Vector3(pos.x + 1, pos.y + 0.8f, pos.z + 1));
+	}
+
+	@Override
+	public void generateCustomModel(Tessellator tess, float x, float y, float z, float globalScale, boolean top,
+			boolean bottom, boolean left, boolean right, boolean front, boolean back, float light) {
+		if (!top)
+			tess.generateCube(x, y, z, globalScale, globalScale, globalScale, top, bottom, left, right, front, back,
+					this, light);
+		else
+			tess.generateCube(x, y, z, globalScale, globalScale - 0.2f * globalScale, globalScale, top, bottom, left,
+					right, front, back, this, light);
 	}
 
 }

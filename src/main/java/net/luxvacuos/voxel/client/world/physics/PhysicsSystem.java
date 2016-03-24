@@ -20,6 +20,8 @@
 
 package net.luxvacuos.voxel.client.world.physics;
 
+import java.util.List;
+
 import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
@@ -27,6 +29,7 @@ import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.math.collision.BoundingBox;
 
 import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.voxel.client.world.IWorld;
@@ -40,6 +43,8 @@ public class PhysicsSystem extends EntitySystem {
 	private ComponentMapper<CollisionComponent> cm = ComponentMapper.getFor(CollisionComponent.class);
 
 	private IWorld world;
+	private List<BoundingBox> boxes;
+	private Vector3f tmp = new Vector3f();;
 
 	public PhysicsSystem(IWorld world) {
 		this.world = world;
@@ -50,7 +55,7 @@ public class PhysicsSystem extends EntitySystem {
 		entities = engine.getEntitiesFor(
 				Family.all(PositionComponent.class, VelocityComponent.class, CollisionComponent.class).get());
 	}
-
+	
 	@Override
 	public void update(float deltaTime) {
 		for (Entity entity : entities) {
@@ -139,5 +144,104 @@ public class PhysicsSystem extends EntitySystem {
 			position.position.z += velocityV.z * deltaTime;
 		}
 	}
+// NEW COLLISION SYSTEM, PRE-PRE-PRE ALPHA
+	/*
+	@Override
+	public void update(float deltaTime) {
+		for (Entity entity : entities) {
 
+			PositionComponent position = pm.get(entity);
+			VelocityComponent velocity = vm.get(entity);
+			CollisionComponent collison = cm.get(entity);
+
+			velocity.velocity.y += -1.8f * deltaTime;
+
+			velocity.velocity.x *= 0.4f - velocity.velocity.x * 0.01f;
+			velocity.velocity.z *= 0.4f - velocity.velocity.z * 0.01f;
+
+			collison.boundingBox.set(
+					new Vector3(position.position.x - 0.2f, position.position.y - 1f, position.position.z - 0.2f),
+					new Vector3(position.position.x + 0.2f, position.position.y + 0.2f, position.position.z + 0.2f));
+
+			boxes = world.getGlobalBoundingBox(collison.boundingBox);
+
+			for (BoundingBox boundingBox : boxes) {
+				if (boundingBox.intersects(collison.boundingBox)) {
+					tmp.set(minimumTranslation(collison.boundingBox, boundingBox));
+					if (tmp.x != 0) {
+						float pos = 0;
+						if (velocity.velocity.x > 0)
+							pos -= 0.01f;
+						else if (velocity.velocity.x < 0)
+							pos += 0.01f;
+						position.position.x += pos;
+						velocity.velocity.x = 0;
+					}
+					if (tmp.y != 0) {
+						float pos = 0;
+						if (velocity.velocity.y > 0)
+							pos -= 0.01f;
+						else if (velocity.velocity.y < 0)
+							pos += 0.01f;
+						position.position.y += pos;
+						velocity.velocity.y = 0;
+					}
+					if (tmp.z != 0) {
+						float pos = 0;
+						if (velocity.velocity.z > 0)
+							pos -= 0.01f;
+						else if (velocity.velocity.z < 0)
+							pos += 0.01f;
+						position.position.z += pos;
+						velocity.velocity.z = 0;
+					}
+				}
+			}
+
+			position.position.x += velocity.velocity.x * deltaTime;
+			position.position.y += velocity.velocity.y * deltaTime;
+			position.position.z += velocity.velocity.z * deltaTime;
+
+		}
+	}
+
+	public Vector3 minimumTranslation(BoundingBox own, BoundingBox other) {
+		Vector3 amin = own.min;
+		Vector3 amax = own.max;
+		Vector3 bmin = other.min;
+		Vector3 bmax = other.max;
+
+		Vector3 mtd = new Vector3();
+
+		float left = (bmin.x - amax.x);
+		float right = (bmax.x - amin.x);
+		float top = (bmin.y - amax.y);
+		float bottom = (bmax.y - amin.y);
+		float front = (bmin.z - amax.z);
+		float back = (bmax.z - amin.z);
+
+		// box intersect. work out the mtd on both x and y axes.
+		if (Math.abs(left) < right)
+			mtd.x = left;
+		else
+			mtd.x = right;
+
+		if (Math.abs(top) < bottom)
+			mtd.y = top;
+		else
+			mtd.y = bottom;
+
+		if (Math.abs(front) < back)
+			mtd.z = front;
+		else
+			mtd.z = back;
+
+		// 0 the axis with the largest mtd value.
+		if (Math.abs(mtd.x) < Math.abs(mtd.y))
+			mtd.y = 0;
+		else
+			mtd.x = 0;
+		return mtd;
+	}
+	*/
 }

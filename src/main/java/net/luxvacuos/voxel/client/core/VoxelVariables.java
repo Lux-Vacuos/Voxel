@@ -36,6 +36,11 @@ public class VoxelVariables {
 	public static int UPS = 30;
 	public static boolean VSYNC = false;
 	public static final String Title = "Voxel";
+
+	/**
+	 * Users Stuff
+	 */
+	public static String username = "";
 	/**
 	 * Game Settings
 	 */
@@ -46,7 +51,7 @@ public class VoxelVariables {
 	public static final String apiVersion = "0.0.6";
 	public static final int apiVersionNum = 000006;
 	public static final String state = "ALPHA";
-	public static final int build = 182;
+	public static final int build = 183;
 	public static int FOV = 90;
 	public static int WIDTH = 1280;
 	public static int HEIGHT = 720;
@@ -76,6 +81,7 @@ public class VoxelVariables {
 	public static boolean useParallax = false;
 	public static boolean useReflections = false;
 	public static float fogDensity = 0.02f;
+	public static final float WAVE_SPEED = 4f;
 	/**
 	 * World Settings
 	 */
@@ -90,10 +96,6 @@ public class VoxelVariables {
 	public static final int DIM_0 = 0;
 	public static final int DIM_1 = 1;
 	public static final float GRAVITY = -10;
-	/**
-	 * Graphics Settings
-	 */
-	public static final float WAVE_SPEED = 4f;
 	/**
 	 * Shader Files
 	 */

@@ -58,7 +58,7 @@ public class Voxel {
 	private ModInitialization api;
 
 	/**
-	 * Constructor of the Kernel, Initializes the Game and starts the loop
+	 * Constructor of the Voxel Kernel, Initializes the Game and starts the loop
 	 */
 	public Voxel() {
 		mainLoop();
@@ -134,12 +134,6 @@ public class Voxel {
 		} catch (VersionException e) {
 			e.printStackTrace();
 		}
-		gameResources.getSoundSystem().stop("menu1");
-		gameResources.getSoundSystem().stop("menu2");
-		if (gameResources.getRand().nextBoolean())
-			gameResources.getSoundSystem().play("menu1");
-		else
-			gameResources.getSoundSystem().play("menu2");
 		Mouse.setHidden(true);
 		Timers.initDebugDisplay();
 	}

@@ -31,8 +31,6 @@ public class BlocksResources {
 
 	public static TexturedModel cubeTorch;
 
-	public static TexturedModel missingDrop;
-
 	private static TessellatorTextureAtlas tessellatorTextureAtlas;
 
 	private static int normalMap;
@@ -42,7 +40,6 @@ public class BlocksResources {
 	public static void createBlocks(Loader loader) {
 
 		RawModel torch = loader.getObjLoader().loadObjModel("Torch");
-		RawModel missing = loader.getObjLoader().loadObjModel("cube");
 
 		tessellatorTextureAtlas = new TessellatorTextureAtlas(256, 256, loader.loadTextureBlocks("blocks"));
 		normalMap = loader.loadTextureBlocks("blocks_normal");
@@ -50,9 +47,7 @@ public class BlocksResources {
 		specularMap = loader.loadTextureBlocks("blocks_specular");
 
 		ModelTexture torchTex = new ModelTexture(loader.loadTextureBlocks("Torch"));
-		ModelTexture missingTex = new ModelTexture(loader.loadTextureBlocks("Missing"));
 		cubeTorch = new TexturedModel(torch, torchTex);
-		missingDrop = new TexturedModel(missing, missingTex);
 		loadTexCoords();
 	}
 
@@ -69,6 +64,7 @@ public class BlocksResources {
 		tessellatorTextureAtlas.registerTextureCoords("LeavesSnow", new Vector2f(144, 0));
 		tessellatorTextureAtlas.registerTextureCoords("Sand", new Vector2f(160, 0));
 		tessellatorTextureAtlas.registerTextureCoords("SandSnow", new Vector2f(176, 0));
+		tessellatorTextureAtlas.registerTextureCoords("Water", new Vector2f(192, 0));
 		tessellatorTextureAtlas.registerTextureCoords("Stone", new Vector2f(208, 0));
 		tessellatorTextureAtlas.registerTextureCoords("Wood", new Vector2f(224, 0));
 		tessellatorTextureAtlas.registerTextureCoords("DimOre", new Vector2f(240, 0));

@@ -27,16 +27,11 @@ import net.luxvacuos.voxel.client.rendering.api.nanovg.Timers;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.VectorsRendering;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.world.IWorld;
-import net.luxvacuos.voxel.client.world.block.Block;
 
 public class GameSP {
 	private float xScale, yScale;
 
 	private int ypos;
-
-	private BlockGui[] blocks;
-
-	private BlockGui block;
 
 	private float x, y, w, h;
 
@@ -45,14 +40,6 @@ public class GameSP {
 		float height = VoxelVariables.HEIGHT;
 		yScale = height / 720f;
 		xScale = width / 1280f;
-		blocks = new BlockGui[10];
-		blocks[0] = new BlockGui(Block.Stone.getId(), gm.getLoader().loadNVGTexture("Stone"), 100);
-		blocks[1] = new BlockGui(Block.Dirt.getId(), gm.getLoader().loadNVGTexture("Dirt"), 100);
-		blocks[2] = new BlockGui(Block.Ice.getId(), gm.getLoader().loadNVGTexture("Ice"), 100);
-		blocks[3] = new BlockGui(Block.Glass.getId(), gm.getLoader().loadNVGTexture("Glass"), 100);
-		blocks[4] = new BlockGui(Block.Torch.getId(), gm.getLoader().loadNVGTexture("Torch"), 100);
-		blocks[5] = new BlockGui(Block.Water.getId(), gm.getLoader().loadNVGTexture("Water"), 100);
-		blocks[6] = new BlockGui(Block.Cobblestone.getId(), gm.getLoader().loadNVGTexture("Cobblestone"), 100);
 		x = gm.getDisplay().getDisplayWidth() / 2;
 		y = gm.getDisplay().getDisplayHeight() / 2;
 		w = 16;
@@ -101,13 +88,6 @@ public class GameSP {
 					VectorsRendering.rgba(255, 255, 255, 100, VectorsRendering.colorA),
 					VectorsRendering.rgba(255, 255, 255, 255, VectorsRendering.colorB),
 					VectorsRendering.rgba(0, 0, 0, 255, VectorsRendering.colorC));
-			if (blocks[i] != null) {
-				VectorsRendering.renderImage(5 * xScale, 5 + i * 64 * yScale, 60 * xScale, 60 * yScale,
-						blocks[i].getTex(), 1f);
-				VectorsRendering.renderText("" + blocks[i].getTotal(), "Roboto-Bold", 10 * xScale, 39 + i * 64 * yScale,
-						20 * yScale, VectorsRendering.rgba(255, 255, 255, 255, VectorsRendering.colorA),
-						VectorsRendering.rgba(255, 255, 255, 255, VectorsRendering.colorB));
-			}
 		}
 		VectorsRendering.renderBox(5 * xScale, 5 + ypos * 64 * yScale, 60 * xScale, 60 * yScale,
 				VectorsRendering.rgba(255, 255, 255, 100, VectorsRendering.colorA),
@@ -125,16 +105,6 @@ public class GameSP {
 			ypos = 0;
 		if (ypos < 0)
 			ypos = 9;
-		if (blocks[ypos] != null) {
-			block = blocks[ypos];
-			if (blocks[ypos].getTotal() < 0)
-				blocks[ypos] = null;
-		} else
-			block = null;
-	}
-
-	public BlockGui getBlock() {
-		return block;
 	}
 
 }

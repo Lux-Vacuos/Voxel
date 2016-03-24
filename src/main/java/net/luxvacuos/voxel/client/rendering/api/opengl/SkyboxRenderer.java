@@ -117,9 +117,9 @@ public class SkyboxRenderer {
 		float res = time * 0.015f;
 
 		if (VoxelVariables.raining) {
-			rainFactor += 0.5f * delta;
+			rainFactor += 0.2f * delta;
 		} else
-			rainFactor -= 0.5f * delta;
+			rainFactor -= 0.2f * delta;
 
 		rainFactor = Maths.clamp(rainFactor, 0f, 1f);
 

@@ -49,7 +49,7 @@ public class VoxelClient {
 		client = new Client();
 		client.start();
 		client.addListener(new DedicatedListener(gm));
-		client.setName("Guerra24");
+		client.setName(VoxelVariables.username);
 		Kryo kryo = client.getKryo();
 		kryo.register(Vector3f.class);
 		kryo.register(Vector2f.class);

@@ -68,7 +68,7 @@ public abstract class BlockBase {
 	}
 
 	public ItemDropBase getDrop(GameResources gm, Vector3f pos) {
-		return new ItemDropMissing(BlocksResources.missingDrop, pos, this, 0, 0, 0, 0.2f);
+		return new ItemDropMissing(pos, this, 0.2f);
 	}
 
 	/**
@@ -94,7 +94,7 @@ public abstract class BlockBase {
 		return null;
 	}
 
-	public void generateCustomModel(Tessellator tess, float x, float y, float z, boolean top, boolean bottom,
+	public void generateCustomModel(Tessellator tess, float x, float y, float z, float globalScale, boolean top, boolean bottom,
 			boolean left, boolean right, boolean front, boolean back, float light) {
 	}
 

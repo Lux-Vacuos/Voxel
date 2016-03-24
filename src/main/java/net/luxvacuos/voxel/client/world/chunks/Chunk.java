@@ -20,9 +20,6 @@
 
 package net.luxvacuos.voxel.client.world.chunks;
 
-import static org.lwjgl.opengl.GL11.GL_CULL_FACE;
-import static org.lwjgl.opengl.GL11.glDisable;
-import static org.lwjgl.opengl.GL11.glEnable;
 import static org.lwjgl.opengl.GL15.GL_SAMPLES_PASSED;
 import static org.lwjgl.opengl.GL15.glBeginQuery;
 import static org.lwjgl.opengl.GL15.glEndQuery;
@@ -38,7 +35,6 @@ import net.luxvacuos.voxel.client.core.VoxelVariables;
 import net.luxvacuos.voxel.client.particle.ParticlePoint;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Tessellator;
 import net.luxvacuos.voxel.client.resources.GameResources;
-import net.luxvacuos.voxel.client.resources.models.WaterTile;
 import net.luxvacuos.voxel.client.util.Maths;
 import net.luxvacuos.voxel.client.world.IWorld;
 import net.luxvacuos.voxel.client.world.WorldService;
@@ -65,7 +61,6 @@ public class Chunk {
 	private transient List<Object> blocksMesh;
 	private transient List<Object> blocksMeshtemp;
 	private transient Queue<ParticlePoint> particlePoints;
-	private transient Queue<WaterTile> waterTiles;
 	private transient int sizeX, sizeY, sizeZ;
 	transient boolean readyToRender = true;
 	private transient Tessellator tess;
@@ -124,7 +119,6 @@ public class Chunk {
 		blocksMesh = new ArrayList<Object>();
 		blocksMeshtemp = new ArrayList<Object>();
 		particlePoints = new ConcurrentLinkedQueue<ParticlePoint>();
-		waterTiles = new ConcurrentLinkedQueue<WaterTile>();
 		sizeX = VoxelVariables.CHUNK_SIZE;
 		sizeY = VoxelVariables.CHUNK_HEIGHT;
 		sizeZ = VoxelVariables.CHUNK_SIZE;
@@ -178,7 +172,6 @@ public class Chunk {
 	protected void update(IWorld world) {
 		blocksMeshtemp.addAll(blocksMesh);
 		blocksMesh.clear();
-		waterTiles.clear();
 		particlePoints.clear();
 		calculateLight(blocksMesh, world);
 		rebuildChunkSection(blocksMesh, world);
@@ -248,9 +241,6 @@ public class Chunk {
 						cubes.add(Block.getBlock(blocks[x][y][z])
 								.getSingleModel(new Vector3f(x + posX, y + posY, z + posZ)));
 					} else if (Block.getBlock(blocks[x][y][z]) == Block.Water) {
-						if (cullFaceUpWater(x + posX, y + posY, z + posZ, world)) {
-							waterTiles.add(Block.Water.getWaterTitle(new Vector3f(x + posX, y + posY, z + posZ)));
-						}
 					}
 				}
 			}
@@ -265,8 +255,7 @@ public class Chunk {
 				for (int y = 0; y < sizeY; y++) {
 					BlockBase block = Block.getBlock(blocks[x][y][z]);
 					if (block == Block.Torch) {
-					} else if (block != Block.Air && block != Block.Water && !block.usesSingleModel()
-							&& !block.isCustomModel()) {
+					} else if (block != Block.Air && !block.usesSingleModel() && !block.isCustomModel()) {
 						tess.generateCube(x + posX, y + posY, (z + posZ) - 1, 1,
 								cullFaceUpSolidBlock(block.getId(), x + posX, y + posY, z + posZ, world),
 								cullFaceDown(block.getId(), x + posX, y + posY, z + posZ, world),
@@ -276,7 +265,7 @@ public class Chunk {
 								cullFaceSouth(block.getId(), x + posX, y + posY, z + posZ, world), block,
 								getTorchLight(x, y, z));
 					} else if (block.isCustomModel()) {
-						block.generateCustomModel(tess, x + posX, y + posY, (z + posZ) - 1,
+						block.generateCustomModel(tess, x + posX, y + posY, (z + posZ) - 1, 1,
 								cullFaceUpSolidBlock(block.getId(), x + posX, y + posY, z + posZ, world),
 								cullFaceDown(block.getId(), x + posX, y + posY, z + posZ, world),
 								cullFaceEast(block.getId(), x + posX, y + posY, z + posZ, world),
@@ -285,7 +274,6 @@ public class Chunk {
 								cullFaceSouth(block.getId(), x + posX, y + posY, z + posZ, world),
 								getTorchLight(x, y, z));
 					} else if (block.usesSingleModel() && !block.isCustomModel()) {
-					} else if (block == Block.Water) {
 					}
 				}
 			}
@@ -417,24 +405,6 @@ public class Chunk {
 		return false;
 	}
 
-	private boolean cullFaceUpWater(int x, int y, int z, IWorld world) {
-		if (y > (posY) && y < (posY) + 15) {
-			if (getLocalBlock(x, y + 1, z) != Block.Air.getId() && getLocalBlock(x, y + 1, z) != Block.Glass.getId()
-					&& getLocalBlock(x, y + 1, z) != Block.Leaves.getId()) {
-				return false;
-			} else {
-				return true;
-			}
-		}
-		if (world.getGlobalBlock(x, y + 1, z) != Block.Air.getId()
-				&& world.getGlobalBlock(x, y + 1, z) != Block.Glass.getId()
-				&& world.getGlobalBlock(x, y + 1, z) != Block.Leaves.getId()) {
-			return false;
-		} else {
-			return true;
-		}
-	}
-
 	private boolean cullFaceNorth(byte block, int x, int y, int z, IWorld world) {
 		if (z > (posZ) + 1 && z < (posZ) + 16) {
 			if (getLocalBlock(x, y, z - 1) == block)
@@ -468,9 +438,6 @@ public class Chunk {
 		if (readyToRender) {
 			tess.draw(gm);
 			gm.getRenderer().processChunk(blocksMesh, gm);
-			glDisable(GL_CULL_FACE);
-			gm.getRenderer().getWaterRenderer().render(waterTiles, gm);
-			glEnable(GL_CULL_FACE);
 		} else {
 			gm.getRenderer().processChunk(blocksMeshtemp, gm);
 		}
@@ -487,9 +454,6 @@ public class Chunk {
 		if (readyToRender) {
 			glBeginQuery(GL_SAMPLES_PASSED, tess.getOcclusion());
 			tess.drawOcclusion(gm.getCamera(), gm.getRenderer().getProjectionMatrix());
-			glDisable(GL_CULL_FACE);
-			gm.getRenderer().getWaterRenderer().renderOcclusion(waterTiles, gm);
-			glEnable(GL_CULL_FACE);
 			glEndQuery(GL_SAMPLES_PASSED);
 		}
 	}
@@ -498,7 +462,6 @@ public class Chunk {
 		blocksMesh.clear();
 		blocksMeshtemp.clear();
 		particlePoints.clear();
-		waterTiles.clear();
 		tess.cleanUp();
 	}
 

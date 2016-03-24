@@ -48,6 +48,7 @@ import net.luxvacuos.voxel.client.util.Maths;
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
  * @category Rendering
+ * @deprecated Tessellator now handles water rendering
  */
 public class WaterRenderer {
 	/**

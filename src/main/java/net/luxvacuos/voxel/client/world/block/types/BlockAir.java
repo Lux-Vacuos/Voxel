@@ -20,6 +20,9 @@
 
 package net.luxvacuos.voxel.client.world.block.types;
 
+import com.badlogic.gdx.math.collision.BoundingBox;
+
+import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.voxel.client.world.block.BlockBase;
 
 public class BlockAir extends BlockBase {
@@ -31,6 +34,11 @@ public class BlockAir extends BlockBase {
 	@Override
 	public byte getId() {
 		return 0;
+	}
+
+	@Override
+	public BoundingBox getBoundingBox(Vector3f pos) {
+		return null;
 	}
 
 }

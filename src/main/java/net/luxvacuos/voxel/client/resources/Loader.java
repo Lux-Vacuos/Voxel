@@ -283,7 +283,7 @@ public class Loader {
 	public void loadNVGFont(String filename, String name) {
 		loadNVGFont(filename, name, 150);
 	}
-	
+
 	public void loadNVGFont(String filename, String name, int size) {
 		Logger.log("Loading NVGFont: " + filename + ".ttf");
 		int font = 0;

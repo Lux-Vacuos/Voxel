@@ -49,6 +49,7 @@ import net.luxvacuos.voxel.client.rendering.api.nanovg.VectorsRendering;
 import net.luxvacuos.voxel.client.rendering.api.opengl.DeferredShadingRenderer;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Frustum;
 import net.luxvacuos.voxel.client.rendering.api.opengl.GLMasterRenderer;
+import net.luxvacuos.voxel.client.rendering.api.opengl.ItemsDropRenderer;
 import net.luxvacuos.voxel.client.rendering.api.opengl.MasterShadowRenderer;
 import net.luxvacuos.voxel.client.rendering.api.opengl.OcclusionRenderer;
 import net.luxvacuos.voxel.client.rendering.api.opengl.SkyboxRenderer;
@@ -98,6 +99,7 @@ public class GameResources {
 	private DeferredShadingRenderer deferredShadingRenderer;
 	private MasterShadowRenderer masterShadowRenderer;
 	private OcclusionRenderer occlusionRenderer;
+	private ItemsDropRenderer itemsDropRenderer;
 
 	private Engine physicsEngine;
 	private PhysicsSystem physicsSystem;
@@ -145,6 +147,7 @@ public class GameResources {
 			occlusionRenderer = new OcclusionRenderer(renderer.getProjectionMatrix());
 			skyboxRenderer = new SkyboxRenderer(loader, renderer.getProjectionMatrix());
 			deferredShadingRenderer = new DeferredShadingRenderer(this);
+			itemsDropRenderer = new ItemsDropRenderer(this);
 			TessellatorShader.getInstance();
 			TessellatorBasicShader.getInstance();
 			ParticleMaster.getInstance().init(loader, renderer.getProjectionMatrix());
@@ -187,8 +190,6 @@ public class GameResources {
 	 * 
 	 */
 	public void loadResources() {
-		soundSystem.backgroundMusic("menu1", "menu/menu1.ogg", false);
-		soundSystem.backgroundMusic("menu2", "menu/menu2.ogg", false);
 		loader.loadNVGFont("Roboto-Bold", "Roboto-Bold");
 		loader.loadNVGFont("Roboto-Regular", "Roboto-Regular");
 		loader.loadNVGFont("Entypo", "Entypo", 40);
@@ -211,12 +212,6 @@ public class GameResources {
 		Vector3f.add(sun_Camera.getPosition(), invertedLightPosition, invertedLightPosition);
 	}
 
-	public void reload(Voxel voxel) {
-		cleanUp();
-		init(voxel);
-		loadResources();
-	}
-
 	/**
 	 * Disposes all objects
 	 * 
@@ -227,6 +222,7 @@ public class GameResources {
 		TessellatorBasicShader.getInstance().cleanUp();
 		masterShadowRenderer.cleanUp();
 		occlusionRenderer.cleanUp();
+		itemsDropRenderer.cleanUp();
 		ParticleMaster.getInstance().cleanUp();
 		deferredShadingRenderer.cleanUp();
 		renderer.cleanUp();
@@ -321,6 +317,10 @@ public class GameResources {
 
 	public VoxelClient getVoxelClient() {
 		return voxelClient;
+	}
+
+	public ItemsDropRenderer getItemsDropRenderer() {
+		return itemsDropRenderer;
 	}
 
 }

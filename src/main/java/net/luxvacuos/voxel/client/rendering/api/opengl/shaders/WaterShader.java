@@ -31,6 +31,7 @@ import net.luxvacuos.voxel.client.world.entities.Camera;
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
  * @category Rendering
+ * @deprecated Tessellator now handles water rendering
  */
 public class WaterShader extends ShaderProgram {
 	/**
