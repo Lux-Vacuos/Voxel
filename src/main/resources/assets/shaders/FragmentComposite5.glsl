@@ -99,7 +99,7 @@ void main(void){
 		shadowDist = shadowDist / transitionDistance;
 		float fadeOut = clamp(1.0-shadowDist, 0.0, 1.0);
     	float b = (max(dot(normal.xyz,lightDir),-1.0) - (data.a * fadeOut));
-    	data1.a = clamp(data1.a,0.0,0.2);
+    	data1.a = clamp(data1.a,0.0,0.4);
     	if(b <= data1.a)
     		b = data1.a;
     	b = clamp(b,0.02,1.0);

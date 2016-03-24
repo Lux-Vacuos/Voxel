@@ -167,7 +167,8 @@ public class PlayerCamera extends Camera {
 				setBlock(gm.getDisplay().getDisplayWidth(), gm.getDisplay().getDisplayHeight(), (byte) 0, world, gm);
 			} else if (isButtonDown(1)) {
 				clickTime = 10;
-				setBlock(gm.getDisplay().getDisplayWidth(), gm.getDisplay().getDisplayHeight(), Block.Water.getId(), world, gm);
+				setBlock(gm.getDisplay().getDisplayWidth(), gm.getDisplay().getDisplayHeight(), Block.Torch.getId(),
+						world, gm);
 			}
 		if (isKeyDown(Keyboard.KEY_Y))
 			world.setGlobalBlock(bx, by - 1, bz, Block.Lava.getId());
@@ -216,10 +217,12 @@ public class PlayerCamera extends Camera {
 		int bz = (int) tempZ;
 
 		if (block == Block.Torch.getId())
-			world.lighting(bx, by, bz, 14);
+			world.addLight(bx, by, bz, 14);
 		if (block == Block.Air.getId() && world.getGlobalBlock(bx, by, bz) != Block.Air.getId())
 			gm.getPhysicsEngine().addEntity(Block.getBlock(world.getGlobalBlock(bx, by, bz)).getDrop(gm,
 					new Vector3f(bx + 0.5f, by + 0.5f, bz - 0.5f)));
+		if (block == Block.Air.getId() && world.getGlobalBlock(bx, by, bz) == Block.Torch.getId())
+			world.removeLight(bx, by, bz, 0);
 		world.setGlobalBlock(bx, by, bz, block);
 	}
 

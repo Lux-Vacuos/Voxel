@@ -49,7 +49,8 @@ import net.luxvacuos.voxel.client.world.block.Block;
 import net.luxvacuos.voxel.client.world.chunks.Chunk;
 import net.luxvacuos.voxel.client.world.chunks.ChunkGenerator;
 import net.luxvacuos.voxel.client.world.chunks.ChunkKey;
-import net.luxvacuos.voxel.client.world.chunks.LightNode;
+import net.luxvacuos.voxel.client.world.chunks.LightNodeAdd;
+import net.luxvacuos.voxel.client.world.chunks.LightNodeRemoval;
 
 /**
  * Dimensional World
@@ -76,7 +77,8 @@ public class InfinityWorld implements IWorld {
 	private int seedi;
 	private ChunkGenerator chunkGenerator;
 	private String codeName = "Infinity";
-	private Queue<LightNode> lightNodes;
+	private Queue<LightNodeAdd> lightNodeAdds;
+	private Queue<LightNodeRemoval> lightNodeRemovals;
 	private ParticleSystem particleSystem;
 	private WorldService worldService;
 	private int renderedChunks = 0;
@@ -105,7 +107,8 @@ public class InfinityWorld implements IWorld {
 		particleSystem.setSpeedError(0.2f);
 		seedi = seed.nextInt();
 		noise = new SimplexNoise(256, 0.15f, seedi);
-		lightNodes = new LinkedList<>();
+		lightNodeAdds = new LinkedList<>();
+		lightNodeRemovals = new LinkedList<>();
 		chunks = new HashMap<ChunkKey, Chunk>();
 		chunkGenerator = new ChunkGenerator();
 		worldService = new WorldService();
@@ -277,8 +280,21 @@ public class InfinityWorld implements IWorld {
 
 	@Override
 	public void lighting() {
-		while (!lightNodes.isEmpty()) {
-			LightNode node = lightNodes.poll();
+		while (!lightNodeRemovals.isEmpty()) {
+			LightNodeRemoval node = lightNodeRemovals.poll();
+			int x = node.x;
+			int y = node.y;
+			int z = node.z;
+			int lightLevel = node.val;
+			setupLightRemove(x - 1, y, z, lightLevel);
+			setupLightRemove(x + 1, y, z, lightLevel);
+			setupLightRemove(x, y, z - 1, lightLevel);
+			setupLightRemove(x, y, z + 1, lightLevel);
+			setupLightRemove(x, y - 1, z, lightLevel);
+			setupLightRemove(x, y + 1, z, lightLevel);
+		}
+		while (!lightNodeAdds.isEmpty()) {
+			LightNodeAdd node = lightNodeAdds.poll();
 			int x = node.x;
 			int y = node.y;
 			int z = node.z;
@@ -287,29 +303,17 @@ public class InfinityWorld implements IWorld {
 			int cy = y >> 4;
 			Chunk chunk = getChunk(chunkDim, cx, cy, cz);
 			int lightLevel = (int) chunk.getTorchLight(x, y, z);
-			if (chunk.getTorchLight(x - 1, y, z) + 2 <= lightLevel) {
-				setupLight(x - 1, y, z, lightLevel);
-			}
-			if (chunk.getTorchLight(x + 1, y, z) + 2 <= lightLevel) {
-				setupLight(x + 1, y, z, lightLevel);
-			}
-			if (chunk.getTorchLight(x, y, z - 1) + 2 <= lightLevel) {
-				setupLight(x, y, z - 1, lightLevel);
-			}
-			if (chunk.getTorchLight(x, y, z + 1) + 2 <= lightLevel) {
-				setupLight(x, y, z + 1, lightLevel);
-			}
-			if (chunk.getTorchLight(x, y - 1, z) + 2 <= lightLevel) {
-				setupLight(x, y - 1, z, lightLevel);
-			}
-			if (chunk.getTorchLight(x, y + 1, z) + 2 <= lightLevel) {
-				setupLight(x, y + 1, z, lightLevel);
-			}
+			setupLightAdd(x - 1, y, z, lightLevel);
+			setupLightAdd(x + 1, y, z, lightLevel);
+			setupLightAdd(x, y, z - 1, lightLevel);
+			setupLightAdd(x, y, z + 1, lightLevel);
+			setupLightAdd(x, y - 1, z, lightLevel);
+			setupLightAdd(x, y + 1, z, lightLevel);
 		}
 	}
 
 	@Override
-	public void setupLight(int x, int y, int z, int lightLevel) {
+	public void setupLightAdd(int x, int y, int z, int lightLevel) {
 		int cx = x >> 4;
 		int cz = z >> 4;
 		int cy = y >> 4;
@@ -318,8 +322,27 @@ public class InfinityWorld implements IWorld {
 			if (chunk.getTorchLight(x, y, z) + 2 <= lightLevel) {
 				chunk.setTorchLight(x, y, z, lightLevel - 1);
 				chunk.needsRebuild = true;
-				lightNodes.add(new LightNode(x, y, z));
+				lightNodeAdds.add(new LightNodeAdd(x, y, z));
 			}
+	}
+
+	@Override
+	public void setupLightRemove(int x, int y, int z, int lightLevel) {
+		int cx = x >> 4;
+		int cz = z >> 4;
+		int cy = y >> 4;
+		Chunk chunk = getChunk(chunkDim, cx, cy, cz);
+		if (chunk != null) {
+			int neighborLevel = (int) chunk.getTorchLight(x, y, z);
+			if (neighborLevel != 0 && neighborLevel < lightLevel) {
+				chunk.setTorchLight(x, y, z, 0);
+				lightNodeRemovals.add(new LightNodeRemoval(x, y, z, neighborLevel));
+				chunk.needsRebuild = true;
+			} else if (neighborLevel >= lightLevel) {
+				lightNodeAdds.add(new LightNodeAdd(x, y, z));
+				chunk.needsRebuild = true;
+			}
+		}
 	}
 
 	@Override
@@ -538,14 +561,26 @@ public class InfinityWorld implements IWorld {
 	}
 
 	@Override
-	public void lighting(int x, int y, int z, int val) {
+	public void addLight(int x, int y, int z, int val) {
 		int cx = x >> 4;
 		int cz = z >> 4;
 		int cy = y >> 4;
 		Chunk chunk = getChunk(chunkDim, cx, cy, cz);
 		if (chunk != null) {
 			chunk.setTorchLight(x, y, z, val);
-			lightNodes.add(new LightNode(x, y, z));
+			lightNodeAdds.add(new LightNodeAdd(x, y, z));
+		}
+	}
+
+	@Override
+	public void removeLight(int x, int y, int z, int val) {
+		int cx = x >> 4;
+		int cz = z >> 4;
+		int cy = y >> 4;
+		Chunk chunk = getChunk(chunkDim, cx, cy, cz);
+		if (chunk != null) {
+			lightNodeRemovals.add(new LightNodeRemoval(x, y, z, (int) chunk.getTorchLight(x, y, z)));
+			chunk.setTorchLight(x, y, z, 0);
 		}
 	}
 

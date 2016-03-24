@@ -52,7 +52,8 @@ public interface IWorld {
 
 	public void updateChunksShadow(GameResources gm);
 
-	public void setupLight(int x, int y, int z, int lightLevel);
+	public void setupLightAdd(int x, int y, int z, int lightLevel);
+	public void setupLightRemove(int x, int y, int z, int lightLevel);
 
 	public void lighting();
 
@@ -84,7 +85,9 @@ public interface IWorld {
 
 	public void setGlobalBlock(int x, int y, int z, byte id);
 
-	public void lighting(int x, int y, int z, int val);
+	public void addLight(int x, int y, int z, int val);
+
+	public void removeLight(int x, int y, int z, int val);
 
 	public float getLight(int x, int y, int z);
 

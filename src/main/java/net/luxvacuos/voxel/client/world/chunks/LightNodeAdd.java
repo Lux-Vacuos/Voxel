@@ -20,10 +20,10 @@
 
 package net.luxvacuos.voxel.client.world.chunks;
 
-public class LightNode {
+public class LightNodeAdd {
 	public int x, y, z;
 
-	public LightNode(int x, int y, int z) {
+	public LightNodeAdd(int x, int y, int z) {
 		this.x = x;
 		this.y = y;
 		this.z = z;
