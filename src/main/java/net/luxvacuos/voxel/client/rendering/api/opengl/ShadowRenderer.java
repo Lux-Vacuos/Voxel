@@ -36,7 +36,6 @@ import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.resources.models.RawModel;
 import net.luxvacuos.voxel.client.resources.models.TexturedModel;
 import net.luxvacuos.voxel.client.util.Maths;
-import net.luxvacuos.voxel.client.world.block.BlockEntity;
 import net.luxvacuos.voxel.client.world.entities.GameEntity;
 
 public class ShadowRenderer {
@@ -58,24 +57,6 @@ public class ShadowRenderer {
 		shader.stop();
 	}
 
-	/**
-	 * Render the block entity's in the list
-	 * 
-	 * @param blockEntities
-	 *            A List of entity's
-	 */
-	public void renderBlockEntity(Map<TexturedModel, List<BlockEntity>> blockEntities, GameResources gm) {
-		for (TexturedModel model : blockEntities.keySet()) {
-			prepareTexturedModel(model, gm);
-			List<BlockEntity> batch = blockEntities.get(model);
-			for (BlockEntity entity : batch) {
-				prepareInstance(entity);
-				glDrawElements(GL_TRIANGLES, model.getRawModel().getVertexCount(), GL_UNSIGNED_INT, 0);
-			}
-			unbindTexturedModel();
-		}
-	}
-	
 	public void renderEntity(Map<TexturedModel, List<GameEntity>> blockEntities, GameResources gm) {
 		for (TexturedModel model : blockEntities.keySet()) {
 			prepareTexturedModel(model, gm);
@@ -108,18 +89,6 @@ public class ShadowRenderer {
 		glBindVertexArray(0);
 	}
 
-	/**
-	 * Prepares the Textured Model Translation, Rotation and Scale
-	 * 
-	 * @param entity
-	 */
-	private void prepareInstance(BlockEntity entity) {
-		Matrix4f transformationMatrix = Maths.createTransformationMatrix(entity.getPosition(), entity.getRotX(),
-				entity.getRotY(), entity.getRotZ(), entity.getScale());
-		shader.loadTransformationMatrix(transformationMatrix);
-
-	}
-	
 	/**
 	 * Prepares the Textured Model Translation, Rotation and Scale
 	 * 

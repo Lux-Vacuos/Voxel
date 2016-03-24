@@ -37,18 +37,19 @@ import static org.lwjgl.opengl.GL11.glDisable;
 import static org.lwjgl.opengl.GL11.glEnable;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.utils.ImmutableArray;
 
+import net.luxvacuos.igl.vector.Matrix4f;
 import net.luxvacuos.voxel.client.core.VoxelVariables;
-import net.luxvacuos.voxel.client.rendering.MasterRenderer;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.EntityShader;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.WaterShader;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.resources.models.TexturedModel;
-import net.luxvacuos.voxel.client.world.block.BlockEntity;
 import net.luxvacuos.voxel.client.world.entities.GameEntity;
 
 /**
@@ -57,7 +58,7 @@ import net.luxvacuos.voxel.client.world.entities.GameEntity;
  * @author Guerra24 <pablo230699@hotmail.com>
  * @category Rendering
  */
-public class GLMasterRenderer extends MasterRenderer {
+public class MasterRenderer {
 
 	/**
 	 * Master Renderer Data
@@ -65,7 +66,9 @@ public class GLMasterRenderer extends MasterRenderer {
 	private WaterShader waterShader;
 	private WaterRenderer waterRenderer;
 	private EntityShader shader = new EntityShader();
-	private GLEntityRenderer entityRenderer;
+	private EntityRenderer entityRenderer;
+	private Matrix4f projectionMatrix;
+	private Map<TexturedModel, List<GameEntity>> entities = new HashMap<TexturedModel, List<GameEntity>>();
 
 	/**
 	 * Constructor, Initializes the OpenGL code, creates the projection matrix,
@@ -74,16 +77,14 @@ public class GLMasterRenderer extends MasterRenderer {
 	 * @param loader
 	 *            Game Loader
 	 */
-	public GLMasterRenderer(GameResources gm) {
-		super(gm);
+	public MasterRenderer(GameResources gm) {
 		projectionMatrix = createProjectionMatrix(gm.getDisplay().getDisplayWidth(), gm.getDisplay().getDisplayHeight(),
 				VoxelVariables.FOV, VoxelVariables.NEAR_PLANE, VoxelVariables.FAR_PLANE);
-		entityRenderer = new GLEntityRenderer(shader, gm, projectionMatrix);
+		entityRenderer = new EntityRenderer(shader, gm, projectionMatrix);
 		waterShader = new WaterShader();
 		waterRenderer = new WaterRenderer(gm, projectionMatrix);
 	}
 
-	@Override
 	public void init() {
 		glEnable(GL_DEPTH_TEST);
 		glEnable(GL_CULL_FACE);
@@ -91,16 +92,6 @@ public class GLMasterRenderer extends MasterRenderer {
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	}
 
-	@Override
-	public void processChunk(List<Object> cubes, GameResources gm) {
-		for (Object entity : cubes) {
-			if (entity instanceof BlockEntity)
-				processBlockEntity((BlockEntity) entity);
-		}
-		renderChunk(gm);
-	}
-
-	@Override
 	public void renderEntity(ImmutableArray<Entity> immutableArray, GameResources gm) {
 		for (Entity entity : immutableArray) {
 			if (entity instanceof GameEntity) {
@@ -112,19 +103,6 @@ public class GLMasterRenderer extends MasterRenderer {
 		renderEntity(gm);
 	}
 
-	@Override
-	protected void renderChunk(GameResources gm) {
-		shader.start();
-		shader.loadProjectionMatrix(projectionMatrix);
-		shader.loadviewMatrix(gm.getCamera());
-		shader.loadLightMatrix(gm);
-		shader.useShadows(VoxelVariables.useShadows);
-		entityRenderer.renderBlockEntity(blockEntities, gm);
-		shader.stop();
-		blockEntities.clear();
-	}
-
-	@Override
 	protected void renderEntity(GameResources gm) {
 		shader.start();
 		shader.loadProjectionMatrix(projectionMatrix);
@@ -134,20 +112,6 @@ public class GLMasterRenderer extends MasterRenderer {
 		entities.clear();
 	}
 
-	@Override
-	protected void processBlockEntity(BlockEntity entity) {
-		TexturedModel entityModel = entity.getModel();
-		List<BlockEntity> batch = blockEntities.get(entityModel);
-		if (batch != null) {
-			batch.add(entity);
-		} else {
-			List<BlockEntity> newBatch = new ArrayList<BlockEntity>();
-			newBatch.add(entity);
-			blockEntities.put(entityModel, newBatch);
-		}
-	}
-
-	@Override
 	protected void processEntity(GameEntity entity) {
 		TexturedModel entityModel = entity.getModel();
 		List<GameEntity> batch = entities.get(entityModel);
@@ -160,7 +124,6 @@ public class GLMasterRenderer extends MasterRenderer {
 		}
 	}
 
-	@Override
 	public void prepare() {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 		glClearColor(VoxelVariables.RED, VoxelVariables.GREEN, VoxelVariables.BLUE, 1);
@@ -171,15 +134,48 @@ public class GLMasterRenderer extends MasterRenderer {
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	}
 
-	@Override
 	public void cleanUp() {
 		shader.cleanUp();
 		waterShader.cleanUp();
 	}
 
-	@Override
 	public WaterRenderer getWaterRenderer() {
 		return waterRenderer;
+	}
+
+	public Matrix4f getProjectionMatrix() {
+		return projectionMatrix;
+	}
+
+	public void setProjectionMatrix(Matrix4f matrix) {
+		projectionMatrix = matrix;
+	}
+
+	public void update(GameResources gm) {
+		projectionMatrix = createProjectionMatrix(projectionMatrix, gm.getDisplay().getDisplayWidth(),
+				gm.getDisplay().getDisplayHeight(), VoxelVariables.FOV, VoxelVariables.NEAR_PLANE,
+				VoxelVariables.FAR_PLANE);
+	}
+
+	public static Matrix4f createProjectionMatrix(int width, int height, float fov, float nearPlane, float farPlane) {
+		return createProjectionMatrix(new Matrix4f(), width, height, fov, nearPlane, farPlane);
+	}
+
+	public static Matrix4f createProjectionMatrix(Matrix4f proj, int width, int height, float fov, float nearPlane,
+			float farPlane) {
+		float aspectRatio = (float) width / (float) height;
+		float y_scale = (float) ((1f / Math.tan(Math.toRadians(fov / 2f))));
+		float x_scale = y_scale / aspectRatio;
+		float frustrum_length = farPlane - nearPlane;
+
+		proj.setIdentity();
+		proj.m00 = x_scale;
+		proj.m11 = y_scale;
+		proj.m22 = -((farPlane + nearPlane) / frustrum_length);
+		proj.m23 = -1;
+		proj.m32 = -((2 * nearPlane * farPlane) / frustrum_length);
+		proj.m33 = 0;
+		return proj;
 	}
 
 }

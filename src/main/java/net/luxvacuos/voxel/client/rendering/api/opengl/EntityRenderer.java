@@ -41,7 +41,6 @@ import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.resources.models.RawModel;
 import net.luxvacuos.voxel.client.resources.models.TexturedModel;
 import net.luxvacuos.voxel.client.util.Maths;
-import net.luxvacuos.voxel.client.world.block.BlockEntity;
 import net.luxvacuos.voxel.client.world.entities.GameEntity;
 
 /**
@@ -50,7 +49,7 @@ import net.luxvacuos.voxel.client.world.entities.GameEntity;
  * @author Guerra24 <pablo230699@hotmail.com>
  * @category Rendering
  */
-public class GLEntityRenderer {
+public class EntityRenderer {
 	/**
 	 * Entity Shader
 	 */
@@ -64,32 +63,13 @@ public class GLEntityRenderer {
 	 * @param projectionMatrix
 	 *            A Matrix4f Projection
 	 */
-	public GLEntityRenderer(EntityShader shader, GameResources gm, Matrix4f projectionMatrix) {
+	public EntityRenderer(EntityShader shader, GameResources gm, Matrix4f projectionMatrix) {
 		this.shader = shader;
 		shader.start();
 		shader.loadProjectionMatrix(projectionMatrix);
 		shader.connectTextureUnits();
 		shader.loadBiasMatrix(gm);
 		shader.stop();
-	}
-
-	/**
-	 * Render the block entity's in the list
-	 * 
-	 * @param blockEntities
-	 *            A List of entity's
-	 */
-	public void renderBlockEntity(Map<TexturedModel, List<BlockEntity>> blockEntities, GameResources gm) {
-		for (TexturedModel model : blockEntities.keySet()) {
-			prepareTexturedModel(model, gm);
-			List<BlockEntity> batch = blockEntities.get(model);
-			for (BlockEntity entity : batch) {
-				shader.loadEntityLight(entity.getLocalLight());
-				prepareInstance(entity);
-				glDrawElements(GL_TRIANGLES, model.getRawModel().getVertexCount(), GL_UNSIGNED_INT, 0);
-			}
-			unbindTexturedModel();
-		}
 	}
 
 	/**
@@ -138,18 +118,6 @@ public class GLEntityRenderer {
 		glDisableVertexAttribArray(1);
 		glDisableVertexAttribArray(2);
 		glBindVertexArray(0);
-	}
-
-	/**
-	 * Prepares the Textured Model Translation, Rotation and Scale
-	 * 
-	 * @param entity
-	 */
-	protected void prepareInstance(BlockEntity entity) {
-		Matrix4f transformationMatrix = Maths.createTransformationMatrix(entity.getPosition(), entity.getRotX(),
-				entity.getRotY(), entity.getRotZ(), entity.getScale());
-		shader.loadTransformationMatrix(transformationMatrix);
-
 	}
 
 	/**

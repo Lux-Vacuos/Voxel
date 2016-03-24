@@ -41,17 +41,15 @@ import net.luxvacuos.voxel.client.menu.Menu;
 import net.luxvacuos.voxel.client.network.VoxelClient;
 import net.luxvacuos.voxel.client.particle.ParticleMaster;
 import net.luxvacuos.voxel.client.particle.ParticleTexture;
-import net.luxvacuos.voxel.client.rendering.MasterRenderer;
 import net.luxvacuos.voxel.client.rendering.api.glfw.ContextFormat;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Display;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.Timers;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.VectorsRendering;
 import net.luxvacuos.voxel.client.rendering.api.opengl.DeferredShadingRenderer;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Frustum;
-import net.luxvacuos.voxel.client.rendering.api.opengl.GLMasterRenderer;
 import net.luxvacuos.voxel.client.rendering.api.opengl.ItemsDropRenderer;
+import net.luxvacuos.voxel.client.rendering.api.opengl.MasterRenderer;
 import net.luxvacuos.voxel.client.rendering.api.opengl.MasterShadowRenderer;
-import net.luxvacuos.voxel.client.rendering.api.opengl.OcclusionRenderer;
 import net.luxvacuos.voxel.client.rendering.api.opengl.SkyboxRenderer;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.ShaderProgram;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.TessellatorBasicShader;
@@ -98,7 +96,6 @@ public class GameResources {
 	private GlobalStates globalStates;
 	private DeferredShadingRenderer deferredShadingRenderer;
 	private MasterShadowRenderer masterShadowRenderer;
-	private OcclusionRenderer occlusionRenderer;
 	private ItemsDropRenderer itemsDropRenderer;
 
 	private Engine physicsEngine;
@@ -140,18 +137,16 @@ public class GameResources {
 	public void init(Voxel voxel) {
 		rand = new Random();
 		if (display.isVk()) {
-		} else {
-			loader = new Loader(display);
-			masterShadowRenderer = new MasterShadowRenderer(display);
-			renderer = new GLMasterRenderer(this);
-			occlusionRenderer = new OcclusionRenderer(renderer.getProjectionMatrix());
-			skyboxRenderer = new SkyboxRenderer(loader, renderer.getProjectionMatrix());
-			deferredShadingRenderer = new DeferredShadingRenderer(this);
-			itemsDropRenderer = new ItemsDropRenderer(this);
-			TessellatorShader.getInstance();
-			TessellatorBasicShader.getInstance();
-			ParticleMaster.getInstance().init(loader, renderer.getProjectionMatrix());
 		}
+		loader = new Loader(display);
+		masterShadowRenderer = new MasterShadowRenderer(display);
+		renderer = new MasterRenderer(this);
+		skyboxRenderer = new SkyboxRenderer(loader, renderer.getProjectionMatrix());
+		deferredShadingRenderer = new DeferredShadingRenderer(this);
+		itemsDropRenderer = new ItemsDropRenderer(this);
+		TessellatorShader.getInstance();
+		TessellatorBasicShader.getInstance();
+		ParticleMaster.getInstance().init(loader, renderer.getProjectionMatrix());
 		sun_Camera = new SunCamera(masterShadowRenderer.getProjectionMatrix());
 		sun_Camera.setPosition(new Vector3f(0, 0, 0));
 		sun_Camera.setYaw(sunRotation.x);
@@ -221,7 +216,6 @@ public class GameResources {
 		TessellatorShader.getInstance().cleanUp();
 		TessellatorBasicShader.getInstance().cleanUp();
 		masterShadowRenderer.cleanUp();
-		occlusionRenderer.cleanUp();
 		itemsDropRenderer.cleanUp();
 		ParticleMaster.getInstance().cleanUp();
 		deferredShadingRenderer.cleanUp();
@@ -289,10 +283,6 @@ public class GameResources {
 
 	public GameSettings getGameSettings() {
 		return gameSettings;
-	}
-
-	public OcclusionRenderer getOcclusionRenderer() {
-		return occlusionRenderer;
 	}
 
 	public Menu getMenuSystem() {
