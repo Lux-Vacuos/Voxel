@@ -28,11 +28,9 @@ import net.luxvacuos.igl.vector.Vector8f;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Tessellator;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.world.items.ItemDropBase;
-import net.luxvacuos.voxel.client.world.items.ItemDropMissing;
+import net.luxvacuos.voxel.client.world.items.ItemDropDefault;
 
 public abstract class BlockBase {
-	@Deprecated
-	protected boolean usesSingleModel = false;
 	protected boolean transparent = false;
 	protected boolean customModel = false;
 	protected boolean affectedByGravity = false;
@@ -68,33 +66,12 @@ public abstract class BlockBase {
 	}
 
 	public ItemDropBase getDrop(GameResources gm, Vector3f pos) {
-		return new ItemDropMissing(pos, this, 0.2f);
-	}
-
-	/**
-	 * Get a single model
-	 * 
-	 * @param pos
-	 *            Position
-	 * @return BlockEntity
-	 * @deprecated
-	 */
-	public BlockEntity getSingleModel(Vector3f pos) {
-		return null;
+		return new ItemDropDefault(pos, this, 0.2f);
 	}
 
 	public void generateCustomModel(Tessellator tess, float x, float y, float z, float globalScale, boolean top,
-			boolean bottom, boolean left, boolean right, boolean front, boolean back, float light) {
-	}
-
-	/**
-	 * Check if uses single model
-	 * 
-	 * @return Uses single model
-	 * @deprecated
-	 */
-	public boolean usesSingleModel() {
-		return usesSingleModel;
+			boolean bottom, boolean left, boolean right, boolean front, boolean back, float lightTop, float lightBottom,
+			float lightLeft, float lightRight, float lightFront, float lightBack) {
 	}
 
 	public boolean isTransparent() {

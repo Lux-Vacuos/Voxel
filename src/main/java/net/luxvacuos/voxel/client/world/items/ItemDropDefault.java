@@ -23,8 +23,8 @@ package net.luxvacuos.voxel.client.world.items;
 import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.voxel.client.world.block.BlockBase;
 
-public class ItemDropDirt extends ItemDropBase {
-	public ItemDropDirt(Vector3f pos, BlockBase block, float scale) {
-		super(pos, block, scale);
+public class ItemDropDefault extends ItemDropBase {
+	public ItemDropDefault(Vector3f position, BlockBase block, float scale) {
+		super(position, block, scale);
 	}
 }

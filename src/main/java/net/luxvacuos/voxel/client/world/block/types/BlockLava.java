@@ -78,13 +78,14 @@ public class BlockLava extends BlockBase {
 
 	@Override
 	public void generateCustomModel(Tessellator tess, float x, float y, float z, float globalScale, boolean top,
-			boolean bottom, boolean left, boolean right, boolean front, boolean back, float light) {
+			boolean bottom, boolean left, boolean right, boolean front, boolean back, float lightTop, float lightBottom,
+			float lightLeft, float lightRight, float lightFront, float lightBack) {
 		if (!top)
 			tess.generateCube(x, y, z, globalScale, globalScale, globalScale, top, bottom, left, right, front, back,
-					this, light);
+					this, lightTop, lightBottom, lightLeft, lightRight, lightFront, lightBack);
 		else
 			tess.generateCube(x, y, z, globalScale, globalScale - 0.2f * globalScale, globalScale, top, bottom, left,
-					right, front, back, this, light);
+					right, front, back, this, lightTop, lightBottom, lightLeft, lightRight, lightFront, lightBack);
 	}
 
 }

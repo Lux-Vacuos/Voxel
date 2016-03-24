@@ -22,14 +22,9 @@ package net.luxvacuos.voxel.client.world.block;
 
 import net.luxvacuos.igl.vector.Vector2f;
 import net.luxvacuos.voxel.client.resources.Loader;
-import net.luxvacuos.voxel.client.resources.models.ModelTexture;
-import net.luxvacuos.voxel.client.resources.models.RawModel;
 import net.luxvacuos.voxel.client.resources.models.TessellatorTextureAtlas;
-import net.luxvacuos.voxel.client.resources.models.TexturedModel;
 
 public class BlocksResources {
-
-	public static TexturedModel cubeTorch;
 
 	private static TessellatorTextureAtlas tessellatorTextureAtlas;
 
@@ -39,15 +34,11 @@ public class BlocksResources {
 
 	public static void createBlocks(Loader loader) {
 
-		RawModel torch = loader.getObjLoader().loadObjModel("Torch");
-
 		tessellatorTextureAtlas = new TessellatorTextureAtlas(256, 256, loader.loadTextureBlocks("blocks"));
 		normalMap = loader.loadTextureBlocks("blocks_normal");
 		heightMap = loader.loadTextureBlocks("blocks_height");
 		specularMap = loader.loadTextureBlocks("blocks_specular");
 
-		ModelTexture torchTex = new ModelTexture(loader.loadTextureBlocks("Torch"));
-		cubeTorch = new TexturedModel(torch, torchTex);
 		loadTexCoords();
 	}
 
@@ -72,6 +63,7 @@ public class BlocksResources {
 		tessellatorTextureAtlas.registerTextureCoords("GoldOre", new Vector2f(16, 16));
 		tessellatorTextureAtlas.registerTextureCoords("Lava", new Vector2f(32, 16));
 		tessellatorTextureAtlas.registerTextureCoords("LavaSide", new Vector2f(48, 16));
+		tessellatorTextureAtlas.registerTextureCoords("Missing", new Vector2f(240, 240));
 	}
 
 	public static TessellatorTextureAtlas getTessellatorTextureAtlas() {

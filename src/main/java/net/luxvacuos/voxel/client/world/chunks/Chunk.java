@@ -24,8 +24,6 @@ import static org.lwjgl.opengl.GL15.GL_SAMPLES_PASSED;
 import static org.lwjgl.opengl.GL15.glBeginQuery;
 import static org.lwjgl.opengl.GL15.glEndQuery;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -40,7 +38,6 @@ import net.luxvacuos.voxel.client.world.IWorld;
 import net.luxvacuos.voxel.client.world.WorldService;
 import net.luxvacuos.voxel.client.world.block.Block;
 import net.luxvacuos.voxel.client.world.block.BlockBase;
-import net.luxvacuos.voxel.client.world.block.BlockEntity;
 import net.luxvacuos.voxel.client.world.block.BlocksResources;
 import net.luxvacuos.voxel.client.world.entities.Camera;
 
@@ -58,11 +55,8 @@ public class Chunk {
 	public int dim, posX, posY, posZ, cx, cy, cz;
 	public byte[][][] blocks;
 	public byte[][][] lightMap;
-	private transient List<Object> blocksMesh;
-	private transient List<Object> blocksMeshtemp;
 	private transient Queue<ParticlePoint> particlePoints;
 	private transient int sizeX, sizeY, sizeZ;
-	transient boolean readyToRender = true;
 	private transient Tessellator tess;
 	private transient float distance;
 	public transient boolean needsRebuild = true, updated = false, updating = false, empty = true, visible = false,
@@ -116,8 +110,6 @@ public class Chunk {
 	 * 
 	 */
 	public void load(GameResources gm) {
-		blocksMesh = new ArrayList<Object>();
-		blocksMeshtemp = new ArrayList<Object>();
 		particlePoints = new ConcurrentLinkedQueue<ParticlePoint>();
 		sizeX = VoxelVariables.CHUNK_SIZE;
 		sizeY = VoxelVariables.CHUNK_HEIGHT;
@@ -174,13 +166,8 @@ public class Chunk {
 	}
 
 	protected void update(IWorld world) {
-		blocksMeshtemp.addAll(blocksMesh);
-		blocksMesh.clear();
 		particlePoints.clear();
-		calculateLight(blocksMesh, world);
-		rebuildChunkSection(blocksMesh, world);
 		rebuildChunkSection(world);
-		blocksMeshtemp.clear();
 	}
 
 	protected void updateBlocks(IWorld world) {
@@ -250,26 +237,6 @@ public class Chunk {
 		decorated = true;
 	}
 
-	@Deprecated
-	private void rebuildChunkSection(List<Object> cubes, IWorld world) {
-		for (int x = 0; x < sizeX; x++) {
-			for (int z = 0; z < sizeZ; z++) {
-				for (int y = 0; y < sizeY; y++) {
-					if (Block.getBlock(blocks[x][y][z]) == Block.Torch) {
-						cubes.add(Block.getBlock(blocks[x][y][z])
-								.getSingleModel(new Vector3f(x + posX, y + posY, z + posZ)));
-						particlePoints.add(new ParticlePoint(
-								new Vector3f((x + posX) + 0.5f, (y + posY) + 0.8f, (z + posZ) - 0.5f)));
-					} else if (Block.getBlock(blocks[x][y][z]).usesSingleModel()) {
-						cubes.add(Block.getBlock(blocks[x][y][z])
-								.getSingleModel(new Vector3f(x + posX, y + posY, z + posZ)));
-					} else if (Block.getBlock(blocks[x][y][z]) == Block.Water) {
-					}
-				}
-			}
-		}
-	}
-
 	private void rebuildChunkSection(IWorld world) {
 		tess.begin(BlocksResources.getTessellatorTextureAtlas().getTexture(), BlocksResources.getNormalMap(),
 				BlocksResources.getHeightMap(), BlocksResources.getSpecularMap());
@@ -278,16 +245,6 @@ public class Chunk {
 				for (int y = 0; y < sizeY; y++) {
 					BlockBase block = Block.getBlock(blocks[x][y][z]);
 					if (block == Block.Torch) {
-					} else if (block != Block.Air && !block.usesSingleModel() && !block.isCustomModel()) {
-						tess.generateCube(x + posX, y + posY, (z + posZ) - 1, 1,
-								cullFaceUpSolidBlock(block.getId(), x + posX, y + posY, z + posZ, world),
-								cullFaceDown(block.getId(), x + posX, y + posY, z + posZ, world),
-								cullFaceEast(block.getId(), x + posX, y + posY, z + posZ, world),
-								cullFaceWest(block.getId(), x + posX, y + posY, z + posZ, world),
-								cullFaceNorth(block.getId(), x + posX, y + posY, z + posZ, world),
-								cullFaceSouth(block.getId(), x + posX, y + posY, z + posZ, world), block,
-								getTorchLight(x, y, z));
-					} else if (block.isCustomModel()) {
 						block.generateCustomModel(tess, x + posX, y + posY, (z + posZ) - 1, 1,
 								cullFaceUpSolidBlock(block.getId(), x + posX, y + posY, z + posZ, world),
 								cullFaceDown(block.getId(), x + posX, y + posY, z + posZ, world),
@@ -295,49 +252,47 @@ public class Chunk {
 								cullFaceWest(block.getId(), x + posX, y + posY, z + posZ, world),
 								cullFaceNorth(block.getId(), x + posX, y + posY, z + posZ, world),
 								cullFaceSouth(block.getId(), x + posX, y + posY, z + posZ, world),
-								getTorchLight(x, y, z));
-					} else if (block.usesSingleModel() && !block.isCustomModel()) {
+								world.getLight(x + posX, y + posY + 1, z + posZ),
+								world.getLight(x + posX, y + posY - 1, z + posZ),
+								world.getLight(x + posX + 1, y + posY, z + posZ),
+								world.getLight(x + posX - 1, y + posY, z + posZ),
+								world.getLight(x + posX, y + posY, z + posZ + 1),
+								world.getLight(x + posX, y + posY, z + posZ - 1));
+						particlePoints.add(new ParticlePoint(
+								new Vector3f((x + posX) + 0.5f, (y + posY) + 0.8f, (z + posZ) - 0.5f)));
+					} else if (block != Block.Air && !block.isCustomModel()) {
+						tess.generateCube(x + posX, y + posY, (z + posZ) - 1, 1,
+								cullFaceUpSolidBlock(block.getId(), x + posX, y + posY, z + posZ, world),
+								cullFaceDown(block.getId(), x + posX, y + posY, z + posZ, world),
+								cullFaceEast(block.getId(), x + posX, y + posY, z + posZ, world),
+								cullFaceWest(block.getId(), x + posX, y + posY, z + posZ, world),
+								cullFaceNorth(block.getId(), x + posX, y + posY, z + posZ, world),
+								cullFaceSouth(block.getId(), x + posX, y + posY, z + posZ, world), block,
+								world.getLight(x + posX, y + posY + 1, z + posZ),
+								world.getLight(x + posX, y + posY - 1, z + posZ),
+								world.getLight(x + posX + 1, y + posY, z + posZ),
+								world.getLight(x + posX - 1, y + posY, z + posZ),
+								world.getLight(x + posX, y + posY, z + posZ + 1),
+								world.getLight(x + posX, y + posY, z + posZ - 1));
+					} else if (block != Block.Air && block.isCustomModel()) {
+						block.generateCustomModel(tess, x + posX, y + posY, (z + posZ) - 1, 1,
+								cullFaceUpSolidBlock(block.getId(), x + posX, y + posY, z + posZ, world),
+								cullFaceDown(block.getId(), x + posX, y + posY, z + posZ, world),
+								cullFaceEast(block.getId(), x + posX, y + posY, z + posZ, world),
+								cullFaceWest(block.getId(), x + posX, y + posY, z + posZ, world),
+								cullFaceNorth(block.getId(), x + posX, y + posY, z + posZ, world),
+								cullFaceSouth(block.getId(), x + posX, y + posY, z + posZ, world),
+								world.getLight(x + posX, y + posY + 1, z + posZ),
+								world.getLight(x + posX, y + posY - 1, z + posZ),
+								world.getLight(x + posX + 1, y + posY, z + posZ),
+								world.getLight(x + posX - 1, y + posY, z + posZ),
+								world.getLight(x + posX, y + posY, z + posZ + 1),
+								world.getLight(x + posX, y + posY, z + posZ - 1));
 					}
 				}
 			}
 		}
 		tess.end();
-	}
-
-	@Deprecated
-	private void calculateLight(List<Object> cubes, IWorld world) {
-		for (Object blockEnt : cubes) {
-			if (blockEnt.getClass().equals(BlockEntity.class)) {
-				BlockEntity blockEntity = (BlockEntity) blockEnt;
-				int x, y, z;
-				x = (int) blockEntity.getPosition().x;
-				y = (int) blockEntity.getPosition().y;
-				z = (int) blockEntity.getPosition().z;
-				switch (blockEntity.getSide()) {
-				case "UP":
-					blockEntity.setLocalLight(getTorchLight(x, y + 1, z) / 15f);
-					break;
-				case "DOWN":
-					blockEntity.setLocalLight(getTorchLight(x, y - 1, z) / 15f);
-					break;
-				case "EAST":
-					blockEntity.setLocalLight(getTorchLight(x + 1, y, z) / 15f);
-					break;
-				case "WEST":
-					blockEntity.setLocalLight(getTorchLight(x - 1, y, z) / 15f);
-					break;
-				case "NORTH":
-					blockEntity.setLocalLight(getTorchLight(x, y, z - 1) / 15f);
-					break;
-				case "SOUTH":
-					blockEntity.setLocalLight(getTorchLight(x, y, z + 1) / 15f);
-					break;
-				case "SINGLE MODEL":
-					blockEntity.setLocalLight(getTorchLight(x, y, z) / 15f);
-					break;
-				}
-			}
-		}
 	}
 
 	public byte getLocalBlock(int x, int y, int z) {
@@ -458,32 +413,20 @@ public class Chunk {
 	}
 
 	public void render(GameResources gm) {
-		if (readyToRender) {
-			tess.draw(gm);
-			gm.getRenderer().processChunk(blocksMesh, gm);
-		} else {
-			gm.getRenderer().processChunk(blocksMeshtemp, gm);
-		}
+		tess.draw(gm);
 	}
 
 	public void renderShadow(GameResources gm) {
-		if (readyToRender) {
-			gm.getMasterShadowRenderer().renderChunk(blocksMesh, gm);
-			tess.drawShadow(gm.getSun_Camera());
-		}
+		tess.drawShadow(gm.getSun_Camera());
 	}
 
 	public void renderOcclusion(GameResources gm) {
-		if (readyToRender) {
-			glBeginQuery(GL_SAMPLES_PASSED, tess.getOcclusion());
-			tess.drawOcclusion(gm.getCamera(), gm.getRenderer().getProjectionMatrix());
-			glEndQuery(GL_SAMPLES_PASSED);
-		}
+		glBeginQuery(GL_SAMPLES_PASSED, tess.getOcclusion());
+		tess.drawOcclusion(gm.getCamera(), gm.getRenderer().getProjectionMatrix());
+		glEndQuery(GL_SAMPLES_PASSED);
 	}
 
 	private void clear() {
-		blocksMesh.clear();
-		blocksMeshtemp.clear();
 		particlePoints.clear();
 		tess.cleanUp();
 	}

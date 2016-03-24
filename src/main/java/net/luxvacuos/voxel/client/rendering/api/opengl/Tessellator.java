@@ -403,16 +403,24 @@ public class Tessellator {
 	}
 
 	public void generateCube(float x, float y, float z, float size, boolean top, boolean bottom, boolean left,
-			boolean right, boolean front, boolean back, BlockBase block, float light) {
+			boolean right, boolean front, boolean back, BlockBase block, float lightTop, float lightBottom,
+			float lightLeft, float lightRight, float lightFront, float lightBack) {
 		if (block.getId() != Block.Air.getId()) {
-			generateCube(x, y, z, size, size, size, top, bottom, left, right, front, back, block, light);
+			generateCube(x, y, z, size, size, size, top, bottom, left, right, front, back, block, lightTop, lightBottom,
+					lightLeft, lightRight, lightFront, lightBack);
 		}
 	}
 
 	public void generateCube(float x, float y, float z, float xsize, float ysize, float zsize, boolean top,
-			boolean bottom, boolean left, boolean right, boolean front, boolean back, BlockBase block, float light) {
+			boolean bottom, boolean left, boolean right, boolean front, boolean back, BlockBase block, float lightTop,
+			float lightBottom, float lightLeft, float lightRight, float lightFront, float lightBack) {
 		int id = block.getId();
-		float l = light / 15f;
+		float ltop = lightTop / 15f;
+		float lbottom = lightBottom / 15f;
+		float lleft = lightLeft / 15f;
+		float lright = lightRight / 15f;
+		float lfront = lightFront / 15f;
+		float lback = lightBack / 15f;
 		if (id != Block.Air.getId()) {
 			if (top) {
 				Vector8f texcoords = block.texCoordsUp();
@@ -420,22 +428,22 @@ public class Tessellator {
 				vertex3f(new Vector3f(x, y + ysize, z + zsize));
 				texture2f(new Vector2f(texcoords.getZ(), texcoords.getW()));
 				normal3f(new Vector3f(0, 1, 0));
-				data4f(new Vector4f(id, l, 0, 0));
+				data4f(new Vector4f(id, ltop, 0, 0));
 
 				vertex3f(new Vector3f(x + xsize, y + ysize, z + zsize));
 				texture2f(new Vector2f(texcoords.getI(), texcoords.getJ()));
 				normal3f(new Vector3f(0, 1, 0));
-				data4f(new Vector4f(id, l, 0, 0));
+				data4f(new Vector4f(id, ltop, 0, 0));
 
 				vertex3f(new Vector3f(x + xsize, y + ysize, z));
 				texture2f(new Vector2f(texcoords.getK(), texcoords.getL()));
 				normal3f(new Vector3f(0, 1, 0));
-				data4f(new Vector4f(id, l, 0, 0));
+				data4f(new Vector4f(id, ltop, 0, 0));
 
 				vertex3f(new Vector3f(x, y + ysize, z));
 				texture2f(new Vector2f(texcoords.getX(), texcoords.getY()));
 				normal3f(new Vector3f(0, 1, 0));
-				data4f(new Vector4f(id, l, 0, 0));
+				data4f(new Vector4f(id, ltop, 0, 0));
 
 				Vector3f edge1 = Vector3f.sub(new Vector3f(x + xsize, y + ysize, z + zsize),
 						new Vector3f(x, y + ysize, z + zsize), null);
@@ -479,22 +487,22 @@ public class Tessellator {
 				vertex3f(new Vector3f(x, y, z));
 				texture2f(new Vector2f(texcoords.getZ(), texcoords.getW()));
 				normal3f(new Vector3f(0, -1, 0));
-				data4f(new Vector4f(id, l, 0, 0));
+				data4f(new Vector4f(id, lbottom, 0, 0));
 
 				vertex3f(new Vector3f(x + xsize, y, z));
 				texture2f(new Vector2f(texcoords.getI(), texcoords.getJ()));
 				normal3f(new Vector3f(0, -1, 0));
-				data4f(new Vector4f(id, l, 0, 0));
+				data4f(new Vector4f(id, lbottom, 0, 0));
 
 				vertex3f(new Vector3f(x + xsize, y, z + zsize));
 				texture2f(new Vector2f(texcoords.getK(), texcoords.getL()));
 				normal3f(new Vector3f(0, -1, 0));
-				data4f(new Vector4f(id, l, 0, 0));
+				data4f(new Vector4f(id, lbottom, 0, 0));
 
 				vertex3f(new Vector3f(x, y, z + zsize));
 				texture2f(new Vector2f(texcoords.getX(), texcoords.getY()));
 				normal3f(new Vector3f(0, -1, 0));
-				data4f(new Vector4f(id, l, 0, 0));
+				data4f(new Vector4f(id, lbottom, 0, 0));
 
 				Vector3f edge1 = Vector3f.sub(new Vector3f(x + xsize, y, z), new Vector3f(x, y, z), null);
 
@@ -539,22 +547,22 @@ public class Tessellator {
 				vertex3f(new Vector3f(x, y, z + zsize));
 				texture2f(new Vector2f(texcoords.getX(), texcoords.getY()));
 				normal3f(new Vector3f(0, 0, 1));
-				data4f(new Vector4f(id, l, 0, 0));
+				data4f(new Vector4f(id, lback, 0, 0));
 
 				vertex3f(new Vector3f(x + xsize, y, z + zsize));
 				texture2f(new Vector2f(texcoords.getK(), texcoords.getL()));
 				normal3f(new Vector3f(0, 0, 1));
-				data4f(new Vector4f(id, l, 0, 0));
+				data4f(new Vector4f(id, lback, 0, 0));
 
 				vertex3f(new Vector3f(x + xsize, y + ysize, z + zsize));
 				texture2f(new Vector2f(texcoords.getI(), texcoords.getJ()));
 				normal3f(new Vector3f(0, 0, 1));
-				data4f(new Vector4f(id, l, 0, 0));
+				data4f(new Vector4f(id, lback, 0, 0));
 
 				vertex3f(new Vector3f(x, y + ysize, z + zsize));
 				texture2f(new Vector2f(texcoords.getZ(), texcoords.getW()));
 				normal3f(new Vector3f(0, 0, 1));
-				data4f(new Vector4f(id, l, 0, 0));
+				data4f(new Vector4f(id, lback, 0, 0));
 
 				Vector3f edge1 = Vector3f.sub(new Vector3f(x + xsize, y, z + zsize), new Vector3f(x, y, z + zsize),
 						null);
@@ -601,22 +609,22 @@ public class Tessellator {
 				vertex3f(new Vector3f(x, y + ysize, z));
 				texture2f(new Vector2f(texcoords.getZ(), texcoords.getW()));
 				normal3f(new Vector3f(0, 0, -1));
-				data4f(new Vector4f(id, l, 0, 0));
+				data4f(new Vector4f(id, lfront, 0, 0));
 
 				vertex3f(new Vector3f(x + xsize, y + ysize, z));
 				texture2f(new Vector2f(texcoords.getI(), texcoords.getJ()));
 				normal3f(new Vector3f(0, 0, -1));
-				data4f(new Vector4f(id, l, 0, 0));
+				data4f(new Vector4f(id, lfront, 0, 0));
 
 				vertex3f(new Vector3f(x + xsize, y, z));
 				texture2f(new Vector2f(texcoords.getK(), texcoords.getL()));
 				normal3f(new Vector3f(0, 0, -1));
-				data4f(new Vector4f(id, l, 0, 0));
+				data4f(new Vector4f(id, lfront, 0, 0));
 
 				vertex3f(new Vector3f(x, y, z));
 				texture2f(new Vector2f(texcoords.getX(), texcoords.getY()));
 				normal3f(new Vector3f(0, 0, -1));
-				data4f(new Vector4f(id, l, 0, 0));
+				data4f(new Vector4f(id, lfront, 0, 0));
 
 				Vector3f edge1 = Vector3f.sub(new Vector3f(x + xsize, y + ysize, z), new Vector3f(x, y + ysize, z),
 						null);
@@ -662,22 +670,22 @@ public class Tessellator {
 				vertex3f(new Vector3f(x, y, z));
 				texture2f(new Vector2f(texcoords.getK(), texcoords.getL()));
 				normal3f(new Vector3f(-1, 0, 0));
-				data4f(new Vector4f(id, l, 0, 0));
+				data4f(new Vector4f(id, lright, 0, 0));
 
 				vertex3f(new Vector3f(x, y, z + zsize));
 				texture2f(new Vector2f(texcoords.getX(), texcoords.getY()));
 				normal3f(new Vector3f(-1, 0, 0));
-				data4f(new Vector4f(id, l, 0, 0));
+				data4f(new Vector4f(id, lright, 0, 0));
 
 				vertex3f(new Vector3f(x, y + ysize, z + zsize));
 				texture2f(new Vector2f(texcoords.getZ(), texcoords.getW()));
 				normal3f(new Vector3f(-1, 0, 0));
-				data4f(new Vector4f(id, l, 0, 0));
+				data4f(new Vector4f(id, lright, 0, 0));
 
 				vertex3f(new Vector3f(x, y + ysize, z));
 				texture2f(new Vector2f(texcoords.getI(), texcoords.getJ()));
 				normal3f(new Vector3f(-1, 0, 0));
-				data4f(new Vector4f(id, l, 0, 0));
+				data4f(new Vector4f(id, lright, 0, 0));
 
 				Vector3f edge1 = Vector3f.sub(new Vector3f(x, y, z + zsize), new Vector3f(x, y, z), null);
 
@@ -722,22 +730,22 @@ public class Tessellator {
 				vertex3f(new Vector3f(x + xsize, y, z + zsize));
 				texture2f(new Vector2f(texcoords.getK(), texcoords.getL()));
 				normal3f(new Vector3f(1, 0, 0));
-				data4f(new Vector4f(id, l, 0, 0));
+				data4f(new Vector4f(id, lleft, 0, 0));
 
 				vertex3f(new Vector3f(x + xsize, y, z));
 				texture2f(new Vector2f(texcoords.getX(), texcoords.getY()));
 				normal3f(new Vector3f(1, 0, 0));
-				data4f(new Vector4f(id, l, 0, 0));
+				data4f(new Vector4f(id, lleft, 0, 0));
 
 				vertex3f(new Vector3f(x + xsize, y + ysize, z));
 				texture2f(new Vector2f(texcoords.getZ(), texcoords.getW()));
 				normal3f(new Vector3f(1, 0, 0));
-				data4f(new Vector4f(id, l, 0, 0));
+				data4f(new Vector4f(id, lleft, 0, 0));
 
 				vertex3f(new Vector3f(x + xsize, y + ysize, z + zsize));
 				texture2f(new Vector2f(texcoords.getI(), texcoords.getJ()));
 				normal3f(new Vector3f(1, 0, 0));
-				data4f(new Vector4f(id, l, 0, 0));
+				data4f(new Vector4f(id, lleft, 0, 0));
 
 				Vector3f edge1 = Vector3f.sub(new Vector3f(x + xsize, y, z), new Vector3f(x + xsize, y, z + zsize),
 						null);
