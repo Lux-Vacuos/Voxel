@@ -66,7 +66,7 @@ public class Chunk {
 	private transient Tessellator tess;
 	private transient float distance;
 	public transient boolean needsRebuild = true, updated = false, updating = false, empty = true, visible = false,
-			creating = false, decorating = false;
+			creating = false, decorating = false, updatingBlocks = false, updatedBlocks = false;
 	public boolean created = false, decorated = false, cavesGenerated = false;
 	public int version = 1;
 
@@ -146,12 +146,16 @@ public class Chunk {
 		}
 	}
 
-	public void update(IWorld world, WorldService service, Camera camera) {
+	public void update(IWorld world, WorldService service, Camera camera, float delta) {
 		distance = Vector3f.sub(camera.getPosition(), new Vector3f(posX, posY, posZ), null).lengthSquared();
 
 		if (!created && !creating) {
 			creating = true;
 			service.add_worker(new ChunkWorkerGenerator(world, this));
+		}
+		if (!updatingBlocks && !updatedBlocks) {
+			updatingBlocks = true;
+			service.add_worker(new ChunkWorkerUpdate(world, this));
 		}
 
 		if (!decorated) {
@@ -177,6 +181,25 @@ public class Chunk {
 		rebuildChunkSection(blocksMesh, world);
 		rebuildChunkSection(world);
 		blocksMeshtemp.clear();
+	}
+
+	protected void updateBlocks(IWorld world) {
+		for (int x = 0; x < sizeX; x++) {
+			for (int z = 0; z < sizeZ; z++) {
+				for (int y = 0; y < sizeY; y++) {
+					if (Block.getBlock(world.getGlobalBlock(x + posX, y + posY, z + posZ)).isAffectedByGravity()) {
+						if (world.getGlobalBlock(x + posX, y + posY - 1, z + posZ) == 0) {
+							world.setGlobalBlock(x + posX, y + posY - 1, z + posZ,
+									world.getGlobalBlock(x + posX, y + posY, z + posZ));
+							world.setGlobalBlock(x + posX, y + posY, z + posZ, (byte) 0);
+						}
+
+					}
+
+				}
+			}
+		}
+
 	}
 
 	protected void createBasicTerrain(IWorld world) {

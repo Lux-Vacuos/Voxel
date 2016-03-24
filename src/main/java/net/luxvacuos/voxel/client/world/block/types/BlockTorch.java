@@ -24,6 +24,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 
 import net.luxvacuos.igl.vector.Vector3f;
+import net.luxvacuos.voxel.client.rendering.api.opengl.Tessellator;
 import net.luxvacuos.voxel.client.world.block.BlockBase;
 import net.luxvacuos.voxel.client.world.block.BlockEntity;
 import net.luxvacuos.voxel.client.world.block.BlocksResources;
@@ -49,6 +50,11 @@ public class BlockTorch extends BlockBase {
 	public BoundingBox getBoundingBox(Vector3f pos) {
 		return new BoundingBox(new Vector3(pos.x + 0.3f, pos.y, pos.z + 0.3f),
 				new Vector3(pos.x + 0.7f, pos.y + 0.5f, pos.z + 0.7f));
+	}
+	
+	@Override
+	public void generateCustomModel(Tessellator tess, float x, float y, float z, float globalScale, boolean top,
+			boolean bottom, boolean left, boolean right, boolean front, boolean back, float light) {
 	}
 
 }

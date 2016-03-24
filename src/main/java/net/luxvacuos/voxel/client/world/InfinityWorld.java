@@ -173,7 +173,7 @@ public class InfinityWorld implements IWorld {
 							}
 						} else {
 							Chunk chunk = getChunk(chunkDim, xx, yy, zz);
-							chunk.update(this, worldService, gm.getCamera());
+							chunk.update(this, worldService, gm.getCamera(), delta);
 							if (gm.getFrustum().cubeInFrustum(chunk.posX, chunk.posY, chunk.posZ, chunk.posX + 16,
 									chunk.posY + 16, chunk.posZ + 16)) {
 								chunk.rebuild(worldService, this);
@@ -533,6 +533,7 @@ public class InfinityWorld implements IWorld {
 			chunk.setLocalBlock(x, y, z, id);
 			chunk.updated = false;
 			chunk.needsRebuild = true;
+			chunk.updatedBlocks = false;
 		}
 	}
 

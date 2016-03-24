@@ -27,7 +27,6 @@ import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.igl.vector.Vector8f;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Tessellator;
 import net.luxvacuos.voxel.client.resources.GameResources;
-import net.luxvacuos.voxel.client.resources.models.WaterTile;
 import net.luxvacuos.voxel.client.world.items.ItemDropBase;
 import net.luxvacuos.voxel.client.world.items.ItemDropMissing;
 
@@ -36,31 +35,32 @@ public abstract class BlockBase {
 	protected boolean usesSingleModel = false;
 	protected boolean transparent = false;
 	protected boolean customModel = false;
+	protected boolean affectedByGravity = false;
 
 	public abstract byte getId();
 
 	public Vector8f texCoordsUp() {
-		return null;
+		return BlocksResources.getTessellatorTextureAtlas().getTextureCoords("Missing");
 	}
 
 	public Vector8f texCoordsDown() {
-		return null;
+		return BlocksResources.getTessellatorTextureAtlas().getTextureCoords("Missing");
 	}
 
 	public Vector8f texCoordsFront() {
-		return null;
+		return BlocksResources.getTessellatorTextureAtlas().getTextureCoords("Missing");
 	}
 
 	public Vector8f texCoordsBack() {
-		return null;
+		return BlocksResources.getTessellatorTextureAtlas().getTextureCoords("Missing");
 	}
 
 	public Vector8f texCoordsRight() {
-		return null;
+		return BlocksResources.getTessellatorTextureAtlas().getTextureCoords("Missing");
 	}
 
 	public Vector8f texCoordsLeft() {
-		return null;
+		return BlocksResources.getTessellatorTextureAtlas().getTextureCoords("Missing");
 	}
 
 	public BoundingBox getBoundingBox(Vector3f pos) {
@@ -69,17 +69,6 @@ public abstract class BlockBase {
 
 	public ItemDropBase getDrop(GameResources gm, Vector3f pos) {
 		return new ItemDropMissing(pos, this, 0.2f);
-	}
-
-	/**
-	 * Get the WaterTile of the Block
-	 * 
-	 * @param pos
-	 *            Position
-	 * @return WaterTile
-	 */
-	public WaterTile getWaterTitle(Vector3f pos) {
-		return null;
 	}
 
 	/**
@@ -94,8 +83,8 @@ public abstract class BlockBase {
 		return null;
 	}
 
-	public void generateCustomModel(Tessellator tess, float x, float y, float z, float globalScale, boolean top, boolean bottom,
-			boolean left, boolean right, boolean front, boolean back, float light) {
+	public void generateCustomModel(Tessellator tess, float x, float y, float z, float globalScale, boolean top,
+			boolean bottom, boolean left, boolean right, boolean front, boolean back, float light) {
 	}
 
 	/**
@@ -114,5 +103,9 @@ public abstract class BlockBase {
 
 	public boolean isCustomModel() {
 		return customModel;
+	}
+
+	public boolean isAffectedByGravity() {
+		return affectedByGravity;
 	}
 }

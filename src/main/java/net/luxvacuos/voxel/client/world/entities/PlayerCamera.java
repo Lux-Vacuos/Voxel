@@ -167,7 +167,7 @@ public class PlayerCamera extends Camera {
 				setBlock(gm.getDisplay().getDisplayWidth(), gm.getDisplay().getDisplayHeight(), (byte) 0, world, gm);
 			} else if (isButtonDown(1)) {
 				clickTime = 10;
-				setBlock(gm.getDisplay().getDisplayWidth(), gm.getDisplay().getDisplayHeight(), (byte) 9, world, gm);
+				setBlock(gm.getDisplay().getDisplayWidth(), gm.getDisplay().getDisplayHeight(), Block.Water.getId(), world, gm);
 			}
 		if (isKeyDown(Keyboard.KEY_Y))
 			world.setGlobalBlock(bx, by - 1, bz, Block.Lava.getId());

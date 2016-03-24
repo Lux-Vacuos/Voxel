@@ -43,6 +43,7 @@ import net.luxvacuos.voxel.client.particle.ParticleMaster;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.world.WorldsHandler;
 import net.luxvacuos.voxel.client.world.entities.PlayerCamera;
+import net.luxvacuos.voxel.client.world.physics.PhysicsSystem;
 
 /**
  * Single Player GameState
@@ -62,6 +63,7 @@ public class GameSPState implements State {
 		worlds.getActiveWorld().updateChunksGeneration(gm, delta);
 
 		gm.getPhysicsEngine().update(delta);
+		gm.getPhysicsEngine().getSystem(PhysicsSystem.class).processItems(gm);
 
 		gm.update(gm.getSkyboxRenderer().update(delta));
 		gm.getRenderer().getWaterRenderer().update(delta);
