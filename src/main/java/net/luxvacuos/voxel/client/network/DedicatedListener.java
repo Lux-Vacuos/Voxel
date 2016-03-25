@@ -46,7 +46,7 @@ public class DedicatedListener extends Listener {
 	public void received(Connection connection, Object object) {
 		if (object instanceof WorldTime) {
 			WorldTime time = (WorldTime) object;
-			gm.getSkyboxRenderer().setTime(time.getTime());
+			gm.getWorldSimulation().setTime(time.getTime());
 		} else if (object instanceof String) {
 			Logger.log((String) object);
 		} else if (object instanceof UpdateNames) {

@@ -47,7 +47,6 @@ import com.badlogic.ashley.utils.ImmutableArray;
 import net.luxvacuos.igl.vector.Matrix4f;
 import net.luxvacuos.voxel.client.core.VoxelVariables;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.EntityShader;
-import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.WaterShader;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.resources.models.TexturedModel;
 import net.luxvacuos.voxel.client.world.entities.GameEntity;
@@ -63,8 +62,6 @@ public class MasterRenderer {
 	/**
 	 * Master Renderer Data
 	 */
-	private WaterShader waterShader;
-	private WaterRenderer waterRenderer;
 	private EntityShader shader = new EntityShader();
 	private EntityRenderer entityRenderer;
 	private Matrix4f projectionMatrix;
@@ -81,8 +78,6 @@ public class MasterRenderer {
 		projectionMatrix = createProjectionMatrix(gm.getDisplay().getDisplayWidth(), gm.getDisplay().getDisplayHeight(),
 				VoxelVariables.FOV, VoxelVariables.NEAR_PLANE, VoxelVariables.FAR_PLANE);
 		entityRenderer = new EntityRenderer(shader, gm, projectionMatrix);
-		waterShader = new WaterShader();
-		waterRenderer = new WaterRenderer(gm, projectionMatrix);
 	}
 
 	public void init() {
@@ -136,11 +131,6 @@ public class MasterRenderer {
 
 	public void cleanUp() {
 		shader.cleanUp();
-		waterShader.cleanUp();
-	}
-
-	public WaterRenderer getWaterRenderer() {
-		return waterRenderer;
 	}
 
 	public Matrix4f getProjectionMatrix() {

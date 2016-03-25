@@ -30,7 +30,6 @@ import static org.lwjgl.opengl.GL30.glBindVertexArray;
 
 import net.luxvacuos.igl.vector.Matrix4f;
 import net.luxvacuos.igl.vector.Vector3f;
-import net.luxvacuos.voxel.client.core.VoxelVariables;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.SkyboxShader;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.resources.Loader;
@@ -47,12 +46,6 @@ public class SkyboxRenderer {
 
 	private RawModel dome;
 	private SkyboxShader shader;
-	private float time = 0;
-	private float globalTime = 0;
-	private float accTime = 0;
-	private float rainFactor;
-
-	private static final float TIME_MULTIPLIER = 10;
 
 	/**
 	 * Constructor, Initializes the Skybox model, Textures and Shader
@@ -69,7 +62,6 @@ public class SkyboxRenderer {
 		shader.loadProjectionMatrix(projectionMatrix);
 		shader.loadTransformationMatrix(Maths.createTransformationMatrix(new Vector3f(), 0, 0, 0, 360));
 		shader.stop();
-		time = 11000;
 	}
 
 	/**
@@ -93,7 +85,7 @@ public class SkyboxRenderer {
 		shader.loadTransformationMatrix(Maths.createTransformationMatrix(gm.getCamera().getPosition(), 0, 0, 0, 370));
 		shader.loadViewMatrix(gm.getCamera());
 		shader.loadFog(r, g, b);
-		shader.loadTime(globalTime);
+		shader.loadTime(gm.getWorldSimulation().getGlobalTime());
 		shader.loadLightPosition(gm.getLightPos());
 		glBindVertexArray(dome.getVaoID());
 		glEnableVertexAttribArray(0);
@@ -102,45 +94,6 @@ public class SkyboxRenderer {
 		glBindVertexArray(0);
 		shader.stop();
 		glDepthMask(true);
-	}
-
-	/**
-	 * Update world time
-	 * 
-	 * @param delta
-	 *            Delta
-	 */
-	public float update(float delta) {
-		time += delta * TIME_MULTIPLIER;
-		time %= 24000;
-		globalTime += delta * TIME_MULTIPLIER;
-		float res = time * 0.015f;
-
-		if (VoxelVariables.raining) {
-			rainFactor += 0.2f * delta;
-		} else
-			rainFactor -= 0.2f * delta;
-
-		rainFactor = Maths.clamp(rainFactor, 0f, 1f);
-
-		return res - 90;
-	}
-
-	/**
-	 * Get the world time
-	 * 
-	 * @return time
-	 */
-	public float getTime() {
-		return time;
-	}
-
-	public void setTime(float time) {
-		this.time = time;
-	}
-
-	public float getRainFactor() {
-		return rainFactor;
 	}
 
 }

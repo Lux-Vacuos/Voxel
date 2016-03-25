@@ -45,8 +45,8 @@ uniform int useShadows;
 uniform int useParallax;
 uniform float rainFactor;
 
-const float xPixelOffset = 0.0005;
-const float yPixelOffset = 0.0005;
+const float xPixelOffset = 0.0002;
+const float yPixelOffset = 0.0002;
 
 #ifdef NVIDIA
 const float heightScale = 0.02f;

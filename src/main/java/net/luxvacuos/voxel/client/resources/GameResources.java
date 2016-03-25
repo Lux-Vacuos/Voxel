@@ -51,6 +51,7 @@ import net.luxvacuos.voxel.client.rendering.api.opengl.ItemsDropRenderer;
 import net.luxvacuos.voxel.client.rendering.api.opengl.MasterRenderer;
 import net.luxvacuos.voxel.client.rendering.api.opengl.MasterShadowRenderer;
 import net.luxvacuos.voxel.client.rendering.api.opengl.SkyboxRenderer;
+import net.luxvacuos.voxel.client.rendering.api.opengl.WorldSimulation;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.ShaderProgram;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.TessellatorBasicShader;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.TessellatorShader;
@@ -101,6 +102,7 @@ public class GameResources {
 	private Engine physicsEngine;
 	private PhysicsSystem physicsSystem;
 	private VoxelClient voxelClient;
+	private WorldSimulation worldSimulation;
 
 	private SoundSystem soundSystem;
 	private Frustum frustum;
@@ -155,6 +157,7 @@ public class GameResources {
 		camera = new PlayerCamera(renderer.getProjectionMatrix(), display);
 		kryo = new Kryo();
 		frustum = new Frustum();
+		worldSimulation = new WorldSimulation();
 
 		physicsEngine = new Engine();
 		physicsSystem = new PhysicsSystem(voxel.getWorldsHandler().getActiveWorld());
@@ -311,6 +314,10 @@ public class GameResources {
 
 	public ItemsDropRenderer getItemsDropRenderer() {
 		return itemsDropRenderer;
+	}
+
+	public WorldSimulation getWorldSimulation() {
+		return worldSimulation;
 	}
 
 }

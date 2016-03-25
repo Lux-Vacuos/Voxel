@@ -196,7 +196,7 @@ public class DeferredShadingRenderer {
 		shader6.loadviewMatrix(((PlayerCamera) gm.getCamera()));
 		shader6.loadSunPosition(Maths.convertTo2F(new Vector3f(gm.getLightPos()),
 				gm.getRenderer().getProjectionMatrix(), Maths.createViewMatrix(gm.getCamera()), width, height));
-		shader6.loadTime(gm.getSkyboxRenderer().getTime());
+		shader6.loadTime(gm.getWorldSimulation().getTime());
 		glBindVertexArray(quad.getVaoID());
 		glEnableVertexAttribArray(0);
 		glActiveTexture(GL_TEXTURE0);
@@ -229,7 +229,7 @@ public class DeferredShadingRenderer {
 				VoxelVariables.useVolumetricLight, VoxelVariables.useReflections);
 		shader5.loadSunPosition(Maths.convertTo2F(new Vector3f(gm.getLightPos()),
 				gm.getRenderer().getProjectionMatrix(), Maths.createViewMatrix(gm.getCamera()), width, height));
-		shader5.loadTime(gm.getSkyboxRenderer().getTime());
+		shader5.loadTime(gm.getWorldSimulation().getTime());
 		glBindVertexArray(quad.getVaoID());
 		glEnableVertexAttribArray(0);
 		glActiveTexture(GL_TEXTURE0);
@@ -264,7 +264,7 @@ public class DeferredShadingRenderer {
 				VoxelVariables.useVolumetricLight, VoxelVariables.useReflections);
 		shader4.loadSunPosition(Maths.convertTo2F(new Vector3f(gm.getLightPos()),
 				gm.getRenderer().getProjectionMatrix(), Maths.createViewMatrix(gm.getCamera()), width, height));
-		shader4.loadTime(gm.getSkyboxRenderer().getTime());
+		shader4.loadTime(gm.getWorldSimulation().getTime());
 		glBindVertexArray(quad.getVaoID());
 		glEnableVertexAttribArray(0);
 		glActiveTexture(GL_TEXTURE0);
@@ -299,7 +299,7 @@ public class DeferredShadingRenderer {
 				VoxelVariables.useVolumetricLight, VoxelVariables.useReflections);
 		shader3.loadSunPosition(Maths.convertTo2F(new Vector3f(gm.getLightPos()),
 				gm.getRenderer().getProjectionMatrix(), Maths.createViewMatrix(gm.getCamera()), width, height));
-		shader3.loadTime(gm.getSkyboxRenderer().getTime());
+		shader3.loadTime(gm.getWorldSimulation().getTime());
 		glBindVertexArray(quad.getVaoID());
 		glEnableVertexAttribArray(0);
 		glActiveTexture(GL_TEXTURE0);
@@ -335,7 +335,7 @@ public class DeferredShadingRenderer {
 		shader2.loadSunPosition(Maths.convertTo2F(new Vector3f(gm.getLightPos()),
 				gm.getRenderer().getProjectionMatrix(), Maths.createViewMatrix(gm.getCamera()), width, height));
 		shader2.loadExposure(4f);
-		shader2.loadTime(gm.getSkyboxRenderer().getTime());
+		shader2.loadTime(gm.getWorldSimulation().getTime());
 		glBindVertexArray(quad.getVaoID());
 		glEnableVertexAttribArray(0);
 		glActiveTexture(GL_TEXTURE0);
@@ -372,7 +372,7 @@ public class DeferredShadingRenderer {
 		shader1.loadviewMatrix(((PlayerCamera) gm.getCamera()));
 		shader1.loadSunPosition(Maths.convertTo2F(new Vector3f(gm.getLightPos()),
 				gm.getRenderer().getProjectionMatrix(), Maths.createViewMatrix(gm.getCamera()), width, height));
-		shader1.loadTime(gm.getSkyboxRenderer().getTime());
+		shader1.loadTime(gm.getWorldSimulation().getTime());
 		glBindVertexArray(quad.getVaoID());
 		glEnableVertexAttribArray(0);
 		glActiveTexture(GL_TEXTURE0);
@@ -407,7 +407,7 @@ public class DeferredShadingRenderer {
 		shader0.loadviewMatrix(((PlayerCamera) gm.getCamera()));
 		shader0.loadSunPosition(Maths.convertTo2F(new Vector3f(gm.getLightPos()),
 				gm.getRenderer().getProjectionMatrix(), Maths.createViewMatrix(gm.getCamera()), width, height));
-		shader0.loadTime(gm.getSkyboxRenderer().getTime());
+		shader0.loadTime(gm.getWorldSimulation().getTime());
 		glBindVertexArray(quad.getVaoID());
 		glEnableVertexAttribArray(0);
 		glActiveTexture(GL_TEXTURE0);

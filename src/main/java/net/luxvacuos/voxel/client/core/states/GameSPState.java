@@ -65,8 +65,7 @@ public class GameSPState implements State {
 		gm.getPhysicsEngine().update(delta);
 		gm.getPhysicsEngine().getSystem(PhysicsSystem.class).processItems(gm);
 
-		gm.update(gm.getSkyboxRenderer().update(delta));
-		gm.getRenderer().getWaterRenderer().update(delta);
+		gm.update(gm.getWorldSimulation().update(delta));
 		ParticleMaster.getInstance().update(delta, gm.getCamera());
 		while (next()) {
 			if (isKeyDown(KEY_F1))

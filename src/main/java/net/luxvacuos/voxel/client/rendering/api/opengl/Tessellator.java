@@ -240,8 +240,8 @@ public class Tessellator {
 		shader.loadviewMatrix(gm.getCamera());
 		shader.loadLightMatrix(gm);
 		shader.loadSettings(VoxelVariables.useShadows, VoxelVariables.useParallax);
-		shader.loadMoveFactor(gm.getRenderer().getWaterRenderer().getMoveFactor());
-		shader.loadRainFactor(gm.getSkyboxRenderer().getRainFactor());
+		shader.loadMoveFactor(gm.getWorldSimulation().getMoveFactor());
+		shader.loadRainFactor(gm.getWorldSimulation().getRainFactor());
 		glBindVertexArray(vaoID);
 		glEnableVertexAttribArray(0);
 		glEnableVertexAttribArray(1);
