@@ -31,6 +31,7 @@ public class BlockTorch extends BlockBase {
 
 	public BlockTorch() {
 		transparent = true;
+		customModel = true;
 	}
 
 	@Override
@@ -41,14 +42,20 @@ public class BlockTorch extends BlockBase {
 	@Override
 	public BoundingBox getBoundingBox(Vector3f pos) {
 		return new BoundingBox(new Vector3(pos.x + 0.3f, pos.y, pos.z + 0.3f),
-				new Vector3(pos.x + 0.7f, pos.y + 0.5f, pos.z + 0.7f));
+				new Vector3(pos.x + 0.7f, pos.y + 1f, pos.z + 0.7f));
 	}
 
 	@Override
 	public void generateCustomModel(Tessellator tess, float x, float y, float z, float globalScale, boolean top,
 			boolean bottom, boolean left, boolean right, boolean front, boolean back, float lightTop, float lightBottom,
 			float lightLeft, float lightRight, float lightFront, float lightBack) {
-		tess.generateCube(x, y, z, globalScale, globalScale, globalScale, top, bottom, left, right, front, back, this,
-				lightTop, lightBottom, lightLeft, lightRight, lightFront, lightBack);
+		tess.generateCube(x + 0.35f * globalScale, y, z + 0.35f * globalScale, globalScale - 0.7f * globalScale,
+				globalScale - 0.3f * globalScale, globalScale - 0.7f * globalScale, true, true, true, true, true, true,
+				this, lightTop, lightBottom, lightLeft, lightRight, lightFront, lightBack);
+		tess.generateCube(x + 0.3f * globalScale, y + 0.7f * globalScale, z + 0.3f * globalScale,
+				globalScale - 0.6f * globalScale, globalScale - 0.7f * globalScale, globalScale - 0.6f * globalScale,
+				true, true, true, true, true, true, this, lightTop, lightBottom, lightLeft, lightRight, lightFront,
+				lightBack);
+
 	}
 }

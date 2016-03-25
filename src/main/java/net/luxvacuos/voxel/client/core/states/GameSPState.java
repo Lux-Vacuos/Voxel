@@ -99,6 +99,7 @@ public class GameSPState implements State {
 			gm.getMasterShadowRenderer().being();
 			gm.getRenderer().prepare();
 			worlds.getActiveWorld().updateChunksShadow(gm);
+			gm.getItemsDropRenderer().getTess().drawShadow(gm.getSun_Camera());
 			gm.getMasterShadowRenderer().renderEntity(gm.getPhysicsEngine().getEntities(), gm);
 			gm.getMasterShadowRenderer().end();
 		}
