@@ -2,12 +2,11 @@ apply plugin:'java'
 apply plugin:'eclipse'
 apply plugin:'idea'
 apply plugin:'application'
-apply plugin: 'signing'
 
 mainClassName = 'net.luxvacuos.voxel.client.bootstrap.Bootstrap'
 version = '0.0.10-ALPHA'
 sourceCompatibility = 1.8
-def build = 189
+def build = 190
 
 if (System.getProperty("os.name").toLowerCase().contains("mac os x")) {
   applicationDefaultJvmArgs = ["-XstartOnFirstThread"]
@@ -16,7 +15,6 @@ if (System.getProperty("os.name").toLowerCase().contains("mac os x")) {
 buildscript {
 	repositories {
         mavenCentral()
-        maven { url "https://oss.sonatype.org/content/repositories/releases/" }
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
     }
 }
@@ -25,7 +23,6 @@ repositories {
 	mavenCentral()
 	maven {
     	url "https://oss.sonatype.org/content/repositories/snapshots/"
-     	//url "https://oss.sonatype.org/content/repositories/releases/" 
     }
 }
 
