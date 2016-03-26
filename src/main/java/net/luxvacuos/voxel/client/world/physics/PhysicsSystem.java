@@ -34,7 +34,6 @@ import com.badlogic.gdx.math.collision.BoundingBox;
 import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.world.IWorld;
-import net.luxvacuos.voxel.client.world.block.Block;
 import net.luxvacuos.voxel.client.world.items.ItemDropBase;
 
 public class PhysicsSystem extends EntitySystem {
@@ -46,7 +45,10 @@ public class PhysicsSystem extends EntitySystem {
 
 	private IWorld world;
 	private List<BoundingBox> boxes;
-	private Vector3f tmp = new Vector3f();;
+	private Vector3f tmp = new Vector3f();
+	private Vector3 normalTMP = new Vector3();
+	private float depthTMP;
+	private int faceTMP;
 
 	public PhysicsSystem(IWorld world) {
 		this.world = world;
@@ -56,96 +58,6 @@ public class PhysicsSystem extends EntitySystem {
 	public void addedToEngine(Engine engine) {
 		entities = engine.getEntitiesFor(
 				Family.all(PositionComponent.class, VelocityComponent.class, CollisionComponent.class).get());
-	}
-
-	@Override
-	public void update(float deltaTime) {
-		for (Entity entity : entities) {
-
-			PositionComponent position = pm.get(entity);
-			VelocityComponent velocity = vm.get(entity);
-			CollisionComponent collison = cm.get(entity);
-
-			Vector3f positionV = position.position;
-			Vector3f velocityV = velocity.velocity;
-
-			float tempx = (positionV.x);
-			int tempX = (int) tempx;
-			if (positionV.x < 0) {
-				tempx = (positionV.x);
-				tempX = (int) tempx - 1;
-			}
-
-			float tempz = (positionV.z);
-			int tempZ = (int) tempz;
-			if (positionV.z > 0) {
-				tempz = (positionV.z);
-				tempZ = (int) tempz + 1;
-			}
-
-			float tempy = (positionV.y);
-			int tempY = (int) tempy;
-
-			int bx = (int) tempX;
-			int by = (int) tempY;
-			int bz = (int) tempZ;
-
-			int ya = world.getGlobalBlock(bx, by + 1, bz);
-			int yb = world.getGlobalBlock(bx, by - 1, bz);
-			int xa = world.getGlobalBlock(bx + 1, by, bz);
-			int xb = world.getGlobalBlock(bx - 1, by, bz);
-			int za = world.getGlobalBlock(bx, by, bz + 1);
-			int zb = world.getGlobalBlock(bx, by, bz - 1);
-
-			velocityV.y += -9.8f * deltaTime;
-
-			velocityV.x *= 0.4f - velocityV.x * 0.01f;
-			velocityV.z *= 0.4f - velocityV.z * 0.01f;
-
-			collison.boundingBox.set(new Vector3(positionV.x, positionV.y, positionV.z),
-					new Vector3(positionV.x + 1f, positionV.y + 1f, positionV.z + 1f));
-
-			if (velocityV.y < 0)
-				if (yb != Block.Air.getId() && yb != Block.Water.getId())
-					if (entity.getComponent(CollisionComponent.class).boundingBox
-							.intersects(Block.getBlock((byte) yb).getBoundingBox(new Vector3f(bx, by, bz))))
-						velocityV.y = 0;
-
-			if (velocityV.y > 0)
-				if (ya != Block.Air.getId() && ya != Block.Water.getId())
-					if (entity.getComponent(CollisionComponent.class).boundingBox
-							.intersects(Block.getBlock((byte) ya).getBoundingBox(new Vector3f(bx, by, bz))))
-						velocityV.y = 0;
-
-			if (velocityV.x < 0)
-				if (xb != Block.Air.getId() && xb != Block.Water.getId())
-					if (entity.getComponent(CollisionComponent.class).boundingBox
-							.intersects(Block.getBlock((byte) xb).getBoundingBox(new Vector3f(bx, by, bz))))
-						velocityV.x = 0;
-
-			if (velocityV.x > 0)
-				if (xa != Block.Air.getId() && xa != Block.Water.getId())
-					if (entity.getComponent(CollisionComponent.class).boundingBox
-							.intersects(Block.getBlock((byte) xa).getBoundingBox(new Vector3f(bx, by, bz))))
-						velocityV.x = 0;
-
-			if (velocityV.z < 0)
-				if (zb != Block.Air.getId() && zb != Block.Water.getId())
-					if (entity.getComponent(CollisionComponent.class).boundingBox
-							.intersects(Block.getBlock((byte) zb).getBoundingBox(new Vector3f(bx, by, bz))))
-						velocityV.z = 0;
-
-			if (velocityV.z > 0)
-				if (za != Block.Air.getId() && za != Block.Water.getId())
-					if (entity.getComponent(CollisionComponent.class).boundingBox
-							.intersects(Block.getBlock((byte) za).getBoundingBox(new Vector3f(bx, by, bz - 1))))
-						velocityV.z = 0;
-
-			position.position.x += velocityV.x * deltaTime;
-			position.position.y += velocityV.y * deltaTime;
-			position.position.z += velocityV.z * deltaTime;
-		}
-
 	}
 
 	public void processItems(GameResources gm) {
@@ -160,62 +72,68 @@ public class PhysicsSystem extends EntitySystem {
 		}
 	}
 
-	// NEW COLLISION SYSTEM, PRE-PRE-PRE ALPHA
-	/*
-	 * @Override public void update(float deltaTime) { for (Entity entity :
-	 * entities) {
-	 * 
-	 * PositionComponent position = pm.get(entity); VelocityComponent velocity =
-	 * vm.get(entity); CollisionComponent collison = cm.get(entity);
-	 * 
-	 * velocity.velocity.y += -1.8f * deltaTime;
-	 * 
-	 * velocity.velocity.x *= 0.4f - velocity.velocity.x * 0.01f;
-	 * velocity.velocity.z *= 0.4f - velocity.velocity.z * 0.01f;
-	 * 
-	 * collison.boundingBox.set( new Vector3(position.position.x - 0.2f,
-	 * position.position.y - 1f, position.position.z - 0.2f), new
-	 * Vector3(position.position.x + 0.2f, position.position.y + 0.2f,
-	 * position.position.z + 0.2f));
-	 * 
-	 * boxes = world.getGlobalBoundingBox(collison.boundingBox);
-	 * 
-	 * for (BoundingBox boundingBox : boxes) { if
-	 * (boundingBox.intersects(collison.boundingBox)) {
-	 * tmp.set(minimumTranslation(collison.boundingBox, boundingBox)); if (tmp.x
-	 * != 0) { float pos = 0; if (velocity.velocity.x > 0) pos -= 0.01f; else if
-	 * (velocity.velocity.x < 0) pos += 0.01f; position.position.x += pos;
-	 * velocity.velocity.x = 0; } if (tmp.y != 0) { float pos = 0; if
-	 * (velocity.velocity.y > 0) pos -= 0.01f; else if (velocity.velocity.y < 0)
-	 * pos += 0.01f; position.position.y += pos; velocity.velocity.y = 0; } if
-	 * (tmp.z != 0) { float pos = 0; if (velocity.velocity.z > 0) pos -= 0.01f;
-	 * else if (velocity.velocity.z < 0) pos += 0.01f; position.position.z +=
-	 * pos; velocity.velocity.z = 0; } } }
-	 * 
-	 * position.position.x += velocity.velocity.x * deltaTime;
-	 * position.position.y += velocity.velocity.y * deltaTime;
-	 * position.position.z += velocity.velocity.z * deltaTime;
-	 * 
-	 * } }
-	 * 
-	 * public Vector3 minimumTranslation(BoundingBox own, BoundingBox other) {
-	 * Vector3 amin = own.min; Vector3 amax = own.max; Vector3 bmin = other.min;
-	 * Vector3 bmax = other.max;
-	 * 
-	 * Vector3 mtd = new Vector3();
-	 * 
-	 * float left = (bmin.x - amax.x); float right = (bmax.x - amin.x); float
-	 * top = (bmin.y - amax.y); float bottom = (bmax.y - amin.y); float front =
-	 * (bmin.z - amax.z); float back = (bmax.z - amin.z);
-	 * 
-	 * // box intersect. work out the mtd on both x and y axes. if
-	 * (Math.abs(left) < right) mtd.x = left; else mtd.x = right;
-	 * 
-	 * if (Math.abs(top) < bottom) mtd.y = top; else mtd.y = bottom;
-	 * 
-	 * if (Math.abs(front) < back) mtd.z = front; else mtd.z = back;
-	 * 
-	 * // 0 the axis with the largest mtd value. if (Math.abs(mtd.x) <
-	 * Math.abs(mtd.y)) mtd.y = 0; else mtd.x = 0; return mtd; }
-	 */
+	@Override
+	public void update(float deltaTime) {
+		for (Entity entity : entities) {
+
+			PositionComponent position = pm.get(entity);
+			VelocityComponent velocity = vm.get(entity);
+			CollisionComponent collison = cm.get(entity);
+
+			velocity.velocity.y += -9.8f * deltaTime;
+
+			velocity.velocity.x *= 0.4f - velocity.velocity.x * 0.01f;
+			velocity.velocity.z *= 0.4f - velocity.velocity.z * 0.01f;
+
+			collison.update(position.position);
+			boxes = world.getGlobalBoundingBox(collison.boundingBox);
+
+			for (BoundingBox boundingBox : boxes) {
+				normalTMP.set(0, 0, 0);
+				if (AABBIntersect(collison.boundingBox.min, collison.boundingBox.max, boundingBox.min, boundingBox.max,
+						depthTMP, faceTMP)) {
+					if (normalTMP.x > 0 && velocity.velocity.x > 0)
+						velocity.velocity.x = 0;
+					if (normalTMP.x < 0 && velocity.velocity.x < 0)
+						velocity.velocity.x = 0;
+
+					if (normalTMP.y > 0 && velocity.velocity.y > 0)
+						velocity.velocity.y = 0;
+					if (normalTMP.y < 0 && velocity.velocity.y < 0)
+						velocity.velocity.y = 0;
+
+					if (normalTMP.z > 0 && velocity.velocity.z > 0)
+						velocity.velocity.z = 0;
+					if (normalTMP.z < 0 && velocity.velocity.z < 0)
+						velocity.velocity.z = 0;
+				}
+			}
+
+			position.position.x += velocity.velocity.x * deltaTime;
+			position.position.y += velocity.velocity.y * deltaTime;
+			position.position.z += velocity.velocity.z * deltaTime;
+
+		}
+	}
+
+	private boolean AABBIntersect(final Vector3 mina, final Vector3 maxa, final Vector3 minb, final Vector3 maxb,
+			float depthColl, int faceColl) {
+		final Vector3 faces[] = { new Vector3(-1, 0, 0), new Vector3(1, 0, 0), new Vector3(0, -1, 0),
+				new Vector3(0, 1, 0), new Vector3(0, 0, -1), new Vector3(0, 0, 1) };
+		float distances[] = { (maxb.x - mina.x), (maxa.x - minb.x), (maxb.y - mina.y), (maxa.y - minb.y),
+				(maxb.z - mina.z), (maxa.z - minb.z) };
+		for (int i = 0; i < 6; i++) {
+			if (distances[i] < 0.0f)
+				return false;
+			if ((i == 0) || (distances[i] < depthColl)) {
+				faceColl = i;
+				normalTMP = faces[i];
+				depthColl = distances[i];
+			}
+
+		}
+		return true;
+
+	}
+
 }

@@ -47,7 +47,6 @@ import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.util.Maths;
 import net.luxvacuos.voxel.client.world.IWorld;
 import net.luxvacuos.voxel.client.world.block.Block;
-import net.luxvacuos.voxel.universal.resources.UniversalResources;
 
 public class PlayerCamera extends Camera {
 
@@ -61,7 +60,7 @@ public class PlayerCamera extends Camera {
 	private int clickTime;
 
 	public PlayerCamera(Matrix4f proj, Display display) {
-		super(proj);
+		super(proj, new Vector3f(-0.25f, -1.2f, -0.25f), new Vector3f(0.25f, 0.2f, 0.25f));
 		center = new Vector2f(display.getDisplayWidth() / 2, display.getDisplayHeight() / 2);
 		this.speed = 3f;
 	}
@@ -151,11 +150,6 @@ public class PlayerCamera extends Camera {
 		}
 
 		if (isKeyDown(KEY_T)) {
-			gm.getPhysicsEngine()
-					.addEntity(new GameEntity(UniversalResources.player,
-							new Vector3f(this.getPosition().x, this.getPosition().y + 2, this.getPosition().z),
-							velocityComponent.velocity.x, velocityComponent.velocity.y, velocityComponent.velocity.z, 0,
-							0, 0, 1));
 		}
 
 		if (clickTime > 0)

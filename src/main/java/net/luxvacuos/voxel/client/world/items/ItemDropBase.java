@@ -21,6 +21,7 @@
 package net.luxvacuos.voxel.client.world.items;
 
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.math.Vector3;
 
 import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Tessellator;
@@ -48,6 +49,9 @@ public abstract class ItemDropBase extends Entity {
 		this.add(collisionComponent);
 		this.block = block;
 		this.scale = scale;
+		collisionComponent.min = new Vector3(-0.2f, -0.2f, -0.2f);
+		collisionComponent.max = new Vector3(0.2f, 0.2f, 0.2f);
+		collisionComponent.boundingBox.set(collisionComponent.min, collisionComponent.max);
 	}
 
 	public void generateModel(Tessellator tess) {

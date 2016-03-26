@@ -245,7 +245,7 @@ public class Chunk {
 				for (int y = 0; y < sizeY; y++) {
 					BlockBase block = Block.getBlock(blocks[x][y][z]);
 					if (block == Block.Torch) {
-						block.generateCustomModel(tess, x + posX, y + posY, (z + posZ) - 1, 1,
+						block.generateCustomModel(tess, x + posX, y + posY, z + posZ, 1,
 								cullFaceUpSolidBlock(block.getId(), x + posX, y + posY, z + posZ, world),
 								cullFaceDown(block.getId(), x + posX, y + posY, z + posZ, world),
 								cullFaceEast(block.getId(), x + posX, y + posY, z + posZ, world),
@@ -259,9 +259,9 @@ public class Chunk {
 								world.getLight(x + posX, y + posY, z + posZ + 1),
 								world.getLight(x + posX, y + posY, z + posZ - 1));
 						particlePoints.add(new ParticlePoint(
-								new Vector3f((x + posX) + 0.5f, (y + posY) + 0.8f, (z + posZ) - 0.5f)));
+								new Vector3f((x + posX) + 0.5f, (y + posY) + 0.8f, (z + posZ) + 0.5f)));
 					} else if (block != Block.Air && !block.isCustomModel()) {
-						tess.generateCube(x + posX, y + posY, (z + posZ) - 1, 1,
+						tess.generateCube(x + posX, y + posY, z + posZ, 1,
 								cullFaceUpSolidBlock(block.getId(), x + posX, y + posY, z + posZ, world),
 								cullFaceDown(block.getId(), x + posX, y + posY, z + posZ, world),
 								cullFaceEast(block.getId(), x + posX, y + posY, z + posZ, world),
@@ -275,7 +275,7 @@ public class Chunk {
 								world.getLight(x + posX, y + posY, z + posZ + 1),
 								world.getLight(x + posX, y + posY, z + posZ - 1));
 					} else if (block != Block.Air && block.isCustomModel()) {
-						block.generateCustomModel(tess, x + posX, y + posY, (z + posZ) - 1, 1,
+						block.generateCustomModel(tess, x + posX, y + posY, z + posZ, 1,
 								cullFaceUpSolidBlock(block.getId(), x + posX, y + posY, z + posZ, world),
 								cullFaceDown(block.getId(), x + posX, y + posY, z + posZ, world),
 								cullFaceEast(block.getId(), x + posX, y + posY, z + posZ, world),

@@ -40,8 +40,8 @@ uniform vec3 lightPosition;
 
 uniform int useShadows;
 
-const float xPixelOffset = 0.0005;
-const float yPixelOffset = 0.0005;
+const float xPixelOffset = 0.0002;
+const float yPixelOffset = 0.0002;
 
 float lookup( vec2 offSet){
 	return texture(depth0, ShadowCoord.xyz + vec3(offSet.x * xPixelOffset, offSet.y * yPixelOffset, 0.0) );

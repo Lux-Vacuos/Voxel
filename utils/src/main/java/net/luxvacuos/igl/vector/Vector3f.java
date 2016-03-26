@@ -403,4 +403,8 @@ public class Vector3f extends Vector implements Serializable, ReadableVector3f, 
 		return z;
 	}
 
+	public Vector3 getAsVec3() {
+		return new Vector3(x, y, z);
+	}
+
 }

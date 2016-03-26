@@ -22,6 +22,7 @@ package net.luxvacuos.voxel.client.world.entities;
 
 import net.luxvacuos.igl.vector.Matrix4f;
 import net.luxvacuos.igl.vector.Vector2f;
+import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.resources.Ray;
 import net.luxvacuos.voxel.client.util.Maths;
@@ -31,7 +32,7 @@ public class SunCamera extends Camera {
 	private Vector2f center;
 
 	public SunCamera(Matrix4f proj) {
-		super(proj);
+		super(proj, new Vector3f(-1, -1, -1), new Vector3f(1, 1, 1));
 		center = new Vector2f(2048, 2048);
 	}
 

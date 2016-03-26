@@ -2,23 +2,15 @@ apply plugin:'java'
 apply plugin:'eclipse'
 apply plugin:'idea'
 apply plugin:'application'
+apply plugin: 'signing'
 
 mainClassName = 'net.luxvacuos.voxel.client.bootstrap.Bootstrap'
 version = '0.0.10-ALPHA'
+sourceCompatibility = 1.8
+def build = 189
 
 if (System.getProperty("os.name").toLowerCase().contains("mac os x")) {
   applicationDefaultJvmArgs = ["-XstartOnFirstThread"]
-}
-
-jar {
-	include("*net/**")
-	include("*assets/**") 
-	include("log4j.properties")
-	
-    manifest {
-        attributes 'Voxel-Client-Branch': 'Develop',
-                   'Voxel-Client-Version': version
-    }
 }
 
 buildscript {
@@ -58,6 +50,28 @@ sourceSets {
     }
 }
 
+task apiJar(type: Jar) {  
+    from(sourceSets.main.output) {  
+        include "net/luxvacuos/voxel/client/api/**" 
+    } 
+	version "0.0.6"
+	baseName "MoltenAPI"
+}
+
+jar {
+	tasks.apiJar.execute()
+	exclude "net/luxvacuos/voxel/client/api/**" 
+	manifest {
+        attributes (
+			"Specification-Title": "Voxel-Client",
+			"Specification-Version": version,
+			"Specification-Vendor": "Lux Vacuos",
+			"Implementation-Title": "net.luxvacuos.voxel",
+			"Implementation-Version": build,
+			"Implementation-Vendor": "Lux Vacuos"
+			)
+    }
+}
 
 task generateJavaDoc(type: Javadoc) {
 	failOnError = false

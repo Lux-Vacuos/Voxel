@@ -51,7 +51,7 @@ public abstract class Camera extends Entity {
 	public boolean isMoved = false;
 	public float depth = 0;
 
-	public Camera(Matrix4f proj) {
+	public Camera(Matrix4f proj, Vector3f aabbMin, Vector3f aabbMax) {
 		velocityComponent = new VelocityComponent();
 		positionComponent = new PositionComponent();
 		collisionComponent = new CollisionComponent();
@@ -59,6 +59,9 @@ public abstract class Camera extends Entity {
 		this.add(positionComponent);
 		this.add(collisionComponent);
 		ray = new Ray(proj, Maths.createViewMatrix(this), new Vector2f(), 0, 0);
+		collisionComponent.min = aabbMin.getAsVec3();
+		collisionComponent.max = aabbMax.getAsVec3();
+		collisionComponent.boundingBox.set(collisionComponent.min, collisionComponent.max);
 	}
 
 	public void updateRay(Matrix4f projectionMatrix, int width, int height, Vector2f pos) {

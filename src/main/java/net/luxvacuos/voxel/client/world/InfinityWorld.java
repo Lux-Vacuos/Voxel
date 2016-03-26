@@ -83,6 +83,7 @@ public class InfinityWorld implements IWorld {
 	private WorldService worldService;
 	private int renderedChunks = 0;
 	private boolean saving;
+	private int loadedChunks = 0;
 
 	@Override
 	public void startWorld(String name, Random seed, int chunkDim, GameResources gm) {
@@ -472,6 +473,7 @@ public class InfinityWorld implements IWorld {
 		}
 		chunks.put(key.clone(), chunk);
 		key.free();
+		loadedChunks++;
 		for (int xx = chunk.cx - 1; xx < chunk.cx + 1; xx++) {
 			for (int zz = chunk.cz - 1; zz < chunk.cz + 1; zz++) {
 				for (int yy = chunk.cy - 1; yy < chunk.cy + 1; yy++) {
@@ -491,6 +493,7 @@ public class InfinityWorld implements IWorld {
 			chunk.dispose();
 			chunks.remove(key);
 			key.free();
+			loadedChunks--;
 			for (int xx = chunk.cx - 1; xx < chunk.cx + 1; xx++) {
 				for (int zz = chunk.cz - 1; zz < chunk.cz + 1; zz++) {
 					for (int yy = chunk.cy - 1; yy < chunk.cy + 1; yy++) {
@@ -507,7 +510,7 @@ public class InfinityWorld implements IWorld {
 
 	@Override
 	public int getLoadedChunks() {
-		return chunks.size();
+		return loadedChunks;
 	}
 
 	@Override
@@ -619,6 +622,7 @@ public class InfinityWorld implements IWorld {
 			worldService.es.shutdown();
 			chunks.clear();
 			saveWorld(gm);
+			saving = false;
 		}
 	}
 

@@ -21,10 +21,20 @@
 package net.luxvacuos.voxel.client.world.physics;
 
 import com.badlogic.ashley.core.Component;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
+
+import net.luxvacuos.igl.vector.Vector3f;
 
 public class CollisionComponent implements Component {
 
 	public BoundingBox boundingBox = new BoundingBox();
+	
+	public Vector3 min, max;
+
+	public void update(Vector3f position) {
+		boundingBox.set(new Vector3(position.x + min.x, position.y + min.y, position.z + min.z),
+				new Vector3(position.x + max.x, position.y + max.y, position.z + max.z));
+	}
 
 }

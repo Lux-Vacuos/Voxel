@@ -38,7 +38,8 @@ public class GameEntity extends Entity {
 	private float scale;
 	private int visibility;
 
-	public GameEntity(TexturedModel model, Vector3f position, float rotX, float rotY, float rotZ, float scale) {
+	public GameEntity(TexturedModel model, Vector3f position, Vector3f aabbMin, Vector3f aabbMax, float rotX,
+			float rotY, float rotZ, float scale) {
 		velocityComponent = new VelocityComponent();
 		positionComponent = new PositionComponent();
 		positionComponent.position = new Vector3f(position);
@@ -51,10 +52,13 @@ public class GameEntity extends Entity {
 		this.rotY = rotY;
 		this.rotZ = rotZ;
 		this.scale = scale;
+		collisionComponent.min = aabbMin.getAsVec3();
+		collisionComponent.max = aabbMax.getAsVec3();
+		collisionComponent.boundingBox.set(collisionComponent.min, collisionComponent.max);
 	}
 
-	public GameEntity(TexturedModel model, Vector3f position, float vx, float vy, float vz, float rotX, float rotY,
-			float rotZ, float scale) {
+	public GameEntity(TexturedModel model, Vector3f position, Vector3f aabbMin, Vector3f aabbMax, float vx, float vy,
+			float vz, float rotX, float rotY, float rotZ, float scale) {
 		velocityComponent = new VelocityComponent();
 		positionComponent = new PositionComponent();
 		collisionComponent = new CollisionComponent();
@@ -70,6 +74,9 @@ public class GameEntity extends Entity {
 		this.rotY = rotY;
 		this.rotZ = rotZ;
 		this.scale = scale;
+		collisionComponent.min = aabbMin.getAsVec3();
+		collisionComponent.max = aabbMax.getAsVec3();
+		collisionComponent.boundingBox.set(collisionComponent.min, collisionComponent.max);
 	}
 
 	public void increasePosition(float dx, float dy, float dz) {
