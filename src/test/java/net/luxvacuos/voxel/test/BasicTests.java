@@ -170,5 +170,15 @@ public class BasicTests {
 	public void testRun() {
 		Voxel voxel = new Voxel("test");
 		assertNotNull(voxel);
+		
+		//voxel.preInit();
+		//voxel.init();
+		//voxel.postInit();
+		
+		//assertNotNull(voxel.getApi());
+		//assertNotNull(voxel.getGameResources());
+		//assertNotNull(voxel.getWorldsHandler());
+		
+		//voxel.dispose();
 	}
 }
