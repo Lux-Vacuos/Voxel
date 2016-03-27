@@ -20,13 +20,13 @@
 
 package net.luxvacuos.voxel.client.world.chunks;
 
-import net.luxvacuos.voxel.client.world.IWorld;
+import net.luxvacuos.voxel.client.world.Dimension;
 
 public class ChunkWorkerMesh implements Runnable {
-	private final IWorld world;
+	private final Dimension world;
 	private Chunk chunk;
 
-	public ChunkWorkerMesh(final IWorld world, Chunk chunk) {
+	public ChunkWorkerMesh(final Dimension world, Chunk chunk) {
 		this.world = world;
 		this.chunk = chunk;
 	}

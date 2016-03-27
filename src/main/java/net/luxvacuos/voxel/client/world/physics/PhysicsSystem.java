@@ -33,7 +33,7 @@ import com.badlogic.gdx.math.collision.BoundingBox;
 
 import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.voxel.client.resources.GameResources;
-import net.luxvacuos.voxel.client.world.IWorld;
+import net.luxvacuos.voxel.client.world.Dimension;
 import net.luxvacuos.voxel.client.world.items.ItemDropBase;
 
 public class PhysicsSystem extends EntitySystem {
@@ -43,15 +43,15 @@ public class PhysicsSystem extends EntitySystem {
 	private ComponentMapper<VelocityComponent> vm = ComponentMapper.getFor(VelocityComponent.class);
 	private ComponentMapper<CollisionComponent> cm = ComponentMapper.getFor(CollisionComponent.class);
 
-	private IWorld world;
+	private Dimension dim;
 	private List<BoundingBox> boxes;
 	private Vector3f tmp = new Vector3f();
 	private Vector3 normalTMP = new Vector3();
 	private float depthTMP;
 	private int faceTMP;
 
-	public PhysicsSystem(IWorld world) {
-		this.world = world;
+	public PhysicsSystem(Dimension dim) {
+		this.dim = dim;
 	}
 
 	@Override
@@ -86,7 +86,7 @@ public class PhysicsSystem extends EntitySystem {
 			velocity.velocity.z *= 0.4f - velocity.velocity.z * 0.01f;
 
 			collison.update(position.position);
-			boxes = world.getGlobalBoundingBox(collison.boundingBox);
+			boxes = dim.getGlobalBoundingBox(collison.boundingBox);
 
 			for (BoundingBox boundingBox : boxes) {
 				normalTMP.set(0, 0, 0);

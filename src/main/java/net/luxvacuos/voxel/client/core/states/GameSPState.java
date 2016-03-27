@@ -35,13 +35,13 @@ import org.lwjgl.BufferUtils;
 
 import net.luxvacuos.voxel.client.core.GlobalStates;
 import net.luxvacuos.voxel.client.core.GlobalStates.GameState;
-import net.luxvacuos.voxel.client.input.Keyboard;
 import net.luxvacuos.voxel.client.core.State;
 import net.luxvacuos.voxel.client.core.Voxel;
 import net.luxvacuos.voxel.client.core.VoxelVariables;
+import net.luxvacuos.voxel.client.input.Keyboard;
 import net.luxvacuos.voxel.client.particle.ParticleMaster;
 import net.luxvacuos.voxel.client.resources.GameResources;
-import net.luxvacuos.voxel.client.world.WorldsHandler;
+import net.luxvacuos.voxel.client.world.Dimension;
 import net.luxvacuos.voxel.client.world.entities.PlayerCamera;
 import net.luxvacuos.voxel.client.world.physics.PhysicsSystem;
 
@@ -56,14 +56,15 @@ public class GameSPState implements State {
 	@Override
 	public void update(Voxel voxel, GlobalStates states, float delta) {
 		GameResources gm = voxel.getGameResources();
-		WorldsHandler worlds = voxel.getWorldsHandler();
 
-		((PlayerCamera) gm.getCamera()).update(delta, gm, worlds.getActiveWorld());
+		((PlayerCamera) gm.getCamera()).update(delta, gm, gm.getWorldsHandler().getActiveWorld().getActiveDimension());
 		gm.getMenuSystem().gameSP.update();
-		worlds.getActiveWorld().updateChunksGeneration(gm, delta);
+		gm.getWorldsHandler().getActiveWorld().getActiveDimension().updateChunksGeneration(gm, delta);
 
-		gm.getPhysicsEngine().update(delta);
-		gm.getPhysicsEngine().getSystem(PhysicsSystem.class).processItems(gm);
+		for (Dimension dim : gm.getWorldsHandler().getActiveWorld().getDimensions().values()) {
+			dim.getPhysicsEngine().update(delta);
+			dim.getPhysicsEngine().getSystem(PhysicsSystem.class).processItems(gm);
+		}
 
 		gm.update(gm.getWorldSimulation().update(delta));
 		ParticleMaster.getInstance().update(delta, gm.getCamera());
@@ -89,32 +90,33 @@ public class GameSPState implements State {
 	@Override
 	public void render(Voxel voxel, GlobalStates states, float delta) {
 		GameResources gm = voxel.getGameResources();
-		WorldsHandler worlds = voxel.getWorldsHandler();
 
-		worlds.getActiveWorld().lighting();
+		gm.getWorldsHandler().getActiveWorld().getActiveDimension().lighting();
 		gm.getSun_Camera().setPosition(gm.getCamera().getPosition());
 		gm.getFrustum().calculateFrustum(gm.getMasterShadowRenderer().getProjectionMatrix(), gm.getSun_Camera());
 		if (VoxelVariables.useShadows) {
 			gm.getMasterShadowRenderer().being();
 			gm.getRenderer().prepare();
-			worlds.getActiveWorld().updateChunksShadow(gm);
+			gm.getWorldsHandler().getActiveWorld().getActiveDimension().updateChunksShadow(gm);
 			gm.getItemsDropRenderer().getTess().drawShadow(gm.getSun_Camera());
-			gm.getMasterShadowRenderer().renderEntity(gm.getPhysicsEngine().getEntities(), gm);
+			gm.getMasterShadowRenderer().renderEntity(
+					gm.getWorldsHandler().getActiveWorld().getActiveDimension().getPhysicsEngine().getEntities(), gm);
 			gm.getMasterShadowRenderer().end();
 		}
 		gm.getFrustum().calculateFrustum(gm.getRenderer().getProjectionMatrix(), gm.getCamera());
 		gm.getRenderer().prepare();
-		worlds.getActiveWorld().updateChunksOcclusion(gm);
+		gm.getWorldsHandler().getActiveWorld().getActiveDimension().updateChunksOcclusion(gm);
 
 		gm.getDeferredShadingRenderer().getPost_fbo().begin();
 		gm.getRenderer().prepare();
 		gm.getSkyboxRenderer().render(VoxelVariables.RED, VoxelVariables.GREEN, VoxelVariables.BLUE, delta, gm);
-		worlds.getActiveWorld().updateChunksRender(gm);
+		gm.getWorldsHandler().getActiveWorld().getActiveDimension().updateChunksRender(gm);
 		FloatBuffer p = BufferUtils.createFloatBuffer(1);
 		glReadPixels(gm.getDisplay().getDisplayWidth() / 2, gm.getDisplay().getDisplayHeight() / 2, 1, 1,
 				GL_DEPTH_COMPONENT, GL_FLOAT, p);
 		gm.getCamera().depth = p.get(0);
-		gm.getRenderer().renderEntity(gm.getPhysicsEngine().getEntities(), gm);
+		gm.getRenderer().renderEntity(
+				gm.getWorldsHandler().getActiveWorld().getActiveDimension().getPhysicsEngine().getEntities(), gm);
 		gm.getItemsDropRenderer().render(gm);
 		gm.getDeferredShadingRenderer().getPost_fbo().end();
 
@@ -122,7 +124,7 @@ public class GameSPState implements State {
 		gm.getDeferredShadingRenderer().render(gm);
 		ParticleMaster.getInstance().render(gm.getCamera(), gm.getRenderer().getProjectionMatrix());
 		gm.getDisplay().beingNVGFrame();
-		gm.getMenuSystem().gameSP.render(gm, worlds.getActiveWorld());
+		gm.getMenuSystem().gameSP.render(gm, gm.getWorldsHandler().getActiveWorld().getActiveDimension());
 		gm.getDisplay().endNVGFrame();
 
 	}

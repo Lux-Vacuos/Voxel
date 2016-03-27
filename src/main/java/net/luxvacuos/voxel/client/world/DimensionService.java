@@ -23,10 +23,10 @@ package net.luxvacuos.voxel.client.world;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class WorldService {
+public class DimensionService {
 	public final ExecutorService es;
 
-	public WorldService() {
+	public DimensionService() {
 		this.es = Executors.newWorkStealingPool();
 	}
 

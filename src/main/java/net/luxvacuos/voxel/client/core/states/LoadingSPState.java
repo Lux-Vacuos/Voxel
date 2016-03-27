@@ -20,15 +20,14 @@
 
 package net.luxvacuos.voxel.client.core.states;
 
-import java.util.Random;
-
 import net.luxvacuos.voxel.client.core.GlobalStates;
+import net.luxvacuos.voxel.client.core.GlobalStates.GameState;
 import net.luxvacuos.voxel.client.core.State;
 import net.luxvacuos.voxel.client.core.Voxel;
 import net.luxvacuos.voxel.client.core.VoxelVariables;
-import net.luxvacuos.voxel.client.core.GlobalStates.GameState;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.VectorsRendering;
 import net.luxvacuos.voxel.client.resources.GameResources;
+import net.luxvacuos.voxel.client.world.DefaultWorld;
 import net.luxvacuos.voxel.client.world.entities.PlayerCamera;
 
 /**
@@ -52,13 +51,10 @@ public class LoadingSPState implements State {
 	public void update(Voxel voxel, GlobalStates states, float delta) {
 		GameResources gm = voxel.getGameResources();
 
-		Random seed;
-		if (VoxelVariables.isCustomSeed) {
-			seed = new Random(VoxelVariables.seed.hashCode());
-		} else {
-			seed = new Random();
-		}
-		voxel.getWorldsHandler().getActiveWorld().startWorld(gm.getMenuSystem().worldSelectionMenu.getWorldName(), seed, 0, voxel.getGameResources());
+		gm.getWorldsHandler().registerWorld(new DefaultWorld(gm.getMenuSystem().worldSelectionMenu.getWorldName()));
+		gm.getWorldsHandler().setActiveWorld(gm.getMenuSystem().worldSelectionMenu.getWorldName());
+		gm.getWorldsHandler().getActiveWorld().init(gm);
+		gm.getWorldsHandler().getActiveWorld().getActiveDimension().getPhysicsEngine().addEntity(gm.getCamera());
 		((PlayerCamera) gm.getCamera()).setMouse(gm.getDisplay());
 		gm.getSoundSystem().rewind("menu1");
 		gm.getSoundSystem().stop("menu1");

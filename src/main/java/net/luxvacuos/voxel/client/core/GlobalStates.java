@@ -39,11 +39,11 @@ import net.luxvacuos.voxel.client.core.states.WorldSelectionState;
  */
 public class GlobalStates {
 
-	public boolean loop = false;
-
 	private GameState state;
 
 	private GameState oldState;
+
+	private InternalState internalState;
 
 	public enum GameState {
 		GAME_SP(new GameSPState()), MAINMENU(new MainMenuState()), IN_PAUSE(new InPauseState()), LOADING_WORLD(
@@ -57,8 +57,13 @@ public class GlobalStates {
 		State state;
 	}
 
+	public enum InternalState {
+		INTERNAL_ERROR, WORLD_ERROR, STOPPED, RUNNIG;
+
+	}
+
 	public GlobalStates() {
-		loop = true;
+		internalState = InternalState.STOPPED;
 		state = VoxelVariables.autostart ? GameState.LOADING_WORLD : GameState.MAINMENU;
 	}
 
@@ -68,7 +73,7 @@ public class GlobalStates {
 			modStateLoop.update(this.state.state, delta);
 		}
 		if (voxel.getGameResources().getDisplay().isCloseRequested())
-			loop = false;
+			internalState = InternalState.STOPPED;
 	}
 
 	public void doRender(Voxel voxel, float alpha) {
@@ -91,5 +96,13 @@ public class GlobalStates {
 
 	public GameState getOldState() {
 		return oldState;
+	}
+
+	public void setInternalState(InternalState internalState) {
+		this.internalState = internalState;
+	}
+
+	public InternalState getInternalState() {
+		return internalState;
 	}
 }

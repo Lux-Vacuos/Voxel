@@ -24,6 +24,7 @@ import net.luxvacuos.voxel.client.core.GlobalStates;
 import net.luxvacuos.voxel.client.core.State;
 import net.luxvacuos.voxel.client.core.Voxel;
 import net.luxvacuos.voxel.client.core.GlobalStates.GameState;
+import net.luxvacuos.voxel.client.core.GlobalStates.InternalState;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.VectorsRendering;
 import net.luxvacuos.voxel.client.resources.GameResources;
 
@@ -54,11 +55,12 @@ public class MainMenuState implements State {
 		} else if (gm.getMenuSystem().mainMenu.getPlayMPButton().pressed()) {
 			states.setState(GameState.MP_SELECTION);
 		} else if (gm.getMenuSystem().mainMenu.getExitButton().pressed()) {
-			states.loop = false;
+			states.setInternalState(InternalState.STOPPED);
 		} else if (gm.getMenuSystem().mainMenu.getOptionsButton().pressed()) {
 			try {
 				Thread.sleep(100);
 			} catch (InterruptedException e) {
+				states.setInternalState(InternalState.INTERNAL_ERROR);
 			}
 			states.setState(GameState.OPTIONS);
 		} else if (gm.getMenuSystem().mainMenu.getAboutButton().pressed()) {

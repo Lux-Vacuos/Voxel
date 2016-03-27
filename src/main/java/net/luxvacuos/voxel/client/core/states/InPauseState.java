@@ -30,16 +30,14 @@ import org.lwjgl.BufferUtils;
 
 import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.voxel.client.core.GlobalStates;
+import net.luxvacuos.voxel.client.core.GlobalStates.GameState;
 import net.luxvacuos.voxel.client.core.State;
 import net.luxvacuos.voxel.client.core.Voxel;
 import net.luxvacuos.voxel.client.core.VoxelVariables;
-import net.luxvacuos.voxel.client.core.GlobalStates.GameState;
 import net.luxvacuos.voxel.client.input.Keyboard;
 import net.luxvacuos.voxel.client.input.Mouse;
-import net.luxvacuos.voxel.client.particle.ParticleMaster;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.VectorsRendering;
 import net.luxvacuos.voxel.client.resources.GameResources;
-import net.luxvacuos.voxel.client.world.WorldsHandler;
 import net.luxvacuos.voxel.client.world.entities.PlayerCamera;
 
 /**
@@ -55,7 +53,7 @@ public class InPauseState implements State {
 		GameResources gm = voxel.getGameResources();
 		while (Mouse.next()) {
 			if (gm.getMenuSystem().pauseMenu.getExitButton().pressed()) {
-				voxel.getWorldsHandler().getActiveWorld().clearDimension(gm);
+				gm.getWorldsHandler().getActiveWorld().getActiveDimension().clearDimension(gm);
 				gm.getCamera().setPosition(new Vector3f(0, 0, 1));
 				gm.getCamera().setPitch(0);
 				gm.getCamera().setYaw(0);
@@ -75,37 +73,35 @@ public class InPauseState implements State {
 	@Override
 	public void render(Voxel voxel, GlobalStates states, float delta) {
 		GameResources gm = voxel.getGameResources();
-		WorldsHandler worlds = voxel.getWorldsHandler();
 
-		worlds.getActiveWorld().lighting();
+		gm.getWorldsHandler().getActiveWorld().getActiveDimension().lighting();
+		gm.getSun_Camera().setPosition(gm.getCamera().getPosition());
 		gm.getFrustum().calculateFrustum(gm.getMasterShadowRenderer().getProjectionMatrix(), gm.getSun_Camera());
 		if (VoxelVariables.useShadows) {
 			gm.getMasterShadowRenderer().being();
 			gm.getRenderer().prepare();
-			worlds.getActiveWorld().updateChunksShadow(gm);
+			gm.getWorldsHandler().getActiveWorld().getActiveDimension().updateChunksShadow(gm);
 			gm.getItemsDropRenderer().getTess().drawShadow(gm.getSun_Camera());
-			gm.getMasterShadowRenderer().renderEntity(gm.getPhysicsEngine().getEntities(), gm);
+			gm.getMasterShadowRenderer().renderEntity(
+					gm.getWorldsHandler().getActiveWorld().getActiveDimension().getPhysicsEngine().getEntities(), gm);
 			gm.getMasterShadowRenderer().end();
 		}
 		gm.getFrustum().calculateFrustum(gm.getRenderer().getProjectionMatrix(), gm.getCamera());
 		gm.getRenderer().prepare();
-		worlds.getActiveWorld().updateChunksOcclusion(gm);
+		gm.getWorldsHandler().getActiveWorld().getActiveDimension().updateChunksOcclusion(gm);
 
 		gm.getDeferredShadingRenderer().getPost_fbo().begin();
 		gm.getRenderer().prepare();
 		gm.getSkyboxRenderer().render(VoxelVariables.RED, VoxelVariables.GREEN, VoxelVariables.BLUE, delta, gm);
-		worlds.getActiveWorld().updateChunksRender(gm);
+		gm.getWorldsHandler().getActiveWorld().getActiveDimension().updateChunksRender(gm);
 		FloatBuffer p = BufferUtils.createFloatBuffer(1);
 		glReadPixels(gm.getDisplay().getDisplayWidth() / 2, gm.getDisplay().getDisplayHeight() / 2, 1, 1,
 				GL_DEPTH_COMPONENT, GL_FLOAT, p);
 		gm.getCamera().depth = p.get(0);
-		gm.getRenderer().renderEntity(gm.getPhysicsEngine().getEntities(), gm);
+		gm.getRenderer().renderEntity(
+				gm.getWorldsHandler().getActiveWorld().getActiveDimension().getPhysicsEngine().getEntities(), gm);
 		gm.getItemsDropRenderer().render(gm);
 		gm.getDeferredShadingRenderer().getPost_fbo().end();
-
-		gm.getRenderer().prepare();
-		gm.getDeferredShadingRenderer().render(gm);
-		ParticleMaster.getInstance().render(gm.getCamera(), gm.getRenderer().getProjectionMatrix());
 
 		gm.getDisplay().beingNVGFrame();
 		gm.getMenuSystem().pauseMenu.render();

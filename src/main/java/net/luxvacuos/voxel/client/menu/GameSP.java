@@ -26,7 +26,7 @@ import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.Timers;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.VectorsRendering;
 import net.luxvacuos.voxel.client.resources.GameResources;
-import net.luxvacuos.voxel.client.world.IWorld;
+import net.luxvacuos.voxel.client.world.Dimension;
 
 public class GameSP {
 	private float xScale, yScale;
@@ -46,7 +46,7 @@ public class GameSP {
 		h = 16;
 	}
 
-	public void render(GameResources gm, IWorld world) {
+	public void render(GameResources gm, Dimension world) {
 		if (!VoxelVariables.hideHud)
 			renderHud(gm);
 

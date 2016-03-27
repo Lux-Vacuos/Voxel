@@ -25,7 +25,6 @@ import static org.lwjgl.glfw.GLFW.GLFW_OPENGL_CORE_PROFILE;
 
 import java.util.Random;
 
-import com.badlogic.ashley.core.Engine;
 import com.esotericsoftware.kryo.Kryo;
 
 import net.luxvacuos.igl.CustomLog;
@@ -61,11 +60,11 @@ import net.luxvacuos.voxel.client.sound.soundsystem.SoundSystemConfig;
 import net.luxvacuos.voxel.client.sound.soundsystem.SoundSystemException;
 import net.luxvacuos.voxel.client.sound.soundsystem.codecs.CodecJOgg;
 import net.luxvacuos.voxel.client.util.LoggerSoundSystem;
+import net.luxvacuos.voxel.client.world.WorldsHandler;
 import net.luxvacuos.voxel.client.world.block.Block;
 import net.luxvacuos.voxel.client.world.entities.Camera;
 import net.luxvacuos.voxel.client.world.entities.PlayerCamera;
 import net.luxvacuos.voxel.client.world.entities.SunCamera;
-import net.luxvacuos.voxel.client.world.physics.PhysicsSystem;
 import net.luxvacuos.voxel.universal.resources.UniversalResources;
 
 /**
@@ -99,10 +98,9 @@ public class GameResources {
 	private MasterShadowRenderer masterShadowRenderer;
 	private ItemsDropRenderer itemsDropRenderer;
 
-	private Engine physicsEngine;
-	private PhysicsSystem physicsSystem;
 	private VoxelClient voxelClient;
 	private WorldSimulation worldSimulation;
+	private WorldsHandler worldsHandler;
 
 	private SoundSystem soundSystem;
 	private Frustum frustum;
@@ -159,10 +157,6 @@ public class GameResources {
 		frustum = new Frustum();
 		worldSimulation = new WorldSimulation();
 
-		physicsEngine = new Engine();
-		physicsSystem = new PhysicsSystem(voxel.getWorldsHandler().getActiveWorld());
-		physicsEngine.addSystem(physicsSystem);
-		physicsEngine.addEntity(camera);
 		CustomLog.getInstance();
 		voxelClient = new VoxelClient(this);
 
@@ -181,6 +175,7 @@ public class GameResources {
 		Block.initBasicBlocks();
 		UniversalResources.loadUniversalResources(this);
 		menuSystem = new Menu(this);
+		worldsHandler = new WorldsHandler();
 	}
 
 	/**
@@ -300,10 +295,6 @@ public class GameResources {
 		return sunRotation;
 	}
 
-	public Engine getPhysicsEngine() {
-		return physicsEngine;
-	}
-
 	public Display getDisplay() {
 		return display;
 	}
@@ -318,6 +309,10 @@ public class GameResources {
 
 	public WorldSimulation getWorldSimulation() {
 		return worldSimulation;
+	}
+	
+	public WorldsHandler getWorldsHandler() {
+		return worldsHandler;
 	}
 
 }

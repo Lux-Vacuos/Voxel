@@ -45,7 +45,7 @@ import net.luxvacuos.voxel.client.input.Keyboard;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Display;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.util.Maths;
-import net.luxvacuos.voxel.client.world.IWorld;
+import net.luxvacuos.voxel.client.world.Dimension;
 import net.luxvacuos.voxel.client.world.block.Block;
 
 public class PlayerCamera extends Camera {
@@ -65,7 +65,7 @@ public class PlayerCamera extends Camera {
 		this.speed = 3f;
 	}
 
-	public void update(float delta, GameResources gm, IWorld world) {
+	public void update(float delta, GameResources gm, Dimension world) {
 		isMoved = false;
 		float mouseDX = getDX() * delta * mouseSpeed * 0.16f * multiplierMouse;
 		float mouseDY = getDY() * delta * mouseSpeed * 0.16f * multiplierMouse;
@@ -172,7 +172,7 @@ public class PlayerCamera extends Camera {
 				gm.getDisplay().getDisplayHeight(), center);
 	}
 
-	public void updateDebug(IWorld world) {
+	public void updateDebug(Dimension world) {
 		if (isKeyDown(KEY_I)) {
 			VoxelVariables.radius++;
 		}
@@ -181,7 +181,7 @@ public class PlayerCamera extends Camera {
 		}
 	}
 
-	private void setBlock(int ww, int wh, byte block, IWorld world, GameResources gm) {
+	private void setBlock(int ww, int wh, byte block, Dimension world, GameResources gm) {
 		Vector4f viewport = new Vector4f(0, 0, ww, wh);
 		Vector3f wincoord = new Vector3f(ww / 2, wh / 2, depth);
 		Vector3f objcoord = new Vector3f();
@@ -213,7 +213,7 @@ public class PlayerCamera extends Camera {
 		if (block == Block.Torch.getId())
 			world.addLight(bx, by, bz, 14);
 		if (block == Block.Air.getId() && world.getGlobalBlock(bx, by, bz) != Block.Air.getId())
-			gm.getPhysicsEngine().addEntity(Block.getBlock(world.getGlobalBlock(bx, by, bz)).getDrop(gm,
+			world.getPhysicsEngine().addEntity(Block.getBlock(world.getGlobalBlock(bx, by, bz)).getDrop(gm,
 					new Vector3f(bx + 0.5f, by + 0.5f, bz - 0.5f)));
 		if (block == Block.Air.getId() && world.getGlobalBlock(bx, by, bz) == Block.Torch.getId())
 			world.removeLight(bx, by, bz, 0);

@@ -41,11 +41,11 @@ public class MoltenAPI {
 	}
 
 	public void registetEntity(Entity mob) {
-		gm.getPhysicsEngine().addEntity(mob);
+		// TODO: Implement
 	}
 
 	public void removeEntity(Entity entity) {
-		gm.getPhysicsEngine().removeEntity(entity);
+		//TODO: Implement
 	}
 
 	public void registerBlock(BlockBase block) {

@@ -41,7 +41,8 @@ public class ItemsDropRenderer {
 
 	public void render(GameResources gm) {
 		items.clear();
-		for (Entity entity : gm.getPhysicsEngine().getEntities()) {
+		for (Entity entity : gm.getWorldsHandler().getActiveWorld().getActiveDimension().getPhysicsEngine()
+				.getEntities()) {
 			if (entity instanceof ItemDropBase)
 				items.add((ItemDropBase) entity);
 		}

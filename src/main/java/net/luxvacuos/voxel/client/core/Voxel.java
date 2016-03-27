@@ -32,11 +32,10 @@ import net.luxvacuos.igl.Logger;
 import net.luxvacuos.voxel.client.api.ModInitialization;
 import net.luxvacuos.voxel.client.api.VersionException;
 import net.luxvacuos.voxel.client.bootstrap.Bootstrap;
+import net.luxvacuos.voxel.client.core.GlobalStates.InternalState;
 import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.Timers;
 import net.luxvacuos.voxel.client.resources.GameResources;
-import net.luxvacuos.voxel.client.world.InfinityWorld;
-import net.luxvacuos.voxel.client.world.WorldsHandler;
 import net.luxvacuos.voxel.client.world.block.BlocksResources;
 
 /**
@@ -54,7 +53,6 @@ public class Voxel {
 	 * Game Data
 	 */
 	private GameResources gameResources;
-	private WorldsHandler worldsHandler;
 	private ModInitialization api;
 
 	/**
@@ -108,10 +106,6 @@ public class Voxel {
 	 * the API Init
 	 */
 	public void init() {
-		worldsHandler = new WorldsHandler();
-		InfinityWorld world = new InfinityWorld();
-		worldsHandler.registerWorld(world.getCodeName(), world);
-		worldsHandler.setActiveWorld("Infinity");
 		gameResources.init(this);
 		BlocksResources.createBlocks(gameResources.getLoader());
 		gameResources.loadResources();
@@ -146,11 +140,12 @@ public class Voxel {
 		preInit();
 		init();
 		postInit();
+		gameResources.getGlobalStates().setInternalState(InternalState.RUNNIG);
 		float delta = 0;
 		float accumulator = 0f;
 		float interval = 1f / VoxelVariables.UPS;
 		float alpha = 0;
-		while (gameResources.getGlobalStates().loop) {
+		while (gameResources.getGlobalStates().getInternalState() == InternalState.RUNNIG) {
 			Timers.startCPUTimer();
 			if (gameResources.getDisplay().getTimeCount() > 1f) {
 				CoreInfo.ups = CoreInfo.upsCount;
@@ -211,10 +206,6 @@ public class Voxel {
 
 	public ModInitialization getApi() {
 		return api;
-	}
-
-	public WorldsHandler getWorldsHandler() {
-		return worldsHandler;
 	}
 
 }

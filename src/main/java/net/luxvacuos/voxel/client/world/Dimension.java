@@ -34,6 +34,7 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.Random;
 
+import com.badlogic.ashley.core.Engine;
 import com.badlogic.gdx.math.collision.BoundingBox;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
@@ -41,6 +42,7 @@ import com.esotericsoftware.kryo.io.Output;
 import net.luxvacuos.igl.Logger;
 import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.voxel.client.core.VoxelVariables;
+import net.luxvacuos.voxel.client.core.GlobalStates.InternalState;
 import net.luxvacuos.voxel.client.particle.ParticlePoint;
 import net.luxvacuos.voxel.client.particle.ParticleSystem;
 import net.luxvacuos.voxel.client.resources.GameResources;
@@ -51,21 +53,21 @@ import net.luxvacuos.voxel.client.world.chunks.ChunkGenerator;
 import net.luxvacuos.voxel.client.world.chunks.ChunkKey;
 import net.luxvacuos.voxel.client.world.chunks.LightNodeAdd;
 import net.luxvacuos.voxel.client.world.chunks.LightNodeRemoval;
+import net.luxvacuos.voxel.client.world.physics.PhysicsSystem;
 
 /**
- * Dimensional World
  * 
- * @author Guerra24 <pablo230699@hotmail.com>
- * @category World
+ * Interface of World, this is used as template for all worlds
+ * 
+ * @author pablo
+ *
  */
-public class InfinityWorld implements IWorld {
+public abstract class Dimension {
 
 	/**
 	 * Dimensional World Data
 	 */
 	private int chunkDim;
-	private int worldID;
-	private int version = 1;
 	private Map<ChunkKey, Chunk> chunks;
 	private Random seed;
 	private SimplexNoise noise;
@@ -76,30 +78,30 @@ public class InfinityWorld implements IWorld {
 	private int tempRadius = 0;
 	private int seedi;
 	private ChunkGenerator chunkGenerator;
-	private String codeName = "Infinity";
 	private Queue<LightNodeAdd> lightNodeAdds;
 	private Queue<LightNodeRemoval> lightNodeRemovals;
 	private ParticleSystem particleSystem;
-	private WorldService worldService;
+	private DimensionService dimensionService;
 	private int renderedChunks = 0;
 	private boolean saving;
 	private int loadedChunks = 0;
+	private Engine physicsEngine;
+	private PhysicsSystem physicsSystem;
 
-	@Override
-	public void startWorld(String name, Random seed, int chunkDim, GameResources gm) {
+	public Dimension(String name, Random seed, int chunkDim, GameResources gm) {
 		this.name = name;
 		this.seed = seed;
 		this.chunkDim = chunkDim;
 		gm.getCamera().setPosition(new Vector3f(0, 140, 0));
-		if (existWorld()) {
-			loadWorld(gm);
-		}
-		saveWorld(gm);
+
+		File filec = new File(VoxelVariables.worldPath + name + "/dimension_" + chunkDim);
+		if (!filec.exists())
+			filec.mkdirs();
+
 		init(gm);
 		createDimension(gm);
 	}
 
-	@Override
 	public void init(GameResources gm) {
 		particleSystem = new ParticleSystem(gm.getTorchTexture(), 2, 1, -0.01f, 4, 0.5f);
 		particleSystem.setDirection(new Vector3f(0, 1, 0), 0.1f);
@@ -112,10 +114,12 @@ public class InfinityWorld implements IWorld {
 		lightNodeRemovals = new LinkedList<>();
 		chunks = new HashMap<ChunkKey, Chunk>();
 		chunkGenerator = new ChunkGenerator();
-		worldService = new WorldService();
+		dimensionService = new DimensionService();
+		physicsEngine = new Engine();
+		physicsSystem = new PhysicsSystem(this);
+		physicsEngine.addSystem(physicsSystem);
 	}
 
-	@Override
 	public void createDimension(GameResources gm) {
 		Logger.log("Generating World");
 		xPlayChunk = (int) (gm.getCamera().getPosition().x / 16);
@@ -128,12 +132,12 @@ public class InfinityWorld implements IWorld {
 				for (int yr = -4; yr <= 4; yr++) {
 					int yy = yPlayChunk + yr;
 					if (zr * zr + xr * xr + yr * yr < 4 * 4 * 4) {
-						if (!hasChunk(chunkDim, xx, yy, zz)) {
-							if (existChunkFile(chunkDim, xx, yy, zz)) {
-								loadChunk(chunkDim, xx, yy, zz, gm);
+						if (!hasChunk(xx, yy, zz)) {
+							if (existChunkFile(xx, yy, zz)) {
+								loadChunk(xx, yy, zz, gm);
 							} else {
-								addChunk(new Chunk(chunkDim, xx, yy, zz, this, gm));
-								saveChunk(chunkDim, xx, yy, zz, gm);
+								addChunk(new Chunk(xx, yy, zz, this, gm));
+								saveChunk(xx, yy, zz, gm);
 							}
 						}
 					}
@@ -142,7 +146,6 @@ public class InfinityWorld implements IWorld {
 		}
 	}
 
-	@Override
 	public void updateChunksGeneration(GameResources gm, float delta) {
 		if (gm.getCamera().getPosition().x < 0)
 			xPlayChunk = (int) ((gm.getCamera().getPosition().x - 16) / 16);
@@ -166,21 +169,21 @@ public class InfinityWorld implements IWorld {
 					if (zr * zr + xr * xr + yr * yr <= (VoxelVariables.genRadius - VoxelVariables.radiusLimit)
 							* (VoxelVariables.genRadius - VoxelVariables.radiusLimit)
 							* (VoxelVariables.genRadius - VoxelVariables.radiusLimit)) {
-						if (!hasChunk(chunkDim, xx, yy, zz)) {
-							if (existChunkFile(chunkDim, xx, yy, zz)) {
-								loadChunk(chunkDim, xx, yy, zz, gm);
+						if (!hasChunk(xx, yy, zz)) {
+							if (existChunkFile(xx, yy, zz)) {
+								loadChunk(xx, yy, zz, gm);
 							} else {
 								if (VoxelVariables.generateChunks) {
-									addChunk(new Chunk(chunkDim, xx, yy, zz, this, gm));
-									// saveChunk(chunkDim, xx, yy, zz, gm);
+									addChunk(new Chunk(xx, yy, zz, this, gm));
+									// saveChunk( xx, yy, zz, gm);
 								}
 							}
 						} else {
-							Chunk chunk = getChunk(chunkDim, xx, yy, zz);
-							chunk.update(this, worldService, gm.getCamera(), delta);
+							Chunk chunk = getChunk(xx, yy, zz);
+							chunk.update(this, dimensionService, gm.getCamera(), delta);
 							if (gm.getFrustum().cubeInFrustum(chunk.posX, chunk.posY, chunk.posZ, chunk.posX + 16,
 									chunk.posY + 16, chunk.posZ + 16)) {
-								chunk.rebuild(worldService, this);
+								chunk.rebuild(dimensionService, this);
 							}
 							for (ParticlePoint particlePoint : chunk.getParticlePoints()) {
 								particleSystem.generateParticles(particlePoint, delta);
@@ -194,9 +197,9 @@ public class InfinityWorld implements IWorld {
 											* (VoxelVariables.genRadius - VoxelVariables.radiusLimit + 1)
 											* (VoxelVariables.genRadius - VoxelVariables.radiusLimit + 1)) {
 
-						if (hasChunk(chunkDim, xx, yy, zz)) {
-							saveChunk(chunkDim, xx, yy, zz, gm);
-							removeChunk(getChunk(chunkDim, xx, yy, zz));
+						if (hasChunk(xx, yy, zz)) {
+							saveChunk(xx, yy, zz, gm);
+							removeChunk(getChunk(xx, yy, zz));
 						}
 
 					}
@@ -207,7 +210,6 @@ public class InfinityWorld implements IWorld {
 			tempRadius++;
 	}
 
-	@Override
 	public void updateChunksRender(GameResources gm) {
 		renderedChunks = 0;
 		for (int zr = -VoxelVariables.radius; zr <= VoxelVariables.radius; zr++) {
@@ -216,8 +218,8 @@ public class InfinityWorld implements IWorld {
 				int xx = xPlayChunk + xr;
 				for (int yr = -VoxelVariables.radius; yr <= VoxelVariables.radius; yr++) {
 					int yy = yPlayChunk + yr;
-					if (hasChunk(chunkDim, xx, yy, zz)) {
-						Chunk chunk = getChunk(chunkDim, xx, yy, zz);
+					if (hasChunk(xx, yy, zz)) {
+						Chunk chunk = getChunk(xx, yy, zz);
 						if (chunk != null) {
 							if (gm.getFrustum().cubeInFrustum(chunk.posX, chunk.posY, chunk.posZ, chunk.posX + 16,
 									chunk.posY + 16, chunk.posZ + 16)) {
@@ -234,7 +236,6 @@ public class InfinityWorld implements IWorld {
 		}
 	}
 
-	@Override
 	public void updateChunksShadow(GameResources gm) {
 		for (int zr = -VoxelVariables.radius; zr <= VoxelVariables.radius; zr++) {
 			int zz = zPlayChunk + zr;
@@ -242,8 +243,8 @@ public class InfinityWorld implements IWorld {
 				int xx = xPlayChunk + xr;
 				for (int yr = -VoxelVariables.radius; yr <= VoxelVariables.radius; yr++) {
 					int yy = yPlayChunk + yr;
-					if (hasChunk(chunkDim, xx, yy, zz)) {
-						Chunk chunk = getChunk(chunkDim, xx, yy, zz);
+					if (hasChunk(xx, yy, zz)) {
+						Chunk chunk = getChunk(xx, yy, zz);
 						if (chunk != null)
 							if (gm.getFrustum().cubeInFrustum(chunk.posX, chunk.posY, chunk.posZ, chunk.posX + 16,
 									chunk.posY + 16, chunk.posZ + 16))
@@ -254,7 +255,6 @@ public class InfinityWorld implements IWorld {
 		}
 	}
 
-	@Override
 	public void updateChunksOcclusion(GameResources gm) {
 		List<Chunk> chunks = new ArrayList<Chunk>();
 		for (int zr = -VoxelVariables.radius; zr <= VoxelVariables.radius; zr++) {
@@ -263,8 +263,8 @@ public class InfinityWorld implements IWorld {
 				int xx = xPlayChunk + xr;
 				for (int yr = -VoxelVariables.radius; yr <= VoxelVariables.radius; yr++) {
 					int yy = yPlayChunk + yr;
-					if (hasChunk(chunkDim, xx, yy, zz)) {
-						Chunk chunk = getChunk(chunkDim, xx, yy, zz);
+					if (hasChunk(xx, yy, zz)) {
+						Chunk chunk = getChunk(xx, yy, zz);
 						if (chunk != null)
 							if (gm.getFrustum().cubeInFrustum(chunk.posX, chunk.posY, chunk.posZ, chunk.posX + 16,
 									chunk.posY + 16, chunk.posZ + 16))
@@ -279,7 +279,6 @@ public class InfinityWorld implements IWorld {
 		}
 	}
 
-	@Override
 	public void lighting() {
 		while (!lightNodeRemovals.isEmpty()) {
 			LightNodeRemoval node = lightNodeRemovals.poll();
@@ -302,7 +301,7 @@ public class InfinityWorld implements IWorld {
 			int cx = x >> 4;
 			int cz = z >> 4;
 			int cy = y >> 4;
-			Chunk chunk = getChunk(chunkDim, cx, cy, cz);
+			Chunk chunk = getChunk(cx, cy, cz);
 			int lightLevel = (int) chunk.getTorchLight(x, y, z);
 			setupLightAdd(x - 1, y, z, lightLevel);
 			setupLightAdd(x + 1, y, z, lightLevel);
@@ -313,12 +312,11 @@ public class InfinityWorld implements IWorld {
 		}
 	}
 
-	@Override
 	public void setupLightAdd(int x, int y, int z, int lightLevel) {
 		int cx = x >> 4;
 		int cz = z >> 4;
 		int cy = y >> 4;
-		Chunk chunk = getChunk(chunkDim, cx, cy, cz);
+		Chunk chunk = getChunk(cx, cy, cz);
 		if (chunk != null)
 			if (chunk.getTorchLight(x, y, z) + 2 <= lightLevel) {
 				chunk.setTorchLight(x, y, z, lightLevel - 1);
@@ -327,12 +325,11 @@ public class InfinityWorld implements IWorld {
 			}
 	}
 
-	@Override
 	public void setupLightRemove(int x, int y, int z, int lightLevel) {
 		int cx = x >> 4;
 		int cz = z >> 4;
 		int cy = y >> 4;
-		Chunk chunk = getChunk(chunkDim, cx, cy, cz);
+		Chunk chunk = getChunk(cx, cy, cz);
 		if (chunk != null) {
 			int neighborLevel = (int) chunk.getTorchLight(x, y, z);
 			if (neighborLevel != 0 && neighborLevel < lightLevel) {
@@ -346,127 +343,64 @@ public class InfinityWorld implements IWorld {
 		}
 	}
 
-	@Override
-	public void switchDimension(int id, GameResources gm) {
-		if (id != chunkDim) {
-			clearDimension(gm);
-			chunkDim = id;
-			init(gm);
-			createDimension(gm);
-		}
-	}
-
-	@Override
-	public void saveWorld(GameResources gm) {
-		if (!existWorld()) {
-			File file = new File(VoxelVariables.worldPath + name + "/");
-			file.mkdirs();
-		}
-		if (!existChunkFolder(chunkDim)) {
-			File filec = new File(VoxelVariables.worldPath + name + "/chunks_" + chunkDim + "/");
-			filec.mkdirs();
-		}
+	public void saveChunk(int cx, int cy, int cz, GameResources gm) {
 		try {
-			Output output = new Output(new FileOutputStream(VoxelVariables.worldPath + name + "/world.dat"));
-			gm.getKryo().writeObject(output, seed);
+			Output output = new Output(new FileOutputStream(VoxelVariables.worldPath + name + "/dimension_" + chunkDim
+					+ "/chunk_" + cx + "_" + cy + "_" + cz + ".dat"));
+			gm.getKryo().writeObject(output, getChunk(cx, cy, cz));
 			output.close();
 		} catch (Exception e) {
+			Logger.error("Error Saving Chunk " + chunkDim + " " + cx + " " + cy + " " + cz);
+			Logger.log("Voxel are automatically shutdown to prevent damage in your worlds");
 			e.printStackTrace();
+			gm.getGlobalStates().setInternalState(InternalState.WORLD_ERROR);
 		}
 	}
 
-	@Override
-	public void loadWorld(GameResources gm) {
+	public void loadChunk(int cx, int cy, int cz, GameResources gm) {
 		try {
-			Input input = new Input(new FileInputStream(VoxelVariables.worldPath + name + "/world.dat"));
-			seed = gm.getKryo().readObject(input, Random.class);
-			input.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	@Override
-	public void saveChunk(int chunkDim, int cx, int cy, int cz, GameResources gm) {
-		try {
-			Output output = new Output(new FileOutputStream(VoxelVariables.worldPath + name + "/chunks_" + chunkDim
-					+ "/chunk_" + chunkDim + "_" + cx + "_" + cy + "_" + cz + ".dat"));
-			gm.getKryo().writeObject(output, getChunk(chunkDim, cx, cy, cz));
-			output.close();
-		} catch (Exception e) {
-			Logger.warn("Error Saving Chunk " + chunkDim + " " + cx + " " + cy + " " + cz);
-			e.printStackTrace();
-		}
-	}
-
-	@Override
-	public void loadChunk(int chunkDim, int cx, int cy, int cz, GameResources gm) {
-		try {
-			Input input = new Input(new FileInputStream(VoxelVariables.worldPath + name + "/chunks_" + chunkDim
-					+ "/chunk_" + chunkDim + "_" + cx + "_" + cy + "_" + cz + ".dat"));
+			Input input = new Input(new FileInputStream(VoxelVariables.worldPath + name + "/dimension_" + chunkDim
+					+ "/chunk_" + cx + "_" + cy + "_" + cz + ".dat"));
 			Chunk chunk = gm.getKryo().readObject(input, Chunk.class);
 			input.close();
 			if (chunk != null) {
 				chunk.load(gm);
 				chunk.checkForMissingBlocks();
-				if (chunk.version != this.version) {
-					Logger.warn("An invalid chunk has been detected in: " + cx + " " + cy + " " + cz);
-					chunk = new Chunk(chunkDim, cx, cy, cz, this, gm);
-				}
 				addChunk(chunk);
 			}
 
 		} catch (Exception e) {
-			Logger.warn("Error Loading Chunk " + chunkDim + " " + cx + " " + cy + " " + cz);
+			Logger.error("Error Loading Chunk " + chunkDim + " " + cx + " " + cy + " " + cz);
+			Logger.log("Voxel are automatically shutdown to prevent damage in your worlds");
 			e.printStackTrace();
+			gm.getGlobalStates().setInternalState(InternalState.WORLD_ERROR);
 		}
 	}
 
-	@Override
-	public boolean existChunkFile(int chunkDim, int cx, int cy, int cz) {
-		File file = new File(VoxelVariables.worldPath + name + "/chunks_" + chunkDim + "/chunk_" + chunkDim + "_" + cx
-				+ "_" + cy + "_" + cz + ".dat");
+	public boolean existChunkFile(int cx, int cy, int cz) {
+		File file = new File(VoxelVariables.worldPath + name + "/dimension_" + chunkDim + "/chunk_" + cx + "_" + cy
+				+ "_" + cz + ".dat");
 		return file.exists();
 	}
 
-	/**
-	 * Check if exist a world file
-	 * 
-	 * @return true if exist
-	 */
-	@Override
-	public boolean existWorld() {
-		File file = new File(VoxelVariables.worldPath + name + "/world.dat");
-		return file.exists();
-	}
-
-	@Override
-	public boolean existChunkFolder(int chunkDim) {
-		File file = new File(VoxelVariables.worldPath + name + "/chunks_" + chunkDim + "/");
-		return file.exists();
-	}
-
-	@Override
-	public Chunk getChunk(int chunkDim, int cx, int cy, int cz) {
-		ChunkKey key = ChunkKey.alloc(chunkDim, cx, cy, cz);
+	public Chunk getChunk(int cx, int cy, int cz) {
+		ChunkKey key = ChunkKey.alloc(cx, cy, cz);
 		Chunk chunk;
 		chunk = chunks.get(key);
 		key.free();
 		return chunk;
 	}
 
-	@Override
-	public boolean hasChunk(int chunkDim, int cx, int cy, int cz) {
-		ChunkKey key = ChunkKey.alloc(chunkDim, cx, cy, cz);
+	public boolean hasChunk(int cx, int cy, int cz) {
+		ChunkKey key = ChunkKey.alloc(cx, cy, cz);
 		boolean contains;
 		contains = chunks.containsKey(key);
 		key.free();
 		return contains;
 	}
 
-	@Override
 	public void addChunk(Chunk chunk) {
-		ChunkKey key = ChunkKey.alloc(chunk.dim, chunk.cx, chunk.cy, chunk.cz);
+		ChunkKey key = ChunkKey.alloc(chunk.cx, chunk.cy, chunk.cz);
 		Chunk old = chunks.get(key);
 		if (old != null) {
 			removeChunk(old);
@@ -477,7 +411,7 @@ public class InfinityWorld implements IWorld {
 		for (int xx = chunk.cx - 1; xx < chunk.cx + 1; xx++) {
 			for (int zz = chunk.cz - 1; zz < chunk.cz + 1; zz++) {
 				for (int yy = chunk.cy - 1; yy < chunk.cy + 1; yy++) {
-					Chunk chunka = getChunk(chunkDim, xx, yy, zz);
+					Chunk chunka = getChunk(xx, yy, zz);
 					if (chunka != null) {
 						chunka.needsRebuild = true;
 					}
@@ -486,10 +420,9 @@ public class InfinityWorld implements IWorld {
 		}
 	}
 
-	@Override
 	public void removeChunk(Chunk chunk) {
 		if (chunk != null) {
-			ChunkKey key = ChunkKey.alloc(chunk.dim, chunk.cx, chunk.cy, chunk.cz);
+			ChunkKey key = ChunkKey.alloc(chunk.cx, chunk.cy, chunk.cz);
 			chunk.dispose();
 			chunks.remove(key);
 			key.free();
@@ -497,7 +430,7 @@ public class InfinityWorld implements IWorld {
 			for (int xx = chunk.cx - 1; xx < chunk.cx + 1; xx++) {
 				for (int zz = chunk.cz - 1; zz < chunk.cz + 1; zz++) {
 					for (int yy = chunk.cy - 1; yy < chunk.cy + 1; yy++) {
-						Chunk chunka = getChunk(chunkDim, xx, yy, zz);
+						Chunk chunka = getChunk(xx, yy, zz);
 						if (chunka != null) {
 							chunka.needsRebuild = true;
 						}
@@ -508,29 +441,25 @@ public class InfinityWorld implements IWorld {
 		}
 	}
 
-	@Override
 	public int getLoadedChunks() {
 		return loadedChunks;
 	}
 
-	@Override
 	public int getRenderedChunks() {
 		return renderedChunks;
 	}
 
-	@Override
 	public byte getGlobalBlock(int x, int y, int z) {
 		int cx = x >> 4;
 		int cz = z >> 4;
 		int cy = y >> 4;
-		Chunk chunk = getChunk(chunkDim, cx, cy, cz);
+		Chunk chunk = getChunk(cx, cy, cz);
 		if (chunk != null)
 			return chunk.getLocalBlock(x, y, z);
 		else
 			return 0;
 	}
 
-	@Override
 	public List<BoundingBox> getGlobalBoundingBox(BoundingBox box) {
 		List<BoundingBox> array = new ArrayList<>();
 		Vector3f vec = new Vector3f(0, 0, 0);
@@ -549,12 +478,11 @@ public class InfinityWorld implements IWorld {
 		return array;
 	}
 
-	@Override
 	public void setGlobalBlock(int x, int y, int z, byte id) {
 		int cx = x >> 4;
 		int cz = z >> 4;
 		int cy = y >> 4;
-		Chunk chunk = getChunk(chunkDim, cx, cy, cz);
+		Chunk chunk = getChunk(cx, cy, cz);
 		if (chunk != null) {
 			chunk.setLocalBlock(x, y, z, id);
 			chunk.updated = false;
@@ -563,43 +491,39 @@ public class InfinityWorld implements IWorld {
 		}
 	}
 
-	@Override
 	public void addLight(int x, int y, int z, int val) {
 		int cx = x >> 4;
 		int cz = z >> 4;
 		int cy = y >> 4;
-		Chunk chunk = getChunk(chunkDim, cx, cy, cz);
+		Chunk chunk = getChunk(cx, cy, cz);
 		if (chunk != null) {
 			chunk.setTorchLight(x, y, z, val);
 			lightNodeAdds.add(new LightNodeAdd(x, y, z));
 		}
 	}
 
-	@Override
 	public void removeLight(int x, int y, int z, int val) {
 		int cx = x >> 4;
 		int cz = z >> 4;
 		int cy = y >> 4;
-		Chunk chunk = getChunk(chunkDim, cx, cy, cz);
+		Chunk chunk = getChunk(cx, cy, cz);
 		if (chunk != null) {
 			lightNodeRemovals.add(new LightNodeRemoval(x, y, z, (int) chunk.getTorchLight(x, y, z)));
 			chunk.setTorchLight(x, y, z, 0);
 		}
 	}
 
-	@Override
 	public float getLight(int x, int y, int z) {
 		int cx = x >> 4;
 		int cz = z >> 4;
 		int cy = y >> 4;
-		Chunk chunk = getChunk(chunkDim, cx, cy, cz);
+		Chunk chunk = getChunk(cx, cy, cz);
 		if (chunk != null) {
 			return chunk.getTorchLight(x, y, z);
 		}
 		return 0;
 	}
 
-	@Override
 	public void clearDimension(GameResources gm) {
 		if (!saving) {
 			saving = true;
@@ -612,62 +536,49 @@ public class InfinityWorld implements IWorld {
 						int yy = yPlayChunk + yr;
 						if (zr * zr + xr * xr + yr * yr <= VoxelVariables.genRadius * VoxelVariables.genRadius
 								* VoxelVariables.genRadius) {
-							if (hasChunk(chunkDim, xx, yy, zz)) {
-								saveChunk(chunkDim, xx, yy, zz, gm);
+							if (hasChunk(xx, yy, zz)) {
+								saveChunk(xx, yy, zz, gm);
 							}
 						}
 					}
 				}
 			}
-			worldService.es.shutdown();
+			dimensionService.es.shutdown();
 			chunks.clear();
-			saveWorld(gm);
 			saving = false;
 		}
 	}
 
-	@Override
 	public int getzPlayChunk() {
 		return zPlayChunk;
 	}
 
-	@Override
 	public int getxPlayChunk() {
 		return xPlayChunk;
 	}
 
-	@Override
-	public int getWorldID() {
-		return worldID;
-	}
-
-	@Override
-	public int getChunkDimension() {
+	public int getDimensionID() {
 		return chunkDim;
 	}
 
-	@Override
 	public int getyPlayChunk() {
 		return yPlayChunk;
 	}
 
-	@Override
 	public SimplexNoise getNoise() {
 		return noise;
 	}
 
-	@Override
 	public Random getSeed() {
 		return seed;
 	}
 
-	@Override
 	public ChunkGenerator getChunkGenerator() {
 		return chunkGenerator;
 	}
-
-	public String getCodeName() {
-		return codeName;
+	
+	public Engine getPhysicsEngine() {
+		return physicsEngine;
 	}
 
 }

@@ -23,10 +23,9 @@ package net.luxvacuos.voxel.client.world.chunks;
 import java.util.ArrayList;
 
 public class ChunkKey implements Cloneable {
-	public int dim, cx, cy, cz;
+	public int cx, cy, cz;
 
-	public ChunkKey(int dim, int cx, int cy, int cz) {
-		this.dim = dim;
+	public ChunkKey(int cx, int cy, int cz) {
 		this.cx = cx;
 		this.cy = cy;
 		this.cz = cz;
@@ -34,14 +33,12 @@ public class ChunkKey implements Cloneable {
 
 	@Override
 	public int hashCode() {
-		return (dim << 16) ^ (cx << 8) ^ (cy << 4) ^ cz;
+		return (cx << 8) ^ (cy << 4) ^ cz;
 	}
 
 	@Override
 	public boolean equals(Object obj) {
 		ChunkKey key = (ChunkKey) obj;
-		if (key.dim != dim)
-			return false;
 		if (key.cx != cx)
 			return false;
 		if (key.cy != cy)
@@ -53,23 +50,22 @@ public class ChunkKey implements Cloneable {
 
 	@Override
 	public ChunkKey clone() {
-		return new ChunkKey(dim, cx, cy, cz);
+		return new ChunkKey(cx, cy, cz);
 	}
 
 	private static ArrayList<ChunkKey> pool = new ArrayList<ChunkKey>();
 	public static int cnt;
 
-	public static ChunkKey alloc(int dim, int cx, int cy, int cz) {
+	public static ChunkKey alloc(int cx, int cy, int cz) {
 		ChunkKey c;
 		synchronized (pool) {
 			int size = pool.size();
 			if (size == 0) {
 				cnt++;
-				return new ChunkKey(dim, cx, cy, cz);
+				return new ChunkKey(cx, cy, cz);
 			}
 			c = pool.remove(size - 1);
 		}
-		c.dim = dim;
 		c.cx = cx;
 		c.cy = cy;
 		c.cz = cz;

@@ -34,8 +34,8 @@ import net.luxvacuos.voxel.client.particle.ParticlePoint;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Tessellator;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.util.Maths;
-import net.luxvacuos.voxel.client.world.IWorld;
-import net.luxvacuos.voxel.client.world.WorldService;
+import net.luxvacuos.voxel.client.world.Dimension;
+import net.luxvacuos.voxel.client.world.DimensionService;
 import net.luxvacuos.voxel.client.world.block.Block;
 import net.luxvacuos.voxel.client.world.block.BlockBase;
 import net.luxvacuos.voxel.client.world.block.BlocksResources;
@@ -45,14 +45,14 @@ import net.luxvacuos.voxel.client.world.entities.Camera;
  * Chunk
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
- * @category World
+ * @category dimension
  */
 public class Chunk {
 
 	/**
 	 * Chunk Data
 	 */
-	public int dim, posX, posY, posZ, cx, cy, cz;
+	public int posX, posY, posZ, cx, cy, cz;
 	public byte[][][] blocks;
 	public byte[][][] lightMap;
 	private transient Queue<ParticlePoint> particlePoints;
@@ -73,18 +73,17 @@ public class Chunk {
 	 *            Chunk X
 	 * @param cz
 	 *            Chunk Z
-	 * @param world
-	 *            Dimensional World
+	 * @param dimension
+	 *            Dimensional dimension
 	 */
-	public Chunk(int dim, int cx, int cy, int cz, IWorld world, GameResources gm) {
-		this.dim = dim;
+	public Chunk(int cx, int cy, int cz, Dimension dimension, GameResources gm) {
 		this.cx = cx;
 		this.cy = cy;
 		this.cz = cz;
 		this.posX = cx * 16;
 		this.posZ = cz * 16;
 		this.posY = cy * 16;
-		init(world, gm);
+		init(dimension, gm);
 	}
 
 	/**
@@ -96,10 +95,10 @@ public class Chunk {
 	/**
 	 * Initialize Chunk
 	 * 
-	 * @param world
-	 *            Dimensional World
+	 * @param dimension
+	 *            Dimensional dimension
 	 */
-	public void init(IWorld world, GameResources gm) {
+	public void init(Dimension dimension, GameResources gm) {
 		load(gm);
 		blocks = new byte[sizeX][sizeY][sizeZ];
 		lightMap = new byte[sizeX][sizeY][sizeZ];
@@ -122,8 +121,8 @@ public class Chunk {
 			for (int z = 0; z < sizeZ; z++) {
 				for (int y = 0; y < sizeY; y++) {
 					if (Block.getBlock(blocks[x][y][z]) == null) {
-						Logger.warn("Chunk " + dim + " " + cx + " " + cy + " " + cz
-								+ " contains a missing block with ID: " + blocks[x][y][z]);
+						Logger.warn("Chunk " + cx + " " + cy + " " + cz + " contains a missing block with ID: "
+								+ blocks[x][y][z]);
 						blocks[x][y][z] = 0;
 					}
 				}
@@ -131,23 +130,23 @@ public class Chunk {
 		}
 	}
 
-	public void rebuild(WorldService service, IWorld world) {
+	public void rebuild(DimensionService service, Dimension dimension) {
 		if ((needsRebuild || !updated) && !updating) {
 			updating = true;
-			service.add_worker(new ChunkWorkerMesh(world, this));
+			service.add_worker(new ChunkWorkerMesh(dimension, this));
 		}
 	}
 
-	public void update(IWorld world, WorldService service, Camera camera, float delta) {
+	public void update(Dimension dimension, DimensionService service, Camera camera, float delta) {
 		distance = Vector3f.sub(camera.getPosition(), new Vector3f(posX, posY, posZ), null).lengthSquared();
 
 		if (!created && !creating) {
 			creating = true;
-			service.add_worker(new ChunkWorkerGenerator(world, this));
+			service.add_worker(new ChunkWorkerGenerator(dimension, this));
 		}
 		if (!updatingBlocks && !updatedBlocks) {
 			updatingBlocks = true;
-			service.add_worker(new ChunkWorkerUpdate(world, this));
+			service.add_worker(new ChunkWorkerUpdate(dimension, this));
 		}
 
 		if (!decorated) {
@@ -155,30 +154,30 @@ public class Chunk {
 			T: for (int jx = cx - 1; jx < cx + 1; jx++)
 				for (int jz = cz - 1; jz < cz + 1; jz++)
 					for (int jy = cy - 1; jy < cy + 1; jy++)
-						if (!world.hasChunk(dim, jx, jy, jz)) {
+						if (!dimension.hasChunk(jx, jy, jz)) {
 							can = false;
 							break T;
 						}
 
 			if (can)
-				decorate(world);
+				decorate(dimension);
 		}
 	}
 
-	protected void update(IWorld world) {
+	protected void update(Dimension dimension) {
 		particlePoints.clear();
-		rebuildChunkSection(world);
+		rebuildChunkSection(dimension);
 	}
 
-	protected void updateBlocks(IWorld world) {
+	protected void updateBlocks(Dimension dimension) {
 		for (int x = 0; x < sizeX; x++) {
 			for (int z = 0; z < sizeZ; z++) {
 				for (int y = 0; y < sizeY; y++) {
-					if (Block.getBlock(world.getGlobalBlock(x + posX, y + posY, z + posZ)).isAffectedByGravity()) {
-						if (world.getGlobalBlock(x + posX, y + posY - 1, z + posZ) == 0) {
-							world.setGlobalBlock(x + posX, y + posY - 1, z + posZ,
-									world.getGlobalBlock(x + posX, y + posY, z + posZ));
-							world.setGlobalBlock(x + posX, y + posY, z + posZ, (byte) 0);
+					if (Block.getBlock(dimension.getGlobalBlock(x + posX, y + posY, z + posZ)).isAffectedByGravity()) {
+						if (dimension.getGlobalBlock(x + posX, y + posY - 1, z + posZ) == 0) {
+							dimension.setGlobalBlock(x + posX, y + posY - 1, z + posZ,
+									dimension.getGlobalBlock(x + posX, y + posY, z + posZ));
+							dimension.setGlobalBlock(x + posX, y + posY, z + posZ, (byte) 0);
 						}
 
 					}
@@ -189,7 +188,7 @@ public class Chunk {
 
 	}
 
-	protected void createBasicTerrain(IWorld world) {
+	protected void createBasicTerrain(Dimension dimension) {
 		for (int x = 0; x < sizeX; x++) {
 			for (int z = 0; z < sizeZ; z++) {
 				for (int y = 0; y < 128; y++) {
@@ -201,7 +200,7 @@ public class Chunk {
 		}
 		for (int x = 0; x < sizeX; x++) {
 			for (int z = 0; z < sizeZ; z++) {
-				double tempHeight = world.getNoise().getNoise((int) ((x + cx * 16)), (int) ((z + cz * 16)));
+				double tempHeight = dimension.getNoise().getNoise((int) ((x + cx * 16)), (int) ((z + cz * 16)));
 				tempHeight += 1;
 				int height = (int) (128 * Maths.clamp(tempHeight));
 				for (int y = 0; y < height; y++) {
@@ -218,26 +217,26 @@ public class Chunk {
 				}
 			}
 		}
-		world.getChunkGenerator().generateCaves(this, world.getNoise());
+		dimension.getChunkGenerator().generateCaves(this, dimension.getNoise());
 		created = true;
 	}
 
-	protected void decorate(IWorld world) {
+	protected void decorate(Dimension dimension) {
 		for (int i = 0; i < 4; i++) {
 			int xx = Maths.randInt(0, 15);
 			int zz = Maths.randInt(0, 15);
-			double tempHeight = world.getNoise().getNoise((int) ((xx + cx * 16)), (int) ((zz + cz * 16)));
+			double tempHeight = dimension.getNoise().getNoise((int) ((xx + cx * 16)), (int) ((zz + cz * 16)));
 			tempHeight += 1;
 			int height = (int) (128 * Maths.clamp(tempHeight));
 			int h = getLocalBlock(xx, height - 1, zz);
 			if (h == Block.Grass.getId() || h == Block.Dirt.getId())
-				world.getChunkGenerator().addTree(world, xx + cx * 16, height, zz + cz * 16, Maths.randInt(4, 10),
-						world.getSeed());
+				dimension.getChunkGenerator().addTree(dimension, xx + cx * 16, height, zz + cz * 16,
+						Maths.randInt(4, 10), dimension.getSeed());
 		}
 		decorated = true;
 	}
 
-	private void rebuildChunkSection(IWorld world) {
+	private void rebuildChunkSection(Dimension dimension) {
 		tess.begin(BlocksResources.getTessellatorTextureAtlas().getTexture(), BlocksResources.getNormalMap(),
 				BlocksResources.getHeightMap(), BlocksResources.getSpecularMap());
 		for (int x = 0; x < sizeX; x++) {
@@ -246,48 +245,48 @@ public class Chunk {
 					BlockBase block = Block.getBlock(blocks[x][y][z]);
 					if (block == Block.Torch) {
 						block.generateCustomModel(tess, x + posX, y + posY, z + posZ, 1,
-								cullFaceUpSolidBlock(block.getId(), x + posX, y + posY, z + posZ, world),
-								cullFaceDown(block.getId(), x + posX, y + posY, z + posZ, world),
-								cullFaceEast(block.getId(), x + posX, y + posY, z + posZ, world),
-								cullFaceWest(block.getId(), x + posX, y + posY, z + posZ, world),
-								cullFaceNorth(block.getId(), x + posX, y + posY, z + posZ, world),
-								cullFaceSouth(block.getId(), x + posX, y + posY, z + posZ, world),
-								world.getLight(x + posX, y + posY + 1, z + posZ),
-								world.getLight(x + posX, y + posY - 1, z + posZ),
-								world.getLight(x + posX + 1, y + posY, z + posZ),
-								world.getLight(x + posX - 1, y + posY, z + posZ),
-								world.getLight(x + posX, y + posY, z + posZ + 1),
-								world.getLight(x + posX, y + posY, z + posZ - 1));
+								cullFaceUpSolidBlock(block.getId(), x + posX, y + posY, z + posZ, dimension),
+								cullFaceDown(block.getId(), x + posX, y + posY, z + posZ, dimension),
+								cullFaceEast(block.getId(), x + posX, y + posY, z + posZ, dimension),
+								cullFaceWest(block.getId(), x + posX, y + posY, z + posZ, dimension),
+								cullFaceNorth(block.getId(), x + posX, y + posY, z + posZ, dimension),
+								cullFaceSouth(block.getId(), x + posX, y + posY, z + posZ, dimension),
+								dimension.getLight(x + posX, y + posY + 1, z + posZ),
+								dimension.getLight(x + posX, y + posY - 1, z + posZ),
+								dimension.getLight(x + posX + 1, y + posY, z + posZ),
+								dimension.getLight(x + posX - 1, y + posY, z + posZ),
+								dimension.getLight(x + posX, y + posY, z + posZ + 1),
+								dimension.getLight(x + posX, y + posY, z + posZ - 1));
 						particlePoints.add(new ParticlePoint(
 								new Vector3f((x + posX) + 0.5f, (y + posY) + 0.8f, (z + posZ) + 0.5f)));
 					} else if (block != Block.Air && !block.isCustomModel()) {
 						tess.generateCube(x + posX, y + posY, z + posZ, 1,
-								cullFaceUpSolidBlock(block.getId(), x + posX, y + posY, z + posZ, world),
-								cullFaceDown(block.getId(), x + posX, y + posY, z + posZ, world),
-								cullFaceEast(block.getId(), x + posX, y + posY, z + posZ, world),
-								cullFaceWest(block.getId(), x + posX, y + posY, z + posZ, world),
-								cullFaceNorth(block.getId(), x + posX, y + posY, z + posZ, world),
-								cullFaceSouth(block.getId(), x + posX, y + posY, z + posZ, world), block,
-								world.getLight(x + posX, y + posY + 1, z + posZ),
-								world.getLight(x + posX, y + posY - 1, z + posZ),
-								world.getLight(x + posX + 1, y + posY, z + posZ),
-								world.getLight(x + posX - 1, y + posY, z + posZ),
-								world.getLight(x + posX, y + posY, z + posZ + 1),
-								world.getLight(x + posX, y + posY, z + posZ - 1));
+								cullFaceUpSolidBlock(block.getId(), x + posX, y + posY, z + posZ, dimension),
+								cullFaceDown(block.getId(), x + posX, y + posY, z + posZ, dimension),
+								cullFaceEast(block.getId(), x + posX, y + posY, z + posZ, dimension),
+								cullFaceWest(block.getId(), x + posX, y + posY, z + posZ, dimension),
+								cullFaceNorth(block.getId(), x + posX, y + posY, z + posZ, dimension),
+								cullFaceSouth(block.getId(), x + posX, y + posY, z + posZ, dimension), block,
+								dimension.getLight(x + posX, y + posY + 1, z + posZ),
+								dimension.getLight(x + posX, y + posY - 1, z + posZ),
+								dimension.getLight(x + posX + 1, y + posY, z + posZ),
+								dimension.getLight(x + posX - 1, y + posY, z + posZ),
+								dimension.getLight(x + posX, y + posY, z + posZ + 1),
+								dimension.getLight(x + posX, y + posY, z + posZ - 1));
 					} else if (block != Block.Air && block.isCustomModel()) {
 						block.generateCustomModel(tess, x + posX, y + posY, z + posZ, 1,
-								cullFaceUpSolidBlock(block.getId(), x + posX, y + posY, z + posZ, world),
-								cullFaceDown(block.getId(), x + posX, y + posY, z + posZ, world),
-								cullFaceEast(block.getId(), x + posX, y + posY, z + posZ, world),
-								cullFaceWest(block.getId(), x + posX, y + posY, z + posZ, world),
-								cullFaceNorth(block.getId(), x + posX, y + posY, z + posZ, world),
-								cullFaceSouth(block.getId(), x + posX, y + posY, z + posZ, world),
-								world.getLight(x + posX, y + posY + 1, z + posZ),
-								world.getLight(x + posX, y + posY - 1, z + posZ),
-								world.getLight(x + posX + 1, y + posY, z + posZ),
-								world.getLight(x + posX - 1, y + posY, z + posZ),
-								world.getLight(x + posX, y + posY, z + posZ + 1),
-								world.getLight(x + posX, y + posY, z + posZ - 1));
+								cullFaceUpSolidBlock(block.getId(), x + posX, y + posY, z + posZ, dimension),
+								cullFaceDown(block.getId(), x + posX, y + posY, z + posZ, dimension),
+								cullFaceEast(block.getId(), x + posX, y + posY, z + posZ, dimension),
+								cullFaceWest(block.getId(), x + posX, y + posY, z + posZ, dimension),
+								cullFaceNorth(block.getId(), x + posX, y + posY, z + posZ, dimension),
+								cullFaceSouth(block.getId(), x + posX, y + posY, z + posZ, dimension),
+								dimension.getLight(x + posX, y + posY + 1, z + posZ),
+								dimension.getLight(x + posX, y + posY - 1, z + posZ),
+								dimension.getLight(x + posX + 1, y + posY, z + posZ),
+								dimension.getLight(x + posX - 1, y + posY, z + posZ),
+								dimension.getLight(x + posX, y + posY, z + posZ + 1),
+								dimension.getLight(x + posX, y + posY, z + posZ - 1));
 					}
 				}
 			}
@@ -327,87 +326,87 @@ public class Chunk {
 		return distance;
 	}
 
-	private boolean cullFaceWest(byte block, int x, int y, int z, IWorld world) {
+	private boolean cullFaceWest(byte block, int x, int y, int z, Dimension dimension) {
 		if (x > (posX) + 1 && x < (posX) + 16) {
 			if (getLocalBlock(x - 1, y, z) == block)
 				return false;
 			if (Block.getBlock(getLocalBlock(x - 1, y, z)).isTransparent())
 				return true;
 		}
-		if (world.getGlobalBlock(x - 1, y, z) == block)
+		if (dimension.getGlobalBlock(x - 1, y, z) == block)
 			return false;
-		if (Block.getBlock(world.getGlobalBlock(x - 1, y, z)).isTransparent())
+		if (Block.getBlock(dimension.getGlobalBlock(x - 1, y, z)).isTransparent())
 			return true;
 		return false;
 	}
 
-	private boolean cullFaceEast(byte block, int x, int y, int z, IWorld world) {
+	private boolean cullFaceEast(byte block, int x, int y, int z, Dimension dimension) {
 		if (x > (posX) && x < (posX) + 15) {
 			if (getLocalBlock(x + 1, y, z) == block)
 				return false;
 			if (Block.getBlock(getLocalBlock(x + 1, y, z)).isTransparent())
 				return true;
 		}
-		if (world.getGlobalBlock(x + 1, y, z) == block)
+		if (dimension.getGlobalBlock(x + 1, y, z) == block)
 			return false;
-		if (Block.getBlock(world.getGlobalBlock(x + 1, y, z)).isTransparent())
+		if (Block.getBlock(dimension.getGlobalBlock(x + 1, y, z)).isTransparent())
 			return true;
 		return false;
 	}
 
-	private boolean cullFaceDown(byte block, int x, int y, int z, IWorld world) {
+	private boolean cullFaceDown(byte block, int x, int y, int z, Dimension dimension) {
 		if (y > (posY) + 1 && y < (posY) + 16) {
 			if (getLocalBlock(x, y - 1, z) == block)
 				return false;
 			if (Block.getBlock(getLocalBlock(x, y - 1, z)).isTransparent())
 				return true;
 		}
-		if (world.getGlobalBlock(x, y - 1, z) == block)
+		if (dimension.getGlobalBlock(x, y - 1, z) == block)
 			return false;
-		if (Block.getBlock(world.getGlobalBlock(x, y - 1, z)).isTransparent())
+		if (Block.getBlock(dimension.getGlobalBlock(x, y - 1, z)).isTransparent())
 			return true;
 		return false;
 	}
 
-	private boolean cullFaceUpSolidBlock(byte block, int x, int y, int z, IWorld world) {
+	private boolean cullFaceUpSolidBlock(byte block, int x, int y, int z, Dimension dimension) {
 		if (y > (posY) && y < (posY) + 15) {
 			if (getLocalBlock(x, y + 1, z) == block)
 				return false;
 			if (Block.getBlock(getLocalBlock(x, y + 1, z)).isTransparent())
 				return true;
 		}
-		if (world.getGlobalBlock(x, y + 1, z) == block)
+		if (dimension.getGlobalBlock(x, y + 1, z) == block)
 			return false;
-		if (Block.getBlock(world.getGlobalBlock(x, y + 1, z)).isTransparent())
+		if (Block.getBlock(dimension.getGlobalBlock(x, y + 1, z)).isTransparent())
 			return true;
 		return false;
 	}
 
-	private boolean cullFaceNorth(byte block, int x, int y, int z, IWorld world) {
+	private boolean cullFaceNorth(byte block, int x, int y, int z, Dimension dimension) {
 		if (z > (posZ) + 1 && z < (posZ) + 16) {
 			if (getLocalBlock(x, y, z - 1) == block)
 				return false;
 			if (Block.getBlock(getLocalBlock(x, y, z - 1)).isTransparent())
 				return true;
 		}
-		if (world.getGlobalBlock(x, y, z - 1) == block)
+		if (dimension.getGlobalBlock(x, y, z - 1) == block)
 			return false;
-		if (Block.getBlock(world.getGlobalBlock(x, y, z - 1)).isTransparent())
+		if (Block.getBlock(dimension.getGlobalBlock(x, y, z - 1)).isTransparent())
 			return true;
 		return false;
 	}
 
-	private boolean cullFaceSouth(byte block, int x, int y, int z, IWorld world) {
+	private boolean cullFaceSouth(byte block, int x, int y, int z, Dimension dimension) {
 		if (z > (posZ) && z < (posZ) + 15) {
 			if (getLocalBlock(x, y, z + 1) == block)
 				return false;
 			if (Block.getBlock(getLocalBlock(x, y, z + 1)).isTransparent())
 				return true;
 		}
-		if (world.getGlobalBlock(x, y, z + 1) == block)
+		if (dimension.getGlobalBlock(x, y, z + 1) == block)
 			return false;
 
-		if (Block.getBlock(world.getGlobalBlock(x, y, z + 1)).isTransparent())
+		if (Block.getBlock(dimension.getGlobalBlock(x, y, z + 1)).isTransparent())
 			return true;
 		return false;
 	}

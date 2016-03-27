@@ -23,31 +23,28 @@ package net.luxvacuos.voxel.client.world;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.luxvacuos.igl.Logger;
-
 public class WorldsHandler {
 
-	private Map<String, IWorld> worlds;
-	private IWorld activeWorld;
+	private Map<String, World> worlds;
+	private World activeWorld;
 
 	public WorldsHandler() {
 		init();
 	}
 
 	public void init() {
-		worlds = new HashMap<String, IWorld>();
+		worlds = new HashMap<String, World>();
 	}
 
-	public void registerWorld(String name, IWorld world) {
-		worlds.put(name, world);
-		Logger.log("The World type " + name + " has been successfully registered");
+	public void registerWorld(World world) {
+		worlds.put(world.getName(), world);
 	}
 
 	public void setActiveWorld(String name) {
 		activeWorld = worlds.get(name);
 	}
 
-	public IWorld getActiveWorld() {
+	public World getActiveWorld() {
 		return activeWorld;
 	}
 
