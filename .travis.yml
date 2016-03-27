@@ -44,3 +44,4 @@ install: gradle assemble
 
 script:
   - LIBGL_ALWAYS_SOFTWARE=1 gradle test
+  - curl https://build.luxvacuos.net/git/notifyCommit?url=https://github.com/Lux-Vacuos/Voxel.git
