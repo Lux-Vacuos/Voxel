@@ -26,6 +26,10 @@ import net.luxvacuos.voxel.client.world.block.BlocksResources;
 
 public class BlockSand extends BlockBase {
 
+	public BlockSand() {
+		affectedByGravity = true;
+	}
+
 	@Override
 	public byte getId() {
 		return 3;

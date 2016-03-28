@@ -22,13 +22,11 @@ package net.luxvacuos.voxel.client.world;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 
 import net.luxvacuos.voxel.client.resources.GameResources;
 
 public abstract class World {
 
-	protected Random seed;
 	protected String name;
 	protected Dimension activeDimension;
 
@@ -40,9 +38,6 @@ public abstract class World {
 	}
 
 	public abstract void init(GameResources gm);
-
-	public void load(GameResources gm) {
-	}
 
 	public void addDimension(Dimension dim) {
 		dimensions.put(dim.getDimensionID(), dim);
@@ -56,6 +51,12 @@ public abstract class World {
 		this.activeDimension = dim;
 	}
 
+	public void switchDimension(int id, GameResources gm) {
+		activeDimension.getPhysicsEngine().removeEntity(gm.getCamera());
+		activeDimension = getDimension(id);
+		activeDimension.getPhysicsEngine().addEntity(gm.getCamera());
+	}
+
 	public Dimension getActiveDimension() {
 		return activeDimension;
 	}
@@ -63,9 +64,11 @@ public abstract class World {
 	public String getName() {
 		return name;
 	}
-
-	public Random getSeed() {
-		return seed;
+	
+	public void dispose(GameResources gm){
+		for (Dimension dim : dimensions.values()) {
+			dim.clearDimension(gm);
+		}
 	}
 
 	public Map<Integer, Dimension> getDimensions() {

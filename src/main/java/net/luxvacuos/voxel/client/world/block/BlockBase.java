@@ -34,6 +34,7 @@ public abstract class BlockBase {
 	protected boolean transparent = false;
 	protected boolean customModel = false;
 	protected boolean affectedByGravity = false;
+	protected boolean collision = true;
 
 	public abstract byte getId();
 
@@ -84,5 +85,9 @@ public abstract class BlockBase {
 
 	public boolean isAffectedByGravity() {
 		return affectedByGravity;
+	}
+
+	public boolean isCollision() {
+		return collision;
 	}
 }

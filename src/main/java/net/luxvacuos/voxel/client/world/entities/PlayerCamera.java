@@ -22,9 +22,7 @@ package net.luxvacuos.voxel.client.world.entities;
 
 import static net.luxvacuos.voxel.client.input.Keyboard.KEY_A;
 import static net.luxvacuos.voxel.client.input.Keyboard.KEY_D;
-import static net.luxvacuos.voxel.client.input.Keyboard.KEY_I;
 import static net.luxvacuos.voxel.client.input.Keyboard.KEY_LSHIFT;
-import static net.luxvacuos.voxel.client.input.Keyboard.KEY_O;
 import static net.luxvacuos.voxel.client.input.Keyboard.KEY_S;
 import static net.luxvacuos.voxel.client.input.Keyboard.KEY_SPACE;
 import static net.luxvacuos.voxel.client.input.Keyboard.KEY_T;
@@ -40,13 +38,13 @@ import net.luxvacuos.igl.vector.Matrix4f;
 import net.luxvacuos.igl.vector.Vector2f;
 import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.igl.vector.Vector4f;
-import net.luxvacuos.voxel.client.core.VoxelVariables;
 import net.luxvacuos.voxel.client.input.Keyboard;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Display;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.util.Maths;
 import net.luxvacuos.voxel.client.world.Dimension;
 import net.luxvacuos.voxel.client.world.block.Block;
+import net.luxvacuos.voxel.universal.resources.UniversalResources;
 
 public class PlayerCamera extends Camera {
 
@@ -60,7 +58,7 @@ public class PlayerCamera extends Camera {
 	private int clickTime;
 
 	public PlayerCamera(Matrix4f proj, Display display) {
-		super(proj, new Vector3f(-0.25f, -1.2f, -0.25f), new Vector3f(0.25f, 0.2f, 0.25f));
+		super(proj, new Vector3f(-0.25f, -1.4f, -0.25f), new Vector3f(0.25f, 0.2f, 0.25f));
 		center = new Vector2f(display.getDisplayWidth() / 2, display.getDisplayHeight() / 2);
 		this.speed = 3f;
 	}
@@ -143,13 +141,17 @@ public class PlayerCamera extends Camera {
 		} else {
 			speed = 3;
 		}
-
-		if (isKeyDown(Keyboard.KEY_Y)) {
-			System.out.println(positionComponent.toString());
-			System.out.println(velocityComponent.toString());
-		}
-
+		/*
+		 * if (isKeyDown(Keyboard.KEY_Y)) {
+		 * gm.getWorldsHandler().getActiveWorld().switchDimension(0, gm); } if
+		 * (isKeyDown(Keyboard.KEY_O)) {
+		 * gm.getWorldsHandler().getActiveWorld().switchDimension(1, gm); }
+		 */
 		if (isKeyDown(KEY_T)) {
+			gm.getWorldsHandler().getActiveWorld().getActiveDimension().getPhysicsEngine()
+					.addEntity(new GameEntity(UniversalResources.player, getPosition(), new Vector3f(-1, -1, -1),
+							new Vector3f(1, 1, 1), velocityComponent.velocity.x, velocityComponent.velocity.y,
+							velocityComponent.velocity.z, 0, 0, 0, 1));
 		}
 
 		if (clickTime > 0)
@@ -164,21 +166,9 @@ public class PlayerCamera extends Camera {
 				setBlock(gm.getDisplay().getDisplayWidth(), gm.getDisplay().getDisplayHeight(), Block.Torch.getId(),
 						world, gm);
 			}
-		if (isKeyDown(Keyboard.KEY_Y))
-			world.setGlobalBlock(bx, by - 1, bz, Block.Lava.getId());
 
-		updateDebug(world);
 		updateRay(gm.getRenderer().getProjectionMatrix(), gm.getDisplay().getDisplayWidth(),
 				gm.getDisplay().getDisplayHeight(), center);
-	}
-
-	public void updateDebug(Dimension world) {
-		if (isKeyDown(KEY_I)) {
-			VoxelVariables.radius++;
-		}
-		if (isKeyDown(KEY_O)) {
-			VoxelVariables.radius--;
-		}
 	}
 
 	private void setBlock(int ww, int wh, byte block, Dimension world, GameResources gm) {
@@ -208,13 +198,13 @@ public class PlayerCamera extends Camera {
 
 		int bx = (int) tempX;
 		int by = (int) tempY;
-		int bz = (int) tempZ;
+		int bz = (int) tempZ - 1;
 
 		if (block == Block.Torch.getId())
 			world.addLight(bx, by, bz, 14);
 		if (block == Block.Air.getId() && world.getGlobalBlock(bx, by, bz) != Block.Air.getId())
 			world.getPhysicsEngine().addEntity(Block.getBlock(world.getGlobalBlock(bx, by, bz)).getDrop(gm,
-					new Vector3f(bx + 0.5f, by + 0.5f, bz - 0.5f)));
+					new Vector3f(bx + 0.5f, by + 0.5f, bz + 0.5f)));
 		if (block == Block.Air.getId() && world.getGlobalBlock(bx, by, bz) == Block.Torch.getId())
 			world.removeLight(bx, by, bz, 0);
 		world.setGlobalBlock(bx, by, bz, block);

@@ -48,7 +48,7 @@ public class VoxelVariables {
 	public static boolean hideHud = false;
 	public static boolean onServer = false;
 	public static final String version = "0.0.10";
-	public static final int build = 192;
+	public static final int build = 193;
 	public static int FOV = 90;
 	public static int WIDTH = 1280;
 	public static int HEIGHT = 720;
@@ -90,9 +90,6 @@ public class VoxelVariables {
 	public static boolean generateChunks = true;
 	public static final int CHUNK_SIZE = 16;
 	public static final int CHUNK_HEIGHT = 16;
-	public static final int DIM_0 = 0;
-	public static final int DIM_1 = 1;
-	public static final float GRAVITY = -10;
 	/**
 	 * Shader Files
 	 */

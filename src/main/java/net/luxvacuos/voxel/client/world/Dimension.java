@@ -25,6 +25,7 @@ import static org.lwjgl.opengl.GL15.glGetQueryObjectui;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,13 +42,14 @@ import com.esotericsoftware.kryo.io.Output;
 
 import net.luxvacuos.igl.Logger;
 import net.luxvacuos.igl.vector.Vector3f;
-import net.luxvacuos.voxel.client.core.VoxelVariables;
 import net.luxvacuos.voxel.client.core.GlobalStates.InternalState;
+import net.luxvacuos.voxel.client.core.VoxelVariables;
 import net.luxvacuos.voxel.client.particle.ParticlePoint;
 import net.luxvacuos.voxel.client.particle.ParticleSystem;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.util.Maths;
 import net.luxvacuos.voxel.client.world.block.Block;
+import net.luxvacuos.voxel.client.world.block.BlockBase;
 import net.luxvacuos.voxel.client.world.chunks.Chunk;
 import net.luxvacuos.voxel.client.world.chunks.ChunkGenerator;
 import net.luxvacuos.voxel.client.world.chunks.ChunkKey;
@@ -69,7 +71,6 @@ public abstract class Dimension {
 	 */
 	private int chunkDim;
 	private Map<ChunkKey, Chunk> chunks;
-	private Random seed;
 	private SimplexNoise noise;
 	private String name;
 	private int xPlayChunk;
@@ -77,6 +78,7 @@ public abstract class Dimension {
 	private int yPlayChunk;
 	private int tempRadius = 0;
 	private int seedi;
+	private DimensionData data;
 	private ChunkGenerator chunkGenerator;
 	private Queue<LightNodeAdd> lightNodeAdds;
 	private Queue<LightNodeRemoval> lightNodeRemovals;
@@ -90,14 +92,19 @@ public abstract class Dimension {
 
 	public Dimension(String name, Random seed, int chunkDim, GameResources gm) {
 		this.name = name;
-		this.seed = seed;
 		this.chunkDim = chunkDim;
-		gm.getCamera().setPosition(new Vector3f(0, 140, 0));
+		data = new DimensionData();
+		data.addObject("Seed", seed.hashCode());
 
 		File filec = new File(VoxelVariables.worldPath + name + "/dimension_" + chunkDim);
 		if (!filec.exists())
 			filec.mkdirs();
-
+		if (existDimFile())
+			try {
+				load(gm);
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			}
 		init(gm);
 	}
 
@@ -107,7 +114,7 @@ public abstract class Dimension {
 		particleSystem.setLifeError(0.8f);
 		particleSystem.setScaleError(0.2f);
 		particleSystem.setSpeedError(0.2f);
-		seedi = seed.nextInt();
+		seedi = (int) data.getObject("Seed");
 		noise = new SimplexNoise(256, 0.15f, seedi);
 		lightNodeAdds = new LinkedList<>();
 		lightNodeRemovals = new LinkedList<>();
@@ -119,30 +126,16 @@ public abstract class Dimension {
 		physicsEngine.addSystem(physicsSystem);
 	}
 
-	public void createDimension(GameResources gm) {
-		Logger.log("Generating Dimension " + chunkDim);
-		xPlayChunk = (int) (gm.getCamera().getPosition().x / 16);
-		zPlayChunk = (int) (gm.getCamera().getPosition().z / 16);
-		yPlayChunk = (int) (gm.getCamera().getPosition().y / 16);
-		for (int zr = -4; zr <= 4; zr++) {
-			int zz = zPlayChunk + zr;
-			for (int xr = -4; xr <= 4; xr++) {
-				int xx = xPlayChunk + xr;
-				for (int yr = -4; yr <= 4; yr++) {
-					int yy = yPlayChunk + yr;
-					if (zr * zr + xr * xr + yr * yr < 4 * 4 * 4) {
-						if (!hasChunk(xx, yy, zz)) {
-							if (existChunkFile(xx, yy, zz)) {
-								loadChunk(xx, yy, zz, gm);
-							} else {
-								addChunk(new Chunk(xx, yy, zz, this, gm));
-								saveChunk(xx, yy, zz, gm);
-							}
-						}
-					}
-				}
-			}
-		}
+	private void load(GameResources gm) throws FileNotFoundException {
+		Input input = new Input(new FileInputStream(VoxelVariables.worldPath + name + "/dim_" + chunkDim + ".dat"));
+		data = gm.getKryo().readObject(input, DimensionData.class);
+		input.close();
+	}
+
+	private void save(GameResources gm) throws FileNotFoundException {
+		Output output = new Output(new FileOutputStream(VoxelVariables.worldPath + name + "/dim_" + chunkDim + ".dat"));
+		gm.getKryo().writeObject(output, data);
+		output.close();
 	}
 
 	public void updateChunksGeneration(GameResources gm, float delta) {
@@ -377,9 +370,12 @@ public abstract class Dimension {
 	}
 
 	public boolean existChunkFile(int cx, int cy, int cz) {
-		File file = new File(VoxelVariables.worldPath + name + "/dimension_" + chunkDim + "/chunk_" + cx + "_" + cy
-				+ "_" + cz + ".dat");
-		return file.exists();
+		return new File(VoxelVariables.worldPath + name + "/dimension_" + chunkDim + "/chunk_" + cx + "_" + cy + "_"
+				+ cz + ".dat").exists();
+	}
+
+	public boolean existDimFile() {
+		return new File(VoxelVariables.worldPath + name + "/dim_" + chunkDim + ".dat").exists();
 	}
 
 	public Chunk getChunk(int cx, int cy, int cz) {
@@ -467,10 +463,9 @@ public abstract class Dimension {
 			for (int j = (int) Math.floor(box.min.y); j < (int) Math.ceil(box.max.y); j++) {
 				for (int k = (int) Math.floor(box.min.z); k < (int) Math.ceil(box.max.z); k++) {
 					vec.set(i, j, k);
-					BoundingBox cmp = Block.getBlock(getGlobalBlock(i, j, k)).getBoundingBox(vec);
-					if (cmp != null) {
-						array.add(cmp);
-					}
+					BlockBase block = Block.getBlock(getGlobalBlock(i, j, k));
+					if (block.isCollision())
+						array.add(block.getBoundingBox(vec));
 				}
 			}
 		}
@@ -527,6 +522,11 @@ public abstract class Dimension {
 		if (!saving) {
 			saving = true;
 			Logger.log("Saving Dimension " + chunkDim);
+			try {
+				save(gm);
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			}
 			for (int zr = -VoxelVariables.genRadius; zr <= VoxelVariables.genRadius; zr++) {
 				int zz = zPlayChunk + zr;
 				for (int xr = -VoxelVariables.genRadius; xr <= VoxelVariables.genRadius; xr++) {
@@ -537,6 +537,7 @@ public abstract class Dimension {
 								* VoxelVariables.genRadius) {
 							if (hasChunk(xx, yy, zz)) {
 								saveChunk(xx, yy, zz, gm);
+								removeChunk(getChunk(xx, yy, zz));
 							}
 						}
 					}
@@ -546,6 +547,9 @@ public abstract class Dimension {
 			chunks.clear();
 			saving = false;
 		}
+	}
+
+	public void disposeGraphics() {
 	}
 
 	public int getzPlayChunk() {
@@ -568,14 +572,14 @@ public abstract class Dimension {
 		return noise;
 	}
 
-	public Random getSeed() {
-		return seed;
+	public int getSeed() {
+		return seedi;
 	}
 
 	public ChunkGenerator getChunkGenerator() {
 		return chunkGenerator;
 	}
-	
+
 	public Engine getPhysicsEngine() {
 		return physicsEngine;
 	}

@@ -20,6 +20,7 @@
 
 package net.luxvacuos.voxel.client.core.states;
 
+import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.voxel.client.core.GlobalStates;
 import net.luxvacuos.voxel.client.core.GlobalStates.GameState;
 import net.luxvacuos.voxel.client.core.State;
@@ -54,8 +55,8 @@ public class LoadingSPState implements State {
 		gm.getWorldsHandler().registerWorld(new DefaultWorld(gm.getMenuSystem().worldSelectionMenu.getWorldName()));
 		gm.getWorldsHandler().setActiveWorld(gm.getMenuSystem().worldSelectionMenu.getWorldName());
 		gm.getWorldsHandler().getActiveWorld().init(gm);
-		gm.getWorldsHandler().getActiveWorld().getActiveDimension().createDimension(gm);
 		gm.getWorldsHandler().getActiveWorld().getActiveDimension().getPhysicsEngine().addEntity(gm.getCamera());
+		gm.getCamera().setPosition(new Vector3f(0, 140, 0));
 		((PlayerCamera) gm.getCamera()).setMouse(gm.getDisplay());
 		gm.getSoundSystem().rewind("menu1");
 		gm.getSoundSystem().stop("menu1");

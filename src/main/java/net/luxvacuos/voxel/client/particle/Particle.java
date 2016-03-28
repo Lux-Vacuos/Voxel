@@ -22,7 +22,6 @@ package net.luxvacuos.voxel.client.particle;
 
 import net.luxvacuos.igl.vector.Vector2f;
 import net.luxvacuos.igl.vector.Vector3f;
-import net.luxvacuos.voxel.client.core.VoxelVariables;
 import net.luxvacuos.voxel.client.world.entities.Camera;
 
 public class Particle {
@@ -56,7 +55,7 @@ public class Particle {
 	}
 
 	public boolean update(float delta, Camera camera) {
-		velocity.y += VoxelVariables.GRAVITY * gravityEffect * delta;
+		velocity.y += -9.8 * gravityEffect * delta;
 		Vector3f change = new Vector3f(velocity);
 		change.scale(delta);
 		Vector3f.add(change, position, position);

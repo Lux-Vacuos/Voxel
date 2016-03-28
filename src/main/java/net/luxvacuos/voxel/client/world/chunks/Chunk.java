@@ -25,6 +25,7 @@ import static org.lwjgl.opengl.GL15.glBeginQuery;
 import static org.lwjgl.opengl.GL15.glEndQuery;
 
 import java.util.Queue;
+import java.util.Random;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import net.luxvacuos.igl.Logger;
@@ -231,7 +232,7 @@ public class Chunk {
 			int h = getLocalBlock(xx, height - 1, zz);
 			if (h == Block.Grass.getId() || h == Block.Dirt.getId())
 				dimension.getChunkGenerator().addTree(dimension, xx + cx * 16, height, zz + cz * 16,
-						Maths.randInt(4, 10), dimension.getSeed());
+						Maths.randInt(4, 10), new Random(dimension.getSeed()));
 		}
 		decorated = true;
 	}
