@@ -20,6 +20,7 @@
 
 package net.luxvacuos.voxel.client.menu;
 
+import net.luxvacuos.voxel.client.api.MoltenAPI;
 import net.luxvacuos.voxel.client.core.CoreInfo;
 import net.luxvacuos.voxel.client.core.VoxelVariables;
 import net.luxvacuos.voxel.client.input.Mouse;
@@ -52,8 +53,8 @@ public class GameSP {
 
 		if (VoxelVariables.debug) {
 			VectorsRendering.renderText(
-					"Voxel " + VoxelVariables.version + " (" + VoxelVariables.state + "-Build " + VoxelVariables.build
-							+ ")",
+					"Voxel " + " (" + VoxelVariables.version + "/" + VoxelVariables.build + ")" + " Molten API" + " ("
+							+ MoltenAPI.apiVersion + "/" + MoltenAPI.build + ")",
 					"Roboto-Bold", 5 * xScale, 12 * yScale, 25 * yScale,
 					VectorsRendering.rgba(160, 160, 160, 200, VectorsRendering.colorA),
 					VectorsRendering.rgba(255, 255, 255, 255, VectorsRendering.colorB));

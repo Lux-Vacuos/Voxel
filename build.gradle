@@ -5,7 +5,8 @@ apply plugin:'application'
 
 mainClassName = 'net.luxvacuos.voxel.client.bootstrap.Bootstrap'
 sourceCompatibility = 1.8
-def build = 191
+def build = 192
+def apiBuild = 1
 
 if (System.getProperty("os.name").toLowerCase().contains("mac os x")) {
   applicationDefaultJvmArgs = ["-XstartOnFirstThread"]
@@ -50,7 +51,7 @@ task apiJar(type: Jar) {
     from(sourceSets.main.output) {  
         include "net/luxvacuos/voxel/client/api/**" 
     } 
-	version "0.0.6-" + build
+	version "0.0.1-" + apiBuild
 	baseName "MoltenAPI"
 }
 

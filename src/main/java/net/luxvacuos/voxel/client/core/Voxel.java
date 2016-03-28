@@ -30,6 +30,7 @@ import org.lwjgl.glfw.GLFW;
 
 import net.luxvacuos.igl.Logger;
 import net.luxvacuos.voxel.client.api.ModInitialization;
+import net.luxvacuos.voxel.client.api.MoltenAPI;
 import net.luxvacuos.voxel.client.api.VersionException;
 import net.luxvacuos.voxel.client.bootstrap.Bootstrap;
 import net.luxvacuos.voxel.client.core.GlobalStates.InternalState;
@@ -74,8 +75,9 @@ public class Voxel {
 		Logger.log("Starting Client");
 		gameResources = GameResources.instance();
 		Logger.log("Voxel Version: " + VoxelVariables.version);
-		Logger.log("Molten API Version: " + VoxelVariables.apiVersion);
 		Logger.log("Build: " + VoxelVariables.build);
+		Logger.log("Molten API Version: " + MoltenAPI.apiVersion);
+		Logger.log("Build: " + MoltenAPI.build);
 		Logger.log("Running on: " + Bootstrap.getPlatform());
 		Logger.log("LWJGL Version: " + Version.getVersion());
 		Logger.log("GLFW Version: " + GLFW.glfwGetVersionString());

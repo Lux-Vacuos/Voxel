@@ -35,29 +35,34 @@ public class MoltenAPI {
 	private GameResources gm;
 	private List<ModStateLoop> modStateLoops;
 
+	public static final String apiVersion = "0.0.1";
+	public static final int apiIntVersion = 1;
+	public static final int build = 1;
+
 	public MoltenAPI(GameResources gm) {
 		this.gm = gm;
 		modStateLoops = new ArrayList<>();
 	}
 
-	public void registetEntity(Entity mob) {
-		// TODO: Implement
+	/**
+	 * 
+	 * Add an entity to the specified dimension
+	 * 
+	 * @param dimID
+	 *            Dimension ID
+	 * @param entity
+	 *            Entity to add
+	 */
+	public void addEntity(int dimID, Entity entity) {
+		gm.getWorldsHandler().getActiveWorld().getDimension(dimID).getPhysicsEngine().addEntity(entity);
 	}
 
-	public void removeEntity(Entity entity) {
-		//TODO: Implement
+	public void removeEntity(int dimID, Entity entity) {
+		gm.getWorldsHandler().getActiveWorld().getDimension(dimID).getPhysicsEngine().removeEntity(entity);
 	}
 
 	public void registerBlock(BlockBase block) {
 		Block.registerBlock(block);
-	}
-
-	public void registerSaveData(String key, String value) {
-		gm.getGameSettings().registerValue(key, value);
-	}
-
-	public String getSaveData(String key) {
-		return gm.getGameSettings().getValue(key);
 	}
 
 	public void registerModStateLoop(ModStateLoop modStateLoop) {
@@ -65,7 +70,7 @@ public class MoltenAPI {
 	}
 
 	/**
-	 * NOT USE THIS!!!!!!
+	 * <h1>NOT USE THIS!!!!!!</h1>
 	 * 
 	 * <p>
 	 * This is used internally for calling all modStates

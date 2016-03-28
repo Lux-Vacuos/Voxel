@@ -25,7 +25,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import net.luxvacuos.voxel.client.core.VoxelVariables;
+import net.luxvacuos.voxel.client.api.MoltenAPI;
 
 /**
  * Mod
@@ -41,6 +41,6 @@ public @interface MoltenAPIMod {
 
 	public String name() default "";
 
-	public int requiredAPIVersion() default VoxelVariables.apiVersionNum;
+	public int requiredAPIVersion() default MoltenAPI.apiIntVersion;
 
 }

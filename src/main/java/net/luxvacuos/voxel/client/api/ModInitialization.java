@@ -29,7 +29,6 @@ import java.util.Map;
 import net.luxvacuos.igl.Logger;
 import net.luxvacuos.voxel.client.api.mod.MoltenAPIInitPhase;
 import net.luxvacuos.voxel.client.api.mod.MoltenAPIMod;
-import net.luxvacuos.voxel.client.core.VoxelVariables;
 import net.luxvacuos.voxel.client.resources.GameResources;
 
 /**
@@ -67,7 +66,7 @@ public class ModInitialization {
 			Logger.log("Mod: " + info.name());
 			Logger.log("Author: " + info.createdBy());
 			Logger.log("Required Molten API Verion: " + info.requiredAPIVersion());
-			if (info.requiredAPIVersion() > VoxelVariables.apiVersionNum)
+			if (info.requiredAPIVersion() > MoltenAPI.apiIntVersion)
 				throw new VersionException("THE MOD " + info.name() + " REQUIRES AN API VERSION EQUAL OR MORE THAT "
 						+ info.requiredAPIVersion());
 			Method method;

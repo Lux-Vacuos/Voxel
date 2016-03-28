@@ -99,10 +99,9 @@ public abstract class Dimension {
 			filec.mkdirs();
 
 		init(gm);
-		createDimension(gm);
 	}
 
-	public void init(GameResources gm) {
+	private void init(GameResources gm) {
 		particleSystem = new ParticleSystem(gm.getTorchTexture(), 2, 1, -0.01f, 4, 0.5f);
 		particleSystem.setDirection(new Vector3f(0, 1, 0), 0.1f);
 		particleSystem.setLifeError(0.8f);
@@ -121,7 +120,7 @@ public abstract class Dimension {
 	}
 
 	public void createDimension(GameResources gm) {
-		Logger.log("Generating World");
+		Logger.log("Generating Dimension " + chunkDim);
 		xPlayChunk = (int) (gm.getCamera().getPosition().x / 16);
 		zPlayChunk = (int) (gm.getCamera().getPosition().z / 16);
 		yPlayChunk = (int) (gm.getCamera().getPosition().y / 16);
@@ -325,7 +324,7 @@ public abstract class Dimension {
 			}
 	}
 
-	public void setupLightRemove(int x, int y, int z, int lightLevel) {
+	private void setupLightRemove(int x, int y, int z, int lightLevel) {
 		int cx = x >> 4;
 		int cz = z >> 4;
 		int cy = y >> 4;
@@ -343,7 +342,7 @@ public abstract class Dimension {
 		}
 	}
 
-	public void saveChunk(int cx, int cy, int cz, GameResources gm) {
+	private void saveChunk(int cx, int cy, int cz, GameResources gm) {
 		try {
 			Output output = new Output(new FileOutputStream(VoxelVariables.worldPath + name + "/dimension_" + chunkDim
 					+ "/chunk_" + cx + "_" + cy + "_" + cz + ".dat"));
@@ -527,7 +526,7 @@ public abstract class Dimension {
 	public void clearDimension(GameResources gm) {
 		if (!saving) {
 			saving = true;
-			Logger.log("Saving World");
+			Logger.log("Saving Dimension " + chunkDim);
 			for (int zr = -VoxelVariables.genRadius; zr <= VoxelVariables.genRadius; zr++) {
 				int zz = zPlayChunk + zr;
 				for (int xr = -VoxelVariables.genRadius; xr <= VoxelVariables.genRadius; xr++) {

@@ -24,6 +24,7 @@ import static org.lwjgl.nanovg.NanoVG.*;
 import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_MIDDLE;
 
 import net.luxvacuos.igl.vector.Vector2f;
+import net.luxvacuos.voxel.client.api.MoltenAPI;
 import net.luxvacuos.voxel.client.core.CoreInfo;
 import net.luxvacuos.voxel.client.core.VoxelVariables;
 import net.luxvacuos.voxel.client.input.Mouse;
@@ -99,8 +100,8 @@ public class AboutMenu {
 				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorA),
 				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorB));
 		VectorsRendering.renderText(
-				VoxelVariables.version + " (" + VoxelVariables.state + "/Build " + VoxelVariables.build + ")"
-						+ " Molten API " + VoxelVariables.apiVersion,
+				" (" + VoxelVariables.version + "/" + VoxelVariables.build + ")" + " Molten API" + " ("
+						+ MoltenAPI.apiVersion + "/" + MoltenAPI.build + ")",
 				"Roboto-Regular", NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE, 1180 * xScale, (300 + globalY) * yScale,
 				40 * yScale, VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorA),
 				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorB));
