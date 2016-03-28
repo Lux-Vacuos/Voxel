@@ -55,7 +55,6 @@ task apiJar(type: Jar) {
 }
 
 jar {
-	tasks.apiJar.execute()
 	exclude "net/luxvacuos/voxel/client/api/**" 
 	version = "0.0.10-" + build
 	manifest {
