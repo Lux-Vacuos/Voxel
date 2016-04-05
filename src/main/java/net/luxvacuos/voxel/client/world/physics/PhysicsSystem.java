@@ -31,6 +31,7 @@ import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 
+import javafx.geometry.Pos;
 import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.world.Dimension;
@@ -63,9 +64,23 @@ public class PhysicsSystem extends EntitySystem {
 	public void processItems(GameResources gm) {
 		for (Entity entity : entities) {
 			if (entity instanceof ItemDropBase) {
+				tmp.set(0, 0, 0);
 				if (Vector3f
 						.sub(entity.getComponent(PositionComponent.class).position, gm.getCamera().getPosition(), tmp)
 						.lengthSquared() < 2) {
+					for (int x = 0; x < gm.getMenuSystem().gameSP.getItems().length; x++) {
+						if (gm.getMenuSystem().gameSP.getItems()[x].getBlock().getId() == ((ItemDropBase) entity)
+								.getBlock().getId()) {
+							gm.getMenuSystem().gameSP.getItems()[x].setBlock(((ItemDropBase) entity).getBlock());
+							gm.getMenuSystem().gameSP.getItems()[x]
+									.setTotal(gm.getMenuSystem().gameSP.getItems()[x].getTotal() + 1);
+							break;
+						} else if (gm.getMenuSystem().gameSP.getItems()[x].getBlock().getId() == 0) {
+							gm.getMenuSystem().gameSP.getItems()[x].setBlock(((ItemDropBase) entity).getBlock());
+							gm.getMenuSystem().gameSP.getItems()[x].setTotal(1);
+							break;
+						}
+					}
 					getEngine().removeEntity(entity);
 				}
 			}
@@ -80,18 +95,17 @@ public class PhysicsSystem extends EntitySystem {
 			VelocityComponent velocity = vm.get(entity);
 			CollisionComponent collison = cm.get(entity);
 
+			velocity.velocity.x *= 0.4f - velocity.velocity.x * 0.002f;
+			velocity.velocity.z *= 0.4f - velocity.velocity.z * 0.002f;
 			velocity.velocity.y += -9.8f * deltaTime;
-
-			velocity.velocity.x *= 0.4f - velocity.velocity.x * 0.01f;
-			velocity.velocity.z *= 0.4f - velocity.velocity.z * 0.01f;
 
 			collison.update(position.position);
 			boxes = dim.getGlobalBoundingBox(collison.boundingBox);
 
 			for (BoundingBox boundingBox : boxes) {
 				normalTMP.set(0, 0, 0);
-				if (AABBIntersect(collison.boundingBox.min, collison.boundingBox.max, boundingBox.min, boundingBox.max,
-						depthTMP, faceTMP)) {
+				if (AABBIntersect(collison.boundingBox.min, collison.boundingBox.max, boundingBox.min,
+						boundingBox.max)) {
 					if (normalTMP.x > 0 && velocity.velocity.x > 0)
 						velocity.velocity.x = 0;
 					if (normalTMP.x < 0 && velocity.velocity.x < 0)
@@ -99,8 +113,10 @@ public class PhysicsSystem extends EntitySystem {
 
 					if (normalTMP.y > 0 && velocity.velocity.y > 0)
 						velocity.velocity.y = 0;
-					if (normalTMP.y < 0 && velocity.velocity.y < 0)
+					if (normalTMP.y < 0 && velocity.velocity.y < 0) {
 						velocity.velocity.y = 0;
+						position.position.y += depthTMP;
+					}
 
 					if (normalTMP.z > 0 && velocity.velocity.z > 0)
 						velocity.velocity.z = 0;
@@ -116,8 +132,7 @@ public class PhysicsSystem extends EntitySystem {
 		}
 	}
 
-	private boolean AABBIntersect(final Vector3 mina, final Vector3 maxa, final Vector3 minb, final Vector3 maxb,
-			float depthColl, int faceColl) {
+	private boolean AABBIntersect(final Vector3 mina, final Vector3 maxa, final Vector3 minb, final Vector3 maxb) {
 		final Vector3 faces[] = { new Vector3(-1, 0, 0), new Vector3(1, 0, 0), new Vector3(0, -1, 0),
 				new Vector3(0, 1, 0), new Vector3(0, 0, -1), new Vector3(0, 0, 1) };
 		float distances[] = { (maxb.x - mina.x), (maxa.x - minb.x), (maxb.y - mina.y), (maxa.y - minb.y),
@@ -125,10 +140,10 @@ public class PhysicsSystem extends EntitySystem {
 		for (int i = 0; i < 6; i++) {
 			if (distances[i] < 0.0f)
 				return false;
-			if ((i == 0) || (distances[i] < depthColl)) {
-				faceColl = i;
+			if ((i == 0) || (distances[i] < depthTMP)) {
+				faceTMP = i;
 				normalTMP = faces[i];
-				depthColl = distances[i];
+				depthTMP = distances[i];
 			}
 
 		}

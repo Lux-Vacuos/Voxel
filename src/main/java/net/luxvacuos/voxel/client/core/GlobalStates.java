@@ -20,7 +20,6 @@
 
 package net.luxvacuos.voxel.client.core;
 
-import net.luxvacuos.voxel.client.api.mod.ModStateLoop;
 import net.luxvacuos.voxel.client.core.states.AboutState;
 import net.luxvacuos.voxel.client.core.states.GameSPState;
 import net.luxvacuos.voxel.client.core.states.InPauseState;
@@ -30,6 +29,7 @@ import net.luxvacuos.voxel.client.core.states.MPSelectionState;
 import net.luxvacuos.voxel.client.core.states.MainMenuState;
 import net.luxvacuos.voxel.client.core.states.OptionsState;
 import net.luxvacuos.voxel.client.core.states.WorldSelectionState;
+import net.luxvacuos.voxel.universal.api.mod.ModStateLoop;
 
 /**
  * States Handler

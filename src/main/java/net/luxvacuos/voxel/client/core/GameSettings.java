@@ -48,7 +48,7 @@ public class GameSettings {
 				e.printStackTrace();
 			}
 		} else {
-			new File(Bootstrap.getPrefix() + "voxel/assets/game/").mkdirs();
+			new File(Bootstrap.getPrefix() + "voxel/").mkdirs();
 		}
 		if (getVersion() == 1) {
 			VoxelVariables.useShadows = Boolean.parseBoolean(getValue("useShadows"));

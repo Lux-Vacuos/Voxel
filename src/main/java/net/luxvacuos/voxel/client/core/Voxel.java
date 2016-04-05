@@ -29,15 +29,15 @@ import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFW;
 
 import net.luxvacuos.igl.Logger;
-import net.luxvacuos.voxel.client.api.ModInitialization;
-import net.luxvacuos.voxel.client.api.MoltenAPI;
-import net.luxvacuos.voxel.client.api.VersionException;
 import net.luxvacuos.voxel.client.bootstrap.Bootstrap;
 import net.luxvacuos.voxel.client.core.GlobalStates.InternalState;
 import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.Timers;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.world.block.BlocksResources;
+import net.luxvacuos.voxel.universal.api.ModInitialization;
+import net.luxvacuos.voxel.universal.api.MoltenAPI;
+import net.luxvacuos.voxel.universal.api.VersionException;
 
 /**
  * The Kernel, Game Engine Core

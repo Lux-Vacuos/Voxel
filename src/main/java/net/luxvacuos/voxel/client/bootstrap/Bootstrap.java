@@ -97,12 +97,6 @@ public class Bootstrap {
 		WINDOWS_32, WINDOWS_64, MACOSX, LINUX_32, LINUX_64, UNKNOWN;
 	}
 
-	static {
-		File file = new File(Bootstrap.getPrefix() + "voxel/assets/game/logs");
-		if (!file.exists())
-			file.mkdirs();
-	}
-
 	/**
 	 * Launcher main function
 	 * 

@@ -48,6 +48,7 @@ import net.luxvacuos.voxel.client.rendering.api.nanovg.VectorsRendering;
 import net.luxvacuos.voxel.client.rendering.api.opengl.DeferredShadingRenderer;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Frustum;
 import net.luxvacuos.voxel.client.rendering.api.opengl.ItemsDropRenderer;
+import net.luxvacuos.voxel.client.rendering.api.opengl.ItemsGuiRenderer;
 import net.luxvacuos.voxel.client.rendering.api.opengl.MasterRenderer;
 import net.luxvacuos.voxel.client.rendering.api.opengl.MasterShadowRenderer;
 import net.luxvacuos.voxel.client.rendering.api.opengl.SkyboxRenderer;
@@ -97,6 +98,7 @@ public class GameResources {
 	private DeferredShadingRenderer deferredShadingRenderer;
 	private MasterShadowRenderer masterShadowRenderer;
 	private ItemsDropRenderer itemsDropRenderer;
+	private ItemsGuiRenderer itemsGuiRenderer;
 
 	private VoxelClient voxelClient;
 	private WorldSimulation worldSimulation;
@@ -153,6 +155,7 @@ public class GameResources {
 		sun_Camera.setPitch(sunRotation.y);
 		sun_Camera.setRoll(sunRotation.z);
 		camera = new PlayerCamera(renderer.getProjectionMatrix(), display);
+		itemsGuiRenderer = new ItemsGuiRenderer(this);
 		kryo = new Kryo();
 		frustum = new Frustum();
 		worldSimulation = new WorldSimulation();
@@ -217,6 +220,7 @@ public class GameResources {
 		itemsDropRenderer.cleanUp();
 		ParticleMaster.getInstance().cleanUp();
 		deferredShadingRenderer.cleanUp();
+		itemsGuiRenderer.cleanUp();
 		renderer.cleanUp();
 		loader.cleanUp();
 		soundSystem.cleanup();
@@ -310,9 +314,13 @@ public class GameResources {
 	public WorldSimulation getWorldSimulation() {
 		return worldSimulation;
 	}
-	
+
 	public WorldsHandler getWorldsHandler() {
 		return worldsHandler;
+	}
+
+	public ItemsGuiRenderer getItemsGuiRenderer() {
+		return itemsGuiRenderer;
 	}
 
 }

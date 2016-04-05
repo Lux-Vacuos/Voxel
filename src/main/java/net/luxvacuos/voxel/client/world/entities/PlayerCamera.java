@@ -38,7 +38,7 @@ import net.luxvacuos.igl.vector.Matrix4f;
 import net.luxvacuos.igl.vector.Vector2f;
 import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.igl.vector.Vector4f;
-import net.luxvacuos.voxel.client.input.Keyboard;
+import net.luxvacuos.voxel.client.menu.ItemGui;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Display;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.util.Maths;
@@ -56,6 +56,7 @@ public class PlayerCamera extends Camera {
 	private final int maxLookDown = -90;
 	private Vector2f center;
 	private int clickTime;
+	private Vector3f normalVector = new Vector3f();
 
 	public PlayerCamera(Matrix4f proj, Display display) {
 		super(proj, new Vector3f(-0.25f, -1.4f, -0.25f), new Vector3f(0.25f, 0.2f, 0.25f));
@@ -81,6 +82,9 @@ public class PlayerCamera extends Camera {
 		} else if (pitch - mouseDY > maxLookUp) {
 			pitch = maxLookUp;
 		}
+
+		normalVector.set((float) Math.cos(yaw) * (float) Math.cos(pitch), (float) Math.sin(yaw),
+				(float) Math.cos(yaw) * (float) Math.sin(pitch));
 
 		Vector3f v = this.getPosition();
 
@@ -137,7 +141,7 @@ public class PlayerCamera extends Camera {
 		if (velocityComponent.velocity.y == 0)
 			jump = false;
 		if (isKeyDown(KEY_LSHIFT)) {
-			speed = 0.5f;
+			speed = 0.8f;
 		} else {
 			speed = 3;
 		}
@@ -160,18 +164,19 @@ public class PlayerCamera extends Camera {
 		if (clickTime == 0)
 			if (isButtonDown(0)) {
 				clickTime = 10;
-				setBlock(gm.getDisplay().getDisplayWidth(), gm.getDisplay().getDisplayHeight(), (byte) 0, world, gm);
+				setBlock(gm.getDisplay().getDisplayWidth(), gm.getDisplay().getDisplayHeight(),
+						new ItemGui(new Vector3f(), Block.Air), world, gm);
 			} else if (isButtonDown(1)) {
 				clickTime = 10;
-				setBlock(gm.getDisplay().getDisplayWidth(), gm.getDisplay().getDisplayHeight(), Block.Torch.getId(),
-						world, gm);
+				setBlock(gm.getDisplay().getDisplayWidth(), gm.getDisplay().getDisplayHeight(),
+						gm.getMenuSystem().gameSP.getBlock(), world, gm);
 			}
 
 		updateRay(gm.getRenderer().getProjectionMatrix(), gm.getDisplay().getDisplayWidth(),
 				gm.getDisplay().getDisplayHeight(), center);
 	}
 
-	private void setBlock(int ww, int wh, byte block, Dimension world, GameResources gm) {
+	private void setBlock(int ww, int wh, ItemGui block, Dimension world, GameResources gm) {
 		Vector4f viewport = new Vector4f(0, 0, ww, wh);
 		Vector3f wincoord = new Vector3f(ww / 2, wh / 2, depth);
 		Vector3f objcoord = new Vector3f();
@@ -200,14 +205,16 @@ public class PlayerCamera extends Camera {
 		int by = (int) tempY;
 		int bz = (int) tempZ - 1;
 
-		if (block == Block.Torch.getId())
+		if (block.getBlock().getId() == Block.Torch.getId())
 			world.addLight(bx, by, bz, 14);
-		if (block == Block.Air.getId() && world.getGlobalBlock(bx, by, bz) != Block.Air.getId())
+		if (block.getBlock().getId() == Block.Air.getId() && world.getGlobalBlock(bx, by, bz) != Block.Air.getId())
 			world.getPhysicsEngine().addEntity(Block.getBlock(world.getGlobalBlock(bx, by, bz)).getDrop(gm,
 					new Vector3f(bx + 0.5f, by + 0.5f, bz + 0.5f)));
-		if (block == Block.Air.getId() && world.getGlobalBlock(bx, by, bz) == Block.Torch.getId())
+		if (block.getBlock().getId() == Block.Air.getId() && world.getGlobalBlock(bx, by, bz) == Block.Torch.getId())
 			world.removeLight(bx, by, bz, 0);
-		world.setGlobalBlock(bx, by, bz, block);
+		if (block.getBlock().getId() != 0)
+			block.setTotal(block.getTotal() - 1);
+		world.setGlobalBlock(bx, by, bz, block.getBlock().getId());
 	}
 
 	public void invertPitch() {

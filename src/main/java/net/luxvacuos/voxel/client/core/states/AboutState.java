@@ -21,9 +21,9 @@
 package net.luxvacuos.voxel.client.core.states;
 
 import net.luxvacuos.voxel.client.core.GlobalStates;
+import net.luxvacuos.voxel.client.core.GlobalStates.GameState;
 import net.luxvacuos.voxel.client.core.State;
 import net.luxvacuos.voxel.client.core.Voxel;
-import net.luxvacuos.voxel.client.core.GlobalStates.GameState;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.VectorsRendering;
 import net.luxvacuos.voxel.client.resources.GameResources;
 

@@ -35,6 +35,7 @@ public abstract class BlockBase {
 	protected boolean customModel = false;
 	protected boolean affectedByGravity = false;
 	protected boolean collision = true;
+	protected boolean fluid = false;
 
 	public abstract byte getId();
 
@@ -90,4 +91,9 @@ public abstract class BlockBase {
 	public boolean isCollision() {
 		return collision;
 	}
+
+	public boolean isFluid() {
+		return fluid;
+	}
+
 }

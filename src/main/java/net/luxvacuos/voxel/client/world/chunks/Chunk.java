@@ -57,7 +57,7 @@ public class Chunk {
 	public byte[][][] blocks;
 	public byte[][][] lightMap;
 	private transient Queue<ParticlePoint> particlePoints;
-	private transient int sizeX, sizeY, sizeZ;
+	transient int sizeX, sizeY, sizeZ;
 	private transient Tessellator tess;
 	private transient float distance;
 	public transient boolean needsRebuild = true, updated = false, updating = false, empty = true, visible = false,
@@ -174,15 +174,14 @@ public class Chunk {
 		for (int x = 0; x < sizeX; x++) {
 			for (int z = 0; z < sizeZ; z++) {
 				for (int y = 0; y < sizeY; y++) {
-					if (Block.getBlock(dimension.getGlobalBlock(x + posX, y + posY, z + posZ)).isAffectedByGravity()) {
+					if (Block.getBlock(dimension.getGlobalBlock(x + posX, y + posY, z + posZ)).isAffectedByGravity()
+							|| Block.getBlock(dimension.getGlobalBlock(x + posX, y + posY, z + posZ)).isFluid()) {
 						if (dimension.getGlobalBlock(x + posX, y + posY - 1, z + posZ) == 0) {
 							dimension.setGlobalBlock(x + posX, y + posY - 1, z + posZ,
 									dimension.getGlobalBlock(x + posX, y + posY, z + posZ));
 							dimension.setGlobalBlock(x + posX, y + posY, z + posZ, (byte) 0);
 						}
-
 					}
-
 				}
 			}
 		}
@@ -218,7 +217,7 @@ public class Chunk {
 				}
 			}
 		}
-		dimension.getChunkGenerator().generateCaves(this, dimension.getNoise());
+		dimension.getChunkGenerator().generateCaves(this, dimension);
 		created = true;
 	}
 

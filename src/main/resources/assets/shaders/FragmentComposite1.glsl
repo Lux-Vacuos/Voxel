@@ -90,14 +90,12 @@ void main(void){
     			//factt = min(1, 1.38 - factt*factt);
     			vec3 newPos;
     			vec4 newScreen;
-    			float i = 0;
     			vec3 rayTrace = worldStartingPos;
     			float currentWorldDist, rayDist;
-    			float incr = 0.4;
+    			float incr = 0.2;
     			do {
-	        		i += 0.05;
         			rayTrace += refl*incr;
-        			incr *= 1.4;
+        			incr *= 1.2;
         			newScreen = projectionMatrix * viewMatrix * vec4(rayTrace, 1);
         			newScreen /= newScreen.w;
         			newPos = texture(gPosition, newScreen.xy/2.0+0.5).xyz;

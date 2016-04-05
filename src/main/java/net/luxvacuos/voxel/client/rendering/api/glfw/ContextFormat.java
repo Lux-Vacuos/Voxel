@@ -28,7 +28,7 @@ import static org.lwjgl.glfw.GLFW.GLFW_OPENGL_PROFILE;
 import static org.lwjgl.glfw.GLFW.glfwWindowHint;
 import static org.lwjgl.system.MemoryUtil.NULL;
 import static org.lwjgl.system.MemoryUtil.memAllocPointer;
-import static org.lwjgl.system.MemoryUtil.memEncodeASCII;
+import static org.lwjgl.system.MemoryUtil.memASCII;
 import static org.lwjgl.system.MemoryUtil.memFree;
 import static org.lwjgl.vulkan.EXTDebugReport.VK_EXT_DEBUG_REPORT_EXTENSION_NAME;
 import static org.lwjgl.vulkan.VK10.VK_STRUCTURE_TYPE_APPLICATION_INFO;
@@ -42,7 +42,6 @@ import java.nio.ByteBuffer;
 
 import org.lwjgl.PointerBuffer;
 import org.lwjgl.glfw.GLFW;
-import org.lwjgl.system.MemoryUtil.BufferAllocator;
 import org.lwjgl.vulkan.VkApplicationInfo;
 import org.lwjgl.vulkan.VkInstance;
 import org.lwjgl.vulkan.VkInstanceCreateInfo;
@@ -51,15 +50,11 @@ public class ContextFormat {
 
 	private static final boolean validation = Boolean.parseBoolean(System.getProperty("vulkan.validation", "false"));
 
-	private static ByteBuffer[] layers = { memEncodeASCII("VK_LAYER_LUNARG_threading", BufferAllocator.MALLOC),
-			memEncodeASCII("VK_LAYER_LUNARG_mem_tracker", BufferAllocator.MALLOC),
-			memEncodeASCII("VK_LAYER_LUNARG_object_tracker", BufferAllocator.MALLOC),
-			memEncodeASCII("VK_LAYER_LUNARG_draw_state", BufferAllocator.MALLOC),
-			memEncodeASCII("VK_LAYER_LUNARG_param_checker", BufferAllocator.MALLOC),
-			memEncodeASCII("VK_LAYER_LUNARG_swapchain", BufferAllocator.MALLOC),
-			memEncodeASCII("VK_LAYER_LUNARG_device_limits", BufferAllocator.MALLOC),
-			memEncodeASCII("VK_LAYER_LUNARG_image", BufferAllocator.MALLOC),
-			memEncodeASCII("VK_LAYER_GOOGLE_unique_objects", BufferAllocator.MALLOC) };
+	private static ByteBuffer[] layers = { memASCII("VK_LAYER_LUNARG_threading"),
+			memASCII("VK_LAYER_LUNARG_mem_tracker"), memASCII("VK_LAYER_LUNARG_object_tracker"),
+			memASCII("VK_LAYER_LUNARG_draw_state"), memASCII("VK_LAYER_LUNARG_param_checker"),
+			memASCII("VK_LAYER_LUNARG_swapchain"), memASCII("VK_LAYER_LUNARG_device_limits"),
+			memASCII("VK_LAYER_LUNARG_image"), memASCII("VK_LAYER_GOOGLE_unique_objects") };
 
 	private boolean forwardCompat;
 	private int profile;
@@ -133,10 +128,13 @@ public class ContextFormat {
 	}
 
 	public VkInstance createVulkan(PointerBuffer requiredExtensions) {
+		ByteBuffer name = memASCII("Voxel");
+		ByteBuffer nameEngine = memASCII("Infinity");
 		VkApplicationInfo appInfo = VkApplicationInfo.calloc().sType(VK_STRUCTURE_TYPE_APPLICATION_INFO)
-				.pApplicationName("Voxel").pEngineName("Infinity").apiVersion(VK_MAKE_VERSION(1, 0, 5));
-		ByteBuffer VK_EXT_DEBUG_REPORT_EXTENSION = memEncodeASCII(VK_EXT_DEBUG_REPORT_EXTENSION_NAME,
-				BufferAllocator.MALLOC);
+				.pApplicationName(name).pEngineName(nameEngine).apiVersion(VK_MAKE_VERSION(1, 0, 5));
+		memFree(name);
+		memFree(nameEngine);
+		ByteBuffer VK_EXT_DEBUG_REPORT_EXTENSION = memASCII(VK_EXT_DEBUG_REPORT_EXTENSION_NAME);
 		PointerBuffer ppEnabledExtensionNames = memAllocPointer(requiredExtensions.remaining() + 1);
 		ppEnabledExtensionNames.put(requiredExtensions).put(VK_EXT_DEBUG_REPORT_EXTENSION).flip();
 

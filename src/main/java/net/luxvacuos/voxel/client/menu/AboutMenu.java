@@ -24,12 +24,12 @@ import static org.lwjgl.nanovg.NanoVG.*;
 import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_MIDDLE;
 
 import net.luxvacuos.igl.vector.Vector2f;
-import net.luxvacuos.voxel.client.api.MoltenAPI;
 import net.luxvacuos.voxel.client.core.CoreInfo;
 import net.luxvacuos.voxel.client.core.VoxelVariables;
 import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.VectorsRendering;
 import net.luxvacuos.voxel.client.resources.GameResources;
+import net.luxvacuos.voxel.universal.api.MoltenAPI;
 
 public class AboutMenu {
 

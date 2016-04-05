@@ -18,17 +18,14 @@
  * 
  */
 
-package net.luxvacuos.voxel.client.api.mod;
+package net.luxvacuos.voxel.universal.api.mod;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import net.luxvacuos.voxel.client.core.State;
 
-@Target(ElementType.METHOD)
-@Retention(RetentionPolicy.RUNTIME)
-public @interface MoltenAPIInitPhase {
+public interface ModStateLoop {
 
-	public boolean enabled() default true;
+	public void update(State state, float delta);
+
+	public void render(State state, float alpha);
 
 }

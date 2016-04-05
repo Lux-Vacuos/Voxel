@@ -18,7 +18,7 @@
  * 
  */
 
-package net.luxvacuos.voxel.client.api;
+package net.luxvacuos.voxel.universal.api;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
@@ -27,9 +27,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import net.luxvacuos.igl.Logger;
-import net.luxvacuos.voxel.client.api.mod.MoltenAPIInitPhase;
-import net.luxvacuos.voxel.client.api.mod.MoltenAPIMod;
 import net.luxvacuos.voxel.client.resources.GameResources;
+import net.luxvacuos.voxel.universal.api.mod.MoltenAPIInitPhase;
+import net.luxvacuos.voxel.universal.api.mod.MoltenAPIMod;
 
 /**
  * @author Guerra24 <pablo230699@hotmail.com>

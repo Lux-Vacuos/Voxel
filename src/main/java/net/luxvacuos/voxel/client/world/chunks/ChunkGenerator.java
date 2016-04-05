@@ -23,10 +23,10 @@ package net.luxvacuos.voxel.client.world.chunks;
 import java.util.Random;
 
 import net.luxvacuos.voxel.client.world.Dimension;
-import net.luxvacuos.voxel.client.world.SimplexNoise;
 import net.luxvacuos.voxel.client.world.block.Block;
 
 public class ChunkGenerator {
+
 	public void addTree(Dimension world, int xo, int yo, int zo, int treeHeight, Random rand) {
 		for (int y = 0; y < treeHeight; y++) {
 			world.setGlobalBlock(xo, yo + y, zo, Block.Wood.getId());
@@ -51,6 +51,7 @@ public class ChunkGenerator {
 
 	}
 
-	public void generateCaves(Chunk chunk, SimplexNoise noise) {
+	public void generateCaves(Chunk chunk, Dimension dim) {
 	}
+
 }

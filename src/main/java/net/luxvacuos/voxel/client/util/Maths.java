@@ -145,19 +145,39 @@ public class Maths {
 	 * @param far
 	 * @return Matrix4f
 	 */
-	public static Matrix4f orthographic(float left, float right, float bottom, float top, float near, float far) {
-		Matrix4f matrix = new Matrix4f();
-		matrix.m00 = 2.0f / (right - left);
-		matrix.m11 = 2.0f / (top - bottom);
-		matrix.m22 = 2.0f / (near - far);
+	public static Matrix4f orthographic(float left, float right, float bottom, float top, float zNear, float zFar,
+			boolean zZeroToOne) {
+		Matrix4f dest = new Matrix4f();
+		// calculate right matrix elements
+		float rm00 = 2.0f / (right - left);
+		float rm11 = 2.0f / (top - bottom);
+		float rm22 = (zZeroToOne ? 1.0f : 2.0f) / (zNear - zFar);
+		float rm30 = (left + right) / (left - right);
+		float rm31 = (top + bottom) / (bottom - top);
+		float rm32 = (zZeroToOne ? zNear : (zFar + zNear)) / (zNear - zFar);
 
-		matrix.m03 = (left + right) / (left - right);
-		matrix.m13 = (bottom + top) / (bottom - top);
-		matrix.m23 = (far + near) / (far - near);
+		// perform optimized multiplication
+		// compute the last column first, because other columns do not depend on
+		// it
+		dest.m30 = dest.m00 * rm30 + dest.m10 * rm31 + dest.m20 * rm32 + dest.m30;
+		dest.m31 = dest.m01 * rm30 + dest.m11 * rm31 + dest.m21 * rm32 + dest.m31;
+		dest.m32 = dest.m02 * rm30 + dest.m12 * rm31 + dest.m22 * rm32 + dest.m32;
+		dest.m33 = dest.m03 * rm30 + dest.m13 * rm31 + dest.m23 * rm32 + dest.m33;
+		dest.m00 = dest.m00 * rm00;
+		dest.m01 = dest.m01 * rm00;
+		dest.m02 = dest.m02 * rm00;
+		dest.m03 = dest.m03 * rm00;
+		dest.m10 = dest.m10 * rm11;
+		dest.m11 = dest.m11 * rm11;
+		dest.m12 = dest.m12 * rm11;
+		dest.m13 = dest.m13 * rm11;
+		dest.m20 = dest.m20 * rm22;
+		dest.m21 = dest.m21 * rm22;
+		dest.m22 = dest.m22 * rm22;
+		dest.m23 = dest.m23 * rm22;
 
-		matrix.m33 = 1.0f;
+		return dest;
 
-		return matrix;
 	}
 
 	/**

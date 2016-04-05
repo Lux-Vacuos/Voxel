@@ -30,8 +30,8 @@ public class BlockWater extends BlockBase {
 	public BlockWater() {
 		transparent = true;
 		customModel = true;
-		affectedByGravity = true;
 		collision = false;
+		fluid = true;
 	}
 
 	@Override

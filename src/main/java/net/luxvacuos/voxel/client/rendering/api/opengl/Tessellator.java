@@ -225,6 +225,10 @@ public class Tessellator {
 	}
 
 	public void draw(GameResources gm) {
+		draw(gm.getCamera(), gm.getRenderer().getProjectionMatrix(), gm);
+	}
+
+	public void draw(Camera camera, Matrix4f projectionMatrix, GameResources gm) {
 		if (updated) {
 			updateGlBuffers(vboID0, vboCapacity, buffer0);
 			updateGlBuffers(vboID1, vboCapacity, buffer1);
@@ -236,8 +240,8 @@ public class Tessellator {
 			updated = false;
 		}
 		shader.start();
-		shader.loadProjectionMatrix(gm.getRenderer().getProjectionMatrix());
-		shader.loadviewMatrix(gm.getCamera());
+		shader.loadProjectionMatrix(projectionMatrix);
+		shader.loadviewMatrix(camera);
 		shader.loadLightMatrix(gm);
 		shader.loadSettings(VoxelVariables.useShadows, VoxelVariables.useParallax);
 		shader.loadMoveFactor(gm.getWorldSimulation().getMoveFactor());

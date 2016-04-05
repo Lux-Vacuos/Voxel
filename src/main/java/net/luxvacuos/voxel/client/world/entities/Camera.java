@@ -36,7 +36,7 @@ import net.luxvacuos.voxel.client.world.physics.VelocityComponent;
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
  */
-public abstract class Camera extends Entity {
+public class Camera extends Entity {
 
 	protected float pitch;
 	protected float yaw;

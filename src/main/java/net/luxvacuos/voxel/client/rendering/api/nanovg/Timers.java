@@ -49,7 +49,7 @@ import static org.lwjgl.opengl.GL15.glGetQueryObjectiv;
 import static org.lwjgl.system.MemoryUtil.NULL;
 import static org.lwjgl.system.MemoryUtil.memAllocInt;
 import static org.lwjgl.system.MemoryUtil.memAllocLong;
-import static org.lwjgl.system.MemoryUtil.memEncodeUTF8;
+import static org.lwjgl.system.MemoryUtil.memUTF8;
 import static org.lwjgl.system.MemoryUtil.memFree;
 
 import java.nio.ByteBuffer;
@@ -198,7 +198,7 @@ public class Timers {
 
 	private static void initGraph(PerfGraph fps, int style, String name) {
 		fps.style = style;
-		fps.name = memEncodeUTF8(name);
+		fps.name = memUTF8(name);
 		Arrays.fill(fps.values, 0);
 		fps.head = 0;
 	}

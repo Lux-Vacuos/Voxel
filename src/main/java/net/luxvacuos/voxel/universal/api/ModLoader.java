@@ -18,7 +18,7 @@
  * 
  */
 
-package net.luxvacuos.voxel.client.api;
+package net.luxvacuos.voxel.universal.api;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,8 +31,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.luxvacuos.igl.Logger;
-import net.luxvacuos.voxel.client.api.mod.MoltenAPIMod;
 import net.luxvacuos.voxel.client.bootstrap.Bootstrap;
+import net.luxvacuos.voxel.universal.api.mod.MoltenAPIMod;
 
 public class ModLoader {
 
@@ -44,7 +44,7 @@ public class ModLoader {
 	}
 
 	public void loadMods() {
-		modsFolder = new File(Bootstrap.getPrefix() +"voxel/assets/mods");
+		modsFolder = new File(Bootstrap.getPrefix() +"voxel/mods");
 		if(!modsFolder.exists())
 			modsFolder.mkdirs();
 		try {

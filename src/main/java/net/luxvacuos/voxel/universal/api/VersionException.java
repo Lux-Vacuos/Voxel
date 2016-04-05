@@ -18,29 +18,24 @@
  * 
  */
 
-package net.luxvacuos.voxel.client.api.mod;
+package net.luxvacuos.voxel.universal.api;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+public class VersionException extends Exception {
+	private static final long serialVersionUID = 1536541208749543634L;
 
-import net.luxvacuos.voxel.client.api.MoltenAPI;
+	public VersionException() {
+		super();
+	}
 
-/**
- * Mod
- * 
- * @author Guerra24 <pablo230699@hotmail.com>
- * @category API
- */
-@Target(ElementType.TYPE)
-@Retention(RetentionPolicy.RUNTIME)
-public @interface MoltenAPIMod {
+	public VersionException(String message) {
+		super(message);
+	}
 
-	public String createdBy() default "";
+	public VersionException(String message, Throwable cause) {
+		super(message, cause);
+	}
 
-	public String name() default "";
-
-	public int requiredAPIVersion() default MoltenAPI.apiIntVersion;
-
+	public VersionException(Throwable cause) {
+		super(cause);
+	}
 }

@@ -18,24 +18,17 @@
  * 
  */
 
-package net.luxvacuos.voxel.client.api;
+package net.luxvacuos.voxel.universal.api.mod;
 
-public class VersionException extends Exception {
-	private static final long serialVersionUID = 1536541208749543634L;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-	public VersionException() {
-		super();
-	}
+@Target(ElementType.METHOD)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface MoltenAPIInitPhase {
 
-	public VersionException(String message) {
-		super(message);
-	}
+	public boolean enabled() default true;
 
-	public VersionException(String message, Throwable cause) {
-		super(message, cause);
-	}
-
-	public VersionException(Throwable cause) {
-		super(cause);
-	}
 }

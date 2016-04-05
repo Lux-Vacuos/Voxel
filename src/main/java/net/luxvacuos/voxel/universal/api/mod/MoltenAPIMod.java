@@ -18,8 +18,29 @@
  * 
  */
 
-package net.luxvacuos.voxel.client.api;
+package net.luxvacuos.voxel.universal.api.mod;
 
-public class World {
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+import net.luxvacuos.voxel.universal.api.MoltenAPI;
+
+/**
+ * Mod
+ * 
+ * @author Guerra24 <pablo230699@hotmail.com>
+ * @category API
+ */
+@Target(ElementType.TYPE)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface MoltenAPIMod {
+
+	public String createdBy() default "";
+
+	public String name() default "";
+
+	public int requiredAPIVersion() default MoltenAPI.apiIntVersion;
 
 }

@@ -48,7 +48,7 @@ public class VoxelVariables {
 	public static boolean hideHud = false;
 	public static boolean onServer = false;
 	public static final String version = "0.0.10";
-	public static final int build = 193;
+	public static final int build = 194;
 	public static int FOV = 90;
 	public static int WIDTH = 1280;
 	public static int HEIGHT = 720;
@@ -61,7 +61,7 @@ public class VoxelVariables {
 	public static boolean autostart = false;
 	public static boolean christmas = false;
 	public static boolean raining = false;
-	public static final String settings = Bootstrap.getPrefix() + "voxel/assets/game/settings.conf";
+	public static final String settings = Bootstrap.getPrefix() + "voxel/settings.conf";
 
 	/**
 	 * External Data
@@ -118,7 +118,7 @@ public class VoxelVariables {
 	/**
 	 * World Folder Path
 	 */
-	public static final String worldPath = Bootstrap.getPrefix() + "voxel/assets/game/world/";
+	public static final String worldPath = Bootstrap.getPrefix() + "voxel/world/";
 
 	/**
 	 * Update Global Variables

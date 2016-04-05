@@ -94,7 +94,7 @@ public abstract class Dimension {
 		this.name = name;
 		this.chunkDim = chunkDim;
 		data = new DimensionData();
-		data.addObject("Seed", seed.hashCode());
+		data.addObject("Seed", seed.nextInt());
 
 		File filec = new File(VoxelVariables.worldPath + name + "/dimension_" + chunkDim);
 		if (!filec.exists())

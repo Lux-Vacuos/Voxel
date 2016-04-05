@@ -52,8 +52,8 @@ import static org.lwjgl.nanovg.NanoVG.nvgTextAlign;
 import static org.lwjgl.nanovg.NanoVG.nvgTextBounds;
 import static org.lwjgl.system.MemoryUtil.NULL;
 import static org.lwjgl.system.MemoryUtil.memAllocInt;
-import static org.lwjgl.system.MemoryUtil.memEncodeASCII;
-import static org.lwjgl.system.MemoryUtil.memEncodeUTF8;
+import static org.lwjgl.system.MemoryUtil.memASCII;
+import static org.lwjgl.system.MemoryUtil.memUTF8;
 import static org.lwjgl.system.MemoryUtil.memFree;
 
 import java.nio.ByteBuffer;
@@ -61,7 +61,6 @@ import java.nio.IntBuffer;
 
 import org.lwjgl.nanovg.NVGColor;
 import org.lwjgl.nanovg.NVGPaint;
-import org.lwjgl.system.MemoryUtil.BufferAllocator;
 
 import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Display;
@@ -234,7 +233,7 @@ public class VectorsRendering {
 		nvgFontFace(vg, font);
 		nvgTextAlign(vg, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
 
-		ByteBuffer titleText = memEncodeASCII(title, BufferAllocator.MALLOC);
+		ByteBuffer titleText = memASCII(title);
 
 		nvgFontBlur(vg, 2);
 		nvgFillColor(vg, rgba(0, 0, 0, 128, colorA));
@@ -405,7 +404,7 @@ public class VectorsRendering {
 		nvgStrokeColor(vg, rgba(0, 0, 0, 48, colorA));
 		nvgStroke(vg);
 
-		ByteBuffer textEncoded = memEncodeASCII(text, BufferAllocator.MALLOC);
+		ByteBuffer textEncoded = memASCII(text);
 
 		nvgFontSize(vg, fontSize);
 		nvgFontFace(vg, font);
@@ -437,7 +436,7 @@ public class VectorsRendering {
 	}
 
 	public static ByteBuffer cpToUTF8(int cp) {
-		return memEncodeUTF8(new String(Character.toChars(cp)), true);
+		return memUTF8(new String(Character.toChars(cp)), true);
 	}
 
 }

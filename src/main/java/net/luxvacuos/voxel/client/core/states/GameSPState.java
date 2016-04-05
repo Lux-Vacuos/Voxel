@@ -126,6 +126,7 @@ public class GameSPState implements State {
 		gm.getDisplay().beingNVGFrame();
 		gm.getMenuSystem().gameSP.render(gm, gm.getWorldsHandler().getActiveWorld().getActiveDimension());
 		gm.getDisplay().endNVGFrame();
+		gm.getItemsGuiRenderer().render(gm);
 
 	}
 

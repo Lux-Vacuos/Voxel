@@ -67,5 +67,9 @@ public abstract class ItemDropBase extends Entity {
 	public float getScale() {
 		return scale;
 	}
+	
+	public BlockBase getBlock() {
+		return block;
+	}
 
 }

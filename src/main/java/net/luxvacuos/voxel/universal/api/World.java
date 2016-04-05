@@ -18,14 +18,8 @@
  * 
  */
 
-package net.luxvacuos.voxel.client.api.mod;
+package net.luxvacuos.voxel.universal.api;
 
-import net.luxvacuos.voxel.client.core.State;
-
-public interface ModStateLoop {
-
-	public void update(State state, float delta);
-
-	public void render(State state, float alpha);
+public class World {
 
 }

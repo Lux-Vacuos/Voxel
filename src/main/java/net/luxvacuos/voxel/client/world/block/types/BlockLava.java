@@ -35,6 +35,7 @@ public class BlockLava extends BlockBase {
 		customModel = true;
 		transparent = true;
 		collision = false;
+		fluid = true;
 	}
 
 	@Override

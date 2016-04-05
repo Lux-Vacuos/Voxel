@@ -49,11 +49,11 @@ public class MasterShadowRenderer {
 	private Matrix4f projectionMatrix;
 	private Display display;
 	private int textureSize = 4096;
-	
+
 	public MasterShadowRenderer(Display display) {
 		this.display = display;
 		shader = new EntityBasicShader();
-		projectionMatrix = Maths.orthographic(-80, 80, -80, 80, -80, 80);
+		projectionMatrix = Maths.orthographic(-80, 80, -80, 80, -80, 80, false);
 		renderer = new ShadowRenderer(shader, projectionMatrix);
 		if (textureSize > GLUtil.getTextureMaxSize())
 			textureSize = GLUtil.getTextureMaxSize();
