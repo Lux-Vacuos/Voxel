@@ -154,8 +154,8 @@ public class PlayerCamera extends Camera {
 		if (isKeyDown(KEY_T)) {
 			gm.getWorldsHandler().getActiveWorld().getActiveDimension().getPhysicsEngine()
 					.addEntity(new GameEntity(UniversalResources.player, getPosition(), new Vector3f(-1, -1, -1),
-							new Vector3f(1, 1, 1), velocityComponent.velocity.x, velocityComponent.velocity.y,
-							velocityComponent.velocity.z, 0, 0, 0, 1));
+							new Vector3f(1, 1, 1), 0, 0,
+							0, 0, 0, 0, 1));
 		}
 
 		if (clickTime > 0)

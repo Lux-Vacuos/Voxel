@@ -7,7 +7,6 @@ public class WorldSimulation {
 	private float moveFactor = 0;
 	private float time = 0;
 	private float globalTime = 0;
-	private float accTime = 0;
 	private float rainFactor;
 
 	private static final float TIME_MULTIPLIER = 10;

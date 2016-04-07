@@ -78,6 +78,9 @@ public class GameEntity extends Entity {
 		collisionComponent.max = aabbMax.getAsVec3();
 		collisionComponent.boundingBox.set(collisionComponent.min, collisionComponent.max);
 	}
+	
+	public void update(float delta){
+	}
 
 	public void increasePosition(float dx, float dy, float dz) {
 		this.positionComponent.position.x += dx;

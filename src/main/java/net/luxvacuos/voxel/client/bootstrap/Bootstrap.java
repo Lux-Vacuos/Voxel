@@ -20,7 +20,6 @@
 
 package net.luxvacuos.voxel.client.bootstrap;
 
-import java.io.File;
 import java.util.Calendar;
 
 import com.esotericsoftware.minlog.Log;

@@ -34,6 +34,7 @@ import com.badlogic.gdx.math.collision.BoundingBox;
 import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.world.Dimension;
+import net.luxvacuos.voxel.client.world.entities.GameEntity;
 import net.luxvacuos.voxel.client.world.items.ItemDropBase;
 
 public class PhysicsSystem extends EntitySystem {
@@ -127,6 +128,9 @@ public class PhysicsSystem extends EntitySystem {
 			position.position.x += velocity.velocity.x * deltaTime;
 			position.position.y += velocity.velocity.y * deltaTime;
 			position.position.z += velocity.velocity.z * deltaTime;
+
+			if (entity instanceof GameEntity)
+				((GameEntity) entity).update(deltaTime);
 
 		}
 	}
