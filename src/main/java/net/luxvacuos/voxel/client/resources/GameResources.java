@@ -190,6 +190,7 @@ public class GameResources {
 		loader.loadNVGFont("Roboto-Regular", "Roboto-Regular");
 		loader.loadNVGFont("Entypo", "Entypo", 40);
 		torchTexture = new ParticleTexture(loader.loadTextureParticle("fire0"), 4);
+		EntityResources.loadEntityResources(loader);
 	}
 
 	public void update(float rot) {

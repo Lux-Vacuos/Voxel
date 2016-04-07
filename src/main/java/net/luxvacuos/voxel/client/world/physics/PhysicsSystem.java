@@ -115,6 +115,7 @@ public class PhysicsSystem extends EntitySystem {
 						velocity.velocity.y = 0;
 					if (normalTMP.y < 0 && velocity.velocity.y < 0) {
 						velocity.velocity.y = 0;
+						depthTMP /= 4f;
 						position.position.y += depthTMP;
 					}
 
@@ -133,6 +134,15 @@ public class PhysicsSystem extends EntitySystem {
 				((GameEntity) entity).update(deltaTime);
 
 		}
+	}
+
+	public void doSpawn(GameResources gm) {
+		/*
+		 * Vector3f tmp = new Vector3f(gm.getCamera().getPosition());
+		 * Vector3f.add(tmp, new Vector3f(Maths.randInt(1, 10), Maths.randInt(1,
+		 * 10), Maths.randInt(1, 10)), tmp); if (Maths.getRandomBoolean(80)) {
+		 * getEngine().addEntity(new Ghost(new Vector3f(tmp))); }
+		 */
 	}
 
 	private boolean AABBIntersect(final Vector3 mina, final Vector3 maxa, final Vector3 minb, final Vector3 maxb) {

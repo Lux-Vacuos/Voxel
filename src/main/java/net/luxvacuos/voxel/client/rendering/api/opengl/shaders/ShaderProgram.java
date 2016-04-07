@@ -308,7 +308,7 @@ public abstract class ShaderProgram {
 		glShaderSource(shaderID, shaderSource);
 		glCompileShader(shaderID);
 		if (glGetShaderi(shaderID, GL_COMPILE_STATUS) == GL_FALSE) {
-			System.err.println(glGetShaderInfoLog(shaderID, 500));
+			Logger.error(glGetShaderInfoLog(shaderID, 500));
 			throw new IllegalStateException("Syntax Error in " + file);
 		}
 		return shaderID;

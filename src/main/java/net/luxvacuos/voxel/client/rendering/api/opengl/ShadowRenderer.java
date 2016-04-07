@@ -20,9 +20,13 @@
 
 package net.luxvacuos.voxel.client.rendering.api.opengl;
 
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
 import static org.lwjgl.opengl.GL11.GL_UNSIGNED_INT;
+import static org.lwjgl.opengl.GL11.glBindTexture;
 import static org.lwjgl.opengl.GL11.glDrawElements;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
+import static org.lwjgl.opengl.GL13.glActiveTexture;
 import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
 import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
@@ -54,6 +58,7 @@ public class ShadowRenderer {
 		this.shader = shader;
 		shader.start();
 		shader.loadProjectionMatrix(projectionMatrix);
+		shader.connectTextureUnits();
 		shader.stop();
 	}
 
@@ -78,6 +83,9 @@ public class ShadowRenderer {
 		RawModel rawmodel = model.getRawModel();
 		glBindVertexArray(rawmodel.getVaoID());
 		glEnableVertexAttribArray(0);
+		glEnableVertexAttribArray(1);
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, model.getTexture().getID());
 	}
 
 	/**
@@ -86,6 +94,7 @@ public class ShadowRenderer {
 	 */
 	private void unbindTexturedModel() {
 		glDisableVertexAttribArray(0);
+		glDisableVertexAttribArray(1);
 		glBindVertexArray(0);
 	}
 

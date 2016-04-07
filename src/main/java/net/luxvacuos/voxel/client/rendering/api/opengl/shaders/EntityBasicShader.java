@@ -30,6 +30,7 @@ public class EntityBasicShader extends ShaderProgram {
 	private int loc_projectionMatrix;
 	private int loc_transformationMatrix;
 	private int loc_viewMatrix;
+	private int loc_texture;
 
 	public EntityBasicShader() {
 		super(VoxelVariables.VERTEX_FILE_ENTITY_BASIC, VoxelVariables.FRAGMENT_FILE_ENTITY_BASIC);
@@ -40,11 +41,17 @@ public class EntityBasicShader extends ShaderProgram {
 		loc_transformationMatrix = super.getUniformLocation("transformationMatrix");
 		loc_projectionMatrix = super.getUniformLocation("projectionMatrix");
 		loc_viewMatrix = super.getUniformLocation("viewMatrix");
+		loc_texture = super.getUniformLocation("texture0");
 	}
 
 	@Override
 	protected void bindAttributes() {
 		super.bindAttribute(0, "position");
+		super.bindAttribute(1, "textureCoords");
+	}
+
+	public void connectTextureUnits() {
+		super.loadInt(loc_texture, 0);
 	}
 
 	/**

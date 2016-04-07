@@ -44,7 +44,6 @@ import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.util.Maths;
 import net.luxvacuos.voxel.client.world.Dimension;
 import net.luxvacuos.voxel.client.world.block.Block;
-import net.luxvacuos.voxel.universal.resources.UniversalResources;
 
 public class PlayerCamera extends Camera {
 
@@ -152,10 +151,6 @@ public class PlayerCamera extends Camera {
 		 * gm.getWorldsHandler().getActiveWorld().switchDimension(1, gm); }
 		 */
 		if (isKeyDown(KEY_T)) {
-			gm.getWorldsHandler().getActiveWorld().getActiveDimension().getPhysicsEngine()
-					.addEntity(new GameEntity(UniversalResources.player, getPosition(), new Vector3f(-1, -1, -1),
-							new Vector3f(1, 1, 1), 0, 0,
-							0, 0, 0, 0, 1));
 		}
 
 		if (clickTime > 0)

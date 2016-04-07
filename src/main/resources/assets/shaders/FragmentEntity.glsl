@@ -34,7 +34,7 @@ in vec4 ShadowCoord;
 out vec4 [5] out_Color;
 
 uniform sampler2D texture0;
-uniform sampler2DShadow depth0;
+uniform sampler2DShadow depth;
 uniform vec3 skyColour;
 uniform vec3 lightPosition;
 
@@ -44,11 +44,11 @@ const float xPixelOffset = 0.0002;
 const float yPixelOffset = 0.0002;
 
 float lookup( vec2 offSet){
-	return texture(depth0, ShadowCoord.xyz + vec3(offSet.x * xPixelOffset, offSet.y * yPixelOffset, 0.0) );
+	return texture(depth, ShadowCoord.xyz + vec3(offSet.x * xPixelOffset, offSet.y * yPixelOffset, 0.0) );
 }
 void main(void) {
     vec4 textureColour = texture(texture0, pass_textureCoords);
-    float shadow = 0;
+	float shadow = 0;
 	if(useShadows == 1){
 		float x,y;
 		for (y = -1.5 ; y <=1.5 ; y+=1.0)
@@ -58,7 +58,7 @@ void main(void) {
 		if(ShadowCoord.z > 1.0){
        		shadow = 0.0;
        	}
-   	}
+	}
     
     if(textureColour.a<0.5) {
 		discard;

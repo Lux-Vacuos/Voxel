@@ -74,7 +74,7 @@ public class EntityShader extends ShaderProgram {
 		loc_viewLightMatrix = super.getUniformLocation("viewLightMatrix");
 		loc_entityLight = super.getUniformLocation("entityLight");
 		loc_texture0 = super.getUniformLocation("texture0");
-		loc_depth0 = super.getUniformLocation("depth0");
+		loc_depth0 = super.getUniformLocation("depth");
 		loc_useShadows = super.getUniformLocation("useShadows");
 	}
 

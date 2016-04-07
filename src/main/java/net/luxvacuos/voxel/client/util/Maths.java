@@ -224,15 +224,6 @@ public class Maths {
 		return Matrix4f.Project(pos, projection, viewMatrix, new Vector4f(0, 0, width, height));
 	}
 
-	/**
-	 * Gets a Random float from Range
-	 * 
-	 * @param min
-	 *            Min Value
-	 * @param max
-	 *            Max Value
-	 * @return Random Int
-	 */
 	public static float randFloat() {
 		Random rand = new Random();
 		float randomNum = (rand.nextFloat() - 0.5f) / 16;

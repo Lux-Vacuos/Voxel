@@ -90,9 +90,7 @@ public class MasterRenderer {
 	public void renderEntity(ImmutableArray<Entity> immutableArray, GameResources gm) {
 		for (Entity entity : immutableArray) {
 			if (entity instanceof GameEntity) {
-				GameEntity ent = (GameEntity) entity;
-				if (gm.getFrustum().pointInFrustum(ent.getPosition().x, ent.getPosition().y, ent.getPosition().z))
-					processEntity(ent);
+				processEntity((GameEntity) entity);
 			}
 		}
 		renderEntity(gm);
@@ -102,6 +100,8 @@ public class MasterRenderer {
 		shader.start();
 		shader.loadProjectionMatrix(projectionMatrix);
 		shader.loadviewMatrix(gm.getCamera());
+		shader.loadLightMatrix(gm);
+		shader.useShadows(VoxelVariables.useShadows);
 		entityRenderer.renderEntity(entities, gm);
 		shader.stop();
 		entities.clear();

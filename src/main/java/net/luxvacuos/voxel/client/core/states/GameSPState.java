@@ -64,6 +64,7 @@ public class GameSPState implements State {
 		for (Dimension dim : gm.getWorldsHandler().getActiveWorld().getDimensions().values()) {
 			dim.getPhysicsEngine().update(delta);
 			dim.getPhysicsEngine().getSystem(PhysicsSystem.class).processItems(gm);
+			dim.getPhysicsEngine().getSystem(PhysicsSystem.class).doSpawn(gm);
 		}
 
 		gm.update(gm.getWorldSimulation().update(delta));
