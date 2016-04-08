@@ -4,6 +4,7 @@ import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.voxel.client.core.VoxelVariables;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.VectorsRendering;
 import net.luxvacuos.voxel.client.resources.GameResources;
+import net.luxvacuos.voxel.client.ui.menu.ItemGui;
 import net.luxvacuos.voxel.client.world.block.Block;
 
 public class Inventory {
@@ -11,13 +12,17 @@ public class Inventory {
 	private ItemGui[][] items;
 	private int sizeX, sizeY;
 	private float xPos, yPos;
-	private float xScale, yScale;
+	private transient float xScale, yScale;
 	private transient ItemGui tmp;
 	private transient boolean push = false;
 	private transient int x, y;
 
 	public Inventory() {
 		tmp = new ItemGui();
+		float width = VoxelVariables.WIDTH;
+		float height = VoxelVariables.HEIGHT;
+		yScale = height / 720f;
+		xScale = width / 1280f;
 	}
 
 	public Inventory(int sizeX, int sizeY, float xPos, float yPos) {

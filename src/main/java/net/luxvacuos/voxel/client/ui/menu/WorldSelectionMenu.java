@@ -18,7 +18,7 @@
  * 
  */
 
-package net.luxvacuos.voxel.client.ui;
+package net.luxvacuos.voxel.client.ui.menu;
 
 import java.io.File;
 
@@ -27,6 +27,8 @@ import net.luxvacuos.igl.vector.Vector2f;
 import net.luxvacuos.voxel.client.core.VoxelVariables;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.VectorsRendering;
 import net.luxvacuos.voxel.client.resources.GameResources;
+import net.luxvacuos.voxel.client.ui.Button;
+import net.luxvacuos.voxel.client.ui.WorldGui;
 
 public class WorldSelectionMenu {
 

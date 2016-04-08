@@ -59,7 +59,7 @@ import net.luxvacuos.voxel.client.sound.soundsystem.SoundSystem;
 import net.luxvacuos.voxel.client.sound.soundsystem.SoundSystemConfig;
 import net.luxvacuos.voxel.client.sound.soundsystem.SoundSystemException;
 import net.luxvacuos.voxel.client.sound.soundsystem.codecs.CodecJOgg;
-import net.luxvacuos.voxel.client.ui.Menu;
+import net.luxvacuos.voxel.client.ui.menu.Menu;
 import net.luxvacuos.voxel.client.util.LoggerSoundSystem;
 import net.luxvacuos.voxel.client.world.WorldsHandler;
 import net.luxvacuos.voxel.client.world.block.Block;

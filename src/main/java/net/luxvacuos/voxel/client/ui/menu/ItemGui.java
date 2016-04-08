@@ -1,4 +1,4 @@
-package net.luxvacuos.voxel.client.ui;
+package net.luxvacuos.voxel.client.ui.menu;
 
 import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Tessellator;

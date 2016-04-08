@@ -18,11 +18,12 @@
  * 
  */
 
-package net.luxvacuos.voxel.client.ui;
+package net.luxvacuos.voxel.client.ui.menu;
 
 import net.luxvacuos.igl.vector.Vector2f;
 import net.luxvacuos.voxel.client.core.VoxelVariables;
 import net.luxvacuos.voxel.client.resources.GameResources;
+import net.luxvacuos.voxel.client.ui.Button;
 
 public class PauseMenu {
 	private Button exitButton;
