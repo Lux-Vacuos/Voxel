@@ -16,6 +16,7 @@ import javafx.stage.Stage;
 public class CrashScreen extends Application {
 
 	public static PrintStream ps;
+	public static boolean ready = false;
 
 	public static void run() {
 		launch();
@@ -28,12 +29,13 @@ public class CrashScreen extends Application {
 		stage.getIcons().add(new Image(getClass().getClassLoader().getResourceAsStream("assets/icons/icon64.png")));
 		Scene main = new Scene(startMain(stage));
 		stage.setScene(main);
-		stage.setMinWidth(854);
+		stage.setMinWidth(894);
 		stage.setMinHeight(680);
-		stage.setWidth(854);
+		stage.setWidth(894);
 		stage.setHeight(680);
 		stage.centerOnScreen();
 		stage.show();
+		ready = true;
 	}
 
 	private BorderPane startMain(Stage stage) {
