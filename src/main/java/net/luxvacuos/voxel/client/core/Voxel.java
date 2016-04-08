@@ -34,6 +34,7 @@ import net.luxvacuos.voxel.client.core.GlobalStates.InternalState;
 import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.Timers;
 import net.luxvacuos.voxel.client.resources.GameResources;
+import net.luxvacuos.voxel.client.ui.CrashScreen;
 import net.luxvacuos.voxel.client.world.block.BlocksResources;
 import net.luxvacuos.voxel.universal.api.ModInitialization;
 import net.luxvacuos.voxel.universal.api.MoltenAPI;
@@ -147,6 +148,7 @@ public class Voxel {
 		float accumulator = 0f;
 		float interval = 1f / VoxelVariables.UPS;
 		float alpha = 0;
+
 		try {
 			while (gameResources.getGlobalStates().getInternalState() == InternalState.RUNNIG) {
 				Timers.startCPUTimer();
@@ -170,8 +172,36 @@ public class Voxel {
 				gameResources.getDisplay().updateDisplay(VoxelVariables.FPS);
 			}
 		} catch (Exception e) {
+			new Thread(new Runnable() {
+
+				@Override
+				public void run() {
+					CrashScreen.run();
+				}
+			}).start();
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e1) {
+				e1.printStackTrace();
+			}
 			Logger.log("FATAL ERROR - STOPPING");
-			e.printStackTrace();
+			Logger.log(e.getMessage());
+			CrashScreen.ps.println("Voxel has crashed, please report this in the Forum or GitHub Repo");
+			CrashScreen.ps.println();
+			CrashScreen.ps.println("## System Info");
+			CrashScreen.ps.println("Voxel Version: " + VoxelVariables.version);
+			CrashScreen.ps.println("Build: " + VoxelVariables.build);
+			CrashScreen.ps.println("Molten API Version: " + MoltenAPI.apiVersion);
+			CrashScreen.ps.println("Build: " + MoltenAPI.build);
+			CrashScreen.ps.println("Running on: " + Bootstrap.getPlatform());
+			CrashScreen.ps.println("LWJGL Version: " + Version.getVersion());
+			CrashScreen.ps.println("GLFW Version: " + GLFW.glfwGetVersionString());
+			CrashScreen.ps.println("OpenGL Version: " + glGetString(GL_VERSION));
+			CrashScreen.ps.println("Vendor: " + glGetString(GL_VENDOR));
+			CrashScreen.ps.println("Renderer: " + glGetString(GL_RENDERER));
+			CrashScreen.ps.println();
+			CrashScreen.ps.println("## StackTrace");
+			e.printStackTrace(CrashScreen.ps);
 			gameResources.getGlobalStates().setInternalState(InternalState.INTERNAL_ERROR);
 		}
 		dispose();
