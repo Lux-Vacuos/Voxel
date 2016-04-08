@@ -20,6 +20,12 @@
 
 package net.luxvacuos.voxel.client.core.states;
 
+import static net.luxvacuos.voxel.client.input.Keyboard.KEY_E;
+import static net.luxvacuos.voxel.client.input.Keyboard.KEY_ESCAPE;
+import static net.luxvacuos.voxel.client.input.Keyboard.KEY_F1;
+import static net.luxvacuos.voxel.client.input.Keyboard.KEY_F2;
+import static net.luxvacuos.voxel.client.input.Keyboard.isKeyDown;
+import static net.luxvacuos.voxel.client.input.Keyboard.next;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_COMPONENT;
 import static org.lwjgl.opengl.GL11.GL_FLOAT;
 import static org.lwjgl.opengl.GL11.glReadPixels;
@@ -28,47 +34,56 @@ import java.nio.FloatBuffer;
 
 import org.lwjgl.BufferUtils;
 
-import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.voxel.client.core.GlobalStates;
 import net.luxvacuos.voxel.client.core.GlobalStates.GameState;
 import net.luxvacuos.voxel.client.core.State;
 import net.luxvacuos.voxel.client.core.Voxel;
 import net.luxvacuos.voxel.client.core.VoxelVariables;
-import net.luxvacuos.voxel.client.input.Keyboard;
-import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.particle.ParticleMaster;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.VectorsRendering;
 import net.luxvacuos.voxel.client.resources.GameResources;
+import net.luxvacuos.voxel.client.world.Dimension;
+import net.luxvacuos.voxel.client.world.block.BlocksResources;
 import net.luxvacuos.voxel.client.world.entities.PlayerCamera;
+import net.luxvacuos.voxel.client.world.physics.PhysicsSystem;
 
 /**
- * In Pause State
  * 
  * @author danirod
  * @category Kernel
  */
-public class InPauseState implements State {
+public class GameSPInventoryState implements State {
 
 	@Override
 	public void update(Voxel voxel, GlobalStates states, float delta) {
 		GameResources gm = voxel.getGameResources();
-		while (Mouse.next()) {
-			if (gm.getMenuSystem().pauseMenu.getExitButton().pressed()) {
-				gm.getWorldsHandler().getActiveWorld().dispose(gm);
-				gm.getCamera().setPosition(new Vector3f(0, 0, 1));
-				gm.getCamera().setPitch(0);
-				gm.getCamera().setYaw(0);
-				states.setState(GameState.MAINMENU);
-			} else if (gm.getMenuSystem().pauseMenu.getOptionsButton().pressed()) {
-				states.setState(GameState.OPTIONS);
-			}
+
+		gm.getWorldsHandler().getActiveWorld().getActiveDimension().updateChunksGeneration(gm, delta);
+
+		for (Dimension dim : gm.getWorldsHandler().getActiveWorld().getDimensions().values()) {
+			dim.getPhysicsEngine().update(delta);
+			dim.getPhysicsEngine().getSystem(PhysicsSystem.class).processItems(gm);
+			dim.getPhysicsEngine().getSystem(PhysicsSystem.class).doSpawn(gm);
 		}
-		while (Keyboard.next()) {
-			if (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
+
+		gm.update(gm.getWorldSimulation().update(delta));
+		ParticleMaster.getInstance().update(delta, gm.getCamera());
+		while (next()) {
+			gm.getMenuSystem().gameSPInventory.update(gm);
+			if (isKeyDown(KEY_F1))
+				VoxelVariables.debug = !VoxelVariables.debug;
+			if (isKeyDown(KEY_F2))
+				VoxelVariables.hideHud = !VoxelVariables.hideHud;
+			if (isKeyDown(KEY_ESCAPE) || isKeyDown(KEY_E)) {
 				((PlayerCamera) gm.getCamera()).setMouse(gm.getDisplay());
 				gm.getGlobalStates().setState(GameState.GAME_SP);
 			}
 		}
+
+		// if (!display.isDisplayFocused()) {
+		// gm.getCamera().unlockMouse();
+		// states.setState(GameState.IN_PAUSE);
+		// }
 	}
 
 	@Override
@@ -108,9 +123,16 @@ public class InPauseState implements State {
 		gm.getDeferredShadingRenderer().render(gm);
 		ParticleMaster.getInstance().render(gm.getCamera(), gm.getRenderer().getProjectionMatrix());
 		gm.getDisplay().beingNVGFrame();
-		gm.getMenuSystem().pauseMenu.render();
+
+		gm.getItemsGuiRenderer().getTess().begin(BlocksResources.getTessellatorTextureAtlas().getTexture(),
+				BlocksResources.getNormalMap(), BlocksResources.getHeightMap(), BlocksResources.getSpecularMap());
+		((PlayerCamera) gm.getCamera()).getInventory().render(gm);
+		gm.getItemsGuiRenderer().getTess().end();
+
 		VectorsRendering.renderMouse();
 		gm.getDisplay().endNVGFrame();
+		gm.getItemsGuiRenderer().render(gm);
+
 	}
 
 }

@@ -17,7 +17,7 @@ public class ItemsGuiRenderer {
 		tess = new Tessellator(gm);
 		projectionMatrix = Maths.orthographic(-11 * aspectRatio, 11 * aspectRatio, -11, 11, -11, 11, false);
 		camera = new Camera(projectionMatrix, new Vector3f(-1, -1, -1), new Vector3f(1, 1, 1));
-		camera.setPosition(new Vector3f(13.58f, 14.52f, 13.58f));
+		camera.setPosition(new Vector3f(13.58f, 13.58f, 13.58f));
 		camera.setPitch(45);
 		camera.setYaw(45);
 		aspectRatio = (float) gm.getDisplay().getDisplayWidth() / (float) gm.getDisplay().getDisplayHeight();

@@ -31,7 +31,7 @@ public class DefaultWorld extends World {
 	}
 
 	@Override
-	public void init(GameResources gm) {
+	protected void localInit(GameResources gm) {
 		addDimension(new DefaultDimension(name, new Random(), 0, gm));
 		//addDimension(new DefaultDimension(name, new Random(), 1, gm));
 		setActiveDimension(getDimension(0));

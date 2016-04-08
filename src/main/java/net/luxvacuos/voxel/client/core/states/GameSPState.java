@@ -20,6 +20,7 @@
 
 package net.luxvacuos.voxel.client.core.states;
 
+import static net.luxvacuos.voxel.client.input.Keyboard.KEY_E;
 import static net.luxvacuos.voxel.client.input.Keyboard.KEY_ESCAPE;
 import static net.luxvacuos.voxel.client.input.Keyboard.KEY_F1;
 import static net.luxvacuos.voxel.client.input.Keyboard.KEY_F2;
@@ -42,6 +43,7 @@ import net.luxvacuos.voxel.client.input.Keyboard;
 import net.luxvacuos.voxel.client.particle.ParticleMaster;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.world.Dimension;
+import net.luxvacuos.voxel.client.world.block.BlocksResources;
 import net.luxvacuos.voxel.client.world.entities.PlayerCamera;
 import net.luxvacuos.voxel.client.world.physics.PhysicsSystem;
 
@@ -58,7 +60,6 @@ public class GameSPState implements State {
 		GameResources gm = voxel.getGameResources();
 
 		((PlayerCamera) gm.getCamera()).update(delta, gm, gm.getWorldsHandler().getActiveWorld().getActiveDimension());
-		gm.getMenuSystem().gameSP.update();
 		gm.getWorldsHandler().getActiveWorld().getActiveDimension().updateChunksGeneration(gm, delta);
 
 		for (Dimension dim : gm.getWorldsHandler().getActiveWorld().getDimensions().values()) {
@@ -77,6 +78,10 @@ public class GameSPState implements State {
 			if (isKeyDown(KEY_ESCAPE)) {
 				((PlayerCamera) gm.getCamera()).unlockMouse();
 				gm.getGlobalStates().setState(GameState.IN_PAUSE);
+			}
+			if (isKeyDown(KEY_E)) {
+				((PlayerCamera) gm.getCamera()).unlockMouse();
+				gm.getGlobalStates().setState(GameState.GAME_SP_INVENTORY);
 			}
 			if (Keyboard.isKeyDown(Keyboard.KEY_R))
 				VoxelVariables.raining = !VoxelVariables.raining;
@@ -126,6 +131,13 @@ public class GameSPState implements State {
 		ParticleMaster.getInstance().render(gm.getCamera(), gm.getRenderer().getProjectionMatrix());
 		gm.getDisplay().beingNVGFrame();
 		gm.getMenuSystem().gameSP.render(gm, gm.getWorldsHandler().getActiveWorld().getActiveDimension());
+
+		gm.getItemsGuiRenderer().getTess().begin(BlocksResources.getTessellatorTextureAtlas().getTexture(),
+				BlocksResources.getNormalMap(), BlocksResources.getHeightMap(), BlocksResources.getSpecularMap());
+		((PlayerCamera) gm.getCamera()).getInventory().render(1, 11, 0, 0, 0, ((PlayerCamera) gm.getCamera()).getyPos(),
+				gm);
+		gm.getItemsGuiRenderer().getTess().end();
+
 		gm.getDisplay().endNVGFrame();
 		gm.getItemsGuiRenderer().render(gm);
 

@@ -104,8 +104,4 @@ public class Camera extends Entity {
 		return ray;
 	}
 
-	public CollisionComponent getCollisionComponent() {
-		return collisionComponent;
-	}
-
 }

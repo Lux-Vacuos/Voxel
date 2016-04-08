@@ -18,7 +18,7 @@
  * 
  */
 
-package net.luxvacuos.voxel.client.menu;
+package net.luxvacuos.voxel.client.ui;
 
 import java.io.File;
 

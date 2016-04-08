@@ -1,4 +1,4 @@
-package net.luxvacuos.voxel.client.menu;
+package net.luxvacuos.voxel.client.ui;
 
 import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Tessellator;
@@ -8,6 +8,9 @@ public class ItemGui {
 	private BlockBase block;
 	private Vector3f position;
 	private int total;
+	
+	public ItemGui() {
+	}
 
 	public ItemGui(Vector3f pos, BlockBase block) {
 		this.position = pos;

@@ -18,35 +18,30 @@
  * 
  */
 
-package net.luxvacuos.voxel.client.menu;
+package net.luxvacuos.voxel.client.ui;
 
-import net.luxvacuos.voxel.client.input.Mouse;
+public class WebText {
 
-public class Slider {
+	private String text;
+	private float fontSize;
+	private boolean title;
 
-	private float pos;
-	private float x, y, w, h;
-
-	public Slider(float x, float y, float w, float h) {
-		this.x = x;
-		this.y = y;
-		this.w = w;
-		this.h = h;
+	public WebText(String text, float fontSize, boolean title) {
+		this.text = text;
+		this.fontSize = fontSize;
+		this.title = title;
 	}
 
-	public void update() {
-		if (Mouse.getX() > x && Mouse.getX() < x + w && Mouse.getY() > y && Mouse.getY() < y + h
-				&& Mouse.isButtonDown(0)) {
-			pos = Mouse.getX() / w - 2.6f - 0.23f;
-		}
+	public boolean isTitle() {
+		return title;
 	}
 
-	public void setPos(float pos) {
-		this.pos = pos;
+	public String getText() {
+		return text;
 	}
 
-	public float getPos() {
-		return pos;
+	public float getFontSize() {
+		return fontSize;
 	}
 
 }

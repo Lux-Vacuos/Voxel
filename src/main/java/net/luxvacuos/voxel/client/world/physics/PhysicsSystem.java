@@ -35,6 +35,7 @@ import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.world.Dimension;
 import net.luxvacuos.voxel.client.world.entities.GameEntity;
+import net.luxvacuos.voxel.client.world.entities.PlayerCamera;
 import net.luxvacuos.voxel.client.world.items.ItemDropBase;
 
 public class PhysicsSystem extends EntitySystem {
@@ -68,17 +69,22 @@ public class PhysicsSystem extends EntitySystem {
 				if (Vector3f
 						.sub(entity.getComponent(PositionComponent.class).position, gm.getCamera().getPosition(), tmp)
 						.lengthSquared() < 2) {
-					for (int x = 0; x < gm.getMenuSystem().gameSP.getItems().length; x++) {
-						if (gm.getMenuSystem().gameSP.getItems()[x].getBlock().getId() == ((ItemDropBase) entity)
-								.getBlock().getId()) {
-							gm.getMenuSystem().gameSP.getItems()[x].setBlock(((ItemDropBase) entity).getBlock());
-							gm.getMenuSystem().gameSP.getItems()[x]
-									.setTotal(gm.getMenuSystem().gameSP.getItems()[x].getTotal() + 1);
-							break;
-						} else if (gm.getMenuSystem().gameSP.getItems()[x].getBlock().getId() == 0) {
-							gm.getMenuSystem().gameSP.getItems()[x].setBlock(((ItemDropBase) entity).getBlock());
-							gm.getMenuSystem().gameSP.getItems()[x].setTotal(1);
-							break;
+					A: for (int x = 0; x < ((PlayerCamera) gm.getCamera()).getInventory().getSizeX(); x++) {
+						for (int y = 0; y < ((PlayerCamera) gm.getCamera()).getInventory().getSizeY(); y++) {
+							if (((PlayerCamera) gm.getCamera()).getInventory().getItems()[x][y].getBlock()
+									.getId() == ((ItemDropBase) entity).getBlock().getId()) {
+								((PlayerCamera) gm.getCamera()).getInventory().getItems()[x][y]
+										.setBlock(((ItemDropBase) entity).getBlock());
+								((PlayerCamera) gm.getCamera()).getInventory().getItems()[x][y].setTotal(
+										((PlayerCamera) gm.getCamera()).getInventory().getItems()[x][y].getTotal() + 1);
+								break A;
+							} else if (((PlayerCamera) gm.getCamera()).getInventory().getItems()[x][y].getBlock()
+									.getId() == 0) {
+								((PlayerCamera) gm.getCamera()).getInventory().getItems()[x][y]
+										.setBlock(((ItemDropBase) entity).getBlock());
+								((PlayerCamera) gm.getCamera()).getInventory().getItems()[x][y].setTotal(1);
+								break A;
+							}
 						}
 					}
 					getEngine().removeEntity(entity);

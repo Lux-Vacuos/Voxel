@@ -18,7 +18,7 @@
  * 
  */
 
-package net.luxvacuos.voxel.client.menu;
+package net.luxvacuos.voxel.client.ui;
 
 import net.luxvacuos.igl.vector.Vector2f;
 import net.luxvacuos.voxel.client.core.VoxelVariables;

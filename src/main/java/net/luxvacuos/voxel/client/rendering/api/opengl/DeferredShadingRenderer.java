@@ -98,6 +98,7 @@ public class DeferredShadingRenderer {
 		this.display = gm.getDisplay();
 		width = (int) (display.getDisplayWidth() * display.getPixelRatio());
 		height = (int) (display.getDisplayHeight() * display.getPixelRatio());
+
 		if (width > GLUtil.getTextureMaxSize())
 			width = GLUtil.getTextureMaxSize();
 		if (height > GLUtil.getTextureMaxSize())

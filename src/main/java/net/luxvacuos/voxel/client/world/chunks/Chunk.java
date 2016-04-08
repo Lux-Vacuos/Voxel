@@ -177,9 +177,9 @@ public class Chunk {
 					if (Block.getBlock(dimension.getGlobalBlock(x + posX, y + posY, z + posZ)).isAffectedByGravity()
 							|| Block.getBlock(dimension.getGlobalBlock(x + posX, y + posY, z + posZ)).isFluid()) {
 						if (dimension.getGlobalBlock(x + posX, y + posY - 1, z + posZ) == 0) {
-							dimension.setGlobalBlock(x + posX, y + posY - 1, z + posZ,
-									dimension.getGlobalBlock(x + posX, y + posY, z + posZ));
-							dimension.setGlobalBlock(x + posX, y + posY, z + posZ, (byte) 0);
+							if (dimension.setGlobalBlock(x + posX, y + posY - 1, z + posZ,
+									dimension.getGlobalBlock(x + posX, y + posY, z + posZ)))
+								dimension.setGlobalBlock(x + posX, y + posY, z + posZ, (byte) 0);
 						}
 					}
 				}

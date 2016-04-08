@@ -5,7 +5,7 @@ apply plugin:'application'
 
 mainClassName = 'net.luxvacuos.voxel.client.bootstrap.Bootstrap'
 sourceCompatibility = 1.8
-def build = 196
+def build = 197
 def apiBuild = 2
 
 if (System.getProperty("os.name").toLowerCase().contains("mac os x")) {

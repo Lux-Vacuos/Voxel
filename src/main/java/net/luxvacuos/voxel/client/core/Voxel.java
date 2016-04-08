@@ -147,26 +147,32 @@ public class Voxel {
 		float accumulator = 0f;
 		float interval = 1f / VoxelVariables.UPS;
 		float alpha = 0;
-		while (gameResources.getGlobalStates().getInternalState() == InternalState.RUNNIG) {
-			Timers.startCPUTimer();
-			if (gameResources.getDisplay().getTimeCount() > 1f) {
-				CoreInfo.ups = CoreInfo.upsCount;
-				CoreInfo.upsCount = 0;
-				gameResources.getDisplay().setTimeCount(gameResources.getDisplay().getTimeCount() - 1);
+		try {
+			while (gameResources.getGlobalStates().getInternalState() == InternalState.RUNNIG) {
+				Timers.startCPUTimer();
+				if (gameResources.getDisplay().getTimeCount() > 1f) {
+					CoreInfo.ups = CoreInfo.upsCount;
+					CoreInfo.upsCount = 0;
+					gameResources.getDisplay().setTimeCount(gameResources.getDisplay().getTimeCount() - 1);
+				}
+				delta = gameResources.getDisplay().getDelta();
+				accumulator += delta;
+				while (accumulator >= interval) {
+					update(interval);
+					accumulator -= interval;
+				}
+				alpha = accumulator / interval;
+				Timers.stopCPUTimer();
+				Timers.startGPUTimer();
+				render(alpha);
+				Timers.stopGPUTimer();
+				Timers.update();
+				gameResources.getDisplay().updateDisplay(VoxelVariables.FPS);
 			}
-			delta = gameResources.getDisplay().getDelta();
-			accumulator += delta;
-			while (accumulator >= interval) {
-				update(interval);
-				accumulator -= interval;
-			}
-			alpha = accumulator / interval;
-			Timers.stopCPUTimer();
-			Timers.startGPUTimer();
-			render(alpha);
-			Timers.stopGPUTimer();
-			Timers.update();
-			gameResources.getDisplay().updateDisplay(VoxelVariables.FPS);
+		} catch (Exception e) {
+			Logger.log("FATAL ERROR - STOPPING");
+			e.printStackTrace();
+			gameResources.getGlobalStates().setInternalState(InternalState.INTERNAL_ERROR);
 		}
 		dispose();
 	}

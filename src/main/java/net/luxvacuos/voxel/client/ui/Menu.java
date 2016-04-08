@@ -18,7 +18,7 @@
  * 
  */
 
-package net.luxvacuos.voxel.client.menu;
+package net.luxvacuos.voxel.client.ui;
 
 import net.luxvacuos.voxel.client.resources.GameResources;
 
@@ -43,6 +43,8 @@ public class Menu {
 	public final MPSelectionMenu mpSelectionMenu;
 	
 	public final MPLoadingWorld mpLoadingWorld;
+	
+	public final GameSPInventory gameSPInventory;
 
 	public Menu(GameResources gm) {
 		mainMenu = new MainMenu(gm);
@@ -53,6 +55,7 @@ public class Menu {
 		aboutMenu = new AboutMenu(gm);
 		mpSelectionMenu = new MPSelectionMenu(gm);
 		mpLoadingWorld = new MPLoadingWorld(gm);
+		gameSPInventory = new GameSPInventory(gm);
 	}
 
 }

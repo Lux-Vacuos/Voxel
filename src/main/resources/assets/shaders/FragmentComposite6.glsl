@@ -46,9 +46,13 @@ uniform sampler2D gData1;
 /*------------------COMPOSITE 6 CODE----------------------*/
 /*--------------------------------------------------------*/
 
-vec2 size = vec2(30, 35);
+vec2 size = vec2(40, 45);
 
 void main(void){
+
+	vec2 scale = vec2(resolution.x / 1280, resolution.y / 720);
+	size *= scale;
+
 	vec2 texcoord = textureCoords;
 	vec4 image = vec4(0.0);
 	vec4 data0 = texture(gData0, texcoord);

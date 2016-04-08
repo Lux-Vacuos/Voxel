@@ -38,9 +38,11 @@ import net.luxvacuos.igl.vector.Matrix4f;
 import net.luxvacuos.igl.vector.Vector2f;
 import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.igl.vector.Vector4f;
-import net.luxvacuos.voxel.client.menu.ItemGui;
+import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Display;
 import net.luxvacuos.voxel.client.resources.GameResources;
+import net.luxvacuos.voxel.client.ui.Inventory;
+import net.luxvacuos.voxel.client.ui.ItemGui;
 import net.luxvacuos.voxel.client.util.Maths;
 import net.luxvacuos.voxel.client.world.Dimension;
 import net.luxvacuos.voxel.client.world.block.Block;
@@ -56,11 +58,15 @@ public class PlayerCamera extends Camera {
 	private Vector2f center;
 	private int clickTime;
 	private Vector3f normalVector = new Vector3f();
+	private Inventory inventory;
+	private int yPos;
+	private ItemGui block;
 
 	public PlayerCamera(Matrix4f proj, Display display) {
 		super(proj, new Vector3f(-0.25f, -1.4f, -0.25f), new Vector3f(0.25f, 0.2f, 0.25f));
 		center = new Vector2f(display.getDisplayWidth() / 2, display.getDisplayHeight() / 2);
 		this.speed = 3f;
+		inventory = new Inventory(11, 11, 300, 0);
 	}
 
 	public void update(float delta, GameResources gm, Dimension world) {
@@ -81,6 +87,14 @@ public class PlayerCamera extends Camera {
 		} else if (pitch - mouseDY > maxLookUp) {
 			pitch = maxLookUp;
 		}
+
+		yPos += Mouse.getDWheel();
+		if (yPos > 10)
+			yPos = 0;
+		if (yPos < 0)
+			yPos = 10;
+
+		block = inventory.getItems()[0][yPos];
 
 		normalVector.set((float) Math.cos(yaw) * (float) Math.cos(pitch), (float) Math.sin(yaw),
 				(float) Math.cos(yaw) * (float) Math.sin(pitch));
@@ -106,7 +120,7 @@ public class PlayerCamera extends Camera {
 
 		int bx = (int) tempX;
 		int by = (int) tempY;
-		int bz = (int) tempZ;
+		int bz = (int) tempZ - 1;
 
 		if (world.getGlobalBlock(bx, by + 1, bz) == Block.Water.getId())
 			underWater = true;
@@ -163,8 +177,7 @@ public class PlayerCamera extends Camera {
 						new ItemGui(new Vector3f(), Block.Air), world, gm);
 			} else if (isButtonDown(1)) {
 				clickTime = 10;
-				setBlock(gm.getDisplay().getDisplayWidth(), gm.getDisplay().getDisplayHeight(),
-						gm.getMenuSystem().gameSP.getBlock(), world, gm);
+				setBlock(gm.getDisplay().getDisplayWidth(), gm.getDisplay().getDisplayHeight(), block, world, gm);
 			}
 
 		updateRay(gm.getRenderer().getProjectionMatrix(), gm.getDisplay().getDisplayWidth(),
@@ -212,6 +225,10 @@ public class PlayerCamera extends Camera {
 		world.setGlobalBlock(bx, by, bz, block.getBlock().getId());
 	}
 
+	public int getyPos() {
+		return yPos;
+	}
+
 	public void invertPitch() {
 		pitch = -pitch;
 	}
@@ -227,6 +244,14 @@ public class PlayerCamera extends Camera {
 
 	public boolean isUnderWater() {
 		return underWater;
+	}
+
+	public Inventory getInventory() {
+		return inventory;
+	}
+
+	public void setInventory(Inventory inventory) {
+		this.inventory = inventory;
 	}
 
 }

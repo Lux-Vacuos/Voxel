@@ -472,7 +472,7 @@ public abstract class Dimension {
 		return array;
 	}
 
-	public void setGlobalBlock(int x, int y, int z, byte id) {
+	public boolean setGlobalBlock(int x, int y, int z, byte id) {
 		int cx = x >> 4;
 		int cz = z >> 4;
 		int cy = y >> 4;
@@ -482,7 +482,9 @@ public abstract class Dimension {
 			chunk.updated = false;
 			chunk.needsRebuild = true;
 			chunk.updatedBlocks = false;
+			return true;
 		}
+		return false;
 	}
 
 	public void addLight(int x, int y, int z, int val) {

@@ -18,28 +18,20 @@
  * 
  */
 
-package net.luxvacuos.voxel.client.menu;
+package net.luxvacuos.voxel.client.ui;
 
-import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.voxel.client.core.CoreInfo;
 import net.luxvacuos.voxel.client.core.VoxelVariables;
-import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.Timers;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.VectorsRendering;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.world.Dimension;
-import net.luxvacuos.voxel.client.world.block.Block;
-import net.luxvacuos.voxel.client.world.block.BlocksResources;
 import net.luxvacuos.voxel.universal.api.MoltenAPI;
 
 public class GameSP {
 	private float xScale, yScale;
 
-	private int ypos;
-
 	private float x, y, w, h;
-	private ItemGui[] items;
-	private ItemGui block;
 
 	public GameSP(GameResources gm) {
 		float width = VoxelVariables.WIDTH;
@@ -50,11 +42,6 @@ public class GameSP {
 		y = gm.getDisplay().getDisplayHeight() / 2;
 		w = 16;
 		h = 16;
-		items = new ItemGui[10];
-		for (int x = 0; x < items.length; x++) {
-			items[x] = new ItemGui(new Vector3f(0, (items.length - x - 1) + 1.76f * (items.length - x - 1), 0),
-					Block.Air);
-		}
 	}
 
 	public void render(GameResources gm, Dimension world) {
@@ -94,62 +81,11 @@ public class GameSP {
 	}
 
 	private void renderHud(GameResources gm) {
-		gm.getItemsGuiRenderer().getTess().begin(BlocksResources.getTessellatorTextureAtlas().getTexture(),
-				BlocksResources.getNormalMap(), BlocksResources.getHeightMap(), BlocksResources.getSpecularMap());
-		for (int i = 0; i < 10; i++) {
-			VectorsRendering.renderBox(5 * xScale, 48 + 5 + i * 64 * yScale, 60 * xScale, 60 * yScale,
-					VectorsRendering.rgba(255, 255, 255, 100, VectorsRendering.colorA),
-					VectorsRendering.rgba(255, 255, 255, 100, VectorsRendering.colorB),
-					VectorsRendering.rgba(0, 0, 0, 255, VectorsRendering.colorC));
-			if (items[i].getTotal() < 1)
-				items[i].setBlock(Block.Air);
-			items[i].generateModel(gm.getItemsGuiRenderer().getTess());
-		}
-		gm.getItemsGuiRenderer().getTess().end();
-		VectorsRendering.renderBox(5 * xScale, 48 + 5 + ypos * 64 * yScale, 60 * xScale, 60 * yScale,
-				VectorsRendering.rgba(255, 255, 255, 255, VectorsRendering.colorA),
-				VectorsRendering.rgba(255, 255, 255, 255, VectorsRendering.colorB),
-				VectorsRendering.rgba(255, 255, 255, 255, VectorsRendering.colorC));
-
-		for (int i = 0; i < 10; i++) {
-			if (items[i].getBlock().getId() != Block.Air.getId()) {
-				if (items[i] == block)
-					VectorsRendering.renderText("" + items[i].getTotal(), "Roboto-Bold", 10 * xScale,
-							88 + i * 64 * yScale, 20 * yScale,
-							VectorsRendering.rgba(0, 0, 0, 255, VectorsRendering.colorA),
-							VectorsRendering.rgba(0, 0, 0, 255, VectorsRendering.colorB));
-				else
-					VectorsRendering.renderText("" + items[i].getTotal(), "Roboto-Bold", 10 * xScale,
-							88 + i * 64 * yScale, 20 * yScale,
-							VectorsRendering.rgba(255, 255, 255, 255, VectorsRendering.colorA),
-							VectorsRendering.rgba(255, 255, 255, 255, VectorsRendering.colorB));
-			}
-			if (items[i].getTotal() < 1)
-				items[i].setBlock(Block.Air);
-			items[i].generateModel(gm.getItemsGuiRenderer().getTess());
-		}
 
 		VectorsRendering.renderBox(x - 8, y - 8, w, h,
 				VectorsRendering.rgba(255, 255, 255, 200, VectorsRendering.colorA),
 				VectorsRendering.rgba(32, 32, 32, 32, VectorsRendering.colorB),
 				VectorsRendering.rgba(0, 0, 0, 48, VectorsRendering.colorC));
-	}
-
-	public void update() {
-		ypos -= Mouse.getDWheel();
-		if (ypos > 9)
-			ypos = 0;
-		if (ypos < 0)
-			ypos = 9;
-		block = items[ypos];
-	}
-
-	public ItemGui getBlock() {
-		return block;
-	}
-
-	public ItemGui[] getItems() {
-		return items;
 	}
 
 }
