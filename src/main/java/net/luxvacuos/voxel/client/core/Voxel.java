@@ -214,7 +214,7 @@ public class Voxel {
 		CrashScreen.ps.println("Build: " + VoxelVariables.build);
 		CrashScreen.ps.println("Molten API Version: " + MoltenAPI.apiVersion);
 		CrashScreen.ps.println("Build: " + MoltenAPI.build);
-		CrashScreen.ps.println("Running on: " + Bootstrap.getPlatform());
+		CrashScreen.ps.println("Running on: " + CoreInfo.OS);
 		CrashScreen.ps.println("LWJGL Version: " + Version.getVersion());
 		CrashScreen.ps.println("GLFW Version: " + GLFW.glfwGetVersionString());
 		CrashScreen.ps.println("OpenGL Version: " + GLUtil.getString(GL_VERSION));
