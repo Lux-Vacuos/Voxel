@@ -54,13 +54,12 @@ import java.nio.FloatBuffer;
 
 import org.lwjgl.BufferUtils;
 
-import com.sun.org.apache.xalan.internal.xsltc.compiler.CompilerException;
-
 import net.luxvacuos.igl.Logger;
 import net.luxvacuos.igl.vector.Matrix4f;
 import net.luxvacuos.igl.vector.Vector2f;
 import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.igl.vector.Vector4f;
+import net.luxvacuos.voxel.client.core.exception.CompileShaderException;
 import net.luxvacuos.voxel.client.core.exception.LoadShaderException;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Display;
 
@@ -311,7 +310,7 @@ public abstract class ShaderProgram {
 		glCompileShader(shaderID);
 		if (glGetShaderi(shaderID, GL_COMPILE_STATUS) == GL_FALSE) {
 			Logger.error(glGetShaderInfoLog(shaderID, 500));
-			throw new CompilerException(glGetShaderInfoLog(shaderID, 500));
+			throw new CompileShaderException(glGetShaderInfoLog(shaderID, 500));
 		}
 		return shaderID;
 	}
