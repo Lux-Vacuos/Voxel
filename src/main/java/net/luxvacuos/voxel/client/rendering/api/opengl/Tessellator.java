@@ -96,11 +96,11 @@ public class Tessellator {
 
 	private Matrix4f orthoProjectionMatrix;
 
-	public Tessellator(GameResources gm) {
+	public Tessellator(GameResources gm) throws Exception {
 		init(gm);
 	}
 
-	private void init(GameResources gm) {
+	private void init(GameResources gm) throws Exception {
 		pos = new ArrayList<Vector3f>();
 		texcoords = new ArrayList<Vector2f>();
 		normals = new ArrayList<Vector3f>();

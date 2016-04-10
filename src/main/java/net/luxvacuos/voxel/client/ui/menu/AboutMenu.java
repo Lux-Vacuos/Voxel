@@ -20,8 +20,8 @@
 
 package net.luxvacuos.voxel.client.ui.menu;
 
-import static org.lwjgl.nanovg.NanoVG.*;
 import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_MIDDLE;
+import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_RIGHT;
 
 import net.luxvacuos.igl.vector.Vector2f;
 import net.luxvacuos.voxel.client.core.CoreInfo;
@@ -41,7 +41,7 @@ public class AboutMenu {
 	private int voxelLogo;
 	private int ashleyLogo;
 
-	public AboutMenu(GameResources gm) {
+	public AboutMenu(GameResources gm) throws Exception {
 		float width = VoxelVariables.WIDTH;
 		float height = VoxelVariables.HEIGHT;
 		yScale = height / 720f;

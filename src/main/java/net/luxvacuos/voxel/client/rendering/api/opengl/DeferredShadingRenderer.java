@@ -88,13 +88,7 @@ public class DeferredShadingRenderer {
 
 	private Display display;
 
-	/**
-	 * Constructor
-	 * 
-	 * @param loader
-	 *            Loader
-	 */
-	public DeferredShadingRenderer(GameResources gm) {
+	public DeferredShadingRenderer(GameResources gm) throws Exception {
 		this.display = gm.getDisplay();
 		width = (int) (display.getDisplayWidth() * display.getPixelRatio());
 		height = (int) (display.getDisplayHeight() * display.getPixelRatio());

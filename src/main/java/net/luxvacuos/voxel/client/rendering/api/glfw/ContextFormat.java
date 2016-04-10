@@ -127,11 +127,11 @@ public class ContextFormat {
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, major);
 	}
 
-	public VkInstance createVulkan(PointerBuffer requiredExtensions) {
+	public VkInstance createVulkan(PointerBuffer requiredExtensions) throws Exception {
 		ByteBuffer name = memASCII("Voxel");
 		ByteBuffer nameEngine = memASCII("Infinity");
 		VkApplicationInfo appInfo = VkApplicationInfo.calloc().sType(VK_STRUCTURE_TYPE_APPLICATION_INFO)
-				.pApplicationName(name).pEngineName(nameEngine).apiVersion(VK_MAKE_VERSION(1, 0, 5));
+				.pApplicationName(name).pEngineName(nameEngine).apiVersion(VK_MAKE_VERSION(1, 0, 8));
 		memFree(name);
 		memFree(nameEngine);
 		ByteBuffer VK_EXT_DEBUG_REPORT_EXTENSION = memASCII(VK_EXT_DEBUG_REPORT_EXTENSION_NAME);

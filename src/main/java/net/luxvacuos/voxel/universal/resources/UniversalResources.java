@@ -29,7 +29,7 @@ public class UniversalResources {
 
 	public static TexturedModel player;
 
-	public static void loadUniversalResources(GameResources gm) {
+	public static void loadUniversalResources(GameResources gm) throws Exception {
 		ModelTexture texture = new ModelTexture(gm.getLoader().loadTextureEntity("player"));
 		RawModel model = gm.getLoader().getObjLoader().loadObjModel("cube");
 		player = new TexturedModel(model, texture);

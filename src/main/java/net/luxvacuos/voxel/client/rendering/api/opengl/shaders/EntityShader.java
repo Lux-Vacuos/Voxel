@@ -49,11 +49,7 @@ public class EntityShader extends ShaderProgram {
 
 	private int loc_useShadows;
 
-	/**
-	 * Constructor, creates an Entity Shader
-	 * 
-	 */
-	public EntityShader() {
+	public EntityShader() throws Exception {
 		super(VoxelVariables.VERTEX_FILE_ENTITY, VoxelVariables.FRAGMENT_FILE_ENTITY);
 	}
 

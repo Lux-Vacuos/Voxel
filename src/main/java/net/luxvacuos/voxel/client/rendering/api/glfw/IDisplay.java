@@ -21,7 +21,7 @@ package net.luxvacuos.voxel.client.rendering.api.glfw;
 
 public interface IDisplay {
 	public void create(int width, int height, String title, boolean vsync, boolean visible, boolean resizable,
-			ContextFormat format, String[] icons);
+			ContextFormat format, String[] icons) throws Exception;
 
 	public void beingNVGFrame();
 

@@ -109,7 +109,7 @@ public abstract class World {
 		return name;
 	}
 
-	public void dispose(GameResources gm) {
+	public void dispose(GameResources gm) throws Exception {
 		Logger.log("Saving " + name);
 		save(gm);
 		for (Dimension dim : dimensions.values()) {

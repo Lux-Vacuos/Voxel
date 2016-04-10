@@ -33,11 +33,12 @@ import net.luxvacuos.voxel.client.bootstrap.Bootstrap;
 import net.luxvacuos.voxel.client.core.GlobalStates.InternalState;
 import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.Timers;
+import net.luxvacuos.voxel.client.rendering.api.opengl.GLUtil;
 import net.luxvacuos.voxel.client.resources.GameResources;
+import net.luxvacuos.voxel.client.ui.CrashScreen;
 import net.luxvacuos.voxel.client.world.block.BlocksResources;
 import net.luxvacuos.voxel.universal.api.ModInitialization;
 import net.luxvacuos.voxel.universal.api.MoltenAPI;
-import net.luxvacuos.voxel.universal.api.VersionException;
 
 /**
  * The Kernel, Game Engine Core
@@ -48,13 +49,12 @@ import net.luxvacuos.voxel.universal.api.VersionException;
 public class Voxel {
 
 	/**
-	 * Game Threads
-	 */
-	/**
 	 * Game Data
 	 */
 	private GameResources gameResources;
 	private ModInitialization api;
+	private boolean disposed = false;
+	private boolean loaded = false;
 
 	/**
 	 * Constructor of the Voxel Kernel, Initializes the Game and starts the loop
@@ -71,9 +71,10 @@ public class Voxel {
 	 * PreInit phase, initialize the display and runs the API PreInit
 	 * 
 	 */
-	public void preInit() {
+	public void preInit() throws Throwable {
 		Logger.log("Starting Client");
 		gameResources = GameResources.instance();
+		gameResources.preInit();
 		Logger.log("Voxel Version: " + VoxelVariables.version);
 		Logger.log("Build: " + VoxelVariables.build);
 		Logger.log("Molten API Version: " + MoltenAPI.apiVersion);
@@ -96,40 +97,27 @@ public class Voxel {
 			VoxelVariables.runningOnMac = true;
 		}
 		api = new ModInitialization(gameResources);
-		try {
-			api.preInit();
-		} catch (VersionException e) {
-			e.printStackTrace();
-		}
+		api.preInit();
 	}
 
 	/**
 	 * Init phase, initialize the game data (models,textures,music,etc) and runs
 	 * the API Init
 	 */
-	public void init() {
+	public void init() throws Throwable {
 		gameResources.init(this);
 		BlocksResources.createBlocks(gameResources.getLoader());
 		gameResources.loadResources();
 		Logger.log("Initializing Threads");
 		gameResources.getRenderer().prepare();
-
-		try {
-			api.init();
-		} catch (VersionException e) {
-			e.printStackTrace();
-		}
+		api.init();
 	}
 
 	/**
 	 * PostInit phase, starts music and runs the API PostInit
 	 */
-	public void postInit() {
-		try {
-			api.postInit();
-		} catch (VersionException e) {
-			e.printStackTrace();
-		}
+	public void postInit() throws Throwable {
+		api.postInit();
 		Mouse.setHidden(true);
 		Timers.initDebugDisplay();
 	}
@@ -139,15 +127,17 @@ public class Voxel {
 	 * 
 	 */
 	private void mainLoop() {
-		preInit();
-		init();
-		postInit();
-		gameResources.getGlobalStates().setInternalState(InternalState.RUNNIG);
-		float delta = 0;
-		float accumulator = 0f;
-		float interval = 1f / VoxelVariables.UPS;
-		float alpha = 0;
 		try {
+			preInit();
+			init();
+			postInit();
+			gameResources.getGlobalStates().setInternalState(InternalState.RUNNIG);
+			loaded = true;
+			float delta = 0;
+			float accumulator = 0f;
+			float interval = 1f / VoxelVariables.UPS;
+			float alpha = 0;
+
 			while (gameResources.getGlobalStates().getInternalState() == InternalState.RUNNIG) {
 				Timers.startCPUTimer();
 				if (gameResources.getDisplay().getTimeCount() > 1f) {
@@ -169,12 +159,10 @@ public class Voxel {
 				Timers.update();
 				gameResources.getDisplay().updateDisplay(VoxelVariables.FPS);
 			}
-		} catch (Exception e) {
-			Logger.log("FATAL ERROR - STOPPING");
-			e.printStackTrace();
-			gameResources.getGlobalStates().setInternalState(InternalState.INTERNAL_ERROR);
+			dispose();
+		} catch (Throwable t) {
+			handleError(t);
 		}
-		dispose();
 	}
 
 	/**
@@ -192,17 +180,61 @@ public class Voxel {
 	 * 
 	 * @param delta
 	 *            Delta value from Update Thread
+	 * @throws Exception
 	 */
-	private void update(float delta) {
+	private void update(float delta) throws Exception {
 		CoreInfo.upsCount++;
 		gameResources.getGlobalStates().doUpdate(this, delta);
 	}
 
-	/**
-	 * Disposes all game data
-	 */
-	public void dispose() {
-		Logger.log("Closing Game");
+	private void handleError(Throwable e) {
+		new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				CrashScreen.run();
+			}
+		}).start();
+
+		while (!CrashScreen.ready) {
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e1) {
+				e1.printStackTrace();
+			}
+
+		}
+
+		Logger.log("FATAL ERROR - STOPPING");
+		Logger.log(e.getMessage());
+		CrashScreen.ps.println("Voxel has crashed, please report this in the Forum or GitHub Repo");
+		CrashScreen.ps.println();
+		CrashScreen.ps.println("## System Info");
+		CrashScreen.ps.println("Voxel Version: " + VoxelVariables.version);
+		CrashScreen.ps.println("Build: " + VoxelVariables.build);
+		CrashScreen.ps.println("Molten API Version: " + MoltenAPI.apiVersion);
+		CrashScreen.ps.println("Build: " + MoltenAPI.build);
+		CrashScreen.ps.println("Running on: " + CoreInfo.OS);
+		CrashScreen.ps.println("LWJGL Version: " + Version.getVersion());
+		CrashScreen.ps.println("GLFW Version: " + GLFW.glfwGetVersionString());
+		CrashScreen.ps.println("OpenGL Version: " + GLUtil.getString(GL_VERSION));
+		CrashScreen.ps.println("Vulkan Version: " + CoreInfo.VkVersion);
+		CrashScreen.ps.println("Vendor: " + GLUtil.getString(GL_VENDOR));
+		CrashScreen.ps.println("Renderer: " + GLUtil.getString(GL_RENDERER));
+		CrashScreen.ps.println();
+		CrashScreen.ps.println("## StackTrace");
+		e.printStackTrace(CrashScreen.ps);
+		if (!disposed && loaded)
+			try {
+				dispose();
+			} catch (Exception e1) {
+				e1.printStackTrace();
+			}
+	}
+
+	public void dispose() throws Exception {
+		disposed = true;
+		Logger.log("Cleaning Resources");
 		gameResources.cleanUp();
 		api.dispose();
 		gameResources.getDisplay().closeDisplay();

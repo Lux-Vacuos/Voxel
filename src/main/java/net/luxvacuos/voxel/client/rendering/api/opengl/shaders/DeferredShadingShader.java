@@ -74,9 +74,10 @@ public class DeferredShadingShader extends ShaderProgram {
 
 	/**
 	 * Constructor
+	 * @throws Exception 
 	 * 
 	 */
-	public DeferredShadingShader(String num) {
+	public DeferredShadingShader(String num) throws Exception {
 		super(VoxelVariables.VERTEX_FILE_COMPOSITE + num + ".glsl",
 				VoxelVariables.FRAGMENT_FILE_COMPOSITE + num + ".glsl");
 	}

@@ -49,7 +49,7 @@ public class ParticleMaster {
 	private ParticleMaster() {
 	}
 
-	public void init(Loader loader, Matrix4f projectionMatrix) {
+	public void init(Loader loader, Matrix4f projectionMatrix) throws Exception {
 		particles = new HashMap<ParticleTexture, List<Particle>>();
 		renderer = new ParticleRenderer(loader, projectionMatrix);
 	}

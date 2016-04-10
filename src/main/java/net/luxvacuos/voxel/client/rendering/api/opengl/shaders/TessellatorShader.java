@@ -30,7 +30,7 @@ public class TessellatorShader extends ShaderProgram {
 
 	private static TessellatorShader instance = null;
 
-	public static TessellatorShader getInstance() {
+	public static TessellatorShader getInstance() throws Exception {
 		if (instance == null) {
 			instance = new TessellatorShader();
 		}
@@ -56,7 +56,7 @@ public class TessellatorShader extends ShaderProgram {
 
 	private int loc_rainFactor;
 
-	public TessellatorShader() {
+	public TessellatorShader() throws Exception {
 		super(VoxelVariables.VERTEX_FILE_TESSELLATOR, VoxelVariables.FRAGMENT_FILE_TESSELLATOR);
 	}
 

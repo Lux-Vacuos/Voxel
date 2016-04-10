@@ -115,11 +115,10 @@ public class GameResources {
 	private Vector3f invertedLightPosition = new Vector3f(0, 0, 0);
 	private ParticleTexture torchTexture;
 
-	/**
-	 * Constructor
-	 * 
-	 */
 	private GameResources() {
+	}
+
+	public void preInit() throws Exception {
 		gameSettings = new GameSettings();
 		display = new Display();
 		display.create(VoxelVariables.WIDTH, VoxelVariables.HEIGHT, "Voxel", VoxelVariables.VSYNC, false, false,
@@ -132,11 +131,7 @@ public class GameResources {
 		ShaderProgram.setDisplay(display);
 	}
 
-	/**
-	 * Initialize the Game Objects
-	 * 
-	 */
-	public void init(Voxel voxel) {
+	public void init(Voxel voxel) throws Exception {
 		rand = new Random();
 		if (display.isVk()) {
 		}
@@ -181,11 +176,7 @@ public class GameResources {
 		worldsHandler = new WorldsHandler();
 	}
 
-	/**
-	 * Load Resources
-	 * 
-	 */
-	public void loadResources() {
+	public void loadResources() throws Exception {
 		loader.loadNVGFont("Roboto-Bold", "Roboto-Bold");
 		loader.loadNVGFont("Roboto-Regular", "Roboto-Regular");
 		loader.loadNVGFont("Entypo", "Entypo", 40);
@@ -213,7 +204,7 @@ public class GameResources {
 	 * Disposes all objects
 	 * 
 	 */
-	public void cleanUp() {
+	public void cleanUp() throws Exception {
 		gameSettings.save();
 		TessellatorShader.getInstance().cleanUp();
 		TessellatorBasicShader.getInstance().cleanUp();
