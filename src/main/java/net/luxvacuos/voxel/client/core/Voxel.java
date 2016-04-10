@@ -33,7 +33,6 @@ import net.luxvacuos.voxel.client.bootstrap.Bootstrap;
 import net.luxvacuos.voxel.client.core.GlobalStates.InternalState;
 import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.Timers;
-import net.luxvacuos.voxel.client.rendering.api.opengl.GLUtil;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.ui.CrashScreen;
 import net.luxvacuos.voxel.client.world.block.BlocksResources;
@@ -158,6 +157,7 @@ public class Voxel {
 				Timers.stopGPUTimer();
 				Timers.update();
 				gameResources.getDisplay().updateDisplay(VoxelVariables.FPS);
+				throw new RuntimeException();
 			}
 			dispose();
 		} catch (Throwable t) {
@@ -188,48 +188,13 @@ public class Voxel {
 	}
 
 	private void handleError(Throwable e) {
-		new Thread(new Runnable() {
-
-			@Override
-			public void run() {
-				CrashScreen.run();
-			}
-		}).start();
-
-		while (!CrashScreen.ready) {
-			try {
-				Thread.sleep(100);
-			} catch (InterruptedException e1) {
-				e1.printStackTrace();
-			}
-
-		}
-
-		Logger.log("FATAL ERROR - STOPPING");
-		Logger.log(e.getMessage());
-		CrashScreen.ps.println("Voxel has crashed, please report this in the Forum or GitHub Repo");
-		CrashScreen.ps.println();
-		CrashScreen.ps.println("## System Info");
-		CrashScreen.ps.println("Voxel Version: " + VoxelVariables.version);
-		CrashScreen.ps.println("Build: " + VoxelVariables.build);
-		CrashScreen.ps.println("Molten API Version: " + MoltenAPI.apiVersion);
-		CrashScreen.ps.println("Build: " + MoltenAPI.build);
-		CrashScreen.ps.println("Running on: " + CoreInfo.OS);
-		CrashScreen.ps.println("LWJGL Version: " + Version.getVersion());
-		CrashScreen.ps.println("GLFW Version: " + GLFW.glfwGetVersionString());
-		CrashScreen.ps.println("OpenGL Version: " + GLUtil.getString(GL_VERSION));
-		CrashScreen.ps.println("Vulkan Version: " + CoreInfo.VkVersion);
-		CrashScreen.ps.println("Vendor: " + GLUtil.getString(GL_VENDOR));
-		CrashScreen.ps.println("Renderer: " + GLUtil.getString(GL_RENDERER));
-		CrashScreen.ps.println();
-		CrashScreen.ps.println("## StackTrace");
-		e.printStackTrace(CrashScreen.ps);
 		if (!disposed && loaded)
 			try {
 				dispose();
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			}
+		CrashScreen.run(e);
 	}
 
 	public void dispose() throws Exception {

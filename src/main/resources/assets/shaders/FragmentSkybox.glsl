@@ -85,13 +85,19 @@ void main(void){
 	f = 1.0 - (pow(sharpness, c));
 	
 	float fac = max(dot(vec3(0,1,0),normalize(lightPosition)),-1.0);
-	fac = clamp(fac,0.1,1.0);
+	fac = clamp(fac,0.02,1.0);
+	f *= 3;
+	f *= fac;
+	
+	float facHaze = max(dot(textureCoords,normalize(lightPosition)),-1.0);
+	vec3 col = vec3(1,0.2,0);
 
     vec4 finalColour = vec4(fogColour,1.0);
     finalColour.rgb *= fac;
     float factor = (textureCoords.y - lowerLimit) / (upperLimit - lowerLimit);
     factor = clamp(factor, 0.0, 1.0);
     finalColour = mix(finalColour, vec4(f,f,f,1.0), factor);
+    
     out_Color[0] = finalColour;
     out_Color[1] = vec4(pass_position.xyz,0);
     out_Color[2] = vec4(0.0);

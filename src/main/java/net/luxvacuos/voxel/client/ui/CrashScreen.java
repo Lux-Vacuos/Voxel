@@ -2,6 +2,9 @@ package net.luxvacuos.voxel.client.ui;
 
 import java.io.PrintStream;
 
+import org.lwjgl.Version;
+import org.lwjgl.glfw.GLFW;
+
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -12,14 +15,47 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+import net.luxvacuos.igl.Logger;
+import net.luxvacuos.voxel.client.core.CoreInfo;
+import net.luxvacuos.voxel.client.core.VoxelVariables;
+import net.luxvacuos.voxel.universal.api.MoltenAPI;
 
 public class CrashScreen extends Application {
 
 	public static PrintStream ps;
 	public static boolean ready = false;
 
-	public static void run() {
+	private static Thread th;
+
+	public static void run(Throwable e) {
+		th = new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				Logger.log("FATAL ERROR - STOPPING");
+				Logger.log(e.getMessage());
+				ps.println("Voxel has crashed, please report this in the Forum or GitHub Repo");
+				ps.println();
+				ps.println("## System Info");
+				ps.println("Voxel Version: " + VoxelVariables.version);
+				ps.println("Build: " + VoxelVariables.build);
+				ps.println("Molten API Version: " + MoltenAPI.apiVersion);
+				ps.println("Build: " + MoltenAPI.build);
+				ps.println("Running on: " + CoreInfo.OS);
+				ps.println("LWJGL Version: " + Version.getVersion());
+				ps.println("GLFW Version: " + GLFW.glfwGetVersionString());
+				ps.println("OpenGL Version: " + CoreInfo.OpenGLVer);
+				ps.println("Vulkan Version: " + CoreInfo.VkVersion);
+				ps.println("Vendor: " + CoreInfo.Vendor);
+				ps.println("Renderer: " + CoreInfo.Renderer);
+				ps.println();
+				ps.println("## StackTrace");
+				e.printStackTrace(ps);
+			}
+		});
+		th.setName("Crash Thread");
 		launch();
+
 	}
 
 	@Override
@@ -36,6 +72,7 @@ public class CrashScreen extends Application {
 		stage.centerOnScreen();
 		stage.show();
 		ready = true;
+		th.start();
 	}
 
 	private BorderPane startMain(Stage stage) {

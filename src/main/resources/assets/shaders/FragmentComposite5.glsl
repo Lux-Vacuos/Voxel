@@ -138,7 +138,7 @@ void main(void){
 	}
 	if(data.b != 1) {
 		float visibility = exp(-pow((distance*density),gradient));
-		visibility = clamp(visibility,0.8,1.1);
+		visibility = clamp(visibility,0.95,1.1);
     	image.rgb = mix(skyColor.rgb, image.rgb, visibility);
 	}
     
