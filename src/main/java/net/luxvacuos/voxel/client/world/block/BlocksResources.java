@@ -32,7 +32,7 @@ public class BlocksResources {
 	private static int heightMap;
 	private static int specularMap;
 
-	public static void createBlocks(Loader loader) {
+	public static void createBlocks(Loader loader) throws Exception {
 
 		tessellatorTextureAtlas = new TessellatorTextureAtlas(256, 256, loader.loadTextureBlocks("blocks"));
 		normalMap = loader.loadTextureBlocks("blocks_normal");

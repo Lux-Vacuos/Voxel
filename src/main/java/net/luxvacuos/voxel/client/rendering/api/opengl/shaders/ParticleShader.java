@@ -28,7 +28,7 @@ public class ParticleShader extends ShaderProgram {
 	private int loc_projectionMatrix;
 	private int loc_numberOfRows;
 
-	public ParticleShader() {
+	public ParticleShader() throws Exception {
 		super(VoxelVariables.VERTEX_FILE_PARTICLE, VoxelVariables.FRAGMENT_FILE_PARTICLE);
 	}
 

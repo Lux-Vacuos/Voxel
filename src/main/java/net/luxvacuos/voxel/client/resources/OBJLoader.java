@@ -29,6 +29,7 @@ import java.util.List;
 import net.luxvacuos.igl.Logger;
 import net.luxvacuos.igl.vector.Vector2f;
 import net.luxvacuos.igl.vector.Vector3f;
+import net.luxvacuos.voxel.client.core.exception.LoadOBJModelException;
 import net.luxvacuos.voxel.client.resources.models.RawModel;
 
 /**
@@ -51,8 +52,10 @@ public class OBJLoader {
 	 * @param fileName
 	 *            OBJ File name
 	 * @return RawModel that contains all the data loaded to the GPU
+	 * @throws LoadOBJModelException
+	 *             Exception in case of error
 	 */
-	public RawModel loadObjModel(String fileName) {
+	public RawModel loadObjModel(String fileName) throws Exception {
 		InputStream file = getClass().getClassLoader().getResourceAsStream("assets/models/" + fileName + ".obj");
 		Logger.log("Loading Model: " + fileName + ".obj");
 		BufferedReader reader = new BufferedReader(new InputStreamReader(file));
@@ -106,8 +109,7 @@ public class OBJLoader {
 			}
 			reader.close();
 		} catch (Exception e) {
-			e.printStackTrace();
-			Logger.error("Unknown error, Check Log");
+			throw new LoadOBJModelException(e);
 		}
 		verticesArray = new float[vertices.size() * 3];
 		indicesArray = new int[indices.size()];
@@ -141,7 +143,7 @@ public class OBJLoader {
 	 * @param normalsArray
 	 *            Normals Arrays
 	 */
-	private static void processVertex(String[] vertexData, List<Integer> indices, List<Vector2f> textures,
+	private void processVertex(String[] vertexData, List<Integer> indices, List<Vector2f> textures,
 			List<Vector3f> normals, float[] textureArrays, float[] normalsArray) {
 		int currentVertexPointer = Integer.parseInt(vertexData[0]) - 1;
 		indices.add(currentVertexPointer);

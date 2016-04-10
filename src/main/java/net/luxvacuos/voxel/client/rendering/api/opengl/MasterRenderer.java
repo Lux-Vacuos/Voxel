@@ -62,19 +62,13 @@ public class MasterRenderer {
 	/**
 	 * Master Renderer Data
 	 */
-	private EntityShader shader = new EntityShader();
+	private EntityShader shader;
 	private EntityRenderer entityRenderer;
 	private Matrix4f projectionMatrix;
 	private Map<TexturedModel, List<GameEntity>> entities = new HashMap<TexturedModel, List<GameEntity>>();
 
-	/**
-	 * Constructor, Initializes the OpenGL code, creates the projection matrix,
-	 * entity renderer
-	 * 
-	 * @param loader
-	 *            Game Loader
-	 */
-	public MasterRenderer(GameResources gm) {
+	public MasterRenderer(GameResources gm) throws Exception {
+		shader = new EntityShader();
 		projectionMatrix = createProjectionMatrix(gm.getDisplay().getDisplayWidth(), gm.getDisplay().getDisplayHeight(),
 				VoxelVariables.FOV, VoxelVariables.NEAR_PLANE, VoxelVariables.FAR_PLANE);
 		entityRenderer = new EntityRenderer(shader, gm, projectionMatrix);

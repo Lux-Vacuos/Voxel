@@ -33,6 +33,7 @@ import net.luxvacuos.voxel.client.bootstrap.Bootstrap;
 import net.luxvacuos.voxel.client.core.GlobalStates.InternalState;
 import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.Timers;
+import net.luxvacuos.voxel.client.rendering.api.opengl.GLUtil;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.ui.CrashScreen;
 import net.luxvacuos.voxel.client.world.block.BlocksResources;
@@ -48,13 +49,12 @@ import net.luxvacuos.voxel.universal.api.MoltenAPI;
 public class Voxel {
 
 	/**
-	 * Game Threads
-	 */
-	/**
 	 * Game Data
 	 */
 	private GameResources gameResources;
 	private ModInitialization api;
+	private boolean disposed = false;
+	private boolean loaded = false;
 
 	/**
 	 * Constructor of the Voxel Kernel, Initializes the Game and starts the loop
@@ -74,6 +74,7 @@ public class Voxel {
 	public void preInit() throws Throwable {
 		Logger.log("Starting Client");
 		gameResources = GameResources.instance();
+		gameResources.preInit();
 		Logger.log("Voxel Version: " + VoxelVariables.version);
 		Logger.log("Build: " + VoxelVariables.build);
 		Logger.log("Molten API Version: " + MoltenAPI.apiVersion);
@@ -131,6 +132,7 @@ public class Voxel {
 			init();
 			postInit();
 			gameResources.getGlobalStates().setInternalState(InternalState.RUNNIG);
+			loaded = true;
 			float delta = 0;
 			float accumulator = 0f;
 			float interval = 1f / VoxelVariables.UPS;
@@ -157,10 +159,10 @@ public class Voxel {
 				Timers.update();
 				gameResources.getDisplay().updateDisplay(VoxelVariables.FPS);
 			}
+			dispose();
 		} catch (Throwable t) {
 			handleError(t);
 		}
-		dispose();
 	}
 
 	/**
@@ -178,8 +180,9 @@ public class Voxel {
 	 * 
 	 * @param delta
 	 *            Delta value from Update Thread
+	 * @throws Exception
 	 */
-	private void update(float delta) {
+	private void update(float delta) throws Exception {
 		CoreInfo.upsCount++;
 		gameResources.getGlobalStates().doUpdate(this, delta);
 	}
@@ -214,21 +217,24 @@ public class Voxel {
 		CrashScreen.ps.println("Running on: " + Bootstrap.getPlatform());
 		CrashScreen.ps.println("LWJGL Version: " + Version.getVersion());
 		CrashScreen.ps.println("GLFW Version: " + GLFW.glfwGetVersionString());
-		CrashScreen.ps.println("OpenGL Version: " + glGetString(GL_VERSION));
-		CrashScreen.ps.println("Vendor: " + glGetString(GL_VENDOR));
-		CrashScreen.ps.println("Renderer: " + glGetString(GL_RENDERER));
+		CrashScreen.ps.println("OpenGL Version: " + GLUtil.getString(GL_VERSION));
+		CrashScreen.ps.println("Vulkan Version: " + CoreInfo.VkVersion);
+		CrashScreen.ps.println("Vendor: " + GLUtil.getString(GL_VENDOR));
+		CrashScreen.ps.println("Renderer: " + GLUtil.getString(GL_RENDERER));
 		CrashScreen.ps.println();
 		CrashScreen.ps.println("## StackTrace");
 		e.printStackTrace(CrashScreen.ps);
-
-		gameResources.getGlobalStates().setInternalState(InternalState.INTERNAL_ERROR);
+		if (!disposed && loaded)
+			try {
+				dispose();
+			} catch (Exception e1) {
+				e1.printStackTrace();
+			}
 	}
 
-	/**
-	 * Disposes all game data
-	 */
-	public void dispose() {
-		Logger.log("Closing Game");
+	public void dispose() throws Exception {
+		disposed = true;
+		Logger.log("Cleaning Resources");
 		gameResources.cleanUp();
 		api.dispose();
 		gameResources.getDisplay().closeDisplay();

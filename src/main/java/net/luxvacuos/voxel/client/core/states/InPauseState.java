@@ -50,7 +50,7 @@ import net.luxvacuos.voxel.client.world.entities.PlayerCamera;
 public class InPauseState implements State {
 
 	@Override
-	public void update(Voxel voxel, GlobalStates states, float delta) {
+	public void update(Voxel voxel, GlobalStates states, float delta) throws Exception {
 		GameResources gm = voxel.getGameResources();
 		while (Mouse.next()) {
 			if (gm.getMenuSystem().pauseMenu.getExitButton().pressed()) {

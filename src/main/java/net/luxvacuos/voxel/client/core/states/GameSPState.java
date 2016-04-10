@@ -56,7 +56,7 @@ import net.luxvacuos.voxel.client.world.physics.PhysicsSystem;
 public class GameSPState implements State {
 
 	@Override
-	public void update(Voxel voxel, GlobalStates states, float delta) {
+	public void update(Voxel voxel, GlobalStates states, float delta) throws Exception {
 		GameResources gm = voxel.getGameResources();
 
 		((PlayerCamera) gm.getCamera()).update(delta, gm, gm.getWorldsHandler().getActiveWorld().getActiveDimension());

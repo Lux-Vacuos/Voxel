@@ -54,11 +54,14 @@ import java.nio.FloatBuffer;
 
 import org.lwjgl.BufferUtils;
 
+import com.sun.org.apache.xalan.internal.xsltc.compiler.CompilerException;
+
 import net.luxvacuos.igl.Logger;
 import net.luxvacuos.igl.vector.Matrix4f;
 import net.luxvacuos.igl.vector.Vector2f;
 import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.igl.vector.Vector4f;
+import net.luxvacuos.voxel.client.core.exception.LoadShaderException;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Display;
 
 /**
@@ -103,8 +106,9 @@ public abstract class ShaderProgram {
 	 *            Vertex Shader Path
 	 * @param fragmentFile
 	 *            Fragment Shader Path
+	 * @throws Exception
 	 */
-	public ShaderProgram(String vertexFile, String fragmentFile) {
+	public ShaderProgram(String vertexFile, String fragmentFile) throws Exception {
 		vertexShaderID = loadShader(vertexFile, GL_VERTEX_SHADER);
 		fragmentShaderID = loadShader(fragmentFile, GL_FRAGMENT_SHADER);
 		programID = glCreateProgram();
@@ -284,7 +288,7 @@ public abstract class ShaderProgram {
 	 * @throws IllegalStateException
 	 *             in case of compilation error
 	 */
-	private int loadShader(String file, int type) throws IllegalStateException {
+	private int loadShader(String file, int type) throws Exception {
 		StringBuilder shaderSource = new StringBuilder();
 		InputStream filet = getClass().getClassLoader().getResourceAsStream("assets/shaders/" + file);
 		try {
@@ -300,16 +304,14 @@ public abstract class ShaderProgram {
 			else if (display.isAmd())
 				shaderSource.insert(0, "#define AMD//\n");// TEMPORAL FIX
 		} catch (IOException e) {
-			Logger.warn("Shader file not found: " + file);
-			e.printStackTrace();
-			System.exit(-1);
+			throw new LoadShaderException(e);
 		}
 		int shaderID = glCreateShader(type);
 		glShaderSource(shaderID, shaderSource);
 		glCompileShader(shaderID);
 		if (glGetShaderi(shaderID, GL_COMPILE_STATUS) == GL_FALSE) {
 			Logger.error(glGetShaderInfoLog(shaderID, 500));
-			throw new IllegalStateException("Syntax Error in " + file);
+			throw new CompilerException(glGetShaderInfoLog(shaderID, 500));
 		}
 		return shaderID;
 	}

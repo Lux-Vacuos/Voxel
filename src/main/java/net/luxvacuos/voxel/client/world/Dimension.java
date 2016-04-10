@@ -42,8 +42,9 @@ import com.esotericsoftware.kryo.io.Output;
 
 import net.luxvacuos.igl.Logger;
 import net.luxvacuos.igl.vector.Vector3f;
-import net.luxvacuos.voxel.client.core.GlobalStates.InternalState;
 import net.luxvacuos.voxel.client.core.VoxelVariables;
+import net.luxvacuos.voxel.client.core.exception.LoadChunkException;
+import net.luxvacuos.voxel.client.core.exception.SaveChunkException;
 import net.luxvacuos.voxel.client.particle.ParticlePoint;
 import net.luxvacuos.voxel.client.particle.ParticleSystem;
 import net.luxvacuos.voxel.client.resources.GameResources;
@@ -138,7 +139,7 @@ public abstract class Dimension {
 		output.close();
 	}
 
-	public void updateChunksGeneration(GameResources gm, float delta) {
+	public void updateChunksGeneration(GameResources gm, float delta) throws Exception {
 		if (gm.getCamera().getPosition().x < 0)
 			xPlayChunk = (int) ((gm.getCamera().getPosition().x - 16) / 16);
 		if (gm.getCamera().getPosition().y < 0)
@@ -335,21 +336,18 @@ public abstract class Dimension {
 		}
 	}
 
-	private void saveChunk(int cx, int cy, int cz, GameResources gm) {
+	private void saveChunk(int cx, int cy, int cz, GameResources gm) throws SaveChunkException {
 		try {
 			Output output = new Output(new FileOutputStream(VoxelVariables.worldPath + name + "/dimension_" + chunkDim
 					+ "/chunk_" + cx + "_" + cy + "_" + cz + ".dat"));
 			gm.getKryo().writeObject(output, getChunk(cx, cy, cz));
 			output.close();
 		} catch (Exception e) {
-			Logger.error("Error Saving Chunk " + chunkDim + " " + cx + " " + cy + " " + cz);
-			Logger.log("Voxel are automatically shutdown to prevent damage in your worlds");
-			e.printStackTrace();
-			gm.getGlobalStates().setInternalState(InternalState.WORLD_ERROR);
+			throw new SaveChunkException(e);
 		}
 	}
 
-	public void loadChunk(int cx, int cy, int cz, GameResources gm) {
+	public void loadChunk(int cx, int cy, int cz, GameResources gm) throws LoadChunkException {
 		try {
 			Input input = new Input(new FileInputStream(VoxelVariables.worldPath + name + "/dimension_" + chunkDim
 					+ "/chunk_" + cx + "_" + cy + "_" + cz + ".dat"));
@@ -362,10 +360,7 @@ public abstract class Dimension {
 			}
 
 		} catch (Exception e) {
-			Logger.error("Error Loading Chunk " + chunkDim + " " + cx + " " + cy + " " + cz);
-			Logger.log("Voxel are automatically shutdown to prevent damage in your worlds");
-			e.printStackTrace();
-			gm.getGlobalStates().setInternalState(InternalState.WORLD_ERROR);
+			throw new LoadChunkException(e);
 		}
 	}
 
@@ -520,7 +515,7 @@ public abstract class Dimension {
 		return 0;
 	}
 
-	public void clearDimension(GameResources gm) {
+	public void clearDimension(GameResources gm) throws Exception {
 		if (!saving) {
 			saving = true;
 			Logger.log("Saving Dimension " + chunkDim);

@@ -55,7 +55,7 @@ import net.luxvacuos.voxel.client.world.physics.PhysicsSystem;
 public class GameSPInventoryState implements State {
 
 	@Override
-	public void update(Voxel voxel, GlobalStates states, float delta) {
+	public void update(Voxel voxel, GlobalStates states, float delta) throws Exception {
 		GameResources gm = voxel.getGameResources();
 
 		gm.getWorldsHandler().getActiveWorld().getActiveDimension().updateChunksGeneration(gm, delta);

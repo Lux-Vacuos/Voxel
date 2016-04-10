@@ -27,16 +27,7 @@ package net.luxvacuos.voxel.client.core;
  * @category Kernel
  */
 public interface State {
-
-	/**
-	 * 
-	 * This method is called every time in the game loop, it applies update
-	 * 
-	 * @param voxel
-	 * @param states
-	 * @param delta
-	 */
-	void update(Voxel voxel, GlobalStates states, float delta);
+	void update(Voxel voxel, GlobalStates states, float delta) throws Exception;
 
 	void render(Voxel voxel, GlobalStates states, float alpha);
 

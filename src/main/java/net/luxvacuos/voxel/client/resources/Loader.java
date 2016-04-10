@@ -82,6 +82,8 @@ import org.lwjgl.BufferUtils;
 import de.matthiasmann.twl.utils.PNGDecoder;
 import de.matthiasmann.twl.utils.PNGDecoder.Format;
 import net.luxvacuos.igl.Logger;
+import net.luxvacuos.voxel.client.core.exception.DecodeTextureException;
+import net.luxvacuos.voxel.client.core.exception.LoadTextureException;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Display;
 import net.luxvacuos.voxel.client.resources.models.EntityTexture;
 import net.luxvacuos.voxel.client.resources.models.RawModel;
@@ -204,8 +206,9 @@ public class Loader {
 	 * @param fileName
 	 *            Block Texture Name
 	 * @return Texture ID
+	 * @throws LoadTextureException
 	 */
-	public int loadTextureBlocks(String fileName) {
+	public int loadTextureBlocks(String fileName) throws LoadTextureException {
 		int texture_id = 0;
 		try {
 			InputStream file = getClass().getClassLoader()
@@ -213,8 +216,7 @@ public class Loader {
 			texture_id = loadTexture(file, GL_NEAREST, GL_REPEAT);
 			Logger.log("Loading Texture: " + fileName + ".png");
 		} catch (Exception e) {
-			e.printStackTrace();
-			Logger.log("Couldn' load texture file " + fileName);
+			throw new LoadTextureException(fileName, e);
 		}
 		textures.add(texture_id);
 		return texture_id;
@@ -226,8 +228,9 @@ public class Loader {
 	 * @param fileName
 	 *            Particle Texture Name
 	 * @return Texture ID
+	 * @throws LoadTextureException
 	 */
-	public int loadTextureParticle(String fileName) {
+	public int loadTextureParticle(String fileName) throws LoadTextureException {
 		int texture_id = 0;
 		try {
 			InputStream file = getClass().getClassLoader()
@@ -235,8 +238,7 @@ public class Loader {
 			Logger.log("Loading Texture: " + fileName + ".png");
 			texture_id = loadTexture(file, GL_NEAREST, GL_REPEAT);
 		} catch (Exception e) {
-			e.printStackTrace();
-			Logger.log("Couldn' load texture file " + fileName);
+			throw new LoadTextureException(fileName, e);
 		}
 		textures.add(texture_id);
 		return texture_id;
@@ -248,8 +250,9 @@ public class Loader {
 	 * @param fileName
 	 *            Block Texture Name
 	 * @return Texture ID
+	 * @throws LoadTextureException
 	 */
-	public int loadTextureEntity(String fileName) {
+	public int loadTextureEntity(String fileName) throws LoadTextureException {
 		int texture = 0;
 		try {
 			InputStream file = getClass().getClassLoader()
@@ -260,14 +263,13 @@ public class Loader {
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_LOD_BIAS, -0.4f);
 		} catch (Exception e) {
-			e.printStackTrace();
-			Logger.log("Couldn' load texture file" + fileName);
+			throw new LoadTextureException(fileName, e);
 		}
 		textures.add(texture);
 		return texture;
 	}
 
-	private int loadTexture(InputStream file, int filter, int textureWarp) throws IOException {
+	private int loadTexture(InputStream file, int filter, int textureWarp) throws DecodeTextureException {
 		int texture_id = glGenTextures();
 		glBindTexture(GL_TEXTURE_2D, texture_id);
 		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, textureWarp);
@@ -280,11 +282,11 @@ public class Loader {
 		return texture_id;
 	}
 
-	public void loadNVGFont(String filename, String name) {
+	public void loadNVGFont(String filename, String name) throws LoadTextureException {
 		loadNVGFont(filename, name, 150);
 	}
 
-	public void loadNVGFont(String filename, String name, int size) {
+	public void loadNVGFont(String filename, String name, int size) throws LoadTextureException {
 		Logger.log("Loading NVGFont: " + filename + ".ttf");
 		int font = 0;
 		try {
@@ -292,13 +294,13 @@ public class Loader {
 			nvgFont.add(buffer);
 			font = nvgCreateFontMem(display.getVg(), name, buffer, 0);
 		} catch (IOException e) {
-			e.printStackTrace();
+			throw new LoadTextureException(filename, e);
 		}
 		if (font == -1)
 			Logger.error("Fail to load Font");
 	}
 
-	public int loadNVGTexture(String file) {
+	public int loadNVGTexture(String file) throws LoadTextureException {
 		ByteBuffer buffer = null;
 		int tex = 0;
 		try {
@@ -306,8 +308,7 @@ public class Loader {
 			buffer = ioResourceToByteBuffer("assets/textures/menu/" + file + ".png", 32 * 1024);
 			tex = nvgCreateImageMem(display.getVg(), 0, buffer);
 		} catch (Exception e) {
-			e.printStackTrace();
-			Logger.error("Tried to load texture " + file + ", didn't work");
+			throw new LoadTextureException(file, e);
 		}
 		nvgData.add(tex);
 		return tex;
@@ -332,14 +333,7 @@ public class Loader {
 		}
 	}
 
-	/**
-	 * Load Skybox Texture
-	 * 
-	 * @param textureFiles
-	 *            Array of Texture Names
-	 * @return Texture ID
-	 */
-	public int loadCubeMap(String[] textureFiles) {
+	public int loadCubeMap(String[] textureFiles) throws DecodeTextureException {
 		int texID = glGenTextures();
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_CUBE_MAP, texID);
@@ -358,14 +352,7 @@ public class Loader {
 		return texID;
 	}
 
-	/**
-	 * Decodes the Texture
-	 * 
-	 * @param file.
-	 *            Name
-	 * @return EntityTexture
-	 */
-	private EntityTexture decodeTextureFile(InputStream file) {
+	private EntityTexture decodeTextureFile(InputStream file) throws DecodeTextureException {
 		int width = 0;
 		int height = 0;
 		ByteBuffer buffer = null;
@@ -379,8 +366,7 @@ public class Loader {
 			buffer.flip();
 			in.close();
 		} catch (Exception e) {
-			e.printStackTrace();
-			Logger.error("Tried to load texture " + file + ", didn't work");
+			throw new DecodeTextureException(e);
 		}
 		return new EntityTexture(buffer, width, height);
 	}

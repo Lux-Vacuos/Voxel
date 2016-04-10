@@ -46,7 +46,7 @@ public class Menu {
 	
 	public final GameSPInventory gameSPInventory;
 
-	public Menu(GameResources gm) {
+	public Menu(GameResources gm) throws Exception {
 		mainMenu = new MainMenu(gm);
 		pauseMenu = new PauseMenu(gm);
 		optionsMenu = new OptionsMenu(gm);

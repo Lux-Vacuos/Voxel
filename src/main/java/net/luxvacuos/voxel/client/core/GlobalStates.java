@@ -60,8 +60,7 @@ public class GlobalStates {
 	}
 
 	public enum InternalState {
-		INTERNAL_ERROR, WORLD_ERROR, STOPPED, RUNNIG;
-
+		STOPPED, RUNNIG;
 	}
 
 	public GlobalStates() {
@@ -69,7 +68,7 @@ public class GlobalStates {
 		state = VoxelVariables.autostart ? GameState.LOADING_WORLD : GameState.MAINMENU;
 	}
 
-	public void doUpdate(Voxel voxel, float delta) {
+	public void doUpdate(Voxel voxel, float delta) throws Exception {
 		state.state.update(voxel, this, delta);
 		for (ModStateLoop modStateLoop : voxel.getApi().getMoltenAPI().getModStateLoops()) {
 			modStateLoop.update(this.state.state, delta);

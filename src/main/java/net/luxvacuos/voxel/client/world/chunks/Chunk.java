@@ -65,19 +65,7 @@ public class Chunk {
 	public boolean created = false, decorated = false, cavesGenerated = false;
 	public int version = 1;
 
-	/**
-	 * Constructor
-	 * 
-	 * @param dim
-	 *            Chunk Dimension
-	 * @param cx
-	 *            Chunk X
-	 * @param cz
-	 *            Chunk Z
-	 * @param dimension
-	 *            Dimensional dimension
-	 */
-	public Chunk(int cx, int cy, int cz, Dimension dimension, GameResources gm) {
+	public Chunk(int cx, int cy, int cz, Dimension dimension, GameResources gm) throws Exception {
 		this.cx = cx;
 		this.cy = cy;
 		this.cz = cz;
@@ -93,23 +81,13 @@ public class Chunk {
 	public Chunk() {
 	}
 
-	/**
-	 * Initialize Chunk
-	 * 
-	 * @param dimension
-	 *            Dimensional dimension
-	 */
-	public void init(Dimension dimension, GameResources gm) {
+	public void init(Dimension dimension, GameResources gm) throws Exception {
 		load(gm);
 		blocks = new byte[sizeX][sizeY][sizeZ];
 		lightMap = new byte[sizeX][sizeY][sizeZ];
 	}
 
-	/**
-	 * Initialize List
-	 * 
-	 */
-	public void load(GameResources gm) {
+	public void load(GameResources gm) throws Exception {
 		particlePoints = new ConcurrentLinkedQueue<ParticlePoint>();
 		sizeX = VoxelVariables.CHUNK_SIZE;
 		sizeY = VoxelVariables.CHUNK_HEIGHT;

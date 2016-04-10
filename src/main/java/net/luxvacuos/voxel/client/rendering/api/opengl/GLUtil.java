@@ -31,4 +31,13 @@ public class GLUtil {
 		return GL11.glGetInteger(GL11.GL_MAX_TEXTURE_SIZE);
 	}
 
+	public static String getString(int name) {
+		String res = "null";
+		try {
+			res = GL11.glGetString(name);
+		} catch (Exception e) {
+		}
+		return res;
+	}
+
 }

@@ -13,7 +13,7 @@ public class ItemsGuiRenderer {
 	private Matrix4f projectionMatrix;
 	private float aspectRatio;
 
-	public ItemsGuiRenderer(GameResources gm) {
+	public ItemsGuiRenderer(GameResources gm) throws Exception {
 		tess = new Tessellator(gm);
 		projectionMatrix = Maths.orthographic(-11 * aspectRatio, 11 * aspectRatio, -11, 11, -11, 11, false);
 		camera = new Camera(projectionMatrix, new Vector3f(-1, -1, -1), new Vector3f(1, 1, 1));

@@ -43,11 +43,7 @@ public class SkyboxShader extends ShaderProgram {
 	private int loc_lightPosition;
 	private int loc_fogColour;
 
-	/**
-	 * Constructor, Create a Skybox Shader
-	 * 
-	 */
-	public SkyboxShader() {
+	public SkyboxShader() throws Exception {
 		super(VoxelVariables.VERTEX_FILE_SKYBOX, VoxelVariables.FRAGMENT_FILE_SKYBOX);
 	}
 

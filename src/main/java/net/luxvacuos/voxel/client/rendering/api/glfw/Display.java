@@ -57,7 +57,6 @@ import static org.lwjgl.opengl.GL11.glGetString;
 import static org.lwjgl.opengl.GL11.glViewport;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
@@ -105,7 +104,7 @@ public class Display extends Window {
 
 	@Override
 	public void create(int width, int height, String title, boolean vsync, boolean visible, boolean resizable,
-			ContextFormat format, String[] icons) {
+			ContextFormat format, String[] icons) throws Exception {
 		Logger.log("Creating Window");
 		super.displayWidth = width;
 		super.displayHeight = height;
@@ -126,7 +125,7 @@ public class Display extends Window {
 			}
 			vkInstance = format.createVulkan(requiredExtensions);
 			vk = true;
-			CoreInfo.VkVersion = "1.0.2";
+			CoreInfo.VkVersion = "1.0.8";
 		}
 
 		super.window = glfwCreateWindow(displayWidth, displayHeight, title, NULL, NULL);
@@ -141,26 +140,21 @@ public class Display extends Window {
 		glfwMakeContextCurrent(super.window);
 		glfwSwapInterval(vsync ? 1 : 0);
 
-		try {
-			GLFWImage.Buffer iconsbuff = GLFWImage.malloc(2);
-			for (int i = 0; i < icons.length; i++) {
-				String path = icons[i];
-				InputStream file = getClass().getClassLoader().getResourceAsStream(path);
-				PNGDecoder decoder = new PNGDecoder(file);
-				ByteBuffer bytebuf = ByteBuffer.allocateDirect(decoder.getWidth() * decoder.getHeight() * 4);
-				decoder.decode(bytebuf, decoder.getWidth() * 4, PNGDecoder.Format.RGBA);
-				bytebuf.flip();
-				iconsbuff.position(i).width(decoder.getWidth()).height(decoder.getHeight()).pixels(bytebuf);
-			}
-
-			iconsbuff.position(0);
-			glfwSetWindowIcon(super.window, iconsbuff);
-			iconsbuff.free();
-
-		} catch (IOException e) {
-			Logger.error("Failed to load icons");
-			e.printStackTrace();
+		GLFWImage.Buffer iconsbuff = GLFWImage.malloc(2);
+		for (int i = 0; i < icons.length; i++) {
+			String path = icons[i];
+			InputStream file = getClass().getClassLoader().getResourceAsStream(path);
+			PNGDecoder decoder = new PNGDecoder(file);
+			ByteBuffer bytebuf = ByteBuffer.allocateDirect(decoder.getWidth() * decoder.getHeight() * 4);
+			decoder.decode(bytebuf, decoder.getWidth() * 4, PNGDecoder.Format.RGBA);
+			bytebuf.flip();
+			iconsbuff.position(i).width(decoder.getWidth()).height(decoder.getHeight()).pixels(bytebuf);
 		}
+
+		iconsbuff.position(0);
+		glfwSetWindowIcon(super.window, iconsbuff);
+		iconsbuff.free();
+
 		capabilities = createCapabilities();
 		super.vg = nvgCreateGL3(NVG_ANTIALIAS | NVG_STENCIL_STROKES);
 		if (vg == NULL)

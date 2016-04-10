@@ -25,6 +25,7 @@ import net.luxvacuos.voxel.client.core.GlobalStates.GameState;
 import net.luxvacuos.voxel.client.core.GlobalStates.InternalState;
 import net.luxvacuos.voxel.client.core.State;
 import net.luxvacuos.voxel.client.core.Voxel;
+import net.luxvacuos.voxel.client.core.exception.ThreadException;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.VectorsRendering;
 import net.luxvacuos.voxel.client.resources.GameResources;
 
@@ -47,7 +48,7 @@ public class MainMenuState implements State {
 	}
 
 	@Override
-	public void update(Voxel voxel, GlobalStates states, float delta) {
+	public void update(Voxel voxel, GlobalStates states, float delta) throws Exception {
 		GameResources gm = voxel.getGameResources();
 
 		if (gm.getMenuSystem().mainMenu.getPlayButton().pressed()) {
@@ -60,7 +61,7 @@ public class MainMenuState implements State {
 			try {
 				Thread.sleep(100);
 			} catch (InterruptedException e) {
-				states.setInternalState(InternalState.INTERNAL_ERROR);
+				throw new ThreadException(e);
 			}
 			states.setState(GameState.OPTIONS);
 		} else if (gm.getMenuSystem().mainMenu.getAboutButton().pressed()) {

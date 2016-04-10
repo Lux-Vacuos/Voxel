@@ -50,7 +50,7 @@ public class MasterShadowRenderer {
 	private Display display;
 	private int textureSize = 4096;
 
-	public MasterShadowRenderer(Display display) {
+	public MasterShadowRenderer(Display display) throws Exception {
 		this.display = display;
 		shader = new EntityBasicShader();
 		projectionMatrix = Maths.orthographic(-80, 80, -80, 80, -80, 80, false);

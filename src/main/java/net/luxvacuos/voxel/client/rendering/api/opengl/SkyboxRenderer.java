@@ -47,15 +47,7 @@ public class SkyboxRenderer {
 	private RawModel dome;
 	private SkyboxShader shader;
 
-	/**
-	 * Constructor, Initializes the Skybox model, Textures and Shader
-	 * 
-	 * @param loader
-	 *            Game Loader
-	 * @param projectionMatrix
-	 *            Matrix4f, Projection Matrix
-	 */
-	public SkyboxRenderer(Loader loader, Matrix4f projectionMatrix) {
+	public SkyboxRenderer(Loader loader, Matrix4f projectionMatrix) throws Exception {
 		dome = loader.getObjLoader().loadObjModel("SkyDome");
 		shader = new SkyboxShader();
 		shader.start();
