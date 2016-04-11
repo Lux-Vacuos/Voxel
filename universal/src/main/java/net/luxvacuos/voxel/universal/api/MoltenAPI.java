@@ -1,5 +1,5 @@
 /*
- * This file is part of Voxel
+ * This file is part of UVoxel
  * 
  * Copyright (C) 2016 Lux Vacuos
  *
@@ -18,47 +18,43 @@
  * 
  */
 
-package net.luxvacuos.voxel.server.api;
+package net.luxvacuos.voxel.universal.api;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import com.badlogic.ashley.core.Entity;
-
-import net.luxvacuos.voxel.server.api.mod.ModStateLoop;
-import net.luxvacuos.voxel.server.resources.GameResources;
-import net.luxvacuos.voxel.server.world.block.Block;
-import net.luxvacuos.voxel.server.world.block.BlockBase;
+import net.luxvacuos.voxel.universal.api.mod.ModStateLoop;
+import net.luxvacuos.voxel.universal.core.UVoxel;
 
 public class MoltenAPI {
 
-	private GameResources gm;
+	private UVoxel uVoxel;
 	private List<ModStateLoop> modStateLoops;
+	private final Map<String, APIMethod<Object>> methods = new HashMap<String, APIMethod<Object>>();
+	private String prefix;
 
-	public MoltenAPI(GameResources gm) {
-		this.gm = gm;
+	public static final String apiVersion = "0.0.1";
+	public static final int apiIntVersion = 1;
+	public static final int build = 3;
+
+	public MoltenAPI(UVoxel uVoxel) {
+		this.uVoxel = uVoxel;
+		if (this.uVoxel.isClient())
+			prefix = "Client_";
+		else if (this.uVoxel.isServer())
+			prefix = "Server_";
 		modStateLoops = new ArrayList<>();
+		this.uVoxel.registerAPIMethods(this, methods);
 	}
 
-	public void registetEntity(Entity mob) {
-		// TODO: Implement This
-	}
+	public Object runMethod(String name, Object... objects) {
+		APIMethod<Object> method = methods.get(prefix + name);
+		if (method == null)
+			throw new RuntimeException("Method not found: " + prefix + name);
 
-	public void removeEntity(Entity entity) {
-		// TODO: Implement This
-	}
-
-	public void registerBlock(BlockBase block) {
-		Block.registerBlock(block);
-	}
-
-	public void registerSaveData(String key, String value) {
-		// TODO: Implement This
-	}
-
-	public String getSaveData(String key) {
-		// TODO: Implement This
-		return null;
+		return method.run(objects);
 	}
 
 	public void registerModStateLoop(ModStateLoop modStateLoop) {
@@ -66,7 +62,7 @@ public class MoltenAPI {
 	}
 
 	/**
-	 * NOT USE THIS!!!!!!
+	 * <h1>NOT USE THIS!!!!!!</h1>
 	 * 
 	 * <p>
 	 * This is used internally for calling all modStates

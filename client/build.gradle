@@ -2,7 +2,7 @@ apply plugin:'application'
 
 mainClassName = 'net.luxvacuos.voxel.client.bootstrap.Bootstrap'
 sourceCompatibility = 1.8
-def build = 199
+def build = 200
 
 if (System.getProperty("os.name").toLowerCase().contains("mac os x")) {
   applicationDefaultJvmArgs = ["-XstartOnFirstThread"]
@@ -16,7 +16,6 @@ sourceSets {
 }
 
 jar {
-	exclude "net/luxvacuos/voxel/universal/api/**" 
 	version = "0.0.10-" + build
 	manifest {
         attributes (

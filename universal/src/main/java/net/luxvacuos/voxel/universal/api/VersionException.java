@@ -1,5 +1,5 @@
 /*
- * This file is part of Voxel
+ * This file is part of UVoxel
  * 
  * Copyright (C) 2016 Lux Vacuos
  *
@@ -20,6 +20,22 @@
 
 package net.luxvacuos.voxel.universal.api;
 
-public class World {
+public class VersionException extends Exception {
+	private static final long serialVersionUID = 1536541208749543634L;
 
+	public VersionException() {
+		super();
+	}
+
+	public VersionException(String message) {
+		super(message);
+	}
+
+	public VersionException(String message, Throwable cause) {
+		super(message, cause);
+	}
+
+	public VersionException(Throwable cause) {
+		super(cause);
+	}
 }

@@ -21,7 +21,6 @@
 package net.luxvacuos.voxel.client.core.states;
 
 import net.luxvacuos.igl.vector.Vector3f;
-import net.luxvacuos.voxel.client.core.GlobalStates;
 import net.luxvacuos.voxel.client.core.GlobalStates.GameState;
 import net.luxvacuos.voxel.client.core.State;
 import net.luxvacuos.voxel.client.core.Voxel;
@@ -49,7 +48,7 @@ public class LoadingSPState implements State {
 	}
 
 	@Override
-	public void update(Voxel voxel, GlobalStates states, float delta) {
+	public void update(Voxel voxel, float delta) {
 		GameResources gm = voxel.getGameResources();
 
 		gm.getWorldsHandler().registerWorld(new DefaultWorld(gm.getMenuSystem().worldSelectionMenu.getWorldName()));
@@ -62,12 +61,12 @@ public class LoadingSPState implements State {
 		gm.getSoundSystem().stop("menu1");
 		gm.getSoundSystem().rewind("menu2");
 		gm.getSoundSystem().stop("menu2");
-		states.setState(GameState.GAME_SP);
+		gm.getGlobalStates().setState(GameState.GAME_SP);
 
 	}
 
 	@Override
-	public void render(Voxel voxel, GlobalStates states, float delta) {
+	public void render(Voxel voxel, float delta) {
 		GameResources gm = voxel.getGameResources();
 		gm.getRenderer().prepare();
 		gm.getDisplay().beingNVGFrame();

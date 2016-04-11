@@ -27,8 +27,8 @@ package net.luxvacuos.voxel.client.core;
  * @category Kernel
  */
 public interface State {
-	void update(Voxel voxel, GlobalStates states, float delta) throws Exception;
+	void update(Voxel voxel, float delta) throws Exception;
 
-	void render(Voxel voxel, GlobalStates states, float alpha);
+	void render(Voxel voxel, float alpha);
 
 }

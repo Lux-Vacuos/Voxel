@@ -20,7 +20,6 @@
 
 package net.luxvacuos.voxel.client.core.states;
 
-import net.luxvacuos.voxel.client.core.GlobalStates;
 import net.luxvacuos.voxel.client.core.GlobalStates.GameState;
 import net.luxvacuos.voxel.client.core.State;
 import net.luxvacuos.voxel.client.core.Voxel;
@@ -30,7 +29,7 @@ import net.luxvacuos.voxel.client.resources.GameResources;
 public class MPSelectionState implements State {
 
 	@Override
-	public void update(Voxel voxel, GlobalStates states, float delta) {
+	public void update(Voxel voxel, float delta) {
 		GameResources gm = voxel.getGameResources();
 		if (gm.getMenuSystem().mpSelectionMenu.getExitButton().pressed())
 			gm.getGlobalStates().setState(GameState.MAINMENU);
@@ -40,7 +39,7 @@ public class MPSelectionState implements State {
 	}
 
 	@Override
-	public void render(Voxel voxel, GlobalStates states, float alpha) {
+	public void render(Voxel voxel, float alpha) {
 		GameResources gm = voxel.getGameResources();
 		gm.getRenderer().prepare();
 		gm.getDisplay().beingNVGFrame();

@@ -20,7 +20,6 @@
 
 package net.luxvacuos.voxel.client.core.states;
 
-import net.luxvacuos.voxel.client.core.GlobalStates;
 import net.luxvacuos.voxel.client.core.GlobalStates.GameState;
 import net.luxvacuos.voxel.client.core.State;
 import net.luxvacuos.voxel.client.core.Voxel;
@@ -36,7 +35,7 @@ import net.luxvacuos.voxel.client.resources.GameResources;
 public class AboutState implements State {
 
 	@Override
-	public void render(Voxel voxel, GlobalStates states, float delta) {
+	public void render(Voxel voxel, float delta) {
 		GameResources gm = voxel.getGameResources();
 		gm.getRenderer().prepare();
 		gm.getDisplay().beingNVGFrame();
@@ -46,10 +45,10 @@ public class AboutState implements State {
 	}
 
 	@Override
-	public void update(Voxel voxel, GlobalStates states, float delta) {
+	public void update(Voxel voxel, float delta) {
 		GameResources gm = voxel.getGameResources();
 		if (gm.getMenuSystem().aboutMenu.getBackButton().pressed())
-			states.setState(GameState.MAINMENU);
+			gm.getGlobalStates().setState(GameState.MAINMENU);
 		gm.getMenuSystem().aboutMenu.update();
 	}
 

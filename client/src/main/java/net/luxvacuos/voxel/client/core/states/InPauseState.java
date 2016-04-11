@@ -29,7 +29,6 @@ import java.nio.FloatBuffer;
 import org.lwjgl.BufferUtils;
 
 import net.luxvacuos.igl.vector.Vector3f;
-import net.luxvacuos.voxel.client.core.GlobalStates;
 import net.luxvacuos.voxel.client.core.GlobalStates.GameState;
 import net.luxvacuos.voxel.client.core.State;
 import net.luxvacuos.voxel.client.core.Voxel;
@@ -50,7 +49,7 @@ import net.luxvacuos.voxel.client.world.entities.PlayerCamera;
 public class InPauseState implements State {
 
 	@Override
-	public void update(Voxel voxel, GlobalStates states, float delta) throws Exception {
+	public void update(Voxel voxel, float delta) throws Exception {
 		GameResources gm = voxel.getGameResources();
 		while (Mouse.next()) {
 			if (gm.getMenuSystem().pauseMenu.getExitButton().pressed()) {
@@ -58,9 +57,9 @@ public class InPauseState implements State {
 				gm.getCamera().setPosition(new Vector3f(0, 0, 1));
 				gm.getCamera().setPitch(0);
 				gm.getCamera().setYaw(0);
-				states.setState(GameState.MAINMENU);
+				gm.getGlobalStates().setState(GameState.MAINMENU);
 			} else if (gm.getMenuSystem().pauseMenu.getOptionsButton().pressed()) {
-				states.setState(GameState.OPTIONS);
+				gm.getGlobalStates().setState(GameState.OPTIONS);
 			}
 		}
 		while (Keyboard.next()) {
@@ -72,7 +71,7 @@ public class InPauseState implements State {
 	}
 
 	@Override
-	public void render(Voxel voxel, GlobalStates states, float delta) {
+	public void render(Voxel voxel, float delta) {
 		GameResources gm = voxel.getGameResources();
 
 		gm.getWorldsHandler().getActiveWorld().getActiveDimension().lighting();

@@ -34,7 +34,6 @@ import java.nio.FloatBuffer;
 
 import org.lwjgl.BufferUtils;
 
-import net.luxvacuos.voxel.client.core.GlobalStates;
 import net.luxvacuos.voxel.client.core.GlobalStates.GameState;
 import net.luxvacuos.voxel.client.core.State;
 import net.luxvacuos.voxel.client.core.Voxel;
@@ -56,7 +55,7 @@ import net.luxvacuos.voxel.client.world.physics.PhysicsSystem;
 public class GameSPState implements State {
 
 	@Override
-	public void update(Voxel voxel, GlobalStates states, float delta) throws Exception {
+	public void update(Voxel voxel, float delta) throws Exception {
 		GameResources gm = voxel.getGameResources();
 
 		((PlayerCamera) gm.getCamera()).update(delta, gm, gm.getWorldsHandler().getActiveWorld().getActiveDimension());
@@ -94,7 +93,7 @@ public class GameSPState implements State {
 	}
 
 	@Override
-	public void render(Voxel voxel, GlobalStates states, float delta) {
+	public void render(Voxel voxel, float delta) {
 		GameResources gm = voxel.getGameResources();
 
 		gm.getWorldsHandler().getActiveWorld().getActiveDimension().lighting();

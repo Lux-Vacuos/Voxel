@@ -22,7 +22,6 @@ package net.luxvacuos.voxel.client.core.states;
 
 import java.io.IOException;
 
-import net.luxvacuos.voxel.client.core.GlobalStates;
 import net.luxvacuos.voxel.client.core.State;
 import net.luxvacuos.voxel.client.core.Voxel;
 import net.luxvacuos.voxel.client.core.VoxelVariables;
@@ -35,7 +34,7 @@ public class LoadingMPState implements State {
 	private String message = "Connecting...";
 
 	@Override
-	public void update(Voxel voxel, GlobalStates states, float delta) {
+	public void update(Voxel voxel, float delta) {
 
 		GameResources gm = voxel.getGameResources();
 		if (!trying) {
@@ -56,7 +55,7 @@ public class LoadingMPState implements State {
 	}
 
 	@Override
-	public void render(Voxel voxel, GlobalStates states, float delta) {
+	public void render(Voxel voxel, float delta) {
 		GameResources gm = voxel.getGameResources();
 		gm.getRenderer().prepare();
 		gm.getDisplay().beingNVGFrame();

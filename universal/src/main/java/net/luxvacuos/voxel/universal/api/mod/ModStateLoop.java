@@ -1,5 +1,5 @@
 /*
- * This file is part of Voxel
+ * This file is part of UVoxel
  * 
  * Copyright (C) 2016 Lux Vacuos
  *
@@ -18,29 +18,14 @@
  * 
  */
 
-package net.luxvacuos.voxel.server.api.mod;
+package net.luxvacuos.voxel.universal.api.mod;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import net.luxvacuos.voxel.universal.core.UVoxel;
 
-import net.luxvacuos.voxel.server.core.VoxelVariables;
+public interface ModStateLoop {
 
-/**
- * Mod
- * 
- * @author Guerra24 <pablo230699@hotmail.com>
- * @category API
- */
-@Target(ElementType.TYPE)
-@Retention(RetentionPolicy.RUNTIME)
-public @interface MoltenAPIMod {
+	public void update(UVoxel voxel, float delta);
 
-	public String createdBy() default "";
-
-	public String name() default "";
-
-	public int requiredAPIVersion() default VoxelVariables.apiVersionNum;
+	public void render(UVoxel voxel, float alpha);
 
 }

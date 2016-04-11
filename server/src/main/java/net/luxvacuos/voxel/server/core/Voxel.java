@@ -20,24 +20,30 @@
 
 package net.luxvacuos.voxel.server.core;
 
-import net.luxvacuos.voxel.server.api.ModInitialization;
-import net.luxvacuos.voxel.server.api.VersionException;
+import java.util.Map;
+
 import net.luxvacuos.voxel.server.bootstrap.Bootstrap;
 import net.luxvacuos.voxel.server.resources.GameResources;
 import net.luxvacuos.voxel.server.util.Logger;
+import net.luxvacuos.voxel.universal.api.APIMethod;
+import net.luxvacuos.voxel.universal.api.ModInitialization;
+import net.luxvacuos.voxel.universal.api.MoltenAPI;
+import net.luxvacuos.voxel.universal.api.VersionException;
+import net.luxvacuos.voxel.universal.core.UVoxel;
 import net.luxvacuos.voxel.universal.network.packets.WorldTime;
 
-public class Voxel {
+public class Voxel extends UVoxel {
 
 	// private WorldsHandler worldsHandler;
 	public float time = 6700;
 	private int port;
 
-	private GameResources gameResources;
 	private ModInitialization api;
 
 	public Voxel(int port) {
 		this.port = port;
+		super.prefix = "";
+		super.server = true;
 		mainLoop();
 	}
 
@@ -45,12 +51,12 @@ public class Voxel {
 		Logger.log("Starting Server");
 		gameResources = new GameResources(port);
 		Logger.log("Voxel Server Version: " + VoxelVariables.version);
-		Logger.log("Molten API Version: " + VoxelVariables.apiVersion);
+		Logger.log("Molten API Version: " + MoltenAPI.apiVersion);
 		Logger.log("Build: " + VoxelVariables.build);
 		Logger.log("Running on: " + Bootstrap.getPlatform());
 
-		gameResources.preInit();
-		api = new ModInitialization(gameResources);
+		getGameResources().preInit();
+		api = new ModInitialization(this);
 		try {
 			api.preInit();
 		} catch (VersionException e) {
@@ -59,10 +65,7 @@ public class Voxel {
 	}
 
 	private void init() {
-		// worldsHandler = new WorldsHandler();
-		// worldsHandler.registerWorld("Inifinty", new InfinityWorld());
-		gameResources.init();
-
+		getGameResources().init();
 		try {
 			api.init();
 		} catch (VersionException e) {
@@ -71,14 +74,18 @@ public class Voxel {
 	}
 
 	private void postInit() {
-		gameResources.postInit(this);
+		getGameResources().postInit(this);
 		try {
 			api.postInit();
 		} catch (VersionException e) {
 			e.printStackTrace();
 		}
-		gameResources.getWrapperUI().getThreadUI().start();
-		gameResources.getVoxelServer().connect();
+		getGameResources().getWrapperUI().getThreadUI().start();
+		getGameResources().getVoxelServer().connect();
+	}
+
+	@Override
+	public void registerAPIMethods(MoltenAPI api, Map<String, APIMethod<Object>> methods) {
 	}
 
 	private void mainLoop() {
@@ -88,32 +95,32 @@ public class Voxel {
 		float delta = 0;
 		float accumulator = 0f;
 		float interval = 1f / VoxelVariables.UPS;
-		while (gameResources.getGlobalStates().loop) {
-			if (gameResources.getCoreUtils().getTimeCount() > 1f) {
+		while (getGameResources().getGlobalStates().loop) {
+			if (getGameResources().getCoreUtils().getTimeCount() > 1f) {
 				CoreInfo.ups = CoreInfo.upsCount;
 				CoreInfo.upsCount = 0;
-				gameResources.getCoreUtils().setTimeCount(gameResources.getCoreUtils().getTimeCount() - 1f);
+				getGameResources().getCoreUtils().setTimeCount(getGameResources().getCoreUtils().getTimeCount() - 1f);
 			}
-			delta = gameResources.getCoreUtils().getDelta();
+			delta = getGameResources().getCoreUtils().getDelta();
 			accumulator += delta;
 			while (accumulator >= interval) {
 				update(interval);
 				accumulator -= interval;
 			}
-			gameResources.getVoxelServer().getServer().sendToAllTCP(new WorldTime(time));
-			gameResources.getCoreUtils().sync(VoxelVariables.UPS);
+			getGameResources().getVoxelServer().getServer().sendToAllTCP(new WorldTime(time));
+			getGameResources().getCoreUtils().sync(VoxelVariables.UPS);
 		}
 		dispose();
 	}
 
 	private void update(float delta) {
 		CoreInfo.upsCount++;
-		gameResources.getGlobalStates().doUpdate(this, delta);
+		getGameResources().getGlobalStates().doUpdate(this, delta);
 	}
 
 	private void dispose() {
 		Logger.log("Stopping Server");
-		gameResources.dispose();
+		getGameResources().dispose();
 	}
 
 	public ModInitialization getApi() {
@@ -121,7 +128,7 @@ public class Voxel {
 	}
 
 	public GameResources getGameResources() {
-		return gameResources;
+		return ((GameResources) gameResources);
 	}
 
 }

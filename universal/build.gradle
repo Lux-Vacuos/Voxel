@@ -1,6 +1,24 @@
+sourceCompatibility = 1.8
+def build = 3
+
 sourceSets {
     main {
         java.srcDir("${projectDir}/src/main/java/")
         resources.srcDir("${projectDir}/src/main/resources")
     }
 }
+
+jar {
+	version = "0.0.1-" + build
+	manifest {
+        attributes (
+			"Specification-Title": "Voxel-Universal",
+			"Specification-Version": version,
+			"Specification-Vendor": "Lux Vacuos",
+			"Implementation-Title": "net.luxvacuos.voxel.universal",
+			"Implementation-Version": build,
+			"Implementation-Vendor": "Lux Vacuos"
+			)
+    }
+}
+

@@ -28,8 +28,9 @@ import net.luxvacuos.voxel.server.core.Voxel;
 import net.luxvacuos.voxel.server.network.VoxelServer;
 import net.luxvacuos.voxel.server.ui.WrapperUI;
 import net.luxvacuos.voxel.server.util.CustomLog;
+import net.luxvacuos.voxel.universal.resources.UGameResources;
 
-public class GameResources {
+public class GameResources extends UGameResources {
 
 	private GlobalStates globalStates;
 	private Kryo kryo;

@@ -20,7 +20,6 @@
 
 package net.luxvacuos.voxel.client.core.states;
 
-import net.luxvacuos.voxel.client.core.GlobalStates;
 import net.luxvacuos.voxel.client.core.GlobalStates.GameState;
 import net.luxvacuos.voxel.client.core.GlobalStates.InternalState;
 import net.luxvacuos.voxel.client.core.State;
@@ -38,7 +37,7 @@ import net.luxvacuos.voxel.client.resources.GameResources;
 public class MainMenuState implements State {
 
 	@Override
-	public void render(Voxel voxel, GlobalStates states, float delta) {
+	public void render(Voxel voxel, float delta) {
 		GameResources gm = voxel.getGameResources();
 		gm.getRenderer().prepare();
 		gm.getDisplay().beingNVGFrame();
@@ -48,24 +47,24 @@ public class MainMenuState implements State {
 	}
 
 	@Override
-	public void update(Voxel voxel, GlobalStates states, float delta) throws Exception {
+	public void update(Voxel voxel, float delta) throws Exception {
 		GameResources gm = voxel.getGameResources();
 
 		if (gm.getMenuSystem().mainMenu.getPlayButton().pressed()) {
-			states.setState(GameState.WORLD_SELECTION);
+			gm.getGlobalStates().setState(GameState.WORLD_SELECTION);
 		} else if (gm.getMenuSystem().mainMenu.getPlayMPButton().pressed()) {
-			states.setState(GameState.MP_SELECTION);
+			gm.getGlobalStates().setState(GameState.MP_SELECTION);
 		} else if (gm.getMenuSystem().mainMenu.getExitButton().pressed()) {
-			states.setInternalState(InternalState.STOPPED);
+			gm.getGlobalStates().setInternalState(InternalState.STOPPED);
 		} else if (gm.getMenuSystem().mainMenu.getOptionsButton().pressed()) {
 			try {
 				Thread.sleep(100);
 			} catch (InterruptedException e) {
 				throw new ThreadException(e);
 			}
-			states.setState(GameState.OPTIONS);
+			gm.getGlobalStates().setState(GameState.OPTIONS);
 		} else if (gm.getMenuSystem().mainMenu.getAboutButton().pressed()) {
-			states.setState(GameState.ABOUT);
+			gm.getGlobalStates().setState(GameState.ABOUT);
 		}
 		gm.getMenuSystem().mainMenu.update();
 	}

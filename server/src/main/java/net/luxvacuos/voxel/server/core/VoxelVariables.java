@@ -35,11 +35,9 @@ public class VoxelVariables {
 	 * Game Settings
 	 */
 	public static final String version = "0.0.10";
-	public static final String apiVersion = "0.0.6";
-	public static final int apiVersionNum = 000006;
-	public static final String state = "ALPHA";
-	public static final int build = 180;
-	public static final String settings = "assets/game/settings.conf";
+
+	public static final int build = 200;
+	public static final String settings = "settings.conf";
 	public static final float TIME_MULTIPLIER = 10;
 
 	/**
@@ -59,7 +57,7 @@ public class VoxelVariables {
 	/**
 	 * World Folder Path
 	 */
-	public static final String worldPath = "assets/game/world/";
+	public static final String worldPath = "world/";
 
 	/**
 	 * Update Global Variables

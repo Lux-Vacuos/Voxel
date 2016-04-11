@@ -44,7 +44,6 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextArea;
-import javafx.scene.control.TextAreaBuilder;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -229,7 +228,10 @@ public class MainUI extends Application {
 		pl.autosize();
 		gridHome.add(pl, 0, 0);
 
-		TextArea tac = TextAreaBuilder.create().prefWidth(800).prefHeight(600).wrapText(true).build();
+		TextArea tac = new TextArea();
+		tac.setPrefWidth(800);
+		tac.setPrefHeight(600);
+		tac.setWrapText(true);
 		tac.setEditable(false);
 		Console console = new Console(tac);
 		PrintStream ps = new PrintStream(console, true);
@@ -240,7 +242,10 @@ public class MainUI extends Application {
 		gridHome.add(tac, 1, 0);
 		home.setContent(gridHome);
 
-		TextArea tar = TextAreaBuilder.create().prefWidth(800).prefHeight(14).wrapText(true).build();
+		TextArea tar = new TextArea();
+		tar.setPrefWidth(800);
+		tar.setPrefHeight(14);
+		tar.setWrapText(true);
 		tar.setEditable(true);
 		tar.setPrefRowCount(1);
 		tar.setOnKeyPressed(new EventHandler<KeyEvent>() {

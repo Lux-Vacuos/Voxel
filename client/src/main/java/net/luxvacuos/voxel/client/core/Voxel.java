@@ -25,10 +25,13 @@ import static org.lwjgl.opengl.GL11.GL_VENDOR;
 import static org.lwjgl.opengl.GL11.GL_VERSION;
 import static org.lwjgl.opengl.GL11.glGetString;
 
+import java.util.Map;
+
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFW;
 
 import net.luxvacuos.igl.Logger;
+import net.luxvacuos.voxel.client.api.Client_Test;
 import net.luxvacuos.voxel.client.bootstrap.Bootstrap;
 import net.luxvacuos.voxel.client.core.GlobalStates.InternalState;
 import net.luxvacuos.voxel.client.input.Mouse;
@@ -36,8 +39,10 @@ import net.luxvacuos.voxel.client.rendering.api.nanovg.Timers;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.ui.CrashScreen;
 import net.luxvacuos.voxel.client.world.block.BlocksResources;
+import net.luxvacuos.voxel.universal.api.APIMethod;
 import net.luxvacuos.voxel.universal.api.ModInitialization;
 import net.luxvacuos.voxel.universal.api.MoltenAPI;
+import net.luxvacuos.voxel.universal.core.UVoxel;
 
 /**
  * The Kernel, Game Engine Core
@@ -45,20 +50,15 @@ import net.luxvacuos.voxel.universal.api.MoltenAPI;
  * @author Guerra24 <pablo230699@hotmail.com>
  * @category Kernel
  */
-public class Voxel {
+public class Voxel extends UVoxel {
 
-	/**
-	 * Game Data
-	 */
-	private GameResources gameResources;
 	private ModInitialization api;
 	private boolean disposed = false;
 	private boolean loaded = false;
 
-	/**
-	 * Constructor of the Voxel Kernel, Initializes the Game and starts the loop
-	 */
 	public Voxel() {
+		super.prefix = Bootstrap.getPrefix();
+		super.client = true;
 		mainLoop();
 	}
 
@@ -66,14 +66,10 @@ public class Voxel {
 		Logger.log("Running voxel in test mode");
 	}
 
-	/**
-	 * PreInit phase, initialize the display and runs the API PreInit
-	 * 
-	 */
 	public void preInit() throws Throwable {
 		Logger.log("Starting Client");
 		gameResources = GameResources.instance();
-		gameResources.preInit();
+		getGameResources().preInit();
 		Logger.log("Voxel Version: " + VoxelVariables.version);
 		Logger.log("Build: " + VoxelVariables.build);
 		Logger.log("Molten API Version: " + MoltenAPI.apiVersion);
@@ -90,61 +86,56 @@ public class Voxel {
 		CoreInfo.OpenGLVer = glGetString(GL_VERSION);
 		CoreInfo.Vendor = glGetString(GL_VENDOR);
 		CoreInfo.Renderer = glGetString(GL_RENDERER);
-		gameResources.getDisplay().setVisible();
+		getGameResources().getDisplay().setVisible();
 
 		if (Bootstrap.getPlatform() == Bootstrap.Platform.MACOSX) {
 			VoxelVariables.runningOnMac = true;
 		}
-		api = new ModInitialization(gameResources);
+		api = new ModInitialization(this);
 		api.preInit();
 	}
 
-	/**
-	 * Init phase, initialize the game data (models,textures,music,etc) and runs
-	 * the API Init
-	 */
 	public void init() throws Throwable {
-		gameResources.init(this);
-		BlocksResources.createBlocks(gameResources.getLoader());
-		gameResources.loadResources();
+		getGameResources().init(this);
+		BlocksResources.createBlocks(getGameResources().getLoader());
+		getGameResources().loadResources();
 		Logger.log("Initializing Threads");
-		gameResources.getRenderer().prepare();
+		getGameResources().getRenderer().prepare();
 		api.init();
+		api.getMoltenAPI().runMethod("LL");
 	}
 
-	/**
-	 * PostInit phase, starts music and runs the API PostInit
-	 */
 	public void postInit() throws Throwable {
 		api.postInit();
 		Mouse.setHidden(true);
 		Timers.initDebugDisplay();
 	}
 
-	/**
-	 * Voxel Main Loop
-	 * 
-	 */
+	@Override
+	public void registerAPIMethods(MoltenAPI api, Map<String, APIMethod<Object>> methods) {
+		methods.put("Client_Test", new Client_Test());
+	}
+
 	private void mainLoop() {
 		try {
 			preInit();
 			init();
 			postInit();
-			gameResources.getGlobalStates().setInternalState(InternalState.RUNNIG);
+			getGameResources().getGlobalStates().setInternalState(InternalState.RUNNIG);
 			loaded = true;
 			float delta = 0;
 			float accumulator = 0f;
 			float interval = 1f / VoxelVariables.UPS;
 			float alpha = 0;
 
-			while (gameResources.getGlobalStates().getInternalState() == InternalState.RUNNIG) {
+			while (getGameResources().getGlobalStates().getInternalState() == InternalState.RUNNIG) {
 				Timers.startCPUTimer();
-				if (gameResources.getDisplay().getTimeCount() > 1f) {
+				if (getGameResources().getDisplay().getTimeCount() > 1f) {
 					CoreInfo.ups = CoreInfo.upsCount;
 					CoreInfo.upsCount = 0;
-					gameResources.getDisplay().setTimeCount(gameResources.getDisplay().getTimeCount() - 1);
+					getGameResources().getDisplay().setTimeCount(getGameResources().getDisplay().getTimeCount() - 1);
 				}
-				delta = gameResources.getDisplay().getDelta();
+				delta = getGameResources().getDisplay().getDelta();
 				accumulator += delta;
 				while (accumulator >= interval) {
 					update(interval);
@@ -156,7 +147,7 @@ public class Voxel {
 				render(alpha);
 				Timers.stopGPUTimer();
 				Timers.update();
-				gameResources.getDisplay().updateDisplay(VoxelVariables.FPS);
+				getGameResources().getDisplay().updateDisplay(VoxelVariables.FPS);
 			}
 			dispose();
 		} catch (Throwable t) {
@@ -171,7 +162,7 @@ public class Voxel {
 	 *            Delta value from Render Thread
 	 */
 	private void render(float delta) {
-		gameResources.getGlobalStates().doRender(this, delta);
+		getGameResources().getGlobalStates().doRender(this, delta);
 	}
 
 	/**
@@ -183,7 +174,7 @@ public class Voxel {
 	 */
 	private void update(float delta) throws Exception {
 		CoreInfo.upsCount++;
-		gameResources.getGlobalStates().doUpdate(this, delta);
+		getGameResources().getGlobalStates().doUpdate(this, delta);
 	}
 
 	private void handleError(Throwable e) {
@@ -193,19 +184,21 @@ public class Voxel {
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			}
+		else
+			getGameResources().getDisplay().closeDisplay();
 		CrashScreen.run(e);
 	}
 
 	public void dispose() throws Exception {
 		disposed = true;
 		Logger.log("Cleaning Resources");
-		gameResources.cleanUp();
+		getGameResources().cleanUp();
 		api.dispose();
-		gameResources.getDisplay().closeDisplay();
+		getGameResources().getDisplay().closeDisplay();
 	}
 
 	public GameResources getGameResources() {
-		return gameResources;
+		return ((GameResources) gameResources);
 	}
 
 	public ModInitialization getApi() {

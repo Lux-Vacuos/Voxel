@@ -6,6 +6,7 @@ import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFW;
 
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -15,6 +16,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import net.luxvacuos.igl.Logger;
 import net.luxvacuos.voxel.client.core.CoreInfo;
 import net.luxvacuos.voxel.client.core.VoxelVariables;
@@ -71,6 +73,13 @@ public class CrashScreen extends Application {
 		stage.setHeight(680);
 		stage.centerOnScreen();
 		stage.show();
+		stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+
+			@Override
+			public void handle(WindowEvent event) {
+				System.exit(0);
+			}
+		});
 		ready = true;
 		th.start();
 	}

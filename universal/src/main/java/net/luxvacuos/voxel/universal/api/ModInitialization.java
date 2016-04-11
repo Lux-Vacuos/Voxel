@@ -1,5 +1,5 @@
 /*
- * This file is part of Voxel
+ * This file is part of UVoxel
  * 
  * Copyright (C) 2016 Lux Vacuos
  *
@@ -27,9 +27,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import net.luxvacuos.igl.Logger;
-import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.universal.api.mod.MoltenAPIInitPhase;
 import net.luxvacuos.voxel.universal.api.mod.MoltenAPIMod;
+import net.luxvacuos.voxel.universal.core.UVoxel;
 
 /**
  * @author Guerra24 <pablo230699@hotmail.com>
@@ -44,10 +44,10 @@ public class ModInitialization {
 
 	private Map<Class<?>, Object> instances;
 
-	public ModInitialization(GameResources gm) {
+	public ModInitialization(UVoxel uVoxel) {
 		modLoader = new ModLoader();
-		modLoader.loadMods();
-		moltenAPI = new MoltenAPI(gm);
+		modLoader.loadMods(uVoxel.getPrefix());
+		moltenAPI = new MoltenAPI(uVoxel);
 		instances = new HashMap<>();
 	}
 

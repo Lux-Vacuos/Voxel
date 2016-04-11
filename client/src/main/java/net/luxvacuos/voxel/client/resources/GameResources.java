@@ -66,6 +66,7 @@ import net.luxvacuos.voxel.client.world.block.Block;
 import net.luxvacuos.voxel.client.world.entities.Camera;
 import net.luxvacuos.voxel.client.world.entities.PlayerCamera;
 import net.luxvacuos.voxel.client.world.entities.SunCamera;
+import net.luxvacuos.voxel.universal.resources.UGameResources;
 import net.luxvacuos.voxel.universal.resources.UniversalResources;
 
 /**
@@ -74,7 +75,7 @@ import net.luxvacuos.voxel.universal.resources.UniversalResources;
  * @author Guerra24 <pablo230699@hotmail.com>
  * @category Assets
  */
-public class GameResources {
+public class GameResources extends UGameResources {
 
 	private static GameResources instance = null;
 

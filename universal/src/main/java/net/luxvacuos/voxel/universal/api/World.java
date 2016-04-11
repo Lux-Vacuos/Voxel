@@ -1,5 +1,5 @@
 /*
- * This file is part of Voxel
+ * This file is part of UVoxel
  * 
  * Copyright (C) 2016 Lux Vacuos
  *
@@ -18,17 +18,8 @@
  * 
  */
 
-package net.luxvacuos.voxel.universal.api.mod;
+package net.luxvacuos.voxel.universal.api;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-
-@Target(ElementType.METHOD)
-@Retention(RetentionPolicy.RUNTIME)
-public @interface MoltenAPIInitPhase {
-
-	public boolean enabled() default true;
+public class World {
 
 }

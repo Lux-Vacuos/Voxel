@@ -69,18 +69,18 @@ public class GlobalStates {
 	}
 
 	public void doUpdate(Voxel voxel, float delta) throws Exception {
-		state.state.update(voxel, this, delta);
+		state.state.update(voxel, delta);
 		for (ModStateLoop modStateLoop : voxel.getApi().getMoltenAPI().getModStateLoops()) {
-			modStateLoop.update(this.state.state, delta);
+			modStateLoop.update(voxel, delta);
 		}
 		if (voxel.getGameResources().getDisplay().isCloseRequested())
 			internalState = InternalState.STOPPED;
 	}
 
 	public void doRender(Voxel voxel, float alpha) {
-		state.state.render(voxel, this, alpha);
+		state.state.render(voxel, alpha);
 		for (ModStateLoop modStateLoop : voxel.getApi().getMoltenAPI().getModStateLoops()) {
-			modStateLoop.render(state.state, alpha);
+			modStateLoop.render(voxel, alpha);
 		}
 	}
 

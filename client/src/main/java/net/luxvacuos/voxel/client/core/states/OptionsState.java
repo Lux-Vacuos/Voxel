@@ -1,3 +1,4 @@
+
 /*
  * This file is part of Voxel
  * 
@@ -17,7 +18,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * 
  */
-
 package net.luxvacuos.voxel.client.core.states;
 
 import static org.lwjgl.opengl.GL11.GL_DEPTH_COMPONENT;
@@ -28,7 +28,6 @@ import java.nio.FloatBuffer;
 
 import org.lwjgl.BufferUtils;
 
-import net.luxvacuos.voxel.client.core.GlobalStates;
 import net.luxvacuos.voxel.client.core.GlobalStates.GameState;
 import net.luxvacuos.voxel.client.core.State;
 import net.luxvacuos.voxel.client.core.Voxel;
@@ -47,7 +46,7 @@ import net.luxvacuos.voxel.client.resources.GameResources;
 public class OptionsState implements State {
 
 	@Override
-	public void update(Voxel voxel, GlobalStates states, float delta) {
+	public void update(Voxel voxel, float delta) {
 		GameResources gm = voxel.getGameResources();
 
 		while (Mouse.next()) {
@@ -72,7 +71,7 @@ public class OptionsState implements State {
 			if (gm.getMenuSystem().optionsMenu.getExitButton().pressed()) {
 				gm.getGameSettings().updateSetting();
 				gm.getGameSettings().save();
-				states.setState(states.getOldState());
+				gm.getGlobalStates().setState(gm.getGlobalStates().getOldState());
 			}
 		}
 		gm.getMenuSystem().optionsMenu.update();
@@ -80,9 +79,9 @@ public class OptionsState implements State {
 	}
 
 	@Override
-	public void render(Voxel voxel, GlobalStates states, float delta) {
+	public void render(Voxel voxel, float delta) {
 		GameResources gm = voxel.getGameResources();
-		if (states.getOldState().equals(GameState.IN_PAUSE)) {
+		if (gm.getGlobalStates().getOldState().equals(GameState.IN_PAUSE)) {
 			gm.getWorldsHandler().getActiveWorld().getActiveDimension().lighting();
 			gm.getSun_Camera().setPosition(gm.getCamera().getPosition());
 			gm.getFrustum().calculateFrustum(gm.getMasterShadowRenderer().getProjectionMatrix(), gm.getSun_Camera());

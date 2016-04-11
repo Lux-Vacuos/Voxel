@@ -1,5 +1,5 @@
 /*
- * This file is part of Voxel
+ * This file is part of UVoxel
  * 
  * Copyright (C) 2016 Lux Vacuos
  *
@@ -18,7 +18,7 @@
  * 
  */
 
-package net.luxvacuos.voxel.server.api;
+package net.luxvacuos.voxel.universal.api;
 
 import java.io.File;
 import java.io.IOException;
@@ -30,8 +30,8 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.luxvacuos.voxel.server.api.mod.MoltenAPIMod;
-import net.luxvacuos.voxel.server.util.Logger;
+import net.luxvacuos.igl.Logger;
+import net.luxvacuos.voxel.universal.api.mod.MoltenAPIMod;
 
 public class ModLoader {
 
@@ -42,8 +42,8 @@ public class ModLoader {
 		modsClass = new ArrayList<Class<?>>();
 	}
 
-	public void loadMods() {
-		modsFolder = new File("assets/mods");
+	public void loadMods(String prefix) {
+		modsFolder = new File(prefix + "/mods");
 		if (!modsFolder.exists())
 			modsFolder.mkdirs();
 		try {

@@ -2,7 +2,7 @@ apply plugin:'application'
 
 mainClassName = 'net.luxvacuos.voxel.server.bootstrap.Bootstrap'
 sourceCompatibility = 1.8
-def build = 199
+def build = 200
 
 sourceSets {
     main {
@@ -12,7 +12,6 @@ sourceSets {
 }
 
 jar {
-	exclude "net/luxvacuos/voxel/universal/api/**" 
 	version = "0.0.10-" + build
 	manifest {
         attributes (
