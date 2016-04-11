@@ -157,7 +157,6 @@ public class Voxel {
 				Timers.stopGPUTimer();
 				Timers.update();
 				gameResources.getDisplay().updateDisplay(VoxelVariables.FPS);
-				throw new RuntimeException();
 			}
 			dispose();
 		} catch (Throwable t) {

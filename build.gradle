@@ -29,7 +29,6 @@ repositories {
 dependencies {
 	compile project(':ashley')
 	compile project(':utils')
-	compile 'org.l33tlabs.twl:pngdecoder:1.0'
 	compile 'de.jarnbjo:j-ogg-all:1.0.0'
 	compile 'org.jcraft:jorbis:0.0.17'
 	compile 'com.esotericsoftware:kryonet:2.22.+'
