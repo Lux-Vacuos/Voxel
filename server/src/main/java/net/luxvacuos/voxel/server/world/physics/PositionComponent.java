@@ -22,7 +22,7 @@ package net.luxvacuos.voxel.server.world.physics;
 
 import com.badlogic.ashley.core.Component;
 
-import net.luxvacuos.voxel.universal.util.vector.Vector3f;
+import net.luxvacuos.igl.vector.Vector3f;
 
 public class PositionComponent implements Component {
 	public Vector3f position = new Vector3f(0, 0, 0);

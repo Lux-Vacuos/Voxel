@@ -22,7 +22,7 @@ package net.luxvacuos.voxel.server.world.block;
 
 import com.badlogic.gdx.math.collision.BoundingBox;
 
-import net.luxvacuos.voxel.universal.util.vector.Vector3f;
+import net.luxvacuos.igl.vector.Vector3f;
 
 public abstract class BlockBase {
 

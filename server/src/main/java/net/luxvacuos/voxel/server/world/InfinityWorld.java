@@ -33,6 +33,7 @@ import com.badlogic.gdx.math.collision.BoundingBox;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 
+import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.voxel.server.core.VoxelVariables;
 import net.luxvacuos.voxel.server.resources.GameResources;
 import net.luxvacuos.voxel.server.util.Logger;
@@ -41,7 +42,6 @@ import net.luxvacuos.voxel.server.world.chunks.Chunk;
 import net.luxvacuos.voxel.server.world.chunks.ChunkGenerator;
 import net.luxvacuos.voxel.server.world.chunks.ChunkKey;
 import net.luxvacuos.voxel.server.world.chunks.LightNode;
-import net.luxvacuos.voxel.universal.util.vector.Vector3f;
 
 /**
  * Dimensional World

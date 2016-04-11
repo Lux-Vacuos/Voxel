@@ -28,12 +28,12 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Server;
 
+import net.luxvacuos.igl.vector.Vector2f;
+import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.voxel.server.resources.GameResources;
 import net.luxvacuos.voxel.universal.network.packets.UpdateNames;
 import net.luxvacuos.voxel.universal.network.packets.Username;
 import net.luxvacuos.voxel.universal.network.packets.WorldTime;
-import net.luxvacuos.voxel.universal.util.vector.Vector2f;
-import net.luxvacuos.voxel.universal.util.vector.Vector3f;
 
 public class VoxelServer {
 

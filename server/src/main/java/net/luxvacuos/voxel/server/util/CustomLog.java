@@ -20,10 +20,16 @@
 
 package net.luxvacuos.voxel.server.util;
 
+import static com.esotericsoftware.minlog.Log.LEVEL_DEBUG;
+import static com.esotericsoftware.minlog.Log.LEVEL_ERROR;
+import static com.esotericsoftware.minlog.Log.LEVEL_INFO;
+import static com.esotericsoftware.minlog.Log.LEVEL_TRACE;
+import static com.esotericsoftware.minlog.Log.LEVEL_WARN;
+import static com.esotericsoftware.minlog.Log.setLogger;
+
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
-import static com.esotericsoftware.minlog.Log.*;
 import com.esotericsoftware.minlog.Log.Logger;
 
 public class CustomLog extends Logger {
