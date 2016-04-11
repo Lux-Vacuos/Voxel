@@ -1,6 +1,3 @@
-apply plugin:'java'
-apply plugin:'eclipse'
-apply plugin:'idea'
 apply plugin:'application'
 
 mainClassName = 'net.luxvacuos.voxel.client.bootstrap.Bootstrap'
@@ -10,7 +7,6 @@ def build = 199
 if (System.getProperty("os.name").toLowerCase().contains("mac os x")) {
   applicationDefaultJvmArgs = ["-XstartOnFirstThread"]
 }
-
 
 sourceSets {
     main {

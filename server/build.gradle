@@ -1,5 +1,3 @@
-apply plugin:'java'
-apply plugin:'eclipse'
 apply plugin:'application'
 
 mainClassName = 'net.luxvacuos.voxel.server.bootstrap.Bootstrap'
