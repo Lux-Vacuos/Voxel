@@ -1,77 +1,3 @@
-apply plugin:'java'
-apply plugin:'eclipse'
-apply plugin:'idea'
-apply plugin:'application'
-
-mainClassName = 'net.luxvacuos.voxel.client.bootstrap.Bootstrap'
-sourceCompatibility = 1.8
-def build = 199
-def apiBuild = 2
-
-if (System.getProperty("os.name").toLowerCase().contains("mac os x")) {
-  applicationDefaultJvmArgs = ["-XstartOnFirstThread"]
-}
-
-buildscript {
-	repositories {
-        mavenCentral()
-        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
-    }
-}
-
-repositories {
-	mavenCentral()
-	maven {
-    	url "https://oss.sonatype.org/content/repositories/snapshots/"
-    }
-}
-
-dependencies {
-	compile project(':ashley')
-	compile project(':utils')
-	compile 'de.jarnbjo:j-ogg-all:1.0.0'
-	compile 'org.jcraft:jorbis:0.0.17'
-	compile 'com.esotericsoftware:kryonet:2.22.+'
-	compile 'org.lwjgl:lwjgl:3.0.0-SNAPSHOT'
-	compile 'org.lwjgl:lwjgl-platform:3.0.0-SNAPSHOT:natives-windows'
-	compile 'org.lwjgl:lwjgl-platform:3.0.0-SNAPSHOT:natives-linux'
-	compile 'org.lwjgl:lwjgl-platform:3.0.0-SNAPSHOT:natives-osx'
-    testCompile group: 'junit', name: 'junit', version: '4.12'
-}
-
-sourceSets {
-    main {
-        java.srcDir("${projectDir}/src/main/java/")
-        resources.srcDir("${projectDir}/src/main/resources")
-    }
-}
-
-task apiJar(type: Jar) {  
-    from(sourceSets.main.output) {  
-        include "net/luxvacuos/voxel/universal/api/**" 
-    } 
-	version "0.0.1-" + apiBuild
-	baseName "MoltenAPI"
-}
-
-jar {
-	exclude "net/luxvacuos/voxel/client/api/**" 
-	version = "0.0.10-" + build
-	manifest {
-        attributes (
-			"Specification-Title": "Voxel-Client",
-			"Specification-Version": version,
-			"Specification-Vendor": "Lux Vacuos",
-			"Implementation-Title": "net.luxvacuos.voxel",
-			"Implementation-Version": build,
-			"Implementation-Vendor": "Lux Vacuos"
-			)
-    }
-}
-
-task generateJavaDoc(type: Javadoc) {
-	failOnError = false
-}
 
 task wrapper(type: Wrapper) {
     gradleVersion = '2.12'
@@ -91,13 +17,48 @@ subprojects {
 
 project(":ashley") {
     dependencies {
-    	compile project(':utils')
+        compile project(':utils')
+    }
+}
+
+project(":client") {
+    dependencies {
+        compile project(':ashley')
+        compile project(':universal')
+        compile project(':utils')
+        compile 'org.l33tlabs.twl:pngdecoder:1.0'
+        compile 'de.jarnbjo:j-ogg-all:1.0.0'
+        compile 'org.jcraft:jorbis:0.0.17'
+        compile 'com.esotericsoftware:kryonet:2.22.+'
+        compile 'org.lwjgl:lwjgl:3.0.0-SNAPSHOT'
+        compile 'org.lwjgl:lwjgl-platform:3.0.0-SNAPSHOT:natives-windows'
+        compile 'org.lwjgl:lwjgl-platform:3.0.0-SNAPSHOT:natives-linux'
+        compile 'org.lwjgl:lwjgl-platform:3.0.0-SNAPSHOT:natives-osx'
+        testCompile group: 'junit', name: 'junit', version: '4.12'
+    }
+}
+
+project(":universal") {
+    dependencies {
+        compile project(':ashley')
+        compile project(':utils')
+        testCompile group: 'junit', name: 'junit', version: '4.12'
     }
 }
 
 project(":utils") {
     dependencies {
-    	compile 'log4j:log4j:1.2.17'
-    	compile 'com.esotericsoftware.minlog:minlog:1.2'
+        compile 'log4j:log4j:1.2.17'
+        compile 'com.esotericsoftware.minlog:minlog:1.2'
+    }
+}
+
+project(":server") {
+    dependencies {
+        compile project(':ashley')
+        compile project(':universal')
+        compile project(':utils')
+        compile 'com.esotericsoftware:kryonet:2.22.+'
+        testCompile group: 'junit', name: 'junit', version: '4.12'
     }
 }
