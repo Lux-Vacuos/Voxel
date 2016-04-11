@@ -17,44 +17,48 @@ subprojects {
 
 project(":ashley") {
     dependencies {
-    	compile project(':utils')
-    }
-}
-
-project(":utils") {
-    dependencies {
-    	compile 'log4j:log4j:1.2.17'
-    	compile 'com.esotericsoftware.minlog:minlog:1.2'
+        compile project(':utils')
     }
 }
 
 project(":client") {
     dependencies {
-    	compile project(':ashley')
-		compile project(':utils')
-		compile 'org.l33tlabs.twl:pngdecoder:1.0'
-		compile 'de.jarnbjo:j-ogg-all:1.0.0'
-		compile 'org.jcraft:jorbis:0.0.17'
-		compile 'com.esotericsoftware:kryonet:2.22.+'
-		compile 'org.lwjgl:lwjgl:3.0.0-SNAPSHOT'
-		compile 'org.lwjgl:lwjgl-platform:3.0.0-SNAPSHOT:natives-windows'
-		compile 'org.lwjgl:lwjgl-platform:3.0.0-SNAPSHOT:natives-linux'
-		compile 'org.lwjgl:lwjgl-platform:3.0.0-SNAPSHOT:natives-osx'
-		testCompile group: 'junit', name: 'junit', version: '4.12'
-    }
-}
-
-project(":server") {
-    dependencies {
-    	compile project(':ashley')
-		compile project(':utils')
-		compile 'com.esotericsoftware:kryonet:2.22.+'
-		testCompile group: 'junit', name: 'junit', version: '4.12'
+        compile project(':ashley')
+        compile project(':universal')
+        compile project(':utils')
+        compile 'org.l33tlabs.twl:pngdecoder:1.0'
+        compile 'de.jarnbjo:j-ogg-all:1.0.0'
+        compile 'org.jcraft:jorbis:0.0.17'
+        compile 'com.esotericsoftware:kryonet:2.22.+'
+        compile 'org.lwjgl:lwjgl:3.0.0-SNAPSHOT'
+        compile 'org.lwjgl:lwjgl-platform:3.0.0-SNAPSHOT:natives-windows'
+        compile 'org.lwjgl:lwjgl-platform:3.0.0-SNAPSHOT:natives-linux'
+        compile 'org.lwjgl:lwjgl-platform:3.0.0-SNAPSHOT:natives-osx'
+        testCompile group: 'junit', name: 'junit', version: '4.12'
     }
 }
 
 project(":universal") {
     dependencies {
-		testCompile group: 'junit', name: 'junit', version: '4.12'
+        compile project(':ashley')
+        compile project(':utils')
+        testCompile group: 'junit', name: 'junit', version: '4.12'
+    }
+}
+
+project(":utils") {
+    dependencies {
+        compile 'log4j:log4j:1.2.17'
+        compile 'com.esotericsoftware.minlog:minlog:1.2'
+    }
+}
+
+project(":server") {
+    dependencies {
+        compile project(':ashley')
+        compile project(':universal')
+        compile project(':utils')
+        compile 'com.esotericsoftware:kryonet:2.22.+'
+        testCompile group: 'junit', name: 'junit', version: '4.12'
     }
 }
