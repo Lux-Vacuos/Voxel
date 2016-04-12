@@ -161,15 +161,15 @@ public class Display extends Window {
 			throw new RuntimeException("Fail to create NanoVG");
 
 		lastLoopTime = getTime();
-		ByteBuffer w = BufferUtils.createByteBuffer(4);
-		ByteBuffer h = BufferUtils.createByteBuffer(4);
+		IntBuffer w = BufferUtils.createIntBuffer(1);
+		IntBuffer h = BufferUtils.createIntBuffer(1);
 		glfwGetFramebufferSize(window, w, h);
-		super.displayFramebufferWidth = w.getInt(0);
-		super.displayFramebufferHeight = h.getInt(0);
+		super.displayFramebufferWidth = w.get(0);
+		super.displayFramebufferHeight = h.get(0);
 
 		glfwGetWindowSize(super.window, w, h);
-		super.displayWidth = w.getInt(0);
-		super.displayHeight = h.getInt(0);
+		super.displayWidth = w.get(0);
+		super.displayHeight = h.get(0);
 		super.pixelRatio = (float) displayFramebufferWidth / (float) displayWidth;
 		glViewport(0, 0, (int) (displayWidth * pixelRatio), (int) (displayHeight * pixelRatio));
 

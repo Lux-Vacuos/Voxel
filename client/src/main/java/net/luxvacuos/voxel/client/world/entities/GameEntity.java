@@ -31,61 +31,90 @@ import net.luxvacuos.voxel.client.world.physics.VelocityComponent;
 public class GameEntity extends Entity {
 
 	private TexturedModel model;
-	private PositionComponent positionComponent;
-	private VelocityComponent velocityComponent;
-	private CollisionComponent collisionComponent;
 	private float rotX, rotY, rotZ;
 	private float scale;
+	@Deprecated
 	private int visibility;
 
 	public GameEntity(TexturedModel model, Vector3f position, Vector3f aabbMin, Vector3f aabbMax, float rotX,
 			float rotY, float rotZ, float scale) {
-		velocityComponent = new VelocityComponent();
-		positionComponent = new PositionComponent();
-		positionComponent.position = new Vector3f(position);
-		collisionComponent = new CollisionComponent();
-		this.add(positionComponent);
-		this.add(velocityComponent);
-		this.add(collisionComponent);
+		this.add(new CollisionComponent());
+		this.add(new VelocityComponent());
+		this.add(new PositionComponent());
+		this.getComponent(PositionComponent.class).position = new Vector3f(position);
 		this.model = model;
 		this.rotX = rotX;
 		this.rotY = rotY;
 		this.rotZ = rotZ;
 		this.scale = scale;
-		collisionComponent.min = aabbMin.getAsVec3();
-		collisionComponent.max = aabbMax.getAsVec3();
-		collisionComponent.boundingBox.set(collisionComponent.min, collisionComponent.max);
+		this.getComponent(CollisionComponent.class).min = aabbMin.getAsVec3();
+		this.getComponent(CollisionComponent.class).max = aabbMax.getAsVec3();
+		this.getComponent(CollisionComponent.class).boundingBox.set(this.getComponent(CollisionComponent.class).min,
+				this.getComponent(CollisionComponent.class).max);
+		init();
 	}
 
 	public GameEntity(TexturedModel model, Vector3f position, Vector3f aabbMin, Vector3f aabbMax, float vx, float vy,
 			float vz, float rotX, float rotY, float rotZ, float scale) {
-		velocityComponent = new VelocityComponent();
-		positionComponent = new PositionComponent();
-		collisionComponent = new CollisionComponent();
-		positionComponent.position = new Vector3f(position);
-		velocityComponent.velocity.x = vx;
-		velocityComponent.velocity.y = vy;
-		velocityComponent.velocity.z = vz;
-		this.add(positionComponent);
-		this.add(velocityComponent);
-		this.add(collisionComponent);
+		this.add(new CollisionComponent());
+		this.add(new VelocityComponent());
+		this.add(new PositionComponent());
+		this.getComponent(PositionComponent.class).position = new Vector3f(position);
+		this.getComponent(VelocityComponent.class).velocity.x = vx;
+		this.getComponent(VelocityComponent.class).velocity.y = vy;
+		this.getComponent(VelocityComponent.class).velocity.z = vz;
 		this.model = model;
 		this.rotX = rotX;
 		this.rotY = rotY;
 		this.rotZ = rotZ;
 		this.scale = scale;
-		collisionComponent.min = aabbMin.getAsVec3();
-		collisionComponent.max = aabbMax.getAsVec3();
-		collisionComponent.boundingBox.set(collisionComponent.min, collisionComponent.max);
+		setAABB(aabbMin, aabbMax);
+		init();
 	}
-	
-	public void update(float delta){
+
+	public GameEntity(Vector3f position, Vector3f aabbMin, Vector3f aabbMax, float rotX, float rotY, float rotZ,
+			float scale) {
+		this.add(new CollisionComponent());
+		this.add(new VelocityComponent());
+		this.add(new PositionComponent());
+		this.getComponent(PositionComponent.class).position = new Vector3f(position);
+		this.rotX = rotX;
+		this.rotY = rotY;
+		this.rotZ = rotZ;
+		this.scale = scale;
+		setAABB(aabbMin, aabbMax);
+		init();
+	}
+
+	public GameEntity(Vector3f position, float rotX, float rotY, float rotZ, float scale) {
+		this.add(new CollisionComponent());
+		this.add(new VelocityComponent());
+		this.add(new PositionComponent());
+		this.getComponent(PositionComponent.class).position = new Vector3f(position);
+		this.rotX = rotX;
+		this.rotY = rotY;
+		this.rotZ = rotZ;
+		this.scale = scale;
+		init();
+	}
+
+	public void init() {
+	}
+
+	public void update(float delta) {
+	}
+
+	public void setAABB(Vector3f aabbMin, Vector3f aabbMax) {
+		this.getComponent(CollisionComponent.class).min = aabbMin.getAsVec3();
+		this.getComponent(CollisionComponent.class).max = aabbMax.getAsVec3();
+		this.getComponent(CollisionComponent.class).boundingBox.set(this.getComponent(CollisionComponent.class).min,
+				this.getComponent(CollisionComponent.class).max);
 	}
 
 	public void increasePosition(float dx, float dy, float dz) {
-		this.positionComponent.position.x += dx;
-		this.positionComponent.position.y += dy;
-		this.positionComponent.position.z += dz;
+		this.getComponent(PositionComponent.class).position.x += dx;
+		this.getComponent(PositionComponent.class).position.y += dy;
+		this.getComponent(PositionComponent.class).position.z += dz;
 	}
 
 	public void increaseRotation(float dx, float dy, float dz) {
@@ -103,11 +132,11 @@ public class GameEntity extends Entity {
 	}
 
 	public Vector3f getPosition() {
-		return positionComponent.position;
+		return getComponent(PositionComponent.class).position;
 	}
 
 	public void setPosition(Vector3f position) {
-		this.positionComponent.position = position;
+		this.getComponent(PositionComponent.class).position = position;
 	}
 
 	public float getRotX() {

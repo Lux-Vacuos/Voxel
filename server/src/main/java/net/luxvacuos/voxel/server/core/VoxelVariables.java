@@ -36,7 +36,7 @@ public class VoxelVariables {
 	 */
 	public static final String version = "0.0.10";
 
-	public static final int build = 200;
+	public static final int build = 201;
 	public static final String settings = "settings.conf";
 	public static final float TIME_MULTIPLIER = 10;
 

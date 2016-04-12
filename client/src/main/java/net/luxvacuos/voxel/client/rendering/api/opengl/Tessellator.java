@@ -126,46 +126,46 @@ public class Tessellator {
 		glBindVertexArray(vaoID);
 		iboID = glGenBuffers();
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, iboID);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, iboCapacity, null, GL_DYNAMIC_DRAW);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, iboCapacity, GL_DYNAMIC_DRAW);
 
 		vboID0 = glGenBuffers();
 		glBindBuffer(GL_ARRAY_BUFFER, vboID0);
-		glBufferData(GL_ARRAY_BUFFER, vboCapacity, null, GL_DYNAMIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, vboCapacity, GL_DYNAMIC_DRAW);
 		glEnableVertexAttribArray(0);
 		glVertexAttribPointer(0, 3, GL_FLOAT, false, 0, 0);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 		vboID1 = glGenBuffers();
 		glBindBuffer(GL_ARRAY_BUFFER, vboID1);
-		glBufferData(GL_ARRAY_BUFFER, vboCapacity, null, GL_DYNAMIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, vboCapacity, GL_DYNAMIC_DRAW);
 		glEnableVertexAttribArray(1);
 		glVertexAttribPointer(1, 2, GL_FLOAT, false, 0, 0);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 		vboID2 = glGenBuffers();
 		glBindBuffer(GL_ARRAY_BUFFER, vboID2);
-		glBufferData(GL_ARRAY_BUFFER, vboCapacity, null, GL_DYNAMIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, vboCapacity, GL_DYNAMIC_DRAW);
 		glEnableVertexAttribArray(2);
 		glVertexAttribPointer(2, 3, GL_FLOAT, false, 0, 0);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 		vboID3 = glGenBuffers();
 		glBindBuffer(GL_ARRAY_BUFFER, vboID3);
-		glBufferData(GL_ARRAY_BUFFER, vboCapacity, null, GL_DYNAMIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, vboCapacity, GL_DYNAMIC_DRAW);
 		glEnableVertexAttribArray(3);
 		glVertexAttribPointer(3, 4, GL_FLOAT, false, 0, 0);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 		vboID4 = glGenBuffers();
 		glBindBuffer(GL_ARRAY_BUFFER, vboID4);
-		glBufferData(GL_ARRAY_BUFFER, vboCapacity, null, GL_DYNAMIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, vboCapacity, GL_DYNAMIC_DRAW);
 		glEnableVertexAttribArray(4);
 		glVertexAttribPointer(4, 3, GL_FLOAT, false, 0, 0);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 		vboID5 = glGenBuffers();
 		glBindBuffer(GL_ARRAY_BUFFER, vboID5);
-		glBufferData(GL_ARRAY_BUFFER, vboCapacity, null, GL_DYNAMIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, vboCapacity, GL_DYNAMIC_DRAW);
 		glEnableVertexAttribArray(5);
 		glVertexAttribPointer(5, 3, GL_FLOAT, false, 0, 0);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);

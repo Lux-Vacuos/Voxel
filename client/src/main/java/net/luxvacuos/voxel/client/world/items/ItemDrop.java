@@ -30,16 +30,14 @@ import net.luxvacuos.voxel.client.world.physics.CollisionComponent;
 import net.luxvacuos.voxel.client.world.physics.PositionComponent;
 import net.luxvacuos.voxel.client.world.physics.VelocityComponent;
 
-public abstract class ItemDropBase extends Entity {
+public class ItemDrop extends Entity {
 
 	private BlockBase block;
 	private PositionComponent positionComponent;
 	private VelocityComponent velocityComponent;
 	private CollisionComponent collisionComponent;
 
-	private float scale;
-
-	public ItemDropBase(Vector3f pos, BlockBase block, float scale) {
+	public ItemDrop(Vector3f pos, BlockBase block, float scale) {
 		velocityComponent = new VelocityComponent();
 		positionComponent = new PositionComponent();
 		positionComponent.position = new Vector3f(pos);
@@ -48,7 +46,20 @@ public abstract class ItemDropBase extends Entity {
 		this.add(velocityComponent);
 		this.add(collisionComponent);
 		this.block = block;
-		this.scale = scale;
+		collisionComponent.min = new Vector3(-0.2f, -0.2f, -0.2f);
+		collisionComponent.max = new Vector3(0.2f, 0.2f, 0.2f);
+		collisionComponent.boundingBox.set(collisionComponent.min, collisionComponent.max);
+	}
+
+	public ItemDrop(BlockBase block) {
+		velocityComponent = new VelocityComponent();
+		positionComponent = new PositionComponent();
+		positionComponent.position = new Vector3f();
+		collisionComponent = new CollisionComponent();
+		this.add(positionComponent);
+		this.add(velocityComponent);
+		this.add(collisionComponent);
+		this.block = block;
 		collisionComponent.min = new Vector3(-0.2f, -0.2f, -0.2f);
 		collisionComponent.max = new Vector3(0.2f, 0.2f, 0.2f);
 		collisionComponent.boundingBox.set(collisionComponent.min, collisionComponent.max);
@@ -64,10 +75,6 @@ public abstract class ItemDropBase extends Entity {
 					0, 0);
 	}
 
-	public float getScale() {
-		return scale;
-	}
-	
 	public BlockBase getBlock() {
 		return block;
 	}

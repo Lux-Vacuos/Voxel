@@ -36,7 +36,7 @@ import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.world.Dimension;
 import net.luxvacuos.voxel.client.world.entities.GameEntity;
 import net.luxvacuos.voxel.client.world.entities.PlayerCamera;
-import net.luxvacuos.voxel.client.world.items.ItemDropBase;
+import net.luxvacuos.voxel.client.world.items.ItemDrop;
 
 public class PhysicsSystem extends EntitySystem {
 	private ImmutableArray<Entity> entities;
@@ -64,7 +64,7 @@ public class PhysicsSystem extends EntitySystem {
 
 	public void processItems(GameResources gm) {
 		for (Entity entity : entities) {
-			if (entity instanceof ItemDropBase) {
+			if (entity instanceof ItemDrop) {
 				tmp.set(0, 0, 0);
 				if (Vector3f
 						.sub(entity.getComponent(PositionComponent.class).position, gm.getCamera().getPosition(), tmp)
@@ -72,16 +72,16 @@ public class PhysicsSystem extends EntitySystem {
 					A: for (int x = 0; x < ((PlayerCamera) gm.getCamera()).getInventory().getSizeX(); x++) {
 						for (int y = 0; y < ((PlayerCamera) gm.getCamera()).getInventory().getSizeY(); y++) {
 							if (((PlayerCamera) gm.getCamera()).getInventory().getItems()[x][y].getBlock()
-									.getId() == ((ItemDropBase) entity).getBlock().getId()) {
+									.getId() == ((ItemDrop) entity).getBlock().getId()) {
 								((PlayerCamera) gm.getCamera()).getInventory().getItems()[x][y]
-										.setBlock(((ItemDropBase) entity).getBlock());
+										.setBlock(((ItemDrop) entity).getBlock());
 								((PlayerCamera) gm.getCamera()).getInventory().getItems()[x][y].setTotal(
 										((PlayerCamera) gm.getCamera()).getInventory().getItems()[x][y].getTotal() + 1);
 								break A;
 							} else if (((PlayerCamera) gm.getCamera()).getInventory().getItems()[x][y].getBlock()
 									.getId() == 0) {
 								((PlayerCamera) gm.getCamera()).getInventory().getItems()[x][y]
-										.setBlock(((ItemDropBase) entity).getBlock());
+										.setBlock(((ItemDrop) entity).getBlock());
 								((PlayerCamera) gm.getCamera()).getInventory().getItems()[x][y].setTotal(1);
 								break A;
 							}

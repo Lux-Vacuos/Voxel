@@ -27,8 +27,7 @@ import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.igl.vector.Vector8f;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Tessellator;
 import net.luxvacuos.voxel.client.resources.GameResources;
-import net.luxvacuos.voxel.client.world.items.ItemDropBase;
-import net.luxvacuos.voxel.client.world.items.ItemDropDefault;
+import net.luxvacuos.voxel.client.world.items.ItemDrop;
 
 public abstract class BlockBase {
 	protected boolean transparent = false;
@@ -67,8 +66,8 @@ public abstract class BlockBase {
 		return new BoundingBox(new Vector3(pos.x, pos.y, pos.z), new Vector3(pos.x + 1, pos.y + 1, pos.z + 1));
 	}
 
-	public ItemDropBase getDrop(GameResources gm, Vector3f pos) {
-		return new ItemDropDefault(pos, this, 0.2f);
+	public ItemDrop getDrop(GameResources gm, Vector3f pos) {
+		return new ItemDrop(pos, this, 0.2f);
 	}
 
 	public void generateCustomModel(Tessellator tess, float x, float y, float z, float globalScale, boolean top,

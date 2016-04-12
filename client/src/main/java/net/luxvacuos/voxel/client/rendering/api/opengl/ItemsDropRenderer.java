@@ -27,11 +27,11 @@ import com.badlogic.ashley.core.Entity;
 
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.world.block.BlocksResources;
-import net.luxvacuos.voxel.client.world.items.ItemDropBase;
+import net.luxvacuos.voxel.client.world.items.ItemDrop;
 
 public class ItemsDropRenderer {
 
-	private List<ItemDropBase> items;
+	private List<ItemDrop> items;
 	private Tessellator tess;
 
 	public ItemsDropRenderer(GameResources gm) throws Exception {
@@ -43,8 +43,8 @@ public class ItemsDropRenderer {
 		items.clear();
 		for (Entity entity : gm.getWorldsHandler().getActiveWorld().getActiveDimension().getPhysicsEngine()
 				.getEntities()) {
-			if (entity instanceof ItemDropBase)
-				items.add((ItemDropBase) entity);
+			if (entity instanceof ItemDrop)
+				items.add((ItemDrop) entity);
 		}
 		doRender(gm);
 	}
@@ -52,8 +52,8 @@ public class ItemsDropRenderer {
 	private void doRender(GameResources gm) {
 		tess.begin(BlocksResources.getTessellatorTextureAtlas().getTexture(), BlocksResources.getNormalMap(),
 				BlocksResources.getHeightMap(), BlocksResources.getSpecularMap());
-		for (ItemDropBase itemDropBase : items) {
-			itemDropBase.generateModel(tess);
+		for (ItemDrop itemDrop : items) {
+			itemDrop.generateModel(tess);
 		}
 		tess.end();
 		tess.draw(gm);

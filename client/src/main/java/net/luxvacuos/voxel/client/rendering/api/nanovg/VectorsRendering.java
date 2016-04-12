@@ -57,6 +57,7 @@ import static org.lwjgl.system.MemoryUtil.memUTF8;
 import static org.lwjgl.system.MemoryUtil.memFree;
 
 import java.nio.ByteBuffer;
+import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
 import org.lwjgl.nanovg.NVGColor;
@@ -408,11 +409,11 @@ public class VectorsRendering {
 
 		nvgFontSize(vg, fontSize);
 		nvgFontFace(vg, font);
-		tw = nvgTextBounds(vg, 0, 0, textEncoded, NULL, (ByteBuffer) null);
+		tw = nvgTextBounds(vg, 0, 0, textEncoded, NULL, (FloatBuffer) null);
 		if (preicon != null) {
 			nvgFontSize(vg, h * 1.3f);
 			nvgFontFace(vg, entypo);
-			iw = nvgTextBounds(vg, 0, 0, preicon, NULL, (ByteBuffer) null);
+			iw = nvgTextBounds(vg, 0, 0, preicon, NULL, (FloatBuffer) null);
 			iw += h * 0.15f;
 		}
 

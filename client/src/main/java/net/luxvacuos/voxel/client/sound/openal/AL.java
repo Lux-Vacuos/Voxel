@@ -18,6 +18,7 @@ import static org.lwjgl.openal.ALC11.ALC_STEREO_SOURCES;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
 import java.util.List;
 
 import org.lwjgl.openal.ALC;
@@ -57,7 +58,7 @@ public class AL {
 		String defaultDeviceSpecifier = alcGetString(NULL, ALC_DEFAULT_DEVICE_SPECIFIER);
 		Logger.log("Default device: " + defaultDeviceSpecifier);
 
-		context = alcCreateContext(device, (ByteBuffer) null);
+		context = alcCreateContext(device, (IntBuffer) null);
 		alcMakeContextCurrent(context);
 		org.lwjgl.openal.AL.createCapabilities(deviceCaps);
 
