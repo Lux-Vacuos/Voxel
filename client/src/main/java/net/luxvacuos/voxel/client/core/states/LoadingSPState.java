@@ -55,12 +55,8 @@ public class LoadingSPState implements State {
 		gm.getWorldsHandler().setActiveWorld(gm.getMenuSystem().worldSelectionMenu.getWorldName());
 		gm.getWorldsHandler().getActiveWorld().init(gm);
 		gm.getWorldsHandler().getActiveWorld().getActiveDimension().getPhysicsEngine().addEntity(gm.getCamera());
-		gm.getCamera().setPosition(new Vector3f(0, 140, 0));
+		gm.getCamera().setPosition(new Vector3f(0, 180, 0));
 		((PlayerCamera) gm.getCamera()).setMouse(gm.getDisplay());
-		gm.getSoundSystem().rewind("menu1");
-		gm.getSoundSystem().stop("menu1");
-		gm.getSoundSystem().rewind("menu2");
-		gm.getSoundSystem().stop("menu2");
 		gm.getGlobalStates().setState(GameState.GAME_SP);
 
 	}

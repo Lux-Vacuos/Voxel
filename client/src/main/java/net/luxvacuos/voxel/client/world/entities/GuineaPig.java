@@ -24,19 +24,10 @@ public class GuineaPig extends GameEntity {
 	public void init() {
 		setModel(UniversalResources.player);
 		setAABB(new Vector3f(-1, -1, -1), new Vector3f(1, 1, 1));
-
-		// Add Life Component
-		super.add(new LifeComponent(10)); // Set a life of 10
-
-		// Add Drop Component
+		super.add(new LifeComponent(10));
 		List<ItemDrop> drop = new ArrayList<>();
-
-		// Add items to the drop list
-		drop.add(new ItemDrop(Block.Glass)); // For testing we assign a Glass
-												// Block that the entity will
-												// drop on die
-
-		super.add(new DropComponent(drop)); // Set the drop on die
+		drop.add(new ItemDrop(Block.Glass));
+		super.add(new DropComponent(drop));
 	}
 
 	@Override

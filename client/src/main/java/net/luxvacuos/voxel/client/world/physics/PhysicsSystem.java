@@ -32,10 +32,14 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 
 import net.luxvacuos.igl.vector.Vector3f;
+import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.resources.GameResources;
+import net.luxvacuos.voxel.client.util.Maths;
 import net.luxvacuos.voxel.client.world.Dimension;
 import net.luxvacuos.voxel.client.world.entities.GameEntity;
 import net.luxvacuos.voxel.client.world.entities.PlayerCamera;
+import net.luxvacuos.voxel.client.world.entities.components.DropComponent;
+import net.luxvacuos.voxel.client.world.entities.components.LifeComponent;
 import net.luxvacuos.voxel.client.world.items.ItemDrop;
 
 public class PhysicsSystem extends EntitySystem {
@@ -44,11 +48,14 @@ public class PhysicsSystem extends EntitySystem {
 	private ComponentMapper<PositionComponent> pm = ComponentMapper.getFor(PositionComponent.class);
 	private ComponentMapper<VelocityComponent> vm = ComponentMapper.getFor(VelocityComponent.class);
 	private ComponentMapper<CollisionComponent> cm = ComponentMapper.getFor(CollisionComponent.class);
+	private ComponentMapper<LifeComponent> lm = ComponentMapper.getFor(LifeComponent.class);
+	private ComponentMapper<DropComponent> dm = ComponentMapper.getFor(DropComponent.class);
 
 	private Dimension dim;
 	private List<BoundingBox> boxes;
 	private Vector3f tmp = new Vector3f();
 	private Vector3 normalTMP = new Vector3();
+	private Vector3 tmp1 = new Vector3();
 	private float depthTMP;
 	private int faceTMP;
 
@@ -93,10 +100,33 @@ public class PhysicsSystem extends EntitySystem {
 		}
 	}
 
+	public void processEntities(GameResources gm) {
+		for (Entity entity : entities) {
+			if (entity instanceof GameEntity) {
+
+				LifeComponent life = lm.get(entity);
+				DropComponent drop = dm.get(entity);
+				CollisionComponent collison = cm.get(entity);
+				PositionComponent position = pm.get(entity);
+
+				if (life != null) {
+					if (Maths.intersectRayBounds(((PlayerCamera) gm.getCamera()).getDRay().getRay(),
+							collison.boundingBox, tmp1) && Mouse.isButtonDown(0))
+						life.setLife(life.getLife() - 1);
+					if (life.getLife() <= 0) {
+						if (drop != null) {
+							drop.drop(getEngine(), position.position);
+						}
+						getEngine().removeEntity(entity);
+					}
+				}
+			}
+		}
+	}
+
 	@Override
 	public void update(float deltaTime) {
 		for (Entity entity : entities) {
-
 			PositionComponent position = pm.get(entity);
 			VelocityComponent velocity = vm.get(entity);
 			CollisionComponent collison = cm.get(entity);

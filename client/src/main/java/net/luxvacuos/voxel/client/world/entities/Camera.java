@@ -25,7 +25,7 @@ import com.badlogic.ashley.core.Entity;
 import net.luxvacuos.igl.vector.Matrix4f;
 import net.luxvacuos.igl.vector.Vector2f;
 import net.luxvacuos.igl.vector.Vector3f;
-import net.luxvacuos.voxel.client.resources.Ray;
+import net.luxvacuos.voxel.client.resources.DRay;
 import net.luxvacuos.voxel.client.util.Maths;
 import net.luxvacuos.voxel.client.world.physics.CollisionComponent;
 import net.luxvacuos.voxel.client.world.physics.PositionComponent;
@@ -41,41 +41,35 @@ public class Camera extends Entity {
 	protected float pitch;
 	protected float yaw;
 	protected float roll;
-	protected Ray ray;
+	protected DRay dRay;
 	protected boolean jump = false;
-
-	protected VelocityComponent velocityComponent;
-	protected PositionComponent positionComponent;
-	protected CollisionComponent collisionComponent;
 
 	public boolean isMoved = false;
 	public float depth = 0;
 
 	public Camera(Matrix4f proj, Vector3f aabbMin, Vector3f aabbMax) {
-		velocityComponent = new VelocityComponent();
-		positionComponent = new PositionComponent();
-		collisionComponent = new CollisionComponent();
-		this.add(velocityComponent);
-		this.add(positionComponent);
-		this.add(collisionComponent);
-		ray = new Ray(proj, Maths.createViewMatrix(this), new Vector2f(), 0, 0);
-		collisionComponent.min = aabbMin.getAsVec3();
-		collisionComponent.max = aabbMax.getAsVec3();
-		collisionComponent.boundingBox.set(collisionComponent.min, collisionComponent.max);
+		this.add(new VelocityComponent());
+		this.add(new PositionComponent());
+		this.add(new CollisionComponent());
+		dRay = new DRay(proj, Maths.createViewMatrix(this), new Vector2f(), 0, 0);
+		this.getComponent(CollisionComponent.class).min = aabbMin.getAsVec3();
+		this.getComponent(CollisionComponent.class).max = aabbMax.getAsVec3();
+		this.getComponent(CollisionComponent.class).boundingBox.set(this.getComponent(CollisionComponent.class).min,
+				this.getComponent(CollisionComponent.class).max);
 	}
 
 	public void updateRay(Matrix4f projectionMatrix, int width, int height, Vector2f pos) {
-		ray = new Ray(projectionMatrix, Maths.createViewMatrix(this), pos, width, height);
+		dRay = new DRay(projectionMatrix, Maths.createViewMatrix(this), pos, width, height);
 	}
 
 	public Vector3f getPosition() {
-		return positionComponent.position;
+		return this.getComponent(PositionComponent.class).position;
 	}
 
 	public void setPosition(Vector3f position) {
-		this.positionComponent.position = position;
+		this.getComponent(PositionComponent.class).position = position;
 	}
-
+	
 	public float getPitch() {
 		return pitch;
 	}
@@ -100,8 +94,8 @@ public class Camera extends Entity {
 		this.roll = roll;
 	}
 
-	public Ray getRay() {
-		return ray;
+	public DRay getDRay() {
+		return dRay;
 	}
 
 }

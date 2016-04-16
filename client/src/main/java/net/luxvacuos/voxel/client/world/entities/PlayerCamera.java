@@ -46,6 +46,7 @@ import net.luxvacuos.voxel.client.ui.menu.ItemGui;
 import net.luxvacuos.voxel.client.util.Maths;
 import net.luxvacuos.voxel.client.world.Dimension;
 import net.luxvacuos.voxel.client.world.block.Block;
+import net.luxvacuos.voxel.client.world.physics.VelocityComponent;
 
 public class PlayerCamera extends Camera {
 
@@ -128,30 +129,30 @@ public class PlayerCamera extends Camera {
 			underWater = false;
 
 		if (isKeyDown(KEY_W)) {
-			velocityComponent.velocity.z += -Math.cos(Math.toRadians(yaw)) * speed;
-			velocityComponent.velocity.x += Math.sin(Math.toRadians(yaw)) * speed;
+			this.getComponent(VelocityComponent.class).velocity.z += -Math.cos(Math.toRadians(yaw)) * speed;
+			this.getComponent(VelocityComponent.class).velocity.x += Math.sin(Math.toRadians(yaw)) * speed;
 			isMoved = true;
 
 		} else if (isKeyDown(KEY_S)) {
-			velocityComponent.velocity.z -= -Math.cos(Math.toRadians(yaw)) * speed;
-			velocityComponent.velocity.x -= Math.sin(Math.toRadians(yaw)) * speed;
+			this.getComponent(VelocityComponent.class).velocity.z -= -Math.cos(Math.toRadians(yaw)) * speed;
+			this.getComponent(VelocityComponent.class).velocity.x -= Math.sin(Math.toRadians(yaw)) * speed;
 			isMoved = true;
 		}
 
 		if (isKeyDown(KEY_D)) {
-			velocityComponent.velocity.z += Math.sin(Math.toRadians(yaw)) * speed;
-			velocityComponent.velocity.x += Math.cos(Math.toRadians(yaw)) * speed;
+			this.getComponent(VelocityComponent.class).velocity.z += Math.sin(Math.toRadians(yaw)) * speed;
+			this.getComponent(VelocityComponent.class).velocity.x += Math.cos(Math.toRadians(yaw)) * speed;
 			isMoved = true;
 		} else if (isKeyDown(KEY_A)) {
-			velocityComponent.velocity.z -= Math.sin(Math.toRadians(yaw)) * speed;
-			velocityComponent.velocity.x -= Math.cos(Math.toRadians(yaw)) * speed;
+			this.getComponent(VelocityComponent.class).velocity.z -= Math.sin(Math.toRadians(yaw)) * speed;
+			this.getComponent(VelocityComponent.class).velocity.x -= Math.cos(Math.toRadians(yaw)) * speed;
 			isMoved = true;
 		}
 		if (isKeyDown(KEY_SPACE) && !jump) {
-			velocityComponent.velocity.y = 5;
+			this.getComponent(VelocityComponent.class).velocity.y = 5;
 			jump = true;
 		}
-		if (velocityComponent.velocity.y == 0)
+		if (this.getComponent(VelocityComponent.class).velocity.y == 0)
 			jump = false;
 		if (isKeyDown(KEY_LSHIFT)) {
 			speed = 0.8f;
@@ -165,6 +166,8 @@ public class PlayerCamera extends Camera {
 		 * gm.getWorldsHandler().getActiveWorld().switchDimension(1, gm); }
 		 */
 		if (isKeyDown(KEY_T)) {
+			gm.getWorldsHandler().getActiveWorld().getActiveDimension().getPhysicsEngine()
+					.addEntity(new GuineaPig(getPosition()));
 		}
 
 		if (clickTime > 0)

@@ -62,6 +62,7 @@ public class GameSPInventoryState implements State {
 		for (Dimension dim : gm.getWorldsHandler().getActiveWorld().getDimensions().values()) {
 			dim.getPhysicsEngine().update(delta);
 			dim.getPhysicsEngine().getSystem(PhysicsSystem.class).processItems(gm);
+			dim.getPhysicsEngine().getSystem(PhysicsSystem.class).processEntities(gm);
 			dim.getPhysicsEngine().getSystem(PhysicsSystem.class).doSpawn(gm);
 		}
 

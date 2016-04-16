@@ -102,7 +102,6 @@ public class Voxel extends UVoxel {
 		Logger.log("Initializing Threads");
 		getGameResources().getRenderer().prepare();
 		api.init();
-		api.getMoltenAPI().runMethod("LL");
 	}
 
 	public void postInit() throws Throwable {

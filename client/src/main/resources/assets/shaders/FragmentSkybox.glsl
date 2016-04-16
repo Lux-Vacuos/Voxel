@@ -84,7 +84,7 @@ void main(void){
 		c = 0.0;
 	f = 1.0 - (pow(sharpness, c));
 	
-	float fac = max(dot(vec3(0,1,0),normalize(lightPosition)),-1.0);
+	float fac = max(dot(vec3(0,1,0),normalize(lightPosition - pass_position)),-1.0);
 	fac = clamp(fac,0.02,1.0);
 	f *= 3;
 	f *= fac;

@@ -24,7 +24,7 @@ import net.luxvacuos.igl.vector.Matrix4f;
 import net.luxvacuos.igl.vector.Vector2f;
 import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.voxel.client.resources.GameResources;
-import net.luxvacuos.voxel.client.resources.Ray;
+import net.luxvacuos.voxel.client.resources.DRay;
 import net.luxvacuos.voxel.client.util.Maths;
 
 public class SunCamera extends Camera {
@@ -38,12 +38,10 @@ public class SunCamera extends Camera {
 
 	public void updateShadowRay(GameResources gm, boolean inverted) {
 		if (inverted)
-			ray = new Ray(gm.getMasterShadowRenderer().getProjectionMatrix(),
-					Maths.createViewMatrixPos(positionComponent.position,
-							Maths.createViewMatrixRot(pitch + 180, yaw, roll, null)),
-					center, 4096, 4096);
+			dRay = new DRay(gm.getMasterShadowRenderer().getProjectionMatrix(), Maths.createViewMatrixPos(
+					this.getPosition(), Maths.createViewMatrixRot(pitch + 180, yaw, roll, null)), center, 4096, 4096);
 		else
-			ray = new Ray(gm.getMasterShadowRenderer().getProjectionMatrix(), Maths.createViewMatrix(this), center,
+			dRay = new DRay(gm.getMasterShadowRenderer().getProjectionMatrix(), Maths.createViewMatrix(this), center,
 					4096, 4096);
 	}
 
