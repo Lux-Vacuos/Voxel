@@ -32,12 +32,13 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 
 import net.luxvacuos.igl.vector.Vector3f;
-import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.util.Maths;
 import net.luxvacuos.voxel.client.world.Dimension;
+import net.luxvacuos.voxel.client.world.block.Block;
 import net.luxvacuos.voxel.client.world.entities.GameEntity;
 import net.luxvacuos.voxel.client.world.entities.PlayerCamera;
+import net.luxvacuos.voxel.client.world.entities.components.ArmourComponent;
 import net.luxvacuos.voxel.client.world.entities.components.DropComponent;
 import net.luxvacuos.voxel.client.world.entities.components.LifeComponent;
 import net.luxvacuos.voxel.client.world.items.ItemDrop;
@@ -50,6 +51,7 @@ public class PhysicsSystem extends EntitySystem {
 	private ComponentMapper<CollisionComponent> cm = ComponentMapper.getFor(CollisionComponent.class);
 	private ComponentMapper<LifeComponent> lm = ComponentMapper.getFor(LifeComponent.class);
 	private ComponentMapper<DropComponent> dm = ComponentMapper.getFor(DropComponent.class);
+	private ComponentMapper<ArmourComponent> am = ComponentMapper.getFor(ArmourComponent.class);
 
 	private Dimension dim;
 	private List<BoundingBox> boxes;
@@ -111,9 +113,9 @@ public class PhysicsSystem extends EntitySystem {
 
 				if (life != null) {
 					if (Maths.intersectRayBounds(((PlayerCamera) gm.getCamera()).getDRay().getRay(),
-							collison.boundingBox, tmp1) && Mouse.isButtonDown(0))
-						life.setLife(life.getLife() - 1);
-					if (life.getLife() <= 0) {
+							collison.boundingBox, tmp1) && ((PlayerCamera) gm.getCamera()).isHit())
+						life.life -= 1;
+					if (life.life <= 0) {
 						if (drop != null) {
 							drop.drop(getEngine(), position.position);
 						}
@@ -130,6 +132,8 @@ public class PhysicsSystem extends EntitySystem {
 			PositionComponent position = pm.get(entity);
 			VelocityComponent velocity = vm.get(entity);
 			CollisionComponent collison = cm.get(entity);
+			LifeComponent life = lm.get(entity);
+			ArmourComponent armour = am.get(entity);
 
 			velocity.velocity.x *= 0.4f - velocity.velocity.x * 0.002f;
 			velocity.velocity.z *= 0.4f - velocity.velocity.z * 0.002f;
@@ -137,6 +141,27 @@ public class PhysicsSystem extends EntitySystem {
 
 			collison.update(position.position);
 			boxes = dim.getGlobalBoundingBox(collison.boundingBox);
+
+			float tempx = (velocity.velocity.x);
+			int tempX = (int) tempx;
+			if (velocity.velocity.x < 0) {
+				tempx = (velocity.velocity.x);
+				tempX = (int) tempx - 1;
+			}
+
+			float tempz = (velocity.velocity.z);
+			int tempZ = (int) tempz;
+			if (velocity.velocity.z > 0) {
+				tempz = (velocity.velocity.z);
+				tempZ = (int) tempz + 1;
+			}
+
+			float tempy = (velocity.velocity.y);
+			int tempY = (int) tempy - 1;
+
+			int bx = (int) tempX;
+			int by = (int) tempY;
+			int bz = (int) tempZ - 1;
 
 			for (BoundingBox boundingBox : boxes) {
 				normalTMP.set(0, 0, 0);
@@ -150,6 +175,10 @@ public class PhysicsSystem extends EntitySystem {
 					if (normalTMP.y > 0 && velocity.velocity.y > 0)
 						velocity.velocity.y = 0;
 					if (normalTMP.y < 0 && velocity.velocity.y < 0) {
+						if (life != null && velocity.velocity.y < -10f) {
+							life.life += velocity.velocity.y * 0.2f + 1 * armour.armour.getProtection();
+							System.out.println(life.life);
+						}
 						velocity.velocity.y = 0;
 						depthTMP /= 4f;
 						position.position.y += depthTMP;
@@ -160,6 +189,13 @@ public class PhysicsSystem extends EntitySystem {
 					if (normalTMP.z < 0 && velocity.velocity.z < 0)
 						velocity.velocity.z = 0;
 				}
+			}
+			if (life != null) {
+				byte b = dim.getGlobalBlock(bx, by, bz);
+				if (b == Block.Lava.getId())
+					life.life -= 0.2f;
+				if (!Block.getBlock(b).isTransparent())
+					life.life -= 0.5f;
 			}
 
 			position.position.x += velocity.velocity.x * deltaTime;

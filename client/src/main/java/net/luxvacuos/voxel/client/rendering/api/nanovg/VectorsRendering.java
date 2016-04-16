@@ -191,6 +191,27 @@ public class VectorsRendering {
 		nvgFillPaint(vg, paintB);
 		nvgFill(vg);
 	}
+	
+	public static void renderLife(float x, float y, float w, float h, float pos) {
+		long vg = display.getVg();
+		nvgBoxGradient(vg, x + 1, y + 1, w - 2, h, 3, 4, rgba(32, 32, 32, 120, colorA), rgba(92, 92, 92, 255, colorB),
+				paintA);
+		nvgBeginPath(vg);
+		nvgRoundedRect(vg, x, y, w, h, 1);
+		nvgFillPaint(vg, paintA);
+		nvgFill(vg);
+		
+		float value = Math.min(Math.max(0.0f, pos), 1.0f);
+		int barPos = (int) (Math.round(w - 2) * value);
+		
+		nvgBoxGradient(vg, x, y, barPos + 1.5f, h - 1, 3, 4, rgba(220, 0, 0, 255, colorC),
+				rgba(128, 100, 128, 255, colorB), paintB);
+		
+		nvgBeginPath(vg);
+		nvgRoundedRect(vg, x + 1, y + 1, barPos, h - 2, 3);
+		nvgFillPaint(vg, paintB);
+		nvgFill(vg);
+	}
 
 	public static void renderWindow(String title, String font, float x, float y, float w, float h) {
 		float cornerRadius = 3.0f;

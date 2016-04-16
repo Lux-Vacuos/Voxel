@@ -38,6 +38,8 @@ import net.luxvacuos.igl.vector.Matrix4f;
 import net.luxvacuos.igl.vector.Vector2f;
 import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.igl.vector.Vector4f;
+import net.luxvacuos.voxel.client.core.GlobalStates.GameState;
+import net.luxvacuos.voxel.client.input.Keyboard;
 import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Display;
 import net.luxvacuos.voxel.client.resources.GameResources;
@@ -46,6 +48,9 @@ import net.luxvacuos.voxel.client.ui.menu.ItemGui;
 import net.luxvacuos.voxel.client.util.Maths;
 import net.luxvacuos.voxel.client.world.Dimension;
 import net.luxvacuos.voxel.client.world.block.Block;
+import net.luxvacuos.voxel.client.world.entities.components.ArmourComponent;
+import net.luxvacuos.voxel.client.world.entities.components.LifeComponent;
+import net.luxvacuos.voxel.client.world.items.EmptyArmour;
 import net.luxvacuos.voxel.client.world.physics.VelocityComponent;
 
 public class PlayerCamera extends Camera {
@@ -62,16 +67,33 @@ public class PlayerCamera extends Camera {
 	private Inventory inventory;
 	private int yPos;
 	private ItemGui block;
+	private boolean hit;
 
 	public PlayerCamera(Matrix4f proj, Display display) {
 		super(proj, new Vector3f(-0.25f, -1.4f, -0.25f), new Vector3f(0.25f, 0.2f, 0.25f));
 		center = new Vector2f(display.getDisplayWidth() / 2, display.getDisplayHeight() / 2);
 		this.speed = 3f;
 		inventory = new Inventory(11, 11, 300, 0);
+		super.add(new LifeComponent(20));
+		super.add(new ArmourComponent());
+		super.getComponent(ArmourComponent.class).armour = new EmptyArmour();
 	}
 
 	public void update(float delta, GameResources gm, Dimension world) {
 		isMoved = false;
+
+		if (super.getComponent(LifeComponent.class).life <= 0) {
+			try {
+				gm.getWorldsHandler().getActiveWorld().dispose(gm);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			gm.getCamera().setPosition(new Vector3f(0, 0, 1));
+			gm.getCamera().setPitch(0);
+			gm.getCamera().setYaw(0);
+			gm.getGlobalStates().setState(GameState.MAINMENU);
+		}
+
 		float mouseDX = getDX() * delta * mouseSpeed * 0.16f * multiplierMouse;
 		float mouseDY = getDY() * delta * mouseSpeed * 0.16f * multiplierMouse;
 		if (yaw + mouseDX >= 360) {
@@ -170,16 +192,22 @@ public class PlayerCamera extends Camera {
 					.addEntity(new GuineaPig(getPosition()));
 		}
 
+		if (isKeyDown(Keyboard.KEY_8)) {
+			gm.getWorldsHandler().getActiveWorld().getActiveDimension().getPhysicsEngine()
+					.addEntity(Block.Torch.getDrop(gm, getPosition()));
+		}
+
 		if (clickTime > 0)
 			clickTime--;
-
+		hit = false;
 		if (clickTime == 0)
 			if (isButtonDown(0)) {
-				clickTime = 10;
+				clickTime = 8;
 				setBlock(gm.getDisplay().getDisplayWidth(), gm.getDisplay().getDisplayHeight(),
 						new ItemGui(new Vector3f(), Block.Air), world, gm);
+				hit = true;
 			} else if (isButtonDown(1)) {
-				clickTime = 10;
+				clickTime = 8;
 				setBlock(gm.getDisplay().getDisplayWidth(), gm.getDisplay().getDisplayHeight(), block, world, gm);
 			}
 
@@ -255,6 +283,10 @@ public class PlayerCamera extends Camera {
 
 	public void setInventory(Inventory inventory) {
 		this.inventory = inventory;
+	}
+
+	public boolean isHit() {
+		return hit;
 	}
 
 }

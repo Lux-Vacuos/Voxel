@@ -171,7 +171,7 @@ public class Inventory {
 	public ItemGui[][] getItems() {
 		return items;
 	}
-
+	
 	public int getSizeX() {
 		return sizeX;
 	}

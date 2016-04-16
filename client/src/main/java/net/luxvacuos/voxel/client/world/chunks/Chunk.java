@@ -169,10 +169,8 @@ public class Chunk {
 	protected void createBasicTerrain(Dimension dimension) {
 		for (int x = 0; x < sizeX; x++) {
 			for (int z = 0; z < sizeZ; z++) {
-				for (int y = 0; y < 128; y++) {
-					if (y >= cy * 16 && y < 16 + cy * 16) {
-						setLocalBlock(x, y, z, Block.Water.getId());
-					}
+				for (int y = 0; y < sizeY; y++) {
+					setLocalBlock(x, y, z, Block.Water.getId());
 				}
 			}
 		}
@@ -181,17 +179,15 @@ public class Chunk {
 				double tempHeight = dimension.getNoise().getNoise((int) ((x + cx * 16)), (int) ((z + cz * 16)));
 				tempHeight += 1;
 				int height = (int) (128 * Maths.clamp(tempHeight));
-				for (int y = 0; y < height; y++) {
-					if (y >= cy * 16 && y < 16 + cy * 16) {
-						if (y == height - 1 && y > 128)
-							setLocalBlock(x, y, z, Block.Grass.getId());
-						else if (y == height - 2 && y > 128)
-							setLocalBlock(x, y, z, Block.Dirt.getId());
-						else if (y == height - 1 && y < 129)
-							setLocalBlock(x, y, z, Block.Sand.getId());
-						else
-							setLocalBlock(x, y, z, Block.Stone.getId());
-					}
+				for (int y = 0; y < sizeY; y++) {
+					if (y + posY == height - 1 && y + posY > 128)
+						setLocalBlock(x, y, z, Block.Grass.getId());
+					else if (y + posY == height - 2 && y + posY > 128)
+						setLocalBlock(x, y, z, Block.Dirt.getId());
+					else if (y + posY == height - 1 && y + posY < 129)
+						setLocalBlock(x, y, z, Block.Sand.getId());
+					else
+						setLocalBlock(x, y, z, Block.Stone.getId());
 				}
 			}
 		}

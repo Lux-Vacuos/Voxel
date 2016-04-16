@@ -26,6 +26,8 @@ import net.luxvacuos.voxel.client.rendering.api.nanovg.Timers;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.VectorsRendering;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.world.Dimension;
+import net.luxvacuos.voxel.client.world.entities.PlayerCamera;
+import net.luxvacuos.voxel.client.world.entities.components.LifeComponent;
 import net.luxvacuos.voxel.universal.api.MoltenAPI;
 
 public class GameSP {
@@ -78,6 +80,10 @@ public class GameSP {
 					VectorsRendering.rgba(255, 255, 255, 255, VectorsRendering.colorB));
 			Timers.renderDebugDisplay(5 * xScale, 24 * yScale, 300 * xScale, 55 * yScale);
 		}
+
+		VectorsRendering.renderLife(440 * xScale, 700 * yScale, 200 * xScale, 20 * yScale,
+				((PlayerCamera) gm.getCamera()).getComponent(LifeComponent.class).life / 20f);
+
 	}
 
 	private void renderHud(GameResources gm) {

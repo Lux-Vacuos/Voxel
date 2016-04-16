@@ -67,19 +67,19 @@ public abstract class World {
 				((PlayerCamera) gm.getCamera()).setInventory(gm.getKryo().readObject(input, Inventory.class));
 				input.close();
 			} catch (FileNotFoundException e) {
+				e.printStackTrace();
 			}
 		}
 	}
 
 	private void save(GameResources gm) {
-		if (file.exists()) {
-			Output output;
-			try {
-				output = new Output(new FileOutputStream(file));
-				gm.getKryo().writeObject(output, ((PlayerCamera) gm.getCamera()).getInventory());
-				output.close();
-			} catch (FileNotFoundException e) {
-			}
+		Output output;
+		try {
+			output = new Output(new FileOutputStream(file));
+			gm.getKryo().writeObject(output, ((PlayerCamera) gm.getCamera()).getInventory());
+			output.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
 		}
 	}
 
