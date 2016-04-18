@@ -18,7 +18,7 @@
  * 
  */
 
-package net.luxvacuos.voxel.client.particle;
+package net.luxvacuos.voxel.client.rendering.api.opengl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,8 +28,10 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import net.luxvacuos.igl.vector.Matrix4f;
-import net.luxvacuos.voxel.client.rendering.api.opengl.ParticleRenderer;
 import net.luxvacuos.voxel.client.resources.Loader;
+import net.luxvacuos.voxel.client.resources.models.InsertionSort;
+import net.luxvacuos.voxel.client.resources.models.Particle;
+import net.luxvacuos.voxel.client.resources.models.ParticleTexture;
 import net.luxvacuos.voxel.client.world.entities.Camera;
 
 public class ParticleMaster {

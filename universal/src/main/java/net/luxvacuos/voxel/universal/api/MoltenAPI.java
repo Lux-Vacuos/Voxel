@@ -52,7 +52,7 @@ public class MoltenAPI {
 	public Object runMethod(String name, Object... objects) {
 		APIMethod<Object> method = methods.get(prefix + name);
 		if (method == null)
-			throw new RuntimeException("Method not found: " + prefix + name);
+			throw new NullPointerException("Method not found: " + prefix + name);
 
 		return method.run(objects);
 	}

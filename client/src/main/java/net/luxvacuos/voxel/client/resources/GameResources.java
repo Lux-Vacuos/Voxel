@@ -38,8 +38,6 @@ import net.luxvacuos.voxel.client.core.WorldSimulation;
 import net.luxvacuos.voxel.client.input.Keyboard;
 import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.network.VoxelClient;
-import net.luxvacuos.voxel.client.particle.ParticleMaster;
-import net.luxvacuos.voxel.client.particle.ParticleTexture;
 import net.luxvacuos.voxel.client.rendering.api.glfw.ContextFormat;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Display;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.Timers;
@@ -50,10 +48,12 @@ import net.luxvacuos.voxel.client.rendering.api.opengl.ItemsDropRenderer;
 import net.luxvacuos.voxel.client.rendering.api.opengl.ItemsGuiRenderer;
 import net.luxvacuos.voxel.client.rendering.api.opengl.MasterRenderer;
 import net.luxvacuos.voxel.client.rendering.api.opengl.MasterShadowRenderer;
+import net.luxvacuos.voxel.client.rendering.api.opengl.ParticleMaster;
 import net.luxvacuos.voxel.client.rendering.api.opengl.SkyboxRenderer;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.ShaderProgram;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.TessellatorBasicShader;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.TessellatorShader;
+import net.luxvacuos.voxel.client.resources.models.ParticleTexture;
 import net.luxvacuos.voxel.client.sound.LibraryLWJGLOpenAL;
 import net.luxvacuos.voxel.client.sound.soundsystem.SoundSystem;
 import net.luxvacuos.voxel.client.sound.soundsystem.SoundSystemConfig;
@@ -67,7 +67,6 @@ import net.luxvacuos.voxel.client.world.entities.Camera;
 import net.luxvacuos.voxel.client.world.entities.PlayerCamera;
 import net.luxvacuos.voxel.client.world.entities.SunCamera;
 import net.luxvacuos.voxel.universal.resources.UGameResources;
-import net.luxvacuos.voxel.universal.resources.UniversalResources;
 
 /**
  * Game Resources
@@ -172,7 +171,6 @@ public class GameResources extends UGameResources {
 		soundSystem = new SoundSystem();
 		globalStates = new GlobalStates();
 		Block.initBasicBlocks();
-		UniversalResources.loadUniversalResources(this);
 		menuSystem = new Menu(this);
 		worldsHandler = new WorldsHandler();
 	}

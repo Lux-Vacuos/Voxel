@@ -18,7 +18,7 @@
  * 
  */
 
-package net.luxvacuos.voxel.client.world.physics;
+package net.luxvacuos.voxel.client.world;
 
 import java.util.List;
 
@@ -34,13 +34,15 @@ import com.badlogic.gdx.math.collision.BoundingBox;
 import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.util.Maths;
-import net.luxvacuos.voxel.client.world.Dimension;
 import net.luxvacuos.voxel.client.world.block.Block;
 import net.luxvacuos.voxel.client.world.entities.GameEntity;
 import net.luxvacuos.voxel.client.world.entities.PlayerCamera;
 import net.luxvacuos.voxel.client.world.entities.components.ArmourComponent;
+import net.luxvacuos.voxel.client.world.entities.components.CollisionComponent;
 import net.luxvacuos.voxel.client.world.entities.components.DropComponent;
 import net.luxvacuos.voxel.client.world.entities.components.LifeComponent;
+import net.luxvacuos.voxel.client.world.entities.components.PositionComponent;
+import net.luxvacuos.voxel.client.world.entities.components.VelocityComponent;
 import net.luxvacuos.voxel.client.world.items.ItemDrop;
 
 public class PhysicsSystem extends EntitySystem {

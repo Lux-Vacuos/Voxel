@@ -24,9 +24,9 @@ import com.badlogic.ashley.core.Entity;
 
 import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.voxel.client.resources.models.TexturedModel;
-import net.luxvacuos.voxel.client.world.physics.CollisionComponent;
-import net.luxvacuos.voxel.client.world.physics.PositionComponent;
-import net.luxvacuos.voxel.client.world.physics.VelocityComponent;
+import net.luxvacuos.voxel.client.world.entities.components.CollisionComponent;
+import net.luxvacuos.voxel.client.world.entities.components.PositionComponent;
+import net.luxvacuos.voxel.client.world.entities.components.VelocityComponent;
 
 public class GameEntity extends Entity {
 

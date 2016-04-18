@@ -18,17 +18,24 @@
  * 
  */
 
-package net.luxvacuos.voxel.client.world.physics;
+package net.luxvacuos.voxel.client.resources.models;
 
-import com.badlogic.ashley.core.Component;
+public class ParticleTexture {
 
-import net.luxvacuos.igl.vector.Vector3f;
+	private int textureID;
+	private int numbreOfRows;
 
-public class VelocityComponent implements Component {
-	public Vector3f velocity = new Vector3f();
-
-	@Override
-	public String toString() {
-		return "[x:" + velocity.x + "]" + "[y:" + velocity.y + "]" + "[z:" + velocity.z + "]";
+	public ParticleTexture(int textureID, int numbreOfRows) {
+		this.textureID = textureID;
+		this.numbreOfRows = numbreOfRows;
 	}
+
+	public int getTextureID() {
+		return textureID;
+	}
+
+	public int getNumbreOfRows() {
+		return numbreOfRows;
+	}
+
 }

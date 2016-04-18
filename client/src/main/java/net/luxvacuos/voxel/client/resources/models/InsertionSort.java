@@ -18,7 +18,7 @@
  * 
  */
 
-package net.luxvacuos.voxel.client.particle;
+package net.luxvacuos.voxel.client.resources.models;
 
 import java.util.List;
 

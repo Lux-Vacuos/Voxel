@@ -100,7 +100,6 @@ public class Voxel extends UVoxel {
 		BlocksResources.createBlocks(getGameResources().getLoader());
 		getGameResources().loadResources();
 		Logger.log("Initializing Threads");
-		getGameResources().getRenderer().prepare();
 		api.init();
 	}
 
@@ -179,6 +178,7 @@ public class Voxel extends UVoxel {
 	private void handleError(Throwable e) {
 		if (!disposed && loaded)
 			try {
+				getGameResources().getWorldsHandler().getActiveWorld().dispose(getGameResources());
 				dispose();
 			} catch (Exception e1) {
 				e1.printStackTrace();

@@ -1,14 +1,38 @@
+/*
+ * This file is part of Voxel
+ * 
+ * Copyright (C) 2016 Lux Vacuos
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * 
+ */
+
 package net.luxvacuos.voxel.client.world.entities;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import net.luxvacuos.igl.vector.Matrix4f;
 import net.luxvacuos.igl.vector.Vector3f;
+import net.luxvacuos.igl.vector.Vector4f;
+import net.luxvacuos.voxel.client.resources.EntityResources;
+import net.luxvacuos.voxel.client.util.Maths;
 import net.luxvacuos.voxel.client.world.block.Block;
 import net.luxvacuos.voxel.client.world.entities.components.DropComponent;
 import net.luxvacuos.voxel.client.world.entities.components.LifeComponent;
+import net.luxvacuos.voxel.client.world.entities.components.VelocityComponent;
 import net.luxvacuos.voxel.client.world.items.ItemDrop;
-import net.luxvacuos.voxel.universal.resources.UniversalResources;
 
 public class GuineaPig extends GameEntity {
 
@@ -17,13 +41,13 @@ public class GuineaPig extends GameEntity {
 	}
 
 	public GuineaPig(Vector3f position) {
-		super(position, 0, 0, 0, 1);
+		super(position, 0, 90, 0, 1);
 	}
 
 	@Override
 	public void init() {
-		setModel(UniversalResources.player);
-		setAABB(new Vector3f(-1, -1, -1), new Vector3f(1, 1, 1));
+		setModel(EntityResources.getGuineaPig());
+		setAABB(new Vector3f(-1, -0.45f, -0.4f), new Vector3f(1, 0.6f, 0.4f));
 		super.add(new LifeComponent(10));
 		List<ItemDrop> drop = new ArrayList<>();
 		drop.add(new ItemDrop(Block.Glass));
@@ -32,6 +56,19 @@ public class GuineaPig extends GameEntity {
 
 	@Override
 	public void update(float delta) {
+		// Test with rotation based movement
+		/*
+		Vector3f velocity = super.getComponent(VelocityComponent.class).velocity;
+		velocity.x -= 0.4f;
+		Vector4f tmp = new Vector4f();
+
+		Matrix4f.transform(
+				Maths.createTransformationMatrix(new Vector3f(), getRotX(), getRotY(), getRotZ(), getScale()),
+				new Vector4f(velocity.x, velocity.y, velocity.z, 1), tmp);
+		super.getComponent(VelocityComponent.class).velocity.x = tmp.x;
+		super.getComponent(VelocityComponent.class).velocity.y = tmp.y;
+		super.getComponent(VelocityComponent.class).velocity.z = tmp.z;
+		*/
 	}
 
 }

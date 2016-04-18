@@ -18,24 +18,18 @@
  * 
  */
 
-package net.luxvacuos.voxel.client.particle;
+package net.luxvacuos.voxel.client.resources.models;
 
-public class ParticleTexture {
+import net.luxvacuos.igl.vector.Vector3f;
 
-	private int textureID;
-	private int numbreOfRows;
+public class ParticlePoint {
+	private Vector3f pos;
 
-	public ParticleTexture(int textureID, int numbreOfRows) {
-		this.textureID = textureID;
-		this.numbreOfRows = numbreOfRows;
+	public ParticlePoint(Vector3f pos) {
+		this.pos = pos;
 	}
 
-	public int getTextureID() {
-		return textureID;
+	public Vector3f getPos() {
+		return pos;
 	}
-
-	public int getNumbreOfRows() {
-		return numbreOfRows;
-	}
-
 }

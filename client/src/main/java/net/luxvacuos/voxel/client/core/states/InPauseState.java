@@ -35,8 +35,8 @@ import net.luxvacuos.voxel.client.core.Voxel;
 import net.luxvacuos.voxel.client.core.VoxelVariables;
 import net.luxvacuos.voxel.client.input.Keyboard;
 import net.luxvacuos.voxel.client.input.Mouse;
-import net.luxvacuos.voxel.client.particle.ParticleMaster;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.VectorsRendering;
+import net.luxvacuos.voxel.client.rendering.api.opengl.ParticleMaster;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.world.entities.PlayerCamera;
 

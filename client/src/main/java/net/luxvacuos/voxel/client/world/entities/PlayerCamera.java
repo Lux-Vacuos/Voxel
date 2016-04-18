@@ -50,8 +50,8 @@ import net.luxvacuos.voxel.client.world.Dimension;
 import net.luxvacuos.voxel.client.world.block.Block;
 import net.luxvacuos.voxel.client.world.entities.components.ArmourComponent;
 import net.luxvacuos.voxel.client.world.entities.components.LifeComponent;
+import net.luxvacuos.voxel.client.world.entities.components.VelocityComponent;
 import net.luxvacuos.voxel.client.world.items.EmptyArmour;
-import net.luxvacuos.voxel.client.world.physics.VelocityComponent;
 
 public class PlayerCamera extends Camera {
 

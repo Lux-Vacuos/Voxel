@@ -26,9 +26,9 @@ import com.badlogic.gdx.math.Vector3;
 import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Tessellator;
 import net.luxvacuos.voxel.client.world.block.BlockBase;
-import net.luxvacuos.voxel.client.world.physics.CollisionComponent;
-import net.luxvacuos.voxel.client.world.physics.PositionComponent;
-import net.luxvacuos.voxel.client.world.physics.VelocityComponent;
+import net.luxvacuos.voxel.client.world.entities.components.CollisionComponent;
+import net.luxvacuos.voxel.client.world.entities.components.PositionComponent;
+import net.luxvacuos.voxel.client.world.entities.components.VelocityComponent;
 
 public class ItemDrop extends Entity {
 

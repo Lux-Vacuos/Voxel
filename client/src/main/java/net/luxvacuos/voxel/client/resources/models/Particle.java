@@ -18,10 +18,11 @@
  * 
  */
 
-package net.luxvacuos.voxel.client.particle;
+package net.luxvacuos.voxel.client.resources.models;
 
 import net.luxvacuos.igl.vector.Vector2f;
 import net.luxvacuos.igl.vector.Vector3f;
+import net.luxvacuos.voxel.client.rendering.api.opengl.ParticleMaster;
 import net.luxvacuos.voxel.client.world.entities.Camera;
 
 public class Particle {

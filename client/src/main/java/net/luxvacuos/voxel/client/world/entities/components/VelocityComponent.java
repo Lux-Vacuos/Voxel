@@ -18,23 +18,17 @@
  * 
  */
 
-package net.luxvacuos.voxel.client.world.physics;
+package net.luxvacuos.voxel.client.world.entities.components;
 
 import com.badlogic.ashley.core.Component;
-import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.math.collision.BoundingBox;
 
 import net.luxvacuos.igl.vector.Vector3f;
 
-public class CollisionComponent implements Component {
+public class VelocityComponent implements Component {
+	public Vector3f velocity = new Vector3f();
 
-	public BoundingBox boundingBox = new BoundingBox();
-	
-	public Vector3 min, max;
-
-	public void update(Vector3f position) {
-		boundingBox.set(new Vector3(position.x + min.x, position.y + min.y, position.z + min.z),
-				new Vector3(position.x + max.x, position.y + max.y, position.z + max.z));
+	@Override
+	public String toString() {
+		return "[x:" + velocity.x + "]" + "[y:" + velocity.y + "]" + "[z:" + velocity.z + "]";
 	}
-
 }

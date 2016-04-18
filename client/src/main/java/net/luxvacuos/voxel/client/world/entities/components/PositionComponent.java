@@ -18,21 +18,17 @@
  * 
  */
 
-package net.luxvacuos.voxel.universal.resources;
+package net.luxvacuos.voxel.client.world.entities.components;
 
-import net.luxvacuos.voxel.client.resources.GameResources;
-import net.luxvacuos.voxel.client.resources.models.ModelTexture;
-import net.luxvacuos.voxel.client.resources.models.RawModel;
-import net.luxvacuos.voxel.client.resources.models.TexturedModel;
+import com.badlogic.ashley.core.Component;
 
-public class UniversalResources {
+import net.luxvacuos.igl.vector.Vector3f;
 
-	public static TexturedModel player;
+public class PositionComponent implements Component {
+	public Vector3f position = new Vector3f(0, 0, 0);
 
-	public static void loadUniversalResources(GameResources gm) throws Exception {
-		ModelTexture texture = new ModelTexture(gm.getLoader().loadTextureEntity("player"));
-		RawModel model = gm.getLoader().getObjLoader().loadObjModel("cube");
-		player = new TexturedModel(model, texture);
+	@Override
+	public String toString() {
+		return "[x:" + position.x + "]" + "[y:" + position.y + "]" + "[z:" + position.z + "]";
 	}
-
 }

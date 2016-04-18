@@ -18,18 +18,10 @@
  * 
  */
 
-package net.luxvacuos.voxel.client.particle;
+package net.luxvacuos.voxel.client.world.items;
 
-import net.luxvacuos.igl.vector.Vector3f;
+public abstract class Enchant {
+	
+	
 
-public class ParticlePoint {
-	private Vector3f pos;
-
-	public ParticlePoint(Vector3f pos) {
-		this.pos = pos;
-	}
-
-	public Vector3f getPos() {
-		return pos;
-	}
 }
