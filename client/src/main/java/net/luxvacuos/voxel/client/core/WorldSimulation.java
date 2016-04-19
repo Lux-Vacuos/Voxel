@@ -12,7 +12,7 @@ public class WorldSimulation {
 	private static final float TIME_MULTIPLIER = 10;
 
 	public WorldSimulation() {
-		time = 10000;
+		time = 7000;
 	}
 
 	public float update(float delta) {

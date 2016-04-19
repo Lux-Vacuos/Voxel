@@ -68,11 +68,12 @@ public class ItemDrop extends Entity {
 	public void generateModel(Tessellator tess) {
 		if (block.isCustomModel())
 			block.generateCustomModel(tess, positionComponent.position.x - 0.15f, positionComponent.position.y - 0.15f,
-					positionComponent.position.z - 0.15f, 0.3f, true, true, true, true, true, true, 0, 0, 0, 0, 0, 0);
+					positionComponent.position.z - 0.15f, 0.3f, true, true, true, true, true, true, 0, 0, 0, 0, 0, 0, 0,
+					0);
 		else
 			tess.generateCube(positionComponent.position.x - 0.15f, positionComponent.position.y - 0.15f,
 					positionComponent.position.z - 0.15f, 0.3f, true, true, true, true, true, true, block, 0, 0, 0, 0,
-					0, 0);
+					0, 0, 0, 0);
 	}
 
 	public BlockBase getBlock() {

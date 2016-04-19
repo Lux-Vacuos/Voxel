@@ -226,11 +226,13 @@ public class Chunk {
 								cullFaceNorth(block.getId(), x + posX, y + posY, z + posZ, dimension),
 								cullFaceSouth(block.getId(), x + posX, y + posY, z + posZ, dimension),
 								dimension.getLight(x + posX, y + posY + 1, z + posZ),
-								dimension.getLight(x + posX, y + posY - 1, z + posZ),
+								dimension.getLight(x + posX + 1, y + posY + 1, z + posZ),
+								dimension.getLight(x + posX, y + posY + 1, z + posZ + 1),
+								dimension.getLight(x + posX + 1, y + posY + 1, z + posZ + 1),
+								dimension.getLight(x + posX, y + posY, z + posZ),
 								dimension.getLight(x + posX + 1, y + posY, z + posZ),
-								dimension.getLight(x + posX - 1, y + posY, z + posZ),
 								dimension.getLight(x + posX, y + posY, z + posZ + 1),
-								dimension.getLight(x + posX, y + posY, z + posZ - 1));
+								dimension.getLight(x + posX + 1, y + posY, z + posZ + 1));
 						particlePoints.add(new ParticlePoint(
 								new Vector3f((x + posX) + 0.5f, (y + posY) + 0.8f, (z + posZ) + 0.5f)));
 					} else if (block != Block.Air && !block.isCustomModel()) {
@@ -242,11 +244,13 @@ public class Chunk {
 								cullFaceNorth(block.getId(), x + posX, y + posY, z + posZ, dimension),
 								cullFaceSouth(block.getId(), x + posX, y + posY, z + posZ, dimension), block,
 								dimension.getLight(x + posX, y + posY + 1, z + posZ),
-								dimension.getLight(x + posX, y + posY - 1, z + posZ),
+								dimension.getLight(x + posX + 1, y + posY + 1, z + posZ),
+								dimension.getLight(x + posX, y + posY + 1, z + posZ + 1),
+								dimension.getLight(x + posX + 1, y + posY + 1, z + posZ + 1),
+								dimension.getLight(x + posX, y + posY, z + posZ),
 								dimension.getLight(x + posX + 1, y + posY, z + posZ),
-								dimension.getLight(x + posX - 1, y + posY, z + posZ),
 								dimension.getLight(x + posX, y + posY, z + posZ + 1),
-								dimension.getLight(x + posX, y + posY, z + posZ - 1));
+								dimension.getLight(x + posX + 1, y + posY, z + posZ + 1));
 					} else if (block != Block.Air && block.isCustomModel()) {
 						block.generateCustomModel(tess, x + posX, y + posY, z + posZ, 1,
 								cullFaceUpSolidBlock(block.getId(), x + posX, y + posY, z + posZ, dimension),
@@ -256,11 +260,13 @@ public class Chunk {
 								cullFaceNorth(block.getId(), x + posX, y + posY, z + posZ, dimension),
 								cullFaceSouth(block.getId(), x + posX, y + posY, z + posZ, dimension),
 								dimension.getLight(x + posX, y + posY + 1, z + posZ),
-								dimension.getLight(x + posX, y + posY - 1, z + posZ),
+								dimension.getLight(x + posX + 1, y + posY + 1, z + posZ),
+								dimension.getLight(x + posX, y + posY + 1, z + posZ + 1),
+								dimension.getLight(x + posX + 1, y + posY + 1, z + posZ + 1),
+								dimension.getLight(x + posX, y + posY, z + posZ),
 								dimension.getLight(x + posX + 1, y + posY, z + posZ),
-								dimension.getLight(x + posX - 1, y + posY, z + posZ),
 								dimension.getLight(x + posX, y + posY, z + posZ + 1),
-								dimension.getLight(x + posX, y + posY, z + posZ - 1));
+								dimension.getLight(x + posX + 1, y + posY, z + posZ + 1));
 					}
 				}
 			}

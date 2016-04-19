@@ -47,15 +47,14 @@ public class BlockTorch extends BlockBase {
 
 	@Override
 	public void generateCustomModel(Tessellator tess, float x, float y, float z, float globalScale, boolean top,
-			boolean bottom, boolean left, boolean right, boolean front, boolean back, float lightTop, float lightBottom,
-			float lightLeft, float lightRight, float lightFront, float lightBack) {
+			boolean bottom, boolean left, boolean right, boolean front, boolean back, float tbl_, float tbr_,
+			float tfl_, float tfr_, float bbl_, float bbr_, float bfl_, float bfr_) {
 		tess.generateCube(x + 0.35f * globalScale, y, z + 0.35f * globalScale, globalScale - 0.7f * globalScale,
 				globalScale - 0.3f * globalScale, globalScale - 0.7f * globalScale, true, true, true, true, true, true,
-				this, lightTop, lightBottom, lightLeft, lightRight, lightFront, lightBack);
+				this, tbl_, tbr_, tfl_, tfr_, bbl_, bbr_, bfl_, bfr_);
 		tess.generateCube(x + 0.3f * globalScale, y + 0.7f * globalScale, z + 0.3f * globalScale,
 				globalScale - 0.6f * globalScale, globalScale - 0.7f * globalScale, globalScale - 0.6f * globalScale,
-				true, true, true, true, true, true, this, lightTop, lightBottom, lightLeft, lightRight, lightFront,
-				lightBack);
-
+				true, true, true, true, true, true, this, tbl_, tbr_, tfl_, tfr_, bbl_, bbr_, bfl_, bfr_);
 	}
+
 }

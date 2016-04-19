@@ -43,7 +43,7 @@ uniform float exposure;
 
 const float weight[5] = float[] (0.227027, 0.1945946, 0.1216216, 0.054054, 0.016216);
 
-const float gamma = 1.2;
+const float gamma = 2.2;
 
 /*--------------------------------------------------------*/
 /*------------------COMPOSITE 2 CODE----------------------*/
@@ -53,7 +53,7 @@ const float gamma = 1.2;
 void main(void){
 	vec2 texcoord = textureCoords;
 	vec4 image0 = vec4(0.0);
-	vec2 tex_offset = 1.0 / (resolution / 2);
+	vec2 tex_offset = 1.0 / resolution;
     vec3 result = texture(composite0, texcoord).rgb * weight[0];
     
     for(int i = 1; i < 5; ++i) {

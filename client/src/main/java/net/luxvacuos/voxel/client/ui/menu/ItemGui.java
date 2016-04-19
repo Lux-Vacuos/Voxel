@@ -8,7 +8,7 @@ public class ItemGui {
 	private BlockBase block;
 	private Vector3f position;
 	private int total;
-	
+
 	public ItemGui() {
 	}
 
@@ -20,10 +20,10 @@ public class ItemGui {
 	public void generateModel(Tessellator tess) {
 		if (block.isCustomModel())
 			block.generateCustomModel(tess, position.x, position.y, position.z, 1f, true, false, false, true, false,
-					true, 0, 0, 0, 0, 0, 0);
+					true, 0, 0, 0, 0, 0, 0, 0, 0);
 		else
 			tess.generateCube(position.x, position.y, position.z, 1f, true, false, false, true, false, true, block, 0,
-					0, 0, 0, 0, 0);
+					0, 0, 0, 0, 0, 0, 0);
 	}
 
 	public void setBlock(BlockBase block) {

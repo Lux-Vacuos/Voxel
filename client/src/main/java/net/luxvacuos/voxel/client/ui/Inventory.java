@@ -151,7 +151,6 @@ public class Inventory {
 					tmp.setTotal(0);
 				} else if (items[x][y].getBlock().getId() == tmp.getBlock().getId()) {
 					push = false;
-					System.out.println("ll");
 					items[x][y].setTotal(items[x][y].getTotal() + tmp.getTotal());
 					tmp.setBlock(Block.Air);
 					tmp.setTotal(0);

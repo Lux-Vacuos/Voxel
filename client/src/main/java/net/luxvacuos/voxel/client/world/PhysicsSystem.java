@@ -123,6 +123,7 @@ public class PhysicsSystem extends EntitySystem {
 						}
 						getEngine().removeEntity(entity);
 					}
+					break;
 				}
 			}
 		}

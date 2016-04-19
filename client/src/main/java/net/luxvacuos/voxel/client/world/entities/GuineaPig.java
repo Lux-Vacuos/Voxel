@@ -47,7 +47,7 @@ public class GuineaPig extends GameEntity {
 	@Override
 	public void init() {
 		setModel(EntityResources.getGuineaPig());
-		setAABB(new Vector3f(-1, -0.45f, -0.4f), new Vector3f(1, 0.6f, 0.4f));
+		setAABB(new Vector3f(-0.15f, -0.15f, -0.15f), new Vector3f(0.15f, 0.3f, 0.15f));
 		super.add(new LifeComponent(10));
 		List<ItemDrop> drop = new ArrayList<>();
 		drop.add(new ItemDrop(Block.Glass));
@@ -56,10 +56,11 @@ public class GuineaPig extends GameEntity {
 
 	@Override
 	public void update(float delta) {
+
 		// Test with rotation based movement
-		/*
+/*
 		Vector3f velocity = super.getComponent(VelocityComponent.class).velocity;
-		velocity.x -= 0.4f;
+		velocity.x += 0.4f;
 		Vector4f tmp = new Vector4f();
 
 		Matrix4f.transform(
@@ -68,7 +69,7 @@ public class GuineaPig extends GameEntity {
 		super.getComponent(VelocityComponent.class).velocity.x = tmp.x;
 		super.getComponent(VelocityComponent.class).velocity.y = tmp.y;
 		super.getComponent(VelocityComponent.class).velocity.z = tmp.z;
-		*/
+*/
 	}
 
 }
