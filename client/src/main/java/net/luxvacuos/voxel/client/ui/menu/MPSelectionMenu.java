@@ -47,7 +47,7 @@ public class MPSelectionMenu {
 	public void render() {
 		VectorsRendering.renderWindow("Multiplayer", "Roboto-Bold", 20 * xScale, 20 * yScale, 1240 * xScale,
 				540 * yScale);
-		VectorsRendering.renderText("IP:  ", "Roboto-Regular", 280 * xScale, 279 * yScale, 60 * yScale,
+		VectorsRendering.renderText("IP:  ", "Roboto-Regular", 270 * xScale, 275 * yScale, 60 * yScale,
 				VectorsRendering.rgba(255, 255, 255, 255, VectorsRendering.colorA),
 				VectorsRendering.rgba(255, 255, 255, 255, VectorsRendering.colorA));
 		VectorsRendering.renderWindow(20 * xScale, 570 * yScale, 1240 * xScale, 130 * yScale);

@@ -35,8 +35,6 @@ import static org.lwjgl.glfw.GLFW.glfwSetWindowPosCallback;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowRefreshCallback;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowSizeCallback;
 import static org.lwjgl.glfw.GLFW.glfwWindowShouldClose;
-import static org.lwjgl.opengl.GL11.GL_FALSE;
-import static org.lwjgl.opengl.GL11.GL_TRUE;
 
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWCharCallback;
@@ -106,11 +104,6 @@ public abstract class Window implements IDisplay {
 				delegate.invoke(error, description);
 			}
 
-			@Override
-			public void free() {
-				delegate.free();
-				super.free();
-			}
 		});
 		keyCallback = new GLFWKeyCallback() {
 			@Override
@@ -131,9 +124,10 @@ public abstract class Window implements IDisplay {
 		};
 
 		cursorEnterCallback = new GLFWCursorEnterCallback() {
+
 			@Override
-			public void invoke(long window, int entered) {
-				Mouse.setMouseInsideWindow(entered == GL_TRUE);
+			public void invoke(long window, boolean entered) {
+				Mouse.setMouseInsideWindow(entered);
 			}
 		};
 
@@ -153,15 +147,15 @@ public abstract class Window implements IDisplay {
 
 		windowFocusCallback = new GLFWWindowFocusCallback() {
 			@Override
-			public void invoke(long window, int focused) {
-				displayFocused = focused == GL_TRUE;
+			public void invoke(long window, boolean focused) {
+				displayFocused = focused;
 			}
 		};
 
 		windowIconifyCallback = new GLFWWindowIconifyCallback() {
 			@Override
-			public void invoke(long window, int iconified) {
-				displayVisible = iconified == GL_FALSE;
+			public void invoke(long window, boolean iconified) {
+				displayVisible = iconified;
 			}
 		};
 
@@ -203,7 +197,7 @@ public abstract class Window implements IDisplay {
 				Mouse.addWheelEvent((int) yoffset);
 			}
 		};
-		
+
 	}
 
 	public void setCallbacks() {
@@ -219,22 +213,6 @@ public abstract class Window implements IDisplay {
 		glfwSetWindowRefreshCallback(window, windowRefreshCallback);
 		glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
 		glfwSetScrollCallback(window, scrollCallback);
-	}
-
-	public void releaseCallbacks() {
-		errorCallback.free();
-		keyCallback.free();
-		charCallback.free();
-		cursorEnterCallback.free();
-		cursorPosCallback.free();
-		mouseButtonCallback.free();
-		windowFocusCallback.free();
-		windowIconifyCallback.free();
-		windowSizeCallback.free();
-		windowPosCallback.free();
-		windowRefreshCallback.free();
-		framebufferSizeCallback.free();
-		scrollCallback.free();
 	}
 
 	public GLFWErrorCallback getErrorCallback() {
@@ -366,7 +344,7 @@ public abstract class Window implements IDisplay {
 	}
 
 	public boolean isCloseRequested() {
-		return glfwWindowShouldClose(window) == GL_TRUE;
+		return glfwWindowShouldClose(window);
 	}
 
 }

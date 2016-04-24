@@ -107,7 +107,10 @@ public class Block {
 	 * @return Block
 	 */
 	public static BlockBase getBlock(byte id) {
-		return blockMap.get(id);
+		BlockBase b = blockMap.get(id);
+		if (b == null)
+			throw new NullPointerException("Block don't found: " + id);
+		return b;
 	}
 
 }

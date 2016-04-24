@@ -45,18 +45,18 @@ public class MainMenu {
 		float height = VoxelVariables.HEIGHT;
 		yScale = height / 720f;
 		xScale = width / 1280f;
-		playButton = new Button(new Vector2f(177, 568), new Vector2f(215, 80), xScale, yScale);
-		playMPButton = new Button(new Vector2f(177, 468), new Vector2f(215, 80), xScale, yScale);
-		optionsButton = new Button(new Vector2f(177, 368), new Vector2f(215, 80), xScale, yScale);
-		aboutButton = new Button(new Vector2f(177, 268), new Vector2f(215, 80), xScale, yScale);
-		exitButton = new Button(new Vector2f(177, 168), new Vector2f(215, 80), xScale, yScale);
+		playButton = new Button(new Vector2f(77, 568), new Vector2f(315, 80), xScale, yScale);
+		playMPButton = new Button(new Vector2f(77, 468), new Vector2f(315, 80), xScale, yScale);
+		optionsButton = new Button(new Vector2f(77, 368), new Vector2f(315, 80), xScale, yScale);
+		aboutButton = new Button(new Vector2f(77, 268), new Vector2f(315, 80), xScale, yScale);
+		exitButton = new Button(new Vector2f(77, 168), new Vector2f(315, 80), xScale, yScale);
 		newsRefreshButton = new Button(new Vector2f(1096, 627), new Vector2f(100, 40), xScale, yScale);
 		webRenderer = new WebRenderer(VoxelVariables.web + "news/menu.webtag", 460 * xScale, 120 * yScale);
 		webRenderer.update();
 	}
 
 	public void render() {
-		VectorsRendering.renderWindow(160 * xScale, 50 * yScale, 250 * xScale, 600 * yScale);
+		VectorsRendering.renderWindow(60 * xScale, 50 * yScale, 350 * xScale, 600 * yScale);
 		playButton.render("Play", VectorsRendering.ICON_BLACK_RIGHT_POINTING_TRIANGLE);
 		playMPButton.render("Multiplayer", VectorsRendering.ICON_BLACK_RIGHT_POINTING_TRIANGLE);
 		optionsButton.render("Options", VectorsRendering.ICON_GEAR);

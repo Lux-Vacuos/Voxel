@@ -50,7 +50,6 @@ import static org.lwjgl.nanovg.NanoVGGL3.NVG_STENCIL_STROKES;
 import static org.lwjgl.nanovg.NanoVGGL3.nvgCreateGL3;
 import static org.lwjgl.nanovg.NanoVGGL3.nvgDeleteGL3;
 import static org.lwjgl.opengl.GL.createCapabilities;
-import static org.lwjgl.opengl.GL11.GL_TRUE;
 import static org.lwjgl.opengl.GL11.GL_VENDOR;
 import static org.lwjgl.opengl.GL11.glGetIntegerv;
 import static org.lwjgl.opengl.GL11.glGetString;
@@ -108,7 +107,7 @@ public class Display extends Window {
 		Logger.log("Creating Window");
 		super.displayWidth = width;
 		super.displayHeight = height;
-		if (glfwInit() != GL_TRUE)
+		if (!glfwInit())
 			throw new IllegalStateException("Unable to initialize GLFW");
 
 		glfwDefaultWindowHints();
@@ -118,7 +117,7 @@ public class Display extends Window {
 
 		format.create();
 
-		if (glfwVulkanSupported() == GL_TRUE) {
+		if (glfwVulkanSupported()) {
 			PointerBuffer requiredExtensions = glfwGetRequiredInstanceExtensions();
 			if (requiredExtensions == null) {
 				throw new AssertionError("Failed to find list of required Vulkan extensions");
@@ -210,7 +209,6 @@ public class Display extends Window {
 	@Override
 	public void closeDisplay() {
 		nvgDeleteGL3(super.vg);
-		releaseCallbacks();
 		glfwDestroyWindow(super.window);
 		glfwTerminate();
 	}

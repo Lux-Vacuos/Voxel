@@ -28,7 +28,6 @@ import java.util.Queue;
 import java.util.Random;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import net.luxvacuos.igl.Logger;
 import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.voxel.client.core.VoxelVariables;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Tessellator;
@@ -95,20 +94,6 @@ public class Chunk {
 		tess = new Tessellator(gm);
 	}
 
-	public void checkForMissingBlocks() {
-		for (int x = 0; x < sizeX; x++) {
-			for (int z = 0; z < sizeZ; z++) {
-				for (int y = 0; y < sizeY; y++) {
-					if (Block.getBlock(blocks[x][y][z]) == null) {
-						Logger.warn("Chunk " + cx + " " + cy + " " + cz + " contains a missing block with ID: "
-								+ blocks[x][y][z]);
-						blocks[x][y][z] = 0;
-					}
-				}
-			}
-		}
-	}
-
 	public void rebuild(DimensionService service, Dimension dimension) {
 		if ((needsRebuild || !updated) && !updating) {
 			updating = true;
@@ -170,7 +155,8 @@ public class Chunk {
 		for (int x = 0; x < sizeX; x++) {
 			for (int z = 0; z < sizeZ; z++) {
 				for (int y = 0; y < sizeY; y++) {
-					setLocalBlock(x, y, z, Block.Water.getId());
+					if (y + posY <= 128)
+						setLocalBlock(x, y, z, Block.Water.getId());
 				}
 			}
 		}
@@ -186,8 +172,10 @@ public class Chunk {
 						setLocalBlock(x, y, z, Block.Dirt.getId());
 					else if (y + posY == height - 1 && y + posY < 129)
 						setLocalBlock(x, y, z, Block.Sand.getId());
-					else
+					else if (y + posY < height - 2)
 						setLocalBlock(x, y, z, Block.Stone.getId());
+					else if (getLocalBlock(x, y, z) != Block.Water.getId())
+						setLocalBlock(x, y, z, Block.Air.getId());
 				}
 			}
 		}

@@ -65,9 +65,7 @@ float fbm( vec2 p )
     	return f/0.984375;
 }
 
-void main(void){
-
-	float tt = time / 10;
+float clouds(float tt){
 	vec2 wind_vec = vec2(0.001 + tt*0.01, 0.003 + tt * 0.01);
 	
 	// Set up domain
@@ -83,15 +81,20 @@ void main(void){
 	if ( c < 0.0 )
 		c = 0.0;
 	f = 1.0 - (pow(sharpness, c));
+	return f;
+}
+
+void main(void){
+
+	float tt = time / 10;
+
+	float f = clouds(tt);
 	
 	float fac = max(dot(vec3(0,1,0),normalize(lightPosition - pass_position)),-1.0);
 	fac = clamp(fac,0.02,1.0);
 	f *= 3;
 	f *= fac;
 	
-	float facHaze = max(dot(textureCoords,normalize(lightPosition)),-1.0);
-	vec3 col = vec3(1,0.2,0);
-
     vec4 finalColour = vec4(fogColour,1.0);
     finalColour.rgb *= fac;
     float factor = (textureCoords.y - lowerLimit) / (upperLimit - lowerLimit);

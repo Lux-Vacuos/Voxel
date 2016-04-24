@@ -57,18 +57,8 @@ import net.luxvacuos.voxel.client.world.chunks.ChunkKey;
 import net.luxvacuos.voxel.client.world.chunks.LightNodeAdd;
 import net.luxvacuos.voxel.client.world.chunks.LightNodeRemoval;
 
-/**
- * 
- * Interface of World, this is used as template for all worlds
- * 
- * @author pablo
- *
- */
 public abstract class Dimension {
 
-	/**
-	 * Dimensional World Data
-	 */
 	private int chunkDim;
 	private Map<ChunkKey, Chunk> chunks;
 	private SimplexNoise noise;
@@ -354,7 +344,6 @@ public abstract class Dimension {
 			input.close();
 			if (chunk != null) {
 				chunk.load(gm);
-				chunk.checkForMissingBlocks();
 				addChunk(chunk);
 			}
 

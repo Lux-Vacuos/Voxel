@@ -63,15 +63,16 @@ public class Inventory {
 			}
 		}
 		if (push)
-			VectorsRendering.renderBox((xPos + x * 60.8f) * xScale, 440 - (yPos + y * 60.8f) * yScale, 60 * xScale,
+			VectorsRendering.renderBox((xPos + x * 60.8f) * xScale, 660 - (yPos + y * 61f) * yScale, 60 * xScale,
 					60 * yScale, VectorsRendering.rgba(100, 255, 100, 120, VectorsRendering.colorA),
 					VectorsRendering.rgba(0, 255, 0, 120, VectorsRendering.colorB),
 					VectorsRendering.rgba(0, 255, 0, 120, VectorsRendering.colorC));
 		else
-			VectorsRendering.renderBox((xPos + x * 60.8f) * xScale, 440 - (yPos + y * 60.8f) * yScale, 60 * xScale,
+			VectorsRendering.renderBox((xPos + x * 60.8f) * xScale, 660 - (yPos + y * 61f) * yScale, 60 * xScale,
 					60 * yScale, VectorsRendering.rgba(255, 255, 255, 120, VectorsRendering.colorA),
 					VectorsRendering.rgba(255, 255, 255, 120, VectorsRendering.colorB),
 					VectorsRendering.rgba(255, 255, 255, 120, VectorsRendering.colorC));
+		
 		for (int x = 0; x < sizeX; x++) {
 			for (int y = 0; y < sizeY; y++) {
 				if (items[x][y].getBlock().getId() != Block.Air.getId()) {
@@ -104,8 +105,7 @@ public class Inventory {
 
 			}
 		}
-
-		VectorsRendering.renderBox((xPos + cursorX * 60.8f) * xScale, 440 - (yPos + cursorY * 60.8f) * yScale,
+		VectorsRendering.renderBox((xPos + cursorX * 60.8f) * xScale, 660 - (yPos + cursorY * 61f) * yScale,
 				60 * xScale, 60 * yScale, VectorsRendering.rgba(255, 255, 255, 120, VectorsRendering.colorA),
 				VectorsRendering.rgba(255, 255, 255, 120, VectorsRendering.colorB),
 				VectorsRendering.rgba(255, 255, 255, 120, VectorsRendering.colorC));
