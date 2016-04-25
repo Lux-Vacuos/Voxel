@@ -18,17 +18,15 @@
  * 
  */
 
-package net.luxvacuos.voxel.server.world.physics;
+package net.luxvacuos.voxel.client.api;
 
-import com.badlogic.ashley.core.Component;
+import net.luxvacuos.voxel.universal.api.APIMethod;
 
-import net.luxvacuos.igl.vector.Vector3f;
-
-public class VelocityComponent implements Component {
-	public Vector3f velocity = new Vector3f();
-
+public class Test implements APIMethod {
+	
 	@Override
-	public String toString() {
-		return "[x:" + velocity.x + "]" + "[y:" + velocity.y + "]" + "[z:" + velocity.z + "]";
+	public String run(Object... objects) {
+		return "TEST";
 	}
+
 }

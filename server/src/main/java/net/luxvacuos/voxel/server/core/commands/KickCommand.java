@@ -18,23 +18,29 @@
  * 
  */
 
-package net.luxvacuos.voxel.server.world.block.types;
+package net.luxvacuos.voxel.server.core.commands;
 
-import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.math.collision.BoundingBox;
+import net.luxvacuos.igl.Logger;
+import net.luxvacuos.voxel.server.core.Voxel;
+import net.luxvacuos.voxel.server.network.ConnectionsHandler;
 
-import net.luxvacuos.igl.vector.Vector3f;
-import net.luxvacuos.voxel.server.world.block.BlockBase;
+public class KickCommand extends Command {
 
-public class BlockLeaves extends BlockBase {
+	private String name;
 
-	@Override
-	public byte getId() {
-		return 11;
+	public KickCommand(String name) {
+		this.name = name;
 	}
 
 	@Override
-	public BoundingBox getBoundingBox(Vector3f pos) {
-		return new BoundingBox(new Vector3(pos.x, pos.y, pos.z), new Vector3(pos.x + 1, pos.y + 1, pos.z + 1));
+	public boolean run(Voxel voxel) {
+		try {
+			ConnectionsHandler.getInstace().getByName(name).close();
+		} catch (NullPointerException e) {
+			Logger.log("User not found: " + name);
+		}
+		voxel.getGameResources().getVoxelServer().updateNames();
+		return true;
 	}
+
 }

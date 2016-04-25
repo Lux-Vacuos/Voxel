@@ -42,7 +42,7 @@ public class OBJLoader {
 
 	private Loader loader;
 
-	public OBJLoader(Loader loader) {
+	OBJLoader(Loader loader) {
 		this.loader = loader;
 	}
 

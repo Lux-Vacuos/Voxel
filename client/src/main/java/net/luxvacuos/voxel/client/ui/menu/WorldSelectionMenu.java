@@ -32,8 +32,6 @@ import net.luxvacuos.voxel.client.ui.WorldGui;
 
 public class WorldSelectionMenu {
 
-	private float xScale, yScale;
-
 	private Button exitButton;
 	private Button playButton;
 
@@ -45,12 +43,8 @@ public class WorldSelectionMenu {
 	private int worldsNumber;
 
 	public WorldSelectionMenu(GameResources gm) {
-		float width = VoxelVariables.WIDTH;
-		float height = VoxelVariables.HEIGHT;
-		yScale = height / 720f;
-		xScale = width / 1280f;
-		exitButton = new Button(new Vector2f(655, 30), new Vector2f(215, 80), xScale, yScale);
-		playButton = new Button(new Vector2f(410, 30), new Vector2f(215, 80), xScale, yScale);
+		exitButton = new Button(new Vector2f(655, 30), new Vector2f(215, 80));
+		playButton = new Button(new Vector2f(410, 30), new Vector2f(215, 80));
 		// worldsNumber = new File(VoxelVariables.worldPath).list().length;
 		worldsNumber = 5;
 		worlds = new WorldGui[worldsNumber];
@@ -60,24 +54,28 @@ public class WorldSelectionMenu {
 		}
 		worldName = "";
 		worldsButtons = new Button[worldsNumber];
-		worldsButtons[0] = new Button(new Vector2f(35, 165), new Vector2f(245, 80), xScale, yScale);
-		worldsButtons[1] = new Button(new Vector2f(35, 265), new Vector2f(245, 80), xScale, yScale);
-		worldsButtons[2] = new Button(new Vector2f(35, 365), new Vector2f(245, 80), xScale, yScale);
-		worldsButtons[3] = new Button(new Vector2f(35, 465), new Vector2f(245, 80), xScale, yScale);
-		worldsButtons[4] = new Button(new Vector2f(35, 565), new Vector2f(245, 80), xScale, yScale);
+		worldsButtons[0] = new Button(new Vector2f(35, 165), new Vector2f(245, 80));
+		worldsButtons[1] = new Button(new Vector2f(35, 265), new Vector2f(245, 80));
+		worldsButtons[2] = new Button(new Vector2f(35, 365), new Vector2f(245, 80));
+		worldsButtons[3] = new Button(new Vector2f(35, 465), new Vector2f(245, 80));
+		worldsButtons[4] = new Button(new Vector2f(35, 565), new Vector2f(245, 80));
 	}
 
 	public void render() {
-		VectorsRendering.renderWindow("Worlds", "Roboto-Bold", 20 * xScale, 20 * yScale, 275 * xScale, 540 * yScale);
-		VectorsRendering.renderWindow("World Info: " + worldName, "Roboto-Bold", 310 * xScale, 20 * yScale, 950 * xScale,
-				540 * yScale);
-		VectorsRendering.renderText("World Size : " + worldSize + "MB", "Roboto-Regular", 330 * xScale, 130 * yScale,
-				30 * yScale, VectorsRendering.rgba(255, 255, 255, 255, VectorsRendering.colorA),
+		VectorsRendering.renderWindow("Worlds", "Roboto-Bold", 20 * VoxelVariables.XSCALE, 20 * VoxelVariables.YSCALE,
+				275 * VoxelVariables.XSCALE, 540 * VoxelVariables.YSCALE);
+		VectorsRendering.renderWindow("World Info: " + worldName, "Roboto-Bold", 310 * VoxelVariables.XSCALE,
+				20 * VoxelVariables.YSCALE, 950 * VoxelVariables.XSCALE, 540 * VoxelVariables.YSCALE);
+		VectorsRendering.renderText("World Size : " + worldSize + "MB", "Roboto-Regular", 330 * VoxelVariables.XSCALE,
+				130 * VoxelVariables.YSCALE, 30 * VoxelVariables.YSCALE,
+				VectorsRendering.rgba(255, 255, 255, 255, VectorsRendering.colorA),
 				VectorsRendering.rgba(255, 255, 255, 255, VectorsRendering.colorA));
-		VectorsRendering.renderText("World Seed: ", "Roboto-Regular", 330 * xScale, 100 * yScale,
-				30 * yScale, VectorsRendering.rgba(255, 255, 255, 255, VectorsRendering.colorA),
+		VectorsRendering.renderText("World Seed: ", "Roboto-Regular", 330 * VoxelVariables.XSCALE,
+				100 * VoxelVariables.YSCALE, 30 * VoxelVariables.YSCALE,
+				VectorsRendering.rgba(255, 255, 255, 255, VectorsRendering.colorA),
 				VectorsRendering.rgba(255, 255, 255, 255, VectorsRendering.colorA));
-		VectorsRendering.renderWindow(20 * xScale, 570 * yScale, 1240 * xScale, 130 * yScale);
+		VectorsRendering.renderWindow(20 * VoxelVariables.XSCALE, 570 * VoxelVariables.YSCALE,
+				1240 * VoxelVariables.XSCALE, 130 * VoxelVariables.YSCALE);
 		for (int i = 0; i < worlds.length; i++) {
 			if (worlds[i].isSelected())
 				worldsButtons[i].render(worlds[i].getToRender(),

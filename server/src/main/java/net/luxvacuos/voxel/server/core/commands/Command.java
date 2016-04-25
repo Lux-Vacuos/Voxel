@@ -18,24 +18,12 @@
  * 
  */
 
-package net.luxvacuos.voxel.server.world.block.types;
+package net.luxvacuos.voxel.server.core.commands;
 
-import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.math.collision.BoundingBox;
+import net.luxvacuos.voxel.server.core.Voxel;
 
-import net.luxvacuos.igl.vector.Vector3f;
-import net.luxvacuos.voxel.server.world.block.BlockBase;
-
-public class BlockGoldOre extends BlockBase {
-
-	@Override
-	public byte getId() {
-		return 6;
-	}
-
-	@Override
-	public BoundingBox getBoundingBox(Vector3f pos) {
-		return new BoundingBox(new Vector3(pos.x, pos.y, pos.z), new Vector3(pos.x + 1, pos.y + 1, pos.z + 1));
-	}
+public abstract class Command {
+	
+	public abstract boolean run(Voxel voxel);
 
 }

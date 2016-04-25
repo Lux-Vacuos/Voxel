@@ -22,11 +22,13 @@ package net.luxvacuos.voxel.server.ui;
 
 import net.luxvacuos.voxel.server.core.Voxel;
 
-public class WrapperUI {
+public class UserInterface {
 
 	private Thread threadUI;
+	static boolean started;
+	static boolean ready;
 
-	public WrapperUI(Voxel voxel) {
+	public UserInterface(Voxel voxel) {
 		threadUI = new Thread(new Runnable() {
 
 			@Override
@@ -41,6 +43,14 @@ public class WrapperUI {
 
 	public Thread getThreadUI() {
 		return threadUI;
+	}
+
+	public boolean isStarted() {
+		return started;
+	}
+	
+	public static void setReady(boolean ready) {
+		UserInterface.ready = ready;
 	}
 
 }

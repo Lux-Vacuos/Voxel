@@ -31,7 +31,10 @@ import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFW;
 
 import net.luxvacuos.igl.Logger;
-import net.luxvacuos.voxel.client.api.Client_Test;
+import net.luxvacuos.voxel.client.api.AddChunk;
+import net.luxvacuos.voxel.client.api.AddEntity;
+import net.luxvacuos.voxel.client.api.GetChunk;
+import net.luxvacuos.voxel.client.api.Test;
 import net.luxvacuos.voxel.client.bootstrap.Bootstrap;
 import net.luxvacuos.voxel.client.core.GlobalStates.InternalState;
 import net.luxvacuos.voxel.client.input.Mouse;
@@ -110,8 +113,11 @@ public class Voxel extends UVoxel {
 	}
 
 	@Override
-	public void registerAPIMethods(MoltenAPI api, Map<String, APIMethod<Object>> methods) {
-		methods.put("Client_Test", new Client_Test());
+	public void registerAPIMethods(MoltenAPI api, Map<String, APIMethod> methods) {
+		methods.put("Client_Test", new Test());
+		methods.put("Client_AddEntity", new AddEntity());
+		methods.put("Client_GetChunk", new GetChunk());
+		methods.put("Client_AddChunk", new AddChunk());
 	}
 
 	private void mainLoop() {
@@ -126,7 +132,7 @@ public class Voxel extends UVoxel {
 			float interval = 1f / VoxelVariables.UPS;
 			float alpha = 0;
 
-			while (getGameResources().getGlobalStates().getInternalState() == InternalState.RUNNIG) {
+			while (getGameResources().getGlobalStates().getInternalState().equals(InternalState.RUNNIG)) {
 				Timers.startCPUTimer();
 				if (getGameResources().getDisplay().getTimeCount() > 1f) {
 					CoreInfo.ups = CoreInfo.upsCount;
@@ -196,6 +202,7 @@ public class Voxel extends UVoxel {
 		getGameResources().getDisplay().closeDisplay();
 	}
 
+	@Override
 	public GameResources getGameResources() {
 		return ((GameResources) gameResources);
 	}

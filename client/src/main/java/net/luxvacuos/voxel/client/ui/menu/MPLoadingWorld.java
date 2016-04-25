@@ -28,25 +28,20 @@ import net.luxvacuos.voxel.client.ui.Button;
 
 public class MPLoadingWorld {
 
-	private float xScale, yScale;
-
 	private Button exitButton;
 
 	public MPLoadingWorld(GameResources gm) {
-		float width = VoxelVariables.WIDTH;
-		float height = VoxelVariables.HEIGHT;
-		yScale = height / 720f;
-		xScale = width / 1280f;
-		exitButton = new Button(new Vector2f(533, 220), new Vector2f(215, 80), xScale, yScale);
+		exitButton = new Button(new Vector2f(533, 220), new Vector2f(215, 80));
 	}
 
 	public void render(String message) {
-		VectorsRendering.renderWindow("Loading Multiplayer", "Roboto-Bold", 20 * xScale, 20 * yScale, 1240 * xScale,
-				540 * yScale);
-		VectorsRendering.renderText(message, "Roboto-Regular", 40 * xScale, 300 * yScale, 60 * yScale,
-				VectorsRendering.rgba(255, 255, 255, 255, VectorsRendering.colorA),
+		VectorsRendering.renderWindow("Loading Multiplayer", "Roboto-Bold", 20 * VoxelVariables.XSCALE,
+				20 * VoxelVariables.YSCALE, 1240 * VoxelVariables.XSCALE, 540 * VoxelVariables.YSCALE);
+		VectorsRendering.renderText(message, "Roboto-Regular", 40 * VoxelVariables.XSCALE, 300 * VoxelVariables.YSCALE,
+				60 * VoxelVariables.YSCALE, VectorsRendering.rgba(255, 255, 255, 255, VectorsRendering.colorA),
 				VectorsRendering.rgba(255, 255, 255, 255, VectorsRendering.colorA));
-		VectorsRendering.renderWindow(20 * xScale, 570 * yScale, 1240 * xScale, 130 * yScale);
+		VectorsRendering.renderWindow(20 * VoxelVariables.XSCALE, 570 * VoxelVariables.YSCALE,
+				1240 * VoxelVariables.XSCALE, 130 * VoxelVariables.YSCALE);
 		exitButton.render("Cancel");
 	}
 

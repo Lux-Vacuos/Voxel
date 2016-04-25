@@ -28,6 +28,6 @@ package net.luxvacuos.voxel.server.core;
  */
 public interface State {
 
-	void update(Voxel voxel, GlobalStates states, float delta);
+	void update(Voxel voxel, float delta);
 
 }

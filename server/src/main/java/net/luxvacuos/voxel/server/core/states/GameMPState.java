@@ -20,15 +20,14 @@
 
 package net.luxvacuos.voxel.server.core.states;
 
-import net.luxvacuos.voxel.server.core.GlobalStates;
 import net.luxvacuos.voxel.server.core.State;
 import net.luxvacuos.voxel.server.core.Voxel;
-import net.luxvacuos.voxel.server.core.VoxelVariables;
+import net.luxvacuos.voxel.server.core.commands.CommandsHandler;
 
 public class GameMPState implements State {
 	@Override
-	public void update(Voxel voxel, GlobalStates states, float delta) {
-		voxel.time += delta * VoxelVariables.TIME_MULTIPLIER;
-		voxel.time %= 24000;
+	public void update(Voxel voxel, float delta) {
+		voxel.getGameResources().getWorldSimulation().update(delta);
+		CommandsHandler.getInstace().update(voxel);
 	}
 }

@@ -29,32 +29,27 @@ import net.luxvacuos.voxel.client.ui.Button;
 
 public class MPSelectionMenu {
 
-	private float xScale, yScale;
-
 	private Button exitButton;
 	private Button playButton;
 	private String ip = "";
 
 	public MPSelectionMenu(GameResources gm) {
-		float width = VoxelVariables.WIDTH;
-		float height = VoxelVariables.HEIGHT;
-		yScale = height / 720f;
-		xScale = width / 1280f;
-		exitButton = new Button(new Vector2f(655, 30), new Vector2f(215, 80), xScale, yScale);
-		playButton = new Button(new Vector2f(410, 30), new Vector2f(215, 80), xScale, yScale);
+		exitButton = new Button(new Vector2f(655, 30), new Vector2f(215, 80));
+		playButton = new Button(new Vector2f(410, 30), new Vector2f(215, 80));
 	}
 
 	public void render() {
-		VectorsRendering.renderWindow("Multiplayer", "Roboto-Bold", 20 * xScale, 20 * yScale, 1240 * xScale,
-				540 * yScale);
-		VectorsRendering.renderText("IP:  ", "Roboto-Regular", 270 * xScale, 275 * yScale, 60 * yScale,
-				VectorsRendering.rgba(255, 255, 255, 255, VectorsRendering.colorA),
+		VectorsRendering.renderWindow("Multiplayer", "Roboto-Bold", 20 * VoxelVariables.XSCALE,
+				20 * VoxelVariables.YSCALE, 1240 * VoxelVariables.XSCALE, 540 * VoxelVariables.YSCALE);
+		VectorsRendering.renderText("IP:  ", "Roboto-Regular", 270 * VoxelVariables.XSCALE, 275 * VoxelVariables.YSCALE,
+				60 * VoxelVariables.YSCALE, VectorsRendering.rgba(255, 255, 255, 255, VectorsRendering.colorA),
 				VectorsRendering.rgba(255, 255, 255, 255, VectorsRendering.colorA));
-		VectorsRendering.renderWindow(20 * xScale, 570 * yScale, 1240 * xScale, 130 * yScale);
+		VectorsRendering.renderWindow(20 * VoxelVariables.XSCALE, 570 * VoxelVariables.YSCALE,
+				1240 * VoxelVariables.XSCALE, 130 * VoxelVariables.YSCALE);
 		while (Keyboard.next())
 			ip = Keyboard.keyWritten(ip);
-		VectorsRendering.renderSearchBox(ip, "Roboto-Regular", "Entypo", 340 * xScale, 260 * yScale, 600 * xScale,
-				40 * yScale);
+		VectorsRendering.renderSearchBox(ip, "Roboto-Regular", "Entypo", 340 * VoxelVariables.XSCALE,
+				260 * VoxelVariables.YSCALE, 600 * VoxelVariables.XSCALE, 40 * VoxelVariables.YSCALE);
 
 		exitButton.render("Back");
 		playButton.render("Play");

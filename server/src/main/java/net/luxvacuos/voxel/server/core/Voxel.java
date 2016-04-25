@@ -22,9 +22,11 @@ package net.luxvacuos.voxel.server.core;
 
 import java.util.Map;
 
+import net.luxvacuos.igl.Logger;
 import net.luxvacuos.voxel.server.bootstrap.Bootstrap;
+import net.luxvacuos.voxel.server.core.GlobalStates.InternalState;
 import net.luxvacuos.voxel.server.resources.GameResources;
-import net.luxvacuos.voxel.server.util.Logger;
+import net.luxvacuos.voxel.server.ui.UserInterface;
 import net.luxvacuos.voxel.universal.api.APIMethod;
 import net.luxvacuos.voxel.universal.api.ModInitialization;
 import net.luxvacuos.voxel.universal.api.MoltenAPI;
@@ -34,8 +36,6 @@ import net.luxvacuos.voxel.universal.network.packets.WorldTime;
 
 public class Voxel extends UVoxel {
 
-	// private WorldsHandler worldsHandler;
-	public float time = 6700;
 	private int port;
 
 	private ModInitialization api;
@@ -48,8 +48,15 @@ public class Voxel extends UVoxel {
 	}
 
 	private void preInit() {
+		gameResources = new GameResources(port, this);
+		getGameResources().getUserInterface().getThreadUI().start();
+		while (!getGameResources().getUserInterface().isStarted())
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e1) {
+				e1.printStackTrace();
+			}
 		Logger.log("Starting Server");
-		gameResources = new GameResources(port);
 		Logger.log("Voxel Server Version: " + VoxelVariables.version);
 		Logger.log("Molten API Version: " + MoltenAPI.apiVersion);
 		Logger.log("Build: " + VoxelVariables.build);
@@ -74,18 +81,19 @@ public class Voxel extends UVoxel {
 	}
 
 	private void postInit() {
-		getGameResources().postInit(this);
+		getGameResources().postInit();
 		try {
 			api.postInit();
 		} catch (VersionException e) {
 			e.printStackTrace();
 		}
-		getGameResources().getWrapperUI().getThreadUI().start();
 		getGameResources().getVoxelServer().connect();
+		getGameResources().getUserInterface();
+		UserInterface.setReady(true);
 	}
 
 	@Override
-	public void registerAPIMethods(MoltenAPI api, Map<String, APIMethod<Object>> methods) {
+	public void registerAPIMethods(MoltenAPI api, Map<String, APIMethod> methods) {
 	}
 
 	private void mainLoop() {
@@ -95,7 +103,8 @@ public class Voxel extends UVoxel {
 		float delta = 0;
 		float accumulator = 0f;
 		float interval = 1f / VoxelVariables.UPS;
-		while (getGameResources().getGlobalStates().loop) {
+		getGameResources().getGlobalStates().setInternalState(InternalState.RUNNIG);
+		while (getGameResources().getGlobalStates().getInternalState().equals(InternalState.RUNNIG)) {
 			if (getGameResources().getCoreUtils().getTimeCount() > 1f) {
 				CoreInfo.ups = CoreInfo.upsCount;
 				CoreInfo.upsCount = 0;
@@ -107,7 +116,8 @@ public class Voxel extends UVoxel {
 				update(interval);
 				accumulator -= interval;
 			}
-			getGameResources().getVoxelServer().getServer().sendToAllTCP(new WorldTime(time));
+			getGameResources().getVoxelServer().getServer()
+					.sendToAllTCP(new WorldTime(getGameResources().getWorldSimulation().getTime()));
 			getGameResources().getCoreUtils().sync(VoxelVariables.UPS);
 		}
 		dispose();
@@ -127,6 +137,7 @@ public class Voxel extends UVoxel {
 		return api;
 	}
 
+	@Override
 	public GameResources getGameResources() {
 		return ((GameResources) gameResources);
 	}

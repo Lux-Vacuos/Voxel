@@ -1,5 +1,4 @@
 /*
- /*
  * This file is part of Voxel
  * 
  * Copyright (C) 2016 Lux Vacuos
@@ -19,24 +18,17 @@
  * 
  */
 
-package net.luxvacuos.voxel.server.world.block.types;
+package net.luxvacuos.voxel.client.api;
 
-import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.math.collision.BoundingBox;
+import net.luxvacuos.voxel.client.world.Dimension;
+import net.luxvacuos.voxel.client.world.chunks.Chunk;
+import net.luxvacuos.voxel.universal.api.APIMethod;
 
-import net.luxvacuos.igl.vector.Vector3f;
-import net.luxvacuos.voxel.server.world.block.BlockBase;
-
-public class BlockTorch extends BlockBase {
-
+public class GetChunk implements APIMethod {
 	@Override
-	public byte getId() {
-		return 9;
-	}
-
-	@Override
-	public BoundingBox getBoundingBox(Vector3f pos) {
-		return new BoundingBox(new Vector3(pos.x, pos.y, pos.z), new Vector3(pos.x + 1, pos.y + 1, pos.z + 1));
+	public Chunk run(Object... objects) {
+		Dimension dim = (Dimension) objects[0];
+		return dim.getChunk((int) objects[1], (int) objects[2], (int) objects[3]);
 	}
 
 }

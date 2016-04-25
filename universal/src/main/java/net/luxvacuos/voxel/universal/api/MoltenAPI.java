@@ -32,12 +32,12 @@ public class MoltenAPI {
 
 	private UVoxel uVoxel;
 	private List<ModStateLoop> modStateLoops;
-	private final Map<String, APIMethod<Object>> methods = new HashMap<String, APIMethod<Object>>();
+	private final Map<String, APIMethod> methods = new HashMap<String, APIMethod>();
 	private String prefix;
 
 	public static final String apiVersion = "0.0.1";
 	public static final int apiIntVersion = 1;
-	public static final int build = 3;
+	public static final int build = 4;
 
 	public MoltenAPI(UVoxel uVoxel) {
 		this.uVoxel = uVoxel;
@@ -50,7 +50,7 @@ public class MoltenAPI {
 	}
 
 	public Object runMethod(String name, Object... objects) {
-		APIMethod<Object> method = methods.get(prefix + name);
+		APIMethod method = methods.get(prefix + name);
 		if (method == null)
 			throw new NullPointerException("Method not found: " + prefix + name);
 

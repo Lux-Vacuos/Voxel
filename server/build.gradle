@@ -2,7 +2,7 @@ apply plugin:'application'
 
 mainClassName = 'net.luxvacuos.voxel.server.bootstrap.Bootstrap'
 sourceCompatibility = 1.8
-def build = 206
+def build = 207
 
 sourceSets {
     main {

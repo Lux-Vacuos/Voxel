@@ -18,24 +18,18 @@
  * 
  */
 
-package net.luxvacuos.voxel.server.world.block.types;
+package net.luxvacuos.voxel.client.api;
 
-import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.math.collision.BoundingBox;
+import net.luxvacuos.voxel.client.world.Dimension;
+import net.luxvacuos.voxel.client.world.chunks.Chunk;
+import net.luxvacuos.voxel.universal.api.APIMethod;
 
-import net.luxvacuos.igl.vector.Vector3f;
-import net.luxvacuos.voxel.server.world.block.BlockBase;
-
-public class BlockIndes extends BlockBase {
-
+public class AddChunk implements APIMethod {
 	@Override
-	public byte getId() {
-		return 14;
-	}
-
-	@Override
-	public BoundingBox getBoundingBox(Vector3f pos) {
-		return new BoundingBox(new Vector3(pos.x, pos.y, pos.z), new Vector3(pos.x + 1, pos.y + 1, pos.z + 1));
+	public Boolean run(Object... objects) {
+		Dimension dim = (Dimension) objects[0];
+		dim.addChunk((Chunk) objects[1]);
+		return true;
 	}
 
 }

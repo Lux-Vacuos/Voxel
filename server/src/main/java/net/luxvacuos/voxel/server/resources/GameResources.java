@@ -22,12 +22,14 @@ package net.luxvacuos.voxel.server.resources;
 
 import com.esotericsoftware.kryo.Kryo;
 
+import net.luxvacuos.igl.CustomLog;
 import net.luxvacuos.voxel.server.core.CoreUtils;
+import net.luxvacuos.voxel.server.core.GameSettings;
 import net.luxvacuos.voxel.server.core.GlobalStates;
 import net.luxvacuos.voxel.server.core.Voxel;
+import net.luxvacuos.voxel.server.core.WorldSimulation;
 import net.luxvacuos.voxel.server.network.VoxelServer;
-import net.luxvacuos.voxel.server.ui.WrapperUI;
-import net.luxvacuos.voxel.server.util.CustomLog;
+import net.luxvacuos.voxel.server.ui.UserInterface;
 import net.luxvacuos.voxel.universal.resources.UGameResources;
 
 public class GameResources extends UGameResources {
@@ -36,12 +38,15 @@ public class GameResources extends UGameResources {
 	private Kryo kryo;
 	private VoxelServer voxelServer;
 	private CoreUtils coreUtils;
-	private WrapperUI wrapperUI;
+	private UserInterface userInterface;
+	private WorldSimulation worldSimulation;
+	private GameSettings gameSettings;
 
 	private int port;
 
-	public GameResources(int port) {
+	public GameResources(int port, Voxel voxel) {
 		this.port = port;
+		userInterface = new UserInterface(voxel);
 	}
 
 	public void preInit() {
@@ -54,14 +59,21 @@ public class GameResources extends UGameResources {
 		voxelServer.init(this);
 		coreUtils = new CoreUtils();
 		CustomLog.getInstance();
+		worldSimulation = new WorldSimulation();
+		gameSettings = new GameSettings();
 	}
 
-	public void postInit(Voxel voxel) {
-		wrapperUI = new WrapperUI(voxel);
+	public void postInit() {
 	}
 
 	public void dispose() {
+		gameSettings.updateSetting();
+		gameSettings.save();
 		voxelServer.dispose();
+	}
+
+	public WorldSimulation getWorldSimulation() {
+		return worldSimulation;
 	}
 
 	public GlobalStates getGlobalStates() {
@@ -80,8 +92,8 @@ public class GameResources extends UGameResources {
 		return voxelServer;
 	}
 
-	public WrapperUI getWrapperUI() {
-		return wrapperUI;
+	public UserInterface getUserInterface() {
+		return userInterface;
 	}
 
 }

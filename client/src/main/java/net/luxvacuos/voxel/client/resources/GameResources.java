@@ -28,7 +28,6 @@ import java.util.Random;
 import com.esotericsoftware.kryo.Kryo;
 
 import net.luxvacuos.igl.CustomLog;
-import net.luxvacuos.igl.Logger;
 import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.voxel.client.core.GameSettings;
 import net.luxvacuos.voxel.client.core.GlobalStates;
@@ -57,7 +56,6 @@ import net.luxvacuos.voxel.client.resources.models.ParticleTexture;
 import net.luxvacuos.voxel.client.sound.LibraryLWJGLOpenAL;
 import net.luxvacuos.voxel.client.sound.soundsystem.SoundSystem;
 import net.luxvacuos.voxel.client.sound.soundsystem.SoundSystemConfig;
-import net.luxvacuos.voxel.client.sound.soundsystem.SoundSystemException;
 import net.luxvacuos.voxel.client.sound.soundsystem.codecs.CodecJOgg;
 import net.luxvacuos.voxel.client.ui.menu.Menu;
 import net.luxvacuos.voxel.client.util.LoggerSoundSystem;
@@ -129,6 +127,11 @@ public class GameResources extends UGameResources {
 		VectorsRendering.setDisplay(display);
 		Timers.setDisplay(display);
 		ShaderProgram.setDisplay(display);
+		float width = VoxelVariables.WIDTH;
+		float height = VoxelVariables.HEIGHT;
+		VoxelVariables.ASPECT_RATIO = width / height;
+		VoxelVariables.YSCALE = height / 720f;
+		VoxelVariables.XSCALE = width / 1280f;
 	}
 
 	public void init(Voxel voxel) throws Exception {
@@ -136,7 +139,7 @@ public class GameResources extends UGameResources {
 		if (display.isVk()) {
 		}
 		loader = new Loader(display);
-		masterShadowRenderer = new MasterShadowRenderer(display);
+		masterShadowRenderer = new MasterShadowRenderer();
 		renderer = new MasterRenderer(this);
 		skyboxRenderer = new SkyboxRenderer(loader, renderer.getProjectionMatrix());
 		deferredShadingRenderer = new DeferredShadingRenderer(this);
@@ -157,17 +160,10 @@ public class GameResources extends UGameResources {
 
 		CustomLog.getInstance();
 		voxelClient = new VoxelClient(this);
-
-		try {
-			SoundSystemConfig.addLibrary(LibraryLWJGLOpenAL.class);
-			SoundSystemConfig.setCodec("ogg", CodecJOgg.class);
-			SoundSystemConfig.setSoundFilesPackage("assets/sounds/");
-			SoundSystemConfig.setLogger(new LoggerSoundSystem());
-		} catch (SoundSystemException e) {
-			Logger.error("Unable to setting up Sound System Configuration");
-			e.printStackTrace();
-			System.exit(-1);
-		}
+		SoundSystemConfig.addLibrary(LibraryLWJGLOpenAL.class);
+		SoundSystemConfig.setCodec("ogg", CodecJOgg.class);
+		SoundSystemConfig.setSoundFilesPackage("assets/sounds/");
+		SoundSystemConfig.setLogger(new LoggerSoundSystem());
 		soundSystem = new SoundSystem();
 		globalStates = new GlobalStates();
 		Block.initBasicBlocks();

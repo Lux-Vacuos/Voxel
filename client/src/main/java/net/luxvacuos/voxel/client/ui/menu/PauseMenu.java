@@ -21,22 +21,16 @@
 package net.luxvacuos.voxel.client.ui.menu;
 
 import net.luxvacuos.igl.vector.Vector2f;
-import net.luxvacuos.voxel.client.core.VoxelVariables;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.ui.Button;
 
 public class PauseMenu {
 	private Button exitButton;
 	private Button optionsButton;
-	private float yScale, xScale;
 
 	public PauseMenu(GameResources gm) {
-		float width = VoxelVariables.WIDTH;
-		float height = VoxelVariables.HEIGHT;
-		yScale = height / 720f;
-		xScale = width / 1280f;
-		exitButton = new Button(new Vector2f(500, 35), new Vector2f(280, 80), xScale, yScale);
-		optionsButton = new Button(new Vector2f(500, 135), new Vector2f(280, 80), xScale, yScale);
+		exitButton = new Button(new Vector2f(500, 35), new Vector2f(280, 80));
+		optionsButton = new Button(new Vector2f(500, 135), new Vector2f(280, 80));
 	}
 
 	public void render() {

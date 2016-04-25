@@ -41,6 +41,7 @@ public class LoadingMPState implements State {
 			try {
 				trying = true;
 				gm.getVoxelClient().connect(4059, gm.getMenuSystem().mpSelectionMenu.getIP());
+				message = "Loading World";
 			} catch (IOException e) {
 				VoxelVariables.onServer = false;
 				message = e.getMessage();

@@ -104,7 +104,7 @@ public class Bootstrap {
 	 */
 	public static void main(String[] args) {
 		Log.set(Log.LEVEL_INFO);
-		Thread.currentThread().setName("Voxel Main");
+		Thread.currentThread().setName("Voxel-Client");
 
 		try {
 			parseArgs(args);

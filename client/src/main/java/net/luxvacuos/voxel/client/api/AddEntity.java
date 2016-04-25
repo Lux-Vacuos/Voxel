@@ -18,23 +18,14 @@
  * 
  */
 
-package net.luxvacuos.voxel.server.world.block.types;
+package net.luxvacuos.voxel.client.api;
 
-import com.badlogic.gdx.math.collision.BoundingBox;
+import net.luxvacuos.voxel.universal.api.APIMethod;
 
-import net.luxvacuos.igl.vector.Vector3f;
-import net.luxvacuos.voxel.server.world.block.BlockBase;
-
-public class BlockAir extends BlockBase {
-
+public class AddEntity implements APIMethod {
 	@Override
-	public byte getId() {
-		return 0;
+	public Boolean run(Object... objects) {
+		System.out.println(objects[0]);
+		return true;
 	}
-
-	@Override
-	public BoundingBox getBoundingBox(Vector3f pos) {
-		return null;
-	}
-
 }

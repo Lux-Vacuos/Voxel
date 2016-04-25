@@ -18,13 +18,12 @@
  * 
  */
 
-package net.luxvacuos.voxel.client.core;
+package net.luxvacuos.voxel.server.core;
 
-import net.luxvacuos.voxel.client.util.Maths;
+import net.luxvacuos.voxel.server.util.Maths;
 
 public class WorldSimulation {
 
-	private float moveFactor = 0;
 	private float time = 0;
 	private float globalTime = 0;
 	private float rainFactor;
@@ -35,26 +34,16 @@ public class WorldSimulation {
 		time = 12000;
 	}
 
-	public float update(float delta) {
-		moveFactor += VoxelVariables.WAVE_SPEED * delta;
-		moveFactor %= 6.3f;
+	public void update(float delta) {
 		time += delta * TIME_MULTIPLIER;
 		time %= 24000;
 		globalTime += delta * TIME_MULTIPLIER;
-		float res = time * 0.015f;
 
-		if (VoxelVariables.raining) {
+		if (VoxelVariables.raining)
 			rainFactor += 0.2f * delta;
-		} else
+		else
 			rainFactor -= 0.2f * delta;
-
 		rainFactor = Maths.clamp(rainFactor, 0f, 1f);
-
-		return res - 90;
-	}
-
-	public float getMoveFactor() {
-		return moveFactor;
 	}
 
 	public float getGlobalTime() {

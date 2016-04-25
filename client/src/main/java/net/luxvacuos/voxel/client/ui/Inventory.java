@@ -12,17 +12,12 @@ public class Inventory {
 	private ItemGui[][] items;
 	private int sizeX, sizeY;
 	private float xPos, yPos;
-	private transient float xScale, yScale;
 	private transient ItemGui tmp;
 	private transient boolean push = false;
 	private transient int x, y;
 
 	public Inventory() {
 		tmp = new ItemGui();
-		float width = VoxelVariables.WIDTH;
-		float height = VoxelVariables.HEIGHT;
-		yScale = height / 720f;
-		xScale = width / 1280f;
 	}
 
 	public Inventory(int sizeX, int sizeY, float xPos, float yPos) {
@@ -32,10 +27,6 @@ public class Inventory {
 		this.sizeY = sizeY;
 		this.xPos = xPos;
 		this.yPos = yPos;
-		float width = VoxelVariables.WIDTH;
-		float height = VoxelVariables.HEIGHT;
-		yScale = height / 720f;
-		xScale = width / 1280f;
 		for (int x = 0; x < sizeX; x++) {
 			for (int y = 0; y < sizeY; y++) {
 				items[x][y] = new ItemGui(new Vector3f((xPos * 0.0164f + x - 0.1f) * 1.321f, (yPos + y - 0.44f) * 2.63f,
@@ -53,8 +44,9 @@ public class Inventory {
 		}
 		for (int x = 0; x < sizeX; x++) {
 			for (int y = 0; y < sizeY; y++) {
-				VectorsRendering.renderBox((xPos + (60 * x) + x) * xScale, (660 + (60 * -y) + yPos + -y) * yScale,
-						60 * xScale, 60 * yScale, VectorsRendering.rgba(255, 255, 255, 100, VectorsRendering.colorA),
+				VectorsRendering.renderBox((xPos + (60 * x) + x) * VoxelVariables.XSCALE,
+						(660 + (60 * -y) + yPos + -y) * VoxelVariables.YSCALE, 60 * VoxelVariables.XSCALE,
+						60 * VoxelVariables.YSCALE, VectorsRendering.rgba(255, 255, 255, 100, VectorsRendering.colorA),
 						VectorsRendering.rgba(255, 255, 255, 100, VectorsRendering.colorB),
 						VectorsRendering.rgba(0, 0, 0, 255, VectorsRendering.colorC));
 				if (items[x][y].getTotal() < 1)
@@ -63,23 +55,26 @@ public class Inventory {
 			}
 		}
 		if (push)
-			VectorsRendering.renderBox((xPos + x * 60.8f) * xScale, 660 - (yPos + y * 61f) * yScale, 60 * xScale,
-					60 * yScale, VectorsRendering.rgba(100, 255, 100, 120, VectorsRendering.colorA),
+			VectorsRendering.renderBox((xPos + x * 60.8f) * VoxelVariables.XSCALE,
+					(660 - (yPos + y * 61f)) * VoxelVariables.YSCALE, 60 * VoxelVariables.XSCALE,
+					60 * VoxelVariables.YSCALE, VectorsRendering.rgba(100, 255, 100, 120, VectorsRendering.colorA),
 					VectorsRendering.rgba(0, 255, 0, 120, VectorsRendering.colorB),
 					VectorsRendering.rgba(0, 255, 0, 120, VectorsRendering.colorC));
 		else
-			VectorsRendering.renderBox((xPos + x * 60.8f) * xScale, 660 - (yPos + y * 61f) * yScale, 60 * xScale,
-					60 * yScale, VectorsRendering.rgba(255, 255, 255, 120, VectorsRendering.colorA),
+			VectorsRendering.renderBox((xPos + x * 60.8f) * VoxelVariables.XSCALE,
+					(660 - (yPos + y * 61f)) * VoxelVariables.YSCALE, 60 * VoxelVariables.XSCALE,
+					60 * VoxelVariables.YSCALE, VectorsRendering.rgba(255, 255, 255, 120, VectorsRendering.colorA),
 					VectorsRendering.rgba(255, 255, 255, 120, VectorsRendering.colorB),
 					VectorsRendering.rgba(255, 255, 255, 120, VectorsRendering.colorC));
-		
+
 		for (int x = 0; x < sizeX; x++) {
 			for (int y = 0; y < sizeY; y++) {
 				if (items[x][y].getBlock().getId() != Block.Air.getId()) {
 					items[x][y].generateModel(gm.getItemsGuiRenderer().getTess());
 					VectorsRendering.renderText("" + items[x][y].getTotal(), "Roboto-Bold",
-							(xPos + (60 * x) + 2 + x) * xScale, (720 + (60 * -y) - 10 + yPos + -y) * yScale,
-							20 * yScale, VectorsRendering.rgba(255, 255, 255, 255, VectorsRendering.colorA),
+							(xPos + (60 * x) + 2 + x) * VoxelVariables.XSCALE,
+							(720 + (60 * -y) - 10 + yPos + -y) * VoxelVariables.YSCALE, 20 * VoxelVariables.YSCALE,
+							VectorsRendering.rgba(255, 255, 255, 255, VectorsRendering.colorA),
 							VectorsRendering.rgba(255, 255, 255, 255, VectorsRendering.colorB));
 
 				}
@@ -96,8 +91,9 @@ public class Inventory {
 		}
 		for (int x = 0; x < sizeX; x++) {
 			for (int y = 0; y < sizeY; y++) {
-				VectorsRendering.renderBox((xPos + (60 * x) + x) * xScale, (660 + (60 * -y) + yPos + -y) * yScale,
-						60 * xScale, 60 * yScale, VectorsRendering.rgba(255, 255, 255, 100, VectorsRendering.colorA),
+				VectorsRendering.renderBox((xPos + (60 * x) + x) * VoxelVariables.XSCALE,
+						(660 + (60 * -y) + yPos + -y) * VoxelVariables.YSCALE, 60 * VoxelVariables.XSCALE,
+						60 * VoxelVariables.YSCALE, VectorsRendering.rgba(255, 255, 255, 100, VectorsRendering.colorA),
 						VectorsRendering.rgba(255, 255, 255, 100, VectorsRendering.colorB),
 						VectorsRendering.rgba(0, 0, 0, 255, VectorsRendering.colorC));
 				if (items[x][y].getTotal() < 1)
@@ -105,8 +101,9 @@ public class Inventory {
 
 			}
 		}
-		VectorsRendering.renderBox((xPos + cursorX * 60.8f) * xScale, 660 - (yPos + cursorY * 61f) * yScale,
-				60 * xScale, 60 * yScale, VectorsRendering.rgba(255, 255, 255, 120, VectorsRendering.colorA),
+		VectorsRendering.renderBox((xPos + cursorX * 60.8f) * VoxelVariables.XSCALE,
+				(660 - (yPos + cursorY * 61f)) * VoxelVariables.YSCALE, 60 * VoxelVariables.XSCALE,
+				60 * VoxelVariables.YSCALE, VectorsRendering.rgba(255, 255, 255, 120, VectorsRendering.colorA),
 				VectorsRendering.rgba(255, 255, 255, 120, VectorsRendering.colorB),
 				VectorsRendering.rgba(255, 255, 255, 120, VectorsRendering.colorC));
 		for (int x = 0; x < sizeX; x++) {
@@ -114,8 +111,9 @@ public class Inventory {
 				if (items[x][y].getBlock().getId() != Block.Air.getId()) {
 					items[x][y].generateModel(gm.getItemsGuiRenderer().getTess());
 					VectorsRendering.renderText("" + items[x][y].getTotal(), "Roboto-Bold",
-							(xPos + (60 * x) + 2 + x) * xScale, (720 + (60 * -y) - 10 + yPos + -y) * yScale,
-							20 * yScale, VectorsRendering.rgba(255, 255, 255, 255, VectorsRendering.colorA),
+							(xPos + (60 * x) + 2 + x) * VoxelVariables.XSCALE,
+							(720 + (60 * -y) - 10 + yPos + -y) * VoxelVariables.YSCALE, 20 * VoxelVariables.YSCALE,
+							VectorsRendering.rgba(255, 255, 255, 255, VectorsRendering.colorA),
 							VectorsRendering.rgba(255, 255, 255, 255, VectorsRendering.colorB));
 
 				}
@@ -170,7 +168,7 @@ public class Inventory {
 	public ItemGui[][] getItems() {
 		return items;
 	}
-	
+
 	public int getSizeX() {
 		return sizeX;
 	}

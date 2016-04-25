@@ -48,7 +48,6 @@ import net.luxvacuos.igl.vector.Matrix4f;
 import net.luxvacuos.igl.vector.Vector2f;
 import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.voxel.client.core.VoxelVariables;
-import net.luxvacuos.voxel.client.rendering.api.glfw.Display;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.DeferredShadingShader;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.resources.models.RawModel;
@@ -86,12 +85,9 @@ public class DeferredShadingRenderer {
 
 	private Vector3f skyColor = new Vector3f(VoxelVariables.RED, VoxelVariables.GREEN, VoxelVariables.BLUE);
 
-	private Display display;
-
 	public DeferredShadingRenderer(GameResources gm) throws Exception {
-		this.display = gm.getDisplay();
-		width = (int) (display.getDisplayWidth() * display.getPixelRatio());
-		height = (int) (display.getDisplayHeight() * display.getPixelRatio());
+		width = (int) (gm.getDisplay().getDisplayWidth() * gm.getDisplay().getPixelRatio());
+		height = (int) (gm.getDisplay().getDisplayHeight() * gm.getDisplay().getPixelRatio());
 
 		if (width > GLUtil.getTextureMaxSize())
 			width = GLUtil.getTextureMaxSize();
@@ -162,13 +158,13 @@ public class DeferredShadingRenderer {
 		shaderFinal1.loadResolution(new Vector2f(width, height));
 		shaderFinal1.loadSkyColor(skyColor);
 		shaderFinal1.stop();
-		aux0FBO = new FrameBuffer(false, width, height, display);
-		aux1FBO = new FrameBuffer(false, width, height, display);
-		aux2FBO = new FrameBuffer(false, width, height, display);
-		aux3FBO = new FrameBuffer(false, width, height, display);
-		aux4FBO = new FrameBuffer(false, width, height, display);
-		auxFinal0FBO = new FrameBuffer(false, width, height, display);
-		auxFinal1FBO = new FrameBuffer(false, width, height, display);
+		aux0FBO = new FrameBuffer(false, width, height);
+		aux1FBO = new FrameBuffer(false, width, height);
+		aux2FBO = new FrameBuffer(false, width, height);
+		aux3FBO = new FrameBuffer(false, width, height);
+		aux4FBO = new FrameBuffer(false, width, height);
+		auxFinal0FBO = new FrameBuffer(false, width, height);
+		auxFinal1FBO = new FrameBuffer(false, width, height);
 		postProcessingFBO = new DeferredShadingFBO(width, height);
 		previousViewMatrix = new Matrix4f();
 		previousCameraPosition = new Vector3f();
@@ -210,7 +206,7 @@ public class DeferredShadingRenderer {
 		glDisableVertexAttribArray(0);
 		glBindVertexArray(0);
 		shader6.stop();
-		aux4FBO.end(display);
+		aux4FBO.end();
 
 		aux3FBO.begin(width, height);
 		gm.getRenderer().prepare();
@@ -245,7 +241,7 @@ public class DeferredShadingRenderer {
 		glDisableVertexAttribArray(0);
 		glBindVertexArray(0);
 		shader5.stop();
-		aux3FBO.end(display);
+		aux3FBO.end();
 
 		aux2FBO.begin(width, height);
 		gm.getRenderer().prepare();
@@ -280,7 +276,7 @@ public class DeferredShadingRenderer {
 		glDisableVertexAttribArray(0);
 		glBindVertexArray(0);
 		shader4.stop();
-		aux2FBO.end(display);
+		aux2FBO.end();
 
 		aux4FBO.begin(width, height);
 		gm.getRenderer().prepare();
@@ -315,7 +311,7 @@ public class DeferredShadingRenderer {
 		glDisableVertexAttribArray(0);
 		glBindVertexArray(0);
 		shader3.stop();
-		aux4FBO.end(display);
+		aux4FBO.end();
 
 		aux1FBO.begin(width, height);
 		gm.getRenderer().prepare();
@@ -353,7 +349,7 @@ public class DeferredShadingRenderer {
 		glDisableVertexAttribArray(0);
 		glBindVertexArray(0);
 		shader2.stop();
-		aux1FBO.end(display);
+		aux1FBO.end();
 
 		aux0FBO.begin(width, height);
 		gm.getRenderer().prepare();
@@ -388,7 +384,7 @@ public class DeferredShadingRenderer {
 		glDisableVertexAttribArray(0);
 		glBindVertexArray(0);
 		shader1.stop();
-		aux0FBO.end(display);
+		aux0FBO.end();
 
 		auxFinal1FBO.begin(width, height);
 		gm.getRenderer().prepare();
@@ -423,7 +419,7 @@ public class DeferredShadingRenderer {
 		glDisableVertexAttribArray(0);
 		glBindVertexArray(0);
 		shader0.stop();
-		auxFinal1FBO.end(display);
+		auxFinal1FBO.end();
 
 		auxFinal0FBO.begin(width, height);
 		gm.getRenderer().prepare();
@@ -457,7 +453,7 @@ public class DeferredShadingRenderer {
 		glDisableVertexAttribArray(0);
 		glBindVertexArray(0);
 		shaderFinal1.stop();
-		auxFinal0FBO.end(display);
+		auxFinal0FBO.end();
 
 		gm.getRenderer().prepare();
 		shaderFinal0.start();

@@ -20,20 +20,14 @@
 
 package net.luxvacuos.voxel.client.ui.menu;
 
-import net.luxvacuos.voxel.client.core.VoxelVariables;
 import net.luxvacuos.voxel.client.input.Keyboard;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.world.entities.PlayerCamera;
 
 public class GameSPInventory {
-	private float yScale, xScale;
 	private int x, y;
 
 	public GameSPInventory(GameResources gm) {
-		float width = VoxelVariables.WIDTH;
-		float height = VoxelVariables.HEIGHT;
-		yScale = height / 720f;
-		xScale = width / 1280f;
 	}
 
 	public void update(GameResources gm) {
@@ -46,9 +40,9 @@ public class GameSPInventory {
 		((PlayerCamera) gm.getCamera()).getInventory().setXY(x, y);
 
 		if (Keyboard.isKeyDown(Keyboard.KEY_SPACE))
-			((PlayerCamera) gm.getCamera()).getInventory().push( x,  y);
+			((PlayerCamera) gm.getCamera()).getInventory().push(x, y);
 		else if (Keyboard.isKeyDown(Keyboard.KEY_LCONTROL))
-			((PlayerCamera) gm.getCamera()).getInventory().pop( x,  y);
+			((PlayerCamera) gm.getCamera()).getInventory().pop(x, y);
 
 	}
 

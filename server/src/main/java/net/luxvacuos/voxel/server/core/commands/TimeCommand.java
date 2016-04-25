@@ -18,14 +18,24 @@
  * 
  */
 
-package net.luxvacuos.voxel.server.world.chunks;
+package net.luxvacuos.voxel.server.core.commands;
 
-public class LightNode {
-	public int x, y, z;
+import net.luxvacuos.igl.Logger;
+import net.luxvacuos.voxel.server.core.Voxel;
 
-	public LightNode(int x, int y, int z) {
-		this.x = x;
-		this.y = y;
-		this.z = z;
+public class TimeCommand extends Command {
+
+	private float time;
+
+	public TimeCommand(float time) {
+		this.time = time;
 	}
+
+	@Override
+	public boolean run(Voxel voxel) {
+		voxel.getGameResources().getWorldSimulation().setTime(time);
+		Logger.log("Time set to: " + time);
+		return true;
+	}
+
 }

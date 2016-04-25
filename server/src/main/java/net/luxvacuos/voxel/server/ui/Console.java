@@ -23,6 +23,7 @@ package net.luxvacuos.voxel.server.ui;
 import java.io.IOException;
 import java.io.OutputStream;
 
+import javafx.application.Platform;
 import javafx.scene.control.TextArea;
 
 public class Console extends OutputStream {
@@ -35,6 +36,6 @@ public class Console extends OutputStream {
 
 	@Override
 	public void write(int i) throws IOException {
-		output.appendText(String.valueOf((char) i));
+		Platform.runLater(() -> output.appendText(String.valueOf((char) i)));
 	}
 }

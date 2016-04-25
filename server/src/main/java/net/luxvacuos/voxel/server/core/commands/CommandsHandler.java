@@ -18,24 +18,38 @@
  * 
  */
 
-package net.luxvacuos.voxel.server.world.block.types;
+package net.luxvacuos.voxel.server.core.commands;
 
-import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.math.collision.BoundingBox;
+import java.util.LinkedList;
+import java.util.Queue;
 
-import net.luxvacuos.igl.vector.Vector3f;
-import net.luxvacuos.voxel.server.world.block.BlockBase;
+import net.luxvacuos.voxel.server.core.Voxel;
 
-public class BlockWood extends BlockBase {
+public class CommandsHandler {
 
-	@Override
-	public byte getId() {
-		return 12;
+	private static CommandsHandler instance = null;
+
+	public static CommandsHandler getInstace() {
+		if (instance == null)
+			instance = new CommandsHandler();
+		return instance;
 	}
 
-	@Override
-	public BoundingBox getBoundingBox(Vector3f pos) {
-		return new BoundingBox(new Vector3(pos.x, pos.y, pos.z), new Vector3(pos.x + 1, pos.y + 1, pos.z + 1));
+	private Queue<Command> commands;
+
+	private CommandsHandler() {
+		commands = new LinkedList<>();
+	}
+
+	public void update(Voxel voxel) {
+		while (!commands.isEmpty()) {
+			Command com = commands.poll();
+			com.run(voxel);
+		}
+	}
+
+	public void addCommand(Command com) {
+		commands.add(com);
 	}
 
 }

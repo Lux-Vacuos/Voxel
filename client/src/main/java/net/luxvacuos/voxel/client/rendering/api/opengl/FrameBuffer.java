@@ -66,7 +66,7 @@ import java.nio.FloatBuffer;
 
 import org.lwjgl.BufferUtils;
 
-import net.luxvacuos.voxel.client.rendering.api.glfw.Display;
+import net.luxvacuos.voxel.client.resources.GameResources;
 
 /**
  * FrameBuffer
@@ -79,11 +79,11 @@ public class FrameBuffer {
 	private int renderBuffer;
 	private int texture;
 
-	public FrameBuffer(boolean depth, int width, int height, Display display) {
-		initialiseFrameBuffer(depth, width, height, display);
+	public FrameBuffer(boolean depth, int width, int height) {
+		initialiseFrameBuffer(depth, width, height);
 	}
 
-	private void initialiseFrameBuffer(boolean depth, int width, int height, Display display) {
+	private void initialiseFrameBuffer(boolean depth, int width, int height) {
 		frameBuffer = createFrameBuffer(depth);
 		if (depth) {
 			texture = createDepthTextureAttachment(width, height);
@@ -92,17 +92,20 @@ public class FrameBuffer {
 		}
 		if (!depth)
 			renderBuffer = createDepthBufferAttachment(width, height);
-		end(display);
+		end();
 	}
 
 	public void begin(int width, int height) {
 		bindFrameBuffer(frameBuffer, width, height);
 	}
 
-	public void end(Display display) {
+	public void end() {
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-		glViewport(0, 0, (int) (display.getDisplayWidth() * display.getPixelRatio()),
-				(int) (display.getDisplayHeight() * display.getPixelRatio()));
+		glViewport(0, 0,
+				(int) (GameResources.instance().getDisplay().getDisplayWidth()
+						* GameResources.instance().getDisplay().getPixelRatio()),
+				(int) (GameResources.instance().getDisplay().getDisplayHeight()
+						* GameResources.instance().getDisplay().getPixelRatio()));
 	}
 
 	private void bindFrameBuffer(int frameBuffer, int width, int height) {

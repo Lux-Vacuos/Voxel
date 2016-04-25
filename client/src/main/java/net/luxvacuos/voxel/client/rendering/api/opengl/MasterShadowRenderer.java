@@ -33,7 +33,6 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.utils.ImmutableArray;
 
 import net.luxvacuos.igl.vector.Matrix4f;
-import net.luxvacuos.voxel.client.rendering.api.glfw.Display;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.EntityBasicShader;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.resources.models.TexturedModel;
@@ -47,17 +46,15 @@ public class MasterShadowRenderer {
 	private ShadowRenderer renderer;
 	private FrameBuffer fbo;
 	private Matrix4f projectionMatrix;
-	private Display display;
 	private int textureSize = 4096;
 
-	public MasterShadowRenderer(Display display) throws Exception {
-		this.display = display;
+	public MasterShadowRenderer() throws Exception {
 		shader = new EntityBasicShader();
 		projectionMatrix = Maths.orthographic(-80, 80, -80, 80, -80, 80, false);
 		renderer = new ShadowRenderer(shader, projectionMatrix);
 		if (textureSize > GLUtil.getTextureMaxSize())
 			textureSize = GLUtil.getTextureMaxSize();
-		fbo = new FrameBuffer(true, textureSize, textureSize, display);
+		fbo = new FrameBuffer(true, textureSize, textureSize);
 	}
 
 	public void being() {
@@ -65,7 +62,7 @@ public class MasterShadowRenderer {
 	}
 
 	public void end() {
-		fbo.end(display);
+		fbo.end();
 	}
 
 	public void renderEntity(ImmutableArray<Entity> immutableArray, GameResources gm) {

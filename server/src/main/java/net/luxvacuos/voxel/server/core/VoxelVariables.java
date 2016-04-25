@@ -36,7 +36,7 @@ public class VoxelVariables {
 	 */
 	public static final String version = "0.0.10";
 
-	public static final int build = 206;
+	public static final int build = 207;
 	public static final String settings = "settings.conf";
 	public static final float TIME_MULTIPLIER = 10;
 
@@ -49,6 +49,7 @@ public class VoxelVariables {
 	public static boolean isCustomSeed = false;
 	public static String seed = "";
 	public static boolean generateChunks = true;
+	public static boolean raining;
 	public static final int CHUNK_SIZE = 16;
 	public static final int CHUNK_HEIGHT = 16;
 	public static final int DIM_0 = 0;

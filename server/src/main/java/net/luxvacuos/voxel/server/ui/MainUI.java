@@ -54,11 +54,15 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.Callback;
+import net.luxvacuos.igl.Logger;
 import net.luxvacuos.voxel.server.core.CoreInfo;
 import net.luxvacuos.voxel.server.core.CoreUtils;
 import net.luxvacuos.voxel.server.core.Voxel;
+import net.luxvacuos.voxel.server.core.commands.CommandsHandler;
+import net.luxvacuos.voxel.server.core.commands.KickCommand;
+import net.luxvacuos.voxel.server.core.commands.StopCommand;
+import net.luxvacuos.voxel.server.core.commands.TimeCommand;
 import net.luxvacuos.voxel.server.network.ConnectionsHandler;
-import net.luxvacuos.voxel.server.util.Logger;
 
 public class MainUI extends Application {
 
@@ -81,6 +85,7 @@ public class MainUI extends Application {
 
 	@Override
 	public void start(Stage stage) throws Exception {
+		Thread.currentThread().setName("Voxel-Server-UI");
 		coreUtils = new CoreUtils();
 		stage.setTitle("Voxel Server - UI");
 		stage.getIcons().add(new Image(getClass().getClassLoader().getResourceAsStream("assets/icons/icon32.png")));
@@ -93,17 +98,47 @@ public class MainUI extends Application {
 		stage.sizeToScene();
 		stage.setMinHeight(780);
 		stage.setMinWidth(1094);
+		stage.setHeight(780);
+		stage.setWidth(1094);
 		stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
 			public void handle(WindowEvent event) {
 				if (event.getEventType() == WindowEvent.WINDOW_CLOSE_REQUEST && !close) {
 					event.consume();
+					final Stage dialog = new Stage();
+					dialog.initModality(Modality.APPLICATION_MODAL);
+					dialog.initOwner(stage);
+					GridPane gridEdit = new GridPane();
+					gridEdit.setAlignment(Pos.CENTER);
+					gridEdit.setHgap(10);
+					gridEdit.setVgap(10);
+					gridEdit.setPadding(new Insets(10, 10, 10, 10));
+
+					Button btnClose = new Button("Back");
+					btnClose.setOnAction(new EventHandler<ActionEvent>() {
+						@Override
+						public void handle(ActionEvent event) {
+							dialog.close();
+						}
+					});
+					gridEdit.add(btnClose, 0, 1);
+					Text dl = new Text("The server is running, can't close UI. For exit please stop the server");
+					gridEdit.add(dl, 0, 0);
+
+					Scene dialogScene = new Scene(gridEdit, 400, 100);
+					dialog.setScene(dialogScene);
+					dialog.setTitle("Can't Close");
+					dialog.setResizable(false);
+					dialog.getIcons().addAll(stage.getIcons());
+					dialog.show();
 				}
 			};
 		});
-
 		Task<Void> task = new Task<Void>() {
 			@Override
 			public Void call() throws Exception {
+				while (!UserInterface.ready)
+					Thread.sleep(100);
+
 				while (!close) {
 					textUps.setText("Updates Per Second: " + CoreInfo.ups);
 					Platform.runLater(new Runnable() {
@@ -121,6 +156,8 @@ public class MainUI extends Application {
 		Thread th = new Thread(task);
 		th.setDaemon(true);
 		th.start();
+
+		UserInterface.started = true;
 	}
 
 	private BorderPane startMain(Stage stage) {
@@ -133,7 +170,7 @@ public class MainUI extends Application {
 		btnStop.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				voxel.getGameResources().getGlobalStates().loop = false;
+				CommandsHandler.getInstace().addCommand(new StopCommand());
 				close = true;
 				stage.close();
 			}
@@ -229,15 +266,14 @@ public class MainUI extends Application {
 		gridHome.add(pl, 0, 0);
 
 		TextArea tac = new TextArea();
-		tac.setPrefWidth(800);
-		tac.setPrefHeight(600);
+		tac.setMinWidth(800);
+		tac.setMinHeight(600);
 		tac.setWrapText(true);
 		tac.setEditable(false);
 		Console console = new Console(tac);
 		PrintStream ps = new PrintStream(console, true);
 		System.setOut(ps);
 		System.setErr(ps);
-		Logger.readyToConsole = true;
 		tac.autosize();
 		gridHome.add(tac, 1, 0);
 		home.setContent(gridHome);
@@ -253,22 +289,20 @@ public class MainUI extends Application {
 			public void handle(KeyEvent event) {
 				if (event.getCode().equals(KeyCode.ENTER)) {
 					String text = tar.getText();
-					Logger.log("[Server] " + text);
+					Logger.log(text);
 					if (text.equals("/stop")) {
-						voxel.getGameResources().getGlobalStates().loop = false;
+						CommandsHandler.getInstace().addCommand(new StopCommand());
+						close = true;
 						btnStop.setText("Exit");
 					} else if (text.contains("/time set")) {
-						voxel.time = Float.parseFloat(text.substring(10));
-						Logger.log("Time set to: " + voxel.time);
+						CommandsHandler.getInstace().addCommand(new TimeCommand(Float.parseFloat(text.substring(10))));
 					} else if (text.contains("/kick")) {
-						try {
-							ConnectionsHandler.getInstace().getByName(text.substring(6)).close();
-						} catch (NullPointerException e) {
-							Logger.log("[Server] User not found: " + text.substring(6));
-						}
-						voxel.getGameResources().getVoxelServer().updateNames();
+						if (text.length() > 6)
+							CommandsHandler.getInstace().addCommand(new KickCommand(text.substring(6)));
+						else
+							Logger.log("Syntax: /kick <username>");
 					} else {
-						Logger.log("[Server] Command not found: " + text);
+						Logger.log("Command not found: " + text);
 					}
 					tar.clear();
 					event.consume();

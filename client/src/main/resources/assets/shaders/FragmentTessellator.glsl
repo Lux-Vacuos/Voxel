@@ -100,9 +100,6 @@ void main(void) {
 			for (x = -1.5 ; x <=1.5 ; x+=1.0)
 				shadow += -lookup(vec2(x,y)) + 1;
 		shadow /= 16.0 ;
-		if(ShadowCoord.z > 1.0){
-       		shadow = 0.0;
-       	}
 	}
 
     vec4 textureColour = texture(texture0, texcoords);

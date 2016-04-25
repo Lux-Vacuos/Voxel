@@ -87,8 +87,11 @@ public abstract class Window implements IDisplay {
 	protected int displayFramebufferWidth = 0;
 	protected int displayFramebufferHeight = 0;
 
+	@Deprecated
 	protected boolean latestResized = false;
+	@Deprecated
 	protected int latestWidth = 0;
+	@Deprecated
 	protected int latestHeight = 0;
 	protected float pixelRatio;
 

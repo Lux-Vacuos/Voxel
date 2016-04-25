@@ -18,15 +18,17 @@
  * 
  */
 
-package net.luxvacuos.voxel.server.world.block;
+package net.luxvacuos.voxel.server.core.commands;
 
-import com.badlogic.gdx.math.collision.BoundingBox;
+import net.luxvacuos.voxel.server.core.GlobalStates.InternalState;
+import net.luxvacuos.voxel.server.core.Voxel;
 
-import net.luxvacuos.igl.vector.Vector3f;
+public class StopCommand extends Command {
 
-public abstract class BlockBase {
+	@Override
+	public boolean run(Voxel voxel) {
+		voxel.getGameResources().getGlobalStates().setInternalState(InternalState.STOPPED);
+		return true;
+	}
 
-	public abstract byte getId();
-
-	public abstract BoundingBox getBoundingBox(Vector3f pos);
 }

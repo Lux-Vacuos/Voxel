@@ -26,11 +26,11 @@ import net.luxvacuos.voxel.universal.api.mod.ModStateLoop;
 
 public class GlobalStates {
 
-	public boolean loop = false;
-
 	private GameState state;
 
 	private GameState oldState;
+
+	private InternalState internalState;
 
 	public enum GameState {
 		GAME_MP(new GameMPState());
@@ -42,13 +42,17 @@ public class GlobalStates {
 		State state;
 	}
 
+	public enum InternalState {
+		STOPPED, RUNNIG;
+	}
+
 	public GlobalStates() {
-		loop = true;
-		setState(GameState.GAME_MP);;
+		internalState = InternalState.STOPPED;
+		setState(GameState.GAME_MP);
 	}
 
 	public void doUpdate(Voxel voxel, float delta) {
-		state.state.update(voxel, this, delta);
+		state.state.update(voxel, delta);
 		for (ModStateLoop modStateLoop : voxel.getApi().getMoltenAPI().getModStateLoops()) {
 			modStateLoop.update(voxel, delta);
 		}
@@ -67,5 +71,13 @@ public class GlobalStates {
 
 	public GameState getOldState() {
 		return oldState;
+	}
+
+	public void setInternalState(InternalState internalState) {
+		this.internalState = internalState;
+	}
+
+	public InternalState getInternalState() {
+		return internalState;
 	}
 }

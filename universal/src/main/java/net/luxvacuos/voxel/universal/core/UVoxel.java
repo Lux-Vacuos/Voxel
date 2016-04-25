@@ -32,7 +32,7 @@ public abstract class UVoxel {
 	protected String prefix;
 	protected boolean client, server;
 
-	public abstract void registerAPIMethods(MoltenAPI api, Map<String, APIMethod<Object>> methods);
+	public abstract void registerAPIMethods(MoltenAPI api, Map<String, APIMethod> methods);
 
 	public String getPrefix() {
 		return prefix;
@@ -44,6 +44,10 @@ public abstract class UVoxel {
 
 	public boolean isServer() {
 		return server;
+	}
+	
+	public UGameResources getGameResources() {
+		return gameResources;
 	}
 
 }

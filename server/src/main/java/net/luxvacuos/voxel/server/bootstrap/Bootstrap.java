@@ -73,7 +73,7 @@ public class Bootstrap {
 	}
 
 	static {
-		File file = new File("assets/game/logs");
+		File file = new File("logs");
 		if (!file.exists())
 			file.mkdirs();
 	}

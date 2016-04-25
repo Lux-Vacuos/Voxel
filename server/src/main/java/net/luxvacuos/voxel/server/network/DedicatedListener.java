@@ -23,8 +23,8 @@ package net.luxvacuos.voxel.server.network;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 
+import net.luxvacuos.igl.Logger;
 import net.luxvacuos.voxel.server.resources.GameResources;
-import net.luxvacuos.voxel.server.util.Logger;
 import net.luxvacuos.voxel.universal.network.packets.Username;
 
 public class DedicatedListener extends Listener {

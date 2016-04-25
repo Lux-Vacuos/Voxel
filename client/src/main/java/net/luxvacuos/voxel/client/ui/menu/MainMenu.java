@@ -38,33 +38,29 @@ public class MainMenu {
 
 	private WebRenderer webRenderer;
 
-	private float xScale, yScale;
-
 	public MainMenu(GameResources gm) {
-		float width = VoxelVariables.WIDTH;
-		float height = VoxelVariables.HEIGHT;
-		yScale = height / 720f;
-		xScale = width / 1280f;
-		playButton = new Button(new Vector2f(77, 568), new Vector2f(315, 80), xScale, yScale);
-		playMPButton = new Button(new Vector2f(77, 468), new Vector2f(315, 80), xScale, yScale);
-		optionsButton = new Button(new Vector2f(77, 368), new Vector2f(315, 80), xScale, yScale);
-		aboutButton = new Button(new Vector2f(77, 268), new Vector2f(315, 80), xScale, yScale);
-		exitButton = new Button(new Vector2f(77, 168), new Vector2f(315, 80), xScale, yScale);
-		newsRefreshButton = new Button(new Vector2f(1096, 627), new Vector2f(100, 40), xScale, yScale);
-		webRenderer = new WebRenderer(VoxelVariables.web + "news/menu.webtag", 460 * xScale, 120 * yScale);
+		playButton = new Button(new Vector2f(77, 568), new Vector2f(315, 80));
+		playMPButton = new Button(new Vector2f(77, 468), new Vector2f(315, 80));
+		optionsButton = new Button(new Vector2f(77, 368), new Vector2f(315, 80));
+		aboutButton = new Button(new Vector2f(77, 268), new Vector2f(315, 80));
+		exitButton = new Button(new Vector2f(77, 168), new Vector2f(315, 80));
+		newsRefreshButton = new Button(new Vector2f(1096, 627), new Vector2f(100, 40));
+		webRenderer = new WebRenderer(VoxelVariables.web + "news/menu.webtag", 460 * VoxelVariables.XSCALE,
+				120 * VoxelVariables.YSCALE);
 		webRenderer.update();
 	}
 
 	public void render() {
-		VectorsRendering.renderWindow(60 * xScale, 50 * yScale, 350 * xScale, 600 * yScale);
+		VectorsRendering.renderWindow(60 * VoxelVariables.XSCALE, 50 * VoxelVariables.YSCALE,
+				350 * VoxelVariables.XSCALE, 600 * VoxelVariables.YSCALE);
 		playButton.render("Play", VectorsRendering.ICON_BLACK_RIGHT_POINTING_TRIANGLE);
 		playMPButton.render("Multiplayer", VectorsRendering.ICON_BLACK_RIGHT_POINTING_TRIANGLE);
 		optionsButton.render("Options", VectorsRendering.ICON_GEAR);
 		aboutButton.render("About", VectorsRendering.ICON_INFORMATION_SOURCE);
 		exitButton.render("Exit", VectorsRendering.ICON_LOGIN);
 
-		VectorsRendering.renderWindow("Voxel News", "Roboto-Bold", 450 * xScale, 50 * yScale, 750 * xScale,
-				600 * yScale);
+		VectorsRendering.renderWindow("Voxel News", "Roboto-Bold", 450 * VoxelVariables.XSCALE,
+				50 * VoxelVariables.YSCALE, 750 * VoxelVariables.XSCALE, 600 * VoxelVariables.YSCALE);
 		webRenderer.render();
 
 		newsRefreshButton.render("Reload", VectorsRendering.rgba(80, 80, 80, 80, VectorsRendering.colorA));
