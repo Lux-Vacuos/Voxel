@@ -10,3 +10,24 @@ Voxel is a Minecraft inspired game made using Java and LWJGL3 library.
 ## Development
 
 The main development are taken in the 'develop' branch, for stable code please use the 'master' branch.
+
+## Project Layout
+
+The project is divided into subprojects within these we find different parts of code, as the client, server, etc.
+
+This is divided into.
+
+### Client
+This contains code that is used only for the client side, like the graphics engine.
+
+### Server
+This contains the code from the server version.
+
+### Universal
+This code contains compratido between client and server, in this case some parts of the netcode and API for mods.
+
+### Ashley
+This is a fork of libgdx/Ashley that was modified so it can run without all the libgdx library.
+
+### Utils
+This contains code that is used in all other sub-projects in this code from libgdx and LWJGL2 was exported so the other projects do not have to implement the same code.
