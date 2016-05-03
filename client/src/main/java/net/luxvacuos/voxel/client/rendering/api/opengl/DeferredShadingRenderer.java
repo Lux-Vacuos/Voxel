@@ -54,6 +54,10 @@ import net.luxvacuos.voxel.client.resources.models.RawModel;
 import net.luxvacuos.voxel.client.util.Maths;
 import net.luxvacuos.voxel.client.world.entities.PlayerCamera;
 
+/**
+ * 
+ * @deprecated Due to new Rendering Pipeline
+ */
 public class DeferredShadingRenderer {
 
 	/**

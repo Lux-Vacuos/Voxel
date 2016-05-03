@@ -176,6 +176,13 @@ public class DeferredShadingFBO {
 		if (status != GL_FRAMEBUFFER_COMPLETE)
 			Logger.error("FBO initialization failed");
 
+		int buffer[] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3,
+				GL_COLOR_ATTACHMENT4 };
+		IntBuffer buffers = BufferUtils.createIntBuffer(buffer.length);
+		buffers.put(buffer);
+		buffers.flip();
+		glDrawBuffers(buffers);
+
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
@@ -197,12 +204,6 @@ public class DeferredShadingFBO {
 
 	public void begin() {
 		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-		int buffer[] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3,
-				GL_COLOR_ATTACHMENT4 };
-		IntBuffer buffers = BufferUtils.createIntBuffer(buffer.length);
-		buffers.put(buffer);
-		buffers.flip();
-		glDrawBuffers(buffers);
 		glViewport(0, 0, width, height);
 	}
 

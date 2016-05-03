@@ -20,6 +20,7 @@
 
 package net.luxvacuos.voxel.client.core;
 
+import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.voxel.client.bootstrap.Bootstrap;
 
 /**
@@ -48,7 +49,7 @@ public class VoxelVariables {
 	public static boolean hideHud = false;
 	public static boolean onServer = false;
 	public static final String version = "0.0.10";
-	public static final int build = 207;
+	public static final int build = 208;
 	public static int FOV = 90;
 	public static int WIDTH = 1280;
 	public static int HEIGHT = 720;
@@ -60,6 +61,7 @@ public class VoxelVariables {
 	public static float RED = 0.32f;
 	public static float GREEN = 0.8f;
 	public static float BLUE = 1f;
+	public static Vector3f skyColor = new Vector3f(VoxelVariables.RED, VoxelVariables.GREEN, VoxelVariables.BLUE);
 	public static boolean runningOnMac = false;
 	public static boolean autostart = false;
 	public static boolean christmas = false;
@@ -112,8 +114,16 @@ public class VoxelVariables {
 	public static final String FRAGMENT_FILE_PARTICLE = "FragmentParticle.glsl";
 	public static final String VERTEX_FILE_FONT = "VertexFont.glsl";
 	public static final String FRAGMENT_FILE_FONT = "FragmentFont.glsl";
+
+	/**
+	 * @deprecated Due to new Rendering Pipeline
+	 */
 	public static final String VERTEX_FILE_COMPOSITE = "VertexComposite";
+	/**
+	 * @deprecated Due to new Rendering Pipeline
+	 */
 	public static final String FRAGMENT_FILE_COMPOSITE = "FragmentComposite";
+
 	public static final String VERTEX_FILE_TESSELLATOR = "VertexTessellator.glsl";
 	public static final String FRAGMENT_FILE_TESSELLATOR = "FragmentTessellator.glsl";
 	public static final String VERTEX_FILE_TESSELLATOR_BASIC = "VertexTessellatorBasic.glsl";

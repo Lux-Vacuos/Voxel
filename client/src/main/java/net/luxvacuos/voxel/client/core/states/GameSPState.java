@@ -113,7 +113,8 @@ public class GameSPState implements State {
 		gm.getRenderer().prepare();
 		gm.getWorldsHandler().getActiveWorld().getActiveDimension().updateChunksOcclusion(gm);
 
-		gm.getDeferredShadingRenderer().getPost_fbo().begin();
+		gm.getRenderingPipeline().begin();
+		//gm.getDeferredShadingRenderer().getPost_fbo().begin();
 		gm.getRenderer().prepare();
 		gm.getSkyboxRenderer().render(VoxelVariables.RED, VoxelVariables.GREEN, VoxelVariables.BLUE, delta, gm);
 		gm.getWorldsHandler().getActiveWorld().getActiveDimension().updateChunksRender(gm);
@@ -124,10 +125,10 @@ public class GameSPState implements State {
 		gm.getRenderer().renderEntity(
 				gm.getWorldsHandler().getActiveWorld().getActiveDimension().getPhysicsEngine().getEntities(), gm);
 		gm.getItemsDropRenderer().render(gm);
-		gm.getDeferredShadingRenderer().getPost_fbo().end();
+		gm.getRenderingPipeline().end();
 
 		gm.getRenderer().prepare();
-		gm.getDeferredShadingRenderer().render(gm);
+		gm.getRenderingPipeline().render(gm);
 		ParticleMaster.getInstance().render(gm.getCamera(), gm.getRenderer().getProjectionMatrix());
 		gm.getDisplay().beingNVGFrame();
 		gm.getMenuSystem().gameSP.render(gm, gm.getWorldsHandler().getActiveWorld().getActiveDimension());

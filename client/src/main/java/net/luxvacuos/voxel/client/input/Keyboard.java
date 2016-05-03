@@ -28,6 +28,7 @@ import java.util.Map;
 import org.lwjgl.glfw.GLFW;
 
 import net.luxvacuos.voxel.client.rendering.api.glfw.Display;
+import net.luxvacuos.voxel.client.resources.GameResources;
 
 public class Keyboard {
 
@@ -200,8 +201,6 @@ public class Keyboard {
 	private static final String[] keyName = new String[KEYBOARD_SIZE];
 	private static final Map<String, Integer> keyMap = new HashMap<String, Integer>(253);
 
-	private static Display display;
-
 	static {
 		// Use reflection to find out key names
 		Field[] fields = Keyboard.class.getFields();
@@ -222,10 +221,6 @@ public class Keyboard {
 		} catch (Exception e) {
 		}
 
-	}
-
-	public static void setDisplay(Display display) {
-		Keyboard.display = display;
 	}
 
 	public static void addKeyEvent(int key, boolean pressed) {
@@ -252,7 +247,8 @@ public class Keyboard {
 	}
 
 	public static boolean isKeyDown(int key) {
-		return GLFW.glfwGetKey(display.getWindow(), KeyCodes.toGlfwKey(key)) == GLFW.GLFW_PRESS;
+		return GLFW.glfwGetKey(GameResources.instance().getDisplay().getWindow(),
+				KeyCodes.toGlfwKey(key)) == GLFW.GLFW_PRESS;
 	}
 
 	public static boolean next() {

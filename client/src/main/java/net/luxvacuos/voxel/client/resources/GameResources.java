@@ -28,28 +28,25 @@ import java.util.Random;
 import com.esotericsoftware.kryo.Kryo;
 
 import net.luxvacuos.igl.CustomLog;
+import net.luxvacuos.igl.Logger;
 import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.voxel.client.core.GameSettings;
 import net.luxvacuos.voxel.client.core.GlobalStates;
 import net.luxvacuos.voxel.client.core.Voxel;
 import net.luxvacuos.voxel.client.core.VoxelVariables;
 import net.luxvacuos.voxel.client.core.WorldSimulation;
-import net.luxvacuos.voxel.client.input.Keyboard;
-import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.network.VoxelClient;
 import net.luxvacuos.voxel.client.rendering.api.glfw.ContextFormat;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Display;
-import net.luxvacuos.voxel.client.rendering.api.nanovg.Timers;
-import net.luxvacuos.voxel.client.rendering.api.nanovg.VectorsRendering;
-import net.luxvacuos.voxel.client.rendering.api.opengl.DeferredShadingRenderer;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Frustum;
 import net.luxvacuos.voxel.client.rendering.api.opengl.ItemsDropRenderer;
 import net.luxvacuos.voxel.client.rendering.api.opengl.ItemsGuiRenderer;
 import net.luxvacuos.voxel.client.rendering.api.opengl.MasterRenderer;
 import net.luxvacuos.voxel.client.rendering.api.opengl.MasterShadowRenderer;
 import net.luxvacuos.voxel.client.rendering.api.opengl.ParticleMaster;
+import net.luxvacuos.voxel.client.rendering.api.opengl.RenderingPipeline;
 import net.luxvacuos.voxel.client.rendering.api.opengl.SkyboxRenderer;
-import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.ShaderProgram;
+import net.luxvacuos.voxel.client.rendering.api.opengl.pipeline.Forward;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.TessellatorBasicShader;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.TessellatorShader;
 import net.luxvacuos.voxel.client.resources.models.ParticleTexture;
@@ -82,9 +79,6 @@ public class GameResources extends UGameResources {
 		return instance;
 	}
 
-	/**
-	 * GameResources Data
-	 */
 	private Display display;
 	private Random rand;
 	private Loader loader;
@@ -93,7 +87,10 @@ public class GameResources extends UGameResources {
 	private MasterRenderer renderer;
 	private SkyboxRenderer skyboxRenderer;
 	private GlobalStates globalStates;
-	private DeferredShadingRenderer deferredShadingRenderer;
+	
+	private RenderingPipeline renderingPipeline;
+	
+	//private DeferredShadingRenderer deferredShadingRenderer;
 	private MasterShadowRenderer masterShadowRenderer;
 	private ItemsDropRenderer itemsDropRenderer;
 	private ItemsGuiRenderer itemsGuiRenderer;
@@ -122,11 +119,6 @@ public class GameResources extends UGameResources {
 		display.create(VoxelVariables.WIDTH, VoxelVariables.HEIGHT, "Voxel", VoxelVariables.VSYNC, false, false,
 				new ContextFormat(3, 3, GLFW_OPENGL_API, GLFW_OPENGL_CORE_PROFILE, true),
 				new String[] { "assets/icons/icon32.png", "assets/icons/icon64.png" });
-		Keyboard.setDisplay(display);
-		Mouse.setDisplay(display);
-		VectorsRendering.setDisplay(display);
-		Timers.setDisplay(display);
-		ShaderProgram.setDisplay(display);
 		float width = VoxelVariables.WIDTH;
 		float height = VoxelVariables.HEIGHT;
 		VoxelVariables.ASPECT_RATIO = width / height;
@@ -142,7 +134,11 @@ public class GameResources extends UGameResources {
 		masterShadowRenderer = new MasterShadowRenderer();
 		renderer = new MasterRenderer(this);
 		skyboxRenderer = new SkyboxRenderer(loader, renderer.getProjectionMatrix());
-		deferredShadingRenderer = new DeferredShadingRenderer(this);
+		
+		Logger.log("Using Single Pass Rendering Pipeline");
+		renderingPipeline = new Forward();
+		
+		//deferredShadingRenderer = new DeferredShadingRenderer(this);
 		itemsDropRenderer = new ItemsDropRenderer(this);
 		TessellatorShader.getInstance();
 		TessellatorBasicShader.getInstance();
@@ -206,7 +202,8 @@ public class GameResources extends UGameResources {
 		masterShadowRenderer.cleanUp();
 		itemsDropRenderer.cleanUp();
 		ParticleMaster.getInstance().cleanUp();
-		deferredShadingRenderer.cleanUp();
+		renderingPipeline.disposeI();
+		//deferredShadingRenderer.cleanUp();
 		itemsGuiRenderer.cleanUp();
 		renderer.cleanUp();
 		loader.cleanUp();
@@ -242,8 +239,12 @@ public class GameResources extends UGameResources {
 		return soundSystem;
 	}
 
-	public DeferredShadingRenderer getDeferredShadingRenderer() {
-		return deferredShadingRenderer;
+	//public DeferredShadingRenderer getDeferredShadingRenderer() {
+	//	return deferredShadingRenderer;
+	//}
+	
+	public RenderingPipeline getRenderingPipeline() {
+		return renderingPipeline;
 	}
 
 	public Frustum getFrustum() {

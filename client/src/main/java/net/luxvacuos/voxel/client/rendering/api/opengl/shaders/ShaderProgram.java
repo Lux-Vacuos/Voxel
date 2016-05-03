@@ -61,7 +61,7 @@ import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.igl.vector.Vector4f;
 import net.luxvacuos.voxel.client.core.exception.CompileShaderException;
 import net.luxvacuos.voxel.client.core.exception.LoadShaderException;
-import net.luxvacuos.voxel.client.rendering.api.glfw.Display;
+import net.luxvacuos.voxel.client.resources.GameResources;
 
 /**
  * Shader Program, Use to create shaders
@@ -90,12 +90,6 @@ public abstract class ShaderProgram {
 	 * Used to Load Matrix to shader
 	 */
 	private FloatBuffer matrixBuffer = BufferUtils.createFloatBuffer(16);
-
-	private static Display display;
-
-	public static void setDisplay(Display display) {
-		ShaderProgram.display = display;
-	}
 
 	/**
 	 * Constructor, Creates a Shader Program Using a Vertex Shader and a
@@ -284,8 +278,9 @@ public abstract class ShaderProgram {
 	 *            Type of Shader
 	 * @return Shader ID
 	 * 
-	 * @throws IllegalStateException
-	 *             in case of compilation error
+	 * @throws Exception
+	 *             This can be {@link CompileShaderException} or
+	 *             {@link LoadShaderException}.
 	 */
 	private int loadShader(String file, int type) throws Exception {
 		StringBuilder shaderSource = new StringBuilder();
@@ -298,9 +293,9 @@ public abstract class ShaderProgram {
 				shaderSource.append(line).append("//\n");
 			}
 			reader.close();
-			if (display.isNvidia())
+			if (GameResources.instance().getDisplay().isNvidia())
 				shaderSource.insert(0, "#define NVIDIA//\n");// TEMPORAL FIX
-			else if (display.isAmd())
+			else if (GameResources.instance().getDisplay().isAmd())
 				shaderSource.insert(0, "#define AMD//\n");// TEMPORAL FIX
 		} catch (IOException e) {
 			throw new LoadShaderException(e);

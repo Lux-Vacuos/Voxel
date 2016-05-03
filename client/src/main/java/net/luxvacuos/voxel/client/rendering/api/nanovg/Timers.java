@@ -49,8 +49,8 @@ import static org.lwjgl.opengl.GL15.glGetQueryObjectiv;
 import static org.lwjgl.system.MemoryUtil.NULL;
 import static org.lwjgl.system.MemoryUtil.memAllocInt;
 import static org.lwjgl.system.MemoryUtil.memAllocLong;
-import static org.lwjgl.system.MemoryUtil.memUTF8;
 import static org.lwjgl.system.MemoryUtil.memFree;
+import static org.lwjgl.system.MemoryUtil.memUTF8;
 
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
@@ -61,7 +61,7 @@ import java.util.Arrays;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL;
 
-import net.luxvacuos.voxel.client.rendering.api.glfw.Display;
+import net.luxvacuos.voxel.client.resources.GameResources;
 
 public class Timers {
 
@@ -78,14 +78,9 @@ public class Timers {
 	private static final int GRAPH_HISTORY_COUNT = 200;
 	private static final int GPU_QUERY_COUNT = 5;
 
-	private static Display display;
-
-	public static void setDisplay(Display display) {
-		Timers.display = display;
-	}
 
 	public static void initDebugDisplay() {
-		vg = display.getVg();
+		vg = GameResources.instance().getDisplay().getVg();
 
 		gpuTimer = new GPUtimer();
 		fps = new PerfGraph();

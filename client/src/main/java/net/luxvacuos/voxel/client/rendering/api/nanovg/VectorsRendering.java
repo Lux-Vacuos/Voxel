@@ -51,10 +51,10 @@ import static org.lwjgl.nanovg.NanoVG.nvgText;
 import static org.lwjgl.nanovg.NanoVG.nvgTextAlign;
 import static org.lwjgl.nanovg.NanoVG.nvgTextBounds;
 import static org.lwjgl.system.MemoryUtil.NULL;
-import static org.lwjgl.system.MemoryUtil.memAllocInt;
 import static org.lwjgl.system.MemoryUtil.memASCII;
-import static org.lwjgl.system.MemoryUtil.memUTF8;
+import static org.lwjgl.system.MemoryUtil.memAllocInt;
 import static org.lwjgl.system.MemoryUtil.memFree;
+import static org.lwjgl.system.MemoryUtil.memUTF8;
 
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
@@ -64,7 +64,7 @@ import org.lwjgl.nanovg.NVGColor;
 import org.lwjgl.nanovg.NVGPaint;
 
 import net.luxvacuos.voxel.client.input.Mouse;
-import net.luxvacuos.voxel.client.rendering.api.glfw.Display;
+import net.luxvacuos.voxel.client.resources.GameResources;
 
 /**
  * This class contains basic rendering methods using NanoVG
@@ -91,12 +91,6 @@ public class VectorsRendering {
 	public static final ByteBuffer ICON_GEAR = cpToUTF8(0x2699);
 	public static final ByteBuffer ICON_BLACK_RIGHT_POINTING_TRIANGLE = cpToUTF8(0x25B6);
 
-	private static Display display;
-
-	public static void setDisplay(Display display) {
-		VectorsRendering.display = display;
-	}
-
 	private static boolean isBlack(NVGColor col) {
 		return col.r() == 0.0f && col.g() == 0.0f && col.b() == 0.0f && col.a() == 0.0f;
 	}
@@ -110,7 +104,7 @@ public class VectorsRendering {
 	}
 
 	public static void renderLabel(String text, String font, float x, float y, float w, float h, float fontSize) {
-		long vg = display.getVg();
+		long vg = GameResources.instance().getDisplay().getVg();
 		nvgFontSize(vg, fontSize);
 		nvgFontFace(vg, font);
 		nvgFillColor(vg, rgba(255, 255, 255, 128, colorA));
@@ -119,7 +113,7 @@ public class VectorsRendering {
 	}
 
 	public static void renderSearchBox(String text, String font, String entypo, float x, float y, float w, float h) {
-		long vg = display.getVg();
+		long vg = GameResources.instance().getDisplay().getVg();
 		NVGPaint bg = paintA;
 		float cornerRadius = h / 2 - 1;
 
@@ -158,7 +152,7 @@ public class VectorsRendering {
 	public static void renderImage(float x, float y, float w, float h, int image, float alpha) {
 		NVGPaint imgPaint = paintB;
 		IntBuffer imgw = memAllocInt(1), imgh = memAllocInt(1);
-		long vg = display.getVg();
+		long vg = GameResources.instance().getDisplay().getVg();
 		nvgSave(vg);
 		nvgImageSize(vg, image, imgw, imgh);
 		nvgImagePattern(vg, x, y, w, h, 0.0f / 180.0f * NVG_PI, image, alpha, imgPaint);
@@ -172,7 +166,7 @@ public class VectorsRendering {
 	}
 
 	public static void renderProgressBar(float x, float y, float w, float h, float pos) {
-		long vg = display.getVg();
+		long vg = GameResources.instance().getDisplay().getVg();
 		nvgBoxGradient(vg, x + 1, y + 1, w - 2, h, 3, 4, rgba(32, 32, 32, 255, colorA), rgba(92, 92, 92, 255, colorB),
 				paintA);
 		nvgBeginPath(vg);
@@ -191,22 +185,22 @@ public class VectorsRendering {
 		nvgFillPaint(vg, paintB);
 		nvgFill(vg);
 	}
-	
+
 	public static void renderLife(float x, float y, float w, float h, float pos) {
-		long vg = display.getVg();
+		long vg = GameResources.instance().getDisplay().getVg();
 		nvgBoxGradient(vg, x + 1, y + 1, w - 2, h, 3, 4, rgba(32, 32, 32, 120, colorA), rgba(92, 92, 92, 255, colorB),
 				paintA);
 		nvgBeginPath(vg);
 		nvgRoundedRect(vg, x, y, w, h, 1);
 		nvgFillPaint(vg, paintA);
 		nvgFill(vg);
-		
+
 		float value = Math.min(Math.max(0.0f, pos), 1.0f);
 		int barPos = (int) (Math.round(w - 2) * value);
-		
+
 		nvgBoxGradient(vg, x, y, barPos + 1.5f, h - 1, 3, 4, rgba(220, 0, 0, 255, colorC),
 				rgba(128, 100, 128, 255, colorB), paintB);
-		
+
 		nvgBeginPath(vg);
 		nvgRoundedRect(vg, x + 1, y + 1, barPos, h - 2, 3);
 		nvgFillPaint(vg, paintB);
@@ -217,7 +211,7 @@ public class VectorsRendering {
 		float cornerRadius = 3.0f;
 		NVGPaint shadowPaint = paintA;
 		NVGPaint headerPaint = paintB;
-		long vg = display.getVg();
+		long vg = GameResources.instance().getDisplay().getVg();
 
 		nvgSave(vg);
 		// nvgClearState(vg);
@@ -273,7 +267,7 @@ public class VectorsRendering {
 	public static void renderWindow(float x, float y, float w, float h) {
 		float cornerRadius = 3.0f;
 		NVGPaint shadowPaint = paintA;
-		long vg = display.getVg();
+		long vg = GameResources.instance().getDisplay().getVg();
 
 		nvgSave(vg);
 		// nvgClearState(vg);
@@ -300,11 +294,11 @@ public class VectorsRendering {
 
 	public static void renderMouse() {
 		float x = Mouse.getX() - 8;
-		float y = -Mouse.getY() - 8 + display.getDisplayHeight();
+		float y = -Mouse.getY() - 8 + GameResources.instance().getDisplay().getDisplayHeight();
 		float w = 16;
 		float h = 16;
 		NVGPaint bg = paintA;
-		long vg = display.getVg();
+		long vg = GameResources.instance().getDisplay().getVg();
 		nvgBoxGradient(vg, x + 1, y + 1 + 1.5f, w - 2, h - 2, 3, 4, rgba(255, 255, 255, 200, colorA),
 				rgba(32, 32, 32, 32, colorB), bg);
 		nvgBeginPath(vg);
@@ -321,7 +315,7 @@ public class VectorsRendering {
 	public static void renderBox(float x, float y, float w, float h, NVGColor color1, NVGColor color2,
 			NVGColor color3) {
 		NVGPaint bg = paintA;
-		long vg = display.getVg();
+		long vg = GameResources.instance().getDisplay().getVg();
 		nvgBoxGradient(vg, x + 1, y + 1 + 1.5f, w - 2, h - 2, 3, 4, color1, color2, bg);
 		nvgBeginPath(vg);
 		nvgRoundedRect(vg, x + 1, y + 1, w - 2, h - 2, 4 - 1);
@@ -338,7 +332,7 @@ public class VectorsRendering {
 		NVGPaint bg = paintA, knob = paintB;
 		float cy = y + (int) (h * 0.5f);
 		float kr = (int) (h * 0.25f);
-		long vg = display.getVg();
+		long vg = GameResources.instance().getDisplay().getVg();
 
 		nvgSave(vg);
 		// nvgClearState(vg);
@@ -385,7 +379,7 @@ public class VectorsRendering {
 
 	public static void renderText(String text, String font, int align, float x, float y, float fontSize,
 			NVGColor colort, NVGColor colorg) {
-		long vg = display.getVg();
+		long vg = GameResources.instance().getDisplay().getVg();
 		nvgFontSize(vg, fontSize);
 		nvgFontFace(vg, font);
 		nvgTextAlign(vg, align);
@@ -397,7 +391,7 @@ public class VectorsRendering {
 
 	public static void renderButton(ByteBuffer preicon, String text, String font, String entypo, float x, float y,
 			float w, float h, NVGColor color, boolean mouseInside) {
-		long vg = display.getVg();
+		long vg = GameResources.instance().getDisplay().getVg();
 		NVGPaint bg = paintA;
 		float cornerRadius = 10.0f;
 		float tw, iw = 0;
