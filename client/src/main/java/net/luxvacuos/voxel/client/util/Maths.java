@@ -76,13 +76,14 @@ public class Maths {
 	 *            Scale
 	 * @return Transformation Matrix 3D
 	 */
-	public static Matrix4f createTransformationMatrix(Vector3f translation, float rx, float ry, float rz, float scale) {
+	public static Matrix4f createTransformationMatrix(Vector3f translation, double rx, double ry, double rz,
+			double scale) {
 		Matrix4f matrix = new Matrix4f();
 		matrix.setIdentity();
 		Matrix4f.translate(translation, matrix, matrix);
-		Matrix4f.rotate((float) Math.toRadians(rx), new Vector3f(1, 0, 0), matrix, matrix);
-		Matrix4f.rotate((float) Math.toRadians(ry), new Vector3f(0, 1, 0), matrix, matrix);
-		Matrix4f.rotate((float) Math.toRadians(rz), new Vector3f(0, 0, 1), matrix, matrix);
+		Matrix4f.rotate(Math.toRadians(rx), new Vector3f(1, 0, 0), matrix, matrix);
+		Matrix4f.rotate(Math.toRadians(ry), new Vector3f(0, 1, 0), matrix, matrix);
+		Matrix4f.rotate(Math.toRadians(rz), new Vector3f(0, 0, 1), matrix, matrix);
 		Matrix4f.scale(new Vector3f(scale, scale, scale), matrix, matrix);
 		return matrix;
 	}
@@ -131,12 +132,12 @@ public class Maths {
 	 *            creating a new one
 	 * @return The composed matrix
 	 */
-	public static Matrix4f createViewMatrixRot(float pitch, float yaw, float roll, Matrix4f viewMatrix) {
+	public static Matrix4f createViewMatrixRot(double pitch, double yaw, double roll, Matrix4f viewMatrix) {
 		if (viewMatrix == null)
 			viewMatrix = new Matrix4f();
-		Matrix4f.rotate((float) Math.toRadians(pitch), new Vector3f(1, 0, 0), viewMatrix, viewMatrix);
-		Matrix4f.rotate((float) Math.toRadians(yaw), new Vector3f(0, 1, 0), viewMatrix, viewMatrix);
-		Matrix4f.rotate((float) Math.toRadians(roll), new Vector3f(0, 0, 1), viewMatrix, viewMatrix);
+		Matrix4f.rotate(Math.toRadians(pitch), new Vector3f(1, 0, 0), viewMatrix, viewMatrix);
+		Matrix4f.rotate(Math.toRadians(yaw), new Vector3f(0, 1, 0), viewMatrix, viewMatrix);
+		Matrix4f.rotate(Math.toRadians(roll), new Vector3f(0, 0, 1), viewMatrix, viewMatrix);
 		return viewMatrix;
 	}
 
@@ -268,7 +269,7 @@ public class Maths {
 				intersection.set(ray.origin);
 			return true;
 		}
-		float lowest = 0, t;
+		double lowest = 0, t;
 		boolean hit = false;
 
 		// min x

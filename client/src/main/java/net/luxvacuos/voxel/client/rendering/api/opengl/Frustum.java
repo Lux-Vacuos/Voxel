@@ -20,7 +20,7 @@
 
 package net.luxvacuos.voxel.client.rendering.api.opengl;
 
-import java.nio.FloatBuffer;
+import java.nio.DoubleBuffer;
 
 import org.lwjgl.BufferUtils;
 
@@ -51,9 +51,9 @@ public class Frustum {
 	private final int B = 1;
 	private final int C = 2;
 	private final int D = 3;
-	private float[][] m_Frustum = new float[6][4];
+	private double[][] m_Frustum = new double[6][4];
 	private Matrix4f clip_ = new Matrix4f();
-	private FloatBuffer clip_b;
+	private DoubleBuffer clip_b;
 
 	/**
 	 * Normalize Frustum Plane
@@ -63,8 +63,8 @@ public class Frustum {
 	 * @param side
 	 *            side
 	 */
-	public void normalizePlane(float[][] frustum, int side) {
-		float magnitude = (float) Math.sqrt(frustum[side][A] * frustum[side][A] + frustum[side][B] * frustum[side][B]
+	public void normalizePlane(double[][] frustum, int side) {
+		double magnitude = Math.sqrt(frustum[side][A] * frustum[side][A] + frustum[side][B] * frustum[side][B]
 				+ frustum[side][C] * frustum[side][C]);
 
 		frustum[side][A] /= magnitude;
@@ -80,7 +80,7 @@ public class Frustum {
 	 *            GameResources
 	 */
 	public void calculateFrustum(Matrix4f projectionMatrix, Camera camera) {
-		float[] clip = new float[16];
+		double[] clip = new double[16];
 
 		Matrix4f.mul(projectionMatrix, Maths.createViewMatrix(camera), clip_);
 		clip_b.rewind();
@@ -173,7 +173,7 @@ public class Frustum {
 	 *            Size of the cube
 	 * @return true if in Frustum
 	 */
-	public boolean cubeInFrustum(Vector3f center, float size) {
+	public boolean cubeInFrustum(Vector3f center, double size) {
 		return cubeInFrustum(center.x, center.y, center.z, size);
 	}
 
@@ -190,7 +190,7 @@ public class Frustum {
 	 *            Size of the cube
 	 * @return true if in Frustum
 	 */
-	public boolean cubeInFrustum(float x, float y, float z, float size) {
+	public boolean cubeInFrustum(double x, double y, double z, double size) {
 		for (int i = 0; i < 6; i++) {
 			if (m_Frustum[i][A] * (x - size) + m_Frustum[i][B] * (y - size) + m_Frustum[i][C] * (z - size)
 					+ m_Frustum[i][D] > 0)
@@ -268,6 +268,6 @@ public class Frustum {
 	 * 
 	 */
 	public Frustum() {
-		clip_b = BufferUtils.createFloatBuffer(16);
+		clip_b = BufferUtils.createDoubleBuffer(16);
 	}
 }

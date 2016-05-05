@@ -45,7 +45,7 @@ public interface WritableVector4f extends WritableVector3f {
 	 * 
 	 * @param w
 	 */
-	void setW(float w);
+	void setW(double w);
 
 	/**
 	 * Set the X,Y,Z,W values
@@ -55,6 +55,6 @@ public interface WritableVector4f extends WritableVector3f {
 	 * @param z
 	 * @param w
 	 */
-	void set(float x, float y, float z, float w);
+	void set(double x, double y, double z, double w);
 
 }

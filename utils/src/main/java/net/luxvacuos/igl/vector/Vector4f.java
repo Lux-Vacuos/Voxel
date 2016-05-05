@@ -32,7 +32,7 @@
 package net.luxvacuos.igl.vector;
 
 import java.io.Serializable;
-import java.nio.FloatBuffer;
+import java.nio.DoubleBuffer;
 
 /**
  *
@@ -47,7 +47,7 @@ public class Vector4f extends Vector implements Serializable, ReadableVector4f, 
 
 	private static final long serialVersionUID = 1L;
 
-	public float x, y, z, w;
+	public double x, y, z, w;
 
 	/**
 	 * Constructor for Vector4f.
@@ -66,16 +66,16 @@ public class Vector4f extends Vector implements Serializable, ReadableVector4f, 
 	/**
 	 * Constructor
 	 */
-	public Vector4f(float x, float y, float z, float w) {
+	public Vector4f(double x, double y, double z, double w) {
 		set(x, y, z, w);
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.lwjgl.util.vector.WritableVector2f#set(float, float)
+	 * @see org.lwjgl.util.vector.WritableVector2f#set(double, double)
 	 */
-	public void set(float x, float y) {
+	public void set(double x, double y) {
 		this.x = x;
 		this.y = y;
 	}
@@ -83,9 +83,9 @@ public class Vector4f extends Vector implements Serializable, ReadableVector4f, 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.lwjgl.util.vector.WritableVector3f#set(float, float, float)
+	 * @see org.lwjgl.util.vector.WritableVector3f#set(double, double, double)
 	 */
-	public void set(float x, float y, float z) {
+	public void set(double x, double y, double z) {
 		this.x = x;
 		this.y = y;
 		this.z = z;
@@ -94,10 +94,10 @@ public class Vector4f extends Vector implements Serializable, ReadableVector4f, 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.lwjgl.util.vector.WritableVector4f#set(float, float, float,
-	 * float)
+	 * @see org.lwjgl.util.vector.WritableVector4f#set(double, double, double,
+	 * double)
 	 */
-	public void set(float x, float y, float z, float w) {
+	public void set(double x, double y, double z, double w) {
 		this.x = x;
 		this.y = y;
 		this.z = z;
@@ -122,7 +122,7 @@ public class Vector4f extends Vector implements Serializable, ReadableVector4f, 
 	/**
 	 * @return the length squared of the vector
 	 */
-	public float lengthSquared() {
+	public double lengthSquared() {
 		return x * x + y * y + z * z + w * w;
 	}
 
@@ -135,7 +135,7 @@ public class Vector4f extends Vector implements Serializable, ReadableVector4f, 
 	 *            the translation in y
 	 * @return this
 	 */
-	public Vector4f translate(float x, float y, float z, float w) {
+	public Vector4f translate(double x, double y, double z, double w) {
 		this.x += x;
 		this.y += y;
 		this.z += z;
@@ -143,7 +143,7 @@ public class Vector4f extends Vector implements Serializable, ReadableVector4f, 
 		return this;
 	}
 
-	public Vector4f div(float v) {
+	public Vector4f div(double v) {
 		x /= v;
 		y /= v;
 		z /= v;
@@ -235,7 +235,7 @@ public class Vector4f extends Vector implements Serializable, ReadableVector4f, 
 	 * @return the normalised vector
 	 */
 	public Vector4f normalise(Vector4f dest) {
-		float l = length();
+		double l = length();
 
 		if (dest == null)
 			dest = new Vector4f(x / l, y / l, z / l, w / l);
@@ -255,7 +255,7 @@ public class Vector4f extends Vector implements Serializable, ReadableVector4f, 
 	 *            The RHS vector
 	 * @return left dot right
 	 */
-	public static float dot(Vector4f left, Vector4f right) {
+	public static double dot(Vector4f left, Vector4f right) {
 		return left.x * right.x + left.y * right.y + left.z * right.z + left.w * right.w;
 	}
 
@@ -268,21 +268,20 @@ public class Vector4f extends Vector implements Serializable, ReadableVector4f, 
 	 *            The other vector
 	 * @return the angle between the two vectors, in radians
 	 */
-	public static float angle(Vector4f a, Vector4f b) {
-		float dls = dot(a, b) / (a.length() * b.length());
+	public static double angle(Vector4f a, Vector4f b) {
+		double dls = dot(a, b) / (a.length() * b.length());
 		if (dls < -1f)
 			dls = -1f;
 		else if (dls > 1.0f)
 			dls = 1.0f;
-		return (float) Math.acos(dls);
+		return Math.acos(dls);
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.lwjgl.vector.Vector#load(FloatBuffer)
-	 */
-	public Vector load(FloatBuffer buf) {
+	 * @see org.lwjgl.vector.Vector#load(doubleBuffdouble	 */
+	public Vector load(DoubleBuffer buf) {
 		x = buf.get();
 		y = buf.get();
 		z = buf.get();
@@ -293,9 +292,9 @@ public class Vector4f extends Vector implements Serializable, ReadableVector4f, 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.lwjgl.vector.Vector#scale(float)
+	 * @see org.lwjgl.vector.Vector#scale(double)
 	 */
-	public Vector scale(float scale) {
+	public Vector scale(double scale) {
 		x *= scale;
 		y *= scale;
 		z *= scale;
@@ -306,9 +305,9 @@ public class Vector4f extends Vector implements Serializable, ReadableVector4f, 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.lwjgl.vector.Vector#store(FloatBuffer)
+	 * @see org.lwjgl.vector.Vector#store(doubleBuffer)
 	 */
-	public Vector store(FloatBuffer buf) {
+	public Vector store(DoubleBuffer buf) {
 
 		buf.put(x);
 		buf.put(y);
@@ -325,14 +324,14 @@ public class Vector4f extends Vector implements Serializable, ReadableVector4f, 
 	/**
 	 * @return x
 	 */
-	public final float getX() {
+	public final double getX() {
 		return x;
 	}
 
 	/**
 	 * @return y
 	 */
-	public final float getY() {
+	public final double getY() {
 		return y;
 	}
 
@@ -341,7 +340,7 @@ public class Vector4f extends Vector implements Serializable, ReadableVector4f, 
 	 * 
 	 * @param x
 	 */
-	public final void setX(float x) {
+	public final void setX(double x) {
 		this.x = x;
 	}
 
@@ -350,7 +349,7 @@ public class Vector4f extends Vector implements Serializable, ReadableVector4f, 
 	 * 
 	 * @param y
 	 */
-	public final void setY(float y) {
+	public final void setY(double y) {
 		this.y = y;
 	}
 
@@ -359,7 +358,7 @@ public class Vector4f extends Vector implements Serializable, ReadableVector4f, 
 	 * 
 	 * @param z
 	 */
-	public void setZ(float z) {
+	public void setZ(double z) {
 		this.z = z;
 	}
 
@@ -368,7 +367,7 @@ public class Vector4f extends Vector implements Serializable, ReadableVector4f, 
 	 * 
 	 * @see org.lwjgl.vector.ReadableVector3f#getZ()
 	 */
-	public float getZ() {
+	public double getZ() {
 		return z;
 	}
 
@@ -377,7 +376,7 @@ public class Vector4f extends Vector implements Serializable, ReadableVector4f, 
 	 * 
 	 * @param w
 	 */
-	public void setW(float w) {
+	public void setW(double w) {
 		this.w = w;
 	}
 
@@ -386,7 +385,7 @@ public class Vector4f extends Vector implements Serializable, ReadableVector4f, 
 	 * 
 	 * @see org.lwjgl.vector.ReadableVector3f#getZ()
 	 */
-	public float getW() {
+	public double getW() {
 		return w;
 	}
 

@@ -38,9 +38,9 @@ import net.luxvacuos.voxel.client.world.entities.components.VelocityComponent;
  */
 public class Camera extends Entity {
 
-	protected float pitch;
-	protected float yaw;
-	protected float roll;
+	protected double pitch;
+	protected double yaw;
+	protected double roll;
 	protected DRay dRay;
 	protected boolean jump = false;
 
@@ -70,27 +70,27 @@ public class Camera extends Entity {
 		this.getComponent(PositionComponent.class).position = position;
 	}
 	
-	public float getPitch() {
+	public double getPitch() {
 		return pitch;
 	}
 
-	public float getYaw() {
+	public double getYaw() {
 		return yaw;
 	}
 
-	public void setPitch(float pitch) {
+	public void setPitch(double pitch) {
 		this.pitch = pitch;
 	}
 
-	public void setYaw(float yaw) {
+	public void setYaw(double yaw) {
 		this.yaw = yaw;
 	}
 
-	public float getRoll() {
+	public double getRoll() {
 		return roll;
 	}
 
-	public void setRoll(float roll) {
+	public void setRoll(double roll) {
 		this.roll = roll;
 	}
 

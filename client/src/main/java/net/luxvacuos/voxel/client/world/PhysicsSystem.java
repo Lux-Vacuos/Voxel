@@ -60,7 +60,7 @@ public class PhysicsSystem extends EntitySystem {
 	private Vector3f tmp = new Vector3f();
 	private Vector3 normalTMP = new Vector3();
 	private Vector3 tmp1 = new Vector3();
-	private float depthTMP;
+	private double depthTMP;
 	private int faceTMP;
 
 	public PhysicsSystem(Dimension dim) {
@@ -145,21 +145,21 @@ public class PhysicsSystem extends EntitySystem {
 			collison.update(position.position);
 			boxes = dim.getGlobalBoundingBox(collison.boundingBox);
 
-			float tempx = (velocity.velocity.x);
+			double tempx = (velocity.velocity.x);
 			int tempX = (int) tempx;
 			if (velocity.velocity.x < 0) {
 				tempx = (velocity.velocity.x);
 				tempX = (int) tempx - 1;
 			}
 
-			float tempz = (velocity.velocity.z);
+			double tempz = (velocity.velocity.z);
 			int tempZ = (int) tempz;
 			if (velocity.velocity.z > 0) {
 				tempz = (velocity.velocity.z);
 				tempZ = (int) tempz + 1;
 			}
 
-			float tempy = (velocity.velocity.y);
+			double tempy = (velocity.velocity.y);
 			int tempY = (int) tempy - 1;
 
 			int bx = (int) tempX;
@@ -180,7 +180,6 @@ public class PhysicsSystem extends EntitySystem {
 					if (normalTMP.y < 0 && velocity.velocity.y < 0) {
 						if (life != null && velocity.velocity.y < -10f) {
 							life.life += velocity.velocity.y * 0.2f + 1 * armour.armour.getProtection();
-							System.out.println(life.life);
 						}
 						velocity.velocity.y = 0;
 						depthTMP /= 4f;
@@ -223,7 +222,7 @@ public class PhysicsSystem extends EntitySystem {
 	private boolean AABBIntersect(final Vector3 mina, final Vector3 maxa, final Vector3 minb, final Vector3 maxb) {
 		final Vector3 faces[] = { new Vector3(-1, 0, 0), new Vector3(1, 0, 0), new Vector3(0, -1, 0),
 				new Vector3(0, 1, 0), new Vector3(0, 0, -1), new Vector3(0, 0, 1) };
-		float distances[] = { (maxb.x - mina.x), (maxa.x - minb.x), (maxb.y - mina.y), (maxa.y - minb.y),
+		double distances[] = { (maxb.x - mina.x), (maxa.x - minb.x), (maxb.y - mina.y), (maxa.y - minb.y),
 				(maxb.z - mina.z), (maxa.z - minb.z) };
 		for (int i = 0; i < 6; i++) {
 			if (distances[i] < 0.0f)

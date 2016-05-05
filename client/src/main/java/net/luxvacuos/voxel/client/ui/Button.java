@@ -67,9 +67,10 @@ public class Button {
 	}
 
 	public void render(String text, String font, String entypo, ByteBuffer preicon, NVGColor color) {
-		VectorsRendering.renderButton(preicon, text, font, entypo, renderPos.x * VoxelVariables.XSCALE,
-				(720f - renderPos.y - renderSize.y) * VoxelVariables.YSCALE, renderSize.x * VoxelVariables.XSCALE,
-				renderSize.y * VoxelVariables.YSCALE, color, this.insideButton());
+		VectorsRendering.renderButton(preicon, text, font, entypo, (float) (renderPos.x * VoxelVariables.XSCALE),
+				(float) (720f - renderPos.y - renderSize.y) * VoxelVariables.YSCALE,
+				(float) (renderSize.x * VoxelVariables.XSCALE), (float) (renderSize.y * VoxelVariables.YSCALE), color,
+				this.insideButton());
 	}
 
 	public boolean pressed() {

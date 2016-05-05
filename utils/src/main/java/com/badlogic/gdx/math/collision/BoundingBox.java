@@ -19,7 +19,6 @@ package com.badlogic.gdx.math.collision;
 import java.io.Serializable;
 import java.util.List;
 
-import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 
 /** Encapsulates an axis aligned bounding box represented by a minimum and a maximum Vector. Additionally you can query for the
@@ -28,8 +27,6 @@ import com.badlogic.gdx.math.Vector3;
  * @author badlogicgames@gmail.com, Xoppa */
 public class BoundingBox implements Serializable {
 	private static final long serialVersionUID = -1286036817192127343L;
-
-	private final static Vector3 tmpVector = new Vector3();
 
 	public final Vector3 min = new Vector3();
 	public final Vector3 max = new Vector3();
@@ -43,15 +40,15 @@ public class BoundingBox implements Serializable {
 		return out.set(cnt);
 	}
 
-	public float getCenterX () {
+	public double getCenterX () {
 		return cnt.x;
 	}
 
-	public float getCenterY () {
+	public double getCenterY () {
 		return cnt.y;
 	}
 
-	public float getCenterZ () {
+	public double getCenterZ () {
 		return cnt.z;
 	}
 
@@ -93,15 +90,15 @@ public class BoundingBox implements Serializable {
 		return out.set(dim);
 	}
 
-	public float getWidth () {
+	public double getWidth () {
 		return dim.x;
 	}
 
-	public float getHeight () {
+	public double getHeight () {
 		return dim.y;
 	}
 
-	public float getDepth () {
+	public double getDepth () {
 		return dim.z;
 	}
 
@@ -186,8 +183,8 @@ public class BoundingBox implements Serializable {
 	 *
 	 * @return This bounding box for chaining. */
 	public BoundingBox inf () {
-		min.set(Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY);
-		max.set(Float.NEGATIVE_INFINITY, Float.NEGATIVE_INFINITY, Float.NEGATIVE_INFINITY);
+		min.set(Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY);
+		max.set(Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY);
 		cnt.set(0, 0, 0);
 		dim.set(0, 0, 0);
 		return this;
@@ -227,45 +224,9 @@ public class BoundingBox implements Serializable {
 	 * @param center Sphere center
 	 * @param radius Sphere radius
 	 * @return This bounding box for chaining. */
-	public BoundingBox ext (Vector3 center, float radius) {
+	public BoundingBox ext (Vector3 center, double radius) {
 		return this.set(min.set(min(min.x, center.x - radius), min(min.y, center.y - radius), min(min.z, center.z - radius)),
 			max.set(max(max.x, center.x + radius), max(max.y, center.y + radius), max(max.z, center.z + radius)));
-	}
-
-	/** Extends this bounding box by the given transformed bounding box.
-	 *
-	 * @param bounds The bounding box
-	 * @param transform The transformation matrix to apply to bounds, before using it to extend this bounding box.
-	 * @return This bounding box for chaining. */
-	public BoundingBox ext (BoundingBox bounds, Matrix4 transform) {
-		ext(tmpVector.set(bounds.min.x, bounds.min.y, bounds.min.z).mul(transform));
-		ext(tmpVector.set(bounds.min.x, bounds.min.y, bounds.max.z).mul(transform));
-		ext(tmpVector.set(bounds.min.x, bounds.max.y, bounds.min.z).mul(transform));
-		ext(tmpVector.set(bounds.min.x, bounds.max.y, bounds.max.z).mul(transform));
-		ext(tmpVector.set(bounds.max.x, bounds.min.y, bounds.min.z).mul(transform));
-		ext(tmpVector.set(bounds.max.x, bounds.min.y, bounds.max.z).mul(transform));
-		ext(tmpVector.set(bounds.max.x, bounds.max.y, bounds.min.z).mul(transform));
-		ext(tmpVector.set(bounds.max.x, bounds.max.y, bounds.max.z).mul(transform));
-		return this;
-	}
-
-	/** Multiplies the bounding box by the given matrix. This is achieved by multiplying the 8 corner points and then calculating
-	 * the minimum and maximum vectors from the transformed points.
-	 *
-	 * @param transform The matrix
-	 * @return This bounding box for chaining. */
-	public BoundingBox mul (Matrix4 transform) {
-		final float x0 = min.x, y0 = min.y, z0 = min.z, x1 = max.x, y1 = max.y, z1 = max.z;
-		inf();
-		ext(tmpVector.set(x0, y0, z0).mul(transform));
-		ext(tmpVector.set(x0, y0, z1).mul(transform));
-		ext(tmpVector.set(x0, y1, z0).mul(transform));
-		ext(tmpVector.set(x0, y1, z1).mul(transform));
-		ext(tmpVector.set(x1, y0, z0).mul(transform));
-		ext(tmpVector.set(x1, y0, z1).mul(transform));
-		ext(tmpVector.set(x1, y1, z0).mul(transform));
-		ext(tmpVector.set(x1, y1, z1).mul(transform));
-		return this;
 	}
 
 	/** Returns whether the given bounding box is contained in this bounding box.
@@ -284,14 +245,14 @@ public class BoundingBox implements Serializable {
 
 		// test using SAT (separating axis theorem)
 
-		float lx = Math.abs(this.cnt.x - b.cnt.x);
-		float sumx = (this.dim.x / 2.0f) + (b.dim.x / 2.0f);
+		double lx = Math.abs(this.cnt.x - b.cnt.x);
+		double sumx = (this.dim.x / 2.0f) + (b.dim.x / 2.0f);
 
-		float ly = Math.abs(this.cnt.y - b.cnt.y);
-		float sumy = (this.dim.y / 2.0f) + (b.dim.y / 2.0f);
+		double ly = Math.abs(this.cnt.y - b.cnt.y);
+		double sumy = (this.dim.y / 2.0f) + (b.dim.y / 2.0f);
 
-		float lz = Math.abs(this.cnt.z - b.cnt.z);
-		float sumz = (this.dim.z / 2.0f) + (b.dim.z / 2.0f);
+		double lz = Math.abs(this.cnt.z - b.cnt.z);
+		double sumz = (this.dim.z / 2.0f) + (b.dim.z / 2.0f);
 
 		return (lx <= sumx && ly <= sumy && lz <= sumz);
 
@@ -315,15 +276,15 @@ public class BoundingBox implements Serializable {
 	 * @param y The y-coordinate
 	 * @param z The z-coordinate
 	 * @return This bounding box for chaining. */
-	public BoundingBox ext (float x, float y, float z) {
+	public BoundingBox ext (double x, double y, double z) {
 		return this.set(min.set(min(min.x, x), min(min.y, y), min(min.z, z)), max.set(max(max.x, x), max(max.y, y), max(max.z, z)));
 	}
 
-	static final float min (final float a, final float b) {
+	static final double min (final double a, final double b) {
 		return a > b ? b : a;
 	}
 
-	static final float max (final float a, final float b) {
+	static final double max (final double a, final double b) {
 		return a > b ? a : b;
 	}
 }

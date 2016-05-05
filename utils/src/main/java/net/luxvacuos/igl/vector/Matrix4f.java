@@ -32,7 +32,7 @@
 package net.luxvacuos.igl.vector;
 
 import java.io.Serializable;
-import java.nio.FloatBuffer;
+import java.nio.DoubleBuffer;
 
 /**
  * Holds a 4x4 float matrix.
@@ -42,7 +42,7 @@ import java.nio.FloatBuffer;
 public class Matrix4f extends Matrix implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	public float m00, m01, m02, m03, m10, m11, m12, m13, m20, m21, m22, m23, m30, m31, m32, m33;
+	public double m00, m01, m02, m03, m10, m11, m12, m13, m20, m21, m22, m23, m30, m31, m32, m33;
 
 	/**
 	 * Construct a new matrix, initialized to the identity.
@@ -194,7 +194,7 @@ public class Matrix4f extends Matrix implements Serializable {
 	 *            A float buffer to read from
 	 * @return this
 	 */
-	public Matrix load(FloatBuffer buf) {
+	public Matrix load(DoubleBuffer buf) {
 
 		m00 = buf.get();
 		m01 = buf.get();
@@ -224,7 +224,7 @@ public class Matrix4f extends Matrix implements Serializable {
 	 *            A float buffer to read from
 	 * @return this
 	 */
-	public Matrix loadTranspose(FloatBuffer buf) {
+	public Matrix loadTranspose(DoubleBuffer buf) {
 
 		m00 = buf.get();
 		m10 = buf.get();
@@ -253,7 +253,7 @@ public class Matrix4f extends Matrix implements Serializable {
 	 * @param buf
 	 *            The buffer to store this matrix in
 	 */
-	public Matrix store(FloatBuffer buf) {
+	public Matrix store(DoubleBuffer buf) {
 		buf.put(m00);
 		buf.put(m01);
 		buf.put(m02);
@@ -280,7 +280,7 @@ public class Matrix4f extends Matrix implements Serializable {
 	 * @param buf
 	 *            The buffer to store this matrix in
 	 */
-	public Matrix storeTranspose(FloatBuffer buf) {
+	public Matrix storeTranspose(DoubleBuffer buf) {
 		buf.put(m00);
 		buf.put(m10);
 		buf.put(m20);
@@ -307,7 +307,7 @@ public class Matrix4f extends Matrix implements Serializable {
 	 * @param buf
 	 *            The buffer to store this matrix in
 	 */
-	public Matrix store3f(FloatBuffer buf) {
+	public Matrix store3f(DoubleBuffer buf) {
 		buf.put(m00);
 		buf.put(m01);
 		buf.put(m02);
@@ -407,22 +407,22 @@ public class Matrix4f extends Matrix implements Serializable {
 		if (dest == null)
 			dest = new Matrix4f();
 
-		float m00 = left.m00 * right.m00 + left.m10 * right.m01 + left.m20 * right.m02 + left.m30 * right.m03;
-		float m01 = left.m01 * right.m00 + left.m11 * right.m01 + left.m21 * right.m02 + left.m31 * right.m03;
-		float m02 = left.m02 * right.m00 + left.m12 * right.m01 + left.m22 * right.m02 + left.m32 * right.m03;
-		float m03 = left.m03 * right.m00 + left.m13 * right.m01 + left.m23 * right.m02 + left.m33 * right.m03;
-		float m10 = left.m00 * right.m10 + left.m10 * right.m11 + left.m20 * right.m12 + left.m30 * right.m13;
-		float m11 = left.m01 * right.m10 + left.m11 * right.m11 + left.m21 * right.m12 + left.m31 * right.m13;
-		float m12 = left.m02 * right.m10 + left.m12 * right.m11 + left.m22 * right.m12 + left.m32 * right.m13;
-		float m13 = left.m03 * right.m10 + left.m13 * right.m11 + left.m23 * right.m12 + left.m33 * right.m13;
-		float m20 = left.m00 * right.m20 + left.m10 * right.m21 + left.m20 * right.m22 + left.m30 * right.m23;
-		float m21 = left.m01 * right.m20 + left.m11 * right.m21 + left.m21 * right.m22 + left.m31 * right.m23;
-		float m22 = left.m02 * right.m20 + left.m12 * right.m21 + left.m22 * right.m22 + left.m32 * right.m23;
-		float m23 = left.m03 * right.m20 + left.m13 * right.m21 + left.m23 * right.m22 + left.m33 * right.m23;
-		float m30 = left.m00 * right.m30 + left.m10 * right.m31 + left.m20 * right.m32 + left.m30 * right.m33;
-		float m31 = left.m01 * right.m30 + left.m11 * right.m31 + left.m21 * right.m32 + left.m31 * right.m33;
-		float m32 = left.m02 * right.m30 + left.m12 * right.m31 + left.m22 * right.m32 + left.m32 * right.m33;
-		float m33 = left.m03 * right.m30 + left.m13 * right.m31 + left.m23 * right.m32 + left.m33 * right.m33;
+		double m00 = left.m00 * right.m00 + left.m10 * right.m01 + left.m20 * right.m02 + left.m30 * right.m03;
+		double m01 = left.m01 * right.m00 + left.m11 * right.m01 + left.m21 * right.m02 + left.m31 * right.m03;
+		double m02 = left.m02 * right.m00 + left.m12 * right.m01 + left.m22 * right.m02 + left.m32 * right.m03;
+		double m03 = left.m03 * right.m00 + left.m13 * right.m01 + left.m23 * right.m02 + left.m33 * right.m03;
+		double m10 = left.m00 * right.m10 + left.m10 * right.m11 + left.m20 * right.m12 + left.m30 * right.m13;
+		double m11 = left.m01 * right.m10 + left.m11 * right.m11 + left.m21 * right.m12 + left.m31 * right.m13;
+		double m12 = left.m02 * right.m10 + left.m12 * right.m11 + left.m22 * right.m12 + left.m32 * right.m13;
+		double m13 = left.m03 * right.m10 + left.m13 * right.m11 + left.m23 * right.m12 + left.m33 * right.m13;
+		double m20 = left.m00 * right.m20 + left.m10 * right.m21 + left.m20 * right.m22 + left.m30 * right.m23;
+		double m21 = left.m01 * right.m20 + left.m11 * right.m21 + left.m21 * right.m22 + left.m31 * right.m23;
+		double m22 = left.m02 * right.m20 + left.m12 * right.m21 + left.m22 * right.m22 + left.m32 * right.m23;
+		double m23 = left.m03 * right.m20 + left.m13 * right.m21 + left.m23 * right.m22 + left.m33 * right.m23;
+		double m30 = left.m00 * right.m30 + left.m10 * right.m31 + left.m20 * right.m32 + left.m30 * right.m33;
+		double m31 = left.m01 * right.m30 + left.m11 * right.m31 + left.m21 * right.m32 + left.m31 * right.m33;
+		double m32 = left.m02 * right.m30 + left.m12 * right.m31 + left.m22 * right.m32 + left.m32 * right.m33;
+		double m33 = left.m03 * right.m30 + left.m13 * right.m31 + left.m23 * right.m32 + left.m33 * right.m33;
 
 		dest.m00 = m00;
 		dest.m01 = m01;
@@ -460,10 +460,10 @@ public class Matrix4f extends Matrix implements Serializable {
 		if (dest == null)
 			dest = new Vector4f();
 
-		float x = left.m00 * right.x + left.m10 * right.y + left.m20 * right.z + left.m30 * right.w;
-		float y = left.m01 * right.x + left.m11 * right.y + left.m21 * right.z + left.m31 * right.w;
-		float z = left.m02 * right.x + left.m12 * right.y + left.m22 * right.z + left.m32 * right.w;
-		float w = left.m03 * right.x + left.m13 * right.y + left.m23 * right.z + left.m33 * right.w;
+		double x = left.m00 * right.x + left.m10 * right.y + left.m20 * right.z + left.m30 * right.w;
+		double y = left.m01 * right.x + left.m11 * right.y + left.m21 * right.z + left.m31 * right.w;
+		double z = left.m02 * right.x + left.m12 * right.y + left.m22 * right.z + left.m32 * right.w;
+		double w = left.m03 * right.x + left.m13 * right.y + left.m23 * right.z + left.m33 * right.w;
 
 		dest.x = x;
 		dest.y = y;
@@ -546,46 +546,46 @@ public class Matrix4f extends Matrix implements Serializable {
 	}
 
 	public Vector3f unproject(Vector3f winCoords, Vector4f viewport, Vector3f dest) {
-		float winX = winCoords.x;
-		float winY = winCoords.y;
-		float winZ = winCoords.z;
-		float a = m00 * m11 - m01 * m10;
-		float b = m00 * m12 - m02 * m10;
-		float c = m00 * m13 - m03 * m10;
-		float d = m01 * m12 - m02 * m11;
-		float e = m01 * m13 - m03 * m11;
-		float f = m02 * m13 - m03 * m12;
-		float g = m20 * m31 - m21 * m30;
-		float h = m20 * m32 - m22 * m30;
-		float i = m20 * m33 - m23 * m30;
-		float j = m21 * m32 - m22 * m31;
-		float k = m21 * m33 - m23 * m31;
-		float l = m22 * m33 - m23 * m32;
-		float det = a * l - b * k + c * j + d * i - e * h + f * g;
+		double winX = winCoords.x;
+		double winY = winCoords.y;
+		double winZ = winCoords.z;
+		double a = m00 * m11 - m01 * m10;
+		double b = m00 * m12 - m02 * m10;
+		double c = m00 * m13 - m03 * m10;
+		double d = m01 * m12 - m02 * m11;
+		double e = m01 * m13 - m03 * m11;
+		double f = m02 * m13 - m03 * m12;
+		double g = m20 * m31 - m21 * m30;
+		double h = m20 * m32 - m22 * m30;
+		double i = m20 * m33 - m23 * m30;
+		double j = m21 * m32 - m22 * m31;
+		double k = m21 * m33 - m23 * m31;
+		double l = m22 * m33 - m23 * m32;
+		double det = a * l - b * k + c * j + d * i - e * h + f * g;
 		det = 1.0f / det;
-		float im00 = (m11 * l - m12 * k + m13 * j) * det;
-		float im01 = (-m01 * l + m02 * k - m03 * j) * det;
-		float im02 = (m31 * f - m32 * e + m33 * d) * det;
-		float im03 = (-m21 * f + m22 * e - m23 * d) * det;
-		float im10 = (-m10 * l + m12 * i - m13 * h) * det;
-		float im11 = (m00 * l - m02 * i + m03 * h) * det;
-		float im12 = (-m30 * f + m32 * c - m33 * b) * det;
-		float im13 = (m20 * f - m22 * c + m23 * b) * det;
-		float im20 = (m10 * k - m11 * i + m13 * g) * det;
-		float im21 = (-m00 * k + m01 * i - m03 * g) * det;
-		float im22 = (m30 * e - m31 * c + m33 * a) * det;
-		float im23 = (-m20 * e + m21 * c - m23 * a) * det;
-		float im30 = (-m10 * j + m11 * h - m12 * g) * det;
-		float im31 = (m00 * j - m01 * h + m02 * g) * det;
-		float im32 = (-m30 * d + m31 * b - m32 * a) * det;
-		float im33 = (m20 * d - m21 * b + m22 * a) * det;
-		float ndcX = (winX - viewport.x) / viewport.z * 2.0f - 1.0f;
-		float ndcY = (winY - viewport.y) / viewport.w * 2.0f - 1.0f;
-		float ndcZ = 2.0f * winZ - 1.0f;
+		double im00 = (m11 * l - m12 * k + m13 * j) * det;
+		double im01 = (-m01 * l + m02 * k - m03 * j) * det;
+		double im02 = (m31 * f - m32 * e + m33 * d) * det;
+		double im03 = (-m21 * f + m22 * e - m23 * d) * det;
+		double im10 = (-m10 * l + m12 * i - m13 * h) * det;
+		double im11 = (m00 * l - m02 * i + m03 * h) * det;
+		double im12 = (-m30 * f + m32 * c - m33 * b) * det;
+		double im13 = (m20 * f - m22 * c + m23 * b) * det;
+		double im20 = (m10 * k - m11 * i + m13 * g) * det;
+		double im21 = (-m00 * k + m01 * i - m03 * g) * det;
+		double im22 = (m30 * e - m31 * c + m33 * a) * det;
+		double im23 = (-m20 * e + m21 * c - m23 * a) * det;
+		double im30 = (-m10 * j + m11 * h - m12 * g) * det;
+		double im31 = (m00 * j - m01 * h + m02 * g) * det;
+		double im32 = (-m30 * d + m31 * b - m32 * a) * det;
+		double im33 = (m20 * d - m21 * b + m22 * a) * det;
+		double ndcX = (winX - viewport.x) / viewport.z * 2.0f - 1.0f;
+		double ndcY = (winY - viewport.y) / viewport.w * 2.0f - 1.0f;
+		double ndcZ = 2.0f * winZ - 1.0f;
 		dest.x = im00 * ndcX + im10 * ndcY + im20 * ndcZ + im30;
 		dest.y = im01 * ndcX + im11 * ndcY + im21 * ndcZ + im31;
 		dest.z = im02 * ndcX + im12 * ndcY + im22 * ndcZ + im32;
-		float w = im03 * ndcX + im13 * ndcY + im23 * ndcZ + im33;
+		double w = im03 * ndcX + im13 * ndcY + im23 * ndcZ + im33;
 		dest.div(w);
 		return dest;
 	}
@@ -612,7 +612,7 @@ public class Matrix4f extends Matrix implements Serializable {
 	 *            The vector representing the rotation axis. Must be normalized.
 	 * @return this
 	 */
-	public Matrix4f rotate(float angle, Vector3f axis) {
+	public Matrix4f rotate(double angle, Vector3f axis) {
 		return rotate(angle, axis, this);
 	}
 
@@ -628,7 +628,7 @@ public class Matrix4f extends Matrix implements Serializable {
 	 *            created
 	 * @return The rotated matrix
 	 */
-	public Matrix4f rotate(float angle, Vector3f axis, Matrix4f dest) {
+	public Matrix4f rotate(double angle, Vector3f axis, Matrix4f dest) {
 		return rotate(angle, axis, this, dest);
 	}
 
@@ -647,39 +647,39 @@ public class Matrix4f extends Matrix implements Serializable {
 	 *            created
 	 * @return The rotated matrix
 	 */
-	public static Matrix4f rotate(float angle, Vector3f axis, Matrix4f src, Matrix4f dest) {
+	public static Matrix4f rotate(double angle, Vector3f axis, Matrix4f src, Matrix4f dest) {
 		if (dest == null)
 			dest = new Matrix4f();
-		float c = (float) Math.cos(angle);
-		float s = (float) Math.sin(angle);
-		float oneminusc = 1.0f - c;
-		float xy = axis.x * axis.y;
-		float yz = axis.y * axis.z;
-		float xz = axis.x * axis.z;
-		float xs = axis.x * s;
-		float ys = axis.y * s;
-		float zs = axis.z * s;
+		double c = Math.cos(angle);
+		double s = Math.sin(angle);
+		double oneminusc = 1.0f - c;
+		double xy = axis.x * axis.y;
+		double yz = axis.y * axis.z;
+		double xz = axis.x * axis.z;
+		double xs = axis.x * s;
+		double ys = axis.y * s;
+		double zs = axis.z * s;
 
-		float f00 = axis.x * axis.x * oneminusc + c;
-		float f01 = xy * oneminusc + zs;
-		float f02 = xz * oneminusc - ys;
+		double f00 = axis.x * axis.x * oneminusc + c;
+		double f01 = xy * oneminusc + zs;
+		double f02 = xz * oneminusc - ys;
 		// n[3] not used
-		float f10 = xy * oneminusc - zs;
-		float f11 = axis.y * axis.y * oneminusc + c;
-		float f12 = yz * oneminusc + xs;
+		double f10 = xy * oneminusc - zs;
+		double f11 = axis.y * axis.y * oneminusc + c;
+		double f12 = yz * oneminusc + xs;
 		// n[7] not used
-		float f20 = xz * oneminusc + ys;
-		float f21 = yz * oneminusc - xs;
-		float f22 = axis.z * axis.z * oneminusc + c;
+		double f20 = xz * oneminusc + ys;
+		double f21 = yz * oneminusc - xs;
+		double f22 = axis.z * axis.z * oneminusc + c;
 
-		float t00 = src.m00 * f00 + src.m10 * f01 + src.m20 * f02;
-		float t01 = src.m01 * f00 + src.m11 * f01 + src.m21 * f02;
-		float t02 = src.m02 * f00 + src.m12 * f01 + src.m22 * f02;
-		float t03 = src.m03 * f00 + src.m13 * f01 + src.m23 * f02;
-		float t10 = src.m00 * f10 + src.m10 * f11 + src.m20 * f12;
-		float t11 = src.m01 * f10 + src.m11 * f11 + src.m21 * f12;
-		float t12 = src.m02 * f10 + src.m12 * f11 + src.m22 * f12;
-		float t13 = src.m03 * f10 + src.m13 * f11 + src.m23 * f12;
+		double t00 = src.m00 * f00 + src.m10 * f01 + src.m20 * f02;
+		double t01 = src.m01 * f00 + src.m11 * f01 + src.m21 * f02;
+		double t02 = src.m02 * f00 + src.m12 * f01 + src.m22 * f02;
+		double t03 = src.m03 * f00 + src.m13 * f01 + src.m23 * f02;
+		double t10 = src.m00 * f10 + src.m10 * f11 + src.m20 * f12;
+		double t11 = src.m01 * f10 + src.m11 * f11 + src.m21 * f12;
+		double t12 = src.m02 * f10 + src.m12 * f11 + src.m22 * f12;
+		double t13 = src.m03 * f10 + src.m13 * f11 + src.m23 * f12;
 		dest.m20 = src.m00 * f20 + src.m10 * f21 + src.m20 * f22;
 		dest.m21 = src.m01 * f20 + src.m11 * f21 + src.m21 * f22;
 		dest.m22 = src.m02 * f20 + src.m12 * f21 + src.m22 * f22;
@@ -799,22 +799,22 @@ public class Matrix4f extends Matrix implements Serializable {
 	public static Matrix4f transpose(Matrix4f src, Matrix4f dest) {
 		if (dest == null)
 			dest = new Matrix4f();
-		float m00 = src.m00;
-		float m01 = src.m10;
-		float m02 = src.m20;
-		float m03 = src.m30;
-		float m10 = src.m01;
-		float m11 = src.m11;
-		float m12 = src.m21;
-		float m13 = src.m31;
-		float m20 = src.m02;
-		float m21 = src.m12;
-		float m22 = src.m22;
-		float m23 = src.m32;
-		float m30 = src.m03;
-		float m31 = src.m13;
-		float m32 = src.m23;
-		float m33 = src.m33;
+		double m00 = src.m00;
+		double m01 = src.m10;
+		double m02 = src.m20;
+		double m03 = src.m30;
+		double m10 = src.m01;
+		double m11 = src.m11;
+		double m12 = src.m21;
+		double m13 = src.m31;
+		double m20 = src.m02;
+		double m21 = src.m12;
+		double m22 = src.m22;
+		double m23 = src.m32;
+		double m30 = src.m03;
+		double m31 = src.m13;
+		double m32 = src.m23;
+		double m33 = src.m33;
 
 		dest.m00 = m00;
 		dest.m01 = m01;
@@ -839,8 +839,8 @@ public class Matrix4f extends Matrix implements Serializable {
 	/**
 	 * @return the determinant of the matrix
 	 */
-	public float determinant() {
-		float f = m00 * ((m11 * m22 * m33 + m12 * m23 * m31 + m13 * m21 * m32) - m13 * m22 * m31 - m11 * m23 * m32
+	public double determinant() {
+		double f = m00 * ((m11 * m22 * m33 + m12 * m23 * m31 + m13 * m21 * m32) - m13 * m22 * m31 - m11 * m23 * m32
 				- m12 * m21 * m33);
 		f -= m01 * ((m10 * m22 * m33 + m12 * m23 * m30 + m13 * m20 * m32) - m13 * m22 * m30 - m10 * m23 * m32
 				- m12 * m20 * m33);
@@ -857,8 +857,8 @@ public class Matrix4f extends Matrix implements Serializable {
 	 * @return result
 	 */
 
-	private static float determinant3x3(float t00, float t01, float t02, float t10, float t11, float t12, float t20,
-			float t21, float t22) {
+	private static double determinant3x3(double t00, double t01, double t02, double t10, double t11, double t12,
+			double t20, double t21, double t22) {
 		return t00 * (t11 * t22 - t12 * t21) + t01 * (t12 * t20 - t10 * t22) + t02 * (t10 * t21 - t11 * t20);
 	}
 
@@ -882,7 +882,7 @@ public class Matrix4f extends Matrix implements Serializable {
 	 * @return The inverted matrix if successful, null otherwise
 	 */
 	public static Matrix4f invert(Matrix4f src, Matrix4f dest) {
-		float determinant = src.determinant();
+		double determinant = src.determinant();
 
 		if (determinant != 0) {
 			/*
@@ -890,36 +890,44 @@ public class Matrix4f extends Matrix implements Serializable {
 			 */
 			if (dest == null)
 				dest = new Matrix4f();
-			float determinant_inv = 1f / determinant;
+			double determinant_inv = 1f / determinant;
 
 			// first row
-			float t00 = determinant3x3(src.m11, src.m12, src.m13, src.m21, src.m22, src.m23, src.m31, src.m32, src.m33);
-			float t01 = -determinant3x3(src.m10, src.m12, src.m13, src.m20, src.m22, src.m23, src.m30, src.m32,
+			double t00 = determinant3x3(src.m11, src.m12, src.m13, src.m21, src.m22, src.m23, src.m31, src.m32,
 					src.m33);
-			float t02 = determinant3x3(src.m10, src.m11, src.m13, src.m20, src.m21, src.m23, src.m30, src.m31, src.m33);
-			float t03 = -determinant3x3(src.m10, src.m11, src.m12, src.m20, src.m21, src.m22, src.m30, src.m31,
+			double t01 = -determinant3x3(src.m10, src.m12, src.m13, src.m20, src.m22, src.m23, src.m30, src.m32,
+					src.m33);
+			double t02 = determinant3x3(src.m10, src.m11, src.m13, src.m20, src.m21, src.m23, src.m30, src.m31,
+					src.m33);
+			double t03 = -determinant3x3(src.m10, src.m11, src.m12, src.m20, src.m21, src.m22, src.m30, src.m31,
 					src.m32);
 			// second row
-			float t10 = -determinant3x3(src.m01, src.m02, src.m03, src.m21, src.m22, src.m23, src.m31, src.m32,
+			double t10 = -determinant3x3(src.m01, src.m02, src.m03, src.m21, src.m22, src.m23, src.m31, src.m32,
 					src.m33);
-			float t11 = determinant3x3(src.m00, src.m02, src.m03, src.m20, src.m22, src.m23, src.m30, src.m32, src.m33);
-			float t12 = -determinant3x3(src.m00, src.m01, src.m03, src.m20, src.m21, src.m23, src.m30, src.m31,
+			double t11 = determinant3x3(src.m00, src.m02, src.m03, src.m20, src.m22, src.m23, src.m30, src.m32,
 					src.m33);
-			float t13 = determinant3x3(src.m00, src.m01, src.m02, src.m20, src.m21, src.m22, src.m30, src.m31, src.m32);
+			double t12 = -determinant3x3(src.m00, src.m01, src.m03, src.m20, src.m21, src.m23, src.m30, src.m31,
+					src.m33);
+			double t13 = determinant3x3(src.m00, src.m01, src.m02, src.m20, src.m21, src.m22, src.m30, src.m31,
+					src.m32);
 			// third row
-			float t20 = determinant3x3(src.m01, src.m02, src.m03, src.m11, src.m12, src.m13, src.m31, src.m32, src.m33);
-			float t21 = -determinant3x3(src.m00, src.m02, src.m03, src.m10, src.m12, src.m13, src.m30, src.m32,
+			double t20 = determinant3x3(src.m01, src.m02, src.m03, src.m11, src.m12, src.m13, src.m31, src.m32,
 					src.m33);
-			float t22 = determinant3x3(src.m00, src.m01, src.m03, src.m10, src.m11, src.m13, src.m30, src.m31, src.m33);
-			float t23 = -determinant3x3(src.m00, src.m01, src.m02, src.m10, src.m11, src.m12, src.m30, src.m31,
+			double t21 = -determinant3x3(src.m00, src.m02, src.m03, src.m10, src.m12, src.m13, src.m30, src.m32,
+					src.m33);
+			double t22 = determinant3x3(src.m00, src.m01, src.m03, src.m10, src.m11, src.m13, src.m30, src.m31,
+					src.m33);
+			double t23 = -determinant3x3(src.m00, src.m01, src.m02, src.m10, src.m11, src.m12, src.m30, src.m31,
 					src.m32);
 			// fourth row
-			float t30 = -determinant3x3(src.m01, src.m02, src.m03, src.m11, src.m12, src.m13, src.m21, src.m22,
+			double t30 = -determinant3x3(src.m01, src.m02, src.m03, src.m11, src.m12, src.m13, src.m21, src.m22,
 					src.m23);
-			float t31 = determinant3x3(src.m00, src.m02, src.m03, src.m10, src.m12, src.m13, src.m20, src.m22, src.m23);
-			float t32 = -determinant3x3(src.m00, src.m01, src.m03, src.m10, src.m11, src.m13, src.m20, src.m21,
+			double t31 = determinant3x3(src.m00, src.m02, src.m03, src.m10, src.m12, src.m13, src.m20, src.m22,
 					src.m23);
-			float t33 = determinant3x3(src.m00, src.m01, src.m02, src.m10, src.m11, src.m12, src.m20, src.m21, src.m22);
+			double t32 = -determinant3x3(src.m00, src.m01, src.m03, src.m10, src.m11, src.m13, src.m20, src.m21,
+					src.m23);
+			double t33 = determinant3x3(src.m00, src.m01, src.m02, src.m10, src.m11, src.m12, src.m20, src.m21,
+					src.m22);
 
 			// transpose and divide by the determinant
 			dest.m00 = t00 * determinant_inv;

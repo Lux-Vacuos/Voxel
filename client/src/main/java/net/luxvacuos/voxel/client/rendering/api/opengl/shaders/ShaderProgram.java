@@ -50,7 +50,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.nio.FloatBuffer;
+import java.nio.DoubleBuffer;
 
 import org.lwjgl.BufferUtils;
 
@@ -89,7 +89,7 @@ public abstract class ShaderProgram {
 	/**
 	 * Used to Load Matrix to shader
 	 */
-	private FloatBuffer matrixBuffer = BufferUtils.createFloatBuffer(16);
+	private DoubleBuffer matrixBuffer = BufferUtils.createDoubleBuffer(16);
 
 	/**
 	 * Constructor, Creates a Shader Program Using a Vertex Shader and a
@@ -212,7 +212,7 @@ public abstract class ShaderProgram {
 	 *            Vector4f
 	 */
 	protected void loadVector(int location, Vector4f vector) {
-		glUniform4f(location, vector.x, vector.y, vector.z, vector.w);
+		glUniform4f(location, (float) vector.x, (float) vector.y, (float) vector.z, (float) vector.w);
 	}
 
 	/**
@@ -224,7 +224,7 @@ public abstract class ShaderProgram {
 	 *            Vector3f
 	 */
 	protected void loadVector(int location, Vector3f vector) {
-		glUniform3f(location, vector.x, vector.y, vector.z);
+		glUniform3f(location, (float) vector.x, (float) vector.y, (float) vector.z);
 	}
 
 	/**
@@ -236,7 +236,7 @@ public abstract class ShaderProgram {
 	 *            Vector2f
 	 */
 	protected void load2DVector(int location, Vector2f vector) {
-		glUniform2f(location, vector.x, vector.y);
+		glUniform2f(location, (float) vector.x, (float) vector.y);
 	}
 
 	/**
@@ -264,9 +264,30 @@ public abstract class ShaderProgram {
 	 *            Matrix4f
 	 */
 	protected void loadMatrix(int location, Matrix4f matrix) {
+		matrixBuffer.clear();
 		matrix.store(matrixBuffer);
 		matrixBuffer.flip();
-		glUniformMatrix4fv(location, false, matrixBuffer);
+
+		double[] dm = new double[16];
+		matrixBuffer.get(dm);
+		float[] fm = new float[16];
+		fm[0] = (float) dm[0];
+		fm[1] = (float) dm[1];
+		fm[2] = (float) dm[2];
+		fm[3] = (float) dm[3];
+		fm[4] = (float) dm[4];
+		fm[5] = (float) dm[5];
+		fm[6] = (float) dm[6];
+		fm[7] = (float) dm[7];
+		fm[8] = (float) dm[8];
+		fm[9] = (float) dm[9];
+		fm[10] = (float) dm[10];
+		fm[11] = (float) dm[11];
+		fm[12] = (float) dm[12];
+		fm[13] = (float) dm[13];
+		fm[14] = (float) dm[14];
+		fm[15] = (float) dm[15];
+		glUniformMatrix4fv(location, false, fm);
 	}
 
 	/**

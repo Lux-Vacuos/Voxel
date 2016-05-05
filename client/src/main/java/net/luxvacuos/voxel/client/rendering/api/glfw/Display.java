@@ -273,5 +273,9 @@ public class Display extends Window {
 	public void setTimeCount(float timeCount) {
 		this.timeCount = timeCount;
 	}
+	
+	public DisplayUtils getDisplayUtils() {
+		return displayUtils;
+	}
 
 }

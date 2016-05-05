@@ -34,6 +34,7 @@ import static org.lwjgl.glfw.GLFW.glfwSetWindowIconifyCallback;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowPosCallback;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowRefreshCallback;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowSizeCallback;
+import static org.lwjgl.glfw.GLFW.glfwSwapBuffers;
 import static org.lwjgl.glfw.GLFW.glfwWindowShouldClose;
 
 import org.lwjgl.glfw.GLFW;
@@ -69,6 +70,7 @@ public abstract class Window implements IDisplay {
 	private GLFWWindowRefreshCallback windowRefreshCallback;
 	private GLFWFramebufferSizeCallback framebufferSizeCallback;
 	private GLFWScrollCallback scrollCallback;
+	private GLFWWindowRefreshCallback refreshCallback;
 
 	protected boolean displayCreated = false;
 	protected boolean displayFocused = false;
@@ -201,6 +203,14 @@ public abstract class Window implements IDisplay {
 			}
 		};
 
+		refreshCallback = new GLFWWindowRefreshCallback() {
+			
+			@Override
+			public void invoke(long window) {
+				glfwSwapBuffers(window);
+			}
+		};
+		
 	}
 
 	public void setCallbacks() {
@@ -216,6 +226,7 @@ public abstract class Window implements IDisplay {
 		glfwSetWindowRefreshCallback(window, windowRefreshCallback);
 		glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
 		glfwSetScrollCallback(window, scrollCallback);
+		glfwSetWindowRefreshCallback(window, refreshCallback);
 	}
 
 	public GLFWErrorCallback getErrorCallback() {

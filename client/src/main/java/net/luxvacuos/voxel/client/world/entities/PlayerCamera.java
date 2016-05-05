@@ -124,21 +124,21 @@ public class PlayerCamera extends Camera {
 
 		Vector3f v = this.getPosition();
 
-		float tempx = (v.x);
+		double tempx = (v.x);
 		int tempX = (int) tempx;
 		if (v.x < 0) {
 			tempx = (v.x);
 			tempX = (int) tempx - 1;
 		}
 
-		float tempz = (v.z);
+		double tempz = (v.z);
 		int tempZ = (int) tempz;
 		if (v.z > 0) {
 			tempz = (v.z);
 			tempZ = (int) tempz + 1;
 		}
 
-		float tempy = (v.y);
+		double tempy = (v.y);
 		int tempY = (int) tempy - 1;
 
 		int bx = (int) tempX;
@@ -223,21 +223,21 @@ public class PlayerCamera extends Camera {
 		Matrix4f.mul(gm.getRenderer().getProjectionMatrix(), Maths.createViewMatrix(this), mvp);
 		objcoord = mvp.unproject(wincoord, viewport, objcoord);
 
-		float tempx = (objcoord.x);
+		double tempx = (objcoord.x);
 		int tempX = (int) tempx;
 		if (objcoord.x < 0) {
 			tempx = (objcoord.x);
 			tempX = (int) tempx - 1;
 		}
 
-		float tempz = (objcoord.z);
+		double tempz = (objcoord.z);
 		int tempZ = (int) tempz;
 		if (objcoord.z > 0) {
 			tempz = (objcoord.z);
 			tempZ = (int) tempz + 1;
 		}
 
-		float tempy = (objcoord.y);
+		double tempy = (objcoord.y);
 		int tempY = (int) tempy;
 
 		int bx = (int) tempX;

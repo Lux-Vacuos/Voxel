@@ -31,7 +31,7 @@
  */
 package net.luxvacuos.igl.vector;
 
-import java.nio.FloatBuffer;
+import java.nio.DoubleBuffer;
 
 /**
  * @author foo
@@ -40,12 +40,12 @@ public interface ReadableVector {
 	/**
 	 * @return the length of the vector
 	 */
-	float length();
+	double length();
 
 	/**
 	 * @return the length squared of the vector
 	 */
-	float lengthSquared();
+	double lengthSquared();
 
 	/**
 	 * Store this vector in a FloatBuffer
@@ -54,5 +54,5 @@ public interface ReadableVector {
 	 *            The buffer to store it in, at the current position
 	 * @return this
 	 */
-	Vector store(FloatBuffer buf);
+	Vector store(DoubleBuffer buf);
 }

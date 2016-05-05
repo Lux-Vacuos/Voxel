@@ -103,10 +103,10 @@ public class ParticleRenderer {
 	}
 
 	private void updateTexCoordInfo(Particle particle, float[] vboData) {
-		vboData[pointer++] = particle.getTexOffset0().x;
-		vboData[pointer++] = particle.getTexOffset0().y;
-		vboData[pointer++] = particle.getTexOffset1().x;
-		vboData[pointer++] = particle.getTexOffset1().y;
+		vboData[pointer++] = (float) particle.getTexOffset0().x;
+		vboData[pointer++] = (float) particle.getTexOffset0().y;
+		vboData[pointer++] = (float) particle.getTexOffset1().x;
+		vboData[pointer++] = (float) particle.getTexOffset1().y;
 		vboData[pointer++] = particle.getBlend();
 	}
 
@@ -130,22 +130,22 @@ public class ParticleRenderer {
 	}
 
 	private void storeMatrixData(Matrix4f matrix, float[] vboData) {
-		vboData[pointer++] = matrix.m00;
-		vboData[pointer++] = matrix.m01;
-		vboData[pointer++] = matrix.m02;
-		vboData[pointer++] = matrix.m03;
-		vboData[pointer++] = matrix.m10;
-		vboData[pointer++] = matrix.m11;
-		vboData[pointer++] = matrix.m12;
-		vboData[pointer++] = matrix.m13;
-		vboData[pointer++] = matrix.m20;
-		vboData[pointer++] = matrix.m21;
-		vboData[pointer++] = matrix.m22;
-		vboData[pointer++] = matrix.m23;
-		vboData[pointer++] = matrix.m30;
-		vboData[pointer++] = matrix.m31;
-		vboData[pointer++] = matrix.m32;
-		vboData[pointer++] = matrix.m33;
+		vboData[pointer++] = (float) matrix.m00;
+		vboData[pointer++] = (float) matrix.m01;
+		vboData[pointer++] = (float) matrix.m02;
+		vboData[pointer++] = (float) matrix.m03;
+		vboData[pointer++] = (float) matrix.m10;
+		vboData[pointer++] = (float) matrix.m11;
+		vboData[pointer++] = (float) matrix.m12;
+		vboData[pointer++] = (float) matrix.m13;
+		vboData[pointer++] = (float) matrix.m20;
+		vboData[pointer++] = (float) matrix.m21;
+		vboData[pointer++] = (float) matrix.m22;
+		vboData[pointer++] = (float) matrix.m23;
+		vboData[pointer++] = (float) matrix.m30;
+		vboData[pointer++] = (float) matrix.m31;
+		vboData[pointer++] = (float) matrix.m32;
+		vboData[pointer++] = (float) matrix.m33;
 	}
 
 	private void prepare() {

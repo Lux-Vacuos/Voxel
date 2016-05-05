@@ -194,24 +194,15 @@ public abstract class Dimension {
 
 	public void updateChunksRender(GameResources gm) {
 		renderedChunks = 0;
-		for (int zr = -VoxelVariables.radius; zr <= VoxelVariables.radius; zr++) {
-			int zz = zPlayChunk + zr;
-			for (int xr = -VoxelVariables.radius; xr <= VoxelVariables.radius; xr++) {
-				int xx = xPlayChunk + xr;
-				for (int yr = -VoxelVariables.radius; yr <= VoxelVariables.radius; yr++) {
-					int yy = yPlayChunk + yr;
-					if (hasChunk(xx, yy, zz)) {
-						Chunk chunk = getChunk(xx, yy, zz);
-						if (chunk != null) {
-							if (gm.getFrustum().cubeInFrustum(chunk.posX, chunk.posY, chunk.posZ, chunk.posX + 16,
-									chunk.posY + 16, chunk.posZ + 16)) {
-								int res = glGetQueryObjectui(chunk.getTess().getOcclusion(), GL_QUERY_RESULT);
-								if (res > 0) {
-									chunk.render(gm);
-									renderedChunks++;
-								}
-							}
-						}
+
+		for (Chunk chunk : chunks.values()) {
+			if (chunk != null) {
+				if (gm.getFrustum().cubeInFrustum(chunk.posX, chunk.posY, chunk.posZ, chunk.posX + 16, chunk.posY + 16,
+						chunk.posZ + 16)) {
+					int res = glGetQueryObjectui(chunk.getTess().getOcclusion(), GL_QUERY_RESULT);
+					if (res > 0) {
+						chunk.render(gm);
+						renderedChunks++;
 					}
 				}
 			}
@@ -219,44 +210,24 @@ public abstract class Dimension {
 	}
 
 	public void updateChunksShadow(GameResources gm) {
-		for (int zr = -VoxelVariables.radius; zr <= VoxelVariables.radius; zr++) {
-			int zz = zPlayChunk + zr;
-			for (int xr = -VoxelVariables.radius; xr <= VoxelVariables.radius; xr++) {
-				int xx = xPlayChunk + xr;
-				for (int yr = -VoxelVariables.radius; yr <= VoxelVariables.radius; yr++) {
-					int yy = yPlayChunk + yr;
-					if (hasChunk(xx, yy, zz)) {
-						Chunk chunk = getChunk(xx, yy, zz);
-						if (chunk != null)
-							if (gm.getFrustum().cubeInFrustum(chunk.posX, chunk.posY, chunk.posZ, chunk.posX + 16,
-									chunk.posY + 16, chunk.posZ + 16))
-								chunk.renderShadow(gm);
-					}
-				}
-			}
+		for (Chunk chunk : chunks.values()) {
+			if (chunk != null)
+				if (gm.getFrustum().cubeInFrustum(chunk.posX, chunk.posY, chunk.posZ, chunk.posX + 16, chunk.posY + 16,
+						chunk.posZ + 16))
+					chunk.renderShadow(gm);
 		}
 	}
 
 	public void updateChunksOcclusion(GameResources gm) {
-		List<Chunk> chunks = new ArrayList<Chunk>();
-		for (int zr = -VoxelVariables.radius; zr <= VoxelVariables.radius; zr++) {
-			int zz = zPlayChunk + zr;
-			for (int xr = -VoxelVariables.radius; xr <= VoxelVariables.radius; xr++) {
-				int xx = xPlayChunk + xr;
-				for (int yr = -VoxelVariables.radius; yr <= VoxelVariables.radius; yr++) {
-					int yy = yPlayChunk + yr;
-					if (hasChunk(xx, yy, zz)) {
-						Chunk chunk = getChunk(xx, yy, zz);
-						if (chunk != null)
-							if (gm.getFrustum().cubeInFrustum(chunk.posX, chunk.posY, chunk.posZ, chunk.posX + 16,
-									chunk.posY + 16, chunk.posZ + 16))
-								chunks.add(chunk);
-					}
-				}
-			}
+		List<Chunk> chunks_ = new ArrayList<Chunk>();
+		for (Chunk chunk : chunks.values()) {
+			if (chunk != null)
+				if (gm.getFrustum().cubeInFrustum(chunk.posX, chunk.posY, chunk.posZ, chunk.posX + 16, chunk.posY + 16,
+						chunk.posZ + 16))
+					chunks_.add(chunk);
 		}
-		Maths.sortLowToHigh(chunks);
-		for (Chunk chunk : chunks) {
+		Maths.sortLowToHigh(chunks_);
+		for (Chunk chunk : chunks_) {
 			chunk.renderOcclusion(gm);
 		}
 	}

@@ -21,16 +21,16 @@
 package net.luxvacuos.igl.vector;
 
 import java.io.Serializable;
-import java.nio.FloatBuffer;
+import java.nio.DoubleBuffer;
 
 /**
  * @author Guerra24 <pablo230699@hotmail.com>
  */
 public class Vector8f extends Vector implements Serializable {
 	private static final long serialVersionUID = 1L;
-	private float x, y, z, w, i, j, k, l;
+	private double x, y, z, w, i, j, k, l;
 
-	public Vector8f(float x, float y, float z, float w, float i, float j, float k, float l) {
+	public Vector8f(double x, double y, double z, double w, double i, double j, double k, double l) {
 		this.x = x;
 		this.y = y;
 		this.z = z;
@@ -41,77 +41,77 @@ public class Vector8f extends Vector implements Serializable {
 		this.l = l;
 	}
 
-	public float getX() {
+	public double getX() {
 		return x;
 	}
 
-	public void setX(float x) {
+	public void setX(double x) {
 		this.x = x;
 	}
 
-	public float getY() {
+	public double getY() {
 		return y;
 	}
 
-	public void setY(float y) {
+	public void setY(double y) {
 		this.y = y;
 	}
 
-	public float getZ() {
+	public double getZ() {
 		return z;
 	}
 
-	public void setZ(float z) {
+	public void setZ(double z) {
 		this.z = z;
 	}
 
-	public float getW() {
+	public double getW() {
 		return w;
 	}
 
-	public void setW(float w) {
+	public void setW(double w) {
 		this.w = w;
 	}
 
-	public float getI() {
+	public double getI() {
 		return i;
 	}
 
-	public void setI(float i) {
+	public void setI(double i) {
 		this.i = i;
 	}
 
-	public float getJ() {
+	public double getJ() {
 		return j;
 	}
 
-	public void setJ(float j) {
+	public void setJ(double j) {
 		this.j = j;
 	}
 
-	public float getK() {
+	public double getK() {
 		return k;
 	}
 
-	public void setK(float k) {
+	public void setK(double k) {
 		this.k = k;
 	}
 
-	public float getL() {
+	public double getL() {
 		return l;
 	}
 
-	public void setL(float l) {
+	public void setL(double l) {
 		this.l = l;
 	}
 
 	@Override
-	public float lengthSquared() {
+	public double lengthSquared() {
 		return x * x + y * y + z * z + w * w + i * i + j * j + k * k + l * l;
 	}
 
 	@Override
-	public Vector load(FloatBuffer buf) {
+	public Vector load(DoubleBuffer buf) {
 		return null;
 	}
 
@@ -121,12 +121,12 @@ public class Vector8f extends Vector implements Serializable {
 	}
 
 	@Override
-	public Vector store(FloatBuffer buf) {
+	public Vector store(DoubleBuffer buf) {
 		return null;
 	}
 
 	@Override
-	public Vector scale(float scale) {
+	public Vector scale(double scale) {
 		return null;
 	}
 

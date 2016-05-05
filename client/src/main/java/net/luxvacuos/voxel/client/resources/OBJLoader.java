@@ -116,9 +116,9 @@ public class OBJLoader {
 
 		int vertexPointer = 0;
 		for (Vector3f vertex : vertices) {
-			verticesArray[vertexPointer++] = vertex.x;
-			verticesArray[vertexPointer++] = vertex.y;
-			verticesArray[vertexPointer++] = vertex.z;
+			verticesArray[vertexPointer++] = (float) vertex.x;
+			verticesArray[vertexPointer++] = (float) vertex.y;
+			verticesArray[vertexPointer++] = (float) vertex.z;
 		}
 
 		for (int i = 0; i < indices.size(); i++) {
@@ -148,11 +148,11 @@ public class OBJLoader {
 		int currentVertexPointer = Integer.parseInt(vertexData[0]) - 1;
 		indices.add(currentVertexPointer);
 		Vector2f currentTex = textures.get(Integer.parseInt(vertexData[1]) - 1);
-		textureArrays[currentVertexPointer * 2] = currentTex.x;
-		textureArrays[currentVertexPointer * 2 + 1] = 1 - currentTex.y;
+		textureArrays[currentVertexPointer * 2] = (float) currentTex.x;
+		textureArrays[currentVertexPointer * 2 + 1] = (float) (1 - currentTex.y);
 		Vector3f currentNorm = normals.get(Integer.parseInt(vertexData[2]) - 1);
-		normalsArray[currentVertexPointer * 3] = currentNorm.x;
-		normalsArray[currentVertexPointer * 3 + 1] = currentNorm.y;
-		normalsArray[currentVertexPointer * 3 + 2] = currentNorm.z;
+		normalsArray[currentVertexPointer * 3] = (float) currentNorm.x;
+		normalsArray[currentVertexPointer * 3 + 1] = (float) currentNorm.y;
+		normalsArray[currentVertexPointer * 3 + 2] = (float) currentNorm.z;
 	}
 }

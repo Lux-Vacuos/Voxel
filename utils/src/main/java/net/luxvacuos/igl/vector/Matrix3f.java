@@ -32,7 +32,7 @@
 package net.luxvacuos.igl.vector;
 
 import java.io.Serializable;
-import java.nio.FloatBuffer;
+import java.nio.DoubleBuffer;
 
 /**
  *
@@ -47,7 +47,7 @@ public class Matrix3f extends Matrix implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	public float m00, m01, m02, m10, m11, m12, m20, m21, m22;
+	public double m00, m01, m02, m10, m11, m12, m20, m21, m22;
 
 	/**
 	 * Constructor for Matrix3f. Matrix is initialised to the identity.
@@ -103,7 +103,7 @@ public class Matrix3f extends Matrix implements Serializable {
 	 *            A float buffer to read from
 	 * @return this
 	 */
-	public Matrix load(FloatBuffer buf) {
+	public Matrix load(DoubleBuffer buf) {
 
 		m00 = buf.get();
 		m01 = buf.get();
@@ -126,7 +126,7 @@ public class Matrix3f extends Matrix implements Serializable {
 	 *            A float buffer to read from
 	 * @return this
 	 */
-	public Matrix loadTranspose(FloatBuffer buf) {
+	public Matrix loadTranspose(DoubleBuffer buf) {
 
 		m00 = buf.get();
 		m10 = buf.get();
@@ -148,7 +148,7 @@ public class Matrix3f extends Matrix implements Serializable {
 	 * @param buf
 	 *            The buffer to store this matrix in
 	 */
-	public Matrix store(FloatBuffer buf) {
+	public Matrix store(DoubleBuffer buf) {
 		buf.put(m00);
 		buf.put(m01);
 		buf.put(m02);
@@ -168,7 +168,7 @@ public class Matrix3f extends Matrix implements Serializable {
 	 * @param buf
 	 *            The buffer to store this matrix in
 	 */
-	public Matrix storeTranspose(FloatBuffer buf) {
+	public Matrix storeTranspose(DoubleBuffer buf) {
 		buf.put(m00);
 		buf.put(m10);
 		buf.put(m20);
@@ -254,15 +254,15 @@ public class Matrix3f extends Matrix implements Serializable {
 		if (dest == null)
 			dest = new Matrix3f();
 
-		float m00 = left.m00 * right.m00 + left.m10 * right.m01 + left.m20 * right.m02;
-		float m01 = left.m01 * right.m00 + left.m11 * right.m01 + left.m21 * right.m02;
-		float m02 = left.m02 * right.m00 + left.m12 * right.m01 + left.m22 * right.m02;
-		float m10 = left.m00 * right.m10 + left.m10 * right.m11 + left.m20 * right.m12;
-		float m11 = left.m01 * right.m10 + left.m11 * right.m11 + left.m21 * right.m12;
-		float m12 = left.m02 * right.m10 + left.m12 * right.m11 + left.m22 * right.m12;
-		float m20 = left.m00 * right.m20 + left.m10 * right.m21 + left.m20 * right.m22;
-		float m21 = left.m01 * right.m20 + left.m11 * right.m21 + left.m21 * right.m22;
-		float m22 = left.m02 * right.m20 + left.m12 * right.m21 + left.m22 * right.m22;
+		double m00 = left.m00 * right.m00 + left.m10 * right.m01 + left.m20 * right.m02;
+		double m01 = left.m01 * right.m00 + left.m11 * right.m01 + left.m21 * right.m02;
+		double m02 = left.m02 * right.m00 + left.m12 * right.m01 + left.m22 * right.m02;
+		double m10 = left.m00 * right.m10 + left.m10 * right.m11 + left.m20 * right.m12;
+		double m11 = left.m01 * right.m10 + left.m11 * right.m11 + left.m21 * right.m12;
+		double m12 = left.m02 * right.m10 + left.m12 * right.m11 + left.m22 * right.m12;
+		double m20 = left.m00 * right.m20 + left.m10 * right.m21 + left.m20 * right.m22;
+		double m21 = left.m01 * right.m20 + left.m11 * right.m21 + left.m21 * right.m22;
+		double m22 = left.m02 * right.m20 + left.m12 * right.m21 + left.m22 * right.m22;
 
 		dest.m00 = m00;
 		dest.m01 = m01;
@@ -293,9 +293,9 @@ public class Matrix3f extends Matrix implements Serializable {
 		if (dest == null)
 			dest = new Vector3f();
 
-		float x = left.m00 * right.x + left.m10 * right.y + left.m20 * right.z;
-		float y = left.m01 * right.x + left.m11 * right.y + left.m21 * right.z;
-		float z = left.m02 * right.x + left.m12 * right.y + left.m22 * right.z;
+		double x = left.m00 * right.x + left.m10 * right.y + left.m20 * right.z;
+		double y = left.m01 * right.x + left.m11 * right.y + left.m21 * right.z;
+		double z = left.m02 * right.x + left.m12 * right.y + left.m22 * right.z;
 
 		dest.x = x;
 		dest.y = y;
@@ -339,15 +339,15 @@ public class Matrix3f extends Matrix implements Serializable {
 	public static Matrix3f transpose(Matrix3f src, Matrix3f dest) {
 		if (dest == null)
 			dest = new Matrix3f();
-		float m00 = src.m00;
-		float m01 = src.m10;
-		float m02 = src.m20;
-		float m10 = src.m01;
-		float m11 = src.m11;
-		float m12 = src.m21;
-		float m20 = src.m02;
-		float m21 = src.m12;
-		float m22 = src.m22;
+		double m00 = src.m00;
+		double m01 = src.m10;
+		double m02 = src.m20;
+		double m10 = src.m01;
+		double m11 = src.m11;
+		double m12 = src.m21;
+		double m20 = src.m02;
+		double m21 = src.m12;
+		double m22 = src.m22;
 
 		dest.m00 = m00;
 		dest.m01 = m01;
@@ -364,8 +364,8 @@ public class Matrix3f extends Matrix implements Serializable {
 	/**
 	 * @return the determinant of the matrix
 	 */
-	public float determinant() {
-		float f = m00 * (m11 * m22 - m12 * m21) + m01 * (m12 * m20 - m10 * m22) + m02 * (m10 * m21 - m11 * m20);
+	public double determinant() {
+		double f = m00 * (m11 * m22 - m12 * m21) + m01 * (m12 * m20 - m10 * m22) + m02 * (m10 * m21 - m11 * m20);
 		return f;
 	}
 
@@ -399,7 +399,7 @@ public class Matrix3f extends Matrix implements Serializable {
 	 * @return The inverted matrix if successful, null otherwise
 	 */
 	public static Matrix3f invert(Matrix3f src, Matrix3f dest) {
-		float determinant = src.determinant();
+		double determinant = src.determinant();
 
 		if (determinant != 0) {
 			if (dest == null)
@@ -412,18 +412,18 @@ public class Matrix3f extends Matrix implements Serializable {
 			 *
 			 * m00 m01 m02 m10 m11 m12 m20 m21 m22
 			 */
-			float determinant_inv = 1f / determinant;
+			double determinant_inv = 1f / determinant;
 
 			// get the conjugate matrix
-			float t00 = src.m11 * src.m22 - src.m12 * src.m21;
-			float t01 = -src.m10 * src.m22 + src.m12 * src.m20;
-			float t02 = src.m10 * src.m21 - src.m11 * src.m20;
-			float t10 = -src.m01 * src.m22 + src.m02 * src.m21;
-			float t11 = src.m00 * src.m22 - src.m02 * src.m20;
-			float t12 = -src.m00 * src.m21 + src.m01 * src.m20;
-			float t20 = src.m01 * src.m12 - src.m02 * src.m11;
-			float t21 = -src.m00 * src.m12 + src.m02 * src.m10;
-			float t22 = src.m00 * src.m11 - src.m01 * src.m10;
+			double t00 = src.m11 * src.m22 - src.m12 * src.m21;
+			double t01 = -src.m10 * src.m22 + src.m12 * src.m20;
+			double t02 = src.m10 * src.m21 - src.m11 * src.m20;
+			double t10 = -src.m01 * src.m22 + src.m02 * src.m21;
+			double t11 = src.m00 * src.m22 - src.m02 * src.m20;
+			double t12 = -src.m00 * src.m21 + src.m01 * src.m20;
+			double t20 = src.m01 * src.m12 - src.m02 * src.m11;
+			double t21 = -src.m00 * src.m12 + src.m02 * src.m10;
+			double t22 = src.m00 * src.m11 - src.m01 * src.m10;
 
 			dest.m00 = t00 * determinant_inv;
 			dest.m11 = t11 * determinant_inv;

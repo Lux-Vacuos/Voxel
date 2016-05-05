@@ -79,7 +79,7 @@ public class BlockLava extends BlockBase {
 	}
 
 	@Override
-	public void generateCustomModel(Tessellator tess, float x, float y, float z, float globalScale, boolean top,
+	public void generateCustomModel(Tessellator tess, double x, double y, double z, float globalScale, boolean top,
 			boolean bottom, boolean left, boolean right, boolean front, boolean back, float tbl_, float tbr_,
 			float tfl_, float tfr_, float bbl_, float bbr_, float bfl_, float bfr_) {
 		if (!top)

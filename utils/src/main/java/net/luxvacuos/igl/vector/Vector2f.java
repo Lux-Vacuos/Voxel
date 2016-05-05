@@ -32,7 +32,7 @@
 package net.luxvacuos.igl.vector;
 
 import java.io.Serializable;
-import java.nio.FloatBuffer;
+import java.nio.DoubleBuffer;
 
 /**
  *
@@ -47,7 +47,7 @@ public class Vector2f extends Vector implements Serializable, ReadableVector2f, 
 
 	private static final long serialVersionUID = 1L;
 
-	public float x, y;
+	public double x, y;
 
 	/**
 	 * Constructor for Vector3f.
@@ -66,7 +66,7 @@ public class Vector2f extends Vector implements Serializable, ReadableVector2f, 
 	/**
 	 * Constructor
 	 */
-	public Vector2f(float x, float y) {
+	public Vector2f(double x, double y) {
 		set(x, y);
 	}
 
@@ -75,7 +75,7 @@ public class Vector2f extends Vector implements Serializable, ReadableVector2f, 
 	 * 
 	 * @see org.lwjgl.util.vector.WritableVector2f#set(float, float)
 	 */
-	public void set(float x, float y) {
+	public void set(double x, double y) {
 		this.x = x;
 		this.y = y;
 	}
@@ -96,7 +96,7 @@ public class Vector2f extends Vector implements Serializable, ReadableVector2f, 
 	/**
 	 * @return the length squared of the vector
 	 */
-	public float lengthSquared() {
+	public double lengthSquared() {
 		return x * x + y * y;
 	}
 
@@ -109,7 +109,7 @@ public class Vector2f extends Vector implements Serializable, ReadableVector2f, 
 	 *            the translation in y
 	 * @return this
 	 */
-	public Vector2f translate(float x, float y) {
+	public Vector2f translate(double x, double y) {
 		this.x += x;
 		this.y += y;
 		return this;
@@ -151,7 +151,7 @@ public class Vector2f extends Vector implements Serializable, ReadableVector2f, 
 	 * @return the normalised vector
 	 */
 	public Vector2f normalise(Vector2f dest) {
-		float l = length();
+		double l = length();
 
 		if (dest == null)
 			dest = new Vector2f(x / l, y / l);
@@ -171,7 +171,7 @@ public class Vector2f extends Vector implements Serializable, ReadableVector2f, 
 	 *            The RHS vector
 	 * @return left dot right
 	 */
-	public static float dot(Vector2f left, Vector2f right) {
+	public static double dot(Vector2f left, Vector2f right) {
 		return left.x * right.x + left.y * right.y;
 	}
 
@@ -184,13 +184,13 @@ public class Vector2f extends Vector implements Serializable, ReadableVector2f, 
 	 *            The other vector
 	 * @return the angle between the two vectors, in radians
 	 */
-	public static float angle(Vector2f a, Vector2f b) {
-		float dls = dot(a, b) / (a.length() * b.length());
+	public static double angle(Vector2f a, Vector2f b) {
+		double dls = dot(a, b) / (a.length() * b.length());
 		if (dls < -1f)
 			dls = -1f;
 		else if (dls > 1.0f)
 			dls = 1.0f;
-		return (float) Math.acos(dls);
+		return (double) Math.acos(dls);
 	}
 
 	/**
@@ -244,7 +244,7 @@ public class Vector2f extends Vector implements Serializable, ReadableVector2f, 
 	 *            The buffer to store it in, at the current position
 	 * @return this
 	 */
-	public Vector store(FloatBuffer buf) {
+	public Vector store(DoubleBuffer buf) {
 		buf.put(x);
 		buf.put(y);
 		return this;
@@ -257,7 +257,7 @@ public class Vector2f extends Vector implements Serializable, ReadableVector2f, 
 	 *            The buffer to load it from, at the current position
 	 * @return this
 	 */
-	public Vector load(FloatBuffer buf) {
+	public Vector load(DoubleBuffer buf) {
 		x = buf.get();
 		y = buf.get();
 		return this;
@@ -268,7 +268,7 @@ public class Vector2f extends Vector implements Serializable, ReadableVector2f, 
 	 * 
 	 * @see org.lwjgl.vector.Vector#scale(float)
 	 */
-	public Vector scale(float scale) {
+	public Vector scale(double scale) {
 
 		x *= scale;
 		y *= scale;
@@ -295,14 +295,14 @@ public class Vector2f extends Vector implements Serializable, ReadableVector2f, 
 	/**
 	 * @return x
 	 */
-	public final float getX() {
+	public final double getX() {
 		return x;
 	}
 
 	/**
 	 * @return y
 	 */
-	public final float getY() {
+	public final double getY() {
 		return y;
 	}
 
@@ -311,7 +311,7 @@ public class Vector2f extends Vector implements Serializable, ReadableVector2f, 
 	 * 
 	 * @param x
 	 */
-	public final void setX(float x) {
+	public final void setX(double x) {
 		this.x = x;
 	}
 
@@ -320,7 +320,7 @@ public class Vector2f extends Vector implements Serializable, ReadableVector2f, 
 	 * 
 	 * @param y
 	 */
-	public final void setY(float y) {
+	public final void setY(double y) {
 		this.y = y;
 	}
 

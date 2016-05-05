@@ -337,34 +337,34 @@ public class Tessellator {
 		buffer4 = BufferUtils.createByteBuffer((tangent.size() * 3) * 4);
 		buffer5 = BufferUtils.createByteBuffer((bitangent.size() * 3) * 4);
 		for (int i = 0; i < pos.size(); i++) {
-			buffer0.putFloat(pos.get(i).x);
-			buffer0.putFloat(pos.get(i).y);
-			buffer0.putFloat(pos.get(i).z);
+			buffer0.putFloat((float) pos.get(i).x);
+			buffer0.putFloat((float) pos.get(i).y);
+			buffer0.putFloat((float) pos.get(i).z);
 		}
 		for (int i = 0; i < texcoords.size(); i++) {
-			buffer1.putFloat(texcoords.get(i).x);
-			buffer1.putFloat(texcoords.get(i).y);
+			buffer1.putFloat((float) texcoords.get(i).x);
+			buffer1.putFloat((float) texcoords.get(i).y);
 		}
 		for (int i = 0; i < normals.size(); i++) {
-			buffer2.putFloat(normals.get(i).x);
-			buffer2.putFloat(normals.get(i).y);
-			buffer2.putFloat(normals.get(i).z);
+			buffer2.putFloat((float) normals.get(i).x);
+			buffer2.putFloat((float) normals.get(i).y);
+			buffer2.putFloat((float) normals.get(i).z);
 		}
 		for (int i = 0; i < data.size(); i++) {
-			buffer3.putFloat(data.get(i).x);
-			buffer3.putFloat(data.get(i).y);
-			buffer3.putFloat(data.get(i).z);
-			buffer3.putFloat(data.get(i).w);
+			buffer3.putFloat((float) data.get(i).x);
+			buffer3.putFloat((float) data.get(i).y);
+			buffer3.putFloat((float) data.get(i).z);
+			buffer3.putFloat((float) data.get(i).w);
 		}
 		for (int i = 0; i < tangent.size(); i++) {
-			buffer4.putFloat(tangent.get(i).x);
-			buffer4.putFloat(tangent.get(i).y);
-			buffer4.putFloat(tangent.get(i).z);
+			buffer4.putFloat((float) tangent.get(i).x);
+			buffer4.putFloat((float) tangent.get(i).y);
+			buffer4.putFloat((float) tangent.get(i).z);
 		}
 		for (int i = 0; i < bitangent.size(); i++) {
-			buffer5.putFloat(bitangent.get(i).x);
-			buffer5.putFloat(bitangent.get(i).y);
-			buffer5.putFloat(bitangent.get(i).z);
+			buffer5.putFloat((float) bitangent.get(i).x);
+			buffer5.putFloat((float) bitangent.get(i).y);
+			buffer5.putFloat((float) bitangent.get(i).z);
 		}
 		buffer0.flip();
 		buffer1.flip();
@@ -406,7 +406,7 @@ public class Tessellator {
 
 	}
 
-	public void generateCube(float x, float y, float z, float size, boolean top, boolean bottom, boolean left,
+	public void generateCube(double x, double y, double z, float size, boolean top, boolean bottom, boolean left,
 			boolean right, boolean front, boolean back, BlockBase block, float tbl_, float tbr_, float tfl_, float tfr_,
 			float bbl_, float bbr_, float bfl_, float bfr_) {
 		if (block.getId() != Block.Air.getId()) {
@@ -415,7 +415,7 @@ public class Tessellator {
 		}
 	}
 
-	public void generateCube(float x, float y, float z, float xsize, float ysize, float zsize, boolean top,
+	public void generateCube(double x, double y, double z, float xsize, float ysize, float zsize, boolean top,
 			boolean bottom, boolean left, boolean right, boolean front, boolean back, BlockBase block, float tbl_,
 			float tbr_, float tfl_, float tfr_, float bbl_, float bbr_, float bfl_, float bfr_) {
 		int id = block.getId();
@@ -460,7 +460,7 @@ public class Tessellator {
 				Vector2f deltaUV2 = Vector2f.sub(new Vector2f(texcoords.getK(), texcoords.getL()),
 						new Vector2f(texcoords.getZ(), texcoords.getW()), null);
 
-				float f = 1.0f / (deltaUV1.x * deltaUV2.y - deltaUV2.x * deltaUV1.y);
+				float f = (float) (1.0f / (deltaUV1.x * deltaUV2.y - deltaUV2.x * deltaUV1.y));
 
 				Vector3f tangent = new Vector3f();
 
@@ -520,7 +520,7 @@ public class Tessellator {
 				Vector2f deltaUV2 = Vector2f.sub(new Vector2f(texcoords.getK(), texcoords.getL()),
 						new Vector2f(texcoords.getZ(), texcoords.getW()), null);
 
-				float f = 1.0f / (deltaUV1.x * deltaUV2.y - deltaUV2.x * deltaUV1.y);
+				float f = (float) (1.0f / (deltaUV1.x * deltaUV2.y - deltaUV2.x * deltaUV1.y));
 
 				Vector3f tangent = new Vector3f();
 
@@ -582,7 +582,7 @@ public class Tessellator {
 				Vector2f deltaUV2 = Vector2f.sub(new Vector2f(texcoords.getI(), texcoords.getJ()),
 						new Vector2f(texcoords.getX(), texcoords.getY()), null);
 
-				float f = 1.0f / (deltaUV1.x * deltaUV2.y - deltaUV2.x * deltaUV1.y);
+				float f = (float) (1.0f / (deltaUV1.x * deltaUV2.y - deltaUV2.x * deltaUV1.y));
 
 				Vector3f tangent = new Vector3f();
 
@@ -643,7 +643,7 @@ public class Tessellator {
 				Vector2f deltaUV2 = Vector2f.sub(new Vector2f(texcoords.getK(), texcoords.getL()),
 						new Vector2f(texcoords.getZ(), texcoords.getW()), null);
 
-				float f = 1.0f / (deltaUV1.x * deltaUV2.y - deltaUV2.x * deltaUV1.y);
+				float f = (float) (1.0f / (deltaUV1.x * deltaUV2.y - deltaUV2.x * deltaUV1.y));
 
 				Vector3f tangent = new Vector3f();
 
@@ -703,7 +703,7 @@ public class Tessellator {
 				Vector2f deltaUV2 = Vector2f.sub(new Vector2f(texcoords.getZ(), texcoords.getW()),
 						new Vector2f(texcoords.getK(), texcoords.getL()), null);
 
-				float f = 1.0f / (deltaUV1.x * deltaUV2.y - deltaUV2.x * deltaUV1.y);
+				float f = (float) (1.0f / (deltaUV1.x * deltaUV2.y - deltaUV2.x * deltaUV1.y));
 
 				Vector3f tangent = new Vector3f();
 
@@ -765,7 +765,7 @@ public class Tessellator {
 				Vector2f deltaUV2 = Vector2f.sub(new Vector2f(texcoords.getZ(), texcoords.getW()),
 						new Vector2f(texcoords.getK(), texcoords.getL()), null);
 
-				float f = 1.0f / (deltaUV1.x * deltaUV2.y - deltaUV2.x * deltaUV1.y);
+				float f = (float) (1.0f / (deltaUV1.x * deltaUV2.y - deltaUV2.x * deltaUV1.y));
 
 				Vector3f tangent = new Vector3f();
 

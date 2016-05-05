@@ -90,7 +90,6 @@ public class Voxel extends UVoxel {
 		CoreInfo.Vendor = glGetString(GL_VENDOR);
 		CoreInfo.Renderer = glGetString(GL_RENDERER);
 		getGameResources().getDisplay().setVisible();
-
 		if (Bootstrap.getPlatform() == Bootstrap.Platform.MACOSX) {
 			VoxelVariables.runningOnMac = true;
 		}
@@ -126,12 +125,12 @@ public class Voxel extends UVoxel {
 			init();
 			postInit();
 			getGameResources().getGlobalStates().setInternalState(InternalState.RUNNIG);
-			loaded = true;
 			float delta = 0;
 			float accumulator = 0f;
 			float interval = 1f / VoxelVariables.UPS;
 			float alpha = 0;
 
+			loaded = true;
 			while (getGameResources().getGlobalStates().getInternalState().equals(InternalState.RUNNIG)) {
 				Timers.startCPUTimer();
 				if (getGameResources().getDisplay().getTimeCount() > 1f) {
