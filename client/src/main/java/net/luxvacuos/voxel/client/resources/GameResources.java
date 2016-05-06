@@ -28,7 +28,6 @@ import java.util.Random;
 import com.esotericsoftware.kryo.Kryo;
 
 import net.luxvacuos.igl.CustomLog;
-import net.luxvacuos.igl.Logger;
 import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.voxel.client.core.GameSettings;
 import net.luxvacuos.voxel.client.core.GlobalStates;
@@ -46,7 +45,8 @@ import net.luxvacuos.voxel.client.rendering.api.opengl.MasterShadowRenderer;
 import net.luxvacuos.voxel.client.rendering.api.opengl.ParticleMaster;
 import net.luxvacuos.voxel.client.rendering.api.opengl.RenderingPipeline;
 import net.luxvacuos.voxel.client.rendering.api.opengl.SkyboxRenderer;
-import net.luxvacuos.voxel.client.rendering.api.opengl.pipeline.Forward;
+import net.luxvacuos.voxel.client.rendering.api.opengl.pipeline.MultiPass;
+import net.luxvacuos.voxel.client.rendering.api.opengl.pipeline.SinglePass;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.TessellatorBasicShader;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.TessellatorShader;
 import net.luxvacuos.voxel.client.resources.models.ParticleTexture;
@@ -87,10 +87,10 @@ public class GameResources extends UGameResources {
 	private MasterRenderer renderer;
 	private SkyboxRenderer skyboxRenderer;
 	private GlobalStates globalStates;
-	
+
 	private RenderingPipeline renderingPipeline;
-	
-	//private DeferredShadingRenderer deferredShadingRenderer;
+
+	// private DeferredShadingRenderer deferredShadingRenderer;
 	private MasterShadowRenderer masterShadowRenderer;
 	private ItemsDropRenderer itemsDropRenderer;
 	private ItemsGuiRenderer itemsGuiRenderer;
@@ -134,11 +134,8 @@ public class GameResources extends UGameResources {
 		masterShadowRenderer = new MasterShadowRenderer();
 		renderer = new MasterRenderer(this);
 		skyboxRenderer = new SkyboxRenderer(loader, renderer.getProjectionMatrix());
-		
-		Logger.log("Using Single Pass Rendering Pipeline");
-		renderingPipeline = new Forward();
-		
-		//deferredShadingRenderer = new DeferredShadingRenderer(this);
+
+		// deferredShadingRenderer = new DeferredShadingRenderer(this);
 		itemsDropRenderer = new ItemsDropRenderer(this);
 		TessellatorShader.getInstance();
 		TessellatorBasicShader.getInstance();
@@ -175,6 +172,13 @@ public class GameResources extends UGameResources {
 		EntityResources.loadEntityResources(loader);
 	}
 
+	public void postInit() throws Exception {
+		if (VoxelVariables.renderingPipeline.equals("SinglePass"))
+			renderingPipeline = new SinglePass();
+		else if (VoxelVariables.renderingPipeline.equals("MultiPass"))
+			renderingPipeline = new MultiPass();
+	}
+
 	public void update(float rot) {
 		sunRotation.setY(rot);
 		sun_Camera.setYaw(sunRotation.x);
@@ -203,7 +207,7 @@ public class GameResources extends UGameResources {
 		itemsDropRenderer.cleanUp();
 		ParticleMaster.getInstance().cleanUp();
 		renderingPipeline.disposeI();
-		//deferredShadingRenderer.cleanUp();
+		// deferredShadingRenderer.cleanUp();
 		itemsGuiRenderer.cleanUp();
 		renderer.cleanUp();
 		loader.cleanUp();
@@ -239,10 +243,10 @@ public class GameResources extends UGameResources {
 		return soundSystem;
 	}
 
-	//public DeferredShadingRenderer getDeferredShadingRenderer() {
-	//	return deferredShadingRenderer;
-	//}
-	
+	// public DeferredShadingRenderer getDeferredShadingRenderer() {
+	// return deferredShadingRenderer;
+	// }
+
 	public RenderingPipeline getRenderingPipeline() {
 		return renderingPipeline;
 	}

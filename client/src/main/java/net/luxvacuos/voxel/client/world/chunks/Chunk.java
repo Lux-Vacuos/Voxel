@@ -102,8 +102,7 @@ public class Chunk {
 	}
 
 	public void update(Dimension dimension, DimensionService service, Camera camera, float delta) {
-		distance = (float) Vector3f.sub(camera.getPosition(), new Vector3f(posX, posY, posZ), null).lengthSquared();
-
+		distance = (float) Vector3f.sub(camera.getPosition(), new Vector3f(posX + 8f, posY + 8f, posZ + 8f), null).lengthSquared();
 		if (!created && !creating) {
 			creating = true;
 			service.add_worker(new ChunkWorkerGenerator(dimension, this));

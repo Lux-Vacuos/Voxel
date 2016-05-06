@@ -23,15 +23,13 @@ package net.luxvacuos.voxel.client.world.entities;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.luxvacuos.igl.vector.Matrix4f;
 import net.luxvacuos.igl.vector.Vector3f;
-import net.luxvacuos.igl.vector.Vector4f;
 import net.luxvacuos.voxel.client.resources.EntityResources;
-import net.luxvacuos.voxel.client.util.Maths;
 import net.luxvacuos.voxel.client.world.block.Block;
+import net.luxvacuos.voxel.client.world.entities.components.ArmourComponent;
 import net.luxvacuos.voxel.client.world.entities.components.DropComponent;
 import net.luxvacuos.voxel.client.world.entities.components.LifeComponent;
-import net.luxvacuos.voxel.client.world.entities.components.VelocityComponent;
+import net.luxvacuos.voxel.client.world.items.EmptyArmour;
 import net.luxvacuos.voxel.client.world.items.ItemDrop;
 
 public class GuineaPig extends GameEntity {
@@ -52,24 +50,26 @@ public class GuineaPig extends GameEntity {
 		List<ItemDrop> drop = new ArrayList<>();
 		drop.add(new ItemDrop(Block.Glass));
 		super.add(new DropComponent(drop));
+		super.add(new ArmourComponent());
+		super.getComponent(ArmourComponent.class).armour = new EmptyArmour();
 	}
 
 	@Override
 	public void update(float delta) {
 
 		// Test with rotation based movement
-/*
-		Vector3f velocity = super.getComponent(VelocityComponent.class).velocity;
-		velocity.x += 0.4f;
-		Vector4f tmp = new Vector4f();
-
-		Matrix4f.transform(
-				Maths.createTransformationMatrix(new Vector3f(), getRotX(), getRotY(), getRotZ(), getScale()),
-				new Vector4f(velocity.x, velocity.y, velocity.z, 1), tmp);
-		super.getComponent(VelocityComponent.class).velocity.x = tmp.x;
-		super.getComponent(VelocityComponent.class).velocity.y = tmp.y;
-		super.getComponent(VelocityComponent.class).velocity.z = tmp.z;
-*/
+		/*
+		 * Vector3f velocity =
+		 * super.getComponent(VelocityComponent.class).velocity; velocity.x +=
+		 * 0.4f; Vector4f tmp = new Vector4f();
+		 * 
+		 * Matrix4f.transform( Maths.createTransformationMatrix(new Vector3f(),
+		 * getRotX(), getRotY(), getRotZ(), getScale()), new
+		 * Vector4f(velocity.x, velocity.y, velocity.z, 1), tmp);
+		 * super.getComponent(VelocityComponent.class).velocity.x = tmp.x;
+		 * super.getComponent(VelocityComponent.class).velocity.y = tmp.y;
+		 * super.getComponent(VelocityComponent.class).velocity.z = tmp.z;
+		 */
 	}
 
 }

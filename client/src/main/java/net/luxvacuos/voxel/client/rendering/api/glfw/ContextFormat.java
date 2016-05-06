@@ -27,8 +27,8 @@ import static org.lwjgl.glfw.GLFW.GLFW_OPENGL_FORWARD_COMPAT;
 import static org.lwjgl.glfw.GLFW.GLFW_OPENGL_PROFILE;
 import static org.lwjgl.glfw.GLFW.glfwWindowHint;
 import static org.lwjgl.system.MemoryUtil.NULL;
-import static org.lwjgl.system.MemoryUtil.memAllocPointer;
 import static org.lwjgl.system.MemoryUtil.memASCII;
+import static org.lwjgl.system.MemoryUtil.memAllocPointer;
 import static org.lwjgl.system.MemoryUtil.memFree;
 import static org.lwjgl.vulkan.EXTDebugReport.VK_EXT_DEBUG_REPORT_EXTENSION_NAME;
 import static org.lwjgl.vulkan.VK10.VK_STRUCTURE_TYPE_APPLICATION_INFO;
@@ -36,7 +36,6 @@ import static org.lwjgl.vulkan.VK10.VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
 import static org.lwjgl.vulkan.VK10.VK_SUCCESS;
 import static org.lwjgl.vulkan.VK10.vkCreateInstance;
 import static org.lwjgl.vulkan.VKUtil.VK_MAKE_VERSION;
-import static org.lwjgl.vulkan.VKUtil.translateVulkanResult;
 
 import java.nio.ByteBuffer;
 
@@ -151,7 +150,7 @@ public class ContextFormat {
 		long instance = pInstance.get(0);
 		memFree(pInstance);
 		if (err != VK_SUCCESS) {
-			throw new AssertionError("Failed to create VkInstance: " + translateVulkanResult(err));
+			throw new AssertionError("Failed to create VkInstance");
 		}
 		VkInstance ret = new VkInstance(instance, pCreateInfo);
 

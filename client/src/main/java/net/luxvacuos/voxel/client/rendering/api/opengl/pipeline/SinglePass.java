@@ -23,13 +23,13 @@ package net.luxvacuos.voxel.client.rendering.api.opengl.pipeline;
 import net.luxvacuos.voxel.client.rendering.api.opengl.RenderingPipeline;
 import net.luxvacuos.voxel.client.resources.GameResources;
 
-public class Forward extends RenderingPipeline {
+public class SinglePass extends RenderingPipeline {
 
-	public Forward() throws Exception {
-		super();
+	public SinglePass() throws Exception {
+		super("SinglePass");
 	}
 
-	private ForwardImagePass pass;
+	private LightingPass pass;
 	private SunPass sunPass;
 
 	@Override
@@ -38,8 +38,8 @@ public class Forward extends RenderingPipeline {
 		sunPass.setName("Sun");
 		sunPass.init();
 		super.imagePasses.add(sunPass);
-		pass = new ForwardImagePass(width, height);
-		pass.setName("Forward");
+		pass = new LightingPass(width, height);
+		pass.setName("Lighting");
 		pass.init();
 		super.imagePasses.add(pass);
 	}

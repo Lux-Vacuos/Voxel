@@ -45,6 +45,7 @@ import static org.lwjgl.opengl.GL30.glBlitFramebuffer;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.luxvacuos.igl.Logger;
 import net.luxvacuos.igl.vector.Matrix4f;
 import net.luxvacuos.igl.vector.Vector2f;
 import net.luxvacuos.igl.vector.Vector3f;
@@ -78,6 +79,7 @@ public abstract class RenderingPipeline {
 	private RawModel quad;
 	private ImagePassFBO[] auxs;
 	private DeferredShadingShader finalShader;
+	private String name;
 
 	/**
 	 * 
@@ -88,7 +90,9 @@ public abstract class RenderingPipeline {
 	 * @param height
 	 *            Final Image Height, can be higher that the window Height.
 	 */
-	public RenderingPipeline() throws Exception {
+	public RenderingPipeline(String name) throws Exception {
+		this.name = name;
+		Logger.log("Using " + name + " Rendering Pipeline");
 		GameResources gm = GameResources.instance();
 
 		width = (int) (gm.getDisplay().getDisplayWidth() * gm.getDisplay().getPixelRatio());
@@ -219,6 +223,10 @@ public abstract class RenderingPipeline {
 
 	public DeferredShadingFBO getMainFBO() {
 		return mainFBO;
+	}
+	
+	public String getName() {
+		return name;
 	}
 
 }

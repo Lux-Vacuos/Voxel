@@ -21,27 +21,26 @@
 #version 330 core
 
 /*--------------------------------------------------------*/
-/*-----------COMPOSITE FINAL 0 IN-OUT-UNIFORMS------------*/
+/*---------------BLOOM MASK IN-OUT-UNIFORMS---------------*/
 /*--------------------------------------------------------*/
 
 in vec2 position;
 
 out vec2 textureCoords;
-out vec4 posPos;
 
 uniform mat4 transformationMatrix;
-uniform vec2 resolution;
 
 /*--------------------------------------------------------*/
-/*---------------COMPOSITE FINAL 0 CONFIG-----------------*/
+/*-------------------BLOOM MASK CONFIG--------------------*/
 /*--------------------------------------------------------*/
 
 /*--------------------------------------------------------*/
-/*---------------COMPOSITE FINAL 0 CODE-------------------*/
+/*-------------------BLOOM MASK CODE----------------------*/
 /*--------------------------------------------------------*/
+
+
 
 void main(void){
-
 	gl_Position = transformationMatrix * vec4(position, -0.8, 1.0);
 	textureCoords = vec2((position.x+1.0)/2.0, (position.y+1.0)/2.0);
 }

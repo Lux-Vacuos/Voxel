@@ -109,6 +109,7 @@ public class Voxel extends UVoxel {
 		api.postInit();
 		Mouse.setHidden(true);
 		Timers.initDebugDisplay();
+		getGameResources().postInit();
 	}
 
 	@Override

@@ -54,6 +54,7 @@ import net.luxvacuos.voxel.client.world.block.BlockBase;
 import net.luxvacuos.voxel.client.world.chunks.Chunk;
 import net.luxvacuos.voxel.client.world.chunks.ChunkGenerator;
 import net.luxvacuos.voxel.client.world.chunks.ChunkKey;
+import net.luxvacuos.voxel.client.world.chunks.ChunkNodeRemoval;
 import net.luxvacuos.voxel.client.world.chunks.LightNodeAdd;
 import net.luxvacuos.voxel.client.world.chunks.LightNodeRemoval;
 
@@ -72,6 +73,7 @@ public abstract class Dimension {
 	private ChunkGenerator chunkGenerator;
 	private Queue<LightNodeAdd> lightNodeAdds;
 	private Queue<LightNodeRemoval> lightNodeRemovals;
+	private Queue<ChunkNodeRemoval> chunkNodeRemovals;
 	private ParticleSystem particleSystem;
 	private DimensionService dimensionService;
 	private int renderedChunks = 0;
@@ -108,7 +110,8 @@ public abstract class Dimension {
 		noise = new SimplexNoise(256, 0.15f, seedi);
 		lightNodeAdds = new LinkedList<>();
 		lightNodeRemovals = new LinkedList<>();
-		chunks = new HashMap<ChunkKey, Chunk>();
+		chunkNodeRemovals = new LinkedList<>();
+		chunks = new HashMap<>();
 		chunkGenerator = new ChunkGenerator();
 		dimensionService = new DimensionService();
 		physicsEngine = new Engine();
@@ -142,13 +145,14 @@ public abstract class Dimension {
 		if (gm.getCamera().getPosition().z > 0)
 			zPlayChunk = (int) ((gm.getCamera().getPosition().z) / 16);
 		VoxelVariables.update();
+
 		for (int zr = -tempRadius; zr <= tempRadius; zr++) {
 			int zz = zPlayChunk + zr;
 			for (int xr = -tempRadius; xr <= tempRadius; xr++) {
 				int xx = xPlayChunk + xr;
 				for (int yr = -tempRadius; yr <= tempRadius; yr++) {
 					int yy = yPlayChunk + yr;
-					if (zr * zr + xr * xr + yr * yr <= (VoxelVariables.genRadius - VoxelVariables.radiusLimit)
+					if (zr * zr + xr * xr + yr * yr < (VoxelVariables.genRadius - VoxelVariables.radiusLimit)
 							* (VoxelVariables.genRadius - VoxelVariables.radiusLimit)
 							* (VoxelVariables.genRadius - VoxelVariables.radiusLimit)) {
 						if (!hasChunk(xx, yy, zz)) {
@@ -172,24 +176,28 @@ public abstract class Dimension {
 							}
 						}
 					}
-					if (zr * zr + xr * xr + yr * yr <= VoxelVariables.genRadius * VoxelVariables.genRadius
-							* VoxelVariables.genRadius
-							&& zr * zr + xr * xr
-									+ yr * yr >= (VoxelVariables.genRadius - VoxelVariables.radiusLimit + 1)
-											* (VoxelVariables.genRadius - VoxelVariables.radiusLimit + 1)
-											* (VoxelVariables.genRadius - VoxelVariables.radiusLimit + 1)) {
+					if (zr * zr + xr * xr + yr * yr >= (VoxelVariables.genRadius - VoxelVariables.radiusLimit)
+							* (VoxelVariables.genRadius - VoxelVariables.radiusLimit)
+							* (VoxelVariables.genRadius - VoxelVariables.radiusLimit)) {
 
 						if (hasChunk(xx, yy, zz)) {
-							saveChunk(xx, yy, zz, gm);
-							removeChunk(getChunk(xx, yy, zz));
+							chunkNodeRemovals.add(new ChunkNodeRemoval(getChunk(xx, yy, zz)));
 						}
 
 					}
 				}
 			}
 		}
+
+		while (!chunkNodeRemovals.isEmpty()) {
+			ChunkNodeRemoval node = chunkNodeRemovals.poll();
+			saveChunk(node.chunk, gm);
+			removeChunk(node.chunk);
+		}
+
 		if (tempRadius <= VoxelVariables.genRadius)
 			tempRadius++;
+
 	}
 
 	public void updateChunksRender(GameResources gm) {
@@ -296,11 +304,22 @@ public abstract class Dimension {
 		}
 	}
 
-	private void saveChunk(int cx, int cy, int cz, GameResources gm) throws SaveChunkException {
+	public void saveChunk(int cx, int cy, int cz, GameResources gm) throws SaveChunkException {
 		try {
 			Output output = new Output(new FileOutputStream(VoxelVariables.worldPath + name + "/dimension_" + chunkDim
 					+ "/chunk_" + cx + "_" + cy + "_" + cz + ".dat"));
 			gm.getKryo().writeObject(output, getChunk(cx, cy, cz));
+			output.close();
+		} catch (Exception e) {
+			throw new SaveChunkException(e);
+		}
+	}
+
+	public void saveChunk(Chunk chunk, GameResources gm) throws SaveChunkException {
+		try {
+			Output output = new Output(new FileOutputStream(VoxelVariables.worldPath + name + "/dimension_" + chunkDim
+					+ "/chunk_" + chunk.cx + "_" + chunk.cy + "_" + chunk.cz + ".dat"));
+			gm.getKryo().writeObject(output, chunk);
 			output.close();
 		} catch (Exception e) {
 			throw new SaveChunkException(e);
@@ -483,21 +502,15 @@ public abstract class Dimension {
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 			}
-			for (int zr = -VoxelVariables.genRadius; zr <= VoxelVariables.genRadius; zr++) {
-				int zz = zPlayChunk + zr;
-				for (int xr = -VoxelVariables.genRadius; xr <= VoxelVariables.genRadius; xr++) {
-					int xx = xPlayChunk + xr;
-					for (int yr = -VoxelVariables.genRadius; yr <= VoxelVariables.genRadius; yr++) {
-						int yy = yPlayChunk + yr;
-						if (zr * zr + xr * xr + yr * yr <= VoxelVariables.genRadius * VoxelVariables.genRadius
-								* VoxelVariables.genRadius) {
-							if (hasChunk(xx, yy, zz)) {
-								saveChunk(xx, yy, zz, gm);
-								removeChunk(getChunk(xx, yy, zz));
-							}
-						}
-					}
+			for (Chunk chunk : chunks.values()) {
+				if (chunk != null) {
+					chunkNodeRemovals.add(new ChunkNodeRemoval(chunk));
 				}
+			}
+			while (!chunkNodeRemovals.isEmpty()) {
+				ChunkNodeRemoval node = chunkNodeRemovals.poll();
+				saveChunk(node.chunk, gm);
+				removeChunk(node.chunk);
 			}
 			dimensionService.es.shutdown();
 			chunks.clear();

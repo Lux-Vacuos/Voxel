@@ -35,9 +35,9 @@ import net.luxvacuos.voxel.client.rendering.api.opengl.ImagePass;
 import net.luxvacuos.voxel.client.rendering.api.opengl.ImagePassFBO;
 import net.luxvacuos.voxel.client.rendering.api.opengl.RenderingPipeline;
 
-public class ForwardImagePass extends ImagePass {
+public class LightingPass extends ImagePass {
 
-	public ForwardImagePass(int width, int height) {
+	public LightingPass(int width, int height) {
 		super(width, height);
 	}
 

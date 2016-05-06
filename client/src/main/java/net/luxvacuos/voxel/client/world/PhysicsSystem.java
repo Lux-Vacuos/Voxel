@@ -77,6 +77,8 @@ public class PhysicsSystem extends EntitySystem {
 		for (Entity entity : entities) {
 			if (entity instanceof ItemDrop) {
 				tmp.set(0, 0, 0);
+				PositionComponent position = pm.get(entity);
+				VelocityComponent velocity = vm.get(entity);
 				if (Vector3f
 						.sub(entity.getComponent(PositionComponent.class).position, gm.getCamera().getPosition(), tmp)
 						.lengthSquared() < 2) {
@@ -100,6 +102,12 @@ public class PhysicsSystem extends EntitySystem {
 					}
 					getEngine().removeEntity(entity);
 				}
+				if (Vector3f
+						.sub(entity.getComponent(PositionComponent.class).position, gm.getCamera().getPosition(), tmp)
+						.lengthSquared() < 6) {
+					Vector3f.add(Vector3f.sub(gm.getCamera().getPosition(), position.position, null), velocity.velocity,
+							velocity.velocity);
+				}
 			}
 		}
 	}
@@ -112,11 +120,15 @@ public class PhysicsSystem extends EntitySystem {
 				DropComponent drop = dm.get(entity);
 				CollisionComponent collison = cm.get(entity);
 				PositionComponent position = pm.get(entity);
+				VelocityComponent velocity = vm.get(entity);
 
 				if (life != null) {
 					if (Maths.intersectRayBounds(((PlayerCamera) gm.getCamera()).getDRay().getRay(),
 							collison.boundingBox, tmp1) && ((PlayerCamera) gm.getCamera()).isHit())
 						life.life -= 1;
+					Vector3f.add(Vector3f.sub(gm.getCamera().getPosition(), position.position, null), velocity.velocity,
+							velocity.velocity);
+
 					if (life.life <= 0) {
 						if (drop != null) {
 							drop.drop(getEngine(), position.position);

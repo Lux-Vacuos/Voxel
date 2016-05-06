@@ -21,27 +21,35 @@
 #version 330 core
 
 /*--------------------------------------------------------*/
-/*-----------COMPOSITE FINAL 0 IN-OUT-UNIFORMS------------*/
+/*---------------BLOOM MASK IN-OUT-UNIFORMS---------------*/
 /*--------------------------------------------------------*/
 
-in vec2 position;
+in vec2 textureCoords;
 
-out vec2 textureCoords;
-out vec4 posPos;
+out vec4 out_Color;
 
-uniform mat4 transformationMatrix;
-uniform vec2 resolution;
-
-/*--------------------------------------------------------*/
-/*---------------COMPOSITE FINAL 0 CONFIG-----------------*/
-/*--------------------------------------------------------*/
+uniform sampler2D composite0;
+uniform sampler2D gData0;
 
 /*--------------------------------------------------------*/
-/*---------------COMPOSITE FINAL 0 CODE-------------------*/
+/*------------------COMPOSITE 4 CONFIG--------------------*/
 /*--------------------------------------------------------*/
+
+/*--------------------------------------------------------*/
+/*-------------------BLOOM MASK CODE----------------------*/
+/*--------------------------------------------------------*/
+
 
 void main(void){
-
-	gl_Position = transformationMatrix * vec4(position, -0.8, 1.0);
-	textureCoords = vec2((position.x+1.0)/2.0, (position.y+1.0)/2.0);
+	vec2 texcoord = textureCoords;
+	vec4 image = vec4(0.0);
+	vec4 result = vec4(0.0);
+	vec4 data0 = texture(gData0, texcoord);
+	if(data0.b != 1){
+		image = texture(composite0, texcoord);
+		float brightness = dot(image.rgb, vec3(0.2126, 0.7152, 0.0722));
+    	if(brightness > 1)
+    	    result = vec4(image.rgb, 1.0);
+		out_Color = result;
+	}
 }

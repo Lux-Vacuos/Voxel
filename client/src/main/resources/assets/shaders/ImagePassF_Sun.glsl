@@ -1,31 +1,27 @@
 //
-// The MIT License (MIT)
+// This file is part of Voxel
+// 
+// Copyright (C) 2016 Lux Vacuos
 //
-// Copyright (c) 2015-2016 Lux Vacuos
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
 //
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
 //
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-// SOFTWARE.
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+// 
 //
 
 #version 330 core
 
 /*--------------------------------------------------------*/
-/*--------------COMPOSITE 6 IN-OUT-UNIFORMS---------------*/
+/*----------------SUN PASS IN-OUT-UNIFORMS----------------*/
 /*--------------------------------------------------------*/
 
 in vec2 textureCoords;
@@ -39,17 +35,16 @@ uniform sampler2D gData0;
 uniform sampler2D gData1;
 
 /*--------------------------------------------------------*/
-/*------------------COMPOSITE 6 CONFIG--------------------*/
+/*-------------------SUN PASS CONFIG----------------------*/
 /*--------------------------------------------------------*/
 
 /*--------------------------------------------------------*/
-/*------------------COMPOSITE 6 CODE----------------------*/
+/*--------------------SUN PASS CODE-----------------------*/
 /*--------------------------------------------------------*/
 
 vec2 size = vec2(40, 45);
 
 void main(void){
-
 	vec2 scale = vec2(resolution.x / 1280, resolution.y / 720);
 	size *= scale;
 
@@ -65,26 +60,6 @@ void main(void){
 		image.rgb = vec3(circle,circle,circle);
 		image.a = circle;
 		image *= data1.r;
-		
-	// OLD CUBE SUN GENERATION
-    /* 
-    	if(gl_FragCoord.x <= sunPositionInScreen.x + 60 && gl_FragCoord.x >= sunPositionInScreen.x - 60 && gl_FragCoord.y <= sunPositionInScreen.y + 60 && gl_FragCoord.y >= sunPositionInScreen.y - 60){
-    		image.rgb = mix(image.rgb,vec3(1, 0.870588, 0.678431),0.5);
-	    	image.a = 0.2;
-    	}
-    	if(gl_FragCoord.x <= sunPositionInScreen.x + 40 && gl_FragCoord.x >= sunPositionInScreen.x - 40 && gl_FragCoord.y <= sunPositionInScreen.y + 40 && gl_FragCoord.y >= sunPositionInScreen.y - 40){
-    		image.rgb = mix(image.rgb,vec3(1, 0.870588, 0.678431),0.8);
-	    	image.a = 0.5;
-    	}
-    	if(gl_FragCoord.x <= sunPositionInScreen.x + 30 && gl_FragCoord.x >= sunPositionInScreen.x - 30 && gl_FragCoord.y <= sunPositionInScreen.y + 30 && gl_FragCoord.y >= sunPositionInScreen.y - 30){
-    		image.rgb = vec3(1, 0.870588, 0.678431);
-	    	image.a = 1;
-    	}
-    	if(gl_FragCoord.x <= sunPositionInScreen.x + 20 && gl_FragCoord.x >= sunPositionInScreen.x - 20 && gl_FragCoord.y <= sunPositionInScreen.y + 20 && gl_FragCoord.y >= sunPositionInScreen.y - 20){
-    		image.rgb = vec3(1,1,1);
-    		image.a = 1;
-    	}
-    	*/
     }
     out_Color = image;
 

@@ -2,7 +2,7 @@ apply plugin:'application'
 
 mainClassName = 'net.luxvacuos.voxel.client.bootstrap.Bootstrap'
 sourceCompatibility = 1.8
-def build = 209
+def build = 210
 
 if (System.getProperty("os.name").toLowerCase().contains("mac os x")) {
   applicationDefaultJvmArgs = ["-XstartOnFirstThread"]

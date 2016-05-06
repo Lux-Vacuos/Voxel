@@ -21,27 +21,34 @@
 #version 330 core
 
 /*--------------------------------------------------------*/
-/*-----------COMPOSITE FINAL 0 IN-OUT-UNIFORMS------------*/
+/*--------------COMPOSITE 3 IN-OUT-UNIFORMS---------------*/
 /*--------------------------------------------------------*/
 
-in vec2 position;
+in vec2 textureCoords;
 
-out vec2 textureCoords;
-out vec4 posPos;
+out vec4 out_Color;
 
-uniform mat4 transformationMatrix;
 uniform vec2 resolution;
+uniform sampler2D composite0;
 
 /*--------------------------------------------------------*/
-/*---------------COMPOSITE FINAL 0 CONFIG-----------------*/
+/*---------------BLOOM HORIZONTAL CONFIG------------------*/
 /*--------------------------------------------------------*/
 
+const float weight[5] = float[] (0.227027, 0.1945946, 0.1216216, 0.054054, 0.016216);
+
 /*--------------------------------------------------------*/
-/*---------------COMPOSITE FINAL 0 CODE-------------------*/
+/*----------------BLOOM HORIZONTAL CODE-------------------*/
 /*--------------------------------------------------------*/
+
 
 void main(void){
-
-	gl_Position = transformationMatrix * vec4(position, -0.8, 1.0);
-	textureCoords = vec2((position.x+1.0)/2.0, (position.y+1.0)/2.0);
+	vec2 texcoord = textureCoords;
+	vec2 tex_offset = 1.0 / resolution;
+    vec3 result = texture(composite0, texcoord).rgb * weight[0];
+    for(int i = 1; i < 5; ++i) {
+        result += texture(composite0, texcoord + vec2(tex_offset.x * i, 0.0)).rgb * weight[i];
+        result += texture(composite0, texcoord - vec2(tex_offset.x * i, 0.0)).rgb * weight[i];
+    }
+    out_Color.rgb = result;
 }

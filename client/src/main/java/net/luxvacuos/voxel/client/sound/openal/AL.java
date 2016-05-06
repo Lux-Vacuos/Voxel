@@ -48,7 +48,7 @@ public class AL {
 		if (deviceCaps.OpenALC11) {
 			List<String> devices = ALUtil.getStringList(NULL, ALC_ALL_DEVICES_SPECIFIER);
 			if (devices == null)
-				ALUtil.checkALCError(NULL);
+				throw new IllegalStateException("Unable to initialize devices");
 			else {
 				for (int i = 0; i < devices.size(); i++)
 					Logger.log(i + ": " + devices.get(i));

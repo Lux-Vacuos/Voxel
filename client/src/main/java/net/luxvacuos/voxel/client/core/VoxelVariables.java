@@ -49,7 +49,7 @@ public class VoxelVariables {
 	public static boolean hideHud = false;
 	public static boolean onServer = false;
 	public static final String version = "0.0.10";
-	public static final int build = 209;
+	public static final int build = 210;
 	public static int FOV = 90;
 	public static int WIDTH = 1280;
 	public static int HEIGHT = 720;
@@ -84,6 +84,7 @@ public class VoxelVariables {
 	public static boolean useReflections = false;
 	public static float fogDensity = 0.02f;
 	public static final float WAVE_SPEED = 4f;
+	public static String renderingPipeline = "SinglePass";
 	/**
 	 * World Settings
 	 */
@@ -133,9 +134,6 @@ public class VoxelVariables {
 	 */
 	public static final String worldPath = Bootstrap.getPrefix() + "voxel/world/";
 
-	/**
-	 * Update Global Variables
-	 */
 	public static void update() {
 		genRadius = radius + radiusLimit;
 	}
