@@ -49,20 +49,17 @@ import net.luxvacuos.voxel.client.world.entities.Camera;
  */
 public class Chunk {
 
-	/**
-	 * Chunk Data
-	 */
 	public int posX, posY, posZ, cx, cy, cz;
 	public byte[][][] blocks;
 	public byte[][][] lightMap;
-	private transient Queue<ParticlePoint> particlePoints;
-	transient int sizeX, sizeY, sizeZ;
+	public boolean created = false, decorated = false, cavesGenerated = false;
+
 	private transient Tessellator tess;
 	private transient float distance;
+	transient int sizeX, sizeY, sizeZ;
 	public transient boolean needsRebuild = true, updated = false, updating = false, empty = true, visible = false,
 			creating = false, decorating = false, updatingBlocks = false, updatedBlocks = false;
-	public boolean created = false, decorated = false, cavesGenerated = false;
-	public int version = 1;
+	private transient Queue<ParticlePoint> particlePoints;
 
 	public Chunk(int cx, int cy, int cz, Dimension dimension, GameResources gm) throws Exception {
 		this.cx = cx;
@@ -102,7 +99,8 @@ public class Chunk {
 	}
 
 	public void update(Dimension dimension, DimensionService service, Camera camera, float delta) {
-		distance = (float) Vector3f.sub(camera.getPosition(), new Vector3f(posX + 8f, posY + 8f, posZ + 8f), null).lengthSquared();
+		distance = (float) Vector3f.sub(camera.getPosition(), new Vector3f(posX + 8f, posY + 8f, posZ + 8f), null)
+				.lengthSquared();
 		if (!created && !creating) {
 			creating = true;
 			service.add_worker(new ChunkWorkerGenerator(dimension, this));

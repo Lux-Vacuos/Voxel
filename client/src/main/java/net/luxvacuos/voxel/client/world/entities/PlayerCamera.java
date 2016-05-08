@@ -34,6 +34,12 @@ import static net.luxvacuos.voxel.client.input.Mouse.isButtonDown;
 import static net.luxvacuos.voxel.client.input.Mouse.setCursorPosition;
 import static net.luxvacuos.voxel.client.input.Mouse.setGrabbed;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.math.collision.BoundingBox;
+
 import net.luxvacuos.igl.vector.Matrix4f;
 import net.luxvacuos.igl.vector.Vector2f;
 import net.luxvacuos.igl.vector.Vector3f;
@@ -68,6 +74,9 @@ public class PlayerCamera extends Camera {
 	private int yPos;
 	private ItemGui block;
 	private boolean hit;
+
+	private static List<BoundingBox> blocks = new ArrayList<>();
+	private static Vector3 tmp = new Vector3();
 
 	public PlayerCamera(Matrix4f proj, Display display) {
 		super(proj, new Vector3f(-0.25f, -1.4f, -0.25f), new Vector3f(0.25f, 0.2f, 0.25f));
@@ -119,8 +128,17 @@ public class PlayerCamera extends Camera {
 
 		block = inventory.getItems()[0][yPos];
 
-		normalVector.set((float) Math.cos(yaw) * (float) Math.cos(pitch), (float) Math.sin(yaw),
-				(float) Math.cos(yaw) * (float) Math.sin(pitch));
+		if (yaw < 270 && yaw > 90)
+			normalVector.z = 1;
+		else
+			normalVector.z = -1;
+
+		if (yaw > 0 && yaw < 180)
+			normalVector.x = 1;
+		else
+			normalVector.x = -1;
+
+		normalVector.y = pitch / -90;
 
 		Vector3f v = this.getPosition();
 
@@ -198,7 +216,7 @@ public class PlayerCamera extends Camera {
 		}
 		if (isKeyDown(Keyboard.KEY_2))
 			gm.getWorldsHandler().getActiveWorld().getActiveDimension().getPhysicsEngine()
-					.addEntity(Block.BlockMTop.getDrop(gm, getPosition()));
+					.addEntity(Block.Pedestal.getDrop(gm, getPosition()));
 
 		if (clickTime > 0)
 			clickTime--;
@@ -225,22 +243,36 @@ public class PlayerCamera extends Camera {
 		Matrix4f mvp = new Matrix4f();
 		Matrix4f.mul(gm.getRenderer().getProjectionMatrix(), Maths.createViewMatrix(this), mvp);
 		objcoord = mvp.unproject(wincoord, viewport, objcoord);
+		double bcx = 0, bcy = 0, bcz = 0;
+		blocks = world
+				.getGlobalBoundingBox(new BoundingBox(new Vector3(objcoord.x - 0.1, objcoord.y - 0.1, objcoord.z - 0.1),
+						new Vector3(objcoord.x + 0.1, objcoord.y + 0.1, objcoord.z + 0.1)));
+		for (BoundingBox boundingBox : blocks) {
+			if (Maths.intersectRayBounds(getDRay().getRay(), boundingBox, tmp)) {
+				bcx = boundingBox.getCenterX();
+				bcy = boundingBox.getCenterY();
+				bcz = boundingBox.getCenterZ();
 
-		double tempx = (objcoord.x);
+				break;
+			}
+
+		}
+
+		double tempx = (bcx);
 		int tempX = (int) tempx;
 		if (objcoord.x < 0) {
-			tempx = (objcoord.x);
+			tempx = (bcx);
 			tempX = (int) tempx - 1;
 		}
 
-		double tempz = (objcoord.z);
+		double tempz = (bcz);
 		int tempZ = (int) tempz;
 		if (objcoord.z > 0) {
-			tempz = (objcoord.z);
+			tempz = (bcz);
 			tempZ = (int) tempz + 1;
 		}
 
-		double tempy = (objcoord.y);
+		double tempy = (bcy);
 		int tempY = (int) tempy;
 
 		int bx = (int) tempX;

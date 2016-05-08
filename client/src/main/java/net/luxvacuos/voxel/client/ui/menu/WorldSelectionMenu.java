@@ -70,10 +70,6 @@ public class WorldSelectionMenu {
 				130 * VoxelVariables.YSCALE, 30 * VoxelVariables.YSCALE,
 				VectorsRendering.rgba(255, 255, 255, 255, VectorsRendering.colorA),
 				VectorsRendering.rgba(255, 255, 255, 255, VectorsRendering.colorA));
-		VectorsRendering.renderText("World Seed: ", "Roboto-Regular", 330 * VoxelVariables.XSCALE,
-				100 * VoxelVariables.YSCALE, 30 * VoxelVariables.YSCALE,
-				VectorsRendering.rgba(255, 255, 255, 255, VectorsRendering.colorA),
-				VectorsRendering.rgba(255, 255, 255, 255, VectorsRendering.colorA));
 		VectorsRendering.renderWindow(20 * VoxelVariables.XSCALE, 570 * VoxelVariables.YSCALE,
 				1240 * VoxelVariables.XSCALE, 130 * VoxelVariables.YSCALE);
 		for (int i = 0; i < worlds.length; i++) {

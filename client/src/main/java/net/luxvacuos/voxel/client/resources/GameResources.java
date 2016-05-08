@@ -26,6 +26,7 @@ import static org.lwjgl.glfw.GLFW.GLFW_OPENGL_CORE_PROFILE;
 import java.util.Random;
 
 import com.esotericsoftware.kryo.Kryo;
+import com.esotericsoftware.kryo.serializers.CompatibleFieldSerializer;
 
 import net.luxvacuos.igl.CustomLog;
 import net.luxvacuos.igl.vector.Vector3f;
@@ -90,7 +91,6 @@ public class GameResources extends UGameResources {
 
 	private RenderingPipeline renderingPipeline;
 
-	// private DeferredShadingRenderer deferredShadingRenderer;
 	private MasterShadowRenderer masterShadowRenderer;
 	private ItemsDropRenderer itemsDropRenderer;
 	private ItemsGuiRenderer itemsGuiRenderer;
@@ -148,6 +148,7 @@ public class GameResources extends UGameResources {
 		camera = new PlayerCamera(renderer.getProjectionMatrix(), display);
 		itemsGuiRenderer = new ItemsGuiRenderer(this);
 		kryo = new Kryo();
+		kryo.setDefaultSerializer(CompatibleFieldSerializer.class);
 		frustum = new Frustum();
 		worldSimulation = new WorldSimulation();
 

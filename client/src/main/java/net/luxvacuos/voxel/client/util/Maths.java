@@ -365,4 +365,8 @@ public class Maths {
 		return hit;
 	}
 
+	public static float dti(double val) {
+		return (float) Math.abs(val - Math.round(val));
+	}
+
 }

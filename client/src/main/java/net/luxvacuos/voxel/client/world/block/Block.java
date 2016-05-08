@@ -33,7 +33,7 @@ import net.luxvacuos.voxel.client.world.block.types.BlockIce;
 import net.luxvacuos.voxel.client.world.block.types.BlockIndes;
 import net.luxvacuos.voxel.client.world.block.types.BlockLava;
 import net.luxvacuos.voxel.client.world.block.types.BlockLeaves;
-import net.luxvacuos.voxel.client.world.block.types.BlockMTop;
+import net.luxvacuos.voxel.client.world.block.types.BlockPedestal;
 import net.luxvacuos.voxel.client.world.block.types.BlockSand;
 import net.luxvacuos.voxel.client.world.block.types.BlockStone;
 import net.luxvacuos.voxel.client.world.block.types.BlockTorch;
@@ -68,7 +68,7 @@ public class Block {
 	public static final BlockBase Ice = new BlockIce();
 	public static final BlockBase Indes = new BlockIndes();
 	public static final BlockBase Cobblestone = new BlockCobblestone();
-	public static final BlockBase BlockMTop = new BlockMTop();
+	public static final BlockBase Pedestal = new BlockPedestal();
 
 	public static void initBasicBlocks() {
 		registerBlock(Indes);
@@ -87,7 +87,7 @@ public class Block {
 		registerBlock(Wood);
 		registerBlock(Ice);
 		registerBlock(Cobblestone);
-		registerBlock(BlockMTop);
+		registerBlock(Pedestal);
 	}
 
 	/**

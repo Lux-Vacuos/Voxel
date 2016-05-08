@@ -10,9 +10,9 @@ import net.luxvacuos.igl.vector.Vector8f;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Tessellator;
 import net.luxvacuos.voxel.client.world.block.BlockBase;
 
-public class BlockMTop extends BlockBase {
+public class BlockPedestal extends BlockBase {
 
-	public BlockMTop() {
+	public BlockPedestal() {
 		customModel = true;
 		transparent = true;
 	}
