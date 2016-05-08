@@ -26,11 +26,6 @@ import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11.GL_TRIANGLE_STRIP;
 import static org.lwjgl.opengl.GL11.glBindTexture;
 import static org.lwjgl.opengl.GL11.glDrawArrays;
-import static org.lwjgl.opengl.GL13.GL_TEXTURE1;
-import static org.lwjgl.opengl.GL13.GL_TEXTURE2;
-import static org.lwjgl.opengl.GL13.GL_TEXTURE3;
-import static org.lwjgl.opengl.GL13.GL_TEXTURE4;
-import static org.lwjgl.opengl.GL13.GL_TEXTURE5;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE6;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
 import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
@@ -81,15 +76,6 @@ public abstract class RenderingPipeline {
 	private DeferredShadingShader finalShader;
 	private String name;
 
-	/**
-	 * 
-	 * Creates the {@link DeferredShadingFBO} and initializes variables.
-	 * 
-	 * @param width
-	 *            Final Image Width, can be higher that the window width.
-	 * @param height
-	 *            Final Image Height, can be higher that the window Height.
-	 */
 	public RenderingPipeline(String name) throws Exception {
 		this.name = name;
 		Logger.log("Using " + name + " Rendering Pipeline");
@@ -122,6 +108,49 @@ public abstract class RenderingPipeline {
 				GameResources.instance().getDisplay().getDisplayHeight()));
 		finalShader.loadSkyColor(VoxelVariables.skyColor);
 		finalShader.stop();
+		init(gm);
+	}
+
+	/**
+	 * 
+	 * Creates the {@link DeferredShadingFBO} and initializes variables.
+	 * 
+	 * @param width
+	 *            Final Image Width, can be higher that the window width.
+	 * @param height
+	 *            Final Image Height, can be higher that the window Height.
+	 */
+	public RenderingPipeline(String name, int width, int height) throws Exception {
+		this.name = name;
+		Logger.log("Using " + name + " Rendering Pipeline");
+		GameResources gm = GameResources.instance();
+
+		if (width > GLUtil.getTextureMaxSize())
+			width = GLUtil.getTextureMaxSize();
+		if (height > GLUtil.getTextureMaxSize())
+			height = GLUtil.getTextureMaxSize();
+		float[] positions = { -1, 1, -1, -1, 1, 1, 1, -1 };
+		quad = gm.getLoader().loadToVAO(positions, 2);
+
+		mainFBO = new DeferredShadingFBO(width, height);
+		imagePasses = new ArrayList<>();
+		auxs = new ImagePassFBO[3];
+
+		for (int i = 0; i < auxs.length; i++) {
+			auxs[i] = new ImagePassFBO(width, height);
+		}
+		previousCameraPosition = new Vector3f();
+		previousViewMatrix = new Matrix4f();
+		finalShader = new DeferredShadingShader("Final", null);
+		finalShader.start();
+		finalShader.loadTransformation(Maths.createTransformationMatrix(new Vector2f(0, 0), new Vector2f(1, 1)));
+		finalShader.connectTextureUnits();
+		finalShader.loadResolution(new Vector2f(GameResources.instance().getDisplay().getDisplayWidth(),
+				GameResources.instance().getDisplay().getDisplayHeight()));
+		finalShader.loadSkyColor(VoxelVariables.skyColor);
+		finalShader.stop();
+		this.width = width;
+		this.height = height;
 		init(gm);
 	}
 
@@ -172,17 +201,6 @@ public abstract class RenderingPipeline {
 		finalShader.start();
 		glBindVertexArray(quad.getVaoID());
 		glEnableVertexAttribArray(0);
-		glBindTexture(GL_TEXTURE_2D, mainFBO.getDiffuseTex());
-		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_2D, mainFBO.getPositionTex());
-		glActiveTexture(GL_TEXTURE2);
-		glBindTexture(GL_TEXTURE_2D, mainFBO.getNormalTex());
-		glActiveTexture(GL_TEXTURE3);
-		glBindTexture(GL_TEXTURE_2D, mainFBO.getDepthTex());
-		glActiveTexture(GL_TEXTURE4);
-		glBindTexture(GL_TEXTURE_2D, mainFBO.getData0Tex());
-		glActiveTexture(GL_TEXTURE5);
-		glBindTexture(GL_TEXTURE_2D, mainFBO.getData1Tex());
 		glActiveTexture(GL_TEXTURE6);
 		glBindTexture(GL_TEXTURE_2D, auxs[0].getTexture());
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, quad.getVertexCount());
@@ -224,7 +242,7 @@ public abstract class RenderingPipeline {
 	public DeferredShadingFBO getMainFBO() {
 		return mainFBO;
 	}
-	
+
 	public String getName() {
 		return name;
 	}

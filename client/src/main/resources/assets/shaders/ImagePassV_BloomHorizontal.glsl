@@ -27,7 +27,9 @@
 in vec2 position;
 
 out vec2 textureCoords;
+out vec2 blurTexCoords[11];
 
+uniform vec2 resolution;
 uniform mat4 transformationMatrix;
 
 /*--------------------------------------------------------*/
@@ -43,4 +45,10 @@ uniform mat4 transformationMatrix;
 void main(void){
 	gl_Position = transformationMatrix * vec4(position, -0.8, 1.0);
 	textureCoords = vec2((position.x+1.0)/2.0, (position.y+1.0)/2.0);
+	
+	vec2 pixelSize = 1.0 / resolution;
+	
+	for(int i = -5; i <= 5; i++){
+		blurTexCoords[i+5] = textureCoords + vec2(pixelSize.x * i, 0.0);
+	}
 }

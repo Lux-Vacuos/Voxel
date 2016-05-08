@@ -20,14 +20,6 @@
  */
 package net.luxvacuos.voxel.client.core.states;
 
-import static org.lwjgl.opengl.GL11.GL_DEPTH_COMPONENT;
-import static org.lwjgl.opengl.GL11.GL_FLOAT;
-import static org.lwjgl.opengl.GL11.glReadPixels;
-
-import java.nio.FloatBuffer;
-
-import org.lwjgl.BufferUtils;
-
 import net.luxvacuos.voxel.client.core.GlobalStates.GameState;
 import net.luxvacuos.voxel.client.core.State;
 import net.luxvacuos.voxel.client.core.Voxel;
@@ -103,10 +95,6 @@ public class OptionsState implements State {
 			gm.getRenderer().prepare();
 			gm.getSkyboxRenderer().render(VoxelVariables.RED, VoxelVariables.GREEN, VoxelVariables.BLUE, delta, gm);
 			gm.getWorldsHandler().getActiveWorld().getActiveDimension().updateChunksRender(gm);
-			FloatBuffer p = BufferUtils.createFloatBuffer(1);
-			glReadPixels(gm.getDisplay().getDisplayWidth() / 2, gm.getDisplay().getDisplayHeight() / 2, 1, 1,
-					GL_DEPTH_COMPONENT, GL_FLOAT, p);
-			gm.getCamera().depth = p.get(0);
 			gm.getRenderer().renderEntity(
 					gm.getWorldsHandler().getActiveWorld().getActiveDimension().getPhysicsEngine().getEntities(), gm);
 			gm.getItemsDropRenderer().render(gm);

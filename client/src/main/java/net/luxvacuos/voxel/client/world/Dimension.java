@@ -77,7 +77,6 @@ public abstract class Dimension {
 	private ParticleSystem particleSystem;
 	private DimensionService dimensionService;
 	private int renderedChunks = 0;
-	private boolean saving;
 	private int loadedChunks = 0;
 	private Engine physicsEngine;
 	private PhysicsSystem physicsSystem;
@@ -494,28 +493,24 @@ public abstract class Dimension {
 	}
 
 	public void clearDimension(GameResources gm) throws Exception {
-		if (!saving) {
-			saving = true;
-			Logger.log("Saving Dimension " + chunkDim);
-			try {
-				save(gm);
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			}
-			for (Chunk chunk : chunks.values()) {
-				if (chunk != null) {
-					chunkNodeRemovals.add(new ChunkNodeRemoval(chunk));
-				}
-			}
-			while (!chunkNodeRemovals.isEmpty()) {
-				ChunkNodeRemoval node = chunkNodeRemovals.poll();
-				saveChunk(node.chunk, gm);
-				removeChunk(node.chunk);
-			}
-			dimensionService.es.shutdown();
-			chunks.clear();
-			saving = false;
+		Logger.log("Saving Dimension " + chunkDim);
+		try {
+			save(gm);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
 		}
+		for (Chunk chunk : chunks.values()) {
+			if (chunk != null) {
+				chunkNodeRemovals.add(new ChunkNodeRemoval(chunk));
+			}
+		}
+		while (!chunkNodeRemovals.isEmpty()) {
+			ChunkNodeRemoval node = chunkNodeRemovals.poll();
+			saveChunk(node.chunk, gm);
+			removeChunk(node.chunk);
+		}
+		dimensionService.es.shutdown();
+		chunks.clear();
 	}
 
 	public void disposeGraphics() {

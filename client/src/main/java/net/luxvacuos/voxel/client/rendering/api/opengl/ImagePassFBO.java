@@ -90,7 +90,6 @@ public class ImagePassFBO {
 	}
 
 	private void bindFrameBuffer(int frameBuffer) {
-		glBindTexture(GL_TEXTURE_2D, 0);
 		glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
 		glViewport(0, 0, width, height);
 	}

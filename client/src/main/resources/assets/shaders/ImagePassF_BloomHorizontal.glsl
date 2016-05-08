@@ -25,17 +25,15 @@
 /*--------------------------------------------------------*/
 
 in vec2 textureCoords;
+in vec2 blurTexCoords[11];
 
 out vec4 out_Color;
 
-uniform vec2 resolution;
 uniform sampler2D composite0;
 
 /*--------------------------------------------------------*/
 /*---------------BLOOM HORIZONTAL CONFIG------------------*/
 /*--------------------------------------------------------*/
-
-const float weight[5] = float[] (0.227027, 0.1945946, 0.1216216, 0.054054, 0.016216);
 
 /*--------------------------------------------------------*/
 /*----------------BLOOM HORIZONTAL CODE-------------------*/
@@ -44,11 +42,19 @@ const float weight[5] = float[] (0.227027, 0.1945946, 0.1216216, 0.054054, 0.016
 
 void main(void){
 	vec2 texcoord = textureCoords;
-	vec2 tex_offset = 1.0 / resolution;
-    vec3 result = texture(composite0, texcoord).rgb * weight[0];
-    for(int i = 1; i < 5; ++i) {
-        result += texture(composite0, texcoord + vec2(tex_offset.x * i, 0.0)).rgb * weight[i];
-        result += texture(composite0, texcoord - vec2(tex_offset.x * i, 0.0)).rgb * weight[i];
-    }
-    out_Color.rgb = result;
+    vec4 result = vec4(0.0);
+    
+    result += texture(composite0, blurTexCoords[0]) * 0.0093;
+    result += texture(composite0, blurTexCoords[1]) * 0.028002;
+    result += texture(composite0, blurTexCoords[2]) * 0.065984;
+    result += texture(composite0, blurTexCoords[3]) * 0.121703;
+    result += texture(composite0, blurTexCoords[4]) * 0.175713;
+    result += texture(composite0, blurTexCoords[5]) * 0.198596;
+    result += texture(composite0, blurTexCoords[6]) * 0.175713;
+    result += texture(composite0, blurTexCoords[7]) * 0.121703;
+    result += texture(composite0, blurTexCoords[8]) * 0.065984;
+    result += texture(composite0, blurTexCoords[9]) * 0.028002;
+    result += texture(composite0, blurTexCoords[10]) * 0.0093;
+    
+    out_Color = result;
 }

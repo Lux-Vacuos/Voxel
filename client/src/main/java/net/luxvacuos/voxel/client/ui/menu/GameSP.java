@@ -26,6 +26,7 @@ import net.luxvacuos.voxel.client.rendering.api.nanovg.Timers;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.VectorsRendering;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.world.Dimension;
+import net.luxvacuos.voxel.client.world.block.BlocksResources;
 import net.luxvacuos.voxel.client.world.entities.PlayerCamera;
 import net.luxvacuos.voxel.client.world.entities.components.LifeComponent;
 import net.luxvacuos.voxel.universal.api.MoltenAPI;
@@ -72,12 +73,9 @@ public class GameSP {
 					"Roboto-Bold", 5 * VoxelVariables.XSCALE, 164 * VoxelVariables.YSCALE, 25 * VoxelVariables.YSCALE,
 					VectorsRendering.rgba(160, 160, 160, 200, VectorsRendering.colorA),
 					VectorsRendering.rgba(255, 255, 255, 255, VectorsRendering.colorB));
-			Timers.renderDebugDisplay(5 * VoxelVariables.XSCALE, 24 * VoxelVariables.YSCALE, 300 * VoxelVariables.XSCALE, 55 * VoxelVariables.YSCALE);
+			Timers.renderDebugDisplay(5 * VoxelVariables.XSCALE, 24 * VoxelVariables.YSCALE,
+					300 * VoxelVariables.XSCALE, 55 * VoxelVariables.YSCALE);
 		}
-
-		VectorsRendering.renderLife(440 * VoxelVariables.XSCALE, 700 * VoxelVariables.YSCALE,
-				200 * VoxelVariables.XSCALE, 20 * VoxelVariables.YSCALE,
-				((PlayerCamera) gm.getCamera()).getComponent(LifeComponent.class).life / 20f);
 
 	}
 
@@ -87,6 +85,15 @@ public class GameSP {
 				VectorsRendering.rgba(255, 255, 255, 200, VectorsRendering.colorA),
 				VectorsRendering.rgba(32, 32, 32, 32, VectorsRendering.colorB),
 				VectorsRendering.rgba(0, 0, 0, 48, VectorsRendering.colorC));
+		VectorsRendering.renderLife(440 * VoxelVariables.XSCALE, 700 * VoxelVariables.YSCALE,
+				200 * VoxelVariables.XSCALE, 20 * VoxelVariables.YSCALE,
+				((PlayerCamera) gm.getCamera()).getComponent(LifeComponent.class).life / 20f);
+
+		gm.getItemsGuiRenderer().getTess().begin(BlocksResources.getTessellatorTextureAtlas().getTexture(),
+				BlocksResources.getNormalMap(), BlocksResources.getHeightMap(), BlocksResources.getSpecularMap());
+		((PlayerCamera) gm.getCamera()).getInventory().render(1, 11, 0, 0, 0, ((PlayerCamera) gm.getCamera()).getyPos(),
+				gm);
+		gm.getItemsGuiRenderer().getTess().end();
 	}
 
 }

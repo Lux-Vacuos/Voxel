@@ -43,7 +43,6 @@ import net.luxvacuos.voxel.client.rendering.api.opengl.ParticleMaster;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.world.Dimension;
 import net.luxvacuos.voxel.client.world.PhysicsSystem;
-import net.luxvacuos.voxel.client.world.block.BlocksResources;
 import net.luxvacuos.voxel.client.world.entities.PlayerCamera;
 
 /**
@@ -53,6 +52,11 @@ import net.luxvacuos.voxel.client.world.entities.PlayerCamera;
  * @category Kernel
  */
 public class GameSPState implements State {
+	FloatBuffer p;
+
+	public GameSPState() {
+		p = BufferUtils.createFloatBuffer(1);
+	}
 
 	@Override
 	public void update(Voxel voxel, float delta) throws Exception {
@@ -114,16 +118,16 @@ public class GameSPState implements State {
 		gm.getWorldsHandler().getActiveWorld().getActiveDimension().updateChunksOcclusion(gm);
 
 		gm.getRenderingPipeline().begin();
-		//gm.getDeferredShadingRenderer().getPost_fbo().begin();
+		// gm.getDeferredShadingRenderer().getPost_fbo().begin();
 		gm.getRenderer().prepare();
 		gm.getSkyboxRenderer().render(VoxelVariables.RED, VoxelVariables.GREEN, VoxelVariables.BLUE, delta, gm);
 		gm.getWorldsHandler().getActiveWorld().getActiveDimension().updateChunksRender(gm);
-		FloatBuffer p = BufferUtils.createFloatBuffer(1);
+		gm.getRenderer().renderEntity(
+				gm.getWorldsHandler().getActiveWorld().getActiveDimension().getPhysicsEngine().getEntities(), gm);
+		p.clear();
 		glReadPixels(gm.getDisplay().getDisplayWidth() / 2, gm.getDisplay().getDisplayHeight() / 2, 1, 1,
 				GL_DEPTH_COMPONENT, GL_FLOAT, p);
 		gm.getCamera().depth = p.get(0);
-		gm.getRenderer().renderEntity(
-				gm.getWorldsHandler().getActiveWorld().getActiveDimension().getPhysicsEngine().getEntities(), gm);
 		gm.getItemsDropRenderer().render(gm);
 		gm.getRenderingPipeline().end();
 
@@ -132,13 +136,6 @@ public class GameSPState implements State {
 		ParticleMaster.getInstance().render(gm.getCamera(), gm.getRenderer().getProjectionMatrix());
 		gm.getDisplay().beingNVGFrame();
 		gm.getMenuSystem().gameSP.render(gm, gm.getWorldsHandler().getActiveWorld().getActiveDimension());
-
-		gm.getItemsGuiRenderer().getTess().begin(BlocksResources.getTessellatorTextureAtlas().getTexture(),
-				BlocksResources.getNormalMap(), BlocksResources.getHeightMap(), BlocksResources.getSpecularMap());
-		((PlayerCamera) gm.getCamera()).getInventory().render(1, 11, 0, 0, 0, ((PlayerCamera) gm.getCamera()).getyPos(),
-				gm);
-		gm.getItemsGuiRenderer().getTess().end();
-
 		gm.getDisplay().endNVGFrame();
 		gm.getItemsGuiRenderer().render(gm);
 

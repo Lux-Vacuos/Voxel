@@ -26,13 +26,6 @@ import static net.luxvacuos.voxel.client.input.Keyboard.KEY_F1;
 import static net.luxvacuos.voxel.client.input.Keyboard.KEY_F2;
 import static net.luxvacuos.voxel.client.input.Keyboard.isKeyDown;
 import static net.luxvacuos.voxel.client.input.Keyboard.next;
-import static org.lwjgl.opengl.GL11.GL_DEPTH_COMPONENT;
-import static org.lwjgl.opengl.GL11.GL_FLOAT;
-import static org.lwjgl.opengl.GL11.glReadPixels;
-
-import java.nio.FloatBuffer;
-
-import org.lwjgl.BufferUtils;
 
 import net.luxvacuos.voxel.client.core.GlobalStates.GameState;
 import net.luxvacuos.voxel.client.core.State;
@@ -110,10 +103,6 @@ public class GameSPInventoryState implements State {
 		gm.getRenderer().prepare();
 		gm.getSkyboxRenderer().render(VoxelVariables.RED, VoxelVariables.GREEN, VoxelVariables.BLUE, delta, gm);
 		gm.getWorldsHandler().getActiveWorld().getActiveDimension().updateChunksRender(gm);
-		FloatBuffer p = BufferUtils.createFloatBuffer(1);
-		glReadPixels(gm.getDisplay().getDisplayWidth() / 2, gm.getDisplay().getDisplayHeight() / 2, 1, 1,
-				GL_DEPTH_COMPONENT, GL_FLOAT, p);
-		gm.getCamera().depth = p.get(0);
 		gm.getRenderer().renderEntity(
 				gm.getWorldsHandler().getActiveWorld().getActiveDimension().getPhysicsEngine().getEntities(), gm);
 		gm.getItemsDropRenderer().render(gm);

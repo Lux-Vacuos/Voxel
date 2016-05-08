@@ -43,6 +43,7 @@ public abstract class World {
 
 	private Map<Integer, Dimension> dimensions;
 	private File file;
+	private boolean saving;
 
 	public World(String name) {
 		this.name = name;
@@ -110,13 +111,17 @@ public abstract class World {
 	}
 
 	public void dispose(GameResources gm) throws Exception {
-		Logger.log("Saving " + name);
-		save(gm);
-		for (Dimension dim : dimensions.values()) {
-			dim.clearDimension(gm);
+		if (!saving) {
+			saving = true;
+			Logger.log("Saving " + name);
+			save(gm);
+			for (Dimension dim : dimensions.values()) {
+				dim.clearDimension(gm);
+			}
+			activeDimension.getPhysicsEngine().removeEntity(gm.getCamera());
+			((PlayerCamera) gm.getCamera()).getInventory().clearInventorty();
+			saving = false;
 		}
-		activeDimension.getPhysicsEngine().removeEntity(gm.getCamera());
-		((PlayerCamera) gm.getCamera()).getInventory().clearInventorty();
 	}
 
 	public Map<Integer, Dimension> getDimensions() {

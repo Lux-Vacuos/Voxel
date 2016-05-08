@@ -25,10 +25,10 @@
 /*--------------------------------------------------------*/
 
 in vec2 textureCoords;
+in vec2 blurTexCoords[11];
 
 out vec4 out_Color;
 
-uniform vec2 resolution;
 uniform sampler2D composite0;
 uniform sampler2D composite1;
 uniform float exposure;
@@ -36,8 +36,6 @@ uniform float exposure;
 /*--------------------------------------------------------*/
 /*------------------COMPOSITE 2 CONFIG--------------------*/
 /*--------------------------------------------------------*/
-
-const float weight[5] = float[] (0.227027, 0.1945946, 0.1216216, 0.054054, 0.016216);
 
 const float gamma = 2.2;
 
@@ -48,18 +46,23 @@ const float gamma = 2.2;
 
 void main(void){
 	vec2 texcoord = textureCoords;
-	vec4 image0 = vec4(0.0);
-	vec2 tex_offset = 1.0 / resolution;
-    vec3 result = texture(composite0, texcoord).rgb * weight[0];
+    vec4 result = vec4(0.0);
+    result += texture(composite0, blurTexCoords[0]) * 0.0093;
+    result += texture(composite0, blurTexCoords[1]) * 0.028002;
+    result += texture(composite0, blurTexCoords[2]) * 0.065984;
+    result += texture(composite0, blurTexCoords[3]) * 0.121703;
+    result += texture(composite0, blurTexCoords[4]) * 0.175713;
+    result += texture(composite0, blurTexCoords[5]) * 0.198596;
+    result += texture(composite0, blurTexCoords[6]) * 0.175713;
+    result += texture(composite0, blurTexCoords[7]) * 0.121703;
+    result += texture(composite0, blurTexCoords[8]) * 0.065984;
+    result += texture(composite0, blurTexCoords[9]) * 0.028002;
+    result += texture(composite0, blurTexCoords[10]) * 0.0093;
     
-    for(int i = 1; i < 5; ++i) {
-        result += texture(composite0, texcoord + vec2(0.0, tex_offset.y * i)).rgb * weight[i];
-        result += texture(composite0, texcoord - vec2(0.0, tex_offset.y * i)).rgb * weight[i];
-    }
-    vec3 hdrColor = texture(composite1, texcoord).rgb;      
-    vec3 bloomColor = result.rgb;
+    vec4 hdrColor = texture(composite1, texcoord);      
+    vec4 bloomColor = result;
     hdrColor += bloomColor;
-    vec3 final = vec3(1.0) - exp(-hdrColor * exposure);
-    final = pow(final, vec3(1.0 / gamma));
-    out_Color.xyz = final.xyz;
+    vec4 final = vec4(1.0) - exp(-hdrColor * exposure);
+    final = pow(final, vec4(1.0 / gamma));
+    out_Color = final;
 }

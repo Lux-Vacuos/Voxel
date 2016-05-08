@@ -124,18 +124,20 @@ public class PhysicsSystem extends EntitySystem {
 
 				if (life != null) {
 					if (Maths.intersectRayBounds(((PlayerCamera) gm.getCamera()).getDRay().getRay(),
-							collison.boundingBox, tmp1) && ((PlayerCamera) gm.getCamera()).isHit())
+							collison.boundingBox, tmp1) && ((PlayerCamera) gm.getCamera()).isHit()) {
 						life.life -= 1;
-					Vector3f.add(Vector3f.sub(gm.getCamera().getPosition(), position.position, null), velocity.velocity,
-							velocity.velocity);
 
-					if (life.life <= 0) {
-						if (drop != null) {
-							drop.drop(getEngine(), position.position);
+						Vector3f.add(Vector3f.sub(position.position, gm.getCamera().getPosition(), null),
+								velocity.velocity, velocity.velocity);
+
+						if (life.life <= 0) {
+							if (drop != null) {
+								drop.drop(getEngine(), position.position);
+							}
+							getEngine().removeEntity(entity);
 						}
-						getEngine().removeEntity(entity);
+						break;
 					}
-					break;
 				}
 			}
 		}

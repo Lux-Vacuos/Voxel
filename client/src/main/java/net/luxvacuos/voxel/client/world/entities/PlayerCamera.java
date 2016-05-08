@@ -196,6 +196,9 @@ public class PlayerCamera extends Camera {
 			gm.getWorldsHandler().getActiveWorld().getActiveDimension().getPhysicsEngine()
 					.addEntity(Block.Torch.getDrop(gm, getPosition()));
 		}
+		if (isKeyDown(Keyboard.KEY_2))
+			gm.getWorldsHandler().getActiveWorld().getActiveDimension().getPhysicsEngine()
+					.addEntity(Block.BlockMTop.getDrop(gm, getPosition()));
 
 		if (clickTime > 0)
 			clickTime--;

@@ -15,6 +15,7 @@ public class MultiPass extends RenderingPipeline {
 	private BloomHorizonal bloomHorizontal;
 	private BloomVertical bloomVertical;
 	private SSRPass ssrPass;
+	private AmbientOcclusionPass ambientOcclusionPass;
 
 	@Override
 	public void init(GameResources gm) throws Exception {
@@ -38,6 +39,10 @@ public class MultiPass extends RenderingPipeline {
 		bloomVertical.setName("BloomVertical");
 		bloomVertical.init();
 		super.imagePasses.add(bloomVertical);
+		ambientOcclusionPass = new AmbientOcclusionPass(width, height);
+		ambientOcclusionPass.setName("AmbientOcclusion");
+		ambientOcclusionPass.init();
+		super.imagePasses.add(ambientOcclusionPass);
 		ssrPass = new SSRPass(width, height);
 		ssrPass.setName("SSR");
 		ssrPass.init();
