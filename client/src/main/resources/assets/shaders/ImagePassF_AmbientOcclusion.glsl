@@ -84,7 +84,7 @@ void main(void){
         float VPdistSP = distance(position.rgb, samplePos);
         float a = 1.0 - smoothstep(distanceThreshold, distanceThreshold * 2, VPdistSP);
         float b = NdotS;
-        ambientOcclusion += (a * b);
+        ambientOcclusion += (a * b) * 1.3;
     }
 	out_Color = mix(image, vec4(0.0), ambientOcclusion / sample_count);
 	

@@ -1,3 +1,23 @@
+/*
+ * This file is part of Voxel
+ * 
+ * Copyright (C) 2016 Lux Vacuos
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * 
+ */
+
 package net.luxvacuos.voxel.client.world.block.types;
 
 import com.badlogic.gdx.math.Vector3;
@@ -76,30 +96,30 @@ public class BlockPedestal extends BlockEntity {
 		if (top) {
 			Vector8f texcoords = texCoordsUp();
 			// top face
-			tess.vertex3f(new Vector3f(x + 0.3f, y + 0.8f, z + 0.7f));
+			tess.vertex3f(new Vector3f(x + 0.3f, y + 1f, z + 0.7f));
 			tess.texture2f(new Vector2f(texcoords.getZ(), texcoords.getW()));
 			tess.normal3f(new Vector3f(0, 1, 0));
 			tess.data4f(new Vector4f(getId(), tfl, 0, 0));
 
-			tess.vertex3f(new Vector3f(x + 0.7f, y + 0.8f, z + 0.7f));
+			tess.vertex3f(new Vector3f(x + 0.7f, y + 1f, z + 0.7f));
 			tess.texture2f(new Vector2f(texcoords.getI(), texcoords.getJ()));
 			tess.normal3f(new Vector3f(0, 1, 0));
 			tess.data4f(new Vector4f(getId(), tfr, 0, 0));
 
-			tess.vertex3f(new Vector3f(x + 0.7f, y + 0.8f, z + 0.3f));
+			tess.vertex3f(new Vector3f(x + 0.7f, y + 1f, z + 0.3f));
 			tess.texture2f(new Vector2f(texcoords.getK(), texcoords.getL()));
 			tess.normal3f(new Vector3f(0, 1, 0));
 			tess.data4f(new Vector4f(getId(), tbr, 0, 0));
 
-			tess.vertex3f(new Vector3f(x + 0.3f, y + 0.8f, z + 0.3f));
+			tess.vertex3f(new Vector3f(x + 0.3f, y + 1f, z + 0.3f));
 			tess.texture2f(new Vector2f(texcoords.getX(), texcoords.getY()));
 			tess.normal3f(new Vector3f(0, 1, 0));
 			tess.data4f(new Vector4f(getId(), tbl, 0, 0));
 
-			Vector3f edge1 = Vector3f.sub(new Vector3f(x + 0.7f, y + 0.8f, z + 0.7f),
-					new Vector3f(x + 0.3f, y + 0.8f, z + 0.7f), null);
-			Vector3f edge2 = Vector3f.sub(new Vector3f(x + 0.7f, y + 0.8f, z + 0.3f),
-					new Vector3f(x + 0.3f, y + 0.8f, z + 0.7f), null);
+			Vector3f edge1 = Vector3f.sub(new Vector3f(x + 0.7f, y + 1f, z + 0.7f),
+					new Vector3f(x + 0.3f, y + 1f, z + 0.7f), null);
+			Vector3f edge2 = Vector3f.sub(new Vector3f(x + 0.7f, y + 1f, z + 0.3f),
+					new Vector3f(x + 0.3f, y + 1f, z + 0.7f), null);
 			Vector2f deltaUV1 = Vector2f.sub(new Vector2f(texcoords.getI(), texcoords.getJ()),
 					new Vector2f(texcoords.getZ(), texcoords.getW()), null);
 			Vector2f deltaUV2 = Vector2f.sub(new Vector2f(texcoords.getK(), texcoords.getL()),
@@ -206,19 +226,19 @@ public class BlockPedestal extends BlockEntity {
 			tess.normal3f(new Vector3f(0, 0.2f, 1));
 			tess.data4f(new Vector4f(getId(), bfr, 0, 0));
 
-			tess.vertex3f(new Vector3f(x + 0.7f, y + 0.8f, z + 0.7f));
+			tess.vertex3f(new Vector3f(x + 0.7f, y + 1f, z + 0.7f));
 			tess.texture2f(new Vector2f(texcoords.getI(), texcoords.getJ()));
 			tess.normal3f(new Vector3f(0, 0.2f, 1));
 			tess.data4f(new Vector4f(getId(), tfr, 0, 0));
 
-			tess.vertex3f(new Vector3f(x + 0.3f, y + 0.8f, z + 0.7f));
+			tess.vertex3f(new Vector3f(x + 0.3f, y + 1f, z + 0.7f));
 			tess.texture2f(new Vector2f(texcoords.getZ(), texcoords.getW()));
 			tess.normal3f(new Vector3f(0, 0.2f, 1));
 			tess.data4f(new Vector4f(getId(), tfl, 0, 0));
 
-			Vector3f edge1 = Vector3f.sub(new Vector3f(x + 0.3f, y + 0.8f, z + 0.7f), new Vector3f(x, y, z + 1f), null);
+			Vector3f edge1 = Vector3f.sub(new Vector3f(x + 0.3f, y + 1f, z + 0.7f), new Vector3f(x, y, z + 1f), null);
 
-			Vector3f edge2 = Vector3f.sub(new Vector3f(x + 0.7f, y + 0.8f, z + 0.7f), new Vector3f(x, y, z + 1f), null);
+			Vector3f edge2 = Vector3f.sub(new Vector3f(x + 0.7f, y + 1f, z + 0.7f), new Vector3f(x, y, z + 1f), null);
 
 			Vector2f deltaUV1 = Vector2f.sub(new Vector2f(texcoords.getK(), texcoords.getL()),
 					new Vector2f(texcoords.getX(), texcoords.getY()), null);
@@ -257,12 +277,12 @@ public class BlockPedestal extends BlockEntity {
 		if (front) {
 			// front face
 			Vector8f texcoords = texCoordsFront();
-			tess.vertex3f(new Vector3f(x + 0.3f, y + 0.8f, z + 0.3f));
+			tess.vertex3f(new Vector3f(x + 0.3f, y + 1f, z + 0.3f));
 			tess.texture2f(new Vector2f(texcoords.getZ(), texcoords.getW()));
 			tess.normal3f(new Vector3f(0, 0.2f, -1));
 			tess.data4f(new Vector4f(getId(), tbl, 0, 0));
 
-			tess.vertex3f(new Vector3f(x + 0.7f, y + 0.8f, z + 0.3f));
+			tess.vertex3f(new Vector3f(x + 0.7f, y + 1f, z + 0.3f));
 			tess.texture2f(new Vector2f(texcoords.getI(), texcoords.getJ()));
 			tess.normal3f(new Vector3f(0, 0.2f, -1));
 			tess.data4f(new Vector4f(getId(), tbr, 0, 0));
@@ -277,10 +297,10 @@ public class BlockPedestal extends BlockEntity {
 			tess.normal3f(new Vector3f(0, 0.2f, -1));
 			tess.data4f(new Vector4f(getId(), bbl, 0, 0));
 
-			Vector3f edge1 = Vector3f.sub(new Vector3f(x + 0.7f, y + 0.8f, z + 0.3f),
-					new Vector3f(x + 0.3f, y + 0.8f, z + 0.3f), null);
+			Vector3f edge1 = Vector3f.sub(new Vector3f(x + 0.7f, y + 1f, z + 0.3f),
+					new Vector3f(x + 0.3f, y + 1f, z + 0.3f), null);
 
-			Vector3f edge2 = Vector3f.sub(new Vector3f(x + 1f, y, z), new Vector3f(x + 0.3f, y + 0.8f, z + 0.3f), null);
+			Vector3f edge2 = Vector3f.sub(new Vector3f(x + 1f, y, z), new Vector3f(x + 0.3f, y + 1f, z + 0.3f), null);
 
 			Vector2f deltaUV1 = Vector2f.sub(new Vector2f(texcoords.getI(), texcoords.getJ()),
 					new Vector2f(texcoords.getZ(), texcoords.getW()), null);
@@ -329,19 +349,19 @@ public class BlockPedestal extends BlockEntity {
 			tess.normal3f(new Vector3f(-1, 0.2f, 0));
 			tess.data4f(new Vector4f(getId(), bfl, 0, 0));
 
-			tess.vertex3f(new Vector3f(x + 0.3f, y + 0.8f, z + 0.7f));
+			tess.vertex3f(new Vector3f(x + 0.3f, y + 1f, z + 0.7f));
 			tess.texture2f(new Vector2f(texcoords.getZ(), texcoords.getW()));
 			tess.normal3f(new Vector3f(-1, 0.2f, 0));
 			tess.data4f(new Vector4f(getId(), tfl, 0, 0));
 
-			tess.vertex3f(new Vector3f(x + 0.3f, y + 0.8f, z + 0.3f));
+			tess.vertex3f(new Vector3f(x + 0.3f, y + 1f, z + 0.3f));
 			tess.texture2f(new Vector2f(texcoords.getI(), texcoords.getJ()));
 			tess.normal3f(new Vector3f(-1, 0.2f, 0));
 			tess.data4f(new Vector4f(getId(), tbl, 0, 0));
 
 			Vector3f edge1 = Vector3f.sub(new Vector3f(x, y, z + 1f), new Vector3f(x, y, z), null);
 
-			Vector3f edge2 = Vector3f.sub(new Vector3f(x + 0.3f, y + 0.8f, z + 0.7f), new Vector3f(x, y, z), null);
+			Vector3f edge2 = Vector3f.sub(new Vector3f(x + 0.3f, y + 1f, z + 0.7f), new Vector3f(x, y, z), null);
 
 			Vector2f deltaUV1 = Vector2f.sub(new Vector2f(texcoords.getX(), texcoords.getY()),
 					new Vector2f(texcoords.getK(), texcoords.getL()), null);
@@ -390,19 +410,19 @@ public class BlockPedestal extends BlockEntity {
 			tess.normal3f(new Vector3f(1, 0.2f, 0));
 			tess.data4f(new Vector4f(getId(), bbr, 0, 0));
 
-			tess.vertex3f(new Vector3f(x + 0.7f, y + 0.8f, z + 0.3f));
+			tess.vertex3f(new Vector3f(x + 0.7f, y + 1f, z + 0.3f));
 			tess.texture2f(new Vector2f(texcoords.getZ(), texcoords.getW()));
 			tess.normal3f(new Vector3f(1, 0.2f, 0));
 			tess.data4f(new Vector4f(getId(), tbr, 0, 0));
 
-			tess.vertex3f(new Vector3f(x + 0.7f, y + 0.8f, z + 0.7f));
+			tess.vertex3f(new Vector3f(x + 0.7f, y + 1f, z + 0.7f));
 			tess.texture2f(new Vector2f(texcoords.getI(), texcoords.getJ()));
 			tess.normal3f(new Vector3f(1, 0.2f, 0));
 			tess.data4f(new Vector4f(getId(), tfr, 0, 0));
 
 			Vector3f edge1 = Vector3f.sub(new Vector3f(x + 1f, y, z), new Vector3f(x + 1f, y, z + 1f), null);
 
-			Vector3f edge2 = Vector3f.sub(new Vector3f(x + 0.7f, y + 0.8f, z + 0.3f), new Vector3f(x + 1f, y, z + 1f),
+			Vector3f edge2 = Vector3f.sub(new Vector3f(x + 0.7f, y + 1f, z + 0.3f), new Vector3f(x + 1f, y, z + 1f),
 					null);
 
 			Vector2f deltaUV1 = Vector2f.sub(new Vector2f(texcoords.getX(), texcoords.getY()),
@@ -444,7 +464,7 @@ public class BlockPedestal extends BlockEntity {
 	@Override
 	public BoundingBox getBoundingBox(Vector3f pos) {
 		return new BoundingBox(new Vector3(pos.x + 0.15, pos.y, pos.z + 0.15),
-				new Vector3(pos.x + 0.85, pos.y + 0.8, pos.z + 0.85));
+				new Vector3(pos.x + 0.85, pos.y + 1, pos.z + 0.85));
 	}
 
 }
