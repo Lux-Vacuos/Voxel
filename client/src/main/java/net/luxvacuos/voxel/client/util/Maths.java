@@ -237,11 +237,8 @@ public class Maths {
 		return randomNum;
 	}
 
-	public static boolean getRandomBoolean(int chanceOfTrue) {
-		Random random = new Random();
-		if (random.nextInt(chanceOfTrue) == 0)
-			return true;
-		return false;
+	public static boolean getRandomBoolean(float chanceOfTrue) {
+		return new Random().nextInt(100) < chanceOfTrue;
 	}
 
 	public static void sortLowToHigh(List<Chunk> list) {

@@ -35,6 +35,7 @@ import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.util.Maths;
 import net.luxvacuos.voxel.client.world.block.Block;
+import net.luxvacuos.voxel.client.world.block.BlockBase;
 import net.luxvacuos.voxel.client.world.entities.GameEntity;
 import net.luxvacuos.voxel.client.world.entities.PlayerCamera;
 import net.luxvacuos.voxel.client.world.entities.components.ArmourComponent;
@@ -207,10 +208,10 @@ public class PhysicsSystem extends EntitySystem {
 				}
 			}
 			if (life != null) {
-				byte b = dim.getGlobalBlock(bx, by, bz);
-				if (b == Block.Lava.getId())
+				BlockBase b = dim.getGlobalBlock(bx, by, bz);
+				if (b == Block.Lava)
 					life.life -= 0.2f;
-				if (!Block.getBlock(b).isTransparent())
+				if (!b.isTransparent())
 					life.life -= 0.5f;
 			}
 

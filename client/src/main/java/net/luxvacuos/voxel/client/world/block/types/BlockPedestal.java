@@ -8,13 +8,51 @@ import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.igl.vector.Vector4f;
 import net.luxvacuos.igl.vector.Vector8f;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Tessellator;
-import net.luxvacuos.voxel.client.world.block.BlockBase;
+import net.luxvacuos.voxel.client.world.block.BlockEntity;
+import net.luxvacuos.voxel.client.world.block.BlocksResources;
 
-public class BlockPedestal extends BlockBase {
+public class BlockPedestal extends BlockEntity {
+
+	public BlockPedestal(Integer x, Integer y, Integer z) {
+		super(x, y, z);
+		customModel = false;
+		transparent = true;
+	}
 
 	public BlockPedestal() {
-		customModel = true;
+		super();
+		customModel = false;
 		transparent = true;
+	}
+
+	@Override
+	public Vector8f texCoordsBack() {
+		return BlocksResources.getTessellatorTextureAtlas().getTextureCoords("Pedestal");
+	}
+
+	@Override
+	public Vector8f texCoordsDown() {
+		return BlocksResources.getTessellatorTextureAtlas().getTextureCoords("PedestalBottom");
+	}
+
+	@Override
+	public Vector8f texCoordsFront() {
+		return BlocksResources.getTessellatorTextureAtlas().getTextureCoords("Pedestal");
+	}
+
+	@Override
+	public Vector8f texCoordsLeft() {
+		return BlocksResources.getTessellatorTextureAtlas().getTextureCoords("Pedestal");
+	}
+
+	@Override
+	public Vector8f texCoordsRight() {
+		return BlocksResources.getTessellatorTextureAtlas().getTextureCoords("Pedestal");
+	}
+
+	@Override
+	public Vector8f texCoordsUp() {
+		return BlocksResources.getTessellatorTextureAtlas().getTextureCoords("PedestalTop");
 	}
 
 	@Override

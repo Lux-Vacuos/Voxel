@@ -29,7 +29,7 @@ public class ChunkGenerator {
 
 	public void addTree(Dimension world, int xo, int yo, int zo, int treeHeight, Random rand) {
 		for (int y = 0; y < treeHeight; y++) {
-			world.setGlobalBlock(xo, yo + y, zo, Block.Wood.getId());
+			world.setGlobalBlock(xo, yo + y, zo, Block.Wood);
 		}
 		for (int x = 0; x < treeHeight; x++) {
 			for (int z = 0; z < treeHeight; z++) {
@@ -42,7 +42,7 @@ public class ChunkGenerator {
 					double test = Math.sqrt((double) xx * xx + yy * yy + zz * zz);
 					if (test < (treeHeight - 1) / 2) {
 						if (rand.nextDouble() < 0.8) {
-							world.setGlobalBlock(xo + xx, yo + yy + treeHeight - 1, zo + zz, Block.Leaves.getId());
+							world.setGlobalBlock(xo + xx, yo + yy + treeHeight - 1, zo + zz, Block.Leaves);
 						}
 					}
 				}

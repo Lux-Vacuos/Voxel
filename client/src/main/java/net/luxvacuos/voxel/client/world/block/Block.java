@@ -20,8 +20,6 @@
 
 package net.luxvacuos.voxel.client.world.block;
 
-import java.util.HashMap;
-
 import net.luxvacuos.voxel.client.world.block.types.BlockAir;
 import net.luxvacuos.voxel.client.world.block.types.BlockCobblestone;
 import net.luxvacuos.voxel.client.world.block.types.BlockDiamondOre;
@@ -33,6 +31,7 @@ import net.luxvacuos.voxel.client.world.block.types.BlockIce;
 import net.luxvacuos.voxel.client.world.block.types.BlockIndes;
 import net.luxvacuos.voxel.client.world.block.types.BlockLava;
 import net.luxvacuos.voxel.client.world.block.types.BlockLeaves;
+import net.luxvacuos.voxel.client.world.block.types.BlockNode;
 import net.luxvacuos.voxel.client.world.block.types.BlockPedestal;
 import net.luxvacuos.voxel.client.world.block.types.BlockSand;
 import net.luxvacuos.voxel.client.world.block.types.BlockStone;
@@ -47,10 +46,6 @@ import net.luxvacuos.voxel.client.world.block.types.BlockWood;
  * @category World
  */
 public class Block {
-	/**
-	 * Blocks Data
-	 */
-	public static final HashMap<Byte, BlockBase> blockMap = new HashMap<Byte, BlockBase>();
 
 	public static final BlockBase Air = new BlockAir();
 	public static final BlockBase Stone = new BlockStone();
@@ -69,51 +64,6 @@ public class Block {
 	public static final BlockBase Indes = new BlockIndes();
 	public static final BlockBase Cobblestone = new BlockCobblestone();
 	public static final BlockBase Pedestal = new BlockPedestal();
-
-	public static void initBasicBlocks() {
-		registerBlock(Indes);
-		registerBlock(Air);
-		registerBlock(Stone);
-		registerBlock(Grass);
-		registerBlock(Sand);
-		registerBlock(Dirt);
-		registerBlock(DiamondOre);
-		registerBlock(GoldOre);
-		registerBlock(Water);
-		registerBlock(Glass);
-		registerBlock(Torch);
-		registerBlock(Lava);
-		registerBlock(Leaves);
-		registerBlock(Wood);
-		registerBlock(Ice);
-		registerBlock(Cobblestone);
-		registerBlock(Pedestal);
-	}
-
-	/**
-	 * Register a Block to the map
-	 * 
-	 * @param id
-	 *            Block ID
-	 * @param block
-	 *            Block
-	 */
-	public static void registerBlock(BlockBase block) {
-		blockMap.put(block.getId(), block);
-	}
-
-	/**
-	 * Get the block in the position id of the map
-	 * 
-	 * @param id
-	 *            Block ID
-	 * @return Block
-	 */
-	public static BlockBase getBlock(byte id) {
-		BlockBase b = blockMap.get(id);
-		if (b == null)
-			throw new NullPointerException("Block don't found: " + id);
-		return b;
-	}
+	public static final BlockBase Node = new BlockNode();
 
 }

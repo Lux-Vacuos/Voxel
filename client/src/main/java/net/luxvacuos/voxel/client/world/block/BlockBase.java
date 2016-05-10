@@ -26,15 +26,15 @@ import com.badlogic.gdx.math.collision.BoundingBox;
 import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.igl.vector.Vector8f;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Tessellator;
-import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.world.items.ItemDrop;
 
 public abstract class BlockBase {
 	protected boolean transparent = false;
-	protected boolean customModel = false;
+	protected transient boolean customModel = false;
 	protected boolean affectedByGravity = false;
 	protected boolean collision = true;
 	protected boolean fluid = false;
+	protected boolean objModel = false;
 
 	public abstract byte getId();
 
@@ -66,7 +66,7 @@ public abstract class BlockBase {
 		return new BoundingBox(new Vector3(pos.x, pos.y, pos.z), new Vector3(pos.x + 1, pos.y + 1, pos.z + 1));
 	}
 
-	public ItemDrop getDrop(GameResources gm, Vector3f pos) {
+	public ItemDrop getDrop(Vector3f pos) {
 		return new ItemDrop(pos, this, 0.2f);
 	}
 
@@ -93,6 +93,10 @@ public abstract class BlockBase {
 
 	public boolean isFluid() {
 		return fluid;
+	}
+	
+	public boolean isObjModel() {
+		return objModel;
 	}
 
 }

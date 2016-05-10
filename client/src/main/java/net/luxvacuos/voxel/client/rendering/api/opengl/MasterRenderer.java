@@ -127,6 +127,12 @@ public class MasterRenderer {
 		shader.cleanUp();
 	}
 
+	public void update(GameResources gm) {
+		projectionMatrix = createProjectionMatrix(projectionMatrix, gm.getDisplay().getDisplayWidth(),
+				gm.getDisplay().getDisplayHeight(), VoxelVariables.FOV, VoxelVariables.NEAR_PLANE,
+				VoxelVariables.FAR_PLANE);
+	}
+	
 	public Matrix4f getProjectionMatrix() {
 		return projectionMatrix;
 	}
@@ -134,11 +140,9 @@ public class MasterRenderer {
 	public void setProjectionMatrix(Matrix4f matrix) {
 		projectionMatrix = matrix;
 	}
-
-	public void update(GameResources gm) {
-		projectionMatrix = createProjectionMatrix(projectionMatrix, gm.getDisplay().getDisplayWidth(),
-				gm.getDisplay().getDisplayHeight(), VoxelVariables.FOV, VoxelVariables.NEAR_PLANE,
-				VoxelVariables.FAR_PLANE);
+	
+	public EntityShader getShader() {
+		return shader;
 	}
 
 	public static Matrix4f createProjectionMatrix(int width, int height, float fov, float nearPlane, float farPlane) {

@@ -58,7 +58,6 @@ import net.luxvacuos.voxel.client.sound.soundsystem.codecs.CodecJOgg;
 import net.luxvacuos.voxel.client.ui.menu.Menu;
 import net.luxvacuos.voxel.client.util.LoggerSoundSystem;
 import net.luxvacuos.voxel.client.world.WorldsHandler;
-import net.luxvacuos.voxel.client.world.block.Block;
 import net.luxvacuos.voxel.client.world.entities.Camera;
 import net.luxvacuos.voxel.client.world.entities.PlayerCamera;
 import net.luxvacuos.voxel.client.world.entities.SunCamera;
@@ -160,7 +159,6 @@ public class GameResources extends UGameResources {
 		SoundSystemConfig.setLogger(new LoggerSoundSystem());
 		soundSystem = new SoundSystem();
 		globalStates = new GlobalStates();
-		Block.initBasicBlocks();
 		menuSystem = new Menu(this);
 		worldsHandler = new WorldsHandler();
 	}

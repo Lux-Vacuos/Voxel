@@ -416,7 +416,7 @@ public abstract class Dimension {
 		return renderedChunks;
 	}
 
-	public byte getGlobalBlock(int x, int y, int z) {
+	public BlockBase getGlobalBlock(int x, int y, int z) {
 		int cx = x >> 4;
 		int cz = z >> 4;
 		int cy = y >> 4;
@@ -424,7 +424,7 @@ public abstract class Dimension {
 		if (chunk != null)
 			return chunk.getLocalBlock(x, y, z);
 		else
-			return 0;
+			return Block.Air;
 	}
 
 	public List<BoundingBox> getGlobalBoundingBox(BoundingBox box) {
@@ -435,7 +435,7 @@ public abstract class Dimension {
 			for (int j = (int) Math.floor(box.min.y); j < (int) Math.ceil(box.max.y); j++) {
 				for (int k = (int) Math.floor(box.min.z); k < (int) Math.ceil(box.max.z); k++) {
 					vec.set(i, j, k);
-					BlockBase block = Block.getBlock(getGlobalBlock(i, j, k));
+					BlockBase block = getGlobalBlock(i, j, k);
 					if (block.isCollision())
 						array.add(block.getBoundingBox(vec));
 				}
@@ -444,7 +444,7 @@ public abstract class Dimension {
 		return array;
 	}
 
-	public boolean setGlobalBlock(int x, int y, int z, byte id) {
+	public boolean setGlobalBlock(int x, int y, int z, BlockBase id) {
 		int cx = x >> 4;
 		int cz = z >> 4;
 		int cy = y >> 4;

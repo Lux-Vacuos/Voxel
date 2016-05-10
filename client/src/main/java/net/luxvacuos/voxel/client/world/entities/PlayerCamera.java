@@ -34,6 +34,7 @@ import static net.luxvacuos.voxel.client.input.Mouse.isButtonDown;
 import static net.luxvacuos.voxel.client.input.Mouse.setCursorPosition;
 import static net.luxvacuos.voxel.client.input.Mouse.setGrabbed;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,6 +55,7 @@ import net.luxvacuos.voxel.client.ui.menu.ItemGui;
 import net.luxvacuos.voxel.client.util.Maths;
 import net.luxvacuos.voxel.client.world.Dimension;
 import net.luxvacuos.voxel.client.world.block.Block;
+import net.luxvacuos.voxel.client.world.block.BlockEntity;
 import net.luxvacuos.voxel.client.world.entities.components.ArmourComponent;
 import net.luxvacuos.voxel.client.world.entities.components.LifeComponent;
 import net.luxvacuos.voxel.client.world.entities.components.VelocityComponent;
@@ -163,7 +165,7 @@ public class PlayerCamera extends Camera {
 		int by = (int) tempY;
 		int bz = (int) tempZ - 1;
 
-		if (world.getGlobalBlock(bx, by + 1, bz) == Block.Water.getId())
+		if (world.getGlobalBlock(bx, by + 1, bz).getId() == Block.Water.getId())
 			underWater = true;
 		else
 			underWater = false;
@@ -212,11 +214,11 @@ public class PlayerCamera extends Camera {
 
 		if (isKeyDown(Keyboard.KEY_8)) {
 			gm.getWorldsHandler().getActiveWorld().getActiveDimension().getPhysicsEngine()
-					.addEntity(Block.Torch.getDrop(gm, getPosition()));
+					.addEntity(Block.Pedestal.getDrop(getPosition()));
 		}
 		if (isKeyDown(Keyboard.KEY_2))
 			gm.getWorldsHandler().getActiveWorld().getActiveDimension().getPhysicsEngine()
-					.addEntity(Block.Pedestal.getDrop(gm, getPosition()));
+					.addEntity(Block.Node.getDrop(getPosition()));
 
 		if (clickTime > 0)
 			clickTime--;
@@ -281,14 +283,24 @@ public class PlayerCamera extends Camera {
 
 		if (block.getBlock().getId() == Block.Torch.getId())
 			world.addLight(bx, by, bz, 14);
-		if (block.getBlock().getId() == Block.Air.getId() && world.getGlobalBlock(bx, by, bz) != Block.Air.getId())
-			world.getPhysicsEngine().addEntity(Block.getBlock(world.getGlobalBlock(bx, by, bz)).getDrop(gm,
-					new Vector3f(bx + 0.5f, by + 0.5f, bz + 0.5f)));
-		if (block.getBlock().getId() == Block.Air.getId() && world.getGlobalBlock(bx, by, bz) == Block.Torch.getId())
+		if (block.getBlock().getId() == Block.Air.getId() && world.getGlobalBlock(bx, by, bz) != Block.Air)
+			world.getPhysicsEngine()
+					.addEntity(world.getGlobalBlock(bx, by, bz).getDrop(new Vector3f(bx + 0.5f, by + 0.5f, bz + 0.5f)));
+		if (block.getBlock().getId() == Block.Air.getId() && world.getGlobalBlock(bx, by, bz) == Block.Torch)
 			world.removeLight(bx, by, bz, 0);
 		if (block.getBlock().getId() != 0)
 			block.setTotal(block.getTotal() - 1);
-		world.setGlobalBlock(bx, by, bz, block.getBlock().getId());
+		if (block.getBlock() instanceof BlockEntity) {
+			try {
+				world.setGlobalBlock(bx, by, bz, block.getBlock().getClass()
+						.getDeclaredConstructor(Integer.class, Integer.class, Integer.class).newInstance(bx, by, bz));
+			} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
+					| InvocationTargetException | NoSuchMethodException | SecurityException e) {
+				e.printStackTrace();
+			}
+			return;
+		}
+		world.setGlobalBlock(bx, by, bz, block.getBlock());
 	}
 
 	public int getyPos() {
