@@ -3,3 +3,7 @@ sourceCompatibility = 1.8
 
 sourceSets.main.java.srcDirs = [ "src/main/java" ]
 sourceSets.main.resources.srcDirs = [ "src/main/resources" ]
+
+jar {
+	version = "0.0.1"
+}

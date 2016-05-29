@@ -1,12 +1,8 @@
 apply plugin:'application'
 
-mainClassName = 'net.luxvacuos.voxel.client.bootstrap.Bootstrap'
+mainClassName = 'net.luxvacuos.voxel.launcher.bootstrap.Bootstrap'
 sourceCompatibility = 1.8
-def build = 215
-
-if (System.getProperty("os.name").toLowerCase().contains("mac os x")) {
-  applicationDefaultJvmArgs = ["-XstartOnFirstThread"]
-}
+def build = 1
 
 sourceSets {
     main {
@@ -16,13 +12,13 @@ sourceSets {
 }
 
 jar {
-	version = "0.0.10-" + build
+	version = "0.0.1-" + build
 	manifest {
         attributes (
-			"Specification-Title": "Voxel-Client",
+			"Specification-Title": "Voxel-Launcher",
 			"Specification-Version": version,
 			"Specification-Vendor": "Lux Vacuos",
-			"Implementation-Title": "net.luxvacuos.voxel.client",
+			"Implementation-Title": "net.luxvacuos.voxel.launcher",
 			"Implementation-Version": build,
 			"Implementation-Vendor": "Lux Vacuos"
 			)

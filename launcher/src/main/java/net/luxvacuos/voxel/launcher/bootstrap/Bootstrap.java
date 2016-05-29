@@ -18,18 +18,14 @@
  * 
  */
 
-package net.luxvacuos.voxel.client.bootstrap;
+package net.luxvacuos.voxel.launcher.bootstrap;
 
-import java.util.Calendar;
+import java.io.File;
 
-import com.esotericsoftware.minlog.Log;
-
-import net.luxvacuos.igl.Logger;
-import net.luxvacuos.voxel.client.core.Voxel;
-import net.luxvacuos.voxel.client.core.VoxelVariables;
+import net.luxvacuos.voxel.launcher.core.LauncherVariables;
+import net.luxvacuos.voxel.launcher.ui.MainUI;
 
 /**
- * Initialize the basic game code
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
  */
@@ -90,7 +86,6 @@ public class Bootstrap {
 	/**
 	 * Enumerator of the OS
 	 * 
-	 *
 	 */
 	public enum Platform {
 		WINDOWS_32, WINDOWS_64, MACOSX, LINUX_32, LINUX_64, UNKNOWN;
@@ -103,77 +98,10 @@ public class Bootstrap {
 	 *            Args
 	 */
 	public static void main(String[] args) {
-		Log.set(Log.LEVEL_INFO);
-		Thread.currentThread().setName("Voxel-Client");
+		Thread.currentThread().setName("Voxel-Launcher-Bootstrap");
+		new File(Bootstrap.getPrefix() + LauncherVariables.project + "/libraries/").mkdirs();
 
-		try {
-			parseArgs(args);
-		} catch (ArrayIndexOutOfBoundsException aioe) {
-			Logger.error("Error: Arguments were wrong", aioe);
-			System.exit(1);
-		} catch (Exception ex) {
-			Logger.error(ex);
-			System.exit(1);
-		}
-		checkSomeValues();
-		new Voxel();
-	}
-
-	private static void checkSomeValues() {
-		Calendar christmas = Calendar.getInstance();
-		if (christmas.get(Calendar.MONTH) == Calendar.DECEMBER) {
-			VoxelVariables.christmas = true;
-			VoxelVariables.RED = 0.882f;
-			VoxelVariables.GREEN = 1;
-			VoxelVariables.BLUE = 1;
-		}
-	}
-
-	/**
-	 * Handles all Voxel available args
-	 * 
-	 * @param args
-	 *            Array of args
-	 */
-	private static void parseArgs(String[] args) {
-		boolean gaveWidth = false, gaveHeight = false;
-		boolean gaveAutostart = false;
-
-		for (int i = 0; i < args.length; i++) {
-			switch (args[i]) {
-			case "-width":
-				if (gaveWidth)
-					throw new IllegalStateException("Width already given");
-				VoxelVariables.WIDTH = Integer.parseInt(args[++i]);
-				if (VoxelVariables.WIDTH <= 0)
-					throw new IllegalArgumentException("Width must be positive");
-				gaveWidth = true;
-				break;
-			case "-height":
-				if (gaveHeight)
-					throw new IllegalStateException("Height already given");
-				VoxelVariables.HEIGHT = Integer.parseInt(args[++i]);
-				if (VoxelVariables.HEIGHT <= 0)
-					throw new IllegalArgumentException("Height must be positive");
-				gaveHeight = true;
-				break;
-			case "-autostart":
-				if (gaveAutostart)
-					throw new IllegalStateException("Autostart already given");
-				VoxelVariables.autostart = true;
-				gaveAutostart = true;
-				break;
-			case "-username":
-				VoxelVariables.username = args[++i];
-				break;
-			default:
-				if (args[i].startsWith("-")) {
-					throw new IllegalArgumentException("Unknown argument: " + args[i].substring(1));
-				} else {
-					throw new IllegalArgumentException("Unknown token: " + args[i]);
-				}
-			}
-		}
+		MainUI.main(args);
 	}
 
 	public static String getPrefix() {

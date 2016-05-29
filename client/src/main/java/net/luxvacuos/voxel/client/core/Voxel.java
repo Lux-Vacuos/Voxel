@@ -182,15 +182,19 @@ public class Voxel extends UVoxel {
 	}
 
 	private void handleError(Throwable e) {
-		if (!disposed && loaded)
-			try {
-				getGameResources().getWorldsHandler().getActiveWorld().dispose(getGameResources());
-				dispose();
-			} catch (Exception e1) {
-				e1.printStackTrace();
-			}
-		else
-			getGameResources().getDisplay().closeDisplay();
+		try {
+			if (!disposed && loaded)
+				try {
+					getGameResources().getWorldsHandler().getActiveWorld().dispose(getGameResources());
+					dispose();
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+			else
+				getGameResources().getDisplay().closeDisplay();
+		} catch (NullPointerException t) {
+			e.printStackTrace();
+		}
 		CrashScreen.run(e);
 	}
 
