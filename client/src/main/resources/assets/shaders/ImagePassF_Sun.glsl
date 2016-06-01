@@ -42,7 +42,7 @@ uniform sampler2D gData1;
 /*--------------------SUN PASS CODE-----------------------*/
 /*--------------------------------------------------------*/
 
-vec2 size = vec2(40, 45);
+vec2 size = vec2(40, 85);
 
 void main(void){
 	vec2 scale = vec2(resolution.x / 1280, resolution.y / 720);
@@ -54,7 +54,6 @@ void main(void){
 	vec4 data1 = texture(gData1, texcoord);
     if(data0.b == 1 && data1.r > 0){
     	vec2 midpoint = sunPositionInScreen.xy;
-		float radius = min(resolution.x, resolution.y) * 0.1;
 		float dist = length(gl_FragCoord.xy - midpoint);
 		float circle = 1 - smoothstep(size.x-1.0, size.y+1.0, dist);
 		image.rgb = vec3(circle,circle,circle);

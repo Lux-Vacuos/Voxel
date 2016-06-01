@@ -96,11 +96,11 @@ public class Tessellator {
 
 	private Matrix4f orthoProjectionMatrix;
 
-	public Tessellator(GameResources gm) throws Exception {
-		init(gm);
+	public Tessellator() throws Exception {
+		init();
 	}
 
-	private void init(GameResources gm) throws Exception {
+	private void init() throws Exception {
 		pos = new ArrayList<Vector3f>();
 		texcoords = new ArrayList<Vector2f>();
 		normals = new ArrayList<Vector3f>();
@@ -108,16 +108,16 @@ public class Tessellator {
 		indices = new ArrayList<Integer>();
 		tangent = new ArrayList<Vector3f>();
 		bitangent = new ArrayList<Vector3f>();
-		this.orthoProjectionMatrix = gm.getMasterShadowRenderer().getProjectionMatrix();
+		this.orthoProjectionMatrix = GameResources.instance().getMasterShadowRenderer().getProjectionMatrix();
 		shader = TessellatorShader.getInstance();
 		shader.start();
 		shader.conectTextureUnits();
-		shader.loadProjectionMatrix(gm.getRenderer().getProjectionMatrix());
-		shader.loadBiasMatrix(gm);
+		shader.loadProjectionMatrix(GameResources.instance().getRenderer().getProjectionMatrix());
+		shader.loadBiasMatrix(GameResources.instance());
 		shader.stop();
 		basicShader = TessellatorBasicShader.getInstance();
 		basicShader.start();
-		basicShader.loadProjectionMatrix(gm.getMasterShadowRenderer().getProjectionMatrix());
+		basicShader.loadProjectionMatrix(GameResources.instance().getMasterShadowRenderer().getProjectionMatrix());
 		basicShader.stop();
 
 		occlusion = glGenQueries();
@@ -797,8 +797,8 @@ public class Tessellator {
 			}
 		}
 	}
-	
-	private void clearBuffers(){
+
+	private void clearBuffers() {
 		if (buffer0 != null)
 			buffer0.clear();
 		if (buffer1 != null)

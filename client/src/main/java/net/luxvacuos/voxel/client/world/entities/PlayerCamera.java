@@ -76,6 +76,7 @@ public class PlayerCamera extends Camera {
 	private int yPos;
 	private ItemGui block;
 	private boolean hit;
+	private boolean flyMode = true;
 
 	private static List<BoundingBox> blocks = new ArrayList<>();
 	private static Vector3 tmp = new Vector3();
@@ -190,17 +191,33 @@ public class PlayerCamera extends Camera {
 			this.getComponent(VelocityComponent.class).velocity.x -= Math.cos(Math.toRadians(yaw)) * speed;
 			isMoved = true;
 		}
-		if (isKeyDown(KEY_SPACE) && !jump) {
-			this.getComponent(VelocityComponent.class).velocity.y = 5;
-			jump = true;
-		}
-		if (this.getComponent(VelocityComponent.class).velocity.y == 0)
-			jump = false;
-		if (isKeyDown(KEY_LSHIFT)) {
-			speed = 0.8f;
+		if (flyMode) {
+			if (isKeyDown(KEY_SPACE))
+				this.getComponent(VelocityComponent.class).velocity.y = 5;
 		} else {
-			speed = 3;
+			if (isKeyDown(KEY_SPACE) && !jump) {
+				this.getComponent(VelocityComponent.class).velocity.y = 5;
+				jump = true;
+			}
+			if (this.getComponent(VelocityComponent.class).velocity.y == 0)
+				jump = false;
 		}
+		if (flyMode) {
+			if (isKeyDown(KEY_LSHIFT))
+				this.getComponent(VelocityComponent.class).velocity.y = -5;
+		} else {
+			if (isKeyDown(KEY_LSHIFT))
+				speed = 0.8f;
+			else
+				speed = 3f;
+
+		}
+
+		if (isKeyDown(Keyboard.KEY_LCONTROL))
+			speed = 7f;
+		else
+			speed = 3f;
+
 		/*
 		 * if (isKeyDown(Keyboard.KEY_Y)) {
 		 * gm.getWorldsHandler().getActiveWorld().switchDimension(0, gm); } if
@@ -288,8 +305,12 @@ public class PlayerCamera extends Camera {
 					.addEntity(world.getGlobalBlock(bx, by, bz).getDrop(new Vector3f(bx + 0.5f, by + 0.5f, bz + 0.5f)));
 		if (block.getBlock().getId() == Block.Air.getId() && world.getGlobalBlock(bx, by, bz) == Block.Torch)
 			world.removeLight(bx, by, bz, 0);
-		if (block.getBlock().getId() != 0)
+		if (block.getBlock().getId() != 0) {
 			block.setTotal(block.getTotal() - 1);
+			bx += (int) (normal.x * 1.5f);
+			by += (int) (normal.y * 1.5f);
+			bz += (int) (normal.z * 1.5f);
+		}
 		if (block.getBlock() instanceof BlockEntity) {
 			try {
 				world.setGlobalBlock(bx, by, bz, block.getBlock().getClass()

@@ -24,6 +24,7 @@ import static org.lwjgl.opengl.GL15.GL_SAMPLES_PASSED;
 import static org.lwjgl.opengl.GL15.glBeginQuery;
 import static org.lwjgl.opengl.GL15.glEndQuery;
 
+import java.util.Arrays;
 import java.util.Queue;
 import java.util.Random;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -64,31 +65,31 @@ public class Chunk {
 			creating = false, decorating = false, updatingBlocks = false, updatedBlocks = false;
 	private transient Queue<ParticlePoint> particlePoints;
 
-	public Chunk(int cx, int cy, int cz, Dimension dimension, GameResources gm) throws Exception {
+	public Chunk(int cx, int cy, int cz) throws Exception {
 		this.cx = cx;
 		this.cy = cy;
 		this.cz = cz;
 		this.posX = cx * 16;
 		this.posZ = cz * 16;
 		this.posY = cy * 16;
-		init(dimension, gm);
+		init();
 	}
 
 	public Chunk() {
 	}
 
-	public void init(Dimension dimension, GameResources gm) throws Exception {
-		load(gm);
+	public void init() throws Exception {
+		load();
 		blocks = new BlockBase[sizeX][sizeY][sizeZ];
 		lightMap = new byte[sizeX][sizeY][sizeZ];
 	}
 
-	public void load(GameResources gm) throws Exception {
+	public void load() throws Exception {
 		particlePoints = new ConcurrentLinkedQueue<ParticlePoint>();
 		sizeX = VoxelVariables.CHUNK_SIZE;
 		sizeY = VoxelVariables.CHUNK_HEIGHT;
 		sizeZ = VoxelVariables.CHUNK_SIZE;
-		tess = new Tessellator(gm);
+		tess = new Tessellator();
 		if (blocks != null)
 			for (BlockBase[][] blockBases : blocks) {
 				for (BlockBase[] blockBases2 : blockBases) {
@@ -103,15 +104,23 @@ public class Chunk {
 	}
 
 	public void rebuild(DimensionService service, Dimension dimension) {
-		if ((needsRebuild || !updated) && !updating) {
+		if ((needsRebuild || !updated) && !updating && !empty) {
 			updating = true;
 			service.add_worker(new ChunkWorkerMesh(dimension, this));
 		}
 	}
 
-	public void update(Dimension dimension, DimensionService service, Camera camera, float delta) {
+	public void update(Dimension dimension, DimensionService service, Camera camera, float delta) throws Exception {
 		distance = (float) Vector3f.sub(camera.getPosition(), new Vector3f(posX + 8f, posY + 8f, posZ + 8f), null)
 				.lengthSquared();
+		empty = Arrays.asList(blocks).size() == 0;
+		if (!empty && tess == null) {
+			generateGraphics();
+		} else if (empty && tess != null) {
+			disposeGraphics();
+		}
+		if (empty)
+			return;
 		for (BlockBase[][] blockBases : blocks) {
 			for (BlockBase[] blockBases2 : blockBases) {
 				for (BlockBase b : blockBases2) {
@@ -425,7 +434,8 @@ public class Chunk {
 	}
 
 	public void render(GameResources gm) {
-		tess.draw(gm);
+		if (!empty)
+			tess.draw(gm);
 		for (BlockBase[][] blockBases : blocks) {
 			for (BlockBase[] blockBases2 : blockBases) {
 				for (BlockBase b : blockBases2) {
@@ -439,13 +449,16 @@ public class Chunk {
 	}
 
 	public void renderShadow(GameResources gm) {
-		tess.drawShadow(gm.getSun_Camera());
+		if (!empty)
+			tess.drawShadow(gm.getSun_Camera());
 	}
 
 	public void renderOcclusion(GameResources gm) {
-		glBeginQuery(GL_SAMPLES_PASSED, tess.getOcclusion());
-		tess.drawOcclusion(gm.getCamera(), gm.getRenderer().getProjectionMatrix());
-		glEndQuery(GL_SAMPLES_PASSED);
+		if (!empty) {
+			glBeginQuery(GL_SAMPLES_PASSED, tess.getOcclusion());
+			tess.drawOcclusion(gm.getCamera(), gm.getRenderer().getProjectionMatrix());
+			glEndQuery(GL_SAMPLES_PASSED);
+		}
 	}
 
 	private void clear() {
@@ -455,6 +468,15 @@ public class Chunk {
 
 	public void dispose() {
 		clear();
+	}
+
+	public void generateGraphics() throws Exception {
+		tess = new Tessellator();
+	}
+
+	public void disposeGraphics() {
+		tess.cleanUp();
+		tess = null;
 	}
 
 	public Tessellator getTess() {

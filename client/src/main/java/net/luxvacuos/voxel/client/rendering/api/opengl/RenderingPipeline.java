@@ -100,7 +100,7 @@ public abstract class RenderingPipeline {
 		}
 		previousCameraPosition = new Vector3f();
 		previousViewMatrix = new Matrix4f();
-		finalShader = new DeferredShadingShader("Final", null);
+		finalShader = new DeferredShadingShader("Final");
 		finalShader.start();
 		finalShader.loadTransformation(Maths.createTransformationMatrix(new Vector2f(0, 0), new Vector2f(1, 1)));
 		finalShader.connectTextureUnits();
@@ -141,7 +141,7 @@ public abstract class RenderingPipeline {
 		}
 		previousCameraPosition = new Vector3f();
 		previousViewMatrix = new Matrix4f();
-		finalShader = new DeferredShadingShader("Final", null);
+		finalShader = new DeferredShadingShader("Final");
 		finalShader.start();
 		finalShader.loadTransformation(Maths.createTransformationMatrix(new Vector2f(0, 0), new Vector2f(1, 1)));
 		finalShader.connectTextureUnits();

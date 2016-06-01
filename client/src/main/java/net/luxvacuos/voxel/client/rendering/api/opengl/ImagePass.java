@@ -50,7 +50,7 @@ public abstract class ImagePass {
 
 	public void init() throws Exception {
 		fbo = new ImagePassFBO(width, height);
-		shader = new DeferredShadingShader(name, null);
+		shader = new DeferredShadingShader(name);
 		shader.start();
 		shader.loadTransformation(Maths.createTransformationMatrix(new Vector2f(0, 0), new Vector2f(1, 1)));
 		shader.connectTextureUnits();

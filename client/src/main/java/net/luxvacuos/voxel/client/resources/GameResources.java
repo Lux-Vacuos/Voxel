@@ -135,7 +135,7 @@ public class GameResources extends UGameResources {
 		skyboxRenderer = new SkyboxRenderer(loader, renderer.getProjectionMatrix());
 
 		// deferredShadingRenderer = new DeferredShadingRenderer(this);
-		itemsDropRenderer = new ItemsDropRenderer(this);
+		itemsDropRenderer = new ItemsDropRenderer();
 		TessellatorShader.getInstance();
 		TessellatorBasicShader.getInstance();
 		ParticleMaster.getInstance().init(loader, renderer.getProjectionMatrix());

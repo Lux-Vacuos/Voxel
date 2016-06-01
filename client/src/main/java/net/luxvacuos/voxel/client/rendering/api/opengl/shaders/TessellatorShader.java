@@ -56,7 +56,7 @@ public class TessellatorShader extends ShaderProgram {
 
 	private int loc_rainFactor;
 
-	public TessellatorShader() throws Exception {
+	private TessellatorShader() throws Exception {
 		super(VoxelVariables.VERTEX_FILE_TESSELLATOR, VoxelVariables.FRAGMENT_FILE_TESSELLATOR);
 	}
 

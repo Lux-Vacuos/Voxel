@@ -46,6 +46,7 @@ public class Camera extends Entity {
 
 	public boolean isMoved = false;
 	public float depth = 0;
+	public Vector3f normal = new Vector3f();
 
 	public Camera(Matrix4f proj, Vector3f aabbMin, Vector3f aabbMax) {
 		this.add(new VelocityComponent());

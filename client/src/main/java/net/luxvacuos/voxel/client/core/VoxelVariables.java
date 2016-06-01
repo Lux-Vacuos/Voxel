@@ -49,7 +49,7 @@ public class VoxelVariables {
 	public static boolean hideHud = false;
 	public static boolean onServer = false;
 	public static final String version = "0.0.10";
-	public static final int build = 215;
+	public static final int build = 216;
 	public static int FOV = 90;
 	public static int WIDTH = 1280;
 	public static int HEIGHT = 720;
@@ -89,8 +89,6 @@ public class VoxelVariables {
 	 * World Settings
 	 */
 	public static int radius = 2;
-	public static int radiusLimit = 2;
-	public static int genRadius = radius + radiusLimit;
 	public static boolean isCustomSeed = false;
 	public static String seed = "";
 	public static boolean generateChunks = true;
@@ -134,8 +132,5 @@ public class VoxelVariables {
 	 */
 	public static final String worldPath = Bootstrap.getPrefix() + "voxel/world/";
 
-	public static void update() {
-		genRadius = radius + radiusLimit;
-	}
 
 }

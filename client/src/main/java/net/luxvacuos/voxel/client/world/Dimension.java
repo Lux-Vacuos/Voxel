@@ -64,10 +64,6 @@ public abstract class Dimension {
 	private Map<ChunkKey, Chunk> chunks;
 	private SimplexNoise noise;
 	private String name;
-	private int xPlayChunk;
-	private int zPlayChunk;
-	private int yPlayChunk;
-	private int tempRadius = 0;
 	private int seedi;
 	private DimensionData data;
 	private ChunkGenerator chunkGenerator;
@@ -131,60 +127,48 @@ public abstract class Dimension {
 	}
 
 	public void updateChunksGeneration(GameResources gm, float delta) throws Exception {
-		if (gm.getCamera().getPosition().x < 0)
-			xPlayChunk = (int) ((gm.getCamera().getPosition().x - 16) / 16);
-		if (gm.getCamera().getPosition().y < 0)
-			yPlayChunk = (int) ((gm.getCamera().getPosition().y - 16) / 16);
-		if (gm.getCamera().getPosition().z < 0)
-			zPlayChunk = (int) ((gm.getCamera().getPosition().z - 16) / 16);
-		if (gm.getCamera().getPosition().x > 0)
-			xPlayChunk = (int) ((gm.getCamera().getPosition().x) / 16);
-		if (gm.getCamera().getPosition().y > 0)
-			yPlayChunk = (int) ((gm.getCamera().getPosition().y) / 16);
-		if (gm.getCamera().getPosition().z > 0)
-			zPlayChunk = (int) ((gm.getCamera().getPosition().z) / 16);
-		VoxelVariables.update();
 
-		for (int zr = -tempRadius; zr <= tempRadius; zr++) {
-			int zz = zPlayChunk + zr;
-			for (int xr = -tempRadius; xr <= tempRadius; xr++) {
-				int xx = xPlayChunk + xr;
-				for (int yr = -tempRadius; yr <= tempRadius; yr++) {
-					int yy = yPlayChunk + yr;
-					if (zr * zr + xr * xr + yr * yr < (VoxelVariables.genRadius - VoxelVariables.radiusLimit)
-							* (VoxelVariables.genRadius - VoxelVariables.radiusLimit)
-							* (VoxelVariables.genRadius - VoxelVariables.radiusLimit)) {
-						if (!hasChunk(xx, yy, zz)) {
-							if (existChunkFile(xx, yy, zz)) {
-								loadChunk(xx, yy, zz, gm);
-							} else {
-								if (VoxelVariables.generateChunks) {
-									addChunk(new Chunk(xx, yy, zz, this, gm));
-									// saveChunk( xx, yy, zz, gm);
-								}
-							}
+		for (float zr = -VoxelVariables.radius * 16f; zr <= VoxelVariables.radius * 16f; zr += 16f) {
+			float cz = (float) (gm.getCamera().getPosition().getZ() + zr);
+			for (float xr = -VoxelVariables.radius * 16f; xr <= VoxelVariables.radius * 16f; xr += 16f) {
+				float cx = (float) (gm.getCamera().getPosition().getX() + xr);
+				for (float yr = -VoxelVariables.radius * 16f; yr <= VoxelVariables.radius * 16f; yr += 16f) {
+					float cy = (float) (gm.getCamera().getPosition().getY() + yr);
+					int xx = (int) (cx / 16f);
+					int yy = (int) (cy / 16f);
+					int zz = (int) (cz / 16f);
+
+					if (!hasChunk(xx, yy, zz)) {
+						if (existChunkFile(xx, yy, zz)) {
+							loadChunk(xx, yy, zz, gm);
 						} else {
-							Chunk chunk = getChunk(xx, yy, zz);
-							chunk.update(this, dimensionService, gm.getCamera(), delta);
-							if (gm.getFrustum().cubeInFrustum(chunk.posX, chunk.posY, chunk.posZ, chunk.posX + 16,
-									chunk.posY + 16, chunk.posZ + 16)) {
-								chunk.rebuild(dimensionService, this);
-							}
-							for (ParticlePoint particlePoint : chunk.getParticlePoints()) {
-								particleSystem.generateParticles(particlePoint, delta);
+							if (VoxelVariables.generateChunks) {
+								addChunk(new Chunk(xx, yy, zz));
+								// saveChunk( xx, yy, zz, gm);
 							}
 						}
-					}
-					if (zr * zr + xr * xr + yr * yr >= (VoxelVariables.genRadius - VoxelVariables.radiusLimit)
-							* (VoxelVariables.genRadius - VoxelVariables.radiusLimit)
-							* (VoxelVariables.genRadius - VoxelVariables.radiusLimit)) {
-
-						if (hasChunk(xx, yy, zz)) {
-							chunkNodeRemovals.add(new ChunkNodeRemoval(getChunk(xx, yy, zz)));
+					} else {
+						Chunk chunk = getChunk(xx, yy, zz);
+						chunk.update(this, dimensionService, gm.getCamera(), delta);
+						if (gm.getFrustum().cubeInFrustum(chunk.posX, chunk.posY, chunk.posZ, chunk.posX + 16,
+								chunk.posY + 16, chunk.posZ + 16)) {
+							chunk.rebuild(dimensionService, this);
 						}
-
+						for (ParticlePoint particlePoint : chunk.getParticlePoints()) {
+							particleSystem.generateParticles(particlePoint, delta);
+						}
 					}
+
 				}
+			}
+		}
+
+		for (Chunk chunk : chunks.values()) {
+			float dist = (float) Vector3f.sub(new Vector3f(gm.getCamera().getPosition()).div(16),
+					new Vector3f(chunk.cx, chunk.cy, chunk.cz), null).lengthSquared();
+			if (dist > new Vector3f((float) VoxelVariables.radius, (float) VoxelVariables.radius + 1,
+					(float) VoxelVariables.radius).lengthSquared()) {
+				chunkNodeRemovals.add(new ChunkNodeRemoval(chunk));
 			}
 		}
 
@@ -193,9 +177,6 @@ public abstract class Dimension {
 			saveChunk(node.chunk, gm);
 			removeChunk(node.chunk);
 		}
-
-		if (tempRadius <= VoxelVariables.genRadius)
-			tempRadius++;
 
 	}
 
@@ -332,7 +313,7 @@ public abstract class Dimension {
 			Chunk chunk = gm.getKryo().readObject(input, Chunk.class);
 			input.close();
 			if (chunk != null) {
-				chunk.load(gm);
+				chunk.load();
 				addChunk(chunk);
 			}
 
@@ -516,20 +497,8 @@ public abstract class Dimension {
 	public void disposeGraphics() {
 	}
 
-	public int getzPlayChunk() {
-		return zPlayChunk;
-	}
-
-	public int getxPlayChunk() {
-		return xPlayChunk;
-	}
-
 	public int getDimensionID() {
 		return chunkDim;
-	}
-
-	public int getyPlayChunk() {
-		return yPlayChunk;
 	}
 
 	public SimplexNoise getNoise() {

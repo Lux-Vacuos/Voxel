@@ -28,7 +28,10 @@ import static net.luxvacuos.voxel.client.input.Keyboard.isKeyDown;
 import static net.luxvacuos.voxel.client.input.Keyboard.next;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_COMPONENT;
 import static org.lwjgl.opengl.GL11.GL_FLOAT;
+import static org.lwjgl.opengl.GL11.GL_RGB;
+import static org.lwjgl.opengl.GL11.glReadBuffer;
 import static org.lwjgl.opengl.GL11.glReadPixels;
+import static org.lwjgl.opengl.GL30.GL_COLOR_ATTACHMENT2;
 
 import java.nio.FloatBuffer;
 
@@ -53,9 +56,11 @@ import net.luxvacuos.voxel.client.world.entities.PlayerCamera;
  */
 public class GameSPState implements State {
 	FloatBuffer p;
+	FloatBuffer c;
 
 	public GameSPState() {
 		p = BufferUtils.createFloatBuffer(1);
+		c = BufferUtils.createFloatBuffer(3);
 	}
 
 	@Override
@@ -127,7 +132,14 @@ public class GameSPState implements State {
 		p.clear();
 		glReadPixels(gm.getDisplay().getDisplayWidth() / 2, gm.getDisplay().getDisplayHeight() / 2, 1, 1,
 				GL_DEPTH_COMPONENT, GL_FLOAT, p);
+		c.clear();
+		glReadBuffer(GL_COLOR_ATTACHMENT2);
+		glReadPixels(gm.getDisplay().getDisplayWidth() / 2, gm.getDisplay().getDisplayHeight() / 2, 1, 1, GL_RGB,
+				GL_FLOAT, c);
 		gm.getCamera().depth = p.get(0);
+		gm.getCamera().normal.x = c.get(0);
+		gm.getCamera().normal.y = c.get(1);
+		gm.getCamera().normal.z = c.get(2);
 		gm.getItemsDropRenderer().render(gm);
 		gm.getRenderingPipeline().end();
 

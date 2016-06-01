@@ -23,8 +23,6 @@ package net.luxvacuos.voxel.client.rendering.api.opengl.shaders;
 import net.luxvacuos.igl.vector.Matrix4f;
 import net.luxvacuos.igl.vector.Vector2f;
 import net.luxvacuos.igl.vector.Vector3f;
-import net.luxvacuos.voxel.client.core.VoxelVariables;
-import net.luxvacuos.voxel.client.rendering.api.opengl.DeferredShadingRenderer;
 import net.luxvacuos.voxel.client.util.Maths;
 import net.luxvacuos.voxel.client.world.entities.Camera;
 
@@ -74,17 +72,6 @@ public class DeferredShadingShader extends ShaderProgram {
 	private float time;
 
 	/**
-	 * Constructor
-	 * 
-	 * @throws Exception
-	 * @deprecated Due to new Rendering Pipeline
-	 */
-	public DeferredShadingShader(String num) throws Exception {
-		super(VoxelVariables.VERTEX_FILE_COMPOSITE + num + ".glsl",
-				VoxelVariables.FRAGMENT_FILE_COMPOSITE + num + ".glsl");
-	}
-
-	/**
 	 * 
 	 * 
 	 * 
@@ -95,7 +82,7 @@ public class DeferredShadingShader extends ShaderProgram {
 	 *            {@link DeferredShadingRenderer}, ignore/
 	 * @throws Exception
 	 */
-	public DeferredShadingShader(String type, String tmp) throws Exception {
+	public DeferredShadingShader(String type) throws Exception {
 		super("ImagePassV_" + type + ".glsl", "ImagePassF_" + type + ".glsl");
 	}
 
