@@ -37,7 +37,7 @@ public class MoltenAPI {
 
 	public static final String apiVersion = "0.0.1";
 	public static final int apiIntVersion = 1;
-	public static final int build = 4;
+	public static final int build = 5;
 
 	public MoltenAPI(UVoxel uVoxel) {
 		this.uVoxel = uVoxel;
