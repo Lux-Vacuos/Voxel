@@ -1,3 +1,5 @@
+release date=15:52 05.06.2016,version=0.0.1
+ * Fixed files in wrong location.
 release date=13:45 05.06.2016,version=0.0.1
  * Add Login support.
  * Add Git Versioning.
