@@ -30,12 +30,13 @@ version = "0.0.1-" + versioning.info.full
 pkg {
     name = "voxel-launcher"
 	author = "Lux Vacuos"
-    description = "Voxel Launcher."
+    description = "Voxel Standalone Launcher"
     changes = "src/pkg/changes.txt"
 	section = "games"
 
     dirs {
-        pack dir: "build/libs", prefix: "/bin"
+		pack dir: "src/pkg/bin", prefix: "/usr/bin"
+        pack dir: "build/libs", prefix: "/usr/lib/voxel/bin"
     }
 
     depends {
@@ -46,8 +47,10 @@ pkg {
 }
 
 jar {
+	version = ""
 	manifest {
         attributes (
+			"Main-Class": "net.luxvacuos.voxel.launcher.bootstrap.Bootstrap",
 			"Specification-Title": "Voxel-Launcher",
 			"Specification-Version": version,
 			"Specification-Vendor": "Lux Vacuos",
