@@ -1,3 +1,3 @@
 #!/bin/bash
 
-java -jar /usr/lib/voxel/bin/Launcher.jar
+java -jar /usr/lib/voxel/bin/launcher*.jar

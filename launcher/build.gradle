@@ -47,7 +47,6 @@ pkg {
 }
 
 jar {
-	version = ""
 	manifest {
         attributes (
 			"Main-Class": "net.luxvacuos.voxel.launcher.bootstrap.Bootstrap",
