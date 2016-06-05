@@ -58,6 +58,9 @@ public class Camera extends Entity {
 		this.getComponent(CollisionComponent.class).boundingBox.set(this.getComponent(CollisionComponent.class).min,
 				this.getComponent(CollisionComponent.class).max);
 	}
+	
+	public void render(){
+	}
 
 	public void updateRay(Matrix4f projectionMatrix, int width, int height, Vector2f pos) {
 		dRay = new DRay(projectionMatrix, Maths.createViewMatrix(this), pos, width, height);

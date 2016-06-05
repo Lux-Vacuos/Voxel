@@ -73,7 +73,14 @@ public class GameResources extends UGameResources {
 
 	private static GameResources instance = null;
 
+	@Deprecated
 	public static GameResources instance() {
+		if (instance == null)
+			instance = new GameResources();
+		return instance;
+	}
+
+	public static GameResources getInstance() {
 		if (instance == null)
 			instance = new GameResources();
 		return instance;
@@ -158,9 +165,9 @@ public class GameResources extends UGameResources {
 		SoundSystemConfig.setSoundFilesPackage("assets/sounds/");
 		SoundSystemConfig.setLogger(new LoggerSoundSystem());
 		soundSystem = new SoundSystem();
-		globalStates = new GlobalStates();
 		menuSystem = new Menu(this);
 		worldsHandler = new WorldsHandler();
+		globalStates = new GlobalStates();
 	}
 
 	public void loadResources() throws Exception {
@@ -206,7 +213,6 @@ public class GameResources extends UGameResources {
 		itemsDropRenderer.cleanUp();
 		ParticleMaster.getInstance().cleanUp();
 		renderingPipeline.disposeI();
-		// deferredShadingRenderer.cleanUp();
 		itemsGuiRenderer.cleanUp();
 		renderer.cleanUp();
 		loader.cleanUp();

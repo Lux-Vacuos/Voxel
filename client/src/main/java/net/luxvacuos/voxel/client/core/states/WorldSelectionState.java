@@ -26,7 +26,7 @@ import net.luxvacuos.voxel.client.core.Voxel;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.VectorsRendering;
 import net.luxvacuos.voxel.client.resources.GameResources;
 
-public class WorldSelectionState implements State {
+public class WorldSelectionState extends State {
 
 	@Override
 	public void update(Voxel voxel, float delta) {

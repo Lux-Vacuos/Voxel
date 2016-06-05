@@ -50,6 +50,9 @@ import net.luxvacuos.voxel.client.input.Keyboard;
 import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Display;
 import net.luxvacuos.voxel.client.resources.GameResources;
+import net.luxvacuos.voxel.client.resources.models.ModelTexture;
+import net.luxvacuos.voxel.client.resources.models.RendereableTexturedModel;
+import net.luxvacuos.voxel.client.resources.models.TexturedModel;
 import net.luxvacuos.voxel.client.ui.Inventory;
 import net.luxvacuos.voxel.client.ui.menu.ItemGui;
 import net.luxvacuos.voxel.client.util.Maths;
@@ -76,12 +79,13 @@ public class PlayerCamera extends Camera {
 	private int yPos;
 	private ItemGui block;
 	private boolean hit;
-	private boolean flyMode = true;
+	private boolean flyMode = false;
+	private RendereableTexturedModel blockSelector;
 
 	private static List<BoundingBox> blocks = new ArrayList<>();
 	private static Vector3 tmp = new Vector3();
 
-	public PlayerCamera(Matrix4f proj, Display display) {
+	public PlayerCamera(Matrix4f proj, Display display) throws Exception {
 		super(proj, new Vector3f(-0.25f, -1.4f, -0.25f), new Vector3f(0.25f, 0.2f, 0.25f));
 		center = new Vector2f(display.getDisplayWidth() / 2, display.getDisplayHeight() / 2);
 		this.speed = 3f;
@@ -89,6 +93,10 @@ public class PlayerCamera extends Camera {
 		super.add(new LifeComponent(20));
 		super.add(new ArmourComponent());
 		super.getComponent(ArmourComponent.class).armour = new EmptyArmour();
+		blockSelector = new RendereableTexturedModel(new Vector3f(),
+				new TexturedModel(GameResources.getInstance().getLoader().getObjLoader().loadObjModel("BlockSelector"),
+						new ModelTexture(GameResources.getInstance().getLoader().loadTextureEntity("BlockSelector"))));
+		blockSelector.scale = 1.02f;
 	}
 
 	public void update(float delta, GameResources gm, Dimension world) {
@@ -240,27 +248,23 @@ public class PlayerCamera extends Camera {
 		if (clickTime > 0)
 			clickTime--;
 		hit = false;
-		if (clickTime == 0)
-			if (isButtonDown(0)) {
-				clickTime = 8;
-				setBlock(gm.getDisplay().getDisplayWidth(), gm.getDisplay().getDisplayHeight(),
-						new ItemGui(new Vector3f(), Block.Air), world, gm);
-				hit = true;
-			} else if (isButtonDown(1)) {
-				clickTime = 8;
-				setBlock(gm.getDisplay().getDisplayWidth(), gm.getDisplay().getDisplayHeight(), block, world, gm);
-			}
-
+		setBlock(gm.getDisplay().getDisplayWidth(), gm.getDisplay().getDisplayHeight(), world);
 		updateRay(gm.getRenderer().getProjectionMatrix(), gm.getDisplay().getDisplayWidth(),
 				gm.getDisplay().getDisplayHeight(), center);
 	}
 
-	private void setBlock(int ww, int wh, ItemGui block, Dimension world, GameResources gm) {
+	@Override
+	public void render() {
+		blockSelector.render(GameResources.getInstance().getRenderer().getShader(), false);
+	}
+
+	private void setBlock(int ww, int wh, Dimension world) {
 		Vector4f viewport = new Vector4f(0, 0, ww, wh);
 		Vector3f wincoord = new Vector3f(ww / 2, wh / 2, depth);
 		Vector3f objcoord = new Vector3f();
 		Matrix4f mvp = new Matrix4f();
-		Matrix4f.mul(gm.getRenderer().getProjectionMatrix(), Maths.createViewMatrix(this), mvp);
+		Matrix4f.mul(GameResources.getInstance().getRenderer().getProjectionMatrix(), Maths.createViewMatrix(this),
+				mvp);
 		objcoord = mvp.unproject(wincoord, viewport, objcoord);
 		double bcx = 0, bcy = 0, bcz = 0;
 		blocks = world
@@ -297,6 +301,19 @@ public class PlayerCamera extends Camera {
 		int bx = (int) tempX;
 		int by = (int) tempY;
 		int bz = (int) tempZ - 1;
+		blockSelector.pos.set(bx + 0.5, by + 0.5f, bz + 0.5);
+		if (clickTime == 0)
+			if (isButtonDown(0)) {
+				clickTime = 8;
+				setBlock(bx, by, bz, new ItemGui(new Vector3f(), Block.Air), world);
+				hit = true;
+			} else if (isButtonDown(1)) {
+				clickTime = 8;
+				setBlock(bx, by, bz, block, world);
+			}
+	}
+
+	private void setBlock(int bx, int by, int bz, ItemGui block, Dimension world) {
 
 		if (block.getBlock().getId() == Block.Torch.getId())
 			world.addLight(bx, by, bz, 14);

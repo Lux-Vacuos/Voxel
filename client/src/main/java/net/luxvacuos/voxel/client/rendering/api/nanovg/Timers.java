@@ -80,7 +80,7 @@ public class Timers {
 
 
 	public static void initDebugDisplay() {
-		vg = GameResources.instance().getDisplay().getVg();
+		vg = GameResources.getInstance().getDisplay().getVg();
 
 		gpuTimer = new GPUtimer();
 		fps = new PerfGraph();

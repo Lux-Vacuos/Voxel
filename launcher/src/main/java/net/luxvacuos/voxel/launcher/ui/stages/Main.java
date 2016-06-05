@@ -37,11 +37,9 @@ import javafx.scene.control.TabPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
-import net.luxvacuos.voxel.launcher.core.VersionKey;
 import net.luxvacuos.voxel.launcher.ui.MainUI;
 
 public class Main extends BorderPane {
@@ -59,7 +57,6 @@ public class Main extends BorderPane {
 		webEngine.load("https://luxvacuos.net");
 		browser.minWidth(342);
 		browser.minHeight(370);
-		browser.setPrefHeight(370);
 		home.setContent(browser);
 
 		Tab status = new Tab("Settings");
@@ -71,11 +68,7 @@ public class Main extends BorderPane {
 
 		status.setContent(gridStatus);
 
-		GridPane gridBottom = new GridPane();
-		gridBottom.setAlignment(Pos.CENTER);
-		gridBottom.setHgap(10);
-		gridBottom.setVgap(10);
-		gridBottom.setPadding(new Insets(10, 10, 10, 10));
+		BorderPane bottom = new BorderPane();
 
 		playButton = new Button("Play");
 		playButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -87,7 +80,7 @@ public class Main extends BorderPane {
 					@Override
 					public void run() {
 						try {
-							ui.getUpdater().downloadAndRun(new VersionKey("client", "0.0.10", "alpha"));
+							ui.getUpdater().downloadAndRun(ui.getUpdater().getVersionsHandler().getVersions().get(0));
 							Platform.runLater(() -> playButton.setText("Launching..."));
 						} catch (JsonSyntaxException | JsonIOException | FileNotFoundException e) {
 							Platform.runLater(() -> playButton.setText("Error downloading, try again"));
@@ -145,18 +138,17 @@ public class Main extends BorderPane {
 		});
 		playButton.setMinSize(160, 60);
 		playButton.setFont(new Font(16));
-		gridBottom.add(playButton, 0, 0);
-		Text text = new Text("Download Progress:");
-		gridBottom.add(text, 1, 0);
+		bottom.setCenter(playButton);
+
 		download = new ProgressBar(0);
 		download.setMinWidth(300);
-		gridBottom.add(download, 2, 0);
+		download.setPrefWidth(4000);
+		bottom.setBottom(download);
 
 		TabPane tabPane = new TabPane(home, status);
 		setTop(tabPane);
-		setBottom(gridBottom);
+		setBottom(bottom);
 		autosize();
-
 	}
 
 }

@@ -47,8 +47,8 @@ public class GameSP {
 
 		if (VoxelVariables.debug) {
 			VectorsRendering.renderText(
-					"Voxel " + " (" + VoxelVariables.version + "/" + VoxelVariables.build + ")" + " Molten API" + " ("
-							+ MoltenAPI.apiVersion + "/" + MoltenAPI.build + ")",
+					"Voxel " + " (" + VoxelVariables.version + ")" + " Molten API" + " (" + MoltenAPI.apiVersion + "/"
+							+ MoltenAPI.build + ")",
 					"Roboto-Bold", 5 * VoxelVariables.XSCALE, 12 * VoxelVariables.YSCALE, 25 * VoxelVariables.YSCALE,
 					VectorsRendering.rgba(160, 160, 160, 200, VectorsRendering.colorA),
 					VectorsRendering.rgba(255, 255, 255, 255, VectorsRendering.colorB));
@@ -85,7 +85,7 @@ public class GameSP {
 				VectorsRendering.rgba(255, 255, 255, 200, VectorsRendering.colorA),
 				VectorsRendering.rgba(32, 32, 32, 32, VectorsRendering.colorB),
 				VectorsRendering.rgba(0, 0, 0, 48, VectorsRendering.colorC));
-		VectorsRendering.renderLife(440 * VoxelVariables.XSCALE, 700 * VoxelVariables.YSCALE,
+		VectorsRendering.renderLife(440 * VoxelVariables.XSCALE, 600 * VoxelVariables.YSCALE,
 				200 * VoxelVariables.XSCALE, 20 * VoxelVariables.YSCALE,
 				((PlayerCamera) gm.getCamera()).getComponent(LifeComponent.class).life / 20f);
 

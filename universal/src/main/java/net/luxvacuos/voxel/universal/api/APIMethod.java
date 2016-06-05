@@ -20,6 +20,6 @@
 
 package net.luxvacuos.voxel.universal.api;
 
-public interface APIMethod {
-	Object run(Object... objects);
+public interface APIMethod<T> {
+	T run(Object... objects);
 }

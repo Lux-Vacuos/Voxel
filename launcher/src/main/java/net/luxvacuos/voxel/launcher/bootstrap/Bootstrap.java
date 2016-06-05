@@ -21,6 +21,9 @@
 package net.luxvacuos.voxel.launcher.bootstrap;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.jar.Attributes;
+import java.util.jar.Manifest;
 
 import net.luxvacuos.voxel.launcher.core.LauncherVariables;
 import net.luxvacuos.voxel.launcher.ui.MainUI;
@@ -46,6 +49,15 @@ public class Bootstrap {
 	}
 
 	private Bootstrap() {
+		try {
+			Manifest manifest = new Manifest(getClass().getClassLoader().getResourceAsStream("META-INF/MANIFEST.MF"));
+			Attributes attr = manifest.getMainAttributes();
+			String t = attr.getValue("Specification-Version");
+			if (t != null)
+				LauncherVariables.version = t;
+		} catch (IOException E) {
+			E.printStackTrace();
+		}
 	}
 
 	/**
@@ -100,6 +112,7 @@ public class Bootstrap {
 	public static void main(String[] args) {
 		Thread.currentThread().setName("Voxel-Launcher-Bootstrap");
 		new File(Bootstrap.getPrefix() + LauncherVariables.project + "/libraries/").mkdirs();
+		new Bootstrap();
 
 		MainUI.main(args);
 	}

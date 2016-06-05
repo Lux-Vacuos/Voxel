@@ -180,20 +180,24 @@ public abstract class Dimension {
 
 	}
 
-	public void updateChunksRender(GameResources gm) {
-		renderedChunks = 0;
-
+	public void updateChunksRender(GameResources gm, boolean transparent) {
+		List<Chunk> chunks_ = new ArrayList<>();
 		for (Chunk chunk : chunks.values()) {
 			if (chunk != null) {
 				if (gm.getFrustum().cubeInFrustum(chunk.posX, chunk.posY, chunk.posZ, chunk.posX + 16, chunk.posY + 16,
 						chunk.posZ + 16)) {
 					int res = glGetQueryObjectui(chunk.getTess().getOcclusion(), GL_QUERY_RESULT);
-					if (res > 0) {
-						chunk.render(gm);
-						renderedChunks++;
+					if (res > 0 || transparent) {
+						chunks_.add(chunk);
 					}
 				}
 			}
+		}
+		Maths.sortHighToLow(chunks_);
+		renderedChunks = 0;
+		for (Chunk chunk : chunks_) {
+			chunk.render(gm, transparent);
+			renderedChunks++;
 		}
 	}
 
@@ -432,9 +436,6 @@ public abstract class Dimension {
 		Chunk chunk = getChunk(cx, cy, cz);
 		if (chunk != null) {
 			chunk.setLocalBlock(x, y, z, id);
-			chunk.updated = false;
-			chunk.needsRebuild = true;
-			chunk.updatedBlocks = false;
 			return true;
 		}
 		return false;

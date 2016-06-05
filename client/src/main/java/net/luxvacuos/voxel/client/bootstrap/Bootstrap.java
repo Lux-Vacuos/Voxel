@@ -137,7 +137,6 @@ public class Bootstrap {
 	 */
 	private static void parseArgs(String[] args) {
 		boolean gaveWidth = false, gaveHeight = false;
-		boolean gaveAutostart = false;
 
 		for (int i = 0; i < args.length; i++) {
 			switch (args[i]) {
@@ -156,12 +155,6 @@ public class Bootstrap {
 				if (VoxelVariables.HEIGHT <= 0)
 					throw new IllegalArgumentException("Height must be positive");
 				gaveHeight = true;
-				break;
-			case "-autostart":
-				if (gaveAutostart)
-					throw new IllegalStateException("Autostart already given");
-				VoxelVariables.autostart = true;
-				gaveAutostart = true;
 				break;
 			case "-username":
 				VoxelVariables.username = args[++i];

@@ -41,7 +41,7 @@ import net.luxvacuos.voxel.client.util.Maths;
 public class RendereableTexturedModel {
 
 	private TexturedModel model;
-	private Vector3f pos;
+	public Vector3f pos;
 	public float rotX, rotY, rotZ, scale = 1;
 
 	public RendereableTexturedModel(Vector3f pos, TexturedModel tex) {
@@ -49,11 +49,15 @@ public class RendereableTexturedModel {
 		model = tex;
 	}
 
-	public void render(EntityShader shader) {
+	public void render(EntityShader shader){
+		render(shader, true);
+	}
+	
+	public void render(EntityShader shader, boolean useShadows) {
 		shader.start();
-		shader.loadProjectionMatrix(GameResources.instance().getRenderer().getProjectionMatrix());
-		shader.loadviewMatrix(GameResources.instance().getCamera());
-		shader.loadLightMatrix(GameResources.instance());
+		shader.loadProjectionMatrix(GameResources.getInstance().getRenderer().getProjectionMatrix());
+		shader.loadviewMatrix(GameResources.getInstance().getCamera());
+		shader.loadLightMatrix(GameResources.getInstance());
 		shader.useShadows(VoxelVariables.useShadows);
 		RawModel rawmodel = model.getRawModel();
 		glBindVertexArray(rawmodel.getVaoID());
@@ -63,10 +67,9 @@ public class RendereableTexturedModel {
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, model.getTexture().getID());
 		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_2D, GameResources.instance().getMasterShadowRenderer().getFbo().getTexture());
+		glBindTexture(GL_TEXTURE_2D, GameResources.getInstance().getMasterShadowRenderer().getFbo().getTexture());
 		shader.loadEntityLight(1);
-		shader.loadTransformationMatrix(
-				Maths.createTransformationMatrix(pos, rotX, rotY, rotZ, scale));
+		shader.loadTransformationMatrix(Maths.createTransformationMatrix(pos, rotX, rotY, rotZ, scale));
 		glDrawElements(GL_TRIANGLES, model.getRawModel().getVertexCount(), GL_UNSIGNED_INT, 0);
 		glDisableVertexAttribArray(0);
 		glDisableVertexAttribArray(1);
@@ -74,4 +77,5 @@ public class RendereableTexturedModel {
 		glBindVertexArray(0);
 		shader.stop();
 	}
+
 }

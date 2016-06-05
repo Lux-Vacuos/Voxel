@@ -1,0 +1,5 @@
+release date=13:45 05.06.2016,version=0.0.1
+ * Add Login support.
+ * Add Git Versioning.
+release date=13:30 04.06.2016,version=0.0.1
+ * initial release

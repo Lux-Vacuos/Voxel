@@ -22,10 +22,10 @@ package net.luxvacuos.voxel.client.api;
 
 import net.luxvacuos.voxel.universal.api.APIMethod;
 
-public class AddEntity implements APIMethod {
+public class AddEntity implements APIMethod<Void> {
 	@Override
-	public Boolean run(Object... objects) {
+	public Void run(Object... objects) {
 		System.out.println(objects[0]);
-		return true;
+		return null;
 	}
 }

@@ -100,8 +100,8 @@ public class AboutMenu {
 				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorA),
 				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorB));
 		VectorsRendering.renderText(
-				" (" + VoxelVariables.version + "/" + VoxelVariables.build + ")" + " Molten API" + " ("
-						+ MoltenAPI.apiVersion + "/" + MoltenAPI.build + ")",
+				" (" + VoxelVariables.version + ")" + " Molten API" + " (" + MoltenAPI.apiVersion + "/"
+						+ MoltenAPI.build + ")",
 				"Roboto-Regular", NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE, 1180 * VoxelVariables.XSCALE,
 				(300 + globalY) * VoxelVariables.YSCALE, 40 * VoxelVariables.YSCALE,
 				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorA),

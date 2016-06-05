@@ -25,7 +25,10 @@ import static org.lwjgl.opengl.GL11.GL_VENDOR;
 import static org.lwjgl.opengl.GL11.GL_VERSION;
 import static org.lwjgl.opengl.GL11.glGetString;
 
+import java.io.IOException;
 import java.util.Map;
+import java.util.jar.Attributes;
+import java.util.jar.Manifest;
 
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFW;
@@ -33,9 +36,11 @@ import org.lwjgl.glfw.GLFW;
 import net.luxvacuos.igl.Logger;
 import net.luxvacuos.voxel.client.api.AddChunk;
 import net.luxvacuos.voxel.client.api.AddEntity;
+import net.luxvacuos.voxel.client.api.GetActiveDimension;
 import net.luxvacuos.voxel.client.api.GetChunk;
 import net.luxvacuos.voxel.client.api.Test;
 import net.luxvacuos.voxel.client.bootstrap.Bootstrap;
+import net.luxvacuos.voxel.client.core.GlobalStates.GameState;
 import net.luxvacuos.voxel.client.core.GlobalStates.InternalState;
 import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.Timers;
@@ -70,11 +75,19 @@ public class Voxel extends UVoxel {
 	}
 
 	public void preInit() throws Throwable {
+		try {
+			Manifest manifest = new Manifest(getClass().getClassLoader().getResourceAsStream("META-INF/MANIFEST.MF"));
+			Attributes attr = manifest.getMainAttributes();
+			String t = attr.getValue("Specification-Version");
+			if (t != null)
+				VoxelVariables.version = t;
+		} catch (IOException E) {
+			E.printStackTrace();
+		}
 		Logger.log("Starting Client");
-		gameResources = GameResources.instance();
+		gameResources = GameResources.getInstance();
 		getGameResources().preInit();
 		Logger.log("Voxel Version: " + VoxelVariables.version);
-		Logger.log("Build: " + VoxelVariables.build);
 		Logger.log("Molten API Version: " + MoltenAPI.apiVersion);
 		Logger.log("Build: " + MoltenAPI.build);
 		Logger.log("Running on: " + Bootstrap.getPlatform());
@@ -110,14 +123,16 @@ public class Voxel extends UVoxel {
 		Mouse.setHidden(true);
 		Timers.initDebugDisplay();
 		getGameResources().postInit();
+		getGameResources().getGlobalStates().setState(GameState.MAINMENU);
 	}
 
 	@Override
-	public void registerAPIMethods(MoltenAPI api, Map<String, APIMethod> methods) {
+	public void registerAPIMethods(MoltenAPI api, Map<String, APIMethod<?>> methods) {
 		methods.put("Client_Test", new Test());
 		methods.put("Client_AddEntity", new AddEntity());
 		methods.put("Client_GetChunk", new GetChunk());
 		methods.put("Client_AddChunk", new AddChunk());
+		methods.put("Client_GetActiveDimension", new GetActiveDimension());
 	}
 
 	private void mainLoop() {

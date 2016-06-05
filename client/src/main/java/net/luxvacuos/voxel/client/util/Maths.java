@@ -245,6 +245,25 @@ public class Maths {
 		for (int i = 1; i < list.size(); i++) {
 			Chunk item = list.get(i);
 			if (item.getDistance() < list.get(i - 1).getDistance()) {
+				sortLowToHigh(list, i);
+			}
+		}
+	}
+
+	private static void sortLowToHigh(List<Chunk> list, int i) {
+		Chunk item = list.get(i);
+		int attemptPos = i - 1;
+		while (attemptPos != 0 && list.get(attemptPos - 1).getDistance() > item.getDistance()) {
+			attemptPos--;
+		}
+		list.remove(i);
+		list.add(attemptPos, item);
+	}
+	
+	public static void sortHighToLow(List<Chunk> list) {
+		for (int i = 1; i < list.size(); i++) {
+			Chunk item = list.get(i);
+			if (item.getDistance() > list.get(i - 1).getDistance()) {
 				sortUpHighToLow(list, i);
 			}
 		}
@@ -253,7 +272,7 @@ public class Maths {
 	private static void sortUpHighToLow(List<Chunk> list, int i) {
 		Chunk item = list.get(i);
 		int attemptPos = i - 1;
-		while (attemptPos != 0 && list.get(attemptPos - 1).getDistance() > item.getDistance()) {
+		while (attemptPos != 0 && list.get(attemptPos - 1).getDistance() < item.getDistance()) {
 			attemptPos--;
 		}
 		list.remove(i);

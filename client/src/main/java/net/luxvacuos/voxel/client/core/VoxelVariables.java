@@ -30,6 +30,7 @@ import net.luxvacuos.voxel.client.bootstrap.Bootstrap;
  * @category Kernel
  */
 public class VoxelVariables {
+
 	/**
 	 * Display Data
 	 */
@@ -48,8 +49,7 @@ public class VoxelVariables {
 	public static boolean debug = false;
 	public static boolean hideHud = false;
 	public static boolean onServer = false;
-	public static final String version = "0.0.10";
-	public static final int build = 216;
+	public static String version = "Development Version";
 	public static int FOV = 90;
 	public static int WIDTH = 1280;
 	public static int HEIGHT = 720;
@@ -131,6 +131,5 @@ public class VoxelVariables {
 	 * World Folder Path
 	 */
 	public static final String worldPath = Bootstrap.getPrefix() + "voxel/world/";
-
 
 }

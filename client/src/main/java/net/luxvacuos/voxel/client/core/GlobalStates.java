@@ -50,7 +50,8 @@ public class GlobalStates {
 		GAME_SP(new GameSPState()), MAINMENU(new MainMenuState()), IN_PAUSE(new InPauseState()), LOADING_WORLD(
 				new LoadingSPState()), OPTIONS(new OptionsState()), WORLD_SELECTION(new WorldSelectionState()), ABOUT(
 						new AboutState()), MP_SELECTION(new MPSelectionState()), LOADING_MP_WORLD(
-								new LoadingMPState()), GAME_SP_INVENTORY(new GameSPInventoryState());
+								new LoadingMPState()), GAME_SP_INVENTORY(
+										new GameSPInventoryState());
 
 		GameState(State state) {
 			this.state = state;
@@ -65,7 +66,6 @@ public class GlobalStates {
 
 	public GlobalStates() {
 		internalState = InternalState.STOPPED;
-		state = VoxelVariables.autostart ? GameState.LOADING_WORLD : GameState.MAINMENU;
 	}
 
 	public void doUpdate(Voxel voxel, float delta) throws Exception {
@@ -90,8 +90,11 @@ public class GlobalStates {
 
 	public void setState(GameState state) {
 		if (!state.equals(this.state)) {
+			if (this.state != null)
+				this.state.state.end();
 			this.oldState = this.state;
 			this.state = state;
+			this.state.state.start();
 		}
 	}
 

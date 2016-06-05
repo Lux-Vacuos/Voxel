@@ -57,7 +57,7 @@ public class Mouse {
 
 	public static void addMoveEvent(double mouseX, double mouseY) {
 		latestX = (int) mouseX;
-		latestY = GameResources.instance().getDisplay().getDisplayHeight() - (int) mouseY;
+		latestY = GameResources.getInstance().getDisplay().getDisplayHeight() - (int) mouseY;
 
 		lastxEvents[queue.getNextPos()] = xEvents[queue.getNextPos()];
 		lastyEvents[queue.getNextPos()] = yEvents[queue.getNextPos()];
@@ -123,10 +123,10 @@ public class Mouse {
 				latestX = 0;
 			if (latestY < 0)
 				latestY = 0;
-			if (latestX > GameResources.instance().getDisplay().getDisplayWidth() - 1)
-				latestX = GameResources.instance().getDisplay().getDisplayWidth() - 1;
-			if (latestY > GameResources.instance().getDisplay().getDisplayHeight() - 1)
-				latestY = GameResources.instance().getDisplay().getDisplayHeight() - 1;
+			if (latestX > GameResources.getInstance().getDisplay().getDisplayWidth() - 1)
+				latestX = GameResources.getInstance().getDisplay().getDisplayWidth() - 1;
+			if (latestY > GameResources.getInstance().getDisplay().getDisplayHeight() - 1)
+				latestY = GameResources.getInstance().getDisplay().getDisplayHeight() - 1;
 		}
 
 		x = latestX;
@@ -134,13 +134,13 @@ public class Mouse {
 	}
 
 	public static void setGrabbed(boolean grab) {
-		GLFW.glfwSetInputMode(GameResources.instance().getDisplay().getWindow(), GLFW.GLFW_CURSOR,
+		GLFW.glfwSetInputMode(GameResources.getInstance().getDisplay().getWindow(), GLFW.GLFW_CURSOR,
 				grab ? GLFW.GLFW_CURSOR_DISABLED : GLFW.GLFW_CURSOR_HIDDEN);
 		grabbed = grab;
 	}
 
 	public static void setHidden(boolean hidden) {
-		GLFW.glfwSetInputMode(GameResources.instance().getDisplay().getWindow(), GLFW.GLFW_CURSOR,
+		GLFW.glfwSetInputMode(GameResources.getInstance().getDisplay().getWindow(), GLFW.GLFW_CURSOR,
 				hidden ? GLFW.GLFW_CURSOR_HIDDEN : GLFW.GLFW_CURSOR_NORMAL);
 	}
 
@@ -149,7 +149,7 @@ public class Mouse {
 	}
 
 	public static boolean isButtonDown(int button) {
-		return GLFW.glfwGetMouseButton(GameResources.instance().getDisplay().getWindow(), button) == GLFW.GLFW_PRESS;
+		return GLFW.glfwGetMouseButton(GameResources.getInstance().getDisplay().getWindow(), button) == GLFW.GLFW_PRESS;
 	}
 
 	public static boolean next() {
@@ -223,7 +223,7 @@ public class Mouse {
 	}
 
 	public static void setCursorPosition(int new_x, int new_y) {
-		GLFW.glfwSetCursorPos(GameResources.instance().getDisplay().getWindow(), new_x, new_y);
+		GLFW.glfwSetCursorPos(GameResources.getInstance().getDisplay().getWindow(), new_x, new_y);
 	}
 
 }

@@ -24,7 +24,9 @@ import static org.lwjgl.opengl.GL15.GL_SAMPLES_PASSED;
 import static org.lwjgl.opengl.GL15.glBeginQuery;
 import static org.lwjgl.opengl.GL15.glEndQuery;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Queue;
 import java.util.Random;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -41,8 +43,6 @@ import net.luxvacuos.voxel.client.world.block.Block;
 import net.luxvacuos.voxel.client.world.block.BlockBase;
 import net.luxvacuos.voxel.client.world.block.BlockEntity;
 import net.luxvacuos.voxel.client.world.block.BlocksResources;
-import net.luxvacuos.voxel.client.world.block.types.BlockNode;
-import net.luxvacuos.voxel.client.world.block.types.BlockPedestal;
 import net.luxvacuos.voxel.client.world.entities.Camera;
 
 /**
@@ -60,6 +60,7 @@ public class Chunk {
 
 	private transient Tessellator tess;
 	private transient float distance;
+	private transient List<BlockEntity> blockEntities;
 	transient int sizeX, sizeY, sizeZ;
 	public transient boolean needsRebuild = true, updated = false, updating = false, empty = true, visible = false,
 			creating = false, decorating = false, updatingBlocks = false, updatedBlocks = false;
@@ -86,6 +87,7 @@ public class Chunk {
 
 	public void load() throws Exception {
 		particlePoints = new ConcurrentLinkedQueue<ParticlePoint>();
+		blockEntities = new ArrayList<>();
 		sizeX = VoxelVariables.CHUNK_SIZE;
 		sizeY = VoxelVariables.CHUNK_HEIGHT;
 		sizeZ = VoxelVariables.CHUNK_SIZE;
@@ -121,15 +123,6 @@ public class Chunk {
 		}
 		if (empty)
 			return;
-		for (BlockBase[][] blockBases : blocks) {
-			for (BlockBase[] blockBases2 : blockBases) {
-				for (BlockBase b : blockBases2) {
-					if (b instanceof BlockEntity) {
-						((BlockEntity) b).update(dimension, delta);
-					}
-				}
-			}
-		}
 
 		if (!created && !creating) {
 			creating = true;
@@ -137,7 +130,20 @@ public class Chunk {
 		}
 		if (!updatingBlocks && !updatedBlocks) {
 			updatingBlocks = true;
+			blockEntities.clear();
+			for (BlockBase[][] blockBases : blocks) {
+				for (BlockBase[] blockBases2 : blockBases) {
+					for (BlockBase b : blockBases2) {
+						if (b instanceof BlockEntity) {
+							blockEntities.add((BlockEntity) b);
+						}
+					}
+				}
+			}
 			service.add_worker(new ChunkWorkerUpdate(dimension, this));
+		}
+		for (BlockEntity blockEntity : blockEntities) {
+			blockEntity.update(dimension, delta);
 		}
 
 		if (!decorated) {
@@ -222,30 +228,6 @@ public class Chunk {
 				dimension.getChunkGenerator().addTree(dimension, xx + cx * 16, height, zz + cz * 16,
 						Maths.randInt(4, 10), new Random(dimension.getSeed()));
 		}
-		if (Maths.getRandomBoolean(60)) {
-			int ty = 0, tx = 0, tz = 0;
-			boolean can = false;
-			for (int x = 0; x < sizeX; x++) {
-				for (int z = 0; z < sizeZ; z++) {
-					for (int y = 0; y < sizeY; y++) {
-						if (y <= ty && getLocalBlock(x, y, z).getId() != 0 && !getLocalBlock(x, y, z).isTransparent()
-								&& !getLocalBlock(x, y, z).isFluid()
-								&& getLocalBlock(x, y, z).getId() != Block.Wood.getId()) {
-							ty = y;
-							tz = z;
-							tx = x;
-							can = true;
-						}
-					}
-				}
-			}
-			if (!can)
-				return;
-			dimension.setGlobalBlock(tx + posX, ty + 1 + posY, tz + posZ,
-					new BlockPedestal(tx + posX, ty + 1 + posY, tz + posZ));
-			dimension.setGlobalBlock(tx + posX, ty + 2 + posY, tz + posZ,
-					new BlockNode(tx + posX, ty + 2 + posY, tz + posZ));
-		}
 		decorated = true;
 	}
 
@@ -321,6 +303,9 @@ public class Chunk {
 	}
 
 	public void setLocalBlock(int x, int y, int z, BlockBase id) {
+		updated = false;
+		needsRebuild = true;
+		updatedBlocks = false;
 		blocks[x & 0xF][y & 0xF][z & 0xF] = id;
 	}
 
@@ -433,18 +418,14 @@ public class Chunk {
 		return false;
 	}
 
-	public void render(GameResources gm) {
-		if (!empty)
-			tess.draw(gm);
-		for (BlockBase[][] blockBases : blocks) {
-			for (BlockBase[] blockBases2 : blockBases) {
-				for (BlockBase b : blockBases2) {
-					if (b instanceof BlockEntity) {
-						if (((BlockEntity) b).isObjModel())
-							((BlockEntity) b).render();
-					}
+	public void render(GameResources gm, boolean transparent) {
+		if (!empty) {
+			tess.draw(gm, transparent);
+			if (!transparent)
+				for (BlockEntity blockEntity : blockEntities) {
+					if (blockEntity.isObjModel())
+						blockEntity.render();
 				}
-			}
 		}
 	}
 

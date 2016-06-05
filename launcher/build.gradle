@@ -1,4 +1,18 @@
-apply plugin:'application'
+
+buildscript {
+    repositories {
+        mavenCentral()
+         jcenter()
+    }
+    dependencies {
+        classpath 'org.jamel.pkg4j:pkg4j-gradle:0.0.6'
+        classpath 'net.nemerosa:versioning:2.0.0'
+    }
+}
+
+apply plugin: 'net.nemerosa.versioning'
+apply plugin: 'pkg4j'
+apply plugin: 'application'
 
 mainClassName = 'net.luxvacuos.voxel.launcher.bootstrap.Bootstrap'
 sourceCompatibility = 1.8
@@ -11,15 +25,34 @@ sourceSets {
     }
 }
 
+version = "0.0.1-" + versioning.info.full
+
+pkg {
+    name = "voxel-launcher"
+	author = "Lux Vacuos"
+    description = "Voxel Launcher."
+    changes = "src/pkg/changes.txt"
+	section = "games"
+
+    dirs {
+        pack dir: "build/libs", prefix: "/bin"
+    }
+
+    depends {
+        on "openjdk-8-jre"
+        on "openjfx"
+    }
+
+}
+
 jar {
-	version = "0.0.1-" + build
 	manifest {
         attributes (
 			"Specification-Title": "Voxel-Launcher",
 			"Specification-Version": version,
 			"Specification-Vendor": "Lux Vacuos",
 			"Implementation-Title": "net.luxvacuos.voxel.launcher",
-			"Implementation-Version": build,
+			"Implementation-Version": versioning.info.full,
 			"Implementation-Vendor": "Lux Vacuos"
 			)
     }

@@ -20,12 +20,15 @@
 
 package net.luxvacuos.voxel.client.rendering.api.opengl;
 
+import static org.lwjgl.opengl.GL11.GL_BLEND;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_NEAREST;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11.GL_TRIANGLE_STRIP;
 import static org.lwjgl.opengl.GL11.glBindTexture;
+import static org.lwjgl.opengl.GL11.glDisable;
 import static org.lwjgl.opengl.GL11.glDrawArrays;
+import static org.lwjgl.opengl.GL11.glEnable;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE6;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
 import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
@@ -66,7 +69,7 @@ import net.luxvacuos.voxel.client.world.entities.PlayerCamera;
  */
 public abstract class RenderingPipeline {
 
-	protected DeferredShadingFBO mainFBO;
+	protected RenderingPipelineFBO mainFBO;
 	protected int width, height;
 	protected List<ImagePass> imagePasses;
 	private Matrix4f previousViewMatrix;
@@ -79,7 +82,7 @@ public abstract class RenderingPipeline {
 	public RenderingPipeline(String name) throws Exception {
 		this.name = name;
 		Logger.log("Using " + name + " Rendering Pipeline");
-		GameResources gm = GameResources.instance();
+		GameResources gm = GameResources.getInstance();
 
 		width = (int) (gm.getDisplay().getDisplayWidth() * gm.getDisplay().getPixelRatio());
 		height = (int) (gm.getDisplay().getDisplayHeight() * gm.getDisplay().getPixelRatio());
@@ -91,7 +94,7 @@ public abstract class RenderingPipeline {
 		float[] positions = { -1, 1, -1, -1, 1, 1, 1, -1 };
 		quad = gm.getLoader().loadToVAO(positions, 2);
 
-		mainFBO = new DeferredShadingFBO(width, height);
+		mainFBO = new RenderingPipelineFBO(width, height);
 		imagePasses = new ArrayList<>();
 		auxs = new ImagePassFBO[3];
 
@@ -104,8 +107,8 @@ public abstract class RenderingPipeline {
 		finalShader.start();
 		finalShader.loadTransformation(Maths.createTransformationMatrix(new Vector2f(0, 0), new Vector2f(1, 1)));
 		finalShader.connectTextureUnits();
-		finalShader.loadResolution(new Vector2f(GameResources.instance().getDisplay().getDisplayWidth(),
-				GameResources.instance().getDisplay().getDisplayHeight()));
+		finalShader.loadResolution(new Vector2f(GameResources.getInstance().getDisplay().getDisplayWidth(),
+				GameResources.getInstance().getDisplay().getDisplayHeight()));
 		finalShader.loadSkyColor(VoxelVariables.skyColor);
 		finalShader.stop();
 		init(gm);
@@ -113,7 +116,7 @@ public abstract class RenderingPipeline {
 
 	/**
 	 * 
-	 * Creates the {@link DeferredShadingFBO} and initializes variables.
+	 * Creates the {@link RenderingPipelineFBO} and initializes variables.
 	 * 
 	 * @param width
 	 *            Final Image Width, can be higher that the window width.
@@ -123,7 +126,7 @@ public abstract class RenderingPipeline {
 	public RenderingPipeline(String name, int width, int height) throws Exception {
 		this.name = name;
 		Logger.log("Using " + name + " Rendering Pipeline");
-		GameResources gm = GameResources.instance();
+		GameResources gm = GameResources.getInstance();
 
 		if (width > GLUtil.getTextureMaxSize())
 			width = GLUtil.getTextureMaxSize();
@@ -132,7 +135,7 @@ public abstract class RenderingPipeline {
 		float[] positions = { -1, 1, -1, -1, 1, 1, 1, -1 };
 		quad = gm.getLoader().loadToVAO(positions, 2);
 
-		mainFBO = new DeferredShadingFBO(width, height);
+		mainFBO = new RenderingPipelineFBO(width, height);
 		imagePasses = new ArrayList<>();
 		auxs = new ImagePassFBO[3];
 
@@ -145,8 +148,8 @@ public abstract class RenderingPipeline {
 		finalShader.start();
 		finalShader.loadTransformation(Maths.createTransformationMatrix(new Vector2f(0, 0), new Vector2f(1, 1)));
 		finalShader.connectTextureUnits();
-		finalShader.loadResolution(new Vector2f(GameResources.instance().getDisplay().getDisplayWidth(),
-				GameResources.instance().getDisplay().getDisplayHeight()));
+		finalShader.loadResolution(new Vector2f(GameResources.getInstance().getDisplay().getDisplayWidth(),
+				GameResources.getInstance().getDisplay().getDisplayHeight()));
 		finalShader.loadSkyColor(VoxelVariables.skyColor);
 		finalShader.stop();
 		this.width = width;
@@ -167,6 +170,8 @@ public abstract class RenderingPipeline {
 	 * Begin Rendering
 	 */
 	public void begin() {
+		glDisable(GL_BLEND);
+
 		mainFBO.begin();
 	}
 
@@ -175,6 +180,7 @@ public abstract class RenderingPipeline {
 	 */
 	public void end() {
 		mainFBO.end();
+		glEnable(GL_BLEND);
 	}
 
 	/**
@@ -239,7 +245,7 @@ public abstract class RenderingPipeline {
 	 */
 	public abstract void dispose();
 
-	public DeferredShadingFBO getMainFBO() {
+	public RenderingPipelineFBO getMainFBO() {
 		return mainFBO;
 	}
 

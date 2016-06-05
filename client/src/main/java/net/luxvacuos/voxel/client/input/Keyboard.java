@@ -247,7 +247,7 @@ public class Keyboard {
 	}
 
 	public static boolean isKeyDown(int key) {
-		return GLFW.glfwGetKey(GameResources.instance().getDisplay().getWindow(),
+		return GLFW.glfwGetKey(GameResources.getInstance().getDisplay().getWindow(),
 				KeyCodes.toGlfwKey(key)) == GLFW.GLFW_PRESS;
 	}
 

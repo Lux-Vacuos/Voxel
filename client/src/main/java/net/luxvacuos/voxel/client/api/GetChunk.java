@@ -24,7 +24,7 @@ import net.luxvacuos.voxel.client.world.Dimension;
 import net.luxvacuos.voxel.client.world.chunks.Chunk;
 import net.luxvacuos.voxel.universal.api.APIMethod;
 
-public class GetChunk implements APIMethod {
+public class GetChunk implements APIMethod<Chunk> {
 	@Override
 	public Chunk run(Object... objects) {
 		Dimension dim = (Dimension) objects[0];

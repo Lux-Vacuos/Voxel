@@ -31,6 +31,7 @@ in mat3 TBN;
 out vec4 [5] out_Color;
 
 uniform vec3 cameraPos;
+uniform int transparent;
 uniform sampler2D texture0;
 uniform sampler2DShadow depth;
 uniform sampler2D normalMap;
@@ -99,7 +100,12 @@ void main(void) {
 	}
 
     vec4 textureColour = texture(texture0, texcoords);
-    if(textureColour.a < 0.5)
+    if(textureColour.a == 0)
+    	discard;
+    
+    if(transparent == 1 && textureColour.a == 1)
+    	discard;
+    else if(transparent == 0 && textureColour.a < 1)
     	discard;
     	
 	vec3 normal = texture(normalMap, texcoords).rgb;
@@ -109,6 +115,11 @@ void main(void) {
 	float reflectionFactor = rainFactor;
 	reflectionFactor += texture(specularMap, texcoords).r;
 	reflectionFactor = clamp(reflectionFactor,0,1);
+	
+	if(transparent == 1){
+		shadow = clamp(shadow,0.02,1.0);
+    	textureColour.rgb *= (1 - shadow);
+	}
     	
 	out_Color[0] = textureColour;
 	out_Color[1] = vec4(pass_position.xyz,0);

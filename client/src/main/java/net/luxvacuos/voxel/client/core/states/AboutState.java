@@ -32,8 +32,8 @@ import net.luxvacuos.voxel.client.resources.GameResources;
  * @author danirod
  * @category Kernel
  */
-public class AboutState implements State {
-
+public class AboutState extends State {
+	
 	@Override
 	public void render(Voxel voxel, float delta) {
 		GameResources gm = voxel.getGameResources();

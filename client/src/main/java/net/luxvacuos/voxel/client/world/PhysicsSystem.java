@@ -155,7 +155,7 @@ public class PhysicsSystem extends EntitySystem {
 
 			velocity.velocity.x *= 0.7f - velocity.velocity.x * 0.0001f;
 			velocity.velocity.z *= 0.7f - velocity.velocity.z * 0.0001f;
-			velocity.velocity.y *= 0.7f - velocity.velocity.y * 0.0001f;
+			velocity.velocity.y += -9.8f * deltaTime;
 
 			collison.update(position.position);
 			boxes = dim.getGlobalBoundingBox(collison.boundingBox);
@@ -207,13 +207,13 @@ public class PhysicsSystem extends EntitySystem {
 						velocity.velocity.z = 0;
 				}
 			}
-			/*if (life != null) {
+			if (life != null) {
 				BlockBase b = dim.getGlobalBlock(bx, by, bz);
 				if (b == Block.Lava)
 					life.life -= 0.2f;
 				if (!b.isTransparent())
 					life.life -= 0.5f;
-			}*/
+			}
 
 			position.position.x += velocity.velocity.x * deltaTime;
 			position.position.y += velocity.velocity.y * deltaTime;

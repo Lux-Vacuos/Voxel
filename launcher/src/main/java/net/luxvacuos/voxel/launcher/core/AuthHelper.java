@@ -28,7 +28,7 @@ import java.net.URLConnection;
 
 public class AuthHelper {
 	
-	static boolean login(String user, String pass) {
+	public static boolean login(String user, String pass) {
 		try {
 			URL url = new URL(LauncherVariables.authHost + "/forum/getdata.php?option=login&user=" + user + "&pass=" + pass);
 			URLConnection conn = url.openConnection();

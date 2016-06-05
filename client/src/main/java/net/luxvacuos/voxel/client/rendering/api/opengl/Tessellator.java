@@ -108,16 +108,16 @@ public class Tessellator {
 		indices = new ArrayList<Integer>();
 		tangent = new ArrayList<Vector3f>();
 		bitangent = new ArrayList<Vector3f>();
-		this.orthoProjectionMatrix = GameResources.instance().getMasterShadowRenderer().getProjectionMatrix();
+		this.orthoProjectionMatrix = GameResources.getInstance().getMasterShadowRenderer().getProjectionMatrix();
 		shader = TessellatorShader.getInstance();
 		shader.start();
 		shader.conectTextureUnits();
-		shader.loadProjectionMatrix(GameResources.instance().getRenderer().getProjectionMatrix());
-		shader.loadBiasMatrix(GameResources.instance());
+		shader.loadProjectionMatrix(GameResources.getInstance().getRenderer().getProjectionMatrix());
+		shader.loadBiasMatrix(GameResources.getInstance());
 		shader.stop();
 		basicShader = TessellatorBasicShader.getInstance();
 		basicShader.start();
-		basicShader.loadProjectionMatrix(GameResources.instance().getMasterShadowRenderer().getProjectionMatrix());
+		basicShader.loadProjectionMatrix(GameResources.getInstance().getMasterShadowRenderer().getProjectionMatrix());
 		basicShader.stop();
 
 		occlusion = glGenQueries();
@@ -225,10 +225,18 @@ public class Tessellator {
 	}
 
 	public void draw(GameResources gm) {
-		draw(gm.getCamera(), gm.getRenderer().getProjectionMatrix(), gm);
+		draw(gm, false);
+	}
+
+	public void draw(GameResources gm, boolean transparent) {
+		draw(gm.getCamera(), gm.getRenderer().getProjectionMatrix(), gm, transparent);
 	}
 
 	public void draw(Camera camera, Matrix4f projectionMatrix, GameResources gm) {
+		draw(camera, projectionMatrix, gm, false);
+	}
+
+	public void draw(Camera camera, Matrix4f projectionMatrix, GameResources gm, boolean transparent) {
 		if (updated) {
 			updateGlBuffers(vboID0, vboCapacity, buffer0);
 			updateGlBuffers(vboID1, vboCapacity, buffer1);
@@ -244,6 +252,7 @@ public class Tessellator {
 		shader.loadProjectionMatrix(projectionMatrix);
 		shader.loadviewMatrix(camera);
 		shader.loadLightMatrix(gm);
+		shader.loadTransparent(transparent);
 		shader.loadSettings(VoxelVariables.useShadows, VoxelVariables.useParallax);
 		shader.loadMoveFactor(gm.getWorldSimulation().getMoveFactor());
 		shader.loadRainFactor(gm.getWorldSimulation().getRainFactor());

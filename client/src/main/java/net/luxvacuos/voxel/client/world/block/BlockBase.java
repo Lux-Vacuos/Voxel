@@ -29,12 +29,12 @@ import net.luxvacuos.voxel.client.rendering.api.opengl.Tessellator;
 import net.luxvacuos.voxel.client.world.items.ItemDrop;
 
 public abstract class BlockBase {
-	protected boolean transparent = false;
+	protected transient boolean transparent = false;
 	protected transient boolean customModel = false;
-	protected boolean affectedByGravity = false;
-	protected boolean collision = true;
-	protected boolean fluid = false;
-	protected boolean objModel = false;
+	protected transient boolean affectedByGravity = false;
+	protected transient boolean collision = true;
+	protected transient boolean fluid = false;
+	protected transient boolean objModel = false;
 
 	public abstract byte getId();
 
@@ -98,5 +98,5 @@ public abstract class BlockBase {
 	public boolean isObjModel() {
 		return objModel;
 	}
-
+	
 }

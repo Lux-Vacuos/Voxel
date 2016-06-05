@@ -93,7 +93,7 @@ public class Voxel extends UVoxel {
 	}
 
 	@Override
-	public void registerAPIMethods(MoltenAPI api, Map<String, APIMethod> methods) {
+	public void registerAPIMethods(MoltenAPI api, Map<String, APIMethod<?>> methods) {
 	}
 
 	private void mainLoop() {

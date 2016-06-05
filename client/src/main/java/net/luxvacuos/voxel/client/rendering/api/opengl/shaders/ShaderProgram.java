@@ -314,9 +314,9 @@ public abstract class ShaderProgram {
 				shaderSource.append(line).append("//\n");
 			}
 			reader.close();
-			if (GameResources.instance().getDisplay().isNvidia())
+			if (GameResources.getInstance().getDisplay().isNvidia())
 				shaderSource.insert(0, "#define NVIDIA//\n");// TEMPORAL FIX
-			else if (GameResources.instance().getDisplay().isAmd())
+			else if (GameResources.getInstance().getDisplay().isAmd())
 				shaderSource.insert(0, "#define AMD//\n");// TEMPORAL FIX
 		} catch (IOException e) {
 			throw new LoadShaderException(e);

@@ -24,12 +24,12 @@ import net.luxvacuos.voxel.client.world.Dimension;
 import net.luxvacuos.voxel.client.world.chunks.Chunk;
 import net.luxvacuos.voxel.universal.api.APIMethod;
 
-public class AddChunk implements APIMethod {
+public class AddChunk implements APIMethod<Void> {
 	@Override
-	public Boolean run(Object... objects) {
+	public Void run(Object... objects) {
 		Dimension dim = (Dimension) objects[0];
 		dim.addChunk((Chunk) objects[1]);
-		return true;
+		return null;
 	}
 
 }

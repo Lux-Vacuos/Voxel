@@ -32,7 +32,7 @@ public abstract class UVoxel {
 	protected String prefix;
 	protected boolean client, server;
 
-	public abstract void registerAPIMethods(MoltenAPI api, Map<String, APIMethod> methods);
+	public abstract void registerAPIMethods(MoltenAPI api, Map<String, APIMethod<?>> methods);
 
 	public String getPrefix() {
 		return prefix;

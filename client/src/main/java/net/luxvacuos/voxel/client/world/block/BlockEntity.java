@@ -34,7 +34,7 @@ public abstract class BlockEntity extends BlockBase {
 	}
 
 	public void render() {
-		model.render(GameResources.instance().getRenderer().getShader());
+		model.render(GameResources.getInstance().getRenderer().getShader());
 	}
 
 	protected void setModel(TexturedModel model) {

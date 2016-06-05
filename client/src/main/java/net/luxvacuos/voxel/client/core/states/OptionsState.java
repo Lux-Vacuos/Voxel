@@ -35,7 +35,7 @@ import net.luxvacuos.voxel.client.resources.GameResources;
  * @author danirod
  * @category Kernel
  */
-public class OptionsState implements State {
+public class OptionsState extends State {
 
 	@Override
 	public void update(Voxel voxel, float delta) {
@@ -94,13 +94,14 @@ public class OptionsState implements State {
 			gm.getRenderingPipeline().begin();
 			gm.getRenderer().prepare();
 			gm.getSkyboxRenderer().render(VoxelVariables.RED, VoxelVariables.GREEN, VoxelVariables.BLUE, delta, gm);
-			gm.getWorldsHandler().getActiveWorld().getActiveDimension().updateChunksRender(gm);
+			gm.getWorldsHandler().getActiveWorld().getActiveDimension().updateChunksRender(gm, false);
 			gm.getRenderer().renderEntity(
 					gm.getWorldsHandler().getActiveWorld().getActiveDimension().getPhysicsEngine().getEntities(), gm);
 			gm.getItemsDropRenderer().render(gm);
 			gm.getRenderingPipeline().end();
 			gm.getRenderer().prepare();
 			gm.getRenderingPipeline().render(gm);
+			gm.getWorldsHandler().getActiveWorld().getActiveDimension().updateChunksRender(gm, true);
 			ParticleMaster.getInstance().render(gm.getCamera(), gm.getRenderer().getProjectionMatrix());
 		} else {
 			gm.getRenderer().prepare();

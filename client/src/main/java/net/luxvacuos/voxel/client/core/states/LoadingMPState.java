@@ -28,7 +28,7 @@ import net.luxvacuos.voxel.client.core.VoxelVariables;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.VectorsRendering;
 import net.luxvacuos.voxel.client.resources.GameResources;
 
-public class LoadingMPState implements State {
+public class LoadingMPState extends State {
 
 	private boolean trying = false;
 	private String message = "Connecting...";

@@ -130,5 +130,9 @@ public class Updater {
 	public boolean isLaunched() {
 		return launched;
 	}
+	
+	public VersionsHandler getVersionsHandler() {
+		return versionsHandler;
+	}
 
 }

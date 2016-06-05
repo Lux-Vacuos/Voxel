@@ -20,20 +20,22 @@
 
 package net.luxvacuos.voxel.launcher.ui.stages;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
-import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import net.luxvacuos.voxel.launcher.core.AuthHelper;
 import net.luxvacuos.voxel.launcher.ui.MainUI;
 
 public class Login extends GridPane {
@@ -41,7 +43,7 @@ public class Login extends GridPane {
 	private Text userText;
 	private TextField userField;
 	private Text passText;
-	private TextField passField;
+	private PasswordField passField;
 	private Button login;
 	private ProgressBar loginProgress;
 
@@ -72,10 +74,10 @@ public class Login extends GridPane {
 		passText = new Text("Password:");
 		add(passText, 0, 3);
 
-		passField = new TextField();
+		passField = new PasswordField();
 		add(passField, 0, 4);
 
-		login = new Button("Continue");
+		login = new Button("Login");
 		login.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
@@ -83,18 +85,39 @@ public class Login extends GridPane {
 				passField.setEditable(false);
 				loginProgress.setVisible(true);
 				loginProgress.setProgress(-1);
-				stage.hide();
-				stage.setScene(new Scene(ui.getMainStage()));
-				stage.centerOnScreen();
-				stage.show();
+				new Thread(new Runnable() {
 
+					@Override
+					public void run() {
+						if (AuthHelper.login(userField.getText(), passField.getText()))
+							Platform.runLater(new Runnable() {
+
+								@Override
+								public void run() {
+									stage.hide();
+									stage.setScene(new Scene(ui.getMainStage()));
+									stage.centerOnScreen();
+									stage.show();
+
+								}
+							});
+						else
+							Platform.runLater(new Runnable() {
+								@Override
+								public void run() {
+									userField.setText("");
+									passField.setText("");
+									userField.setEditable(true);
+									passField.setEditable(true);
+									loginProgress.setVisible(false);
+									loginProgress.setProgress(0);
+								}
+							});
+					}
+				}).start();
 			};
 		});
 		add(login, 0, 5);
-
-		Text loginDis = new Text("ALPHA: Login Disabled, Click continue");
-		loginDis.setFont(new Font(16));
-		add(loginDis, 0, 6);
 		loginProgress = new ProgressBar(0);
 		loginProgress.setVisible(false);
 		loginProgress.setMinWidth(200);

@@ -46,7 +46,7 @@ import net.luxvacuos.voxel.client.world.entities.PlayerCamera;
  * @author danirod
  * @category Kernel
  */
-public class InPauseState implements State {
+public class InPauseState extends State {
 
 	@Override
 	public void update(Voxel voxel, float delta) throws Exception {
@@ -93,7 +93,7 @@ public class InPauseState implements State {
 		gm.getRenderingPipeline().begin();
 		gm.getRenderer().prepare();
 		gm.getSkyboxRenderer().render(VoxelVariables.RED, VoxelVariables.GREEN, VoxelVariables.BLUE, delta, gm);
-		gm.getWorldsHandler().getActiveWorld().getActiveDimension().updateChunksRender(gm);
+		gm.getWorldsHandler().getActiveWorld().getActiveDimension().updateChunksRender(gm, false);
 		FloatBuffer p = BufferUtils.createFloatBuffer(1);
 		glReadPixels(gm.getDisplay().getDisplayWidth() / 2, gm.getDisplay().getDisplayHeight() / 2, 1, 1,
 				GL_DEPTH_COMPONENT, GL_FLOAT, p);
@@ -105,6 +105,7 @@ public class InPauseState implements State {
 
 		gm.getRenderer().prepare();
 		gm.getRenderingPipeline().render(gm);
+		gm.getWorldsHandler().getActiveWorld().getActiveDimension().updateChunksRender(gm, true);
 		ParticleMaster.getInstance().render(gm.getCamera(), gm.getRenderer().getProjectionMatrix());
 		gm.getDisplay().beingNVGFrame();
 		gm.getMenuSystem().pauseMenu.render();

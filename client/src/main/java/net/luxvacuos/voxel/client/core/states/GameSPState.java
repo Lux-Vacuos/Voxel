@@ -54,7 +54,7 @@ import net.luxvacuos.voxel.client.world.entities.PlayerCamera;
  * @author danirod
  * @category Kernel
  */
-public class GameSPState implements State {
+public class GameSPState extends State {
 	FloatBuffer p;
 	FloatBuffer c;
 
@@ -123,10 +123,9 @@ public class GameSPState implements State {
 		gm.getWorldsHandler().getActiveWorld().getActiveDimension().updateChunksOcclusion(gm);
 
 		gm.getRenderingPipeline().begin();
-		// gm.getDeferredShadingRenderer().getPost_fbo().begin();
 		gm.getRenderer().prepare();
 		gm.getSkyboxRenderer().render(VoxelVariables.RED, VoxelVariables.GREEN, VoxelVariables.BLUE, delta, gm);
-		gm.getWorldsHandler().getActiveWorld().getActiveDimension().updateChunksRender(gm);
+		gm.getWorldsHandler().getActiveWorld().getActiveDimension().updateChunksRender(gm, false);
 		gm.getRenderer().renderEntity(
 				gm.getWorldsHandler().getActiveWorld().getActiveDimension().getPhysicsEngine().getEntities(), gm);
 		p.clear();
@@ -145,6 +144,12 @@ public class GameSPState implements State {
 
 		gm.getRenderer().prepare();
 		gm.getRenderingPipeline().render(gm);
+		
+		
+		gm.getWorldsHandler().getActiveWorld().getActiveDimension().updateChunksRender(gm, true);
+		gm.getCamera().render();
+		
+		
 		ParticleMaster.getInstance().render(gm.getCamera(), gm.getRenderer().getProjectionMatrix());
 		gm.getDisplay().beingNVGFrame();
 		gm.getMenuSystem().gameSP.render(gm, gm.getWorldsHandler().getActiveWorld().getActiveDimension());

@@ -26,9 +26,15 @@ package net.luxvacuos.voxel.client.core;
  * @author danirod
  * @category Kernel
  */
-public interface State {
-	void update(Voxel voxel, float delta) throws Exception;
+public abstract class State {
 
-	void render(Voxel voxel, float alpha);
+	public void start() {
+	}
 
+	public abstract void update(Voxel voxel, float delta) throws Exception;
+
+	public abstract void render(Voxel voxel, float alpha);
+
+	public void end() {
+	}
 }

@@ -34,7 +34,7 @@ import net.luxvacuos.voxel.client.resources.GameResources;
  * @author danirod
  * @category Kernel
  */
-public class MainMenuState implements State {
+public class MainMenuState extends State {
 
 	@Override
 	public void render(Voxel voxel, float delta) {

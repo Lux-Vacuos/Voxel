@@ -83,10 +83,10 @@ public class ImagePassFBO {
 	public void end() {
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		glViewport(0, 0,
-				(int) (GameResources.instance().getDisplay().getDisplayWidth()
-						* GameResources.instance().getDisplay().getPixelRatio()),
-				(int) (GameResources.instance().getDisplay().getDisplayHeight()
-						* GameResources.instance().getDisplay().getPixelRatio()));
+				(int) (GameResources.getInstance().getDisplay().getDisplayWidth()
+						* GameResources.getInstance().getDisplay().getPixelRatio()),
+				(int) (GameResources.getInstance().getDisplay().getDisplayHeight()
+						* GameResources.getInstance().getDisplay().getPixelRatio()));
 	}
 
 	private void bindFrameBuffer(int frameBuffer) {

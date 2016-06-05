@@ -60,7 +60,6 @@ public class CrashScreen extends Application {
 				ps.println();
 				ps.println("## System Info");
 				ps.println("Voxel Version: " + VoxelVariables.version);
-				ps.println("Build: " + VoxelVariables.build);
 				ps.println("Molten API Version: " + MoltenAPI.apiVersion);
 				ps.println("Build: " + MoltenAPI.build);
 				ps.println("Running on: " + CoreInfo.OS);

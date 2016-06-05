@@ -36,7 +36,7 @@ import net.luxvacuos.voxel.client.world.entities.PlayerCamera;
  * @author danirod
  * @category Kernel
  */
-public class LoadingSPState implements State {
+public class LoadingSPState extends State {
 
 	private float xScale, yScale;
 

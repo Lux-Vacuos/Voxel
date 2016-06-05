@@ -55,6 +55,7 @@ public class TessellatorShader extends ShaderProgram {
 	private int loc_useParallax;
 
 	private int loc_rainFactor;
+	private int loc_transparent;
 
 	private TessellatorShader() throws Exception {
 		super(VoxelVariables.VERTEX_FILE_TESSELLATOR, VoxelVariables.FRAGMENT_FILE_TESSELLATOR);
@@ -85,6 +86,7 @@ public class TessellatorShader extends ShaderProgram {
 		loc_useParallax = super.getUniformLocation("useParallax");
 		loc_moveFactor = super.getUniformLocation("moveFactor");
 		loc_rainFactor = super.getUniformLocation("rainFactor");
+		loc_transparent = super.getUniformLocation("transparent");
 	}
 
 	@Override
@@ -149,6 +151,10 @@ public class TessellatorShader extends ShaderProgram {
 	public void loadSettings(boolean useShadows, boolean useParallax) {
 		super.loadBoolean(loc_useShadows, useShadows);
 		super.loadBoolean(loc_useParallax, useParallax);
+	}
+
+	public void loadTransparent(boolean trans) {
+		super.loadBoolean(loc_transparent, trans);
 	}
 
 	/**

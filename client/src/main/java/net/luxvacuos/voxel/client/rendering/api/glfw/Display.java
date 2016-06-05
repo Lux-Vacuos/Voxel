@@ -41,7 +41,6 @@ import static org.lwjgl.glfw.GLFW.glfwSwapBuffers;
 import static org.lwjgl.glfw.GLFW.glfwSwapInterval;
 import static org.lwjgl.glfw.GLFW.glfwTerminate;
 import static org.lwjgl.glfw.GLFW.glfwWindowHint;
-import static org.lwjgl.glfw.GLFWVulkan.glfwGetRequiredInstanceExtensions;
 import static org.lwjgl.glfw.GLFWVulkan.glfwVulkanSupported;
 import static org.lwjgl.nanovg.NanoVG.nvgBeginFrame;
 import static org.lwjgl.nanovg.NanoVG.nvgEndFrame;
@@ -61,7 +60,6 @@ import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
 import org.lwjgl.BufferUtils;
-import org.lwjgl.PointerBuffer;
 import org.lwjgl.glfw.GLFWImage;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GLCapabilities;
@@ -71,7 +69,6 @@ import org.lwjgl.vulkan.VkInstance;
 
 import de.matthiasmann.twl.utils.PNGDecoder;
 import net.luxvacuos.igl.Logger;
-import net.luxvacuos.voxel.client.core.CoreInfo;
 import net.luxvacuos.voxel.client.input.Mouse;
 
 /**

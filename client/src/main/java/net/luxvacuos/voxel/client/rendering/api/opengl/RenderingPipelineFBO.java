@@ -68,7 +68,7 @@ import org.lwjgl.BufferUtils;
 
 import net.luxvacuos.igl.Logger;
 
-public class DeferredShadingFBO {
+public class RenderingPipelineFBO {
 
 	private int fbo, diffuseRT, positionRT, normalRT, data0RT, data1RT, depthBuffer;
 
@@ -76,7 +76,7 @@ public class DeferredShadingFBO {
 
 	private int width, height;
 
-	public DeferredShadingFBO(int width, int height) {
+	public RenderingPipelineFBO(int width, int height) {
 		this.width = width;
 		this.height = height;
 		init(width, height);

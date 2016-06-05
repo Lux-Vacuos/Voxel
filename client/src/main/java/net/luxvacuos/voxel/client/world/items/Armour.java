@@ -20,8 +20,6 @@
 
 package net.luxvacuos.voxel.client.world.items;
 
-import java.util.List;
-
 public abstract class Armour {
 
 	protected float protection;
@@ -29,7 +27,6 @@ public abstract class Armour {
 	protected float weight;
 	protected float warmth;
 	protected float impediment;
-	protected List<Enchant> enchants;
 
 	public float getDurability() {
 		return durability;
@@ -49,10 +46,6 @@ public abstract class Armour {
 
 	public float getWeight() {
 		return weight;
-	}
-	
-	public List<Enchant> getEnchants() {
-		return enchants;
 	}
 	
 }

@@ -65,10 +65,10 @@ public class ModInitialization {
 			MoltenAPIMod info = (MoltenAPIMod) annotation;
 			Logger.log("Mod: " + info.name());
 			Logger.log("Author: " + info.createdBy());
-			Logger.log("Required Molten API Verion: " + info.requiredAPIVersion());
+			Logger.log("Required Molten API Version: " + info.requiredAPIVersion());
 			if (info.requiredAPIVersion() > MoltenAPI.apiIntVersion)
-				throw new VersionException("THE MOD " + info.name() + " REQUIRES AN API VERSION EQUAL OR MORE THAT "
-						+ info.requiredAPIVersion());
+				throw new VersionException(
+						"The Mod " + info.name() + " requires an API version more than " + info.requiredAPIVersion());
 			Method method;
 			try {
 				method = mod.getDeclaredMethod("preInit", MoltenAPI.class);
