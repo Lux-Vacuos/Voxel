@@ -14,6 +14,7 @@ apply plugin: 'application'
 mainClassName = 'net.luxvacuos.voxel.launcher.bootstrap.Bootstrap'
 sourceCompatibility = 1.8
 def build = 2
+def opt = "-fix2"
 
 sourceSets {
     main {
@@ -22,7 +23,7 @@ sourceSets {
     }
 }
 
-version = "0.0.1-" + build
+version = "0.0.1-" + build + opt
 
 pkg {
     name = "voxel-launcher"
@@ -33,8 +34,8 @@ pkg {
 
     dirs {
 		create "/usr/lib/voxel"
-		pack dir: "src/pkg/bin", prefix: "/usr/bin"
-        pack dir: "build/libs", prefix: "/usr/lib/voxel/bin"
+		pack dir: "src/pkg/bin", prefix: "/usr/bin", mode: "775"
+        pack dir: "build/libs", prefix: "/usr/lib/voxel"
     }
 
     depends {
