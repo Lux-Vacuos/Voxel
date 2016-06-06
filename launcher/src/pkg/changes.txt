@@ -1,7 +1,9 @@
-release date=15:52 05.06.2016,version=0.0.1
- * Fixed files in wrong location.
-release date=13:45 05.06.2016,version=0.0.1
- * Add Login support.
- * Add Git Versioning.
-release date=13:30 04.06.2016,version=0.0.1
- * initial release
+release date=17:10 06.06.2016,version=0.0.1-2-fix3
+ * Removed .sh from script
+release date=15:52 06.05.2016,version=0.0.1-2-fix2
+ * Fixed files in wrong location
+release date=13:45 06.05.2016,version=0.0.1-2-fix1
+ * Add Login support
+ * Add Git Versioning
+release date=13:30 06.04.2016,version=0.0.1
+ * Initial release
