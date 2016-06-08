@@ -1,5 +1,5 @@
 sourceCompatibility = 1.8
-def build = 5
+def build = 6
 
 sourceSets {
     main {
@@ -9,7 +9,7 @@ sourceSets {
 }
 
 jar {
-	version = "0.0.1-" + build
+	version = "0.0.2-" + build
 	manifest {
         attributes (
 			"Specification-Title": "Voxel-Universal",

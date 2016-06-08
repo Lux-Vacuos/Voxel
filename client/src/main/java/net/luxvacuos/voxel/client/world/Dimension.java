@@ -476,11 +476,7 @@ public abstract class Dimension {
 
 	public void clearDimension(GameResources gm) throws Exception {
 		Logger.log("Saving Dimension " + chunkDim);
-		try {
-			save(gm);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
+		save(gm);
 		for (Chunk chunk : chunks.values()) {
 			if (chunk != null) {
 				chunkNodeRemovals.add(new ChunkNodeRemoval(chunk));

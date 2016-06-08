@@ -20,29 +20,12 @@
 
 #version 330 core
 
-/*--------------------------------------------------------*/
-/*--------------COMPOSITE 2 IN-OUT-UNIFORMS---------------*/
-/*--------------------------------------------------------*/
-
 in vec2 textureCoords;
 in vec2 blurTexCoords[11];
 
 out vec4 out_Color;
 
 uniform sampler2D composite0;
-uniform sampler2D composite1;
-uniform float exposure;
-
-/*--------------------------------------------------------*/
-/*------------------COMPOSITE 2 CONFIG--------------------*/
-/*--------------------------------------------------------*/
-
-const float gamma = 2.2;
-
-/*--------------------------------------------------------*/
-/*------------------COMPOSITE 2 CODE----------------------*/
-/*--------------------------------------------------------*/
-
 
 void main(void){
 	vec2 texcoord = textureCoords;
@@ -58,11 +41,5 @@ void main(void){
     result += texture(composite0, blurTexCoords[8]) * 0.065984;
     result += texture(composite0, blurTexCoords[9]) * 0.028002;
     result += texture(composite0, blurTexCoords[10]) * 0.0093;
-    
-    vec4 hdrColor = texture(composite1, texcoord);      
-    vec4 bloomColor = result;
-    hdrColor += bloomColor;
-    vec4 final = vec4(1.0) - exp(-hdrColor * exposure);
-    final = pow(final, vec4(1.0 / gamma));
-    out_Color = final;
+    out_Color = result;
 }

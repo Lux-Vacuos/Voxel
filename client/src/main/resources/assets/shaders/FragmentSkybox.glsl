@@ -88,7 +88,6 @@ void main(void){
 	
 	float fac = max(dot(vec3(0,1,0),normalize(lightPosition - pass_position)),-1.0);
 	fac = clamp(fac,0.02,1.0);
-	f *= 3;
 	f *= fac;
 	
     vec4 finalColour = vec4(fogColour,1.0);
@@ -101,7 +100,7 @@ void main(void){
     out_Color[1] = vec4(pass_position.xyz,0);
     out_Color[2] = vec4(0.0);
     out_Color[3] = vec4(0,0,1,0);
-    out_Color[4] = vec4(1.0 - f,0,0,0);
+    out_Color[4] = vec4(1.0 - f * 3,0,0,0);
     
     if(factor < 0.01)
     	out_Color[4].r = 0;

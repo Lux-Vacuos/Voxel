@@ -79,6 +79,7 @@ public class PlayerCamera extends Camera {
 	private int yPos;
 	private ItemGui block;
 	private boolean hit;
+	private boolean died = false;
 	private boolean flyMode = false;
 	private RendereableTexturedModel blockSelector;
 
@@ -102,7 +103,8 @@ public class PlayerCamera extends Camera {
 	public void update(float delta, GameResources gm, Dimension world) {
 		isMoved = false;
 
-		if (super.getComponent(LifeComponent.class).life <= 0) {
+		if (super.getComponent(LifeComponent.class).life <= 0 && !died) {
+			died = true;
 			try {
 				gm.getWorldsHandler().getActiveWorld().dispose(gm);
 			} catch (Exception e) {
@@ -111,6 +113,7 @@ public class PlayerCamera extends Camera {
 			gm.getCamera().setPosition(new Vector3f(0, 0, 1));
 			gm.getCamera().setPitch(0);
 			gm.getCamera().setYaw(0);
+			unlockMouse();
 			gm.getGlobalStates().setState(GameState.MAINMENU);
 		}
 

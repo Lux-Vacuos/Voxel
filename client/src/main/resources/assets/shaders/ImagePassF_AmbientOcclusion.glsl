@@ -20,10 +20,6 @@
 
 #version 330 core
 
-/*--------------------------------------------------------*/
-/*-----------AMBIENT OCCLUSION IN-OUT-UNIFORMS------------*/
-/*--------------------------------------------------------*/
-
 in vec2 textureCoords;
 in vec4 posPos;
 
@@ -34,10 +30,6 @@ uniform sampler2D gPosition;
 uniform sampler2D gNormal;
 uniform sampler2D composite0;
 uniform sampler2D gDepth;
-
-/*--------------------------------------------------------*/
-/*---------------AMBIENT OCCLUSION CONFIG-----------------*/
-/*--------------------------------------------------------*/
 
 const float distanceThreshold = 5;
 const int sample_count = 16;
@@ -59,12 +51,6 @@ const vec2 poisson16[] = vec2[](
                                 vec2(  0.19984126,   0.78641367 ),
                                 vec2(  0.14383161,  -0.14100790 )
                                );
-
-/*--------------------------------------------------------*/
-/*----------------AMBIENT OCCLUSION CODE------------------*/
-/*--------------------------------------------------------*/
-
-
 
 void main(void){
 	vec2 texcoord = textureCoords;

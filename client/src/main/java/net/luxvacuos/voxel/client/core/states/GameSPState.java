@@ -67,8 +67,8 @@ public class GameSPState extends State {
 	public void update(Voxel voxel, float delta) throws Exception {
 		GameResources gm = voxel.getGameResources();
 
-		((PlayerCamera) gm.getCamera()).update(delta, gm, gm.getWorldsHandler().getActiveWorld().getActiveDimension());
 		gm.getWorldsHandler().getActiveWorld().getActiveDimension().updateChunksGeneration(gm, delta);
+		((PlayerCamera) gm.getCamera()).update(delta, gm, gm.getWorldsHandler().getActiveWorld().getActiveDimension());
 
 		for (Dimension dim : gm.getWorldsHandler().getActiveWorld().getDimensions().values()) {
 			dim.getPhysicsEngine().update(delta);

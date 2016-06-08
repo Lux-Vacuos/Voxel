@@ -20,25 +20,23 @@
 
 #version 330 core
 
-/*--------------------------------------------------------*/
-/*--------------COMPOSITE 1 IN-OUT-UNIFORMS---------------*/
-/*--------------------------------------------------------*/
+in vec2 textureCoords;
+in vec2 blurTexCoords[11];
 
-in vec2 position;
+out vec4 out_Color;
 
-out vec2 textureCoords;
+uniform sampler2D composite0;
+uniform sampler2D composite1;
+uniform float exposure;
 
-uniform mat4 transformationMatrix;
-
-/*--------------------------------------------------------*/
-/*------------------COMPOSITE 1 CONFIG--------------------*/
-/*--------------------------------------------------------*/
-
-/*--------------------------------------------------------*/
-/*------------------COMPOSITE 1 CODE----------------------*/
-/*--------------------------------------------------------*/
+const float gamma = 2.2;
 
 void main(void){
-	gl_Position = transformationMatrix * vec4(position, -0.8, 1.0);
-	textureCoords = vec2((position.x+1.0)/2.0, (position.y+1.0)/2.0);
+	vec2 texcoord = textureCoords;
+    vec4 bloomColor = texture(composite0, texcoord);
+    vec4 hdrColor = texture(composite1, texcoord);      
+    hdrColor += bloomColor;
+    vec4 final = vec4(1.0) - exp(-hdrColor * exposure);
+    final = pow(final, vec4(1.0 / gamma));
+    out_Color = final;
 }

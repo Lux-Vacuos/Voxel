@@ -20,10 +20,6 @@
 
 #version 330 core
 
-/*--------------------------------------------------------*/
-/*---------------LIGHT PASS IN-OUT-UNIFORMS---------------*/
-/*--------------------------------------------------------*/
-
 in vec2 textureCoords;
 in vec4 posPos;
 
@@ -33,23 +29,18 @@ uniform int camUnderWater;
 uniform float camUnderWaterOffset;
 uniform float time;
 uniform vec2 resolution;
-uniform vec2 sunPositionInScreen;
 uniform vec3 cameraPosition;
-uniform vec3 previousCameraPosition;
 uniform vec3 lightPosition;
-uniform vec3 invertedLightPosition;
 uniform vec3 skyColor;
 uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;
-uniform mat4 inverseProjectionMatrix;
-uniform mat4 inverseViewMatrix;
-uniform mat4 previousViewMatrix;
 uniform sampler2D gDiffuse;
 uniform sampler2D gPosition;
 uniform sampler2D gNormal;
 uniform sampler2D gData0;
 uniform sampler2D gData1;
 uniform sampler2D composite0;
+uniform sampler2D composite1;
 uniform sampler2DShadow gDepth;
 
 uniform int useFXAA;
@@ -57,20 +48,11 @@ uniform int useDOF;
 uniform int useMotionBlur;
 uniform int useVolumetricLight;
 
-/*--------------------------------------------------------*/
-/*------------------LIGHT PASS CONFIG---------------------*/
-/*--------------------------------------------------------*/
-
 const int NUM_SAMPLES = 50;
 const float density = 0.01;
 const float gradient = 2.0;
 const float transitionDistance = 5;
 const float shadowDistance = 80;
-
-/*--------------------------------------------------------*/
-/*-------------------LIGHT PASS CODE----------------------*/
-/*--------------------------------------------------------*/
-
 
 void main(void){
 	vec2 texcoord = textureCoords;
@@ -84,10 +66,6 @@ void main(void){
     vec3 lightDir = light - position.xyz;
     lightDir = normalize(lightDir);
     vec3 eyeDir = normalize(cameraPosition-position.xyz);
-	vec3 invertedLight = invertedLightPosition;
-    vec3 invertedlightDir = invertedLight - position.xyz ;
-    invertedlightDir = normalize(invertedlightDir);
-    float lightDirDOTviewDir = dot(invertedlightDir,eyeDir);
 	float distance = length(cameraPosition-position.xyz);
     if(data.b != 1) {
     	normal = normalize(normal);
@@ -106,38 +84,14 @@ void main(void){
 	   			image += pow(max(dot(normal.xyz,vHalfVector),0.0), 100) * data.r * 1.5;
 	   		}
     }
-	vec4 raysColor = texture(composite0, texcoord);
-	image.rgb = mix(image.rgb, raysColor.rgb, raysColor.a);
-	if(useVolumetricLight == 1){
-		if (lightDirDOTviewDir>0.0){
-			float exposure	= 0.1/NUM_SAMPLES;
-			float decay		= 1.0;
-			float density	= 1;
-			float weight	= 6.0;
-			float illuminationDecay = 1.0;
-			vec2 pos = vec2(0.0);
-			pos.x = (sunPositionInScreen.x) / resolution.x;
-			pos.y = (sunPositionInScreen.y) / resolution.y;
-			vec2 deltaTextCoord = vec2( texcoord - pos);
-			vec2 textCoo = texcoord;
-			deltaTextCoord *= 1.0 / float(NUM_SAMPLES) * density;
-			for(int i=0; i < NUM_SAMPLES ; i++) {
-				textCoo -= deltaTextCoord;
-				vec4 tsample = texture(composite0, textCoo );
-				tsample *= illuminationDecay * weight;
-				raysColor += tsample;
-				illuminationDecay *= decay;
-			}
-			raysColor *= exposure * lightDirDOTviewDir;
-			image += raysColor;
-		}
-	}
+    image += texture(composite0, texcoord);
+    image += texture(composite1, texcoord);
+    
 	if(data.b != 1) {
 		float visibility = exp(-pow((distance*density),gradient));
 		visibility = clamp(visibility,0.95,1.1);
     	image.rgb = mix(skyColor.rgb, image.rgb, visibility);
 	}
-    
     if(camUnderWater == 1){
 		out_Color = mix(vec4(0.0,0.0,0.3125,1.0),image,0.5);
 	} else {

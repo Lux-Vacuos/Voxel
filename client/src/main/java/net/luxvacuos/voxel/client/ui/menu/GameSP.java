@@ -85,7 +85,7 @@ public class GameSP {
 				VectorsRendering.rgba(255, 255, 255, 200, VectorsRendering.colorA),
 				VectorsRendering.rgba(32, 32, 32, 32, VectorsRendering.colorB),
 				VectorsRendering.rgba(0, 0, 0, 48, VectorsRendering.colorC));
-		VectorsRendering.renderLife(440 * VoxelVariables.XSCALE, 600 * VoxelVariables.YSCALE,
+		VectorsRendering.renderLife(440 * VoxelVariables.XSCALE, 700 * VoxelVariables.YSCALE,
 				200 * VoxelVariables.XSCALE, 20 * VoxelVariables.YSCALE,
 				((PlayerCamera) gm.getCamera()).getComponent(LifeComponent.class).life / 20f);
 

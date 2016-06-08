@@ -27,6 +27,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Hyperlink;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextField;
@@ -77,6 +78,10 @@ public class Login extends GridPane {
 		passField = new PasswordField();
 		add(passField, 0, 4);
 
+		GridPane bottom = new GridPane();
+		bottom.setHgap(10);
+		bottom.setVgap(10);
+
 		login = new Button("Login");
 		login.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
@@ -117,7 +122,18 @@ public class Login extends GridPane {
 				}).start();
 			};
 		});
-		add(login, 0, 5);
+		bottom.add(login, 0, 0);
+		Hyperlink link = new Hyperlink("Don't have an account?");
+		link.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				ui.getHostServices().showDocument("https://luxvacuos.net/forum/register.php");
+			}
+		});
+
+		bottom.add(link, 1, 0);
+		add(bottom, 0, 5);
+
 		loginProgress = new ProgressBar(0);
 		loginProgress.setVisible(false);
 		loginProgress.setMinWidth(200);

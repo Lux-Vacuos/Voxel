@@ -17,38 +17,16 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 //
- 
-#version 330 core
 
-/*--------------------------------------------------------*/
-/*------------BLOOM HORIZONTAL IN-OUT-UNIFORMS------------*/
-/*--------------------------------------------------------*/
+#version 330 core
 
 in vec2 position;
 
 out vec2 textureCoords;
-out vec2 blurTexCoords[11];
 
-uniform vec2 resolution;
 uniform mat4 transformationMatrix;
-
-/*--------------------------------------------------------*/
-/*---------------BLOOM HORIZONTAL CONFIG------------------*/
-/*--------------------------------------------------------*/
-
-/*--------------------------------------------------------*/
-/*----------------BLOOM HORIZONTAL CODE-------------------*/
-/*--------------------------------------------------------*/
-
-
 
 void main(void){
 	gl_Position = transformationMatrix * vec4(position, -0.8, 1.0);
 	textureCoords = vec2((position.x+1.0)/2.0, (position.y+1.0)/2.0);
-	
-	vec2 pixelSize = 1.0 / resolution;
-	
-	for(int i = -5; i <= 5; i++){
-		blurTexCoords[i+5] = textureCoords + vec2(pixelSize.x * i, 0.0);
-	}
 }

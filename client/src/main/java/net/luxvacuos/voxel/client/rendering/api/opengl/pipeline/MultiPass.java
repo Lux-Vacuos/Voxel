@@ -29,44 +29,66 @@ public class MultiPass extends RenderingPipeline {
 		super("MultiPass");
 	}
 
-	private LightingPass lightingPass;
-	private SunPass sunPass;
-	private BloomMaskPass bloomMaskPass;
-	private BloomHorizonal bloomHorizontal;
-	private BloomVertical bloomVertical;
-	private SSRPass ssrPass;
-	private AmbientOcclusionPass ambientOcclusionPass;
+	private Lighting lighting;
+	private VolumetricLight volumetricLight;
+	private Sun sun;
+	private BloomMask bloomMask;
+	private GaussianHorizonal gaussianHorizontal;
+	private GaussianVertical gaussianVertical;
+	private ScreenSpaceReflections screenSpaceReflections;
+	private AmbientOcclusion ambientOcclusion;
+	private ColorCorrection colorCorrection;
 
 	@Override
 	public void init(GameResources gm) throws Exception {
-		sunPass = new SunPass(width, height);
-		sunPass.setName("Sun");
-		sunPass.init();
-		super.imagePasses.add(sunPass);
-		lightingPass = new LightingPass(width, height);
-		lightingPass.setName("Lighting");
-		lightingPass.init();
-		super.imagePasses.add(lightingPass);
-		ambientOcclusionPass = new AmbientOcclusionPass(width, height);
-		ambientOcclusionPass.setName("AmbientOcclusion");
-		ambientOcclusionPass.init();
-		super.imagePasses.add(ambientOcclusionPass);
-		bloomMaskPass = new BloomMaskPass(width, height);
-		bloomMaskPass.setName("BloomMask");
-		bloomMaskPass.init();
-		super.imagePasses.add(bloomMaskPass);
-		bloomHorizontal = new BloomHorizonal(width, height);
-		bloomHorizontal.setName("BloomHorizontal");
-		bloomHorizontal.init();
-		super.imagePasses.add(bloomHorizontal);
-		bloomVertical = new BloomVertical(width, height);
-		bloomVertical.setName("BloomVertical");
-		bloomVertical.init();
-		super.imagePasses.add(bloomVertical);
-		ssrPass = new SSRPass(width, height);
-		ssrPass.setName("SSR");
-		ssrPass.init();
-		super.imagePasses.add(ssrPass);
+		sun = new Sun(width, height);
+		sun.setName("Sun");
+		sun.init();
+		super.imagePasses.add(sun);
+
+		volumetricLight = new VolumetricLight(width, height);
+		volumetricLight.setName("VolumetricLight");
+		volumetricLight.init();
+		super.imagePasses.add(volumetricLight);
+		
+		gaussianHorizontal = new GaussianHorizonal(width, height);
+		gaussianHorizontal.setName("GaussianHorizontal");
+		gaussianHorizontal.init();
+		super.imagePasses.add(gaussianHorizontal);
+
+		gaussianVertical = new GaussianVertical(width, height);
+		gaussianVertical.setName("GaussianVertical");
+		gaussianVertical.init();
+		super.imagePasses.add(gaussianVertical);
+
+		lighting = new Lighting(width, height);
+		lighting.setName("Lighting");
+		lighting.init();
+		super.imagePasses.add(lighting);
+
+		ambientOcclusion = new AmbientOcclusion(width, height);
+		ambientOcclusion.setName("AmbientOcclusion");
+		ambientOcclusion.init();
+		super.imagePasses.add(ambientOcclusion);
+
+		bloomMask = new BloomMask(width, height);
+		bloomMask.setName("BloomMask");
+		bloomMask.init();
+		super.imagePasses.add(bloomMask);
+
+		super.imagePasses.add(gaussianHorizontal);
+		
+		super.imagePasses.add(gaussianVertical);
+
+		colorCorrection = new ColorCorrection(width, height);
+		colorCorrection.setName("ColorCorrection");
+		colorCorrection.init();
+		super.imagePasses.add(colorCorrection);
+
+		screenSpaceReflections = new ScreenSpaceReflections(width, height);
+		screenSpaceReflections.setName("ScreenSpaceReflections");
+		screenSpaceReflections.init();
+		super.imagePasses.add(screenSpaceReflections);
 	}
 
 	@Override

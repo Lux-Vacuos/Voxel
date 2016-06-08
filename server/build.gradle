@@ -1,8 +1,10 @@
-apply plugin:'application'
+plugins {
+	id 'application'
+	id 'net.nemerosa.versioning' version '2.0.0'
+}
 
 mainClassName = 'net.luxvacuos.voxel.server.bootstrap.Bootstrap'
 sourceCompatibility = 1.8
-def build = 217
 
 sourceSets {
     main {
@@ -12,15 +14,16 @@ sourceSets {
 }
 
 jar {
-	version = "0.0.10-" + build
+	version = "0.0.10-" + versioning.info.full
 	manifest {
         attributes (
 			"Specification-Title": "Voxel-Server",
 			"Specification-Version": version,
 			"Specification-Vendor": "Lux Vacuos",
 			"Implementation-Title": "net.luxvacuos.voxel.server",
-			"Implementation-Version": build,
+			"Implementation-Version": versioning.info.full,
 			"Implementation-Vendor": "Lux Vacuos"
 			)
     }
 }
+

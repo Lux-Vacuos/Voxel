@@ -29,9 +29,9 @@ import net.luxvacuos.voxel.client.rendering.api.opengl.ImagePass;
 import net.luxvacuos.voxel.client.rendering.api.opengl.ImagePassFBO;
 import net.luxvacuos.voxel.client.rendering.api.opengl.RenderingPipeline;
 
-public class BloomHorizonal extends ImagePass {
+public class GaussianHorizonal extends ImagePass {
 
-	public BloomHorizonal(int width, int height) {
+	public GaussianHorizonal(int width, int height) {
 		super(width, height);
 	}
 

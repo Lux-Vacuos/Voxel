@@ -54,7 +54,7 @@ public class Main extends BorderPane {
 
 		WebView browser = new WebView();
 		WebEngine webEngine = browser.getEngine();
-		webEngine.load("https://luxvacuos.net");
+		webEngine.load("https://guerra24.github.io/launcher");
 		browser.minWidth(342);
 		browser.minHeight(370);
 		home.setContent(browser);

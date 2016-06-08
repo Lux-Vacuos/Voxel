@@ -20,17 +20,17 @@
 
 package net.luxvacuos.voxel.server.core;
 
-import java.util.Map;
+import java.io.IOException;
+import java.util.jar.Attributes;
+import java.util.jar.Manifest;
 
 import net.luxvacuos.igl.Logger;
 import net.luxvacuos.voxel.server.bootstrap.Bootstrap;
 import net.luxvacuos.voxel.server.core.GlobalStates.InternalState;
 import net.luxvacuos.voxel.server.resources.GameResources;
 import net.luxvacuos.voxel.server.ui.UserInterface;
-import net.luxvacuos.voxel.universal.api.APIMethod;
 import net.luxvacuos.voxel.universal.api.ModInitialization;
 import net.luxvacuos.voxel.universal.api.MoltenAPI;
-import net.luxvacuos.voxel.universal.api.VersionException;
 import net.luxvacuos.voxel.universal.core.UVoxel;
 import net.luxvacuos.voxel.universal.network.packets.WorldTime;
 
@@ -40,63 +40,51 @@ public class Voxel extends UVoxel {
 
 	private ModInitialization api;
 
-	public Voxel(int port) {
+	public Voxel(int port) throws Exception {
 		this.port = port;
 		super.prefix = "";
 		super.server = true;
 		mainLoop();
 	}
 
-	private void preInit() {
+	private void preInit() throws Exception {
+		try {
+			Manifest manifest = new Manifest(getClass().getClassLoader().getResourceAsStream("META-INF/MANIFEST.MF"));
+			Attributes attr = manifest.getMainAttributes();
+			String t = attr.getValue("Specification-Version");
+			if (t != null)
+				VoxelVariables.version = t;
+		} catch (IOException E) {
+			E.printStackTrace();
+		}
 		gameResources = new GameResources(port, this);
 		getGameResources().getUserInterface().getThreadUI().start();
 		while (!getGameResources().getUserInterface().isStarted())
-			try {
-				Thread.sleep(100);
-			} catch (InterruptedException e1) {
-				e1.printStackTrace();
-			}
+			Thread.sleep(100);
 		Logger.log("Starting Server");
 		Logger.log("Voxel Server Version: " + VoxelVariables.version);
 		Logger.log("Molten API Version: " + MoltenAPI.apiVersion);
-		Logger.log("Build: " + VoxelVariables.build);
 		Logger.log("Running on: " + Bootstrap.getPlatform());
 
 		getGameResources().preInit();
 		api = new ModInitialization(this);
-		try {
-			api.preInit();
-		} catch (VersionException e) {
-			e.printStackTrace();
-		}
+		api.preInit();
 	}
 
-	private void init() {
+	private void init() throws Exception {
 		getGameResources().init();
-		try {
-			api.init();
-		} catch (VersionException e) {
-			e.printStackTrace();
-		}
+		api.init();
 	}
 
-	private void postInit() {
+	private void postInit() throws Exception {
 		getGameResources().postInit();
-		try {
-			api.postInit();
-		} catch (VersionException e) {
-			e.printStackTrace();
-		}
+		api.postInit();
 		getGameResources().getVoxelServer().connect();
 		getGameResources().getUserInterface();
 		UserInterface.setReady(true);
 	}
 
-	@Override
-	public void registerAPIMethods(MoltenAPI api, Map<String, APIMethod<?>> methods) {
-	}
-
-	private void mainLoop() {
+	private void mainLoop() throws Exception {
 		preInit();
 		init();
 		postInit();

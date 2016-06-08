@@ -21,8 +21,6 @@
 package net.luxvacuos.voxel.universal.api;
 
 import java.io.File;
-import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Files;
@@ -30,7 +28,6 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.luxvacuos.igl.Logger;
 import net.luxvacuos.voxel.universal.api.mod.MoltenAPIMod;
 
 public class ModLoader {
@@ -42,34 +39,29 @@ public class ModLoader {
 		modsClass = new ArrayList<Class<?>>();
 	}
 
-	public void loadMods(String prefix) {
+	public void loadMods(String prefix) throws Exception {
 		modsFolder = new File(prefix + "/mods");
 		if (!modsFolder.exists())
 			modsFolder.mkdirs();
-		try {
-			Files.walk(Paths.get(modsFolder.toURI())).forEach(filePath -> {
-				if (Files.isRegularFile(filePath)) {
+		Files.walk(Paths.get(modsFolder.toURI())).forEach(filePath -> {
+			if (Files.isRegularFile(filePath)) {
+				if (filePath.toFile().getAbsolutePath().endsWith(".jar")) {
 					try {
-						if (filePath.toFile().getAbsolutePath().endsWith(".jar")) {
-							URLClassLoader child = new URLClassLoader(new URL[] { filePath.toFile().toURI().toURL() },
-									this.getClass().getClassLoader());
-							String name = filePath.getFileName().toString();
-							name = name.substring(0, name.lastIndexOf('.'));
-							Class<?> classToLoad = Class.forName("mod_" + name, true, child);
-							if (classToLoad.isAnnotationPresent(MoltenAPIMod.class)) {
-								modsClass.add(classToLoad);
-							}
+						URLClassLoader child = new URLClassLoader(new URL[] { filePath.toFile().toURI().toURL() },
+								this.getClass().getClassLoader());
+						String name = filePath.getFileName().toString();
+						name = name.substring(0, name.lastIndexOf('.'));
+						Class<?> classToLoad;
+						classToLoad = Class.forName("mod_" + name, true, child);
+						if (classToLoad.isAnnotationPresent(MoltenAPIMod.class)) {
+							modsClass.add(classToLoad);
 						}
-					} catch (MalformedURLException | ClassNotFoundException | SecurityException
-							| IllegalArgumentException e) {
-						Logger.error("Error Loading Mod: " + filePath.getFileName().toString());
+					} catch (Exception e) {
 						e.printStackTrace();
 					}
 				}
-			});
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+			}
+		});
 
 	}
 

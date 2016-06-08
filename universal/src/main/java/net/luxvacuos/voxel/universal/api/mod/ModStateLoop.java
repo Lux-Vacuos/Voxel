@@ -26,6 +26,5 @@ public interface ModStateLoop {
 
 	public void update(UVoxel voxel, float delta);
 
-	public void render(UVoxel voxel, float alpha);
 
 }

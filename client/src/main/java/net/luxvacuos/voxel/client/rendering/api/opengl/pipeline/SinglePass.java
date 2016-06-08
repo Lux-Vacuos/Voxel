@@ -29,16 +29,16 @@ public class SinglePass extends RenderingPipeline {
 		super("SinglePass");
 	}
 
-	private LightingPass pass;
-	private SunPass sunPass;
+	private Lighting pass;
+	private Sun sun;
 
 	@Override
 	public void init(GameResources gm) throws Exception {
-		sunPass = new SunPass(width, height);
-		sunPass.setName("Sun");
-		sunPass.init();
-		super.imagePasses.add(sunPass);
-		pass = new LightingPass(width, height);
+		sun = new Sun(width, height);
+		sun.setName("Sun");
+		sun.init();
+		super.imagePasses.add(sun);
+		pass = new Lighting(width, height);
 		pass.setName("Lighting");
 		pass.init();
 		super.imagePasses.add(pass);

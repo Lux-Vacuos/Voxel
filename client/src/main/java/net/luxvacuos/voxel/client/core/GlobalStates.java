@@ -30,7 +30,6 @@ import net.luxvacuos.voxel.client.core.states.MPSelectionState;
 import net.luxvacuos.voxel.client.core.states.MainMenuState;
 import net.luxvacuos.voxel.client.core.states.OptionsState;
 import net.luxvacuos.voxel.client.core.states.WorldSelectionState;
-import net.luxvacuos.voxel.universal.api.mod.ModStateLoop;
 
 /**
  * States Handler
@@ -50,8 +49,7 @@ public class GlobalStates {
 		GAME_SP(new GameSPState()), MAINMENU(new MainMenuState()), IN_PAUSE(new InPauseState()), LOADING_WORLD(
 				new LoadingSPState()), OPTIONS(new OptionsState()), WORLD_SELECTION(new WorldSelectionState()), ABOUT(
 						new AboutState()), MP_SELECTION(new MPSelectionState()), LOADING_MP_WORLD(
-								new LoadingMPState()), GAME_SP_INVENTORY(
-										new GameSPInventoryState());
+								new LoadingMPState()), GAME_SP_INVENTORY(new GameSPInventoryState());
 
 		GameState(State state) {
 			this.state = state;
@@ -69,19 +67,13 @@ public class GlobalStates {
 	}
 
 	public void doUpdate(Voxel voxel, float delta) throws Exception {
-		state.state.update(voxel, delta);
-		for (ModStateLoop modStateLoop : voxel.getApi().getMoltenAPI().getModStateLoops()) {
-			modStateLoop.update(voxel, delta);
-		}
+		state.state.iUpdate(voxel, delta);
 		if (voxel.getGameResources().getDisplay().isCloseRequested())
 			internalState = InternalState.STOPPED;
 	}
 
 	public void doRender(Voxel voxel, float alpha) {
 		state.state.render(voxel, alpha);
-		for (ModStateLoop modStateLoop : voxel.getApi().getMoltenAPI().getModStateLoops()) {
-			modStateLoop.render(voxel, alpha);
-		}
 	}
 
 	public GameState getState() {

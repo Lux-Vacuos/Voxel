@@ -34,9 +34,8 @@ public class VoxelVariables {
 	/**
 	 * Game Settings
 	 */
-	public static final String version = "0.0.10";
+	public static String version = "Development Version";
 
-	public static final int build = 217;
 	public static final String settings = "settings.conf";
 	public static final float TIME_MULTIPLIER = 10;
 

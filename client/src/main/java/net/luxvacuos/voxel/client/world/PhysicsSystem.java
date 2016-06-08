@@ -194,7 +194,7 @@ public class PhysicsSystem extends EntitySystem {
 						velocity.velocity.y = 0;
 					if (normalTMP.y < 0 && velocity.velocity.y < 0) {
 						if (life != null && velocity.velocity.y < -10f) {
-							life.life += velocity.velocity.y * 0.2f + 1 * armour.armour.getProtection();
+							life.life += velocity.velocity.y * 0.4f + 1 * armour.armour.getProtection();
 						}
 						velocity.velocity.y = 0;
 						depthTMP /= 4f;

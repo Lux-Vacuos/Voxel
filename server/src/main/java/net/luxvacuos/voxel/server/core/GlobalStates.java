@@ -22,7 +22,6 @@
 package net.luxvacuos.voxel.server.core;
 
 import net.luxvacuos.voxel.server.core.states.GameMPState;
-import net.luxvacuos.voxel.universal.api.mod.ModStateLoop;
 
 public class GlobalStates {
 
@@ -53,9 +52,6 @@ public class GlobalStates {
 
 	public void doUpdate(Voxel voxel, float delta) {
 		state.state.update(voxel, delta);
-		for (ModStateLoop modStateLoop : voxel.getApi().getMoltenAPI().getModStateLoops()) {
-			modStateLoop.update(voxel, delta);
-		}
 	}
 
 	public GameState getState() {

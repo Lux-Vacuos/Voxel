@@ -20,10 +20,6 @@
 
 #version 330 core
 
-/*--------------------------------------------------------*/
-/*--------------COMPOSITE 3 IN-OUT-UNIFORMS---------------*/
-/*--------------------------------------------------------*/
-
 in vec2 textureCoords;
 in vec2 blurTexCoords[11];
 
@@ -31,19 +27,9 @@ out vec4 out_Color;
 
 uniform sampler2D composite0;
 
-/*--------------------------------------------------------*/
-/*---------------BLOOM HORIZONTAL CONFIG------------------*/
-/*--------------------------------------------------------*/
-
-/*--------------------------------------------------------*/
-/*----------------BLOOM HORIZONTAL CODE-------------------*/
-/*--------------------------------------------------------*/
-
-
 void main(void){
 	vec2 texcoord = textureCoords;
     vec4 result = vec4(0.0);
-    
     result += texture(composite0, blurTexCoords[0]) * 0.0093;
     result += texture(composite0, blurTexCoords[1]) * 0.028002;
     result += texture(composite0, blurTexCoords[2]) * 0.065984;
@@ -55,6 +41,5 @@ void main(void){
     result += texture(composite0, blurTexCoords[8]) * 0.065984;
     result += texture(composite0, blurTexCoords[9]) * 0.028002;
     result += texture(composite0, blurTexCoords[10]) * 0.0093;
-    
     out_Color = result;
 }

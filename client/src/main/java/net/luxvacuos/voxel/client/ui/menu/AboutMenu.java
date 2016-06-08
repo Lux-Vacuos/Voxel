@@ -66,31 +66,31 @@ public class AboutMenu {
 				100 * VoxelVariables.XSCALE, (680 + globalY) * VoxelVariables.YSCALE, 40 * VoxelVariables.YSCALE,
 				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorA),
 				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorB));
-		VectorsRendering.renderText("Infinity Game Engine - Infinity is license under the MIT License.",
+		VectorsRendering.renderText("Infinity Game Engine - Infinity is licensed under the MIT License.",
 				"Roboto-Regular", 100 * VoxelVariables.XSCALE, (880 + globalY) * VoxelVariables.YSCALE,
 				40 * VoxelVariables.YSCALE, VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorA),
 				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorB));
-		VectorsRendering.renderText("Light Weight Java Game Library 3 - LWJGL is license under the BSD License.",
+		VectorsRendering.renderText("Light Weight Java Game Library 3 - LWJGL is licensed under the BSD License.",
 				"Roboto-Regular", 100 * VoxelVariables.XSCALE, (1080 + globalY) * VoxelVariables.YSCALE,
 				40 * VoxelVariables.YSCALE, VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorA),
 				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorB));
-		VectorsRendering.renderText("Ashley - Ashley is license under the Apache2 License.", "Roboto-Regular",
+		VectorsRendering.renderText("Ashley - Ashley is licensed under the Apache2 License.", "Roboto-Regular",
 				100 * VoxelVariables.XSCALE, (1280 + globalY) * VoxelVariables.YSCALE, 40 * VoxelVariables.YSCALE,
 				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorA),
 				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorB));
-		VectorsRendering.renderText("Sound System - Sound System is license under the Sound System License.",
+		VectorsRendering.renderText("Sound System - Sound System is licensed under the Sound System License.",
 				"Roboto-Regular", 100 * VoxelVariables.XSCALE, (1480 + globalY) * VoxelVariables.YSCALE,
 				40 * VoxelVariables.YSCALE, VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorA),
 				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorB));
-		VectorsRendering.renderText("Log4J - Log4j is license under the Apache2.", "Roboto-Regular",
+		VectorsRendering.renderText("Log4J - Log4j is licensed under the Apache2.", "Roboto-Regular",
 				100 * VoxelVariables.XSCALE, (1680 + globalY) * VoxelVariables.YSCALE, 40 * VoxelVariables.YSCALE,
 				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorA),
 				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorB));
-		VectorsRendering.renderText("Kryo - Kryo is license under the BSD License.", "Roboto-Regular",
+		VectorsRendering.renderText("Kryo - Kryo is licensed under the BSD License.", "Roboto-Regular",
 				100 * VoxelVariables.XSCALE, (1880 + globalY) * VoxelVariables.YSCALE, 40 * VoxelVariables.YSCALE,
 				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorA),
 				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorB));
-		VectorsRendering.renderText("KryoNet - KryoNet is license under the BSD License.", "Roboto-Regular",
+		VectorsRendering.renderText("KryoNet - KryoNet is licensed under the BSD License.", "Roboto-Regular",
 				100 * VoxelVariables.XSCALE, (2080 + globalY) * VoxelVariables.YSCALE, 40 * VoxelVariables.YSCALE,
 				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorA),
 				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorB));

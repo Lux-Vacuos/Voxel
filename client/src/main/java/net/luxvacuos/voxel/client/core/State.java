@@ -20,6 +20,11 @@
 
 package net.luxvacuos.voxel.client.core;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import net.luxvacuos.voxel.universal.api.mod.ModStateLoop;
+
 /**
  * State
  * 
@@ -28,7 +33,16 @@ package net.luxvacuos.voxel.client.core;
  */
 public abstract class State {
 
+	private List<ModStateLoop> modsLoops = new ArrayList<>();
+
 	public void start() {
+	}
+
+	void iUpdate(Voxel voxel, float delta) throws Exception {
+		update(voxel, delta);
+		for (ModStateLoop modStateLoop : modsLoops) {
+			modStateLoop.update(voxel, delta);
+		}
 	}
 
 	public abstract void update(Voxel voxel, float delta) throws Exception;
@@ -36,5 +50,9 @@ public abstract class State {
 	public abstract void render(Voxel voxel, float alpha);
 
 	public void end() {
+	}
+
+	public List<ModStateLoop> getModsLoops() {
+		return modsLoops;
 	}
 }

@@ -78,7 +78,7 @@ public class Bootstrap {
 			file.mkdirs();
 	}
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 		Log.set(Log.LEVEL_INFO);
 		Thread.currentThread().setName("Voxel-Server");
 		int port;

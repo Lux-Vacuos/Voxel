@@ -3,7 +3,6 @@ plugins {
 	id 'net.nemerosa.versioning' version '2.0.0'
 }
 
-
 mainClassName = 'net.luxvacuos.voxel.client.bootstrap.Bootstrap'
 sourceCompatibility = 1.8
 

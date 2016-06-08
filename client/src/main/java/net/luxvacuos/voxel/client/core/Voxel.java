@@ -26,7 +26,6 @@ import static org.lwjgl.opengl.GL11.GL_VERSION;
 import static org.lwjgl.opengl.GL11.glGetString;
 
 import java.io.IOException;
-import java.util.Map;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 
@@ -34,11 +33,6 @@ import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFW;
 
 import net.luxvacuos.igl.Logger;
-import net.luxvacuos.voxel.client.api.AddChunk;
-import net.luxvacuos.voxel.client.api.AddEntity;
-import net.luxvacuos.voxel.client.api.GetActiveDimension;
-import net.luxvacuos.voxel.client.api.GetChunk;
-import net.luxvacuos.voxel.client.api.Test;
 import net.luxvacuos.voxel.client.bootstrap.Bootstrap;
 import net.luxvacuos.voxel.client.core.GlobalStates.GameState;
 import net.luxvacuos.voxel.client.core.GlobalStates.InternalState;
@@ -47,7 +41,6 @@ import net.luxvacuos.voxel.client.rendering.api.nanovg.Timers;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.ui.CrashScreen;
 import net.luxvacuos.voxel.client.world.block.BlocksResources;
-import net.luxvacuos.voxel.universal.api.APIMethod;
 import net.luxvacuos.voxel.universal.api.ModInitialization;
 import net.luxvacuos.voxel.universal.api.MoltenAPI;
 import net.luxvacuos.voxel.universal.core.UVoxel;
@@ -124,15 +117,6 @@ public class Voxel extends UVoxel {
 		Timers.initDebugDisplay();
 		getGameResources().postInit();
 		getGameResources().getGlobalStates().setState(GameState.MAINMENU);
-	}
-
-	@Override
-	public void registerAPIMethods(MoltenAPI api, Map<String, APIMethod<?>> methods) {
-		methods.put("Client_Test", new Test());
-		methods.put("Client_AddEntity", new AddEntity());
-		methods.put("Client_GetChunk", new GetChunk());
-		methods.put("Client_AddChunk", new AddChunk());
-		methods.put("Client_GetActiveDimension", new GetActiveDimension());
 	}
 
 	private void mainLoop() {
