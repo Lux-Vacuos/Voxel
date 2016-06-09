@@ -1,2 +1,3 @@
-release date=17:10 06.06.2016,version=0.0.2-1
- * Fixed NullPointerExeption.
+release date=15:45 09.06.2016,version=0.0.3
+ * Add update notice.
+ * Fixed Voxel not starting.

@@ -40,12 +40,12 @@ public class MainUI extends Application {
 		Logger.log("Version: " + LauncherVariables.version);
 		Logger.log("Dist Server: " + LauncherVariables.host);
 		Logger.log("Auth Server: " + LauncherVariables.authHost);
-		Thread.currentThread().setName("Voxel-Launcher");
 		launch(args);
 	}
 
 	@Override
 	public void start(Stage stage) throws Exception {
+		Thread.currentThread().setName("Voxel-Launcher");
 		updater = new Updater();
 		updater.getRemoteVersions();
 		loginStage = new Login(stage, this);

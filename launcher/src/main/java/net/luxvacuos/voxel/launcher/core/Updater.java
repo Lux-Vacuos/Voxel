@@ -68,10 +68,10 @@ public class Updater {
 			ProcessBuilder pb;
 			if (Bootstrap.getPlatform().equals(Platform.MACOSX)) {
 				pb = new ProcessBuilder("java", "-XstartOnFirstThread", "-classpath", getClassPath(ver),
-						"net.luxvacuos.voxel.client.bootstrap.Bootstrap -username " + username);
+						"net.luxvacuos.voxel.client.bootstrap.Bootstrap", "-username", username);
 			} else {
 				pb = new ProcessBuilder("java", "-classpath", getClassPath(ver),
-						"net.luxvacuos.voxel.client.bootstrap.Bootstrap -username " + username);
+						"net.luxvacuos.voxel.client.bootstrap.Bootstrap", "-username", username);
 			}
 			try {
 				launched = true;
@@ -82,16 +82,22 @@ public class Updater {
 		}
 	}
 
-	public void getRemoteVersions() throws IOException {
-		if (DownloadsHelper.download(Bootstrap.getPrefix() + LauncherVariables.project + "/config/remote.json",
-				"/" + LauncherVariables.project + "/config/remote.json")) {
-			File remote = new File(Bootstrap.getPrefix() + LauncherVariables.project + "/config/remote.json");
-			Files.copy(remote.toPath(), local.toPath(), REPLACE_EXISTING);
-			remote.delete();
-		}
-		if (local.exists()) {
-			versionsHandler = gson.fromJson(new FileReader(local), VersionsHandler.class);
-		}
+	public void getRemoteVersions() {
+		new Thread(() -> {
+			try {
+				if (DownloadsHelper.download(Bootstrap.getPrefix() + LauncherVariables.project + "/config/remote.json",
+						"/" + LauncherVariables.project + "/config/remote.json")) {
+					File remote = new File(Bootstrap.getPrefix() + LauncherVariables.project + "/config/remote.json");
+					Files.copy(remote.toPath(), local.toPath(), REPLACE_EXISTING);
+					remote.delete();
+				}
+				if (local.exists()) {
+					versionsHandler = gson.fromJson(new FileReader(local), VersionsHandler.class);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}).start();
 	}
 
 	private String getClassPath(Version ver) {

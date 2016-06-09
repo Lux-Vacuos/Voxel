@@ -26,8 +26,6 @@ import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
 
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -72,71 +70,58 @@ public class Main extends BorderPane {
 		BorderPane bottom = new BorderPane();
 
 		playButton = new Button("Play");
-		playButton.setOnAction(new EventHandler<ActionEvent>() {
-
-			@Override
-			public void handle(ActionEvent event) {
-				new Thread(new Runnable() {
-
-					@Override
-					public void run() {
-						try {
-							ui.getUpdater().downloadAndRun(ui.getUpdater().getVersionsHandler().getVersions().get(0),
-									userName.getText());
-							Platform.runLater(() -> playButton.setText("Launching..."));
-						} catch (JsonSyntaxException | JsonIOException | FileNotFoundException e) {
-							Platform.runLater(() -> playButton.setText("Error downloading, try again"));
-							Platform.runLater(() -> playButton.setDisable(false));
-							e.printStackTrace();
-							return;
-						}
-					}
-				}).start();
-				while (!ui.getUpdater().isDownloading() && !ui.getUpdater().isDownloaded()) {
+		playButton.setOnAction((event) -> {
+			
+			new Thread(() -> {
+				try {
+					ui.getUpdater().downloadAndRun(ui.getUpdater().getVersionsHandler().getVersions().get(0),
+							userName.getText());
+					Platform.runLater(() -> playButton.setText("Launching..."));
+				} catch (JsonSyntaxException | JsonIOException | FileNotFoundException e) {
+					Platform.runLater(() -> {
+						playButton.setText("Error downloading, try again");
+						playButton.setDisable(false);
+					});
+					e.printStackTrace();
+					return;
+				}
+			}).start();
+			
+			while (!ui.getUpdater().isDownloading() && !ui.getUpdater().isDownloaded()) {
+				try {
+					Thread.sleep(100);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+			
+			new Thread(() -> {
+				while (ui.getUpdater().isDownloading()) {
+					Platform.runLater(
+							() -> download.setProgress(ui.getUpdater().getDownloadingVersion().getDownloadProgress()));
 					try {
 						Thread.sleep(100);
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
 				}
-				new Thread(new Runnable() {
-
-					@Override
-					public void run() {
-						while (ui.getUpdater().isDownloading()) {
-							Platform.runLater(() -> download
-									.setProgress(ui.getUpdater().getDownloadingVersion().getDownloadProgress()));
-							try {
-								Thread.sleep(100);
-							} catch (InterruptedException e) {
-								e.printStackTrace();
-							}
-						}
-						Platform.runLater(() -> download.setProgress(1f));
+				Platform.runLater(() -> download.setProgress(1f));
+			}).start();
+			
+			playButton.setText("Downloading... Please Wait");
+			playButton.setDisable(true);
+			
+			new Thread(() -> {
+				try {
+					while (!ui.getUpdater().isLaunched()) {
+						Thread.sleep(100);
 					}
-				}).start();
-				playButton.setText("Downloading... Please Wait");
-				playButton.setDisable(true);
-				new Thread(new Runnable() {
-
-					@Override
-					public void run() {
-						while (!ui.getUpdater().isLaunched()) {
-							try {
-								Thread.sleep(100);
-							} catch (InterruptedException e) {
-								e.printStackTrace();
-							}
-						}
-						try {
-							Thread.sleep(1000);
-						} catch (InterruptedException e) {
-							e.printStackTrace();
-						}
-						Platform.runLater(() -> stage.close());
-					}
-				}).start();
-			}
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				Platform.runLater(() -> stage.close());
+			}).start();
 		});
 		playButton.setMinSize(160, 60);
 		playButton.setFont(new Font(16));
@@ -154,6 +139,7 @@ public class Main extends BorderPane {
 		left.setPadding(new Insets(20, 20, 20, 20));
 
 		TabPane tabPane = new TabPane(home, status);
+
 		setCenter(tabPane);
 		setBottom(bottom);
 		autosize();
