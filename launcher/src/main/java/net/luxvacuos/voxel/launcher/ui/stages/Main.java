@@ -49,6 +49,7 @@ public class Main extends BorderPane {
 	Text userName;
 
 	public Main(Stage stage, MainUI ui) {
+		userName = new Text();
 
 		Tab home = new Tab("Home");
 		home.setClosable(false);
