@@ -89,7 +89,7 @@ public class PlayerCamera extends Camera {
 	public PlayerCamera(Matrix4f proj, Display display) throws Exception {
 		super(proj, new Vector3f(-0.25f, -1.4f, -0.25f), new Vector3f(0.25f, 0.2f, 0.25f));
 		center = new Vector2f(display.getDisplayWidth() / 2, display.getDisplayHeight() / 2);
-		this.speed = 3f;
+		this.speed = 1f;
 		inventory = new Inventory(11, 11, 300, 0);
 		super.add(new LifeComponent(20));
 		super.add(new ArmourComponent());
@@ -218,16 +218,16 @@ public class PlayerCamera extends Camera {
 				this.getComponent(VelocityComponent.class).velocity.y = -5;
 		} else {
 			if (isKeyDown(KEY_LSHIFT))
-				speed = 0.8f;
+				speed = 0.2f;
 			else
-				speed = 3f;
+				speed = 1f;
 
 		}
 
 		if (isKeyDown(Keyboard.KEY_LCONTROL))
-			speed = 7f;
+			speed = 2f;
 		else
-			speed = 3f;
+			speed = 1f;
 
 		/*
 		 * if (isKeyDown(Keyboard.KEY_Y)) {

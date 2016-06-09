@@ -37,7 +37,7 @@ import javafx.scene.control.TabPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Font;
-import javafx.scene.web.WebEngine;
+import javafx.scene.text.Text;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import net.luxvacuos.voxel.launcher.ui.MainUI;
@@ -46,6 +46,7 @@ public class Main extends BorderPane {
 
 	private Button playButton;
 	private ProgressBar download;
+	Text userName;
 
 	public Main(Stage stage, MainUI ui) {
 
@@ -53,8 +54,7 @@ public class Main extends BorderPane {
 		home.setClosable(false);
 
 		WebView browser = new WebView();
-		WebEngine webEngine = browser.getEngine();
-		webEngine.load("https://guerra24.github.io/launcher");
+		browser.getEngine().load("https://guerra24.github.io/launcher");
 		browser.minWidth(342);
 		browser.minHeight(370);
 		home.setContent(browser);
@@ -80,7 +80,8 @@ public class Main extends BorderPane {
 					@Override
 					public void run() {
 						try {
-							ui.getUpdater().downloadAndRun(ui.getUpdater().getVersionsHandler().getVersions().get(0));
+							ui.getUpdater().downloadAndRun(ui.getUpdater().getVersionsHandler().getVersions().get(0),
+									userName.getText());
 							Platform.runLater(() -> playButton.setText("Launching..."));
 						} catch (JsonSyntaxException | JsonIOException | FileNotFoundException e) {
 							Platform.runLater(() -> playButton.setText("Error downloading, try again"));
@@ -145,8 +146,14 @@ public class Main extends BorderPane {
 		download.setPrefWidth(4000);
 		bottom.setBottom(download);
 
+		GridPane left = new GridPane();
+		left.setAlignment(Pos.CENTER);
+		left.setHgap(10);
+		left.setVgap(10);
+		left.setPadding(new Insets(20, 20, 20, 20));
+
 		TabPane tabPane = new TabPane(home, status);
-		setTop(tabPane);
+		setCenter(tabPane);
 		setBottom(bottom);
 		autosize();
 	}

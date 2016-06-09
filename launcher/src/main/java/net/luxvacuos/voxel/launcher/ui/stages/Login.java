@@ -103,7 +103,8 @@ public class Login extends GridPane {
 									stage.setScene(new Scene(ui.getMainStage()));
 									stage.centerOnScreen();
 									stage.show();
-
+									ui.getMainStage().userName.setText("Welcome, " + userField.getText());
+									passField.setText("");
 								}
 							});
 						else

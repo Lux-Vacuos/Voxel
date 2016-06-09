@@ -38,7 +38,6 @@ public class MainUI extends Application {
 
 	public static void main(String[] args) {
 		Logger.log("Version: " + LauncherVariables.version);
-		Logger.log("Build: " + LauncherVariables.build);
 		Logger.log("Dist Server: " + LauncherVariables.host);
 		Logger.log("Auth Server: " + LauncherVariables.authHost);
 		Thread.currentThread().setName("Voxel-Launcher");

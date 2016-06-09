@@ -51,7 +51,8 @@ public class Updater {
 		new File(Bootstrap.getPrefix() + LauncherVariables.project + "/config/versions/").mkdirs();
 	}
 
-	public void downloadAndRun(VersionKey key) throws JsonSyntaxException, JsonIOException, FileNotFoundException {
+	public void downloadAndRun(VersionKey key, String username)
+			throws JsonSyntaxException, JsonIOException, FileNotFoundException {
 		if (DownloadsHelper.download(
 				Bootstrap.getPrefix() + LauncherVariables.project + "/config/versions/" + key.name + "-" + key.version
 						+ ".json",
@@ -67,10 +68,10 @@ public class Updater {
 			ProcessBuilder pb;
 			if (Bootstrap.getPlatform().equals(Platform.MACOSX)) {
 				pb = new ProcessBuilder("java", "-XstartOnFirstThread", "-classpath", getClassPath(ver),
-						"net.luxvacuos.voxel.client.bootstrap.Bootstrap");
+						"net.luxvacuos.voxel.client.bootstrap.Bootstrap -username " + username);
 			} else {
 				pb = new ProcessBuilder("java", "-classpath", getClassPath(ver),
-						"net.luxvacuos.voxel.client.bootstrap.Bootstrap");
+						"net.luxvacuos.voxel.client.bootstrap.Bootstrap -username " + username);
 			}
 			try {
 				launched = true;
@@ -130,7 +131,7 @@ public class Updater {
 	public boolean isLaunched() {
 		return launched;
 	}
-	
+
 	public VersionsHandler getVersionsHandler() {
 		return versionsHandler;
 	}
