@@ -20,12 +20,6 @@
 
 package net.luxvacuos.voxel.launcher.ui.stages;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.net.URLConnection;
-
 import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -37,11 +31,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
-import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import net.luxvacuos.voxel.launcher.core.AuthHelper;
-import net.luxvacuos.voxel.launcher.core.LauncherVariables;
 import net.luxvacuos.voxel.launcher.ui.MainUI;
 
 public class Login extends GridPane {
@@ -70,33 +62,6 @@ public class Login extends GridPane {
 
 		add(voxelLogo, 0, 0);
 
-		GridPane updatePane = new GridPane();
-		updatePane.setAlignment(Pos.CENTER);
-		updatePane.setHgap(10);
-		updatePane.setVgap(10);
-		new Thread(() -> {
-			URL url;
-			String latest = LauncherVariables.version;
-			try {
-				url = new URL("https://get.luxvacuos.net/launcher/version");
-				URLConnection conn = url.openConnection();
-				BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-				latest = bufferedReader.readLine();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			if (!latest.equals(LauncherVariables.version)) {
-				Hyperlink updateNotice = new Hyperlink("New Update available!");
-				updateNotice.setFont(new Font(16));
-				updateNotice.setOnAction((event) -> {
-					ui.getHostServices().showDocument("https://github.com/Lux-Vacuos/Voxel/releases");
-				});
-				Platform.runLater(() -> updatePane.add(updateNotice, 0, 0));
-			}
-		}).start();
-
-		add(updatePane, 0, 1);
-
 		GridPane loginPane = new GridPane();
 		loginPane.setHgap(10);
 		loginPane.setVgap(10);
@@ -113,7 +78,7 @@ public class Login extends GridPane {
 
 		passField = new PasswordField();
 		loginPane.add(passField, 0, 3);
-		add(loginPane, 0, 2);
+		add(loginPane, 0, 1);
 
 		GridPane bottom = new GridPane();
 		bottom.setHgap(10);
@@ -154,13 +119,13 @@ public class Login extends GridPane {
 		});
 
 		bottom.add(link, 1, 0);
-		add(bottom, 0, 3);
+		add(bottom, 0, 2);
 
 		loginProgress = new ProgressBar(0);
 		loginProgress.setVisible(false);
 		loginProgress.setMinWidth(200);
 
-		add(loginProgress, 0, 4);
+		add(loginProgress, 0, 3);
 
 	}
 

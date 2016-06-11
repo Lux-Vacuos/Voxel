@@ -21,9 +21,6 @@
 package net.luxvacuos.voxel.launcher.bootstrap;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.jar.Attributes;
-import java.util.jar.Manifest;
 
 import net.luxvacuos.voxel.launcher.core.LauncherVariables;
 import net.luxvacuos.voxel.launcher.ui.MainUI;
@@ -104,7 +101,26 @@ public class Bootstrap {
 		Thread.currentThread().setName("Voxel-Launcher-Bootstrap");
 		new File(Bootstrap.getPrefix() + LauncherVariables.project + "/libraries/").mkdirs();
 
+		parseArgs(args);
+
 		MainUI.main(args);
+	}
+
+	private static void parseArgs(String[] args) {
+
+		for (int i = 0; i < args.length; i++) {
+			switch (args[i]) {
+			case "-apt":
+				LauncherVariables.apt = true;
+				break;
+			default:
+				if (args[i].startsWith("-")) {
+					throw new IllegalArgumentException("Unknown argument: " + args[i].substring(1));
+				} else {
+					throw new IllegalArgumentException("Unknown token: " + args[i]);
+				}
+			}
+		}
 	}
 
 	public static String getPrefix() {

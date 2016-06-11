@@ -1,3 +1,2 @@
-release date=15:45 09.06.2016,version=0.0.3
- * Add update notice.
- * Fixed Voxel not starting.
+release date=16:20 06.011.2016,version=0.0.4
+ * Now can update itself.

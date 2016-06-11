@@ -22,7 +22,8 @@ package net.luxvacuos.voxel.launcher.core;
 
 public class LauncherVariables {
 
-	public static String version = "0.0.3";
+	public static final String version = "0.0.4";
+	public static boolean apt = false;
 	public static final String host = "https://get.luxvacuos.net";
 	public static final String authHost = "https://luxvacuos.net";
 	public static final String project = "voxel";

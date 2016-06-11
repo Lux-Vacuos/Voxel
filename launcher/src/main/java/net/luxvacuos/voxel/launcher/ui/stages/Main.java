@@ -53,7 +53,7 @@ public class Main extends BorderPane {
 		home.setClosable(false);
 
 		WebView browser = new WebView();
-		browser.getEngine().load("https://guerra24.github.io/launcher");
+		browser.getEngine().load("https://luxvacuos.net/projects/launcher/launcher");
 		browser.minWidth(342);
 		browser.minHeight(370);
 		home.setContent(browser);

@@ -25,15 +25,20 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import net.luxvacuos.voxel.launcher.core.LauncherVariables;
+import net.luxvacuos.voxel.launcher.core.UpdateLauncher;
 import net.luxvacuos.voxel.launcher.core.Updater;
 import net.luxvacuos.voxel.launcher.ui.stages.Login;
 import net.luxvacuos.voxel.launcher.ui.stages.Main;
+import net.luxvacuos.voxel.launcher.ui.stages.Update;
 import net.luxvacuos.voxel.launcher.util.Logger;
 
 public class MainUI extends Application {
 
 	private Login loginStage;
 	private Main mainStage;
+	private Update updateStage;
+
+	private UpdateLauncher updateLauncher;
 	private Updater updater;
 
 	public static void main(String[] args) {
@@ -48,16 +53,22 @@ public class MainUI extends Application {
 		Thread.currentThread().setName("Voxel-Launcher");
 		updater = new Updater();
 		updater.getRemoteVersions();
+		updateLauncher = new UpdateLauncher();
+
 		loginStage = new Login(stage, this);
 		mainStage = new Main(stage, this);
 		stage.setTitle("Voxel Launcher");
 		stage.getIcons().add(new Image(getClass().getClassLoader().getResourceAsStream("assets/icons/icon32.png")));
 		stage.getIcons().add(new Image(getClass().getClassLoader().getResourceAsStream("assets/icons/icon64.png")));
-		stage.setScene(new Scene(loginStage));
-		stage.setWidth(854);
-		stage.setHeight(520);
-		stage.setMinWidth(342);
-		stage.setMinHeight(520);
+		if (updateLauncher.checkUpdate() ) {
+			updateStage = new Update(stage, this);
+			stage.setScene(new Scene(updateStage));
+			stage.sizeToScene();
+		} else {
+			stage.setScene(new Scene(loginStage));
+			stage.setWidth(854);
+			stage.setHeight(520);
+		}
 		stage.centerOnScreen();
 		stage.show();
 	}
@@ -70,8 +81,16 @@ public class MainUI extends Application {
 		return mainStage;
 	}
 
+	public Update getUpdateStage() {
+		return updateStage;
+	}
+
 	public Updater getUpdater() {
 		return updater;
+	}
+
+	public UpdateLauncher getUpdateLauncher() {
+		return updateLauncher;
 	}
 
 }
