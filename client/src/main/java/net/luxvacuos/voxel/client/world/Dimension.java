@@ -20,6 +20,9 @@
 
 package net.luxvacuos.voxel.client.world;
 
+import static org.lwjgl.opengl.GL11.GL_BLEND;
+import static org.lwjgl.opengl.GL11.glDisable;
+import static org.lwjgl.opengl.GL11.glEnable;
 import static org.lwjgl.opengl.GL15.GL_QUERY_RESULT;
 import static org.lwjgl.opengl.GL15.glGetQueryObjectui;
 
@@ -76,6 +79,7 @@ public abstract class Dimension {
 	private int loadedChunks = 0;
 	private Engine physicsEngine;
 	private PhysicsSystem physicsSystem;
+	public static int CHUNKS_LOADED_PER_FRAME = 3;
 
 	public Dimension(String name, Random seed, int chunkDim, GameResources gm) {
 		this.name = name;
@@ -127,7 +131,7 @@ public abstract class Dimension {
 	}
 
 	public void updateChunksGeneration(GameResources gm, float delta) throws Exception {
-
+		int chunkLoaded = 0;
 		for (float zr = -VoxelVariables.radius * 16f; zr <= VoxelVariables.radius * 16f; zr += 16f) {
 			float cz = (float) (gm.getCamera().getPosition().getZ() + zr);
 			for (float xr = -VoxelVariables.radius * 16f; xr <= VoxelVariables.radius * 16f; xr += 16f) {
@@ -138,18 +142,16 @@ public abstract class Dimension {
 					int yy = (int) (cy / 16f);
 					int zz = (int) (cz / 16f);
 
-					if (!hasChunk(xx, yy, zz)) {
-						if (existChunkFile(xx, yy, zz)) {
+					if (!hasChunk(xx, yy, zz) && chunkLoaded < CHUNKS_LOADED_PER_FRAME) {
+						if (existChunkFile(xx, yy, zz))
 							loadChunk(xx, yy, zz, gm);
-						} else {
-							if (VoxelVariables.generateChunks) {
-								addChunk(new Chunk(xx, yy, zz));
-								// saveChunk( xx, yy, zz, gm);
-							}
-						}
-					} else {
+						else if (VoxelVariables.generateChunks)
+							addChunk(new Chunk(xx, yy, zz));
+
+						chunkLoaded++;
+					} else if (hasChunk(xx, yy, zz)) {
 						Chunk chunk = getChunk(xx, yy, zz);
-						chunk.update(this, dimensionService, gm.getCamera(), delta);
+						chunk.update(this, gm.getCamera(), delta);
 						if (gm.getFrustum().cubeInFrustum(chunk.posX, chunk.posY, chunk.posZ, chunk.posX + 16,
 								chunk.posY + 16, chunk.posZ + 16)) {
 							chunk.rebuild(dimensionService, this);
@@ -166,7 +168,7 @@ public abstract class Dimension {
 		for (Chunk chunk : chunks.values()) {
 			float dist = (float) Vector3f.sub(new Vector3f(gm.getCamera().getPosition()).div(16),
 					new Vector3f(chunk.cx, chunk.cy, chunk.cz), null).lengthSquared();
-			if (dist > new Vector3f((float) VoxelVariables.radius, (float) VoxelVariables.radius + 1,
+			if (dist > new Vector3f((float) VoxelVariables.radius, (float) VoxelVariables.radius + 0.1f,
 					(float) VoxelVariables.radius).lengthSquared()) {
 				chunkNodeRemovals.add(new ChunkNodeRemoval(chunk));
 			}
@@ -181,6 +183,8 @@ public abstract class Dimension {
 	}
 
 	public void updateChunksRender(GameResources gm, boolean transparent) {
+		if (transparent)
+			glEnable(GL_BLEND);
 		List<Chunk> chunks_ = new ArrayList<>();
 		for (Chunk chunk : chunks.values()) {
 			if (chunk != null) {
@@ -199,6 +203,8 @@ public abstract class Dimension {
 			chunk.render(gm, transparent);
 			renderedChunks++;
 		}
+		if (transparent)
+			glDisable(GL_BLEND);
 	}
 
 	public void updateChunksShadow(GameResources gm) {
@@ -317,7 +323,7 @@ public abstract class Dimension {
 			Chunk chunk = gm.getKryo().readObject(input, Chunk.class);
 			input.close();
 			if (chunk != null) {
-				chunk.load();
+				chunk.onLoad();
 				addChunk(chunk);
 			}
 
@@ -391,14 +397,6 @@ public abstract class Dimension {
 			}
 			chunk = null;
 		}
-	}
-
-	public int getLoadedChunks() {
-		return loadedChunks;
-	}
-
-	public int getRenderedChunks() {
-		return renderedChunks;
 	}
 
 	public BlockBase getGlobalBlock(int x, int y, int z) {
@@ -494,8 +492,20 @@ public abstract class Dimension {
 	public void disposeGraphics() {
 	}
 
+	public int getLoadedChunks() {
+		return loadedChunks;
+	}
+
+	public int getRenderedChunks() {
+		return renderedChunks;
+	}
+
 	public int getDimensionID() {
 		return chunkDim;
+	}
+
+	public DimensionService getDimensionService() {
+		return dimensionService;
 	}
 
 	public SimplexNoise getNoise() {

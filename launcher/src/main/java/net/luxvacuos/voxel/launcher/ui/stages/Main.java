@@ -39,6 +39,7 @@ import javafx.scene.text.Text;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import net.luxvacuos.voxel.launcher.ui.MainUI;
+import net.luxvacuos.voxel.launcher.ui.modules.Dropdown;
 
 public class Main extends BorderPane {
 
@@ -58,20 +59,11 @@ public class Main extends BorderPane {
 		browser.minHeight(370);
 		home.setContent(browser);
 
-		Tab status = new Tab("Settings");
-		status.setClosable(false);
-
-		GridPane gridStatus = new GridPane();
-		gridStatus.setAlignment(Pos.CENTER);
-		gridStatus.setPadding(new Insets(10, 10, 10, 10));
-
-		status.setContent(gridStatus);
-
 		BorderPane bottom = new BorderPane();
 
 		playButton = new Button("Play");
 		playButton.setOnAction((event) -> {
-			
+
 			new Thread(() -> {
 				try {
 					ui.getUpdater().downloadAndRun(ui.getUpdater().getVersionsHandler().getVersions().get(0),
@@ -86,7 +78,7 @@ public class Main extends BorderPane {
 					return;
 				}
 			}).start();
-			
+
 			while (!ui.getUpdater().isDownloading() && !ui.getUpdater().isDownloaded()) {
 				try {
 					Thread.sleep(100);
@@ -94,7 +86,7 @@ public class Main extends BorderPane {
 					e.printStackTrace();
 				}
 			}
-			
+
 			new Thread(() -> {
 				while (ui.getUpdater().isDownloading()) {
 					Platform.runLater(
@@ -107,10 +99,10 @@ public class Main extends BorderPane {
 				}
 				Platform.runLater(() -> download.setProgress(1f));
 			}).start();
-			
+
 			playButton.setText("Downloading... Please Wait");
 			playButton.setDisable(true);
-			
+
 			new Thread(() -> {
 				try {
 					while (!ui.getUpdater().isLaunched()) {
@@ -138,7 +130,25 @@ public class Main extends BorderPane {
 		left.setVgap(10);
 		left.setPadding(new Insets(20, 20, 20, 20));
 
-		TabPane tabPane = new TabPane(home, status);
+		Tab settings = new Tab("Settings");
+		settings.setClosable(false);
+
+		GridPane gridSettings = new GridPane();
+		gridSettings.setPadding(new Insets(10, 10, 10, 10));
+		
+		GridPane resGrid = new GridPane();
+		Text resolutionText = new Text("Resolution");
+		Font font = new Font(14);
+		resolutionText.setFont(font);
+		resGrid.add(resolutionText, 0, 0);
+		Dropdown resolutions = new Dropdown("854x480", "1280x720", "1920x1080");
+		resGrid.add(resolutions, 0, 1);
+		
+		gridSettings.add(resGrid, 0, 0);
+
+		settings.setContent(gridSettings);
+
+		TabPane tabPane = new TabPane(home, settings);
 
 		setCenter(tabPane);
 		setBottom(bottom);

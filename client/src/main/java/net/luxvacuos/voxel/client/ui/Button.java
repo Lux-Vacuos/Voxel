@@ -25,17 +25,17 @@ import java.nio.ByteBuffer;
 import org.lwjgl.nanovg.NVGColor;
 
 import net.luxvacuos.igl.vector.Vector2f;
-import net.luxvacuos.voxel.client.core.VoxelVariables;
 import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.VectorsRendering;
+import net.luxvacuos.voxel.client.resources.GameResources;
 
 public class Button {
 	private Vector2f pos, renderPos;
 	private Vector2f size, renderSize;
 
 	public Button(Vector2f pos, Vector2f size) {
-		this.pos = new Vector2f(pos.x * VoxelVariables.XSCALE, pos.y * VoxelVariables.YSCALE);
-		this.size = new Vector2f((pos.x + size.x) * VoxelVariables.XSCALE, (pos.y + size.y) * VoxelVariables.YSCALE);
+		this.pos = new Vector2f(pos.x, pos.y);
+		this.size = new Vector2f((pos.x + size.x), (pos.y + size.y));
 		renderPos = pos;
 		renderSize = size;
 	}
@@ -67,10 +67,9 @@ public class Button {
 	}
 
 	public void render(String text, String font, String entypo, ByteBuffer preicon, NVGColor color) {
-		VectorsRendering.renderButton(preicon, text, font, entypo, (float) (renderPos.x * VoxelVariables.XSCALE),
-				(float) (720f - renderPos.y - renderSize.y) * VoxelVariables.YSCALE,
-				(float) (renderSize.x * VoxelVariables.XSCALE), (float) (renderSize.y * VoxelVariables.YSCALE), color,
-				this.insideButton());
+		VectorsRendering.renderButton(preicon, text, font, entypo, (float) (renderPos.x),
+				(float) (GameResources.getInstance().getDisplay().getDisplayHeight() - renderPos.y - renderSize.y), (float) (renderSize.x),
+				(float) (renderSize.y), color, this.insideButton());
 	}
 
 	public boolean pressed() {

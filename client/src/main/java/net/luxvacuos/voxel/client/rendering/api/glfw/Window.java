@@ -89,12 +89,7 @@ public abstract class Window implements IDisplay {
 	protected int displayFramebufferWidth = 0;
 	protected int displayFramebufferHeight = 0;
 
-	@Deprecated
 	protected boolean latestResized = false;
-	@Deprecated
-	protected int latestWidth = 0;
-	@Deprecated
-	protected int latestHeight = 0;
 	protected float pixelRatio;
 
 	protected long window;
@@ -168,8 +163,8 @@ public abstract class Window implements IDisplay {
 			@Override
 			public void invoke(long window, int width, int height) {
 				latestResized = true;
-				latestWidth = width;
-				latestHeight = height;
+				displayWidth = width;
+				displayHeight = height;
 			}
 		};
 
@@ -335,14 +330,6 @@ public abstract class Window implements IDisplay {
 
 	public boolean isLatestResized() {
 		return latestResized;
-	}
-
-	public int getLatestWidth() {
-		return latestWidth;
-	}
-
-	public int getLatestHeight() {
-		return latestHeight;
 	}
 
 	public float getPixelRatio() {

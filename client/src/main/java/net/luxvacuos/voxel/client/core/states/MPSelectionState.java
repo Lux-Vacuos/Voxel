@@ -28,13 +28,24 @@ import net.luxvacuos.voxel.client.resources.GameResources;
 
 public class MPSelectionState extends State {
 
+	private float time = 0;
+
+	@Override
+	public void start() {
+		time = 0;
+	}
+
 	@Override
 	public void update(Voxel voxel, float delta) {
 		GameResources gm = voxel.getGameResources();
-		if (gm.getMenuSystem().mpSelectionMenu.getExitButton().pressed())
-			gm.getGlobalStates().setState(GameState.MAINMENU);
-		else if (gm.getMenuSystem().mpSelectionMenu.getPlayButton().pressed()) {
-			gm.getGlobalStates().setState(GameState.LOADING_MP_WORLD);
+		if (time > 0.2f) {
+			if (gm.getMenuSystem().mpSelectionMenu.getExitButton().pressed())
+				gm.getGlobalStates().setState(GameState.MAINMENU);
+			else if (gm.getMenuSystem().mpSelectionMenu.getPlayButton().pressed()) {
+				gm.getGlobalStates().setState(GameState.LOADING_MP_WORLD);
+			}
+		} else {
+			time += 1 * delta;
 		}
 	}
 

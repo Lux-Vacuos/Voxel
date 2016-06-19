@@ -51,7 +51,7 @@ public class MainMenuState extends State {
 		GameResources gm = voxel.getGameResources();
 
 		if (gm.getMenuSystem().mainMenu.getPlayButton().pressed()) {
-			gm.getGlobalStates().setState(GameState.WORLD_SELECTION);
+			gm.getGlobalStates().setState(GameState.SP_SELECTION);
 		} else if (gm.getMenuSystem().mainMenu.getPlayMPButton().pressed()) {
 			gm.getGlobalStates().setState(GameState.MP_SELECTION);
 		} else if (gm.getMenuSystem().mainMenu.getExitButton().pressed()) {

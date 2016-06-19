@@ -21,54 +21,52 @@
 package net.luxvacuos.voxel.client.ui.menu;
 
 import net.luxvacuos.igl.vector.Vector2f;
-import net.luxvacuos.voxel.client.core.VoxelVariables;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.VectorsRendering;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.ui.Button;
-import net.luxvacuos.voxel.client.ui.WebRenderer;
 
 public class MainMenu {
 
 	private Button playButton;
 	private Button exitButton;
 	private Button optionsButton;
-	private Button newsRefreshButton;
 	private Button aboutButton;
 	private Button playMPButton;
 
-	private WebRenderer webRenderer;
-
 	public MainMenu(GameResources gm) {
-		playButton = new Button(new Vector2f(77, 568), new Vector2f(315, 80));
-		playMPButton = new Button(new Vector2f(77, 468), new Vector2f(315, 80));
-		optionsButton = new Button(new Vector2f(77, 368), new Vector2f(315, 80));
-		aboutButton = new Button(new Vector2f(77, 268), new Vector2f(315, 80));
-		exitButton = new Button(new Vector2f(77, 168), new Vector2f(315, 80));
-		newsRefreshButton = new Button(new Vector2f(1096, 627), new Vector2f(100, 40));
-		webRenderer = new WebRenderer(VoxelVariables.web + "news/menu.webtag", 460 * VoxelVariables.XSCALE,
-				120 * VoxelVariables.YSCALE);
-		webRenderer.update();
+		playButton = new Button(
+				new Vector2f(GameResources.getInstance().getDisplay().getDisplayWidth() / 2f - 100,
+						GameResources.getInstance().getDisplay().getDisplayHeight() / 2f + 120 - 20),
+				new Vector2f(200, 40));
+		playMPButton = new Button(
+				new Vector2f(GameResources.getInstance().getDisplay().getDisplayWidth() / 2f - 100,
+						GameResources.getInstance().getDisplay().getDisplayHeight() / 2f + 60 - 20),
+				new Vector2f(200, 40));
+		optionsButton = new Button(new Vector2f(GameResources.getInstance().getDisplay().getDisplayWidth() / 2f - 100,
+				GameResources.getInstance().getDisplay().getDisplayHeight() / 2 - 20), new Vector2f(200, 40));
+		aboutButton = new Button(
+				new Vector2f(GameResources.getInstance().getDisplay().getDisplayWidth() / 2f - 100,
+						GameResources.getInstance().getDisplay().getDisplayHeight() / 2f - 60 - 20),
+				new Vector2f(200, 40));
+		exitButton = new Button(
+				new Vector2f(GameResources.getInstance().getDisplay().getDisplayWidth() / 2f - 100,
+						GameResources.getInstance().getDisplay().getDisplayHeight() / 2f - 120 - 20),
+				new Vector2f(200, 40));
 	}
 
 	public void render() {
-		VectorsRendering.renderWindow(60 * VoxelVariables.XSCALE, 50 * VoxelVariables.YSCALE,
-				350 * VoxelVariables.XSCALE, 600 * VoxelVariables.YSCALE);
+		VectorsRendering.renderWindow("Main Menu", "Roboto-Bold", 20, 20,
+				GameResources.getInstance().getDisplay().getDisplayWidth() - 40,
+				GameResources.getInstance().getDisplay().getDisplayHeight() - 40);
 		playButton.render("Play", VectorsRendering.ICON_BLACK_RIGHT_POINTING_TRIANGLE);
 		playMPButton.render("Multiplayer", VectorsRendering.ICON_BLACK_RIGHT_POINTING_TRIANGLE);
 		optionsButton.render("Options", VectorsRendering.ICON_GEAR);
 		aboutButton.render("About", VectorsRendering.ICON_INFORMATION_SOURCE);
 		exitButton.render("Exit", VectorsRendering.ICON_LOGIN);
 
-		VectorsRendering.renderWindow("Voxel News", "Roboto-Bold", 450 * VoxelVariables.XSCALE,
-				50 * VoxelVariables.YSCALE, 750 * VoxelVariables.XSCALE, 600 * VoxelVariables.YSCALE);
-		webRenderer.render();
-
-		newsRefreshButton.render("Reload", VectorsRendering.rgba(80, 80, 80, 80, VectorsRendering.colorA));
 	}
 
 	public void update() {
-		if (newsRefreshButton.pressed())
-			webRenderer.update();
 	}
 
 	public Button getPlayButton() {

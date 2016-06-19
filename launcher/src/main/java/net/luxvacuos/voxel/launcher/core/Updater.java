@@ -75,7 +75,7 @@ public class Updater {
 			}
 			try {
 				launched = true;
-				Process p = pb.start();
+				pb.start();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

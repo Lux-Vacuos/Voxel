@@ -115,13 +115,15 @@ public class Display extends Window {
 		format.create();
 
 		if (glfwVulkanSupported()) {
-			//PointerBuffer requiredExtensions = glfwGetRequiredInstanceExtensions();
-			//if (requiredExtensions == null) {
-			//	throw new AssertionError("Failed to find list of required Vulkan extensions");
-			//}
-			//vkInstance = format.createVulkan(requiredExtensions);
-			//vk = true;
-			//CoreInfo.VkVersion = "1.0.8";
+			// PointerBuffer requiredExtensions =
+			// glfwGetRequiredInstanceExtensions();
+			// if (requiredExtensions == null) {
+			// throw new AssertionError("Failed to find list of required Vulkan
+			// extensions");
+			// }
+			// vkInstance = format.createVulkan(requiredExtensions);
+			// vk = true;
+			// CoreInfo.VkVersion = "1.0.8";
 		}
 
 		super.window = glfwCreateWindow(displayWidth, displayHeight, title, NULL, NULL);
@@ -270,7 +272,7 @@ public class Display extends Window {
 	public void setTimeCount(float timeCount) {
 		this.timeCount = timeCount;
 	}
-	
+
 	public DisplayUtils getDisplayUtils() {
 		return displayUtils;
 	}

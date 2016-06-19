@@ -18,30 +18,14 @@
  * 
  */
 
-package net.luxvacuos.voxel.client.ui;
+package net.luxvacuos.voxel.client.world.chunks;
 
-public class WebText {
-
-	private String text;
-	private float fontSize;
-	private boolean title;
-
-	public WebText(String text, float fontSize, boolean title) {
-		this.text = text;
-		this.fontSize = fontSize;
-		this.title = title;
-	}
-
-	public boolean isTitle() {
-		return title;
-	}
-
-	public String getText() {
-		return text;
-	}
-
-	public float getFontSize() {
-		return fontSize;
-	}
+/**
+ * Chunk
+ * 
+ * @author Guerra24 <pablo230699@hotmail.com>
+ * @category dimension
+ */
+public class ChunkV1 extends Chunk {
 
 }

@@ -42,7 +42,8 @@ public class AboutMenu {
 	private int ashleyLogo;
 
 	public AboutMenu(GameResources gm) throws Exception {
-		backButton = new Button(new Vector2f(533, 35), new Vector2f(215, 80));
+		backButton = new Button(new Vector2f(GameResources.getInstance().getDisplay().getDisplayWidth() / 2f - 100, 40),
+				new Vector2f(200, 40));
 		infinityLogo = gm.getLoader().loadNVGTexture("Infinity-Logo");
 		voxelLogo = gm.getLoader().loadNVGTexture("Voxel-Logo");
 		ashleyLogo = gm.getLoader().loadNVGTexture("Ashley-Logo");
@@ -50,124 +51,102 @@ public class AboutMenu {
 	}
 
 	public void render() {
-		VectorsRendering.renderWindow("About", "Roboto-Bold", 20 * VoxelVariables.XSCALE,
-				(20 + globalY) * VoxelVariables.YSCALE, 1240 * VoxelVariables.XSCALE, 2200 * VoxelVariables.YSCALE);
-		VectorsRendering.renderImage(440 * VoxelVariables.XSCALE, (60 + globalY) * VoxelVariables.YSCALE,
-				400 * VoxelVariables.XSCALE, 200 * VoxelVariables.YSCALE, voxelLogo, 1);
-		VectorsRendering.renderImage(100 * VoxelVariables.XSCALE, (660 + globalY) * VoxelVariables.YSCALE,
-				400 * VoxelVariables.XSCALE, 200 * VoxelVariables.YSCALE, infinityLogo, 1);
-		VectorsRendering.renderImage(100 * VoxelVariables.XSCALE, (1070 + globalY) * VoxelVariables.YSCALE,
-				400 * VoxelVariables.XSCALE, 200 * VoxelVariables.YSCALE, ashleyLogo, 1);
-		VectorsRendering.renderText("Libraries", "Roboto-Regular", 100 * VoxelVariables.XSCALE,
-				(600 + globalY) * VoxelVariables.YSCALE, 60 * VoxelVariables.YSCALE,
+		VectorsRendering.renderWindow("About", "Roboto-Bold", 20, (20 + globalY),
+				GameResources.getInstance().getDisplay().getDisplayWidth() - 40, 2200);
+		VectorsRendering.renderImage(GameResources.getInstance().getDisplay().getDisplayWidth() / 2f - 200, (60 + globalY), 400, 200, voxelLogo, 1);
+		VectorsRendering.renderImage(60, (660 + globalY), 400, 200, infinityLogo, 1);
+		VectorsRendering.renderImage(60, (1070 + globalY), 400, 200, ashleyLogo, 1);
+
+		VectorsRendering.renderText("Libraries", "Roboto-Bold", 60, (600 + globalY), 60,
 				VectorsRendering.rgba(255, 255, 255, 255, VectorsRendering.colorA),
 				VectorsRendering.rgba(255, 255, 255, 255, VectorsRendering.colorA));
-		VectorsRendering.renderText("This game makes use of the following libraries.", "Roboto-Regular",
-				100 * VoxelVariables.XSCALE, (680 + globalY) * VoxelVariables.YSCALE, 40 * VoxelVariables.YSCALE,
-				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorA),
+		VectorsRendering.renderText("This game makes use of the following libraries.", "Roboto-Regular", 60,
+				(680 + globalY), 30, VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorA),
 				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorB));
 		VectorsRendering.renderText("Infinity Game Engine - Infinity is licensed under the MIT License.",
-				"Roboto-Regular", 100 * VoxelVariables.XSCALE, (880 + globalY) * VoxelVariables.YSCALE,
-				40 * VoxelVariables.YSCALE, VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorA),
+				"Roboto-Regular", 60, (880 + globalY), 30,
+				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorA),
 				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorB));
 		VectorsRendering.renderText("Light Weight Java Game Library 3 - LWJGL is licensed under the BSD License.",
-				"Roboto-Regular", 100 * VoxelVariables.XSCALE, (1080 + globalY) * VoxelVariables.YSCALE,
-				40 * VoxelVariables.YSCALE, VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorA),
-				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorB));
-		VectorsRendering.renderText("Ashley - Ashley is licensed under the Apache2 License.", "Roboto-Regular",
-				100 * VoxelVariables.XSCALE, (1280 + globalY) * VoxelVariables.YSCALE, 40 * VoxelVariables.YSCALE,
+				"Roboto-Regular", 60, (1080 + globalY), 30,
 				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorA),
+				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorB));
+		VectorsRendering.renderText("Ashley - Ashley is licensed under the Apache2 License.", "Roboto-Regular", 60,
+				(1280 + globalY), 30, VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorA),
 				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorB));
 		VectorsRendering.renderText("Sound System - Sound System is licensed under the Sound System License.",
-				"Roboto-Regular", 100 * VoxelVariables.XSCALE, (1480 + globalY) * VoxelVariables.YSCALE,
-				40 * VoxelVariables.YSCALE, VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorA),
-				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorB));
-		VectorsRendering.renderText("Log4J - Log4j is licensed under the Apache2.", "Roboto-Regular",
-				100 * VoxelVariables.XSCALE, (1680 + globalY) * VoxelVariables.YSCALE, 40 * VoxelVariables.YSCALE,
+				"Roboto-Regular", 60, (1480 + globalY), 30,
 				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorA),
 				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorB));
-		VectorsRendering.renderText("Kryo - Kryo is licensed under the BSD License.", "Roboto-Regular",
-				100 * VoxelVariables.XSCALE, (1880 + globalY) * VoxelVariables.YSCALE, 40 * VoxelVariables.YSCALE,
-				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorA),
+		VectorsRendering.renderText("Log4J - Log4j is licensed under the Apache2.", "Roboto-Regular", 60,
+				(1680 + globalY), 30, VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorA),
 				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorB));
-		VectorsRendering.renderText("KryoNet - KryoNet is licensed under the BSD License.", "Roboto-Regular",
-				100 * VoxelVariables.XSCALE, (2080 + globalY) * VoxelVariables.YSCALE, 40 * VoxelVariables.YSCALE,
-				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorA),
+		VectorsRendering.renderText("Kryo - Kryo is licensed under the BSD License.", "Roboto-Regular", 60,
+				(1880 + globalY), 30, VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorA),
+				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorB));
+		VectorsRendering.renderText("KryoNet - KryoNet is licensed under the BSD License.", "Roboto-Regular", 60,
+				(2080 + globalY), 30, VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorA),
 				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorB));
 
-		VectorsRendering.renderText("Version ", "Roboto-Bold", 100 * VoxelVariables.XSCALE,
-				(300 + globalY) * VoxelVariables.YSCALE, 40 * VoxelVariables.YSCALE,
+		
+		
+		VectorsRendering.renderText("Version ", "Roboto-Bold", 60, (300 + globalY), 30,
 				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorA),
 				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorB));
 		VectorsRendering.renderText(
 				" (" + VoxelVariables.version + ")" + " Molten API" + " (" + MoltenAPI.apiVersion + "/"
 						+ MoltenAPI.build + ")",
-				"Roboto-Regular", NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE, 1180 * VoxelVariables.XSCALE,
-				(300 + globalY) * VoxelVariables.YSCALE, 40 * VoxelVariables.YSCALE,
+				"Roboto-Regular", NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE, GameResources.getInstance().getDisplay().getDisplayWidth() - 60, (300 + globalY), 30,
 				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorA),
 				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorB));
-		VectorsRendering.renderText("OS ", "Roboto-Bold", 100 * VoxelVariables.XSCALE,
-				(330 + globalY) * VoxelVariables.YSCALE, 40 * VoxelVariables.YSCALE,
+		VectorsRendering.renderText("OS ", "Roboto-Bold", 60, (330 + globalY), 30,
 				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorA),
 				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorB));
-		VectorsRendering.renderText(CoreInfo.OS, "Roboto-Regular", NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE,
-				1180 * VoxelVariables.XSCALE, (330 + globalY) * VoxelVariables.YSCALE, 40 * VoxelVariables.YSCALE,
+		VectorsRendering.renderText(CoreInfo.OS, "Roboto-Regular", NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE, GameResources.getInstance().getDisplay().getDisplayWidth() - 60,
+				(330 + globalY), 30, VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorA),
+				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorB));
+
+		VectorsRendering.renderText("LWJGL Version ", "Roboto-Bold", 60, (360 + globalY), 30,
+				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorA),
+				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorB));
+		VectorsRendering.renderText(CoreInfo.LWJGLVer, "Roboto-Regular", NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE, GameResources.getInstance().getDisplay().getDisplayWidth() - 60,
+				(360 + globalY), 30, VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorA),
+				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorB));
+
+		VectorsRendering.renderText("GLFW Version ", "Roboto-Bold", 60, (390 + globalY), 30,
+				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorA),
+				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorB));
+		VectorsRendering.renderText(CoreInfo.GLFWVer, "Roboto-Regular", NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE, GameResources.getInstance().getDisplay().getDisplayWidth() - 60,
+				(390 + globalY), 30, VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorA),
+				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorB));
+
+		VectorsRendering.renderText("OpenGL Version ", "Roboto-Bold", 60, (420 + globalY), 30,
+				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorA),
+				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorB));
+		VectorsRendering.renderText(CoreInfo.OpenGLVer, "Roboto-Regular", NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE, GameResources.getInstance().getDisplay().getDisplayWidth() - 60,
+				(420 + globalY), 30, VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorA),
+				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorB));
+
+		VectorsRendering.renderText("Vulkan Version ", "Roboto-Bold", 60, (450 + globalY), 30,
 				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorA),
 				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorB));
 
-		VectorsRendering.renderText("LWJGL Version ", "Roboto-Bold", 100 * VoxelVariables.XSCALE,
-				(360 + globalY) * VoxelVariables.YSCALE, 40 * VoxelVariables.YSCALE,
-				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorA),
-				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorB));
-		VectorsRendering.renderText(CoreInfo.LWJGLVer, "Roboto-Regular", NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE,
-				1180 * VoxelVariables.XSCALE, (360 + globalY) * VoxelVariables.YSCALE, 40 * VoxelVariables.YSCALE,
-				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorA),
+		VectorsRendering.renderText(CoreInfo.VkVersion, "Roboto-Regular", NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE, GameResources.getInstance().getDisplay().getDisplayWidth() - 60,
+				(450 + globalY), 30, VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorA),
 				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorB));
 
-		VectorsRendering.renderText("GLFW Version ", "Roboto-Bold", 100 * VoxelVariables.XSCALE,
-				(390 + globalY) * VoxelVariables.YSCALE, 40 * VoxelVariables.YSCALE,
+		VectorsRendering.renderText("Vendor ", "Roboto-Bold", 60, (480 + globalY), 30,
 				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorA),
 				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorB));
-		VectorsRendering.renderText(CoreInfo.GLFWVer, "Roboto-Regular", NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE,
-				1180 * VoxelVariables.XSCALE, (390 + globalY) * VoxelVariables.YSCALE, 40 * VoxelVariables.YSCALE,
-				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorA),
+		VectorsRendering.renderText(CoreInfo.Vendor, "Roboto-Regular", NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE, GameResources.getInstance().getDisplay().getDisplayWidth() - 60,
+				(480 + globalY), 30, VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorA),
 				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorB));
 
-		VectorsRendering.renderText("OpenGL Version ", "Roboto-Bold", 100 * VoxelVariables.XSCALE,
-				(420 + globalY) * VoxelVariables.YSCALE, 40 * VoxelVariables.YSCALE,
+		VectorsRendering.renderText("Renderer ", "Roboto-Bold", 60, (510 + globalY), 30,
 				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorA),
 				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorB));
-		VectorsRendering.renderText(CoreInfo.OpenGLVer, "Roboto-Regular", NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE,
-				1180 * VoxelVariables.XSCALE, (420 + globalY) * VoxelVariables.YSCALE, 40 * VoxelVariables.YSCALE,
-				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorA),
-				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorB));
-
-		VectorsRendering.renderText("Vulkan Version ", "Roboto-Bold", 100 * VoxelVariables.XSCALE,
-				(450 + globalY) * VoxelVariables.YSCALE, 40 * VoxelVariables.YSCALE,
-				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorA),
-				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorB));
-
-		VectorsRendering.renderText(CoreInfo.VkVersion, "Roboto-Regular", NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE,
-				1180 * VoxelVariables.XSCALE, (450 + globalY) * VoxelVariables.YSCALE, 40 * VoxelVariables.YSCALE,
-				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorA),
-				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorB));
-
-		VectorsRendering.renderText("Vendor ", "Roboto-Bold", 100 * VoxelVariables.XSCALE,
-				(480 + globalY) * VoxelVariables.YSCALE, 40 * VoxelVariables.YSCALE,
-				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorA),
-				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorB));
-		VectorsRendering.renderText(CoreInfo.Vendor, "Roboto-Regular", NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE,
-				1180 * VoxelVariables.XSCALE, (480 + globalY) * VoxelVariables.YSCALE, 40 * VoxelVariables.YSCALE,
-				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorA),
-				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorB));
-
-		VectorsRendering.renderText("Renderer ", "Roboto-Bold", 100 * VoxelVariables.XSCALE,
-				(510 + globalY) * VoxelVariables.YSCALE, 40 * VoxelVariables.YSCALE,
-				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorA),
-				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorB));
-		VectorsRendering.renderText(CoreInfo.Renderer, "Roboto-Regular", NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE,
-				1180 * VoxelVariables.XSCALE, (510 + globalY) * VoxelVariables.YSCALE, 40 * VoxelVariables.YSCALE,
-				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorA),
+		VectorsRendering.renderText(CoreInfo.Renderer, "Roboto-Regular", NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE, GameResources.getInstance().getDisplay().getDisplayWidth() - 60,
+				(510 + globalY), 30, VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorA),
 				VectorsRendering.rgba(255, 255, 255, 160, VectorsRendering.colorB));
 		backButton.render("Back");
 	}

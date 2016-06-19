@@ -393,14 +393,14 @@ public class VectorsRendering {
 			float w, float h, NVGColor color, boolean mouseInside) {
 		long vg = GameResources.getInstance().getDisplay().getVg();
 		NVGPaint bg = paintA;
-		float cornerRadius = 10.0f;
+		float cornerRadius = 4.0f;
 		float tw, iw = 0;
 
 		if (mouseInside) {
-			x += 3;
-			y += 3;
-			w -= 6;
-			h -= 6;
+			x += 1;
+			y += 1;
+			w -= 2;
+			h -= 2;
 		}
 		float fontSize = h / 2;
 
@@ -443,9 +443,9 @@ public class VectorsRendering {
 		nvgFontSize(vg, fontSize);
 		nvgFontFace(vg, font);
 		nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
-		nvgFillColor(vg, rgba(0, 0, 0, 160, colorA));
+		nvgFillColor(vg, rgba(0, 0, 0, 255, colorA));
 		nvgText(vg, x + w * 0.5f - tw * 0.5f + iw * 0.25f, y + h * 0.5f - 1, textEncoded, NULL);
-		nvgFillColor(vg, rgba(255, 255, 255, 160, colorA));
+		nvgFillColor(vg, rgba(255, 255, 255, 100, colorA));
 		nvgText(vg, x + w * 0.5f - tw * 0.5f + iw * 0.25f, y + h * 0.5f, textEncoded, NULL);
 
 		memFree(textEncoded);

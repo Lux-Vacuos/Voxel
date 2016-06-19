@@ -32,6 +32,12 @@ public class LoadingMPState extends State {
 
 	private boolean trying = false;
 	private String message = "Connecting...";
+	private float time = 0;
+
+	@Override
+	public void start() {
+		time = 0;
+	}
 
 	@Override
 	public void update(Voxel voxel, float delta) {
@@ -48,10 +54,14 @@ public class LoadingMPState extends State {
 				e.printStackTrace();
 			}
 		}
-		if (gm.getMenuSystem().mpLoadingWorld.getExitButton().pressed()) {
-			trying = false;
-			message = "Connecting...";
-			gm.getGlobalStates().setState(gm.getGlobalStates().getOldState());
+		if (time > 0.2f) {
+			if (gm.getMenuSystem().mpLoadingWorld.getExitButton().pressed()) {
+				trying = false;
+				message = "Connecting...";
+				gm.getGlobalStates().setState(gm.getGlobalStates().getOldState());
+			}
+		} else {
+			time += 1 * delta;
 		}
 	}
 

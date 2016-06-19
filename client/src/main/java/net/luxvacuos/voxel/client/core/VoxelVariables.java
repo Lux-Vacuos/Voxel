@@ -53,9 +53,7 @@ public class VoxelVariables {
 	public static int FOV = 90;
 	public static int WIDTH = 1280;
 	public static int HEIGHT = 720;
-	public static float XSCALE = 1f;
-	public static float YSCALE = 1f;
-	public static float ASPECT_RATIO = 1f;
+
 	public static final float NEAR_PLANE = 0.1f;
 	public static final float FAR_PLANE = 1000f;
 	public static float RED = 0.32f;
@@ -89,8 +87,6 @@ public class VoxelVariables {
 	 * World Settings
 	 */
 	public static int radius = 2;
-	public static boolean isCustomSeed = false;
-	public static String seed = "";
 	public static boolean generateChunks = true;
 	public static final int CHUNK_SIZE = 16;
 	public static final int CHUNK_HEIGHT = 16;

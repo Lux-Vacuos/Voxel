@@ -26,16 +26,16 @@ import net.luxvacuos.voxel.client.core.Voxel;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.VectorsRendering;
 import net.luxvacuos.voxel.client.resources.GameResources;
 
-public class WorldSelectionState extends State {
+public class SPSelectionState extends State {
 
 	@Override
 	public void update(Voxel voxel, float delta) {
 		GameResources gm = voxel.getGameResources();
-		gm.getMenuSystem().worldSelectionMenu.update();
-		if (gm.getMenuSystem().worldSelectionMenu.getExitButton().pressed())
+		gm.getMenuSystem().spSelectionMenu.update();
+		if (gm.getMenuSystem().spSelectionMenu.getExitButton().pressed())
 			gm.getGlobalStates().setState(GameState.MAINMENU);
-		else if (gm.getMenuSystem().worldSelectionMenu.getPlayButton().pressed()
-				&& gm.getMenuSystem().worldSelectionMenu.getWorldName() != "")
+		else if (gm.getMenuSystem().spSelectionMenu.getPlayButton().pressed()
+				&& gm.getMenuSystem().spSelectionMenu.getWorldName() != "")
 			gm.getGlobalStates().setState(GameState.LOADING_WORLD);
 	}
 
@@ -44,7 +44,7 @@ public class WorldSelectionState extends State {
 		GameResources gm = voxel.getGameResources();
 		gm.getRenderer().prepare();
 		gm.getDisplay().beingNVGFrame();
-		gm.getMenuSystem().worldSelectionMenu.render();
+		gm.getMenuSystem().spSelectionMenu.render();
 		VectorsRendering.renderMouse();
 		gm.getDisplay().endNVGFrame();
 	}

@@ -54,8 +54,7 @@ public abstract class ImagePass {
 		shader.start();
 		shader.loadTransformation(Maths.createTransformationMatrix(new Vector2f(0, 0), new Vector2f(1, 1)));
 		shader.connectTextureUnits();
-		shader.loadResolution(new Vector2f(GameResources.getInstance().getDisplay().getDisplayWidth(),
-				GameResources.getInstance().getDisplay().getDisplayHeight()));
+		shader.loadResolution(new Vector2f(width, height));
 		shader.loadSkyColor(VoxelVariables.skyColor);
 		shader.stop();
 	}

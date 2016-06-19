@@ -29,7 +29,7 @@ import net.luxvacuos.voxel.client.core.states.LoadingSPState;
 import net.luxvacuos.voxel.client.core.states.MPSelectionState;
 import net.luxvacuos.voxel.client.core.states.MainMenuState;
 import net.luxvacuos.voxel.client.core.states.OptionsState;
-import net.luxvacuos.voxel.client.core.states.WorldSelectionState;
+import net.luxvacuos.voxel.client.core.states.SPSelectionState;
 
 /**
  * States Handler
@@ -47,7 +47,7 @@ public class GlobalStates {
 
 	public enum GameState {
 		GAME_SP(new GameSPState()), MAINMENU(new MainMenuState()), IN_PAUSE(new InPauseState()), LOADING_WORLD(
-				new LoadingSPState()), OPTIONS(new OptionsState()), WORLD_SELECTION(new WorldSelectionState()), ABOUT(
+				new LoadingSPState()), OPTIONS(new OptionsState()), SP_SELECTION(new SPSelectionState()), ABOUT(
 						new AboutState()), MP_SELECTION(new MPSelectionState()), LOADING_MP_WORLD(
 								new LoadingMPState()), GAME_SP_INVENTORY(new GameSPInventoryState());
 

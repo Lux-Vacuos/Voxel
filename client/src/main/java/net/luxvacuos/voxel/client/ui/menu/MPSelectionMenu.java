@@ -21,7 +21,6 @@
 package net.luxvacuos.voxel.client.ui.menu;
 
 import net.luxvacuos.igl.vector.Vector2f;
-import net.luxvacuos.voxel.client.core.VoxelVariables;
 import net.luxvacuos.voxel.client.input.Keyboard;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.VectorsRendering;
 import net.luxvacuos.voxel.client.resources.GameResources;
@@ -34,22 +33,26 @@ public class MPSelectionMenu {
 	private String ip = "";
 
 	public MPSelectionMenu(GameResources gm) {
-		exitButton = new Button(new Vector2f(655, 30), new Vector2f(215, 80));
-		playButton = new Button(new Vector2f(410, 30), new Vector2f(215, 80));
+		exitButton = new Button(new Vector2f(GameResources.getInstance().getDisplay().getDisplayWidth() / 2f - 210, 35),
+				new Vector2f(200, 40));
+		playButton = new Button(new Vector2f(GameResources.getInstance().getDisplay().getDisplayWidth() / 2f + 10, 35),
+				new Vector2f(200, 40));
 	}
 
 	public void render() {
-		VectorsRendering.renderWindow("Multiplayer", "Roboto-Bold", 20 * VoxelVariables.XSCALE,
-				20 * VoxelVariables.YSCALE, 1240 * VoxelVariables.XSCALE, 540 * VoxelVariables.YSCALE);
-		VectorsRendering.renderText("IP:  ", "Roboto-Regular", 270 * VoxelVariables.XSCALE, 275 * VoxelVariables.YSCALE,
-				60 * VoxelVariables.YSCALE, VectorsRendering.rgba(255, 255, 255, 255, VectorsRendering.colorA),
+		VectorsRendering.renderWindow("Multiplayer", "Roboto-Bold", 20, 20,
+				GameResources.getInstance().getDisplay().getDisplayWidth() - 40,
+				GameResources.getInstance().getDisplay().getDisplayHeight() - 40);
+		VectorsRendering.renderText("IP:  ", "Roboto-Regular",
+				GameResources.getInstance().getDisplay().getDisplayWidth() / 2f - 170f,
+				GameResources.getInstance().getDisplay().getDisplayHeight() / 2f, 30,
+				VectorsRendering.rgba(255, 255, 255, 255, VectorsRendering.colorA),
 				VectorsRendering.rgba(255, 255, 255, 255, VectorsRendering.colorA));
-		VectorsRendering.renderWindow(20 * VoxelVariables.XSCALE, 570 * VoxelVariables.YSCALE,
-				1240 * VoxelVariables.XSCALE, 130 * VoxelVariables.YSCALE);
 		while (Keyboard.next())
 			ip = Keyboard.keyWritten(ip);
-		VectorsRendering.renderSearchBox(ip, "Roboto-Regular", "Entypo", 340 * VoxelVariables.XSCALE,
-				260 * VoxelVariables.YSCALE, 600 * VoxelVariables.XSCALE, 40 * VoxelVariables.YSCALE);
+		VectorsRendering.renderSearchBox(ip, "Roboto-Regular", "Entypo",
+				GameResources.getInstance().getDisplay().getDisplayWidth() / 2f - 150f,
+				GameResources.getInstance().getDisplay().getDisplayHeight() / 2f - 10f, 300, 20);
 
 		exitButton.render("Back");
 		playButton.render("Play");

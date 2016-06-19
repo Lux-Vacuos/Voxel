@@ -125,11 +125,6 @@ public class GameResources extends UGameResources {
 		display.create(VoxelVariables.WIDTH, VoxelVariables.HEIGHT, "Voxel", VoxelVariables.VSYNC, false, false,
 				new ContextFormat(3, 3, GLFW_OPENGL_API, GLFW_OPENGL_CORE_PROFILE, true),
 				new String[] { "assets/icons/icon32.png", "assets/icons/icon64.png" });
-		float width = VoxelVariables.WIDTH;
-		float height = VoxelVariables.HEIGHT;
-		VoxelVariables.ASPECT_RATIO = width / height;
-		VoxelVariables.YSCALE = height / 720f;
-		VoxelVariables.XSCALE = width / 1280f;
 	}
 
 	public void init(Voxel voxel) throws Exception {

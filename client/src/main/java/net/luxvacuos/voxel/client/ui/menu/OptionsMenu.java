@@ -25,7 +25,6 @@ import net.luxvacuos.voxel.client.core.VoxelVariables;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.VectorsRendering;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.ui.Button;
-import net.luxvacuos.voxel.client.ui.Slider;
 
 public class OptionsMenu {
 
@@ -38,38 +37,36 @@ public class OptionsMenu {
 	private Button reflectionsButton;
 	private Button parallaxButton;
 
-	private Slider drawDistanceSlider;
-	private Slider fovSlider;
-
 	public OptionsMenu(GameResources gm) {
-		drawDistanceSlider = new Slider(900 * VoxelVariables.XSCALE, 540 * VoxelVariables.YSCALE,
-				315 * VoxelVariables.XSCALE, 80 * VoxelVariables.YSCALE);
-		fovSlider = new Slider(900 * VoxelVariables.XSCALE, 440 * VoxelVariables.YSCALE, 315 * VoxelVariables.XSCALE,
-				80 * VoxelVariables.YSCALE);
-		exitButton = new Button(new Vector2f(530, 35), new Vector2f(230, 80));
-		godraysButton = new Button(new Vector2f(40, 560), new Vector2f(230, 80));
-		shadowsButton = new Button(new Vector2f(40, 460), new Vector2f(230, 80));
-		dofButton = new Button(new Vector2f(40, 360), new Vector2f(230, 80));
-		fxaaButton = new Button(new Vector2f(40, 260), new Vector2f(230, 80));
-		motionBlurButton = new Button(new Vector2f(40, 160), new Vector2f(230, 80));
+		exitButton = new Button(new Vector2f(GameResources.getInstance().getDisplay().getDisplayWidth() / 2f - 100, 35),
+				new Vector2f(200, 40));
+		godraysButton = new Button(new Vector2f(40, GameResources.getInstance().getDisplay().getDisplayHeight() - 110),
+				new Vector2f(200, 40));
+		shadowsButton = new Button(new Vector2f(40, GameResources.getInstance().getDisplay().getDisplayHeight() - 170),
+				new Vector2f(200, 40));
+		dofButton = new Button(new Vector2f(40, GameResources.getInstance().getDisplay().getDisplayHeight() - 230),
+				new Vector2f(200, 40));
+		fxaaButton = new Button(new Vector2f(40, GameResources.getInstance().getDisplay().getDisplayHeight() - 290),
+				new Vector2f(200, 40));
+		motionBlurButton = new Button(
+				new Vector2f(40, GameResources.getInstance().getDisplay().getDisplayHeight() - 350),
+				new Vector2f(200, 40));
 
-		reflectionsButton = new Button(new Vector2f(290, 560), new Vector2f(230, 80));
-		parallaxButton = new Button(new Vector2f(290, 460), new Vector2f(230, 80));
-
-		drawDistanceSlider.setPos(VoxelVariables.radius / 32f);
-		fovSlider.setPos(VoxelVariables.FOV / 140f);
+		reflectionsButton = new Button(
+				new Vector2f(260, GameResources.getInstance().getDisplay().getDisplayHeight() - 110),
+				new Vector2f(200, 40));
+		parallaxButton = new Button(
+				new Vector2f(260, GameResources.getInstance().getDisplay().getDisplayHeight() - 170),
+				new Vector2f(200, 40));
 	}
 
 	public void update() {
-		drawDistanceSlider.setPos(VoxelVariables.radius / 32f);
-		drawDistanceSlider.update();
-		fovSlider.setPos(VoxelVariables.FOV / 140f);
-		fovSlider.update();
 	}
 
 	public void render() {
-		VectorsRendering.renderWindow("Options", "Roboto-Bold", 20 * VoxelVariables.XSCALE, 20 * VoxelVariables.YSCALE,
-				1240 * VoxelVariables.XSCALE, 680 * VoxelVariables.YSCALE);
+		VectorsRendering.renderWindow("Options", "Roboto-Bold", 20, 20,
+				GameResources.getInstance().getDisplay().getDisplayWidth() - 40,
+				GameResources.getInstance().getDisplay().getDisplayHeight() - 40);
 
 		if (VoxelVariables.useVolumetricLight)
 			godraysButton.render("Light Rays: ON", VectorsRendering.rgba(100, 255, 100, 255, VectorsRendering.colorA));
@@ -111,27 +108,6 @@ public class OptionsMenu {
 			parallaxButton.render("Parallax: OFF", VectorsRendering.rgba(255, 100, 100, 255, VectorsRendering.colorA));
 
 		exitButton.render("Back");
-		VectorsRendering.renderLabel("Draw Distance: " + VoxelVariables.radius, "Roboto-Bold",
-				970 * VoxelVariables.XSCALE, 90 * VoxelVariables.YSCALE, 315 * VoxelVariables.XSCALE,
-				20 * VoxelVariables.YSCALE, 25f * VoxelVariables.YSCALE);
-		int r = (int) (drawDistanceSlider.getPos() * 32f);
-		if (r < 2)
-			r = 2;
-		VoxelVariables.radius = r;
-		VectorsRendering.renderSlider(VoxelVariables.radius / 32f, 900 * VoxelVariables.XSCALE,
-				100 * VoxelVariables.YSCALE, 315 * VoxelVariables.XSCALE, 80 * VoxelVariables.YSCALE);
-
-		VectorsRendering.renderLabel("Field of View: " + VoxelVariables.FOV, "Roboto-Bold", 970 * VoxelVariables.XSCALE,
-				190 * VoxelVariables.YSCALE, 315 * VoxelVariables.XSCALE, 20 * VoxelVariables.YSCALE,
-				25f * VoxelVariables.YSCALE);
-		int t = (int) (fovSlider.getPos() * 140f);
-		if (t < 20)
-			t = 20;
-		else if (t > 140)
-			t = 140;
-		VoxelVariables.FOV = t;
-		VectorsRendering.renderSlider(VoxelVariables.FOV / 140f, 900 * VoxelVariables.XSCALE,
-				200 * VoxelVariables.YSCALE, 315 * VoxelVariables.XSCALE, 80 * VoxelVariables.YSCALE);
 	}
 
 	public Button getExitButton() {

@@ -51,8 +51,8 @@ public class LoadingSPState extends State {
 	public void update(Voxel voxel, float delta) {
 		GameResources gm = voxel.getGameResources();
 
-		gm.getWorldsHandler().registerWorld(new DefaultWorld(gm.getMenuSystem().worldSelectionMenu.getWorldName()));
-		gm.getWorldsHandler().setActiveWorld(gm.getMenuSystem().worldSelectionMenu.getWorldName());
+		gm.getWorldsHandler().registerWorld(new DefaultWorld(gm.getMenuSystem().spSelectionMenu.getWorldName()));
+		gm.getWorldsHandler().setActiveWorld(gm.getMenuSystem().spSelectionMenu.getWorldName());
 		gm.getWorldsHandler().getActiveWorld().init(gm);
 		gm.getWorldsHandler().getActiveWorld().getActiveDimension().getPhysicsEngine().addEntity(gm.getCamera());
 		gm.getCamera().setPosition(new Vector3f(0, 180, 0));

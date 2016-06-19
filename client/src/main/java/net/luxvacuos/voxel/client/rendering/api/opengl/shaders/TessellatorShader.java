@@ -30,9 +30,13 @@ public class TessellatorShader extends ShaderProgram {
 
 	private static TessellatorShader instance = null;
 
-	public static TessellatorShader getInstance() throws Exception {
+	public static TessellatorShader getInstance() {
 		if (instance == null) {
-			instance = new TessellatorShader();
+			try {
+				instance = new TessellatorShader();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 		return instance;
 	}

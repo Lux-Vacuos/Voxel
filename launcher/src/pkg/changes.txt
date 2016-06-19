@@ -1,2 +1,2 @@
-release date=16:20 06.011.2016,version=0.0.4
- * Now can update itself.
+release date=00:40 06.19.2016,version=0.0.5
+ * Add resolution Dropdown (Not actually working).

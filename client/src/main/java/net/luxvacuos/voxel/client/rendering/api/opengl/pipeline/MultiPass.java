@@ -50,7 +50,7 @@ public class MultiPass extends RenderingPipeline {
 		volumetricLight.setName("VolumetricLight");
 		volumetricLight.init();
 		super.imagePasses.add(volumetricLight);
-		
+
 		gaussianHorizontal = new GaussianHorizonal(width, height);
 		gaussianHorizontal.setName("GaussianHorizontal");
 		gaussianHorizontal.init();
@@ -77,7 +77,7 @@ public class MultiPass extends RenderingPipeline {
 		super.imagePasses.add(bloomMask);
 
 		super.imagePasses.add(gaussianHorizontal);
-		
+
 		super.imagePasses.add(gaussianVertical);
 
 		colorCorrection = new ColorCorrection(width, height);

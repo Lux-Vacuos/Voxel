@@ -2,9 +2,8 @@ language: java
 jdk:
   - oraclejdk8
   
-dist: xenial
+dist: trusty
   
 install: gradle assemble
-  
-script:
-  - gradle test
+ 
+script: gradle test

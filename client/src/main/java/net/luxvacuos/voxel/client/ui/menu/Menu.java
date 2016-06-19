@@ -36,7 +36,7 @@ public class Menu {
 
 	public final GameSP gameSP;
 
-	public final WorldSelectionMenu worldSelectionMenu;
+	public final SPSelectionMenu spSelectionMenu;
 
 	public final AboutMenu aboutMenu;
 	
@@ -51,7 +51,7 @@ public class Menu {
 		pauseMenu = new PauseMenu(gm);
 		optionsMenu = new OptionsMenu(gm);
 		gameSP = new GameSP(gm);
-		worldSelectionMenu = new WorldSelectionMenu(gm);
+		spSelectionMenu = new SPSelectionMenu(gm);
 		aboutMenu = new AboutMenu(gm);
 		mpSelectionMenu = new MPSelectionMenu(gm);
 		mpLoadingWorld = new MPLoadingWorld(gm);

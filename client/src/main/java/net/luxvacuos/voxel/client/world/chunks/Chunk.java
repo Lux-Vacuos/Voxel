@@ -1,23 +1,3 @@
-/*
- * This file is part of Voxel
- * 
- * Copyright (C) 2016 Lux Vacuos
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
- */
-
 package net.luxvacuos.voxel.client.world.chunks;
 
 import static org.lwjgl.opengl.GL15.GL_SAMPLES_PASSED;
@@ -28,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Queue;
-import java.util.Random;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import net.luxvacuos.igl.vector.Vector3f;
@@ -45,28 +24,21 @@ import net.luxvacuos.voxel.client.world.block.BlockEntity;
 import net.luxvacuos.voxel.client.world.block.BlocksResources;
 import net.luxvacuos.voxel.client.world.entities.Camera;
 
-/**
- * Chunk
- * 
- * @author Guerra24 <pablo230699@hotmail.com>
- * @category dimension
- */
 public class Chunk {
 
 	public int posX, posY, posZ, cx, cy, cz;
 	public BlockBase[][][] blocks;
 	public byte[][][] lightMap;
 	public boolean created = false, decorated = false, cavesGenerated = false;
-
-	private transient Tessellator tess;
-	private transient float distance;
-	private transient List<BlockEntity> blockEntities;
-	transient int sizeX, sizeY, sizeZ;
 	public transient boolean needsRebuild = true, updated = false, updating = false, empty = true, visible = false,
 			creating = false, decorating = false, updatingBlocks = false, updatedBlocks = false;
-	private transient Queue<ParticlePoint> particlePoints;
+	protected transient Tessellator tess;
+	protected transient float distance;
+	protected transient List<BlockEntity> blockEntities;
+	protected transient int sizeX, sizeY, sizeZ;
+	protected transient Queue<ParticlePoint> particlePoints;
 
-	public Chunk(int cx, int cy, int cz) throws Exception {
+	public Chunk(int cx, int cy, int cz) {
 		this.cx = cx;
 		this.cy = cy;
 		this.cz = cz;
@@ -79,13 +51,13 @@ public class Chunk {
 	public Chunk() {
 	}
 
-	public void init() throws Exception {
-		load();
+	public void init() {
+		onLoad();
 		blocks = new BlockBase[sizeX][sizeY][sizeZ];
 		lightMap = new byte[sizeX][sizeY][sizeZ];
 	}
 
-	public void load() throws Exception {
+	public void onLoad() {
 		particlePoints = new ConcurrentLinkedQueue<ParticlePoint>();
 		blockEntities = new ArrayList<>();
 		sizeX = VoxelVariables.CHUNK_SIZE;
@@ -105,14 +77,7 @@ public class Chunk {
 			}
 	}
 
-	public void rebuild(DimensionService service, Dimension dimension) {
-		if ((needsRebuild || !updated) && !updating && !empty) {
-			updating = true;
-			service.add_worker(new ChunkWorkerMesh(dimension, this));
-		}
-	}
-
-	public void update(Dimension dimension, DimensionService service, Camera camera, float delta) throws Exception {
+	public void update(Dimension dimension, Camera camera, float delta) {
 		distance = (float) Vector3f.sub(camera.getPosition(), new Vector3f(posX + 8f, posY + 8f, posZ + 8f), null)
 				.lengthSquared();
 		empty = Arrays.asList(blocks).size() == 0;
@@ -126,7 +91,7 @@ public class Chunk {
 
 		if (!created && !creating) {
 			creating = true;
-			service.add_worker(new ChunkWorkerGenerator(dimension, this));
+			dimension.getDimensionService().add_worker(new ChunkWorkerGenerator(dimension, this));
 		}
 		if (!updatingBlocks && !updatedBlocks) {
 			updatingBlocks = true;
@@ -140,48 +105,11 @@ public class Chunk {
 					}
 				}
 			}
-			service.add_worker(new ChunkWorkerUpdate(dimension, this));
+			dimension.getDimensionService().add_worker(new ChunkWorkerUpdate(dimension, this));
 		}
 		for (BlockEntity blockEntity : blockEntities) {
 			blockEntity.update(dimension, delta);
 		}
-
-		if (!decorated) {
-			boolean can = true;
-			T: for (int jx = cx - 1; jx < cx + 1; jx++)
-				for (int jz = cz - 1; jz < cz + 1; jz++)
-					for (int jy = cy - 1; jy < cy + 1; jy++)
-						if (!dimension.hasChunk(jx, jy, jz)) {
-							can = false;
-							break T;
-						}
-
-			if (can)
-				decorate(dimension);
-		}
-
-	}
-
-	void update(Dimension dimension) {
-		particlePoints.clear();
-		rebuildChunkSection(dimension);
-	}
-
-	void updateBlocks(Dimension dimension) {
-		for (int x = 0; x < sizeX; x++) {
-			for (int z = 0; z < sizeZ; z++) {
-				for (int y = 0; y < sizeY; y++) {
-					BlockBase b = dimension.getGlobalBlock(x + posX, y + posY, z + posZ);
-					if (b.isAffectedByGravity() || b.isFluid()) {
-						if (dimension.getGlobalBlock(x + posX, y + posY - 1, z + posZ) == Block.Air) {
-							if (dimension.setGlobalBlock(x + posX, y + posY - 1, z + posZ, b))
-								dimension.setGlobalBlock(x + posX, y + posY, z + posZ, Block.Air);
-						}
-					}
-				}
-			}
-		}
-
 	}
 
 	void createBasicTerrain(Dimension dimension) {
@@ -205,6 +133,8 @@ public class Chunk {
 						setLocalBlock(x, y, z, Block.Dirt);
 					else if (y + posY == height - 1 && y + posY < 129)
 						setLocalBlock(x, y, z, Block.Sand);
+					else if (y + posY == height - 2 && y + posY < 129)
+						setLocalBlock(x, y, z, Block.Sand);
 					else if (y + posY < height - 2)
 						setLocalBlock(x, y, z, Block.Stone);
 					else if (getLocalBlock(x, y, z) != Block.Water)
@@ -216,19 +146,33 @@ public class Chunk {
 		created = true;
 	}
 
-	private void decorate(Dimension dimension) {
-		for (int i = 0; i < 4; i++) {
-			int xx = Maths.randInt(0, 15);
-			int zz = Maths.randInt(0, 15);
-			double tempHeight = dimension.getNoise().getNoise((int) ((xx + cx * 16)), (int) ((zz + cz * 16)));
-			tempHeight += 1;
-			int height = (int) (128 * Maths.clamp(tempHeight));
-			BlockBase h = getLocalBlock(xx, height - 1, zz);
-			if (h == Block.Grass || h == Block.Dirt)
-				dimension.getChunkGenerator().addTree(dimension, xx + cx * 16, height, zz + cz * 16,
-						Maths.randInt(4, 10), new Random(dimension.getSeed()));
+	void updateBlocks(Dimension dimension) {
+		for (int x = 0; x < sizeX; x++) {
+			for (int z = 0; z < sizeZ; z++) {
+				for (int y = 0; y < sizeY; y++) {
+					BlockBase b = dimension.getGlobalBlock(x + posX, y + posY, z + posZ);
+					if (b.isAffectedByGravity() || b.isFluid()) {
+						if (dimension.getGlobalBlock(x + posX, y + posY - 1, z + posZ) == Block.Air) {
+							if (dimension.setGlobalBlock(x + posX, y + posY - 1, z + posZ, b))
+								dimension.setGlobalBlock(x + posX, y + posY, z + posZ, Block.Air);
+						}
+					}
+				}
+			}
 		}
-		decorated = true;
+
+	}
+
+	public void rebuild(DimensionService service, Dimension dimension) {
+		if ((needsRebuild || !updated) && !updating && !empty) {
+			updating = true;
+			service.add_worker(new ChunkWorkerMesh(dimension, this));
+		}
+	}
+
+	void rebuildMesh(Dimension dimension) {
+		particlePoints.clear();
+		rebuildChunkSection(dimension);
 	}
 
 	private void rebuildChunkSection(Dimension dimension) {
@@ -295,45 +239,7 @@ public class Chunk {
 		tess.end();
 	}
 
-	public BlockBase getLocalBlock(int x, int y, int z) {
-		BlockBase b = blocks[x & 0xF][y & 0xF][z & 0xF];
-		if (b != null)
-			return b;
-		return Block.Air;
-	}
-
-	public void setLocalBlock(int x, int y, int z, BlockBase id) {
-		updated = false;
-		needsRebuild = true;
-		updatedBlocks = false;
-		blocks[x & 0xF][y & 0xF][z & 0xF] = id;
-	}
-
-	public float getSunLight(int x, int y, int z) {
-		return (lightMap[y & 0xF][z & 0xF][x & 0xF] >> 4) & 0xF;
-	}
-
-	public void setSunLight(int x, int y, int z, int val) {
-		lightMap[x & 0xF][y & 0xF][z & 0xF] = (byte) ((lightMap[x & 0xF][y & 0xF][z & 0xF] & 0xF) | (val << 4));
-	}
-
-	public float getTorchLight(int x, int y, int z) {
-		return lightMap[x & 0xF][y & 0xF][z & 0xF] & 0xF;
-	}
-
-	public void setTorchLight(int x, int y, int z, int val) {
-		lightMap[x & 0xF][y & 0xF][z & 0xF] = (byte) ((lightMap[x & 0xF][y & 0xF][z & 0xF] & 0xF0) | val);
-	}
-
-	public Queue<ParticlePoint> getParticlePoints() {
-		return particlePoints;
-	}
-
-	public float getDistance() {
-		return distance;
-	}
-
-	private boolean cullFaceWest(BlockBase block, int x, int y, int z, Dimension dimension) {
+	protected boolean cullFaceWest(BlockBase block, int x, int y, int z, Dimension dimension) {
 		if (x > (posX) + 1 && x < (posX) + 16) {
 			if (getLocalBlock(x - 1, y, z).getId() == block.getId())
 				return false;
@@ -347,7 +253,7 @@ public class Chunk {
 		return false;
 	}
 
-	private boolean cullFaceEast(BlockBase block, int x, int y, int z, Dimension dimension) {
+	protected boolean cullFaceEast(BlockBase block, int x, int y, int z, Dimension dimension) {
 		if (x > (posX) && x < (posX) + 15) {
 			if (getLocalBlock(x + 1, y, z).getId() == block.getId())
 				return false;
@@ -361,7 +267,7 @@ public class Chunk {
 		return false;
 	}
 
-	private boolean cullFaceDown(BlockBase block, int x, int y, int z, Dimension dimension) {
+	protected boolean cullFaceDown(BlockBase block, int x, int y, int z, Dimension dimension) {
 		if (y > (posY) + 1 && y < (posY) + 16) {
 			if (getLocalBlock(x, y - 1, z).getId() == block.getId())
 				return false;
@@ -375,7 +281,7 @@ public class Chunk {
 		return false;
 	}
 
-	private boolean cullFaceUpSolidBlock(BlockBase block, int x, int y, int z, Dimension dimension) {
+	protected boolean cullFaceUpSolidBlock(BlockBase block, int x, int y, int z, Dimension dimension) {
 		if (y > (posY) && y < (posY) + 15) {
 			if (getLocalBlock(x, y + 1, z).getId() == block.getId())
 				return false;
@@ -389,7 +295,7 @@ public class Chunk {
 		return false;
 	}
 
-	private boolean cullFaceNorth(BlockBase block, int x, int y, int z, Dimension dimension) {
+	protected boolean cullFaceNorth(BlockBase block, int x, int y, int z, Dimension dimension) {
 		if (z > (posZ) + 1 && z < (posZ) + 16) {
 			if (getLocalBlock(x, y, z - 1).getId() == block.getId())
 				return false;
@@ -403,7 +309,7 @@ public class Chunk {
 		return false;
 	}
 
-	private boolean cullFaceSouth(BlockBase block, int x, int y, int z, Dimension dimension) {
+	protected boolean cullFaceSouth(BlockBase block, int x, int y, int z, Dimension dimension) {
 		if (z > (posZ) && z < (posZ) + 15) {
 			if (getLocalBlock(x, y, z + 1).getId() == block.getId())
 				return false;
@@ -451,7 +357,7 @@ public class Chunk {
 		clear();
 	}
 
-	public void generateGraphics() throws Exception {
+	public void generateGraphics() {
 		tess = new Tessellator();
 	}
 
@@ -462,6 +368,44 @@ public class Chunk {
 
 	public Tessellator getTess() {
 		return tess;
+	}
+
+	public BlockBase getLocalBlock(int x, int y, int z) {
+		BlockBase b = blocks[x & 0xF][y & 0xF][z & 0xF];
+		if (b != null)
+			return b;
+		return Block.Air;
+	}
+
+	public void setLocalBlock(int x, int y, int z, BlockBase id) {
+		updated = false;
+		needsRebuild = true;
+		updatedBlocks = false;
+		blocks[x & 0xF][y & 0xF][z & 0xF] = id;
+	}
+
+	public float getSunLight(int x, int y, int z) {
+		return (lightMap[y & 0xF][z & 0xF][x & 0xF] >> 4) & 0xF;
+	}
+
+	public void setSunLight(int x, int y, int z, int val) {
+		lightMap[x & 0xF][y & 0xF][z & 0xF] = (byte) ((lightMap[x & 0xF][y & 0xF][z & 0xF] & 0xF) | (val << 4));
+	}
+
+	public float getTorchLight(int x, int y, int z) {
+		return lightMap[x & 0xF][y & 0xF][z & 0xF] & 0xF;
+	}
+
+	public void setTorchLight(int x, int y, int z, int val) {
+		lightMap[x & 0xF][y & 0xF][z & 0xF] = (byte) ((lightMap[x & 0xF][y & 0xF][z & 0xF] & 0xF0) | val);
+	}
+
+	public Queue<ParticlePoint> getParticlePoints() {
+		return particlePoints;
+	}
+
+	public float getDistance() {
+		return distance;
 	}
 
 }
