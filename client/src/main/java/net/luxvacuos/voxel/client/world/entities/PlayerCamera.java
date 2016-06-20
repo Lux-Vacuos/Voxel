@@ -80,7 +80,7 @@ public class PlayerCamera extends Camera {
 	private ItemGui block;
 	private boolean hit;
 	private boolean died = false;
-	private boolean flyMode = false;
+	private boolean flyMode = true;
 	private RendereableTexturedModel blockSelector;
 
 	private static List<BoundingBox> blocks = new ArrayList<>();
@@ -90,7 +90,7 @@ public class PlayerCamera extends Camera {
 		super(proj, new Vector3f(-0.25f, -1.4f, -0.25f), new Vector3f(0.25f, 0.2f, 0.25f));
 		center = new Vector2f(display.getDisplayWidth() / 2, display.getDisplayHeight() / 2);
 		this.speed = 1f;
-		inventory = new Inventory(11, 11, 300, 0);
+		inventory = new Inventory(11, 11, GameResources.getInstance().getDisplay().getDisplayWidth() / 2 - 200, 0);
 		super.add(new LifeComponent(20));
 		super.add(new ArmourComponent());
 		super.getComponent(ArmourComponent.class).armour = new EmptyArmour();
@@ -223,11 +223,18 @@ public class PlayerCamera extends Camera {
 				speed = 1f;
 
 		}
+		if (flyMode) {
+			if (isKeyDown(Keyboard.KEY_LCONTROL))
+				speed = 6f;
+			else
+				speed = 1f;
+		} else {
+			if (isKeyDown(Keyboard.KEY_LCONTROL))
+				speed = 2f;
+			else
+				speed = 1f;
 
-		if (isKeyDown(Keyboard.KEY_LCONTROL))
-			speed = 2f;
-		else
-			speed = 1f;
+		}
 
 		/*
 		 * if (isKeyDown(Keyboard.KEY_Y)) {

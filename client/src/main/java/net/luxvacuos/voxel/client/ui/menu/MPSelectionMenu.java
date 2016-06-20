@@ -33,9 +33,9 @@ public class MPSelectionMenu {
 	private String ip = "";
 
 	public MPSelectionMenu(GameResources gm) {
-		exitButton = new Button(new Vector2f(GameResources.getInstance().getDisplay().getDisplayWidth() / 2f - 210, 35),
+		exitButton = new Button(new Vector2f(GameResources.getInstance().getDisplay().getDisplayWidth() / 2f + 10, 35),
 				new Vector2f(200, 40));
-		playButton = new Button(new Vector2f(GameResources.getInstance().getDisplay().getDisplayWidth() / 2f + 10, 35),
+		playButton = new Button(new Vector2f(GameResources.getInstance().getDisplay().getDisplayWidth() / 2f - 210, 35),
 				new Vector2f(200, 40));
 	}
 

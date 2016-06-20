@@ -149,7 +149,6 @@ public class GameSPState extends State {
 		gm.getWorldsHandler().getActiveWorld().getActiveDimension().updateChunksRender(gm, true);
 		gm.getCamera().render();
 		
-		
 		ParticleMaster.getInstance().render(gm.getCamera(), gm.getRenderer().getProjectionMatrix());
 		gm.getDisplay().beingNVGFrame();
 		gm.getMenuSystem().gameSP.render(gm, gm.getWorldsHandler().getActiveWorld().getActiveDimension());

@@ -79,7 +79,7 @@ public abstract class Dimension {
 	private int loadedChunks = 0;
 	private Engine physicsEngine;
 	private PhysicsSystem physicsSystem;
-	public static int CHUNKS_LOADED_PER_FRAME = 3;
+	public static int CHUNKS_LOADED_PER_FRAME = 1;
 
 	public Dimension(String name, Random seed, int chunkDim, GameResources gm) {
 		this.name = name;
@@ -147,7 +147,6 @@ public abstract class Dimension {
 							loadChunk(xx, yy, zz, gm);
 						else if (VoxelVariables.generateChunks)
 							addChunk(new Chunk(xx, yy, zz));
-
 						chunkLoaded++;
 					} else if (hasChunk(xx, yy, zz)) {
 						Chunk chunk = getChunk(xx, yy, zz);
@@ -179,10 +178,11 @@ public abstract class Dimension {
 			saveChunk(node.chunk, gm);
 			removeChunk(node.chunk);
 		}
-
 	}
 
 	public void updateChunksRender(GameResources gm, boolean transparent) {
+		if (transparent)
+			return;
 		if (transparent)
 			glEnable(GL_BLEND);
 		List<Chunk> chunks_ = new ArrayList<>();

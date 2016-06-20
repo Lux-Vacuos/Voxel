@@ -1,7 +1,6 @@
 package net.luxvacuos.voxel.client.ui;
 
 import net.luxvacuos.igl.vector.Vector3f;
-import net.luxvacuos.voxel.client.core.VoxelVariables;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.VectorsRendering;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.ui.menu.ItemGui;
@@ -10,8 +9,8 @@ import net.luxvacuos.voxel.client.world.block.Block;
 public class Inventory {
 
 	private ItemGui[][] items;
-	private int sizeX, sizeY;
-	private float xPos, yPos;
+	private transient int sizeX, sizeY;
+	private transient float xPos, yPos;
 	private transient ItemGui tmp;
 	private transient boolean push = false;
 	private transient int x, y;
@@ -38,14 +37,15 @@ public class Inventory {
 	public void render(GameResources gm) {
 		for (int x = 0; x < sizeX; x++) {
 			for (int y = 0; y < sizeY; y++) {
-				items[x][y].getPosition().set((xPos * 0.0164f + x - 0.1f) * 1.321f, (yPos + y - 0.44f) * 2.63f,
-						(xPos * 0.0164f + x - 0.1f) * 1.321f);
+				items[x][y].getPosition().set((xPos * 0.0242f + x) * 1.321f, (yPos + y - 0.45f) * 2.659f,
+						(xPos * 0.0242f + x) * 1.321f);
 			}
 		}
 		for (int x = 0; x < sizeX; x++) {
 			for (int y = 0; y < sizeY; y++) {
-				VectorsRendering.renderBox((xPos + (60 * x) + x), (660 + (60 * -y) + yPos + -y), 60, 60,
-						VectorsRendering.rgba(255, 255, 255, 100, VectorsRendering.colorA),
+				VectorsRendering.renderBox((xPos + (40 * x) + x),
+						(GameResources.getInstance().getDisplay().getDisplayHeight() + (40 * (-y - 1)) + yPos + -y), 40,
+						40, VectorsRendering.rgba(255, 255, 255, 100, VectorsRendering.colorA),
 						VectorsRendering.rgba(255, 255, 255, 100, VectorsRendering.colorB),
 						VectorsRendering.rgba(0, 0, 0, 255, VectorsRendering.colorC));
 				if (items[x][y].getTotal() < 1)
@@ -54,12 +54,14 @@ public class Inventory {
 			}
 		}
 		if (push)
-			VectorsRendering.renderBox((xPos + x * 60.8f), (660 - (yPos + y * 61f)), 60, 60,
+			VectorsRendering.renderBox((xPos + x * 41f),
+					(GameResources.getInstance().getDisplay().getDisplayHeight() - (yPos + (1 + y) * 41f) + 1f), 40, 40,
 					VectorsRendering.rgba(100, 255, 100, 120, VectorsRendering.colorA),
 					VectorsRendering.rgba(0, 255, 0, 120, VectorsRendering.colorB),
 					VectorsRendering.rgba(0, 255, 0, 120, VectorsRendering.colorC));
 		else
-			VectorsRendering.renderBox((xPos + x * 60.8f), (660 - (yPos + y * 61f)), 60, 60,
+			VectorsRendering.renderBox((xPos + x * 41f),
+					(GameResources.getInstance().getDisplay().getDisplayHeight() - (yPos + (1 + y) * 41f) + 1f), 40, 40,
 					VectorsRendering.rgba(255, 255, 255, 120, VectorsRendering.colorA),
 					VectorsRendering.rgba(255, 255, 255, 120, VectorsRendering.colorB),
 					VectorsRendering.rgba(255, 255, 255, 120, VectorsRendering.colorC));
@@ -68,9 +70,9 @@ public class Inventory {
 			for (int y = 0; y < sizeY; y++) {
 				if (items[x][y].getBlock().getId() != Block.Air.getId()) {
 					items[x][y].generateModel(gm.getItemsGuiRenderer().getTess());
-					VectorsRendering.renderText("" + items[x][y].getTotal(), "Roboto-Bold", (xPos + (60 * x) + 2 + x),
-							(720 + (60 * -y) - 10 + yPos + -y), 20,
-							VectorsRendering.rgba(255, 255, 255, 255, VectorsRendering.colorA),
+					VectorsRendering.renderText("" + items[x][y].getTotal(), "Roboto-Bold", (xPos + (40 * x) + 2 + x),
+							(GameResources.getInstance().getDisplay().getDisplayHeight() + (40 * -y) - 10 + yPos + -y),
+							15, VectorsRendering.rgba(255, 255, 255, 255, VectorsRendering.colorA),
 							VectorsRendering.rgba(255, 255, 255, 255, VectorsRendering.colorB));
 
 				}
@@ -81,14 +83,15 @@ public class Inventory {
 	public void render(int sizeX, int sizeY, float xPos, float yPos, float cursorX, float cursorY, GameResources gm) {
 		for (int x = 0; x < sizeX; x++) {
 			for (int y = 0; y < sizeY; y++) {
-				items[x][y].getPosition().set((xPos * 0.0164f + x - 0.1f) * 1.321f, (yPos + y - 0.44f) * 2.63f,
-						(xPos * 0.0164f + x - 0.1f) * 1.321f);
+				items[x][y].getPosition().set((xPos * 0.0241f + x) * 1.321f - 0.12f, (yPos + y - 0.45f) * 2.659f,
+						(xPos * 0.0242f + x) * 1.321f - 0.12f);
 			}
 		}
 		for (int x = 0; x < sizeX; x++) {
 			for (int y = 0; y < sizeY; y++) {
-				VectorsRendering.renderBox((xPos + (60 * x) + x), (660 + (60 * -y) + yPos + -y), 60, 60,
-						VectorsRendering.rgba(255, 255, 255, 100, VectorsRendering.colorA),
+				VectorsRendering.renderBox((xPos + (40 * x) + x),
+						(GameResources.getInstance().getDisplay().getDisplayHeight() + (40 * (-y + -1)) + yPos + -y),
+						40, 40, VectorsRendering.rgba(255, 255, 255, 100, VectorsRendering.colorA),
 						VectorsRendering.rgba(255, 255, 255, 100, VectorsRendering.colorB),
 						VectorsRendering.rgba(0, 0, 0, 255, VectorsRendering.colorC));
 				if (items[x][y].getTotal() < 1)
@@ -96,17 +99,20 @@ public class Inventory {
 
 			}
 		}
-		VectorsRendering.renderBox((xPos + cursorX * 60.8f), (660 - (yPos + cursorY * 61f)), 60, 60,
-				VectorsRendering.rgba(255, 255, 255, 120, VectorsRendering.colorA),
-				VectorsRendering.rgba(255, 255, 255, 120, VectorsRendering.colorB),
-				VectorsRendering.rgba(255, 255, 255, 120, VectorsRendering.colorC));
+		VectorsRendering
+				.renderBox((xPos + cursorX * 41f),
+						(GameResources.getInstance().getDisplay().getDisplayHeight() - (yPos + (cursorY + 1) * 41f)
+								+ 1f),
+						40, 40, VectorsRendering.rgba(255, 255, 255, 120, VectorsRendering.colorA),
+						VectorsRendering.rgba(255, 255, 255, 120, VectorsRendering.colorB),
+						VectorsRendering.rgba(255, 255, 255, 120, VectorsRendering.colorC));
 		for (int x = 0; x < sizeX; x++) {
 			for (int y = 0; y < sizeY; y++) {
 				if (items[x][y].getBlock().getId() != Block.Air.getId()) {
 					items[x][y].generateModel(gm.getItemsGuiRenderer().getTess());
-					VectorsRendering.renderText("" + items[x][y].getTotal(), "Roboto-Bold", (xPos + (60 * x) + 2 + x),
-							(720 + (60 * -y) - 10 + yPos + -y), 20,
-							VectorsRendering.rgba(255, 255, 255, 255, VectorsRendering.colorA),
+					VectorsRendering.renderText("" + items[x][y].getTotal(), "Roboto-Bold", (xPos + (40 * x) + 2 + x),
+							(GameResources.getInstance().getDisplay().getDisplayHeight() + (40 * -y) - 10 + yPos + -y),
+							15, VectorsRendering.rgba(255, 255, 255, 255, VectorsRendering.colorA),
 							VectorsRendering.rgba(255, 255, 255, 255, VectorsRendering.colorB));
 
 				}
@@ -168,6 +174,10 @@ public class Inventory {
 
 	public int getSizeY() {
 		return sizeY;
+	}
+	
+	public void setItems(ItemGui[][] items) {
+		this.items = items;
 	}
 
 }

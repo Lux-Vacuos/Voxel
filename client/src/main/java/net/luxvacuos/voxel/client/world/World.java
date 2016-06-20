@@ -66,7 +66,8 @@ public abstract class World {
 			Input input;
 			try {
 				input = new Input(new FileInputStream(file));
-				((PlayerCamera) gm.getCamera()).setInventory(gm.getKryo().readObject(input, Inventory.class));
+				((PlayerCamera) gm.getCamera()).getInventory()
+						.setItems(gm.getKryo().readObject(input, Inventory.class).getItems());
 				input.close();
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();

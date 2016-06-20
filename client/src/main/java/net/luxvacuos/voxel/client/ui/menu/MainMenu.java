@@ -24,6 +24,8 @@ import net.luxvacuos.igl.vector.Vector2f;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.VectorsRendering;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.ui.Button;
+import net.luxvacuos.voxel.client.ui.Square;
+import net.luxvacuos.voxel.client.ui.Window;
 
 public class MainMenu {
 
@@ -32,6 +34,7 @@ public class MainMenu {
 	private Button optionsButton;
 	private Button aboutButton;
 	private Button playMPButton;
+	private Window window;
 
 	public MainMenu(GameResources gm) {
 		playButton = new Button(
@@ -52,6 +55,8 @@ public class MainMenu {
 				new Vector2f(GameResources.getInstance().getDisplay().getDisplayWidth() / 2f - 100,
 						GameResources.getInstance().getDisplay().getDisplayHeight() / 2f - 120 - 20),
 				new Vector2f(200, 40));
+		window = new Window(10, 200, 200, 200, "Drag Me!!!", "Roboto-Bold");
+		window.addChilder(new Square(40, 40, 40, 40));
 	}
 
 	public void render() {
@@ -63,10 +68,11 @@ public class MainMenu {
 		optionsButton.render("Options", VectorsRendering.ICON_GEAR);
 		aboutButton.render("About", VectorsRendering.ICON_INFORMATION_SOURCE);
 		exitButton.render("Exit", VectorsRendering.ICON_LOGIN);
-
+		window.render();
 	}
 
 	public void update() {
+		window.update();
 	}
 
 	public Button getPlayButton() {

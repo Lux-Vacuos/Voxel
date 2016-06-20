@@ -69,7 +69,7 @@ import net.luxvacuos.voxel.client.resources.GameResources;
 /**
  * This class contains basic rendering methods using NanoVG
  * 
- * @author pablo
+ * @author Guerra24 <pablo230699@hotmail.com>
  *
  */
 public class VectorsRendering {

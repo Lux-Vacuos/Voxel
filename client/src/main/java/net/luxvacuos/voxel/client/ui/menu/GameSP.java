@@ -44,42 +44,32 @@ public class GameSP {
 	public void render(GameResources gm, Dimension world) {
 		if (!VoxelVariables.hideHud)
 			renderHud(gm);
-		/*
-		 * if (VoxelVariables.debug) { VectorsRendering.renderText( "Voxel " +
-		 * " (" + VoxelVariables.version + ")" + " Molten API" + " (" +
-		 * MoltenAPI.apiVersion + "/" + MoltenAPI.build + ")", "Roboto-Bold", 5
-		 * * VoxelVariables.XSCALE, 12 * VoxelVariables.YSCALE, 25 *
-		 * VoxelVariables.YSCALE, VectorsRendering.rgba(160, 160, 160, 200,
-		 * VectorsRendering.colorA), VectorsRendering.rgba(255, 255, 255, 255,
-		 * VectorsRendering.colorB)); VectorsRendering.renderText("Used VRam: "
-		 * + gm.getDisplay().getUsedVRAM() + "KB " + " UPS: " + CoreInfo.ups,
-		 * "Roboto-Bold", 5 * VoxelVariables.XSCALE, 100 *
-		 * VoxelVariables.YSCALE, 25 * VoxelVariables.YSCALE,
-		 * VectorsRendering.rgba(160, 160, 160, 200, VectorsRendering.colorA),
-		 * VectorsRendering.rgba(255, 255, 255, 255, VectorsRendering.colorB));
-		 * VectorsRendering.renderText( "Loaded Chunks: " +
-		 * world.getLoadedChunks() + "   Rendered Chunks: " +
-		 * world.getRenderedChunks(), "Roboto-Bold", 5 * VoxelVariables.XSCALE,
-		 * 120 * VoxelVariables.YSCALE, 25 * VoxelVariables.YSCALE,
-		 * VectorsRendering.rgba(160, 160, 160, 200, VectorsRendering.colorA),
-		 * VectorsRendering.rgba(255, 255, 255, 255, VectorsRendering.colorB));
-		 * VectorsRendering.renderText( "Position XYZ:  " +
-		 * gm.getCamera().getPosition().getX() + "  " +
-		 * gm.getCamera().getPosition().getY() + "  " +
-		 * gm.getCamera().getPosition().getZ(), "Roboto-Bold", 5 *
-		 * VoxelVariables.XSCALE, 142 * VoxelVariables.YSCALE, 25 *
-		 * VoxelVariables.YSCALE, VectorsRendering.rgba(160, 160, 160, 200,
-		 * VectorsRendering.colorA), VectorsRendering.rgba(255, 255, 255, 255,
-		 * VectorsRendering.colorB)); VectorsRendering.renderText( "Pitch:  " +
-		 * gm.getCamera().getPitch() + "   Yaw: " + gm.getCamera().getYaw() +
-		 * "   Roll: " + gm.getCamera().getRoll(), "Roboto-Bold", 5 *
-		 * VoxelVariables.XSCALE, 164 * VoxelVariables.YSCALE, 25 *
-		 * VoxelVariables.YSCALE, VectorsRendering.rgba(160, 160, 160, 200,
-		 * VectorsRendering.colorA), VectorsRendering.rgba(255, 255, 255, 255,
-		 * VectorsRendering.colorB)); Timers.renderDebugDisplay(5 *
-		 * VoxelVariables.XSCALE, 24 * VoxelVariables.YSCALE, 300 *
-		 * VoxelVariables.XSCALE, 55 * VoxelVariables.YSCALE); }
-		 */
+
+		if (VoxelVariables.debug) {
+			VectorsRendering.renderText(
+					"Voxel " + " (" + VoxelVariables.version + ")" + " Molten API" + " (" + MoltenAPI.apiVersion + "/"
+							+ MoltenAPI.build + ")",
+					"Roboto-Bold", 5, 12, 20, VectorsRendering.rgba(160, 160, 160, 200, VectorsRendering.colorA),
+					VectorsRendering.rgba(255, 255, 255, 255, VectorsRendering.colorB));
+			VectorsRendering.renderText("Used VRam: " + gm.getDisplay().getUsedVRAM() + "KB " + " UPS: " + CoreInfo.ups,
+					"Roboto-Bold", 5, 95, 20, VectorsRendering.rgba(160, 160, 160, 200, VectorsRendering.colorA),
+					VectorsRendering.rgba(255, 255, 255, 255, VectorsRendering.colorB));
+			VectorsRendering.renderText(
+					"Loaded Chunks: " + world.getLoadedChunks() + "   Rendered Chunks: " + world.getRenderedChunks(),
+					"Roboto-Bold", 5, 115, 20, VectorsRendering.rgba(160, 160, 160, 200, VectorsRendering.colorA),
+					VectorsRendering.rgba(255, 255, 255, 255, VectorsRendering.colorB));
+			VectorsRendering.renderText(
+					"Position XYZ:  " + gm.getCamera().getPosition().getX() + "  " + gm.getCamera().getPosition().getY()
+							+ "  " + gm.getCamera().getPosition().getZ(),
+					"Roboto-Bold", 5, 135, 20, VectorsRendering.rgba(160, 160, 160, 200, VectorsRendering.colorA),
+					VectorsRendering.rgba(255, 255, 255, 255, VectorsRendering.colorB));
+			VectorsRendering.renderText(
+					"Pitch:  " + gm.getCamera().getPitch() + "   Yaw: " + gm.getCamera().getYaw() + "   Roll: "
+							+ gm.getCamera().getRoll(),
+					"Roboto-Bold", 5, 155, 20, VectorsRendering.rgba(160, 160, 160, 200, VectorsRendering.colorA),
+					VectorsRendering.rgba(255, 255, 255, 255, VectorsRendering.colorB));
+			Timers.renderDebugDisplay(5, 24, 200, 55);
+		}
 
 	}
 
@@ -89,7 +79,8 @@ public class GameSP {
 				VectorsRendering.rgba(255, 255, 255, 200, VectorsRendering.colorA),
 				VectorsRendering.rgba(32, 32, 32, 32, VectorsRendering.colorB),
 				VectorsRendering.rgba(0, 0, 0, 48, VectorsRendering.colorC));
-		VectorsRendering.renderLife(440, 700, 200, 20,
+		VectorsRendering.renderLife(gm.getDisplay().getDisplayWidth() / 2 - 200,
+				gm.getDisplay().getDisplayHeight() - 15, 200, 15,
 				((PlayerCamera) gm.getCamera()).getComponent(LifeComponent.class).life / 20f);
 
 		gm.getItemsGuiRenderer().getTess().begin(BlocksResources.getTessellatorTextureAtlas().getTexture(),

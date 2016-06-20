@@ -155,7 +155,7 @@ public class PhysicsSystem extends EntitySystem {
 
 			velocity.velocity.x *= 0.7f - velocity.velocity.x * 0.0001f;
 			velocity.velocity.z *= 0.7f - velocity.velocity.z * 0.0001f;
-			velocity.velocity.y += -9.8f * deltaTime;
+			velocity.velocity.y *= 0.7f - velocity.velocity.y * 0.0001f;
 
 			collison.update(position.position);
 			boxes = dim.getGlobalBoundingBox(collison.boundingBox);
