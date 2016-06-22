@@ -60,9 +60,8 @@ public class VoxelClient {
 		kryo.register(ArrayList.class);
 	}
 
-	public void connect(int port, String url) throws IOException {
+	public void connect(int port) throws IOException {
 		this.port = port;
-		this.url = url;
 		VoxelVariables.onServer = true;
 		client.connect(1000, this.url, this.port, this.port);
 	}
@@ -73,6 +72,10 @@ public class VoxelClient {
 
 	public Client getClient() {
 		return client;
+	}
+	
+	public void setUrl(String url) {
+		this.url = url;
 	}
 
 }

@@ -20,23 +20,87 @@
 
 package net.luxvacuos.voxel.client.core.states;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.List;
+
 import net.luxvacuos.voxel.client.core.GlobalStates.GameState;
+import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.core.State;
 import net.luxvacuos.voxel.client.core.Voxel;
-import net.luxvacuos.voxel.client.rendering.api.nanovg.VectorsRendering;
+import net.luxvacuos.voxel.client.core.VoxelVariables;
+import net.luxvacuos.voxel.client.rendering.api.nanovg.UIRendering;
 import net.luxvacuos.voxel.client.resources.GameResources;
+import net.luxvacuos.voxel.client.ui.Button;
+import net.luxvacuos.voxel.client.ui.Window;
+import net.luxvacuos.voxel.client.ui.World;
 
 public class SPSelectionState extends State {
 
+	private Window window;
+	private Button exitButton;
+	private Button playButton;
+	private List<World> worlds;
+	private int y = 0;
+	private int ySize = 40;
+
+	public SPSelectionState() {
+		y = 0;
+		window = new Window(20, GameResources.getInstance().getDisplay().getDisplayHeight() - 20,
+				GameResources.getInstance().getDisplay().getDisplayWidth() - 40,
+				GameResources.getInstance().getDisplay().getDisplayHeight() - 40, "Singleplayer");
+		exitButton = new Button(window.getWidth() / 2 + 10, -window.getHeight() + 35, 200, 40, "Back");
+		playButton = new Button(window.getWidth() / 2 - 210, -window.getHeight() + 35, 200, 40, "Load World");
+
+		exitButton.setOnButtonPress(() -> {
+			switchTo(GameState.MAINMENU);
+		});
+		playButton.setOnButtonPress(() -> {
+			switchTo(GameState.LOADING_WORLD);
+		});
+
+		window.addChildren(exitButton);
+		window.addChildren(playButton);
+		worlds = new ArrayList<>();
+	}
+
+	@Override
+	public void start() {
+		y = 0;
+		try {
+			Files.walk(VoxelVariables.WORLD_PATH.toPath(), 1).forEach(filePath -> {
+				if (Files.isDirectory(filePath) && !filePath.toFile().equals(VoxelVariables.WORLD_PATH)) {
+					World world = new World(20, -ySize - 50 - (y * (ySize + 5)), 400, ySize,
+							filePath.getFileName().toString());
+					y++;
+					worlds.add(world);
+				}
+			});
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		window.getChildrens().addAll(worlds);
+		window.setFadeAlpha(0);
+	}
+
+	@Override
+	public void end() {
+		window.getChildrens().removeAll(worlds);
+		worlds.clear();
+		window.setFadeAlpha(1);
+	}
+
 	@Override
 	public void update(Voxel voxel, float delta) {
-		GameResources gm = voxel.getGameResources();
-		gm.getMenuSystem().spSelectionMenu.update();
-		if (gm.getMenuSystem().spSelectionMenu.getExitButton().pressed())
-			gm.getGlobalStates().setState(GameState.MAINMENU);
-		else if (gm.getMenuSystem().spSelectionMenu.getPlayButton().pressed()
-				&& gm.getMenuSystem().spSelectionMenu.getWorldName() != "")
-			gm.getGlobalStates().setState(GameState.LOADING_WORLD);
+		while (Mouse.next())
+			window.update();
+		if (!switching)
+			window.fadeIn(4, delta);
+		if (switching)
+			if (window.fadeOut(4, delta)) {
+				readyForSwitch = true;
+			}
 	}
 
 	@Override
@@ -44,8 +108,8 @@ public class SPSelectionState extends State {
 		GameResources gm = voxel.getGameResources();
 		gm.getRenderer().prepare();
 		gm.getDisplay().beingNVGFrame();
-		gm.getMenuSystem().spSelectionMenu.render();
-		VectorsRendering.renderMouse();
+		window.render();
+		UIRendering.renderMouse();
 		gm.getDisplay().endNVGFrame();
 	}
 

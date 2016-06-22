@@ -31,7 +31,7 @@ import net.luxvacuos.voxel.client.core.GlobalStates.GameState;
 import net.luxvacuos.voxel.client.core.State;
 import net.luxvacuos.voxel.client.core.Voxel;
 import net.luxvacuos.voxel.client.core.VoxelVariables;
-import net.luxvacuos.voxel.client.rendering.api.nanovg.VectorsRendering;
+import net.luxvacuos.voxel.client.rendering.api.nanovg.UIRendering;
 import net.luxvacuos.voxel.client.rendering.api.opengl.ParticleMaster;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.world.Dimension;
@@ -62,7 +62,6 @@ public class GameSPInventoryState extends State {
 		gm.update(gm.getWorldSimulation().update(delta));
 		ParticleMaster.getInstance().update(delta, gm.getCamera());
 		while (next()) {
-			gm.getMenuSystem().gameSPInventory.update(gm);
 			if (isKeyDown(KEY_F1))
 				VoxelVariables.debug = !VoxelVariables.debug;
 			if (isKeyDown(KEY_F2))
@@ -119,7 +118,7 @@ public class GameSPInventoryState extends State {
 		((PlayerCamera) gm.getCamera()).getInventory().render(gm);
 		gm.getItemsGuiRenderer().getTess().end();
 
-		VectorsRendering.renderMouse();
+		UIRendering.renderMouse();
 		gm.getDisplay().endNVGFrame();
 		gm.getItemsGuiRenderer().render(gm);
 

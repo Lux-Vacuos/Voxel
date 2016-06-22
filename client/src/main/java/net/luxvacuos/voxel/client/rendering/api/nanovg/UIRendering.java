@@ -72,7 +72,7 @@ import net.luxvacuos.voxel.client.resources.GameResources;
  * @author Guerra24 <pablo230699@hotmail.com>
  *
  */
-public class VectorsRendering {
+public class UIRendering {
 
 	public static final NVGPaint paintA = NVGPaint.create();
 	public static final NVGPaint paintB = NVGPaint.create();
@@ -96,6 +96,15 @@ public class VectorsRendering {
 	}
 
 	public static NVGColor rgba(int r, int g, int b, int a, NVGColor color) {
+		color.r(r / 255.0f);
+		color.g(g / 255.0f);
+		color.b(b / 255.0f);
+		color.a(a / 255.0f);
+		return color;
+	}
+
+	public static NVGColor rgba(int r, int g, int b, int a) {
+		NVGColor color = NVGColor.create();
 		color.r(r / 255.0f);
 		color.g(g / 255.0f);
 		color.b(b / 255.0f);
@@ -207,7 +216,7 @@ public class VectorsRendering {
 		nvgFill(vg);
 	}
 
-	public static void renderWindow(String title, String font, float x, float y, float w, float h) {
+	public static void renderWindow(String title, String font, float x, float y, float w, float h, float alphaMult) {
 		float cornerRadius = 3.0f;
 		NVGPaint shadowPaint = paintA;
 		NVGPaint headerPaint = paintB;
@@ -219,13 +228,13 @@ public class VectorsRendering {
 		// Window
 		nvgBeginPath(vg);
 		nvgRoundedRect(vg, x, y, w, h, cornerRadius);
-		nvgFillColor(vg, rgba(28, 30, 34, 192, colorA));
+		nvgFillColor(vg, UIRendering.rgba(28, 30, 34, (int) (192 * alphaMult), colorA));
 		// nvgFillColor(vg, rgba(0,0,0,128, color));
 		nvgFill(vg);
 
 		// Drop shadow
-		nvgBoxGradient(vg, x, y + 2, w, h, cornerRadius * 2, 10, rgba(0, 0, 0, 128, colorA), rgba(0, 0, 0, 0, colorB),
-				shadowPaint);
+		nvgBoxGradient(vg, x, y + 2, w, h, cornerRadius * 2, 10, rgba(0, 0, 0, (int) (128 * alphaMult), colorA),
+				rgba(0, 0, 0, 0, colorB), shadowPaint);
 		nvgBeginPath(vg);
 		nvgRect(vg, x - 10, y - 10, w + 20, h + 30);
 		nvgRoundedRect(vg, x, y, w, h, cornerRadius);
@@ -234,7 +243,8 @@ public class VectorsRendering {
 		nvgFill(vg);
 
 		// Header
-		nvgLinearGradient(vg, x, y, x, y + 15, rgba(255, 255, 255, 8, colorA), rgba(0, 0, 0, 16, colorB), headerPaint);
+		nvgLinearGradient(vg, x, y, x, y + 15, rgba(255, 255, 255, (int) (8 * alphaMult), colorA),
+				rgba(0, 0, 0, (int) (16 * alphaMult), colorB), headerPaint);
 		nvgBeginPath(vg);
 		nvgRoundedRect(vg, x + 1, y + 1, w - 2, 30, cornerRadius - 1);
 		nvgFillPaint(vg, headerPaint);
@@ -242,7 +252,7 @@ public class VectorsRendering {
 		nvgBeginPath(vg);
 		nvgMoveTo(vg, x + 0.5f, y + 0.5f + 30);
 		nvgLineTo(vg, x + 0.5f + w - 1, y + 0.5f + 30);
-		nvgStrokeColor(vg, rgba(0, 0, 0, 32, colorA));
+		nvgStrokeColor(vg, rgba(0, 0, 0, (int) (32 * alphaMult), colorA));
 		nvgStroke(vg);
 
 		nvgFontSize(vg, 18.0f);
@@ -252,11 +262,11 @@ public class VectorsRendering {
 		ByteBuffer titleText = memASCII(title);
 
 		nvgFontBlur(vg, 2);
-		nvgFillColor(vg, rgba(0, 0, 0, 128, colorA));
+		nvgFillColor(vg, rgba(0, 0, 0, (int) (128 * alphaMult), colorA));
 		nvgText(vg, x + w / 2, y + 16 + 1, titleText, NULL);
 
 		nvgFontBlur(vg, 0);
-		nvgFillColor(vg, rgba(220, 220, 220, 160, colorA));
+		nvgFillColor(vg, rgba(220, 220, 220, (int) (160 * alphaMult), colorA));
 		nvgText(vg, x + w / 2, y + 16, titleText, NULL);
 
 		memFree(titleText);
@@ -275,7 +285,7 @@ public class VectorsRendering {
 		// Window
 		nvgBeginPath(vg);
 		nvgRoundedRect(vg, x, y, w, h, cornerRadius);
-		nvgFillColor(vg, rgba(28, 30, 34, 192, colorA));
+		nvgFillColor(vg, UIRendering.rgba(28, 30, 34, 192));
 		// nvgFillColor(vg, rgba(0,0,0,128, color));
 		nvgFill(vg);
 
@@ -312,11 +322,16 @@ public class VectorsRendering {
 		nvgStroke(vg);
 	}
 
-	public static void renderBox(float x, float y, float w, float h, NVGColor color1, NVGColor color2,
-			NVGColor color3) {
+	public static void renderBox(float x, float y, float w, float h, NVGColor color1, NVGColor color2, NVGColor color3,
+			float fadeAlpha) {
 		NVGPaint bg = paintA;
 		long vg = GameResources.getInstance().getDisplay().getVg();
-		nvgBoxGradient(vg, x + 1, y + 1 + 1.5f, w - 2, h - 2, 3, 4, color1, color2, bg);
+		nvgBoxGradient(vg, x + 1, y + 1 + 1.5f, w - 2, h - 2, 3, 4,
+				rgba((int) color1.r() * 255, (int) color1.g() * 255, (int) color1.b() * 255,
+						(int) (color1.a() * fadeAlpha * 255), colorA),
+				rgba((int) color2.r() * 255, (int) color2.g() * 255, (int) color2.b() * 255,
+						(int) (color2.a() * fadeAlpha * 255), colorB),
+				bg);
 		nvgBeginPath(vg);
 		nvgRoundedRect(vg, x + 1, y + 1, w - 2, h - 2, 4 - 1);
 		nvgFillPaint(vg, bg);
@@ -324,7 +339,8 @@ public class VectorsRendering {
 
 		nvgBeginPath(vg);
 		nvgRoundedRect(vg, x + 0.5f, y + 0.5f, w - 1, h - 1, 4 - 0.5f);
-		nvgStrokeColor(vg, color3);
+		nvgStrokeColor(vg, rgba((int) color3.r() * 255, (int) color3.g() * 255, (int) color3.b() * 255,
+				(int) (color3.a() * fadeAlpha * 255), colorC));
 		nvgStroke(vg);
 	}
 
@@ -372,25 +388,34 @@ public class VectorsRendering {
 		nvgRestore(vg);
 	}
 
-	public static void renderText(String text, String font, float x, float y, float fontSize, NVGColor colort,
-			NVGColor colorg) {
-		renderText(text, font, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE, x, y, fontSize, colort, colorg);
+	public static void renderText(String text, String font, float x, float y, float fontSize, NVGColor color,
+			NVGColor color1) {
+		renderText(text, font, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE, x, y, fontSize, color, color1);
 	}
 
-	public static void renderText(String text, String font, int align, float x, float y, float fontSize,
-			NVGColor colort, NVGColor colorg) {
+	public static void renderText(String text, String font, int align, float x, float y, float fontSize, NVGColor color,
+			NVGColor color1) {
 		long vg = GameResources.getInstance().getDisplay().getVg();
 		nvgFontSize(vg, fontSize);
 		nvgFontFace(vg, font);
 		nvgTextAlign(vg, align);
-		nvgFillColor(vg, colort);
+		nvgFillColor(vg, color);
 		nvgText(vg, x, y, text, NULL);
-		nvgFillColor(vg, colorg);
+	}
+
+	public static void renderText(String text, String font, int align, float x, float y, float fontSize, NVGColor color,
+			float fadeAlpha) {
+		long vg = GameResources.getInstance().getDisplay().getVg();
+		nvgFontSize(vg, fontSize);
+		nvgFontFace(vg, font);
+		nvgTextAlign(vg, align);
+		nvgFillColor(vg, rgba((int) color.r() * 255, (int) color.g() * 255, (int) color.b() * 255,
+				(int) (color.a() * fadeAlpha * 255), colorA));
 		nvgText(vg, x, y, text, NULL);
 	}
 
 	public static void renderButton(ByteBuffer preicon, String text, String font, String entypo, float x, float y,
-			float w, float h, NVGColor color, boolean mouseInside) {
+			float w, float h, NVGColor color, boolean mouseInside, float fadeAlpha) {
 		long vg = GameResources.getInstance().getDisplay().getVg();
 		NVGPaint bg = paintA;
 		float cornerRadius = 4.0f;
@@ -404,12 +429,15 @@ public class VectorsRendering {
 		}
 		float fontSize = h / 2;
 
-		nvgLinearGradient(vg, x, y, x, y + h, rgba(255, 255, 255, isBlack(color) ? 16 : 32, colorB),
-				rgba(0, 0, 0, isBlack(color) ? 16 : 32, colorC), bg);
+		nvgLinearGradient(vg, x, y, x, y + h,
+				rgba(255, 255, 255, (int) ((isBlack(color) ? 16 : 32) * fadeAlpha), colorB),
+				rgba(0, 0, 0, (int) ((isBlack(color) ? 16 : 32) * fadeAlpha), colorC), bg);
 		nvgBeginPath(vg);
 		nvgRoundedRect(vg, x + 1, y + 1, w - 2, h - 2, cornerRadius - 1);
-		if (!isBlack(color)) {
-			nvgFillColor(vg, color);
+		if (!isBlack(rgba((int) color.r() * 255, (int) color.g() * 255, (int) color.b() * 255,
+				(int) (color.a() * fadeAlpha * 255), colorA))) {
+			nvgFillColor(vg, rgba((int) color.r() * 255, (int) color.g() * 255, (int) color.b() * 255,
+					(int) (color.a() * fadeAlpha * 255), colorA));
 			nvgFill(vg);
 		}
 		nvgFillPaint(vg, bg);
@@ -417,7 +445,7 @@ public class VectorsRendering {
 
 		nvgBeginPath(vg);
 		nvgRoundedRect(vg, x + 0.5f, y + 0.5f, w - 1, h - 1, cornerRadius - 0.5f);
-		nvgStrokeColor(vg, rgba(0, 0, 0, 48, colorA));
+		nvgStrokeColor(vg, rgba(0, 0, 0, (int) (48 * fadeAlpha), colorA));
 		nvgStroke(vg);
 
 		ByteBuffer textEncoded = memASCII(text);
@@ -435,7 +463,7 @@ public class VectorsRendering {
 		if (preicon != null) {
 			nvgFontSize(vg, h * 1.3f);
 			nvgFontFace(vg, entypo);
-			nvgFillColor(vg, rgba(100, 100, 100, 96, colorA));
+			nvgFillColor(vg, rgba(100, 100, 100, (int) (96 * fadeAlpha), colorA));
 			nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
 			nvgText(vg, x + w * 0.5f - tw * 0.5f - iw * 0.75f, y + h * 0.5f, preicon, NULL);
 		}
@@ -443,9 +471,9 @@ public class VectorsRendering {
 		nvgFontSize(vg, fontSize);
 		nvgFontFace(vg, font);
 		nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
-		nvgFillColor(vg, rgba(0, 0, 0, 255, colorA));
+		nvgFillColor(vg, rgba(0, 0, 0, (int) (255 * fadeAlpha), colorA));
 		nvgText(vg, x + w * 0.5f - tw * 0.5f + iw * 0.25f, y + h * 0.5f - 1, textEncoded, NULL);
-		nvgFillColor(vg, rgba(255, 255, 255, 100, colorA));
+		nvgFillColor(vg, rgba(255, 255, 255, (int) (100 * fadeAlpha), colorA));
 		nvgText(vg, x + w * 0.5f - tw * 0.5f + iw * 0.25f, y + h * 0.5f, textEncoded, NULL);
 
 		memFree(textEncoded);

@@ -20,49 +20,45 @@
 
 package net.luxvacuos.voxel.client.core.states;
 
-import java.io.IOException;
-
+import net.luxvacuos.igl.vector.Vector3f;
+import net.luxvacuos.voxel.client.core.GlobalStates.GameState;
 import net.luxvacuos.voxel.client.core.State;
 import net.luxvacuos.voxel.client.core.Voxel;
 import net.luxvacuos.voxel.client.core.VoxelVariables;
-import net.luxvacuos.voxel.client.rendering.api.nanovg.VectorsRendering;
+import net.luxvacuos.voxel.client.rendering.api.nanovg.UIRendering;
 import net.luxvacuos.voxel.client.resources.GameResources;
+import net.luxvacuos.voxel.client.world.DefaultWorld;
+import net.luxvacuos.voxel.client.world.entities.PlayerCamera;
 
-public class LoadingMPState extends State {
+/**
+ * Loading Screen State
+ * 
+ * @author danirod
+ * @category Kernel
+ */
+public class SPLoadingState extends State {
 
-	private boolean trying = false;
-	private String message = "Connecting...";
-	private float time = 0;
+	private float xScale, yScale;
 
-	@Override
-	public void start() {
-		time = 0;
+	public SPLoadingState() {
+		float width = VoxelVariables.WIDTH;
+		float height = VoxelVariables.HEIGHT;
+		yScale = height / 720f;
+		xScale = width / 1280f;
 	}
 
 	@Override
 	public void update(Voxel voxel, float delta) {
-
 		GameResources gm = voxel.getGameResources();
-		if (!trying) {
-			try {
-				trying = true;
-				gm.getVoxelClient().connect(4059, gm.getMenuSystem().mpSelectionMenu.getIP());
-				message = "Loading World";
-			} catch (IOException e) {
-				VoxelVariables.onServer = false;
-				message = e.getMessage();
-				e.printStackTrace();
-			}
-		}
-		if (time > 0.2f) {
-			if (gm.getMenuSystem().mpLoadingWorld.getExitButton().pressed()) {
-				trying = false;
-				message = "Connecting...";
-				gm.getGlobalStates().setState(gm.getGlobalStates().getOldState());
-			}
-		} else {
-			time += 1 * delta;
-		}
+
+		gm.getWorldsHandler().registerWorld(new DefaultWorld(""));
+		gm.getWorldsHandler().setActiveWorld("");
+		gm.getWorldsHandler().getActiveWorld().init(gm);
+		gm.getWorldsHandler().getActiveWorld().getActiveDimension().getPhysicsEngine().addEntity(gm.getCamera());
+		gm.getCamera().setPosition(new Vector3f(0, 180, 0));
+		((PlayerCamera) gm.getCamera()).setMouse(gm.getDisplay());
+		gm.getGlobalStates().setState(GameState.GAME_SP);
+
 	}
 
 	@Override
@@ -70,8 +66,9 @@ public class LoadingMPState extends State {
 		GameResources gm = voxel.getGameResources();
 		gm.getRenderer().prepare();
 		gm.getDisplay().beingNVGFrame();
-		gm.getMenuSystem().mpLoadingWorld.render(message);
-		VectorsRendering.renderMouse();
+		UIRendering.renderText("Loading World...", "Roboto-Bold", 530 * xScale, 358 * yScale, 40 * yScale,
+				UIRendering.rgba(255, 255, 255, 160, UIRendering.colorA),
+				UIRendering.rgba(255, 255, 255, 160, UIRendering.colorB));
 		gm.getDisplay().endNVGFrame();
 	}
 

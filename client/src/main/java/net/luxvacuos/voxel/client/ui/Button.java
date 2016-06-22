@@ -24,52 +24,31 @@ import java.nio.ByteBuffer;
 
 import org.lwjgl.nanovg.NVGColor;
 
-import net.luxvacuos.igl.vector.Vector2f;
 import net.luxvacuos.voxel.client.input.Mouse;
-import net.luxvacuos.voxel.client.rendering.api.nanovg.VectorsRendering;
+import net.luxvacuos.voxel.client.rendering.api.nanovg.UIRendering;
 import net.luxvacuos.voxel.client.resources.GameResources;
 
-public class Button {
-	private Vector2f pos, renderPos;
-	private Vector2f size, renderSize;
+public class Button extends Component {
 
-	public Button(Vector2f pos, Vector2f size) {
-		this.pos = new Vector2f(pos.x, pos.y);
-		this.size = new Vector2f((pos.x + size.x), (pos.y + size.y));
-		renderPos = pos;
-		renderSize = size;
+	private String text = "missigno", font = "Roboto-Regular", entypo = "Entypo";
+	private NVGColor color = UIRendering.rgba(255, 255, 255, 255);
+	private ByteBuffer preicon;
+	private OnAction onPress;
+
+	public Button(int x, int y, int width, int height, String text) {
+		this.x = x;
+		this.y = y;
+		this.width = width;
+		this.height = height;
+		this.text = text;
 	}
 
 	public boolean insideButton() {
-		if (Mouse.getX() > pos.getX() && Mouse.getY() > pos.getY() && Mouse.getX() < size.getX()
-				&& Mouse.getY() < size.getY())
+		if (Mouse.getX() > rootX + x && Mouse.getY() > rootY + y && Mouse.getX() < rootX + x + width
+				&& Mouse.getY() < rootY + y + height)
 			return true;
 		else
 			return false;
-	}
-
-	public void render(String text) {
-		this.render(text, "Roboto-Regular", "Entypo", null,
-				VectorsRendering.rgba(255, 255, 255, 255, VectorsRendering.colorA));
-	}
-
-	public void render(String text, ByteBuffer preicon) {
-		this.render(text, "Roboto-Regular", "Entypo", preicon,
-				VectorsRendering.rgba(255, 255, 255, 255, VectorsRendering.colorA));
-	}
-
-	public void render(String text, NVGColor color) {
-		this.render(text, "Roboto-Regular", "Entypo", null, color);
-	}
-
-	public void render(String text, ByteBuffer preicon, NVGColor color) {
-		this.render(text, "Roboto-Regular", "Entypo", preicon, color);
-	}
-
-	public void render(String text, String font, String entypo, ByteBuffer preicon, NVGColor color) {
-		VectorsRendering.renderButton(preicon, text, font, entypo, (float) (renderPos.x),
-				(float) (GameResources.getInstance().getDisplay().getDisplayHeight() - renderPos.y - renderSize.y), (float) (renderSize.x),
-				(float) (renderSize.y), color, this.insideButton());
 	}
 
 	public boolean pressed() {
@@ -81,4 +60,44 @@ public class Button {
 		else
 			return false;
 	}
+
+	@Override
+	public void render() {
+		UIRendering.renderButton(preicon, text, font, entypo, rootX + x,
+				GameResources.getInstance().getDisplay().getDisplayHeight() - rootY - y - height, width, height, color,
+				this.insideButton(), fadeAlpha);
+		super.render();
+	}
+
+	@Override
+	public void update() {
+		if (pressed() && onPress != null)
+			onPress.onAction();
+		super.update();
+	}
+
+	public void setColor(int r, int g, int b, int a) {
+		UIRendering.rgba(r, g, b, a, color);
+	}
+
+	public void setText(String text) {
+		this.text = text;
+	}
+
+	public void setOnButtonPress(OnAction onPress) {
+		this.onPress = onPress;
+	}
+
+	public void setEntypo(String entypo) {
+		this.entypo = entypo;
+	}
+
+	public void setFont(String font) {
+		this.font = font;
+	}
+
+	public void setPreicon(ByteBuffer preicon) {
+		this.preicon = preicon;
+	}
+	
 }

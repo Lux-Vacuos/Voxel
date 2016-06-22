@@ -23,6 +23,8 @@ package net.luxvacuos.voxel.client.core;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.luxvacuos.voxel.client.core.GlobalStates.GameState;
+import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.universal.api.mod.ModStateLoop;
 
 /**
@@ -34,6 +36,8 @@ import net.luxvacuos.voxel.universal.api.mod.ModStateLoop;
 public abstract class State {
 
 	private List<ModStateLoop> modsLoops = new ArrayList<>();
+	protected boolean readyForSwitch, switching;
+	private GameState switchTo;
 
 	public void start() {
 	}
@@ -50,6 +54,19 @@ public abstract class State {
 	public abstract void render(Voxel voxel, float alpha);
 
 	public void end() {
+	}
+
+	public void switchTo(GameState state) {
+		switching = true;
+		this.switchTo = state;
+	}
+
+	public void updateSwitch() {
+		if (readyForSwitch && switching) {
+			GameResources.getInstance().getGlobalStates().setState(switchTo);
+			switching = false;
+			readyForSwitch = false;
+		}
 	}
 
 	public List<ModStateLoop> getModsLoops() {

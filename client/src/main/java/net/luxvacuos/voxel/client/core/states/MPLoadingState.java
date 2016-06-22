@@ -20,70 +20,82 @@
 
 package net.luxvacuos.voxel.client.core.states;
 
-import net.luxvacuos.voxel.client.core.GlobalStates.GameState;
+import java.io.IOException;
+
+import org.lwjgl.nanovg.NanoVG;
+
 import net.luxvacuos.voxel.client.core.State;
 import net.luxvacuos.voxel.client.core.Voxel;
-import net.luxvacuos.voxel.client.input.Keyboard;
+import net.luxvacuos.voxel.client.core.VoxelVariables;
+import net.luxvacuos.voxel.client.core.GlobalStates.GameState;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.UIRendering;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.ui.Button;
 import net.luxvacuos.voxel.client.ui.Text;
 import net.luxvacuos.voxel.client.ui.Window;
 
-public class MPSelectionState extends State {
+public class MPLoadingState extends State {
 
+	private boolean trying = false;
 	private Button exitButton;
-	private Button playButton;
 	private Window window;
-	private String ip = "";
-	private Text ipText;
-
+	private Text message;
 	private float time = 0;
+	private boolean fadeIn;
 
-	public MPSelectionState() {
+	public MPLoadingState() {
 		window = new Window(20, GameResources.getInstance().getDisplay().getDisplayHeight() - 20,
 				GameResources.getInstance().getDisplay().getDisplayWidth() - 40,
 				GameResources.getInstance().getDisplay().getDisplayHeight() - 40, "Multiplayer");
-		exitButton = new Button(window.getWidth() / 2 + 10, -window.getHeight() + 35, 200, 40, "Back");
-		playButton = new Button(window.getWidth() / 2 - 210, -window.getHeight() + 35, 200, 40, "Enter");
-
+		exitButton = new Button(window.getWidth() / 2 - 100, -window.getHeight() + 35, 200, 40, "Cancel");
 		exitButton.setOnButtonPress(() -> {
-			if (time > 0.2f)
-				switchTo(GameState.MAINMENU);
-		});
-
-		playButton.setOnButtonPress(() -> {
 			if (time > 0.2f) {
-				GameResources.getInstance().getVoxelClient().setUrl(ip);
-				switchTo(GameState.LOADING_MP_WORLD);
+				switchTo(GameState.MP_SELECTION);
 			}
 		});
-		ipText = new Text("IP:", window.getWidth() / 2 - 170, -window.getHeight() / 2);
-
+		message = new Text("Connecting...", window.getWidth() / 2, -window.getHeight() / 2);
+		message.setAlign(NanoVG.NVG_ALIGN_CENTER);
 		window.addChildren(exitButton);
-		window.addChildren(playButton);
-		window.addChildren(ipText);
+		window.addChildren(message);
 	}
 
 	@Override
 	public void start() {
 		time = 0;
+		trying = false;
+		fadeIn = false;
 		window.setFadeAlpha(0);
 	}
 
 	@Override
 	public void end() {
+		message.setText("Connecting...");
 		window.setFadeAlpha(1);
 	}
 
 	@Override
 	public void update(Voxel voxel, float delta) {
 		window.update();
+		GameResources gm = voxel.getGameResources();
+		if (!trying && fadeIn) {
+			try {
+				trying = true;
+				gm.getVoxelClient().connect(4059);
+				message.setText("Loading World");
+			} catch (IOException e) {
+				VoxelVariables.onServer = false;
+				message.setText(e.getMessage());
+				e.printStackTrace();
+			}
+		}
+		if (time <= 0.2f) {
+			time += 1 * delta;
+		}
 		if (time <= 0.2f) {
 			time += 1 * delta;
 		}
 		if (!switching)
-			window.fadeIn(4, delta);
+			fadeIn = window.fadeIn(4, delta);
 		if (switching)
 			if (window.fadeOut(4, delta)) {
 				readyForSwitch = true;
@@ -91,22 +103,13 @@ public class MPSelectionState extends State {
 	}
 
 	@Override
-	public void render(Voxel voxel, float alpha) {
+	public void render(Voxel voxel, float delta) {
 		GameResources gm = voxel.getGameResources();
 		gm.getRenderer().prepare();
 		gm.getDisplay().beingNVGFrame();
 		window.render();
-		while (Keyboard.next())
-			ip = Keyboard.keyWritten(ip);
-		UIRendering.renderSearchBox(ip, "Roboto-Regular", "Entypo",
-				GameResources.getInstance().getDisplay().getDisplayWidth() / 2f - 150f,
-				GameResources.getInstance().getDisplay().getDisplayHeight() / 2f - 10, 300, 20);
 		UIRendering.renderMouse();
 		gm.getDisplay().endNVGFrame();
-	}
-
-	public String getIp() {
-		return ip;
 	}
 
 }

@@ -22,10 +22,10 @@ package net.luxvacuos.voxel.client.core;
 
 import net.luxvacuos.voxel.client.core.states.AboutState;
 import net.luxvacuos.voxel.client.core.states.GameSPInventoryState;
-import net.luxvacuos.voxel.client.core.states.GameSPState;
+import net.luxvacuos.voxel.client.core.states.SPState;
 import net.luxvacuos.voxel.client.core.states.InPauseState;
-import net.luxvacuos.voxel.client.core.states.LoadingMPState;
-import net.luxvacuos.voxel.client.core.states.LoadingSPState;
+import net.luxvacuos.voxel.client.core.states.MPLoadingState;
+import net.luxvacuos.voxel.client.core.states.SPLoadingState;
 import net.luxvacuos.voxel.client.core.states.MPSelectionState;
 import net.luxvacuos.voxel.client.core.states.MainMenuState;
 import net.luxvacuos.voxel.client.core.states.OptionsState;
@@ -46,10 +46,10 @@ public class GlobalStates {
 	private InternalState internalState;
 
 	public enum GameState {
-		GAME_SP(new GameSPState()), MAINMENU(new MainMenuState()), IN_PAUSE(new InPauseState()), LOADING_WORLD(
-				new LoadingSPState()), OPTIONS(new OptionsState()), SP_SELECTION(new SPSelectionState()), ABOUT(
+		GAME_SP(new SPState()), MAINMENU(new MainMenuState()), IN_PAUSE(new InPauseState()), LOADING_WORLD(
+				new SPLoadingState()), OPTIONS(new OptionsState()), SP_SELECTION(new SPSelectionState()), ABOUT(
 						new AboutState()), MP_SELECTION(new MPSelectionState()), LOADING_MP_WORLD(
-								new LoadingMPState()), GAME_SP_INVENTORY(new GameSPInventoryState());
+								new MPLoadingState()), GAME_SP_INVENTORY(new GameSPInventoryState());
 
 		GameState(State state) {
 			this.state = state;
@@ -68,6 +68,7 @@ public class GlobalStates {
 
 	public void doUpdate(Voxel voxel, float delta) throws Exception {
 		state.state.iUpdate(voxel, delta);
+		state.state.updateSwitch();
 		if (voxel.getGameResources().getDisplay().isCloseRequested())
 			internalState = InternalState.STOPPED;
 	}

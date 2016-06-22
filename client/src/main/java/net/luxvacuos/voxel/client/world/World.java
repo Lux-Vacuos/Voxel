@@ -48,7 +48,7 @@ public abstract class World {
 	public World(String name) {
 		this.name = name;
 		dimensions = new HashMap<>();
-		file = new File(VoxelVariables.worldPath + name + "/world.dat");
+		file = new File(VoxelVariables.WORLD_PATH + name + "/world.dat");
 	}
 
 	public void init(GameResources gm) {

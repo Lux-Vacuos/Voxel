@@ -1,17 +1,16 @@
 package net.luxvacuos.voxel.client.ui;
 
 import net.luxvacuos.voxel.client.input.Mouse;
-import net.luxvacuos.voxel.client.rendering.api.nanovg.VectorsRendering;
+import net.luxvacuos.voxel.client.rendering.api.nanovg.UIRendering;
 import net.luxvacuos.voxel.client.resources.GameResources;
 
 public class Window extends Component {
 
-	private String title, font;
+	private String title, font = "Roboto-Bold";
+	private boolean draggable = false;
 
-	public Window(int x, int y, int w, int h, String title, String font) {
-		super();
+	public Window(int x, int y, int w, int h, String title) {
 		this.title = title;
-		this.font = font;
 		this.x = x;
 		this.y = y;
 		this.width = w;
@@ -20,22 +19,53 @@ public class Window extends Component {
 
 	@Override
 	public void render() {
-		VectorsRendering.renderWindow(title, font, x, GameResources.getInstance().getDisplay().getDisplayHeight() - y,
-				width, height);
-		for (Component component : childrens) {
-			component.rootX = x;
-			component.rootY = y;
-			component.render();
-		}
+		if (enabled)
+			UIRendering.renderWindow(title, font, rootX + x,
+					GameResources.getInstance().getDisplay().getDisplayHeight() - rootY - y, width, height, fadeAlpha);
+		super.render();
 	}
 
 	@Override
 	public void update() {
-		if (Mouse.isButtonDown(0) && Mouse.getX() > x && Mouse.getY() < y && Mouse.getX() < x + width
-				&& Mouse.getY() > y - 32) {
-			this.x = Mouse.getX() - width / 2;
-			this.y = Mouse.getY() + 32 / 2;
+		if (enabled)
+			if (Mouse.isButtonDown(0) && Mouse.getX() > x && Mouse.getY() < y && Mouse.getX() < x + width
+					&& Mouse.getY() > y - 32 && draggable) {
+				this.x = Mouse.getX() - width / 2;
+				this.y = Mouse.getY() + 32 / 2;
+			}
+		super.update();
+	}
+
+	public boolean fadeIn(float time, float delta) {
+		if (fadeAlpha < 1) {
+			fadeAlpha += time * delta;
+			return false;
 		}
+		return true;
+	}
+
+	public boolean fadeOut(float time, float delta) {
+		if (fadeAlpha > 0) {
+			fadeAlpha -= time * delta;
+			return false;
+		}
+		return true;
+	}
+
+	public void setDraggable(boolean draggable) {
+		this.draggable = draggable;
+	}
+
+	public boolean isDraggable() {
+		return draggable;
+	}
+
+	public void setFadeAlpha(float fadeAlpha) {
+		this.fadeAlpha = fadeAlpha;
+	}
+
+	public void setFont(String font) {
+		this.font = font;
 	}
 
 }

@@ -20,8 +20,7 @@
 
 package net.luxvacuos.voxel.client.ui.menu;
 
-import net.luxvacuos.igl.vector.Vector2f;
-import net.luxvacuos.voxel.client.rendering.api.nanovg.VectorsRendering;
+import net.luxvacuos.voxel.client.rendering.api.nanovg.UIRendering;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.ui.Button;
 
@@ -30,19 +29,18 @@ public class PauseMenu {
 	private Button optionsButton;
 
 	public PauseMenu(GameResources gm) {
-		exitButton = new Button(new Vector2f(GameResources.getInstance().getDisplay().getDisplayWidth() / 2f - 100, 35),
-				new Vector2f(200, 40));
-		optionsButton = new Button(
-				new Vector2f(GameResources.getInstance().getDisplay().getDisplayWidth() / 2f - 100, 115),
-				new Vector2f(200, 40));
+		exitButton = new Button((int) (GameResources.getInstance().getDisplay().getDisplayWidth() / 2f - 100), 35, 200,
+				40, "Back to Main Menu");
+		optionsButton = new Button((int) (GameResources.getInstance().getDisplay().getDisplayWidth() / 2f - 100), 115,
+				200, 40, "Options");
 	}
 
 	public void render() {
-		VectorsRendering.renderWindow("Pause", "Roboto-Bold", 20, 20,
+		UIRendering.renderWindow("Pause", "Roboto-Bold", 20, 20,
 				GameResources.getInstance().getDisplay().getDisplayWidth() - 40,
 				GameResources.getInstance().getDisplay().getDisplayHeight() - 40);
-		exitButton.render("Back to Main Menu");
-		optionsButton.render("Options");
+		exitButton.render();
+		optionsButton.render();
 	}
 
 	public Button getExitButton() {

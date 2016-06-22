@@ -40,7 +40,6 @@ public class DisplayUtils {
 	}
 
 	public void checkErrors() {
-		//checkGLError();
 	}
 
 	public void sync(int fps) {

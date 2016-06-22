@@ -25,37 +25,21 @@ import net.luxvacuos.voxel.client.resources.GameResources;
 /**
  * 
  * @author danirod
+ * @deprecated
  */
 public class Menu {
 
-	public final MainMenu mainMenu;
 
 	public final PauseMenu pauseMenu;
 
-	public final OptionsMenu optionsMenu;
-
 	public final GameSP gameSP;
 
-	public final SPSelectionMenu spSelectionMenu;
-
 	public final AboutMenu aboutMenu;
-	
-	public final MPSelectionMenu mpSelectionMenu;
-	
-	public final MPLoadingWorld mpLoadingWorld;
-	
-	public final GameSPInventory gameSPInventory;
 
 	public Menu(GameResources gm) throws Exception {
-		mainMenu = new MainMenu(gm);
 		pauseMenu = new PauseMenu(gm);
-		optionsMenu = new OptionsMenu(gm);
 		gameSP = new GameSP(gm);
-		spSelectionMenu = new SPSelectionMenu(gm);
 		aboutMenu = new AboutMenu(gm);
-		mpSelectionMenu = new MPSelectionMenu(gm);
-		mpLoadingWorld = new MPLoadingWorld(gm);
-		gameSPInventory = new GameSPInventory(gm);
 	}
 
 }

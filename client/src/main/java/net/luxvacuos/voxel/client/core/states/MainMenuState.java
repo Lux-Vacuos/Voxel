@@ -24,9 +24,10 @@ import net.luxvacuos.voxel.client.core.GlobalStates.GameState;
 import net.luxvacuos.voxel.client.core.GlobalStates.InternalState;
 import net.luxvacuos.voxel.client.core.State;
 import net.luxvacuos.voxel.client.core.Voxel;
-import net.luxvacuos.voxel.client.core.exception.ThreadException;
-import net.luxvacuos.voxel.client.rendering.api.nanovg.VectorsRendering;
+import net.luxvacuos.voxel.client.rendering.api.nanovg.UIRendering;
 import net.luxvacuos.voxel.client.resources.GameResources;
+import net.luxvacuos.voxel.client.ui.Button;
+import net.luxvacuos.voxel.client.ui.Window;
 
 /**
  * Main Menu State
@@ -36,37 +37,89 @@ import net.luxvacuos.voxel.client.resources.GameResources;
  */
 public class MainMenuState extends State {
 
+	private Button playButton;
+	private Button exitButton;
+	private Button optionsButton;
+	private Button aboutButton;
+	private Button playMPButton;
+	private Window window;
+
+	public MainMenuState() {
+		window = new Window(20, GameResources.getInstance().getDisplay().getDisplayHeight() - 20,
+				GameResources.getInstance().getDisplay().getDisplayWidth() - 40,
+				GameResources.getInstance().getDisplay().getDisplayHeight() - 40, "Main Menu");
+
+		playButton = new Button(window.getWidth() / 2 - 100, -window.getHeight() / 2 + 120 - 20, 200, 40,
+				"Singleplayer");
+		playMPButton = new Button(window.getWidth() / 2 - 100, -window.getHeight() / 2 + 60 - 20, 200, 40,
+				"Multiplayer");
+		optionsButton = new Button(window.getWidth() / 2 - 100, -window.getHeight() / 2 - 20, 200, 40, "Options");
+		aboutButton = new Button(window.getWidth() / 2 - 100, -window.getHeight() / 2 - 60 - 20, 200, 40, "About");
+		exitButton = new Button(window.getWidth() / 2 - 100, -window.getHeight() / 2 - 120 - 20, 200, 40, "Exit");
+
+		playButton.setPreicon(UIRendering.ICON_BLACK_RIGHT_POINTING_TRIANGLE);
+		playMPButton.setPreicon(UIRendering.ICON_BLACK_RIGHT_POINTING_TRIANGLE);
+		optionsButton.setPreicon(UIRendering.ICON_GEAR);
+		aboutButton.setPreicon(UIRendering.ICON_INFORMATION_SOURCE);
+		exitButton.setPreicon(UIRendering.ICON_LOGIN);
+
+		playButton.setOnButtonPress(() -> {
+			switchTo(GameState.SP_SELECTION);
+		});
+
+		playMPButton.setOnButtonPress(() -> {
+			switchTo(GameState.MP_SELECTION);
+		});
+
+		optionsButton.setOnButtonPress(() -> {
+			switchTo(GameState.OPTIONS);
+		});
+
+		aboutButton.setOnButtonPress(() -> {
+			switchTo(GameState.ABOUT);
+		});
+
+		exitButton.setOnButtonPress(() -> {
+			GameResources.getInstance().getGlobalStates().setInternalState(InternalState.STOPPED);
+		});
+
+		window.addChildren(playButton);
+		window.addChildren(playMPButton);
+		window.addChildren(optionsButton);
+		window.addChildren(aboutButton);
+		window.addChildren(exitButton);
+	}
+
+	@Override
+	public void start() {
+		window.setFadeAlpha(0);
+	}
+
+	@Override
+	public void end() {
+		window.setFadeAlpha(1);
+	}
+
 	@Override
 	public void render(Voxel voxel, float delta) {
 		GameResources gm = voxel.getGameResources();
 		gm.getRenderer().prepare();
 		gm.getDisplay().beingNVGFrame();
-		gm.getMenuSystem().mainMenu.render();
-		VectorsRendering.renderMouse();
+		window.render();
+		UIRendering.renderMouse();
 		gm.getDisplay().endNVGFrame();
 	}
 
 	@Override
 	public void update(Voxel voxel, float delta) throws Exception {
-		GameResources gm = voxel.getGameResources();
-
-		if (gm.getMenuSystem().mainMenu.getPlayButton().pressed()) {
-			gm.getGlobalStates().setState(GameState.SP_SELECTION);
-		} else if (gm.getMenuSystem().mainMenu.getPlayMPButton().pressed()) {
-			gm.getGlobalStates().setState(GameState.MP_SELECTION);
-		} else if (gm.getMenuSystem().mainMenu.getExitButton().pressed()) {
-			gm.getGlobalStates().setInternalState(InternalState.STOPPED);
-		} else if (gm.getMenuSystem().mainMenu.getOptionsButton().pressed()) {
-			try {
-				Thread.sleep(100);
-			} catch (InterruptedException e) {
-				throw new ThreadException(e);
+		window.update();
+		if (!switching)
+			window.fadeIn(4, delta);
+		if (switching)
+			if (window.fadeOut(4, delta)) {
+				readyForSwitch = true;
 			}
-			gm.getGlobalStates().setState(GameState.OPTIONS);
-		} else if (gm.getMenuSystem().mainMenu.getAboutButton().pressed()) {
-			gm.getGlobalStates().setState(GameState.ABOUT);
-		}
-		gm.getMenuSystem().mainMenu.update();
+
 	}
 
 }

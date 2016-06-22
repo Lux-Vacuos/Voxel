@@ -54,11 +54,11 @@ import net.luxvacuos.voxel.client.world.entities.PlayerCamera;
  * @author danirod
  * @category Kernel
  */
-public class GameSPState extends State {
+public class SPState extends State {
 	FloatBuffer p;
 	FloatBuffer c;
 
-	public GameSPState() {
+	public SPState() {
 		p = BufferUtils.createFloatBuffer(1);
 		c = BufferUtils.createFloatBuffer(3);
 	}

@@ -21,10 +21,23 @@
 package net.luxvacuos.voxel.client.core.states;
 
 import net.luxvacuos.voxel.client.core.GlobalStates.GameState;
+
+import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_MIDDLE;
+import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_RIGHT;
+
+import net.luxvacuos.voxel.client.core.CoreInfo;
 import net.luxvacuos.voxel.client.core.State;
 import net.luxvacuos.voxel.client.core.Voxel;
-import net.luxvacuos.voxel.client.rendering.api.nanovg.VectorsRendering;
+import net.luxvacuos.voxel.client.core.VoxelVariables;
+import net.luxvacuos.voxel.client.core.exception.LoadTextureException;
+import net.luxvacuos.voxel.client.input.Mouse;
+import net.luxvacuos.voxel.client.rendering.api.nanovg.UIRendering;
 import net.luxvacuos.voxel.client.resources.GameResources;
+import net.luxvacuos.voxel.client.ui.Button;
+import net.luxvacuos.voxel.client.ui.Image;
+import net.luxvacuos.voxel.client.ui.Text;
+import net.luxvacuos.voxel.client.ui.Window;
+import net.luxvacuos.voxel.universal.api.MoltenAPI;
 
 /**
  * Main Menu State
@@ -33,23 +46,126 @@ import net.luxvacuos.voxel.client.resources.GameResources;
  * @category Kernel
  */
 public class AboutState extends State {
-	
+
+	private Window window;
+	private Button backButton;
+	private Image voxelLogo;
+
+	private int globalY;
+
+	public AboutState() {
+		window = new Window(20, GameResources.getInstance().getDisplay().getDisplayHeight() - 20,
+				GameResources.getInstance().getDisplay().getDisplayWidth() - 40, 2200, "About");
+		backButton = new Button((int) (GameResources.getInstance().getDisplay().getDisplayWidth() / 2f - 100), 40, 200,
+				40, "Back");
+		backButton.setOnButtonPress(() -> {
+			switchTo(GameState.MAINMENU);
+		});
+
+		try {
+			voxelLogo = new Image(window.getWidth() / 2 - 200, -40, 400, 200,
+					GameResources.getInstance().getLoader().loadNVGTexture("Voxel-Logo"));
+		} catch (LoadTextureException e) {
+			e.printStackTrace();
+		}
+		window.addChildren(voxelLogo);
+
+		Text versionL = new Text("Version", 30, -300);
+		versionL.setFont("Roboto-Bold");
+		Text versionR = new Text(" (" + VoxelVariables.version + ")" + " Molten API" + " (" + MoltenAPI.apiVersion + "/"
+				+ MoltenAPI.build + ")", window.getWidth() - 30, -300);
+		versionR.setAlign(NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE);
+
+		Text osL = new Text("Operative System", 30, -330);
+		osL.setFont("Roboto-Bold");
+		Text osR = new Text(CoreInfo.OS, window.getWidth() - 30, -330);
+		osR.setAlign(NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE);
+
+		Text lwjglL = new Text("LWJGL Version", 30, -360);
+		lwjglL.setFont("Roboto-Bold");
+		Text lwjglR = new Text(CoreInfo.LWJGLVer, window.getWidth() - 30, -360);
+		lwjglR.setAlign(NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE);
+
+		Text glfwL = new Text("GLFW Version", 30, -390);
+		glfwL.setFont("Roboto-Bold");
+		Text glfwR = new Text(CoreInfo.GLFWVer, window.getWidth() - 30, -390);
+		glfwR.setAlign(NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE);
+
+		Text openglL = new Text("OpenGL Version", 30, -420);
+		openglL.setFont("Roboto-Bold");
+		Text openglR = new Text(CoreInfo.OpenGLVer, window.getWidth() - 30, -420);
+		openglR.setAlign(NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE);
+
+		Text vkL = new Text("Vulkan Version", 30, -450);
+		vkL.setFont("Roboto-Bold");
+		Text vkR = new Text(CoreInfo.VkVersion, window.getWidth() - 30, -450);
+		vkR.setAlign(NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE);
+
+		Text vendorL = new Text("Vendor", 30, -480);
+		vendorL.setFont("Roboto-Bold");
+		Text vendorR = new Text(CoreInfo.Vendor, window.getWidth() - 30, -480);
+		vendorR.setAlign(NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE);
+
+		Text rendererL = new Text("Renderer", 30, -510);
+		rendererL.setFont("Roboto-Bold");
+		Text rendererR = new Text(CoreInfo.Renderer, window.getWidth() - 30, -510);
+		rendererR.setAlign(NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE);
+		
+		backButton.setPositionRelativeToRoot(false);
+		window.addChildren(backButton);
+		window.addChildren(versionL);
+		window.addChildren(versionR);
+		window.addChildren(osL);
+		window.addChildren(osR);
+		window.addChildren(lwjglL);
+		window.addChildren(lwjglR);
+		window.addChildren(glfwL);
+		window.addChildren(glfwR);
+		window.addChildren(openglL);
+		window.addChildren(openglR);
+		window.addChildren(vkL);
+		window.addChildren(vkR);
+		window.addChildren(vendorL);
+		window.addChildren(vendorR);
+		window.addChildren(rendererL);
+		window.addChildren(rendererR);
+	}
+
+	@Override
+	public void start() {
+		window.setFadeAlpha(0);
+	}
+
+	@Override
+	public void end() {
+		window.setFadeAlpha(1);
+	}
+
 	@Override
 	public void render(Voxel voxel, float delta) {
 		GameResources gm = voxel.getGameResources();
 		gm.getRenderer().prepare();
 		gm.getDisplay().beingNVGFrame();
-		gm.getMenuSystem().aboutMenu.render();
-		VectorsRendering.renderMouse();
+		window.render();
+		UIRendering.renderMouse();
 		gm.getDisplay().endNVGFrame();
 	}
 
 	@Override
 	public void update(Voxel voxel, float delta) {
-		GameResources gm = voxel.getGameResources();
-		if (gm.getMenuSystem().aboutMenu.getBackButton().pressed())
-			gm.getGlobalStates().setState(GameState.MAINMENU);
-		gm.getMenuSystem().aboutMenu.update();
+		globalY += (int) (Mouse.getDWheel() * 60f);
+		if (globalY > 0)
+			globalY = 0;
+		else if (globalY < -1520)
+			globalY = -1520;
+		window.setPosition(20, GameResources.getInstance().getDisplay().getDisplayHeight() - 20 - globalY);
+		window.update();
+		if (!switching)
+			window.fadeIn(4, delta);
+		if (switching)
+			if (window.fadeOut(4, delta)) {
+				readyForSwitch = true;
+			}
 	}
 
 }

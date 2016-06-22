@@ -34,6 +34,7 @@ import org.lwjgl.glfw.GLFW;
 
 import net.luxvacuos.igl.Logger;
 import net.luxvacuos.voxel.client.bootstrap.Bootstrap;
+import net.luxvacuos.voxel.client.bootstrap.Bootstrap.Platform;
 import net.luxvacuos.voxel.client.core.GlobalStates.GameState;
 import net.luxvacuos.voxel.client.core.GlobalStates.InternalState;
 import net.luxvacuos.voxel.client.input.Mouse;
@@ -187,14 +188,16 @@ public class Voxel extends UVoxel {
 					getGameResources().getWorldsHandler().getActiveWorld().dispose(getGameResources());
 					dispose();
 				} catch (Exception e1) {
-					e1.printStackTrace();
 				}
 			else
 				getGameResources().getDisplay().closeDisplay();
 		} catch (NullPointerException t) {
 			e.printStackTrace();
 		}
-		CrashScreen.run(e);
+		if (!Bootstrap.getPlatform().equals(Platform.MACOSX))
+			CrashScreen.run(e);
+		else
+			System.exit(-1);
 	}
 
 	public void dispose() throws Exception {
