@@ -32,7 +32,7 @@ public class EntityBasicShader extends ShaderProgram {
 	private int loc_viewMatrix;
 	private int loc_texture;
 
-	public EntityBasicShader() throws Exception {
+	public EntityBasicShader() {
 		super(VoxelVariables.VERTEX_FILE_ENTITY_BASIC, VoxelVariables.FRAGMENT_FILE_ENTITY_BASIC);
 	}
 

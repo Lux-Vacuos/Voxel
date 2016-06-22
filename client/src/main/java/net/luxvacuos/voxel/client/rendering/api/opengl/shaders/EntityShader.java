@@ -49,7 +49,7 @@ public class EntityShader extends ShaderProgram {
 
 	private int loc_useShadows;
 
-	public EntityShader() throws Exception {
+	public EntityShader() {
 		super(VoxelVariables.VERTEX_FILE_ENTITY, VoxelVariables.FRAGMENT_FILE_ENTITY);
 	}
 
@@ -82,11 +82,11 @@ public class EntityShader extends ShaderProgram {
 		super.loadInt(loc_texture0, 0);
 		super.loadInt(loc_depth0, 1);
 	}
-	
-	public void loadEntityLight(float light){
+
+	public void loadEntityLight(float light) {
 		super.loadFloat(loc_entityLight, light);
 	}
-	
+
 	public void useShadows(boolean value) {
 		super.loadBoolean(loc_useShadows, value);
 	}
@@ -100,8 +100,8 @@ public class EntityShader extends ShaderProgram {
 	public void loadTransformationMatrix(Matrix4f matrix) {
 		super.loadMatrix(loc_transformationMatrix, matrix);
 	}
-	
-	public void loadBiasMatrix(GameResources gm){
+
+	public void loadBiasMatrix(GameResources gm) {
 		Matrix4f biasMatrix = new Matrix4f();
 		biasMatrix.m00 = 0.5f;
 		biasMatrix.m01 = 0;

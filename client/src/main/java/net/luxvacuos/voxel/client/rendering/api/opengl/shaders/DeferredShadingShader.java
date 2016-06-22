@@ -35,7 +35,7 @@ import net.luxvacuos.voxel.client.world.entities.Camera;
 public class DeferredShadingShader extends ShaderProgram {
 
 	/**
-	 * Post Processing Shadaer Data
+	 * Post Processing Shader Data
 	 */
 	private int loc_transformationMatrix;
 	private int loc_projectionMatrix;
@@ -71,18 +71,7 @@ public class DeferredShadingShader extends ShaderProgram {
 
 	private float time;
 
-	/**
-	 * 
-	 * 
-	 * 
-	 * @param type
-	 *            Type of image pass
-	 * @param tmp
-	 *            Temporal Variable to prevent errors with the old
-	 *            {@link DeferredShadingRenderer}, ignore/
-	 * @throws Exception
-	 */
-	public DeferredShadingShader(String type) throws Exception {
+	public DeferredShadingShader(String type) {
 		super("ImagePassV_" + type + ".glsl", "ImagePassF_" + type + ".glsl");
 	}
 

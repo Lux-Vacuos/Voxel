@@ -54,8 +54,8 @@ import net.luxvacuos.voxel.client.resources.models.ParticleTexture;
 import net.luxvacuos.voxel.client.sound.LibraryLWJGLOpenAL;
 import net.luxvacuos.voxel.client.sound.soundsystem.SoundSystem;
 import net.luxvacuos.voxel.client.sound.soundsystem.SoundSystemConfig;
+import net.luxvacuos.voxel.client.sound.soundsystem.SoundSystemException;
 import net.luxvacuos.voxel.client.sound.soundsystem.codecs.CodecJOgg;
-import net.luxvacuos.voxel.client.ui.menu.Menu;
 import net.luxvacuos.voxel.client.util.LoggerSoundSystem;
 import net.luxvacuos.voxel.client.world.WorldsHandler;
 import net.luxvacuos.voxel.client.world.entities.Camera;
@@ -72,13 +72,6 @@ import net.luxvacuos.voxel.universal.resources.UGameResources;
 public class GameResources extends UGameResources {
 
 	private static GameResources instance = null;
-
-	@Deprecated
-	public static GameResources instance() {
-		if (instance == null)
-			instance = new GameResources();
-		return instance;
-	}
 
 	public static GameResources getInstance() {
 		if (instance == null)
@@ -108,7 +101,6 @@ public class GameResources extends UGameResources {
 	private SoundSystem soundSystem;
 	private Frustum frustum;
 	private Kryo kryo;
-	private Menu menuSystem;
 	private GameSettings gameSettings;
 
 	private Vector3f sunRotation = new Vector3f(5, 0, -45);
@@ -119,7 +111,7 @@ public class GameResources extends UGameResources {
 	private GameResources() {
 	}
 
-	public void preInit() throws Exception {
+	public void preInit() {
 		gameSettings = new GameSettings();
 		display = new Display();
 		display.create(VoxelVariables.WIDTH, VoxelVariables.HEIGHT, "Voxel", VoxelVariables.VSYNC, false, false,
@@ -127,7 +119,7 @@ public class GameResources extends UGameResources {
 				new String[] { "assets/icons/icon32.png", "assets/icons/icon64.png" });
 	}
 
-	public void init(Voxel voxel) throws Exception {
+	public void init(Voxel voxel) {
 		rand = new Random();
 		if (display.isVk()) {
 		}
@@ -136,7 +128,6 @@ public class GameResources extends UGameResources {
 		renderer = new MasterRenderer(this);
 		skyboxRenderer = new SkyboxRenderer(loader, renderer.getProjectionMatrix());
 
-		// deferredShadingRenderer = new DeferredShadingRenderer(this);
 		itemsDropRenderer = new ItemsDropRenderer();
 		TessellatorShader.getInstance();
 		TessellatorBasicShader.getInstance();
@@ -155,17 +146,20 @@ public class GameResources extends UGameResources {
 
 		CustomLog.getInstance();
 		voxelClient = new VoxelClient(this);
-		SoundSystemConfig.addLibrary(LibraryLWJGLOpenAL.class);
-		SoundSystemConfig.setCodec("ogg", CodecJOgg.class);
+		try {
+			SoundSystemConfig.addLibrary(LibraryLWJGLOpenAL.class);
+			SoundSystemConfig.setCodec("ogg", CodecJOgg.class);
+		} catch (SoundSystemException e) {
+			e.printStackTrace();
+		}
 		SoundSystemConfig.setSoundFilesPackage("assets/sounds/");
 		SoundSystemConfig.setLogger(new LoggerSoundSystem());
 		soundSystem = new SoundSystem();
-		menuSystem = new Menu(this);
 		worldsHandler = new WorldsHandler();
 		globalStates = new GlobalStates();
 	}
 
-	public void loadResources() throws Exception {
+	public void loadResources() {
 		loader.loadNVGFont("Roboto-Bold", "Roboto-Bold");
 		loader.loadNVGFont("Roboto-Regular", "Roboto-Regular");
 		loader.loadNVGFont("Entypo", "Entypo", 40);
@@ -173,7 +167,7 @@ public class GameResources extends UGameResources {
 		EntityResources.loadEntityResources(loader);
 	}
 
-	public void postInit() throws Exception {
+	public void postInit() {
 		if (VoxelVariables.renderingPipeline.equals("SinglePass"))
 			renderingPipeline = new SinglePass();
 		else if (VoxelVariables.renderingPipeline.equals("MultiPass"))
@@ -200,7 +194,7 @@ public class GameResources extends UGameResources {
 	 * Disposes all objects
 	 * 
 	 */
-	public void cleanUp() throws Exception {
+	public void cleanUp() {
 		gameSettings.save();
 		TessellatorShader.getInstance().cleanUp();
 		TessellatorBasicShader.getInstance().cleanUp();
@@ -243,10 +237,6 @@ public class GameResources extends UGameResources {
 		return soundSystem;
 	}
 
-	// public DeferredShadingRenderer getDeferredShadingRenderer() {
-	// return deferredShadingRenderer;
-	// }
-
 	public RenderingPipeline getRenderingPipeline() {
 		return renderingPipeline;
 	}
@@ -277,10 +267,6 @@ public class GameResources extends UGameResources {
 
 	public GameSettings getGameSettings() {
 		return gameSettings;
-	}
-
-	public Menu getMenuSystem() {
-		return menuSystem;
 	}
 
 	public ParticleTexture getTorchTexture() {

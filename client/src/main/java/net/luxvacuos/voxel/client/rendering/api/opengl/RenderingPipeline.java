@@ -79,7 +79,7 @@ public abstract class RenderingPipeline {
 	private DeferredShadingShader finalShader;
 	private String name;
 
-	public RenderingPipeline(String name) throws Exception {
+	public RenderingPipeline(String name) {
 		this.name = name;
 		Logger.log("Using " + name + " Rendering Pipeline");
 		GameResources gm = GameResources.getInstance();
@@ -164,7 +164,7 @@ public abstract class RenderingPipeline {
 	 * @param gm
 	 *            {@link GameResources}
 	 */
-	public abstract void init(GameResources gm) throws Exception;
+	public abstract void init(GameResources gm);
 
 	/**
 	 * Begin Rendering

@@ -31,11 +31,7 @@ public class TessellatorBasicShader extends ShaderProgram {
 
 	public static TessellatorBasicShader getInstance() {
 		if (instance == null) {
-			try {
-				instance = new TessellatorBasicShader();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			instance = new TessellatorBasicShader();
 		}
 		return instance;
 	}
@@ -44,7 +40,7 @@ public class TessellatorBasicShader extends ShaderProgram {
 	private int loc_viewMatrix;
 	private int loc_cameraPos;
 
-	public TessellatorBasicShader() throws Exception {
+	public TessellatorBasicShader() {
 		super(VoxelVariables.VERTEX_FILE_TESSELLATOR_BASIC, VoxelVariables.FRAGMENT_FILE_TESSELLATOR_BASIC);
 	}
 

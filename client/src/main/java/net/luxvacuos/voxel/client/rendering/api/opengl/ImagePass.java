@@ -48,7 +48,7 @@ public abstract class ImagePass {
 		this.height = height;
 	}
 
-	public void init() throws Exception {
+	public void init() {
 		fbo = new ImagePassFBO(width, height);
 		shader = new DeferredShadingShader(name);
 		shader.start();

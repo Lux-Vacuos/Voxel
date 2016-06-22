@@ -55,6 +55,7 @@ import static org.lwjgl.opengl.GL11.glGetString;
 import static org.lwjgl.opengl.GL11.glViewport;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
@@ -69,6 +70,7 @@ import org.lwjgl.vulkan.VkInstance;
 
 import de.matthiasmann.twl.utils.PNGDecoder;
 import net.luxvacuos.igl.Logger;
+import net.luxvacuos.voxel.client.core.exception.LoadTextureException;
 import net.luxvacuos.voxel.client.input.Mouse;
 
 /**
@@ -100,7 +102,7 @@ public class Display extends Window {
 
 	@Override
 	public void create(int width, int height, String title, boolean vsync, boolean visible, boolean resizable,
-			ContextFormat format, String[] icons) throws Exception {
+			ContextFormat format, String[] icons) {
 		Logger.log("Creating Window");
 		super.displayWidth = width;
 		super.displayHeight = height;
@@ -139,14 +141,19 @@ public class Display extends Window {
 		glfwSwapInterval(vsync ? 1 : 0);
 
 		GLFWImage.Buffer iconsbuff = GLFWImage.malloc(2);
-		for (int i = 0; i < icons.length; i++) {
-			String path = icons[i];
-			InputStream file = getClass().getClassLoader().getResourceAsStream(path);
-			PNGDecoder decoder = new PNGDecoder(file);
-			ByteBuffer bytebuf = ByteBuffer.allocateDirect(decoder.getWidth() * decoder.getHeight() * 4);
-			decoder.decode(bytebuf, decoder.getWidth() * 4, PNGDecoder.Format.RGBA);
-			bytebuf.flip();
-			iconsbuff.position(i).width(decoder.getWidth()).height(decoder.getHeight()).pixels(bytebuf);
+		try {
+			for (int i = 0; i < icons.length; i++) {
+				String path = icons[i];
+				InputStream file = getClass().getClassLoader().getResourceAsStream(path);
+				PNGDecoder decoder;
+				decoder = new PNGDecoder(file);
+				ByteBuffer bytebuf = ByteBuffer.allocateDirect(decoder.getWidth() * decoder.getHeight() * 4);
+				decoder.decode(bytebuf, decoder.getWidth() * 4, PNGDecoder.Format.RGBA);
+				bytebuf.flip();
+				iconsbuff.position(i).width(decoder.getWidth()).height(decoder.getHeight()).pixels(bytebuf);
+			}
+		} catch (IOException e) {
+			throw new LoadTextureException(e);
 		}
 
 		iconsbuff.position(0);

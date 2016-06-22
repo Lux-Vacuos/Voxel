@@ -58,7 +58,7 @@ public class ParticleRenderer {
 	private int vbo;
 	private int pointer = 0;
 
-	public ParticleRenderer(Loader loader, Matrix4f projectionMatrix) throws Exception {
+	public ParticleRenderer(Loader loader, Matrix4f projectionMatrix) {
 		this.loader = loader;
 		this.vbo = loader.createEmptyVBO(INSTANCE_DATA_LENGHT * MAX_INSTANCES);
 		quad = loader.loadToVAO(VERTICES, 2);

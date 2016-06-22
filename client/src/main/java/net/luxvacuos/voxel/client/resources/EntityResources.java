@@ -20,7 +20,6 @@
 
 package net.luxvacuos.voxel.client.resources;
 
-import net.luxvacuos.voxel.client.core.exception.LoadTextureException;
 import net.luxvacuos.voxel.client.resources.models.ModelTexture;
 import net.luxvacuos.voxel.client.resources.models.TexturedModel;
 
@@ -28,7 +27,7 @@ public class EntityResources {
 
 	private static TexturedModel guineaPig;
 
-	static void loadEntityResources(Loader loader) throws LoadTextureException, Exception {
+	static void loadEntityResources(Loader loader) {
 		guineaPig = new TexturedModel(loader.getObjLoader().loadObjModel("GuineaPig"),
 				new ModelTexture(loader.loadTextureEntity("GuineaPig")));
 	}

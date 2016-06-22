@@ -20,14 +20,15 @@
 
 package net.luxvacuos.voxel.client.core.states;
 
+import org.lwjgl.nanovg.NanoVG;
+
 import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.voxel.client.core.GlobalStates.GameState;
 import net.luxvacuos.voxel.client.core.State;
 import net.luxvacuos.voxel.client.core.Voxel;
-import net.luxvacuos.voxel.client.core.VoxelVariables;
-import net.luxvacuos.voxel.client.rendering.api.nanovg.UIRendering;
 import net.luxvacuos.voxel.client.resources.GameResources;
-import net.luxvacuos.voxel.client.world.DefaultWorld;
+import net.luxvacuos.voxel.client.ui.Text;
+import net.luxvacuos.voxel.client.ui.Window;
 import net.luxvacuos.voxel.client.world.entities.PlayerCamera;
 
 /**
@@ -38,27 +39,33 @@ import net.luxvacuos.voxel.client.world.entities.PlayerCamera;
  */
 public class SPLoadingState extends State {
 
-	private float xScale, yScale;
+	private Window window;
 
 	public SPLoadingState() {
-		float width = VoxelVariables.WIDTH;
-		float height = VoxelVariables.HEIGHT;
-		yScale = height / 720f;
-		xScale = width / 1280f;
+		window = new Window(20, GameResources.getInstance().getDisplay().getDisplayHeight() - 20,
+				GameResources.getInstance().getDisplay().getDisplayWidth() - 40,
+				GameResources.getInstance().getDisplay().getDisplayHeight() - 40, "Loading World");
+
+		Text text = new Text("Loading World", window.getWidth() / 2, window.getHeight());
+		text.setAlign(NanoVG.NVG_ALIGN_CENTER);
+		window.addChildren(text);
+	}
+
+	@Override
+	public void start() {
+		new Thread(() -> {
+			GameResources.getInstance().getWorldsHandler().getActiveWorld().init();
+			GameResources.getInstance().getWorldsHandler().getActiveWorld().getActiveDimension().getPhysicsEngine()
+					.addEntity(GameResources.getInstance().getCamera());
+			GameResources.getInstance().getCamera().setPosition(new Vector3f(0, 180, 0));
+			((PlayerCamera) GameResources.getInstance().getCamera()).setMouse();
+			GameResources.getInstance().getGlobalStates().setState(GameState.SP);
+		}).start();
 	}
 
 	@Override
 	public void update(Voxel voxel, float delta) {
-		GameResources gm = voxel.getGameResources();
-
-		gm.getWorldsHandler().registerWorld(new DefaultWorld(""));
-		gm.getWorldsHandler().setActiveWorld("");
-		gm.getWorldsHandler().getActiveWorld().init(gm);
-		gm.getWorldsHandler().getActiveWorld().getActiveDimension().getPhysicsEngine().addEntity(gm.getCamera());
-		gm.getCamera().setPosition(new Vector3f(0, 180, 0));
-		((PlayerCamera) gm.getCamera()).setMouse(gm.getDisplay());
-		gm.getGlobalStates().setState(GameState.GAME_SP);
-
+		window.update();
 	}
 
 	@Override
@@ -66,9 +73,7 @@ public class SPLoadingState extends State {
 		GameResources gm = voxel.getGameResources();
 		gm.getRenderer().prepare();
 		gm.getDisplay().beingNVGFrame();
-		UIRendering.renderText("Loading World...", "Roboto-Bold", 530 * xScale, 358 * yScale, 40 * yScale,
-				UIRendering.rgba(255, 255, 255, 160, UIRendering.colorA),
-				UIRendering.rgba(255, 255, 255, 160, UIRendering.colorB));
+		window.render();
 		gm.getDisplay().endNVGFrame();
 	}
 

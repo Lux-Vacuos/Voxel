@@ -1,6 +1,6 @@
-package net.luxvacuos.voxel.client.core.exception;
+package net.luxvacuos.voxel.universal.core.exception;
 
-public class ThreadException extends Exception {
+public class ThreadException extends RuntimeException {
 
 	private static final long serialVersionUID = 4013981199790877927L;
 

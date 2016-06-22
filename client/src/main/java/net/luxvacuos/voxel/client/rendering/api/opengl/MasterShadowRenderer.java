@@ -48,7 +48,7 @@ public class MasterShadowRenderer {
 	private Matrix4f projectionMatrix;
 	private int textureSize = 4096;
 
-	public MasterShadowRenderer() throws Exception {
+	public MasterShadowRenderer() {
 		shader = new EntityBasicShader();
 		projectionMatrix = Maths.orthographic(-80, 80, -80, 80, -80, 80, false);
 		renderer = new ShadowRenderer(shader, projectionMatrix);

@@ -68,7 +68,7 @@ public class Voxel extends UVoxel {
 		Logger.log("Running voxel in test mode");
 	}
 
-	public void preInit() throws Throwable {
+	public void preInit() throws Exception {
 		try {
 			Manifest manifest = new Manifest(getClass().getClassLoader().getResourceAsStream("META-INF/MANIFEST.MF"));
 			Attributes attr = manifest.getMainAttributes();
@@ -104,7 +104,7 @@ public class Voxel extends UVoxel {
 		api.preInit();
 	}
 
-	public void init() throws Throwable {
+	public void init() throws Exception {
 		getGameResources().init(this);
 		BlocksResources.createBlocks(getGameResources().getLoader());
 		getGameResources().loadResources();
@@ -112,7 +112,7 @@ public class Voxel extends UVoxel {
 		api.init();
 	}
 
-	public void postInit() throws Throwable {
+	public void postInit() throws Exception {
 		api.postInit();
 		Mouse.setHidden(true);
 		Timers.initDebugDisplay();

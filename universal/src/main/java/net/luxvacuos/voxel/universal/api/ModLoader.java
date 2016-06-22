@@ -21,6 +21,7 @@
 package net.luxvacuos.voxel.universal.api;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Files;
@@ -39,29 +40,33 @@ public class ModLoader {
 		modsClass = new ArrayList<Class<?>>();
 	}
 
-	public void loadMods(String prefix) throws Exception {
+	public void loadMods(String prefix) {
 		modsFolder = new File(prefix + "/mods");
 		if (!modsFolder.exists())
 			modsFolder.mkdirs();
-		Files.walk(Paths.get(modsFolder.toURI())).forEach(filePath -> {
-			if (Files.isRegularFile(filePath)) {
-				if (filePath.toFile().getAbsolutePath().endsWith(".jar")) {
-					try {
-						URLClassLoader child = new URLClassLoader(new URL[] { filePath.toFile().toURI().toURL() },
-								this.getClass().getClassLoader());
-						String name = filePath.getFileName().toString();
-						name = name.substring(0, name.lastIndexOf('.'));
-						Class<?> classToLoad;
-						classToLoad = Class.forName("mod_" + name, true, child);
-						if (classToLoad.isAnnotationPresent(MoltenAPIMod.class)) {
-							modsClass.add(classToLoad);
+		try {
+			Files.walk(Paths.get(modsFolder.toURI())).forEach(filePath -> {
+				if (Files.isRegularFile(filePath)) {
+					if (filePath.toFile().getAbsolutePath().endsWith(".jar")) {
+						try {
+							URLClassLoader child = new URLClassLoader(new URL[] { filePath.toFile().toURI().toURL() },
+									this.getClass().getClassLoader());
+							String name = filePath.getFileName().toString();
+							name = name.substring(0, name.lastIndexOf('.'));
+							Class<?> classToLoad;
+							classToLoad = Class.forName("mod_" + name, true, child);
+							if (classToLoad.isAnnotationPresent(MoltenAPIMod.class)) {
+								modsClass.add(classToLoad);
+							}
+						} catch (Exception e) {
+							e.printStackTrace();
 						}
-					} catch (Exception e) {
-						e.printStackTrace();
 					}
 				}
-			}
-		});
+			});
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
 	}
 

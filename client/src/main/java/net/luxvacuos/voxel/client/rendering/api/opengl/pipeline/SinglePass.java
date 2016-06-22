@@ -25,7 +25,7 @@ import net.luxvacuos.voxel.client.resources.GameResources;
 
 public class SinglePass extends RenderingPipeline {
 
-	public SinglePass() throws Exception {
+	public SinglePass() {
 		super("SinglePass");
 	}
 
@@ -33,7 +33,7 @@ public class SinglePass extends RenderingPipeline {
 	private Sun sun;
 
 	@Override
-	public void init(GameResources gm) throws Exception {
+	public void init(GameResources gm) {
 		sun = new Sun(width, height);
 		sun.setName("Sun");
 		sun.init();

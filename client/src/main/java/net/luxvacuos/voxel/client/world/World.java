@@ -51,12 +51,12 @@ public abstract class World {
 		file = new File(VoxelVariables.WORLD_PATH + name + "/world.dat");
 	}
 
-	public void init(GameResources gm) {
+	public void init() {
 		Logger.log("Loading " + name);
-		((PlayerCamera) gm.getCamera()).getInventory().clearInventorty();
+		((PlayerCamera) GameResources.getInstance().getCamera()).getInventory().clearInventorty();
 		saved = false;
-		load(gm);
-		localInit(gm);
+		load(GameResources.getInstance());
+		localInit(GameResources.getInstance());
 	}
 
 	protected abstract void localInit(GameResources gm);

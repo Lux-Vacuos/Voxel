@@ -47,7 +47,7 @@ public class SkyboxRenderer {
 	private RawModel dome;
 	private SkyboxShader shader;
 
-	public SkyboxRenderer(Loader loader, Matrix4f projectionMatrix) throws Exception {
+	public SkyboxRenderer(Loader loader, Matrix4f projectionMatrix) {
 		dome = loader.getObjLoader().loadObjModel("SkyDome");
 		shader = new SkyboxShader();
 		shader.start();

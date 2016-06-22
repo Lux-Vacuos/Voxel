@@ -1,6 +1,6 @@
-package net.luxvacuos.voxel.client.core.exception;
+package net.luxvacuos.voxel.universal.core.exception;
 
-public class LoadChunkException extends Exception {
+public class LoadChunkException extends RuntimeException {
 
 	private static final long serialVersionUID = -4872686166091646688L;
 

@@ -67,7 +67,7 @@ public class MasterRenderer {
 	private Matrix4f projectionMatrix;
 	private Map<TexturedModel, List<GameEntity>> entities = new HashMap<TexturedModel, List<GameEntity>>();
 
-	public MasterRenderer(GameResources gm) throws Exception {
+	public MasterRenderer(GameResources gm) {
 		shader = new EntityShader();
 		projectionMatrix = createProjectionMatrix(gm.getDisplay().getDisplayWidth(), gm.getDisplay().getDisplayHeight(),
 				VoxelVariables.FOV, VoxelVariables.NEAR_PLANE, VoxelVariables.FAR_PLANE);
@@ -132,7 +132,7 @@ public class MasterRenderer {
 				gm.getDisplay().getDisplayHeight(), VoxelVariables.FOV, VoxelVariables.NEAR_PLANE,
 				VoxelVariables.FAR_PLANE);
 	}
-	
+
 	public Matrix4f getProjectionMatrix() {
 		return projectionMatrix;
 	}
@@ -140,7 +140,7 @@ public class MasterRenderer {
 	public void setProjectionMatrix(Matrix4f matrix) {
 		projectionMatrix = matrix;
 	}
-	
+
 	public EntityShader getShader() {
 		return shader;
 	}

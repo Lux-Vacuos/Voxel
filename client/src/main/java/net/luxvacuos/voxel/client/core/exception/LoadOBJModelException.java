@@ -1,6 +1,6 @@
 package net.luxvacuos.voxel.client.core.exception;
 
-public class LoadOBJModelException extends Exception {
+public class LoadOBJModelException extends RuntimeException {
 
 	private static final long serialVersionUID = 6202284750530615822L;
 

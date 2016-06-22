@@ -322,6 +322,11 @@ public class UIRendering {
 		nvgStroke(vg);
 	}
 
+	public static void renderBox(float x, float y, float w, float h, NVGColor color1, NVGColor color2,
+			NVGColor color3) {
+		renderBox(x, y, w, h, color1, color2, color3, 1);
+	}
+
 	public static void renderBox(float x, float y, float w, float h, NVGColor color1, NVGColor color2, NVGColor color3,
 			float fadeAlpha) {
 		NVGPaint bg = paintA;

@@ -86,7 +86,7 @@ public class PlayerCamera extends Camera {
 	private static List<BoundingBox> blocks = new ArrayList<>();
 	private static Vector3 tmp = new Vector3();
 
-	public PlayerCamera(Matrix4f proj, Display display) throws Exception {
+	public PlayerCamera(Matrix4f proj, Display display) {
 		super(proj, new Vector3f(-0.25f, -1.4f, -0.25f), new Vector3f(0.25f, 0.2f, 0.25f));
 		center = new Vector2f(display.getDisplayWidth() / 2, display.getDisplayHeight() / 2);
 		this.speed = 1f;
@@ -359,8 +359,9 @@ public class PlayerCamera extends Camera {
 		pitch = -pitch;
 	}
 
-	public void setMouse(Display display) {
-		setCursorPosition(display.getDisplayWidth() / 2, display.getDisplayHeight() / 2);
+	public void setMouse() {
+		setCursorPosition(GameResources.getInstance().getDisplay().getDisplayWidth() / 2,
+				GameResources.getInstance().getDisplay().getDisplayHeight() / 2);
 		setGrabbed(true);
 	}
 

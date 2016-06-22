@@ -26,15 +26,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.luxvacuos.voxel.client.core.GlobalStates.GameState;
-import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.core.State;
 import net.luxvacuos.voxel.client.core.Voxel;
 import net.luxvacuos.voxel.client.core.VoxelVariables;
+import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.UIRendering;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.ui.Button;
 import net.luxvacuos.voxel.client.ui.Window;
 import net.luxvacuos.voxel.client.ui.World;
+import net.luxvacuos.voxel.client.world.DefaultWorld;
 
 public class SPSelectionState extends State {
 
@@ -42,6 +43,7 @@ public class SPSelectionState extends State {
 	private Button exitButton;
 	private Button playButton;
 	private List<World> worlds;
+	private String worldName;
 	private int y = 0;
 	private int ySize = 40;
 
@@ -57,7 +59,10 @@ public class SPSelectionState extends State {
 			switchTo(GameState.MAINMENU);
 		});
 		playButton.setOnButtonPress(() -> {
-			switchTo(GameState.LOADING_WORLD);
+			if (!worldName.equals(""))
+				GameResources.getInstance().getWorldsHandler().registerWorld(new DefaultWorld(worldName));
+			GameResources.getInstance().getWorldsHandler().setActiveWorld(worldName);
+			switchTo(GameState.SP_LOADING_WORLD);
 		});
 
 		window.addChildren(exitButton);
@@ -82,6 +87,7 @@ public class SPSelectionState extends State {
 		}
 		window.getChildrens().addAll(worlds);
 		window.setFadeAlpha(0);
+		worldName = "";
 	}
 
 	@Override
@@ -95,6 +101,19 @@ public class SPSelectionState extends State {
 	public void update(Voxel voxel, float delta) {
 		while (Mouse.next())
 			window.update();
+
+		for (int i = 0; i < worlds.size(); i++) {
+			if (worlds.get(i).isSelected()) {
+				worldName = worlds.get(i).getName();
+			}
+			if (worlds.get(i).isPressed()) {
+				for (int j = 0; j < worlds.size(); j++) {
+					worlds.get(j).setSelected(false);
+				}
+				worlds.get(i).setSelected(true);
+			}
+		}
+
 		if (!switching)
 			window.fadeIn(4, delta);
 		if (switching)

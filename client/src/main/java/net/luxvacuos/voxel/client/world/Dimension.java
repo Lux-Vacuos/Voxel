@@ -46,8 +46,6 @@ import com.esotericsoftware.kryo.io.Output;
 import net.luxvacuos.igl.Logger;
 import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.voxel.client.core.VoxelVariables;
-import net.luxvacuos.voxel.client.core.exception.LoadChunkException;
-import net.luxvacuos.voxel.client.core.exception.SaveChunkException;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.resources.models.ParticlePoint;
 import net.luxvacuos.voxel.client.resources.models.ParticleSystem;
@@ -60,6 +58,8 @@ import net.luxvacuos.voxel.client.world.chunks.ChunkKey;
 import net.luxvacuos.voxel.client.world.chunks.ChunkNodeRemoval;
 import net.luxvacuos.voxel.client.world.chunks.LightNodeAdd;
 import net.luxvacuos.voxel.client.world.chunks.LightNodeRemoval;
+import net.luxvacuos.voxel.universal.core.exception.LoadChunkException;
+import net.luxvacuos.voxel.universal.core.exception.SaveChunkException;
 
 public abstract class Dimension {
 

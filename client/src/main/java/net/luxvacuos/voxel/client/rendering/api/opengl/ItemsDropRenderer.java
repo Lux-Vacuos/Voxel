@@ -34,7 +34,7 @@ public class ItemsDropRenderer {
 	private List<ItemDrop> items;
 	private Tessellator tess;
 
-	public ItemsDropRenderer() throws Exception {
+	public ItemsDropRenderer() {
 		items = new ArrayList<>();
 		tess = new Tessellator();
 	}

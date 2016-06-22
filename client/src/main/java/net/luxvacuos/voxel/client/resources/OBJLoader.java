@@ -55,7 +55,7 @@ public class OBJLoader {
 	 * @throws LoadOBJModelException
 	 *             Exception in case of error
 	 */
-	public RawModel loadObjModel(String fileName) throws Exception {
+	public RawModel loadObjModel(String fileName) {
 		InputStream file = getClass().getClassLoader().getResourceAsStream("assets/models/" + fileName + ".obj");
 		Logger.log("Loading Model: " + fileName + ".obj");
 		BufferedReader reader = new BufferedReader(new InputStreamReader(file));

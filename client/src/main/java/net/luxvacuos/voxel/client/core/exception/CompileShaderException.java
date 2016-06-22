@@ -1,6 +1,6 @@
 package net.luxvacuos.voxel.client.core.exception;
 
-public class CompileShaderException extends Exception {
+public class CompileShaderException extends RuntimeException {
 
 	private static final long serialVersionUID = -8459235864100073938L;
 

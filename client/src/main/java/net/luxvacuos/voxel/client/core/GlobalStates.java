@@ -46,7 +46,7 @@ public class GlobalStates {
 	private InternalState internalState;
 
 	public enum GameState {
-		GAME_SP(new SPState()), MAINMENU(new MainMenuState()), IN_PAUSE(new InPauseState()), LOADING_WORLD(
+		SP(new SPState()), MAINMENU(new MainMenuState()), IN_PAUSE(new InPauseState()), SP_LOADING_WORLD(
 				new SPLoadingState()), OPTIONS(new OptionsState()), SP_SELECTION(new SPSelectionState()), ABOUT(
 						new AboutState()), MP_SELECTION(new MPSelectionState()), LOADING_MP_WORLD(
 								new MPLoadingState()), GAME_SP_INVENTORY(new GameSPInventoryState());

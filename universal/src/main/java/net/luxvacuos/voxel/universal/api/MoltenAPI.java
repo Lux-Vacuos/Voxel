@@ -9,7 +9,7 @@ public class MoltenAPI {
 
 	public static final String apiVersion = "0.0.2";
 	public static final int apiIntVersion = 2;
-	public static final int build = 6;
+	public static final int build = 7;
 
 	private Class<?> api;
 	private Object apiI;

@@ -101,7 +101,7 @@ public abstract class ShaderProgram {
 	 *            Fragment Shader Path
 	 * @throws Exception
 	 */
-	public ShaderProgram(String vertexFile, String fragmentFile) throws Exception {
+	public ShaderProgram(String vertexFile, String fragmentFile) {
 		vertexShaderID = loadShader(vertexFile, GL_VERTEX_SHADER);
 		fragmentShaderID = loadShader(fragmentFile, GL_FRAGMENT_SHADER);
 		programID = glCreateProgram();
@@ -299,11 +299,8 @@ public abstract class ShaderProgram {
 	 *            Type of Shader
 	 * @return Shader ID
 	 * 
-	 * @throws Exception
-	 *             This can be {@link CompileShaderException} or
-	 *             {@link LoadShaderException}.
 	 */
-	private int loadShader(String file, int type) throws Exception {
+	private int loadShader(String file, int type) {
 		StringBuilder shaderSource = new StringBuilder();
 		InputStream filet = getClass().getClassLoader().getResourceAsStream("assets/shaders/" + file);
 		try {

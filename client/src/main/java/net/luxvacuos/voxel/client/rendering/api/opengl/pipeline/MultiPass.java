@@ -25,7 +25,7 @@ import net.luxvacuos.voxel.client.resources.GameResources;
 
 public class MultiPass extends RenderingPipeline {
 
-	public MultiPass() throws Exception {
+	public MultiPass() {
 		super("MultiPass");
 	}
 
@@ -40,7 +40,7 @@ public class MultiPass extends RenderingPipeline {
 	private ColorCorrection colorCorrection;
 
 	@Override
-	public void init(GameResources gm) throws Exception {
+	public void init(GameResources gm) {
 		sun = new Sun(width, height);
 		sun.setName("Sun");
 		sun.init();
