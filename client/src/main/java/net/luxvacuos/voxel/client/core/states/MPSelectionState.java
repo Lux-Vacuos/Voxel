@@ -25,6 +25,7 @@ import net.luxvacuos.voxel.client.core.State;
 import net.luxvacuos.voxel.client.core.Voxel;
 import net.luxvacuos.voxel.client.input.Keyboard;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.UIRendering;
+import net.luxvacuos.voxel.client.rendering.api.opengl.MasterRenderer;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.ui.Button;
 import net.luxvacuos.voxel.client.ui.Text;
@@ -47,12 +48,12 @@ public class MPSelectionState extends State {
 		exitButton = new Button(window.getWidth() / 2 + 10, -window.getHeight() + 35, 200, 40, "Back");
 		playButton = new Button(window.getWidth() / 2 - 210, -window.getHeight() + 35, 200, 40, "Enter");
 
-		exitButton.setOnButtonPress(() -> {
+		exitButton.setOnButtonPress((button, delta) -> {
 			if (time > 0.2f)
 				switchTo(GameState.MAINMENU);
 		});
 
-		playButton.setOnButtonPress(() -> {
+		playButton.setOnButtonPress((button, delta) -> {
 			if (time > 0.2f) {
 				GameResources.getInstance().getVoxelClient().setUrl(ip);
 				switchTo(GameState.LOADING_MP_WORLD);
@@ -78,7 +79,7 @@ public class MPSelectionState extends State {
 
 	@Override
 	public void update(Voxel voxel, float delta) {
-		window.update();
+		window.update(delta);
 		if (time <= 0.2f) {
 			time += 1 * delta;
 		}
@@ -93,7 +94,7 @@ public class MPSelectionState extends State {
 	@Override
 	public void render(Voxel voxel, float alpha) {
 		GameResources gm = voxel.getGameResources();
-		gm.getRenderer().prepare();
+		MasterRenderer.prepare(0, 0, 0, 1);
 		gm.getDisplay().beingNVGFrame();
 		window.render();
 		while (Keyboard.next())

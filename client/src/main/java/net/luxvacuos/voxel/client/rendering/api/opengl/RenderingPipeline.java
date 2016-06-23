@@ -193,7 +193,7 @@ public abstract class RenderingPipeline {
 	public void render(GameResources gm) {
 		for (ImagePass imagePass : imagePasses) {
 			imagePass.begin(gm, previousViewMatrix, previousCameraPosition);
-			gm.getRenderer().prepare();
+			MasterRenderer.prepare();
 			glBindVertexArray(quad.getVaoID());
 			glEnableVertexAttribArray(0);
 			imagePass.render(auxs, this);
@@ -203,7 +203,7 @@ public abstract class RenderingPipeline {
 			imagePass.end();
 			auxs[0] = imagePass.getFbo();
 		}
-		gm.getRenderer().prepare();
+		MasterRenderer.prepare();
 		finalShader.start();
 		glBindVertexArray(quad.getVaoID());
 		glEnableVertexAttribArray(0);

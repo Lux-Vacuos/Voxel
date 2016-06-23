@@ -125,7 +125,8 @@ public abstract class Dimension {
 	}
 
 	private void save(GameResources gm) throws FileNotFoundException {
-		Output output = new Output(new FileOutputStream(VoxelVariables.WORLD_PATH + name + "/dim_" + chunkDim + ".dat"));
+		Output output = new Output(
+				new FileOutputStream(VoxelVariables.WORLD_PATH + name + "/dim_" + chunkDim + ".dat"));
 		gm.getKryo().writeObject(output, data);
 		output.close();
 	}

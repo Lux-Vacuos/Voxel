@@ -21,11 +21,10 @@
 package net.luxvacuos.voxel.test;
 
 import static net.luxvacuos.voxel.client.input.Keyboard.*;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import net.luxvacuos.voxel.client.core.Voxel;
 import net.luxvacuos.voxel.client.core.VoxelVariables;
 import net.luxvacuos.voxel.client.input.KeyCodes;
 
@@ -164,21 +163,5 @@ public class BasicTests {
 		assertEquals(91, KeyCodes.toGlfwKey(KEY_LBRACKET));
 		assertEquals(93, KeyCodes.toGlfwKey(KEY_RBRACKET));
 		assertEquals(39, KeyCodes.toGlfwKey(KEY_APOSTROPHE));
-	}
-
-	@Test
-	public void testRun() {
-		Voxel voxel = new Voxel("test");
-		assertNotNull(voxel);
-		
-		//voxel.preInit();
-		//voxel.init();
-		//voxel.postInit();
-		
-		//assertNotNull(voxel.getApi());
-		//assertNotNull(voxel.getGameResources());
-		//assertNotNull(voxel.getWorldsHandler());
-		
-		//voxel.dispose();
 	}
 }

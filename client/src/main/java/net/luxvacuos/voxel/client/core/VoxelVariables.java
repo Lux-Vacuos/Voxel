@@ -20,8 +20,6 @@
 
 package net.luxvacuos.voxel.client.core;
 
-import java.io.File;
-
 import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.voxel.client.bootstrap.Bootstrap;
 
@@ -128,6 +126,6 @@ public class VoxelVariables {
 	/**
 	 * World Folder Path
 	 */
-	public static final File WORLD_PATH = new File(Bootstrap.getPrefix() + "voxel/world/");
+	public static final String WORLD_PATH = Bootstrap.getPrefix() + "voxel/world/";
 
 }

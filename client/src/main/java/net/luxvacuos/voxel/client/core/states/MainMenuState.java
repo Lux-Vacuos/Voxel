@@ -25,6 +25,7 @@ import net.luxvacuos.voxel.client.core.GlobalStates.InternalState;
 import net.luxvacuos.voxel.client.core.State;
 import net.luxvacuos.voxel.client.core.Voxel;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.UIRendering;
+import net.luxvacuos.voxel.client.rendering.api.opengl.MasterRenderer;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.ui.Button;
 import net.luxvacuos.voxel.client.ui.Window;
@@ -63,23 +64,23 @@ public class MainMenuState extends State {
 		aboutButton.setPreicon(UIRendering.ICON_INFORMATION_SOURCE);
 		exitButton.setPreicon(UIRendering.ICON_LOGIN);
 
-		playButton.setOnButtonPress(() -> {
+		playButton.setOnButtonPress((button, delta) -> {
 			switchTo(GameState.SP_SELECTION);
 		});
 
-		playMPButton.setOnButtonPress(() -> {
+		playMPButton.setOnButtonPress((button, delta) -> {
 			switchTo(GameState.MP_SELECTION);
 		});
 
-		optionsButton.setOnButtonPress(() -> {
+		optionsButton.setOnButtonPress((button, delta) -> {
 			switchTo(GameState.OPTIONS);
 		});
 
-		aboutButton.setOnButtonPress(() -> {
+		aboutButton.setOnButtonPress((button, delta) -> {
 			switchTo(GameState.ABOUT);
 		});
 
-		exitButton.setOnButtonPress(() -> {
+		exitButton.setOnButtonPress((button, delta) -> {
 			GameResources.getInstance().getGlobalStates().setInternalState(InternalState.STOPPED);
 		});
 
@@ -88,6 +89,7 @@ public class MainMenuState extends State {
 		window.addChildren(optionsButton);
 		window.addChildren(aboutButton);
 		window.addChildren(exitButton);
+
 	}
 
 	@Override
@@ -103,7 +105,7 @@ public class MainMenuState extends State {
 	@Override
 	public void render(Voxel voxel, float delta) {
 		GameResources gm = voxel.getGameResources();
-		gm.getRenderer().prepare();
+		MasterRenderer.prepare(0, 0, 0, 1);
 		gm.getDisplay().beingNVGFrame();
 		window.render();
 		UIRendering.renderMouse();
@@ -112,7 +114,7 @@ public class MainMenuState extends State {
 
 	@Override
 	public void update(Voxel voxel, float delta) throws Exception {
-		window.update();
+		window.update(delta);
 		if (!switching)
 			window.fadeIn(4, delta);
 		if (switching)

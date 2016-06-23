@@ -39,6 +39,7 @@ import net.luxvacuos.voxel.client.core.GlobalStates.GameState;
 import net.luxvacuos.voxel.client.core.GlobalStates.InternalState;
 import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.Timers;
+import net.luxvacuos.voxel.client.rendering.api.opengl.MasterRenderer;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.ui.CrashScreen;
 import net.luxvacuos.voxel.client.world.block.BlocksResources;
@@ -64,10 +65,6 @@ public class Voxel extends UVoxel {
 		mainLoop();
 	}
 
-	public Voxel(String test) {
-		Logger.log("Running voxel in test mode");
-	}
-
 	public void preInit() throws Exception {
 		try {
 			Manifest manifest = new Manifest(getClass().getClassLoader().getResourceAsStream("META-INF/MANIFEST.MF"));
@@ -81,6 +78,9 @@ public class Voxel extends UVoxel {
 		Logger.log("Starting Client");
 		gameResources = GameResources.getInstance();
 		getGameResources().preInit();
+		getGameResources().getDisplay().setVisible();
+		MasterRenderer.prepare(0, 0, 0, 1);
+		getGameResources().getDisplay().updateDisplay(VoxelVariables.FPS);
 		Logger.log("Voxel Version: " + VoxelVariables.version);
 		Logger.log("Molten API Version: " + MoltenAPI.apiVersion);
 		Logger.log("Build: " + MoltenAPI.build);
@@ -96,7 +96,6 @@ public class Voxel extends UVoxel {
 		CoreInfo.OpenGLVer = glGetString(GL_VERSION);
 		CoreInfo.Vendor = glGetString(GL_VENDOR);
 		CoreInfo.Renderer = glGetString(GL_RENDERER);
-		getGameResources().getDisplay().setVisible();
 		if (Bootstrap.getPlatform() == Bootstrap.Platform.MACOSX) {
 			VoxelVariables.runningOnMac = true;
 		}
@@ -117,7 +116,7 @@ public class Voxel extends UVoxel {
 		Mouse.setHidden(true);
 		Timers.initDebugDisplay();
 		getGameResources().postInit();
-		getGameResources().getGlobalStates().setState(GameState.MAINMENU);
+		getGameResources().getGlobalStates().setState(GameState.SPLASH_SCREEN);
 	}
 
 	private void mainLoop() {

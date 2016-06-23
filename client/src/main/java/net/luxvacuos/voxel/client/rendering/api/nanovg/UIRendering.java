@@ -166,7 +166,7 @@ public class UIRendering {
 		nvgImageSize(vg, image, imgw, imgh);
 		nvgImagePattern(vg, x, y, w, h, 0.0f / 180.0f * NVG_PI, image, alpha, imgPaint);
 		nvgBeginPath(vg);
-		nvgRoundedRect(vg, x, y, w, h, 5);
+		nvgRect(vg, x, y, w, h);
 		nvgFillPaint(vg, imgPaint);
 		nvgFill(vg);
 		nvgRestore(vg);

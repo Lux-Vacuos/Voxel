@@ -35,7 +35,7 @@ public class Button extends Component {
 	private ByteBuffer preicon;
 	private OnAction onPress;
 
-	public Button(int x, int y, int width, int height, String text) {
+	public Button(float x, float y, float width, float height, String text) {
 		this.x = x;
 		this.y = y;
 		this.width = width;
@@ -70,10 +70,10 @@ public class Button extends Component {
 	}
 
 	@Override
-	public void update() {
+	public void update(float delta) {
 		if (pressed() && onPress != null)
-			onPress.onAction();
-		super.update();
+			onPress.onAction(this, delta);
+		super.update(delta);
 	}
 
 	public void setColor(int r, int g, int b, int a) {
@@ -99,5 +99,5 @@ public class Button extends Component {
 	public void setPreicon(ByteBuffer preicon) {
 		this.preicon = preicon;
 	}
-	
+
 }

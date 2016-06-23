@@ -20,6 +20,7 @@
 
 package net.luxvacuos.voxel.client.core.states;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
@@ -31,6 +32,7 @@ import net.luxvacuos.voxel.client.core.Voxel;
 import net.luxvacuos.voxel.client.core.VoxelVariables;
 import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.UIRendering;
+import net.luxvacuos.voxel.client.rendering.api.opengl.MasterRenderer;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.ui.Button;
 import net.luxvacuos.voxel.client.ui.Window;
@@ -55,14 +57,15 @@ public class SPSelectionState extends State {
 		exitButton = new Button(window.getWidth() / 2 + 10, -window.getHeight() + 35, 200, 40, "Back");
 		playButton = new Button(window.getWidth() / 2 - 210, -window.getHeight() + 35, 200, 40, "Load World");
 
-		exitButton.setOnButtonPress(() -> {
+		exitButton.setOnButtonPress((button, delta) -> {
 			switchTo(GameState.MAINMENU);
 		});
-		playButton.setOnButtonPress(() -> {
-			if (!worldName.equals(""))
+		playButton.setOnButtonPress((button, delta) -> {
+			if (!worldName.equals("")) {
 				GameResources.getInstance().getWorldsHandler().registerWorld(new DefaultWorld(worldName));
-			GameResources.getInstance().getWorldsHandler().setActiveWorld(worldName);
-			switchTo(GameState.SP_LOADING_WORLD);
+				GameResources.getInstance().getWorldsHandler().setActiveWorld(worldName);
+				switchTo(GameState.SP_LOADING_WORLD);
+			}
 		});
 
 		window.addChildren(exitButton);
@@ -74,8 +77,8 @@ public class SPSelectionState extends State {
 	public void start() {
 		y = 0;
 		try {
-			Files.walk(VoxelVariables.WORLD_PATH.toPath(), 1).forEach(filePath -> {
-				if (Files.isDirectory(filePath) && !filePath.toFile().equals(VoxelVariables.WORLD_PATH)) {
+			Files.walk(new File(VoxelVariables.WORLD_PATH).toPath(), 1).forEach(filePath -> {
+				if (Files.isDirectory(filePath) && !filePath.toFile().equals(new File(VoxelVariables.WORLD_PATH))) {
 					World world = new World(20, -ySize - 50 - (y * (ySize + 5)), 400, ySize,
 							filePath.getFileName().toString());
 					y++;
@@ -100,7 +103,7 @@ public class SPSelectionState extends State {
 	@Override
 	public void update(Voxel voxel, float delta) {
 		while (Mouse.next())
-			window.update();
+			window.update(delta);
 
 		for (int i = 0; i < worlds.size(); i++) {
 			if (worlds.get(i).isSelected()) {
@@ -125,7 +128,7 @@ public class SPSelectionState extends State {
 	@Override
 	public void render(Voxel voxel, float alpha) {
 		GameResources gm = voxel.getGameResources();
-		gm.getRenderer().prepare();
+		MasterRenderer.prepare(0, 0, 0, 1);
 		gm.getDisplay().beingNVGFrame();
 		window.render();
 		UIRendering.renderMouse();

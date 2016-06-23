@@ -29,7 +29,7 @@ public class Window extends Component {
 	private String title, font = "Roboto-Bold";
 	private boolean draggable = false;
 
-	public Window(int x, int y, int w, int h, String title) {
+	public Window(float x, float y, float w, float h, String title) {
 		this.title = title;
 		this.x = x;
 		this.y = y;
@@ -39,21 +39,23 @@ public class Window extends Component {
 
 	@Override
 	public void render() {
-		if (enabled)
+		if (enabled) {
 			UIRendering.renderWindow(title, font, rootX + x,
 					GameResources.getInstance().getDisplay().getDisplayHeight() - rootY - y, width, height, fadeAlpha);
-		super.render();
+			super.render();
+		}
 	}
 
 	@Override
-	public void update() {
-		if (enabled)
+	public void update(float delta) {
+		if (enabled) {
 			if (Mouse.isButtonDown(0) && Mouse.getX() > x && Mouse.getY() < y && Mouse.getX() < x + width
 					&& Mouse.getY() > y - 32 && draggable) {
 				this.x = Mouse.getX() - width / 2;
 				this.y = Mouse.getY() + 32 / 2;
 			}
-		super.update();
+			super.update(delta);
+		}
 	}
 
 	public boolean fadeIn(float time, float delta) {

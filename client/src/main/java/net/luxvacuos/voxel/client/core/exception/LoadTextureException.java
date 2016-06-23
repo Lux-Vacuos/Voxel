@@ -12,7 +12,7 @@ public class LoadTextureException extends RuntimeException {
 
 	public LoadTextureException(String texture, Exception cause) {
 		super(cause);
-		Logger.error("Couldn' load texture file" + texture);
+		Logger.error("Couldn' load texture file " + texture);
 	}
 
 }

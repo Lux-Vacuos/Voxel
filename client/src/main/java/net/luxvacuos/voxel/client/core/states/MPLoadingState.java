@@ -29,6 +29,7 @@ import net.luxvacuos.voxel.client.core.Voxel;
 import net.luxvacuos.voxel.client.core.VoxelVariables;
 import net.luxvacuos.voxel.client.core.GlobalStates.GameState;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.UIRendering;
+import net.luxvacuos.voxel.client.rendering.api.opengl.MasterRenderer;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.ui.Button;
 import net.luxvacuos.voxel.client.ui.Text;
@@ -48,7 +49,7 @@ public class MPLoadingState extends State {
 				GameResources.getInstance().getDisplay().getDisplayWidth() - 40,
 				GameResources.getInstance().getDisplay().getDisplayHeight() - 40, "Multiplayer");
 		exitButton = new Button(window.getWidth() / 2 - 100, -window.getHeight() + 35, 200, 40, "Cancel");
-		exitButton.setOnButtonPress(() -> {
+		exitButton.setOnButtonPress((button, delta) -> {
 			if (time > 0.2f) {
 				switchTo(GameState.MP_SELECTION);
 			}
@@ -75,7 +76,7 @@ public class MPLoadingState extends State {
 
 	@Override
 	public void update(Voxel voxel, float delta) {
-		window.update();
+		window.update(delta);
 		GameResources gm = voxel.getGameResources();
 		if (!trying && fadeIn) {
 			try {
@@ -105,7 +106,7 @@ public class MPLoadingState extends State {
 	@Override
 	public void render(Voxel voxel, float delta) {
 		GameResources gm = voxel.getGameResources();
-		gm.getRenderer().prepare();
+		MasterRenderer.prepare(0, 0, 0, 1);
 		gm.getDisplay().beingNVGFrame();
 		window.render();
 		UIRendering.renderMouse();

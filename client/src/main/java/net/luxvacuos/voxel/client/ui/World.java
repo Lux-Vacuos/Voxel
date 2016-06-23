@@ -29,7 +29,7 @@ public class World extends Component {
 	private Panel panel;
 	private boolean selected = false;
 
-	public World(int x, int y, int w, int h, String name) {
+	public World(float x, float y, float w, float h, String name) {
 		this.x = x;
 		this.y = y;
 		this.width = w;
@@ -44,7 +44,7 @@ public class World extends Component {
 		addChildren(text);
 
 		Button btn = new Button(w - 60, 2, 58, h - 4, "Info");
-		btn.setOnButtonPress(() -> {
+		btn.setOnButtonPress((button, delta) -> {
 			info.setEnabled(!info.isEnabled());
 		});
 		addChildren(btn);

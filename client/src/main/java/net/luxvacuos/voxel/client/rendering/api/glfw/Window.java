@@ -21,6 +21,8 @@
 package net.luxvacuos.voxel.client.rendering.api.glfw;
 
 import static org.lwjgl.glfw.GLFW.GLFW_RELEASE;
+import static org.lwjgl.glfw.GLFW.glfwGetFramebufferSize;
+import static org.lwjgl.glfw.GLFW.glfwGetWindowSize;
 import static org.lwjgl.glfw.GLFW.glfwSetCharCallback;
 import static org.lwjgl.glfw.GLFW.glfwSetCursorEnterCallback;
 import static org.lwjgl.glfw.GLFW.glfwSetCursorPosCallback;
@@ -36,7 +38,11 @@ import static org.lwjgl.glfw.GLFW.glfwSetWindowRefreshCallback;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowSizeCallback;
 import static org.lwjgl.glfw.GLFW.glfwSwapBuffers;
 import static org.lwjgl.glfw.GLFW.glfwWindowShouldClose;
+import static org.lwjgl.opengl.GL11.glViewport;
 
+import java.nio.IntBuffer;
+
+import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWCharCallback;
 import org.lwjgl.glfw.GLFWCursorEnterCallback;
@@ -162,9 +168,17 @@ public abstract class Window implements IDisplay {
 		windowSizeCallback = new GLFWWindowSizeCallback() {
 			@Override
 			public void invoke(long window, int width, int height) {
-				latestResized = true;
-				displayWidth = width;
-				displayHeight = height;
+				IntBuffer w = BufferUtils.createIntBuffer(1);
+				IntBuffer h = BufferUtils.createIntBuffer(1);
+				glfwGetFramebufferSize(window, w, h);
+				displayFramebufferWidth = w.get(0);
+				displayFramebufferHeight = h.get(0);
+
+				glfwGetWindowSize(window, w, h);
+				displayWidth = w.get(0);
+				displayHeight = h.get(0);
+				pixelRatio = (float) displayFramebufferWidth / (float) displayWidth;
+				glViewport(0, 0, (int) (displayWidth * pixelRatio), (int) (displayHeight * pixelRatio));
 			}
 		};
 

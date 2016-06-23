@@ -32,6 +32,7 @@ import net.luxvacuos.voxel.client.core.VoxelVariables;
 import net.luxvacuos.voxel.client.core.exception.LoadTextureException;
 import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.UIRendering;
+import net.luxvacuos.voxel.client.rendering.api.opengl.MasterRenderer;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.ui.Button;
 import net.luxvacuos.voxel.client.ui.Image;
@@ -58,7 +59,7 @@ public class AboutState extends State {
 				GameResources.getInstance().getDisplay().getDisplayWidth() - 40, 2200, "About");
 		backButton = new Button((int) (GameResources.getInstance().getDisplay().getDisplayWidth() / 2f - 100), 40, 200,
 				40, "Back");
-		backButton.setOnButtonPress(() -> {
+		backButton.setOnButtonPress((button, delta) -> {
 			switchTo(GameState.MAINMENU);
 		});
 
@@ -110,7 +111,7 @@ public class AboutState extends State {
 		rendererL.setFont("Roboto-Bold");
 		Text rendererR = new Text(CoreInfo.Renderer, window.getWidth() - 30, -510);
 		rendererR.setAlign(NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE);
-		
+
 		backButton.setPositionRelativeToRoot(false);
 		window.addChildren(backButton);
 		window.addChildren(versionL);
@@ -144,7 +145,7 @@ public class AboutState extends State {
 	@Override
 	public void render(Voxel voxel, float delta) {
 		GameResources gm = voxel.getGameResources();
-		gm.getRenderer().prepare();
+		MasterRenderer.prepare(0, 0, 0, 1);
 		gm.getDisplay().beingNVGFrame();
 		window.render();
 		UIRendering.renderMouse();
@@ -159,7 +160,7 @@ public class AboutState extends State {
 		else if (globalY < -1520)
 			globalY = -1520;
 		window.setPosition(20, GameResources.getInstance().getDisplay().getDisplayHeight() - 20 - globalY);
-		window.update();
+		window.update(delta);
 		if (!switching)
 			window.fadeIn(4, delta);
 		if (switching)

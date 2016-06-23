@@ -31,7 +31,7 @@ public class Panel extends Component {
 			borderColor = UIRendering.rgba(0, 0, 0, 255);
 	private OnAction onPress;
 
-	public Panel(int x, int y, int width, int height) {
+	public Panel(float x, float y, float width, float height) {
 		this.x = x;
 		this.y = y;
 		this.width = width;
@@ -47,10 +47,10 @@ public class Panel extends Component {
 	}
 
 	@Override
-	public void update() {
+	public void update(float delta) {
 		if (pressed() && onPress != null)
-			onPress.onAction();
-		super.update();
+			onPress.onAction(this, delta);
+		super.update(delta);
 	}
 
 	public boolean inside() {
@@ -83,8 +83,28 @@ public class Panel extends Component {
 		UIRendering.rgba(r, g, b, a, fillColor);
 	}
 
+	public boolean fadeIn(float time, float delta) {
+		if (fadeAlpha < 1) {
+			fadeAlpha += time * delta;
+			return false;
+		}
+		return true;
+	}
+
+	public boolean fadeOut(float time, float delta) {
+		if (fadeAlpha > 0) {
+			fadeAlpha -= time * delta;
+			return false;
+		}
+		return true;
+	}
+
 	public void setOnPress(OnAction onPress) {
 		this.onPress = onPress;
+	}
+
+	public void setFadeAlpha(float fadeAlpha) {
+		this.fadeAlpha = fadeAlpha;
 	}
 
 }

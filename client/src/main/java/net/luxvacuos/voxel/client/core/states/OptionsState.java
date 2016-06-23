@@ -26,6 +26,7 @@ import net.luxvacuos.voxel.client.core.Voxel;
 import net.luxvacuos.voxel.client.core.VoxelVariables;
 import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.UIRendering;
+import net.luxvacuos.voxel.client.rendering.api.opengl.MasterRenderer;
 import net.luxvacuos.voxel.client.rendering.api.opengl.ParticleMaster;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.ui.Button;
@@ -121,13 +122,13 @@ public class OptionsState extends State {
 			parallaxButton.setColor(255, 100, 100, 255);
 		}
 
-		exitButton.setOnButtonPress(() -> {
+		exitButton.setOnButtonPress((button, delta) -> {
 			GameResources.getInstance().getGameSettings().updateSetting();
 			GameResources.getInstance().getGameSettings().save();
 			switchTo(GameResources.getInstance().getGlobalStates().getOldState());
 		});
 
-		shadowsButton.setOnButtonPress(() -> {
+		shadowsButton.setOnButtonPress((button, delta) -> {
 			VoxelVariables.useShadows = !VoxelVariables.useShadows;
 			if (VoxelVariables.useShadows) {
 				shadowsButton.setText("Shadows: ON");
@@ -138,7 +139,7 @@ public class OptionsState extends State {
 			}
 		});
 
-		dofButton.setOnButtonPress(() -> {
+		dofButton.setOnButtonPress((button, delta) -> {
 			VoxelVariables.useDOF = !VoxelVariables.useDOF;
 			if (VoxelVariables.useDOF) {
 				dofButton.setText("DoF: ON");
@@ -150,7 +151,7 @@ public class OptionsState extends State {
 
 		});
 
-		godraysButton.setOnButtonPress(() -> {
+		godraysButton.setOnButtonPress((button, delta) -> {
 			VoxelVariables.useVolumetricLight = !VoxelVariables.useVolumetricLight;
 			if (VoxelVariables.useVolumetricLight) {
 				godraysButton.setText("Light Rays: ON");
@@ -161,7 +162,7 @@ public class OptionsState extends State {
 			}
 		});
 
-		fxaaButton.setOnButtonPress(() -> {
+		fxaaButton.setOnButtonPress((button, delta) -> {
 			VoxelVariables.useFXAA = !VoxelVariables.useFXAA;
 
 			if (VoxelVariables.useFXAA) {
@@ -173,7 +174,7 @@ public class OptionsState extends State {
 			}
 		});
 
-		parallaxButton.setOnButtonPress(() -> {
+		parallaxButton.setOnButtonPress((button, delta) -> {
 			VoxelVariables.useParallax = !VoxelVariables.useParallax;
 			if (VoxelVariables.useParallax) {
 				parallaxButton.setText("Parallax: ON");
@@ -185,7 +186,7 @@ public class OptionsState extends State {
 
 		});
 
-		motionBlurButton.setOnButtonPress(() -> {
+		motionBlurButton.setOnButtonPress((button, delta) -> {
 			VoxelVariables.useMotionBlur = !VoxelVariables.useMotionBlur;
 			if (VoxelVariables.useMotionBlur) {
 				motionBlurButton.setText("Motion Blur: ON");
@@ -197,7 +198,7 @@ public class OptionsState extends State {
 
 		});
 
-		reflectionsButton.setOnButtonPress(() -> {
+		reflectionsButton.setOnButtonPress((button, delta) -> {
 			VoxelVariables.useReflections = !VoxelVariables.useReflections;
 			if (VoxelVariables.useReflections) {
 				reflectionsButton.setText("Reflections: ON");
@@ -233,7 +234,7 @@ public class OptionsState extends State {
 	public void update(Voxel voxel, float delta) {
 		GameResources gm = voxel.getGameResources();
 		while (Mouse.next()) {
-			window.update();
+			window.update(delta);
 		}
 
 		if (!switching)
@@ -255,7 +256,7 @@ public class OptionsState extends State {
 			gm.getFrustum().calculateFrustum(gm.getMasterShadowRenderer().getProjectionMatrix(), gm.getSun_Camera());
 			if (VoxelVariables.useShadows) {
 				gm.getMasterShadowRenderer().being();
-				gm.getRenderer().prepare();
+				MasterRenderer.prepare();
 				gm.getWorldsHandler().getActiveWorld().getActiveDimension().updateChunksShadow(gm);
 				gm.getItemsDropRenderer().getTess().drawShadow(gm.getSun_Camera());
 				gm.getMasterShadowRenderer().renderEntity(
@@ -264,23 +265,23 @@ public class OptionsState extends State {
 				gm.getMasterShadowRenderer().end();
 			}
 			gm.getFrustum().calculateFrustum(gm.getRenderer().getProjectionMatrix(), gm.getCamera());
-			gm.getRenderer().prepare();
+			MasterRenderer.prepare();
 			gm.getWorldsHandler().getActiveWorld().getActiveDimension().updateChunksOcclusion(gm);
 
 			gm.getRenderingPipeline().begin();
-			gm.getRenderer().prepare();
+			MasterRenderer.prepare();
 			gm.getSkyboxRenderer().render(VoxelVariables.RED, VoxelVariables.GREEN, VoxelVariables.BLUE, delta, gm);
 			gm.getWorldsHandler().getActiveWorld().getActiveDimension().updateChunksRender(gm, false);
 			gm.getRenderer().renderEntity(
 					gm.getWorldsHandler().getActiveWorld().getActiveDimension().getPhysicsEngine().getEntities(), gm);
 			gm.getItemsDropRenderer().render(gm);
 			gm.getRenderingPipeline().end();
-			gm.getRenderer().prepare();
+			MasterRenderer.prepare();
 			gm.getRenderingPipeline().render(gm);
 			gm.getWorldsHandler().getActiveWorld().getActiveDimension().updateChunksRender(gm, true);
 			ParticleMaster.getInstance().render(gm.getCamera(), gm.getRenderer().getProjectionMatrix());
 		} else {
-			gm.getRenderer().prepare();
+			MasterRenderer.prepare(0, 0, 0, 1);
 		}
 
 		gm.getDisplay().beingNVGFrame();

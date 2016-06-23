@@ -29,10 +29,10 @@ import net.luxvacuos.voxel.client.util.Maths;
 public abstract class Component {
 
 	protected Queue<Component> childrens;
-	protected int x, y;
-	protected int rootX, rootY;
-	protected int rootW, rootH;
-	protected int width, height;
+	protected float x, y;
+	protected float rootX, rootY;
+	protected float rootW, rootH;
+	protected float width, height;
 	protected float fadeAlpha = 1;
 	protected boolean enabled = true;
 	protected boolean positionRelativeToRoot = true;
@@ -55,12 +55,13 @@ public abstract class Component {
 			}
 	}
 
-	public void update() {
+	public void update(float delta) {
 		Maths.clamp(fadeAlpha, 0, 1);
-		if (enabled)
+		if (enabled) {
 			for (Component component : childrens) {
-				component.update();
+				component.update(delta);
 			}
+		}
 	}
 
 	public void addChildren(Component comp) {
@@ -69,29 +70,34 @@ public abstract class Component {
 		childrens.add(comp);
 	}
 
-	public void setPosition(int x, int y) {
+	public void setPosition(float x, float y) {
 		this.x = x;
 		this.y = y;
 	}
 
-	public void setSize(int w, int h) {
+	public void addPosition(float dx, float dy) {
+		this.x += dx;
+		this.y += dy;
+	}
+
+	public void setSize(float w, float h) {
 		this.width = w;
 		this.height = h;
 	}
 
-	public int getX() {
+	public float getX() {
 		return x;
 	}
 
-	public int getY() {
+	public float getY() {
 		return y;
 	}
 
-	public int getWidth() {
+	public float getWidth() {
 		return width;
 	}
 
-	public int getHeight() {
+	public float getHeight() {
 		return height;
 	}
 
@@ -113,6 +119,14 @@ public abstract class Component {
 
 	public boolean isPositionRelativeToRoot() {
 		return positionRelativeToRoot;
+	}
+
+	public void setFadeAlpha(float fadeAlpha) {
+		this.fadeAlpha = fadeAlpha;
+	}
+
+	public float getFadeAlpha() {
+		return fadeAlpha;
 	}
 
 }

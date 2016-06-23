@@ -24,6 +24,7 @@ import org.lwjgl.nanovg.NanoVG;
 
 import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.voxel.client.core.GlobalStates.GameState;
+import net.luxvacuos.voxel.client.rendering.api.opengl.MasterRenderer;
 import net.luxvacuos.voxel.client.core.State;
 import net.luxvacuos.voxel.client.core.Voxel;
 import net.luxvacuos.voxel.client.resources.GameResources;
@@ -65,13 +66,13 @@ public class SPLoadingState extends State {
 
 	@Override
 	public void update(Voxel voxel, float delta) {
-		window.update();
+		window.update(delta);
 	}
 
 	@Override
 	public void render(Voxel voxel, float delta) {
 		GameResources gm = voxel.getGameResources();
-		gm.getRenderer().prepare();
+		MasterRenderer.prepare();
 		gm.getDisplay().beingNVGFrame();
 		window.render();
 		gm.getDisplay().endNVGFrame();

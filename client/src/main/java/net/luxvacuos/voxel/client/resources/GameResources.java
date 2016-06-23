@@ -117,13 +117,17 @@ public class GameResources extends UGameResources {
 		display.create(VoxelVariables.WIDTH, VoxelVariables.HEIGHT, "Voxel", VoxelVariables.VSYNC, false, false,
 				new ContextFormat(3, 3, GLFW_OPENGL_API, GLFW_OPENGL_CORE_PROFILE, true),
 				new String[] { "assets/icons/icon32.png", "assets/icons/icon64.png" });
+		loader = new Loader(display);
+		loader.loadNVGFont("Roboto-Bold", "Roboto-Bold");
+		loader.loadNVGFont("Roboto-Regular", "Roboto-Regular");
+		loader.loadNVGFont("Entypo", "Entypo", 40);
+		globalStates = new GlobalStates();
 	}
 
 	public void init(Voxel voxel) {
 		rand = new Random();
 		if (display.isVk()) {
 		}
-		loader = new Loader(display);
 		masterShadowRenderer = new MasterShadowRenderer();
 		renderer = new MasterRenderer(this);
 		skyboxRenderer = new SkyboxRenderer(loader, renderer.getProjectionMatrix());
@@ -156,13 +160,9 @@ public class GameResources extends UGameResources {
 		SoundSystemConfig.setLogger(new LoggerSoundSystem());
 		soundSystem = new SoundSystem();
 		worldsHandler = new WorldsHandler();
-		globalStates = new GlobalStates();
 	}
 
 	public void loadResources() {
-		loader.loadNVGFont("Roboto-Bold", "Roboto-Bold");
-		loader.loadNVGFont("Roboto-Regular", "Roboto-Regular");
-		loader.loadNVGFont("Entypo", "Entypo", 40);
 		torchTexture = new ParticleTexture(loader.loadTextureParticle("fire0"), 4);
 		EntityResources.loadEntityResources(loader);
 	}

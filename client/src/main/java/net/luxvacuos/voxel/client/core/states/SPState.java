@@ -42,6 +42,7 @@ import net.luxvacuos.voxel.client.core.State;
 import net.luxvacuos.voxel.client.core.Voxel;
 import net.luxvacuos.voxel.client.core.VoxelVariables;
 import net.luxvacuos.voxel.client.input.Keyboard;
+import net.luxvacuos.voxel.client.rendering.api.opengl.MasterRenderer;
 import net.luxvacuos.voxel.client.rendering.api.opengl.ParticleMaster;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.world.Dimension;
@@ -111,7 +112,7 @@ public class SPState extends State {
 		gm.getFrustum().calculateFrustum(gm.getMasterShadowRenderer().getProjectionMatrix(), gm.getSun_Camera());
 		if (VoxelVariables.useShadows) {
 			gm.getMasterShadowRenderer().being();
-			gm.getRenderer().prepare();
+			MasterRenderer.prepare();
 			gm.getWorldsHandler().getActiveWorld().getActiveDimension().updateChunksShadow(gm);
 			gm.getItemsDropRenderer().getTess().drawShadow(gm.getSun_Camera());
 			gm.getMasterShadowRenderer().renderEntity(
@@ -119,11 +120,11 @@ public class SPState extends State {
 			gm.getMasterShadowRenderer().end();
 		}
 		gm.getFrustum().calculateFrustum(gm.getRenderer().getProjectionMatrix(), gm.getCamera());
-		gm.getRenderer().prepare();
+		MasterRenderer.prepare();
 		gm.getWorldsHandler().getActiveWorld().getActiveDimension().updateChunksOcclusion(gm);
 
 		gm.getRenderingPipeline().begin();
-		gm.getRenderer().prepare();
+		MasterRenderer.prepare();
 		gm.getSkyboxRenderer().render(VoxelVariables.RED, VoxelVariables.GREEN, VoxelVariables.BLUE, delta, gm);
 		gm.getWorldsHandler().getActiveWorld().getActiveDimension().updateChunksRender(gm, false);
 		gm.getRenderer().renderEntity(
@@ -142,13 +143,12 @@ public class SPState extends State {
 		gm.getItemsDropRenderer().render(gm);
 		gm.getRenderingPipeline().end();
 
-		gm.getRenderer().prepare();
+		MasterRenderer.prepare();
 		gm.getRenderingPipeline().render(gm);
-		
-		
+
 		gm.getWorldsHandler().getActiveWorld().getActiveDimension().updateChunksRender(gm, true);
 		gm.getCamera().render();
-		
+
 		ParticleMaster.getInstance().render(gm.getCamera(), gm.getRenderer().getProjectionMatrix());
 		gm.getDisplay().beingNVGFrame();
 		gm.getDisplay().endNVGFrame();

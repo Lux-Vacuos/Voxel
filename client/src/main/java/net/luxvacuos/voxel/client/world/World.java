@@ -52,11 +52,12 @@ public abstract class World {
 	}
 
 	public void init() {
-		Logger.log("Loading " + name);
+		Logger.log("Loading World: " + name);
 		((PlayerCamera) GameResources.getInstance().getCamera()).getInventory().clearInventorty();
 		saved = false;
 		load(GameResources.getInstance());
 		localInit(GameResources.getInstance());
+		Logger.log("Load Completed");
 	}
 
 	protected abstract void localInit(GameResources gm);

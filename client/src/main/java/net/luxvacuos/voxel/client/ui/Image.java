@@ -26,8 +26,9 @@ import net.luxvacuos.voxel.client.resources.GameResources;
 public class Image extends Component {
 
 	private int image;
+	private OnAction onUpdate;
 
-	public Image(int x, int y, int w, int h, int image) {
+	public Image(float x, float y, float w, float h, int image) {
 		this.x = x;
 		this.y = y;
 		this.width = w;
@@ -40,6 +41,17 @@ public class Image extends Component {
 		UIRendering.renderImage(rootX + x, GameResources.getInstance().getDisplay().getDisplayHeight() - rootY - y,
 				width, height, image, fadeAlpha);
 		super.render();
+	}
+
+	@Override
+	public void update(float delta) {
+		if (onUpdate != null)
+			onUpdate.onAction(this, delta);
+		super.update(delta);
+	}
+
+	public void setOnUpdate(OnAction onUpdate) {
+		this.onUpdate = onUpdate;
 	}
 
 }

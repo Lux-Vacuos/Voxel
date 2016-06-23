@@ -35,7 +35,7 @@ public class Text extends Component {
 	private int fontSize = 25;
 	private NVGColor color = UIRendering.rgba(255, 255, 255, 255, NVGColor.create());
 
-	public Text(String text, int x, int y) {
+	public Text(String text, float x, float y) {
 		this.text = text;
 		this.x = x;
 		this.y = y;
