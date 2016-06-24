@@ -38,16 +38,20 @@ import java.nio.FloatBuffer;
 import org.lwjgl.BufferUtils;
 
 import net.luxvacuos.voxel.client.core.GlobalStates.GameState;
+import net.luxvacuos.voxel.client.core.CoreInfo;
 import net.luxvacuos.voxel.client.core.State;
 import net.luxvacuos.voxel.client.core.Voxel;
 import net.luxvacuos.voxel.client.core.VoxelVariables;
 import net.luxvacuos.voxel.client.input.Keyboard;
+import net.luxvacuos.voxel.client.rendering.api.nanovg.Timers;
+import net.luxvacuos.voxel.client.rendering.api.nanovg.UIRendering;
 import net.luxvacuos.voxel.client.rendering.api.opengl.MasterRenderer;
 import net.luxvacuos.voxel.client.rendering.api.opengl.ParticleMaster;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.world.Dimension;
 import net.luxvacuos.voxel.client.world.PhysicsSystem;
 import net.luxvacuos.voxel.client.world.entities.PlayerCamera;
+import net.luxvacuos.voxel.universal.api.MoltenAPI;
 
 /**
  * Single Player GameState
@@ -87,7 +91,7 @@ public class SPState extends State {
 				VoxelVariables.hideHud = !VoxelVariables.hideHud;
 			if (isKeyDown(KEY_ESCAPE)) {
 				((PlayerCamera) gm.getCamera()).unlockMouse();
-				gm.getGlobalStates().setState(GameState.IN_PAUSE);
+				gm.getGlobalStates().setState(GameState.SP_PAUSE);
 			}
 			if (isKeyDown(KEY_E)) {
 				((PlayerCamera) gm.getCamera()).unlockMouse();
@@ -151,6 +155,33 @@ public class SPState extends State {
 
 		ParticleMaster.getInstance().render(gm.getCamera(), gm.getRenderer().getProjectionMatrix());
 		gm.getDisplay().beingNVGFrame();
+		if (VoxelVariables.debug) {
+			UIRendering.renderText(
+					"Voxel " + " (" + VoxelVariables.version + ")" + " Molten API" + " (" + MoltenAPI.apiVersion + "/"
+							+ MoltenAPI.build + ")",
+					"Roboto-Bold", 5, 12, 20, UIRendering.rgba(220, 220, 220, 255, UIRendering.colorA),
+					UIRendering.rgba(255, 255, 255, 255, UIRendering.colorB));
+			UIRendering.renderText("Used VRam: " + gm.getDisplay().getUsedVRAM() + "KB " + " UPS: " + CoreInfo.ups,
+					"Roboto-Bold", 5, 95, 20, UIRendering.rgba(220, 220, 220, 255, UIRendering.colorA),
+					UIRendering.rgba(255, 255, 255, 255, UIRendering.colorB));
+			UIRendering.renderText(
+					"Loaded Chunks: " + gm.getWorldsHandler().getActiveWorld().getActiveDimension().getLoadedChunks()
+							+ "   Rendered Chunks: "
+							+ gm.getWorldsHandler().getActiveWorld().getActiveDimension().getRenderedChunks(),
+					"Roboto-Bold", 5, 115, 20, UIRendering.rgba(220, 220, 220, 255, UIRendering.colorA),
+					UIRendering.rgba(255, 255, 255, 255, UIRendering.colorB));
+			UIRendering.renderText(
+					"Position XYZ:  " + gm.getCamera().getPosition().getX() + "  " + gm.getCamera().getPosition().getY()
+							+ "  " + gm.getCamera().getPosition().getZ(),
+					"Roboto-Bold", 5, 135, 20, UIRendering.rgba(220, 220, 220, 255, UIRendering.colorA),
+					UIRendering.rgba(255, 255, 255, 255, UIRendering.colorB));
+			UIRendering.renderText(
+					"Pitch:  " + gm.getCamera().getPitch() + "   Yaw: " + gm.getCamera().getYaw() + "   Roll: "
+							+ gm.getCamera().getRoll(),
+					"Roboto-Bold", 5, 155, 20, UIRendering.rgba(220, 220, 220, 255, UIRendering.colorA),
+					UIRendering.rgba(255, 255, 255, 255, UIRendering.colorB));
+			Timers.renderDebugDisplay(5, 24, 200, 55);
+		}
 		gm.getDisplay().endNVGFrame();
 		gm.getItemsGuiRenderer().render(gm);
 

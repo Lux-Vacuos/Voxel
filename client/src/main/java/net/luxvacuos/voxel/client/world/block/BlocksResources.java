@@ -39,9 +39,9 @@ public class BlocksResources {
 	public static void createBlocks(Loader loader) {
 
 		tessellatorTextureAtlas = new TessellatorTextureAtlas(256, 256, loader.loadTextureBlocks("blocks"));
-		normalMap = loader.loadTextureBlocks("blocks_normal");
-		heightMap = loader.loadTextureBlocks("blocks_height");
-		specularMap = loader.loadTextureBlocks("blocks_specular");
+		normalMap = loader.loadTextureMisc("blocks_normal");
+		heightMap = loader.loadTextureMisc("blocks_height");
+		specularMap = loader.loadTextureMisc("blocks_specular");
 
 		RawModel rNode = loader.getObjLoader().loadObjModel("Node");
 		ModelTexture tNode = new ModelTexture(loader.loadTextureBlocks("Node"));

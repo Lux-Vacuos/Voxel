@@ -67,6 +67,7 @@ public class SPLoadingState extends State {
 	@Override
 	public void update(Voxel voxel, float delta) {
 		window.update(delta);
+		((PlayerCamera) GameResources.getInstance().getCamera()).setMouse();
 	}
 
 	@Override

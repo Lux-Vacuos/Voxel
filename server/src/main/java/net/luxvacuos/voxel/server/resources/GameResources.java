@@ -21,6 +21,7 @@
 package net.luxvacuos.voxel.server.resources;
 
 import com.esotericsoftware.kryo.Kryo;
+import com.esotericsoftware.kryo.serializers.CompatibleFieldSerializer;
 
 import net.luxvacuos.igl.CustomLog;
 import net.luxvacuos.voxel.server.core.CoreUtils;
@@ -30,9 +31,18 @@ import net.luxvacuos.voxel.server.core.Voxel;
 import net.luxvacuos.voxel.server.core.WorldSimulation;
 import net.luxvacuos.voxel.server.network.VoxelServer;
 import net.luxvacuos.voxel.server.ui.UserInterface;
+import net.luxvacuos.voxel.server.world.WorldsHandler;
 import net.luxvacuos.voxel.universal.resources.UGameResources;
 
 public class GameResources extends UGameResources {
+
+	private static GameResources instance = null;
+
+	public static GameResources getInstance() {
+		if (instance == null)
+			instance = new GameResources();
+		return instance;
+	}
 
 	private GlobalStates globalStates;
 	private Kryo kryo;
@@ -41,10 +51,14 @@ public class GameResources extends UGameResources {
 	private UserInterface userInterface;
 	private WorldSimulation worldSimulation;
 	private GameSettings gameSettings;
+	private WorldsHandler worldsHandler;
 
 	private int port;
 
-	public GameResources(int port, Voxel voxel) {
+	private GameResources() {
+	}
+
+	public void construct(Voxel voxel, int port) {
 		this.port = port;
 		userInterface = new UserInterface(voxel);
 	}
@@ -55,12 +69,14 @@ public class GameResources extends UGameResources {
 
 	public void init() {
 		kryo = new Kryo();
+		kryo.setDefaultSerializer(CompatibleFieldSerializer.class);
 		globalStates = new GlobalStates();
 		voxelServer.init(this);
 		coreUtils = new CoreUtils();
 		CustomLog.getInstance();
 		worldSimulation = new WorldSimulation();
 		gameSettings = new GameSettings();
+		worldsHandler = new WorldsHandler();
 	}
 
 	public void postInit() {
@@ -94,6 +110,10 @@ public class GameResources extends UGameResources {
 
 	public UserInterface getUserInterface() {
 		return userInterface;
+	}
+
+	public WorldsHandler getWorldsHandler() {
+		return worldsHandler;
 	}
 
 }

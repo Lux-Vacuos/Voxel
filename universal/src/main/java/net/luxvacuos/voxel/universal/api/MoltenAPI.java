@@ -9,7 +9,7 @@ public class MoltenAPI {
 
 	public static final String apiVersion = "0.0.2";
 	public static final int apiIntVersion = 2;
-	public static final int build = 7;
+	public static final int build = 8;
 
 	private Class<?> api;
 	private Object apiI;
@@ -19,6 +19,8 @@ public class MoltenAPI {
 	public MoltenAPI(String prefix) throws Exception {
 		if (prefix.equals("Client"))
 			api = Class.forName("net.luxvacuos.voxel.client.api.MoltenAPI");
+		else if (prefix.equals("Server"))
+			api = Class.forName("net.luxvacuos.voxel.server.api.MoltenAPI");
 		apiI = api.newInstance();
 		methods = new HashMap<>();
 		for (Method mth : api.getMethods()) {

@@ -48,10 +48,10 @@ public abstract class World {
 	public World(String name) {
 		this.name = name;
 		dimensions = new HashMap<>();
-		file = new File(VoxelVariables.WORLD_PATH + name + "/world.dat");
 	}
 
 	public void init() {
+		file = new File(VoxelVariables.WORLD_PATH + name + "/world.dat");
 		Logger.log("Loading World: " + name);
 		((PlayerCamera) GameResources.getInstance().getCamera()).getInventory().clearInventorty();
 		saved = false;
@@ -62,7 +62,7 @@ public abstract class World {
 
 	protected abstract void localInit(GameResources gm);
 
-	private void load(GameResources gm) {
+	protected void load(GameResources gm) {
 		if (file.exists()) {
 			Input input;
 			try {
@@ -76,11 +76,12 @@ public abstract class World {
 		}
 	}
 
-	private void save(GameResources gm) {
+	protected void save() {
 		Output output;
 		try {
 			output = new Output(new FileOutputStream(file));
-			gm.getKryo().writeObject(output, ((PlayerCamera) gm.getCamera()).getInventory());
+			GameResources.getInstance().getKryo().writeObject(output,
+					((PlayerCamera) GameResources.getInstance().getCamera()).getInventory());
 			output.close();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -113,15 +114,15 @@ public abstract class World {
 		return name;
 	}
 
-	public void dispose(GameResources gm) throws Exception {
+	public void dispose() {
 		if (!saved) {
 			Logger.log("Saving " + name);
-			save(gm);
+			save();
 			for (Dimension dim : dimensions.values()) {
-				dim.clearDimension(gm);
+				dim.clearDimension();
 			}
-			activeDimension.getPhysicsEngine().removeEntity(gm.getCamera());
-			((PlayerCamera) gm.getCamera()).getInventory().clearInventorty();
+			activeDimension.getPhysicsEngine().removeEntity(GameResources.getInstance().getCamera());
+			((PlayerCamera) GameResources.getInstance().getCamera()).getInventory().clearInventorty();
 			saved = true;
 		}
 	}

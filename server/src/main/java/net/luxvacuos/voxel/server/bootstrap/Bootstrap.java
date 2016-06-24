@@ -21,10 +21,12 @@
 package net.luxvacuos.voxel.server.bootstrap;
 
 import java.io.File;
+import java.io.IOException;
 
 import com.esotericsoftware.minlog.Log;
 
 import net.luxvacuos.voxel.server.core.Voxel;
+import net.luxvacuos.voxel.server.core.VoxelVariables;
 
 public class Bootstrap {
 
@@ -73,9 +75,16 @@ public class Bootstrap {
 	}
 
 	static {
-		File file = new File("logs");
-		if (!file.exists())
-			file.mkdirs();
+		try {
+			File file = new File(new File(".").getCanonicalPath() + "/logs");
+			if (!file.exists())
+				file.mkdirs();
+			File file1 = new File(VoxelVariables.WORLD_PATH);
+			if (!file1.exists())
+				file1.mkdirs();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public static void main(String[] args) throws Exception {

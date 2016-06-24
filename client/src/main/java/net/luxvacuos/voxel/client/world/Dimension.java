@@ -63,50 +63,45 @@ import net.luxvacuos.voxel.universal.core.exception.SaveChunkException;
 
 public abstract class Dimension {
 
-	private int chunkDim;
-	private Map<ChunkKey, Chunk> chunks;
-	private SimplexNoise noise;
-	private String name;
-	private int seedi;
-	private DimensionData data;
-	private ChunkGenerator chunkGenerator;
-	private Queue<LightNodeAdd> lightNodeAdds;
-	private Queue<LightNodeRemoval> lightNodeRemovals;
-	private Queue<ChunkNodeRemoval> chunkNodeRemovals;
-	private ParticleSystem particleSystem;
-	private DimensionService dimensionService;
-	private int renderedChunks = 0;
-	private int loadedChunks = 0;
-	private Engine physicsEngine;
-	private PhysicsSystem physicsSystem;
-	public static int CHUNKS_LOADED_PER_FRAME = 1;
+	protected int chunkDim;
+	protected Map<ChunkKey, Chunk> chunks;
+	protected SimplexNoise noise;
+	protected String name;
+	protected int seedi;
+	protected DimensionData data;
+	protected ChunkGenerator chunkGenerator;
+	protected Queue<LightNodeAdd> lightNodeAdds;
+	protected Queue<LightNodeRemoval> lightNodeRemovals;
+	protected Queue<ChunkNodeRemoval> chunkNodeRemovals;
+	protected ParticleSystem particleSystem;
+	protected DimensionService dimensionService;
+	protected int renderedChunks = 0;
+	protected int loadedChunks = 0;
+	protected Engine physicsEngine;
+	protected PhysicsSystem physicsSystem;
+	public static int CHUNKS_LOADED_PER_FRAME = 6;
 
 	public Dimension(String name, Random seed, int chunkDim, GameResources gm) {
 		this.name = name;
 		this.chunkDim = chunkDim;
 		data = new DimensionData();
 		data.addObject("Seed", seed.nextInt());
+		init(gm);
+	}
 
+	protected void init(GameResources gm) {
 		File filec = new File(VoxelVariables.WORLD_PATH + name + "/dimension_" + chunkDim);
 		if (!filec.exists())
 			filec.mkdirs();
 		if (existDimFile())
-			try {
-				load(gm);
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			}
-		init(gm);
-	}
-
-	private void init(GameResources gm) {
+			load();
 		particleSystem = new ParticleSystem(gm.getTorchTexture(), 2, 1, -0.01f, 4, 0.5f);
 		particleSystem.setDirection(new Vector3f(0, 1, 0), 0.1f);
 		particleSystem.setLifeError(0.8f);
 		particleSystem.setScaleError(0.2f);
 		particleSystem.setSpeedError(0.2f);
 		seedi = (int) data.getObject("Seed");
-		noise = new SimplexNoise(256, 0.15f, seedi);
+		noise = new SimplexNoise(256, 0.5f, seedi);
 		lightNodeAdds = new LinkedList<>();
 		lightNodeRemovals = new LinkedList<>();
 		chunkNodeRemovals = new LinkedList<>();
@@ -118,20 +113,27 @@ public abstract class Dimension {
 		physicsEngine.addSystem(physicsSystem);
 	}
 
-	private void load(GameResources gm) throws FileNotFoundException {
-		Input input = new Input(new FileInputStream(VoxelVariables.WORLD_PATH + name + "/dim_" + chunkDim + ".dat"));
-		data = gm.getKryo().readObject(input, DimensionData.class);
-		input.close();
+	protected void load() {
+		Input input;
+		try {
+			input = new Input(new FileInputStream(VoxelVariables.WORLD_PATH + name + "/dim_" + chunkDim + ".dat"));
+			data = GameResources.getInstance().getKryo().readObject(input, DimensionData.class);
+			input.close();
+		} catch (FileNotFoundException e) {
+		}
 	}
 
-	private void save(GameResources gm) throws FileNotFoundException {
-		Output output = new Output(
-				new FileOutputStream(VoxelVariables.WORLD_PATH + name + "/dim_" + chunkDim + ".dat"));
-		gm.getKryo().writeObject(output, data);
-		output.close();
+	protected void save() {
+		Output output;
+		try {
+			output = new Output(new FileOutputStream(VoxelVariables.WORLD_PATH + name + "/dim_" + chunkDim + ".dat"));
+			GameResources.getInstance().getKryo().writeObject(output, data);
+			output.close();
+		} catch (FileNotFoundException e) {
+		}
 	}
 
-	public void updateChunksGeneration(GameResources gm, float delta) throws Exception {
+	public void updateChunksGeneration(GameResources gm, float delta) {
 		int chunkLoaded = 0;
 		for (float zr = -VoxelVariables.radius * 16f; zr <= VoxelVariables.radius * 16f; zr += 16f) {
 			float cz = (float) (gm.getCamera().getPosition().getZ() + zr);
@@ -144,10 +146,7 @@ public abstract class Dimension {
 					int zz = (int) (cz / 16f);
 
 					if (!hasChunk(xx, yy, zz) && chunkLoaded < CHUNKS_LOADED_PER_FRAME) {
-						if (existChunkFile(xx, yy, zz))
-							loadChunk(xx, yy, zz, gm);
-						else if (VoxelVariables.generateChunks)
-							addChunk(new Chunk(xx, yy, zz));
+						addChunk(new Chunk(xx, yy, zz));
 						chunkLoaded++;
 					} else if (hasChunk(xx, yy, zz)) {
 						Chunk chunk = getChunk(xx, yy, zz);
@@ -176,7 +175,6 @@ public abstract class Dimension {
 
 		while (!chunkNodeRemovals.isEmpty()) {
 			ChunkNodeRemoval node = chunkNodeRemovals.poll();
-			saveChunk(node.chunk, gm);
 			removeChunk(node.chunk);
 		}
 	}
@@ -277,7 +275,7 @@ public abstract class Dimension {
 			}
 	}
 
-	private void setupLightRemove(int x, int y, int z, int lightLevel) {
+	protected void setupLightRemove(int x, int y, int z, int lightLevel) {
 		int cx = x >> 4;
 		int cz = z >> 4;
 		int cy = y >> 4;
@@ -306,22 +304,22 @@ public abstract class Dimension {
 		}
 	}
 
-	public void saveChunk(Chunk chunk, GameResources gm) throws SaveChunkException {
+	public void saveChunk(Chunk chunk) {
 		try {
 			Output output = new Output(new FileOutputStream(VoxelVariables.WORLD_PATH + name + "/dimension_" + chunkDim
 					+ "/chunk_" + chunk.cx + "_" + chunk.cy + "_" + chunk.cz + ".dat"));
-			gm.getKryo().writeObject(output, chunk);
+			GameResources.getInstance().getKryo().writeObject(output, chunk);
 			output.close();
 		} catch (Exception e) {
 			throw new SaveChunkException(e);
 		}
 	}
 
-	public void loadChunk(int cx, int cy, int cz, GameResources gm) throws LoadChunkException {
+	public void loadChunk(int cx, int cy, int cz) {
 		try {
 			Input input = new Input(new FileInputStream(VoxelVariables.WORLD_PATH + name + "/dimension_" + chunkDim
 					+ "/chunk_" + cx + "_" + cy + "_" + cz + ".dat"));
-			Chunk chunk = gm.getKryo().readObject(input, Chunk.class);
+			Chunk chunk = GameResources.getInstance().getKryo().readObject(input, Chunk.class);
 			input.close();
 			if (chunk != null) {
 				chunk.onLoad();
@@ -408,7 +406,7 @@ public abstract class Dimension {
 		if (chunk != null)
 			return chunk.getLocalBlock(x, y, z);
 		else
-			return Block.Air;
+			return Block.NULL;
 	}
 
 	public List<BoundingBox> getGlobalBoundingBox(BoundingBox box) {
@@ -473,9 +471,9 @@ public abstract class Dimension {
 		return 0;
 	}
 
-	public void clearDimension(GameResources gm) throws Exception {
+	public void clearDimension() {
 		Logger.log("Saving Dimension " + chunkDim);
-		save(gm);
+		save();
 		for (Chunk chunk : chunks.values()) {
 			if (chunk != null) {
 				chunkNodeRemovals.add(new ChunkNodeRemoval(chunk));
@@ -483,7 +481,7 @@ public abstract class Dimension {
 		}
 		while (!chunkNodeRemovals.isEmpty()) {
 			ChunkNodeRemoval node = chunkNodeRemovals.poll();
-			saveChunk(node.chunk, gm);
+			saveChunk(node.chunk);
 			removeChunk(node.chunk);
 		}
 		dimensionService.es.shutdown();

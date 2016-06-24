@@ -20,6 +20,9 @@
 
 package net.luxvacuos.voxel.server.core;
 
+import java.io.File;
+import java.io.IOException;
+
 /**
  * Locations of all global variables
  * 
@@ -57,7 +60,15 @@ public class VoxelVariables {
 	/**
 	 * World Folder Path
 	 */
-	public static final String worldPath = "world/";
+	public static String WORLD_PATH = null;
+	static {
+		try {
+			WORLD_PATH = new File(".").getCanonicalPath() + "/worlds/";
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+	}
 
 	/**
 	 * Update Global Variables

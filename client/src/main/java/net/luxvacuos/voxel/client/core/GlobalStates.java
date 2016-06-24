@@ -22,15 +22,16 @@ package net.luxvacuos.voxel.client.core;
 
 import net.luxvacuos.voxel.client.core.states.AboutState;
 import net.luxvacuos.voxel.client.core.states.GameSPInventoryState;
-import net.luxvacuos.voxel.client.core.states.SPState;
-import net.luxvacuos.voxel.client.core.states.SplashScreenState;
-import net.luxvacuos.voxel.client.core.states.InPauseState;
 import net.luxvacuos.voxel.client.core.states.MPLoadingState;
-import net.luxvacuos.voxel.client.core.states.SPLoadingState;
 import net.luxvacuos.voxel.client.core.states.MPSelectionState;
+import net.luxvacuos.voxel.client.core.states.MPState;
 import net.luxvacuos.voxel.client.core.states.MainMenuState;
 import net.luxvacuos.voxel.client.core.states.OptionsState;
+import net.luxvacuos.voxel.client.core.states.SPLoadingState;
+import net.luxvacuos.voxel.client.core.states.SPPauseState;
 import net.luxvacuos.voxel.client.core.states.SPSelectionState;
+import net.luxvacuos.voxel.client.core.states.SPState;
+import net.luxvacuos.voxel.client.core.states.SplashScreenState;
 
 /**
  * States Handler
@@ -47,11 +48,11 @@ public class GlobalStates {
 	private InternalState internalState;
 
 	public enum GameState {
-		SP(new SPState()), MAINMENU(new MainMenuState()), IN_PAUSE(new InPauseState()), SP_LOADING_WORLD(
+		SP(new SPState()), MAINMENU(new MainMenuState()), SP_PAUSE(new SPPauseState()), SP_LOADING_WORLD(
 				new SPLoadingState()), OPTIONS(new OptionsState()), SP_SELECTION(new SPSelectionState()), ABOUT(
 						new AboutState()), MP_SELECTION(new MPSelectionState()), LOADING_MP_WORLD(
-								new MPLoadingState()), GAME_SP_INVENTORY(
-										new GameSPInventoryState()), SPLASH_SCREEN(new SplashScreenState());
+								new MPLoadingState()), GAME_SP_INVENTORY(new GameSPInventoryState()), SPLASH_SCREEN(
+										new SplashScreenState()), MP(new MPState());
 
 		GameState(State state) {
 			this.state = state;

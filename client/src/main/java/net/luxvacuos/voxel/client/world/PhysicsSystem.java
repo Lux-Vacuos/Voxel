@@ -211,7 +211,7 @@ public class PhysicsSystem extends EntitySystem {
 				BlockBase b = dim.getGlobalBlock(bx, by, bz);
 				if (b == Block.Lava)
 					life.life -= 0.2f;
-				if (!b.isTransparent())
+				if (!b.isTransparent() && b.getId() != Block.NULL.getId())
 					life.life -= 0.5f;
 			}
 

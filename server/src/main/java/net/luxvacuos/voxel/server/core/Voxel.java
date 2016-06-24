@@ -29,6 +29,7 @@ import net.luxvacuos.voxel.server.bootstrap.Bootstrap;
 import net.luxvacuos.voxel.server.core.GlobalStates.InternalState;
 import net.luxvacuos.voxel.server.resources.GameResources;
 import net.luxvacuos.voxel.server.ui.UserInterface;
+import net.luxvacuos.voxel.server.world.DefaultWorld;
 import net.luxvacuos.voxel.universal.api.ModInitialization;
 import net.luxvacuos.voxel.universal.api.MoltenAPI;
 import net.luxvacuos.voxel.universal.core.UVoxel;
@@ -57,7 +58,8 @@ public class Voxel extends UVoxel {
 		} catch (IOException E) {
 			E.printStackTrace();
 		}
-		gameResources = new GameResources(port, this);
+		gameResources = GameResources.getInstance();
+		getGameResources().construct(this, port);
 		getGameResources().getUserInterface().getThreadUI().start();
 		while (!getGameResources().getUserInterface().isStarted())
 			Thread.sleep(100);
@@ -82,6 +84,9 @@ public class Voxel extends UVoxel {
 		getGameResources().getVoxelServer().connect();
 		getGameResources().getUserInterface();
 		UserInterface.setReady(true);
+		GameResources.getInstance().getWorldsHandler().registerWorld(new DefaultWorld("world"));
+		GameResources.getInstance().getWorldsHandler().setActiveWorld("world");
+		GameResources.getInstance().getWorldsHandler().getActiveWorld().init();
 	}
 
 	private void mainLoop() throws Exception {
@@ -118,6 +123,7 @@ public class Voxel extends UVoxel {
 
 	private void dispose() {
 		Logger.log("Stopping Server");
+		GameResources.getInstance().getWorldsHandler().getActiveWorld().dispose();
 		getGameResources().dispose();
 	}
 

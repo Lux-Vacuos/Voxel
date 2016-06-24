@@ -182,6 +182,8 @@ public class Chunk {
 			for (int z = 0; z < sizeZ; z++) {
 				for (int y = 0; y < sizeY; y++) {
 					BlockBase block = blocks[x][y][z];
+					if (block == null)
+						continue;
 					if (block == Block.Torch) {
 						block.generateCustomModel(tess, x + posX, y + posY, z + posZ, 1,
 								cullFaceUpSolidBlock(block, x + posX, y + posY, z + posZ, dimension),

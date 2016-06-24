@@ -184,7 +184,7 @@ public class Voxel extends UVoxel {
 		try {
 			if (!disposed && loaded)
 				try {
-					getGameResources().getWorldsHandler().getActiveWorld().dispose(getGameResources());
+					getGameResources().getWorldsHandler().getActiveWorld().dispose();
 					dispose();
 				} catch (Exception e1) {
 				}

@@ -250,7 +250,7 @@ public class OptionsState extends State {
 	@Override
 	public void render(Voxel voxel, float delta) {
 		GameResources gm = voxel.getGameResources();
-		if (gm.getGlobalStates().getOldState().equals(GameState.IN_PAUSE)) {
+		if (gm.getGlobalStates().getOldState().equals(GameState.SP_PAUSE)) {
 			gm.getWorldsHandler().getActiveWorld().getActiveDimension().lighting();
 			gm.getSun_Camera().setPosition(gm.getCamera().getPosition());
 			gm.getFrustum().calculateFrustum(gm.getMasterShadowRenderer().getProjectionMatrix(), gm.getSun_Camera());

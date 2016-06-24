@@ -55,25 +55,18 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.Callback;
 import net.luxvacuos.igl.Logger;
-import net.luxvacuos.voxel.server.core.CoreInfo;
 import net.luxvacuos.voxel.server.core.CoreUtils;
-import net.luxvacuos.voxel.server.core.Voxel;
 import net.luxvacuos.voxel.server.core.commands.CommandsHandler;
 import net.luxvacuos.voxel.server.core.commands.KickCommand;
 import net.luxvacuos.voxel.server.core.commands.StopCommand;
 import net.luxvacuos.voxel.server.core.commands.TimeCommand;
 import net.luxvacuos.voxel.server.network.ConnectionsHandler;
+import net.luxvacuos.voxel.server.resources.GameResources;
 
 public class MainUI extends Application {
 
-	private static Voxel voxel;
-
 	static void launchUI(String... args) {
 		launch(args);
-	}
-
-	static void setVoxel(Voxel voxel) {
-		MainUI.voxel = voxel;
 	}
 
 	private boolean close = false;
@@ -138,14 +131,15 @@ public class MainUI extends Application {
 			public Void call() throws Exception {
 				while (!UserInterface.ready)
 					Thread.sleep(100);
-
 				while (!close) {
-					textUps.setText("Updates Per Second: " + CoreInfo.ups);
+					textUps.setText("Loaded Chunks: " + GameResources.getInstance().getWorldsHandler().getActiveWorld()
+							.getActiveDimension().getLoadedChunks());
+
 					Platform.runLater(new Runnable() {
 						@Override
 						public void run() {
 							players.clear();
-							players.addAll(voxel.getGameResources().getVoxelServer().getNames());
+							players.addAll(GameResources.getInstance().getVoxelServer().getNames());
 						}
 					});
 					coreUtils.sync(1);
@@ -236,7 +230,7 @@ public class MainUI extends Application {
 						Logger.log(item + " was kicked from this server");
 						ConnectionsHandler.getInstace().getByName(item).close();
 						param.getItems().remove(item);
-						voxel.getGameResources().getVoxelServer().updateNames();
+						GameResources.getInstance().getVoxelServer().updateNames();
 					}
 				});
 				MenuItem banPlayer = new MenuItem();
@@ -316,11 +310,10 @@ public class MainUI extends Application {
 		Tab status = new Tab("Status");
 		status.setClosable(false);
 		GridPane gridStatus = new GridPane();
-		gridStatus.setAlignment(Pos.CENTER);
 		gridStatus.setHgap(10);
 		gridStatus.setVgap(10);
 		gridStatus.setPadding(new Insets(10, 10, 10, 10));
-		textUps = new Text();
+		textUps = new Text("Loaded Chunks: ");
 		gridStatus.getChildren().add(textUps);
 		status.setContent(gridStatus);
 

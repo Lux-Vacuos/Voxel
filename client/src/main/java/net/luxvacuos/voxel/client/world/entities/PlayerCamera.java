@@ -106,7 +106,7 @@ public class PlayerCamera extends Camera {
 		if (super.getComponent(LifeComponent.class).life <= 0 && !died) {
 			died = true;
 			try {
-				gm.getWorldsHandler().getActiveWorld().dispose(gm);
+				gm.getWorldsHandler().getActiveWorld().dispose();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -235,7 +235,7 @@ public class PlayerCamera extends Camera {
 				speed = 1f;
 
 		}
-
+		
 		/*
 		 * if (isKeyDown(Keyboard.KEY_Y)) {
 		 * gm.getWorldsHandler().getActiveWorld().switchDimension(0, gm); } if

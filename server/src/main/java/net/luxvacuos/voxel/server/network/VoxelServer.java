@@ -31,6 +31,26 @@ import com.esotericsoftware.kryonet.Server;
 import net.luxvacuos.igl.vector.Vector2f;
 import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.voxel.server.resources.GameResources;
+import net.luxvacuos.voxel.server.world.block.BlockBase;
+import net.luxvacuos.voxel.server.world.block.BlockEntity;
+import net.luxvacuos.voxel.server.world.block.types.BlockAir;
+import net.luxvacuos.voxel.server.world.block.types.BlockCobblestone;
+import net.luxvacuos.voxel.server.world.block.types.BlockDiamondOre;
+import net.luxvacuos.voxel.server.world.block.types.BlockDirt;
+import net.luxvacuos.voxel.server.world.block.types.BlockGlass;
+import net.luxvacuos.voxel.server.world.block.types.BlockGoldOre;
+import net.luxvacuos.voxel.server.world.block.types.BlockGrass;
+import net.luxvacuos.voxel.server.world.block.types.BlockIce;
+import net.luxvacuos.voxel.server.world.block.types.BlockIndes;
+import net.luxvacuos.voxel.server.world.block.types.BlockLava;
+import net.luxvacuos.voxel.server.world.block.types.BlockNode;
+import net.luxvacuos.voxel.server.world.block.types.BlockPedestal;
+import net.luxvacuos.voxel.server.world.block.types.BlockSand;
+import net.luxvacuos.voxel.server.world.block.types.BlockStone;
+import net.luxvacuos.voxel.server.world.block.types.BlockTorch;
+import net.luxvacuos.voxel.server.world.block.types.BlockWater;
+import net.luxvacuos.voxel.server.world.block.types.BlockWood;
+import net.luxvacuos.voxel.server.world.chunks.Chunk;
 import net.luxvacuos.voxel.universal.network.packets.UpdateNames;
 import net.luxvacuos.voxel.universal.network.packets.Username;
 import net.luxvacuos.voxel.universal.network.packets.WorldTime;
@@ -47,7 +67,7 @@ public class VoxelServer {
 	}
 
 	public void init(GameResources gm) {
-		server = new Server();
+		server = new Server(16384, 10240);
 		server.start();
 		server.addListener(new DedicatedListener(gm));
 		Kryo kryo = server.getKryo();
@@ -58,6 +78,31 @@ public class VoxelServer {
 		kryo.register(UpdateNames.class);
 		kryo.register(List.class);
 		kryo.register(ArrayList.class);
+		kryo.register(Chunk.class);
+		kryo.register(BlockBase[][][].class);
+		kryo.register(BlockBase[][].class);
+		kryo.register(BlockBase[].class);
+		kryo.register(BlockEntity.class);
+		kryo.register(BlockAir.class);
+		kryo.register(BlockCobblestone.class);
+		kryo.register(BlockDiamondOre.class);
+		kryo.register(BlockDirt.class);
+		kryo.register(BlockGlass.class);
+		kryo.register(BlockGoldOre.class);
+		kryo.register(BlockGrass.class);
+		kryo.register(BlockIce.class);
+		kryo.register(BlockIndes.class);
+		kryo.register(BlockLava.class);
+		kryo.register(BlockNode.class);
+		kryo.register(BlockPedestal.class);
+		kryo.register(BlockSand.class);
+		kryo.register(BlockStone.class);
+		kryo.register(BlockTorch.class);
+		kryo.register(BlockWater.class);
+		kryo.register(BlockWood.class);
+		kryo.register(byte[][][].class);
+		kryo.register(byte[][].class);
+		kryo.register(byte[].class);
 	}
 
 	public void connect() {

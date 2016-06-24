@@ -25,6 +25,7 @@ import com.esotericsoftware.kryonet.Listener;
 
 import net.luxvacuos.igl.Logger;
 import net.luxvacuos.voxel.client.resources.GameResources;
+import net.luxvacuos.voxel.client.world.chunks.Chunk;
 import net.luxvacuos.voxel.universal.network.packets.UpdateNames;
 import net.luxvacuos.voxel.universal.network.packets.Username;
 import net.luxvacuos.voxel.universal.network.packets.WorldTime;
@@ -50,6 +51,8 @@ public class DedicatedListener extends Listener {
 		} else if (object instanceof String) {
 			Logger.log((String) object);
 		} else if (object instanceof UpdateNames) {
+		} else if (object instanceof Chunk) {
+			gm.getWorldsHandler().getActiveWorld().getActiveDimension().addChunk((Chunk) object);
 		}
 	}
 

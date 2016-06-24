@@ -86,12 +86,12 @@ void main(void){
     }
     image += texture(composite0, texcoord);
     image += texture(composite1, texcoord);
-    
+    /*
 	if(data.b != 1) {
 		float visibility = exp(-pow((distance*density),gradient));
 		visibility = clamp(visibility,0.95,1.1);
     	image.rgb = mix(skyColor.rgb, image.rgb, visibility);
-	}
+	}*/
     if(camUnderWater == 1){
 		out_Color = mix(vec4(0.0,0.0,0.3125,1.0),image,0.5);
 	} else {

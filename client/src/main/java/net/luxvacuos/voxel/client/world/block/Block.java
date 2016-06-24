@@ -32,6 +32,7 @@ import net.luxvacuos.voxel.client.world.block.types.BlockIndes;
 import net.luxvacuos.voxel.client.world.block.types.BlockLava;
 import net.luxvacuos.voxel.client.world.block.types.BlockLeaves;
 import net.luxvacuos.voxel.client.world.block.types.BlockNode;
+import net.luxvacuos.voxel.client.world.block.types.BlockNull;
 import net.luxvacuos.voxel.client.world.block.types.BlockPedestal;
 import net.luxvacuos.voxel.client.world.block.types.BlockSand;
 import net.luxvacuos.voxel.client.world.block.types.BlockStone;
@@ -47,6 +48,7 @@ import net.luxvacuos.voxel.client.world.block.types.BlockWood;
  */
 public class Block {
 
+	public static final BlockBase NULL = new BlockNull();
 	public static final BlockBase Air = new BlockAir();
 	public static final BlockBase Stone = new BlockStone();
 	public static final BlockBase Grass = new BlockGrass();

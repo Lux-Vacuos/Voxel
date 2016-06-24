@@ -24,16 +24,18 @@ import java.io.IOException;
 
 import org.lwjgl.nanovg.NanoVG;
 
+import net.luxvacuos.voxel.client.core.GlobalStates.GameState;
 import net.luxvacuos.voxel.client.core.State;
 import net.luxvacuos.voxel.client.core.Voxel;
 import net.luxvacuos.voxel.client.core.VoxelVariables;
-import net.luxvacuos.voxel.client.core.GlobalStates.GameState;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.UIRendering;
 import net.luxvacuos.voxel.client.rendering.api.opengl.MasterRenderer;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.ui.Button;
 import net.luxvacuos.voxel.client.ui.Text;
 import net.luxvacuos.voxel.client.ui.Window;
+import net.luxvacuos.voxel.client.world.ClientWorld;
+import net.luxvacuos.voxel.client.world.entities.PlayerCamera;
 
 public class MPLoadingState extends State {
 
@@ -83,6 +85,13 @@ public class MPLoadingState extends State {
 				trying = true;
 				gm.getVoxelClient().connect(4059);
 				message.setText("Loading World");
+				GameResources.getInstance().getWorldsHandler().registerWorld(new ClientWorld());
+				GameResources.getInstance().getWorldsHandler().setActiveWorld("server");
+				GameResources.getInstance().getWorldsHandler().getActiveWorld().init();
+				GameResources.getInstance().getWorldsHandler().getActiveWorld().getActiveDimension().getPhysicsEngine()
+						.addEntity(GameResources.getInstance().getCamera());
+				((PlayerCamera) GameResources.getInstance().getCamera()).setMouse();
+				switchTo(GameState.MP);
 			} catch (IOException e) {
 				VoxelVariables.onServer = false;
 				message.setText(e.getMessage());

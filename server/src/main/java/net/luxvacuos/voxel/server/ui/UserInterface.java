@@ -30,10 +30,8 @@ public class UserInterface {
 
 	public UserInterface(Voxel voxel) {
 		threadUI = new Thread(new Runnable() {
-
 			@Override
 			public void run() {
-				MainUI.setVoxel(voxel);
 				MainUI.launchUI();
 			}
 		});
@@ -48,7 +46,7 @@ public class UserInterface {
 	public boolean isStarted() {
 		return started;
 	}
-	
+
 	public static void setReady(boolean ready) {
 		UserInterface.ready = ready;
 	}
