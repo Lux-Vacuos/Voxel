@@ -20,8 +20,6 @@
 
 package net.luxvacuos.voxel.client.world.chunks;
 
-import java.util.ArrayList;
-
 public class ChunkKey implements Cloneable {
 	public int cx, cy, cz;
 
@@ -51,35 +49,6 @@ public class ChunkKey implements Cloneable {
 	@Override
 	public ChunkKey clone() {
 		return new ChunkKey(cx, cy, cz);
-	}
-
-	private static ArrayList<ChunkKey> pool = new ArrayList<ChunkKey>();
-	public static int cnt;
-
-	public static ChunkKey alloc(int cx, int cy, int cz) {
-		ChunkKey c;
-		synchronized (pool) {
-			int size = pool.size();
-			if (size == 0) {
-				cnt++;
-				return new ChunkKey(cx, cy, cz);
-			}
-			c = pool.remove(size - 1);
-		}
-		c.cx = cx;
-		c.cy = cy;
-		c.cz = cz;
-		return c;
-	}
-
-	private static void free(ChunkKey c) {
-		synchronized (pool) {
-			pool.add(c);
-		}
-	}
-
-	public void free() {
-		free(this);
 	}
 
 }

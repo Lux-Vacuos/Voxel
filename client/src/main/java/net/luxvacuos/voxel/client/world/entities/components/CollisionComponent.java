@@ -31,6 +31,7 @@ public class CollisionComponent implements Component {
 	public BoundingBox boundingBox = new BoundingBox();
 	
 	public Vector3 min, max;
+	public boolean enabled = true;
 
 	public void update(Vector3f position) {
 		boundingBox.set(new Vector3(position.x + min.x, position.y + min.y, position.z + min.z),

@@ -28,7 +28,27 @@ import de.matthiasmann.twl.utils.PNGDecoder;
 
 public class DisplayUtils {
 
-	private long variableYieldTime, lastTime;
+	private Sync sync;
+
+	public DisplayUtils() {
+		String osName = System.getProperty("os.name");
+
+		if (osName.startsWith("Win")) {
+			Thread timerAccuracyThread = new Thread(new Runnable() {
+				public void run() {
+					try {
+						Thread.sleep(Long.MAX_VALUE);
+					} catch (Exception e) {
+					}
+				}
+			});
+
+			timerAccuracyThread.setName("LWJGL Timer");
+			timerAccuracyThread.setDaemon(true);
+			timerAccuracyThread.start();
+		}
+		sync = new Sync();
+	}
 
 	public ByteBuffer loadIcon(String path) throws IOException {
 		InputStream file = getClass().getClassLoader().getResourceAsStream(path);
@@ -43,35 +63,7 @@ public class DisplayUtils {
 	}
 
 	public void sync(int fps) {
-		if (fps <= 0)
-			return;
-		long sleepTime = 1000000000 / fps;
-		long yieldTime = Math.min(sleepTime, variableYieldTime + sleepTime % (1000 * 1000));
-		long overSleep = 0;
-
-		try {
-			while (true) {
-				long t = System.nanoTime() - lastTime;
-
-				if (t < sleepTime - yieldTime) {
-					Thread.sleep(1);
-				} else if (t < sleepTime) {
-					Thread.yield();
-				} else {
-					overSleep = t - sleepTime;
-					break;
-				}
-			}
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		} finally {
-			lastTime = System.nanoTime() - Math.min(overSleep, sleepTime);
-			if (overSleep > variableYieldTime) {
-				variableYieldTime = Math.min(variableYieldTime + 200 * 1000, sleepTime);
-			} else if (overSleep < variableYieldTime - 200 * 1000) {
-				variableYieldTime = Math.max(variableYieldTime - 2 * 1000, 0);
-			}
-		}
+		sync.sync(fps);
 	}
 
 }

@@ -1,3 +1,23 @@
+/*
+ * This file is part of Voxel
+ * 
+ * Copyright (C) 2016 Lux Vacuos
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * 
+ */
+
 package net.luxvacuos.voxel.client.world.chunks;
 
 import static org.lwjgl.opengl.GL15.GL_SAMPLES_PASSED;
@@ -11,13 +31,11 @@ import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import net.luxvacuos.igl.vector.Vector3f;
-import net.luxvacuos.voxel.client.core.VoxelVariables;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Tessellator;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.resources.models.ParticlePoint;
 import net.luxvacuos.voxel.client.util.Maths;
 import net.luxvacuos.voxel.client.world.Dimension;
-import net.luxvacuos.voxel.client.world.DimensionService;
 import net.luxvacuos.voxel.client.world.block.Block;
 import net.luxvacuos.voxel.client.world.block.BlockBase;
 import net.luxvacuos.voxel.client.world.block.BlockEntity;
@@ -29,41 +47,41 @@ public class Chunk {
 	public int posX, posY, posZ, cx, cy, cz;
 	public BlockBase[][][] blocks;
 	public byte[][][] lightMap;
-	public boolean created = false, decorated = false, cavesGenerated = false;
-	public transient boolean needsRebuild = true, updated = false, updating = false, empty = true, visible = false,
-			creating = false, decorating = false, updatingBlocks = false, updatedBlocks = false;
+	public boolean decorated = false, cavesGenerated = false;
+	public boolean loaded = false, empty = true, updatedBlocks = false, rebuild = true, unloadGraphics = false,
+			readyToRemove = false;
 	protected transient Tessellator tess;
 	protected transient float distance;
 	protected transient List<BlockEntity> blockEntities;
 	protected transient int sizeX, sizeY, sizeZ;
 	protected transient Queue<ParticlePoint> particlePoints;
 
-	public Chunk(int cx, int cy, int cz) {
-		this.cx = cx;
-		this.cy = cy;
-		this.cz = cz;
+	public Chunk(ChunkNode node, Dimension dim) {
+		this.cx = node.cx;
+		this.cy = node.cy;
+		this.cz = node.cz;
 		this.posX = cx * 16;
 		this.posZ = cz * 16;
 		this.posY = cy * 16;
-		init();
 	}
 
 	public Chunk() {
 	}
 
-	public void init() {
+	public void init(Dimension dim) {
 		onLoad();
 		blocks = new BlockBase[sizeX][sizeY][sizeZ];
 		lightMap = new byte[sizeX][sizeY][sizeZ];
+		createBasicTerrain(dim);
+		loaded = true;
 	}
 
 	public void onLoad() {
 		particlePoints = new ConcurrentLinkedQueue<ParticlePoint>();
 		blockEntities = new ArrayList<>();
-		sizeX = VoxelVariables.CHUNK_SIZE;
-		sizeY = VoxelVariables.CHUNK_HEIGHT;
-		sizeZ = VoxelVariables.CHUNK_SIZE;
-		tess = new Tessellator();
+		sizeX = 16;
+		sizeY = 16;
+		sizeZ = 16;
 		if (blocks != null)
 			for (BlockBase[][] blockBases : blocks) {
 				for (BlockBase[] blockBases2 : blockBases) {
@@ -78,23 +96,15 @@ public class Chunk {
 	}
 
 	public void update(Dimension dimension, Camera camera, float delta) {
+		if (!loaded || readyToRemove)
+			return;
 		distance = (float) Vector3f.sub(camera.getPosition(), new Vector3f(posX + 8f, posY + 8f, posZ + 8f), null)
 				.lengthSquared();
 		empty = Arrays.asList(blocks).size() == 0;
-		if (!empty && tess == null) {
-			generateGraphics();
-		} else if (empty && tess != null) {
-			disposeGraphics();
-		}
 		if (empty)
 			return;
 
-		if (!created && !creating) {
-			creating = true;
-			dimension.getDimensionService().add_worker(new ChunkWorkerGenerator(dimension, this));
-		}
-		if (!updatingBlocks && !updatedBlocks) {
-			updatingBlocks = true;
+		if (!updatedBlocks) {
 			blockEntities.clear();
 			for (BlockBase[][] blockBases : blocks) {
 				for (BlockBase[] blockBases2 : blockBases) {
@@ -105,10 +115,24 @@ public class Chunk {
 					}
 				}
 			}
-			dimension.getDimensionService().add_worker(new ChunkWorkerUpdate(dimension, this));
+			updateBlocks(dimension);
+			updatedBlocks = true;
 		}
 		for (BlockEntity blockEntity : blockEntities) {
 			blockEntity.update(dimension, delta);
+		}
+	}
+
+	public void updateGraphics() {
+		if (readyToRemove)
+			return;
+		if (!empty && tess == null) {
+			generateGraphics();
+		} else if (empty && tess != null) {
+			disposeGraphics();
+		} else if (tess != null && unloadGraphics && !readyToRemove) {
+			disposeGraphics();
+			readyToRemove = true;
 		}
 	}
 
@@ -143,7 +167,6 @@ public class Chunk {
 			}
 		}
 		dimension.getChunkGenerator().generateCaves(this, dimension);
-		created = true;
 	}
 
 	void updateBlocks(Dimension dimension) {
@@ -163,19 +186,18 @@ public class Chunk {
 
 	}
 
-	public void rebuild(DimensionService service, Dimension dimension) {
-		if ((needsRebuild || !updated) && !updating && !empty) {
-			updating = true;
-			service.add_worker(new ChunkWorkerMesh(dimension, this));
+	public void rebuildMesh(Dimension dimension) {
+		if (rebuild && !empty) {
+			particlePoints.clear();
+			if (rebuildChunkSection(dimension)) {
+				rebuild = false;
+			}
 		}
 	}
 
-	void rebuildMesh(Dimension dimension) {
-		particlePoints.clear();
-		rebuildChunkSection(dimension);
-	}
-
-	private void rebuildChunkSection(Dimension dimension) {
+	private boolean rebuildChunkSection(Dimension dimension) {
+		if (tess == null)
+			return false;
 		tess.begin(BlocksResources.getTessellatorTextureAtlas().getTexture(), BlocksResources.getNormalMap(),
 				BlocksResources.getHeightMap(), BlocksResources.getSpecularMap());
 		for (int x = 0; x < sizeX; x++) {
@@ -239,6 +261,7 @@ public class Chunk {
 			}
 		}
 		tess.end();
+		return true;
 	}
 
 	protected boolean cullFaceWest(BlockBase block, int x, int y, int z, Dimension dimension) {
@@ -327,6 +350,8 @@ public class Chunk {
 	}
 
 	public void render(GameResources gm, boolean transparent) {
+		if (tess == null)
+			return;
 		if (!empty) {
 			tess.draw(gm, transparent);
 			if (!transparent)
@@ -338,11 +363,15 @@ public class Chunk {
 	}
 
 	public void renderShadow(GameResources gm) {
+		if (tess == null)
+			return;
 		if (!empty)
 			tess.drawShadow(gm.getSun_Camera());
 	}
 
 	public void renderOcclusion(GameResources gm) {
+		if (tess == null)
+			return;
 		if (!empty) {
 			glBeginQuery(GL_SAMPLES_PASSED, tess.getOcclusion());
 			tess.drawOcclusion(gm.getCamera(), gm.getRenderer().getProjectionMatrix());
@@ -350,13 +379,10 @@ public class Chunk {
 		}
 	}
 
-	private void clear() {
-		particlePoints.clear();
-		tess.cleanUp();
-	}
-
 	public void dispose() {
-		clear();
+		if (!loaded)
+			return;
+		particlePoints.clear();
 	}
 
 	public void generateGraphics() {
@@ -380,8 +406,7 @@ public class Chunk {
 	}
 
 	public void setLocalBlock(int x, int y, int z, BlockBase id) {
-		updated = false;
-		needsRebuild = true;
+		rebuild = true;
 		updatedBlocks = false;
 		blocks[x & 0xF][y & 0xF][z & 0xF] = id;
 	}

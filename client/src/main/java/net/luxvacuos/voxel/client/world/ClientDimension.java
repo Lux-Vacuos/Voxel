@@ -1,8 +1,29 @@
+/*
+ * This file is part of Voxel
+ * 
+ * Copyright (C) 2016 Lux Vacuos
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * 
+ */
+
 package net.luxvacuos.voxel.client.world;
 
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Random;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import com.badlogic.ashley.core.Engine;
 
@@ -13,7 +34,7 @@ import net.luxvacuos.voxel.client.resources.models.ParticlePoint;
 import net.luxvacuos.voxel.client.resources.models.ParticleSystem;
 import net.luxvacuos.voxel.client.world.chunks.Chunk;
 import net.luxvacuos.voxel.client.world.chunks.ChunkGenerator;
-import net.luxvacuos.voxel.client.world.chunks.ChunkNodeRemoval;
+import net.luxvacuos.voxel.client.world.chunks.ChunkNode;
 
 public class ClientDimension extends Dimension {
 
@@ -32,13 +53,13 @@ public class ClientDimension extends Dimension {
 		noise = new SimplexNoise(256, 0.15f, seedi);
 		lightNodeAdds = new LinkedList<>();
 		lightNodeRemovals = new LinkedList<>();
-		chunkNodeRemovals = new LinkedList<>();
-		chunks = new HashMap<>();
+		chunks = new ConcurrentHashMap<>();
 		chunkGenerator = new ChunkGenerator();
-		dimensionService = new DimensionService();
 		physicsEngine = new Engine();
 		physicsSystem = new PhysicsSystem(this);
 		physicsEngine.addSystem(physicsSystem);
+		addQueue = new ConcurrentLinkedQueue<>();
+		removeQueue = new ConcurrentLinkedQueue<>();
 	}
 
 	@Override
@@ -51,25 +72,36 @@ public class ClientDimension extends Dimension {
 
 	@Override
 	public void updateChunksGeneration(GameResources gm, float delta) {
-		int chunkLoaded = 0;
-		for (float zr = -VoxelVariables.radius * 16f; zr <= VoxelVariables.radius * 16f; zr += 16f) {
-			float cz = (float) (gm.getCamera().getPosition().getZ() + zr);
-			for (float xr = -VoxelVariables.radius * 16f; xr <= VoxelVariables.radius * 16f; xr += 16f) {
-				float cx = (float) (gm.getCamera().getPosition().getX() + xr);
-				for (float yr = -VoxelVariables.radius * 16f; yr <= VoxelVariables.radius * 16f; yr += 16f) {
-					float cy = (float) (gm.getCamera().getPosition().getY() + yr);
-					int xx = (int) (cx / 16f);
-					int yy = (int) (cy / 16f);
-					int zz = (int) (cz / 16f);
+		if (gm.getCamera().getPosition().x < 0)
+			playerCX = (int) ((gm.getCamera().getPosition().x - 16) / 16);
+		if (gm.getCamera().getPosition().y < 0)
+			playerCY = (int) ((gm.getCamera().getPosition().y - 16) / 16);
+		if (gm.getCamera().getPosition().z < 0)
+			playerCZ = (int) ((gm.getCamera().getPosition().z - 16) / 16);
+		if (gm.getCamera().getPosition().x > 0)
+			playerCX = (int) ((gm.getCamera().getPosition().x) / 16);
+		if (gm.getCamera().getPosition().y > 0)
+			playerCY = (int) ((gm.getCamera().getPosition().y) / 16);
+		if (gm.getCamera().getPosition().z > 0)
+			playerCZ = (int) ((gm.getCamera().getPosition().z) / 16);
+		for (int zr = -VoxelVariables.radius; zr <= VoxelVariables.radius; zr++) {
+			int zz = playerCZ + zr;
+			for (int xr = -VoxelVariables.radius; xr <= VoxelVariables.radius; xr++) {
+				int xx = playerCX + xr;
+				for (int yr = -VoxelVariables.radius; yr <= VoxelVariables.radius; yr++) {
+					int yy = playerCY + yr;
 
-					if (!hasChunk(xx, yy, zz) && chunkLoaded < CHUNKS_LOADED_PER_FRAME) {
-						chunkLoaded++;
+					if (!hasChunk(xx, yy, zz)) {
+						addChunk(new Chunk(new ChunkNode(xx, yy, zz), this));
+						addTo(new ChunkNode(xx, yy, zz), addQueue);
 					} else if (hasChunk(xx, yy, zz)) {
 						Chunk chunk = getChunk(xx, yy, zz);
+						if (!chunk.loaded)
+							continue;
 						chunk.update(this, gm.getCamera(), delta);
 						if (gm.getFrustum().cubeInFrustum(chunk.posX, chunk.posY, chunk.posZ, chunk.posX + 16,
 								chunk.posY + 16, chunk.posZ + 16)) {
-							chunk.rebuild(dimensionService, this);
+							chunk.rebuildMesh(this);
 						}
 						for (ParticlePoint particlePoint : chunk.getParticlePoints()) {
 							particleSystem.generateParticles(particlePoint, delta);
@@ -81,18 +113,31 @@ public class ClientDimension extends Dimension {
 		}
 
 		for (Chunk chunk : chunks.values()) {
-			float dist = (float) Vector3f.sub(new Vector3f(gm.getCamera().getPosition()).div(16),
-					new Vector3f(chunk.cx, chunk.cy, chunk.cz), null).lengthSquared();
-			if (dist > new Vector3f((float) VoxelVariables.radius, (float) VoxelVariables.radius + 0.1f,
-					(float) VoxelVariables.radius).lengthSquared()) {
-				chunkNodeRemovals.add(new ChunkNodeRemoval(chunk));
+			if (Math.abs(chunk.cx - playerCX) > VoxelVariables.radius) {
+				addTo(new ChunkNode(chunk.cx, chunk.cy, chunk.cz), removeQueue);
+			} else if (Math.abs(chunk.cz - playerCZ) > VoxelVariables.radius) {
+				addTo(new ChunkNode(chunk.cx, chunk.cy, chunk.cz), removeQueue);
+			} else if (Math.abs(chunk.cy - playerCY) > VoxelVariables.radius) {
+				addTo(new ChunkNode(chunk.cx, chunk.cy, chunk.cz), removeQueue);
 			}
 		}
+		int chunksLoaded = 0;
+		int chunksUnloaded = 0;
+		while (!removeQueue.isEmpty()) {
+			ChunkNode node = removeQueue.poll();
+			Chunk chnk = getChunk(node.cx, node.cy, node.cz);
+			saveChunk(chnk);
+			removeChunk(chnk);
+			chunksUnloaded++;
+		}
 
-		while (!chunkNodeRemovals.isEmpty()) {
-			ChunkNodeRemoval node = chunkNodeRemovals.poll();
-			saveChunk(node.chunk);
-			removeChunk(node.chunk);
+		while (!addQueue.isEmpty()) {
+			ChunkNode node = addQueue.poll();
+			if (existChunkFile(node.cx, node.cy, node.cz))
+				loadChunk(node.cx, node.cy, node.cz);
+			else
+				getChunk(node.cx, node.cy, node.cz).init(this);
+			chunksLoaded++;
 		}
 	}
 

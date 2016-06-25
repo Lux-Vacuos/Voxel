@@ -60,6 +60,7 @@ import net.luxvacuos.voxel.client.world.Dimension;
 import net.luxvacuos.voxel.client.world.block.Block;
 import net.luxvacuos.voxel.client.world.block.BlockEntity;
 import net.luxvacuos.voxel.client.world.entities.components.ArmourComponent;
+import net.luxvacuos.voxel.client.world.entities.components.CollisionComponent;
 import net.luxvacuos.voxel.client.world.entities.components.LifeComponent;
 import net.luxvacuos.voxel.client.world.entities.components.VelocityComponent;
 import net.luxvacuos.voxel.client.world.items.EmptyArmour;
@@ -98,6 +99,7 @@ public class PlayerCamera extends Camera {
 				new TexturedModel(GameResources.getInstance().getLoader().getObjLoader().loadObjModel("BlockSelector"),
 						new ModelTexture(GameResources.getInstance().getLoader().loadTextureEntity("BlockSelector"))));
 		blockSelector.scale = 1.02f;
+		super.getComponent(CollisionComponent.class).enabled = false;
 	}
 
 	public void update(float delta, GameResources gm, Dimension world) {
@@ -204,10 +206,10 @@ public class PlayerCamera extends Camera {
 		}
 		if (flyMode) {
 			if (isKeyDown(KEY_SPACE))
-				this.getComponent(VelocityComponent.class).velocity.y = 5;
+				this.getComponent(VelocityComponent.class).velocity.y = 5f * speed;
 		} else {
 			if (isKeyDown(KEY_SPACE) && !jump) {
-				this.getComponent(VelocityComponent.class).velocity.y = 5;
+				this.getComponent(VelocityComponent.class).velocity.y = 5f;
 				jump = true;
 			}
 			if (this.getComponent(VelocityComponent.class).velocity.y == 0)
@@ -215,7 +217,7 @@ public class PlayerCamera extends Camera {
 		}
 		if (flyMode) {
 			if (isKeyDown(KEY_LSHIFT))
-				this.getComponent(VelocityComponent.class).velocity.y = -5;
+				this.getComponent(VelocityComponent.class).velocity.y = -5f * speed;
 		} else {
 			if (isKeyDown(KEY_LSHIFT))
 				speed = 0.2f;
@@ -235,7 +237,7 @@ public class PlayerCamera extends Camera {
 				speed = 1f;
 
 		}
-		
+
 		/*
 		 * if (isKeyDown(Keyboard.KEY_Y)) {
 		 * gm.getWorldsHandler().getActiveWorld().switchDimension(0, gm); } if
@@ -307,6 +309,10 @@ public class PlayerCamera extends Camera {
 
 		double tempy = (bcy);
 		int tempY = (int) tempy;
+		if (objcoord.y < 0) {
+			tempy = (bcz);
+			tempY = (int) tempy - 1;
+		}
 
 		int bx = (int) tempX;
 		int by = (int) tempY;

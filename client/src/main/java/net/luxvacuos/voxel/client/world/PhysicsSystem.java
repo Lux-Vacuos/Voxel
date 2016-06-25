@@ -180,33 +180,41 @@ public class PhysicsSystem extends EntitySystem {
 			int bx = (int) tempX;
 			int by = (int) tempY;
 			int bz = (int) tempZ - 1;
-
-			for (BoundingBox boundingBox : boxes) {
-				normalTMP.set(0, 0, 0);
-				if (AABBIntersect(collison.boundingBox.min, collison.boundingBox.max, boundingBox.min,
-						boundingBox.max)) {
-					if (normalTMP.x > 0 && velocity.velocity.x > 0)
-						velocity.velocity.x = 0;
-					if (normalTMP.x < 0 && velocity.velocity.x < 0)
-						velocity.velocity.x = 0;
-
-					if (normalTMP.y > 0 && velocity.velocity.y > 0)
-						velocity.velocity.y = 0;
-					if (normalTMP.y < 0 && velocity.velocity.y < 0) {
-						if (life != null && velocity.velocity.y < -10f) {
-							life.life += velocity.velocity.y * 0.4f + 1 * armour.armour.getProtection();
-						}
-						velocity.velocity.y = 0;
+			if (collison.enabled)
+				for (BoundingBox boundingBox : boxes) {
+					normalTMP.set(0, 0, 0);
+					if (AABBIntersect(collison.boundingBox.min, collison.boundingBox.max, boundingBox.min,
+							boundingBox.max)) {
 						depthTMP /= 4f;
-						position.position.y += depthTMP;
-					}
+						if (normalTMP.x > 0 && velocity.velocity.x > 0) {
+							velocity.velocity.x = 0;
+							position.position.x -= depthTMP;
+						}
+						if (normalTMP.x < 0 && velocity.velocity.x < 0) {
+							velocity.velocity.x = 0;
+							position.position.x += depthTMP;
+						}
 
-					if (normalTMP.z > 0 && velocity.velocity.z > 0)
-						velocity.velocity.z = 0;
-					if (normalTMP.z < 0 && velocity.velocity.z < 0)
-						velocity.velocity.z = 0;
+						if (normalTMP.y > 0 && velocity.velocity.y > 0)
+							velocity.velocity.y = 0;
+						if (normalTMP.y < 0 && velocity.velocity.y < 0) {
+							if (life != null && velocity.velocity.y < -10f) {
+								life.life += velocity.velocity.y * 0.4f + 1 * armour.armour.getProtection();
+							}
+							velocity.velocity.y = 0;
+							position.position.y += depthTMP;
+						}
+
+						if (normalTMP.z > 0 && velocity.velocity.z > 0) {
+							velocity.velocity.z = 0;
+							position.position.z -= depthTMP;
+						}
+						if (normalTMP.z < 0 && velocity.velocity.z < 0) {
+							velocity.velocity.z = 0;
+							position.position.z += depthTMP;
+						}
+					}
 				}
-			}
 			if (life != null) {
 				BlockBase b = dim.getGlobalBlock(bx, by, bz);
 				if (b == Block.Lava)

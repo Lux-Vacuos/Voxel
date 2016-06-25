@@ -51,38 +51,35 @@ public class AboutMenu {
 
 	public void render() {
 		UIRendering.renderWindow("About", "Roboto-Bold", 20, (20 + globalY),
-				GameResources.getInstance().getDisplay().getDisplayWidth() - 40, 2200);
-		UIRendering.renderImage(GameResources.getInstance().getDisplay().getDisplayWidth() / 2f - 200,
-				(60 + globalY), 400, 200, voxelLogo, 1);
+				GameResources.getInstance().getDisplay().getDisplayWidth() - 40, 2200, 1);
+		UIRendering.renderImage(GameResources.getInstance().getDisplay().getDisplayWidth() / 2f - 200, (60 + globalY),
+				400, 200, voxelLogo, 1);
 		UIRendering.renderImage(60, (660 + globalY), 400, 200, infinityLogo, 1);
 		UIRendering.renderImage(60, (1070 + globalY), 400, 200, ashleyLogo, 1);
 
 		UIRendering.renderText("Libraries", "Roboto-Bold", 60, (600 + globalY), 60,
 				UIRendering.rgba(255, 255, 255, 255, UIRendering.colorA),
 				UIRendering.rgba(255, 255, 255, 255, UIRendering.colorA));
-		UIRendering.renderText("This game makes use of the following libraries.", "Roboto-Regular", 60,
-				(680 + globalY), 30, UIRendering.rgba(255, 255, 255, 160, UIRendering.colorA),
+		UIRendering.renderText("This game makes use of the following libraries.", "Roboto-Regular", 60, (680 + globalY),
+				30, UIRendering.rgba(255, 255, 255, 160, UIRendering.colorA),
 				UIRendering.rgba(255, 255, 255, 160, UIRendering.colorB));
-		UIRendering.renderText("Infinity Game Engine - Infinity is licensed under the MIT License.",
-				"Roboto-Regular", 60, (880 + globalY), 30,
-				UIRendering.rgba(255, 255, 255, 160, UIRendering.colorA),
+		UIRendering.renderText("Infinity Game Engine - Infinity is licensed under the MIT License.", "Roboto-Regular",
+				60, (880 + globalY), 30, UIRendering.rgba(255, 255, 255, 160, UIRendering.colorA),
 				UIRendering.rgba(255, 255, 255, 160, UIRendering.colorB));
 		UIRendering.renderText("Light Weight Java Game Library 3 - LWJGL is licensed under the BSD License.",
-				"Roboto-Regular", 60, (1080 + globalY), 30,
-				UIRendering.rgba(255, 255, 255, 160, UIRendering.colorA),
+				"Roboto-Regular", 60, (1080 + globalY), 30, UIRendering.rgba(255, 255, 255, 160, UIRendering.colorA),
 				UIRendering.rgba(255, 255, 255, 160, UIRendering.colorB));
 		UIRendering.renderText("Ashley - Ashley is licensed under the Apache2 License.", "Roboto-Regular", 60,
 				(1280 + globalY), 30, UIRendering.rgba(255, 255, 255, 160, UIRendering.colorA),
 				UIRendering.rgba(255, 255, 255, 160, UIRendering.colorB));
 		UIRendering.renderText("Sound System - Sound System is licensed under the Sound System License.",
-				"Roboto-Regular", 60, (1480 + globalY), 30,
-				UIRendering.rgba(255, 255, 255, 160, UIRendering.colorA),
+				"Roboto-Regular", 60, (1480 + globalY), 30, UIRendering.rgba(255, 255, 255, 160, UIRendering.colorA),
 				UIRendering.rgba(255, 255, 255, 160, UIRendering.colorB));
-		UIRendering.renderText("Log4J - Log4j is licensed under the Apache2.", "Roboto-Regular", 60,
-				(1680 + globalY), 30, UIRendering.rgba(255, 255, 255, 160, UIRendering.colorA),
+		UIRendering.renderText("Log4J - Log4j is licensed under the Apache2.", "Roboto-Regular", 60, (1680 + globalY),
+				30, UIRendering.rgba(255, 255, 255, 160, UIRendering.colorA),
 				UIRendering.rgba(255, 255, 255, 160, UIRendering.colorB));
-		UIRendering.renderText("Kryo - Kryo is licensed under the BSD License.", "Roboto-Regular", 60,
-				(1880 + globalY), 30, UIRendering.rgba(255, 255, 255, 160, UIRendering.colorA),
+		UIRendering.renderText("Kryo - Kryo is licensed under the BSD License.", "Roboto-Regular", 60, (1880 + globalY),
+				30, UIRendering.rgba(255, 255, 255, 160, UIRendering.colorA),
 				UIRendering.rgba(255, 255, 255, 160, UIRendering.colorB));
 		UIRendering.renderText("KryoNet - KryoNet is licensed under the BSD License.", "Roboto-Regular", 60,
 				(2080 + globalY), 30, UIRendering.rgba(255, 255, 255, 160, UIRendering.colorA),

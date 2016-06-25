@@ -21,6 +21,7 @@
 package net.luxvacuos.voxel.client.util;
 
 import java.util.List;
+import java.util.Queue;
 import java.util.Random;
 
 import com.badlogic.gdx.math.Vector3;
@@ -32,6 +33,7 @@ import net.luxvacuos.igl.vector.Vector2f;
 import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.igl.vector.Vector4f;
 import net.luxvacuos.voxel.client.world.chunks.Chunk;
+import net.luxvacuos.voxel.client.world.chunks.ChunkNode;
 import net.luxvacuos.voxel.client.world.entities.Camera;
 
 /**
@@ -259,7 +261,7 @@ public class Maths {
 		list.remove(i);
 		list.add(attemptPos, item);
 	}
-	
+
 	public static void sortHighToLow(List<Chunk> list) {
 		for (int i = 1; i < list.size(); i++) {
 			Chunk item = list.get(i);

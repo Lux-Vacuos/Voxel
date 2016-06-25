@@ -67,8 +67,8 @@ public class GameSPInventoryState extends State {
 			if (isKeyDown(KEY_F2))
 				VoxelVariables.hideHud = !VoxelVariables.hideHud;
 			if (isKeyDown(KEY_ESCAPE) || isKeyDown(KEY_E)) {
-				((PlayerCamera) gm.getCamera()).setMouse(gm.getDisplay());
-				gm.getGlobalStates().setState(GameState.GAME_SP);
+				((PlayerCamera) gm.getCamera()).setMouse();
+				gm.getGlobalStates().setState(GameState.SP);
 			}
 		}
 

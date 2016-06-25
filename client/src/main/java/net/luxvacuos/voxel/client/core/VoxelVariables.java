@@ -88,8 +88,6 @@ public class VoxelVariables {
 	 */
 	public static int radius = 2;
 	public static boolean generateChunks = true;
-	public static final int CHUNK_SIZE = 16;
-	public static final int CHUNK_HEIGHT = 16;
 	/**
 	 * Shader Files
 	 */
