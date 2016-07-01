@@ -1,2 +1,2 @@
-release date=00:40 06.19.2016,version=0.0.5
- * Add resolution Dropdown (Not actually working).
+release date=16:00 07.01.2016,version=0.0.6
+ * Display size can be modified.
