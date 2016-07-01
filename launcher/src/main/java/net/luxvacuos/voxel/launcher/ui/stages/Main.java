@@ -20,7 +20,11 @@
 
 package net.luxvacuos.voxel.launcher.ui.stages;
 
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Properties;
 
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
@@ -32,22 +36,32 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
+import net.luxvacuos.voxel.launcher.bootstrap.Bootstrap;
+import net.luxvacuos.voxel.launcher.core.LauncherVariables;
 import net.luxvacuos.voxel.launcher.ui.MainUI;
-import net.luxvacuos.voxel.launcher.ui.modules.Dropdown;
 
 public class Main extends BorderPane {
 
 	private Button playButton;
 	private ProgressBar download;
 	Text userName;
+	private Properties settings;
+	private MainUI ui;
+
+	private TextField wf;
+	private TextField hf;
 
 	public Main(Stage stage, MainUI ui) {
+		this.ui = ui;
+		settings = new Properties();
+
 		userName = new Text();
 
 		Tab home = new Tab("Home");
@@ -65,6 +79,7 @@ public class Main extends BorderPane {
 		playButton.setOnAction((event) -> {
 
 			new Thread(() -> {
+				store();
 				try {
 					ui.getUpdater().downloadAndRun(ui.getUpdater().getVersionsHandler().getVersions().get(0),
 							userName.getText());
@@ -135,15 +150,32 @@ public class Main extends BorderPane {
 
 		GridPane gridSettings = new GridPane();
 		gridSettings.setPadding(new Insets(10, 10, 10, 10));
-		
+
 		GridPane resGrid = new GridPane();
+		resGrid.setVgap(10);
+		resGrid.setAlignment(Pos.CENTER);
+
 		Text resolutionText = new Text("Resolution");
-		Font font = new Font(14);
+		Font font = new Font(16);
 		resolutionText.setFont(font);
 		resGrid.add(resolutionText, 0, 0);
-		Dropdown resolutions = new Dropdown("854x480", "1280x720", "1920x1080");
-		resGrid.add(resolutions, 0, 1);
-		
+
+		GridPane resOpts = new GridPane();
+		resOpts.setHgap(10);
+		Text w = new Text("Width");
+		resOpts.add(w, 0, 0);
+
+		wf = new TextField();
+		resOpts.add(wf, 1, 0);
+
+		Text h = new Text("Height");
+		resOpts.add(h, 0, 1);
+
+		hf = new TextField();
+		resOpts.add(hf, 1, 1);
+
+		resGrid.add(resOpts, 0, 1);
+
 		gridSettings.add(resGrid, 0, 0);
 
 		settings.setContent(gridSettings);
@@ -153,6 +185,45 @@ public class Main extends BorderPane {
 		setCenter(tabPane);
 		setBottom(bottom);
 		autosize();
+		load();
+	}
+
+	private void load() {
+		try {
+			settings.load(
+					new FileInputStream(Bootstrap.getPrefix() + LauncherVariables.project + "/config/launcher.conf"));
+		} catch (IOException e1) {
+		}
+		String arg = settings.getProperty("args");
+		if (arg != null) {
+			String[] t = arg.split(" ");
+			for (int x = 0; x < t.length; x++) {
+				switch (t[x]) {
+				case "-width":
+					wf.setText(t[++x]);
+					break;
+				case "-height":
+					hf.setText(t[++x]);
+					break;
+				}
+			}
+			ui.getUpdater().args = arg;
+		}
+	}
+
+	private void store() {
+		StringBuilder str = new StringBuilder();
+		str.append("-width " + wf.getText());
+		str.append(" ");
+		str.append("-height " + hf.getText());
+		ui.getUpdater().args = str.toString();
+		settings.setProperty("args", ui.getUpdater().args);
+		try {
+			settings.store(
+					new FileOutputStream(Bootstrap.getPrefix() + LauncherVariables.project + "/config/launcher.conf"),
+					"Launcher Settings");
+		} catch (Exception e) {
+		}
 	}
 
 }

@@ -48,8 +48,7 @@ public class Chunk {
 	public BlockBase[][][] blocks;
 	public byte[][][] lightMap;
 	public boolean decorated = false, cavesGenerated = false;
-	public boolean loaded = false, empty = true, updatedBlocks = false, rebuild = true, unloadGraphics = false,
-			readyToRemove = false;
+	public transient boolean empty = true, updatedBlocks = false, rebuild = true, loaded = false, rebuilding = false;
 	protected transient Tessellator tess;
 	protected transient float distance;
 	protected transient List<BlockEntity> blockEntities;
@@ -82,6 +81,7 @@ public class Chunk {
 		sizeX = 16;
 		sizeY = 16;
 		sizeZ = 16;
+		tess = new Tessellator();
 		if (blocks != null)
 			for (BlockBase[][] blockBases : blocks) {
 				for (BlockBase[] blockBases2 : blockBases) {
@@ -96,8 +96,6 @@ public class Chunk {
 	}
 
 	public void update(Dimension dimension, Camera camera, float delta) {
-		if (!loaded || readyToRemove)
-			return;
 		distance = (float) Vector3f.sub(camera.getPosition(), new Vector3f(posX + 8f, posY + 8f, posZ + 8f), null)
 				.lengthSquared();
 		empty = Arrays.asList(blocks).size() == 0;
@@ -124,15 +122,10 @@ public class Chunk {
 	}
 
 	public void updateGraphics() {
-		if (readyToRemove)
-			return;
 		if (!empty && tess == null) {
 			generateGraphics();
 		} else if (empty && tess != null) {
 			disposeGraphics();
-		} else if (tess != null && unloadGraphics && !readyToRemove) {
-			disposeGraphics();
-			readyToRemove = true;
 		}
 	}
 
@@ -186,8 +179,12 @@ public class Chunk {
 
 	}
 
+	public boolean checkForRebuild() {
+		return rebuild && !rebuilding && !empty;
+	}
+
 	public void rebuildMesh(Dimension dimension) {
-		if (rebuild && !empty) {
+		if (checkForRebuild()) {
 			particlePoints.clear();
 			if (rebuildChunkSection(dimension)) {
 				rebuild = false;
@@ -198,6 +195,7 @@ public class Chunk {
 	private boolean rebuildChunkSection(Dimension dimension) {
 		if (tess == null)
 			return false;
+		rebuilding = true;
 		tess.begin(BlocksResources.getTessellatorTextureAtlas().getTexture(), BlocksResources.getNormalMap(),
 				BlocksResources.getHeightMap(), BlocksResources.getSpecularMap());
 		for (int x = 0; x < sizeX; x++) {
@@ -261,6 +259,7 @@ public class Chunk {
 			}
 		}
 		tess.end();
+		rebuilding = false;
 		return true;
 	}
 
@@ -382,7 +381,10 @@ public class Chunk {
 	public void dispose() {
 		if (!loaded)
 			return;
-		particlePoints.clear();
+		if (particlePoints != null)
+			particlePoints.clear();
+		if (tess != null)
+			tess.cleanUp();
 	}
 
 	public void generateGraphics() {

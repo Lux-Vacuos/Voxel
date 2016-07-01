@@ -31,6 +31,7 @@ public class SinglePass extends RenderingPipeline {
 
 	private Lighting pass;
 	private Sun sun;
+	private ColorCorrection colorCorrection;
 
 	@Override
 	public void init(GameResources gm) {
@@ -42,6 +43,10 @@ public class SinglePass extends RenderingPipeline {
 		pass.setName("Lighting");
 		pass.init();
 		super.imagePasses.add(pass);
+		colorCorrection = new ColorCorrection(width, height);
+		colorCorrection.setName("ColorCorrection");
+		colorCorrection.init();
+		super.imagePasses.add(colorCorrection);
 	}
 
 	@Override

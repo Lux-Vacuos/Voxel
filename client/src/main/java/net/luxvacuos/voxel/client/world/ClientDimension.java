@@ -126,7 +126,7 @@ public class ClientDimension extends Dimension {
 		while (!removeQueue.isEmpty()) {
 			ChunkNode node = removeQueue.poll();
 			Chunk chnk = getChunk(node.cx, node.cy, node.cz);
-			saveChunk(chnk);
+			saveChunk(gm.getKryo(), chnk);
 			removeChunk(chnk);
 			chunksUnloaded++;
 		}
@@ -134,7 +134,7 @@ public class ClientDimension extends Dimension {
 		while (!addQueue.isEmpty()) {
 			ChunkNode node = addQueue.poll();
 			if (existChunkFile(node.cx, node.cy, node.cz))
-				loadChunk(node.cx, node.cy, node.cz);
+				loadChunk(gm.getKryo(), node.cx, node.cy, node.cz);
 			else
 				getChunk(node.cx, node.cy, node.cz).init(this);
 			chunksLoaded++;

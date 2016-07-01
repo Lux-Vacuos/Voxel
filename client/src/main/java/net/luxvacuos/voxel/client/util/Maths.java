@@ -21,7 +21,6 @@
 package net.luxvacuos.voxel.client.util;
 
 import java.util.List;
-import java.util.Queue;
 import java.util.Random;
 
 import com.badlogic.gdx.math.Vector3;
@@ -256,6 +255,25 @@ public class Maths {
 		Chunk item = list.get(i);
 		int attemptPos = i - 1;
 		while (attemptPos != 0 && list.get(attemptPos - 1).getDistance() > item.getDistance()) {
+			attemptPos--;
+		}
+		list.remove(i);
+		list.add(attemptPos, item);
+	}
+
+	public static void sortLowToHighN(List<ChunkNode> list) {
+		for (int i = 1; i < list.size(); i++) {
+			ChunkNode item = list.get(i);
+			if (item.distance < list.get(i - 1).distance) {
+				sortLowToHighN(list, i);
+			}
+		}
+	}
+
+	private static void sortLowToHighN(List<ChunkNode> list, int i) {
+		ChunkNode item = list.get(i);
+		int attemptPos = i - 1;
+		while (attemptPos != 0 && list.get(attemptPos - 1).distance > item.distance) {
 			attemptPos--;
 		}
 		list.remove(i);

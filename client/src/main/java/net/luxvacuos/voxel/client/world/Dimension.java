@@ -41,6 +41,7 @@ import java.util.concurrent.ConcurrentMap;
 
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.gdx.math.collision.BoundingBox;
+import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 
@@ -60,8 +61,6 @@ import net.luxvacuos.voxel.client.world.chunks.ChunkKey;
 import net.luxvacuos.voxel.client.world.chunks.ChunkNode;
 import net.luxvacuos.voxel.client.world.chunks.LightNodeAdd;
 import net.luxvacuos.voxel.client.world.chunks.LightNodeRemoval;
-import net.luxvacuos.voxel.universal.core.exception.LoadChunkException;
-import net.luxvacuos.voxel.universal.core.exception.SaveChunkException;
 
 public abstract class Dimension {
 
@@ -80,6 +79,7 @@ public abstract class Dimension {
 
 	protected Queue<ChunkNode> addQueue;
 	protected Queue<ChunkNode> removeQueue;
+	protected Queue<ChunkNode> rebuildQueue;
 
 	protected ParticleSystem particleSystem;
 	protected int renderedChunks = 0;
@@ -89,6 +89,11 @@ public abstract class Dimension {
 	protected Thread processThread;
 	protected boolean running = true;
 	protected Sync sync;
+	private List<ChunkNode> tmp;
+
+	public static int CHUNKS_REBUILD_PER_FRAME = 4;
+	public static int CHUNKS_LOAD_PER_FRAME = 4;
+	public static int CHUNKS_UNLOAD_PER_FRAME = 4;
 
 	public Dimension(String name, Random seed, int chunkDim, GameResources gm) {
 		this.name = name;
@@ -120,28 +125,16 @@ public abstract class Dimension {
 		physicsEngine.addSystem(physicsSystem);
 		addQueue = new ConcurrentLinkedQueue<>();
 		removeQueue = new ConcurrentLinkedQueue<>();
+		rebuildQueue = new ConcurrentLinkedQueue<>();
+		tmp = new LinkedList<>();
 		sync = new Sync();
 		processThread = new Thread(() -> {
 			while (running) {
-				while (!removeQueue.isEmpty()) {
-					ChunkNode node = removeQueue.poll();
-					Chunk chnk = getChunk(node.cx, node.cy, node.cz);
-					saveChunk(chnk);
-					removeChunk(chnk);
-				}
-
-				while (!addQueue.isEmpty()) {
-					ChunkNode node = addQueue.poll();
-					Chunk chn = getChunk(node.cx, node.cy, node.cz);
-					if (chn == null)
-						continue;
-					chn.init(this);
-				}
 				sync.sync(30);
 			}
 		});
 		processThread.setDaemon(true);
-		processThread.start();
+		// processThread.start();
 	}
 
 	protected void load() {
@@ -185,17 +178,18 @@ public abstract class Dimension {
 					int yy = playerCY + yr;
 
 					if (!hasChunk(xx, yy, zz)) {
-						addChunk(new Chunk(new ChunkNode(xx, yy, zz), this));
-						addTo(new ChunkNode(xx, yy, zz), addQueue);
+						ChunkNode node = new ChunkNode(xx, yy, zz);
+						addTo(node, addQueue);
+						addChunk(new Chunk(node, this));
 					} else if (hasChunk(xx, yy, zz)) {
 						Chunk chunk = getChunk(xx, yy, zz);
 						if (!chunk.loaded)
 							continue;
 						chunk.update(this, gm.getCamera(), delta);
-						if (gm.getFrustum().cubeInFrustum(chunk.posX, chunk.posY, chunk.posZ, chunk.posX + 16,
-								chunk.posY + 16, chunk.posZ + 16)) {
-							chunk.rebuildMesh(this);
-						}
+						if (chunk.checkForRebuild())
+							if (gm.getFrustum().cubeInFrustum(chunk.posX, chunk.posY, chunk.posZ, chunk.posX + 16,
+									chunk.posY + 16, chunk.posZ + 16))
+								addTo(new ChunkNode(xx, yy, zz), rebuildQueue);
 						for (ParticlePoint particlePoint : chunk.getParticlePoints()) {
 							particleSystem.generateParticles(particlePoint, delta);
 						}
@@ -206,15 +200,57 @@ public abstract class Dimension {
 		}
 		for (Chunk chunk : chunks.values()) {
 			if (Math.abs(chunk.cx - playerCX) > VoxelVariables.radius) {
-				chunk.unloadGraphics = true;
 				addTo(new ChunkNode(chunk.cx, chunk.cy, chunk.cz), removeQueue);
 			} else if (Math.abs(chunk.cz - playerCZ) > VoxelVariables.radius) {
-				chunk.unloadGraphics = true;
 				addTo(new ChunkNode(chunk.cx, chunk.cy, chunk.cz), removeQueue);
 			} else if (Math.abs(chunk.cy - playerCY) > VoxelVariables.radius) {
-				chunk.unloadGraphics = true;
 				addTo(new ChunkNode(chunk.cx, chunk.cy, chunk.cz), removeQueue);
 			}
+		}
+		tmp = new ArrayList<ChunkNode>(addQueue);
+		Maths.sortLowToHighN(tmp);
+		addQueue = new ConcurrentLinkedQueue<ChunkNode>(tmp);
+		
+		tmp = new ArrayList<ChunkNode>(rebuildQueue);
+		Maths.sortLowToHighN(tmp);
+		rebuildQueue = new ConcurrentLinkedQueue<ChunkNode>(tmp);
+
+		int rebuilds = 0, load = 0, unload = 0;
+		while (!removeQueue.isEmpty()) {
+			if (unload > CHUNKS_UNLOAD_PER_FRAME)
+				break;
+			ChunkNode node = removeQueue.poll();
+			Chunk chnk = getChunk(node.cx, node.cy, node.cz);
+			//saveChunk(gm.getKryo(), chnk);
+			removeChunk(chnk);
+			unload++;
+		}
+
+		while (!addQueue.isEmpty()) {
+			if (load > CHUNKS_LOAD_PER_FRAME)
+				break;
+			ChunkNode node = addQueue.poll();
+			//if (existChunkFile(node.cx, node.cy, node.cz)) {
+				//loadChunk(gm.getKryo(), node.cx, node.cy, node.cz);
+			//} else {
+				Chunk chnk = getChunk(node.cx, node.cy, node.cz);
+				if (chnk == null)
+					continue;
+				chnk.init(this);
+			//}
+			load++;
+		}
+		while (!rebuildQueue.isEmpty())
+
+		{
+			if (rebuilds > CHUNKS_REBUILD_PER_FRAME)
+				break;
+			ChunkNode node = rebuildQueue.poll();
+			Chunk chn = getChunk(node.cx, node.cy, node.cz);
+			if (chn == null)
+				continue;
+			chn.rebuildMesh(this);
+			rebuilds++;
 		}
 	}
 
@@ -227,9 +263,7 @@ public abstract class Dimension {
 		for (Chunk chunk : chunks.values()) {
 			if (chunk != null) {
 				chunk.updateGraphics();
-				if (chunk.unloadGraphics)
-					continue;
-				if (chunk.getTess() == null)
+				if (chunk.getTess() == null || !chunk.loaded)
 					continue;
 				if (gm.getFrustum().cubeInFrustum(chunk.posX, chunk.posY, chunk.posZ, chunk.posX + 16, chunk.posY + 16,
 						chunk.posZ + 16)) {
@@ -342,22 +376,23 @@ public abstract class Dimension {
 			queue.add(node);
 	}
 
-	public void saveChunk(Chunk chunk) {
-		try {
-			Output output = new Output(new FileOutputStream(VoxelVariables.WORLD_PATH + name + "/dimension_" + chunkDim
-					+ "/chunk_" + chunk.cx + "_" + chunk.cy + "_" + chunk.cz + ".dat"));
-			GameResources.getInstance().getKryo().writeObject(output, chunk);
-			output.close();
-		} catch (Exception e) {
-			throw new SaveChunkException(e);
-		}
+	public void saveChunk(Kryo kryo, Chunk chunk) {
+		if (chunk != null)
+			try {
+				Output output = new Output(new FileOutputStream(VoxelVariables.WORLD_PATH + name + "/dimension_"
+						+ chunkDim + "/chunk_" + chunk.cx + "_" + chunk.cy + "_" + chunk.cz + ".dat"));
+				kryo.writeObject(output, chunk);
+				output.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 	}
 
-	public void loadChunk(int cx, int cy, int cz) {
+	public void loadChunk(Kryo kryo, int cx, int cy, int cz) {
 		try {
 			Input input = new Input(new FileInputStream(VoxelVariables.WORLD_PATH + name + "/dimension_" + chunkDim
 					+ "/chunk_" + cx + "_" + cy + "_" + cz + ".dat"));
-			Chunk chunk = GameResources.getInstance().getKryo().readObject(input, Chunk.class);
+			Chunk chunk = kryo.readObject(input, Chunk.class);
 			input.close();
 			if (chunk != null) {
 				chunk.onLoad();
@@ -366,7 +401,7 @@ public abstract class Dimension {
 			}
 
 		} catch (Exception e) {
-			throw new LoadChunkException(e);
+			e.printStackTrace();
 		}
 	}
 
@@ -519,7 +554,7 @@ public abstract class Dimension {
 		while (!removeQueue.isEmpty()) {
 			ChunkNode node = removeQueue.poll();
 			Chunk chnk = getChunk(node.cx, node.cy, node.cz);
-			saveChunk(chnk);
+			saveChunk(GameResources.getInstance().getKryo(), chnk);
 			removeChunk(chnk);
 		}
 

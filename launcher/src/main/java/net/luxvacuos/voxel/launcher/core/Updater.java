@@ -27,6 +27,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.Arrays;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonIOException;
@@ -44,6 +45,7 @@ public class Updater {
 	private boolean downloading = false;
 	private boolean downloaded = false;
 	private boolean launched = false;
+	public String vmargs = "", args = "";
 
 	public Updater() {
 		gson = new Gson();
@@ -65,14 +67,17 @@ public class Updater {
 			downloading = false;
 			downloadingVersion = null;
 			downloaded = true;
+
 			ProcessBuilder pb;
 			if (Bootstrap.getPlatform().equals(Platform.MACOSX)) {
-				pb = new ProcessBuilder("java", "-XstartOnFirstThread", "-classpath", getClassPath(ver),
+				pb = new ProcessBuilder("java", "-XstartOnFirstThread", vmargs, "-classpath", getClassPath(ver),
 						"net.luxvacuos.voxel.client.bootstrap.Bootstrap", "-username", username);
 			} else {
-				pb = new ProcessBuilder("java", "-classpath", getClassPath(ver),
+				pb = new ProcessBuilder("java", vmargs, "-classpath", getClassPath(ver),
 						"net.luxvacuos.voxel.client.bootstrap.Bootstrap", "-username", username);
 			}
+			String[] arg = args.split(" ");
+			pb.command().addAll(Arrays.asList(arg));
 			try {
 				launched = true;
 				pb.start();

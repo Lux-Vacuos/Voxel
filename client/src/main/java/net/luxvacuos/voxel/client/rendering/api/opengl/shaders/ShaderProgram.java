@@ -61,7 +61,6 @@ import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.igl.vector.Vector4f;
 import net.luxvacuos.voxel.client.core.exception.CompileShaderException;
 import net.luxvacuos.voxel.client.core.exception.LoadShaderException;
-import net.luxvacuos.voxel.client.resources.GameResources;
 
 /**
  * Shader Program, Use to create shaders
@@ -85,7 +84,7 @@ public abstract class ShaderProgram {
 	/**
 	 * Shader bind status
 	 */
-	private boolean binded = false;
+	public static boolean binded = false;
 	/**
 	 * Used to Load Matrix to shader
 	 */
@@ -311,10 +310,6 @@ public abstract class ShaderProgram {
 				shaderSource.append(line).append("//\n");
 			}
 			reader.close();
-			if (GameResources.getInstance().getDisplay().isNvidia())
-				shaderSource.insert(0, "#define NVIDIA//\n");// TEMPORAL FIX
-			else if (GameResources.getInstance().getDisplay().isAmd())
-				shaderSource.insert(0, "#define AMD//\n");// TEMPORAL FIX
 		} catch (IOException e) {
 			throw new LoadShaderException(e);
 		}

@@ -211,11 +211,11 @@ public class OptionsState extends State {
 
 		window.addChildren(exitButton);
 		window.addChildren(shadowsButton);
-		window.addChildren(dofButton);
+		//window.addChildren(dofButton);
 		window.addChildren(godraysButton);
-		window.addChildren(fxaaButton);
-		window.addChildren(parallaxButton);
-		window.addChildren(motionBlurButton);
+		//window.addChildren(fxaaButton);
+		//window.addChildren(parallaxButton);
+		//window.addChildren(motionBlurButton);
 		window.addChildren(reflectionsButton);
 
 	}

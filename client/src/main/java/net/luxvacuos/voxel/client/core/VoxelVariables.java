@@ -35,7 +35,7 @@ public class VoxelVariables {
 	 * Display Data
 	 */
 	public static int FPS = 60;
-	public static int UPS = 30;
+	public static int UPS = 60;
 	public static boolean VSYNC = false;
 	public static final String Title = "Voxel";
 
@@ -82,11 +82,11 @@ public class VoxelVariables {
 	public static boolean useReflections = false;
 	public static float fogDensity = 0.02f;
 	public static final float WAVE_SPEED = 4f;
-	public static String renderingPipeline = "SinglePass";
+	public static String renderingPipeline = "MultiPass";
 	/**
 	 * World Settings
 	 */
-	public static int radius = 2;
+	public static int radius = 6;
 	public static boolean generateChunks = true;
 	/**
 	 * Shader Files
@@ -107,16 +107,6 @@ public class VoxelVariables {
 	public static final String FRAGMENT_FILE_PARTICLE = "FragmentParticle.glsl";
 	public static final String VERTEX_FILE_FONT = "VertexFont.glsl";
 	public static final String FRAGMENT_FILE_FONT = "FragmentFont.glsl";
-
-	/**
-	 * @deprecated Due to new Rendering Pipeline
-	 */
-	public static final String VERTEX_FILE_COMPOSITE = "VertexComposite";
-	/**
-	 * @deprecated Due to new Rendering Pipeline
-	 */
-	public static final String FRAGMENT_FILE_COMPOSITE = "FragmentComposite";
-
 	public static final String VERTEX_FILE_TESSELLATOR = "VertexTessellator.glsl";
 	public static final String FRAGMENT_FILE_TESSELLATOR = "FragmentTessellator.glsl";
 	public static final String VERTEX_FILE_TESSELLATOR_BASIC = "VertexTessellatorBasic.glsl";

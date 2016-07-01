@@ -58,7 +58,7 @@ public class SPLoadingState extends State {
 			GameResources.getInstance().getWorldsHandler().getActiveWorld().init();
 			GameResources.getInstance().getWorldsHandler().getActiveWorld().getActiveDimension().getPhysicsEngine()
 					.addEntity(GameResources.getInstance().getCamera());
-			GameResources.getInstance().getCamera().setPosition(new Vector3f(0, 180, 0));
+			GameResources.getInstance().getCamera().setPosition(new Vector3f(0, 150, 0));
 			((PlayerCamera) GameResources.getInstance().getCamera()).setMouse();
 			GameResources.getInstance().getGlobalStates().setState(GameState.SP);
 		}).start();
