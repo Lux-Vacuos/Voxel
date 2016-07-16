@@ -20,56 +20,81 @@
 
 package net.luxvacuos.voxel.client.core;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import net.luxvacuos.voxel.client.core.GlobalStates.GameState;
 import net.luxvacuos.voxel.client.resources.GameResources;
-import net.luxvacuos.voxel.universal.api.mod.ModStateLoop;
 
 /**
- * State
+ * Engine State
  * 
  * @author danirod
- * @category Kernel
  */
 public abstract class State {
 
-	private List<ModStateLoop> modsLoops = new ArrayList<>();
+	/**
+	 * Booleans for switch to another state
+	 */
 	protected boolean readyForSwitch, switching;
+	/**
+	 * State to switch
+	 */
 	private GameState switchTo;
 
+	/**
+	 * Called by {@link GlobalStates} on set
+	 */
 	public void start() {
 	}
 
-	void iUpdate(Voxel voxel, float delta) throws Exception {
-		update(voxel, delta);
-		for (ModStateLoop modStateLoop : modsLoops) {
-			modStateLoop.update(voxel, delta);
-		}
-	}
+	/**
+	 * Update method
+	 * 
+	 * @param voxel
+	 *            Voxel Instance
+	 * @param delta
+	 *            Delta for update
+	 */
+	public abstract void update(Voxel voxel, float delta);
 
-	public abstract void update(Voxel voxel, float delta) throws Exception;
-
+	/**
+	 * Render method
+	 * 
+	 * @param voxel
+	 *            Voxel Instance
+	 * @param alpha
+	 *            Alpha for update
+	 */
 	public abstract void render(Voxel voxel, float alpha);
 
+	/**
+	 * Called by {@link GlobalStates} on set
+	 */
 	public void end() {
 	}
 
-	public void switchTo(GameState state) {
+	/**
+	 * Begin the state switch
+	 * 
+	 * @param state
+	 */
+	protected void switchTo(GameState state) {
+		// Start switching
 		switching = true;
+		// Set the switchTo state
 		this.switchTo = state;
 	}
 
-	public void updateSwitch() {
+	/**
+	 * Update the state switching
+	 */
+	protected void updateSwitch() {
+		// Check for switch
 		if (readyForSwitch && switching) {
+			// Set the state
 			GameResources.getInstance().getGlobalStates().setState(switchTo);
+			// Stop switching
 			switching = false;
 			readyForSwitch = false;
 		}
 	}
 
-	public List<ModStateLoop> getModsLoops() {
-		return modsLoops;
-	}
 }

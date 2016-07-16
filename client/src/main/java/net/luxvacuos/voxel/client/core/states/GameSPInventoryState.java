@@ -42,12 +42,12 @@ import net.luxvacuos.voxel.client.world.entities.PlayerCamera;
 /**
  * 
  * @author danirod
- * @category Kernel
+ * @deprecated Removed due to new UI system.
  */
 public class GameSPInventoryState extends State {
 
 	@Override
-	public void update(Voxel voxel, float delta) throws Exception {
+	public void update(Voxel voxel, float delta) {
 		GameResources gm = voxel.getGameResources();
 
 		gm.getWorldsHandler().getActiveWorld().getActiveDimension().updateChunksGeneration(gm, delta);

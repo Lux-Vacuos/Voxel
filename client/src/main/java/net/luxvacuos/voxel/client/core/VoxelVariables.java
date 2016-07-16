@@ -24,7 +24,7 @@ import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.voxel.client.bootstrap.Bootstrap;
 
 /**
- * Locations of all global variables
+ * Voxel Global Variables
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
  * @category Kernel
@@ -66,10 +66,6 @@ public class VoxelVariables {
 	public static boolean raining = false;
 	public static final String settings = Bootstrap.getPrefix() + "voxel/config/settings.conf";
 
-	/**
-	 * External Data
-	 */
-	public static final String web = "https://guerra24.github.io/";
 	/**
 	 * Graphic Settings
 	 */

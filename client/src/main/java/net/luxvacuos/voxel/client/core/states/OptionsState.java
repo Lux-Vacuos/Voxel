@@ -33,10 +33,9 @@ import net.luxvacuos.voxel.client.ui.Button;
 import net.luxvacuos.voxel.client.ui.Window;
 
 /**
- * Options Menu State
+ * Options State, here all the options are stored.
  * 
  * @author danirod
- * @category Kernel
  */
 public class OptionsState extends State {
 

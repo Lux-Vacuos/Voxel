@@ -54,7 +54,7 @@ import net.luxvacuos.voxel.client.world.entities.PlayerCamera;
 import net.luxvacuos.voxel.universal.api.MoltenAPI;
 
 /**
- * Single Player GameState
+ * Single Player State, here the local world is updated and rendered.
  * 
  * @author danirod
  * @category Kernel
@@ -69,7 +69,7 @@ public class SPState extends State {
 	}
 
 	@Override
-	public void update(Voxel voxel, float delta) throws Exception {
+	public void update(Voxel voxel, float delta) {
 		GameResources gm = voxel.getGameResources();
 
 		gm.getWorldsHandler().getActiveWorld().getActiveDimension().updateChunksGeneration(gm, delta);

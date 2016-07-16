@@ -39,7 +39,7 @@ public abstract class UVoxel {
 	public boolean isServer() {
 		return server;
 	}
-	
+
 	public UGameResources getGameResources() {
 		return gameResources;
 	}

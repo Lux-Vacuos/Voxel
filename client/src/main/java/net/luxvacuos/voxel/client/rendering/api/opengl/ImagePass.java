@@ -30,24 +30,47 @@ import net.luxvacuos.voxel.client.util.Maths;
 import net.luxvacuos.voxel.client.world.entities.PlayerCamera;
 
 /**
- *
+ * ImagePass, use inside {@link RenderingPipeline} to process diferent image
+ * passes.
  *
  * @author Guerra24 <pablo230699@hotmail.com>
  *
  */
 public abstract class ImagePass {
 
+	/**
+	 * Deferred Shader
+	 */
 	private DeferredShadingShader shader;
+	/**
+	 * FBO
+	 */
 	private ImagePassFBO fbo;
 
+	/**
+	 * Width and Height of the FBO
+	 */
 	private int width, height;
+	/**
+	 * Name
+	 */
 	private String name;
 
+	/**
+	 * 
+	 * @param width
+	 *            Width
+	 * @param height
+	 *            Height
+	 */
 	public ImagePass(int width, int height) {
 		this.width = width;
 		this.height = height;
 	}
 
+	/**
+	 * Initializes the FBO, Shader and loads information to the shader.
+	 */
 	public void init() {
 		fbo = new ImagePassFBO(width, height);
 		shader = new DeferredShadingShader(name);
@@ -59,6 +82,16 @@ public abstract class ImagePass {
 		shader.stop();
 	}
 
+	/**
+	 * Begin ImagePass processing, binds the FBO, starts the shader, loads
+	 * dynamic data and leaves the state for rendering.
+	 * 
+	 * @param gm
+	 * @param previousViewMatrix
+	 *            Previous View Matrix
+	 * @param previousCameraPosition
+	 *            Previous Camera Position
+	 */
 	public void begin(GameResources gm, Matrix4f previousViewMatrix, Vector3f previousCameraPosition) {
 		fbo.begin();
 		shader.start();
@@ -75,13 +108,27 @@ public abstract class ImagePass {
 		shader.loadTime(gm.getWorldSimulation().getTime());
 	}
 
+	/**
+	 * Runs the render code.
+	 * 
+	 * @param auxs
+	 *            Auxiliary FBOs
+	 * @param pipe
+	 *            Rendering Pipline
+	 */
 	public abstract void render(ImagePassFBO[] auxs, RenderingPipeline pipe);
 
+	/**
+	 * End the render, disables shader and ends FBO.
+	 */
 	public void end() {
 		shader.stop();
 		fbo.end();
 	}
 
+	/**
+	 * Dispose shader and FBO
+	 */
 	public void dispose() {
 		shader.cleanUp();
 		fbo.cleanUp();

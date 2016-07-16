@@ -39,6 +39,13 @@ import net.luxvacuos.voxel.client.ui.Window;
 import net.luxvacuos.voxel.client.ui.World;
 import net.luxvacuos.voxel.client.world.DefaultWorld;
 
+/**
+ * Singleplayer World Selection State, here all the worlds selection menu are
+ * created from folders inside the world folder.
+ * 
+ * @author Guerra24 <pablo230699@hotmail.com>
+ *
+ */
 public class SPSelectionState extends State {
 
 	private Window window;

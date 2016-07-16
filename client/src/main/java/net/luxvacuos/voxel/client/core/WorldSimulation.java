@@ -22,6 +22,13 @@ package net.luxvacuos.voxel.client.core;
 
 import net.luxvacuos.voxel.client.util.Maths;
 
+/**
+ * 
+ * World Simulation, this handles the simulation like time.
+ * 
+ * @author Guerra24 <pablo230699@hotmail.com>
+ *
+ */
 public class WorldSimulation {
 
 	private float moveFactor = 0;
@@ -35,21 +42,32 @@ public class WorldSimulation {
 		time = 12000;
 	}
 
+	/**
+	 * Update the simulation
+	 * 
+	 * @param delta
+	 *            Delta to update
+	 * @return Rotation for sun
+	 */
 	public float update(float delta) {
+		// Set move factor for waves
 		moveFactor += VoxelVariables.WAVE_SPEED * delta;
 		moveFactor %= 6.3f;
+		// Set time
 		time += delta * TIME_MULTIPLIER;
 		time %= 24000;
+		// Set global time for clouds
 		globalTime += delta * TIME_MULTIPLIER;
 		float res = time * 0.015f;
 
+		// Check for rain
 		if (VoxelVariables.raining) {
 			rainFactor += 0.2f * delta;
 		} else
 			rainFactor -= 0.2f * delta;
 
 		rainFactor = Maths.clamp(rainFactor, 0f, 1f);
-
+		// Return the sun rotation
 		return res - 90;
 	}
 

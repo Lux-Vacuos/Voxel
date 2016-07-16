@@ -31,10 +31,9 @@ import net.luxvacuos.voxel.client.ui.Button;
 import net.luxvacuos.voxel.client.ui.Window;
 
 /**
- * Main Menu State
+ * Main Menu State, this is the menu show after the splash screen fade out.
  * 
  * @author danirod
- * @category Kernel
  */
 public class MainMenuState extends State {
 
@@ -113,7 +112,7 @@ public class MainMenuState extends State {
 	}
 
 	@Override
-	public void update(Voxel voxel, float delta) throws Exception {
+	public void update(Voxel voxel, float delta) {
 		window.update(delta);
 		if (!switching)
 			window.fadeIn(4, delta);

@@ -33,10 +33,9 @@ import net.luxvacuos.voxel.client.ui.Window;
 import net.luxvacuos.voxel.client.world.entities.PlayerCamera;
 
 /**
- * Loading Screen State
+ * Singleplayer World Loading State, this is runned when loading a world.
  * 
  * @author danirod
- * @category Kernel
  */
 public class SPLoadingState extends State {
 

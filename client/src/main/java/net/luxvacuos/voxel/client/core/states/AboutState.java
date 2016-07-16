@@ -41,10 +41,9 @@ import net.luxvacuos.voxel.client.ui.Window;
 import net.luxvacuos.voxel.universal.api.MoltenAPI;
 
 /**
- * Main Menu State
+ * About State, this shows all the information about Voxel and the system where is running.
  * 
  * @author danirod
- * @category Kernel
  */
 public class AboutState extends State {
 

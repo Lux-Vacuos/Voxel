@@ -44,10 +44,9 @@ import net.luxvacuos.voxel.client.ui.Window;
 import net.luxvacuos.voxel.client.world.entities.PlayerCamera;
 
 /**
- * In Pause State
+ * Singleplayer Pause State.
  * 
  * @author danirod
- * @category Kernel
  */
 public class SPPauseState extends State {
 
@@ -86,7 +85,7 @@ public class SPPauseState extends State {
 	}
 
 	@Override
-	public void update(Voxel voxel, float delta) throws Exception {
+	public void update(Voxel voxel, float delta) {
 		GameResources gm = voxel.getGameResources();
 		while (Mouse.next())
 			window.update(delta);

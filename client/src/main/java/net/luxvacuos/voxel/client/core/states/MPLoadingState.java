@@ -37,6 +37,13 @@ import net.luxvacuos.voxel.client.ui.Window;
 import net.luxvacuos.voxel.client.world.ClientWorld;
 import net.luxvacuos.voxel.client.world.entities.PlayerCamera;
 
+/**
+ * 
+ * Multiplayer Loading state, this is runned when loading a multiplayer session.
+ * 
+ * @author Guerra24 <pablo230699@hotmail.com>
+ *
+ */
 public class MPLoadingState extends State {
 
 	private boolean trying = false;

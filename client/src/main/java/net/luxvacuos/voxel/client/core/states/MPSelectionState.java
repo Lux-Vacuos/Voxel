@@ -31,6 +31,12 @@ import net.luxvacuos.voxel.client.ui.Button;
 import net.luxvacuos.voxel.client.ui.Text;
 import net.luxvacuos.voxel.client.ui.Window;
 
+/**
+ * Multiplayer Selection State, here the user inserts the server IP.
+ * 
+ * @author Guerra24 <pablo230699@hotmail.com>
+ *
+ */
 public class MPSelectionState extends State {
 
 	private Button exitButton;

@@ -49,6 +49,13 @@ import net.luxvacuos.voxel.client.world.PhysicsSystem;
 import net.luxvacuos.voxel.client.world.entities.PlayerCamera;
 import net.luxvacuos.voxel.universal.api.MoltenAPI;
 
+/**
+ * Multiplayer State, like {@link SPState}, here the remote world is updated and
+ * rendered.
+ * 
+ * @author Guerra24 <pablo230699@hotmail.com>
+ *
+ */
 public class MPState extends State {
 	FloatBuffer p;
 	FloatBuffer c;
@@ -137,7 +144,7 @@ public class MPState extends State {
 	}
 
 	@Override
-	public void update(Voxel voxel, float delta) throws Exception {
+	public void update(Voxel voxel, float delta) {
 		GameResources gm = voxel.getGameResources();
 		((PlayerCamera) gm.getCamera()).update(delta, gm, gm.getWorldsHandler().getActiveWorld().getActiveDimension());
 

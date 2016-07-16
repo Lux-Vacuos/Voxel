@@ -32,8 +32,10 @@ import net.luxvacuos.voxel.client.world.entities.Camera;
 /**
  * Frustum Culling
  * 
- * @author Ron Sullivan (modified by Thomas Hourdel(modified by Guerra24))
- *         <thomas.hourdel@libertysurf.fr>
+ * @author Ron Sullivan (modified by Thomas Hourdel
+ *         <thomas.hourdel@libertysurf.fr> (modified by Guerra24
+ *         <pablo230699@hotmail.com>))
+ * 
  * @category Rendering
  */
 public class Frustum {
@@ -74,10 +76,12 @@ public class Frustum {
 	}
 
 	/**
-	 * Update Frustum
+	 * Updates the frustum view
 	 * 
-	 * @param gm
-	 *            GameResources
+	 * @param projectionMatrix
+	 *            Projection Matrix
+	 * @param camera
+	 *            Camera
 	 */
 	public void calculateFrustum(Matrix4f projectionMatrix, Camera camera) {
 		double[] clip = new double[16];

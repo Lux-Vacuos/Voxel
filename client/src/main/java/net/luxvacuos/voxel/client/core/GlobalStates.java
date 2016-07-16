@@ -34,19 +34,34 @@ import net.luxvacuos.voxel.client.core.states.SPState;
 import net.luxvacuos.voxel.client.core.states.SplashScreenState;
 
 /**
- * States Handler
+ * This controls the state of the engine and updates the object version of the
+ * states.
  * 
  * @author danirod
- * @category Kernel
  */
 public class GlobalStates {
 
+	/**
+	 * Actual state
+	 */
 	private GameState state;
 
+	/**
+	 * Old State
+	 */
 	private GameState oldState;
 
+	/**
+	 * Engine internal state
+	 */
 	private InternalState internalState;
 
+	/**
+	 * Enum of available states.
+	 * 
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 *
+	 */
 	public enum GameState {
 		SP(new SPState()), MAINMENU(new MainMenuState()), SP_PAUSE(new SPPauseState()), SP_LOADING_WORLD(
 				new SPLoadingState()), OPTIONS(new OptionsState()), SP_SELECTION(new SPSelectionState()), ABOUT(
@@ -61,47 +76,108 @@ public class GlobalStates {
 		State state;
 	}
 
+	/**
+	 * Enum of Internal States
+	 * 
+	 * @author Guerra24 <pablo230699@hotmail.com>
+	 *
+	 */
 	public enum InternalState {
 		STOPPED, RUNNIG;
 	}
 
+	/**
+	 * Initialize the internalState to Stopped
+	 */
 	public GlobalStates() {
 		internalState = InternalState.STOPPED;
 	}
 
-	public void doUpdate(Voxel voxel, float delta) throws Exception {
-		state.state.iUpdate(voxel, delta);
+	/**
+	 * Update the actual state
+	 * 
+	 * @param voxel
+	 *            Voxel Instance
+	 * @param delta
+	 *            Delta for update
+	 */
+	public void doUpdate(Voxel voxel, float delta) {
+		// Call the update method from the state
+		state.state.update(voxel, delta);
+		// Update stateSwitching of the state
 		state.state.updateSwitch();
+		// Check for display close request
 		if (voxel.getGameResources().getDisplay().isCloseRequested())
 			internalState = InternalState.STOPPED;
 	}
 
+	/**
+	 * Render the actual state
+	 * 
+	 * @param voxel
+	 *            Voxel Instance
+	 * @param alpha
+	 *            Render Alpha
+	 */
 	public void doRender(Voxel voxel, float alpha) {
 		state.state.render(voxel, alpha);
 	}
 
-	public GameState getState() {
-		return state;
-	}
-
+	/**
+	 * Set the state
+	 * 
+	 * @param state
+	 *            State
+	 */
 	public void setState(GameState state) {
+		// Check for equal state
 		if (!state.equals(this.state)) {
+			// Check for actual null
 			if (this.state != null)
+				// End the actual statue
 				this.state.state.end();
+			// Set the old state
 			this.oldState = this.state;
+			// Switch state
 			this.state = state;
+			// Start the state
 			this.state.state.start();
 		}
 	}
 
+	/**
+	 * Get the state
+	 * 
+	 * @return The actual state
+	 */
+	public GameState getState() {
+		return state;
+	}
+
+	/**
+	 * Get the old state
+	 * 
+	 * @return The old state
+	 */
 	public GameState getOldState() {
 		return oldState;
 	}
 
+	/**
+	 * Set internal state, use only in specific case
+	 * 
+	 * @param internalState
+	 *            State to set
+	 */
 	public void setInternalState(InternalState internalState) {
 		this.internalState = internalState;
 	}
 
+	/**
+	 * Get the actual Internal State
+	 * 
+	 * @return Actual internal state
+	 */
 	public InternalState getInternalState() {
 		return internalState;
 	}

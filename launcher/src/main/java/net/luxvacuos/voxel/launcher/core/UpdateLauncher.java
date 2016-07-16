@@ -21,7 +21,7 @@ public class UpdateLauncher {
 			URL url;
 			String latest = LauncherVariables.version;
 			try {
-				url = new URL("https://get.luxvacuos.net/launcher/version");
+				url = new URL(LauncherVariables.host + "/launcher/version");
 				URLConnection conn = url.openConnection();
 				BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 				latest = bufferedReader.readLine();

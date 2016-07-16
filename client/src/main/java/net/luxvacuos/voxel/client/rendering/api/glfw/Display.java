@@ -75,7 +75,7 @@ import net.luxvacuos.voxel.client.input.Mouse;
 
 /**
  * 
- * A new complete re-writed Display Manager.
+ * A new complete re-write Display Manager.
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
  * 

@@ -48,7 +48,8 @@ public class Chunk {
 	public BlockBase[][][] blocks;
 	public byte[][][] lightMap;
 	public boolean decorated = false, cavesGenerated = false;
-	public transient boolean empty = true, updatedBlocks = false, rebuild = true, loaded = false, rebuilding = false;
+	public transient boolean empty = true, updatedBlocks = false, rebuild = true, loaded = false, rebuilding = false,
+			remove = false;
 	protected transient Tessellator tess;
 	protected transient float distance;
 	protected transient List<BlockEntity> blockEntities;
@@ -81,7 +82,6 @@ public class Chunk {
 		sizeX = 16;
 		sizeY = 16;
 		sizeZ = 16;
-		tess = new Tessellator();
 		if (blocks != null)
 			for (BlockBase[][] blockBases : blocks) {
 				for (BlockBase[] blockBases2 : blockBases) {
