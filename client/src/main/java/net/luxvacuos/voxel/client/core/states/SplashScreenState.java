@@ -25,11 +25,8 @@ import net.luxvacuos.voxel.client.core.State;
 import net.luxvacuos.voxel.client.core.Voxel;
 import net.luxvacuos.voxel.client.rendering.api.opengl.MasterRenderer;
 import net.luxvacuos.voxel.client.resources.GameResources;
-import net.luxvacuos.voxel.client.ui.Component;
 import net.luxvacuos.voxel.client.ui.Image;
-import net.luxvacuos.voxel.client.ui.OnAction;
 import net.luxvacuos.voxel.client.ui.Panel;
-import net.luxvacuos.voxel.client.util.Maths;
 
 /**
  * Splash screen State, show only in the load.
@@ -52,25 +49,18 @@ public class SplashScreenState extends State {
 
 		luxVacuosLogo = new Image(-256, 256, 512, 512,
 				GameResources.getInstance().getLoader().loadNVGTexture("LuxVacuos-Logo"));
-/*
-		luxVacuosLogo.setOnUpdate(new OnAction() {
-			private float speed = 0;
+		/*
+		 * luxVacuosLogo.setOnUpdate(new OnAction() { private float speed = 0;
+		 * 
+		 * @Override public void onAction(Component component, float delta) {
+		 * Image img = (Image) component; if (img.getY() < 200 + 100 && speed <=
+		 * 1) speed += 1 * delta; else if (speed > 0) speed -= 1 * delta; else
+		 * speed = 0; speed = Maths.clamp(speed, 0, 1); img.addPosition(0,
+		 * speed); } });
+		 */
 
-			@Override
-			public void onAction(Component component, float delta) {
-				Image img = (Image) component;
-				if (img.getY() < 200 + 100 && speed <= 1)
-					speed += 1 * delta;
-				else if (speed > 0)
-					speed -= 1 * delta;
-				else
-					speed = 0;
-				speed = Maths.clamp(speed, 0, 1);
-				img.addPosition(0, speed);
-			}
-		});
-*/
 		panel.addChildren(luxVacuosLogo);
+
 	}
 
 	@Override
@@ -95,8 +85,9 @@ public class SplashScreenState extends State {
 	@Override
 	public void update(Voxel voxel, float delta) {
 		wait += 1 * delta;
-		if (wait > 2)
+		if (wait > 2) {
 			panel.update(delta);
+		}
 		if (!switching)
 			panel.fadeIn(4, delta);
 		if (switching)
@@ -105,6 +96,7 @@ public class SplashScreenState extends State {
 			}
 		if (wait > 3)
 			switchTo(GameState.MAINMENU);
+
 	}
 
 }

@@ -21,6 +21,7 @@
 package net.luxvacuos.voxel.client.core;
 
 import net.luxvacuos.voxel.client.core.states.AboutState;
+import net.luxvacuos.voxel.client.core.states.CreateWorldState;
 import net.luxvacuos.voxel.client.core.states.GameSPInventoryState;
 import net.luxvacuos.voxel.client.core.states.MPLoadingState;
 import net.luxvacuos.voxel.client.core.states.MPSelectionState;
@@ -67,7 +68,8 @@ public class GlobalStates {
 				new SPLoadingState()), OPTIONS(new OptionsState()), SP_SELECTION(new SPSelectionState()), ABOUT(
 						new AboutState()), MP_SELECTION(new MPSelectionState()), LOADING_MP_WORLD(
 								new MPLoadingState()), GAME_SP_INVENTORY(new GameSPInventoryState()), SPLASH_SCREEN(
-										new SplashScreenState()), MP(new MPState());
+										new SplashScreenState()), MP(new MPState()), CREATE_WORLD(
+												new CreateWorldState());
 
 		GameState(State state) {
 			this.state = state;

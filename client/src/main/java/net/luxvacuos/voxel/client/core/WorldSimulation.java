@@ -36,10 +36,10 @@ public class WorldSimulation {
 	private float globalTime = 0;
 	private float rainFactor;
 
-	private static final float TIME_MULTIPLIER = 10;
+	private static final float TIME_MULTIPLIER = 500;
 
 	public WorldSimulation() {
-		time = 12000;
+		time = 0;
 	}
 
 	/**

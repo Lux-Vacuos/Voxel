@@ -82,8 +82,10 @@ public class CrashScreen extends Application {
 	@Override
 	public void start(Stage stage) throws Exception {
 		stage.setTitle("Voxel");
-		stage.getIcons().add(new Image(getClass().getClassLoader().getResourceAsStream("assets/icons/icon32.png")));
-		stage.getIcons().add(new Image(getClass().getClassLoader().getResourceAsStream("assets/icons/icon64.png")));
+		stage.getIcons().add(new Image(getClass().getClassLoader()
+				.getResourceAsStream("assets/" + VoxelVariables.assets + "/icons/icon32.png")));
+		stage.getIcons().add(new Image(getClass().getClassLoader()
+				.getResourceAsStream("assets/" + VoxelVariables.assets + "/icons/icon64.png")));
 		Scene main = new Scene(startMain(stage));
 		stage.setScene(main);
 		stage.setMinWidth(894);
@@ -111,8 +113,8 @@ public class CrashScreen extends Application {
 		gridTop.setPadding(new Insets(10, 10, 10, 10));
 		gridTop.autosize();
 
-		Image voxelLogoI = new Image(
-				getClass().getClassLoader().getResourceAsStream("assets/textures/menu/Voxel-Logo.png"));
+		Image voxelLogoI = new Image(getClass().getClassLoader()
+				.getResourceAsStream("assets/" + VoxelVariables.assets + "/textures/menu/Voxel-Logo.png"));
 
 		ImageView voxelLogo = new ImageView();
 		voxelLogo.setImage(voxelLogoI);

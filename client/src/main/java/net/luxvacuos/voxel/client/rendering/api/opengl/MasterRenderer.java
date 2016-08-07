@@ -49,7 +49,8 @@ import net.luxvacuos.voxel.client.core.VoxelVariables;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.EntityShader;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.resources.models.TexturedModel;
-import net.luxvacuos.voxel.client.world.entities.GameEntity;
+import net.luxvacuos.voxel.client.world.entities.AbstractEntity;
+import net.luxvacuos.voxel.client.world.entities.components.RendereableComponent;
 
 /**
  * Game Master Renderer
@@ -65,7 +66,7 @@ public class MasterRenderer {
 	private EntityShader shader;
 	private EntityRenderer entityRenderer;
 	private Matrix4f projectionMatrix;
-	private Map<TexturedModel, List<GameEntity>> entities = new HashMap<TexturedModel, List<GameEntity>>();
+	private Map<TexturedModel, List<AbstractEntity>> entities = new HashMap<TexturedModel, List<AbstractEntity>>();
 
 	public MasterRenderer(GameResources gm) {
 		shader = new EntityShader();
@@ -83,8 +84,8 @@ public class MasterRenderer {
 
 	public void renderEntity(ImmutableArray<Entity> immutableArray, GameResources gm) {
 		for (Entity entity : immutableArray) {
-			if (entity instanceof GameEntity) {
-				processEntity((GameEntity) entity);
+			if (entity instanceof AbstractEntity && entity.getComponent(RendereableComponent.class) != null) {
+				processEntity((AbstractEntity) entity);
 			}
 		}
 		renderEntity(gm);
@@ -101,13 +102,13 @@ public class MasterRenderer {
 		entities.clear();
 	}
 
-	protected void processEntity(GameEntity entity) {
-		TexturedModel entityModel = entity.getModel();
-		List<GameEntity> batch = entities.get(entityModel);
+	protected void processEntity(AbstractEntity entity) {
+		TexturedModel entityModel = entity.getComponent(RendereableComponent.class).model;
+		List<AbstractEntity> batch = entities.get(entityModel);
 		if (batch != null) {
 			batch.add(entity);
 		} else {
-			List<GameEntity> newBatch = new ArrayList<GameEntity>();
+			List<AbstractEntity> newBatch = new ArrayList<AbstractEntity>();
 			newBatch.add(entity);
 			entities.put(entityModel, newBatch);
 		}

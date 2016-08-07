@@ -51,6 +51,7 @@ public class SPSelectionState extends State {
 	private Window window;
 	private Button exitButton;
 	private Button playButton;
+	private Button createButton;
 	private List<World> worlds;
 	private String worldName;
 	private int y = 0;
@@ -61,8 +62,9 @@ public class SPSelectionState extends State {
 		window = new Window(20, GameResources.getInstance().getDisplay().getDisplayHeight() - 20,
 				GameResources.getInstance().getDisplay().getDisplayWidth() - 40,
 				GameResources.getInstance().getDisplay().getDisplayHeight() - 40, "Singleplayer");
-		exitButton = new Button(window.getWidth() / 2 + 10, -window.getHeight() + 35, 200, 40, "Back");
-		playButton = new Button(window.getWidth() / 2 - 210, -window.getHeight() + 35, 200, 40, "Load World");
+		exitButton = new Button(window.getWidth() - 230, -200, 200, 40, "Back");
+		playButton = new Button(window.getWidth() - 230, -150, 200, 40, "Load World");
+		createButton = new Button(window.getWidth() - 230, -100, 200, 40, "Create World");
 
 		exitButton.setOnButtonPress((button, delta) -> {
 			switchTo(GameState.MAINMENU);
@@ -75,8 +77,13 @@ public class SPSelectionState extends State {
 			}
 		});
 
+		createButton.setOnButtonPress((button, delta) -> {
+			switchTo(GameState.CREATE_WORLD);
+		});
+
 		window.addChildren(exitButton);
 		window.addChildren(playButton);
+		window.addChildren(createButton);
 		worlds = new ArrayList<>();
 	}
 

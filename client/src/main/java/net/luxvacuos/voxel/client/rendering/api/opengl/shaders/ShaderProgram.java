@@ -59,6 +59,7 @@ import net.luxvacuos.igl.vector.Matrix4f;
 import net.luxvacuos.igl.vector.Vector2f;
 import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.igl.vector.Vector4f;
+import net.luxvacuos.voxel.client.core.VoxelVariables;
 import net.luxvacuos.voxel.client.core.exception.CompileShaderException;
 import net.luxvacuos.voxel.client.core.exception.LoadShaderException;
 
@@ -301,7 +302,8 @@ public abstract class ShaderProgram {
 	 */
 	private int loadShader(String file, int type) {
 		StringBuilder shaderSource = new StringBuilder();
-		InputStream filet = getClass().getClassLoader().getResourceAsStream("assets/shaders/" + file);
+		InputStream filet = getClass().getClassLoader()
+				.getResourceAsStream("assets/" + VoxelVariables.assets + "/shaders/" + file);
 		try {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(filet));
 			Logger.log("Loading Shader: " + file);

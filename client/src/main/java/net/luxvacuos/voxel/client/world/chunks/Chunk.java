@@ -82,7 +82,7 @@ public class Chunk {
 		sizeX = 16;
 		sizeY = 16;
 		sizeZ = 16;
-		if (blocks != null)
+		if (blocks != null) {
 			for (BlockBase[][] blockBases : blocks) {
 				for (BlockBase[] blockBases2 : blockBases) {
 					for (BlockBase b : blockBases2) {
@@ -93,6 +93,12 @@ public class Chunk {
 					}
 				}
 			}
+		} else {
+			blocks = new BlockBase[sizeX][sizeY][sizeZ];
+		}
+		if (lightMap == null) {
+			lightMap = new byte[sizeX][sizeY][sizeZ];
+		}
 	}
 
 	public void update(Dimension dimension, Camera camera, float delta) {

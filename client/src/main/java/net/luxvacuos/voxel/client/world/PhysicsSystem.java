@@ -36,7 +36,7 @@ import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.util.Maths;
 import net.luxvacuos.voxel.client.world.block.Block;
 import net.luxvacuos.voxel.client.world.block.BlockBase;
-import net.luxvacuos.voxel.client.world.entities.GameEntity;
+import net.luxvacuos.voxel.client.world.entities.AbstractEntity;
 import net.luxvacuos.voxel.client.world.entities.PlayerCamera;
 import net.luxvacuos.voxel.client.world.entities.components.ArmourComponent;
 import net.luxvacuos.voxel.client.world.entities.components.CollisionComponent;
@@ -80,23 +80,21 @@ public class PhysicsSystem extends EntitySystem {
 				tmp.set(0, 0, 0);
 				PositionComponent position = pm.get(entity);
 				VelocityComponent velocity = vm.get(entity);
+				PlayerCamera cam = (PlayerCamera) gm.getCamera();
 				if (Vector3f
 						.sub(entity.getComponent(PositionComponent.class).position, gm.getCamera().getPosition(), tmp)
 						.lengthSquared() < 2) {
-					A: for (int x = 0; x < ((PlayerCamera) gm.getCamera()).getInventory().getSizeX(); x++) {
-						for (int y = 0; y < ((PlayerCamera) gm.getCamera()).getInventory().getSizeY(); y++) {
-							if (((PlayerCamera) gm.getCamera()).getInventory().getItems()[x][y].getBlock()
-									.getId() == ((ItemDrop) entity).getBlock().getId()) {
-								((PlayerCamera) gm.getCamera()).getInventory().getItems()[x][y]
-										.setBlock(((ItemDrop) entity).getBlock());
-								((PlayerCamera) gm.getCamera()).getInventory().getItems()[x][y].setTotal(
-										((PlayerCamera) gm.getCamera()).getInventory().getItems()[x][y].getTotal() + 1);
+					A: for (int x = 0; x < cam.getInventory().getSizeX(); x++) {
+						for (int y = 0; y < cam.getInventory().getSizeY(); y++) {
+							if (cam.getInventory().getItems()[x][y].getBlock().getId() == ((ItemDrop) entity).getBlock()
+									.getId()) {
+								cam.getInventory().getItems()[x][y].setBlock(((ItemDrop) entity).getBlock());
+								cam.getInventory().getItems()[x][y]
+										.setTotal(cam.getInventory().getItems()[x][y].getTotal() + 1);
 								break A;
-							} else if (((PlayerCamera) gm.getCamera()).getInventory().getItems()[x][y].getBlock()
-									.getId() == 0) {
-								((PlayerCamera) gm.getCamera()).getInventory().getItems()[x][y]
-										.setBlock(((ItemDrop) entity).getBlock());
-								((PlayerCamera) gm.getCamera()).getInventory().getItems()[x][y].setTotal(1);
+							} else if (cam.getInventory().getItems()[x][y].getBlock().getId() == 0) {
+								cam.getInventory().getItems()[x][y].setBlock(((ItemDrop) entity).getBlock());
+								cam.getInventory().getItems()[x][y].setTotal(1);
 								break A;
 							}
 						}
@@ -115,7 +113,7 @@ public class PhysicsSystem extends EntitySystem {
 
 	public void processEntities(GameResources gm) {
 		for (Entity entity : entities) {
-			if (entity instanceof GameEntity) {
+			if (entity instanceof AbstractEntity && !(entity instanceof PlayerCamera)) {
 
 				LifeComponent life = lm.get(entity);
 				DropComponent drop = dm.get(entity);
@@ -155,7 +153,7 @@ public class PhysicsSystem extends EntitySystem {
 
 			velocity.velocity.x *= 0.7f - velocity.velocity.x * 0.0001f;
 			velocity.velocity.z *= 0.7f - velocity.velocity.z * 0.0001f;
-			velocity.velocity.y *= 0.7f - velocity.velocity.y * 0.0001f;
+			velocity.velocity.y += -9.8f * deltaTime;
 
 			collison.update(position.position);
 			boxes = dim.getGlobalBoundingBox(collison.boundingBox);
@@ -227,8 +225,8 @@ public class PhysicsSystem extends EntitySystem {
 			position.position.y += velocity.velocity.y * deltaTime;
 			position.position.z += velocity.velocity.z * deltaTime;
 
-			if (entity instanceof GameEntity)
-				((GameEntity) entity).update(deltaTime);
+			if (entity instanceof AbstractEntity)
+				((AbstractEntity) entity).update(deltaTime);
 
 		}
 	}

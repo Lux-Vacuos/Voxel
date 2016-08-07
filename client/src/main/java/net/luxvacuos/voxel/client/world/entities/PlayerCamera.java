@@ -81,7 +81,7 @@ public class PlayerCamera extends Camera {
 	private ItemGui block;
 	private boolean hit;
 	private boolean died = false;
-	private boolean flyMode = true;
+	private boolean flyMode = false;
 	private RendereableTexturedModel blockSelector;
 
 	private static List<BoundingBox> blocks = new ArrayList<>();
@@ -99,7 +99,8 @@ public class PlayerCamera extends Camera {
 				new TexturedModel(GameResources.getInstance().getLoader().getObjLoader().loadObjModel("BlockSelector"),
 						new ModelTexture(GameResources.getInstance().getLoader().loadTextureEntity("BlockSelector"))));
 		blockSelector.scale = 1.02f;
-		super.getComponent(CollisionComponent.class).enabled = false;
+		if (flyMode)
+			super.getComponent(CollisionComponent.class).enabled = false;
 	}
 
 	public void update(float delta, GameResources gm, Dimension world) {
@@ -246,7 +247,7 @@ public class PlayerCamera extends Camera {
 		 */
 		if (isKeyDown(KEY_T)) {
 			gm.getWorldsHandler().getActiveWorld().getActiveDimension().getPhysicsEngine()
-					.addEntity(new GuineaPig(getPosition()));
+					.addEntity(new GuineaPig(new Vector3f(getPosition())));
 		}
 
 		if (isKeyDown(Keyboard.KEY_8)) {
@@ -263,6 +264,8 @@ public class PlayerCamera extends Camera {
 		setBlock(gm.getDisplay().getDisplayWidth(), gm.getDisplay().getDisplayHeight(), world);
 		updateRay(gm.getRenderer().getProjectionMatrix(), gm.getDisplay().getDisplayWidth(),
 				gm.getDisplay().getDisplayHeight(), center);
+
+		super.update(delta);
 	}
 
 	@Override
@@ -333,10 +336,12 @@ public class PlayerCamera extends Camera {
 
 		if (block.getBlock().getId() == Block.Torch.getId())
 			world.addLight(bx, by, bz, 14);
-		if (block.getBlock().getId() == Block.Air.getId() && world.getGlobalBlock(bx, by, bz) != Block.Air)
+		if (block.getBlock().getId() == Block.Air.getId()
+				&& world.getGlobalBlock(bx, by, bz).getId() != Block.Air.getId())
 			world.getPhysicsEngine()
 					.addEntity(world.getGlobalBlock(bx, by, bz).getDrop(new Vector3f(bx + 0.5f, by + 0.5f, bz + 0.5f)));
-		if (block.getBlock().getId() == Block.Air.getId() && world.getGlobalBlock(bx, by, bz) == Block.Torch)
+		if (block.getBlock().getId() == Block.Air.getId()
+				&& world.getGlobalBlock(bx, by, bz).getId() == Block.Torch.getId())
 			world.removeLight(bx, by, bz, 0);
 		if (block.getBlock().getId() != 0) {
 			block.setTotal(block.getTotal() - 1);

@@ -31,6 +31,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import net.luxvacuos.voxel.launcher.core.AuthHelper;
@@ -44,6 +45,7 @@ public class Login extends GridPane {
 	private PasswordField passField;
 	private Button login;
 	private ProgressBar loginProgress;
+	private Text message;
 
 	public Login(Stage stage, MainUI ui) {
 
@@ -86,21 +88,33 @@ public class Login extends GridPane {
 
 		login = new Button("Login");
 		login.setOnAction((event) -> {
+			message.setText("");
 			userField.setEditable(false);
 			passField.setEditable(false);
 			loginProgress.setVisible(true);
 			loginProgress.setProgress(-1);
 			new Thread(() -> {
-				if (AuthHelper.login(userField.getText(), passField.getText()))
-					Platform.runLater(() -> {
-						stage.hide();
-						stage.setScene(new Scene(ui.getMainStage()));
-						stage.centerOnScreen();
-						stage.show();
-						ui.getMainStage().userName.setText("Welcome, " + userField.getText());
-						passField.setText("");
-					});
-				else
+				try {
+					if (AuthHelper.login(userField.getText(), passField.getText()))
+						Platform.runLater(() -> {
+							stage.hide();
+							stage.setScene(new Scene(ui.getMainStage()));
+							stage.centerOnScreen();
+							stage.show();
+							ui.getMainStage().userName.setText("Welcome, " + userField.getText());
+							passField.setText("");
+						});
+					else
+						Platform.runLater(() -> {
+							userField.setText("");
+							passField.setText("");
+							userField.setEditable(true);
+							passField.setEditable(true);
+							loginProgress.setVisible(false);
+							loginProgress.setProgress(0);
+							message.setText("Invalid credentials");
+						});
+				} catch (Exception e) {
 					Platform.runLater(() -> {
 						userField.setText("");
 						passField.setText("");
@@ -108,7 +122,9 @@ public class Login extends GridPane {
 						passField.setEditable(true);
 						loginProgress.setVisible(false);
 						loginProgress.setProgress(0);
+						message.setText("No Internet connection");
 					});
+				}
 			}).start();
 		});
 		bottom.add(login, 0, 0);
@@ -125,7 +141,11 @@ public class Login extends GridPane {
 		loginProgress.setVisible(false);
 		loginProgress.setMinWidth(200);
 
+		message = new Text();
+		message.setFont(new Font(16));
+
 		add(loginProgress, 0, 3);
+		add(message, 0, 4);
 
 	}
 

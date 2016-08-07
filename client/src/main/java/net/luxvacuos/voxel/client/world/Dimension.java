@@ -20,9 +20,7 @@
 
 package net.luxvacuos.voxel.client.world;
 
-import static org.lwjgl.opengl.GL11.GL_BLEND;
-import static org.lwjgl.opengl.GL11.glDisable;
-import static org.lwjgl.opengl.GL11.glEnable;
+import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL15.GL_QUERY_RESULT;
 import static org.lwjgl.opengl.GL15.glGetQueryObjectui;
 
@@ -44,9 +42,11 @@ import com.badlogic.gdx.math.collision.BoundingBox;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
+import com.esotericsoftware.kryo.serializers.CompatibleFieldSerializer;
 
 import net.luxvacuos.igl.Logger;
 import net.luxvacuos.igl.vector.Vector3f;
+import net.luxvacuos.voxel.client.core.GlobalStates.InternalState;
 import net.luxvacuos.voxel.client.core.VoxelVariables;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Sync;
 import net.luxvacuos.voxel.client.resources.GameResources;
@@ -88,18 +88,14 @@ public abstract class Dimension {
 	protected PhysicsSystem physicsSystem;
 	protected Thread processThread;
 	protected boolean running = true;
-	protected Sync sync;
 	private List<ChunkNode> tmp;
-
-	public static int CHUNKS_REBUILD_PER_FRAME = 8;
-	public static int CHUNKS_LOAD_PER_FRAME = 8;
-	public static int CHUNKS_UNLOAD_PER_FRAME = 8;
 
 	public Dimension(String name, Random seed, int chunkDim, GameResources gm) {
 		this.name = name;
 		this.chunkDim = chunkDim;
 		data = new DimensionData();
 		data.addObject("Seed", seed.nextInt());
+		data.addObject("PlayerPos", gm.getCamera().getPosition());
 		init(gm);
 	}
 
@@ -115,6 +111,10 @@ public abstract class Dimension {
 		particleSystem.setScaleError(0.2f);
 		particleSystem.setSpeedError(0.2f);
 		seedi = (int) data.getObject("Seed");
+		if ((Vector3f) data.getObject("PlayerPos") == null)
+			gm.getCamera().setPosition(new Vector3f(0, 140, 0));
+		else
+			gm.getCamera().setPosition((Vector3f) data.getObject("PlayerPos"));
 		noise = new SimplexNoise(256, 0.15f, seedi);
 		lightNodeAdds = new LinkedList<>();
 		lightNodeRemovals = new LinkedList<>();
@@ -127,8 +127,10 @@ public abstract class Dimension {
 		removeQueue = new ConcurrentLinkedQueue<>();
 		rebuildQueue = new ConcurrentLinkedQueue<>();
 		tmp = new LinkedList<>();
-		sync = new Sync();
 		processThread = new Thread(() -> {
+			Kryo kryo = new Kryo();
+			Sync sync = new Sync();
+			kryo.setDefaultSerializer(CompatibleFieldSerializer.class);
 			while (running) {
 				for (Chunk chunk : chunks.values()) {
 					if (Math.abs(chunk.cx - playerCX) > VoxelVariables.radius) {
@@ -150,44 +152,35 @@ public abstract class Dimension {
 					rebuildQueue = new ConcurrentLinkedQueue<ChunkNode>(tmp);
 				}
 
-				int rebuilds = 0, load = 0, unload = 0;
 				while (!removeQueue.isEmpty()) {
-					if (unload > CHUNKS_UNLOAD_PER_FRAME)
-						break;
 					ChunkNode node = removeQueue.poll();
 					Chunk chnk = getChunk(node.cx, node.cy, node.cz);
-					// saveChunk(gm.getKryo(), chnk);
+					saveChunk(kryo, chnk);
 					if (chnk != null)
 						chnk.remove = true;
-					unload++;
 				}
 
 				while (!addQueue.isEmpty()) {
-					if (load > CHUNKS_LOAD_PER_FRAME)
-						break;
 					ChunkNode node = addQueue.poll();
-					// if (existChunkFile(node.cx, node.cy, node.cz)) {
-					// loadChunk(gm.getKryo(), node.cx, node.cy, node.cz);
-					// } else {
-					Chunk chnk = getChunk(node.cx, node.cy, node.cz);
-					if (chnk == null)
-						continue;
-					chnk.init(this);
-					// }
-					load++;
+					if (existChunkFile(node.cx, node.cy, node.cz)) {
+						loadChunk(kryo, node.cx, node.cy, node.cz);
+					} else {
+						Chunk chnk = getChunk(node.cx, node.cy, node.cz);
+						if (chnk == null)
+							continue;
+						chnk.init(this);
+					}
 				}
 				while (!rebuildQueue.isEmpty()) {
-					if (rebuilds > CHUNKS_REBUILD_PER_FRAME)
-						break;
 					ChunkNode node = rebuildQueue.poll();
 					Chunk chn = getChunk(node.cx, node.cy, node.cz);
 					if (chn == null)
 						continue;
 					chn.rebuildMesh(this);
-					rebuilds++;
 				}
+				if (!GameResources.getInstance().getGlobalStates().getInternalState().equals(InternalState.RUNNIG))
+					break;
 				sync.sync(30);
-
 			}
 		});
 		processThread.setDaemon(true);
@@ -233,7 +226,6 @@ public abstract class Dimension {
 				int xx = playerCX + xr;
 				for (int yr = -VoxelVariables.radius; yr <= VoxelVariables.radius; yr++) {
 					int yy = playerCY + yr;
-
 					if (!hasChunk(xx, yy, zz)) {
 						ChunkNode node = new ChunkNode(xx, yy, zz);
 						addTo(node, addQueue);
@@ -301,6 +293,11 @@ public abstract class Dimension {
 	}
 
 	public void updateChunksOcclusion(GameResources gm) {
+		glViewport(0, 0,
+				(int) (GameResources.getInstance().getDisplay().getDisplayWidth()
+						* GameResources.getInstance().getDisplay().getPixelRatio() / 6f),
+				(int) (GameResources.getInstance().getDisplay().getDisplayHeight()
+						* GameResources.getInstance().getDisplay().getPixelRatio() / 6f));
 		List<Chunk> chunks_ = new ArrayList<Chunk>();
 		for (Chunk chunk : chunks.values()) {
 			if (chunk != null)
@@ -312,6 +309,11 @@ public abstract class Dimension {
 		for (Chunk chunk : chunks_) {
 			chunk.renderOcclusion(gm);
 		}
+		glViewport(0, 0,
+				(int) (GameResources.getInstance().getDisplay().getDisplayWidth()
+						* GameResources.getInstance().getDisplay().getPixelRatio()),
+				(int) (GameResources.getInstance().getDisplay().getDisplayHeight()
+						* GameResources.getInstance().getDisplay().getPixelRatio()));
 	}
 
 	public void lighting() {
@@ -347,7 +349,7 @@ public abstract class Dimension {
 		}
 	}
 
-	public void setupLightAdd(int x, int y, int z, int lightLevel) {
+	protected void setupLightAdd(int x, int y, int z, int lightLevel) {
 		int cx = x >> 4;
 		int cz = z >> 4;
 		int cy = y >> 4;
@@ -528,6 +530,7 @@ public abstract class Dimension {
 		int cx = x >> 4;
 		int cz = z >> 4;
 		int cy = y >> 4;
+
 		Chunk chunk = getChunk(cx, cy, cz);
 		if (chunk != null) {
 			if (chunk.loaded) {
@@ -552,6 +555,7 @@ public abstract class Dimension {
 	public void clearDimension() {
 		running = false;
 		Logger.log("Saving Dimension " + chunkDim);
+		data.addObject("PlayerPos", GameResources.getInstance().getCamera().getPosition());
 		save();
 		for (Chunk chunk : chunks.values()) {
 			if (chunk != null) {

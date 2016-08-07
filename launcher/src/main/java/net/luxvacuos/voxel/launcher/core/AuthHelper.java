@@ -27,15 +27,12 @@ import java.net.URL;
 import java.net.URLConnection;
 
 public class AuthHelper {
-	
-	public static boolean login(String user, String pass) {
-		try {
-			URL url = new URL(LauncherVariables.authHost + "/forum/getdata.php?option=login&user=" + user + "&pass=" + pass);
-			URLConnection conn = url.openConnection();
-			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-			return bufferedReader.readLine().equals("login: true");
-		} catch (IOException e) {
-		}
-		return false;
+
+	public static boolean login(String user, String pass) throws IOException {
+		URL url = new URL(
+				LauncherVariables.authHost + "/forum/getdata.php?option=login&user=" + user + "&pass=" + pass);
+		URLConnection conn = url.openConnection();
+		BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+		return bufferedReader.readLine().equals("login: true");
 	}
 }

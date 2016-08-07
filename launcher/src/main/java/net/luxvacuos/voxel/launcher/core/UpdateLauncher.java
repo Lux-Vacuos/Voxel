@@ -26,7 +26,6 @@ public class UpdateLauncher {
 				BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 				latest = bufferedReader.readLine();
 			} catch (IOException e) {
-				e.printStackTrace();
 			}
 
 			String[] vrs = latest.split("\\.");

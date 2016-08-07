@@ -20,6 +20,11 @@
 
 package net.luxvacuos.voxel.client.core.states;
 
+import javax.script.Bindings;
+import javax.script.CompiledScript;
+import javax.script.ScriptException;
+import javax.script.SimpleBindings;
+
 import net.luxvacuos.voxel.client.core.GlobalStates.GameState;
 import net.luxvacuos.voxel.client.core.GlobalStates.InternalState;
 import net.luxvacuos.voxel.client.core.State;
@@ -43,6 +48,8 @@ public class MainMenuState extends State {
 	private Button aboutButton;
 	private Button playMPButton;
 	private Window window;
+	private CompiledScript script;
+	private Bindings bindings;
 
 	public MainMenuState() {
 		window = new Window(20, GameResources.getInstance().getDisplay().getDisplayHeight() - 20,
@@ -82,13 +89,14 @@ public class MainMenuState extends State {
 		exitButton.setOnButtonPress((button, delta) -> {
 			GameResources.getInstance().getGlobalStates().setInternalState(InternalState.STOPPED);
 		});
-
 		window.addChildren(playButton);
 		window.addChildren(playMPButton);
 		window.addChildren(optionsButton);
 		window.addChildren(aboutButton);
 		window.addChildren(exitButton);
-
+		bindings = new SimpleBindings();
+		bindings.put("window", window);
+		script = GameResources.getInstance().getScripting().compile("mainmenu");
 	}
 
 	@Override
@@ -113,6 +121,11 @@ public class MainMenuState extends State {
 
 	@Override
 	public void update(Voxel voxel, float delta) {
+		try {
+			script.eval(bindings);
+		} catch (ScriptException e) {
+			e.printStackTrace();
+		}
 		window.update(delta);
 		if (!switching)
 			window.fadeIn(4, delta);

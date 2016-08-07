@@ -1,2 +1,3 @@
-release date=16:00 07.01.2016,version=0.0.6
- * Display size can be modified.
+release date=15:10 08.07.2016,version=0.0.8
+ * Set G1GC as default GC.
+ * Message when try to login without internet.

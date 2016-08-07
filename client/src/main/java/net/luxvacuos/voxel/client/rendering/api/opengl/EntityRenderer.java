@@ -41,7 +41,8 @@ import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.resources.models.RawModel;
 import net.luxvacuos.voxel.client.resources.models.TexturedModel;
 import net.luxvacuos.voxel.client.util.Maths;
-import net.luxvacuos.voxel.client.world.entities.GameEntity;
+import net.luxvacuos.voxel.client.world.entities.AbstractEntity;
+import net.luxvacuos.voxel.client.world.entities.components.PositionComponent;
 
 /**
  * Entity Rendering
@@ -78,11 +79,11 @@ public class EntityRenderer {
 	 * @param blockEntities
 	 *            A List of entity's
 	 */
-	public void renderEntity(Map<TexturedModel, List<GameEntity>> blockEntities, GameResources gm) {
+	public void renderEntity(Map<TexturedModel, List<AbstractEntity>> blockEntities, GameResources gm) {
 		for (TexturedModel model : blockEntities.keySet()) {
 			prepareTexturedModel(model, gm);
-			List<GameEntity> batch = blockEntities.get(model);
-			for (GameEntity entity : batch) {
+			List<AbstractEntity> batch = blockEntities.get(model);
+			for (AbstractEntity entity : batch) {
 				shader.loadEntityLight(1);
 				prepareInstance(entity);
 				glDrawElements(GL_TRIANGLES, model.getRawModel().getVertexCount(), GL_UNSIGNED_INT, 0);
@@ -125,9 +126,10 @@ public class EntityRenderer {
 	 * 
 	 * @param entity
 	 */
-	protected void prepareInstance(GameEntity entity) {
-		Matrix4f transformationMatrix = Maths.createTransformationMatrix(entity.getPosition(), entity.getRotX(),
-				entity.getRotY(), entity.getRotZ(), entity.getScale());
+	protected void prepareInstance(AbstractEntity entity) {
+		PositionComponent pos = entity.getComponent(PositionComponent.class);
+		Matrix4f transformationMatrix = Maths.createTransformationMatrix(pos.position, pos.rotation.getX(),
+				pos.rotation.getY(), pos.rotation.getZ(), pos.scale);
 		shader.loadTransformationMatrix(transformationMatrix);
 	}
 

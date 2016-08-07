@@ -70,10 +70,10 @@ public class Updater {
 
 			ProcessBuilder pb;
 			if (Bootstrap.getPlatform().equals(Platform.MACOSX)) {
-				pb = new ProcessBuilder("java", "-XstartOnFirstThread", vmargs, "-classpath", getClassPath(ver),
-						"net.luxvacuos.voxel.client.bootstrap.Bootstrap", "-username", username);
+				pb = new ProcessBuilder("java", "-XX:+UseG1GC", "-XstartOnFirstThread", vmargs, "-classpath",
+						getClassPath(ver), "net.luxvacuos.voxel.client.bootstrap.Bootstrap", "-username", username);
 			} else {
-				pb = new ProcessBuilder("java", vmargs, "-classpath", getClassPath(ver),
+				pb = new ProcessBuilder("java", "-XX:+UseG1GC", vmargs, "-classpath", getClassPath(ver),
 						"net.luxvacuos.voxel.client.bootstrap.Bootstrap", "-username", username);
 			}
 			String[] arg = args.split(" ");

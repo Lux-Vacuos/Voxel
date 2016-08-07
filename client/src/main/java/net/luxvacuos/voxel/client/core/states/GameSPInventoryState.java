@@ -59,7 +59,7 @@ public class GameSPInventoryState extends State {
 			dim.getPhysicsEngine().getSystem(PhysicsSystem.class).doSpawn(gm);
 		}
 
-		gm.update(gm.getWorldSimulation().update(delta));
+		gm.update(gm.getWorldSimulation().update(delta), delta);
 		ParticleMaster.getInstance().update(delta, gm.getCamera());
 		while (next()) {
 			if (isKeyDown(KEY_F1))

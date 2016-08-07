@@ -20,8 +20,6 @@
 
 package net.luxvacuos.voxel.client.world.entities;
 
-import com.badlogic.ashley.core.Entity;
-
 import net.luxvacuos.igl.vector.Matrix4f;
 import net.luxvacuos.igl.vector.Vector2f;
 import net.luxvacuos.igl.vector.Vector3f;
@@ -36,13 +34,11 @@ import net.luxvacuos.voxel.client.world.entities.components.VelocityComponent;
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
  */
-public class Camera extends Entity {
+public class Camera extends AbstractEntity {
 
-	protected double pitch;
-	protected double yaw;
-	protected double roll;
 	protected DRay dRay;
 	protected boolean jump = false;
+	protected double pitch, yaw, roll;
 
 	public boolean isMoved = false;
 	public float depth = 0;
@@ -58,8 +54,12 @@ public class Camera extends Entity {
 		this.getComponent(CollisionComponent.class).boundingBox.set(this.getComponent(CollisionComponent.class).min,
 				this.getComponent(CollisionComponent.class).max);
 	}
-	
-	public void render(){
+
+	public void render() {
+	}
+
+	@Override
+	public void update(float delta) {
 	}
 
 	public void updateRay(Matrix4f projectionMatrix, int width, int height, Vector2f pos) {
@@ -73,7 +73,7 @@ public class Camera extends Entity {
 	public void setPosition(Vector3f position) {
 		this.getComponent(PositionComponent.class).position = position;
 	}
-	
+
 	public double getPitch() {
 		return pitch;
 	}
@@ -82,16 +82,16 @@ public class Camera extends Entity {
 		return yaw;
 	}
 
+	public double getRoll() {
+		return roll;
+	}
+
 	public void setPitch(double pitch) {
 		this.pitch = pitch;
 	}
 
 	public void setYaw(double yaw) {
 		this.yaw = yaw;
-	}
-
-	public double getRoll() {
-		return roll;
 	}
 
 	public void setRoll(double roll) {

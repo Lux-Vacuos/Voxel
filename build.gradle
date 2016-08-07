@@ -1,71 +1,70 @@
 
-task wrapper(type: Wrapper) {
-    gradleVersion = '2.14'
-}
+task wrapper(type: Wrapper) { gradleVersion = '2.14' }
 
 subprojects {
-    apply plugin: "eclipse"
-    apply plugin: "idea"
-    apply plugin: "java"
+	apply plugin: "eclipse"
+	apply plugin: "idea"
+	apply plugin: "java"
 
-    repositories {
-        mavenCentral()
-        maven { url "https://oss.sonatype.org/content/repositories/releases/" }
-        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
-    }
+	repositories {
+		mavenCentral()
+		maven { url "https://oss.sonatype.org/content/repositories/releases/" }
+		maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+	}
 }
 
 project(":ashley") {
-    dependencies {
-        compile project(':utils')
-    }
+	dependencies { compile project(':utils') }
 }
 
 project(":client") {
 
-    dependencies {
-        compile project(':ashley')
-        compile project(':universal')
-        compile project(':utils')
-        compile 'org.l33tlabs.twl:pngdecoder:1.0'
-        compile 'de.jarnbjo:j-ogg-all:1.0.0'
-        compile 'org.jcraft:jorbis:0.0.17'
-        compile 'org.lwjgl:lwjgl:3.0.0'
-        compile 'org.lwjgl:lwjgl-platform:3.0.0:natives-windows'
-        compile 'org.lwjgl:lwjgl-platform:3.0.0:natives-linux'
-        compile 'org.lwjgl:lwjgl-platform:3.0.0:natives-osx'
-        testCompile group: 'junit', name: 'junit', version: '4.12'
-    }
+	dependencies {
+		compile project(':ashley')
+		compile project(':universal')
+		compile project(':utils')
+		compile project(':assets')
+		compile 'org.codehaus.groovy:groovy:2.4.7'
+		compile 'org.codehaus.groovy:groovy-jsr223:2.4.7'
+		compile 'org.l33tlabs.twl:pngdecoder:1.0'
+		compile 'de.jarnbjo:j-ogg-all:1.0.0'
+		compile 'org.jcraft:jorbis:0.0.17'
+		compile 'org.lwjgl:lwjgl:3.0.0'
+		compile 'org.lwjgl:lwjgl-platform:3.0.0:natives-windows'
+		compile 'org.lwjgl:lwjgl-platform:3.0.0:natives-linux'
+		compile 'org.lwjgl:lwjgl-platform:3.0.0:natives-osx'
+		testCompile group: 'junit', name: 'junit', version: '4.12'
+	}
 }
 
 project(":server") {
-    dependencies {
-        compile project(':ashley')
-        compile project(':universal')
-        compile project(':utils')
-        testCompile group: 'junit', name: 'junit', version: '4.12'
-    }
+	dependencies {
+		compile project(':ashley')
+		compile project(':universal')
+		compile project(':utils')
+		testCompile group: 'junit', name: 'junit', version: '4.12'
+	}
 }
 
 project(":launcher") {
-    dependencies {
-        testCompile group: 'junit', name: 'junit', version: '4.12'
-    }
+	dependencies {
+		testCompile group: 'junit', name: 'junit', version: '4.12'
+	}
 }
 
 project(":universal") {
-    dependencies {
-        compile project(':ashley')
-        compile project(':utils')
-        testCompile group: 'junit', name: 'junit', version: '4.12'
-    }
+	dependencies {
+		compile project(':ashley')
+		compile project(':utils')
+		testCompile group: 'junit', name: 'junit', version: '4.12'
+	}
 }
 
 project(":utils") {
-    dependencies {
-        compile 'log4j:log4j:1.2.17'
-        compile 'com.esotericsoftware:kryo:4.0.0'
-        compile 'com.esotericsoftware:jsonbeans:0.7'
-        testCompile group: 'junit', name: 'junit', version: '4.12'
-    }
+	dependencies {
+		compile 'log4j:log4j:1.2.17'
+		compile 'com.esotericsoftware:kryo:4.0.0'
+		compile 'com.esotericsoftware:jsonbeans:0.7'
+		testCompile group: 'junit', name: 'junit', version: '4.12'
+	}
 }

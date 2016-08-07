@@ -82,6 +82,7 @@ import org.lwjgl.BufferUtils;
 import de.matthiasmann.twl.utils.PNGDecoder;
 import de.matthiasmann.twl.utils.PNGDecoder.Format;
 import net.luxvacuos.igl.Logger;
+import net.luxvacuos.voxel.client.core.VoxelVariables;
 import net.luxvacuos.voxel.client.core.exception.DecodeTextureException;
 import net.luxvacuos.voxel.client.core.exception.LoadTextureException;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Display;
@@ -211,7 +212,7 @@ public class Loader {
 		int texture_id = 0;
 		try {
 			InputStream file = getClass().getClassLoader()
-					.getResourceAsStream("assets/textures/blocks/" + fileName + ".png");
+					.getResourceAsStream("assets/" + VoxelVariables.assets + "/textures/blocks/" + fileName + ".png");
 			texture_id = loadTexture(file, GL_NEAREST, GL_REPEAT, GL_SRGB_ALPHA);
 			Logger.log("Loading Texture: " + fileName + ".png");
 		} catch (Exception e) {
@@ -225,7 +226,7 @@ public class Loader {
 		int texture_id = 0;
 		try {
 			InputStream file = getClass().getClassLoader()
-					.getResourceAsStream("assets/textures/blocks/" + fileName + ".png");
+					.getResourceAsStream("assets/" + VoxelVariables.assets + "/textures/blocks/" + fileName + ".png");
 			texture_id = loadTexture(file, GL_NEAREST, GL_REPEAT, GL_RGBA);
 			Logger.log("Loading Texture: " + fileName + ".png");
 		} catch (Exception e) {
@@ -245,8 +246,8 @@ public class Loader {
 	public int loadTextureParticle(String fileName) {
 		int texture_id = 0;
 		try {
-			InputStream file = getClass().getClassLoader()
-					.getResourceAsStream("assets/textures/particles/" + fileName + ".png");
+			InputStream file = getClass().getClassLoader().getResourceAsStream(
+					"assets/" + VoxelVariables.assets + "/textures/particles/" + fileName + ".png");
 			Logger.log("Loading Texture: " + fileName + ".png");
 			texture_id = loadTexture(file, GL_NEAREST, GL_REPEAT, GL_SRGB_ALPHA);
 		} catch (Exception e) {
@@ -267,7 +268,7 @@ public class Loader {
 		int texture = 0;
 		try {
 			InputStream file = getClass().getClassLoader()
-					.getResourceAsStream("assets/textures/entity/" + fileName + ".png");
+					.getResourceAsStream("assets/" + VoxelVariables.assets + "/textures/entity/" + fileName + ".png");
 			Logger.log("Loading Texture: " + fileName + ".png");
 			texture = loadTexture(file, GL_NEAREST, GL_REPEAT, GL_SRGB_ALPHA);
 			glGenerateMipmap(GL_TEXTURE_2D);
@@ -301,7 +302,8 @@ public class Loader {
 		Logger.log("Loading NVGFont: " + filename + ".ttf");
 		int font = 0;
 		try {
-			ByteBuffer buffer = ioResourceToByteBuffer("assets/fonts/" + filename + ".ttf", size * 1024);
+			ByteBuffer buffer = ioResourceToByteBuffer(
+					"assets/" + VoxelVariables.assets + "/fonts/" + filename + ".ttf", size * 1024);
 			nvgFont.add(buffer);
 			font = nvgCreateFontMem(display.getVg(), name, buffer, 0);
 		} catch (IOException e) {
@@ -316,7 +318,8 @@ public class Loader {
 		int tex = 0;
 		try {
 			Logger.log("Loading NVGTexture: " + file + ".png");
-			buffer = ioResourceToByteBuffer("assets/textures/menu/" + file + ".png", 32 * 1024);
+			buffer = ioResourceToByteBuffer("assets/" + VoxelVariables.assets + "/textures/menu/" + file + ".png",
+					32 * 1024);
 			tex = nvgCreateImageMem(display.getVg(), 0, buffer);
 		} catch (Exception e) {
 			throw new LoadTextureException(file, e);
@@ -350,8 +353,8 @@ public class Loader {
 		glBindTexture(GL_TEXTURE_CUBE_MAP, texID);
 
 		for (int i = 0; i < textureFiles.length; i++) {
-			InputStream file = getClass().getClassLoader()
-					.getResourceAsStream("assets/textures/skybox/" + textureFiles[i] + ".png");
+			InputStream file = getClass().getClassLoader().getResourceAsStream(
+					"assets/" + VoxelVariables.assets + "/textures/skybox/" + textureFiles[i] + ".png");
 			EntityTexture data = decodeTextureFile(file);
 			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGBA, data.getWidth(), data.getHeight(), 0, GL_RGBA,
 					GL_UNSIGNED_BYTE, data.getBuffer());

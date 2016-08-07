@@ -22,11 +22,10 @@ package net.luxvacuos.voxel.client.core.states;
 
 import org.lwjgl.nanovg.NanoVG;
 
-import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.voxel.client.core.GlobalStates.GameState;
-import net.luxvacuos.voxel.client.rendering.api.opengl.MasterRenderer;
 import net.luxvacuos.voxel.client.core.State;
 import net.luxvacuos.voxel.client.core.Voxel;
+import net.luxvacuos.voxel.client.rendering.api.opengl.MasterRenderer;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.ui.Text;
 import net.luxvacuos.voxel.client.ui.Window;
@@ -57,7 +56,6 @@ public class SPLoadingState extends State {
 			GameResources.getInstance().getWorldsHandler().getActiveWorld().init();
 			GameResources.getInstance().getWorldsHandler().getActiveWorld().getActiveDimension().getPhysicsEngine()
 					.addEntity(GameResources.getInstance().getCamera());
-			GameResources.getInstance().getCamera().setPosition(new Vector3f(0, 150, 0));
 			((PlayerCamera) GameResources.getInstance().getCamera()).setMouse();
 			GameResources.getInstance().getGlobalStates().setState(GameState.SP);
 		}).start();

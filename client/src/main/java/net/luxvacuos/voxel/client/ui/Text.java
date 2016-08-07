@@ -63,4 +63,8 @@ public class Text extends Component {
 	public void setColor(int r, int g, int b, int a) {
 		UIRendering.rgba(r, g, b, a, color);
 	}
+
+	public void setFontSize(int fontSize) {
+		this.fontSize = fontSize;
+	}
 }

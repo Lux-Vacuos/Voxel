@@ -26,6 +26,8 @@ import net.luxvacuos.igl.vector.Vector3f;
 
 public class PositionComponent implements Component {
 	public Vector3f position = new Vector3f(0, 0, 0);
+	public Vector3f rotation = new Vector3f(0, 0, 0);
+	public float scale = 1;
 
 	@Override
 	public String toString() {

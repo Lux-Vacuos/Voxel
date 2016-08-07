@@ -32,6 +32,7 @@ import net.luxvacuos.igl.CustomLog;
 import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.voxel.client.core.GameSettings;
 import net.luxvacuos.voxel.client.core.GlobalStates;
+import net.luxvacuos.voxel.client.core.Scripting;
 import net.luxvacuos.voxel.client.core.Voxel;
 import net.luxvacuos.voxel.client.core.VoxelVariables;
 import net.luxvacuos.voxel.client.core.WorldSimulation;
@@ -78,10 +79,13 @@ public class GameResources extends UGameResources {
 			instance = new GameResources();
 		return instance;
 	}
-
+	
 	private Display display;
-	private Random rand;
 	private Loader loader;
+	private Scripting scripting;
+	private GameSettings gameSettings;
+
+	private Random rand;
 	private Camera camera;
 	private Camera sun_Camera;
 	private MasterRenderer renderer;
@@ -89,7 +93,6 @@ public class GameResources extends UGameResources {
 	private GlobalStates globalStates;
 
 	private RenderingPipeline renderingPipeline;
-
 	private MasterShadowRenderer masterShadowRenderer;
 	private ItemsDropRenderer itemsDropRenderer;
 	private ItemsGuiRenderer itemsGuiRenderer;
@@ -101,7 +104,6 @@ public class GameResources extends UGameResources {
 	private SoundSystem soundSystem;
 	private Frustum frustum;
 	private Kryo kryo;
-	private GameSettings gameSettings;
 
 	private Vector3f sunRotation = new Vector3f(5, 0, -45);
 	private Vector3f lightPos = new Vector3f(0, 0, 0);
@@ -116,7 +118,8 @@ public class GameResources extends UGameResources {
 		display = new Display();
 		display.create(VoxelVariables.WIDTH, VoxelVariables.HEIGHT, "Voxel", VoxelVariables.VSYNC, false, false,
 				new ContextFormat(3, 3, GLFW_OPENGL_API, GLFW_OPENGL_CORE_PROFILE, true),
-				new String[] { "assets/icons/icon32.png", "assets/icons/icon64.png" });
+				new String[] { "assets/" + VoxelVariables.assets + "/icons/icon32.png",
+						"assets/" + VoxelVariables.assets + "/icons/icon64.png" });
 		loader = new Loader(display);
 		loader.loadNVGFont("Roboto-Bold", "Roboto-Bold");
 		loader.loadNVGFont("Roboto-Regular", "Roboto-Regular");
@@ -125,6 +128,7 @@ public class GameResources extends UGameResources {
 	}
 
 	public void init(Voxel voxel) {
+		scripting = new Scripting();
 		rand = new Random();
 		if (display.isVk()) {
 		}
@@ -174,7 +178,7 @@ public class GameResources extends UGameResources {
 			renderingPipeline = new MultiPass();
 	}
 
-	public void update(float rot) {
+	public void update(float rot, float delta) {
 		sunRotation.setY(rot);
 		sun_Camera.setYaw(sunRotation.x);
 		sun_Camera.setPitch(sunRotation.y);
@@ -299,6 +303,10 @@ public class GameResources extends UGameResources {
 
 	public ItemsGuiRenderer getItemsGuiRenderer() {
 		return itemsGuiRenderer;
+	}
+
+	public Scripting getScripting() {
+		return scripting;
 	}
 
 }

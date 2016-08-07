@@ -65,6 +65,7 @@ public class VoxelVariables {
 	public static boolean christmas = false;
 	public static boolean raining = false;
 	public static final String settings = Bootstrap.getPrefix() + "voxel/config/settings.conf";
+	public static String assets = "voxel";
 
 	/**
 	 * Graphic Settings

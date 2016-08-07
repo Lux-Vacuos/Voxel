@@ -49,7 +49,7 @@ public class GameSettings {
 	/**
 	 * Settings version
 	 */
-	private static int version = 6;
+	private static int version = 7;
 
 	/**
 	 * Create a GameSettings instance that will set the path, create the
@@ -110,6 +110,11 @@ public class GameSettings {
 		if (getVersion() >= 6) {
 			// Parse rendering pipeline
 			VoxelVariables.renderingPipeline = getValue("RenderingPipeline");
+		}
+		// Check for version 7
+		if (getVersion() >= 7) {
+			// Parse assetsPack
+			VoxelVariables.assets = getValue("Assets");
 		}
 		// Update Settings
 		updateSetting();
@@ -181,6 +186,7 @@ public class GameSettings {
 		registerValue("DrawDistance", Integer.toString(VoxelVariables.radius));
 		registerValue("FOV", Integer.toString(VoxelVariables.FOV));
 		registerValue("RenderingPipeline", VoxelVariables.renderingPipeline);
+		registerValue("Assets", VoxelVariables.assets);
 	}
 
 }
