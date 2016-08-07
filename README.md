@@ -32,3 +32,14 @@ This is a fork of libgdx/Ashley that was modified so it can run without all the 
 
 ### Utils
 This contains code that is used in all other sub projects, some code from libgdx and LWJGL2 was exported so the other projects do not have to implement the same code.
+
+## Running Voxel
+
+The main method is stored inside the Bootstrap class found in the package of the same name, this is for Client and Server. Has support to the following parameters.
+
+| Name          | Variable Type | Description    | Client, Server or Universal |
+| ------------- |:-------------:| --------------:| ----------------:|
+| -width        | integer       | Display Width  | Client Only |
+| -height       | integer       | Display Height | Client Only |
+| -username     | string        | Username to use when connecting to a server | Client Only |
+
