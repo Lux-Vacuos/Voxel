@@ -37,9 +37,9 @@ This contains code that is used in all other sub projects, some code from libgdx
 
 The main method is stored inside the Bootstrap class found in the package of the same name, this is for Client and Server. Has support to the following parameters.
 
-| Name          | Variable Type | Description    | Client, Server or Universal |
-| ------------- |:-------------:| --------------:| ----------------:|
-| -width        | integer       | Display Width  | Client Only |
-| -height       | integer       | Display Height | Client Only |
-| -username     | string        | Username to use when connecting to a server | Client Only |
+| Name          | Variable Type | Default Value  | Description    | Client, Server or Universal |
+| ------------- | -------------:| :-------------:| --------------:| -----------:|
+| -width        | integer       | 720            | Display Width  | Client Only |
+| -height       | integer       | 1280           | Display Height | Client Only |
+| -username     | string        | (empty)        | Username to use when connecting to a server | Client Only |
 
