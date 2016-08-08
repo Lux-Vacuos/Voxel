@@ -122,7 +122,7 @@ public class OptionsState extends State {
 		}
 
 		exitButton.setOnButtonPress((button, delta) -> {
-			GameResources.getInstance().getGameSettings().updateSetting();
+			GameResources.getInstance().getGameSettings().update();
 			GameResources.getInstance().getGameSettings().save();
 			switchTo(GameResources.getInstance().getGlobalStates().getOldState());
 		});
