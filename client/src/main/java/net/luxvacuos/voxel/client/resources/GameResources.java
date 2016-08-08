@@ -23,6 +23,7 @@ package net.luxvacuos.voxel.client.resources;
 import static org.lwjgl.glfw.GLFW.GLFW_OPENGL_API;
 import static org.lwjgl.glfw.GLFW.GLFW_OPENGL_CORE_PROFILE;
 
+import java.io.File;
 import java.util.Random;
 
 import com.esotericsoftware.kryo.Kryo;
@@ -30,7 +31,7 @@ import com.esotericsoftware.kryo.serializers.CompatibleFieldSerializer;
 
 import net.luxvacuos.igl.CustomLog;
 import net.luxvacuos.igl.vector.Vector3f;
-import net.luxvacuos.voxel.client.core.GameSettings;
+import net.luxvacuos.voxel.client.core.ClientGameSettings;
 import net.luxvacuos.voxel.client.core.GlobalStates;
 import net.luxvacuos.voxel.client.core.Scripting;
 import net.luxvacuos.voxel.client.core.Voxel;
@@ -83,7 +84,7 @@ public class GameResources extends UGameResources {
 	private Display display;
 	private Loader loader;
 	private Scripting scripting;
-	private GameSettings gameSettings;
+	private ClientGameSettings gameSettings;
 
 	private Random rand;
 	private Camera camera;
@@ -114,7 +115,10 @@ public class GameResources extends UGameResources {
 	}
 
 	public void preInit() {
-		gameSettings = new GameSettings();
+		gameSettings = new ClientGameSettings();
+		gameSettings.load(new File(VoxelVariables.settings));
+		gameSettings.read();
+		
 		display = new Display();
 		display.create(VoxelVariables.WIDTH, VoxelVariables.HEIGHT, "Voxel", VoxelVariables.VSYNC, false, false,
 				new ContextFormat(3, 3, GLFW_OPENGL_API, GLFW_OPENGL_CORE_PROFILE, true),
@@ -269,7 +273,7 @@ public class GameResources extends UGameResources {
 		return invertedLightPosition;
 	}
 
-	public GameSettings getGameSettings() {
+	public ClientGameSettings getGameSettings() {
 		return gameSettings;
 	}
 

@@ -20,14 +20,17 @@
 
 package net.luxvacuos.voxel.server.resources;
 
+import java.io.File;
+
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.serializers.CompatibleFieldSerializer;
 
 import net.luxvacuos.igl.CustomLog;
 import net.luxvacuos.voxel.server.core.CoreUtils;
-import net.luxvacuos.voxel.server.core.GameSettings;
+import net.luxvacuos.voxel.server.core.ServerGameSettings;
 import net.luxvacuos.voxel.server.core.GlobalStates;
 import net.luxvacuos.voxel.server.core.Voxel;
+import net.luxvacuos.voxel.server.core.VoxelVariables;
 import net.luxvacuos.voxel.server.core.WorldSimulation;
 import net.luxvacuos.voxel.server.network.VoxelServer;
 import net.luxvacuos.voxel.server.ui.UserInterface;
@@ -50,7 +53,7 @@ public class GameResources extends UGameResources {
 	private CoreUtils coreUtils;
 	private UserInterface userInterface;
 	private WorldSimulation worldSimulation;
-	private GameSettings gameSettings;
+	private ServerGameSettings gameSettings;
 	private WorldsHandler worldsHandler;
 
 	private int port;
@@ -68,6 +71,10 @@ public class GameResources extends UGameResources {
 	}
 
 	public void init() {
+		gameSettings = new ServerGameSettings();
+		gameSettings.load(new File(VoxelVariables.settings));
+		gameSettings.read();
+		
 		kryo = new Kryo();
 		kryo.setDefaultSerializer(CompatibleFieldSerializer.class);
 		globalStates = new GlobalStates();
@@ -75,7 +82,6 @@ public class GameResources extends UGameResources {
 		coreUtils = new CoreUtils();
 		CustomLog.getInstance();
 		worldSimulation = new WorldSimulation();
-		gameSettings = new GameSettings();
 		worldsHandler = new WorldsHandler();
 	}
 
@@ -83,7 +89,7 @@ public class GameResources extends UGameResources {
 	}
 
 	public void dispose() {
-		gameSettings.updateSetting();
+		gameSettings.update();
 		gameSettings.save();
 		voxelServer.dispose();
 	}
