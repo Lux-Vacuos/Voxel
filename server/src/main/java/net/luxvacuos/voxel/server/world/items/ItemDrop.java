@@ -26,22 +26,22 @@ import com.badlogic.gdx.math.Vector3;
 import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.voxel.server.world.block.BlockBase;
 import net.luxvacuos.voxel.server.world.entities.components.CollisionComponent;
-import net.luxvacuos.voxel.server.world.entities.components.PositionComponent;
 import net.luxvacuos.voxel.server.world.entities.components.VelocityComponent;
+import net.luxvacuos.voxel.universal.ecs.components.Position;
 
 public class ItemDrop extends Entity {
 
 	private BlockBase block;
-	private PositionComponent positionComponent;
+	private Position position;
 	private VelocityComponent velocityComponent;
 	private CollisionComponent collisionComponent;
 
 	public ItemDrop(Vector3f pos, BlockBase block, float scale) {
 		velocityComponent = new VelocityComponent();
-		positionComponent = new PositionComponent();
-		positionComponent.position = new Vector3f(pos);
+		position = new Position();
+		position.set(pos);
 		collisionComponent = new CollisionComponent();
-		this.add(positionComponent);
+		this.add(position);
 		this.add(velocityComponent);
 		this.add(collisionComponent);
 		this.block = block;
@@ -51,17 +51,7 @@ public class ItemDrop extends Entity {
 	}
 
 	public ItemDrop(BlockBase block) {
-		velocityComponent = new VelocityComponent();
-		positionComponent = new PositionComponent();
-		positionComponent.position = new Vector3f();
-		collisionComponent = new CollisionComponent();
-		this.add(positionComponent);
-		this.add(velocityComponent);
-		this.add(collisionComponent);
-		this.block = block;
-		collisionComponent.min = new Vector3(-0.2f, -0.2f, -0.2f);
-		collisionComponent.max = new Vector3(0.2f, 0.2f, 0.2f);
-		collisionComponent.boundingBox.set(collisionComponent.min, collisionComponent.max);
+		this(new Vector3f(), block, 0f);
 	}
 
 	public BlockBase getBlock() {

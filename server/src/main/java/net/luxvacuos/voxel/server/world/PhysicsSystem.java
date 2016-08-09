@@ -40,13 +40,14 @@ import net.luxvacuos.voxel.server.world.entities.components.ArmourComponent;
 import net.luxvacuos.voxel.server.world.entities.components.CollisionComponent;
 import net.luxvacuos.voxel.server.world.entities.components.DropComponent;
 import net.luxvacuos.voxel.server.world.entities.components.LifeComponent;
-import net.luxvacuos.voxel.server.world.entities.components.PositionComponent;
 import net.luxvacuos.voxel.server.world.entities.components.VelocityComponent;
+import net.luxvacuos.voxel.universal.ecs.Components;
+import net.luxvacuos.voxel.universal.ecs.components.Position;
 
 public class PhysicsSystem extends EntitySystem {
 	private ImmutableArray<Entity> entities;
 
-	private ComponentMapper<PositionComponent> pm = ComponentMapper.getFor(PositionComponent.class);
+	//private ComponentMapper<PositionComponent> pm = ComponentMapper.getFor(PositionComponent.class);
 	private ComponentMapper<VelocityComponent> vm = ComponentMapper.getFor(VelocityComponent.class);
 	private ComponentMapper<CollisionComponent> cm = ComponentMapper.getFor(CollisionComponent.class);
 	private ComponentMapper<LifeComponent> lm = ComponentMapper.getFor(LifeComponent.class);
@@ -68,13 +69,13 @@ public class PhysicsSystem extends EntitySystem {
 	@Override
 	public void addedToEngine(Engine engine) {
 		entities = engine.getEntitiesFor(
-				Family.all(PositionComponent.class, VelocityComponent.class, CollisionComponent.class).get());
+				Family.all(Position.class, VelocityComponent.class, CollisionComponent.class).get());
 	}
 
 	@Override
 	public void update(float deltaTime) {
 		for (Entity entity : entities) {
-			PositionComponent position = pm.get(entity);
+			Position position = Components.POSITION.get(entity);
 			VelocityComponent velocity = vm.get(entity);
 			CollisionComponent collison = cm.get(entity);
 			LifeComponent life = lm.get(entity);
@@ -84,7 +85,7 @@ public class PhysicsSystem extends EntitySystem {
 			velocity.velocity.z *= 0.7f - velocity.velocity.z * 0.0001f;
 			velocity.velocity.y *= 0.7f - velocity.velocity.y * 0.0001f;
 
-			collison.update(position.position);
+			collison.update(position.getPosition());
 			boxes = dim.getGlobalBoundingBox(collison.boundingBox);
 
 			double tempx = (velocity.velocity.x);
@@ -125,7 +126,7 @@ public class PhysicsSystem extends EntitySystem {
 						}
 						velocity.velocity.y = 0;
 						depthTMP /= 4f;
-						position.position.y += depthTMP;
+						position.setY(position.getY() + depthTMP);
 					}
 
 					if (normalTMP.z > 0 && velocity.velocity.z > 0)
@@ -142,9 +143,9 @@ public class PhysicsSystem extends EntitySystem {
 					life.life -= 0.5f;
 			}
 
-			position.position.x += velocity.velocity.x * deltaTime;
-			position.position.y += velocity.velocity.y * deltaTime;
-			position.position.z += velocity.velocity.z * deltaTime;
+			position.setX(position.getX() + velocity.velocity.x * deltaTime);
+			position.setY(position.getY() + velocity.velocity.y * deltaTime);
+			position.setZ(position.getZ() + velocity.velocity.z * deltaTime);
 
 			if (entity instanceof GameEntity)
 				((GameEntity) entity).update(deltaTime);

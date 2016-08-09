@@ -41,7 +41,10 @@ import net.luxvacuos.voxel.client.resources.models.RawModel;
 import net.luxvacuos.voxel.client.resources.models.TexturedModel;
 import net.luxvacuos.voxel.client.util.Maths;
 import net.luxvacuos.voxel.client.world.entities.AbstractEntity;
-import net.luxvacuos.voxel.client.world.entities.components.PositionComponent;
+import net.luxvacuos.voxel.universal.ecs.Components;
+import net.luxvacuos.voxel.universal.ecs.components.Position;
+import net.luxvacuos.voxel.universal.ecs.components.Rotation;
+import net.luxvacuos.voxel.universal.ecs.components.Scale;
 
 public class ShadowRenderer {
 
@@ -105,9 +108,11 @@ public class ShadowRenderer {
 	 * @param entity
 	 */
 	protected void prepareInstance(AbstractEntity entity) {
-		PositionComponent pos = entity.getComponent(PositionComponent.class);
-		Matrix4f transformationMatrix = Maths.createTransformationMatrix(pos.position, pos.rotation.getX(),
-				pos.rotation.getY(), pos.rotation.getZ(), pos.scale);
+		Position pos = Components.POSITION.get(entity);
+		Rotation rot = Components.ROTATION.get(entity);
+		Scale scale = Components.SCALE.get(entity);
+		Matrix4f transformationMatrix = Maths.createTransformationMatrix(pos.getPosition(), rot.getX(),
+				rot.getY(), rot.getZ(), scale.getScale());
 		shader.loadTransformationMatrix(transformationMatrix);
 	}
 

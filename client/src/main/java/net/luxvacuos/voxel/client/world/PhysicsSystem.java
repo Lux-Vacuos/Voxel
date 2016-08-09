@@ -42,14 +42,14 @@ import net.luxvacuos.voxel.client.world.entities.components.ArmourComponent;
 import net.luxvacuos.voxel.client.world.entities.components.CollisionComponent;
 import net.luxvacuos.voxel.client.world.entities.components.DropComponent;
 import net.luxvacuos.voxel.client.world.entities.components.LifeComponent;
-import net.luxvacuos.voxel.client.world.entities.components.PositionComponent;
 import net.luxvacuos.voxel.client.world.entities.components.VelocityComponent;
 import net.luxvacuos.voxel.client.world.items.ItemDrop;
+import net.luxvacuos.voxel.universal.ecs.Components;
+import net.luxvacuos.voxel.universal.ecs.components.Position;
 
 public class PhysicsSystem extends EntitySystem {
 	private ImmutableArray<Entity> entities;
 
-	private ComponentMapper<PositionComponent> pm = ComponentMapper.getFor(PositionComponent.class);
 	private ComponentMapper<VelocityComponent> vm = ComponentMapper.getFor(VelocityComponent.class);
 	private ComponentMapper<CollisionComponent> cm = ComponentMapper.getFor(CollisionComponent.class);
 	private ComponentMapper<LifeComponent> lm = ComponentMapper.getFor(LifeComponent.class);
@@ -71,18 +71,18 @@ public class PhysicsSystem extends EntitySystem {
 	@Override
 	public void addedToEngine(Engine engine) {
 		entities = engine.getEntitiesFor(
-				Family.all(PositionComponent.class, VelocityComponent.class, CollisionComponent.class).get());
+				Family.all(Position.class, VelocityComponent.class, CollisionComponent.class).get());
 	}
 
 	public void processItems(GameResources gm) {
 		for (Entity entity : entities) {
+			Position position = Components.POSITION.get(entity);
 			if (entity instanceof ItemDrop) {
 				tmp.set(0, 0, 0);
-				PositionComponent position = pm.get(entity);
 				VelocityComponent velocity = vm.get(entity);
 				PlayerCamera cam = (PlayerCamera) gm.getCamera();
 				if (Vector3f
-						.sub(entity.getComponent(PositionComponent.class).position, gm.getCamera().getPosition(), tmp)
+						.sub(position.getPosition(), gm.getCamera().getPosition(), tmp)
 						.lengthSquared() < 2) {
 					A: for (int x = 0; x < cam.getInventory().getSizeX(); x++) {
 						for (int y = 0; y < cam.getInventory().getSizeY(); y++) {
@@ -102,9 +102,9 @@ public class PhysicsSystem extends EntitySystem {
 					getEngine().removeEntity(entity);
 				}
 				if (Vector3f
-						.sub(entity.getComponent(PositionComponent.class).position, gm.getCamera().getPosition(), tmp)
+						.sub(position.getPosition(), gm.getCamera().getPosition(), tmp)
 						.lengthSquared() < 6) {
-					Vector3f.add(Vector3f.sub(gm.getCamera().getPosition(), position.position, null), velocity.velocity,
+					Vector3f.add(Vector3f.sub(gm.getCamera().getPosition(), position.getPosition(), null), velocity.velocity,
 							velocity.velocity);
 				}
 			}
@@ -113,12 +113,13 @@ public class PhysicsSystem extends EntitySystem {
 
 	public void processEntities(GameResources gm) {
 		for (Entity entity : entities) {
-			if (entity instanceof AbstractEntity && !(entity instanceof PlayerCamera)) {
+			if(entity instanceof PlayerCamera) continue;
+			if (entity instanceof AbstractEntity) {
 
 				LifeComponent life = lm.get(entity);
 				DropComponent drop = dm.get(entity);
 				CollisionComponent collison = cm.get(entity);
-				PositionComponent position = pm.get(entity);
+				Position pos = Components.POSITION.get(entity);
 				VelocityComponent velocity = vm.get(entity);
 
 				if (life != null) {
@@ -126,12 +127,12 @@ public class PhysicsSystem extends EntitySystem {
 							collison.boundingBox, tmp1) && ((PlayerCamera) gm.getCamera()).isHit()) {
 						life.life -= 1;
 
-						Vector3f.add(Vector3f.sub(position.position, gm.getCamera().getPosition(), null),
+						Vector3f.add(Vector3f.sub(pos.getPosition(), gm.getCamera().getPosition(), null),
 								velocity.velocity, velocity.velocity);
 
 						if (life.life <= 0) {
 							if (drop != null) {
-								drop.drop(getEngine(), position.position);
+								drop.drop(getEngine(), pos.getPosition());
 							}
 							getEngine().removeEntity(entity);
 						}
@@ -145,7 +146,7 @@ public class PhysicsSystem extends EntitySystem {
 	@Override
 	public void update(float deltaTime) {
 		for (Entity entity : entities) {
-			PositionComponent position = pm.get(entity);
+			Position pos = Components.POSITION.get(entity);
 			VelocityComponent velocity = vm.get(entity);
 			CollisionComponent collison = cm.get(entity);
 			LifeComponent life = lm.get(entity);
@@ -155,7 +156,7 @@ public class PhysicsSystem extends EntitySystem {
 			velocity.velocity.z *= 0.7f - velocity.velocity.z * 0.0001f;
 			velocity.velocity.y += -9.8f * deltaTime;
 
-			collison.update(position.position);
+			collison.update(pos.getPosition());
 			boxes = dim.getGlobalBoundingBox(collison.boundingBox);
 
 			double tempx = (velocity.velocity.x);
@@ -186,11 +187,11 @@ public class PhysicsSystem extends EntitySystem {
 						depthTMP /= 4f;
 						if (normalTMP.x > 0 && velocity.velocity.x > 0) {
 							velocity.velocity.x = 0;
-							position.position.x -= depthTMP;
+							pos.setX(pos.getX() - depthTMP);
 						}
 						if (normalTMP.x < 0 && velocity.velocity.x < 0) {
 							velocity.velocity.x = 0;
-							position.position.x += depthTMP;
+							pos.setX(pos.getX() + depthTMP);
 						}
 
 						if (normalTMP.y > 0 && velocity.velocity.y > 0)
@@ -200,16 +201,16 @@ public class PhysicsSystem extends EntitySystem {
 								life.life += velocity.velocity.y * 0.4f + 1 * armour.armour.getProtection();
 							}
 							velocity.velocity.y = 0;
-							position.position.y += depthTMP;
+							pos.setY(pos.getY() + depthTMP);
 						}
 
 						if (normalTMP.z > 0 && velocity.velocity.z > 0) {
 							velocity.velocity.z = 0;
-							position.position.z -= depthTMP;
+							pos.setZ(pos.getZ() - depthTMP);
 						}
 						if (normalTMP.z < 0 && velocity.velocity.z < 0) {
 							velocity.velocity.z = 0;
-							position.position.z += depthTMP;
+							pos.setZ(pos.getZ() + depthTMP);
 						}
 					}
 				}
@@ -221,9 +222,9 @@ public class PhysicsSystem extends EntitySystem {
 					life.life -= 0.5f;
 			}
 
-			position.position.x += velocity.velocity.x * deltaTime;
-			position.position.y += velocity.velocity.y * deltaTime;
-			position.position.z += velocity.velocity.z * deltaTime;
+			pos.setX(pos.getX() + velocity.velocity.x * deltaTime);
+			pos.setX(pos.getY() + velocity.velocity.y * deltaTime);
+			pos.setX(pos.getZ() + velocity.velocity.z * deltaTime);
 
 			if (entity instanceof AbstractEntity)
 				((AbstractEntity) entity).update(deltaTime);
