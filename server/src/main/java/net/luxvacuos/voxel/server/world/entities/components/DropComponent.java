@@ -27,6 +27,7 @@ import com.badlogic.ashley.core.Engine;
 
 import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.voxel.server.world.items.ItemDrop;
+import net.luxvacuos.voxel.universal.ecs.Components;
 
 public class DropComponent implements Component {
 
@@ -38,7 +39,7 @@ public class DropComponent implements Component {
 
 	public void drop(Engine system, Vector3f pos) {
 		for (ItemDrop itemDrop : drop) {
-			itemDrop.getComponent(PositionComponent.class).position = pos;
+			Components.POSITION.get(itemDrop).set(pos);
 			system.addEntity(itemDrop);
 		}
 		drop.clear();

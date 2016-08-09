@@ -25,9 +25,12 @@ import net.luxvacuos.igl.vector.Vector2f;
 import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.voxel.client.resources.DRay;
 import net.luxvacuos.voxel.client.util.Maths;
-import net.luxvacuos.voxel.client.world.entities.components.CollisionComponent;
-import net.luxvacuos.voxel.client.world.entities.components.PositionComponent;
-import net.luxvacuos.voxel.client.world.entities.components.VelocityComponent;
+import net.luxvacuos.voxel.universal.ecs.Components;
+import net.luxvacuos.voxel.universal.ecs.components.AABB;
+import net.luxvacuos.voxel.universal.ecs.components.Position;
+import net.luxvacuos.voxel.universal.ecs.components.Rotation;
+import net.luxvacuos.voxel.universal.ecs.components.Scale;
+import net.luxvacuos.voxel.universal.ecs.components.Velocity;
 
 /**
  * Camera
@@ -44,15 +47,13 @@ public class Camera extends AbstractEntity {
 	public float depth = 0;
 	public Vector3f normal = new Vector3f();
 
-	public Camera(Matrix4f proj, Vector3f aabbMin, Vector3f aabbMax) {
-		this.add(new VelocityComponent());
-		this.add(new PositionComponent());
-		this.add(new CollisionComponent());
+	public Camera(Matrix4f proj, Vector3f min, Vector3f max) {
+		this.add(new Velocity());
+		this.add(new Position());
+		this.add(new Rotation());
+		this.add(new Scale());
+		this.add(new AABB(min, max).setBoundingBox(min, max));
 		dRay = new DRay(proj, Maths.createViewMatrix(this), new Vector2f(), 0, 0);
-		this.getComponent(CollisionComponent.class).min = aabbMin.getAsVec3();
-		this.getComponent(CollisionComponent.class).max = aabbMax.getAsVec3();
-		this.getComponent(CollisionComponent.class).boundingBox.set(this.getComponent(CollisionComponent.class).min,
-				this.getComponent(CollisionComponent.class).max);
 	}
 
 	public void render() {
@@ -67,11 +68,11 @@ public class Camera extends AbstractEntity {
 	}
 
 	public Vector3f getPosition() {
-		return this.getComponent(PositionComponent.class).position;
+		return Components.POSITION.get(this).getPosition();
 	}
 
 	public void setPosition(Vector3f position) {
-		this.getComponent(PositionComponent.class).position = position;
+		Components.POSITION.get(this).set(position);
 	}
 
 	public double getPitch() {

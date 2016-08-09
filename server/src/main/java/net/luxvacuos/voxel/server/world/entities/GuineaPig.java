@@ -27,9 +27,9 @@ import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.voxel.server.world.block.Block;
 import net.luxvacuos.voxel.server.world.entities.components.ArmourComponent;
 import net.luxvacuos.voxel.server.world.entities.components.DropComponent;
-import net.luxvacuos.voxel.server.world.entities.components.LifeComponent;
 import net.luxvacuos.voxel.server.world.items.EmptyArmour;
 import net.luxvacuos.voxel.server.world.items.ItemDrop;
+import net.luxvacuos.voxel.universal.ecs.components.Health;
 
 public class GuineaPig extends GameEntity {
 
@@ -44,7 +44,7 @@ public class GuineaPig extends GameEntity {
 	@Override
 	public void init() {
 		setAABB(new Vector3f(-0.15f, -0.15f, -0.15f), new Vector3f(0.15f, 0.3f, 0.15f));
-		super.add(new LifeComponent(10));
+		super.add(new Health(10));
 		List<ItemDrop> drop = new ArrayList<>();
 		drop.add(new ItemDrop(Block.Glass));
 		super.add(new DropComponent(drop));

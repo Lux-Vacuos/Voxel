@@ -23,9 +23,10 @@ package net.luxvacuos.voxel.server.world.entities;
 import com.badlogic.ashley.core.Entity;
 
 import net.luxvacuos.igl.vector.Vector3f;
-import net.luxvacuos.voxel.server.world.entities.components.CollisionComponent;
-import net.luxvacuos.voxel.server.world.entities.components.PositionComponent;
-import net.luxvacuos.voxel.server.world.entities.components.VelocityComponent;
+import net.luxvacuos.voxel.universal.ecs.Components;
+import net.luxvacuos.voxel.universal.ecs.components.AABB;
+import net.luxvacuos.voxel.universal.ecs.components.Position;
+import net.luxvacuos.voxel.universal.ecs.components.Velocity;
 
 public class GameEntity extends Entity {
 
@@ -34,10 +35,9 @@ public class GameEntity extends Entity {
 
 	public GameEntity(Vector3f position, Vector3f aabbMin, Vector3f aabbMax, float rotX, float rotY, float rotZ,
 			float scale) {
-		this.add(new CollisionComponent());
-		this.add(new VelocityComponent());
-		this.add(new PositionComponent());
-		this.getComponent(PositionComponent.class).position = new Vector3f(position);
+		this.add(new AABB());
+		this.add(new Velocity());
+		this.add(new Position(position));
 		this.rotX = rotX;
 		this.rotY = rotY;
 		this.rotZ = rotZ;
@@ -47,10 +47,9 @@ public class GameEntity extends Entity {
 	}
 
 	public GameEntity(Vector3f position, float rotX, float rotY, float rotZ, float scale) {
-		this.add(new CollisionComponent());
-		this.add(new VelocityComponent());
-		this.add(new PositionComponent());
-		this.getComponent(PositionComponent.class).position = new Vector3f(position);
+		this.add(new AABB());
+		this.add(new Velocity());
+		this.add(new Position(position));
 		this.rotX = rotX;
 		this.rotY = rotY;
 		this.rotZ = rotZ;
@@ -65,30 +64,13 @@ public class GameEntity extends Entity {
 	}
 
 	public void setAABB(Vector3f aabbMin, Vector3f aabbMax) {
-		this.getComponent(CollisionComponent.class).min = aabbMin.getAsVec3();
-		this.getComponent(CollisionComponent.class).max = aabbMax.getAsVec3();
-		this.getComponent(CollisionComponent.class).boundingBox.set(this.getComponent(CollisionComponent.class).min,
-				this.getComponent(CollisionComponent.class).max);
-	}
-
-	public void increasePosition(float dx, float dy, float dz) {
-		this.getComponent(PositionComponent.class).position.x += dx;
-		this.getComponent(PositionComponent.class).position.y += dy;
-		this.getComponent(PositionComponent.class).position.z += dz;
+		Components.AABB.get(this).set(aabbMin, aabbMax).setBoundingBox(aabbMin, aabbMax);
 	}
 
 	public void increaseRotation(float dx, float dy, float dz) {
 		this.rotX += dx;
 		this.rotY += dy;
 		this.rotZ += dz;
-	}
-
-	public Vector3f getPosition() {
-		return getComponent(PositionComponent.class).position;
-	}
-
-	public void setPosition(Vector3f position) {
-		this.getComponent(PositionComponent.class).position = position;
 	}
 
 	public float getRotX() {

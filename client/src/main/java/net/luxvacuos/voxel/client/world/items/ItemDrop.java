@@ -26,54 +26,38 @@ import com.badlogic.gdx.math.Vector3;
 import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Tessellator;
 import net.luxvacuos.voxel.client.world.block.BlockBase;
-import net.luxvacuos.voxel.client.world.entities.components.CollisionComponent;
-import net.luxvacuos.voxel.client.world.entities.components.PositionComponent;
-import net.luxvacuos.voxel.client.world.entities.components.VelocityComponent;
+import net.luxvacuos.voxel.universal.ecs.Components;
+import net.luxvacuos.voxel.universal.ecs.components.AABB;
+import net.luxvacuos.voxel.universal.ecs.components.Position;
+import net.luxvacuos.voxel.universal.ecs.components.Scale;
+import net.luxvacuos.voxel.universal.ecs.components.Velocity;
 
 public class ItemDrop extends Entity {
 
 	private BlockBase block;
-	private PositionComponent positionComponent;
-	private VelocityComponent velocityComponent;
-	private CollisionComponent collisionComponent;
 
 	public ItemDrop(Vector3f pos, BlockBase block, float scale) {
-		velocityComponent = new VelocityComponent();
-		positionComponent = new PositionComponent();
-		positionComponent.position = new Vector3f(pos);
-		collisionComponent = new CollisionComponent();
-		this.add(positionComponent);
-		this.add(velocityComponent);
-		this.add(collisionComponent);
+		Vector3 min = new Vector3(-0.2f, -0.2f, -0.2f);
+		Vector3 max = new Vector3(0.2f, 0.2f, 0.2f);
+		this.add(new Position(pos));
+		this.add(new Scale(scale));
+		this.add(new Velocity());
+		this.add(new AABB(min, max).setBoundingBox(min, max));
 		this.block = block;
-		collisionComponent.min = new Vector3(-0.2f, -0.2f, -0.2f);
-		collisionComponent.max = new Vector3(0.2f, 0.2f, 0.2f);
-		collisionComponent.boundingBox.set(collisionComponent.min, collisionComponent.max);
 	}
 
 	public ItemDrop(BlockBase block) {
-		velocityComponent = new VelocityComponent();
-		positionComponent = new PositionComponent();
-		positionComponent.position = new Vector3f();
-		collisionComponent = new CollisionComponent();
-		this.add(positionComponent);
-		this.add(velocityComponent);
-		this.add(collisionComponent);
-		this.block = block;
-		collisionComponent.min = new Vector3(-0.2f, -0.2f, -0.2f);
-		collisionComponent.max = new Vector3(0.2f, 0.2f, 0.2f);
-		collisionComponent.boundingBox.set(collisionComponent.min, collisionComponent.max);
+		this(new Vector3f(), block, 1);
 	}
 
 	public void generateModel(Tessellator tess) {
+		Position pos = Components.POSITION.get(this);
 		if (block.isCustomModel())
-			block.generateCustomModel(tess, positionComponent.position.x - 0.15f, positionComponent.position.y - 0.15f,
-					positionComponent.position.z - 0.15f, 0.3f, true, true, true, true, true, true, 0, 0, 0, 0, 0, 0, 0,
-					0);
+			block.generateCustomModel(tess, pos.getX() - 0.15f, pos.getY() - 0.15f,
+					pos.getZ() - 0.15f, 0.3f, true, true, true, true, true, true, 0, 0, 0, 0, 0, 0, 0, 0);
 		else
-			tess.generateCube(positionComponent.position.x - 0.15f, positionComponent.position.y - 0.15f,
-					positionComponent.position.z - 0.15f, 0.3f, true, true, true, true, true, true, block, 0, 0, 0, 0,
-					0, 0, 0, 0);
+			tess.generateCube(pos.getX() - 0.15f, pos.getY() - 0.15f, pos.getZ() - 0.15f,
+					0.3f, true, true, true, true, true, true, block, 0, 0, 0, 0, 0, 0, 0, 0);
 	}
 
 	public BlockBase getBlock() {

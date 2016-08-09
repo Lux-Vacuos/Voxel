@@ -60,10 +60,10 @@ import net.luxvacuos.voxel.client.world.Dimension;
 import net.luxvacuos.voxel.client.world.block.Block;
 import net.luxvacuos.voxel.client.world.block.BlockEntity;
 import net.luxvacuos.voxel.client.world.entities.components.ArmourComponent;
-import net.luxvacuos.voxel.client.world.entities.components.CollisionComponent;
-import net.luxvacuos.voxel.client.world.entities.components.LifeComponent;
-import net.luxvacuos.voxel.client.world.entities.components.VelocityComponent;
 import net.luxvacuos.voxel.client.world.items.EmptyArmour;
+import net.luxvacuos.voxel.universal.ecs.Components;
+import net.luxvacuos.voxel.universal.ecs.components.Health;
+import net.luxvacuos.voxel.universal.ecs.components.Velocity;
 
 public class PlayerCamera extends Camera {
 
@@ -92,7 +92,7 @@ public class PlayerCamera extends Camera {
 		center = new Vector2f(display.getDisplayWidth() / 2, display.getDisplayHeight() / 2);
 		this.speed = 1f;
 		inventory = new Inventory(11, 11, GameResources.getInstance().getDisplay().getDisplayWidth() / 2 - 200, 0);
-		super.add(new LifeComponent(20));
+		super.add(new Health(20));
 		super.add(new ArmourComponent());
 		super.getComponent(ArmourComponent.class).armour = new EmptyArmour();
 		blockSelector = new RendereableTexturedModel(new Vector3f(),
@@ -100,13 +100,13 @@ public class PlayerCamera extends Camera {
 						new ModelTexture(GameResources.getInstance().getLoader().loadTextureEntity("BlockSelector"))));
 		blockSelector.scale = 1.02f;
 		if (flyMode)
-			super.getComponent(CollisionComponent.class).enabled = false;
+			Components.AABB.get(this).setEnabled(false);
 	}
 
 	public void update(float delta, GameResources gm, Dimension world) {
 		isMoved = false;
 
-		if (super.getComponent(LifeComponent.class).life <= 0 && !died) {
+		if (Components.HEALTH.get(this).get() <= 0 && !died) {
 			died = true;
 			try {
 				gm.getWorldsHandler().getActiveWorld().dispose();
@@ -184,41 +184,42 @@ public class PlayerCamera extends Camera {
 			underWater = true;
 		else
 			underWater = false;
+		
+		Velocity vel = Components.VELOCITY.get(this);
 
 		if (isKeyDown(KEY_W)) {
-			this.getComponent(VelocityComponent.class).velocity.z += -Math.cos(Math.toRadians(yaw)) * speed;
-			this.getComponent(VelocityComponent.class).velocity.x += Math.sin(Math.toRadians(yaw)) * speed;
+			vel.setZ(vel.getZ() + -Math.cos(Math.toRadians(this.yaw)) * this.speed);
+			vel.setX(vel.getX() + Math.sin(Math.toRadians(this.yaw)) * this.speed);
 			isMoved = true;
-
 		} else if (isKeyDown(KEY_S)) {
-			this.getComponent(VelocityComponent.class).velocity.z -= -Math.cos(Math.toRadians(yaw)) * speed;
-			this.getComponent(VelocityComponent.class).velocity.x -= Math.sin(Math.toRadians(yaw)) * speed;
+			vel.setZ(vel.getZ() - -Math.cos(Math.toRadians(this.yaw)) * this.speed);
+			vel.setX(vel.getX() - Math.sin(Math.toRadians(this.yaw)) * this.speed);
 			isMoved = true;
 		}
 
 		if (isKeyDown(KEY_D)) {
-			this.getComponent(VelocityComponent.class).velocity.z += Math.sin(Math.toRadians(yaw)) * speed;
-			this.getComponent(VelocityComponent.class).velocity.x += Math.cos(Math.toRadians(yaw)) * speed;
+			vel.setZ(vel.getZ() + Math.sin(Math.toRadians(this.yaw)) * this.speed);
+			vel.setX(vel.getX() + Math.cos(Math.toRadians(this.yaw)) * this.speed);
 			isMoved = true;
 		} else if (isKeyDown(KEY_A)) {
-			this.getComponent(VelocityComponent.class).velocity.z -= Math.sin(Math.toRadians(yaw)) * speed;
-			this.getComponent(VelocityComponent.class).velocity.x -= Math.cos(Math.toRadians(yaw)) * speed;
+			vel.setZ(vel.getZ() - Math.sin(Math.toRadians(this.yaw)) * this.speed);
+			vel.setX(vel.getX() - Math.cos(Math.toRadians(this.yaw)) * this.speed);
 			isMoved = true;
 		}
 		if (flyMode) {
 			if (isKeyDown(KEY_SPACE))
-				this.getComponent(VelocityComponent.class).velocity.y = 5f * speed;
+				vel.setY(5f * speed);
 		} else {
 			if (isKeyDown(KEY_SPACE) && !jump) {
-				this.getComponent(VelocityComponent.class).velocity.y = 5f;
+				vel.setY(5f);
 				jump = true;
 			}
-			if (this.getComponent(VelocityComponent.class).velocity.y == 0)
+			if (vel.getY() == 0)
 				jump = false;
 		}
 		if (flyMode) {
 			if (isKeyDown(KEY_LSHIFT))
-				this.getComponent(VelocityComponent.class).velocity.y = -5f * speed;
+				vel.setY(-5f * speed);
 		} else {
 			if (isKeyDown(KEY_LSHIFT))
 				speed = 0.2f;

@@ -29,30 +29,30 @@ import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.voxel.client.resources.EntityResources;
 import net.luxvacuos.voxel.client.world.block.Block;
 import net.luxvacuos.voxel.client.world.entities.components.ArmourComponent;
-import net.luxvacuos.voxel.client.world.entities.components.CollisionComponent;
 import net.luxvacuos.voxel.client.world.entities.components.DropComponent;
-import net.luxvacuos.voxel.client.world.entities.components.LifeComponent;
-import net.luxvacuos.voxel.client.world.entities.components.PositionComponent;
 import net.luxvacuos.voxel.client.world.entities.components.RendereableComponent;
-import net.luxvacuos.voxel.client.world.entities.components.VelocityComponent;
 import net.luxvacuos.voxel.client.world.items.EmptyArmour;
 import net.luxvacuos.voxel.client.world.items.ItemDrop;
+import net.luxvacuos.voxel.universal.ecs.components.AABB;
+import net.luxvacuos.voxel.universal.ecs.components.Health;
+import net.luxvacuos.voxel.universal.ecs.components.Position;
+import net.luxvacuos.voxel.universal.ecs.components.Velocity;
 
 public class GuineaPig extends AbstractEntity {
 
 	public GuineaPig(Vector3f position) {
 		super.add(new RendereableComponent()).getComponent(RendereableComponent.class).model = EntityResources
 				.getGuineaPig();
-		super.add(new CollisionComponent());
-		super.getComponent(CollisionComponent.class).min = new Vector3(-0.15f, -0.15f, -0.15f);
-		super.getComponent(CollisionComponent.class).max = new Vector3(0.15f, 0.3f, 0.15f);
-		super.add(new LifeComponent(10));
+		Vector3 min = new Vector3(-0.15f, -0.15f, -0.15f);
+		Vector3 max = new Vector3(0.15f, 0.3f, 0.15f);
+		super.add(new AABB(min, max));
+		super.add(new Health(10));
 		List<ItemDrop> drop = new ArrayList<>();
 		drop.add(new ItemDrop(Block.Torch));
 		super.add(new DropComponent(drop));
-		super.add(new PositionComponent()).getComponent(PositionComponent.class).position = position;
+		super.add(new Position(position));
 		super.add(new ArmourComponent()).getComponent(ArmourComponent.class).armour = new EmptyArmour();
-		super.add(new VelocityComponent());
+		super.add(new Velocity());
 	}
 
 	@Override
