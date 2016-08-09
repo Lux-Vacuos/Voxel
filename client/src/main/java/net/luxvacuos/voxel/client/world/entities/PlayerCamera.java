@@ -62,8 +62,9 @@ import net.luxvacuos.voxel.client.world.block.BlockEntity;
 import net.luxvacuos.voxel.client.world.entities.components.ArmourComponent;
 import net.luxvacuos.voxel.client.world.entities.components.CollisionComponent;
 import net.luxvacuos.voxel.client.world.entities.components.LifeComponent;
-import net.luxvacuos.voxel.client.world.entities.components.VelocityComponent;
 import net.luxvacuos.voxel.client.world.items.EmptyArmour;
+import net.luxvacuos.voxel.universal.ecs.Components;
+import net.luxvacuos.voxel.universal.ecs.components.Velocity;
 
 public class PlayerCamera extends Camera {
 
@@ -184,41 +185,42 @@ public class PlayerCamera extends Camera {
 			underWater = true;
 		else
 			underWater = false;
+		
+		Velocity vel = Components.VELOCITY.get(this);
 
 		if (isKeyDown(KEY_W)) {
-			this.getComponent(VelocityComponent.class).velocity.z += -Math.cos(Math.toRadians(yaw)) * speed;
-			this.getComponent(VelocityComponent.class).velocity.x += Math.sin(Math.toRadians(yaw)) * speed;
+			vel.setZ(vel.getZ() + -Math.cos(Math.toRadians(this.yaw)) * this.speed);
+			vel.setX(vel.getX() + Math.sin(Math.toRadians(this.yaw)) * this.speed);
 			isMoved = true;
-
 		} else if (isKeyDown(KEY_S)) {
-			this.getComponent(VelocityComponent.class).velocity.z -= -Math.cos(Math.toRadians(yaw)) * speed;
-			this.getComponent(VelocityComponent.class).velocity.x -= Math.sin(Math.toRadians(yaw)) * speed;
+			vel.setZ(vel.getZ() - -Math.cos(Math.toRadians(this.yaw)) * this.speed);
+			vel.setX(vel.getX() - Math.sin(Math.toRadians(this.yaw)) * this.speed);
 			isMoved = true;
 		}
 
 		if (isKeyDown(KEY_D)) {
-			this.getComponent(VelocityComponent.class).velocity.z += Math.sin(Math.toRadians(yaw)) * speed;
-			this.getComponent(VelocityComponent.class).velocity.x += Math.cos(Math.toRadians(yaw)) * speed;
+			vel.setZ(vel.getZ() + Math.sin(Math.toRadians(this.yaw)) * this.speed);
+			vel.setX(vel.getX() + Math.cos(Math.toRadians(this.yaw)) * this.speed);
 			isMoved = true;
 		} else if (isKeyDown(KEY_A)) {
-			this.getComponent(VelocityComponent.class).velocity.z -= Math.sin(Math.toRadians(yaw)) * speed;
-			this.getComponent(VelocityComponent.class).velocity.x -= Math.cos(Math.toRadians(yaw)) * speed;
+			vel.setZ(vel.getZ() - Math.sin(Math.toRadians(this.yaw)) * this.speed);
+			vel.setX(vel.getX() - Math.cos(Math.toRadians(this.yaw)) * this.speed);
 			isMoved = true;
 		}
 		if (flyMode) {
 			if (isKeyDown(KEY_SPACE))
-				this.getComponent(VelocityComponent.class).velocity.y = 5f * speed;
+				vel.setY(5f * speed);
 		} else {
 			if (isKeyDown(KEY_SPACE) && !jump) {
-				this.getComponent(VelocityComponent.class).velocity.y = 5f;
+				vel.setY(5f);
 				jump = true;
 			}
-			if (this.getComponent(VelocityComponent.class).velocity.y == 0)
+			if (vel.getY() == 0)
 				jump = false;
 		}
 		if (flyMode) {
 			if (isKeyDown(KEY_LSHIFT))
-				this.getComponent(VelocityComponent.class).velocity.y = -5f * speed;
+				vel.setY(-5f * speed);
 		} else {
 			if (isKeyDown(KEY_LSHIFT))
 				speed = 0.2f;

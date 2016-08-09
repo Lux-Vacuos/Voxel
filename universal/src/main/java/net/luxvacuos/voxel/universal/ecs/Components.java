@@ -15,4 +15,6 @@ public class Components {
 	public static final ComponentMapper<Rotation> ROTATION = ComponentMapper.getFor(Rotation.class);
 	
 	public static final ComponentMapper<Scale> SCALE = ComponentMapper.getFor(Scale.class);
+	
+	public static final ComponentMapper<Velocity> VELOCITY = ComponentMapper.getFor(Velocity.class);
 }

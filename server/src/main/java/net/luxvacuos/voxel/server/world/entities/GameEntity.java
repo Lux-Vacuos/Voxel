@@ -24,8 +24,8 @@ import com.badlogic.ashley.core.Entity;
 
 import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.voxel.server.world.entities.components.CollisionComponent;
-import net.luxvacuos.voxel.server.world.entities.components.VelocityComponent;
 import net.luxvacuos.voxel.universal.ecs.components.Position;
+import net.luxvacuos.voxel.universal.ecs.components.Velocity;
 
 public class GameEntity extends Entity {
 
@@ -35,7 +35,7 @@ public class GameEntity extends Entity {
 	public GameEntity(Vector3f position, Vector3f aabbMin, Vector3f aabbMax, float rotX, float rotY, float rotZ,
 			float scale) {
 		this.add(new CollisionComponent());
-		this.add(new VelocityComponent());
+		this.add(new Velocity());
 		this.add(new Position(position));
 		this.rotX = rotX;
 		this.rotY = rotY;
@@ -47,7 +47,7 @@ public class GameEntity extends Entity {
 
 	public GameEntity(Vector3f position, float rotX, float rotY, float rotZ, float scale) {
 		this.add(new CollisionComponent());
-		this.add(new VelocityComponent());
+		this.add(new Velocity());
 		this.add(new Position(position));
 		this.rotX = rotX;
 		this.rotY = rotY;

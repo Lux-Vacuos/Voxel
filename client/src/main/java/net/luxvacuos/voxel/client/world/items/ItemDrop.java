@@ -27,23 +27,21 @@ import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Tessellator;
 import net.luxvacuos.voxel.client.world.block.BlockBase;
 import net.luxvacuos.voxel.client.world.entities.components.CollisionComponent;
-import net.luxvacuos.voxel.client.world.entities.components.VelocityComponent;
 import net.luxvacuos.voxel.universal.ecs.Components;
 import net.luxvacuos.voxel.universal.ecs.components.Position;
 import net.luxvacuos.voxel.universal.ecs.components.Scale;
+import net.luxvacuos.voxel.universal.ecs.components.Velocity;
 
 public class ItemDrop extends Entity {
 
 	private BlockBase block;
-	private VelocityComponent velocityComponent;
 	private CollisionComponent collisionComponent;
 
 	public ItemDrop(Vector3f pos, BlockBase block, float scale) {
-		velocityComponent = new VelocityComponent();
 		collisionComponent = new CollisionComponent();
 		this.add(new Position(pos));
 		this.add(new Scale(scale));
-		this.add(velocityComponent);
+		this.add(new Velocity());
 		this.add(collisionComponent);
 		this.block = block;
 		collisionComponent.min = new Vector3(-0.2f, -0.2f, -0.2f);

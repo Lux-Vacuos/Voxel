@@ -33,10 +33,10 @@ import net.luxvacuos.voxel.client.world.entities.components.CollisionComponent;
 import net.luxvacuos.voxel.client.world.entities.components.DropComponent;
 import net.luxvacuos.voxel.client.world.entities.components.LifeComponent;
 import net.luxvacuos.voxel.client.world.entities.components.RendereableComponent;
-import net.luxvacuos.voxel.client.world.entities.components.VelocityComponent;
 import net.luxvacuos.voxel.client.world.items.EmptyArmour;
 import net.luxvacuos.voxel.client.world.items.ItemDrop;
 import net.luxvacuos.voxel.universal.ecs.components.Position;
+import net.luxvacuos.voxel.universal.ecs.components.Velocity;
 
 public class GuineaPig extends AbstractEntity {
 
@@ -52,7 +52,7 @@ public class GuineaPig extends AbstractEntity {
 		super.add(new DropComponent(drop));
 		super.add(new Position(position));
 		super.add(new ArmourComponent()).getComponent(ArmourComponent.class).armour = new EmptyArmour();
-		super.add(new VelocityComponent());
+		super.add(new Velocity());
 	}
 
 	@Override

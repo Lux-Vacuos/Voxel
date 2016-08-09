@@ -26,11 +26,11 @@ import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.voxel.client.resources.DRay;
 import net.luxvacuos.voxel.client.util.Maths;
 import net.luxvacuos.voxel.client.world.entities.components.CollisionComponent;
-import net.luxvacuos.voxel.client.world.entities.components.VelocityComponent;
 import net.luxvacuos.voxel.universal.ecs.Components;
 import net.luxvacuos.voxel.universal.ecs.components.Position;
 import net.luxvacuos.voxel.universal.ecs.components.Rotation;
 import net.luxvacuos.voxel.universal.ecs.components.Scale;
+import net.luxvacuos.voxel.universal.ecs.components.Velocity;
 
 /**
  * Camera
@@ -48,7 +48,7 @@ public class Camera extends AbstractEntity {
 	public Vector3f normal = new Vector3f();
 
 	public Camera(Matrix4f proj, Vector3f aabbMin, Vector3f aabbMax) {
-		this.add(new VelocityComponent());
+		this.add(new Velocity());
 		this.add(new Position());
 		this.add(new Rotation());
 		this.add(new Scale());
