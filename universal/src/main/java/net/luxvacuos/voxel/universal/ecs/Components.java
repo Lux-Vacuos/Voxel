@@ -17,4 +17,6 @@ public class Components {
 	public static final ComponentMapper<Scale> SCALE = ComponentMapper.getFor(Scale.class);
 	
 	public static final ComponentMapper<Velocity> VELOCITY = ComponentMapper.getFor(Velocity.class);
+	
+	public static final ComponentMapper<Health> HEALTH = ComponentMapper.getFor(Health.class);
 }

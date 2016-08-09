@@ -39,8 +39,8 @@ import net.luxvacuos.voxel.server.world.entities.GameEntity;
 import net.luxvacuos.voxel.server.world.entities.components.ArmourComponent;
 import net.luxvacuos.voxel.server.world.entities.components.CollisionComponent;
 import net.luxvacuos.voxel.server.world.entities.components.DropComponent;
-import net.luxvacuos.voxel.server.world.entities.components.LifeComponent;
 import net.luxvacuos.voxel.universal.ecs.Components;
+import net.luxvacuos.voxel.universal.ecs.components.Health;
 import net.luxvacuos.voxel.universal.ecs.components.Position;
 import net.luxvacuos.voxel.universal.ecs.components.Velocity;
 
@@ -48,7 +48,6 @@ public class PhysicsSystem extends EntitySystem {
 	private ImmutableArray<Entity> entities;
 
 	private ComponentMapper<CollisionComponent> cm = ComponentMapper.getFor(CollisionComponent.class);
-	private ComponentMapper<LifeComponent> lm = ComponentMapper.getFor(LifeComponent.class);
 	private ComponentMapper<DropComponent> dm = ComponentMapper.getFor(DropComponent.class);
 	private ComponentMapper<ArmourComponent> am = ComponentMapper.getFor(ArmourComponent.class);
 
@@ -76,7 +75,7 @@ public class PhysicsSystem extends EntitySystem {
 			Position position = Components.POSITION.get(entity);
 			Velocity velocity = Components.VELOCITY.get(entity);
 			CollisionComponent collison = cm.get(entity);
-			LifeComponent life = lm.get(entity);
+			Health health = Components.HEALTH.get(entity);
 			ArmourComponent armour = am.get(entity);
 
 			velocity.setX(velocity.getX() * 0.7f - velocity.getX() * 0.0001f);
@@ -119,8 +118,8 @@ public class PhysicsSystem extends EntitySystem {
 					if (normalTMP.y > 0 && velocity.getY() > 0)
 						velocity.setY(0);
 					if (normalTMP.y < 0 && velocity.getY() < 0) {
-						if (life != null && velocity.getY() < -10f) {
-							life.life += velocity.getY() * 0.4f + 1 * armour.armour.getProtection();
+						if (health != null && velocity.getY() < -10f) {
+							health.take((float)(velocity.getY() * 0.4f + 1 * armour.armour.getProtection()));
 						}
 						velocity.setY(0);
 						depthTMP /= 4f;
@@ -133,12 +132,12 @@ public class PhysicsSystem extends EntitySystem {
 						velocity.setZ(0);
 				}
 			}
-			if (life != null) {
+			if (health != null) {
 				BlockBase b = dim.getGlobalBlock(bx, by, bz);
 				if (b == Block.Lava)
-					life.life -= 0.2f;
+					health.take(0.2f);
 				if (!b.isTransparent())
-					life.life -= 0.5f;
+					health.take(0.5f);
 			}
 
 			position.setX(position.getX() + velocity.getX() * deltaTime);

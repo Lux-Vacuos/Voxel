@@ -28,8 +28,8 @@ import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.world.Dimension;
 import net.luxvacuos.voxel.client.world.block.BlocksResources;
 import net.luxvacuos.voxel.client.world.entities.PlayerCamera;
-import net.luxvacuos.voxel.client.world.entities.components.LifeComponent;
 import net.luxvacuos.voxel.universal.api.MoltenAPI;
+import net.luxvacuos.voxel.universal.ecs.components.Health;
 
 public class GameSP {
 	private float x, y, w, h;
@@ -81,7 +81,7 @@ public class GameSP {
 				UIRendering.rgba(0, 0, 0, 48, UIRendering.colorC));
 		UIRendering.renderLife(gm.getDisplay().getDisplayWidth() / 2 - 200,
 				gm.getDisplay().getDisplayHeight() - 15, 200, 15,
-				((PlayerCamera) gm.getCamera()).getComponent(LifeComponent.class).life / 20f);
+				((PlayerCamera) gm.getCamera()).getComponent(Health.class).get() / 20f);
 
 		gm.getItemsGuiRenderer().getTess().begin(BlocksResources.getTessellatorTextureAtlas().getTexture(),
 				BlocksResources.getNormalMap(), BlocksResources.getHeightMap(), BlocksResources.getSpecularMap());
