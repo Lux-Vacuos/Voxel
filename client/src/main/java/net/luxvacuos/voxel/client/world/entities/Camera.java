@@ -25,8 +25,8 @@ import net.luxvacuos.igl.vector.Vector2f;
 import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.voxel.client.resources.DRay;
 import net.luxvacuos.voxel.client.util.Maths;
-import net.luxvacuos.voxel.client.world.entities.components.CollisionComponent;
 import net.luxvacuos.voxel.universal.ecs.Components;
+import net.luxvacuos.voxel.universal.ecs.components.AABB;
 import net.luxvacuos.voxel.universal.ecs.components.Position;
 import net.luxvacuos.voxel.universal.ecs.components.Rotation;
 import net.luxvacuos.voxel.universal.ecs.components.Scale;
@@ -47,17 +47,13 @@ public class Camera extends AbstractEntity {
 	public float depth = 0;
 	public Vector3f normal = new Vector3f();
 
-	public Camera(Matrix4f proj, Vector3f aabbMin, Vector3f aabbMax) {
+	public Camera(Matrix4f proj, Vector3f min, Vector3f max) {
 		this.add(new Velocity());
 		this.add(new Position());
 		this.add(new Rotation());
 		this.add(new Scale());
-		this.add(new CollisionComponent());
+		this.add(new AABB(min, max).setBoundingBox(min, max));
 		dRay = new DRay(proj, Maths.createViewMatrix(this), new Vector2f(), 0, 0);
-		this.getComponent(CollisionComponent.class).min = aabbMin.getAsVec3();
-		this.getComponent(CollisionComponent.class).max = aabbMax.getAsVec3();
-		this.getComponent(CollisionComponent.class).boundingBox.set(this.getComponent(CollisionComponent.class).min,
-				this.getComponent(CollisionComponent.class).max);
 	}
 
 	public void render() {

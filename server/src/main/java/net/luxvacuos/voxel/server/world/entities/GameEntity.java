@@ -23,7 +23,8 @@ package net.luxvacuos.voxel.server.world.entities;
 import com.badlogic.ashley.core.Entity;
 
 import net.luxvacuos.igl.vector.Vector3f;
-import net.luxvacuos.voxel.server.world.entities.components.CollisionComponent;
+import net.luxvacuos.voxel.universal.ecs.Components;
+import net.luxvacuos.voxel.universal.ecs.components.AABB;
 import net.luxvacuos.voxel.universal.ecs.components.Position;
 import net.luxvacuos.voxel.universal.ecs.components.Velocity;
 
@@ -34,7 +35,7 @@ public class GameEntity extends Entity {
 
 	public GameEntity(Vector3f position, Vector3f aabbMin, Vector3f aabbMax, float rotX, float rotY, float rotZ,
 			float scale) {
-		this.add(new CollisionComponent());
+		this.add(new AABB());
 		this.add(new Velocity());
 		this.add(new Position(position));
 		this.rotX = rotX;
@@ -46,7 +47,7 @@ public class GameEntity extends Entity {
 	}
 
 	public GameEntity(Vector3f position, float rotX, float rotY, float rotZ, float scale) {
-		this.add(new CollisionComponent());
+		this.add(new AABB());
 		this.add(new Velocity());
 		this.add(new Position(position));
 		this.rotX = rotX;
@@ -63,10 +64,7 @@ public class GameEntity extends Entity {
 	}
 
 	public void setAABB(Vector3f aabbMin, Vector3f aabbMax) {
-		this.getComponent(CollisionComponent.class).min = aabbMin.getAsVec3();
-		this.getComponent(CollisionComponent.class).max = aabbMax.getAsVec3();
-		this.getComponent(CollisionComponent.class).boundingBox.set(this.getComponent(CollisionComponent.class).min,
-				this.getComponent(CollisionComponent.class).max);
+		Components.AABB.get(this).set(aabbMin, aabbMax).setBoundingBox(aabbMin, aabbMax);
 	}
 
 	public void increaseRotation(float dx, float dy, float dz) {

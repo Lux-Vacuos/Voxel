@@ -26,8 +26,8 @@ import com.badlogic.gdx.math.Vector3;
 import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Tessellator;
 import net.luxvacuos.voxel.client.world.block.BlockBase;
-import net.luxvacuos.voxel.client.world.entities.components.CollisionComponent;
 import net.luxvacuos.voxel.universal.ecs.Components;
+import net.luxvacuos.voxel.universal.ecs.components.AABB;
 import net.luxvacuos.voxel.universal.ecs.components.Position;
 import net.luxvacuos.voxel.universal.ecs.components.Scale;
 import net.luxvacuos.voxel.universal.ecs.components.Velocity;
@@ -35,18 +35,15 @@ import net.luxvacuos.voxel.universal.ecs.components.Velocity;
 public class ItemDrop extends Entity {
 
 	private BlockBase block;
-	private CollisionComponent collisionComponent;
 
 	public ItemDrop(Vector3f pos, BlockBase block, float scale) {
-		collisionComponent = new CollisionComponent();
+		Vector3 min = new Vector3(-0.2f, -0.2f, -0.2f);
+		Vector3 max = new Vector3(0.2f, 0.2f, 0.2f);
 		this.add(new Position(pos));
 		this.add(new Scale(scale));
 		this.add(new Velocity());
-		this.add(collisionComponent);
+		this.add(new AABB(min, max).setBoundingBox(min, max));
 		this.block = block;
-		collisionComponent.min = new Vector3(-0.2f, -0.2f, -0.2f);
-		collisionComponent.max = new Vector3(0.2f, 0.2f, 0.2f);
-		collisionComponent.boundingBox.set(collisionComponent.min, collisionComponent.max);
 	}
 
 	public ItemDrop(BlockBase block) {

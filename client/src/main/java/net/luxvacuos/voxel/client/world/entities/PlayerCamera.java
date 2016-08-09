@@ -60,7 +60,6 @@ import net.luxvacuos.voxel.client.world.Dimension;
 import net.luxvacuos.voxel.client.world.block.Block;
 import net.luxvacuos.voxel.client.world.block.BlockEntity;
 import net.luxvacuos.voxel.client.world.entities.components.ArmourComponent;
-import net.luxvacuos.voxel.client.world.entities.components.CollisionComponent;
 import net.luxvacuos.voxel.client.world.items.EmptyArmour;
 import net.luxvacuos.voxel.universal.ecs.Components;
 import net.luxvacuos.voxel.universal.ecs.components.Health;
@@ -101,7 +100,7 @@ public class PlayerCamera extends Camera {
 						new ModelTexture(GameResources.getInstance().getLoader().loadTextureEntity("BlockSelector"))));
 		blockSelector.scale = 1.02f;
 		if (flyMode)
-			super.getComponent(CollisionComponent.class).enabled = false;
+			Components.AABB.get(this).setEnabled(false);
 	}
 
 	public void update(float delta, GameResources gm, Dimension world) {

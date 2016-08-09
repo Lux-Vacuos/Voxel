@@ -39,10 +39,10 @@ import net.luxvacuos.voxel.client.world.block.BlockBase;
 import net.luxvacuos.voxel.client.world.entities.AbstractEntity;
 import net.luxvacuos.voxel.client.world.entities.PlayerCamera;
 import net.luxvacuos.voxel.client.world.entities.components.ArmourComponent;
-import net.luxvacuos.voxel.client.world.entities.components.CollisionComponent;
 import net.luxvacuos.voxel.client.world.entities.components.DropComponent;
 import net.luxvacuos.voxel.client.world.items.ItemDrop;
 import net.luxvacuos.voxel.universal.ecs.Components;
+import net.luxvacuos.voxel.universal.ecs.components.AABB;
 import net.luxvacuos.voxel.universal.ecs.components.Health;
 import net.luxvacuos.voxel.universal.ecs.components.Position;
 import net.luxvacuos.voxel.universal.ecs.components.Velocity;
@@ -50,7 +50,6 @@ import net.luxvacuos.voxel.universal.ecs.components.Velocity;
 public class PhysicsSystem extends EntitySystem {
 	private ImmutableArray<Entity> entities;
 
-	private ComponentMapper<CollisionComponent> cm = ComponentMapper.getFor(CollisionComponent.class);
 	private ComponentMapper<DropComponent> dm = ComponentMapper.getFor(DropComponent.class);
 	private ComponentMapper<ArmourComponent> am = ComponentMapper.getFor(ArmourComponent.class);
 
@@ -69,7 +68,7 @@ public class PhysicsSystem extends EntitySystem {
 	@Override
 	public void addedToEngine(Engine engine) {
 		entities = engine.getEntitiesFor(
-				Family.all(Position.class, Velocity.class, CollisionComponent.class).get());
+				Family.all(Position.class, Velocity.class, AABB.class).get());
 	}
 
 	public void processItems(GameResources gm) {
@@ -116,13 +115,13 @@ public class PhysicsSystem extends EntitySystem {
 
 				Health health = Components.HEALTH.get(entity);
 				DropComponent drop = dm.get(entity);
-				CollisionComponent collison = cm.get(entity);
+				AABB aabb = Components.AABB.get(entity);
 				Position pos = Components.POSITION.get(entity);
 				Velocity velocity = Components.VELOCITY.get(entity);
 
 				if (health != null) {
 					if (Maths.intersectRayBounds(((PlayerCamera) gm.getCamera()).getDRay().getRay(),
-							collison.boundingBox, tmp1) && ((PlayerCamera) gm.getCamera()).isHit()) {
+							aabb.getBoundingBox(), tmp1) && ((PlayerCamera) gm.getCamera()).isHit()) {
 						health.take(1);
 
 						Vector3f.add(Vector3f.sub(pos.getPosition(), gm.getCamera().getPosition(), null),
@@ -146,7 +145,7 @@ public class PhysicsSystem extends EntitySystem {
 		for (Entity entity : entities) {
 			Position pos = Components.POSITION.get(entity);
 			Velocity velocity = Components.VELOCITY.get(entity);
-			CollisionComponent collison = cm.get(entity);
+			AABB aabb = Components.AABB.get(entity);
 			Health health = Components.HEALTH.get(entity);
 			ArmourComponent armour = am.get(entity);
 			
@@ -154,8 +153,8 @@ public class PhysicsSystem extends EntitySystem {
 			velocity.setY(velocity.getY() + -9.8f * deltaTime);
 			velocity.setZ(velocity.getZ() * 0.7f - velocity.getZ() * 0.0001f);
 
-			collison.update(pos.getPosition());
-			boxes = dim.getGlobalBoundingBox(collison.boundingBox);
+			aabb.update(pos.getPosition());
+			boxes = dim.getGlobalBoundingBox(aabb.getBoundingBox());
 
 			double tempx = velocity.getX();
 			int tempX = (int) tempx;
@@ -177,10 +176,10 @@ public class PhysicsSystem extends EntitySystem {
 			int bx = (int) tempX;
 			int by = (int) tempY;
 			int bz = (int) tempZ - 1;
-			if (collison.enabled)
+			if (aabb.isEnabled())
 				for (BoundingBox boundingBox : boxes) {
 					normalTMP.set(0, 0, 0);
-					if (AABBIntersect(collison.boundingBox.min, collison.boundingBox.max, boundingBox.min,
+					if (AABBIntersect(aabb.getBoundingBox().min, aabb.getBoundingBox().max, boundingBox.min,
 							boundingBox.max)) {
 						depthTMP /= 4f;
 						if (normalTMP.x > 0 && velocity.getX() > 0) {

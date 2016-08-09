@@ -23,7 +23,7 @@ package net.luxvacuos.voxel.server.world.entities;
 import com.badlogic.ashley.core.Entity;
 
 import net.luxvacuos.igl.vector.Vector3f;
-import net.luxvacuos.voxel.server.world.entities.components.CollisionComponent;
+import net.luxvacuos.voxel.universal.ecs.components.AABB;
 import net.luxvacuos.voxel.universal.ecs.components.Position;
 import net.luxvacuos.voxel.universal.ecs.components.Velocity;
 
@@ -38,14 +38,10 @@ public class Camera extends Entity {
 
 	public boolean isMoved = false;
 
-	public Camera(Vector3f aabbMin, Vector3f aabbMax) {
+	public Camera(Vector3f min, Vector3f max) {
 		this.add(new Velocity());
 		this.add(new Position());
-		this.add(new CollisionComponent());
-		this.getComponent(CollisionComponent.class).min = aabbMin.getAsVec3();
-		this.getComponent(CollisionComponent.class).max = aabbMax.getAsVec3();
-		this.getComponent(CollisionComponent.class).boundingBox.set(this.getComponent(CollisionComponent.class).min,
-				this.getComponent(CollisionComponent.class).max);
+		this.add(new AABB(min, max).setBoundingBox(min, max));
 	}
 
 }
