@@ -223,8 +223,8 @@ public class PhysicsSystem extends EntitySystem {
 			}
 
 			pos.setX(pos.getX() + velocity.velocity.x * deltaTime);
-			pos.setX(pos.getY() + velocity.velocity.y * deltaTime);
-			pos.setX(pos.getZ() + velocity.velocity.z * deltaTime);
+			pos.setY(pos.getY() + velocity.velocity.y * deltaTime);
+			pos.setZ(pos.getZ() + velocity.velocity.z * deltaTime);
 
 			if (entity instanceof AbstractEntity)
 				((AbstractEntity) entity).update(deltaTime);
