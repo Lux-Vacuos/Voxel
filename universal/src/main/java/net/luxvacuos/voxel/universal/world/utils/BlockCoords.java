@@ -1,10 +1,10 @@
-package net.luxvacuos.voxel.universal.world.block;
+package net.luxvacuos.voxel.universal.world.utils;
 
-public final class BlockPos {
+public final class BlockCoords {
 	
 	private final int x, y, z;
 	
-	public BlockPos(int x, int y, int z) {
+	public BlockCoords(int x, int y, int z) {
 		this.x = x;
 		this.y = y;
 		this.z = z;

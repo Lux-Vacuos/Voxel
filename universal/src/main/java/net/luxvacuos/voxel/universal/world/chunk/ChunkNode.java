@@ -1,6 +1,6 @@
 package net.luxvacuos.voxel.universal.world.chunk;
 
-import net.luxvacuos.voxel.universal.world.block.BlockPos;
+import net.luxvacuos.voxel.universal.world.utils.BlockCoords;
 
 public final class ChunkNode {
 
@@ -52,7 +52,7 @@ public final class ChunkNode {
 		return true;
 	}
 	
-	public static ChunkNode getFromBlockPos(int x, int y, int z) {
+	public static ChunkNode getFromBlockCoords(int x, int y, int z) {
 		int cx = x >> 4;
 		int cy = y >> 4;
 		int cz = z >> 4;
@@ -60,7 +60,7 @@ public final class ChunkNode {
 		return new ChunkNode(cx, cy, cz);
 	}
 	
-	public static ChunkNode getFromBlockPos(BlockPos block) {
+	public static ChunkNode getFromBlockCoords(BlockCoords block) {
 		int cx = block.getX() >> 4;
 		int cy = block.getY() >> 4;
 		int cz = block.getZ() >> 4;

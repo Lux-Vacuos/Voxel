@@ -2,8 +2,8 @@ package net.luxvacuos.voxel.universal.world;
 
 import com.badlogic.ashley.utils.ImmutableArray;
 
-import net.luxvacuos.voxel.universal.world.block.BlockPos;
 import net.luxvacuos.voxel.universal.world.dimension.IDimension;
+import net.luxvacuos.voxel.universal.world.utils.BlockCoords;
 
 public interface IWorld {
 	
@@ -22,9 +22,9 @@ public interface IWorld {
 	public ImmutableArray<IDimension> getDimensions();
 	
 	//Helper functions for Dimensions
-	public void addLight(int dimensionID, BlockPos block, int val);
+	public void addLight(BlockCoords block, int val);
 	
-	public float getLight(int dimensionID, BlockPos block);
+	public float getLight(BlockCoords block);
 	
-	public void removeLight(int dimensionID, BlockPos block);
+	public void removeLight(BlockCoords block);
 }

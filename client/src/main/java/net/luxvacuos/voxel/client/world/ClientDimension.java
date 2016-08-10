@@ -113,12 +113,12 @@ public class ClientDimension extends Dimension {
 		}
 
 		for (Chunk chunk : chunks.values()) {
-			if (Math.abs(chunk.cx - playerCX) > VoxelVariables.radius) {
-				addTo(new ChunkNode(chunk.cx, chunk.cy, chunk.cz), removeQueue);
-			} else if (Math.abs(chunk.cz - playerCZ) > VoxelVariables.radius) {
-				addTo(new ChunkNode(chunk.cx, chunk.cy, chunk.cz), removeQueue);
-			} else if (Math.abs(chunk.cy - playerCY) > VoxelVariables.radius) {
-				addTo(new ChunkNode(chunk.cx, chunk.cy, chunk.cz), removeQueue);
+			if (Math.abs(chunk.node.cx - playerCX) > VoxelVariables.radius) {
+				addTo(chunk.node, removeQueue);
+			} else if (Math.abs(chunk.node.cz - playerCZ) > VoxelVariables.radius) {
+				addTo(chunk.node, removeQueue);
+			} else if (Math.abs(chunk.node.cy - playerCY) > VoxelVariables.radius) {
+				addTo(chunk.node, removeQueue);
 			}
 		}
 		int chunksLoaded = 0;
