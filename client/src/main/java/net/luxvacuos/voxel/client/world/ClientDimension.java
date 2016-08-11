@@ -34,7 +34,7 @@ import net.luxvacuos.voxel.client.resources.models.ParticlePoint;
 import net.luxvacuos.voxel.client.resources.models.ParticleSystem;
 import net.luxvacuos.voxel.client.world.chunks.Chunk;
 import net.luxvacuos.voxel.client.world.chunks.ChunkGenerator;
-import net.luxvacuos.voxel.client.world.chunks.ChunkNode;
+import net.luxvacuos.voxel.universal.world.chunk.ChunkNode;
 
 public class ClientDimension extends Dimension {
 
@@ -84,18 +84,22 @@ public class ClientDimension extends Dimension {
 			playerCY = (int) ((gm.getCamera().getPosition().y) / 16);
 		if (gm.getCamera().getPosition().z > 0)
 			playerCZ = (int) ((gm.getCamera().getPosition().z) / 16);
+		
+		ChunkNode node;
+		int xx, yy, zz;
 		for (int zr = -VoxelVariables.radius; zr <= VoxelVariables.radius; zr++) {
-			int zz = playerCZ + zr;
+			zz = playerCZ + zr;
 			for (int xr = -VoxelVariables.radius; xr <= VoxelVariables.radius; xr++) {
-				int xx = playerCX + xr;
+				xx = playerCX + xr;
 				for (int yr = -VoxelVariables.radius; yr <= VoxelVariables.radius; yr++) {
-					int yy = playerCY + yr;
+					yy = playerCY + yr;
+					node = new ChunkNode(xx, yy, zz);
 
-					if (!hasChunk(xx, yy, zz)) {
-						addChunk(new Chunk(new ChunkNode(xx, yy, zz), this));
-						addTo(new ChunkNode(xx, yy, zz), addQueue);
+					if (!hasChunk(node)) {
+						addChunk(new Chunk(node, this));
+						addTo(node, addQueue);
 					} else if (hasChunk(xx, yy, zz)) {
-						Chunk chunk = getChunk(xx, yy, zz);
+						Chunk chunk = getChunk(node);
 						if (!chunk.loaded)
 							continue;
 						chunk.update(this, gm.getCamera(), delta);
@@ -107,36 +111,36 @@ public class ClientDimension extends Dimension {
 							particleSystem.generateParticles(particlePoint, delta);
 						}
 					}
-
 				}
 			}
 		}
 
 		for (Chunk chunk : chunks.values()) {
-			if (Math.abs(chunk.cx - playerCX) > VoxelVariables.radius) {
-				addTo(new ChunkNode(chunk.cx, chunk.cy, chunk.cz), removeQueue);
-			} else if (Math.abs(chunk.cz - playerCZ) > VoxelVariables.radius) {
-				addTo(new ChunkNode(chunk.cx, chunk.cy, chunk.cz), removeQueue);
-			} else if (Math.abs(chunk.cy - playerCY) > VoxelVariables.radius) {
-				addTo(new ChunkNode(chunk.cx, chunk.cy, chunk.cz), removeQueue);
+			if (Math.abs(chunk.node.getX() - playerCX) > VoxelVariables.radius) {
+				addTo(chunk.node, removeQueue);
+			} else if (Math.abs(chunk.node.getZ() - playerCZ) > VoxelVariables.radius) {
+				addTo(chunk.node, removeQueue);
+			} else if (Math.abs(chunk.node.getY() - playerCY) > VoxelVariables.radius) {
+				addTo(chunk.node, removeQueue);
 			}
 		}
+		
 		int chunksLoaded = 0;
 		int chunksUnloaded = 0;
 		while (!removeQueue.isEmpty()) {
-			ChunkNode node = removeQueue.poll();
-			Chunk chnk = getChunk(node.cx, node.cy, node.cz);
+			node = removeQueue.poll();
+			Chunk chnk = getChunk(node);
 			saveChunk(gm.getKryo(), chnk);
 			removeChunk(chnk);
 			chunksUnloaded++;
 		}
 
 		while (!addQueue.isEmpty()) {
-			ChunkNode node = addQueue.poll();
-			if (existChunkFile(node.cx, node.cy, node.cz))
-				loadChunk(gm.getKryo(), node.cx, node.cy, node.cz);
+			node = addQueue.poll();
+			if (existChunkFile(node))
+				loadChunk(gm.getKryo(), node);
 			else
-				getChunk(node.cx, node.cy, node.cz).init(this);
+				getChunk(node).init(this);
 			chunksLoaded++;
 		}
 	}

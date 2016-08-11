@@ -45,7 +45,7 @@ import net.luxvacuos.voxel.server.world.block.Block;
 import net.luxvacuos.voxel.server.world.block.BlockBase;
 import net.luxvacuos.voxel.server.world.chunks.Chunk;
 import net.luxvacuos.voxel.server.world.chunks.ChunkGenerator;
-import net.luxvacuos.voxel.server.world.chunks.ChunkKey;
+import net.luxvacuos.voxel.universal.world.chunk.ChunkNode;
 import net.luxvacuos.voxel.server.world.chunks.ChunkNodeRemoval;
 import net.luxvacuos.voxel.server.world.chunks.LightNodeAdd;
 import net.luxvacuos.voxel.server.world.chunks.LightNodeRemoval;
@@ -55,7 +55,7 @@ import net.luxvacuos.voxel.universal.core.exception.SaveChunkException;
 public abstract class Dimension {
 
 	private int chunkDim;
-	private Map<ChunkKey, Chunk> chunks;
+	private Map<ChunkNode, Chunk> chunks;
 	private SimplexNoise noise;
 	private String name;
 	private int seedi;
@@ -121,24 +121,23 @@ public abstract class Dimension {
 
 	public void updateChunksGeneration(GameResources gm, float delta) {
 		int chunkLoaded = 0;
-		for (float zr = -VoxelVariables.radius * 16f; zr <= VoxelVariables.radius * 16f; zr += 16f) {
-			float cz = zr;
-			for (float xr = -VoxelVariables.radius * 16f; xr <= VoxelVariables.radius * 16f; xr += 16f) {
-				float cx = xr;
-				for (float yr = -VoxelVariables.radius * 16f; yr <= VoxelVariables.radius * 16f; yr += 16f) {
-					float cy = +yr;
+		ChunkNode node;
+		for (float cz = -VoxelVariables.radius * 16f; cz <= VoxelVariables.radius * 16f; cz += 16f) {
+			for (float cx = -VoxelVariables.radius * 16f; cx <= VoxelVariables.radius * 16f; cx += 16f) {
+				for (float cy = -VoxelVariables.radius * 16f; cy <= VoxelVariables.radius * 16f; cy += 16f) {
 					int xx = (int) (cx / 16f);
-					int yy = (int) (cy / 16f);
+					int yy = (int) (+cy / 16f);
 					int zz = (int) (cz / 16f);
+					node = new ChunkNode(xx, yy, zz);
 
-					if (!hasChunk(xx, yy, zz) && chunkLoaded < CHUNKS_LOADED_PER_FRAME) {
-						if (existChunkFile(xx, yy, zz))
-							loadChunk(xx, yy, zz);
+					if (!hasChunk(node) && chunkLoaded < CHUNKS_LOADED_PER_FRAME) {
+						if (existChunkFile(node))
+							loadChunk(node);
 						else
 							addChunk(new Chunk(xx, yy, zz));
 						chunkLoaded++;
-					} else if (hasChunk(xx, yy, zz)) {
-						Chunk chunk = getChunk(xx, yy, zz);
+					} else if (hasChunk(node)) {
+						Chunk chunk = getChunk(node);
 						chunk.update(this, delta);
 						gm.getVoxelServer().getServer().sendToAllTCP(chunk);
 					}
@@ -148,9 +147,9 @@ public abstract class Dimension {
 		}
 
 		while (!chunkNodeRemovals.isEmpty()) {
-			ChunkNodeRemoval node = chunkNodeRemovals.poll();
-			saveChunk(node.chunk);
-			removeChunk(node.chunk);
+			ChunkNodeRemoval cnode = chunkNodeRemovals.poll();
+			saveChunk(cnode.chunk);
+			removeChunk(cnode.chunk);
 		}
 	}
 
@@ -232,7 +231,7 @@ public abstract class Dimension {
 	public void saveChunk(Chunk chunk) {
 		try {
 			Output output = new Output(new FileOutputStream(VoxelVariables.WORLD_PATH + name + "/dimension_" + chunkDim
-					+ "/chunk_" + chunk.cx + "_" + chunk.cy + "_" + chunk.cz + ".dat"));
+					+ "/chunk_" + chunk.node.getX() + "_" + chunk.node.getY() + "_" + chunk.node.getZ() + ".dat"));
 			GameResources.getInstance().getKryo().writeObject(output, chunk);
 			output.close();
 		} catch (Exception e) {
@@ -240,10 +239,10 @@ public abstract class Dimension {
 		}
 	}
 
-	public void loadChunk(int cx, int cy, int cz) {
+	public void loadChunk(ChunkNode node) {
 		try {
 			Input input = new Input(new FileInputStream(VoxelVariables.WORLD_PATH + name + "/dimension_" + chunkDim
-					+ "/chunk_" + cx + "_" + cy + "_" + cz + ".dat"));
+					+ "/chunk_" + node.getX() + "_" + node.getY() + "_" + node.getZ() + ".dat"));
 			Chunk chunk = GameResources.getInstance().getKryo().readObject(input, Chunk.class);
 			input.close();
 			if (chunk != null) {
@@ -256,43 +255,35 @@ public abstract class Dimension {
 		}
 	}
 
-	public boolean existChunkFile(int cx, int cy, int cz) {
-		return new File(VoxelVariables.WORLD_PATH + name + "/dimension_" + chunkDim + "/chunk_" + cx + "_" + cy + "_"
-				+ cz + ".dat").exists();
+	public boolean existChunkFile(ChunkNode node) {
+		return new File(VoxelVariables.WORLD_PATH + name + "/dimension_" + chunkDim + "/chunk_" + 
+				node.getX() + "_" + node.getY() + "_" + node.getZ() + ".dat").exists();
 	}
 
 	public boolean existDimFile() {
 		return new File(VoxelVariables.WORLD_PATH + name + "/dim_" + chunkDim + ".dat").exists();
 	}
 
-	public Chunk getChunk(int cx, int cy, int cz) {
-		ChunkKey key = ChunkKey.alloc(cx, cy, cz);
-		Chunk chunk;
-		chunk = chunks.get(key);
-		key.free();
-		return chunk;
+	protected Chunk getChunk(int x, int y, int z) {
+		return this.getChunk(new ChunkNode(x, y, z));
+	}
+	
+	public Chunk getChunk(ChunkNode node) {
+		return chunks.get(node);
 	}
 
-	public boolean hasChunk(int cx, int cy, int cz) {
-		ChunkKey key = ChunkKey.alloc(cx, cy, cz);
-		boolean contains;
-		contains = chunks.containsKey(key);
-		key.free();
-		return contains;
+	public boolean hasChunk(ChunkNode node) {
+		return chunks.containsKey(node);
 	}
 
 	public void addChunk(Chunk chunk) {
-		ChunkKey key = ChunkKey.alloc(chunk.cx, chunk.cy, chunk.cz);
-		Chunk old = chunks.get(key);
-		if (old != null) {
-			removeChunk(old);
-		}
-		chunks.put(key.clone(), chunk);
-		key.free();
+		Chunk old = chunks.get(chunk.node);
+		if (old != null) removeChunk(old);
+		chunks.put(chunk.node, chunk);
 		loadedChunks++;
-		for (int xx = chunk.cx - 1; xx < chunk.cx + 1; xx++) {
-			for (int zz = chunk.cz - 1; zz < chunk.cz + 1; zz++) {
-				for (int yy = chunk.cy - 1; yy < chunk.cy + 1; yy++) {
+		for (int xx = chunk.node.getX() - 1; xx < chunk.node.getX() + 1; xx++) {
+			for (int zz = chunk.node.getZ() - 1; zz < chunk.node.getZ() + 1; zz++) {
+				for (int yy = chunk.node.getY() - 1; yy < chunk.node.getY() + 1; yy++) {
 					Chunk chunka = getChunk(xx, yy, zz);
 					if (chunka != null) {
 						chunka.needsRebuild = true;
@@ -304,13 +295,11 @@ public abstract class Dimension {
 
 	public void removeChunk(Chunk chunk) {
 		if (chunk != null) {
-			ChunkKey key = ChunkKey.alloc(chunk.cx, chunk.cy, chunk.cz);
-			chunks.remove(key);
-			key.free();
+			chunks.remove(chunk.node);
 			loadedChunks--;
-			for (int xx = chunk.cx - 1; xx < chunk.cx + 1; xx++) {
-				for (int zz = chunk.cz - 1; zz < chunk.cz + 1; zz++) {
-					for (int yy = chunk.cy - 1; yy < chunk.cy + 1; yy++) {
+			for (int xx = chunk.node.getX() - 1; xx < chunk.node.getX() + 1; xx++) {
+				for (int zz = chunk.node.getZ() - 1; zz < chunk.node.getZ() + 1; zz++) {
+					for (int yy = chunk.node.getY() - 1; yy < chunk.node.getY() + 1; yy++) {
 						Chunk chunka = getChunk(xx, yy, zz);
 						if (chunka != null) {
 							chunka.needsRebuild = true;

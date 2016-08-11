@@ -41,10 +41,12 @@ import net.luxvacuos.voxel.client.world.block.BlockBase;
 import net.luxvacuos.voxel.client.world.block.BlockEntity;
 import net.luxvacuos.voxel.client.world.block.BlocksResources;
 import net.luxvacuos.voxel.client.world.entities.Camera;
+import net.luxvacuos.voxel.universal.world.chunk.ChunkNode;
 
 public class Chunk {
 
-	public int posX, posY, posZ, cx, cy, cz;
+	public int posX, posY, posZ;
+	public ChunkNode node;
 	public BlockBase[][][] blocks;
 	public byte[][][] lightMap;
 	public boolean decorated = false, cavesGenerated = false;
@@ -57,12 +59,10 @@ public class Chunk {
 	protected transient Queue<ParticlePoint> particlePoints;
 
 	public Chunk(ChunkNode node, Dimension dim) {
-		this.cx = node.cx;
-		this.cy = node.cy;
-		this.cz = node.cz;
-		this.posX = cx * 16;
-		this.posZ = cz * 16;
-		this.posY = cy * 16;
+		this.node = node;
+		this.posX = node.getX() * 16;
+		this.posZ = node.getY() * 16;
+		this.posY = node.getZ() * 16;
 	}
 
 	public Chunk() {
@@ -146,7 +146,7 @@ public class Chunk {
 		}
 		for (int x = 0; x < sizeX; x++) {
 			for (int z = 0; z < sizeZ; z++) {
-				double tempHeight = dimension.getNoise().getNoise((int) ((x + cx * 16)), (int) ((z + cz * 16)));
+				double tempHeight = dimension.getNoise().getNoise((int) ((x + node.getX() * 16)), (int) ((z + node.getY() * 16)));
 				tempHeight += 1;
 				int height = (int) (128 * Maths.clamp(tempHeight));
 				for (int y = 0; y < sizeY; y++) {
