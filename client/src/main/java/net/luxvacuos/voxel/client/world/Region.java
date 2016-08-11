@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import net.luxvacuos.voxel.client.world.chunks.Chunk;
-import net.luxvacuos.voxel.client.world.chunks.ChunkNode;
+import net.luxvacuos.voxel.universal.world.chunk.ChunkNode;
 
 public class Region {
 

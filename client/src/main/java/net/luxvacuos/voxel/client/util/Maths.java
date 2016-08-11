@@ -32,7 +32,7 @@ import net.luxvacuos.igl.vector.Vector2f;
 import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.igl.vector.Vector4f;
 import net.luxvacuos.voxel.client.world.chunks.Chunk;
-import net.luxvacuos.voxel.client.world.chunks.ChunkNode;
+import net.luxvacuos.voxel.universal.world.chunk.ChunkNode;
 import net.luxvacuos.voxel.client.world.entities.Camera;
 
 /**
@@ -261,7 +261,7 @@ public class Maths {
 		list.add(attemptPos, item);
 	}
 
-	public static void sortLowToHighN(List<ChunkNode> list) {
+	/*public static void sortLowToHighN(List<ChunkNode> list) {
 		for (int i = 1; i < list.size(); i++) {
 			ChunkNode item = list.get(i);
 			if (item.distance < list.get(i - 1).distance) {
@@ -278,7 +278,7 @@ public class Maths {
 		}
 		list.remove(i);
 		list.add(attemptPos, item);
-	}
+	} */
 
 	public static void sortHighToLow(List<Chunk> list) {
 		for (int i = 1; i < list.size(); i++) {
