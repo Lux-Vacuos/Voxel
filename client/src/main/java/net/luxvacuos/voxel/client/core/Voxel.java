@@ -45,7 +45,7 @@ import net.luxvacuos.voxel.client.ui.CrashScreen;
 import net.luxvacuos.voxel.client.world.block.BlocksResources;
 import net.luxvacuos.voxel.universal.api.ModInitialization;
 import net.luxvacuos.voxel.universal.api.MoltenAPI;
-import net.luxvacuos.voxel.universal.core.UVoxel;
+import net.luxvacuos.voxel.universal.core.AbstractVoxel;
 
 /**
  * Voxel's Heart, the main object where the loop is stored.
@@ -53,7 +53,7 @@ import net.luxvacuos.voxel.universal.core.UVoxel;
  * @author Guerra24 <pablo230699@hotmail.com>
  * @category Kernel
  */
-public class Voxel extends UVoxel {
+public class Voxel extends AbstractVoxel {
 
 	/**
 	 * Mod Initialization instance
@@ -77,7 +77,7 @@ public class Voxel extends UVoxel {
 		// Set client
 		super.client = true;
 		// Call Mainloop
-		mainLoop();
+		loop();
 	}
 
 	/**
@@ -87,7 +87,8 @@ public class Voxel extends UVoxel {
 	 * @throws Exception
 	 *             Throws Exception in case of error
 	 */
-	private void preInit() throws Exception {
+	@Override
+	public void preInit() throws Exception {
 
 		// Find version from Manifest file
 
@@ -146,7 +147,8 @@ public class Voxel extends UVoxel {
 	 * @throws Exception
 	 *             Throws Exception in case of error
 	 */
-	private void init() throws Exception {
+	@Override
+	public void init() throws Exception {
 		// Do Init on Game Resources
 		getGameResources().init(this);
 		// Load Block assets
@@ -164,7 +166,8 @@ public class Voxel extends UVoxel {
 	 * @throws Exception
 	 *             Throws Exception in case of error
 	 */
-	private void postInit() throws Exception {
+	@Override
+	public void postInit() throws Exception {
 		// Do Mod PostInit
 		api.postInit();
 		// Set the Mouse hidden
@@ -180,7 +183,8 @@ public class Voxel extends UVoxel {
 	/**
 	 * Main Loop
 	 */
-	private void mainLoop() {
+	@Override
+	public void loop() {
 		// Big try catch to handle all possible exceptions.
 		try {
 			// Do the init process
@@ -244,7 +248,7 @@ public class Voxel extends UVoxel {
 	 * @param alpha
 	 *            Alpha for update
 	 */
-	private void render(float alpha) {
+	public void render(float alpha) {
 		getGameResources().getGlobalStates().doRender(this, alpha);
 	}
 
@@ -255,7 +259,8 @@ public class Voxel extends UVoxel {
 	 * @param delta
 	 *            Delta for update
 	 */
-	private void update(float delta) {
+	@Override
+	public void update(float delta) {
 		CoreInfo.upsCount++;
 		getGameResources().getGlobalStates().doUpdate(this, delta);
 	}
@@ -266,7 +271,8 @@ public class Voxel extends UVoxel {
 	 * @param e
 	 *            Throwable
 	 */
-	private void handleError(Throwable e) {
+	@Override
+	public void handleError(Throwable e) {
 		// Try to dispose world and assets
 		try {
 			if (!disposed && loaded)
@@ -292,7 +298,8 @@ public class Voxel extends UVoxel {
 	 * Dispose method, all loaded stuff is cleaned
 	 * 
 	 */
-	private void dispose() {
+	@Override
+	public void dispose() {
 		Logger.log("Cleaning Resources");
 		// Clean loaded assets
 		getGameResources().cleanUp();

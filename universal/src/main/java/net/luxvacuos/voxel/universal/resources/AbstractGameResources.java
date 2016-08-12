@@ -20,6 +20,14 @@
 
 package net.luxvacuos.voxel.universal.resources;
 
-public class UGameResources {
+import net.luxvacuos.voxel.universal.core.AbstractGameSettings;
+
+public class AbstractGameResources {
+
+	protected AbstractGameSettings gameSettings;
+
+	public AbstractGameSettings getGameSettings() {
+		return gameSettings;
+	}
 
 }

@@ -1,5 +1,5 @@
 /*
- * This file is part of UVoxel
+ * This file is part of AbstractVoxel
  * 
  * Copyright (C) 2016 Lux Vacuos
  *
@@ -20,11 +20,11 @@
 
 package net.luxvacuos.voxel.universal.api.mod;
 
-import net.luxvacuos.voxel.universal.core.UVoxel;
+import net.luxvacuos.voxel.universal.core.AbstractVoxel;
 
 public interface ModStateLoop {
 
-	public void update(UVoxel voxel, float delta);
+	public void update(AbstractVoxel voxel, float delta);
 
 
 }

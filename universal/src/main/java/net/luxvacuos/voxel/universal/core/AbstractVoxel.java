@@ -20,11 +20,12 @@
 
 package net.luxvacuos.voxel.universal.core;
 
-import net.luxvacuos.voxel.universal.resources.UGameResources;
+import net.luxvacuos.voxel.universal.resources.AbstractGameResources;
+import net.luxvacuos.voxel.universal.resources.IDisposable;
 
-public abstract class UVoxel {
+public abstract class AbstractVoxel implements IVoxel, IDisposable {
 
-	protected UGameResources gameResources;
+	protected AbstractGameResources gameResources;
 	protected String prefix;
 	protected boolean client, server;
 
@@ -40,7 +41,7 @@ public abstract class UVoxel {
 		return server;
 	}
 
-	public UGameResources getGameResources() {
+	public AbstractGameResources getGameResources() {
 		return gameResources;
 	}
 

@@ -36,8 +36,10 @@ public final class ClientGameSettings extends AbstractGameSettings {
 	 * Create a GameSettings instance that will set the path, create the
 	 * Properties object and check for existing file.
 	 */
-	public ClientGameSettings() { }
+	public ClientGameSettings() {
+	}
 
+	@Override
 	public void read() {
 		// Parse Shadow, Volumetric Light and FXAA
 		VoxelVariables.useShadows = Boolean.parseBoolean(getValue("useShadows", "false"));
@@ -53,17 +55,17 @@ public final class ClientGameSettings extends AbstractGameSettings {
 		// Parse Motion Blur and DoF
 		VoxelVariables.useMotionBlur = Boolean.parseBoolean(getValue("useMotionBlur", "false"));
 		VoxelVariables.useDOF = Boolean.parseBoolean(getValue("useDOF", "false"));
-		
+
 		// Parse Reflections and Parallax
 		VoxelVariables.useReflections = Boolean.parseBoolean(getValue("useReflections", "false"));
 		VoxelVariables.useParallax = Boolean.parseBoolean(getValue("useParallax", "false"));
-		
+
 		// Parse FoV
 		VoxelVariables.FOV = Integer.parseInt(getValue("FOV", "90"));
-		
+
 		// Parse rendering pipeline
 		VoxelVariables.renderingPipeline = getValue("RenderingPipeline", "MultiPass");
-		
+
 		// Parse assetsPack
 		VoxelVariables.assets = getValue("Assets", "voxel");
 	}

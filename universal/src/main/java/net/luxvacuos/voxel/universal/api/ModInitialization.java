@@ -1,5 +1,5 @@
 /*
- * This file is part of UVoxel
+ * This file is part of AbstractVoxel
  * 
  * Copyright (C) 2016 Lux Vacuos
  *
@@ -27,7 +27,7 @@ import java.util.Map;
 import net.luxvacuos.igl.Logger;
 import net.luxvacuos.voxel.universal.api.mod.MoltenAPIInitPhase;
 import net.luxvacuos.voxel.universal.api.mod.MoltenAPIMod;
-import net.luxvacuos.voxel.universal.core.UVoxel;
+import net.luxvacuos.voxel.universal.core.AbstractVoxel;
 
 /**
  * @author Guerra24 <pablo230699@hotmail.com>
@@ -42,13 +42,13 @@ public class ModInitialization {
 
 	private Map<Class<?>, Object> instances;
 
-	public ModInitialization(UVoxel uVoxel) throws Exception {
+	public ModInitialization(AbstractVoxel abstractVoxel) throws Exception {
 		modLoader = new ModLoader();
-		modLoader.loadMods(uVoxel.getPrefix());
+		modLoader.loadMods(abstractVoxel.getPrefix());
 		String pre = null;
-		if (uVoxel.isClient())
+		if (abstractVoxel.isClient())
 			pre = "Client";
-		else if (uVoxel.isServer())
+		else if (abstractVoxel.isServer())
 			pre = "Server";
 		moltenAPI = new MoltenAPI(pre);
 		instances = new HashMap<>();

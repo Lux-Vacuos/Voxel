@@ -63,7 +63,7 @@ import net.luxvacuos.voxel.client.world.WorldsHandler;
 import net.luxvacuos.voxel.client.world.entities.Camera;
 import net.luxvacuos.voxel.client.world.entities.PlayerCamera;
 import net.luxvacuos.voxel.client.world.entities.SunCamera;
-import net.luxvacuos.voxel.universal.resources.UGameResources;
+import net.luxvacuos.voxel.universal.resources.AbstractGameResources;
 
 /**
  * Game Resources
@@ -71,7 +71,7 @@ import net.luxvacuos.voxel.universal.resources.UGameResources;
  * @author Guerra24 <pablo230699@hotmail.com>
  * @category Assets
  */
-public class GameResources extends UGameResources {
+public class GameResources extends AbstractGameResources {
 
 	private static GameResources instance = null;
 
@@ -80,11 +80,10 @@ public class GameResources extends UGameResources {
 			instance = new GameResources();
 		return instance;
 	}
-	
+
 	private Display display;
 	private Loader loader;
 	private Scripting scripting;
-	private ClientGameSettings gameSettings;
 
 	private Random rand;
 	private Camera camera;
@@ -118,7 +117,7 @@ public class GameResources extends UGameResources {
 		gameSettings = new ClientGameSettings();
 		gameSettings.load(new File(VoxelVariables.settings));
 		gameSettings.read();
-		
+
 		display = new Display();
 		display.create(VoxelVariables.WIDTH, VoxelVariables.HEIGHT, "Voxel", VoxelVariables.VSYNC, false, false,
 				new ContextFormat(3, 3, GLFW_OPENGL_API, GLFW_OPENGL_CORE_PROFILE, true),
@@ -271,10 +270,6 @@ public class GameResources extends UGameResources {
 
 	public Vector3f getInvertedLightPosition() {
 		return invertedLightPosition;
-	}
-
-	public ClientGameSettings getGameSettings() {
-		return gameSettings;
 	}
 
 	public ParticleTexture getTorchTexture() {

@@ -1,5 +1,5 @@
 /*
- * This file is part of UVoxel
+ * This file is part of AbstractVoxel
  * 
  * Copyright (C) 2016 Lux Vacuos
  *

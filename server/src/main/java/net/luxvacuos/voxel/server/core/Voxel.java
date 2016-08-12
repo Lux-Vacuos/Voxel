@@ -32,10 +32,10 @@ import net.luxvacuos.voxel.server.ui.UserInterface;
 import net.luxvacuos.voxel.server.world.DefaultWorld;
 import net.luxvacuos.voxel.universal.api.ModInitialization;
 import net.luxvacuos.voxel.universal.api.MoltenAPI;
-import net.luxvacuos.voxel.universal.core.UVoxel;
+import net.luxvacuos.voxel.universal.core.AbstractVoxel;
 import net.luxvacuos.voxel.universal.network.packets.WorldTime;
 
-public class Voxel extends UVoxel {
+public class Voxel extends AbstractVoxel {
 
 	private int port;
 
@@ -45,10 +45,11 @@ public class Voxel extends UVoxel {
 		this.port = port;
 		super.prefix = "";
 		super.server = true;
-		mainLoop();
+		loop();
 	}
 
-	private void preInit() throws Exception {
+	@Override
+	public void preInit() throws Exception {
 		try {
 			Manifest manifest = new Manifest(getClass().getClassLoader().getResourceAsStream("META-INF/MANIFEST.MF"));
 			Attributes attr = manifest.getMainAttributes();
@@ -73,12 +74,14 @@ public class Voxel extends UVoxel {
 		api.preInit();
 	}
 
-	private void init() throws Exception {
+	@Override
+	public void init() throws Exception {
 		getGameResources().init();
 		api.init();
 	}
 
-	private void postInit() throws Exception {
+	@Override
+	public void postInit() throws Exception {
 		getGameResources().postInit();
 		api.postInit();
 		getGameResources().getVoxelServer().connect();
@@ -89,39 +92,52 @@ public class Voxel extends UVoxel {
 		GameResources.getInstance().getWorldsHandler().getActiveWorld().init();
 	}
 
-	private void mainLoop() throws Exception {
-		preInit();
-		init();
-		postInit();
-		float delta = 0;
-		float accumulator = 0f;
-		float interval = 1f / VoxelVariables.UPS;
-		getGameResources().getGlobalStates().setInternalState(InternalState.RUNNIG);
-		while (getGameResources().getGlobalStates().getInternalState().equals(InternalState.RUNNIG)) {
-			if (getGameResources().getCoreUtils().getTimeCount() > 1f) {
-				CoreInfo.ups = CoreInfo.upsCount;
-				CoreInfo.upsCount = 0;
-				getGameResources().getCoreUtils().setTimeCount(getGameResources().getCoreUtils().getTimeCount() - 1f);
+	@Override
+	public void loop() {
+		try {
+			preInit();
+			init();
+			postInit();
+			float delta = 0;
+			float accumulator = 0f;
+			float interval = 1f / VoxelVariables.UPS;
+			getGameResources().getGlobalStates().setInternalState(InternalState.RUNNIG);
+			while (getGameResources().getGlobalStates().getInternalState().equals(InternalState.RUNNIG)) {
+				if (getGameResources().getCoreUtils().getTimeCount() > 1f) {
+					CoreInfo.ups = CoreInfo.upsCount;
+					CoreInfo.upsCount = 0;
+					getGameResources().getCoreUtils()
+							.setTimeCount(getGameResources().getCoreUtils().getTimeCount() - 1f);
+				}
+				delta = getGameResources().getCoreUtils().getDelta();
+				accumulator += delta;
+				while (accumulator >= interval) {
+					update(interval);
+					accumulator -= interval;
+				}
+				getGameResources().getVoxelServer().getServer()
+						.sendToAllTCP(new WorldTime(getGameResources().getWorldSimulation().getTime()));
+				getGameResources().getCoreUtils().sync(VoxelVariables.UPS);
 			}
-			delta = getGameResources().getCoreUtils().getDelta();
-			accumulator += delta;
-			while (accumulator >= interval) {
-				update(interval);
-				accumulator -= interval;
-			}
-			getGameResources().getVoxelServer().getServer()
-					.sendToAllTCP(new WorldTime(getGameResources().getWorldSimulation().getTime()));
-			getGameResources().getCoreUtils().sync(VoxelVariables.UPS);
+			dispose();
+		} catch (Throwable t) {
+			handleError(t);
 		}
-		dispose();
 	}
 
-	private void update(float delta) {
+	@Override
+	public void handleError(Throwable e) {
+		// TODO: Implement This
+	}
+
+	@Override
+	public void update(float delta) {
 		CoreInfo.upsCount++;
 		getGameResources().getGlobalStates().doUpdate(this, delta);
 	}
 
-	private void dispose() {
+	@Override
+	public void dispose() {
 		Logger.log("Stopping Server");
 		GameResources.getInstance().getWorldsHandler().getActiveWorld().dispose();
 		getGameResources().dispose();

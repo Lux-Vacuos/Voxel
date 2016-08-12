@@ -1,3 +1,5 @@
+plugins { id 'net.nemerosa.versioning' version '2.0.0' }
+
 sourceCompatibility = 1.8
 def build = 8
 
@@ -9,14 +11,14 @@ sourceSets {
 }
 
 jar {
-	version = "0.0.2-" + build
+	version = "0.0.10-" + versioning.info.full
 	manifest {
 		attributes (
 				"Specification-Title": "Voxel-Universal",
 				"Specification-Version": version,
 				"Specification-Vendor": "Lux Vacuos",
 				"Implementation-Title": "net.luxvacuos.voxel.universal",
-				"Implementation-Version": build,
+				"Implementation-Version": versioning.info.full,
 				"Implementation-Vendor": "Lux Vacuos"
 				)
 	}

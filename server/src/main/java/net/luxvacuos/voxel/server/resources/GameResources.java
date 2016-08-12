@@ -35,9 +35,9 @@ import net.luxvacuos.voxel.server.core.WorldSimulation;
 import net.luxvacuos.voxel.server.network.VoxelServer;
 import net.luxvacuos.voxel.server.ui.UserInterface;
 import net.luxvacuos.voxel.server.world.WorldsHandler;
-import net.luxvacuos.voxel.universal.resources.UGameResources;
+import net.luxvacuos.voxel.universal.resources.AbstractGameResources;
 
-public class GameResources extends UGameResources {
+public class GameResources extends AbstractGameResources {
 
 	private static GameResources instance = null;
 
@@ -53,7 +53,6 @@ public class GameResources extends UGameResources {
 	private CoreUtils coreUtils;
 	private UserInterface userInterface;
 	private WorldSimulation worldSimulation;
-	private ServerGameSettings gameSettings;
 	private WorldsHandler worldsHandler;
 
 	private int port;

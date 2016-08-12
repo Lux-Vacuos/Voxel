@@ -248,11 +248,7 @@ public abstract class ShaderProgram {
 	 *            Value
 	 */
 	protected void loadBoolean(int location, boolean value) {
-		int toLoad = 0;
-		if (value) {
-			toLoad = 1;
-		}
-		glUniform1i(location, toLoad);
+		glUniform1i(location, value ? 1 : 0);
 	}
 
 	/**
