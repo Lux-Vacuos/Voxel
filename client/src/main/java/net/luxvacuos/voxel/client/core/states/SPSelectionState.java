@@ -78,7 +78,7 @@ public class SPSelectionState extends State {
 		});
 
 		createButton.setOnButtonPress((button, delta) -> {
-			switchTo(GameState.CREATE_WORLD);
+			switchTo(GameState.SP_CREATE_WORLD);
 		});
 
 		window.addChildren(exitButton);
