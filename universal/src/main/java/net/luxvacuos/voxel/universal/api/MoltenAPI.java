@@ -17,9 +17,9 @@ public class MoltenAPI {
 	private Map<String, Method> methods;
 
 	public MoltenAPI(String prefix) throws Exception {
-		if (prefix.equals("Client"))
+		if (prefix.equals("client"))
 			api = Class.forName("net.luxvacuos.voxel.client.api.MoltenAPI");
-		else if (prefix.equals("Server"))
+		else if (prefix.equals("server"))
 			api = Class.forName("net.luxvacuos.voxel.server.api.MoltenAPI");
 		apiI = api.newInstance();
 		methods = new HashMap<>();

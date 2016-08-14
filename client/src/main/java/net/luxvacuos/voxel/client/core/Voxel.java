@@ -46,6 +46,7 @@ import net.luxvacuos.voxel.client.world.block.BlocksResources;
 import net.luxvacuos.voxel.universal.api.ModInitialization;
 import net.luxvacuos.voxel.universal.api.MoltenAPI;
 import net.luxvacuos.voxel.universal.core.AbstractVoxel;
+import net.luxvacuos.voxel.universal.core.RunningSide;
 
 /**
  * Voxel's Heart, the main object where the loop is stored.
@@ -74,8 +75,6 @@ public class Voxel extends AbstractVoxel {
 	public Voxel() {
 		// Path prefix
 		super.prefix = Bootstrap.getPrefix();
-		// Set client
-		super.client = true;
 		// Call Mainloop
 		loop();
 	}
@@ -315,6 +314,11 @@ public class Voxel extends AbstractVoxel {
 	@Override
 	public GameResources getGameResources() {
 		return ((GameResources) gameResources);
+	}
+
+	@Override
+	public RunningSide getSide() {
+		return RunningSide.CLIENT;
 	}
 
 }

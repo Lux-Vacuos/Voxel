@@ -33,5 +33,7 @@ public interface IVoxel {
 	public void update(float delta);
 
 	public void handleError(Throwable e);
+	
+	public RunningSide getSide();
 
 }

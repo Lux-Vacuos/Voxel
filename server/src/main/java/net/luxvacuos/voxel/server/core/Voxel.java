@@ -33,6 +33,7 @@ import net.luxvacuos.voxel.server.world.DefaultWorld;
 import net.luxvacuos.voxel.universal.api.ModInitialization;
 import net.luxvacuos.voxel.universal.api.MoltenAPI;
 import net.luxvacuos.voxel.universal.core.AbstractVoxel;
+import net.luxvacuos.voxel.universal.core.RunningSide;
 import net.luxvacuos.voxel.universal.network.packets.WorldTime;
 
 public class Voxel extends AbstractVoxel {
@@ -44,7 +45,6 @@ public class Voxel extends AbstractVoxel {
 	public Voxel(int port) throws Exception {
 		this.port = port;
 		super.prefix = "";
-		super.server = true;
 		loop();
 	}
 
@@ -150,6 +150,11 @@ public class Voxel extends AbstractVoxel {
 	@Override
 	public GameResources getGameResources() {
 		return ((GameResources) gameResources);
+	}
+
+	@Override
+	public RunningSide getSide() {
+		return RunningSide.SERVER;
 	}
 
 }

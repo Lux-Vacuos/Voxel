@@ -20,20 +20,8 @@
 
 package net.luxvacuos.voxel.universal.core;
 
-import net.luxvacuos.voxel.universal.resources.AbstractGameResources;
-import net.luxvacuos.voxel.universal.resources.IDisposable;
-
-public abstract class AbstractVoxel implements IVoxel, IDisposable {
-
-	protected AbstractGameResources gameResources;
-	protected String prefix;
-
-	public String getPrefix() {
-		return prefix;
-	}
-
-	public AbstractGameResources getGameResources() {
-		return gameResources;
-	}
-
+public enum RunningSide {
+	CLIENT,
+	SERVER,
+	UNKNOWN
 }

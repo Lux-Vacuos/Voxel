@@ -18,22 +18,24 @@
  * 
  */
 
-package net.luxvacuos.voxel.universal.core;
+package net.luxvacuos.voxel.universal.core.states;
 
-import net.luxvacuos.voxel.universal.resources.AbstractGameResources;
-import net.luxvacuos.voxel.universal.resources.IDisposable;
+import net.luxvacuos.voxel.universal.core.AbstractVoxel;
 
-public abstract class AbstractVoxel implements IVoxel, IDisposable {
-
-	protected AbstractGameResources gameResources;
-	protected String prefix;
-
-	public String getPrefix() {
-		return prefix;
-	}
-
-	public AbstractGameResources getGameResources() {
-		return gameResources;
-	}
+public interface IState {
+	
+	public void init();
+	
+	public void start();
+	
+	public boolean isRunning();
+	
+	public void update(AbstractVoxel voxel, float deltaTime);
+	
+	public void render(AbstractVoxel voxel, float alpha);
+	
+	public void end();
+	
+	public String getName();
 
 }
