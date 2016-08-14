@@ -27,9 +27,6 @@ import static net.luxvacuos.voxel.client.input.Keyboard.KEY_F2;
 import static net.luxvacuos.voxel.client.input.Keyboard.isKeyDown;
 import static net.luxvacuos.voxel.client.input.Keyboard.next;
 
-import net.luxvacuos.voxel.client.core.GlobalStates.GameState;
-import net.luxvacuos.voxel.client.core.State;
-import net.luxvacuos.voxel.client.core.Voxel;
 import net.luxvacuos.voxel.client.core.VoxelVariables;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.UIRendering;
 import net.luxvacuos.voxel.client.rendering.api.opengl.ParticleMaster;
@@ -38,17 +35,24 @@ import net.luxvacuos.voxel.client.world.Dimension;
 import net.luxvacuos.voxel.client.world.PhysicsSystem;
 import net.luxvacuos.voxel.client.world.block.BlocksResources;
 import net.luxvacuos.voxel.client.world.entities.PlayerCamera;
+import net.luxvacuos.voxel.universal.core.AbstractVoxel;
+import net.luxvacuos.voxel.universal.core.states.AbstractState;
+import net.luxvacuos.voxel.universal.core.states.StateMachine;
 
 /**
  * 
  * @author danirod
  * @deprecated Removed due to new UI system.
  */
-public class GameSPInventoryState extends State {
+public class GameSPInventoryState extends AbstractState {
+	
+	public GameSPInventoryState() {
+		super(StateNames.SP_INVENTORY);
+	}
 
 	@Override
-	public void update(Voxel voxel, float delta) {
-		GameResources gm = voxel.getGameResources();
+	public void update(AbstractVoxel voxel, float delta) {
+		GameResources gm = (GameResources) voxel.getGameResources();
 
 		gm.getWorldsHandler().getActiveWorld().getActiveDimension().updateChunksGeneration(gm, delta);
 
@@ -68,7 +72,8 @@ public class GameSPInventoryState extends State {
 				VoxelVariables.hideHud = !VoxelVariables.hideHud;
 			if (isKeyDown(KEY_ESCAPE) || isKeyDown(KEY_E)) {
 				((PlayerCamera) gm.getCamera()).setMouse();
-				gm.getGlobalStates().setState(GameState.SP);
+				//gm.getGlobalStates().setState(GameState.SP);
+				StateMachine.setCurrentState(StateNames.SINGLEPLAYER);
 			}
 		}
 
@@ -79,8 +84,8 @@ public class GameSPInventoryState extends State {
 	}
 
 	@Override
-	public void render(Voxel voxel, float delta) {
-		GameResources gm = voxel.getGameResources();
+	public void render(AbstractVoxel voxel, float delta) {
+		GameResources gm = (GameResources) voxel.getGameResources();
 
 		gm.getWorldsHandler().getActiveWorld().getActiveDimension().lighting();
 		gm.getSun_Camera().setPosition(gm.getCamera().getPosition());

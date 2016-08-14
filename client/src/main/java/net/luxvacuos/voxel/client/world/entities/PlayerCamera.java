@@ -45,7 +45,6 @@ import net.luxvacuos.igl.vector.Matrix4f;
 import net.luxvacuos.igl.vector.Vector2f;
 import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.igl.vector.Vector4f;
-import net.luxvacuos.voxel.client.core.GlobalStates.GameState;
 import net.luxvacuos.voxel.client.input.Keyboard;
 import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Display;
@@ -61,6 +60,7 @@ import net.luxvacuos.voxel.client.world.block.Block;
 import net.luxvacuos.voxel.client.world.block.BlockEntity;
 import net.luxvacuos.voxel.client.world.entities.components.ArmourComponent;
 import net.luxvacuos.voxel.client.world.items.EmptyArmour;
+import net.luxvacuos.voxel.universal.core.states.StateMachine;
 import net.luxvacuos.voxel.universal.ecs.Components;
 import net.luxvacuos.voxel.universal.ecs.components.Health;
 import net.luxvacuos.voxel.universal.ecs.components.Velocity;
@@ -117,7 +117,8 @@ public class PlayerCamera extends Camera {
 			gm.getCamera().setPitch(0);
 			gm.getCamera().setYaw(0);
 			unlockMouse();
-			gm.getGlobalStates().setState(GameState.MAINMENU);
+			//gm.getGlobalStates().setState(GameState.MAINMENU);
+			StateMachine.setCurrentState("MainMenu");
 		}
 
 		float mouseDX = getDX() * delta * mouseSpeed * 0.16f * multiplierMouse;

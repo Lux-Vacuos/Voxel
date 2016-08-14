@@ -22,11 +22,11 @@ package net.luxvacuos.voxel.server.world;
 
 import java.util.Random;
 
-import net.luxvacuos.voxel.server.resources.GameResources;
+import net.luxvacuos.voxel.server.resources.ServerGameResources;
 
 public class DefaultDimension extends Dimension {
 
-	public DefaultDimension(String name, Random seed, int chunkDim, GameResources gm) {
+	public DefaultDimension(String name, Random seed, int chunkDim, ServerGameResources gm) {
 		super(name, seed, chunkDim, gm);
 	}
 

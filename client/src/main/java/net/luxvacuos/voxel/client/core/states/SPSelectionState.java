@@ -26,9 +26,6 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.luxvacuos.voxel.client.core.GlobalStates.GameState;
-import net.luxvacuos.voxel.client.core.State;
-import net.luxvacuos.voxel.client.core.Voxel;
 import net.luxvacuos.voxel.client.core.VoxelVariables;
 import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.UIRendering;
@@ -38,6 +35,9 @@ import net.luxvacuos.voxel.client.ui.Button;
 import net.luxvacuos.voxel.client.ui.Window;
 import net.luxvacuos.voxel.client.ui.World;
 import net.luxvacuos.voxel.client.world.DefaultWorld;
+import net.luxvacuos.voxel.universal.core.AbstractVoxel;
+import net.luxvacuos.voxel.universal.core.states.AbstractState;
+import net.luxvacuos.voxel.universal.core.states.StateMachine;
 
 /**
  * Singleplayer World Selection State, here all the worlds selection menu are
@@ -46,7 +46,7 @@ import net.luxvacuos.voxel.client.world.DefaultWorld;
  * @author Guerra24 <pablo230699@hotmail.com>
  *
  */
-public class SPSelectionState extends State {
+public class SPSelectionState extends AbstractState {
 
 	private Window window;
 	private Button exitButton;
@@ -58,6 +58,7 @@ public class SPSelectionState extends State {
 	private int ySize = 40;
 
 	public SPSelectionState() {
+		super("SP_Selection");
 		y = 0;
 		window = new Window(20, GameResources.getInstance().getDisplay().getDisplayHeight() - 20,
 				GameResources.getInstance().getDisplay().getDisplayWidth() - 40,
@@ -67,18 +68,21 @@ public class SPSelectionState extends State {
 		createButton = new Button(window.getWidth() - 230, -100, 200, 40, "Create World");
 
 		exitButton.setOnButtonPress((button, delta) -> {
-			switchTo(GameState.MAINMENU);
+			//switchTo(GameState.MAINMENU);
+			StateMachine.setCurrentState(StateNames.MAIN_MENU);
 		});
 		playButton.setOnButtonPress((button, delta) -> {
 			if (!worldName.equals("")) {
 				GameResources.getInstance().getWorldsHandler().registerWorld(new DefaultWorld(worldName));
 				GameResources.getInstance().getWorldsHandler().setActiveWorld(worldName);
-				switchTo(GameState.SP_LOADING_WORLD);
+				//switchTo(GameState.SP_LOADING_WORLD);
+				StateMachine.setCurrentState(StateNames.SP_LOADING);
 			}
 		});
 
 		createButton.setOnButtonPress((button, delta) -> {
-			switchTo(GameState.SP_CREATE_WORLD);
+			//switchTo(GameState.SP_CREATE_WORLD);
+			StateMachine.setCurrentState(StateNames.SP_CREATE_WORLD);
 		});
 
 		window.addChildren(exitButton);
@@ -89,12 +93,9 @@ public class SPSelectionState extends State {
 
 	@Override
 	public void start() {
-		File file = new File(VoxelVariables.WORLD_PATH);
-		if (!file.exists())
-			file.mkdirs();
 		y = 0;
 		try {
-			Files.walk(file.toPath(), 1).forEach(filePath -> {
+			Files.walk(new File(VoxelVariables.WORLD_PATH).toPath(), 1).forEach(filePath -> {
 				if (Files.isDirectory(filePath) && !filePath.toFile().equals(new File(VoxelVariables.WORLD_PATH))) {
 					World world = new World(20, -ySize - 50 - (y * (ySize + 5)), 400, ySize,
 							filePath.getFileName().toString());
@@ -106,7 +107,7 @@ public class SPSelectionState extends State {
 			e.printStackTrace();
 		}
 		window.getChildrens().addAll(worlds);
-		window.setFadeAlpha(0);
+		//window.setFadeAlpha(0);
 		worldName = "";
 	}
 
@@ -114,11 +115,11 @@ public class SPSelectionState extends State {
 	public void end() {
 		window.getChildrens().removeAll(worlds);
 		worlds.clear();
-		window.setFadeAlpha(1);
+		//window.setFadeAlpha(1);
 	}
 
 	@Override
-	public void update(Voxel voxel, float delta) {
+	public void update(AbstractVoxel voxel, float delta) {
 		while (Mouse.next())
 			window.update(delta);
 
@@ -134,17 +135,17 @@ public class SPSelectionState extends State {
 			}
 		}
 
-		if (!switching)
+		/*if (!switching)
 			window.fadeIn(4, delta);
 		if (switching)
 			if (window.fadeOut(4, delta)) {
 				readyForSwitch = true;
-			}
+			}*/
 	}
 
 	@Override
-	public void render(Voxel voxel, float alpha) {
-		GameResources gm = voxel.getGameResources();
+	public void render(AbstractVoxel voxel, float alpha) {
+		GameResources gm = (GameResources)voxel.getGameResources();
 		MasterRenderer.prepare(0, 0, 0, 1);
 		gm.getDisplay().beingNVGFrame();
 		window.render();

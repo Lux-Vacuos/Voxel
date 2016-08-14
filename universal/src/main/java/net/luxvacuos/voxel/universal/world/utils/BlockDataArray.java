@@ -18,24 +18,29 @@
  * 
  */
 
-package net.luxvacuos.voxel.server.core.commands;
+package net.luxvacuos.voxel.universal.world.utils;
 
-import net.luxvacuos.igl.Logger;
-import net.luxvacuos.voxel.universal.core.AbstractVoxel;
-
-public class TimeCommand extends Command {
-
-	private float time;
-
-	public TimeCommand(float time) {
-		this.time = time;
+public class BlockDataArray {
+	private final int[] data;
+	
+	public BlockDataArray() {
+		this(32768); //16 * 128 * 16
 	}
-
-	@Override
-	public boolean run(AbstractVoxel voxel) {
-		voxel.getGameResources().getWorldSimulation().setTime(time);
-		Logger.log("Time set to: " + time);
-		return true;
+	
+	public BlockDataArray(int indexSize) {
+		this.data = new int[indexSize];
+	}
+	
+	public int get(int x, int y, int z) {
+		return this.data[(128 * 16 * z) + (16 * y) + x];
+	}
+	
+	public void set(int x, int y, int z, int data) {
+		this.data[(128 * 16 * z) + (16 * y) + x] = data;
+	}
+	
+	public final int[] getData() {
+		return this.data;
 	}
 
 }

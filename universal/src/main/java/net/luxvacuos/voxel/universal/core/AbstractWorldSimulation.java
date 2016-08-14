@@ -18,24 +18,36 @@
  * 
  */
 
-package net.luxvacuos.voxel.server.core.commands;
+package net.luxvacuos.voxel.universal.core;
 
-import net.luxvacuos.igl.Logger;
-import net.luxvacuos.voxel.universal.core.AbstractVoxel;
-
-public class TimeCommand extends Command {
-
-	private float time;
-
-	public TimeCommand(float time) {
+public abstract class AbstractWorldSimulation implements IWorldSimulation {
+	
+	protected float time = 0;
+	protected float globalTime = 0;
+	protected float rainFactor = 0;
+	
+	protected AbstractWorldSimulation(float time) {
 		this.time = time;
 	}
 
 	@Override
-	public boolean run(AbstractVoxel voxel) {
-		voxel.getGameResources().getWorldSimulation().setTime(time);
-		Logger.log("Time set to: " + time);
-		return true;
+	public float getGlobalTime() {
+		return this.globalTime;
+	}
+
+	@Override
+	public float getRainFactor() {
+		return this.rainFactor;
+	}
+
+	@Override
+	public float getTime() {
+		return this.time;
+	}
+
+	@Override
+	public void setTime(float time) {
+		this.time = time;
 	}
 
 }

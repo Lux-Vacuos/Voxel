@@ -32,11 +32,9 @@ import com.esotericsoftware.kryo.serializers.CompatibleFieldSerializer;
 import net.luxvacuos.igl.CustomLog;
 import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.voxel.client.core.ClientGameSettings;
-import net.luxvacuos.voxel.client.core.GlobalStates;
 import net.luxvacuos.voxel.client.core.Scripting;
-import net.luxvacuos.voxel.client.core.Voxel;
 import net.luxvacuos.voxel.client.core.VoxelVariables;
-import net.luxvacuos.voxel.client.core.WorldSimulation;
+import net.luxvacuos.voxel.client.core.ClientWorldSimulation;
 import net.luxvacuos.voxel.client.network.VoxelClient;
 import net.luxvacuos.voxel.client.rendering.api.glfw.ContextFormat;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Display;
@@ -63,6 +61,7 @@ import net.luxvacuos.voxel.client.world.WorldsHandler;
 import net.luxvacuos.voxel.client.world.entities.Camera;
 import net.luxvacuos.voxel.client.world.entities.PlayerCamera;
 import net.luxvacuos.voxel.client.world.entities.SunCamera;
+import net.luxvacuos.voxel.universal.core.AbstractVoxel;
 import net.luxvacuos.voxel.universal.resources.AbstractGameResources;
 
 /**
@@ -90,7 +89,6 @@ public class GameResources extends AbstractGameResources {
 	private Camera sun_Camera;
 	private MasterRenderer renderer;
 	private SkyboxRenderer skyboxRenderer;
-	private GlobalStates globalStates;
 
 	private RenderingPipeline renderingPipeline;
 	private MasterShadowRenderer masterShadowRenderer;
@@ -98,12 +96,11 @@ public class GameResources extends AbstractGameResources {
 	private ItemsGuiRenderer itemsGuiRenderer;
 
 	private VoxelClient voxelClient;
-	private WorldSimulation worldSimulation;
+	private ClientWorldSimulation worldSimulation;
 	private WorldsHandler worldsHandler;
 
 	private SoundSystem soundSystem;
 	private Frustum frustum;
-	private Kryo kryo;
 
 	private Vector3f sunRotation = new Vector3f(5, 0, -45);
 	private Vector3f lightPos = new Vector3f(0, 0, 0);
@@ -113,6 +110,7 @@ public class GameResources extends AbstractGameResources {
 	private GameResources() {
 	}
 
+	@Override
 	public void preInit() {
 		gameSettings = new ClientGameSettings();
 		gameSettings.load(new File(VoxelVariables.settings));
@@ -127,10 +125,10 @@ public class GameResources extends AbstractGameResources {
 		loader.loadNVGFont("Roboto-Bold", "Roboto-Bold");
 		loader.loadNVGFont("Roboto-Regular", "Roboto-Regular");
 		loader.loadNVGFont("Entypo", "Entypo", 40);
-		globalStates = new GlobalStates();
 	}
 
-	public void init(Voxel voxel) {
+	@Override
+	public void init(AbstractVoxel voxel) {
 		scripting = new Scripting();
 		rand = new Random();
 		if (display.isVk()) {
@@ -153,7 +151,7 @@ public class GameResources extends AbstractGameResources {
 		kryo = new Kryo();
 		kryo.setDefaultSerializer(CompatibleFieldSerializer.class);
 		frustum = new Frustum();
-		worldSimulation = new WorldSimulation();
+		worldSimulation = new ClientWorldSimulation();
 
 		CustomLog.getInstance();
 		voxelClient = new VoxelClient(this);
@@ -174,6 +172,7 @@ public class GameResources extends AbstractGameResources {
 		EntityResources.loadEntityResources(loader);
 	}
 
+	@Override
 	public void postInit() {
 		if (VoxelVariables.renderingPipeline.equals("SinglePass"))
 			renderingPipeline = new SinglePass();
@@ -201,7 +200,8 @@ public class GameResources extends AbstractGameResources {
 	 * Disposes all objects
 	 * 
 	 */
-	public void cleanUp() {
+	@Override
+	public void dispose() {
 		gameSettings.save();
 		TessellatorShader.getInstance().cleanUp();
 		TessellatorBasicShader.getInstance().cleanUp();
@@ -222,10 +222,6 @@ public class GameResources extends AbstractGameResources {
 
 	public Loader getLoader() {
 		return loader;
-	}
-
-	public Kryo getKryo() {
-		return kryo;
 	}
 
 	public Camera getCamera() {
@@ -250,10 +246,6 @@ public class GameResources extends AbstractGameResources {
 
 	public Frustum getFrustum() {
 		return frustum;
-	}
-
-	public GlobalStates getGlobalStates() {
-		return globalStates;
 	}
 
 	public MasterShadowRenderer getMasterShadowRenderer() {
@@ -292,7 +284,7 @@ public class GameResources extends AbstractGameResources {
 		return itemsDropRenderer;
 	}
 
-	public WorldSimulation getWorldSimulation() {
+	public ClientWorldSimulation getWorldSimulation() {
 		return worldSimulation;
 	}
 

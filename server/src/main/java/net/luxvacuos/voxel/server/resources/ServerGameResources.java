@@ -28,36 +28,33 @@ import com.esotericsoftware.kryo.serializers.CompatibleFieldSerializer;
 import net.luxvacuos.igl.CustomLog;
 import net.luxvacuos.voxel.server.core.CoreUtils;
 import net.luxvacuos.voxel.server.core.ServerGameSettings;
-import net.luxvacuos.voxel.server.core.GlobalStates;
 import net.luxvacuos.voxel.server.core.Voxel;
 import net.luxvacuos.voxel.server.core.VoxelVariables;
-import net.luxvacuos.voxel.server.core.WorldSimulation;
+import net.luxvacuos.voxel.server.core.ServerWorldSimulation;
 import net.luxvacuos.voxel.server.network.VoxelServer;
 import net.luxvacuos.voxel.server.ui.UserInterface;
 import net.luxvacuos.voxel.server.world.WorldsHandler;
+import net.luxvacuos.voxel.universal.core.AbstractVoxel;
 import net.luxvacuos.voxel.universal.resources.AbstractGameResources;
 
-public class GameResources extends AbstractGameResources {
+public class ServerGameResources extends AbstractGameResources {
 
-	private static GameResources instance = null;
+	private static ServerGameResources instance = null;
 
-	public static GameResources getInstance() {
+	public static ServerGameResources getInstance() {
 		if (instance == null)
-			instance = new GameResources();
+			instance = new ServerGameResources();
 		return instance;
 	}
 
-	private GlobalStates globalStates;
-	private Kryo kryo;
 	private VoxelServer voxelServer;
 	private CoreUtils coreUtils;
 	private UserInterface userInterface;
-	private WorldSimulation worldSimulation;
 	private WorldsHandler worldsHandler;
 
 	private int port;
 
-	private GameResources() {
+	private ServerGameResources() {
 	}
 
 	public void construct(Voxel voxel, int port) {
@@ -65,44 +62,42 @@ public class GameResources extends AbstractGameResources {
 		userInterface = new UserInterface(voxel);
 	}
 
+	@Override
 	public void preInit() {
 		voxelServer = new VoxelServer(port);
 	}
 
-	public void init() {
+	@Override
+	public void init(AbstractVoxel voxel) {
 		gameSettings = new ServerGameSettings();
 		gameSettings.load(new File(VoxelVariables.settings));
 		gameSettings.read();
 		
 		kryo = new Kryo();
 		kryo.setDefaultSerializer(CompatibleFieldSerializer.class);
-		globalStates = new GlobalStates();
 		voxelServer.init(this);
 		coreUtils = new CoreUtils();
 		CustomLog.getInstance();
-		worldSimulation = new WorldSimulation();
+		worldSimulation = new ServerWorldSimulation();
 		worldsHandler = new WorldsHandler();
 	}
 
-	public void postInit() {
-	}
-
+	@Override
 	public void dispose() {
 		gameSettings.update();
 		gameSettings.save();
 		voxelServer.dispose();
+		super.dispose();
 	}
 
-	public WorldSimulation getWorldSimulation() {
-		return worldSimulation;
+	@Override
+	public ServerWorldSimulation getWorldSimulation() {
+		return ((ServerWorldSimulation) this.worldSimulation);
 	}
-
-	public GlobalStates getGlobalStates() {
-		return globalStates;
-	}
-
-	public Kryo getKryo() {
-		return kryo;
+	
+	@Override
+	public ServerGameSettings getGameSettings() {
+		return ((ServerGameSettings)this.gameSettings);
 	}
 
 	public CoreUtils getCoreUtils() {

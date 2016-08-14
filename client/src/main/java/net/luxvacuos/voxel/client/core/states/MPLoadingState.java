@@ -24,9 +24,6 @@ import java.io.IOException;
 
 import org.lwjgl.nanovg.NanoVG;
 
-import net.luxvacuos.voxel.client.core.GlobalStates.GameState;
-import net.luxvacuos.voxel.client.core.State;
-import net.luxvacuos.voxel.client.core.Voxel;
 import net.luxvacuos.voxel.client.core.VoxelVariables;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.UIRendering;
 import net.luxvacuos.voxel.client.rendering.api.opengl.MasterRenderer;
@@ -35,7 +32,11 @@ import net.luxvacuos.voxel.client.ui.Button;
 import net.luxvacuos.voxel.client.ui.Text;
 import net.luxvacuos.voxel.client.ui.Window;
 import net.luxvacuos.voxel.client.world.ClientWorld;
+import net.luxvacuos.voxel.client.world.WorldsHandler;
 import net.luxvacuos.voxel.client.world.entities.PlayerCamera;
+import net.luxvacuos.voxel.universal.core.AbstractVoxel;
+import net.luxvacuos.voxel.universal.core.states.AbstractState;
+import net.luxvacuos.voxel.universal.core.states.StateMachine;
 
 /**
  * 
@@ -44,7 +45,7 @@ import net.luxvacuos.voxel.client.world.entities.PlayerCamera;
  * @author Guerra24 <pablo230699@hotmail.com>
  *
  */
-public class MPLoadingState extends State {
+public class MPLoadingState extends AbstractState {
 
 	private boolean trying = false;
 	private Button exitButton;
@@ -54,13 +55,15 @@ public class MPLoadingState extends State {
 	private boolean fadeIn;
 
 	public MPLoadingState() {
+		super(StateNames.MP_LOADING);
 		window = new Window(20, GameResources.getInstance().getDisplay().getDisplayHeight() - 20,
 				GameResources.getInstance().getDisplay().getDisplayWidth() - 40,
 				GameResources.getInstance().getDisplay().getDisplayHeight() - 40, "Multiplayer");
 		exitButton = new Button(window.getWidth() / 2 - 100, -window.getHeight() + 35, 200, 40, "Cancel");
 		exitButton.setOnButtonPress((button, delta) -> {
 			if (time > 0.2f) {
-				switchTo(GameState.MP_SELECTION);
+				//switchTo(GameState.MP_SELECTION);
+				StateMachine.setCurrentState(StateNames.MP_SELECTION);
 			}
 		});
 		message = new Text("Connecting...", window.getWidth() / 2, -window.getHeight() / 2);
@@ -74,31 +77,32 @@ public class MPLoadingState extends State {
 		time = 0;
 		trying = false;
 		fadeIn = false;
-		window.setFadeAlpha(0);
+		//window.setFadeAlpha(0);
 	}
 
 	@Override
 	public void end() {
 		message.setText("Connecting...");
-		window.setFadeAlpha(1);
+		//window.setFadeAlpha(1);
 	}
 
 	@Override
-	public void update(Voxel voxel, float delta) {
+	public void update(AbstractVoxel voxel, float delta) {
 		window.update(delta);
-		GameResources gm = voxel.getGameResources();
+		GameResources gm = (GameResources)voxel.getGameResources();
 		if (!trying && fadeIn) {
 			try {
 				trying = true;
 				gm.getVoxelClient().connect(4059);
 				message.setText("Loading World");
-				GameResources.getInstance().getWorldsHandler().registerWorld(new ClientWorld());
-				GameResources.getInstance().getWorldsHandler().setActiveWorld("server");
-				GameResources.getInstance().getWorldsHandler().getActiveWorld().init();
-				GameResources.getInstance().getWorldsHandler().getActiveWorld().getActiveDimension().getPhysicsEngine()
-						.addEntity(GameResources.getInstance().getCamera());
+				WorldsHandler wm = gm.getWorldsHandler();
+				wm.registerWorld(new ClientWorld());
+				wm.setActiveWorld("server");
+				wm.getActiveWorld().init();
+				wm.getActiveWorld().getActiveDimension().getPhysicsEngine().addEntity(GameResources.getInstance().getCamera());
 				((PlayerCamera) GameResources.getInstance().getCamera()).setMouse();
-				switchTo(GameState.MP);
+				//switchTo(GameState.MP);
+				StateMachine.setCurrentState(StateNames.MULTIPLAYER);
 			} catch (IOException e) {
 				VoxelVariables.onServer = false;
 				message.setText(e.getMessage());
@@ -111,17 +115,17 @@ public class MPLoadingState extends State {
 		if (time <= 0.2f) {
 			time += 1 * delta;
 		}
-		if (!switching)
+		/*if (!switching)
 			fadeIn = window.fadeIn(4, delta);
 		if (switching)
 			if (window.fadeOut(4, delta)) {
 				readyForSwitch = true;
-			}
+			} */
 	}
 
 	@Override
-	public void render(Voxel voxel, float delta) {
-		GameResources gm = voxel.getGameResources();
+	public void render(AbstractVoxel voxel, float delta) {
+		GameResources gm = (GameResources)voxel.getGameResources();
 		MasterRenderer.prepare(0, 0, 0, 1);
 		gm.getDisplay().beingNVGFrame();
 		window.render();

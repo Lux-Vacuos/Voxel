@@ -29,9 +29,6 @@ import java.nio.FloatBuffer;
 import org.lwjgl.BufferUtils;
 
 import net.luxvacuos.igl.vector.Vector3f;
-import net.luxvacuos.voxel.client.core.GlobalStates.GameState;
-import net.luxvacuos.voxel.client.core.State;
-import net.luxvacuos.voxel.client.core.Voxel;
 import net.luxvacuos.voxel.client.core.VoxelVariables;
 import net.luxvacuos.voxel.client.input.Keyboard;
 import net.luxvacuos.voxel.client.input.Mouse;
@@ -42,19 +39,23 @@ import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.ui.Button;
 import net.luxvacuos.voxel.client.ui.Window;
 import net.luxvacuos.voxel.client.world.entities.PlayerCamera;
+import net.luxvacuos.voxel.universal.core.AbstractVoxel;
+import net.luxvacuos.voxel.universal.core.states.AbstractState;
+import net.luxvacuos.voxel.universal.core.states.StateMachine;
 
 /**
  * Singleplayer Pause State.
  * 
  * @author danirod
  */
-public class SPPauseState extends State {
+public class SPPauseState extends AbstractState {
 
 	private Window window;
 	private Button exitButton;
 	private Button optionsButton;
 
 	public SPPauseState() {
+		super(StateNames.SP_PAUSE);
 		window = new Window(20, GameResources.getInstance().getDisplay().getDisplayHeight() - 20,
 				GameResources.getInstance().getDisplay().getDisplayWidth() - 40,
 				GameResources.getInstance().getDisplay().getDisplayHeight() - 40, "Pause");
@@ -65,10 +66,12 @@ public class SPPauseState extends State {
 			GameResources.getInstance().getCamera().setPosition(new Vector3f(0, 0, 1));
 			GameResources.getInstance().getCamera().setPitch(0);
 			GameResources.getInstance().getCamera().setYaw(0);
-			switchTo(GameState.MAINMENU);
+			//switchTo(GameState.MAINMENU);
+			StateMachine.setCurrentState(StateNames.MAIN_MENU);
 		});
 		optionsButton.setOnButtonPress((button, delta) -> {
-			switchTo(GameState.OPTIONS);
+			//switchTo(GameState.OPTIONS);
+			StateMachine.setCurrentState(StateNames.OPTIONS);
 		});
 		window.addChildren(exitButton);
 		window.addChildren(optionsButton);
@@ -76,37 +79,38 @@ public class SPPauseState extends State {
 
 	@Override
 	public void start() {
-		window.setFadeAlpha(0);
+		//window.setFadeAlpha(0);
 	}
 
 	@Override
 	public void end() {
-		window.setFadeAlpha(1);
+		//window.setFadeAlpha(1);
 	}
 
 	@Override
-	public void update(Voxel voxel, float delta) {
-		GameResources gm = voxel.getGameResources();
+	public void update(AbstractVoxel voxel, float delta) {
+		GameResources gm = (GameResources)voxel.getGameResources();
 		while (Mouse.next())
 			window.update(delta);
-		if (!switching)
+		/*if (!switching)
 			window.fadeIn(4, delta);
 		if (switching)
 			if (window.fadeOut(4, delta)) {
 				readyForSwitch = true;
-			}
+			} */
 
 		while (Keyboard.next()) {
 			if (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
 				((PlayerCamera) gm.getCamera()).setMouse();
-				switchTo(GameState.SP);
+				//switchTo(GameState.SP);
+				StateMachine.setCurrentState(StateNames.SINGLEPLAYER);
 			}
 		}
 	}
 
 	@Override
-	public void render(Voxel voxel, float delta) {
-		GameResources gm = voxel.getGameResources();
+	public void render(AbstractVoxel voxel, float delta) {
+		GameResources gm = (GameResources)voxel.getGameResources();
 
 		gm.getWorldsHandler().getActiveWorld().getActiveDimension().lighting();
 		gm.getSun_Camera().setPosition(gm.getCamera().getPosition());

@@ -20,14 +20,15 @@
 
 package net.luxvacuos.voxel.server.core.commands;
 
-import net.luxvacuos.voxel.server.core.GlobalStates.InternalState;
-import net.luxvacuos.voxel.server.core.Voxel;
+import net.luxvacuos.voxel.universal.core.AbstractVoxel;
+import net.luxvacuos.voxel.universal.core.states.StateMachine;
 
 public class StopCommand extends Command {
 
 	@Override
-	public boolean run(Voxel voxel) {
-		voxel.getGameResources().getGlobalStates().setInternalState(InternalState.STOPPED);
+	public boolean run(AbstractVoxel voxel) {
+		//voxel.getGameResources().getGlobalStates().setInternalState(InternalState.STOPPED);
+		StateMachine.dispose();
 		return true;
 	}
 

@@ -18,24 +18,24 @@
  * 
  */
 
-package net.luxvacuos.voxel.server.core.commands;
+package net.luxvacuos.voxel.universal.core.states;
 
-import net.luxvacuos.igl.Logger;
 import net.luxvacuos.voxel.universal.core.AbstractVoxel;
 
-public class TimeCommand extends Command {
-
-	private float time;
-
-	public TimeCommand(float time) {
-		this.time = time;
-	}
-
-	@Override
-	public boolean run(AbstractVoxel voxel) {
-		voxel.getGameResources().getWorldSimulation().setTime(time);
-		Logger.log("Time set to: " + time);
-		return true;
-	}
+public interface IState {
+	
+	public void init();
+	
+	public void start();
+	
+	public boolean isRunning();
+	
+	public void update(AbstractVoxel voxel, float deltaTime);
+	
+	public void render(AbstractVoxel voxel, float alpha);
+	
+	public void end();
+	
+	public String getName();
 
 }

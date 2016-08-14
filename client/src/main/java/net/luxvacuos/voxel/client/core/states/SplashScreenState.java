@@ -20,13 +20,13 @@
 
 package net.luxvacuos.voxel.client.core.states;
 
-import net.luxvacuos.voxel.client.core.GlobalStates.GameState;
-import net.luxvacuos.voxel.client.core.State;
-import net.luxvacuos.voxel.client.core.Voxel;
 import net.luxvacuos.voxel.client.rendering.api.opengl.MasterRenderer;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.ui.Image;
 import net.luxvacuos.voxel.client.ui.Panel;
+import net.luxvacuos.voxel.universal.core.AbstractVoxel;
+import net.luxvacuos.voxel.universal.core.states.AbstractState;
+import net.luxvacuos.voxel.universal.core.states.StateMachine;
 
 /**
  * Splash screen State, show only in the load.
@@ -34,13 +34,14 @@ import net.luxvacuos.voxel.client.ui.Panel;
  * @author Guerra24 <pablo230699@hotmail.com>
  *
  */
-public class SplashScreenState extends State {
+public class SplashScreenState extends AbstractState {
 
 	private Panel panel;
 	private Image luxVacuosLogo;
 	private float wait = 0;
 
 	public SplashScreenState() {
+		super(StateNames.SPLASH_SCREEN);
 		panel = new Panel(GameResources.getInstance().getDisplay().getDisplayWidth() / 2,
 				GameResources.getInstance().getDisplay().getDisplayHeight() / 2, 0, 0);
 		panel.setBorderColor(0, 0, 0, 0);
@@ -65,17 +66,17 @@ public class SplashScreenState extends State {
 
 	@Override
 	public void start() {
-		panel.setFadeAlpha(0);
+		//panel.setFadeAlpha(0);
 	}
 
 	@Override
 	public void end() {
-		panel.setFadeAlpha(1);
+		//panel.setFadeAlpha(1);
 	}
 
 	@Override
-	public void render(Voxel voxel, float alpha) {
-		GameResources gm = voxel.getGameResources();
+	public void render(AbstractVoxel voxel, float alpha) {
+		GameResources gm = (GameResources) voxel.getGameResources();
 		MasterRenderer.prepare(0, 0, 0, 1);
 		gm.getDisplay().beingNVGFrame();
 		panel.render();
@@ -83,19 +84,21 @@ public class SplashScreenState extends State {
 	}
 
 	@Override
-	public void update(Voxel voxel, float delta) {
+	public void update(AbstractVoxel voxel, float delta) {
+		panel.fadeIn(4, delta); //XXX: Hack to get things working
 		wait += 1 * delta;
 		if (wait > 2) {
 			panel.update(delta);
 		}
-		if (!switching)
+		/*if (!switching)
 			panel.fadeIn(4, delta);
 		if (switching)
 			if (panel.fadeOut(4, delta)) {
 				readyForSwitch = true;
-			}
+			} */
 		if (wait > 3)
-			switchTo(GameState.MAINMENU);
+			//switchTo(GameState.MAINMENU);
+			StateMachine.setCurrentState(StateNames.MAIN_MENU);
 
 	}
 

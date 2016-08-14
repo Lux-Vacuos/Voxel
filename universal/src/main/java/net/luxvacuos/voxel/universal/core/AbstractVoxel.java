@@ -43,7 +43,7 @@ public abstract class AbstractVoxel implements IVoxel, IDisposable {
 	}
 
 	public AbstractGameResources getGameResources() {
-		return gameResources;
+		return this.gameResources;
 	}
 
 }

@@ -32,7 +32,7 @@ import com.esotericsoftware.kryo.io.Output;
 
 import net.luxvacuos.igl.Logger;
 import net.luxvacuos.voxel.server.core.VoxelVariables;
-import net.luxvacuos.voxel.server.resources.GameResources;
+import net.luxvacuos.voxel.server.resources.ServerGameResources;
 
 public abstract class World {
 
@@ -52,14 +52,14 @@ public abstract class World {
 	public void init() {
 		Logger.log("Loading World: " + name);
 		saved = false;
-		load(GameResources.getInstance());
-		localInit(GameResources.getInstance());
+		load(ServerGameResources.getInstance());
+		localInit(ServerGameResources.getInstance());
 		Logger.log("Load Completed");
 	}
 
-	protected abstract void localInit(GameResources gm);
+	protected abstract void localInit(ServerGameResources gm);
 
-	private void load(GameResources gm) {
+	private void load(ServerGameResources gm) {
 		if (file.exists()) {
 			Input input;
 			try {
@@ -93,7 +93,7 @@ public abstract class World {
 		this.activeDimension = dim;
 	}
 
-	public void switchDimension(int id, GameResources gm) {
+	public void switchDimension(int id, ServerGameResources gm) {
 		activeDimension = getDimension(id);
 	}
 

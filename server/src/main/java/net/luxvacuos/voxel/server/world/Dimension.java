@@ -40,7 +40,7 @@ import com.esotericsoftware.kryo.io.Output;
 import net.luxvacuos.igl.Logger;
 import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.voxel.server.core.VoxelVariables;
-import net.luxvacuos.voxel.server.resources.GameResources;
+import net.luxvacuos.voxel.server.resources.ServerGameResources;
 import net.luxvacuos.voxel.server.world.block.Block;
 import net.luxvacuos.voxel.server.world.block.BlockBase;
 import net.luxvacuos.voxel.server.world.chunks.Chunk;
@@ -71,7 +71,7 @@ public abstract class Dimension {
 	private PhysicsSystem physicsSystem;
 	public static int CHUNKS_LOADED_PER_FRAME = 1;
 
-	public Dimension(String name, Random seed, int chunkDim, GameResources gm) {
+	public Dimension(String name, Random seed, int chunkDim, ServerGameResources gm) {
 		this.name = name;
 		this.chunkDim = chunkDim;
 		data = new DimensionData();
@@ -85,7 +85,7 @@ public abstract class Dimension {
 		init(gm);
 	}
 
-	private void init(GameResources gm) {
+	private void init(ServerGameResources gm) {
 		seedi = (int) data.getObject("Seed");
 		noise = new SimplexNoise(256, 0.15f, seedi);
 		lightNodeAdds = new LinkedList<>();
@@ -103,7 +103,7 @@ public abstract class Dimension {
 		Input input;
 		try {
 			input = new Input(new FileInputStream(VoxelVariables.WORLD_PATH + name + "/dim_" + chunkDim + ".dat"));
-			data = GameResources.getInstance().getKryo().readObject(input, DimensionData.class);
+			data = ServerGameResources.getInstance().getKryo().readObject(input, DimensionData.class);
 			input.close();
 		} catch (FileNotFoundException e) {
 		}
@@ -113,13 +113,13 @@ public abstract class Dimension {
 		Output output;
 		try {
 			output = new Output(new FileOutputStream(VoxelVariables.WORLD_PATH + name + "/dim_" + chunkDim + ".dat"));
-			GameResources.getInstance().getKryo().writeObject(output, data);
+			ServerGameResources.getInstance().getKryo().writeObject(output, data);
 			output.close();
 		} catch (FileNotFoundException e) {
 		}
 	}
 
-	public void updateChunksGeneration(GameResources gm, float delta) {
+	public void updateChunksGeneration(ServerGameResources gm, float delta) {
 		int chunkLoaded = 0;
 		ChunkNode node;
 		for (float cz = -VoxelVariables.radius * 16f; cz <= VoxelVariables.radius * 16f; cz += 16f) {
@@ -217,7 +217,7 @@ public abstract class Dimension {
 		}
 	}
 
-	public void saveChunk(int cx, int cy, int cz, GameResources gm) throws SaveChunkException {
+	public void saveChunk(int cx, int cy, int cz, ServerGameResources gm) throws SaveChunkException {
 		try {
 			Output output = new Output(new FileOutputStream(VoxelVariables.WORLD_PATH + name + "/dimension_" + chunkDim
 					+ "/chunk_" + cx + "_" + cy + "_" + cz + ".dat"));
@@ -232,7 +232,7 @@ public abstract class Dimension {
 		try {
 			Output output = new Output(new FileOutputStream(VoxelVariables.WORLD_PATH + name + "/dimension_" + chunkDim
 					+ "/chunk_" + chunk.node.getX() + "_" + chunk.node.getY() + "_" + chunk.node.getZ() + ".dat"));
-			GameResources.getInstance().getKryo().writeObject(output, chunk);
+			ServerGameResources.getInstance().getKryo().writeObject(output, chunk);
 			output.close();
 		} catch (Exception e) {
 			throw new SaveChunkException(e);
@@ -243,7 +243,7 @@ public abstract class Dimension {
 		try {
 			Input input = new Input(new FileInputStream(VoxelVariables.WORLD_PATH + name + "/dimension_" + chunkDim
 					+ "/chunk_" + node.getX() + "_" + node.getY() + "_" + node.getZ() + ".dat"));
-			Chunk chunk = GameResources.getInstance().getKryo().readObject(input, Chunk.class);
+			Chunk chunk = ServerGameResources.getInstance().getKryo().readObject(input, Chunk.class);
 			input.close();
 			if (chunk != null) {
 				chunk.onLoad();

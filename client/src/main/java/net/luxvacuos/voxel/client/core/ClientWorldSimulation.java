@@ -21,6 +21,7 @@
 package net.luxvacuos.voxel.client.core;
 
 import net.luxvacuos.voxel.client.util.Maths;
+import net.luxvacuos.voxel.universal.core.AbstractWorldSimulation;
 
 /**
  * 
@@ -29,17 +30,12 @@ import net.luxvacuos.voxel.client.util.Maths;
  * @author Guerra24 <pablo230699@hotmail.com>
  *
  */
-public class WorldSimulation {
+public final class ClientWorldSimulation extends AbstractWorldSimulation {
 
 	private float moveFactor = 0;
-	private float time = 0;
-	private float globalTime = 0;
-	private float rainFactor;
 
-	private static final float TIME_MULTIPLIER = 10;
-
-	public WorldSimulation() {
-		time = 7000;
+	public ClientWorldSimulation() {
+		super(7000);
 	}
 
 	/**
@@ -49,6 +45,7 @@ public class WorldSimulation {
 	 *            Delta to update
 	 * @return Rotation for sun
 	 */
+	@Override
 	public float update(float delta) {
 		// Set move factor for waves
 		moveFactor += VoxelVariables.WAVE_SPEED * delta;
@@ -73,22 +70,6 @@ public class WorldSimulation {
 
 	public float getMoveFactor() {
 		return moveFactor;
-	}
-
-	public float getGlobalTime() {
-		return globalTime;
-	}
-
-	public float getRainFactor() {
-		return rainFactor;
-	}
-
-	public float getTime() {
-		return time;
-	}
-
-	public void setTime(float time) {
-		this.time = time;
 	}
 
 }

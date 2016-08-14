@@ -18,24 +18,11 @@
  * 
  */
 
-package net.luxvacuos.voxel.server.core.commands;
+package net.luxvacuos.voxel.universal.utils;
 
-import net.luxvacuos.igl.Logger;
-import net.luxvacuos.voxel.universal.core.AbstractVoxel;
+public interface IResource {
 
-public class TimeCommand extends Command {
-
-	private float time;
-
-	public TimeCommand(float time) {
-		this.time = time;
-	}
-
-	@Override
-	public boolean run(AbstractVoxel voxel) {
-		voxel.getGameResources().getWorldSimulation().setTime(time);
-		Logger.log("Time set to: " + time);
-		return true;
-	}
-
+	public String getResourceDomain();
+	
+	public String getResourcePath();
 }

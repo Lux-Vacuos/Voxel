@@ -20,10 +20,10 @@
 
 package net.luxvacuos.voxel.server.core.commands;
 
-import net.luxvacuos.voxel.server.core.Voxel;
+import net.luxvacuos.voxel.universal.core.AbstractVoxel;
 
 public abstract class Command {
 	
-	public abstract boolean run(Voxel voxel);
+	public abstract boolean run(AbstractVoxel voxel);
 
 }

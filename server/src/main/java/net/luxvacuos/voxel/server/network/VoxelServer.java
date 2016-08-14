@@ -30,7 +30,7 @@ import com.esotericsoftware.kryonet.Server;
 
 import net.luxvacuos.igl.vector.Vector2f;
 import net.luxvacuos.igl.vector.Vector3f;
-import net.luxvacuos.voxel.server.resources.GameResources;
+import net.luxvacuos.voxel.server.resources.ServerGameResources;
 import net.luxvacuos.voxel.server.world.block.BlockBase;
 import net.luxvacuos.voxel.server.world.block.BlockEntity;
 import net.luxvacuos.voxel.server.world.block.types.BlockAir;
@@ -66,7 +66,7 @@ public class VoxelServer {
 		names = new ArrayList<>();
 	}
 
-	public void init(GameResources gm) {
+	public void init(ServerGameResources gm) {
 		server = new Server(16384, 10240);
 		server.start();
 		server.addListener(new DedicatedListener(gm));
