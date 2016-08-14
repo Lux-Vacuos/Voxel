@@ -27,54 +27,18 @@ import com.esotericsoftware.minlog.Log;
 
 import net.luxvacuos.voxel.server.core.Voxel;
 import net.luxvacuos.voxel.server.core.VoxelVariables;
+import net.luxvacuos.voxel.universal.bootstrap.AbstractBootstrap;
 
-public class Bootstrap {
+public class Bootstrap extends AbstractBootstrap {
 
-	/**
-	 * OS info
-	 */
-	private static Platform platform;
-
-	/**
-	 * 
-	 * Gets the OS
-	 * 
-	 * @return The OS and the architecture
-	 * 
-	 */
-	public static Platform getPlatform() {
-		if (platform == null) {
-			final String OS = System.getProperty("os.name").toLowerCase();
-			final String ARCH = System.getProperty("os.arch").toLowerCase();
-
-			boolean isWindows = OS.contains("windows");
-			boolean isLinux = OS.contains("linux");
-			boolean isMac = OS.contains("mac");
-			boolean is64Bit = ARCH.equals("amd64") || ARCH.equals("x86_64");
-
-			platform = Platform.UNKNOWN;
-
-			if (isWindows)
-				platform = is64Bit ? Platform.WINDOWS_64 : Platform.WINDOWS_32;
-			if (isLinux)
-				platform = is64Bit ? Platform.LINUX_64 : Platform.LINUX_32;
-			if (isMac)
-				platform = Platform.MACOSX;
-		}
-
-		return platform;
+	public Bootstrap(String[] args) {
+		super(args);
 	}
 
-	/**
-	 * Enumerator of the OS
-	 * 
-	 *
-	 */
-	public enum Platform {
-		WINDOWS_32, WINDOWS_64, MACOSX, LINUX_32, LINUX_64, UNKNOWN;
-	}
-
-	static {
+	@Override
+	public void init() {
+		Log.set(Log.LEVEL_INFO);
+		Thread.currentThread().setName("Voxel-Server");
 		try {
 			File file = new File(new File(".").getCanonicalPath() + "/logs");
 			if (!file.exists())
@@ -87,15 +51,43 @@ public class Bootstrap {
 		}
 	}
 
+	@Override
+	public void parseArgs(String[] args) {
+		boolean gavePort = false;
+		for (int i = 0; i < args.length; i++) {
+			switch (args[i]) {
+			case "-port":
+				if (gavePort)
+					throw new IllegalStateException("Port already given");
+				VoxelVariables.port = Integer.parseInt(args[++i]);
+				if (VoxelVariables.port <= 0)
+					throw new IllegalArgumentException("Port must be positive");
+				gavePort = true;
+				break;
+			default:
+				if (args[i].startsWith("-")) {
+					throw new IllegalArgumentException("Unknown argument: " + args[i].substring(1));
+				} else {
+					throw new IllegalArgumentException("Unknown token: " + args[i]);
+				}
+			}
+		}
+	}
+
+	@Override
+	public String getPrefix() {
+		if (prefix == null) {
+			try {
+				prefix = new File(".").getCanonicalPath().toString();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return prefix;
+	}
+
 	public static void main(String[] args) throws Exception {
-		Log.set(Log.LEVEL_INFO);
-		Thread.currentThread().setName("Voxel-Server");
-		int port;
-		if (args.length > 0)
-			port = Integer.parseInt(args[0]);
-		else
-			port = 4059;
-		new Voxel(port);
+		new Voxel(new Bootstrap(args));
 	}
 
 }

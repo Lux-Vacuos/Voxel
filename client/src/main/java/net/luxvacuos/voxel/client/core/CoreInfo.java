@@ -20,7 +20,7 @@
 
 package net.luxvacuos.voxel.client.core;
 
-import net.luxvacuos.voxel.client.bootstrap.Bootstrap.Platform;
+import net.luxvacuos.voxel.universal.bootstrap.Platform;
 
 public class CoreInfo {
 

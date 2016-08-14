@@ -24,7 +24,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import net.luxvacuos.voxel.universal.core.AbstractVoxel;
-import net.luxvacuos.voxel.universal.core.RunningSide;
+import net.luxvacuos.voxel.universal.core.EngineType;
 import net.luxvacuos.voxel.universal.resources.IDisposable;
 
 public final class StateMachine {
@@ -64,7 +64,7 @@ public final class StateMachine {
 	}
 	
 	public static boolean render(AbstractVoxel voxel, float alpha) {
-		if(currentState == null || voxel.getSide() != RunningSide.CLIENT)
+		if(currentState == null || voxel.getEngineType() != EngineType.CLIENT)
 			return false;
 		
 		currentState.render(voxel, alpha);

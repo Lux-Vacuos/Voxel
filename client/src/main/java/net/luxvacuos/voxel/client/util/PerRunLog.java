@@ -29,7 +29,7 @@ import org.apache.log4j.FileAppender;
 import org.apache.log4j.Layout;
 import org.apache.log4j.spi.ErrorCode;
 
-import net.luxvacuos.voxel.client.bootstrap.Bootstrap;
+import net.luxvacuos.voxel.client.core.VoxelVariables;
 
 public class PerRunLog extends FileAppender {
 
@@ -82,7 +82,7 @@ public class PerRunLog extends FileAppender {
 			} else {
 				newFileName = fileName + HIPHEN + timeStampFormat.format(new Date());
 			}
-			return Bootstrap.getPrefix() + "voxel/" + logFile.getParent() + File.separator + newFileName;
+			return VoxelVariables.log + logFile.getParent() + File.separator + newFileName;
 		}
 		return null;
 	}

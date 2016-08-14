@@ -33,8 +33,6 @@ import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFW;
 
 import net.luxvacuos.igl.Logger;
-import net.luxvacuos.voxel.client.bootstrap.Bootstrap;
-import net.luxvacuos.voxel.client.bootstrap.Bootstrap.Platform;
 import net.luxvacuos.voxel.client.core.states.*;
 import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.Timers;
@@ -44,8 +42,10 @@ import net.luxvacuos.voxel.client.ui.CrashScreen;
 import net.luxvacuos.voxel.client.world.block.BlocksResources;
 import net.luxvacuos.voxel.universal.api.ModInitialization;
 import net.luxvacuos.voxel.universal.api.MoltenAPI;
+import net.luxvacuos.voxel.universal.bootstrap.AbstractBootstrap;
+import net.luxvacuos.voxel.universal.bootstrap.Platform;
 import net.luxvacuos.voxel.universal.core.AbstractVoxel;
-import net.luxvacuos.voxel.universal.core.RunningSide;
+import net.luxvacuos.voxel.universal.core.EngineType;
 import net.luxvacuos.voxel.universal.core.states.StateMachine;
 
 /**
@@ -72,9 +72,10 @@ public class Voxel extends AbstractVoxel {
 	/**
 	 * Create the instance and set some variables
 	 */
-	public Voxel() {
-		// Path prefix
-		super.prefix = Bootstrap.getPrefix();
+	public Voxel(AbstractBootstrap bootstrap) {
+		super(bootstrap);
+		// Set client
+		super.engineType = EngineType.CLIENT;
 		// Call Mainloop
 		loop();
 	}
@@ -90,7 +91,6 @@ public class Voxel extends AbstractVoxel {
 	public void preInit() throws Exception {
 
 		// Find version from Manifest file
-
 		try {
 			Manifest manifest = new Manifest(getClass().getClassLoader().getResourceAsStream("META-INF/MANIFEST.MF"));
 			Attributes attr = manifest.getMainAttributes();
@@ -101,6 +101,10 @@ public class Voxel extends AbstractVoxel {
 			E.printStackTrace();
 		}
 		Logger.log("Starting Client");
+
+		VoxelVariables.settings = bootstrap.getPrefix() + "/config/settings.conf";
+		VoxelVariables.WORLD_PATH = bootstrap.getPrefix() + "/world/";
+		VoxelVariables.log = bootstrap.getPrefix() + "/";
 
 		// Create the GameResources instance
 		gameResources = GameResources.getInstance();
@@ -116,21 +120,21 @@ public class Voxel extends AbstractVoxel {
 		Logger.log("Voxel Version: " + VoxelVariables.version);
 		Logger.log("Molten API Version: " + MoltenAPI.apiVersion);
 		Logger.log("Build: " + MoltenAPI.build);
-		Logger.log("Running on: " + Bootstrap.getPlatform());
+		Logger.log("Running on: " + bootstrap.getPlatform());
 		Logger.log("LWJGL Version: " + Version.getVersion());
 		Logger.log("GLFW Version: " + GLFW.glfwGetVersionString());
 		Logger.log("OpenGL Version: " + glGetString(GL_VERSION));
 		Logger.log("Vendor: " + glGetString(GL_VENDOR));
 		Logger.log("Renderer: " + glGetString(GL_RENDERER));
 		// Set the info to objects
-		CoreInfo.platform = Bootstrap.getPlatform();
+		CoreInfo.platform = bootstrap.getPlatform();
 		CoreInfo.LWJGLVer = Version.getVersion();
 		CoreInfo.GLFWVer = GLFW.glfwGetVersionString();
 		CoreInfo.OpenGLVer = glGetString(GL_VERSION);
 		CoreInfo.Vendor = glGetString(GL_VENDOR);
 		CoreInfo.Renderer = glGetString(GL_RENDERER);
 		// Check for OS X
-		if (Bootstrap.getPlatform() == Bootstrap.Platform.MACOSX) {
+		if (bootstrap.getPlatform().equals(Platform.MACOSX)) {
 			VoxelVariables.runningOnMac = true;
 		}
 		// Create ModInitialization instance
@@ -301,7 +305,7 @@ public class Voxel extends AbstractVoxel {
 			e.printStackTrace();
 		}
 		// If running on MacOSX don't show crash screen
-		if (!Bootstrap.getPlatform().equals(Platform.MACOSX))
+		if (!bootstrap.getPlatform().equals(Platform.MACOSX))
 			CrashScreen.run(e);
 		else
 			System.exit(-1);
@@ -330,11 +334,6 @@ public class Voxel extends AbstractVoxel {
 	@Override
 	public GameResources getGameResources() {
 		return ((GameResources) gameResources);
-	}
-
-	@Override
-	public RunningSide getSide() {
-		return RunningSide.CLIENT;
 	}
 
 }

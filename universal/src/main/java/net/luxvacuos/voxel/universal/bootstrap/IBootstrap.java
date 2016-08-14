@@ -18,10 +18,16 @@
  * 
  */
 
-package net.luxvacuos.voxel.universal.core;
+package net.luxvacuos.voxel.universal.bootstrap;
 
-public enum RunningSide {
-	CLIENT,
-	SERVER,
-	UNKNOWN
+public interface IBootstrap {
+
+	public void parseArgs(String[] args);
+
+	public void init();
+
+	public String getPrefix();
+
+	public Platform getPlatform();
+
 }

@@ -20,16 +20,26 @@
 
 package net.luxvacuos.voxel.universal.core;
 
+import net.luxvacuos.voxel.universal.bootstrap.AbstractBootstrap;
 import net.luxvacuos.voxel.universal.resources.AbstractGameResources;
 import net.luxvacuos.voxel.universal.resources.IDisposable;
 
 public abstract class AbstractVoxel implements IVoxel, IDisposable {
 
 	protected AbstractGameResources gameResources;
-	protected String prefix;
+	protected EngineType engineType;
+	protected AbstractBootstrap bootstrap;
 
-	public String getPrefix() {
-		return this.prefix;
+	public AbstractVoxel(AbstractBootstrap bootstrap) {
+		this.bootstrap = bootstrap;
+	}
+
+	public EngineType getEngineType() {
+		return engineType;
+	}
+
+	public AbstractBootstrap getBootstrap() {
+		return bootstrap;
 	}
 
 	public AbstractGameResources getGameResources() {
