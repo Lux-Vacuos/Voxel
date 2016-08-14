@@ -29,11 +29,11 @@ public abstract class AbstractVoxel implements IVoxel, IDisposable {
 	protected String prefix;
 
 	public String getPrefix() {
-		return prefix;
+		return this.prefix;
 	}
 
 	public AbstractGameResources getGameResources() {
-		return gameResources;
+		return this.gameResources;
 	}
 
 }

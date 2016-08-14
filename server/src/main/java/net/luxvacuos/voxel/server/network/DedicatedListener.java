@@ -24,14 +24,14 @@ import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 
 import net.luxvacuos.igl.Logger;
-import net.luxvacuos.voxel.server.resources.GameResources;
+import net.luxvacuos.voxel.server.resources.ServerGameResources;
 import net.luxvacuos.voxel.universal.network.packets.Username;
 
 public class DedicatedListener extends Listener {
 
-	private GameResources gm;
+	private ServerGameResources gm;
 
-	public DedicatedListener(GameResources gm) {
+	public DedicatedListener(ServerGameResources gm) {
 		this.gm = gm;
 	}
 

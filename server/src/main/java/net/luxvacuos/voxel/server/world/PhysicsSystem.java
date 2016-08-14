@@ -32,7 +32,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 
 import net.luxvacuos.igl.vector.Vector3f;
-import net.luxvacuos.voxel.server.resources.GameResources;
+import net.luxvacuos.voxel.server.resources.ServerGameResources;
 import net.luxvacuos.voxel.server.world.block.Block;
 import net.luxvacuos.voxel.server.world.block.BlockBase;
 import net.luxvacuos.voxel.server.world.entities.GameEntity;
@@ -149,7 +149,7 @@ public class PhysicsSystem extends EntitySystem {
 		}
 	}
 
-	public void doSpawn(GameResources gm) {
+	public void doSpawn(ServerGameResources gm) {
 		/*
 		 * Vector3f tmp = new Vector3f(gm.getCamera().getPosition());
 		 * Vector3f.add(tmp, new Vector3f(Maths.randInt(1, 10), Maths.randInt(1,

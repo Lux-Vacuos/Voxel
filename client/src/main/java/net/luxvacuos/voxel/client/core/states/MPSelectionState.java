@@ -20,9 +20,6 @@
 
 package net.luxvacuos.voxel.client.core.states;
 
-import net.luxvacuos.voxel.client.core.GlobalStates.GameState;
-import net.luxvacuos.voxel.client.core.State;
-import net.luxvacuos.voxel.client.core.Voxel;
 import net.luxvacuos.voxel.client.input.Keyboard;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.UIRendering;
 import net.luxvacuos.voxel.client.rendering.api.opengl.MasterRenderer;
@@ -30,6 +27,9 @@ import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.ui.Button;
 import net.luxvacuos.voxel.client.ui.Text;
 import net.luxvacuos.voxel.client.ui.Window;
+import net.luxvacuos.voxel.universal.core.AbstractVoxel;
+import net.luxvacuos.voxel.universal.core.states.AbstractState;
+import net.luxvacuos.voxel.universal.core.states.StateMachine;
 
 /**
  * Multiplayer Selection State, here the user inserts the server IP.
@@ -37,7 +37,7 @@ import net.luxvacuos.voxel.client.ui.Window;
  * @author Guerra24 <pablo230699@hotmail.com>
  *
  */
-public class MPSelectionState extends State {
+public class MPSelectionState extends AbstractState {
 
 	private Button exitButton;
 	private Button playButton;
@@ -48,6 +48,7 @@ public class MPSelectionState extends State {
 	private float time = 0;
 
 	public MPSelectionState() {
+		super("MP_Selection");
 		window = new Window(20, GameResources.getInstance().getDisplay().getDisplayHeight() - 20,
 				GameResources.getInstance().getDisplay().getDisplayWidth() - 40,
 				GameResources.getInstance().getDisplay().getDisplayHeight() - 40, "Multiplayer");
@@ -56,13 +57,15 @@ public class MPSelectionState extends State {
 
 		exitButton.setOnButtonPress((button, delta) -> {
 			if (time > 0.2f)
-				switchTo(GameState.MAINMENU);
+				//switchTo(GameState.MAINMENU);
+				StateMachine.setCurrentState("MainMenu");
 		});
 
 		playButton.setOnButtonPress((button, delta) -> {
 			if (time > 0.2f) {
 				GameResources.getInstance().getVoxelClient().setUrl(ip);
-				switchTo(GameState.LOADING_MP_WORLD);
+				//switchTo(GameState.LOADING_MP_WORLD);
+				StateMachine.setCurrentState("MP_Loading");
 			}
 		});
 		ipText = new Text("IP:", window.getWidth() / 2 - 170, -window.getHeight() / 2);
@@ -84,22 +87,22 @@ public class MPSelectionState extends State {
 	}
 
 	@Override
-	public void update(Voxel voxel, float delta) {
+	public void update(AbstractVoxel voxel, float delta) {
 		window.update(delta);
 		if (time <= 0.2f) {
 			time += 1 * delta;
 		}
-		if (!switching)
+		/*if (!switching)
 			window.fadeIn(4, delta);
 		if (switching)
 			if (window.fadeOut(4, delta)) {
 				readyForSwitch = true;
-			}
+			} */
 	}
 
 	@Override
-	public void render(Voxel voxel, float alpha) {
-		GameResources gm = voxel.getGameResources();
+	public void render(AbstractVoxel voxel, float alpha) {
+		GameResources gm = (GameResources) voxel.getGameResources();
 		MasterRenderer.prepare(0, 0, 0, 1);
 		gm.getDisplay().beingNVGFrame();
 		window.render();

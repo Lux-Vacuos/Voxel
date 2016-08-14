@@ -37,10 +37,7 @@ import java.nio.FloatBuffer;
 
 import org.lwjgl.BufferUtils;
 
-import net.luxvacuos.voxel.client.core.GlobalStates.GameState;
 import net.luxvacuos.voxel.client.core.CoreInfo;
-import net.luxvacuos.voxel.client.core.State;
-import net.luxvacuos.voxel.client.core.Voxel;
 import net.luxvacuos.voxel.client.core.VoxelVariables;
 import net.luxvacuos.voxel.client.input.Keyboard;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.Timers;
@@ -52,6 +49,9 @@ import net.luxvacuos.voxel.client.world.Dimension;
 import net.luxvacuos.voxel.client.world.PhysicsSystem;
 import net.luxvacuos.voxel.client.world.entities.PlayerCamera;
 import net.luxvacuos.voxel.universal.api.MoltenAPI;
+import net.luxvacuos.voxel.universal.core.AbstractVoxel;
+import net.luxvacuos.voxel.universal.core.states.AbstractState;
+import net.luxvacuos.voxel.universal.core.states.StateMachine;
 
 /**
  * Single Player State, here the local world is updated and rendered.
@@ -59,18 +59,19 @@ import net.luxvacuos.voxel.universal.api.MoltenAPI;
  * @author danirod
  * @category Kernel
  */
-public class SPState extends State {
+public class SPState extends AbstractState {
 	FloatBuffer p;
 	FloatBuffer c;
 
 	public SPState() {
+		super("SinglePlayer");
 		p = BufferUtils.createFloatBuffer(1);
 		c = BufferUtils.createFloatBuffer(3);
 	}
 
 	@Override
-	public void update(Voxel voxel, float delta) {
-		GameResources gm = voxel.getGameResources();
+	public void update(AbstractVoxel voxel, float delta) {
+		GameResources gm = (GameResources)voxel.getGameResources();
 
 		gm.getWorldsHandler().getActiveWorld().getActiveDimension().updateChunksGeneration(gm, delta);
 		((PlayerCamera) gm.getCamera()).update(delta, gm, gm.getWorldsHandler().getActiveWorld().getActiveDimension());
@@ -91,11 +92,13 @@ public class SPState extends State {
 				VoxelVariables.hideHud = !VoxelVariables.hideHud;
 			if (isKeyDown(KEY_ESCAPE)) {
 				((PlayerCamera) gm.getCamera()).unlockMouse();
-				gm.getGlobalStates().setState(GameState.SP_PAUSE);
+				//gm.getGlobalStates().setState(GameState.SP_PAUSE);
+				StateMachine.setCurrentState("SP_Pause");
 			}
 			if (isKeyDown(KEY_E)) {
 				((PlayerCamera) gm.getCamera()).unlockMouse();
-				gm.getGlobalStates().setState(GameState.GAME_SP_INVENTORY);
+				//gm.getGlobalStates().setState(GameState.GAME_SP_INVENTORY);
+				StateMachine.setCurrentState("SP_Inventory");
 			}
 			if (Keyboard.isKeyDown(Keyboard.KEY_R))
 				VoxelVariables.raining = !VoxelVariables.raining;
@@ -108,8 +111,8 @@ public class SPState extends State {
 	}
 
 	@Override
-	public void render(Voxel voxel, float delta) {
-		GameResources gm = voxel.getGameResources();
+	public void render(AbstractVoxel voxel, float delta) {
+		GameResources gm = (GameResources)voxel.getGameResources();
 
 		gm.getWorldsHandler().getActiveWorld().getActiveDimension().lighting();
 		gm.getSun_Camera().setPosition(gm.getCamera().getPosition());

@@ -24,11 +24,11 @@ import net.luxvacuos.voxel.universal.core.AbstractVoxel;
 import net.luxvacuos.voxel.universal.resources.IDisposable;
 
 public abstract class AbstractState implements IState, IDisposable {
-	private final String name;
+	private final String stateName;
 	private boolean running;
 	
 	protected AbstractState(String name) {
-		this.name = name;
+		this.stateName = name;
 	}
 	
 	@Override
@@ -57,14 +57,14 @@ public abstract class AbstractState implements IState, IDisposable {
 	
 	@Override
 	public String getName() {
-		return this.name;
+		return this.stateName;
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 523;
 		int result = 1;
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + ((stateName == null) ? 0 : stateName.hashCode());
 		return result;
 	}
 
@@ -77,10 +77,10 @@ public abstract class AbstractState implements IState, IDisposable {
 		if (!(obj instanceof AbstractState))
 			return false;
 		AbstractState other = (AbstractState) obj;
-		if (name == null) {
-			if (other.name != null)
+		if (stateName == null) {
+			if (other.stateName != null)
 				return false;
-		} else if (!name.equals(other.name))
+		} else if (!stateName.equals(other.stateName))
 			return false;
 		return true;
 	}

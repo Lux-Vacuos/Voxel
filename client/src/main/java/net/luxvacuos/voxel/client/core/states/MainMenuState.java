@@ -25,22 +25,21 @@ import javax.script.CompiledScript;
 import javax.script.ScriptException;
 import javax.script.SimpleBindings;
 
-import net.luxvacuos.voxel.client.core.GlobalStates.GameState;
-import net.luxvacuos.voxel.client.core.GlobalStates.InternalState;
-import net.luxvacuos.voxel.client.core.State;
-import net.luxvacuos.voxel.client.core.Voxel;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.UIRendering;
 import net.luxvacuos.voxel.client.rendering.api.opengl.MasterRenderer;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.ui.Button;
 import net.luxvacuos.voxel.client.ui.Window;
+import net.luxvacuos.voxel.universal.core.AbstractVoxel;
+import net.luxvacuos.voxel.universal.core.states.AbstractState;
+import net.luxvacuos.voxel.universal.core.states.StateMachine;
 
 /**
  * Main Menu State, this is the menu show after the splash screen fade out.
  * 
  * @author danirod
  */
-public class MainMenuState extends State {
+public class MainMenuState extends AbstractState {
 
 	private Button playButton;
 	private Button exitButton;
@@ -52,6 +51,7 @@ public class MainMenuState extends State {
 	private Bindings bindings;
 
 	public MainMenuState() {
+		super("MainMenu");
 		window = new Window(20, GameResources.getInstance().getDisplay().getDisplayHeight() - 20,
 				GameResources.getInstance().getDisplay().getDisplayWidth() - 40,
 				GameResources.getInstance().getDisplay().getDisplayHeight() - 40, "Main Menu");
@@ -71,23 +71,27 @@ public class MainMenuState extends State {
 		exitButton.setPreicon(UIRendering.ICON_LOGIN);
 
 		playButton.setOnButtonPress((button, delta) -> {
-			switchTo(GameState.SP_SELECTION);
+			//switchTo(GameState.SP_SELECTION);
+			StateMachine.setCurrentState("SP_Selection");
 		});
 
 		playMPButton.setOnButtonPress((button, delta) -> {
-			switchTo(GameState.MP_SELECTION);
+			//switchTo(GameState.MP_SELECTION);
+			StateMachine.setCurrentState("MP_Selection");
 		});
 
 		optionsButton.setOnButtonPress((button, delta) -> {
-			switchTo(GameState.OPTIONS);
+			//switchTo(GameState.OPTIONS);
+			StateMachine.setCurrentState("Options");
 		});
 
 		aboutButton.setOnButtonPress((button, delta) -> {
-			switchTo(GameState.ABOUT);
+			//switchTo(GameState.ABOUT);
+			StateMachine.setCurrentState("About");
 		});
 
 		exitButton.setOnButtonPress((button, delta) -> {
-			GameResources.getInstance().getGlobalStates().setInternalState(InternalState.STOPPED);
+			StateMachine.dispose();
 		});
 		window.addChildren(playButton);
 		window.addChildren(playMPButton);
@@ -110,8 +114,8 @@ public class MainMenuState extends State {
 	}
 
 	@Override
-	public void render(Voxel voxel, float delta) {
-		GameResources gm = voxel.getGameResources();
+	public void render(AbstractVoxel voxel, float delta) {
+		GameResources gm = (GameResources)voxel.getGameResources();
 		MasterRenderer.prepare(0, 0, 0, 1);
 		gm.getDisplay().beingNVGFrame();
 		window.render();
@@ -120,19 +124,19 @@ public class MainMenuState extends State {
 	}
 
 	@Override
-	public void update(Voxel voxel, float delta) {
+	public void update(AbstractVoxel voxel, float delta) {
 		try {
 			script.eval(bindings);
 		} catch (ScriptException e) {
 			e.printStackTrace();
 		}
 		window.update(delta);
-		if (!switching)
+		/*if (!switching)
 			window.fadeIn(4, delta);
 		if (switching)
 			if (window.fadeOut(4, delta)) {
 				readyForSwitch = true;
-			}
+			} */
 
 	}
 

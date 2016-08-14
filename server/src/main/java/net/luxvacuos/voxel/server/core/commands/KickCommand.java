@@ -21,8 +21,9 @@
 package net.luxvacuos.voxel.server.core.commands;
 
 import net.luxvacuos.igl.Logger;
-import net.luxvacuos.voxel.server.core.Voxel;
 import net.luxvacuos.voxel.server.network.ConnectionsHandler;
+import net.luxvacuos.voxel.server.resources.ServerGameResources;
+import net.luxvacuos.voxel.universal.core.AbstractVoxel;
 
 public class KickCommand extends Command {
 
@@ -33,13 +34,13 @@ public class KickCommand extends Command {
 	}
 
 	@Override
-	public boolean run(Voxel voxel) {
+	public boolean run(AbstractVoxel voxel) {
 		try {
 			ConnectionsHandler.getInstace().getByName(name).close();
 		} catch (NullPointerException e) {
 			Logger.log("User not found: " + name);
 		}
-		voxel.getGameResources().getVoxelServer().updateNames();
+		((ServerGameResources)voxel.getGameResources()).getVoxelServer().updateNames();
 		return true;
 	}
 

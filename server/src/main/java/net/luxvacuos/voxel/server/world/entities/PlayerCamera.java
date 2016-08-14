@@ -21,7 +21,7 @@
 package net.luxvacuos.voxel.server.world.entities;
 
 import net.luxvacuos.igl.vector.Vector3f;
-import net.luxvacuos.voxel.server.resources.GameResources;
+import net.luxvacuos.voxel.server.resources.ServerGameResources;
 import net.luxvacuos.voxel.server.world.Dimension;
 import net.luxvacuos.voxel.server.world.entities.components.ArmourComponent;
 import net.luxvacuos.voxel.server.world.items.EmptyArmour;
@@ -39,7 +39,7 @@ public class PlayerCamera extends Camera {
 		super.getComponent(ArmourComponent.class).armour = new EmptyArmour();
 	}
 
-	public void update(float delta, GameResources gm, Dimension world) {
+	public void update(float delta, ServerGameResources gm, Dimension world) {
 	}
 
 	public boolean isUnderWater() {

@@ -35,8 +35,7 @@ import org.lwjgl.glfw.GLFW;
 import net.luxvacuos.igl.Logger;
 import net.luxvacuos.voxel.client.bootstrap.Bootstrap;
 import net.luxvacuos.voxel.client.bootstrap.Bootstrap.Platform;
-import net.luxvacuos.voxel.client.core.GlobalStates.GameState;
-import net.luxvacuos.voxel.client.core.GlobalStates.InternalState;
+import net.luxvacuos.voxel.client.core.states.*;
 import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.Timers;
 import net.luxvacuos.voxel.client.rendering.api.opengl.MasterRenderer;
@@ -47,6 +46,7 @@ import net.luxvacuos.voxel.universal.api.ModInitialization;
 import net.luxvacuos.voxel.universal.api.MoltenAPI;
 import net.luxvacuos.voxel.universal.core.AbstractVoxel;
 import net.luxvacuos.voxel.universal.core.RunningSide;
+import net.luxvacuos.voxel.universal.core.states.StateMachine;
 
 /**
  * Voxel's Heart, the main object where the loop is stored.
@@ -102,8 +102,20 @@ public class Voxel extends AbstractVoxel {
 		}
 		Logger.log("Starting Client");
 
+		//Load the States into the StateMachine
+		StateMachine.registerState(new AboutState());
+		StateMachine.registerState(new MainMenuState());
+		StateMachine.registerState(new MPLoadingState());
+		StateMachine.registerState(new MPState());
+		StateMachine.registerState(new OptionsState());
+		StateMachine.registerState(new SPCreateWorld());
+		StateMachine.registerState(new SplashScreenState());
+		StateMachine.registerState(new SPLoadingState());
+		StateMachine.registerState(new SPPauseState());
+		StateMachine.registerState(new SPSelectionState());
+		StateMachine.registerState(new SPState());
+		
 		// Create the GameResources instance
-
 		gameResources = GameResources.getInstance();
 		// Do preInit on Game Resources
 		getGameResources().preInit();
@@ -176,7 +188,8 @@ public class Voxel extends AbstractVoxel {
 		// Do PostInit on Game Resources
 		getGameResources().postInit();
 		// Set the state to splash screen
-		getGameResources().getGlobalStates().setState(GameState.SPLASH_SCREEN);
+		//getGameResources().getGlobalStates().setState(GameState.SPLASH_SCREEN);
+		StateMachine.setCurrentState("SplashScreen");
 	}
 
 	/**
@@ -191,7 +204,7 @@ public class Voxel extends AbstractVoxel {
 			init();
 			postInit();
 			// Set Internal State to Running
-			getGameResources().getGlobalStates().setInternalState(InternalState.RUNNIG);
+			StateMachine.run();
 			// Initialize time variables
 			float delta = 0;
 			float accumulator = 0f;
@@ -199,7 +212,7 @@ public class Voxel extends AbstractVoxel {
 			float alpha = 0;
 			// Set loaded
 			loaded = true;
-			while (getGameResources().getGlobalStates().getInternalState().equals(InternalState.RUNNIG)) {
+			while (StateMachine.isRunning()) {
 				// Start CPU timer
 				Timers.startCPUTimer();
 				// Update UPS
@@ -248,7 +261,8 @@ public class Voxel extends AbstractVoxel {
 	 *            Alpha for update
 	 */
 	public void render(float alpha) {
-		getGameResources().getGlobalStates().doRender(this, alpha);
+		//getGameResources().getGlobalStates().doRender(this, alpha);
+		StateMachine.render(this, alpha);
 	}
 
 	/**
@@ -261,7 +275,8 @@ public class Voxel extends AbstractVoxel {
 	@Override
 	public void update(float delta) {
 		CoreInfo.upsCount++;
-		getGameResources().getGlobalStates().doUpdate(this, delta);
+		//getGameResources().getGlobalStates().doUpdate(this, delta);
+		StateMachine.update(this, delta);
 	}
 
 	/**

@@ -20,14 +20,10 @@
 
 package net.luxvacuos.voxel.client.core.states;
 
-import net.luxvacuos.voxel.client.core.GlobalStates.GameState;
-
 import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_MIDDLE;
 import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_RIGHT;
 
 import net.luxvacuos.voxel.client.core.CoreInfo;
-import net.luxvacuos.voxel.client.core.State;
-import net.luxvacuos.voxel.client.core.Voxel;
 import net.luxvacuos.voxel.client.core.VoxelVariables;
 import net.luxvacuos.voxel.client.core.exception.LoadTextureException;
 import net.luxvacuos.voxel.client.input.Mouse;
@@ -39,13 +35,16 @@ import net.luxvacuos.voxel.client.ui.Image;
 import net.luxvacuos.voxel.client.ui.Text;
 import net.luxvacuos.voxel.client.ui.Window;
 import net.luxvacuos.voxel.universal.api.MoltenAPI;
+import net.luxvacuos.voxel.universal.core.AbstractVoxel;
+import net.luxvacuos.voxel.universal.core.states.AbstractState;
+import net.luxvacuos.voxel.universal.core.states.StateMachine;
 
 /**
  * About State, this shows all the information about Voxel and the system where is running.
  * 
  * @author danirod
  */
-public class AboutState extends State {
+public class AboutState extends AbstractState {
 
 	private Window window;
 	private Button backButton;
@@ -54,12 +53,14 @@ public class AboutState extends State {
 	private int globalY;
 
 	public AboutState() {
+		super("About");
 		window = new Window(20, GameResources.getInstance().getDisplay().getDisplayHeight() - 20,
 				GameResources.getInstance().getDisplay().getDisplayWidth() - 40, 2200, "About");
 		backButton = new Button((int) (GameResources.getInstance().getDisplay().getDisplayWidth() / 2f - 100), 40, 200,
 				40, "Back");
 		backButton.setOnButtonPress((button, delta) -> {
-			switchTo(GameState.MAINMENU);
+			//switchTo(GameState.MAINMENU);
+			StateMachine.setCurrentState("MainMenu");
 		});
 
 		try {
@@ -142,8 +143,8 @@ public class AboutState extends State {
 	}
 
 	@Override
-	public void render(Voxel voxel, float delta) {
-		GameResources gm = voxel.getGameResources();
+	public void render(AbstractVoxel voxel, float delta) {
+		GameResources gm = (GameResources)voxel.getGameResources();
 		MasterRenderer.prepare(0, 0, 0, 1);
 		gm.getDisplay().beingNVGFrame();
 		window.render();
@@ -152,20 +153,23 @@ public class AboutState extends State {
 	}
 
 	@Override
-	public void update(Voxel voxel, float delta) {
+	public void update(AbstractVoxel voxel, float delta) {
 		globalY += (int) (Mouse.getDWheel() * 60f);
 		if (globalY > 0)
 			globalY = 0;
 		else if (globalY < -1520)
 			globalY = -1520;
-		window.setPosition(20, GameResources.getInstance().getDisplay().getDisplayHeight() - 20 - globalY);
+		window.setPosition(20, ((GameResources)voxel.getGameResources()).getDisplay().getDisplayHeight() - 20 - globalY);
 		window.update(delta);
+		/* TODO: Need to find a way to reimplement this with the new StateMachine
 		if (!switching)
 			window.fadeIn(4, delta);
-		if (switching)
+		if (switching) {
 			if (window.fadeOut(4, delta)) {
 				readyForSwitch = true;
 			}
+		}
+		 */
 	}
 
 }

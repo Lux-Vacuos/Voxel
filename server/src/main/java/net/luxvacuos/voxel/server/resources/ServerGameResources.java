@@ -28,7 +28,6 @@ import com.esotericsoftware.kryo.serializers.CompatibleFieldSerializer;
 import net.luxvacuos.igl.CustomLog;
 import net.luxvacuos.voxel.server.core.CoreUtils;
 import net.luxvacuos.voxel.server.core.ServerGameSettings;
-import net.luxvacuos.voxel.server.core.GlobalStates;
 import net.luxvacuos.voxel.server.core.Voxel;
 import net.luxvacuos.voxel.server.core.VoxelVariables;
 import net.luxvacuos.voxel.server.core.ServerWorldSimulation;
@@ -38,26 +37,24 @@ import net.luxvacuos.voxel.server.world.WorldsHandler;
 import net.luxvacuos.voxel.universal.core.AbstractVoxel;
 import net.luxvacuos.voxel.universal.resources.AbstractGameResources;
 
-public class GameResources extends AbstractGameResources {
+public class ServerGameResources extends AbstractGameResources {
 
-	private static GameResources instance = null;
+	private static ServerGameResources instance = null;
 
-	public static GameResources getInstance() {
+	public static ServerGameResources getInstance() {
 		if (instance == null)
-			instance = new GameResources();
+			instance = new ServerGameResources();
 		return instance;
 	}
 
-	private GlobalStates globalStates;
 	private VoxelServer voxelServer;
 	private CoreUtils coreUtils;
 	private UserInterface userInterface;
-	private ServerWorldSimulation worldSimulation;
 	private WorldsHandler worldsHandler;
 
 	private int port;
 
-	private GameResources() {
+	private ServerGameResources() {
 	}
 
 	public void construct(Voxel voxel, int port) {
@@ -78,7 +75,6 @@ public class GameResources extends AbstractGameResources {
 		
 		kryo = new Kryo();
 		kryo.setDefaultSerializer(CompatibleFieldSerializer.class);
-		globalStates = new GlobalStates();
 		voxelServer.init(this);
 		coreUtils = new CoreUtils();
 		CustomLog.getInstance();
@@ -94,12 +90,14 @@ public class GameResources extends AbstractGameResources {
 		super.dispose();
 	}
 
+	@Override
 	public ServerWorldSimulation getWorldSimulation() {
-		return worldSimulation;
+		return ((ServerWorldSimulation) this.worldSimulation);
 	}
-
-	public GlobalStates getGlobalStates() {
-		return globalStates;
+	
+	@Override
+	public ServerGameSettings getGameSettings() {
+		return ((ServerGameSettings)this.gameSettings);
 	}
 
 	public CoreUtils getCoreUtils() {

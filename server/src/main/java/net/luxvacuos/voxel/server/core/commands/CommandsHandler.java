@@ -23,7 +23,7 @@ package net.luxvacuos.voxel.server.core.commands;
 import java.util.LinkedList;
 import java.util.Queue;
 
-import net.luxvacuos.voxel.server.core.Voxel;
+import net.luxvacuos.voxel.universal.core.AbstractVoxel;
 
 public class CommandsHandler {
 
@@ -41,7 +41,7 @@ public class CommandsHandler {
 		commands = new LinkedList<>();
 	}
 
-	public void update(Voxel voxel) {
+	public void update(AbstractVoxel voxel) {
 		while (!commands.isEmpty()) {
 			Command com = commands.poll();
 			com.run(voxel);

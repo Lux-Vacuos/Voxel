@@ -21,7 +21,7 @@
 package net.luxvacuos.voxel.server.core.commands;
 
 import net.luxvacuos.igl.Logger;
-import net.luxvacuos.voxel.server.core.Voxel;
+import net.luxvacuos.voxel.universal.core.AbstractVoxel;
 
 public class TimeCommand extends Command {
 
@@ -32,7 +32,7 @@ public class TimeCommand extends Command {
 	}
 
 	@Override
-	public boolean run(Voxel voxel) {
+	public boolean run(AbstractVoxel voxel) {
 		voxel.getGameResources().getWorldSimulation().setTime(time);
 		Logger.log("Time set to: " + time);
 		return true;

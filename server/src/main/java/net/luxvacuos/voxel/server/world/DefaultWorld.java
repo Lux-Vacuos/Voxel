@@ -22,7 +22,7 @@ package net.luxvacuos.voxel.server.world;
 
 import java.util.Random;
 
-import net.luxvacuos.voxel.server.resources.GameResources;
+import net.luxvacuos.voxel.server.resources.ServerGameResources;
 
 public class DefaultWorld extends World {
 
@@ -31,7 +31,7 @@ public class DefaultWorld extends World {
 	}
 
 	@Override
-	protected void localInit(GameResources gm) {
+	protected void localInit(ServerGameResources gm) {
 		addDimension(new DefaultDimension(name, new Random(), 0, gm));
 		// addDimension(new DefaultDimension(name, new Random(), 1, gm));
 		setActiveDimension(getDimension(0));

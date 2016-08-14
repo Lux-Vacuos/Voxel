@@ -20,9 +20,6 @@
 
 package net.luxvacuos.voxel.client.core.states;
 
-import net.luxvacuos.voxel.client.core.GlobalStates.GameState;
-import net.luxvacuos.voxel.client.core.State;
-import net.luxvacuos.voxel.client.core.Voxel;
 import net.luxvacuos.voxel.client.core.VoxelVariables;
 import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.UIRendering;
@@ -31,13 +28,16 @@ import net.luxvacuos.voxel.client.rendering.api.opengl.ParticleMaster;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.ui.Button;
 import net.luxvacuos.voxel.client.ui.Window;
+import net.luxvacuos.voxel.universal.core.AbstractVoxel;
+import net.luxvacuos.voxel.universal.core.states.AbstractState;
+import net.luxvacuos.voxel.universal.core.states.StateMachine;
 
 /**
  * Options State, here all the options are stored.
  * 
  * @author danirod
  */
-public class OptionsState extends State {
+public class OptionsState extends AbstractState {
 
 	private Button exitButton;
 	private Button dofButton;
@@ -50,7 +50,7 @@ public class OptionsState extends State {
 	private Window window;
 
 	public OptionsState() {
-
+		super("Options");
 		window = new Window(20, GameResources.getInstance().getDisplay().getDisplayHeight() - 20,
 				GameResources.getInstance().getDisplay().getDisplayWidth() - 40,
 				GameResources.getInstance().getDisplay().getDisplayHeight() - 40, "Options");
@@ -124,7 +124,8 @@ public class OptionsState extends State {
 		exitButton.setOnButtonPress((button, delta) -> {
 			GameResources.getInstance().getGameSettings().update();
 			GameResources.getInstance().getGameSettings().save();
-			switchTo(GameResources.getInstance().getGlobalStates().getOldState());
+			//switchTo(GameResources.getInstance().getGlobalStates().getOldState());
+			StateMachine.setCurrentState(StateMachine.getPreviousState().getName());
 		});
 
 		shadowsButton.setOnButtonPress((button, delta) -> {
@@ -230,26 +231,27 @@ public class OptionsState extends State {
 	}
 
 	@Override
-	public void update(Voxel voxel, float delta) {
-		GameResources gm = voxel.getGameResources();
+	public void update(AbstractVoxel voxel, float delta) {
+		GameResources gm = (GameResources) voxel.getGameResources();
 		while (Mouse.next()) {
 			window.update(delta);
 		}
 
-		if (!switching)
+		/*if (!switching)
 			window.fadeIn(4, delta);
 		if (switching)
 			if (window.fadeOut(4, delta)) {
 				readyForSwitch = true;
-			}
+			} */
 
 		gm.getRenderer().update(gm);
 	}
 
 	@Override
-	public void render(Voxel voxel, float delta) {
-		GameResources gm = voxel.getGameResources();
-		if (gm.getGlobalStates().getOldState().equals(GameState.SP_PAUSE)) {
+	public void render(AbstractVoxel voxel, float delta) {
+		GameResources gm = (GameResources) voxel.getGameResources();
+		//if (gm.getGlobalStates().getOldState().equals(GameState.SP_PAUSE)) {
+		if(StateMachine.getPreviousState().getName().equals("SP_Pause")) {
 			gm.getWorldsHandler().getActiveWorld().getActiveDimension().lighting();
 			gm.getSun_Camera().setPosition(gm.getCamera().getPosition());
 			gm.getFrustum().calculateFrustum(gm.getMasterShadowRenderer().getProjectionMatrix(), gm.getSun_Camera());

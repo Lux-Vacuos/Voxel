@@ -26,14 +26,15 @@ import java.util.jar.Manifest;
 
 import net.luxvacuos.igl.Logger;
 import net.luxvacuos.voxel.server.bootstrap.Bootstrap;
-import net.luxvacuos.voxel.server.core.GlobalStates.InternalState;
-import net.luxvacuos.voxel.server.resources.GameResources;
+import net.luxvacuos.voxel.server.core.states.GameMPState;
+import net.luxvacuos.voxel.server.resources.ServerGameResources;
 import net.luxvacuos.voxel.server.ui.UserInterface;
 import net.luxvacuos.voxel.server.world.DefaultWorld;
 import net.luxvacuos.voxel.universal.api.ModInitialization;
 import net.luxvacuos.voxel.universal.api.MoltenAPI;
 import net.luxvacuos.voxel.universal.core.AbstractVoxel;
 import net.luxvacuos.voxel.universal.core.RunningSide;
+import net.luxvacuos.voxel.universal.core.states.StateMachine;
 import net.luxvacuos.voxel.universal.network.packets.WorldTime;
 
 public class Voxel extends AbstractVoxel {
@@ -44,7 +45,7 @@ public class Voxel extends AbstractVoxel {
 
 	public Voxel(int port) throws Exception {
 		this.port = port;
-		super.prefix = "";
+		this.prefix = "";
 		loop();
 	}
 
@@ -59,7 +60,10 @@ public class Voxel extends AbstractVoxel {
 		} catch (IOException E) {
 			E.printStackTrace();
 		}
-		gameResources = GameResources.getInstance();
+		
+		StateMachine.registerState(new GameMPState());
+		
+		gameResources = ServerGameResources.getInstance();
 		getGameResources().construct(this, port);
 		getGameResources().getUserInterface().getThreadUI().start();
 		while (!getGameResources().getUserInterface().isStarted())
@@ -87,9 +91,9 @@ public class Voxel extends AbstractVoxel {
 		getGameResources().getVoxelServer().connect();
 		getGameResources().getUserInterface();
 		UserInterface.setReady(true);
-		GameResources.getInstance().getWorldsHandler().registerWorld(new DefaultWorld("world"));
-		GameResources.getInstance().getWorldsHandler().setActiveWorld("world");
-		GameResources.getInstance().getWorldsHandler().getActiveWorld().init();
+		ServerGameResources.getInstance().getWorldsHandler().registerWorld(new DefaultWorld("world"));
+		ServerGameResources.getInstance().getWorldsHandler().setActiveWorld("world");
+		ServerGameResources.getInstance().getWorldsHandler().getActiveWorld().init();
 	}
 
 	@Override
@@ -101,8 +105,9 @@ public class Voxel extends AbstractVoxel {
 			float delta = 0;
 			float accumulator = 0f;
 			float interval = 1f / VoxelVariables.UPS;
-			getGameResources().getGlobalStates().setInternalState(InternalState.RUNNIG);
-			while (getGameResources().getGlobalStates().getInternalState().equals(InternalState.RUNNIG)) {
+			StateMachine.setCurrentState("GameMPState");
+			StateMachine.run();
+			while (StateMachine.isRunning()) {
 				if (getGameResources().getCoreUtils().getTimeCount() > 1f) {
 					CoreInfo.ups = CoreInfo.upsCount;
 					CoreInfo.upsCount = 0;
@@ -133,7 +138,7 @@ public class Voxel extends AbstractVoxel {
 	@Override
 	public void update(float delta) {
 		CoreInfo.upsCount++;
-		getGameResources().getGlobalStates().doUpdate(this, delta);
+		StateMachine.update(this, delta);
 	}
 
 	@Override
@@ -148,8 +153,8 @@ public class Voxel extends AbstractVoxel {
 	}
 
 	@Override
-	public GameResources getGameResources() {
-		return ((GameResources) gameResources);
+	public ServerGameResources getGameResources() {
+		return ((ServerGameResources) gameResources);
 	}
 
 	@Override

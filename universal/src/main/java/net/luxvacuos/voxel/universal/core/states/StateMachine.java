@@ -31,11 +31,19 @@ public final class StateMachine {
 	
 	private static IState currentState, previousState;
 	
-	private static InternalState internalState = InternalState.IDLE;
+	private static InternalState internalState = InternalState.STOPPED;
 	
 	private static Map<String, IState> registeredStates = new HashMap<String, IState>();
 	
 	private StateMachine() { }
+	
+	public static void run() {
+		internalState = InternalState.RUNNING;
+	}
+	
+	public static boolean isRunning() {
+		return internalState == InternalState.RUNNING;
+	}
 	
 	public static boolean registerState(IState state) {
 		if(!registeredStates.containsKey(state.getName())) {
@@ -49,9 +57,7 @@ public final class StateMachine {
 		if(currentState == null)
 			return false;
 		
-		internalState = InternalState.UPDATING;
 		currentState.update(voxel, deltaTime);
-		internalState = InternalState.IDLE;
 		return true;
 	}
 	
@@ -59,25 +65,22 @@ public final class StateMachine {
 		if(currentState == null || voxel.getSide() != RunningSide.CLIENT)
 			return false;
 		
-		internalState = InternalState.RENDERING;
 		currentState.render(voxel, alpha);
-		internalState = InternalState.IDLE;
 		return true;
 	}
 	
 	public static boolean setCurrentState(String name) {
 		if(name != null || registeredStates.containsKey(name)) {
 			IState state = registeredStates.get(name);
-			if(currentState.equals(state)) return false;
+			if(currentState != null) {
+				if(currentState.equals(state)) return false;
 			
-			internalState = InternalState.SWITCHING;
+				currentState.end();
+				previousState = currentState;
+			}
 			
-			currentState.end();
-			previousState = currentState;
 			currentState = state;
 			currentState.start();
-			
-			internalState = InternalState.IDLE;
 			return true;
 		} else return false;
 	}
@@ -104,11 +107,7 @@ public final class StateMachine {
 	
 	public enum InternalState {
 		STOPPED,
-		PAUSED,
-		RENDERING,
-		UPDATING,
-		SWITCHING,
-		IDLE
+		RUNNING
 	}
 
 }

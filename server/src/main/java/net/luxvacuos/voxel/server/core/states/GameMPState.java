@@ -20,17 +20,22 @@
 
 package net.luxvacuos.voxel.server.core.states;
 
-import net.luxvacuos.voxel.server.core.State;
-import net.luxvacuos.voxel.server.core.Voxel;
 import net.luxvacuos.voxel.server.core.commands.CommandsHandler;
-import net.luxvacuos.voxel.server.resources.GameResources;
+import net.luxvacuos.voxel.server.resources.ServerGameResources;
 import net.luxvacuos.voxel.server.world.Dimension;
 import net.luxvacuos.voxel.server.world.PhysicsSystem;
+import net.luxvacuos.voxel.universal.core.AbstractVoxel;
+import net.luxvacuos.voxel.universal.core.states.AbstractState;
 
-public class GameMPState implements State {
+public class GameMPState extends AbstractState {
+	
+	public GameMPState() {
+		super("GameMPState");
+	}
+	
 	@Override
-	public void update(Voxel voxel, float delta) {
-		GameResources gm = voxel.getGameResources();
+	public void update(AbstractVoxel voxel, float delta) {
+		ServerGameResources gm = (ServerGameResources)voxel.getGameResources();
 		gm.getWorldsHandler().getActiveWorld().getActiveDimension().updateChunksGeneration(gm, delta);
 
 		for (Dimension dim : gm.getWorldsHandler().getActiveWorld().getDimensions().values()) {

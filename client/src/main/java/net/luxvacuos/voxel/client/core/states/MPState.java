@@ -35,8 +35,6 @@ import java.nio.FloatBuffer;
 import org.lwjgl.BufferUtils;
 
 import net.luxvacuos.voxel.client.core.CoreInfo;
-import net.luxvacuos.voxel.client.core.State;
-import net.luxvacuos.voxel.client.core.Voxel;
 import net.luxvacuos.voxel.client.core.VoxelVariables;
 import net.luxvacuos.voxel.client.input.Keyboard;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.Timers;
@@ -48,6 +46,8 @@ import net.luxvacuos.voxel.client.world.Dimension;
 import net.luxvacuos.voxel.client.world.PhysicsSystem;
 import net.luxvacuos.voxel.client.world.entities.PlayerCamera;
 import net.luxvacuos.voxel.universal.api.MoltenAPI;
+import net.luxvacuos.voxel.universal.core.AbstractVoxel;
+import net.luxvacuos.voxel.universal.core.states.AbstractState;
 
 /**
  * Multiplayer State, like {@link SPState}, here the remote world is updated and
@@ -56,18 +56,19 @@ import net.luxvacuos.voxel.universal.api.MoltenAPI;
  * @author Guerra24 <pablo230699@hotmail.com>
  *
  */
-public class MPState extends State {
+public class MPState extends AbstractState {
 	FloatBuffer p;
 	FloatBuffer c;
 
 	public MPState() {
+		super("MultiPlayer");
 		p = BufferUtils.createFloatBuffer(1);
 		c = BufferUtils.createFloatBuffer(3);
 	}
 
 	@Override
-	public void render(Voxel voxel, float alpha) {
-		GameResources gm = voxel.getGameResources();
+	public void render(AbstractVoxel voxel, float alpha) {
+		GameResources gm = (GameResources) voxel.getGameResources();
 
 		gm.getSun_Camera().setPosition(gm.getCamera().getPosition());
 		gm.getFrustum().calculateFrustum(gm.getMasterShadowRenderer().getProjectionMatrix(), gm.getSun_Camera());
@@ -144,8 +145,8 @@ public class MPState extends State {
 	}
 
 	@Override
-	public void update(Voxel voxel, float delta) {
-		GameResources gm = voxel.getGameResources();
+	public void update(AbstractVoxel voxel, float delta) {
+		GameResources gm = (GameResources) voxel.getGameResources();
 		((PlayerCamera) gm.getCamera()).update(delta, gm, gm.getWorldsHandler().getActiveWorld().getActiveDimension());
 
 		for (Dimension dim : gm.getWorldsHandler().getActiveWorld().getDimensions().values()) {

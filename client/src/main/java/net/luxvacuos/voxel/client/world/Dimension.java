@@ -46,7 +46,6 @@ import com.esotericsoftware.kryo.serializers.CompatibleFieldSerializer;
 
 import net.luxvacuos.igl.Logger;
 import net.luxvacuos.igl.vector.Vector3f;
-import net.luxvacuos.voxel.client.core.GlobalStates.InternalState;
 import net.luxvacuos.voxel.client.core.VoxelVariables;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Sync;
 import net.luxvacuos.voxel.client.resources.GameResources;
@@ -57,6 +56,7 @@ import net.luxvacuos.voxel.client.world.block.Block;
 import net.luxvacuos.voxel.client.world.block.BlockBase;
 import net.luxvacuos.voxel.client.world.chunks.Chunk;
 import net.luxvacuos.voxel.client.world.chunks.ChunkGenerator;
+import net.luxvacuos.voxel.universal.core.states.StateMachine;
 import net.luxvacuos.voxel.universal.world.chunk.ChunkNode; 
 import net.luxvacuos.voxel.client.world.chunks.LightNodeAdd;
 import net.luxvacuos.voxel.client.world.chunks.LightNodeRemoval;
@@ -179,7 +179,7 @@ public abstract class Dimension {
 						continue;
 					chn.rebuildMesh(this);
 				}
-				if (!GameResources.getInstance().getGlobalStates().getInternalState().equals(InternalState.RUNNIG))
+				if (!StateMachine.isRunning())
 					break;
 				sync.sync(30);
 			}

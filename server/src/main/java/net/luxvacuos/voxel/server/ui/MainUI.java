@@ -61,7 +61,7 @@ import net.luxvacuos.voxel.server.core.commands.KickCommand;
 import net.luxvacuos.voxel.server.core.commands.StopCommand;
 import net.luxvacuos.voxel.server.core.commands.TimeCommand;
 import net.luxvacuos.voxel.server.network.ConnectionsHandler;
-import net.luxvacuos.voxel.server.resources.GameResources;
+import net.luxvacuos.voxel.server.resources.ServerGameResources;
 
 public class MainUI extends Application {
 
@@ -132,14 +132,14 @@ public class MainUI extends Application {
 				while (!UserInterface.ready)
 					Thread.sleep(100);
 				while (!close) {
-					textUps.setText("Loaded Chunks: " + GameResources.getInstance().getWorldsHandler().getActiveWorld()
+					textUps.setText("Loaded Chunks: " + ServerGameResources.getInstance().getWorldsHandler().getActiveWorld()
 							.getActiveDimension().getLoadedChunks());
 
 					Platform.runLater(new Runnable() {
 						@Override
 						public void run() {
 							players.clear();
-							players.addAll(GameResources.getInstance().getVoxelServer().getNames());
+							players.addAll(ServerGameResources.getInstance().getVoxelServer().getNames());
 						}
 					});
 					coreUtils.sync(1);
@@ -230,7 +230,7 @@ public class MainUI extends Application {
 						Logger.log(item + " was kicked from this server");
 						ConnectionsHandler.getInstace().getByName(item).close();
 						param.getItems().remove(item);
-						GameResources.getInstance().getVoxelServer().updateNames();
+						ServerGameResources.getInstance().getVoxelServer().updateNames();
 					}
 				});
 				MenuItem banPlayer = new MenuItem();

@@ -32,7 +32,6 @@ import com.esotericsoftware.kryo.serializers.CompatibleFieldSerializer;
 import net.luxvacuos.igl.CustomLog;
 import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.voxel.client.core.ClientGameSettings;
-import net.luxvacuos.voxel.client.core.GlobalStates;
 import net.luxvacuos.voxel.client.core.Scripting;
 import net.luxvacuos.voxel.client.core.VoxelVariables;
 import net.luxvacuos.voxel.client.core.ClientWorldSimulation;
@@ -90,7 +89,6 @@ public class GameResources extends AbstractGameResources {
 	private Camera sun_Camera;
 	private MasterRenderer renderer;
 	private SkyboxRenderer skyboxRenderer;
-	private GlobalStates globalStates;
 
 	private RenderingPipeline renderingPipeline;
 	private MasterShadowRenderer masterShadowRenderer;
@@ -127,7 +125,6 @@ public class GameResources extends AbstractGameResources {
 		loader.loadNVGFont("Roboto-Bold", "Roboto-Bold");
 		loader.loadNVGFont("Roboto-Regular", "Roboto-Regular");
 		loader.loadNVGFont("Entypo", "Entypo", 40);
-		globalStates = new GlobalStates();
 	}
 
 	@Override
@@ -249,10 +246,6 @@ public class GameResources extends AbstractGameResources {
 
 	public Frustum getFrustum() {
 		return frustum;
-	}
-
-	public GlobalStates getGlobalStates() {
-		return globalStates;
 	}
 
 	public MasterShadowRenderer getMasterShadowRenderer() {
