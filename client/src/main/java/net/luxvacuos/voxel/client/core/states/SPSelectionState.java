@@ -69,20 +69,20 @@ public class SPSelectionState extends AbstractState {
 
 		exitButton.setOnButtonPress((button, delta) -> {
 			//switchTo(GameState.MAINMENU);
-			StateMachine.setCurrentState("MainMenu");
+			StateMachine.setCurrentState(StateNames.MAIN_MENU);
 		});
 		playButton.setOnButtonPress((button, delta) -> {
 			if (!worldName.equals("")) {
 				GameResources.getInstance().getWorldsHandler().registerWorld(new DefaultWorld(worldName));
 				GameResources.getInstance().getWorldsHandler().setActiveWorld(worldName);
 				//switchTo(GameState.SP_LOADING_WORLD);
-				StateMachine.setCurrentState("SP_Loading");
+				StateMachine.setCurrentState(StateNames.SP_LOADING);
 			}
 		});
 
 		createButton.setOnButtonPress((button, delta) -> {
 			//switchTo(GameState.SP_CREATE_WORLD);
-			StateMachine.setCurrentState("SP_Create");
+			StateMachine.setCurrentState(StateNames.SP_CREATE_WORLD);
 		});
 
 		window.addChildren(exitButton);
@@ -107,7 +107,7 @@ public class SPSelectionState extends AbstractState {
 			e.printStackTrace();
 		}
 		window.getChildrens().addAll(worlds);
-		window.setFadeAlpha(0);
+		//window.setFadeAlpha(0);
 		worldName = "";
 	}
 
@@ -115,7 +115,7 @@ public class SPSelectionState extends AbstractState {
 	public void end() {
 		window.getChildrens().removeAll(worlds);
 		worlds.clear();
-		window.setFadeAlpha(1);
+		//window.setFadeAlpha(1);
 	}
 
 	@Override

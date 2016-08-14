@@ -55,7 +55,7 @@ public class MPLoadingState extends AbstractState {
 	private boolean fadeIn;
 
 	public MPLoadingState() {
-		super("MP_Loading");
+		super(StateNames.MP_LOADING);
 		window = new Window(20, GameResources.getInstance().getDisplay().getDisplayHeight() - 20,
 				GameResources.getInstance().getDisplay().getDisplayWidth() - 40,
 				GameResources.getInstance().getDisplay().getDisplayHeight() - 40, "Multiplayer");
@@ -63,7 +63,7 @@ public class MPLoadingState extends AbstractState {
 		exitButton.setOnButtonPress((button, delta) -> {
 			if (time > 0.2f) {
 				//switchTo(GameState.MP_SELECTION);
-				StateMachine.setCurrentState("MP_Selection");
+				StateMachine.setCurrentState(StateNames.MP_SELECTION);
 			}
 		});
 		message = new Text("Connecting...", window.getWidth() / 2, -window.getHeight() / 2);
@@ -77,13 +77,13 @@ public class MPLoadingState extends AbstractState {
 		time = 0;
 		trying = false;
 		fadeIn = false;
-		window.setFadeAlpha(0);
+		//window.setFadeAlpha(0);
 	}
 
 	@Override
 	public void end() {
 		message.setText("Connecting...");
-		window.setFadeAlpha(1);
+		//window.setFadeAlpha(1);
 	}
 
 	@Override
@@ -102,7 +102,7 @@ public class MPLoadingState extends AbstractState {
 				wm.getActiveWorld().getActiveDimension().getPhysicsEngine().addEntity(GameResources.getInstance().getCamera());
 				((PlayerCamera) GameResources.getInstance().getCamera()).setMouse();
 				//switchTo(GameState.MP);
-				StateMachine.setCurrentState("MultiPlayer");
+				StateMachine.setCurrentState(StateNames.MULTIPLAYER);
 			} catch (IOException e) {
 				VoxelVariables.onServer = false;
 				message.setText(e.getMessage());

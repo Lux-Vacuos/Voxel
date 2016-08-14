@@ -45,7 +45,7 @@ public class SPCreateWorld extends AbstractState {
 	private Button backButton;
 
 	public SPCreateWorld() {
-		super("SP_Create");
+		super(StateNames.SP_CREATE_WORLD);
 		window = new Window(20, GameResources.getInstance().getDisplay().getDisplayHeight() - 20,
 				GameResources.getInstance().getDisplay().getDisplayWidth() - 40,
 				GameResources.getInstance().getDisplay().getDisplayHeight() - 40, "Create World");
@@ -58,14 +58,14 @@ public class SPCreateWorld extends AbstractState {
 			if (!worldName.equals("")) {
 				new File(VoxelVariables.WORLD_PATH + worldName).mkdirs();
 				//switchTo(GameState.SP_SELECTION);
-				StateMachine.setCurrentState("SP_Selection");
+				StateMachine.setCurrentState(StateNames.SP_SELECTION);
 				worldName = "";
 			}
 		});
 		backButton = new Button(window.getWidth() / 2 + 10, -window.getHeight() + 35, 200, 40, "Back");
 		backButton.setOnButtonPress((button, delta) -> {
 			//switchTo(GameState.SP_SELECTION);
-			StateMachine.setCurrentState("SP_Selection");
+			StateMachine.setCurrentState(StateNames.SP_SELECTION);
 		});
 		window.addChildren(nameT);
 		window.addChildren(optionsT);
@@ -75,12 +75,12 @@ public class SPCreateWorld extends AbstractState {
 
 	@Override
 	public void start() {
-		window.setFadeAlpha(0);
+		//window.setFadeAlpha(0);
 	}
 
 	@Override
 	public void end() {
-		window.setFadeAlpha(1);
+		//window.setFadeAlpha(1);
 	}
 
 	@Override

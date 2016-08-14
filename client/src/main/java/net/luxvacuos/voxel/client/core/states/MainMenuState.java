@@ -51,7 +51,7 @@ public class MainMenuState extends AbstractState {
 	private Bindings bindings;
 
 	public MainMenuState() {
-		super("MainMenu");
+		super(StateNames.MAIN_MENU);
 		window = new Window(20, GameResources.getInstance().getDisplay().getDisplayHeight() - 20,
 				GameResources.getInstance().getDisplay().getDisplayWidth() - 40,
 				GameResources.getInstance().getDisplay().getDisplayHeight() - 40, "Main Menu");
@@ -72,22 +72,22 @@ public class MainMenuState extends AbstractState {
 
 		playButton.setOnButtonPress((button, delta) -> {
 			//switchTo(GameState.SP_SELECTION);
-			StateMachine.setCurrentState("SP_Selection");
+			StateMachine.setCurrentState(StateNames.SP_SELECTION);
 		});
 
 		playMPButton.setOnButtonPress((button, delta) -> {
 			//switchTo(GameState.MP_SELECTION);
-			StateMachine.setCurrentState("MP_Selection");
+			StateMachine.setCurrentState(StateNames.MP_SELECTION);
 		});
 
 		optionsButton.setOnButtonPress((button, delta) -> {
 			//switchTo(GameState.OPTIONS);
-			StateMachine.setCurrentState("Options");
+			StateMachine.setCurrentState(StateNames.OPTIONS);
 		});
 
 		aboutButton.setOnButtonPress((button, delta) -> {
 			//switchTo(GameState.ABOUT);
-			StateMachine.setCurrentState("About");
+			StateMachine.setCurrentState(StateNames.ABOUT);
 		});
 
 		exitButton.setOnButtonPress((button, delta) -> {
@@ -105,12 +105,12 @@ public class MainMenuState extends AbstractState {
 
 	@Override
 	public void start() {
-		window.setFadeAlpha(0);
+		//window.setFadeAlpha(0);
 	}
 
 	@Override
 	public void end() {
-		window.setFadeAlpha(1);
+		//window.setFadeAlpha(1);
 	}
 
 	@Override

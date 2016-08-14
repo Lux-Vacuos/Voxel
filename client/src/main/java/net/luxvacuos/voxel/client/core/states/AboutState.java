@@ -53,14 +53,14 @@ public class AboutState extends AbstractState {
 	private int globalY;
 
 	public AboutState() {
-		super("About");
+		super(StateNames.ABOUT);
 		window = new Window(20, GameResources.getInstance().getDisplay().getDisplayHeight() - 20,
 				GameResources.getInstance().getDisplay().getDisplayWidth() - 40, 2200, "About");
 		backButton = new Button((int) (GameResources.getInstance().getDisplay().getDisplayWidth() / 2f - 100), 40, 200,
 				40, "Back");
 		backButton.setOnButtonPress((button, delta) -> {
 			//switchTo(GameState.MAINMENU);
-			StateMachine.setCurrentState("MainMenu");
+			StateMachine.setCurrentState(StateNames.MAIN_MENU);
 		});
 
 		try {
@@ -134,12 +134,12 @@ public class AboutState extends AbstractState {
 
 	@Override
 	public void start() {
-		window.setFadeAlpha(0);
+		//window.setFadeAlpha(0);
 	}
 
 	@Override
 	public void end() {
-		window.setFadeAlpha(1);
+		//window.setFadeAlpha(1);
 	}
 
 	@Override

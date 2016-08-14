@@ -41,7 +41,7 @@ public class SplashScreenState extends AbstractState {
 	private float wait = 0;
 
 	public SplashScreenState() {
-		super("SplashScreen");
+		super(StateNames.SPLASH_SCREEN);
 		panel = new Panel(GameResources.getInstance().getDisplay().getDisplayWidth() / 2,
 				GameResources.getInstance().getDisplay().getDisplayHeight() / 2, 0, 0);
 		panel.setBorderColor(0, 0, 0, 0);
@@ -66,12 +66,12 @@ public class SplashScreenState extends AbstractState {
 
 	@Override
 	public void start() {
-		panel.setFadeAlpha(0);
+		//panel.setFadeAlpha(0);
 	}
 
 	@Override
 	public void end() {
-		panel.setFadeAlpha(1);
+		//panel.setFadeAlpha(1);
 	}
 
 	@Override
@@ -85,6 +85,7 @@ public class SplashScreenState extends AbstractState {
 
 	@Override
 	public void update(AbstractVoxel voxel, float delta) {
+		panel.fadeIn(4, delta); //XXX: Hack to get things working
 		wait += 1 * delta;
 		if (wait > 2) {
 			panel.update(delta);
@@ -97,7 +98,7 @@ public class SplashScreenState extends AbstractState {
 			} */
 		if (wait > 3)
 			//switchTo(GameState.MAINMENU);
-			StateMachine.setCurrentState("MainMenu");
+			StateMachine.setCurrentState(StateNames.MAIN_MENU);
 
 	}
 

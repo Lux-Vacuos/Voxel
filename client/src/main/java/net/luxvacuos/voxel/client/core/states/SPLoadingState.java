@@ -41,7 +41,7 @@ public class SPLoadingState extends AbstractState {
 	private Window window;
 
 	public SPLoadingState() {
-		super("SP_Loading");
+		super(StateNames.SP_LOADING);
 		window = new Window(20, GameResources.getInstance().getDisplay().getDisplayHeight() - 20,
 				GameResources.getInstance().getDisplay().getDisplayWidth() - 40,
 				GameResources.getInstance().getDisplay().getDisplayHeight() - 40, "Loading World");
@@ -59,7 +59,7 @@ public class SPLoadingState extends AbstractState {
 					.addEntity(GameResources.getInstance().getCamera());
 			((PlayerCamera) GameResources.getInstance().getCamera()).setMouse();
 			//GameResources.getInstance().getGlobalStates().setState(GameState.SP);
-			StateMachine.setCurrentState("SinglePlayer");
+			StateMachine.setCurrentState(StateNames.SINGLEPLAYER);
 		}).start();
 	}
 

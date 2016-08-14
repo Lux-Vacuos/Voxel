@@ -26,55 +26,35 @@ import static net.luxvacuos.voxel.client.input.Keyboard.KEY_F1;
 import static net.luxvacuos.voxel.client.input.Keyboard.KEY_F2;
 import static net.luxvacuos.voxel.client.input.Keyboard.isKeyDown;
 import static net.luxvacuos.voxel.client.input.Keyboard.next;
-import static org.lwjgl.opengl.GL11.GL_DEPTH_COMPONENT;
-import static org.lwjgl.opengl.GL11.GL_FLOAT;
-import static org.lwjgl.opengl.GL11.GL_RGB;
-import static org.lwjgl.opengl.GL11.glReadBuffer;
-import static org.lwjgl.opengl.GL11.glReadPixels;
-import static org.lwjgl.opengl.GL30.GL_COLOR_ATTACHMENT2;
 
-import java.nio.FloatBuffer;
-
-import org.lwjgl.BufferUtils;
-
-import net.luxvacuos.voxel.client.core.CoreInfo;
 import net.luxvacuos.voxel.client.core.VoxelVariables;
-import net.luxvacuos.voxel.client.input.Keyboard;
-import net.luxvacuos.voxel.client.rendering.api.nanovg.Timers;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.UIRendering;
-import net.luxvacuos.voxel.client.rendering.api.opengl.MasterRenderer;
 import net.luxvacuos.voxel.client.rendering.api.opengl.ParticleMaster;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.world.Dimension;
 import net.luxvacuos.voxel.client.world.PhysicsSystem;
+import net.luxvacuos.voxel.client.world.block.BlocksResources;
 import net.luxvacuos.voxel.client.world.entities.PlayerCamera;
-import net.luxvacuos.voxel.universal.api.MoltenAPI;
 import net.luxvacuos.voxel.universal.core.AbstractVoxel;
 import net.luxvacuos.voxel.universal.core.states.AbstractState;
 import net.luxvacuos.voxel.universal.core.states.StateMachine;
 
 /**
- * Single Player State, here the local world is updated and rendered.
  * 
  * @author danirod
- * @category Kernel
+ * @deprecated Removed due to new UI system.
  */
-public class SPState extends AbstractState {
-	FloatBuffer p;
-	FloatBuffer c;
-
-	public SPState() {
-		super(StateNames.SINGLEPLAYER);
-		p = BufferUtils.createFloatBuffer(1);
-		c = BufferUtils.createFloatBuffer(3);
+public class GameSPInventoryState extends AbstractState {
+	
+	public GameSPInventoryState() {
+		super(StateNames.SP_INVENTORY);
 	}
 
 	@Override
 	public void update(AbstractVoxel voxel, float delta) {
-		GameResources gm = (GameResources)voxel.getGameResources();
+		GameResources gm = (GameResources) voxel.getGameResources();
 
 		gm.getWorldsHandler().getActiveWorld().getActiveDimension().updateChunksGeneration(gm, delta);
-		((PlayerCamera) gm.getCamera()).update(delta, gm, gm.getWorldsHandler().getActiveWorld().getActiveDimension());
 
 		for (Dimension dim : gm.getWorldsHandler().getActiveWorld().getDimensions().values()) {
 			dim.getPhysicsEngine().update(delta);
@@ -90,18 +70,11 @@ public class SPState extends AbstractState {
 				VoxelVariables.debug = !VoxelVariables.debug;
 			if (isKeyDown(KEY_F2))
 				VoxelVariables.hideHud = !VoxelVariables.hideHud;
-			if (isKeyDown(KEY_ESCAPE)) {
-				((PlayerCamera) gm.getCamera()).unlockMouse();
-				//gm.getGlobalStates().setState(GameState.SP_PAUSE);
-				StateMachine.setCurrentState(StateNames.SP_PAUSE);
+			if (isKeyDown(KEY_ESCAPE) || isKeyDown(KEY_E)) {
+				((PlayerCamera) gm.getCamera()).setMouse();
+				//gm.getGlobalStates().setState(GameState.SP);
+				StateMachine.setCurrentState(StateNames.SINGLEPLAYER);
 			}
-			if (isKeyDown(KEY_E)) {
-				((PlayerCamera) gm.getCamera()).unlockMouse();
-				//gm.getGlobalStates().setState(GameState.GAME_SP_INVENTORY);
-				StateMachine.setCurrentState(StateNames.SP_INVENTORY);
-			}
-			if (Keyboard.isKeyDown(Keyboard.KEY_R))
-				VoxelVariables.raining = !VoxelVariables.raining;
 		}
 
 		// if (!display.isDisplayFocused()) {
@@ -112,14 +85,14 @@ public class SPState extends AbstractState {
 
 	@Override
 	public void render(AbstractVoxel voxel, float delta) {
-		GameResources gm = (GameResources)voxel.getGameResources();
+		GameResources gm = (GameResources) voxel.getGameResources();
 
 		gm.getWorldsHandler().getActiveWorld().getActiveDimension().lighting();
 		gm.getSun_Camera().setPosition(gm.getCamera().getPosition());
 		gm.getFrustum().calculateFrustum(gm.getMasterShadowRenderer().getProjectionMatrix(), gm.getSun_Camera());
 		if (VoxelVariables.useShadows) {
 			gm.getMasterShadowRenderer().being();
-			MasterRenderer.prepare();
+			gm.getRenderer().prepare();
 			gm.getWorldsHandler().getActiveWorld().getActiveDimension().updateChunksShadow(gm);
 			gm.getItemsDropRenderer().getTess().drawShadow(gm.getSun_Camera());
 			gm.getMasterShadowRenderer().renderEntity(
@@ -127,64 +100,30 @@ public class SPState extends AbstractState {
 			gm.getMasterShadowRenderer().end();
 		}
 		gm.getFrustum().calculateFrustum(gm.getRenderer().getProjectionMatrix(), gm.getCamera());
-		MasterRenderer.prepare();
+		gm.getRenderer().prepare();
 		gm.getWorldsHandler().getActiveWorld().getActiveDimension().updateChunksOcclusion(gm);
 
 		gm.getRenderingPipeline().begin();
-		MasterRenderer.prepare();
+		gm.getRenderer().prepare();
 		gm.getSkyboxRenderer().render(VoxelVariables.RED, VoxelVariables.GREEN, VoxelVariables.BLUE, delta, gm);
 		gm.getWorldsHandler().getActiveWorld().getActiveDimension().updateChunksRender(gm, false);
 		gm.getRenderer().renderEntity(
 				gm.getWorldsHandler().getActiveWorld().getActiveDimension().getPhysicsEngine().getEntities(), gm);
-		p.clear();
-		glReadPixels(gm.getDisplay().getDisplayWidth() / 2, gm.getDisplay().getDisplayHeight() / 2, 1, 1,
-				GL_DEPTH_COMPONENT, GL_FLOAT, p);
-		c.clear();
-		glReadBuffer(GL_COLOR_ATTACHMENT2);
-		glReadPixels(gm.getDisplay().getDisplayWidth() / 2, gm.getDisplay().getDisplayHeight() / 2, 1, 1, GL_RGB,
-				GL_FLOAT, c);
-		gm.getCamera().depth = p.get(0);
-		gm.getCamera().normal.x = c.get(0);
-		gm.getCamera().normal.y = c.get(1);
-		gm.getCamera().normal.z = c.get(2);
 		gm.getItemsDropRenderer().render(gm);
 		gm.getRenderingPipeline().end();
 
-		MasterRenderer.prepare();
+		gm.getRenderer().prepare();
 		gm.getRenderingPipeline().render(gm);
-
 		gm.getWorldsHandler().getActiveWorld().getActiveDimension().updateChunksRender(gm, true);
-		gm.getCamera().render();
-
 		ParticleMaster.getInstance().render(gm.getCamera(), gm.getRenderer().getProjectionMatrix());
 		gm.getDisplay().beingNVGFrame();
-		if (VoxelVariables.debug) {
-			UIRendering.renderText(
-					"Voxel " + " (" + VoxelVariables.version + ")" + " Molten API" + " (" + MoltenAPI.apiVersion + "/"
-							+ MoltenAPI.build + ")",
-					"Roboto-Bold", 5, 12, 20, UIRendering.rgba(220, 220, 220, 255, UIRendering.colorA),
-					UIRendering.rgba(255, 255, 255, 255, UIRendering.colorB));
-			UIRendering.renderText("Used VRam: " + gm.getDisplay().getUsedVRAM() + "KB " + " UPS: " + CoreInfo.ups,
-					"Roboto-Bold", 5, 95, 20, UIRendering.rgba(220, 220, 220, 255, UIRendering.colorA),
-					UIRendering.rgba(255, 255, 255, 255, UIRendering.colorB));
-			UIRendering.renderText(
-					"Loaded Chunks: " + gm.getWorldsHandler().getActiveWorld().getActiveDimension().getLoadedChunks()
-							+ "   Rendered Chunks: "
-							+ gm.getWorldsHandler().getActiveWorld().getActiveDimension().getRenderedChunks(),
-					"Roboto-Bold", 5, 115, 20, UIRendering.rgba(220, 220, 220, 255, UIRendering.colorA),
-					UIRendering.rgba(255, 255, 255, 255, UIRendering.colorB));
-			UIRendering.renderText(
-					"Position XYZ:  " + gm.getCamera().getPosition().getX() + "  " + gm.getCamera().getPosition().getY()
-							+ "  " + gm.getCamera().getPosition().getZ(),
-					"Roboto-Bold", 5, 135, 20, UIRendering.rgba(220, 220, 220, 255, UIRendering.colorA),
-					UIRendering.rgba(255, 255, 255, 255, UIRendering.colorB));
-			UIRendering.renderText(
-					"Pitch:  " + gm.getCamera().getPitch() + "   Yaw: " + gm.getCamera().getYaw() + "   Roll: "
-							+ gm.getCamera().getRoll(),
-					"Roboto-Bold", 5, 155, 20, UIRendering.rgba(220, 220, 220, 255, UIRendering.colorA),
-					UIRendering.rgba(255, 255, 255, 255, UIRendering.colorB));
-			Timers.renderDebugDisplay(5, 24, 200, 55);
-		}
+
+		gm.getItemsGuiRenderer().getTess().begin(BlocksResources.getTessellatorTextureAtlas().getTexture(),
+				BlocksResources.getNormalMap(), BlocksResources.getHeightMap(), BlocksResources.getSpecularMap());
+		((PlayerCamera) gm.getCamera()).getInventory().render(gm);
+		gm.getItemsGuiRenderer().getTess().end();
+
+		UIRendering.renderMouse();
 		gm.getDisplay().endNVGFrame();
 		gm.getItemsGuiRenderer().render(gm);
 

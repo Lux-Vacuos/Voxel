@@ -55,7 +55,7 @@ public class SPPauseState extends AbstractState {
 	private Button optionsButton;
 
 	public SPPauseState() {
-		super("SP_Pause");
+		super(StateNames.SP_PAUSE);
 		window = new Window(20, GameResources.getInstance().getDisplay().getDisplayHeight() - 20,
 				GameResources.getInstance().getDisplay().getDisplayWidth() - 40,
 				GameResources.getInstance().getDisplay().getDisplayHeight() - 40, "Pause");
@@ -67,11 +67,11 @@ public class SPPauseState extends AbstractState {
 			GameResources.getInstance().getCamera().setPitch(0);
 			GameResources.getInstance().getCamera().setYaw(0);
 			//switchTo(GameState.MAINMENU);
-			StateMachine.setCurrentState("MainMenu");
+			StateMachine.setCurrentState(StateNames.MAIN_MENU);
 		});
 		optionsButton.setOnButtonPress((button, delta) -> {
 			//switchTo(GameState.OPTIONS);
-			StateMachine.setCurrentState("Options");
+			StateMachine.setCurrentState(StateNames.OPTIONS);
 		});
 		window.addChildren(exitButton);
 		window.addChildren(optionsButton);
@@ -79,12 +79,12 @@ public class SPPauseState extends AbstractState {
 
 	@Override
 	public void start() {
-		window.setFadeAlpha(0);
+		//window.setFadeAlpha(0);
 	}
 
 	@Override
 	public void end() {
-		window.setFadeAlpha(1);
+		//window.setFadeAlpha(1);
 	}
 
 	@Override
@@ -103,7 +103,7 @@ public class SPPauseState extends AbstractState {
 			if (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
 				((PlayerCamera) gm.getCamera()).setMouse();
 				//switchTo(GameState.SP);
-				StateMachine.setCurrentState("SinglePlayer");
+				StateMachine.setCurrentState(StateNames.SINGLEPLAYER);
 			}
 		}
 	}

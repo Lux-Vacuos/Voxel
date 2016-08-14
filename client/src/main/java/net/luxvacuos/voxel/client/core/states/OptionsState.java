@@ -50,7 +50,7 @@ public class OptionsState extends AbstractState {
 	private Window window;
 
 	public OptionsState() {
-		super("Options");
+		super(StateNames.OPTIONS);
 		window = new Window(20, GameResources.getInstance().getDisplay().getDisplayHeight() - 20,
 				GameResources.getInstance().getDisplay().getDisplayWidth() - 40,
 				GameResources.getInstance().getDisplay().getDisplayHeight() - 40, "Options");
@@ -222,12 +222,12 @@ public class OptionsState extends AbstractState {
 
 	@Override
 	public void start() {
-		window.setFadeAlpha(0);
+		//window.setFadeAlpha(0);
 	}
 
 	@Override
 	public void end() {
-		window.setFadeAlpha(1);
+		//window.setFadeAlpha(1);
 	}
 
 	@Override

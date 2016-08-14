@@ -38,6 +38,7 @@ public final class StateMachine {
 	private StateMachine() { }
 	
 	public static void run() {
+		System.out.println("StateMachine running");
 		internalState = InternalState.RUNNING;
 	}
 	
@@ -47,6 +48,7 @@ public final class StateMachine {
 	
 	public static boolean registerState(IState state) {
 		if(!registeredStates.containsKey(state.getName())) {
+			System.out.println("Registering State: "+state.getName());
 			state.init(); //Initialize the state
 			registeredStates.put(state.getName(), state);
 			return true;
@@ -72,6 +74,7 @@ public final class StateMachine {
 	public static boolean setCurrentState(String name) {
 		if(name != null || registeredStates.containsKey(name)) {
 			IState state = registeredStates.get(name);
+			System.out.println("Setting current state to "+state.getName());
 			if(currentState != null) {
 				if(currentState.equals(state)) return false;
 			

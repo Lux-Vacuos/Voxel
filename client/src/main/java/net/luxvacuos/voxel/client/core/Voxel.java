@@ -102,19 +102,6 @@ public class Voxel extends AbstractVoxel {
 		}
 		Logger.log("Starting Client");
 
-		//Load the States into the StateMachine
-		StateMachine.registerState(new AboutState());
-		StateMachine.registerState(new MainMenuState());
-		StateMachine.registerState(new MPLoadingState());
-		StateMachine.registerState(new MPState());
-		StateMachine.registerState(new OptionsState());
-		StateMachine.registerState(new SPCreateWorld());
-		StateMachine.registerState(new SplashScreenState());
-		StateMachine.registerState(new SPLoadingState());
-		StateMachine.registerState(new SPPauseState());
-		StateMachine.registerState(new SPSelectionState());
-		StateMachine.registerState(new SPState());
-		
 		// Create the GameResources instance
 		gameResources = GameResources.getInstance();
 		// Do preInit on Game Resources
@@ -166,6 +153,18 @@ public class Voxel extends AbstractVoxel {
 		BlocksResources.createBlocks(getGameResources().getLoader());
 		// Load extra assets
 		getGameResources().loadResources();
+		//Load the States into the StateMachine
+		StateMachine.registerState(new AboutState());
+		StateMachine.registerState(new MainMenuState());
+		StateMachine.registerState(new MPLoadingState());
+		StateMachine.registerState(new MPState());
+		StateMachine.registerState(new OptionsState());
+		StateMachine.registerState(new SPCreateWorld());
+		StateMachine.registerState(new SplashScreenState());
+		StateMachine.registerState(new SPLoadingState());
+		StateMachine.registerState(new SPPauseState());
+		StateMachine.registerState(new SPSelectionState());
+		StateMachine.registerState(new SPState());
 		// Do Mod Init
 		api.init();
 	}
@@ -189,7 +188,7 @@ public class Voxel extends AbstractVoxel {
 		getGameResources().postInit();
 		// Set the state to splash screen
 		//getGameResources().getGlobalStates().setState(GameState.SPLASH_SCREEN);
-		StateMachine.setCurrentState("SplashScreen");
+		StateMachine.setCurrentState(StateNames.SPLASH_SCREEN);
 	}
 
 	/**
@@ -212,7 +211,7 @@ public class Voxel extends AbstractVoxel {
 			float alpha = 0;
 			// Set loaded
 			loaded = true;
-			while (StateMachine.isRunning()) {
+			while (StateMachine.isRunning() && !(this.getGameResources().getDisplay().isCloseRequested())) {
 				// Start CPU timer
 				Timers.startCPUTimer();
 				// Update UPS
@@ -321,6 +320,8 @@ public class Voxel extends AbstractVoxel {
 		api.dispose();
 		// Close Window
 		getGameResources().getDisplay().closeDisplay();
+		
+		StateMachine.dispose();
 		// Set dispose and loaded
 		disposed = true;
 		loaded = false;

@@ -48,7 +48,7 @@ public class MPSelectionState extends AbstractState {
 	private float time = 0;
 
 	public MPSelectionState() {
-		super("MP_Selection");
+		super(StateNames.MP_SELECTION);
 		window = new Window(20, GameResources.getInstance().getDisplay().getDisplayHeight() - 20,
 				GameResources.getInstance().getDisplay().getDisplayWidth() - 40,
 				GameResources.getInstance().getDisplay().getDisplayHeight() - 40, "Multiplayer");
@@ -58,14 +58,14 @@ public class MPSelectionState extends AbstractState {
 		exitButton.setOnButtonPress((button, delta) -> {
 			if (time > 0.2f)
 				//switchTo(GameState.MAINMENU);
-				StateMachine.setCurrentState("MainMenu");
+				StateMachine.setCurrentState(StateNames.MAIN_MENU);
 		});
 
 		playButton.setOnButtonPress((button, delta) -> {
 			if (time > 0.2f) {
 				GameResources.getInstance().getVoxelClient().setUrl(ip);
 				//switchTo(GameState.LOADING_MP_WORLD);
-				StateMachine.setCurrentState("MP_Loading");
+				StateMachine.setCurrentState(StateNames.MP_LOADING);
 			}
 		});
 		ipText = new Text("IP:", window.getWidth() / 2 - 170, -window.getHeight() / 2);
@@ -78,12 +78,12 @@ public class MPSelectionState extends AbstractState {
 	@Override
 	public void start() {
 		time = 0;
-		window.setFadeAlpha(0);
+		//window.setFadeAlpha(0);
 	}
 
 	@Override
 	public void end() {
-		window.setFadeAlpha(1);
+		//window.setFadeAlpha(1);
 	}
 
 	@Override

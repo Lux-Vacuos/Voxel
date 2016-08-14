@@ -61,7 +61,7 @@ public class MPState extends AbstractState {
 	FloatBuffer c;
 
 	public MPState() {
-		super("MultiPlayer");
+		super(StateNames.MULTIPLAYER);
 		p = BufferUtils.createFloatBuffer(1);
 		c = BufferUtils.createFloatBuffer(3);
 	}
