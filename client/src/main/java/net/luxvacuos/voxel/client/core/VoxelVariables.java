@@ -65,7 +65,6 @@ public class VoxelVariables {
 	public static boolean raining = false;
 	public static String settings;
 	public static String assets = "voxel";
-	public static String log;
 
 	/**
 	 * Graphic Settings

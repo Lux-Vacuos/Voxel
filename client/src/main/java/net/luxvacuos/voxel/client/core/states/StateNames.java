@@ -5,7 +5,6 @@ public class StateNames {
 	private StateNames() { }
 	
 	public static final String ABOUT = "About";
-	public static final String SP_INVENTORY = "SP_Inventory";
 	public static final String MAIN_MENU = "Main_Menu";
 	public static final String MP_LOADING = "MP_Loading";
 	public static final String MP_SELECTION = "MP_Selection";

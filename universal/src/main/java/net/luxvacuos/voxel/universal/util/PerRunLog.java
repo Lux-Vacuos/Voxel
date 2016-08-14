@@ -18,7 +18,7 @@
  * 
  */
 
-package net.luxvacuos.voxel.server.util;
+package net.luxvacuos.voxel.universal.util;
 
 import java.io.File;
 import java.io.IOException;
@@ -29,9 +29,16 @@ import org.apache.log4j.FileAppender;
 import org.apache.log4j.Layout;
 import org.apache.log4j.spi.ErrorCode;
 
+import net.luxvacuos.voxel.universal.bootstrap.AbstractBootstrap;
+
 public class PerRunLog extends FileAppender {
 
 	private static SimpleDateFormat timeStampFormat;
+	private static AbstractBootstrap bootstrap;
+
+	public static void setBootstrap(AbstractBootstrap bootstrap) {
+		PerRunLog.bootstrap = bootstrap;
+	}
 
 	static {
 		timeStampFormat = new SimpleDateFormat("yyyy-MM-dd-h-mm-ss-a");
@@ -80,8 +87,9 @@ public class PerRunLog extends FileAppender {
 			} else {
 				newFileName = fileName + HIPHEN + timeStampFormat.format(new Date());
 			}
-			return logFile.getParent() + File.separator + newFileName;
+			return bootstrap.getPrefix() + "/" + logFile.getParent() + File.separator + newFileName;
 		}
 		return null;
 	}
+
 }

@@ -18,7 +18,7 @@
  * 
  */
 
-package net.luxvacuos.voxel.universal.utils;
+package net.luxvacuos.voxel.universal.util;
 
 public class SimpleResource implements IResource {
 	

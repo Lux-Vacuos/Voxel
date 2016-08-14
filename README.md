@@ -43,4 +43,5 @@ The main method is stored inside the Bootstrap class found in the package of the
 | -height       | integer       | 1280           | Display Height | Client Only |
 | -username     | string        | (empty)        | Username to use when connecting to a server | Client Only |
 | -port         | integer       | 4059           | Server's port  | Server Only |
+| -ui           | (boolean)     | false          | Enable Server UI  | Server Only |
 

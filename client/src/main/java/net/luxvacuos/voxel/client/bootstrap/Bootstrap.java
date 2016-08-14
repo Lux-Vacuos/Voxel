@@ -22,7 +22,6 @@ package net.luxvacuos.voxel.client.bootstrap;
 
 import com.esotericsoftware.minlog.Log;
 
-import net.luxvacuos.igl.Logger;
 import net.luxvacuos.voxel.client.core.Voxel;
 import net.luxvacuos.voxel.client.core.VoxelVariables;
 import net.luxvacuos.voxel.universal.bootstrap.AbstractBootstrap;

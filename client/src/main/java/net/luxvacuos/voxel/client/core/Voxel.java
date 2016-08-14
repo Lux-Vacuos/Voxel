@@ -47,6 +47,7 @@ import net.luxvacuos.voxel.universal.bootstrap.Platform;
 import net.luxvacuos.voxel.universal.core.AbstractVoxel;
 import net.luxvacuos.voxel.universal.core.EngineType;
 import net.luxvacuos.voxel.universal.core.states.StateMachine;
+import net.luxvacuos.voxel.universal.util.PerRunLog;
 
 /**
  * Voxel's Heart, the main object where the loop is stored.
@@ -89,6 +90,8 @@ public class Voxel extends AbstractVoxel {
 	 */
 	@Override
 	public void preInit() throws Exception {
+		PerRunLog.setBootstrap(bootstrap);
+		Logger.init();
 
 		// Find version from Manifest file
 		try {
@@ -104,7 +107,6 @@ public class Voxel extends AbstractVoxel {
 
 		VoxelVariables.settings = bootstrap.getPrefix() + "/config/settings.conf";
 		VoxelVariables.WORLD_PATH = bootstrap.getPrefix() + "/world/";
-		VoxelVariables.log = bootstrap.getPrefix() + "/";
 
 		// Create the GameResources instance
 		gameResources = GameResources.getInstance();
@@ -157,7 +159,7 @@ public class Voxel extends AbstractVoxel {
 		BlocksResources.createBlocks(getGameResources().getLoader());
 		// Load extra assets
 		getGameResources().loadResources();
-		//Load the States into the StateMachine
+		// Load the States into the StateMachine
 		StateMachine.registerState(new AboutState());
 		StateMachine.registerState(new MainMenuState());
 		StateMachine.registerState(new MPLoadingState());
@@ -169,6 +171,7 @@ public class Voxel extends AbstractVoxel {
 		StateMachine.registerState(new SPPauseState());
 		StateMachine.registerState(new SPSelectionState());
 		StateMachine.registerState(new SPState());
+		StateMachine.registerState(new MPSelectionState());
 		// Do Mod Init
 		api.init();
 	}
@@ -191,7 +194,7 @@ public class Voxel extends AbstractVoxel {
 		// Do PostInit on Game Resources
 		getGameResources().postInit();
 		// Set the state to splash screen
-		//getGameResources().getGlobalStates().setState(GameState.SPLASH_SCREEN);
+		// getGameResources().getGlobalStates().setState(GameState.SPLASH_SCREEN);
 		StateMachine.setCurrentState(StateNames.SPLASH_SCREEN);
 	}
 
@@ -264,7 +267,7 @@ public class Voxel extends AbstractVoxel {
 	 *            Alpha for update
 	 */
 	public void render(float alpha) {
-		//getGameResources().getGlobalStates().doRender(this, alpha);
+		// getGameResources().getGlobalStates().doRender(this, alpha);
 		StateMachine.render(this, alpha);
 	}
 
@@ -278,7 +281,7 @@ public class Voxel extends AbstractVoxel {
 	@Override
 	public void update(float delta) {
 		CoreInfo.upsCount++;
-		//getGameResources().getGlobalStates().doUpdate(this, delta);
+		// getGameResources().getGlobalStates().doUpdate(this, delta);
 		StateMachine.update(this, delta);
 	}
 
@@ -324,7 +327,7 @@ public class Voxel extends AbstractVoxel {
 		api.dispose();
 		// Close Window
 		getGameResources().getDisplay().closeDisplay();
-		
+
 		StateMachine.dispose();
 		// Set dispose and loaded
 		disposed = true;

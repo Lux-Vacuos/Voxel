@@ -53,7 +53,7 @@ public class Bootstrap extends AbstractBootstrap {
 
 	@Override
 	public void parseArgs(String[] args) {
-		boolean gavePort = false;
+		boolean gavePort = false, gaveUI = false;
 		for (int i = 0; i < args.length; i++) {
 			switch (args[i]) {
 			case "-port":
@@ -63,6 +63,12 @@ public class Bootstrap extends AbstractBootstrap {
 				if (VoxelVariables.port <= 0)
 					throw new IllegalArgumentException("Port must be positive");
 				gavePort = true;
+				break;
+			case "-ui":
+				if (gaveUI)
+					throw new IllegalStateException("UI already given");
+				VoxelVariables.useUI = true;
+				gaveUI = true;
 				break;
 			default:
 				if (args[i].startsWith("-")) {

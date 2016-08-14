@@ -57,9 +57,10 @@ public class ServerGameResources extends AbstractGameResources {
 	private ServerGameResources() {
 	}
 
-	public void construct(Voxel voxel, int port) {
+	public void construct(Voxel voxel, int port) throws InterruptedException {
 		this.port = port;
-		userInterface = new UserInterface(voxel);
+		if (VoxelVariables.useUI)
+			userInterface = new UserInterface(voxel);
 	}
 
 	@Override
@@ -72,7 +73,7 @@ public class ServerGameResources extends AbstractGameResources {
 		gameSettings = new ServerGameSettings();
 		gameSettings.load(new File(VoxelVariables.settings));
 		gameSettings.read();
-		
+
 		kryo = new Kryo();
 		kryo.setDefaultSerializer(CompatibleFieldSerializer.class);
 		voxelServer.init(this);
@@ -94,10 +95,10 @@ public class ServerGameResources extends AbstractGameResources {
 	public ServerWorldSimulation getWorldSimulation() {
 		return ((ServerWorldSimulation) this.worldSimulation);
 	}
-	
+
 	@Override
 	public ServerGameSettings getGameSettings() {
-		return ((ServerGameSettings)this.gameSettings);
+		return ((ServerGameSettings) this.gameSettings);
 	}
 
 	public CoreUtils getCoreUtils() {

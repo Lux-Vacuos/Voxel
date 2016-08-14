@@ -18,16 +18,11 @@
  * 
  */
 
-package net.luxvacuos.voxel.server.core;
+package net.luxvacuos.voxel.universal.util;
 
-/**
- * State
- * 
- * @author danirod
- * @category Kernel
- */
-public interface State {
+public interface IResource {
 
-	void update(Voxel voxel, float delta);
-
+	public String getResourceDomain();
+	
+	public String getResourcePath();
 }

@@ -27,7 +27,11 @@ package net.luxvacuos.igl;
  */
 public final class Logger {
 
-	private static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger("Voxel");
+	private static org.apache.log4j.Logger log;
+
+	public static void init() {
+		log = org.apache.log4j.Logger.getLogger("Voxel");
+	}
 
 	/**
 	 * Prints to the Log

@@ -42,6 +42,7 @@ public class VoxelVariables {
 	public static final String settings = "settings.conf";
 	public static final float TIME_MULTIPLIER = 10;
 	public static int port = 4059;
+	public static boolean useUI = false;
 
 	/**
 	 * World Settings
@@ -62,6 +63,7 @@ public class VoxelVariables {
 	 * World Folder Path
 	 */
 	public static String WORLD_PATH = null;
+
 	static {
 		try {
 			WORLD_PATH = new File(".").getCanonicalPath() + "/worlds/";

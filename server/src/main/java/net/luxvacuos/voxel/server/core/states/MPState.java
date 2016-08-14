@@ -27,15 +27,15 @@ import net.luxvacuos.voxel.server.world.PhysicsSystem;
 import net.luxvacuos.voxel.universal.core.AbstractVoxel;
 import net.luxvacuos.voxel.universal.core.states.AbstractState;
 
-public class GameMPState extends AbstractState {
-	
-	public GameMPState() {
-		super("GameMPState");
+public class MPState extends AbstractState {
+
+	public MPState() {
+		super("MPState");
 	}
-	
+
 	@Override
 	public void update(AbstractVoxel voxel, float delta) {
-		ServerGameResources gm = (ServerGameResources)voxel.getGameResources();
+		ServerGameResources gm = (ServerGameResources) voxel.getGameResources();
 		gm.getWorldsHandler().getActiveWorld().getActiveDimension().updateChunksGeneration(gm, delta);
 
 		for (Dimension dim : gm.getWorldsHandler().getActiveWorld().getDimensions().values()) {

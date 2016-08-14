@@ -52,7 +52,6 @@ public class MPLoadingState extends AbstractState {
 	private Window window;
 	private Text message;
 	private float time = 0;
-	private boolean fadeIn;
 
 	public MPLoadingState() {
 		super(StateNames.MP_LOADING);
@@ -62,7 +61,7 @@ public class MPLoadingState extends AbstractState {
 		exitButton = new Button(window.getWidth() / 2 - 100, -window.getHeight() + 35, 200, 40, "Cancel");
 		exitButton.setOnButtonPress((button, delta) -> {
 			if (time > 0.2f) {
-				//switchTo(GameState.MP_SELECTION);
+				// switchTo(GameState.MP_SELECTION);
 				StateMachine.setCurrentState(StateNames.MP_SELECTION);
 			}
 		});
@@ -76,21 +75,20 @@ public class MPLoadingState extends AbstractState {
 	public void start() {
 		time = 0;
 		trying = false;
-		fadeIn = false;
-		//window.setFadeAlpha(0);
+		// window.setFadeAlpha(0);
 	}
 
 	@Override
 	public void end() {
 		message.setText("Connecting...");
-		//window.setFadeAlpha(1);
+		// window.setFadeAlpha(1);
 	}
 
 	@Override
 	public void update(AbstractVoxel voxel, float delta) {
 		window.update(delta);
-		GameResources gm = (GameResources)voxel.getGameResources();
-		if (!trying && fadeIn) {
+		GameResources gm = (GameResources) voxel.getGameResources();
+		if (!trying) {
 			try {
 				trying = true;
 				gm.getVoxelClient().connect(4059);
@@ -99,9 +97,10 @@ public class MPLoadingState extends AbstractState {
 				wm.registerWorld(new ClientWorld());
 				wm.setActiveWorld("server");
 				wm.getActiveWorld().init();
-				wm.getActiveWorld().getActiveDimension().getPhysicsEngine().addEntity(GameResources.getInstance().getCamera());
+				wm.getActiveWorld().getActiveDimension().getPhysicsEngine()
+						.addEntity(GameResources.getInstance().getCamera());
 				((PlayerCamera) GameResources.getInstance().getCamera()).setMouse();
-				//switchTo(GameState.MP);
+				// switchTo(GameState.MP);
 				StateMachine.setCurrentState(StateNames.MULTIPLAYER);
 			} catch (IOException e) {
 				VoxelVariables.onServer = false;
@@ -115,17 +114,15 @@ public class MPLoadingState extends AbstractState {
 		if (time <= 0.2f) {
 			time += 1 * delta;
 		}
-		/*if (!switching)
-			fadeIn = window.fadeIn(4, delta);
-		if (switching)
-			if (window.fadeOut(4, delta)) {
-				readyForSwitch = true;
-			} */
+		/*
+		 * if (!switching) fadeIn = window.fadeIn(4, delta); if (switching) if
+		 * (window.fadeOut(4, delta)) { readyForSwitch = true; }
+		 */
 	}
 
 	@Override
 	public void render(AbstractVoxel voxel, float delta) {
-		GameResources gm = (GameResources)voxel.getGameResources();
+		GameResources gm = (GameResources) voxel.getGameResources();
 		MasterRenderer.prepare(0, 0, 0, 1);
 		gm.getDisplay().beingNVGFrame();
 		window.render();

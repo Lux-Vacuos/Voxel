@@ -20,7 +20,6 @@
 
 package net.luxvacuos.voxel.client.core.states;
 
-import static net.luxvacuos.voxel.client.input.Keyboard.KEY_E;
 import static net.luxvacuos.voxel.client.input.Keyboard.KEY_ESCAPE;
 import static net.luxvacuos.voxel.client.input.Keyboard.KEY_F1;
 import static net.luxvacuos.voxel.client.input.Keyboard.KEY_F2;
@@ -71,7 +70,7 @@ public class SPState extends AbstractState {
 
 	@Override
 	public void update(AbstractVoxel voxel, float delta) {
-		GameResources gm = (GameResources)voxel.getGameResources();
+		GameResources gm = (GameResources) voxel.getGameResources();
 
 		gm.getWorldsHandler().getActiveWorld().getActiveDimension().updateChunksGeneration(gm, delta);
 		((PlayerCamera) gm.getCamera()).update(delta, gm, gm.getWorldsHandler().getActiveWorld().getActiveDimension());
@@ -92,27 +91,25 @@ public class SPState extends AbstractState {
 				VoxelVariables.hideHud = !VoxelVariables.hideHud;
 			if (isKeyDown(KEY_ESCAPE)) {
 				((PlayerCamera) gm.getCamera()).unlockMouse();
-				//gm.getGlobalStates().setState(GameState.SP_PAUSE);
+				// gm.getGlobalStates().setState(GameState.SP_PAUSE);
 				StateMachine.setCurrentState(StateNames.SP_PAUSE);
 			}
-			if (isKeyDown(KEY_E)) {
-				((PlayerCamera) gm.getCamera()).unlockMouse();
-				//gm.getGlobalStates().setState(GameState.GAME_SP_INVENTORY);
-				StateMachine.setCurrentState(StateNames.SP_INVENTORY);
-			}
+			// TODO: Handle Inventory
+			//
+			// if (isKeyDown(KEY_E)) {
+			// ((PlayerCamera) gm.getCamera()).unlockMouse();
+			// gm.getGlobalStates().setState(GameState.GAME_SP_INVENTORY);
+			// }
+
 			if (Keyboard.isKeyDown(Keyboard.KEY_R))
 				VoxelVariables.raining = !VoxelVariables.raining;
 		}
 
-		// if (!display.isDisplayFocused()) {
-		// gm.getCamera().unlockMouse();
-		// states.setState(GameState.IN_PAUSE);
-		// }
 	}
 
 	@Override
 	public void render(AbstractVoxel voxel, float delta) {
-		GameResources gm = (GameResources)voxel.getGameResources();
+		GameResources gm = (GameResources) voxel.getGameResources();
 
 		gm.getWorldsHandler().getActiveWorld().getActiveDimension().lighting();
 		gm.getSun_Camera().setPosition(gm.getCamera().getPosition());
