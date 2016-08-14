@@ -18,26 +18,16 @@
  * 
  */
 
-package net.luxvacuos.voxel.client.core;
+package net.luxvacuos.voxel.universal.bootstrap;
 
-import net.luxvacuos.voxel.universal.bootstrap.Platform;
+public interface IBootstrap {
 
-public class CoreInfo {
+	public void parseArgs(String[] args);
 
-	static {
-		String os = System.getProperty("os.name");
-		OS = os + " "+ System.getProperty("os.arch").toUpperCase();
-	}
+	public void init();
 
-	public static int ups;
-	public static int upsCount;
+	public String getPrefix();
 
-	public static Platform platform;
-	public static String OS;
-	public static String LWJGLVer;
-	public static String GLFWVer;
-	public static String OpenGLVer;
-	public static String Vendor;
-	public static String Renderer;
-	public static String VkVersion = "No Available";
+	public Platform getPlatform();
+
 }

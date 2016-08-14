@@ -89,9 +89,12 @@ public class SPSelectionState extends State {
 
 	@Override
 	public void start() {
+		File file = new File(VoxelVariables.WORLD_PATH);
+		if (!file.exists())
+			file.mkdirs();
 		y = 0;
 		try {
-			Files.walk(new File(VoxelVariables.WORLD_PATH).toPath(), 1).forEach(filePath -> {
+			Files.walk(file.toPath(), 1).forEach(filePath -> {
 				if (Files.isDirectory(filePath) && !filePath.toFile().equals(new File(VoxelVariables.WORLD_PATH))) {
 					World world = new World(20, -ySize - 50 - (y * (ySize + 5)), 400, ySize,
 							filePath.getFileName().toString());

@@ -25,26 +25,24 @@ import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 
 import net.luxvacuos.igl.Logger;
-import net.luxvacuos.voxel.server.bootstrap.Bootstrap;
 import net.luxvacuos.voxel.server.core.GlobalStates.InternalState;
 import net.luxvacuos.voxel.server.resources.GameResources;
 import net.luxvacuos.voxel.server.ui.UserInterface;
 import net.luxvacuos.voxel.server.world.DefaultWorld;
 import net.luxvacuos.voxel.universal.api.ModInitialization;
 import net.luxvacuos.voxel.universal.api.MoltenAPI;
+import net.luxvacuos.voxel.universal.bootstrap.AbstractBootstrap;
 import net.luxvacuos.voxel.universal.core.AbstractVoxel;
+import net.luxvacuos.voxel.universal.core.EngineType;
 import net.luxvacuos.voxel.universal.network.packets.WorldTime;
 
 public class Voxel extends AbstractVoxel {
 
-	private int port;
-
 	private ModInitialization api;
 
-	public Voxel(int port) throws Exception {
-		this.port = port;
-		super.prefix = "";
-		super.server = true;
+	public Voxel(AbstractBootstrap bootstrap) {
+		super(bootstrap);
+		super.engineType = EngineType.SERVER;
 		loop();
 	}
 
@@ -60,14 +58,14 @@ public class Voxel extends AbstractVoxel {
 			E.printStackTrace();
 		}
 		gameResources = GameResources.getInstance();
-		getGameResources().construct(this, port);
+		getGameResources().construct(this, VoxelVariables.port);
 		getGameResources().getUserInterface().getThreadUI().start();
 		while (!getGameResources().getUserInterface().isStarted())
 			Thread.sleep(100);
 		Logger.log("Starting Server");
 		Logger.log("Voxel Server Version: " + VoxelVariables.version);
 		Logger.log("Molten API Version: " + MoltenAPI.apiVersion);
-		Logger.log("Running on: " + Bootstrap.getPlatform());
+		Logger.log("Running on: " + bootstrap.getPlatform());
 
 		getGameResources().preInit();
 		api = new ModInitialization(this);

@@ -22,9 +22,10 @@ package net.luxvacuos.voxel.client.bootstrap;
 
 import com.esotericsoftware.minlog.Log;
 
-import net.luxvacuos.igl.Logger;
 import net.luxvacuos.voxel.client.core.Voxel;
 import net.luxvacuos.voxel.client.core.VoxelVariables;
+import net.luxvacuos.voxel.universal.bootstrap.AbstractBootstrap;
+import net.luxvacuos.voxel.universal.bootstrap.Platform;
 
 /**
  * Bootstrap, this initializes the game path using <b>AppData</b> on Windows and
@@ -32,111 +33,21 @@ import net.luxvacuos.voxel.client.core.VoxelVariables;
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
  */
-public class Bootstrap {
+public class Bootstrap extends AbstractBootstrap {
 
-	/**
-	 * Path Prefix
-	 */
-	private static String prefix;
-
-	/**
-	 * Try to detect the OS and set the path
-	 */
-	static {
-		// Check for OS and Path
-		if (getPlatform().equals(Platform.WINDOWS_32) || getPlatform().equals(Platform.WINDOWS_64))
-			prefix = System.getenv("AppData");
-		else if (getPlatform().equals(Platform.LINUX_32) || getPlatform().equals(Platform.LINUX_64))
-			prefix = System.getProperty("user.home");
-		else if (getPlatform().equals(Platform.MACOSX)) {
-			prefix = System.getProperty("user.home");
-			prefix += "/Library/Application Support";
-		}
-		prefix += "/.";
+	public Bootstrap(String[] args) {
+		super(args);
 	}
 
-	private Bootstrap() {
-	}
-
-	/**
-	 * OS type
-	 */
-	private static Platform platform;
-
-	/**
-	 * 
-	 * Get running OS
-	 * 
-	 * @return The OS and architecture
-	 * 
-	 */
-	public static Platform getPlatform() {
-		// if null search for the OS
-		if (platform == null) {
-			// Convert os.name and os.arch to lower case
-			final String OS = System.getProperty("os.name").toLowerCase();
-			final String ARCH = System.getProperty("os.arch").toLowerCase();
-
-			// Find what OS is running
-			boolean isWindows = OS.contains("windows");
-			boolean isLinux = OS.contains("linux");
-			boolean isMac = OS.contains("mac");
-			boolean is64Bit = ARCH.equals("amd64") || ARCH.equals("x86_64");
-
-			// Set platform to unknown before setting the real OS
-			platform = Platform.UNKNOWN;
-
-			// Check booleans and architecture
-			if (isWindows)
-				platform = is64Bit ? Platform.WINDOWS_64 : Platform.WINDOWS_32;
-			if (isLinux)
-				platform = is64Bit ? Platform.LINUX_64 : Platform.LINUX_32;
-			if (isMac)
-				platform = Platform.MACOSX;
-		}
-
-		return platform;
-	}
-
-	/**
-	 * Enum for available OS
-	 *
-	 */
-	public enum Platform {
-		WINDOWS_32, WINDOWS_64, MACOSX, LINUX_32, LINUX_64, UNKNOWN;
-	}
-
-	/**
-	 * Main method
-	 * 
-	 * @param args
-	 *            Args
-	 */
-	public static void main(String[] args) {
+	@Override
+	public void init() {
 		// Minglog Log level
 		Log.set(Log.LEVEL_INFO);
 		Thread.currentThread().setName("Voxel-Client");
-
-		// Try parse args
-		try {
-			parseArgs(args);
-		} catch (ArrayIndexOutOfBoundsException aioe) {
-			Logger.error("Error: Arguments were wrong", aioe);
-			System.exit(1);
-		} catch (Exception ex) {
-			Logger.error(ex);
-			System.exit(1);
-		}
-		new Voxel();
 	}
 
-	/**
-	 * Handles all Voxel available args
-	 * 
-	 * @param args
-	 *            Array of args
-	 */
-	private static void parseArgs(String[] args) {
+	@Override
+	public void parseArgs(String[] args) {
 		// Booleans to prevent setting a previously set value
 		boolean gaveWidth = false, gaveHeight = false;
 
@@ -179,13 +90,30 @@ public class Bootstrap {
 		}
 	}
 
-	/**
-	 * Get the previously generated path
-	 * 
-	 * @return Final Path
-	 */
-	public static String getPrefix() {
+	@Override
+	public String getPrefix() {
+		if (prefix == null) {
+			if (getPlatform().equals(Platform.WINDOWS_32) || getPlatform().equals(Platform.WINDOWS_64))
+				prefix = System.getenv("AppData");
+			else if (getPlatform().equals(Platform.LINUX_32) || getPlatform().equals(Platform.LINUX_64))
+				prefix = System.getProperty("user.home");
+			else if (getPlatform().equals(Platform.MACOSX)) {
+				prefix = System.getProperty("user.home");
+				prefix += "/Library/Application Support";
+			}
+			prefix += "/.voxel";
+		}
 		return prefix;
+	}
+
+	/**
+	 * Main method
+	 * 
+	 * @param args
+	 *            Args
+	 */
+	public static void main(String[] args) {
+		new Voxel(new Bootstrap(args));
 	}
 
 }

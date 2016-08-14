@@ -21,7 +21,6 @@
 package net.luxvacuos.voxel.client.core;
 
 import net.luxvacuos.igl.vector.Vector3f;
-import net.luxvacuos.voxel.client.bootstrap.Bootstrap;
 
 /**
  * Voxel Global Variables
@@ -64,8 +63,9 @@ public class VoxelVariables {
 	public static boolean autostart = false;
 	public static boolean christmas = false;
 	public static boolean raining = false;
-	public static final String settings = Bootstrap.getPrefix() + "voxel/config/settings.conf";
+	public static String settings;
 	public static String assets = "voxel";
+	public static String log;
 
 	/**
 	 * Graphic Settings
@@ -111,6 +111,6 @@ public class VoxelVariables {
 	/**
 	 * World Folder Path
 	 */
-	public static final String WORLD_PATH = Bootstrap.getPrefix() + "voxel/world/";
+	public static String WORLD_PATH;
 
 }

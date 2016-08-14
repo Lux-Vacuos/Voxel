@@ -5,6 +5,8 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
+import net.luxvacuos.voxel.universal.core.EngineType;
+
 public class MoltenAPI {
 
 	public static final String apiVersion = "0.0.2";
@@ -16,11 +18,20 @@ public class MoltenAPI {
 
 	private Map<String, Method> methods;
 
-	public MoltenAPI(String prefix) throws Exception {
-		if (prefix.equals("Client"))
+	public MoltenAPI(EngineType type) throws Exception {
+		switch (type) {
+		case CLIENT:
 			api = Class.forName("net.luxvacuos.voxel.client.api.MoltenAPI");
-		else if (prefix.equals("Server"))
+			break;
+		case SERVER:
 			api = Class.forName("net.luxvacuos.voxel.server.api.MoltenAPI");
+			break;
+		case UNKNOWN:
+			// TODO: Handle This
+			break;
+		default:
+			throw new RuntimeException("Invalid Engine Type");
+		}
 		apiI = api.newInstance();
 		methods = new HashMap<>();
 		for (Method mth : api.getMethods()) {

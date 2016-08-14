@@ -44,13 +44,8 @@ public class ModInitialization {
 
 	public ModInitialization(AbstractVoxel abstractVoxel) throws Exception {
 		modLoader = new ModLoader();
-		modLoader.loadMods(abstractVoxel.getPrefix());
-		String pre = null;
-		if (abstractVoxel.isClient())
-			pre = "Client";
-		else if (abstractVoxel.isServer())
-			pre = "Server";
-		moltenAPI = new MoltenAPI(pre);
+		modLoader.loadMods(abstractVoxel.getBootstrap().getPrefix());
+		moltenAPI = new MoltenAPI(abstractVoxel.getEngineType());
 		instances = new HashMap<>();
 	}
 
