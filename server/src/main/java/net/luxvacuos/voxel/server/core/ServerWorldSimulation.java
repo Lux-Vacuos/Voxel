@@ -21,20 +21,16 @@
 package net.luxvacuos.voxel.server.core;
 
 import net.luxvacuos.voxel.server.util.Maths;
+import net.luxvacuos.voxel.universal.core.AbstractWorldSimulation;
 
-public class WorldSimulation {
+public final class ServerWorldSimulation extends AbstractWorldSimulation {
 
-	private float time = 0;
-	private float globalTime = 0;
-	private float rainFactor;
-
-	private static final float TIME_MULTIPLIER = 10;
-
-	public WorldSimulation() {
-		time = 12000;
+	public ServerWorldSimulation() {
+		super(12000);
 	}
 
-	public void update(float delta) {
+	@Override
+	public float update(float delta) {
 		time += delta * TIME_MULTIPLIER;
 		time %= 24000;
 		globalTime += delta * TIME_MULTIPLIER;
@@ -44,22 +40,8 @@ public class WorldSimulation {
 		else
 			rainFactor -= 0.2f * delta;
 		rainFactor = Maths.clamp(rainFactor, 0f, 1f);
-	}
-
-	public float getGlobalTime() {
-		return globalTime;
-	}
-
-	public float getRainFactor() {
-		return rainFactor;
-	}
-
-	public float getTime() {
-		return time;
-	}
-
-	public void setTime(float time) {
-		this.time = time;
+		
+		return 0;
 	}
 
 }

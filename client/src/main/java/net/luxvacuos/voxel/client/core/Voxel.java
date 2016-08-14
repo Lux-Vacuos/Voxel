@@ -302,7 +302,7 @@ public class Voxel extends AbstractVoxel {
 	public void dispose() {
 		Logger.log("Cleaning Resources");
 		// Clean loaded assets
-		getGameResources().cleanUp();
+		this.gameResources.dispose();
 		// Clean mods
 		api.dispose();
 		// Close Window

@@ -76,13 +76,13 @@ public class Voxel extends AbstractVoxel {
 
 	@Override
 	public void init() throws Exception {
-		getGameResources().init();
+		this.gameResources.init(this);
 		api.init();
 	}
 
 	@Override
 	public void postInit() throws Exception {
-		getGameResources().postInit();
+		this.gameResources.postInit();
 		api.postInit();
 		getGameResources().getVoxelServer().connect();
 		getGameResources().getUserInterface();
@@ -139,8 +139,8 @@ public class Voxel extends AbstractVoxel {
 	@Override
 	public void dispose() {
 		Logger.log("Stopping Server");
-		GameResources.getInstance().getWorldsHandler().getActiveWorld().dispose();
-		getGameResources().dispose();
+		this.getGameResources().getWorldsHandler().getActiveWorld().dispose();
+		this.gameResources.dispose();
 	}
 
 	public ModInitialization getApi() {

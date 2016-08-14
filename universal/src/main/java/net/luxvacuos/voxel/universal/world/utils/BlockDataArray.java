@@ -18,33 +18,29 @@
  * 
  */
 
-package net.luxvacuos.voxel.universal.resources;
+package net.luxvacuos.voxel.universal.world.utils;
 
-import com.esotericsoftware.kryo.Kryo;
-
-import net.luxvacuos.voxel.universal.core.AbstractGameSettings;
-import net.luxvacuos.voxel.universal.core.AbstractVoxel;
-
-public class AbstractGameResources implements IDisposable {
-
-	protected AbstractGameSettings gameSettings;
-	protected Kryo kryo;
+public class BlockDataArray {
+	private final int[] data;
 	
-	public void preInit() { }
-	
-	public void init(AbstractVoxel voxel) { }
-	
-	public void postInit() { }
-
-	@Override
-	public void dispose() { }
-	
-	public AbstractGameSettings getGameSettings() {
-		return gameSettings;
+	public BlockDataArray() {
+		this(32768); //16 * 128 * 16
 	}
 	
-	public Kryo getKryo() {
-		return this.kryo;
+	public BlockDataArray(int indexSize) {
+		this.data = new int[indexSize];
+	}
+	
+	public int get(int x, int y, int z) {
+		return this.data[(128 * 16 * z) + (16 * y) + x];
+	}
+	
+	public void set(int x, int y, int z, int data) {
+		this.data[(128 * 16 * z) + (16 * y) + x] = data;
+	}
+	
+	public final int[] getData() {
+		return this.data;
 	}
 
 }

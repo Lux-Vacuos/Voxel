@@ -18,33 +18,36 @@
  * 
  */
 
-package net.luxvacuos.voxel.universal.resources;
+package net.luxvacuos.voxel.universal.core;
 
-import com.esotericsoftware.kryo.Kryo;
-
-import net.luxvacuos.voxel.universal.core.AbstractGameSettings;
-import net.luxvacuos.voxel.universal.core.AbstractVoxel;
-
-public class AbstractGameResources implements IDisposable {
-
-	protected AbstractGameSettings gameSettings;
-	protected Kryo kryo;
+public abstract class AbstractWorldSimulation implements IWorldSimulation {
 	
-	public void preInit() { }
+	protected float time = 0;
+	protected float globalTime = 0;
+	protected float rainFactor = 0;
 	
-	public void init(AbstractVoxel voxel) { }
-	
-	public void postInit() { }
+	protected AbstractWorldSimulation(float time) {
+		this.time = time;
+	}
 
 	@Override
-	public void dispose() { }
-	
-	public AbstractGameSettings getGameSettings() {
-		return gameSettings;
+	public float getGlobalTime() {
+		return this.globalTime;
 	}
-	
-	public Kryo getKryo() {
-		return this.kryo;
+
+	@Override
+	public float getRainFactor() {
+		return this.rainFactor;
+	}
+
+	@Override
+	public float getTime() {
+		return this.time;
+	}
+
+	@Override
+	public void setTime(float time) {
+		this.time = time;
 	}
 
 }

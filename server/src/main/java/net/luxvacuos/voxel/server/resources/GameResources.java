@@ -31,10 +31,11 @@ import net.luxvacuos.voxel.server.core.ServerGameSettings;
 import net.luxvacuos.voxel.server.core.GlobalStates;
 import net.luxvacuos.voxel.server.core.Voxel;
 import net.luxvacuos.voxel.server.core.VoxelVariables;
-import net.luxvacuos.voxel.server.core.WorldSimulation;
+import net.luxvacuos.voxel.server.core.ServerWorldSimulation;
 import net.luxvacuos.voxel.server.network.VoxelServer;
 import net.luxvacuos.voxel.server.ui.UserInterface;
 import net.luxvacuos.voxel.server.world.WorldsHandler;
+import net.luxvacuos.voxel.universal.core.AbstractVoxel;
 import net.luxvacuos.voxel.universal.resources.AbstractGameResources;
 
 public class GameResources extends AbstractGameResources {
@@ -48,11 +49,10 @@ public class GameResources extends AbstractGameResources {
 	}
 
 	private GlobalStates globalStates;
-	private Kryo kryo;
 	private VoxelServer voxelServer;
 	private CoreUtils coreUtils;
 	private UserInterface userInterface;
-	private WorldSimulation worldSimulation;
+	private ServerWorldSimulation worldSimulation;
 	private WorldsHandler worldsHandler;
 
 	private int port;
@@ -65,11 +65,13 @@ public class GameResources extends AbstractGameResources {
 		userInterface = new UserInterface(voxel);
 	}
 
+	@Override
 	public void preInit() {
 		voxelServer = new VoxelServer(port);
 	}
 
-	public void init() {
+	@Override
+	public void init(AbstractVoxel voxel) {
 		gameSettings = new ServerGameSettings();
 		gameSettings.load(new File(VoxelVariables.settings));
 		gameSettings.read();
@@ -80,29 +82,24 @@ public class GameResources extends AbstractGameResources {
 		voxelServer.init(this);
 		coreUtils = new CoreUtils();
 		CustomLog.getInstance();
-		worldSimulation = new WorldSimulation();
+		worldSimulation = new ServerWorldSimulation();
 		worldsHandler = new WorldsHandler();
 	}
 
-	public void postInit() {
-	}
-
+	@Override
 	public void dispose() {
 		gameSettings.update();
 		gameSettings.save();
 		voxelServer.dispose();
+		super.dispose();
 	}
 
-	public WorldSimulation getWorldSimulation() {
+	public ServerWorldSimulation getWorldSimulation() {
 		return worldSimulation;
 	}
 
 	public GlobalStates getGlobalStates() {
 		return globalStates;
-	}
-
-	public Kryo getKryo() {
-		return kryo;
 	}
 
 	public CoreUtils getCoreUtils() {
