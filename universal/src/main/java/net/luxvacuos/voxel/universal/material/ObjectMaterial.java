@@ -20,7 +20,7 @@
 
 package net.luxvacuos.voxel.universal.material;
 
-public class ObjectMaterial {
+public class ObjectMaterial implements IMaterial {
 	
 	/** The name of this Material */
 	protected final String name;
@@ -58,6 +58,7 @@ public class ObjectMaterial {
 	 * 
 	 * @return the name of this Material
 	 */
+	@Override
 	public String getName() {
 		return this.name;
 	}
