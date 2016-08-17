@@ -18,9 +18,8 @@
  * 
  */
 
-package net.luxvacuos.voxel.universal.world.block;
+package net.luxvacuos.voxel.client.rendering.world.chunk;
 
-public class BlockBase {
-	
+public interface IRenderChunk {
 
 }
