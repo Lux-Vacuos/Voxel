@@ -24,11 +24,14 @@ import net.luxvacuos.voxel.universal.world.utils.BlockDataArray;
 
 public final class ChunkData {
 
-	private int[] heightmap;
+	private short[] heightmap; //[(Z * WIDTH) + X]
 	private ChunkSlice[] slices;
+	private boolean needsRebuild, fullRebuild;
 
 	protected ChunkData() {
-		this.heightmap = new int[256]; //16 * 16
+		this.needsRebuild = false;
+		this.fullRebuild = false;
+		this.heightmap = new short[256]; //16 * 16
 		this.slices = new ChunkSlice[16];
 
 		for(int i = 0; i < this.slices.length; i++) this.slices[i] = new ChunkSlice().setOffset((byte)i);
@@ -114,6 +117,57 @@ public final class ChunkData {
 		if(this.slices.length != arrays.length) return;
 
 		for(int i = 0; i < this.slices.length; i++) this.slices[i].setBlockDataArray(arrays[i]);
+	}
+	
+	protected boolean needsRebuild() {
+		return this.needsRebuild || this.fullRebuild;
+	}
+	
+	protected void markFullRebuild() {
+		this.fullRebuild = true;
+	}
+	
+	protected void rebuild() {
+		boolean rebuildHeightMap = false;
+		for(ChunkSlice slice : this.slices) {
+			if(this.fullRebuild || slice.needsBlockRebuild()) {
+				if(!rebuildHeightMap) rebuildHeightMap = true;
+				slice.rebuildBlocks();
+			}
+			if(this.fullRebuild || slice.needsLightRebuild()) slice.rebuildLight();
+		}
+		
+		if(rebuildHeightMap) {
+			this.buildHeightMap();
+		}
+		
+		this.fullRebuild = false;
+	}
+	
+	protected void buildHeightMap() {
+		short maxY = ((short)((this.slices.length << 4) - 1));
+		short currentY;
+		
+		for(int x = 0; x < 16; x++) {
+			for(int z = 0; z < 16; z++) {
+				short test = this.heightmap[(z * 16) + x];
+				
+				if(test != 0) {
+					currentY = ((short)(test + 10));
+					while(!this.slices[this.getSlice(currentY)].isBlockAir(x, this.modY(currentY), z)) {
+						currentY += 10;
+						if(currentY >= maxY) {
+							currentY = maxY;
+							break;
+						}
+					}
+				} else currentY = maxY;
+				
+				while(this.slices[this.getSlice(currentY)].isBlockAir(x, this.modY(currentY), z)) currentY--;
+				
+				this.heightmap[(z * 16) + x] = currentY;
+			}
+		}
 	}
 
 	private int modY(int y) {

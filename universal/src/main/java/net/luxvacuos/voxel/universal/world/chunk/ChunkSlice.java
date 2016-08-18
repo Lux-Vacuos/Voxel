@@ -51,6 +51,8 @@ public final class ChunkSlice {
 		this.numBlocks = 0;
 		this.numSkyLight = 0;
 		this.numBlockLight = 0;
+		this.blockRebuild = false;
+		this.lightRebuild = false;
 		this.blockData = new BlockDataArray();
 		this.lightData = new BlockDataArray();
 	}
@@ -61,7 +63,7 @@ public final class ChunkSlice {
 	}
 
 	public void setBlockAt(int x, int y, int z, int data) {
-		this.numBlocks++;
+		this.blockRebuild = true;
 		this.blockData.set(x, y, z, data);
 	}
 
@@ -76,7 +78,7 @@ public final class ChunkSlice {
 	}
 
 	public void setSkyLightAt(int x, int y, int z, int value) {
-		if(!this.hasSkyLight()) this.numSkyLight++;
+		this.lightRebuild = true;
 
 		int i = ((value & BLOCK_LIGHT_MASK) << 8);
 		int j = (this.lightData.get(x, y, z) & ~SKY_LIGHT_MASK); //0xFFFF00FF
@@ -89,7 +91,7 @@ public final class ChunkSlice {
 	}
 
 	public void setBlockLightAt(int x, int y, int z, int value) {
-		if(!this.hasBlockLight()) this.numBlockLight++;
+		this.lightRebuild = true;
 		
 		int i = (value & BLOCK_LIGHT_MASK);
 		int j = (this.lightData.get(x, y, z) & ~BLOCK_LIGHT_MASK); //0xFFFFFF00
@@ -108,6 +110,7 @@ public final class ChunkSlice {
 	}
 
 	public void setRawLightDataAt(int x, int y, int z, int rawValue) {
+		this.lightRebuild = true;
 		this.lightData.set(x, y, z, rawValue);
 	}
 
@@ -136,8 +139,31 @@ public final class ChunkSlice {
 	public void setBlockDataArray(BlockDataArray array) {
 		this.blockData = array;
 	}
+	
+	protected boolean needsBlockRebuild() {
+		return this.blockRebuild;
+	}
+	
+	protected boolean needsLightRebuild() {
+		return this.lightRebuild;
+	}
+	
+	protected void rebuildBlocks() {
+		this.blockRebuild = false;
+		this.numBlocks = 0;
+		int[] rawData = this.blockData.getData();
+		
+		for(int i = 0; i < rawData.length; i++) {
+			if(rawData[i] != 0) this.numBlocks++;
+		}
+	}
+	
+	protected void rebuildLight() {
+		this.lightRebuild = false;
+		//TODO: This
+	}
 
-	public boolean isEmpty() {
+	protected boolean isEmpty() {
 		return this.numBlocks == 0;
 	}
 
