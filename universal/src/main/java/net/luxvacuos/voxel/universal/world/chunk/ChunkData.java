@@ -23,50 +23,46 @@ package net.luxvacuos.voxel.universal.world.chunk;
 import net.luxvacuos.voxel.universal.world.utils.BlockDataArray;
 
 public final class ChunkData {
-	
-	private static final int BLOCK_LIGHT_MASK = 0x000000FF;
-	private static final int SKY_LIGHT_MASK = 0x0000FF00;
-	
-	private BlockDataArray blockData;
-	
-	/**
-	 * This light data array has both the sky light data and block light data packed in it:<br />
-	 * 0x0000SSBB<br />
-	 * The <i>S</i> bits is the skylight data<br />
-	 * The <i>B</i> bits is blocklight data<br />
-	 * <br />
-	 * The functions in ChunkData automatically pack and unpack the data, so it should be
-	 * transparent to whatever is using it
-	 */
-	private BlockDataArray lightData;
-	
+
+	private int[] heightmap;
+	private ChunkSlice[] slices;
+
 	protected ChunkData() {
-		this.blockData = new BlockDataArray();
-		this.lightData = new BlockDataArray();
-		
+		this.heightmap = new int[256]; //16 * 16
+		this.slices = new ChunkSlice[16];
+
+		for(int i = 0; i < this.slices.length; i++) this.slices[i] = new ChunkSlice().setOffset((byte)i);
 	}
-	
-	protected ChunkData(int blockDataArraySize, int lightDataArraySize) {
-		this.blockData = new BlockDataArray(blockDataArraySize);
-		this.lightData = new BlockDataArray(lightDataArraySize);
-	}
-	
+
 	public int getBlockAt(int x, int y, int z) {
-		return this.blockData.get(x, y, z);
+		return this.slices[this.getSlice(y)].getBlockAt(x, this.modY(y), z);
 	}
-	
+
 	public void setBlockAt(int x, int y, int z, int data) {
-		this.blockData.set(x, y, z, data);
+		this.slices[this.getSlice(y)].setBlockAt(x, this.modY(y), z, data);
 	}
-	
+
 	public boolean isBlockAir(int x, int y, int z) {
-		return this.blockData.get(x, y, z) == 0;
+		if(this.heightmap[x * z] < y) return true;
+		return this.slices[this.getSlice(y)].isBlockAir(x, this.modY(y), z);
 	}
-	
+
 	public int getSkyLightAt(int x, int y, int z) {
-		return ((this.lightData.get(x, y, z) & SKY_LIGHT_MASK) >> 8);
+		return this.slices[this.getSlice(y)].getSkyLightAt(x, this.modY(y), z);
 	}
-	
+
+	public void setSkyLightAt(int x, int y, int z, int value) {
+		this.slices[this.getSlice(y)].setSkyLightAt(x, this.modY(y), z, value);
+	}
+
+	public int getBlockLightAt(int x, int y, int z) {
+		return this.slices[this.getSlice(y)].getBlockLightAt(x, this.modY(y), z);
+	}
+
+	public void setBlockLightAt(int x, int y, int z, int value) {
+		this.slices[this.getSlice(y)].setBlockLightAt(x, this.modY(y), z, value);
+	}
+
 	/**
 	 * Get's the <b>raw, unpacked</b> value from the lightmap
 	 * @param x
@@ -74,30 +70,14 @@ public final class ChunkData {
 	 * @param z
 	 * @return the raw lightmap value at the supplied x, y, and z coordinates
 	 */
-	public int getRawSkyLightAt(int x, int y, int z) {
-		return this.lightData.get(x, y, z);
+	public int getRawLightDataAt(int x, int y, int z) {
+		return this.slices[this.getSlice(y)].getRawLightDataAt(x, this.modY(y), z);
 	}
-	
-	public void setSkyLightAt(int x, int y, int z, int value) {
-		int i = ((value & BLOCK_LIGHT_MASK) << 8);
-		int j = (this.lightData.get(x, y, z) & ~SKY_LIGHT_MASK); //0xFFFF00FF
-		this.lightData.set(x, y, z, (i + j));
-	}
-	
+
 	public void setRawSkyLightAt(int x, int y, int z, int rawValue) {
-		this.lightData.set(x, y, z, rawValue);
+		this.slices[this.getSlice(y)].setRawLightDataAt(x, this.modY(y), z, rawValue);
 	}
-	
-	public int getBlockLightAt(int x, int y, int z) {
-		return (this.lightData.get(x, y, z) & BLOCK_LIGHT_MASK);
-	}
-	
-	public void setBlockLightAt(int x, int y, int z, int value) {
-		int i = (value & BLOCK_LIGHT_MASK);
-		int j = (this.lightData.get(x, y, z) & ~BLOCK_LIGHT_MASK); //0xFFFFFF00
-		this.lightData.set(x, y, z, (i + j));
-	}
-	
+
 	/**
 	 * Get's the Chunks Light Data Array<br />
 	 * <br />
@@ -108,20 +88,40 @@ public final class ChunkData {
 	 * 
 	 * @return The light data array
 	 */
-	public final BlockDataArray getLightDataArray() {
-		return this.lightData;
+	public final BlockDataArray[] getLightDataArrays() {
+		BlockDataArray[] array = new BlockDataArray[this.slices.length];
+
+		for(int i = 0; i < this.slices.length; i++) array[i] = this.slices[i].getLightDataArray();
+
+		return array;
 	}
-	
-	public void setLightDataArray(BlockDataArray array) {
-		this.lightData = array;
+
+	public void setLightDataArrays(BlockDataArray[] arrays) {
+		if(this.slices.length != arrays.length) return;
+
+		for(int i = 0; i < this.slices.length; i++) this.slices[i].setLightDataArray(arrays[i]);
 	}
-	
-	public final BlockDataArray getBlockDataArray() {
-		return this.blockData;
+
+	public final BlockDataArray[] getBlockDataArrays() {
+		BlockDataArray[] array = new BlockDataArray[this.slices.length];
+
+		for(int i = 0; i < this.slices.length; i++) array[i] = this.slices[i].getBlockDataArray();
+
+		return array;
 	}
-	
-	public void setBlockDataArray(BlockDataArray array) {
-		this.blockData = array;
+
+	public void setBlockDataArrays(BlockDataArray[] arrays) {
+		if(this.slices.length != arrays.length) return;
+
+		for(int i = 0; i < this.slices.length; i++) this.slices[i].setBlockDataArray(arrays[i]);
 	}
- 
+
+	private int modY(int y) {
+		return (y & 0x0F);
+	}
+
+	private int getSlice(int y) {
+		return y >> 4;
+	}
+
 }
