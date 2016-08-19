@@ -18,19 +18,9 @@
  * 
  */
 
-package net.luxvacuos.voxel.client.rendering.world.block;
+package net.luxvacuos.voxel.universal.world.block;
 
-import net.luxvacuos.igl.vector.Vector8f;
-import net.luxvacuos.voxel.universal.world.utils.BlockFace;
+public interface IBlockEntity extends IBlock {
 
-public interface IRenderBlock {
-	
-	public Vector8f getTexCoords(BlockFace face);
-	
-	public boolean isTransparent();
-	
-	public boolean hasCustomModel();
-	
-	public boolean hasObjModel();
-
+	public void update(float delta);
 }

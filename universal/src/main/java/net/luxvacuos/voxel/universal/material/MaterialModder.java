@@ -117,6 +117,13 @@ public final class MaterialModder {
 			return this;
 		}
 		
+		public MatMod affectedByGravity(boolean flag) {
+			if(this.mat instanceof BlockMaterial) {
+				((BlockMaterial)this.mat).affectedByGravity = flag;
+			}
+			return this;
+		}
+		
 		//-----
 	}
 

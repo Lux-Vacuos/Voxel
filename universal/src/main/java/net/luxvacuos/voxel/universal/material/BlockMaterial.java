@@ -39,6 +39,9 @@ public class BlockMaterial extends ObjectMaterial {
 	/** Flag to see if this BlockMaterial can be broken */
 	protected boolean canBeBroken = true;
 	
+	/** Flag to see if this BlockMaterial is affected by gravity */
+	protected boolean affectedByGravity = false;
+	
 	public BlockMaterial(String name) {
 		super(name);
 		this.objectType = Type.BLOCK;
@@ -96,6 +99,14 @@ public class BlockMaterial extends ObjectMaterial {
 	 */
 	public boolean canBeBroken() {
 		return this.canBeBroken;
+	}
+	
+	/**
+	 * Returns if this BlockMaterial is affected by gravity
+	 * @return <b>true</b> if this BlockMaterial is affected by gravity, <b>false</b> otherwise
+	 */
+	public boolean affectedByGravity() {
+		return this.affectedByGravity;
 	}
 
 }

@@ -20,17 +20,9 @@
 
 package net.luxvacuos.voxel.client.rendering.world.block;
 
-import net.luxvacuos.igl.vector.Vector8f;
-import net.luxvacuos.voxel.universal.world.utils.BlockFace;
+import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.EntityShader;
 
-public interface IRenderBlock {
-	
-	public Vector8f getTexCoords(BlockFace face);
-	
-	public boolean isTransparent();
-	
-	public boolean hasCustomModel();
-	
-	public boolean hasObjModel();
+public interface IRenderBlockEntity extends IRenderBlock {
 
+	public void render(EntityShader shader);
 }
