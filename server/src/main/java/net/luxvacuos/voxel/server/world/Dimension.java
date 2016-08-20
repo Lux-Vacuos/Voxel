@@ -45,12 +45,12 @@ import net.luxvacuos.voxel.server.world.block.Block;
 import net.luxvacuos.voxel.server.world.block.BlockBase;
 import net.luxvacuos.voxel.server.world.chunks.Chunk;
 import net.luxvacuos.voxel.server.world.chunks.ChunkGenerator;
-import net.luxvacuos.voxel.universal.world.chunk.ChunkNode;
 import net.luxvacuos.voxel.server.world.chunks.ChunkNodeRemoval;
 import net.luxvacuos.voxel.server.world.chunks.LightNodeAdd;
 import net.luxvacuos.voxel.server.world.chunks.LightNodeRemoval;
 import net.luxvacuos.voxel.universal.core.exception.LoadChunkException;
 import net.luxvacuos.voxel.universal.core.exception.SaveChunkException;
+import net.luxvacuos.voxel.universal.world.utils.ChunkNode;
 
 public abstract class Dimension {
 

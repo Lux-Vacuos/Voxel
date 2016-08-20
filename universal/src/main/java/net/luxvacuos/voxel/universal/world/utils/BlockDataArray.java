@@ -25,11 +25,11 @@ public class BlockDataArray {
 	private final int[] data;
 	
 	public BlockDataArray() {
-		this(4096); //16 * 16 * 16 for a ChunkSection
+		this.data = new int[4096]; //16 * 16 * 16 for a ChunkSection
 	}
 	
-	public BlockDataArray(int indexSize) {
-		this.data = new int[indexSize];
+	public BlockDataArray(int[] data) {
+		this.data = data;
 	}
 	
 	public int get(int x, int y, int z) {

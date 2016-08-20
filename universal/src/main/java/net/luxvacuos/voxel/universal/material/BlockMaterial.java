@@ -42,6 +42,12 @@ public class BlockMaterial extends ObjectMaterial {
 	/** Flag to see if this BlockMaterial is affected by gravity */
 	protected boolean affectedByGravity = false;
 	
+	/** Flag to see if this BlockMaterial provides light */
+	protected boolean providesLight = false;
+	
+	/** The amount of light this BlockMaterial provides */
+	protected byte lightAmount = -1;
+	
 	public BlockMaterial(String name) {
 		super(name);
 		this.objectType = Type.BLOCK;
@@ -107,6 +113,22 @@ public class BlockMaterial extends ObjectMaterial {
 	 */
 	public boolean affectedByGravity() {
 		return this.affectedByGravity;
+	}
+	
+	/**
+	 * Returns if this BlockMaterial provides light
+	 * @return <b>true</b> if this BlockMaterial provides light, <b>false</b> otherwise
+	 */
+	public boolean providesLight() {
+		return this.providesLight;
+	}
+	
+	/**
+	 * Gets the amount of light this BlockMaterial provides, or -1 if it doesn't provide any light
+	 * @return 0 to Byte.MAX_VALUE, or -1 for no light
+	 */
+	public byte lightAmount() {
+		return this.lightAmount;
 	}
 
 }

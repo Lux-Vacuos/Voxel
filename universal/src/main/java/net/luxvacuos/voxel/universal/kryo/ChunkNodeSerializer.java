@@ -25,7 +25,7 @@ import com.esotericsoftware.kryo.Serializer;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 
-import net.luxvacuos.voxel.universal.world.chunk.ChunkNode;
+import net.luxvacuos.voxel.universal.world.utils.ChunkNode;
 
 public class ChunkNodeSerializer extends Serializer<ChunkNode> {
 

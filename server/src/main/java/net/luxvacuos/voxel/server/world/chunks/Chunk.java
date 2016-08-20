@@ -10,7 +10,7 @@ import net.luxvacuos.voxel.server.world.Dimension;
 import net.luxvacuos.voxel.server.world.block.Block;
 import net.luxvacuos.voxel.server.world.block.BlockBase;
 import net.luxvacuos.voxel.server.world.block.BlockEntity;
-import net.luxvacuos.voxel.universal.world.chunk.ChunkNode;
+import net.luxvacuos.voxel.universal.world.utils.ChunkNode;
 
 public class Chunk {
 

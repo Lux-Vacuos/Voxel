@@ -124,6 +124,20 @@ public final class MaterialModder {
 			return this;
 		}
 		
+		public MatMod providesLight(boolean flag) {
+			if(this.mat instanceof BlockMaterial) {
+				((BlockMaterial)this.mat).providesLight = flag;
+			}
+			return this;
+		}
+		
+		public MatMod lightAmount(byte amount) {
+			if(this.mat instanceof BlockMaterial) {
+				((BlockMaterial)this.mat).lightAmount = amount;
+			}
+			return this;
+		}
+		
 		//-----
 	}
 

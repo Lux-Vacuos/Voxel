@@ -1,6 +1,4 @@
-package net.luxvacuos.voxel.universal.world.chunk;
-
-import net.luxvacuos.voxel.universal.world.utils.BlockCoords;
+package net.luxvacuos.voxel.universal.world.utils;
 
 public final class ChunkNode {
 

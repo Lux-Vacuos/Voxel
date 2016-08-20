@@ -27,42 +27,52 @@ public final class ChunkData {
 	private short[] heightmap; //[(Z * WIDTH) + X]
 	private ChunkSlice[] slices;
 	private boolean needsRebuild, fullRebuild;
+	private int skyLight;
+	//TODO: Implement a way to store block metadata
 
 	protected ChunkData() {
 		this.needsRebuild = false;
 		this.fullRebuild = false;
+		this.skyLight = 0;
 		this.heightmap = new short[256]; //16 * 16
 		this.slices = new ChunkSlice[16];
 
-		for(int i = 0; i < this.slices.length; i++) this.slices[i] = new ChunkSlice().setOffset((byte)i);
+		for(int i = 0; i < this.slices.length; i++) this.slices[i] = new ChunkSlice((byte)i);
 	}
 
 	public int getBlockAt(int x, int y, int z) {
 		return this.slices[this.getSlice(y)].getBlockAt(x, this.modY(y), z);
 	}
 
-	public void setBlockAt(int x, int y, int z, int data) {
-		this.slices[this.getSlice(y)].setBlockAt(x, this.modY(y), z, data);
+	protected void setBlockAt(int x, int y, int z, int blockID) {
+		this.slices[this.getSlice(y)].setBlockAt(x, this.modY(y), z, blockID);
 	}
 
 	public boolean isBlockAir(int x, int y, int z) {
 		if(this.heightmap[x * z] < y) return true;
 		return this.slices[this.getSlice(y)].isBlockAir(x, this.modY(y), z);
 	}
-
-	public int getSkyLightAt(int x, int y, int z) {
-		return this.slices[this.getSlice(y)].getSkyLightAt(x, this.modY(y), z);
+	
+	public void setSkyLight(int value) {
+		this.skyLight = value;
 	}
 
-	public void setSkyLightAt(int x, int y, int z, int value) {
-		this.slices[this.getSlice(y)].setSkyLightAt(x, this.modY(y), z, value);
+	public int getSkyLightAt(int x, int y, int z) {
+		ChunkSlice slice = this.slices[this.getSlice(y)];
+		
+		if(!slice.hasSkyLight()) return 0;
+		return slice.getSkyLightAt(x, this.modY(y), z);
+	}
+
+	protected void setSkyLightAt(int x, int y, int z) {
+		this.slices[this.getSlice(y)].setSkyLightAt(x, this.modY(y), z, this.skyLight);
 	}
 
 	public int getBlockLightAt(int x, int y, int z) {
 		return this.slices[this.getSlice(y)].getBlockLightAt(x, this.modY(y), z);
 	}
 
-	public void setBlockLightAt(int x, int y, int z, int value) {
+	protected void setBlockLightAt(int x, int y, int z, int value) {
 		this.slices[this.getSlice(y)].setBlockLightAt(x, this.modY(y), z, value);
 	}
 
@@ -77,7 +87,7 @@ public final class ChunkData {
 		return this.slices[this.getSlice(y)].getRawLightDataAt(x, this.modY(y), z);
 	}
 
-	public void setRawSkyLightAt(int x, int y, int z, int rawValue) {
+	protected void setRawSkyLightAt(int x, int y, int z, int rawValue) {
 		this.slices[this.getSlice(y)].setRawLightDataAt(x, this.modY(y), z, rawValue);
 	}
 
@@ -99,7 +109,7 @@ public final class ChunkData {
 		return array;
 	}
 
-	public void setLightDataArrays(BlockDataArray[] arrays) {
+	protected void setLightDataArrays(BlockDataArray[] arrays) {
 		if(this.slices.length != arrays.length) return;
 
 		for(int i = 0; i < this.slices.length; i++) this.slices[i].setLightDataArray(arrays[i]);
@@ -113,7 +123,7 @@ public final class ChunkData {
 		return array;
 	}
 
-	public void setBlockDataArrays(BlockDataArray[] arrays) {
+	protected void setBlockDataArrays(BlockDataArray[] arrays) {
 		if(this.slices.length != arrays.length) return;
 
 		for(int i = 0; i < this.slices.length; i++) this.slices[i].setBlockDataArray(arrays[i]);
@@ -131,22 +141,33 @@ public final class ChunkData {
 		boolean rebuildHeightMap = false;
 		for(ChunkSlice slice : this.slices) {
 			if(this.fullRebuild || slice.needsBlockRebuild()) {
-				if(!rebuildHeightMap) rebuildHeightMap = true;
+				if(slice.inHeightMap() && !rebuildHeightMap) rebuildHeightMap = true;
 				slice.rebuildBlocks();
 			}
-			if(this.fullRebuild || slice.needsLightRebuild()) slice.rebuildLight();
 		}
 		
-		if(rebuildHeightMap) {
-			this.buildHeightMap();
-		}
+		if(rebuildHeightMap) this.buildHeightMap();
 		
-		this.fullRebuild = false;
+		for(ChunkSlice slice : this.slices) {
+			if(this.fullRebuild || slice.needsLightRebuild()) {
+				slice.wipeLightData(true, true);
+				slice.rebuildSkyLight(this.heightmap, this.skyLight);
+			}
+		}
 	}
 	
-	protected void buildHeightMap() {
+	protected void rebuildBlockLight() {
+		for(ChunkSlice slice : this.slices) {
+			if(this.fullRebuild || slice.needsLightRebuild()) slice.rebuildBlockLight();
+		}
+		
+		if(this.fullRebuild) this.fullRebuild = false;
+	}
+	
+	private void buildHeightMap() {
 		short maxY = ((short)((this.slices.length << 4) - 1));
 		short currentY;
+		short lowestY = maxY;
 		
 		for(int x = 0; x < 16; x++) {
 			for(int z = 0; z < 16; z++) {
@@ -166,7 +187,18 @@ public final class ChunkData {
 				while(this.slices[this.getSlice(currentY)].isBlockAir(x, this.modY(currentY), z)) currentY--;
 				
 				this.heightmap[(z * 16) + x] = currentY;
+				
+				if(currentY < lowestY) lowestY = currentY;
 			}
+		}
+		
+		int lastSliceIndex = 0, sliceIndex = 0;
+		for(short y = maxY; y > lowestY; y--) {
+			sliceIndex = this.getSlice(y);
+			if(lastSliceIndex == sliceIndex) continue;
+			
+			lastSliceIndex = sliceIndex;
+			this.slices[sliceIndex].markInHeightMap();
 		}
 	}
 

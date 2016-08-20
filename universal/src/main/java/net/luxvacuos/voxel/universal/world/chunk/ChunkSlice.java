@@ -40,19 +40,20 @@ public final class ChunkSlice {
 	 */
 	private BlockDataArray lightData;
 
-	@SuppressWarnings("unused")
 	private byte yOffset; //Used when saving the data to disk, so it can be put back in the right place
 
 	private short numBlocks, numSkyLight, numBlockLight;
-	
-	private boolean blockRebuild, lightRebuild;
 
-	protected ChunkSlice() {
+	private boolean blockRebuild, skyLightRebuild, blockLightRebuild, inHeightMap;
+
+	protected ChunkSlice(byte offset) {
+		this.yOffset = offset;
 		this.numBlocks = 0;
 		this.numSkyLight = 0;
 		this.numBlockLight = 0;
 		this.blockRebuild = false;
-		this.lightRebuild = false;
+		this.skyLightRebuild = false;
+		this.blockLightRebuild = false;
 		this.blockData = new BlockDataArray();
 		this.lightData = new BlockDataArray();
 	}
@@ -62,9 +63,9 @@ public final class ChunkSlice {
 		return this.blockData.get(x, y, z);
 	}
 
-	public void setBlockAt(int x, int y, int z, int data) {
+	public void setBlockAt(int x, int y, int z, int blockID) {
 		this.blockRebuild = true;
-		this.blockData.set(x, y, z, data);
+		this.blockData.set(x, y, z, blockID);
 	}
 
 	public boolean isBlockAir(int x, int y, int z) {
@@ -78,11 +79,15 @@ public final class ChunkSlice {
 	}
 
 	public void setSkyLightAt(int x, int y, int z, int value) {
-		this.lightRebuild = true;
+		this.setSkyLightAt(x, y, z, value, true);
+	}
 
-		int i = ((value & BLOCK_LIGHT_MASK) << 8);
-		int j = (this.lightData.get(x, y, z) & ~SKY_LIGHT_MASK); //0xFFFF00FF
-		this.lightData.set(x, y, z, (i + j));
+	private void setSkyLightAt(int x, int y, int z, int value, boolean requireRebuild) {
+		if(!this.skyLightRebuild && requireRebuild) this.skyLightRebuild = requireRebuild;
+
+		int shift = ((value & BLOCK_LIGHT_MASK) << 8);
+		int mask = (this.lightData.get(x, y, z) & ~SKY_LIGHT_MASK); //0xFFFF00FF
+		this.lightData.set(x, y, z, (shift + mask));
 	}
 
 	public int getBlockLightAt(int x, int y, int z) {
@@ -91,13 +96,17 @@ public final class ChunkSlice {
 	}
 
 	public void setBlockLightAt(int x, int y, int z, int value) {
-		this.lightRebuild = true;
-		
-		int i = (value & BLOCK_LIGHT_MASK);
-		int j = (this.lightData.get(x, y, z) & ~BLOCK_LIGHT_MASK); //0xFFFFFF00
-		this.lightData.set(x, y, z, (i + j));
+		this.setBlockLightAt(x, y, z, value, true);
 	}
-	
+
+	private void setBlockLightAt(int x, int y, int z, int value, boolean requireRebuild) {
+		if(!this.blockLightRebuild && requireRebuild) this.blockLightRebuild = requireRebuild;
+
+		int shift = (value & BLOCK_LIGHT_MASK);
+		int mask = (this.lightData.get(x, y, z) & ~BLOCK_LIGHT_MASK); //0xFFFFFF00
+		this.lightData.set(x, y, z, (shift + mask));
+	}
+
 	/**
 	 * Get's the <b>raw, unpacked</b> value from the lightmap
 	 * @param x
@@ -110,7 +119,8 @@ public final class ChunkSlice {
 	}
 
 	public void setRawLightDataAt(int x, int y, int z, int rawValue) {
-		this.lightRebuild = true;
+		this.skyLightRebuild = true;
+		this.blockLightRebuild = true;
 		this.lightData.set(x, y, z, rawValue);
 	}
 
@@ -139,45 +149,98 @@ public final class ChunkSlice {
 	public void setBlockDataArray(BlockDataArray array) {
 		this.blockData = array;
 	}
-	
+
 	protected boolean needsBlockRebuild() {
 		return this.blockRebuild;
 	}
-	
+
 	protected boolean needsLightRebuild() {
-		return this.lightRebuild;
+		return this.skyLightRebuild || this.blockLightRebuild;
 	}
-	
+
+	protected void wipeLightData(boolean blockLight, boolean skyLight) {
+		int[] rawLightData = this.lightData.getData();
+		int[] newLightData = new int[rawLightData.length];
+		int value;
+
+		for(int i = 0; i < rawLightData.length; i++) {
+			value = rawLightData[i];
+			if(blockLight) value = (value & ~BLOCK_LIGHT_MASK); //0xFFFFFF00
+			if(skyLight) value = (value & ~SKY_LIGHT_MASK);     //0xFFFF00FF
+			newLightData[i] = value;
+		}
+
+		this.lightData = new BlockDataArray(newLightData);
+	}
+
 	protected void rebuildBlocks() {
 		this.blockRebuild = false;
 		this.numBlocks = 0;
 		int[] rawData = this.blockData.getData();
-		
+
 		for(int i = 0; i < rawData.length; i++) {
 			if(rawData[i] != 0) this.numBlocks++;
 		}
 	}
-	
-	protected void rebuildLight() {
-		this.lightRebuild = false;
-		//TODO: This
+
+	protected void rebuildSkyLight(short[] heightmap, int skyLight) {
+		if(this.skyLightRebuild) { //Only rebuild if needed
+			this.numSkyLight = 0;
+
+			for(int z = 0; z < 16; z++) {
+				for(int x = 0; x < 16; x++) {
+					int y = heightmap[(z * 16) + x];
+					int offset = (y >> 4);
+
+					if(this.yOffset > offset) y = 0;
+					else if(this.yOffset == offset) y = (y & 0x0F);
+					else continue;
+
+					for(int height = 15; height >= y; height--) {
+						this.setSkyLightAt(x, y, z, skyLight, false);
+						this.numSkyLight++;
+					}
+				}
+			}
+
+			if(!this.hasSkyLight()) this.inHeightMap = false;
+			this.skyLightRebuild = false;
+		}
+	}
+
+	protected void rebuildBlockLight() {
+		if(this.blockLightRebuild) {
+			this.numBlockLight = 0;
+			int[] rawLightData = this.lightData.getData();
+			int value;
+
+			for(int i = 0; i < rawLightData.length; i++) {
+				value = (rawLightData[i] & BLOCK_LIGHT_MASK);
+				if(value > 0) this.numBlockLight++;
+			}
+
+			this.blockLightRebuild = false;
+		}
 	}
 
 	protected boolean isEmpty() {
 		return this.numBlocks == 0;
 	}
 
-	protected boolean hasSkyLight() {
-		return this.numSkyLight != 0;
-	}
-	
-	protected boolean hasBlockLight() {
-		return this.numBlockLight != 0;
+	protected void markInHeightMap() {
+		this.inHeightMap = true;
 	}
 
-	protected ChunkSlice setOffset(byte offset) {
-		this.yOffset = offset;
-		return this;
+	protected boolean inHeightMap() {
+		return this.inHeightMap;
+	}
+
+	protected boolean hasSkyLight() {
+		return (this.numSkyLight != 0 && this.inHeightMap);
+	}
+
+	protected boolean hasBlockLight() {
+		return this.numBlockLight != 0;
 	}
 
 }

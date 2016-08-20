@@ -24,7 +24,7 @@ import com.badlogic.ashley.core.Entity;
 
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.world.chunks.Chunk;
-import net.luxvacuos.voxel.universal.world.chunk.ChunkNode;
+import net.luxvacuos.voxel.universal.world.utils.ChunkNode;
 
 /**
  * Client side API. Holds all the methods used by the mods API that are called
