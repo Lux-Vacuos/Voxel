@@ -21,50 +21,58 @@
 package net.luxvacuos.voxel.universal.world.block;
 
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 
-public class BlockEntity extends Entity implements IBlockEntity {
+import net.luxvacuos.voxel.universal.material.BlockMaterial;
+
+public abstract class AbstractBlockEntityBase extends Entity implements IBlockEntity {
+	protected final BlockMaterial material;
+	private BoundingBox aabb = new BoundingBox(new Vector3(0, 0, 0), new Vector3(1, 1, 1));
+	private int id;
+	
+	protected AbstractBlockEntityBase(BlockMaterial material) {
+		this.material = material;
+	}
+	
+	protected AbstractBlockEntityBase(BlockMaterial material, BoundingBox aabb) {
+		this.material = material;
+		this.aabb = aabb;
+	}
 
 	@Override
 	public int getID() {
-		// TODO Auto-generated method stub
-		return 0;
+		return this.id;
+	}
+	
+	AbstractBlockEntityBase setID(int id) {
+		this.id = id;
+		return this;
 	}
 
 	@Override
 	public String getName() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.material.getName();
 	}
 
 	@Override
 	public BoundingBox getBoundingBox() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.aabb;
 	}
 
 	@Override
 	public boolean isAffectedByGravity() {
-		// TODO Auto-generated method stub
-		return false;
+		return this.material.affectedByGravity();
 	}
 
 	@Override
 	public boolean hasCollision() {
-		// TODO Auto-generated method stub
-		return false;
+		return this.material.blocksMovement();
 	}
 
 	@Override
 	public boolean isFluid() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public void update(float delta) {
-		// TODO Auto-generated method stub
-
+		return this.material.isLiquid();
 	}
 
 	@Override

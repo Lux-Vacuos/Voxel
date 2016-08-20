@@ -20,42 +20,49 @@
 
 package net.luxvacuos.voxel.client.world.block.newAPI;
 
+import com.badlogic.gdx.math.collision.BoundingBox;
+
 import net.luxvacuos.igl.vector.Vector8f;
-import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.EntityShader;
+import net.luxvacuos.voxel.client.rendering.utils.BlockFaceAtlas;
+import net.luxvacuos.voxel.client.rendering.world.block.ICustomRenderBlock;
+import net.luxvacuos.voxel.client.rendering.world.block.IObjRenderBlock;
 import net.luxvacuos.voxel.client.rendering.world.block.IRenderBlockEntity;
-import net.luxvacuos.voxel.universal.world.block.BlockEntity;
+import net.luxvacuos.voxel.client.world.block.BlocksResources;
+import net.luxvacuos.voxel.universal.material.BlockMaterial;
+import net.luxvacuos.voxel.universal.world.block.AbstractBlockEntityBase;
 import net.luxvacuos.voxel.universal.world.utils.BlockFace;
 
-public class RenderBlockEntity extends BlockEntity implements IRenderBlockEntity {
+public abstract class AbstractRenderBlockEntity extends AbstractBlockEntityBase implements IRenderBlockEntity {
+	protected final BlockFaceAtlas atlas;
+
+	protected AbstractRenderBlockEntity(BlockMaterial material, BlockFaceAtlas atlas) {
+		super(material);
+		this.atlas = atlas;
+	}
+	
+	protected AbstractRenderBlockEntity(BlockMaterial material, BoundingBox aabb, BlockFaceAtlas atlas) {
+		super(material, aabb);
+		this.atlas = atlas;
+	}
 
 	@Override
 	public Vector8f getTexCoords(BlockFace face) {
-		// TODO Auto-generated method stub
-		return null;
+		return BlocksResources.getTessellatorTextureAtlas().getTextureCoords(this.atlas.get(face));
 	}
 
 	@Override
 	public boolean isTransparent() {
-		// TODO Auto-generated method stub
-		return false;
+		return this.material.isTransparent();
 	}
 
 	@Override
 	public boolean hasCustomModel() {
-		// TODO Auto-generated method stub
-		return false;
+		return (this instanceof ICustomRenderBlock);
 	}
 
 	@Override
 	public boolean hasObjModel() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public void render(EntityShader shader) {
-		// TODO Auto-generated method stub
-
+		return (this instanceof IObjRenderBlock);
 	}
 
 }
