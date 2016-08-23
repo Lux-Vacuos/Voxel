@@ -40,22 +40,29 @@ public final class ChunkSlice {
 	 */
 	private BlockDataArray lightData;
 
-	private byte yOffset; //Used when saving the data to disk, so it can be put back in the right place
+	public final byte yOffset; //Used when saving the data to disk, so it can be put back in the right place
 
-	private short numBlocks, numSkyLight, numBlockLight;
+	private short numBlocks = 0, numSkyLight = 0, numBlockLight = 0;
 
 	private boolean blockRebuild, skyLightRebuild, blockLightRebuild, inHeightMap;
 
-	protected ChunkSlice(byte offset) {
+	public ChunkSlice(byte offset) {
 		this.yOffset = offset;
-		this.numBlocks = 0;
-		this.numSkyLight = 0;
-		this.numBlockLight = 0;
 		this.blockRebuild = false;
 		this.skyLightRebuild = false;
 		this.blockLightRebuild = false;
+		this.inHeightMap = false;
 		this.blockData = new BlockDataArray();
 		this.lightData = new BlockDataArray();
+	}
+
+	public ChunkSlice(byte offset, BlockDataArray blockData, BlockDataArray lightData) {
+		this.yOffset = offset;
+		this.blockRebuild = true;
+		this.skyLightRebuild = true;
+		this.blockLightRebuild = true;
+		this.blockData = blockData;
+		this.lightData = lightData;
 	}
 
 	public int getBlockAt(int x, int y, int z) {
@@ -140,6 +147,8 @@ public final class ChunkSlice {
 
 	public void setLightDataArray(BlockDataArray array) {
 		this.lightData = array;
+		this.skyLightRebuild = true;
+		this.blockLightRebuild = true;
 	}
 
 	public final BlockDataArray getBlockDataArray() {
@@ -148,6 +157,7 @@ public final class ChunkSlice {
 
 	public void setBlockDataArray(BlockDataArray array) {
 		this.blockData = array;
+		this.blockRebuild = true;
 	}
 
 	protected boolean needsBlockRebuild() {
@@ -174,12 +184,14 @@ public final class ChunkSlice {
 	}
 
 	protected void rebuildBlocks() {
-		this.blockRebuild = false;
-		this.numBlocks = 0;
-		int[] rawData = this.blockData.getData();
+		if(this.blockRebuild) {
+			this.blockRebuild = false;
+			this.numBlocks = 0;
+			int[] rawData = this.blockData.getData();
 
-		for(int i = 0; i < rawData.length; i++) {
-			if(rawData[i] != 0) this.numBlocks++;
+			for(int i = 0; i < rawData.length; i++) {
+				if(rawData[i] != 0) this.numBlocks++;
+			}
 		}
 	}
 
@@ -223,8 +235,12 @@ public final class ChunkSlice {
 		}
 	}
 
-	protected boolean isEmpty() {
+	public boolean isEmpty() {
 		return this.numBlocks == 0;
+	}
+	
+	public boolean hasLightData() {
+		return (this.numSkyLight > 0 || this.numBlockLight > 0);
 	}
 
 	protected void markInHeightMap() {

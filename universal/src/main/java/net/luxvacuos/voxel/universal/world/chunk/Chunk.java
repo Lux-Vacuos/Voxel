@@ -25,8 +25,12 @@ import net.luxvacuos.voxel.universal.world.block.IBlock;
 import net.luxvacuos.voxel.universal.world.utils.ChunkNode;
 
 public class Chunk implements IChunk {
-	private ChunkNode node;
+	private final ChunkNode node;
 	protected ChunkData data;
+	
+	protected Chunk(ChunkNode node) {
+		this.node = node;
+	}
 
 	@Override
 	public ChunkNode getNode() {

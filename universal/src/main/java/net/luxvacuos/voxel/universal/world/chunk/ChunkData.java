@@ -20,12 +20,15 @@
 
 package net.luxvacuos.voxel.universal.world.chunk;
 
+import com.badlogic.ashley.utils.ImmutableArray;
+import com.badlogic.gdx.utils.Array;
+
 import net.luxvacuos.voxel.universal.world.utils.BlockDataArray;
 
 public final class ChunkData {
 
 	private short[] heightmap; //[(Z * WIDTH) + X]
-	private ChunkSlice[] slices;
+	ChunkSlice[] slices;
 	private boolean needsRebuild, fullRebuild;
 	private int skyLight;
 	//TODO: Implement a way to store block metadata
@@ -129,6 +132,14 @@ public final class ChunkData {
 		for(int i = 0; i < this.slices.length; i++) this.slices[i].setBlockDataArray(arrays[i]);
 	}
 	
+	public final ImmutableArray<ChunkSlice> getChunkSlices() {
+		Array<ChunkSlice> array = new Array<ChunkSlice>();
+		
+		for(ChunkSlice slice : this.slices) array.add(slice);
+		
+		return new ImmutableArray<ChunkSlice>(array);
+	}
+	
 	protected boolean needsRebuild() {
 		return this.needsRebuild || this.fullRebuild;
 	}
@@ -209,5 +220,4 @@ public final class ChunkData {
 	private int getSlice(int y) {
 		return y >> 4;
 	}
-
 }
