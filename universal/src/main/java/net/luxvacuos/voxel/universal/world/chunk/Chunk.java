@@ -84,6 +84,16 @@ public class Chunk implements IChunk {
 		return null;
 	}
 	
+	@Override
+	public void markForRebuild() {
+		this.data.markFullRebuild();
+	}
+	
+	@Override
+	public boolean needsRebuild() {
+		return this.data.needsRebuild();
+	}
+	
 	public void update(float delta) {
 		if(this.data.needsRebuild()) this.data.rebuild();
 		

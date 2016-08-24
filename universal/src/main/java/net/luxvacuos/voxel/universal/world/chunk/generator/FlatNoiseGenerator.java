@@ -18,17 +18,19 @@
  * 
  */
 
-package net.luxvacuos.voxel.client.world.chunks.newAPI;
+package net.luxvacuos.voxel.universal.world.chunk.generator;
 
-import net.luxvacuos.voxel.universal.world.chunk.Chunk;
-import net.luxvacuos.voxel.universal.world.utils.ChunkNode;
+public class FlatNoiseGenerator implements INoiseGenerator {
+	private int maxY;
 
-public class RenderChunk extends Chunk {
-
-	protected RenderChunk(ChunkNode node) {
-		super(node);
-		// TODO Auto-generated constructor stub
+	public FlatNoiseGenerator(int maxY) {
+		this.maxY = maxY;
 	}
 
-	
+	@Override
+	public double eval(double x, double y, double z) {
+		if(y <= this.maxY) return 1;
+		else return 0;
+	}
+
 }

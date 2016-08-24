@@ -18,17 +18,10 @@
  * 
  */
 
-package net.luxvacuos.voxel.client.world.chunks.newAPI;
+package net.luxvacuos.voxel.universal.world.chunk.generator;
 
-import net.luxvacuos.voxel.universal.world.chunk.Chunk;
-import net.luxvacuos.voxel.universal.world.utils.ChunkNode;
-
-public class RenderChunk extends Chunk {
-
-	protected RenderChunk(ChunkNode node) {
-		super(node);
-		// TODO Auto-generated constructor stub
-	}
-
+public interface INoiseGenerator {
 	
+	public double eval(double x, double y, double z);
+
 }

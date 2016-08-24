@@ -23,6 +23,7 @@ package net.luxvacuos.voxel.universal.world.chunk;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import net.luxvacuos.voxel.universal.world.chunk.generator.IChunkGenerator;
 import net.luxvacuos.voxel.universal.world.dimension.IDimension;
 
 public final class ChunkManager {
@@ -30,6 +31,7 @@ public final class ChunkManager {
 	
 	protected final ExecutorService executor = Executors.newCachedThreadPool();
 	
+	protected IChunkGenerator chunkGenerator;
 	
 	public ChunkManager(IDimension dimension) {
 		this.dimension = dimension;

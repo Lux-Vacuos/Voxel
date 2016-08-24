@@ -16,4 +16,8 @@ public interface IChunk {
 	public IBlock getBlockAt(int x, int y, int z);
 	
 	public ChunkSnapshot takeSnapshot();
+	
+	public void markForRebuild();
+	
+	public boolean needsRebuild();
 }

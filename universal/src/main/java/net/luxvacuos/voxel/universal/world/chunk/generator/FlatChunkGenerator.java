@@ -18,17 +18,15 @@
  * 
  */
 
-package net.luxvacuos.voxel.client.world.chunks.newAPI;
+package net.luxvacuos.voxel.universal.world.chunk.generator;
 
-import net.luxvacuos.voxel.universal.world.chunk.Chunk;
-import net.luxvacuos.voxel.universal.world.utils.ChunkNode;
+public class FlatChunkGenerator extends AbstractChunkGenerator {
 
-public class RenderChunk extends Chunk {
+	public FlatChunkGenerator() { }
 
-	protected RenderChunk(ChunkNode node) {
-		super(node);
-		// TODO Auto-generated constructor stub
+	@Override
+	protected int generateBlock(int chunkX, int chunkY, int chunkZ, double noise) {
+		return (int)noise;
 	}
 
-	
 }
