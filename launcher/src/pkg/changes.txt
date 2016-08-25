@@ -1,3 +1,2 @@
-release date=15:10 08.07.2016,version=0.0.8
- * Set G1GC as default GC.
- * Message when try to login without internet.
+release date=13:22 08.25.2016,version=0.0.9
+ * Changed Host to s3.luxvacuos.net
