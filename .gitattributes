@@ -1,3 +1,1 @@
-*.java text eol=lf
-*.groovy text eol=lf
-*.glsl text eol=lf
+* text eol=lf

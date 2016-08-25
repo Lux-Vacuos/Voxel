@@ -13,7 +13,7 @@ apply plugin: 'application'
 
 mainClassName = 'net.luxvacuos.voxel.launcher.bootstrap.Bootstrap'
 sourceCompatibility = 1.8
-def opt = ""
+def opt = "1"
 def mversion = "0.0.9"
 
 sourceSets {

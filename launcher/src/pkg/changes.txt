@@ -1,2 +1,2 @@
-release date=13:22 08.25.2016,version=0.0.9
- * Changed Host to s3.luxvacuos.net
+release date=13:50 08.25.2016,version=0.0.9-1
+ * Fixed EOL.
