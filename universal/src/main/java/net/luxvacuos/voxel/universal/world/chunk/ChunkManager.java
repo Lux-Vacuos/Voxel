@@ -20,21 +20,34 @@
 
 package net.luxvacuos.voxel.universal.world.chunk;
 
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
+import net.luxvacuos.voxel.universal.util.Pair;
+import net.luxvacuos.voxel.universal.world.chunk.generator.FlatChunkGenerator;
 import net.luxvacuos.voxel.universal.world.chunk.generator.IChunkGenerator;
 import net.luxvacuos.voxel.universal.world.dimension.IDimension;
+import net.luxvacuos.voxel.universal.world.utils.ChunkNode;
 
 public final class ChunkManager {
 	protected final IDimension dimension;
-	
 	protected final ExecutorService executor = Executors.newCachedThreadPool();
+	protected IChunkGenerator chunkGenerator = new FlatChunkGenerator();
 	
-	protected IChunkGenerator chunkGenerator;
+	protected List<Future<Pair<ChunkNode, ChunkData>>> chunkLoadList;
 	
 	public ChunkManager(IDimension dimension) {
 		this.dimension = dimension;
+	}
+	
+	public void setGenerator(IChunkGenerator generator) {
+		this.chunkGenerator = generator;
+	}
+	
+	public void update() {
+		
 	}
 
 }
