@@ -4,7 +4,7 @@ import com.badlogic.ashley.core.Entity;
 
 import net.luxvacuos.voxel.server.resources.ServerGameResources;
 import net.luxvacuos.voxel.server.world.chunks.Chunk;
-import net.luxvacuos.voxel.universal.world.chunk.ChunkNode;
+import net.luxvacuos.voxel.universal.world.utils.ChunkNode;
 
 public class MoltenAPI {
 

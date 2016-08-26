@@ -3,12 +3,13 @@ package net.luxvacuos.voxel.universal.world;
 import com.badlogic.ashley.utils.ImmutableArray;
 
 import net.luxvacuos.voxel.universal.world.dimension.IDimension;
-import net.luxvacuos.voxel.universal.world.utils.BlockCoords;
 
 public interface IWorld {
 	
 	//World Stuff
 	public String getName();
+	
+	public void update(float delta);
 	
 	//Dimension stuff
 	public void addDimension(IDimension dimension);
@@ -21,10 +22,5 @@ public interface IWorld {
 	
 	public ImmutableArray<IDimension> getDimensions();
 	
-	//Helper functions for Dimensions
-	public void addLight(BlockCoords block, int val);
 	
-	public float getLight(BlockCoords block);
-	
-	public void removeLight(BlockCoords block);
 }

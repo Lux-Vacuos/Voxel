@@ -21,22 +21,23 @@
 package net.luxvacuos.voxel.universal.world.utils;
 
 public class BlockDataArray {
+	// [(HEIGHT * WIDTH * Z) + (LENGTH * Y) + X]
 	private final int[] data;
 	
 	public BlockDataArray() {
-		this(32768); //16 * 128 * 16
+		this.data = new int[4096]; //16 * 16 * 16 for a ChunkSection
 	}
 	
-	public BlockDataArray(int indexSize) {
-		this.data = new int[indexSize];
+	public BlockDataArray(int[] data) {
+		this.data = data;
 	}
 	
 	public int get(int x, int y, int z) {
-		return this.data[(128 * 16 * z) + (16 * y) + x];
+		return this.data[(16 * 16 * z) + (16 * y) + x];
 	}
 	
 	public void set(int x, int y, int z, int data) {
-		this.data[(128 * 16 * z) + (16 * y) + x] = data;
+		this.data[(16 * 16 * z) + (16 * y) + x] = data;
 	}
 	
 	public final int[] getData() {
