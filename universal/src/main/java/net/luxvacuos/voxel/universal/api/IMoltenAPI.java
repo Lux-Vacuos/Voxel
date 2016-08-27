@@ -1,5 +1,5 @@
 /*
- * This file is part of AbstractVoxel
+ * This file is part of Voxel
  * 
  * Copyright (C) 2016 Lux Vacuos
  *
@@ -20,6 +20,6 @@
 
 package net.luxvacuos.voxel.universal.api;
 
-public class World {
+public interface IMoltenAPI {
 
 }

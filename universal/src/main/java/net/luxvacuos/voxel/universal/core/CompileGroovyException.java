@@ -1,4 +1,4 @@
-package net.luxvacuos.voxel.client.core.exception;
+package net.luxvacuos.voxel.universal.core;
 
 public class CompileGroovyException extends RuntimeException {
 

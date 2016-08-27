@@ -20,41 +20,8 @@
 
 package net.luxvacuos.voxel.client.api;
 
-import com.badlogic.ashley.core.Entity;
+import net.luxvacuos.voxel.universal.api.IMoltenAPI;
 
-import net.luxvacuos.voxel.client.resources.GameResources;
-import net.luxvacuos.voxel.client.world.chunks.Chunk;
-import net.luxvacuos.voxel.universal.world.utils.ChunkNode;
-
-/**
- * Client side API. Holds all the methods used by the mods API that are called
- * using reflection by the universal API to maintain consistency between server
- * and client allowing mods to run in anywhere. Mods should never access this
- * class directly.
- * 
- * @author Guerra24 <pablo230699@hotmail.com>
- *
- */
-public class MoltenAPI {
-
-	public MoltenAPI() {
-	}
-
-	public void testPrint() {
-		System.out.println("TEST");
-	}
-
-	public Chunk getChunk(ChunkNode node) {
-		return GameResources.getInstance().getWorldsHandler().getActiveWorld().getActiveDimension().getChunk(node);
-	}
-
-	public void addChunk(Chunk chunk) {
-		GameResources.getInstance().getWorldsHandler().getActiveWorld().getActiveDimension().addChunk(chunk);
-	}
-
-	public void addEntity(Entity entity) {
-		GameResources.getInstance().getWorldsHandler().getActiveWorld().getActiveDimension().getPhysicsEngine()
-				.addEntity(entity);
-	}
+public class MoltenAPI implements IMoltenAPI {
 
 }

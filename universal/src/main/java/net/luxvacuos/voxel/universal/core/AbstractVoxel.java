@@ -20,6 +20,7 @@
 
 package net.luxvacuos.voxel.universal.core;
 
+import net.luxvacuos.voxel.universal.api.ModsHandler;
 import net.luxvacuos.voxel.universal.bootstrap.AbstractBootstrap;
 import net.luxvacuos.voxel.universal.resources.AbstractGameResources;
 import net.luxvacuos.voxel.universal.resources.IDisposable;
@@ -29,6 +30,7 @@ public abstract class AbstractVoxel implements IVoxel, IDisposable {
 	protected AbstractGameResources gameResources;
 	protected EngineType engineType;
 	protected AbstractBootstrap bootstrap;
+	protected ModsHandler modsHandler;
 
 	public AbstractVoxel(AbstractBootstrap bootstrap) {
 		this.bootstrap = bootstrap;

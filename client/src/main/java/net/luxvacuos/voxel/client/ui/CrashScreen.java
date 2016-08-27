@@ -40,7 +40,6 @@ import javafx.stage.WindowEvent;
 import net.luxvacuos.igl.Logger;
 import net.luxvacuos.voxel.client.core.CoreInfo;
 import net.luxvacuos.voxel.client.core.VoxelVariables;
-import net.luxvacuos.voxel.universal.api.MoltenAPI;
 
 public class CrashScreen extends Application {
 
@@ -59,9 +58,7 @@ public class CrashScreen extends Application {
 				ps.println("Voxel has crashed, please report this in the Forum or GitHub Repo");
 				ps.println();
 				ps.println("## System Info");
-				ps.println("Voxel Version: " + VoxelVariables.version);
-				ps.println("Molten API Version: " + MoltenAPI.apiVersion);
-				ps.println("Build: " + MoltenAPI.build);
+				ps.println("Voxel Client Version: " + VoxelVariables.version);
 				ps.println("Running on: " + CoreInfo.OS);
 				ps.println("LWJGL Version: " + Version.getVersion());
 				ps.println("GLFW Version: " + GLFW.glfwGetVersionString());

@@ -34,13 +34,13 @@ import net.luxvacuos.voxel.client.ui.Button;
 import net.luxvacuos.voxel.client.ui.Image;
 import net.luxvacuos.voxel.client.ui.Text;
 import net.luxvacuos.voxel.client.ui.Window;
-import net.luxvacuos.voxel.universal.api.MoltenAPI;
 import net.luxvacuos.voxel.universal.core.AbstractVoxel;
 import net.luxvacuos.voxel.universal.core.states.AbstractState;
 import net.luxvacuos.voxel.universal.core.states.StateMachine;
 
 /**
- * About State, this shows all the information about Voxel and the system where is running.
+ * About State, this shows all the information about Voxel and the system where
+ * is running.
  * 
  * @author danirod
  */
@@ -59,7 +59,7 @@ public class AboutState extends AbstractState {
 		backButton = new Button((int) (GameResources.getInstance().getDisplay().getDisplayWidth() / 2f - 100), 40, 200,
 				40, "Back");
 		backButton.setOnButtonPress((button, delta) -> {
-			//switchTo(GameState.MAINMENU);
+			// switchTo(GameState.MAINMENU);
 			StateMachine.setCurrentState(StateNames.MAIN_MENU);
 		});
 
@@ -73,8 +73,7 @@ public class AboutState extends AbstractState {
 
 		Text versionL = new Text("Version", 30, -300);
 		versionL.setFont("Roboto-Bold");
-		Text versionR = new Text(" (" + VoxelVariables.version + ")" + " Molten API" + " (" + MoltenAPI.apiVersion + "/"
-				+ MoltenAPI.build + ")", window.getWidth() - 30, -300);
+		Text versionR = new Text(" (" + VoxelVariables.version + ")", window.getWidth() - 30, -300);
 		versionR.setAlign(NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE);
 
 		Text osL = new Text("Operative System", 30, -330);
@@ -134,17 +133,17 @@ public class AboutState extends AbstractState {
 
 	@Override
 	public void start() {
-		//window.setFadeAlpha(0);
+		// window.setFadeAlpha(0);
 	}
 
 	@Override
 	public void end() {
-		//window.setFadeAlpha(1);
+		// window.setFadeAlpha(1);
 	}
 
 	@Override
 	public void render(AbstractVoxel voxel, float delta) {
-		GameResources gm = (GameResources)voxel.getGameResources();
+		GameResources gm = (GameResources) voxel.getGameResources();
 		MasterRenderer.prepare(0, 0, 0, 1);
 		gm.getDisplay().beingNVGFrame();
 		window.render();
@@ -159,16 +158,13 @@ public class AboutState extends AbstractState {
 			globalY = 0;
 		else if (globalY < -1520)
 			globalY = -1520;
-		window.setPosition(20, ((GameResources)voxel.getGameResources()).getDisplay().getDisplayHeight() - 20 - globalY);
+		window.setPosition(20,
+				((GameResources) voxel.getGameResources()).getDisplay().getDisplayHeight() - 20 - globalY);
 		window.update(delta);
-		/* TODO: Need to find a way to reimplement this with the new StateMachine
-		if (!switching)
-			window.fadeIn(4, delta);
-		if (switching) {
-			if (window.fadeOut(4, delta)) {
-				readyForSwitch = true;
-			}
-		}
+		/*
+		 * TODO: Need to find a way to reimplement this with the new
+		 * StateMachine if (!switching) window.fadeIn(4, delta); if (switching)
+		 * { if (window.fadeOut(4, delta)) { readyForSwitch = true; } }
 		 */
 	}
 

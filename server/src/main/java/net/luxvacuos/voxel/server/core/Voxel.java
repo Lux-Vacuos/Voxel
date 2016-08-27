@@ -25,12 +25,12 @@ import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 
 import net.luxvacuos.igl.Logger;
+import net.luxvacuos.voxel.server.api.MoltenAPI;
 import net.luxvacuos.voxel.server.core.states.MPState;
 import net.luxvacuos.voxel.server.resources.ServerGameResources;
 import net.luxvacuos.voxel.server.ui.UserInterface;
 import net.luxvacuos.voxel.server.world.DefaultWorld;
-import net.luxvacuos.voxel.universal.api.ModInitialization;
-import net.luxvacuos.voxel.universal.api.MoltenAPI;
+import net.luxvacuos.voxel.universal.api.ModsHandler;
 import net.luxvacuos.voxel.universal.bootstrap.AbstractBootstrap;
 import net.luxvacuos.voxel.universal.core.AbstractVoxel;
 import net.luxvacuos.voxel.universal.core.EngineType;
@@ -40,8 +40,6 @@ import net.luxvacuos.voxel.universal.util.PerRunLog;
 
 public class Voxel extends AbstractVoxel {
 
-	private ModInitialization api;
-
 	public Voxel(AbstractBootstrap bootstrap) {
 		super(bootstrap);
 		super.engineType = EngineType.SERVER;
@@ -50,7 +48,7 @@ public class Voxel extends AbstractVoxel {
 
 	@Override
 	public void preInit() throws Exception {
-		
+
 		try {
 			Manifest manifest = new Manifest(getClass().getClassLoader().getResourceAsStream("META-INF/MANIFEST.MF"));
 			Attributes attr = manifest.getMainAttributes();
@@ -72,25 +70,25 @@ public class Voxel extends AbstractVoxel {
 		Logger.init();
 		Logger.log("Starting Server");
 		Logger.log("Voxel Server Version: " + VoxelVariables.version);
-		Logger.log("Molten API Version: " + MoltenAPI.apiVersion);
 		Logger.log("Running on: " + bootstrap.getPlatform());
 
 		StateMachine.registerState(new MPState());
 		getGameResources().preInit();
-		api = new ModInitialization(this);
-		api.preInit();
+		modsHandler = new ModsHandler(this);
+		modsHandler.setMoltenAPI(new MoltenAPI());
+		modsHandler.preInit();
 	}
 
 	@Override
 	public void init() throws Exception {
 		getGameResources().init(this);
-		api.init();
+		modsHandler.init();
 	}
 
 	@Override
 	public void postInit() throws Exception {
 		this.gameResources.postInit();
-		api.postInit();
+		modsHandler.postInit();
 		getGameResources().getVoxelServer().connect();
 		UserInterface.setReady(true);
 		ServerGameResources.getInstance().getWorldsHandler().registerWorld(new DefaultWorld("world"));
@@ -150,10 +148,6 @@ public class Voxel extends AbstractVoxel {
 		this.getGameResources().getWorldsHandler().getActiveWorld().dispose();
 		this.gameResources.dispose();
 		StateMachine.dispose();
-	}
-
-	public ModInitialization getApi() {
-		return api;
 	}
 
 	@Override

@@ -18,7 +18,7 @@
  * 
  */
 
-package net.luxvacuos.voxel.client.core;
+package net.luxvacuos.voxel.universal.core;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -31,7 +31,6 @@ import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
 import net.luxvacuos.igl.Logger;
-import net.luxvacuos.voxel.client.core.exception.CompileGroovyException;
 
 /**
  * 

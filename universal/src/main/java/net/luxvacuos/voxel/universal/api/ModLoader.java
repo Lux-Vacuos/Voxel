@@ -1,5 +1,5 @@
 /*
- * This file is part of AbstractVoxel
+ * This file is part of Voxel
  * 
  * Copyright (C) 2016 Lux Vacuos
  *
@@ -26,21 +26,14 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
 
-import net.luxvacuos.voxel.universal.api.mod.MoltenAPIMod;
+import net.luxvacuos.voxel.universal.api.mod.IMod;
 
 public class ModLoader {
 
-	private List<Class<?>> modsClass;
 	private File modsFolder;
 
-	public ModLoader() {
-		modsClass = new ArrayList<Class<?>>();
-	}
-
-	public void loadMods(String prefix) {
+	public void loadMods(ModsHandler modsHandler, String prefix) {
 		modsFolder = new File(prefix + "/mods");
 		if (!modsFolder.exists())
 			modsFolder.mkdirs();
@@ -55,9 +48,7 @@ public class ModLoader {
 							name = name.substring(0, name.lastIndexOf('.'));
 							Class<?> classToLoad;
 							classToLoad = Class.forName("mod_" + name, true, child);
-							if (classToLoad.isAnnotationPresent(MoltenAPIMod.class)) {
-								modsClass.add(classToLoad);
-							}
+							modsHandler.addMod((IMod) classToLoad.newInstance());
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
@@ -70,7 +61,4 @@ public class ModLoader {
 
 	}
 
-	public List<Class<?>> getModsClass() {
-		return modsClass;
-	}
 }

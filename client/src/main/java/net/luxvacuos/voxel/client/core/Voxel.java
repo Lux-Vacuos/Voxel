@@ -33,15 +33,27 @@ import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFW;
 
 import net.luxvacuos.igl.Logger;
-import net.luxvacuos.voxel.client.core.states.*;
+import net.luxvacuos.voxel.client.api.MoltenAPI;
+import net.luxvacuos.voxel.client.core.states.AboutState;
+import net.luxvacuos.voxel.client.core.states.MPLoadingState;
+import net.luxvacuos.voxel.client.core.states.MPSelectionState;
+import net.luxvacuos.voxel.client.core.states.MPState;
+import net.luxvacuos.voxel.client.core.states.MainMenuState;
+import net.luxvacuos.voxel.client.core.states.OptionsState;
+import net.luxvacuos.voxel.client.core.states.SPCreateWorld;
+import net.luxvacuos.voxel.client.core.states.SPLoadingState;
+import net.luxvacuos.voxel.client.core.states.SPPauseState;
+import net.luxvacuos.voxel.client.core.states.SPSelectionState;
+import net.luxvacuos.voxel.client.core.states.SPState;
+import net.luxvacuos.voxel.client.core.states.SplashScreenState;
+import net.luxvacuos.voxel.client.core.states.StateNames;
 import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.Timers;
 import net.luxvacuos.voxel.client.rendering.api.opengl.MasterRenderer;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.ui.CrashScreen;
 import net.luxvacuos.voxel.client.world.block.BlocksResources;
-import net.luxvacuos.voxel.universal.api.ModInitialization;
-import net.luxvacuos.voxel.universal.api.MoltenAPI;
+import net.luxvacuos.voxel.universal.api.ModsHandler;
 import net.luxvacuos.voxel.universal.bootstrap.AbstractBootstrap;
 import net.luxvacuos.voxel.universal.bootstrap.Platform;
 import net.luxvacuos.voxel.universal.core.AbstractVoxel;
@@ -56,11 +68,6 @@ import net.luxvacuos.voxel.universal.util.PerRunLog;
  * @category Kernel
  */
 public class Voxel extends AbstractVoxel {
-
-	/**
-	 * Mod Initialization instance
-	 */
-	private ModInitialization api;
 	/**
 	 * Disposed boolean
 	 */
@@ -119,9 +126,7 @@ public class Voxel extends AbstractVoxel {
 		// Update Screen buffers
 		getGameResources().getDisplay().updateDisplay(VoxelVariables.FPS);
 		// Print info
-		Logger.log("Voxel Version: " + VoxelVariables.version);
-		Logger.log("Molten API Version: " + MoltenAPI.apiVersion);
-		Logger.log("Build: " + MoltenAPI.build);
+		Logger.log("Voxel Client Version: " + VoxelVariables.version);
 		Logger.log("Running on: " + bootstrap.getPlatform());
 		Logger.log("LWJGL Version: " + Version.getVersion());
 		Logger.log("GLFW Version: " + GLFW.glfwGetVersionString());
@@ -139,10 +144,11 @@ public class Voxel extends AbstractVoxel {
 		if (bootstrap.getPlatform().equals(Platform.MACOSX)) {
 			VoxelVariables.runningOnMac = true;
 		}
-		// Create ModInitialization instance
-		api = new ModInitialization(this);
+		// Create ModsHandler instance
+		modsHandler = new ModsHandler(this);
+		modsHandler.setMoltenAPI(new MoltenAPI());
 		// Do Mod PreInit
-		api.preInit();
+		modsHandler.preInit();
 	}
 
 	/**
@@ -173,7 +179,7 @@ public class Voxel extends AbstractVoxel {
 		StateMachine.registerState(new SPState());
 		StateMachine.registerState(new MPSelectionState());
 		// Do Mod Init
-		api.init();
+		modsHandler.init();
 	}
 
 	/**
@@ -186,7 +192,7 @@ public class Voxel extends AbstractVoxel {
 	@Override
 	public void postInit() throws Exception {
 		// Do Mod PostInit
-		api.postInit();
+		modsHandler.postInit();
 		// Set the Mouse hidden
 		Mouse.setHidden(true);
 		// Initialize debug data
@@ -324,7 +330,7 @@ public class Voxel extends AbstractVoxel {
 		// Clean loaded assets
 		this.gameResources.dispose();
 		// Clean mods
-		api.dispose();
+		modsHandler.dispose();
 		// Close Window
 		getGameResources().getDisplay().closeDisplay();
 
