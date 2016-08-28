@@ -18,22 +18,30 @@
  * 
  */
 
-package net.luxvacuos.voxel.client.world.chunks.newAPI;
+package net.luxvacuos.voxel.universal.world.utils;
 
-import net.luxvacuos.voxel.universal.world.chunk.Chunk;
-import net.luxvacuos.voxel.universal.world.chunk.ChunkData;
-import net.luxvacuos.voxel.universal.world.utils.ChunkNode;
-
-public class RenderChunk extends Chunk {
-
-	protected RenderChunk(ChunkNode node, ChunkData data) {
-		super(node, data);
-		// TODO Auto-generated constructor stub
+public class BlockIntDataArray {
+	// [(HEIGHT * WIDTH * Z) + (LENGTH * Y) + X]
+	private final int[] data;
+	
+	public BlockIntDataArray() {
+		this.data = new int[4096]; //16 * 16 * 16 for a ChunkSection
 	}
 	
-	public void render() {
-		
+	public BlockIntDataArray(int[] data) {
+		this.data = data;
+	}
+	
+	public int get(int x, int y, int z) {
+		return this.data[(16 * 16 * z) + (16 * y) + x];
+	}
+	
+	public void set(int x, int y, int z, int data) {
+		this.data[(16 * 16 * z) + (16 * y) + x] = data;
+	}
+	
+	public final int[] getData() {
+		return this.data;
 	}
 
-	
 }
