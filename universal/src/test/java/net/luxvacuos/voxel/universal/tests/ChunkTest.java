@@ -18,22 +18,27 @@
  * 
  */
 
-package net.luxvacuos.voxel.client.world.chunks.newAPI;
+package net.luxvacuos.voxel.universal.tests;
 
-import net.luxvacuos.voxel.universal.world.chunk.Chunk;
-import net.luxvacuos.voxel.universal.world.chunk.ChunkData;
-import net.luxvacuos.voxel.universal.world.utils.ChunkNode;
+import static org.junit.Assert.*;
 
-public class RenderChunk extends Chunk {
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
-	protected RenderChunk(ChunkNode node, ChunkData data) {
-		super(node, data);
-		// TODO Auto-generated constructor stub
-	}
-	
-	public void render() {
-		
+public class ChunkTest {
+
+	@Before
+	public void setUp() throws Exception {
 	}
 
-	
+	@After
+	public void tearDown() throws Exception {
+	}
+
+	@Test
+	public void test() {
+		fail("Not yet implemented");
+	}
+
 }

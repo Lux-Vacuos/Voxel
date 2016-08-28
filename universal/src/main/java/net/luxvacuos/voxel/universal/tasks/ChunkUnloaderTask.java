@@ -18,30 +18,22 @@
  * 
  */
 
-package net.luxvacuos.voxel.universal.world.utils;
+package net.luxvacuos.voxel.universal.tasks;
 
-public class BlockDataArray {
-	// [(HEIGHT * WIDTH * Z) + (LENGTH * Y) + X]
-	private final int[] data;
-	
-	public BlockDataArray() {
-		this.data = new int[4096]; //16 * 16 * 16 for a ChunkSection
+import java.util.concurrent.Callable;
+
+import net.luxvacuos.voxel.universal.world.chunk.IChunk;
+
+public class ChunkUnloaderTask implements Callable<IChunk> {
+
+	public ChunkUnloaderTask(IChunk chunk) {
+		// TODO Auto-generated constructor stub
 	}
-	
-	public BlockDataArray(int[] data) {
-		this.data = data;
-	}
-	
-	public int get(int x, int y, int z) {
-		return this.data[(16 * 16 * z) + (16 * y) + x];
-	}
-	
-	public void set(int x, int y, int z, int data) {
-		this.data[(16 * 16 * z) + (16 * y) + x] = data;
-	}
-	
-	public final int[] getData() {
-		return this.data;
+
+	@Override
+	public IChunk call() throws Exception {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

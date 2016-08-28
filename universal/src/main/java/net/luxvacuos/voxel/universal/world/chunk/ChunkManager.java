@@ -20,34 +20,269 @@
 
 package net.luxvacuos.voxel.universal.world.chunk;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
+import net.luxvacuos.igl.Logger;
+import net.luxvacuos.voxel.universal.resources.IDisposable;
+import net.luxvacuos.voxel.universal.tasks.ChunkGenerateTask;
+import net.luxvacuos.voxel.universal.tasks.ChunkLoaderTask;
+import net.luxvacuos.voxel.universal.tasks.ChunkSaveTask;
+import net.luxvacuos.voxel.universal.tasks.ChunkUnloaderTask;
 import net.luxvacuos.voxel.universal.util.Pair;
 import net.luxvacuos.voxel.universal.world.chunk.generator.FlatChunkGenerator;
 import net.luxvacuos.voxel.universal.world.chunk.generator.IChunkGenerator;
 import net.luxvacuos.voxel.universal.world.dimension.IDimension;
 import net.luxvacuos.voxel.universal.world.utils.ChunkNode;
 
-public final class ChunkManager {
+public class ChunkManager implements IDisposable {
 	protected final IDimension dimension;
 	protected final ExecutorService executor = Executors.newCachedThreadPool();
 	protected IChunkGenerator chunkGenerator = new FlatChunkGenerator();
-	
+
 	protected List<Future<Pair<ChunkNode, ChunkData>>> chunkLoadList;
-	
+	protected List<Future<IChunk>> chunkGenerateList;
+	protected List<Future<IChunk>> chunkUnloadList;
+	protected volatile Map<ChunkNode, IChunk> loadedChunks;
+
+	protected final Lock loadLock = new ReentrantLock();
+	protected final Lock unloadLock = new ReentrantLock();
+	protected final ReadWriteLock chunkLock = new ReentrantReadWriteLock();
+
+	private Future<Void> saveTask = null;
+
 	public ChunkManager(IDimension dimension) {
 		this.dimension = dimension;
+		this.chunkGenerateList = new ArrayList<>();
+		this.chunkLoadList = new ArrayList<>();
+		this.chunkUnloadList = new ArrayList<>();
+		this.loadedChunks = new HashMap<>();
 	}
-	
+
 	public void setGenerator(IChunkGenerator generator) {
 		this.chunkGenerator = generator;
 	}
-	
+
+	public final void loadChunk(ChunkNode node) {
+		this.chunkLock.readLock().lock();
+		try {
+			if(!this.loadedChunks.containsKey(node)) {
+				this.loadLock.lock();
+				try {
+					this.chunkLoadList.add(this.executor.submit(new ChunkLoaderTask(node)));
+				} catch(Exception e) {
+					Logger.error(e);
+				} finally {
+					this.loadLock.unlock();
+				}
+			}
+		} catch(Exception e) {
+
+		} finally {
+			this.chunkLock.readLock().unlock();
+		}
+	}
+
+	public final void batchLoadChunks(ChunkNode... nodes) {
+		this.loadLock.lock();
+		this.chunkLock.readLock().lock();
+		try {
+			for(ChunkNode node : nodes) {
+				if(!this.loadedChunks.containsKey(node)) {
+					this.chunkLoadList.add(this.executor.submit(new ChunkLoaderTask(node)));
+				}
+			}
+		} catch(Exception e) {
+
+		} finally {
+			this.chunkLock.readLock().unlock();
+			this.loadLock.unlock();
+		}
+	}
+
+	public final void unloadChunk(ChunkNode node) {
+		this.chunkLock.readLock().lock();
+		try {
+			if(this.loadedChunks.containsKey(node)) {
+				IChunk chunk = this.loadedChunks.get(node);
+
+				// Need to release the Read Lock to upgrade to a Write Lock
+				this.chunkLock.readLock().unlock();
+				this.chunkLock.writeLock().lock();
+				try {
+					this.loadedChunks.remove(node);
+					this.chunkUnloadList.add(this.executor.submit(new ChunkUnloaderTask(chunk)));
+					this.chunkLock.readLock().lock(); //Downgrade the Write Lock by acquiring the Read Lock before releasing the Write Lock
+				} catch(Exception e) {
+
+				} finally {
+					this.chunkLock.writeLock().unlock(); //Remove Write access, Hold Read access
+				}
+			}
+		} catch(Exception e) {
+
+		} finally {
+			this.chunkLock.readLock().unlock(); //Release Read access
+		}
+	}
+
+	public final boolean isChunkLoaded(ChunkNode node) {
+		this.chunkLock.readLock().lock();
+		try {
+			return this.loadedChunks.containsKey(node);
+		} catch(Exception e) {
+			Logger.error(e);
+			return false;
+		} finally {
+			this.chunkLock.readLock().unlock();
+		}
+	}
+
+	public void saveChunks() {
+		this.chunkLock.readLock().lock();
+		try {
+			this.saveTask = this.executor.submit(new ChunkSaveTask(Collections.unmodifiableCollection(this.loadedChunks.values())));
+		} catch(Exception e) {
+
+		} finally {
+			this.chunkLock.readLock().unlock();
+		}
+
+	}
+
 	public void update() {
-		
+		//Check if the save task is done
+		try {
+			if(this.saveTask != null && this.saveTask.isDone()) {
+				this.saveTask = null;
+				Logger.log("Chunks saved");
+			}
+		} catch(Exception e) { //XXX: this needs to be done better, but for debugging, fail fast works for now
+			Logger.error("ChunkSaveTask threw an error during exectuion! Shutting down to try and protect data...");
+			this.executor.shutdownNow();
+			throw new RuntimeException(e);
+		}
+
+		//Check if any of the ChunkLoaderTasks completed
+		//Lock the Loader Lock to make sure the underlying List does not get modified by anything other than the Iterator
+		this.loadLock.lock();
+		if(!this.chunkLoadList.isEmpty()) {
+			try {
+				Iterator<Future<Pair<ChunkNode, ChunkData>>> iterator = this.chunkLoadList.iterator();
+				while(iterator.hasNext()) {
+					Future<Pair<ChunkNode, ChunkData>> value = iterator.next();
+					if(value.isCancelled()) { //If the task got cancelled for any reason, ignore it
+						iterator.remove();
+						continue;
+					}
+
+					if(value.isDone()) { //Non-blocking check to see if the task is done
+						Pair<ChunkNode, ChunkData> pair = value.get();
+						iterator.remove();
+						IChunk chunk = this.makeChunk(pair.getFirst(), pair.getSecond());
+						if(pair.getSecond().shouldGenerate()) {
+							this.chunkGenerateList.add(this.executor.submit(new ChunkGenerateTask(chunk)));
+						} else {
+							this.chunkLock.writeLock().lock(); //Lock the Chunk Writer lock
+							try {
+								this.loadedChunks.put(chunk.getNode(), chunk);
+							} catch(Exception e) {
+
+							} finally {
+								this.chunkLock.writeLock().unlock();
+							}
+						}
+					}
+				}
+			} catch(Exception e) { //XXX: this needs to be done better, but for debugging, fail fast works for now
+				Logger.error("ChunkLoaderTask threw an error during exectuion! Shutting down to try and protect data...");
+				this.executor.shutdownNow();
+				throw new RuntimeException(e);
+			} finally {
+				this.loadLock.unlock();
+			}
+		}
+
+		Iterator<Future<IChunk>> iterator;
+		Future<IChunk> value;
+
+		this.unloadLock.lock();
+		try {
+			iterator = this.chunkUnloadList.iterator();
+			while(iterator.hasNext()) {
+				value = iterator.next();
+				if(value.isCancelled()) {
+					iterator.remove();
+					continue;
+				}
+
+				if(value.isDone()) {
+					IChunk chunk = value.get();
+					iterator.remove();
+					chunk.dispose();
+				}
+			}
+		} catch(Exception e) {
+
+		} finally {
+			this.unloadLock.unlock();
+		}
+
+		iterator = this.chunkGenerateList.iterator();
+		this.chunkLock.writeLock().lock();
+		try {
+			while(iterator.hasNext()) {
+				value = iterator.next();
+				if(value.isCancelled()) {
+					iterator.remove();
+					continue;
+				}
+
+				if(value.isDone()) {
+					IChunk chunk = value.get();
+					iterator.remove();
+					this.loadedChunks.put(chunk.getNode(), chunk);
+				}
+			}
+		} catch(Exception e) {
+
+		} finally {
+			this.chunkLock.writeLock().unlock();
+		}
+
+	}
+
+	protected Chunk makeChunk(ChunkNode node, ChunkData data) {
+		return new Chunk(node, data);
+	}
+
+	public final Collection<IChunk> getLoadedChunks() {
+		this.chunkLock.readLock().lock();
+		try {
+			return Collections.unmodifiableCollection(this.loadedChunks.values());
+		} catch(Exception e) {
+			return null;
+		} finally {
+			this.chunkLock.readLock().unlock();
+		}
+	}
+
+	@Override
+	public void dispose() {
+		// TODO Auto-generated method stub
+
 	}
 
 }

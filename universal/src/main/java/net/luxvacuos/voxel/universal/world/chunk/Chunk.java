@@ -20,16 +20,21 @@
 
 package net.luxvacuos.voxel.universal.world.chunk;
 
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+
 import net.luxvacuos.voxel.universal.world.block.Blocks;
 import net.luxvacuos.voxel.universal.world.block.IBlock;
 import net.luxvacuos.voxel.universal.world.utils.ChunkNode;
 
 public class Chunk implements IChunk {
 	private final ChunkNode node;
-	protected ChunkData data;
+	protected volatile ChunkData data;
+	protected final ReadWriteLock lock = new ReentrantReadWriteLock();
 	
-	protected Chunk(ChunkNode node) {
+	protected Chunk(ChunkNode node, ChunkData data) {
 		this.node = node;
+		this.data = data;
 	}
 
 	@Override
@@ -59,11 +64,18 @@ public class Chunk implements IChunk {
 
 	@Override
 	public IBlock getBlockAt(int x, int y, int z) {
+		this.lock.readLock().lock();
+		try {
 		IBlock block = Blocks.getBlockByID(this.data.getBlockAt(x, y, z));
 		if(block.hasMetadata()) {
 			//TODO: Implement this
 		}
 		return block;
+		} catch(Exception e) {
+			return null;
+		} finally {
+			this.lock.readLock().unlock();
+		}
 	}
 	
 	public void setSunlight(int value) {
@@ -98,6 +110,12 @@ public class Chunk implements IChunk {
 		if(this.data.needsRebuild()) this.data.rebuild();
 		
 		//TODO: update BlockEntities
+	}
+
+	@Override
+	public void dispose() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

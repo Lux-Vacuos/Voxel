@@ -29,7 +29,7 @@ import com.esotericsoftware.kryo.io.Output;
 import net.luxvacuos.voxel.universal.world.chunk.ChunkData;
 import net.luxvacuos.voxel.universal.world.chunk.ChunkDataBuilder;
 import net.luxvacuos.voxel.universal.world.chunk.ChunkSlice;
-import net.luxvacuos.voxel.universal.world.utils.BlockDataArray;
+import net.luxvacuos.voxel.universal.world.utils.BlockIntDataArray;
 
 public class ChunkDataSerializer extends Serializer<ChunkData> {
 
@@ -38,7 +38,7 @@ public class ChunkDataSerializer extends Serializer<ChunkData> {
 		ImmutableArray<ChunkSlice> slices = object.getChunkSlices();
 		output.writeInt(slices.size()); //Write the size of the array so we can read it back in correctly
 
-		BlockDataArray bda = null;
+		BlockIntDataArray bda = null;
 		boolean wroteLength = false;
 		for(ChunkSlice slice : slices) {
 			output.writeByte(slice.yOffset); //Write the offset to the stream
@@ -79,14 +79,14 @@ public class ChunkDataSerializer extends Serializer<ChunkData> {
 			if(input.readBoolean()) {
 				length = input.readInt();
 				array = input.readInts(length);
-				slice.setBlockDataArray(new BlockDataArray(array));
+				slice.setBlockDataArray(new BlockIntDataArray(array));
 				array = null;
 			}
 			
 			if(input.readBoolean()) {
 				if(length == 0) length = input.readInt();
 				array = input.readInts(length);
-				slice.setLightDataArray(new BlockDataArray(array));
+				slice.setLightDataArray(new BlockIntDataArray(array));
 				array = null;
 			}
 			

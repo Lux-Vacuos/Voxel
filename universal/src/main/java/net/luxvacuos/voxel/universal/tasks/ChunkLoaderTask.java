@@ -22,19 +22,15 @@ package net.luxvacuos.voxel.universal.tasks;
 
 import java.util.concurrent.Callable;
 
-import com.esotericsoftware.kryo.Kryo;
-
-import net.luxvacuos.voxel.universal.kryo.ChunkDataSerializer;
 import net.luxvacuos.voxel.universal.util.Pair;
 import net.luxvacuos.voxel.universal.world.chunk.ChunkData;
 import net.luxvacuos.voxel.universal.world.utils.ChunkNode;
 
 public class ChunkLoaderTask implements Callable<Pair<ChunkNode, ChunkData>> {
-	private Kryo kryo = new Kryo();
 	private ChunkNode node;
 	
-	public ChunkLoaderTask() {
-		this.kryo.register(ChunkData.class, new ChunkDataSerializer());
+	public ChunkLoaderTask(ChunkNode node) {
+		this.node = node;
 	}
 
 	@Override
