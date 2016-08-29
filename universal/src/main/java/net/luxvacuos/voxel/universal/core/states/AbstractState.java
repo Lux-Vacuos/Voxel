@@ -26,35 +26,38 @@ import net.luxvacuos.voxel.universal.resources.IDisposable;
 public abstract class AbstractState implements IState, IDisposable {
 	private final String stateName;
 	private boolean running;
-	
+
 	protected AbstractState(String name) {
 		this.stateName = name;
 	}
-	
+
 	@Override
-	public void init() { }
+	public void init() {
+	}
 
 	@Override
 	public void start() {
 		this.running = true;
 	}
-	
+
 	@Override
-	public void render(AbstractVoxel voxel, float alpha) { }
+	public void render(AbstractVoxel voxel, float alpha) {
+	}
 
 	@Override
 	public void end() {
 		this.running = false;
 	}
-	
+
 	@Override
-	public void dispose() { }
-	
+	public void dispose() {
+	}
+
 	@Override
 	public boolean isRunning() {
 		return this.running;
 	}
-	
+
 	@Override
 	public String getName() {
 		return this.stateName;

@@ -123,7 +123,7 @@ public class MPLoadingState extends AbstractState {
 	@Override
 	public void render(AbstractVoxel voxel, float delta) {
 		GameResources gm = (GameResources) voxel.getGameResources();
-		MasterRenderer.prepare(0, 0, 0, 1);
+		MasterRenderer.prepare(1, 1, 1, 1);
 		gm.getDisplay().beingNVGFrame();
 		window.render();
 		UIRendering.renderMouse();

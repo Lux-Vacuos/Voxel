@@ -121,8 +121,8 @@ public class Voxel extends AbstractVoxel {
 		getGameResources().preInit();
 		// Set Window visible
 		getGameResources().getDisplay().setVisible();
-		// Clear Screen to black
-		MasterRenderer.prepare(0, 0, 0, 1);
+		// Clear Screen
+		MasterRenderer.prepare(1, 1, 1, 1);
 		// Update Screen buffers
 		getGameResources().getDisplay().updateDisplay(VoxelVariables.FPS);
 		// Print info

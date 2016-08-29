@@ -1,4 +1,4 @@
-package net.luxvacuos.voxel.universal.core;
+package net.luxvacuos.voxel.universal.core.exception;
 
 public class InvokeGroovyException extends RuntimeException {
 	private static final long serialVersionUID = 4272551520344358231L;

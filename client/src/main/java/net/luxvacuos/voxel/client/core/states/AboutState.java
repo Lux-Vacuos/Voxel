@@ -25,8 +25,6 @@ import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_RIGHT;
 
 import net.luxvacuos.voxel.client.core.CoreInfo;
 import net.luxvacuos.voxel.client.core.VoxelVariables;
-import net.luxvacuos.voxel.client.core.exception.LoadTextureException;
-import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.UIRendering;
 import net.luxvacuos.voxel.client.rendering.api.opengl.MasterRenderer;
 import net.luxvacuos.voxel.client.resources.GameResources;
@@ -47,28 +45,22 @@ import net.luxvacuos.voxel.universal.core.states.StateMachine;
 public class AboutState extends AbstractState {
 
 	private Window window;
-	private Button backButton;
 	private Image voxelLogo;
-
-	private int globalY;
 
 	public AboutState() {
 		super(StateNames.ABOUT);
 		window = new Window(20, GameResources.getInstance().getDisplay().getDisplayHeight() - 20,
-				GameResources.getInstance().getDisplay().getDisplayWidth() - 40, 2200, "About");
-		backButton = new Button((int) (GameResources.getInstance().getDisplay().getDisplayWidth() / 2f - 100), 40, 200,
-				40, "Back");
+				GameResources.getInstance().getDisplay().getDisplayWidth() - 40,
+				GameResources.getInstance().getDisplay().getDisplayHeight() - 40, "About");
+		Button backButton = new Button((int) (GameResources.getInstance().getDisplay().getDisplayWidth() / 2f - 100),
+				40, 200, 40, "Back");
 		backButton.setOnButtonPress((button, delta) -> {
 			// switchTo(GameState.MAINMENU);
 			StateMachine.setCurrentState(StateNames.MAIN_MENU);
 		});
 
-		try {
-			voxelLogo = new Image(window.getWidth() / 2 - 200, -40, 400, 200,
-					GameResources.getInstance().getLoader().loadNVGTexture("Voxel-Logo"));
-		} catch (LoadTextureException e) {
-			e.printStackTrace();
-		}
+		voxelLogo = new Image(window.getWidth() / 2 - 200, -40, 400, 200,
+				GameResources.getInstance().getLoader().loadNVGTexture("Voxel-Logo"));
 		window.addChildren(voxelLogo);
 
 		Text versionL = new Text("Version", 30, -300);
@@ -144,7 +136,7 @@ public class AboutState extends AbstractState {
 	@Override
 	public void render(AbstractVoxel voxel, float delta) {
 		GameResources gm = (GameResources) voxel.getGameResources();
-		MasterRenderer.prepare(0, 0, 0, 1);
+		MasterRenderer.prepare(1, 1, 1, 1);
 		gm.getDisplay().beingNVGFrame();
 		window.render();
 		UIRendering.renderMouse();
@@ -153,13 +145,6 @@ public class AboutState extends AbstractState {
 
 	@Override
 	public void update(AbstractVoxel voxel, float delta) {
-		globalY += (int) (Mouse.getDWheel() * 60f);
-		if (globalY > 0)
-			globalY = 0;
-		else if (globalY < -1520)
-			globalY = -1520;
-		window.setPosition(20,
-				((GameResources) voxel.getGameResources()).getDisplay().getDisplayHeight() - 20 - globalY);
 		window.update(delta);
 		/*
 		 * TODO: Need to find a way to reimplement this with the new

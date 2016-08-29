@@ -282,7 +282,7 @@ public class OptionsState extends AbstractState {
 			gm.getWorldsHandler().getActiveWorld().getActiveDimension().updateChunksRender(gm, true);
 			ParticleMaster.getInstance().render(gm.getCamera(), gm.getRenderer().getProjectionMatrix());
 		} else {
-			MasterRenderer.prepare(0, 0, 0, 1);
+			MasterRenderer.prepare(1, 1, 1, 1);
 		}
 
 		gm.getDisplay().beingNVGFrame();

@@ -20,11 +20,6 @@
 
 package net.luxvacuos.voxel.client.core.states;
 
-import javax.script.Bindings;
-import javax.script.CompiledScript;
-import javax.script.ScriptException;
-import javax.script.SimpleBindings;
-
 import net.luxvacuos.voxel.client.rendering.api.nanovg.UIRendering;
 import net.luxvacuos.voxel.client.rendering.api.opengl.MasterRenderer;
 import net.luxvacuos.voxel.client.resources.GameResources;
@@ -47,8 +42,6 @@ public class MainMenuState extends AbstractState {
 	private Button aboutButton;
 	private Button playMPButton;
 	private Window window;
-	private CompiledScript script;
-	private Bindings bindings;
 
 	public MainMenuState() {
 		super(StateNames.MAIN_MENU);
@@ -71,22 +64,22 @@ public class MainMenuState extends AbstractState {
 		exitButton.setPreicon(UIRendering.ICON_LOGIN);
 
 		playButton.setOnButtonPress((button, delta) -> {
-			//switchTo(GameState.SP_SELECTION);
+			// switchTo(GameState.SP_SELECTION);
 			StateMachine.setCurrentState(StateNames.SP_SELECTION);
 		});
 
 		playMPButton.setOnButtonPress((button, delta) -> {
-			//switchTo(GameState.MP_SELECTION);
+			// switchTo(GameState.MP_SELECTION);
 			StateMachine.setCurrentState(StateNames.MP_SELECTION);
 		});
 
 		optionsButton.setOnButtonPress((button, delta) -> {
-			//switchTo(GameState.OPTIONS);
+			// switchTo(GameState.OPTIONS);
 			StateMachine.setCurrentState(StateNames.OPTIONS);
 		});
 
 		aboutButton.setOnButtonPress((button, delta) -> {
-			//switchTo(GameState.ABOUT);
+			// switchTo(GameState.ABOUT);
 			StateMachine.setCurrentState(StateNames.ABOUT);
 		});
 
@@ -98,25 +91,22 @@ public class MainMenuState extends AbstractState {
 		window.addChildren(optionsButton);
 		window.addChildren(aboutButton);
 		window.addChildren(exitButton);
-		bindings = new SimpleBindings();
-		bindings.put("window", window);
-		script = GameResources.getInstance().getScripting().compile("mainmenu");
 	}
 
 	@Override
 	public void start() {
-		//window.setFadeAlpha(0);
+		// window.setFadeAlpha(0);
 	}
 
 	@Override
 	public void end() {
-		//window.setFadeAlpha(1);
+		// window.setFadeAlpha(1);
 	}
 
 	@Override
 	public void render(AbstractVoxel voxel, float delta) {
-		GameResources gm = (GameResources)voxel.getGameResources();
-		MasterRenderer.prepare(0, 0, 0, 1);
+		GameResources gm = (GameResources) voxel.getGameResources();
+		MasterRenderer.prepare(1, 1, 1, 1);
 		gm.getDisplay().beingNVGFrame();
 		window.render();
 		UIRendering.renderMouse();
@@ -125,18 +115,11 @@ public class MainMenuState extends AbstractState {
 
 	@Override
 	public void update(AbstractVoxel voxel, float delta) {
-		try {
-			script.eval(bindings);
-		} catch (ScriptException e) {
-			e.printStackTrace();
-		}
 		window.update(delta);
-		/*if (!switching)
-			window.fadeIn(4, delta);
-		if (switching)
-			if (window.fadeOut(4, delta)) {
-				readyForSwitch = true;
-			} */
+		/*
+		 * if (!switching) window.fadeIn(4, delta); if (switching) if
+		 * (window.fadeOut(4, delta)) { readyForSwitch = true; }
+		 */
 
 	}
 

@@ -68,20 +68,20 @@ public class SPSelectionState extends AbstractState {
 		createButton = new Button(window.getWidth() - 230, -100, 200, 40, "Create World");
 
 		exitButton.setOnButtonPress((button, delta) -> {
-			//switchTo(GameState.MAINMENU);
+			// switchTo(GameState.MAINMENU);
 			StateMachine.setCurrentState(StateNames.MAIN_MENU);
 		});
 		playButton.setOnButtonPress((button, delta) -> {
 			if (!worldName.equals("")) {
 				GameResources.getInstance().getWorldsHandler().registerWorld(new DefaultWorld(worldName));
 				GameResources.getInstance().getWorldsHandler().setActiveWorld(worldName);
-				//switchTo(GameState.SP_LOADING_WORLD);
+				// switchTo(GameState.SP_LOADING_WORLD);
 				StateMachine.setCurrentState(StateNames.SP_LOADING);
 			}
 		});
 
 		createButton.setOnButtonPress((button, delta) -> {
-			//switchTo(GameState.SP_CREATE_WORLD);
+			// switchTo(GameState.SP_CREATE_WORLD);
 			StateMachine.setCurrentState(StateNames.SP_CREATE_WORLD);
 		});
 
@@ -94,9 +94,12 @@ public class SPSelectionState extends AbstractState {
 	@Override
 	public void start() {
 		y = 0;
+		File worldPath = new File(VoxelVariables.WORLD_PATH);
+		if (!worldPath.exists())
+			worldPath.mkdirs();
 		try {
-			Files.walk(new File(VoxelVariables.WORLD_PATH).toPath(), 1).forEach(filePath -> {
-				if (Files.isDirectory(filePath) && !filePath.toFile().equals(new File(VoxelVariables.WORLD_PATH))) {
+			Files.walk(worldPath.toPath(), 1).forEach(filePath -> {
+				if (Files.isDirectory(filePath) && !filePath.toFile().equals(worldPath)) {
 					World world = new World(20, -ySize - 50 - (y * (ySize + 5)), 400, ySize,
 							filePath.getFileName().toString());
 					y++;
@@ -107,7 +110,7 @@ public class SPSelectionState extends AbstractState {
 			e.printStackTrace();
 		}
 		window.getChildrens().addAll(worlds);
-		//window.setFadeAlpha(0);
+		// window.setFadeAlpha(0);
 		worldName = "";
 	}
 
@@ -115,7 +118,7 @@ public class SPSelectionState extends AbstractState {
 	public void end() {
 		window.getChildrens().removeAll(worlds);
 		worlds.clear();
-		//window.setFadeAlpha(1);
+		// window.setFadeAlpha(1);
 	}
 
 	@Override
@@ -135,18 +138,16 @@ public class SPSelectionState extends AbstractState {
 			}
 		}
 
-		/*if (!switching)
-			window.fadeIn(4, delta);
-		if (switching)
-			if (window.fadeOut(4, delta)) {
-				readyForSwitch = true;
-			}*/
+		/*
+		 * if (!switching) window.fadeIn(4, delta); if (switching) if
+		 * (window.fadeOut(4, delta)) { readyForSwitch = true; }
+		 */
 	}
 
 	@Override
 	public void render(AbstractVoxel voxel, float alpha) {
-		GameResources gm = (GameResources)voxel.getGameResources();
-		MasterRenderer.prepare(0, 0, 0, 1);
+		GameResources gm = (GameResources) voxel.getGameResources();
+		MasterRenderer.prepare(1, 1, 1, 1);
 		gm.getDisplay().beingNVGFrame();
 		window.render();
 		UIRendering.renderMouse();

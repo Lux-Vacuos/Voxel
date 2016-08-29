@@ -31,6 +31,7 @@ import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
 import net.luxvacuos.igl.Logger;
+import net.luxvacuos.voxel.universal.core.exception.CompileGroovyException;
 
 /**
  * 

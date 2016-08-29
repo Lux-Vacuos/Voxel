@@ -72,7 +72,7 @@ public class DeferredShadingShader extends ShaderProgram {
 	private float time;
 
 	public DeferredShadingShader(String type) {
-		super("ImagePassV_" + type + ".glsl", "ImagePassF_" + type + ".glsl");
+		super("IP_V_" + type + ".glsl", "IP_F_" + type + ".glsl");
 	}
 
 	@Override

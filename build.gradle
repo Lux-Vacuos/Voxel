@@ -1,5 +1,5 @@
 
-task wrapper(type: Wrapper) { gradleVersion = '2.14' }
+task wrapper(type: Wrapper) { gradleVersion = '3.0' }
 
 subprojects {
 	apply plugin: "eclipse"
@@ -24,8 +24,6 @@ project(":client") {
 		compile project(':universal')
 		compile project(':utils')
 		compile project(':assets')
-		compile 'org.codehaus.groovy:groovy:2.4.7'
-		compile 'org.codehaus.groovy:groovy-jsr223:2.4.7'
 		compile 'org.l33tlabs.twl:pngdecoder:1.0'
 		compile 'de.jarnbjo:j-ogg-all:1.0.0'
 		compile 'org.jcraft:jorbis:0.0.17'
@@ -54,6 +52,8 @@ project(":launcher") {
 
 project(":universal") {
 	dependencies {
+		compile 'org.codehaus.groovy:groovy:2.4.7'
+		compile 'org.codehaus.groovy:groovy-jsr223:2.4.7'
 		compile project(':ashley')
 		compile project(':utils')
 		testCompile group: 'junit', name: 'junit', version: '4.12'
