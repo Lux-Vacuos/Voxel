@@ -18,22 +18,22 @@
  * 
  */
 
-package net.luxvacuos.voxel.client.world.chunks.newAPI;
+package net.luxvacuos.voxel.universal.tasks;
 
-import net.luxvacuos.voxel.universal.world.chunk.Chunk;
-import net.luxvacuos.voxel.universal.world.chunk.ChunkData;
-import net.luxvacuos.voxel.universal.world.utils.ChunkNode;
+import java.util.concurrent.Callable;
 
-public class RenderChunk extends Chunk {
+import net.luxvacuos.voxel.universal.world.chunk.IChunk;
 
-	protected RenderChunk(ChunkNode node, ChunkData data) {
-		super(node, data);
+public class ChunkUnloaderTask implements Callable<IChunk> {
+
+	public ChunkUnloaderTask(IChunk chunk) {
 		// TODO Auto-generated constructor stub
 	}
-	
-	public void render() {
-		
+
+	@Override
+	public IChunk call() throws Exception {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
-	
 }

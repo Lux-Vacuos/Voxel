@@ -1,9 +1,10 @@
 package net.luxvacuos.voxel.universal.world.chunk;
 
+import net.luxvacuos.voxel.universal.resources.IDisposable;
 import net.luxvacuos.voxel.universal.world.block.IBlock;
 import net.luxvacuos.voxel.universal.world.utils.ChunkNode;
 
-public interface IChunk {
+public interface IChunk extends IDisposable {
 
 	public ChunkNode getNode();
 	

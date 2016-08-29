@@ -18,30 +18,27 @@
  * 
  */
 
-package net.luxvacuos.voxel.universal.world.utils;
+package net.luxvacuos.voxel.universal.tests;
 
-public class BlockDataArray {
-	// [(HEIGHT * WIDTH * Z) + (LENGTH * Y) + X]
-	private final int[] data;
-	
-	public BlockDataArray() {
-		this.data = new int[4096]; //16 * 16 * 16 for a ChunkSection
+import static org.junit.Assert.*;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
+public class ChunkTest {
+
+	@Before
+	public void setUp() throws Exception {
 	}
-	
-	public BlockDataArray(int[] data) {
-		this.data = data;
+
+	@After
+	public void tearDown() throws Exception {
 	}
-	
-	public int get(int x, int y, int z) {
-		return this.data[(16 * 16 * z) + (16 * y) + x];
-	}
-	
-	public void set(int x, int y, int z, int data) {
-		this.data[(16 * 16 * z) + (16 * y) + x] = data;
-	}
-	
-	public final int[] getData() {
-		return this.data;
+
+	@Test
+	public void test() {
+		//fail("Not yet implemented");
 	}
 
 }

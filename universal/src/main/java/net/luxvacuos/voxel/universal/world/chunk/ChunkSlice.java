@@ -20,14 +20,14 @@
 
 package net.luxvacuos.voxel.universal.world.chunk;
 
-import net.luxvacuos.voxel.universal.world.utils.BlockDataArray;
+import net.luxvacuos.voxel.universal.world.utils.BlockIntDataArray;
 
 public final class ChunkSlice {
 
 	private static final int BLOCK_LIGHT_MASK = 0x000000FF;
 	private static final int SKY_LIGHT_MASK = 0x0000FF00;
 
-	private BlockDataArray blockData;
+	private BlockIntDataArray blockData; //Maybe have longs instead, with packed metadata? 0xMMMMMMMMBBBBBBBB
 
 	/**
 	 * This light data array has both the sky light data and block light data packed in it:<br />
@@ -38,7 +38,7 @@ public final class ChunkSlice {
 	 * The functions in ChunkData automatically pack and unpack the data, so it should be
 	 * transparent to whatever is using it
 	 */
-	private BlockDataArray lightData;
+	private BlockIntDataArray lightData;
 
 	public final byte yOffset; //Used when saving the data to disk, so it can be put back in the right place
 
@@ -52,11 +52,11 @@ public final class ChunkSlice {
 		this.skyLightRebuild = false;
 		this.blockLightRebuild = false;
 		this.inHeightMap = false;
-		this.blockData = new BlockDataArray();
-		this.lightData = new BlockDataArray();
+		this.blockData = new BlockIntDataArray();
+		this.lightData = new BlockIntDataArray();
 	}
 
-	public ChunkSlice(byte offset, BlockDataArray blockData, BlockDataArray lightData) {
+	public ChunkSlice(byte offset, BlockIntDataArray blockData, BlockIntDataArray lightData) {
 		this.yOffset = offset;
 		this.blockRebuild = true;
 		this.skyLightRebuild = true;
@@ -141,21 +141,21 @@ public final class ChunkSlice {
 	 * 
 	 * @return The light data array
 	 */
-	public final BlockDataArray getLightDataArray() {
+	public final BlockIntDataArray getLightDataArray() {
 		return this.lightData;
 	}
 
-	public void setLightDataArray(BlockDataArray array) {
+	public void setLightDataArray(BlockIntDataArray array) {
 		this.lightData = array;
 		this.skyLightRebuild = true;
 		this.blockLightRebuild = true;
 	}
 
-	public final BlockDataArray getBlockDataArray() {
+	public final BlockIntDataArray getBlockDataArray() {
 		return this.blockData;
 	}
 
-	public void setBlockDataArray(BlockDataArray array) {
+	public void setBlockDataArray(BlockIntDataArray array) {
 		this.blockData = array;
 		this.blockRebuild = true;
 	}
@@ -180,7 +180,7 @@ public final class ChunkSlice {
 			newLightData[i] = value;
 		}
 
-		this.lightData = new BlockDataArray(newLightData);
+		this.lightData = new BlockIntDataArray(newLightData);
 	}
 
 	protected void rebuildBlocks() {

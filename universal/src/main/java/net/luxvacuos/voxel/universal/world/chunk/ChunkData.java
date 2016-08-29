@@ -23,7 +23,7 @@ package net.luxvacuos.voxel.universal.world.chunk;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.utils.Array;
 
-import net.luxvacuos.voxel.universal.world.utils.BlockDataArray;
+import net.luxvacuos.voxel.universal.world.utils.BlockIntDataArray;
 
 public final class ChunkData {
 
@@ -104,29 +104,29 @@ public final class ChunkData {
 	 * 
 	 * @return The light data array
 	 */
-	public final BlockDataArray[] getLightDataArrays() {
-		BlockDataArray[] array = new BlockDataArray[this.slices.length];
+	public final BlockIntDataArray[] getLightDataArrays() {
+		BlockIntDataArray[] array = new BlockIntDataArray[this.slices.length];
 
 		for(int i = 0; i < this.slices.length; i++) array[i] = this.slices[i].getLightDataArray();
 
 		return array;
 	}
 
-	protected void setLightDataArrays(BlockDataArray[] arrays) {
+	protected void setLightDataArrays(BlockIntDataArray[] arrays) {
 		if(this.slices.length != arrays.length) return;
 
 		for(int i = 0; i < this.slices.length; i++) this.slices[i].setLightDataArray(arrays[i]);
 	}
 
-	public final BlockDataArray[] getBlockDataArrays() {
-		BlockDataArray[] array = new BlockDataArray[this.slices.length];
+	public final BlockIntDataArray[] getBlockDataArrays() {
+		BlockIntDataArray[] array = new BlockIntDataArray[this.slices.length];
 
 		for(int i = 0; i < this.slices.length; i++) array[i] = this.slices[i].getBlockDataArray();
 
 		return array;
 	}
 
-	protected void setBlockDataArrays(BlockDataArray[] arrays) {
+	protected void setBlockDataArrays(BlockIntDataArray[] arrays) {
 		if(this.slices.length != arrays.length) return;
 
 		for(int i = 0; i < this.slices.length; i++) this.slices[i].setBlockDataArray(arrays[i]);
@@ -211,6 +211,15 @@ public final class ChunkData {
 			lastSliceIndex = sliceIndex;
 			this.slices[sliceIndex].markInHeightMap();
 		}
+	}
+	
+	protected boolean shouldGenerate() {
+		for(ChunkSlice slice : this.slices) {
+			if(slice.needsBlockRebuild()) slice.rebuildBlocks();
+			if(!slice.isEmpty()) return false;
+		}
+		
+		return true;
 	}
 
 	private int modY(int y) {
