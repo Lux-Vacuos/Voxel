@@ -24,6 +24,7 @@ import static org.junit.Assert.*;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class ChunkTest {
@@ -37,8 +38,8 @@ public class ChunkTest {
 	}
 
 	@Test
+	@Ignore("Not yet implemented")
 	public void test() {
-		//fail("Not yet implemented");
 	}
 
 }
