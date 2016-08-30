@@ -33,7 +33,7 @@ public class Chunk implements IChunk {
 	protected final IDimension dim;
 	protected volatile ChunkData data;
 	protected final ReadWriteLock lock = new ReentrantReadWriteLock();
-	
+
 	protected Chunk(IDimension dim, ChunkNode node, ChunkData data) {
 		this.node = node;
 		this.data = data;
@@ -49,7 +49,7 @@ public class Chunk implements IChunk {
 	public ChunkData getChunkData() {
 		return this.data;
 	}
-	
+
 	void setChunkData(ChunkData data) {
 		this.data = data;
 		this.data.markFullRebuild();
@@ -69,26 +69,26 @@ public class Chunk implements IChunk {
 	public IBlock getBlockAt(int x, int y, int z) {
 		this.lock.readLock().lock();
 		try {
-		IBlock block = Blocks.getBlockByID(this.data.getBlockAt(x, y, z));
-		if(block.hasMetadata()) {
-			//TODO: Implement this
-		}
-		return block;
+			IBlock block = Blocks.getBlockByID(this.data.getBlockIDAt(x, y, z));
+			if(block.hasComplexMetadata()) {
+				//TODO: Implement this
+			}
+			return block;
 		} catch(Exception e) {
 			return null;
 		} finally {
 			this.lock.readLock().unlock();
 		}
 	}
-	
+
 	public void setSunlight(int value) {
 		this.data.setSkyLight(value);
 	}
 
 	public void setBlockAt(int x, int y, int z, IBlock block) {
 		//TODO: Update neighboring blocks if block == air
-		this.data.setBlockAt(x, y, z, block.getID());
-		if(block.hasMetadata()) {
+		this.data.setBlockAt(x, y, z, block);
+		if(block.hasComplexMetadata()) {
 			//TODO: Implement this
 		}
 	}
@@ -98,27 +98,27 @@ public class Chunk implements IChunk {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
 	@Override
 	public void markForRebuild() {
 		this.data.markFullRebuild();
 	}
-	
+
 	@Override
 	public boolean needsRebuild() {
 		return this.data.needsRebuild();
 	}
-	
+
 	public void update(float delta) {
 		if(this.data.needsRebuild()) this.data.rebuild();
-		
+
 		//TODO: update BlockEntities
 	}
 
 	@Override
 	public void dispose() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override

@@ -23,7 +23,9 @@ package net.luxvacuos.voxel.universal.world.chunk;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.utils.Array;
 
+import net.luxvacuos.voxel.universal.world.block.IBlock;
 import net.luxvacuos.voxel.universal.world.utils.BlockIntDataArray;
+import net.luxvacuos.voxel.universal.world.utils.BlockLongDataArray;
 
 public final class ChunkData {
 
@@ -43,12 +45,20 @@ public final class ChunkData {
 		for(int i = 0; i < this.slices.length; i++) this.slices[i] = new ChunkSlice((byte)i);
 	}
 
-	public int getBlockAt(int x, int y, int z) {
+	public int getBlockIDAt(int x, int y, int z) {
+		return this.slices[this.getSlice(y)].getBlockIDAt(x, this.modY(y), z);
+	}
+	
+	public int getBlockMetadataAt(int x, int y, int z) {
+		return this.slices[this.getSlice(y)].getBlockMetadataAt(x, this.modY(y), z);
+	}
+	
+	public IBlock getBlockAt(int x, int y, int z) {
 		return this.slices[this.getSlice(y)].getBlockAt(x, this.modY(y), z);
 	}
 
-	protected void setBlockAt(int x, int y, int z, int blockID) {
-		this.slices[this.getSlice(y)].setBlockAt(x, this.modY(y), z, blockID);
+	protected void setBlockAt(int x, int y, int z, IBlock block) {
+		this.slices[this.getSlice(y)].setBlockAt(x, this.modY(y), z, block);
 	}
 
 	public boolean isBlockAir(int x, int y, int z) {
@@ -118,15 +128,15 @@ public final class ChunkData {
 		for(int i = 0; i < this.slices.length; i++) this.slices[i].setLightDataArray(arrays[i]);
 	}
 
-	public final BlockIntDataArray[] getBlockDataArrays() {
-		BlockIntDataArray[] array = new BlockIntDataArray[this.slices.length];
+	public final BlockLongDataArray[] getBlockDataArrays() {
+		BlockLongDataArray[] array = new BlockLongDataArray[this.slices.length];
 
 		for(int i = 0; i < this.slices.length; i++) array[i] = this.slices[i].getBlockDataArray();
 
 		return array;
 	}
 
-	protected void setBlockDataArrays(BlockIntDataArray[] arrays) {
+	protected void setBlockDataArrays(BlockLongDataArray[] arrays) {
 		if(this.slices.length != arrays.length) return;
 
 		for(int i = 0; i < this.slices.length; i++) this.slices[i].setBlockDataArray(arrays[i]);

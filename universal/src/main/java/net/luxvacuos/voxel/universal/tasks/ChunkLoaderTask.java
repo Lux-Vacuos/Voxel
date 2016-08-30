@@ -35,6 +35,7 @@ import net.luxvacuos.voxel.universal.world.chunk.ChunkDataBuilder;
 import net.luxvacuos.voxel.universal.world.chunk.ChunkSlice;
 import net.luxvacuos.voxel.universal.world.dimension.IDimension;
 import net.luxvacuos.voxel.universal.world.utils.BlockIntDataArray;
+import net.luxvacuos.voxel.universal.world.utils.BlockLongDataArray;
 import net.luxvacuos.voxel.universal.world.utils.ChunkNode;
 
 public class ChunkLoaderTask implements Callable<Pair<ChunkNode, ChunkData>> {
@@ -63,7 +64,8 @@ public class ChunkLoaderTask implements Callable<Pair<ChunkNode, ChunkData>> {
 		ChunkSlice slice;
 		int length = 0;
 		byte offset;
-		int[] array = null;
+		int[] array0 = null;
+		long[] array1 = null;
 		int numSlices;
 		
 		if(this.exists) {
@@ -74,18 +76,18 @@ public class ChunkLoaderTask implements Callable<Pair<ChunkNode, ChunkData>> {
 				
 				if(this.in.readBoolean()) {
 					length = this.in.readInt();
-					array = new int[length];
-					for(int input = 0; input < length; input++) array[input] = this.in.readInt();
-					slice.setBlockDataArray(new BlockIntDataArray(array));
-					array = null;
+					array1 = new long[length];
+					for(int input = 0; input < length; input++) array1[input] = this.in.readLong();
+					slice.setBlockDataArray(new BlockLongDataArray(array1));
+					array1 = null;
 				}
 				
 				if(this.in.readBoolean()) {
 					if(length == 0) length = this.in.readInt();
-					array = new int[length];
-					for(int input = 0; input < length; input++) array[input] = this.in.readInt();
-					slice.setLightDataArray(new BlockIntDataArray(array));
-					array = null;
+					array0 = new int[length];
+					for(int input = 0; input < length; input++) array0[input] = this.in.readInt();
+					slice.setLightDataArray(new BlockIntDataArray(array0));
+					array0 = null;
 				}
 				
 				builder.setSlice(offset, slice);

@@ -29,6 +29,7 @@ public class BlockBase implements IBlock {
 	protected final BlockMaterial material;
 	private BoundingBox aabb = new BoundingBox(new Vector3(0, 0, 0), new Vector3(1, 1, 1));
 	private int id;
+	private int metadata = 0;
 	
 	public BlockBase(BlockMaterial material) {
 		this.material = material;
@@ -75,8 +76,19 @@ public class BlockBase implements IBlock {
 	}
 
 	@Override
-	public boolean hasMetadata() {
+	public boolean hasComplexMetadata() {
 		return false;
+	}
+
+	@Override
+	public int getPackedMetadata() {
+		return this.metadata;
+	}
+
+	@Override
+	public void setPackedMetadata(int packedMetadata) {
+		this.metadata = packedMetadata;
+		
 	}
 
 }

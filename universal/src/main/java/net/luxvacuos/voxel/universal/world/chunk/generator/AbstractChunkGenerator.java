@@ -23,7 +23,7 @@ package net.luxvacuos.voxel.universal.world.chunk.generator;
 import java.util.Random;
 
 import net.luxvacuos.voxel.universal.world.chunk.IChunk;
-import net.luxvacuos.voxel.universal.world.utils.BlockIntDataArray;
+import net.luxvacuos.voxel.universal.world.utils.BlockLongDataArray;
 
 public abstract class AbstractChunkGenerator implements IChunkGenerator {
 	protected Random rng = null;
@@ -56,7 +56,7 @@ public abstract class AbstractChunkGenerator implements IChunkGenerator {
 	
 	@Override
 	public void generateChunk(IChunk chunk, int worldX, int worldZ) {
-		BlockIntDataArray[] bda = chunk.getChunkData().getBlockDataArrays();
+		BlockLongDataArray[] bda = chunk.getChunkData().getBlockDataArrays();
 		int adjWorldX, adjWorldZ;
 		double noise;
 		

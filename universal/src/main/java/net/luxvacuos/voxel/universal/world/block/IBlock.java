@@ -5,6 +5,10 @@ import com.badlogic.gdx.math.collision.BoundingBox;
 public interface IBlock {
 	public int getID();
 	
+	public int getPackedMetadata();
+	
+	public void setPackedMetadata(int packedMetadata);
+	
 	public String getName();
 	
 	public BoundingBox getBoundingBox();
@@ -15,5 +19,5 @@ public interface IBlock {
 	
 	public boolean isFluid();
 
-	public boolean hasMetadata();
+	public boolean hasComplexMetadata();
 }

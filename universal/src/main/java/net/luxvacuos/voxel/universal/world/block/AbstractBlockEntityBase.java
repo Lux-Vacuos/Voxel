@@ -30,6 +30,7 @@ public abstract class AbstractBlockEntityBase extends Entity implements IBlockEn
 	protected final BlockMaterial material;
 	private BoundingBox aabb = new BoundingBox(new Vector3(0, 0, 0), new Vector3(1, 1, 1));
 	private int id;
+	private int metadata;
 	
 	protected AbstractBlockEntityBase(BlockMaterial material) {
 		this.material = material;
@@ -76,8 +77,19 @@ public abstract class AbstractBlockEntityBase extends Entity implements IBlockEn
 	}
 
 	@Override
-	public boolean hasMetadata() {
+	public boolean hasComplexMetadata() {
 		return false;
+	}
+	
+	@Override
+	public int getPackedMetadata() {
+		return this.metadata;
+	}
+
+	@Override
+	public void setPackedMetadata(int packedMetadata) {
+		this.metadata = packedMetadata;
+		
 	}
 
 }

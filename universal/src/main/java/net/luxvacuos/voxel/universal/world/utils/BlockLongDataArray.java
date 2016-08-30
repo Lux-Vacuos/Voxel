@@ -20,27 +20,26 @@
 
 package net.luxvacuos.voxel.universal.world.utils;
 
-public final class BlockIntDataArray {
-	// [(HEIGHT * WIDTH * Z) + (LENGTH * Y) + X]
-	private final int[] data;
-	
-	public BlockIntDataArray() {
-		this.data = new int[4096]; //16 * 16 * 16 for a ChunkSection
+public final class BlockLongDataArray {
+	private final long[] data;
+
+	public BlockLongDataArray() {
+		this.data = new long[4096];
 	}
 	
-	public BlockIntDataArray(int[] data) {
+	public BlockLongDataArray(long[] data) {
 		this.data = data;
 	}
 	
-	public int get(int x, int y, int z) {
+	public long get(int x, int y, int z) {
 		return this.data[(16 * 16 * z) + (16 * y) + x];
 	}
 	
-	public void set(int x, int y, int z, int data) {
+	public void set(int x, int y, int z, long data) {
 		this.data[(16 * 16 * z) + (16 * y) + x] = data;
 	}
 	
-	public final int[] getData() {
+	public final long[] getData() {
 		return this.data;
 	}
 

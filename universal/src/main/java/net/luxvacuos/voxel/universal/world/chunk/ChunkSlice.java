@@ -20,14 +20,29 @@
 
 package net.luxvacuos.voxel.universal.world.chunk;
 
+import net.luxvacuos.voxel.universal.world.block.Blocks;
+import net.luxvacuos.voxel.universal.world.block.IBlock;
 import net.luxvacuos.voxel.universal.world.utils.BlockIntDataArray;
+import net.luxvacuos.voxel.universal.world.utils.BlockLongDataArray;
 
 public final class ChunkSlice {
 
-	private static final int BLOCK_LIGHT_MASK = 0x000000FF;
-	private static final int SKY_LIGHT_MASK = 0x0000FF00;
-
-	private BlockIntDataArray blockData; //Maybe have longs instead, with packed metadata? 0xMMMMMMMMBBBBBBBB
+	private final long BLOCK_METADATA_MASK = 0xFFFFFFFF00000000L;
+	private final long BLOCK_ID_MASK = 0x00000000FFFFFFFFL;
+	
+	/**
+	 * This block data array has both simple block metadata and the blockID packed in it:<br />
+	 * 0xMMMMMMMMBBBBBBBB<br />
+	 * The <i>M</i> bits is the simple block metadata<br />
+	 * The <i>B</i> bits is the blockID<br />
+	 * <br />
+	 * The functions in ChunkData automatically pack and unpack the data, so it should be
+	 * transparent to whatever is using it
+	 */
+	private BlockLongDataArray blockData;
+	
+	private final int BLOCK_LIGHT_MASK = 0x000000FF;
+	private final int SKY_LIGHT_MASK = 0x0000FF00;
 
 	/**
 	 * This light data array has both the sky light data and block light data packed in it:<br />
@@ -52,11 +67,11 @@ public final class ChunkSlice {
 		this.skyLightRebuild = false;
 		this.blockLightRebuild = false;
 		this.inHeightMap = false;
-		this.blockData = new BlockIntDataArray();
+		this.blockData = new BlockLongDataArray();
 		this.lightData = new BlockIntDataArray();
 	}
 
-	public ChunkSlice(byte offset, BlockIntDataArray blockData, BlockIntDataArray lightData) {
+	public ChunkSlice(byte offset, BlockLongDataArray blockData, BlockIntDataArray lightData) {
 		this.yOffset = offset;
 		this.blockRebuild = true;
 		this.skyLightRebuild = true;
@@ -65,14 +80,28 @@ public final class ChunkSlice {
 		this.lightData = lightData;
 	}
 
-	public int getBlockAt(int x, int y, int z) {
+	public int getBlockIDAt(int x, int y, int z) {
 		if(this.isEmpty()) return 0;
-		return this.blockData.get(x, y, z);
+		return (int)(this.blockData.get(x, y, z) & BLOCK_ID_MASK);
+	}
+	
+	public int getBlockMetadataAt(int x, int y, int z) {
+		if(this.isEmpty()) return 0;
+		return (int)((this.blockData.get(x, y, z) & BLOCK_METADATA_MASK) >> 32);
+	}
+	
+	public IBlock getBlockAt(int x, int y, int z) {
+		if(this.isEmpty()) return Blocks.getBlockByID(0);
+		
+		IBlock block = Blocks.getBlockByID(this.getBlockIDAt(x, y, z));
+		block.setPackedMetadata(this.getBlockMetadataAt(x, y, z));
+		return block;
 	}
 
-	public void setBlockAt(int x, int y, int z, int blockID) {
+	public void setBlockAt(int x, int y, int z, IBlock block) {
 		this.blockRebuild = true;
-		this.blockData.set(x, y, z, blockID);
+		long data = (long)(((block.getPackedMetadata()) << 32) + block.getID());
+		this.blockData.set(x, y, z, data);
 	}
 
 	public boolean isBlockAir(int x, int y, int z) {
@@ -151,11 +180,11 @@ public final class ChunkSlice {
 		this.blockLightRebuild = true;
 	}
 
-	public final BlockIntDataArray getBlockDataArray() {
+	public final BlockLongDataArray getBlockDataArray() {
 		return this.blockData;
 	}
 
-	public void setBlockDataArray(BlockIntDataArray array) {
+	public void setBlockDataArray(BlockLongDataArray array) {
 		this.blockData = array;
 		this.blockRebuild = true;
 	}
@@ -187,7 +216,7 @@ public final class ChunkSlice {
 		if(this.blockRebuild) {
 			this.blockRebuild = false;
 			this.numBlocks = 0;
-			int[] rawData = this.blockData.getData();
+			long[] rawData = this.blockData.getData();
 
 			for(int i = 0; i < rawData.length; i++) {
 				if(rawData[i] != 0) this.numBlocks++;

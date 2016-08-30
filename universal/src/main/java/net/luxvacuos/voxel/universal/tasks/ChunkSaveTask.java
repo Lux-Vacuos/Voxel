@@ -56,7 +56,8 @@ public class ChunkSaveTask implements Callable<Void> {
 			ImmutableArray<ChunkSlice> slices = chunk.getChunkData().getChunkSlices();
 			this.out.writeInt(slices.size());
 			
-			int[] bda = null;
+			int[] bda0 = null;
+			long[] bda1 = null;
 			boolean wroteLength = false;
 			for(ChunkSlice slice : slices) {
 				this.out.writeByte(slice.getOffset());
@@ -64,18 +65,18 @@ public class ChunkSaveTask implements Callable<Void> {
 				if(!slice.isEmpty()) {
 					this.out.writeBoolean(true);
 					wroteLength = true;
-					bda = slice.getBlockDataArray().getData();
-					this.out.writeInt(bda.length);
-					for(int i = 0; i < bda.length; i++)  this.out.writeInt(bda[i]);
-					bda = null;
+					bda1 = slice.getBlockDataArray().getData();
+					this.out.writeInt(bda1.length);
+					for(int i = 0; i < bda1.length; i++)  this.out.writeLong(bda1[i]);
+					bda1 = null;
 				} else this.out.writeBoolean(false);
 				
 				if(slice.hasLightData()) {
 					this.out.writeBoolean(true);
-					bda = slice.getLightDataArray().getData(); //Set bda to the light data
-					if(!wroteLength) this.out.writeInt(bda.length); //Write the length of the light data array to the stream if needed
-					for(int i = 0; i < bda.length; i++)  this.out.writeInt(bda[i]);
-					bda = null;
+					bda0 = slice.getLightDataArray().getData(); //Set bda to the light data
+					if(!wroteLength) this.out.writeInt(bda0.length); //Write the length of the light data array to the stream if needed
+					for(int i = 0; i < bda0.length; i++)  this.out.writeInt(bda0[i]);
+					bda0 = null;
 				} else this.out.writeBoolean(false);
 			}
 			
