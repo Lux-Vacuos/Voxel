@@ -8,6 +8,8 @@ public interface IDimension {
 	
 	public String getName();
 	
+	public String getWorldName();
+	
 	public int getID();
 
 	public boolean exists();

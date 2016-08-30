@@ -22,12 +22,13 @@ package net.luxvacuos.voxel.client.world.chunks.newAPI;
 
 import net.luxvacuos.voxel.universal.world.chunk.Chunk;
 import net.luxvacuos.voxel.universal.world.chunk.ChunkData;
+import net.luxvacuos.voxel.universal.world.dimension.IDimension;
 import net.luxvacuos.voxel.universal.world.utils.ChunkNode;
 
 public class RenderChunk extends Chunk {
 
-	protected RenderChunk(ChunkNode node, ChunkData data) {
-		super(node, data);
+	protected RenderChunk(IDimension dim, ChunkNode node, ChunkData data) {
+		super(dim, node, data);
 		// TODO Auto-generated constructor stub
 	}
 	

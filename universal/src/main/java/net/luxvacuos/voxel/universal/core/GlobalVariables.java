@@ -18,26 +18,16 @@
  * 
  */
 
-package net.luxvacuos.voxel.universal.tasks;
+package net.luxvacuos.voxel.universal.core;
 
-import java.util.concurrent.Callable;
+public class GlobalVariables {
+	
+	/** The path where all the world data resides */
+	public static String WORLD_PATH;
+	
+	/** Flag to enable debug mode */
+	public static boolean debug = false;
 
-import net.luxvacuos.voxel.universal.world.chunk.IChunk;
-import net.luxvacuos.voxel.universal.world.chunk.generator.IChunkGenerator;
-
-public class ChunkGenerateTask implements Callable<IChunk> {
-	private IChunk chunk;
-	private IChunkGenerator gen;
-
-	public ChunkGenerateTask(IChunk chunk, IChunkGenerator gen) {
-		this.chunk = chunk;
-		this.gen = gen;
-	}
-
-	@Override
-	public IChunk call() throws Exception {
-		this.gen.generateChunk(this.chunk, (this.chunk.getX() << 4) , (this.chunk.getZ() << 4));
-		return this.chunk;
-	}
+	private GlobalVariables() { }
 
 }

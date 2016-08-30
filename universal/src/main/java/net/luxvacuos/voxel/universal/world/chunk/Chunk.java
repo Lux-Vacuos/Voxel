@@ -25,16 +25,19 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import net.luxvacuos.voxel.universal.world.block.Blocks;
 import net.luxvacuos.voxel.universal.world.block.IBlock;
+import net.luxvacuos.voxel.universal.world.dimension.IDimension;
 import net.luxvacuos.voxel.universal.world.utils.ChunkNode;
 
 public class Chunk implements IChunk {
 	private final ChunkNode node;
+	protected final IDimension dim;
 	protected volatile ChunkData data;
 	protected final ReadWriteLock lock = new ReentrantReadWriteLock();
 	
-	protected Chunk(ChunkNode node, ChunkData data) {
+	protected Chunk(IDimension dim, ChunkNode node, ChunkData data) {
 		this.node = node;
 		this.data = data;
+		this.dim = dim;
 	}
 
 	@Override
@@ -116,6 +119,11 @@ public class Chunk implements IChunk {
 	public void dispose() {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public IDimension getDimension() {
+		return this.dim;
 	}
 
 }

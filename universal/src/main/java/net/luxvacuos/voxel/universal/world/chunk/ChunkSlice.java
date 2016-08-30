@@ -40,7 +40,7 @@ public final class ChunkSlice {
 	 */
 	private BlockIntDataArray lightData;
 
-	public final byte yOffset; //Used when saving the data to disk, so it can be put back in the right place
+	private final byte yOffset; //Used when saving the data to disk, so it can be put back in the right place
 
 	private short numBlocks = 0, numSkyLight = 0, numBlockLight = 0;
 
@@ -233,6 +233,10 @@ public final class ChunkSlice {
 
 			this.blockLightRebuild = false;
 		}
+	}
+	
+	public final byte getOffset() {
+		return this.yOffset;
 	}
 
 	public boolean isEmpty() {

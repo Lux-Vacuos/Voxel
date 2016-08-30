@@ -20,23 +20,90 @@
 
 package net.luxvacuos.voxel.universal.tasks;
 
+import java.io.BufferedInputStream;
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.concurrent.Callable;
 
+import net.luxvacuos.voxel.universal.core.GlobalVariables;
 import net.luxvacuos.voxel.universal.util.Pair;
 import net.luxvacuos.voxel.universal.world.chunk.ChunkData;
+import net.luxvacuos.voxel.universal.world.chunk.ChunkDataBuilder;
+import net.luxvacuos.voxel.universal.world.chunk.ChunkSlice;
+import net.luxvacuos.voxel.universal.world.dimension.IDimension;
+import net.luxvacuos.voxel.universal.world.utils.BlockIntDataArray;
 import net.luxvacuos.voxel.universal.world.utils.ChunkNode;
 
 public class ChunkLoaderTask implements Callable<Pair<ChunkNode, ChunkData>> {
+	private DataInputStream in = null;
 	private ChunkNode node;
-	
-	public ChunkLoaderTask(ChunkNode node) {
+	private boolean exists;
+
+	public ChunkLoaderTask(IDimension dim, ChunkNode node) throws IOException, FileNotFoundException {
 		this.node = node;
+		
+		String path = GlobalVariables.WORLD_PATH + dim.getWorldName() + File.pathSeparator + dim.getName();
+		String fullPath = path + File.pathSeparator + "chunk_" + node.getX() + "_" + node.getZ() + ".dat";
+		File file = new File(fullPath);
+		
+		if(this.exists = file.exists()) {
+			this.in = new DataInputStream(new BufferedInputStream(new FileInputStream(file)));
+		} else {
+			new File(path).mkdirs();
+			file.createNewFile();
+		}
 	}
 
 	@Override
 	public Pair<ChunkNode, ChunkData> call() throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		ChunkDataBuilder builder = new ChunkDataBuilder();
+		ChunkSlice slice;
+		int length = 0;
+		byte offset;
+		int[] array = null;
+		int numSlices;
+		
+		if(this.exists) {
+			numSlices = this.in.readInt();
+			for(int i = 0; i < numSlices; i++) {
+				offset = this.in.readByte();
+				slice = new ChunkSlice(offset);
+				
+				if(this.in.readBoolean()) {
+					length = this.in.readInt();
+					array = new int[length];
+					for(int input = 0; input < length; input++) array[input] = this.in.readInt();
+					slice.setBlockDataArray(new BlockIntDataArray(array));
+					array = null;
+				}
+				
+				if(this.in.readBoolean()) {
+					if(length == 0) length = this.in.readInt();
+					array = new int[length];
+					for(int input = 0; input < length; input++) array[input] = this.in.readInt();
+					slice.setLightDataArray(new BlockIntDataArray(array));
+					array = null;
+				}
+				
+				builder.setSlice(offset, slice);
+				slice = null;
+			}
+			
+			this.in.close();
+			
+			return new Pair<ChunkNode, ChunkData>(this.node, builder.build());
+		} else {
+			for(byte i = 0; i < 16; i++) {
+				slice = new ChunkSlice(i);
+				builder.setSlice(i, slice);
+				slice = null;
+			}
+			
+			return new Pair<ChunkNode, ChunkData>(this.node, builder.build());
+		}
 	}
 
 }

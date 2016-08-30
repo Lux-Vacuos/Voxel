@@ -20,21 +20,68 @@
 
 package net.luxvacuos.voxel.universal.tasks;
 
+import java.io.BufferedOutputStream;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.Collection;
 import java.util.concurrent.Callable;
 
+import com.badlogic.ashley.utils.ImmutableArray;
+
+import net.luxvacuos.voxel.universal.core.GlobalVariables;
+import net.luxvacuos.voxel.universal.world.chunk.ChunkSlice;
 import net.luxvacuos.voxel.universal.world.chunk.IChunk;
 
 public class ChunkSaveTask implements Callable<Void> {
 	private Collection<IChunk> chunks;
+	private DataOutputStream out;
 
 	public ChunkSaveTask(Collection<IChunk> chunks) {
-		// TODO Auto-generated constructor stub
+		this.chunks = chunks;
 	}
 
 	@Override
 	public Void call() throws Exception {
-		// TODO Auto-generated method stub
+		for(IChunk chunk : this.chunks) {
+			String path = GlobalVariables.WORLD_PATH + chunk.getDimension().getWorldName()
+					+ File.pathSeparator + chunk.getDimension().getName() + File.pathSeparator
+					+ "chunk_" + chunk.getX() + "_" + chunk.getZ() + ".dat";
+			
+			File file = new File(path);
+			if(!file.exists()) file.createNewFile(); //This shouldn't happen, but just in case it does
+			
+			this.out = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(file)));
+			
+			ImmutableArray<ChunkSlice> slices = chunk.getChunkData().getChunkSlices();
+			this.out.writeInt(slices.size());
+			
+			int[] bda = null;
+			boolean wroteLength = false;
+			for(ChunkSlice slice : slices) {
+				this.out.writeByte(slice.getOffset());
+				
+				if(!slice.isEmpty()) {
+					this.out.writeBoolean(true);
+					wroteLength = true;
+					bda = slice.getBlockDataArray().getData();
+					this.out.writeInt(bda.length);
+					for(int i = 0; i < bda.length; i++)  this.out.writeInt(bda[i]);
+					bda = null;
+				} else this.out.writeBoolean(false);
+				
+				if(slice.hasLightData()) {
+					this.out.writeBoolean(true);
+					bda = slice.getLightDataArray().getData(); //Set bda to the light data
+					if(!wroteLength) this.out.writeInt(bda.length); //Write the length of the light data array to the stream if needed
+					for(int i = 0; i < bda.length; i++)  this.out.writeInt(bda[i]);
+					bda = null;
+				} else this.out.writeBoolean(false);
+			}
+			
+			this.out.close();
+		}
+		
 		return null;
 	}
 

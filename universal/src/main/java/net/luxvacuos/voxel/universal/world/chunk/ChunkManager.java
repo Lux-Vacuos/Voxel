@@ -48,7 +48,7 @@ import net.luxvacuos.voxel.universal.world.dimension.IDimension;
 import net.luxvacuos.voxel.universal.world.utils.ChunkNode;
 
 public class ChunkManager implements IDisposable {
-	protected final IDimension dimension;
+	protected final IDimension dim;
 	protected final ExecutorService executor = Executors.newCachedThreadPool();
 	protected IChunkGenerator chunkGenerator = new FlatChunkGenerator();
 
@@ -63,8 +63,8 @@ public class ChunkManager implements IDisposable {
 
 	private Future<Void> saveTask = null;
 
-	public ChunkManager(IDimension dimension) {
-		this.dimension = dimension;
+	public ChunkManager(IDimension dim) {
+		this.dim = dim;
 		this.chunkGenerateList = new ArrayList<>();
 		this.chunkLoadList = new ArrayList<>();
 		this.chunkUnloadList = new ArrayList<>();
@@ -81,7 +81,7 @@ public class ChunkManager implements IDisposable {
 			if(!this.loadedChunks.containsKey(node)) {
 				this.loadLock.lock();
 				try {
-					this.chunkLoadList.add(this.executor.submit(new ChunkLoaderTask(node)));
+					this.chunkLoadList.add(this.executor.submit(new ChunkLoaderTask(this.dim, node)));
 				} catch(Exception e) {
 					Logger.error(e);
 				} finally {
@@ -101,7 +101,7 @@ public class ChunkManager implements IDisposable {
 		try {
 			for(ChunkNode node : nodes) {
 				if(!this.loadedChunks.containsKey(node)) {
-					this.chunkLoadList.add(this.executor.submit(new ChunkLoaderTask(node)));
+					this.chunkLoadList.add(this.executor.submit(new ChunkLoaderTask(this.dim, node)));
 				}
 			}
 		} catch(Exception e) {
@@ -191,9 +191,9 @@ public class ChunkManager implements IDisposable {
 					if(value.isDone()) { //Non-blocking check to see if the task is done
 						Pair<ChunkNode, ChunkData> pair = value.get();
 						iterator.remove();
-						IChunk chunk = this.makeChunk(pair.getFirst(), pair.getSecond());
+						IChunk chunk = this.makeChunk(this.dim, pair.getFirst(), pair.getSecond());
 						if(pair.getSecond().shouldGenerate()) {
-							this.chunkGenerateList.add(this.executor.submit(new ChunkGenerateTask(chunk)));
+							this.chunkGenerateList.add(this.executor.submit(new ChunkGenerateTask(chunk, this.chunkGenerator)));
 						} else {
 							this.chunkLock.writeLock().lock(); //Lock the Chunk Writer lock
 							try {
@@ -264,8 +264,8 @@ public class ChunkManager implements IDisposable {
 
 	}
 
-	protected Chunk makeChunk(ChunkNode node, ChunkData data) {
-		return new Chunk(node, data);
+	protected Chunk makeChunk(IDimension dim, ChunkNode node, ChunkData data) {
+		return new Chunk(dim, node, data);
 	}
 
 	public final Collection<IChunk> getLoadedChunks() {
