@@ -29,7 +29,7 @@ import com.esotericsoftware.kryonet.Client;
 
 import net.luxvacuos.igl.vector.Vector2f;
 import net.luxvacuos.igl.vector.Vector3f;
-import net.luxvacuos.voxel.client.core.VoxelVariables;
+import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.world.block.BlockBase;
 import net.luxvacuos.voxel.client.world.block.BlockEntity;
@@ -69,7 +69,7 @@ public class VoxelClient {
 		client = new Client(16384, 10240);
 		client.start();
 		client.addListener(new DedicatedListener(gm));
-		client.setName(VoxelVariables.username);
+		client.setName(ClientVariables.username);
 		Kryo kryo = client.getKryo();
 		kryo.register(Vector3f.class);
 		kryo.register(Vector2f.class);
@@ -107,7 +107,7 @@ public class VoxelClient {
 
 	public void connect(int port) throws IOException {
 		this.port = port;
-		VoxelVariables.onServer = true;
+		ClientVariables.onServer = true;
 		client.connect(1000, this.url, this.port, this.port);
 	}
 

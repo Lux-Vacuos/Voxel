@@ -31,7 +31,7 @@ import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 
 import net.luxvacuos.igl.Logger;
-import net.luxvacuos.voxel.server.core.VoxelVariables;
+import net.luxvacuos.voxel.server.core.ServerVariables;
 import net.luxvacuos.voxel.server.resources.ServerGameResources;
 
 public abstract class World {
@@ -46,7 +46,7 @@ public abstract class World {
 	public World(String name) {
 		this.name = name;
 		dimensions = new HashMap<>();
-		file = new File(VoxelVariables.WORLD_PATH + name + "/world.dat");
+		file = new File(ServerVariables.WORLD_PATH + name + "/world.dat");
 	}
 
 	public void init() {

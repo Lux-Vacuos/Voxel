@@ -48,7 +48,7 @@ public final class ClientWorldSimulation extends AbstractWorldSimulation {
 	@Override
 	public float update(float delta) {
 		// Set move factor for waves
-		moveFactor += VoxelVariables.WAVE_SPEED * delta;
+		moveFactor += ClientVariables.WAVE_SPEED * delta;
 		moveFactor %= 6.3f;
 		// Set time
 		time += delta * TIME_MULTIPLIER;
@@ -58,7 +58,7 @@ public final class ClientWorldSimulation extends AbstractWorldSimulation {
 		float res = time * 0.015f;
 
 		// Check for rain
-		if (VoxelVariables.raining) {
+		if (ClientVariables.raining) {
 			rainFactor += 0.2f * delta;
 		} else
 			rainFactor -= 0.2f * delta;

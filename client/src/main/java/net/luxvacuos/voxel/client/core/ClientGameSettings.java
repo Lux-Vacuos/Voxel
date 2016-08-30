@@ -42,32 +42,32 @@ public final class ClientGameSettings extends AbstractGameSettings {
 	@Override
 	public void read() {
 		// Parse Shadow, Volumetric Light and FXAA
-		VoxelVariables.useShadows = Boolean.parseBoolean(getValue("useShadows", "false"));
-		VoxelVariables.useVolumetricLight = Boolean.parseBoolean(getValue("useVolumetricLight", "false"));
-		VoxelVariables.useFXAA = Boolean.parseBoolean(getValue("useFXAA", "false"));
+		ClientVariables.useShadows = Boolean.parseBoolean(getValue("useShadows", "false"));
+		ClientVariables.useVolumetricLight = Boolean.parseBoolean(getValue("useVolumetricLight", "false"));
+		ClientVariables.useFXAA = Boolean.parseBoolean(getValue("useFXAA", "false"));
 
 		// Parse VSync, FPS, UPS and radius
-		VoxelVariables.VSYNC = Boolean.parseBoolean(getValue("VSYNC", "false"));
-		VoxelVariables.FPS = Integer.parseInt(getValue("FPS", "60"));
-		VoxelVariables.UPS = Integer.parseInt(getValue("UPS", "60"));
-		VoxelVariables.radius = Integer.parseInt(getValue("DrawDistance", "6"));
+		ClientVariables.VSYNC = Boolean.parseBoolean(getValue("VSYNC", "false"));
+		ClientVariables.FPS = Integer.parseInt(getValue("FPS", "60"));
+		ClientVariables.UPS = Integer.parseInt(getValue("UPS", "60"));
+		ClientVariables.radius = Integer.parseInt(getValue("DrawDistance", "6"));
 
 		// Parse Motion Blur and DoF
-		VoxelVariables.useMotionBlur = Boolean.parseBoolean(getValue("useMotionBlur", "false"));
-		VoxelVariables.useDOF = Boolean.parseBoolean(getValue("useDOF", "false"));
+		ClientVariables.useMotionBlur = Boolean.parseBoolean(getValue("useMotionBlur", "false"));
+		ClientVariables.useDOF = Boolean.parseBoolean(getValue("useDOF", "false"));
 
 		// Parse Reflections and Parallax
-		VoxelVariables.useReflections = Boolean.parseBoolean(getValue("useReflections", "false"));
-		VoxelVariables.useParallax = Boolean.parseBoolean(getValue("useParallax", "false"));
+		ClientVariables.useReflections = Boolean.parseBoolean(getValue("useReflections", "false"));
+		ClientVariables.useParallax = Boolean.parseBoolean(getValue("useParallax", "false"));
 
 		// Parse FoV
-		VoxelVariables.FOV = Integer.parseInt(getValue("FOV", "90"));
+		ClientVariables.FOV = Integer.parseInt(getValue("FOV", "90"));
 
 		// Parse rendering pipeline
-		VoxelVariables.renderingPipeline = getValue("RenderingPipeline", "MultiPass");
+		ClientVariables.renderingPipeline = getValue("RenderingPipeline", "MultiPass");
 
 		// Parse assetsPack
-		VoxelVariables.assets = getValue("Assets", "voxel");
+		ClientVariables.assets = getValue("Assets", "voxel");
 	}
 
 	/**
@@ -76,20 +76,20 @@ public final class ClientGameSettings extends AbstractGameSettings {
 	@Override
 	public void update() {
 		registerValue("SettingsVersion", Integer.toString(ClientGameSettings.VERSION));
-		registerValue("useShadows", Boolean.toString(VoxelVariables.useShadows));
-		registerValue("useVolumetricLight", Boolean.toString(VoxelVariables.useVolumetricLight));
-		registerValue("useFXAA", Boolean.toString(VoxelVariables.useFXAA));
-		registerValue("useMotionBlur", Boolean.toString(VoxelVariables.useMotionBlur));
-		registerValue("useDOF", Boolean.toString(VoxelVariables.useDOF));
-		registerValue("useReflections", Boolean.toString(VoxelVariables.useReflections));
-		registerValue("useParallax", Boolean.toString(VoxelVariables.useParallax));
-		registerValue("VSYNC", Boolean.toString(VoxelVariables.VSYNC));
-		registerValue("FPS", Integer.toString(VoxelVariables.FPS));
-		registerValue("UPS", Integer.toString(VoxelVariables.UPS));
-		registerValue("DrawDistance", Integer.toString(VoxelVariables.radius));
-		registerValue("FOV", Integer.toString(VoxelVariables.FOV));
-		registerValue("RenderingPipeline", VoxelVariables.renderingPipeline);
-		registerValue("Assets", VoxelVariables.assets);
+		registerValue("useShadows", Boolean.toString(ClientVariables.useShadows));
+		registerValue("useVolumetricLight", Boolean.toString(ClientVariables.useVolumetricLight));
+		registerValue("useFXAA", Boolean.toString(ClientVariables.useFXAA));
+		registerValue("useMotionBlur", Boolean.toString(ClientVariables.useMotionBlur));
+		registerValue("useDOF", Boolean.toString(ClientVariables.useDOF));
+		registerValue("useReflections", Boolean.toString(ClientVariables.useReflections));
+		registerValue("useParallax", Boolean.toString(ClientVariables.useParallax));
+		registerValue("VSYNC", Boolean.toString(ClientVariables.VSYNC));
+		registerValue("FPS", Integer.toString(ClientVariables.FPS));
+		registerValue("UPS", Integer.toString(ClientVariables.UPS));
+		registerValue("DrawDistance", Integer.toString(ClientVariables.radius));
+		registerValue("FOV", Integer.toString(ClientVariables.FOV));
+		registerValue("RenderingPipeline", ClientVariables.renderingPipeline);
+		registerValue("Assets", ClientVariables.assets);
 	}
 
 }

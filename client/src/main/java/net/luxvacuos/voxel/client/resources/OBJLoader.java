@@ -29,7 +29,7 @@ import java.util.List;
 import net.luxvacuos.igl.Logger;
 import net.luxvacuos.igl.vector.Vector2f;
 import net.luxvacuos.igl.vector.Vector3f;
-import net.luxvacuos.voxel.client.core.VoxelVariables;
+import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.core.exception.LoadOBJModelException;
 import net.luxvacuos.voxel.client.resources.models.RawModel;
 
@@ -58,7 +58,7 @@ public class OBJLoader {
 	 */
 	public RawModel loadObjModel(String fileName) {
 		InputStream file = getClass().getClassLoader()
-				.getResourceAsStream("assets/" + VoxelVariables.assets + "/models/" + fileName + ".obj");
+				.getResourceAsStream("assets/" + ClientVariables.assets + "/models/" + fileName + ".obj");
 		Logger.log("Loading Model: " + fileName + ".obj");
 		BufferedReader reader = new BufferedReader(new InputStreamReader(file));
 		String line;

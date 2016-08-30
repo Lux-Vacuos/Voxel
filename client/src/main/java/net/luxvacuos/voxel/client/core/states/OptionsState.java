@@ -20,7 +20,7 @@
 
 package net.luxvacuos.voxel.client.core.states;
 
-import net.luxvacuos.voxel.client.core.VoxelVariables;
+import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.UIRendering;
 import net.luxvacuos.voxel.client.rendering.api.opengl.MasterRenderer;
@@ -65,7 +65,7 @@ public class OptionsState extends AbstractState {
 		reflectionsButton = new Button(260, -110, 200, 40, "Reflections");
 		parallaxButton = new Button(260, -170, 200, 40, "Parallax");
 
-		if (VoxelVariables.useVolumetricLight) {
+		if (ClientVariables.useVolumetricLight) {
 			godraysButton.setText("Light Rays: ON");
 			godraysButton.setColor(100, 255, 100, 255);
 		} else {
@@ -73,7 +73,7 @@ public class OptionsState extends AbstractState {
 			godraysButton.setColor(255, 100, 100, 255);
 		}
 
-		if (VoxelVariables.useShadows) {
+		if (ClientVariables.useShadows) {
 			shadowsButton.setText("Shadows: ON");
 			shadowsButton.setColor(100, 255, 100, 255);
 		} else {
@@ -81,7 +81,7 @@ public class OptionsState extends AbstractState {
 			shadowsButton.setColor(255, 100, 100, 255);
 		}
 
-		if (VoxelVariables.useDOF) {
+		if (ClientVariables.useDOF) {
 			dofButton.setText("DoF: ON");
 			dofButton.setColor(100, 255, 100, 255);
 		} else {
@@ -89,7 +89,7 @@ public class OptionsState extends AbstractState {
 			dofButton.setColor(255, 100, 100, 255);
 		}
 
-		if (VoxelVariables.useFXAA) {
+		if (ClientVariables.useFXAA) {
 			fxaaButton.setText("FXAA: ON");
 			fxaaButton.setColor(100, 255, 100, 255);
 		} else {
@@ -97,7 +97,7 @@ public class OptionsState extends AbstractState {
 			fxaaButton.setColor(255, 100, 100, 255);
 		}
 
-		if (VoxelVariables.useMotionBlur) {
+		if (ClientVariables.useMotionBlur) {
 			motionBlurButton.setText("Motion Blur: ON");
 			motionBlurButton.setColor(100, 255, 100, 255);
 		} else {
@@ -105,7 +105,7 @@ public class OptionsState extends AbstractState {
 			motionBlurButton.setColor(255, 100, 100, 255);
 		}
 
-		if (VoxelVariables.useReflections) {
+		if (ClientVariables.useReflections) {
 			reflectionsButton.setText("Reflections: ON");
 			reflectionsButton.setColor(100, 255, 100, 255);
 		} else {
@@ -113,7 +113,7 @@ public class OptionsState extends AbstractState {
 			reflectionsButton.setColor(255, 100, 100, 255);
 		}
 
-		if (VoxelVariables.useParallax) {
+		if (ClientVariables.useParallax) {
 			parallaxButton.setText("Parallax: ON");
 			parallaxButton.setColor(100, 255, 100, 255);
 		} else {
@@ -129,8 +129,8 @@ public class OptionsState extends AbstractState {
 		});
 
 		shadowsButton.setOnButtonPress((button, delta) -> {
-			VoxelVariables.useShadows = !VoxelVariables.useShadows;
-			if (VoxelVariables.useShadows) {
+			ClientVariables.useShadows = !ClientVariables.useShadows;
+			if (ClientVariables.useShadows) {
 				shadowsButton.setText("Shadows: ON");
 				shadowsButton.setColor(100, 255, 100, 255);
 			} else {
@@ -140,8 +140,8 @@ public class OptionsState extends AbstractState {
 		});
 
 		dofButton.setOnButtonPress((button, delta) -> {
-			VoxelVariables.useDOF = !VoxelVariables.useDOF;
-			if (VoxelVariables.useDOF) {
+			ClientVariables.useDOF = !ClientVariables.useDOF;
+			if (ClientVariables.useDOF) {
 				dofButton.setText("DoF: ON");
 				dofButton.setColor(100, 255, 100, 255);
 			} else {
@@ -152,8 +152,8 @@ public class OptionsState extends AbstractState {
 		});
 
 		godraysButton.setOnButtonPress((button, delta) -> {
-			VoxelVariables.useVolumetricLight = !VoxelVariables.useVolumetricLight;
-			if (VoxelVariables.useVolumetricLight) {
+			ClientVariables.useVolumetricLight = !ClientVariables.useVolumetricLight;
+			if (ClientVariables.useVolumetricLight) {
 				godraysButton.setText("Light Rays: ON");
 				godraysButton.setColor(100, 255, 100, 255);
 			} else {
@@ -163,9 +163,9 @@ public class OptionsState extends AbstractState {
 		});
 
 		fxaaButton.setOnButtonPress((button, delta) -> {
-			VoxelVariables.useFXAA = !VoxelVariables.useFXAA;
+			ClientVariables.useFXAA = !ClientVariables.useFXAA;
 
-			if (VoxelVariables.useFXAA) {
+			if (ClientVariables.useFXAA) {
 				fxaaButton.setText("FXAA: ON");
 				fxaaButton.setColor(100, 255, 100, 255);
 			} else {
@@ -175,8 +175,8 @@ public class OptionsState extends AbstractState {
 		});
 
 		parallaxButton.setOnButtonPress((button, delta) -> {
-			VoxelVariables.useParallax = !VoxelVariables.useParallax;
-			if (VoxelVariables.useParallax) {
+			ClientVariables.useParallax = !ClientVariables.useParallax;
+			if (ClientVariables.useParallax) {
 				parallaxButton.setText("Parallax: ON");
 				parallaxButton.setColor(100, 255, 100, 255);
 			} else {
@@ -187,8 +187,8 @@ public class OptionsState extends AbstractState {
 		});
 
 		motionBlurButton.setOnButtonPress((button, delta) -> {
-			VoxelVariables.useMotionBlur = !VoxelVariables.useMotionBlur;
-			if (VoxelVariables.useMotionBlur) {
+			ClientVariables.useMotionBlur = !ClientVariables.useMotionBlur;
+			if (ClientVariables.useMotionBlur) {
 				motionBlurButton.setText("Motion Blur: ON");
 				motionBlurButton.setColor(100, 255, 100, 255);
 			} else {
@@ -199,8 +199,8 @@ public class OptionsState extends AbstractState {
 		});
 
 		reflectionsButton.setOnButtonPress((button, delta) -> {
-			VoxelVariables.useReflections = !VoxelVariables.useReflections;
-			if (VoxelVariables.useReflections) {
+			ClientVariables.useReflections = !ClientVariables.useReflections;
+			if (ClientVariables.useReflections) {
 				reflectionsButton.setText("Reflections: ON");
 				reflectionsButton.setColor(100, 255, 100, 255);
 			} else {
@@ -255,7 +255,7 @@ public class OptionsState extends AbstractState {
 			gm.getWorldsHandler().getActiveWorld().getActiveDimension().lighting();
 			gm.getSun_Camera().setPosition(gm.getCamera().getPosition());
 			gm.getFrustum().calculateFrustum(gm.getMasterShadowRenderer().getProjectionMatrix(), gm.getSun_Camera());
-			if (VoxelVariables.useShadows) {
+			if (ClientVariables.useShadows) {
 				gm.getMasterShadowRenderer().being();
 				MasterRenderer.prepare();
 				gm.getWorldsHandler().getActiveWorld().getActiveDimension().updateChunksShadow(gm);
@@ -271,7 +271,7 @@ public class OptionsState extends AbstractState {
 
 			gm.getRenderingPipeline().begin();
 			MasterRenderer.prepare();
-			gm.getSkyboxRenderer().render(VoxelVariables.RED, VoxelVariables.GREEN, VoxelVariables.BLUE, delta, gm);
+			gm.getSkyboxRenderer().render(ClientVariables.RED, ClientVariables.GREEN, ClientVariables.BLUE, delta, gm);
 			gm.getWorldsHandler().getActiveWorld().getActiveDimension().updateChunksRender(gm, false);
 			gm.getRenderer().renderEntity(
 					gm.getWorldsHandler().getActiveWorld().getActiveDimension().getPhysicsEngine().getEntities(), gm);

@@ -23,7 +23,7 @@ package net.luxvacuos.voxel.client.rendering.api.opengl;
 import net.luxvacuos.igl.vector.Matrix4f;
 import net.luxvacuos.igl.vector.Vector2f;
 import net.luxvacuos.igl.vector.Vector3f;
-import net.luxvacuos.voxel.client.core.VoxelVariables;
+import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.DeferredShadingShader;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.util.Maths;
@@ -78,7 +78,7 @@ public abstract class ImagePass {
 		shader.loadTransformation(Maths.createTransformationMatrix(new Vector2f(0, 0), new Vector2f(1, 1)));
 		shader.connectTextureUnits();
 		shader.loadResolution(new Vector2f(width, height));
-		shader.loadSkyColor(VoxelVariables.skyColor);
+		shader.loadSkyColor(ClientVariables.skyColor);
 		shader.stop();
 	}
 
@@ -100,8 +100,8 @@ public abstract class ImagePass {
 				previousViewMatrix, previousCameraPosition);
 		shader.loadLightPosition(gm.getLightPos(), gm.getInvertedLightPosition());
 		shader.loadviewMatrix(((PlayerCamera) gm.getCamera()));
-		shader.loadSettings(VoxelVariables.useDOF, VoxelVariables.useFXAA, VoxelVariables.useMotionBlur,
-				VoxelVariables.useVolumetricLight, VoxelVariables.useReflections);
+		shader.loadSettings(ClientVariables.useDOF, ClientVariables.useFXAA, ClientVariables.useMotionBlur,
+				ClientVariables.useVolumetricLight, ClientVariables.useReflections);
 		shader.loadSunPosition(Maths.convertTo2F(new Vector3f(gm.getLightPos()), gm.getRenderer().getProjectionMatrix(),
 				Maths.createViewMatrix(gm.getCamera()), width, height));
 		shader.loadExposure(4f);

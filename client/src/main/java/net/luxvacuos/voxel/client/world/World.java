@@ -31,7 +31,7 @@ import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 
 import net.luxvacuos.igl.Logger;
-import net.luxvacuos.voxel.client.core.VoxelVariables;
+import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.ui.Inventory;
 import net.luxvacuos.voxel.client.world.entities.PlayerCamera;
@@ -51,7 +51,7 @@ public abstract class World {
 	}
 
 	public void init() {
-		file = new File(VoxelVariables.WORLD_PATH + name + "/world.dat");
+		file = new File(ClientVariables.WORLD_PATH + name + "/world.dat");
 		Logger.log("Loading World: " + name);
 		((PlayerCamera) GameResources.getInstance().getCamera()).getInventory().clearInventorty();
 		saved = false;

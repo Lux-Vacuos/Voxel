@@ -35,7 +35,7 @@ import java.nio.FloatBuffer;
 import org.lwjgl.BufferUtils;
 
 import net.luxvacuos.voxel.client.core.CoreInfo;
-import net.luxvacuos.voxel.client.core.VoxelVariables;
+import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.input.Keyboard;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.Timers;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.UIRendering;
@@ -71,7 +71,7 @@ public class MPState extends AbstractState {
 
 		gm.getSun_Camera().setPosition(gm.getCamera().getPosition());
 		gm.getFrustum().calculateFrustum(gm.getMasterShadowRenderer().getProjectionMatrix(), gm.getSun_Camera());
-		if (VoxelVariables.useShadows) {
+		if (ClientVariables.useShadows) {
 			gm.getMasterShadowRenderer().being();
 			MasterRenderer.prepare();
 			gm.getWorldsHandler().getActiveWorld().getActiveDimension().updateChunksShadow(gm);
@@ -86,7 +86,7 @@ public class MPState extends AbstractState {
 
 		gm.getRenderingPipeline().begin();
 		MasterRenderer.prepare();
-		gm.getSkyboxRenderer().render(VoxelVariables.RED, VoxelVariables.GREEN, VoxelVariables.BLUE, alpha, gm);
+		gm.getSkyboxRenderer().render(ClientVariables.RED, ClientVariables.GREEN, ClientVariables.BLUE, alpha, gm);
 		gm.getWorldsHandler().getActiveWorld().getActiveDimension().updateChunksRender(gm, false);
 		gm.getRenderer().renderEntity(
 				gm.getWorldsHandler().getActiveWorld().getActiveDimension().getPhysicsEngine().getEntities(), gm);
@@ -112,8 +112,8 @@ public class MPState extends AbstractState {
 
 		ParticleMaster.getInstance().render(gm.getCamera(), gm.getRenderer().getProjectionMatrix());
 		gm.getDisplay().beingNVGFrame();
-		if (VoxelVariables.debug) {
-			UIRendering.renderText("Voxel " + " (" + VoxelVariables.version + ")", "Roboto-Bold", 5, 12, 20,
+		if (ClientVariables.debug) {
+			UIRendering.renderText("Voxel " + " (" + ClientVariables.version + ")", "Roboto-Bold", 5, 12, 20,
 					UIRendering.rgba(220, 220, 220, 255, UIRendering.colorA),
 					UIRendering.rgba(255, 255, 255, 255, UIRendering.colorB));
 			UIRendering.renderText("Used VRam: " + gm.getDisplay().getUsedVRAM() + "KB " + " UPS: " + CoreInfo.ups,
@@ -157,9 +157,9 @@ public class MPState extends AbstractState {
 		ParticleMaster.getInstance().update(delta, gm.getCamera());
 		while (next()) {
 			if (isKeyDown(KEY_F1))
-				VoxelVariables.debug = !VoxelVariables.debug;
+				ClientVariables.debug = !ClientVariables.debug;
 			if (Keyboard.isKeyDown(Keyboard.KEY_R))
-				VoxelVariables.raining = !VoxelVariables.raining;
+				ClientVariables.raining = !ClientVariables.raining;
 		}
 	}
 

@@ -33,7 +33,7 @@ import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 
 import net.luxvacuos.igl.vector.Vector3f;
-import net.luxvacuos.voxel.client.core.VoxelVariables;
+import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.EntityShader;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.util.Maths;
@@ -58,7 +58,7 @@ public class RendereableTexturedModel {
 		shader.loadProjectionMatrix(GameResources.getInstance().getRenderer().getProjectionMatrix());
 		shader.loadviewMatrix(GameResources.getInstance().getCamera());
 		shader.loadLightMatrix(GameResources.getInstance());
-		shader.useShadows(VoxelVariables.useShadows);
+		shader.useShadows(ClientVariables.useShadows);
 		RawModel rawmodel = model.getRawModel();
 		glBindVertexArray(rawmodel.getVaoID());
 		glEnableVertexAttribArray(0);

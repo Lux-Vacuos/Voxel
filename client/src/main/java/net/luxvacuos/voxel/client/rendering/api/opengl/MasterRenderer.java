@@ -45,7 +45,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.utils.ImmutableArray;
 
 import net.luxvacuos.igl.vector.Matrix4f;
-import net.luxvacuos.voxel.client.core.VoxelVariables;
+import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.EntityShader;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.resources.models.TexturedModel;
@@ -71,7 +71,7 @@ public class MasterRenderer {
 	public MasterRenderer(GameResources gm) {
 		shader = new EntityShader();
 		projectionMatrix = createProjectionMatrix(gm.getDisplay().getDisplayWidth(), gm.getDisplay().getDisplayHeight(),
-				VoxelVariables.FOV, VoxelVariables.NEAR_PLANE, VoxelVariables.FAR_PLANE);
+				ClientVariables.FOV, ClientVariables.NEAR_PLANE, ClientVariables.FAR_PLANE);
 		entityRenderer = new EntityRenderer(shader, gm, projectionMatrix);
 	}
 
@@ -96,7 +96,7 @@ public class MasterRenderer {
 		shader.loadProjectionMatrix(projectionMatrix);
 		shader.loadviewMatrix(gm.getCamera());
 		shader.loadLightMatrix(gm);
-		shader.useShadows(VoxelVariables.useShadows);
+		shader.useShadows(ClientVariables.useShadows);
 		entityRenderer.renderEntity(entities, gm);
 		shader.stop();
 		entities.clear();
@@ -116,7 +116,7 @@ public class MasterRenderer {
 
 	public static void prepare() {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-		glClearColor(VoxelVariables.RED, VoxelVariables.GREEN, VoxelVariables.BLUE, 1);
+		glClearColor(ClientVariables.RED, ClientVariables.GREEN, ClientVariables.BLUE, 1);
 		glEnable(GL_CULL_FACE);
 		glCullFace(GL_BACK);
 		glEnable(GL_DEPTH_TEST);
@@ -140,8 +140,8 @@ public class MasterRenderer {
 
 	public void update(GameResources gm) {
 		projectionMatrix = createProjectionMatrix(projectionMatrix, gm.getDisplay().getDisplayWidth(),
-				gm.getDisplay().getDisplayHeight(), VoxelVariables.FOV, VoxelVariables.NEAR_PLANE,
-				VoxelVariables.FAR_PLANE);
+				gm.getDisplay().getDisplayHeight(), ClientVariables.FOV, ClientVariables.NEAR_PLANE,
+				ClientVariables.FAR_PLANE);
 	}
 
 	public Matrix4f getProjectionMatrix() {

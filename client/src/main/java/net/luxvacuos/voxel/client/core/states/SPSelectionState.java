@@ -26,7 +26,7 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.luxvacuos.voxel.client.core.VoxelVariables;
+import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.UIRendering;
 import net.luxvacuos.voxel.client.rendering.api.opengl.MasterRenderer;
@@ -94,7 +94,7 @@ public class SPSelectionState extends AbstractState {
 	@Override
 	public void start() {
 		y = 0;
-		File worldPath = new File(VoxelVariables.WORLD_PATH);
+		File worldPath = new File(ClientVariables.WORLD_PATH);
 		if (!worldPath.exists())
 			worldPath.mkdirs();
 		try {

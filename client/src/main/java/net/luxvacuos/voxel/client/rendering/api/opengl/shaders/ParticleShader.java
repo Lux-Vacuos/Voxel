@@ -21,7 +21,7 @@
 package net.luxvacuos.voxel.client.rendering.api.opengl.shaders;
 
 import net.luxvacuos.igl.vector.Matrix4f;
-import net.luxvacuos.voxel.client.core.VoxelVariables;
+import net.luxvacuos.voxel.client.core.ClientVariables;
 
 public class ParticleShader extends ShaderProgram {
 
@@ -29,7 +29,7 @@ public class ParticleShader extends ShaderProgram {
 	private int loc_numberOfRows;
 
 	public ParticleShader() {
-		super(VoxelVariables.VERTEX_FILE_PARTICLE, VoxelVariables.FRAGMENT_FILE_PARTICLE);
+		super(ClientVariables.VERTEX_FILE_PARTICLE, ClientVariables.FRAGMENT_FILE_PARTICLE);
 	}
 
 	@Override

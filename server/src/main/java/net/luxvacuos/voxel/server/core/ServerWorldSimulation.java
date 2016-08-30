@@ -35,7 +35,7 @@ public final class ServerWorldSimulation extends AbstractWorldSimulation {
 		time %= 24000;
 		globalTime += delta * TIME_MULTIPLIER;
 
-		if (VoxelVariables.raining)
+		if (ServerVariables.raining)
 			rainFactor += 0.2f * delta;
 		else
 			rainFactor -= 0.2f * delta;

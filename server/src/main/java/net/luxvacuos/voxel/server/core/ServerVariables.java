@@ -23,23 +23,20 @@ package net.luxvacuos.voxel.server.core;
 import java.io.File;
 import java.io.IOException;
 
+import net.luxvacuos.voxel.universal.core.GlobalVariables;
+
 /**
  * Locations of all global variables
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
  * @category Kernel
  */
-public class VoxelVariables {
-	/**
-	 * Display Data
-	 */
-	public static int UPS = 60;
+public class ServerVariables extends GlobalVariables {
 	/**
 	 * Game Settings
 	 */
 	public static String version = "Development Version";
 
-	public static final String settings = "settings.conf";
 	public static final float TIME_MULTIPLIER = 10;
 	public static int port = 4059;
 	public static boolean useUI = false;
@@ -59,14 +56,10 @@ public class VoxelVariables {
 	public static final int DIM_0 = 0;
 	public static final int DIM_1 = 1;
 	public static final float GRAVITY = -10;
-	/**
-	 * World Folder Path
-	 */
-	public static String WORLD_PATH = null;
 
 	static {
 		try {
-			WORLD_PATH = new File(".").getCanonicalPath() + "/worlds/";
+			WORLD_PATH = new File(".").getCanonicalPath() + File.pathSeparator+ "worlds" + File.pathSeparator;
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

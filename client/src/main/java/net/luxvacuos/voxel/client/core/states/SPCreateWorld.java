@@ -24,7 +24,7 @@ import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_CENTER;
 
 import java.io.File;
 
-import net.luxvacuos.voxel.client.core.VoxelVariables;
+import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.input.Keyboard;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.UIRendering;
 import net.luxvacuos.voxel.client.rendering.api.opengl.MasterRenderer;
@@ -56,7 +56,7 @@ public class SPCreateWorld extends AbstractState {
 		createButton = new Button(window.getWidth() / 2 - 210, -window.getHeight() + 35, 200, 40, "Create World");
 		createButton.setOnButtonPress((button, delta) -> {
 			if (!worldName.equals("")) {
-				new File(VoxelVariables.WORLD_PATH + worldName).mkdirs();
+				new File(ClientVariables.WORLD_PATH + worldName).mkdirs();
 				//switchTo(GameState.SP_SELECTION);
 				StateMachine.setCurrentState(StateNames.SP_SELECTION);
 				worldName = "";

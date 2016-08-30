@@ -63,7 +63,7 @@ import net.luxvacuos.igl.vector.Vector2f;
 import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.igl.vector.Vector4f;
 import net.luxvacuos.igl.vector.Vector8f;
-import net.luxvacuos.voxel.client.core.VoxelVariables;
+import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.TessellatorBasicShader;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.TessellatorShader;
 import net.luxvacuos.voxel.client.resources.GameResources;
@@ -253,7 +253,7 @@ public class Tessellator {
 		shader.loadviewMatrix(camera);
 		shader.loadLightMatrix(gm);
 		shader.loadTransparent(transparent);
-		shader.loadSettings(VoxelVariables.useShadows, VoxelVariables.useParallax);
+		shader.loadSettings(ClientVariables.useShadows, ClientVariables.useParallax);
 		shader.loadMoveFactor(gm.getWorldSimulation().getMoveFactor());
 		shader.loadRainFactor(gm.getWorldSimulation().getRainFactor());
 		glBindVertexArray(vaoID);

@@ -106,14 +106,14 @@ public class Voxel extends AbstractVoxel {
 			Attributes attr = manifest.getMainAttributes();
 			String t = attr.getValue("Specification-Version");
 			if (t != null)
-				VoxelVariables.version = t;
+				ClientVariables.version = t;
 		} catch (IOException E) {
 			E.printStackTrace();
 		}
 		Logger.log("Starting Client");
 
-		VoxelVariables.settings = bootstrap.getPrefix() + "/config/settings.conf";
-		VoxelVariables.WORLD_PATH = bootstrap.getPrefix() + "/world/";
+		ClientVariables.SETTINGS_PATH = bootstrap.getPrefix() + "/config/settings.conf";
+		ClientVariables.WORLD_PATH = bootstrap.getPrefix() + "/world/";
 
 		// Create the GameResources instance
 		gameResources = GameResources.getInstance();
@@ -124,9 +124,9 @@ public class Voxel extends AbstractVoxel {
 		// Clear Screen
 		MasterRenderer.prepare(1, 1, 1, 1);
 		// Update Screen buffers
-		getGameResources().getDisplay().updateDisplay(VoxelVariables.FPS);
+		getGameResources().getDisplay().updateDisplay(ClientVariables.FPS);
 		// Print info
-		Logger.log("Voxel Client Version: " + VoxelVariables.version);
+		Logger.log("Voxel Client Version: " + ClientVariables.version);
 		Logger.log("Running on: " + bootstrap.getPlatform());
 		Logger.log("LWJGL Version: " + Version.getVersion());
 		Logger.log("GLFW Version: " + GLFW.glfwGetVersionString());
@@ -142,7 +142,7 @@ public class Voxel extends AbstractVoxel {
 		CoreInfo.Renderer = glGetString(GL_RENDERER);
 		// Check for OS X
 		if (bootstrap.getPlatform().equals(Platform.MACOSX)) {
-			VoxelVariables.runningOnMac = true;
+			ClientVariables.runningOnMac = true;
 		}
 		// Create ModsHandler instance
 		modsHandler = new ModsHandler(this);
@@ -220,7 +220,7 @@ public class Voxel extends AbstractVoxel {
 			// Initialize time variables
 			float delta = 0;
 			float accumulator = 0f;
-			float interval = 1f / VoxelVariables.UPS;
+			float interval = 1f / ClientVariables.UPS;
 			float alpha = 0;
 			// Set loaded
 			loaded = true;
@@ -257,7 +257,7 @@ public class Voxel extends AbstractVoxel {
 				// Update Timers
 				Timers.update();
 				// Update Screen buffers
-				getGameResources().getDisplay().updateDisplay(VoxelVariables.FPS);
+				getGameResources().getDisplay().updateDisplay(ClientVariables.FPS);
 			}
 			// Dispose all resources
 			dispose();

@@ -23,7 +23,7 @@ package net.luxvacuos.voxel.client.bootstrap;
 import com.esotericsoftware.minlog.Log;
 
 import net.luxvacuos.voxel.client.core.Voxel;
-import net.luxvacuos.voxel.client.core.VoxelVariables;
+import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.universal.bootstrap.AbstractBootstrap;
 import net.luxvacuos.voxel.universal.bootstrap.Platform;
 
@@ -59,8 +59,8 @@ public class Bootstrap extends AbstractBootstrap {
 				if (gaveWidth)
 					throw new IllegalStateException("Width already given");
 				// Convert and set the width
-				VoxelVariables.WIDTH = Integer.parseInt(args[++i]);
-				if (VoxelVariables.WIDTH <= 0)
+				ClientVariables.WIDTH = Integer.parseInt(args[++i]);
+				if (ClientVariables.WIDTH <= 0)
 					throw new IllegalArgumentException("Width must be positive");
 				gaveWidth = true;
 				break;
@@ -69,15 +69,15 @@ public class Bootstrap extends AbstractBootstrap {
 				if (gaveHeight)
 					throw new IllegalStateException("Height already given");
 				// Convert and set height
-				VoxelVariables.HEIGHT = Integer.parseInt(args[++i]);
-				if (VoxelVariables.HEIGHT <= 0)
+				ClientVariables.HEIGHT = Integer.parseInt(args[++i]);
+				if (ClientVariables.HEIGHT <= 0)
 					throw new IllegalArgumentException("Height must be positive");
 				gaveHeight = true;
 				break;
 			// Check for username
 			case "-username":
 				// Set username
-				VoxelVariables.username = args[++i];
+				ClientVariables.username = args[++i];
 				break;
 			default:
 				// If there is an unknown arg throw exception

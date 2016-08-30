@@ -21,6 +21,7 @@
 package net.luxvacuos.voxel.client.core;
 
 import net.luxvacuos.igl.vector.Vector3f;
+import net.luxvacuos.voxel.universal.core.GlobalVariables;
 
 /**
  * Voxel Global Variables
@@ -28,13 +29,12 @@ import net.luxvacuos.igl.vector.Vector3f;
  * @author Guerra24 <pablo230699@hotmail.com>
  * @category Kernel
  */
-public class VoxelVariables {
+public class ClientVariables extends GlobalVariables {
 
 	/**
 	 * Display Data
 	 */
 	public static int FPS = 60;
-	public static int UPS = 60;
 	public static boolean VSYNC = false;
 	public static final String Title = "Voxel";
 
@@ -45,7 +45,6 @@ public class VoxelVariables {
 	/**
 	 * Game Settings
 	 */
-	public static boolean debug = false;
 	public static boolean hideHud = false;
 	public static boolean onServer = false;
 	public static String version = "Development Version";
@@ -58,10 +57,9 @@ public class VoxelVariables {
 	public static float RED = 0.32f;
 	public static float GREEN = 0.8f;
 	public static float BLUE = 1f;
-	public static Vector3f skyColor = new Vector3f(VoxelVariables.RED, VoxelVariables.GREEN, VoxelVariables.BLUE);
+	public static Vector3f skyColor = new Vector3f(ClientVariables.RED, ClientVariables.GREEN, ClientVariables.BLUE);
 	public static boolean runningOnMac = false;
 	public static boolean raining = false;
-	public static String settings;
 	public static String assets = "voxel";
 
 	/**
@@ -96,9 +94,5 @@ public class VoxelVariables {
 	public static final String FRAGMENT_FILE_TESSELLATOR = "F_Tessellator.glsl";
 	public static final String VERTEX_FILE_TESSELLATOR_BASIC = "V_TessellatorBasic.glsl";
 	public static final String FRAGMENT_FILE_TESSELLATOR_BASIC = "F_TessellatorBasic.glsl";
-	/**
-	 * World Folder Path
-	 */
-	public static String WORLD_PATH;
 
 }

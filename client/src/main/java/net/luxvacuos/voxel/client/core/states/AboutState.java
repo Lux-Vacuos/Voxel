@@ -24,7 +24,7 @@ import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_MIDDLE;
 import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_RIGHT;
 
 import net.luxvacuos.voxel.client.core.CoreInfo;
-import net.luxvacuos.voxel.client.core.VoxelVariables;
+import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.UIRendering;
 import net.luxvacuos.voxel.client.rendering.api.opengl.MasterRenderer;
 import net.luxvacuos.voxel.client.resources.GameResources;
@@ -65,7 +65,7 @@ public class AboutState extends AbstractState {
 
 		Text versionL = new Text("Version", 30, -300);
 		versionL.setFont("Roboto-Bold");
-		Text versionR = new Text(" (" + VoxelVariables.version + ")", window.getWidth() - 30, -300);
+		Text versionR = new Text(" (" + ClientVariables.version + ")", window.getWidth() - 30, -300);
 		versionR.setAlign(NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE);
 
 		Text osL = new Text("Operative System", 30, -330);

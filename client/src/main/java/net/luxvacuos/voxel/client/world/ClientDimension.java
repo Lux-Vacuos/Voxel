@@ -28,7 +28,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import com.badlogic.ashley.core.Engine;
 
 import net.luxvacuos.igl.vector.Vector3f;
-import net.luxvacuos.voxel.client.core.VoxelVariables;
+import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.resources.models.ParticlePoint;
 import net.luxvacuos.voxel.client.resources.models.ParticleSystem;
@@ -87,11 +87,11 @@ public class ClientDimension extends Dimension {
 		
 		ChunkNode node;
 		int xx, yy, zz;
-		for (int zr = -VoxelVariables.radius; zr <= VoxelVariables.radius; zr++) {
+		for (int zr = -ClientVariables.radius; zr <= ClientVariables.radius; zr++) {
 			zz = playerCZ + zr;
-			for (int xr = -VoxelVariables.radius; xr <= VoxelVariables.radius; xr++) {
+			for (int xr = -ClientVariables.radius; xr <= ClientVariables.radius; xr++) {
 				xx = playerCX + xr;
-				for (int yr = -VoxelVariables.radius; yr <= VoxelVariables.radius; yr++) {
+				for (int yr = -ClientVariables.radius; yr <= ClientVariables.radius; yr++) {
 					yy = playerCY + yr;
 					node = new ChunkNode(xx, yy, zz);
 
@@ -116,11 +116,11 @@ public class ClientDimension extends Dimension {
 		}
 
 		for (Chunk chunk : chunks.values()) {
-			if (Math.abs(chunk.node.getX() - playerCX) > VoxelVariables.radius) {
+			if (Math.abs(chunk.node.getX() - playerCX) > ClientVariables.radius) {
 				addTo(chunk.node, removeQueue);
-			} else if (Math.abs(chunk.node.getZ() - playerCZ) > VoxelVariables.radius) {
+			} else if (Math.abs(chunk.node.getZ() - playerCZ) > ClientVariables.radius) {
 				addTo(chunk.node, removeQueue);
-			} else if (Math.abs(chunk.node.getY() - playerCY) > VoxelVariables.radius) {
+			} else if (Math.abs(chunk.node.getY() - playerCY) > ClientVariables.radius) {
 				addTo(chunk.node, removeQueue);
 			}
 		}

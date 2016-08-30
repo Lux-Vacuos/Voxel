@@ -26,7 +26,7 @@ import java.io.IOException;
 import com.esotericsoftware.minlog.Log;
 
 import net.luxvacuos.voxel.server.core.Voxel;
-import net.luxvacuos.voxel.server.core.VoxelVariables;
+import net.luxvacuos.voxel.server.core.ServerVariables;
 import net.luxvacuos.voxel.universal.bootstrap.AbstractBootstrap;
 
 public class Bootstrap extends AbstractBootstrap {
@@ -43,7 +43,7 @@ public class Bootstrap extends AbstractBootstrap {
 			File file = new File(new File(".").getCanonicalPath() + "/logs");
 			if (!file.exists())
 				file.mkdirs();
-			File file1 = new File(VoxelVariables.WORLD_PATH);
+			File file1 = new File(ServerVariables.WORLD_PATH);
 			if (!file1.exists())
 				file1.mkdirs();
 		} catch (IOException e) {
@@ -59,15 +59,15 @@ public class Bootstrap extends AbstractBootstrap {
 			case "-port":
 				if (gavePort)
 					throw new IllegalStateException("Port already given");
-				VoxelVariables.port = Integer.parseInt(args[++i]);
-				if (VoxelVariables.port <= 0)
+				ServerVariables.port = Integer.parseInt(args[++i]);
+				if (ServerVariables.port <= 0)
 					throw new IllegalArgumentException("Port must be positive");
 				gavePort = true;
 				break;
 			case "-ui":
 				if (gaveUI)
 					throw new IllegalStateException("UI already given");
-				VoxelVariables.useUI = true;
+				ServerVariables.useUI = true;
 				gaveUI = true;
 				break;
 			default:

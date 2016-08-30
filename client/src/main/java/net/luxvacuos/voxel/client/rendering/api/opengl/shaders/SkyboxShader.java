@@ -22,7 +22,7 @@ package net.luxvacuos.voxel.client.rendering.api.opengl.shaders;
 
 import net.luxvacuos.igl.vector.Matrix4f;
 import net.luxvacuos.igl.vector.Vector3f;
-import net.luxvacuos.voxel.client.core.VoxelVariables;
+import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.util.Maths;
 import net.luxvacuos.voxel.client.world.entities.Camera;
 
@@ -44,7 +44,7 @@ public class SkyboxShader extends ShaderProgram {
 	private int loc_fogColour;
 
 	public SkyboxShader() {
-		super(VoxelVariables.VERTEX_FILE_SKYBOX, VoxelVariables.FRAGMENT_FILE_SKYBOX);
+		super(ClientVariables.VERTEX_FILE_SKYBOX, ClientVariables.FRAGMENT_FILE_SKYBOX);
 	}
 
 	@Override

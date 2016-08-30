@@ -29,7 +29,7 @@ import java.nio.FloatBuffer;
 import org.lwjgl.BufferUtils;
 
 import net.luxvacuos.igl.vector.Vector3f;
-import net.luxvacuos.voxel.client.core.VoxelVariables;
+import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.input.Keyboard;
 import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.UIRendering;
@@ -115,7 +115,7 @@ public class SPPauseState extends AbstractState {
 		gm.getWorldsHandler().getActiveWorld().getActiveDimension().lighting();
 		gm.getSun_Camera().setPosition(gm.getCamera().getPosition());
 		gm.getFrustum().calculateFrustum(gm.getMasterShadowRenderer().getProjectionMatrix(), gm.getSun_Camera());
-		if (VoxelVariables.useShadows) {
+		if (ClientVariables.useShadows) {
 			gm.getMasterShadowRenderer().being();
 			MasterRenderer.prepare(0, 0, 0, 1);
 			gm.getWorldsHandler().getActiveWorld().getActiveDimension().updateChunksShadow(gm);
@@ -130,7 +130,7 @@ public class SPPauseState extends AbstractState {
 
 		gm.getRenderingPipeline().begin();
 		MasterRenderer.prepare(0, 0, 0, 1);
-		gm.getSkyboxRenderer().render(VoxelVariables.RED, VoxelVariables.GREEN, VoxelVariables.BLUE, delta, gm);
+		gm.getSkyboxRenderer().render(ClientVariables.RED, ClientVariables.GREEN, ClientVariables.BLUE, delta, gm);
 		gm.getWorldsHandler().getActiveWorld().getActiveDimension().updateChunksRender(gm, false);
 		FloatBuffer p = BufferUtils.createFloatBuffer(1);
 		glReadPixels(gm.getDisplay().getDisplayWidth() / 2, gm.getDisplay().getDisplayHeight() / 2, 1, 1,

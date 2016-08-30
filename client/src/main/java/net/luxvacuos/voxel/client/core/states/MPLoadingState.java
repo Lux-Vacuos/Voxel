@@ -24,7 +24,7 @@ import java.io.IOException;
 
 import org.lwjgl.nanovg.NanoVG;
 
-import net.luxvacuos.voxel.client.core.VoxelVariables;
+import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.UIRendering;
 import net.luxvacuos.voxel.client.rendering.api.opengl.MasterRenderer;
 import net.luxvacuos.voxel.client.resources.GameResources;
@@ -103,7 +103,7 @@ public class MPLoadingState extends AbstractState {
 				// switchTo(GameState.MP);
 				StateMachine.setCurrentState(StateNames.MULTIPLAYER);
 			} catch (IOException e) {
-				VoxelVariables.onServer = false;
+				ClientVariables.onServer = false;
 				message.setText(e.getMessage());
 				e.printStackTrace();
 			}

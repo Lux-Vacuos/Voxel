@@ -21,7 +21,7 @@
 package net.luxvacuos.voxel.client.rendering.api.opengl.shaders;
 
 import net.luxvacuos.igl.vector.Matrix4f;
-import net.luxvacuos.voxel.client.core.VoxelVariables;
+import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.util.Maths;
 import net.luxvacuos.voxel.client.world.entities.Camera;
@@ -50,7 +50,7 @@ public class EntityShader extends ShaderProgram {
 	private int loc_useShadows;
 
 	public EntityShader() {
-		super(VoxelVariables.VERTEX_FILE_ENTITY, VoxelVariables.FRAGMENT_FILE_ENTITY);
+		super(ClientVariables.VERTEX_FILE_ENTITY, ClientVariables.FRAGMENT_FILE_ENTITY);
 	}
 
 	@Override

@@ -54,14 +54,14 @@ public class Voxel extends AbstractVoxel {
 			Attributes attr = manifest.getMainAttributes();
 			String t = attr.getValue("Specification-Version");
 			if (t != null)
-				VoxelVariables.version = t;
+				ServerVariables.version = t;
 		} catch (IOException E) {
 			E.printStackTrace();
 		}
 
 		gameResources = ServerGameResources.getInstance();
-		getGameResources().construct(this, VoxelVariables.port);
-		if (VoxelVariables.useUI) {
+		getGameResources().construct(this, ServerVariables.port);
+		if (ServerVariables.useUI) {
 			getGameResources().getUserInterface().getThreadUI().start();
 			while (!getGameResources().getUserInterface().isStarted())
 				Thread.sleep(100);
@@ -69,7 +69,7 @@ public class Voxel extends AbstractVoxel {
 		PerRunLog.setBootstrap(bootstrap);
 		Logger.init();
 		Logger.log("Starting Server");
-		Logger.log("Voxel Server Version: " + VoxelVariables.version);
+		Logger.log("Voxel Server Version: " + ServerVariables.version);
 		Logger.log("Running on: " + bootstrap.getPlatform());
 
 		StateMachine.registerState(new MPState());
@@ -105,7 +105,7 @@ public class Voxel extends AbstractVoxel {
 			postInit();
 			float delta = 0;
 			float accumulator = 0f;
-			float interval = 1f / VoxelVariables.UPS;
+			float interval = 1f / ServerVariables.UPS;
 			StateMachine.run();
 			while (StateMachine.isRunning()) {
 				if (getGameResources().getCoreUtils().getTimeCount() > 1f) {
@@ -122,7 +122,7 @@ public class Voxel extends AbstractVoxel {
 				}
 				getGameResources().getVoxelServer().getServer()
 						.sendToAllTCP(new WorldTime(getGameResources().getWorldSimulation().getTime()));
-				getGameResources().getCoreUtils().sync(VoxelVariables.UPS);
+				getGameResources().getCoreUtils().sync(ServerVariables.UPS);
 			}
 			dispose();
 		} catch (Throwable t) {

@@ -47,7 +47,7 @@ import net.luxvacuos.igl.Logger;
 import net.luxvacuos.igl.vector.Matrix4f;
 import net.luxvacuos.igl.vector.Vector2f;
 import net.luxvacuos.igl.vector.Vector3f;
-import net.luxvacuos.voxel.client.core.VoxelVariables;
+import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.DeferredShadingShader;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.resources.models.RawModel;
@@ -109,7 +109,7 @@ public abstract class RenderingPipeline {
 		finalShader.connectTextureUnits();
 		finalShader.loadResolution(new Vector2f(GameResources.getInstance().getDisplay().getDisplayWidth(),
 				GameResources.getInstance().getDisplay().getDisplayHeight()));
-		finalShader.loadSkyColor(VoxelVariables.skyColor);
+		finalShader.loadSkyColor(ClientVariables.skyColor);
 		finalShader.stop();
 		init(gm);
 	}
@@ -150,7 +150,7 @@ public abstract class RenderingPipeline {
 		finalShader.connectTextureUnits();
 		finalShader.loadResolution(new Vector2f(GameResources.getInstance().getDisplay().getDisplayWidth(),
 				GameResources.getInstance().getDisplay().getDisplayHeight()));
-		finalShader.loadSkyColor(VoxelVariables.skyColor);
+		finalShader.loadSkyColor(ClientVariables.skyColor);
 		finalShader.stop();
 		this.width = width;
 		this.height = height;

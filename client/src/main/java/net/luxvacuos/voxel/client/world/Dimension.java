@@ -46,7 +46,7 @@ import com.esotericsoftware.kryo.serializers.CompatibleFieldSerializer;
 
 import net.luxvacuos.igl.Logger;
 import net.luxvacuos.igl.vector.Vector3f;
-import net.luxvacuos.voxel.client.core.VoxelVariables;
+import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Sync;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.resources.models.ParticlePoint;
@@ -100,7 +100,7 @@ public abstract class Dimension {
 	}
 
 	protected void init(GameResources gm) {
-		File filec = new File(VoxelVariables.WORLD_PATH + name + "/dimension_" + chunkDim);
+		File filec = new File(ClientVariables.WORLD_PATH + name + "/dimension_" + chunkDim);
 		if (!filec.exists())
 			filec.mkdirs();
 		if (existDimFile())
@@ -134,11 +134,11 @@ public abstract class Dimension {
 			kryo.setDefaultSerializer(CompatibleFieldSerializer.class);
 			while (running) {
 				for (Chunk chunk : chunks.values()) {
-					if (Math.abs(chunk.node.getX() - playerCX) > VoxelVariables.radius) {
+					if (Math.abs(chunk.node.getX() - playerCX) > ClientVariables.radius) {
 						addTo(chunk.node, removeQueue);
-					} else if (Math.abs(chunk.node.getZ() - playerCZ) > VoxelVariables.radius) {
+					} else if (Math.abs(chunk.node.getZ() - playerCZ) > ClientVariables.radius) {
 						addTo(chunk.node, removeQueue);
-					} else if (Math.abs(chunk.node.getY() - playerCY) > VoxelVariables.radius) {
+					} else if (Math.abs(chunk.node.getY() - playerCY) > ClientVariables.radius) {
 						addTo(chunk.node, removeQueue);
 					}
 				}
@@ -191,7 +191,7 @@ public abstract class Dimension {
 	protected void load() {
 		Input input;
 		try {
-			input = new Input(new FileInputStream(VoxelVariables.WORLD_PATH + name + "/dim_" + chunkDim + ".dat"));
+			input = new Input(new FileInputStream(ClientVariables.WORLD_PATH + name + "/dim_" + chunkDim + ".dat"));
 			data = GameResources.getInstance().getKryo().readObject(input, DimensionData.class);
 			input.close();
 		} catch (FileNotFoundException e) {
@@ -201,7 +201,7 @@ public abstract class Dimension {
 	protected void save() {
 		Output output;
 		try {
-			output = new Output(new FileOutputStream(VoxelVariables.WORLD_PATH + name + "/dim_" + chunkDim + ".dat"));
+			output = new Output(new FileOutputStream(ClientVariables.WORLD_PATH + name + "/dim_" + chunkDim + ".dat"));
 			GameResources.getInstance().getKryo().writeObject(output, data);
 			output.close();
 		} catch (FileNotFoundException e) {
@@ -224,11 +224,11 @@ public abstract class Dimension {
 		
 		ChunkNode node;
 		int xx, yy, zz;
-		for (int zr = -VoxelVariables.radius; zr <= VoxelVariables.radius; zr++) {
+		for (int zr = -ClientVariables.radius; zr <= ClientVariables.radius; zr++) {
 			zz = playerCZ + zr;
-			for (int xr = -VoxelVariables.radius; xr <= VoxelVariables.radius; xr++) {
+			for (int xr = -ClientVariables.radius; xr <= ClientVariables.radius; xr++) {
 				xx = playerCX + xr;
-				for (int yr = -VoxelVariables.radius; yr <= VoxelVariables.radius; yr++) {
+				for (int yr = -ClientVariables.radius; yr <= ClientVariables.radius; yr++) {
 					yy = playerCY + yr;
 					if (!hasChunk(xx, yy, zz)) {
 						node = new ChunkNode(xx, yy, zz);
@@ -392,7 +392,7 @@ public abstract class Dimension {
 	public void saveChunk(Kryo kryo, Chunk chunk) {
 		if (chunk != null)
 			try {
-				Output output = new Output(new FileOutputStream(VoxelVariables.WORLD_PATH + name + "/dimension_"
+				Output output = new Output(new FileOutputStream(ClientVariables.WORLD_PATH + name + "/dimension_"
 						+ chunkDim + "/chunk_" + chunk.node.getX() + "_" + chunk.node.getY() + "_" + chunk.node.getZ() + ".dat"));
 				kryo.writeObject(output, chunk);
 				output.close();
@@ -403,7 +403,7 @@ public abstract class Dimension {
 
 	public void loadChunk(Kryo kryo, ChunkNode node) {
 		try {
-			Input input = new Input(new FileInputStream(VoxelVariables.WORLD_PATH + name + "/dimension_" + chunkDim
+			Input input = new Input(new FileInputStream(ClientVariables.WORLD_PATH + name + "/dimension_" + chunkDim
 					+ "/chunk_" + node.getX() + "_" + node.getY() + "_" + node.getZ() + ".dat"));
 			Chunk chunk = kryo.readObject(input, Chunk.class);
 			input.close();
@@ -419,12 +419,12 @@ public abstract class Dimension {
 	}
 
 	public boolean existChunkFile(ChunkNode node) {
-		return new File(VoxelVariables.WORLD_PATH + name + "/dimension_" + chunkDim + "/chunk_" + 
+		return new File(ClientVariables.WORLD_PATH + name + "/dimension_" + chunkDim + "/chunk_" + 
 				node.getX() + "_" + node.getY() + "_" + node.getZ() + ".dat").exists();
 	}
 
 	public boolean existDimFile() {
-		return new File(VoxelVariables.WORLD_PATH + name + "/dim_" + chunkDim + ".dat").exists();
+		return new File(ClientVariables.WORLD_PATH + name + "/dim_" + chunkDim + ".dat").exists();
 	}
 	
 	private Chunk getChunk(int x, int y, int z) {

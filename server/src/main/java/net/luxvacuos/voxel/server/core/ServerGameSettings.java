@@ -28,14 +28,14 @@ public final class ServerGameSettings extends AbstractGameSettings {
 	
 	@Override
 	public void read() {
-		VoxelVariables.UPS = Integer.parseInt(getValue("UPS", "60"));
-		VoxelVariables.radius = Integer.parseInt(getValue("DrawDistance", "2"));
+		ServerVariables.UPS = Integer.parseInt(getValue("UPS", "60"));
+		ServerVariables.radius = Integer.parseInt(getValue("DrawDistance", "2"));
 	}
 
 	public void update() {
 		registerValue("SettingsVersion", Integer.toString(ServerGameSettings.VERSION));
-		registerValue("UPS", Integer.toString(VoxelVariables.UPS));
-		registerValue("DrawDistance", Integer.toString(VoxelVariables.radius));
+		registerValue("UPS", Integer.toString(ServerVariables.UPS));
+		registerValue("DrawDistance", Integer.toString(ServerVariables.radius));
 	}
 
 }

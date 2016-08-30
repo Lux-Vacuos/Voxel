@@ -32,7 +32,7 @@ import com.esotericsoftware.kryo.serializers.CompatibleFieldSerializer;
 import net.luxvacuos.igl.CustomLog;
 import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.voxel.client.core.ClientGameSettings;
-import net.luxvacuos.voxel.client.core.VoxelVariables;
+import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.core.ClientWorldSimulation;
 import net.luxvacuos.voxel.client.network.VoxelClient;
 import net.luxvacuos.voxel.client.rendering.api.glfw.ContextFormat;
@@ -113,14 +113,14 @@ public class GameResources extends AbstractGameResources {
 	@Override
 	public void preInit() {
 		gameSettings = new ClientGameSettings();
-		gameSettings.load(new File(VoxelVariables.settings));
+		gameSettings.load(new File(ClientVariables.SETTINGS_PATH));
 		gameSettings.read();
 
 		display = new Display();
-		display.create(VoxelVariables.WIDTH, VoxelVariables.HEIGHT, "Voxel", VoxelVariables.VSYNC, false, false,
+		display.create(ClientVariables.WIDTH, ClientVariables.HEIGHT, "Voxel", ClientVariables.VSYNC, false, false,
 				new ContextFormat(3, 3, GLFW_OPENGL_API, GLFW_OPENGL_CORE_PROFILE, true),
-				new String[] { "assets/" + VoxelVariables.assets + "/icons/icon32.png",
-						"assets/" + VoxelVariables.assets + "/icons/icon64.png" });
+				new String[] { "assets/" + ClientVariables.assets + "/icons/icon32.png",
+						"assets/" + ClientVariables.assets + "/icons/icon64.png" });
 		loader = new Loader(display);
 		loader.loadNVGFont("Roboto-Bold", "Roboto-Bold");
 		loader.loadNVGFont("Roboto-Regular", "Roboto-Regular");
@@ -174,9 +174,9 @@ public class GameResources extends AbstractGameResources {
 
 	@Override
 	public void postInit() {
-		if (VoxelVariables.renderingPipeline.equals("SinglePass"))
+		if (ClientVariables.renderingPipeline.equals("SinglePass"))
 			renderingPipeline = new SinglePass();
-		else if (VoxelVariables.renderingPipeline.equals("MultiPass"))
+		else if (ClientVariables.renderingPipeline.equals("MultiPass"))
 			renderingPipeline = new MultiPass();
 	}
 

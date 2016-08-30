@@ -29,7 +29,7 @@ import net.luxvacuos.igl.CustomLog;
 import net.luxvacuos.voxel.server.core.CoreUtils;
 import net.luxvacuos.voxel.server.core.ServerGameSettings;
 import net.luxvacuos.voxel.server.core.Voxel;
-import net.luxvacuos.voxel.server.core.VoxelVariables;
+import net.luxvacuos.voxel.server.core.ServerVariables;
 import net.luxvacuos.voxel.server.core.ServerWorldSimulation;
 import net.luxvacuos.voxel.server.network.VoxelServer;
 import net.luxvacuos.voxel.server.ui.UserInterface;
@@ -59,19 +59,20 @@ public class ServerGameResources extends AbstractGameResources {
 
 	public void construct(Voxel voxel, int port) throws InterruptedException {
 		this.port = port;
-		if (VoxelVariables.useUI)
+		if (ServerVariables.useUI)
 			userInterface = new UserInterface(voxel);
 	}
 
 	@Override
 	public void preInit() {
+		ServerVariables.SETTINGS_PATH = "settings.conf";
 		voxelServer = new VoxelServer(port);
 	}
 
 	@Override
 	public void init(AbstractVoxel voxel) {
 		gameSettings = new ServerGameSettings();
-		gameSettings.load(new File(VoxelVariables.settings));
+		gameSettings.load(new File(ServerVariables.SETTINGS_PATH));
 		gameSettings.read();
 
 		kryo = new Kryo();

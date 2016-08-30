@@ -39,7 +39,7 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import net.luxvacuos.igl.Logger;
 import net.luxvacuos.voxel.client.core.CoreInfo;
-import net.luxvacuos.voxel.client.core.VoxelVariables;
+import net.luxvacuos.voxel.client.core.ClientVariables;
 
 public class CrashScreen extends Application {
 
@@ -58,7 +58,7 @@ public class CrashScreen extends Application {
 				ps.println("Voxel has crashed, please report this in the Forum or GitHub Repo");
 				ps.println();
 				ps.println("## System Info");
-				ps.println("Voxel Client Version: " + VoxelVariables.version);
+				ps.println("Voxel Client Version: " + ClientVariables.version);
 				ps.println("Running on: " + CoreInfo.OS);
 				ps.println("LWJGL Version: " + Version.getVersion());
 				ps.println("GLFW Version: " + GLFW.glfwGetVersionString());
@@ -80,9 +80,9 @@ public class CrashScreen extends Application {
 	public void start(Stage stage) throws Exception {
 		stage.setTitle("Voxel");
 		stage.getIcons().add(new Image(getClass().getClassLoader()
-				.getResourceAsStream("assets/" + VoxelVariables.assets + "/icons/icon32.png")));
+				.getResourceAsStream("assets/" + ClientVariables.assets + "/icons/icon32.png")));
 		stage.getIcons().add(new Image(getClass().getClassLoader()
-				.getResourceAsStream("assets/" + VoxelVariables.assets + "/icons/icon64.png")));
+				.getResourceAsStream("assets/" + ClientVariables.assets + "/icons/icon64.png")));
 		Scene main = new Scene(startMain(stage));
 		stage.setScene(main);
 		stage.setMinWidth(894);
@@ -111,7 +111,7 @@ public class CrashScreen extends Application {
 		gridTop.autosize();
 
 		Image voxelLogoI = new Image(getClass().getClassLoader()
-				.getResourceAsStream("assets/" + VoxelVariables.assets + "/textures/menu/Voxel-Logo.png"));
+				.getResourceAsStream("assets/" + ClientVariables.assets + "/textures/menu/Voxel-Logo.png"));
 
 		ImageView voxelLogo = new ImageView();
 		voxelLogo.setImage(voxelLogoI);

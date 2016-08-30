@@ -25,15 +25,15 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import net.luxvacuos.voxel.client.core.VoxelVariables;
+import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.input.KeyCodes;
 
 public class BasicTests {
 
 	@Test
 	public void testVariables() {
-		assertEquals(0.1f, VoxelVariables.NEAR_PLANE, 0.0001);
-		assertEquals(1000f, VoxelVariables.FAR_PLANE, 0.0001);
+		assertEquals(0.1f, ClientVariables.NEAR_PLANE, 0.0001);
+		assertEquals(1000f, ClientVariables.FAR_PLANE, 0.0001);
 	}
 
 	@Test

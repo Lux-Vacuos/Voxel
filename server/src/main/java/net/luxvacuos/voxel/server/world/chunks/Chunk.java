@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import net.luxvacuos.voxel.server.core.VoxelVariables;
+import net.luxvacuos.voxel.server.core.ServerVariables;
 import net.luxvacuos.voxel.server.util.Maths;
 import net.luxvacuos.voxel.server.world.Dimension;
 import net.luxvacuos.voxel.server.world.block.Block;
@@ -44,9 +44,9 @@ public class Chunk {
 
 	public void onLoad() {
 		blockEntities = new ArrayList<>();
-		sizeX = VoxelVariables.CHUNK_SIZE;
-		sizeY = VoxelVariables.CHUNK_HEIGHT;
-		sizeZ = VoxelVariables.CHUNK_SIZE;
+		sizeX = ServerVariables.CHUNK_SIZE;
+		sizeY = ServerVariables.CHUNK_HEIGHT;
+		sizeZ = ServerVariables.CHUNK_SIZE;
 	}
 
 	public void update(Dimension dimension, float delta) {
