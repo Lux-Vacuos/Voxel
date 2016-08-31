@@ -12,8 +12,8 @@ import net.luxvacuos.voxel.client.rendering.api.opengl.RenderingPipeline;
 
 public class VolumetricLight extends ImagePass {
 
-	public VolumetricLight(int width, int height) {
-		super(width, height);
+	public VolumetricLight(String name, int width, int height) {
+		super(name, width, height);
 	}
 
 	@Override

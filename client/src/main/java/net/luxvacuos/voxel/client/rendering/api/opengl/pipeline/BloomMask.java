@@ -32,8 +32,8 @@ import net.luxvacuos.voxel.client.rendering.api.opengl.RenderingPipeline;
 
 public class BloomMask extends ImagePass {
 
-	public BloomMask(int width, int height) {
-		super(width, height);
+	public BloomMask(String name, int width, int height) {
+		super(name, width, height);
 	}
 
 	@Override

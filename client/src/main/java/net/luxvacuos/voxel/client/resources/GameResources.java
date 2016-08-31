@@ -208,7 +208,7 @@ public class GameResources extends AbstractGameResources {
 		masterShadowRenderer.cleanUp();
 		itemsDropRenderer.cleanUp();
 		ParticleMaster.getInstance().cleanUp();
-		renderingPipeline.disposeI();
+		renderingPipeline.dispose();
 		itemsGuiRenderer.cleanUp();
 		renderer.cleanUp();
 		loader.cleanUp();

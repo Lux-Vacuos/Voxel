@@ -226,7 +226,7 @@ public abstract class RenderingPipeline {
 	/**
 	 * Internal Dispose
 	 */
-	public void disposeI() {
+	public void dispose() {
 		mainFBO.cleanUp();
 		for (ImagePassFBO imagePassFBO : auxs) {
 			imagePassFBO.cleanUp();
@@ -235,15 +235,7 @@ public abstract class RenderingPipeline {
 			imagePass.dispose();
 		}
 		finalShader.cleanUp();
-		dispose();
 	}
-
-	/**
-	 *
-	 * Here are disposed all custom objects
-	 * 
-	 */
-	public abstract void dispose();
 
 	public RenderingPipelineFBO getMainFBO() {
 		return mainFBO;

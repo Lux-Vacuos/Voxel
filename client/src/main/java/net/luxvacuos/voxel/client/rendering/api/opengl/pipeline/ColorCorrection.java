@@ -12,8 +12,9 @@ import net.luxvacuos.voxel.client.rendering.api.opengl.RenderingPipeline;
 
 public class ColorCorrection extends ImagePass {
 
-	public ColorCorrection(int width, int height) {
-		super(width, height);
+
+	public ColorCorrection(String name, int width, int height) {
+		super(name, width, height);
 	}
 
 	@Override

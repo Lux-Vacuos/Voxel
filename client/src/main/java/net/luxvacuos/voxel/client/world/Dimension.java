@@ -20,7 +20,10 @@
 
 package net.luxvacuos.voxel.client.world;
 
-import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.GL_BLEND;
+import static org.lwjgl.opengl.GL11.glDisable;
+import static org.lwjgl.opengl.GL11.glEnable;
+import static org.lwjgl.opengl.GL11.glViewport;
 import static org.lwjgl.opengl.GL15.GL_QUERY_RESULT;
 import static org.lwjgl.opengl.GL15.glGetQueryObjectui;
 
@@ -56,15 +59,15 @@ import net.luxvacuos.voxel.client.world.block.Block;
 import net.luxvacuos.voxel.client.world.block.BlockBase;
 import net.luxvacuos.voxel.client.world.chunks.Chunk;
 import net.luxvacuos.voxel.client.world.chunks.ChunkGenerator;
-import net.luxvacuos.voxel.universal.core.states.StateMachine;
-import net.luxvacuos.voxel.universal.world.utils.ChunkNode;
 import net.luxvacuos.voxel.client.world.chunks.LightNodeAdd;
 import net.luxvacuos.voxel.client.world.chunks.LightNodeRemoval;
+import net.luxvacuos.voxel.universal.core.states.StateMachine;
+import net.luxvacuos.voxel.universal.world.utils.ChunkNode;
 
 public abstract class Dimension {
 
 	protected int chunkDim;
-	//protected ConcurrentMap<ChunkKey, Chunk> chunks;
+	// protected ConcurrentMap<ChunkKey, Chunk> chunks;
 	protected Map<ChunkNode, Chunk> chunks;
 	protected SimplexNoise noise;
 	protected String name;
@@ -133,55 +136,60 @@ public abstract class Dimension {
 			ChunkNode node;
 			kryo.setDefaultSerializer(CompatibleFieldSerializer.class);
 			while (running) {
-				for (Chunk chunk : chunks.values()) {
-					if (Math.abs(chunk.node.getX() - playerCX) > ClientVariables.radius) {
-						addTo(chunk.node, removeQueue);
-					} else if (Math.abs(chunk.node.getZ() - playerCZ) > ClientVariables.radius) {
-						addTo(chunk.node, removeQueue);
-					} else if (Math.abs(chunk.node.getY() - playerCY) > ClientVariables.radius) {
-						addTo(chunk.node, removeQueue);
+				try {
+					for (Chunk chunk : chunks.values()) {
+						if (Math.abs(chunk.node.getX() - playerCX) > ClientVariables.radius) {
+							addTo(chunk.node, removeQueue);
+						} else if (Math.abs(chunk.node.getZ() - playerCZ) > ClientVariables.radius) {
+							addTo(chunk.node, removeQueue);
+						} else if (Math.abs(chunk.node.getY() - playerCY) > ClientVariables.radius) {
+							addTo(chunk.node, removeQueue);
+						}
 					}
-				}
-				if (!addQueue.isEmpty()) {
-					tmp = new ArrayList<ChunkNode>(addQueue);
-					//Maths.sortLowToHighN(tmp); //XXX: Need to reimplement this without the player dependency
-					addQueue = new ConcurrentLinkedQueue<ChunkNode>(tmp);
-				}
-				if (!rebuildQueue.isEmpty()) {
-					tmp = new ArrayList<ChunkNode>(rebuildQueue);
-					//Maths.sortLowToHighN(tmp);
-					rebuildQueue = new ConcurrentLinkedQueue<ChunkNode>(tmp);
-				}
+					if (!addQueue.isEmpty()) {
+						tmp = new ArrayList<ChunkNode>(addQueue);
+						// Maths.sortLowToHighN(tmp); //XXX: Need to reimplement
+						// this without the player dependency
+						addQueue = new ConcurrentLinkedQueue<ChunkNode>(tmp);
+					}
+					if (!rebuildQueue.isEmpty()) {
+						tmp = new ArrayList<ChunkNode>(rebuildQueue);
+						// Maths.sortLowToHighN(tmp);
+						rebuildQueue = new ConcurrentLinkedQueue<ChunkNode>(tmp);
+					}
 
-				while (!removeQueue.isEmpty()) {
-					node = removeQueue.poll();
-					Chunk chnk = getChunk(node);
-					saveChunk(kryo, chnk);
-					if (chnk != null)
-						chnk.remove = true;
-				}
+					while (!removeQueue.isEmpty()) {
+						node = removeQueue.poll();
+						Chunk chnk = getChunk(node);
+						// saveChunk(kryo, chnk);
+						if (chnk != null)
+							chnk.remove = true;
+					}
 
-				while (!addQueue.isEmpty()) {
-					node = addQueue.poll();
-					if (existChunkFile(node)) {
-						loadChunk(kryo, node);
-					} else {
+					while (!addQueue.isEmpty()) {
+						node = addQueue.poll();
+						// if (existChunkFile(node)) {
+						// loadChunk(kryo, node);
+						// } else {
 						Chunk chnk = getChunk(node);
 						if (chnk == null)
 							continue;
 						chnk.init(this);
+						// }
 					}
+					while (!rebuildQueue.isEmpty()) {
+						node = rebuildQueue.poll();
+						Chunk chn = getChunk(node);
+						if (chn == null)
+							continue;
+						chn.rebuildMesh(this);
+					}
+					if (!StateMachine.isRunning())
+						break;
+					sync.sync(30);
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
-				while (!rebuildQueue.isEmpty()) {
-					node = rebuildQueue.poll();
-					Chunk chn = getChunk(node);
-					if (chn == null)
-						continue;
-					chn.rebuildMesh(this);
-				}
-				if (!StateMachine.isRunning())
-					break;
-				sync.sync(30);
 			}
 		});
 		processThread.setDaemon(true);
@@ -221,7 +229,7 @@ public abstract class Dimension {
 			playerCY = (int) ((gm.getCamera().getPosition().y) / 16);
 		if (gm.getCamera().getPosition().z > 0)
 			playerCZ = (int) ((gm.getCamera().getPosition().z) / 16);
-		
+
 		ChunkNode node;
 		int xx, yy, zz;
 		for (int zr = -ClientVariables.radius; zr <= ClientVariables.radius; zr++) {
@@ -255,7 +263,7 @@ public abstract class Dimension {
 
 	public void updateChunksRender(GameResources gm, boolean transparent) {
 		if (transparent)
-			return; //XXX: How does this work?
+			return; // XXX: How does this work?
 		if (transparent)
 			glEnable(GL_BLEND);
 		List<Chunk> chunks_ = new ArrayList<>();
@@ -279,11 +287,14 @@ public abstract class Dimension {
 		}
 		Maths.sortHighToLow(chunks_);
 		renderedChunks = 0;
-		for (Chunk chunk : chunks_) {
+		for (
+
+		Chunk chunk : chunks_) {
 			chunk.render(gm, transparent);
 			renderedChunks++;
 		}
 		if (transparent)
+
 			glDisable(GL_BLEND);
 	}
 
@@ -392,8 +403,9 @@ public abstract class Dimension {
 	public void saveChunk(Kryo kryo, Chunk chunk) {
 		if (chunk != null)
 			try {
-				Output output = new Output(new FileOutputStream(ClientVariables.WORLD_PATH + name + "/dimension_"
-						+ chunkDim + "/chunk_" + chunk.node.getX() + "_" + chunk.node.getY() + "_" + chunk.node.getZ() + ".dat"));
+				Output output = new Output(
+						new FileOutputStream(ClientVariables.WORLD_PATH + name + "/dimension_" + chunkDim + "/chunk_"
+								+ chunk.node.getX() + "_" + chunk.node.getY() + "_" + chunk.node.getZ() + ".dat"));
 				kryo.writeObject(output, chunk);
 				output.close();
 			} catch (Exception e) {
@@ -419,14 +431,14 @@ public abstract class Dimension {
 	}
 
 	public boolean existChunkFile(ChunkNode node) {
-		return new File(ClientVariables.WORLD_PATH + name + "/dimension_" + chunkDim + "/chunk_" + 
-				node.getX() + "_" + node.getY() + "_" + node.getZ() + ".dat").exists();
+		return new File(ClientVariables.WORLD_PATH + name + "/dimension_" + chunkDim + "/chunk_" + node.getX() + "_"
+				+ node.getY() + "_" + node.getZ() + ".dat").exists();
 	}
 
 	public boolean existDimFile() {
 		return new File(ClientVariables.WORLD_PATH + name + "/dim_" + chunkDim + ".dat").exists();
 	}
-	
+
 	private Chunk getChunk(int x, int y, int z) {
 		return this.getChunk(new ChunkNode(x, y, z));
 	}
@@ -438,13 +450,13 @@ public abstract class Dimension {
 	protected boolean hasChunk(int x, int y, int z) {
 		return this.hasChunk(new ChunkNode(x, y, z));
 	}
-	
+
 	public boolean hasChunk(ChunkNode node) {
 		return chunks.containsKey(node);
 	}
 
 	public void addChunk(Chunk chunk) {
-		//ChunkKey key = new ChunkKey(chunk.cx, chunk.cy, chunk.cz);
+		// ChunkKey key = new ChunkKey(chunk.cx, chunk.cy, chunk.cz);
 		Chunk old = chunks.get(chunk.node);
 		if (old != null) {
 			removeChunk(old);
@@ -465,7 +477,7 @@ public abstract class Dimension {
 
 	public void removeChunk(Chunk chunk) {
 		if (chunk != null) {
-			//ChunkKey key = new ChunkKey(chunk.cx, chunk.cy, chunk.cz);
+			// ChunkKey key = new ChunkKey(chunk.cx, chunk.cy, chunk.cz);
 			chunks.remove(chunk.node);
 			chunk.dispose();
 			loadedChunks--;

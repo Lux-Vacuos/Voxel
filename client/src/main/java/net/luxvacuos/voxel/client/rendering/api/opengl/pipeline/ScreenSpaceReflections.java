@@ -37,8 +37,9 @@ import net.luxvacuos.voxel.client.rendering.api.opengl.RenderingPipeline;
 
 public class ScreenSpaceReflections extends ImagePass {
 
-	public ScreenSpaceReflections(int width, int height) {
-		super(width, height);
+
+	public ScreenSpaceReflections(String name, int width, int height) {
+		super(name, width, height);
 	}
 
 	@Override

@@ -63,7 +63,8 @@ public abstract class ImagePass {
 	 * @param height
 	 *            Height
 	 */
-	public ImagePass(int width, int height) {
+	public ImagePass(String name, int width, int height) {
+		this.name = name;
 		this.width = width;
 		this.height = height;
 	}
@@ -132,10 +133,6 @@ public abstract class ImagePass {
 	public void dispose() {
 		shader.cleanUp();
 		fbo.cleanUp();
-	}
-
-	public void setName(String name) {
-		this.name = name;
 	}
 
 	public ImagePassFBO getFbo() {

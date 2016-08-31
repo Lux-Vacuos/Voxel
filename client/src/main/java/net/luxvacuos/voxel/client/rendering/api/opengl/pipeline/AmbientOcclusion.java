@@ -34,8 +34,8 @@ import net.luxvacuos.voxel.client.rendering.api.opengl.RenderingPipeline;
 
 public class AmbientOcclusion extends ImagePass {
 
-	public AmbientOcclusion(int width, int height) {
-		super(width, height);
+	public AmbientOcclusion(String name, int width, int height) {
+		super(name, width, height);
 	}
 
 	@Override

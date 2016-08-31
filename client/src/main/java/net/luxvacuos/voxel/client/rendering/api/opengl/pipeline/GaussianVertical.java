@@ -31,8 +31,9 @@ import net.luxvacuos.voxel.client.rendering.api.opengl.RenderingPipeline;
 
 public class GaussianVertical extends ImagePass {
 
-	public GaussianVertical(int width, int height) {
-		super(width, height);
+
+	public GaussianVertical(String name, int width, int height) {
+		super(name, width, height);
 	}
 
 	@Override

@@ -41,38 +41,31 @@ public class MultiPass extends RenderingPipeline {
 
 	@Override
 	public void init(GameResources gm) {
-		sun = new Sun(width, height);
-		sun.setName("Sun");
+		sun = new Sun("Sun", width, height);
 		sun.init();
 		super.imagePasses.add(sun);
 
-		volumetricLight = new VolumetricLight(width, height);
-		volumetricLight.setName("VolumetricLight");
+		volumetricLight = new VolumetricLight("VolumetricLight", width, height);
 		volumetricLight.init();
 		super.imagePasses.add(volumetricLight);
 
-		gaussianHorizontal = new GaussianHorizonal(width, height);
-		gaussianHorizontal.setName("GaussianHorizontal");
+		gaussianHorizontal = new GaussianHorizonal("GaussianHorizontal", width, height);
 		gaussianHorizontal.init();
 		super.imagePasses.add(gaussianHorizontal);
 
-		gaussianVertical = new GaussianVertical(width, height);
-		gaussianVertical.setName("GaussianVertical");
+		gaussianVertical = new GaussianVertical("GaussianVertical", width, height);
 		gaussianVertical.init();
 		super.imagePasses.add(gaussianVertical);
 
-		lighting = new Lighting(width, height);
-		lighting.setName("Lighting");
+		lighting = new Lighting("Lighting", width, height);
 		lighting.init();
 		super.imagePasses.add(lighting);
 
-		ambientOcclusion = new AmbientOcclusion(width, height);
-		ambientOcclusion.setName("AmbientOcclusion");
+		ambientOcclusion = new AmbientOcclusion("AmbientOcclusion", width, height);
 		ambientOcclusion.init();
 		super.imagePasses.add(ambientOcclusion);
 
-		bloomMask = new BloomMask(width, height);
-		bloomMask.setName("BloomMask");
+		bloomMask = new BloomMask("BloomMask", width, height);
 		bloomMask.init();
 		super.imagePasses.add(bloomMask);
 
@@ -80,19 +73,13 @@ public class MultiPass extends RenderingPipeline {
 
 		super.imagePasses.add(gaussianVertical);
 
-		colorCorrection = new ColorCorrection(width, height);
-		colorCorrection.setName("ColorCorrection");
+		colorCorrection = new ColorCorrection("ColorCorrection", width, height);
 		colorCorrection.init();
 		super.imagePasses.add(colorCorrection);
 
-		screenSpaceReflections = new ScreenSpaceReflections(width, height);
-		screenSpaceReflections.setName("ScreenSpaceReflections");
+		screenSpaceReflections = new ScreenSpaceReflections("ScreenSpaceReflections", width, height);
 		screenSpaceReflections.init();
 		super.imagePasses.add(screenSpaceReflections);
-	}
-
-	@Override
-	public void dispose() {
 	}
 
 }

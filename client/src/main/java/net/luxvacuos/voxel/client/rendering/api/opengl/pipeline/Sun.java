@@ -32,8 +32,9 @@ import net.luxvacuos.voxel.client.rendering.api.opengl.RenderingPipeline;
 
 public class Sun extends ImagePass {
 
-	public Sun(int width, int height) {
-		super(width, height);
+
+	public Sun(String name, int width, int height) {
+		super(name, width, height);
 	}
 
 	@Override

@@ -67,8 +67,7 @@ public class PhysicsSystem extends EntitySystem {
 
 	@Override
 	public void addedToEngine(Engine engine) {
-		entities = engine.getEntitiesFor(
-				Family.all(Position.class, Velocity.class, AABB.class).get());
+		entities = engine.getEntitiesFor(Family.all(Position.class, Velocity.class, AABB.class).get());
 	}
 
 	public void processItems(GameResources gm) {
@@ -78,9 +77,7 @@ public class PhysicsSystem extends EntitySystem {
 			if (entity instanceof ItemDrop) {
 				tmp.set(0, 0, 0);
 				PlayerCamera cam = (PlayerCamera) gm.getCamera();
-				if (Vector3f
-						.sub(position.getPosition(), gm.getCamera().getPosition(), tmp)
-						.lengthSquared() < 2) {
+				if (Vector3f.sub(position.getPosition(), gm.getCamera().getPosition(), tmp).lengthSquared() < 2) {
 					A: for (int x = 0; x < cam.getInventory().getSizeX(); x++) {
 						for (int y = 0; y < cam.getInventory().getSizeY(); y++) {
 							if (cam.getInventory().getItems()[x][y].getBlock().getId() == ((ItemDrop) entity).getBlock()
@@ -98,11 +95,9 @@ public class PhysicsSystem extends EntitySystem {
 					}
 					getEngine().removeEntity(entity);
 				}
-				if (Vector3f
-						.sub(position.getPosition(), gm.getCamera().getPosition(), tmp)
-						.lengthSquared() < 6) {
-					Vector3f.add(Vector3f.sub(gm.getCamera().getPosition(), position.getPosition(), null), velocity.getVelocity(),
-							velocity.getVelocity());
+				if (Vector3f.sub(position.getPosition(), gm.getCamera().getPosition(), tmp).lengthSquared() < 6) {
+					Vector3f.add(Vector3f.sub(gm.getCamera().getPosition(), position.getPosition(), null),
+							velocity.getVelocity(), velocity.getVelocity());
 				}
 			}
 		}
@@ -110,7 +105,8 @@ public class PhysicsSystem extends EntitySystem {
 
 	public void processEntities(GameResources gm) {
 		for (Entity entity : entities) {
-			if(entity instanceof PlayerCamera) continue;
+			if (entity instanceof PlayerCamera)
+				continue;
 			if (entity instanceof AbstractEntity) {
 
 				Health health = Components.HEALTH.get(entity);
@@ -148,9 +144,10 @@ public class PhysicsSystem extends EntitySystem {
 			AABB aabb = Components.AABB.get(entity);
 			Health health = Components.HEALTH.get(entity);
 			ArmourComponent armour = am.get(entity);
-			
+
 			velocity.setX(velocity.getX() * 0.7f - velocity.getX() * 0.0001f);
-			velocity.setY(velocity.getY() + -9.8f * deltaTime);
+			velocity.setY(velocity.getY() * 0.7f - velocity.getY() * 0.0001f);
+			// velocity.setY(velocity.getY() + -9.8f * deltaTime);
 			velocity.setZ(velocity.getZ() * 0.7f - velocity.getZ() * 0.0001f);
 
 			aabb.update(pos.getPosition());
@@ -159,14 +156,14 @@ public class PhysicsSystem extends EntitySystem {
 			double tempx = velocity.getX();
 			int tempX = (int) tempx;
 			if (velocity.getX() < 0) {
-				//tempx = velocity.getX();
+				// tempx = velocity.getX();
 				tempX = (int) tempx - 1;
 			}
 
 			double tempz = velocity.getZ();
 			int tempZ = (int) tempz;
 			if (velocity.getZ() > 0) {
-				//tempz = (velocity.velocity.z);
+				// tempz = (velocity.velocity.z);
 				tempZ = (int) tempz + 1;
 			}
 
@@ -195,7 +192,7 @@ public class PhysicsSystem extends EntitySystem {
 							velocity.setY(0);
 						if (normalTMP.y < 0 && velocity.getY() < 0) {
 							if (health != null && velocity.getY() < -10f) {
-								health.take((float)(velocity.getY() * 0.4f + 1 * armour.armour.getProtection()));
+								health.take((float) (velocity.getY() * 0.4f + 1 * armour.armour.getProtection()));
 							}
 							velocity.setY(0);
 							pos.setY(pos.getY() + depthTMP);
@@ -211,14 +208,15 @@ public class PhysicsSystem extends EntitySystem {
 						}
 					}
 				}
-			if (health != null) {
+			//TODO: Broken
+			/*if (health != null) {
 				BlockBase b = dim.getGlobalBlock(bx, by, bz);
 				if (b == Block.Lava)
 					health.take(0.2f);
 				if (!b.isTransparent() && b.getId() != Block.NULL.getId())
 					health.take(0.5f);
 			}
-
+*/
 			pos.setX(pos.getX() + velocity.getX() * deltaTime);
 			pos.setY(pos.getY() + velocity.getY() * deltaTime);
 			pos.setZ(pos.getZ() + velocity.getZ() * deltaTime);

@@ -45,6 +45,7 @@ import net.luxvacuos.igl.vector.Matrix4f;
 import net.luxvacuos.igl.vector.Vector2f;
 import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.igl.vector.Vector4f;
+import net.luxvacuos.voxel.client.core.states.StateNames;
 import net.luxvacuos.voxel.client.input.Keyboard;
 import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Display;
@@ -99,6 +100,8 @@ public class PlayerCamera extends Camera {
 				new TexturedModel(GameResources.getInstance().getLoader().getObjLoader().loadObjModel("BlockSelector"),
 						new ModelTexture(GameResources.getInstance().getLoader().loadTextureEntity("BlockSelector"))));
 		blockSelector.scale = 1.02f;
+		flyMode = true;
+		
 		if (flyMode)
 			Components.AABB.get(this).setEnabled(false);
 	}
@@ -117,8 +120,8 @@ public class PlayerCamera extends Camera {
 			gm.getCamera().setPitch(0);
 			gm.getCamera().setYaw(0);
 			unlockMouse();
-			//gm.getGlobalStates().setState(GameState.MAINMENU);
-			StateMachine.setCurrentState("MainMenu");
+			// gm.getGlobalStates().setState(GameState.MAINMENU);
+			StateMachine.setCurrentState(StateNames.MAIN_MENU);
 		}
 
 		float mouseDX = getDX() * delta * mouseSpeed * 0.16f * multiplierMouse;
@@ -185,7 +188,7 @@ public class PlayerCamera extends Camera {
 			underWater = true;
 		else
 			underWater = false;
-		
+
 		Velocity vel = Components.VELOCITY.get(this);
 
 		if (isKeyDown(KEY_W)) {

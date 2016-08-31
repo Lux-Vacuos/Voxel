@@ -38,8 +38,8 @@ import net.luxvacuos.voxel.client.rendering.api.opengl.RenderingPipeline;
 
 public class Lighting extends ImagePass {
 
-	public Lighting(int width, int height) {
-		super(width, height);
+	public Lighting(String name, int width, int height) {
+		super(name, width, height);
 	}
 
 	@Override
