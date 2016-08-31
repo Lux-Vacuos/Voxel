@@ -32,10 +32,6 @@ import net.luxvacuos.voxel.universal.core.GlobalVariables;
  * @category Kernel
  */
 public class ServerVariables extends GlobalVariables {
-	/**
-	 * Game Settings
-	 */
-	public static String version = "Development Version";
 
 	public static final float TIME_MULTIPLIER = 10;
 	public static int port = 4059;

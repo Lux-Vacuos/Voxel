@@ -21,6 +21,10 @@ sourceSets {
         java.srcDir("${projectDir}/src/main/java/")
         resources.srcDir("${projectDir}/src/main/resources")
     }
+    
+    test {
+		java.srcDirs = ["${projectDir}/src/test/java/"]
+	}
 }
 if(opt == "")
 	version = mversion
