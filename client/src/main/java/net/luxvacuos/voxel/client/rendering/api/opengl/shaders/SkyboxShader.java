@@ -50,6 +50,7 @@ public class SkyboxShader extends ShaderProgram {
 	@Override
 	protected void bindAttributes() {
 		super.bindAttribute(0, "position");
+		super.bindAttribute(2, "normal");
 	}
 
 	@Override
@@ -81,7 +82,7 @@ public class SkyboxShader extends ShaderProgram {
 	 *            Delta
 	 */
 	public void loadViewMatrix(Camera camera) {
-		Matrix4f matrix = Maths.createViewMatrix(camera);
+		Matrix4f matrix = Maths.createViewMatrixRot(camera.getPitch(), camera.getYaw(), camera.getRoll(), null);
 		super.loadMatrix(loc_viewMatrix, matrix);
 	}
 

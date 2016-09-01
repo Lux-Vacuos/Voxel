@@ -40,8 +40,7 @@ void main(void){
 	vec2 texcoord = textureCoords;
 	vec4 position = texture(gPosition,texcoord);
     vec3 eyeDir = normalize(cameraPosition-position.xyz);
-	vec3 invertedLight = invertedLightPosition;
-    vec3 invertedlightDir = invertedLight - position.xyz ;
+    vec3 invertedlightDir = invertedLightPosition;
     invertedlightDir = normalize(invertedlightDir);
     float lightDirDOTviewDir = dot(invertedlightDir,eyeDir);
 	vec4 raysColor = texture(composite0, texcoord);

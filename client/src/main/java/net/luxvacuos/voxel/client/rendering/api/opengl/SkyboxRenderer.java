@@ -20,10 +20,13 @@
 
 package net.luxvacuos.voxel.client.rendering.api.opengl;
 
+import static org.lwjgl.opengl.GL11.GL_CULL_FACE;
 import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
 import static org.lwjgl.opengl.GL11.GL_UNSIGNED_INT;
 import static org.lwjgl.opengl.GL11.glDepthMask;
+import static org.lwjgl.opengl.GL11.glDisable;
 import static org.lwjgl.opengl.GL11.glDrawElements;
+import static org.lwjgl.opengl.GL11.glEnable;
 import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
 import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
@@ -72,19 +75,23 @@ public class SkyboxRenderer {
 	 */
 	public void render(float r, float g, float b, float delta, GameResources gm) {
 		glDepthMask(false);
+		glDisable(GL_CULL_FACE);
 		shader.start();
 		shader.loadProjectionMatrix(gm.getRenderer().getProjectionMatrix());
-		shader.loadTransformationMatrix(Maths.createTransformationMatrix(gm.getCamera().getPosition(), 0, 0, 0, 370));
+		shader.loadTransformationMatrix(Maths.createTransformationMatrix(gm.getCamera().getPosition(), 0, 0, 0, 400));
 		shader.loadViewMatrix(gm.getCamera());
 		shader.loadFog(r, g, b);
 		shader.loadTime(gm.getWorldSimulation().getGlobalTime());
 		shader.loadLightPosition(gm.getLightPos());
 		glBindVertexArray(dome.getVaoID());
 		glEnableVertexAttribArray(0);
+		glEnableVertexAttribArray(2);
 		glDrawElements(GL_TRIANGLES, dome.getVertexCount(), GL_UNSIGNED_INT, 0);
 		glDisableVertexAttribArray(0);
+		glDisableVertexAttribArray(2);
 		glBindVertexArray(0);
 		shader.stop();
+		glEnable(GL_CULL_FACE);
 		glDepthMask(true);
 	}
 

@@ -22,6 +22,7 @@
 
 in vec3 textureCoords;
 in vec3 pass_position;
+in vec3 pass_normal;
 
 out vec4 [5] out_Color;
 
@@ -29,8 +30,8 @@ uniform float time;
 uniform vec3 fogColour;
 uniform vec3 lightPosition;
 
-const float lowerLimit = -0.0;
-const float upperLimit =  0.6;
+const float lowerLimit =  0.2;
+const float upperLimit =  -0.8;
 
 #define CLOUD_COVER		0.55
 #define CLOUD_SHARPNESS		0.005
@@ -81,27 +82,43 @@ float clouds(float tt){
 }
 
 void main(void){
-
+/*
 	float tt = time / 10;
 
 	float f = clouds(tt);
 	
-	float fac = max(dot(vec3(0,1,0),normalize(lightPosition - pass_position)),-1.0);
+	float fac = max(dot(vec3(0,1,0),normalize(lightPosition)),-1.0);
 	fac = clamp(fac,0.02,1.0);
 	f *= fac;
 	
     vec4 finalColour = vec4(fogColour,1.0);
     finalColour.rgb *= fac;
-    float factor = (textureCoords.y - lowerLimit) / (upperLimit - lowerLimit);
     factor = clamp(factor, 0.0, 1.0);
     finalColour = mix(finalColour, vec4(f,f,f,1.0), factor);
+    finalColour *= factor;
+    */
+    float factor = (textureCoords.y - lowerLimit) / (upperLimit - lowerLimit);
+    vec4 finalColour = vec4(fogColour, 1.0);
     
+    vec4 skyTop = vec4(fogColour.r *0.4, fogColour.g *0.4, fogColour.b, 0.0);
+    
+    finalColour = mix(skyTop, finalColour, factor);
+    
+ 	vec3 V = normalize(pass_normal);
+    vec3 L = normalize(lightPosition);
+
+    float vl = dot(V, L);
+    float f = 0;
+    
+    if(vl > 0.999)
+    	finalColour = vec4(1.0);
+    if(vl > 0.99)
+    	f = 1;
+
     out_Color[0] = finalColour;
     out_Color[1] = vec4(pass_position.xyz,0);
     out_Color[2] = vec4(0.0);
     out_Color[3] = vec4(0,0,1,0);
-    out_Color[4] = vec4(1.0 - f * 3,0,0,0);
-    
-    if(factor < 0.01)
-    	out_Color[4].r = 0;
+    out_Color[4] = vec4(0,0,0,0);
+    out_Color[4] = vec4(f,0,0,0);
 }
