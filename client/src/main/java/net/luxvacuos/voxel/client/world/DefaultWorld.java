@@ -23,7 +23,7 @@ package net.luxvacuos.voxel.client.world;
 import java.util.Random;
 
 import net.luxvacuos.voxel.client.resources.GameResources;
-
+@Deprecated
 public class DefaultWorld extends World {
 
 	public DefaultWorld(String name) {

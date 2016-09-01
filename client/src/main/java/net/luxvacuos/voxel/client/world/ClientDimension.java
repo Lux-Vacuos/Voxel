@@ -35,7 +35,7 @@ import net.luxvacuos.voxel.client.resources.models.ParticleSystem;
 import net.luxvacuos.voxel.client.world.chunks.Chunk;
 import net.luxvacuos.voxel.client.world.chunks.ChunkGenerator;
 import net.luxvacuos.voxel.universal.world.utils.ChunkNode;
-
+@Deprecated
 public class ClientDimension extends Dimension {
 
 	public ClientDimension(String name, Random seed, int chunkDim, GameResources gm) {

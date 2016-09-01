@@ -2,7 +2,7 @@ package net.luxvacuos.voxel.client.world;
 
 import java.util.HashMap;
 import java.util.Map;
-
+@Deprecated
 public class DimensionData {
 
 	private Map<String, Object> values;

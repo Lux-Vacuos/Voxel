@@ -5,7 +5,7 @@ import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.resources.models.RendereableTexturedModel;
 import net.luxvacuos.voxel.client.resources.models.TexturedModel;
 import net.luxvacuos.voxel.client.world.Dimension;
-
+@Deprecated
 public abstract class BlockEntity extends BlockBase {
 
 	protected int x, y, z;

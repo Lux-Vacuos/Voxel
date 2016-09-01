@@ -43,6 +43,8 @@ import net.luxvacuos.voxel.client.world.block.BlocksResources;
 import net.luxvacuos.voxel.client.world.entities.Camera;
 import net.luxvacuos.voxel.universal.world.utils.ChunkNode;
 
+
+@Deprecated
 public class Chunk {
 
 	public int posX, posY, posZ, cx, cy, cz;
