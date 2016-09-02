@@ -48,9 +48,9 @@ void main(void){
 	if(useVolumetricLight == 1){
 		if (lightDirDOTviewDir>0.0){
 			float exposure	= 0.1/NUM_SAMPLES;
-			float decay		= 1;
+			float decay		= 0.95;
 			float density	= 1;
-			float weight	= 6.0;
+			float weight	= 8.0;
 			float illuminationDecay = 2;
 			vec2 pos = vec2(0.0);
 			pos.x = (sunPositionInScreen.x) / resolution.x;

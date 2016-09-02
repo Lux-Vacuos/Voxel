@@ -110,15 +110,16 @@ void main(void){
     float vl = dot(V, L);
     float f = 0;
     
+    finalColour *= max(dot(vec3(0,1,0),L),-1.0);
+    
     if(vl > 0.999)
     	finalColour = vec4(1.0);
-    if(vl > 0.99)
+    if(vl > 0.999)
     	f = 1;
 
     out_Color[0] = finalColour;
     out_Color[1] = vec4(pass_position.xyz,0);
     out_Color[2] = vec4(0.0);
     out_Color[3] = vec4(0,0,1,0);
-    out_Color[4] = vec4(0,0,0,0);
     out_Color[4] = vec4(f,0,0,0);
 }

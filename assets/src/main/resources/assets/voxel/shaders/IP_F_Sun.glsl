@@ -37,7 +37,7 @@ void main(void){
 	vec4 data0 = texture(gData0, texcoord);
 	vec4 data1 = texture(gData1, texcoord);
     if(data0.b == 1 && data1.r > 0){
-		image = vec4(data1.r);
+		image = vec4(data1.r + 1);
     }
     out_Color = image;
 
