@@ -186,14 +186,12 @@ public class GameResources extends AbstractGameResources {
 		sun_Camera.setPitch(sunRotation.y);
 		sun_Camera.setRoll(sunRotation.z);
 		((SunCamera) sun_Camera).updateShadowRay(this, false);
-		lightPos = new Vector3f(sun_Camera.getDRay().direction.x * 1000, sun_Camera.getDRay().direction.y * 1000,
-				sun_Camera.getDRay().direction.z * 1000);
-		Vector3f.add(sun_Camera.getPosition(), lightPos, lightPos);
+		lightPos.set(sun_Camera.getDRay().direction.x * 10, sun_Camera.getDRay().direction.y * 10,
+				sun_Camera.getDRay().direction.z * 10);
 
 		((SunCamera) sun_Camera).updateShadowRay(this, true);
-		invertedLightPosition = new Vector3f(sun_Camera.getDRay().direction.x * 1000,
-				sun_Camera.getDRay().direction.y * 1000, sun_Camera.getDRay().direction.z * 1000);
-		Vector3f.add(sun_Camera.getPosition(), invertedLightPosition, invertedLightPosition);
+		invertedLightPosition.set(sun_Camera.getDRay().direction.x * 10, sun_Camera.getDRay().direction.y * 10,
+				sun_Camera.getDRay().direction.z * 10);
 	}
 
 	/**

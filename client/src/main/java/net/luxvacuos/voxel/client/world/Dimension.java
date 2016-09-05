@@ -21,6 +21,7 @@
 package net.luxvacuos.voxel.client.world;
 
 import static org.lwjgl.opengl.GL11.GL_BLEND;
+
 import static org.lwjgl.opengl.GL11.glDisable;
 import static org.lwjgl.opengl.GL11.glEnable;
 import static org.lwjgl.opengl.GL11.glViewport;
@@ -64,6 +65,8 @@ import net.luxvacuos.voxel.client.world.chunks.LightNodeRemoval;
 import net.luxvacuos.voxel.universal.core.states.StateMachine;
 import net.luxvacuos.voxel.universal.world.utils.ChunkNode;
 
+
+@Deprecated
 public abstract class Dimension {
 
 	protected int chunkDim;

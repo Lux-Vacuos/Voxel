@@ -24,7 +24,7 @@ import java.util.Random;
 
 import net.luxvacuos.voxel.client.world.Dimension;
 import net.luxvacuos.voxel.client.world.block.Block;
-
+@Deprecated
 public class ChunkGenerator {
 
 	public void addTree(Dimension world, int xo, int yo, int zo, int treeHeight, Random rand) {

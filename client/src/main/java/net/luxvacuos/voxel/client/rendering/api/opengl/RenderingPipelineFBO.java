@@ -94,7 +94,7 @@ public class RenderingPipelineFBO {
 		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 
 		glBindRenderbuffer(GL_RENDERBUFFER, diffuseRT);
-		glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA, width, height);
+		glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA16F, width, height);
 		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, diffuseRT);
 
 		glBindRenderbuffer(GL_RENDERBUFFER, positionRT);
@@ -119,7 +119,7 @@ public class RenderingPipelineFBO {
 
 		diffuseTex = glGenTextures();
 		glBindTexture(GL_TEXTURE_2D, diffuseTex);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, (ByteBuffer) null);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, width, height, 0, GL_RGBA, GL_FLOAT, (ByteBuffer) null);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);

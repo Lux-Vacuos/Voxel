@@ -35,7 +35,7 @@ import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.ui.Inventory;
 import net.luxvacuos.voxel.client.world.entities.PlayerCamera;
-
+@Deprecated
 public abstract class World {
 
 	protected String name;

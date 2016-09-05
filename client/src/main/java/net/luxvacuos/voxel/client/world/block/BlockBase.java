@@ -28,6 +28,7 @@ import net.luxvacuos.igl.vector.Vector8f;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Tessellator;
 import net.luxvacuos.voxel.client.world.items.ItemDrop;
 
+@Deprecated
 public abstract class BlockBase {
 	protected transient boolean transparent = false;
 	protected transient boolean customModel = false;
@@ -94,9 +95,9 @@ public abstract class BlockBase {
 	public boolean isFluid() {
 		return fluid;
 	}
-	
+
 	public boolean isObjModel() {
 		return objModel;
 	}
-	
+
 }

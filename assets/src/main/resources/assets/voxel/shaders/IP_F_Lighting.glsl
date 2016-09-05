@@ -62,8 +62,7 @@ void main(void){
     vec4 position = texture(gPosition,texcoord);
     vec4 normal = texture(gNormal, texcoord);
     float depth = texture(gDepth, vec3(texcoord.xy, 0.0), 0);
-	vec3 light = lightPosition;
-    vec3 lightDir = light - position.xyz;
+    vec3 lightDir = lightPosition;
     lightDir = normalize(lightDir);
     vec3 eyeDir = normalize(cameraPosition-position.xyz);
 	float distance = length(cameraPosition-position.xyz);
@@ -85,7 +84,6 @@ void main(void){
 	   		}
     }
     image += texture(composite0, texcoord);
-    image += texture(composite1, texcoord);
     /*
 	if(data.b != 1) {
 		float visibility = exp(-pow((distance*density),gradient));

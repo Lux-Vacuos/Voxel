@@ -104,8 +104,10 @@ public abstract class ImagePass {
 		shader.loadSettings(ClientVariables.useDOF, ClientVariables.useFXAA, ClientVariables.useMotionBlur,
 				ClientVariables.useVolumetricLight, ClientVariables.useReflections);
 		shader.loadSunPosition(Maths.convertTo2F(new Vector3f(gm.getLightPos()), gm.getRenderer().getProjectionMatrix(),
-				Maths.createViewMatrix(gm.getCamera()), width, height));
-		shader.loadExposure(4f);
+				Maths.createViewMatrixRot(gm.getCamera().getPitch(), gm.getCamera().getYaw(), gm.getCamera().getRoll(),
+						null),
+				width, height));
+		shader.loadExposure(2f);
 		shader.loadTime(gm.getWorldSimulation().getTime());
 	}
 

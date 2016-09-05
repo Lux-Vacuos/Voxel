@@ -46,6 +46,7 @@ import net.luxvacuos.voxel.client.world.block.types.BlockWood;
  * @author Guerra24 <pablo230699@hotmail.com>
  * @category World
  */
+@Deprecated
 public class Block {
 
 	public static final BlockBase NULL = new BlockNull();

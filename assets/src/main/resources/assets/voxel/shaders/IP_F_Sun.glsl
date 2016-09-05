@@ -30,23 +30,14 @@ uniform vec2 resolution;
 uniform sampler2D gData0;
 uniform sampler2D gData1;
 
-vec2 size = vec2(40, 85);
-
 void main(void){
-	vec2 scale = vec2(resolution.x / 1280, resolution.y / 720);
-	size *= scale;
 
 	vec2 texcoord = textureCoords;
 	vec4 image = vec4(0.0);
 	vec4 data0 = texture(gData0, texcoord);
 	vec4 data1 = texture(gData1, texcoord);
     if(data0.b == 1 && data1.r > 0){
-    	vec2 midpoint = sunPositionInScreen.xy;
-		float dist = length(gl_FragCoord.xy - midpoint);
-		float circle = 1 - smoothstep(size.x-1.0, size.y+1.0, dist);
-		image.rgb = vec3(circle,circle,circle);
-		image.a = circle;
-		image *= data1.r;
+		image = vec4(data1.r + 1);
     }
     out_Color = image;
 
