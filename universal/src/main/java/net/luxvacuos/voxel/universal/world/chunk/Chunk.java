@@ -23,7 +23,6 @@ package net.luxvacuos.voxel.universal.world.chunk;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-import net.luxvacuos.voxel.universal.world.block.Blocks;
 import net.luxvacuos.voxel.universal.world.block.IBlock;
 import net.luxvacuos.voxel.universal.world.dimension.IDimension;
 import net.luxvacuos.voxel.universal.world.utils.ChunkNode;
@@ -69,7 +68,7 @@ public class Chunk implements IChunk {
 	public IBlock getBlockAt(int x, int y, int z) {
 		this.lock.readLock().lock();
 		try {
-			IBlock block = Blocks.getBlockByID(this.data.getBlockIDAt(x, y, z));
+			IBlock block = this.data.getBlockAt(x, y, z);
 			if(block.hasComplexMetadata()) {
 				//TODO: Implement this
 			}

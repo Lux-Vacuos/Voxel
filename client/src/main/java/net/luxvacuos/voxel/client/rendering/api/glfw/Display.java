@@ -117,6 +117,7 @@ public class Display extends Window {
 		format.create();
 
 		if (glfwVulkanSupported()) {
+			Logger.log("Vulkan supported on current platform");
 			// PointerBuffer requiredExtensions =
 			// glfwGetRequiredInstanceExtensions();
 			// if (requiredExtensions == null) {
@@ -178,18 +179,16 @@ public class Display extends Window {
 		super.pixelRatio = (float) displayFramebufferWidth / (float) displayWidth;
 		glViewport(0, 0, (int) (displayWidth * pixelRatio), (int) (displayHeight * pixelRatio));
 
-		if (glGetString(GL_VENDOR).contains("NVIDIA"))
+		if (glGetString(GL_VENDOR).contains("NVIDIA")) {
 			nvidia = true;
-		else if (glGetString(GL_VENDOR).contains("AMD"))
-			amd = true;
-		if (nvidia)
 			glGetIntegerv(NVXGPUMemoryInfo.GL_GPU_MEMORY_INFO_DEDICATED_VIDMEM_NVX, maxVram);
-		else if (amd)
-			glGetIntegerv(WGLAMDGPUAssociation.WGL_GPU_RAM_AMD, maxVram);
-		if (nvidia)
 			Logger.log("Max VRam: " + maxVram.get(0) + "KB");
-		else if (amd)
+		}
+		else if (glGetString(GL_VENDOR).contains("AMD")) {
+			amd = true;
+			glGetIntegerv(WGLAMDGPUAssociation.WGL_GPU_RAM_AMD, maxVram);
 			Logger.log("Max VRam: " + maxVram.get(0) + "MB");
+		}
 		super.displayCreated = true;
 	}
 

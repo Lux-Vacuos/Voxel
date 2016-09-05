@@ -67,6 +67,7 @@ import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.TessellatorBasicShader;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.TessellatorShader;
 import net.luxvacuos.voxel.client.resources.GameResources;
+import net.luxvacuos.voxel.client.util.Maths;
 import net.luxvacuos.voxel.client.world.block.Block;
 import net.luxvacuos.voxel.client.world.block.BlockBase;
 import net.luxvacuos.voxel.client.world.entities.Camera;
@@ -113,7 +114,8 @@ public class Tessellator {
 		shader.start();
 		shader.conectTextureUnits();
 		shader.loadProjectionMatrix(GameResources.getInstance().getRenderer().getProjectionMatrix());
-		shader.loadBiasMatrix(GameResources.getInstance());
+		//shader.loadBiasMatrix(GameResources.getInstance());
+		shader.loadBiasMatrix(GameResources.getInstance().getMasterShadowRenderer().getProjectionMatrix());
 		shader.stop();
 		basicShader = TessellatorBasicShader.getInstance();
 		basicShader.start();
@@ -250,8 +252,10 @@ public class Tessellator {
 		}
 		shader.start();
 		shader.loadProjectionMatrix(projectionMatrix);
-		shader.loadviewMatrix(camera);
-		shader.loadLightMatrix(gm);
+		//shader.loadviewMatrix(camera);
+		shader.loadViewMatrix(Maths.createViewMatrix(camera), camera.getPosition());
+		//shader.loadLightMatrix(gm);
+		shader.loadLightMatrix(Maths.createViewMatrix(gm.getSun_Camera()));
 		shader.loadTransparent(transparent);
 		shader.loadSettings(ClientVariables.useShadows, ClientVariables.useParallax);
 		shader.loadMoveFactor(gm.getWorldSimulation().getMoveFactor());

@@ -21,10 +21,11 @@
 package net.luxvacuos.voxel.client.rendering.api.opengl.shaders;
 
 import net.luxvacuos.igl.vector.Matrix4f;
+import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.voxel.client.core.ClientVariables;
-import net.luxvacuos.voxel.client.resources.GameResources;
-import net.luxvacuos.voxel.client.util.Maths;
-import net.luxvacuos.voxel.client.world.entities.Camera;
+//import net.luxvacuos.voxel.client.resources.GameResources;
+//import net.luxvacuos.voxel.client.util.Maths;
+//import net.luxvacuos.voxel.client.world.entities.Camera;
 
 public class TessellatorShader extends ShaderProgram {
 
@@ -105,39 +106,45 @@ public class TessellatorShader extends ShaderProgram {
 	 * @param camera
 	 *            Camera
 	 */
-	public void loadviewMatrix(Camera camera) {
-		Matrix4f matrix = Maths.createViewMatrix(camera);
-		matrix.m30 = 0;
-		matrix.m31 = 0;
-		matrix.m32 = 0;
-		super.loadMatrix(loc_viewMatrix, matrix);
-		super.loadVector(loc_cameraPos, camera.getPosition());
+	//public void loadviewMatrix(Camera camera) {
+	public void loadViewMatrix(Matrix4f cameraViewMatrix, Vector3f cameraPosition) {
+		//Matrix4f matrix = Maths.createViewMatrix(camera);
+		cameraViewMatrix.m30 = 0;
+		cameraViewMatrix.m31 = 0;
+		cameraViewMatrix.m32 = 0;
+		super.loadMatrix(loc_viewMatrix, cameraViewMatrix);
+		//super.loadVector(loc_cameraPos, camera.getPosition());
+		super.loadVector(loc_cameraPos, cameraPosition);
 	}
 
-	public void loadBiasMatrix(GameResources gm) {
+	//public void loadBiasMatrix(GameResources gm) {
+	public void loadBiasMatrix(Matrix4f shadowProjectionMatrix) {
 		Matrix4f biasMatrix = new Matrix4f();
 		biasMatrix.m00 = 0.5f;
-		biasMatrix.m01 = 0;
-		biasMatrix.m02 = 0;
-		biasMatrix.m03 = 0;
-		biasMatrix.m10 = 0;
+		//biasMatrix.m01 = 0;
+		//biasMatrix.m02 = 0;
+		//biasMatrix.m03 = 0;
+		//biasMatrix.m10 = 0;
 		biasMatrix.m11 = 0.5f;
-		biasMatrix.m12 = 0;
-		biasMatrix.m13 = 0;
-		biasMatrix.m20 = 0;
-		biasMatrix.m21 = 0;
+		//biasMatrix.m12 = 0;
+		//biasMatrix.m13 = 0;
+		//biasMatrix.m20 = 0;
+		//biasMatrix.m21 = 0;
 		biasMatrix.m22 = 0.5f;
-		biasMatrix.m23 = 0;
+		//biasMatrix.m23 = 0;
 		biasMatrix.m30 = 0.5f;
 		biasMatrix.m31 = 0.5f;
 		biasMatrix.m32 = 0.5f;
-		biasMatrix.m33 = 1f;
+		//biasMatrix.m33 = 1f;
 		super.loadMatrix(loc_biasMatrix, biasMatrix);
-		super.loadMatrix(loc_projectionLightMatrix, gm.getMasterShadowRenderer().getProjectionMatrix());
+		//super.loadMatrix(loc_projectionLightMatrix, gm.getMasterShadowRenderer().getProjectionMatrix());
+		super.loadMatrix(loc_projectionLightMatrix, shadowProjectionMatrix);
 	}
 
-	public void loadLightMatrix(GameResources gm) {
-		super.loadMatrix(loc_viewLightMatrix, Maths.createViewMatrix(gm.getSun_Camera()));
+	//public void loadLightMatrix(GameResources gm) {
+	public void loadLightMatrix(Matrix4f sunCameraViewMatrix) {
+		//super.loadMatrix(loc_viewLightMatrix, Maths.createViewMatrix(gm.getSun_Camera()));
+		super.loadMatrix(loc_viewLightMatrix, sunCameraViewMatrix);
 	}
 
 	public void loadMoveFactor(float factor) {
