@@ -71,6 +71,7 @@ import org.lwjgl.vulkan.VkInstance;
 import de.matthiasmann.twl.utils.PNGDecoder;
 import net.luxvacuos.igl.Logger;
 import net.luxvacuos.voxel.client.core.exception.LoadTextureException;
+import net.luxvacuos.voxel.client.input.KeyboardHandler;
 import net.luxvacuos.voxel.client.input.Mouse;
 
 /**
@@ -133,8 +134,11 @@ public class Display extends Window {
 		if (super.window == NULL) {
 			throw new RuntimeException("Failed to create the GLFW window");
 		}
+		
+		super.kbHandle = new KeyboardHandler(super.window); //Sets up the Keyboard Handler
 		super.createCallbacks();
 		super.setCallbacks();
+		
 		vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 		glfwSetWindowPos(super.window, (vidmode.width() - super.displayWidth) / 2,
 				(vidmode.height() - super.displayHeight) / 2);

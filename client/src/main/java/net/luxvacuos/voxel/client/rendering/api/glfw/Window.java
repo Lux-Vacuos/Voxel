@@ -20,15 +20,15 @@
 
 package net.luxvacuos.voxel.client.rendering.api.glfw;
 
-import static org.lwjgl.glfw.GLFW.GLFW_RELEASE;
+//import static org.lwjgl.glfw.GLFW.GLFW_RELEASE;
 import static org.lwjgl.glfw.GLFW.glfwGetFramebufferSize;
 import static org.lwjgl.glfw.GLFW.glfwGetWindowSize;
-import static org.lwjgl.glfw.GLFW.glfwSetCharCallback;
+//import static org.lwjgl.glfw.GLFW.glfwSetCharCallback;
 import static org.lwjgl.glfw.GLFW.glfwSetCursorEnterCallback;
 import static org.lwjgl.glfw.GLFW.glfwSetCursorPosCallback;
 import static org.lwjgl.glfw.GLFW.glfwSetErrorCallback;
 import static org.lwjgl.glfw.GLFW.glfwSetFramebufferSizeCallback;
-import static org.lwjgl.glfw.GLFW.glfwSetKeyCallback;
+//import static org.lwjgl.glfw.GLFW.glfwSetKeyCallback;
 import static org.lwjgl.glfw.GLFW.glfwSetMouseButtonCallback;
 import static org.lwjgl.glfw.GLFW.glfwSetScrollCallback;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowFocusCallback;
@@ -44,12 +44,12 @@ import java.nio.IntBuffer;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFW;
-import org.lwjgl.glfw.GLFWCharCallback;
+//import org.lwjgl.glfw.GLFWCharCallback;
 import org.lwjgl.glfw.GLFWCursorEnterCallback;
 import org.lwjgl.glfw.GLFWCursorPosCallback;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWFramebufferSizeCallback;
-import org.lwjgl.glfw.GLFWKeyCallback;
+//import org.lwjgl.glfw.GLFWKeyCallback;
 import org.lwjgl.glfw.GLFWMouseButtonCallback;
 import org.lwjgl.glfw.GLFWScrollCallback;
 import org.lwjgl.glfw.GLFWWindowFocusCallback;
@@ -58,14 +58,15 @@ import org.lwjgl.glfw.GLFWWindowPosCallback;
 import org.lwjgl.glfw.GLFWWindowRefreshCallback;
 import org.lwjgl.glfw.GLFWWindowSizeCallback;
 
-import net.luxvacuos.voxel.client.input.Keyboard;
+import net.luxvacuos.voxel.client.input.KeyboardHandler;
+//import net.luxvacuos.voxel.client.input.Keyboard;
 import net.luxvacuos.voxel.client.input.Mouse;
 
 public abstract class Window implements IDisplay {
 
 	private GLFWErrorCallback errorCallback;
-	private GLFWKeyCallback keyCallback;
-	private GLFWCharCallback charCallback;
+	//private GLFWKeyCallback keyCallback;
+	//private GLFWCharCallback charCallback;
 	private GLFWCursorEnterCallback cursorEnterCallback;
 	private GLFWCursorPosCallback cursorPosCallback;
 	private GLFWMouseButtonCallback mouseButtonCallback;
@@ -77,6 +78,9 @@ public abstract class Window implements IDisplay {
 	private GLFWFramebufferSizeCallback framebufferSizeCallback;
 	private GLFWScrollCallback scrollCallback;
 	private GLFWWindowRefreshCallback refreshCallback;
+	
+	//The Keyboard Handler for this window
+	protected KeyboardHandler kbHandle;
 
 	protected boolean displayCreated = false;
 	protected boolean displayFocused = false;
@@ -111,7 +115,7 @@ public abstract class Window implements IDisplay {
 			}
 
 		});
-		keyCallback = new GLFWKeyCallback() {
+		/* keyCallback = new GLFWKeyCallback() {
 			@Override
 			public void invoke(long window, int key, int scancode, int action, int mods) {
 				latestEventKey = key;
@@ -127,7 +131,7 @@ public abstract class Window implements IDisplay {
 			public void invoke(long window, int codepoint) {
 				Keyboard.addCharEvent(latestEventKey, (char) codepoint);
 			}
-		};
+		}; */
 
 		cursorEnterCallback = new GLFWCursorEnterCallback() {
 
@@ -223,8 +227,8 @@ public abstract class Window implements IDisplay {
 	}
 
 	public void setCallbacks() {
-		glfwSetKeyCallback(window, keyCallback);
-		glfwSetCharCallback(window, charCallback);
+		//glfwSetKeyCallback(window, keyCallback);
+		//glfwSetCharCallback(window, charCallback);
 		glfwSetCursorEnterCallback(window, cursorEnterCallback);
 		glfwSetCursorPosCallback(window, cursorPosCallback);
 		glfwSetMouseButtonCallback(window, mouseButtonCallback);
@@ -242,13 +246,13 @@ public abstract class Window implements IDisplay {
 		return errorCallback;
 	}
 
-	public GLFWKeyCallback getKeyCallback() {
+	/* public GLFWKeyCallback getKeyCallback() {
 		return keyCallback;
 	}
 
 	public GLFWCharCallback getCharCallback() {
 		return charCallback;
-	}
+	} */
 
 	public GLFWCursorEnterCallback getCursorEnterCallback() {
 		return cursorEnterCallback;
@@ -356,6 +360,10 @@ public abstract class Window implements IDisplay {
 
 	public long getVg() {
 		return vg;
+	}
+	
+	public KeyboardHandler getKeyboardHandler() {
+		return this.kbHandle;
 	}
 
 	public boolean isCloseRequested() {

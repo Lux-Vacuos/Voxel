@@ -30,6 +30,7 @@ import org.lwjgl.glfw.GLFW;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Display;
 import net.luxvacuos.voxel.client.resources.GameResources;
 
+@Deprecated
 public class Keyboard {
 
 	/**

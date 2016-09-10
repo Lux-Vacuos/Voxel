@@ -72,19 +72,21 @@ public final class KeyboardHandler implements IDisposable {
 		this.charCallback.setEndabled(false);
 	}
 	
-	public boolean hasTextInput() {
+	public boolean hasText() {
 		return this.charCallback.hasData();
 	}
 	
-	public String getTextInput() {
-		StringBuilder result = new StringBuilder();
-		if(!this.charCallback.hasData()) return "";
+	public String getText(String input) {
+		if(!this.charCallback.hasData()) return input;
+		String result = input;
 		
 		for(String in : this.charCallback.getData()) {
-			result.append(in);
+			if(in.equals("BACKSPACE")) {
+				if(in.length() > 0) result = result.substring(0, result.length() - 1);
+			} else result += in;
 		}
 		
-		return result.toString();
+		return result;
 	}
 	
 	public boolean isShiftPressed() {

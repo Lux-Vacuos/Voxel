@@ -20,14 +20,14 @@
 
 package net.luxvacuos.voxel.client.world.entities;
 
-import static net.luxvacuos.voxel.client.input.Keyboard.KEY_A;
-import static net.luxvacuos.voxel.client.input.Keyboard.KEY_D;
-import static net.luxvacuos.voxel.client.input.Keyboard.KEY_LSHIFT;
-import static net.luxvacuos.voxel.client.input.Keyboard.KEY_S;
-import static net.luxvacuos.voxel.client.input.Keyboard.KEY_SPACE;
-import static net.luxvacuos.voxel.client.input.Keyboard.KEY_T;
-import static net.luxvacuos.voxel.client.input.Keyboard.KEY_W;
-import static net.luxvacuos.voxel.client.input.Keyboard.isKeyDown;
+//import static net.luxvacuos.voxel.client.input.Keyboard.KEY_A;
+//import static net.luxvacuos.voxel.client.input.Keyboard.KEY_D;
+//import static net.luxvacuos.voxel.client.input.Keyboard.KEY_LSHIFT;
+//import static net.luxvacuos.voxel.client.input.Keyboard.KEY_S;
+//import static net.luxvacuos.voxel.client.input.Keyboard.KEY_SPACE;
+//import static net.luxvacuos.voxel.client.input.Keyboard.KEY_T;
+//import static net.luxvacuos.voxel.client.input.Keyboard.KEY_W;
+//import static net.luxvacuos.voxel.client.input.Keyboard.isKeyDown;
 import static net.luxvacuos.voxel.client.input.Mouse.getDX;
 import static net.luxvacuos.voxel.client.input.Mouse.getDY;
 import static net.luxvacuos.voxel.client.input.Mouse.isButtonDown;
@@ -38,6 +38,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.lwjgl.glfw.GLFW;
+
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 
@@ -45,9 +47,12 @@ import net.luxvacuos.igl.vector.Matrix4f;
 import net.luxvacuos.igl.vector.Vector2f;
 import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.igl.vector.Vector4f;
+import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.core.states.StateNames;
-import net.luxvacuos.voxel.client.input.Keyboard;
+import net.luxvacuos.voxel.client.input.KeyboardHandler;
+//import net.luxvacuos.voxel.client.input.Keyboard;
 import net.luxvacuos.voxel.client.input.Mouse;
+//import net.luxvacuos.voxel.client.network.VoxelClient;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Display;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.resources.models.ModelTexture;
@@ -101,13 +106,14 @@ public class PlayerCamera extends Camera {
 						new ModelTexture(GameResources.getInstance().getLoader().loadTextureEntity("BlockSelector"))));
 		blockSelector.scale = 1.02f;
 		flyMode = true;
-		
+
 		if (flyMode)
 			Components.AABB.get(this).setEnabled(false);
 	}
 
 	public void update(float delta, GameResources gm, Dimension world) {
 		isMoved = false;
+		KeyboardHandler kbh = gm.getDisplay().getKeyboardHandler();
 
 		if (Components.HEALTH.get(this).get() <= 0 && !died) {
 			died = true;
@@ -191,26 +197,44 @@ public class PlayerCamera extends Camera {
 
 		Velocity vel = Components.VELOCITY.get(this);
 
-		if (isKeyDown(KEY_W)) {
+		if(kbh.isKeyPressed(GLFW.GLFW_KEY_W)) {
 			vel.setZ(vel.getZ() + -Math.cos(Math.toRadians(this.yaw)) * this.speed);
 			vel.setX(vel.getX() + Math.sin(Math.toRadians(this.yaw)) * this.speed);
 			isMoved = true;
-		} else if (isKeyDown(KEY_S)) {
+		} else if(kbh.isKeyPressed(GLFW.GLFW_KEY_S)) {
 			vel.setZ(vel.getZ() - -Math.cos(Math.toRadians(this.yaw)) * this.speed);
 			vel.setX(vel.getX() - Math.sin(Math.toRadians(this.yaw)) * this.speed);
 			isMoved = true;
 		}
 
-		if (isKeyDown(KEY_D)) {
+		if(kbh.isKeyPressed(GLFW.GLFW_KEY_D)) {
 			vel.setZ(vel.getZ() + Math.sin(Math.toRadians(this.yaw)) * this.speed);
 			vel.setX(vel.getX() + Math.cos(Math.toRadians(this.yaw)) * this.speed);
 			isMoved = true;
-		} else if (isKeyDown(KEY_A)) {
+		} else if(kbh.isKeyPressed(GLFW.GLFW_KEY_A)) {
 			vel.setZ(vel.getZ() - Math.sin(Math.toRadians(this.yaw)) * this.speed);
 			vel.setX(vel.getX() - Math.cos(Math.toRadians(this.yaw)) * this.speed);
 			isMoved = true;
 		}
-		if (flyMode) {
+
+		this.speed = (kbh.isCtrlPressed() ? (this.flyMode ? 6f : 2f) : 1f);
+
+		if(this.flyMode) {
+			if(kbh.isKeyPressed(GLFW.GLFW_KEY_SPACE)) vel.setY(5f * this.speed);
+			else if(kbh.isShiftPressed()) vel.setY(-5f * this.speed);
+		} else {
+			if(kbh.isKeyPressed(GLFW.GLFW_KEY_SPACE) && !jump) {
+				vel.setY(5f);
+				jump = true;
+			}
+
+			if(kbh.isShiftPressed() && !jump) speed = 0.2f;
+			else speed = 1f;
+
+			if(vel.getY() == 0) jump = false;
+
+		}
+		/*if (flyMode) {
 			if (isKeyDown(KEY_SPACE))
 				vel.setY(5f * speed);
 		} else {
@@ -242,7 +266,7 @@ public class PlayerCamera extends Camera {
 			else
 				speed = 1f;
 
-		}
+		} */
 
 		/*
 		 * if (isKeyDown(Keyboard.KEY_Y)) {
@@ -250,7 +274,10 @@ public class PlayerCamera extends Camera {
 		 * (isKeyDown(Keyboard.KEY_O)) {
 		 * gm.getWorldsHandler().getActiveWorld().switchDimension(1, gm); }
 		 */
-		if (isKeyDown(KEY_T)) {
+		if(ClientVariables.debug) {
+			//TODO: Readd the below debug keys
+		}
+		/*if (isKeyDown(KEY_T)) {
 			gm.getWorldsHandler().getActiveWorld().getActiveDimension().getPhysicsEngine()
 					.addEntity(new GuineaPig(new Vector3f(getPosition())));
 		}
@@ -261,7 +288,7 @@ public class PlayerCamera extends Camera {
 		}
 		if (isKeyDown(Keyboard.KEY_2))
 			gm.getWorldsHandler().getActiveWorld().getActiveDimension().getPhysicsEngine()
-					.addEntity(Block.Node.getDrop(getPosition()));
+					.addEntity(Block.Node.getDrop(getPosition())); */
 
 		if (clickTime > 0)
 			clickTime--;
@@ -344,7 +371,7 @@ public class PlayerCamera extends Camera {
 		if (block.getBlock().getId() == Block.Air.getId()
 				&& world.getGlobalBlock(bx, by, bz).getId() != Block.Air.getId())
 			world.getPhysicsEngine()
-					.addEntity(world.getGlobalBlock(bx, by, bz).getDrop(new Vector3f(bx + 0.5f, by + 0.5f, bz + 0.5f)));
+			.addEntity(world.getGlobalBlock(bx, by, bz).getDrop(new Vector3f(bx + 0.5f, by + 0.5f, bz + 0.5f)));
 		if (block.getBlock().getId() == Block.Air.getId()
 				&& world.getGlobalBlock(bx, by, bz).getId() == Block.Torch.getId())
 			world.removeLight(bx, by, bz, 0);

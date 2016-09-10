@@ -20,9 +20,9 @@
 
 package net.luxvacuos.voxel.client.core.states;
 
-import static net.luxvacuos.voxel.client.input.Keyboard.KEY_F1;
-import static net.luxvacuos.voxel.client.input.Keyboard.isKeyDown;
-import static net.luxvacuos.voxel.client.input.Keyboard.next;
+//import static net.luxvacuos.voxel.client.input.Keyboard.KEY_F1;
+//import static net.luxvacuos.voxel.client.input.Keyboard.isKeyDown;
+//import static net.luxvacuos.voxel.client.input.Keyboard.next;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_COMPONENT;
 import static org.lwjgl.opengl.GL11.GL_FLOAT;
 import static org.lwjgl.opengl.GL11.GL_RGB;
@@ -33,10 +33,11 @@ import static org.lwjgl.opengl.GL30.GL_COLOR_ATTACHMENT2;
 import java.nio.FloatBuffer;
 
 import org.lwjgl.BufferUtils;
+import org.lwjgl.glfw.GLFW;
 
 import net.luxvacuos.voxel.client.core.CoreInfo;
 import net.luxvacuos.voxel.client.core.ClientVariables;
-import net.luxvacuos.voxel.client.input.Keyboard;
+//import net.luxvacuos.voxel.client.input.Keyboard;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.Timers;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.UIRendering;
 import net.luxvacuos.voxel.client.rendering.api.opengl.MasterRenderer;
@@ -155,12 +156,18 @@ public class MPState extends AbstractState {
 
 		gm.update(gm.getWorldSimulation().update(delta), delta);
 		ParticleMaster.getInstance().update(delta, gm.getCamera());
-		while (next()) {
+		
+		if(gm.getDisplay().getKeyboardHandler().isKeyPressed(GLFW.GLFW_KEY_F1))
+			ClientVariables.debug = !ClientVariables.debug;
+		
+		if(gm.getDisplay().getKeyboardHandler().isKeyPressed(GLFW.GLFW_KEY_R))
+			ClientVariables.raining = !ClientVariables.raining;
+		/* while (next()) {
 			if (isKeyDown(KEY_F1))
 				ClientVariables.debug = !ClientVariables.debug;
 			if (Keyboard.isKeyDown(Keyboard.KEY_R))
 				ClientVariables.raining = !ClientVariables.raining;
-		}
+		} */
 	}
 
 }

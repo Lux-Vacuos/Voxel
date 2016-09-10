@@ -25,7 +25,7 @@ import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_CENTER;
 import java.io.File;
 
 import net.luxvacuos.voxel.client.core.ClientVariables;
-import net.luxvacuos.voxel.client.input.Keyboard;
+//import net.luxvacuos.voxel.client.input.Keyboard;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.UIRendering;
 import net.luxvacuos.voxel.client.rendering.api.opengl.MasterRenderer;
 import net.luxvacuos.voxel.client.resources.GameResources;
@@ -46,6 +46,7 @@ public class SPCreateWorld extends AbstractState {
 
 	public SPCreateWorld() {
 		super(StateNames.SP_CREATE_WORLD);
+		GameResources.getInstance().getDisplay().getKeyboardHandler().enableTextInput();
 		window = new Window(20, GameResources.getInstance().getDisplay().getDisplayHeight() - 20,
 				GameResources.getInstance().getDisplay().getDisplayWidth() - 40,
 				GameResources.getInstance().getDisplay().getDisplayHeight() - 40, "Create World");
@@ -56,6 +57,7 @@ public class SPCreateWorld extends AbstractState {
 		createButton = new Button(window.getWidth() / 2 - 210, -window.getHeight() + 35, 200, 40, "Create World");
 		createButton.setOnButtonPress((button, delta) -> {
 			if (!worldName.equals("")) {
+				GameResources.getInstance().getDisplay().getKeyboardHandler().disableTextInput();
 				new File(ClientVariables.WORLD_PATH + worldName).mkdirs();
 				//switchTo(GameState.SP_SELECTION);
 				StateMachine.setCurrentState(StateNames.SP_SELECTION);
@@ -65,6 +67,7 @@ public class SPCreateWorld extends AbstractState {
 		backButton = new Button(window.getWidth() / 2 + 10, -window.getHeight() + 35, 200, 40, "Back");
 		backButton.setOnButtonPress((button, delta) -> {
 			//switchTo(GameState.SP_SELECTION);
+			GameResources.getInstance().getDisplay().getKeyboardHandler().disableTextInput();
 			StateMachine.setCurrentState(StateNames.SP_SELECTION);
 		});
 		window.addChildren(nameT);
@@ -100,8 +103,9 @@ public class SPCreateWorld extends AbstractState {
 		MasterRenderer.prepare(1, 1, 1, 1);
 		gm.getDisplay().beingNVGFrame();
 		window.render();
-		while (Keyboard.next())
-			worldName = Keyboard.keyWritten(worldName);
+		worldName = gm.getDisplay().getKeyboardHandler().getText(worldName);
+		//while (Keyboard.next())
+			//worldName = Keyboard.keyWritten(worldName);
 		UIRendering.renderSearchBox(worldName, "Roboto-Regular", "Entypo",
 				gm.getDisplay().getDisplayWidth() / 2f - 150f,
 				gm.getDisplay().getDisplayHeight() / 2f - 85, 300, 20);

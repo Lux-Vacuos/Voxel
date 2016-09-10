@@ -27,10 +27,11 @@ import static org.lwjgl.opengl.GL11.glReadPixels;
 import java.nio.FloatBuffer;
 
 import org.lwjgl.BufferUtils;
+import org.lwjgl.glfw.GLFW;
 
 import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.voxel.client.core.ClientVariables;
-import net.luxvacuos.voxel.client.input.Keyboard;
+//import net.luxvacuos.voxel.client.input.Keyboard;
 import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.UIRendering;
 import net.luxvacuos.voxel.client.rendering.api.opengl.MasterRenderer;
@@ -99,13 +100,14 @@ public class SPPauseState extends AbstractState {
 				readyForSwitch = true;
 			} */
 
-		while (Keyboard.next()) {
-			if (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
-				((PlayerCamera) gm.getCamera()).setMouse();
-				//switchTo(GameState.SP);
-				StateMachine.setCurrentState(StateNames.SINGLEPLAYER);
-			}
+		//while (Keyboard.next()) {
+		//	if (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
+		if(gm.getDisplay().getKeyboardHandler().isKeyPressed(GLFW.GLFW_KEY_ESCAPE)) {
+			((PlayerCamera) gm.getCamera()).setMouse();
+			//switchTo(GameState.SP);
+			StateMachine.setCurrentState(StateNames.SINGLEPLAYER);
 		}
+		//}
 	}
 
 	@Override

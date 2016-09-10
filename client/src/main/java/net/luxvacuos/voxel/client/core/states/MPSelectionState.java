@@ -20,7 +20,7 @@
 
 package net.luxvacuos.voxel.client.core.states;
 
-import net.luxvacuos.voxel.client.input.Keyboard;
+//import net.luxvacuos.voxel.client.input.Keyboard;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.UIRendering;
 import net.luxvacuos.voxel.client.rendering.api.opengl.MasterRenderer;
 import net.luxvacuos.voxel.client.resources.GameResources;
@@ -49,6 +49,7 @@ public class MPSelectionState extends AbstractState {
 
 	public MPSelectionState() {
 		super(StateNames.MP_SELECTION);
+		GameResources.getInstance().getDisplay().getKeyboardHandler().enableTextInput();
 		window = new Window(20, GameResources.getInstance().getDisplay().getDisplayHeight() - 20,
 				GameResources.getInstance().getDisplay().getDisplayWidth() - 40,
 				GameResources.getInstance().getDisplay().getDisplayHeight() - 40, "Multiplayer");
@@ -56,13 +57,16 @@ public class MPSelectionState extends AbstractState {
 		playButton = new Button(window.getWidth() / 2 - 210, -window.getHeight() + 35, 200, 40, "Enter");
 
 		exitButton.setOnButtonPress((button, delta) -> {
-			if (time > 0.2f)
+			if (time > 0.2f) {
 				//switchTo(GameState.MAINMENU);
+				GameResources.getInstance().getDisplay().getKeyboardHandler().disableTextInput();
 				StateMachine.setCurrentState(StateNames.MAIN_MENU);
+			}
 		});
 
 		playButton.setOnButtonPress((button, delta) -> {
 			if (time > 0.2f) {
+				GameResources.getInstance().getDisplay().getKeyboardHandler().disableTextInput();
 				GameResources.getInstance().getVoxelClient().setUrl(ip);
 				//switchTo(GameState.LOADING_MP_WORLD);
 				StateMachine.setCurrentState(StateNames.MP_LOADING);
@@ -106,8 +110,9 @@ public class MPSelectionState extends AbstractState {
 		MasterRenderer.prepare(1, 1, 1, 1);
 		gm.getDisplay().beingNVGFrame();
 		window.render();
-		while (Keyboard.next())
-			ip = Keyboard.keyWritten(ip);
+		//while (Keyboard.next())
+		//ip = Keyboard.keyWritten(ip);
+		ip = gm.getDisplay().getKeyboardHandler().getText(ip);
 		UIRendering.renderSearchBox(ip, "Roboto-Regular", "Entypo",
 				GameResources.getInstance().getDisplay().getDisplayWidth() / 2f - 150f,
 				GameResources.getInstance().getDisplay().getDisplayHeight() / 2f - 10, 300, 20);

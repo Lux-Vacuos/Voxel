@@ -20,11 +20,11 @@
 
 package net.luxvacuos.voxel.client.core.states;
 
-import static net.luxvacuos.voxel.client.input.Keyboard.KEY_ESCAPE;
-import static net.luxvacuos.voxel.client.input.Keyboard.KEY_F1;
-import static net.luxvacuos.voxel.client.input.Keyboard.KEY_F2;
-import static net.luxvacuos.voxel.client.input.Keyboard.isKeyDown;
-import static net.luxvacuos.voxel.client.input.Keyboard.next;
+//import static net.luxvacuos.voxel.client.input.Keyboard.KEY_ESCAPE;
+//import static net.luxvacuos.voxel.client.input.Keyboard.KEY_F1;
+//import static net.luxvacuos.voxel.client.input.Keyboard.KEY_F2;
+//import static net.luxvacuos.voxel.client.input.Keyboard.isKeyDown;
+//import static net.luxvacuos.voxel.client.input.Keyboard.next;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_COMPONENT;
 import static org.lwjgl.opengl.GL11.GL_FLOAT;
 import static org.lwjgl.opengl.GL11.GL_RGB;
@@ -35,10 +35,12 @@ import static org.lwjgl.opengl.GL30.GL_COLOR_ATTACHMENT2;
 import java.nio.FloatBuffer;
 
 import org.lwjgl.BufferUtils;
+import org.lwjgl.glfw.GLFW;
 
 import net.luxvacuos.voxel.client.core.CoreInfo;
+import net.luxvacuos.voxel.client.input.KeyboardHandler;
 import net.luxvacuos.voxel.client.core.ClientVariables;
-import net.luxvacuos.voxel.client.input.Keyboard;
+//import net.luxvacuos.voxel.client.input.Keyboard;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.Timers;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.UIRendering;
 import net.luxvacuos.voxel.client.rendering.api.opengl.MasterRenderer;
@@ -83,7 +85,18 @@ public class SPState extends AbstractState {
 
 		gm.update(gm.getWorldSimulation().update(delta), delta);
 		ParticleMaster.getInstance().update(delta, gm.getCamera());
-		while (next()) {
+		KeyboardHandler kbh = gm.getDisplay().getKeyboardHandler();
+		
+		if(kbh.isKeyPressed(GLFW.GLFW_KEY_F1)) ClientVariables.debug = !ClientVariables.debug;
+		if(kbh.isKeyPressed(GLFW.GLFW_KEY_F2)) ClientVariables.hideHud = !ClientVariables.hideHud;
+		if(kbh.isKeyPressed(GLFW.GLFW_KEY_R)) ClientVariables.raining = !ClientVariables.raining;
+		if(kbh.isKeyPressed(GLFW.GLFW_KEY_ESCAPE)) {
+			((PlayerCamera) gm.getCamera()).unlockMouse();
+			// gm.getGlobalStates().setState(GameState.SP_PAUSE);
+			StateMachine.setCurrentState(StateNames.SP_PAUSE);
+		}
+		
+		/* while (next()) {
 			if (isKeyDown(KEY_F1))
 				ClientVariables.debug = !ClientVariables.debug;
 			if (isKeyDown(KEY_F2))
@@ -102,7 +115,7 @@ public class SPState extends AbstractState {
 
 			if (Keyboard.isKeyDown(Keyboard.KEY_R))
 				ClientVariables.raining = !ClientVariables.raining;
-		}
+		} */
 
 	}
 
