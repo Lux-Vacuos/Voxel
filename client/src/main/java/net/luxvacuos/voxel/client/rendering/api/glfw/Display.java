@@ -227,6 +227,14 @@ public class Display extends Window {
 	public void setInvisible() {
 		glfwHideWindow(super.window);
 	}
+	
+	public void resetViewport() {
+		glViewport(0, 0, (int) (displayWidth * pixelRatio), (int) (displayHeight * pixelRatio));
+	}
+	
+	public void setViewport(int x, int y, int width, int height) {
+		glViewport(0, 0, width, height);
+	}
 
 	public static double getTime() {
 		return glfwGetTime();
