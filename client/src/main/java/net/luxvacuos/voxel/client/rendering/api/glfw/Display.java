@@ -210,6 +210,7 @@ public class Display extends Window {
 	public void updateDisplay(int fps) {
 		glfwSwapBuffers(super.window);
 		glfwPollEvents();
+		super.kbHandle.update();
 		Mouse.poll();
 		displayUtils.checkErrors();
 		displayUtils.sync(fps);

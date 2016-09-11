@@ -49,15 +49,15 @@ public final class KeyboardHandler implements IDisposable {
 	}
 	
 	public boolean isKeyPressedRaw(int keycode) {
-		return (this.charCallback.isEnabled() ? false : GLFW.glfwGetKey(this.windowID, keycode) == GLFW.GLFW_PRESS);
+		return GLFW.glfwGetKey(this.windowID, keycode) == GLFW.GLFW_PRESS;
 	}
 	
 	public boolean isKeyPressed(int keycode) {
-		return (this.charCallback.isEnabled() ? false : this.keyCallback.isKeyPressed(keycode));
+		return this.keyCallback.isKeyPressed(keycode);
 	}
 	
 	public boolean wasKeyPressed(int keycode) {
-		return (this.charCallback.isEnabled() ? false : this.keyCallback.wasKeyPressed(keycode));
+		return this.keyCallback.wasKeyPressed(keycode);
 	}
 	
 	public void enableTextInput() {
@@ -90,15 +90,18 @@ public final class KeyboardHandler implements IDisposable {
 	}
 	
 	public boolean isShiftPressed() {
-		return this.checkMod(GLFW.GLFW_MOD_SHIFT);
+		return this.isKeyPressedRaw(GLFW.GLFW_KEY_LEFT_SHIFT) || this.isKeyPressedRaw(GLFW.GLFW_KEY_RIGHT_SHIFT);
+		//return this.checkMod(GLFW.GLFW_MOD_SHIFT);
 	}
 	
 	public boolean isCtrlPressed() {
-		return this.checkMod(GLFW.GLFW_MOD_CONTROL);
+		return this.isKeyPressedRaw(GLFW.GLFW_KEY_LEFT_CONTROL) || this.isKeyPressedRaw(GLFW.GLFW_KEY_RIGHT_CONTROL);
+		//return this.checkMod(GLFW.GLFW_MOD_CONTROL);
 	}
 	
 	public boolean isAltPressed() {
-		return this.checkMod(GLFW.GLFW_MOD_ALT);
+		return this.isKeyPressedRaw(GLFW.GLFW_KEY_LEFT_ALT) || this.isKeyPressedRaw(GLFW.GLFW_KEY_RIGHT_ALT);
+		//return this.checkMod(GLFW.GLFW_MOD_ALT);
 	}
 	
 	public void update() {

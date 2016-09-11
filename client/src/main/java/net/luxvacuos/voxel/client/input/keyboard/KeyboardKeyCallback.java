@@ -25,6 +25,8 @@ import java.util.BitSet;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWKeyCallback;
 
+import net.luxvacuos.igl.Logger;
+
 public class KeyboardKeyCallback extends GLFWKeyCallback {
 	private BitSet keys = new BitSet(65536);
 	private BitSet buffer = new BitSet(65536);
@@ -39,6 +41,10 @@ public class KeyboardKeyCallback extends GLFWKeyCallback {
 	@Override
 	public void invoke(long window, int key, int scancode, int action, int mods) {
 		if(window != this.windowID) return; //only care about the window this callback is assigned to
+		if(key < 0 || key > 65535) {
+			Logger.warn("WARNING: caught invalid key! (Key: "+key+", scancode: "+scancode+", pressed: "+(action != GLFW.GLFW_RELEASE)+")");
+			return;
+		}
 		
 		this.keys.set(key, (action != GLFW.GLFW_RELEASE));
 	}

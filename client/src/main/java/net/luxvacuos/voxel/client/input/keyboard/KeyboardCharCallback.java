@@ -27,7 +27,7 @@ import com.badlogic.gdx.utils.Array;
 
 public class KeyboardCharCallback extends GLFWCharCallback {
 	private Array<String> queue;
-	private String lastChar;
+	private String lastChar = "";
 	private long lastPress;
 	private boolean enabled = false;
 	
@@ -50,10 +50,10 @@ public class KeyboardCharCallback extends GLFWCharCallback {
 		return (this.enabled && this.queue.size > 0);
 	}
 	
-	public String[] getData() {
+	public Array<String> getData() {
 		if(!this.enabled) return null;
 		this.queue.shrink();
-		String[] data = this.queue.toArray();
+		Array<String> data = new Array<String>(this.queue);
 		this.queue.clear();
 		this.queue.ensureCapacity(5);
 		return data;
