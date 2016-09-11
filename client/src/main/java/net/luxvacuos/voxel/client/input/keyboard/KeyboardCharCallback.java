@@ -20,7 +20,6 @@
 
 package net.luxvacuos.voxel.client.input.keyboard;
 
-import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWCharCallback;
 
 import com.badlogic.gdx.utils.Array;
@@ -64,8 +63,7 @@ public class KeyboardCharCallback extends GLFWCharCallback {
 		if(this.enabled && (this.windowID == window)) {
 			String charr;
 			
-			if(codepoint == GLFW.GLFW_KEY_BACKSPACE) charr = "BACKSPACE";
-			else charr = new String(Character.toChars(codepoint));
+			charr = new String(Character.toChars(codepoint));
 			
 			if(this.lastChar.equals(charr) && ((System.currentTimeMillis() - this.lastPress) < 250)) return; //0.25 seconds
 			

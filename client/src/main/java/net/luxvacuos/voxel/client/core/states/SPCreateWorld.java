@@ -103,7 +103,7 @@ public class SPCreateWorld extends AbstractState {
 		MasterRenderer.prepare(1, 1, 1, 1);
 		gm.getDisplay().beingNVGFrame();
 		window.render();
-		worldName = gm.getDisplay().getKeyboardHandler().getText(worldName);
+		worldName = gm.getDisplay().getKeyboardHandler().handleInput(worldName);
 		//while (Keyboard.next())
 			//worldName = Keyboard.keyWritten(worldName);
 		UIRendering.renderSearchBox(worldName, "Roboto-Regular", "Entypo",

@@ -112,7 +112,7 @@ public class MPSelectionState extends AbstractState {
 		window.render();
 		//while (Keyboard.next())
 		//ip = Keyboard.keyWritten(ip);
-		ip = gm.getDisplay().getKeyboardHandler().getText(ip);
+		ip = gm.getDisplay().getKeyboardHandler().handleInput(ip);
 		UIRendering.renderSearchBox(ip, "Roboto-Regular", "Entypo",
 				GameResources.getInstance().getDisplay().getDisplayWidth() / 2f - 150f,
 				GameResources.getInstance().getDisplay().getDisplayHeight() / 2f - 10, 300, 20);

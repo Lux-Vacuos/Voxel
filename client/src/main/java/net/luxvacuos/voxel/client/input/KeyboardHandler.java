@@ -34,6 +34,7 @@ public final class KeyboardHandler implements IDisposable {
 	private final KeyboardCharModsCallback modCallback;
 	
 	private final long windowID;
+	private long lastPress = 0l;
 
 	public KeyboardHandler(long windowID) {
 		this.keyCallback = new KeyboardKeyCallback(windowID);
@@ -72,36 +73,25 @@ public final class KeyboardHandler implements IDisposable {
 		this.charCallback.setEndabled(false);
 	}
 	
-	public boolean hasText() {
-		return this.charCallback.hasData();
-	}
-	
-	public String getText(String input) {
-		if(!this.charCallback.hasData()) return input;
+	public String handleInput(String input) {
+		if(!this.charCallback.hasData()) return this.handleBackspace(input);
 		String result = input;
 		
-		for(String in : this.charCallback.getData()) {
-			if(in.equals("BACKSPACE")) {
-				if(in.length() > 0) result = result.substring(0, result.length() - 1);
-			} else result += in;
-		}
+		for(String in : this.charCallback.getData()) result += in;
 		
 		return result;
 	}
 	
 	public boolean isShiftPressed() {
 		return this.isKeyPressedRaw(GLFW.GLFW_KEY_LEFT_SHIFT) || this.isKeyPressedRaw(GLFW.GLFW_KEY_RIGHT_SHIFT);
-		//return this.checkMod(GLFW.GLFW_MOD_SHIFT);
 	}
 	
 	public boolean isCtrlPressed() {
 		return this.isKeyPressedRaw(GLFW.GLFW_KEY_LEFT_CONTROL) || this.isKeyPressedRaw(GLFW.GLFW_KEY_RIGHT_CONTROL);
-		//return this.checkMod(GLFW.GLFW_MOD_CONTROL);
 	}
 	
 	public boolean isAltPressed() {
 		return this.isKeyPressedRaw(GLFW.GLFW_KEY_LEFT_ALT) || this.isKeyPressedRaw(GLFW.GLFW_KEY_RIGHT_ALT);
-		//return this.checkMod(GLFW.GLFW_MOD_ALT);
 	}
 	
 	public void update() {
@@ -113,8 +103,15 @@ public final class KeyboardHandler implements IDisposable {
 		
 	}
 	
-	private boolean checkMod(int mask) {
-		return ((this.modCallback.getMods() & mask) == mask);
+	private String handleBackspace(String input) {
+		long currentPress = 0l;
+		if(this.isKeyPressed(GLFW.GLFW_KEY_BACKSPACE) && ((currentPress = System.currentTimeMillis()) - this.lastPress) > 150) {
+			String result = input;
+			this.lastPress = currentPress;
+			if(input.length() > 0) result = input.substring(0, input.length() - 1);
+			
+			return result;
+		} else return input;
 	}
 	
 	public static boolean isKeyPressedRaw(long windowID, int keycode) {
