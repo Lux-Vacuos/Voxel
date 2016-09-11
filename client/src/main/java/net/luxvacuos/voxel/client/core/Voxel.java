@@ -316,8 +316,11 @@ public class Voxel extends AbstractVoxel {
 		// If running on MacOSX don't show crash screen
 		if (!bootstrap.getPlatform().equals(Platform.MACOSX))
 			CrashScreen.run(e);
-		else
+		else {
+			e.printStackTrace(System.err); //Instead dump the error into the Error Stream
 			System.exit(-1);
+		}
+			
 	}
 
 	/**
