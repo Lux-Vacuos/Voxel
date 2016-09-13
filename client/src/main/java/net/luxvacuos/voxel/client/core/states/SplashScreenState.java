@@ -26,8 +26,6 @@ import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.ui.Image;
 import net.luxvacuos.voxel.client.ui.Panel;
 import net.luxvacuos.voxel.universal.core.AbstractVoxel;
-import net.luxvacuos.voxel.universal.core.states.AbstractState;
-import net.luxvacuos.voxel.universal.core.states.StateMachine;
 
 /**
  * Splash screen State, show only in the load.
@@ -35,7 +33,7 @@ import net.luxvacuos.voxel.universal.core.states.StateMachine;
  * @author Guerra24 <pablo230699@hotmail.com>
  *
  */
-public class SplashScreenState extends AbstractState {
+public class SplashScreenState extends AbstractFadeState {
 
 	private Panel panel;
 	private Image luxVacuosLogo;
@@ -67,12 +65,12 @@ public class SplashScreenState extends AbstractState {
 
 	@Override
 	public void start() {
-		//panel.setFadeAlpha(0);
+		panel.setFadeAlpha(0);
 	}
 
 	@Override
 	public void end() {
-		//panel.setFadeAlpha(1);
+		panel.setFadeAlpha(1);
 	}
 
 	@Override
@@ -86,21 +84,22 @@ public class SplashScreenState extends AbstractState {
 
 	@Override
 	public void update(AbstractVoxel voxel, float delta) {
-		panel.fadeIn(4, delta); //XXX: Hack to get things working
 		wait += 1 * delta;
-		if (wait > 2) {
-			panel.update(delta);
-		}
-		/*if (!switching)
-			panel.fadeIn(4, delta);
-		if (switching)
-			if (panel.fadeOut(4, delta)) {
-				readyForSwitch = true;
-			} */
-		if (wait > 3)
-			//switchTo(GameState.MAINMENU);
-			StateMachine.setCurrentState(StateNames.MAIN_MENU);
+		if (wait > 2) panel.update(delta);
+		
+		if (wait > 3 && !this.switching) this.switchTo(StateNames.MAIN_MENU);
+		
+		super.update(voxel, delta);
+	}
 
+	@Override
+	protected boolean fadeIn(float delta) {
+		return this.panel.fadeIn(4, delta);
+	}
+
+	@Override
+	protected boolean fadeOut(float delta) {
+		return this.panel.fadeOut(4, delta);
 	}
 
 }

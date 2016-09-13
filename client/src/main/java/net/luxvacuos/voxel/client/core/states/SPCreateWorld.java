@@ -37,7 +37,7 @@ import net.luxvacuos.voxel.universal.core.AbstractVoxel;
 import net.luxvacuos.voxel.universal.core.states.AbstractState;
 import net.luxvacuos.voxel.universal.core.states.StateMachine;
 
-public class SPCreateWorld extends AbstractState {
+public class SPCreateWorld extends AbstractFadeState {
 	private UIWindow uiWindow;
 	private String worldName = "";
 	private Text nameT;
@@ -60,16 +60,14 @@ public class SPCreateWorld extends AbstractState {
 			if (!worldName.equals("")) {
 				window.getKeyboardHandler().disableTextInput();
 				new File(ClientVariables.WORLD_PATH + worldName).mkdirs();
-				//switchTo(GameState.SP_SELECTION);
-				StateMachine.setCurrentState(StateNames.SP_SELECTION);
+				this.switchTo(StateNames.SP_SELECTION);
 				worldName = "";
 			}
 		});
 		backButton = new Button(uiWindow.getWidth() / 2 + 10, -uiWindow.getHeight() + 35, 200, 40, "Back");
 		backButton.setOnButtonPress((button, delta) -> {
-			//switchTo(GameState.SP_SELECTION);
 			window.getKeyboardHandler().disableTextInput();
-			StateMachine.setCurrentState(StateNames.SP_SELECTION);
+			this.switchTo(StateNames.SP_SELECTION);
 		});
 		uiWindow.addChildren(nameT);
 		uiWindow.addChildren(optionsT);
@@ -79,23 +77,19 @@ public class SPCreateWorld extends AbstractState {
 
 	@Override
 	public void start() {
-		//window.setFadeAlpha(0);
+		uiWindow.setFadeAlpha(0);
 	}
 
 	@Override
 	public void end() {
-		//window.setFadeAlpha(1);
+		uiWindow.setFadeAlpha(1);
 	}
 
 	@Override
 	public void update(AbstractVoxel voxel, float delta) {
 		uiWindow.update(delta);
-		/*if (!switching)
-			window.fadeIn(4, delta);
-		if (switching)
-			if (window.fadeOut(4, delta)) {
-				readyForSwitch = true;
-			} */
+		
+		super.update(voxel, delta);
 	}
 
 	@Override
@@ -112,6 +106,16 @@ public class SPCreateWorld extends AbstractState {
 				window.getHeight() / 2f - 85, 300, 20);
 		UIRendering.renderMouse(window.getID());
 		window.endNVGFrame();
+	}
+
+	@Override
+	protected boolean fadeIn(float delta) {
+		return this.uiWindow.fadeIn(4, delta);
+	}
+
+	@Override
+	protected boolean fadeOut(float delta) {
+		return this.uiWindow.fadeOut(4, delta);
 	}
 
 }

@@ -36,8 +36,6 @@ import net.luxvacuos.voxel.client.world.ClientWorld;
 import net.luxvacuos.voxel.client.world.WorldsHandler;
 import net.luxvacuos.voxel.client.world.entities.PlayerCamera;
 import net.luxvacuos.voxel.universal.core.AbstractVoxel;
-import net.luxvacuos.voxel.universal.core.states.AbstractState;
-import net.luxvacuos.voxel.universal.core.states.StateMachine;
 
 /**
  * 
@@ -46,7 +44,7 @@ import net.luxvacuos.voxel.universal.core.states.StateMachine;
  * @author Guerra24 <pablo230699@hotmail.com>
  *
  */
-public class MPLoadingState extends AbstractState {
+public class MPLoadingState extends AbstractFadeState {
 
 	private boolean trying = false;
 	private Button exitButton;
@@ -62,8 +60,7 @@ public class MPLoadingState extends AbstractState {
 		exitButton = new Button(uiWindow.getWidth() / 2 - 100, -uiWindow.getHeight() + 35, 200, 40, "Cancel");
 		exitButton.setOnButtonPress((button, delta) -> {
 			if (time > 0.2f) {
-				// switchTo(GameState.MP_SELECTION);
-				StateMachine.setCurrentState(StateNames.MP_SELECTION);
+				this.switchTo(StateNames.MP_SELECTION);
 			}
 		});
 		message = new Text("Connecting...", uiWindow.getWidth() / 2, -uiWindow.getHeight() / 2);
@@ -76,13 +73,13 @@ public class MPLoadingState extends AbstractState {
 	public void start() {
 		time = 0;
 		trying = false;
-		// window.setFadeAlpha(0);
+		uiWindow.setFadeAlpha(0);
 	}
 
 	@Override
 	public void end() {
 		message.setText("Connecting...");
-		// window.setFadeAlpha(1);
+		uiWindow.setFadeAlpha(1);
 	}
 
 	@Override
@@ -101,24 +98,19 @@ public class MPLoadingState extends AbstractState {
 				wm.getActiveWorld().getActiveDimension().getPhysicsEngine()
 						.addEntity(GameResources.getInstance().getCamera());
 				((PlayerCamera) GameResources.getInstance().getCamera()).setMouse();
-				// switchTo(GameState.MP);
-				StateMachine.setCurrentState(StateNames.MULTIPLAYER);
+				this.switchTo(StateNames.MULTIPLAYER);
 			} catch (IOException e) {
 				ClientVariables.onServer = false;
 				message.setText(e.getMessage());
 				e.printStackTrace();
 			}
 		}
+		
 		if (time <= 0.2f) {
 			time += 1 * delta;
 		}
-		if (time <= 0.2f) {
-			time += 1 * delta;
-		}
-		/*
-		 * if (!switching) fadeIn = window.fadeIn(4, delta); if (switching) if
-		 * (window.fadeOut(4, delta)) { readyForSwitch = true; }
-		 */
+		
+		super.update(voxel, delta);
 	}
 
 	@Override
@@ -129,6 +121,16 @@ public class MPLoadingState extends AbstractState {
 		uiWindow.render(window.getID());
 		UIRendering.renderMouse(window.getID());
 		window.endNVGFrame();
+	}
+
+	@Override
+	protected boolean fadeIn(float delta) {
+		return this.uiWindow.fadeOut(4, delta);
+	}
+
+	@Override
+	protected boolean fadeOut(float delta) {
+		return this.uiWindow.fadeOut(4, delta);
 	}
 
 }

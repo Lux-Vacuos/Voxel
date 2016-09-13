@@ -30,7 +30,6 @@ import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.ui.Button;
 import net.luxvacuos.voxel.client.ui.UIWindow;
 import net.luxvacuos.voxel.universal.core.AbstractVoxel;
-import net.luxvacuos.voxel.universal.core.states.AbstractState;
 import net.luxvacuos.voxel.universal.core.states.StateMachine;
 
 /**
@@ -38,7 +37,7 @@ import net.luxvacuos.voxel.universal.core.states.StateMachine;
  * 
  * @author danirod
  */
-public class OptionsState extends AbstractState {
+public class OptionsState extends AbstractFadeState {
 
 	private Button exitButton;
 	private Button dofButton;
@@ -126,8 +125,7 @@ public class OptionsState extends AbstractState {
 		exitButton.setOnButtonPress((button, delta) -> {
 			GameResources.getInstance().getGameSettings().update();
 			GameResources.getInstance().getGameSettings().save();
-			//switchTo(GameResources.getInstance().getGlobalStates().getOldState());
-			StateMachine.setCurrentState(StateMachine.getPreviousState().getName());
+			this.switchTo(StateMachine.getPreviousState().getName());
 		});
 
 		shadowsButton.setOnButtonPress((button, delta) -> {
@@ -224,12 +222,12 @@ public class OptionsState extends AbstractState {
 
 	@Override
 	public void start() {
-		//window.setFadeAlpha(0);
+		uiWindow.setFadeAlpha(0);
 	}
 
 	@Override
 	public void end() {
-		//window.setFadeAlpha(1);
+		uiWindow.setFadeAlpha(1);
 	}
 
 	@Override
@@ -239,12 +237,7 @@ public class OptionsState extends AbstractState {
 			uiWindow.update(delta);
 		}
 
-		/*if (!switching)
-			window.fadeIn(4, delta);
-		if (switching)
-			if (window.fadeOut(4, delta)) {
-				readyForSwitch = true;
-			} */
+		super.update(voxel, delta);
 
 		gm.getRenderer().update(gm);
 	}
@@ -252,7 +245,6 @@ public class OptionsState extends AbstractState {
 	@Override
 	public void render(AbstractVoxel voxel, float delta) {
 		GameResources gm = (GameResources) voxel.getGameResources();
-		//if (gm.getGlobalStates().getOldState().equals(GameState.SP_PAUSE)) {
 		if(StateMachine.getPreviousState().getName().equals("SP_Pause")) {
 			gm.getWorldsHandler().getActiveWorld().getActiveDimension().lighting();
 			gm.getSun_Camera().setPosition(gm.getCamera().getPosition());
@@ -292,6 +284,16 @@ public class OptionsState extends AbstractState {
 		uiWindow.render(window.getID());
 		UIRendering.renderMouse(window.getID());
 		window.endNVGFrame();
+	}
+
+	@Override
+	protected boolean fadeIn(float delta) {
+		return this.uiWindow.fadeIn(4, delta);
+	}
+
+	@Override
+	protected boolean fadeOut(float delta) {
+		return this.uiWindow.fadeOut(4, delta);
 	}
 
 }

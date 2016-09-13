@@ -20,29 +20,38 @@
 
 package net.luxvacuos.voxel.client.core.states;
 
-import net.luxvacuos.voxel.client.world.entities.Camera;
 import net.luxvacuos.voxel.universal.core.AbstractVoxel;
 import net.luxvacuos.voxel.universal.core.states.AbstractState;
-import net.luxvacuos.voxel.universal.world.IWorld;
+import net.luxvacuos.voxel.universal.core.states.StateMachine;
 
-public class NewSingleplayerState extends AbstractState {
-	private IWorld activeWorld;
-	private Camera playerCamera;
+public abstract class AbstractFadeState extends AbstractState {
+	protected boolean switching = false;
+	private String switchTarget;
 
-	protected NewSingleplayerState() {
-		super("New Singleplayer");
-		
+	protected AbstractFadeState(String name) {
+		super(name);
 	}
 
 	@Override
 	public void update(AbstractVoxel voxel, float deltaTime) {
-		// TODO Auto-generated method stub
-
+		if(this.switching) {
+			if(this.fadeOut(deltaTime)) {
+				this.switching = false;
+				StateMachine.setCurrentState(switchTarget);
+				this.switchTarget = "";
+			}
+		} else {
+			this.fadeIn(deltaTime);
+		}
 	}
 	
-	@Override
-	public void render(AbstractVoxel voxel, float delta) {
-		
+	protected abstract boolean fadeIn(float delta);
+	
+	protected abstract boolean fadeOut(float delta);
+	
+	protected void switchTo(String target) {
+		this.switching = true;
+		this.switchTarget = target;
 	}
 
 }

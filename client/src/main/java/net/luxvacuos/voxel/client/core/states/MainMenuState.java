@@ -27,7 +27,6 @@ import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.ui.Button;
 import net.luxvacuos.voxel.client.ui.UIWindow;
 import net.luxvacuos.voxel.universal.core.AbstractVoxel;
-import net.luxvacuos.voxel.universal.core.states.AbstractState;
 import net.luxvacuos.voxel.universal.core.states.StateMachine;
 
 /**
@@ -35,7 +34,7 @@ import net.luxvacuos.voxel.universal.core.states.StateMachine;
  * 
  * @author danirod
  */
-public class MainMenuState extends AbstractState {
+public class MainMenuState extends AbstractFadeState {
 
 	private Button playButton;
 	private Button exitButton;
@@ -65,28 +64,25 @@ public class MainMenuState extends AbstractState {
 		exitButton.setPreicon(UIRendering.ICON_LOGIN);
 
 		playButton.setOnButtonPress((button, delta) -> {
-			// switchTo(GameState.SP_SELECTION);
-			StateMachine.setCurrentState(StateNames.SP_SELECTION);
+			this.switchTo(StateNames.SP_SELECTION);
 		});
 
 		playMPButton.setOnButtonPress((button, delta) -> {
-			// switchTo(GameState.MP_SELECTION);
-			StateMachine.setCurrentState(StateNames.MP_SELECTION);
+			this.switchTo(StateNames.MP_SELECTION);
 		});
 
 		optionsButton.setOnButtonPress((button, delta) -> {
-			// switchTo(GameState.OPTIONS);
-			StateMachine.setCurrentState(StateNames.OPTIONS);
+			this.switchTo(StateNames.OPTIONS);
 		});
 
 		aboutButton.setOnButtonPress((button, delta) -> {
-			// switchTo(GameState.ABOUT);
-			StateMachine.setCurrentState(StateNames.ABOUT);
+			this.switchTo(StateNames.ABOUT);
 		});
 
 		exitButton.setOnButtonPress((button, delta) -> {
 			StateMachine.dispose();
 		});
+		
 		uiWindow.addChildren(playButton);
 		uiWindow.addChildren(playMPButton);
 		uiWindow.addChildren(optionsButton);
@@ -96,12 +92,12 @@ public class MainMenuState extends AbstractState {
 
 	@Override
 	public void start() {
-		// window.setFadeAlpha(0);
+		uiWindow.setFadeAlpha(0);
 	}
 
 	@Override
 	public void end() {
-		// window.setFadeAlpha(1);
+		uiWindow.setFadeAlpha(1);
 	}
 
 	@Override
@@ -117,11 +113,18 @@ public class MainMenuState extends AbstractState {
 	@Override
 	public void update(AbstractVoxel voxel, float delta) {
 		uiWindow.update(delta);
-		/*
-		 * if (!switching) window.fadeIn(4, delta); if (switching) if
-		 * (window.fadeOut(4, delta)) { readyForSwitch = true; }
-		 */
+		
+		super.update(voxel, delta);
+	}
 
+	@Override
+	protected boolean fadeIn(float delta) {
+		return this.uiWindow.fadeIn(4, delta);
+	}
+
+	@Override
+	protected boolean fadeOut(float delta) {
+		return this.uiWindow.fadeOut(4, delta);
 	}
 
 }

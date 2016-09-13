@@ -37,8 +37,6 @@ import net.luxvacuos.voxel.client.ui.UIWindow;
 import net.luxvacuos.voxel.client.ui.World;
 import net.luxvacuos.voxel.client.world.DefaultWorld;
 import net.luxvacuos.voxel.universal.core.AbstractVoxel;
-import net.luxvacuos.voxel.universal.core.states.AbstractState;
-import net.luxvacuos.voxel.universal.core.states.StateMachine;
 
 /**
  * Singleplayer World Selection State, here all the worlds selection menu are
@@ -47,7 +45,7 @@ import net.luxvacuos.voxel.universal.core.states.StateMachine;
  * @author Guerra24 <pablo230699@hotmail.com>
  *
  */
-public class SPSelectionState extends AbstractState {
+public class SPSelectionState extends AbstractFadeState {
 
 	private UIWindow uiWindow;
 	private Button exitButton;
@@ -68,21 +66,18 @@ public class SPSelectionState extends AbstractState {
 		createButton = new Button(uiWindow.getWidth() - 230, -100, 200, 40, "Create World");
 
 		exitButton.setOnButtonPress((button, delta) -> {
-			// switchTo(GameState.MAINMENU);
-			StateMachine.setCurrentState(StateNames.MAIN_MENU);
+			this.switchTo(StateNames.MAIN_MENU);
 		});
 		playButton.setOnButtonPress((button, delta) -> {
 			if (!worldName.equals("")) {
 				GameResources.getInstance().getWorldsHandler().registerWorld(new DefaultWorld(worldName));
 				GameResources.getInstance().getWorldsHandler().setActiveWorld(worldName);
-				// switchTo(GameState.SP_LOADING_WORLD);
-				StateMachine.setCurrentState(StateNames.SP_LOADING);
+				this.switchTo(StateNames.SP_LOADING);
 			}
 		});
 
 		createButton.setOnButtonPress((button, delta) -> {
-			// switchTo(GameState.SP_CREATE_WORLD);
-			StateMachine.setCurrentState(StateNames.SP_CREATE_WORLD);
+			this.switchTo(StateNames.SP_CREATE_WORLD);
 		});
 
 		uiWindow.addChildren(exitButton);
@@ -110,7 +105,7 @@ public class SPSelectionState extends AbstractState {
 			e.printStackTrace();
 		}
 		uiWindow.getChildrens().addAll(worlds);
-		// window.setFadeAlpha(0);
+		uiWindow.setFadeAlpha(0);
 		worldName = "";
 	}
 
@@ -118,7 +113,7 @@ public class SPSelectionState extends AbstractState {
 	public void end() {
 		uiWindow.getChildrens().removeAll(worlds);
 		worlds.clear();
-		// window.setFadeAlpha(1);
+		uiWindow.setFadeAlpha(1);
 	}
 
 	@Override
@@ -138,10 +133,7 @@ public class SPSelectionState extends AbstractState {
 			}
 		}
 
-		/*
-		 * if (!switching) window.fadeIn(4, delta); if (switching) if
-		 * (window.fadeOut(4, delta)) { readyForSwitch = true; }
-		 */
+		super.update(voxel, delta);
 	}
 
 	@Override
@@ -152,6 +144,16 @@ public class SPSelectionState extends AbstractState {
 		uiWindow.render(window.getID());
 		UIRendering.renderMouse(window.getID());
 		window.endNVGFrame();
+	}
+
+	@Override
+	protected boolean fadeIn(float delta) {
+		return this.uiWindow.fadeIn(4, delta);
+	}
+
+	@Override
+	protected boolean fadeOut(float delta) {
+		return this.uiWindow.fadeOut(4, delta);
 	}
 
 }

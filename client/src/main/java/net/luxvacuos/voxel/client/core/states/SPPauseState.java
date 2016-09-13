@@ -42,15 +42,13 @@ import net.luxvacuos.voxel.client.ui.Button;
 import net.luxvacuos.voxel.client.ui.UIWindow;
 import net.luxvacuos.voxel.client.world.entities.PlayerCamera;
 import net.luxvacuos.voxel.universal.core.AbstractVoxel;
-import net.luxvacuos.voxel.universal.core.states.AbstractState;
-import net.luxvacuos.voxel.universal.core.states.StateMachine;
 
 /**
  * Singleplayer Pause State.
  * 
  * @author danirod
  */
-public class SPPauseState extends AbstractState {
+public class SPPauseState extends AbstractFadeState {
 
 	private UIWindow uiWindow;
 	private Button exitButton;
@@ -67,12 +65,10 @@ public class SPPauseState extends AbstractState {
 			GameResources.getInstance().getCamera().setPosition(new Vector3f(0, 0, 1));
 			GameResources.getInstance().getCamera().setPitch(0);
 			GameResources.getInstance().getCamera().setYaw(0);
-			//switchTo(GameState.MAINMENU);
-			StateMachine.setCurrentState(StateNames.MAIN_MENU);
+			this.switchTo(StateNames.MAIN_MENU);
 		});
 		optionsButton.setOnButtonPress((button, delta) -> {
-			//switchTo(GameState.OPTIONS);
-			StateMachine.setCurrentState(StateNames.OPTIONS);
+			this.switchTo(StateNames.OPTIONS);
 		});
 		uiWindow.addChildren(exitButton);
 		uiWindow.addChildren(optionsButton);
@@ -80,12 +76,12 @@ public class SPPauseState extends AbstractState {
 
 	@Override
 	public void start() {
-		//window.setFadeAlpha(0);
+		uiWindow.setFadeAlpha(0);
 	}
 
 	@Override
 	public void end() {
-		//window.setFadeAlpha(1);
+		uiWindow.setFadeAlpha(1);
 	}
 
 	@Override
@@ -94,20 +90,15 @@ public class SPPauseState extends AbstractState {
 		Window window = gm.getGameWindow();
 		while (Mouse.next())
 			uiWindow.update(delta);
-		/*if (!switching)
-			window.fadeIn(4, delta);
-		if (switching)
-			if (window.fadeOut(4, delta)) {
-				readyForSwitch = true;
-			} */
+		
+		super.update(voxel, delta);
 
 		//while (Keyboard.next()) {
 		//	if (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
 		if(window.getKeyboardHandler().isKeyPressed(GLFW.GLFW_KEY_ESCAPE)) {
 			window.getKeyboardHandler().ignoreKeyUntilRelease(GLFW.GLFW_KEY_ESCAPE);
 			((PlayerCamera) gm.getCamera()).setMouse();
-			//switchTo(GameState.SP);
-			StateMachine.setCurrentState(StateNames.SINGLEPLAYER);
+			this.switchTo(StateNames.SINGLEPLAYER);
 		}
 		//}
 	}
@@ -150,10 +141,21 @@ public class SPPauseState extends AbstractState {
 		gm.getRenderingPipeline().render(gm);
 		gm.getWorldsHandler().getActiveWorld().getActiveDimension().updateChunksRender(gm, true);
 		ParticleMaster.getInstance().render(gm.getCamera(), gm.getRenderer().getProjectionMatrix());
+		
 		window.beingNVGFrame();
 		uiWindow.render(window.getID());
 		UIRendering.renderMouse(window.getID());
 		window.endNVGFrame();
+	}
+
+	@Override
+	protected boolean fadeIn(float delta) {
+		return this.uiWindow.fadeIn(4, delta);
+	}
+
+	@Override
+	protected boolean fadeOut(float delta) {
+		return this.uiWindow.fadeOut(4, delta);
 	}
 
 }

@@ -34,8 +34,6 @@ import net.luxvacuos.voxel.client.ui.Image;
 import net.luxvacuos.voxel.client.ui.Text;
 import net.luxvacuos.voxel.client.ui.UIWindow;
 import net.luxvacuos.voxel.universal.core.AbstractVoxel;
-import net.luxvacuos.voxel.universal.core.states.AbstractState;
-import net.luxvacuos.voxel.universal.core.states.StateMachine;
 
 /**
  * About State, this shows all the information about Voxel and the system where
@@ -43,7 +41,7 @@ import net.luxvacuos.voxel.universal.core.states.StateMachine;
  * 
  * @author danirod
  */
-public class AboutState extends AbstractState {
+public class AboutState extends AbstractFadeState {
 
 	private UIWindow uiWindow;
 	private Image voxelLogo;
@@ -57,8 +55,7 @@ public class AboutState extends AbstractState {
 		Button backButton = new Button((int) (window.getWidth() / 2f - 100),
 				40, 200, 40, "Back");
 		backButton.setOnButtonPress((button, delta) -> {
-			// switchTo(GameState.MAINMENU);
-			StateMachine.setCurrentState(StateNames.MAIN_MENU);
+			this.switchTo(StateNames.MAIN_MENU);
 		});
 
 		voxelLogo = new Image(uiWindow.getWidth() / 2 - 200, -40, 400, 200,
@@ -127,12 +124,12 @@ public class AboutState extends AbstractState {
 
 	@Override
 	public void start() {
-		// window.setFadeAlpha(0);
+		uiWindow.setFadeAlpha(0);
 	}
 
 	@Override
 	public void end() {
-		// window.setFadeAlpha(1);
+		uiWindow.setFadeAlpha(1);
 	}
 
 	@Override
@@ -148,11 +145,17 @@ public class AboutState extends AbstractState {
 	@Override
 	public void update(AbstractVoxel voxel, float delta) {
 		uiWindow.update(delta);
-		/*
-		 * TODO: Need to find a way to reimplement this with the new
-		 * StateMachine if (!switching) window.fadeIn(4, delta); if (switching)
-		 * { if (window.fadeOut(4, delta)) { readyForSwitch = true; } }
-		 */
+		super.update(voxel, delta);
+	}
+
+	@Override
+	protected boolean fadeIn(float delta) {
+		return this.uiWindow.fadeIn(4, delta);
+	}
+
+	@Override
+	protected boolean fadeOut(float delta) {
+		return this.uiWindow.fadeOut(4, delta);
 	}
 
 }
