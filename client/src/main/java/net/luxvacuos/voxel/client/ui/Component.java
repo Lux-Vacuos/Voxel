@@ -41,7 +41,7 @@ public abstract class Component {
 		childrens = new ConcurrentLinkedQueue<>();
 	}
 
-	public void render() {
+	public void render(long windowID) {
 		if (enabled)
 			for (Component component : childrens) {
 				if (component.positionRelativeToRoot) {
@@ -51,7 +51,7 @@ public abstract class Component {
 					component.rootH = height;
 				}
 				component.fadeAlpha = fadeAlpha;
-				component.render();
+				component.render(windowID);
 			}
 	}
 

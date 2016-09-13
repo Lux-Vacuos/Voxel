@@ -20,6 +20,7 @@
 
 package net.luxvacuos.voxel.client.core.states;
 
+import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.opengl.MasterRenderer;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.ui.Image;
@@ -42,14 +43,14 @@ public class SplashScreenState extends AbstractState {
 
 	public SplashScreenState() {
 		super(StateNames.SPLASH_SCREEN);
-		panel = new Panel(GameResources.getInstance().getDisplay().getDisplayWidth() / 2,
-				GameResources.getInstance().getDisplay().getDisplayHeight() / 2, 0, 0);
+		Window window = GameResources.getInstance().getGameWindow();
+		panel = new Panel(window.getWidth() / 2, window.getHeight() / 2, 0, 0);
 		panel.setBorderColor(0, 0, 0, 0);
 		panel.setFillColor(0, 0, 0, 0);
 		panel.setGradientColor(0, 0, 0, 0);
 
 		luxVacuosLogo = new Image(-256, 256, 512, 512,
-				GameResources.getInstance().getLoader().loadNVGTexture("LuxVacuos-Logo"));
+				GameResources.getInstance().getResourceLoader().loadNVGTexture("LuxVacuos-Logo"));
 		/*
 		 * luxVacuosLogo.setOnUpdate(new OnAction() { private float speed = 0;
 		 * 
@@ -76,11 +77,11 @@ public class SplashScreenState extends AbstractState {
 
 	@Override
 	public void render(AbstractVoxel voxel, float alpha) {
-		GameResources gm = (GameResources) voxel.getGameResources();
+		Window window = ((GameResources)voxel.getGameResources()).getGameWindow();
 		MasterRenderer.prepare(1, 1, 1, 1);
-		gm.getDisplay().beingNVGFrame();
-		panel.render();
-		gm.getDisplay().endNVGFrame();
+		window.beingNVGFrame();
+		panel.render(window.getID());
+		window.endNVGFrame();
 	}
 
 	@Override

@@ -22,12 +22,13 @@ package net.luxvacuos.voxel.client.core.states;
 
 import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.input.Mouse;
+import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.UIRendering;
 import net.luxvacuos.voxel.client.rendering.api.opengl.MasterRenderer;
 import net.luxvacuos.voxel.client.rendering.api.opengl.ParticleMaster;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.ui.Button;
-import net.luxvacuos.voxel.client.ui.Window;
+import net.luxvacuos.voxel.client.ui.UIWindow;
 import net.luxvacuos.voxel.universal.core.AbstractVoxel;
 import net.luxvacuos.voxel.universal.core.states.AbstractState;
 import net.luxvacuos.voxel.universal.core.states.StateMachine;
@@ -47,15 +48,16 @@ public class OptionsState extends AbstractState {
 	private Button motionBlurButton;
 	private Button reflectionsButton;
 	private Button parallaxButton;
-	private Window window;
+	private UIWindow uiWindow;
 
 	public OptionsState() {
 		super(StateNames.OPTIONS);
-		window = new Window(20, GameResources.getInstance().getDisplay().getDisplayHeight() - 20,
-				GameResources.getInstance().getDisplay().getDisplayWidth() - 40,
-				GameResources.getInstance().getDisplay().getDisplayHeight() - 40, "Options");
+		Window window = GameResources.getInstance().getGameWindow();
+		uiWindow = new UIWindow(20, window.getHeight() - 20,
+				window.getWidth() - 40,
+				window.getHeight() - 40, "Options");
 
-		exitButton = new Button(window.getWidth() / 2 - 100, -window.getHeight() + 35, 200, 40, "Back");
+		exitButton = new Button(uiWindow.getWidth() / 2 - 100, -uiWindow.getHeight() + 35, 200, 40, "Back");
 		godraysButton = new Button(40, -110, 200, 40, "Light Rays");
 		shadowsButton = new Button(40, -170, 200, 40, "Shadows");
 		dofButton = new Button(40, -230, 200, 40, "DoF");
@@ -209,14 +211,14 @@ public class OptionsState extends AbstractState {
 			}
 		});
 
-		window.addChildren(exitButton);
-		window.addChildren(shadowsButton);
+		uiWindow.addChildren(exitButton);
+		uiWindow.addChildren(shadowsButton);
 		//window.addChildren(dofButton);
-		window.addChildren(godraysButton);
+		uiWindow.addChildren(godraysButton);
 		//window.addChildren(fxaaButton);
 		//window.addChildren(parallaxButton);
 		//window.addChildren(motionBlurButton);
-		window.addChildren(reflectionsButton);
+		uiWindow.addChildren(reflectionsButton);
 
 	}
 
@@ -234,7 +236,7 @@ public class OptionsState extends AbstractState {
 	public void update(AbstractVoxel voxel, float delta) {
 		GameResources gm = (GameResources) voxel.getGameResources();
 		while (Mouse.next()) {
-			window.update(delta);
+			uiWindow.update(delta);
 		}
 
 		/*if (!switching)
@@ -284,11 +286,12 @@ public class OptionsState extends AbstractState {
 		} else {
 			MasterRenderer.prepare(1, 1, 1, 1);
 		}
-
-		gm.getDisplay().beingNVGFrame();
-		window.render();
-		UIRendering.renderMouse();
-		gm.getDisplay().endNVGFrame();
+		
+		Window window = gm.getGameWindow();
+		window.beingNVGFrame();
+		uiWindow.render(window.getID());
+		UIRendering.renderMouse(window.getID());
+		window.endNVGFrame();
 	}
 
 }

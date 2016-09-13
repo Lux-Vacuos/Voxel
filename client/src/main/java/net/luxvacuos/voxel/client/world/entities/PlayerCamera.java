@@ -54,6 +54,8 @@ import net.luxvacuos.voxel.client.input.KeyboardHandler;
 import net.luxvacuos.voxel.client.input.Mouse;
 //import net.luxvacuos.voxel.client.network.VoxelClient;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Display;
+import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
+import net.luxvacuos.voxel.client.rendering.api.glfw.WindowManager;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.resources.models.ModelTexture;
 import net.luxvacuos.voxel.client.resources.models.RendereableTexturedModel;
@@ -93,17 +95,17 @@ public class PlayerCamera extends Camera {
 	private static List<BoundingBox> blocks = new ArrayList<>();
 	private static Vector3 tmp = new Vector3();
 
-	public PlayerCamera(Matrix4f proj, Display display) {
+	public PlayerCamera(Matrix4f proj, Window window) {
 		super(proj, new Vector3f(-0.25f, -1.4f, -0.25f), new Vector3f(0.25f, 0.2f, 0.25f));
-		center = new Vector2f(display.getDisplayWidth() / 2, display.getDisplayHeight() / 2);
+		center = new Vector2f(window.getWidth() / 2, window.getHeight() / 2);
 		this.speed = 1f;
-		inventory = new Inventory(11, 11, GameResources.getInstance().getDisplay().getDisplayWidth() / 2 - 200, 0);
+		inventory = new Inventory(11, 11, window.getWidth() / 2 - 200, 0);
 		super.add(new Health(20));
 		super.add(new ArmourComponent());
 		super.getComponent(ArmourComponent.class).armour = new EmptyArmour();
 		blockSelector = new RendereableTexturedModel(new Vector3f(),
-				new TexturedModel(GameResources.getInstance().getLoader().getObjLoader().loadObjModel("BlockSelector"),
-						new ModelTexture(GameResources.getInstance().getLoader().loadTextureEntity("BlockSelector"))));
+				new TexturedModel(GameResources.getInstance().getResourceLoader().getObjLoader().loadObjModel("BlockSelector"),
+						new ModelTexture(GameResources.getInstance().getResourceLoader().loadTextureEntity("BlockSelector"))));
 		blockSelector.scale = 1.02f;
 		flyMode = true;
 
@@ -113,7 +115,8 @@ public class PlayerCamera extends Camera {
 
 	public void update(float delta, GameResources gm, Dimension world) {
 		isMoved = false;
-		KeyboardHandler kbh = gm.getDisplay().getKeyboardHandler();
+		Window window = gm.getGameWindow();
+		KeyboardHandler kbh = window.getKeyboardHandler();
 
 		if (Components.HEALTH.get(this).get() <= 0 && !died) {
 			died = true;
@@ -293,9 +296,9 @@ public class PlayerCamera extends Camera {
 		if (clickTime > 0)
 			clickTime--;
 		hit = false;
-		setBlock(gm.getDisplay().getDisplayWidth(), gm.getDisplay().getDisplayHeight(), world);
-		updateRay(gm.getRenderer().getProjectionMatrix(), gm.getDisplay().getDisplayWidth(),
-				gm.getDisplay().getDisplayHeight(), center);
+		setBlock(window.getWidth(), window.getHeight(), world);
+		updateRay(gm.getRenderer().getProjectionMatrix(), window.getWidth(),
+				window.getHeight(), center);
 
 		super.update(delta);
 	}
@@ -403,8 +406,8 @@ public class PlayerCamera extends Camera {
 	}
 
 	public void setMouse() {
-		setCursorPosition(GameResources.getInstance().getDisplay().getDisplayWidth() / 2,
-				GameResources.getInstance().getDisplay().getDisplayHeight() / 2);
+		setCursorPosition(GameResources.getInstance().getGameWindow().getWidth() / 2,
+				GameResources.getInstance().getGameWindow().getHeight() / 2);
 		setGrabbed(true);
 	}
 

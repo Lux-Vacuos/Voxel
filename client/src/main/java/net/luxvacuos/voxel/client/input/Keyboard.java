@@ -27,7 +27,7 @@ import java.util.Map;
 
 import org.lwjgl.glfw.GLFW;
 
-import net.luxvacuos.voxel.client.rendering.api.glfw.Display;
+import net.luxvacuos.voxel.client.rendering.api.glfw.WindowManager;
 import net.luxvacuos.voxel.client.resources.GameResources;
 
 @Deprecated
@@ -231,7 +231,7 @@ public class Keyboard {
 		keyEvents[queue.getNextPos()] = KeyCodes.toLwjglKey(key);
 		keyEventStates[queue.getNextPos()] = pressed;
 
-		nanoTimeEvents[queue.getNextPos()] = Display.getNanoTime();
+		nanoTimeEvents[queue.getNextPos()] = WindowManager.getNanoTime();
 
 		queue.add();
 		/*
@@ -248,7 +248,7 @@ public class Keyboard {
 	}
 
 	public static boolean isKeyDown(int key) {
-		return GLFW.glfwGetKey(GameResources.getInstance().getDisplay().getWindow(),
+		return GLFW.glfwGetKey(GameResources.getInstance().getGameWindow().getID(),
 				KeyCodes.toGlfwKey(key)) == GLFW.GLFW_PRESS;
 	}
 

@@ -23,11 +23,12 @@ package net.luxvacuos.voxel.client.ui;
 import org.lwjgl.nanovg.NVGColor;
 
 import net.luxvacuos.voxel.client.input.Mouse;
+import net.luxvacuos.voxel.client.rendering.api.glfw.WindowManager;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.UIRendering;
-import net.luxvacuos.voxel.client.resources.GameResources;
 
 public class Panel extends Component {
-	private NVGColor fillColor = UIRendering.rgba(255, 255, 255, 200), gradientColor = UIRendering.rgba(32, 32, 32, 32),
+	private NVGColor fillColor = UIRendering.rgba(255, 255, 255, 200), 
+			gradientColor = UIRendering.rgba(32, 32, 32, 32),
 			borderColor = UIRendering.rgba(0, 0, 0, 255);
 	private OnAction onPress;
 
@@ -39,11 +40,11 @@ public class Panel extends Component {
 	}
 
 	@Override
-	public void render() {
-		UIRendering.renderBox(rootX + x,
-				GameResources.getInstance().getDisplay().getDisplayHeight() - rootY - y - height, width, height,
+	public void render(long windowID) {
+		UIRendering.renderBox(windowID, rootX + x,
+				WindowManager.getWindow(windowID).getHeight() - rootY - y - height, width, height,
 				fillColor, gradientColor, borderColor, fadeAlpha);
-		super.render();
+		super.render(windowID);
 	}
 
 	@Override

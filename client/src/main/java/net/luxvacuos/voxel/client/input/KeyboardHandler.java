@@ -53,8 +53,12 @@ public final class KeyboardHandler implements IDisposable {
 		return GLFW.glfwGetKey(this.windowID, keycode) == GLFW.GLFW_PRESS;
 	}
 	
+	public boolean isKeyPressed(int keycode, boolean repeat) {
+		return this.keyCallback.isKeyPressed(keycode) && (repeat ? true : !this.keyCallback.wasKeyRepeated(keycode));
+	}
+	
 	public boolean isKeyPressed(int keycode) {
-		return this.keyCallback.isKeyPressed(keycode);
+		return this.isKeyPressed(keycode, true);
 	}
 	
 	public boolean wasKeyPressed(int keycode) {

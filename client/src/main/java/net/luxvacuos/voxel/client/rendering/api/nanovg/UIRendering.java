@@ -64,7 +64,7 @@ import org.lwjgl.nanovg.NVGColor;
 import org.lwjgl.nanovg.NVGPaint;
 
 import net.luxvacuos.voxel.client.input.Mouse;
-import net.luxvacuos.voxel.client.resources.GameResources;
+import net.luxvacuos.voxel.client.rendering.api.glfw.WindowManager;
 
 /**
  * This class contains basic rendering methods using NanoVG
@@ -112,8 +112,8 @@ public class UIRendering {
 		return color;
 	}
 
-	public static void renderLabel(String text, String font, float x, float y, float w, float h, float fontSize) {
-		long vg = GameResources.getInstance().getDisplay().getVg();
+	public static void renderLabel(long windowID, String text, String font, float x, float y, float w, float h, float fontSize) {
+		long vg = WindowManager.getWindow(windowID).getNVGID();
 		nvgFontSize(vg, fontSize);
 		nvgFontFace(vg, font);
 		nvgFillColor(vg, rgba(255, 255, 255, 128, colorA));
@@ -121,8 +121,8 @@ public class UIRendering {
 		nvgText(vg, x, y, text, NULL);
 	}
 
-	public static void renderSearchBox(String text, String font, String entypo, float x, float y, float w, float h) {
-		long vg = GameResources.getInstance().getDisplay().getVg();
+	public static void renderSearchBox(long windowID, String text, String font, String entypo, float x, float y, float w, float h) {
+		long vg = WindowManager.getWindow(windowID).getNVGID();
 		NVGPaint bg = paintA;
 		float cornerRadius = h / 2 - 1;
 
@@ -158,10 +158,10 @@ public class UIRendering {
 		nvgText(vg, x + w - h * 0.55f, y + h * 0.55f, ICON_CIRCLED_CROSS, NULL);
 	}
 
-	public static void renderImage(float x, float y, float w, float h, int image, float alpha) {
+	public static void renderImage(long windowID, float x, float y, float w, float h, int image, float alpha) {
 		NVGPaint imgPaint = paintB;
 		IntBuffer imgw = memAllocInt(1), imgh = memAllocInt(1);
-		long vg = GameResources.getInstance().getDisplay().getVg();
+		long vg = WindowManager.getWindow(windowID).getNVGID();
 		nvgSave(vg);
 		nvgImageSize(vg, image, imgw, imgh);
 		nvgImagePattern(vg, x, y, w, h, 0.0f / 180.0f * NVG_PI, image, alpha, imgPaint);
@@ -174,8 +174,8 @@ public class UIRendering {
 		memFree(imgw);
 	}
 
-	public static void renderProgressBar(float x, float y, float w, float h, float pos) {
-		long vg = GameResources.getInstance().getDisplay().getVg();
+	public static void renderProgressBar(long windowID, float x, float y, float w, float h, float pos) {
+		long vg = WindowManager.getWindow(windowID).getNVGID();
 		nvgBoxGradient(vg, x + 1, y + 1, w - 2, h, 3, 4, rgba(32, 32, 32, 255, colorA), rgba(92, 92, 92, 255, colorB),
 				paintA);
 		nvgBeginPath(vg);
@@ -195,8 +195,8 @@ public class UIRendering {
 		nvgFill(vg);
 	}
 
-	public static void renderLife(float x, float y, float w, float h, float pos) {
-		long vg = GameResources.getInstance().getDisplay().getVg();
+	public static void renderLife(long windowID, float x, float y, float w, float h, float pos) {
+		long vg = WindowManager.getWindow(windowID).getNVGID();
 		nvgBoxGradient(vg, x + 1, y + 1, w - 2, h, 3, 4, rgba(32, 32, 32, 120, colorA), rgba(92, 92, 92, 255, colorB),
 				paintA);
 		nvgBeginPath(vg);
@@ -216,11 +216,11 @@ public class UIRendering {
 		nvgFill(vg);
 	}
 
-	public static void renderWindow(String title, String font, float x, float y, float w, float h, float alphaMult) {
+	public static void renderWindow(long windowID, String title, String font, float x, float y, float w, float h, float alphaMult) {
 		float cornerRadius = 3.0f;
 		NVGPaint shadowPaint = paintA;
 		NVGPaint headerPaint = paintB;
-		long vg = GameResources.getInstance().getDisplay().getVg();
+		long vg = WindowManager.getWindow(windowID).getNVGID();
 
 		nvgSave(vg);
 		// nvgClearState(vg);
@@ -274,10 +274,10 @@ public class UIRendering {
 		nvgRestore(vg);
 	}
 
-	public static void renderWindow(float x, float y, float w, float h) {
+	public static void renderWindow(long windowID, float x, float y, float w, float h) {
 		float cornerRadius = 3.0f;
 		NVGPaint shadowPaint = paintA;
-		long vg = GameResources.getInstance().getDisplay().getVg();
+		long vg = WindowManager.getWindow(windowID).getNVGID();
 
 		nvgSave(vg);
 		// nvgClearState(vg);
@@ -302,13 +302,13 @@ public class UIRendering {
 		nvgRestore(vg);
 	}
 
-	public static void renderMouse() {
+	public static void renderMouse(long windowID) {
 		float x = Mouse.getX() - 8;
-		float y = -Mouse.getY() - 8 + GameResources.getInstance().getDisplay().getDisplayHeight();
+		float y = -Mouse.getY() - 8 + WindowManager.getWindow(windowID).getHeight();
 		float w = 16;
 		float h = 16;
 		NVGPaint bg = paintA;
-		long vg = GameResources.getInstance().getDisplay().getVg();
+		long vg = WindowManager.getWindow(windowID).getNVGID();
 		nvgBoxGradient(vg, x + 1, y + 1 + 1.5f, w - 2, h - 2, 3, 4, rgba(255, 255, 255, 200, colorA),
 				rgba(32, 32, 32, 32, colorB), bg);
 		nvgBeginPath(vg);
@@ -322,15 +322,15 @@ public class UIRendering {
 		nvgStroke(vg);
 	}
 
-	public static void renderBox(float x, float y, float w, float h, NVGColor color1, NVGColor color2,
+	public static void renderBox(long windowID, float x, float y, float w, float h, NVGColor color1, NVGColor color2,
 			NVGColor color3) {
-		renderBox(x, y, w, h, color1, color2, color3, 1);
+		renderBox(windowID, x, y, w, h, color1, color2, color3, 1);
 	}
 
-	public static void renderBox(float x, float y, float w, float h, NVGColor color1, NVGColor color2, NVGColor color3,
+	public static void renderBox(long windowID, float x, float y, float w, float h, NVGColor color1, NVGColor color2, NVGColor color3,
 			float fadeAlpha) {
 		NVGPaint bg = paintA;
-		long vg = GameResources.getInstance().getDisplay().getVg();
+		long vg = WindowManager.getWindow(windowID).getNVGID();
 		nvgBoxGradient(vg, x + 1, y + 1 + 1.5f, w - 2, h - 2, 3, 4,
 				rgba((int) color1.r() * 255, (int) color1.g() * 255, (int) color1.b() * 255,
 						(int) (color1.a() * fadeAlpha * 255), colorA),
@@ -349,11 +349,11 @@ public class UIRendering {
 		nvgStroke(vg);
 	}
 
-	public static void renderSlider(float pos, float x, float y, float w, float h) {
+	public static void renderSlider(long windowID, float pos, float x, float y, float w, float h) {
 		NVGPaint bg = paintA, knob = paintB;
 		float cy = y + (int) (h * 0.5f);
 		float kr = (int) (h * 0.25f);
-		long vg = GameResources.getInstance().getDisplay().getVg();
+		long vg = WindowManager.getWindow(windowID).getNVGID();
 
 		nvgSave(vg);
 		// nvgClearState(vg);
@@ -393,14 +393,14 @@ public class UIRendering {
 		nvgRestore(vg);
 	}
 
-	public static void renderText(String text, String font, float x, float y, float fontSize, NVGColor color,
+	public static void renderText(long windowID, String text, String font, float x, float y, float fontSize, NVGColor color,
 			NVGColor color1) {
-		renderText(text, font, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE, x, y, fontSize, color, color1);
+		renderText(windowID, text, font, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE, x, y, fontSize, color, color1);
 	}
 
-	public static void renderText(String text, String font, int align, float x, float y, float fontSize, NVGColor color,
+	public static void renderText(long windowID, String text, String font, int align, float x, float y, float fontSize, NVGColor color,
 			NVGColor color1) {
-		long vg = GameResources.getInstance().getDisplay().getVg();
+		long vg = WindowManager.getWindow(windowID).getNVGID();
 		nvgFontSize(vg, fontSize);
 		nvgFontFace(vg, font);
 		nvgTextAlign(vg, align);
@@ -408,9 +408,9 @@ public class UIRendering {
 		nvgText(vg, x, y, text, NULL);
 	}
 
-	public static void renderText(String text, String font, int align, float x, float y, float fontSize, NVGColor color,
+	public static void renderText(long windowID, String text, String font, int align, float x, float y, float fontSize, NVGColor color,
 			float fadeAlpha) {
-		long vg = GameResources.getInstance().getDisplay().getVg();
+		long vg = WindowManager.getWindow(windowID).getNVGID();
 		nvgFontSize(vg, fontSize);
 		nvgFontFace(vg, font);
 		nvgTextAlign(vg, align);
@@ -419,9 +419,9 @@ public class UIRendering {
 		nvgText(vg, x, y, text, NULL);
 	}
 
-	public static void renderButton(ByteBuffer preicon, String text, String font, String entypo, float x, float y,
+	public static void renderButton(long windowID, ByteBuffer preicon, String text, String font, String entypo, float x, float y,
 			float w, float h, NVGColor color, boolean mouseInside, float fadeAlpha) {
-		long vg = GameResources.getInstance().getDisplay().getVg();
+		long vg = WindowManager.getWindow(windowID).getNVGID();
 		NVGPaint bg = paintA;
 		float cornerRadius = 4.0f;
 		float tw, iw = 0;

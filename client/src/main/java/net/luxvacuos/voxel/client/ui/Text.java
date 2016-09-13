@@ -25,8 +25,8 @@ import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_MIDDLE;
 
 import org.lwjgl.nanovg.NVGColor;
 
+import net.luxvacuos.voxel.client.rendering.api.glfw.WindowManager;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.UIRendering;
-import net.luxvacuos.voxel.client.resources.GameResources;
 
 public class Text extends Component {
 
@@ -42,10 +42,10 @@ public class Text extends Component {
 	}
 
 	@Override
-	public void render() {
-		UIRendering.renderText(text, font, align, rootX + x,
-				GameResources.getInstance().getDisplay().getDisplayHeight() - rootY - y, fontSize, color, fadeAlpha);
-		super.render();
+	public void render(long windowID) {
+		UIRendering.renderText(windowID, text, font, align, rootX + x,
+				WindowManager.getWindow(windowID).getHeight() - rootY - y, fontSize, color, fadeAlpha);
+		super.render(windowID);
 	}
 
 	public void setAlign(int align) {

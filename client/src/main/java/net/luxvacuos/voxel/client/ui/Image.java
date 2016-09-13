@@ -20,8 +20,8 @@
 
 package net.luxvacuos.voxel.client.ui;
 
+import net.luxvacuos.voxel.client.rendering.api.glfw.WindowManager;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.UIRendering;
-import net.luxvacuos.voxel.client.resources.GameResources;
 
 public class Image extends Component {
 
@@ -37,10 +37,10 @@ public class Image extends Component {
 	}
 
 	@Override
-	public void render() {
-		UIRendering.renderImage(rootX + x, GameResources.getInstance().getDisplay().getDisplayHeight() - rootY - y,
+	public void render(long windowID) {
+		UIRendering.renderImage(windowID, rootX + x, WindowManager.getWindow(windowID).getHeight() - rootY - y,
 				width, height, image, fadeAlpha);
-		super.render();
+		super.render(windowID);
 	}
 
 	@Override

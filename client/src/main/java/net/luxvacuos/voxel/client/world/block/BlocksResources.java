@@ -21,7 +21,7 @@
 package net.luxvacuos.voxel.client.world.block;
 
 import net.luxvacuos.igl.vector.Vector2f;
-import net.luxvacuos.voxel.client.resources.Loader;
+import net.luxvacuos.voxel.client.resources.ResourceLoader;
 import net.luxvacuos.voxel.client.resources.models.ModelTexture;
 import net.luxvacuos.voxel.client.resources.models.RawModel;
 import net.luxvacuos.voxel.client.resources.models.TessellatorTextureAtlas;
@@ -36,7 +36,7 @@ public class BlocksResources {
 	private static int specularMap;
 	private static TexturedModel node;
 
-	public static void createBlocks(Loader loader) {
+	public static void createBlocks(ResourceLoader loader) {
 
 		tessellatorTextureAtlas = new TessellatorTextureAtlas(256, 256, loader.loadTextureBlocks("blocks"));
 		normalMap = loader.loadTextureMisc("blocks_normal");

@@ -31,6 +31,7 @@ import java.util.jar.Manifest;
 
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFW;
+import org.lwjgl.glfw.GLFWErrorCallback;
 
 import net.luxvacuos.igl.Logger;
 import net.luxvacuos.voxel.client.api.MoltenAPI;
@@ -48,6 +49,8 @@ import net.luxvacuos.voxel.client.core.states.SPState;
 import net.luxvacuos.voxel.client.core.states.SplashScreenState;
 import net.luxvacuos.voxel.client.core.states.StateNames;
 import net.luxvacuos.voxel.client.input.Mouse;
+import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
+import net.luxvacuos.voxel.client.rendering.api.glfw.WindowManager;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.Timers;
 import net.luxvacuos.voxel.client.rendering.api.opengl.MasterRenderer;
 import net.luxvacuos.voxel.client.resources.GameResources;
@@ -76,12 +79,16 @@ public class Voxel extends AbstractVoxel {
 	 * Loaded boolean
 	 */
 	private boolean loaded = false;
+	
+	GLFWErrorCallback errorfun = GLFWErrorCallback.createPrint(System.err);
 
 	/**
 	 * Create the instance and set some variables
 	 */
 	public Voxel(AbstractBootstrap bootstrap) {
 		super(bootstrap);
+		//Set the GLFW Error Callback
+		GLFW.glfwSetErrorCallback(this.errorfun);
 		// Set client
 		super.engineType = EngineType.CLIENT;
 		// Call Mainloop
@@ -120,11 +127,11 @@ public class Voxel extends AbstractVoxel {
 		// Do preInit on Game Resources
 		getGameResources().preInit();
 		// Set Window visible
-		getGameResources().getDisplay().setVisible();
+		getGameResources().getGameWindow().setVisible(true);
 		// Clear Screen
 		MasterRenderer.prepare(1, 1, 1, 1);
 		// Update Screen buffers
-		getGameResources().getDisplay().updateDisplay(ClientVariables.FPS);
+		getGameResources().getGameWindow().updateDisplay(ClientVariables.FPS);
 		// Print info
 		Logger.log("Voxel Client Version: " + ClientVariables.version);
 		Logger.log("Running on: " + bootstrap.getPlatform());
@@ -162,7 +169,7 @@ public class Voxel extends AbstractVoxel {
 		// Do Init on Game Resources
 		getGameResources().init(this);
 		// Load Block assets
-		BlocksResources.createBlocks(getGameResources().getLoader());
+		BlocksResources.createBlocks(getGameResources().getResourceLoader());
 		// Load extra assets
 		getGameResources().loadResources();
 		// Load the States into the StateMachine
@@ -224,17 +231,19 @@ public class Voxel extends AbstractVoxel {
 			float alpha = 0;
 			// Set loaded
 			loaded = true;
-			while (StateMachine.isRunning() && !(this.getGameResources().getDisplay().isCloseRequested())) {
+			//Get a local game window reference
+			Window window = getGameResources().getGameWindow();
+			while (StateMachine.isRunning() && !(window.isCloseRequested())) {
 				// Start CPU timer
 				Timers.startCPUTimer();
 				// Update UPS
-				if (getGameResources().getDisplay().getTimeCount() > 1f) {
+				if (window.getTimeCount() > 1f) {
 					CoreInfo.ups = CoreInfo.upsCount;
 					CoreInfo.upsCount = 0;
-					getGameResources().getDisplay().setTimeCount(getGameResources().getDisplay().getTimeCount() - 1);
+					window.setTimeCount(window.getTimeCount() - 1);
 				}
 				// Get last frame delta
-				delta = getGameResources().getDisplay().getDelta();
+				delta = window.getDelta();
 				// Add delta to accumulator
 				accumulator += delta;
 				// Fixed Update while
@@ -257,10 +266,11 @@ public class Voxel extends AbstractVoxel {
 				// Update Timers
 				Timers.update();
 				// Update Screen buffers
-				getGameResources().getDisplay().updateDisplay(ClientVariables.FPS);
+				window.updateDisplay(ClientVariables.FPS);
 			}
 			// Dispose all resources
 			dispose();
+			GLFW.glfwTerminate();
 		} catch (Throwable t) {
 			handleError(t);
 		}
@@ -309,10 +319,13 @@ public class Voxel extends AbstractVoxel {
 				}
 			else
 				// try to close display
-				getGameResources().getDisplay().closeDisplay();
+				WindowManager.closeAllDisplays();
 		} catch (NullPointerException t) {
 			e.printStackTrace();
+		} finally {
+			GLFW.glfwTerminate();
 		}
+		
 		// If running on MacOSX don't show crash screen
 		if (!bootstrap.getPlatform().equals(Platform.MACOSX))
 			CrashScreen.run(e);
@@ -335,7 +348,9 @@ public class Voxel extends AbstractVoxel {
 		// Clean mods
 		modsHandler.dispose();
 		// Close Window
-		getGameResources().getDisplay().closeDisplay();
+		WindowManager.closeAllDisplays();
+		//Free the Error Callback
+		GLFW.glfwSetErrorCallback(null).free();
 
 		StateMachine.dispose();
 		// Set dispose and loaded

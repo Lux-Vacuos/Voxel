@@ -37,7 +37,7 @@ import org.lwjgl.BufferUtils;
 import net.luxvacuos.igl.vector.Matrix4f;
 import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.ParticleShader;
-import net.luxvacuos.voxel.client.resources.Loader;
+import net.luxvacuos.voxel.client.resources.ResourceLoader;
 import net.luxvacuos.voxel.client.resources.models.Particle;
 import net.luxvacuos.voxel.client.resources.models.ParticleTexture;
 import net.luxvacuos.voxel.client.resources.models.RawModel;
@@ -54,11 +54,11 @@ public class ParticleRenderer {
 	private RawModel quad;
 	private ParticleShader shader;
 
-	private Loader loader;
+	private ResourceLoader loader;
 	private int vbo;
 	private int pointer = 0;
 
-	public ParticleRenderer(Loader loader, Matrix4f projectionMatrix) {
+	public ParticleRenderer(ResourceLoader loader, Matrix4f projectionMatrix) {
 		this.loader = loader;
 		this.vbo = loader.createEmptyVBO(INSTANCE_DATA_LENGHT * MAX_INSTANCES);
 		quad = loader.loadToVAO(VERTICES, 2);

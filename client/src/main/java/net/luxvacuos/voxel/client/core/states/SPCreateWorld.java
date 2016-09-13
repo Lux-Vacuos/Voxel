@@ -25,19 +25,20 @@ import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_CENTER;
 import java.io.File;
 
 import net.luxvacuos.voxel.client.core.ClientVariables;
+import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 //import net.luxvacuos.voxel.client.input.Keyboard;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.UIRendering;
 import net.luxvacuos.voxel.client.rendering.api.opengl.MasterRenderer;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.ui.Button;
 import net.luxvacuos.voxel.client.ui.Text;
-import net.luxvacuos.voxel.client.ui.Window;
+import net.luxvacuos.voxel.client.ui.UIWindow;
 import net.luxvacuos.voxel.universal.core.AbstractVoxel;
 import net.luxvacuos.voxel.universal.core.states.AbstractState;
 import net.luxvacuos.voxel.universal.core.states.StateMachine;
 
 public class SPCreateWorld extends AbstractState {
-	private Window window;
+	private UIWindow uiWindow;
 	private String worldName = "";
 	private Text nameT;
 	private Text optionsT;
@@ -46,34 +47,34 @@ public class SPCreateWorld extends AbstractState {
 
 	public SPCreateWorld() {
 		super(StateNames.SP_CREATE_WORLD);
-		GameResources.getInstance().getDisplay().getKeyboardHandler().enableTextInput();
-		window = new Window(20, GameResources.getInstance().getDisplay().getDisplayHeight() - 20,
-				GameResources.getInstance().getDisplay().getDisplayWidth() - 40,
-				GameResources.getInstance().getDisplay().getDisplayHeight() - 40, "Create World");
-		nameT = new Text("World Name", window.getWidth() / 2, -window.getHeight() / 2 + 100);
+		Window window = GameResources.getInstance().getGameWindow();
+		window.getKeyboardHandler().enableTextInput();
+		uiWindow = new UIWindow(20, window.getHeight() - 20,
+				window.getWidth() - 40, window.getHeight() - 40, "Create World");
+		nameT = new Text("World Name", uiWindow.getWidth() / 2, -uiWindow.getHeight() / 2 + 100);
 		nameT.setAlign(NVG_ALIGN_CENTER);
-		optionsT = new Text("Options", window.getWidth() / 2, -window.getHeight() / 2);
+		optionsT = new Text("Options", uiWindow.getWidth() / 2, -uiWindow.getHeight() / 2);
 		optionsT.setAlign(NVG_ALIGN_CENTER);
-		createButton = new Button(window.getWidth() / 2 - 210, -window.getHeight() + 35, 200, 40, "Create World");
+		createButton = new Button(uiWindow.getWidth() / 2 - 210, -uiWindow.getHeight() + 35, 200, 40, "Create World");
 		createButton.setOnButtonPress((button, delta) -> {
 			if (!worldName.equals("")) {
-				GameResources.getInstance().getDisplay().getKeyboardHandler().disableTextInput();
+				window.getKeyboardHandler().disableTextInput();
 				new File(ClientVariables.WORLD_PATH + worldName).mkdirs();
 				//switchTo(GameState.SP_SELECTION);
 				StateMachine.setCurrentState(StateNames.SP_SELECTION);
 				worldName = "";
 			}
 		});
-		backButton = new Button(window.getWidth() / 2 + 10, -window.getHeight() + 35, 200, 40, "Back");
+		backButton = new Button(uiWindow.getWidth() / 2 + 10, -uiWindow.getHeight() + 35, 200, 40, "Back");
 		backButton.setOnButtonPress((button, delta) -> {
 			//switchTo(GameState.SP_SELECTION);
-			GameResources.getInstance().getDisplay().getKeyboardHandler().disableTextInput();
+			window.getKeyboardHandler().disableTextInput();
 			StateMachine.setCurrentState(StateNames.SP_SELECTION);
 		});
-		window.addChildren(nameT);
-		window.addChildren(optionsT);
-		window.addChildren(createButton);
-		window.addChildren(backButton);
+		uiWindow.addChildren(nameT);
+		uiWindow.addChildren(optionsT);
+		uiWindow.addChildren(createButton);
+		uiWindow.addChildren(backButton);
 	}
 
 	@Override
@@ -88,7 +89,7 @@ public class SPCreateWorld extends AbstractState {
 
 	@Override
 	public void update(AbstractVoxel voxel, float delta) {
-		window.update(delta);
+		uiWindow.update(delta);
 		/*if (!switching)
 			window.fadeIn(4, delta);
 		if (switching)
@@ -99,18 +100,18 @@ public class SPCreateWorld extends AbstractState {
 
 	@Override
 	public void render(AbstractVoxel voxel, float alpha) {
-		GameResources gm = (GameResources) voxel.getGameResources();
+		Window window = ((GameResources) voxel.getGameResources()).getGameWindow();
 		MasterRenderer.prepare(1, 1, 1, 1);
-		gm.getDisplay().beingNVGFrame();
-		window.render();
-		worldName = gm.getDisplay().getKeyboardHandler().handleInput(worldName);
+		window.beingNVGFrame();
+		uiWindow.render(window.getID());
+		worldName = window.getKeyboardHandler().handleInput(worldName);
 		//while (Keyboard.next())
 			//worldName = Keyboard.keyWritten(worldName);
-		UIRendering.renderSearchBox(worldName, "Roboto-Regular", "Entypo",
-				gm.getDisplay().getDisplayWidth() / 2f - 150f,
-				gm.getDisplay().getDisplayHeight() / 2f - 85, 300, 20);
-		UIRendering.renderMouse();
-		gm.getDisplay().endNVGFrame();
+		UIRendering.renderSearchBox(window.getID(), worldName, "Roboto-Regular", "Entypo",
+				window.getWidth() / 2f - 150f,
+				window.getHeight() / 2f - 85, 300, 20);
+		UIRendering.renderMouse(window.getID());
+		window.endNVGFrame();
 	}
 
 }

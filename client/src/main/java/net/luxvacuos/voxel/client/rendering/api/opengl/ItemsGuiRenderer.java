@@ -20,7 +20,7 @@ public class ItemsGuiRenderer {
 		camera.setPosition(new Vector3f(13.58f, 13.58f, 13.58f));
 		camera.setPitch(45);
 		camera.setYaw(45);
-		aspectRatio = (float) gm.getDisplay().getDisplayWidth() / (float) gm.getDisplay().getDisplayHeight();
+		aspectRatio = (float) gm.getGameWindow().getWidth() / (float) gm.getGameWindow().getHeight();
 	}
 
 	public void render(GameResources gm) {

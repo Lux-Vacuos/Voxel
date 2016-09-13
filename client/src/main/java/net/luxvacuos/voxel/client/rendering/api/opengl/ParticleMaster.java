@@ -28,7 +28,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import net.luxvacuos.igl.vector.Matrix4f;
-import net.luxvacuos.voxel.client.resources.Loader;
+import net.luxvacuos.voxel.client.resources.ResourceLoader;
 import net.luxvacuos.voxel.client.resources.models.InsertionSort;
 import net.luxvacuos.voxel.client.resources.models.Particle;
 import net.luxvacuos.voxel.client.resources.models.ParticleTexture;
@@ -51,7 +51,7 @@ public class ParticleMaster {
 	private ParticleMaster() {
 	}
 
-	public void init(Loader loader, Matrix4f projectionMatrix) {
+	public void init(ResourceLoader loader, Matrix4f projectionMatrix) {
 		particles = new HashMap<ParticleTexture, List<Particle>>();
 		renderer = new ParticleRenderer(loader, projectionMatrix);
 	}

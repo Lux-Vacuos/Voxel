@@ -35,7 +35,7 @@ import net.luxvacuos.igl.vector.Matrix4f;
 import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.SkyboxShader;
 import net.luxvacuos.voxel.client.resources.GameResources;
-import net.luxvacuos.voxel.client.resources.Loader;
+import net.luxvacuos.voxel.client.resources.ResourceLoader;
 import net.luxvacuos.voxel.client.resources.models.RawModel;
 import net.luxvacuos.voxel.client.util.Maths;
 
@@ -50,7 +50,7 @@ public class SkyboxRenderer {
 	private RawModel dome;
 	private SkyboxShader shader;
 
-	public SkyboxRenderer(Loader loader, Matrix4f projectionMatrix) {
+	public SkyboxRenderer(ResourceLoader loader, Matrix4f projectionMatrix) {
 		dome = loader.getObjLoader().loadObjModel("SkyDome");
 		shader = new SkyboxShader();
 		shader.start();

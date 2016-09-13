@@ -20,9 +20,6 @@
 
 package net.luxvacuos.voxel.client.resources;
 
-import static org.lwjgl.glfw.GLFW.GLFW_OPENGL_API;
-import static org.lwjgl.glfw.GLFW.GLFW_OPENGL_CORE_PROFILE;
-
 import java.io.File;
 import java.util.Random;
 
@@ -35,8 +32,9 @@ import net.luxvacuos.voxel.client.core.ClientGameSettings;
 import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.core.ClientWorldSimulation;
 import net.luxvacuos.voxel.client.network.VoxelClient;
-import net.luxvacuos.voxel.client.rendering.api.glfw.ContextFormat;
-import net.luxvacuos.voxel.client.rendering.api.glfw.Display;
+import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
+import net.luxvacuos.voxel.client.rendering.api.glfw.WindowHandle;
+import net.luxvacuos.voxel.client.rendering.api.glfw.WindowManager;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Frustum;
 import net.luxvacuos.voxel.client.rendering.api.opengl.ItemsDropRenderer;
 import net.luxvacuos.voxel.client.rendering.api.opengl.ItemsGuiRenderer;
@@ -80,8 +78,7 @@ public class GameResources extends AbstractGameResources {
 		return instance;
 	}
 
-	private Display display;
-	private Loader loader;
+	private long gameWindowID;
 	private Scripting scripting;
 
 	private Random rand;
@@ -107,21 +104,28 @@ public class GameResources extends AbstractGameResources {
 	private Vector3f invertedLightPosition = new Vector3f(0, 0, 0);
 	private ParticleTexture torchTexture;
 
-	private GameResources() {
-	}
+	private GameResources() { }
 
 	@Override
 	public void preInit() {
 		gameSettings = new ClientGameSettings();
 		gameSettings.load(new File(ClientVariables.SETTINGS_PATH));
 		gameSettings.read();
+		
+		String[] icons = new String[] { "assets/" + ClientVariables.assets + "/icons/icon32.png",
+				"assets/" + ClientVariables.assets + "/icons/icon64.png" };
 
-		display = new Display();
+		WindowHandle handle = WindowManager.generateHandle(ClientVariables.WIDTH, ClientVariables.HEIGHT, "Voxel");
+		handle.canResize(false).isVisible(false).setIcon(icons);
+		this.gameWindowID = WindowManager.createWindow(handle, ClientVariables.VSYNC);
+		Window window = WindowManager.getWindow(this.gameWindowID);
+		
+		/*display = new Display();
 		display.create(ClientVariables.WIDTH, ClientVariables.HEIGHT, "Voxel", ClientVariables.VSYNC, false, false,
 				new ContextFormat(3, 3, GLFW_OPENGL_API, GLFW_OPENGL_CORE_PROFILE, true),
 				new String[] { "assets/" + ClientVariables.assets + "/icons/icon32.png",
-						"assets/" + ClientVariables.assets + "/icons/icon64.png" });
-		loader = new Loader(display);
+						"assets/" + ClientVariables.assets + "/icons/icon64.png" }); */
+		ResourceLoader loader = window.getResourceLoader();
 		loader.loadNVGFont("Roboto-Bold", "Roboto-Bold");
 		loader.loadNVGFont("Roboto-Regular", "Roboto-Regular");
 		loader.loadNVGFont("Entypo", "Entypo", 40);
@@ -129,10 +133,10 @@ public class GameResources extends AbstractGameResources {
 
 	@Override
 	public void init(AbstractVoxel voxel) {
+		ResourceLoader loader = WindowManager.getWindow(this.gameWindowID).getResourceLoader();
 		scripting = new Scripting();
 		rand = new Random();
-		if (display.isVk()) {
-		}
+		
 		masterShadowRenderer = new MasterShadowRenderer();
 		renderer = new MasterRenderer(this);
 		skyboxRenderer = new SkyboxRenderer(loader, renderer.getProjectionMatrix());
@@ -146,7 +150,7 @@ public class GameResources extends AbstractGameResources {
 		sun_Camera.setYaw(sunRotation.x);
 		sun_Camera.setPitch(sunRotation.y);
 		sun_Camera.setRoll(sunRotation.z);
-		camera = new PlayerCamera(renderer.getProjectionMatrix(), display);
+		camera = new PlayerCamera(renderer.getProjectionMatrix(), this.getGameWindow());
 		itemsGuiRenderer = new ItemsGuiRenderer(this);
 		kryo = new Kryo();
 		kryo.setDefaultSerializer(CompatibleFieldSerializer.class);
@@ -168,6 +172,7 @@ public class GameResources extends AbstractGameResources {
 	}
 
 	public void loadResources() {
+		ResourceLoader loader = this.getGameWindow().getResourceLoader();
 		torchTexture = new ParticleTexture(loader.loadTextureParticle("fire0"), 4);
 		EntityResources.loadEntityResources(loader);
 	}
@@ -209,7 +214,6 @@ public class GameResources extends AbstractGameResources {
 		renderingPipeline.dispose();
 		itemsGuiRenderer.cleanUp();
 		renderer.cleanUp();
-		loader.cleanUp();
 		soundSystem.cleanup();
 		voxelClient.dispose();
 	}
@@ -218,9 +222,9 @@ public class GameResources extends AbstractGameResources {
 		return rand;
 	}
 
-	public Loader getLoader() {
-		return loader;
-	}
+	public ResourceLoader getResourceLoader() {
+		return WindowManager.getWindow(this.gameWindowID).getResourceLoader();
+	} 
 
 	public Camera getCamera() {
 		return camera;
@@ -269,9 +273,9 @@ public class GameResources extends AbstractGameResources {
 	public Vector3f getSunRotation() {
 		return sunRotation;
 	}
-
-	public Display getDisplay() {
-		return display;
+	
+	public Window getGameWindow() {
+		return WindowManager.getWindow(this.gameWindowID);
 	}
 
 	public VoxelClient getVoxelClient() {

@@ -25,7 +25,7 @@ import org.lwjgl.nanovg.NanoVG;
 public class World extends Component {
 
 	private String name;
-	private Window info;
+	private UIWindow info;
 	private Panel panel;
 	private boolean selected = false;
 
@@ -49,7 +49,7 @@ public class World extends Component {
 		});
 		addChildren(btn);
 
-		info = new Window(w + 10, h, 300, 200, "World " + name + " info");
+		info = new UIWindow(w + 10, h, 300, 200, "World " + name + " info");
 		info.setEnabled(false);
 		Text infoText = new Text("WORK IN PROGRESS", 150, -100);
 		infoText.setAlign(NanoVG.NVG_ALIGN_CENTER);

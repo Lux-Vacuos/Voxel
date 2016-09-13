@@ -28,11 +28,12 @@ import java.util.List;
 
 import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.input.Mouse;
+import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.UIRendering;
 import net.luxvacuos.voxel.client.rendering.api.opengl.MasterRenderer;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.ui.Button;
-import net.luxvacuos.voxel.client.ui.Window;
+import net.luxvacuos.voxel.client.ui.UIWindow;
 import net.luxvacuos.voxel.client.ui.World;
 import net.luxvacuos.voxel.client.world.DefaultWorld;
 import net.luxvacuos.voxel.universal.core.AbstractVoxel;
@@ -48,7 +49,7 @@ import net.luxvacuos.voxel.universal.core.states.StateMachine;
  */
 public class SPSelectionState extends AbstractState {
 
-	private Window window;
+	private UIWindow uiWindow;
 	private Button exitButton;
 	private Button playButton;
 	private Button createButton;
@@ -59,13 +60,12 @@ public class SPSelectionState extends AbstractState {
 
 	public SPSelectionState() {
 		super("SP_Selection");
+		Window window = GameResources.getInstance().getGameWindow();
 		y = 0;
-		window = new Window(20, GameResources.getInstance().getDisplay().getDisplayHeight() - 20,
-				GameResources.getInstance().getDisplay().getDisplayWidth() - 40,
-				GameResources.getInstance().getDisplay().getDisplayHeight() - 40, "Singleplayer");
-		exitButton = new Button(window.getWidth() - 230, -200, 200, 40, "Back");
-		playButton = new Button(window.getWidth() - 230, -150, 200, 40, "Load World");
-		createButton = new Button(window.getWidth() - 230, -100, 200, 40, "Create World");
+		uiWindow = new UIWindow(20, window.getHeight() - 20, window.getWidth() - 40, window.getHeight() - 40, "Singleplayer");
+		exitButton = new Button(uiWindow.getWidth() - 230, -200, 200, 40, "Back");
+		playButton = new Button(uiWindow.getWidth() - 230, -150, 200, 40, "Load World");
+		createButton = new Button(uiWindow.getWidth() - 230, -100, 200, 40, "Create World");
 
 		exitButton.setOnButtonPress((button, delta) -> {
 			// switchTo(GameState.MAINMENU);
@@ -85,9 +85,9 @@ public class SPSelectionState extends AbstractState {
 			StateMachine.setCurrentState(StateNames.SP_CREATE_WORLD);
 		});
 
-		window.addChildren(exitButton);
-		window.addChildren(playButton);
-		window.addChildren(createButton);
+		uiWindow.addChildren(exitButton);
+		uiWindow.addChildren(playButton);
+		uiWindow.addChildren(createButton);
 		worlds = new ArrayList<>();
 	}
 
@@ -109,14 +109,14 @@ public class SPSelectionState extends AbstractState {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		window.getChildrens().addAll(worlds);
+		uiWindow.getChildrens().addAll(worlds);
 		// window.setFadeAlpha(0);
 		worldName = "";
 	}
 
 	@Override
 	public void end() {
-		window.getChildrens().removeAll(worlds);
+		uiWindow.getChildrens().removeAll(worlds);
 		worlds.clear();
 		// window.setFadeAlpha(1);
 	}
@@ -124,7 +124,7 @@ public class SPSelectionState extends AbstractState {
 	@Override
 	public void update(AbstractVoxel voxel, float delta) {
 		while (Mouse.next())
-			window.update(delta);
+			uiWindow.update(delta);
 
 		for (int i = 0; i < worlds.size(); i++) {
 			if (worlds.get(i).isSelected()) {
@@ -146,12 +146,12 @@ public class SPSelectionState extends AbstractState {
 
 	@Override
 	public void render(AbstractVoxel voxel, float alpha) {
-		GameResources gm = (GameResources) voxel.getGameResources();
+		Window window = ((GameResources)voxel.getGameResources()).getGameWindow();
 		MasterRenderer.prepare(1, 1, 1, 1);
-		gm.getDisplay().beingNVGFrame();
-		window.render();
-		UIRendering.renderMouse();
-		gm.getDisplay().endNVGFrame();
+		window.beingNVGFrame();
+		uiWindow.render(window.getID());
+		UIRendering.renderMouse(window.getID());
+		window.endNVGFrame();
 	}
 
 }

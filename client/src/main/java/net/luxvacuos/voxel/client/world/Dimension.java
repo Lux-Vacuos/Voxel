@@ -52,6 +52,7 @@ import net.luxvacuos.igl.Logger;
 import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Sync;
+import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.resources.models.ParticlePoint;
 import net.luxvacuos.voxel.client.resources.models.ParticleSystem;
@@ -311,11 +312,12 @@ public abstract class Dimension {
 	}
 
 	public void updateChunksOcclusion(GameResources gm) {
-		glViewport(0, 0,
-				(int) (GameResources.getInstance().getDisplay().getDisplayWidth()
-						* GameResources.getInstance().getDisplay().getPixelRatio() / 6f),
-				(int) (GameResources.getInstance().getDisplay().getDisplayHeight()
-						* GameResources.getInstance().getDisplay().getPixelRatio() / 6f));
+		Window window = gm.getGameWindow();
+		
+		int width = (int)(window.getWidth() * window.getPixelRatio() / 6f);
+		int height = (int)(window.getHeight() * window.getPixelRatio() / 6f);
+		window.setViewport(0, 0, width, height);
+
 		List<Chunk> chunks_ = new ArrayList<Chunk>();
 		for (Chunk chunk : chunks.values()) {
 			if (chunk != null)
@@ -327,11 +329,8 @@ public abstract class Dimension {
 		for (Chunk chunk : chunks_) {
 			chunk.renderOcclusion(gm);
 		}
-		glViewport(0, 0,
-				(int) (GameResources.getInstance().getDisplay().getDisplayWidth()
-						* GameResources.getInstance().getDisplay().getPixelRatio()),
-				(int) (GameResources.getInstance().getDisplay().getDisplayHeight()
-						* GameResources.getInstance().getDisplay().getPixelRatio()));
+		
+		window.resetViewport();
 	}
 
 	public void lighting() {

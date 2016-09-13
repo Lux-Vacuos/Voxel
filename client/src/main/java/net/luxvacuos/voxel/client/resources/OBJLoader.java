@@ -41,9 +41,9 @@ import net.luxvacuos.voxel.client.resources.models.RawModel;
  */
 public class OBJLoader {
 
-	private Loader loader;
+	private ResourceLoader loader;
 
-	OBJLoader(Loader loader) {
+	OBJLoader(ResourceLoader loader) {
 		this.loader = loader;
 	}
 

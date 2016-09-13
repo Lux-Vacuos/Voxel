@@ -22,33 +22,34 @@ package net.luxvacuos.voxel.client.core.states;
 
 import org.lwjgl.nanovg.NanoVG;
 
+import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.opengl.MasterRenderer;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.ui.Text;
-import net.luxvacuos.voxel.client.ui.Window;
+import net.luxvacuos.voxel.client.ui.UIWindow;
 import net.luxvacuos.voxel.client.world.entities.PlayerCamera;
 import net.luxvacuos.voxel.universal.core.AbstractVoxel;
 import net.luxvacuos.voxel.universal.core.states.AbstractState;
 import net.luxvacuos.voxel.universal.core.states.StateMachine;
 
 /**
- * Singleplayer World Loading State, this is runned when loading a world.
+ * Singleplayer World Loading State, this is ran when loading a world.
  * 
  * @author danirod
  */
 public class SPLoadingState extends AbstractState {
 
-	private Window window;
+	private UIWindow uiWindow;
 
 	public SPLoadingState() {
 		super(StateNames.SP_LOADING);
-		window = new Window(20, GameResources.getInstance().getDisplay().getDisplayHeight() - 20,
-				GameResources.getInstance().getDisplay().getDisplayWidth() - 40,
-				GameResources.getInstance().getDisplay().getDisplayHeight() - 40, "Loading World");
+		Window window = GameResources.getInstance().getGameWindow();
+		uiWindow = new UIWindow(20, window.getHeight() - 20,
+				window.getWidth() - 40, window.getHeight() - 40, "Loading World");
 
-		Text text = new Text("Loading World", window.getWidth() / 2, window.getHeight());
+		Text text = new Text("Loading World", uiWindow.getWidth() / 2, uiWindow.getHeight());
 		text.setAlign(NanoVG.NVG_ALIGN_CENTER);
-		window.addChildren(text);
+		uiWindow.addChildren(text);
 	}
 
 	@Override
@@ -65,17 +66,17 @@ public class SPLoadingState extends AbstractState {
 
 	@Override
 	public void update(AbstractVoxel voxel, float delta) {
-		window.update(delta);
+		uiWindow.update(delta);
 		((PlayerCamera) GameResources.getInstance().getCamera()).setMouse();
 	}
 
 	@Override
 	public void render(AbstractVoxel voxel, float delta) {
-		GameResources gm = (GameResources) voxel.getGameResources();
+		Window window = ((GameResources) voxel.getGameResources()).getGameWindow();
 		MasterRenderer.prepare(1, 1, 1, 1);
-		gm.getDisplay().beingNVGFrame();
-		window.render();
-		gm.getDisplay().endNVGFrame();
+		window.beingNVGFrame();
+		uiWindow.render(window.getID());
+		window.endNVGFrame();
 	}
 
 }

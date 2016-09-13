@@ -29,8 +29,8 @@ import net.luxvacuos.igl.Logger;
 
 public class KeyboardKeyCallback extends GLFWKeyCallback {
 	private BitSet keys = new BitSet(65536);
-	private BitSet buffer = new BitSet(65536);
 	private BitSet last = new BitSet(65536);
+	private BitSet repeat = new BitSet(65536);
 	
 	private final long windowID;
 	
@@ -42,24 +42,28 @@ public class KeyboardKeyCallback extends GLFWKeyCallback {
 	public void invoke(long window, int key, int scancode, int action, int mods) {
 		if(window != this.windowID) return; //only care about the window this callback is assigned to
 		if(key < 0 || key > 65535) {
-			Logger.warn("WARNING: caught invalid key! (Key: "+key+", scancode: "+scancode+", pressed: "+(action != GLFW.GLFW_RELEASE)+")");
+			Logger.warn("WARNING: Caught invalid key! (Key: "+key+", scancode: "+scancode+", pressed: "+(action != GLFW.GLFW_RELEASE)+")");
 			return;
 		}
 		
 		this.keys.set(key, (action != GLFW.GLFW_RELEASE));
+		this.repeat.set(key, (action == GLFW.GLFW_REPEAT));
 	}
 	
 	public boolean isKeyPressed(int keycode) {
-		return this.buffer.get(keycode);
+		return this.keys.get(keycode);
 	}
 	
 	public boolean wasKeyPressed(int keycode) {
 		return this.last.get(keycode);
 	}
 	
+	public boolean wasKeyRepeated(int keycode) {
+		return this.repeat.get(keycode);
+	}
+	
 	public void swapBuffers() {
-		this.last = this.buffer;
-		this.buffer = this.keys;
+		this.last = this.keys;
 	}
 
 }

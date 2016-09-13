@@ -85,7 +85,8 @@ import net.luxvacuos.igl.Logger;
 import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.core.exception.DecodeTextureException;
 import net.luxvacuos.voxel.client.core.exception.LoadTextureException;
-import net.luxvacuos.voxel.client.rendering.api.glfw.Display;
+import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
+import net.luxvacuos.voxel.client.rendering.api.glfw.WindowManager;
 import net.luxvacuos.voxel.client.resources.models.EntityTexture;
 import net.luxvacuos.voxel.client.resources.models.RawModel;
 
@@ -96,7 +97,7 @@ import net.luxvacuos.voxel.client.resources.models.RawModel;
  * @author Guerra24 <pablo230699@hotmail.com>
  * @category Assets
  */
-public class Loader {
+public class ResourceLoader {
 	/**
 	 * VAOs List
 	 */
@@ -118,11 +119,16 @@ public class Loader {
 	 */
 	private List<ByteBuffer> nvgFont = new ArrayList<ByteBuffer>();
 	private OBJLoader objLoader;
-	private Display display;
+	private long windowID;
 
-	public Loader(Display display) {
+	/* public Loader(Display display) {
 		objLoader = new OBJLoader(this);
 		this.display = display;
+	} */
+	
+	public ResourceLoader(long windowID) {
+		this.objLoader = new OBJLoader(this);
+		this.windowID = windowID;
 	}
 
 	/**
@@ -299,13 +305,14 @@ public class Loader {
 	}
 
 	public void loadNVGFont(String filename, String name, int size) throws LoadTextureException {
+		Window window = WindowManager.getWindow(this.windowID);
 		Logger.log("Loading NVGFont: " + filename + ".ttf");
 		int font = 0;
 		try {
 			ByteBuffer buffer = ioResourceToByteBuffer(
 					"assets/" + ClientVariables.assets + "/fonts/" + filename + ".ttf", size * 1024);
 			nvgFont.add(buffer);
-			font = nvgCreateFontMem(display.getVg(), name, buffer, 0);
+			font = nvgCreateFontMem(window.getNVGID(), name, buffer, 0);
 		} catch (IOException e) {
 			throw new LoadTextureException(filename, e);
 		}
@@ -314,13 +321,14 @@ public class Loader {
 	}
 
 	public int loadNVGTexture(String file) throws LoadTextureException {
+		Window window = WindowManager.getWindow(this.windowID);
 		ByteBuffer buffer = null;
 		int tex = 0;
 		try {
 			Logger.log("Loading NVGTexture: " + file + ".png");
 			buffer = ioResourceToByteBuffer("assets/" + ClientVariables.assets + "/textures/menu/" + file + ".png",
 					32 * 1024);
-			tex = nvgCreateImageMem(display.getVg(), 0, buffer);
+			tex = nvgCreateImageMem(window.getNVGID(), 0, buffer);
 		} catch (Exception e) {
 			throw new LoadTextureException(file, e);
 		}
@@ -342,8 +350,11 @@ public class Loader {
 		for (int texture : textures) {
 			glDeleteTextures(texture);
 		}
+		
+		Window window = WindowManager.getWindow(this.windowID);
+		long nvgID = window.getNVGID();
 		for (int texture : nvgData) {
-			nvgDeleteImage(display.getVg(), texture);
+			nvgDeleteImage(nvgID, texture);
 		}
 	}
 

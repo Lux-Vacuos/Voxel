@@ -37,6 +37,8 @@ import org.lwjgl.glfw.GLFW;
 
 import net.luxvacuos.voxel.client.core.CoreInfo;
 import net.luxvacuos.voxel.client.core.ClientVariables;
+import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
+import net.luxvacuos.voxel.client.rendering.api.glfw.WindowManager;
 //import net.luxvacuos.voxel.client.input.Keyboard;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.Timers;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.UIRendering;
@@ -69,6 +71,7 @@ public class MPState extends AbstractState {
 	@Override
 	public void render(AbstractVoxel voxel, float alpha) {
 		GameResources gm = (GameResources) voxel.getGameResources();
+		Window window = gm.getGameWindow();
 
 		gm.getSun_Camera().setPosition(gm.getCamera().getPosition());
 		gm.getFrustum().calculateFrustum(gm.getMasterShadowRenderer().getProjectionMatrix(), gm.getSun_Camera());
@@ -92,11 +95,11 @@ public class MPState extends AbstractState {
 		gm.getRenderer().renderEntity(
 				gm.getWorldsHandler().getActiveWorld().getActiveDimension().getPhysicsEngine().getEntities(), gm);
 		p.clear();
-		glReadPixels(gm.getDisplay().getDisplayWidth() / 2, gm.getDisplay().getDisplayHeight() / 2, 1, 1,
+		glReadPixels(window.getWidth() / 2, window.getHeight() / 2, 1, 1,
 				GL_DEPTH_COMPONENT, GL_FLOAT, p);
 		c.clear();
 		glReadBuffer(GL_COLOR_ATTACHMENT2);
-		glReadPixels(gm.getDisplay().getDisplayWidth() / 2, gm.getDisplay().getDisplayHeight() / 2, 1, 1, GL_RGB,
+		glReadPixels(window.getWidth() / 2, window.getHeight() / 2, 1, 1, GL_RGB,
 				GL_FLOAT, c);
 		gm.getCamera().depth = p.get(0);
 		gm.getCamera().normal.x = c.get(0);
@@ -112,33 +115,33 @@ public class MPState extends AbstractState {
 		gm.getCamera().render();
 
 		ParticleMaster.getInstance().render(gm.getCamera(), gm.getRenderer().getProjectionMatrix());
-		gm.getDisplay().beingNVGFrame();
+		window.beingNVGFrame();
 		if (ClientVariables.debug) {
-			UIRendering.renderText("Voxel " + " (" + ClientVariables.version + ")", "Roboto-Bold", 5, 12, 20,
+			UIRendering.renderText(window.getID(), "Voxel " + " (" + ClientVariables.version + ")", "Roboto-Bold", 5, 12, 20,
 					UIRendering.rgba(220, 220, 220, 255, UIRendering.colorA),
 					UIRendering.rgba(255, 255, 255, 255, UIRendering.colorB));
-			UIRendering.renderText("Used VRam: " + gm.getDisplay().getUsedVRAM() + "KB " + " UPS: " + CoreInfo.ups,
+			UIRendering.renderText(window.getID(), "Used VRam: " + WindowManager.getUsedVRAM() + "KB " + " UPS: " + CoreInfo.ups,
 					"Roboto-Bold", 5, 95, 20, UIRendering.rgba(220, 220, 220, 255, UIRendering.colorA),
 					UIRendering.rgba(255, 255, 255, 255, UIRendering.colorB));
-			UIRendering.renderText(
+			UIRendering.renderText(window.getID(),
 					"Loaded Chunks: " + gm.getWorldsHandler().getActiveWorld().getActiveDimension().getLoadedChunks()
 							+ "   Rendered Chunks: "
 							+ gm.getWorldsHandler().getActiveWorld().getActiveDimension().getRenderedChunks(),
 					"Roboto-Bold", 5, 115, 20, UIRendering.rgba(220, 220, 220, 255, UIRendering.colorA),
 					UIRendering.rgba(255, 255, 255, 255, UIRendering.colorB));
-			UIRendering.renderText(
+			UIRendering.renderText(window.getID(),
 					"Position XYZ:  " + gm.getCamera().getPosition().getX() + "  " + gm.getCamera().getPosition().getY()
 							+ "  " + gm.getCamera().getPosition().getZ(),
 					"Roboto-Bold", 5, 135, 20, UIRendering.rgba(220, 220, 220, 255, UIRendering.colorA),
 					UIRendering.rgba(255, 255, 255, 255, UIRendering.colorB));
-			UIRendering.renderText(
+			UIRendering.renderText(window.getID(),
 					"Pitch:  " + gm.getCamera().getPitch() + "   Yaw: " + gm.getCamera().getYaw() + "   Roll: "
 							+ gm.getCamera().getRoll(),
 					"Roboto-Bold", 5, 155, 20, UIRendering.rgba(220, 220, 220, 255, UIRendering.colorA),
 					UIRendering.rgba(255, 255, 255, 255, UIRendering.colorB));
 			Timers.renderDebugDisplay(5, 24, 200, 55);
 		}
-		gm.getDisplay().endNVGFrame();
+		window.endNVGFrame();
 		gm.getItemsGuiRenderer().render(gm);
 	}
 
@@ -157,10 +160,10 @@ public class MPState extends AbstractState {
 		gm.update(gm.getWorldSimulation().update(delta), delta);
 		ParticleMaster.getInstance().update(delta, gm.getCamera());
 		
-		if(gm.getDisplay().getKeyboardHandler().isKeyPressed(GLFW.GLFW_KEY_F1))
+		if(gm.getGameWindow().getKeyboardHandler().isKeyPressed(GLFW.GLFW_KEY_F1))
 			ClientVariables.debug = !ClientVariables.debug;
 		
-		if(gm.getDisplay().getKeyboardHandler().isKeyPressed(GLFW.GLFW_KEY_R))
+		if(gm.getGameWindow().getKeyboardHandler().isKeyPressed(GLFW.GLFW_KEY_R))
 			ClientVariables.raining = !ClientVariables.raining;
 		/* while (next()) {
 			if (isKeyDown(KEY_F1))

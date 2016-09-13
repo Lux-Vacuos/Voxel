@@ -24,34 +24,22 @@ import static org.lwjgl.glfw.GLFW.GLFW_RESIZABLE;
 import static org.lwjgl.glfw.GLFW.GLFW_VISIBLE;
 import static org.lwjgl.glfw.GLFW.glfwCreateWindow;
 import static org.lwjgl.glfw.GLFW.glfwDefaultWindowHints;
-import static org.lwjgl.glfw.GLFW.glfwDestroyWindow;
 import static org.lwjgl.glfw.GLFW.glfwGetFramebufferSize;
 import static org.lwjgl.glfw.GLFW.glfwGetPrimaryMonitor;
-import static org.lwjgl.glfw.GLFW.glfwGetTime;
 import static org.lwjgl.glfw.GLFW.glfwGetVideoMode;
 import static org.lwjgl.glfw.GLFW.glfwGetWindowSize;
-import static org.lwjgl.glfw.GLFW.glfwHideWindow;
 import static org.lwjgl.glfw.GLFW.glfwInit;
 import static org.lwjgl.glfw.GLFW.glfwMakeContextCurrent;
 import static org.lwjgl.glfw.GLFW.glfwPollEvents;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowIcon;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowPos;
-import static org.lwjgl.glfw.GLFW.glfwShowWindow;
 import static org.lwjgl.glfw.GLFW.glfwSwapBuffers;
 import static org.lwjgl.glfw.GLFW.glfwSwapInterval;
-import static org.lwjgl.glfw.GLFW.glfwTerminate;
 import static org.lwjgl.glfw.GLFW.glfwWindowHint;
-import static org.lwjgl.glfw.GLFWVulkan.glfwVulkanSupported;
-import static org.lwjgl.nanovg.NanoVG.nvgBeginFrame;
-import static org.lwjgl.nanovg.NanoVG.nvgEndFrame;
 import static org.lwjgl.nanovg.NanoVGGL3.NVG_ANTIALIAS;
 import static org.lwjgl.nanovg.NanoVGGL3.NVG_STENCIL_STROKES;
 import static org.lwjgl.nanovg.NanoVGGL3.nvgCreateGL3;
-import static org.lwjgl.nanovg.NanoVGGL3.nvgDeleteGL3;
 import static org.lwjgl.opengl.GL.createCapabilities;
-import static org.lwjgl.opengl.GL11.GL_VENDOR;
-import static org.lwjgl.opengl.GL11.glGetIntegerv;
-import static org.lwjgl.opengl.GL11.glGetString;
 import static org.lwjgl.opengl.GL11.glViewport;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
@@ -63,10 +51,6 @@ import java.nio.IntBuffer;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFWImage;
 import org.lwjgl.glfw.GLFWVidMode;
-import org.lwjgl.opengl.GLCapabilities;
-import org.lwjgl.opengl.NVXGPUMemoryInfo;
-import org.lwjgl.opengl.WGLAMDGPUAssociation;
-import org.lwjgl.vulkan.VkInstance;
 
 import de.matthiasmann.twl.utils.PNGDecoder;
 import net.luxvacuos.igl.Logger;
@@ -81,68 +65,44 @@ import net.luxvacuos.voxel.client.input.Mouse;
  * @author Guerra24 <pablo230699@hotmail.com>
  * 
  */
-public class Display extends Window {
+@Deprecated
+public class Display extends AbstractWindow {
 
 	private GLFWVidMode vidmode;
-	private GLCapabilities capabilities;
-	private VkInstance vkInstance;
-	private double lastLoopTime;
-	private float timeCount;
 
-	private DisplayUtils displayUtils;
-
-	private IntBuffer maxVram = BufferUtils.createIntBuffer(1);
-	private IntBuffer usedVram = BufferUtils.createIntBuffer(1);
-	private boolean nvidia;
-	private boolean amd;
-	private boolean vk;
-
-	public Display() {
-		displayUtils = new DisplayUtils();
-	}
+	public Display() { }
 
 	@Override
 	public void create(int width, int height, String title, boolean vsync, boolean visible, boolean resizable,
 			ContextFormat format, String[] icons) {
 		Logger.log("Creating Window");
-		super.displayWidth = width;
-		super.displayHeight = height;
+		super.width = width;
+		super.height = height;
 		if (!glfwInit())
 			throw new IllegalStateException("Unable to initialize GLFW");
+		
+		this.displayUtils = new DisplayUtils();
 
 		glfwDefaultWindowHints();
 		glfwWindowHint(GLFW_VISIBLE, visible ? 1 : 0);
-		super.displayResizable = resizable;
+		//super.resizable = resizable;
 		glfwWindowHint(GLFW_RESIZABLE, resizable ? 1 : 0);
 
 		format.create();
 
-		if (glfwVulkanSupported()) {
-			Logger.log("Vulkan supported on current platform");
-			// PointerBuffer requiredExtensions =
-			// glfwGetRequiredInstanceExtensions();
-			// if (requiredExtensions == null) {
-			// throw new AssertionError("Failed to find list of required Vulkan
-			// extensions");
-			// }
-			// vkInstance = format.createVulkan(requiredExtensions);
-			// vk = true;
-			// CoreInfo.VkVersion = "1.0.8";
-		}
-
-		super.window = glfwCreateWindow(displayWidth, displayHeight, title, NULL, NULL);
-		if (super.window == NULL) {
+		super.windowID = glfwCreateWindow(width, height, title, NULL, NULL);
+		if (super.windowID == NULL) {
 			throw new RuntimeException("Failed to create the GLFW window");
 		}
+		glfwMakeContextCurrent(super.windowID);
+		super.capabilities = createCapabilities();
 		
-		super.kbHandle = new KeyboardHandler(super.window); //Sets up the Keyboard Handler
-		super.createCallbacks();
+		super.kbHandle = new KeyboardHandler(super.windowID); //Sets up the Keyboard Handler
+		//super.createCallbacks();
 		super.setCallbacks();
 		
 		vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-		glfwSetWindowPos(super.window, (vidmode.width() - super.displayWidth) / 2,
-				(vidmode.height() - super.displayHeight) / 2);
-		glfwMakeContextCurrent(super.window);
+		glfwSetWindowPos(super.windowID, (vidmode.width() - super.width) / 2, (vidmode.height() - super.height) / 2);
 		glfwSwapInterval(vsync ? 1 : 0);
 
 		GLFWImage.Buffer iconsbuff = GLFWImage.malloc(2);
@@ -162,134 +122,37 @@ public class Display extends Window {
 		}
 
 		iconsbuff.position(0);
-		glfwSetWindowIcon(super.window, iconsbuff);
+		glfwSetWindowIcon(super.windowID, iconsbuff);
 		iconsbuff.free();
 
-		capabilities = createCapabilities();
-		super.vg = nvgCreateGL3(NVG_ANTIALIAS | NVG_STENCIL_STROKES);
-		if (vg == NULL)
+		super.nvgID = nvgCreateGL3(NVG_ANTIALIAS | NVG_STENCIL_STROKES);
+		if (nvgID == NULL)
 			throw new RuntimeException("Fail to create NanoVG");
 
-		lastLoopTime = getTime();
+		lastLoopTime = WindowManager.getTime();
 		IntBuffer w = BufferUtils.createIntBuffer(1);
 		IntBuffer h = BufferUtils.createIntBuffer(1);
-		glfwGetFramebufferSize(window, w, h);
-		super.displayFramebufferWidth = w.get(0);
-		super.displayFramebufferHeight = h.get(0);
+		glfwGetFramebufferSize(windowID, w, h);
+		super.framebufferWidth = w.get(0);
+		super.framebufferHeight = h.get(0);
 
-		glfwGetWindowSize(super.window, w, h);
-		super.displayWidth = w.get(0);
-		super.displayHeight = h.get(0);
-		super.pixelRatio = (float) displayFramebufferWidth / (float) displayWidth;
-		glViewport(0, 0, (int) (displayWidth * pixelRatio), (int) (displayHeight * pixelRatio));
+		glfwGetWindowSize(super.windowID, w, h);
+		super.width = w.get(0);
+		super.height = h.get(0);
+		super.pixelRatio = (float) framebufferWidth / (float) width;
+		glViewport(0, 0, (int) (width * pixelRatio), (int) (height * pixelRatio));
 
-		if (glGetString(GL_VENDOR).contains("NVIDIA")) {
-			nvidia = true;
-			glGetIntegerv(NVXGPUMemoryInfo.GL_GPU_MEMORY_INFO_DEDICATED_VIDMEM_NVX, maxVram);
-			Logger.log("Max VRam: " + maxVram.get(0) + "KB");
-		}
-		else if (glGetString(GL_VENDOR).contains("AMD")) {
-			amd = true;
-			glGetIntegerv(WGLAMDGPUAssociation.WGL_GPU_RAM_AMD, maxVram);
-			Logger.log("Max VRam: " + maxVram.get(0) + "MB");
-		}
-		super.displayCreated = true;
-	}
-
-	@Override
-	public void beingNVGFrame() {
-		nvgBeginFrame(super.vg, super.displayWidth, super.displayHeight, super.pixelRatio);
-	}
-
-	@Override
-	public void endNVGFrame() {
-		nvgEndFrame(super.vg);
+		super.created = true;
 	}
 
 	@Override
 	public void updateDisplay(int fps) {
-		glfwSwapBuffers(super.window);
+		glfwSwapBuffers(super.windowID);
 		glfwPollEvents();
 		super.kbHandle.update();
 		Mouse.poll();
 		displayUtils.checkErrors();
 		displayUtils.sync(fps);
-	}
-
-	@Override
-	public void closeDisplay() {
-		nvgDeleteGL3(super.vg);
-		glfwDestroyWindow(super.window);
-		glfwTerminate();
-	}
-
-	@Override
-	public void setVisible() {
-		glfwShowWindow(window);
-	}
-
-	@Override
-	public void setInvisible() {
-		glfwHideWindow(super.window);
-	}
-	
-	public void resetViewport() {
-		glViewport(0, 0, (int) (displayWidth * pixelRatio), (int) (displayHeight * pixelRatio));
-	}
-	
-	public void setViewport(int x, int y, int width, int height) {
-		glViewport(0, 0, width, height);
-	}
-
-	public static double getTime() {
-		return glfwGetTime();
-	}
-
-	public static long getNanoTime() {
-		return (long) (glfwGetTime() * (1000L * 1000L * 1000L));
-	}
-
-	@Override
-	public float getDelta() {
-		double time = getTime();
-		float delta = (float) (time - lastLoopTime);
-		lastLoopTime = time;
-		timeCount += delta;
-		return delta;
-	}
-
-	public int getUsedVRAM() {
-		if (nvidia)
-			glGetIntegerv(NVXGPUMemoryInfo.GL_GPU_MEMORY_INFO_CURRENT_AVAILABLE_VIDMEM_NVX, usedVram);
-		return maxVram.get(0) - usedVram.get(0);
-	}
-
-	public boolean isNvidia() {
-		return nvidia;
-	}
-
-	public boolean isAmd() {
-		return amd;
-	}
-
-	public boolean isVk() {
-		return vk;
-	}
-
-	public GLCapabilities getCapabilities() {
-		return capabilities;
-	}
-
-	public VkInstance getVkInstance() {
-		return vkInstance;
-	}
-
-	public float getTimeCount() {
-		return timeCount;
-	}
-
-	public void setTimeCount(float timeCount) {
-		this.timeCount = timeCount;
 	}
 
 	public DisplayUtils getDisplayUtils() {

@@ -22,7 +22,8 @@ package net.luxvacuos.voxel.client.input;
 
 import org.lwjgl.glfw.GLFW;
 
-import net.luxvacuos.voxel.client.rendering.api.glfw.Display;
+import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
+import net.luxvacuos.voxel.client.rendering.api.glfw.WindowManager;
 import net.luxvacuos.voxel.client.resources.GameResources;
 
 public class Mouse {
@@ -57,7 +58,7 @@ public class Mouse {
 
 	public static void addMoveEvent(double mouseX, double mouseY) {
 		latestX = (int) mouseX;
-		latestY = GameResources.getInstance().getDisplay().getDisplayHeight() - (int) mouseY;
+		latestY = GameResources.getInstance().getGameWindow().getHeight() - (int) mouseY;
 
 		lastxEvents[queue.getNextPos()] = xEvents[queue.getNextPos()];
 		lastyEvents[queue.getNextPos()] = yEvents[queue.getNextPos()];
@@ -70,7 +71,7 @@ public class Mouse {
 
 		wheelEvents[queue.getNextPos()] = 0;
 
-		nanoTimeEvents[queue.getNextPos()] = Display.getNanoTime();
+		nanoTimeEvents[queue.getNextPos()] = WindowManager.getNanoTime();
 
 		queue.add();
 	}
@@ -87,7 +88,7 @@ public class Mouse {
 
 		wheelEvents[queue.getNextPos()] = 0;
 
-		nanoTimeEvents[queue.getNextPos()] = Display.getNanoTime();
+		nanoTimeEvents[queue.getNextPos()] = WindowManager.getNanoTime();
 
 		queue.add();
 	}
@@ -105,7 +106,7 @@ public class Mouse {
 		wheelEvents[queue.getNextPos()] = wheel;
 		lastDWheel = wheel;
 
-		nanoTimeEvents[queue.getNextPos()] = Display.getNanoTime();
+		nanoTimeEvents[queue.getNextPos()] = WindowManager.getNanoTime();
 
 		queue.add();
 	}
@@ -119,14 +120,15 @@ public class Mouse {
 		lastY = y;
 
 		if (!grabbed && clipPostionToDisplay) {
+			Window window = GameResources.getInstance().getGameWindow();
 			if (latestX < 0)
 				latestX = 0;
 			if (latestY < 0)
 				latestY = 0;
-			if (latestX > GameResources.getInstance().getDisplay().getDisplayWidth() - 1)
-				latestX = GameResources.getInstance().getDisplay().getDisplayWidth() - 1;
-			if (latestY > GameResources.getInstance().getDisplay().getDisplayHeight() - 1)
-				latestY = GameResources.getInstance().getDisplay().getDisplayHeight() - 1;
+			if (latestX > window.getWidth() - 1)
+				latestX = window.getWidth() - 1;
+			if (latestY > window.getHeight() - 1)
+				latestY = window.getHeight() - 1;
 		}
 
 		x = latestX;
@@ -134,13 +136,13 @@ public class Mouse {
 	}
 
 	public static void setGrabbed(boolean grab) {
-		GLFW.glfwSetInputMode(GameResources.getInstance().getDisplay().getWindow(), GLFW.GLFW_CURSOR,
+		GLFW.glfwSetInputMode(GameResources.getInstance().getGameWindow().getID(), GLFW.GLFW_CURSOR,
 				grab ? GLFW.GLFW_CURSOR_DISABLED : GLFW.GLFW_CURSOR_HIDDEN);
 		grabbed = grab;
 	}
 
 	public static void setHidden(boolean hidden) {
-		GLFW.glfwSetInputMode(GameResources.getInstance().getDisplay().getWindow(), GLFW.GLFW_CURSOR,
+		GLFW.glfwSetInputMode(GameResources.getInstance().getGameWindow().getID(), GLFW.GLFW_CURSOR,
 				hidden ? GLFW.GLFW_CURSOR_HIDDEN : GLFW.GLFW_CURSOR_NORMAL);
 	}
 
@@ -149,7 +151,7 @@ public class Mouse {
 	}
 
 	public static boolean isButtonDown(int button) {
-		return GLFW.glfwGetMouseButton(GameResources.getInstance().getDisplay().getWindow(), button) == GLFW.GLFW_PRESS;
+		return GLFW.glfwGetMouseButton(GameResources.getInstance().getGameWindow().getID(), button) == GLFW.GLFW_PRESS;
 	}
 
 	public static boolean next() {
@@ -223,7 +225,7 @@ public class Mouse {
 	}
 
 	public static void setCursorPosition(int new_x, int new_y) {
-		GLFW.glfwSetCursorPos(GameResources.getInstance().getDisplay().getWindow(), new_x, new_y);
+		GLFW.glfwSetCursorPos(GameResources.getInstance().getGameWindow().getID(), new_x, new_y);
 	}
 
 }

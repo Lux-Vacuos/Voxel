@@ -20,11 +20,12 @@
 
 package net.luxvacuos.voxel.client.core.states;
 
+import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.UIRendering;
 import net.luxvacuos.voxel.client.rendering.api.opengl.MasterRenderer;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.ui.Button;
-import net.luxvacuos.voxel.client.ui.Window;
+import net.luxvacuos.voxel.client.ui.UIWindow;
 import net.luxvacuos.voxel.universal.core.AbstractVoxel;
 import net.luxvacuos.voxel.universal.core.states.AbstractState;
 import net.luxvacuos.voxel.universal.core.states.StateMachine;
@@ -41,21 +42,21 @@ public class MainMenuState extends AbstractState {
 	private Button optionsButton;
 	private Button aboutButton;
 	private Button playMPButton;
-	private Window window;
+	private UIWindow uiWindow;
 
 	public MainMenuState() {
 		super(StateNames.MAIN_MENU);
-		window = new Window(20, GameResources.getInstance().getDisplay().getDisplayHeight() - 20,
-				GameResources.getInstance().getDisplay().getDisplayWidth() - 40,
-				GameResources.getInstance().getDisplay().getDisplayHeight() - 40, "Main Menu");
+		Window window = GameResources.getInstance().getGameWindow();
+		uiWindow = new UIWindow(20, window.getHeight() - 20, window.getWidth() - 40,
+				window.getHeight() - 40, "Main Menu");
 
-		playButton = new Button(window.getWidth() / 2 - 100, -window.getHeight() / 2 + 120 - 20, 200, 40,
+		playButton = new Button(uiWindow.getWidth() / 2 - 100, -uiWindow.getHeight() / 2 + 120 - 20, 200, 40,
 				"Singleplayer");
-		playMPButton = new Button(window.getWidth() / 2 - 100, -window.getHeight() / 2 + 60 - 20, 200, 40,
+		playMPButton = new Button(uiWindow.getWidth() / 2 - 100, -uiWindow.getHeight() / 2 + 60 - 20, 200, 40,
 				"Multiplayer");
-		optionsButton = new Button(window.getWidth() / 2 - 100, -window.getHeight() / 2 - 20, 200, 40, "Options");
-		aboutButton = new Button(window.getWidth() / 2 - 100, -window.getHeight() / 2 - 60 - 20, 200, 40, "About");
-		exitButton = new Button(window.getWidth() / 2 - 100, -window.getHeight() / 2 - 120 - 20, 200, 40, "Exit");
+		optionsButton = new Button(uiWindow.getWidth() / 2 - 100, -uiWindow.getHeight() / 2 - 20, 200, 40, "Options");
+		aboutButton = new Button(uiWindow.getWidth() / 2 - 100, -uiWindow.getHeight() / 2 - 60 - 20, 200, 40, "About");
+		exitButton = new Button(uiWindow.getWidth() / 2 - 100, -uiWindow.getHeight() / 2 - 120 - 20, 200, 40, "Exit");
 
 		playButton.setPreicon(UIRendering.ICON_BLACK_RIGHT_POINTING_TRIANGLE);
 		playMPButton.setPreicon(UIRendering.ICON_BLACK_RIGHT_POINTING_TRIANGLE);
@@ -86,11 +87,11 @@ public class MainMenuState extends AbstractState {
 		exitButton.setOnButtonPress((button, delta) -> {
 			StateMachine.dispose();
 		});
-		window.addChildren(playButton);
-		window.addChildren(playMPButton);
-		window.addChildren(optionsButton);
-		window.addChildren(aboutButton);
-		window.addChildren(exitButton);
+		uiWindow.addChildren(playButton);
+		uiWindow.addChildren(playMPButton);
+		uiWindow.addChildren(optionsButton);
+		uiWindow.addChildren(aboutButton);
+		uiWindow.addChildren(exitButton);
 	}
 
 	@Override
@@ -105,17 +106,17 @@ public class MainMenuState extends AbstractState {
 
 	@Override
 	public void render(AbstractVoxel voxel, float delta) {
-		GameResources gm = (GameResources) voxel.getGameResources();
+		Window window = ((GameResources) voxel.getGameResources()).getGameWindow();
 		MasterRenderer.prepare(1, 1, 1, 1);
-		gm.getDisplay().beingNVGFrame();
-		window.render();
-		UIRendering.renderMouse();
-		gm.getDisplay().endNVGFrame();
+		window.beingNVGFrame();
+		uiWindow.render(window.getID());
+		UIRendering.renderMouse(window.getID());
+		window.endNVGFrame();
 	}
 
 	@Override
 	public void update(AbstractVoxel voxel, float delta) {
-		window.update(delta);
+		uiWindow.update(delta);
 		/*
 		 * if (!switching) window.fadeIn(4, delta); if (switching) if
 		 * (window.fadeOut(4, delta)) { readyForSwitch = true; }

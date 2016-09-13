@@ -25,13 +25,14 @@ import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_RIGHT;
 
 import net.luxvacuos.voxel.client.core.CoreInfo;
 import net.luxvacuos.voxel.client.core.ClientVariables;
+import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.UIRendering;
 import net.luxvacuos.voxel.client.rendering.api.opengl.MasterRenderer;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.ui.Button;
 import net.luxvacuos.voxel.client.ui.Image;
 import net.luxvacuos.voxel.client.ui.Text;
-import net.luxvacuos.voxel.client.ui.Window;
+import net.luxvacuos.voxel.client.ui.UIWindow;
 import net.luxvacuos.voxel.universal.core.AbstractVoxel;
 import net.luxvacuos.voxel.universal.core.states.AbstractState;
 import net.luxvacuos.voxel.universal.core.states.StateMachine;
@@ -44,83 +45,84 @@ import net.luxvacuos.voxel.universal.core.states.StateMachine;
  */
 public class AboutState extends AbstractState {
 
-	private Window window;
+	private UIWindow uiWindow;
 	private Image voxelLogo;
 
 	public AboutState() {
 		super(StateNames.ABOUT);
-		window = new Window(20, GameResources.getInstance().getDisplay().getDisplayHeight() - 20,
-				GameResources.getInstance().getDisplay().getDisplayWidth() - 40,
-				GameResources.getInstance().getDisplay().getDisplayHeight() - 40, "About");
-		Button backButton = new Button((int) (GameResources.getInstance().getDisplay().getDisplayWidth() / 2f - 100),
+		Window window = GameResources.getInstance().getGameWindow();
+		uiWindow = new UIWindow(20, window.getHeight() - 20,
+				window.getWidth() - 40,
+				window.getHeight() - 40, "About");
+		Button backButton = new Button((int) (window.getWidth() / 2f - 100),
 				40, 200, 40, "Back");
 		backButton.setOnButtonPress((button, delta) -> {
 			// switchTo(GameState.MAINMENU);
 			StateMachine.setCurrentState(StateNames.MAIN_MENU);
 		});
 
-		voxelLogo = new Image(window.getWidth() / 2 - 200, -40, 400, 200,
-				GameResources.getInstance().getLoader().loadNVGTexture("Voxel-Logo"));
-		window.addChildren(voxelLogo);
+		voxelLogo = new Image(uiWindow.getWidth() / 2 - 200, -40, 400, 200,
+				GameResources.getInstance().getResourceLoader().loadNVGTexture("Voxel-Logo"));
+		uiWindow.addChildren(voxelLogo);
 
 		Text versionL = new Text("Version", 30, -300);
 		versionL.setFont("Roboto-Bold");
-		Text versionR = new Text(" (" + ClientVariables.version + ")", window.getWidth() - 30, -300);
+		Text versionR = new Text(" (" + ClientVariables.version + ")", uiWindow.getWidth() - 30, -300);
 		versionR.setAlign(NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE);
 
 		Text osL = new Text("Operative System", 30, -330);
 		osL.setFont("Roboto-Bold");
-		Text osR = new Text(CoreInfo.OS, window.getWidth() - 30, -330);
+		Text osR = new Text(CoreInfo.OS, uiWindow.getWidth() - 30, -330);
 		osR.setAlign(NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE);
 
 		Text lwjglL = new Text("LWJGL Version", 30, -360);
 		lwjglL.setFont("Roboto-Bold");
-		Text lwjglR = new Text(CoreInfo.LWJGLVer, window.getWidth() - 30, -360);
+		Text lwjglR = new Text(CoreInfo.LWJGLVer, uiWindow.getWidth() - 30, -360);
 		lwjglR.setAlign(NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE);
 
 		Text glfwL = new Text("GLFW Version", 30, -390);
 		glfwL.setFont("Roboto-Bold");
-		Text glfwR = new Text(CoreInfo.GLFWVer, window.getWidth() - 30, -390);
+		Text glfwR = new Text(CoreInfo.GLFWVer, uiWindow.getWidth() - 30, -390);
 		glfwR.setAlign(NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE);
 
 		Text openglL = new Text("OpenGL Version", 30, -420);
 		openglL.setFont("Roboto-Bold");
-		Text openglR = new Text(CoreInfo.OpenGLVer, window.getWidth() - 30, -420);
+		Text openglR = new Text(CoreInfo.OpenGLVer, uiWindow.getWidth() - 30, -420);
 		openglR.setAlign(NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE);
 
 		Text vkL = new Text("Vulkan Version", 30, -450);
 		vkL.setFont("Roboto-Bold");
-		Text vkR = new Text(CoreInfo.VkVersion, window.getWidth() - 30, -450);
+		Text vkR = new Text(CoreInfo.VkVersion, uiWindow.getWidth() - 30, -450);
 		vkR.setAlign(NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE);
 
 		Text vendorL = new Text("Vendor", 30, -480);
 		vendorL.setFont("Roboto-Bold");
-		Text vendorR = new Text(CoreInfo.Vendor, window.getWidth() - 30, -480);
+		Text vendorR = new Text(CoreInfo.Vendor, uiWindow.getWidth() - 30, -480);
 		vendorR.setAlign(NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE);
 
 		Text rendererL = new Text("Renderer", 30, -510);
 		rendererL.setFont("Roboto-Bold");
-		Text rendererR = new Text(CoreInfo.Renderer, window.getWidth() - 30, -510);
+		Text rendererR = new Text(CoreInfo.Renderer, uiWindow.getWidth() - 30, -510);
 		rendererR.setAlign(NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE);
 
 		backButton.setPositionRelativeToRoot(false);
-		window.addChildren(backButton);
-		window.addChildren(versionL);
-		window.addChildren(versionR);
-		window.addChildren(osL);
-		window.addChildren(osR);
-		window.addChildren(lwjglL);
-		window.addChildren(lwjglR);
-		window.addChildren(glfwL);
-		window.addChildren(glfwR);
-		window.addChildren(openglL);
-		window.addChildren(openglR);
-		window.addChildren(vkL);
-		window.addChildren(vkR);
-		window.addChildren(vendorL);
-		window.addChildren(vendorR);
-		window.addChildren(rendererL);
-		window.addChildren(rendererR);
+		uiWindow.addChildren(backButton);
+		uiWindow.addChildren(versionL);
+		uiWindow.addChildren(versionR);
+		uiWindow.addChildren(osL);
+		uiWindow.addChildren(osR);
+		uiWindow.addChildren(lwjglL);
+		uiWindow.addChildren(lwjglR);
+		uiWindow.addChildren(glfwL);
+		uiWindow.addChildren(glfwR);
+		uiWindow.addChildren(openglL);
+		uiWindow.addChildren(openglR);
+		uiWindow.addChildren(vkL);
+		uiWindow.addChildren(vkR);
+		uiWindow.addChildren(vendorL);
+		uiWindow.addChildren(vendorR);
+		uiWindow.addChildren(rendererL);
+		uiWindow.addChildren(rendererR);
 	}
 
 	@Override
@@ -135,17 +137,17 @@ public class AboutState extends AbstractState {
 
 	@Override
 	public void render(AbstractVoxel voxel, float delta) {
-		GameResources gm = (GameResources) voxel.getGameResources();
+		Window window = ((GameResources) voxel.getGameResources()).getGameWindow();
 		MasterRenderer.prepare(1, 1, 1, 1);
-		gm.getDisplay().beingNVGFrame();
-		window.render();
-		UIRendering.renderMouse();
-		gm.getDisplay().endNVGFrame();
+		window.beingNVGFrame();
+		uiWindow.render(window.getID());
+		UIRendering.renderMouse(window.getID());
+		window.endNVGFrame();
 	}
 
 	@Override
 	public void update(AbstractVoxel voxel, float delta) {
-		window.update(delta);
+		uiWindow.update(delta);
 		/*
 		 * TODO: Need to find a way to reimplement this with the new
 		 * StateMachine if (!switching) window.fadeIn(4, delta); if (switching)

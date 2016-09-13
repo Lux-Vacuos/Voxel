@@ -20,13 +20,14 @@
 
 package net.luxvacuos.voxel.client.core.states;
 
+import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 //import net.luxvacuos.voxel.client.input.Keyboard;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.UIRendering;
 import net.luxvacuos.voxel.client.rendering.api.opengl.MasterRenderer;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.ui.Button;
 import net.luxvacuos.voxel.client.ui.Text;
-import net.luxvacuos.voxel.client.ui.Window;
+import net.luxvacuos.voxel.client.ui.UIWindow;
 import net.luxvacuos.voxel.universal.core.AbstractVoxel;
 import net.luxvacuos.voxel.universal.core.states.AbstractState;
 import net.luxvacuos.voxel.universal.core.states.StateMachine;
@@ -41,7 +42,7 @@ public class MPSelectionState extends AbstractState {
 
 	private Button exitButton;
 	private Button playButton;
-	private Window window;
+	private UIWindow uiWindow;
 	private String ip = "";
 	private Text ipText;
 
@@ -49,34 +50,34 @@ public class MPSelectionState extends AbstractState {
 
 	public MPSelectionState() {
 		super(StateNames.MP_SELECTION);
-		GameResources.getInstance().getDisplay().getKeyboardHandler().enableTextInput();
-		window = new Window(20, GameResources.getInstance().getDisplay().getDisplayHeight() - 20,
-				GameResources.getInstance().getDisplay().getDisplayWidth() - 40,
-				GameResources.getInstance().getDisplay().getDisplayHeight() - 40, "Multiplayer");
-		exitButton = new Button(window.getWidth() / 2 + 10, -window.getHeight() + 35, 200, 40, "Back");
-		playButton = new Button(window.getWidth() / 2 - 210, -window.getHeight() + 35, 200, 40, "Enter");
+		Window window = GameResources.getInstance().getGameWindow();
+		window.getKeyboardHandler().enableTextInput();
+		uiWindow = new UIWindow(20, window.getHeight() - 20,
+				window.getWidth() - 40, window.getHeight() - 40, "Multiplayer");
+		exitButton = new Button(uiWindow.getWidth() / 2 + 10, -uiWindow.getHeight() + 35, 200, 40, "Back");
+		playButton = new Button(uiWindow.getWidth() / 2 - 210, -uiWindow.getHeight() + 35, 200, 40, "Enter");
 
 		exitButton.setOnButtonPress((button, delta) -> {
 			if (time > 0.2f) {
 				//switchTo(GameState.MAINMENU);
-				GameResources.getInstance().getDisplay().getKeyboardHandler().disableTextInput();
+				window.getKeyboardHandler().disableTextInput();
 				StateMachine.setCurrentState(StateNames.MAIN_MENU);
 			}
 		});
 
 		playButton.setOnButtonPress((button, delta) -> {
 			if (time > 0.2f) {
-				GameResources.getInstance().getDisplay().getKeyboardHandler().disableTextInput();
+				window.getKeyboardHandler().disableTextInput();
 				GameResources.getInstance().getVoxelClient().setUrl(ip);
 				//switchTo(GameState.LOADING_MP_WORLD);
 				StateMachine.setCurrentState(StateNames.MP_LOADING);
 			}
 		});
-		ipText = new Text("IP:", window.getWidth() / 2 - 170, -window.getHeight() / 2);
+		ipText = new Text("IP:", uiWindow.getWidth() / 2 - 170, -uiWindow.getHeight() / 2);
 
-		window.addChildren(exitButton);
-		window.addChildren(playButton);
-		window.addChildren(ipText);
+		uiWindow.addChildren(exitButton);
+		uiWindow.addChildren(playButton);
+		uiWindow.addChildren(ipText);
 	}
 
 	@Override
@@ -92,7 +93,7 @@ public class MPSelectionState extends AbstractState {
 
 	@Override
 	public void update(AbstractVoxel voxel, float delta) {
-		window.update(delta);
+		uiWindow.update(delta);
 		if (time <= 0.2f) {
 			time += 1 * delta;
 		}
@@ -106,18 +107,18 @@ public class MPSelectionState extends AbstractState {
 
 	@Override
 	public void render(AbstractVoxel voxel, float alpha) {
-		GameResources gm = (GameResources) voxel.getGameResources();
+		Window window = ((GameResources)voxel.getGameResources()).getGameWindow();
 		MasterRenderer.prepare(1, 1, 1, 1);
-		gm.getDisplay().beingNVGFrame();
-		window.render();
+		window.beingNVGFrame();
+		uiWindow.render(window.getID());
 		//while (Keyboard.next())
 		//ip = Keyboard.keyWritten(ip);
-		ip = gm.getDisplay().getKeyboardHandler().handleInput(ip);
-		UIRendering.renderSearchBox(ip, "Roboto-Regular", "Entypo",
-				GameResources.getInstance().getDisplay().getDisplayWidth() / 2f - 150f,
-				GameResources.getInstance().getDisplay().getDisplayHeight() / 2f - 10, 300, 20);
-		UIRendering.renderMouse();
-		gm.getDisplay().endNVGFrame();
+		ip = window.getKeyboardHandler().handleInput(ip);
+		UIRendering.renderSearchBox(window.getID(), ip, "Roboto-Regular", "Entypo",
+				window.getWidth() / 2f - 150f,
+				window.getHeight() / 2f - 10, 300, 20);
+		UIRendering.renderMouse(window.getID());
+		window.endNVGFrame();
 	}
 
 	public String getIp() {

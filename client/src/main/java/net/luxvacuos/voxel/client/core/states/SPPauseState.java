@@ -33,12 +33,13 @@ import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.voxel.client.core.ClientVariables;
 //import net.luxvacuos.voxel.client.input.Keyboard;
 import net.luxvacuos.voxel.client.input.Mouse;
+import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.UIRendering;
 import net.luxvacuos.voxel.client.rendering.api.opengl.MasterRenderer;
 import net.luxvacuos.voxel.client.rendering.api.opengl.ParticleMaster;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.ui.Button;
-import net.luxvacuos.voxel.client.ui.Window;
+import net.luxvacuos.voxel.client.ui.UIWindow;
 import net.luxvacuos.voxel.client.world.entities.PlayerCamera;
 import net.luxvacuos.voxel.universal.core.AbstractVoxel;
 import net.luxvacuos.voxel.universal.core.states.AbstractState;
@@ -51,17 +52,16 @@ import net.luxvacuos.voxel.universal.core.states.StateMachine;
  */
 public class SPPauseState extends AbstractState {
 
-	private Window window;
+	private UIWindow uiWindow;
 	private Button exitButton;
 	private Button optionsButton;
 
 	public SPPauseState() {
 		super(StateNames.SP_PAUSE);
-		window = new Window(20, GameResources.getInstance().getDisplay().getDisplayHeight() - 20,
-				GameResources.getInstance().getDisplay().getDisplayWidth() - 40,
-				GameResources.getInstance().getDisplay().getDisplayHeight() - 40, "Pause");
-		exitButton = new Button(window.getWidth() / 2 - 100, -window.getHeight() + 35, 200, 40, "Back to Main Menu");
-		optionsButton = new Button(window.getWidth() / 2 - 100, -window.getHeight() + 85, 200, 40, "Options");
+		Window window = GameResources.getInstance().getGameWindow();
+		uiWindow = new UIWindow(20, window.getHeight() - 20, window.getWidth() - 40, window.getHeight() - 40, "Pause");
+		exitButton = new Button(uiWindow.getWidth() / 2 - 100, -uiWindow.getHeight() + 35, 200, 40, "Back to Main Menu");
+		optionsButton = new Button(uiWindow.getWidth() / 2 - 100, -uiWindow.getHeight() + 85, 200, 40, "Options");
 		exitButton.setOnButtonPress((button, delta) -> {
 			GameResources.getInstance().getWorldsHandler().getActiveWorld().dispose();
 			GameResources.getInstance().getCamera().setPosition(new Vector3f(0, 0, 1));
@@ -74,8 +74,8 @@ public class SPPauseState extends AbstractState {
 			//switchTo(GameState.OPTIONS);
 			StateMachine.setCurrentState(StateNames.OPTIONS);
 		});
-		window.addChildren(exitButton);
-		window.addChildren(optionsButton);
+		uiWindow.addChildren(exitButton);
+		uiWindow.addChildren(optionsButton);
 	}
 
 	@Override
@@ -90,9 +90,10 @@ public class SPPauseState extends AbstractState {
 
 	@Override
 	public void update(AbstractVoxel voxel, float delta) {
-		GameResources gm = (GameResources)voxel.getGameResources();
+		GameResources gm = ((GameResources)voxel.getGameResources());
+		Window window = gm.getGameWindow();
 		while (Mouse.next())
-			window.update(delta);
+			uiWindow.update(delta);
 		/*if (!switching)
 			window.fadeIn(4, delta);
 		if (switching)
@@ -102,7 +103,7 @@ public class SPPauseState extends AbstractState {
 
 		//while (Keyboard.next()) {
 		//	if (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
-		if(gm.getDisplay().getKeyboardHandler().isKeyPressed(GLFW.GLFW_KEY_ESCAPE)) {
+		if(window.getKeyboardHandler().isKeyPressed(GLFW.GLFW_KEY_ESCAPE)) {
 			((PlayerCamera) gm.getCamera()).setMouse();
 			//switchTo(GameState.SP);
 			StateMachine.setCurrentState(StateNames.SINGLEPLAYER);
@@ -113,6 +114,7 @@ public class SPPauseState extends AbstractState {
 	@Override
 	public void render(AbstractVoxel voxel, float delta) {
 		GameResources gm = (GameResources)voxel.getGameResources();
+		Window window = gm.getGameWindow();
 
 		gm.getWorldsHandler().getActiveWorld().getActiveDimension().lighting();
 		gm.getSun_Camera().setPosition(gm.getCamera().getPosition());
@@ -135,7 +137,7 @@ public class SPPauseState extends AbstractState {
 		gm.getSkyboxRenderer().render(ClientVariables.RED, ClientVariables.GREEN, ClientVariables.BLUE, delta, gm);
 		gm.getWorldsHandler().getActiveWorld().getActiveDimension().updateChunksRender(gm, false);
 		FloatBuffer p = BufferUtils.createFloatBuffer(1);
-		glReadPixels(gm.getDisplay().getDisplayWidth() / 2, gm.getDisplay().getDisplayHeight() / 2, 1, 1,
+		glReadPixels(window.getWidth() / 2, window.getHeight() / 2, 1, 1,
 				GL_DEPTH_COMPONENT, GL_FLOAT, p);
 		gm.getCamera().depth = p.get(0);
 		gm.getRenderer().renderEntity(
@@ -147,10 +149,10 @@ public class SPPauseState extends AbstractState {
 		gm.getRenderingPipeline().render(gm);
 		gm.getWorldsHandler().getActiveWorld().getActiveDimension().updateChunksRender(gm, true);
 		ParticleMaster.getInstance().render(gm.getCamera(), gm.getRenderer().getProjectionMatrix());
-		gm.getDisplay().beingNVGFrame();
-		window.render();
-		UIRendering.renderMouse();
-		gm.getDisplay().endNVGFrame();
+		window.beingNVGFrame();
+		uiWindow.render(window.getID());
+		UIRendering.renderMouse(window.getID());
+		window.endNVGFrame();
 	}
 
 }

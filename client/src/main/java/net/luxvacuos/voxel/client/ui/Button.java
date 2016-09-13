@@ -25,8 +25,8 @@ import java.nio.ByteBuffer;
 import org.lwjgl.nanovg.NVGColor;
 
 import net.luxvacuos.voxel.client.input.Mouse;
+import net.luxvacuos.voxel.client.rendering.api.glfw.WindowManager;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.UIRendering;
-import net.luxvacuos.voxel.client.resources.GameResources;
 
 public class Button extends Component {
 
@@ -62,11 +62,11 @@ public class Button extends Component {
 	}
 
 	@Override
-	public void render() {
-		UIRendering.renderButton(preicon, text, font, entypo, rootX + x,
-				GameResources.getInstance().getDisplay().getDisplayHeight() - rootY - y - height, width, height, color,
+	public void render(long windowID) {
+		UIRendering.renderButton(windowID, preicon, text, font, entypo, rootX + x,
+				WindowManager.getWindow(windowID).getHeight() - rootY - y - height, width, height, color,
 				this.insideButton(), fadeAlpha);
-		super.render();
+		super.render(windowID);
 	}
 
 	@Override

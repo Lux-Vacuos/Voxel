@@ -27,7 +27,7 @@ public class EntityResources {
 
 	private static TexturedModel guineaPig;
 
-	static void loadEntityResources(Loader loader) {
+	static void loadEntityResources(ResourceLoader loader) {
 		guineaPig = new TexturedModel(loader.getObjLoader().loadObjModel("GuineaPig"),
 				new ModelTexture(loader.loadTextureEntity("GuineaPig")));
 	}

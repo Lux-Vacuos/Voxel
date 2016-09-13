@@ -31,6 +31,7 @@ import org.lwjgl.PointerBuffer;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.vulkan.VkInstance;
 
+@Deprecated
 public class ContextFormat {
 
 	private boolean forwardCompat;

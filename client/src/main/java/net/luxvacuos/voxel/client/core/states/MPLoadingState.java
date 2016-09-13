@@ -25,12 +25,13 @@ import java.io.IOException;
 import org.lwjgl.nanovg.NanoVG;
 
 import net.luxvacuos.voxel.client.core.ClientVariables;
+import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.UIRendering;
 import net.luxvacuos.voxel.client.rendering.api.opengl.MasterRenderer;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.ui.Button;
 import net.luxvacuos.voxel.client.ui.Text;
-import net.luxvacuos.voxel.client.ui.Window;
+import net.luxvacuos.voxel.client.ui.UIWindow;
 import net.luxvacuos.voxel.client.world.ClientWorld;
 import net.luxvacuos.voxel.client.world.WorldsHandler;
 import net.luxvacuos.voxel.client.world.entities.PlayerCamera;
@@ -49,26 +50,26 @@ public class MPLoadingState extends AbstractState {
 
 	private boolean trying = false;
 	private Button exitButton;
-	private Window window;
+	private UIWindow uiWindow;
 	private Text message;
 	private float time = 0;
 
 	public MPLoadingState() {
 		super(StateNames.MP_LOADING);
-		window = new Window(20, GameResources.getInstance().getDisplay().getDisplayHeight() - 20,
-				GameResources.getInstance().getDisplay().getDisplayWidth() - 40,
-				GameResources.getInstance().getDisplay().getDisplayHeight() - 40, "Multiplayer");
-		exitButton = new Button(window.getWidth() / 2 - 100, -window.getHeight() + 35, 200, 40, "Cancel");
+		Window window = GameResources.getInstance().getGameWindow();
+		uiWindow = new UIWindow(20, window.getHeight() - 20,
+				window.getWidth() - 40, window.getHeight() - 40, "Multiplayer");
+		exitButton = new Button(uiWindow.getWidth() / 2 - 100, -uiWindow.getHeight() + 35, 200, 40, "Cancel");
 		exitButton.setOnButtonPress((button, delta) -> {
 			if (time > 0.2f) {
 				// switchTo(GameState.MP_SELECTION);
 				StateMachine.setCurrentState(StateNames.MP_SELECTION);
 			}
 		});
-		message = new Text("Connecting...", window.getWidth() / 2, -window.getHeight() / 2);
+		message = new Text("Connecting...", uiWindow.getWidth() / 2, -uiWindow.getHeight() / 2);
 		message.setAlign(NanoVG.NVG_ALIGN_CENTER);
-		window.addChildren(exitButton);
-		window.addChildren(message);
+		uiWindow.addChildren(exitButton);
+		uiWindow.addChildren(message);
 	}
 
 	@Override
@@ -86,7 +87,7 @@ public class MPLoadingState extends AbstractState {
 
 	@Override
 	public void update(AbstractVoxel voxel, float delta) {
-		window.update(delta);
+		uiWindow.update(delta);
 		GameResources gm = (GameResources) voxel.getGameResources();
 		if (!trying) {
 			try {
@@ -122,12 +123,12 @@ public class MPLoadingState extends AbstractState {
 
 	@Override
 	public void render(AbstractVoxel voxel, float delta) {
-		GameResources gm = (GameResources) voxel.getGameResources();
+		Window window = ((GameResources)voxel.getGameResources()).getGameWindow();
 		MasterRenderer.prepare(1, 1, 1, 1);
-		gm.getDisplay().beingNVGFrame();
-		window.render();
-		UIRendering.renderMouse();
-		gm.getDisplay().endNVGFrame();
+		window.beingNVGFrame();
+		uiWindow.render(window.getID());
+		UIRendering.renderMouse(window.getID());
+		window.endNVGFrame();
 	}
 
 }

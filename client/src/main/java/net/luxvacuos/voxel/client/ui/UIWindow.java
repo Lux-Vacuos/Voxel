@@ -21,15 +21,15 @@
 package net.luxvacuos.voxel.client.ui;
 
 import net.luxvacuos.voxel.client.input.Mouse;
+import net.luxvacuos.voxel.client.rendering.api.glfw.WindowManager;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.UIRendering;
-import net.luxvacuos.voxel.client.resources.GameResources;
 
-public class Window extends Component {
+public class UIWindow extends Component {
 
 	private String title, font = "Roboto-Bold";
 	private boolean draggable = false;
 
-	public Window(float x, float y, float w, float h, String title) {
+	public UIWindow(float x, float y, float w, float h, String title) {
 		this.title = title;
 		this.x = x;
 		this.y = y;
@@ -38,11 +38,11 @@ public class Window extends Component {
 	}
 
 	@Override
-	public void render() {
+	public void render(long windowID) {
 		if (enabled) {
-			UIRendering.renderWindow(title, font, rootX + x,
-					GameResources.getInstance().getDisplay().getDisplayHeight() - rootY - y, width, height, fadeAlpha);
-			super.render();
+			UIRendering.renderWindow(windowID, title, font, rootX + x,
+					WindowManager.getWindow(windowID).getHeight() - rootY - y, width, height, fadeAlpha);
+			super.render(windowID);
 		}
 	}
 

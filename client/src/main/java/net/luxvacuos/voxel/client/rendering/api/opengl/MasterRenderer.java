@@ -70,7 +70,7 @@ public class MasterRenderer {
 
 	public MasterRenderer(GameResources gm) {
 		shader = new EntityShader();
-		projectionMatrix = createProjectionMatrix(gm.getDisplay().getDisplayWidth(), gm.getDisplay().getDisplayHeight(),
+		projectionMatrix = createProjectionMatrix(gm.getGameWindow().getWidth(), gm.getGameWindow().getHeight(),
 				ClientVariables.FOV, ClientVariables.NEAR_PLANE, ClientVariables.FAR_PLANE);
 		entityRenderer = new EntityRenderer(shader, gm, projectionMatrix);
 	}
@@ -139,8 +139,8 @@ public class MasterRenderer {
 	}
 
 	public void update(GameResources gm) {
-		projectionMatrix = createProjectionMatrix(projectionMatrix, gm.getDisplay().getDisplayWidth(),
-				gm.getDisplay().getDisplayHeight(), ClientVariables.FOV, ClientVariables.NEAR_PLANE,
+		projectionMatrix = createProjectionMatrix(projectionMatrix, gm.getGameWindow().getWidth(),
+				gm.getGameWindow().getHeight(), ClientVariables.FOV, ClientVariables.NEAR_PLANE,
 				ClientVariables.FAR_PLANE);
 	}
 

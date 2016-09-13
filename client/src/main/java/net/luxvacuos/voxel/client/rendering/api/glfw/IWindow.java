@@ -19,21 +19,30 @@
  */
 package net.luxvacuos.voxel.client.rendering.api.glfw;
 
-public interface IDisplay {
+import net.luxvacuos.voxel.universal.resources.IDisposable;
+
+public interface IWindow extends IDisposable {
+	@Deprecated
 	public void create(int width, int height, String title, boolean vsync, boolean visible, boolean resizable,
 			ContextFormat format, String[] icons) throws Exception;
 
+	@Deprecated
 	public void beingNVGFrame();
 
+	@Deprecated
 	public void endNVGFrame();
 
 	public void updateDisplay(int fps);
 
 	public void closeDisplay();
 
+	@Deprecated
 	public void setVisible();
 
+	@Deprecated
 	public void setInvisible();
+	
+	public void setVisible(boolean flag);
 
 	public float getDelta();
 

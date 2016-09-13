@@ -48,6 +48,7 @@ import net.luxvacuos.igl.vector.Matrix4f;
 import net.luxvacuos.igl.vector.Vector2f;
 import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.voxel.client.core.ClientVariables;
+import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.DeferredShadingShader;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.resources.models.RawModel;
@@ -83,16 +84,17 @@ public abstract class RenderingPipeline {
 		this.name = name;
 		Logger.log("Using " + name + " Rendering Pipeline");
 		GameResources gm = GameResources.getInstance();
+		Window window = gm.getGameWindow();
 
-		width = (int) (gm.getDisplay().getDisplayWidth() * gm.getDisplay().getPixelRatio());
-		height = (int) (gm.getDisplay().getDisplayHeight() * gm.getDisplay().getPixelRatio());
+		width = (int) (window.getWidth() * window.getPixelRatio());
+		height = (int) (window.getHeight() * window.getPixelRatio());
 
 		if (width > GLUtil.getTextureMaxSize())
 			width = GLUtil.getTextureMaxSize();
 		if (height > GLUtil.getTextureMaxSize())
 			height = GLUtil.getTextureMaxSize();
 		float[] positions = { -1, 1, -1, -1, 1, 1, 1, -1 };
-		quad = gm.getLoader().loadToVAO(positions, 2);
+		quad = gm.getResourceLoader().loadToVAO(positions, 2);
 
 		mainFBO = new RenderingPipelineFBO(width, height);
 		imagePasses = new ArrayList<>();
@@ -107,8 +109,7 @@ public abstract class RenderingPipeline {
 		finalShader.start();
 		finalShader.loadTransformation(Maths.createTransformationMatrix(new Vector2f(0, 0), new Vector2f(1, 1)));
 		finalShader.connectTextureUnits();
-		finalShader.loadResolution(new Vector2f(GameResources.getInstance().getDisplay().getDisplayWidth(),
-				GameResources.getInstance().getDisplay().getDisplayHeight()));
+		finalShader.loadResolution(new Vector2f(window.getWidth(), window.getHeight()));
 		finalShader.loadSkyColor(ClientVariables.skyColor);
 		finalShader.stop();
 		init(gm);
@@ -127,13 +128,14 @@ public abstract class RenderingPipeline {
 		this.name = name;
 		Logger.log("Using " + name + " Rendering Pipeline");
 		GameResources gm = GameResources.getInstance();
+		Window window = gm.getGameWindow();
 
 		if (width > GLUtil.getTextureMaxSize())
 			width = GLUtil.getTextureMaxSize();
 		if (height > GLUtil.getTextureMaxSize())
 			height = GLUtil.getTextureMaxSize();
 		float[] positions = { -1, 1, -1, -1, 1, 1, 1, -1 };
-		quad = gm.getLoader().loadToVAO(positions, 2);
+		quad = gm.getResourceLoader().loadToVAO(positions, 2);
 
 		mainFBO = new RenderingPipelineFBO(width, height);
 		imagePasses = new ArrayList<>();
@@ -148,8 +150,7 @@ public abstract class RenderingPipeline {
 		finalShader.start();
 		finalShader.loadTransformation(Maths.createTransformationMatrix(new Vector2f(0, 0), new Vector2f(1, 1)));
 		finalShader.connectTextureUnits();
-		finalShader.loadResolution(new Vector2f(GameResources.getInstance().getDisplay().getDisplayWidth(),
-				GameResources.getInstance().getDisplay().getDisplayHeight()));
+		finalShader.loadResolution(new Vector2f(window.getWidth(), window.getHeight()));
 		finalShader.loadSkyColor(ClientVariables.skyColor);
 		finalShader.stop();
 		this.width = width;
