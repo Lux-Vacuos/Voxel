@@ -141,6 +141,7 @@ public final class WindowManager {
 			if(window.windowID == windowID) {
 				int index = windows.indexOf(window, true);
 				if(index != 0) windows.swap(0, index); //Swap the window to the front of the array to speed up future recurring searches
+				if(GLFW.glfwGetCurrentContext() != windowID) GLFW.glfwMakeContextCurrent(windowID);
 				return window;
 			}
 				
@@ -177,21 +178,11 @@ public final class WindowManager {
 
 	private static IntBuffer maxVram = BufferUtils.createIntBuffer(1);
 	private static IntBuffer usedVram = BufferUtils.createIntBuffer(1);
-	private static boolean nvidia;
-	private static boolean amd;
+	private static boolean nvidia = false;
+	private static boolean amd = false;
+	private static boolean detected = false;
 
 	static {
-		if (glGetString(GL_VENDOR).contains("NVIDIA")) {
-			nvidia = true;
-			glGetIntegerv(NVXGPUMemoryInfo.GL_GPU_MEMORY_INFO_DEDICATED_VIDMEM_NVX, maxVram);
-			Logger.log("Max VRam: " + maxVram.get(0) + "KB");
-		}
-		else if (glGetString(GL_VENDOR).contains("AMD")) {
-			amd = true;
-			glGetIntegerv(WGLAMDGPUAssociation.WGL_GPU_RAM_AMD, maxVram);
-			Logger.log("Max VRam: " + maxVram.get(0) + "MB");
-		}
-
 		cursorEnterCallback = new GLFWCursorEnterCallback() {
 			@Override
 			public void invoke(long windowID, boolean entered) {
@@ -285,17 +276,35 @@ public final class WindowManager {
 	}
 
 	public static int getUsedVRAM() {
+		if(!detected) detectGraphicsCard();
+		
 		if (nvidia)
 			glGetIntegerv(NVXGPUMemoryInfo.GL_GPU_MEMORY_INFO_CURRENT_AVAILABLE_VIDMEM_NVX, usedVram);
 		return maxVram.get(0) - usedVram.get(0);
 	}
 
 	public static boolean isNvidia() {
+		if(!detected) detectGraphicsCard();
 		return nvidia;
 	}
 
 	public static boolean isAmd() {
+		if(!detected) detectGraphicsCard();
 		return amd;
+	}
+	
+	private static void detectGraphicsCard() {
+		if (glGetString(GL_VENDOR).contains("NVIDIA")) {
+			nvidia = true;
+			glGetIntegerv(NVXGPUMemoryInfo.GL_GPU_MEMORY_INFO_DEDICATED_VIDMEM_NVX, maxVram);
+			Logger.log("Max VRam: " + maxVram.get(0) + "KB");
+		} else if (glGetString(GL_VENDOR).contains("AMD")) {
+			amd = true;
+			glGetIntegerv(WGLAMDGPUAssociation.WGL_GPU_RAM_AMD, maxVram);
+			Logger.log("Max VRam: " + maxVram.get(0) + "MB");
+		}
+		
+		detected = true;
 	}
 
 }

@@ -29,8 +29,7 @@ import net.luxvacuos.igl.Logger;
 
 public class KeyboardKeyCallback extends GLFWKeyCallback {
 	private BitSet keys = new BitSet(65536);
-	private BitSet last = new BitSet(65536);
-	private BitSet repeat = new BitSet(65536);
+	private BitSet ignore = new BitSet(65536);
 	
 	private final long windowID;
 	
@@ -47,23 +46,19 @@ public class KeyboardKeyCallback extends GLFWKeyCallback {
 		}
 		
 		this.keys.set(key, (action != GLFW.GLFW_RELEASE));
-		this.repeat.set(key, (action == GLFW.GLFW_REPEAT));
+		if(action == GLFW.GLFW_RELEASE && this.ignore.get(key)) this.ignore.clear(key);
 	}
 	
 	public boolean isKeyPressed(int keycode) {
 		return this.keys.get(keycode);
 	}
 	
-	public boolean wasKeyPressed(int keycode) {
-		return this.last.get(keycode);
+	public boolean isKeyIgnored(int keycode) {
+		return this.ignore.get(keycode);
 	}
 	
-	public boolean wasKeyRepeated(int keycode) {
-		return this.repeat.get(keycode);
-	}
-	
-	public void swapBuffers() {
-		this.last = this.keys;
+	public void setKeyIgnored(int keycode) {
+		this.ignore.set(keycode);
 	}
 
 }

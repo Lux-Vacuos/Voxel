@@ -20,13 +20,18 @@
 
 package net.luxvacuos.voxel.client.rendering.api.glfw;
 
+import static org.lwjgl.glfw.GLFW.glfwPollEvents;
+import static org.lwjgl.glfw.GLFW.glfwSwapBuffers;
+
 import net.luxvacuos.voxel.client.input.KeyboardHandler;
+import net.luxvacuos.voxel.client.input.Mouse;
 
 public class Window extends AbstractWindow {
 
 	protected Window(long windowID) {
 		this.windowID = windowID;
 		this.kbHandle = new KeyboardHandler(windowID);
+		this.displayUtils = new DisplayUtils();
 		
 		this.setCallbacks();
 	}
@@ -40,8 +45,11 @@ public class Window extends AbstractWindow {
 
 	@Override
 	public void updateDisplay(int fps) {
-		// TODO Auto-generated method stub
-
+		glfwSwapBuffers(this.windowID);
+		glfwPollEvents();
+		Mouse.poll();
+		this.displayUtils.checkErrors();
+		this.displayUtils.sync(fps);
 	}
 
 }

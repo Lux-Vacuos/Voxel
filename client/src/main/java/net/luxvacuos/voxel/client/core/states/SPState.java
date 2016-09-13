@@ -92,7 +92,8 @@ public class SPState extends AbstractState {
 		if(kbh.isKeyPressed(GLFW.GLFW_KEY_F1)) ClientVariables.debug = !ClientVariables.debug;
 		if(kbh.isKeyPressed(GLFW.GLFW_KEY_F2)) ClientVariables.hideHud = !ClientVariables.hideHud;
 		if(kbh.isKeyPressed(GLFW.GLFW_KEY_R)) ClientVariables.raining = !ClientVariables.raining;
-		if(kbh.isKeyPressed(GLFW.GLFW_KEY_ESCAPE, false)) {
+		if(kbh.isKeyPressed(GLFW.GLFW_KEY_ESCAPE)) {
+			kbh.ignoreKeyUntilRelease(GLFW.GLFW_KEY_ESCAPE);
 			((PlayerCamera) gm.getCamera()).unlockMouse();
 			// gm.getGlobalStates().setState(GameState.SP_PAUSE);
 			StateMachine.setCurrentState(StateNames.SP_PAUSE);

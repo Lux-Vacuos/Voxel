@@ -104,6 +104,7 @@ public class SPPauseState extends AbstractState {
 		//while (Keyboard.next()) {
 		//	if (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
 		if(window.getKeyboardHandler().isKeyPressed(GLFW.GLFW_KEY_ESCAPE)) {
+			window.getKeyboardHandler().ignoreKeyUntilRelease(GLFW.GLFW_KEY_ESCAPE);
 			((PlayerCamera) gm.getCamera()).setMouse();
 			//switchTo(GameState.SP);
 			StateMachine.setCurrentState(StateNames.SINGLEPLAYER);

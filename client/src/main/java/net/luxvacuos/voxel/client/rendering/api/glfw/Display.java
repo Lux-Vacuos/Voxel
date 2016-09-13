@@ -149,7 +149,6 @@ public class Display extends AbstractWindow {
 	public void updateDisplay(int fps) {
 		glfwSwapBuffers(super.windowID);
 		glfwPollEvents();
-		super.kbHandle.update();
 		Mouse.poll();
 		displayUtils.checkErrors();
 		displayUtils.sync(fps);

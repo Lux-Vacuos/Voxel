@@ -20,6 +20,7 @@
 
 package net.luxvacuos.voxel.client.core;
 
+import static org.lwjgl.glfw.GLFW.glfwInit;
 import static org.lwjgl.opengl.GL11.GL_RENDERER;
 import static org.lwjgl.opengl.GL11.GL_VENDOR;
 import static org.lwjgl.opengl.GL11.GL_VERSION;
@@ -118,6 +119,8 @@ public class Voxel extends AbstractVoxel {
 			E.printStackTrace();
 		}
 		Logger.log("Starting Client");
+		
+		if (!glfwInit()) throw new IllegalStateException("Unable to initialize GLFW");
 
 		ClientVariables.SETTINGS_PATH = bootstrap.getPrefix() + "/config/settings.conf";
 		ClientVariables.WORLD_PATH = bootstrap.getPrefix() + "/world/";
@@ -272,6 +275,7 @@ public class Voxel extends AbstractVoxel {
 			dispose();
 			GLFW.glfwTerminate();
 		} catch (Throwable t) {
+			t.printStackTrace(System.err);
 			handleError(t);
 		}
 	}
