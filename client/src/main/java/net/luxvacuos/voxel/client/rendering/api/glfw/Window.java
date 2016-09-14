@@ -23,24 +23,12 @@ package net.luxvacuos.voxel.client.rendering.api.glfw;
 import static org.lwjgl.glfw.GLFW.glfwPollEvents;
 import static org.lwjgl.glfw.GLFW.glfwSwapBuffers;
 
-import net.luxvacuos.voxel.client.input.KeyboardHandler;
 import net.luxvacuos.voxel.client.input.Mouse;
 
 public class Window extends AbstractWindow {
 
 	protected Window(long windowID) {
-		this.windowID = windowID;
-		this.kbHandle = new KeyboardHandler(windowID);
-		this.displayUtils = new DisplayUtils();
-		
-		this.setCallbacks();
-	}
-
-	@Override
-	public void create(int width, int height, String title, boolean vsync, boolean visible, boolean resizable,
-			ContextFormat format, String[] icons) throws Exception {
-		// TODO Auto-generated method stub
-
+		super(windowID);
 	}
 
 	@Override

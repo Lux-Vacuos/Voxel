@@ -46,6 +46,8 @@ import net.luxvacuos.voxel.client.resources.ResourceLoader;
 
 public abstract class AbstractWindow implements IWindow {
 	
+	protected final long windowID;
+	
 	//The Keyboard Handler for this window
 	protected KeyboardHandler kbHandle;
 	
@@ -56,10 +58,8 @@ public abstract class AbstractWindow implements IWindow {
 	protected boolean created = false;
 	protected boolean dirty = false;
 
-	protected int latestEventKey = 0;
-
-	protected int displayX = 0;
-	protected int displayY = 0;
+	protected int posX = 0;
+	protected int posY = 0;
 
 	protected boolean resized = false;
 	protected int width = 0;
@@ -69,16 +69,22 @@ public abstract class AbstractWindow implements IWindow {
 
 	protected boolean latestResized = false;
 	protected float pixelRatio;
-
-	protected long windowID;
 	
 	protected long nvgID;
 	protected ResourceLoader resourceLoader;
 	
 	protected double lastLoopTime;
 	protected float timeCount;
+	
+	protected AbstractWindow(long windowID) {
+		this.windowID = windowID;
+		this.displayUtils = new DisplayUtils();
+		
+		this.setCallbacks();
+	}
 
 	protected void setCallbacks() {
+		this.kbHandle = new KeyboardHandler(this.windowID);
 		glfwSetCursorEnterCallback(windowID, WindowManager.cursorEnterCallback);
 		glfwSetCursorPosCallback(windowID, WindowManager.cursorPosCallback);
 		glfwSetMouseButtonCallback(windowID, WindowManager.mouseButtonCallback);
@@ -88,18 +94,6 @@ public abstract class AbstractWindow implements IWindow {
 		glfwSetFramebufferSizeCallback(windowID, WindowManager.framebufferSizeCallback);
 		glfwSetScrollCallback(windowID, WindowManager.scrollCallback);
 		glfwSetWindowRefreshCallback(windowID, WindowManager.refreshCallback);
-	}
-	
-	@Override
-	@Deprecated
-	public void setVisible() {
-		glfwShowWindow(this.windowID);
-	}
-
-	@Override
-	@Deprecated
-	public void setInvisible() {
-		glfwHideWindow(this.windowID);
 	}
 	
 	@Override
@@ -155,11 +149,11 @@ public abstract class AbstractWindow implements IWindow {
 	}
 
 	public int getWindowX() {
-		return this.displayX;
+		return this.posX;
 	}
 
 	public int getWindowY() {
-		return this.displayY;
+		return this.posY;
 	}
 
 	public boolean wasResized() {

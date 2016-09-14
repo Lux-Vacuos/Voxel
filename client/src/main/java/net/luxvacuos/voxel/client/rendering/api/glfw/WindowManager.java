@@ -214,7 +214,8 @@ public final class WindowManager {
 		windowFocusCallback = new GLFWWindowFocusCallback() {
 			@Override
 			public void invoke(long windowID, boolean focused) {
-				GLFW.glfwFocusWindow(windowID);
+				if(focused && getWindow(windowID) != null && !getWindow(windowID).isWindowFocused())
+					GLFW.glfwFocusWindow(windowID);
 			}
 		};
 
@@ -223,6 +224,7 @@ public final class WindowManager {
 			public void invoke(long windowID, int width, int height) {
 				Window window = getWindow(windowID);
 				if(window == null) return;
+				
 				IntBuffer w = BufferUtils.createIntBuffer(1);
 				IntBuffer h = BufferUtils.createIntBuffer(1);
 				glfwGetFramebufferSize(windowID, w, h);
@@ -242,8 +244,8 @@ public final class WindowManager {
 			public void invoke(long windowID, int xpos, int ypos) {
 				Window window = getWindow(windowID);
 				if(window == null) return;
-				window.displayX = xpos;
-				window.displayY = ypos;
+				window.posX = xpos;
+				window.posY = ypos;
 			}
 		};
 

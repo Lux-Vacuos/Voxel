@@ -18,7 +18,7 @@
  * 
  */
 
-package net.luxvacuos.voxel.client.input.keyboard;
+package net.luxvacuos.voxel.client.input.callbacks;
 
 import org.lwjgl.glfw.GLFWCharCallback;
 

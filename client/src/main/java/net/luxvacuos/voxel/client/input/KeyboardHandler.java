@@ -22,9 +22,9 @@ package net.luxvacuos.voxel.client.input;
 
 import org.lwjgl.glfw.GLFW;
 
-import net.luxvacuos.voxel.client.input.keyboard.KeyboardCharCallback;
-import net.luxvacuos.voxel.client.input.keyboard.KeyboardCharModsCallback;
-import net.luxvacuos.voxel.client.input.keyboard.KeyboardKeyCallback;
+import net.luxvacuos.voxel.client.input.callbacks.KeyboardCharCallback;
+import net.luxvacuos.voxel.client.input.callbacks.KeyboardCharModsCallback;
+import net.luxvacuos.voxel.client.input.callbacks.KeyboardKeyCallback;
 import net.luxvacuos.voxel.universal.resources.IDisposable;
 
 public final class KeyboardHandler implements IDisposable {

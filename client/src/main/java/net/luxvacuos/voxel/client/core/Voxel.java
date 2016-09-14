@@ -80,7 +80,7 @@ public class Voxel extends AbstractVoxel {
 	 * Loaded boolean
 	 */
 	private boolean loaded = false;
-	
+
 	GLFWErrorCallback errorfun = GLFWErrorCallback.createPrint(System.err);
 
 	/**
@@ -119,7 +119,7 @@ public class Voxel extends AbstractVoxel {
 			E.printStackTrace();
 		}
 		Logger.log("Starting Client");
-		
+
 		if (!glfwInit()) throw new IllegalStateException("Unable to initialize GLFW");
 
 		ClientVariables.SETTINGS_PATH = bootstrap.getPrefix() + "/config/settings.conf";
@@ -135,14 +135,6 @@ public class Voxel extends AbstractVoxel {
 		MasterRenderer.prepare(1, 1, 1, 1);
 		// Update Screen buffers
 		getGameResources().getGameWindow().updateDisplay(ClientVariables.FPS);
-		// Print info
-		Logger.log("Voxel Client Version: " + ClientVariables.version);
-		Logger.log("Running on: " + bootstrap.getPlatform());
-		Logger.log("LWJGL Version: " + Version.getVersion());
-		Logger.log("GLFW Version: " + GLFW.glfwGetVersionString());
-		Logger.log("OpenGL Version: " + glGetString(GL_VERSION));
-		Logger.log("Vendor: " + glGetString(GL_VENDOR));
-		Logger.log("Renderer: " + glGetString(GL_RENDERER));
 		// Set the info to objects
 		CoreInfo.platform = bootstrap.getPlatform();
 		CoreInfo.LWJGLVer = Version.getVersion();
@@ -150,6 +142,14 @@ public class Voxel extends AbstractVoxel {
 		CoreInfo.OpenGLVer = glGetString(GL_VERSION);
 		CoreInfo.Vendor = glGetString(GL_VENDOR);
 		CoreInfo.Renderer = glGetString(GL_RENDERER);
+		// Print info
+		Logger.log("Voxel Client Version: " + ClientVariables.version);
+		Logger.log("Running on: " + CoreInfo.platform);
+		Logger.log("LWJGL Version: " + CoreInfo.LWJGLVer);
+		Logger.log("GLFW Version: " + CoreInfo.GLFWVer);
+		Logger.log("OpenGL Version: " + CoreInfo.OpenGLVer);
+		Logger.log("Vendor: " + CoreInfo.Vendor);
+		Logger.log("Renderer: " + CoreInfo.Renderer);
 		// Check for OS X
 		if (bootstrap.getPlatform().equals(Platform.MACOSX)) {
 			ClientVariables.runningOnMac = true;
@@ -329,7 +329,7 @@ public class Voxel extends AbstractVoxel {
 		} finally {
 			GLFW.glfwTerminate();
 		}
-		
+
 		// If running on MacOSX don't show crash screen
 		if (!bootstrap.getPlatform().equals(Platform.MACOSX))
 			CrashScreen.run(e);
@@ -337,7 +337,7 @@ public class Voxel extends AbstractVoxel {
 			e.printStackTrace(System.err); //Instead dump the error into the Error Stream
 			System.exit(-1);
 		}
-			
+
 	}
 
 	/**

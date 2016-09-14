@@ -24,6 +24,7 @@ package net.luxvacuos.voxel.client.input;
  * Internal utility class to keep track of event positions in an array. When the
  * array is full the position will wrap to the beginning.
  */
+@Deprecated
 class EventQueue {
 
 	private int maxEvents = 32;

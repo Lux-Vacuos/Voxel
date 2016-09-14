@@ -120,11 +120,6 @@ public class GameResources extends AbstractGameResources {
 		this.gameWindowID = WindowManager.createWindow(handle, ClientVariables.VSYNC);
 		Window window = WindowManager.getWindow(this.gameWindowID);
 		
-		/*display = new Display();
-		display.create(ClientVariables.WIDTH, ClientVariables.HEIGHT, "Voxel", ClientVariables.VSYNC, false, false,
-				new ContextFormat(3, 3, GLFW_OPENGL_API, GLFW_OPENGL_CORE_PROFILE, true),
-				new String[] { "assets/" + ClientVariables.assets + "/icons/icon32.png",
-						"assets/" + ClientVariables.assets + "/icons/icon64.png" }); */
 		ResourceLoader loader = window.getResourceLoader();
 		loader.loadNVGFont("Roboto-Bold", "Roboto-Bold");
 		loader.loadNVGFont("Roboto-Regular", "Roboto-Regular");
