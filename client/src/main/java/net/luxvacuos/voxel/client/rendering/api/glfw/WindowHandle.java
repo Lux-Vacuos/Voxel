@@ -85,6 +85,7 @@ public final class WindowHandle {
 	}
 	
 	public WindowHandle setPixelBuffer(PixelBufferHandle pbh) {
+		Logger.log(pbh.toString());
 		this.setWindowHint(GLFW.GLFW_RED_BITS, pbh.getRedBits());
 		this.setWindowHint(GLFW.GLFW_ACCUM_RED_BITS, pbh.getRedBitsAccum());
 		this.setWindowHint(GLFW.GLFW_GREEN_BITS, pbh.getGreenBits());

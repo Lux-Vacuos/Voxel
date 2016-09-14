@@ -32,6 +32,7 @@ import net.luxvacuos.voxel.client.core.ClientGameSettings;
 import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.core.ClientWorldSimulation;
 import net.luxvacuos.voxel.client.network.VoxelClient;
+import net.luxvacuos.voxel.client.rendering.api.glfw.PixelBufferHandle;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.glfw.WindowHandle;
 import net.luxvacuos.voxel.client.rendering.api.glfw.WindowManager;
@@ -117,6 +118,9 @@ public class GameResources extends AbstractGameResources {
 
 		WindowHandle handle = WindowManager.generateHandle(ClientVariables.WIDTH, ClientVariables.HEIGHT, "Voxel");
 		handle.canResize(false).isVisible(false).setIcon(icons);
+		PixelBufferHandle pbHandle = new PixelBufferHandle();
+		pbHandle.setDepthBits(32);
+		handle.setPixelBuffer(pbHandle);
 		this.gameWindowID = WindowManager.createWindow(handle, ClientVariables.VSYNC);
 		Window window = WindowManager.getWindow(this.gameWindowID);
 		

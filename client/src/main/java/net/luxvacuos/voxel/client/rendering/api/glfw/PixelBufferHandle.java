@@ -186,4 +186,15 @@ public final class PixelBufferHandle {
 		if(input >= 0) return input;
 		else return 0;
 	}
+
+	@Override
+	public String toString() {
+		return "PixelBufferHandle [redBits=" + redBits + ", redBitsAccum=" + redBitsAccum + ", greenBits=" + greenBits
+				+ ", greenBitsAccum=" + greenBitsAccum + ", blueBits=" + blueBits + ", blueBitsAccum=" + blueBitsAccum
+				+ ", alphaBits=" + alphaBits + ", alphaBitsAccum=" + alphaBitsAccum + ", depthBits=" + depthBits
+				+ ", stencilBits=" + stencilBits + ", auxBuffers=" + auxBuffers + ", samples=" + samples
+				+ ", refreshRate=" + refreshRate + ", stereo=" + (stereo == GLFW.GLFW_TRUE ? "true" : "false") 
+				+ ", srgbCapable=" + (srgbCapable == GLFW.GLFW_TRUE ? "true" : "false")
+				+ ", doubleBuffer=" + (doubleBuffer == GLFW.GLFW_TRUE ? "true" : "false")+ "]";
+	}
 }
