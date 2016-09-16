@@ -30,7 +30,7 @@ public interface IWindow extends IDisposable {
 	public void updateDisplay(int fps);
 
 	public void closeDisplay();
-	
+
 	public void setVisible(boolean flag);
 
 	public float getDelta();

@@ -27,63 +27,63 @@ import com.badlogic.gdx.utils.Array;
 import net.luxvacuos.igl.Logger;
 
 public final class WindowHandle {
-	
+
 	protected int width, height;
 	protected String title;
 	protected Array<String> icons = new Array<>();
 
 	protected WindowHandle(int width, int height, String title) {
-		Logger.log("Creating WindowHandle for '"+title+"'");
+		Logger.log("Creating WindowHandle for '" + title + "'");
 		this.width = width;
 		this.height = height;
 		this.title = title;
-		
-		//Reset the window hints
+
+		// Reset the window hints
 		GLFW.glfwDefaultWindowHints();
-		
-		//Set the window to use OpenGL 3.3 Core with forward compatibility
+
+		// Set the window to use OpenGL 3.3 Core with forward compatibility
 		this.setWindowHint(GLFW.GLFW_CONTEXT_VERSION_MAJOR, 3);
 		this.setWindowHint(GLFW.GLFW_CONTEXT_VERSION_MINOR, 3);
 		this.setWindowHint(GLFW.GLFW_CLIENT_API, GLFW.GLFW_OPENGL_API);
 		this.setWindowHint(GLFW.GLFW_OPENGL_PROFILE, GLFW.GLFW_OPENGL_CORE_PROFILE);
 		this.setWindowHint(GLFW.GLFW_OPENGL_FORWARD_COMPAT, true);
 	}
-	
+
 	public WindowHandle canResize(boolean flag) {
 		this.setWindowHint(GLFW.GLFW_RESIZABLE, flag);
 		return this;
 	}
-	
+
 	public WindowHandle isVisible(boolean flag) {
 		this.setWindowHint(GLFW.GLFW_VISIBLE, flag);
 		return this;
 	}
-	
+
 	public WindowHandle isDecorated(boolean flag) {
 		this.setWindowHint(GLFW.GLFW_DECORATED, flag);
 		return this;
 	}
-	
+
 	public WindowHandle setFocusOnCreation(boolean flag) {
 		this.setWindowHint(GLFW.GLFW_FOCUSED, flag);
 		return this;
 	}
-	
+
 	public WindowHandle alwaysOnTop(boolean flag) {
 		this.setWindowHint(GLFW.GLFW_FLOATING, flag);
 		return this;
 	}
-	
+
 	public WindowHandle isMaximizedOnCreation(boolean flag) {
 		this.setWindowHint(GLFW.GLFW_MAXIMIZED, flag);
 		return this;
 	}
-	
+
 	public WindowHandle useDebugContext(boolean flag) {
 		this.setWindowHint(GLFW.GLFW_OPENGL_DEBUG_CONTEXT, flag);
 		return this;
 	}
-	
+
 	public WindowHandle setPixelBuffer(PixelBufferHandle pbh) {
 		Logger.log(pbh.toString());
 		this.setWindowHint(GLFW.GLFW_RED_BITS, pbh.getRedBits());
@@ -104,17 +104,17 @@ public final class WindowHandle {
 		this.setWindowHint(GLFW.GLFW_DOUBLEBUFFER, pbh.getDoubleBuffer());
 		return this;
 	}
-	
+
 	public WindowHandle setWindowHint(int hint, boolean flag) {
 		GLFW.glfwWindowHint(hint, (flag ? 1 : 0));
 		return this;
 	}
-	
+
 	public WindowHandle setIcon(String... icons) {
 		this.icons.addAll(icons);
 		return this;
 	}
-	
+
 	public void setWindowHint(int hint, int value) {
 		GLFW.glfwWindowHint(hint, value);
 	}

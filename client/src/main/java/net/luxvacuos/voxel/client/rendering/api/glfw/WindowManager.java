@@ -63,27 +63,28 @@ public final class WindowManager {
 
 	private static Array<Window> windows = new Array<>();
 
-	private WindowManager() {}
+	private WindowManager() {
+	}
 
 	public static WindowHandle generateHandle(int width, int height, String title) {
 		return new WindowHandle(width, height, title);
 	}
 
 	public static long createWindow(WindowHandle handle, boolean vsync) {
-		Logger.log("Creating new Window '"+handle.title+"'");
+		Logger.log("Creating new Window '" + handle.title + "'");
 		long windowID = GLFW.glfwCreateWindow(handle.width, handle.height, handle.title, NULL, NULL);
-		if(windowID == NULL) {
-			throw new RuntimeException("Failed to create GLFW Window '"+handle.title+"'");
+		if (windowID == NULL) {
+			throw new RuntimeException("Failed to create GLFW Window '" + handle.title + "'");
 		}
 
-		Window window = new Window(windowID);
+		Window window = new Window(windowID, handle.width, handle.height);
 
 		GLFWVidMode vidmode = GLFW.glfwGetVideoMode(GLFW.glfwGetPrimaryMonitor());
 		GLFW.glfwSetWindowPos(windowID, (vidmode.width() - window.width) / 2, (vidmode.height() - window.height) / 2);
 		GLFW.glfwMakeContextCurrent(windowID);
 		GLFW.glfwSwapInterval(vsync ? 1 : 0);
 
-		if(handle.icons.size != 0) {
+		if (handle.icons.size != 0) {
 			GLFWImage.Buffer iconsbuff = GLFWImage.malloc(handle.icons.size);
 			try {
 				int i = 0;
@@ -100,7 +101,7 @@ public final class WindowManager {
 			} catch (IOException e) {
 				throw new LoadTextureException(e);
 			}
-			
+
 			iconsbuff.position(0);
 			GLFW.glfwSetWindowIcon(windowID, iconsbuff);
 			iconsbuff.free();
@@ -110,15 +111,17 @@ public final class WindowManager {
 		window.capabilities = GL.createCapabilities(forwardCompat);
 
 		int nvgFlags = NanoVGGL3.NVG_ANTIALIAS | NanoVGGL3.NVG_STENCIL_STROKES;
-		if(ClientVariables.debug) nvgFlags = (nvgFlags | NanoVGGL3.NVG_DEBUG);
+		if (ClientVariables.debug)
+			nvgFlags = (nvgFlags | NanoVGGL3.NVG_DEBUG);
 		window.nvgID = NanoVGGL3.nvgCreateGL3(nvgFlags);
 
-		if(window.nvgID == NULL)
-			throw new RuntimeException("Fail to create NanoVG context for Window '"+handle.title+"'");
+		if (window.nvgID == NULL)
+			throw new RuntimeException("Fail to create NanoVG context for Window '" + handle.title + "'");
 
 		window.lastLoopTime = getTime();
 
-		int[] h = new int[1]; int[] w = new int[1];
+		int[] h = new int[1];
+		int[] w = new int[1];
 
 		GLFW.glfwGetFramebufferSize(windowID, w, h);
 		window.framebufferHeight = h[0];
@@ -137,21 +140,25 @@ public final class WindowManager {
 	}
 
 	public static Window getWindow(long windowID) {
-		for(Window window : windows) {
-			if(window.windowID == windowID) {
+		for (Window window : windows) {
+			if (window.windowID == windowID) {
 				int index = windows.indexOf(window, true);
-				if(index != 0) windows.swap(0, index); //Swap the window to the front of the array to speed up future recurring searches
-				if(GLFW.glfwGetCurrentContext() != windowID) GLFW.glfwMakeContextCurrent(windowID);
+				if (index != 0)
+					windows.swap(0, index); // Swap the window to the front of
+											// the array to speed up future
+											// recurring searches
+				if (GLFW.glfwGetCurrentContext() != windowID)
+					GLFW.glfwMakeContextCurrent(windowID);
 				return window;
 			}
-				
+
 		}
 
 		return null;
 	}
-	
+
 	public static void closeAllDisplays() {
-		for(Window window : windows) {
+		for (Window window : windows) {
 			window.closeDisplay();
 			window.dispose();
 		}
@@ -214,7 +221,7 @@ public final class WindowManager {
 		windowFocusCallback = new GLFWWindowFocusCallback() {
 			@Override
 			public void invoke(long windowID, boolean focused) {
-				if(focused && getWindow(windowID) != null && !getWindow(windowID).isWindowFocused())
+				if (focused && getWindow(windowID) != null && !getWindow(windowID).isWindowFocused())
 					GLFW.glfwFocusWindow(windowID);
 			}
 		};
@@ -223,8 +230,9 @@ public final class WindowManager {
 			@Override
 			public void invoke(long windowID, int width, int height) {
 				Window window = getWindow(windowID);
-				if(window == null) return;
-				
+				if (window == null)
+					return;
+
 				IntBuffer w = BufferUtils.createIntBuffer(1);
 				IntBuffer h = BufferUtils.createIntBuffer(1);
 				glfwGetFramebufferSize(windowID, w, h);
@@ -243,7 +251,8 @@ public final class WindowManager {
 			@Override
 			public void invoke(long windowID, int xpos, int ypos) {
 				Window window = getWindow(windowID);
-				if(window == null) return;
+				if (window == null)
+					return;
 				window.posX = xpos;
 				window.posY = ypos;
 			}
@@ -253,7 +262,8 @@ public final class WindowManager {
 			@Override
 			public void invoke(long windowID) {
 				Window window = getWindow(windowID);
-				if(window == null) return;
+				if (window == null)
+					return;
 				window.dirty = true;
 			}
 		};
@@ -262,7 +272,8 @@ public final class WindowManager {
 			@Override
 			public void invoke(long windowID, int width, int height) {
 				Window window = getWindow(windowID);
-				if(window == null) return;
+				if (window == null)
+					return;
 				window.framebufferWidth = width;
 				window.framebufferHeight = height;
 			}
@@ -278,23 +289,26 @@ public final class WindowManager {
 	}
 
 	public static int getUsedVRAM() {
-		if(!detected) detectGraphicsCard();
-		
+		if (!detected)
+			detectGraphicsCard();
+
 		if (nvidia)
 			glGetIntegerv(NVXGPUMemoryInfo.GL_GPU_MEMORY_INFO_CURRENT_AVAILABLE_VIDMEM_NVX, usedVram);
 		return maxVram.get(0) - usedVram.get(0);
 	}
 
 	public static boolean isNvidia() {
-		if(!detected) detectGraphicsCard();
+		if (!detected)
+			detectGraphicsCard();
 		return nvidia;
 	}
 
 	public static boolean isAmd() {
-		if(!detected) detectGraphicsCard();
+		if (!detected)
+			detectGraphicsCard();
 		return amd;
 	}
-	
+
 	private static void detectGraphicsCard() {
 		if (glGetString(GL_VENDOR).contains("NVIDIA")) {
 			nvidia = true;
@@ -305,7 +319,7 @@ public final class WindowManager {
 			glGetIntegerv(WGLAMDGPUAssociation.WGL_GPU_RAM_AMD, maxVram);
 			Logger.log("Max VRam: " + maxVram.get(0) + "MB");
 		}
-		
+
 		detected = true;
 	}
 

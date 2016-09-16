@@ -45,14 +45,14 @@ import net.luxvacuos.voxel.client.input.KeyboardHandler;
 import net.luxvacuos.voxel.client.resources.ResourceLoader;
 
 public abstract class AbstractWindow implements IWindow {
-	
+
 	protected final long windowID;
-	
-	//The Keyboard Handler for this window
+
+	// The Keyboard Handler for this window
 	protected KeyboardHandler kbHandle;
-	
+
 	protected DisplayUtils displayUtils;
-	
+
 	protected GLCapabilities capabilities;
 
 	protected boolean created = false;
@@ -69,17 +69,19 @@ public abstract class AbstractWindow implements IWindow {
 
 	protected boolean latestResized = false;
 	protected float pixelRatio;
-	
+
 	protected long nvgID;
 	protected ResourceLoader resourceLoader;
-	
+
 	protected double lastLoopTime;
 	protected float timeCount;
-	
-	protected AbstractWindow(long windowID) {
+
+	protected AbstractWindow(long windowID, int width, int height) {
 		this.windowID = windowID;
 		this.displayUtils = new DisplayUtils();
-		
+		this.width = width;
+		this.height = height;
+
 		this.setCallbacks();
 	}
 
@@ -95,18 +97,20 @@ public abstract class AbstractWindow implements IWindow {
 		glfwSetScrollCallback(windowID, WindowManager.scrollCallback);
 		glfwSetWindowRefreshCallback(windowID, WindowManager.refreshCallback);
 	}
-	
+
 	@Override
 	public void setVisible(boolean flag) {
-		if(flag) glfwShowWindow(this.windowID);
-		else glfwHideWindow(this.windowID);
+		if (flag)
+			glfwShowWindow(this.windowID);
+		else
+			glfwHideWindow(this.windowID);
 	}
-	
+
 	public void resetViewport() {
 		glViewport(0, 0, (int) (width * pixelRatio), (int) (height * pixelRatio));
-		//glViewport(0, 0, this.framebufferWidth, this.framebufferHeight);
+		// glViewport(0, 0, this.framebufferWidth, this.framebufferHeight);
 	}
-	
+
 	public void setViewport(int x, int y, int width, int height) {
 		glViewport(0, 0, width, height);
 	}
@@ -119,7 +123,7 @@ public abstract class AbstractWindow implements IWindow {
 		this.timeCount += delta;
 		return delta;
 	}
-	
+
 	public float getTimeCount() {
 		return this.timeCount;
 	}
@@ -187,12 +191,13 @@ public abstract class AbstractWindow implements IWindow {
 	public long getNVGID() {
 		return this.nvgID;
 	}
-	
+
 	public ResourceLoader getResourceLoader() {
-		if(this.resourceLoader == null) this.resourceLoader = new ResourceLoader(this.windowID);
+		if (this.resourceLoader == null)
+			this.resourceLoader = new ResourceLoader(this.windowID);
 		return this.resourceLoader;
 	}
-	
+
 	public KeyboardHandler getKeyboardHandler() {
 		return this.kbHandle;
 	}
@@ -200,15 +205,15 @@ public abstract class AbstractWindow implements IWindow {
 	public boolean isCloseRequested() {
 		return glfwWindowShouldClose(this.windowID);
 	}
-	
+
 	private boolean getWindowAttribute(int attribute) {
 		return (GLFW.glfwGetWindowAttrib(this.windowID, attribute) == GLFW.GLFW_TRUE ? true : false);
 	}
-	
+
 	public GLCapabilities getCapabilities() {
 		return this.capabilities;
 	}
-	
+
 	@Override
 	public void beingNVGFrame() {
 		nvgBeginFrame(this.nvgID, this.width, this.height, this.pixelRatio);
@@ -218,7 +223,7 @@ public abstract class AbstractWindow implements IWindow {
 	public void endNVGFrame() {
 		nvgEndFrame(this.nvgID);
 	}
-	
+
 	@Override
 	public void closeDisplay() {
 		nvgDeleteGL3(this.nvgID);
@@ -226,10 +231,10 @@ public abstract class AbstractWindow implements IWindow {
 		glfwDestroyWindow(this.windowID);
 		this.created = false;
 	}
-	
+
 	@Override
 	public void dispose() {
-		
+
 	}
 
 }

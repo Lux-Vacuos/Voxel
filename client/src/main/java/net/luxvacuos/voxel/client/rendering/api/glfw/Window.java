@@ -27,8 +27,8 @@ import net.luxvacuos.voxel.client.input.Mouse;
 
 public class Window extends AbstractWindow {
 
-	protected Window(long windowID) {
-		super(windowID);
+	protected Window(long windowID, int width, int height) {
+		super(windowID, width, height);
 	}
 
 	@Override
