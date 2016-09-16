@@ -101,9 +101,9 @@ public class PlayerCamera extends Camera {
 		super.add(new Health(20));
 		super.add(new ArmourComponent());
 		super.getComponent(ArmourComponent.class).armour = new EmptyArmour();
-		blockSelector = new RendereableTexturedModel(new Vector3f(),
-				new TexturedModel(GameResources.getInstance().getResourceLoader().getObjLoader().loadObjModel("BlockSelector"),
-						new ModelTexture(GameResources.getInstance().getResourceLoader().loadTextureEntity("BlockSelector"))));
+		blockSelector = new RendereableTexturedModel(new Vector3f(), new TexturedModel(
+				GameResources.getInstance().getResourceLoader().getObjLoader().loadObjModel("BlockSelector"),
+				new ModelTexture(GameResources.getInstance().getResourceLoader().loadTextureEntity("BlockSelector"))));
 		blockSelector.scale = 1.02f;
 		flyMode = true;
 
@@ -290,11 +290,10 @@ public class PlayerCamera extends Camera {
 		if (isKeyDown(Keyboard.KEY_2))
 			gm.getWorldsHandler().getActiveWorld().getActiveDimension().getPhysicsEngine()
 					.addEntity(Block.Node.getDrop(getPosition())); */
+		
+	if(clickTime>0)clickTime--;hit=false;
 
-		if (clickTime > 0)
-			clickTime--;
-		hit = false;
-		setBlock(window.getWidth(), window.getHeight(), world);
+	setBlock(window.getWidth(), window.getHeight(), world);
 		updateRay(gm.getRenderer().getProjectionMatrix(), window.getWidth(),
 				window.getHeight(), center);
 
@@ -372,7 +371,7 @@ public class PlayerCamera extends Camera {
 		if (block.getBlock().getId() == Block.Air.getId()
 				&& world.getGlobalBlock(bx, by, bz).getId() != Block.Air.getId())
 			world.getPhysicsEngine()
-			.addEntity(world.getGlobalBlock(bx, by, bz).getDrop(new Vector3f(bx + 0.5f, by + 0.5f, bz + 0.5f)));
+					.addEntity(world.getGlobalBlock(bx, by, bz).getDrop(new Vector3f(bx + 0.5f, by + 0.5f, bz + 0.5f)));
 		if (block.getBlock().getId() == Block.Air.getId()
 				&& world.getGlobalBlock(bx, by, bz).getId() == Block.Torch.getId())
 			world.removeLight(bx, by, bz, 0);

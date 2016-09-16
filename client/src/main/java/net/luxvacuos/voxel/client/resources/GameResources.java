@@ -21,6 +21,8 @@
 package net.luxvacuos.voxel.client.resources;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import com.esotericsoftware.kryo.Kryo;
@@ -104,15 +106,19 @@ public class GameResources extends AbstractGameResources {
 	private Vector3f lightPos = new Vector3f(0, 0, 0);
 	private Vector3f invertedLightPosition = new Vector3f(0, 0, 0);
 	private ParticleTexture torchTexture;
+	
+	//TODO: Move to another place, for test only!
+	public List<Vector3f> lights = new ArrayList<>();
 
-	private GameResources() { }
+	private GameResources() {
+	}
 
 	@Override
 	public void preInit() {
 		gameSettings = new ClientGameSettings();
 		gameSettings.load(new File(ClientVariables.SETTINGS_PATH));
 		gameSettings.read();
-		
+
 		String[] icons = new String[] { "assets/" + ClientVariables.assets + "/icons/icon32.png",
 				"assets/" + ClientVariables.assets + "/icons/icon64.png" };
 
@@ -123,7 +129,7 @@ public class GameResources extends AbstractGameResources {
 		handle.setPixelBuffer(pbHandle);
 		this.gameWindowID = WindowManager.createWindow(handle, ClientVariables.VSYNC);
 		Window window = WindowManager.getWindow(this.gameWindowID);
-		
+
 		ResourceLoader loader = window.getResourceLoader();
 		loader.loadNVGFont("Roboto-Bold", "Roboto-Bold");
 		loader.loadNVGFont("Roboto-Regular", "Roboto-Regular");
@@ -135,7 +141,7 @@ public class GameResources extends AbstractGameResources {
 		ResourceLoader loader = WindowManager.getWindow(this.gameWindowID).getResourceLoader();
 		scripting = new Scripting();
 		rand = new Random();
-		
+
 		masterShadowRenderer = new MasterShadowRenderer();
 		renderer = new MasterRenderer(this);
 		skyboxRenderer = new SkyboxRenderer(loader, renderer.getProjectionMatrix());
@@ -174,6 +180,9 @@ public class GameResources extends AbstractGameResources {
 		ResourceLoader loader = this.getGameWindow().getResourceLoader();
 		torchTexture = new ParticleTexture(loader.loadTextureParticle("fire0"), 4);
 		EntityResources.loadEntityResources(loader);
+		lights.add(new Vector3f(-2.5f,135,-3.5f));
+		lights.add(new Vector3f(32,132,16));
+		lights.add(new Vector3f(40,132,80));
 	}
 
 	@Override
@@ -223,7 +232,7 @@ public class GameResources extends AbstractGameResources {
 
 	public ResourceLoader getResourceLoader() {
 		return WindowManager.getWindow(this.gameWindowID).getResourceLoader();
-	} 
+	}
 
 	public Camera getCamera() {
 		return camera;
@@ -272,7 +281,7 @@ public class GameResources extends AbstractGameResources {
 	public Vector3f getSunRotation() {
 		return sunRotation;
 	}
-	
+
 	public Window getGameWindow() {
 		return WindowManager.getWindow(this.gameWindowID);
 	}

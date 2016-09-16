@@ -108,6 +108,7 @@ public abstract class ImagePass {
 						null),
 				width, height));
 		shader.loadExposure(2f);
+		shader.loadPointLightsPos(gm.lights);
 		shader.loadTime(gm.getWorldSimulation().getTime());
 	}
 

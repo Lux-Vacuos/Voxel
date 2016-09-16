@@ -20,6 +20,8 @@
 
 package net.luxvacuos.voxel.client.rendering.api.opengl.shaders;
 
+import java.util.List;
+
 import net.luxvacuos.igl.vector.Matrix4f;
 import net.luxvacuos.igl.vector.Vector2f;
 import net.luxvacuos.igl.vector.Vector3f;
@@ -62,6 +64,7 @@ public class DeferredShadingShader extends ShaderProgram {
 	private int loc_skyColor;
 	private int loc_time;
 	private int loc_exposure;
+	private int loc_pointLightsPos[];
 
 	private int loc_useFXAA;
 	private int loc_useDOF;
@@ -102,6 +105,11 @@ public class DeferredShadingShader extends ShaderProgram {
 		loc_skyColor = super.getUniformLocation("skyColor");
 		loc_exposure = super.getUniformLocation("exposure");
 		loc_time = super.getUniformLocation("time");
+		loc_pointLightsPos = new int[4];
+
+		for (int x = 0; x < 4; x++) {
+			loc_pointLightsPos[x] = super.getUniformLocation("pointLightsPos[" + x + "]");
+		}
 
 		loc_useFXAA = super.getUniformLocation("useFXAA");
 		loc_useDOF = super.getUniformLocation("useDOF");
@@ -155,6 +163,18 @@ public class DeferredShadingShader extends ShaderProgram {
 
 	public void loadTime(float time) {
 		super.loadFloat(loc_time, time);
+	}
+
+	public void loadPointLightsPos(List<Vector3f> lights) {
+		//TODO: Implement lights in the right way!
+		//TODO: Add color support
+		for (int x = 0; x < 4; x++) {
+			if (x < lights.size()) {
+				super.loadVector(loc_pointLightsPos[x], lights.get(x));
+			} else {
+				super.loadVector(loc_pointLightsPos[x], new Vector3f(0, -100, 0));
+			}
+		}
 	}
 
 	/**

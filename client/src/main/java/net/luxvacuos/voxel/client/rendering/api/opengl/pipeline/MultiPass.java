@@ -38,6 +38,7 @@ public class MultiPass extends RenderingPipeline {
 	private ScreenSpaceReflections screenSpaceReflections;
 	private AmbientOcclusion ambientOcclusion;
 	private ColorCorrection colorCorrection;
+	private PointLightPass pointLightPass;
 
 	@Override
 	public void init(GameResources gm) {
@@ -60,6 +61,10 @@ public class MultiPass extends RenderingPipeline {
 		lighting = new Lighting("Lighting", width, height);
 		lighting.init();
 		super.imagePasses.add(lighting);
+
+		pointLightPass = new PointLightPass("PointLight", width, height);
+		pointLightPass.init();
+		super.imagePasses.add(pointLightPass);
 
 		ambientOcclusion = new AmbientOcclusion("AmbientOcclusion", width, height);
 		ambientOcclusion.init();

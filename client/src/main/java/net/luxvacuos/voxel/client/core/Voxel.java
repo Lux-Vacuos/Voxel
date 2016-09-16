@@ -88,7 +88,7 @@ public class Voxel extends AbstractVoxel {
 	 */
 	public Voxel(AbstractBootstrap bootstrap) {
 		super(bootstrap);
-		//Set the GLFW Error Callback
+		// Set the GLFW Error Callback
 		GLFW.glfwSetErrorCallback(this.errorfun);
 		// Set client
 		super.engineType = EngineType.CLIENT;
@@ -120,7 +120,8 @@ public class Voxel extends AbstractVoxel {
 		}
 		Logger.log("Starting Client");
 
-		if (!glfwInit()) throw new IllegalStateException("Unable to initialize GLFW");
+		if (!glfwInit())
+			throw new IllegalStateException("Unable to initialize GLFW");
 
 		ClientVariables.SETTINGS_PATH = bootstrap.getPrefix() + "/config/settings.conf";
 		ClientVariables.WORLD_PATH = bootstrap.getPrefix() + "/world/";
@@ -234,7 +235,7 @@ public class Voxel extends AbstractVoxel {
 			float alpha = 0;
 			// Set loaded
 			loaded = true;
-			//Get a local game window reference
+			// Get a local game window reference
 			Window window = getGameResources().getGameWindow();
 			while (StateMachine.isRunning() && !(window.isCloseRequested())) {
 				// Start CPU timer
@@ -334,7 +335,8 @@ public class Voxel extends AbstractVoxel {
 		if (!bootstrap.getPlatform().equals(Platform.MACOSX))
 			CrashScreen.run(e);
 		else {
-			e.printStackTrace(System.err); //Instead dump the error into the Error Stream
+			e.printStackTrace(System.err); // Instead dump the error into the
+											// Error Stream
 			System.exit(-1);
 		}
 
@@ -353,7 +355,7 @@ public class Voxel extends AbstractVoxel {
 		modsHandler.dispose();
 		// Close Window
 		WindowManager.closeAllDisplays();
-		//Free the Error Callback
+		// Free the Error Callback
 		GLFW.glfwSetErrorCallback(null).free();
 
 		StateMachine.dispose();

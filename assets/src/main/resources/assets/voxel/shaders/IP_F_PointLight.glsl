@@ -25,34 +25,19 @@ in vec4 posPos;
 
 out vec4 out_Color;
 
-uniform int camUnderWater;
-uniform float camUnderWaterOffset;
-uniform float time;
-uniform vec2 resolution;
 uniform vec3 cameraPosition;
-uniform vec3 lightPosition;
-uniform vec3 skyColor;
 uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;
+
+uniform vec3 pointLightsPos[4];
+
 uniform sampler2D gDiffuse;
 uniform sampler2D gPosition;
 uniform sampler2D gNormal;
 uniform sampler2D gData0;
 uniform sampler2D gData1;
 uniform sampler2D composite0;
-uniform sampler2D composite1;
 uniform sampler2DShadow gDepth;
-
-uniform int useFXAA;
-uniform int useDOF;
-uniform int useMotionBlur;
-uniform int useVolumetricLight;
-
-const int NUM_SAMPLES = 50;
-const float density = 0.01;
-const float gradient = 2.0;
-const float transitionDistance = 5;
-const float shadowDistance = 160;
 
 void main(void){
 	vec2 texcoord = textureCoords;
@@ -62,37 +47,27 @@ void main(void){
     vec4 position = texture(gPosition,texcoord);
     vec4 normal = texture(gNormal, texcoord);
     float depth = texture(gDepth, vec3(texcoord.xy, 0.0), 0);
-    vec3 lightDir = lightPosition;
-    lightDir = normalize(lightDir);
+    vec4 composite = texture(composite0, texcoord);
     vec3 eyeDir = normalize(cameraPosition-position.xyz);
-	float distance = length(cameraPosition-position.xyz);
-    if(data.b != 1) {
-    	normal = normalize(normal);
-    	float shadowDist = distance - (shadowDistance - transitionDistance);
-		shadowDist = shadowDist / transitionDistance;
-		float fadeOut = clamp(1.0-shadowDist, 0.0, 1.0);
-    	float b = max(dot(normal.xyz, lightDir), 0) - (data.a * fadeOut);
-    	if(b <= data1.a)
-    		b = data1.a;
-    	b = clamp(b,0.02,1.0);
-    	image = b * image;
-    	if(data.r> 0.0)
-    		if(data.a <= 0.5){
+    normal = normalize(normal);
+    for(int x = 0; x < 4; x++){
+    	vec3 lightDir = pointLightsPos[x] - position.xyz;
+    	float distance = length(lightDir);
+    	float attFactor = 1 + (0.01 * distance) + (0.002 * distance * distance);
+    	lightDir = normalize(lightDir);
+    	if(data.b != 1) {
+    		float b = max(dot(normal.xyz, lightDir), 0) * 16;
+    		b /= attFactor;
+    		composite += b * composite;
+    		if(data.r> 0.0) {
     			vec3 vHalfVector = normalize(lightDir.xyz+eyeDir);
-	   			image += pow(max(dot(normal.xyz,vHalfVector),0.0), 100) * data.r * 1.5;
-	   		}
-    }
-    image += texture(composite0, texcoord);
-    /*
-	if(data.b != 1) {
-		float visibility = exp(-pow((distance*density),gradient));
-		visibility = clamp(visibility,0.95,1.1);
-    	image.rgb = mix(skyColor.rgb, image.rgb, visibility);
-	}*/
-    if(camUnderWater == 1){
-		out_Color = mix(vec4(0.0,0.0,0.3125,1.0),image,0.5);
-	} else {
-		out_Color = image;
+    			float spec = pow(max(dot(normal.xyz,vHalfVector),0.0), 100) * data.r * 1.5;
+    			spec /= attFactor;
+		   		composite += spec;
+		   		
+		   	}
+		}
 	}
-	
+    
+	out_Color = composite;
 }

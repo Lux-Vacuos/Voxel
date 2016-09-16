@@ -113,7 +113,7 @@ void main(void){
     finalColour *= max(dot(vec3(0,1,0),L),-1.0);
     
     if(vl > 0.999)
-    	finalColour = vec4(1.0);
+    	finalColour = vec4(2.0);
     if(vl > 0.999)
     	f = 1;
 
