@@ -24,7 +24,6 @@ in vec2 textureCoords;
 
 out vec4 out_Color;
 
-uniform vec2 sunPositionInScreen;
 uniform vec2 resolution;
 uniform vec3 cameraPosition;
 uniform vec3 previousCameraPosition;

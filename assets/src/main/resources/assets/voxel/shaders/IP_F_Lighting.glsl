@@ -21,36 +21,18 @@
 #version 330 core
 
 in vec2 textureCoords;
-in vec4 posPos;
 
 out vec4 out_Color;
 
-uniform int camUnderWater;
-uniform float camUnderWaterOffset;
-uniform float time;
-uniform vec2 resolution;
 uniform vec3 cameraPosition;
 uniform vec3 lightPosition;
-uniform vec3 skyColor;
-uniform mat4 projectionMatrix;
-uniform mat4 viewMatrix;
 uniform sampler2D gDiffuse;
 uniform sampler2D gPosition;
 uniform sampler2D gNormal;
 uniform sampler2D gData0;
 uniform sampler2D gData1;
 uniform sampler2D composite0;
-uniform sampler2D composite1;
-uniform sampler2DShadow gDepth;
 
-uniform int useFXAA;
-uniform int useDOF;
-uniform int useMotionBlur;
-uniform int useVolumetricLight;
-
-const int NUM_SAMPLES = 120;
-const float density = 0.01;
-const float gradient = 2.0;
 const float transitionDistance = 5;
 const float shadowDistance = 60;
 
@@ -61,7 +43,7 @@ void main(void){
 	vec4 data1 = texture(gData1, texcoord);
     vec4 position = texture(gPosition,texcoord);
     vec4 normal = texture(gNormal, texcoord);
-    float depth = texture(gDepth, vec3(texcoord.xy, 0.0), 0);
+    
     vec3 lightDir = lightPosition;
     lightDir = normalize(lightDir);
     vec3 eyeDir = normalize(cameraPosition-position.xyz);

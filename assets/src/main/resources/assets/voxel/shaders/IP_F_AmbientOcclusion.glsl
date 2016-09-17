@@ -21,7 +21,6 @@
 #version 330 core
 
 in vec2 textureCoords;
-in vec4 posPos;
 
 out vec4 out_Color;
 

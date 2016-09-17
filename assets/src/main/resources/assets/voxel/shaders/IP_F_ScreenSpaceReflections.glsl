@@ -21,34 +21,18 @@
 #version 330 core
 
 in vec2 textureCoords;
-in vec4 posPos;
 
 out vec4 out_Color;
 
-uniform int camUnderWater;
-uniform float camUnderWaterOffset;
-uniform vec2 resolution;
 uniform vec3 cameraPosition;
-uniform vec3 previousCameraPosition;
-uniform vec3 lightPosition;
-uniform vec2 sunPositionInScreen;
 uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;
-uniform mat4 inverseProjectionMatrix;
-uniform mat4 inverseViewMatrix;
-uniform mat4 previousViewMatrix;
-uniform sampler2D gDiffuse;
 uniform sampler2D gPosition;
 uniform sampler2D gNormal;
 uniform sampler2D gData0;
-uniform sampler2D gData1;
 uniform sampler2D composite0;
 uniform sampler2DShadow gDepth;
 
-uniform int useFXAA;
-uniform int useDOF;
-uniform int useMotionBlur;
-uniform int useVolumetricLight;
 uniform int useReflections;
 
 void main(void){
@@ -100,10 +84,6 @@ void main(void){
     	}
     }
     
-    if(camUnderWater == 1){
-		out_Color = mix(vec4(0.0,0.0,0.3125,1.0),image,0.5);
-	} else {
-		out_Color = image;
-	}
+	out_Color = image;
 	
 }
