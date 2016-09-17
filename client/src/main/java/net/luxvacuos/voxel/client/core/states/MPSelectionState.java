@@ -49,7 +49,6 @@ public class MPSelectionState extends AbstractFadeState {
 	public MPSelectionState() {
 		super(StateNames.MP_SELECTION);
 		Window window = GameResources.getInstance().getGameWindow();
-		window.getKeyboardHandler().enableTextInput();
 		uiWindow = new UIWindow(20, window.getHeight() - 20,
 				window.getWidth() - 40, window.getHeight() - 40, "Multiplayer");
 		exitButton = new Button(uiWindow.getWidth() / 2 + 10, -uiWindow.getHeight() + 35, 200, 40, "Back");
@@ -78,12 +77,14 @@ public class MPSelectionState extends AbstractFadeState {
 
 	@Override
 	public void start() {
+		GameResources.getInstance().getGameWindow().getKeyboardHandler().enableTextInput();
 		time = 0;
 		this.uiWindow.setFadeAlpha(0);
 	}
 
 	@Override
 	public void end() {
+		this.ip = "";
 		this.uiWindow.setFadeAlpha(1);
 	}
 

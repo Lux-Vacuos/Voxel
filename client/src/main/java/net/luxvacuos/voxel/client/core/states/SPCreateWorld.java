@@ -48,7 +48,6 @@ public class SPCreateWorld extends AbstractFadeState {
 	public SPCreateWorld() {
 		super(StateNames.SP_CREATE_WORLD);
 		Window window = GameResources.getInstance().getGameWindow();
-		window.getKeyboardHandler().enableTextInput();
 		uiWindow = new UIWindow(20, window.getHeight() - 20,
 				window.getWidth() - 40, window.getHeight() - 40, "Create World");
 		nameT = new Text("World Name", uiWindow.getWidth() / 2, -uiWindow.getHeight() / 2 + 100);
@@ -77,11 +76,13 @@ public class SPCreateWorld extends AbstractFadeState {
 
 	@Override
 	public void start() {
+		GameResources.getInstance().getGameWindow().getKeyboardHandler().enableTextInput();
 		uiWindow.setFadeAlpha(0);
 	}
 
 	@Override
 	public void end() {
+		this.worldName = "";
 		uiWindow.setFadeAlpha(1);
 	}
 
