@@ -20,41 +20,18 @@
 
 #version 330 core
 
-/*--------------------------------------------------------*/
-/*-----------COMPOSITE FINAL 1 IN-OUT-UNIFORMS------------*/
-/*--------------------------------------------------------*/
-
 in vec2 textureCoords;
-in vec4 posPos;
 
 out vec4 out_Color;
 
-uniform vec2 sunPositionInScreen;
-uniform vec2 resolution;
-uniform vec3 cameraPosition;
-uniform vec3 previousCameraPosition;
-uniform mat4 projectionMatrix;
-uniform mat4 inverseProjectionMatrix;
-uniform mat4 inverseViewMatrix;
-uniform mat4 previousViewMatrix;
 uniform sampler2D composite0;
 uniform sampler2D gDepth;
-uniform sampler2D gData0;
 
 uniform int useDOF;
-
-/*--------------------------------------------------------*/
-/*---------------COMPOSITE FINAL 1 CONFIG-----------------*/
-/*--------------------------------------------------------*/
-
-/*--------------------------------------------------------*/
-/*---------------COMPOSITE FINAL 1 CODE-------------------*/
-/*--------------------------------------------------------*/
 
 void main(void){
 	vec2 texcoord = textureCoords;
 	vec4 textureColour = texture(composite0, texcoord);
-	vec4 data = texture(gData0, texcoord);
 	if(useDOF == 1){
 		vec3 sum = textureColour.rgb;
 		float bias = min(abs(texture(gDepth, texcoord).x - texture(gDepth, vec2(0.5)).x) * .02, .01);

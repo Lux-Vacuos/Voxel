@@ -20,24 +20,15 @@
 
 #version 330 core
 
-/*--------------------------------------------------------*/
-/*--------------COMPOSITE 0 IN-OUT-UNIFORMS---------------*/
-/*--------------------------------------------------------*/
-
 in vec2 textureCoords;
 in vec4 posPos;
 
 out vec4 out_Color;
 
-uniform vec2 sunPositionInScreen;
 uniform sampler2D composite0;
 uniform vec2 resolution;
 
 uniform int useFXAA;
-
-/*--------------------------------------------------------*/
-/*------------------COMPOSITE 0 CONFIG--------------------*/
-/*--------------------------------------------------------*/
 
 #define FxaaInt2 ivec2
 #define FxaaFloat2 vec2
@@ -50,10 +41,6 @@ uniform int useFXAA;
 
 #define rt_w resolution.x
 #define rt_h resolution.y
-
-/*--------------------------------------------------------*/
-/*------------------COMPOSITE 0 CODE----------------------*/
-/*--------------------------------------------------------*/
 
 vec3 FxaaPixelShader(vec4 posPos, sampler2D tex, vec2 rcpFrame) {
     vec3 rgbNW = FxaaTexLod0(tex, posPos.zw).xyz;
@@ -103,13 +90,9 @@ vec4 PostFX(sampler2D tex, vec2 uv, float time) {
 }
 
 void main(void){
-	vec2 texcoord = textureCoords;
-	vec4 data = vec4(0.0);
 	if (useFXAA == 1) {
-		data = PostFX(composite0, texcoord, 0);
+		out_Color = PostFX(composite0, textureCoords, 0);
 	} else {
-		data = texture(composite0,texcoord);
+		out_Color = texture(composite0,textureCoords);
 	}
-    out_Color = data;
-
 }

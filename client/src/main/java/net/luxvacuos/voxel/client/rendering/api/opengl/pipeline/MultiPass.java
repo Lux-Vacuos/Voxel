@@ -39,6 +39,9 @@ public class MultiPass extends RenderingPipeline {
 	private AmbientOcclusion ambientOcclusion;
 	private ColorCorrection colorCorrection;
 	private PointLightPass pointLightPass;
+	private FXAA fxaa;
+	private MotionBlur motionBlur;
+	private DepthOfField depthOfField;
 
 	@Override
 	public void init(GameResources gm) {
@@ -85,6 +88,18 @@ public class MultiPass extends RenderingPipeline {
 		screenSpaceReflections = new ScreenSpaceReflections("ScreenSpaceReflections", width, height);
 		screenSpaceReflections.init();
 		super.imagePasses.add(screenSpaceReflections);
+
+		fxaa = new FXAA("FXAA", width, height);
+		fxaa.init();
+		super.imagePasses.add(fxaa);
+
+		motionBlur = new MotionBlur("MotionBlur", width, height);
+		motionBlur.init();
+		super.imagePasses.add(motionBlur);
+
+		depthOfField = new DepthOfField("DoF", width, height);
+		depthOfField.init();
+		super.imagePasses.add(depthOfField);
 	}
 
 }

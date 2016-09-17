@@ -20,12 +20,7 @@
 
 #version 330 core
 
-/*--------------------------------------------------------*/
-/*-----------COMPOSITE FINAL 0 IN-OUT-UNIFORMS------------*/
-/*--------------------------------------------------------*/
-
 in vec2 textureCoords;
-in vec4 posPos;
 
 out vec4 out_Color;
 
@@ -39,22 +34,12 @@ uniform mat4 inverseViewMatrix;
 uniform mat4 previousViewMatrix;
 uniform sampler2D composite0;
 uniform sampler2D gDepth;
-uniform sampler2D gData0;
 
-uniform int useDOF;
 uniform int useMotionBlur;
-
-/*--------------------------------------------------------*/
-/*---------------COMPOSITE FINAL 0 CONFIG-----------------*/
-/*--------------------------------------------------------*/
 
 const float max_distort = 0.1;
 const int num_iter = 12;
 const float reci_num_iter_f = 1.0 / float(num_iter);
-
-/*--------------------------------------------------------*/
-/*---------------COMPOSITE FINAL 0 CODE-------------------*/
-/*--------------------------------------------------------*/
 
 vec2 barrelDistortion(vec2 coord, float amt) {
 	vec2 cc = coord - 0.5;
@@ -88,11 +73,10 @@ vec4 spectrum_offset( float t ) {
 void main(void){
 	vec2 texcoord = textureCoords;
 	vec4 textureColour = vec4(0.0);
-	vec4 data = texture(gData0, texcoord);
 	textureColour = texture(composite0, texcoord);
 	// CHROMATIC ABERRATION - DISABLED - Needs own FBO/Shader
 	/*
-	vec2 uv=(gl_FragCoord.xy/resolution.xy);
+	vec2 uv = (gl_FragCoord.xy/resolution.xy);
 	vec4 sumcol = vec4(0.0);
 	vec4 sumw = vec4(0.0);	
 	for ( int i=0; i<num_iter;++i )

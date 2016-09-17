@@ -48,11 +48,11 @@ uniform int useDOF;
 uniform int useMotionBlur;
 uniform int useVolumetricLight;
 
-const int NUM_SAMPLES = 50;
+const int NUM_SAMPLES = 120;
 const float density = 0.01;
 const float gradient = 2.0;
 const float transitionDistance = 5;
-const float shadowDistance = 160;
+const float shadowDistance = 60;
 
 void main(void){
 	vec2 texcoord = textureCoords;
@@ -83,16 +83,6 @@ void main(void){
 	   		}
     }
     image += texture(composite0, texcoord);
-    /*
-	if(data.b != 1) {
-		float visibility = exp(-pow((distance*density),gradient));
-		visibility = clamp(visibility,0.95,1.1);
-    	image.rgb = mix(skyColor.rgb, image.rgb, visibility);
-	}*/
-    if(camUnderWater == 1){
-		out_Color = mix(vec4(0.0,0.0,0.3125,1.0),image,0.5);
-	} else {
-		out_Color = image;
-	}
+	out_Color = image;
 	
 }

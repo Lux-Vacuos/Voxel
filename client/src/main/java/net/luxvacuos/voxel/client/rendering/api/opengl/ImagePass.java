@@ -20,12 +20,19 @@
 
 package net.luxvacuos.voxel.client.rendering.api.opengl;
 
+import static org.lwjgl.opengl.GL11.GL_TRIANGLE_STRIP;
+import static org.lwjgl.opengl.GL11.glDrawArrays;
+import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
+import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
+import static org.lwjgl.opengl.GL30.glBindVertexArray;
+
 import net.luxvacuos.igl.vector.Matrix4f;
 import net.luxvacuos.igl.vector.Vector2f;
 import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.DeferredShadingShader;
 import net.luxvacuos.voxel.client.resources.GameResources;
+import net.luxvacuos.voxel.client.resources.models.RawModel;
 import net.luxvacuos.voxel.client.util.Maths;
 import net.luxvacuos.voxel.client.world.entities.PlayerCamera;
 
@@ -83,6 +90,20 @@ public abstract class ImagePass {
 		shader.stop();
 	}
 
+	public void process(GameResources gm, Matrix4f previousViewMatrix, Vector3f previousCameraPosition,
+			ImagePassFBO[] auxs, RenderingPipeline pipe, RawModel quad) {
+		begin(gm, previousViewMatrix, previousCameraPosition);
+		MasterRenderer.prepare();
+		glBindVertexArray(quad.getVaoID());
+		glEnableVertexAttribArray(0);
+		render(auxs, pipe);
+		glDrawArrays(GL_TRIANGLE_STRIP, 0, quad.getVertexCount());
+		glDisableVertexAttribArray(0);
+		glBindVertexArray(0);
+		end();
+		auxs[0] = getFbo();
+	}
+
 	/**
 	 * Begin ImagePass processing, binds the FBO, starts the shader, loads
 	 * dynamic data and leaves the state for rendering.
@@ -108,8 +129,9 @@ public abstract class ImagePass {
 						null),
 				width, height));
 		shader.loadExposure(2f);
-		shader.loadPointLightsPos(gm.lights);
+		shader.loadPointLightsPos(gm.getLightRenderer().getLights());
 		shader.loadTime(gm.getWorldSimulation().getTime());
+		MasterRenderer.prepare();
 	}
 
 	/**

@@ -20,10 +20,6 @@
 
 #version 330 core
 
-/*--------------------------------------------------------*/
-/*--------------COMPOSITE 0 IN-OUT-UNIFORMS---------------*/
-/*--------------------------------------------------------*/
-
 in vec2 position;
 
 out vec2 textureCoords;
@@ -34,20 +30,9 @@ uniform vec2 resolution;
 
 uniform int useFXAA;
 
-/*--------------------------------------------------------*/
-/*------------------COMPOSITE 0 CONFIG--------------------*/
-/*--------------------------------------------------------*/
-
 #define FXAA_SUBPIX_SHIFT (1.0/4.0)
 
-/*--------------------------------------------------------*/
-/*------------------COMPOSITE 0 CODE----------------------*/
-/*--------------------------------------------------------*/
-
-
-
 void main(void){
-
 	gl_Position = transformationMatrix * vec4(position, -0.8, 1.0);
 	textureCoords = vec2((position.x+1.0)/2.0, (position.y+1.0)/2.0);
 	if(useFXAA == 1){
@@ -55,5 +40,4 @@ void main(void){
 		posPos.xy = textureCoords;
 		posPos.zw = textureCoords - (rcpFrame * (0.5 + FXAA_SUBPIX_SHIFT));
 	}
-	
 }

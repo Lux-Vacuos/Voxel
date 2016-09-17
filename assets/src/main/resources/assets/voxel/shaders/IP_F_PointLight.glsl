@@ -29,7 +29,7 @@ uniform vec3 cameraPosition;
 uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;
 
-uniform vec3 pointLightsPos[4];
+uniform vec3 pointLightsPos[256];
 
 uniform sampler2D gDiffuse;
 uniform sampler2D gPosition;
@@ -50,13 +50,15 @@ void main(void){
     vec4 composite = texture(composite0, texcoord);
     vec3 eyeDir = normalize(cameraPosition-position.xyz);
     normal = normalize(normal);
-    for(int x = 0; x < 4; x++){
+    for(int x = 0; x < 256; x++){
+    	if(pointLightsPos[x].y < 0)
+    		break;
     	vec3 lightDir = pointLightsPos[x] - position.xyz;
     	float distance = length(lightDir);
     	float attFactor = 1 + (0.01 * distance) + (0.002 * distance * distance);
     	lightDir = normalize(lightDir);
     	if(data.b != 1) {
-    		float b = max(dot(normal.xyz, lightDir), 0) * 16;
+    		float b = max(dot(normal.xyz, lightDir), 0) * 8;
     		b /= attFactor;
     		composite += b * composite;
     		if(data.r> 0.0) {
