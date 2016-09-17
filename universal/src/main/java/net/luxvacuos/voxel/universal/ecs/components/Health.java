@@ -1,8 +1,10 @@
 package net.luxvacuos.voxel.universal.ecs.components;
 
-import com.badlogic.ashley.core.Component;
+import com.hackhalo2.nbt.CompoundBuilder;
+import com.hackhalo2.nbt.exceptions.NBTException;
+import com.hackhalo2.nbt.tags.TagCompound;
 
-public class Health implements Component {
+public class Health implements VoxelComponent {
 	
 	private float health;
 	
@@ -34,6 +36,16 @@ public class Health implements Component {
 		this.health += amount;
 		
 		return this;
+	}
+
+	@Override
+	public void load(TagCompound compound) throws NBTException {
+		this.health = compound.getFloat("Health");
+	}
+
+	@Override
+	public TagCompound save() {
+		return new CompoundBuilder().start("HealthCompound").addFloat("Health", this.health).build();
 	}
 
 }

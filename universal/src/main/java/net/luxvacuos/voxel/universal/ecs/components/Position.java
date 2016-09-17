@@ -1,10 +1,12 @@
 package net.luxvacuos.voxel.universal.ecs.components;
 
-import com.badlogic.ashley.core.Component;
+import com.hackhalo2.nbt.CompoundBuilder;
+import com.hackhalo2.nbt.exceptions.NBTException;
+import com.hackhalo2.nbt.tags.TagCompound;
 
 import net.luxvacuos.igl.vector.Vector3f;
 
-public class Position implements Component {
+public class Position implements VoxelComponent {
 
 	private double x, y, z;
 	
@@ -79,5 +81,22 @@ public class Position implements Component {
 	@Override
 	public String toString() {
 		return "[x:" + this.x + "]" + "[y:" + this.y + "]" + "[z:" + this.z + "]";
+	}
+
+	@Override
+	public void load(TagCompound compound) throws NBTException {
+		this.x = compound.getDouble("PosX");
+		this.y = compound.getDouble("PosY");
+		this.z = compound.getDouble("PosZ");
+		
+	}
+
+	@Override
+	public TagCompound save() {
+		CompoundBuilder builder = new CompoundBuilder().start("PositionComponent");
+		
+		builder.addDouble("PosX", this.x).addDouble("PosY", this.y).addDouble("PosZ", this.z);
+		
+		return builder.build();
 	}
 }

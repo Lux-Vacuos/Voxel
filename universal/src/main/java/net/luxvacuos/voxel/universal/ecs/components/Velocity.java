@@ -1,10 +1,12 @@
 package net.luxvacuos.voxel.universal.ecs.components;
 
-import com.badlogic.ashley.core.Component;
+import com.hackhalo2.nbt.CompoundBuilder;
+import com.hackhalo2.nbt.exceptions.NBTException;
+import com.hackhalo2.nbt.tags.TagCompound;
 
 import net.luxvacuos.igl.vector.Vector3f;
 
-public class Velocity implements Component {
+public class Velocity implements VoxelComponent {
 private double x, y, z;
 	
 	public Velocity() {
@@ -78,5 +80,22 @@ private double x, y, z;
 	@Override
 	public String toString() {
 		return "[x:" + this.x + "]" + "[y:" + this.y + "]" + "[z:" + this.z + "]";
+	}
+	
+	@Override
+	public void load(TagCompound compound) throws NBTException {
+		this.x = compound.getDouble("VelX");
+		this.y = compound.getDouble("VelY");
+		this.z = compound.getDouble("VelZ");
+		
+	}
+
+	@Override
+	public TagCompound save() {
+		CompoundBuilder builder = new CompoundBuilder().start("VelocityComponent");
+		
+		builder.addDouble("VelX", this.x).addDouble("VelY", this.y).addDouble("VelZ", this.z);
+		
+		return builder.build();
 	}
 }

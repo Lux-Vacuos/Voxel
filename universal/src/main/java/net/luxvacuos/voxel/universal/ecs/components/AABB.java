@@ -1,12 +1,14 @@
 package net.luxvacuos.voxel.universal.ecs.components;
 
-import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
+import com.hackhalo2.nbt.CompoundBuilder;
+import com.hackhalo2.nbt.exceptions.NBTException;
+import com.hackhalo2.nbt.tags.TagCompound;
 
 import net.luxvacuos.igl.vector.Vector3f;
 
-public class AABB implements Component {
+public class AABB implements VoxelComponent {
 
 	private BoundingBox bb = new BoundingBox();
 
@@ -20,11 +22,12 @@ public class AABB implements Component {
 	public AABB(Vector3 min, Vector3 max) {
 		this.min = min;
 		this.max = max;
+		
+		this.bb = new BoundingBox(this.min, this.max);
 	}
 
 	public AABB(Vector3f min, Vector3f max) {
-		this.min = min.getAsVec3();
-		this.max = max.getAsVec3();
+		this(min.getAsVec3(), max.getAsVec3());
 	}
 
 	public AABB set(Vector3 min, Vector3 max) {
@@ -111,9 +114,7 @@ public class AABB implements Component {
 	}
 
 	public AABB setBoundingBox(Vector3f min, Vector3f max) {
-		this.bb = new BoundingBox(min.getAsVec3(), max.getAsVec3());
-
-		return this;
+		return this.setBoundingBox(min.getAsVec3(), max.getAsVec3());
 	}
 
 	public AABB setBoundingBox(Vector3 min, Vector3 max) {
@@ -123,7 +124,35 @@ public class AABB implements Component {
 	}
 
 	public void update(Vector3f position) {
-		this.bb.set(new Vector3(position.x + min.x, position.y + min.y, position.z + min.z),
-				new Vector3(position.x + max.x, position.y + max.y, position.z + max.z));
+		this.bb.set(new Vector3(position.x + this.min.x, position.y + this.min.y, position.z + this.min.z),
+				new Vector3(position.x + this.max.x, position.y + this.max.y, position.z + this.max.z));
+	}
+
+	@Override
+	public void load(TagCompound compound) throws NBTException {
+		double minX, minY, minZ, maxX, maxY, maxZ;
+		
+		minX = compound.getDouble("MinX");
+		minY = compound.getDouble("MinY");
+		minZ = compound.getDouble("MinZ");
+		maxX = compound.getDouble("MaxX");
+		maxY = compound.getDouble("MaxY");
+		maxZ = compound.getDouble("MaxZ");
+		
+		this.min = new Vector3(minX, minY, minZ);
+		this.max = new Vector3(maxX, maxY, maxZ);
+		
+		this.bb.set(this.min, this.max);
+		
+	}
+
+	@Override
+	public TagCompound save() {
+		CompoundBuilder builder = new CompoundBuilder().start("AABBComponent");
+		
+		builder.addDouble("MinX", this.min.x).addDouble("MinY", this.min.y).addDouble("MinZ", this.min.z);
+		builder.addDouble("MaxX", this.max.x).addDouble("MaxY", this.max.y).addDouble("MaxZ", this.max.z);
+		
+		return builder.build();
 	}
 }

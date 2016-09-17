@@ -1,8 +1,10 @@
 package net.luxvacuos.voxel.universal.ecs.components;
 
-import com.badlogic.ashley.core.Component;
+import com.hackhalo2.nbt.CompoundBuilder;
+import com.hackhalo2.nbt.exceptions.NBTException;
+import com.hackhalo2.nbt.tags.TagCompound;
 
-public class Scale implements Component {
+public class Scale implements VoxelComponent {
 	
 	private float scale;
 	
@@ -22,6 +24,17 @@ public class Scale implements Component {
 		this.scale = scale;
 		
 		return this;
+	}
+
+	@Override
+	public void load(TagCompound compound) throws NBTException {
+		this.scale = compound.getFloat("Scale");
+		
+	}
+
+	@Override
+	public TagCompound save() {
+		return new CompoundBuilder().start("ScaleCompound").addFloat("Scale", this.scale).build();
 	}
 
 }
