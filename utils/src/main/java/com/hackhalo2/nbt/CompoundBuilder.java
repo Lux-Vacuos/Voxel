@@ -5,6 +5,7 @@ import com.hackhalo2.nbt.tags.TagByte;
 import com.hackhalo2.nbt.tags.TagByteArray;
 import com.hackhalo2.nbt.tags.TagCompound;
 import com.hackhalo2.nbt.tags.TagDouble;
+import com.hackhalo2.nbt.tags.TagFloat;
 import com.hackhalo2.nbt.tags.TagInt;
 import com.hackhalo2.nbt.tags.TagIntArray;
 import com.hackhalo2.nbt.tags.TagList;
@@ -189,6 +190,36 @@ public class CompoundBuilder {
 		try {
 			if(this.compound.hasTagByName(name)) {
 				TagLong tag = this.compound.getTag(name, TagLong.class);
+				tag.setValue(value);
+			}
+		} catch(NBTException e) {
+			e.printStackTrace();
+		}
+
+		return this;
+	}
+
+	//Add a Float Tag to the Compound
+	public CompoundBuilder addFloat(String name, float value) {
+		this.checkIfInitialized();
+
+		try {
+			TagFloat tag = new TagFloat(name, value);
+			this.compound.addTag(tag);
+		} catch(NBTException e) {
+			e.printStackTrace();
+		}
+
+		return this;
+	}
+
+	//Modify an existing Float in the compound by name
+	public CompoundBuilder modifyFloat(String name, float value) {
+		this.checkIfInitialized();
+
+		try {
+			if(this.compound.hasTagByName(name)) {
+				TagFloat tag = this.compound.getTag(name, TagFloat.class);
 				tag.setValue(value);
 			}
 		} catch(NBTException e) {

@@ -9,8 +9,9 @@ import com.hackhalo2.nbt.stream.NBTOutputStream;
 public final class TagFloat extends AbstractTag {
 	private float value;
 
-	public TagFloat(String name) {
+	public TagFloat(String name, float value) {
 		super(name, TagType.FLOAT.getID());
+		this.value = value;
 	}
 	
 	public TagFloat(NBTInputStream in, boolean anonymous) throws NBTException, IOException {
