@@ -29,6 +29,7 @@ uniform sampler2D gPosition;
 uniform sampler2D gNormal;
 uniform sampler2D composite0;
 uniform sampler2D gDepth;
+uniform int useAmbientOcclusion;
 
 const float distanceThreshold = 5;
 const int sample_count = 16;
@@ -57,20 +58,24 @@ void main(void){
     vec4 normal = texture(gNormal, texcoord);
     vec4 depth = texture(gDepth, texcoord);
     vec4 image = texture(composite0, texcoord);
-    vec2 filterRadius = vec2(10 / resolution.x, 10 / resolution.y);
+    if(useAmbientOcclusion == 1){
     
-    float ambientOcclusion = 0;
-    for (int i = 0; i < sample_count; ++i) {
-        vec2 sampleTexCoord = texcoord + (poisson16[i] * (filterRadius));
-        float sampleDepth = texture(gDepth, sampleTexCoord).r;
-        vec3 samplePos = texture(gPosition, sampleTexCoord).rgb;
-        vec3 sampleDir = normalize(samplePos - position.rgb);
-        float NdotS = max(dot(normal.rgb, sampleDir), 0);
-        float VPdistSP = distance(position.rgb, samplePos);
-        float a = 1.0 - smoothstep(distanceThreshold, distanceThreshold * 2, VPdistSP);
-        float b = NdotS;
-        ambientOcclusion += (a * b) * 1.3;
-    }
-	out_Color = mix(image, vec4(0.0), ambientOcclusion / sample_count);
+    	vec2 filterRadius = vec2(10 / resolution.x, 10 / resolution.y);
+    
+    	float ambientOcclusion = 0;
+    	for (int i = 0; i < sample_count; ++i) {
+	        vec2 sampleTexCoord = texcoord + (poisson16[i] * (filterRadius));
+        	float sampleDepth = texture(gDepth, sampleTexCoord).r;
+        	vec3 samplePos = texture(gPosition, sampleTexCoord).rgb;
+        	vec3 sampleDir = normalize(samplePos - position.rgb);
+        	float NdotS = max(dot(normal.rgb, sampleDir), 0);
+        	float VPdistSP = distance(position.rgb, samplePos);
+        	float a = 1.0 - smoothstep(distanceThreshold, distanceThreshold * 2, VPdistSP);
+        	float b = NdotS;
+        	ambientOcclusion += (a * b) * 1.3;
+    	}
+		out_Color = mix(image, vec4(0.0), ambientOcclusion / sample_count);
+	} else 
+		out_Color = image;
 	
 }

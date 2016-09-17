@@ -72,6 +72,7 @@ public class ClientVariables extends GlobalVariables {
 	public static boolean useVolumetricLight = false;
 	public static boolean useParallax = false;
 	public static boolean useReflections = false;
+	public static boolean useAmbientOcclusion = false;
 	public static final float WAVE_SPEED = 4f;
 	public static String renderingPipeline = "MultiPass";
 	/**

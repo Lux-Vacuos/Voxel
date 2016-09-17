@@ -72,6 +72,7 @@ public class DeferredShadingShader extends ShaderProgram {
 	private int loc_useMotionBlur;
 	private int loc_useVolumetricLight;
 	private int loc_useReflections;
+	private int loc_useAmbientOcclusion;
 
 	private float time;
 
@@ -117,6 +118,7 @@ public class DeferredShadingShader extends ShaderProgram {
 		loc_useMotionBlur = super.getUniformLocation("useMotionBlur");
 		loc_useReflections = super.getUniformLocation("useReflections");
 		loc_useVolumetricLight = super.getUniformLocation("useVolumetricLight");
+		loc_useAmbientOcclusion = super.getUniformLocation("useAmbientOcclusion");
 	}
 
 	@Override
@@ -188,12 +190,13 @@ public class DeferredShadingShader extends ShaderProgram {
 	}
 
 	public void loadSettings(boolean useDOF, boolean useFXAA, boolean useMotionBlur, boolean useVolumetricLight,
-			boolean useReflections) {
+			boolean useReflections, boolean useAmbientOcclusion) {
 		super.loadBoolean(loc_useDOF, useDOF);
 		super.loadBoolean(loc_useFXAA, useFXAA);
 		super.loadBoolean(loc_useMotionBlur, useMotionBlur);
 		super.loadBoolean(loc_useVolumetricLight, useVolumetricLight);
 		super.loadBoolean(loc_useReflections, useReflections);
+		super.loadBoolean(loc_useAmbientOcclusion, useAmbientOcclusion);
 	}
 
 	public void loadMotionBlurData(Matrix4f projectionMatrix, Camera camera, Matrix4f previousViewMatrix,

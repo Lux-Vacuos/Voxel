@@ -47,30 +47,32 @@ public class OptionsState extends AbstractFadeState {
 	private Button motionBlurButton;
 	private Button reflectionsButton;
 	private Button parallaxButton;
+	private Button ambientOccButton;
 	private UIWindow uiWindow;
 
 	public OptionsState() {
 		super(StateNames.OPTIONS);
 		Window window = GameResources.getInstance().getGameWindow();
-		uiWindow = new UIWindow(20, window.getHeight() - 20,
-				window.getWidth() - 40,
-				window.getHeight() - 40, "Options");
+		uiWindow = new UIWindow(20, window.getHeight() - 20, window.getWidth() - 40, window.getHeight() - 40,
+				"Options");
 
 		exitButton = new Button(uiWindow.getWidth() / 2 - 100, -uiWindow.getHeight() + 35, 200, 40, "Back");
-		godraysButton = new Button(40, -110, 200, 40, "Light Rays");
+		godraysButton = new Button(40, -110, 200, 40, "Volumetric Light");
 		shadowsButton = new Button(40, -170, 200, 40, "Shadows");
-		dofButton = new Button(40, -230, 200, 40, "DoF");
+		dofButton = new Button(40, -230, 200, 40, "Depth of Field");
 		fxaaButton = new Button(40, -290, 200, 40, "FXAA");
 		motionBlurButton = new Button(40, -350, 200, 40, "Motion Blur");
 
 		reflectionsButton = new Button(260, -110, 200, 40, "Reflections");
 		parallaxButton = new Button(260, -170, 200, 40, "Parallax");
 
+		ambientOccButton = new Button(260, -230, 200, 40, "Ambient Occlusion");
+
 		if (ClientVariables.useVolumetricLight) {
-			godraysButton.setText("Light Rays: ON");
+			godraysButton.setText("Volumetric Light: ON");
 			godraysButton.setColor(100, 255, 100, 255);
 		} else {
-			godraysButton.setText("Light Rays: OFF");
+			godraysButton.setText("Volumetric Light: OFF");
 			godraysButton.setColor(255, 100, 100, 255);
 		}
 
@@ -83,10 +85,10 @@ public class OptionsState extends AbstractFadeState {
 		}
 
 		if (ClientVariables.useDOF) {
-			dofButton.setText("DoF: ON");
+			dofButton.setText("Depth of Field: ON");
 			dofButton.setColor(100, 255, 100, 255);
 		} else {
-			dofButton.setText("DoF: OFF");
+			dofButton.setText("Depth of Field: OFF");
 			dofButton.setColor(255, 100, 100, 255);
 		}
 
@@ -122,6 +124,14 @@ public class OptionsState extends AbstractFadeState {
 			parallaxButton.setColor(255, 100, 100, 255);
 		}
 
+		if (ClientVariables.useAmbientOcclusion) {
+			ambientOccButton.setText("Ambient Occlusion: ON");
+			ambientOccButton.setColor(100, 255, 100, 255);
+		} else {
+			ambientOccButton.setText("Ambient Occlusion: OFF");
+			ambientOccButton.setColor(255, 100, 100, 255);
+		}
+
 		exitButton.setOnButtonPress((button, delta) -> {
 			GameResources.getInstance().getGameSettings().update();
 			GameResources.getInstance().getGameSettings().save();
@@ -142,10 +152,10 @@ public class OptionsState extends AbstractFadeState {
 		dofButton.setOnButtonPress((button, delta) -> {
 			ClientVariables.useDOF = !ClientVariables.useDOF;
 			if (ClientVariables.useDOF) {
-				dofButton.setText("DoF: ON");
+				dofButton.setText("Depth of Field: ON");
 				dofButton.setColor(100, 255, 100, 255);
 			} else {
-				dofButton.setText("DoF: OFF");
+				dofButton.setText("Depth of Field: OFF");
 				dofButton.setColor(255, 100, 100, 255);
 			}
 
@@ -154,10 +164,10 @@ public class OptionsState extends AbstractFadeState {
 		godraysButton.setOnButtonPress((button, delta) -> {
 			ClientVariables.useVolumetricLight = !ClientVariables.useVolumetricLight;
 			if (ClientVariables.useVolumetricLight) {
-				godraysButton.setText("Light Rays: ON");
+				godraysButton.setText("Volumetric Light: ON");
 				godraysButton.setColor(100, 255, 100, 255);
 			} else {
-				godraysButton.setText("Light Rays: OFF");
+				godraysButton.setText("Volumetric Light: OFF");
 				godraysButton.setColor(255, 100, 100, 255);
 			}
 		});
@@ -209,14 +219,26 @@ public class OptionsState extends AbstractFadeState {
 			}
 		});
 
+		ambientOccButton.setOnButtonPress((button, delta) -> {
+			ClientVariables.useAmbientOcclusion = !ClientVariables.useAmbientOcclusion;
+			if (ClientVariables.useAmbientOcclusion) {
+				ambientOccButton.setText("Ambient Occlusion: ON");
+				ambientOccButton.setColor(100, 255, 100, 255);
+			} else {
+				ambientOccButton.setText("Ambient Occlusion: OFF");
+				ambientOccButton.setColor(255, 100, 100, 255);
+			}
+		});
+
 		uiWindow.addChildren(exitButton);
 		uiWindow.addChildren(shadowsButton);
 		uiWindow.addChildren(dofButton);
 		uiWindow.addChildren(godraysButton);
 		uiWindow.addChildren(fxaaButton);
-		//window.addChildren(parallaxButton);
+		// window.addChildren(parallaxButton);
 		uiWindow.addChildren(motionBlurButton);
 		uiWindow.addChildren(reflectionsButton);
+		uiWindow.addChildren(ambientOccButton);
 
 	}
 
@@ -245,7 +267,7 @@ public class OptionsState extends AbstractFadeState {
 	@Override
 	public void render(AbstractVoxel voxel, float delta) {
 		GameResources gm = (GameResources) voxel.getGameResources();
-		if(StateMachine.getPreviousState().getName().equals("SP_Pause")) {
+		if (StateMachine.getPreviousState().getName().equals("SP_Pause")) {
 			gm.getWorldsHandler().getActiveWorld().getActiveDimension().lighting();
 			gm.getSun_Camera().setPosition(gm.getCamera().getPosition());
 			gm.getFrustum().calculateFrustum(gm.getMasterShadowRenderer().getProjectionMatrix(), gm.getSun_Camera());
@@ -278,7 +300,7 @@ public class OptionsState extends AbstractFadeState {
 		} else {
 			MasterRenderer.prepare(1, 1, 1, 1);
 		}
-		
+
 		Window window = gm.getGameWindow();
 		window.beingNVGFrame();
 		uiWindow.render(window.getID());

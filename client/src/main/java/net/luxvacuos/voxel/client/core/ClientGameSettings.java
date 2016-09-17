@@ -68,6 +68,9 @@ public final class ClientGameSettings extends AbstractGameSettings {
 
 		// Parse assetsPack
 		ClientVariables.assets = getValue("Assets", "voxel");
+
+		// Parse Ambient Occlusion
+		ClientVariables.useAmbientOcclusion = Boolean.parseBoolean(getValue("useAmbientOcclusion", "false"));
 	}
 
 	/**
@@ -83,6 +86,7 @@ public final class ClientGameSettings extends AbstractGameSettings {
 		registerValue("useDOF", Boolean.toString(ClientVariables.useDOF));
 		registerValue("useReflections", Boolean.toString(ClientVariables.useReflections));
 		registerValue("useParallax", Boolean.toString(ClientVariables.useParallax));
+		registerValue("useAmbientOcclusion", Boolean.toString(ClientVariables.useAmbientOcclusion));
 		registerValue("VSYNC", Boolean.toString(ClientVariables.VSYNC));
 		registerValue("FPS", Integer.toString(ClientVariables.FPS));
 		registerValue("UPS", Integer.toString(ClientVariables.UPS));
