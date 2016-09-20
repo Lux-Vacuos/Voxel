@@ -102,15 +102,7 @@ public class ParticleSystem {
 	}
 
 	public void generateParticles(ParticlePoint particlePoint, float delta) {
-		float particlesToCreate = pps * delta;
-		int count = (int) Math.floor(particlesToCreate);
-		float partialParticle = particlesToCreate % 1;
-		for (int i = 0; i < count; i++) {
-			emitParticle(particlePoint.getPos());
-		}
-		if (Math.random() < partialParticle) {
-			emitParticle(particlePoint.getPos());
-		}
+		this.generateParticles(particlePoint.getPos(), delta);
 	}
 
 	private void emitParticle(Vector3f center) {
