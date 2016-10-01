@@ -65,7 +65,7 @@ public class MainUI extends Application {
 			stage.setScene(new Scene(updateStage));
 			stage.sizeToScene();
 		} else {
-			stage.setScene(new Scene(loginStage));
+			stage.setScene(new Scene(mainStage));
 			stage.setWidth(854);
 			stage.setHeight(520);
 		}

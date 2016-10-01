@@ -1,2 +1,2 @@
-release date=13:50 08.25.2016,version=0.0.9-1
- * Fixed EOL.
+release date=13:50 08.25.2016,version=0.0.10
+ * Disabled login

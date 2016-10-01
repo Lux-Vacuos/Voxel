@@ -24,7 +24,7 @@ import static org.lwjgl.nanovg.NanoVG.nvgCreateFontMem;
 import static org.lwjgl.nanovg.NanoVG.nvgCreateImageMem;
 import static org.lwjgl.nanovg.NanoVG.nvgDeleteImage;
 import static org.lwjgl.opengl.GL11.GL_FLOAT;
-import static org.lwjgl.opengl.GL11.GL_LINEAR;
+import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL11.GL_LINEAR_MIPMAP_LINEAR;
 import static org.lwjgl.opengl.GL11.GL_NEAREST;
 import static org.lwjgl.opengl.GL11.GL_REPEAT;
@@ -44,9 +44,9 @@ import static org.lwjgl.opengl.GL11.glTexParameteri;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE_CUBE_MAP;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE_CUBE_MAP_POSITIVE_X;
-import static org.lwjgl.opengl.GL13.glActiveTexture;
-import static org.lwjgl.opengl.GL14.GL_TEXTURE_LOD_BIAS;
-import static org.lwjgl.opengl.GL15.GL_ARRAY_BUFFER;
+import static org.lwjgl.opengl.GL13.*;
+import static org.lwjgl.opengl.GL14.*;
+import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL15.GL_ELEMENT_ARRAY_BUFFER;
 import static org.lwjgl.opengl.GL15.GL_STATIC_DRAW;
 import static org.lwjgl.opengl.GL15.GL_STREAM_DRAW;
@@ -55,13 +55,17 @@ import static org.lwjgl.opengl.GL15.glBufferData;
 import static org.lwjgl.opengl.GL15.glBufferSubData;
 import static org.lwjgl.opengl.GL15.glDeleteBuffers;
 import static org.lwjgl.opengl.GL15.glGenBuffers;
-import static org.lwjgl.opengl.GL20.glVertexAttribPointer;
-import static org.lwjgl.opengl.GL21.GL_SRGB_ALPHA;
-import static org.lwjgl.opengl.GL30.glBindVertexArray;
+import static org.lwjgl.opengl.GL20.*;
+import static org.lwjgl.opengl.GL21.*;
+import static org.lwjgl.opengl.GL30.*;
 import static org.lwjgl.opengl.GL30.glDeleteVertexArrays;
 import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 import static org.lwjgl.opengl.GL30.glGenerateMipmap;
-import static org.lwjgl.opengl.GL33.glVertexAttribDivisor;
+import static org.lwjgl.opengl.GL33.*;
+import static org.lwjgl.stb.STBImage.stbi_failure_reason;
+import static org.lwjgl.stb.STBImage.stbi_info_from_memory;
+import static org.lwjgl.stb.STBImage.stbi_is_hdr_from_memory;
+import static org.lwjgl.stb.STBImage.stbi_load_from_memory;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -79,8 +83,6 @@ import java.util.List;
 
 import org.lwjgl.BufferUtils;
 
-import de.matthiasmann.twl.utils.PNGDecoder;
-import de.matthiasmann.twl.utils.PNGDecoder.Format;
 import net.luxvacuos.igl.Logger;
 import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.core.exception.DecodeTextureException;
@@ -121,11 +123,11 @@ public class ResourceLoader {
 	private OBJLoader objLoader;
 	private long windowID;
 
-	/* public Loader(Display display) {
-		objLoader = new OBJLoader(this);
-		this.display = display;
-	} */
-	
+	/*
+	 * public Loader(Display display) { objLoader = new OBJLoader(this);
+	 * this.display = display; }
+	 */
+
 	public ResourceLoader(long windowID) {
 		this.objLoader = new OBJLoader(this);
 		this.windowID = windowID;
@@ -217,10 +219,9 @@ public class ResourceLoader {
 	public int loadTextureBlocks(String fileName) {
 		int texture_id = 0;
 		try {
-			InputStream file = getClass().getClassLoader()
-					.getResourceAsStream("assets/" + ClientVariables.assets + "/textures/blocks/" + fileName + ".png");
-			texture_id = loadTexture(file, GL_NEAREST, GL_REPEAT, GL_SRGB_ALPHA);
 			Logger.log("Loading Texture: " + fileName + ".png");
+			texture_id = loadTexture("assets/" + ClientVariables.assets + "/textures/blocks/" + fileName + ".png",
+					GL_NEAREST, GL_REPEAT, GL_SRGB_ALPHA);
 		} catch (Exception e) {
 			throw new LoadTextureException(fileName, e);
 		}
@@ -231,10 +232,9 @@ public class ResourceLoader {
 	public int loadTextureMisc(String fileName) {
 		int texture_id = 0;
 		try {
-			InputStream file = getClass().getClassLoader()
-					.getResourceAsStream("assets/" + ClientVariables.assets + "/textures/blocks/" + fileName + ".png");
-			texture_id = loadTexture(file, GL_NEAREST, GL_REPEAT, GL_RGBA);
 			Logger.log("Loading Texture: " + fileName + ".png");
+			texture_id = loadTexture("assets/" + ClientVariables.assets + "/textures/blocks/" + fileName + ".png",
+					GL_NEAREST, GL_REPEAT, GL_RGBA);
 		} catch (Exception e) {
 			throw new LoadTextureException(fileName, e);
 		}
@@ -252,10 +252,9 @@ public class ResourceLoader {
 	public int loadTextureParticle(String fileName) {
 		int texture_id = 0;
 		try {
-			InputStream file = getClass().getClassLoader().getResourceAsStream(
-					"assets/" + ClientVariables.assets + "/textures/particles/" + fileName + ".png");
 			Logger.log("Loading Texture: " + fileName + ".png");
-			texture_id = loadTexture(file, GL_NEAREST, GL_REPEAT, GL_SRGB_ALPHA);
+			texture_id = loadTexture("assets/" + ClientVariables.assets + "/textures/particles/" + fileName + ".png",
+					GL_NEAREST, GL_REPEAT, GL_SRGB_ALPHA);
 		} catch (Exception e) {
 			throw new LoadTextureException(fileName, e);
 		}
@@ -273,10 +272,9 @@ public class ResourceLoader {
 	public int loadTextureEntity(String fileName) {
 		int texture = 0;
 		try {
-			InputStream file = getClass().getClassLoader()
-					.getResourceAsStream("assets/" + ClientVariables.assets + "/textures/entity/" + fileName + ".png");
 			Logger.log("Loading Texture: " + fileName + ".png");
-			texture = loadTexture(file, GL_NEAREST, GL_REPEAT, GL_SRGB_ALPHA);
+			texture = loadTexture("assets/" + ClientVariables.assets + "/textures/entity/" + fileName + ".png",
+					GL_NEAREST, GL_REPEAT, GL_SRGB_ALPHA);
 			glGenerateMipmap(GL_TEXTURE_2D);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_LOD_BIAS, -0.4f);
@@ -287,7 +285,7 @@ public class ResourceLoader {
 		return texture;
 	}
 
-	private int loadTexture(InputStream file, int filter, int textureWarp, int format) throws DecodeTextureException {
+	private int loadTexture(String file, int filter, int textureWarp, int format) throws DecodeTextureException {
 		int texture_id = glGenTextures();
 		glBindTexture(GL_TEXTURE_2D, texture_id);
 		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, textureWarp);
@@ -295,8 +293,18 @@ public class ResourceLoader {
 		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filter);
 		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter);
 		EntityTexture data = decodeTextureFile(file);
-		glTexImage2D(GL_TEXTURE_2D, 0, format, data.getWidth(), data.getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE,
-				data.getBuffer());
+		if (data.getComp() == 3) {
+			if ((data.getWidth() & 3) != 0)
+				glPixelStorei(GL_UNPACK_ALIGNMENT, 2 - (data.getWidth() & 1));
+			glTexImage2D(GL_TEXTURE_2D, 0, format, data.getWidth(), data.getHeight(), 0, GL_RGB, GL_UNSIGNED_BYTE,
+					data.getBuffer());
+		} else {
+			glTexImage2D(GL_TEXTURE_2D, 0, format, data.getWidth(), data.getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE,
+					data.getBuffer());
+		}
+		// glTexImage2D(GL_TEXTURE_2D, 0, format, data.getWidth(),
+		// data.getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE,
+		// data.getBuffer());
 		return texture_id;
 	}
 
@@ -327,7 +335,7 @@ public class ResourceLoader {
 		try {
 			Logger.log("Loading NVGTexture: " + file + ".png");
 			buffer = ioResourceToByteBuffer("assets/" + ClientVariables.assets + "/textures/menu/" + file + ".png",
-					32 * 1024);
+					8 * 1024);
 			tex = nvgCreateImageMem(window.getNVGID(), 0, buffer);
 		} catch (Exception e) {
 			throw new LoadTextureException(file, e);
@@ -350,7 +358,7 @@ public class ResourceLoader {
 		for (int texture : textures) {
 			glDeleteTextures(texture);
 		}
-		
+
 		Window window = WindowManager.getWindow(this.windowID);
 		long nvgID = window.getNVGID();
 		for (int texture : nvgData) {
@@ -364,9 +372,8 @@ public class ResourceLoader {
 		glBindTexture(GL_TEXTURE_CUBE_MAP, texID);
 
 		for (int i = 0; i < textureFiles.length; i++) {
-			InputStream file = getClass().getClassLoader().getResourceAsStream(
+			EntityTexture data = decodeTextureFile(
 					"assets/" + ClientVariables.assets + "/textures/skybox/" + textureFiles[i] + ".png");
-			EntityTexture data = decodeTextureFile(file);
 			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGBA, data.getWidth(), data.getHeight(), 0, GL_RGBA,
 					GL_UNSIGNED_BYTE, data.getBuffer());
 		}
@@ -377,23 +384,36 @@ public class ResourceLoader {
 		return texID;
 	}
 
-	private EntityTexture decodeTextureFile(InputStream file) throws DecodeTextureException {
+	private EntityTexture decodeTextureFile(String file) throws DecodeTextureException {
 		int width = 0;
 		int height = 0;
-		ByteBuffer buffer = null;
+		int component = 0;
+		ByteBuffer imageBuffer;
+		ByteBuffer image;
 		try {
-			InputStream in = file;
-			PNGDecoder decoder = new PNGDecoder(in);
-			width = decoder.getWidth();
-			height = decoder.getHeight();
-			buffer = ByteBuffer.allocateDirect(4 * width * height);
-			decoder.decode(buffer, width * 4, Format.RGBA);
-			buffer.flip();
-			in.close();
-		} catch (Exception e) {
-			throw new DecodeTextureException(e);
+			imageBuffer = ioResourceToByteBuffer(file, 8 * 1024);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
 		}
-		return new EntityTexture(buffer, width, height);
+
+		IntBuffer w = BufferUtils.createIntBuffer(1);
+		IntBuffer h = BufferUtils.createIntBuffer(1);
+		IntBuffer comp = BufferUtils.createIntBuffer(1);
+
+		if (stbi_info_from_memory(imageBuffer, w, h, comp) != 1)
+			throw new DecodeTextureException("Failed to read image information: " + stbi_failure_reason());
+
+		Logger.log("Image width: " + w.get(0), "Image height: " + h.get(0), "Image components: " + comp.get(0),
+				"Image HDR: " + stbi_is_hdr_from_memory(imageBuffer));
+
+		image = stbi_load_from_memory(imageBuffer, w, h, comp, 0);
+		if (image == null)
+			throw new DecodeTextureException("Failed to load image: " + stbi_failure_reason());
+		width = w.get(0);
+		height = h.get(0);
+		component = comp.get(0);
+
+		return new EntityTexture(image, width, height, component);
 	}
 
 	/**

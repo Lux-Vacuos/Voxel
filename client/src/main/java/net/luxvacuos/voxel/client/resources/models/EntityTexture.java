@@ -38,6 +38,10 @@ public class EntityTexture {
 	 */
 	private int height;
 	/**
+	 * Components
+	 */
+	private int comp;
+	/**
 	 * ByteBuffer
 	 */
 	private ByteBuffer buffer;
@@ -52,10 +56,11 @@ public class EntityTexture {
 	 * @param height
 	 *            Texture Height
 	 */
-	public EntityTexture(ByteBuffer buffer, int width, int height) {
+	public EntityTexture(ByteBuffer buffer, int width, int height, int comp) {
 		this.buffer = buffer;
 		this.width = width;
 		this.height = height;
+		this.comp = comp;
 	}
 
 	/**
@@ -74,6 +79,10 @@ public class EntityTexture {
 	 */
 	public int getHeight() {
 		return height;
+	}
+
+	public int getComp() {
+		return comp;
 	}
 
 	/**
