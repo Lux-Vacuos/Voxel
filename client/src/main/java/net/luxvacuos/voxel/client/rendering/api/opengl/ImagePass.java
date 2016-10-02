@@ -128,7 +128,7 @@ public abstract class ImagePass {
 				Maths.createViewMatrixRot(gm.getCamera().getPitch(), gm.getCamera().getYaw(), gm.getCamera().getRoll(),
 						null),
 				width, height));
-		shader.loadExposure(2f);
+		shader.loadExposure(1f);
 		shader.loadPointLightsPos(gm.getLightRenderer().getLights());
 		shader.loadTime(gm.getWorldSimulation().getTime());
 		MasterRenderer.prepare();
