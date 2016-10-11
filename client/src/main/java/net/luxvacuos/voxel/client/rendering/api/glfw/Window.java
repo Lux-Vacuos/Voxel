@@ -23,12 +23,15 @@ package net.luxvacuos.voxel.client.rendering.api.glfw;
 import static org.lwjgl.glfw.GLFW.glfwPollEvents;
 import static org.lwjgl.glfw.GLFW.glfwSwapBuffers;
 
+import org.lwjgl.vulkan.VkInstance;
+
 import net.luxvacuos.voxel.client.input.Mouse;
+import net.luxvacuos.voxel.client.rendering.api.glfw.WindowManager.DeviceAndGraphicsQueueFamily;
 
 public class Window extends AbstractWindow {
 
-	protected Window(long windowID, int width, int height) {
-		super(windowID, width, height);
+	protected Window(VkInstance vkInstance, DeviceAndGraphicsQueueFamily device, long windowID, int width, int height) {
+		super(vkInstance, device, windowID, width, height);
 	}
 
 	@Override

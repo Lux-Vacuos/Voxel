@@ -23,6 +23,8 @@ package net.luxvacuos.voxel.client.rendering.api.glfw;
 import static org.lwjgl.glfw.GLFW.glfwGetFramebufferSize;
 import static org.lwjgl.glfw.GLFW.glfwGetWindowSize;
 import static org.lwjgl.glfw.GLFW.glfwSwapBuffers;
+import static org.lwjgl.glfw.GLFWVulkan.glfwGetRequiredInstanceExtensions;
+import static org.lwjgl.glfw.GLFWVulkan.glfwVulkanSupported;
 import static org.lwjgl.opengl.GL11.GL_VENDOR;
 import static org.lwjgl.opengl.GL11.glGetIntegerv;
 import static org.lwjgl.opengl.GL11.glGetString;
@@ -31,12 +33,38 @@ import static org.lwjgl.stb.STBImage.stbi_info_from_memory;
 import static org.lwjgl.stb.STBImage.stbi_is_hdr_from_memory;
 import static org.lwjgl.stb.STBImage.stbi_load_from_memory;
 import static org.lwjgl.system.MemoryUtil.NULL;
+import static org.lwjgl.system.MemoryUtil.memAllocFloat;
+import static org.lwjgl.system.MemoryUtil.memAllocInt;
+import static org.lwjgl.system.MemoryUtil.memAllocLong;
+import static org.lwjgl.system.MemoryUtil.memAllocPointer;
+import static org.lwjgl.system.MemoryUtil.memFree;
+import static org.lwjgl.system.MemoryUtil.memUTF8;
+import static org.lwjgl.vulkan.EXTDebugReport.VK_DEBUG_REPORT_ERROR_BIT_EXT;
+import static org.lwjgl.vulkan.EXTDebugReport.VK_DEBUG_REPORT_WARNING_BIT_EXT;
+import static org.lwjgl.vulkan.EXTDebugReport.VK_EXT_DEBUG_REPORT_EXTENSION_NAME;
+import static org.lwjgl.vulkan.EXTDebugReport.VK_STRUCTURE_TYPE_DEBUG_REPORT_CALLBACK_CREATE_INFO_EXT;
+import static org.lwjgl.vulkan.EXTDebugReport.vkCreateDebugReportCallbackEXT;
+import static org.lwjgl.vulkan.KHRSwapchain.VK_KHR_SWAPCHAIN_EXTENSION_NAME;
+import static org.lwjgl.vulkan.VK10.VK_QUEUE_GRAPHICS_BIT;
+import static org.lwjgl.vulkan.VK10.VK_STRUCTURE_TYPE_APPLICATION_INFO;
+import static org.lwjgl.vulkan.VK10.VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
+import static org.lwjgl.vulkan.VK10.VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
+import static org.lwjgl.vulkan.VK10.VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
+import static org.lwjgl.vulkan.VK10.VK_SUCCESS;
+import static org.lwjgl.vulkan.VK10.vkCreateDevice;
+import static org.lwjgl.vulkan.VK10.vkCreateInstance;
+import static org.lwjgl.vulkan.VK10.vkEnumeratePhysicalDevices;
+import static org.lwjgl.vulkan.VK10.vkGetPhysicalDeviceQueueFamilyProperties;
+import static org.lwjgl.vulkan.VKUtil.VK_MAKE_VERSION;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
+import java.nio.LongBuffer;
 
 import org.lwjgl.BufferUtils;
+import org.lwjgl.PointerBuffer;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWCursorEnterCallback;
 import org.lwjgl.glfw.GLFWCursorPosCallback;
@@ -53,18 +81,34 @@ import org.lwjgl.nanovg.NanoVGGL3;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.NVXGPUMemoryInfo;
 import org.lwjgl.opengl.WGLAMDGPUAssociation;
+import org.lwjgl.vulkan.VkApplicationInfo;
+import org.lwjgl.vulkan.VkDebugReportCallbackCreateInfoEXT;
+import org.lwjgl.vulkan.VkDebugReportCallbackEXT;
+import org.lwjgl.vulkan.VkDevice;
+import org.lwjgl.vulkan.VkDeviceCreateInfo;
+import org.lwjgl.vulkan.VkDeviceQueueCreateInfo;
+import org.lwjgl.vulkan.VkInstance;
+import org.lwjgl.vulkan.VkInstanceCreateInfo;
+import org.lwjgl.vulkan.VkPhysicalDevice;
+import org.lwjgl.vulkan.VkQueueFamilyProperties;
 
 import com.badlogic.gdx.utils.Array;
 
 import net.luxvacuos.igl.Logger;
 import net.luxvacuos.voxel.client.core.ClientVariables;
+import net.luxvacuos.voxel.client.core.CoreInfo;
 import net.luxvacuos.voxel.client.core.exception.DecodeTextureException;
 import net.luxvacuos.voxel.client.input.Mouse;
+import net.luxvacuos.voxel.client.rendering.api.vulkan.VKUtil;
 import net.luxvacuos.voxel.client.resources.ResourceLoader;
 
 public final class WindowManager {
 
 	private static Array<Window> windows = new Array<>();
+
+	private static final boolean validation = Boolean.parseBoolean(System.getProperty("vulkan.validation", "false"));
+
+	private static ByteBuffer[] layers = { memUTF8("VK_LAYER_LUNARG_standard_validation"), };
 
 	private WindowManager() {
 	}
@@ -75,12 +119,37 @@ public final class WindowManager {
 
 	public static long createWindow(WindowHandle handle, boolean vsync) {
 		Logger.log("Creating new Window '" + handle.title + "'");
+		// TODO: Move Vulkan Stuff
+		VkInstance instance = null;
+		DeviceAndGraphicsQueueFamily deviceAndGraphicsQueueFamily = null;
+		if (glfwVulkanSupported()) {
+			Logger.log("Enabling Vulkan API");
+			PointerBuffer requiredExtensions = glfwGetRequiredInstanceExtensions();
+			if (requiredExtensions == null) {
+				throw new AssertionError("Failed to find list of required Vulkan extensions");
+			}
+
+			instance = createInstance(requiredExtensions);
+			VkDebugReportCallbackEXT debugCallback = new VkDebugReportCallbackEXT() {
+				public int invoke(int flags, int objectType, long object, long location, int messageCode,
+						long pLayerPrefix, long pMessage, long pUserData) {
+					Logger.error("ERROR OCCURED: " + VkDebugReportCallbackEXT.getString(pMessage));
+					return 0;
+				}
+			};
+			long debugCallbackHandle = setupDebugging(instance,
+					VK_DEBUG_REPORT_ERROR_BIT_EXT | VK_DEBUG_REPORT_WARNING_BIT_EXT, debugCallback);
+			VkPhysicalDevice physicalDevice = getFirstPhysicalDevice(instance);
+			deviceAndGraphicsQueueFamily = createDeviceAndGetGraphicsQueueFamily(physicalDevice);
+			CoreInfo.VkVersion = "1.0.2";
+		}
+
 		long windowID = GLFW.glfwCreateWindow(handle.width, handle.height, handle.title, NULL, NULL);
 		if (windowID == NULL) {
 			throw new RuntimeException("Failed to create GLFW Window '" + handle.title + "'");
 		}
 
-		Window window = new Window(windowID, handle.width, handle.height);
+		Window window = new Window(instance, deviceAndGraphicsQueueFamily, windowID, handle.width, handle.height);
 
 		GLFWVidMode vidmode = GLFW.glfwGetVideoMode(GLFW.glfwGetPrimaryMonitor());
 		GLFW.glfwSetWindowPos(windowID, (vidmode.width() - window.width) / 2, (vidmode.height() - window.height) / 2);
@@ -152,6 +221,133 @@ public final class WindowManager {
 		windows.add(window);
 
 		return windowID;
+	}
+
+	private static VkInstance createInstance(PointerBuffer requiredExtensions) {
+		VkApplicationInfo appInfo = VkApplicationInfo.calloc().sType(VK_STRUCTURE_TYPE_APPLICATION_INFO)
+				.pApplicationName(memUTF8("Voxel")).pEngineName(memUTF8("")).apiVersion(VK_MAKE_VERSION(1, 0, 2));
+
+		ByteBuffer VK_EXT_DEBUG_REPORT_EXTENSION = memUTF8(VK_EXT_DEBUG_REPORT_EXTENSION_NAME);
+		PointerBuffer ppEnabledExtensionNames = memAllocPointer(requiredExtensions.remaining() + 1);
+		ppEnabledExtensionNames.put(requiredExtensions)
+
+				.put(VK_EXT_DEBUG_REPORT_EXTENSION).flip();
+
+		PointerBuffer ppEnabledLayerNames = memAllocPointer(layers.length);
+		for (int i = 0; validation && i < layers.length; i++)
+			ppEnabledLayerNames.put(layers[i]);
+		ppEnabledLayerNames.flip();
+
+		VkInstanceCreateInfo pCreateInfo = VkInstanceCreateInfo.calloc().sType(VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO)
+				.pNext(NULL).pApplicationInfo(appInfo).ppEnabledExtensionNames(ppEnabledExtensionNames)
+				.ppEnabledLayerNames(ppEnabledLayerNames);
+		PointerBuffer pInstance = memAllocPointer(1);
+		int err = vkCreateInstance(pCreateInfo, null, pInstance);
+		long instance = pInstance.get(0);
+		memFree(pInstance);
+
+		if (err != VK_SUCCESS) {
+			throw new AssertionError("Failed to create VkInstance: " + VKUtil.translateVulkanResult(err));
+		}
+		VkInstance ret = new VkInstance(instance, pCreateInfo);
+
+		pCreateInfo.free();
+		memFree(ppEnabledLayerNames);
+		memFree(VK_EXT_DEBUG_REPORT_EXTENSION);
+		memFree(ppEnabledExtensionNames);
+		memFree(appInfo.pApplicationName());
+		memFree(appInfo.pEngineName());
+		appInfo.free();
+		return ret;
+	}
+
+	private static long setupDebugging(VkInstance instance, int flags, VkDebugReportCallbackEXT callback) {
+		VkDebugReportCallbackCreateInfoEXT dbgCreateInfo = VkDebugReportCallbackCreateInfoEXT.calloc()
+				.sType(VK_STRUCTURE_TYPE_DEBUG_REPORT_CALLBACK_CREATE_INFO_EXT).pNext(NULL).pfnCallback(callback)
+				.pUserData(NULL).flags(flags);
+		LongBuffer pCallback = memAllocLong(1);
+		int err = vkCreateDebugReportCallbackEXT(instance, dbgCreateInfo, null, pCallback);
+		long callbackHandle = pCallback.get(0);
+		memFree(pCallback);
+		dbgCreateInfo.free();
+		if (err != VK_SUCCESS) {
+			throw new AssertionError("Failed to create VkInstance: " + VKUtil.translateVulkanResult(err));
+		}
+		return callbackHandle;
+	}
+
+	private static VkPhysicalDevice getFirstPhysicalDevice(VkInstance instance) {
+		IntBuffer pPhysicalDeviceCount = memAllocInt(1);
+		int err = vkEnumeratePhysicalDevices(instance, pPhysicalDeviceCount, null);
+		if (err != VK_SUCCESS) {
+			throw new AssertionError("Failed to get number of physical devices: " + VKUtil.translateVulkanResult(err));
+		}
+		PointerBuffer pPhysicalDevices = memAllocPointer(pPhysicalDeviceCount.get(0));
+		err = vkEnumeratePhysicalDevices(instance, pPhysicalDeviceCount, pPhysicalDevices);
+		long physicalDevice = pPhysicalDevices.get(0);
+		memFree(pPhysicalDeviceCount);
+		memFree(pPhysicalDevices);
+		if (err != VK_SUCCESS) {
+			throw new AssertionError("Failed to get physical devices: " + VKUtil.translateVulkanResult(err));
+		}
+		return new VkPhysicalDevice(physicalDevice, instance);
+	}
+
+	public static class DeviceAndGraphicsQueueFamily {
+		VkDevice device;
+		int queueFamilyIndex;
+	}
+
+	private static DeviceAndGraphicsQueueFamily createDeviceAndGetGraphicsQueueFamily(VkPhysicalDevice physicalDevice) {
+		IntBuffer pQueueFamilyPropertyCount = memAllocInt(1);
+		vkGetPhysicalDeviceQueueFamilyProperties(physicalDevice, pQueueFamilyPropertyCount, null);
+		int queueCount = pQueueFamilyPropertyCount.get(0);
+		VkQueueFamilyProperties.Buffer queueProps = VkQueueFamilyProperties.calloc(queueCount);
+		vkGetPhysicalDeviceQueueFamilyProperties(physicalDevice, pQueueFamilyPropertyCount, queueProps);
+		memFree(pQueueFamilyPropertyCount);
+		int graphicsQueueFamilyIndex;
+		for (graphicsQueueFamilyIndex = 0; graphicsQueueFamilyIndex < queueCount; graphicsQueueFamilyIndex++) {
+			if ((queueProps.get(graphicsQueueFamilyIndex).queueFlags() & VK_QUEUE_GRAPHICS_BIT) != 0)
+				break;
+		}
+		queueProps.free();
+		FloatBuffer pQueuePriorities = memAllocFloat(1).put(0.0f);
+		pQueuePriorities.flip();
+		VkDeviceQueueCreateInfo.Buffer queueCreateInfo = VkDeviceQueueCreateInfo.calloc(1)
+				.sType(VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO).queueFamilyIndex(graphicsQueueFamilyIndex)
+				.pQueuePriorities(pQueuePriorities);
+
+		PointerBuffer extensions = memAllocPointer(1);
+		ByteBuffer VK_KHR_SWAPCHAIN_EXTENSION = memUTF8(VK_KHR_SWAPCHAIN_EXTENSION_NAME);
+		extensions.put(VK_KHR_SWAPCHAIN_EXTENSION);
+		extensions.flip();
+		PointerBuffer ppEnabledLayerNames = memAllocPointer(layers.length);
+		for (int i = 0; validation && i < layers.length; i++)
+			ppEnabledLayerNames.put(layers[i]);
+		ppEnabledLayerNames.flip();
+
+		VkDeviceCreateInfo deviceCreateInfo = VkDeviceCreateInfo.calloc().sType(VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO)
+				.pNext(NULL).pQueueCreateInfos(queueCreateInfo).ppEnabledExtensionNames(extensions)
+				.ppEnabledLayerNames(ppEnabledLayerNames);
+
+		PointerBuffer pDevice = memAllocPointer(1);
+		int err = vkCreateDevice(physicalDevice, deviceCreateInfo, null, pDevice);
+		long device = pDevice.get(0);
+		memFree(pDevice);
+		if (err != VK_SUCCESS) {
+			throw new AssertionError("Failed to create device: " + VKUtil.translateVulkanResult(err));
+		}
+
+		DeviceAndGraphicsQueueFamily ret = new DeviceAndGraphicsQueueFamily();
+		ret.device = new VkDevice(device, physicalDevice, deviceCreateInfo);
+		ret.queueFamilyIndex = graphicsQueueFamilyIndex;
+
+		deviceCreateInfo.free();
+		memFree(ppEnabledLayerNames);
+		memFree(VK_KHR_SWAPCHAIN_EXTENSION);
+		memFree(extensions);
+		memFree(pQueuePriorities);
+		return ret;
 	}
 
 	public static Window getWindow(long windowID) {

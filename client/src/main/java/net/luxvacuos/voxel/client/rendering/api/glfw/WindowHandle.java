@@ -47,6 +47,7 @@ public final class WindowHandle {
 		this.setWindowHint(GLFW.GLFW_CLIENT_API, GLFW.GLFW_OPENGL_API);
 		this.setWindowHint(GLFW.GLFW_OPENGL_PROFILE, GLFW.GLFW_OPENGL_CORE_PROFILE);
 		this.setWindowHint(GLFW.GLFW_OPENGL_FORWARD_COMPAT, true);
+
 	}
 
 	public WindowHandle canResize(boolean flag) {
