@@ -53,11 +53,11 @@ public class MultiPass extends RenderingPipeline {
 		volumetricLight.init();
 		super.imagePasses.add(volumetricLight);
 
-		gaussianHorizontal = new GaussianHorizonal("GaussianHorizontal", width, height);
+		gaussianHorizontal = new GaussianHorizonal("GaussianHorizontal", width/4, height/4);
 		gaussianHorizontal.init();
 		super.imagePasses.add(gaussianHorizontal);
 
-		gaussianVertical = new GaussianVertical("GaussianVertical", width, height);
+		gaussianVertical = new GaussianVertical("GaussianVertical", width/4, height/4);
 		gaussianVertical.init();
 		super.imagePasses.add(gaussianVertical);
 

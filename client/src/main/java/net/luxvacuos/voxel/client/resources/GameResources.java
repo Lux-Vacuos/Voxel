@@ -45,6 +45,7 @@ import net.luxvacuos.voxel.client.rendering.api.opengl.MasterShadowRenderer;
 import net.luxvacuos.voxel.client.rendering.api.opengl.ParticleMaster;
 import net.luxvacuos.voxel.client.rendering.api.opengl.RenderingPipeline;
 import net.luxvacuos.voxel.client.rendering.api.opengl.SkyboxRenderer;
+import net.luxvacuos.voxel.client.rendering.api.opengl.objects.Light;
 import net.luxvacuos.voxel.client.rendering.api.opengl.pipeline.MultiPass;
 import net.luxvacuos.voxel.client.rendering.api.opengl.pipeline.SinglePass;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.TessellatorBasicShader;
@@ -56,6 +57,7 @@ import net.luxvacuos.voxel.client.sound.soundsystem.SoundSystemConfig;
 import net.luxvacuos.voxel.client.sound.soundsystem.SoundSystemException;
 import net.luxvacuos.voxel.client.sound.soundsystem.codecs.CodecJOgg;
 import net.luxvacuos.voxel.client.util.LoggerSoundSystem;
+import net.luxvacuos.voxel.client.util.Maths;
 import net.luxvacuos.voxel.client.world.WorldsHandler;
 import net.luxvacuos.voxel.client.world.entities.Camera;
 import net.luxvacuos.voxel.client.world.entities.PlayerCamera;
@@ -121,9 +123,12 @@ public class GameResources extends AbstractGameResources {
 
 		WindowHandle handle = WindowManager.generateHandle(ClientVariables.WIDTH, ClientVariables.HEIGHT, "Voxel");
 		handle.canResize(false).isVisible(false).setIcon(icons);
-		PixelBufferHandle pbHandle = new PixelBufferHandle();
-		pbHandle.setDepthBits(32);
-		handle.setPixelBuffer(pbHandle);
+		PixelBufferHandle pb = new PixelBufferHandle();
+		pb.setDepthBits(32);
+		pb.setRedBits(16);
+		pb.setBlueBits(16);
+		pb.setGreenBits(16);
+		handle.setPixelBuffer(pb);
 		this.gameWindowID = WindowManager.createWindow(handle, ClientVariables.VSYNC);
 		Window window = WindowManager.getWindow(this.gameWindowID);
 
@@ -178,6 +183,9 @@ public class GameResources extends AbstractGameResources {
 		ResourceLoader loader = this.getGameWindow().getResourceLoader();
 		torchTexture = new ParticleTexture(loader.loadTextureParticle("fire0"), 4);
 		EntityResources.loadEntityResources(loader);
+		//for (int x = 0; x < 64; x++) {
+		//	lightRenderer.addLight(new Light(new Vector3f(Maths.randInt(-128, 128), 130, Maths.randInt(-128, 128))));
+		//}
 	}
 
 	@Override

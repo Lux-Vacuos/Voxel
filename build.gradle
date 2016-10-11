@@ -24,7 +24,6 @@ project(":client") {
 		compile project(':universal')
 		compile project(':utils')
 		compile project(':assets')
-		compile 'org.l33tlabs.twl:pngdecoder:1.0'
 		compile 'de.jarnbjo:j-ogg-all:1.0.0'
 		compile 'org.jcraft:jorbis:0.0.17'
 		compile 'org.lwjgl:lwjgl:3.0.0'

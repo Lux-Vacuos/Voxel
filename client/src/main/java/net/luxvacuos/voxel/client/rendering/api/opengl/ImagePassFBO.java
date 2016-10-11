@@ -22,7 +22,7 @@ package net.luxvacuos.voxel.client.rendering.api.opengl;
 
 import static org.lwjgl.opengl.GL11.GL_DEPTH_COMPONENT;
 import static org.lwjgl.opengl.GL11.GL_FLOAT;
-import static org.lwjgl.opengl.GL11.GL_NEAREST;
+import static org.lwjgl.opengl.GL11.GL_LINEAR;
 import static org.lwjgl.opengl.GL11.GL_RGBA;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_MAG_FILTER;
@@ -39,13 +39,16 @@ import static org.lwjgl.opengl.GL12.GL_CLAMP_TO_EDGE;
 import static org.lwjgl.opengl.GL30.GL_COLOR_ATTACHMENT0;
 import static org.lwjgl.opengl.GL30.GL_DEPTH_ATTACHMENT;
 import static org.lwjgl.opengl.GL30.GL_FRAMEBUFFER;
+import static org.lwjgl.opengl.GL30.GL_FRAMEBUFFER_COMPLETE;
 import static org.lwjgl.opengl.GL30.GL_RENDERBUFFER;
 import static org.lwjgl.opengl.GL30.GL_RGBA16F;
 import static org.lwjgl.opengl.GL30.glBindFramebuffer;
 import static org.lwjgl.opengl.GL30.glBindRenderbuffer;
+import static org.lwjgl.opengl.GL30.glCheckFramebufferStatus;
 import static org.lwjgl.opengl.GL30.glDeleteFramebuffers;
 import static org.lwjgl.opengl.GL30.glDeleteRenderbuffers;
 import static org.lwjgl.opengl.GL30.glFramebufferRenderbuffer;
+import static org.lwjgl.opengl.GL30.glFramebufferTexture2D;
 import static org.lwjgl.opengl.GL30.glGenFramebuffers;
 import static org.lwjgl.opengl.GL30.glGenRenderbuffers;
 import static org.lwjgl.opengl.GL30.glRenderbufferStorage;
@@ -53,31 +56,63 @@ import static org.lwjgl.opengl.GL32.glFramebufferTexture;
 
 import java.nio.ByteBuffer;
 
+import net.luxvacuos.voxel.client.core.exception.FrameBufferException;
 import net.luxvacuos.voxel.client.resources.GameResources;
 
 public class ImagePassFBO {
 
-	private int frameBuffer;
-	private int renderBuffer;
-	private int texture;
+	private int fbo, rt, depthBuffer;
+
+	private int tex, depthTex;
 
 	private int width, height;
 
 	public ImagePassFBO(int width, int height) {
 		this.width = width;
 		this.height = height;
-		initialiseFrameBuffer();
+		init();
 	}
 
-	private void initialiseFrameBuffer() {
-		frameBuffer = createFrameBuffer();
-		texture = createTextureAttachment();
-		renderBuffer = createDepthBufferAttachment();
-		end();
+	private void init() {
+		fbo = glGenFramebuffers();
+		rt = glGenRenderbuffers();
+		depthBuffer = glGenRenderbuffers();
+
+		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+
+		glBindRenderbuffer(GL_RENDERBUFFER, rt);
+		glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA16F, width, height);
+		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, rt);
+
+		tex = glGenTextures();
+		glBindTexture(GL_TEXTURE_2D, tex);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, width, height, 0, GL_RGBA, GL_FLOAT, (ByteBuffer) null);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex, 0);
+
+		depthTex = glGenTextures();
+		glBindTexture(GL_TEXTURE_2D, depthTex);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT,
+				(ByteBuffer) null);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, depthTex, 0);
+
+		int status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+		if (status != GL_FRAMEBUFFER_COMPLETE)
+			throw new FrameBufferException("Incomplete FrameBuffer ");
+
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
 	public void begin() {
-		bindFrameBuffer(frameBuffer);
+		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+		glViewport(0, 0, width, height);
 	}
 
 	public void end() {
@@ -85,53 +120,16 @@ public class ImagePassFBO {
 		GameResources.getInstance().getGameWindow().resetViewport();
 	}
 
-	private void bindFrameBuffer(int frameBuffer) {
-		glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
-		glViewport(0, 0, width, height);
-	}
-
-	private int createFrameBuffer() {
-		int frameBuffer = glGenFramebuffers();
-		glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
-		return frameBuffer;
-	}
-
-	private int createTextureAttachment() {
-		int texture = glGenTextures();
-		glBindTexture(GL_TEXTURE_2D, texture);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, width, height, 0, GL_RGBA, GL_FLOAT, (ByteBuffer) null);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texture, 0);
-		return texture;
-	}
-
-	private int createDepthBufferAttachment() {
-		int depthBuffer = glGenRenderbuffers();
-		glBindRenderbuffer(GL_RENDERBUFFER, depthBuffer);
-		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height);
-		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthBuffer);
-		return depthBuffer;
-	}
-
 	public void cleanUp() {
-		glDeleteFramebuffers(frameBuffer);
-		glDeleteRenderbuffers(renderBuffer);
-		glDeleteTextures(texture);
-	}
-
-	public int getFrameBuffer() {
-		return frameBuffer;
-	}
-
-	public int getRenderBuffer() {
-		return renderBuffer;
+		glDeleteTextures(tex);
+		glDeleteTextures(depthTex);
+		glDeleteFramebuffers(fbo);
+		glDeleteRenderbuffers(rt);
+		glDeleteRenderbuffers(depthBuffer);
 	}
 
 	public int getTexture() {
-		return texture;
+		return tex;
 	}
 
 }

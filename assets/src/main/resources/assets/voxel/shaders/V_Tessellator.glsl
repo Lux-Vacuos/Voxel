@@ -55,9 +55,9 @@ void main() {
 	if(id == 7 || id == 10){
 		float sina = sin(position.x + moveFactor) * 0.02;
 		float sinb = cos(position.z - moveFactor) * 0.008;
-		worldPosition += vec4(0.0, sina + sinb, 0.0, 0.0);
-		vec3 addPos = vec3(0.0, sina + sinb, 0.0);
-		vec3 addNormal = vec3(sina, 1.0, sinb);
+		worldPosition += vec4(0.0, (sina + sinb) * 4, 0.0, 0.0);
+		vec3 addPos = vec3(0.0, (sina + sinb) * 4, 0.0);
+		vec3 addNormal = vec3(sina * 4, 1.0, sinb * 4);
 		pass_position = position + addPos;
 		pass_normal = normal + addNormal;
 	} else {

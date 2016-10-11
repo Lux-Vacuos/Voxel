@@ -58,7 +58,7 @@ void main(void){
     	float attFactor = 1 + (0.01 * distance) + (0.002 * distance * distance);
     	lightDir = normalize(lightDir);
     	if(data.b != 1) {
-    		float b = max(dot(normal.xyz, lightDir), 0) * 8;
+    		float b = max(dot(normal.xyz, lightDir), 0) * 1;
     		b /= attFactor;
     		composite += b * composite;
     		if(data.r> 0.0) {

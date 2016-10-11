@@ -20,12 +20,6 @@
 
 package net.luxvacuos.voxel.client.rendering.api.glfw;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.ByteBuffer;
-
-import de.matthiasmann.twl.utils.PNGDecoder;
-
 public class DisplayUtils {
 
 	private Sync sync;
@@ -48,15 +42,6 @@ public class DisplayUtils {
 			timerAccuracyThread.start();
 		}
 		sync = new Sync();
-	}
-
-	public ByteBuffer loadIcon(String path) throws IOException {
-		InputStream file = getClass().getClassLoader().getResourceAsStream(path);
-		PNGDecoder decoder = new PNGDecoder(file);
-		ByteBuffer bytebuf = ByteBuffer.allocateDirect(decoder.getWidth() * decoder.getHeight() * 4);
-		decoder.decode(bytebuf, decoder.getWidth() * 4, PNGDecoder.Format.RGBA);
-		bytebuf.flip();
-		return bytebuf;
 	}
 
 	public void checkErrors() {

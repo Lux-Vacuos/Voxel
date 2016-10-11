@@ -40,6 +40,6 @@ void main(void){
     result += texture(composite0, blurTexCoords[7]) * 0.121703;
     result += texture(composite0, blurTexCoords[8]) * 0.065984;
     result += texture(composite0, blurTexCoords[9]) * 0.028002;
-    result += texture(composite0, blurTexCoords[10]) * 0.0093;
+	result += texture(composite0, blurTexCoords[10]) * 0.0093;
     out_Color = result;
 }
