@@ -26,10 +26,9 @@ import net.luxvacuos.voxel.universal.world.dimension.IDimension;
 import net.luxvacuos.voxel.universal.world.utils.ChunkNode;
 
 public class RenderChunk extends Chunk {
-
+	
 	protected RenderChunk(IDimension dim, ChunkNode node, ChunkData data) {
 		super(dim, node, data);
-		// TODO Auto-generated constructor stub
 	}
 	
 	public void render() {

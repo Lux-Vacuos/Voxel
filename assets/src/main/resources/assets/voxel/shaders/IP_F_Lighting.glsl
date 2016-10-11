@@ -56,7 +56,7 @@ void main(void){
     	float b = max(dot(normal.xyz, lightDir), 0) - (data.a * fadeOut);
     	if(b <= data1.a)
     		b = data1.a;
-    	b = clamp(b,0.02,1.0);
+    	b = clamp(b,0.015,1.0);
     	image = b * image;
     	if(data.r> 0.0)
     		if(data.a <= 0.5){

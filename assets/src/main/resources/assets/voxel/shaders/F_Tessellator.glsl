@@ -45,18 +45,17 @@ uniform float rainFactor;
 const float xPixelOffset = 0.0002;
 const float yPixelOffset = 0.0002;
 
-#ifdef NVIDIA
 const float heightScale = 0.02f;
 
 vec2 ParallaxMapping(vec2 texCoords, vec3 viewDir) { 
 
-	const float minLayers = 8;
+	const float minLayers = 16;
 	const float maxLayers = 32;
 	float numLayers = mix(maxLayers, minLayers, abs(dot(vec3(0.0, 0.0, 1.0), viewDir)));  
     float layerDepth = 1.0 / numLayers;
     float currentLayerDepth = 0.0;
     vec2 P = viewDir.xy * heightScale; 
-    float deltaTexCoords = P / numLayers;
+    vec2 deltaTexCoords = P / numLayers;
     vec2 currentTexCoords = texCoords;
 	float currentDepthMapValue = texture(heightMap, currentTexCoords).r;
   
@@ -72,7 +71,6 @@ vec2 ParallaxMapping(vec2 texCoords, vec3 viewDir) {
 	vec2 finalTexCoords = prevTexCoords * weight + currentTexCoords * (1.0 - weight);
 	return finalTexCoords;
 } 
-#endif
 
 float lookup( vec2 offSet){
 	return texture(depth, ShadowCoord.xyz + vec3(offSet.x * xPixelOffset, offSet.y * yPixelOffset, 0.0) );
@@ -85,10 +83,8 @@ void main(void) {
 
 	vec3 eyeDir = normalize(TBN * (cameraPos - pass_position));
 	vec2 texcoords = pass_textureCoords;
-	#ifdef NVIDIA
 	if(useParallax == 1)
 		texcoords = ParallaxMapping(texcoords, eyeDir);
-	#endif
 	
 	float shadow = 0;
 	if(useShadows == 1){

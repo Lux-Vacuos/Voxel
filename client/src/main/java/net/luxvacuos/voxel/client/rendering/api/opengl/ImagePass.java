@@ -123,7 +123,8 @@ public abstract class ImagePass {
 		shader.loadLightPosition(gm.getLightPos(), gm.getInvertedLightPosition());
 		shader.loadviewMatrix(((PlayerCamera) gm.getCamera()));
 		shader.loadSettings(ClientVariables.useDOF, ClientVariables.useFXAA, ClientVariables.useMotionBlur,
-				ClientVariables.useVolumetricLight, ClientVariables.useReflections, ClientVariables.useAmbientOcclusion);
+				ClientVariables.useVolumetricLight, ClientVariables.useReflections,
+				ClientVariables.useAmbientOcclusion);
 		shader.loadSunPosition(Maths.convertTo2F(new Vector3f(gm.getLightPos()), gm.getRenderer().getProjectionMatrix(),
 				Maths.createViewMatrixRot(gm.getCamera().getPitch(), gm.getCamera().getYaw(), gm.getCamera().getRoll(),
 						null),

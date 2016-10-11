@@ -71,8 +71,7 @@ public class EntityBasicShader extends ShaderProgram {
 	 *            Camera
 	 */
 	public void loadviewMatrix(Camera camera) {
-		Matrix4f viewMatrix = Maths.createViewMatrix(camera);
-		super.loadMatrix(loc_viewMatrix, viewMatrix);
+		super.loadMatrix(loc_viewMatrix, Maths.createViewMatrix(camera));
 	}
 
 	/**

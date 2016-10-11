@@ -183,7 +183,7 @@ public class GameResources extends AbstractGameResources {
 		ResourceLoader loader = this.getGameWindow().getResourceLoader();
 		torchTexture = new ParticleTexture(loader.loadTextureParticle("fire0"), 4);
 		EntityResources.loadEntityResources(loader);
-		//for (int x = 0; x < 64; x++) {
+		//for (int x = 0; x < 32; x++) {
 		//	lightRenderer.addLight(new Light(new Vector3f(Maths.randInt(-128, 128), 130, Maths.randInt(-128, 128))));
 		//}
 	}

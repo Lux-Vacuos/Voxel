@@ -235,7 +235,7 @@ public class OptionsState extends AbstractFadeState {
 		uiWindow.addChildren(dofButton);
 		uiWindow.addChildren(godraysButton);
 		uiWindow.addChildren(fxaaButton);
-		// window.addChildren(parallaxButton);
+		uiWindow.addChildren(parallaxButton);
 		uiWindow.addChildren(motionBlurButton);
 		uiWindow.addChildren(reflectionsButton);
 		uiWindow.addChildren(ambientOccButton);
