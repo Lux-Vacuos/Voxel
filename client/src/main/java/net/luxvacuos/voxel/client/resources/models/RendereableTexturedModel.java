@@ -67,7 +67,7 @@ public class RendereableTexturedModel {
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, model.getTexture().getID());
 		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_2D, GameResources.getInstance().getMasterShadowRenderer().getFbo().getTexture());
+		glBindTexture(GL_TEXTURE_2D, GameResources.getInstance().getMasterShadowRenderer().getFbo().getDepthBuffer());
 		shader.loadEntityLight(1);
 		shader.loadTransformationMatrix(Maths.createTransformationMatrix(pos, rotX, rotY, rotZ, scale));
 		glDrawElements(GL_TRIANGLES, model.getRawModel().getVertexCount(), GL_UNSIGNED_INT, 0);

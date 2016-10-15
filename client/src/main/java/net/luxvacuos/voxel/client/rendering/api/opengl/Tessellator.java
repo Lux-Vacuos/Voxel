@@ -21,7 +21,7 @@
 package net.luxvacuos.voxel.client.rendering.api.opengl;
 
 import static org.lwjgl.opengl.GL11.GL_BACK;
-import static org.lwjgl.opengl.GL11.GL_FLOAT;
+import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL11.GL_FRONT;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
@@ -34,6 +34,7 @@ import static org.lwjgl.opengl.GL13.GL_TEXTURE1;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE2;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE3;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE4;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE5;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
 import static org.lwjgl.opengl.GL15.GL_ARRAY_BUFFER;
 import static org.lwjgl.opengl.GL15.GL_DYNAMIC_DRAW;
@@ -114,7 +115,7 @@ public class Tessellator {
 		shader.start();
 		shader.conectTextureUnits();
 		shader.loadProjectionMatrix(GameResources.getInstance().getRenderer().getProjectionMatrix());
-		//shader.loadBiasMatrix(GameResources.getInstance());
+		// shader.loadBiasMatrix(GameResources.getInstance());
 		shader.loadBiasMatrix(GameResources.getInstance().getMasterShadowRenderer().getProjectionMatrix());
 		shader.stop();
 		basicShader = TessellatorBasicShader.getInstance();
@@ -252,9 +253,9 @@ public class Tessellator {
 		}
 		shader.start();
 		shader.loadProjectionMatrix(projectionMatrix);
-		//shader.loadviewMatrix(camera);
+		// shader.loadviewMatrix(camera);
 		shader.loadViewMatrix(Maths.createViewMatrix(camera), camera.getPosition());
-		//shader.loadLightMatrix(gm);
+		// shader.loadLightMatrix(gm);
 		shader.loadLightMatrix(Maths.createViewMatrix(gm.getSun_Camera()));
 		shader.loadTransparent(transparent);
 		shader.loadSettings(ClientVariables.useShadows, ClientVariables.useParallax);
@@ -270,13 +271,15 @@ public class Tessellator {
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, texture);
 		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_2D, gm.getMasterShadowRenderer().getFbo().getTexture());
+		glBindTexture(GL_TEXTURE_2D, gm.getMasterShadowRenderer().getFbo().getDepthTex());
 		glActiveTexture(GL_TEXTURE2);
 		glBindTexture(GL_TEXTURE_2D, normalMap);
 		glActiveTexture(GL_TEXTURE3);
 		glBindTexture(GL_TEXTURE_2D, heightMap);
 		glActiveTexture(GL_TEXTURE4);
 		glBindTexture(GL_TEXTURE_2D, specularMap);
+		glActiveTexture(GL_TEXTURE5);
+		glBindTexture(GL_TEXTURE_2D, gm.getMasterShadowRenderer().getFbo().getShadowTex());
 		glDrawElements(GL_TRIANGLES, indicesCounter, GL_UNSIGNED_INT, 0);
 		glDisableVertexAttribArray(0);
 		glDisableVertexAttribArray(1);
@@ -448,7 +451,7 @@ public class Tessellator {
 			Vector3f edge1, edge2, tangent, bitangent;
 			Vector2f deltaUV1, deltaUV2;
 			float f;
-			
+
 			if (top) {
 				texcoords = block.texCoordsUp();
 				// top face
@@ -474,8 +477,8 @@ public class Tessellator {
 
 				edge1 = Vector3f.sub(new Vector3f(x + xsize, y + ysize, z + zsize),
 						new Vector3f(x, y + ysize, z + zsize), null);
-				edge2 = Vector3f.sub(new Vector3f(x + xsize, y + ysize, z),
-						new Vector3f(x, y + ysize, z + zsize), null);
+				edge2 = Vector3f.sub(new Vector3f(x + xsize, y + ysize, z), new Vector3f(x, y + ysize, z + zsize),
+						null);
 				deltaUV1 = Vector2f.sub(new Vector2f(texcoords.getI(), texcoords.getJ()),
 						new Vector2f(texcoords.getZ(), texcoords.getW()), null);
 				deltaUV2 = Vector2f.sub(new Vector2f(texcoords.getK(), texcoords.getL()),
@@ -591,11 +594,10 @@ public class Tessellator {
 				normal3f(new Vector3f(0, 0, 1));
 				data4f(new Vector4f(id, tfl, 0, 0));
 
-				edge1 = Vector3f.sub(new Vector3f(x + xsize, y, z + zsize), new Vector3f(x, y, z + zsize),
-						null);
+				edge1 = Vector3f.sub(new Vector3f(x + xsize, y, z + zsize), new Vector3f(x, y, z + zsize), null);
 
-				edge2 = Vector3f.sub(new Vector3f(x + xsize, y + ysize, z + zsize),
-						new Vector3f(x, y, z + zsize), null);
+				edge2 = Vector3f.sub(new Vector3f(x + xsize, y + ysize, z + zsize), new Vector3f(x, y, z + zsize),
+						null);
 
 				deltaUV1 = Vector2f.sub(new Vector2f(texcoords.getK(), texcoords.getL()),
 						new Vector2f(texcoords.getX(), texcoords.getY()), null);
@@ -653,8 +655,7 @@ public class Tessellator {
 				normal3f(new Vector3f(0, 0, -1));
 				data4f(new Vector4f(id, bbl, 0, 0));
 
-				edge1 = Vector3f.sub(new Vector3f(x + xsize, y + ysize, z), new Vector3f(x, y + ysize, z),
-						null);
+				edge1 = Vector3f.sub(new Vector3f(x + xsize, y + ysize, z), new Vector3f(x, y + ysize, z), null);
 
 				edge2 = Vector3f.sub(new Vector3f(x + xsize, y, z), new Vector3f(x, y + ysize, z), null);
 
@@ -774,11 +775,10 @@ public class Tessellator {
 				normal3f(new Vector3f(1, 0, 0));
 				data4f(new Vector4f(id, tfr, 0, 0));
 
-				edge1 = Vector3f.sub(new Vector3f(x + xsize, y, z), new Vector3f(x + xsize, y, z + zsize),
-						null);
+				edge1 = Vector3f.sub(new Vector3f(x + xsize, y, z), new Vector3f(x + xsize, y, z + zsize), null);
 
-				edge2 = Vector3f.sub(new Vector3f(x + xsize, y + ysize, z),
-						new Vector3f(x + xsize, y, z + zsize), null);
+				edge2 = Vector3f.sub(new Vector3f(x + xsize, y + ysize, z), new Vector3f(x + xsize, y, z + zsize),
+						null);
 
 				deltaUV1 = Vector2f.sub(new Vector2f(texcoords.getX(), texcoords.getY()),
 						new Vector2f(texcoords.getK(), texcoords.getL()), null);

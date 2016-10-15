@@ -67,6 +67,7 @@ import java.nio.IntBuffer;
 import org.lwjgl.BufferUtils;
 
 import net.luxvacuos.voxel.client.core.exception.FrameBufferException;
+import net.luxvacuos.voxel.client.resources.GameResources;
 
 public class RenderingPipelineFBO {
 
@@ -209,6 +210,7 @@ public class RenderingPipelineFBO {
 
 	public void end() {
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		GameResources.getInstance().getGameWindow().resetViewport();
 	}
 
 	public int getDepthBuffer() {

@@ -267,7 +267,7 @@ public abstract class Dimension {
 
 	public void updateChunksRender(GameResources gm, boolean transparent) {
 		if (transparent)
-			return; // XXX: How does this work?
+			return; // XXX: DISABLED
 		if (transparent)
 			glEnable(GL_BLEND);
 		List<Chunk> chunks_ = new ArrayList<>();

@@ -281,15 +281,12 @@ public class PlayerCamera extends Camera {
 		/*if (isKeyDown(KEY_T)) {
 			gm.getWorldsHandler().getActiveWorld().getActiveDimension().getPhysicsEngine()
 					.addEntity(new GuineaPig(new Vector3f(getPosition())));
-		}
+		}*/
 
-		if (isKeyDown(Keyboard.KEY_8)) {
+		if (kbh.isKeyPressed(GLFW.GLFW_KEY_1)) {
 			gm.getWorldsHandler().getActiveWorld().getActiveDimension().getPhysicsEngine()
-					.addEntity(Block.Pedestal.getDrop(getPosition()));
+					.addEntity(Block.Glass.getDrop(getPosition()));
 		}
-		if (isKeyDown(Keyboard.KEY_2))
-			gm.getWorldsHandler().getActiveWorld().getActiveDimension().getPhysicsEngine()
-					.addEntity(Block.Node.getDrop(getPosition())); */
 		
 	if(clickTime>0)clickTime--;hit=false;
 

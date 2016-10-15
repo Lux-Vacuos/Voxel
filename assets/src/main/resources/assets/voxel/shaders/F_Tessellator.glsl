@@ -37,6 +37,7 @@ uniform sampler2DShadow depth;
 uniform sampler2D normalMap;
 uniform sampler2D heightMap;
 uniform sampler2D specularMap;
+uniform sampler2D shadowTex;
 
 uniform int useShadows;
 uniform int useParallax;
@@ -93,6 +94,7 @@ void main(void) {
 			for (x = -1.5 ; x <=1.5 ; x+=1.0)
 				shadow += -lookup(vec2(x,y)) + 1;
 		shadow /= 16.0 ;
+		shadow *= texture(shadowTex, ShadowCoord.xy).r;
 	}
 
     vec4 textureColour = texture(texture0, texcoords);
@@ -113,7 +115,7 @@ void main(void) {
 	reflectionFactor = clamp(reflectionFactor,0,1);
 	
 	if(transparent == 1){
-		shadow = clamp(shadow,0.02,1.0);
+		shadow = clamp(shadow,0.015,1.0);
     	textureColour.rgb *= (1 - shadow);
 	}
     	

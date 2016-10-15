@@ -110,7 +110,7 @@ public class EntityRenderer {
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, model.getTexture().getID());
 		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_2D, gm.getMasterShadowRenderer().getFbo().getTexture());
+		glBindTexture(GL_TEXTURE_2D, gm.getMasterShadowRenderer().getFbo().getDepthTex());
 	}
 
 	/**
@@ -133,8 +133,8 @@ public class EntityRenderer {
 		Position pos = Components.POSITION.get(entity);
 		Rotation rot = Components.ROTATION.get(entity);
 		Scale scale = Components.SCALE.get(entity);
-		Matrix4f transformationMatrix = Maths.createTransformationMatrix(pos.getPosition(), rot.getX(),
-				rot.getY(), rot.getZ(), scale.getScale());
+		Matrix4f transformationMatrix = Maths.createTransformationMatrix(pos.getPosition(), rot.getX(), rot.getY(),
+				rot.getZ(), scale.getScale());
 		shader.loadTransformationMatrix(transformationMatrix);
 	}
 

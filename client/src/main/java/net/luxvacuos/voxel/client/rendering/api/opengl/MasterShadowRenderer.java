@@ -45,7 +45,7 @@ public class MasterShadowRenderer {
 	private Map<TexturedModel, List<AbstractEntity>> entities = new HashMap<TexturedModel, List<AbstractEntity>>();
 	private EntityBasicShader shader;
 	private ShadowRenderer renderer;
-	private FrameBuffer fbo;
+	private ShadowFBO fbo;
 	private Matrix4f projectionMatrix;
 	private int textureSize = 4096;
 
@@ -55,11 +55,11 @@ public class MasterShadowRenderer {
 		renderer = new ShadowRenderer(shader, projectionMatrix);
 		if (textureSize > GLUtil.getTextureMaxSize())
 			textureSize = GLUtil.getTextureMaxSize();
-		fbo = new FrameBuffer(true, textureSize, textureSize);
+		fbo = new ShadowFBO( textureSize, textureSize);
 	}
 
 	public void being() {
-		fbo.begin(textureSize, textureSize);
+		fbo.begin();
 	}
 
 	public void end() {
@@ -103,7 +103,7 @@ public class MasterShadowRenderer {
 		}
 	}
 
-	public FrameBuffer getFbo() {
+	public ShadowFBO getFbo() {
 		return fbo;
 	}
 

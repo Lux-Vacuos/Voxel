@@ -51,6 +51,7 @@ public class TessellatorShader extends ShaderProgram {
 	private int loc_normalMap;
 	private int loc_heightMap;
 	private int loc_specularMap;
+	private int loc_shadow;
 
 	private int loc_useShadows;
 	private int loc_useParallax;
@@ -68,6 +69,7 @@ public class TessellatorShader extends ShaderProgram {
 		super.loadInt(loc_normalMap, 2);
 		super.loadInt(loc_heightMap, 3);
 		super.loadInt(loc_specularMap, 4);
+		super.loadInt(loc_shadow, 5);
 	}
 
 	@Override
@@ -80,6 +82,7 @@ public class TessellatorShader extends ShaderProgram {
 		loc_cameraPos = super.getUniformLocation("cameraPos");
 		loc_texture = super.getUniformLocation("texture0");
 		loc_depth = super.getUniformLocation("depth");
+		loc_shadow = super.getUniformLocation("shadowTex");
 		loc_useShadows = super.getUniformLocation("useShadows");
 		loc_normalMap = super.getUniformLocation("normalMap");
 		loc_heightMap = super.getUniformLocation("heightMap");
