@@ -45,6 +45,7 @@ import static org.lwjgl.vulkan.EXTDebugReport.VK_EXT_DEBUG_REPORT_EXTENSION_NAME
 import static org.lwjgl.vulkan.EXTDebugReport.VK_STRUCTURE_TYPE_DEBUG_REPORT_CALLBACK_CREATE_INFO_EXT;
 import static org.lwjgl.vulkan.EXTDebugReport.vkCreateDebugReportCallbackEXT;
 import static org.lwjgl.vulkan.KHRSwapchain.VK_KHR_SWAPCHAIN_EXTENSION_NAME;
+import static org.lwjgl.vulkan.VK10.VK_MAKE_VERSION;
 import static org.lwjgl.vulkan.VK10.VK_QUEUE_GRAPHICS_BIT;
 import static org.lwjgl.vulkan.VK10.VK_STRUCTURE_TYPE_APPLICATION_INFO;
 import static org.lwjgl.vulkan.VK10.VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
@@ -55,7 +56,6 @@ import static org.lwjgl.vulkan.VK10.vkCreateDevice;
 import static org.lwjgl.vulkan.VK10.vkCreateInstance;
 import static org.lwjgl.vulkan.VK10.vkEnumeratePhysicalDevices;
 import static org.lwjgl.vulkan.VK10.vkGetPhysicalDeviceQueueFamilyProperties;
-import static org.lwjgl.vulkan.VKUtil.VK_MAKE_VERSION;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -141,7 +141,7 @@ public final class WindowManager {
 					VK_DEBUG_REPORT_ERROR_BIT_EXT | VK_DEBUG_REPORT_WARNING_BIT_EXT, debugCallback);
 			VkPhysicalDevice physicalDevice = getFirstPhysicalDevice(instance);
 			deviceAndGraphicsQueueFamily = createDeviceAndGetGraphicsQueueFamily(physicalDevice);
-			CoreInfo.VkVersion = "1.0.2";
+			CoreInfo.VkVersion = "1.0.30";
 		}
 
 		long windowID = GLFW.glfwCreateWindow(handle.width, handle.height, handle.title, NULL, NULL);
@@ -172,7 +172,7 @@ public final class WindowManager {
 				IntBuffer h = BufferUtils.createIntBuffer(1);
 				IntBuffer comp = BufferUtils.createIntBuffer(1);
 
-				if (stbi_info_from_memory(imageBuffer, w, h, comp) != 1)
+				if (!stbi_info_from_memory(imageBuffer, w, h, comp))
 					throw new DecodeTextureException("Failed to read image information: " + stbi_failure_reason());
 
 				Logger.log("Image width: " + w.get(0), "Image height: " + h.get(0), "Image components: " + comp.get(0),
@@ -197,7 +197,7 @@ public final class WindowManager {
 		int nvgFlags = NanoVGGL3.NVG_ANTIALIAS | NanoVGGL3.NVG_STENCIL_STROKES;
 		if (ClientVariables.debug)
 			nvgFlags = (nvgFlags | NanoVGGL3.NVG_DEBUG);
-		window.nvgID = NanoVGGL3.nvgCreateGL3(nvgFlags);
+		window.nvgID = NanoVGGL3.nvgCreate(nvgFlags);
 
 		if (window.nvgID == NULL)
 			throw new RuntimeException("Fail to create NanoVG context for Window '" + handle.title + "'");
@@ -225,7 +225,7 @@ public final class WindowManager {
 
 	private static VkInstance createInstance(PointerBuffer requiredExtensions) {
 		VkApplicationInfo appInfo = VkApplicationInfo.calloc().sType(VK_STRUCTURE_TYPE_APPLICATION_INFO)
-				.pApplicationName(memUTF8("Voxel")).pEngineName(memUTF8("")).apiVersion(VK_MAKE_VERSION(1, 0, 2));
+				.pApplicationName(memUTF8("Voxel")).pEngineName(memUTF8("")).apiVersion(VK_MAKE_VERSION(1, 0, 30));
 
 		ByteBuffer VK_EXT_DEBUG_REPORT_EXTENSION = memUTF8(VK_EXT_DEBUG_REPORT_EXTENSION_NAME);
 		PointerBuffer ppEnabledExtensionNames = memAllocPointer(requiredExtensions.remaining() + 1);

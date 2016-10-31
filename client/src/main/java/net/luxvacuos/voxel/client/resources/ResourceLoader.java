@@ -400,7 +400,7 @@ public class ResourceLoader {
 		IntBuffer h = BufferUtils.createIntBuffer(1);
 		IntBuffer comp = BufferUtils.createIntBuffer(1);
 
-		if (stbi_info_from_memory(imageBuffer, w, h, comp) != 1)
+		if (!stbi_info_from_memory(imageBuffer, w, h, comp))
 			throw new DecodeTextureException("Failed to read image information: " + stbi_failure_reason());
 
 		Logger.log("Image width: " + w.get(0), "Image height: " + h.get(0), "Image components: " + comp.get(0),

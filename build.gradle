@@ -1,5 +1,6 @@
+import org.gradle.internal.os.OperatingSystem
 
-task wrapper(type: Wrapper) { gradleVersion = '3.1' }
+task wrapper(type: Wrapper) { gradleVersion = '3.2-rc-2' }
 
 subprojects {
 	apply plugin: "eclipse"
@@ -19,6 +20,20 @@ project(":ashley") {
 
 project(":client") {
 
+	switch ( OperatingSystem.current() ) {
+		case OperatingSystem.WINDOWS:
+			project.ext.lwjglNatives = "natives-windows"
+				break
+		case OperatingSystem.LINUX:
+			project.ext.lwjglNatives = "natives-linux"
+		break
+		case OperatingSystem.MAC_OS:
+			project.ext.lwjglNatives = "natives-macos"
+			break
+	}
+
+	project.ext.lwjglVersion = "3.1.0"
+
 	dependencies {
 		compile project(':ashley')
 		compile project(':universal')
@@ -26,10 +41,24 @@ project(":client") {
 		compile project(':assets')
 		compile 'de.jarnbjo:j-ogg-all:1.0.0'
 		compile 'org.jcraft:jorbis:0.0.17'
-		compile 'org.lwjgl:lwjgl:3.0.0'
-		compile 'org.lwjgl:lwjgl-platform:3.0.0:natives-windows'
-		compile 'org.lwjgl:lwjgl-platform:3.0.0:natives-linux'
-		compile 'org.lwjgl:lwjgl-platform:3.0.0:natives-osx'
+		
+		// LWJGL dependencies
+		compile "org.lwjgl:lwjgl:${lwjglVersion}"
+		compile "org.lwjgl:lwjgl-glfw:${lwjglVersion}"
+		compile "org.lwjgl:lwjgl-jemalloc:${lwjglVersion}"
+		compile "org.lwjgl:lwjgl-nanovg:${lwjglVersion}"
+		compile "org.lwjgl:lwjgl-openal:${lwjglVersion}"
+		compile "org.lwjgl:lwjgl-opengl:${lwjglVersion}"
+		compile "org.lwjgl:lwjgl-stb:${lwjglVersion}"
+		compile "org.lwjgl:lwjgl-vulkan:${lwjglVersion}"
+		// LWJGL natives
+		runtime "org.lwjgl:lwjgl:${lwjglVersion}:${lwjglNatives}"
+		runtime "org.lwjgl:lwjgl-glfw:${lwjglVersion}:${lwjglNatives}"
+		runtime "org.lwjgl:lwjgl-jemalloc:${lwjglVersion}:${lwjglNatives}"
+		runtime "org.lwjgl:lwjgl-nanovg:${lwjglVersion}:${lwjglNatives}"
+		runtime "org.lwjgl:lwjgl-openal:${lwjglVersion}:${lwjglNatives}"
+		runtime "org.lwjgl:lwjgl-stb:${lwjglVersion}:${lwjglNatives}"
+		
 		testCompile group: 'junit', name: 'junit', version: '4.12'
 	}
 }

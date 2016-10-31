@@ -34,7 +34,7 @@ import static org.lwjgl.glfw.GLFW.glfwShowWindow;
 import static org.lwjgl.glfw.GLFW.glfwWindowShouldClose;
 import static org.lwjgl.nanovg.NanoVG.nvgBeginFrame;
 import static org.lwjgl.nanovg.NanoVG.nvgEndFrame;
-import static org.lwjgl.nanovg.NanoVGGL3.nvgDeleteGL3;
+import static org.lwjgl.nanovg.NanoVGGL3.nvgDelete;
 import static org.lwjgl.opengl.GL11.glViewport;
 
 import org.lwjgl.glfw.Callbacks;
@@ -234,7 +234,7 @@ public abstract class AbstractWindow implements IWindow {
 
 	@Override
 	public void closeDisplay() {
-		nvgDeleteGL3(this.nvgID);
+		nvgDelete(this.nvgID);
 		Callbacks.glfwFreeCallbacks(this.windowID);
 		glfwDestroyWindow(this.windowID);
 		this.created = false;
