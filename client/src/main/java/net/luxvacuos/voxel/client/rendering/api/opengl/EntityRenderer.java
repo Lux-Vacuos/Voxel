@@ -71,7 +71,6 @@ public class EntityRenderer {
 		this.shader = shader;
 		shader.start();
 		shader.loadProjectionMatrix(projectionMatrix);
-		shader.connectTextureUnits();
 		shader.loadBiasMatrix(gm);
 		shader.stop();
 	}

@@ -34,15 +34,8 @@ import static org.lwjgl.opengl.GL20.glDeleteShader;
 import static org.lwjgl.opengl.GL20.glDetachShader;
 import static org.lwjgl.opengl.GL20.glGetShaderInfoLog;
 import static org.lwjgl.opengl.GL20.glGetShaderi;
-import static org.lwjgl.opengl.GL20.glGetUniformLocation;
 import static org.lwjgl.opengl.GL20.glLinkProgram;
 import static org.lwjgl.opengl.GL20.glShaderSource;
-import static org.lwjgl.opengl.GL20.glUniform1f;
-import static org.lwjgl.opengl.GL20.glUniform1i;
-import static org.lwjgl.opengl.GL20.glUniform2f;
-import static org.lwjgl.opengl.GL20.glUniform3f;
-import static org.lwjgl.opengl.GL20.glUniform4f;
-import static org.lwjgl.opengl.GL20.glUniformMatrix4fv;
 import static org.lwjgl.opengl.GL20.glUseProgram;
 import static org.lwjgl.opengl.GL20.glValidateProgram;
 
@@ -50,18 +43,13 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.nio.DoubleBuffer;
-
-import org.lwjgl.BufferUtils;
 
 import net.luxvacuos.igl.Logger;
-import net.luxvacuos.igl.vector.Matrix4f;
-import net.luxvacuos.igl.vector.Vector2f;
-import net.luxvacuos.igl.vector.Vector3f;
-import net.luxvacuos.igl.vector.Vector4f;
 import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.core.exception.CompileShaderException;
 import net.luxvacuos.voxel.client.core.exception.LoadShaderException;
+import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.Attribute;
+import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.Uniform;
 
 /**
  * Shader Program, Use to create shaders
@@ -75,21 +63,9 @@ public abstract class ShaderProgram {
 	 */
 	private int programID;
 	/**
-	 * Vertex Shader ID
-	 */
-	private int vertexShaderID;
-	/**
-	 * Fragment Shader ID
-	 */
-	private int fragmentShaderID;
-	/**
 	 * Shader bind status
 	 */
-	public static boolean binded = false;
-	/**
-	 * Used to Load Matrix to shader
-	 */
-	private DoubleBuffer matrixBuffer = BufferUtils.createDoubleBuffer(16);
+	private static boolean binded = false;
 
 	/**
 	 * Constructor, Creates a Shader Program Using a Vertex Shader and a
@@ -101,32 +77,42 @@ public abstract class ShaderProgram {
 	 *            Fragment Shader Path
 	 * @throws Exception
 	 */
-	public ShaderProgram(String vertexFile, String fragmentFile) {
-		vertexShaderID = loadShader(vertexFile, GL_VERTEX_SHADER);
-		fragmentShaderID = loadShader(fragmentFile, GL_FRAGMENT_SHADER);
+	public ShaderProgram(String vertexFile, String fragmentFile, Attribute... inVariables) {
+		int vertexShaderID = loadShader(vertexFile, GL_VERTEX_SHADER);
+		int fragmentShaderID = loadShader(fragmentFile, GL_FRAGMENT_SHADER);
 		programID = glCreateProgram();
 		glAttachShader(programID, vertexShaderID);
 		glAttachShader(programID, fragmentShaderID);
-		bindAttributes();
+		bindAttributes(inVariables);
 		glLinkProgram(programID);
-		glValidateProgram(programID);
-		getAllUniformLocations();
+		glDetachShader(programID, vertexShaderID);
+		glDetachShader(programID, fragmentShaderID);
+		glDeleteShader(vertexShaderID);
+		glDeleteShader(fragmentShaderID);
 	}
 
 	/**
-	 * Loads all Uniform Locations
+	 * Loads All Uniforms and validate the program.
+	 * 
+	 * @param uniforms
+	 *            Array of Uniforms
 	 */
-	protected abstract void getAllUniformLocations();
+	protected void storeAllUniformLocations(Uniform... uniforms) {
+		for (Uniform uniform : uniforms) {
+			uniform.storeUniformLocation(programID);
+		}
+		glValidateProgram(programID);
+	}
 
 	/**
-	 * Gets The Uniform Location
+	 * Loads All Uniforms.
 	 * 
-	 * @param uniformName
-	 *            Uniform Namer
-	 * @return ID of the Uniform Location
+	 * @param uniforms
 	 */
-	protected int getUniformLocation(String uniformName) {
-		return glGetUniformLocation(programID, uniformName);
+	protected void storeUniformArray(Uniform... uniforms) {
+		for (Uniform uniform : uniforms) {
+			uniform.storeUniformLocation(programID);
+		}
 	}
 
 	/**
@@ -155,135 +141,19 @@ public abstract class ShaderProgram {
 	 */
 	public void cleanUp() {
 		stop();
-		glDetachShader(programID, vertexShaderID);
-		glDetachShader(programID, fragmentShaderID);
-		glDeleteShader(vertexShaderID);
-		glDeleteShader(fragmentShaderID);
 		glDeleteProgram(programID);
 	}
 
 	/**
-	 * Binds the Shader Attributes
-	 */
-	protected abstract void bindAttributes();
-
-	/**
-	 * Binds the variable to an uniform id
+	 * Bind array of attributes
 	 * 
-	 * @param attribute
-	 *            Uniform ID
-	 * @param variableName
-	 *            Variable Name
+	 * @param inVariables
+	 *            Array
 	 */
-	protected void bindAttribute(int attribute, String variableName) {
-		glBindAttribLocation(programID, attribute, variableName);
-	}
-
-	/**
-	 * Load a float
-	 * 
-	 * @param location
-	 *            Uniform ID
-	 * @param value
-	 *            Value
-	 */
-	protected void loadFloat(int location, float value) {
-		glUniform1f(location, value);
-	}
-
-	/**
-	 * Load an int
-	 * 
-	 * @param location
-	 *            Uniform ID
-	 * @param value
-	 *            Value
-	 */
-	protected void loadInt(int location, int value) {
-		glUniform1i(location, value);
-	}
-
-	/**
-	 * Load a Vector4f
-	 * 
-	 * @param location
-	 *            Uniform ID
-	 * @param vector
-	 *            Vector4f
-	 */
-	protected void loadVector(int location, Vector4f vector) {
-		glUniform4f(location, (float) vector.x, (float) vector.y, (float) vector.z, (float) vector.w);
-	}
-
-	/**
-	 * Load a Vector3f
-	 * 
-	 * @param location
-	 *            Uniform ID
-	 * @param vector
-	 *            Vector3f
-	 */
-	protected void loadVector(int location, Vector3f vector) {
-		glUniform3f(location, (float) vector.x, (float) vector.y, (float) vector.z);
-	}
-
-	/**
-	 * Load a Vector2f
-	 * 
-	 * @param location
-	 *            Uniform ID
-	 * @param vector
-	 *            Vector2f
-	 */
-	protected void load2DVector(int location, Vector2f vector) {
-		glUniform2f(location, (float) vector.x, (float) vector.y);
-	}
-
-	/**
-	 * Load a Boolean
-	 * 
-	 * @param location
-	 *            Uniform ID
-	 * @param value
-	 *            Value
-	 */
-	protected void loadBoolean(int location, boolean value) {
-		glUniform1i(location, value ? 1 : 0);
-	}
-
-	/**
-	 * Load a Matrix4f
-	 * 
-	 * @param location
-	 *            Uniform ID
-	 * @param matrix
-	 *            Matrix4f
-	 */
-	protected void loadMatrix(int location, Matrix4f matrix) {
-		matrixBuffer.clear();
-		matrix.store(matrixBuffer);
-		matrixBuffer.flip();
-
-		double[] dm = new double[16];
-		matrixBuffer.get(dm);
-		float[] fm = new float[16];
-		fm[0] = (float) dm[0];
-		fm[1] = (float) dm[1];
-		fm[2] = (float) dm[2];
-		fm[3] = (float) dm[3];
-		fm[4] = (float) dm[4];
-		fm[5] = (float) dm[5];
-		fm[6] = (float) dm[6];
-		fm[7] = (float) dm[7];
-		fm[8] = (float) dm[8];
-		fm[9] = (float) dm[9];
-		fm[10] = (float) dm[10];
-		fm[11] = (float) dm[11];
-		fm[12] = (float) dm[12];
-		fm[13] = (float) dm[13];
-		fm[14] = (float) dm[14];
-		fm[15] = (float) dm[15];
-		glUniformMatrix4fv(location, false, fm);
+	private void bindAttributes(Attribute[] att) {
+		for (int i = 0; i < att.length; i++) {
+			glBindAttribLocation(programID, att[i].getId(), att[i].getName());
+		}
 	}
 
 	/**

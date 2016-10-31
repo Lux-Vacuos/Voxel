@@ -22,36 +22,28 @@ package net.luxvacuos.voxel.client.rendering.api.opengl.shaders;
 
 import net.luxvacuos.igl.vector.Matrix4f;
 import net.luxvacuos.voxel.client.core.ClientVariables;
+import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.Attribute;
+import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.UniformFloat;
+import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.UniformMatrix;
 
 public class ParticleShader extends ShaderProgram {
 
-	private int loc_projectionMatrix;
-	private int loc_numberOfRows;
+	private UniformMatrix projectionMatrix = new UniformMatrix("projectionMatrix");
+	private UniformFloat numberOfRows = new UniformFloat("numberOfRows");
 
 	public ParticleShader() {
-		super(ClientVariables.VERTEX_FILE_PARTICLE, ClientVariables.FRAGMENT_FILE_PARTICLE);
-	}
-
-	@Override
-	protected void getAllUniformLocations() {
-		loc_projectionMatrix = super.getUniformLocation("projectionMatrix");
-		loc_numberOfRows = super.getUniformLocation("numberOfRows");
-	}
-
-	@Override
-	protected void bindAttributes() {
-		super.bindAttribute(0, "position");
-		super.bindAttribute(1, "modelViewMatrix");
-		super.bindAttribute(5, "texOffsets");
-		super.bindAttribute(6, "blendFactor");
+		super(ClientVariables.VERTEX_FILE_PARTICLE, ClientVariables.FRAGMENT_FILE_PARTICLE,
+				new Attribute(0, "position"), new Attribute(1, "modelViewMatrix"), new Attribute(5, "texOffsets"),
+				new Attribute(6, "blendFactor"));
+		super.storeAllUniformLocations(projectionMatrix);
 	}
 
 	public void loadNumberOfRows(float rows) {
-		super.loadFloat(loc_numberOfRows, rows);
+		numberOfRows.loadFloat(rows);
 	}
 
 	public void loadProjectionMatrix(Matrix4f projectionMatrix) {
-		super.loadMatrix(loc_projectionMatrix, projectionMatrix);
+		this.projectionMatrix.loadMatrix(projectionMatrix);
 	}
 
 }

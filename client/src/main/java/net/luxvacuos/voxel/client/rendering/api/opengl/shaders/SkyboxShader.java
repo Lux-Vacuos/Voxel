@@ -23,6 +23,10 @@ package net.luxvacuos.voxel.client.rendering.api.opengl.shaders;
 import net.luxvacuos.igl.vector.Matrix4f;
 import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.voxel.client.core.ClientVariables;
+import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.Attribute;
+import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.UniformFloat;
+import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.UniformMatrix;
+import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.UniformVec3;
 import net.luxvacuos.voxel.client.util.Maths;
 import net.luxvacuos.voxel.client.world.entities.Camera;
 
@@ -33,34 +37,21 @@ import net.luxvacuos.voxel.client.world.entities.Camera;
  * @category Rendering
  */
 public class SkyboxShader extends ShaderProgram {
-	/**
-	 * Skybox Shader Data
-	 */
-	private int loc_projectionMatrix;
-	private int loc_transformationMatrix;
-	private int loc_viewMatrix;
-	private int loc_time;
-	private int loc_lightPosition;
-	private int loc_fogColour;
+
+	private static Matrix4f camM;
+
+	private UniformMatrix projectionMatrix = new UniformMatrix("projectionMatrix");
+	private UniformMatrix transformationMatrix = new UniformMatrix("transformationMatrix");
+	private UniformMatrix viewMatrix = new UniformMatrix("viewMatrix");
+	private UniformFloat time = new UniformFloat("time");
+	private UniformVec3 fogColour = new UniformVec3("fogColour");
+	private UniformVec3 lightPosition = new UniformVec3("lightPosition");
 
 	public SkyboxShader() {
-		super(ClientVariables.VERTEX_FILE_SKYBOX, ClientVariables.FRAGMENT_FILE_SKYBOX);
-	}
-
-	@Override
-	protected void bindAttributes() {
-		super.bindAttribute(0, "position");
-		super.bindAttribute(2, "normal");
-	}
-
-	@Override
-	protected void getAllUniformLocations() {
-		loc_projectionMatrix = super.getUniformLocation("projectionMatrix");
-		loc_transformationMatrix = super.getUniformLocation("transformationMatrix");
-		loc_viewMatrix = super.getUniformLocation("viewMatrix");
-		loc_fogColour = super.getUniformLocation("fogColour");
-		loc_time = super.getUniformLocation("time");
-		loc_lightPosition = super.getUniformLocation("lightPosition");
+		super(ClientVariables.VERTEX_FILE_SKYBOX, ClientVariables.FRAGMENT_FILE_SKYBOX, new Attribute(0, "position"),
+				new Attribute(2, "normal"));
+		super.storeAllUniformLocations(projectionMatrix, transformationMatrix, viewMatrix, time, fogColour,
+				lightPosition);
 	}
 
 	/**
@@ -70,7 +61,7 @@ public class SkyboxShader extends ShaderProgram {
 	 *            Projection Matrix
 	 */
 	public void loadProjectionMatrix(Matrix4f matrix) {
-		super.loadMatrix(loc_projectionMatrix, matrix);
+		projectionMatrix.loadMatrix(matrix);
 	}
 
 	/**
@@ -82,16 +73,15 @@ public class SkyboxShader extends ShaderProgram {
 	 *            Delta
 	 */
 	public void loadViewMatrix(Camera camera) {
-		Matrix4f matrix = Maths.createViewMatrixRot(camera.getPitch(), camera.getYaw(), camera.getRoll(), null);
-		super.loadMatrix(loc_viewMatrix, matrix);
+		viewMatrix.loadMatrix(Maths.createViewMatrixRot(camera.getPitch(), camera.getYaw(), camera.getRoll(), camM));
 	}
 
 	public void loadTransformationMatrix(Matrix4f mat) {
-		super.loadMatrix(loc_transformationMatrix, mat);
+		transformationMatrix.loadMatrix(mat);
 	}
 
 	public void loadLightPosition(Vector3f pos) {
-		super.loadVector(loc_lightPosition, pos);
+		lightPosition.loadVec3(pos);
 	}
 
 	/**
@@ -105,11 +95,11 @@ public class SkyboxShader extends ShaderProgram {
 	 *            Blue Value
 	 */
 	public void loadFog(float r, float g, float b) {
-		super.loadVector(loc_fogColour, new Vector3f(r, g, b));
+		fogColour.loadVec3(new Vector3f(r, g, b));
 	}
 
 	public void loadTime(float time) {
-		super.loadFloat(loc_time, time);
+		this.time.loadFloat(time);
 	}
 
 }

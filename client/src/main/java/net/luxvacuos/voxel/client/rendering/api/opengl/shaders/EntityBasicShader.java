@@ -22,36 +22,30 @@ package net.luxvacuos.voxel.client.rendering.api.opengl.shaders;
 
 import net.luxvacuos.igl.vector.Matrix4f;
 import net.luxvacuos.voxel.client.core.ClientVariables;
+import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.Attribute;
+import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.UniformMatrix;
+import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.UniformSampler;
 import net.luxvacuos.voxel.client.util.Maths;
 import net.luxvacuos.voxel.client.world.entities.Camera;
 
 public class EntityBasicShader extends ShaderProgram {
 
-	private int loc_projectionMatrix;
-	private int loc_transformationMatrix;
-	private int loc_viewMatrix;
-	private int loc_texture;
+	private UniformMatrix transformationMatrix = new UniformMatrix("transformationMatrix");
+	private UniformMatrix projectionMatrix = new UniformMatrix("projectionMatrix");
+	private UniformMatrix viewMatrix = new UniformMatrix("viewMatrix");
+	private UniformSampler texture0 = new UniformSampler("texture0");
 
 	public EntityBasicShader() {
-		super(ClientVariables.VERTEX_FILE_ENTITY_BASIC, ClientVariables.FRAGMENT_FILE_ENTITY_BASIC);
+		super(ClientVariables.VERTEX_FILE_ENTITY_BASIC, ClientVariables.FRAGMENT_FILE_ENTITY_BASIC,
+				new Attribute(0, "position"), new Attribute(1, "textureCoords"));
+		super.storeAllUniformLocations(transformationMatrix, projectionMatrix, viewMatrix, texture0);
+		connectTextureUnits();
 	}
 
-	@Override
-	protected void getAllUniformLocations() {
-		loc_transformationMatrix = super.getUniformLocation("transformationMatrix");
-		loc_projectionMatrix = super.getUniformLocation("projectionMatrix");
-		loc_viewMatrix = super.getUniformLocation("viewMatrix");
-		loc_texture = super.getUniformLocation("texture0");
-	}
-
-	@Override
-	protected void bindAttributes() {
-		super.bindAttribute(0, "position");
-		super.bindAttribute(1, "textureCoords");
-	}
-
-	public void connectTextureUnits() {
-		super.loadInt(loc_texture, 0);
+	private void connectTextureUnits() {
+		super.start();
+		texture0.loadTexUnit(0);
+		super.stop();
 	}
 
 	/**
@@ -61,7 +55,7 @@ public class EntityBasicShader extends ShaderProgram {
 	 *            Transformation Matrix
 	 */
 	public void loadTransformationMatrix(Matrix4f matrix) {
-		super.loadMatrix(loc_transformationMatrix, matrix);
+		transformationMatrix.loadMatrix(matrix);
 	}
 
 	/**
@@ -71,7 +65,7 @@ public class EntityBasicShader extends ShaderProgram {
 	 *            Camera
 	 */
 	public void loadviewMatrix(Camera camera) {
-		super.loadMatrix(loc_viewMatrix, Maths.createViewMatrix(camera));
+		viewMatrix.loadMatrix(Maths.createViewMatrix(camera));
 	}
 
 	/**
@@ -81,7 +75,7 @@ public class EntityBasicShader extends ShaderProgram {
 	 *            Projection Matrix
 	 */
 	public void loadProjectionMatrix(Matrix4f projection) {
-		super.loadMatrix(loc_projectionMatrix, projection);
+		projectionMatrix.loadMatrix(projection);
 	}
 
 }

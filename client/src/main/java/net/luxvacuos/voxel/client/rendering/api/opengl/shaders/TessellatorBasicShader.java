@@ -22,6 +22,9 @@ package net.luxvacuos.voxel.client.rendering.api.opengl.shaders;
 
 import net.luxvacuos.igl.vector.Matrix4f;
 import net.luxvacuos.voxel.client.core.ClientVariables;
+import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.Attribute;
+import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.UniformMatrix;
+import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.UniformVec3;
 import net.luxvacuos.voxel.client.util.Maths;
 import net.luxvacuos.voxel.client.world.entities.Camera;
 
@@ -36,25 +39,15 @@ public class TessellatorBasicShader extends ShaderProgram {
 		return instance;
 	}
 
-	private int loc_projectionMatrix;
-	private int loc_viewMatrix;
-	private int loc_cameraPos;
+	private UniformMatrix projectionMatrix = new UniformMatrix("projectionMatrix");
+	private UniformMatrix viewMatrix = new UniformMatrix("viewMatrix");
+
+	private UniformVec3 cameraPos = new UniformVec3("cameraPos");
 
 	public TessellatorBasicShader() {
-		super(ClientVariables.VERTEX_FILE_TESSELLATOR_BASIC, ClientVariables.FRAGMENT_FILE_TESSELLATOR_BASIC);
-	}
-
-	@Override
-	protected void getAllUniformLocations() {
-		loc_projectionMatrix = super.getUniformLocation("projectionMatrix");
-		loc_viewMatrix = super.getUniformLocation("viewMatrix");
-		loc_cameraPos = super.getUniformLocation("cameraPos");
-	}
-
-	@Override
-	protected void bindAttributes() {
-		super.bindAttribute(0, "position");
-		super.bindAttribute(1, "textureCoords");
+		super(ClientVariables.VERTEX_FILE_TESSELLATOR_BASIC, ClientVariables.FRAGMENT_FILE_TESSELLATOR_BASIC,
+				new Attribute(0, "position"), new Attribute(1, "textureCoords"));
+		super.storeAllUniformLocations(projectionMatrix, viewMatrix, cameraPos);
 	}
 
 	/**
@@ -68,8 +61,8 @@ public class TessellatorBasicShader extends ShaderProgram {
 		matrix.m30 = 0;
 		matrix.m31 = 0;
 		matrix.m32 = 0;
-		super.loadMatrix(loc_viewMatrix, matrix);
-		super.loadVector(loc_cameraPos, camera.getPosition());
+		viewMatrix.loadMatrix(matrix);
+		cameraPos.loadVec3(camera.getPosition());
 	}
 
 	/**
@@ -79,7 +72,7 @@ public class TessellatorBasicShader extends ShaderProgram {
 	 *            Projection Matrix
 	 */
 	public void loadProjectionMatrix(Matrix4f projection) {
-		super.loadMatrix(loc_projectionMatrix, projection);
+		projectionMatrix.loadMatrix(projection);
 	}
 
 }

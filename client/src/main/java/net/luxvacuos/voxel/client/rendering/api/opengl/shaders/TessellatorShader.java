@@ -23,9 +23,12 @@ package net.luxvacuos.voxel.client.rendering.api.opengl.shaders;
 import net.luxvacuos.igl.vector.Matrix4f;
 import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.voxel.client.core.ClientVariables;
-//import net.luxvacuos.voxel.client.resources.GameResources;
-//import net.luxvacuos.voxel.client.util.Maths;
-//import net.luxvacuos.voxel.client.world.entities.Camera;
+import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.Attribute;
+import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.UniformBoolean;
+import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.UniformFloat;
+import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.UniformMatrix;
+import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.UniformSampler;
+import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.UniformVec3;
 
 public class TessellatorShader extends ShaderProgram {
 
@@ -38,69 +41,47 @@ public class TessellatorShader extends ShaderProgram {
 		return instance;
 	}
 
-	private int loc_projectionMatrix;
-	private int loc_viewMatrix;
-	private int loc_cameraPos;
-	private int loc_projectionLightMatrix;
-	private int loc_viewLightMatrix;
-	private int loc_biasMatrix;
-	private int loc_moveFactor;
+	private UniformMatrix projectionMatrix = new UniformMatrix("projectionMatrix");
+	private UniformMatrix viewMatrix = new UniformMatrix("viewMatrix");
+	private UniformMatrix biasMatrix = new UniformMatrix("biasMatrix");
+	private UniformMatrix projectionLightMatrix = new UniformMatrix("projectionLightMatrix");
+	private UniformMatrix viewLightMatrix = new UniformMatrix("viewLightMatrix");
 
-	private int loc_texture;
-	private int loc_depth;
-	private int loc_normalMap;
-	private int loc_heightMap;
-	private int loc_specularMap;
-	private int loc_shadow;
+	private UniformVec3 cameraPos = new UniformVec3("cameraPos");
 
-	private int loc_useShadows;
-	private int loc_useParallax;
+	private UniformFloat moveFactor = new UniformFloat("moveFactor");
+	private UniformFloat rainFactor = new UniformFloat("rainFactor");
 
-	private int loc_rainFactor;
-	private int loc_transparent;
+	private UniformSampler texture0 = new UniformSampler("texture0");
+	private UniformSampler depth = new UniformSampler("depth");
+	private UniformSampler shadowTex = new UniformSampler("shadowTex");
+	private UniformSampler normalMap = new UniformSampler("normalMap");
+	private UniformSampler heightMap = new UniformSampler("heightMap");
+	private UniformSampler specularMap = new UniformSampler("specularMap");
+
+	private UniformBoolean useShadows = new UniformBoolean("useShadows");
+	private UniformBoolean useParallax = new UniformBoolean("useParallax");
+	private UniformBoolean transparent = new UniformBoolean("transparent");
 
 	private TessellatorShader() {
-		super(ClientVariables.VERTEX_FILE_TESSELLATOR, ClientVariables.FRAGMENT_FILE_TESSELLATOR);
+		super(ClientVariables.VERTEX_FILE_TESSELLATOR, ClientVariables.FRAGMENT_FILE_TESSELLATOR,
+				new Attribute(0, "position"), new Attribute(1, "textureCoords"), new Attribute(2, "normal"),
+				new Attribute(3, "data"), new Attribute(4, "tangent"), new Attribute(5, "bitangent"));
+		super.storeAllUniformLocations(projectionMatrix, viewMatrix, biasMatrix, projectionLightMatrix, viewLightMatrix,
+				cameraPos, moveFactor, rainFactor, texture0, depth, shadowTex, normalMap, heightMap, specularMap,
+				useShadows, useParallax, transparent);
+		conectTextureUnits();
 	}
 
-	public void conectTextureUnits() {
-		super.loadInt(loc_texture, 0);
-		super.loadInt(loc_depth, 1);
-		super.loadInt(loc_normalMap, 2);
-		super.loadInt(loc_heightMap, 3);
-		super.loadInt(loc_specularMap, 4);
-		super.loadInt(loc_shadow, 5);
-	}
-
-	@Override
-	protected void getAllUniformLocations() {
-		loc_projectionMatrix = super.getUniformLocation("projectionMatrix");
-		loc_viewMatrix = super.getUniformLocation("viewMatrix");
-		loc_biasMatrix = super.getUniformLocation("biasMatrix");
-		loc_projectionLightMatrix = super.getUniformLocation("projectionLightMatrix");
-		loc_viewLightMatrix = super.getUniformLocation("viewLightMatrix");
-		loc_cameraPos = super.getUniformLocation("cameraPos");
-		loc_texture = super.getUniformLocation("texture0");
-		loc_depth = super.getUniformLocation("depth");
-		loc_shadow = super.getUniformLocation("shadowTex");
-		loc_useShadows = super.getUniformLocation("useShadows");
-		loc_normalMap = super.getUniformLocation("normalMap");
-		loc_heightMap = super.getUniformLocation("heightMap");
-		loc_specularMap = super.getUniformLocation("specularMap");
-		loc_useParallax = super.getUniformLocation("useParallax");
-		loc_moveFactor = super.getUniformLocation("moveFactor");
-		loc_rainFactor = super.getUniformLocation("rainFactor");
-		loc_transparent = super.getUniformLocation("transparent");
-	}
-
-	@Override
-	protected void bindAttributes() {
-		super.bindAttribute(0, "position");
-		super.bindAttribute(1, "textureCoords");
-		super.bindAttribute(2, "normal");
-		super.bindAttribute(3, "data");
-		super.bindAttribute(4, "tangent");
-		super.bindAttribute(5, "bitangent");
+	private void conectTextureUnits() {
+		super.start();
+		texture0.loadTexUnit(0);
+		depth.loadTexUnit(1);
+		normalMap.loadTexUnit(2);
+		heightMap.loadTexUnit(3);
+		specularMap.loadTexUnit(4);
+		shadowTex.loadTexUnit(5);
+		super.stop();
 	}
 
 	/**
@@ -109,62 +90,45 @@ public class TessellatorShader extends ShaderProgram {
 	 * @param camera
 	 *            Camera
 	 */
-	//public void loadviewMatrix(Camera camera) {
 	public void loadViewMatrix(Matrix4f cameraViewMatrix, Vector3f cameraPosition) {
-		//Matrix4f matrix = Maths.createViewMatrix(camera);
 		cameraViewMatrix.m30 = 0;
 		cameraViewMatrix.m31 = 0;
 		cameraViewMatrix.m32 = 0;
-		super.loadMatrix(loc_viewMatrix, cameraViewMatrix);
-		//super.loadVector(loc_cameraPos, camera.getPosition());
-		super.loadVector(loc_cameraPos, cameraPosition);
+		viewMatrix.loadMatrix(cameraViewMatrix);
+		cameraPos.loadVec3(cameraPosition);
 	}
 
-	//public void loadBiasMatrix(GameResources gm) {
 	public void loadBiasMatrix(Matrix4f shadowProjectionMatrix) {
 		Matrix4f biasMatrix = new Matrix4f();
 		biasMatrix.m00 = 0.5f;
-		//biasMatrix.m01 = 0;
-		//biasMatrix.m02 = 0;
-		//biasMatrix.m03 = 0;
-		//biasMatrix.m10 = 0;
 		biasMatrix.m11 = 0.5f;
-		//biasMatrix.m12 = 0;
-		//biasMatrix.m13 = 0;
-		//biasMatrix.m20 = 0;
-		//biasMatrix.m21 = 0;
 		biasMatrix.m22 = 0.5f;
-		//biasMatrix.m23 = 0;
 		biasMatrix.m30 = 0.5f;
 		biasMatrix.m31 = 0.5f;
 		biasMatrix.m32 = 0.5f;
-		//biasMatrix.m33 = 1f;
-		super.loadMatrix(loc_biasMatrix, biasMatrix);
-		//super.loadMatrix(loc_projectionLightMatrix, gm.getMasterShadowRenderer().getProjectionMatrix());
-		super.loadMatrix(loc_projectionLightMatrix, shadowProjectionMatrix);
+		this.biasMatrix.loadMatrix(biasMatrix);
+		projectionLightMatrix.loadMatrix(shadowProjectionMatrix);
 	}
 
-	//public void loadLightMatrix(GameResources gm) {
 	public void loadLightMatrix(Matrix4f sunCameraViewMatrix) {
-		//super.loadMatrix(loc_viewLightMatrix, Maths.createViewMatrix(gm.getSun_Camera()));
-		super.loadMatrix(loc_viewLightMatrix, sunCameraViewMatrix);
+		viewLightMatrix.loadMatrix(sunCameraViewMatrix);
 	}
 
 	public void loadMoveFactor(float factor) {
-		super.loadFloat(loc_moveFactor, factor);
+		moveFactor.loadFloat(factor);
 	}
 
 	public void loadRainFactor(float factor) {
-		super.loadFloat(loc_rainFactor, factor);
+		rainFactor.loadFloat(factor);
 	}
 
 	public void loadSettings(boolean useShadows, boolean useParallax) {
-		super.loadBoolean(loc_useShadows, useShadows);
-		super.loadBoolean(loc_useParallax, useParallax);
+		this.useShadows.loadBoolean(useShadows);
+		this.useParallax.loadBoolean(useParallax);
 	}
 
 	public void loadTransparent(boolean trans) {
-		super.loadBoolean(loc_transparent, trans);
+		transparent.loadBoolean(trans);
 	}
 
 	/**
@@ -174,7 +138,7 @@ public class TessellatorShader extends ShaderProgram {
 	 *            Projection Matrix
 	 */
 	public void loadProjectionMatrix(Matrix4f projection) {
-		super.loadMatrix(loc_projectionMatrix, projection);
+		projectionMatrix.loadMatrix(projection);
 	}
 
 }

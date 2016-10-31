@@ -22,6 +22,11 @@ package net.luxvacuos.voxel.client.rendering.api.opengl.shaders;
 
 import net.luxvacuos.igl.vector.Matrix4f;
 import net.luxvacuos.voxel.client.core.ClientVariables;
+import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.Attribute;
+import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.UniformBoolean;
+import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.UniformFloat;
+import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.UniformMatrix;
+import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.UniformSampler;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.util.Maths;
 import net.luxvacuos.voxel.client.world.entities.Camera;
@@ -34,61 +39,42 @@ import net.luxvacuos.voxel.client.world.entities.Camera;
  */
 public class EntityShader extends ShaderProgram {
 
-	/**
-	 * Entity Shader Data
-	 */
-	private int loc_transformationMatrix;
-	private int loc_projectionMatrix;
-	private int loc_viewMatrix;
-	private int loc_projectionLightMatrix;
-	private int loc_viewLightMatrix;
-	private int loc_biasMatrix;
-	private int loc_entityLight;
-	private int loc_texture0;
-	private int loc_depth0;
-
-	private int loc_useShadows;
+	private UniformMatrix transformationMatrix = new UniformMatrix("transformationMatrix");
+	private UniformMatrix projectionMatrix = new UniformMatrix("projectionMatrix");
+	private UniformMatrix viewMatrix = new UniformMatrix("viewMatrix");
+	private UniformMatrix biasMatrix = new UniformMatrix("biasMatrix");
+	private UniformMatrix projectionLightMatrix = new UniformMatrix("projectionLightMatrix");
+	private UniformMatrix viewLightMatrix = new UniformMatrix("viewLightMatrix");
+	private UniformFloat entityLight = new UniformFloat("entityLight");
+	private UniformSampler texture0 = new UniformSampler("texture0");
+	private UniformSampler depth = new UniformSampler("depth");
+	private UniformBoolean useShadows = new UniformBoolean("useShadows");
 
 	public EntityShader() {
-		super(ClientVariables.VERTEX_FILE_ENTITY, ClientVariables.FRAGMENT_FILE_ENTITY);
-	}
-
-	@Override
-	protected void bindAttributes() {
-		super.bindAttribute(0, "position");
-		super.bindAttribute(1, "textureCoords");
-		super.bindAttribute(2, "normal");
-	}
-
-	@Override
-	protected void getAllUniformLocations() {
-		loc_transformationMatrix = super.getUniformLocation("transformationMatrix");
-		loc_projectionMatrix = super.getUniformLocation("projectionMatrix");
-		loc_viewMatrix = super.getUniformLocation("viewMatrix");
-		loc_biasMatrix = super.getUniformLocation("biasMatrix");
-		loc_projectionLightMatrix = super.getUniformLocation("projectionLightMatrix");
-		loc_viewLightMatrix = super.getUniformLocation("viewLightMatrix");
-		loc_entityLight = super.getUniformLocation("entityLight");
-		loc_texture0 = super.getUniformLocation("texture0");
-		loc_depth0 = super.getUniformLocation("depth");
-		loc_useShadows = super.getUniformLocation("useShadows");
+		super(ClientVariables.VERTEX_FILE_ENTITY, ClientVariables.FRAGMENT_FILE_ENTITY, new Attribute(0, "position"),
+				new Attribute(1, "textureCoords"), new Attribute(2, "normals"));
+		super.storeAllUniformLocations(transformationMatrix, projectionMatrix, viewMatrix, biasMatrix,
+				projectionLightMatrix, viewLightMatrix, entityLight, texture0, depth, useShadows);
+		connectTextureUnits();
 	}
 
 	/**
 	 * Loads Textures ID
 	 * 
 	 */
-	public void connectTextureUnits() {
-		super.loadInt(loc_texture0, 0);
-		super.loadInt(loc_depth0, 1);
+	private void connectTextureUnits() {
+		super.start();
+		texture0.loadTexUnit(0);
+		depth.loadTexUnit(1);
+		super.stop();
 	}
 
 	public void loadEntityLight(float light) {
-		super.loadFloat(loc_entityLight, light);
+		entityLight.loadFloat(light);
 	}
 
 	public void useShadows(boolean value) {
-		super.loadBoolean(loc_useShadows, value);
+		useShadows.loadBoolean(value);
 	}
 
 	/**
@@ -98,33 +84,23 @@ public class EntityShader extends ShaderProgram {
 	 *            Transformation Matrix
 	 */
 	public void loadTransformationMatrix(Matrix4f matrix) {
-		super.loadMatrix(loc_transformationMatrix, matrix);
+		transformationMatrix.loadMatrix(matrix);
 	}
 
 	public void loadBiasMatrix(GameResources gm) {
 		Matrix4f biasMatrix = new Matrix4f();
 		biasMatrix.m00 = 0.5f;
-		biasMatrix.m01 = 0;
-		biasMatrix.m02 = 0;
-		biasMatrix.m03 = 0;
-		biasMatrix.m10 = 0;
 		biasMatrix.m11 = 0.5f;
-		biasMatrix.m12 = 0;
-		biasMatrix.m13 = 0;
-		biasMatrix.m20 = 0;
-		biasMatrix.m21 = 0;
 		biasMatrix.m22 = 0.5f;
-		biasMatrix.m23 = 0;
 		biasMatrix.m30 = 0.5f;
 		biasMatrix.m31 = 0.5f;
 		biasMatrix.m32 = 0.5f;
-		biasMatrix.m33 = 1f;
-		super.loadMatrix(loc_biasMatrix, biasMatrix);
-		super.loadMatrix(loc_projectionLightMatrix, gm.getMasterShadowRenderer().getProjectionMatrix());
+		this.biasMatrix.loadMatrix(biasMatrix);
+		projectionLightMatrix.loadMatrix(gm.getMasterShadowRenderer().getProjectionMatrix());
 	}
 
 	public void loadLightMatrix(GameResources gm) {
-		super.loadMatrix(loc_viewLightMatrix, Maths.createViewMatrix(gm.getSun_Camera()));
+		viewLightMatrix.loadMatrix(Maths.createViewMatrix(gm.getSun_Camera()));
 	}
 
 	/**
@@ -134,8 +110,7 @@ public class EntityShader extends ShaderProgram {
 	 *            Camera
 	 */
 	public void loadviewMatrix(Camera camera) {
-		Matrix4f viewMatrix = Maths.createViewMatrix(camera);
-		super.loadMatrix(loc_viewMatrix, viewMatrix);
+		viewMatrix.loadMatrix(Maths.createViewMatrix(camera));
 	}
 
 	/**
@@ -145,6 +120,6 @@ public class EntityShader extends ShaderProgram {
 	 *            Projection Matrix
 	 */
 	public void loadProjectionMatrix(Matrix4f projection) {
-		super.loadMatrix(loc_projectionMatrix, projection);
+		projectionMatrix.loadMatrix(projection);
 	}
 }

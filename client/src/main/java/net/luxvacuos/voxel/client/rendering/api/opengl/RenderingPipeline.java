@@ -108,7 +108,6 @@ public abstract class RenderingPipeline {
 		finalShader = new DeferredShadingShader("Final");
 		finalShader.start();
 		finalShader.loadTransformation(Maths.createTransformationMatrix(new Vector2f(0, 0), new Vector2f(1, 1)));
-		finalShader.connectTextureUnits();
 		finalShader.loadResolution(new Vector2f(window.getWidth(), window.getHeight()));
 		finalShader.loadSkyColor(ClientVariables.skyColor);
 		finalShader.stop();
@@ -149,7 +148,6 @@ public abstract class RenderingPipeline {
 		finalShader = new DeferredShadingShader("Final");
 		finalShader.start();
 		finalShader.loadTransformation(Maths.createTransformationMatrix(new Vector2f(0, 0), new Vector2f(1, 1)));
-		finalShader.connectTextureUnits();
 		finalShader.loadResolution(new Vector2f(window.getWidth(), window.getHeight()));
 		finalShader.loadSkyColor(ClientVariables.skyColor);
 		finalShader.stop();

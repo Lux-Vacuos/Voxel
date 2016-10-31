@@ -84,7 +84,6 @@ public abstract class ImagePass {
 		shader = new DeferredShadingShader(name);
 		shader.start();
 		shader.loadTransformation(Maths.createTransformationMatrix(new Vector2f(0, 0), new Vector2f(1, 1)));
-		shader.connectTextureUnits();
 		shader.loadResolution(new Vector2f(width, height));
 		shader.loadSkyColor(ClientVariables.skyColor);
 		shader.stop();

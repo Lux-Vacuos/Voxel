@@ -540,7 +540,6 @@ public class ResourceLoader {
 	 * @param data
 	 *            Array of data
 	 * @return IntBuffer
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	private IntBuffer storeDataInIntBuffer(int[] data) {
 		IntBuffer buffer = BufferUtils.createIntBuffer(data.length);
@@ -555,7 +554,6 @@ public class ResourceLoader {
 	 * @param data
 	 *            Array of data
 	 * @return FloatBuffer
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	private FloatBuffer storeDataInFloatBuffer(float[] data) {
 		FloatBuffer buffer = BufferUtils.createFloatBuffer(data.length);
@@ -568,7 +566,6 @@ public class ResourceLoader {
 	 * Get OBJLoader
 	 * 
 	 * @return OBJLoader
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public OBJLoader getObjLoader() {
 		return objLoader;

@@ -26,6 +26,13 @@ import net.luxvacuos.igl.vector.Matrix4f;
 import net.luxvacuos.igl.vector.Vector2f;
 import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.Light;
+import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.Attribute;
+import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.UniformBoolean;
+import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.UniformFloat;
+import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.UniformMatrix;
+import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.UniformSampler;
+import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.UniformVec2;
+import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.UniformVec3;
 import net.luxvacuos.voxel.client.util.Maths;
 import net.luxvacuos.voxel.client.world.entities.Camera;
 
@@ -37,144 +44,114 @@ import net.luxvacuos.voxel.client.world.entities.Camera;
  */
 public class DeferredShadingShader extends ShaderProgram {
 
-	/**
-	 * Post Processing Shader Data
-	 */
-	private int loc_transformationMatrix;
-	private int loc_projectionMatrix;
-	private int loc_viewMatrix;
-	private int loc_inverseProjectionMatrix;
-	private int loc_inverseViewMatrix;
-	private int loc_previousViewMatrix;
-	private int loc_sunPositionInScreen;
-	private int loc_camUnderWater;
-	private int loc_camUnderWaterOffset;
-	private int loc_resolution;
-	private int loc_gDiffuse;
-	private int loc_gPosition;
-	private int loc_gNormal;
-	private int loc_depth0;
-	private int loc_gData0;
-	private int loc_gData1;
-	private int loc_composite0;
-	private int loc_composite1;
-	private int loc_cameraPosition;
-	private int loc_previousCameraPosition;
-	private int loc_lightPosition;
-	private int loc_invertedLightPosition;
-	private int loc_skyColor;
-	private int loc_time;
-	private int loc_exposure;
-	private int loc_pointLightsPos[];
+	private UniformMatrix transformationMatrix = new UniformMatrix("transformationMatrix");
+	private UniformMatrix projectionMatrix = new UniformMatrix("projectionMatrix");
+	private UniformMatrix viewMatrix = new UniformMatrix("viewMatrix");
+	private UniformMatrix inverseProjectionMatrix = new UniformMatrix("inverseProjectionMatrix");
+	private UniformMatrix inverseViewMatrix = new UniformMatrix("inverseViewMatrix");
+	private UniformMatrix previousViewMatrix = new UniformMatrix("previousViewMatrix");
 
-	private int loc_useFXAA;
-	private int loc_useDOF;
-	private int loc_useMotionBlur;
-	private int loc_useVolumetricLight;
-	private int loc_useReflections;
-	private int loc_useAmbientOcclusion;
+	private UniformVec3 cameraPosition = new UniformVec3("cameraPosition");
+	private UniformVec3 previousCameraPosition = new UniformVec3("previousCameraPosition");
+	private UniformVec3 lightPosition = new UniformVec3("lightPosition");
+	private UniformVec3 invertedLightPosition = new UniformVec3("invertedLightPosition");
+	private UniformVec3 skyColor = new UniformVec3("skyColor");
+	private UniformVec3 pointLightsPos[];
 
-	private float time;
+	private UniformVec2 resolution = new UniformVec2("resolution");
+	private UniformVec2 sunPositionInScreen = new UniformVec2("sunPositionInScreen");
+
+	private UniformFloat exposure = new UniformFloat("exposure");
+	private UniformFloat time = new UniformFloat("time");
+	private UniformFloat camUnderWaterOffset = new UniformFloat("camUnderWaterOffset");
+
+	private UniformBoolean camUnderWater = new UniformBoolean("camUnderWater");
+	private UniformBoolean useFXAA = new UniformBoolean("useFXAA");
+	private UniformBoolean useDOF = new UniformBoolean("useDOF");
+	private UniformBoolean useMotionBlur = new UniformBoolean("useMotionBlur");
+	private UniformBoolean useReflections = new UniformBoolean("useReflections");
+	private UniformBoolean useVolumetricLight = new UniformBoolean("useVolumetricLight");
+	private UniformBoolean useAmbientOcclusion = new UniformBoolean("useAmbientOcclusion");
+
+	private UniformSampler gDiffuse = new UniformSampler("gDiffuse");
+	private UniformSampler gPosition = new UniformSampler("gPosition");
+	private UniformSampler gNormal = new UniformSampler("gNormal");
+	private UniformSampler gDepth = new UniformSampler("gDepth");
+	private UniformSampler gData0 = new UniformSampler("gData0");
+	private UniformSampler gData1 = new UniformSampler("gData1");
+	private UniformSampler composite0 = new UniformSampler("composite0");
+	private UniformSampler composite1 = new UniformSampler("composite1");
+
+	private static float tTime = 0;
+
+	private static Matrix4f iPM, iVM;
 
 	public DeferredShadingShader(String type) {
-		super("IP_V_" + type + ".glsl", "IP_F_" + type + ".glsl");
-	}
-
-	@Override
-	protected void getAllUniformLocations() {
-		loc_transformationMatrix = super.getUniformLocation("transformationMatrix");
-		loc_projectionMatrix = super.getUniformLocation("projectionMatrix");
-		loc_viewMatrix = super.getUniformLocation("viewMatrix");
-		loc_inverseProjectionMatrix = super.getUniformLocation("inverseProjectionMatrix");
-		loc_inverseViewMatrix = super.getUniformLocation("inverseViewMatrix");
-		loc_previousViewMatrix = super.getUniformLocation("previousViewMatrix");
-		loc_cameraPosition = super.getUniformLocation("cameraPosition");
-		loc_previousCameraPosition = super.getUniformLocation("previousCameraPosition");
-		loc_camUnderWater = super.getUniformLocation("camUnderWater");
-		loc_camUnderWaterOffset = super.getUniformLocation("camUnderWaterOffset");
-		loc_resolution = super.getUniformLocation("resolution");
-		loc_gDiffuse = super.getUniformLocation("gDiffuse");
-		loc_gPosition = super.getUniformLocation("gPosition");
-		loc_gNormal = super.getUniformLocation("gNormal");
-		loc_depth0 = super.getUniformLocation("gDepth");
-		loc_gData0 = super.getUniformLocation("gData0");
-		loc_gData1 = super.getUniformLocation("gData1");
-		loc_composite0 = super.getUniformLocation("composite0");
-		loc_composite1 = super.getUniformLocation("composite1");
-		loc_lightPosition = super.getUniformLocation("lightPosition");
-		loc_invertedLightPosition = super.getUniformLocation("invertedLightPosition");
-		loc_sunPositionInScreen = super.getUniformLocation("sunPositionInScreen");
-		loc_skyColor = super.getUniformLocation("skyColor");
-		loc_exposure = super.getUniformLocation("exposure");
-		loc_time = super.getUniformLocation("time");
-		loc_pointLightsPos = new int[256];
-
+		super("IP_V_" + type + ".glsl", "IP_F_" + type + ".glsl", new Attribute(0, "position"));
+		pointLightsPos = new UniformVec3[256];
 		for (int x = 0; x < 256; x++) {
-			loc_pointLightsPos[x] = super.getUniformLocation("pointLightsPos[" + x + "]");
+			pointLightsPos[x] = new UniformVec3("pointLightsPos[" + x + "]");
 		}
-
-		loc_useFXAA = super.getUniformLocation("useFXAA");
-		loc_useDOF = super.getUniformLocation("useDOF");
-		loc_useMotionBlur = super.getUniformLocation("useMotionBlur");
-		loc_useReflections = super.getUniformLocation("useReflections");
-		loc_useVolumetricLight = super.getUniformLocation("useVolumetricLight");
-		loc_useAmbientOcclusion = super.getUniformLocation("useAmbientOcclusion");
-	}
-
-	@Override
-	protected void bindAttributes() {
-		super.bindAttribute(0, "position");
+		super.storeUniformArray(pointLightsPos);
+		super.storeAllUniformLocations(transformationMatrix, projectionMatrix, viewMatrix, inverseProjectionMatrix,
+				inverseViewMatrix, previousViewMatrix, cameraPosition, previousCameraPosition, lightPosition,
+				invertedLightPosition, skyColor, resolution, sunPositionInScreen, exposure, time, camUnderWaterOffset,
+				camUnderWater, useFXAA, useDOF, useMotionBlur, useReflections, useVolumetricLight, useAmbientOcclusion,
+				gDiffuse, gPosition, gNormal, gDepth, gData0, gData1, composite0, composite1);
+		connectTextureUnits();
 	}
 
 	/**
 	 * Loads Textures ID
 	 * 
 	 */
-	public void connectTextureUnits() {
-		super.loadInt(loc_gDiffuse, 0);
-		super.loadInt(loc_gPosition, 1);
-		super.loadInt(loc_gNormal, 2);
-		super.loadInt(loc_depth0, 3);
-		super.loadInt(loc_gData0, 4);
-		super.loadInt(loc_gData1, 5);
-		super.loadInt(loc_composite0, 6);
-		super.loadInt(loc_composite1, 7);
+	private void connectTextureUnits() {
+		super.start();
+		gDiffuse.loadTexUnit(0);
+		gPosition.loadTexUnit(1);
+		gNormal.loadTexUnit(2);
+		gDepth.loadTexUnit(3);
+		gData0.loadTexUnit(4);
+		gData1.loadTexUnit(5);
+		composite0.loadTexUnit(6);
+		composite1.loadTexUnit(7);
+		super.stop();
 	}
 
 	public void loadUnderWater(boolean value) {
-		super.loadBoolean(loc_camUnderWater, value);
-		super.loadFloat(loc_camUnderWaterOffset, time += 0.1f);
-		time %= 10;
+		camUnderWater.loadBoolean(value);
+		camUnderWaterOffset.loadFloat(tTime += 0.1f);
+		tTime %= 10;
 	}
 
-	public void loadExposure(float bright) {
-		super.loadFloat(loc_exposure, bright);
+	public void loadExposure(float exposure) {
+		this.exposure.loadFloat(exposure);
 	}
 
 	public void loadSkyColor(Vector3f color) {
-		super.loadVector(loc_skyColor, color);
+		skyColor.loadVec3(color);
 	}
 
 	public void loadLightPosition(Vector3f pos, Vector3f invertPos) {
-		super.loadVector(loc_lightPosition, pos);
-		super.loadVector(loc_invertedLightPosition, invertPos);
+		lightPosition.loadVec3(pos);
+		invertedLightPosition.loadVec3(invertPos);
 	}
 
 	public void loadSunPosition(Vector2f pos) {
-		super.load2DVector(loc_sunPositionInScreen, pos);
+		sunPositionInScreen.loadVec2(pos);
 	}
 
 	public void loadTime(float time) {
-		super.loadFloat(loc_time, time);
+		this.time.loadFloat(time);
 	}
 
 	public void loadPointLightsPos(List<Light> lights) {
 		// TODO: Add color support
 		for (int x = 0; x < 256; x++) {
 			if (x < lights.size()) {
-				super.loadVector(loc_pointLightsPos[x], lights.get(x).getPosition());
+				pointLightsPos[x].loadVec3(lights.get(x).getPosition());
 			} else {
-				super.loadVector(loc_pointLightsPos[x], new Vector3f(0, -100, 0));
+				pointLightsPos[x].loadVec3(new Vector3f(0, -100, 0));
 			}
 		}
 	}
@@ -186,27 +163,27 @@ public class DeferredShadingShader extends ShaderProgram {
 	 *            Resolution as Vector2f
 	 */
 	public void loadResolution(Vector2f res) {
-		super.load2DVector(loc_resolution, res);
+		resolution.loadVec2(res);
 	}
 
 	public void loadSettings(boolean useDOF, boolean useFXAA, boolean useMotionBlur, boolean useVolumetricLight,
 			boolean useReflections, boolean useAmbientOcclusion) {
-		super.loadBoolean(loc_useDOF, useDOF);
-		super.loadBoolean(loc_useFXAA, useFXAA);
-		super.loadBoolean(loc_useMotionBlur, useMotionBlur);
-		super.loadBoolean(loc_useVolumetricLight, useVolumetricLight);
-		super.loadBoolean(loc_useReflections, useReflections);
-		super.loadBoolean(loc_useAmbientOcclusion, useAmbientOcclusion);
+		this.useDOF.loadBoolean(useDOF);
+		this.useFXAA.loadBoolean(useFXAA);
+		this.useMotionBlur.loadBoolean(useMotionBlur);
+		this.useVolumetricLight.loadBoolean(useVolumetricLight);
+		this.useReflections.loadBoolean(useReflections);
+		this.useAmbientOcclusion.loadBoolean(useAmbientOcclusion);
 	}
 
 	public void loadMotionBlurData(Matrix4f projectionMatrix, Camera camera, Matrix4f previousViewMatrix,
 			Vector3f previousCameraPosition) {
-		super.loadMatrix(loc_projectionMatrix, projectionMatrix);
-		super.loadMatrix(loc_inverseProjectionMatrix, Matrix4f.invert(projectionMatrix, null));
-		super.loadMatrix(loc_inverseViewMatrix, Matrix4f.invert(Maths.createViewMatrix(camera), null));
-		super.loadMatrix(loc_previousViewMatrix, previousViewMatrix);
-		super.loadVector(loc_cameraPosition, camera.getPosition());
-		super.loadVector(loc_previousCameraPosition, previousCameraPosition);
+		this.projectionMatrix.loadMatrix(projectionMatrix);
+		this.inverseProjectionMatrix.loadMatrix(Matrix4f.invert(projectionMatrix, iPM));
+		this.inverseViewMatrix.loadMatrix(Matrix4f.invert(Maths.createViewMatrix(camera), iVM));
+		this.previousViewMatrix.loadMatrix(previousViewMatrix);
+		this.cameraPosition.loadVec3(camera.getPosition());
+		this.previousCameraPosition.loadVec3(previousCameraPosition);
 	}
 
 	/**
@@ -216,8 +193,7 @@ public class DeferredShadingShader extends ShaderProgram {
 	 *            Camera
 	 */
 	public void loadviewMatrix(Camera camera) {
-		Matrix4f viewMatrix = Maths.createViewMatrix(camera);
-		super.loadMatrix(loc_viewMatrix, viewMatrix);
+		this.viewMatrix.loadMatrix(Maths.createViewMatrix(camera));
 	}
 
 	/**
@@ -227,7 +203,7 @@ public class DeferredShadingShader extends ShaderProgram {
 	 *            Transformation Matrix
 	 */
 	public void loadTransformation(Matrix4f matrix) {
-		super.loadMatrix(loc_transformationMatrix, matrix);
+		transformationMatrix.loadMatrix(matrix);
 	}
 
 }

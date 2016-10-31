@@ -62,7 +62,6 @@ public class ShadowRenderer {
 		this.shader = shader;
 		shader.start();
 		shader.loadProjectionMatrix(projectionMatrix);
-		shader.connectTextureUnits();
 		shader.stop();
 	}
 

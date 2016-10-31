@@ -21,7 +21,7 @@
 package net.luxvacuos.voxel.client.rendering.api.opengl;
 
 import static org.lwjgl.opengl.GL11.GL_BACK;
-import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.GL_FLOAT;
 import static org.lwjgl.opengl.GL11.GL_FRONT;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
@@ -113,7 +113,6 @@ public class Tessellator {
 		this.orthoProjectionMatrix = GameResources.getInstance().getMasterShadowRenderer().getProjectionMatrix();
 		shader = TessellatorShader.getInstance();
 		shader.start();
-		shader.conectTextureUnits();
 		shader.loadProjectionMatrix(GameResources.getInstance().getRenderer().getProjectionMatrix());
 		// shader.loadBiasMatrix(GameResources.getInstance());
 		shader.loadBiasMatrix(GameResources.getInstance().getMasterShadowRenderer().getProjectionMatrix());
