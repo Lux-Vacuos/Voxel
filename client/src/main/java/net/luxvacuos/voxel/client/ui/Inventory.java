@@ -91,7 +91,6 @@ public class Inventory {
 		for (int x = 0; x < sizeX; x++) {
 			for (int y = 0; y < sizeY; y++) {
 				if (items[x][y].getBlock().getId() != Block.Air.getId()) {
-					items[x][y].generateModel(gm.getItemsGuiRenderer().getTess());
 					UIRendering.renderText(window.getID(), "" + items[x][y].getTotal(), "Roboto-Bold", (xPos + (40 * x) + 2 + x),
 							(window.getHeight() + (40 * -y) - 10 + yPos + -y),
 							15, UIRendering.rgba(255, 255, 255, 255, UIRendering.colorA),
@@ -132,7 +131,6 @@ public class Inventory {
 		for (int x = 0; x < sizeX; x++) {
 			for (int y = 0; y < sizeY; y++) {
 				if (items[x][y].getBlock().getId() != Block.Air.getId()) {
-					items[x][y].generateModel(gm.getItemsGuiRenderer().getTess());
 					UIRendering.renderText(window.getID(), "" + items[x][y].getTotal(), 
 							"Roboto-Bold", (xPos + (40 * x) + 2 + x),
 							(window.getHeight() + (40 * -y) - 10 + yPos + -y),

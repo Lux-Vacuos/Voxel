@@ -21,10 +21,8 @@
 package net.luxvacuos.voxel.client.world;
 
 import static org.lwjgl.opengl.GL11.GL_BLEND;
-
 import static org.lwjgl.opengl.GL11.glDisable;
 import static org.lwjgl.opengl.GL11.glEnable;
-import static org.lwjgl.opengl.GL11.glViewport;
 import static org.lwjgl.opengl.GL15.GL_QUERY_RESULT;
 import static org.lwjgl.opengl.GL15.glGetQueryObjectui;
 
@@ -49,10 +47,13 @@ import com.esotericsoftware.kryo.io.Output;
 import com.esotericsoftware.kryo.serializers.CompatibleFieldSerializer;
 
 import net.luxvacuos.igl.Logger;
+import net.luxvacuos.igl.vector.Matrix4f;
 import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.voxel.client.core.ClientVariables;
+import net.luxvacuos.voxel.client.core.ClientWorldSimulation;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Sync;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
+import net.luxvacuos.voxel.client.rendering.api.opengl.Frustum;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.resources.models.ParticlePoint;
 import net.luxvacuos.voxel.client.resources.models.ParticleSystem;
@@ -63,9 +64,9 @@ import net.luxvacuos.voxel.client.world.chunks.Chunk;
 import net.luxvacuos.voxel.client.world.chunks.ChunkGenerator;
 import net.luxvacuos.voxel.client.world.chunks.LightNodeAdd;
 import net.luxvacuos.voxel.client.world.chunks.LightNodeRemoval;
+import net.luxvacuos.voxel.client.world.entities.Camera;
 import net.luxvacuos.voxel.universal.core.states.StateMachine;
 import net.luxvacuos.voxel.universal.world.utils.ChunkNode;
-
 
 @Deprecated
 public abstract class Dimension {
@@ -122,7 +123,7 @@ public abstract class Dimension {
 			gm.getCamera().setPosition(new Vector3f(0, 140, 0));
 		else
 			gm.getCamera().setPosition((Vector3f) data.getObject("PlayerPos"));
-		noise = new SimplexNoise(256, 0.15f, seedi);
+		noise = new SimplexNoise(256, 0.3f, seedi);
 		lightNodeAdds = new LinkedList<>();
 		lightNodeRemovals = new LinkedList<>();
 		chunks = new ConcurrentHashMap<>();
@@ -220,19 +221,19 @@ public abstract class Dimension {
 		}
 	}
 
-	public void updateChunksGeneration(GameResources gm, float delta) {
-		if (gm.getCamera().getPosition().x < 0)
-			playerCX = (int) ((gm.getCamera().getPosition().x - 16) / 16);
-		if (gm.getCamera().getPosition().y < 0)
-			playerCY = (int) ((gm.getCamera().getPosition().y - 16) / 16);
-		if (gm.getCamera().getPosition().z < 0)
-			playerCZ = (int) ((gm.getCamera().getPosition().z - 16) / 16);
-		if (gm.getCamera().getPosition().x > 0)
-			playerCX = (int) ((gm.getCamera().getPosition().x) / 16);
-		if (gm.getCamera().getPosition().y > 0)
-			playerCY = (int) ((gm.getCamera().getPosition().y) / 16);
-		if (gm.getCamera().getPosition().z > 0)
-			playerCZ = (int) ((gm.getCamera().getPosition().z) / 16);
+	public void updateChunksGeneration(Camera camera, Frustum frustum, float delta) {
+		if (camera.getPosition().x < 0)
+			playerCX = (int) ((camera.getPosition().x - 16) / 16);
+		if (camera.getPosition().y < 0)
+			playerCY = (int) ((camera.getPosition().y - 16) / 16);
+		if (camera.getPosition().z < 0)
+			playerCZ = (int) ((camera.getPosition().z - 16) / 16);
+		if (camera.getPosition().x > 0)
+			playerCX = (int) ((camera.getPosition().x) / 16);
+		if (camera.getPosition().y > 0)
+			playerCY = (int) ((camera.getPosition().y) / 16);
+		if (camera.getPosition().z > 0)
+			playerCZ = (int) ((camera.getPosition().z) / 16);
 
 		ChunkNode node;
 		int xx, yy, zz;
@@ -250,9 +251,9 @@ public abstract class Dimension {
 						Chunk chunk = getChunk(xx, yy, zz);
 						if (!chunk.loaded || chunk.remove)
 							continue;
-						chunk.update(this, gm.getCamera(), delta);
+						chunk.update(this, camera, delta);
 						if (chunk.checkForRebuild())
-							if (gm.getFrustum().cubeInFrustum(chunk.posX, chunk.posY, chunk.posZ, chunk.posX + 16,
+							if (frustum.cubeInFrustum(chunk.posX, chunk.posY, chunk.posZ, chunk.posX + 16,
 									chunk.posY + 16, chunk.posZ + 16))
 								addTo(new ChunkNode(xx, yy, zz), rebuildQueue);
 						for (ParticlePoint particlePoint : chunk.getParticlePoints()) {
@@ -265,7 +266,8 @@ public abstract class Dimension {
 		}
 	}
 
-	public void updateChunksRender(GameResources gm, boolean transparent) {
+	public void updateChunksRender(Camera camera, Camera sunCamera, ClientWorldSimulation clientWorldSimulation,
+			Matrix4f projectionMatrix, Matrix4f shadowProjectionMatrix, int shadowMap, int shadowData, Frustum frustum, boolean transparent) {
 		if (transparent)
 			return; // XXX: DISABLED
 		if (transparent)
@@ -277,10 +279,10 @@ public abstract class Dimension {
 					removeChunk(chunk);
 					continue;
 				}
-				chunk.updateGraphics();
+				chunk.updateGraphics(projectionMatrix, shadowProjectionMatrix);
 				if (chunk.getTess() == null || !chunk.loaded || chunk.remove)
 					continue;
-				if (gm.getFrustum().cubeInFrustum(chunk.posX, chunk.posY, chunk.posZ, chunk.posX + 16, chunk.posY + 16,
+				if (frustum.cubeInFrustum(chunk.posX, chunk.posY, chunk.posZ, chunk.posX + 16, chunk.posY + 16,
 						chunk.posZ + 16)) {
 					int res = glGetQueryObjectui(chunk.getTess().getOcclusion(), GL_QUERY_RESULT);
 					if (res > 0 || transparent) {
@@ -294,7 +296,8 @@ public abstract class Dimension {
 		for (
 
 		Chunk chunk : chunks_) {
-			chunk.render(gm, transparent);
+			chunk.render(camera, sunCamera, clientWorldSimulation, projectionMatrix, shadowMap, shadowData,
+					transparent);
 			renderedChunks++;
 		}
 		if (transparent)
@@ -302,34 +305,33 @@ public abstract class Dimension {
 			glDisable(GL_BLEND);
 	}
 
-	public void updateChunksShadow(GameResources gm) {
+	public void updateChunksShadow(Camera sunCamera, Matrix4f shadowProjectionMatrix, Frustum frustum) {
 		for (Chunk chunk : chunks.values()) {
 			if (chunk != null)
-				if (gm.getFrustum().cubeInFrustum(chunk.posX, chunk.posY, chunk.posZ, chunk.posX + 16, chunk.posY + 16,
+				if (frustum.cubeInFrustum(chunk.posX, chunk.posY, chunk.posZ, chunk.posX + 16, chunk.posY + 16,
 						chunk.posZ + 16))
-					chunk.renderShadow(gm);
+					chunk.renderShadow(sunCamera, shadowProjectionMatrix);
 		}
 	}
 
-	public void updateChunksOcclusion(GameResources gm) {
-		Window window = gm.getGameWindow();
-		
-		int width = (int)(window.getWidth() * window.getPixelRatio() / 6f);
-		int height = (int)(window.getHeight() * window.getPixelRatio() / 6f);
+	public void updateChunksOcclusion(Window window, Camera camera, Matrix4f projectionMatrix, Frustum frustum) {
+
+		int width = (int) (window.getWidth() * window.getPixelRatio() / 6f);
+		int height = (int) (window.getHeight() * window.getPixelRatio() / 6f);
 		window.setViewport(0, 0, width, height);
 
 		List<Chunk> chunks_ = new ArrayList<Chunk>();
 		for (Chunk chunk : chunks.values()) {
 			if (chunk != null)
-				if (gm.getFrustum().cubeInFrustum(chunk.posX, chunk.posY, chunk.posZ, chunk.posX + 16, chunk.posY + 16,
+				if (frustum.cubeInFrustum(chunk.posX, chunk.posY, chunk.posZ, chunk.posX + 16, chunk.posY + 16,
 						chunk.posZ + 16))
 					chunks_.add(chunk);
 		}
 		Maths.sortLowToHigh(chunks_);
 		for (Chunk chunk : chunks_) {
-			chunk.renderOcclusion(gm);
+			chunk.renderOcclusion(camera, projectionMatrix);
 		}
-		
+
 		window.resetViewport();
 	}
 

@@ -30,9 +30,10 @@ import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import net.luxvacuos.igl.vector.Matrix4f;
 import net.luxvacuos.igl.vector.Vector3f;
+import net.luxvacuos.voxel.client.core.ClientWorldSimulation;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Tessellator;
-import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.resources.models.ParticlePoint;
 import net.luxvacuos.voxel.client.util.Maths;
 import net.luxvacuos.voxel.client.world.Dimension;
@@ -42,7 +43,6 @@ import net.luxvacuos.voxel.client.world.block.BlockEntity;
 import net.luxvacuos.voxel.client.world.block.BlocksResources;
 import net.luxvacuos.voxel.client.world.entities.Camera;
 import net.luxvacuos.voxel.universal.world.utils.ChunkNode;
-
 
 @Deprecated
 public class Chunk {
@@ -132,9 +132,9 @@ public class Chunk {
 		}
 	}
 
-	public void updateGraphics() {
+	public void updateGraphics(Matrix4f projectionMatrix, Matrix4f shadowProjectionMatrix) {
 		if (!empty && tess == null) {
-			generateGraphics();
+			generateGraphics(projectionMatrix, shadowProjectionMatrix);;
 		} else if (empty && tess != null) {
 			disposeGraphics();
 		}
@@ -359,11 +359,12 @@ public class Chunk {
 		return false;
 	}
 
-	public void render(GameResources gm, boolean transparent) {
+	public void render(Camera camera, Camera sunCamera, ClientWorldSimulation clientWorldSimulation,
+			Matrix4f projectionMatrix, int shadowMap, int shadowData, boolean transparent) {
 		if (tess == null)
 			return;
 		if (!empty) {
-			tess.draw(gm, transparent);
+			tess.draw(camera, sunCamera, clientWorldSimulation, projectionMatrix, shadowMap, shadowData, transparent);
 			if (!transparent)
 				for (BlockEntity blockEntity : blockEntities) {
 					if (blockEntity.isObjModel())
@@ -372,19 +373,19 @@ public class Chunk {
 		}
 	}
 
-	public void renderShadow(GameResources gm) {
+	public void renderShadow(Camera sunCamera, Matrix4f shadowProjectionMatrix) {
 		if (tess == null)
 			return;
 		if (!empty)
-			tess.drawShadow(gm.getSun_Camera());
+			tess.drawShadow(sunCamera, shadowProjectionMatrix);
 	}
 
-	public void renderOcclusion(GameResources gm) {
+	public void renderOcclusion(Camera camera, Matrix4f projectionMatrix) {
 		if (tess == null)
 			return;
 		if (!empty) {
 			glBeginQuery(GL_SAMPLES_PASSED, tess.getOcclusion());
-			tess.drawOcclusion(gm.getCamera(), gm.getRenderer().getProjectionMatrix());
+			tess.drawOcclusion(camera, projectionMatrix);
 			glEndQuery(GL_SAMPLES_PASSED);
 		}
 	}
@@ -398,8 +399,8 @@ public class Chunk {
 			tess.cleanUp();
 	}
 
-	public void generateGraphics() {
-		tess = new Tessellator();
+	public void generateGraphics(Matrix4f projectionMatrix, Matrix4f shadowProjectionMatrix) {
+		tess = new Tessellator(projectionMatrix, shadowProjectionMatrix);
 	}
 
 	public void disposeGraphics() {

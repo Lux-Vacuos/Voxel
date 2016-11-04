@@ -35,19 +35,20 @@ import java.util.Properties;
  *
  */
 public abstract class AbstractGameSettings implements IGameSettings {
-	
+
 	/**
 	 * The Properties file used to load and save data
 	 */
 	protected Properties prop = new Properties();
-	
+
 	/**
 	 * The File path to the Properties File
 	 */
 	protected File settings;
-	
-	//Make sure the constructor isn't public for the Abstract class
-	protected AbstractGameSettings() { }
+
+	// Make sure the constructor isn't public for the Abstract class
+	protected AbstractGameSettings() {
+	}
 
 	@Override
 	public void registerValue(String key, String data) {
@@ -61,9 +62,9 @@ public abstract class AbstractGameSettings implements IGameSettings {
 
 	@Override
 	public String getValue(String key, String defaultData) {
-		if(this.prop.containsKey(key))
+		if (this.prop.containsKey(key))
 			return this.prop.getProperty(key);
-		
+
 		return defaultData;
 	}
 
@@ -75,42 +76,40 @@ public abstract class AbstractGameSettings implements IGameSettings {
 			e.printStackTrace();
 		}
 	}
-	
+
 	@Override
 	public void load(File settingsFile) {
-		this.settings = settingsFile; //Save the settings file to the class variable
-		
-		//Make sure the file actually exists on disk, and create it if needed
-		if(this.settings.exists()) {
+		this.settings = settingsFile; // Save the settings file to the class
+										// variable
+
+		// Make sure the file actually exists on disk, and create it if needed
+		if (this.settings.exists()) {
 			InputStream in = null;
 			try {
 				in = new BufferedInputStream(new FileInputStream(this.settings));
 				this.prop.load(in);
-			} catch(IOException e) {
+			} catch (IOException e) {
 				e.printStackTrace();
 			} finally {
-				if(in != null) {
+				if (in != null) {
 					try {
-						in.close(); //Always close an InputStream
-					} catch(IOException e) {
+						in.close(); // Always close an InputStream
+					} catch (IOException e) {
 						e.printStackTrace();
 					}
 				}
 			}
 		} else {
-			//The file doesn't exist, make the directories that it needs
+			// The file doesn't exist, make the directories that it needs
 			String absolutePath = this.settings.getAbsolutePath();
 			String filePath = absolutePath.substring(0, absolutePath.lastIndexOf(File.separator));
-			new File(filePath).mkdirs(); //XXX: Might need to have some condition checking for this?
+			new File(filePath).mkdirs(); // XXX: Might need to have some
+											// condition checking for this?
 		}
 	}
-	
+
 	protected int getVersion() {
-		String b = getValue("SettingsVersion");
-		if (b == null)
-			b = "1";
-		int a = Integer.parseInt(b);
-		return a;
+		return Integer.parseInt(getValue("SettingsVersion", "1"));
 	}
 
 }

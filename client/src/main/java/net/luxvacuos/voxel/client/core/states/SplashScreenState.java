@@ -21,7 +21,7 @@
 package net.luxvacuos.voxel.client.core.states;
 
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
-import net.luxvacuos.voxel.client.rendering.api.opengl.MasterRenderer;
+import net.luxvacuos.voxel.client.rendering.api.opengl.Renderer;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.ui.Image;
 import net.luxvacuos.voxel.client.ui.Panel;
@@ -76,7 +76,7 @@ public class SplashScreenState extends AbstractFadeState {
 	@Override
 	public void render(AbstractVoxel voxel, float alpha) {
 		Window window = ((GameResources)voxel.getGameResources()).getGameWindow();
-		MasterRenderer.prepare(1, 1, 1, 1);
+		Renderer.prepare(1, 1, 1, 1);
 		window.beingNVGFrame();
 		panel.render(window.getID());
 		window.endNVGFrame();

@@ -24,9 +24,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.ashley.utils.ImmutableArray;
 
-import net.luxvacuos.voxel.client.resources.GameResources;
+import net.luxvacuos.igl.vector.Matrix4f;
+import net.luxvacuos.voxel.client.core.ClientWorldSimulation;
 import net.luxvacuos.voxel.client.world.block.BlocksResources;
+import net.luxvacuos.voxel.client.world.entities.Camera;
 import net.luxvacuos.voxel.client.world.items.ItemDrop;
 
 public class ItemsDropRenderer {
@@ -34,29 +37,30 @@ public class ItemsDropRenderer {
 	private List<ItemDrop> items;
 	private Tessellator tess;
 
-	public ItemsDropRenderer() {
+	public ItemsDropRenderer(Matrix4f projectionMatrix, Matrix4f shadowProjectionMatrix) {
 		items = new ArrayList<>();
-		tess = new Tessellator();
+		tess = new Tessellator(projectionMatrix, shadowProjectionMatrix);
 	}
 
-	public void render(GameResources gm) {
+	public void render(ImmutableArray<Entity> immutableArray, Camera camera, Camera sunCamera,
+			ClientWorldSimulation clientWorldSimulation, Matrix4f projectionMatrix, int shadowMap, int shadowData) {
 		items.clear();
-		for (Entity entity : gm.getWorldsHandler().getActiveWorld().getActiveDimension().getPhysicsEngine()
-				.getEntities()) {
+		for (Entity entity : immutableArray) {
 			if (entity instanceof ItemDrop)
 				items.add((ItemDrop) entity);
 		}
-		doRender(gm);
+		doRender(camera, sunCamera, clientWorldSimulation, projectionMatrix, shadowMap, shadowData);
 	}
 
-	private void doRender(GameResources gm) {
+	private void doRender(Camera camera, Camera sunCamera, ClientWorldSimulation clientWorldSimulation,
+			Matrix4f projectionMatrix, int shadowMap, int shadowData) {
 		tess.begin(BlocksResources.getTessellatorTextureAtlas().getTexture(), BlocksResources.getNormalMap(),
 				BlocksResources.getHeightMap(), BlocksResources.getSpecularMap());
 		for (ItemDrop itemDrop : items) {
 			itemDrop.generateModel(tess);
 		}
 		tess.end();
-		tess.draw(gm);
+		tess.draw(camera, sunCamera, clientWorldSimulation, projectionMatrix, shadowMap, shadowData, false);
 	}
 
 	public void cleanUp() {

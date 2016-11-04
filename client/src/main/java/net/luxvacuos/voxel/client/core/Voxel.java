@@ -53,7 +53,7 @@ import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.glfw.WindowManager;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.Timers;
-import net.luxvacuos.voxel.client.rendering.api.opengl.MasterRenderer;
+import net.luxvacuos.voxel.client.rendering.api.opengl.Renderer;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.ui.CrashScreen;
 import net.luxvacuos.voxel.client.world.block.BlocksResources;
@@ -133,7 +133,7 @@ public class Voxel extends AbstractVoxel {
 		// Set Window visible
 		getGameResources().getGameWindow().setVisible(true);
 		// Clear Screen
-		MasterRenderer.prepare(1, 1, 1, 1);
+		Renderer.prepare(1, 1, 1, 1);
 		// Update Screen buffers
 		getGameResources().getGameWindow().updateDisplay(ClientVariables.FPS);
 		// Set the info to objects
@@ -202,6 +202,8 @@ public class Voxel extends AbstractVoxel {
 	 */
 	@Override
 	public void postInit() throws Exception {
+		// Save settings
+		GameResources.getInstance().getGameSettings().save();
 		// Do Mod PostInit
 		modsHandler.postInit();
 		// Set the Mouse hidden
@@ -211,7 +213,6 @@ public class Voxel extends AbstractVoxel {
 		// Do PostInit on Game Resources
 		getGameResources().postInit();
 		// Set the state to splash screen
-		// getGameResources().getGlobalStates().setState(GameState.SPLASH_SCREEN);
 		StateMachine.setCurrentState(StateNames.SPLASH_SCREEN);
 	}
 

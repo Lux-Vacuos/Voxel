@@ -36,18 +36,8 @@ import net.luxvacuos.voxel.client.rendering.api.glfw.PixelBufferHandle;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.glfw.WindowHandle;
 import net.luxvacuos.voxel.client.rendering.api.glfw.WindowManager;
-import net.luxvacuos.voxel.client.rendering.api.opengl.Frustum;
-import net.luxvacuos.voxel.client.rendering.api.opengl.ItemsDropRenderer;
-import net.luxvacuos.voxel.client.rendering.api.opengl.ItemsGuiRenderer;
-import net.luxvacuos.voxel.client.rendering.api.opengl.LightRenderer;
-import net.luxvacuos.voxel.client.rendering.api.opengl.MasterRenderer;
-import net.luxvacuos.voxel.client.rendering.api.opengl.MasterShadowRenderer;
 import net.luxvacuos.voxel.client.rendering.api.opengl.ParticleMaster;
-import net.luxvacuos.voxel.client.rendering.api.opengl.RenderingPipeline;
-import net.luxvacuos.voxel.client.rendering.api.opengl.SkyboxRenderer;
-import net.luxvacuos.voxel.client.rendering.api.opengl.objects.Light;
-import net.luxvacuos.voxel.client.rendering.api.opengl.pipeline.MultiPass;
-import net.luxvacuos.voxel.client.rendering.api.opengl.pipeline.SinglePass;
+import net.luxvacuos.voxel.client.rendering.api.opengl.Renderer;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.TessellatorBasicShader;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.TessellatorShader;
 import net.luxvacuos.voxel.client.resources.models.ParticleTexture;
@@ -57,7 +47,6 @@ import net.luxvacuos.voxel.client.sound.soundsystem.SoundSystemConfig;
 import net.luxvacuos.voxel.client.sound.soundsystem.SoundSystemException;
 import net.luxvacuos.voxel.client.sound.soundsystem.codecs.CodecJOgg;
 import net.luxvacuos.voxel.client.util.LoggerSoundSystem;
-import net.luxvacuos.voxel.client.util.Maths;
 import net.luxvacuos.voxel.client.world.WorldsHandler;
 import net.luxvacuos.voxel.client.world.entities.Camera;
 import net.luxvacuos.voxel.client.world.entities.PlayerCamera;
@@ -88,21 +77,13 @@ public class GameResources extends AbstractGameResources {
 	private Random rand;
 	private Camera camera;
 	private Camera sun_Camera;
-	private MasterRenderer renderer;
-	private SkyboxRenderer skyboxRenderer;
-
-	private RenderingPipeline renderingPipeline;
-	private MasterShadowRenderer masterShadowRenderer;
-	private ItemsDropRenderer itemsDropRenderer;
-	private ItemsGuiRenderer itemsGuiRenderer;
-	private LightRenderer lightRenderer;
+	private Renderer renderer;
 
 	private VoxelClient voxelClient;
 	private ClientWorldSimulation worldSimulation;
 	private WorldsHandler worldsHandler;
 
 	private SoundSystem soundSystem;
-	private Frustum frustum;
 
 	private Vector3f sunRotation = new Vector3f(5, 0, -45);
 	private Vector3f lightPos = new Vector3f(0, 0, 0);
@@ -144,25 +125,18 @@ public class GameResources extends AbstractGameResources {
 		scripting = new Scripting();
 		rand = new Random();
 
-		masterShadowRenderer = new MasterShadowRenderer();
-		renderer = new MasterRenderer(this);
-		skyboxRenderer = new SkyboxRenderer(loader, renderer.getProjectionMatrix());
-		lightRenderer = new LightRenderer();
-
-		itemsDropRenderer = new ItemsDropRenderer();
+		renderer = new Renderer(getGameWindow());
 		TessellatorShader.getInstance();
 		TessellatorBasicShader.getInstance();
 		ParticleMaster.getInstance().init(loader, renderer.getProjectionMatrix());
-		sun_Camera = new SunCamera(masterShadowRenderer.getProjectionMatrix());
+		sun_Camera = new SunCamera(renderer.getShadowProjectionMatrix());
 		sun_Camera.setPosition(new Vector3f(0, 0, 0));
 		sun_Camera.setYaw(sunRotation.x);
 		sun_Camera.setPitch(sunRotation.y);
 		sun_Camera.setRoll(sunRotation.z);
 		camera = new PlayerCamera(renderer.getProjectionMatrix(), this.getGameWindow());
-		itemsGuiRenderer = new ItemsGuiRenderer(this);
 		kryo = new Kryo();
 		kryo.setDefaultSerializer(CompatibleFieldSerializer.class);
-		frustum = new Frustum();
 		worldSimulation = new ClientWorldSimulation();
 
 		CustomLog.getInstance();
@@ -183,17 +157,14 @@ public class GameResources extends AbstractGameResources {
 		ResourceLoader loader = this.getGameWindow().getResourceLoader();
 		torchTexture = new ParticleTexture(loader.loadTextureParticle("fire0"), 4);
 		EntityResources.loadEntityResources(loader);
-		//for (int x = 0; x < 32; x++) {
-		//	lightRenderer.addLight(new Light(new Vector3f(Maths.randInt(-128, 128), 130, Maths.randInt(-128, 128))));
-		//}
+		// for (int x = 0; x < 32; x++) {
+		// lightRenderer.addLight(new Light(new Vector3f(Maths.randInt(-128,
+		// 128), 130, Maths.randInt(-128, 128))));
+		// }
 	}
 
 	@Override
 	public void postInit() {
-		if (ClientVariables.renderingPipeline.equals("SinglePass"))
-			renderingPipeline = new SinglePass();
-		else if (ClientVariables.renderingPipeline.equals("MultiPass"))
-			renderingPipeline = new MultiPass();
 	}
 
 	public void update(float rot, float delta) {
@@ -201,11 +172,11 @@ public class GameResources extends AbstractGameResources {
 		sun_Camera.setYaw(sunRotation.x);
 		sun_Camera.setPitch(sunRotation.y);
 		sun_Camera.setRoll(sunRotation.z);
-		((SunCamera) sun_Camera).updateShadowRay(this, false);
+		((SunCamera) sun_Camera).updateShadowRay(false);
 		lightPos.set(sun_Camera.getDRay().direction.x * 10, sun_Camera.getDRay().direction.y * 10,
 				sun_Camera.getDRay().direction.z * 10);
 
-		((SunCamera) sun_Camera).updateShadowRay(this, true);
+		((SunCamera) sun_Camera).updateShadowRay(true);
 		invertedLightPosition.set(sun_Camera.getDRay().direction.x * 10, sun_Camera.getDRay().direction.y * 10,
 				sun_Camera.getDRay().direction.z * 10);
 	}
@@ -217,13 +188,6 @@ public class GameResources extends AbstractGameResources {
 	@Override
 	public void dispose() {
 		gameSettings.save();
-		TessellatorShader.getInstance().cleanUp();
-		TessellatorBasicShader.getInstance().cleanUp();
-		masterShadowRenderer.cleanUp();
-		itemsDropRenderer.cleanUp();
-		ParticleMaster.getInstance().cleanUp();
-		renderingPipeline.dispose();
-		itemsGuiRenderer.cleanUp();
 		renderer.cleanUp();
 		soundSystem.cleanup();
 		voxelClient.dispose();
@@ -241,28 +205,12 @@ public class GameResources extends AbstractGameResources {
 		return camera;
 	}
 
-	public MasterRenderer getRenderer() {
+	public Renderer getRenderer() {
 		return renderer;
-	}
-
-	public SkyboxRenderer getSkyboxRenderer() {
-		return skyboxRenderer;
 	}
 
 	public SoundSystem getSoundSystem() {
 		return soundSystem;
-	}
-
-	public RenderingPipeline getRenderingPipeline() {
-		return renderingPipeline;
-	}
-
-	public Frustum getFrustum() {
-		return frustum;
-	}
-
-	public MasterShadowRenderer getMasterShadowRenderer() {
-		return masterShadowRenderer;
 	}
 
 	public Camera getSun_Camera() {
@@ -293,10 +241,6 @@ public class GameResources extends AbstractGameResources {
 		return voxelClient;
 	}
 
-	public ItemsDropRenderer getItemsDropRenderer() {
-		return itemsDropRenderer;
-	}
-
 	public ClientWorldSimulation getWorldSimulation() {
 		return worldSimulation;
 	}
@@ -305,16 +249,8 @@ public class GameResources extends AbstractGameResources {
 		return worldsHandler;
 	}
 
-	public ItemsGuiRenderer getItemsGuiRenderer() {
-		return itemsGuiRenderer;
-	}
-
 	public Scripting getScripting() {
 		return scripting;
-	}
-
-	public LightRenderer getLightRenderer() {
-		return lightRenderer;
 	}
 
 }

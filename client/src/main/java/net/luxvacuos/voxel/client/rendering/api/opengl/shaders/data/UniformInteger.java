@@ -18,32 +18,25 @@
  * 
  */
 
-package net.luxvacuos.voxel.client.world.block.types;
+package net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data;
 
-import net.luxvacuos.voxel.client.world.Dimension;
-import net.luxvacuos.voxel.client.world.block.BlockEntity;
+import static org.lwjgl.opengl.GL20.*;
 
-public class BlockNode extends BlockEntity {
+public class UniformInteger extends Uniform {
 
-	public BlockNode(Integer x, Integer y, Integer z) {
-		super(x, y, z);
-		transparent = true;
-		objModel = true;
+	private int currentValue;
+	private boolean used = false;
+
+	public UniformInteger(String name) {
+		super(name);
 	}
 
-	public BlockNode() {
-		super();
-		transparent = true;
-		objModel = true;
-	}
-
-	@Override
-	public void update(Dimension dimension, float delta) {
-	}
-
-	@Override
-	public byte getId() {
-		return 18;
+	public void loadInteger(int value) {
+		if (!used || currentValue != value) {
+			glUniform1i(super.getLocation(), value);
+			used = true;
+			currentValue = value;
+		}
 	}
 
 }

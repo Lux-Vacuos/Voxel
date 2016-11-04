@@ -27,7 +27,7 @@ import org.lwjgl.nanovg.NanoVG;
 import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.UIRendering;
-import net.luxvacuos.voxel.client.rendering.api.opengl.MasterRenderer;
+import net.luxvacuos.voxel.client.rendering.api.opengl.Renderer;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.ui.Button;
 import net.luxvacuos.voxel.client.ui.Text;
@@ -55,8 +55,8 @@ public class MPLoadingState extends AbstractFadeState {
 	public MPLoadingState() {
 		super(StateNames.MP_LOADING);
 		Window window = GameResources.getInstance().getGameWindow();
-		uiWindow = new UIWindow(20, window.getHeight() - 20,
-				window.getWidth() - 40, window.getHeight() - 40, "Multiplayer");
+		uiWindow = new UIWindow(20, window.getHeight() - 20, window.getWidth() - 40, window.getHeight() - 40,
+				"Multiplayer");
 		exitButton = new Button(uiWindow.getWidth() / 2 - 100, -uiWindow.getHeight() + 35, 200, 40, "Cancel");
 		exitButton.setOnButtonPress((button, delta) -> {
 			if (time > 0.2f) {
@@ -105,18 +105,18 @@ public class MPLoadingState extends AbstractFadeState {
 				e.printStackTrace();
 			}
 		}
-		
+
 		if (time <= 0.2f) {
 			time += 1 * delta;
 		}
-		
+
 		super.update(voxel, delta);
 	}
 
 	@Override
 	public void render(AbstractVoxel voxel, float delta) {
-		Window window = ((GameResources)voxel.getGameResources()).getGameWindow();
-		MasterRenderer.prepare(1, 1, 1, 1);
+		Window window = ((GameResources) voxel.getGameResources()).getGameWindow();
+		Renderer.prepare(1, 1, 1, 1);
 		window.beingNVGFrame();
 		uiWindow.render(window.getID());
 		UIRendering.renderMouse(window.getID());

@@ -48,12 +48,14 @@ import net.luxvacuos.igl.vector.Matrix4f;
 import net.luxvacuos.igl.vector.Vector2f;
 import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.voxel.client.core.ClientVariables;
+import net.luxvacuos.voxel.client.core.ClientWorldSimulation;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
+import net.luxvacuos.voxel.client.rendering.api.opengl.objects.Light;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.DeferredShadingShader;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.resources.models.RawModel;
 import net.luxvacuos.voxel.client.util.Maths;
-import net.luxvacuos.voxel.client.world.entities.PlayerCamera;
+import net.luxvacuos.voxel.client.world.entities.Camera;
 
 /**
  * 
@@ -189,11 +191,13 @@ public abstract class RenderingPipeline {
 	 * @param gm
 	 *            {@link GameResources}
 	 */
-	public void render(GameResources gm) {
+	public void render(Camera camera, Matrix4f projectionMatrix, Vector3f lightPosition, Vector3f invertedLightPosition,
+			ClientWorldSimulation clientWorldSimulation, List<Light> lights) {
 		for (ImagePass imagePass : imagePasses) {
-			imagePass.process(gm, previousViewMatrix, previousCameraPosition, auxs, this, quad);
+			imagePass.process(camera, projectionMatrix, previousViewMatrix, previousCameraPosition, lightPosition,
+					invertedLightPosition, clientWorldSimulation, lights, auxs, this, quad);
 		}
-		MasterRenderer.prepare();
+		Renderer.prepare();
 		finalShader.start();
 		glBindVertexArray(quad.getVaoID());
 		glEnableVertexAttribArray(0);
@@ -209,8 +213,8 @@ public abstract class RenderingPipeline {
 		glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_DEPTH_BUFFER_BIT, GL_NEAREST);
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-		previousViewMatrix = Maths.createViewMatrix(gm.getCamera());
-		previousCameraPosition = ((PlayerCamera) gm.getCamera()).getPosition();
+		previousViewMatrix = Maths.createViewMatrix(camera);
+		previousCameraPosition = camera.getPosition();
 	}
 
 	/**

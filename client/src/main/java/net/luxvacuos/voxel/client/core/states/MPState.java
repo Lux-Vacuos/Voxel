@@ -20,29 +20,15 @@
 
 package net.luxvacuos.voxel.client.core.states;
 
-//import static net.luxvacuos.voxel.client.input.Keyboard.KEY_F1;
-//import static net.luxvacuos.voxel.client.input.Keyboard.isKeyDown;
-//import static net.luxvacuos.voxel.client.input.Keyboard.next;
-import static org.lwjgl.opengl.GL11.GL_DEPTH_COMPONENT;
-import static org.lwjgl.opengl.GL11.GL_FLOAT;
-import static org.lwjgl.opengl.GL11.GL_RGB;
-import static org.lwjgl.opengl.GL11.glReadBuffer;
-import static org.lwjgl.opengl.GL11.glReadPixels;
-import static org.lwjgl.opengl.GL30.GL_COLOR_ATTACHMENT2;
-
-import java.nio.FloatBuffer;
-
-import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFW;
 
-import net.luxvacuos.voxel.client.core.CoreInfo;
 import net.luxvacuos.voxel.client.core.ClientVariables;
+import net.luxvacuos.voxel.client.core.CoreInfo;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.glfw.WindowManager;
 //import net.luxvacuos.voxel.client.input.Keyboard;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.Timers;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.UIRendering;
-import net.luxvacuos.voxel.client.rendering.api.opengl.MasterRenderer;
 import net.luxvacuos.voxel.client.rendering.api.opengl.ParticleMaster;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.world.Dimension;
@@ -59,13 +45,9 @@ import net.luxvacuos.voxel.universal.core.states.AbstractState;
  *
  */
 public class MPState extends AbstractState {
-	FloatBuffer p;
-	FloatBuffer c;
 
 	public MPState() {
 		super(StateNames.MULTIPLAYER);
-		p = BufferUtils.createFloatBuffer(1);
-		c = BufferUtils.createFloatBuffer(3);
 	}
 
 	@Override
@@ -74,54 +56,16 @@ public class MPState extends AbstractState {
 		Window window = gm.getGameWindow();
 
 		gm.getSun_Camera().setPosition(gm.getCamera().getPosition());
-		gm.getFrustum().calculateFrustum(gm.getMasterShadowRenderer().getProjectionMatrix(), gm.getSun_Camera());
-		if (ClientVariables.useShadows) {
-			gm.getMasterShadowRenderer().being();
-			MasterRenderer.prepare();
-			gm.getWorldsHandler().getActiveWorld().getActiveDimension().updateChunksShadow(gm);
-			gm.getItemsDropRenderer().getTess().drawShadow(gm.getSun_Camera());
-			gm.getMasterShadowRenderer().renderEntity(
-					gm.getWorldsHandler().getActiveWorld().getActiveDimension().getPhysicsEngine().getEntities(), gm);
-			gm.getMasterShadowRenderer().end();
-		}
-		gm.getFrustum().calculateFrustum(gm.getRenderer().getProjectionMatrix(), gm.getCamera());
-		MasterRenderer.prepare();
-		gm.getWorldsHandler().getActiveWorld().getActiveDimension().updateChunksOcclusion(gm);
-
-		gm.getRenderingPipeline().begin();
-		MasterRenderer.prepare();
-		gm.getSkyboxRenderer().render(ClientVariables.RED, ClientVariables.GREEN, ClientVariables.BLUE, alpha, gm);
-		gm.getWorldsHandler().getActiveWorld().getActiveDimension().updateChunksRender(gm, false);
-		gm.getRenderer().renderEntity(
-				gm.getWorldsHandler().getActiveWorld().getActiveDimension().getPhysicsEngine().getEntities(), gm);
-		p.clear();
-		glReadPixels(window.getWidth() / 2, window.getHeight() / 2, 1, 1,
-				GL_DEPTH_COMPONENT, GL_FLOAT, p);
-		c.clear();
-		glReadBuffer(GL_COLOR_ATTACHMENT2);
-		glReadPixels(window.getWidth() / 2, window.getHeight() / 2, 1, 1, GL_RGB,
-				GL_FLOAT, c);
-		gm.getCamera().depth = p.get(0);
-		gm.getCamera().normal.x = c.get(0);
-		gm.getCamera().normal.y = c.get(1);
-		gm.getCamera().normal.z = c.get(2);
-		gm.getItemsDropRenderer().render(gm);
-		gm.getRenderingPipeline().end();
-
-		MasterRenderer.prepare();
-		gm.getRenderingPipeline().render(gm);
-
-		gm.getWorldsHandler().getActiveWorld().getActiveDimension().updateChunksRender(gm, true);
-		gm.getCamera().render();
-
-		ParticleMaster.getInstance().render(gm.getCamera(), gm.getRenderer().getProjectionMatrix());
+		gm.getRenderer().render(gm.getWorldsHandler().getActiveWorld().getActiveDimension(), gm.getCamera(),
+				gm.getSun_Camera(), gm.getWorldSimulation(), gm.getLightPos(), gm.getInvertedLightPosition(), alpha);
 		window.beingNVGFrame();
 		if (ClientVariables.debug) {
-			UIRendering.renderText(window.getID(), "Voxel " + " (" + ClientVariables.version + ")", "Roboto-Bold", 5, 12, 20,
-					UIRendering.rgba(220, 220, 220, 255, UIRendering.colorA),
+			UIRendering.renderText(window.getID(), "Voxel " + " (" + ClientVariables.version + ")", "Roboto-Bold", 5,
+					12, 20, UIRendering.rgba(220, 220, 220, 255, UIRendering.colorA),
 					UIRendering.rgba(255, 255, 255, 255, UIRendering.colorB));
-			UIRendering.renderText(window.getID(), "Used VRam: " + WindowManager.getUsedVRAM() + "KB " + " UPS: " + CoreInfo.ups,
-					"Roboto-Bold", 5, 95, 20, UIRendering.rgba(220, 220, 220, 255, UIRendering.colorA),
+			UIRendering.renderText(window.getID(),
+					"Used VRam: " + WindowManager.getUsedVRAM() + "KB " + " UPS: " + CoreInfo.ups, "Roboto-Bold", 5, 95,
+					20, UIRendering.rgba(220, 220, 220, 255, UIRendering.colorA),
 					UIRendering.rgba(255, 255, 255, 255, UIRendering.colorB));
 			UIRendering.renderText(window.getID(),
 					"Loaded Chunks: " + gm.getWorldsHandler().getActiveWorld().getActiveDimension().getLoadedChunks()
@@ -142,7 +86,6 @@ public class MPState extends AbstractState {
 			Timers.renderDebugDisplay(5, 24, 200, 55);
 		}
 		window.endNVGFrame();
-		gm.getItemsGuiRenderer().render(gm);
 	}
 
 	@Override
@@ -159,18 +102,17 @@ public class MPState extends AbstractState {
 
 		gm.update(gm.getWorldSimulation().update(delta), delta);
 		ParticleMaster.getInstance().update(delta, gm.getCamera());
-		
-		if(gm.getGameWindow().getKeyboardHandler().isKeyPressed(GLFW.GLFW_KEY_F1))
+
+		if (gm.getGameWindow().getKeyboardHandler().isKeyPressed(GLFW.GLFW_KEY_F1))
 			ClientVariables.debug = !ClientVariables.debug;
-		
-		if(gm.getGameWindow().getKeyboardHandler().isKeyPressed(GLFW.GLFW_KEY_R))
+
+		if (gm.getGameWindow().getKeyboardHandler().isKeyPressed(GLFW.GLFW_KEY_R))
 			ClientVariables.raining = !ClientVariables.raining;
-		/* while (next()) {
-			if (isKeyDown(KEY_F1))
-				ClientVariables.debug = !ClientVariables.debug;
-			if (Keyboard.isKeyDown(Keyboard.KEY_R))
-				ClientVariables.raining = !ClientVariables.raining;
-		} */
+		/*
+		 * while (next()) { if (isKeyDown(KEY_F1)) ClientVariables.debug =
+		 * !ClientVariables.debug; if (Keyboard.isKeyDown(Keyboard.KEY_R))
+		 * ClientVariables.raining = !ClientVariables.raining; }
+		 */
 	}
 
 }

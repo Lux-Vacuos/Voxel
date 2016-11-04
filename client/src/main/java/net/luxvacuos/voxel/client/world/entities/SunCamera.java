@@ -22,27 +22,26 @@ package net.luxvacuos.voxel.client.world.entities;
 
 import net.luxvacuos.igl.vector.Matrix4f;
 import net.luxvacuos.igl.vector.Vector2f;
-import net.luxvacuos.igl.vector.Vector3f;
-import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.resources.DRay;
 import net.luxvacuos.voxel.client.util.Maths;
 
 public class SunCamera extends Camera {
 
 	private Vector2f center;
+	private Matrix4f projectionMatrix;
 
-	public SunCamera(Matrix4f proj) {
-		super(proj, new Vector3f(-1, -1, -1), new Vector3f(1, 1, 1));
+	public SunCamera(Matrix4f projectionMatrix) {
+		this.projectionMatrix = projectionMatrix;
 		center = new Vector2f(2048, 2048);
+		dRay = new DRay(projectionMatrix, Maths.createViewMatrix(this), center, 0, 0);
 	}
 
-	public void updateShadowRay(GameResources gm, boolean inverted) {
+	public void updateShadowRay(boolean inverted) {
 		if (inverted)
-			dRay = new DRay(gm.getMasterShadowRenderer().getProjectionMatrix(), Maths.createViewMatrixPos(
-					this.getPosition(), Maths.createViewMatrixRot(pitch + 180, yaw, roll, null)), center, 4096, 4096);
+			dRay = new DRay(projectionMatrix, Maths.createViewMatrixPos(this.getPosition(),
+					Maths.createViewMatrixRot(pitch + 180, yaw, roll, null)), center, 4096, 4096);
 		else
-			dRay = new DRay(gm.getMasterShadowRenderer().getProjectionMatrix(), Maths.createViewMatrix(this), center,
-					4096, 4096);
+			dRay = new DRay(projectionMatrix, Maths.createViewMatrix(this), center, 4096, 4096);
 	}
 
 }

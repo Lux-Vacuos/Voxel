@@ -24,8 +24,7 @@ import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.UIRendering;
-import net.luxvacuos.voxel.client.rendering.api.opengl.MasterRenderer;
-import net.luxvacuos.voxel.client.rendering.api.opengl.ParticleMaster;
+import net.luxvacuos.voxel.client.rendering.api.opengl.Renderer;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.ui.Button;
 import net.luxvacuos.voxel.client.ui.UIWindow;
@@ -261,44 +260,20 @@ public class OptionsState extends AbstractFadeState {
 
 		super.update(voxel, delta);
 
-		gm.getRenderer().update(gm);
+		gm.getRenderer().update();
 	}
 
 	@Override
-	public void render(AbstractVoxel voxel, float delta) {
+	public void render(AbstractVoxel voxel, float alpha) {
 		GameResources gm = (GameResources) voxel.getGameResources();
 		if (StateMachine.getPreviousState().getName().equals("SP_Pause")) {
 			gm.getWorldsHandler().getActiveWorld().getActiveDimension().lighting();
 			gm.getSun_Camera().setPosition(gm.getCamera().getPosition());
-			gm.getFrustum().calculateFrustum(gm.getMasterShadowRenderer().getProjectionMatrix(), gm.getSun_Camera());
-			if (ClientVariables.useShadows) {
-				gm.getMasterShadowRenderer().being();
-				MasterRenderer.prepare();
-				gm.getWorldsHandler().getActiveWorld().getActiveDimension().updateChunksShadow(gm);
-				gm.getItemsDropRenderer().getTess().drawShadow(gm.getSun_Camera());
-				gm.getMasterShadowRenderer().renderEntity(
-						gm.getWorldsHandler().getActiveWorld().getActiveDimension().getPhysicsEngine().getEntities(),
-						gm);
-				gm.getMasterShadowRenderer().end();
-			}
-			gm.getFrustum().calculateFrustum(gm.getRenderer().getProjectionMatrix(), gm.getCamera());
-			MasterRenderer.prepare();
-			gm.getWorldsHandler().getActiveWorld().getActiveDimension().updateChunksOcclusion(gm);
-
-			gm.getRenderingPipeline().begin();
-			MasterRenderer.prepare();
-			gm.getSkyboxRenderer().render(ClientVariables.RED, ClientVariables.GREEN, ClientVariables.BLUE, delta, gm);
-			gm.getWorldsHandler().getActiveWorld().getActiveDimension().updateChunksRender(gm, false);
-			gm.getRenderer().renderEntity(
-					gm.getWorldsHandler().getActiveWorld().getActiveDimension().getPhysicsEngine().getEntities(), gm);
-			gm.getItemsDropRenderer().render(gm);
-			gm.getRenderingPipeline().end();
-			MasterRenderer.prepare();
-			gm.getRenderingPipeline().render(gm);
-			gm.getWorldsHandler().getActiveWorld().getActiveDimension().updateChunksRender(gm, true);
-			ParticleMaster.getInstance().render(gm.getCamera(), gm.getRenderer().getProjectionMatrix());
+			gm.getRenderer().render(gm.getWorldsHandler().getActiveWorld().getActiveDimension(), gm.getCamera(),
+					gm.getSun_Camera(), gm.getWorldSimulation(), gm.getLightPos(), gm.getInvertedLightPosition(),
+					alpha);
 		} else {
-			MasterRenderer.prepare(1, 1, 1, 1);
+			Renderer.prepare(1, 1, 1, 1);
 		}
 
 		Window window = gm.getGameWindow();

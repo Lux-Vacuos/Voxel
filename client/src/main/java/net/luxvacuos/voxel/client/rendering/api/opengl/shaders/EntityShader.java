@@ -27,7 +27,6 @@ import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.UniformBoole
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.UniformFloat;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.UniformMatrix;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.UniformSampler;
-import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.util.Maths;
 import net.luxvacuos.voxel.client.world.entities.Camera;
 
@@ -87,7 +86,7 @@ public class EntityShader extends ShaderProgram {
 		transformationMatrix.loadMatrix(matrix);
 	}
 
-	public void loadBiasMatrix(GameResources gm) {
+	public void loadBiasMatrix(Matrix4f shadowProjectionMatrix) {
 		Matrix4f biasMatrix = new Matrix4f();
 		biasMatrix.m00 = 0.5f;
 		biasMatrix.m11 = 0.5f;
@@ -96,11 +95,11 @@ public class EntityShader extends ShaderProgram {
 		biasMatrix.m31 = 0.5f;
 		biasMatrix.m32 = 0.5f;
 		this.biasMatrix.loadMatrix(biasMatrix);
-		projectionLightMatrix.loadMatrix(gm.getMasterShadowRenderer().getProjectionMatrix());
+		projectionLightMatrix.loadMatrix(shadowProjectionMatrix);
 	}
 
-	public void loadLightMatrix(GameResources gm) {
-		viewLightMatrix.loadMatrix(Maths.createViewMatrix(gm.getSun_Camera()));
+	public void loadLightMatrix(Camera sunCamera) {
+		viewLightMatrix.loadMatrix(Maths.createViewMatrix(sunCamera));
 	}
 
 	/**

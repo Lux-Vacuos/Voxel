@@ -71,6 +71,10 @@ public final class ClientGameSettings extends AbstractGameSettings {
 
 		// Parse Ambient Occlusion
 		ClientVariables.useAmbientOcclusion = Boolean.parseBoolean(getValue("useAmbientOcclusion", "false"));
+
+		// Parse Shadow Map Resolution and Shadow Draw Distance.
+		ClientVariables.shadowMapResolution = Integer.parseInt(getValue("shadowMapResolution", "4096"));
+		ClientVariables.shadowMapDrawDistance = Integer.parseInt(getValue("shadowMapDrawDistance", "60"));
 	}
 
 	/**
@@ -94,6 +98,8 @@ public final class ClientGameSettings extends AbstractGameSettings {
 		registerValue("FOV", Integer.toString(ClientVariables.FOV));
 		registerValue("RenderingPipeline", ClientVariables.renderingPipeline);
 		registerValue("Assets", ClientVariables.assets);
+		registerValue("shadowMapResolution", Integer.toString(ClientVariables.shadowMapResolution));
+		registerValue("shadowMapDrawDistance", Integer.toString(ClientVariables.shadowMapDrawDistance));
 	}
 
 }

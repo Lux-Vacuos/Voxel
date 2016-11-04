@@ -32,9 +32,9 @@ uniform sampler2D gNormal;
 uniform sampler2D gData0;
 uniform sampler2D gData1;
 uniform sampler2D composite0;
+uniform int shadowDrawDistance;
 
 const float transitionDistance = 5;
-const float shadowDistance = 60;
 
 void main(void){
 	vec2 texcoord = textureCoords;
@@ -50,7 +50,7 @@ void main(void){
 	float distance = length(cameraPosition-position.xyz);
     if(data.b != 1) {
     	normal = normalize(normal);
-    	float shadowDist = distance - (shadowDistance - transitionDistance);
+    	float shadowDist = distance - (shadowDrawDistance - transitionDistance);
 		shadowDist = shadowDist / transitionDistance;
 		float fadeOut = clamp(1.0-shadowDist, 0.0, 1.0);
     	float b = max(dot(normal.xyz, lightDir), 0) - (data.a * fadeOut);

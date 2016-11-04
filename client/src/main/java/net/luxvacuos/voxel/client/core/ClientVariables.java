@@ -51,7 +51,7 @@ public class ClientVariables extends GlobalVariables {
 	public static int FOV = 90;
 	public static int WIDTH = 1280;
 	public static int HEIGHT = 720;
-
+	
 	public static final float NEAR_PLANE = 0.1f;
 	public static final float FAR_PLANE = 1000f;
 	public static float RED = 0.32f;
@@ -73,6 +73,8 @@ public class ClientVariables extends GlobalVariables {
 	public static boolean useParallax = false;
 	public static boolean useReflections = false;
 	public static boolean useAmbientOcclusion = false;
+	public static int shadowMapResolution = 4096;
+	public static int shadowMapDrawDistance = 60;
 	public static final float WAVE_SPEED = 4f;
 	public static String renderingPipeline = "MultiPass";
 	/**

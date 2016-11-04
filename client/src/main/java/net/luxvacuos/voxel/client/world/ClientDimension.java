@@ -28,13 +28,10 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import com.badlogic.ashley.core.Engine;
 
 import net.luxvacuos.igl.vector.Vector3f;
-import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.resources.GameResources;
-import net.luxvacuos.voxel.client.resources.models.ParticlePoint;
 import net.luxvacuos.voxel.client.resources.models.ParticleSystem;
-import net.luxvacuos.voxel.client.world.chunks.Chunk;
 import net.luxvacuos.voxel.client.world.chunks.ChunkGenerator;
-import net.luxvacuos.voxel.universal.world.utils.ChunkNode;
+
 @Deprecated
 public class ClientDimension extends Dimension {
 
@@ -68,81 +65,6 @@ public class ClientDimension extends Dimension {
 
 	@Override
 	protected void save() {
-	}
-
-	@Override
-	public void updateChunksGeneration(GameResources gm, float delta) {
-		if (gm.getCamera().getPosition().x < 0)
-			playerCX = (int) ((gm.getCamera().getPosition().x - 16) / 16);
-		if (gm.getCamera().getPosition().y < 0)
-			playerCY = (int) ((gm.getCamera().getPosition().y - 16) / 16);
-		if (gm.getCamera().getPosition().z < 0)
-			playerCZ = (int) ((gm.getCamera().getPosition().z - 16) / 16);
-		if (gm.getCamera().getPosition().x > 0)
-			playerCX = (int) ((gm.getCamera().getPosition().x) / 16);
-		if (gm.getCamera().getPosition().y > 0)
-			playerCY = (int) ((gm.getCamera().getPosition().y) / 16);
-		if (gm.getCamera().getPosition().z > 0)
-			playerCZ = (int) ((gm.getCamera().getPosition().z) / 16);
-		
-		ChunkNode node;
-		int xx, yy, zz;
-		for (int zr = -ClientVariables.radius; zr <= ClientVariables.radius; zr++) {
-			zz = playerCZ + zr;
-			for (int xr = -ClientVariables.radius; xr <= ClientVariables.radius; xr++) {
-				xx = playerCX + xr;
-				for (int yr = -ClientVariables.radius; yr <= ClientVariables.radius; yr++) {
-					yy = playerCY + yr;
-					node = new ChunkNode(xx, yy, zz);
-
-					if (!hasChunk(node)) {
-						addChunk(new Chunk(node, this));
-						addTo(node, addQueue);
-					} else if (hasChunk(xx, yy, zz)) {
-						Chunk chunk = getChunk(node);
-						if (!chunk.loaded)
-							continue;
-						chunk.update(this, gm.getCamera(), delta);
-						if (gm.getFrustum().cubeInFrustum(chunk.posX, chunk.posY, chunk.posZ, chunk.posX + 16,
-								chunk.posY + 16, chunk.posZ + 16)) {
-							chunk.rebuildMesh(this);
-						}
-						for (ParticlePoint particlePoint : chunk.getParticlePoints()) {
-							particleSystem.generateParticles(particlePoint, delta);
-						}
-					}
-				}
-			}
-		}
-
-		for (Chunk chunk : chunks.values()) {
-			if (Math.abs(chunk.node.getX() - playerCX) > ClientVariables.radius) {
-				addTo(chunk.node, removeQueue);
-			} else if (Math.abs(chunk.node.getZ() - playerCZ) > ClientVariables.radius) {
-				addTo(chunk.node, removeQueue);
-			} else if (Math.abs(chunk.node.getY() - playerCY) > ClientVariables.radius) {
-				addTo(chunk.node, removeQueue);
-			}
-		}
-		
-		int chunksLoaded = 0;
-		int chunksUnloaded = 0;
-		while (!removeQueue.isEmpty()) {
-			node = removeQueue.poll();
-			Chunk chnk = getChunk(node);
-			saveChunk(gm.getKryo(), chnk);
-			removeChunk(chnk);
-			chunksUnloaded++;
-		}
-
-		while (!addQueue.isEmpty()) {
-			node = addQueue.poll();
-			if (existChunkFile(node))
-				loadChunk(gm.getKryo(), node);
-			else
-				getChunk(node).init(this);
-			chunksLoaded++;
-		}
 	}
 
 }

@@ -28,14 +28,12 @@ import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 //import net.luxvacuos.voxel.client.input.Keyboard;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.UIRendering;
-import net.luxvacuos.voxel.client.rendering.api.opengl.MasterRenderer;
+import net.luxvacuos.voxel.client.rendering.api.opengl.Renderer;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.ui.Button;
 import net.luxvacuos.voxel.client.ui.Text;
 import net.luxvacuos.voxel.client.ui.UIWindow;
 import net.luxvacuos.voxel.universal.core.AbstractVoxel;
-import net.luxvacuos.voxel.universal.core.states.AbstractState;
-import net.luxvacuos.voxel.universal.core.states.StateMachine;
 
 public class SPCreateWorld extends AbstractFadeState {
 	private UIWindow uiWindow;
@@ -48,8 +46,8 @@ public class SPCreateWorld extends AbstractFadeState {
 	public SPCreateWorld() {
 		super(StateNames.SP_CREATE_WORLD);
 		Window window = GameResources.getInstance().getGameWindow();
-		uiWindow = new UIWindow(20, window.getHeight() - 20,
-				window.getWidth() - 40, window.getHeight() - 40, "Create World");
+		uiWindow = new UIWindow(20, window.getHeight() - 20, window.getWidth() - 40, window.getHeight() - 40,
+				"Create World");
 		nameT = new Text("World Name", uiWindow.getWidth() / 2, -uiWindow.getHeight() / 2 + 100);
 		nameT.setAlign(NVG_ALIGN_CENTER);
 		optionsT = new Text("Options", uiWindow.getWidth() / 2, -uiWindow.getHeight() / 2);
@@ -89,22 +87,21 @@ public class SPCreateWorld extends AbstractFadeState {
 	@Override
 	public void update(AbstractVoxel voxel, float delta) {
 		uiWindow.update(delta);
-		
+
 		super.update(voxel, delta);
 	}
 
 	@Override
 	public void render(AbstractVoxel voxel, float alpha) {
 		Window window = ((GameResources) voxel.getGameResources()).getGameWindow();
-		MasterRenderer.prepare(1, 1, 1, 1);
+		Renderer.prepare(1, 1, 1, 1);
 		window.beingNVGFrame();
 		uiWindow.render(window.getID());
 		worldName = window.getKeyboardHandler().handleInput(worldName);
-		//while (Keyboard.next())
-			//worldName = Keyboard.keyWritten(worldName);
+		// while (Keyboard.next())
+		// worldName = Keyboard.keyWritten(worldName);
 		UIRendering.renderSearchBox(window.getID(), worldName, "Roboto-Regular", "Entypo",
-				window.getWidth() / 2f - 150f,
-				window.getHeight() / 2f - 85, 300, 20);
+				window.getWidth() / 2f - 150f, window.getHeight() / 2f - 85, 300, 20);
 		UIRendering.renderMouse(window.getID());
 		window.endNVGFrame();
 	}

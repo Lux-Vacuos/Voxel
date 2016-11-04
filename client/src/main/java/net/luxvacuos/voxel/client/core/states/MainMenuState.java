@@ -22,7 +22,7 @@ package net.luxvacuos.voxel.client.core.states;
 
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.UIRendering;
-import net.luxvacuos.voxel.client.rendering.api.opengl.MasterRenderer;
+import net.luxvacuos.voxel.client.rendering.api.opengl.Renderer;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.ui.Button;
 import net.luxvacuos.voxel.client.ui.UIWindow;
@@ -46,8 +46,8 @@ public class MainMenuState extends AbstractFadeState {
 	public MainMenuState() {
 		super(StateNames.MAIN_MENU);
 		Window window = GameResources.getInstance().getGameWindow();
-		uiWindow = new UIWindow(20, window.getHeight() - 20, window.getWidth() - 40,
-				window.getHeight() - 40, "Main Menu");
+		uiWindow = new UIWindow(20, window.getHeight() - 20, window.getWidth() - 40, window.getHeight() - 40,
+				"Main Menu");
 
 		playButton = new Button(uiWindow.getWidth() / 2 - 100, -uiWindow.getHeight() / 2 + 120 - 20, 200, 40,
 				"Singleplayer");
@@ -82,7 +82,7 @@ public class MainMenuState extends AbstractFadeState {
 		exitButton.setOnButtonPress((button, delta) -> {
 			StateMachine.dispose();
 		});
-		
+
 		uiWindow.addChildren(playButton);
 		uiWindow.addChildren(playMPButton);
 		uiWindow.addChildren(optionsButton);
@@ -103,7 +103,7 @@ public class MainMenuState extends AbstractFadeState {
 	@Override
 	public void render(AbstractVoxel voxel, float delta) {
 		Window window = ((GameResources) voxel.getGameResources()).getGameWindow();
-		MasterRenderer.prepare(1, 1, 1, 1);
+		Renderer.prepare(1, 1, 1, 1);
 		window.beingNVGFrame();
 		uiWindow.render(window.getID());
 		UIRendering.renderMouse(window.getID());
@@ -113,7 +113,7 @@ public class MainMenuState extends AbstractFadeState {
 	@Override
 	public void update(AbstractVoxel voxel, float delta) {
 		uiWindow.update(delta);
-		
+
 		super.update(voxel, delta);
 	}
 

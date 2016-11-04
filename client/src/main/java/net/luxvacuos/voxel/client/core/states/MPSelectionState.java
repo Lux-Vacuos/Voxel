@@ -23,7 +23,7 @@ package net.luxvacuos.voxel.client.core.states;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 //import net.luxvacuos.voxel.client.input.Keyboard;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.UIRendering;
-import net.luxvacuos.voxel.client.rendering.api.opengl.MasterRenderer;
+import net.luxvacuos.voxel.client.rendering.api.opengl.Renderer;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.ui.Button;
 import net.luxvacuos.voxel.client.ui.Text;
@@ -49,8 +49,8 @@ public class MPSelectionState extends AbstractFadeState {
 	public MPSelectionState() {
 		super(StateNames.MP_SELECTION);
 		Window window = GameResources.getInstance().getGameWindow();
-		uiWindow = new UIWindow(20, window.getHeight() - 20,
-				window.getWidth() - 40, window.getHeight() - 40, "Multiplayer");
+		uiWindow = new UIWindow(20, window.getHeight() - 20, window.getWidth() - 40, window.getHeight() - 40,
+				"Multiplayer");
 		exitButton = new Button(uiWindow.getWidth() / 2 + 10, -uiWindow.getHeight() + 35, 200, 40, "Back");
 		playButton = new Button(uiWindow.getWidth() / 2 - 210, -uiWindow.getHeight() + 35, 200, 40, "Enter");
 
@@ -94,21 +94,20 @@ public class MPSelectionState extends AbstractFadeState {
 		if (time <= 0.2f) {
 			time += 1 * delta;
 		}
-		
+
 		super.update(voxel, delta);
 	}
 
 	@Override
 	public void render(AbstractVoxel voxel, float alpha) {
-		Window window = ((GameResources)voxel.getGameResources()).getGameWindow();
-		MasterRenderer.prepare(1, 1, 1, 1);
+		Window window = ((GameResources) voxel.getGameResources()).getGameWindow();
+		Renderer.prepare(1, 1, 1, 1);
 		window.beingNVGFrame();
 		uiWindow.render(window.getID());
-		//while (Keyboard.next())
-		//ip = Keyboard.keyWritten(ip);
+		// while (Keyboard.next())
+		// ip = Keyboard.keyWritten(ip);
 		ip = window.getKeyboardHandler().handleInput(ip);
-		UIRendering.renderSearchBox(window.getID(), ip, "Roboto-Regular", "Entypo",
-				window.getWidth() / 2f - 150f,
+		UIRendering.renderSearchBox(window.getID(), ip, "Roboto-Regular", "Entypo", window.getWidth() / 2f - 150f,
 				window.getHeight() / 2f - 10, 300, 20);
 		UIRendering.renderMouse(window.getID());
 		window.endNVGFrame();

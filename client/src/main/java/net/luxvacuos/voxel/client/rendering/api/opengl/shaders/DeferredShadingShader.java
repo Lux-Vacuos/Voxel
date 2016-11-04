@@ -29,6 +29,7 @@ import net.luxvacuos.voxel.client.rendering.api.opengl.objects.Light;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.Attribute;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.UniformBoolean;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.UniformFloat;
+import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.UniformInteger;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.UniformMatrix;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.UniformSampler;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.UniformVec2;
@@ -65,6 +66,8 @@ public class DeferredShadingShader extends ShaderProgram {
 	private UniformFloat time = new UniformFloat("time");
 	private UniformFloat camUnderWaterOffset = new UniformFloat("camUnderWaterOffset");
 
+	private UniformInteger shadowDrawDistance = new UniformInteger("shadowDrawDistance");
+
 	private UniformBoolean camUnderWater = new UniformBoolean("camUnderWater");
 	private UniformBoolean useFXAA = new UniformBoolean("useFXAA");
 	private UniformBoolean useDOF = new UniformBoolean("useDOF");
@@ -96,8 +99,8 @@ public class DeferredShadingShader extends ShaderProgram {
 		super.storeAllUniformLocations(transformationMatrix, projectionMatrix, viewMatrix, inverseProjectionMatrix,
 				inverseViewMatrix, previousViewMatrix, cameraPosition, previousCameraPosition, lightPosition,
 				invertedLightPosition, skyColor, resolution, sunPositionInScreen, exposure, time, camUnderWaterOffset,
-				camUnderWater, useFXAA, useDOF, useMotionBlur, useReflections, useVolumetricLight, useAmbientOcclusion,
-				gDiffuse, gPosition, gNormal, gDepth, gData0, gData1, composite0, composite1);
+				shadowDrawDistance, camUnderWater, useFXAA, useDOF, useMotionBlur, useReflections, useVolumetricLight,
+				useAmbientOcclusion, gDiffuse, gPosition, gNormal, gDepth, gData0, gData1, composite0, composite1);
 		connectTextureUnits();
 	}
 
@@ -167,13 +170,14 @@ public class DeferredShadingShader extends ShaderProgram {
 	}
 
 	public void loadSettings(boolean useDOF, boolean useFXAA, boolean useMotionBlur, boolean useVolumetricLight,
-			boolean useReflections, boolean useAmbientOcclusion) {
+			boolean useReflections, boolean useAmbientOcclusion, int shadowDrawDistance) {
 		this.useDOF.loadBoolean(useDOF);
 		this.useFXAA.loadBoolean(useFXAA);
 		this.useMotionBlur.loadBoolean(useMotionBlur);
 		this.useVolumetricLight.loadBoolean(useVolumetricLight);
 		this.useReflections.loadBoolean(useReflections);
 		this.useAmbientOcclusion.loadBoolean(useAmbientOcclusion);
+		this.shadowDrawDistance.loadInteger(shadowDrawDistance);
 	}
 
 	public void loadMotionBlurData(Matrix4f projectionMatrix, Camera camera, Matrix4f previousViewMatrix,

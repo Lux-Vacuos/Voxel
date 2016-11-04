@@ -20,23 +20,13 @@
 
 package net.luxvacuos.voxel.client.core.states;
 
-import static org.lwjgl.opengl.GL11.GL_DEPTH_COMPONENT;
-import static org.lwjgl.opengl.GL11.GL_FLOAT;
-import static org.lwjgl.opengl.GL11.glReadPixels;
-
-import java.nio.FloatBuffer;
-
-import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFW;
 
 import net.luxvacuos.igl.vector.Vector3f;
-import net.luxvacuos.voxel.client.core.ClientVariables;
 //import net.luxvacuos.voxel.client.input.Keyboard;
 import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.UIRendering;
-import net.luxvacuos.voxel.client.rendering.api.opengl.MasterRenderer;
-import net.luxvacuos.voxel.client.rendering.api.opengl.ParticleMaster;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.ui.Button;
 import net.luxvacuos.voxel.client.ui.UIWindow;
@@ -58,7 +48,8 @@ public class SPPauseState extends AbstractFadeState {
 		super(StateNames.SP_PAUSE);
 		Window window = GameResources.getInstance().getGameWindow();
 		uiWindow = new UIWindow(20, window.getHeight() - 20, window.getWidth() - 40, window.getHeight() - 40, "Pause");
-		exitButton = new Button(uiWindow.getWidth() / 2 - 100, -uiWindow.getHeight() + 35, 200, 40, "Back to Main Menu");
+		exitButton = new Button(uiWindow.getWidth() / 2 - 100, -uiWindow.getHeight() + 35, 200, 40,
+				"Back to Main Menu");
 		optionsButton = new Button(uiWindow.getWidth() / 2 - 100, -uiWindow.getHeight() + 85, 200, 40, "Options");
 		exitButton.setOnButtonPress((button, delta) -> {
 			GameResources.getInstance().getWorldsHandler().getActiveWorld().dispose();
@@ -86,62 +77,33 @@ public class SPPauseState extends AbstractFadeState {
 
 	@Override
 	public void update(AbstractVoxel voxel, float delta) {
-		GameResources gm = ((GameResources)voxel.getGameResources());
+		GameResources gm = ((GameResources) voxel.getGameResources());
 		Window window = gm.getGameWindow();
 		while (Mouse.next())
 			uiWindow.update(delta);
-		
+
 		super.update(voxel, delta);
 
-		//while (Keyboard.next()) {
-		//	if (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
-		if(window.getKeyboardHandler().isKeyPressed(GLFW.GLFW_KEY_ESCAPE)) {
+		// while (Keyboard.next()) {
+		// if (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
+		if (window.getKeyboardHandler().isKeyPressed(GLFW.GLFW_KEY_ESCAPE)) {
 			window.getKeyboardHandler().ignoreKeyUntilRelease(GLFW.GLFW_KEY_ESCAPE);
 			((PlayerCamera) gm.getCamera()).setMouse();
 			this.switchTo(StateNames.SINGLEPLAYER);
 		}
-		//}
+		// }
 	}
 
 	@Override
-	public void render(AbstractVoxel voxel, float delta) {
-		GameResources gm = (GameResources)voxel.getGameResources();
+	public void render(AbstractVoxel voxel, float alpha) {
+		GameResources gm = (GameResources) voxel.getGameResources();
 		Window window = gm.getGameWindow();
 
 		gm.getWorldsHandler().getActiveWorld().getActiveDimension().lighting();
 		gm.getSun_Camera().setPosition(gm.getCamera().getPosition());
-		gm.getFrustum().calculateFrustum(gm.getMasterShadowRenderer().getProjectionMatrix(), gm.getSun_Camera());
-		if (ClientVariables.useShadows) {
-			gm.getMasterShadowRenderer().being();
-			MasterRenderer.prepare(0, 0, 0, 1);
-			gm.getWorldsHandler().getActiveWorld().getActiveDimension().updateChunksShadow(gm);
-			gm.getItemsDropRenderer().getTess().drawShadow(gm.getSun_Camera());
-			gm.getMasterShadowRenderer().renderEntity(
-					gm.getWorldsHandler().getActiveWorld().getActiveDimension().getPhysicsEngine().getEntities(), gm);
-			gm.getMasterShadowRenderer().end();
-		}
-		gm.getFrustum().calculateFrustum(gm.getRenderer().getProjectionMatrix(), gm.getCamera());
-		MasterRenderer.prepare(0, 0, 0, 1);
-		gm.getWorldsHandler().getActiveWorld().getActiveDimension().updateChunksOcclusion(gm);
+		gm.getRenderer().render(gm.getWorldsHandler().getActiveWorld().getActiveDimension(), gm.getCamera(),
+				gm.getSun_Camera(), gm.getWorldSimulation(), gm.getLightPos(), gm.getInvertedLightPosition(), alpha);
 
-		gm.getRenderingPipeline().begin();
-		MasterRenderer.prepare(0, 0, 0, 1);
-		gm.getSkyboxRenderer().render(ClientVariables.RED, ClientVariables.GREEN, ClientVariables.BLUE, delta, gm);
-		gm.getWorldsHandler().getActiveWorld().getActiveDimension().updateChunksRender(gm, false);
-		FloatBuffer p = BufferUtils.createFloatBuffer(1);
-		glReadPixels(window.getWidth() / 2, window.getHeight() / 2, 1, 1,
-				GL_DEPTH_COMPONENT, GL_FLOAT, p);
-		gm.getCamera().depth = p.get(0);
-		gm.getRenderer().renderEntity(
-				gm.getWorldsHandler().getActiveWorld().getActiveDimension().getPhysicsEngine().getEntities(), gm);
-		gm.getItemsDropRenderer().render(gm);
-		gm.getRenderingPipeline().end();
-
-		MasterRenderer.prepare(0, 0, 0, 1);
-		gm.getRenderingPipeline().render(gm);
-		gm.getWorldsHandler().getActiveWorld().getActiveDimension().updateChunksRender(gm, true);
-		ParticleMaster.getInstance().render(gm.getCamera(), gm.getRenderer().getProjectionMatrix());
-		
 		window.beingNVGFrame();
 		uiWindow.render(window.getID());
 		UIRendering.renderMouse(window.getID());

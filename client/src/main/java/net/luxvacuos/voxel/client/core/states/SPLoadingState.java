@@ -23,7 +23,7 @@ package net.luxvacuos.voxel.client.core.states;
 import org.lwjgl.nanovg.NanoVG;
 
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
-import net.luxvacuos.voxel.client.rendering.api.opengl.MasterRenderer;
+import net.luxvacuos.voxel.client.rendering.api.opengl.Renderer;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.ui.Text;
 import net.luxvacuos.voxel.client.ui.UIWindow;
@@ -73,7 +73,7 @@ public class SPLoadingState extends AbstractState {
 	@Override
 	public void render(AbstractVoxel voxel, float delta) {
 		Window window = ((GameResources) voxel.getGameResources()).getGameWindow();
-		MasterRenderer.prepare(1, 1, 1, 1);
+		Renderer.prepare(1, 1, 1, 1);
 		window.beingNVGFrame();
 		uiWindow.render(window.getID());
 		window.endNVGFrame();

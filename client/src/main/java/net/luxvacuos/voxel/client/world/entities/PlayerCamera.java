@@ -54,10 +54,8 @@ import net.luxvacuos.voxel.client.input.KeyboardHandler;
 import net.luxvacuos.voxel.client.input.Mouse;
 //import net.luxvacuos.voxel.client.network.VoxelClient;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
+import net.luxvacuos.voxel.client.resources.DRay;
 import net.luxvacuos.voxel.client.resources.GameResources;
-import net.luxvacuos.voxel.client.resources.models.ModelTexture;
-import net.luxvacuos.voxel.client.resources.models.RendereableTexturedModel;
-import net.luxvacuos.voxel.client.resources.models.TexturedModel;
 import net.luxvacuos.voxel.client.ui.Inventory;
 import net.luxvacuos.voxel.client.ui.menu.ItemGui;
 import net.luxvacuos.voxel.client.util.Maths;
@@ -68,7 +66,9 @@ import net.luxvacuos.voxel.client.world.entities.components.ArmourComponent;
 import net.luxvacuos.voxel.client.world.items.EmptyArmour;
 import net.luxvacuos.voxel.universal.core.states.StateMachine;
 import net.luxvacuos.voxel.universal.ecs.Components;
+import net.luxvacuos.voxel.universal.ecs.components.AABB;
 import net.luxvacuos.voxel.universal.ecs.components.Health;
+import net.luxvacuos.voxel.universal.ecs.components.Scale;
 import net.luxvacuos.voxel.universal.ecs.components.Velocity;
 
 public class PlayerCamera extends Camera {
@@ -88,23 +88,22 @@ public class PlayerCamera extends Camera {
 	private boolean hit;
 	private boolean died = false;
 	private boolean flyMode = false;
-	private RendereableTexturedModel blockSelector;
 
 	private static List<BoundingBox> blocks = new ArrayList<>();
 	private static Vector3 tmp = new Vector3();
 
 	public PlayerCamera(Matrix4f proj, Window window) {
-		super(proj, new Vector3f(-0.25f, -1.4f, -0.25f), new Vector3f(0.25f, 0.2f, 0.25f));
+		this.add(new Velocity());
+		this.add(new Scale());
+		this.add(new AABB(new Vector3f(-0.25f, -1.4f, -0.25f), new Vector3f(0.25f, 0.2f, 0.25f))
+				.setBoundingBox(new Vector3f(-0.25f, -1.4f, -0.25f), new Vector3f(0.25f, 0.2f, 0.25f)));
 		center = new Vector2f(window.getWidth() / 2, window.getHeight() / 2);
+		dRay = new DRay(proj, Maths.createViewMatrix(this), center, 0, 0);
 		this.speed = 1f;
 		inventory = new Inventory(11, 11, window.getWidth() / 2 - 200, 0);
 		super.add(new Health(20));
 		super.add(new ArmourComponent());
 		super.getComponent(ArmourComponent.class).armour = new EmptyArmour();
-		blockSelector = new RendereableTexturedModel(new Vector3f(), new TexturedModel(
-				GameResources.getInstance().getResourceLoader().getObjLoader().loadObjModel("BlockSelector"),
-				new ModelTexture(GameResources.getInstance().getResourceLoader().loadTextureEntity("BlockSelector"))));
-		blockSelector.scale = 1.02f;
 		flyMode = true;
 
 		if (flyMode)
@@ -198,21 +197,21 @@ public class PlayerCamera extends Camera {
 
 		Velocity vel = Components.VELOCITY.get(this);
 
-		if(kbh.isKeyPressed(GLFW.GLFW_KEY_W)) {
+		if (kbh.isKeyPressed(GLFW.GLFW_KEY_W)) {
 			vel.setZ(vel.getZ() + -Math.cos(Math.toRadians(this.yaw)) * this.speed);
 			vel.setX(vel.getX() + Math.sin(Math.toRadians(this.yaw)) * this.speed);
 			isMoved = true;
-		} else if(kbh.isKeyPressed(GLFW.GLFW_KEY_S)) {
+		} else if (kbh.isKeyPressed(GLFW.GLFW_KEY_S)) {
 			vel.setZ(vel.getZ() - -Math.cos(Math.toRadians(this.yaw)) * this.speed);
 			vel.setX(vel.getX() - Math.sin(Math.toRadians(this.yaw)) * this.speed);
 			isMoved = true;
 		}
 
-		if(kbh.isKeyPressed(GLFW.GLFW_KEY_D)) {
+		if (kbh.isKeyPressed(GLFW.GLFW_KEY_D)) {
 			vel.setZ(vel.getZ() + Math.sin(Math.toRadians(this.yaw)) * this.speed);
 			vel.setX(vel.getX() + Math.cos(Math.toRadians(this.yaw)) * this.speed);
 			isMoved = true;
-		} else if(kbh.isKeyPressed(GLFW.GLFW_KEY_A)) {
+		} else if (kbh.isKeyPressed(GLFW.GLFW_KEY_A)) {
 			vel.setZ(vel.getZ() - Math.sin(Math.toRadians(this.yaw)) * this.speed);
 			vel.setX(vel.getX() - Math.cos(Math.toRadians(this.yaw)) * this.speed);
 			isMoved = true;
@@ -220,54 +219,39 @@ public class PlayerCamera extends Camera {
 
 		this.speed = (kbh.isCtrlPressed() ? (this.flyMode ? 6f : 2f) : 1f);
 
-		if(this.flyMode) {
-			if(kbh.isKeyPressed(GLFW.GLFW_KEY_SPACE)) vel.setY(5f * this.speed);
-			else if(kbh.isShiftPressed()) vel.setY(-5f * this.speed);
+		if (this.flyMode) {
+			if (kbh.isKeyPressed(GLFW.GLFW_KEY_SPACE))
+				vel.setY(5f * this.speed);
+			else if (kbh.isShiftPressed())
+				vel.setY(-5f * this.speed);
 		} else {
-			if(kbh.isKeyPressed(GLFW.GLFW_KEY_SPACE) && !jump) {
+			if (kbh.isKeyPressed(GLFW.GLFW_KEY_SPACE) && !jump) {
 				vel.setY(5f);
 				jump = true;
 			}
 
-			if(kbh.isShiftPressed() && !jump) speed = 0.2f;
-			else speed = 1f;
-
-			if(vel.getY() == 0) jump = false;
-
-		}
-		/*if (flyMode) {
-			if (isKeyDown(KEY_SPACE))
-				vel.setY(5f * speed);
-		} else {
-			if (isKeyDown(KEY_SPACE) && !jump) {
-				vel.setY(5f);
-				jump = true;
-			}
-			if (vel.getY() == 0)
-				jump = false;
-		}
-		if (flyMode) {
-			if (isKeyDown(KEY_LSHIFT))
-				vel.setY(-5f * speed);
-		} else {
-			if (isKeyDown(KEY_LSHIFT))
+			if (kbh.isShiftPressed() && !jump)
 				speed = 0.2f;
 			else
 				speed = 1f;
 
-		}
-		if (flyMode) {
-			if (isKeyDown(Keyboard.KEY_LCONTROL))
-				speed = 6f;
-			else
-				speed = 1f;
-		} else {
-			if (isKeyDown(Keyboard.KEY_LCONTROL))
-				speed = 2f;
-			else
-				speed = 1f;
+			if (vel.getY() == 0)
+				jump = false;
 
-		} */
+		}
+		/*
+		 * if (flyMode) { if (isKeyDown(KEY_SPACE)) vel.setY(5f * speed); } else
+		 * { if (isKeyDown(KEY_SPACE) && !jump) { vel.setY(5f); jump = true; }
+		 * if (vel.getY() == 0) jump = false; } if (flyMode) { if
+		 * (isKeyDown(KEY_LSHIFT)) vel.setY(-5f * speed); } else { if
+		 * (isKeyDown(KEY_LSHIFT)) speed = 0.2f; else speed = 1f;
+		 * 
+		 * } if (flyMode) { if (isKeyDown(Keyboard.KEY_LCONTROL)) speed = 6f;
+		 * else speed = 1f; } else { if (isKeyDown(Keyboard.KEY_LCONTROL)) speed
+		 * = 2f; else speed = 1f;
+		 * 
+		 * }
+		 */
 
 		/*
 		 * if (isKeyDown(Keyboard.KEY_Y)) {
@@ -275,31 +259,33 @@ public class PlayerCamera extends Camera {
 		 * (isKeyDown(Keyboard.KEY_O)) {
 		 * gm.getWorldsHandler().getActiveWorld().switchDimension(1, gm); }
 		 */
-		if(ClientVariables.debug) {
-			//TODO: Readd the below debug keys
+		if (ClientVariables.debug) {
+			// TODO: Readd the below debug keys
 		}
-		/*if (isKeyDown(KEY_T)) {
-			gm.getWorldsHandler().getActiveWorld().getActiveDimension().getPhysicsEngine()
-					.addEntity(new GuineaPig(new Vector3f(getPosition())));
-		}*/
+		/*
+		 * if (isKeyDown(KEY_T)) {
+		 * gm.getWorldsHandler().getActiveWorld().getActiveDimension().
+		 * getPhysicsEngine() .addEntity(new GuineaPig(new
+		 * Vector3f(getPosition()))); }
+		 */
 
 		if (kbh.isKeyPressed(GLFW.GLFW_KEY_1)) {
 			gm.getWorldsHandler().getActiveWorld().getActiveDimension().getPhysicsEngine()
 					.addEntity(Block.Glass.getDrop(getPosition()));
 		}
-		
-	if(clickTime>0)clickTime--;hit=false;
 
-	setBlock(window.getWidth(), window.getHeight(), world);
-		updateRay(gm.getRenderer().getProjectionMatrix(), window.getWidth(),
-				window.getHeight(), center);
+		if (clickTime > 0)
+			clickTime--;
+		hit = false;
+
+		setBlock(window.getWidth(), window.getHeight(), world);
+		updateRay(gm.getRenderer().getProjectionMatrix(), window.getWidth(), window.getHeight(), center);
 
 		super.update(delta);
 	}
 
 	@Override
 	public void render() {
-		blockSelector.render(GameResources.getInstance().getRenderer().getShader(), false);
 	}
 
 	private void setBlock(int ww, int wh, Dimension world) {
@@ -349,7 +335,6 @@ public class PlayerCamera extends Camera {
 		int bx = (int) tempX;
 		int by = (int) tempY;
 		int bz = (int) tempZ - 1;
-		blockSelector.pos.set(bx + 0.5, by + 0.5f, bz + 0.5);
 		if (clickTime == 0)
 			if (isButtonDown(0)) {
 				clickTime = 8;

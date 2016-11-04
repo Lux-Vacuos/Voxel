@@ -26,14 +26,18 @@ import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
 import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 
+import java.util.List;
+
 import net.luxvacuos.igl.vector.Matrix4f;
 import net.luxvacuos.igl.vector.Vector2f;
 import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.voxel.client.core.ClientVariables;
+import net.luxvacuos.voxel.client.core.ClientWorldSimulation;
+import net.luxvacuos.voxel.client.rendering.api.opengl.objects.Light;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.DeferredShadingShader;
-import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.resources.models.RawModel;
 import net.luxvacuos.voxel.client.util.Maths;
+import net.luxvacuos.voxel.client.world.entities.Camera;
 import net.luxvacuos.voxel.client.world.entities.PlayerCamera;
 
 /**
@@ -63,6 +67,8 @@ public abstract class ImagePass {
 	 */
 	private String name;
 
+	private static Matrix4f tmp;
+
 	/**
 	 * 
 	 * @param width
@@ -89,10 +95,13 @@ public abstract class ImagePass {
 		shader.stop();
 	}
 
-	public void process(GameResources gm, Matrix4f previousViewMatrix, Vector3f previousCameraPosition,
-			ImagePassFBO[] auxs, RenderingPipeline pipe, RawModel quad) {
-		begin(gm, previousViewMatrix, previousCameraPosition);
-		MasterRenderer.prepare();
+	public void process(Camera camera, Matrix4f projectionMatrix, Matrix4f previousViewMatrix,
+			Vector3f previousCameraPosition, Vector3f lightPosition, Vector3f invertedLightPosition,
+			ClientWorldSimulation clientWorldSimulation, List<Light> lights, ImagePassFBO[] auxs,
+			RenderingPipeline pipe, RawModel quad) {
+		begin(camera, projectionMatrix, previousViewMatrix, previousCameraPosition, lightPosition,
+				invertedLightPosition, clientWorldSimulation, lights);
+		Renderer.prepare();
 		glBindVertexArray(quad.getVaoID());
 		glEnableVertexAttribArray(0);
 		render(auxs, pipe);
@@ -113,25 +122,24 @@ public abstract class ImagePass {
 	 * @param previousCameraPosition
 	 *            Previous Camera Position
 	 */
-	public void begin(GameResources gm, Matrix4f previousViewMatrix, Vector3f previousCameraPosition) {
+	public void begin(Camera camera, Matrix4f projectionMatrix, Matrix4f previousViewMatrix,
+			Vector3f previousCameraPosition, Vector3f lightPosition, Vector3f invertedLightPosition,
+			ClientWorldSimulation clientWorldSimulation, List<Light> lights) {
 		fbo.begin();
 		shader.start();
-		shader.loadUnderWater(((PlayerCamera) gm.getCamera()).isUnderWater());
-		shader.loadMotionBlurData(gm.getRenderer().getProjectionMatrix(), ((PlayerCamera) gm.getCamera()),
-				previousViewMatrix, previousCameraPosition);
-		shader.loadLightPosition(gm.getLightPos(), gm.getInvertedLightPosition());
-		shader.loadviewMatrix(((PlayerCamera) gm.getCamera()));
+		shader.loadUnderWater(((PlayerCamera) camera).isUnderWater());
+		shader.loadMotionBlurData(projectionMatrix, camera, previousViewMatrix, previousCameraPosition);
+		shader.loadLightPosition(lightPosition, invertedLightPosition);
+		shader.loadviewMatrix(camera);
 		shader.loadSettings(ClientVariables.useDOF, ClientVariables.useFXAA, ClientVariables.useMotionBlur,
-				ClientVariables.useVolumetricLight, ClientVariables.useReflections,
-				ClientVariables.useAmbientOcclusion);
-		shader.loadSunPosition(Maths.convertTo2F(new Vector3f(gm.getLightPos()), gm.getRenderer().getProjectionMatrix(),
-				Maths.createViewMatrixRot(gm.getCamera().getPitch(), gm.getCamera().getYaw(), gm.getCamera().getRoll(),
-						null),
-				width, height));
+				ClientVariables.useVolumetricLight, ClientVariables.useReflections, ClientVariables.useAmbientOcclusion,
+				ClientVariables.shadowMapDrawDistance);
+		shader.loadSunPosition(Maths.convertTo2F(new Vector3f(lightPosition), projectionMatrix,
+				Maths.createViewMatrixRot(camera.getPitch(), camera.getYaw(), camera.getRoll(), tmp), width, height));
 		shader.loadExposure(1f);
-		shader.loadPointLightsPos(gm.getLightRenderer().getLights());
-		shader.loadTime(gm.getWorldSimulation().getTime());
-		MasterRenderer.prepare();
+		shader.loadPointLightsPos(lights);
+		shader.loadTime(clientWorldSimulation.getTime());
+		Renderer.prepare();
 	}
 
 	/**
