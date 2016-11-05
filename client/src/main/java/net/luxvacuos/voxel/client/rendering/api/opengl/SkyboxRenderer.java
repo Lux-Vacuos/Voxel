@@ -31,8 +31,8 @@ import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
 import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 
-import net.luxvacuos.igl.vector.Matrix4f;
-import net.luxvacuos.igl.vector.Vector3f;
+import net.luxvacuos.igl.vector.Matrix4d;
+import net.luxvacuos.igl.vector.Vector3d;
 import net.luxvacuos.voxel.client.core.ClientWorldSimulation;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.SkyboxShader;
 import net.luxvacuos.voxel.client.resources.ResourceLoader;
@@ -51,12 +51,12 @@ public class SkyboxRenderer {
 	private RawModel dome;
 	private SkyboxShader shader;
 
-	public SkyboxRenderer(ResourceLoader loader, Matrix4f projectionMatrix) {
+	public SkyboxRenderer(ResourceLoader loader, Matrix4d projectionMatrix) {
 		dome = loader.getObjLoader().loadObjModel("SkyDome");
 		shader = new SkyboxShader();
 		shader.start();
 		shader.loadProjectionMatrix(projectionMatrix);
-		shader.loadTransformationMatrix(Maths.createTransformationMatrix(new Vector3f(), 0, 0, 0, 360));
+		shader.loadTransformationMatrix(Maths.createTransformationMatrix(new Vector3d(), 0, 0, 0, 360));
 		shader.stop();
 	}
 
@@ -74,8 +74,8 @@ public class SkyboxRenderer {
 	 * @param delta
 	 *            Delta
 	 */
-	public void render(float r, float g, float b, float delta, Camera camera, Matrix4f projectionMatrix,
-			ClientWorldSimulation clientWorldSimulation, Vector3f lightPosition) {
+	public void render(float r, float g, float b, float delta, Camera camera, Matrix4d projectionMatrix,
+			ClientWorldSimulation clientWorldSimulation, Vector3d lightPosition) {
 		glDepthMask(false);
 		glDisable(GL_CULL_FACE);
 		shader.start();

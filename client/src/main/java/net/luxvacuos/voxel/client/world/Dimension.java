@@ -47,8 +47,8 @@ import com.esotericsoftware.kryo.io.Output;
 import com.esotericsoftware.kryo.serializers.CompatibleFieldSerializer;
 
 import net.luxvacuos.igl.Logger;
-import net.luxvacuos.igl.vector.Matrix4f;
-import net.luxvacuos.igl.vector.Vector3f;
+import net.luxvacuos.igl.vector.Matrix4d;
+import net.luxvacuos.igl.vector.Vector3d;
 import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.core.ClientWorldSimulation;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Sync;
@@ -114,15 +114,15 @@ public abstract class Dimension {
 		if (existDimFile())
 			load();
 		particleSystem = new ParticleSystem(gm.getTorchTexture(), 2, 1, -0.01f, 4, 0.5f);
-		particleSystem.setDirection(new Vector3f(0, 1, 0), 0.1f);
+		particleSystem.setDirection(new Vector3d(0, 1, 0), 0.1f);
 		particleSystem.setLifeError(0.8f);
 		particleSystem.setScaleError(0.2f);
 		particleSystem.setSpeedError(0.2f);
 		seedi = (int) data.getObject("Seed");
-		if ((Vector3f) data.getObject("PlayerPos") == null)
-			gm.getCamera().setPosition(new Vector3f(0, 140, 0));
+		if ((Vector3d) data.getObject("PlayerPos") == null)
+			gm.getCamera().setPosition(new Vector3d(0, 140, 0));
 		else
-			gm.getCamera().setPosition((Vector3f) data.getObject("PlayerPos"));
+			gm.getCamera().setPosition((Vector3d) data.getObject("PlayerPos"));
 		noise = new SimplexNoise(256, 0.3f, seedi);
 		lightNodeAdds = new LinkedList<>();
 		lightNodeRemovals = new LinkedList<>();
@@ -267,7 +267,7 @@ public abstract class Dimension {
 	}
 
 	public void updateChunksRender(Camera camera, Camera sunCamera, ClientWorldSimulation clientWorldSimulation,
-			Matrix4f projectionMatrix, Matrix4f shadowProjectionMatrix, int shadowMap, int shadowData, Frustum frustum, boolean transparent) {
+			Matrix4d projectionMatrix, Matrix4d shadowProjectionMatrix, int shadowMap, int shadowData, Frustum frustum, boolean transparent) {
 		if (transparent)
 			return; // XXX: DISABLED
 		if (transparent)
@@ -305,7 +305,7 @@ public abstract class Dimension {
 			glDisable(GL_BLEND);
 	}
 
-	public void updateChunksShadow(Camera sunCamera, Matrix4f shadowProjectionMatrix, Frustum frustum) {
+	public void updateChunksShadow(Camera sunCamera, Matrix4d shadowProjectionMatrix, Frustum frustum) {
 		for (Chunk chunk : chunks.values()) {
 			if (chunk != null)
 				if (frustum.cubeInFrustum(chunk.posX, chunk.posY, chunk.posZ, chunk.posX + 16, chunk.posY + 16,
@@ -314,7 +314,7 @@ public abstract class Dimension {
 		}
 	}
 
-	public void updateChunksOcclusion(Window window, Camera camera, Matrix4f projectionMatrix, Frustum frustum) {
+	public void updateChunksOcclusion(Window window, Camera camera, Matrix4d projectionMatrix, Frustum frustum) {
 
 		int width = (int) (window.getWidth() * window.getPixelRatio() / 6f);
 		int height = (int) (window.getHeight() * window.getPixelRatio() / 6f);
@@ -512,7 +512,7 @@ public abstract class Dimension {
 
 	public List<BoundingBox> getGlobalBoundingBox(BoundingBox box) {
 		List<BoundingBox> array = new ArrayList<>();
-		Vector3f vec = new Vector3f(0, 0, 0);
+		Vector3d vec = new Vector3d(0, 0, 0);
 
 		for (int i = (int) Math.floor(box.min.x); i < (int) Math.ceil(box.max.x); i++) {
 			for (int j = (int) Math.floor(box.min.y); j < (int) Math.ceil(box.max.y); j++) {

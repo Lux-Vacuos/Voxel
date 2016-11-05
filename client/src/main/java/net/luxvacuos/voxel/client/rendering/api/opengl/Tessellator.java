@@ -59,10 +59,10 @@ import java.util.List;
 
 import org.lwjgl.BufferUtils;
 
-import net.luxvacuos.igl.vector.Matrix4f;
-import net.luxvacuos.igl.vector.Vector2f;
-import net.luxvacuos.igl.vector.Vector3f;
-import net.luxvacuos.igl.vector.Vector4f;
+import net.luxvacuos.igl.vector.Matrix4d;
+import net.luxvacuos.igl.vector.Vector2d;
+import net.luxvacuos.igl.vector.Vector3d;
+import net.luxvacuos.igl.vector.Vector4d;
 import net.luxvacuos.igl.vector.Vector8f;
 import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.core.ClientWorldSimulation;
@@ -80,34 +80,34 @@ public class Tessellator {
 
 	private ByteBuffer buffer0, buffer1, buffer2, buffer3, buffer4, buffer5, ibo;
 
-	private List<Vector3f> pos, normals;
-	private List<Vector2f> texcoords;
+	private List<Vector3d> pos, normals;
+	private List<Vector2d> texcoords;
 	private List<Integer> indices;
-	private List<Vector4f> data;
-	private List<Vector3f> tangent;
-	private List<Vector3f> bitangent;
+	private List<Vector4d> data;
+	private List<Vector3d> tangent;
+	private List<Vector3d> bitangent;
 	private int texture;
 	private int normalMap;
 	private int heightMap;
-	private int specularMap;
+	private int pbrMap;
 	private int occlusion;
 	private boolean updated = false;
 
 	private TessellatorShader shader;
 	private TessellatorBasicShader basicShader;
 
-	public Tessellator(Matrix4f projectionMatrix, Matrix4f shadowProjectionMatrix) {
+	public Tessellator(Matrix4d projectionMatrix, Matrix4d shadowProjectionMatrix) {
 		init(projectionMatrix, shadowProjectionMatrix);
 	}
 
-	private void init(Matrix4f projectionMatrix, Matrix4f shadowProjectionMatrix) {
-		pos = new ArrayList<Vector3f>();
-		texcoords = new ArrayList<Vector2f>();
-		normals = new ArrayList<Vector3f>();
-		data = new ArrayList<Vector4f>();
+	private void init(Matrix4d projectionMatrix, Matrix4d shadowProjectionMatrix) {
+		pos = new ArrayList<Vector3d>();
+		texcoords = new ArrayList<Vector2d>();
+		normals = new ArrayList<Vector3d>();
+		data = new ArrayList<Vector4d>();
 		indices = new ArrayList<Integer>();
-		tangent = new ArrayList<Vector3f>();
-		bitangent = new ArrayList<Vector3f>();
+		tangent = new ArrayList<Vector3d>();
+		bitangent = new ArrayList<Vector3d>();
 		shader = TessellatorShader.getInstance();
 		shader.start();
 		shader.loadProjectionMatrix(projectionMatrix);
@@ -170,11 +170,11 @@ public class Tessellator {
 		glBindVertexArray(0);
 	}
 
-	public void begin(int texture, int normalMap, int heightMap, int specularMap) {
+	public void begin(int texture, int normalMap, int heightMap, int pbrMap) {
 		this.texture = texture;
 		this.normalMap = normalMap;
 		this.heightMap = heightMap;
-		this.specularMap = specularMap;
+		this.pbrMap = pbrMap;
 		pos.clear();
 		texcoords.clear();
 		normals.clear();
@@ -183,23 +183,23 @@ public class Tessellator {
 		bitangent.clear();
 	}
 
-	public void vertex3f(Vector3f pos) {
+	public void vertex3f(Vector3d pos) {
 		this.pos.add(pos);
 	}
 
-	public void texture2f(Vector2f texcoords) {
+	public void texture2f(Vector2d texcoords) {
 		this.texcoords.add(texcoords);
 	}
 
-	public void normal3f(Vector3f normals) {
+	public void normal3f(Vector3d normals) {
 		this.normals.add(normals);
 	}
 
-	public void tangent3f(Vector3f tangent) {
+	public void tangent3f(Vector3d tangent) {
 		this.tangent.add(tangent);
 	}
 
-	public void bitangent3f(Vector3f bitangent) {
+	public void bitangent3f(Vector3d bitangent) {
 		this.bitangent.add(bitangent);
 	}
 
@@ -207,7 +207,7 @@ public class Tessellator {
 		this.indices.add(ind);
 	}
 
-	public void data4f(Vector4f data) {
+	public void data4f(Vector4d data) {
 		this.data.add(data);
 	}
 
@@ -223,7 +223,7 @@ public class Tessellator {
 	}
 
 	public void draw(Camera camera, Camera sunCamera, ClientWorldSimulation clientWorldSimulation,
-			Matrix4f projectionMatrix, int shadowMap, int shadowData, boolean transparent) {
+			Matrix4d projectionMatrix, int shadowMap, int shadowData, boolean transparent) {
 		if (updated) {
 			updateGlBuffers(vboID0, vboCapacity, buffer0);
 			updateGlBuffers(vboID1, vboCapacity, buffer1);
@@ -259,7 +259,7 @@ public class Tessellator {
 		glActiveTexture(GL_TEXTURE3);
 		glBindTexture(GL_TEXTURE_2D, heightMap);
 		glActiveTexture(GL_TEXTURE4);
-		glBindTexture(GL_TEXTURE_2D, specularMap);
+		glBindTexture(GL_TEXTURE_2D, pbrMap);
 		glActiveTexture(GL_TEXTURE5);
 		glBindTexture(GL_TEXTURE_2D, shadowData);
 		glDrawElements(GL_TRIANGLES, indicesCounter, GL_UNSIGNED_INT, 0);
@@ -273,7 +273,7 @@ public class Tessellator {
 		shader.stop();
 	}
 
-	public void drawShadow(Camera camera, Matrix4f shadowProjectionMatrix) {
+	public void drawShadow(Camera camera, Matrix4d shadowProjectionMatrix) {
 		if (updated) {
 			updateGlBuffers(vboID0, vboCapacity, buffer0);
 			updateGlBuffers(vboID1, vboCapacity, buffer1);
@@ -302,7 +302,7 @@ public class Tessellator {
 		glCullFace(GL_BACK);
 	}
 
-	public void drawOcclusion(Camera camera, Matrix4f projectionMatrix) {
+	public void drawOcclusion(Camera camera, Matrix4d projectionMatrix) {
 		if (updated) {
 			updateGlBuffers(vboID0, vboCapacity, buffer0);
 			updateGlBuffers(vboID1, vboCapacity, buffer1);
@@ -329,8 +329,8 @@ public class Tessellator {
 		basicShader.stop();
 	}
 
-	public void loadData(List<Vector3f> pos, List<Vector2f> texcoords, List<Vector3f> normals, List<Vector4f> data,
-			List<Vector3f> tangent, List<Vector3f> bitangent) {
+	public void loadData(List<Vector3d> pos, List<Vector2d> texcoords, List<Vector3d> normals, List<Vector4d> data,
+			List<Vector3d> tangent, List<Vector3d> bitangent) {
 		buffer0 = BufferUtils.createByteBuffer((pos.size() * 3) * 4);
 		buffer1 = BufferUtils.createByteBuffer((texcoords.size() * 2) * 4);
 		buffer2 = BufferUtils.createByteBuffer((normals.size() * 3) * 4);
@@ -430,45 +430,45 @@ public class Tessellator {
 		float bfr = bfr_ / 15f;
 		if (id != Block.Air.getId()) {
 			Vector8f texcoords;
-			Vector3f edge1, edge2, tangent, bitangent;
-			Vector2f deltaUV1, deltaUV2;
+			Vector3d edge1, edge2, tangent, bitangent;
+			Vector2d deltaUV1, deltaUV2;
 			float f;
 
 			if (top) {
 				texcoords = block.texCoordsUp();
 				// top face
-				vertex3f(new Vector3f(x, y + ysize, z + zsize));
-				texture2f(new Vector2f(texcoords.getZ(), texcoords.getW()));
-				normal3f(new Vector3f(0, 1, 0));
-				data4f(new Vector4f(id, tfl, 0, 0));
+				vertex3f(new Vector3d(x, y + ysize, z + zsize));
+				texture2f(new Vector2d(texcoords.getZ(), texcoords.getW()));
+				normal3f(new Vector3d(0, 1, 0));
+				data4f(new Vector4d(id, tfl, 0, 0));
 
-				vertex3f(new Vector3f(x + xsize, y + ysize, z + zsize));
-				texture2f(new Vector2f(texcoords.getI(), texcoords.getJ()));
-				normal3f(new Vector3f(0, 1, 0));
-				data4f(new Vector4f(id, tfr, 0, 0));
+				vertex3f(new Vector3d(x + xsize, y + ysize, z + zsize));
+				texture2f(new Vector2d(texcoords.getI(), texcoords.getJ()));
+				normal3f(new Vector3d(0, 1, 0));
+				data4f(new Vector4d(id, tfr, 0, 0));
 
-				vertex3f(new Vector3f(x + xsize, y + ysize, z));
-				texture2f(new Vector2f(texcoords.getK(), texcoords.getL()));
-				normal3f(new Vector3f(0, 1, 0));
-				data4f(new Vector4f(id, tbr, 0, 0));
+				vertex3f(new Vector3d(x + xsize, y + ysize, z));
+				texture2f(new Vector2d(texcoords.getK(), texcoords.getL()));
+				normal3f(new Vector3d(0, 1, 0));
+				data4f(new Vector4d(id, tbr, 0, 0));
 
-				vertex3f(new Vector3f(x, y + ysize, z));
-				texture2f(new Vector2f(texcoords.getX(), texcoords.getY()));
-				normal3f(new Vector3f(0, 1, 0));
-				data4f(new Vector4f(id, tbl, 0, 0));
+				vertex3f(new Vector3d(x, y + ysize, z));
+				texture2f(new Vector2d(texcoords.getX(), texcoords.getY()));
+				normal3f(new Vector3d(0, 1, 0));
+				data4f(new Vector4d(id, tbl, 0, 0));
 
-				edge1 = Vector3f.sub(new Vector3f(x + xsize, y + ysize, z + zsize),
-						new Vector3f(x, y + ysize, z + zsize), null);
-				edge2 = Vector3f.sub(new Vector3f(x + xsize, y + ysize, z), new Vector3f(x, y + ysize, z + zsize),
+				edge1 = Vector3d.sub(new Vector3d(x + xsize, y + ysize, z + zsize),
+						new Vector3d(x, y + ysize, z + zsize), null);
+				edge2 = Vector3d.sub(new Vector3d(x + xsize, y + ysize, z), new Vector3d(x, y + ysize, z + zsize),
 						null);
-				deltaUV1 = Vector2f.sub(new Vector2f(texcoords.getI(), texcoords.getJ()),
-						new Vector2f(texcoords.getZ(), texcoords.getW()), null);
-				deltaUV2 = Vector2f.sub(new Vector2f(texcoords.getK(), texcoords.getL()),
-						new Vector2f(texcoords.getZ(), texcoords.getW()), null);
+				deltaUV1 = Vector2d.sub(new Vector2d(texcoords.getI(), texcoords.getJ()),
+						new Vector2d(texcoords.getZ(), texcoords.getW()), null);
+				deltaUV2 = Vector2d.sub(new Vector2d(texcoords.getK(), texcoords.getL()),
+						new Vector2d(texcoords.getZ(), texcoords.getW()), null);
 
 				f = (float) (1.0f / (deltaUV1.x * deltaUV2.y - deltaUV2.x * deltaUV1.y));
 
-				tangent = new Vector3f();
+				tangent = new Vector3d();
 
 				tangent.x = f * (deltaUV2.y * edge1.x - deltaUV1.y * edge2.x);
 				tangent.y = f * (deltaUV2.y * edge1.y - deltaUV1.y * edge2.y);
@@ -480,7 +480,7 @@ public class Tessellator {
 				tangent3f(tangent);
 				tangent3f(tangent);
 
-				bitangent = new Vector3f();
+				bitangent = new Vector3d();
 
 				bitangent.x = f * (-deltaUV2.x * edge1.x + deltaUV1.x * edge2.x);
 				bitangent.y = f * (-deltaUV2.x * edge1.y + deltaUV1.x * edge2.y);
@@ -496,39 +496,39 @@ public class Tessellator {
 			if (bottom) {
 				texcoords = block.texCoordsDown();
 				// bottom face
-				vertex3f(new Vector3f(x, y, z));
-				texture2f(new Vector2f(texcoords.getZ(), texcoords.getW()));
-				normal3f(new Vector3f(0, -1, 0));
-				data4f(new Vector4f(id, bbl, 0, 0));
+				vertex3f(new Vector3d(x, y, z));
+				texture2f(new Vector2d(texcoords.getZ(), texcoords.getW()));
+				normal3f(new Vector3d(0, -1, 0));
+				data4f(new Vector4d(id, bbl, 0, 0));
 
-				vertex3f(new Vector3f(x + xsize, y, z));
-				texture2f(new Vector2f(texcoords.getI(), texcoords.getJ()));
-				normal3f(new Vector3f(0, -1, 0));
-				data4f(new Vector4f(id, bbr, 0, 0));
+				vertex3f(new Vector3d(x + xsize, y, z));
+				texture2f(new Vector2d(texcoords.getI(), texcoords.getJ()));
+				normal3f(new Vector3d(0, -1, 0));
+				data4f(new Vector4d(id, bbr, 0, 0));
 
-				vertex3f(new Vector3f(x + xsize, y, z + zsize));
-				texture2f(new Vector2f(texcoords.getK(), texcoords.getL()));
-				normal3f(new Vector3f(0, -1, 0));
-				data4f(new Vector4f(id, bfr, 0, 0));
+				vertex3f(new Vector3d(x + xsize, y, z + zsize));
+				texture2f(new Vector2d(texcoords.getK(), texcoords.getL()));
+				normal3f(new Vector3d(0, -1, 0));
+				data4f(new Vector4d(id, bfr, 0, 0));
 
-				vertex3f(new Vector3f(x, y, z + zsize));
-				texture2f(new Vector2f(texcoords.getX(), texcoords.getY()));
-				normal3f(new Vector3f(0, -1, 0));
-				data4f(new Vector4f(id, bfl, 0, 0));
+				vertex3f(new Vector3d(x, y, z + zsize));
+				texture2f(new Vector2d(texcoords.getX(), texcoords.getY()));
+				normal3f(new Vector3d(0, -1, 0));
+				data4f(new Vector4d(id, bfl, 0, 0));
 
-				edge1 = Vector3f.sub(new Vector3f(x + xsize, y, z), new Vector3f(x, y, z), null);
+				edge1 = Vector3d.sub(new Vector3d(x + xsize, y, z), new Vector3d(x, y, z), null);
 
-				edge2 = Vector3f.sub(new Vector3f(x + xsize, y, z + zsize), new Vector3f(x, y, z), null);
+				edge2 = Vector3d.sub(new Vector3d(x + xsize, y, z + zsize), new Vector3d(x, y, z), null);
 
-				deltaUV1 = Vector2f.sub(new Vector2f(texcoords.getI(), texcoords.getJ()),
-						new Vector2f(texcoords.getZ(), texcoords.getW()), null);
+				deltaUV1 = Vector2d.sub(new Vector2d(texcoords.getI(), texcoords.getJ()),
+						new Vector2d(texcoords.getZ(), texcoords.getW()), null);
 
-				deltaUV2 = Vector2f.sub(new Vector2f(texcoords.getK(), texcoords.getL()),
-						new Vector2f(texcoords.getZ(), texcoords.getW()), null);
+				deltaUV2 = Vector2d.sub(new Vector2d(texcoords.getK(), texcoords.getL()),
+						new Vector2d(texcoords.getZ(), texcoords.getW()), null);
 
 				f = (float) (1.0f / (deltaUV1.x * deltaUV2.y - deltaUV2.x * deltaUV1.y));
 
-				tangent = new Vector3f();
+				tangent = new Vector3d();
 
 				tangent.x = f * (deltaUV2.y * edge1.x - deltaUV1.y * edge2.x);
 				tangent.y = f * (deltaUV2.y * edge1.y - deltaUV1.y * edge2.y);
@@ -540,7 +540,7 @@ public class Tessellator {
 				tangent3f(tangent);
 				tangent3f(tangent);
 
-				bitangent = new Vector3f();
+				bitangent = new Vector3d();
 
 				bitangent.x = f * (-deltaUV2.x * edge1.x + deltaUV1.x * edge2.x);
 				bitangent.y = f * (-deltaUV2.x * edge1.y + deltaUV1.x * edge2.y);
@@ -556,40 +556,40 @@ public class Tessellator {
 			if (back) {
 				texcoords = block.texCoordsBack();
 				// back face
-				vertex3f(new Vector3f(x, y, z + zsize));
-				texture2f(new Vector2f(texcoords.getX(), texcoords.getY()));
-				normal3f(new Vector3f(0, 0, 1));
-				data4f(new Vector4f(id, bfl, 0, 0));
+				vertex3f(new Vector3d(x, y, z + zsize));
+				texture2f(new Vector2d(texcoords.getX(), texcoords.getY()));
+				normal3f(new Vector3d(0, 0, 1));
+				data4f(new Vector4d(id, bfl, 0, 0));
 
-				vertex3f(new Vector3f(x + xsize, y, z + zsize));
-				texture2f(new Vector2f(texcoords.getK(), texcoords.getL()));
-				normal3f(new Vector3f(0, 0, 1));
-				data4f(new Vector4f(id, bfr, 0, 0));
+				vertex3f(new Vector3d(x + xsize, y, z + zsize));
+				texture2f(new Vector2d(texcoords.getK(), texcoords.getL()));
+				normal3f(new Vector3d(0, 0, 1));
+				data4f(new Vector4d(id, bfr, 0, 0));
 
-				vertex3f(new Vector3f(x + xsize, y + ysize, z + zsize));
-				texture2f(new Vector2f(texcoords.getI(), texcoords.getJ()));
-				normal3f(new Vector3f(0, 0, 1));
-				data4f(new Vector4f(id, tfr, 0, 0));
+				vertex3f(new Vector3d(x + xsize, y + ysize, z + zsize));
+				texture2f(new Vector2d(texcoords.getI(), texcoords.getJ()));
+				normal3f(new Vector3d(0, 0, 1));
+				data4f(new Vector4d(id, tfr, 0, 0));
 
-				vertex3f(new Vector3f(x, y + ysize, z + zsize));
-				texture2f(new Vector2f(texcoords.getZ(), texcoords.getW()));
-				normal3f(new Vector3f(0, 0, 1));
-				data4f(new Vector4f(id, tfl, 0, 0));
+				vertex3f(new Vector3d(x, y + ysize, z + zsize));
+				texture2f(new Vector2d(texcoords.getZ(), texcoords.getW()));
+				normal3f(new Vector3d(0, 0, 1));
+				data4f(new Vector4d(id, tfl, 0, 0));
 
-				edge1 = Vector3f.sub(new Vector3f(x + xsize, y, z + zsize), new Vector3f(x, y, z + zsize), null);
+				edge1 = Vector3d.sub(new Vector3d(x + xsize, y, z + zsize), new Vector3d(x, y, z + zsize), null);
 
-				edge2 = Vector3f.sub(new Vector3f(x + xsize, y + ysize, z + zsize), new Vector3f(x, y, z + zsize),
+				edge2 = Vector3d.sub(new Vector3d(x + xsize, y + ysize, z + zsize), new Vector3d(x, y, z + zsize),
 						null);
 
-				deltaUV1 = Vector2f.sub(new Vector2f(texcoords.getK(), texcoords.getL()),
-						new Vector2f(texcoords.getX(), texcoords.getY()), null);
+				deltaUV1 = Vector2d.sub(new Vector2d(texcoords.getK(), texcoords.getL()),
+						new Vector2d(texcoords.getX(), texcoords.getY()), null);
 
-				deltaUV2 = Vector2f.sub(new Vector2f(texcoords.getI(), texcoords.getJ()),
-						new Vector2f(texcoords.getX(), texcoords.getY()), null);
+				deltaUV2 = Vector2d.sub(new Vector2d(texcoords.getI(), texcoords.getJ()),
+						new Vector2d(texcoords.getX(), texcoords.getY()), null);
 
 				f = (float) (1.0f / (deltaUV1.x * deltaUV2.y - deltaUV2.x * deltaUV1.y));
 
-				tangent = new Vector3f();
+				tangent = new Vector3d();
 
 				tangent.x = f * (deltaUV2.y * edge1.x - deltaUV1.y * edge2.x);
 				tangent.y = f * (deltaUV2.y * edge1.y - deltaUV1.y * edge2.y);
@@ -601,7 +601,7 @@ public class Tessellator {
 				tangent3f(tangent);
 				tangent3f(tangent);
 
-				bitangent = new Vector3f();
+				bitangent = new Vector3d();
 
 				bitangent.x = f * (-deltaUV2.x * edge1.x + deltaUV1.x * edge2.x);
 				bitangent.y = f * (-deltaUV2.x * edge1.y + deltaUV1.x * edge2.y);
@@ -617,39 +617,39 @@ public class Tessellator {
 			if (front) {
 				// front face
 				texcoords = block.texCoordsFront();
-				vertex3f(new Vector3f(x, y + ysize, z));
-				texture2f(new Vector2f(texcoords.getZ(), texcoords.getW()));
-				normal3f(new Vector3f(0, 0, -1));
-				data4f(new Vector4f(id, tbl, 0, 0));
+				vertex3f(new Vector3d(x, y + ysize, z));
+				texture2f(new Vector2d(texcoords.getZ(), texcoords.getW()));
+				normal3f(new Vector3d(0, 0, -1));
+				data4f(new Vector4d(id, tbl, 0, 0));
 
-				vertex3f(new Vector3f(x + xsize, y + ysize, z));
-				texture2f(new Vector2f(texcoords.getI(), texcoords.getJ()));
-				normal3f(new Vector3f(0, 0, -1));
-				data4f(new Vector4f(id, tbr, 0, 0));
+				vertex3f(new Vector3d(x + xsize, y + ysize, z));
+				texture2f(new Vector2d(texcoords.getI(), texcoords.getJ()));
+				normal3f(new Vector3d(0, 0, -1));
+				data4f(new Vector4d(id, tbr, 0, 0));
 
-				vertex3f(new Vector3f(x + xsize, y, z));
-				texture2f(new Vector2f(texcoords.getK(), texcoords.getL()));
-				normal3f(new Vector3f(0, 0, -1));
-				data4f(new Vector4f(id, bbr, 0, 0));
+				vertex3f(new Vector3d(x + xsize, y, z));
+				texture2f(new Vector2d(texcoords.getK(), texcoords.getL()));
+				normal3f(new Vector3d(0, 0, -1));
+				data4f(new Vector4d(id, bbr, 0, 0));
 
-				vertex3f(new Vector3f(x, y, z));
-				texture2f(new Vector2f(texcoords.getX(), texcoords.getY()));
-				normal3f(new Vector3f(0, 0, -1));
-				data4f(new Vector4f(id, bbl, 0, 0));
+				vertex3f(new Vector3d(x, y, z));
+				texture2f(new Vector2d(texcoords.getX(), texcoords.getY()));
+				normal3f(new Vector3d(0, 0, -1));
+				data4f(new Vector4d(id, bbl, 0, 0));
 
-				edge1 = Vector3f.sub(new Vector3f(x + xsize, y + ysize, z), new Vector3f(x, y + ysize, z), null);
+				edge1 = Vector3d.sub(new Vector3d(x + xsize, y + ysize, z), new Vector3d(x, y + ysize, z), null);
 
-				edge2 = Vector3f.sub(new Vector3f(x + xsize, y, z), new Vector3f(x, y + ysize, z), null);
+				edge2 = Vector3d.sub(new Vector3d(x + xsize, y, z), new Vector3d(x, y + ysize, z), null);
 
-				deltaUV1 = Vector2f.sub(new Vector2f(texcoords.getI(), texcoords.getJ()),
-						new Vector2f(texcoords.getZ(), texcoords.getW()), null);
+				deltaUV1 = Vector2d.sub(new Vector2d(texcoords.getI(), texcoords.getJ()),
+						new Vector2d(texcoords.getZ(), texcoords.getW()), null);
 
-				deltaUV2 = Vector2f.sub(new Vector2f(texcoords.getK(), texcoords.getL()),
-						new Vector2f(texcoords.getZ(), texcoords.getW()), null);
+				deltaUV2 = Vector2d.sub(new Vector2d(texcoords.getK(), texcoords.getL()),
+						new Vector2d(texcoords.getZ(), texcoords.getW()), null);
 
 				f = (float) (1.0f / (deltaUV1.x * deltaUV2.y - deltaUV2.x * deltaUV1.y));
 
-				tangent = new Vector3f();
+				tangent = new Vector3d();
 
 				tangent.x = f * (deltaUV2.y * edge1.x - deltaUV1.y * edge2.x);
 				tangent.y = f * (deltaUV2.y * edge1.y - deltaUV1.y * edge2.y);
@@ -661,7 +661,7 @@ public class Tessellator {
 				tangent3f(tangent);
 				tangent3f(tangent);
 
-				bitangent = new Vector3f();
+				bitangent = new Vector3d();
 
 				bitangent.x = f * (-deltaUV2.x * edge1.x + deltaUV1.x * edge2.x);
 				bitangent.y = f * (-deltaUV2.x * edge1.y + deltaUV1.x * edge2.y);
@@ -677,39 +677,39 @@ public class Tessellator {
 			if (right) {
 				texcoords = block.texCoordsRight();
 				// right face
-				vertex3f(new Vector3f(x, y, z));
-				texture2f(new Vector2f(texcoords.getK(), texcoords.getL()));
-				normal3f(new Vector3f(-1, 0, 0));
-				data4f(new Vector4f(id, bbl, 0, 0));
+				vertex3f(new Vector3d(x, y, z));
+				texture2f(new Vector2d(texcoords.getK(), texcoords.getL()));
+				normal3f(new Vector3d(-1, 0, 0));
+				data4f(new Vector4d(id, bbl, 0, 0));
 
-				vertex3f(new Vector3f(x, y, z + zsize));
-				texture2f(new Vector2f(texcoords.getX(), texcoords.getY()));
-				normal3f(new Vector3f(-1, 0, 0));
-				data4f(new Vector4f(id, bfl, 0, 0));
+				vertex3f(new Vector3d(x, y, z + zsize));
+				texture2f(new Vector2d(texcoords.getX(), texcoords.getY()));
+				normal3f(new Vector3d(-1, 0, 0));
+				data4f(new Vector4d(id, bfl, 0, 0));
 
-				vertex3f(new Vector3f(x, y + ysize, z + zsize));
-				texture2f(new Vector2f(texcoords.getZ(), texcoords.getW()));
-				normal3f(new Vector3f(-1, 0, 0));
-				data4f(new Vector4f(id, tfl, 0, 0));
+				vertex3f(new Vector3d(x, y + ysize, z + zsize));
+				texture2f(new Vector2d(texcoords.getZ(), texcoords.getW()));
+				normal3f(new Vector3d(-1, 0, 0));
+				data4f(new Vector4d(id, tfl, 0, 0));
 
-				vertex3f(new Vector3f(x, y + ysize, z));
-				texture2f(new Vector2f(texcoords.getI(), texcoords.getJ()));
-				normal3f(new Vector3f(-1, 0, 0));
-				data4f(new Vector4f(id, tbl, 0, 0));
+				vertex3f(new Vector3d(x, y + ysize, z));
+				texture2f(new Vector2d(texcoords.getI(), texcoords.getJ()));
+				normal3f(new Vector3d(-1, 0, 0));
+				data4f(new Vector4d(id, tbl, 0, 0));
 
-				edge1 = Vector3f.sub(new Vector3f(x, y, z + zsize), new Vector3f(x, y, z), null);
+				edge1 = Vector3d.sub(new Vector3d(x, y, z + zsize), new Vector3d(x, y, z), null);
 
-				edge2 = Vector3f.sub(new Vector3f(x, y + ysize, z + zsize), new Vector3f(x, y, z), null);
+				edge2 = Vector3d.sub(new Vector3d(x, y + ysize, z + zsize), new Vector3d(x, y, z), null);
 
-				deltaUV1 = Vector2f.sub(new Vector2f(texcoords.getX(), texcoords.getY()),
-						new Vector2f(texcoords.getK(), texcoords.getL()), null);
+				deltaUV1 = Vector2d.sub(new Vector2d(texcoords.getX(), texcoords.getY()),
+						new Vector2d(texcoords.getK(), texcoords.getL()), null);
 
-				deltaUV2 = Vector2f.sub(new Vector2f(texcoords.getZ(), texcoords.getW()),
-						new Vector2f(texcoords.getK(), texcoords.getL()), null);
+				deltaUV2 = Vector2d.sub(new Vector2d(texcoords.getZ(), texcoords.getW()),
+						new Vector2d(texcoords.getK(), texcoords.getL()), null);
 
 				f = (float) (1.0f / (deltaUV1.x * deltaUV2.y - deltaUV2.x * deltaUV1.y));
 
-				tangent = new Vector3f();
+				tangent = new Vector3d();
 
 				tangent.x = f * (deltaUV2.y * edge1.x - deltaUV1.y * edge2.x);
 				tangent.y = f * (deltaUV2.y * edge1.y - deltaUV1.y * edge2.y);
@@ -721,7 +721,7 @@ public class Tessellator {
 				tangent3f(tangent);
 				tangent3f(tangent);
 
-				bitangent = new Vector3f();
+				bitangent = new Vector3d();
 
 				bitangent.x = f * (-deltaUV2.x * edge1.x + deltaUV1.x * edge2.x);
 				bitangent.y = f * (-deltaUV2.x * edge1.y + deltaUV1.x * edge2.y);
@@ -737,40 +737,40 @@ public class Tessellator {
 			if (left) {
 				texcoords = block.texCoordsLeft();
 				// left face
-				vertex3f(new Vector3f(x + xsize, y, z + zsize));
-				texture2f(new Vector2f(texcoords.getK(), texcoords.getL()));
-				normal3f(new Vector3f(1, 0, 0));
-				data4f(new Vector4f(id, bfr, 0, 0));
+				vertex3f(new Vector3d(x + xsize, y, z + zsize));
+				texture2f(new Vector2d(texcoords.getK(), texcoords.getL()));
+				normal3f(new Vector3d(1, 0, 0));
+				data4f(new Vector4d(id, bfr, 0, 0));
 
-				vertex3f(new Vector3f(x + xsize, y, z));
-				texture2f(new Vector2f(texcoords.getX(), texcoords.getY()));
-				normal3f(new Vector3f(1, 0, 0));
-				data4f(new Vector4f(id, bbr, 0, 0));
+				vertex3f(new Vector3d(x + xsize, y, z));
+				texture2f(new Vector2d(texcoords.getX(), texcoords.getY()));
+				normal3f(new Vector3d(1, 0, 0));
+				data4f(new Vector4d(id, bbr, 0, 0));
 
-				vertex3f(new Vector3f(x + xsize, y + ysize, z));
-				texture2f(new Vector2f(texcoords.getZ(), texcoords.getW()));
-				normal3f(new Vector3f(1, 0, 0));
-				data4f(new Vector4f(id, tbr, 0, 0));
+				vertex3f(new Vector3d(x + xsize, y + ysize, z));
+				texture2f(new Vector2d(texcoords.getZ(), texcoords.getW()));
+				normal3f(new Vector3d(1, 0, 0));
+				data4f(new Vector4d(id, tbr, 0, 0));
 
-				vertex3f(new Vector3f(x + xsize, y + ysize, z + zsize));
-				texture2f(new Vector2f(texcoords.getI(), texcoords.getJ()));
-				normal3f(new Vector3f(1, 0, 0));
-				data4f(new Vector4f(id, tfr, 0, 0));
+				vertex3f(new Vector3d(x + xsize, y + ysize, z + zsize));
+				texture2f(new Vector2d(texcoords.getI(), texcoords.getJ()));
+				normal3f(new Vector3d(1, 0, 0));
+				data4f(new Vector4d(id, tfr, 0, 0));
 
-				edge1 = Vector3f.sub(new Vector3f(x + xsize, y, z), new Vector3f(x + xsize, y, z + zsize), null);
+				edge1 = Vector3d.sub(new Vector3d(x + xsize, y, z), new Vector3d(x + xsize, y, z + zsize), null);
 
-				edge2 = Vector3f.sub(new Vector3f(x + xsize, y + ysize, z), new Vector3f(x + xsize, y, z + zsize),
+				edge2 = Vector3d.sub(new Vector3d(x + xsize, y + ysize, z), new Vector3d(x + xsize, y, z + zsize),
 						null);
 
-				deltaUV1 = Vector2f.sub(new Vector2f(texcoords.getX(), texcoords.getY()),
-						new Vector2f(texcoords.getK(), texcoords.getL()), null);
+				deltaUV1 = Vector2d.sub(new Vector2d(texcoords.getX(), texcoords.getY()),
+						new Vector2d(texcoords.getK(), texcoords.getL()), null);
 
-				deltaUV2 = Vector2f.sub(new Vector2f(texcoords.getZ(), texcoords.getW()),
-						new Vector2f(texcoords.getK(), texcoords.getL()), null);
+				deltaUV2 = Vector2d.sub(new Vector2d(texcoords.getZ(), texcoords.getW()),
+						new Vector2d(texcoords.getK(), texcoords.getL()), null);
 
 				f = (float) (1.0f / (deltaUV1.x * deltaUV2.y - deltaUV2.x * deltaUV1.y));
 
-				tangent = new Vector3f();
+				tangent = new Vector3d();
 
 				tangent.x = f * (deltaUV2.y * edge1.x - deltaUV1.y * edge2.x);
 				tangent.y = f * (deltaUV2.y * edge1.y - deltaUV1.y * edge2.y);
@@ -782,7 +782,7 @@ public class Tessellator {
 				tangent3f(tangent);
 				tangent3f(tangent);
 
-				bitangent = new Vector3f();
+				bitangent = new Vector3d();
 
 				bitangent.x = f * (-deltaUV2.x * edge1.x + deltaUV1.x * edge2.x);
 				bitangent.y = f * (-deltaUV2.x * edge1.y + deltaUV1.x * edge2.y);

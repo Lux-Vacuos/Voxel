@@ -34,42 +34,33 @@ uniform vec3 pointLightsPos[256];
 uniform sampler2D gDiffuse;
 uniform sampler2D gPosition;
 uniform sampler2D gNormal;
-uniform sampler2D gData0;
-uniform sampler2D gData1;
+uniform sampler2D gMask;
 uniform sampler2D composite0;
-uniform sampler2DShadow gDepth;
 
 void main(void){
 	vec2 texcoord = textureCoords;
-	vec4 image = texture(gDiffuse, texcoord);
-	vec4 data = texture(gData0, texcoord);
-	vec4 data1 = texture(gData1, texcoord);
-    vec4 position = texture(gPosition,texcoord);
-    vec4 normal = texture(gNormal, texcoord);
-    float depth = texture(gDepth, vec3(texcoord.xy, 0.0), 0);
     vec4 composite = texture(composite0, texcoord);
-    vec3 eyeDir = normalize(cameraPosition-position.xyz);
-    normal = normalize(normal);
-    for(int x = 0; x < 256; x++){
-    	if(pointLightsPos[x].y < 0)
-    		break;
-    	vec3 lightDir = pointLightsPos[x] - position.xyz;
-    	float distance = length(lightDir);
-    	float attFactor = 1 + (0.01 * distance) + (0.002 * distance * distance);
-    	lightDir = normalize(lightDir);
-    	if(data.b != 1) {
-    		float b = max(dot(normal.xyz, lightDir), 0) * 1;
-    		b /= attFactor;
-    		composite += b * composite;
-    		if(data.r> 0.0) {
-    			vec3 vHalfVector = normalize(lightDir.xyz+eyeDir);
-    			float spec = pow(max(dot(normal.xyz,vHalfVector),0.0), 100) * data.r * 1.5;
-    			spec /= attFactor;
-		   		composite += spec;
-		   		
-		   	}
+	vec4 mask = texture(gMask, texcoord);
+	if(mask.a != 1) {
+    	vec4 position = texture(gPosition,texcoord);
+    	vec4 normal = texture(gNormal, texcoord);
+		vec3 eyeDir = normalize(cameraPosition-position.xyz);
+	    normal = normalize(normal);
+    	for(int x = 0; x < 256; x++){
+	    	if(pointLightsPos[x].y < 0)
+	    		break;
+	    	vec3 lightDir = pointLightsPos[x] - position.xyz;
+	    	float distance = length(lightDir);
+	    	float attFactor = 1 + (0.01 * distance) + (0.002 * distance * distance);
+	    	lightDir = normalize(lightDir);
+	    	float finalLight = max(dot(normal.xyz, lightDir), 0) * 1;
+	    	finalLight /= attFactor;
+	    	composite += finalLight * composite;
+	    	vec3 vHalfVector = normalize(lightDir.xyz+eyeDir);
+	    	float spec = pow(max(dot(normal.xyz,vHalfVector),0.0), 100) * 1.5;
+	    	spec /= attFactor;
+			composite += spec;
 		}
 	}
-    
 	out_Color = composite;
 }

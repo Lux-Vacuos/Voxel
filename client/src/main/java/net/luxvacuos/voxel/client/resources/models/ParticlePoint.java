@@ -20,16 +20,16 @@
 
 package net.luxvacuos.voxel.client.resources.models;
 
-import net.luxvacuos.igl.vector.Vector3f;
+import net.luxvacuos.igl.vector.Vector3d;
 
 public class ParticlePoint {
-	private Vector3f pos;
+	private Vector3d pos;
 
-	public ParticlePoint(Vector3f pos) {
+	public ParticlePoint(Vector3d pos) {
 		this.pos = pos;
 	}
 
-	public Vector3f getPos() {
+	public Vector3d getPos() {
 		return pos;
 	}
 }

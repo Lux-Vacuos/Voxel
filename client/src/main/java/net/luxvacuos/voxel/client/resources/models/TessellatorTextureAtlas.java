@@ -23,7 +23,7 @@ package net.luxvacuos.voxel.client.resources.models;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.luxvacuos.igl.vector.Vector2f;
+import net.luxvacuos.igl.vector.Vector2d;
 import net.luxvacuos.igl.vector.Vector8f;
 
 public class TessellatorTextureAtlas {
@@ -42,7 +42,7 @@ public class TessellatorTextureAtlas {
 		ay = 16f / (float) height;
 	}
 
-	public void registerTextureCoords(String name, Vector2f texcoords) {
+	public void registerTextureCoords(String name, Vector2d texcoords) {
 		Vector8f tex = new Vector8f(texcoords.x / width, (texcoords.y / height) + ay, texcoords.x / width,
 				texcoords.y / height, (texcoords.x / width) + ax, texcoords.y / height, (texcoords.x / width) + ax,
 				(texcoords.y / height) + ay);

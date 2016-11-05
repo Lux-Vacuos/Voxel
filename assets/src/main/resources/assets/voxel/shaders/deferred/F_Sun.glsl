@@ -24,16 +24,14 @@ in vec2 textureCoords;
 
 out vec4 out_Color;
 
-uniform sampler2D gData0;
-uniform sampler2D gData1;
+uniform sampler2D gMask;
 
 void main(void){
 
 	vec2 texcoord = textureCoords;
 	vec4 image = vec4(0.0);
-	vec4 data0 = texture(gData0, texcoord);
-	vec4 data1 = texture(gData1, texcoord);
-    if(data0.b == 1 && data1.r > 0){
+	vec4 data1 = texture(gMask, texcoord);
+    if(data1.r > 0 && data1.a == 1){
 		image = vec4(data1.r + 1);
     }
     out_Color = image;

@@ -20,7 +20,7 @@
 
 package net.luxvacuos.voxel.client.rendering.api.opengl.shaders;
 
-import net.luxvacuos.igl.vector.Matrix4f;
+import net.luxvacuos.igl.vector.Matrix4d;
 import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.Attribute;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.UniformMatrix;
@@ -51,13 +51,13 @@ public class TessellatorBasicShader extends ShaderProgram {
 	}
 
 	/**
-	 * Loads View Matrix to the shader
+	 * Loads View Matrixd to the shader
 	 * 
 	 * @param camera
 	 *            Camera
 	 */
 	public void loadviewMatrix(Camera camera) {
-		Matrix4f matrix = Maths.createViewMatrix(camera);
+		Matrix4d matrix = Maths.createViewMatrix(camera);
 		matrix.m30 = 0;
 		matrix.m31 = 0;
 		matrix.m32 = 0;
@@ -66,12 +66,12 @@ public class TessellatorBasicShader extends ShaderProgram {
 	}
 
 	/**
-	 * Loads Projection Matrix to the shader
+	 * Loads Projection Matrixd to the shader
 	 * 
 	 * @param projection
-	 *            Projection Matrix
+	 *            Projection Matrixd
 	 */
-	public void loadProjectionMatrix(Matrix4f projection) {
+	public void loadProjectionMatrix(Matrix4d projection) {
 		projectionMatrix.loadMatrix(projection);
 	}
 

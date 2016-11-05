@@ -29,8 +29,8 @@ uniform vec3 lightPosition;
 uniform sampler2D gDiffuse;
 uniform sampler2D gPosition;
 uniform sampler2D gNormal;
-uniform sampler2D gData0;
-uniform sampler2D gData1;
+uniform sampler2D gPBR; // R = roughness, B = metallic
+uniform sampler2D gMask;
 uniform sampler2D composite0;
 uniform int shadowDrawDistance;
 
@@ -38,32 +38,29 @@ const float transitionDistance = 5;
 
 void main(void){
 	vec2 texcoord = textureCoords;
+	vec4 mask = texture(gMask, texcoord);
 	vec4 image = texture(gDiffuse, texcoord);
-	vec4 data = texture(gData0, texcoord);
-	vec4 data1 = texture(gData1, texcoord);
-    vec4 position = texture(gPosition,texcoord);
-    vec4 normal = texture(gNormal, texcoord);
-    
-    vec3 lightDir = lightPosition;
-    lightDir = normalize(lightDir);
-    vec3 eyeDir = normalize(cameraPosition-position.xyz);
-	float distance = length(cameraPosition-position.xyz);
-    if(data.b != 1) {
+	vec4 pbr = texture(gPBR, texcoord);
+	if(mask.a != 1) {
+    	vec4 position = texture(gPosition,texcoord);
+    	vec4 normal = texture(gNormal, texcoord);
+		image.rgb *= 1.0 - pbr.g;
+		vec3 lightDir = lightPosition;
+    	lightDir = normalize(lightDir);
+    	vec3 eyeDir = normalize(cameraPosition-position.xyz);
+		float distance = length(cameraPosition-position.xyz);
     	normal = normalize(normal);
     	float shadowDist = distance - (shadowDrawDistance - transitionDistance);
 		shadowDist = shadowDist / transitionDistance;
 		float fadeOut = clamp(1.0-shadowDist, 0.0, 1.0);
-    	float b = max(dot(normal.xyz, lightDir), 0) - (data.a * fadeOut);
-    	if(b <= data1.a)
-    		b = data1.a;
-    	b = clamp(b,0.015,1.0);
-    	image = b * image;
-    	if(data.r> 0.0)
-    		if(data.a <= 0.5){
-    			vec3 vHalfVector = normalize(lightDir.xyz+eyeDir);
-	   			image += pow(max(dot(normal.xyz,vHalfVector),0.0), 100) * data.r * 1.5;
-	   		}
-    }
+    	float finalLight = max(dot(normal.xyz, lightDir), 0) - (position.w * fadeOut);
+    	finalLight = clamp(finalLight,0.015,1.0);
+    	image = finalLight * image;
+    	if(position.w <= 0.5){
+    		vec3 vHalfVector = normalize(lightDir.xyz+eyeDir);
+	   		image += pow(max(dot(normal.xyz,vHalfVector),0.0), 200 / pbr.r) * (1-pbr.r);
+	   	}
+	}
     image += texture(composite0, texcoord);
 	out_Color = image;
 	

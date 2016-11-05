@@ -26,7 +26,7 @@ import java.nio.DoubleBuffer;
 /**
  * @author Guerra24 <pablo230699@hotmail.com>
  */
-public class Vector8f extends Vector implements Serializable {
+public class Vector8f extends Vectord implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private double x, y, z, w, i, j, k, l;
 
@@ -111,22 +111,22 @@ public class Vector8f extends Vector implements Serializable {
 	}
 
 	@Override
-	public Vector load(DoubleBuffer buf) {
+	public Vectord load(DoubleBuffer buf) {
 		return null;
 	}
 
 	@Override
-	public Vector negate() {
+	public Vectord negate() {
 		return null;
 	}
 
 	@Override
-	public Vector store(DoubleBuffer buf) {
+	public Vectord store(DoubleBuffer buf) {
 		return null;
 	}
 
 	@Override
-	public Vector scale(double scale) {
+	public Vectord scale(double scale) {
 		return null;
 	}
 

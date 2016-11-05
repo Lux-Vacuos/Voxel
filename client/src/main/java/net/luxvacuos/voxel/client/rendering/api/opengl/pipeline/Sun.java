@@ -41,9 +41,9 @@ public class Sun extends ImagePass {
 	public void render(ImagePassFBO[] auxs, RenderingPipeline pipe) {
 		auxs[1] = getFbo();
 		glActiveTexture(GL_TEXTURE4);
-		glBindTexture(GL_TEXTURE_2D, pipe.getMainFBO().getData0Tex());
+		glBindTexture(GL_TEXTURE_2D, pipe.getMainFBO().getPbrTex());
 		glActiveTexture(GL_TEXTURE5);
-		glBindTexture(GL_TEXTURE_2D, pipe.getMainFBO().getData1Tex());
+		glBindTexture(GL_TEXTURE_2D, pipe.getMainFBO().getMaskTex());
 	}
 
 }

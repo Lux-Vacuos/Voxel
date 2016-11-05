@@ -36,7 +36,7 @@ uniform sampler2D texture0;
 uniform sampler2DShadow depth;
 uniform sampler2D normalMap;
 uniform sampler2D heightMap;
-uniform sampler2D specularMap;
+uniform sampler2D pbrMap;
 uniform sampler2D shadowTex;
 
 uniform int useShadows;
@@ -110,20 +110,16 @@ void main(void) {
 	normal = normalize(normal * 2.0 - 1.0);   
 	normal = normalize(TBN * normal);
 	
-	float reflectionFactor = rainFactor;
-	reflectionFactor += texture(specularMap, texcoords).r;
-	reflectionFactor = clamp(reflectionFactor,0,1);
-	
-	if(transparent == 1){
+	if(transparent == 1) {
 		shadow = clamp(shadow,0.015,1.0);
     	textureColour.rgb *= (1 - shadow);
 	}
     	
 	out_Color[0] = textureColour;
-	out_Color[1] = vec4(pass_position.xyz,0);
+	out_Color[1] = vec4(pass_position.xyz,shadow);
 	out_Color[2] = vec4(normal,0.0);
-	out_Color[3] = vec4(reflectionFactor,1.0,0.0,shadow);
-	out_Color[4] = vec4(0.0, 0.0, 0.0, bright);
+	out_Color[3] = texture(pbrMap, texcoords);
+	out_Color[4] = vec4(0.0);
 		
 		
 }

@@ -27,7 +27,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 import com.badlogic.ashley.core.Engine;
 
-import net.luxvacuos.igl.vector.Vector3f;
+import net.luxvacuos.igl.vector.Vector3d;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.resources.models.ParticleSystem;
 import net.luxvacuos.voxel.client.world.chunks.ChunkGenerator;
@@ -42,7 +42,7 @@ public class ClientDimension extends Dimension {
 	@Override
 	protected void init(GameResources gm) {
 		particleSystem = new ParticleSystem(gm.getTorchTexture(), 2, 1, -0.01f, 4, 0.5f);
-		particleSystem.setDirection(new Vector3f(0, 1, 0), 0.1f);
+		particleSystem.setDirection(new Vector3d(0, 1, 0), 0.1f);
 		particleSystem.setLifeError(0.8f);
 		particleSystem.setScaleError(0.2f);
 		particleSystem.setSpeedError(0.2f);

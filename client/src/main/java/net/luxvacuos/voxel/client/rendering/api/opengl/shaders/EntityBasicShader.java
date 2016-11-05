@@ -20,7 +20,7 @@
 
 package net.luxvacuos.voxel.client.rendering.api.opengl.shaders;
 
-import net.luxvacuos.igl.vector.Matrix4f;
+import net.luxvacuos.igl.vector.Matrix4d;
 import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.Attribute;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.UniformMatrix;
@@ -49,17 +49,17 @@ public class EntityBasicShader extends ShaderProgram {
 	}
 
 	/**
-	 * Loads Transformation Matrix to the shader
+	 * Loads Transformation Matrixd to the shader
 	 * 
 	 * @param matrix
-	 *            Transformation Matrix
+	 *            Transformation Matrixd
 	 */
-	public void loadTransformationMatrix(Matrix4f matrix) {
+	public void loadTransformationMatrix(Matrix4d matrix) {
 		transformationMatrix.loadMatrix(matrix);
 	}
 
 	/**
-	 * Loads View Matrix to the shader
+	 * Loads View Matrixd to the shader
 	 * 
 	 * @param camera
 	 *            Camera
@@ -69,12 +69,12 @@ public class EntityBasicShader extends ShaderProgram {
 	}
 
 	/**
-	 * Loads Projection Matrix to the shader
+	 * Loads Projection Matrixd to the shader
 	 * 
 	 * @param projection
-	 *            Projection Matrix
+	 *            Projection Matrixd
 	 */
-	public void loadProjectionMatrix(Matrix4f projection) {
+	public void loadProjectionMatrix(Matrix4d projection) {
 		projectionMatrix.loadMatrix(projection);
 	}
 

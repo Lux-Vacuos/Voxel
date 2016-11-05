@@ -38,7 +38,7 @@ import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 
 import net.luxvacuos.igl.Logger;
-import net.luxvacuos.igl.vector.Vector3f;
+import net.luxvacuos.igl.vector.Vector3d;
 import net.luxvacuos.voxel.server.core.ServerVariables;
 import net.luxvacuos.voxel.server.resources.ServerGameResources;
 import net.luxvacuos.voxel.server.world.block.Block;
@@ -324,7 +324,7 @@ public abstract class Dimension {
 
 	public List<BoundingBox> getGlobalBoundingBox(BoundingBox box) {
 		List<BoundingBox> array = new ArrayList<>();
-		Vector3f vec = new Vector3f(0, 0, 0);
+		Vector3d vec = new Vector3d(0, 0, 0);
 
 		for (int i = (int) Math.floor(box.min.x); i < (int) Math.ceil(box.max.x); i++) {
 			for (int j = (int) Math.floor(box.min.y); j < (int) Math.ceil(box.max.y); j++) {

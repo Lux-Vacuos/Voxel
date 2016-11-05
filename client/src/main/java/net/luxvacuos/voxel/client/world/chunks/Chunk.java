@@ -30,8 +30,8 @@ import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import net.luxvacuos.igl.vector.Matrix4f;
-import net.luxvacuos.igl.vector.Vector3f;
+import net.luxvacuos.igl.vector.Matrix4d;
+import net.luxvacuos.igl.vector.Vector3d;
 import net.luxvacuos.voxel.client.core.ClientWorldSimulation;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Tessellator;
 import net.luxvacuos.voxel.client.resources.models.ParticlePoint;
@@ -107,7 +107,7 @@ public class Chunk {
 	}
 
 	public void update(Dimension dimension, Camera camera, float delta) {
-		distance = (float) Vector3f.sub(camera.getPosition(), new Vector3f(posX + 8f, posY + 8f, posZ + 8f), null)
+		distance = (float) Vector3d.sub(camera.getPosition(), new Vector3d(posX + 8f, posY + 8f, posZ + 8f), null)
 				.lengthSquared();
 		empty = Arrays.asList(blocks).size() == 0;
 		if (empty)
@@ -132,9 +132,10 @@ public class Chunk {
 		}
 	}
 
-	public void updateGraphics(Matrix4f projectionMatrix, Matrix4f shadowProjectionMatrix) {
+	public void updateGraphics(Matrix4d projectionMatrix, Matrix4d shadowProjectionMatrix) {
 		if (!empty && tess == null) {
-			generateGraphics(projectionMatrix, shadowProjectionMatrix);;
+			generateGraphics(projectionMatrix, shadowProjectionMatrix);
+			;
 		} else if (empty && tess != null) {
 			disposeGraphics();
 		}
@@ -208,7 +209,7 @@ public class Chunk {
 			return false;
 		rebuilding = true;
 		tess.begin(BlocksResources.getTessellatorTextureAtlas().getTexture(), BlocksResources.getNormalMap(),
-				BlocksResources.getHeightMap(), BlocksResources.getSpecularMap());
+				BlocksResources.getHeightMap(), BlocksResources.getPbrMap());
 		for (int x = 0; x < sizeX; x++) {
 			for (int z = 0; z < sizeZ; z++) {
 				for (int y = 0; y < sizeY; y++) {
@@ -232,7 +233,7 @@ public class Chunk {
 								dimension.getLight(x + posX, y + posY, z + posZ + 1),
 								dimension.getLight(x + posX + 1, y + posY, z + posZ + 1));
 						particlePoints.add(new ParticlePoint(
-								new Vector3f((x + posX) + 0.5f, (y + posY) + 0.8f, (z + posZ) + 0.5f)));
+								new Vector3d((x + posX) + 0.5f, (y + posY) + 0.8f, (z + posZ) + 0.5f)));
 					} else if (block != Block.Air && !block.isCustomModel() && !block.isObjModel()) {
 						tess.generateCube(x + posX, y + posY, z + posZ, 1,
 								cullFaceUpSolidBlock(block, x + posX, y + posY, z + posZ, dimension),
@@ -360,7 +361,7 @@ public class Chunk {
 	}
 
 	public void render(Camera camera, Camera sunCamera, ClientWorldSimulation clientWorldSimulation,
-			Matrix4f projectionMatrix, int shadowMap, int shadowData, boolean transparent) {
+			Matrix4d projectionMatrix, int shadowMap, int shadowData, boolean transparent) {
 		if (tess == null)
 			return;
 		if (!empty) {
@@ -373,14 +374,14 @@ public class Chunk {
 		}
 	}
 
-	public void renderShadow(Camera sunCamera, Matrix4f shadowProjectionMatrix) {
+	public void renderShadow(Camera sunCamera, Matrix4d shadowProjectionMatrix) {
 		if (tess == null)
 			return;
 		if (!empty)
 			tess.drawShadow(sunCamera, shadowProjectionMatrix);
 	}
 
-	public void renderOcclusion(Camera camera, Matrix4f projectionMatrix) {
+	public void renderOcclusion(Camera camera, Matrix4d projectionMatrix) {
 		if (tess == null)
 			return;
 		if (!empty) {
@@ -399,7 +400,7 @@ public class Chunk {
 			tess.cleanUp();
 	}
 
-	public void generateGraphics(Matrix4f projectionMatrix, Matrix4f shadowProjectionMatrix) {
+	public void generateGraphics(Matrix4d projectionMatrix, Matrix4d shadowProjectionMatrix) {
 		tess = new Tessellator(projectionMatrix, shadowProjectionMatrix);
 	}
 

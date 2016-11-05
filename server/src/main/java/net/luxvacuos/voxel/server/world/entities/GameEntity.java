@@ -22,7 +22,7 @@ package net.luxvacuos.voxel.server.world.entities;
 
 import com.badlogic.ashley.core.Entity;
 
-import net.luxvacuos.igl.vector.Vector3f;
+import net.luxvacuos.igl.vector.Vector3d;
 import net.luxvacuos.voxel.universal.ecs.Components;
 import net.luxvacuos.voxel.universal.ecs.components.AABB;
 import net.luxvacuos.voxel.universal.ecs.components.Position;
@@ -33,7 +33,7 @@ public class GameEntity extends Entity {
 	private float rotX, rotY, rotZ;
 	private float scale;
 
-	public GameEntity(Vector3f position, Vector3f aabbMin, Vector3f aabbMax, float rotX, float rotY, float rotZ,
+	public GameEntity(Vector3d position, Vector3d aabbMin, Vector3d aabbMax, float rotX, float rotY, float rotZ,
 			float scale) {
 		this.add(new AABB());
 		this.add(new Velocity());
@@ -46,7 +46,7 @@ public class GameEntity extends Entity {
 		init();
 	}
 
-	public GameEntity(Vector3f position, float rotX, float rotY, float rotZ, float scale) {
+	public GameEntity(Vector3d position, float rotX, float rotY, float rotZ, float scale) {
 		this.add(new AABB());
 		this.add(new Velocity());
 		this.add(new Position(position));
@@ -63,7 +63,7 @@ public class GameEntity extends Entity {
 	public void update(float delta) {
 	}
 
-	public void setAABB(Vector3f aabbMin, Vector3f aabbMax) {
+	public void setAABB(Vector3d aabbMin, Vector3d aabbMax) {
 		Components.AABB.get(this).set(aabbMin, aabbMax).setBoundingBox(aabbMin, aabbMax);
 	}
 

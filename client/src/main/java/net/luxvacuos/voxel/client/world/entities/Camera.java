@@ -20,9 +20,9 @@
 
 package net.luxvacuos.voxel.client.world.entities;
 
-import net.luxvacuos.igl.vector.Matrix4f;
-import net.luxvacuos.igl.vector.Vector2f;
-import net.luxvacuos.igl.vector.Vector3f;
+import net.luxvacuos.igl.vector.Matrix4d;
+import net.luxvacuos.igl.vector.Vector2d;
+import net.luxvacuos.igl.vector.Vector3d;
 import net.luxvacuos.voxel.client.resources.DRay;
 import net.luxvacuos.voxel.client.util.Maths;
 import net.luxvacuos.voxel.universal.ecs.Components;
@@ -42,7 +42,7 @@ public class Camera extends AbstractEntity {
 
 	public boolean isMoved = false;
 	public float depth = 0;
-	public Vector3f normal = new Vector3f();
+	public Vector3d normal = new Vector3d();
 
 	public Camera() {
 		this.add(new Position());
@@ -56,15 +56,15 @@ public class Camera extends AbstractEntity {
 	public void update(float delta) {
 	}
 
-	public void updateRay(Matrix4f projectionMatrix, int width, int height, Vector2f pos) {
+	public void updateRay(Matrix4d projectionMatrix, int width, int height, Vector2d pos) {
 		dRay = new DRay(projectionMatrix, Maths.createViewMatrix(this), pos, width, height);
 	}
 
-	public Vector3f getPosition() {
+	public Vector3d getPosition() {
 		return Components.POSITION.get(this).getPosition();
 	}
 
-	public void setPosition(Vector3f position) {
+	public void setPosition(Vector3d position) {
 		Components.POSITION.get(this).set(position);
 	}
 

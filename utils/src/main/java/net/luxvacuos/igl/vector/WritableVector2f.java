@@ -45,14 +45,14 @@ public interface WritableVector2f {
 	 * 
 	 * @param x
 	 */
-	void setX(double x);
+	void setX(float x);
 
 	/**
 	 * Set the Y value
 	 * 
 	 * @param y
 	 */
-	void setY(double y);
+	void setY(float y);
 
 	/**
 	 * Set the X,Y values
@@ -60,6 +60,6 @@ public interface WritableVector2f {
 	 * @param x
 	 * @param y
 	 */
-	void set(double x, double y);
+	void set(float x, float y);
 
 }

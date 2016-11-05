@@ -6,7 +6,7 @@ import com.hackhalo2.nbt.CompoundBuilder;
 import com.hackhalo2.nbt.exceptions.NBTException;
 import com.hackhalo2.nbt.tags.TagCompound;
 
-import net.luxvacuos.igl.vector.Vector3f;
+import net.luxvacuos.igl.vector.Vector3d;
 
 public class AABB implements VoxelComponent {
 
@@ -26,7 +26,7 @@ public class AABB implements VoxelComponent {
 		this.bb = new BoundingBox(this.min, this.max);
 	}
 
-	public AABB(Vector3f min, Vector3f max) {
+	public AABB(Vector3d min, Vector3d max) {
 		this(min.getAsVec3(), max.getAsVec3());
 	}
 
@@ -37,7 +37,7 @@ public class AABB implements VoxelComponent {
 		return this;
 	}
 
-	public AABB set(Vector3f min, Vector3f max) {
+	public AABB set(Vector3d min, Vector3d max) {
 		this.min = min.getAsVec3();
 		this.max = max.getAsVec3();
 
@@ -50,7 +50,7 @@ public class AABB implements VoxelComponent {
 		return this;
 	}
 
-	public AABB setMin(Vector3f min) {
+	public AABB setMin(Vector3d min) {
 		this.min = min.getAsVec3();
 
 		return this;
@@ -62,8 +62,8 @@ public class AABB implements VoxelComponent {
 		return this;
 	}
 
-	public Vector3f getMin() {
-		return new Vector3f(this.min.x, this.min.y, this.min.z);
+	public Vector3d getMin() {
+		return new Vector3d(this.min.x, this.min.y, this.min.z);
 	}
 
 	public AABB setMax(Vector3 max) {
@@ -72,7 +72,7 @@ public class AABB implements VoxelComponent {
 		return this;
 	}
 
-	public AABB setMax(Vector3f max) {
+	public AABB setMax(Vector3d max) {
 		this.max = max.getAsVec3();
 
 		return this;
@@ -84,8 +84,8 @@ public class AABB implements VoxelComponent {
 		return this;
 	}
 
-	public Vector3f getMax() {
-		return new Vector3f(this.max.x, this.max.y, this.max.z);
+	public Vector3d getMax() {
+		return new Vector3d(this.max.x, this.max.y, this.max.z);
 	}
 
 	public AABB setEnabled(boolean flag) {
@@ -113,7 +113,7 @@ public class AABB implements VoxelComponent {
 		return this;
 	}
 
-	public AABB setBoundingBox(Vector3f min, Vector3f max) {
+	public AABB setBoundingBox(Vector3d min, Vector3d max) {
 		return this.setBoundingBox(min.getAsVec3(), max.getAsVec3());
 	}
 
@@ -123,7 +123,7 @@ public class AABB implements VoxelComponent {
 		return this;
 	}
 
-	public void update(Vector3f position) {
+	public void update(Vector3d position) {
 		this.bb.set(new Vector3(position.x + this.min.x, position.y + this.min.y, position.z + this.min.z),
 				new Vector3(position.x + this.max.x, position.y + this.max.y, position.z + this.max.z));
 	}

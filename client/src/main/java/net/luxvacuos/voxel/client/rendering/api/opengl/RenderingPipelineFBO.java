@@ -71,9 +71,9 @@ import net.luxvacuos.voxel.client.resources.GameResources;
 
 public class RenderingPipelineFBO {
 
-	private int fbo, diffuseRT, positionRT, normalRT, data0RT, data1RT, depthBuffer;
+	private int fbo, diffuseRT, positionRT, normalRT, pbrRT, maskRT, depthBuffer;
 
-	private int diffuseTex, positionTex, normalTex, data0Tex, data1Tex, depthTex;
+	private int diffuseTex, positionTex, normalTex, pbrTex, maskTex, depthTex;
 
 	private int width, height;
 
@@ -89,8 +89,8 @@ public class RenderingPipelineFBO {
 		diffuseRT = glGenRenderbuffers();
 		positionRT = glGenRenderbuffers();
 		normalRT = glGenRenderbuffers();
-		data0RT = glGenRenderbuffers();
-		data1RT = glGenRenderbuffers();
+		pbrRT = glGenRenderbuffers();
+		maskRT = glGenRenderbuffers();
 		depthBuffer = glGenRenderbuffers();
 		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 
@@ -106,13 +106,13 @@ public class RenderingPipelineFBO {
 		glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA16F, width, height);
 		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, GL_RENDERBUFFER, normalRT);
 
-		glBindRenderbuffer(GL_RENDERBUFFER, data0RT);
+		glBindRenderbuffer(GL_RENDERBUFFER, pbrRT);
 		glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA, width, height);
-		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT3, GL_RENDERBUFFER, data0RT);
+		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT3, GL_RENDERBUFFER, pbrRT);
 
-		glBindRenderbuffer(GL_RENDERBUFFER, data1RT);
+		glBindRenderbuffer(GL_RENDERBUFFER, maskRT);
 		glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA, width, height);
-		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT4, GL_RENDERBUFFER, data1RT);
+		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT4, GL_RENDERBUFFER, maskRT);
 
 		glBindRenderbuffer(GL_RENDERBUFFER, depthBuffer);
 		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height);
@@ -145,23 +145,23 @@ public class RenderingPipelineFBO {
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, GL_TEXTURE_2D, normalTex, 0);
 
-		data0Tex = glGenTextures();
-		glBindTexture(GL_TEXTURE_2D, data0Tex);
+		pbrTex = glGenTextures();
+		glBindTexture(GL_TEXTURE_2D, pbrTex);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, (ByteBuffer) null);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT3, GL_TEXTURE_2D, data0Tex, 0);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT3, GL_TEXTURE_2D, pbrTex, 0);
 
-		data1Tex = glGenTextures();
-		glBindTexture(GL_TEXTURE_2D, data1Tex);
+		maskTex = glGenTextures();
+		glBindTexture(GL_TEXTURE_2D, maskTex);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, (ByteBuffer) null);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT4, GL_TEXTURE_2D, data1Tex, 0);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT4, GL_TEXTURE_2D, maskTex, 0);
 
 		depthTex = glGenTextures();
 		glBindTexture(GL_TEXTURE_2D, depthTex);
@@ -192,14 +192,14 @@ public class RenderingPipelineFBO {
 		glDeleteTextures(positionTex);
 		glDeleteTextures(normalTex);
 		glDeleteTextures(depthTex);
-		glDeleteTextures(data0Tex);
-		glDeleteTextures(data1Tex);
+		glDeleteTextures(pbrTex);
+		glDeleteTextures(maskTex);
 		glDeleteFramebuffers(fbo);
 		glDeleteRenderbuffers(diffuseRT);
 		glDeleteRenderbuffers(positionRT);
 		glDeleteRenderbuffers(normalRT);
-		glDeleteRenderbuffers(data0RT);
-		glDeleteRenderbuffers(data1RT);
+		glDeleteRenderbuffers(pbrRT);
+		glDeleteRenderbuffers(maskRT);
 		glDeleteRenderbuffers(depthBuffer);
 	}
 
@@ -211,30 +211,6 @@ public class RenderingPipelineFBO {
 	public void end() {
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		GameResources.getInstance().getGameWindow().resetViewport();
-	}
-
-	public int getDepthBuffer() {
-		return depthBuffer;
-	}
-
-	public int getDiffuseRT() {
-		return diffuseRT;
-	}
-
-	public int getPositionRT() {
-		return positionRT;
-	}
-
-	public int getNormalRT() {
-		return normalRT;
-	}
-
-	public int getData0RT() {
-		return data0RT;
-	}
-
-	public int getData1RT() {
-		return data1RT;
 	}
 
 	public int getDiffuseTex() {
@@ -249,12 +225,12 @@ public class RenderingPipelineFBO {
 		return normalTex;
 	}
 
-	public int getData0Tex() {
-		return data0Tex;
+	public int getPbrTex() {
+		return pbrTex;
 	}
 
-	public int getData1Tex() {
-		return data1Tex;
+	public int getMaskTex() {
+		return maskTex;
 	}
 
 	public int getFbo() {

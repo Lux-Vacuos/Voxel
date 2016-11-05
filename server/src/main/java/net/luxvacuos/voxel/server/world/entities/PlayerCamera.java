@@ -20,7 +20,7 @@
 
 package net.luxvacuos.voxel.server.world.entities;
 
-import net.luxvacuos.igl.vector.Vector3f;
+import net.luxvacuos.igl.vector.Vector3d;
 import net.luxvacuos.voxel.server.resources.ServerGameResources;
 import net.luxvacuos.voxel.server.world.Dimension;
 import net.luxvacuos.voxel.server.world.entities.components.ArmourComponent;
@@ -33,7 +33,7 @@ public class PlayerCamera extends Camera {
 	private boolean hit;
 
 	public PlayerCamera() {
-		super(new Vector3f(-0.25f, -1.4f, -0.25f), new Vector3f(0.25f, 0.2f, 0.25f));
+		super(new Vector3d(-0.25f, -1.4f, -0.25f), new Vector3d(0.25f, 0.2f, 0.25f));
 		super.add(new Health(20));
 		super.add(new ArmourComponent());
 		super.getComponent(ArmourComponent.class).armour = new EmptyArmour();

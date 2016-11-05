@@ -22,7 +22,7 @@ package net.luxvacuos.voxel.client.core.states;
 
 import org.lwjgl.glfw.GLFW;
 
-import net.luxvacuos.igl.vector.Vector3f;
+import net.luxvacuos.igl.vector.Vector3d;
 //import net.luxvacuos.voxel.client.input.Keyboard;
 import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
@@ -53,7 +53,7 @@ public class SPPauseState extends AbstractFadeState {
 		optionsButton = new Button(uiWindow.getWidth() / 2 - 100, -uiWindow.getHeight() + 85, 200, 40, "Options");
 		exitButton.setOnButtonPress((button, delta) -> {
 			GameResources.getInstance().getWorldsHandler().getActiveWorld().dispose();
-			GameResources.getInstance().getCamera().setPosition(new Vector3f(0, 0, 1));
+			GameResources.getInstance().getCamera().setPosition(new Vector3d(0, 0, 1));
 			GameResources.getInstance().getCamera().setPitch(0);
 			GameResources.getInstance().getCamera().setYaw(0);
 			this.switchTo(StateNames.MAIN_MENU);

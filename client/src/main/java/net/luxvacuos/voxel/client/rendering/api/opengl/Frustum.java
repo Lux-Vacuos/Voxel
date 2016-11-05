@@ -24,8 +24,8 @@ import java.nio.DoubleBuffer;
 
 import org.lwjgl.BufferUtils;
 
-import net.luxvacuos.igl.vector.Matrix4f;
-import net.luxvacuos.igl.vector.Vector3f;
+import net.luxvacuos.igl.vector.Matrix4d;
+import net.luxvacuos.igl.vector.Vector3d;
 import net.luxvacuos.voxel.client.util.Maths;
 import net.luxvacuos.voxel.client.world.entities.Camera;
 
@@ -54,7 +54,7 @@ public class Frustum {
 	private final int C = 2;
 	private final int D = 3;
 	private double[][] m_Frustum = new double[6][4];
-	private Matrix4f clip_ = new Matrix4f();
+	private Matrix4d clip_ = new Matrix4d();
 	private DoubleBuffer clip_b;
 
 	/**
@@ -79,14 +79,14 @@ public class Frustum {
 	 * Updates the frustum view
 	 * 
 	 * @param projectionMatrix
-	 *            Projection Matrix
+	 *            Projection Matrixd
 	 * @param camera
 	 *            Camera
 	 */
-	public void calculateFrustum(Matrix4f projectionMatrix, Camera camera) {
+	public void calculateFrustum(Matrix4d projectionMatrix, Camera camera) {
 		double[] clip = new double[16];
 
-		Matrix4f.mul(projectionMatrix, Maths.createViewMatrix(camera), clip_);
+		Matrix4d.mul(projectionMatrix, Maths.createViewMatrix(camera), clip_);
 		clip_b.rewind();
 		clip_.store(clip_b);
 		clip_b.rewind();
@@ -177,7 +177,7 @@ public class Frustum {
 	 *            Size of the cube
 	 * @return true if in Frustum
 	 */
-	public boolean cubeInFrustum(Vector3f center, double size) {
+	public boolean cubeInFrustum(Vector3d center, double size) {
 		return cubeInFrustum(center.x, center.y, center.z, size);
 	}
 

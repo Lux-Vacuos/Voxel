@@ -20,17 +20,17 @@
 
 package net.luxvacuos.voxel.client.rendering.api.opengl.objects;
 
-import net.luxvacuos.igl.vector.Vector3f;
+import net.luxvacuos.igl.vector.Vector3d;
 
 public class Light {
 
-	private Vector3f position;
+	private Vector3d position;
 
-	public Light(Vector3f position) {
+	public Light(Vector3d position) {
 		this.position = position;
 	}
 
-	public Vector3f getPosition() {
+	public Vector3d getPosition() {
 		return position;
 	}
 

@@ -20,7 +20,7 @@
 
 package net.luxvacuos.voxel.client.core;
 
-import net.luxvacuos.igl.vector.Vector3f;
+import net.luxvacuos.igl.vector.Vector3d;
 import net.luxvacuos.voxel.universal.core.GlobalVariables;
 
 /**
@@ -57,7 +57,7 @@ public class ClientVariables extends GlobalVariables {
 	public static float RED = 0.32f;
 	public static float GREEN = 0.8f;
 	public static float BLUE = 1f;
-	public static Vector3f skyColor = new Vector3f(ClientVariables.RED, ClientVariables.GREEN, ClientVariables.BLUE);
+	public static Vector3d skyColor = new Vector3d(ClientVariables.RED, ClientVariables.GREEN, ClientVariables.BLUE);
 	public static boolean runningOnMac = false;
 	public static boolean raining = false;
 	public static String assets = "voxel";

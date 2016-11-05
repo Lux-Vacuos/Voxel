@@ -28,9 +28,9 @@ import static org.lwjgl.opengl.GL30.glBindVertexArray;
 
 import java.util.List;
 
-import net.luxvacuos.igl.vector.Matrix4f;
-import net.luxvacuos.igl.vector.Vector2f;
-import net.luxvacuos.igl.vector.Vector3f;
+import net.luxvacuos.igl.vector.Matrix4d;
+import net.luxvacuos.igl.vector.Vector2d;
+import net.luxvacuos.igl.vector.Vector3d;
 import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.core.ClientWorldSimulation;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.Light;
@@ -67,7 +67,7 @@ public abstract class ImagePass {
 	 */
 	private String name;
 
-	private static Matrix4f tmp;
+	private static Matrix4d tmp;
 
 	/**
 	 * 
@@ -89,14 +89,14 @@ public abstract class ImagePass {
 		fbo = new ImagePassFBO(width, height);
 		shader = new DeferredShadingShader(name);
 		shader.start();
-		shader.loadTransformation(Maths.createTransformationMatrix(new Vector2f(0, 0), new Vector2f(1, 1)));
-		shader.loadResolution(new Vector2f(width, height));
+		shader.loadTransformation(Maths.createTransformationMatrix(new Vector2d(0, 0), new Vector2d(1, 1)));
+		shader.loadResolution(new Vector2d(width, height));
 		shader.loadSkyColor(ClientVariables.skyColor);
 		shader.stop();
 	}
 
-	public void process(Camera camera, Matrix4f projectionMatrix, Matrix4f previousViewMatrix,
-			Vector3f previousCameraPosition, Vector3f lightPosition, Vector3f invertedLightPosition,
+	public void process(Camera camera, Matrix4d projectionMatrix, Matrix4d previousViewMatrix,
+			Vector3d previousCameraPosition, Vector3d lightPosition, Vector3d invertedLightPosition,
 			ClientWorldSimulation clientWorldSimulation, List<Light> lights, ImagePassFBO[] auxs,
 			RenderingPipeline pipe, RawModel quad) {
 		begin(camera, projectionMatrix, previousViewMatrix, previousCameraPosition, lightPosition,
@@ -118,12 +118,12 @@ public abstract class ImagePass {
 	 * 
 	 * @param gm
 	 * @param previousViewMatrix
-	 *            Previous View Matrix
+	 *            Previous View Matrixd
 	 * @param previousCameraPosition
 	 *            Previous Camera Position
 	 */
-	public void begin(Camera camera, Matrix4f projectionMatrix, Matrix4f previousViewMatrix,
-			Vector3f previousCameraPosition, Vector3f lightPosition, Vector3f invertedLightPosition,
+	public void begin(Camera camera, Matrix4d projectionMatrix, Matrix4d previousViewMatrix,
+			Vector3d previousCameraPosition, Vector3d lightPosition, Vector3d invertedLightPosition,
 			ClientWorldSimulation clientWorldSimulation, List<Light> lights) {
 		fbo.begin();
 		shader.start();
@@ -134,7 +134,7 @@ public abstract class ImagePass {
 		shader.loadSettings(ClientVariables.useDOF, ClientVariables.useFXAA, ClientVariables.useMotionBlur,
 				ClientVariables.useVolumetricLight, ClientVariables.useReflections, ClientVariables.useAmbientOcclusion,
 				ClientVariables.shadowMapDrawDistance);
-		shader.loadSunPosition(Maths.convertTo2F(new Vector3f(lightPosition), projectionMatrix,
+		shader.loadSunPosition(Maths.convertTo2F(new Vector3d(lightPosition), projectionMatrix,
 				Maths.createViewMatrixRot(camera.getPitch(), camera.getYaw(), camera.getRoll(), tmp), width, height));
 		shader.loadExposure(1f);
 		shader.loadPointLightsPos(lights);

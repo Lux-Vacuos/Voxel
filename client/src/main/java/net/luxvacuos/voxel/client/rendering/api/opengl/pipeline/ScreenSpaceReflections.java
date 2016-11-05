@@ -53,9 +53,9 @@ public class ScreenSpaceReflections extends ImagePass {
 		glActiveTexture(GL_TEXTURE3);
 		glBindTexture(GL_TEXTURE_2D, pipe.getMainFBO().getDepthTex());
 		glActiveTexture(GL_TEXTURE4);
-		glBindTexture(GL_TEXTURE_2D, pipe.getMainFBO().getData0Tex());
+		glBindTexture(GL_TEXTURE_2D, pipe.getMainFBO().getPbrTex());
 		glActiveTexture(GL_TEXTURE5);
-		glBindTexture(GL_TEXTURE_2D, pipe.getMainFBO().getData1Tex());
+		glBindTexture(GL_TEXTURE_2D, pipe.getMainFBO().getMaskTex());
 		glActiveTexture(GL_TEXTURE6);
 		glBindTexture(GL_TEXTURE_2D, auxs[0].getTexture());
 	}

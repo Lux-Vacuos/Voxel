@@ -49,7 +49,7 @@ import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.core.exception.CompileShaderException;
 import net.luxvacuos.voxel.client.core.exception.LoadShaderException;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.Attribute;
-import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.Uniform;
+import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.IUniform;
 
 /**
  * Shader Program, Use to create shaders
@@ -97,8 +97,8 @@ public abstract class ShaderProgram {
 	 * @param uniforms
 	 *            Array of Uniforms
 	 */
-	protected void storeAllUniformLocations(Uniform... uniforms) {
-		for (Uniform uniform : uniforms) {
+	protected void storeAllUniformLocations(IUniform... uniforms) {
+		for (IUniform uniform : uniforms) {
 			uniform.storeUniformLocation(programID);
 		}
 		glValidateProgram(programID);
@@ -109,8 +109,8 @@ public abstract class ShaderProgram {
 	 * 
 	 * @param uniforms
 	 */
-	protected void storeUniformArray(Uniform... uniforms) {
-		for (Uniform uniform : uniforms) {
+	protected void storeUniformArray(IUniform... uniforms) {
+		for (IUniform uniform : uniforms) {
 			uniform.storeUniformLocation(programID);
 		}
 	}

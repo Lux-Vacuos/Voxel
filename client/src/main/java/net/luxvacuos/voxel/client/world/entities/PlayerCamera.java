@@ -43,10 +43,10 @@ import org.lwjgl.glfw.GLFW;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 
-import net.luxvacuos.igl.vector.Matrix4f;
-import net.luxvacuos.igl.vector.Vector2f;
-import net.luxvacuos.igl.vector.Vector3f;
-import net.luxvacuos.igl.vector.Vector4f;
+import net.luxvacuos.igl.vector.Matrix4d;
+import net.luxvacuos.igl.vector.Vector2d;
+import net.luxvacuos.igl.vector.Vector3d;
+import net.luxvacuos.igl.vector.Vector4d;
 import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.core.states.StateNames;
 import net.luxvacuos.voxel.client.input.KeyboardHandler;
@@ -79,9 +79,9 @@ public class PlayerCamera extends Camera {
 	private int mouseSpeed = 2;
 	private final int maxLookUp = 90;
 	private final int maxLookDown = -90;
-	private Vector2f center;
+	private Vector2d center;
 	private int clickTime;
-	private Vector3f normalVector = new Vector3f();
+	private Vector3d normalVector = new Vector3d();
 	private Inventory inventory;
 	private int yPos;
 	private ItemGui block;
@@ -92,12 +92,12 @@ public class PlayerCamera extends Camera {
 	private static List<BoundingBox> blocks = new ArrayList<>();
 	private static Vector3 tmp = new Vector3();
 
-	public PlayerCamera(Matrix4f proj, Window window) {
+	public PlayerCamera(Matrix4d proj, Window window) {
 		this.add(new Velocity());
 		this.add(new Scale());
-		this.add(new AABB(new Vector3f(-0.25f, -1.4f, -0.25f), new Vector3f(0.25f, 0.2f, 0.25f))
-				.setBoundingBox(new Vector3f(-0.25f, -1.4f, -0.25f), new Vector3f(0.25f, 0.2f, 0.25f)));
-		center = new Vector2f(window.getWidth() / 2, window.getHeight() / 2);
+		this.add(new AABB(new Vector3d(-0.25f, -1.4f, -0.25f), new Vector3d(0.25f, 0.2f, 0.25f))
+				.setBoundingBox(new Vector3d(-0.25f, -1.4f, -0.25f), new Vector3d(0.25f, 0.2f, 0.25f)));
+		center = new Vector2d(window.getWidth() / 2, window.getHeight() / 2);
 		dRay = new DRay(proj, Maths.createViewMatrix(this), center, 0, 0);
 		this.speed = 1f;
 		inventory = new Inventory(11, 11, window.getWidth() / 2 - 200, 0);
@@ -122,7 +122,7 @@ public class PlayerCamera extends Camera {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			gm.getCamera().setPosition(new Vector3f(0, 0, 1));
+			gm.getCamera().setPosition(new Vector3d(0, 0, 1));
 			gm.getCamera().setPitch(0);
 			gm.getCamera().setYaw(0);
 			unlockMouse();
@@ -167,7 +167,7 @@ public class PlayerCamera extends Camera {
 
 		normalVector.y = pitch / -90;
 
-		Vector3f v = this.getPosition();
+		Vector3d v = this.getPosition();
 
 		double tempx = (v.x);
 		int tempX = (int) tempx;
@@ -266,12 +266,20 @@ public class PlayerCamera extends Camera {
 		 * if (isKeyDown(KEY_T)) {
 		 * gm.getWorldsHandler().getActiveWorld().getActiveDimension().
 		 * getPhysicsEngine() .addEntity(new GuineaPig(new
-		 * Vector3f(getPosition()))); }
+		 * Vector3d(getPosition()))); }
 		 */
 
 		if (kbh.isKeyPressed(GLFW.GLFW_KEY_1)) {
 			gm.getWorldsHandler().getActiveWorld().getActiveDimension().getPhysicsEngine()
-					.addEntity(Block.Glass.getDrop(getPosition()));
+					.addEntity(Block.Indes.getDrop(getPosition()));
+		}
+		if (kbh.isKeyPressed(GLFW.GLFW_KEY_2)) {
+			gm.getWorldsHandler().getActiveWorld().getActiveDimension().getPhysicsEngine()
+			.addEntity(Block.Wood.getDrop(getPosition()));
+		}
+		if (kbh.isKeyPressed(GLFW.GLFW_KEY_3)) {
+			gm.getWorldsHandler().getActiveWorld().getActiveDimension().getPhysicsEngine()
+			.addEntity(Block.Ice.getDrop(getPosition()));
 		}
 
 		if (clickTime > 0)
@@ -289,11 +297,11 @@ public class PlayerCamera extends Camera {
 	}
 
 	private void setBlock(int ww, int wh, Dimension world) {
-		Vector4f viewport = new Vector4f(0, 0, ww, wh);
-		Vector3f wincoord = new Vector3f(ww / 2, wh / 2, depth);
-		Vector3f objcoord = new Vector3f();
-		Matrix4f mvp = new Matrix4f();
-		Matrix4f.mul(GameResources.getInstance().getRenderer().getProjectionMatrix(), Maths.createViewMatrix(this),
+		Vector4d viewport = new Vector4d(0, 0, ww, wh);
+		Vector3d wincoord = new Vector3d(ww / 2, wh / 2, depth);
+		Vector3d objcoord = new Vector3d();
+		Matrix4d mvp = new Matrix4d();
+		Matrix4d.mul(GameResources.getInstance().getRenderer().getProjectionMatrix(), Maths.createViewMatrix(this),
 				mvp);
 		objcoord = mvp.unproject(wincoord, viewport, objcoord);
 		double bcx = 0, bcy = 0, bcz = 0;
@@ -338,7 +346,7 @@ public class PlayerCamera extends Camera {
 		if (clickTime == 0)
 			if (isButtonDown(0)) {
 				clickTime = 8;
-				setBlock(bx, by, bz, new ItemGui(new Vector3f(), Block.Air), world);
+				setBlock(bx, by, bz, new ItemGui(new Vector3d(), Block.Air), world);
 				hit = true;
 			} else if (isButtonDown(1)) {
 				clickTime = 8;
@@ -353,7 +361,7 @@ public class PlayerCamera extends Camera {
 		if (block.getBlock().getId() == Block.Air.getId()
 				&& world.getGlobalBlock(bx, by, bz).getId() != Block.Air.getId())
 			world.getPhysicsEngine()
-					.addEntity(world.getGlobalBlock(bx, by, bz).getDrop(new Vector3f(bx + 0.5f, by + 0.5f, bz + 0.5f)));
+					.addEntity(world.getGlobalBlock(bx, by, bz).getDrop(new Vector3d(bx + 0.5f, by + 0.5f, bz + 0.5f)));
 		if (block.getBlock().getId() == Block.Air.getId()
 				&& world.getGlobalBlock(bx, by, bz).getId() == Block.Torch.getId())
 			world.removeLight(bx, by, bz, 0);

@@ -32,7 +32,7 @@
 package net.luxvacuos.igl.vector;
 
 import java.io.Serializable;
-import java.nio.DoubleBuffer;
+import java.nio.FloatBuffer;
 
 /**
  *
@@ -75,7 +75,7 @@ public abstract class Matrix implements Serializable {
 	 *            A float buffer to read from
 	 * @return this
 	 */
-	public abstract Matrix load(DoubleBuffer buf);
+	public abstract Matrix load(FloatBuffer buf);
 
 	/**
 	 * Load from a float buffer. The buffer stores the matrix in row major
@@ -85,7 +85,7 @@ public abstract class Matrix implements Serializable {
 	 *            A float buffer to read from
 	 * @return this
 	 */
-	public abstract Matrix loadTranspose(DoubleBuffer buf);
+	public abstract Matrix loadTranspose(FloatBuffer buf);
 
 	/**
 	 * Negate this matrix
@@ -102,7 +102,7 @@ public abstract class Matrix implements Serializable {
 	 *            The buffer to store this matrix in
 	 * @return this
 	 */
-	public abstract Matrix store(DoubleBuffer buf);
+	public abstract Matrix store(FloatBuffer buf);
 
 	/**
 	 * Store this matrix in a float buffer. The matrix is stored in row major
@@ -112,7 +112,7 @@ public abstract class Matrix implements Serializable {
 	 *            The buffer to store this matrix in
 	 * @return this
 	 */
-	public abstract Matrix storeTranspose(DoubleBuffer buf);
+	public abstract Matrix storeTranspose(FloatBuffer buf);
 
 	/**
 	 * Transpose this matrix
@@ -131,6 +131,6 @@ public abstract class Matrix implements Serializable {
 	/**
 	 * @return the determinant of the matrix
 	 */
-	public abstract double determinant();
+	public abstract float determinant();
 
 }

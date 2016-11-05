@@ -139,7 +139,7 @@ public class Vector3D
 /**
  * Returns the vector represented by: A + B.
  * @param A First vector.
- * @param B Vector to add to A.
+ * @param B Vectord to add to A.
  * @return A new Vector3D.
  */
     public Vector3D add( Vector3D A, Vector3D B )
@@ -149,7 +149,7 @@ public class Vector3D
     
 /**
  * Returns the vector represented by: (this) + B.
- * @param B Vector to add to this one.
+ * @param B Vectord to add to this one.
  * @return A new Vector3D.
  */
     public Vector3D add( Vector3D B )
@@ -160,7 +160,7 @@ public class Vector3D
 /**
  * Returns the vector represented by: A - B.
  * @param A First vector.
- * @param B Vector to subtract from A.
+ * @param B Vectord to subtract from A.
  * @return A new Vector3D.
  */
     public Vector3D subtract( Vector3D A, Vector3D B )
@@ -170,7 +170,7 @@ public class Vector3D
     
 /**
  * Returns the vector represented by: (this) - B.
- * @param B Vector to subtract from this one.
+ * @param B Vectord to subtract from this one.
  * @return A new Vector3D.
  */
     public Vector3D subtract( Vector3D B )

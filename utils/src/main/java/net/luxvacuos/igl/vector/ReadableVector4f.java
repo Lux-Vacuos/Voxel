@@ -39,6 +39,6 @@ public interface ReadableVector4f extends ReadableVector3f {
 	/**
 	 * @return w
 	 */
-	double getW();
+	float getW();
 
 }

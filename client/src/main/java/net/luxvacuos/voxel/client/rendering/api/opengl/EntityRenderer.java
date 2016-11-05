@@ -40,7 +40,7 @@ import java.util.Map;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.utils.ImmutableArray;
 
-import net.luxvacuos.igl.vector.Matrix4f;
+import net.luxvacuos.igl.vector.Matrix4d;
 import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.EntityShader;
 import net.luxvacuos.voxel.client.resources.models.RawModel;
@@ -73,9 +73,9 @@ public class EntityRenderer {
 	 * @param shader
 	 *            Entity Shader
 	 * @param projectionMatrix
-	 *            A Matrix4f Projection
+	 *            A Matrix4d Projection
 	 */
-	public EntityRenderer(Matrix4f projectionMatrix, Matrix4f shadowProjectionMatrix) {
+	public EntityRenderer(Matrix4d projectionMatrix, Matrix4d shadowProjectionMatrix) {
 		shader = new EntityShader();
 		shader.start();
 		shader.loadProjectionMatrix(projectionMatrix);
@@ -88,7 +88,7 @@ public class EntityRenderer {
 	}
 
 	public void renderEntity(ImmutableArray<Entity> immutableArray, Camera camera, Camera sunCamera,
-			Matrix4f projectionMatrix, int shadowTex) {
+			Matrix4d projectionMatrix, int shadowTex) {
 		for (Entity entity : immutableArray) {
 			if (entity instanceof AbstractEntity && entity.getComponent(RendereableComponent.class) != null) {
 				processEntity((AbstractEntity) entity);
@@ -97,7 +97,7 @@ public class EntityRenderer {
 		renderEntity(camera, sunCamera, projectionMatrix, shadowTex);
 	}
 
-	private void renderEntity(Camera camera, Camera sunCamera, Matrix4f projectionMatrix, int shadowTex) {
+	private void renderEntity(Camera camera, Camera sunCamera, Matrix4d projectionMatrix, int shadowTex) {
 		shader.start();
 		shader.loadProjectionMatrix(projectionMatrix);
 		shader.loadviewMatrix(camera);
@@ -177,7 +177,7 @@ public class EntityRenderer {
 		Position pos = Components.POSITION.get(entity);
 		Rotation rot = Components.ROTATION.get(entity);
 		Scale scale = Components.SCALE.get(entity);
-		Matrix4f transformationMatrix = Maths.createTransformationMatrix(pos.getPosition(), rot.getX(), rot.getY(),
+		Matrix4d transformationMatrix = Maths.createTransformationMatrix(pos.getPosition(), rot.getX(), rot.getY(),
 				rot.getZ(), scale.getScale());
 		shader.loadTransformationMatrix(transformationMatrix);
 	}

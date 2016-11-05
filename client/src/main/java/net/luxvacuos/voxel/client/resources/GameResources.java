@@ -27,7 +27,7 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.serializers.CompatibleFieldSerializer;
 
 import net.luxvacuos.igl.CustomLog;
-import net.luxvacuos.igl.vector.Vector3f;
+import net.luxvacuos.igl.vector.Vector3d;
 import net.luxvacuos.voxel.client.core.ClientGameSettings;
 import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.core.ClientWorldSimulation;
@@ -85,9 +85,9 @@ public class GameResources extends AbstractGameResources {
 
 	private SoundSystem soundSystem;
 
-	private Vector3f sunRotation = new Vector3f(5, 0, -45);
-	private Vector3f lightPos = new Vector3f(0, 0, 0);
-	private Vector3f invertedLightPosition = new Vector3f(0, 0, 0);
+	private Vector3d sunRotation = new Vector3d(5, 0, -45);
+	private Vector3d lightPos = new Vector3d(0, 0, 0);
+	private Vector3d invertedLightPosition = new Vector3d(0, 0, 0);
 	private ParticleTexture torchTexture;
 
 	private GameResources() {
@@ -130,7 +130,7 @@ public class GameResources extends AbstractGameResources {
 		TessellatorBasicShader.getInstance();
 		ParticleMaster.getInstance().init(loader, renderer.getProjectionMatrix());
 		sun_Camera = new SunCamera(renderer.getShadowProjectionMatrix());
-		sun_Camera.setPosition(new Vector3f(0, 0, 0));
+		sun_Camera.setPosition(new Vector3d(0, 0, 0));
 		sun_Camera.setYaw(sunRotation.x);
 		sun_Camera.setPitch(sunRotation.y);
 		sun_Camera.setRoll(sunRotation.z);
@@ -158,7 +158,7 @@ public class GameResources extends AbstractGameResources {
 		torchTexture = new ParticleTexture(loader.loadTextureParticle("fire0"), 4);
 		EntityResources.loadEntityResources(loader);
 		// for (int x = 0; x < 32; x++) {
-		// lightRenderer.addLight(new Light(new Vector3f(Maths.randInt(-128,
+		// lightRenderer.addLight(new Light(new Vector3d(Maths.randInt(-128,
 		// 128), 130, Maths.randInt(-128, 128))));
 		// }
 	}
@@ -217,11 +217,11 @@ public class GameResources extends AbstractGameResources {
 		return sun_Camera;
 	}
 
-	public Vector3f getLightPos() {
+	public Vector3d getLightPos() {
 		return lightPos;
 	}
 
-	public Vector3f getInvertedLightPosition() {
+	public Vector3d getInvertedLightPosition() {
 		return invertedLightPosition;
 	}
 
@@ -229,7 +229,7 @@ public class GameResources extends AbstractGameResources {
 		return torchTexture;
 	}
 
-	public Vector3f getSunRotation() {
+	public Vector3d getSunRotation() {
 		return sunRotation;
 	}
 

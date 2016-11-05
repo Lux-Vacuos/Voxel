@@ -23,7 +23,7 @@ package net.luxvacuos.voxel.server.world.block;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 
-import net.luxvacuos.igl.vector.Vector3f;
+import net.luxvacuos.igl.vector.Vector3d;
 import net.luxvacuos.voxel.server.world.items.ItemDrop;
 
 public abstract class BlockBase {
@@ -34,11 +34,11 @@ public abstract class BlockBase {
 
 	public abstract byte getId();
 
-	public BoundingBox getBoundingBox(Vector3f pos) {
+	public BoundingBox getBoundingBox(Vector3d pos) {
 		return new BoundingBox(new Vector3(pos.x, pos.y, pos.z), new Vector3(pos.x + 1, pos.y + 1, pos.z + 1));
 	}
 
-	public ItemDrop getDrop(Vector3f pos) {
+	public ItemDrop getDrop(Vector3d pos) {
 		return new ItemDrop(pos, this, 0.2f);
 	}
 

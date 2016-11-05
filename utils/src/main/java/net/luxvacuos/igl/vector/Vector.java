@@ -32,7 +32,7 @@
 package net.luxvacuos.igl.vector;
 
 import java.io.Serializable;
-import java.nio.DoubleBuffer;
+import java.nio.FloatBuffer;
 
 /**
  *
@@ -55,14 +55,14 @@ public abstract class Vector implements Serializable, ReadableVector {
 	/**
 	 * @return the length of the vector
 	 */
-	public final double length() {
-		return Math.sqrt(lengthSquared());
+	public final float length() {
+		return (float) Math.sqrt(lengthSquared());
 	}
 
 	/**
 	 * @return the length squared of the vector
 	 */
-	public abstract double lengthSquared();
+	public abstract float lengthSquared();
 
 	/**
 	 * Load this vector from a FloatBuffer
@@ -71,7 +71,7 @@ public abstract class Vector implements Serializable, ReadableVector {
 	 *            The buffer to load it from, at the current position
 	 * @return this
 	 */
-	public abstract Vector load(DoubleBuffer buf);
+	public abstract Vector load(FloatBuffer buf);
 
 	/**
 	 * Negate a vector
@@ -86,9 +86,9 @@ public abstract class Vector implements Serializable, ReadableVector {
 	 * @return this
 	 */
 	public final Vector normalise() {
-		double len = length();
+		float len = length();
 		if (len != 0.0f) {
-			double l = 1.0d / len;
+			float l = 1.0f / len;
 			return scale(l);
 		} else
 			throw new IllegalStateException("Zero length vector");
@@ -101,7 +101,7 @@ public abstract class Vector implements Serializable, ReadableVector {
 	 *            The buffer to store it in, at the current position
 	 * @return this
 	 */
-	public abstract Vector store(DoubleBuffer buf);
+	public abstract Vector store(FloatBuffer buf);
 
 	/**
 	 * Scale this vector
@@ -110,6 +110,6 @@ public abstract class Vector implements Serializable, ReadableVector {
 	 *            The scale factor
 	 * @return this
 	 */
-	public abstract Vector scale(double scale);
+	public abstract Vector scale(float scale);
 
 }

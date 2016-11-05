@@ -1,18 +1,18 @@
 package net.luxvacuos.voxel.client.ui.menu;
 
-import net.luxvacuos.igl.vector.Vector3f;
+import net.luxvacuos.igl.vector.Vector3d;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Tessellator;
 import net.luxvacuos.voxel.client.world.block.BlockBase;
 
 public class ItemGui {
 	private BlockBase block;
-	private Vector3f position;
+	private Vector3d position;
 	private int total;
 
 	public ItemGui() {
 	}
 
-	public ItemGui(Vector3f pos, BlockBase block) {
+	public ItemGui(Vector3d pos, BlockBase block) {
 		this.position = pos;
 		this.block = block;
 	}
@@ -30,7 +30,7 @@ public class ItemGui {
 		this.block = block;
 	}
 
-	public void setPosition(Vector3f position) {
+	public void setPosition(Vector3d position) {
 		this.position = position;
 	}
 
@@ -38,7 +38,7 @@ public class ItemGui {
 		return block;
 	}
 
-	public Vector3f getPosition() {
+	public Vector3d getPosition() {
 		return position;
 	}
 

@@ -31,7 +31,7 @@ import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 
-import net.luxvacuos.igl.vector.Vector3f;
+import net.luxvacuos.igl.vector.Vector3d;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.util.Maths;
 import net.luxvacuos.voxel.client.world.block.Block;
@@ -55,7 +55,7 @@ public class PhysicsSystem extends EntitySystem {
 
 	private Dimension dim;
 	private List<BoundingBox> boxes;
-	private Vector3f tmp = new Vector3f();
+	private Vector3d tmp = new Vector3d();
 	private Vector3 normalTMP = new Vector3();
 	private Vector3 tmp1 = new Vector3();
 	private double depthTMP;
@@ -77,7 +77,7 @@ public class PhysicsSystem extends EntitySystem {
 			if (entity instanceof ItemDrop) {
 				tmp.set(0, 0, 0);
 				PlayerCamera cam = (PlayerCamera) gm.getCamera();
-				if (Vector3f.sub(position.getPosition(), gm.getCamera().getPosition(), tmp).lengthSquared() < 2) {
+				if (Vector3d.sub(position.getPosition(), gm.getCamera().getPosition(), tmp).lengthSquared() < 2) {
 					A: for (int x = 0; x < cam.getInventory().getSizeX(); x++) {
 						for (int y = 0; y < cam.getInventory().getSizeY(); y++) {
 							if (cam.getInventory().getItems()[x][y].getBlock().getId() == ((ItemDrop) entity).getBlock()
@@ -95,8 +95,8 @@ public class PhysicsSystem extends EntitySystem {
 					}
 					getEngine().removeEntity(entity);
 				}
-				if (Vector3f.sub(position.getPosition(), gm.getCamera().getPosition(), tmp).lengthSquared() < 6) {
-					Vector3f.add(Vector3f.sub(gm.getCamera().getPosition(), position.getPosition(), null),
+				if (Vector3d.sub(position.getPosition(), gm.getCamera().getPosition(), tmp).lengthSquared() < 6) {
+					Vector3d.add(Vector3d.sub(gm.getCamera().getPosition(), position.getPosition(), null),
 							velocity.getVelocity(), velocity.getVelocity());
 				}
 			}
@@ -120,7 +120,7 @@ public class PhysicsSystem extends EntitySystem {
 							aabb.getBoundingBox(), tmp1) && ((PlayerCamera) gm.getCamera()).isHit()) {
 						health.take(1);
 
-						Vector3f.add(Vector3f.sub(pos.getPosition(), gm.getCamera().getPosition(), null),
+						Vector3d.add(Vector3d.sub(pos.getPosition(), gm.getCamera().getPosition(), null),
 								velocity.getVelocity(), velocity.getVelocity());
 
 						if (health.get() <= 0) {
@@ -229,10 +229,10 @@ public class PhysicsSystem extends EntitySystem {
 
 	public void doSpawn(GameResources gm) {
 		/*
-		 * Vector3f tmp = new Vector3f(gm.getCamera().getPosition());
-		 * Vector3f.add(tmp, new Vector3f(Maths.randInt(1, 10), Maths.randInt(1,
+		 * Vector3d tmp = new Vector3d(gm.getCamera().getPosition());
+		 * Vector3d.add(tmp, new Vector3d(Maths.randInt(1, 10), Maths.randInt(1,
 		 * 10), Maths.randInt(1, 10)), tmp); if (Maths.getRandomBoolean(80)) {
-		 * getEngine().addEntity(new Ghost(new Vector3f(tmp))); }
+		 * getEngine().addEntity(new Ghost(new Vector3d(tmp))); }
 		 */
 	}
 

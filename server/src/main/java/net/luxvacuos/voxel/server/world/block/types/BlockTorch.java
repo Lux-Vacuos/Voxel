@@ -23,7 +23,7 @@ package net.luxvacuos.voxel.server.world.block.types;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 
-import net.luxvacuos.igl.vector.Vector3f;
+import net.luxvacuos.igl.vector.Vector3d;
 import net.luxvacuos.voxel.server.world.block.BlockBase;
 
 public class BlockTorch extends BlockBase {
@@ -38,7 +38,7 @@ public class BlockTorch extends BlockBase {
 	}
 
 	@Override
-	public BoundingBox getBoundingBox(Vector3f pos) {
+	public BoundingBox getBoundingBox(Vector3d pos) {
 		return new BoundingBox(new Vector3(pos.x + 0.3f, pos.y, pos.z + 0.3f),
 				new Vector3(pos.x + 0.7f, pos.y + 1f, pos.z + 0.7f));
 	}

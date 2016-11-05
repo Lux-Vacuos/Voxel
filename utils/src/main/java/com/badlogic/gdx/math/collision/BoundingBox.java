@@ -21,7 +21,7 @@ import java.util.List;
 
 import com.badlogic.gdx.math.Vector3;
 
-/** Encapsulates an axis aligned bounding box represented by a minimum and a maximum Vector. Additionally you can query for the
+/** Encapsulates an axis aligned bounding box represented by a minimum and a maximum Vectord. Additionally you can query for the
  * bounding box's center, dimensions and corner points.
  *
  * @author badlogicgames@gmail.com, Xoppa */

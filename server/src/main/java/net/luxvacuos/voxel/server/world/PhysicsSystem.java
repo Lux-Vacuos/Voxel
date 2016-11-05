@@ -31,7 +31,7 @@ import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 
-import net.luxvacuos.igl.vector.Vector3f;
+import net.luxvacuos.igl.vector.Vector3d;
 import net.luxvacuos.voxel.server.resources.ServerGameResources;
 import net.luxvacuos.voxel.server.world.block.Block;
 import net.luxvacuos.voxel.server.world.block.BlockBase;
@@ -52,7 +52,7 @@ public class PhysicsSystem extends EntitySystem {
 
 	private Dimension dim;
 	private List<BoundingBox> boxes;
-	private Vector3f tmp = new Vector3f();
+	private Vector3d tmp = new Vector3d();
 	private Vector3 normalTMP = new Vector3();
 	private Vector3 tmp1 = new Vector3();
 	private double depthTMP;
@@ -151,10 +151,10 @@ public class PhysicsSystem extends EntitySystem {
 
 	public void doSpawn(ServerGameResources gm) {
 		/*
-		 * Vector3f tmp = new Vector3f(gm.getCamera().getPosition());
-		 * Vector3f.add(tmp, new Vector3f(Maths.randInt(1, 10), Maths.randInt(1,
+		 * Vector3d tmp = new Vector3d(gm.getCamera().getPosition());
+		 * Vector3d.add(tmp, new Vector3d(Maths.randInt(1, 10), Maths.randInt(1,
 		 * 10), Maths.randInt(1, 10)), tmp); if (Maths.getRandomBoolean(80)) {
-		 * getEngine().addEntity(new Ghost(new Vector3f(tmp))); }
+		 * getEngine().addEntity(new Ghost(new Vector3d(tmp))); }
 		 */
 	}
 

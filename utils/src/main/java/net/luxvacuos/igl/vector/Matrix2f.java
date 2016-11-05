@@ -32,7 +32,7 @@
 package net.luxvacuos.igl.vector;
 
 import java.io.Serializable;
-import java.nio.DoubleBuffer;
+import java.nio.FloatBuffer;
 
 /**
  *
@@ -47,7 +47,7 @@ public class Matrix2f extends Matrix implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	public double m00, m01, m10, m11;
+	public float m00, m01, m10, m11;
 
 	/**
 	 * Constructor for Matrix2f. The matrix is initialised to the identity.
@@ -104,7 +104,7 @@ public class Matrix2f extends Matrix implements Serializable {
 	 *            A float buffer to read from
 	 * @return this
 	 */
-	public Matrix load(DoubleBuffer buf) {
+	public Matrix load(FloatBuffer buf) {
 
 		m00 = buf.get();
 		m01 = buf.get();
@@ -122,7 +122,7 @@ public class Matrix2f extends Matrix implements Serializable {
 	 *            A float buffer to read from
 	 * @return this
 	 */
-	public Matrix loadTranspose(DoubleBuffer buf) {
+	public Matrix loadTranspose(FloatBuffer buf) {
 
 		m00 = buf.get();
 		m10 = buf.get();
@@ -139,7 +139,7 @@ public class Matrix2f extends Matrix implements Serializable {
 	 * @param buf
 	 *            The buffer to store this matrix in
 	 */
-	public Matrix store(DoubleBuffer buf) {
+	public Matrix store(FloatBuffer buf) {
 		buf.put(m00);
 		buf.put(m01);
 		buf.put(m10);
@@ -154,7 +154,7 @@ public class Matrix2f extends Matrix implements Serializable {
 	 * @param buf
 	 *            The buffer to store this matrix in
 	 */
-	public Matrix storeTranspose(DoubleBuffer buf) {
+	public Matrix storeTranspose(FloatBuffer buf) {
 		buf.put(m00);
 		buf.put(m10);
 		buf.put(m01);
@@ -225,10 +225,10 @@ public class Matrix2f extends Matrix implements Serializable {
 		if (dest == null)
 			dest = new Matrix2f();
 
-		double m00 = left.m00 * right.m00 + left.m10 * right.m01;
-		double m01 = left.m01 * right.m00 + left.m11 * right.m01;
-		double m10 = left.m00 * right.m10 + left.m10 * right.m11;
-		double m11 = left.m01 * right.m10 + left.m11 * right.m11;
+		float m00 = left.m00 * right.m00 + left.m10 * right.m01;
+		float m01 = left.m01 * right.m00 + left.m11 * right.m01;
+		float m10 = left.m00 * right.m10 + left.m10 * right.m11;
+		float m11 = left.m01 * right.m10 + left.m11 * right.m11;
 
 		dest.m00 = m00;
 		dest.m01 = m01;
@@ -254,8 +254,8 @@ public class Matrix2f extends Matrix implements Serializable {
 		if (dest == null)
 			dest = new Vector2f();
 
-		double x = left.m00 * right.x + left.m10 * right.y;
-		double y = left.m01 * right.x + left.m11 * right.y;
+		float x = left.m00 * right.x + left.m10 * right.y;
+		float y = left.m01 * right.x + left.m11 * right.y;
 
 		dest.x = x;
 		dest.y = y;
@@ -299,8 +299,8 @@ public class Matrix2f extends Matrix implements Serializable {
 		if (dest == null)
 			dest = new Matrix2f();
 
-		double m01 = src.m10;
-		double m10 = src.m01;
+		float m01 = src.m10;
+		float m10 = src.m01;
 
 		dest.m01 = m01;
 		dest.m10 = m10;
@@ -332,15 +332,15 @@ public class Matrix2f extends Matrix implements Serializable {
 		 * inv(A) = 1/det(A) * adj(A);
 		 */
 
-		double determinant = src.determinant();
+		float determinant = src.determinant();
 		if (determinant != 0) {
 			if (dest == null)
 				dest = new Matrix2f();
-			double determinant_inv = 1f / determinant;
-			double t00 = src.m11 * determinant_inv;
-			double t01 = -src.m01 * determinant_inv;
-			double t11 = src.m00 * determinant_inv;
-			double t10 = -src.m10 * determinant_inv;
+			float determinant_inv = 1f / determinant;
+			float t00 = src.m11 * determinant_inv;
+			float t01 = -src.m01 * determinant_inv;
+			float t11 = src.m00 * determinant_inv;
+			float t10 = -src.m10 * determinant_inv;
 
 			dest.m00 = t00;
 			dest.m01 = t01;
@@ -450,7 +450,7 @@ public class Matrix2f extends Matrix implements Serializable {
 	 * 
 	 * @see org.lwjgl.vector.Matrix#determinant()
 	 */
-	public double determinant() {
+	public float determinant() {
 		return m00 * m11 - m01 * m10;
 	}
 }

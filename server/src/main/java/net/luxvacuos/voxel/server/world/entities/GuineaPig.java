@@ -23,7 +23,7 @@ package net.luxvacuos.voxel.server.world.entities;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.luxvacuos.igl.vector.Vector3f;
+import net.luxvacuos.igl.vector.Vector3d;
 import net.luxvacuos.voxel.server.world.block.Block;
 import net.luxvacuos.voxel.server.world.entities.components.ArmourComponent;
 import net.luxvacuos.voxel.server.world.entities.components.DropComponent;
@@ -33,17 +33,17 @@ import net.luxvacuos.voxel.universal.ecs.components.Health;
 
 public class GuineaPig extends GameEntity {
 
-	public GuineaPig(Vector3f position, float rotX, float rotY, float rotZ) {
+	public GuineaPig(Vector3d position, float rotX, float rotY, float rotZ) {
 		super(position, rotX, rotY, rotZ, 1);
 	}
 
-	public GuineaPig(Vector3f position) {
+	public GuineaPig(Vector3d position) {
 		super(position, 0, 90, 0, 1);
 	}
 
 	@Override
 	public void init() {
-		setAABB(new Vector3f(-0.15f, -0.15f, -0.15f), new Vector3f(0.15f, 0.3f, 0.15f));
+		setAABB(new Vector3d(-0.15f, -0.15f, -0.15f), new Vector3d(0.15f, 0.3f, 0.15f));
 		super.add(new Health(10));
 		List<ItemDrop> drop = new ArrayList<>();
 		drop.add(new ItemDrop(Block.Glass));
@@ -57,13 +57,13 @@ public class GuineaPig extends GameEntity {
 
 		// Test with rotation based movement
 		/*
-		 * Vector3f velocity =
+		 * Vector3d velocity =
 		 * super.getComponent(VelocityComponent.class).velocity; velocity.x +=
-		 * 0.4f; Vector4f tmp = new Vector4f();
+		 * 0.4f; Vector4d tmp = new Vector4d();
 		 * 
-		 * Matrix4f.transform( Maths.createTransformationMatrix(new Vector3f(),
+		 * Matrix4d.transform( Maths.createTransformationMatrix(new Vector3d(),
 		 * getRotX(), getRotY(), getRotZ(), getScale()), new
-		 * Vector4f(velocity.x, velocity.y, velocity.z, 1), tmp);
+		 * Vector4d(velocity.x, velocity.y, velocity.z, 1), tmp);
 		 * super.getComponent(VelocityComponent.class).velocity.x = tmp.x;
 		 * super.getComponent(VelocityComponent.class).velocity.y = tmp.y;
 		 * super.getComponent(VelocityComponent.class).velocity.z = tmp.z;

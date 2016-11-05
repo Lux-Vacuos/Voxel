@@ -27,10 +27,10 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 import com.badlogic.gdx.math.collision.Ray;
 
-import net.luxvacuos.igl.vector.Matrix4f;
-import net.luxvacuos.igl.vector.Vector2f;
-import net.luxvacuos.igl.vector.Vector3f;
-import net.luxvacuos.igl.vector.Vector4f;
+import net.luxvacuos.igl.vector.Matrix4d;
+import net.luxvacuos.igl.vector.Vector2d;
+import net.luxvacuos.igl.vector.Vector3d;
+import net.luxvacuos.igl.vector.Vector4d;
 import net.luxvacuos.voxel.client.world.chunks.Chunk;
 import net.luxvacuos.voxel.client.world.entities.Camera;
 
@@ -45,24 +45,24 @@ public class Maths {
 	private final static Vector3 v2 = new Vector3();
 
 	/**
-	 * Create a Transformation Matrix 2D
+	 * Create a Transformation Matrixd 2D
 	 * 
 	 * @param translation
 	 *            Position
 	 * @param scale
 	 *            Scale
-	 * @return Transformation Matrix 2D
+	 * @return Transformation Matrixd 2D
 	 */
-	public static Matrix4f createTransformationMatrix(Vector2f translation, Vector2f scale) {
-		Matrix4f matrix = new Matrix4f();
+	public static Matrix4d createTransformationMatrix(Vector2d translation, Vector2d scale) {
+		Matrix4d matrix = new Matrix4d();
 		matrix.setIdentity();
-		Matrix4f.translate(translation, matrix, matrix);
-		Matrix4f.scale(new Vector3f(scale.x, scale.y, 1f), matrix, matrix);
+		Matrix4d.translate(translation, matrix, matrix);
+		Matrix4d.scale(new Vector3d(scale.x, scale.y, 1f), matrix, matrix);
 		return matrix;
 	}
 
 	/**
-	 * Create a Transformation Matrix 3D
+	 * Create a Transformation Matrixd 3D
 	 * 
 	 * @param translation
 	 *            Position
@@ -74,29 +74,29 @@ public class Maths {
 	 *            Rotation Z
 	 * @param scale
 	 *            Scale
-	 * @return Transformation Matrix 3D
+	 * @return Transformation Matrixd 3D
 	 */
-	public static Matrix4f createTransformationMatrix(Vector3f translation, double rx, double ry, double rz,
+	public static Matrix4d createTransformationMatrix(Vector3d translation, double rx, double ry, double rz,
 			double scale) {
-		Matrix4f matrix = new Matrix4f();
+		Matrix4d matrix = new Matrix4d();
 		matrix.setIdentity();
-		Matrix4f.translate(translation, matrix, matrix);
-		Matrix4f.rotate(Math.toRadians(rx), new Vector3f(1, 0, 0), matrix, matrix);
-		Matrix4f.rotate(Math.toRadians(ry), new Vector3f(0, 1, 0), matrix, matrix);
-		Matrix4f.rotate(Math.toRadians(rz), new Vector3f(0, 0, 1), matrix, matrix);
-		Matrix4f.scale(new Vector3f(scale, scale, scale), matrix, matrix);
+		Matrix4d.translate(translation, matrix, matrix);
+		Matrix4d.rotate(Math.toRadians(rx), new Vector3d(1, 0, 0), matrix, matrix);
+		Matrix4d.rotate(Math.toRadians(ry), new Vector3d(0, 1, 0), matrix, matrix);
+		Matrix4d.rotate(Math.toRadians(rz), new Vector3d(0, 0, 1), matrix, matrix);
+		Matrix4d.scale(new Vector3d(scale, scale, scale), matrix, matrix);
 		return matrix;
 	}
 
 	/**
-	 * Create a View Matrix applying position and rotation
+	 * Create a View Matrixd applying position and rotation
 	 * 
 	 * @param camera
 	 *            Camera
-	 * @return View Matrix
+	 * @return View Matrixd
 	 */
-	public static Matrix4f createViewMatrix(Camera camera) {
-		Matrix4f viewMatrix = new Matrix4f();
+	public static Matrix4d createViewMatrix(Camera camera) {
+		Matrix4d viewMatrix = new Matrix4d();
 		viewMatrix.setIdentity();
 		createViewMatrixRot(camera.getPitch(), camera.getYaw(), camera.getRoll(), viewMatrix);
 		createViewMatrixPos(camera.getPosition(), viewMatrix);
@@ -104,40 +104,40 @@ public class Maths {
 	}
 
 	/**
-	 * Create a View Matrix applying position
+	 * Create a View Matrixd applying position
 	 * 
 	 * @param camera
 	 *            Camera
 	 * @param viewMatrix
-	 *            View Matrix Pass an already created matrix or null for
+	 *            View Matrixd Pass an already created matrix or null for
 	 *            creating a new one
 	 * @return The composed matrix
 	 */
-	public static Matrix4f createViewMatrixPos(Vector3f pos, Matrix4f viewMatrix) {
+	public static Matrix4d createViewMatrixPos(Vector3d pos, Matrix4d viewMatrix) {
 		if (viewMatrix == null)
-			viewMatrix = new Matrix4f();
-		Vector3f cameraPost = pos;
-		Vector3f negativeCameraPos = new Vector3f(-cameraPost.x, -cameraPost.y, -cameraPost.z);
-		Matrix4f.translate(negativeCameraPos, viewMatrix, viewMatrix);
+			viewMatrix = new Matrix4d();
+		Vector3d cameraPost = pos;
+		Vector3d negativeCameraPos = new Vector3d(-cameraPost.x, -cameraPost.y, -cameraPost.z);
+		Matrix4d.translate(negativeCameraPos, viewMatrix, viewMatrix);
 		return viewMatrix;
 	}
 
 	/**
-	 * Create a View Matrix applying rotation
+	 * Create a View Matrixd applying rotation
 	 * 
 	 * @param camera
 	 *            Camera
 	 * @param viewMatrix
-	 *            View Matrix Pass an already created matrix or null for
+	 *            View Matrixd Pass an already created matrix or null for
 	 *            creating a new one
 	 * @return The composed matrix
 	 */
-	public static Matrix4f createViewMatrixRot(double pitch, double yaw, double roll, Matrix4f viewMatrix) {
+	public static Matrix4d createViewMatrixRot(double pitch, double yaw, double roll, Matrix4d viewMatrix) {
 		if (viewMatrix == null)
-			viewMatrix = new Matrix4f();
-		Matrix4f.rotate(Math.toRadians(pitch), new Vector3f(1, 0, 0), viewMatrix, viewMatrix);
-		Matrix4f.rotate(Math.toRadians(yaw), new Vector3f(0, 1, 0), viewMatrix, viewMatrix);
-		Matrix4f.rotate(Math.toRadians(roll), new Vector3f(0, 0, 1), viewMatrix, viewMatrix);
+			viewMatrix = new Matrix4d();
+		Matrix4d.rotate(Math.toRadians(pitch), new Vector3d(1, 0, 0), viewMatrix, viewMatrix);
+		Matrix4d.rotate(Math.toRadians(yaw), new Vector3d(0, 1, 0), viewMatrix, viewMatrix);
+		Matrix4d.rotate(Math.toRadians(roll), new Vector3d(0, 0, 1), viewMatrix, viewMatrix);
 		return viewMatrix;
 	}
 
@@ -150,11 +150,11 @@ public class Maths {
 	 * @param top
 	 * @param near
 	 * @param far
-	 * @return Matrix4f
+	 * @return Matrix4d
 	 */
-	public static Matrix4f orthographic(float left, float right, float bottom, float top, float zNear, float zFar,
+	public static Matrix4d orthographic(float left, float right, float bottom, float top, float zNear, float zFar,
 			boolean zZeroToOne) {
-		Matrix4f dest = new Matrix4f();
+		Matrix4d dest = new Matrix4d();
 		// calculate right matrix elements
 		float rm00 = 2.0f / (right - left);
 		float rm11 = 2.0f / (top - bottom);
@@ -227,8 +227,8 @@ public class Maths {
 		return randomNum;
 	}
 
-	public static Vector2f convertTo2F(Vector3f pos, Matrix4f projection, Matrix4f viewMatrix, int width, int height) {
-		return Matrix4f.Project(pos, projection, viewMatrix, new Vector4f(0, 0, width, height));
+	public static Vector2d convertTo2F(Vector3d pos, Matrix4d projection, Matrix4d viewMatrix, int width, int height) {
+		return Matrix4d.Project(pos, projection, viewMatrix, new Vector4d(0, 0, width, height));
 	}
 
 	public static float randFloat() {

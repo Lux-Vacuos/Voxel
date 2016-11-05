@@ -30,13 +30,21 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package net.luxvacuos.igl.vector;
+/**
+ *
+ * Quaternions for LWJGL!
+ *
+ * @author fbi
+ * @version $Revision: 3418 $
+ * $Id: Quaternion.java 3418 2010-09-28 21:11:35Z spasi $
+ */
 
-import java.nio.DoubleBuffer;
+import java.nio.FloatBuffer;
 
 public class Quaternion extends Vector implements ReadableVector4f {
 	private static final long serialVersionUID = 1L;
 
-	public double x, y, z, w;
+	public float x, y, z, w;
 
 	/**
 	 * C'tor. The quaternion will be initialized to the identity.
@@ -59,7 +67,7 @@ public class Quaternion extends Vector implements ReadableVector4f {
 	 * C'tor
 	 *
 	 */
-	public Quaternion(double x, double y, double z, double w) {
+	public Quaternion(float x, float y, float z, float w) {
 		set(x, y, z, w);
 	}
 
@@ -68,7 +76,7 @@ public class Quaternion extends Vector implements ReadableVector4f {
 	 *
 	 * @see org.lwjgl.util.vector.WritableVector2f#set(float, float)
 	 */
-	public void set(double x, double y) {
+	public void set(float x, float y) {
 		this.x = x;
 		this.y = y;
 	}
@@ -78,7 +86,7 @@ public class Quaternion extends Vector implements ReadableVector4f {
 	 *
 	 * @see org.lwjgl.util.vector.WritableVector3f#set(float, float, float)
 	 */
-	public void set(double x, double y, double z) {
+	public void set(float x, float y, float z) {
 		this.x = x;
 		this.y = y;
 		this.z = z;
@@ -90,7 +98,7 @@ public class Quaternion extends Vector implements ReadableVector4f {
 	 * @see org.lwjgl.util.vector.WritableVector4f#set(float, float, float,
 	 * float)
 	 */
-	public void set(double x, double y, double z, double w) {
+	public void set(float x, float y, float z, float w) {
 		this.x = x;
 		this.y = y;
 		this.z = z;
@@ -139,7 +147,7 @@ public class Quaternion extends Vector implements ReadableVector4f {
 	/**
 	 * @return the length squared of the quaternion
 	 */
-	public double lengthSquared() {
+	public float lengthSquared() {
 		return x * x + y * y + z * z + w * w;
 	}
 
@@ -155,7 +163,7 @@ public class Quaternion extends Vector implements ReadableVector4f {
 	 * @return The normalised quaternion
 	 */
 	public static Quaternion normalise(Quaternion src, Quaternion dest) {
-		double inv_l = 1f / src.length();
+		float inv_l = 1f / src.length();
 
 		if (dest == null)
 			dest = new Quaternion();
@@ -186,7 +194,7 @@ public class Quaternion extends Vector implements ReadableVector4f {
 	 *            The RHS quat
 	 * @return left dot right
 	 */
-	public static double dot(Quaternion left, Quaternion right) {
+	public static float dot(Quaternion left, Quaternion right) {
 		return left.x * right.x + left.y * right.y + left.z * right.z + left.w * right.w;
 	}
 
@@ -234,7 +242,7 @@ public class Quaternion extends Vector implements ReadableVector4f {
 	 * 
 	 * @see org.lwjgl.util.vector.Vector#load(java.nio.FloatBuffer)
 	 */
-	public Vector load(DoubleBuffer buf) {
+	public Vector load(FloatBuffer buf) {
 		x = buf.get();
 		y = buf.get();
 		z = buf.get();
@@ -245,9 +253,9 @@ public class Quaternion extends Vector implements ReadableVector4f {
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see org.lwjgl.vector.Vector#scale
+	 * @see org.lwjgl.vector.Vector#scale(float)
 	 */
-	public Vector scale(double scale) {
+	public Vector scale(float scale) {
 		return scale(scale, this, this);
 	}
 
@@ -264,7 +272,7 @@ public class Quaternion extends Vector implements ReadableVector4f {
 	 *            be created
 	 * @return The scaled quaternion
 	 */
-	public static Quaternion scale(double scale, Quaternion src, Quaternion dest) {
+	public static Quaternion scale(float scale, Quaternion src, Quaternion dest) {
 		if (dest == null)
 			dest = new Quaternion();
 		dest.x = src.x * scale;
@@ -279,7 +287,7 @@ public class Quaternion extends Vector implements ReadableVector4f {
 	 * 
 	 * @see org.lwjgl.util.vector.ReadableVector#store(java.nio.FloatBuffer)
 	 */
-	public Vector store(DoubleBuffer buf) {
+	public Vector store(FloatBuffer buf) {
 		buf.put(x);
 		buf.put(y);
 		buf.put(z);
@@ -291,14 +299,14 @@ public class Quaternion extends Vector implements ReadableVector4f {
 	/**
 	 * @return x
 	 */
-	public final double getX() {
+	public final float getX() {
 		return x;
 	}
 
 	/**
 	 * @return y
 	 */
-	public final double getY() {
+	public final float getY() {
 		return y;
 	}
 
@@ -307,7 +315,7 @@ public class Quaternion extends Vector implements ReadableVector4f {
 	 *
 	 * @param x
 	 */
-	public final void setX(double x) {
+	public final void setX(float x) {
 		this.x = x;
 	}
 
@@ -316,7 +324,7 @@ public class Quaternion extends Vector implements ReadableVector4f {
 	 *
 	 * @param y
 	 */
-	public final void setY(double y) {
+	public final void setY(float y) {
 		this.y = y;
 	}
 
@@ -325,7 +333,7 @@ public class Quaternion extends Vector implements ReadableVector4f {
 	 *
 	 * @param z
 	 */
-	public void setZ(double z) {
+	public void setZ(float z) {
 		this.z = z;
 	}
 
@@ -334,7 +342,7 @@ public class Quaternion extends Vector implements ReadableVector4f {
 	 *
 	 * @see org.lwjgl.vector.ReadableVector3f#getZ()
 	 */
-	public double getZ() {
+	public float getZ() {
 		return z;
 	}
 
@@ -343,7 +351,7 @@ public class Quaternion extends Vector implements ReadableVector4f {
 	 *
 	 * @param w
 	 */
-	public void setW(double w) {
+	public void setW(float w) {
 		this.w = w;
 	}
 
@@ -352,7 +360,7 @@ public class Quaternion extends Vector implements ReadableVector4f {
 	 *
 	 * @see org.lwjgl.vector.ReadableVector3f#getW()
 	 */
-	public double getW() {
+	public float getW() {
 		return w;
 	}
 
@@ -392,7 +400,7 @@ public class Quaternion extends Vector implements ReadableVector4f {
 	 *            the right quaternion
 	 */
 	public static Quaternion mulInverse(Quaternion left, Quaternion right, Quaternion dest) {
-		double n = right.lengthSquared();
+		float n = right.lengthSquared();
 		// zero-div may occur.
 		n = (n == 0.0 ? n : 1 / n);
 		// store on stack once for aliasing-safty
@@ -417,13 +425,13 @@ public class Quaternion extends Vector implements ReadableVector4f {
 		x = a1.x;
 		y = a1.y;
 		z = a1.z;
-		double n = Math.sqrt(x * x + y * y + z * z);
+		float n = (float) Math.sqrt(x * x + y * y + z * z);
 		// zero-div may occur.
-		double s = (Math.sin(0.5 * a1.w) / n);
+		float s = (float) (Math.sin(0.5 * a1.w) / n);
 		x *= s;
 		y *= s;
 		z *= s;
-		w = Math.cos(0.5 * a1.w);
+		w = (float) Math.cos(0.5 * a1.w);
 	}
 
 	/**
@@ -482,36 +490,36 @@ public class Quaternion extends Vector implements ReadableVector4f {
 	/**
 	 * Private method to perform the matrix-to-quaternion conversion
 	 */
-	private Quaternion setFromMat(double m00, double m01, double m02, double m10, double m11, double m12, double m20,
-			double m21, double m22) {
+	private Quaternion setFromMat(float m00, float m01, float m02, float m10, float m11, float m12, float m20,
+			float m21, float m22) {
 
-		double s;
-		double tr = m00 + m11 + m22;
+		float s;
+		float tr = m00 + m11 + m22;
 		if (tr >= 0.0) {
-			s = Math.sqrt(tr + 1.0);
+			s = (float) Math.sqrt(tr + 1.0);
 			w = s * 0.5f;
 			s = 0.5f / s;
 			x = (m21 - m12) * s;
 			y = (m02 - m20) * s;
 			z = (m10 - m01) * s;
 		} else {
-			double max = Math.max(Math.max(m00, m11), m22);
+			float max = Math.max(Math.max(m00, m11), m22);
 			if (max == m00) {
-				s = Math.sqrt(m00 - (m11 + m22) + 1.0);
+				s = (float) Math.sqrt(m00 - (m11 + m22) + 1.0);
 				x = s * 0.5f;
 				s = 0.5f / s;
 				y = (m01 + m10) * s;
 				z = (m20 + m02) * s;
 				w = (m21 - m12) * s;
 			} else if (max == m11) {
-				s = Math.sqrt(m11 - (m22 + m00) + 1.0);
+				s = (float) Math.sqrt(m11 - (m22 + m00) + 1.0);
 				y = s * 0.5f;
 				s = 0.5f / s;
 				z = (m12 + m21) * s;
 				x = (m01 + m10) * s;
 				w = (m02 - m20) * s;
 			} else {
-				s = Math.sqrt(m22 - (m00 + m11) + 1.0);
+				s = (float) Math.sqrt(m22 - (m00 + m11) + 1.0);
 				z = s * 0.5f;
 				s = 0.5f / s;
 				x = (m20 + m02) * s;

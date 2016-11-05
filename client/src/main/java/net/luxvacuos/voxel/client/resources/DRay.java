@@ -22,40 +22,40 @@ package net.luxvacuos.voxel.client.resources;
 
 import com.badlogic.gdx.math.collision.Ray;
 
-import net.luxvacuos.igl.vector.Matrix4f;
-import net.luxvacuos.igl.vector.Vector2f;
-import net.luxvacuos.igl.vector.Vector3f;
+import net.luxvacuos.igl.vector.Matrix4d;
+import net.luxvacuos.igl.vector.Vector2d;
+import net.luxvacuos.igl.vector.Vector3d;
 
 public class DRay {
-	public Vector3f origin;
-	public Vector3f direction;
-	public Vector3f inv_direction;
+	public Vector3d origin;
+	public Vector3d direction;
+	public Vector3d inv_direction;
 	public Ray ray;
 
-	public DRay(Matrix4f proj, Matrix4f view, Vector2f mouse, int width, int height) {
-		Vector3f v = new Vector3f();
+	public DRay(Matrix4d proj, Matrix4d view, Vector2d mouse, int width, int height) {
+		Vector3d v = new Vector3d();
 		v.x = (((2.0f * mouse.x) / width) - 1) / proj.m00;
 		v.y = -(((2.0f * mouse.y) / height) - 1) / proj.m11;
 		v.z = 1.0f;
 
-		Matrix4f invert_view = Matrix4f.invert(view, null);
+		Matrix4d invert_view = Matrix4d.invert(view, null);
 
-		Vector3f ray_direction = new Vector3f();
+		Vector3d ray_direction = new Vector3d();
 		ray_direction.x = v.x * invert_view.m00 + v.y * invert_view.m10 + v.z * invert_view.m20;
 		ray_direction.y = v.x * invert_view.m01 + v.y * invert_view.m11 + v.z * invert_view.m21;
 		ray_direction.z = v.x * invert_view.m02 + v.y * invert_view.m12 + v.z * invert_view.m22;
 
-		Vector3f ray_origin = new Vector3f(invert_view.m30, invert_view.m31, invert_view.m32);
-		this.origin = new Vector3f(ray_origin.x, ray_origin.y, ray_origin.z);
-		this.direction = new Vector3f(ray_direction.x, ray_direction.y, ray_direction.z);
-		this.inv_direction = new Vector3f(-ray_direction.x, -ray_direction.y, -ray_direction.z);
+		Vector3d ray_origin = new Vector3d(invert_view.m30, invert_view.m31, invert_view.m32);
+		this.origin = new Vector3d(ray_origin.x, ray_origin.y, ray_origin.z);
+		this.direction = new Vector3d(ray_direction.x, ray_direction.y, ray_direction.z);
+		this.inv_direction = new Vector3d(-ray_direction.x, -ray_direction.y, -ray_direction.z);
 		ray = new Ray(ray_origin.getAsVec3(), inv_direction.getAsVec3());
 	}
 
-	public DRay(Vector3f origin, Vector3f direction) {
+	public DRay(Vector3d origin, Vector3d direction) {
 		this.direction = direction;
 		this.origin = origin;
-		this.inv_direction = new Vector3f(-direction.x, -direction.y, -direction.z);
+		this.inv_direction = new Vector3d(-direction.x, -direction.y, -direction.z);
 		ray = new Ray(origin.getAsVec3(), inv_direction.getAsVec3());
 	}
 

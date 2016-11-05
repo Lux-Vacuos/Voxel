@@ -20,8 +20,8 @@
 
 package net.luxvacuos.voxel.client.rendering.api.opengl.shaders;
 
-import net.luxvacuos.igl.vector.Matrix4f;
-import net.luxvacuos.igl.vector.Vector3f;
+import net.luxvacuos.igl.vector.Matrix4d;
+import net.luxvacuos.igl.vector.Vector3d;
 import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.Attribute;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.UniformBoolean;
@@ -57,7 +57,7 @@ public class TessellatorShader extends ShaderProgram {
 	private UniformSampler shadowTex = new UniformSampler("shadowTex");
 	private UniformSampler normalMap = new UniformSampler("normalMap");
 	private UniformSampler heightMap = new UniformSampler("heightMap");
-	private UniformSampler specularMap = new UniformSampler("specularMap");
+	private UniformSampler pbrMap = new UniformSampler("pbrMap");
 
 	private UniformBoolean useShadows = new UniformBoolean("useShadows");
 	private UniformBoolean useParallax = new UniformBoolean("useParallax");
@@ -68,7 +68,7 @@ public class TessellatorShader extends ShaderProgram {
 				new Attribute(0, "position"), new Attribute(1, "textureCoords"), new Attribute(2, "normal"),
 				new Attribute(3, "data"), new Attribute(4, "tangent"), new Attribute(5, "bitangent"));
 		super.storeAllUniformLocations(projectionMatrix, viewMatrix, biasMatrix, projectionLightMatrix, viewLightMatrix,
-				cameraPos, moveFactor, rainFactor, texture0, depth, shadowTex, normalMap, heightMap, specularMap,
+				cameraPos, moveFactor, rainFactor, texture0, depth, shadowTex, normalMap, heightMap, pbrMap,
 				useShadows, useParallax, transparent);
 		conectTextureUnits();
 	}
@@ -79,18 +79,18 @@ public class TessellatorShader extends ShaderProgram {
 		depth.loadTexUnit(1);
 		normalMap.loadTexUnit(2);
 		heightMap.loadTexUnit(3);
-		specularMap.loadTexUnit(4);
+		pbrMap.loadTexUnit(4);
 		shadowTex.loadTexUnit(5);
 		super.stop();
 	}
 
 	/**
-	 * Loads View Matrix to the shader
+	 * Loads View Matrixd to the shader
 	 * 
 	 * @param camera
 	 *            Camera
 	 */
-	public void loadViewMatrix(Matrix4f cameraViewMatrix, Vector3f cameraPosition) {
+	public void loadViewMatrix(Matrix4d cameraViewMatrix, Vector3d cameraPosition) {
 		cameraViewMatrix.m30 = 0;
 		cameraViewMatrix.m31 = 0;
 		cameraViewMatrix.m32 = 0;
@@ -98,8 +98,8 @@ public class TessellatorShader extends ShaderProgram {
 		cameraPos.loadVec3(cameraPosition);
 	}
 
-	public void loadBiasMatrix(Matrix4f shadowProjectionMatrix) {
-		Matrix4f biasMatrix = new Matrix4f();
+	public void loadBiasMatrix(Matrix4d shadowProjectionMatrix) {
+		Matrix4d biasMatrix = new Matrix4d();
 		biasMatrix.m00 = 0.5f;
 		biasMatrix.m11 = 0.5f;
 		biasMatrix.m22 = 0.5f;
@@ -110,7 +110,7 @@ public class TessellatorShader extends ShaderProgram {
 		projectionLightMatrix.loadMatrix(shadowProjectionMatrix);
 	}
 
-	public void loadLightMatrix(Matrix4f sunCameraViewMatrix) {
+	public void loadLightMatrix(Matrix4d sunCameraViewMatrix) {
 		viewLightMatrix.loadMatrix(sunCameraViewMatrix);
 	}
 
@@ -132,12 +132,12 @@ public class TessellatorShader extends ShaderProgram {
 	}
 
 	/**
-	 * Loads Projection Matrix to the shader
+	 * Loads Projection Matrixd to the shader
 	 * 
 	 * @param projection
-	 *            Projection Matrix
+	 *            Projection Matrixd
 	 */
-	public void loadProjectionMatrix(Matrix4f projection) {
+	public void loadProjectionMatrix(Matrix4d projection) {
 		projectionMatrix.loadMatrix(projection);
 	}
 

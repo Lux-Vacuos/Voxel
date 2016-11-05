@@ -20,8 +20,8 @@
 
 package net.luxvacuos.voxel.client.rendering.api.opengl.shaders;
 
-import net.luxvacuos.igl.vector.Matrix4f;
-import net.luxvacuos.igl.vector.Vector3f;
+import net.luxvacuos.igl.vector.Matrix4d;
+import net.luxvacuos.igl.vector.Vector3d;
 import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.Attribute;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.UniformFloat;
@@ -38,7 +38,7 @@ import net.luxvacuos.voxel.client.world.entities.Camera;
  */
 public class SkyboxShader extends ShaderProgram {
 
-	private static Matrix4f camM;
+	private static Matrix4d camM;
 
 	private UniformMatrix projectionMatrix = new UniformMatrix("projectionMatrix");
 	private UniformMatrix transformationMatrix = new UniformMatrix("transformationMatrix");
@@ -55,17 +55,17 @@ public class SkyboxShader extends ShaderProgram {
 	}
 
 	/**
-	 * Loads a Projection Matrix
+	 * Loads a Projection Matrixd
 	 * 
 	 * @param matrix
-	 *            Projection Matrix
+	 *            Projection Matrixd
 	 */
-	public void loadProjectionMatrix(Matrix4f matrix) {
+	public void loadProjectionMatrix(Matrix4d matrix) {
 		projectionMatrix.loadMatrix(matrix);
 	}
 
 	/**
-	 * Loads View Matrix
+	 * Loads View Matrixd
 	 * 
 	 * @param camera
 	 *            Camera
@@ -76,11 +76,11 @@ public class SkyboxShader extends ShaderProgram {
 		viewMatrix.loadMatrix(Maths.createViewMatrixRot(camera.getPitch(), camera.getYaw(), camera.getRoll(), camM));
 	}
 
-	public void loadTransformationMatrix(Matrix4f mat) {
+	public void loadTransformationMatrix(Matrix4d mat) {
 		transformationMatrix.loadMatrix(mat);
 	}
 
-	public void loadLightPosition(Vector3f pos) {
+	public void loadLightPosition(Vector3d pos) {
 		lightPosition.loadVec3(pos);
 	}
 
@@ -95,7 +95,7 @@ public class SkyboxShader extends ShaderProgram {
 	 *            Blue Value
 	 */
 	public void loadFog(float r, float g, float b) {
-		fogColour.loadVec3(new Vector3f(r, g, b));
+		fogColour.loadVec3(new Vector3d(r, g, b));
 	}
 
 	public void loadTime(float time) {

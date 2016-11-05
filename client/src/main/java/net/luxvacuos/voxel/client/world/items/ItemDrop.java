@@ -23,7 +23,7 @@ package net.luxvacuos.voxel.client.world.items;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.math.Vector3;
 
-import net.luxvacuos.igl.vector.Vector3f;
+import net.luxvacuos.igl.vector.Vector3d;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Tessellator;
 import net.luxvacuos.voxel.client.world.block.BlockBase;
 import net.luxvacuos.voxel.universal.ecs.Components;
@@ -36,7 +36,7 @@ public class ItemDrop extends Entity {
 
 	private BlockBase block;
 
-	public ItemDrop(Vector3f pos, BlockBase block, float scale) {
+	public ItemDrop(Vector3d pos, BlockBase block, float scale) {
 		Vector3 min = new Vector3(-0.2f, -0.2f, -0.2f);
 		Vector3 max = new Vector3(0.2f, 0.2f, 0.2f);
 		this.add(new Position(pos));
@@ -47,7 +47,7 @@ public class ItemDrop extends Entity {
 	}
 
 	public ItemDrop(BlockBase block) {
-		this(new Vector3f(), block, 1);
+		this(new Vector3d(), block, 1);
 	}
 
 	public void generateModel(Tessellator tess) {

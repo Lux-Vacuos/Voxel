@@ -27,8 +27,8 @@ import java.util.List;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Client;
 
-import net.luxvacuos.igl.vector.Vector2f;
-import net.luxvacuos.igl.vector.Vector3f;
+import net.luxvacuos.igl.vector.Vector2d;
+import net.luxvacuos.igl.vector.Vector3d;
 import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.world.block.BlockBase;
@@ -71,8 +71,8 @@ public class VoxelClient {
 		client.addListener(new DedicatedListener(gm));
 		client.setName(ClientVariables.username);
 		Kryo kryo = client.getKryo();
-		kryo.register(Vector3f.class);
-		kryo.register(Vector2f.class);
+		kryo.register(Vector3d.class);
+		kryo.register(Vector2d.class);
 		kryo.register(WorldTime.class);
 		kryo.register(Username.class);
 		kryo.register(UpdateNames.class);

@@ -4,7 +4,7 @@ import com.hackhalo2.nbt.CompoundBuilder;
 import com.hackhalo2.nbt.exceptions.NBTException;
 import com.hackhalo2.nbt.tags.TagCompound;
 
-import net.luxvacuos.igl.vector.Vector3f;
+import net.luxvacuos.igl.vector.Vector3d;
 
 public class Velocity implements VoxelComponent {
 private double x, y, z;
@@ -21,14 +21,14 @@ private double x, y, z;
 		this.z = z;
 	}
 	
-	public Velocity(Vector3f vec) {
+	public Velocity(Vector3d vec) {
 		this.x = vec.x;
 		this.y = vec.y;
 		this.z = vec.z;
 	}
 	
-	public Vector3f getVelocity() {
-		return new Vector3f(this.x, this.y, this.z);
+	public Vector3d getVelocity() {
+		return new Vector3d(this.x, this.y, this.z);
 	}
 	
 	public double getX() {
@@ -69,7 +69,7 @@ private double x, y, z;
 		return this;
 	}
 	
-	public Velocity set(Vector3f vec) {
+	public Velocity set(Vector3d vec) {
 		this.x = vec.x;
 		this.y = vec.y;
 		this.z = vec.z;

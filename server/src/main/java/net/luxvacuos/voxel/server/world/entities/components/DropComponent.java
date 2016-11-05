@@ -25,7 +25,7 @@ import java.util.List;
 import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Engine;
 
-import net.luxvacuos.igl.vector.Vector3f;
+import net.luxvacuos.igl.vector.Vector3d;
 import net.luxvacuos.voxel.server.world.items.ItemDrop;
 import net.luxvacuos.voxel.universal.ecs.Components;
 
@@ -37,7 +37,7 @@ public class DropComponent implements Component {
 		this.drop = drop;
 	}
 
-	public void drop(Engine system, Vector3f pos) {
+	public void drop(Engine system, Vector3d pos) {
 		for (ItemDrop itemDrop : drop) {
 			Components.POSITION.get(itemDrop).set(pos);
 			system.addEntity(itemDrop);

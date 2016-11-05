@@ -22,10 +22,10 @@ package net.luxvacuos.voxel.server.util;
 
 import java.util.Random;
 
-import net.luxvacuos.igl.vector.Matrix4f;
-import net.luxvacuos.igl.vector.Vector2f;
-import net.luxvacuos.igl.vector.Vector3f;
-import net.luxvacuos.igl.vector.Vector4f;
+import net.luxvacuos.igl.vector.Matrix4d;
+import net.luxvacuos.igl.vector.Vector2d;
+import net.luxvacuos.igl.vector.Vector3d;
+import net.luxvacuos.igl.vector.Vector4d;
 
 /**
  * Maths
@@ -75,8 +75,8 @@ public class Maths {
 		return randomNum;
 	}
 
-	public static Vector2f convertTo2F(Vector3f pos, Matrix4f projection, Matrix4f viewMatrix, int width, int height) {
-		return net.luxvacuos.igl.vector.Matrix4f.Project(pos, projection, viewMatrix, new Vector4f(0, 0, width, height));
+	public static Vector2d convertTo2F(Vector3d pos, Matrix4d projection, Matrix4d viewMatrix, int width, int height) {
+		return net.luxvacuos.igl.vector.Matrix4d.Project(pos, projection, viewMatrix, new Vector4d(0, 0, width, height));
 	}
 
 	/**

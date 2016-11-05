@@ -20,19 +20,19 @@
 
 package net.luxvacuos.voxel.client.world.entities;
 
-import net.luxvacuos.igl.vector.Matrix4f;
-import net.luxvacuos.igl.vector.Vector2f;
+import net.luxvacuos.igl.vector.Matrix4d;
+import net.luxvacuos.igl.vector.Vector2d;
 import net.luxvacuos.voxel.client.resources.DRay;
 import net.luxvacuos.voxel.client.util.Maths;
 
 public class SunCamera extends Camera {
 
-	private Vector2f center;
-	private Matrix4f projectionMatrix;
+	private Vector2d center;
+	private Matrix4d projectionMatrix;
 
-	public SunCamera(Matrix4f projectionMatrix) {
+	public SunCamera(Matrix4d projectionMatrix) {
 		this.projectionMatrix = projectionMatrix;
-		center = new Vector2f(2048, 2048);
+		center = new Vector2d(2048, 2048);
 		dRay = new DRay(projectionMatrix, Maths.createViewMatrix(this), center, 0, 0);
 	}
 

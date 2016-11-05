@@ -28,8 +28,8 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Server;
 
-import net.luxvacuos.igl.vector.Vector2f;
-import net.luxvacuos.igl.vector.Vector3f;
+import net.luxvacuos.igl.vector.Vector2d;
+import net.luxvacuos.igl.vector.Vector3d;
 import net.luxvacuos.voxel.server.resources.ServerGameResources;
 import net.luxvacuos.voxel.server.world.block.BlockBase;
 import net.luxvacuos.voxel.server.world.block.BlockEntity;
@@ -71,8 +71,8 @@ public class VoxelServer {
 		server.start();
 		server.addListener(new DedicatedListener(gm));
 		Kryo kryo = server.getKryo();
-		kryo.register(Vector3f.class);
-		kryo.register(Vector2f.class);
+		kryo.register(Vector3d.class);
+		kryo.register(Vector2d.class);
 		kryo.register(WorldTime.class);
 		kryo.register(Username.class);
 		kryo.register(UpdateNames.class);

@@ -1,3 +1,23 @@
+/*
+ * This file is part of Voxel
+ * 
+ * Copyright (C) 2016 Lux Vacuos
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * 
+ */
+
 package net.luxvacuos.voxel.client.rendering.api.opengl;
 
 import static org.lwjgl.opengl.GL11.GL_BACK;
@@ -26,8 +46,8 @@ import java.nio.FloatBuffer;
 
 import org.lwjgl.BufferUtils;
 
-import net.luxvacuos.igl.vector.Matrix4f;
-import net.luxvacuos.igl.vector.Vector3f;
+import net.luxvacuos.igl.vector.Matrix4d;
+import net.luxvacuos.igl.vector.Vector3d;
 import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.core.ClientWorldSimulation;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
@@ -41,7 +61,7 @@ import net.luxvacuos.voxel.client.world.entities.Camera;
 
 public class Renderer {
 
-	private Matrix4f projectionMatrix, shadowProjectionMatrix;
+	private Matrix4d projectionMatrix, shadowProjectionMatrix;
 
 	private EntityRenderer entityRenderer;
 	private EntityShadowRenderer entityShadowRenderer;
@@ -90,7 +110,7 @@ public class Renderer {
 	}
 
 	public void render(Dimension dimension, Camera camera, Camera sunCamera,
-			ClientWorldSimulation clientWorldSimulation, Vector3f lightPosition, Vector3f invertedLightPosition,
+			ClientWorldSimulation clientWorldSimulation, Vector3d lightPosition, Vector3d invertedLightPosition,
 			float alpha) {
 		frustum.calculateFrustum(shadowProjectionMatrix, sunCamera);
 		if (ClientVariables.useShadows) {
@@ -153,11 +173,11 @@ public class Renderer {
 		renderingPipeline.dispose();
 	}
 
-	public Matrix4f getProjectionMatrix() {
+	public Matrix4d getProjectionMatrix() {
 		return projectionMatrix;
 	}
 
-	public Matrix4f getShadowProjectionMatrix() {
+	public Matrix4d getShadowProjectionMatrix() {
 		return shadowProjectionMatrix;
 	}
 
@@ -186,11 +206,11 @@ public class Renderer {
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	}
 
-	public static Matrix4f createProjectionMatrix(int width, int height, float fov, float nearPlane, float farPlane) {
-		return createProjectionMatrix(new Matrix4f(), width, height, fov, nearPlane, farPlane);
+	public static Matrix4d createProjectionMatrix(int width, int height, float fov, float nearPlane, float farPlane) {
+		return createProjectionMatrix(new Matrix4d(), width, height, fov, nearPlane, farPlane);
 	}
 
-	public static Matrix4f createProjectionMatrix(Matrix4f proj, int width, int height, float fov, float nearPlane,
+	public static Matrix4d createProjectionMatrix(Matrix4d proj, int width, int height, float fov, float nearPlane,
 			float farPlane) {
 		float aspectRatio = (float) width / (float) height;
 		float y_scale = (float) ((1f / Math.tan(Math.toRadians(fov / 2f))));

@@ -26,7 +26,7 @@ import java.util.List;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.utils.ImmutableArray;
 
-import net.luxvacuos.igl.vector.Matrix4f;
+import net.luxvacuos.igl.vector.Matrix4d;
 import net.luxvacuos.voxel.client.core.ClientWorldSimulation;
 import net.luxvacuos.voxel.client.world.block.BlocksResources;
 import net.luxvacuos.voxel.client.world.entities.Camera;
@@ -37,13 +37,13 @@ public class ItemsDropRenderer {
 	private List<ItemDrop> items;
 	private Tessellator tess;
 
-	public ItemsDropRenderer(Matrix4f projectionMatrix, Matrix4f shadowProjectionMatrix) {
+	public ItemsDropRenderer(Matrix4d projectionMatrix, Matrix4d shadowProjectionMatrix) {
 		items = new ArrayList<>();
 		tess = new Tessellator(projectionMatrix, shadowProjectionMatrix);
 	}
 
 	public void render(ImmutableArray<Entity> immutableArray, Camera camera, Camera sunCamera,
-			ClientWorldSimulation clientWorldSimulation, Matrix4f projectionMatrix, int shadowMap, int shadowData) {
+			ClientWorldSimulation clientWorldSimulation, Matrix4d projectionMatrix, int shadowMap, int shadowData) {
 		items.clear();
 		for (Entity entity : immutableArray) {
 			if (entity instanceof ItemDrop)
@@ -53,9 +53,9 @@ public class ItemsDropRenderer {
 	}
 
 	private void doRender(Camera camera, Camera sunCamera, ClientWorldSimulation clientWorldSimulation,
-			Matrix4f projectionMatrix, int shadowMap, int shadowData) {
+			Matrix4d projectionMatrix, int shadowMap, int shadowData) {
 		tess.begin(BlocksResources.getTessellatorTextureAtlas().getTexture(), BlocksResources.getNormalMap(),
-				BlocksResources.getHeightMap(), BlocksResources.getSpecularMap());
+				BlocksResources.getHeightMap(), BlocksResources.getPbrMap());
 		for (ItemDrop itemDrop : items) {
 			itemDrop.generateModel(tess);
 		}

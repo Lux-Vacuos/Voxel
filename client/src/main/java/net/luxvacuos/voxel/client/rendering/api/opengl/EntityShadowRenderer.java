@@ -42,7 +42,7 @@ import java.util.Map;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.utils.ImmutableArray;
 
-import net.luxvacuos.igl.vector.Matrix4f;
+import net.luxvacuos.igl.vector.Matrix4d;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.EntityBasicShader;
 import net.luxvacuos.voxel.client.resources.models.RawModel;
 import net.luxvacuos.voxel.client.resources.models.TexturedModel;
@@ -67,9 +67,9 @@ public class EntityShadowRenderer {
 	 * @param shader
 	 *            Entity Shader
 	 * @param projectionMatrix
-	 *            A Matrix4f Projection
+	 *            A Matrix4d Projection
 	 */
-	public EntityShadowRenderer(Matrix4f shadowProjectionMatrix) {
+	public EntityShadowRenderer(Matrix4d shadowProjectionMatrix) {
 		shader = new EntityBasicShader();
 		shader.start();
 		shader.loadProjectionMatrix(shadowProjectionMatrix);
@@ -162,7 +162,7 @@ public class EntityShadowRenderer {
 		Position pos = Components.POSITION.get(entity);
 		Rotation rot = Components.ROTATION.get(entity);
 		Scale scale = Components.SCALE.get(entity);
-		Matrix4f transformationMatrix = Maths.createTransformationMatrix(pos.getPosition(), rot.getX(), rot.getY(),
+		Matrix4d transformationMatrix = Maths.createTransformationMatrix(pos.getPosition(), rot.getX(), rot.getY(),
 				rot.getZ(), scale.getScale());
 		shader.loadTransformationMatrix(transformationMatrix);
 	}

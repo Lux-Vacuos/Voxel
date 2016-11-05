@@ -23,7 +23,7 @@ package net.luxvacuos.voxel.server.world.block.types;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 
-import net.luxvacuos.igl.vector.Vector3f;
+import net.luxvacuos.igl.vector.Vector3d;
 import net.luxvacuos.voxel.server.world.block.BlockEntity;
 
 public class BlockPedestal extends BlockEntity {
@@ -44,7 +44,7 @@ public class BlockPedestal extends BlockEntity {
 	}
 
 	@Override
-	public BoundingBox getBoundingBox(Vector3f pos) {
+	public BoundingBox getBoundingBox(Vector3d pos) {
 		return new BoundingBox(new Vector3(pos.x + 0.15, pos.y, pos.z + 0.15),
 				new Vector3(pos.x + 0.85, pos.y + 1, pos.z + 0.85));
 	}

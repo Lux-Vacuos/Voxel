@@ -22,7 +22,7 @@ package net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data;
 
 import static org.lwjgl.opengl.GL20.glGetUniformLocation;
 
-public abstract class Uniform {
+public abstract class Uniform implements IUniform {
 
 	protected String name;
 	private int location;
@@ -31,6 +31,7 @@ public abstract class Uniform {
 		this.name = name;
 	}
 
+	@Override
 	public void storeUniformLocation(int programID) {
 		location = glGetUniformLocation(programID, name);
 	}

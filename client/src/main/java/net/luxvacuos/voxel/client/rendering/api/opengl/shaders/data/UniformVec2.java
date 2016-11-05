@@ -22,7 +22,7 @@ package net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data;
 
 import static org.lwjgl.opengl.GL20.*;
 
-import net.luxvacuos.igl.vector.Vector2f;
+import net.luxvacuos.igl.vector.Vector2d;
 
 public class UniformVec2 extends Uniform {
 
@@ -34,7 +34,7 @@ public class UniformVec2 extends Uniform {
 		super(name);
 	}
 
-	public void loadVec2(Vector2f vector) {
+	public void loadVec2(Vector2d vector) {
 		loadVec2((float) vector.x, (float) vector.y);
 	}
 

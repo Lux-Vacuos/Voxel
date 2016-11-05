@@ -25,7 +25,7 @@ import java.util.List;
 
 import com.badlogic.gdx.math.Vector3;
 
-import net.luxvacuos.igl.vector.Vector3f;
+import net.luxvacuos.igl.vector.Vector3d;
 import net.luxvacuos.voxel.client.resources.EntityResources;
 import net.luxvacuos.voxel.client.world.block.Block;
 import net.luxvacuos.voxel.client.world.entities.components.ArmourComponent;
@@ -40,7 +40,7 @@ import net.luxvacuos.voxel.universal.ecs.components.Velocity;
 
 public class GuineaPig extends AbstractEntity {
 
-	public GuineaPig(Vector3f position) {
+	public GuineaPig(Vector3d position) {
 		super.add(new RendereableComponent()).getComponent(RendereableComponent.class).model = EntityResources
 				.getGuineaPig();
 		Vector3 min = new Vector3(-0.15f, -0.15f, -0.15f);
@@ -60,13 +60,13 @@ public class GuineaPig extends AbstractEntity {
 
 		// Test with rotation based movement
 		/*
-		 * Vector3f velocity =
+		 * Vector3d velocity =
 		 * super.getComponent(VelocityComponent.class).velocity; velocity.x +=
-		 * 0.4f; Vector4f tmp = new Vector4f();
+		 * 0.4f; Vector4d tmp = new Vector4d();
 		 * 
-		 * Matrix4f.transform( Maths.createTransformationMatrix(new Vector3f(),
+		 * Matrix4d.transform( Maths.createTransformationMatrix(new Vector3d(),
 		 * getRotX(), getRotY(), getRotZ(), getScale()), new
-		 * Vector4f(velocity.x, velocity.y, velocity.z, 1), tmp);
+		 * Vector4d(velocity.x, velocity.y, velocity.z, 1), tmp);
 		 * super.getComponent(VelocityComponent.class).velocity.x = tmp.x;
 		 * super.getComponent(VelocityComponent.class).velocity.y = tmp.y;
 		 * super.getComponent(VelocityComponent.class).velocity.z = tmp.z;

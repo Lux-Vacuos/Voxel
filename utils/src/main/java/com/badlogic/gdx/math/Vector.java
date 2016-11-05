@@ -26,7 +26,7 @@ public interface Vector<T extends Vector<T>> {
 	/** @return The euclidean length */
 	double len ();
 
-	/** This method is faster than {@link Vector#len()} because it avoids calculating a square root. It is useful for comparisons,
+	/** This method is faster than {@link Vectord#len()} because it avoids calculating a square root. It is useful for comparisons,
 	 * but not for getting exact lengths, as the return value is the square of the actual length.
 	 * @return The squared euclidean length */
 	double len2 ();
@@ -99,7 +99,7 @@ public interface Vector<T extends Vector<T>> {
 	 * @return the distance between this and the other vector */
 	double dst (T v);
 
-	/** This method is faster than {@link Vector#dst(Vector)} because it avoids calculating a square root. It is useful for
+	/** This method is faster than {@link Vectord#dst(Vectord)} because it avoids calculating a square root. It is useful for
 	 * comparisons, but not for getting accurate distances, as the return value is the square of the actual distance.
 	 * @param v The other vector
 	 * @return the squared distance between this and the other vector */
@@ -138,20 +138,20 @@ public interface Vector<T extends Vector<T>> {
 	/** @return true if this vector is in line with the other vector (either in the same or the opposite direction) */
 	boolean isOnLine (T other);
 
-	/** @return true if this vector is collinear with the other vector ({@link #isOnLine(Vector, double)} &&
-	 *         {@link #hasSameDirection(Vector)}). */
+	/** @return true if this vector is collinear with the other vector ({@link #isOnLine(Vectord, double)} &&
+	 *         {@link #hasSameDirection(Vectord)}). */
 	boolean isCollinear (T other, double epsilon);
 
-	/** @return true if this vector is collinear with the other vector ({@link #isOnLine(Vector)} &&
-	 *         {@link #hasSameDirection(Vector)}). */
+	/** @return true if this vector is collinear with the other vector ({@link #isOnLine(Vectord)} &&
+	 *         {@link #hasSameDirection(Vectord)}). */
 	boolean isCollinear (T other);
 
-	/** @return true if this vector is opposite collinear with the other vector ({@link #isOnLine(Vector, double)} &&
-	 *         {@link #hasOppositeDirection(Vector)}). */
+	/** @return true if this vector is opposite collinear with the other vector ({@link #isOnLine(Vectord, double)} &&
+	 *         {@link #hasOppositeDirection(Vectord)}). */
 	boolean isCollinearOpposite (T other, double epsilon);
 
-	/** @return true if this vector is opposite collinear with the other vector ({@link #isOnLine(Vector)} &&
-	 *         {@link #hasOppositeDirection(Vector)}). */
+	/** @return true if this vector is opposite collinear with the other vector ({@link #isOnLine(Vectord)} &&
+	 *         {@link #hasOppositeDirection(Vectord)}). */
 	boolean isCollinearOpposite (T other);
 
 	/** @return Whether this vector is perpendicular with the other vector. True if the dot product is 0. */

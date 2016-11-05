@@ -22,9 +22,9 @@ package net.luxvacuos.voxel.client.rendering.api.opengl.shaders;
 
 import java.util.List;
 
-import net.luxvacuos.igl.vector.Matrix4f;
-import net.luxvacuos.igl.vector.Vector2f;
-import net.luxvacuos.igl.vector.Vector3f;
+import net.luxvacuos.igl.vector.Matrix4d;
+import net.luxvacuos.igl.vector.Vector2d;
+import net.luxvacuos.igl.vector.Vector3d;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.Light;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.Attribute;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.UniformBoolean;
@@ -80,17 +80,17 @@ public class DeferredShadingShader extends ShaderProgram {
 	private UniformSampler gPosition = new UniformSampler("gPosition");
 	private UniformSampler gNormal = new UniformSampler("gNormal");
 	private UniformSampler gDepth = new UniformSampler("gDepth");
-	private UniformSampler gData0 = new UniformSampler("gData0");
-	private UniformSampler gData1 = new UniformSampler("gData1");
+	private UniformSampler gPBR = new UniformSampler("gPBR");
+	private UniformSampler gMask = new UniformSampler("gMask");
 	private UniformSampler composite0 = new UniformSampler("composite0");
 	private UniformSampler composite1 = new UniformSampler("composite1");
 
 	private static float tTime = 0;
 
-	private static Matrix4f iPM, iVM;
+	private static Matrix4d iPM, iVM;
 
 	public DeferredShadingShader(String type) {
-		super("IP_V_" + type + ".glsl", "IP_F_" + type + ".glsl", new Attribute(0, "position"));
+		super("deferred/V_" + type + ".glsl", "deferred/F_" + type + ".glsl", new Attribute(0, "position"));
 		pointLightsPos = new UniformVec3[256];
 		for (int x = 0; x < 256; x++) {
 			pointLightsPos[x] = new UniformVec3("pointLightsPos[" + x + "]");
@@ -100,7 +100,7 @@ public class DeferredShadingShader extends ShaderProgram {
 				inverseViewMatrix, previousViewMatrix, cameraPosition, previousCameraPosition, lightPosition,
 				invertedLightPosition, skyColor, resolution, sunPositionInScreen, exposure, time, camUnderWaterOffset,
 				shadowDrawDistance, camUnderWater, useFXAA, useDOF, useMotionBlur, useReflections, useVolumetricLight,
-				useAmbientOcclusion, gDiffuse, gPosition, gNormal, gDepth, gData0, gData1, composite0, composite1);
+				useAmbientOcclusion, gDiffuse, gPosition, gNormal, gDepth, gPBR, gMask, composite0, composite1);
 		connectTextureUnits();
 	}
 
@@ -114,8 +114,8 @@ public class DeferredShadingShader extends ShaderProgram {
 		gPosition.loadTexUnit(1);
 		gNormal.loadTexUnit(2);
 		gDepth.loadTexUnit(3);
-		gData0.loadTexUnit(4);
-		gData1.loadTexUnit(5);
+		gPBR.loadTexUnit(4);
+		gMask.loadTexUnit(5);
 		composite0.loadTexUnit(6);
 		composite1.loadTexUnit(7);
 		super.stop();
@@ -131,16 +131,16 @@ public class DeferredShadingShader extends ShaderProgram {
 		this.exposure.loadFloat(exposure);
 	}
 
-	public void loadSkyColor(Vector3f color) {
+	public void loadSkyColor(Vector3d color) {
 		skyColor.loadVec3(color);
 	}
 
-	public void loadLightPosition(Vector3f pos, Vector3f invertPos) {
+	public void loadLightPosition(Vector3d pos, Vector3d invertPos) {
 		lightPosition.loadVec3(pos);
 		invertedLightPosition.loadVec3(invertPos);
 	}
 
-	public void loadSunPosition(Vector2f pos) {
+	public void loadSunPosition(Vector2d pos) {
 		sunPositionInScreen.loadVec2(pos);
 	}
 
@@ -154,7 +154,7 @@ public class DeferredShadingShader extends ShaderProgram {
 			if (x < lights.size()) {
 				pointLightsPos[x].loadVec3(lights.get(x).getPosition());
 			} else {
-				pointLightsPos[x].loadVec3(new Vector3f(0, -100, 0));
+				pointLightsPos[x].loadVec3(new Vector3d(0, -100, 0));
 			}
 		}
 	}
@@ -163,9 +163,9 @@ public class DeferredShadingShader extends ShaderProgram {
 	 * Load Display Resolution
 	 * 
 	 * @param res
-	 *            Resolution as Vector2f
+	 *            Resolution as Vector2d
 	 */
-	public void loadResolution(Vector2f res) {
+	public void loadResolution(Vector2d res) {
 		resolution.loadVec2(res);
 	}
 
@@ -180,18 +180,18 @@ public class DeferredShadingShader extends ShaderProgram {
 		this.shadowDrawDistance.loadInteger(shadowDrawDistance);
 	}
 
-	public void loadMotionBlurData(Matrix4f projectionMatrix, Camera camera, Matrix4f previousViewMatrix,
-			Vector3f previousCameraPosition) {
+	public void loadMotionBlurData(Matrix4d projectionMatrix, Camera camera, Matrix4d previousViewMatrix,
+			Vector3d previousCameraPosition) {
 		this.projectionMatrix.loadMatrix(projectionMatrix);
-		this.inverseProjectionMatrix.loadMatrix(Matrix4f.invert(projectionMatrix, iPM));
-		this.inverseViewMatrix.loadMatrix(Matrix4f.invert(Maths.createViewMatrix(camera), iVM));
+		this.inverseProjectionMatrix.loadMatrix(Matrix4d.invert(projectionMatrix, iPM));
+		this.inverseViewMatrix.loadMatrix(Matrix4d.invert(Maths.createViewMatrix(camera), iVM));
 		this.previousViewMatrix.loadMatrix(previousViewMatrix);
 		this.cameraPosition.loadVec3(camera.getPosition());
 		this.previousCameraPosition.loadVec3(previousCameraPosition);
 	}
 
 	/**
-	 * Loads View Matrix to the shader
+	 * Loads View Matrixd to the shader
 	 * 
 	 * @param camera
 	 *            Camera
@@ -201,12 +201,12 @@ public class DeferredShadingShader extends ShaderProgram {
 	}
 
 	/**
-	 * Loads Transformation Matrix to the shader
+	 * Loads Transformation Matrixd to the shader
 	 * 
 	 * @param matrix
-	 *            Transformation Matrix
+	 *            Transformation Matrixd
 	 */
-	public void loadTransformation(Matrix4f matrix) {
+	public void loadTransformation(Matrix4d matrix) {
 		transformationMatrix.loadMatrix(matrix);
 	}
 

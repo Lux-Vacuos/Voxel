@@ -20,7 +20,7 @@
 
 package net.luxvacuos.voxel.client.ui;
 
-import net.luxvacuos.igl.vector.Vector3f;
+import net.luxvacuos.igl.vector.Vector3d;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.UIRendering;
 import net.luxvacuos.voxel.client.resources.GameResources;
@@ -49,7 +49,7 @@ public class Inventory {
 		this.yPos = yPos;
 		for (int x = 0; x < sizeX; x++) {
 			for (int y = 0; y < sizeY; y++) {
-				items[x][y] = new ItemGui(new Vector3f((xPos * 0.0164f + x - 0.1f) * 1.321f, (yPos + y - 0.44f) * 2.63f,
+				items[x][y] = new ItemGui(new Vector3d((xPos * 0.0164f + x - 0.1f) * 1.321f, (yPos + y - 0.44f) * 2.63f,
 						(xPos * 0.0164f + x - 0.1f) * 1.321f), Block.Air);
 			}
 		}

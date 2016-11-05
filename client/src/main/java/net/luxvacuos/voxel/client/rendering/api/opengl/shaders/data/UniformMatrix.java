@@ -26,7 +26,7 @@ import java.nio.DoubleBuffer;
 
 import org.lwjgl.BufferUtils;
 
-import net.luxvacuos.igl.vector.Matrix4f;
+import net.luxvacuos.igl.vector.Matrix4d;
 
 public class UniformMatrix extends Uniform {
 
@@ -36,7 +36,7 @@ public class UniformMatrix extends Uniform {
 		super(name);
 	}
 
-	public void loadMatrix(Matrix4f matrix) {
+	public void loadMatrix(Matrix4d matrix) {
 		matrixBuffer.clear();
 		matrix.store(matrixBuffer);
 		matrixBuffer.flip();

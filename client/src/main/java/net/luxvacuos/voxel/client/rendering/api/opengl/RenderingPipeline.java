@@ -44,9 +44,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.luxvacuos.igl.Logger;
-import net.luxvacuos.igl.vector.Matrix4f;
-import net.luxvacuos.igl.vector.Vector2f;
-import net.luxvacuos.igl.vector.Vector3f;
+import net.luxvacuos.igl.vector.Matrix4d;
+import net.luxvacuos.igl.vector.Vector2d;
+import net.luxvacuos.igl.vector.Vector3d;
 import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.core.ClientWorldSimulation;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
@@ -75,8 +75,8 @@ public abstract class RenderingPipeline {
 	protected RenderingPipelineFBO mainFBO;
 	protected int width, height;
 	protected List<ImagePass> imagePasses;
-	private Matrix4f previousViewMatrix;
-	private Vector3f previousCameraPosition;
+	private Matrix4d previousViewMatrix;
+	private Vector3d previousCameraPosition;
 	private RawModel quad;
 	private ImagePassFBO[] auxs;
 	private DeferredShadingShader finalShader;
@@ -105,12 +105,12 @@ public abstract class RenderingPipeline {
 		for (int i = 0; i < auxs.length; i++) {
 			auxs[i] = new ImagePassFBO(width, height);
 		}
-		previousCameraPosition = new Vector3f();
-		previousViewMatrix = new Matrix4f();
+		previousCameraPosition = new Vector3d();
+		previousViewMatrix = new Matrix4d();
 		finalShader = new DeferredShadingShader("Final");
 		finalShader.start();
-		finalShader.loadTransformation(Maths.createTransformationMatrix(new Vector2f(0, 0), new Vector2f(1, 1)));
-		finalShader.loadResolution(new Vector2f(window.getWidth(), window.getHeight()));
+		finalShader.loadTransformation(Maths.createTransformationMatrix(new Vector2d(0, 0), new Vector2d(1, 1)));
+		finalShader.loadResolution(new Vector2d(window.getWidth(), window.getHeight()));
 		finalShader.loadSkyColor(ClientVariables.skyColor);
 		finalShader.stop();
 		init(gm);
@@ -145,12 +145,12 @@ public abstract class RenderingPipeline {
 		for (int i = 0; i < auxs.length; i++) {
 			auxs[i] = new ImagePassFBO(width, height);
 		}
-		previousCameraPosition = new Vector3f();
-		previousViewMatrix = new Matrix4f();
+		previousCameraPosition = new Vector3d();
+		previousViewMatrix = new Matrix4d();
 		finalShader = new DeferredShadingShader("Final");
 		finalShader.start();
-		finalShader.loadTransformation(Maths.createTransformationMatrix(new Vector2f(0, 0), new Vector2f(1, 1)));
-		finalShader.loadResolution(new Vector2f(window.getWidth(), window.getHeight()));
+		finalShader.loadTransformation(Maths.createTransformationMatrix(new Vector2d(0, 0), new Vector2d(1, 1)));
+		finalShader.loadResolution(new Vector2d(window.getWidth(), window.getHeight()));
 		finalShader.loadSkyColor(ClientVariables.skyColor);
 		finalShader.stop();
 		this.width = width;
@@ -191,7 +191,7 @@ public abstract class RenderingPipeline {
 	 * @param gm
 	 *            {@link GameResources}
 	 */
-	public void render(Camera camera, Matrix4f projectionMatrix, Vector3f lightPosition, Vector3f invertedLightPosition,
+	public void render(Camera camera, Matrix4d projectionMatrix, Vector3d lightPosition, Vector3d invertedLightPosition,
 			ClientWorldSimulation clientWorldSimulation, List<Light> lights) {
 		for (ImagePass imagePass : imagePasses) {
 			imagePass.process(camera, projectionMatrix, previousViewMatrix, previousCameraPosition, lightPosition,

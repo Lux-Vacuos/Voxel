@@ -4,7 +4,7 @@ import com.hackhalo2.nbt.CompoundBuilder;
 import com.hackhalo2.nbt.exceptions.NBTException;
 import com.hackhalo2.nbt.tags.TagCompound;
 
-import net.luxvacuos.igl.vector.Vector3f;
+import net.luxvacuos.igl.vector.Vector3d;
 
 public class Position implements VoxelComponent {
 
@@ -22,14 +22,14 @@ public class Position implements VoxelComponent {
 		this.z = z;
 	}
 	
-	public Position(Vector3f vec) {
+	public Position(Vector3d vec) {
 		this.x = vec.x;
 		this.y = vec.y;
 		this.z = vec.z;
 	}
 	
-	public Vector3f getPosition() {
-		return new Vector3f(this.x, this.y, this.z);
+	public Vector3d getPosition() {
+		return new Vector3d(this.x, this.y, this.z);
 	}
 	
 	public double getX() {
@@ -70,7 +70,7 @@ public class Position implements VoxelComponent {
 		return this;
 	}
 	
-	public Position set(Vector3f vec) {
+	public Position set(Vector3d vec) {
 		this.x = vec.x;
 		this.y = vec.y;
 		this.z = vec.z;

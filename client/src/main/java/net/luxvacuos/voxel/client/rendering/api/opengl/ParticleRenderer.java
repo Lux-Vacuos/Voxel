@@ -34,8 +34,8 @@ import java.util.Map;
 
 import org.lwjgl.BufferUtils;
 
-import net.luxvacuos.igl.vector.Matrix4f;
-import net.luxvacuos.igl.vector.Vector3f;
+import net.luxvacuos.igl.vector.Matrix4d;
+import net.luxvacuos.igl.vector.Vector3d;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.ParticleShader;
 import net.luxvacuos.voxel.client.resources.ResourceLoader;
 import net.luxvacuos.voxel.client.resources.models.Particle;
@@ -58,7 +58,7 @@ public class ParticleRenderer {
 	private int vbo;
 	private int pointer = 0;
 
-	public ParticleRenderer(ResourceLoader loader, Matrix4f projectionMatrix) {
+	public ParticleRenderer(ResourceLoader loader, Matrix4d projectionMatrix) {
 		this.loader = loader;
 		this.vbo = loader.createEmptyVBO(INSTANCE_DATA_LENGHT * MAX_INSTANCES);
 		quad = loader.loadToVAO(VERTICES, 2);
@@ -75,8 +75,8 @@ public class ParticleRenderer {
 		shader.stop();
 	}
 
-	public void render(Map<ParticleTexture, List<Particle>> particles, Camera camera, Matrix4f projectionMatrix) {
-		Matrix4f viewMatrix = Maths.createViewMatrix(camera);
+	public void render(Map<ParticleTexture, List<Particle>> particles, Camera camera, Matrix4d projectionMatrix) {
+		Matrix4d viewMatrix = Maths.createViewMatrix(camera);
 		prepare();
 		shader.loadProjectionMatrix(projectionMatrix);
 		for (ParticleTexture texture : particles.keySet()) {
@@ -110,10 +110,10 @@ public class ParticleRenderer {
 		vboData[pointer++] = particle.getBlend();
 	}
 
-	private void updateModelViewMatrix(Vector3f position, float rotation, float scale, Matrix4f viewMatrix,
+	private void updateModelViewMatrix(Vector3d position, float rotation, float scale, Matrix4d viewMatrix,
 			float[] vboData) {
-		Matrix4f modelMatrix = new Matrix4f();
-		Matrix4f.translate(position, modelMatrix, modelMatrix);
+		Matrix4d modelMatrix = new Matrix4d();
+		Matrix4d.translate(position, modelMatrix, modelMatrix);
 		modelMatrix.m00 = viewMatrix.m00;
 		modelMatrix.m01 = viewMatrix.m10;
 		modelMatrix.m02 = viewMatrix.m20;
@@ -123,13 +123,13 @@ public class ParticleRenderer {
 		modelMatrix.m20 = viewMatrix.m02;
 		modelMatrix.m21 = viewMatrix.m12;
 		modelMatrix.m22 = viewMatrix.m22;
-		Matrix4f modelViewMatrix = Matrix4f.mul(viewMatrix, modelMatrix, null);
-		Matrix4f.rotate((float) Math.toRadians(rotation), new Vector3f(0, 0, 1), modelMatrix, modelMatrix);
-		Matrix4f.scale(new Vector3f(scale, scale, scale), modelMatrix, modelMatrix);
+		Matrix4d modelViewMatrix = Matrix4d.mul(viewMatrix, modelMatrix, null);
+		Matrix4d.rotate((float) Math.toRadians(rotation), new Vector3d(0, 0, 1), modelMatrix, modelMatrix);
+		Matrix4d.scale(new Vector3d(scale, scale, scale), modelMatrix, modelMatrix);
 		storeMatrixData(modelViewMatrix, vboData);
 	}
 
-	private void storeMatrixData(Matrix4f matrix, float[] vboData) {
+	private void storeMatrixData(Matrix4d matrix, float[] vboData) {
 		vboData[pointer++] = (float) matrix.m00;
 		vboData[pointer++] = (float) matrix.m01;
 		vboData[pointer++] = (float) matrix.m02;
