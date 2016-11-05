@@ -58,7 +58,7 @@ void main(void){
     	image = finalLight * image;
     	if(position.w <= 0.5){
     		vec3 vHalfVector = normalize(lightDir.xyz+eyeDir);
-	   		image += pow(max(dot(normal.xyz,vHalfVector),0.0), 200 / pbr.r) * (1-pbr.r);
+	   		image += pow(max(dot(normal.xyz,vHalfVector),0.0), 200 / (1-pbr.r)) * (1-pbr.r);
 	   	}
 	}
     image += texture(composite0, texcoord);

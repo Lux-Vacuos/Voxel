@@ -58,10 +58,10 @@ void main(void){
     		vec4 newScreen;
     		vec3 rayTrace = worldStartingPos;
     		float currentWorldDist, rayDist;
-    		float incr = 0.2;
+    		float incr = 0.05;
     		do {
         		rayTrace += refl*incr;
-        		incr *= 1.2;
+        		incr *= 1.05;
         		newScreen = projectionMatrix * viewMatrix * vec4(rayTrace, 1);
         		newScreen /= newScreen.w;
         		newPos = texture(gPosition, newScreen.xy/2.0+0.5).xyz;
@@ -71,7 +71,14 @@ void main(void){
 				//|| dot(refl, cameraToWorldNorm) < 0 || cameraToWorldDist > currentWorldDist)
 	       			break;
     		} while(rayDist < currentWorldDist);
- 			vec4 newColor = texture(composite0, newScreen.xy/2.0 + 0.5);
+			vec4 newColor = texture(composite0, newScreen.xy/2.0 + 0.5);
+			for (int i = -3; i < 3; i++) {
+				for (int j = -3; j < 3; j++) {
+					newColor += texture(composite0,  newScreen.xy/2.0 + 0.5 + vec2(j, i) * ((1-pbr.r) / 100) );
+				}
+			}
+			newColor /= 36.0;
+ 			
     		//if (dot(refl, cameraToWorldNorm) < 0)
 	    	//	fact = 1.0;
     		//else 
