@@ -253,28 +253,16 @@ public class OptionsState extends AbstractFadeState {
 
 	@Override
 	public void update(AbstractVoxel voxel, float delta) {
-		GameResources gm = (GameResources) voxel.getGameResources();
 		while (Mouse.next()) {
 			uiWindow.update(delta);
 		}
-
 		super.update(voxel, delta);
-
-		gm.getRenderer().update();
 	}
 
 	@Override
 	public void render(AbstractVoxel voxel, float alpha) {
 		GameResources gm = (GameResources) voxel.getGameResources();
-		if (StateMachine.getPreviousState().getName().equals("SP_Pause")) {
-			gm.getWorldsHandler().getActiveWorld().getActiveDimension().lighting();
-			gm.getSun_Camera().setPosition(gm.getCamera().getPosition());
-			gm.getRenderer().render(gm.getWorldsHandler().getActiveWorld().getActiveDimension(), gm.getCamera(),
-					gm.getSun_Camera(), gm.getWorldSimulation(), gm.getLightPos(), gm.getInvertedLightPosition(),
-					alpha);
-		} else {
-			Renderer.prepare(1, 1, 1, 1);
-		}
+		Renderer.prepare(1, 1, 1, 1);
 
 		Window window = gm.getGameWindow();
 		window.beingNVGFrame();

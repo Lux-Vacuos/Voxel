@@ -24,29 +24,32 @@ import static org.lwjgl.nanovg.NanoVG.nvgCreateFontMem;
 import static org.lwjgl.nanovg.NanoVG.nvgCreateImageMem;
 import static org.lwjgl.nanovg.NanoVG.nvgDeleteImage;
 import static org.lwjgl.opengl.GL11.GL_FLOAT;
-import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.GL_LINEAR;
 import static org.lwjgl.opengl.GL11.GL_LINEAR_MIPMAP_LINEAR;
 import static org.lwjgl.opengl.GL11.GL_NEAREST;
 import static org.lwjgl.opengl.GL11.GL_REPEAT;
+import static org.lwjgl.opengl.GL11.GL_RGB;
 import static org.lwjgl.opengl.GL11.GL_RGBA;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_MAG_FILTER;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_MIN_FILTER;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_WRAP_S;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_WRAP_T;
+import static org.lwjgl.opengl.GL11.GL_UNPACK_ALIGNMENT;
 import static org.lwjgl.opengl.GL11.GL_UNSIGNED_BYTE;
 import static org.lwjgl.opengl.GL11.glBindTexture;
 import static org.lwjgl.opengl.GL11.glDeleteTextures;
 import static org.lwjgl.opengl.GL11.glGenTextures;
+import static org.lwjgl.opengl.GL11.glPixelStorei;
 import static org.lwjgl.opengl.GL11.glTexImage2D;
 import static org.lwjgl.opengl.GL11.glTexParameterf;
 import static org.lwjgl.opengl.GL11.glTexParameteri;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE_CUBE_MAP;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE_CUBE_MAP_POSITIVE_X;
-import static org.lwjgl.opengl.GL13.*;
-import static org.lwjgl.opengl.GL14.*;
-import static org.lwjgl.opengl.GL15.*;
+import static org.lwjgl.opengl.GL13.glActiveTexture;
+import static org.lwjgl.opengl.GL14.GL_TEXTURE_LOD_BIAS;
+import static org.lwjgl.opengl.GL15.GL_ARRAY_BUFFER;
 import static org.lwjgl.opengl.GL15.GL_ELEMENT_ARRAY_BUFFER;
 import static org.lwjgl.opengl.GL15.GL_STATIC_DRAW;
 import static org.lwjgl.opengl.GL15.GL_STREAM_DRAW;
@@ -55,23 +58,25 @@ import static org.lwjgl.opengl.GL15.glBufferData;
 import static org.lwjgl.opengl.GL15.glBufferSubData;
 import static org.lwjgl.opengl.GL15.glDeleteBuffers;
 import static org.lwjgl.opengl.GL15.glGenBuffers;
-import static org.lwjgl.opengl.GL20.*;
-import static org.lwjgl.opengl.GL21.*;
-import static org.lwjgl.opengl.GL30.*;
+import static org.lwjgl.opengl.GL20.glVertexAttribPointer;
+import static org.lwjgl.opengl.GL21.GL_SRGB_ALPHA;
+import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import static org.lwjgl.opengl.GL30.glDeleteVertexArrays;
 import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 import static org.lwjgl.opengl.GL30.glGenerateMipmap;
-import static org.lwjgl.opengl.GL33.*;
+import static org.lwjgl.opengl.GL33.glVertexAttribDivisor;
 import static org.lwjgl.stb.STBImage.stbi_failure_reason;
 import static org.lwjgl.stb.STBImage.stbi_info_from_memory;
 import static org.lwjgl.stb.STBImage.stbi_is_hdr_from_memory;
 import static org.lwjgl.stb.STBImage.stbi_load_from_memory;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
@@ -84,8 +89,11 @@ import java.util.List;
 import org.lwjgl.BufferUtils;
 
 import net.luxvacuos.igl.Logger;
+import net.luxvacuos.igl.vector.Vector2d;
+import net.luxvacuos.igl.vector.Vector3d;
 import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.core.exception.DecodeTextureException;
+import net.luxvacuos.voxel.client.core.exception.LoadOBJModelException;
 import net.luxvacuos.voxel.client.core.exception.LoadTextureException;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.glfw.WindowManager;
@@ -120,7 +128,6 @@ public class ResourceLoader {
 	 * NanoVG Fonts
 	 */
 	private List<ByteBuffer> nvgFont = new ArrayList<ByteBuffer>();
-	private OBJLoader objLoader;
 	private long windowID;
 
 	/*
@@ -129,7 +136,6 @@ public class ResourceLoader {
 	 */
 
 	public ResourceLoader(long windowID) {
-		this.objLoader = new OBJLoader(this);
 		this.windowID = windowID;
 	}
 
@@ -328,6 +334,117 @@ public class ResourceLoader {
 			Logger.error("Fail to load Font");
 	}
 
+	/**
+	 * Load an ObjModel
+	 * 
+	 * @param fileName
+	 *            OBJ File name
+	 * @return RawModel that contains all the data loaded to the GPU
+	 * @throws LoadOBJModelException
+	 *             Exception in case of error
+	 */
+	public RawModel loadObjModel(String fileName) {
+		InputStream file = getClass().getClassLoader()
+				.getResourceAsStream("assets/" + ClientVariables.assets + "/models/" + fileName + ".obj");
+		Logger.log("Loading Model: " + fileName + ".obj");
+		BufferedReader reader = new BufferedReader(new InputStreamReader(file));
+		String line;
+		List<Vector3d> vertices = new ArrayList<Vector3d>();
+		List<Vector2d> textures = new ArrayList<Vector2d>();
+		List<Vector3d> normals = new ArrayList<Vector3d>();
+		List<Integer> indices = new ArrayList<Integer>();
+		float[] verticesArray = null;
+		float[] normalsArray = null;
+		float[] textureArray = null;
+		int[] indicesArray = null;
+		try {
+
+			while (true) {
+				line = reader.readLine();
+				String[] currentLine = line.split(" ");
+				if (line.startsWith("v ")) {
+					Vector3d vertex = new Vector3d(Float.parseFloat(currentLine[1]), Float.parseFloat(currentLine[2]),
+							Float.parseFloat(currentLine[3]));
+					vertices.add(vertex);
+				} else if (line.startsWith("vt ")) {
+					Vector2d texture = new Vector2d(Float.parseFloat(currentLine[1]), Float.parseFloat(currentLine[2]));
+					textures.add(texture);
+				} else if (line.startsWith("vn ")) {
+					Vector3d normal = new Vector3d(Float.parseFloat(currentLine[1]), Float.parseFloat(currentLine[2]),
+							Float.parseFloat(currentLine[3]));
+					normals.add(normal);
+				} else if (line.startsWith("f ")) {
+					textureArray = new float[vertices.size() * 2];
+					normalsArray = new float[vertices.size() * 3];
+					break;
+				}
+			}
+
+			while (line != null) {
+				if (!line.startsWith("f ")) {
+					line = reader.readLine();
+					continue;
+				}
+				String[] currentLine = line.split(" ");
+				String[] vertex1 = currentLine[1].split("/");
+				String[] vertex2 = currentLine[2].split("/");
+				String[] vertex3 = currentLine[3].split("/");
+
+				processVertex(vertex1, indices, textures, normals, textureArray, normalsArray);
+				processVertex(vertex2, indices, textures, normals, textureArray, normalsArray);
+				processVertex(vertex3, indices, textures, normals, textureArray, normalsArray);
+				line = reader.readLine();
+
+			}
+			reader.close();
+		} catch (Exception e) {
+			throw new LoadOBJModelException(e);
+		}
+		verticesArray = new float[vertices.size() * 3];
+		indicesArray = new int[indices.size()];
+
+		int vertexPointer = 0;
+		for (Vector3d vertex : vertices) {
+			verticesArray[vertexPointer++] = (float) vertex.x;
+			verticesArray[vertexPointer++] = (float) vertex.y;
+			verticesArray[vertexPointer++] = (float) vertex.z;
+		}
+
+		for (int i = 0; i < indices.size(); i++) {
+			indicesArray[i] = indices.get(i);
+		}
+		return loadToVAO(verticesArray, textureArray, normalsArray, indicesArray);
+	}
+
+	/**
+	 * Process Vertex Data
+	 * 
+	 * @param vertexData
+	 *            Vertex Data
+	 * @param indices
+	 *            Indices Data
+	 * @param textures
+	 *            Textures Data
+	 * @param normals
+	 *            Normals Data
+	 * @param textureArrays
+	 *            Texture Array
+	 * @param normalsArray
+	 *            Normals Arrays
+	 */
+	private void processVertex(String[] vertexData, List<Integer> indices, List<Vector2d> textures,
+			List<Vector3d> normals, float[] textureArrays, float[] normalsArray) {
+		int currentVertexPointer = Integer.parseInt(vertexData[0]) - 1;
+		indices.add(currentVertexPointer);
+		Vector2d currentTex = textures.get(Integer.parseInt(vertexData[1]) - 1);
+		textureArrays[currentVertexPointer * 2] = (float) currentTex.x;
+		textureArrays[currentVertexPointer * 2 + 1] = (float) (1 - currentTex.y);
+		Vector3d currentNorm = normals.get(Integer.parseInt(vertexData[2]) - 1);
+		normalsArray[currentVertexPointer * 3] = (float) currentNorm.x;
+		normalsArray[currentVertexPointer * 3 + 1] = (float) currentNorm.y;
+		normalsArray[currentVertexPointer * 3 + 2] = (float) currentNorm.z;
+	}
+
 	public int loadNVGTexture(String file) throws LoadTextureException {
 		Window window = WindowManager.getWindow(this.windowID);
 		ByteBuffer buffer = null;
@@ -342,28 +459,6 @@ public class ResourceLoader {
 		}
 		nvgData.add(tex);
 		return tex;
-	}
-
-	/**
-	 * Clear All VAOs, VBOs and Textures
-	 * 
-	 */
-	public void cleanUp() {
-		for (int vao : vaos) {
-			glDeleteVertexArrays(vao);
-		}
-		for (int vbo : vbos) {
-			glDeleteBuffers(vbo);
-		}
-		for (int texture : textures) {
-			glDeleteTextures(texture);
-		}
-
-		Window window = WindowManager.getWindow(this.windowID);
-		long nvgID = window.getNVGID();
-		for (int texture : nvgData) {
-			nvgDeleteImage(nvgID, texture);
-		}
 	}
 
 	public int loadCubeMap(String[] textureFiles) throws DecodeTextureException {
@@ -563,12 +658,25 @@ public class ResourceLoader {
 	}
 
 	/**
-	 * Get OBJLoader
+	 * Clear All VAOs, VBOs and Textures
 	 * 
-	 * @return OBJLoader
 	 */
-	public OBJLoader getObjLoader() {
-		return objLoader;
+	public void cleanUp() {
+		for (int vao : vaos) {
+			glDeleteVertexArrays(vao);
+		}
+		for (int vbo : vbos) {
+			glDeleteBuffers(vbo);
+		}
+		for (int texture : textures) {
+			glDeleteTextures(texture);
+		}
+
+		Window window = WindowManager.getWindow(this.windowID);
+		long nvgID = window.getNVGID();
+		for (int texture : nvgData) {
+			nvgDeleteImage(nvgID, texture);
+		}
 	}
 
 }

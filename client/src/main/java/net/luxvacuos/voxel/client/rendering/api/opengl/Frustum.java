@@ -26,8 +26,6 @@ import org.lwjgl.BufferUtils;
 
 import net.luxvacuos.igl.vector.Matrix4d;
 import net.luxvacuos.igl.vector.Vector3d;
-import net.luxvacuos.voxel.client.util.Maths;
-import net.luxvacuos.voxel.client.world.entities.Camera;
 
 /**
  * Frustum Culling
@@ -83,10 +81,10 @@ public class Frustum {
 	 * @param camera
 	 *            Camera
 	 */
-	public void calculateFrustum(Matrix4d projectionMatrix, Camera camera) {
+	public void calculateFrustum(Matrix4d projectionMatrix, Matrix4d viewMatrix) {
 		double[] clip = new double[16];
 
-		Matrix4d.mul(projectionMatrix, Maths.createViewMatrix(camera), clip_);
+		Matrix4d.mul(projectionMatrix, viewMatrix, clip_);
 		clip_b.rewind();
 		clip_.store(clip_b);
 		clip_b.rewind();

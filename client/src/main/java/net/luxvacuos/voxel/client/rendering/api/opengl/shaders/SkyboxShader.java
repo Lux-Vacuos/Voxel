@@ -73,7 +73,8 @@ public class SkyboxShader extends ShaderProgram {
 	 *            Delta
 	 */
 	public void loadViewMatrix(Camera camera) {
-		viewMatrix.loadMatrix(Maths.createViewMatrixRot(camera.getPitch(), camera.getYaw(), camera.getRoll(), camM));
+		viewMatrix.loadMatrix(Maths.createViewMatrixRot(camera.getRotation().getX(), camera.getRotation().getY(),
+				camera.getRotation().getZ(), camM));
 	}
 
 	public void loadTransformationMatrix(Matrix4d mat) {

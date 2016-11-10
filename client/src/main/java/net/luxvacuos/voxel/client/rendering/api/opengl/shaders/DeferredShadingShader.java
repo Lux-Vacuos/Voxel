@@ -34,7 +34,6 @@ import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.UniformMatri
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.UniformSampler;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.UniformVec2;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.UniformVec3;
-import net.luxvacuos.voxel.client.util.Maths;
 import net.luxvacuos.voxel.client.world.entities.Camera;
 
 /**
@@ -180,11 +179,10 @@ public class DeferredShadingShader extends ShaderProgram {
 		this.shadowDrawDistance.loadInteger(shadowDrawDistance);
 	}
 
-	public void loadMotionBlurData(Matrix4d projectionMatrix, Camera camera, Matrix4d previousViewMatrix,
-			Vector3d previousCameraPosition) {
-		this.projectionMatrix.loadMatrix(projectionMatrix);
-		this.inverseProjectionMatrix.loadMatrix(Matrix4d.invert(projectionMatrix, iPM));
-		this.inverseViewMatrix.loadMatrix(Matrix4d.invert(Maths.createViewMatrix(camera), iVM));
+	public void loadMotionBlurData(Camera camera, Matrix4d previousViewMatrix, Vector3d previousCameraPosition) {
+		this.projectionMatrix.loadMatrix(camera.getProjectionMatrix());
+		this.inverseProjectionMatrix.loadMatrix(Matrix4d.invert(camera.getProjectionMatrix(), iPM));
+		this.inverseViewMatrix.loadMatrix(Matrix4d.invert(camera.getViewMatrix(), iVM));
 		this.previousViewMatrix.loadMatrix(previousViewMatrix);
 		this.cameraPosition.loadVec3(camera.getPosition());
 		this.previousCameraPosition.loadVec3(previousCameraPosition);
@@ -197,7 +195,7 @@ public class DeferredShadingShader extends ShaderProgram {
 	 *            Camera
 	 */
 	public void loadviewMatrix(Camera camera) {
-		this.viewMatrix.loadMatrix(Maths.createViewMatrix(camera));
+		this.viewMatrix.loadMatrix(camera.getViewMatrix());
 	}
 
 	/**

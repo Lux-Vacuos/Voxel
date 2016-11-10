@@ -43,7 +43,7 @@ public class BlocksResources {
 		heightMap = loader.loadTextureMisc("blocks_height");
 		pbrMap = loader.loadTextureMisc("blocks_pbr");
 
-		RawModel rNode = loader.getObjLoader().loadObjModel("Node");
+		RawModel rNode = loader.loadObjModel("Node");
 		ModelTexture tNode = new ModelTexture(loader.loadTextureBlocks("Node"));
 		node = new TexturedModel(rNode, tNode);
 		loadTexCoords();

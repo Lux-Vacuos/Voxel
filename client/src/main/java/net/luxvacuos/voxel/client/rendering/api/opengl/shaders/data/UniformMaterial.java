@@ -30,8 +30,8 @@ public class UniformMaterial extends UniformArray {
 	private Material currentValue;
 	private boolean used = false;
 
-	public UniformMaterial(String name) {
-		super(name);
+	public UniformMaterial(String... names) {
+		super(names);
 	}
 
 	public void loadMaterial(Material value) {

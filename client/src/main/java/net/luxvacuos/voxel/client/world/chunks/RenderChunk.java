@@ -18,23 +18,22 @@
  * 
  */
 
-package net.luxvacuos.voxel.universal.world.dimension;
+package net.luxvacuos.voxel.client.world.chunks;
 
-import com.badlogic.ashley.utils.ImmutableArray;
+import net.luxvacuos.voxel.universal.world.chunk.Chunk;
+import net.luxvacuos.voxel.universal.world.chunk.ChunkData;
+import net.luxvacuos.voxel.universal.world.dimension.IDimension;
+import net.luxvacuos.voxel.universal.world.utils.ChunkNode;
 
-import net.luxvacuos.voxel.universal.world.chunk.IChunk;
+public class RenderChunk extends Chunk {
+	
+	protected RenderChunk(IDimension dim, ChunkNode node, ChunkData data) {
+		super(dim, node, data);
+	}
+	
+	public void render() {
+		
+	}
 
-public interface IDimension {
 	
-	public String getName();
-	
-	public String getWorldName();
-	
-	public int getID();
-
-	public boolean exists();
-	
-	public void update(float delta);
-	
-	public ImmutableArray<IChunk> getLoadedChunks();
 }

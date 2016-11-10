@@ -20,6 +20,12 @@
 
 #version 330 core
 
+struct Material {
+	vec3 color;
+	float roughness;
+	float metallic;
+};
+
 in float visibility;
 in vec2 pass_textureCoords;
 in vec3 surfaceNormal;
@@ -33,6 +39,7 @@ uniform sampler2D texture0;
 uniform sampler2DShadow depth;
 uniform vec3 skyColour;
 uniform vec3 lightPosition;
+uniform Material material;
 
 uniform int useShadows;
 
@@ -63,6 +70,6 @@ void main(void) {
 	out_Color[0] = textureColour;
 	out_Color[1] = vec4(pass_position.xyz,shadow);
 	out_Color[2] = vec4(surfaceNormal.xyz,0);
-	out_Color[3] = vec4(0.0);
+	out_Color[3] = vec4(material.roughness, material.metallic, 0.0, 0.0);
 	out_Color[4] = vec4(0.0);
 }

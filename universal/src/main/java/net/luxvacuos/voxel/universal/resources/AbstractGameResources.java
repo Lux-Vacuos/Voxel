@@ -20,8 +20,6 @@
 
 package net.luxvacuos.voxel.universal.resources;
 
-import com.esotericsoftware.kryo.Kryo;
-
 import net.luxvacuos.voxel.universal.core.AbstractGameSettings;
 import net.luxvacuos.voxel.universal.core.AbstractVoxel;
 import net.luxvacuos.voxel.universal.core.AbstractWorldSimulation;
@@ -30,27 +28,26 @@ public class AbstractGameResources implements IDisposable {
 
 	protected AbstractGameSettings gameSettings;
 	protected AbstractWorldSimulation worldSimulation;
-	protected Kryo kryo;
-	
-	public void preInit() { }
-	
-	public void init(AbstractVoxel voxel) { }
-	
-	public void postInit() { }
+
+	public void preInit() {
+	}
+
+	public void init(AbstractVoxel voxel) {
+	}
+
+	public void postInit() {
+	}
 
 	@Override
-	public void dispose() { }
-	
+	public void dispose() {
+	}
+
 	public AbstractGameSettings getGameSettings() {
 		return this.gameSettings;
 	}
-	
+
 	public AbstractWorldSimulation getWorldSimulation() {
 		return this.worldSimulation;
-	}
-	
-	public Kryo getKryo() {
-		return this.kryo;
 	}
 
 }

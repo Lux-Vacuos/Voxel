@@ -22,11 +22,11 @@ package net.luxvacuos.voxel.client.core.states;
 
 import org.lwjgl.glfw.GLFW;
 
-import net.luxvacuos.igl.vector.Vector3d;
 //import net.luxvacuos.voxel.client.input.Keyboard;
 import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.UIRendering;
+import net.luxvacuos.voxel.client.rendering.api.opengl.Renderer;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.ui.Button;
 import net.luxvacuos.voxel.client.ui.UIWindow;
@@ -52,10 +52,6 @@ public class SPPauseState extends AbstractFadeState {
 				"Back to Main Menu");
 		optionsButton = new Button(uiWindow.getWidth() / 2 - 100, -uiWindow.getHeight() + 85, 200, 40, "Options");
 		exitButton.setOnButtonPress((button, delta) -> {
-			GameResources.getInstance().getWorldsHandler().getActiveWorld().dispose();
-			GameResources.getInstance().getCamera().setPosition(new Vector3d(0, 0, 1));
-			GameResources.getInstance().getCamera().setPitch(0);
-			GameResources.getInstance().getCamera().setYaw(0);
 			this.switchTo(StateNames.MAIN_MENU);
 		});
 		optionsButton.setOnButtonPress((button, delta) -> {
@@ -98,12 +94,7 @@ public class SPPauseState extends AbstractFadeState {
 	public void render(AbstractVoxel voxel, float alpha) {
 		GameResources gm = (GameResources) voxel.getGameResources();
 		Window window = gm.getGameWindow();
-
-		gm.getWorldsHandler().getActiveWorld().getActiveDimension().lighting();
-		gm.getSun_Camera().setPosition(gm.getCamera().getPosition());
-		gm.getRenderer().render(gm.getWorldsHandler().getActiveWorld().getActiveDimension(), gm.getCamera(),
-				gm.getSun_Camera(), gm.getWorldSimulation(), gm.getLightPos(), gm.getInvertedLightPosition(), alpha);
-
+		Renderer.prepare(1, 1, 1, 1);
 		window.beingNVGFrame();
 		uiWindow.render(window.getID());
 		UIRendering.renderMouse(window.getID());

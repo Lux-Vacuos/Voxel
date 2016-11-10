@@ -53,10 +53,11 @@ void main(void){
     	float shadowDist = distance - (shadowDrawDistance - transitionDistance);
 		shadowDist = shadowDist / transitionDistance;
 		float fadeOut = clamp(1.0-shadowDist, 0.0, 1.0);
-    	float finalLight = max(dot(normal.xyz, lightDir), 0) - (position.w * fadeOut);
+		float normalDotLight = max(dot(normal.xyz, lightDir), 0);
+    	float finalLight = normalDotLight - (position.w * fadeOut);
     	finalLight = clamp(finalLight,0.015,1.0);
     	image = finalLight * image;
-    	if(position.w <= 0.5){
+    	if(position.w <= 0.5 && normalDotLight > 0){
     		vec3 vHalfVector = normalize(lightDir.xyz+eyeDir);
 	   		image += pow(max(dot(normal.xyz,vHalfVector),0.0), 200 / (1-pbr.r)) * (1-pbr.r);
 	   	}

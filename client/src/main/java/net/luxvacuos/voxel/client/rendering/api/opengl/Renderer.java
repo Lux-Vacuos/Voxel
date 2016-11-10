@@ -25,11 +25,8 @@ import static org.lwjgl.opengl.GL11.GL_BLEND;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_CULL_FACE;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11.GL_DEPTH_COMPONENT;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
-import static org.lwjgl.opengl.GL11.GL_FLOAT;
 import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
-import static org.lwjgl.opengl.GL11.GL_RGB;
 import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
 import static org.lwjgl.opengl.GL11.GL_STENCIL_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.glBlendFunc;
@@ -38,13 +35,9 @@ import static org.lwjgl.opengl.GL11.glClearColor;
 import static org.lwjgl.opengl.GL11.glCullFace;
 import static org.lwjgl.opengl.GL11.glDisable;
 import static org.lwjgl.opengl.GL11.glEnable;
-import static org.lwjgl.opengl.GL11.glReadBuffer;
-import static org.lwjgl.opengl.GL11.glReadPixels;
-import static org.lwjgl.opengl.GL30.GL_COLOR_ATTACHMENT2;
 
-import java.nio.FloatBuffer;
-
-import org.lwjgl.BufferUtils;
+import com.badlogic.ashley.core.Entity;
+import com.badlogic.ashley.utils.ImmutableArray;
 
 import net.luxvacuos.igl.vector.Matrix4d;
 import net.luxvacuos.igl.vector.Vector3d;
@@ -55,17 +48,13 @@ import net.luxvacuos.voxel.client.rendering.api.opengl.pipeline.MultiPass;
 import net.luxvacuos.voxel.client.rendering.api.opengl.pipeline.SinglePass;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.TessellatorBasicShader;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.TessellatorShader;
-import net.luxvacuos.voxel.client.util.Maths;
-import net.luxvacuos.voxel.client.world.Dimension;
 import net.luxvacuos.voxel.client.world.entities.Camera;
+import net.luxvacuos.voxel.universal.world.dimension.IDimension;
 
 public class Renderer {
 
-	private Matrix4d projectionMatrix, shadowProjectionMatrix;
-
 	private EntityRenderer entityRenderer;
 	private EntityShadowRenderer entityShadowRenderer;
-	private ItemsDropRenderer itemsDropRenderer;
 	private SkyboxRenderer skyboxRenderer;
 	private RenderingPipeline renderingPipeline;
 	private LightRenderer lightRenderer;
@@ -74,45 +63,25 @@ public class Renderer {
 
 	private Frustum frustum;
 
-	private Window window;
-
-	private FloatBuffer p;
-	private FloatBuffer c;
-
-	public Renderer(Window window) {
-		this.window = window;
-		p = BufferUtils.createFloatBuffer(1);
-		c = BufferUtils.createFloatBuffer(3);
-		projectionMatrix = createProjectionMatrix(window.getWidth(), window.getHeight(), ClientVariables.FOV,
-				ClientVariables.NEAR_PLANE, ClientVariables.FAR_PLANE);
-		shadowProjectionMatrix = Maths.orthographic(-ClientVariables.shadowMapDrawDistance,
-				ClientVariables.shadowMapDrawDistance, -ClientVariables.shadowMapDrawDistance,
-				ClientVariables.shadowMapDrawDistance, -ClientVariables.shadowMapDrawDistance,
-				ClientVariables.shadowMapDrawDistance, false);
+	public Renderer(Window window, Camera camera, Camera sunCamera) {
 		if (ClientVariables.shadowMapResolution > GLUtil.getTextureMaxSize())
 			ClientVariables.shadowMapResolution = GLUtil.getTextureMaxSize();
 		frustum = new Frustum();
 		shadowFBO = new ShadowFBO(ClientVariables.shadowMapResolution, ClientVariables.shadowMapResolution);
-		entityRenderer = new EntityRenderer(projectionMatrix, shadowProjectionMatrix);
-		entityShadowRenderer = new EntityShadowRenderer(shadowProjectionMatrix);
-		skyboxRenderer = new SkyboxRenderer(window.getResourceLoader(), projectionMatrix);
+		entityRenderer = new EntityRenderer(camera.getProjectionMatrix(), sunCamera.getProjectionMatrix());
+		entityShadowRenderer = new EntityShadowRenderer(sunCamera.getProjectionMatrix());
+		skyboxRenderer = new SkyboxRenderer(window.getResourceLoader(), camera.getProjectionMatrix());
 		lightRenderer = new LightRenderer();
-		itemsDropRenderer = new ItemsDropRenderer(projectionMatrix, shadowProjectionMatrix);
 		if (ClientVariables.renderingPipeline.equals("SinglePass"))
 			renderingPipeline = new SinglePass();
 		else if (ClientVariables.renderingPipeline.equals("MultiPass"))
 			renderingPipeline = new MultiPass();
 	}
 
-	public void update() {
-		projectionMatrix = createProjectionMatrix(projectionMatrix, window.getWidth(), window.getHeight(),
-				ClientVariables.FOV, ClientVariables.NEAR_PLANE, ClientVariables.FAR_PLANE);
-	}
-
-	public void render(Dimension dimension, Camera camera, Camera sunCamera,
+	public void render(IDimension iDimension, ImmutableArray<Entity> entities, Camera camera, Camera sunCamera,
 			ClientWorldSimulation clientWorldSimulation, Vector3d lightPosition, Vector3d invertedLightPosition,
 			float alpha) {
-		frustum.calculateFrustum(shadowProjectionMatrix, sunCamera);
+		frustum.calculateFrustum(sunCamera.getProjectionMatrix(), sunCamera.getViewMatrix());
 		if (ClientVariables.useShadows) {
 			shadowFBO.begin();
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
@@ -120,46 +89,37 @@ public class Renderer {
 			glCullFace(GL_BACK);
 			glEnable(GL_DEPTH_TEST);
 			glDisable(GL_BLEND);
-			dimension.updateChunksShadow(sunCamera, shadowProjectionMatrix, frustum);
-			itemsDropRenderer.getTess().drawShadow(sunCamera, shadowProjectionMatrix);
-			entityShadowRenderer.renderEntity(dimension.getPhysicsEngine().getEntities(), sunCamera);
+			// dimension.renderShadow(sunCamera,
+			// sunCamera.getProjectionMatrix(), frustum);
+			entityShadowRenderer.renderEntity(entities, sunCamera);
 			shadowFBO.end();
 		}
-		frustum.calculateFrustum(projectionMatrix, camera);
+		frustum.calculateFrustum(camera.getProjectionMatrix(), camera.getViewMatrix());
 		prepare();
-		dimension.updateChunksOcclusion(window, camera, projectionMatrix, frustum);
+		// dimension.renderOcclusion(window, camera,
+		// camera.getProjectionMatrix(), frustum);
 
 		renderingPipeline.begin();
 		prepare();
 		skyboxRenderer.render(ClientVariables.RED, ClientVariables.GREEN, ClientVariables.BLUE, alpha, camera,
-				projectionMatrix, clientWorldSimulation, lightPosition);
-		dimension.updateChunksRender(camera, sunCamera, clientWorldSimulation, projectionMatrix, shadowProjectionMatrix,
-				shadowFBO.getDepthTex(), shadowFBO.getShadowTex(), frustum, false);
-		entityRenderer.renderEntity(dimension.getPhysicsEngine().getEntities(), camera, sunCamera, projectionMatrix,
-				shadowFBO.getDepthTex());
+				clientWorldSimulation, lightPosition);
+		// dimension.render(camera, sunCamera, clientWorldSimulation,
+		// camera.getProjectionMatrix(),
+		// sunCamera.getProjectionMatrix(), shadowFBO.getShadowDepth(),
+		// shadowFBO.getShadowData(), frustum, false);
 
-		p.clear();
-		glReadPixels(window.getWidth() / 2, window.getHeight() / 2, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, p);
-		c.clear();
-		glReadBuffer(GL_COLOR_ATTACHMENT2);
-		glReadPixels(window.getWidth() / 2, window.getHeight() / 2, 1, 1, GL_RGB, GL_FLOAT, c);
-
-		camera.depth = p.get(0);
-		camera.normal.x = c.get(0);
-		camera.normal.y = c.get(1);
-		camera.normal.z = c.get(2);
-		itemsDropRenderer.render(dimension.getPhysicsEngine().getEntities(), camera, sunCamera, clientWorldSimulation,
-				projectionMatrix, shadowFBO.getDepthTex(), shadowFBO.getShadowTex());
+		entityRenderer.renderEntity(entities, camera, sunCamera, shadowFBO.getShadowDepth());
 		renderingPipeline.end();
 		prepare();
-		renderingPipeline.render(camera, projectionMatrix, lightPosition, invertedLightPosition, clientWorldSimulation,
+		renderingPipeline.render(camera, lightPosition, invertedLightPosition, clientWorldSimulation,
 				lightRenderer.getLights());
 
-		dimension.updateChunksRender(camera, sunCamera, clientWorldSimulation, projectionMatrix, shadowProjectionMatrix,
-				shadowFBO.getDepthTex(), shadowFBO.getShadowTex(), frustum, true);
-		camera.render();
+		// dimension.render(camera, sunCamera, clientWorldSimulation,
+		// camera.getProjectionMatrix(),
+		// sunCamera.getProjectionMatrix(), shadowFBO.getShadowDepth(),
+		// shadowFBO.getShadowData(), frustum, true);
 
-		ParticleMaster.getInstance().render(camera, projectionMatrix);
+		ParticleMaster.getInstance().render(camera);
 	}
 
 	public void cleanUp() {
@@ -168,17 +128,8 @@ public class Renderer {
 		entityShadowRenderer.cleanUp();
 		TessellatorShader.getInstance().cleanUp();
 		TessellatorBasicShader.getInstance().cleanUp();
-		itemsDropRenderer.cleanUp();
 		ParticleMaster.getInstance().cleanUp();
 		renderingPipeline.dispose();
-	}
-
-	public Matrix4d getProjectionMatrix() {
-		return projectionMatrix;
-	}
-
-	public Matrix4d getShadowProjectionMatrix() {
-		return shadowProjectionMatrix;
 	}
 
 	public Frustum getFrustum() {

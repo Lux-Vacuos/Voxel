@@ -28,20 +28,27 @@ import net.luxvacuos.voxel.client.util.Maths;
 public class SunCamera extends Camera {
 
 	private Vector2d center;
-	private Matrix4d projectionMatrix;
 
 	public SunCamera(Matrix4d projectionMatrix) {
 		this.projectionMatrix = projectionMatrix;
 		center = new Vector2d(2048, 2048);
 		dRay = new DRay(projectionMatrix, Maths.createViewMatrix(this), center, 0, 0);
+		this.viewMatrix = Maths.createViewMatrix(this);
 	}
-
+	
 	public void updateShadowRay(boolean inverted) {
+
 		if (inverted)
-			dRay = new DRay(projectionMatrix, Maths.createViewMatrixPos(this.getPosition(),
-					Maths.createViewMatrixRot(pitch + 180, yaw, roll, null)), center, 4096, 4096);
+			dRay = new DRay(projectionMatrix, Maths.createViewMatrixPos(this.getPosition(), Maths
+					.createViewMatrixRot(getRotation().getX() + 180, getRotation().getY(), getRotation().getZ(), null)),
+					center, 4096, 4096);
 		else
 			dRay = new DRay(projectionMatrix, Maths.createViewMatrix(this), center, 4096, 4096);
+		viewMatrix = Maths.createViewMatrix(this);
+	}
+	
+	public DRay getDRay(){
+		return dRay;
 	}
 
 }

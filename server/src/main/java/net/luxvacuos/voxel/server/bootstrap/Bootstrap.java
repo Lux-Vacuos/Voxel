@@ -23,10 +23,6 @@ package net.luxvacuos.voxel.server.bootstrap;
 import java.io.File;
 import java.io.IOException;
 
-import com.esotericsoftware.minlog.Log;
-
-import net.luxvacuos.voxel.server.core.Voxel;
-import net.luxvacuos.voxel.server.core.ServerVariables;
 import net.luxvacuos.voxel.universal.bootstrap.AbstractBootstrap;
 
 public class Bootstrap extends AbstractBootstrap {
@@ -37,15 +33,11 @@ public class Bootstrap extends AbstractBootstrap {
 
 	@Override
 	public void init() {
-		Log.set(Log.LEVEL_INFO);
 		Thread.currentThread().setName("Voxel-Server");
 		try {
 			File file = new File(new File(".").getCanonicalPath() + "/logs");
 			if (!file.exists())
 				file.mkdirs();
-			File file1 = new File(ServerVariables.WORLD_PATH);
-			if (!file1.exists())
-				file1.mkdirs();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -53,23 +45,8 @@ public class Bootstrap extends AbstractBootstrap {
 
 	@Override
 	public void parseArgs(String[] args) {
-		boolean gavePort = false, gaveUI = false;
 		for (int i = 0; i < args.length; i++) {
 			switch (args[i]) {
-			case "-port":
-				if (gavePort)
-					throw new IllegalStateException("Port already given");
-				ServerVariables.port = Integer.parseInt(args[++i]);
-				if (ServerVariables.port <= 0)
-					throw new IllegalArgumentException("Port must be positive");
-				gavePort = true;
-				break;
-			case "-ui":
-				if (gaveUI)
-					throw new IllegalStateException("UI already given");
-				ServerVariables.useUI = true;
-				gaveUI = true;
-				break;
 			default:
 				if (args[i].startsWith("-")) {
 					throw new IllegalArgumentException("Unknown argument: " + args[i].substring(1));
@@ -93,7 +70,6 @@ public class Bootstrap extends AbstractBootstrap {
 	}
 
 	public static void main(String[] args) throws Exception {
-		new Voxel(new Bootstrap(args));
 	}
 
 }

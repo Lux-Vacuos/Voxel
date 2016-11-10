@@ -20,7 +20,6 @@
 
 package net.luxvacuos.voxel.client.util;
 
-import java.util.List;
 import java.util.Random;
 
 import com.badlogic.gdx.math.Vector3;
@@ -31,7 +30,6 @@ import net.luxvacuos.igl.vector.Matrix4d;
 import net.luxvacuos.igl.vector.Vector2d;
 import net.luxvacuos.igl.vector.Vector3d;
 import net.luxvacuos.igl.vector.Vector4d;
-import net.luxvacuos.voxel.client.world.chunks.Chunk;
 import net.luxvacuos.voxel.client.world.entities.Camera;
 
 /**
@@ -98,7 +96,8 @@ public class Maths {
 	public static Matrix4d createViewMatrix(Camera camera) {
 		Matrix4d viewMatrix = new Matrix4d();
 		viewMatrix.setIdentity();
-		createViewMatrixRot(camera.getPitch(), camera.getYaw(), camera.getRoll(), viewMatrix);
+		createViewMatrixRot(camera.getRotation().getX(), camera.getRotation().getY(), camera.getRotation().getZ(),
+				viewMatrix);
 		createViewMatrixPos(camera.getPosition(), viewMatrix);
 		return viewMatrix;
 	}
@@ -239,63 +238,6 @@ public class Maths {
 
 	public static boolean getRandomBoolean(float chanceOfTrue) {
 		return new Random().nextInt(100) < chanceOfTrue;
-	}
-
-	public static void sortLowToHigh(List<Chunk> list) {
-		for (int i = 1; i < list.size(); i++) {
-			Chunk item = list.get(i);
-			if (item.getDistance() < list.get(i - 1).getDistance()) {
-				sortLowToHigh(list, i);
-			}
-		}
-	}
-
-	private static void sortLowToHigh(List<Chunk> list, int i) {
-		Chunk item = list.get(i);
-		int attemptPos = i - 1;
-		while (attemptPos != 0 && list.get(attemptPos - 1).getDistance() > item.getDistance()) {
-			attemptPos--;
-		}
-		list.remove(i);
-		list.add(attemptPos, item);
-	}
-
-	/*public static void sortLowToHighN(List<ChunkNode> list) {
-		for (int i = 1; i < list.size(); i++) {
-			ChunkNode item = list.get(i);
-			if (item.distance < list.get(i - 1).distance) {
-				sortLowToHighN(list, i);
-			}
-		}
-	}
-
-	private static void sortLowToHighN(List<ChunkNode> list, int i) {
-		ChunkNode item = list.get(i);
-		int attemptPos = i - 1;
-		while (attemptPos != 0 && list.get(attemptPos - 1).distance > item.distance) {
-			attemptPos--;
-		}
-		list.remove(i);
-		list.add(attemptPos, item);
-	} */
-
-	public static void sortHighToLow(List<Chunk> list) {
-		for (int i = 1; i < list.size(); i++) {
-			Chunk item = list.get(i);
-			if (item.getDistance() > list.get(i - 1).getDistance()) {
-				sortUpHighToLow(list, i);
-			}
-		}
-	}
-
-	private static void sortUpHighToLow(List<Chunk> list, int i) {
-		Chunk item = list.get(i);
-		int attemptPos = i - 1;
-		while (attemptPos != 0 && list.get(attemptPos - 1).getDistance() < item.getDistance()) {
-			attemptPos--;
-		}
-		list.remove(i);
-		list.add(attemptPos, item);
 	}
 
 	public static boolean intersectRayBounds(Ray ray, BoundingBox box, Vector3 intersection) {

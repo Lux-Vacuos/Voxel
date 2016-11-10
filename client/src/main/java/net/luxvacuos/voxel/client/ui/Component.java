@@ -56,8 +56,8 @@ public abstract class Component {
 	}
 
 	public void update(float delta) {
-		Maths.clamp(fadeAlpha, 0, 1);
 		if (enabled) {
+			Maths.clamp(fadeAlpha, 0, 1);
 			for (Component component : childrens) {
 				component.update(delta);
 			}

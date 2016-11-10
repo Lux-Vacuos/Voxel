@@ -22,12 +22,12 @@ package net.luxvacuos.voxel.client.rendering.api.opengl.shaders;
 
 import net.luxvacuos.igl.vector.Matrix4d;
 import net.luxvacuos.voxel.client.core.ClientVariables;
+import net.luxvacuos.voxel.client.rendering.api.opengl.objects.Material;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.Attribute;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.UniformBoolean;
-import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.UniformFloat;
+import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.UniformMaterial;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.UniformMatrix;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.UniformSampler;
-import net.luxvacuos.voxel.client.util.Maths;
 import net.luxvacuos.voxel.client.world.entities.Camera;
 
 /**
@@ -44,16 +44,16 @@ public class EntityShader extends ShaderProgram {
 	private UniformMatrix biasMatrix = new UniformMatrix("biasMatrix");
 	private UniformMatrix projectionLightMatrix = new UniformMatrix("projectionLightMatrix");
 	private UniformMatrix viewLightMatrix = new UniformMatrix("viewLightMatrix");
-	private UniformFloat entityLight = new UniformFloat("entityLight");
 	private UniformSampler texture0 = new UniformSampler("texture0");
 	private UniformSampler depth = new UniformSampler("depth");
 	private UniformBoolean useShadows = new UniformBoolean("useShadows");
+	private UniformMaterial material = new UniformMaterial("material.color", "material.roughness", "material.metallic");
 
 	public EntityShader() {
 		super(ClientVariables.VERTEX_FILE_ENTITY, ClientVariables.FRAGMENT_FILE_ENTITY, new Attribute(0, "position"),
 				new Attribute(1, "textureCoords"), new Attribute(2, "normals"));
 		super.storeAllUniformLocations(transformationMatrix, projectionMatrix, viewMatrix, biasMatrix,
-				projectionLightMatrix, viewLightMatrix, entityLight, texture0, depth, useShadows);
+				projectionLightMatrix, viewLightMatrix, texture0, depth, useShadows, material);
 		connectTextureUnits();
 	}
 
@@ -66,10 +66,6 @@ public class EntityShader extends ShaderProgram {
 		texture0.loadTexUnit(0);
 		depth.loadTexUnit(1);
 		super.stop();
-	}
-
-	public void loadEntityLight(float light) {
-		entityLight.loadFloat(light);
 	}
 
 	public void useShadows(boolean value) {
@@ -99,7 +95,11 @@ public class EntityShader extends ShaderProgram {
 	}
 
 	public void loadLightMatrix(Camera sunCamera) {
-		viewLightMatrix.loadMatrix(Maths.createViewMatrix(sunCamera));
+		viewLightMatrix.loadMatrix(sunCamera.getViewMatrix());
+	}
+
+	public void loadMaterial(Material mat) {
+		this.material.loadMaterial(mat);
 	}
 
 	/**
@@ -109,7 +109,7 @@ public class EntityShader extends ShaderProgram {
 	 *            Camera
 	 */
 	public void loadviewMatrix(Camera camera) {
-		viewMatrix.loadMatrix(Maths.createViewMatrix(camera));
+		viewMatrix.loadMatrix(camera.getViewMatrix());
 	}
 
 	/**

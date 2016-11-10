@@ -69,7 +69,7 @@ public class ShadowFBO {
 
 	private int fbo, shadowRT, depthBuffer;
 
-	private int shadowTex, depthTex;
+	private int shadowDepth, shadowData;
 
 	private int width, height;
 
@@ -94,17 +94,17 @@ public class ShadowFBO {
 		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height);
 		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthBuffer);
 
-		shadowTex = glGenTextures();
-		glBindTexture(GL_TEXTURE_2D, shadowTex);
+		shadowData = glGenTextures();
+		glBindTexture(GL_TEXTURE_2D, shadowData);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_FLOAT, (ByteBuffer) null);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, shadowTex, 0);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, shadowData, 0);
 
-		depthTex = glGenTextures();
-		glBindTexture(GL_TEXTURE_2D, depthTex);
+		shadowDepth = glGenTextures();
+		glBindTexture(GL_TEXTURE_2D, shadowDepth);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT,
 				(ByteBuffer) null);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -117,7 +117,7 @@ public class ShadowFBO {
 		border.put(borderColor);
 		border.rewind();
 		glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, border);
-		glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, depthTex, 0);
+		glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, shadowDepth, 0);
 
 		int status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
 		if (status != GL_FRAMEBUFFER_COMPLETE)
@@ -127,8 +127,8 @@ public class ShadowFBO {
 	}
 
 	public void cleanUp() {
-		glDeleteTextures(shadowTex);
-		glDeleteTextures(depthTex);
+		glDeleteTextures(shadowDepth);
+		glDeleteTextures(shadowData);
 		glDeleteFramebuffers(fbo);
 		glDeleteRenderbuffers(shadowRT);
 		glDeleteRenderbuffers(depthBuffer);
@@ -144,24 +144,13 @@ public class ShadowFBO {
 		GameResources.getInstance().getGameWindow().resetViewport();
 	}
 
-	public int getDepthBuffer() {
-		return depthBuffer;
+	public int getShadowDepth() {
+		return shadowDepth;
 	}
 
-	public int getShadowRT() {
-		return shadowRT;
+	public int getShadowData() {
+		return shadowData;
 	}
 
-	public int getShadowTex() {
-		return shadowTex;
-	}
-
-	public int getDepthTex() {
-		return depthTex;
-	}
-
-	public int getFbo() {
-		return fbo;
-	}
 
 }

@@ -44,8 +44,8 @@ public class SPLoadingState extends AbstractState {
 	public SPLoadingState() {
 		super(StateNames.SP_LOADING);
 		Window window = GameResources.getInstance().getGameWindow();
-		uiWindow = new UIWindow(20, window.getHeight() - 20,
-				window.getWidth() - 40, window.getHeight() - 40, "Loading World");
+		uiWindow = new UIWindow(20, window.getHeight() - 20, window.getWidth() - 40, window.getHeight() - 40,
+				"Loading World");
 
 		Text text = new Text("Loading World", uiWindow.getWidth() / 2, uiWindow.getHeight());
 		text.setAlign(NanoVG.NVG_ALIGN_CENTER);
@@ -54,14 +54,9 @@ public class SPLoadingState extends AbstractState {
 
 	@Override
 	public void start() {
-		new Thread(() -> {
-			GameResources.getInstance().getWorldsHandler().getActiveWorld().init();
-			GameResources.getInstance().getWorldsHandler().getActiveWorld().getActiveDimension().getPhysicsEngine()
-					.addEntity(GameResources.getInstance().getCamera());
-			((PlayerCamera) GameResources.getInstance().getCamera()).setMouse();
-			//GameResources.getInstance().getGlobalStates().setState(GameState.SP);
-			StateMachine.setCurrentState(StateNames.SINGLEPLAYER);
-		}).start();
+		((PlayerCamera) GameResources.getInstance().getCamera()).setMouse();
+		// GameResources.getInstance().getGlobalStates().setState(GameState.SP);
+		StateMachine.setCurrentState(StateNames.SINGLEPLAYER);
 	}
 
 	@Override

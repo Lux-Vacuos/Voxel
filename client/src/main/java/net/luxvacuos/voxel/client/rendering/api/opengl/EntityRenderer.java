@@ -82,24 +82,22 @@ public class EntityRenderer {
 		shader.loadBiasMatrix(shadowProjectionMatrix);
 		shader.stop();
 	}
-	
-	public void cleanUp(){
+
+	public void cleanUp() {
 		shader.cleanUp();
 	}
 
-	public void renderEntity(ImmutableArray<Entity> immutableArray, Camera camera, Camera sunCamera,
-			Matrix4d projectionMatrix, int shadowTex) {
+	public void renderEntity(ImmutableArray<Entity> immutableArray, Camera camera, Camera sunCamera, int shadowTex) {
 		for (Entity entity : immutableArray) {
 			if (entity instanceof AbstractEntity && entity.getComponent(RendereableComponent.class) != null) {
 				processEntity((AbstractEntity) entity);
 			}
 		}
-		renderEntity(camera, sunCamera, projectionMatrix, shadowTex);
+		renderEntity(camera, sunCamera, shadowTex);
 	}
 
-	private void renderEntity(Camera camera, Camera sunCamera, Matrix4d projectionMatrix, int shadowTex) {
+	private void renderEntity(Camera camera, Camera sunCamera, int shadowTex) {
 		shader.start();
-		shader.loadProjectionMatrix(projectionMatrix);
 		shader.loadviewMatrix(camera);
 		shader.loadLightMatrix(sunCamera);
 		shader.useShadows(ClientVariables.useShadows);
@@ -131,7 +129,7 @@ public class EntityRenderer {
 			prepareTexturedModel(model, shadowTex);
 			List<AbstractEntity> batch = blockEntities.get(model);
 			for (AbstractEntity entity : batch) {
-				shader.loadEntityLight(1);
+				shader.loadMaterial(entity.getComponent(RendereableComponent.class).material);
 				prepareInstance(entity);
 				glDrawElements(GL_TRIANGLES, model.getRawModel().getVertexCount(), GL_UNSIGNED_INT, 0);
 			}

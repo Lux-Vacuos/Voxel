@@ -37,9 +37,6 @@ import org.lwjgl.glfw.GLFWErrorCallback;
 import net.luxvacuos.igl.Logger;
 import net.luxvacuos.voxel.client.api.MoltenAPI;
 import net.luxvacuos.voxel.client.core.states.AboutState;
-import net.luxvacuos.voxel.client.core.states.MPLoadingState;
-import net.luxvacuos.voxel.client.core.states.MPSelectionState;
-import net.luxvacuos.voxel.client.core.states.MPState;
 import net.luxvacuos.voxel.client.core.states.MainMenuState;
 import net.luxvacuos.voxel.client.core.states.OptionsState;
 import net.luxvacuos.voxel.client.core.states.SPCreateWorld;
@@ -179,8 +176,6 @@ public class Voxel extends AbstractVoxel {
 		// Load the States into the StateMachine
 		StateMachine.registerState(new AboutState());
 		StateMachine.registerState(new MainMenuState());
-		StateMachine.registerState(new MPLoadingState());
-		StateMachine.registerState(new MPState());
 		StateMachine.registerState(new OptionsState());
 		StateMachine.registerState(new SPCreateWorld());
 		StateMachine.registerState(new SplashScreenState());
@@ -188,7 +183,6 @@ public class Voxel extends AbstractVoxel {
 		StateMachine.registerState(new SPPauseState());
 		StateMachine.registerState(new SPSelectionState());
 		StateMachine.registerState(new SPState());
-		StateMachine.registerState(new MPSelectionState());
 		// Do Mod Init
 		modsHandler.init();
 	}
@@ -289,7 +283,6 @@ public class Voxel extends AbstractVoxel {
 	 *            Alpha for update
 	 */
 	public void render(float alpha) {
-		// getGameResources().getGlobalStates().doRender(this, alpha);
 		StateMachine.render(this, alpha);
 	}
 
@@ -303,7 +296,6 @@ public class Voxel extends AbstractVoxel {
 	@Override
 	public void update(float delta) {
 		CoreInfo.upsCount++;
-		// getGameResources().getGlobalStates().doUpdate(this, delta);
 		StateMachine.update(this, delta);
 	}
 
@@ -319,7 +311,6 @@ public class Voxel extends AbstractVoxel {
 		try {
 			if (!disposed && loaded)
 				try {
-					getGameResources().getWorldsHandler().getActiveWorld().dispose();
 					dispose();
 				} catch (Exception e1) {
 				}

@@ -21,10 +21,8 @@
 package net.luxvacuos.voxel.client.world.entities;
 
 import net.luxvacuos.igl.vector.Matrix4d;
-import net.luxvacuos.igl.vector.Vector2d;
 import net.luxvacuos.igl.vector.Vector3d;
 import net.luxvacuos.voxel.client.resources.DRay;
-import net.luxvacuos.voxel.client.util.Maths;
 import net.luxvacuos.voxel.universal.ecs.Components;
 import net.luxvacuos.voxel.universal.ecs.components.Position;
 import net.luxvacuos.voxel.universal.ecs.components.Rotation;
@@ -34,30 +32,14 @@ import net.luxvacuos.voxel.universal.ecs.components.Rotation;
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
  */
-public class Camera extends AbstractEntity {
+public abstract class Camera extends AbstractEntity {
 
+	protected Matrix4d projectionMatrix, viewMatrix;
 	protected DRay dRay;
-	protected boolean jump = false;
-	protected double pitch, yaw, roll;
-
-	public boolean isMoved = false;
-	public float depth = 0;
-	public Vector3d normal = new Vector3d();
 
 	public Camera() {
 		this.add(new Position());
 		this.add(new Rotation());
-	}
-
-	public void render() {
-	}
-
-	@Override
-	public void update(float delta) {
-	}
-
-	public void updateRay(Matrix4d projectionMatrix, int width, int height, Vector2d pos) {
-		dRay = new DRay(projectionMatrix, Maths.createViewMatrix(this), pos, width, height);
 	}
 
 	public Vector3d getPosition() {
@@ -68,32 +50,28 @@ public class Camera extends AbstractEntity {
 		Components.POSITION.get(this).set(position);
 	}
 
-	public double getPitch() {
-		return pitch;
+	public Vector3d getRotation() {
+		return Components.ROTATION.get(this).getRotation();
 	}
 
-	public double getYaw() {
-		return yaw;
+	public void setRotation(Vector3d rotation) {
+		Components.ROTATION.get(this).set(rotation);
 	}
 
-	public double getRoll() {
-		return roll;
+	public Matrix4d getProjectionMatrix() {
+		return projectionMatrix;
 	}
 
-	public void setPitch(double pitch) {
-		this.pitch = pitch;
+	public Matrix4d getViewMatrix() {
+		return viewMatrix;
 	}
 
-	public void setYaw(double yaw) {
-		this.yaw = yaw;
+	public void setProjectionMatrix(Matrix4d projectionMatrix) {
+		this.projectionMatrix = projectionMatrix;
 	}
 
-	public void setRoll(double roll) {
-		this.roll = roll;
-	}
-
-	public DRay getDRay() {
-		return dRay;
+	public void setViewMatrix(Matrix4d viewMatrix) {
+		this.viewMatrix = viewMatrix;
 	}
 
 }

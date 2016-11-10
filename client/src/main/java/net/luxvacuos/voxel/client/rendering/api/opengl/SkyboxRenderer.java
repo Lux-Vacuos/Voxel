@@ -52,7 +52,7 @@ public class SkyboxRenderer {
 	private SkyboxShader shader;
 
 	public SkyboxRenderer(ResourceLoader loader, Matrix4d projectionMatrix) {
-		dome = loader.getObjLoader().loadObjModel("SkyDome");
+		dome = loader.loadObjModel("SkyDome");
 		shader = new SkyboxShader();
 		shader.start();
 		shader.loadProjectionMatrix(projectionMatrix);
@@ -74,7 +74,7 @@ public class SkyboxRenderer {
 	 * @param delta
 	 *            Delta
 	 */
-	public void render(float r, float g, float b, float delta, Camera camera, Matrix4d projectionMatrix,
+	public void render(float r, float g, float b, float delta, Camera camera,
 			ClientWorldSimulation clientWorldSimulation, Vector3d lightPosition) {
 		glDepthMask(false);
 		glDisable(GL_CULL_FACE);

@@ -63,16 +63,18 @@ public class Button extends Component {
 
 	@Override
 	public void render(long windowID) {
-		UIRendering.renderButton(windowID, preicon, text, font, entypo, rootX + x,
-				WindowManager.getWindow(windowID).getHeight() - rootY - y - height, width, height, color,
-				this.insideButton(), fadeAlpha);
+		if (enabled)
+			UIRendering.renderButton(windowID, preicon, text, font, entypo, rootX + x,
+					WindowManager.getWindow(windowID).getHeight() - rootY - y - height, width, height, color,
+					this.insideButton(), fadeAlpha);
 		super.render(windowID);
 	}
 
 	@Override
 	public void update(float delta) {
-		if (pressed() && onPress != null)
-			onPress.onAction(this, delta);
+		if (enabled)
+			if (pressed() && onPress != null)
+				onPress.onAction(this, delta);
 		super.update(delta);
 	}
 

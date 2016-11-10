@@ -20,13 +20,19 @@
 
 package net.luxvacuos.voxel.client.rendering.api.opengl;
 
-import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.GL_BLEND;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
+import static org.lwjgl.opengl.GL11.GL_TRIANGLE_STRIP;
+import static org.lwjgl.opengl.GL11.glBindTexture;
+import static org.lwjgl.opengl.GL11.glDepthMask;
+import static org.lwjgl.opengl.GL11.glDisable;
+import static org.lwjgl.opengl.GL11.glEnable;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
 import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
 import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
-import static org.lwjgl.opengl.GL31.*;
+import static org.lwjgl.opengl.GL31.glDrawArraysInstanced;
 
 import java.nio.FloatBuffer;
 import java.util.List;
@@ -41,7 +47,6 @@ import net.luxvacuos.voxel.client.resources.ResourceLoader;
 import net.luxvacuos.voxel.client.resources.models.Particle;
 import net.luxvacuos.voxel.client.resources.models.ParticleTexture;
 import net.luxvacuos.voxel.client.resources.models.RawModel;
-import net.luxvacuos.voxel.client.util.Maths;
 import net.luxvacuos.voxel.client.world.entities.Camera;
 
 public class ParticleRenderer {
@@ -75,10 +80,8 @@ public class ParticleRenderer {
 		shader.stop();
 	}
 
-	public void render(Map<ParticleTexture, List<Particle>> particles, Camera camera, Matrix4d projectionMatrix) {
-		Matrix4d viewMatrix = Maths.createViewMatrix(camera);
+	public void render(Map<ParticleTexture, List<Particle>> particles, Camera camera) {
 		prepare();
-		shader.loadProjectionMatrix(projectionMatrix);
 		for (ParticleTexture texture : particles.keySet()) {
 			bindTexture(texture);
 			List<Particle> particleList = particles.get(texture);
@@ -86,8 +89,8 @@ public class ParticleRenderer {
 			float[] vboData = new float[particleList.size() * INSTANCE_DATA_LENGHT];
 
 			for (Particle particle : particles.get(texture)) {
-				updateModelViewMatrix(particle.getPosition(), particle.getRotation(), particle.getScale(), viewMatrix,
-						vboData);
+				updateModelViewMatrix(particle.getPosition(), particle.getRotation(), particle.getScale(),
+						camera.getViewMatrix(), vboData);
 				updateTexCoordInfo(particle, vboData);
 			}
 			loader.updateVBO(vbo, vboData, buffer);

@@ -22,6 +22,9 @@ package net.luxvacuos.voxel.client.core.states;
 
 import org.lwjgl.glfw.GLFW;
 
+import com.badlogic.ashley.core.Engine;
+
+import net.luxvacuos.igl.vector.Vector3d;
 import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.core.CoreInfo;
 import net.luxvacuos.voxel.client.input.KeyboardHandler;
@@ -32,9 +35,10 @@ import net.luxvacuos.voxel.client.rendering.api.nanovg.Timers;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.UIRendering;
 import net.luxvacuos.voxel.client.rendering.api.opengl.ParticleMaster;
 import net.luxvacuos.voxel.client.resources.GameResources;
-import net.luxvacuos.voxel.client.world.Dimension;
 import net.luxvacuos.voxel.client.world.PhysicsSystem;
+import net.luxvacuos.voxel.client.world.entities.Plane;
 import net.luxvacuos.voxel.client.world.entities.PlayerCamera;
+import net.luxvacuos.voxel.client.world.entities.Test;
 import net.luxvacuos.voxel.universal.core.AbstractVoxel;
 import net.luxvacuos.voxel.universal.core.states.AbstractState;
 import net.luxvacuos.voxel.universal.core.states.StateMachine;
@@ -47,24 +51,42 @@ import net.luxvacuos.voxel.universal.core.states.StateMachine;
  */
 public class SPState extends AbstractState {
 
+	private PhysicsSystem physicsSystem;
+	private Engine engine;
+	private Test t;
+	private Plane plane;
+
 	public SPState() {
 		super(StateNames.SINGLEPLAYER);
+	}
+
+	@Override
+	public void init() {
+		engine = new Engine();
+		physicsSystem = new PhysicsSystem();
+		engine.addSystem(physicsSystem);
+		t = new Test(new Vector3d(0,1,0));
+		plane = new Plane();
+	}
+
+	@Override
+	public void start() {
+		physicsSystem.getEngine().addEntity(GameResources.getInstance().getCamera());
+		physicsSystem.getEngine().addEntity(t);
+		physicsSystem.getEngine().addEntity(plane);
+	}
+
+	@Override
+	public void end() {
+		physicsSystem.getEngine().removeAllEntities();
 	}
 
 	@Override
 	public void update(AbstractVoxel voxel, float delta) {
 		GameResources gm = (GameResources) voxel.getGameResources();
 
-		gm.getWorldsHandler().getActiveWorld().getActiveDimension().updateChunksGeneration(gm.getCamera(),
-				gm.getRenderer().getFrustum(), delta);
-		((PlayerCamera) gm.getCamera()).update(delta, gm, gm.getWorldsHandler().getActiveWorld().getActiveDimension());
-
-		for (Dimension dim : gm.getWorldsHandler().getActiveWorld().getDimensions().values()) {
-			dim.getPhysicsEngine().update(delta);
-			dim.getPhysicsEngine().getSystem(PhysicsSystem.class).processItems(gm);
-			dim.getPhysicsEngine().getSystem(PhysicsSystem.class).processEntities(gm);
-			dim.getPhysicsEngine().getSystem(PhysicsSystem.class).doSpawn(gm);
-		}
+		engine.update(delta);
+		gm.getSunCamera().setPosition(gm.getCamera().getPosition());
 
 		gm.update(gm.getWorldSimulation().update(delta), delta);
 		ParticleMaster.getInstance().update(delta, gm.getCamera());
@@ -79,25 +101,8 @@ public class SPState extends AbstractState {
 		if (kbh.isKeyPressed(GLFW.GLFW_KEY_ESCAPE)) {
 			kbh.ignoreKeyUntilRelease(GLFW.GLFW_KEY_ESCAPE);
 			((PlayerCamera) gm.getCamera()).unlockMouse();
-			// gm.getGlobalStates().setState(GameState.SP_PAUSE);
 			StateMachine.setCurrentState(StateNames.SP_PAUSE);
 		}
-
-		/*
-		 * while (next()) { if (isKeyDown(KEY_F1)) ClientVariables.debug =
-		 * !ClientVariables.debug; if (isKeyDown(KEY_F2))
-		 * ClientVariables.hideHud = !ClientVariables.hideHud; if
-		 * (isKeyDown(KEY_ESCAPE)) { ((PlayerCamera)
-		 * gm.getCamera()).unlockMouse(); //
-		 * gm.getGlobalStates().setState(GameState.SP_PAUSE);
-		 * StateMachine.setCurrentState(StateNames.SP_PAUSE); } // TODO: Handle
-		 * Inventory // // if (isKeyDown(KEY_E)) { // ((PlayerCamera)
-		 * gm.getCamera()).unlockMouse(); //
-		 * gm.getGlobalStates().setState(GameState.GAME_SP_INVENTORY); // }
-		 * 
-		 * if (Keyboard.isKeyDown(Keyboard.KEY_R)) ClientVariables.raining =
-		 * !ClientVariables.raining; }
-		 */
 
 	}
 
@@ -106,10 +111,13 @@ public class SPState extends AbstractState {
 		GameResources gm = (GameResources) voxel.getGameResources();
 		Window window = gm.getGameWindow();
 
-		gm.getWorldsHandler().getActiveWorld().getActiveDimension().lighting();
-		gm.getSun_Camera().setPosition(gm.getCamera().getPosition());
-		gm.getRenderer().render(gm.getWorldsHandler().getActiveWorld().getActiveDimension(), gm.getCamera(),
-				gm.getSun_Camera(), gm.getWorldSimulation(), gm.getLightPos(), gm.getInvertedLightPosition(), alpha);
+		gm.getRenderer().render(null
+
+		// TODO: Implement
+
+				, physicsSystem.getEngine().getEntities(), gm.getCamera(), gm.getSunCamera(), gm.getWorldSimulation(),
+				gm.getLightPos(), gm.getInvertedLightPosition(), alpha);
+
 		window.beingNVGFrame();
 		if (ClientVariables.debug) {
 			UIRendering.renderText(window.getID(), "Voxel " + " (" + ClientVariables.version + ")", "Roboto-Bold", 5,
@@ -119,11 +127,8 @@ public class SPState extends AbstractState {
 					"Used VRam: " + WindowManager.getUsedVRAM() + "KB " + " UPS: " + CoreInfo.ups, "Roboto-Bold", 5, 95,
 					20, UIRendering.rgba(220, 220, 220, 255, UIRendering.colorA),
 					UIRendering.rgba(255, 255, 255, 255, UIRendering.colorB));
-			UIRendering.renderText(window.getID(),
-					"Loaded Chunks: " + gm.getWorldsHandler().getActiveWorld().getActiveDimension().getLoadedChunks()
-							+ "   Rendered Chunks: "
-							+ gm.getWorldsHandler().getActiveWorld().getActiveDimension().getRenderedChunks(),
-					"Roboto-Bold", 5, 115, 20, UIRendering.rgba(220, 220, 220, 255, UIRendering.colorA),
+			UIRendering.renderText(window.getID(), "Loaded Chunks: " + 0 + "   Rendered Chunks: " + 0, "Roboto-Bold", 5,
+					115, 20, UIRendering.rgba(220, 220, 220, 255, UIRendering.colorA),
 					UIRendering.rgba(255, 255, 255, 255, UIRendering.colorB));
 			UIRendering.renderText(window.getID(),
 					"Position XYZ:  " + gm.getCamera().getPosition().getX() + "  " + gm.getCamera().getPosition().getY()
@@ -131,8 +136,8 @@ public class SPState extends AbstractState {
 					"Roboto-Bold", 5, 135, 20, UIRendering.rgba(220, 220, 220, 255, UIRendering.colorA),
 					UIRendering.rgba(255, 255, 255, 255, UIRendering.colorB));
 			UIRendering.renderText(window.getID(),
-					"Pitch:  " + gm.getCamera().getPitch() + "   Yaw: " + gm.getCamera().getYaw() + "   Roll: "
-							+ gm.getCamera().getRoll(),
+					"Pitch Yaw Roll: " + gm.getCamera().getRotation().getX() + " " + gm.getCamera().getRotation().getY()
+							+ " " + gm.getCamera().getRotation().getZ(),
 					"Roboto-Bold", 5, 155, 20, UIRendering.rgba(220, 220, 220, 255, UIRendering.colorA),
 					UIRendering.rgba(255, 255, 255, 255, UIRendering.colorB));
 			Timers.renderDebugDisplay(5, 24, 200, 55);

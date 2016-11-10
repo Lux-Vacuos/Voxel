@@ -109,9 +109,10 @@ void main(void){
 
     float vl = dot(V, L);
     float f = 0;
-    
-    finalColour *= max(dot(vec3(0,1,0),L),0.1);
-    
+
+	float normalDotLight = max(dot(vec3(0,1,0),L),0.002);
+    finalColour *= normalDotLight;
+
     if(vl > 0.999)
     	finalColour = vec4(2.0);
     if(vl > 0.999)

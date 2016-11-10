@@ -35,7 +35,6 @@ import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.ui.Button;
 import net.luxvacuos.voxel.client.ui.UIWindow;
 import net.luxvacuos.voxel.client.ui.World;
-import net.luxvacuos.voxel.client.world.DefaultWorld;
 import net.luxvacuos.voxel.universal.core.AbstractVoxel;
 
 /**
@@ -70,8 +69,6 @@ public class SPSelectionState extends AbstractFadeState {
 		});
 		playButton.setOnButtonPress((button, delta) -> {
 			if (!worldName.equals("")) {
-				GameResources.getInstance().getWorldsHandler().registerWorld(new DefaultWorld(worldName));
-				GameResources.getInstance().getWorldsHandler().setActiveWorld(worldName);
 				this.switchTo(StateNames.SP_LOADING);
 			}
 		});

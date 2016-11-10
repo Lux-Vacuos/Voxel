@@ -191,11 +191,11 @@ public abstract class RenderingPipeline {
 	 * @param gm
 	 *            {@link GameResources}
 	 */
-	public void render(Camera camera, Matrix4d projectionMatrix, Vector3d lightPosition, Vector3d invertedLightPosition,
+	public void render(Camera camera, Vector3d lightPosition, Vector3d invertedLightPosition,
 			ClientWorldSimulation clientWorldSimulation, List<Light> lights) {
 		for (ImagePass imagePass : imagePasses) {
-			imagePass.process(camera, projectionMatrix, previousViewMatrix, previousCameraPosition, lightPosition,
-					invertedLightPosition, clientWorldSimulation, lights, auxs, this, quad);
+			imagePass.process(camera, previousViewMatrix, previousCameraPosition, lightPosition, invertedLightPosition,
+					clientWorldSimulation, lights, auxs, this, quad);
 		}
 		Renderer.prepare();
 		finalShader.start();

@@ -69,9 +69,9 @@ import net.luxvacuos.voxel.client.core.ClientWorldSimulation;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.TessellatorBasicShader;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.TessellatorShader;
 import net.luxvacuos.voxel.client.util.Maths;
-import net.luxvacuos.voxel.client.world.block.Block;
-import net.luxvacuos.voxel.client.world.block.BlockBase;
+import net.luxvacuos.voxel.client.world.block.RenderBlock;
 import net.luxvacuos.voxel.client.world.entities.Camera;
+import net.luxvacuos.voxel.universal.world.utils.BlockFace;
 
 public class Tessellator {
 
@@ -408,18 +408,18 @@ public class Tessellator {
 	}
 
 	public void generateCube(double x, double y, double z, float size, boolean top, boolean bottom, boolean left,
-			boolean right, boolean front, boolean back, BlockBase block, float tbl_, float tbr_, float tfl_, float tfr_,
-			float bbl_, float bbr_, float bfl_, float bfr_) {
-		if (block.getId() != Block.Air.getId()) {
+			boolean right, boolean front, boolean back, RenderBlock block, float tbl_, float tbr_, float tfl_,
+			float tfr_, float bbl_, float bbr_, float bfl_, float bfr_) {
+		if (block.getID() != 0) {
 			generateCube(x, y, z, size, size, size, top, bottom, left, right, front, back, block, tbl_, tbr_, tfl_,
 					tfr_, bbl_, bbr_, bfl_, bfr_);
 		}
 	}
 
 	public void generateCube(double x, double y, double z, float xsize, float ysize, float zsize, boolean top,
-			boolean bottom, boolean left, boolean right, boolean front, boolean back, BlockBase block, float tbl_,
+			boolean bottom, boolean left, boolean right, boolean front, boolean back, RenderBlock block, float tbl_,
 			float tbr_, float tfl_, float tfr_, float bbl_, float bbr_, float bfl_, float bfr_) {
-		int id = block.getId();
+		int id = block.getID();
 		float tbl = tbl_ / 15f;
 		float tbr = tbr_ / 15f;
 		float tfl = tfl_ / 15f;
@@ -428,14 +428,14 @@ public class Tessellator {
 		float bbr = bbr_ / 15f;
 		float bfl = bfl_ / 15f;
 		float bfr = bfr_ / 15f;
-		if (id != Block.Air.getId()) {
+		if (id != 0) {
 			Vector8f texcoords;
 			Vector3d edge1, edge2, tangent, bitangent;
 			Vector2d deltaUV1, deltaUV2;
 			float f;
 
 			if (top) {
-				texcoords = block.texCoordsUp();
+				texcoords = block.getTexCoords(BlockFace.TOP);
 				// top face
 				vertex3f(new Vector3d(x, y + ysize, z + zsize));
 				texture2f(new Vector2d(texcoords.getZ(), texcoords.getW()));
@@ -494,7 +494,7 @@ public class Tessellator {
 
 			}
 			if (bottom) {
-				texcoords = block.texCoordsDown();
+				texcoords = block.getTexCoords(BlockFace.BOTTOM);
 				// bottom face
 				vertex3f(new Vector3d(x, y, z));
 				texture2f(new Vector2d(texcoords.getZ(), texcoords.getW()));
@@ -554,7 +554,7 @@ public class Tessellator {
 			}
 
 			if (back) {
-				texcoords = block.texCoordsBack();
+				texcoords = block.getTexCoords(BlockFace.SOUTH);
 				// back face
 				vertex3f(new Vector3d(x, y, z + zsize));
 				texture2f(new Vector2d(texcoords.getX(), texcoords.getY()));
@@ -616,7 +616,7 @@ public class Tessellator {
 			}
 			if (front) {
 				// front face
-				texcoords = block.texCoordsFront();
+				texcoords = block.getTexCoords(BlockFace.NORTH);
 				vertex3f(new Vector3d(x, y + ysize, z));
 				texture2f(new Vector2d(texcoords.getZ(), texcoords.getW()));
 				normal3f(new Vector3d(0, 0, -1));
@@ -675,7 +675,7 @@ public class Tessellator {
 
 			}
 			if (right) {
-				texcoords = block.texCoordsRight();
+				texcoords = block.getTexCoords(BlockFace.EAST);
 				// right face
 				vertex3f(new Vector3d(x, y, z));
 				texture2f(new Vector2d(texcoords.getK(), texcoords.getL()));
@@ -735,7 +735,7 @@ public class Tessellator {
 
 			}
 			if (left) {
-				texcoords = block.texCoordsLeft();
+				texcoords = block.getTexCoords(BlockFace.WEST);
 				// left face
 				vertex3f(new Vector3d(x + xsize, y, z + zsize));
 				texture2f(new Vector2d(texcoords.getK(), texcoords.getL()));
