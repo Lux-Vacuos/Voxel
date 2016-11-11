@@ -31,6 +31,7 @@ uniform sampler2D gPosition;
 uniform sampler2D gNormal;
 uniform sampler2D gMask;
 uniform sampler2D gPBR;
+uniform samplerCube gEnvironment;
 uniform sampler2D composite0;
 uniform sampler2DShadow gDepth;
 
@@ -54,6 +55,9 @@ void main(void){
     		float fact = pbr.g;
 			fact += (1-pbr.r) * 0.2;
 			fact = clamp(fact,0,1);
+    		float factFinal = pbr.g;
+			factFinal += (1-pbr.r) * 0.2;
+			factFinal = clamp(factFinal,0,1);
     		vec3 newPos;
     		vec4 newScreen;
     		vec3 rayTrace = worldStartingPos;
@@ -67,26 +71,38 @@ void main(void){
         		newPos = texture(gPosition, newScreen.xy/2.0+0.5).xyz;
         		currentWorldDist = length(newPos.xyz - cameraPosition.xyz);
         		rayDist = length(rayTrace.xyz - cameraPosition.xyz);
-        		if (newScreen.x > 1 || newScreen.x < -1 || newScreen.y > 1 || newScreen.y < -1)
-				//|| dot(refl, cameraToWorldNorm) < 0 || cameraToWorldDist > currentWorldDist)
+        		if (newScreen.x > 1 || newScreen.x < -1 || newScreen.y > 1 || newScreen.y < -1 || cameraToWorldDist > currentWorldDist || dot(refl, cameraToWorldNorm) < 0)
 	       			break;
     		} while(rayDist < currentWorldDist);
 			vec4 newColor = texture(composite0, newScreen.xy/2.0 + 0.5);
+
 			for (int i = -3; i < 3; i++) {
 				for (int j = -3; j < 3; j++) {
-					newColor += texture(composite0,  newScreen.xy/2.0 + 0.5 + vec2(j, i) * ((1-pbr.r) / 100) );
+					newColor += texture(composite0,  newScreen.xy/2.0 + 0.5 + vec2(j, i) * (pbr.r / 5) );
 				}
 			}
 			newColor /= 36.0;
+
+			vec4 enviromentMap = texture(gEnvironment, refl);
+			for(int i = -3; i < 3 + 1; i++) { 
+				for(int j = -3; j < 3 + 1; j++) { 
+					for(int k = -3; k < 3 + 1; k++) { 
+						enviromentMap += texture(gEnvironment, refl + vec3(i, j, k) * (pbr.r / 5));
+					} 
+				}
+			} 
+			enviromentMap /= 256;
+
  			
-    		//if (dot(refl, cameraToWorldNorm) < 0)
-	    	//	fact = 1.0;
-    		//else 
-			if (newScreen.x > 1 || newScreen.x < -1 || newScreen.y > 1 || newScreen.y < -1)
+    		if (dot(refl, cameraToWorldNorm) < 0)
+	    		fact = 0.0;
+    		else if (newScreen.x > 1 || newScreen.x < -1 || newScreen.y > 1 || newScreen.y < -1)
 	        	fact = 0.0;
-    		//else if (cameraToWorldDist > currentWorldDist)
-	        //	fact = 1.0;
-			image = mix(image, newColor, fact);
+    		else if (cameraToWorldDist > currentWorldDist)
+	        	fact = 0.0;
+
+			vec4 finalReflection = mix(enviromentMap, newColor, fact);
+			image = mix(image, finalReflection, factFinal);
     	}
 	}
 	out_Color = image;

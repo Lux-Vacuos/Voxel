@@ -34,6 +34,7 @@ import static org.lwjgl.opengl.GL13.glActiveTexture;
 import net.luxvacuos.voxel.client.rendering.api.opengl.ImagePass;
 import net.luxvacuos.voxel.client.rendering.api.opengl.ImagePassFBO;
 import net.luxvacuos.voxel.client.rendering.api.opengl.RenderingPipeline;
+import net.luxvacuos.voxel.client.rendering.api.opengl.objects.CubeMapTexture;
 
 public class Lighting extends ImagePass {
 
@@ -42,7 +43,7 @@ public class Lighting extends ImagePass {
 	}
 
 	@Override
-	public void render(ImagePassFBO[] auxs, RenderingPipeline pipe) {
+	public void render(ImagePassFBO[] auxs, RenderingPipeline pipe, CubeMapTexture environmentMap) {
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, pipe.getMainFBO().getDiffuseTex());
 		glActiveTexture(GL_TEXTURE1);

@@ -58,10 +58,9 @@ void main(void){
     vec4 normal = texture(gNormal, texcoord);
     vec4 depth = texture(gDepth, texcoord);
     vec4 image = texture(composite0, texcoord);
-    if(useAmbientOcclusion == 1){
-    
+    if(useAmbientOcclusion == 1) {
     	vec2 filterRadius = vec2(10 / resolution.x, 10 / resolution.y);
-    
+        normal = normalize(normal);
     	float ambientOcclusion = 0;
     	for (int i = 0; i < sample_count; ++i) {
 	        vec2 sampleTexCoord = texcoord + (poisson16[i] * (filterRadius));

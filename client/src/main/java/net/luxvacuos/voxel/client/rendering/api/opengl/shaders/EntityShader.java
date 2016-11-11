@@ -44,16 +44,15 @@ public class EntityShader extends ShaderProgram {
 	private UniformMatrix biasMatrix = new UniformMatrix("biasMatrix");
 	private UniformMatrix projectionLightMatrix = new UniformMatrix("projectionLightMatrix");
 	private UniformMatrix viewLightMatrix = new UniformMatrix("viewLightMatrix");
-	private UniformSampler texture0 = new UniformSampler("texture0");
 	private UniformSampler depth = new UniformSampler("depth");
 	private UniformBoolean useShadows = new UniformBoolean("useShadows");
-	private UniformMaterial material = new UniformMaterial("material.color", "material.roughness", "material.metallic");
+	private UniformMaterial material = new UniformMaterial("material");
 
 	public EntityShader() {
 		super(ClientVariables.VERTEX_FILE_ENTITY, ClientVariables.FRAGMENT_FILE_ENTITY, new Attribute(0, "position"),
-				new Attribute(1, "textureCoords"), new Attribute(2, "normals"));
+				new Attribute(1, "textureCoords"), new Attribute(2, "normals"), new Attribute(3, "tangent"));
 		super.storeAllUniformLocations(transformationMatrix, projectionMatrix, viewMatrix, biasMatrix,
-				projectionLightMatrix, viewLightMatrix, texture0, depth, useShadows, material);
+				projectionLightMatrix, viewLightMatrix, depth, useShadows, material);
 		connectTextureUnits();
 	}
 
@@ -63,8 +62,7 @@ public class EntityShader extends ShaderProgram {
 	 */
 	private void connectTextureUnits() {
 		super.start();
-		texture0.loadTexUnit(0);
-		depth.loadTexUnit(1);
+		depth.loadTexUnit(8);
 		super.stop();
 	}
 

@@ -21,7 +21,6 @@
 #version 330 core
 
 in vec2 pass_textureCoords;
-in vec3 pass_normal;
 in vec3 pass_position;
 in vec4 pass_Data;
 in vec4 ShadowCoord;
@@ -107,7 +106,7 @@ void main(void) {
     	discard;
     	
 	vec3 normal = texture(normalMap, texcoords).rgb;
-	normal = normalize(normal * 2.0 - 1.0);   
+	normal = normal * 2.0 - 1.0;   
 	normal = normalize(TBN * normal);
 	
 	if(transparent == 1) {

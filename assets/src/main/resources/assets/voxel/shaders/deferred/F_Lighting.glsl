@@ -36,13 +36,26 @@ uniform int shadowDrawDistance;
 
 const float transitionDistance = 5;
 
+float beckmannDistribution(float x, float roughness) {
+	float NdotH = max(x, 0.0001);
+  	float cos2Alpha = NdotH * NdotH;
+	float tan2Alpha = (cos2Alpha - 1.0) / cos2Alpha;
+	float roughness2 = roughness * roughness;
+	float denom = 3.141592653589793 * roughness2 * cos2Alpha * cos2Alpha;
+	return exp(tan2Alpha / roughness2) / denom;
+}
+
+float beckmannSpecular(vec3 lightDirection, vec3 viewDirection, vec3 surfaceNormal, float roughness) {
+	return beckmannDistribution(dot(surfaceNormal, normalize(lightDirection + viewDirection)), roughness);
+}
+
 void main(void){
 	vec2 texcoord = textureCoords;
 	vec4 mask = texture(gMask, texcoord);
 	vec4 image = texture(gDiffuse, texcoord);
-	vec4 pbr = texture(gPBR, texcoord);
-	if(mask.a != 1) {
-    	vec4 position = texture(gPosition,texcoord);
+	if (mask.a != 1) {
+		vec4 pbr = texture(gPBR, texcoord);
+    	vec4 position = texture(gPosition, texcoord);
     	vec4 normal = texture(gNormal, texcoord);
 		image.rgb *= 1.0 - pbr.g;
 		vec3 lightDir = lightPosition;
@@ -55,11 +68,10 @@ void main(void){
 		float fadeOut = clamp(1.0-shadowDist, 0.0, 1.0);
 		float normalDotLight = max(dot(normal.xyz, lightDir), 0);
     	float finalLight = normalDotLight - (position.w * fadeOut);
-    	finalLight = clamp(finalLight,0.015,1.0);
+    	finalLight = max(finalLight,0.015);
     	image = finalLight * image;
     	if(position.w <= 0.5 && normalDotLight > 0){
-    		vec3 vHalfVector = normalize(lightDir.xyz+eyeDir);
-	   		image += pow(max(dot(normal.xyz,vHalfVector),0.0), 200 / (1-pbr.r)) * (1-pbr.r);
+			image += beckmannSpecular(lightDir.xyz, eyeDir, normal.xyz, pbr.r);
 	   	}
 	}
     image += texture(composite0, texcoord);

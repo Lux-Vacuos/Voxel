@@ -43,9 +43,9 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.utils.ImmutableArray;
 
 import net.luxvacuos.igl.vector.Matrix4d;
+import net.luxvacuos.voxel.client.rendering.api.opengl.objects.RawModel;
+import net.luxvacuos.voxel.client.rendering.api.opengl.objects.TexturedModel;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.EntityBasicShader;
-import net.luxvacuos.voxel.client.resources.models.RawModel;
-import net.luxvacuos.voxel.client.resources.models.TexturedModel;
 import net.luxvacuos.voxel.client.util.Maths;
 import net.luxvacuos.voxel.client.world.entities.AbstractEntity;
 import net.luxvacuos.voxel.client.world.entities.Camera;
@@ -140,7 +140,7 @@ public class EntityShadowRenderer {
 		glEnableVertexAttribArray(0);
 		glEnableVertexAttribArray(1);
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, model.getTexture().getID());
+		glBindTexture(GL_TEXTURE_2D, model.getMaterial().getDiffuse().getID());
 	}
 
 	/**

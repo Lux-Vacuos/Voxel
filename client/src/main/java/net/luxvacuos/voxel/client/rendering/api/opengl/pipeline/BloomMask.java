@@ -29,6 +29,7 @@ import static org.lwjgl.opengl.GL13.glActiveTexture;
 import net.luxvacuos.voxel.client.rendering.api.opengl.ImagePass;
 import net.luxvacuos.voxel.client.rendering.api.opengl.ImagePassFBO;
 import net.luxvacuos.voxel.client.rendering.api.opengl.RenderingPipeline;
+import net.luxvacuos.voxel.client.rendering.api.opengl.objects.CubeMapTexture;
 
 public class BloomMask extends ImagePass {
 
@@ -37,7 +38,7 @@ public class BloomMask extends ImagePass {
 	}
 
 	@Override
-	public void render(ImagePassFBO[] auxs, RenderingPipeline pipe) {
+	public void render(ImagePassFBO[] auxs, RenderingPipeline pipe, CubeMapTexture environmentMap) {
 		glActiveTexture(GL_TEXTURE4);
 		glBindTexture(GL_TEXTURE_2D, pipe.getMainFBO().getPbrTex());
 		glActiveTexture(GL_TEXTURE6);

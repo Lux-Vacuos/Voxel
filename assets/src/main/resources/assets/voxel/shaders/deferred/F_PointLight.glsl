@@ -35,13 +35,29 @@ uniform sampler2D gDiffuse;
 uniform sampler2D gPosition;
 uniform sampler2D gNormal;
 uniform sampler2D gMask;
+uniform sampler2D gPBR; // R = roughness, B = metallic
 uniform sampler2D composite0;
+
+
+float beckmannDistribution(float x, float roughness) {
+	float NdotH = max(x, 0.0001);
+  	float cos2Alpha = NdotH * NdotH;
+	float tan2Alpha = (cos2Alpha - 1.0) / cos2Alpha;
+	float roughness2 = roughness * roughness;
+	float denom = 3.141592653589793 * roughness2 * cos2Alpha * cos2Alpha;
+	return exp(tan2Alpha / roughness2) / denom;
+}
+
+float beckmannSpecular(vec3 lightDirection, vec3 viewDirection, vec3 surfaceNormal, float roughness) {
+	return beckmannDistribution(dot(surfaceNormal, normalize(lightDirection + viewDirection)), roughness);
+}
 
 void main(void){
 	vec2 texcoord = textureCoords;
     vec4 composite = texture(composite0, texcoord);
 	vec4 mask = texture(gMask, texcoord);
 	if(mask.a != 1) {
+		vec4 pbr = texture(gPBR, texcoord);
     	vec4 position = texture(gPosition,texcoord);
     	vec4 normal = texture(gNormal, texcoord);
 		vec3 eyeDir = normalize(cameraPosition-position.xyz);
@@ -50,16 +66,22 @@ void main(void){
 	    	if(pointLightsPos[x].y < 0)
 	    		break;
 	    	vec3 lightDir = pointLightsPos[x] - position.xyz;
+    		lightDir = normalize(lightDir);
 	    	float distance = length(lightDir);
-	    	float attFactor = 1 + (0.01 * distance) + (0.002 * distance * distance);
-	    	lightDir = normalize(lightDir);
-	    	float finalLight = max(dot(normal.xyz, lightDir), 0) * 1;
-	    	finalLight /= attFactor;
-	    	composite += finalLight * composite;
-	    	vec3 vHalfVector = normalize(lightDir.xyz+eyeDir);
-	    	float spec = pow(max(dot(normal.xyz,vHalfVector),0.0), 100) * 1.5;
-	    	spec /= attFactor;
-			composite += spec;
+	    	float attFactor = (distance*distance);
+			composite.rgb *= 1.0 - pbr.g;
+    		vec3 eyeDir = normalize(cameraPosition-position.xyz);
+			float normalDotLight = max(dot(normal.xyz, lightDir), 0) * 1.5;
+    		normalDotLight = max(normalDotLight, 0.0);
+			normalDotLight /= attFactor;
+    		composite += normalDotLight * composite;
+    		if(normalDotLight > 0){
+	    		vec3 vHalfVector = normalize(lightDir.xyz+eyeDir);
+				float specular = beckmannSpecular(lightDir.xyz, eyeDir, normal.xyz, pbr.r);
+				specular /= attFactor;
+		   		composite += specular;
+		   	}
+
 		}
 	}
 	out_Color = composite;

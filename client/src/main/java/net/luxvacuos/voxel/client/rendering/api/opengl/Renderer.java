@@ -44,6 +44,7 @@ import net.luxvacuos.igl.vector.Vector3d;
 import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.core.ClientWorldSimulation;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
+import net.luxvacuos.voxel.client.rendering.api.opengl.objects.CubeMapTexture;
 import net.luxvacuos.voxel.client.rendering.api.opengl.pipeline.MultiPass;
 import net.luxvacuos.voxel.client.rendering.api.opengl.pipeline.SinglePass;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.TessellatorBasicShader;
@@ -58,12 +59,15 @@ public class Renderer {
 	private SkyboxRenderer skyboxRenderer;
 	private RenderingPipeline renderingPipeline;
 	private LightRenderer lightRenderer;
+	private EnvironmentRenderer environmentRenderer;
 
 	private ShadowFBO shadowFBO;
 
 	private Frustum frustum;
+	private Window window;
 
 	public Renderer(Window window, Camera camera, Camera sunCamera) {
+		this.window = window;
 		if (ClientVariables.shadowMapResolution > GLUtil.getTextureMaxSize())
 			ClientVariables.shadowMapResolution = GLUtil.getTextureMaxSize();
 		frustum = new Frustum();
@@ -76,11 +80,16 @@ public class Renderer {
 			renderingPipeline = new SinglePass();
 		else if (ClientVariables.renderingPipeline.equals("MultiPass"))
 			renderingPipeline = new MultiPass();
+		environmentRenderer = new EnvironmentRenderer(
+				new CubeMapTexture(window.getResourceLoader().createEmptyCubeMap(128), 128));
 	}
 
 	public void render(IDimension iDimension, ImmutableArray<Entity> entities, Camera camera, Camera sunCamera,
 			ClientWorldSimulation clientWorldSimulation, Vector3d lightPosition, Vector3d invertedLightPosition,
 			float alpha) {
+		environmentRenderer.renderEnvironmentMap(camera.getPosition(), skyboxRenderer, clientWorldSimulation,
+				lightPosition, window);
+
 		frustum.calculateFrustum(sunCamera.getProjectionMatrix(), sunCamera.getViewMatrix());
 		if (ClientVariables.useShadows) {
 			shadowFBO.begin();
@@ -101,8 +110,8 @@ public class Renderer {
 
 		renderingPipeline.begin();
 		prepare();
-		skyboxRenderer.render(ClientVariables.RED, ClientVariables.GREEN, ClientVariables.BLUE, alpha, camera,
-				clientWorldSimulation, lightPosition);
+		skyboxRenderer.render(ClientVariables.RED, ClientVariables.GREEN, ClientVariables.BLUE, camera,
+				clientWorldSimulation, lightPosition, 1, false);
 		// dimension.render(camera, sunCamera, clientWorldSimulation,
 		// camera.getProjectionMatrix(),
 		// sunCamera.getProjectionMatrix(), shadowFBO.getShadowDepth(),
@@ -112,7 +121,7 @@ public class Renderer {
 		renderingPipeline.end();
 		prepare();
 		renderingPipeline.render(camera, lightPosition, invertedLightPosition, clientWorldSimulation,
-				lightRenderer.getLights());
+				lightRenderer.getLights(), environmentRenderer.getCubeMapTexture());
 
 		// dimension.render(camera, sunCamera, clientWorldSimulation,
 		// camera.getProjectionMatrix(),
@@ -123,6 +132,7 @@ public class Renderer {
 	}
 
 	public void cleanUp() {
+		environmentRenderer.cleanUp();
 		shadowFBO.cleanUp();
 		entityRenderer.cleanUp();
 		entityShadowRenderer.cleanUp();
@@ -134,6 +144,10 @@ public class Renderer {
 
 	public Frustum getFrustum() {
 		return frustum;
+	}
+
+	public LightRenderer getLightRenderer() {
+		return lightRenderer;
 	}
 
 	public static void init() {

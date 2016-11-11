@@ -21,11 +21,11 @@
 package net.luxvacuos.voxel.client.world.block;
 
 import net.luxvacuos.igl.vector.Vector2d;
+import net.luxvacuos.voxel.client.rendering.api.opengl.objects.RawModel;
+import net.luxvacuos.voxel.client.rendering.api.opengl.objects.Texture;
+import net.luxvacuos.voxel.client.rendering.api.opengl.objects.TexturedModel;
 import net.luxvacuos.voxel.client.resources.ResourceLoader;
-import net.luxvacuos.voxel.client.resources.models.ModelTexture;
-import net.luxvacuos.voxel.client.resources.models.RawModel;
 import net.luxvacuos.voxel.client.resources.models.TessellatorTextureAtlas;
-import net.luxvacuos.voxel.client.resources.models.TexturedModel;
 
 public class BlocksResources {
 
@@ -44,8 +44,8 @@ public class BlocksResources {
 		pbrMap = loader.loadTextureMisc("blocks_pbr");
 
 		RawModel rNode = loader.loadObjModel("Node");
-		ModelTexture tNode = new ModelTexture(loader.loadTextureBlocks("Node"));
-		node = new TexturedModel(rNode, tNode);
+		Texture tNode = new Texture(loader.loadTextureBlocks("Node"));
+		//node = new TexturedModel(rNode, tNode);
 		loadTexCoords();
 	}
 

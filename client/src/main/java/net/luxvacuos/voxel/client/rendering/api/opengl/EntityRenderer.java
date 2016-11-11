@@ -25,7 +25,7 @@ import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
 import static org.lwjgl.opengl.GL11.GL_UNSIGNED_INT;
 import static org.lwjgl.opengl.GL11.glBindTexture;
 import static org.lwjgl.opengl.GL11.glDrawElements;
-import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
+import static org.lwjgl.opengl.GL13.*;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE1;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
 import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
@@ -42,9 +42,10 @@ import com.badlogic.ashley.utils.ImmutableArray;
 
 import net.luxvacuos.igl.vector.Matrix4d;
 import net.luxvacuos.voxel.client.core.ClientVariables;
+import net.luxvacuos.voxel.client.rendering.api.opengl.objects.Material;
+import net.luxvacuos.voxel.client.rendering.api.opengl.objects.RawModel;
+import net.luxvacuos.voxel.client.rendering.api.opengl.objects.TexturedModel;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.EntityShader;
-import net.luxvacuos.voxel.client.resources.models.RawModel;
-import net.luxvacuos.voxel.client.resources.models.TexturedModel;
 import net.luxvacuos.voxel.client.util.Maths;
 import net.luxvacuos.voxel.client.world.entities.AbstractEntity;
 import net.luxvacuos.voxel.client.world.entities.Camera;
@@ -128,8 +129,8 @@ public class EntityRenderer {
 		for (TexturedModel model : blockEntities.keySet()) {
 			prepareTexturedModel(model, shadowTex);
 			List<AbstractEntity> batch = blockEntities.get(model);
+			shader.loadMaterial(model.getMaterial());
 			for (AbstractEntity entity : batch) {
-				shader.loadMaterial(entity.getComponent(RendereableComponent.class).material);
 				prepareInstance(entity);
 				glDrawElements(GL_TRIANGLES, model.getRawModel().getVertexCount(), GL_UNSIGNED_INT, 0);
 			}
@@ -145,13 +146,17 @@ public class EntityRenderer {
 	 */
 	private void prepareTexturedModel(TexturedModel model, int shadowTex) {
 		RawModel rawmodel = model.getRawModel();
+		Material material = model.getMaterial();
 		glBindVertexArray(rawmodel.getVaoID());
 		glEnableVertexAttribArray(0);
 		glEnableVertexAttribArray(1);
 		glEnableVertexAttribArray(2);
+		glEnableVertexAttribArray(3);
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, model.getTexture().getID());
+		glBindTexture(GL_TEXTURE_2D, material.getDiffuse().getID());
 		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, material.getNormal().getID());
+		glActiveTexture(GL_TEXTURE8);
 		glBindTexture(GL_TEXTURE_2D, shadowTex);
 	}
 
@@ -163,6 +168,7 @@ public class EntityRenderer {
 		glDisableVertexAttribArray(0);
 		glDisableVertexAttribArray(1);
 		glDisableVertexAttribArray(2);
+		glDisableVertexAttribArray(3);
 		glBindVertexArray(0);
 	}
 

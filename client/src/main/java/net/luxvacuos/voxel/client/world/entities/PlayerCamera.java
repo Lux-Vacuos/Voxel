@@ -36,6 +36,7 @@ import net.luxvacuos.voxel.client.util.Maths;
 import net.luxvacuos.voxel.universal.ecs.Components;
 import net.luxvacuos.voxel.universal.ecs.components.AABB;
 import net.luxvacuos.voxel.universal.ecs.components.Health;
+import net.luxvacuos.voxel.universal.ecs.components.Rotation;
 import net.luxvacuos.voxel.universal.ecs.components.Scale;
 import net.luxvacuos.voxel.universal.ecs.components.Velocity;
 
@@ -43,9 +44,8 @@ public class PlayerCamera extends Camera {
 
 	private boolean jump = false;
 	private float speed;
-	private float multiplierMouse = 14;
 	private boolean underWater = false;
-	private int mouseSpeed = 2;
+	private int mouseSpeed = 8;
 	private final int maxLookUp = 90;
 	private final int maxLookDown = -90;
 	private boolean flyMode = false;
@@ -68,10 +68,10 @@ public class PlayerCamera extends Camera {
 	public void update(float delta) {
 		Window window = GameResources.getInstance().getGameWindow();
 		KeyboardHandler kbh = window.getKeyboardHandler();
-		Vector3d rotation = getRotation();
+		Rotation rotation = Components.ROTATION.get(this);
 
-		float mouseDX = getDX() * delta * mouseSpeed * 0.16f * multiplierMouse;
-		float mouseDY = getDY() * delta * mouseSpeed * 0.16f * multiplierMouse;
+		float mouseDX = getDX() * mouseSpeed * delta;
+		float mouseDY = getDY() * mouseSpeed * delta;
 		if (rotation.getY() + mouseDX >= 360) {
 			rotation.setY(rotation.getY() + mouseDX - 360);
 		} else if (rotation.getY() + mouseDX < 0) {
@@ -127,7 +127,6 @@ public class PlayerCamera extends Camera {
 				jump = false;
 
 		}
-		setRotation(rotation);
 	}
 
 	@Override

@@ -53,11 +53,11 @@ public class MultiPass extends RenderingPipeline {
 		volumetricLight.init();
 		super.imagePasses.add(volumetricLight);
 
-		gaussianHorizontal = new GaussianHorizonal("GaussianHorizontal", width/4, height/4);
+		gaussianHorizontal = new GaussianHorizonal("GaussianHorizontal", width, height/4);
 		gaussianHorizontal.init();
 		super.imagePasses.add(gaussianHorizontal);
 
-		gaussianVertical = new GaussianVertical("GaussianVertical", width/4, height/4);
+		gaussianVertical = new GaussianVertical("GaussianVertical", width, height/4);
 		gaussianVertical.init();
 		super.imagePasses.add(gaussianVertical);
 
@@ -72,22 +72,22 @@ public class MultiPass extends RenderingPipeline {
 		ambientOcclusion = new AmbientOcclusion("AmbientOcclusion", width, height);
 		ambientOcclusion.init();
 		super.imagePasses.add(ambientOcclusion);
+		
+		screenSpaceReflections = new ScreenSpaceReflections("ScreenSpaceReflections", width, height);
+		screenSpaceReflections.init();
+		super.imagePasses.add(screenSpaceReflections);
 
-		bloomMask = new BloomMask("BloomMask", width, height);
-		bloomMask.init();
-		super.imagePasses.add(bloomMask);
+		//bloomMask = new BloomMask("BloomMask", width, height);
+		//bloomMask.init();
+		//super.imagePasses.add(bloomMask);
 
-		super.imagePasses.add(gaussianHorizontal);
+		//super.imagePasses.add(gaussianHorizontal);
 
-		super.imagePasses.add(gaussianVertical);
+		//super.imagePasses.add(gaussianVertical);
 
 		colorCorrection = new ColorCorrection("ColorCorrection", width, height);
 		colorCorrection.init();
 		super.imagePasses.add(colorCorrection);
-
-		screenSpaceReflections = new ScreenSpaceReflections("ScreenSpaceReflections", width, height);
-		screenSpaceReflections.init();
-		super.imagePasses.add(screenSpaceReflections);
 
 		fxaa = new FXAA("FXAA", width, height);
 		fxaa.init();

@@ -33,12 +33,12 @@ import net.luxvacuos.igl.vector.Vector2d;
 import net.luxvacuos.igl.vector.Vector3d;
 import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.core.ClientWorldSimulation;
+import net.luxvacuos.voxel.client.rendering.api.opengl.objects.CubeMapTexture;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.Light;
+import net.luxvacuos.voxel.client.rendering.api.opengl.objects.RawModel;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.DeferredShadingShader;
-import net.luxvacuos.voxel.client.resources.models.RawModel;
 import net.luxvacuos.voxel.client.util.Maths;
 import net.luxvacuos.voxel.client.world.entities.Camera;
-import net.luxvacuos.voxel.client.world.entities.PlayerCamera;
 
 /**
  * ImagePass, use inside {@link RenderingPipeline} to process diferent image
@@ -97,13 +97,14 @@ public abstract class ImagePass {
 
 	public void process(Camera camera, Matrix4d previousViewMatrix, Vector3d previousCameraPosition,
 			Vector3d lightPosition, Vector3d invertedLightPosition, ClientWorldSimulation clientWorldSimulation,
-			List<Light> lights, ImagePassFBO[] auxs, RenderingPipeline pipe, RawModel quad) {
+			List<Light> lights, ImagePassFBO[] auxs, RenderingPipeline pipe, RawModel quad,
+			CubeMapTexture environmentMap) {
 		begin(camera, previousViewMatrix, previousCameraPosition, lightPosition, invertedLightPosition,
 				clientWorldSimulation, lights);
 		Renderer.prepare();
 		glBindVertexArray(quad.getVaoID());
 		glEnableVertexAttribArray(0);
-		render(auxs, pipe);
+		render(auxs, pipe, environmentMap);
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, quad.getVertexCount());
 		glDisableVertexAttribArray(0);
 		glBindVertexArray(0);
@@ -126,7 +127,7 @@ public abstract class ImagePass {
 			List<Light> lights) {
 		fbo.begin();
 		shader.start();
-		shader.loadUnderWater(((PlayerCamera) camera).isUnderWater());
+		shader.loadUnderWater(false);
 		shader.loadMotionBlurData(camera, previousViewMatrix, previousCameraPosition);
 		shader.loadLightPosition(lightPosition, invertedLightPosition);
 		shader.loadviewMatrix(camera);
@@ -151,7 +152,7 @@ public abstract class ImagePass {
 	 * @param pipe
 	 *            Rendering Pipline
 	 */
-	public abstract void render(ImagePassFBO[] auxs, RenderingPipeline pipe);
+	public abstract void render(ImagePassFBO[] auxs, RenderingPipeline pipe, CubeMapTexture environmentMap);
 
 	/**
 	 * End the render, disables shader and ends FBO.

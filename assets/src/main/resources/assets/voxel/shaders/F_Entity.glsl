@@ -21,21 +21,21 @@
 #version 330 core
 
 struct Material {
-	vec3 color;
+	vec4 color;
 	float roughness;
 	float metallic;
+	sampler2D diffuse;
+	sampler2D normal;
 };
 
 in float visibility;
 in vec2 pass_textureCoords;
-in vec3 surfaceNormal;
-in vec3 toLightVector;
 in vec4 pass_position;
 in vec4 ShadowCoord;
+in mat3 TBN;
 
 out vec4 [5] out_Color;
 
-uniform sampler2D texture0;
 uniform sampler2DShadow depth;
 uniform vec3 skyColour;
 uniform vec3 lightPosition;
@@ -49,8 +49,13 @@ const float yPixelOffset = 0.0002;
 float lookup( vec2 offSet){
 	return texture(depth, ShadowCoord.xyz + vec3(offSet.x * xPixelOffset, offSet.y * yPixelOffset, 0.0) );
 }
+
 void main(void) {
-    vec4 textureColour = texture(texture0, pass_textureCoords);
+	vec4 textureColour;
+	if(material.color.a < 0)
+   		textureColour = texture(material.diffuse, pass_textureCoords);
+	else
+		textureColour = material.color;
 	float shadow = 0;
 	if(useShadows == 1){
 		float x,y;
@@ -66,10 +71,14 @@ void main(void) {
     if(textureColour.a<0.5) {
 		discard;
 	}
+
+	vec3 normal = texture(material.normal, pass_textureCoords).rgb;
+	normal = normal * 2.0 - 1.0;
+	normal = normalize(TBN * normal);
 	
 	out_Color[0] = textureColour;
 	out_Color[1] = vec4(pass_position.xyz,shadow);
-	out_Color[2] = vec4(surfaceNormal.xyz,0);
+	out_Color[2] = vec4(normal.xyz,0);
 	out_Color[3] = vec4(material.roughness, material.metallic, 0.0, 0.0);
 	out_Color[4] = vec4(0.0);
 }

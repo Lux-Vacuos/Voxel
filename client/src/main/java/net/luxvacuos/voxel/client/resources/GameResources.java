@@ -35,9 +35,9 @@ import net.luxvacuos.voxel.client.rendering.api.glfw.WindowHandle;
 import net.luxvacuos.voxel.client.rendering.api.glfw.WindowManager;
 import net.luxvacuos.voxel.client.rendering.api.opengl.ParticleMaster;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Renderer;
+import net.luxvacuos.voxel.client.rendering.api.opengl.objects.ParticleTexture;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.TessellatorBasicShader;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.TessellatorShader;
-import net.luxvacuos.voxel.client.resources.models.ParticleTexture;
 import net.luxvacuos.voxel.client.sound.LibraryLWJGLOpenAL;
 import net.luxvacuos.voxel.client.sound.soundsystem.SoundSystem;
 import net.luxvacuos.voxel.client.sound.soundsystem.SoundSystemConfig;
@@ -81,7 +81,7 @@ public class GameResources extends AbstractGameResources {
 
 	private SoundSystem soundSystem;
 
-	private Vector3d sunRotation = new Vector3d(5, 0, -45);
+	private Vector3d sunRotation = new Vector3d(5, 0, -35);
 	private Vector3d lightPos = new Vector3d(0, 0, 0);
 	private Vector3d invertedLightPosition = new Vector3d(0, 0, 0);
 	private ParticleTexture torchTexture;
@@ -134,11 +134,11 @@ public class GameResources extends AbstractGameResources {
 		sunCamera.setPosition(new Vector3d(0, 0, 0));
 		sunCamera.setPosition(new Vector3d(sunRotation.y, sunRotation.x, sunRotation.z));
 
+		worldSimulation = new ClientWorldSimulation();
 		renderer = new Renderer(getGameWindow(), camera, sunCamera);
 		TessellatorShader.getInstance();
 		TessellatorBasicShader.getInstance();
 		ParticleMaster.getInstance().init(loader, camera.getProjectionMatrix());
-		worldSimulation = new ClientWorldSimulation();
 
 		CustomLog.getInstance();
 		try {

@@ -30,18 +30,20 @@ import net.luxvacuos.voxel.client.core.CoreInfo;
 import net.luxvacuos.voxel.client.input.KeyboardHandler;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.glfw.WindowManager;
-//import net.luxvacuos.voxel.client.input.Keyboard;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.Timers;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.UIRendering;
 import net.luxvacuos.voxel.client.rendering.api.opengl.ParticleMaster;
+import net.luxvacuos.voxel.client.rendering.api.opengl.objects.Light;
 import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.world.PhysicsSystem;
+import net.luxvacuos.voxel.client.world.entities.Dragon;
 import net.luxvacuos.voxel.client.world.entities.Plane;
 import net.luxvacuos.voxel.client.world.entities.PlayerCamera;
 import net.luxvacuos.voxel.client.world.entities.Test;
 import net.luxvacuos.voxel.universal.core.AbstractVoxel;
 import net.luxvacuos.voxel.universal.core.states.AbstractState;
 import net.luxvacuos.voxel.universal.core.states.StateMachine;
+import net.luxvacuos.voxel.universal.ecs.Components;
 
 /**
  * Single Player State, here the local world is updated and rendered.
@@ -55,6 +57,7 @@ public class SPState extends AbstractState {
 	private Engine engine;
 	private Test t;
 	private Plane plane;
+	private Dragon dragon0, dragon1, dragon2, dragon3;
 
 	public SPState() {
 		super(StateNames.SINGLEPLAYER);
@@ -65,8 +68,16 @@ public class SPState extends AbstractState {
 		engine = new Engine();
 		physicsSystem = new PhysicsSystem();
 		engine.addSystem(physicsSystem);
-		t = new Test(new Vector3d(0,1,0));
+		t = new Test(new Vector3d(0, 1, 0));
 		plane = new Plane();
+		dragon0 = new Dragon(new Vector3d(5,0,0));
+		Components.SCALE.get(dragon0).setScale(0.25f);
+		dragon1 = new Dragon(new Vector3d(-5,0,0));
+		Components.SCALE.get(dragon1).setScale(0.25f);
+		dragon2 = new Dragon(new Vector3d(0,0,5));
+		Components.SCALE.get(dragon2).setScale(0.25f);
+		dragon3 = new Dragon(new Vector3d(0,0,-5));
+		Components.SCALE.get(dragon3).setScale(0.25f);
 	}
 
 	@Override
@@ -74,6 +85,10 @@ public class SPState extends AbstractState {
 		physicsSystem.getEngine().addEntity(GameResources.getInstance().getCamera());
 		physicsSystem.getEngine().addEntity(t);
 		physicsSystem.getEngine().addEntity(plane);
+		physicsSystem.getEngine().addEntity(dragon0);
+		physicsSystem.getEngine().addEntity(dragon1);
+		physicsSystem.getEngine().addEntity(dragon2);
+		physicsSystem.getEngine().addEntity(dragon3);
 	}
 
 	@Override

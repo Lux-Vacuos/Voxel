@@ -29,9 +29,12 @@ out vec4 [5] out_Color;
 uniform float time;
 uniform vec3 fogColour;
 uniform vec3 lightPosition;
+uniform int applyGamma;
+uniform float exposure;
 
 const float lowerLimit =  0.2;
 const float upperLimit =  -0.8;
+const float gamma = 2.2;
 
 #define CLOUD_COVER		0.55
 #define CLOUD_SHARPNESS		0.005
@@ -117,6 +120,11 @@ void main(void){
     	finalColour = vec4(2.0);
     if(vl > 0.999)
     	f = 1;
+
+	//if(applyGamma == 1){
+	//	 finalColour = vec4(1.0) - exp(-finalColour * exposure);
+	//	 finalColour = pow(finalColour, vec4(1.0 / gamma));
+	//}
 
     out_Color[0] = finalColour;
     out_Color[1] = vec4(pass_position.xyz,0);

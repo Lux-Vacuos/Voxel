@@ -29,11 +29,14 @@ import static org.lwjgl.opengl.GL13.GL_TEXTURE3;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE4;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE5;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE6;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE8;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE_CUBE_MAP;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
 
 import net.luxvacuos.voxel.client.rendering.api.opengl.ImagePass;
 import net.luxvacuos.voxel.client.rendering.api.opengl.ImagePassFBO;
 import net.luxvacuos.voxel.client.rendering.api.opengl.RenderingPipeline;
+import net.luxvacuos.voxel.client.rendering.api.opengl.objects.CubeMapTexture;
 
 public class ScreenSpaceReflections extends ImagePass {
 
@@ -43,7 +46,7 @@ public class ScreenSpaceReflections extends ImagePass {
 	}
 
 	@Override
-	public void render(ImagePassFBO[] auxs, RenderingPipeline pipe) {
+	public void render(ImagePassFBO[] auxs, RenderingPipeline pipe, CubeMapTexture environmentMap) {
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, pipe.getMainFBO().getDiffuseTex());
 		glActiveTexture(GL_TEXTURE1);
@@ -58,6 +61,8 @@ public class ScreenSpaceReflections extends ImagePass {
 		glBindTexture(GL_TEXTURE_2D, pipe.getMainFBO().getMaskTex());
 		glActiveTexture(GL_TEXTURE6);
 		glBindTexture(GL_TEXTURE_2D, auxs[0].getTexture());
+		glActiveTexture(GL_TEXTURE8);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, environmentMap.getID());
 	}
 
 }

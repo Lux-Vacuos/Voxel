@@ -44,6 +44,8 @@ import static org.lwjgl.opengl.GL11.glPixelStorei;
 import static org.lwjgl.opengl.GL11.glTexImage2D;
 import static org.lwjgl.opengl.GL11.glTexParameterf;
 import static org.lwjgl.opengl.GL11.glTexParameteri;
+import static org.lwjgl.opengl.GL12.GL_CLAMP_TO_EDGE;
+import static org.lwjgl.opengl.GL12.GL_TEXTURE_WRAP_R;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE_CUBE_MAP;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE_CUBE_MAP_POSITIVE_X;
@@ -87,18 +89,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.lwjgl.BufferUtils;
+import org.lwjgl.opengl.EXTTextureFilterAnisotropic;
 
 import net.luxvacuos.igl.Logger;
-import net.luxvacuos.igl.vector.Vector2d;
-import net.luxvacuos.igl.vector.Vector3d;
+import net.luxvacuos.igl.vector.Vector2f;
+import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.core.exception.DecodeTextureException;
 import net.luxvacuos.voxel.client.core.exception.LoadOBJModelException;
 import net.luxvacuos.voxel.client.core.exception.LoadTextureException;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.glfw.WindowManager;
-import net.luxvacuos.voxel.client.resources.models.EntityTexture;
-import net.luxvacuos.voxel.client.resources.models.RawModel;
+import net.luxvacuos.voxel.client.rendering.api.opengl.objects.RawModel;
+import net.luxvacuos.voxel.client.rendering.api.opengl.objects.RawTexture;
+import net.luxvacuos.voxel.client.rendering.api.opengl.objects.VertexNM;
 
 /**
  * This objects handles all loading methods from any type of data, models,
@@ -124,16 +128,11 @@ public class ResourceLoader {
 	 * Texture List
 	 */
 	private List<Integer> textures = new ArrayList<Integer>();
-	/*
+	/**
 	 * NanoVG Fonts
 	 */
 	private List<ByteBuffer> nvgFont = new ArrayList<ByteBuffer>();
 	private long windowID;
-
-	/*
-	 * public Loader(Display display) { objLoader = new OBJLoader(this);
-	 * this.display = display; }
-	 */
 
 	public ResourceLoader(long windowID) {
 		this.windowID = windowID;
@@ -152,12 +151,14 @@ public class ResourceLoader {
 	 *            Array of Indices
 	 * @return A RawModel
 	 */
-	public RawModel loadToVAO(float[] positions, float[] textureCoords, float[] normals, int[] indices) {
+	public RawModel loadToVAO(float[] positions, float[] textureCoords, float[] normals, float[] tangents,
+			int[] indices) {
 		int vaoID = createVAO();
 		bindIndicesBuffer(indices);
 		storeDataInAttributeList(0, 3, positions);
 		storeDataInAttributeList(1, 2, textureCoords);
 		storeDataInAttributeList(2, 3, normals);
+		storeDataInAttributeList(3, 3, tangents);
 		unbindVAO();
 		return new RawModel(vaoID, indices.length);
 	}
@@ -240,7 +241,20 @@ public class ResourceLoader {
 		try {
 			Logger.log("Loading Texture: " + fileName + ".png");
 			texture_id = loadTexture("assets/" + ClientVariables.assets + "/textures/blocks/" + fileName + ".png",
-					GL_NEAREST, GL_REPEAT, GL_RGBA);
+					GL_LINEAR, GL_REPEAT, GL_RGBA);
+		} catch (Exception e) {
+			throw new LoadTextureException(fileName, e);
+		}
+		textures.add(texture_id);
+		return texture_id;
+	}
+	
+	public int loadTextureEntityMisc(String fileName) {
+		int texture_id = 0;
+		try {
+			Logger.log("Loading Texture: " + fileName + ".png");
+			texture_id = loadTexture("assets/" + ClientVariables.assets + "/textures/entity/" + fileName + ".png",
+					GL_LINEAR, GL_REPEAT, GL_RGBA);
 		} catch (Exception e) {
 			throw new LoadTextureException(fileName, e);
 		}
@@ -260,7 +274,7 @@ public class ResourceLoader {
 		try {
 			Logger.log("Loading Texture: " + fileName + ".png");
 			texture_id = loadTexture("assets/" + ClientVariables.assets + "/textures/particles/" + fileName + ".png",
-					GL_NEAREST, GL_REPEAT, GL_SRGB_ALPHA);
+					GL_LINEAR, GL_REPEAT, GL_SRGB_ALPHA);
 		} catch (Exception e) {
 			throw new LoadTextureException(fileName, e);
 		}
@@ -280,10 +294,7 @@ public class ResourceLoader {
 		try {
 			Logger.log("Loading Texture: " + fileName + ".png");
 			texture = loadTexture("assets/" + ClientVariables.assets + "/textures/entity/" + fileName + ".png",
-					GL_NEAREST, GL_REPEAT, GL_SRGB_ALPHA);
-			glGenerateMipmap(GL_TEXTURE_2D);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_LOD_BIAS, -0.4f);
+					GL_LINEAR, GL_REPEAT, GL_SRGB_ALPHA);
 		} catch (Exception e) {
 			throw new LoadTextureException(fileName, e);
 		}
@@ -298,7 +309,7 @@ public class ResourceLoader {
 		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, textureWarp);
 		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filter);
 		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter);
-		EntityTexture data = decodeTextureFile(file);
+		RawTexture data = decodeTextureFile(file);
 		if (data.getComp() == 3) {
 			if ((data.getWidth() & 3) != 0)
 				glPixelStorei(GL_UNPACK_ALIGNMENT, 2 - (data.getWidth() & 1));
@@ -308,9 +319,16 @@ public class ResourceLoader {
 			glTexImage2D(GL_TEXTURE_2D, 0, format, data.getWidth(), data.getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE,
 					data.getBuffer());
 		}
-		// glTexImage2D(GL_TEXTURE_2D, 0, format, data.getWidth(),
-		// data.getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE,
-		// data.getBuffer());
+		glGenerateMipmap(GL_TEXTURE_2D);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_LOD_BIAS, 0);
+
+		if (WindowManager.getWindow(windowID).getCapabilities().GL_EXT_texture_filter_anisotropic) {
+			float amount = Math.min(16f, EXTTextureFilterAnisotropic.GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT);
+			glTexParameterf(GL_TEXTURE_2D, EXTTextureFilterAnisotropic.GL_TEXTURE_MAX_ANISOTROPY_EXT, amount);
+		} else {
+			Logger.warn("Anisotropic Filtering not supported");
+		}
 		return texture_id;
 	}
 
@@ -332,117 +350,6 @@ public class ResourceLoader {
 		}
 		if (font == -1)
 			Logger.error("Fail to load Font");
-	}
-
-	/**
-	 * Load an ObjModel
-	 * 
-	 * @param fileName
-	 *            OBJ File name
-	 * @return RawModel that contains all the data loaded to the GPU
-	 * @throws LoadOBJModelException
-	 *             Exception in case of error
-	 */
-	public RawModel loadObjModel(String fileName) {
-		InputStream file = getClass().getClassLoader()
-				.getResourceAsStream("assets/" + ClientVariables.assets + "/models/" + fileName + ".obj");
-		Logger.log("Loading Model: " + fileName + ".obj");
-		BufferedReader reader = new BufferedReader(new InputStreamReader(file));
-		String line;
-		List<Vector3d> vertices = new ArrayList<Vector3d>();
-		List<Vector2d> textures = new ArrayList<Vector2d>();
-		List<Vector3d> normals = new ArrayList<Vector3d>();
-		List<Integer> indices = new ArrayList<Integer>();
-		float[] verticesArray = null;
-		float[] normalsArray = null;
-		float[] textureArray = null;
-		int[] indicesArray = null;
-		try {
-
-			while (true) {
-				line = reader.readLine();
-				String[] currentLine = line.split(" ");
-				if (line.startsWith("v ")) {
-					Vector3d vertex = new Vector3d(Float.parseFloat(currentLine[1]), Float.parseFloat(currentLine[2]),
-							Float.parseFloat(currentLine[3]));
-					vertices.add(vertex);
-				} else if (line.startsWith("vt ")) {
-					Vector2d texture = new Vector2d(Float.parseFloat(currentLine[1]), Float.parseFloat(currentLine[2]));
-					textures.add(texture);
-				} else if (line.startsWith("vn ")) {
-					Vector3d normal = new Vector3d(Float.parseFloat(currentLine[1]), Float.parseFloat(currentLine[2]),
-							Float.parseFloat(currentLine[3]));
-					normals.add(normal);
-				} else if (line.startsWith("f ")) {
-					textureArray = new float[vertices.size() * 2];
-					normalsArray = new float[vertices.size() * 3];
-					break;
-				}
-			}
-
-			while (line != null) {
-				if (!line.startsWith("f ")) {
-					line = reader.readLine();
-					continue;
-				}
-				String[] currentLine = line.split(" ");
-				String[] vertex1 = currentLine[1].split("/");
-				String[] vertex2 = currentLine[2].split("/");
-				String[] vertex3 = currentLine[3].split("/");
-
-				processVertex(vertex1, indices, textures, normals, textureArray, normalsArray);
-				processVertex(vertex2, indices, textures, normals, textureArray, normalsArray);
-				processVertex(vertex3, indices, textures, normals, textureArray, normalsArray);
-				line = reader.readLine();
-
-			}
-			reader.close();
-		} catch (Exception e) {
-			throw new LoadOBJModelException(e);
-		}
-		verticesArray = new float[vertices.size() * 3];
-		indicesArray = new int[indices.size()];
-
-		int vertexPointer = 0;
-		for (Vector3d vertex : vertices) {
-			verticesArray[vertexPointer++] = (float) vertex.x;
-			verticesArray[vertexPointer++] = (float) vertex.y;
-			verticesArray[vertexPointer++] = (float) vertex.z;
-		}
-
-		for (int i = 0; i < indices.size(); i++) {
-			indicesArray[i] = indices.get(i);
-		}
-		return loadToVAO(verticesArray, textureArray, normalsArray, indicesArray);
-	}
-
-	/**
-	 * Process Vertex Data
-	 * 
-	 * @param vertexData
-	 *            Vertex Data
-	 * @param indices
-	 *            Indices Data
-	 * @param textures
-	 *            Textures Data
-	 * @param normals
-	 *            Normals Data
-	 * @param textureArrays
-	 *            Texture Array
-	 * @param normalsArray
-	 *            Normals Arrays
-	 */
-	private void processVertex(String[] vertexData, List<Integer> indices, List<Vector2d> textures,
-			List<Vector3d> normals, float[] textureArrays, float[] normalsArray) {
-		int currentVertexPointer = Integer.parseInt(vertexData[0]) - 1;
-		indices.add(currentVertexPointer);
-		Vector2d currentTex = textures.get(Integer.parseInt(vertexData[1]) - 1);
-		textureArrays[currentVertexPointer * 2] = (float) currentTex.x;
-		textureArrays[currentVertexPointer * 2 + 1] = (float) (1 - currentTex.y);
-		Vector3d currentNorm = normals.get(Integer.parseInt(vertexData[2]) - 1);
-		normalsArray[currentVertexPointer * 3] = (float) currentNorm.x;
-		normalsArray[currentVertexPointer * 3 + 1] = (float) currentNorm.y;
-		normalsArray[currentVertexPointer * 3 + 2] = (float) currentNorm.z;
 	}
 
 	public int loadNVGTexture(String file) throws LoadTextureException {
@@ -467,7 +374,7 @@ public class ResourceLoader {
 		glBindTexture(GL_TEXTURE_CUBE_MAP, texID);
 
 		for (int i = 0; i < textureFiles.length; i++) {
-			EntityTexture data = decodeTextureFile(
+			RawTexture data = decodeTextureFile(
 					"assets/" + ClientVariables.assets + "/textures/skybox/" + textureFiles[i] + ".png");
 			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGBA, data.getWidth(), data.getHeight(), 0, GL_RGBA,
 					GL_UNSIGNED_BYTE, data.getBuffer());
@@ -479,7 +386,24 @@ public class ResourceLoader {
 		return texID;
 	}
 
-	private EntityTexture decodeTextureFile(String file) throws DecodeTextureException {
+	public int createEmptyCubeMap(int size) {
+		int texID = glGenTextures();
+		glBindTexture(GL_TEXTURE_CUBE_MAP, texID);
+		for (int i = 0; i < 6; i++) {
+			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGBA, size, size, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+					(ByteBuffer) null);
+		}
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+		textures.add(texID);
+		return texID;
+	}
+
+	private RawTexture decodeTextureFile(String file) throws DecodeTextureException {
 		int width = 0;
 		int height = 0;
 		int component = 0;
@@ -508,7 +432,180 @@ public class ResourceLoader {
 		height = h.get(0);
 		component = comp.get(0);
 
-		return new EntityTexture(image, width, height, component);
+		return new RawTexture(image, width, height, component);
+	}
+
+	/**
+	 * Load an ObjModel
+	 * 
+	 * @param fileName
+	 *            OBJ File name
+	 * @return RawModel that contains all the data loaded to the GPU
+	 * @throws LoadOBJModelException
+	 *             Exception in case of error
+	 */
+	public RawModel loadObjModel(String fileName) {
+		InputStream file = getClass().getClassLoader()
+				.getResourceAsStream("assets/" + ClientVariables.assets + "/models/" + fileName + ".obj");
+		Logger.log("Loading Model: " + fileName + ".obj");
+		BufferedReader reader = new BufferedReader(new InputStreamReader(file));
+		String line;
+		List<VertexNM> vertices = new ArrayList<VertexNM>();
+		List<Vector2f> textures = new ArrayList<Vector2f>();
+		List<Vector3f> normals = new ArrayList<Vector3f>();
+		List<Integer> indices = new ArrayList<Integer>();
+		try {
+			while (true) {
+				line = reader.readLine();
+				if (line.startsWith("v ")) {
+					String[] currentLine = line.split(" ");
+					Vector3f vertex = new Vector3f((float) Float.valueOf(currentLine[1]),
+							(float) Float.valueOf(currentLine[2]), (float) Float.valueOf(currentLine[3]));
+					VertexNM newVertex = new VertexNM(vertices.size(), vertex);
+					vertices.add(newVertex);
+
+				} else if (line.startsWith("vt ")) {
+					String[] currentLine = line.split(" ");
+					Vector2f texture = new Vector2f((float) Float.valueOf(currentLine[1]),
+							(float) Float.valueOf(currentLine[2]));
+					textures.add(texture);
+				} else if (line.startsWith("vn ")) {
+					String[] currentLine = line.split(" ");
+					Vector3f normal = new Vector3f((float) Float.valueOf(currentLine[1]),
+							(float) Float.valueOf(currentLine[2]), (float) Float.valueOf(currentLine[3]));
+					normals.add(normal);
+				} else if (line.startsWith("f ")) {
+					break;
+				}
+			}
+			while (line != null && line.startsWith("f ")) {
+				String[] currentLine = line.split(" ");
+				String[] vertex1 = currentLine[1].split("/");
+				String[] vertex2 = currentLine[2].split("/");
+				String[] vertex3 = currentLine[3].split("/");
+				VertexNM v0 = processVertex(vertex1, vertices, indices);
+				VertexNM v1 = processVertex(vertex2, vertices, indices);
+				VertexNM v2 = processVertex(vertex3, vertices, indices);
+				calculateTangents(v0, v1, v2, textures);// NEW
+				line = reader.readLine();
+			}
+			reader.close();
+		} catch (Exception e) {
+			throw new LoadOBJModelException(e);
+		}
+
+		removeUnusedVertices(vertices);
+		float[] verticesArray = new float[vertices.size() * 3];
+		float[] texturesArray = new float[vertices.size() * 2];
+		float[] normalsArray = new float[vertices.size() * 3];
+		float[] tangentsArray = new float[vertices.size() * 3];
+		float furthest = convertDataToArrays(vertices, textures, normals, verticesArray, texturesArray, normalsArray,
+				tangentsArray);
+		int[] indicesArray = convertIndicesListToArray(indices);
+
+		return loadToVAO(verticesArray, texturesArray, normalsArray, tangentsArray, indicesArray);
+	}
+
+	private void calculateTangents(VertexNM v0, VertexNM v1, VertexNM v2, List<Vector2f> textures) {
+		Vector3f delatPos1 = Vector3f.sub(v1.getPosition(), v0.getPosition(), null);
+		Vector3f delatPos2 = Vector3f.sub(v2.getPosition(), v0.getPosition(), null);
+		Vector2f uv0 = textures.get(v0.getTextureIndex());
+		Vector2f uv1 = textures.get(v1.getTextureIndex());
+		Vector2f uv2 = textures.get(v2.getTextureIndex());
+		Vector2f deltaUv1 = Vector2f.sub(uv1, uv0, null);
+		Vector2f deltaUv2 = Vector2f.sub(uv2, uv0, null);
+
+		float r = 1.0f / (deltaUv1.x * deltaUv2.y - deltaUv1.y * deltaUv2.x);
+		delatPos1.scale(deltaUv2.y);
+		delatPos2.scale(deltaUv1.y);
+		Vector3f tangent = Vector3f.sub(delatPos1, delatPos2, null);
+		tangent.scale(r);
+		v0.addTangent(tangent);
+		v1.addTangent(tangent);
+		v2.addTangent(tangent);
+	}
+
+	private VertexNM processVertex(String[] vertex, List<VertexNM> vertices, List<Integer> indices) {
+		int index = Integer.parseInt(vertex[0]) - 1;
+		VertexNM currentVertex = vertices.get(index);
+		int textureIndex = Integer.parseInt(vertex[1]) - 1;
+		int normalIndex = Integer.parseInt(vertex[2]) - 1;
+		if (!currentVertex.isSet()) {
+			currentVertex.setTextureIndex(textureIndex);
+			currentVertex.setNormalIndex(normalIndex);
+			indices.add(index);
+			return currentVertex;
+		} else {
+			return dealWithAlreadyProcessedVertex(currentVertex, textureIndex, normalIndex, indices, vertices);
+		}
+	}
+
+	private int[] convertIndicesListToArray(List<Integer> indices) {
+		int[] indicesArray = new int[indices.size()];
+		for (int i = 0; i < indicesArray.length; i++) {
+			indicesArray[i] = indices.get(i);
+		}
+		return indicesArray;
+	}
+
+	private float convertDataToArrays(List<VertexNM> vertices, List<Vector2f> textures, List<Vector3f> normals,
+			float[] verticesArray, float[] texturesArray, float[] normalsArray, float[] tangentsArray) {
+		float furthestPoint = 0;
+		for (int i = 0; i < vertices.size(); i++) {
+			VertexNM currentVertex = vertices.get(i);
+			if (currentVertex.getLength() > furthestPoint) {
+				furthestPoint = currentVertex.getLength();
+			}
+			Vector3f position = currentVertex.getPosition();
+			Vector2f textureCoord = textures.get(currentVertex.getTextureIndex());
+			Vector3f normalVector = normals.get(currentVertex.getNormalIndex());
+			Vector3f tangent = currentVertex.getAverageTangent();
+			verticesArray[i * 3] = position.x;
+			verticesArray[i * 3 + 1] = position.y;
+			verticesArray[i * 3 + 2] = position.z;
+			texturesArray[i * 2] = textureCoord.x;
+			texturesArray[i * 2 + 1] = 1 - textureCoord.y;
+			normalsArray[i * 3] = normalVector.x;
+			normalsArray[i * 3 + 1] = normalVector.y;
+			normalsArray[i * 3 + 2] = normalVector.z;
+			tangentsArray[i * 3] = tangent.x;
+			tangentsArray[i * 3 + 1] = tangent.y;
+			tangentsArray[i * 3 + 2] = tangent.z;
+
+		}
+		return furthestPoint;
+	}
+
+	private VertexNM dealWithAlreadyProcessedVertex(VertexNM previousVertex, int newTextureIndex, int newNormalIndex,
+			List<Integer> indices, List<VertexNM> vertices) {
+		if (previousVertex.hasSameTextureAndNormal(newTextureIndex, newNormalIndex)) {
+			indices.add(previousVertex.getIndex());
+			return previousVertex;
+		} else {
+			VertexNM anotherVertex = previousVertex.getDuplicateVertex();
+			if (anotherVertex != null) {
+				return dealWithAlreadyProcessedVertex(anotherVertex, newTextureIndex, newNormalIndex, indices,
+						vertices);
+			} else {
+				VertexNM duplicateVertex = previousVertex.duplicate(vertices.size());// NEW
+				duplicateVertex.setTextureIndex(newTextureIndex);
+				duplicateVertex.setNormalIndex(newNormalIndex);
+				previousVertex.setDuplicateVertex(duplicateVertex);
+				vertices.add(duplicateVertex);
+				indices.add(duplicateVertex.getIndex());
+				return duplicateVertex;
+			}
+		}
+	}
+
+	private void removeUnusedVertices(List<VertexNM> vertices) {
+		for (VertexNM vertex : vertices) {
+			vertex.averageTangents();
+			if (!vertex.isSet()) {
+				vertex.setTextureIndex(0);
+				vertex.setNormalIndex(0);
+			}
+		}
 	}
 
 	/**

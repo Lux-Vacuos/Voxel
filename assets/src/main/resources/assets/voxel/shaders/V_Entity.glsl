@@ -23,12 +23,12 @@
 in vec3 position;
 in vec2 textureCoords;
 in vec3 normal;
+in vec3 tangent;
 
 out vec2 pass_textureCoords;
-out vec3 surfaceNormal;
-out vec3 toLightVector;
 out vec4 pass_position;
 out vec4 ShadowCoord;
+out mat3 TBN;
 
 uniform mat4 transformationMatrix;
 uniform mat4 projectionMatrix;
@@ -36,7 +36,6 @@ uniform mat4 viewMatrix;
 uniform mat4 projectionLightMatrix;
 uniform mat4 viewLightMatrix;
 uniform mat4 biasMatrix;
-uniform vec3 lightPosition;
 
 uniform int useShadows;
 
@@ -46,9 +45,14 @@ void main() {
 	vec4 worldPosition = transformationMatrix * vec4(position, 1.0);
 	vec4 positionRelativeToCam = viewMatrix * worldPosition;
 	gl_Position = projectionMatrix * positionRelativeToCam;
-	toLightVector = lightPosition - worldPosition.xyz;
 	pass_textureCoords = textureCoords;
-	surfaceNormal = (transformationMatrix * vec4(normal, 0.0)).xyz;
+	vec3 normal = (transformationMatrix * vec4(normal, 0.0)).xyz;
+	vec3 bitangent = cross(normal, tangent);
+	vec3 T = normalize(tangent);
+	vec3 B = normalize(bitangent);
+	vec3 N = normalize(normal);
+	TBN = mat3(T, B, N);
+
 	pass_position = worldPosition;
 	if(useShadows == 1){
 		vec4 posLight = viewLightMatrix * worldPosition;

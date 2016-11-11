@@ -50,10 +50,11 @@ import net.luxvacuos.igl.vector.Vector3d;
 import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.core.ClientWorldSimulation;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
+import net.luxvacuos.voxel.client.rendering.api.opengl.objects.CubeMapTexture;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.Light;
+import net.luxvacuos.voxel.client.rendering.api.opengl.objects.RawModel;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.DeferredShadingShader;
 import net.luxvacuos.voxel.client.resources.GameResources;
-import net.luxvacuos.voxel.client.resources.models.RawModel;
 import net.luxvacuos.voxel.client.util.Maths;
 import net.luxvacuos.voxel.client.world.entities.Camera;
 
@@ -192,10 +193,10 @@ public abstract class RenderingPipeline {
 	 *            {@link GameResources}
 	 */
 	public void render(Camera camera, Vector3d lightPosition, Vector3d invertedLightPosition,
-			ClientWorldSimulation clientWorldSimulation, List<Light> lights) {
+			ClientWorldSimulation clientWorldSimulation, List<Light> lights, CubeMapTexture environmentMap) {
 		for (ImagePass imagePass : imagePasses) {
 			imagePass.process(camera, previousViewMatrix, previousCameraPosition, lightPosition, invertedLightPosition,
-					clientWorldSimulation, lights, auxs, this, quad);
+					clientWorldSimulation, lights, auxs, this, quad, environmentMap);
 		}
 		Renderer.prepare();
 		finalShader.start();

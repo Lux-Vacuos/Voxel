@@ -14,7 +14,6 @@ public class Test extends AbstractEntity {
 		add(new RendereableComponent());
 		add(new Scale());
 		getComponent(RendereableComponent.class).model = EntityResources.getTest();
-		getComponent(RendereableComponent.class).material = EntityResources.getTestMat();
 	}
 
 }

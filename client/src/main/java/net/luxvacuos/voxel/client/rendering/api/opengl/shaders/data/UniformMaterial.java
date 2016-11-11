@@ -21,7 +21,8 @@
 package net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data;
 
 import static org.lwjgl.opengl.GL20.glUniform1f;
-import static org.lwjgl.opengl.GL20.glUniform3f;
+import static org.lwjgl.opengl.GL20.glUniform1i;
+import static org.lwjgl.opengl.GL20.glUniform4f;
 
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.Material;
 
@@ -30,16 +31,19 @@ public class UniformMaterial extends UniformArray {
 	private Material currentValue;
 	private boolean used = false;
 
-	public UniformMaterial(String... names) {
-		super(names);
+	public UniformMaterial(String matName) {
+		super(matName + ".color", matName + ".roughness", matName + ".metallic", matName + ".diffuse",
+				matName + ".normal");
 	}
 
 	public void loadMaterial(Material value) {
 		if (!used || !currentValue.equals(value)) {
-			glUniform3f(super.getLocation()[0], value.getBaseColor().getX(), value.getBaseColor().getY(),
-					value.getBaseColor().getZ());
+			glUniform4f(super.getLocation()[0], value.getBaseColor().getX(), value.getBaseColor().getY(),
+					value.getBaseColor().getZ(), value.getBaseColor().getW());
 			glUniform1f(super.getLocation()[1], value.getRoughness());
 			glUniform1f(super.getLocation()[2], value.getMetallic());
+			glUniform1i(super.getLocation()[3], 0);
+			glUniform1i(super.getLocation()[4], 1);
 			used = true;
 			currentValue = value;
 		}

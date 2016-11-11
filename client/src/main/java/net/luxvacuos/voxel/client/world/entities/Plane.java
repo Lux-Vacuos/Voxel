@@ -13,7 +13,6 @@ public class Plane extends AbstractEntity {
 		add(new RendereableComponent());
 		add(new Scale());
 		getComponent(RendereableComponent.class).model = EntityResources.getPlane();
-		getComponent(RendereableComponent.class).material = EntityResources.getPlaneMat();
 	}
 
 }

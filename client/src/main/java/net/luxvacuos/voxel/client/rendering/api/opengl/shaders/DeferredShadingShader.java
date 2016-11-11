@@ -83,6 +83,7 @@ public class DeferredShadingShader extends ShaderProgram {
 	private UniformSampler gMask = new UniformSampler("gMask");
 	private UniformSampler composite0 = new UniformSampler("composite0");
 	private UniformSampler composite1 = new UniformSampler("composite1");
+	private UniformSampler gEnvironment = new UniformSampler("gEnvironment");
 
 	private static float tTime = 0;
 
@@ -99,7 +100,8 @@ public class DeferredShadingShader extends ShaderProgram {
 				inverseViewMatrix, previousViewMatrix, cameraPosition, previousCameraPosition, lightPosition,
 				invertedLightPosition, skyColor, resolution, sunPositionInScreen, exposure, time, camUnderWaterOffset,
 				shadowDrawDistance, camUnderWater, useFXAA, useDOF, useMotionBlur, useReflections, useVolumetricLight,
-				useAmbientOcclusion, gDiffuse, gPosition, gNormal, gDepth, gPBR, gMask, composite0, composite1);
+				useAmbientOcclusion, gDiffuse, gPosition, gNormal, gDepth, gPBR, gMask, composite0, composite1,
+				gEnvironment);
 		connectTextureUnits();
 	}
 
@@ -117,6 +119,7 @@ public class DeferredShadingShader extends ShaderProgram {
 		gMask.loadTexUnit(5);
 		composite0.loadTexUnit(6);
 		composite1.loadTexUnit(7);
+		gEnvironment.loadTexUnit(8);
 		super.stop();
 	}
 

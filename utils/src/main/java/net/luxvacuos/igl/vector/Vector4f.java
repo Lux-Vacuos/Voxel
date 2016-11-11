@@ -55,6 +55,10 @@ public class Vector4f extends Vector implements Serializable, ReadableVector4f, 
 	public Vector4f() {
 		super();
 	}
+	
+	public Vector4f(float val) {
+		set(val, val, val, val);
+	}
 
 	/**
 	 * Constructor

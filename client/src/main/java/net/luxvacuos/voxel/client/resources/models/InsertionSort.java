@@ -22,6 +22,8 @@ package net.luxvacuos.voxel.client.resources.models;
 
 import java.util.List;
 
+import net.luxvacuos.voxel.client.world.particles.Particle;
+
 public class InsertionSort {
 
 	/**
