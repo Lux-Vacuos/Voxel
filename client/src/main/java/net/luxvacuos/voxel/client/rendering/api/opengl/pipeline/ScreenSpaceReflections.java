@@ -63,6 +63,7 @@ public class ScreenSpaceReflections extends ImagePass {
 		glBindTexture(GL_TEXTURE_2D, auxs[0].getTexture());
 		glActiveTexture(GL_TEXTURE8);
 		glBindTexture(GL_TEXTURE_CUBE_MAP, environmentMap.getID());
+		auxs[1] = getFbo();
 	}
 
 }

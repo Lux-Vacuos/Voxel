@@ -62,6 +62,7 @@ import static org.lwjgl.opengl.GL15.glDeleteBuffers;
 import static org.lwjgl.opengl.GL15.glGenBuffers;
 import static org.lwjgl.opengl.GL20.glVertexAttribPointer;
 import static org.lwjgl.opengl.GL21.GL_SRGB_ALPHA;
+import static org.lwjgl.opengl.GL30.GL_RGBA16F;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import static org.lwjgl.opengl.GL30.glDeleteVertexArrays;
 import static org.lwjgl.opengl.GL30.glGenVertexArrays;
@@ -248,7 +249,7 @@ public class ResourceLoader {
 		textures.add(texture_id);
 		return texture_id;
 	}
-	
+
 	public int loadTextureEntityMisc(String fileName) {
 		int texture_id = 0;
 		try {
@@ -386,13 +387,19 @@ public class ResourceLoader {
 		return texID;
 	}
 
-	public int createEmptyCubeMap(int size) {
+	public int createEmptyCubeMap(int size, boolean hdr) {
 		int texID = glGenTextures();
 		glBindTexture(GL_TEXTURE_CUBE_MAP, texID);
-		for (int i = 0; i < 6; i++) {
-			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGBA, size, size, 0, GL_RGBA, GL_UNSIGNED_BYTE,
-					(ByteBuffer) null);
-		}
+		if (hdr)
+			for (int i = 0; i < 6; i++) {
+				glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGBA16F, size, size, 0, GL_RGBA, GL_FLOAT,
+						(ByteBuffer) null);
+			}
+		else
+			for (int i = 0; i < 6; i++) {
+				glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGBA, size, size, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+						(ByteBuffer) null);
+			}
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);

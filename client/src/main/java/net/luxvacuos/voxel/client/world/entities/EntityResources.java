@@ -21,12 +21,12 @@ public class EntityResources {
 		test = new TexturedModel(testModel, testMat);
 
 		RawModel planeModel = loader.loadObjModel("plane");
-		planeMat = new Material(new Vector4f(-1), 0.01f, 0.01f, new Texture(loader.loadTextureEntity("plane")),
+		planeMat = new Material(new Vector4f(-1), 0.9f, 0, new Texture(loader.loadTextureEntity("plane")),
 				new Texture(loader.loadTextureEntityMisc("plane_norm")));
 		plane = new TexturedModel(planeModel, planeMat);
 
 		RawModel dragonModel = loader.loadObjModel("stanford");
-		dragonMat = new Material(new Vector4f(1.000f, 0.766f, 0.336f, 1), 0.05f, 0.01f, new Texture(0), planeNormal);
+		dragonMat = new Material(new Vector4f(1.000f, 0.766f, 0.336f, 1), 0.05f, 0, new Texture(0), planeNormal);
 		dragon = new TexturedModel(dragonModel, dragonMat);
 	}
 

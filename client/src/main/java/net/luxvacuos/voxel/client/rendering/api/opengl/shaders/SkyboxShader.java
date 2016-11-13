@@ -24,7 +24,6 @@ import net.luxvacuos.igl.vector.Matrix4d;
 import net.luxvacuos.igl.vector.Vector3d;
 import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.Attribute;
-import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.UniformBoolean;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.UniformFloat;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.UniformMatrix;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.UniformVec3;
@@ -47,14 +46,12 @@ public class SkyboxShader extends ShaderProgram {
 	private UniformFloat time = new UniformFloat("time");
 	private UniformVec3 fogColour = new UniformVec3("fogColour");
 	private UniformVec3 lightPosition = new UniformVec3("lightPosition");
-	private UniformFloat exposure = new UniformFloat("exposure");
-	private UniformBoolean applyGamma = new UniformBoolean("applyGamma");
 
 	public SkyboxShader() {
 		super(ClientVariables.VERTEX_FILE_SKYBOX, ClientVariables.FRAGMENT_FILE_SKYBOX, new Attribute(0, "position"),
 				new Attribute(2, "normal"));
 		super.storeAllUniformLocations(projectionMatrix, transformationMatrix, viewMatrix, time, fogColour,
-				lightPosition, exposure, applyGamma);
+				lightPosition);
 	}
 
 	/**
@@ -86,11 +83,6 @@ public class SkyboxShader extends ShaderProgram {
 
 	public void loadLightPosition(Vector3d pos) {
 		lightPosition.loadVec3(pos);
-	}
-
-	public void loadExposureAndGamma(float exposure, boolean applyGamma) {
-		this.exposure.loadFloat(exposure);
-		this.applyGamma.loadBoolean(applyGamma);
 	}
 
 	/**

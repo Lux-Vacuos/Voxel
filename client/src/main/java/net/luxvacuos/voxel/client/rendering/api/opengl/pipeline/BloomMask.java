@@ -22,7 +22,6 @@ package net.luxvacuos.voxel.client.rendering.api.opengl.pipeline;
 
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11.glBindTexture;
-import static org.lwjgl.opengl.GL13.GL_TEXTURE4;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE6;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
 
@@ -39,8 +38,6 @@ public class BloomMask extends ImagePass {
 
 	@Override
 	public void render(ImagePassFBO[] auxs, RenderingPipeline pipe, CubeMapTexture environmentMap) {
-		glActiveTexture(GL_TEXTURE4);
-		glBindTexture(GL_TEXTURE_2D, pipe.getMainFBO().getPbrTex());
 		glActiveTexture(GL_TEXTURE6);
 		glBindTexture(GL_TEXTURE_2D, auxs[0].getTexture());
 	}

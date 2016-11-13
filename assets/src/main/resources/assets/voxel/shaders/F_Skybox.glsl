@@ -29,12 +29,12 @@ out vec4 [5] out_Color;
 uniform float time;
 uniform vec3 fogColour;
 uniform vec3 lightPosition;
-uniform int applyGamma;
-uniform float exposure;
 
-const float lowerLimit =  0.2;
-const float upperLimit =  -0.8;
-const float gamma = 2.2;
+const float lowerLimit =  -0.8;
+const float upperLimit =  0.2;
+
+const float sunLowerLimit =  -0.1;
+const float sunUpperLimit =  0.1;
 
 #define CLOUD_COVER		0.55
 #define CLOUD_SHARPNESS		0.005
@@ -100,12 +100,13 @@ void main(void){
     finalColour = mix(finalColour, vec4(f,f,f,1.0), factor);
     finalColour *= factor;
     */
-    float factor = (textureCoords.y - lowerLimit) / (upperLimit - lowerLimit);
+    float factor = (lowerLimit - textureCoords.y) / (lowerLimit - upperLimit);
+    float factorSun = (textureCoords.y - sunLowerLimit) / (sunUpperLimit - sunLowerLimit);
     vec4 finalColour = vec4(fogColour, 1.0);
     
     vec4 skyTop = vec4(fogColour.r *0.4, fogColour.g *0.4, fogColour.b, 0.0);
     
-    finalColour = mix(skyTop, finalColour, factor);
+    finalColour = mix(finalColour, skyTop, factor);
     
  	vec3 V = normalize(pass_normal);
     vec3 L = normalize(lightPosition);
@@ -116,15 +117,13 @@ void main(void){
 	float normalDotLight = max(dot(vec3(0,1,0),L),0.002);
     finalColour *= normalDotLight;
 
-    if(vl > 0.999)
-    	finalColour = vec4(2.0);
-    if(vl > 0.999)
-    	f = 1;
-
-	//if(applyGamma == 1){
-	//	 finalColour = vec4(1.0) - exp(-finalColour * exposure);
-	//	 finalColour = pow(finalColour, vec4(1.0 / gamma));
-	//}
+	float smoothSphere = (0.9995 - vl) / (0.9995 - 0.9999);
+	if(vl > 0.9995){
+		finalColour = mix(finalColour, mix(finalColour, vec4(2.0), smoothSphere), factorSun);
+	}
+    if(vl > 0.5) {
+		f = 1 * factorSun;
+	}
 
     out_Color[0] = finalColour;
     out_Color[1] = vec4(pass_position.xyz,0);

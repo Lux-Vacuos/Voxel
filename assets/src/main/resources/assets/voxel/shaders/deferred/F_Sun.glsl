@@ -24,6 +24,7 @@ in vec2 textureCoords;
 
 out vec4 out_Color;
 
+uniform sampler2D gDiffuse;
 uniform sampler2D gMask;
 
 void main(void){
@@ -32,7 +33,7 @@ void main(void){
 	vec4 image = vec4(0.0);
 	vec4 data1 = texture(gMask, texcoord);
     if(data1.r > 0 && data1.a == 1){
-		image = vec4(data1.r + 1);
+		image = texture(gDiffuse, texcoord);
     }
     out_Color = image;
 

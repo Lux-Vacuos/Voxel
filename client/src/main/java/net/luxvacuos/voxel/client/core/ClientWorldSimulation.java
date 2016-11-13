@@ -35,7 +35,7 @@ public final class ClientWorldSimulation extends AbstractWorldSimulation {
 	private float moveFactor = 0;
 
 	public ClientWorldSimulation() {
-		super(12000);
+		super(7000);
 	}
 
 	/**

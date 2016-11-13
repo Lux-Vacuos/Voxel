@@ -84,7 +84,6 @@ public class SkyboxRenderer {
 		shader.loadFog(r, g, b);
 		shader.loadTime(clientWorldSimulation.getGlobalTime());
 		shader.loadLightPosition(lightPosition);
-		shader.loadExposureAndGamma(exposure, applyGamma);
 		glBindVertexArray(dome.getVaoID());
 		glEnableVertexAttribArray(0);
 		glEnableVertexAttribArray(2);

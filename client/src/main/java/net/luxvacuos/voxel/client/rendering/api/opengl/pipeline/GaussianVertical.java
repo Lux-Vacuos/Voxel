@@ -32,7 +32,6 @@ import net.luxvacuos.voxel.client.rendering.api.opengl.objects.CubeMapTexture;
 
 public class GaussianVertical extends ImagePass {
 
-
 	public GaussianVertical(String name, int width, int height) {
 		super(name, width, height);
 	}

@@ -81,7 +81,7 @@ public class Renderer {
 		else if (ClientVariables.renderingPipeline.equals("MultiPass"))
 			renderingPipeline = new MultiPass();
 		environmentRenderer = new EnvironmentRenderer(
-				new CubeMapTexture(window.getResourceLoader().createEmptyCubeMap(128), 128));
+				new CubeMapTexture(window.getResourceLoader().createEmptyCubeMap(128, true), 128));
 	}
 
 	public void render(IDimension iDimension, ImmutableArray<Entity> entities, Camera camera, Camera sunCamera,

@@ -71,7 +71,7 @@ void main(void){
     	finalLight = max(finalLight,0.015);
     	image = finalLight * image;
     	if(position.w <= 0.5 && normalDotLight > 0){
-			image += beckmannSpecular(lightDir.xyz, eyeDir, normal.xyz, pbr.r);
+			image += beckmannSpecular(lightDir.xyz, eyeDir, normal.xyz, pbr.r) * max((1-pbr.r), 0.1);
 	   	}
 	}
     image += texture(composite0, texcoord);

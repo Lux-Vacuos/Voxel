@@ -21,7 +21,7 @@
 package net.luxvacuos.voxel.universal.core;
 
 public interface IWorldSimulation {
-	public static final float TIME_MULTIPLIER = 10;
+	public static final float TIME_MULTIPLIER = 300;
 	
 	public float update(float deltaTime);
 	

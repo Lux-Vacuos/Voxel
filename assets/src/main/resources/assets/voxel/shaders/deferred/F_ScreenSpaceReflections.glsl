@@ -84,15 +84,15 @@ void main(void){
 			newColor /= 36.0;
 
 			vec4 enviromentMap = texture(gEnvironment, refl);
-			for(int i = -3; i < 3 + 1; i++) { 
+			/*for(int i = -3; i < 3 + 1; i++) { 
 				for(int j = -3; j < 3 + 1; j++) { 
 					for(int k = -3; k < 3 + 1; k++) { 
 						enviromentMap += texture(gEnvironment, refl + vec3(i, j, k) * (pbr.r / 5));
 					} 
 				}
 			} 
-			enviromentMap /= 256;
-
+			enviromentMap /= 300;
+*/
  			
     		if (dot(refl, cameraToWorldNorm) < 0)
 	    		fact = 0.0;
