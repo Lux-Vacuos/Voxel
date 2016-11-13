@@ -20,16 +20,14 @@
 
 package net.luxvacuos.voxel.client.rendering.api.glfw;
 
-import static org.lwjgl.glfw.GLFW.glfwGetFramebufferSize;
-import static org.lwjgl.glfw.GLFW.glfwGetWindowSize;
-import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.glfw.GLFWVulkan.glfwGetRequiredInstanceExtensions;
 import static org.lwjgl.glfw.GLFWVulkan.glfwVulkanSupported;
 import static org.lwjgl.opengl.GL11.GL_VENDOR;
 import static org.lwjgl.opengl.GL11.glGetIntegerv;
 import static org.lwjgl.opengl.GL11.glGetString;
 import static org.lwjgl.stb.STBImage.stbi_failure_reason;
-import static org.lwjgl.stb.STBImage.*;
+import static org.lwjgl.stb.STBImage.stbi_image_free;
+import static org.lwjgl.stb.STBImage.stbi_info_from_memory;
 import static org.lwjgl.stb.STBImage.stbi_is_hdr_from_memory;
 import static org.lwjgl.stb.STBImage.stbi_load_from_memory;
 import static org.lwjgl.system.MemoryUtil.NULL;
@@ -181,7 +179,7 @@ public final class WindowManager {
 				throw new DecodeTextureException("Failed to load image: " + stbi_failure_reason());
 
 			GLFWImage img = GLFWImage.malloc().set(w.get(0), h.get(0), image);
-			glfwSetCursor(windowID, glfwCreateCursor(img, 0, 0));
+			GLFW.glfwSetCursor(windowID, GLFW.glfwCreateCursor(img, 0, 0));
 
 			stbi_image_free(image);
 		}
@@ -217,7 +215,7 @@ public final class WindowManager {
 				i++;
 			}
 			iconsbuff.position(0);
-			glfwSetWindowIcon(windowID, iconsbuff);
+			GLFW.glfwSetWindowIcon(windowID, iconsbuff);
 			iconsbuff.free();
 			for (Icon icon : handle.icons) {
 				stbi_image_free(icon.image);
@@ -480,11 +478,11 @@ public final class WindowManager {
 
 				IntBuffer w = BufferUtils.createIntBuffer(1);
 				IntBuffer h = BufferUtils.createIntBuffer(1);
-				glfwGetFramebufferSize(windowID, w, h);
+				GLFW.glfwGetFramebufferSize(windowID, w, h);
 				window.framebufferWidth = w.get(0);
 				window.framebufferHeight = h.get(0);
 
-				glfwGetWindowSize(windowID, w, h);
+				GLFW.glfwGetWindowSize(windowID, w, h);
 				window.width = w.get(0);
 				window.height = h.get(0);
 				window.pixelRatio = (float) window.framebufferWidth / (float) window.width;
@@ -527,7 +525,7 @@ public final class WindowManager {
 		refreshCallback = new GLFWWindowRefreshCallback() {
 			@Override
 			public void invoke(long window) {
-				glfwSwapBuffers(window);
+				GLFW.glfwSwapBuffers(window);
 			}
 		};
 

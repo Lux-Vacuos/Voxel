@@ -20,7 +20,7 @@ public class Sun {
 	}
 
 	public void update(Vector3d cameraPosition, float rot, float delta) {
-		camera.getPosition().set(cameraPosition);
+		camera.setPosition(cameraPosition);
 		rotation.setY(rot);
 		camera.setRotation(new Vector3d(rotation.y, rotation.x, rotation.z));
 		camera.updateShadowRay(false);

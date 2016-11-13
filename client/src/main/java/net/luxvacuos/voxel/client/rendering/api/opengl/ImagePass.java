@@ -20,6 +20,8 @@
 
 package net.luxvacuos.voxel.client.rendering.api.opengl;
 
+import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_TRIANGLE_STRIP;
 import static org.lwjgl.opengl.GL11.glDrawArrays;
 import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
@@ -101,7 +103,6 @@ public abstract class ImagePass {
 			CubeMapTexture environmentMap) {
 		begin(camera, previousViewMatrix, previousCameraPosition, lightPosition, invertedLightPosition,
 				clientWorldSimulation, lights);
-		Renderer.prepare();
 		glBindVertexArray(quad.getVaoID());
 		glEnableVertexAttribArray(0);
 		render(auxs, pipe, environmentMap);
@@ -141,7 +142,7 @@ public abstract class ImagePass {
 		shader.loadExposure(1f);
 		shader.loadPointLightsPos(lights);
 		shader.loadTime(clientWorldSimulation.getTime());
-		Renderer.prepare();
+		Renderer.clearBuffer(GL_COLOR_BUFFER_BIT |GL_DEPTH_BUFFER_BIT);
 	}
 
 	/**

@@ -20,6 +20,8 @@
 
 package net.luxvacuos.voxel.client.core.states;
 
+import static org.lwjgl.opengl.GL11.*;
+
 import net.luxvacuos.voxel.client.core.ClientInternalSubsystem;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.UIRendering;
@@ -105,7 +107,8 @@ public class MainMenuState extends AbstractFadeState {
 	@Override
 	public void render(AbstractVoxel voxel, float delta) {
 		Window window = ClientInternalSubsystem.getInstance().getGameWindow();
-		Renderer.prepare(1, 1, 1, 1);
+		Renderer.clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		Renderer.clearColors(1, 1, 1, 1);
 		window.beingNVGFrame();
 		uiWindow.render(window.getID());
 		window.endNVGFrame();

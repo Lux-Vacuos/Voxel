@@ -34,7 +34,7 @@ uniform sampler2D gMask;
 uniform sampler2D composite0;
 uniform int shadowDrawDistance;
 
-const float transitionDistance = 5;
+#define TRANSITION_DISTANCE 2.5
 
 float beckmannDistribution(float x, float roughness) {
 	float NdotH = max(x, 0.0001);
@@ -61,10 +61,10 @@ void main(void){
 		vec3 lightDir = lightPosition;
     	lightDir = normalize(lightDir);
     	vec3 eyeDir = normalize(cameraPosition-position.xyz);
-		float distance = length(cameraPosition-position.xyz);
     	normal = normalize(normal);
-    	float shadowDist = distance - (shadowDrawDistance - transitionDistance);
-		shadowDist = shadowDist / transitionDistance;
+		float distance = length(cameraPosition-position.xyz);
+    	float shadowDist = distance - (shadowDrawDistance - TRANSITION_DISTANCE);
+		shadowDist = shadowDist / TRANSITION_DISTANCE;
 		float fadeOut = clamp(1.0-shadowDist, 0.0, 1.0);
 		float normalDotLight = max(dot(normal.xyz, lightDir), 0);
     	float finalLight = normalDotLight - (position.w * fadeOut);

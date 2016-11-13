@@ -20,15 +20,13 @@
 
 package net.luxvacuos.voxel.client.rendering.api.opengl;
 
-import static org.lwjgl.opengl.GL11.GL_BLEND;
+import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_NEAREST;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11.GL_TRIANGLE_STRIP;
 import static org.lwjgl.opengl.GL11.glBindTexture;
-import static org.lwjgl.opengl.GL11.glDisable;
 import static org.lwjgl.opengl.GL11.glDrawArrays;
-import static org.lwjgl.opengl.GL11.glEnable;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE6;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
 import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
@@ -47,9 +45,9 @@ import net.luxvacuos.igl.Logger;
 import net.luxvacuos.igl.vector.Matrix4d;
 import net.luxvacuos.igl.vector.Vector2d;
 import net.luxvacuos.igl.vector.Vector3d;
+import net.luxvacuos.voxel.client.core.ClientInternalSubsystem;
 import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.core.ClientWorldSimulation;
-import net.luxvacuos.voxel.client.core.ClientInternalSubsystem;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.CubeMapTexture;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.Light;
@@ -172,8 +170,6 @@ public abstract class RenderingPipeline {
 	 * Begin Rendering
 	 */
 	public void begin() {
-		glDisable(GL_BLEND);
-
 		mainFBO.begin();
 	}
 
@@ -182,7 +178,6 @@ public abstract class RenderingPipeline {
 	 */
 	public void end() {
 		mainFBO.end();
-		glEnable(GL_BLEND);
 	}
 
 	/**
@@ -198,7 +193,7 @@ public abstract class RenderingPipeline {
 			imagePass.process(camera, previousViewMatrix, previousCameraPosition, lightPosition, invertedLightPosition,
 					clientWorldSimulation, lights, auxs, this, quad, environmentMap);
 		}
-		Renderer.prepare();
+		Renderer.clearBuffer(GL_COLOR_BUFFER_BIT |GL_DEPTH_BUFFER_BIT);
 		finalShader.start();
 		glBindVertexArray(quad.getVaoID());
 		glEnableVertexAttribArray(0);

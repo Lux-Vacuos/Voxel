@@ -39,8 +39,6 @@ uniform mat4 biasMatrix;
 
 uniform int useShadows;
 
-const float gradient = 5.0;
-
 void main() {
 	vec4 worldPosition = transformationMatrix * vec4(position, 1.0);
 	vec4 positionRelativeToCam = viewMatrix * worldPosition;

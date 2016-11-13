@@ -28,7 +28,6 @@ import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
 import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
 import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
-import static org.lwjgl.opengl.GL11.GL_STENCIL_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.glBlendFunc;
 import static org.lwjgl.opengl.GL11.glClear;
 import static org.lwjgl.opengl.GL11.glClearColor;
@@ -87,29 +86,28 @@ public class Renderer {
 	public void render(IDimension iDimension, ImmutableArray<Entity> entities, Camera camera, Camera sunCamera,
 			ClientWorldSimulation clientWorldSimulation, Vector3d lightPosition, Vector3d invertedLightPosition,
 			float alpha) {
+
+		resetState();
+
 		environmentRenderer.renderEnvironmentMap(camera.getPosition(), skyboxRenderer, clientWorldSimulation,
 				lightPosition, window);
 
 		frustum.calculateFrustum(sunCamera.getProjectionMatrix(), sunCamera.getViewMatrix());
 		if (ClientVariables.useShadows) {
 			shadowFBO.begin();
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-			glEnable(GL_CULL_FACE);
-			glCullFace(GL_BACK);
-			glEnable(GL_DEPTH_TEST);
-			glDisable(GL_BLEND);
+			clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			// dimension.renderShadow(sunCamera,
 			// sunCamera.getProjectionMatrix(), frustum);
 			entityShadowRenderer.renderEntity(entities, sunCamera);
 			shadowFBO.end();
 		}
 		frustum.calculateFrustum(camera.getProjectionMatrix(), camera.getViewMatrix());
-		prepare();
+		clearBuffer(GL_DEPTH_BUFFER_BIT);
 		// dimension.renderOcclusion(window, camera,
 		// camera.getProjectionMatrix(), frustum);
 
 		renderingPipeline.begin();
-		prepare();
+		clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		skyboxRenderer.render(ClientVariables.RED, ClientVariables.GREEN, ClientVariables.BLUE, camera,
 				clientWorldSimulation, lightPosition, 1, false);
 		// dimension.render(camera, sunCamera, clientWorldSimulation,
@@ -119,7 +117,7 @@ public class Renderer {
 
 		entityRenderer.renderEntity(entities, camera, sunCamera, shadowFBO.getShadowDepth());
 		renderingPipeline.end();
-		prepare();
+		clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		renderingPipeline.render(camera, lightPosition, invertedLightPosition, clientWorldSimulation,
 				lightRenderer.getLights(), environmentRenderer.getCubeMapTexture());
 
@@ -157,18 +155,20 @@ public class Renderer {
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	}
 
-	public static void prepare() {
-		prepare(ClientVariables.RED, ClientVariables.GREEN, ClientVariables.BLUE, 1);
-	}
-
-	public static void prepare(float r, float g, float b, float a) {
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-		glClearColor(r, g, b, a);
+	public static void resetState() {
 		glEnable(GL_CULL_FACE);
 		glCullFace(GL_BACK);
 		glEnable(GL_DEPTH_TEST);
 		glDisable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	}
+
+	public static void clearColors(float r, float g, float b, float a) {
+		glClearColor(r, g, b, a);
+	}
+
+	public static void clearBuffer(int values) {
+		glClear(values);
 	}
 
 	public static Matrix4d createProjectionMatrix(int width, int height, float fov, float nearPlane, float farPlane) {

@@ -20,6 +20,9 @@
 
 package net.luxvacuos.voxel.client.core.states;
 
+import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
+
 import net.luxvacuos.voxel.client.core.ClientInternalSubsystem;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Renderer;
@@ -47,8 +50,8 @@ public class SplashScreenState extends AbstractFadeState {
 		panel.setFillColor(0, 0, 0, 0);
 		panel.setGradientColor(0, 0, 0, 0);
 
-		luxVacuosLogo = new Image(-256, 256, 512, 512,
-				ClientInternalSubsystem.getInstance().getGameWindow().getResourceLoader().loadNVGTexture("LuxVacuos-Logo"));
+		luxVacuosLogo = new Image(-256, 256, 512, 512, ClientInternalSubsystem.getInstance().getGameWindow()
+				.getResourceLoader().loadNVGTexture("LuxVacuos-Logo"));
 		/*
 		 * luxVacuosLogo.setOnUpdate(new OnAction() { private float speed = 0;
 		 * 
@@ -75,8 +78,9 @@ public class SplashScreenState extends AbstractFadeState {
 
 	@Override
 	public void render(AbstractVoxel voxel, float alpha) {
-		Window window =  ClientInternalSubsystem.getInstance().getGameWindow();
-		Renderer.prepare(1, 1, 1, 1);
+		Window window = ClientInternalSubsystem.getInstance().getGameWindow();
+		Renderer.clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		Renderer.clearColors(1, 1, 1, 1);
 		window.beingNVGFrame();
 		panel.render(window.getID());
 		window.endNVGFrame();

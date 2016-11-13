@@ -21,6 +21,8 @@
 package net.luxvacuos.voxel.client.core.states;
 
 import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_CENTER;
+import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 
 import java.io.File;
 
@@ -94,7 +96,8 @@ public class SPCreateWorld extends AbstractFadeState {
 	@Override
 	public void render(AbstractVoxel voxel, float alpha) {
 		Window window = ClientInternalSubsystem.getInstance().getGameWindow();
-		Renderer.prepare(1, 1, 1, 1);
+		Renderer.clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		Renderer.clearColors(1, 1, 1, 1);
 		window.beingNVGFrame();
 		uiWindow.render(window.getID());
 		worldName = window.getKeyboardHandler().handleInput(worldName);

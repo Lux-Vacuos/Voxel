@@ -30,14 +30,14 @@ uniform float time;
 uniform vec3 fogColour;
 uniform vec3 lightPosition;
 
-const float lowerLimit =  -0.8;
-const float upperLimit =  0.2;
+#define LOWER_LIMIT  -0.8
+#define UPPER_LIMIT  0.2
 
-const float sunLowerLimit =  -0.1;
-const float sunUpperLimit =  0.1;
+#define SUN_LOWER_LIMIT  -0.1
+#define SUN_UPPER_LIMIT  0.1
 
-#define CLOUD_COVER		0.55
-#define CLOUD_SHARPNESS		0.005
+#define CLOUD_COVER  0.55
+#define CLOUD_SHARPNESS  0.005
 
 float hash( float n )
 {
@@ -100,8 +100,8 @@ void main(void){
     finalColour = mix(finalColour, vec4(f,f,f,1.0), factor);
     finalColour *= factor;
     */
-    float factor = (lowerLimit - textureCoords.y) / (lowerLimit - upperLimit);
-    float factorSun = (textureCoords.y - sunLowerLimit) / (sunUpperLimit - sunLowerLimit);
+    float factor = (LOWER_LIMIT - textureCoords.y) / (LOWER_LIMIT - UPPER_LIMIT);
+    float factorSun = (textureCoords.y - SUN_LOWER_LIMIT) / (SUN_UPPER_LIMIT - SUN_LOWER_LIMIT);
     vec4 finalColour = vec4(fogColour, 1.0);
     
     vec4 skyTop = vec4(fogColour.r *0.4, fogColour.g *0.4, fogColour.b, 0.0);

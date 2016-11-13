@@ -21,6 +21,8 @@
 package net.luxvacuos.voxel.client.core;
 
 import static org.lwjgl.glfw.GLFW.glfwInit;
+import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_RENDERER;
 import static org.lwjgl.opengl.GL11.GL_VENDOR;
 import static org.lwjgl.opengl.GL11.GL_VERSION;
@@ -128,7 +130,8 @@ public class Voxel extends AbstractVoxel {
 		// Set Window visible
 		ClientInternalSubsystem.getInstance().getGameWindow().setVisible(true);
 		// Clear Screen
-		Renderer.prepare(1, 1, 1, 1);
+		Renderer.clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		Renderer.clearColors(1, 1, 1, 1);
 		// Update Screen buffers
 		ClientInternalSubsystem.getInstance().getGameWindow().updateDisplay(ClientVariables.FPS);
 		// Set the info to objects

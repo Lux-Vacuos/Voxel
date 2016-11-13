@@ -28,7 +28,7 @@ uniform sampler2D composite0;
 uniform sampler2D composite1;
 uniform float exposure;
 
-const float gamma = 2.2;
+#define GAMMA  2.2
 
 void main(void){
 	vec2 texcoord = textureCoords;
@@ -37,7 +37,7 @@ void main(void){
     hdrColor += bloomColor;
     
     vec4 final = vec4(1.0) - exp(-hdrColor * exposure);
-    final = pow(final, vec4(1.0 / gamma));
+    final = pow(final, vec4(1.0 / GAMMA));
     
     out_Color = final;
 }
