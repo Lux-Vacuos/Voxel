@@ -63,7 +63,6 @@ import java.nio.IntBuffer;
 import org.lwjgl.nanovg.NVGColor;
 import org.lwjgl.nanovg.NVGPaint;
 
-import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.glfw.WindowManager;
 
 /**
@@ -400,7 +399,7 @@ public class UIRendering {
 	}
 
 	public static void renderButton(long windowID, ByteBuffer preicon, String text, String font, String entypo, float x, float y,
-			float w, float h, NVGColor color, boolean mouseInside, float fadeAlpha) {
+			float w, float h, NVGColor color, boolean mouseInside, float fontSize, float fadeAlpha) {
 		long vg = WindowManager.getWindow(windowID).getNVGID();
 		NVGPaint bg = paintA;
 		float cornerRadius = 4.0f;
@@ -412,7 +411,6 @@ public class UIRendering {
 			w -= 2;
 			h -= 2;
 		}
-		float fontSize = h / 2;
 
 		nvgLinearGradient(vg, x, y, x, y + h,
 				rgba(255, 255, 255, (int) ((isBlack(color) ? 16 : 32) * fadeAlpha), colorB),

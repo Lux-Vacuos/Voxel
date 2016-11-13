@@ -20,7 +20,6 @@
 
 package net.luxvacuos.voxel.client.rendering.api.opengl.pipeline;
 
-import net.luxvacuos.voxel.client.core.ClientInternalSubsystem;
 import net.luxvacuos.voxel.client.rendering.api.opengl.RenderingPipeline;
 
 public class SinglePass extends RenderingPipeline {
@@ -34,7 +33,7 @@ public class SinglePass extends RenderingPipeline {
 	private ColorCorrection colorCorrection;
 
 	@Override
-	public void init(ClientInternalSubsystem gm) {
+	public void init() {
 		sun = new Sun("Sun", width, height);
 		sun.init();
 		super.imagePasses.add(sun);

@@ -263,6 +263,7 @@ public class Voxel extends AbstractVoxel {
 				Timers.update();
 				// Update Screen buffers
 				window.updateDisplay(ClientVariables.FPS);
+				WindowManager.update();
 			}
 			// Dispose all resources
 			dispose();

@@ -20,6 +20,7 @@
 
 package net.luxvacuos.voxel.client.rendering.api.glfw;
 
+import static org.lwjgl.glfw.GLFW.glfwPollEvents;
 import static org.lwjgl.glfw.GLFWVulkan.glfwGetRequiredInstanceExtensions;
 import static org.lwjgl.glfw.GLFWVulkan.glfwVulkanSupported;
 import static org.lwjgl.opengl.GL11.GL_VENDOR;
@@ -96,6 +97,7 @@ import net.luxvacuos.igl.Logger;
 import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.core.CoreInfo;
 import net.luxvacuos.voxel.client.core.exception.DecodeTextureException;
+import net.luxvacuos.voxel.client.core.exception.GLFWException;
 import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.vulkan.VKUtil;
 import net.luxvacuos.voxel.client.resources.ResourceLoader;
@@ -143,9 +145,8 @@ public final class WindowManager {
 		}
 
 		long windowID = GLFW.glfwCreateWindow(handle.width, handle.height, handle.title, NULL, NULL);
-		if (windowID == NULL) {
-			throw new RuntimeException("Failed to create GLFW Window '" + handle.title + "'");
-		}
+		if (windowID == NULL)
+			throw new GLFWException("Failed to create GLFW Window '" + handle.title + "'");
 
 		Window window = new Window(instance, deviceAndGraphicsQueueFamily, windowID, handle.width, handle.height);
 
@@ -161,7 +162,7 @@ public final class WindowManager {
 				imageBuffer = ResourceLoader.ioResourceToByteBuffer(
 						"assets/" + ClientVariables.assets + "/cursors/" + handle.cursor + ".png", 8 * 1024);
 			} catch (IOException e) {
-				throw new RuntimeException(e);
+				throw new GLFWException(e);
 			}
 
 			IntBuffer w = BufferUtils.createIntBuffer(1);
@@ -193,7 +194,7 @@ public final class WindowManager {
 					imageBuffer = ResourceLoader.ioResourceToByteBuffer(
 							"assets/" + ClientVariables.assets + "/icons/" + icon.path + ".png", 8 * 1024);
 				} catch (IOException e) {
-					throw new RuntimeException(e);
+					throw new GLFWException(e);
 				}
 
 				IntBuffer w = BufferUtils.createIntBuffer(1);
@@ -232,7 +233,7 @@ public final class WindowManager {
 		window.nvgID = NanoVGGL3.nvgCreate(nvgFlags);
 
 		if (window.nvgID == NULL)
-			throw new RuntimeException("Fail to create NanoVG context for Window '" + handle.title + "'");
+			throw new GLFWException("Fail to create NanoVG context for Window '" + handle.title + "'");
 
 		window.lastLoopTime = getTime();
 
@@ -405,6 +406,10 @@ public final class WindowManager {
 			window.closeDisplay();
 			window.dispose();
 		}
+	}
+	
+	public static void update(){
+		glfwPollEvents();
 	}
 
 	public static double getTime() {

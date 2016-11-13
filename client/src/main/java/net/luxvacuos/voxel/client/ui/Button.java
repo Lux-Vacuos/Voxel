@@ -30,10 +30,11 @@ import net.luxvacuos.voxel.client.rendering.api.nanovg.UIRendering;
 
 public class Button extends Component {
 
-	private String text = "missigno", font = "Roboto-Regular", entypo = "Entypo";
+	private String text = "missigno", font = "Poppins-Medium", entypo = "Entypo";
 	private NVGColor color = UIRendering.rgba(255, 255, 255, 255);
 	private ByteBuffer preicon;
 	private OnAction onPress;
+	private float fontSize = 21;
 
 	public Button(float x, float y, float width, float height, String text) {
 		this.x = x;
@@ -66,7 +67,7 @@ public class Button extends Component {
 		if (enabled)
 			UIRendering.renderButton(windowID, preicon, text, font, entypo, rootX + x,
 					WindowManager.getWindow(windowID).getHeight() - rootY - y - height, width, height, color,
-					this.insideButton(), fadeAlpha);
+					this.insideButton(), fontSize, fadeAlpha);
 		super.render(windowID);
 	}
 
@@ -100,6 +101,10 @@ public class Button extends Component {
 
 	public void setPreicon(ByteBuffer preicon) {
 		this.preicon = preicon;
+	}
+
+	public void setFontSize(float fontSize) {
+		this.fontSize = fontSize;
 	}
 
 }

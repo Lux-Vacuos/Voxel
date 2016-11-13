@@ -18,27 +18,18 @@
  * 
  */
 
-package net.luxvacuos.voxel.client.rendering.api.glfw;
+package net.luxvacuos.voxel.client.core.exception;
 
-import static org.lwjgl.glfw.GLFW.glfwSwapBuffers;
+public class GLFWException extends RuntimeException {
 
-import org.lwjgl.vulkan.VkInstance;
+	private static final long serialVersionUID = -1821842574310124426L;
 
-import net.luxvacuos.voxel.client.input.Mouse;
-import net.luxvacuos.voxel.client.rendering.api.glfw.WindowManager.DeviceAndGraphicsQueueFamily;
-
-public class Window extends AbstractWindow {
-
-	protected Window(VkInstance vkInstance, DeviceAndGraphicsQueueFamily device, long windowID, int width, int height) {
-		super(vkInstance, device, windowID, width, height);
+	public GLFWException(String message) {
+		super(message);
 	}
-
-	@Override
-	public void updateDisplay(int fps) {
-		glfwSwapBuffers(this.windowID);
-		Mouse.poll();
-		this.displayUtils.checkErrors();
-		this.displayUtils.sync(fps);
+	
+	public GLFWException(Exception e) {
+		super(e);
 	}
 
 }

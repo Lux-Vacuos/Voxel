@@ -20,7 +20,6 @@
 
 package net.luxvacuos.voxel.client.rendering.api.opengl.pipeline;
 
-import net.luxvacuos.voxel.client.core.ClientInternalSubsystem;
 import net.luxvacuos.voxel.client.rendering.api.opengl.RenderingPipeline;
 
 public class MultiPass extends RenderingPipeline {
@@ -44,7 +43,7 @@ public class MultiPass extends RenderingPipeline {
 	private DepthOfField depthOfField;
 
 	@Override
-	public void init(ClientInternalSubsystem gm) {
+	public void init() {
 		sun = new Sun("Sun", width, height);
 		sun.init();
 		super.imagePasses.add(sun);
@@ -53,11 +52,11 @@ public class MultiPass extends RenderingPipeline {
 		volumetricLight.init();
 		super.imagePasses.add(volumetricLight);
 
-		gaussianHorizontal = new GaussianHorizonal("GaussianHorizontal", width, height/4);
+		gaussianHorizontal = new GaussianHorizonal("GaussianHorizontal", width, height / 4);
 		gaussianHorizontal.init();
 		super.imagePasses.add(gaussianHorizontal);
 
-		gaussianVertical = new GaussianVertical("GaussianVertical", width, height/4);
+		gaussianVertical = new GaussianVertical("GaussianVertical", width, height / 4);
 		gaussianVertical.init();
 		super.imagePasses.add(gaussianVertical);
 
@@ -72,18 +71,18 @@ public class MultiPass extends RenderingPipeline {
 		ambientOcclusion = new AmbientOcclusion("AmbientOcclusion", width, height);
 		ambientOcclusion.init();
 		super.imagePasses.add(ambientOcclusion);
-		
+
 		screenSpaceReflections = new ScreenSpaceReflections("ScreenSpaceReflections", width, height);
 		screenSpaceReflections.init();
 		super.imagePasses.add(screenSpaceReflections);
 
-		//bloomMask = new BloomMask("BloomMask", width, height);
-		//bloomMask.init();
-		//super.imagePasses.add(bloomMask);
+		// bloomMask = new BloomMask("BloomMask", width, height);
+		// bloomMask.init();
+		// super.imagePasses.add(bloomMask);
 
-		//super.imagePasses.add(gaussianHorizontal);
+		// super.imagePasses.add(gaussianHorizontal);
 
-		//super.imagePasses.add(gaussianVertical);
+		// super.imagePasses.add(gaussianVertical);
 
 		colorCorrection = new ColorCorrection("ColorCorrection", width, height);
 		colorCorrection.init();

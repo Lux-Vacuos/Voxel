@@ -64,6 +64,8 @@ public class Renderer {
 
 	private Frustum frustum;
 	private Window window;
+	
+	private float exposure = 1;
 
 	public Renderer(Window window, Camera camera, Camera sunCamera) {
 		this.window = window;
@@ -119,7 +121,7 @@ public class Renderer {
 		renderingPipeline.end();
 		clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		renderingPipeline.render(camera, lightPosition, invertedLightPosition, clientWorldSimulation,
-				lightRenderer.getLights(), environmentRenderer.getCubeMapTexture());
+				lightRenderer.getLights(), environmentRenderer.getCubeMapTexture(), exposure);
 
 		// dimension.render(camera, sunCamera, clientWorldSimulation,
 		// camera.getProjectionMatrix(),

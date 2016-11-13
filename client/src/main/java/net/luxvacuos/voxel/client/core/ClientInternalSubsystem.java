@@ -74,6 +74,7 @@ public class ClientInternalSubsystem extends AbstractInternalSubsystem {
 		pb.setRedBits(16);
 		pb.setBlueBits(16);
 		pb.setGreenBits(16);
+		pb.setSrgbCapable(1);
 		handle.setPixelBuffer(pb);
 		this.gameWindowID = WindowManager.createWindow(handle, ClientVariables.VSYNC);
 		Window window = WindowManager.getWindow(this.gameWindowID);
@@ -81,6 +82,11 @@ public class ClientInternalSubsystem extends AbstractInternalSubsystem {
 		ResourceLoader loader = window.getResourceLoader();
 		loader.loadNVGFont("Roboto-Bold", "Roboto-Bold");
 		loader.loadNVGFont("Roboto-Regular", "Roboto-Regular");
+		loader.loadNVGFont("Poppins-Regular", "Poppins-Regular");
+		loader.loadNVGFont("Poppins-Light", "Poppins-Light");
+		loader.loadNVGFont("Poppins-Medium", "Poppins-Medium");
+		loader.loadNVGFont("Poppins-Bold", "Poppins-Bold");
+		loader.loadNVGFont("Poppins-SemiBold", "Poppins-SemiBold");
 		loader.loadNVGFont("Entypo", "Entypo", 40);
 	}
 

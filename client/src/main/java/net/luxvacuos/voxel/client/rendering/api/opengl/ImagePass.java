@@ -100,9 +100,9 @@ public abstract class ImagePass {
 	public void process(Camera camera, Matrix4d previousViewMatrix, Vector3d previousCameraPosition,
 			Vector3d lightPosition, Vector3d invertedLightPosition, ClientWorldSimulation clientWorldSimulation,
 			List<Light> lights, ImagePassFBO[] auxs, RenderingPipeline pipe, RawModel quad,
-			CubeMapTexture environmentMap) {
+			CubeMapTexture environmentMap, float exposure) {
 		begin(camera, previousViewMatrix, previousCameraPosition, lightPosition, invertedLightPosition,
-				clientWorldSimulation, lights);
+				clientWorldSimulation, lights, exposure);
 		glBindVertexArray(quad.getVaoID());
 		glEnableVertexAttribArray(0);
 		render(auxs, pipe, environmentMap);
@@ -125,7 +125,7 @@ public abstract class ImagePass {
 	 */
 	public void begin(Camera camera, Matrix4d previousViewMatrix, Vector3d previousCameraPosition,
 			Vector3d lightPosition, Vector3d invertedLightPosition, ClientWorldSimulation clientWorldSimulation,
-			List<Light> lights) {
+			List<Light> lights, float exposure) {
 		fbo.begin();
 		shader.start();
 		shader.loadUnderWater(false);
@@ -139,10 +139,10 @@ public abstract class ImagePass {
 				Maths.createViewMatrixRot(camera.getRotation().getX(), camera.getRotation().getY(),
 						camera.getRotation().getZ(), tmp),
 				width, height));
-		shader.loadExposure(1f);
+		shader.loadExposure(exposure);
 		shader.loadPointLightsPos(lights);
 		shader.loadTime(clientWorldSimulation.getTime());
-		Renderer.clearBuffer(GL_COLOR_BUFFER_BIT |GL_DEPTH_BUFFER_BIT);
+		Renderer.clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
 
 	/**

@@ -84,8 +84,7 @@ public abstract class RenderingPipeline {
 	public RenderingPipeline(String name) {
 		this.name = name;
 		Logger.log("Using " + name + " Rendering Pipeline");
-		ClientInternalSubsystem gm = ClientInternalSubsystem.getInstance();
-		Window window = gm.getGameWindow();
+		Window window = ClientInternalSubsystem.getInstance().getGameWindow();
 
 		width = (int) (window.getWidth() * window.getPixelRatio());
 		height = (int) (window.getHeight() * window.getPixelRatio());
@@ -101,9 +100,6 @@ public abstract class RenderingPipeline {
 		imagePasses = new ArrayList<>();
 		auxs = new ImagePassFBO[3];
 
-		for (int i = 0; i < auxs.length; i++) {
-			auxs[i] = new ImagePassFBO(width, height);
-		}
 		previousCameraPosition = new Vector3d();
 		previousViewMatrix = new Matrix4d();
 		finalShader = new DeferredShadingShader("Final");
@@ -112,7 +108,7 @@ public abstract class RenderingPipeline {
 		finalShader.loadResolution(new Vector2d(window.getWidth(), window.getHeight()));
 		finalShader.loadSkyColor(ClientVariables.skyColor);
 		finalShader.stop();
-		init(gm);
+		init();
 	}
 
 	/**
@@ -127,8 +123,7 @@ public abstract class RenderingPipeline {
 	public RenderingPipeline(String name, int width, int height) throws Exception {
 		this.name = name;
 		Logger.log("Using " + name + " Rendering Pipeline");
-		ClientInternalSubsystem gm = ClientInternalSubsystem.getInstance();
-		Window window = gm.getGameWindow();
+		Window window = ClientInternalSubsystem.getInstance().getGameWindow();
 
 		if (width > GLUtil.getTextureMaxSize())
 			width = GLUtil.getTextureMaxSize();
@@ -141,9 +136,6 @@ public abstract class RenderingPipeline {
 		imagePasses = new ArrayList<>();
 		auxs = new ImagePassFBO[3];
 
-		for (int i = 0; i < auxs.length; i++) {
-			auxs[i] = new ImagePassFBO(width, height);
-		}
 		previousCameraPosition = new Vector3d();
 		previousViewMatrix = new Matrix4d();
 		finalShader = new DeferredShadingShader("Final");
@@ -154,17 +146,15 @@ public abstract class RenderingPipeline {
 		finalShader.stop();
 		this.width = width;
 		this.height = height;
-		init(gm);
+		init();
 	}
 
 	/**
 	 * 
 	 * Initialize custom objects and variables
 	 * 
-	 * @param gm
-	 *            {@link ClientInternalSubsystem}
 	 */
-	public abstract void init(ClientInternalSubsystem gm);
+	public abstract void init();
 
 	/**
 	 * Begin Rendering
@@ -188,10 +178,10 @@ public abstract class RenderingPipeline {
 	 *            {@link ClientInternalSubsystem}
 	 */
 	public void render(Camera camera, Vector3d lightPosition, Vector3d invertedLightPosition,
-			ClientWorldSimulation clientWorldSimulation, List<Light> lights, CubeMapTexture environmentMap) {
+			ClientWorldSimulation clientWorldSimulation, List<Light> lights, CubeMapTexture environmentMap, float exposure) {
 		for (ImagePass imagePass : imagePasses) {
 			imagePass.process(camera, previousViewMatrix, previousCameraPosition, lightPosition, invertedLightPosition,
-					clientWorldSimulation, lights, auxs, this, quad, environmentMap);
+					clientWorldSimulation, lights, auxs, this, quad, environmentMap, exposure);
 		}
 		Renderer.clearBuffer(GL_COLOR_BUFFER_BIT |GL_DEPTH_BUFFER_BIT);
 		finalShader.start();
@@ -218,9 +208,6 @@ public abstract class RenderingPipeline {
 	 */
 	public void dispose() {
 		mainFBO.cleanUp();
-		for (ImagePassFBO imagePassFBO : auxs) {
-			imagePassFBO.cleanUp();
-		}
 		for (ImagePass imagePass : imagePasses) {
 			imagePass.dispose();
 		}
