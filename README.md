@@ -33,9 +33,18 @@ This is a fork of libgdx/Ashley that was modified so it can run without all the 
 ### Utils
 This contains code that is used in all other sub projects, some code from libgdx and LWJGL2 was exported so the other projects do not have to implement the same code.
 
+## Bulding Voxel
+
+Voxel uses Gradle as build system.
+
+Windows: Java 8.
+Linux & OS X: OpenJDK 8 and JavaFX.
+
 ## Running Voxel
 
-The main method is stored inside the Bootstrap class found in the package of the same name, this is for Client and Server. Has support to the following parameters.
+For fast test we recomend using "./gradlew run".
+
+The main method is stored inside the Bootstrap class found in the package of the same name, this is for Client and Server. Has support to the following parameters:
 
 | Name          | Variable Type | Default Value  | Description    | Client, Server or Universal |
 | ------------- | -------------:| :-------------:| --------------:| -----------:|

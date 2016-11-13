@@ -36,6 +36,7 @@ import net.luxvacuos.voxel.client.sound.soundsystem.SoundSystemException;
 import net.luxvacuos.voxel.client.sound.soundsystem.codecs.CodecJOgg;
 import net.luxvacuos.voxel.client.util.LoggerSoundSystem;
 import net.luxvacuos.voxel.universal.core.AbstractInternalSubsystem;
+import net.luxvacuos.voxel.client.core.ClientVariables;
 
 /**
  * 
@@ -86,15 +87,17 @@ public class ClientInternalSubsystem extends AbstractInternalSubsystem {
 	@Override
 	public void init() {
 		CustomLog.getInstance();
-		try {
-			SoundSystemConfig.addLibrary(LibraryLWJGLOpenAL.class);
-			SoundSystemConfig.setCodec("ogg", CodecJOgg.class);
-		} catch (SoundSystemException e) {
-			e.printStackTrace();
+		if (!ClientVariables.WSL) {
+			try {
+				SoundSystemConfig.addLibrary(LibraryLWJGLOpenAL.class);
+				SoundSystemConfig.setCodec("ogg", CodecJOgg.class);
+			} catch (SoundSystemException e) {
+				e.printStackTrace();
+			}
+			SoundSystemConfig.setSoundFilesPackage("assets/" + ClientVariables.assets + "/sounds/");
+			SoundSystemConfig.setLogger(new LoggerSoundSystem());
+			soundSystem = new SoundSystem();
 		}
-		SoundSystemConfig.setSoundFilesPackage("assets/sounds/");
-		SoundSystemConfig.setLogger(new LoggerSoundSystem());
-		soundSystem = new SoundSystem();
 	}
 
 	@Override
@@ -108,7 +111,9 @@ public class ClientInternalSubsystem extends AbstractInternalSubsystem {
 	@Override
 	public void dispose() {
 		gameSettings.save();
-		soundSystem.cleanup();
+		if (!ClientVariables.WSL)
+			soundSystem.cleanup();
+
 	}
 
 	public SoundSystem getSoundSystem() {
