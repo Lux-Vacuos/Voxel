@@ -56,8 +56,8 @@ import static org.lwjgl.opengl.GL32.glFramebufferTexture;
 
 import java.nio.ByteBuffer;
 
+import net.luxvacuos.voxel.client.core.ClientInternalSubsystem;
 import net.luxvacuos.voxel.client.core.exception.FrameBufferException;
-import net.luxvacuos.voxel.client.resources.GameResources;
 
 public class ImagePassFBO {
 
@@ -117,7 +117,7 @@ public class ImagePassFBO {
 
 	public void end() {
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-		GameResources.getInstance().getGameWindow().resetViewport();
+		ClientInternalSubsystem.getInstance().getGameWindow().resetViewport();
 	}
 
 	public void cleanUp() {

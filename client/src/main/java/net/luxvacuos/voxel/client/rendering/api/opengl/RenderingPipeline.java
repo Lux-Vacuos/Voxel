@@ -49,12 +49,12 @@ import net.luxvacuos.igl.vector.Vector2d;
 import net.luxvacuos.igl.vector.Vector3d;
 import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.core.ClientWorldSimulation;
+import net.luxvacuos.voxel.client.core.ClientInternalSubsystem;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.CubeMapTexture;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.Light;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.RawModel;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.DeferredShadingShader;
-import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.util.Maths;
 import net.luxvacuos.voxel.client.world.entities.Camera;
 
@@ -86,7 +86,7 @@ public abstract class RenderingPipeline {
 	public RenderingPipeline(String name) {
 		this.name = name;
 		Logger.log("Using " + name + " Rendering Pipeline");
-		GameResources gm = GameResources.getInstance();
+		ClientInternalSubsystem gm = ClientInternalSubsystem.getInstance();
 		Window window = gm.getGameWindow();
 
 		width = (int) (window.getWidth() * window.getPixelRatio());
@@ -97,7 +97,7 @@ public abstract class RenderingPipeline {
 		if (height > GLUtil.getTextureMaxSize())
 			height = GLUtil.getTextureMaxSize();
 		float[] positions = { -1, 1, -1, -1, 1, 1, 1, -1 };
-		quad = gm.getResourceLoader().loadToVAO(positions, 2);
+		quad = window.getResourceLoader().loadToVAO(positions, 2);
 
 		mainFBO = new RenderingPipelineFBO(width, height);
 		imagePasses = new ArrayList<>();
@@ -129,7 +129,7 @@ public abstract class RenderingPipeline {
 	public RenderingPipeline(String name, int width, int height) throws Exception {
 		this.name = name;
 		Logger.log("Using " + name + " Rendering Pipeline");
-		GameResources gm = GameResources.getInstance();
+		ClientInternalSubsystem gm = ClientInternalSubsystem.getInstance();
 		Window window = gm.getGameWindow();
 
 		if (width > GLUtil.getTextureMaxSize())
@@ -137,7 +137,7 @@ public abstract class RenderingPipeline {
 		if (height > GLUtil.getTextureMaxSize())
 			height = GLUtil.getTextureMaxSize();
 		float[] positions = { -1, 1, -1, -1, 1, 1, 1, -1 };
-		quad = gm.getResourceLoader().loadToVAO(positions, 2);
+		quad = window.getResourceLoader().loadToVAO(positions, 2);
 
 		mainFBO = new RenderingPipelineFBO(width, height);
 		imagePasses = new ArrayList<>();
@@ -164,9 +164,9 @@ public abstract class RenderingPipeline {
 	 * Initialize custom objects and variables
 	 * 
 	 * @param gm
-	 *            {@link GameResources}
+	 *            {@link ClientInternalSubsystem}
 	 */
-	public abstract void init(GameResources gm);
+	public abstract void init(ClientInternalSubsystem gm);
 
 	/**
 	 * Begin Rendering
@@ -190,7 +190,7 @@ public abstract class RenderingPipeline {
 	 * This is used for processing all the stuff
 	 * 
 	 * @param gm
-	 *            {@link GameResources}
+	 *            {@link ClientInternalSubsystem}
 	 */
 	public void render(Camera camera, Vector3d lightPosition, Vector3d invertedLightPosition,
 			ClientWorldSimulation clientWorldSimulation, List<Light> lights, CubeMapTexture environmentMap) {

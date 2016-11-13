@@ -29,14 +29,14 @@ import org.apache.log4j.FileAppender;
 import org.apache.log4j.Layout;
 import org.apache.log4j.spi.ErrorCode;
 
-import net.luxvacuos.voxel.universal.bootstrap.AbstractBootstrap;
+import net.luxvacuos.voxel.universal.bootstrap.IBootstrap;
 
 public class PerRunLog extends FileAppender {
 
 	private static SimpleDateFormat timeStampFormat;
-	private static AbstractBootstrap bootstrap;
+	private static IBootstrap bootstrap;
 
-	public static void setBootstrap(AbstractBootstrap bootstrap) {
+	public static void setBootstrap(IBootstrap bootstrap) {
 		PerRunLog.bootstrap = bootstrap;
 	}
 

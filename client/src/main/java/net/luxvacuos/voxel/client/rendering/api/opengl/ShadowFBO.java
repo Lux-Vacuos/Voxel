@@ -63,8 +63,8 @@ import java.nio.FloatBuffer;
 
 import org.lwjgl.BufferUtils;
 
+import net.luxvacuos.voxel.client.core.ClientInternalSubsystem;
 import net.luxvacuos.voxel.client.core.exception.FrameBufferException;
-import net.luxvacuos.voxel.client.resources.GameResources;
 
 public class ShadowFBO {
 
@@ -142,7 +142,7 @@ public class ShadowFBO {
 
 	public void end() {
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-		GameResources.getInstance().getGameWindow().resetViewport();
+		ClientInternalSubsystem.getInstance().getGameWindow().resetViewport();
 	}
 
 	public int getShadowDepth() {

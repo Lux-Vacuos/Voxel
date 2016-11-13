@@ -66,7 +66,7 @@ import java.nio.FloatBuffer;
 
 import org.lwjgl.BufferUtils;
 
-import net.luxvacuos.voxel.client.resources.GameResources;
+import net.luxvacuos.voxel.client.core.ClientInternalSubsystem;
 
 /**
  * FrameBuffer
@@ -101,7 +101,7 @@ public class FrameBuffer {
 
 	public void end() {
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-		GameResources.getInstance().getGameWindow().resetViewport();
+		ClientInternalSubsystem.getInstance().getGameWindow().resetViewport();
 	}
 
 	private void bindFrameBuffer(int frameBuffer, int width, int height) {

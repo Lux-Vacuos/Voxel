@@ -18,23 +18,21 @@
  * 
  */
 
-package net.luxvacuos.voxel.universal.resources;
+package net.luxvacuos.voxel.universal.core;
 
-import net.luxvacuos.voxel.universal.core.AbstractGameSettings;
-import net.luxvacuos.voxel.universal.core.AbstractVoxel;
-import net.luxvacuos.voxel.universal.core.AbstractWorldSimulation;
-
-public class AbstractGameResources implements IDisposable {
+public abstract class AbstractInternalSubsystem implements IInternalSubsystem {
 
 	protected AbstractGameSettings gameSettings;
-	protected AbstractWorldSimulation worldSimulation;
 
+	@Override
 	public void preInit() {
 	}
 
-	public void init(AbstractVoxel voxel) {
+	@Override
+	public void init() {
 	}
 
+	@Override
 	public void postInit() {
 	}
 
@@ -44,10 +42,6 @@ public class AbstractGameResources implements IDisposable {
 
 	public AbstractGameSettings getGameSettings() {
 		return this.gameSettings;
-	}
-
-	public AbstractWorldSimulation getWorldSimulation() {
-		return this.worldSimulation;
 	}
 
 }

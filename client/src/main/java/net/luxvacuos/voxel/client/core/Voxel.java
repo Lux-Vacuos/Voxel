@@ -51,7 +51,6 @@ import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.glfw.WindowManager;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.Timers;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Renderer;
-import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.ui.CrashScreen;
 import net.luxvacuos.voxel.client.world.block.BlocksResources;
 import net.luxvacuos.voxel.universal.api.ModsHandler;
@@ -123,16 +122,16 @@ public class Voxel extends AbstractVoxel {
 		ClientVariables.SETTINGS_PATH = bootstrap.getPrefix() + "/config/settings.conf";
 		ClientVariables.WORLD_PATH = bootstrap.getPrefix() + "/world/";
 
-		// Create the GameResources instance
-		gameResources = GameResources.getInstance();
+		// Create the ClientInternalSubsystem instance
+		internalSubsystem = ClientInternalSubsystem.getInstance();
 		// Do preInit on Game Resources
-		getGameResources().preInit();
+		internalSubsystem.preInit();
 		// Set Window visible
-		getGameResources().getGameWindow().setVisible(true);
+		ClientInternalSubsystem.getInstance().getGameWindow().setVisible(true);
 		// Clear Screen
 		Renderer.prepare(1, 1, 1, 1);
 		// Update Screen buffers
-		getGameResources().getGameWindow().updateDisplay(ClientVariables.FPS);
+		ClientInternalSubsystem.getInstance().getGameWindow().updateDisplay(ClientVariables.FPS);
 		// Set the info to objects
 		CoreInfo.platform = bootstrap.getPlatform();
 		CoreInfo.LWJGLVer = Version.getVersion();
@@ -168,11 +167,9 @@ public class Voxel extends AbstractVoxel {
 	@Override
 	public void init() throws Exception {
 		// Do Init on Game Resources
-		getGameResources().init(this);
+		internalSubsystem.init();
 		// Load Block assets
-		BlocksResources.createBlocks(getGameResources().getResourceLoader());
-		// Load extra assets
-		getGameResources().loadResources();
+		BlocksResources.createBlocks(ClientInternalSubsystem.getInstance().getGameWindow().getResourceLoader());
 		// Load the States into the StateMachine
 		StateMachine.registerState(new AboutState());
 		StateMachine.registerState(new MainMenuState());
@@ -197,7 +194,7 @@ public class Voxel extends AbstractVoxel {
 	@Override
 	public void postInit() throws Exception {
 		// Save settings
-		GameResources.getInstance().getGameSettings().save();
+		ClientInternalSubsystem.getInstance().getGameSettings().save();
 		// Do Mod PostInit
 		modsHandler.postInit();
 		// Set the Mouse hidden
@@ -205,7 +202,7 @@ public class Voxel extends AbstractVoxel {
 		// Initialize debug data
 		Timers.initDebugDisplay();
 		// Do PostInit on Game Resources
-		getGameResources().postInit();
+		internalSubsystem.postInit();
 		// Set the state to splash screen
 		StateMachine.setCurrentState(StateNames.SPLASH_SCREEN);
 	}
@@ -231,7 +228,7 @@ public class Voxel extends AbstractVoxel {
 			// Set loaded
 			loaded = true;
 			// Get a local game window reference
-			Window window = getGameResources().getGameWindow();
+			Window window = ClientInternalSubsystem.getInstance().getGameWindow();
 			while (StateMachine.isRunning() && !(window.isCloseRequested())) {
 				// Start CPU timer
 				Timers.startCPUTimer();
@@ -342,7 +339,7 @@ public class Voxel extends AbstractVoxel {
 	public void dispose() {
 		Logger.log("Cleaning Resources");
 		// Clean loaded assets
-		this.gameResources.dispose();
+		internalSubsystem.dispose();
 		// Clean mods
 		modsHandler.dispose();
 		// Close Window
@@ -354,11 +351,6 @@ public class Voxel extends AbstractVoxel {
 		// Set dispose and loaded
 		disposed = true;
 		loaded = false;
-	}
-
-	@Override
-	public GameResources getGameResources() {
-		return ((GameResources) gameResources);
 	}
 
 }

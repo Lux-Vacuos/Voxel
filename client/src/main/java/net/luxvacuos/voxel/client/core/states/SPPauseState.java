@@ -22,15 +22,14 @@ package net.luxvacuos.voxel.client.core.states;
 
 import org.lwjgl.glfw.GLFW;
 
+import net.luxvacuos.voxel.client.core.ClientInternalSubsystem;
 //import net.luxvacuos.voxel.client.input.Keyboard;
 import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.UIRendering;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Renderer;
-import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.ui.Button;
 import net.luxvacuos.voxel.client.ui.UIWindow;
-import net.luxvacuos.voxel.client.world.entities.PlayerCamera;
 import net.luxvacuos.voxel.universal.core.AbstractVoxel;
 
 /**
@@ -46,7 +45,7 @@ public class SPPauseState extends AbstractFadeState {
 
 	public SPPauseState() {
 		super(StateNames.SP_PAUSE);
-		Window window = GameResources.getInstance().getGameWindow();
+		Window window = ClientInternalSubsystem.getInstance().getGameWindow();
 		uiWindow = new UIWindow(20, window.getHeight() - 20, window.getWidth() - 40, window.getHeight() - 40, "Pause");
 		exitButton = new Button(uiWindow.getWidth() / 2 - 100, -uiWindow.getHeight() + 35, 200, 40,
 				"Back to Main Menu");
@@ -73,8 +72,7 @@ public class SPPauseState extends AbstractFadeState {
 
 	@Override
 	public void update(AbstractVoxel voxel, float delta) {
-		GameResources gm = ((GameResources) voxel.getGameResources());
-		Window window = gm.getGameWindow();
+		Window window = ClientInternalSubsystem.getInstance().getGameWindow();
 		while (Mouse.next())
 			uiWindow.update(delta);
 
@@ -84,7 +82,6 @@ public class SPPauseState extends AbstractFadeState {
 		// if (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
 		if (window.getKeyboardHandler().isKeyPressed(GLFW.GLFW_KEY_ESCAPE)) {
 			window.getKeyboardHandler().ignoreKeyUntilRelease(GLFW.GLFW_KEY_ESCAPE);
-			((PlayerCamera) gm.getCamera()).setMouse();
 			this.switchTo(StateNames.SINGLEPLAYER);
 		}
 		// }
@@ -92,8 +89,7 @@ public class SPPauseState extends AbstractFadeState {
 
 	@Override
 	public void render(AbstractVoxel voxel, float alpha) {
-		GameResources gm = (GameResources) voxel.getGameResources();
-		Window window = gm.getGameWindow();
+		Window window = ClientInternalSubsystem.getInstance().getGameWindow();
 		Renderer.prepare(1, 1, 1, 1);
 		window.beingNVGFrame();
 		uiWindow.render(window.getID());

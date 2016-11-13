@@ -20,17 +20,14 @@
 
 package net.luxvacuos.voxel.universal.core;
 
-public interface IWorldSimulation {
-	public static final float TIME_MULTIPLIER = 10;
+public interface IInternalSubsystem {
+
+	public void preInit();
+
+	public void init();
+
+	public void postInit();
 	
-	public float update(float deltaTime);
-	
-	public float getGlobalTime();
-	
-	public float getRainFactor();
-	
-	public float getTime();
-	
-	public void setTime(float time);
+	public void dispose();
 
 }

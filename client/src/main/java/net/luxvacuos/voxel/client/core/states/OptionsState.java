@@ -20,12 +20,12 @@
 
 package net.luxvacuos.voxel.client.core.states;
 
+import net.luxvacuos.voxel.client.core.ClientInternalSubsystem;
 import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.UIRendering;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Renderer;
-import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.ui.Button;
 import net.luxvacuos.voxel.client.ui.UIWindow;
 import net.luxvacuos.voxel.universal.core.AbstractVoxel;
@@ -51,7 +51,7 @@ public class OptionsState extends AbstractFadeState {
 
 	public OptionsState() {
 		super(StateNames.OPTIONS);
-		Window window = GameResources.getInstance().getGameWindow();
+		Window window = ClientInternalSubsystem.getInstance().getGameWindow();
 		uiWindow = new UIWindow(20, window.getHeight() - 20, window.getWidth() - 40, window.getHeight() - 40,
 				"Options");
 
@@ -132,8 +132,8 @@ public class OptionsState extends AbstractFadeState {
 		}
 
 		exitButton.setOnButtonPress((button, delta) -> {
-			GameResources.getInstance().getGameSettings().update();
-			GameResources.getInstance().getGameSettings().save();
+			ClientInternalSubsystem.getInstance().getGameSettings().update();
+			ClientInternalSubsystem.getInstance().getGameSettings().save();
 			this.switchTo(StateMachine.getPreviousState().getName());
 		});
 
@@ -261,10 +261,9 @@ public class OptionsState extends AbstractFadeState {
 
 	@Override
 	public void render(AbstractVoxel voxel, float alpha) {
-		GameResources gm = (GameResources) voxel.getGameResources();
-		Renderer.prepare(1, 1, 1, 1);
+		Window window = ClientInternalSubsystem.getInstance().getGameWindow();
 
-		Window window = gm.getGameWindow();
+		Renderer.prepare(1, 1, 1, 1);
 		window.beingNVGFrame();
 		uiWindow.render(window.getID());
 		UIRendering.renderMouse(window.getID());

@@ -20,8 +20,8 @@
 
 package net.luxvacuos.voxel.client.rendering.api.opengl.pipeline;
 
+import net.luxvacuos.voxel.client.core.ClientInternalSubsystem;
 import net.luxvacuos.voxel.client.rendering.api.opengl.RenderingPipeline;
-import net.luxvacuos.voxel.client.resources.GameResources;
 
 public class MultiPass extends RenderingPipeline {
 
@@ -44,7 +44,7 @@ public class MultiPass extends RenderingPipeline {
 	private DepthOfField depthOfField;
 
 	@Override
-	public void init(GameResources gm) {
+	public void init(ClientInternalSubsystem gm) {
 		sun = new Sun("Sun", width, height);
 		sun.init();
 		super.imagePasses.add(sun);

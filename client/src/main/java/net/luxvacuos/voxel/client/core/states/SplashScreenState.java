@@ -20,9 +20,9 @@
 
 package net.luxvacuos.voxel.client.core.states;
 
+import net.luxvacuos.voxel.client.core.ClientInternalSubsystem;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Renderer;
-import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.ui.Image;
 import net.luxvacuos.voxel.client.ui.Panel;
 import net.luxvacuos.voxel.universal.core.AbstractVoxel;
@@ -41,14 +41,14 @@ public class SplashScreenState extends AbstractFadeState {
 
 	public SplashScreenState() {
 		super(StateNames.SPLASH_SCREEN);
-		Window window = GameResources.getInstance().getGameWindow();
+		Window window = ClientInternalSubsystem.getInstance().getGameWindow();
 		panel = new Panel(window.getWidth() / 2, window.getHeight() / 2, 0, 0);
 		panel.setBorderColor(0, 0, 0, 0);
 		panel.setFillColor(0, 0, 0, 0);
 		panel.setGradientColor(0, 0, 0, 0);
 
 		luxVacuosLogo = new Image(-256, 256, 512, 512,
-				GameResources.getInstance().getResourceLoader().loadNVGTexture("LuxVacuos-Logo"));
+				ClientInternalSubsystem.getInstance().getGameWindow().getResourceLoader().loadNVGTexture("LuxVacuos-Logo"));
 		/*
 		 * luxVacuosLogo.setOnUpdate(new OnAction() { private float speed = 0;
 		 * 
@@ -75,7 +75,7 @@ public class SplashScreenState extends AbstractFadeState {
 
 	@Override
 	public void render(AbstractVoxel voxel, float alpha) {
-		Window window = ((GameResources)voxel.getGameResources()).getGameWindow();
+		Window window =  ClientInternalSubsystem.getInstance().getGameWindow();
 		Renderer.prepare(1, 1, 1, 1);
 		window.beingNVGFrame();
 		panel.render(window.getID());
@@ -85,10 +85,12 @@ public class SplashScreenState extends AbstractFadeState {
 	@Override
 	public void update(AbstractVoxel voxel, float delta) {
 		wait += 1 * delta;
-		if (wait > 2) panel.update(delta);
-		
-		if (wait > 3 && !this.switching) this.switchTo(StateNames.MAIN_MENU);
-		
+		if (wait > 2)
+			panel.update(delta);
+
+		if (wait > 3 && !this.switching)
+			this.switchTo(StateNames.MAIN_MENU);
+
 		super.update(voxel, delta);
 	}
 

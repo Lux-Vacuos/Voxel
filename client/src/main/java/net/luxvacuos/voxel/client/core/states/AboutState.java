@@ -25,10 +25,10 @@ import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_RIGHT;
 
 import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.core.CoreInfo;
+import net.luxvacuos.voxel.client.core.ClientInternalSubsystem;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.UIRendering;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Renderer;
-import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.ui.Button;
 import net.luxvacuos.voxel.client.ui.Image;
 import net.luxvacuos.voxel.client.ui.Text;
@@ -48,7 +48,7 @@ public class AboutState extends AbstractFadeState {
 
 	public AboutState() {
 		super(StateNames.ABOUT);
-		Window window = GameResources.getInstance().getGameWindow();
+		Window window = ClientInternalSubsystem.getInstance().getGameWindow();
 		uiWindow = new UIWindow(20, window.getHeight() - 20, window.getWidth() - 40, window.getHeight() - 40, "About");
 		Button backButton = new Button((int) (window.getWidth() / 2f - 100), 40, 200, 40, "Back");
 		backButton.setOnButtonPress((button, delta) -> {
@@ -56,7 +56,7 @@ public class AboutState extends AbstractFadeState {
 		});
 
 		voxelLogo = new Image(uiWindow.getWidth() / 2 - 200, -40, 400, 200,
-				GameResources.getInstance().getResourceLoader().loadNVGTexture("Voxel-Logo"));
+				ClientInternalSubsystem.getInstance().getGameWindow().getResourceLoader().loadNVGTexture("Voxel-Logo"));
 		uiWindow.addChildren(voxelLogo);
 
 		Text versionL = new Text("Version", 30, -300);
@@ -131,7 +131,7 @@ public class AboutState extends AbstractFadeState {
 
 	@Override
 	public void render(AbstractVoxel voxel, float delta) {
-		Window window = ((GameResources) voxel.getGameResources()).getGameWindow();
+		Window window = ClientInternalSubsystem.getInstance().getGameWindow();
 		Renderer.prepare(1, 1, 1, 1);
 		window.beingNVGFrame();
 		uiWindow.render(window.getID());

@@ -29,9 +29,9 @@ import org.lwjgl.glfw.GLFW;
 
 import net.luxvacuos.igl.vector.Matrix4d;
 import net.luxvacuos.igl.vector.Vector3d;
+import net.luxvacuos.voxel.client.core.ClientInternalSubsystem;
 import net.luxvacuos.voxel.client.input.KeyboardHandler;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
-import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.util.Maths;
 import net.luxvacuos.voxel.universal.ecs.Components;
 import net.luxvacuos.voxel.universal.ecs.components.AABB;
@@ -66,7 +66,7 @@ public class PlayerCamera extends Camera {
 
 	@Override
 	public void update(float delta) {
-		Window window = GameResources.getInstance().getGameWindow();
+		Window window = ClientInternalSubsystem.getInstance().getGameWindow();
 		KeyboardHandler kbh = window.getKeyboardHandler();
 		Rotation rotation = Components.ROTATION.get(this);
 
@@ -135,8 +135,8 @@ public class PlayerCamera extends Camera {
 	}
 
 	public void setMouse() {
-		setCursorPosition(GameResources.getInstance().getGameWindow().getWidth() / 2,
-				GameResources.getInstance().getGameWindow().getHeight() / 2);
+		setCursorPosition(ClientInternalSubsystem.getInstance().getGameWindow().getWidth() / 2,
+				ClientInternalSubsystem.getInstance().getGameWindow().getHeight() / 2);
 		setGrabbed(true);
 	}
 

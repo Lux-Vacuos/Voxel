@@ -27,11 +27,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.luxvacuos.voxel.client.core.ClientVariables;
+import net.luxvacuos.voxel.client.core.ClientInternalSubsystem;
 import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.UIRendering;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Renderer;
-import net.luxvacuos.voxel.client.resources.GameResources;
 import net.luxvacuos.voxel.client.ui.Button;
 import net.luxvacuos.voxel.client.ui.UIWindow;
 import net.luxvacuos.voxel.client.ui.World;
@@ -57,7 +57,7 @@ public class SPSelectionState extends AbstractFadeState {
 
 	public SPSelectionState() {
 		super("SP_Selection");
-		Window window = GameResources.getInstance().getGameWindow();
+		Window window = ClientInternalSubsystem.getInstance().getGameWindow();
 		y = 0;
 		uiWindow = new UIWindow(20, window.getHeight() - 20, window.getWidth() - 40, window.getHeight() - 40, "Singleplayer");
 		exitButton = new Button(uiWindow.getWidth() - 230, -200, 200, 40, "Back");
@@ -135,7 +135,7 @@ public class SPSelectionState extends AbstractFadeState {
 
 	@Override
 	public void render(AbstractVoxel voxel, float alpha) {
-		Window window = ((GameResources)voxel.getGameResources()).getGameWindow();
+		Window window =  ClientInternalSubsystem.getInstance().getGameWindow();
 		Renderer.prepare(1, 1, 1, 1);
 		window.beingNVGFrame();
 		uiWindow.render(window.getID());

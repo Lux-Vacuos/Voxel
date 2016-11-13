@@ -61,7 +61,7 @@ import java.util.Arrays;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL;
 
-import net.luxvacuos.voxel.client.resources.GameResources;
+import net.luxvacuos.voxel.client.core.ClientInternalSubsystem;
 
 public class Timers {
 
@@ -80,7 +80,7 @@ public class Timers {
 
 
 	public static void initDebugDisplay() {
-		vg = GameResources.getInstance().getGameWindow().getNVGID();
+		vg = ClientInternalSubsystem.getInstance().getGameWindow().getNVGID();
 
 		gpuTimer = new GPUtimer();
 		fps = new PerfGraph();
