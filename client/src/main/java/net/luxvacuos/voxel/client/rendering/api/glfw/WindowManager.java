@@ -22,14 +22,14 @@ package net.luxvacuos.voxel.client.rendering.api.glfw;
 
 import static org.lwjgl.glfw.GLFW.glfwGetFramebufferSize;
 import static org.lwjgl.glfw.GLFW.glfwGetWindowSize;
-import static org.lwjgl.glfw.GLFW.glfwSwapBuffers;
+import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.glfw.GLFWVulkan.glfwGetRequiredInstanceExtensions;
 import static org.lwjgl.glfw.GLFWVulkan.glfwVulkanSupported;
 import static org.lwjgl.opengl.GL11.GL_VENDOR;
 import static org.lwjgl.opengl.GL11.glGetIntegerv;
 import static org.lwjgl.opengl.GL11.glGetString;
 import static org.lwjgl.stb.STBImage.stbi_failure_reason;
-import static org.lwjgl.stb.STBImage.stbi_info_from_memory;
+import static org.lwjgl.stb.STBImage.*;
 import static org.lwjgl.stb.STBImage.stbi_is_hdr_from_memory;
 import static org.lwjgl.stb.STBImage.stbi_load_from_memory;
 import static org.lwjgl.system.MemoryUtil.NULL;
@@ -156,14 +156,44 @@ public final class WindowManager {
 		GLFW.glfwMakeContextCurrent(windowID);
 		GLFW.glfwSwapInterval(vsync ? 1 : 0);
 
+		if (handle.cursor != null) {
+
+			ByteBuffer imageBuffer;
+			try {
+				imageBuffer = ResourceLoader.ioResourceToByteBuffer(
+						"assets/" + ClientVariables.assets + "/cursors/" + handle.cursor + ".png", 8 * 1024);
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
+
+			IntBuffer w = BufferUtils.createIntBuffer(1);
+			IntBuffer h = BufferUtils.createIntBuffer(1);
+			IntBuffer comp = BufferUtils.createIntBuffer(1);
+
+			if (!stbi_info_from_memory(imageBuffer, w, h, comp))
+				throw new DecodeTextureException("Failed to read image information: " + stbi_failure_reason());
+
+			Logger.log("Image width: " + w.get(0), "Image height: " + h.get(0), "Image components: " + comp.get(0),
+					"Image HDR: " + stbi_is_hdr_from_memory(imageBuffer));
+
+			ByteBuffer image = stbi_load_from_memory(imageBuffer, w, h, comp, 0);
+			if (image == null)
+				throw new DecodeTextureException("Failed to load image: " + stbi_failure_reason());
+
+			GLFWImage img = GLFWImage.malloc().set(w.get(0), h.get(0), image);
+			glfwSetCursor(windowID, glfwCreateCursor(img, 0, 0));
+
+			stbi_image_free(image);
+		}
+
 		if (handle.icons.size != 0) {
 			GLFWImage.Buffer iconsbuff = GLFWImage.malloc(handle.icons.size);
 			int i = 0;
-			for (String path : handle.icons) {
+			for (Icon icon : handle.icons) {
 				ByteBuffer imageBuffer;
-				ByteBuffer image;
 				try {
-					imageBuffer = ResourceLoader.ioResourceToByteBuffer(path, 8 * 1024);
+					imageBuffer = ResourceLoader.ioResourceToByteBuffer(
+							"assets/" + ClientVariables.assets + "/icons/" + icon.path + ".png", 8 * 1024);
 				} catch (IOException e) {
 					throw new RuntimeException(e);
 				}
@@ -178,17 +208,21 @@ public final class WindowManager {
 				Logger.log("Image width: " + w.get(0), "Image height: " + h.get(0), "Image components: " + comp.get(0),
 						"Image HDR: " + stbi_is_hdr_from_memory(imageBuffer));
 
-				image = stbi_load_from_memory(imageBuffer, w, h, comp, 0);
-				if (image == null)
+				icon.image = stbi_load_from_memory(imageBuffer, w, h, comp, 0);
+				if (icon.image == null)
 					throw new DecodeTextureException("Failed to load image: " + stbi_failure_reason());
 
-				image.flip();
-				iconsbuff.position(i).width(w.get(0)).height(h.get(0)).pixels(image);
+				icon.image.flip();
+				iconsbuff.position(i).width(w.get(0)).height(h.get(0)).pixels(icon.image);
 				i++;
 			}
 			iconsbuff.position(0);
-			GLFW.glfwSetWindowIcon(windowID, iconsbuff);
+			glfwSetWindowIcon(windowID, iconsbuff);
 			iconsbuff.free();
+			for (Icon icon : handle.icons) {
+				stbi_image_free(icon.image);
+			}
+
 		}
 
 		boolean forwardCompat = GLFW.glfwGetWindowAttrib(windowID, GLFW.GLFW_OPENGL_FORWARD_COMPAT) == GLFW.GLFW_TRUE;

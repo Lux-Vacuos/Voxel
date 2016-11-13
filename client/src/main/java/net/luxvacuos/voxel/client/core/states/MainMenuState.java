@@ -108,7 +108,6 @@ public class MainMenuState extends AbstractFadeState {
 		Renderer.prepare(1, 1, 1, 1);
 		window.beingNVGFrame();
 		uiWindow.render(window.getID());
-		UIRendering.renderMouse(window.getID());
 		window.endNVGFrame();
 	}
 

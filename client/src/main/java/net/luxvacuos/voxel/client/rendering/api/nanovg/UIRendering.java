@@ -302,26 +302,6 @@ public class UIRendering {
 		nvgRestore(vg);
 	}
 
-	public static void renderMouse(long windowID) {
-		float x = Mouse.getX() - 8;
-		float y = -Mouse.getY() - 8 + WindowManager.getWindow(windowID).getHeight();
-		float w = 16;
-		float h = 16;
-		NVGPaint bg = paintA;
-		long vg = WindowManager.getWindow(windowID).getNVGID();
-		nvgBoxGradient(vg, x + 1, y + 1 + 1.5f, w - 2, h - 2, 3, 4, rgba(255, 255, 255, 200, colorA),
-				rgba(32, 32, 32, 32, colorB), bg);
-		nvgBeginPath(vg);
-		nvgRoundedRect(vg, x + 1, y + 1, w - 2, h - 2, 4 - 1);
-		nvgFillPaint(vg, bg);
-		nvgFill(vg);
-
-		nvgBeginPath(vg);
-		nvgRoundedRect(vg, x + 0.5f, y + 0.5f, w - 1, h - 1, 4 - 0.5f);
-		nvgStrokeColor(vg, rgba(0, 0, 0, 48, colorA));
-		nvgStroke(vg);
-	}
-
 	public static void renderBox(long windowID, float x, float y, float w, float h, NVGColor color1, NVGColor color2,
 			NVGColor color3) {
 		renderBox(windowID, x, y, w, h, color1, color2, color3, 1);

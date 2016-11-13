@@ -30,7 +30,8 @@ public final class WindowHandle {
 
 	protected int width, height;
 	protected String title;
-	protected Array<String> icons = new Array<>();
+	protected Array<Icon> icons = new Array<>();
+	protected String cursor;
 
 	protected WindowHandle(int width, int height, String title) {
 		Logger.log("Creating WindowHandle for '" + title + "'");
@@ -111,8 +112,13 @@ public final class WindowHandle {
 		return this;
 	}
 
-	public WindowHandle setIcon(String... icons) {
+	public WindowHandle setIcon(Icon... icons) {
 		this.icons.addAll(icons);
+		return this;
+	}
+	
+	public WindowHandle setCursor(String cursor){
+		this.cursor = cursor;
 		return this;
 	}
 

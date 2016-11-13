@@ -137,13 +137,8 @@ public class Mouse {
 
 	public static void setGrabbed(boolean grab) {
 		GLFW.glfwSetInputMode(ClientInternalSubsystem.getInstance().getGameWindow().getID(), GLFW.GLFW_CURSOR,
-				grab ? GLFW.GLFW_CURSOR_DISABLED : GLFW.GLFW_CURSOR_HIDDEN);
+				grab ? GLFW.GLFW_CURSOR_DISABLED : GLFW.GLFW_CURSOR_NORMAL);
 		grabbed = grab;
-	}
-
-	public static void setHidden(boolean hidden) {
-		GLFW.glfwSetInputMode(ClientInternalSubsystem.getInstance().getGameWindow().getID(), GLFW.GLFW_CURSOR,
-				hidden ? GLFW.GLFW_CURSOR_HIDDEN : GLFW.GLFW_CURSOR_NORMAL);
 	}
 
 	public static boolean isGrabbed() {

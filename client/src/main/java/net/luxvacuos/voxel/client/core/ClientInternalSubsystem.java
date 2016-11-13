@@ -23,6 +23,7 @@ package net.luxvacuos.voxel.client.core;
 import java.io.File;
 
 import net.luxvacuos.igl.CustomLog;
+import net.luxvacuos.voxel.client.rendering.api.glfw.Icon;
 import net.luxvacuos.voxel.client.rendering.api.glfw.PixelBufferHandle;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.glfw.WindowHandle;
@@ -63,11 +64,10 @@ public class ClientInternalSubsystem extends AbstractInternalSubsystem {
 		gameSettings.load(new File(ClientVariables.SETTINGS_PATH));
 		gameSettings.read();
 
-		String[] icons = new String[] { "assets/" + ClientVariables.assets + "/icons/icon32.png",
-				"assets/" + ClientVariables.assets + "/icons/icon64.png" };
+		Icon[] icons = new Icon[] { new Icon("icon32"), new Icon("icon64") };
 
 		WindowHandle handle = WindowManager.generateHandle(ClientVariables.WIDTH, ClientVariables.HEIGHT, "Voxel");
-		handle.canResize(false).isVisible(false).setIcon(icons);
+		handle.canResize(false).isVisible(false).setIcon(icons).setCursor("normal");
 		PixelBufferHandle pb = new PixelBufferHandle();
 		pb.setDepthBits(32);
 		pb.setRedBits(16);

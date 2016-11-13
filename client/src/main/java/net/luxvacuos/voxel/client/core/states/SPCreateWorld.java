@@ -100,7 +100,6 @@ public class SPCreateWorld extends AbstractFadeState {
 		worldName = window.getKeyboardHandler().handleInput(worldName);
 		UIRendering.renderSearchBox(window.getID(), worldName, "Roboto-Regular", "Entypo",
 				window.getWidth() / 2f - 150f, window.getHeight() / 2f - 85, 300, 20);
-		UIRendering.renderMouse(window.getID());
 		window.endNVGFrame();
 	}
 
