@@ -67,7 +67,7 @@ public class ClientInternalSubsystem extends AbstractInternalSubsystem {
 		Icon[] icons = new Icon[] { new Icon("icon32"), new Icon("icon64") };
 
 		WindowHandle handle = WindowManager.generateHandle(ClientVariables.WIDTH, ClientVariables.HEIGHT, "Voxel");
-		handle.canResize(false).isVisible(false).setIcon(icons).setCursor("normal");
+		handle.canResize(false).isVisible(false).setIcon(icons).setCursor("arrow");
 		PixelBufferHandle pb = new PixelBufferHandle();
 		pb.setDepthBits(32);
 		pb.setRedBits(16);
