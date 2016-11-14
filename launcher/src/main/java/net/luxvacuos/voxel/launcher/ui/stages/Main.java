@@ -165,13 +165,13 @@ public class Main extends BorderPane {
 		Text w = new Text("Width");
 		resOpts.add(w, 0, 0);
 
-		wf = new TextField();
+		wf = new TextField("1280");
 		resOpts.add(wf, 1, 0);
 
 		Text h = new Text("Height");
 		resOpts.add(h, 0, 1);
 
-		hf = new TextField();
+		hf = new TextField("720");
 		resOpts.add(hf, 1, 1);
 
 		resGrid.add(resOpts, 0, 1);

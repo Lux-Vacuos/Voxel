@@ -67,6 +67,13 @@ public class Updater {
 			downloading = false;
 			downloadingVersion = null;
 			downloaded = true;
+			
+			if(username == null){
+				username = "anon";
+			}
+			if(username == ""){
+				username = "anon";
+			}
 
 			ProcessBuilder pb;
 			if (Bootstrap.getPlatform().equals(Platform.MACOSX)) {
