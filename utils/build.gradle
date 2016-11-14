@@ -5,4 +5,4 @@ sourceSets.main.java.srcDirs = ["src/main/java"]
 sourceSets.main.resources.srcDirs = ["src/main/resources"]
 sourceSets.test.java.srcDirs = ["${projectDir}/src/test/java/"]
 
-jar { version = "0.0.2" }
+jar { version = "0.0.3" }
