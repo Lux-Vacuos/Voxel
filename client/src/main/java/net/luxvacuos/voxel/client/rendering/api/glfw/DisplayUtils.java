@@ -57,6 +57,7 @@ public class DisplayUtils {
 	}
 
 	public void checkErrors() {
+		/*
 		switch (glGetError()) {
 		case GL_INVALID_ENUM:
 			throw new OpenGLException("GL_INVALID_ENUM");
@@ -75,7 +76,7 @@ public class DisplayUtils {
 		case GL_CONTEXT_LOST:
 			throw new OpenGLException("GL_CONTEXT_LOST");
 		}
-
+*/
 	}
 
 	public void sync(int fps) {
