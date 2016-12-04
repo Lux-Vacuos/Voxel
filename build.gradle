@@ -1,6 +1,6 @@
 import org.gradle.internal.os.OperatingSystem
 
-task wrapper(type: Wrapper) { gradleVersion = '3.2-rc-3' }
+task wrapper(type: Wrapper) { gradleVersion = '3.2.1' }
 
 subprojects {
 	apply plugin: "eclipse"
