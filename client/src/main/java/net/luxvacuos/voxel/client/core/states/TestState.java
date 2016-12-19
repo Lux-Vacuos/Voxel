@@ -144,6 +144,8 @@ public class TestState extends AbstractState {
 		sun.update(camera.getPosition(), worldSimulation.update(delta), delta);
 		ParticleMaster.getInstance().update(delta, camera);
 		KeyboardHandler kbh = ClientInternalSubsystem.getInstance().getGameWindow().getKeyboardHandler();
+		if (kbh.isCtrlPressed() && kbh.isAltPressed() & kbh.isKeyPressed(GLFW.GLFW_KEY_F10))
+			throw new RuntimeException("Crash caused by User. \n Generated using \"ctrl + alt + f10\".");
 
 		if (kbh.isKeyPressed(GLFW.GLFW_KEY_F1))
 			ClientVariables.debug = !ClientVariables.debug;
@@ -161,7 +163,7 @@ public class TestState extends AbstractState {
 
 	@Override
 	public void render(AbstractVoxel voxel, float alpha) {
-		Window window =  ClientInternalSubsystem.getInstance().getGameWindow();
+		Window window = ClientInternalSubsystem.getInstance().getGameWindow();
 
 		renderer.render(null
 

@@ -49,6 +49,7 @@ import net.luxvacuos.voxel.client.core.states.SPSelectionState;
 import net.luxvacuos.voxel.client.core.states.SplashScreenState;
 import net.luxvacuos.voxel.client.core.states.StateNames;
 import net.luxvacuos.voxel.client.core.states.TestState;
+import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.glfw.WindowManager;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.Timers;
@@ -266,6 +267,7 @@ public class Voxel extends AbstractVoxel {
 		if (!StateMachine.isRunning())
 			StateMachine.run();
 		StateMachine.setCurrentState(StateNames.CRASH);
+		Mouse.setGrabbed(false);
 		loop();
 		dispose();
 	}

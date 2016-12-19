@@ -91,7 +91,7 @@ public class CrashState extends AbstractState {
 		error.setAlign(NVG_ALIGN_MIDDLE);
 		error.setFont("Px437_IBM_VGA8");
 
-		errorMessage = new UIParagraph(t.getMessage(), -370, -55, 740, 400, 740, 400);
+		errorMessage = new UIParagraph(t.getMessage(), -370, -40, 740, 400, 740, 400);
 		errorMessage.setFont("Px437_IBM_VGA8");
 
 		uIPanel.addChildren(titleBack);
