@@ -24,7 +24,7 @@ import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.glfw.WindowManager;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.UIRendering;
 
-public class UIWindow extends Component {
+public class UIWindow extends UIComponent {
 
 	private String title, font = "Roboto-Bold";
 	private boolean draggable = false;

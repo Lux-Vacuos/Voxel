@@ -22,11 +22,11 @@ package net.luxvacuos.voxel.client.ui;
 
 import org.lwjgl.nanovg.NanoVG;
 
-public class World extends Component {
+public class World extends UIComponent {
 
 	private String name;
 	private UIWindow info;
-	private Panel panel;
+	private UIPanel uIPanel;
 	private boolean selected = false;
 
 	public World(float x, float y, float w, float h, String name) {
@@ -34,16 +34,16 @@ public class World extends Component {
 		this.y = y;
 		this.width = w;
 		this.height = h;
-		panel = new Panel(0, 0, w, h);
-		panel.setBorderColor(0, 0, 0, 255);
-		panel.setFillColor(255, 255, 255, 100);
-		addChildren(panel);
+		uIPanel = new UIPanel(0, 0, w, h);
+		uIPanel.setBorderColor(0, 0, 0, 255);
+		uIPanel.setFillColor(255, 255, 255, 100);
+		addChildren(uIPanel);
 
-		Text text = new Text(name, 10, h / 2);
-		text.setColor(80, 80, 80, 255);
-		addChildren(text);
+		UIText uIText = new UIText(name, 10, h / 2);
+		uIText.setColor(80, 80, 80, 255);
+		addChildren(uIText);
 
-		Button btn = new Button(w - 60, 2, 58, h - 4, "Info");
+		UIButton btn = new UIButton(w - 60, 2, 58, h - 4, "Info");
 		btn.setOnButtonPress((button, delta) -> {
 			info.setEnabled(!info.isEnabled());
 		});
@@ -51,7 +51,7 @@ public class World extends Component {
 
 		info = new UIWindow(w + 10, h, 300, 200, "World " + name + " info");
 		info.setEnabled(false);
-		Text infoText = new Text("WORK IN PROGRESS", 150, -100);
+		UIText infoText = new UIText("WORK IN PROGRESS", 150, -100);
 		infoText.setAlign(NanoVG.NVG_ALIGN_CENTER);
 		info.addChildren(infoText);
 
@@ -64,7 +64,7 @@ public class World extends Component {
 	}
 
 	public boolean isPressed() {
-		return panel.pressed();
+		return uIPanel.pressed();
 	}
 
 	public boolean isSelected() {
@@ -73,9 +73,9 @@ public class World extends Component {
 
 	public void setSelected(boolean selected) {
 		if (selected)
-			panel.setFillColor(255, 255, 255, 255);
+			uIPanel.setFillColor(255, 255, 255, 255);
 		else
-			panel.setFillColor(255, 255, 255, 100);
+			uIPanel.setFillColor(255, 255, 255, 100);
 		this.selected = selected;
 	}
 

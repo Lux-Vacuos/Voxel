@@ -28,7 +28,7 @@ import org.lwjgl.nanovg.NanoVG;
 import net.luxvacuos.voxel.client.core.ClientInternalSubsystem;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Renderer;
-import net.luxvacuos.voxel.client.ui.Text;
+import net.luxvacuos.voxel.client.ui.UIText;
 import net.luxvacuos.voxel.client.ui.UIWindow;
 import net.luxvacuos.voxel.universal.core.AbstractVoxel;
 import net.luxvacuos.voxel.universal.core.states.AbstractState;
@@ -45,13 +45,17 @@ public class SPLoadingState extends AbstractState {
 
 	public SPLoadingState() {
 		super(StateNames.SP_LOADING);
+	}
+
+	@Override
+	public void init() {
 		Window window = ClientInternalSubsystem.getInstance().getGameWindow();
 		uiWindow = new UIWindow(20, window.getHeight() - 20, window.getWidth() - 40, window.getHeight() - 40,
 				"Loading World");
 
-		Text text = new Text("Loading World", uiWindow.getWidth() / 2, uiWindow.getHeight());
-		text.setAlign(NanoVG.NVG_ALIGN_CENTER);
-		uiWindow.addChildren(text);
+		UIText uIText = new UIText("Loading World", uiWindow.getWidth() / 2, uiWindow.getHeight());
+		uIText.setAlign(NanoVG.NVG_ALIGN_CENTER);
+		uiWindow.addChildren(uIText);
 	}
 
 	@Override
@@ -66,7 +70,7 @@ public class SPLoadingState extends AbstractState {
 
 	@Override
 	public void render(AbstractVoxel voxel, float delta) {
-		Window window =  ClientInternalSubsystem.getInstance().getGameWindow();
+		Window window = ClientInternalSubsystem.getInstance().getGameWindow();
 		Renderer.clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		Renderer.clearColors(1, 1, 1, 1);
 		window.beingNVGFrame();

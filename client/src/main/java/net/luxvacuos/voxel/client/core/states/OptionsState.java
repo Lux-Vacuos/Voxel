@@ -28,7 +28,7 @@ import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Renderer;
-import net.luxvacuos.voxel.client.ui.Button;
+import net.luxvacuos.voxel.client.ui.UIButton;
 import net.luxvacuos.voxel.client.ui.UIWindow;
 import net.luxvacuos.voxel.universal.core.AbstractVoxel;
 import net.luxvacuos.voxel.universal.core.states.StateMachine;
@@ -40,34 +40,38 @@ import net.luxvacuos.voxel.universal.core.states.StateMachine;
  */
 public class OptionsState extends AbstractFadeState {
 
-	private Button exitButton;
-	private Button dofButton;
-	private Button shadowsButton;
-	private Button godraysButton;
-	private Button fxaaButton;
-	private Button motionBlurButton;
-	private Button reflectionsButton;
-	private Button parallaxButton;
-	private Button ambientOccButton;
+	private UIButton exitButton;
+	private UIButton dofButton;
+	private UIButton shadowsButton;
+	private UIButton godraysButton;
+	private UIButton fxaaButton;
+	private UIButton motionBlurButton;
+	private UIButton reflectionsButton;
+	private UIButton parallaxButton;
+	private UIButton ambientOccButton;
 	private UIWindow uiWindow;
 
 	public OptionsState() {
 		super(StateNames.OPTIONS);
+	}
+	
+	@Override
+	public void init() {
 		Window window = ClientInternalSubsystem.getInstance().getGameWindow();
 		uiWindow = new UIWindow(20, window.getHeight() - 20, window.getWidth() - 40, window.getHeight() - 40,
 				"Options");
 
-		exitButton = new Button(uiWindow.getWidth() / 2 - 100, -uiWindow.getHeight() + 35, 200, 40, "Back");
-		godraysButton = new Button(40, -110, 200, 40, "Volumetric Light");
-		shadowsButton = new Button(40, -170, 200, 40, "Shadows");
-		dofButton = new Button(40, -230, 200, 40, "Depth of Field");
-		fxaaButton = new Button(40, -290, 200, 40, "FXAA");
-		motionBlurButton = new Button(40, -350, 200, 40, "Motion Blur");
+		exitButton = new UIButton(uiWindow.getWidth() / 2 - 100, -uiWindow.getHeight() + 35, 200, 40, "Back");
+		godraysButton = new UIButton(40, -110, 200, 40, "Volumetric Light");
+		shadowsButton = new UIButton(40, -170, 200, 40, "Shadows");
+		dofButton = new UIButton(40, -230, 200, 40, "Depth of Field");
+		fxaaButton = new UIButton(40, -290, 200, 40, "FXAA");
+		motionBlurButton = new UIButton(40, -350, 200, 40, "Motion Blur");
 
-		reflectionsButton = new Button(260, -110, 200, 40, "Reflections");
-		parallaxButton = new Button(260, -170, 200, 40, "Parallax");
+		reflectionsButton = new UIButton(260, -110, 200, 40, "Reflections");
+		parallaxButton = new UIButton(260, -170, 200, 40, "Parallax");
 
-		ambientOccButton = new Button(260, -230, 200, 40, "Ambient Occlusion");
+		ambientOccButton = new UIButton(260, -230, 200, 40, "Ambient Occlusion");
 
 		if (ClientVariables.useVolumetricLight) {
 			godraysButton.setText("Volumetric Light: ON");
@@ -240,7 +244,6 @@ public class OptionsState extends AbstractFadeState {
 		uiWindow.addChildren(motionBlurButton);
 		uiWindow.addChildren(reflectionsButton);
 		uiWindow.addChildren(ambientOccButton);
-
 	}
 
 	@Override

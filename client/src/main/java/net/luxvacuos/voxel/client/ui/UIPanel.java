@@ -26,13 +26,14 @@ import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.glfw.WindowManager;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.UIRendering;
 
-public class Panel extends Component {
+public class UIPanel extends UIComponent {
 	private NVGColor fillColor = UIRendering.rgba(255, 255, 255, 200), 
 			gradientColor = UIRendering.rgba(32, 32, 32, 32),
 			borderColor = UIRendering.rgba(0, 0, 0, 255);
+	private float round = 4;
 	private OnAction onPress;
 
-	public Panel(float x, float y, float width, float height) {
+	public UIPanel(float x, float y, float width, float height) {
 		this.x = x;
 		this.y = y;
 		this.width = width;
@@ -43,7 +44,7 @@ public class Panel extends Component {
 	public void render(long windowID) {
 		UIRendering.renderBox(windowID, rootX + x,
 				WindowManager.getWindow(windowID).getHeight() - rootY - y - height, width, height,
-				fillColor, gradientColor, borderColor, fadeAlpha);
+				fillColor, gradientColor, borderColor, fadeAlpha, round);
 		super.render(windowID);
 	}
 
@@ -82,6 +83,10 @@ public class Panel extends Component {
 
 	public void setFillColor(int r, int g, int b, int a) {
 		UIRendering.rgba(r, g, b, a, fillColor);
+	}
+	
+	public void setRound(float round) {
+		this.round = round;
 	}
 
 	public boolean fadeIn(float time, float delta) {

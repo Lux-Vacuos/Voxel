@@ -28,6 +28,8 @@ public interface IVoxel {
 
 	public void postInit() throws Exception;
 
+	public void build();
+
 	public void loop();
 
 	public void update(float delta);

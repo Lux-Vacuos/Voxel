@@ -26,8 +26,8 @@ import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 import net.luxvacuos.voxel.client.core.ClientInternalSubsystem;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Renderer;
-import net.luxvacuos.voxel.client.ui.Image;
-import net.luxvacuos.voxel.client.ui.Panel;
+import net.luxvacuos.voxel.client.ui.UIImage;
+import net.luxvacuos.voxel.client.ui.UIPanel;
 import net.luxvacuos.voxel.universal.core.AbstractVoxel;
 
 /**
@@ -38,42 +38,45 @@ import net.luxvacuos.voxel.universal.core.AbstractVoxel;
  */
 public class SplashScreenState extends AbstractFadeState {
 
-	private Panel panel;
-	private Image luxVacuosLogo;
+	private UIPanel uIPanel;
+	private UIImage luxVacuosLogo;
 	private float wait = 0;
 
 	public SplashScreenState() {
 		super(StateNames.SPLASH_SCREEN);
-		Window window = ClientInternalSubsystem.getInstance().getGameWindow();
-		panel = new Panel(window.getWidth() / 2, window.getHeight() / 2, 0, 0);
-		panel.setBorderColor(0, 0, 0, 0);
-		panel.setFillColor(0, 0, 0, 0);
-		panel.setGradientColor(0, 0, 0, 0);
+	}
 
-		luxVacuosLogo = new Image(-256, 256, 512, 512, ClientInternalSubsystem.getInstance().getGameWindow()
+	@Override
+	public void init() {
+		Window window = ClientInternalSubsystem.getInstance().getGameWindow();
+		uIPanel = new UIPanel(window.getWidth() / 2, window.getHeight() / 2, 0, 0);
+		uIPanel.setBorderColor(0, 0, 0, 0);
+		uIPanel.setFillColor(0, 0, 0, 0);
+		uIPanel.setGradientColor(0, 0, 0, 0);
+
+		luxVacuosLogo = new UIImage(-256, 256, 512, 512, ClientInternalSubsystem.getInstance().getGameWindow()
 				.getResourceLoader().loadNVGTexture("LuxVacuos-Logo"));
 		/*
 		 * luxVacuosLogo.setOnUpdate(new OnAction() { private float speed = 0;
 		 * 
-		 * @Override public void onAction(Component component, float delta) {
-		 * Image img = (Image) component; if (img.getY() < 200 + 100 && speed <=
-		 * 1) speed += 1 * delta; else if (speed > 0) speed -= 1 * delta; else
-		 * speed = 0; speed = Maths.clamp(speed, 0, 1); img.addPosition(0,
-		 * speed); } });
+		 * @Override public void onAction(UIComponent component, float delta) {
+		 * UIImage img = (UIImage) component; if (img.getY() < 200 + 100 &&
+		 * speed <= 1) speed += 1 * delta; else if (speed > 0) speed -= 1 *
+		 * delta; else speed = 0; speed = Maths.clamp(speed, 0, 1);
+		 * img.addPosition(0, speed); } });
 		 */
 
-		panel.addChildren(luxVacuosLogo);
-
+		uIPanel.addChildren(luxVacuosLogo);
 	}
 
 	@Override
 	public void start() {
-		panel.setFadeAlpha(0);
+		uIPanel.setFadeAlpha(0);
 	}
 
 	@Override
 	public void end() {
-		panel.setFadeAlpha(1);
+		uIPanel.setFadeAlpha(1);
 	}
 
 	@Override
@@ -82,7 +85,7 @@ public class SplashScreenState extends AbstractFadeState {
 		Renderer.clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		Renderer.clearColors(1, 1, 1, 1);
 		window.beingNVGFrame();
-		panel.render(window.getID());
+		uIPanel.render(window.getID());
 		window.endNVGFrame();
 	}
 
@@ -90,7 +93,7 @@ public class SplashScreenState extends AbstractFadeState {
 	public void update(AbstractVoxel voxel, float delta) {
 		wait += 1 * delta;
 		if (wait > 2)
-			panel.update(delta);
+			uIPanel.update(delta);
 
 		if (wait > 3 && !this.switching)
 			this.switchTo(StateNames.MAIN_MENU);
@@ -100,12 +103,12 @@ public class SplashScreenState extends AbstractFadeState {
 
 	@Override
 	protected boolean fadeIn(float delta) {
-		return this.panel.fadeIn(4, delta);
+		return this.uIPanel.fadeIn(4, delta);
 	}
 
 	@Override
 	protected boolean fadeOut(float delta) {
-		return this.panel.fadeOut(4, delta);
+		return this.uIPanel.fadeOut(4, delta);
 	}
 
 }

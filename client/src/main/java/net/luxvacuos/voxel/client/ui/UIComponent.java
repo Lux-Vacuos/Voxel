@@ -26,9 +26,9 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import net.luxvacuos.voxel.client.core.exception.ComponentAdditionException;
 import net.luxvacuos.voxel.client.util.Maths;
 
-public abstract class Component {
+public abstract class UIComponent {
 
-	protected Queue<Component> childrens;
+	protected Queue<UIComponent> childrens;
 	protected float x, y;
 	protected float rootX, rootY;
 	protected float rootW, rootH;
@@ -37,34 +37,34 @@ public abstract class Component {
 	protected boolean enabled = true;
 	protected boolean positionRelativeToRoot = true;
 
-	public Component() {
+	public UIComponent() {
 		childrens = new ConcurrentLinkedQueue<>();
 	}
 
 	public void render(long windowID) {
 		if (enabled)
-			for (Component component : childrens) {
-				if (component.positionRelativeToRoot) {
-					component.rootX = x + rootX;
-					component.rootY = y + rootY;
-					component.rootW = width;
-					component.rootH = height;
+			for (UIComponent uIComponent : childrens) {
+				if (uIComponent.positionRelativeToRoot) {
+					uIComponent.rootX = x + rootX;
+					uIComponent.rootY = y + rootY;
+					uIComponent.rootW = width;
+					uIComponent.rootH = height;
 				}
-				component.fadeAlpha = fadeAlpha;
-				component.render(windowID);
+				uIComponent.fadeAlpha = fadeAlpha;
+				uIComponent.render(windowID);
 			}
 	}
 
 	public void update(float delta) {
 		if (enabled) {
 			Maths.clamp(fadeAlpha, 0, 1);
-			for (Component component : childrens) {
-				component.update(delta);
+			for (UIComponent uIComponent : childrens) {
+				uIComponent.update(delta);
 			}
 		}
 	}
 
-	public void addChildren(Component comp) {
+	public void addChildren(UIComponent comp) {
 		if (comp.equals(this))
 			throw new ComponentAdditionException("Can't add the same object");
 		childrens.add(comp);
@@ -101,7 +101,7 @@ public abstract class Component {
 		return height;
 	}
 
-	public Queue<Component> getChildrens() {
+	public Queue<UIComponent> getChildrens() {
 		return childrens;
 	}
 

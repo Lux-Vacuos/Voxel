@@ -30,9 +30,9 @@ import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.core.CoreInfo;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Renderer;
-import net.luxvacuos.voxel.client.ui.Button;
-import net.luxvacuos.voxel.client.ui.Image;
-import net.luxvacuos.voxel.client.ui.Text;
+import net.luxvacuos.voxel.client.ui.UIButton;
+import net.luxvacuos.voxel.client.ui.UIImage;
+import net.luxvacuos.voxel.client.ui.UIText;
 import net.luxvacuos.voxel.client.ui.UIWindow;
 import net.luxvacuos.voxel.universal.core.AbstractVoxel;
 
@@ -45,59 +45,63 @@ import net.luxvacuos.voxel.universal.core.AbstractVoxel;
 public class AboutState extends AbstractFadeState {
 
 	private UIWindow uiWindow;
-	private Image voxelLogo;
+	private UIImage voxelLogo;
 
 	public AboutState() {
 		super(StateNames.ABOUT);
+	}
+
+	@Override
+	public void init() {
 		Window window = ClientInternalSubsystem.getInstance().getGameWindow();
 		uiWindow = new UIWindow(20, window.getHeight() - 20, window.getWidth() - 40, window.getHeight() - 40, "About");
-		Button backButton = new Button((int) (window.getWidth() / 2f - 100), 40, 200, 40, "Back");
+		UIButton backButton = new UIButton((int) (window.getWidth() / 2f - 100), 40, 200, 40, "Back");
 		backButton.setOnButtonPress((button, delta) -> {
 			this.switchTo(StateNames.MAIN_MENU);
 		});
 
-		voxelLogo = new Image(uiWindow.getWidth() / 2 - 200, -40, 400, 200,
+		voxelLogo = new UIImage(uiWindow.getWidth() / 2 - 200, -40, 400, 200,
 				ClientInternalSubsystem.getInstance().getGameWindow().getResourceLoader().loadNVGTexture("Voxel-Logo"));
 		uiWindow.addChildren(voxelLogo);
 
-		Text versionL = new Text("Version", 30, -300);
+		UIText versionL = new UIText("Version", 30, -300);
 		versionL.setFont("Roboto-Bold");
-		Text versionR = new Text(" (" + ClientVariables.version + ")", uiWindow.getWidth() - 30, -300);
+		UIText versionR = new UIText(" (" + ClientVariables.version + ")", uiWindow.getWidth() - 30, -300);
 		versionR.setAlign(NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE);
 
-		Text osL = new Text("Operative System", 30, -330);
+		UIText osL = new UIText("Operative System", 30, -330);
 		osL.setFont("Roboto-Bold");
-		Text osR = new Text(CoreInfo.OS, uiWindow.getWidth() - 30, -330);
+		UIText osR = new UIText(CoreInfo.OS, uiWindow.getWidth() - 30, -330);
 		osR.setAlign(NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE);
 
-		Text lwjglL = new Text("LWJGL Version", 30, -360);
+		UIText lwjglL = new UIText("LWJGL Version", 30, -360);
 		lwjglL.setFont("Roboto-Bold");
-		Text lwjglR = new Text(CoreInfo.LWJGLVer, uiWindow.getWidth() - 30, -360);
+		UIText lwjglR = new UIText(CoreInfo.LWJGLVer, uiWindow.getWidth() - 30, -360);
 		lwjglR.setAlign(NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE);
 
-		Text glfwL = new Text("GLFW Version", 30, -390);
+		UIText glfwL = new UIText("GLFW Version", 30, -390);
 		glfwL.setFont("Roboto-Bold");
-		Text glfwR = new Text(CoreInfo.GLFWVer, uiWindow.getWidth() - 30, -390);
+		UIText glfwR = new UIText(CoreInfo.GLFWVer, uiWindow.getWidth() - 30, -390);
 		glfwR.setAlign(NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE);
 
-		Text openglL = new Text("OpenGL Version", 30, -420);
+		UIText openglL = new UIText("OpenGL Version", 30, -420);
 		openglL.setFont("Roboto-Bold");
-		Text openglR = new Text(CoreInfo.OpenGLVer, uiWindow.getWidth() - 30, -420);
+		UIText openglR = new UIText(CoreInfo.OpenGLVer, uiWindow.getWidth() - 30, -420);
 		openglR.setAlign(NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE);
 
-		Text vkL = new Text("Vulkan Version", 30, -450);
+		UIText vkL = new UIText("Vulkan Version", 30, -450);
 		vkL.setFont("Roboto-Bold");
-		Text vkR = new Text(CoreInfo.VkVersion, uiWindow.getWidth() - 30, -450);
+		UIText vkR = new UIText(CoreInfo.VkVersion, uiWindow.getWidth() - 30, -450);
 		vkR.setAlign(NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE);
 
-		Text vendorL = new Text("Vendor", 30, -480);
+		UIText vendorL = new UIText("Vendor", 30, -480);
 		vendorL.setFont("Roboto-Bold");
-		Text vendorR = new Text(CoreInfo.Vendor, uiWindow.getWidth() - 30, -480);
+		UIText vendorR = new UIText(CoreInfo.Vendor, uiWindow.getWidth() - 30, -480);
 		vendorR.setAlign(NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE);
 
-		Text rendererL = new Text("Renderer", 30, -510);
+		UIText rendererL = new UIText("Renderer", 30, -510);
 		rendererL.setFont("Roboto-Bold");
-		Text rendererR = new Text(CoreInfo.Renderer, uiWindow.getWidth() - 30, -510);
+		UIText rendererR = new UIText(CoreInfo.Renderer, uiWindow.getWidth() - 30, -510);
 		rendererR.setAlign(NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE);
 
 		backButton.setPositionRelativeToRoot(false);

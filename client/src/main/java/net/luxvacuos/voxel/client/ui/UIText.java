@@ -20,38 +20,51 @@
 
 package net.luxvacuos.voxel.client.ui;
 
+import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_LEFT;
+import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_MIDDLE;
+
+import org.lwjgl.nanovg.NVGColor;
+
 import net.luxvacuos.voxel.client.rendering.api.glfw.WindowManager;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.UIRendering;
 
-public class Image extends Component {
+public class UIText extends UIComponent {
 
-	private int image;
-	private OnAction onUpdate;
+	private String text, font = "Roboto-Regular";
+	private int align = NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE;
+	private int fontSize = 25;
+	private NVGColor color = UIRendering.rgba(255, 255, 255, 255, NVGColor.create());
 
-	public Image(float x, float y, float w, float h, int image) {
+	public UIText(String text, float x, float y) {
+		this.text = text;
 		this.x = x;
 		this.y = y;
-		this.width = w;
-		this.height = h;
-		this.image = image;
 	}
 
 	@Override
 	public void render(long windowID) {
-		UIRendering.renderImage(windowID, rootX + x, WindowManager.getWindow(windowID).getHeight() - rootY - y,
-				width, height, image, fadeAlpha);
+		UIRendering.renderText(windowID, text, font, align, rootX + x,
+				WindowManager.getWindow(windowID).getHeight() - rootY - y, fontSize, color, fadeAlpha);
 		super.render(windowID);
 	}
 
-	@Override
-	public void update(float delta) {
-		if (onUpdate != null)
-			onUpdate.onAction(this, delta);
-		super.update(delta);
+	public void setAlign(int align) {
+		this.align = align;
 	}
 
-	public void setOnUpdate(OnAction onUpdate) {
-		this.onUpdate = onUpdate;
+	public void setFont(String font) {
+		this.font = font;
 	}
 
+	public void setText(String text) {
+		this.text = text;
+	}
+
+	public void setColor(int r, int g, int b, int a) {
+		UIRendering.rgba(r, g, b, a, color);
+	}
+
+	public void setFontSize(int fontSize) {
+		this.fontSize = fontSize;
+	}
 }

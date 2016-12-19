@@ -34,7 +34,7 @@ import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Renderer;
-import net.luxvacuos.voxel.client.ui.Button;
+import net.luxvacuos.voxel.client.ui.UIButton;
 import net.luxvacuos.voxel.client.ui.UIWindow;
 import net.luxvacuos.voxel.client.ui.World;
 import net.luxvacuos.voxel.universal.core.AbstractVoxel;
@@ -49,9 +49,9 @@ import net.luxvacuos.voxel.universal.core.AbstractVoxel;
 public class SPSelectionState extends AbstractFadeState {
 
 	private UIWindow uiWindow;
-	private Button exitButton;
-	private Button playButton;
-	private Button createButton;
+	private UIButton exitButton;
+	private UIButton playButton;
+	private UIButton createButton;
 	private List<World> worlds;
 	private String worldName;
 	private int y = 0;
@@ -59,12 +59,16 @@ public class SPSelectionState extends AbstractFadeState {
 
 	public SPSelectionState() {
 		super("SP_Selection");
+	}
+	
+	@Override
+	public void init() {
 		Window window = ClientInternalSubsystem.getInstance().getGameWindow();
 		y = 0;
 		uiWindow = new UIWindow(20, window.getHeight() - 20, window.getWidth() - 40, window.getHeight() - 40, "Singleplayer");
-		exitButton = new Button(uiWindow.getWidth() - 230, -200, 200, 40, "Back");
-		playButton = new Button(uiWindow.getWidth() - 230, -150, 200, 40, "Load World");
-		createButton = new Button(uiWindow.getWidth() - 230, -100, 200, 40, "Create World");
+		exitButton = new UIButton(uiWindow.getWidth() - 230, -200, 200, 40, "Back");
+		playButton = new UIButton(uiWindow.getWidth() - 230, -150, 200, 40, "Load World");
+		createButton = new UIButton(uiWindow.getWidth() - 230, -100, 200, 40, "Create World");
 
 		exitButton.setOnButtonPress((button, delta) -> {
 			this.switchTo(StateNames.MAIN_MENU);

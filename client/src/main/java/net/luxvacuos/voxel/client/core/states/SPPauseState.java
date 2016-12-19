@@ -30,7 +30,7 @@ import net.luxvacuos.voxel.client.core.ClientInternalSubsystem;
 import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Renderer;
-import net.luxvacuos.voxel.client.ui.Button;
+import net.luxvacuos.voxel.client.ui.UIButton;
 import net.luxvacuos.voxel.client.ui.UIWindow;
 import net.luxvacuos.voxel.universal.core.AbstractVoxel;
 
@@ -42,16 +42,20 @@ import net.luxvacuos.voxel.universal.core.AbstractVoxel;
 public class SPPauseState extends AbstractFadeState {
 
 	private UIWindow uiWindow;
-	private Button exitButton;
-	private Button optionsButton;
+	private UIButton exitButton;
+	private UIButton optionsButton;
 
 	public SPPauseState() {
 		super(StateNames.SP_PAUSE);
+	}
+	
+	@Override
+	public void init() {
 		Window window = ClientInternalSubsystem.getInstance().getGameWindow();
 		uiWindow = new UIWindow(20, window.getHeight() - 20, window.getWidth() - 40, window.getHeight() - 40, "Pause");
-		exitButton = new Button(uiWindow.getWidth() / 2 - 100, -uiWindow.getHeight() + 35, 200, 40,
+		exitButton = new UIButton(uiWindow.getWidth() / 2 - 100, -uiWindow.getHeight() + 35, 200, 40,
 				"Back to Main Menu");
-		optionsButton = new Button(uiWindow.getWidth() / 2 - 100, -uiWindow.getHeight() + 85, 200, 40, "Options");
+		optionsButton = new UIButton(uiWindow.getWidth() / 2 - 100, -uiWindow.getHeight() + 85, 200, 40, "Options");
 		exitButton.setOnButtonPress((button, delta) -> {
 			this.switchTo(StateNames.MAIN_MENU);
 		});

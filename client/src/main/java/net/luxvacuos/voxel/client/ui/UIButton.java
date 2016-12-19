@@ -28,7 +28,7 @@ import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.glfw.WindowManager;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.UIRendering;
 
-public class Button extends Component {
+public class UIButton extends UIComponent {
 
 	private String text = "missigno", font = "Poppins-Medium", entypo = "Entypo";
 	private NVGColor color = UIRendering.rgba(255, 255, 255, 255);
@@ -36,7 +36,7 @@ public class Button extends Component {
 	private OnAction onPress;
 	private float fontSize = 21;
 
-	public Button(float x, float y, float width, float height, String text) {
+	public UIButton(float x, float y, float width, float height, String text) {
 		this.x = x;
 		this.y = y;
 		this.width = width;

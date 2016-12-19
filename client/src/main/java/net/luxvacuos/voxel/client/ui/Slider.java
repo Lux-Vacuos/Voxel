@@ -22,6 +22,7 @@ package net.luxvacuos.voxel.client.ui;
 
 import net.luxvacuos.voxel.client.input.Mouse;
 
+@Deprecated
 public class Slider {
 
 	private float pos;

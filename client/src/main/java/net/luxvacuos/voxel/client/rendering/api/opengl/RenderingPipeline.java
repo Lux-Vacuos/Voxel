@@ -116,9 +116,9 @@ public abstract class RenderingPipeline {
 	 * Creates the {@link RenderingPipelineFBO} and initializes variables.
 	 * 
 	 * @param width
-	 *            Final Image Width, can be higher that the window width.
+	 *            Final UIImage Width, can be higher that the window width.
 	 * @param height
-	 *            Final Image Height, can be higher that the window Height.
+	 *            Final UIImage Height, can be higher that the window Height.
 	 */
 	public RenderingPipeline(String name, int width, int height) throws Exception {
 		this.name = name;

@@ -39,6 +39,7 @@ import org.lwjgl.glfw.GLFWErrorCallback;
 import net.luxvacuos.igl.Logger;
 import net.luxvacuos.voxel.client.api.MoltenAPI;
 import net.luxvacuos.voxel.client.core.states.AboutState;
+import net.luxvacuos.voxel.client.core.states.CrashState;
 import net.luxvacuos.voxel.client.core.states.MainMenuState;
 import net.luxvacuos.voxel.client.core.states.OptionsState;
 import net.luxvacuos.voxel.client.core.states.SPCreateWorld;
@@ -78,7 +79,7 @@ public class Voxel extends AbstractVoxel {
 		super(bootstrap);
 		GLFW.glfwSetErrorCallback(this.errorfun);
 		super.engineType = EngineType.CLIENT;
-		loop();
+		build();
 	}
 
 	/**
@@ -107,7 +108,7 @@ public class Voxel extends AbstractVoxel {
 
 		if (!glfwInit())
 			throw new IllegalStateException("Unable to initialize GLFW");
-
+		
 		ClientVariables.SETTINGS_PATH = bootstrap.getPrefix() + "/config/settings.conf";
 		ClientVariables.WORLD_PATH = bootstrap.getPrefix() + "/world/";
 
@@ -117,6 +118,7 @@ public class Voxel extends AbstractVoxel {
 		Renderer.clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		Renderer.clearColors(1, 1, 1, 1);
 		ClientInternalSubsystem.getInstance().getGameWindow().updateDisplay(ClientVariables.FPS);
+		Timers.initDebugDisplay();
 		CoreInfo.platform = bootstrap.getPlatform();
 		CoreInfo.LWJGLVer = Version.getVersion();
 		CoreInfo.GLFWVer = GLFW.glfwGetVersionString();
@@ -171,7 +173,6 @@ public class Voxel extends AbstractVoxel {
 	public void postInit() throws Exception {
 		ClientInternalSubsystem.getInstance().getGameSettings().save();
 		modsHandler.postInit();
-		Timers.initDebugDisplay();
 		internalSubsystem.postInit();
 		StateMachine.setCurrentState(StateNames.SPLASH_SCREEN);
 	}
@@ -180,44 +181,52 @@ public class Voxel extends AbstractVoxel {
 	 * Main Loop
 	 */
 	@Override
-	public void loop() {
+	public void build() {
 		try {
 			preInit();
 			init();
 			postInit();
 			StateMachine.run();
-			float delta = 0;
-			float accumulator = 0f;
-			float interval = 1f / ClientVariables.UPS;
-			float alpha = 0;
-			Window window = ClientInternalSubsystem.getInstance().getGameWindow();
-			while (StateMachine.isRunning() && !(window.isCloseRequested())) {
-				Timers.startCPUTimer();
-				if (window.getTimeCount() > 1f) {
-					CoreInfo.ups = CoreInfo.upsCount;
-					CoreInfo.upsCount = 0;
-					window.setTimeCount(window.getTimeCount() - 1);
-				}
-				delta = window.getDelta();
-				accumulator += delta;
-				while (accumulator >= interval) {
-					update(interval);
-					accumulator -= interval;
-				}
-				alpha = accumulator / interval;
-				Timers.stopCPUTimer();
-				Timers.startGPUTimer();
-				render(alpha);
-				Timers.stopGPUTimer();
-				Timers.update();
-				window.updateDisplay(ClientVariables.FPS);
-				WindowManager.update();
-			}
+			loop();
 			dispose();
 			GLFW.glfwTerminate();
 		} catch (Throwable t) {
 			t.printStackTrace(System.err);
 			handleError(t);
+		}
+	}
+
+	/**
+	 * Main Loop
+	 */
+	@Override
+	public void loop() {
+		float delta = 0;
+		float accumulator = 0f;
+		float interval = 1f / ClientVariables.UPS;
+		float alpha = 0;
+		Window window = ClientInternalSubsystem.getInstance().getGameWindow();
+		while (StateMachine.isRunning() && !(window.isCloseRequested())) {
+			Timers.startCPUTimer();
+			if (window.getTimeCount() > 1f) {
+				CoreInfo.ups = CoreInfo.upsCount;
+				CoreInfo.upsCount = 0;
+				window.setTimeCount(window.getTimeCount() - 1);
+			}
+			delta = window.getDelta();
+			accumulator += delta;
+			while (accumulator >= interval) {
+				update(interval);
+				accumulator -= interval;
+			}
+			alpha = accumulator / interval;
+			Timers.stopCPUTimer();
+			Timers.startGPUTimer();
+			render(alpha);
+			Timers.stopGPUTimer();
+			Timers.update();
+			window.updateDisplay(ClientVariables.FPS);
+			WindowManager.update();
 		}
 	}
 
@@ -252,14 +261,13 @@ public class Voxel extends AbstractVoxel {
 	 */
 	@Override
 	public void handleError(Throwable e) {
-		try {
-			// TODO: Implement This (Guerra24)
-		} catch (NullPointerException t) {
-			e.printStackTrace();
-		} finally {
-			GLFW.glfwTerminate();
-		}
-
+		CrashState.t = e;
+		StateMachine.registerState(new CrashState());
+		if (!StateMachine.isRunning())
+			StateMachine.run();
+		StateMachine.setCurrentState(StateNames.CRASH);
+		loop();
+		dispose();
 	}
 
 	/**

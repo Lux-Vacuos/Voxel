@@ -32,29 +32,33 @@ import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 //import net.luxvacuos.voxel.client.input.Keyboard;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.UIRendering;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Renderer;
-import net.luxvacuos.voxel.client.ui.Button;
-import net.luxvacuos.voxel.client.ui.Text;
+import net.luxvacuos.voxel.client.ui.UIButton;
+import net.luxvacuos.voxel.client.ui.UIText;
 import net.luxvacuos.voxel.client.ui.UIWindow;
 import net.luxvacuos.voxel.universal.core.AbstractVoxel;
 
 public class SPCreateWorld extends AbstractFadeState {
 	private UIWindow uiWindow;
 	private String worldName = "";
-	private Text nameT;
-	private Text optionsT;
-	private Button createButton;
-	private Button backButton;
+	private UIText nameT;
+	private UIText optionsT;
+	private UIButton createButton;
+	private UIButton backButton;
 
 	public SPCreateWorld() {
 		super(StateNames.SP_CREATE_WORLD);
+	}
+
+	@Override
+	public void init() {
 		Window window = ClientInternalSubsystem.getInstance().getGameWindow();
 		uiWindow = new UIWindow(20, window.getHeight() - 20, window.getWidth() - 40, window.getHeight() - 40,
 				"Create World");
-		nameT = new Text("World Name", uiWindow.getWidth() / 2, -uiWindow.getHeight() / 2 + 100);
+		nameT = new UIText("World Name", uiWindow.getWidth() / 2, -uiWindow.getHeight() / 2 + 100);
 		nameT.setAlign(NVG_ALIGN_CENTER);
-		optionsT = new Text("Options", uiWindow.getWidth() / 2, -uiWindow.getHeight() / 2);
+		optionsT = new UIText("Options", uiWindow.getWidth() / 2, -uiWindow.getHeight() / 2);
 		optionsT.setAlign(NVG_ALIGN_CENTER);
-		createButton = new Button(uiWindow.getWidth() / 2 - 210, -uiWindow.getHeight() + 35, 200, 40, "Create World");
+		createButton = new UIButton(uiWindow.getWidth() / 2 - 210, -uiWindow.getHeight() + 35, 200, 40, "Create World");
 		createButton.setOnButtonPress((button, delta) -> {
 			if (!worldName.equals("")) {
 				window.getKeyboardHandler().disableTextInput();
@@ -63,7 +67,7 @@ public class SPCreateWorld extends AbstractFadeState {
 				worldName = "";
 			}
 		});
-		backButton = new Button(uiWindow.getWidth() / 2 + 10, -uiWindow.getHeight() + 35, 200, 40, "Back");
+		backButton = new UIButton(uiWindow.getWidth() / 2 + 10, -uiWindow.getHeight() + 35, 200, 40, "Back");
 		backButton.setOnButtonPress((button, delta) -> {
 			window.getKeyboardHandler().disableTextInput();
 			this.switchTo(StateNames.SP_SELECTION);

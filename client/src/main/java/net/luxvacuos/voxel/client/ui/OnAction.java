@@ -22,6 +22,6 @@ package net.luxvacuos.voxel.client.ui;
 
 public interface OnAction {
 
-	public void onAction(Component component, float delta);
+	public void onAction(UIComponent uIComponent, float delta);
 
 }

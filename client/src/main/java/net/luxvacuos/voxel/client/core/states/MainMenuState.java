@@ -26,7 +26,7 @@ import net.luxvacuos.voxel.client.core.ClientInternalSubsystem;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.UIRendering;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Renderer;
-import net.luxvacuos.voxel.client.ui.Button;
+import net.luxvacuos.voxel.client.ui.UIButton;
 import net.luxvacuos.voxel.client.ui.UIWindow;
 import net.luxvacuos.voxel.universal.core.AbstractVoxel;
 import net.luxvacuos.voxel.universal.core.states.StateMachine;
@@ -38,26 +38,30 @@ import net.luxvacuos.voxel.universal.core.states.StateMachine;
  */
 public class MainMenuState extends AbstractFadeState {
 
-	private Button playButton;
-	private Button exitButton;
-	private Button optionsButton;
-	private Button aboutButton;
-	private Button playMPButton;
+	private UIButton playButton;
+	private UIButton exitButton;
+	private UIButton optionsButton;
+	private UIButton aboutButton;
+	private UIButton playMPButton;
 	private UIWindow uiWindow;
 
 	public MainMenuState() {
 		super(StateNames.MAIN_MENU);
+	}
+	
+	@Override
+	public void init() {
 		Window window = ClientInternalSubsystem.getInstance().getGameWindow();
 		uiWindow = new UIWindow(20, window.getHeight() - 20, window.getWidth() - 40, window.getHeight() - 40,
 				"Main Menu");
 
-		playButton = new Button(uiWindow.getWidth() / 2 - 100, -uiWindow.getHeight() / 2 + 120 - 20, 200, 40,
+		playButton = new UIButton(uiWindow.getWidth() / 2 - 100, -uiWindow.getHeight() / 2 + 120 - 20, 200, 40,
 				"Singleplayer");
-		playMPButton = new Button(uiWindow.getWidth() / 2 - 100, -uiWindow.getHeight() / 2 + 60 - 20, 200, 40,
+		playMPButton = new UIButton(uiWindow.getWidth() / 2 - 100, -uiWindow.getHeight() / 2 + 60 - 20, 200, 40,
 				"Multiplayer");
-		optionsButton = new Button(uiWindow.getWidth() / 2 - 100, -uiWindow.getHeight() / 2 - 20, 200, 40, "Options");
-		aboutButton = new Button(uiWindow.getWidth() / 2 - 100, -uiWindow.getHeight() / 2 - 60 - 20, 200, 40, "About");
-		exitButton = new Button(uiWindow.getWidth() / 2 - 100, -uiWindow.getHeight() / 2 - 120 - 20, 200, 40, "Exit");
+		optionsButton = new UIButton(uiWindow.getWidth() / 2 - 100, -uiWindow.getHeight() / 2 - 20, 200, 40, "Options");
+		aboutButton = new UIButton(uiWindow.getWidth() / 2 - 100, -uiWindow.getHeight() / 2 - 60 - 20, 200, 40, "About");
+		exitButton = new UIButton(uiWindow.getWidth() / 2 - 100, -uiWindow.getHeight() / 2 - 120 - 20, 200, 40, "Exit");
 
 		playButton.setPreicon(UIRendering.ICON_BLACK_RIGHT_POINTING_TRIANGLE);
 		playMPButton.setPreicon(UIRendering.ICON_BLACK_RIGHT_POINTING_TRIANGLE);
