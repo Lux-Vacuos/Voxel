@@ -55,15 +55,15 @@ void main(void){
     			vec3 refl = normalize(reflect(cameraToWorldNorm, normal));
 				float cosAngle = abs(dot(normal, cameraToWorldNorm));
     			float fresnel = 1 - cosAngle;
-				fresnel = min(1, 1.3333 - fresnel*fresnel);
+				fresnel = min(1, 1.15 - fresnel*fresnel);
     			vec3 newPos;
     			vec4 newScreen;
     			vec3 rayTrace = worldStartingPos;
     			float currentWorldDist, rayDist;
-    			float incr = 0.1;
+    			float incr = 0.2;
     			do {
 	        		rayTrace += refl*incr;
-        			incr *= 1.1;
+        			incr *= 1.2;
         			newScreen = projectionMatrix * viewMatrix * vec4(rayTrace, 1);
         			newScreen /= newScreen.w;
         			newPos = texture(gPosition, newScreen.xy/2.0+0.5).xyz;
@@ -85,7 +85,7 @@ void main(void){
 		        	fact = 0.0;
 
 				vec4 finalReflection = mix(enviromentMap, newColor, fact);
-				image = image*fresnel + finalReflection * (1-fresnel);
+				image = image*fresnel + clamp(finalReflection, 0.0, 1.0) * (1-fresnel);
     		}
 		}
 	}

@@ -58,7 +58,6 @@ public class PlayerCamera extends Camera {
 				.setBoundingBox(new Vector3d(-0.25f, -1.4f, -0.25f), new Vector3d(0.25f, 0.2f, 0.25f)));
 		this.speed = 1f;
 		super.add(new Health(20));
-		flyMode = true;
 		if (flyMode)
 			Components.AABB.get(this).setEnabled(false);
 		this.viewMatrix = Maths.createViewMatrix(this);

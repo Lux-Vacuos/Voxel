@@ -116,11 +116,12 @@ void main(void){
 
 	float normalDotLight = max(dot(vec3(0,1,0),L),0.002);
     finalColour *= normalDotLight;
-
+	finalColour = mix (vec4(0.0), finalColour, factorSun);
 	float smoothSphere = (0.9995 - vl) / (0.9995 - 0.9999);
 	if(vl > 0.9995){
 		finalColour = mix(finalColour, mix(finalColour, vec4(2.0), smoothSphere), factorSun);
 	}
+
     if(vl > 0.5) {
 		f = 1 * factorSun;
 	}

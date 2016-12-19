@@ -17,16 +17,16 @@ public class EntityResources {
 		Texture planeNormal = new Texture(loader.loadTextureEntityMisc("test_norm"));
 
 		RawModel testModel = loader.loadObjModel("test");
-		testMat = new Material(new Vector4f(0.8f, 0.8f, 0.8f, 1), 0.5f, 0f, 0.0f, new Texture(0), planeNormal);
+		testMat = new Material(new Vector4f(0.8f, 0.8f, 0.8f, 1), 0f, 0f, 1.0f, new Texture(0), planeNormal);
 		test = new TexturedModel(testModel, testMat);
 
 		RawModel planeModel = loader.loadObjModel("plane");
-		planeMat = new Material(new Vector4f(-1), 0.6f, 0, 1.0f, new Texture(loader.loadTextureEntity("plane")),
+		planeMat = new Material(new Vector4f(-1), 0.6f, 0, 0.0f, new Texture(loader.loadTextureEntity("plane")),
 				new Texture(loader.loadTextureEntityMisc("plane_norm")));
 		plane = new TexturedModel(planeModel, planeMat);
 
 		RawModel dragonModel = loader.loadObjModel("stanford");
-		dragonMat = new Material(new Vector4f(1.000f, 0.766f, 0.336f, 1), 0.05f, 0, 0.0f, new Texture(0), planeNormal);
+		dragonMat = new Material(new Vector4f(1.000f, 0.766f, 0.336f, 1), 0.0f, 0, 1.0f, new Texture(0), planeNormal);
 		dragon = new TexturedModel(dragonModel, dragonMat);
 	}
 

@@ -270,6 +270,7 @@ public class Voxel extends AbstractVoxel {
 		Mouse.setGrabbed(false);
 		loop();
 		dispose();
+		GLFW.glfwTerminate();
 	}
 
 	/**

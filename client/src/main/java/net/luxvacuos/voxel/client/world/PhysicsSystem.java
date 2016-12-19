@@ -63,8 +63,7 @@ public class PhysicsSystem extends EntitySystem {
 				((AbstractEntity) entity).update(delta);
 
 			velocity.setX(velocity.getX() * 0.7f - velocity.getX() * 0.0001f);
-			velocity.setY(velocity.getY() * 0.7f - velocity.getY() * 0.0001f);
-			// velocity.setY(velocity.getY() + -9.8f * deltaTime);
+			velocity.setY(velocity.getY() - 9.8f * delta);
 			velocity.setZ(velocity.getZ() * 0.7f - velocity.getZ() * 0.0001f);
 
 			aabb.update(pos.getPosition());
@@ -135,6 +134,10 @@ public class PhysicsSystem extends EntitySystem {
 
 	public List<BoundingBox> getBoxes() {
 		return boxes;
+	}
+
+	public void addBox(BoundingBox box) {
+		boxes.add(box);
 	}
 
 }

@@ -29,7 +29,7 @@ uniform vec3 lightPosition;
 uniform sampler2D gDiffuse;
 uniform sampler2D gPosition;
 uniform sampler2D gNormal;
-uniform sampler2D gPBR; // R = roughness, B = metallic
+uniform sampler2D gPBR; // R = roughness, G = metallic, B = specular
 uniform sampler2D gMask;
 uniform sampler2D composite0;
 uniform int shadowDrawDistance;
@@ -70,8 +70,8 @@ void main(void){
     	float finalLight = normalDotLight - (position.w * fadeOut);
     	finalLight = max(finalLight, 0.015);
     	image = finalLight * image;
-    	if(position.w <= 0.5 && normalDotLight > 0){
-			image += beckmannSpecular(lightDir.xyz, eyeDir, normal.xyz, pbr.r) * max((1-pbr.r), 0.1);
+    	if(position.w <= 0.5 && pbr.r > 0.0){
+			image += beckmannSpecular(lightDir.xyz, eyeDir, normal.xyz, pbr.r);
 	   	}
 	}
     image += texture(composite0, texcoord);

@@ -8,7 +8,6 @@ public abstract class AbstractEntity extends Entity {
 	}
 	
 	public void afterUpdate(float delta){
-		
 	}
 
 }

@@ -23,6 +23,8 @@ package net.luxvacuos.voxel.client.core.states;
 import org.lwjgl.glfw.GLFW;
 
 import com.badlogic.ashley.core.Engine;
+import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.math.collision.BoundingBox;
 
 import net.luxvacuos.igl.vector.Matrix4d;
 import net.luxvacuos.igl.vector.Vector3d;
@@ -89,6 +91,7 @@ public class TestState extends AbstractState {
 				ClientVariables.FOV, ClientVariables.NEAR_PLANE, ClientVariables.FAR_PLANE);
 
 		camera = new PlayerCamera(projectionMatrix, window);
+		camera.setPosition(new Vector3d(0,2,0));
 		sun = new Sun(shadowProjectionMatrix);
 
 		worldSimulation = new ClientWorldSimulation();
@@ -102,6 +105,7 @@ public class TestState extends AbstractState {
 		worldSimulation = new ClientWorldSimulation();
 		engine = new Engine();
 		physicsSystem = new PhysicsSystem();
+		physicsSystem.addBox(new BoundingBox(new Vector3(-15, -1, -15), new Vector3(15, 0, 15)));
 		engine.addSystem(physicsSystem);
 		t = new Test(new Vector3d(0, 1, 0));
 		plane = new Plane();
@@ -140,7 +144,6 @@ public class TestState extends AbstractState {
 	@Override
 	public void update(AbstractVoxel voxel, float delta) {
 		engine.update(delta);
-
 		sun.update(camera.getPosition(), worldSimulation.update(delta), delta);
 		ParticleMaster.getInstance().update(delta, camera);
 		KeyboardHandler kbh = ClientInternalSubsystem.getInstance().getGameWindow().getKeyboardHandler();

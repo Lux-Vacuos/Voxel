@@ -172,8 +172,8 @@ public final class WindowManager {
 			if (!stbi_info_from_memory(imageBuffer, w, h, comp))
 				throw new DecodeTextureException("Failed to read image information: " + stbi_failure_reason());
 
-			Logger.log("UIImage width: " + w.get(0), "UIImage height: " + h.get(0), "UIImage components: " + comp.get(0),
-					"UIImage HDR: " + stbi_is_hdr_from_memory(imageBuffer));
+			Logger.log("Image width: " + w.get(0), "Image height: " + h.get(0), "Image components: " + comp.get(0),
+					"Image HDR: " + stbi_is_hdr_from_memory(imageBuffer));
 
 			ByteBuffer image = stbi_load_from_memory(imageBuffer, w, h, comp, 0);
 			if (image == null)
@@ -204,8 +204,8 @@ public final class WindowManager {
 				if (!stbi_info_from_memory(imageBuffer, w, h, comp))
 					throw new DecodeTextureException("Failed to read image information: " + stbi_failure_reason());
 
-				Logger.log("UIImage width: " + w.get(0), "UIImage height: " + h.get(0), "UIImage components: " + comp.get(0),
-						"UIImage HDR: " + stbi_is_hdr_from_memory(imageBuffer));
+				Logger.log("Image width: " + w.get(0), "Image height: " + h.get(0), "Image components: " + comp.get(0),
+						"Image HDR: " + stbi_is_hdr_from_memory(imageBuffer));
 
 				icon.image = stbi_load_from_memory(imageBuffer, w, h, comp, 0);
 				if (icon.image == null)
