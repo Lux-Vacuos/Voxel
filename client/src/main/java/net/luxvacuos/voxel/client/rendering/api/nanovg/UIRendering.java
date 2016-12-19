@@ -22,7 +22,7 @@ package net.luxvacuos.voxel.client.rendering.api.nanovg;
 
 import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_CENTER;
 import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_LEFT;
-import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_MIDDLE;
+import static org.lwjgl.nanovg.NanoVG.*;
 import static org.lwjgl.nanovg.NanoVG.NVG_HOLE;
 import static org.lwjgl.nanovg.NanoVG.NVG_PI;
 import static org.lwjgl.nanovg.NanoVG.nvgBeginPath;
@@ -51,17 +51,19 @@ import static org.lwjgl.nanovg.NanoVG.nvgText;
 import static org.lwjgl.nanovg.NanoVG.nvgTextAlign;
 import static org.lwjgl.nanovg.NanoVG.nvgTextBounds;
 import static org.lwjgl.system.MemoryUtil.NULL;
-import static org.lwjgl.system.MemoryUtil.memASCII;
 import static org.lwjgl.system.MemoryUtil.memAllocInt;
-import static org.lwjgl.system.MemoryUtil.memFree;
 import static org.lwjgl.system.MemoryUtil.memUTF8;
+import static org.lwjgl.system.MemoryUtil.*;
 
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
+import org.lwjgl.BufferUtils;
 import org.lwjgl.nanovg.NVGColor;
+import org.lwjgl.nanovg.NVGGlyphPosition;
 import org.lwjgl.nanovg.NVGPaint;
+import org.lwjgl.nanovg.NVGTextRow;
 
 import net.luxvacuos.voxel.client.rendering.api.glfw.WindowManager;
 
@@ -90,6 +92,10 @@ public class UIRendering {
 	public static final ByteBuffer ICON_GEAR = cpToUTF8(0x2699);
 	public static final ByteBuffer ICON_BLACK_RIGHT_POINTING_TRIANGLE = cpToUTF8(0x25B6);
 
+	private static final NVGGlyphPosition.Buffer glyphs = NVGGlyphPosition.create(100);
+	private static final FloatBuffer lineh = BufferUtils.createFloatBuffer(1);
+	private static final NVGTextRow.Buffer rows = NVGTextRow.create(3);
+
 	private static boolean isBlack(NVGColor col) {
 		return col.r() == 0.0f && col.g() == 0.0f && col.b() == 0.0f && col.a() == 0.0f;
 	}
@@ -109,6 +115,59 @@ public class UIRendering {
 		color.b(b / 255.0f);
 		color.a(a / 255.0f);
 		return color;
+	}
+
+	public static void renderParagraph(long windowID, float x, float y, float width, float height, float mx, float my,
+			float fontSize, String font, String text, int align, NVGColor color) {
+		long vg = WindowManager.getWindow(windowID).getNVGID();
+		ByteBuffer paragraph = memUTF8(text);
+
+		nvgSave(vg);
+
+		nvgFontSize(vg, fontSize);
+		nvgFontFace(vg, font);
+		nvgTextAlign(vg, align);
+		nvgTextMetrics(vg, null, null, lineh);
+
+		long start = memAddress(paragraph);
+		long end = start + paragraph.remaining();
+		int nrows;
+		while ((nrows = nnvgTextBreakLines(vg, start, end, width, memAddress(rows), 3)) != 0) {
+			for (int i = 0; i < nrows; i++) {
+				NVGTextRow row = rows.get(i);
+				boolean hit = mx > x && mx < (x + width) && my >= y && my < (y + lineh.get(0));
+
+				nvgFillColor(vg, color);
+				nnvgText(vg, x, y, row.start(), row.end());
+
+				if (hit) {
+					renderCaret(vg, row, lineh.get(0), x, y, mx);
+				}
+				y += lineh.get(0);
+			}
+			start = rows.get(nrows - 1).next();
+		}
+
+		nvgRestore(vg);
+	}
+
+	private static void renderCaret(long vg, NVGTextRow row, float lineh, float x, float y, float mx) {
+		float caretx = (mx < x + row.width() / 2) ? x : x + row.width();
+		float px = x;
+		int nglyphs = nnvgTextGlyphPositions(vg, x, y, row.start(), row.end(), memAddress(glyphs), 100);
+		for (int j = 0; j < nglyphs; j++) {
+			NVGGlyphPosition glyphPosition = glyphs.get(j);
+			float x0 = glyphPosition.x();
+			float x1 = (j + 1 < nglyphs) ? glyphs.get(j + 1).x() : x + row.width();
+			float gx2 = x0 * 0.3f + x1 * 0.7f;
+			if (mx >= px && mx < gx2)
+				caretx = glyphPosition.x();
+			px = gx2;
+		}
+		nvgBeginPath(vg);
+		nvgFillColor(vg, rgba(255, 192, 0, 255, colorA));
+		nvgRect(vg, caretx, y, 1, lineh);
+		nvgFill(vg);
 	}
 
 	public static void renderLabel(long windowID, String text, String font, float x, float y, float w, float h,
@@ -261,7 +320,7 @@ public class UIRendering {
 		nvgFontFace(vg, font);
 		nvgTextAlign(vg, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
 
-		ByteBuffer titleText = memASCII(title);
+		ByteBuffer titleText = memUTF8(title);
 
 		nvgFontBlur(vg, 2);
 		nvgFillColor(vg, rgba(0, 0, 0, (int) (128 * alphaMult), colorA));
@@ -434,7 +493,7 @@ public class UIRendering {
 		nvgStrokeColor(vg, rgba(0, 0, 0, (int) (48 * fadeAlpha), colorA));
 		nvgStroke(vg);
 
-		ByteBuffer textEncoded = memASCII(text);
+		ByteBuffer textEncoded = memUTF8(text);
 
 		nvgFontSize(vg, fontSize);
 		nvgFontFace(vg, font);

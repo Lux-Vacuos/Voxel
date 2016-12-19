@@ -29,6 +29,7 @@ import net.luxvacuos.voxel.client.core.ClientInternalSubsystem;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Renderer;
 import net.luxvacuos.voxel.client.ui.UIPanel;
+import net.luxvacuos.voxel.client.ui.UIParagraph;
 import net.luxvacuos.voxel.client.ui.UIText;
 import net.luxvacuos.voxel.universal.core.AbstractVoxel;
 import net.luxvacuos.voxel.universal.core.states.AbstractState;
@@ -45,7 +46,7 @@ public class CrashState extends AbstractState {
 	private UIText line3;
 
 	private UIText error;
-	private UIText errorMessage;
+	private UIParagraph errorMessage;
 
 	public CrashState() {
 		super(StateNames.CRASH);
@@ -90,8 +91,7 @@ public class CrashState extends AbstractState {
 		error.setAlign(NVG_ALIGN_MIDDLE);
 		error.setFont("Px437_IBM_VGA8");
 
-		errorMessage = new UIText(t.getMessage(), -370, -55);
-		errorMessage.setAlign(NVG_ALIGN_MIDDLE);
+		errorMessage = new UIParagraph(t.getMessage(), -370, -55, 740, 400, 740, 400);
 		errorMessage.setFont("Px437_IBM_VGA8");
 
 		uIPanel.addChildren(titleBack);
