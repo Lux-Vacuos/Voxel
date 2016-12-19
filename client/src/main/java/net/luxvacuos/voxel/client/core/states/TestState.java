@@ -60,7 +60,7 @@ import net.luxvacuos.voxel.universal.ecs.Components;
  * @author danirod
  * @category Kernel
  */
-public class SPState extends AbstractState {
+public class TestState extends AbstractState {
 
 	private PhysicsSystem physicsSystem;
 	private Engine engine;
@@ -72,8 +72,8 @@ public class SPState extends AbstractState {
 	private Camera camera;
 	private Renderer renderer;
 
-	public SPState() {
-		super(StateNames.SINGLEPLAYER);
+	public TestState() {
+		super(StateNames.TEST);
 	}
 
 	@Override

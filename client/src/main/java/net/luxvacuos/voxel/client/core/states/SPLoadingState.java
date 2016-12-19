@@ -56,7 +56,7 @@ public class SPLoadingState extends AbstractState {
 
 	@Override
 	public void start() {
-		StateMachine.setCurrentState(StateNames.SINGLEPLAYER);
+		StateMachine.setCurrentState(StateNames.TEST);
 	}
 
 	@Override

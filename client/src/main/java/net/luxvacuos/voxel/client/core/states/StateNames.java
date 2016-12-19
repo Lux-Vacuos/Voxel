@@ -15,6 +15,7 @@ public class StateNames {
 	public static final String SP_LOADING = "SP_Loading";
 	public static final String SP_PAUSE = "SP_Pause";
 	public static final String SP_SELECTION = "SP_Selection";
-	public static final String SINGLEPLAYER = "Singleplayer";
+	public static final String SP_WORLD = "SP_World";
+	public static final String TEST = "Test";
 	
 }

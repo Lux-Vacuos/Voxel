@@ -31,7 +31,7 @@ import net.luxvacuos.igl.vector.Vector4f;
 public class Material {
 
 	private Vector4f baseColor;
-	private float roughness, metallic;
+	private float roughness, metallic, specular;
 	private Texture diffuse, normal;
 
 	/**
@@ -42,17 +42,21 @@ public class Material {
 	 *            Material Roughness.
 	 * @param metallic
 	 *            Material Metallic.
+	 * @param specular
+	 *            Material Specular.
 	 * @param diffuse
 	 *            Diffuse texutre.
 	 * @param normal
 	 *            Normal texture.
 	 */
-	public Material(Vector4f baseColor, float roughness, float metallic, Texture diffuse, Texture normal) {
+	public Material(Vector4f baseColor, float roughness, float metallic, float specular, Texture diffuse,
+			Texture normal) {
 		this.baseColor = baseColor;
 		this.roughness = roughness;
 		this.metallic = metallic;
 		this.diffuse = diffuse;
 		this.normal = normal;
+		this.specular = specular;
 	}
 
 	public Vector4f getBaseColor() {
@@ -75,6 +79,10 @@ public class Material {
 		return normal;
 	}
 
+	public float getSpecular() {
+		return specular;
+	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof Material)
@@ -82,7 +90,8 @@ public class Material {
 		Material t = (Material) obj;
 		return t.getBaseColor().getX() == baseColor.getX() && t.getBaseColor().getY() == baseColor.getY()
 				&& t.getBaseColor().getZ() == baseColor.getZ() && t.getRoughness() == roughness
-				&& t.getMetallic() == metallic && t.getDiffuse().equals(diffuse) && t.getNormal().equals(normal);
+				&& t.getMetallic() == metallic && t.getSpecular() == specular && t.getDiffuse().equals(diffuse)
+				&& t.getNormal().equals(normal);
 	}
 
 }

@@ -32,7 +32,7 @@ public class UniformMaterial extends UniformArray {
 	private boolean used = false;
 
 	public UniformMaterial(String matName) {
-		super(matName + ".color", matName + ".roughness", matName + ".metallic", matName + ".diffuse",
+		super(matName + ".color", matName + ".roughness", matName + ".metallic", matName + ".specular", matName + ".diffuse",
 				matName + ".normal");
 	}
 
@@ -42,8 +42,9 @@ public class UniformMaterial extends UniformArray {
 					value.getBaseColor().getZ(), value.getBaseColor().getW());
 			glUniform1f(super.getLocation()[1], value.getRoughness());
 			glUniform1f(super.getLocation()[2], value.getMetallic());
-			glUniform1i(super.getLocation()[3], 0);
-			glUniform1i(super.getLocation()[4], 1);
+			glUniform1f(super.getLocation()[3], value.getSpecular());
+			glUniform1i(super.getLocation()[4], 0);
+			glUniform1i(super.getLocation()[5], 1);
 			used = true;
 			currentValue = value;
 		}

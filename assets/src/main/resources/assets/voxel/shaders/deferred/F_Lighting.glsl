@@ -68,7 +68,7 @@ void main(void){
 		float fadeOut = clamp(1.0-shadowDist, 0.0, 1.0);
 		float normalDotLight = max(dot(normal.xyz, lightDir), 0);
     	float finalLight = normalDotLight - (position.w * fadeOut);
-    	finalLight = max(finalLight,0.015);
+    	finalLight = max(finalLight, 0.015);
     	image = finalLight * image;
     	if(position.w <= 0.5 && normalDotLight > 0){
 			image += beckmannSpecular(lightDir.xyz, eyeDir, normal.xyz, pbr.r) * max((1-pbr.r), 0.1);

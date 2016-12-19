@@ -38,10 +38,10 @@ import net.luxvacuos.voxel.client.rendering.api.opengl.ImagePassFBO;
 import net.luxvacuos.voxel.client.rendering.api.opengl.RenderingPipeline;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.CubeMapTexture;
 
-public class ScreenSpaceReflections extends ImagePass {
+public class Reflections extends ImagePass {
 
 
-	public ScreenSpaceReflections(String name, int width, int height) {
+	public Reflections(String name, int width, int height) {
 		super(name, width, height);
 	}
 

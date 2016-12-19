@@ -24,6 +24,7 @@ struct Material {
 	vec4 color;
 	float roughness;
 	float metallic;
+	float specular;
 	sampler2D diffuse;
 	sampler2D normal;
 };
@@ -46,7 +47,7 @@ uniform int useShadows;
 const float xPixelOffset = 0.0002;
 const float yPixelOffset = 0.0002;
 
-float lookup( vec2 offSet){
+float lookup(vec2 offSet){
 	return texture(depth, ShadowCoord.xyz + vec3(offSet.x * xPixelOffset, offSet.y * yPixelOffset, 0.0) );
 }
 
@@ -79,6 +80,6 @@ void main(void) {
 	out_Color[0] = textureColour;
 	out_Color[1] = vec4(pass_position.xyz,shadow);
 	out_Color[2] = vec4(normal.xyz,0);
-	out_Color[3] = vec4(material.roughness, material.metallic, 0.0, 0.0);
+	out_Color[3] = vec4(material.roughness, material.metallic, material.specular, 0.0);
 	out_Color[4] = vec4(0.0);
 }

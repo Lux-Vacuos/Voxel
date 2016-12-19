@@ -35,12 +35,12 @@ void main(void){
 	if(useDOF == 1){
 		vec3 sum = textureColour.rgb;
 		float bias = min(abs(texture(gDepth, texcoord).x - texture(gDepth, vec2(0.5)).x) * .02, .01);
-		for (int i = -3; i < 3; i++) {
-			for (int j = -3; j < 3; j++) {
+		for (int i = -4; i < 4; i++) {
+			for (int j = -4; j < 4; j++) {
 				sum += texture(composite0, texcoord + vec2(j, i) * bias ).rgb;
 			}
 		}
-		sum /= 36.0;
+		sum /= 65.0;
 		textureColour = vec4(sum,1.0);
 	}
 	
