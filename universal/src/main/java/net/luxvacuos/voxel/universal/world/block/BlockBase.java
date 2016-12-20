@@ -45,7 +45,7 @@ public class BlockBase implements IBlock {
 		return this.id;
 	}
 	
-	BlockBase setID(int id) {
+	public BlockBase setID(int id) {
 		this.id = id;
 		return this;
 	}

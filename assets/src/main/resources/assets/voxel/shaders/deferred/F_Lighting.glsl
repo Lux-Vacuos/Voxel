@@ -70,8 +70,8 @@ void main(void){
     	float finalLight = normalDotLight - (position.w * fadeOut);
     	finalLight = max(finalLight, 0.015);
     	image = finalLight * image;
-    	if(position.w <= 0.5 && pbr.r > 0.0){
-			image += beckmannSpecular(lightDir.xyz, eyeDir, normal.xyz, pbr.r);
+    	if(position.w < 1 && normalDotLight > 0.0 && pbr.r > 0.0){
+			image += beckmannSpecular(lightDir.xyz, eyeDir, normal.xyz, pbr.r) * (1-position.w) * normalDotLight;
 	   	}
 	}
     image += texture(composite0, texcoord);

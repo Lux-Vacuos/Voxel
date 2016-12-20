@@ -28,10 +28,10 @@ import com.badlogic.gdx.math.collision.BoundingBox;
 
 import net.luxvacuos.igl.vector.Matrix4d;
 import net.luxvacuos.igl.vector.Vector3d;
+import net.luxvacuos.voxel.client.core.ClientInternalSubsystem;
 import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.core.ClientWorldSimulation;
 import net.luxvacuos.voxel.client.core.CoreInfo;
-import net.luxvacuos.voxel.client.core.ClientInternalSubsystem;
 import net.luxvacuos.voxel.client.input.KeyboardHandler;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.glfw.WindowManager;
@@ -39,11 +39,16 @@ import net.luxvacuos.voxel.client.rendering.api.nanovg.Timers;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.UIRendering;
 import net.luxvacuos.voxel.client.rendering.api.opengl.ParticleMaster;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Renderer;
+import net.luxvacuos.voxel.client.rendering.api.opengl.Tessellator;
+import net.luxvacuos.voxel.client.rendering.api.opengl.objects.Light;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.TessellatorBasicShader;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.TessellatorShader;
+import net.luxvacuos.voxel.client.rendering.utils.BlockFaceAtlas;
 import net.luxvacuos.voxel.client.resources.ResourceLoader;
 import net.luxvacuos.voxel.client.util.Maths;
 import net.luxvacuos.voxel.client.world.PhysicsSystem;
+import net.luxvacuos.voxel.client.world.block.BlocksResources;
+import net.luxvacuos.voxel.client.world.block.RenderBlock;
 import net.luxvacuos.voxel.client.world.entities.Camera;
 import net.luxvacuos.voxel.client.world.entities.Dragon;
 import net.luxvacuos.voxel.client.world.entities.EntityResources;
@@ -55,12 +60,12 @@ import net.luxvacuos.voxel.universal.core.AbstractVoxel;
 import net.luxvacuos.voxel.universal.core.states.AbstractState;
 import net.luxvacuos.voxel.universal.core.states.StateMachine;
 import net.luxvacuos.voxel.universal.ecs.Components;
+import net.luxvacuos.voxel.universal.material.BlockMaterial;
 
 /**
- * Single Player State, here the local world is updated and rendered.
+ * Test State
  * 
  * @author danirod
- * @category Kernel
  */
 public class TestState extends AbstractState {
 
@@ -73,6 +78,7 @@ public class TestState extends AbstractState {
 	private ClientWorldSimulation worldSimulation;
 	private Camera camera;
 	private Renderer renderer;
+	private Tessellator tess;
 
 	public TestState() {
 		super(StateNames.TEST);
@@ -91,7 +97,7 @@ public class TestState extends AbstractState {
 				ClientVariables.FOV, ClientVariables.NEAR_PLANE, ClientVariables.FAR_PLANE);
 
 		camera = new PlayerCamera(projectionMatrix, window);
-		camera.setPosition(new Vector3d(0,2,0));
+		camera.setPosition(new Vector3d(0, 2, 0));
 		sun = new Sun(shadowProjectionMatrix);
 
 		worldSimulation = new ClientWorldSimulation();
@@ -105,7 +111,7 @@ public class TestState extends AbstractState {
 		worldSimulation = new ClientWorldSimulation();
 		engine = new Engine();
 		physicsSystem = new PhysicsSystem();
-		physicsSystem.addBox(new BoundingBox(new Vector3(-15, -1, -15), new Vector3(15, 0, 15)));
+		physicsSystem.addBox(new BoundingBox(new Vector3(-15, -1, -15), new Vector3(40, 0, 25)));
 		engine.addSystem(physicsSystem);
 		t = new Test(new Vector3d(0, 1, 0));
 		plane = new Plane();
@@ -117,6 +123,28 @@ public class TestState extends AbstractState {
 		Components.SCALE.get(dragon2).setScale(0.25f);
 		dragon3 = new Dragon(new Vector3d(0, 0, -5));
 		Components.SCALE.get(dragon3).setScale(0.25f);
+		BlocksResources.createBlocks(loader);
+		tess = new Tessellator(projectionMatrix, shadowProjectionMatrix);
+		RenderBlock t = new RenderBlock(new BlockMaterial("test"), new BlockFaceAtlas("Ice"));
+		t.setID(1);
+
+		tess.begin(BlocksResources.getTessellatorTextureAtlas().getTexture(), BlocksResources.getNormalMap(),
+				BlocksResources.getHeightMap(), BlocksResources.getPbrMap());
+		for (int x = 0; x < 16; x++) {
+			for (int z = 0; z < 16; z++) {
+				tess.generateCube(20 + x, 0, z, 1, true, true, true, true, true, true, t);
+			}
+		}
+		tess.end();
+
+		renderer.setShadowPass((worldSimulation, camera, sunCamera, shadowMap, shadowData) -> {
+			tess.drawShadow(sunCamera);
+		});
+
+		renderer.setDeferredPass((worldSimulation, camera, sunCamera, shadowMap, shadowData) -> {
+			tess.draw(camera, sunCamera, worldSimulation, shadowMap, shadowData, false);
+		});
+		//renderer.getLightRenderer().addLight(new Light(new Vector3d(2, 3, 0)));
 	}
 
 	@Override

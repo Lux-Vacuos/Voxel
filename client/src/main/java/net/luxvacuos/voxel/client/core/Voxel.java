@@ -54,7 +54,6 @@ import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.glfw.WindowManager;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.Timers;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Renderer;
-import net.luxvacuos.voxel.client.world.block.BlocksResources;
 import net.luxvacuos.voxel.universal.api.ModsHandler;
 import net.luxvacuos.voxel.universal.bootstrap.AbstractBootstrap;
 import net.luxvacuos.voxel.universal.bootstrap.Platform;
@@ -150,7 +149,6 @@ public class Voxel extends AbstractVoxel {
 	@Override
 	public void init() throws Exception {
 		internalSubsystem.init();
-		BlocksResources.createBlocks(ClientInternalSubsystem.getInstance().getGameWindow().getResourceLoader());
 		StateMachine.registerState(new AboutState());
 		StateMachine.registerState(new MainMenuState());
 		StateMachine.registerState(new OptionsState());

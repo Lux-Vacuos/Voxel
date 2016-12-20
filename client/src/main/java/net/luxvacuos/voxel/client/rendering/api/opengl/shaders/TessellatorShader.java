@@ -91,10 +91,11 @@ public class TessellatorShader extends ShaderProgram {
 	 *            Camera
 	 */
 	public void loadViewMatrix(Matrix4d cameraViewMatrix, Vector3d cameraPosition) {
-		cameraViewMatrix.m30 = 0;
-		cameraViewMatrix.m31 = 0;
-		cameraViewMatrix.m32 = 0;
-		viewMatrix.loadMatrix(cameraViewMatrix);
+		Matrix4d mat = new Matrix4d(cameraViewMatrix);
+		mat.m30 = 0;
+		mat.m31 = 0;
+		mat.m32 = 0;
+		viewMatrix.loadMatrix(mat);
 		cameraPos.loadVec3(cameraPosition);
 	}
 

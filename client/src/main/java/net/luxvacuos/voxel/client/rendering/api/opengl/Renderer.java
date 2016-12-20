@@ -64,7 +64,9 @@ public class Renderer {
 
 	private Frustum frustum;
 	private Window window;
-	
+
+	private IRenderPass shadowPass, deferredPass, forwardPass;
+
 	private float exposure = 1;
 
 	public Renderer(Window window, Camera camera, Camera sunCamera) {
@@ -98,6 +100,10 @@ public class Renderer {
 		if (ClientVariables.useShadows) {
 			shadowFBO.begin();
 			clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+			if (shadowPass != null)
+				shadowPass.render(clientWorldSimulation, camera, sunCamera, shadowFBO.getShadowDepth(),
+						shadowFBO.getShadowData());
 			// dimension.renderShadow(sunCamera,
 			// sunCamera.getProjectionMatrix(), frustum);
 			entityShadowRenderer.renderEntity(entities, sunCamera);
@@ -117,6 +123,10 @@ public class Renderer {
 		// sunCamera.getProjectionMatrix(), shadowFBO.getShadowDepth(),
 		// shadowFBO.getShadowData(), frustum, false);
 
+		if (deferredPass != null)
+			deferredPass.render(clientWorldSimulation, camera, sunCamera, shadowFBO.getShadowDepth(),
+					shadowFBO.getShadowData());
+
 		entityRenderer.renderEntity(entities, camera, sunCamera, shadowFBO.getShadowDepth());
 		renderingPipeline.end();
 		clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -127,6 +137,10 @@ public class Renderer {
 		// camera.getProjectionMatrix(),
 		// sunCamera.getProjectionMatrix(), shadowFBO.getShadowDepth(),
 		// shadowFBO.getShadowData(), frustum, true);
+
+		if (forwardPass != null)
+			forwardPass.render(clientWorldSimulation, camera, sunCamera, shadowFBO.getShadowDepth(),
+					shadowFBO.getShadowData());
 
 		ParticleMaster.getInstance().render(camera);
 	}
@@ -140,6 +154,18 @@ public class Renderer {
 		TessellatorBasicShader.getInstance().cleanUp();
 		ParticleMaster.getInstance().cleanUp();
 		renderingPipeline.dispose();
+	}
+
+	public void setShadowPass(IRenderPass shadowPass) {
+		this.shadowPass = shadowPass;
+	}
+
+	public void setDeferredPass(IRenderPass deferredPass) {
+		this.deferredPass = deferredPass;
+	}
+
+	public void setForwardPass(IRenderPass forwardPass) {
+		this.forwardPass = forwardPass;
 	}
 
 	public Frustum getFrustum() {

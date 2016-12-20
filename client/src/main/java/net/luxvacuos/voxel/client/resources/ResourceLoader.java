@@ -242,7 +242,7 @@ public class ResourceLoader {
 		try {
 			Logger.log("Loading Texture: " + fileName + ".png");
 			texture_id = loadTexture("assets/" + ClientVariables.assets + "/textures/blocks/" + fileName + ".png",
-					GL_LINEAR, GL_REPEAT, GL_RGBA);
+					GL_NEAREST, GL_REPEAT, GL_RGBA);
 		} catch (Exception e) {
 			throw new LoadTextureException(fileName, e);
 		}

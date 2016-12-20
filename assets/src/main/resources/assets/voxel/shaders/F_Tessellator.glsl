@@ -22,9 +22,7 @@
 
 in vec2 pass_textureCoords;
 in vec3 pass_position;
-in vec4 pass_Data;
 in vec4 ShadowCoord;
-in vec3 posInTangent;
 in mat3 TBN;
 
 out vec4 [5] out_Color;
@@ -77,9 +75,6 @@ float lookup( vec2 offSet){
 }
 
 void main(void) {
-	vec4 data = pass_Data;
-	float bright = data.y;
-	int id = int(data.x + 0.5f);
 
 	vec3 eyeDir = normalize(TBN * (cameraPos - pass_position));
 	vec2 texcoords = pass_textureCoords;

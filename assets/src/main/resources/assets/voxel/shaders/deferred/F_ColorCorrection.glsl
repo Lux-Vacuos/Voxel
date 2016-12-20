@@ -34,10 +34,9 @@ void main(void){
 	vec2 texcoord = textureCoords;
     vec4 bloomColor = texture(composite0, texcoord);
     vec4 hdrColor = texture(composite1, texcoord);      
-    hdrColor += bloomColor;
     
     vec4 final = vec4(1.0) - exp(-hdrColor * exposure);
     final = pow(final, vec4(1.0 / GAMMA));
-    
+    final += bloomColor;
     out_Color = final;
 }

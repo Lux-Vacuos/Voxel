@@ -85,7 +85,7 @@ void main(void){
 		        	fact = 0.0;
 
 				vec4 finalReflection = mix(enviromentMap, newColor, fact);
-				image = image*fresnel + clamp(finalReflection, 0.0, 1.0) * (1-fresnel);
+				image = image*fresnel + max(finalReflection, 0.0) * (1-fresnel);
     		}
 		}
 	}

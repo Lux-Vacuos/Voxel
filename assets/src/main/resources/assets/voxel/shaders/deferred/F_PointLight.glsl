@@ -55,6 +55,7 @@ float beckmannSpecular(vec3 lightDirection, vec3 viewDirection, vec3 surfaceNorm
 void main(void){
 	vec2 texcoord = textureCoords;
     vec4 composite = texture(composite0, texcoord);
+	vec4 diffuse = texture(gDiffuse, texcoord);
 	vec4 mask = texture(gMask, texcoord);
 	if(mask.a != 1) {
 		vec4 pbr = texture(gPBR, texcoord);
@@ -71,13 +72,12 @@ void main(void){
 	    	float attFactor = (distance*distance);
 			composite.rgb *= 1.0 - pbr.g;
     		vec3 eyeDir = normalize(cameraPosition-position.xyz);
-			float normalDotLight = max(dot(normal.xyz, lightDir), 0) * 1.5;
+			float normalDotLight = max(dot(normal.xyz, lightDir), 0);
     		normalDotLight = max(normalDotLight, 0.0);
 			normalDotLight /= attFactor;
-    		composite += normalDotLight * composite;
-    		if(normalDotLight > 0){
-	    		vec3 vHalfVector = normalize(lightDir.xyz+eyeDir);
-				float specular = beckmannSpecular(lightDir.xyz, eyeDir, normal.xyz, pbr.r);
+    		composite += diffuse * normalDotLight;
+    		if(normalDotLight > 0.0 && pbr.r > 0.0){
+				float specular = beckmannSpecular(lightDir.xyz, eyeDir, normal.xyz, pbr.r) * normalDotLight;
 				specular /= attFactor;
 		   		composite += specular;
 		   	}
