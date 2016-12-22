@@ -43,13 +43,13 @@ import net.luxvacuos.voxel.client.util.Maths;
 import net.luxvacuos.voxel.client.world.entities.Camera;
 
 /**
- * ImagePass, use inside {@link RenderingPipeline} to process diferent image
+ * ImagePass, use inside {@link RenderingPipeline} to process different image
  * passes.
  *
  * @author Guerra24 <pablo230699@hotmail.com>
  *
  */
-public abstract class ImagePass {
+public abstract class ImagePass implements IImagePass {
 
 	/**
 	 * Deferred Shader
@@ -87,6 +87,7 @@ public abstract class ImagePass {
 	/**
 	 * Initializes the FBO, Shader and loads information to the shader.
 	 */
+	@Override
 	public void init() {
 		fbo = new ImagePassFBO(width, height);
 		shader = new DeferredShadingShader(name);
@@ -97,35 +98,11 @@ public abstract class ImagePass {
 		shader.stop();
 	}
 
+	@Override
 	public void process(Camera camera, Matrix4d previousViewMatrix, Vector3d previousCameraPosition,
 			Vector3d lightPosition, Vector3d invertedLightPosition, ClientWorldSimulation clientWorldSimulation,
 			List<Light> lights, ImagePassFBO[] auxs, RenderingPipeline pipe, RawModel quad,
 			CubeMapTexture environmentMap, float exposure) {
-		begin(camera, previousViewMatrix, previousCameraPosition, lightPosition, invertedLightPosition,
-				clientWorldSimulation, lights, exposure);
-		glBindVertexArray(quad.getVaoID());
-		glEnableVertexAttribArray(0);
-		render(auxs, pipe, environmentMap);
-		glDrawArrays(GL_TRIANGLE_STRIP, 0, quad.getVertexCount());
-		glDisableVertexAttribArray(0);
-		glBindVertexArray(0);
-		end();
-		auxs[0] = getFbo();
-	}
-
-	/**
-	 * Begin ImagePass processing, binds the FBO, starts the shader, loads
-	 * dynamic data and leaves the state for rendering.
-	 * 
-	 * @param gm
-	 * @param previousViewMatrix
-	 *            Previous View Matrixd
-	 * @param previousCameraPosition
-	 *            Previous Camera Position
-	 */
-	public void begin(Camera camera, Matrix4d previousViewMatrix, Vector3d previousCameraPosition,
-			Vector3d lightPosition, Vector3d invertedLightPosition, ClientWorldSimulation clientWorldSimulation,
-			List<Light> lights, float exposure) {
 		fbo.begin();
 		shader.start();
 		shader.loadUnderWater(false);
@@ -143,29 +120,21 @@ public abstract class ImagePass {
 		shader.loadPointLightsPos(lights);
 		shader.loadTime(clientWorldSimulation.getTime());
 		Renderer.clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	}
-
-	/**
-	 * Runs the render code.
-	 * 
-	 * @param auxs
-	 *            Auxiliary FBOs
-	 * @param pipe
-	 *            Rendering Pipline
-	 */
-	public abstract void render(ImagePassFBO[] auxs, RenderingPipeline pipe, CubeMapTexture environmentMap);
-
-	/**
-	 * End the render, disables shader and ends FBO.
-	 */
-	public void end() {
+		glBindVertexArray(quad.getVaoID());
+		glEnableVertexAttribArray(0);
+		render(auxs, pipe, environmentMap);
+		glDrawArrays(GL_TRIANGLE_STRIP, 0, quad.getVertexCount());
+		glDisableVertexAttribArray(0);
+		glBindVertexArray(0);
 		shader.stop();
 		fbo.end();
+		auxs[0] = getFbo();
 	}
 
 	/**
 	 * Dispose shader and FBO
 	 */
+	@Override
 	public void dispose() {
 		shader.cleanUp();
 		fbo.cleanUp();

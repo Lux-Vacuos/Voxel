@@ -18,12 +18,16 @@
  * 
  */
 
-package net.luxvacuos.voxel.client.rendering.world.block;
+package net.luxvacuos.voxel.client.rendering.api.opengl;
 
-import net.luxvacuos.voxel.client.rendering.api.opengl.Tessellator;
+public interface IRenderingPipeline {
 
-public interface ICustomRenderBlock {
+	public void init();
 
-	public void generateCustomModel(Tessellator tess, double x, double y, double z, float globalScale, boolean top,
-			boolean bottom, boolean left, boolean right, boolean front, boolean back);
+	public void begin();
+
+	public void end();
+
+	public void dispose();
+
 }

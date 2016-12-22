@@ -22,7 +22,7 @@ package net.luxvacuos.voxel.client.rendering.api.opengl;
 
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11.GL_NEAREST;
+import static org.lwjgl.opengl.GL11.GL_LINEAR;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11.GL_TRIANGLE_STRIP;
 import static org.lwjgl.opengl.GL11.glBindTexture;
@@ -60,16 +60,13 @@ import net.luxvacuos.voxel.client.world.entities.Camera;
  * 
  * This class is responsible for processing and display objects that have been
  * previously rendered. It may contain phases where certain effects are applied
- * to the image created using {@link ImagePass}. This class is used as a
- * replacement {@link DeferredShadingRenderer} since the former has big problems
- * of organization and is very poorly tuned besides that can not change the
- * rendering pipeline.
+ * to the image created using {@link ImagePass}.
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
  * @category Rendering
  *
  */
-public abstract class RenderingPipeline {
+public abstract class RenderingPipeline implements IRenderingPipeline {
 
 	protected RenderingPipelineFBO mainFBO;
 	protected int width, height;
@@ -150,15 +147,9 @@ public abstract class RenderingPipeline {
 	}
 
 	/**
-	 * 
-	 * Initialize custom objects and variables
-	 * 
-	 */
-	public abstract void init();
-
-	/**
 	 * Begin Rendering
 	 */
+	@Override
 	public void begin() {
 		mainFBO.begin();
 	}
@@ -166,6 +157,7 @@ public abstract class RenderingPipeline {
 	/**
 	 * End rendering
 	 */
+	@Override
 	public void end() {
 		mainFBO.end();
 	}
@@ -178,12 +170,13 @@ public abstract class RenderingPipeline {
 	 *            {@link ClientInternalSubsystem}
 	 */
 	public void render(Camera camera, Vector3d lightPosition, Vector3d invertedLightPosition,
-			ClientWorldSimulation clientWorldSimulation, List<Light> lights, CubeMapTexture environmentMap, float exposure) {
+			ClientWorldSimulation clientWorldSimulation, List<Light> lights, CubeMapTexture environmentMap,
+			float exposure) {
 		for (ImagePass imagePass : imagePasses) {
 			imagePass.process(camera, previousViewMatrix, previousCameraPosition, lightPosition, invertedLightPosition,
 					clientWorldSimulation, lights, auxs, this, quad, environmentMap, exposure);
 		}
-		Renderer.clearBuffer(GL_COLOR_BUFFER_BIT |GL_DEPTH_BUFFER_BIT);
+		Renderer.clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		finalShader.start();
 		glBindVertexArray(quad.getVaoID());
 		glEnableVertexAttribArray(0);
@@ -196,7 +189,7 @@ public abstract class RenderingPipeline {
 
 		glBindFramebuffer(GL_READ_FRAMEBUFFER, mainFBO.getFbo());
 		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
-		glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_DEPTH_BUFFER_BIT, GL_NEAREST);
+		glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_DEPTH_BUFFER_BIT, GL_LINEAR);
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 		previousViewMatrix = Maths.createViewMatrix(camera);
@@ -206,6 +199,7 @@ public abstract class RenderingPipeline {
 	/**
 	 * Internal Dispose
 	 */
+	@Override
 	public void dispose() {
 		mainFBO.cleanUp();
 		for (ImagePass imagePass : imagePasses) {

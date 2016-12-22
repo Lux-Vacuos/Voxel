@@ -54,6 +54,7 @@ import net.luxvacuos.voxel.client.world.entities.Dragon;
 import net.luxvacuos.voxel.client.world.entities.EntityResources;
 import net.luxvacuos.voxel.client.world.entities.Plane;
 import net.luxvacuos.voxel.client.world.entities.PlayerCamera;
+import net.luxvacuos.voxel.client.world.entities.SoccerBall;
 import net.luxvacuos.voxel.client.world.entities.Sun;
 import net.luxvacuos.voxel.client.world.entities.Test;
 import net.luxvacuos.voxel.universal.core.AbstractVoxel;
@@ -74,6 +75,7 @@ public class TestState extends AbstractState {
 	private Test t;
 	private Plane plane;
 	private Dragon dragon0, dragon1, dragon2, dragon3;
+	private SoccerBall ball;
 	private Sun sun;
 	private ClientWorldSimulation worldSimulation;
 	private Camera camera;
@@ -113,6 +115,7 @@ public class TestState extends AbstractState {
 		physicsSystem = new PhysicsSystem();
 		physicsSystem.addBox(new BoundingBox(new Vector3(-15, -1, -15), new Vector3(40, 0, 25)));
 		engine.addSystem(physicsSystem);
+		ball = new SoccerBall(new Vector3d(10, 0.5f, 0));
 		t = new Test(new Vector3d(0, 1, 0));
 		plane = new Plane();
 		dragon0 = new Dragon(new Vector3d(5, 0, 0));
@@ -144,7 +147,10 @@ public class TestState extends AbstractState {
 		renderer.setDeferredPass((worldSimulation, camera, sunCamera, shadowMap, shadowData) -> {
 			tess.draw(camera, sunCamera, worldSimulation, shadowMap, shadowData, false);
 		});
-		//renderer.getLightRenderer().addLight(new Light(new Vector3d(2, 3, 0)));
+		// renderer.getLightRenderer().addLight(new Light(new Vector3d(2, 3,
+		// 0)));
+		// renderer.getLightRenderer().addLight(new Light(new Vector3d(-8, 2,
+		// 0)));
 	}
 
 	@Override
@@ -161,6 +167,7 @@ public class TestState extends AbstractState {
 		physicsSystem.getEngine().addEntity(dragon1);
 		physicsSystem.getEngine().addEntity(dragon2);
 		physicsSystem.getEngine().addEntity(dragon3);
+		physicsSystem.getEngine().addEntity(ball);
 		((PlayerCamera) camera).setMouse();
 	}
 

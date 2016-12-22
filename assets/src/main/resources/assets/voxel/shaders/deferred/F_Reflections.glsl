@@ -60,16 +60,18 @@ void main(void){
     			vec4 newScreen;
     			vec3 rayTrace = worldStartingPos;
     			float currentWorldDist, rayDist;
-    			float incr = 0.2;
-    			do {
-	        		rayTrace += refl*incr;
-        			incr *= 1.2;
+				float i = 0;
+    			float incr = 0.4;
+				do {
+					i += 0.05;
+					rayTrace += refl*incr;
+					incr *= 1.3;
         			newScreen = projectionMatrix * viewMatrix * vec4(rayTrace, 1);
         			newScreen /= newScreen.w;
         			newPos = texture(gPosition, newScreen.xy/2.0+0.5).xyz;
         			currentWorldDist = length(newPos.xyz - cameraPosition.xyz);
         			rayDist = length(rayTrace.xyz - cameraPosition.xyz);
-        			if (newScreen.x > 1 || newScreen.x < -1 || newScreen.y > 1 || newScreen.y < -1 || cameraToWorldDist > currentWorldDist || dot(refl, cameraToWorldNorm) < 0)
+        			if (newScreen.x > 1 || newScreen.x < -1 || newScreen.y > 1 || newScreen.y < -1 || newScreen.z > 1 || newScreen.z < -1 || i >= 1.0 || cameraToWorldDist > currentWorldDist)
 		       			break;
     			} while(rayDist < currentWorldDist);
 
@@ -83,9 +85,12 @@ void main(void){
 		        	fact = 0.0;
     			else if (cameraToWorldDist > currentWorldDist)
 		        	fact = 0.0;
-
+				else if(newScreen.z > 1 && newScreen.z < -1)
+					fact = 0.0;
+				//fresnel *= 1-pbr.b;
 				vec4 finalReflection = mix(enviromentMap, newColor, fact);
-				image = image*fresnel + max(finalReflection, 0.0) * (1-fresnel);
+				//image = image*fresnel + max(finalReflection, 0.0) * (1-fresnel);
+				image = mix(image, finalReflection, pbr.b);
     		}
 		}
 	}
