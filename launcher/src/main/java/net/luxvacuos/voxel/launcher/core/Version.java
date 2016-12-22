@@ -70,15 +70,15 @@ public class Version {
 
 		float add = 100f / getTotalLibs();
 		add /= 100f;
-		new File(Bootstrap.getPrefix() + LauncherVariables.project + "/libraries/" + domain + "/" + name + "/" + version
-				+ "/").mkdirs();
-		if (!new File(Bootstrap.getPrefix() + LauncherVariables.project + "/libraries/" + domain + "/" + name + "/"
-				+ version + "/" + name + "-" + version + ".jar").exists())
+		new File(Bootstrap.getPrefix() + LauncherVariables.project + "/" + LauncherVariables.libraries + "/" + domain
+				+ "/" + name + "/" + version + "/").mkdirs();
+		if (!new File(Bootstrap.getPrefix() + LauncherVariables.project + "/" + LauncherVariables.libraries + "/"
+				+ domain + "/" + name + "/" + version + "/" + name + "-" + version + ".jar").exists())
 			DownloadsHelper.download(
-					Bootstrap.getPrefix() + LauncherVariables.project + "/libraries/" + domain + "/" + name + "/"
-							+ version + "/" + name + "-" + version + ".jar",
-					"/" + LauncherVariables.project + "/libraries/" + domain + "/" + name + "/" + version + "/" + name
-							+ "-" + version + ".jar");
+					Bootstrap.getPrefix() + LauncherVariables.project + "/" + LauncherVariables.libraries + "/" + domain
+							+ "/" + name + "/" + version + "/" + name + "-" + version + ".jar",
+					"/" + LauncherVariables.project + "/" + LauncherVariables.libraries + "/" + domain + "/" + name
+							+ "/" + version + "/" + name + "-" + version + ".jar");
 		downloadProgress += add;
 		for (Library library : libs) {
 			library.download();

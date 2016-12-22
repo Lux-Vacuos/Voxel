@@ -21,6 +21,7 @@
 package net.luxvacuos.voxel.launcher.ui;
 
 import javafx.application.Application;
+import javafx.scene.ImageCursor;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
@@ -39,7 +40,6 @@ public class MainUI extends Application {
 	private Update updateStage;
 
 	private UpdateLauncher updateLauncher;
-	private Updater updater;
 
 	public static void main(String[] args) {
 		Logger.log("Version: " + LauncherVariables.version);
@@ -51,8 +51,7 @@ public class MainUI extends Application {
 	@Override
 	public void start(Stage stage) throws Exception {
 		Thread.currentThread().setName("Voxel-Launcher");
-		updater = new Updater();
-		updater.getRemoteVersions();
+		Updater.getUpdater().getRemoteVersions();
 		updateLauncher = new UpdateLauncher();
 
 		loginStage = new Login(stage, this);
@@ -60,14 +59,19 @@ public class MainUI extends Application {
 		stage.setTitle("Voxel Launcher");
 		stage.getIcons().add(new Image(getClass().getClassLoader().getResourceAsStream("assets/icons/icon32.png")));
 		stage.getIcons().add(new Image(getClass().getClassLoader().getResourceAsStream("assets/icons/icon64.png")));
-		if (updateLauncher.checkUpdate() ) {
+		LauncherVariables.cursor = new ImageCursor(
+				new Image(getClass().getClassLoader().getResourceAsStream("assets/cursors/arrow.png")));
+		if (updateLauncher.checkUpdate()) {
 			updateStage = new Update(stage, this);
 			stage.setScene(new Scene(updateStage));
 			stage.sizeToScene();
 		} else {
-			stage.setScene(new Scene(mainStage));
-			stage.setWidth(854);
-			stage.setHeight(520);
+			stage.setScene(new Scene(loginStage));
+			stage.getScene().setCursor(LauncherVariables.cursor);
+			stage.setMinHeight(720);
+			stage.setMinWidth(1280);
+			stage.setWidth(1280);
+			stage.setHeight(720);
 		}
 		stage.centerOnScreen();
 		stage.show();
@@ -83,10 +87,6 @@ public class MainUI extends Application {
 
 	public Update getUpdateStage() {
 		return updateStage;
-	}
-
-	public Updater getUpdater() {
-		return updater;
 	}
 
 	public UpdateLauncher getUpdateLauncher() {

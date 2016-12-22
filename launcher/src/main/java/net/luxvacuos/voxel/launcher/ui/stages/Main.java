@@ -20,11 +20,7 @@
 
 package net.luxvacuos.voxel.launcher.ui.stages;
 
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.Properties;
 
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
@@ -43,8 +39,8 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
-import net.luxvacuos.voxel.launcher.bootstrap.Bootstrap;
 import net.luxvacuos.voxel.launcher.core.LauncherVariables;
+import net.luxvacuos.voxel.launcher.core.Updater;
 import net.luxvacuos.voxel.launcher.ui.MainUI;
 
 public class Main extends BorderPane {
@@ -52,15 +48,11 @@ public class Main extends BorderPane {
 	private Button playButton;
 	private ProgressBar download;
 	Text userName;
-	private Properties settings;
-	private MainUI ui;
 
 	private TextField wf;
 	private TextField hf;
 
 	public Main(Stage stage, MainUI ui) {
-		this.ui = ui;
-		settings = new Properties();
 
 		userName = new Text();
 
@@ -68,7 +60,7 @@ public class Main extends BorderPane {
 		home.setClosable(false);
 
 		WebView browser = new WebView();
-		browser.getEngine().load("https://luxvacuos.net/projects/launcher/launcher");
+		browser.getEngine().load("https://luxvacuos.net/");
 		browser.minWidth(342);
 		browser.minHeight(370);
 		home.setContent(browser);
@@ -79,22 +71,25 @@ public class Main extends BorderPane {
 		playButton.setOnAction((event) -> {
 
 			new Thread(() -> {
-				store();
+
+				LauncherVariables.userArgs.add("-width");
+				LauncherVariables.userArgs.add(wf.getText());
+				LauncherVariables.userArgs.add("-height");
+				LauncherVariables.userArgs.add(hf.getText());
+
 				try {
-					ui.getUpdater().downloadAndRun(ui.getUpdater().getVersionsHandler().getVersions().get(0),
-							userName.getText());
+					Updater.getUpdater().downloadAndRun();
 					Platform.runLater(() -> playButton.setText("Launching..."));
 				} catch (JsonSyntaxException | JsonIOException | FileNotFoundException e) {
 					Platform.runLater(() -> {
 						playButton.setText("Error downloading, try again");
 						playButton.setDisable(false);
 					});
-					e.printStackTrace();
 					return;
 				}
 			}).start();
 
-			while (!ui.getUpdater().isDownloading() && !ui.getUpdater().isDownloaded()) {
+			while (!Updater.getUpdater().isDownloading() && !Updater.getUpdater().isDownloaded()) {
 				try {
 					Thread.sleep(100);
 				} catch (InterruptedException e) {
@@ -103,9 +98,9 @@ public class Main extends BorderPane {
 			}
 
 			new Thread(() -> {
-				while (ui.getUpdater().isDownloading()) {
-					Platform.runLater(
-							() -> download.setProgress(ui.getUpdater().getDownloadingVersion().getDownloadProgress()));
+				while (Updater.getUpdater().isDownloading()) {
+					Platform.runLater(() -> download
+							.setProgress(Updater.getUpdater().getDownloadingVersion().getDownloadProgress()));
 					try {
 						Thread.sleep(100);
 					} catch (InterruptedException e) {
@@ -120,7 +115,7 @@ public class Main extends BorderPane {
 
 			new Thread(() -> {
 				try {
-					while (!ui.getUpdater().isLaunched()) {
+					while (!Updater.getUpdater().isLaunched()) {
 						Thread.sleep(100);
 					}
 					Thread.sleep(1000);
@@ -185,45 +180,6 @@ public class Main extends BorderPane {
 		setCenter(tabPane);
 		setBottom(bottom);
 		autosize();
-		load();
-	}
-
-	private void load() {
-		try {
-			settings.load(
-					new FileInputStream(Bootstrap.getPrefix() + LauncherVariables.project + "/config/launcher.conf"));
-		} catch (IOException e1) {
-		}
-		String arg = settings.getProperty("args");
-		if (arg != null) {
-			String[] t = arg.split(" ");
-			for (int x = 0; x < t.length; x++) {
-				switch (t[x]) {
-				case "-width":
-					wf.setText(t[++x]);
-					break;
-				case "-height":
-					hf.setText(t[++x]);
-					break;
-				}
-			}
-			ui.getUpdater().args = arg;
-		}
-	}
-
-	private void store() {
-		StringBuilder str = new StringBuilder();
-		str.append("-width " + wf.getText());
-		str.append(" ");
-		str.append("-height " + hf.getText());
-		ui.getUpdater().args = str.toString();
-		settings.setProperty("args", ui.getUpdater().args);
-		try {
-			settings.store(
-					new FileOutputStream(Bootstrap.getPrefix() + LauncherVariables.project + "/config/launcher.conf"),
-					"Launcher Settings");
-		} catch (Exception e) {
-		}
 	}
 
 }

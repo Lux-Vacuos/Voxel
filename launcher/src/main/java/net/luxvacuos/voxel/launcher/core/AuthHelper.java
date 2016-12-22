@@ -20,19 +20,12 @@
 
 package net.luxvacuos.voxel.launcher.core;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.net.URLConnection;
-
 public class AuthHelper {
 
-	public static boolean login(String user, String pass) throws IOException {
-		URL url = new URL(
-				LauncherVariables.authHost + "/forum/getdata.php?option=login&user=" + user + "&pass=" + pass);
-		URLConnection conn = url.openConnection();
-		BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-		return bufferedReader.readLine().equals("login: true");
+	public static boolean login(String user, String pass) {
+		if (user == "" || user.equals(""))
+			return false;
+		// TODO: Implement Authentication
+		return true;
 	}
 }

@@ -27,7 +27,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.Arrays;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonIOException;
@@ -38,6 +37,14 @@ import net.luxvacuos.voxel.launcher.bootstrap.Bootstrap.Platform;
 
 public class Updater {
 
+	private static Updater updater;
+
+	public static Updater getUpdater() {
+		if (updater == null)
+			updater = new Updater();
+		return updater;
+	}
+
 	private Gson gson;
 	private VersionsHandler versionsHandler;
 	private File local = new File(Bootstrap.getPrefix() + LauncherVariables.project + "/config/local.json");
@@ -45,46 +52,43 @@ public class Updater {
 	private boolean downloading = false;
 	private boolean downloaded = false;
 	private boolean launched = false;
-	public String vmargs = "", args = "";
 
-	public Updater() {
+	private Updater() {
 		gson = new Gson();
-		new File(Bootstrap.getPrefix() + LauncherVariables.project + "/config/").mkdirs();
-		new File(Bootstrap.getPrefix() + LauncherVariables.project + "/config/versions/").mkdirs();
+		new File(Bootstrap.getPrefix() + LauncherVariables.project + "/" + LauncherVariables.config + "/").mkdirs();
+		new File(Bootstrap.getPrefix() + LauncherVariables.project + "/" + LauncherVariables.config + "/versions/")
+				.mkdirs();
 	}
 
-	public void downloadAndRun(VersionKey key, String username)
-			throws JsonSyntaxException, JsonIOException, FileNotFoundException {
+	public void downloadAndRun() throws JsonSyntaxException, JsonIOException, FileNotFoundException {
+		VersionKey key = versionsHandler.getVersions().get(0);
 		if (DownloadsHelper.download(
-				Bootstrap.getPrefix() + LauncherVariables.project + "/config/versions/" + key.name + "-" + key.version
-						+ ".json",
-				"/" + LauncherVariables.project + "/config/versions/" + key.name + "-" + key.version + ".json")) {
-			Version ver = gson.fromJson(new FileReader(Bootstrap.getPrefix() + LauncherVariables.project
-					+ "/config/versions/" + key.name + "-" + key.version + ".json"), Version.class);
+				Bootstrap.getPrefix() + LauncherVariables.project + "/" + LauncherVariables.config + "/versions/"
+						+ key.name + "-" + key.version + ".json",
+				"/" + LauncherVariables.project + "/" + LauncherVariables.config + "/versions/" + key.name + "-"
+						+ key.version + ".json")) {
+			Version ver = gson
+					.fromJson(
+							new FileReader(Bootstrap.getPrefix() + LauncherVariables.project + "/"
+									+ LauncherVariables.config + "/versions/" + key.name + "-" + key.version + ".json"),
+							Version.class);
 			downloadingVersion = ver;
 			downloading = true;
 			ver.download();
 			downloading = false;
 			downloadingVersion = null;
 			downloaded = true;
-			
-			if(username == null){
-				username = "anon";
-			}
-			if(username == ""){
-				username = "anon";
-			}
 
 			ProcessBuilder pb;
 			if (Bootstrap.getPlatform().equals(Platform.MACOSX)) {
-				pb = new ProcessBuilder("java", "-XX:+UseG1GC", "-XstartOnFirstThread", vmargs, "-classpath",
-						getClassPath(ver), "net.luxvacuos.voxel.client.bootstrap.Bootstrap", "-username", username);
+				pb = new ProcessBuilder("java", "-XX:+UseG1GC", "-XstartOnFirstThread", "-Xmx1G", "-classpath",
+						getClassPath(ver), "net.luxvacuos.voxel.client.bootstrap.Bootstrap", "-username",
+						LauncherVariables.username);
 			} else {
-				pb = new ProcessBuilder("java", "-XX:+UseG1GC", vmargs, "-classpath", getClassPath(ver),
-						"net.luxvacuos.voxel.client.bootstrap.Bootstrap", "-username", username);
+				pb = new ProcessBuilder("java", "-XX:+UseG1GC", "-Xmx1G", "-classpath", getClassPath(ver),
+						"net.luxvacuos.voxel.client.bootstrap.Bootstrap", "-username", LauncherVariables.username);
 			}
-			String[] arg = args.split(" ");
-			pb.command().addAll(Arrays.asList(arg));
+			pb.command().addAll(LauncherVariables.userArgs);
 			try {
 				launched = true;
 				pb.start();
@@ -97,9 +101,12 @@ public class Updater {
 	public void getRemoteVersions() {
 		new Thread(() -> {
 			try {
-				if (DownloadsHelper.download(Bootstrap.getPrefix() + LauncherVariables.project + "/config/remote.json",
-						"/" + LauncherVariables.project + "/config/remote.json")) {
-					File remote = new File(Bootstrap.getPrefix() + LauncherVariables.project + "/config/remote.json");
+				if (DownloadsHelper.download(
+						Bootstrap.getPrefix() + LauncherVariables.project + "/" + LauncherVariables.config
+								+ "/remote.json",
+						"/" + LauncherVariables.project + "/" + LauncherVariables.config + "/remote.json")) {
+					File remote = new File(Bootstrap.getPrefix() + LauncherVariables.project + "/"
+							+ LauncherVariables.config + "/remote.json");
 					Files.copy(remote.toPath(), local.toPath(), REPLACE_EXISTING);
 					remote.delete();
 				}
@@ -116,20 +123,20 @@ public class Updater {
 		StringBuilder builder = new StringBuilder();
 		int size = ver.getLibs().size();
 		int count = 0;
-		builder.append(builder.append(Bootstrap.getPrefix() + LauncherVariables.project + "/libraries/"
-				+ ver.getDomain() + "/" + ver.getName() + "/" + ver.getVersion() + "/" + ver.getName() + "-"
-				+ ver.getVersion() + ".jar" + LauncherVariables.separator));
+		builder.append(builder.append(Bootstrap.getPrefix() + LauncherVariables.project + "/"
+				+ LauncherVariables.libraries + "/" + ver.getDomain() + "/" + ver.getName() + "/" + ver.getVersion()
+				+ "/" + ver.getName() + "-" + ver.getVersion() + ".jar" + LauncherVariables.separator));
 		for (Library library : ver.getLibs()) {
 			count++;
 			builder.append(library.getClassPath());
 			if (count == size)
-				builder.append(Bootstrap.getPrefix() + LauncherVariables.project + "/libraries/" + library.getDomain()
-						+ "/" + library.getName() + "/" + library.getVersion() + "/" + library.getName() + "-"
-						+ library.getVersion() + ".jar");
+				builder.append(Bootstrap.getPrefix() + LauncherVariables.project + "/" + LauncherVariables.libraries
+						+ "/" + library.getDomain() + "/" + library.getName() + "/" + library.getVersion() + "/"
+						+ library.getName() + "-" + library.getVersion() + ".jar");
 			else
-				builder.append(Bootstrap.getPrefix() + LauncherVariables.project + "/libraries/" + library.getDomain()
-						+ "/" + library.getName() + "/" + library.getVersion() + "/" + library.getName() + "-"
-						+ library.getVersion() + ".jar" + LauncherVariables.separator);
+				builder.append(Bootstrap.getPrefix() + LauncherVariables.project + "/" + LauncherVariables.libraries
+						+ "/" + library.getDomain() + "/" + library.getName() + "/" + library.getVersion() + "/"
+						+ library.getName() + "-" + library.getVersion() + ".jar" + LauncherVariables.separator);
 		}
 		return builder.toString();
 	}

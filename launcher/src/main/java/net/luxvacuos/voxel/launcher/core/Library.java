@@ -59,15 +59,15 @@ public class Library {
 	 * Download the library and the dependencies
 	 */
 	public void download() {
-		new File(Bootstrap.getPrefix() + LauncherVariables.project + "/libraries/" + domain + "/" + name + "/" + version
-				+ "/").mkdirs();
-		if (!new File(Bootstrap.getPrefix() + LauncherVariables.project + "/libraries/" + domain + "/" + name + "/"
-				+ version + "/" + name + "-" + version + ".jar").exists())
+		new File(Bootstrap.getPrefix() + LauncherVariables.project + "/" + LauncherVariables.libraries + "/" + domain
+				+ "/" + name + "/" + version + "/").mkdirs();
+		if (!new File(Bootstrap.getPrefix() + LauncherVariables.project + "/" + LauncherVariables.libraries + "/"
+				+ domain + "/" + name + "/" + version + "/" + name + "-" + version + ".jar").exists())
 			DownloadsHelper.download(
-					Bootstrap.getPrefix() + LauncherVariables.project + "/libraries/" + domain + "/" + name + "/"
-							+ version + "/" + name + "-" + version + ".jar",
-					"/" + LauncherVariables.project + "/libraries/" + domain + "/" + name + "/" + version + "/" + name
-							+ "-" + version + ".jar");
+					Bootstrap.getPrefix() + LauncherVariables.project + "/" + LauncherVariables.libraries + "/" + domain
+							+ "/" + name + "/" + version + "/" + name + "-" + version + ".jar",
+					"/" + LauncherVariables.project + "/" + LauncherVariables.libraries + "/" + domain + "/" + name
+							+ "/" + version + "/" + name + "-" + version + ".jar");
 		for (Library library : dependencies) {
 			library.download();
 		}
@@ -100,7 +100,7 @@ public class Library {
 	public String getClassPath() {
 		StringBuilder builder = new StringBuilder();
 		for (Library library : getDependencies()) {
-			builder.append(Bootstrap.getPrefix() + LauncherVariables.project + "/libraries/" + library.getDomain() + "/"
+			builder.append(Bootstrap.getPrefix() + LauncherVariables.project + "/" + LauncherVariables.libraries + "/" + library.getDomain() + "/"
 					+ library.getName() + "/" + library.getVersion() + "/" + library.getName() + "-"
 					+ library.getVersion() + ".jar" + LauncherVariables.separator);
 			builder.append(library.getClassPath());

@@ -8,7 +8,7 @@ import java.net.URL;
 import java.net.URLConnection;
 
 import javafx.stage.Stage;
-import net.luxvacuos.voxel.launcher.ui.stages.Update;
+import net.luxvacuos.voxel.launcher.bootstrap.Bootstrap;
 import net.luxvacuos.voxel.launcher.util.Logger;
 
 public class UpdateLauncher {
@@ -47,17 +47,23 @@ public class UpdateLauncher {
 		return false;
 	}
 
-	public void downloadAndRun(Update up, Stage stg) throws IOException {
+	public void downloadAndRun(Stage stg) throws IOException {
+		if (new File(Bootstrap.getPrefix() + LauncherVariables.project + "/launcher.jar").exists()) {
+			ProcessBuilder pb = new ProcessBuilder("java", "-jar",
+					Bootstrap.getPrefix() + LauncherVariables.project + "/launcher.jar");
+			pb.start();
+			javafx.application.Platform.runLater(() -> stg.close());
+			return;
+		}
 		Logger.log("Updating Launcher");
 		new Thread(() -> {
 			try {
-				DownloadsHelper.download(new File(".").getCanonicalPath() + "/launcher.jar", "/launcher/launcher.jar");
+				DownloadsHelper.download(Bootstrap.getPrefix() + LauncherVariables.project + "/launcher.jar",
+						"/launcher/launcher.jar");
 				ProcessBuilder pb = new ProcessBuilder("java", "-jar",
-						new File(".").getCanonicalPath() + "/launcher.jar");
+						Bootstrap.getPrefix() + LauncherVariables.project + "/launcher.jar");
 				pb.start();
-				javafx.application.Platform.runLater(() -> {
-					stg.close();
-				});
+				javafx.application.Platform.runLater(() -> stg.close());
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

@@ -35,6 +35,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import net.luxvacuos.voxel.launcher.core.AuthHelper;
+import net.luxvacuos.voxel.launcher.core.LauncherVariables;
 import net.luxvacuos.voxel.launcher.ui.MainUI;
 
 public class Login extends GridPane {
@@ -79,6 +80,7 @@ public class Login extends GridPane {
 		loginPane.add(passText, 0, 2);
 
 		passField = new PasswordField();
+		passField.setEditable(false);
 		loginPane.add(passField, 0, 3);
 		add(loginPane, 0, 1);
 
@@ -95,21 +97,23 @@ public class Login extends GridPane {
 			loginProgress.setProgress(-1);
 			new Thread(() -> {
 				try {
-					if (AuthHelper.login(userField.getText(), passField.getText()))
+					if (AuthHelper.login(userField.getText(), passField.getText())) {
+						LauncherVariables.username = userField.getText();
 						Platform.runLater(() -> {
 							stage.hide();
 							stage.setScene(new Scene(ui.getMainStage()));
+							stage.getScene().setCursor(LauncherVariables.cursor);
 							stage.centerOnScreen();
 							stage.show();
 							ui.getMainStage().userName.setText("Welcome, " + userField.getText());
 							passField.setText("");
 						});
-					else
+					} else
 						Platform.runLater(() -> {
 							userField.setText("");
 							passField.setText("");
 							userField.setEditable(true);
-							passField.setEditable(true);
+							// passField.setEditable(true);
 							loginProgress.setVisible(false);
 							loginProgress.setProgress(0);
 							message.setText("Invalid credentials");
@@ -119,10 +123,10 @@ public class Login extends GridPane {
 						userField.setText("");
 						passField.setText("");
 						userField.setEditable(true);
-						passField.setEditable(true);
+						// passField.setEditable(true);
 						loginProgress.setVisible(false);
 						loginProgress.setProgress(0);
-						message.setText("No Internet connection");
+						message.setText("Unkown Error, please try again");
 					});
 				}
 			}).start();
@@ -131,7 +135,7 @@ public class Login extends GridPane {
 
 		Hyperlink link = new Hyperlink("Don't have an account?");
 		link.setOnAction((event) -> {
-			ui.getHostServices().showDocument("https://luxvacuos.net/forum/register.php");
+			ui.getHostServices().showDocument("#"); // TODO: Implement
 		});
 
 		bottom.add(link, 1, 0);

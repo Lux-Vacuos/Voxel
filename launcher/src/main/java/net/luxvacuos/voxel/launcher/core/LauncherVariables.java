@@ -20,13 +20,24 @@
 
 package net.luxvacuos.voxel.launcher.core;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javafx.scene.ImageCursor;
+
 public class LauncherVariables {
 
-	public static final String version = "0.0.11";
+	public static final String version = "0.0.12";
 	public static boolean apt = false;
 	public static final String host = "https://s3.luxvacuos.net";
 	public static final String authHost = "https://luxvacuos.net";
 	public static final String project = "voxel";
+	public static final String config = "config";
+	public static final String libraries = "libraries";
 	public static final String separator = System.getProperty("path.separator");
+
+	public static ImageCursor cursor;
+	public static String username;
+	public static List<String> userArgs = new ArrayList<>();
 
 }
