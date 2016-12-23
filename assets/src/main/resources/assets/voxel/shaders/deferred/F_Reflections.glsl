@@ -31,11 +31,16 @@ uniform sampler2D gPosition;
 uniform sampler2D gNormal;
 uniform sampler2D gMask;
 uniform sampler2D gPBR;
+uniform sampler2D gDiffuse;
 uniform samplerCube gEnvironment;
 uniform sampler2D composite0;
 uniform sampler2DShadow gDepth;
 
 uniform int useReflections;
+
+vec3 fresnelSchlickRoughness(float cosTheta, vec3 F0, float roughness) {
+    return F0 + (max(vec3(1.0 - roughness), F0) - F0) * pow(1.0 - cosTheta, 5.0);
+}
 
 void main(void){
 	vec2 texcoord = textureCoords;
@@ -53,9 +58,15 @@ void main(void){
     			float cameraToWorldDist = length(cameraToWorld);
     			vec3 cameraToWorldNorm = normalize(cameraToWorld);
     			vec3 refl = normalize(reflect(cameraToWorldNorm, normal));
-				float cosAngle = abs(dot(normal, cameraToWorldNorm));
-    			float fresnel = 1 - cosAngle;
-				fresnel = min(1, 1.15 - fresnel*fresnel);
+				
+				vec3 V = normalize(cameraPosition - position.xyz);
+				vec3 F0 = vec3(0.04); 
+				F0 = mix(F0, texture(gDiffuse, texcoord).rgb, pbr.g);
+				vec3 F = fresnelSchlickRoughness(max(dot(normal, V), 0.0), F0, pbr.r);
+				vec3 kS = F;
+				vec3 kD = vec3(1.0) - kS;
+				kD *= 1.0 - pbr.g;	
+				
     			vec3 newPos;
     			vec4 newScreen;
     			vec3 rayTrace = worldStartingPos;
@@ -87,10 +98,8 @@ void main(void){
 		        	fact = 0.0;
 				else if(newScreen.z > 1 && newScreen.z < -1)
 					fact = 0.0;
-				//fresnel *= 1-pbr.b;
 				vec4 finalReflection = mix(enviromentMap, newColor, fact);
-				//image = image*fresnel + max(finalReflection, 0.0) * (1-fresnel);
-				image = mix(image, finalReflection, pbr.b);
+				image.rgb = image.rgb * kD + max(finalReflection.rgb, 0.0) * (1-kD);
     		}
 		}
 	}

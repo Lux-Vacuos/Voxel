@@ -75,7 +75,7 @@ public class Renderer {
 			ClientVariables.shadowMapResolution = GLUtil.getTextureMaxSize();
 		frustum = new Frustum();
 		shadowFBO = new ShadowFBO(ClientVariables.shadowMapResolution, ClientVariables.shadowMapResolution);
-		entityRenderer = new EntityRenderer(camera.getProjectionMatrix(), sunCamera.getProjectionMatrix());
+		entityRenderer = new EntityRenderer(camera.getProjectionMatrix(), sunCamera.getProjectionMatrix(), window.getResourceLoader());
 		entityShadowRenderer = new EntityShadowRenderer(sunCamera.getProjectionMatrix());
 		skyboxRenderer = new SkyboxRenderer(window.getResourceLoader(), camera.getProjectionMatrix());
 		lightRenderer = new LightRenderer();

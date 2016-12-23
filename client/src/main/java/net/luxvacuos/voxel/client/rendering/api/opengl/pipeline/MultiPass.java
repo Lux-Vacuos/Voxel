@@ -72,9 +72,9 @@ public class MultiPass extends RenderingPipeline {
 		ambientOcclusion.init();
 		super.imagePasses.add(ambientOcclusion);
 
-		reflections = new Reflections("Reflections", width, height);
-		reflections.init();
-		super.imagePasses.add(reflections);
+		//reflections = new Reflections("Reflections", width, height);
+		//reflections.init();
+		//super.imagePasses.add(reflections);
 
 		bloomMask = new BloomMask("BloomMask", width, height);
 		bloomMask.init();

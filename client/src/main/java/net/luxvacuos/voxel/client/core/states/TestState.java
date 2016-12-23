@@ -28,6 +28,7 @@ import com.badlogic.gdx.math.collision.BoundingBox;
 
 import net.luxvacuos.igl.vector.Matrix4d;
 import net.luxvacuos.igl.vector.Vector3d;
+import net.luxvacuos.igl.vector.Vector4f;
 import net.luxvacuos.voxel.client.core.ClientInternalSubsystem;
 import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.core.ClientWorldSimulation;
@@ -40,7 +41,10 @@ import net.luxvacuos.voxel.client.rendering.api.nanovg.UIRendering;
 import net.luxvacuos.voxel.client.rendering.api.opengl.ParticleMaster;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Renderer;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Tessellator;
-import net.luxvacuos.voxel.client.rendering.api.opengl.objects.Light;
+import net.luxvacuos.voxel.client.rendering.api.opengl.objects.Material;
+import net.luxvacuos.voxel.client.rendering.api.opengl.objects.RawModel;
+import net.luxvacuos.voxel.client.rendering.api.opengl.objects.Texture;
+import net.luxvacuos.voxel.client.rendering.api.opengl.objects.TexturedModel;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.TessellatorBasicShader;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.TessellatorShader;
 import net.luxvacuos.voxel.client.rendering.utils.BlockFaceAtlas;
@@ -50,17 +54,15 @@ import net.luxvacuos.voxel.client.world.PhysicsSystem;
 import net.luxvacuos.voxel.client.world.block.BlocksResources;
 import net.luxvacuos.voxel.client.world.block.RenderBlock;
 import net.luxvacuos.voxel.client.world.entities.Camera;
-import net.luxvacuos.voxel.client.world.entities.Dragon;
 import net.luxvacuos.voxel.client.world.entities.EntityResources;
 import net.luxvacuos.voxel.client.world.entities.Plane;
 import net.luxvacuos.voxel.client.world.entities.PlayerCamera;
-import net.luxvacuos.voxel.client.world.entities.SoccerBall;
+import net.luxvacuos.voxel.client.world.entities.Sphere;
 import net.luxvacuos.voxel.client.world.entities.Sun;
-import net.luxvacuos.voxel.client.world.entities.Test;
 import net.luxvacuos.voxel.universal.core.AbstractVoxel;
 import net.luxvacuos.voxel.universal.core.states.AbstractState;
 import net.luxvacuos.voxel.universal.core.states.StateMachine;
-import net.luxvacuos.voxel.universal.ecs.Components;
+import net.luxvacuos.voxel.universal.ecs.components.Position;
 import net.luxvacuos.voxel.universal.material.BlockMaterial;
 
 /**
@@ -72,15 +74,14 @@ public class TestState extends AbstractState {
 
 	private PhysicsSystem physicsSystem;
 	private Engine engine;
-	private Test t;
 	private Plane plane;
-	private Dragon dragon0, dragon1, dragon2, dragon3;
-	private SoccerBall ball;
 	private Sun sun;
 	private ClientWorldSimulation worldSimulation;
 	private Camera camera;
 	private Renderer renderer;
 	private Tessellator tess;
+
+	private Sphere mat1, mat2, mat3, mat4, mat5;
 
 	public TestState() {
 		super(StateNames.TEST);
@@ -115,42 +116,48 @@ public class TestState extends AbstractState {
 		physicsSystem = new PhysicsSystem();
 		physicsSystem.addBox(new BoundingBox(new Vector3(-15, -1, -15), new Vector3(40, 0, 25)));
 		engine.addSystem(physicsSystem);
-		ball = new SoccerBall(new Vector3d(10, 0.5f, 0));
-		t = new Test(new Vector3d(0, 1, 0));
 		plane = new Plane();
-		dragon0 = new Dragon(new Vector3d(5, 0, 0));
-		Components.SCALE.get(dragon0).setScale(0.25f);
-		dragon1 = new Dragon(new Vector3d(-5, 0, 0));
-		Components.SCALE.get(dragon1).setScale(0.25f);
-		dragon2 = new Dragon(new Vector3d(0, 0, 5));
-		Components.SCALE.get(dragon2).setScale(0.25f);
-		dragon3 = new Dragon(new Vector3d(0, 0, -5));
-		Components.SCALE.get(dragon3).setScale(0.25f);
 		BlocksResources.createBlocks(loader);
 		tess = new Tessellator(projectionMatrix, shadowProjectionMatrix);
 		RenderBlock t = new RenderBlock(new BlockMaterial("test"), new BlockFaceAtlas("Ice"));
 		t.setID(1);
-
-		tess.begin(BlocksResources.getTessellatorTextureAtlas().getTexture(), BlocksResources.getNormalMap(),
-				BlocksResources.getHeightMap(), BlocksResources.getPbrMap());
-		for (int x = 0; x < 16; x++) {
-			for (int z = 0; z < 16; z++) {
-				tess.generateCube(20 + x, 0, z, 1, true, true, true, true, true, true, t);
-			}
-		}
-		tess.end();
-
-		renderer.setShadowPass((worldSimulation, camera, sunCamera, shadowMap, shadowData) -> {
-			tess.drawShadow(sunCamera);
-		});
-
-		renderer.setDeferredPass((worldSimulation, camera, sunCamera, shadowMap, shadowData) -> {
-			tess.draw(camera, sunCamera, worldSimulation, shadowMap, shadowData, false);
-		});
+		/*
+		 * tess.begin(BlocksResources.getTessellatorTextureAtlas().getTexture(),
+		 * BlocksResources.getNormalMap(), BlocksResources.getHeightMap(),
+		 * BlocksResources.getPbrMap()); for (int x = 0; x < 16; x++) { for (int
+		 * z = 0; z < 16; z++) { tess.generateCube(20 + x, 0, z, 1, true, true,
+		 * true, true, true, true, t); } } tess.end();
+		 * 
+		 * renderer.setShadowPass((worldSimulation, camera, sunCamera,
+		 * shadowMap, shadowData) -> { tess.drawShadow(sunCamera); });
+		 * 
+		 * renderer.setDeferredPass((worldSimulation, camera, sunCamera,
+		 * shadowMap, shadowData) -> { tess.draw(camera, sunCamera,
+		 * worldSimulation, shadowMap, shadowData, false); });
+		 */
 		// renderer.getLightRenderer().addLight(new Light(new Vector3d(2, 3,
 		// 0)));
 		// renderer.getLightRenderer().addLight(new Light(new Vector3d(-8, 2,
 		// 0)));
+
+		RawModel sphere = loader.loadObjModel("sphere");
+
+		mat1 = new Sphere(new TexturedModel(sphere,
+				new Material(new Vector4f(0.8f, 0.8f, 0.8f, 1f), 0.5f, 0, 0, new Texture(0), new Texture(0))));
+		mat1.getComponent(Position.class).set(0, 1, 0);
+		
+		mat2 = new Sphere(new TexturedModel(sphere,
+				new Material(new Vector4f(0.8f, 0.8f, 0.8f, 1f), 1.0f, 0, 0, new Texture(0), new Texture(0))));
+		mat2.getComponent(Position.class).set(3, 1, 0);
+		
+		mat3 = new Sphere(new TexturedModel(sphere,
+				new Material(new Vector4f(0.8f, 0.8f, 0.8f, 1f), 0.2f, 0.8f, 1, new Texture(0), new Texture(0))));
+		mat3.getComponent(Position.class).set(6, 1, 0);
+		
+		mat4 = new Sphere(new TexturedModel(sphere,
+				new Material(new Vector4f(0.8f, 0.8f, 0.8f, 1f), 1f, 0.2f, 1, new Texture(0), new Texture(0))));
+		mat4.getComponent(Position.class).set(9, 1, 0);
+
 	}
 
 	@Override
@@ -161,13 +168,11 @@ public class TestState extends AbstractState {
 	@Override
 	public void start() {
 		physicsSystem.getEngine().addEntity(camera);
-		physicsSystem.getEngine().addEntity(t);
 		physicsSystem.getEngine().addEntity(plane);
-		physicsSystem.getEngine().addEntity(dragon0);
-		physicsSystem.getEngine().addEntity(dragon1);
-		physicsSystem.getEngine().addEntity(dragon2);
-		physicsSystem.getEngine().addEntity(dragon3);
-		physicsSystem.getEngine().addEntity(ball);
+		physicsSystem.getEngine().addEntity(mat1);
+		physicsSystem.getEngine().addEntity(mat2);
+		physicsSystem.getEngine().addEntity(mat3);
+		physicsSystem.getEngine().addEntity(mat4);
 		((PlayerCamera) camera).setMouse();
 	}
 

@@ -25,8 +25,6 @@ import net.luxvacuos.igl.vector.Vector4f;
 /**
  * Material
  * 
- * @author pablo
- *
  */
 public class Material {
 

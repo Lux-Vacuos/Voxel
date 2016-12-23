@@ -25,8 +25,9 @@ import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
 import static org.lwjgl.opengl.GL11.GL_UNSIGNED_INT;
 import static org.lwjgl.opengl.GL11.glBindTexture;
 import static org.lwjgl.opengl.GL11.glDrawElements;
-import static org.lwjgl.opengl.GL13.*;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE1;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE8;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
 import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
 import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
@@ -44,8 +45,10 @@ import net.luxvacuos.igl.vector.Matrix4d;
 import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.Material;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.RawModel;
+import net.luxvacuos.voxel.client.rendering.api.opengl.objects.Texture;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.TexturedModel;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.EntityShader;
+import net.luxvacuos.voxel.client.resources.ResourceLoader;
 import net.luxvacuos.voxel.client.util.Maths;
 import net.luxvacuos.voxel.client.world.entities.AbstractEntity;
 import net.luxvacuos.voxel.client.world.entities.Camera;
@@ -67,6 +70,7 @@ public class EntityRenderer {
 	 */
 	private EntityShader shader;
 	private Map<TexturedModel, List<AbstractEntity>> entities = new HashMap<TexturedModel, List<AbstractEntity>>();
+	private Texture normal;
 
 	/**
 	 * Constructor, initializes the shaders and the projection matrix
@@ -76,12 +80,13 @@ public class EntityRenderer {
 	 * @param projectionMatrix
 	 *            A Matrix4d Projection
 	 */
-	public EntityRenderer(Matrix4d projectionMatrix, Matrix4d shadowProjectionMatrix) {
+	public EntityRenderer(Matrix4d projectionMatrix, Matrix4d shadowProjectionMatrix, ResourceLoader loader) {
 		shader = new EntityShader();
 		shader.start();
 		shader.loadProjectionMatrix(projectionMatrix);
 		shader.loadBiasMatrix(shadowProjectionMatrix);
 		shader.stop();
+		normal = new Texture(loader.loadTextureEntityMisc("default_norm"));
 	}
 
 	public void cleanUp() {
@@ -155,7 +160,10 @@ public class EntityRenderer {
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, material.getDiffuse().getID());
 		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_2D, material.getNormal().getID());
+		if (material.getNormal().getID() == 0)
+			glBindTexture(GL_TEXTURE_2D, normal.getID());
+		else
+			glBindTexture(GL_TEXTURE_2D, material.getNormal().getID());
 		glActiveTexture(GL_TEXTURE8);
 		glBindTexture(GL_TEXTURE_2D, shadowTex);
 	}

@@ -39,7 +39,8 @@ public class BloomMask extends ImagePass {
 	@Override
 	public void render(ImagePassFBO[] auxs, RenderingPipeline pipe, CubeMapTexture environmentMap) {
 		glActiveTexture(GL_TEXTURE6);
-		glBindTexture(GL_TEXTURE_2D, auxs[1].getTexture());
+		glBindTexture(GL_TEXTURE_2D, auxs[0].getTexture());
+		auxs[1] = auxs[0];
 	}
 
 }

@@ -35,21 +35,46 @@ uniform sampler2D composite0;
 uniform int shadowDrawDistance;
 
 #define TRANSITION_DISTANCE 2.5
+#define PI 3.14159265359
 
-float beckmannDistribution(float x, float roughness) {
-	float NdotH = max(x, 0.0001);
-  	float cos2Alpha = NdotH * NdotH;
-	float tan2Alpha = (cos2Alpha - 1.0) / cos2Alpha;
-	float roughness2 = roughness * roughness;
-	float denom = 3.141592653589793 * roughness2 * cos2Alpha * cos2Alpha;
-	return exp(tan2Alpha / roughness2) / denom;
+float DistributionGGX(vec3 N, vec3 H, float roughness) {
+    float a      = roughness*roughness;
+    float a2     = a*a;
+    float NdotH  = max(dot(N, H), 0.0);
+    float NdotH2 = NdotH*NdotH;
+	
+    float nom   = a2;
+    float denom = (NdotH2 * (a2 - 1.0) + 1.0);
+    denom = PI * denom * denom;
+	
+    return nom / denom;
 }
 
-float beckmannSpecular(vec3 lightDirection, vec3 viewDirection, vec3 surfaceNormal, float roughness) {
-	return beckmannDistribution(dot(surfaceNormal, normalize(lightDirection + viewDirection)), roughness);
+float GeometrySchlickGGX(float NdotV, float roughness) {
+    float r = (roughness + 1.0);
+    float k = (r*r) / 8.0;
+
+    float nom   = NdotV;
+    float denom = NdotV * (1.0 - k) + k;
+	
+    return nom / denom;
 }
 
-void main(void){
+float GeometrySmith(vec3 N, vec3 V, vec3 L, float roughness) {
+    float NdotV = max(dot(N, V), 0.0);
+    float NdotL = max(dot(N, L), 0.0);
+    float ggx2  = GeometrySchlickGGX(NdotV, roughness);
+    float ggx1  = GeometrySchlickGGX(NdotL, roughness);
+	
+    return ggx1 * ggx2;
+}
+
+
+vec3 fresnelSchlickRoughness(float cosTheta, vec3 F0, float roughness) {
+    return F0 + (max(vec3(1.0 - roughness), F0) - F0) * pow(1.0 - cosTheta, 5.0);
+}  
+
+void main(void) {
 	vec2 texcoord = textureCoords;
 	vec4 mask = texture(gMask, texcoord);
 	vec4 image = texture(gDiffuse, texcoord);
@@ -57,22 +82,42 @@ void main(void){
 		vec4 pbr = texture(gPBR, texcoord);
     	vec4 position = texture(gPosition, texcoord);
     	vec4 normal = texture(gNormal, texcoord);
-		image.rgb *= 1.0 - pbr.g;
-		vec3 lightDir = lightPosition;
-    	lightDir = normalize(lightDir);
-    	vec3 eyeDir = normalize(cameraPosition-position.xyz);
-    	normal = normalize(normal);
-		float distance = length(cameraPosition-position.xyz);
-    	float shadowDist = distance - (shadowDrawDistance - TRANSITION_DISTANCE);
-		shadowDist = shadowDist / TRANSITION_DISTANCE;
-		float fadeOut = clamp(1.0-shadowDist, 0.0, 1.0);
-		float normalDotLight = max(dot(normal.xyz, lightDir), 0);
-    	float finalLight = normalDotLight - (position.w * fadeOut);
-    	finalLight = max(finalLight, 0.015);
-    	image = finalLight * image;
-    	if(position.w < 1 && normalDotLight > 0.0 && pbr.r > 0.0){
-			image += beckmannSpecular(lightDir.xyz, eyeDir, normal.xyz, pbr.r) * (1-position.w) * normalDotLight;
-	   	}
+
+		vec3 N = normalize(normal.rgb);
+	    vec3 V = normalize(cameraPosition - position.rgb);
+
+		float roughness = pbr.r;
+		float metallic = pbr.g;
+
+	    vec3 F0 = vec3(0.04);
+	    F0 = mix(F0, image.rgb, metallic);
+	    vec3 F = fresnelSchlickRoughness(max(dot(N, V), 0.0), F0, roughness);
+
+	    vec3 kS = F;
+	    vec3 kD = vec3(1.0) - kS;
+	    kD *= 1.0 - metallic;	  
+	
+    	vec3 Lo = vec3(0.0);
+       	vec3 L = normalize(lightPosition);
+       	vec3 H = normalize(V + L);
+        vec3 radiance = vec3(1.0);        
+	
+       	float NDF = DistributionGGX(N, H, roughness);        
+       	float G = GeometrySmith(N, V, L, roughness);      
+        
+    	vec3 nominator = NDF * G * F;
+       	float denominator = max(dot(V, N), 0.0) * max(dot(L, N), 0.0) + 0.001; 
+        vec3 brdf = nominator / denominator;
+	
+       	float NdotL = max(dot(N, L) - position.w, 0.0) ;      
+       	Lo += (kD * image.rgb / PI + brdf) * radiance * NdotL;
+
+    	vec3 ambient = vec3(0.03) * image.rgb;
+    	vec3 color = ambient + Lo;
+		image.rgb = color;
+
+		
+
 	}
     image += texture(composite0, texcoord);
 	out_Color = image;
