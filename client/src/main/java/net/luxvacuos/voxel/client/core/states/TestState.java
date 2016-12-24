@@ -28,6 +28,7 @@ import com.badlogic.gdx.math.collision.BoundingBox;
 
 import net.luxvacuos.igl.vector.Matrix4d;
 import net.luxvacuos.igl.vector.Vector3d;
+import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.igl.vector.Vector4f;
 import net.luxvacuos.voxel.client.core.ClientInternalSubsystem;
 import net.luxvacuos.voxel.client.core.ClientVariables;
@@ -41,6 +42,7 @@ import net.luxvacuos.voxel.client.rendering.api.nanovg.UIRendering;
 import net.luxvacuos.voxel.client.rendering.api.opengl.ParticleMaster;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Renderer;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Tessellator;
+import net.luxvacuos.voxel.client.rendering.api.opengl.objects.Light;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.Material;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.RawModel;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.Texture;
@@ -136,30 +138,32 @@ public class TestState extends AbstractState {
 		 * shadowMap, shadowData) -> { tess.draw(camera, sunCamera,
 		 * worldSimulation, shadowMap, shadowData, false); });
 		 */
-		// renderer.getLightRenderer().addLight(new Light(new Vector3d(2, 3,
-		// 0)));
-		// renderer.getLightRenderer().addLight(new Light(new Vector3d(-8, 2,
-		// 0)));
+		renderer.getLightRenderer().addLight(new Light(new Vector3d(-5, 5, -5), new Vector3f(1, 1, 1)));
+		renderer.getLightRenderer().addLight(new Light(new Vector3d(-5, 5, 5), new Vector3f(1, 1, 1)));
+		renderer.getLightRenderer().addLight(new Light(new Vector3d(5, 5, -5), new Vector3f(1, 1, 1)));
+		renderer.getLightRenderer().addLight(new Light(new Vector3d(5, 5, 5), new Vector3f(1, 1, 1)));
+		renderer.getLightRenderer().addLight(new Light(new Vector3d(0, 5, 0), new Vector3f(1, 1, 1)));
 
 		RawModel sphere = loader.loadObjModel("sphere");
-		Texture test = loader.loadTexture("test1");
+		Texture test = loader.loadTexture("rusted_iron");
 		Texture test_n = null;
-		Texture test_r = loader.loadTexture("test1_r");
+		Texture test_r = loader.loadTexture("rusted_iron-r");
+		Texture test_m = loader.loadTexture("rusted_iron-m");
 
 		mat1 = new Sphere(new TexturedModel(sphere,
-				new Material(new Vector4f(1f), 1f, 1, 0, test, test_n, test_r, test_r, null)));
+				new Material(new Vector4f(1f), 1f, 1f, 0, test, test_n, test_r, test_m, null)));
 		mat1.getComponent(Position.class).set(0, 1, 0);
 
 		mat2 = new Sphere(new TexturedModel(sphere,
-				new Material(new Vector4f(1f), 1f, 1, 0, test, test_n, test_r, test_r, null)));
+				new Material(new Vector4f(1f), 1f, 1f, 0, test, test_n, test_r, test_m, null)));
 		mat2.getComponent(Position.class).set(3, 1, 0);
 
 		mat3 = new Sphere(new TexturedModel(sphere,
-				new Material(new Vector4f(1f), 1f, 1f, 1, test, test_n, test_r, test_r, null)));
+				new Material(new Vector4f(1f), 1f, 1f, 1, test, test_n, test_r, test_m, null)));
 		mat3.getComponent(Position.class).set(6, 1, 0);
 
 		mat4 = new Sphere(new TexturedModel(sphere,
-				new Material(new Vector4f(1f), 1f, 1f, 1, test, test_n, test_r, test_r, null)));
+				new Material(new Vector4f(1f), 1f, 1f, 1, test, test_n, test_r, test_m, null)));
 		mat4.getComponent(Position.class).set(9, 1, 0);
 
 	}

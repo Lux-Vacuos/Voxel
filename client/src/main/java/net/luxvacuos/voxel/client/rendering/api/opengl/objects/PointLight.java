@@ -21,11 +21,12 @@
 package net.luxvacuos.voxel.client.rendering.api.opengl.objects;
 
 import net.luxvacuos.igl.vector.Vector3d;
+import net.luxvacuos.igl.vector.Vector3f;
 
 public class PointLight extends Light {
 
-	public PointLight(Vector3d position) {
-		super(position);
+	public PointLight(Vector3d position, Vector3f color) {
+		super(position, color);
 	}
 
 }

@@ -27,7 +27,7 @@ import static org.lwjgl.opengl.GL11.GL_FLOAT;
 import static org.lwjgl.opengl.GL11.GL_LINEAR;
 import static org.lwjgl.opengl.GL11.GL_LINEAR_MIPMAP_LINEAR;
 import static org.lwjgl.opengl.GL11.GL_REPEAT;
-import static org.lwjgl.opengl.GL11.GL_RGB;
+import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL11.GL_RGBA;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_MAG_FILTER;
@@ -44,24 +44,24 @@ import static org.lwjgl.opengl.GL11.glTexImage2D;
 import static org.lwjgl.opengl.GL11.glTexParameterf;
 import static org.lwjgl.opengl.GL11.glTexParameteri;
 import static org.lwjgl.opengl.GL12.GL_CLAMP_TO_EDGE;
-import static org.lwjgl.opengl.GL12.GL_TEXTURE_WRAP_R;
+import static org.lwjgl.opengl.GL12.*;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE_CUBE_MAP;
-import static org.lwjgl.opengl.GL13.GL_TEXTURE_CUBE_MAP_POSITIVE_X;
+import static org.lwjgl.opengl.GL13.*;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
-import static org.lwjgl.opengl.GL14.GL_TEXTURE_LOD_BIAS;
+import static org.lwjgl.opengl.GL14.*;
 import static org.lwjgl.opengl.GL15.GL_ARRAY_BUFFER;
 import static org.lwjgl.opengl.GL15.GL_ELEMENT_ARRAY_BUFFER;
-import static org.lwjgl.opengl.GL15.GL_STATIC_DRAW;
+import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL15.GL_STREAM_DRAW;
 import static org.lwjgl.opengl.GL15.glBindBuffer;
 import static org.lwjgl.opengl.GL15.glBufferData;
 import static org.lwjgl.opengl.GL15.glBufferSubData;
 import static org.lwjgl.opengl.GL15.glDeleteBuffers;
 import static org.lwjgl.opengl.GL15.glGenBuffers;
-import static org.lwjgl.opengl.GL20.glVertexAttribPointer;
-import static org.lwjgl.opengl.GL21.GL_SRGB_ALPHA;
-import static org.lwjgl.opengl.GL30.GL_RGBA16F;
+import static org.lwjgl.opengl.GL20.*;
+import static org.lwjgl.opengl.GL21.*;
+import static org.lwjgl.opengl.GL30.*;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import static org.lwjgl.opengl.GL30.glDeleteVertexArrays;
 import static org.lwjgl.opengl.GL30.glGenVertexArrays;
@@ -221,33 +221,13 @@ public class ResourceLoader {
 		int texture_id = 0;
 		try {
 			Logger.log("Loading Texture: " + fileName + ".png");
-			texture_id = loadTexture("assets/" + ClientVariables.assets + "/textures/" + fileName + ".png",
-					GL_LINEAR, GL_REPEAT, GL_RGBA);
+			texture_id = loadTexture("assets/" + ClientVariables.assets + "/textures/" + fileName + ".png", GL_LINEAR,
+					GL_REPEAT, GL_RGBA);
 		} catch (Exception e) {
 			throw new LoadTextureException(fileName, e);
 		}
 		textures.add(texture_id);
 		return new Texture(texture_id);
-	}
-
-	/**
-	 * Load Particle Texture
-	 * 
-	 * @param fileName
-	 *            Particle Texture Name
-	 * @return Texture ID
-	 */
-	public int loadTextureParticle(String fileName) {
-		int texture_id = 0;
-		try {
-			Logger.log("Loading Texture: " + fileName + ".png");
-			texture_id = loadTexture("assets/" + ClientVariables.assets + "/textures/particles/" + fileName + ".png",
-					GL_LINEAR, GL_REPEAT, GL_SRGB_ALPHA);
-		} catch (Exception e) {
-			throw new LoadTextureException(fileName, e);
-		}
-		textures.add(texture_id);
-		return texture_id;
 	}
 
 	/**
@@ -261,8 +241,8 @@ public class ResourceLoader {
 		int texture = 0;
 		try {
 			Logger.log("Loading Texture: " + fileName + ".png");
-			texture = loadTexture("assets/" + ClientVariables.assets + "/textures/" + fileName + ".png",
-					GL_LINEAR, GL_REPEAT, GL_SRGB_ALPHA);
+			texture = loadTexture("assets/" + ClientVariables.assets + "/textures/" + fileName + ".png", GL_LINEAR,
+					GL_REPEAT, GL_SRGB_ALPHA);
 		} catch (Exception e) {
 			throw new LoadTextureException(fileName, e);
 		}
@@ -282,6 +262,12 @@ public class ResourceLoader {
 			if ((data.getWidth() & 3) != 0)
 				glPixelStorei(GL_UNPACK_ALIGNMENT, 2 - (data.getWidth() & 1));
 			glTexImage2D(GL_TEXTURE_2D, 0, format, data.getWidth(), data.getHeight(), 0, GL_RGB, GL_UNSIGNED_BYTE,
+					data.getBuffer());
+		} else if (data.getComp() == 2) {
+			glTexImage2D(GL_TEXTURE_2D, 0, format, data.getWidth(), data.getHeight(), 0, GL_RG, GL_UNSIGNED_BYTE,
+					data.getBuffer());
+		} else if (data.getComp() == 1) {
+			glTexImage2D(GL_TEXTURE_2D, 0, format, data.getWidth(), data.getHeight(), 0, GL_RED, GL_UNSIGNED_BYTE,
 					data.getBuffer());
 		} else {
 			glTexImage2D(GL_TEXTURE_2D, 0, format, data.getWidth(), data.getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE,

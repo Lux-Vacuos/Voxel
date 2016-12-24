@@ -33,6 +33,6 @@ void main(void){
 	image = texture(composite0, texcoord);
 	float brightness = dot(image.rgb, vec3(0.2126, 0.7152, 0.0722));
     if(brightness > 1)
-		result = vec4(image.rgb, 1.0);
+		result = vec4(normalize(image.rgb), 1.0);
 	out_Color = result;
 }

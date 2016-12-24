@@ -83,7 +83,7 @@ void main(void) {
 	}
 
 	vec3 normal = texture(material.normalTex, pass_textureCoords).rgb;
-	normal = normal * 2.0 - 1.0;
+	normal = normalize(normal * 2.0 - 1.0);
 	normal = normalize(TBN * normal);
 	
 	out_Color[0] = diffuseF;

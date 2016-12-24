@@ -29,7 +29,9 @@ uniform vec3 cameraPosition;
 uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;
 
-uniform vec3 pointLightsPos[256];
+uniform vec3 pointLightsPosition[256];
+uniform vec3 pointLightsColor[256];
+uniform int totalPointLights;
 
 uniform sampler2D gDiffuse;
 uniform sampler2D gPosition;
@@ -38,19 +40,44 @@ uniform sampler2D gMask;
 uniform sampler2D gPBR; // R = roughness, B = metallic
 uniform sampler2D composite0;
 
+#define PI 3.14159265359
 
-float beckmannDistribution(float x, float roughness) {
-	float NdotH = max(x, 0.0001);
-  	float cos2Alpha = NdotH * NdotH;
-	float tan2Alpha = (cos2Alpha - 1.0) / cos2Alpha;
-	float roughness2 = roughness * roughness;
-	float denom = 3.141592653589793 * roughness2 * cos2Alpha * cos2Alpha;
-	return exp(tan2Alpha / roughness2) / denom;
+float DistributionGGX(vec3 N, vec3 H, float roughness) {
+    float a      = roughness*roughness;
+    float a2     = a*a;
+    float NdotH  = max(dot(N, H), 0.0);
+    float NdotH2 = NdotH*NdotH;
+	
+    float nom   = a2;
+    float denom = (NdotH2 * (a2 - 1.0) + 1.0);
+    denom = PI * denom * denom;
+	
+    return nom / denom;
 }
 
-float beckmannSpecular(vec3 lightDirection, vec3 viewDirection, vec3 surfaceNormal, float roughness) {
-	return beckmannDistribution(dot(surfaceNormal, normalize(lightDirection + viewDirection)), roughness);
+float GeometrySchlickGGX(float NdotV, float roughness) {
+    float r = (roughness + 1.0);
+    float k = (r*r) / 8.0;
+
+    float nom   = NdotV;
+    float denom = NdotV * (1.0 - k) + k;
+	
+    return nom / denom;
 }
+
+float GeometrySmith(vec3 N, vec3 V, vec3 L, float roughness) {
+    float NdotV = max(dot(N, V), 0.0);
+    float NdotL = max(dot(N, L), 0.0);
+    float ggx2  = GeometrySchlickGGX(NdotV, roughness);
+    float ggx1  = GeometrySchlickGGX(NdotL, roughness);
+	
+    return ggx1 * ggx2;
+}
+
+
+vec3 fresnelSchlickRoughness(float cosTheta, vec3 F0, float roughness) {
+    return F0 + (max(vec3(1.0 - roughness), F0) - F0) * pow(1.0 - cosTheta, 5.0);
+} 
 
 void main(void){
 	vec2 texcoord = textureCoords;
@@ -59,30 +86,45 @@ void main(void){
 	vec4 mask = texture(gMask, texcoord);
 	if(mask.a != 1) {
 		vec4 pbr = texture(gPBR, texcoord);
-    	vec4 position = texture(gPosition,texcoord);
+    	vec4 position = texture(gPosition, texcoord);
     	vec4 normal = texture(gNormal, texcoord);
-		vec3 eyeDir = normalize(cameraPosition-position.xyz);
-	    normal = normalize(normal);
-    	for(int x = 0; x < 256; x++){
-	    	if(pointLightsPos[x].y < 0)
-	    		break;
-	    	vec3 lightDir = pointLightsPos[x] - position.xyz;
-    		lightDir = normalize(lightDir);
-	    	float distance = length(lightDir);
-	    	float attFactor = (distance*distance);
-			composite.rgb *= 1.0 - pbr.g;
-    		vec3 eyeDir = normalize(cameraPosition-position.xyz);
-			float normalDotLight = max(dot(normal.xyz, lightDir), 0);
-    		normalDotLight = max(normalDotLight, 0.0);
-			normalDotLight /= attFactor;
-    		composite += diffuse * normalDotLight;
-    		if(normalDotLight > 0.0 && pbr.r > 0.0){
-				float specular = beckmannSpecular(lightDir.xyz, eyeDir, normal.xyz, pbr.r) * normalDotLight;
-				specular /= attFactor;
-		   		composite += specular;
-		   	}
 
-		}
+		vec3 N = normalize(normal.rgb);
+	    vec3 V = normalize(cameraPosition - position.rgb);
+
+		float roughness = pbr.r;
+		float metallic = pbr.g;
+
+	    vec3 F0 = vec3(0.04);
+	    F0 = mix(F0, diffuse.rgb, metallic);
+	    vec3 F = fresnelSchlickRoughness(max(dot(N, V), 0.0), F0, roughness);
+
+	    vec3 kS = F;
+	    vec3 kD = vec3(1.0) - kS;
+	    kD *= 1.0 - metallic;	  
+	
+    	vec3 Lo = vec3(0.0);
+		for(int i = 0; i < totalPointLights; ++i) {
+        	vec3 L = normalize(pointLightsPosition[i] - position.rgb);
+        	vec3 H = normalize(V + L);
+        	float distance = length(pointLightsPosition[i] - position.rgb);
+        	float attenuation = 1.0 / distance * distance;
+	        vec3 radiance = pointLightsColor[i] * attenuation;        
+		
+        	float NDF = DistributionGGX(N, H, roughness);        
+	        float G = GeometrySmith(N, V, L, roughness);      
+		
+        	vec3 nominator = NDF * G * F;
+        	float denominator = totalPointLights * max(dot(V, N), 0.0) * max(dot(L, N), 0.0) + 0.001; 
+	        vec3 brdf = nominator / denominator;
+		
+        	float NdotL = max(dot(N, L), 0.0);                
+	        Lo += (kD * diffuse.rgb / PI + brdf) * radiance * NdotL; 
+    	}
+		vec3 ambient = vec3(0.03) * diffuse.rgb;
+    	vec3 color = ambient + Lo;
+    	composite.rgb += color;
+
 	}
 	out_Color = composite;
 }

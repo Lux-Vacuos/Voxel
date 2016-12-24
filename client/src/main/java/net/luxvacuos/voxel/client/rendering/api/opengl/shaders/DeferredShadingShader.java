@@ -25,6 +25,7 @@ import java.util.List;
 import net.luxvacuos.igl.vector.Matrix4d;
 import net.luxvacuos.igl.vector.Vector2d;
 import net.luxvacuos.igl.vector.Vector3d;
+import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.Light;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.Attribute;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.UniformBoolean;
@@ -56,7 +57,10 @@ public class DeferredShadingShader extends ShaderProgram {
 	private UniformVec3 lightPosition = new UniformVec3("lightPosition");
 	private UniformVec3 invertedLightPosition = new UniformVec3("invertedLightPosition");
 	private UniformVec3 skyColor = new UniformVec3("skyColor");
-	private UniformVec3 pointLightsPos[];
+	
+	private UniformVec3 pointLightsPosition[];
+	private UniformVec3 pointLightsColor[];
+	private UniformInteger totalPointLights = new UniformInteger("totalPointLights");
 
 	private UniformVec2 resolution = new UniformVec2("resolution");
 	private UniformVec2 sunPositionInScreen = new UniformVec2("sunPositionInScreen");
@@ -91,17 +95,22 @@ public class DeferredShadingShader extends ShaderProgram {
 
 	public DeferredShadingShader(String type) {
 		super("deferred/V_" + type + ".glsl", "deferred/F_" + type + ".glsl", new Attribute(0, "position"));
-		pointLightsPos = new UniformVec3[256];
+		pointLightsPosition = new UniformVec3[256];
 		for (int x = 0; x < 256; x++) {
-			pointLightsPos[x] = new UniformVec3("pointLightsPos[" + x + "]");
+			pointLightsPosition[x] = new UniformVec3("pointLightsPosition[" + x + "]");
 		}
-		super.storeUniformArray(pointLightsPos);
+		pointLightsColor = new UniformVec3[256];
+		for (int x = 0; x < 256; x++) {
+			pointLightsColor[x] = new UniformVec3("pointLightsColor[" + x + "]");
+		}
+		super.storeUniformArray(pointLightsPosition);
+		super.storeUniformArray(pointLightsColor);
 		super.storeAllUniformLocations(transformationMatrix, projectionMatrix, viewMatrix, inverseProjectionMatrix,
 				inverseViewMatrix, previousViewMatrix, cameraPosition, previousCameraPosition, lightPosition,
 				invertedLightPosition, skyColor, resolution, sunPositionInScreen, exposure, time, camUnderWaterOffset,
 				shadowDrawDistance, camUnderWater, useFXAA, useDOF, useMotionBlur, useReflections, useVolumetricLight,
 				useAmbientOcclusion, gDiffuse, gPosition, gNormal, gDepth, gPBR, gMask, composite0, composite1,
-				gEnvironment);
+				gEnvironment, totalPointLights);
 		connectTextureUnits();
 	}
 
@@ -151,14 +160,17 @@ public class DeferredShadingShader extends ShaderProgram {
 	}
 
 	public void loadPointLightsPos(List<Light> lights) {
-		// TODO: Add color support
 		for (int x = 0; x < 256; x++) {
 			if (x < lights.size()) {
-				pointLightsPos[x].loadVec3(lights.get(x).getPosition());
-			} else {
-				pointLightsPos[x].loadVec3(new Vector3d(0, -100, 0));
+				pointLightsPosition[x].loadVec3(lights.get(x).getPosition());
 			}
 		}
+		for (int x = 0; x < 256; x++) {
+			if (x < lights.size()) {
+				pointLightsColor[x].loadVec3(lights.get(x).getColor());
+			}
+		}
+		totalPointLights.loadInteger(lights.size());
 	}
 
 	/**

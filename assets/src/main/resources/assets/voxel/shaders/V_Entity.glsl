@@ -44,11 +44,10 @@ void main() {
 	vec4 positionRelativeToCam = viewMatrix * worldPosition;
 	gl_Position = projectionMatrix * positionRelativeToCam;
 	pass_textureCoords = textureCoords;
-	vec3 normal = (transformationMatrix * vec4(normal, 0.0)).xyz;
-	vec3 bitangent = cross(normal, tangent);
-	vec3 T = normalize(tangent);
-	vec3 B = normalize(bitangent);
-	vec3 N = normalize(normal);
+	vec3 T = normalize(vec3(transformationMatrix * vec4(tangent, 0.0)));
+	vec3 N = normalize(vec3(transformationMatrix * vec4(normal, 0.0)));
+	T = normalize(T - dot(T, N) * N);
+	vec3 B = cross(N, T);
 	TBN = mat3(T, B, N);
 
 	pass_position = worldPosition;

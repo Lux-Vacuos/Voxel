@@ -116,8 +116,6 @@ void main(void) {
     	vec3 color = ambient + Lo;
 		image.rgb = color;
 
-		
-
 	}
     image += texture(composite0, texcoord);
 	out_Color = image;
