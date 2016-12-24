@@ -26,7 +26,6 @@ import static org.lwjgl.nanovg.NanoVG.nvgDeleteImage;
 import static org.lwjgl.opengl.GL11.GL_FLOAT;
 import static org.lwjgl.opengl.GL11.GL_LINEAR;
 import static org.lwjgl.opengl.GL11.GL_LINEAR_MIPMAP_LINEAR;
-import static org.lwjgl.opengl.GL11.GL_NEAREST;
 import static org.lwjgl.opengl.GL11.GL_REPEAT;
 import static org.lwjgl.opengl.GL11.GL_RGB;
 import static org.lwjgl.opengl.GL11.GL_RGBA;
@@ -103,6 +102,7 @@ import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.glfw.WindowManager;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.RawModel;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.RawTexture;
+import net.luxvacuos.voxel.client.rendering.api.opengl.objects.Texture;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.VertexNM;
 
 /**
@@ -217,50 +217,17 @@ public class ResourceLoader {
 		glBindVertexArray(0);
 	}
 
-	/**
-	 * Load Block Texture
-	 * 
-	 * @param fileName
-	 *            Block Texture Name
-	 * @return Texture ID
-	 */
-	public int loadTextureBlocks(String fileName) {
+	public Texture loadTextureMisc(String fileName) {
 		int texture_id = 0;
 		try {
 			Logger.log("Loading Texture: " + fileName + ".png");
-			texture_id = loadTexture("assets/" + ClientVariables.assets + "/textures/blocks/" + fileName + ".png",
-					GL_NEAREST, GL_REPEAT, GL_SRGB_ALPHA);
-		} catch (Exception e) {
-			throw new LoadTextureException(fileName, e);
-		}
-		textures.add(texture_id);
-		return texture_id;
-	}
-
-	public int loadTextureMisc(String fileName) {
-		int texture_id = 0;
-		try {
-			Logger.log("Loading Texture: " + fileName + ".png");
-			texture_id = loadTexture("assets/" + ClientVariables.assets + "/textures/blocks/" + fileName + ".png",
-					GL_NEAREST, GL_REPEAT, GL_RGBA);
-		} catch (Exception e) {
-			throw new LoadTextureException(fileName, e);
-		}
-		textures.add(texture_id);
-		return texture_id;
-	}
-
-	public int loadTextureEntityMisc(String fileName) {
-		int texture_id = 0;
-		try {
-			Logger.log("Loading Texture: " + fileName + ".png");
-			texture_id = loadTexture("assets/" + ClientVariables.assets + "/textures/entity/" + fileName + ".png",
+			texture_id = loadTexture("assets/" + ClientVariables.assets + "/textures/" + fileName + ".png",
 					GL_LINEAR, GL_REPEAT, GL_RGBA);
 		} catch (Exception e) {
 			throw new LoadTextureException(fileName, e);
 		}
 		textures.add(texture_id);
-		return texture_id;
+		return new Texture(texture_id);
 	}
 
 	/**
@@ -290,17 +257,17 @@ public class ResourceLoader {
 	 *            Block Texture Name
 	 * @return Texture ID
 	 */
-	public int loadTextureEntity(String fileName) {
+	public Texture loadTexture(String fileName) {
 		int texture = 0;
 		try {
 			Logger.log("Loading Texture: " + fileName + ".png");
-			texture = loadTexture("assets/" + ClientVariables.assets + "/textures/entity/" + fileName + ".png",
+			texture = loadTexture("assets/" + ClientVariables.assets + "/textures/" + fileName + ".png",
 					GL_LINEAR, GL_REPEAT, GL_SRGB_ALPHA);
 		} catch (Exception e) {
 			throw new LoadTextureException(fileName, e);
 		}
 		textures.add(texture);
-		return texture;
+		return new Texture(texture);
 	}
 
 	private int loadTexture(String file, int filter, int textureWarp, int format) throws DecodeTextureException {

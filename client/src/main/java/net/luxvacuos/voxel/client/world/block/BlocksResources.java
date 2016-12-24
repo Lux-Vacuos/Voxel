@@ -21,6 +21,7 @@
 package net.luxvacuos.voxel.client.world.block;
 
 import net.luxvacuos.igl.vector.Vector2d;
+import net.luxvacuos.voxel.client.rendering.api.opengl.objects.Texture;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.TexturedModel;
 import net.luxvacuos.voxel.client.resources.ResourceLoader;
 import net.luxvacuos.voxel.client.resources.models.TessellatorTextureAtlas;
@@ -29,14 +30,14 @@ public class BlocksResources {
 
 	private static TessellatorTextureAtlas tessellatorTextureAtlas;
 
-	private static int normalMap;
-	private static int heightMap;
-	private static int pbrMap;
+	private static Texture normalMap;
+	private static Texture heightMap;
+	private static Texture pbrMap;
 	private static TexturedModel node;
 
 	public static void createBlocks(ResourceLoader loader) {
 
-		tessellatorTextureAtlas = new TessellatorTextureAtlas(256, 256, loader.loadTextureBlocks("blocks"));
+		tessellatorTextureAtlas = new TessellatorTextureAtlas(256, 256, loader.loadTexture("blocks"));
 		normalMap = loader.loadTextureMisc("blocks_normal");
 		heightMap = loader.loadTextureMisc("blocks_height");
 		pbrMap = loader.loadTextureMisc("blocks_pbr");
@@ -75,15 +76,15 @@ public class BlocksResources {
 		return tessellatorTextureAtlas;
 	}
 
-	public static int getHeightMap() {
+	public static Texture getHeightMap() {
 		return heightMap;
 	}
 
-	public static int getNormalMap() {
+	public static Texture getNormalMap() {
 		return normalMap;
 	}
 
-	public static int getPbrMap() {
+	public static Texture getPbrMap() {
 		return pbrMap;
 	}
 

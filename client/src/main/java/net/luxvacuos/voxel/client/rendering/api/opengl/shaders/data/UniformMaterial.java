@@ -32,19 +32,23 @@ public class UniformMaterial extends UniformArray {
 	private boolean used = false;
 
 	public UniformMaterial(String matName) {
-		super(matName + ".color", matName + ".roughness", matName + ".metallic", matName + ".specular", matName + ".diffuse",
-				matName + ".normal");
+		super(matName + ".diffuse", matName + ".roughness", matName + ".metallic", matName + ".specular",
+				matName + ".diffuseTex", matName + ".normalTex", matName + ".roughnessTex", matName + ".metallicTex",
+				matName + ".specularTex");
 	}
 
 	public void loadMaterial(Material value) {
 		if (!used || !currentValue.equals(value)) {
-			glUniform4f(super.getLocation()[0], value.getBaseColor().getX(), value.getBaseColor().getY(),
-					value.getBaseColor().getZ(), value.getBaseColor().getW());
+			glUniform4f(super.getLocation()[0], value.getDiffuse().getX(), value.getDiffuse().getY(),
+					value.getDiffuse().getZ(), value.getDiffuse().getW());
 			glUniform1f(super.getLocation()[1], value.getRoughness());
 			glUniform1f(super.getLocation()[2], value.getMetallic());
 			glUniform1f(super.getLocation()[3], value.getSpecular());
 			glUniform1i(super.getLocation()[4], 0);
 			glUniform1i(super.getLocation()[5], 1);
+			glUniform1i(super.getLocation()[6], 2);
+			glUniform1i(super.getLocation()[7], 3);
+			glUniform1i(super.getLocation()[8], 4);
 			used = true;
 			currentValue = value;
 		}

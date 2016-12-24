@@ -25,7 +25,7 @@ import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
 import static org.lwjgl.opengl.GL11.GL_UNSIGNED_INT;
 import static org.lwjgl.opengl.GL11.glBindTexture;
 import static org.lwjgl.opengl.GL11.glDrawElements;
-import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
+import static org.lwjgl.opengl.GL13.*;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE1;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE8;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
@@ -70,7 +70,7 @@ public class EntityRenderer {
 	 */
 	private EntityShader shader;
 	private Map<TexturedModel, List<AbstractEntity>> entities = new HashMap<TexturedModel, List<AbstractEntity>>();
-	private Texture normal;
+	public static Texture dDiffuse, dNormal, dRoughness, dMetallic, dSpecular;
 
 	/**
 	 * Constructor, initializes the shaders and the projection matrix
@@ -86,7 +86,11 @@ public class EntityRenderer {
 		shader.loadProjectionMatrix(projectionMatrix);
 		shader.loadBiasMatrix(shadowProjectionMatrix);
 		shader.stop();
-		normal = new Texture(loader.loadTextureEntityMisc("default_norm"));
+		dDiffuse = loader.loadTextureMisc("def/d");
+		dNormal = loader.loadTextureMisc("def/d_n");
+		dRoughness = loader.loadTextureMisc("def/d_r");
+		dMetallic = loader.loadTextureMisc("def/d_m");
+		dSpecular = loader.loadTextureMisc("def/d_s");
 	}
 
 	public void cleanUp() {
@@ -158,12 +162,35 @@ public class EntityRenderer {
 		glEnableVertexAttribArray(2);
 		glEnableVertexAttribArray(3);
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, material.getDiffuse().getID());
-		glActiveTexture(GL_TEXTURE1);
-		if (material.getNormal().getID() == 0)
-			glBindTexture(GL_TEXTURE_2D, normal.getID());
+		if (material.getDiffuseTexture() == null)
+			glBindTexture(GL_TEXTURE_2D, dDiffuse.getID());
 		else
-			glBindTexture(GL_TEXTURE_2D, material.getNormal().getID());
+			glBindTexture(GL_TEXTURE_2D, material.getDiffuseTexture().getID());
+
+		glActiveTexture(GL_TEXTURE1);
+		if (material.getNormalTexture() == null)
+			glBindTexture(GL_TEXTURE_2D, dNormal.getID());
+		else
+			glBindTexture(GL_TEXTURE_2D, material.getNormalTexture().getID());
+
+		glActiveTexture(GL_TEXTURE2);
+		if (material.getRoughnessTexture() == null)
+			glBindTexture(GL_TEXTURE_2D, dRoughness.getID());
+		else
+			glBindTexture(GL_TEXTURE_2D, material.getRoughnessTexture().getID());
+
+		glActiveTexture(GL_TEXTURE3);
+		if (material.getMetallicTexture() == null)
+			glBindTexture(GL_TEXTURE_2D, dMetallic.getID());
+		else
+			glBindTexture(GL_TEXTURE_2D, material.getMetallicTexture().getID());
+
+		glActiveTexture(GL_TEXTURE4);
+		if (material.getSpecularTexture() == null)
+			glBindTexture(GL_TEXTURE_2D, dSpecular.getID());
+		else
+			glBindTexture(GL_TEXTURE_2D, material.getSpecularTexture().getID());
+
 		glActiveTexture(GL_TEXTURE8);
 		glBindTexture(GL_TEXTURE_2D, shadowTex);
 	}

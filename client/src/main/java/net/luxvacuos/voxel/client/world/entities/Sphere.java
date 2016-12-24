@@ -12,7 +12,7 @@ public class Sphere extends AbstractEntity {
 		add(new Position());
 		add(new Rotation());
 		add(new RendereableComponent());
-		add(new Scale(2));
+		add(new Scale());
 		getComponent(RendereableComponent.class).model = model;
 	}
 

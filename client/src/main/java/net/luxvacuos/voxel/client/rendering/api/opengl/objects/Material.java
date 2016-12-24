@@ -28,9 +28,9 @@ import net.luxvacuos.igl.vector.Vector4f;
  */
 public class Material {
 
-	private Vector4f baseColor;
+	private Vector4f diffuse;
 	private float roughness, metallic, specular;
-	private Texture diffuse, normal;
+	private Texture diffuseTexture, normalTexture, roughnessTexture, metallicTexture, specularTexture;
 
 	/**
 	 * 
@@ -47,18 +47,21 @@ public class Material {
 	 * @param normal
 	 *            Normal texture.
 	 */
-	public Material(Vector4f baseColor, float roughness, float metallic, float specular, Texture diffuse,
-			Texture normal) {
-		this.baseColor = baseColor;
+	public Material(Vector4f diffuse, float roughness, float metallic, float specular, Texture diffuseTexture,
+			Texture normalTexture, Texture roughnessTexture, Texture metallicTexture, Texture specularTexture) {
+		this.diffuse = diffuse;
 		this.roughness = roughness;
 		this.metallic = metallic;
-		this.diffuse = diffuse;
-		this.normal = normal;
 		this.specular = specular;
+		this.diffuseTexture = diffuseTexture;
+		this.normalTexture = normalTexture;
+		this.roughnessTexture = roughnessTexture;
+		this.metallicTexture = metallicTexture;
+		this.specularTexture = specularTexture;
 	}
 
-	public Vector4f getBaseColor() {
-		return baseColor;
+	public Vector4f getDiffuse() {
+		return diffuse;
 	}
 
 	public float getMetallic() {
@@ -69,16 +72,28 @@ public class Material {
 		return roughness;
 	}
 
-	public Texture getDiffuse() {
-		return diffuse;
-	}
-
-	public Texture getNormal() {
-		return normal;
-	}
-
 	public float getSpecular() {
 		return specular;
+	}
+
+	public Texture getDiffuseTexture() {
+		return diffuseTexture;
+	}
+
+	public Texture getMetallicTexture() {
+		return metallicTexture;
+	}
+
+	public Texture getNormalTexture() {
+		return normalTexture;
+	}
+
+	public Texture getRoughnessTexture() {
+		return roughnessTexture;
+	}
+
+	public Texture getSpecularTexture() {
+		return specularTexture;
 	}
 
 	@Override
@@ -86,10 +101,11 @@ public class Material {
 		if (obj instanceof Material)
 			return false;
 		Material t = (Material) obj;
-		return t.getBaseColor().getX() == baseColor.getX() && t.getBaseColor().getY() == baseColor.getY()
-				&& t.getBaseColor().getZ() == baseColor.getZ() && t.getRoughness() == roughness
+		return t.getDiffuse().getX() == diffuse.getX() && t.getDiffuse().getY() == diffuse.getY()
+				&& t.getDiffuse().getZ() == diffuse.getZ() && t.getRoughness() == roughness
 				&& t.getMetallic() == metallic && t.getSpecular() == specular && t.getDiffuse().equals(diffuse)
-				&& t.getNormal().equals(normal);
+				&& t.getNormalTexture().equals(normalTexture) && t.getRoughnessTexture().equals(roughnessTexture)
+				&& t.getMetallicTexture().equals(metallicTexture) && t.getSpecularTexture().equals(specularTexture);
 	}
 
 }

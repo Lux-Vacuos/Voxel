@@ -21,12 +21,15 @@
 #version 330 core
 
 struct Material {
-	vec4 color;
+	vec4 diffuse;
 	float roughness;
 	float metallic;
 	float specular;
-	sampler2D diffuse;
-	sampler2D normal;
+	sampler2D diffuseTex;
+	sampler2D normalTex;
+	sampler2D roughnessTex;
+	sampler2D metallicTex;
+	sampler2D specularTex;
 };
 
 in float visibility;
@@ -52,11 +55,17 @@ float lookup(vec2 offSet){
 }
 
 void main(void) {
-	vec4 textureColour;
-	if(material.color.a < 0)
-   		textureColour = texture(material.diffuse, pass_textureCoords);
-	else
-		textureColour = material.color;
+
+	vec4 diffuseF = texture(material.diffuseTex, pass_textureCoords);
+	float roughnessF = texture(material.roughnessTex, pass_textureCoords).r;
+	float metallicF = texture(material.metallicTex, pass_textureCoords).r;
+	float specularF = texture(material.specularTex, pass_textureCoords).r;
+
+   	diffuseF *= material.diffuse;
+	roughnessF *= material.roughness;
+	metallicF *= material.metallic;
+	specularF *= material.specular;
+
 	float shadow = 0;
 	if(useShadows == 1){
 		float x,y;
@@ -69,17 +78,17 @@ void main(void) {
        	}
 	}
     
-    if(textureColour.a<0.5) {
+    if(diffuseF.a<0.5) {
 		discard;
 	}
 
-	vec3 normal = texture(material.normal, pass_textureCoords).rgb;
+	vec3 normal = texture(material.normalTex, pass_textureCoords).rgb;
 	normal = normal * 2.0 - 1.0;
 	normal = normalize(TBN * normal);
 	
-	out_Color[0] = textureColour;
+	out_Color[0] = diffuseF;
 	out_Color[1] = vec4(pass_position.xyz,shadow);
 	out_Color[2] = vec4(normal.xyz,0);
-	out_Color[3] = vec4(material.roughness, material.metallic, material.specular, 0.0);
+	out_Color[3] = vec4(roughnessF, metallicF, specularF, 0.0);
 	out_Color[4] = vec4(0.0);
 }

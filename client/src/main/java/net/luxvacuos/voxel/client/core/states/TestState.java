@@ -63,6 +63,7 @@ import net.luxvacuos.voxel.universal.core.AbstractVoxel;
 import net.luxvacuos.voxel.universal.core.states.AbstractState;
 import net.luxvacuos.voxel.universal.core.states.StateMachine;
 import net.luxvacuos.voxel.universal.ecs.components.Position;
+import net.luxvacuos.voxel.universal.ecs.components.Rotation;
 import net.luxvacuos.voxel.universal.material.BlockMaterial;
 
 /**
@@ -141,21 +142,24 @@ public class TestState extends AbstractState {
 		// 0)));
 
 		RawModel sphere = loader.loadObjModel("sphere");
+		Texture test = loader.loadTexture("test1");
+		Texture test_n = null;
+		Texture test_r = loader.loadTexture("test1_r");
 
 		mat1 = new Sphere(new TexturedModel(sphere,
-				new Material(new Vector4f(0.8f, 0.8f, 0.8f, 1f), 0.5f, 0, 0, new Texture(0), new Texture(0))));
+				new Material(new Vector4f(1f), 1f, 1, 0, test, test_n, test_r, test_r, null)));
 		mat1.getComponent(Position.class).set(0, 1, 0);
-		
+
 		mat2 = new Sphere(new TexturedModel(sphere,
-				new Material(new Vector4f(0.8f, 0.8f, 0.8f, 1f), 1.0f, 0, 0, new Texture(0), new Texture(0))));
+				new Material(new Vector4f(1f), 1f, 1, 0, test, test_n, test_r, test_r, null)));
 		mat2.getComponent(Position.class).set(3, 1, 0);
-		
+
 		mat3 = new Sphere(new TexturedModel(sphere,
-				new Material(new Vector4f(0.8f, 0.8f, 0.8f, 1f), 0.2f, 0.8f, 1, new Texture(0), new Texture(0))));
+				new Material(new Vector4f(1f), 1f, 1f, 1, test, test_n, test_r, test_r, null)));
 		mat3.getComponent(Position.class).set(6, 1, 0);
-		
+
 		mat4 = new Sphere(new TexturedModel(sphere,
-				new Material(new Vector4f(0.8f, 0.8f, 0.8f, 1f), 1f, 0.2f, 1, new Texture(0), new Texture(0))));
+				new Material(new Vector4f(1f), 1f, 1f, 1, test, test_n, test_r, test_r, null)));
 		mat4.getComponent(Position.class).set(9, 1, 0);
 
 	}
@@ -190,6 +194,7 @@ public class TestState extends AbstractState {
 		if (kbh.isCtrlPressed() && kbh.isAltPressed() & kbh.isKeyPressed(GLFW.GLFW_KEY_F10))
 			throw new RuntimeException("Crash caused by User. \n Generated using \"ctrl + alt + f10\".");
 
+		mat1.getComponent(Rotation.class).setX(mat1.getComponent(Rotation.class).getX() + 5 * delta);
 		if (kbh.isKeyPressed(GLFW.GLFW_KEY_F1))
 			ClientVariables.debug = !ClientVariables.debug;
 		if (kbh.isKeyPressed(GLFW.GLFW_KEY_F2))
