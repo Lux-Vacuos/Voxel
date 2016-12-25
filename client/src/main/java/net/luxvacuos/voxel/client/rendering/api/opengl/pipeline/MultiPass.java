@@ -45,31 +45,24 @@ public class MultiPass extends RenderingPipeline {
 	@Override
 	public void init() {
 		sun = new Sun("Sun", width, height);
-		sun.init();
 		super.imagePasses.add(sun);
 
 		volumetricLight = new VolumetricLight("VolumetricLight", width, height);
-		volumetricLight.init();
 		super.imagePasses.add(volumetricLight);
 
 		gaussianHorizontal = new GaussianHorizonal("GaussianHorizontal", width / 4, height / 4);
-		gaussianHorizontal.init();
 		super.imagePasses.add(gaussianHorizontal);
 
 		gaussianVertical = new GaussianVertical("GaussianVertical", width / 4, height / 4);
-		gaussianVertical.init();
 		super.imagePasses.add(gaussianVertical);
 
 		lighting = new Lighting("Lighting", width, height);
-		lighting.init();
 		super.imagePasses.add(lighting);
 
 		pointLightPass = new PointLightPass("PointLight", width, height);
-		pointLightPass.init();
 		super.imagePasses.add(pointLightPass);
 
 		ambientOcclusion = new AmbientOcclusion("AmbientOcclusion", width, height);
-		ambientOcclusion.init();
 		super.imagePasses.add(ambientOcclusion);
 
 		//reflections = new Reflections("Reflections", width, height);
@@ -77,7 +70,6 @@ public class MultiPass extends RenderingPipeline {
 		//super.imagePasses.add(reflections);
 
 		bloomMask = new BloomMask("BloomMask", width, height);
-		bloomMask.init();
 		super.imagePasses.add(bloomMask);
 
 		super.imagePasses.add(gaussianHorizontal);
@@ -85,19 +77,15 @@ public class MultiPass extends RenderingPipeline {
 		super.imagePasses.add(gaussianVertical);
 
 		colorCorrection = new ColorCorrection("ColorCorrection", width, height);
-		colorCorrection.init();
 		super.imagePasses.add(colorCorrection);
 
 		fxaa = new FXAA("FXAA", width, height);
-		fxaa.init();
 		super.imagePasses.add(fxaa);
 
 		motionBlur = new MotionBlur("MotionBlur", width, height);
-		motionBlur.init();
 		super.imagePasses.add(motionBlur);
 
 		depthOfField = new DepthOfField("DoF", width, height);
-		depthOfField.init();
 		super.imagePasses.add(depthOfField);
 	}
 

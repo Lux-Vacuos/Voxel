@@ -59,6 +59,7 @@ import net.luxvacuos.voxel.universal.bootstrap.AbstractBootstrap;
 import net.luxvacuos.voxel.universal.bootstrap.Platform;
 import net.luxvacuos.voxel.universal.core.AbstractVoxel;
 import net.luxvacuos.voxel.universal.core.EngineType;
+import net.luxvacuos.voxel.universal.core.TaskManager;
 import net.luxvacuos.voxel.universal.core.states.StateMachine;
 import net.luxvacuos.voxel.universal.util.PerRunLog;
 
@@ -108,7 +109,7 @@ public class Voxel extends AbstractVoxel {
 
 		if (!glfwInit())
 			throw new IllegalStateException("Unable to initialize GLFW");
-		
+
 		ClientVariables.SETTINGS_PATH = bootstrap.getPrefix() + "/config/settings.conf";
 		ClientVariables.WORLD_PATH = bootstrap.getPrefix() + "/world/";
 
@@ -149,15 +150,15 @@ public class Voxel extends AbstractVoxel {
 	@Override
 	public void init() throws Exception {
 		internalSubsystem.init();
-		StateMachine.registerState(new AboutState());
-		StateMachine.registerState(new MainMenuState());
-		StateMachine.registerState(new OptionsState());
-		StateMachine.registerState(new SPCreateWorld());
+		TaskManager.addTask(() -> StateMachine.registerState(new AboutState()));
+		TaskManager.addTask(() -> StateMachine.registerState(new MainMenuState()));
+		TaskManager.addTask(() -> StateMachine.registerState(new OptionsState()));
+		TaskManager.addTask(() -> StateMachine.registerState(new SPCreateWorld()));
+		TaskManager.addTask(() -> StateMachine.registerState(new SPLoadingState()));
+		TaskManager.addTask(() -> StateMachine.registerState(new SPPauseState()));
+		TaskManager.addTask(() -> StateMachine.registerState(new SPSelectionState()));
+		TaskManager.addTask(() -> StateMachine.registerState(new TestState()));
 		StateMachine.registerState(new SplashScreenState());
-		StateMachine.registerState(new SPLoadingState());
-		StateMachine.registerState(new SPPauseState());
-		StateMachine.registerState(new SPSelectionState());
-		StateMachine.registerState(new TestState());
 		modsHandler.init();
 	}
 
@@ -170,7 +171,7 @@ public class Voxel extends AbstractVoxel {
 	 */
 	@Override
 	public void postInit() throws Exception {
-		ClientInternalSubsystem.getInstance().getGameSettings().save();
+		TaskManager.addTask(() -> ClientInternalSubsystem.getInstance().getGameSettings().save());
 		modsHandler.postInit();
 		internalSubsystem.postInit();
 		StateMachine.setCurrentState(StateNames.SPLASH_SCREEN);
@@ -206,6 +207,7 @@ public class Voxel extends AbstractVoxel {
 		float alpha = 0;
 		Window window = ClientInternalSubsystem.getInstance().getGameWindow();
 		while (StateMachine.isRunning() && !(window.isCloseRequested())) {
+			TaskManager.update();
 			Timers.startCPUTimer();
 			if (window.getTimeCount() > 1f) {
 				CoreInfo.ups = CoreInfo.upsCount;
@@ -265,6 +267,7 @@ public class Voxel extends AbstractVoxel {
 		if (!StateMachine.isRunning())
 			StateMachine.run();
 		StateMachine.setCurrentState(StateNames.CRASH);
+		TaskManager.crash();
 		Mouse.setGrabbed(false);
 		loop();
 		dispose();

@@ -49,6 +49,7 @@ import net.luxvacuos.voxel.client.rendering.api.opengl.pipeline.SinglePass;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.TessellatorBasicShader;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.TessellatorShader;
 import net.luxvacuos.voxel.client.world.entities.Camera;
+import net.luxvacuos.voxel.universal.core.TaskManager;
 import net.luxvacuos.voxel.universal.world.dimension.IDimension;
 
 public class Renderer {
@@ -73,18 +74,26 @@ public class Renderer {
 		this.window = window;
 		if (ClientVariables.shadowMapResolution > GLUtil.getTextureMaxSize())
 			ClientVariables.shadowMapResolution = GLUtil.getTextureMaxSize();
-		frustum = new Frustum();
-		shadowFBO = new ShadowFBO(ClientVariables.shadowMapResolution, ClientVariables.shadowMapResolution);
-		entityRenderer = new EntityRenderer(camera.getProjectionMatrix(), sunCamera.getProjectionMatrix(), window.getResourceLoader());
-		entityShadowRenderer = new EntityShadowRenderer(sunCamera.getProjectionMatrix());
-		skyboxRenderer = new SkyboxRenderer(window.getResourceLoader(), camera.getProjectionMatrix());
+
+		TaskManager.addTask(() -> frustum = new Frustum());
+		TaskManager.addTask(() -> shadowFBO = new ShadowFBO(ClientVariables.shadowMapResolution,
+				ClientVariables.shadowMapResolution));
+		TaskManager.addTask(() -> entityRenderer = new EntityRenderer(camera.getProjectionMatrix(),
+				sunCamera.getProjectionMatrix(), window.getResourceLoader()));
+
+		TaskManager.addTask(() -> entityShadowRenderer = new EntityShadowRenderer(sunCamera.getProjectionMatrix()));
+		TaskManager.addTask(
+				() -> skyboxRenderer = new SkyboxRenderer(window.getResourceLoader(), camera.getProjectionMatrix()));
+		TaskManager.addTask(() -> {
+			if (ClientVariables.renderingPipeline.equals("SinglePass"))
+				renderingPipeline = new SinglePass();
+			else if (ClientVariables.renderingPipeline.equals("MultiPass"))
+				renderingPipeline = new MultiPass();
+		});
 		lightRenderer = new LightRenderer();
-		if (ClientVariables.renderingPipeline.equals("SinglePass"))
-			renderingPipeline = new SinglePass();
-		else if (ClientVariables.renderingPipeline.equals("MultiPass"))
-			renderingPipeline = new MultiPass();
-		environmentRenderer = new EnvironmentRenderer(
-				new CubeMapTexture(window.getResourceLoader().createEmptyCubeMap(128, true), 128));
+
+		TaskManager.addTask(() -> environmentRenderer = new EnvironmentRenderer(
+				new CubeMapTexture(window.getResourceLoader().createEmptyCubeMap(128, true), 128)));
 	}
 
 	public void render(IDimension iDimension, ImmutableArray<Entity> entities, Camera camera, Camera sunCamera,

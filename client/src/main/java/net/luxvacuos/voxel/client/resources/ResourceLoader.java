@@ -26,8 +26,9 @@ import static org.lwjgl.nanovg.NanoVG.nvgDeleteImage;
 import static org.lwjgl.opengl.GL11.GL_FLOAT;
 import static org.lwjgl.opengl.GL11.GL_LINEAR;
 import static org.lwjgl.opengl.GL11.GL_LINEAR_MIPMAP_LINEAR;
+import static org.lwjgl.opengl.GL11.GL_RED;
 import static org.lwjgl.opengl.GL11.GL_REPEAT;
-import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.GL_RGB;
 import static org.lwjgl.opengl.GL11.GL_RGBA;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_MAG_FILTER;
@@ -44,24 +45,25 @@ import static org.lwjgl.opengl.GL11.glTexImage2D;
 import static org.lwjgl.opengl.GL11.glTexParameterf;
 import static org.lwjgl.opengl.GL11.glTexParameteri;
 import static org.lwjgl.opengl.GL12.GL_CLAMP_TO_EDGE;
-import static org.lwjgl.opengl.GL12.*;
+import static org.lwjgl.opengl.GL12.GL_TEXTURE_WRAP_R;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE_CUBE_MAP;
-import static org.lwjgl.opengl.GL13.*;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE_CUBE_MAP_POSITIVE_X;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
-import static org.lwjgl.opengl.GL14.*;
+import static org.lwjgl.opengl.GL14.GL_TEXTURE_LOD_BIAS;
 import static org.lwjgl.opengl.GL15.GL_ARRAY_BUFFER;
 import static org.lwjgl.opengl.GL15.GL_ELEMENT_ARRAY_BUFFER;
-import static org.lwjgl.opengl.GL15.*;
+import static org.lwjgl.opengl.GL15.GL_STATIC_DRAW;
 import static org.lwjgl.opengl.GL15.GL_STREAM_DRAW;
 import static org.lwjgl.opengl.GL15.glBindBuffer;
 import static org.lwjgl.opengl.GL15.glBufferData;
 import static org.lwjgl.opengl.GL15.glBufferSubData;
 import static org.lwjgl.opengl.GL15.glDeleteBuffers;
 import static org.lwjgl.opengl.GL15.glGenBuffers;
-import static org.lwjgl.opengl.GL20.*;
-import static org.lwjgl.opengl.GL21.*;
-import static org.lwjgl.opengl.GL30.*;
+import static org.lwjgl.opengl.GL20.glVertexAttribPointer;
+import static org.lwjgl.opengl.GL21.GL_SRGB_ALPHA;
+import static org.lwjgl.opengl.GL30.GL_RG;
+import static org.lwjgl.opengl.GL30.GL_RGBA16F;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import static org.lwjgl.opengl.GL30.glDeleteVertexArrays;
 import static org.lwjgl.opengl.GL30.glGenVertexArrays;
@@ -104,6 +106,7 @@ import net.luxvacuos.voxel.client.rendering.api.opengl.objects.RawModel;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.RawTexture;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.Texture;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.VertexNM;
+import net.luxvacuos.voxel.universal.resources.IDisposable;
 
 /**
  * This objects handles all loading methods from any type of data, models,
@@ -112,7 +115,7 @@ import net.luxvacuos.voxel.client.rendering.api.opengl.objects.VertexNM;
  * @author Guerra24 <pablo230699@hotmail.com>
  * @category Assets
  */
-public class ResourceLoader {
+public class ResourceLoader implements IDisposable {
 	/**
 	 * VAOs List
 	 */
@@ -133,12 +136,13 @@ public class ResourceLoader {
 	 * NanoVG Fonts
 	 */
 	private List<ByteBuffer> nvgFont = new ArrayList<ByteBuffer>();
-	private long windowID;
-
-	public ResourceLoader(long windowID) {
+	private long windowID, nvgID;
+	
+	public ResourceLoader(long windowID, long nvgID) {
 		this.windowID = windowID;
+		this.nvgID = nvgID;
 	}
-
+	
 	/**
 	 * Load a multiple arrays of positions, texture coords, normals and indices
 	 * 
@@ -718,7 +722,9 @@ public class ResourceLoader {
 	 * Clear All VAOs, VBOs and Textures
 	 * 
 	 */
-	public void cleanUp() {
+	@Override
+	public void dispose() {
+		Logger.log("Cleaning Resources for: " + windowID);
 		for (int vao : vaos) {
 			glDeleteVertexArrays(vao);
 		}
@@ -729,8 +735,6 @@ public class ResourceLoader {
 			glDeleteTextures(texture);
 		}
 
-		Window window = WindowManager.getWindow(this.windowID);
-		long nvgID = window.getNVGID();
 		for (int texture : nvgData) {
 			nvgDeleteImage(nvgID, texture);
 		}

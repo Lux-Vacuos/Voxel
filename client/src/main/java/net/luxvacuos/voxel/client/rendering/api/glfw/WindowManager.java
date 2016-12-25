@@ -61,6 +61,9 @@ import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.nio.LongBuffer;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.PointerBuffer;
@@ -403,8 +406,8 @@ public final class WindowManager {
 
 	public static void closeAllDisplays() {
 		for (Window window : windows) {
-			window.closeDisplay();
 			window.dispose();
+			window.closeDisplay();
 		}
 	}
 	

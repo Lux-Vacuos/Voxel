@@ -59,13 +59,14 @@ import net.luxvacuos.voxel.client.world.entities.Camera;
 import net.luxvacuos.voxel.client.world.entities.EntityResources;
 import net.luxvacuos.voxel.client.world.entities.Plane;
 import net.luxvacuos.voxel.client.world.entities.PlayerCamera;
-import net.luxvacuos.voxel.client.world.entities.Sphere;
+import net.luxvacuos.voxel.client.world.entities.BasicEntity;
 import net.luxvacuos.voxel.client.world.entities.Sun;
 import net.luxvacuos.voxel.universal.core.AbstractVoxel;
 import net.luxvacuos.voxel.universal.core.states.AbstractState;
 import net.luxvacuos.voxel.universal.core.states.StateMachine;
 import net.luxvacuos.voxel.universal.ecs.components.Position;
 import net.luxvacuos.voxel.universal.ecs.components.Rotation;
+import net.luxvacuos.voxel.universal.ecs.components.Scale;
 import net.luxvacuos.voxel.universal.material.BlockMaterial;
 
 /**
@@ -84,7 +85,7 @@ public class TestState extends AbstractState {
 	private Renderer renderer;
 	private Tessellator tess;
 
-	private Sphere mat1, mat2, mat3, mat4, mat5;
+	private BasicEntity mat1, mat2, mat3, mat4, mat5;
 
 	public TestState() {
 		super(StateNames.TEST);
@@ -138,33 +139,38 @@ public class TestState extends AbstractState {
 		 * shadowMap, shadowData) -> { tess.draw(camera, sunCamera,
 		 * worldSimulation, shadowMap, shadowData, false); });
 		 */
-		renderer.getLightRenderer().addLight(new Light(new Vector3d(-5, 5, -5), new Vector3f(1, 1, 1)));
-		renderer.getLightRenderer().addLight(new Light(new Vector3d(-5, 5, 5), new Vector3f(1, 1, 1)));
-		renderer.getLightRenderer().addLight(new Light(new Vector3d(5, 5, -5), new Vector3f(1, 1, 1)));
-		renderer.getLightRenderer().addLight(new Light(new Vector3d(5, 5, 5), new Vector3f(1, 1, 1)));
-		renderer.getLightRenderer().addLight(new Light(new Vector3d(0, 5, 0), new Vector3f(1, 1, 1)));
+		//renderer.getLightRenderer().addLight(new Light(new Vector3d(-8, 5, -8), new Vector3f(1, 1, 1)));
+		//renderer.getLightRenderer().addLight(new Light(new Vector3d(-8, 5, 8), new Vector3f(1, 1, 1)));
+		//renderer.getLightRenderer().addLight(new Light(new Vector3d(8, 5, -8), new Vector3f(1, 1, 1)));
+		//renderer.getLightRenderer().addLight(new Light(new Vector3d(8, 5, 8), new Vector3f(1, 1, 1)));
+		//renderer.getLightRenderer().addLight(new Light(new Vector3d(0, 5, 0), new Vector3f(1, 1, 1)));
 
 		RawModel sphere = loader.loadObjModel("sphere");
 		Texture test = loader.loadTexture("rusted_iron");
-		Texture test_n = null;
-		Texture test_r = loader.loadTexture("rusted_iron-r");
-		Texture test_m = loader.loadTexture("rusted_iron-m");
+		Texture test_n = loader.loadTextureMisc("rusted_iron-n");
+		Texture test_r = loader.loadTextureMisc("rusted_iron-r");
+		Texture test_m = loader.loadTextureMisc("rusted_iron-m");
 
-		mat1 = new Sphere(new TexturedModel(sphere,
+		mat1 = new BasicEntity(new TexturedModel(sphere,
 				new Material(new Vector4f(1f), 1f, 1f, 0, test, test_n, test_r, test_m, null)));
 		mat1.getComponent(Position.class).set(0, 1, 0);
 
-		mat2 = new Sphere(new TexturedModel(sphere,
+		mat2 = new BasicEntity(new TexturedModel(sphere,
 				new Material(new Vector4f(1f), 1f, 1f, 0, test, test_n, test_r, test_m, null)));
 		mat2.getComponent(Position.class).set(3, 1, 0);
 
-		mat3 = new Sphere(new TexturedModel(sphere,
+		mat3 = new BasicEntity(new TexturedModel(sphere,
 				new Material(new Vector4f(1f), 1f, 1f, 1, test, test_n, test_r, test_m, null)));
 		mat3.getComponent(Position.class).set(6, 1, 0);
 
-		mat4 = new Sphere(new TexturedModel(sphere,
+		mat4 = new BasicEntity(new TexturedModel(sphere,
 				new Material(new Vector4f(1f), 1f, 1f, 1, test, test_n, test_r, test_m, null)));
 		mat4.getComponent(Position.class).set(9, 1, 0);
+
+		mat5 = new BasicEntity(new TexturedModel(loader.loadObjModel("dragon"),
+				new Material(new Vector4f(1), 1f, 1f, 1f, test, test_n, test_r, test_m, null)));
+		mat5.getComponent(Position.class).set(-7, 0, 0);
+		mat5.getComponent(Scale.class).setScale(0.5f);
 
 	}
 
@@ -181,6 +187,7 @@ public class TestState extends AbstractState {
 		physicsSystem.getEngine().addEntity(mat2);
 		physicsSystem.getEngine().addEntity(mat3);
 		physicsSystem.getEngine().addEntity(mat4);
+		physicsSystem.getEngine().addEntity(mat5);
 		((PlayerCamera) camera).setMouse();
 	}
 
@@ -198,7 +205,6 @@ public class TestState extends AbstractState {
 		if (kbh.isCtrlPressed() && kbh.isAltPressed() & kbh.isKeyPressed(GLFW.GLFW_KEY_F10))
 			throw new RuntimeException("Crash caused by User. \n Generated using \"ctrl + alt + f10\".");
 
-		mat1.getComponent(Rotation.class).setX(mat1.getComponent(Rotation.class).getX() + 5 * delta);
 		if (kbh.isKeyPressed(GLFW.GLFW_KEY_F1))
 			ClientVariables.debug = !ClientVariables.debug;
 		if (kbh.isKeyPressed(GLFW.GLFW_KEY_F2))

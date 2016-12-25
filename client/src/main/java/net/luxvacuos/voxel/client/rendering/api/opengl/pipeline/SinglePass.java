@@ -35,13 +35,10 @@ public class SinglePass extends RenderingPipeline {
 	@Override
 	public void init() {
 		sun = new Sun("Sun", width, height);
-		sun.init();
 		super.imagePasses.add(sun);
 		pass = new Lighting("Lighting", width, height);
-		pass.init();
 		super.imagePasses.add(pass);
 		colorCorrection = new ColorCorrection("ColorCorrection", width, height);
-		colorCorrection.init();
 		super.imagePasses.add(colorCorrection);
 	}
 

@@ -55,6 +55,7 @@ import net.luxvacuos.voxel.client.rendering.api.opengl.objects.RawModel;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.DeferredShadingShader;
 import net.luxvacuos.voxel.client.util.Maths;
 import net.luxvacuos.voxel.client.world.entities.Camera;
+import net.luxvacuos.voxel.universal.core.TaskManager;
 
 /**
  * 
@@ -106,6 +107,9 @@ public abstract class RenderingPipeline implements IRenderingPipeline {
 		finalShader.loadSkyColor(ClientVariables.skyColor);
 		finalShader.stop();
 		init();
+		for (ImagePass imagePass : imagePasses) {
+			TaskManager.addTask(() -> imagePass.init());
+		}
 	}
 
 	/**
@@ -144,6 +148,9 @@ public abstract class RenderingPipeline implements IRenderingPipeline {
 		this.width = width;
 		this.height = height;
 		init();
+		for (ImagePass imagePass : imagePasses) {
+			TaskManager.addTask(() -> imagePass.init());
+		}
 	}
 
 	/**

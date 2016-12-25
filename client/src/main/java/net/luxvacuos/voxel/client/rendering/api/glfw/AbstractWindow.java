@@ -78,11 +78,12 @@ public abstract class AbstractWindow implements IWindow {
 	protected double lastLoopTime;
 	protected float timeCount;
 
-	//TODO: Move Vulkan Stuff
+	// TODO: Move Vulkan Stuff
 	protected DeviceAndGraphicsQueueFamily device;
 	protected VkInstance vkInstance;
 
-	protected AbstractWindow(VkInstance vkInstance,DeviceAndGraphicsQueueFamily device, long windowID, int width, int height) {
+	protected AbstractWindow(VkInstance vkInstance, DeviceAndGraphicsQueueFamily device, long windowID, int width,
+			int height) {
 		this.vkInstance = vkInstance;
 		this.device = device;
 		this.windowID = windowID;
@@ -201,7 +202,7 @@ public abstract class AbstractWindow implements IWindow {
 
 	public ResourceLoader getResourceLoader() {
 		if (this.resourceLoader == null)
-			this.resourceLoader = new ResourceLoader(this.windowID);
+			this.resourceLoader = new ResourceLoader(this.windowID, this.nvgID);
 		return this.resourceLoader;
 	}
 
@@ -241,7 +242,7 @@ public abstract class AbstractWindow implements IWindow {
 
 	@Override
 	public void dispose() {
-
+		resourceLoader.dispose();
 	}
 
 }

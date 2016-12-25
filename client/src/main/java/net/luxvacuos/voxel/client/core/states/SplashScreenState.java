@@ -29,6 +29,7 @@ import net.luxvacuos.voxel.client.rendering.api.opengl.Renderer;
 import net.luxvacuos.voxel.client.ui.UIImage;
 import net.luxvacuos.voxel.client.ui.UIPanel;
 import net.luxvacuos.voxel.universal.core.AbstractVoxel;
+import net.luxvacuos.voxel.universal.core.TaskManager;
 
 /**
  * Splash screen State, show only in the load.
@@ -65,7 +66,6 @@ public class SplashScreenState extends AbstractFadeState {
 		 * delta; else speed = 0; speed = Maths.clamp(speed, 0, 1);
 		 * img.addPosition(0, speed); } });
 		 */
-
 		uIPanel.addChildren(luxVacuosLogo);
 	}
 
@@ -95,7 +95,7 @@ public class SplashScreenState extends AbstractFadeState {
 		if (wait > 2)
 			uIPanel.update(delta);
 
-		if (wait > 3 && !this.switching)
+		if (wait > 3 && !this.switching && TaskManager.isEmpty())
 			this.switchTo(StateNames.MAIN_MENU);
 
 		super.update(voxel, delta);
