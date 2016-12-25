@@ -121,7 +121,7 @@ public abstract class RenderingPipeline implements IRenderingPipeline {
 	 * @param height
 	 *            Final UIImage Height, can be higher that the window Height.
 	 */
-	public RenderingPipeline(String name, int width, int height) throws Exception {
+	public RenderingPipeline(String name, int width, int height) {
 		this.name = name;
 		Logger.log("Using " + name + " Rendering Pipeline");
 		Window window = ClientInternalSubsystem.getInstance().getGameWindow();
