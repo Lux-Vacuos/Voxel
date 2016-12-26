@@ -27,36 +27,21 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import net.luxvacuos.igl.vector.Matrix4d;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.ParticleTexture;
 import net.luxvacuos.voxel.client.resources.ResourceLoader;
 import net.luxvacuos.voxel.client.resources.models.InsertionSort;
 import net.luxvacuos.voxel.client.world.entities.Camera;
 import net.luxvacuos.voxel.client.world.particles.Particle;
 
-public class ParticleMaster {
+public class ParticleDomain {
 
-	private static ParticleMaster instance = null;
+	private static Map<ParticleTexture, List<Particle>> particles;
 
-	public static ParticleMaster getInstance() {
-		if (instance == null) {
-			instance = new ParticleMaster();
-		}
-		return instance;
-	}
-
-	private Map<ParticleTexture, List<Particle>> particles;
-	private ParticleRenderer renderer;
-
-	private ParticleMaster() {
-	}
-
-	public void init(ResourceLoader loader, Matrix4d projectionMatrix) {
+	public static void init(ResourceLoader loader) {
 		particles = new HashMap<ParticleTexture, List<Particle>>();
-		renderer = new ParticleRenderer(loader, projectionMatrix);
 	}
 
-	public void update(float delta, Camera camera) {
+	public static void update(float delta, Camera camera) {
 		Iterator<Entry<ParticleTexture, List<Particle>>> mapIterator = particles.entrySet().iterator();
 		while (mapIterator.hasNext()) {
 			List<Particle> list = mapIterator.next().getValue();
@@ -74,15 +59,7 @@ public class ParticleMaster {
 		}
 	}
 
-	public void render(Camera camera) {
-		renderer.render(particles, camera);
-	}
-
-	public void cleanUp() {
-		renderer.cleanUp();
-	}
-
-	public void addParticle(Particle particle) {
+	public static void addParticle(Particle particle) {
 		List<Particle> list = particles.get(particle.getTexture());
 		if (list == null) {
 			list = new ArrayList<Particle>();
@@ -90,6 +67,10 @@ public class ParticleMaster {
 
 		}
 		list.add(particle);
+	}
+	
+	public static Map<ParticleTexture, List<Particle>> getParticles() {
+		return particles;
 	}
 
 }

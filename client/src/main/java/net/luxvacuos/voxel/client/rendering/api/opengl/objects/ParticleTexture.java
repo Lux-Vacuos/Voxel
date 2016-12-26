@@ -22,16 +22,16 @@ package net.luxvacuos.voxel.client.rendering.api.opengl.objects;
 
 public class ParticleTexture {
 
-	private int textureID;
+	private Texture texture;
 	private int numbreOfRows;
 
-	public ParticleTexture(int textureID, int numbreOfRows) {
-		this.textureID = textureID;
+	public ParticleTexture(Texture texture, int numbreOfRows) {
+		this.texture = texture;
 		this.numbreOfRows = numbreOfRows;
 	}
 
-	public int getTextureID() {
-		return textureID;
+	public Texture getTexture() {
+		return texture;
 	}
 
 	public int getNumbreOfRows() {

@@ -22,7 +22,7 @@ package net.luxvacuos.voxel.client.world.particles;
 
 import net.luxvacuos.igl.vector.Vector2d;
 import net.luxvacuos.igl.vector.Vector3d;
-import net.luxvacuos.voxel.client.rendering.api.opengl.ParticleMaster;
+import net.luxvacuos.voxel.client.rendering.api.opengl.ParticleDomain;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.ParticleTexture;
 import net.luxvacuos.voxel.client.world.entities.Camera;
 
@@ -53,7 +53,7 @@ public class Particle {
 		this.lifeLeght = lifeLeght;
 		this.rotation = rotation;
 		this.scale = scale;
-		ParticleMaster.getInstance().addParticle(this);
+		ParticleDomain.addParticle(this);
 	}
 
 	public boolean update(float delta, Camera camera) {

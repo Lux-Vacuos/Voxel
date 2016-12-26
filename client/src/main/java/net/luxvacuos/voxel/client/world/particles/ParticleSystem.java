@@ -102,10 +102,6 @@ public class ParticleSystem {
 		}
 	}
 
-	public void generateParticles(ParticlePoint particlePoint, float delta) {
-		this.generateParticles(particlePoint.getPos(), delta);
-	}
-
 	private void emitParticle(Vector3d center) {
 		Vector3d velocity = null;
 		if (direction != null) {

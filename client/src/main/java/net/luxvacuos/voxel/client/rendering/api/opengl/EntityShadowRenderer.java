@@ -61,14 +61,6 @@ public class EntityShadowRenderer {
 
 	private Map<TexturedModel, List<AbstractEntity>> entities = new HashMap<TexturedModel, List<AbstractEntity>>();
 
-	/**
-	 * Constructor, initializes the shaders and the projection matrix
-	 * 
-	 * @param shader
-	 *            Entity Shader
-	 * @param projectionMatrix
-	 *            A Matrix4d Projection
-	 */
 	public EntityShadowRenderer(Matrix4d shadowProjectionMatrix) {
 		shader = new EntityBasicShader();
 		shader.start();
@@ -99,12 +91,6 @@ public class EntityShadowRenderer {
 		glCullFace(GL_BACK);
 	}
 
-	/**
-	 * Add the Entity to the batcher map
-	 * 
-	 * @param entity
-	 *            An Entity
-	 */
 	private void processEntity(AbstractEntity entity) {
 		TexturedModel entityModel = entity.getComponent(RendereableComponent.class).model;
 		List<AbstractEntity> batch = entities.get(entityModel);
@@ -129,11 +115,6 @@ public class EntityShadowRenderer {
 		}
 	}
 
-	/**
-	 * Prepares the Entity Textured Model and binds the VAOs
-	 * 
-	 * @param model
-	 */
 	private void prepareTexturedModel(TexturedModel model) {
 		RawModel rawmodel = model.getRawModel();
 		glBindVertexArray(rawmodel.getVaoID());
@@ -144,21 +125,12 @@ public class EntityShadowRenderer {
 
 	}
 
-	/**
-	 * UnBinds the VAOs
-	 * 
-	 */
 	private void unbindTexturedModel() {
 		glDisableVertexAttribArray(0);
 		glDisableVertexAttribArray(1);
 		glBindVertexArray(0);
 	}
 
-	/**
-	 * Prepares the Textured Model Translation, Rotation and Scale
-	 * 
-	 * @param entity
-	 */
 	private void prepareInstance(AbstractEntity entity) {
 		Position pos = Components.POSITION.get(entity);
 		Rotation rot = Components.ROTATION.get(entity);

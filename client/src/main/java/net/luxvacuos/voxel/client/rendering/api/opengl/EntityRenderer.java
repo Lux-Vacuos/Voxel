@@ -73,14 +73,6 @@ public class EntityRenderer {
 	private EntityShader shader;
 	private Map<TexturedModel, List<AbstractEntity>> entities = new HashMap<TexturedModel, List<AbstractEntity>>();
 
-	/**
-	 * Constructor, initializes the shaders and the projection matrix
-	 * 
-	 * @param shader
-	 *            Entity Shader
-	 * @param projectionMatrix
-	 *            A Matrix4d Projection
-	 */
 	public EntityRenderer(Matrix4d projectionMatrix, Matrix4d shadowProjectionMatrix, ResourceLoader loader) {
 		shader = new EntityShader();
 		shader.start();
@@ -124,12 +116,6 @@ public class EntityRenderer {
 		}
 	}
 
-	/**
-	 * Render the entity's in the list
-	 * 
-	 * @param blockEntities
-	 *            A List of entity's
-	 */
 	private void renderEntity(Map<TexturedModel, List<AbstractEntity>> blockEntities, int shadowTex) {
 		for (TexturedModel model : blockEntities.keySet()) {
 			prepareTexturedModel(model, shadowTex);
@@ -144,11 +130,6 @@ public class EntityRenderer {
 
 	}
 
-	/**
-	 * Prepares the Entity Textured Model and binds the VAOs
-	 * 
-	 * @param model
-	 */
 	private void prepareTexturedModel(TexturedModel model, int shadowTex) {
 		RawModel rawmodel = model.getRawModel();
 		Material material = model.getMaterial();
@@ -171,10 +152,6 @@ public class EntityRenderer {
 		glBindTexture(GL_TEXTURE_2D, shadowTex);
 	}
 
-	/**
-	 * UnBinds the VAOs
-	 * 
-	 */
 	private void unbindTexturedModel() {
 		glDisableVertexAttribArray(0);
 		glDisableVertexAttribArray(1);
@@ -183,11 +160,6 @@ public class EntityRenderer {
 		glBindVertexArray(0);
 	}
 
-	/**
-	 * Prepares the Textured Model Translation, Rotation and Scale
-	 * 
-	 * @param entity
-	 */
 	private void prepareInstance(AbstractEntity entity) {
 		Position pos = Components.POSITION.get(entity);
 		Rotation rot = Components.ROTATION.get(entity);

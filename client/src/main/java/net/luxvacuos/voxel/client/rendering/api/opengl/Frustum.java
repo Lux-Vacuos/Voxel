@@ -34,7 +34,6 @@ import net.luxvacuos.igl.vector.Vector3d;
  *         <thomas.hourdel@libertysurf.fr> (modified by Guerra24
  *         <pablo230699@hotmail.com>))
  * 
- * @category Rendering
  */
 public class Frustum {
 

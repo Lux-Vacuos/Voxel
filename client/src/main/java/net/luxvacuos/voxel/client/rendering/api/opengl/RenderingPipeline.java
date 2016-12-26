@@ -41,6 +41,8 @@ import static org.lwjgl.opengl.GL30.glBlitFramebuffer;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.lwjgl.opengl.GL11;
+
 import net.luxvacuos.igl.Logger;
 import net.luxvacuos.igl.vector.Matrix4d;
 import net.luxvacuos.igl.vector.Vector2d;
@@ -196,7 +198,7 @@ public abstract class RenderingPipeline implements IRenderingPipeline {
 
 		glBindFramebuffer(GL_READ_FRAMEBUFFER, mainFBO.getFbo());
 		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
-		glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_DEPTH_BUFFER_BIT, GL_LINEAR);
+		glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_DEPTH_BUFFER_BIT, GL11.GL_NEAREST);
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 		previousViewMatrix = Maths.createViewMatrix(camera);

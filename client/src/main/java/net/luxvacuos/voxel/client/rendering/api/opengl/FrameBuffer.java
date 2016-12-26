@@ -68,12 +68,6 @@ import org.lwjgl.BufferUtils;
 
 import net.luxvacuos.voxel.client.core.ClientInternalSubsystem;
 
-/**
- * FrameBuffer
- * 
- * @author Guerra24 <pablo230699@hotmail.com>
- * @category Rendering
- */
 public class FrameBuffer {
 	private int frameBuffer;
 	private int renderBuffer;

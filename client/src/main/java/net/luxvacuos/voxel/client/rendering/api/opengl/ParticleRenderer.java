@@ -101,7 +101,7 @@ public class ParticleRenderer {
 
 	private void bindTexture(ParticleTexture texture) {
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, texture.getTextureID());
+		glBindTexture(GL_TEXTURE_2D, texture.getTexture().getID());
 		shader.loadNumberOfRows(texture.getNumbreOfRows());
 	}
 

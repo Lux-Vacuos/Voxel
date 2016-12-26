@@ -35,6 +35,9 @@ import static org.lwjgl.opengl.GL11.glCullFace;
 import static org.lwjgl.opengl.GL11.glDisable;
 import static org.lwjgl.opengl.GL11.glEnable;
 
+import java.util.List;
+import java.util.Map;
+
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.utils.ImmutableArray;
 
@@ -44,11 +47,12 @@ import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.core.ClientWorldSimulation;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.CubeMapTexture;
+import net.luxvacuos.voxel.client.rendering.api.opengl.objects.ParticleTexture;
 import net.luxvacuos.voxel.client.rendering.api.opengl.pipeline.MultiPass;
 import net.luxvacuos.voxel.client.rendering.api.opengl.pipeline.SinglePass;
 import net.luxvacuos.voxel.client.world.entities.Camera;
+import net.luxvacuos.voxel.client.world.particles.Particle;
 import net.luxvacuos.voxel.universal.core.TaskManager;
-import net.luxvacuos.voxel.universal.world.dimension.IDimension;
 
 public class Renderer {
 
@@ -58,6 +62,7 @@ public class Renderer {
 	private RenderingPipeline renderingPipeline;
 	private LightRenderer lightRenderer;
 	private EnvironmentRenderer environmentRenderer;
+	private ParticleRenderer particleRenderer;
 
 	private ShadowFBO shadowFBO;
 
@@ -88,13 +93,16 @@ public class Renderer {
 			else if (ClientVariables.renderingPipeline.equals("MultiPass"))
 				renderingPipeline = new MultiPass();
 		});
+		TaskManager.addTask(() -> particleRenderer = new ParticleRenderer(window.getResourceLoader(),
+				camera.getProjectionMatrix()));
 		lightRenderer = new LightRenderer();
 
 		TaskManager.addTask(() -> environmentRenderer = new EnvironmentRenderer(
 				new CubeMapTexture(window.getResourceLoader().createEmptyCubeMap(128, true), 128)));
 	}
 
-	public void render(IDimension iDimension, ImmutableArray<Entity> entities, Camera camera, Camera sunCamera,
+	public void render(ImmutableArray<Entity> entities,
+			Map<ParticleTexture, List<Particle>> particles, Camera camera, Camera sunCamera,
 			ClientWorldSimulation clientWorldSimulation, Vector3d lightPosition, Vector3d invertedLightPosition,
 			float alpha) {
 
@@ -111,24 +119,16 @@ public class Renderer {
 			if (shadowPass != null)
 				shadowPass.render(clientWorldSimulation, camera, sunCamera, shadowFBO.getShadowDepth(),
 						shadowFBO.getShadowData());
-			// dimension.renderShadow(sunCamera,
-			// sunCamera.getProjectionMatrix(), frustum);
 			entityShadowRenderer.renderEntity(entities, sunCamera);
 			shadowFBO.end();
 		}
 		frustum.calculateFrustum(camera.getProjectionMatrix(), camera.getViewMatrix());
 		clearBuffer(GL_DEPTH_BUFFER_BIT);
-		// dimension.renderOcclusion(window, camera,
-		// camera.getProjectionMatrix(), frustum);
 
 		renderingPipeline.begin();
 		clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		skyboxRenderer.render(ClientVariables.RED, ClientVariables.GREEN, ClientVariables.BLUE, camera,
 				clientWorldSimulation, lightPosition, 1, false);
-		// dimension.render(camera, sunCamera, clientWorldSimulation,
-		// camera.getProjectionMatrix(),
-		// sunCamera.getProjectionMatrix(), shadowFBO.getShadowDepth(),
-		// shadowFBO.getShadowData(), frustum, false);
 
 		if (deferredPass != null)
 			deferredPass.render(clientWorldSimulation, camera, sunCamera, shadowFBO.getShadowDepth(),
@@ -139,17 +139,10 @@ public class Renderer {
 		clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		renderingPipeline.render(camera, lightPosition, invertedLightPosition, clientWorldSimulation,
 				lightRenderer.getLights(), environmentRenderer.getCubeMapTexture(), exposure);
-
-		// dimension.render(camera, sunCamera, clientWorldSimulation,
-		// camera.getProjectionMatrix(),
-		// sunCamera.getProjectionMatrix(), shadowFBO.getShadowDepth(),
-		// shadowFBO.getShadowData(), frustum, true);
-
 		if (forwardPass != null)
 			forwardPass.render(clientWorldSimulation, camera, sunCamera, shadowFBO.getShadowDepth(),
 					shadowFBO.getShadowData());
-
-		ParticleMaster.getInstance().render(camera);
+		particleRenderer.render(particles, camera);
 	}
 
 	public void cleanUp() {
@@ -157,8 +150,8 @@ public class Renderer {
 		shadowFBO.cleanUp();
 		entityRenderer.cleanUp();
 		entityShadowRenderer.cleanUp();
-		ParticleMaster.getInstance().cleanUp();
 		renderingPipeline.dispose();
+		particleRenderer.cleanUp();
 	}
 
 	public void setShadowPass(IRenderPass shadowPass) {

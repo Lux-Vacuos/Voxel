@@ -20,8 +20,9 @@
 
 package net.luxvacuos.voxel.client.core.states;
 
+import static org.lwjgl.opengl.GL11.GL_NEAREST;
+
 import org.lwjgl.glfw.GLFW;
-import static org.lwjgl.opengl.GL11.*;
 
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.gdx.math.Vector3;
@@ -40,11 +41,12 @@ import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.glfw.WindowManager;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.Timers;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.UIRendering;
-import net.luxvacuos.voxel.client.rendering.api.opengl.ParticleMaster;
+import net.luxvacuos.voxel.client.rendering.api.opengl.ParticleDomain;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Renderer;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Tessellator;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.Light;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.Material;
+import net.luxvacuos.voxel.client.rendering.api.opengl.objects.ParticleTexture;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.RawModel;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.Texture;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.TexturedModel;
@@ -62,6 +64,7 @@ import net.luxvacuos.voxel.client.world.entities.EntityResources;
 import net.luxvacuos.voxel.client.world.entities.Plane;
 import net.luxvacuos.voxel.client.world.entities.PlayerCamera;
 import net.luxvacuos.voxel.client.world.entities.Sun;
+import net.luxvacuos.voxel.client.world.particles.ParticleSystem;
 import net.luxvacuos.voxel.universal.core.AbstractVoxel;
 import net.luxvacuos.voxel.universal.core.states.AbstractState;
 import net.luxvacuos.voxel.universal.core.states.StateMachine;
@@ -84,8 +87,10 @@ public class TestState extends AbstractState {
 	private Camera camera;
 	private Renderer renderer;
 	private Tessellator tess;
+	private ParticleSystem particleSystem;
+	private Vector3d particlesPoint;
 
-	private BasicEntity mat1, mat2, mat3, mat4, mat5;
+	private BasicEntity mat1, mat2, mat3, mat4, mat5, rocket;
 
 	public TestState() {
 		super(StateNames.TEST);
@@ -113,7 +118,6 @@ public class TestState extends AbstractState {
 
 		worldSimulation = new ClientWorldSimulation();
 		renderer = new Renderer(window, camera, sun.getCamera());
-		ParticleMaster.getInstance().init(loader, camera.getProjectionMatrix());
 
 		EntityResources.load(loader);
 
@@ -183,6 +187,13 @@ public class TestState extends AbstractState {
 		mat5.getComponent(Position.class).set(-7, 0, 0);
 		mat5.getComponent(Scale.class).setScale(0.5f);
 
+		rocket = new BasicEntity(new TexturedModel(loader.loadObjModel("Rocket"),
+				new Material(new Vector4f(0.8f), 0, 0, 0, null, null, null, null, null)));
+		rocket.getComponent(Position.class).set(0, 0, -5);
+
+		particleSystem = new ParticleSystem(new ParticleTexture(loader.loadTexture("fire0"), 4), 1000, 1, -1f, 3f, 6f);
+		particleSystem.setDirection(new Vector3d(0, -1, 0), 0.4f);
+		particlesPoint = new Vector3d(0, 1.7f, -5);
 	}
 
 	@Override
@@ -200,6 +211,7 @@ public class TestState extends AbstractState {
 		physicsSystem.getEngine().addEntity(mat3);
 		physicsSystem.getEngine().addEntity(mat4);
 		physicsSystem.getEngine().addEntity(mat5);
+		physicsSystem.getEngine().addEntity(rocket);
 		((PlayerCamera) camera).setMouse();
 	}
 
@@ -212,7 +224,8 @@ public class TestState extends AbstractState {
 	public void update(AbstractVoxel voxel, float delta) {
 		engine.update(delta);
 		sun.update(camera.getPosition(), worldSimulation.update(delta), delta);
-		ParticleMaster.getInstance().update(delta, camera);
+		particleSystem.generateParticles(particlesPoint, delta);
+		ParticleDomain.update(delta, camera);
 		KeyboardHandler kbh = ClientInternalSubsystem.getInstance().getGameWindow().getKeyboardHandler();
 		if (kbh.isCtrlPressed() && kbh.isAltPressed() & kbh.isKeyPressed(GLFW.GLFW_KEY_F10))
 			throw new RuntimeException("Crash caused by User. \n Generated using \"ctrl + alt + f10\".");
@@ -235,12 +248,8 @@ public class TestState extends AbstractState {
 	public void render(AbstractVoxel voxel, float alpha) {
 		Window window = ClientInternalSubsystem.getInstance().getGameWindow();
 
-		renderer.render(null
-
-		// TODO: Implement
-
-				, physicsSystem.getEngine().getEntities(), camera, sun.getCamera(), worldSimulation,
-				sun.getSunPosition(), sun.getInvertedSunPosition(), alpha);
+		renderer.render(physicsSystem.getEngine().getEntities(), ParticleDomain.getParticles(), camera, sun.getCamera(),
+				worldSimulation, sun.getSunPosition(), sun.getInvertedSunPosition(), alpha);
 
 		window.beingNVGFrame();
 		if (ClientVariables.debug) {
