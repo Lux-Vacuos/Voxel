@@ -137,12 +137,12 @@ public class ResourceLoader implements IDisposable {
 	 */
 	private List<ByteBuffer> nvgFont = new ArrayList<ByteBuffer>();
 	private long windowID, nvgID;
-	
+
 	public ResourceLoader(long windowID, long nvgID) {
 		this.windowID = windowID;
 		this.nvgID = nvgID;
 	}
-	
+
 	/**
 	 * Load a multiple arrays of positions, texture coords, normals and indices
 	 * 
@@ -222,10 +222,14 @@ public class ResourceLoader implements IDisposable {
 	}
 
 	public Texture loadTextureMisc(String fileName) {
+		return loadTextureMisc(fileName, GL_LINEAR);
+	}
+
+	public Texture loadTextureMisc(String fileName, int filter) {
 		int texture_id = 0;
 		try {
 			Logger.log("Loading Texture: " + fileName + ".png");
-			texture_id = loadTexture("assets/" + ClientVariables.assets + "/textures/" + fileName + ".png", GL_LINEAR,
+			texture_id = loadTexture("assets/" + ClientVariables.assets + "/textures/" + fileName + ".png", filter,
 					GL_REPEAT, GL_RGBA);
 		} catch (Exception e) {
 			throw new LoadTextureException(fileName, e);
@@ -235,17 +239,28 @@ public class ResourceLoader implements IDisposable {
 	}
 
 	/**
-	 * Load Entity Texture
+	 * Load Texture
 	 * 
 	 * @param fileName
 	 *            Block Texture Name
 	 * @return Texture ID
 	 */
 	public Texture loadTexture(String fileName) {
+		return loadTexture(fileName, GL_LINEAR);
+	}
+
+	/**
+	 * Load Texture
+	 * 
+	 * @param fileName
+	 *            Block Texture Name
+	 * @return Texture ID
+	 */
+	public Texture loadTexture(String fileName, int filter) {
 		int texture = 0;
 		try {
 			Logger.log("Loading Texture: " + fileName + ".png");
-			texture = loadTexture("assets/" + ClientVariables.assets + "/textures/" + fileName + ".png", GL_LINEAR,
+			texture = loadTexture("assets/" + ClientVariables.assets + "/textures/" + fileName + ".png", filter,
 					GL_REPEAT, GL_SRGB_ALPHA);
 		} catch (Exception e) {
 			throw new LoadTextureException(fileName, e);

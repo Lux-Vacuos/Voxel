@@ -70,6 +70,7 @@ public class OptionsState extends AbstractFadeState {
 
 		reflectionsButton = new UIButton(260, -110, 200, 40, "Reflections");
 		parallaxButton = new UIButton(260, -170, 200, 40, "Parallax");
+		parallaxButton.setEnabled(false);
 
 		ambientOccButton = new UIButton(260, -230, 200, 40, "Ambient Occlusion");
 

@@ -21,6 +21,7 @@
 package net.luxvacuos.voxel.client.core.states;
 
 import org.lwjgl.glfw.GLFW;
+import static org.lwjgl.opengl.GL11.*;
 
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.gdx.math.Vector3;
@@ -123,21 +124,24 @@ public class TestState extends AbstractState {
 		engine.addSystem(physicsSystem);
 		plane = new Plane();
 		BlocksResources.createBlocks(loader);
-		
+
 		Texture test = loader.loadTexture("rusted_iron");
 		Texture test_n = loader.loadTextureMisc("rusted_iron-n");
 		Texture test_r = loader.loadTextureMisc("rusted_iron-r");
 		Texture test_m = loader.loadTextureMisc("rusted_iron-m");
-		
+
+		Texture blocks = loader.loadTexture("blocks", GL_NEAREST);
+		Texture blocks_n = loader.loadTextureMisc("blocks_n", GL_NEAREST);
+
 		tess = new Tessellator(projectionMatrix, shadowProjectionMatrix,
-				new Material(new Vector4f(1f), 1f, 1f, 0, test, test_n, test_r, test_m, null));
+				new Material(new Vector4f(1f), 0.5f, 0f, 0, blocks, blocks_n, null, null, null));
 		RenderBlock t = new RenderBlock(new BlockMaterial("test"), new BlockFaceAtlas("Ice"));
 		t.setID(1);
 
 		tess.begin();
 		for (int x = 0; x < 16; x++) {
 			for (int z = 0; z < 16; z++) {
-				tess.generateCube(20 + x, 0, z, 1, true, true, true, true, true, true, t);
+				tess.generateCube(20 + x, -1, z, 1, true, true, true, true, true, true, t);
 			}
 		}
 		tess.end();
