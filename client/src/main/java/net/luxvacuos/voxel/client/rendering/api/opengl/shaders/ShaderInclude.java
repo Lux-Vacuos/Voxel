@@ -43,7 +43,7 @@ public class ShaderInclude {
 				.getResourceAsStream("assets/" + ClientVariables.assets + "/shaders" + file);
 		try {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(filet));
-			Logger.log("Loading Shader: " + file);
+			Logger.log("Loading Shader to GL-VFS: " + file);
 			String line;
 			while ((line = reader.readLine()) != null) {
 				shaderSource.append(line).append("//\n");

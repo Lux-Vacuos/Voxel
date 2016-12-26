@@ -25,20 +25,17 @@ import java.util.Map;
 
 import net.luxvacuos.igl.vector.Vector2d;
 import net.luxvacuos.igl.vector.Vector8f;
-import net.luxvacuos.voxel.client.rendering.api.opengl.objects.Texture;
 
 public class TessellatorTextureAtlas {
 
 	private Map<String, Vector8f> texcoords;
 	private int width, height;
-	private Texture texture;
 	private float ax, ay;
 
-	public TessellatorTextureAtlas(int textureWidth, int textureHeight, Texture texture) {
+	public TessellatorTextureAtlas(int textureWidth, int textureHeight) {
 		texcoords = new HashMap<String, Vector8f>();
 		this.width = textureWidth;
 		this.height = textureHeight;
-		this.texture = texture;
 		ax = 16f / (float) width;
 		ay = 16f / (float) height;
 	}
@@ -55,10 +52,6 @@ public class TessellatorTextureAtlas {
 		if (coords == null)
 			return new Vector8f(0, 0, 0, 1, 1, 1, 1, 0);
 		return coords;
-	}
-
-	public Texture getTexture() {
-		return texture;
 	}
 
 }

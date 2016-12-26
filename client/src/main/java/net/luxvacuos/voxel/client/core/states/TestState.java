@@ -106,6 +106,8 @@ public class TestState extends AbstractState {
 		camera.setPosition(new Vector3d(0, 2, 0));
 		sun = new Sun(shadowProjectionMatrix);
 
+		ShaderProgram.loadToVFS(new ShaderInclude("/common/common.glsl"));
+		ShaderProgram.loadToVFS(new ShaderInclude("/common/Lighting-PBR.glsl"));
 		ShaderProgram.loadToVFS(new ShaderInclude("/common/Materials.glsl"));
 
 		worldSimulation = new ClientWorldSimulation();

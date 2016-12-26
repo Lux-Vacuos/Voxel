@@ -18,14 +18,7 @@
 // 
 //
 
-struct Material {
-	vec4 diffuse;
-	float roughness;
-	float metallic;
-	float specular;
-	sampler2D diffuseTex;
-	sampler2D normalTex;
-	sampler2D roughnessTex;
-	sampler2D metallicTex;
-	sampler2D specularTex;
-};
+// This file is used to store standard variables that can be used
+// anywhere in the shader's code.
+
+#define PI 3.14159265359

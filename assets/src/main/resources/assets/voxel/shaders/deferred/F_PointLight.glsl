@@ -19,6 +19,10 @@
 //
 
 #version 330 core
+#extension GL_ARB_shading_language_include : require
+
+#include "/common/common.glsl"
+#include "/common/Lighting-PBR.glsl"
 
 in vec2 textureCoords;
 in vec4 posPos;
@@ -39,45 +43,6 @@ uniform sampler2D gNormal;
 uniform sampler2D gMask;
 uniform sampler2D gPBR; // R = roughness, B = metallic
 uniform sampler2D composite0;
-
-#define PI 3.14159265359
-
-float DistributionGGX(vec3 N, vec3 H, float roughness) {
-    float a      = roughness*roughness;
-    float a2     = a*a;
-    float NdotH  = max(dot(N, H), 0.0);
-    float NdotH2 = NdotH*NdotH;
-	
-    float nom   = a2;
-    float denom = (NdotH2 * (a2 - 1.0) + 1.0);
-    denom = PI * denom * denom;
-	
-    return nom / denom;
-}
-
-float GeometrySchlickGGX(float NdotV, float roughness) {
-    float r = (roughness + 1.0);
-    float k = (r*r) / 8.0;
-
-    float nom   = NdotV;
-    float denom = NdotV * (1.0 - k) + k;
-	
-    return nom / denom;
-}
-
-float GeometrySmith(vec3 N, vec3 V, vec3 L, float roughness) {
-    float NdotV = max(dot(N, V), 0.0);
-    float NdotL = max(dot(N, L), 0.0);
-    float ggx2  = GeometrySchlickGGX(NdotV, roughness);
-    float ggx1  = GeometrySchlickGGX(NdotL, roughness);
-	
-    return ggx1 * ggx2;
-}
-
-
-vec3 fresnelSchlickRoughness(float cosTheta, vec3 F0, float roughness) {
-    return F0 + (max(vec3(1.0 - roughness), F0) - F0) * pow(1.0 - cosTheta, 5.0);
-} 
 
 void main(void){
 	vec2 texcoord = textureCoords;
