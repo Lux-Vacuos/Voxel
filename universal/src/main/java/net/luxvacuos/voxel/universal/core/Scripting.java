@@ -66,5 +66,9 @@ public class Scripting {
 			throw new CompileGroovyException("Unable to compile: " + file, e);
 		}
 	}
+	
+	public ScriptEngine getScriptEngine() {
+		return scriptEngine;
+	}
 
 }

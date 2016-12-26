@@ -20,7 +20,14 @@
 
 package net.luxvacuos.voxel.client.core.states;
 
-import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
+
+import javax.script.CompiledScript;
+import javax.script.ScriptException;
+import javax.script.SimpleBindings;
+
+import org.lwjgl.glfw.GLFW;
 
 import net.luxvacuos.voxel.client.core.ClientInternalSubsystem;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
@@ -29,6 +36,7 @@ import net.luxvacuos.voxel.client.rendering.api.opengl.Renderer;
 import net.luxvacuos.voxel.client.ui.UIButton;
 import net.luxvacuos.voxel.client.ui.UIWindow;
 import net.luxvacuos.voxel.universal.core.AbstractVoxel;
+import net.luxvacuos.voxel.universal.core.Scripting;
 import net.luxvacuos.voxel.universal.core.states.StateMachine;
 
 /**
@@ -45,10 +53,14 @@ public class MainMenuState extends AbstractFadeState {
 	private UIButton playMPButton;
 	private UIWindow uiWindow;
 
+	private Scripting scripting;
+	private CompiledScript script;
+	private SimpleBindings bindings;
+
 	public MainMenuState() {
 		super(StateNames.MAIN_MENU);
 	}
-	
+
 	@Override
 	public void init() {
 		Window window = ClientInternalSubsystem.getInstance().getGameWindow();
@@ -60,7 +72,8 @@ public class MainMenuState extends AbstractFadeState {
 		playMPButton = new UIButton(uiWindow.getWidth() / 2 - 100, -uiWindow.getHeight() / 2 + 60 - 20, 200, 40,
 				"Multiplayer");
 		optionsButton = new UIButton(uiWindow.getWidth() / 2 - 100, -uiWindow.getHeight() / 2 - 20, 200, 40, "Options");
-		aboutButton = new UIButton(uiWindow.getWidth() / 2 - 100, -uiWindow.getHeight() / 2 - 60 - 20, 200, 40, "About");
+		aboutButton = new UIButton(uiWindow.getWidth() / 2 - 100, -uiWindow.getHeight() / 2 - 60 - 20, 200, 40,
+				"About");
 		exitButton = new UIButton(uiWindow.getWidth() / 2 - 100, -uiWindow.getHeight() / 2 - 120 - 20, 200, 40, "Exit");
 
 		playButton.setPreicon(UIRendering.ICON_BLACK_RIGHT_POINTING_TRIANGLE);
@@ -96,6 +109,12 @@ public class MainMenuState extends AbstractFadeState {
 		uiWindow.addChildren(optionsButton);
 		uiWindow.addChildren(aboutButton);
 		uiWindow.addChildren(exitButton);
+
+		scripting = new Scripting();
+		script = scripting.compile("test");
+		bindings = new SimpleBindings();
+		bindings.put("window", uiWindow);
+		bindings.put("kb", window.getKeyboardHandler());
 	}
 
 	@Override
@@ -121,6 +140,13 @@ public class MainMenuState extends AbstractFadeState {
 	@Override
 	public void update(AbstractVoxel voxel, float delta) {
 		uiWindow.update(delta);
+		try {
+			script.eval(bindings);
+		} catch (ScriptException e) {
+			e.printStackTrace();
+		}
+		if (ClientInternalSubsystem.getInstance().getGameWindow().getKeyboardHandler().isKeyPressed(GLFW.GLFW_KEY_T))
+			script = scripting.compile("test");
 
 		super.update(voxel, delta);
 	}
