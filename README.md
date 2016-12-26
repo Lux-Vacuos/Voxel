@@ -13,7 +13,7 @@ The main development are taken in the 'develop' branch, for stable code please u
 
 The project is divided into sub projects within these you find different parts of code: client, server, etc.
 
-## Requeriments
+## Requirements
 
 Voxel on the client side requires a modern OpenGL 3.3 compatible card with extra extensions:
 
