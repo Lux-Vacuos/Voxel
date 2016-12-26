@@ -65,6 +65,7 @@ import net.luxvacuos.igl.vector.Vector3d;
 import net.luxvacuos.igl.vector.Vector8f;
 import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.core.ClientWorldSimulation;
+import net.luxvacuos.voxel.client.rendering.api.opengl.objects.Material;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.TessellatorBasicShader;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.TessellatorShader;
 import net.luxvacuos.voxel.client.world.block.RenderBlock;
@@ -81,32 +82,27 @@ public class Tessellator {
 	private List<Vector2d> texcoords;
 	private List<Integer> indices;
 	private List<Vector3d> tangent;
-	private int texture;
-	private int normalMap;
-	private int heightMap;
-	private int pbrMap;
+
 	private int occlusion;
+	private Material material;
 	private boolean updated = false;
 
 	private TessellatorShader shader;
 	private TessellatorBasicShader basicShader;
 
-	public Tessellator(Matrix4d projectionMatrix, Matrix4d shadowProjectionMatrix) {
-		init(projectionMatrix, shadowProjectionMatrix);
-	}
-
-	private void init(Matrix4d projectionMatrix, Matrix4d shadowProjectionMatrix) {
+	public Tessellator(Matrix4d projectionMatrix, Matrix4d shadowProjectionMatrix, Material material) {
+		this.material = material;
 		pos = new ArrayList<Vector3d>();
 		texcoords = new ArrayList<Vector2d>();
 		normals = new ArrayList<Vector3d>();
 		indices = new ArrayList<Integer>();
 		tangent = new ArrayList<Vector3d>();
-		shader = TessellatorShader.getInstance();
+		shader = new TessellatorShader();
 		shader.start();
 		shader.loadProjectionMatrix(projectionMatrix);
 		shader.loadBiasMatrix(shadowProjectionMatrix);
 		shader.stop();
-		basicShader = TessellatorBasicShader.getInstance();
+		basicShader = new TessellatorBasicShader();
 		basicShader.start();
 		basicShader.loadProjectionMatrix(shadowProjectionMatrix);
 		basicShader.stop();
@@ -149,11 +145,7 @@ public class Tessellator {
 
 	}
 
-	public void begin(int texture, int normalMap, int heightMap, int pbrMap) {
-		this.texture = texture;
-		this.normalMap = normalMap;
-		this.heightMap = heightMap;
-		this.pbrMap = pbrMap;
+	public void begin() {
 		pos.clear();
 		texcoords.clear();
 		normals.clear();
@@ -189,8 +181,7 @@ public class Tessellator {
 		updated = true;
 	}
 
-	public void draw(Camera camera, Camera sunCamera, ClientWorldSimulation clientWorldSimulation, int shadowMap,
-			int shadowData, boolean transparent) {
+	public void draw(Camera camera, Camera sunCamera, ClientWorldSimulation clientWorldSimulation, int shadowMap) {
 		if (updated) {
 			updateGlBuffers(vboID0, vboCapacity, buffer0);
 			updateGlBuffers(vboID1, vboCapacity, buffer1);
@@ -204,27 +195,26 @@ public class Tessellator {
 		shader.loadProjectionMatrix(camera.getProjectionMatrix());
 		shader.loadViewMatrix(camera.getViewMatrix(), camera.getPosition());
 		shader.loadLightMatrix(sunCamera.getViewMatrix());
-		shader.loadTransparent(transparent);
-		shader.loadSettings(ClientVariables.useShadows, ClientVariables.useParallax);
+		shader.loadSettings(ClientVariables.useShadows);
 		shader.loadMoveFactor(clientWorldSimulation.getMoveFactor());
-		shader.loadRainFactor(clientWorldSimulation.getRainFactor());
+		shader.loadMaterial(material);
 		glBindVertexArray(vaoID);
 		glEnableVertexAttribArray(0);
 		glEnableVertexAttribArray(1);
 		glEnableVertexAttribArray(2);
 		glEnableVertexAttribArray(4);
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, texture);
+		glBindTexture(GL_TEXTURE_2D, material.getDiffuseTexture().getID());
 		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_2D, shadowMap);
+		glBindTexture(GL_TEXTURE_2D, material.getNormalTexture().getID());
 		glActiveTexture(GL_TEXTURE2);
-		glBindTexture(GL_TEXTURE_2D, normalMap);
+		glBindTexture(GL_TEXTURE_2D, material.getRoughnessTexture().getID());
 		glActiveTexture(GL_TEXTURE3);
-		glBindTexture(GL_TEXTURE_2D, heightMap);
+		glBindTexture(GL_TEXTURE_2D, material.getMetallicTexture().getID());
 		glActiveTexture(GL_TEXTURE4);
-		glBindTexture(GL_TEXTURE_2D, pbrMap);
+		glBindTexture(GL_TEXTURE_2D, material.getSpecularTexture().getID());
 		glActiveTexture(GL_TEXTURE5);
-		glBindTexture(GL_TEXTURE_2D, shadowData);
+		glBindTexture(GL_TEXTURE_2D, shadowMap);
 		glDrawElements(GL_TRIANGLES, indicesCounter, GL_UNSIGNED_INT, 0);
 		glDisableVertexAttribArray(0);
 		glDisableVertexAttribArray(1);
@@ -252,7 +242,7 @@ public class Tessellator {
 		glEnableVertexAttribArray(0);
 		glEnableVertexAttribArray(1);
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, texture);
+		glBindTexture(GL_TEXTURE_2D, material.getDiffuseTexture().getID());
 		glDrawElements(GL_TRIANGLES, indicesCounter, GL_UNSIGNED_INT, 0);
 		glDisableVertexAttribArray(0);
 		glDisableVertexAttribArray(1);
@@ -278,7 +268,7 @@ public class Tessellator {
 		glEnableVertexAttribArray(0);
 		glEnableVertexAttribArray(1);
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, texture);
+		glBindTexture(GL_TEXTURE_2D, material.getDiffuseTexture().getID());
 		glDrawElements(GL_TRIANGLES, indicesCounter, GL_UNSIGNED_INT, 0);
 		glDisableVertexAttribArray(0);
 		glDisableVertexAttribArray(1);
@@ -657,6 +647,8 @@ public class Tessellator {
 		normals.clear();
 		tangent.clear();
 		clearBuffers();
+		shader.cleanUp();
+		basicShader.cleanUp();
 	}
 
 	public int getOcclusion() {

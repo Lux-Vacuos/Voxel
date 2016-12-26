@@ -47,25 +47,24 @@ import net.luxvacuos.voxel.client.rendering.api.opengl.objects.Material;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.RawModel;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.Texture;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.TexturedModel;
-import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.TessellatorBasicShader;
-import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.TessellatorShader;
+import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.ShaderInclude;
+import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.ShaderProgram;
 import net.luxvacuos.voxel.client.rendering.utils.BlockFaceAtlas;
 import net.luxvacuos.voxel.client.resources.ResourceLoader;
 import net.luxvacuos.voxel.client.util.Maths;
 import net.luxvacuos.voxel.client.world.PhysicsSystem;
 import net.luxvacuos.voxel.client.world.block.BlocksResources;
 import net.luxvacuos.voxel.client.world.block.RenderBlock;
+import net.luxvacuos.voxel.client.world.entities.BasicEntity;
 import net.luxvacuos.voxel.client.world.entities.Camera;
 import net.luxvacuos.voxel.client.world.entities.EntityResources;
 import net.luxvacuos.voxel.client.world.entities.Plane;
 import net.luxvacuos.voxel.client.world.entities.PlayerCamera;
-import net.luxvacuos.voxel.client.world.entities.BasicEntity;
 import net.luxvacuos.voxel.client.world.entities.Sun;
 import net.luxvacuos.voxel.universal.core.AbstractVoxel;
 import net.luxvacuos.voxel.universal.core.states.AbstractState;
 import net.luxvacuos.voxel.universal.core.states.StateMachine;
 import net.luxvacuos.voxel.universal.ecs.components.Position;
-import net.luxvacuos.voxel.universal.ecs.components.Rotation;
 import net.luxvacuos.voxel.universal.ecs.components.Scale;
 import net.luxvacuos.voxel.universal.material.BlockMaterial;
 
@@ -107,10 +106,10 @@ public class TestState extends AbstractState {
 		camera.setPosition(new Vector3d(0, 2, 0));
 		sun = new Sun(shadowProjectionMatrix);
 
+		ShaderProgram.loadToVFS(new ShaderInclude("/common/Materials.glsl"));
+
 		worldSimulation = new ClientWorldSimulation();
 		renderer = new Renderer(window, camera, sun.getCamera());
-		TessellatorShader.getInstance();
-		TessellatorBasicShader.getInstance();
 		ParticleMaster.getInstance().init(loader, camera.getProjectionMatrix());
 
 		EntityResources.load(loader);
@@ -122,34 +121,40 @@ public class TestState extends AbstractState {
 		engine.addSystem(physicsSystem);
 		plane = new Plane();
 		BlocksResources.createBlocks(loader);
-		tess = new Tessellator(projectionMatrix, shadowProjectionMatrix);
-		RenderBlock t = new RenderBlock(new BlockMaterial("test"), new BlockFaceAtlas("Ice"));
-		t.setID(1);
-		/*
-		 * tess.begin(BlocksResources.getTessellatorTextureAtlas().getTexture(),
-		 * BlocksResources.getNormalMap(), BlocksResources.getHeightMap(),
-		 * BlocksResources.getPbrMap()); for (int x = 0; x < 16; x++) { for (int
-		 * z = 0; z < 16; z++) { tess.generateCube(20 + x, 0, z, 1, true, true,
-		 * true, true, true, true, t); } } tess.end();
-		 * 
-		 * renderer.setShadowPass((worldSimulation, camera, sunCamera,
-		 * shadowMap, shadowData) -> { tess.drawShadow(sunCamera); });
-		 * 
-		 * renderer.setDeferredPass((worldSimulation, camera, sunCamera,
-		 * shadowMap, shadowData) -> { tess.draw(camera, sunCamera,
-		 * worldSimulation, shadowMap, shadowData, false); });
-		 */
-		//renderer.getLightRenderer().addLight(new Light(new Vector3d(-8, 5, -8), new Vector3f(1, 1, 1)));
-		//renderer.getLightRenderer().addLight(new Light(new Vector3d(-8, 5, 8), new Vector3f(1, 1, 1)));
-		//renderer.getLightRenderer().addLight(new Light(new Vector3d(8, 5, -8), new Vector3f(1, 1, 1)));
-		//renderer.getLightRenderer().addLight(new Light(new Vector3d(8, 5, 8), new Vector3f(1, 1, 1)));
-		//renderer.getLightRenderer().addLight(new Light(new Vector3d(0, 5, 0), new Vector3f(1, 1, 1)));
-
-		RawModel sphere = loader.loadObjModel("sphere");
+		
 		Texture test = loader.loadTexture("rusted_iron");
 		Texture test_n = loader.loadTextureMisc("rusted_iron-n");
 		Texture test_r = loader.loadTextureMisc("rusted_iron-r");
 		Texture test_m = loader.loadTextureMisc("rusted_iron-m");
+		
+		tess = new Tessellator(projectionMatrix, shadowProjectionMatrix,
+				new Material(new Vector4f(1f), 1f, 1f, 0, test, test_n, test_r, test_m, null));
+		RenderBlock t = new RenderBlock(new BlockMaterial("test"), new BlockFaceAtlas("Ice"));
+		t.setID(1);
+
+		tess.begin();
+		for (int x = 0; x < 16; x++) {
+			for (int z = 0; z < 16; z++) {
+				tess.generateCube(20 + x, 0, z, 1, true, true, true, true, true, true, t);
+			}
+		}
+		tess.end();
+
+		renderer.setShadowPass((worldSimulation, camera, sunCamera, shadowMap, shadowData) -> {
+			tess.drawShadow(sunCamera);
+		});
+
+		renderer.setDeferredPass((worldSimulation, camera, sunCamera, shadowMap, shadowData) -> {
+			tess.draw(camera, sunCamera, worldSimulation, shadowMap);
+		});
+
+		renderer.getLightRenderer().addLight(new Light(new Vector3d(-8, 5, -8), new Vector3f(1, 1, 1)));
+		renderer.getLightRenderer().addLight(new Light(new Vector3d(-8, 5, 8), new Vector3f(1, 1, 1)));
+		renderer.getLightRenderer().addLight(new Light(new Vector3d(8, 5, -8), new Vector3f(1, 1, 1)));
+		renderer.getLightRenderer().addLight(new Light(new Vector3d(8, 5, 8), new Vector3f(1, 1, 1)));
+		renderer.getLightRenderer().addLight(new Light(new Vector3d(0, 5, 0), new Vector3f(1, 1, 1)));
+
+		RawModel sphere = loader.loadObjModel("sphere");
 
 		mat1 = new BasicEntity(new TexturedModel(sphere,
 				new Material(new Vector4f(1f), 1f, 1f, 0, test, test_n, test_r, test_m, null)));
@@ -177,6 +182,7 @@ public class TestState extends AbstractState {
 	@Override
 	public void dispose() {
 		renderer.cleanUp();
+		tess.cleanUp();
 	}
 
 	@Override

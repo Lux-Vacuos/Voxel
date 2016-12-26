@@ -46,8 +46,6 @@ import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.CubeMapTexture;
 import net.luxvacuos.voxel.client.rendering.api.opengl.pipeline.MultiPass;
 import net.luxvacuos.voxel.client.rendering.api.opengl.pipeline.SinglePass;
-import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.TessellatorBasicShader;
-import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.TessellatorShader;
 import net.luxvacuos.voxel.client.world.entities.Camera;
 import net.luxvacuos.voxel.universal.core.TaskManager;
 import net.luxvacuos.voxel.universal.world.dimension.IDimension;
@@ -159,8 +157,6 @@ public class Renderer {
 		shadowFBO.cleanUp();
 		entityRenderer.cleanUp();
 		entityShadowRenderer.cleanUp();
-		TessellatorShader.getInstance().cleanUp();
-		TessellatorBasicShader.getInstance().cleanUp();
 		ParticleMaster.getInstance().cleanUp();
 		renderingPipeline.dispose();
 	}

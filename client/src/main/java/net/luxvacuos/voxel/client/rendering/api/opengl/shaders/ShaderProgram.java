@@ -20,6 +20,8 @@
 
 package net.luxvacuos.voxel.client.rendering.api.opengl.shaders;
 
+import static org.lwjgl.opengl.ARBShadingLanguageInclude.GL_SHADER_INCLUDE_ARB;
+import static org.lwjgl.opengl.ARBShadingLanguageInclude.glNamedStringARB;
 import static org.lwjgl.opengl.GL11.GL_FALSE;
 import static org.lwjgl.opengl.GL20.GL_COMPILE_STATUS;
 import static org.lwjgl.opengl.GL20.GL_FRAGMENT_SHADER;
@@ -43,6 +45,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.List;
 
 import net.luxvacuos.igl.Logger;
 import net.luxvacuos.voxel.client.core.ClientVariables;
@@ -66,6 +69,21 @@ public abstract class ShaderProgram {
 	 * Shader bind status
 	 */
 	private static boolean binded = false;
+
+	/**
+	 * Load includes to VFS
+	 */
+	public static void loadToVFS(List<ShaderInclude> shaders) {
+		for (ShaderInclude shader : shaders) {
+			shader.loadShader();
+			glNamedStringARB(GL_SHADER_INCLUDE_ARB, shader.getFile(), shader.getShaderSource());
+		}
+	}
+
+	public static void loadToVFS(ShaderInclude shader) {
+		shader.loadShader();
+		glNamedStringARB(GL_SHADER_INCLUDE_ARB, shader.getFile(), shader.getShaderSource());
+	}
 
 	/**
 	 * Constructor, Creates a Shader Program Using a Vertex Shader and a

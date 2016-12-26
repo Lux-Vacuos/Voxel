@@ -140,11 +140,8 @@ public class EntityShadowRenderer {
 		glEnableVertexAttribArray(0);
 		glEnableVertexAttribArray(1);
 		glActiveTexture(GL_TEXTURE0);
-		if (model.getMaterial().getDiffuse() != null)
-			glBindTexture(GL_TEXTURE_2D, EntityRenderer.dDiffuse.getID());
-		else 
-			glBindTexture(GL_TEXTURE_2D, model.getMaterial().getDiffuseTexture().getID());
-			
+		glBindTexture(GL_TEXTURE_2D, model.getMaterial().getDiffuseTexture().getID());
+
 	}
 
 	/**

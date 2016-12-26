@@ -50,11 +50,11 @@ void main() {
 	
 	vec4 positionRelativeToCam = viewMatrix * worldPosition;
 	gl_Position = projectionMatrix * positionRelativeToCam;
-	
-	vec3 bitangent = cross(normal, tangent);
+
 	vec3 T = normalize(tangent);
-	vec3 B = normalize(bitangent);
 	vec3 N = normalize(normal);
+	T = normalize(T - dot(T, N) * N);
+	vec3 B = cross(N, T);
 	TBN = mat3(T, B, N);
 	
 	if(useShadows == 1){

@@ -23,64 +23,40 @@ package net.luxvacuos.voxel.client.rendering.api.opengl.shaders;
 import net.luxvacuos.igl.vector.Matrix4d;
 import net.luxvacuos.igl.vector.Vector3d;
 import net.luxvacuos.voxel.client.core.ClientVariables;
+import net.luxvacuos.voxel.client.rendering.api.opengl.objects.Material;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.Attribute;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.UniformBoolean;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.UniformFloat;
+import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.UniformMaterial;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.UniformMatrix;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.UniformSampler;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.UniformVec3;
 
 public class TessellatorShader extends ShaderProgram {
 
-	private static TessellatorShader instance = null;
-
-	public static TessellatorShader getInstance() {
-		if (instance == null) {
-			instance = new TessellatorShader();
-		}
-		return instance;
-	}
-
 	private UniformMatrix projectionMatrix = new UniformMatrix("projectionMatrix");
 	private UniformMatrix viewMatrix = new UniformMatrix("viewMatrix");
 	private UniformMatrix biasMatrix = new UniformMatrix("biasMatrix");
 	private UniformMatrix projectionLightMatrix = new UniformMatrix("projectionLightMatrix");
 	private UniformMatrix viewLightMatrix = new UniformMatrix("viewLightMatrix");
-
 	private UniformVec3 cameraPos = new UniformVec3("cameraPos");
-
 	private UniformFloat moveFactor = new UniformFloat("moveFactor");
-	private UniformFloat rainFactor = new UniformFloat("rainFactor");
-
-	private UniformSampler texture0 = new UniformSampler("texture0");
 	private UniformSampler depth = new UniformSampler("depth");
-	private UniformSampler shadowTex = new UniformSampler("shadowTex");
-	private UniformSampler normalMap = new UniformSampler("normalMap");
-	private UniformSampler heightMap = new UniformSampler("heightMap");
-	private UniformSampler pbrMap = new UniformSampler("pbrMap");
-
 	private UniformBoolean useShadows = new UniformBoolean("useShadows");
-	private UniformBoolean useParallax = new UniformBoolean("useParallax");
-	private UniformBoolean transparent = new UniformBoolean("transparent");
+	private UniformMaterial material = new UniformMaterial("material");
 
-	private TessellatorShader() {
+	public TessellatorShader() {
 		super(ClientVariables.VERTEX_FILE_TESSELLATOR, ClientVariables.FRAGMENT_FILE_TESSELLATOR,
 				new Attribute(0, "position"), new Attribute(1, "textureCoords"), new Attribute(2, "normal"),
 				new Attribute(3, "data"), new Attribute(4, "tangent"), new Attribute(5, "bitangent"));
 		super.storeAllUniformLocations(projectionMatrix, viewMatrix, biasMatrix, projectionLightMatrix, viewLightMatrix,
-				cameraPos, moveFactor, rainFactor, texture0, depth, shadowTex, normalMap, heightMap, pbrMap,
-				useShadows, useParallax, transparent);
+				moveFactor, depth, useShadows, cameraPos, material);
 		conectTextureUnits();
 	}
 
 	private void conectTextureUnits() {
 		super.start();
-		texture0.loadTexUnit(0);
-		depth.loadTexUnit(1);
-		normalMap.loadTexUnit(2);
-		heightMap.loadTexUnit(3);
-		pbrMap.loadTexUnit(4);
-		shadowTex.loadTexUnit(5);
+		depth.loadTexUnit(5);
 		super.stop();
 	}
 
@@ -110,6 +86,10 @@ public class TessellatorShader extends ShaderProgram {
 		this.biasMatrix.loadMatrix(biasMatrix);
 		projectionLightMatrix.loadMatrix(shadowProjectionMatrix);
 	}
+	
+	public void loadMaterial(Material mat) {
+		this.material.loadMaterial(mat);
+	}
 
 	public void loadLightMatrix(Matrix4d sunCameraViewMatrix) {
 		viewLightMatrix.loadMatrix(sunCameraViewMatrix);
@@ -119,17 +99,8 @@ public class TessellatorShader extends ShaderProgram {
 		moveFactor.loadFloat(factor);
 	}
 
-	public void loadRainFactor(float factor) {
-		rainFactor.loadFloat(factor);
-	}
-
-	public void loadSettings(boolean useShadows, boolean useParallax) {
+	public void loadSettings(boolean useShadows) {
 		this.useShadows.loadBoolean(useShadows);
-		this.useParallax.loadBoolean(useParallax);
-	}
-
-	public void loadTransparent(boolean trans) {
-		transparent.loadBoolean(trans);
 	}
 
 	/**

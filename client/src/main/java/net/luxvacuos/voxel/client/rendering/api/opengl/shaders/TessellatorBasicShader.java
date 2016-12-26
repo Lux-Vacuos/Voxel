@@ -29,15 +29,6 @@ import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.UniformVec3;
 
 public class TessellatorBasicShader extends ShaderProgram {
 
-	private static TessellatorBasicShader instance = null;
-
-	public static TessellatorBasicShader getInstance() {
-		if (instance == null) {
-			instance = new TessellatorBasicShader();
-		}
-		return instance;
-	}
-
 	private UniformMatrix projectionMatrix = new UniformMatrix("projectionMatrix");
 	private UniformMatrix viewMatrix = new UniformMatrix("viewMatrix");
 

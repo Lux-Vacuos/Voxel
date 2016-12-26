@@ -21,6 +21,7 @@
 package net.luxvacuos.voxel.client.rendering.api.opengl.objects;
 
 import net.luxvacuos.igl.vector.Vector4f;
+import net.luxvacuos.voxel.client.resources.ResourceLoader;
 
 /**
  * Material
@@ -31,6 +32,15 @@ public class Material {
 	private Vector4f diffuse;
 	private float roughness, metallic, specular;
 	private Texture diffuseTexture, normalTexture, roughnessTexture, metallicTexture, specularTexture;
+	private static Texture dDiffuse, dNormal, dRoughness, dMetallic, dSpecular;
+
+	public static void init(ResourceLoader loader) {
+		dDiffuse = loader.loadTextureMisc("def/d");
+		dNormal = loader.loadTextureMisc("def/d_n");
+		dRoughness = loader.loadTextureMisc("def/d_r");
+		dMetallic = loader.loadTextureMisc("def/d_m");
+		dSpecular = loader.loadTextureMisc("def/d_s");
+	}
 
 	/**
 	 * 
@@ -53,11 +63,26 @@ public class Material {
 		this.roughness = roughness;
 		this.metallic = metallic;
 		this.specular = specular;
-		this.diffuseTexture = diffuseTexture;
-		this.normalTexture = normalTexture;
-		this.roughnessTexture = roughnessTexture;
-		this.metallicTexture = metallicTexture;
-		this.specularTexture = specularTexture;
+		if (diffuseTexture == null)
+			this.diffuseTexture = dDiffuse;
+		else
+			this.diffuseTexture = diffuseTexture;
+		if (normalTexture == null)
+			this.normalTexture = dNormal;
+		else
+			this.normalTexture = normalTexture;
+		if (roughnessTexture == null)
+			this.roughnessTexture = dRoughness;
+		else
+			this.roughnessTexture = roughnessTexture;
+		if (metallicTexture == null)
+			this.metallicTexture = dMetallic;
+		else
+			this.metallicTexture = metallicTexture;
+		if (specularTexture == null)
+			this.specularTexture = dSpecular;
+		else
+			this.specularTexture = specularTexture;
 	}
 
 	public Vector4f getDiffuse() {

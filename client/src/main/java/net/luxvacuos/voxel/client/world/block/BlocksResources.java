@@ -37,7 +37,7 @@ public class BlocksResources {
 
 	public static void createBlocks(ResourceLoader loader) {
 
-		tessellatorTextureAtlas = new TessellatorTextureAtlas(256, 256, loader.loadTexture("blocks"));
+		tessellatorTextureAtlas = new TessellatorTextureAtlas(32, 32, loader.loadTexture("blocks"));
 		normalMap = loader.loadTextureMisc("blocks_normal");
 		heightMap = loader.loadTextureMisc("blocks_height");
 		pbrMap = loader.loadTextureMisc("blocks_pbr");

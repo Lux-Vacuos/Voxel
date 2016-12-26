@@ -19,18 +19,9 @@
 //
 
 #version 330 core
+#extension GL_ARB_shading_language_include : require
 
-struct Material {
-	vec4 diffuse;
-	float roughness;
-	float metallic;
-	float specular;
-	sampler2D diffuseTex;
-	sampler2D normalTex;
-	sampler2D roughnessTex;
-	sampler2D metallicTex;
-	sampler2D specularTex;
-};
+#include "/common/Materials.glsl"
 
 in float visibility;
 in vec2 pass_textureCoords;
@@ -41,8 +32,6 @@ in mat3 TBN;
 out vec4 [5] out_Color;
 
 uniform sampler2DShadow depth;
-uniform vec3 skyColour;
-uniform vec3 lightPosition;
 uniform Material material;
 
 uniform int useShadows;
