@@ -46,7 +46,6 @@ import static org.lwjgl.opengl.GL15.glBeginQuery;
 import static org.lwjgl.opengl.GL15.glEndQuery;
 import static org.lwjgl.opengl.GL15.glGenQueries;
 import static org.lwjgl.opengl.GL15.glGetQueryObjectiv;
-import static org.lwjgl.system.MemoryUtil.NULL;
 import static org.lwjgl.system.MemoryUtil.memAllocInt;
 import static org.lwjgl.system.MemoryUtil.memAllocLong;
 import static org.lwjgl.system.MemoryUtil.memFree;
@@ -77,7 +76,6 @@ public class Timers {
 
 	private static final int GRAPH_HISTORY_COUNT = 200;
 	private static final int GPU_QUERY_COUNT = 5;
-
 
 	public static void initDebugDisplay() {
 		vg = ClientInternalSubsystem.getInstance().getGameWindow().getNVGID();
@@ -262,29 +260,29 @@ public class Timers {
 			nvgFontSize(vg, 14.0f);
 			nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_TOP);
 			nvgFillColor(vg, rgba(240, 240, 240, 192, colorA));
-			nvgText(vg, x + 3, y + 1, fps.name, NULL);
+			nvgText(vg, x + 3, y + 1, fps.name);
 		}
 
 		if (fps.style == GRAPH_RENDER_FPS) {
 			nvgFontSize(vg, 18.0f);
 			nvgTextAlign(vg, NVG_ALIGN_RIGHT | NVG_ALIGN_TOP);
 			nvgFillColor(vg, rgba(240, 240, 240, 255, colorA));
-			nvgText(vg, x + w - 3, y + 1, String.format("%.2f FPS", 1.0f / avg), NULL);
+			nvgText(vg, x + w - 3, y + 1, String.format("%.2f FPS", 1.0f / avg));
 
 			nvgFontSize(vg, 15.0f);
 			nvgTextAlign(vg, NVG_ALIGN_RIGHT | NVG_ALIGN_BOTTOM);
 			nvgFillColor(vg, rgba(240, 240, 240, 160, colorA));
-			nvgText(vg, x + w - 3, y + h - 1, String.format("%.2f ms", avg * 1000.0f), NULL);
+			nvgText(vg, x + w - 3, y + h - 1, String.format("%.2f ms", avg * 1000.0f));
 		} else if (fps.style == GRAPH_RENDER_PERCENT) {
 			nvgFontSize(vg, 18.0f);
 			nvgTextAlign(vg, NVG_ALIGN_RIGHT | NVG_ALIGN_TOP);
 			nvgFillColor(vg, rgba(240, 240, 240, 255, colorA));
-			nvgText(vg, x + w - 3, y + 1, String.format("%.1f %%", avg * 1.0f), NULL);
+			nvgText(vg, x + w - 3, y + 1, String.format("%.1f %%", avg * 1.0f));
 		} else {
 			nvgFontSize(vg, 18.0f);
 			nvgTextAlign(vg, NVG_ALIGN_RIGHT | NVG_ALIGN_TOP);
 			nvgFillColor(vg, rgba(240, 240, 240, 255, colorA));
-			nvgText(vg, x + w - 3, y + 1, String.format("%.2f ms", avg * 1000.0f), NULL);
+			nvgText(vg, x + w - 3, y + 1, String.format("%.2f ms", avg * 1000.0f));
 		}
 	}
 

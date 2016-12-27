@@ -53,7 +53,6 @@ import static org.lwjgl.nanovg.NanoVG.nvgText;
 import static org.lwjgl.nanovg.NanoVG.nvgTextAlign;
 import static org.lwjgl.nanovg.NanoVG.nvgTextBounds;
 import static org.lwjgl.nanovg.NanoVG.nvgTextMetrics;
-import static org.lwjgl.system.MemoryUtil.NULL;
 import static org.lwjgl.system.MemoryUtil.memAddress;
 import static org.lwjgl.system.MemoryUtil.memAllocInt;
 import static org.lwjgl.system.MemoryUtil.memFree;
@@ -122,7 +121,7 @@ public class UIRendering {
 	public static void renderParagraph(long windowID, float x, float y, float width, float height, float mx, float my,
 			float fontSize, String font, String text, int align, NVGColor color) {
 		long vg = WindowManager.getWindow(windowID).getNVGID();
-		if(text == null)
+		if (text == null)
 			text = "";
 		ByteBuffer paragraph = memUTF8(text);
 
@@ -156,7 +155,7 @@ public class UIRendering {
 		nvgFontFace(vg, font);
 		nvgFillColor(vg, rgba(255, 255, 255, 128, colorA));
 		nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
-		nvgText(vg, x, y, text, NULL);
+		nvgText(vg, x, y, text);
 	}
 
 	public static void renderSearchBox(long windowID, String text, String font, String entypo, float x, float y,
@@ -181,20 +180,20 @@ public class UIRendering {
 		nvgFontFace(vg, entypo);
 		nvgFillColor(vg, rgba(255, 255, 255, 0, colorA));
 		nvgTextAlign(vg, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
-		nvgText(vg, x + h * 0.55f, y + h * 0.55f, ICON_SEARCH, NULL);
+		nvgText(vg, x + h * 0.55f, y + h * 0.55f, ICON_SEARCH);
 
 		nvgFontSize(vg, h * 1.3f);
 		nvgFontFace(vg, font);
 		nvgFillColor(vg, rgba(255, 255, 255, 140, colorA));
 
 		nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
-		nvgText(vg, x + h * 1.05f, y + h * 0.5f, text, NULL);
+		nvgText(vg, x + h * 1.05f, y + h * 0.5f, text);
 
 		nvgFontSize(vg, h * 1.3f);
 		nvgFontFace(vg, entypo);
 		nvgFillColor(vg, rgba(255, 255, 255, 0, colorA));
 		nvgTextAlign(vg, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
-		nvgText(vg, x + w - h * 0.55f, y + h * 0.55f, ICON_CIRCLED_CROSS, NULL);
+		nvgText(vg, x + w - h * 0.55f, y + h * 0.55f, ICON_CIRCLED_CROSS);
 	}
 
 	public static void renderImage(long windowID, float x, float y, float w, float h, int image, float alpha) {
@@ -299,17 +298,13 @@ public class UIRendering {
 		nvgFontFace(vg, font);
 		nvgTextAlign(vg, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
 
-		ByteBuffer titleText = memUTF8(title);
-
 		nvgFontBlur(vg, 2);
 		nvgFillColor(vg, rgba(0, 0, 0, (int) (128 * alphaMult), colorA));
-		nvgText(vg, x + w / 2, y + 16 + 1, titleText, NULL);
+		nvgText(vg, x + w / 2, y + 16 + 1, title);
 
 		nvgFontBlur(vg, 0);
 		nvgFillColor(vg, rgba(220, 220, 220, (int) (160 * alphaMult), colorA));
-		nvgText(vg, x + w / 2, y + 16, titleText, NULL);
-
-		memFree(titleText);
+		nvgText(vg, x + w / 2, y + 16, title);
 
 		nvgRestore(vg);
 	}
@@ -425,7 +420,7 @@ public class UIRendering {
 		nvgFontFace(vg, font);
 		nvgTextAlign(vg, align);
 		nvgFillColor(vg, color);
-		nvgText(vg, x, y, text, NULL);
+		nvgText(vg, x, y, text);
 	}
 
 	public static void renderText(long windowID, String text, String font, int align, float x, float y, float fontSize,
@@ -436,7 +431,7 @@ public class UIRendering {
 		nvgTextAlign(vg, align);
 		nvgFillColor(vg, rgba((int) (color.r() * 255f), (int) (color.g() * 255f), (int) (color.b() * 255f),
 				(int) (color.a() * fadeAlpha * 255f), colorA));
-		nvgText(vg, x, y, text, NULL);
+		nvgText(vg, x, y, text);
 	}
 
 	public static void renderButton(long windowID, ByteBuffer preicon, String text, String font, String entypo, float x,
@@ -472,15 +467,13 @@ public class UIRendering {
 		nvgStrokeColor(vg, rgba(0, 0, 0, (int) (48 * fadeAlpha), colorA));
 		nvgStroke(vg);
 
-		ByteBuffer textEncoded = memUTF8(text);
-
 		nvgFontSize(vg, fontSize);
 		nvgFontFace(vg, font);
-		tw = nvgTextBounds(vg, 0, 0, textEncoded, NULL, (FloatBuffer) null);
+		tw = nvgTextBounds(vg, 0, 0, text, (FloatBuffer) null);
 		if (preicon != null) {
 			nvgFontSize(vg, h * 1.3f);
 			nvgFontFace(vg, entypo);
-			iw = nvgTextBounds(vg, 0, 0, preicon, NULL, (FloatBuffer) null);
+			iw = nvgTextBounds(vg, 0, 0, preicon, (FloatBuffer) null);
 			iw += h * 0.15f;
 		}
 
@@ -489,18 +482,17 @@ public class UIRendering {
 			nvgFontFace(vg, entypo);
 			nvgFillColor(vg, rgba(100, 100, 100, (int) (96 * fadeAlpha), colorA));
 			nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
-			nvgText(vg, x + w * 0.5f - tw * 0.5f - iw * 0.75f, y + h * 0.5f, preicon, NULL);
+			nvgText(vg, x + w * 0.5f - tw * 0.5f - iw * 0.75f, y + h * 0.5f, preicon);
 		}
 
 		nvgFontSize(vg, fontSize);
 		nvgFontFace(vg, font);
 		nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
 		nvgFillColor(vg, rgba(0, 0, 0, (int) (255 * fadeAlpha), colorA));
-		nvgText(vg, x + w * 0.5f - tw * 0.5f + iw * 0.25f, y + h * 0.5f - 1, textEncoded, NULL);
+		nvgText(vg, x + w * 0.5f - tw * 0.5f + iw * 0.25f, y + h * 0.5f - 1, text);
 		nvgFillColor(vg, rgba(255, 255, 255, (int) (100 * fadeAlpha), colorA));
-		nvgText(vg, x + w * 0.5f - tw * 0.5f + iw * 0.25f, y + h * 0.5f, textEncoded, NULL);
+		nvgText(vg, x + w * 0.5f - tw * 0.5f + iw * 0.25f, y + h * 0.5f, text);
 
-		memFree(textEncoded);
 	}
 
 	public static ByteBuffer cpToUTF8(int cp) {

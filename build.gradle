@@ -23,16 +23,16 @@ project(":client") {
 	switch ( OperatingSystem.current() ) {
 		case OperatingSystem.WINDOWS:
 			project.ext.lwjglNatives = "natives-windows"
-				break
+			break
 		case OperatingSystem.LINUX:
 			project.ext.lwjglNatives = "natives-linux"
-		break
+			break
 		case OperatingSystem.MAC_OS:
 			project.ext.lwjglNatives = "natives-macos"
 			break
 	}
 
-	project.ext.lwjglVersion = "3.1.0"
+	project.ext.lwjglVersion = "3.1.1"
 
 	dependencies {
 		compile project(':ashley')
@@ -41,7 +41,7 @@ project(":client") {
 		compile project(':assets')
 		compile 'de.jarnbjo:j-ogg-all:1.0.0'
 		compile 'org.jcraft:jorbis:0.0.17'
-		
+
 		// LWJGL dependencies
 		compile "org.lwjgl:lwjgl:${lwjglVersion}"
 		compile "org.lwjgl:lwjgl-glfw:${lwjglVersion}"
@@ -53,12 +53,13 @@ project(":client") {
 		compile "org.lwjgl:lwjgl-vulkan:${lwjglVersion}"
 		// LWJGL natives
 		runtime "org.lwjgl:lwjgl:${lwjglVersion}:${lwjglNatives}"
+		runtime "org.lwjgl:lwjgl-opengl:${lwjglVersion}:${lwjglNatives}"
 		runtime "org.lwjgl:lwjgl-glfw:${lwjglVersion}:${lwjglNatives}"
 		runtime "org.lwjgl:lwjgl-jemalloc:${lwjglVersion}:${lwjglNatives}"
 		runtime "org.lwjgl:lwjgl-nanovg:${lwjglVersion}:${lwjglNatives}"
 		runtime "org.lwjgl:lwjgl-openal:${lwjglVersion}:${lwjglNatives}"
 		runtime "org.lwjgl:lwjgl-stb:${lwjglVersion}:${lwjglNatives}"
-		
+
 		testCompile group: 'junit', name: 'junit', version: '4.12'
 	}
 }
