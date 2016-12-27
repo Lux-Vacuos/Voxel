@@ -11,27 +11,16 @@ The main development are taken in the 'develop' branch, for stable code please u
 
 ## Project Layout
 
-The project is divided into sub projects within these we find different parts of code, as the client, server, etc.
+The project is divided into sub projects within these you find different parts of code: client, server, etc.
 
-This is divided into.
+## Requirements
 
-### Client
-This contains code that is used only for the client side, like the graphics engine.
+Voxel on the client side requires a modern OpenGL 3.3 compatible card with extra extensions:
 
-### Server
-This contains the code from the server version.
-
-### Launcher
-This contains the launcher used to download all the libraries and run the client.
-
-### Universal
-This contains code shared between client and server, in this case some parts of the netcode and API for mods.
-
-### Ashley
-This is a fork of libgdx/Ashley that was modified so it can run without all the libgdx library.
-
-### Utils
-This contains code that is used in all other sub projects, some code from libgdx and LWJGL2 was exported so the other projects do not have to implement the same code.
+| Name | Notes |
+| ------------- | ------------- |
+| ARB_shading_language_include | Required to run |
+| EXT_texture_filter_anisotropic | Optional, may cause texture issues if isn't supported |
 
 ## Bulding Voxel
 

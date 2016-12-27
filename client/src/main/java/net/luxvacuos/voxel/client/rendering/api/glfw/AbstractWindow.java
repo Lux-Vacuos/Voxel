@@ -40,10 +40,8 @@ import static org.lwjgl.opengl.GL11.glViewport;
 import org.lwjgl.glfw.Callbacks;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GLCapabilities;
-import org.lwjgl.vulkan.VkInstance;
 
 import net.luxvacuos.voxel.client.input.KeyboardHandler;
-import net.luxvacuos.voxel.client.rendering.api.glfw.WindowManager.DeviceAndGraphicsQueueFamily;
 import net.luxvacuos.voxel.client.resources.ResourceLoader;
 
 public abstract class AbstractWindow implements IWindow {
@@ -78,14 +76,8 @@ public abstract class AbstractWindow implements IWindow {
 	protected double lastLoopTime;
 	protected float timeCount;
 
-	// TODO: Move Vulkan Stuff
-	protected DeviceAndGraphicsQueueFamily device;
-	protected VkInstance vkInstance;
-
-	protected AbstractWindow(VkInstance vkInstance, DeviceAndGraphicsQueueFamily device, long windowID, int width,
+	protected AbstractWindow(long windowID, int width,
 			int height) {
-		this.vkInstance = vkInstance;
-		this.device = device;
 		this.windowID = windowID;
 		this.displayUtils = new DisplayUtils();
 		this.width = width;
