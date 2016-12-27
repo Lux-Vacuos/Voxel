@@ -22,12 +22,13 @@ Voxel on the client side requires a modern OpenGL 3.3 compatible card with extra
 | ARB_shading_language_include | Required to run |
 | EXT_texture_filter_anisotropic | Optional, may cause texture issues if isn't supported |
 
-## Bulding Voxel
+Voxel can be compiled and run in:
 
-Voxel uses Gradle as build system.
+- Linux X64.
+- Windows X86 & X64.
+- OSX X64.
 
-Windows: Java 8.
-Linux & OS X: OpenJDK 8 and JavaFX.
+Only. 
 
 ## Running Voxel
 
