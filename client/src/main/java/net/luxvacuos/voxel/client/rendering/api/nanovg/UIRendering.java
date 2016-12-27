@@ -122,6 +122,8 @@ public class UIRendering {
 	public static void renderParagraph(long windowID, float x, float y, float width, float height, float mx, float my,
 			float fontSize, String font, String text, int align, NVGColor color) {
 		long vg = WindowManager.getWindow(windowID).getNVGID();
+		if(text == null)
+			text = "";
 		ByteBuffer paragraph = memUTF8(text);
 
 		nvgSave(vg);
