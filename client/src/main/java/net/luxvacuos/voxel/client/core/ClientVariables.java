@@ -45,7 +45,6 @@ public class ClientVariables extends GlobalVariables {
 	/**
 	 * Game Settings
 	 */
-	public static boolean hideHud = false;
 	public static boolean onServer = false;
 	public static String version = "Development Version";
 	public static int FOV = 90;

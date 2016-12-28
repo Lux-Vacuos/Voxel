@@ -34,7 +34,7 @@ public class TaskManager {
 		if(crashed)
 			return;
 		if (!tasks.isEmpty()) {
-			timer += 0.5 * 0.33;
+			timer += 1 * 0.33;
 			if (timer > 1) {
 				tasks.poll().run();
 				timer = 0;

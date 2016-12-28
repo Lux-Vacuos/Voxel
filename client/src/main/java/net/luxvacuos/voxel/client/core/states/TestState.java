@@ -61,7 +61,6 @@ import net.luxvacuos.voxel.client.world.block.RenderBlock;
 import net.luxvacuos.voxel.client.world.entities.BasicEntity;
 import net.luxvacuos.voxel.client.world.entities.Camera;
 import net.luxvacuos.voxel.client.world.entities.EntityResources;
-import net.luxvacuos.voxel.client.world.entities.Plane;
 import net.luxvacuos.voxel.client.world.entities.PlayerCamera;
 import net.luxvacuos.voxel.client.world.entities.Sun;
 import net.luxvacuos.voxel.client.world.particles.ParticleSystem;
@@ -81,7 +80,6 @@ public class TestState extends AbstractState {
 
 	private PhysicsSystem physicsSystem;
 	private Engine engine;
-	private Plane plane;
 	private Sun sun;
 	private ClientWorldSimulation worldSimulation;
 	private Camera camera;
@@ -90,7 +88,7 @@ public class TestState extends AbstractState {
 	private ParticleSystem particleSystem;
 	private Vector3d particlesPoint;
 
-	private BasicEntity mat1, mat2, mat3, mat4, mat5, rocket;
+	private BasicEntity mat1, mat2, mat3, mat4, mat5, rocket, plane;
 
 	public TestState() {
 		super(StateNames.TEST);
@@ -124,15 +122,14 @@ public class TestState extends AbstractState {
 		worldSimulation = new ClientWorldSimulation();
 		engine = new Engine();
 		physicsSystem = new PhysicsSystem();
-		physicsSystem.addBox(new BoundingBox(new Vector3(-15, -1, -15), new Vector3(40, 0, 25)));
+		physicsSystem.addBox(new BoundingBox(new Vector3(-50, -1, -50), new Vector3(50, 0, 50)));
 		engine.addSystem(physicsSystem);
-		plane = new Plane();
 		BlocksResources.createBlocks(loader);
 
-		Texture test = loader.loadTexture("rusted_iron");
-		Texture test_n = loader.loadTextureMisc("rusted_iron-n");
-		Texture test_r = loader.loadTextureMisc("rusted_iron-r");
-		Texture test_m = loader.loadTextureMisc("rusted_iron-m");
+		Texture test = loader.loadTexture("test_state/rusted_iron");
+		Texture test_n = loader.loadTextureMisc("test_state/rusted_iron-n");
+		Texture test_r = loader.loadTextureMisc("test_state/rusted_iron-r");
+		Texture test_m = loader.loadTextureMisc("test_state/rusted_iron-m");
 
 		Texture blocks = loader.loadTexture("blocks", GL_NEAREST);
 		Texture blocks_n = loader.loadTextureMisc("blocks_n", GL_NEAREST);
@@ -164,7 +161,7 @@ public class TestState extends AbstractState {
 		renderer.getLightRenderer().addLight(new Light(new Vector3d(8, 5, 8), new Vector3f(1, 1, 1)));
 		renderer.getLightRenderer().addLight(new Light(new Vector3d(0, 5, 0), new Vector3f(1, 1, 1)));
 
-		RawModel sphere = loader.loadObjModel("sphere");
+		RawModel sphere = loader.loadObjModel("test_state/sphere");
 
 		mat1 = new BasicEntity(new TexturedModel(sphere,
 				new Material(new Vector4f(1f), 1f, 1f, 0, test, test_n, test_r, test_m, null)));
@@ -182,16 +179,26 @@ public class TestState extends AbstractState {
 				new Material(new Vector4f(1f), 1f, 1f, 1, test, test_n, test_r, test_m, null)));
 		mat4.getComponent(Position.class).set(9, 1, 0);
 
-		mat5 = new BasicEntity(new TexturedModel(loader.loadObjModel("dragon"),
-				new Material(new Vector4f(1), 1f, 1f, 1f, test, test_n, test_r, test_m, null)));
+		mat5 = new BasicEntity(new TexturedModel(loader.loadObjModel("test_state/dragon"),
+				new Material(new Vector4f(1), 1f, 1f, 1f, loader.loadTexture("test_state/gold-scuffed"),
+						loader.loadTextureMisc("test_state/gold-scuffed_n"),
+						loader.loadTextureMisc("test_state/gold-scuffed_r"),
+						loader.loadTextureMisc("test_state/gold-scuffed_m"), null)));
 		mat5.getComponent(Position.class).set(-7, 0, 0);
 		mat5.getComponent(Scale.class).setScale(0.5f);
 
-		rocket = new BasicEntity(new TexturedModel(loader.loadObjModel("Rocket"),
-				new Material(new Vector4f(0.8f), 0, 0, 0, null, null, null, null, null)));
+		rocket = new BasicEntity(new TexturedModel(loader.loadObjModel("test_state/Rocket"),
+				new Material(new Vector4f(0.8f), 0.5f, 0, 0, null, null, null, null, null)));
 		rocket.getComponent(Position.class).set(0, 0, -5);
 
-		particleSystem = new ParticleSystem(new ParticleTexture(loader.loadTexture("fire0"), 4), 1000, 1, -1f, 3f, 6f);
+		plane = new BasicEntity(new TexturedModel(loader.loadObjModel("test_state/plane"),
+				new Material(new Vector4f(1), 1f, 0, 0.0f, loader.loadTexture("test_state/mahogfloor"),
+						loader.loadTextureMisc("test_state/mahogfloor_n"),
+						loader.loadTextureMisc("test_state/mahogfloor_r"), null, null)));
+		plane.getComponent(Scale.class).setScale(2f);
+
+		particleSystem = new ParticleSystem(new ParticleTexture(loader.loadTexture("particles/fire0"), 4), 1000, 1, -1f,
+				3f, 6f);
 		particleSystem.setDirection(new Vector3d(0, -1, 0), 0.4f);
 		particlesPoint = new Vector3d(0, 1.7f, -5);
 	}
@@ -222,18 +229,15 @@ public class TestState extends AbstractState {
 
 	@Override
 	public void update(AbstractVoxel voxel, float delta) {
+		KeyboardHandler kbh = ClientInternalSubsystem.getInstance().getGameWindow().getKeyboardHandler();
+
 		engine.update(delta);
 		sun.update(camera.getPosition(), worldSimulation.update(delta), delta);
 		particleSystem.generateParticles(particlesPoint, delta);
 		ParticleDomain.update(delta, camera);
-		KeyboardHandler kbh = ClientInternalSubsystem.getInstance().getGameWindow().getKeyboardHandler();
-		if (kbh.isCtrlPressed() && kbh.isAltPressed() & kbh.isKeyPressed(GLFW.GLFW_KEY_F10))
-			throw new RuntimeException("Crash caused by User. \n Generated using \"ctrl + alt + f10\".");
 
 		if (kbh.isKeyPressed(GLFW.GLFW_KEY_F1))
 			ClientVariables.debug = !ClientVariables.debug;
-		if (kbh.isKeyPressed(GLFW.GLFW_KEY_F2))
-			ClientVariables.hideHud = !ClientVariables.hideHud;
 		if (kbh.isKeyPressed(GLFW.GLFW_KEY_R))
 			ClientVariables.raining = !ClientVariables.raining;
 		if (kbh.isKeyPressed(GLFW.GLFW_KEY_ESCAPE)) {
