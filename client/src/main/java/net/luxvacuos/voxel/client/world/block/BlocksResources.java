@@ -20,18 +20,26 @@
 
 package net.luxvacuos.voxel.client.world.block;
 
+import static org.lwjgl.opengl.GL11.GL_NEAREST;
+
 import net.luxvacuos.igl.vector.Vector2d;
+import net.luxvacuos.igl.vector.Vector4f;
+import net.luxvacuos.voxel.client.rendering.api.opengl.objects.Material;
+import net.luxvacuos.voxel.client.rendering.api.opengl.objects.Texture;
 import net.luxvacuos.voxel.client.resources.ResourceLoader;
 import net.luxvacuos.voxel.client.resources.models.TessellatorTextureAtlas;
 
 public class BlocksResources {
 
 	private static TessellatorTextureAtlas tessellatorTextureAtlas;
+	private static Material material;
 
 	public static void createBlocks(ResourceLoader loader) {
 
 		tessellatorTextureAtlas = new TessellatorTextureAtlas(256, 256);
-
+		Texture blocks = loader.loadTexture("blocks", GL_NEAREST);
+		Texture blocks_n = loader.loadTextureMisc("blocks_n", GL_NEAREST);
+		material = new Material(new Vector4f(1f), 0.5f, 0f, 0, blocks, blocks_n, null, null, null);
 		loadTexCoords();
 	}
 
@@ -64,6 +72,10 @@ public class BlocksResources {
 
 	public static TessellatorTextureAtlas getTessellatorTextureAtlas() {
 		return tessellatorTextureAtlas;
+	}
+
+	public static Material getMaterial() {
+		return material;
 	}
 
 }

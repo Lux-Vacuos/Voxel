@@ -88,7 +88,7 @@ public class SPPauseState extends AbstractFadeState {
 		// if (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
 		if (window.getKeyboardHandler().isKeyPressed(GLFW.GLFW_KEY_ESCAPE)) {
 			window.getKeyboardHandler().ignoreKeyUntilRelease(GLFW.GLFW_KEY_ESCAPE);
-			this.switchTo(StateNames.TEST);
+			this.switchTo(StateNames.SP_WORLD);
 		}
 		// }
 	}

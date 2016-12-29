@@ -34,6 +34,14 @@ import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.UniformVec3;
 
 public class TessellatorShader extends ShaderProgram {
 
+	private static TessellatorShader shader;
+
+	public static TessellatorShader getShader() {
+		if (shader == null)
+			shader = new TessellatorShader();
+		return shader;
+	}
+
 	private UniformMatrix projectionMatrix = new UniformMatrix("projectionMatrix");
 	private UniformMatrix viewMatrix = new UniformMatrix("viewMatrix");
 	private UniformMatrix biasMatrix = new UniformMatrix("biasMatrix");
@@ -45,7 +53,7 @@ public class TessellatorShader extends ShaderProgram {
 	private UniformBoolean useShadows = new UniformBoolean("useShadows");
 	private UniformMaterial material = new UniformMaterial("material");
 
-	public TessellatorShader() {
+	private TessellatorShader() {
 		super(ClientVariables.VERTEX_FILE_TESSELLATOR, ClientVariables.FRAGMENT_FILE_TESSELLATOR,
 				new Attribute(0, "position"), new Attribute(1, "textureCoords"), new Attribute(2, "normal"),
 				new Attribute(3, "data"), new Attribute(4, "tangent"), new Attribute(5, "bitangent"));
@@ -86,7 +94,7 @@ public class TessellatorShader extends ShaderProgram {
 		this.biasMatrix.loadMatrix(biasMatrix);
 		projectionLightMatrix.loadMatrix(shadowProjectionMatrix);
 	}
-	
+
 	public void loadMaterial(Material mat) {
 		this.material.loadMaterial(mat);
 	}

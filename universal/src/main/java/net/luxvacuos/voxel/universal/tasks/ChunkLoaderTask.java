@@ -45,16 +45,15 @@ public class ChunkLoaderTask implements Callable<Pair<ChunkNode, ChunkData>> {
 
 	public ChunkLoaderTask(IDimension dim, ChunkNode node) throws IOException, FileNotFoundException {
 		this.node = node;
-		
-		String path = GlobalVariables.WORLD_PATH + dim.getWorldName() + File.pathSeparator + dim.getName();
-		String fullPath = path + File.pathSeparator + "chunk_" + node.getX() + "_" + node.getZ() + ".dat";
+
+		String path = GlobalVariables.WORLD_PATH + dim.getWorldName() + "/" + dim.getID();
+		String fullPath = path + "/" + "chunk_" + node.getX() + "_" + node.getZ() + ".dat";
 		File file = new File(fullPath);
-		
-		if(this.exists = file.exists()) {
+
+		if (this.exists = file.exists()) {
 			this.in = new DataInputStream(new BufferedInputStream(new FileInputStream(file)));
 		} else {
 			new File(path).mkdirs();
-			file.createNewFile();
 		}
 	}
 
@@ -67,43 +66,46 @@ public class ChunkLoaderTask implements Callable<Pair<ChunkNode, ChunkData>> {
 		int[] array0 = null;
 		long[] array1 = null;
 		int numSlices;
-		
-		if(this.exists) {
+
+		if (this.exists) {
 			numSlices = this.in.readInt();
-			for(int i = 0; i < numSlices; i++) {
+			for (int i = 0; i < numSlices; i++) {
 				offset = this.in.readByte();
 				slice = new ChunkSlice(offset);
-				
-				if(this.in.readBoolean()) {
+
+				if (this.in.readBoolean()) {
 					length = this.in.readInt();
 					array1 = new long[length];
-					for(int input = 0; input < length; input++) array1[input] = this.in.readLong();
+					for (int input = 0; input < length; input++)
+						array1[input] = this.in.readLong();
 					slice.setBlockDataArray(new BlockLongDataArray(array1));
 					array1 = null;
 				}
-				
-				if(this.in.readBoolean()) {
-					if(length == 0) length = this.in.readInt();
+
+				if (this.in.readBoolean()) {
+					if (length == 0)
+						length = this.in.readInt();
 					array0 = new int[length];
-					for(int input = 0; input < length; input++) array0[input] = this.in.readInt();
+					for (int input = 0; input < length; input++)
+						array0[input] = this.in.readInt();
 					slice.setLightDataArray(new BlockIntDataArray(array0));
 					array0 = null;
 				}
-				
+
 				builder.setSlice(offset, slice);
 				slice = null;
 			}
-			
+
 			this.in.close();
-			
+
 			return new Pair<ChunkNode, ChunkData>(this.node, builder.build());
 		} else {
-			for(byte i = 0; i < 16; i++) {
+			for (byte i = 0; i < 16; i++) {
 				slice = new ChunkSlice(i);
 				builder.setSlice(i, slice);
 				slice = null;
 			}
-			
+
 			return new Pair<ChunkNode, ChunkData>(this.node, builder.build());
 		}
 	}

@@ -20,20 +20,53 @@
 
 package net.luxvacuos.voxel.client.world.chunks;
 
-import net.luxvacuos.voxel.universal.world.chunk.Chunk;
+import net.luxvacuos.voxel.client.core.ClientWorldSimulation;
+import net.luxvacuos.voxel.client.rendering.api.opengl.Tessellator;
+import net.luxvacuos.voxel.client.world.block.BlocksResources;
+import net.luxvacuos.voxel.client.world.block.RenderBlock;
+import net.luxvacuos.voxel.client.world.entities.Camera;
 import net.luxvacuos.voxel.universal.world.chunk.ChunkData;
-import net.luxvacuos.voxel.universal.world.dimension.IDimension;
 import net.luxvacuos.voxel.universal.world.utils.ChunkNode;
 
-public class RenderChunk extends Chunk {
-	
-	protected RenderChunk(IDimension dim, ChunkNode node, ChunkData data) {
-		super(dim, node, data);
-	}
-	
-	public void render() {
-		
+public class RenderChunk {
+
+	private ChunkNode node;
+	protected volatile ChunkData data;
+	private Tessellator tess;
+
+	public RenderChunk() {
+		tess = new Tessellator(BlocksResources.getMaterial());
 	}
 
-	
+	public void render(Camera camera, Camera sunCamera, ClientWorldSimulation clientWorldSimulation, int shadowMap) {
+		if (data == null)
+			return;
+		tess.begin();
+		for (int x = 0; x < 16; x++) {
+			for (int z = 0; z < 16; z++) {
+				for (int y = 0; y < 16; y++) {
+					if (data.getBlockAt(x, y, z).getID() != 0) {
+						tess.generateCube(node.getX() * 16 + x, y, node.getZ() * 16 + z, 1, true, false, false, false,
+								false, false, ((RenderBlock) data.getBlockAt(x, y, z)));
+					}
+				}
+			}
+
+		}
+		tess.end();
+		tess.draw(camera, sunCamera, clientWorldSimulation, shadowMap);
+	}
+
+	public void setData(ChunkData data) {
+		this.data = data;
+	}
+
+	public void setNode(ChunkNode node) {
+		this.node = node;
+	}
+
+	public void dispose() {
+		tess.cleanUp();
+	}
+
 }

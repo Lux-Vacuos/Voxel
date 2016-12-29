@@ -20,13 +20,13 @@
 
 package net.luxvacuos.voxel.universal.world.dimension;
 
-import com.badlogic.ashley.utils.ImmutableArray;
+import java.util.Collection;
+
+import com.badlogic.ashley.core.Engine;
 
 import net.luxvacuos.voxel.universal.world.chunk.IChunk;
 
 public interface IDimension {
-	
-	public String getName();
 	
 	public String getWorldName();
 	
@@ -36,5 +36,9 @@ public interface IDimension {
 	
 	public void update(float delta);
 	
-	public ImmutableArray<IChunk> getLoadedChunks();
+	public void dispose();
+	
+	public Engine getEntitiesManager();
+	
+	public Collection<IChunk> getLoadedChunks();
 }

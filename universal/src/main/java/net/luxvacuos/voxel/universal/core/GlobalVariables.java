@@ -21,22 +21,26 @@
 package net.luxvacuos.voxel.universal.core;
 
 public class GlobalVariables {
-	
+
 	/** The path where all the world data resides */
 	public static String WORLD_PATH;
-	
+
 	/** The path for the Settings file */
 	public static String SETTINGS_PATH;
-	
+
 	/** The Version of the game */
 	public static String version = "Prototype";
-	
+
 	/** Flag to enable debug mode */
 	public static boolean debug = false;
-	
+
 	/** Updates per Second */
 	public static int UPS = 60;
 
-	protected GlobalVariables() { }
+	/** Chunk Load/Unload Radius */
+	public static int chunk_radius = 1;
+
+	protected GlobalVariables() {
+	}
 
 }

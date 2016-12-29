@@ -20,11 +20,10 @@
 
 package net.luxvacuos.voxel.client.rendering.api.opengl;
 
-import net.luxvacuos.voxel.client.core.ClientWorldSimulation;
 import net.luxvacuos.voxel.client.world.entities.Camera;
 
 public interface IRenderPass {
-	
-	public void render(ClientWorldSimulation clientWorldSimulation, Camera camera, Camera sunCamera, int shadowMap, int shadowData);
-	
+
+	public void render(Camera camera, Camera sunCamera, int shadowMap);
+
 }

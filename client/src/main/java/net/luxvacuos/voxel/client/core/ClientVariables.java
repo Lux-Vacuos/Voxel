@@ -82,6 +82,7 @@ public class ClientVariables extends GlobalVariables {
 	 */
 	public static int radius = 6;
 	public static boolean generateChunks = true;
+	public static String worldNameToLoad;
 	/**
 	 * Shader Files
 	 */

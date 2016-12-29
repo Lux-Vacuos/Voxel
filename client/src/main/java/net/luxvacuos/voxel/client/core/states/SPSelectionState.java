@@ -114,6 +114,7 @@ public class SPSelectionState extends AbstractFadeState {
 
 	@Override
 	public void end() {
+		ClientVariables.worldNameToLoad = new String(worldName);
 		uiWindow.getChildrens().removeAll(worlds);
 		worlds.clear();
 		uiWindow.setFadeAlpha(1);

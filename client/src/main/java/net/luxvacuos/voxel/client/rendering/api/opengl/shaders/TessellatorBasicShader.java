@@ -29,12 +29,20 @@ import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.UniformVec3;
 
 public class TessellatorBasicShader extends ShaderProgram {
 
+	private static TessellatorBasicShader shader;
+
+	public static TessellatorBasicShader getShader() {
+		if (shader == null)
+			shader = new TessellatorBasicShader();
+		return shader;
+	}
+
 	private UniformMatrix projectionMatrix = new UniformMatrix("projectionMatrix");
 	private UniformMatrix viewMatrix = new UniformMatrix("viewMatrix");
 
 	private UniformVec3 cameraPos = new UniformVec3("cameraPos");
 
-	public TessellatorBasicShader() {
+	private TessellatorBasicShader() {
 		super(ClientVariables.VERTEX_FILE_TESSELLATOR_BASIC, ClientVariables.FRAGMENT_FILE_TESSELLATOR_BASIC,
 				new Attribute(0, "position"), new Attribute(1, "textureCoords"));
 		super.storeAllUniformLocations(projectionMatrix, viewMatrix, cameraPos);

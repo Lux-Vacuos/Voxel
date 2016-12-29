@@ -24,8 +24,10 @@ import net.luxvacuos.igl.vector.Matrix4d;
 import net.luxvacuos.igl.vector.Vector3d;
 import net.luxvacuos.voxel.client.resources.DRay;
 import net.luxvacuos.voxel.universal.ecs.Components;
+import net.luxvacuos.voxel.universal.ecs.components.Player;
 import net.luxvacuos.voxel.universal.ecs.components.Position;
 import net.luxvacuos.voxel.universal.ecs.components.Rotation;
+import net.luxvacuos.voxel.universal.world.entities.AbstractEntity;
 
 /**
  * Camera
@@ -40,6 +42,7 @@ public abstract class Camera extends AbstractEntity {
 	public Camera() {
 		this.add(new Position());
 		this.add(new Rotation());
+		this.add(new Player());
 	}
 
 	public Vector3d getPosition() {

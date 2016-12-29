@@ -166,7 +166,6 @@ public final class ChunkData {
 				slice.rebuildBlocks();
 			}
 		}
-		
 		if(rebuildHeightMap) this.buildHeightMap();
 		
 		for(ChunkSlice slice : this.slices) {

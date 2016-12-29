@@ -41,7 +41,7 @@ public class ChunkUnloaderTask implements Callable<IChunk> {
 		this.chunk = chunk;
 		
 		String path = GlobalVariables.WORLD_PATH + chunk.getDimension().getWorldName()
-				+ File.pathSeparator + chunk.getDimension().getName() + File.pathSeparator
+				+ "/" + chunk.getDimension().getID() + "/"
 				+ "chunk_" + chunk.getX() + "_" + chunk.getZ() + ".dat";
 		
 		File file = new File(path);

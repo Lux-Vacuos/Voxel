@@ -18,24 +18,20 @@
  * 
  */
 
-package net.luxvacuos.voxel.universal.core.states;
+package net.luxvacuos.voxel.universal.ecs.components;
 
-import net.luxvacuos.voxel.universal.core.AbstractVoxel;
+import com.hackhalo2.nbt.exceptions.NBTException;
+import com.hackhalo2.nbt.tags.TagCompound;
 
-public interface IState {
-	
-	public void init();
-	
-	public void start();
-	
-	public boolean isRunning();
-	
-	public void update(AbstractVoxel voxel, float delta);
-	
-	public void render(AbstractVoxel voxel, float alpha);
-	
-	public void end();
-	
-	public String getName();
+public class Player implements VoxelComponent {
+
+	@Override
+	public void load(TagCompound compound) throws NBTException {
+	}
+
+	@Override
+	public TagCompound save() {
+		return null;
+	}
 
 }

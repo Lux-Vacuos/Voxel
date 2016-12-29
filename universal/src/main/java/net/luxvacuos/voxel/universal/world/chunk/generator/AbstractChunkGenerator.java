@@ -46,11 +46,11 @@ public abstract class AbstractChunkGenerator implements IChunkGenerator {
 		this.noise = noise;
 	}
 
-	protected void setNoiseGenerator(INoiseGenerator noise) {
+	public void setNoiseGenerator(INoiseGenerator noise) {
 		this.noise = noise;
 	}
 	
-	protected void setSeed(long seed) {
+	public void setSeed(long seed) {
 		this.rng = new Random(seed);
 	}
 	
@@ -67,7 +67,7 @@ public abstract class AbstractChunkGenerator implements IChunkGenerator {
 					adjWorldZ = worldZ + z;
 					noise = this.noise.eval(adjWorldX, y, adjWorldZ);
 					
-					bda[y >> 4].set(x, (y & 0x0F), z, this.generateBlock(x, y, z, noise));
+					bda[y >> 4].set(x, (y & 0x0F), z, this.generateBlock(x, y, z, noise)); // TODO: BROKEN!
 				}
 			}
 		}

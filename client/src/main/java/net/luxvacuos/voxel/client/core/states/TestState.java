@@ -55,7 +55,6 @@ import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.ShaderProgram;
 import net.luxvacuos.voxel.client.rendering.utils.BlockFaceAtlas;
 import net.luxvacuos.voxel.client.resources.ResourceLoader;
 import net.luxvacuos.voxel.client.util.Maths;
-import net.luxvacuos.voxel.client.world.PhysicsSystem;
 import net.luxvacuos.voxel.client.world.block.BlocksResources;
 import net.luxvacuos.voxel.client.world.block.RenderBlock;
 import net.luxvacuos.voxel.client.world.entities.BasicEntity;
@@ -70,6 +69,7 @@ import net.luxvacuos.voxel.universal.core.states.StateMachine;
 import net.luxvacuos.voxel.universal.ecs.components.Position;
 import net.luxvacuos.voxel.universal.ecs.components.Scale;
 import net.luxvacuos.voxel.universal.material.BlockMaterial;
+import net.luxvacuos.voxel.universal.world.dimension.PhysicsSystem;
 
 /**
  * Test State
@@ -134,8 +134,7 @@ public class TestState extends AbstractState {
 		Texture blocks = loader.loadTexture("blocks", GL_NEAREST);
 		Texture blocks_n = loader.loadTextureMisc("blocks_n", GL_NEAREST);
 
-		tess = new Tessellator(projectionMatrix, shadowProjectionMatrix,
-				new Material(new Vector4f(1f), 0.5f, 0f, 0, blocks, blocks_n, null, null, null));
+		tess = new Tessellator(new Material(new Vector4f(1f), 0.5f, 0f, 0, blocks, blocks_n, null, null, null));
 		RenderBlock t = new RenderBlock(new BlockMaterial("test"), new BlockFaceAtlas("Ice"));
 		t.setID(1);
 
@@ -147,11 +146,11 @@ public class TestState extends AbstractState {
 		}
 		tess.end();
 
-		renderer.setShadowPass((worldSimulation, camera, sunCamera, shadowMap, shadowData) -> {
+		renderer.setShadowPass((camera, sunCamera, shadowMap) -> {
 			tess.drawShadow(sunCamera);
 		});
 
-		renderer.setDeferredPass((worldSimulation, camera, sunCamera, shadowMap, shadowData) -> {
+		renderer.setDeferredPass((camera, sunCamera, shadowMap) -> {
 			tess.draw(camera, sunCamera, worldSimulation, shadowMap);
 		});
 

@@ -18,7 +18,7 @@
  * 
  */
 
-package net.luxvacuos.voxel.client.world;
+package net.luxvacuos.voxel.universal.world.dimension;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,12 +31,12 @@ import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 
-import net.luxvacuos.voxel.client.world.entities.AbstractEntity;
 import net.luxvacuos.voxel.universal.ecs.Components;
 import net.luxvacuos.voxel.universal.ecs.components.AABB;
 import net.luxvacuos.voxel.universal.ecs.components.Health;
 import net.luxvacuos.voxel.universal.ecs.components.Position;
 import net.luxvacuos.voxel.universal.ecs.components.Velocity;
+import net.luxvacuos.voxel.universal.world.entities.AbstractEntity;
 
 public class PhysicsSystem extends EntitySystem {
 	private ImmutableArray<Entity> entities;

@@ -18,24 +18,17 @@
  * 
  */
 
-package net.luxvacuos.voxel.universal.core.states;
+package net.luxvacuos.voxel.universal.world.entities;
 
-import net.luxvacuos.voxel.universal.core.AbstractVoxel;
+import com.badlogic.ashley.core.Entity;
 
-public interface IState {
-	
-	public void init();
-	
-	public void start();
-	
-	public boolean isRunning();
-	
-	public void update(AbstractVoxel voxel, float delta);
-	
-	public void render(AbstractVoxel voxel, float alpha);
-	
-	public void end();
-	
-	public String getName();
+public abstract class AbstractEntity extends Entity {
 
+	public void update(float delta) {
+
+	}
+
+	public void afterUpdate(float delta) {
+
+	}
 }

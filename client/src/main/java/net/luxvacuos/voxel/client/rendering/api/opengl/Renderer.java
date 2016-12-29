@@ -101,10 +101,9 @@ public class Renderer {
 				new CubeMapTexture(window.getResourceLoader().createEmptyCubeMap(128, true), 128)));
 	}
 
-	public void render(ImmutableArray<Entity> entities,
-			Map<ParticleTexture, List<Particle>> particles, Camera camera, Camera sunCamera,
-			ClientWorldSimulation clientWorldSimulation, Vector3d lightPosition, Vector3d invertedLightPosition,
-			float alpha) {
+	public void render(ImmutableArray<Entity> entities, Map<ParticleTexture, List<Particle>> particles, Camera camera,
+			Camera sunCamera, ClientWorldSimulation clientWorldSimulation, Vector3d lightPosition,
+			Vector3d invertedLightPosition, float alpha) {
 
 		resetState();
 
@@ -117,8 +116,7 @@ public class Renderer {
 			clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 			if (shadowPass != null)
-				shadowPass.render(clientWorldSimulation, camera, sunCamera, shadowFBO.getShadowDepth(),
-						shadowFBO.getShadowData());
+				shadowPass.render(camera, sunCamera, shadowFBO.getShadowDepth());
 			entityShadowRenderer.renderEntity(entities, sunCamera);
 			shadowFBO.end();
 		}
@@ -131,8 +129,7 @@ public class Renderer {
 				clientWorldSimulation, lightPosition, 1, false);
 
 		if (deferredPass != null)
-			deferredPass.render(clientWorldSimulation, camera, sunCamera, shadowFBO.getShadowDepth(),
-					shadowFBO.getShadowData());
+			deferredPass.render(camera, sunCamera, shadowFBO.getShadowDepth());
 
 		entityRenderer.renderEntity(entities, camera, sunCamera, shadowFBO.getShadowDepth());
 		renderingPipeline.end();
@@ -140,8 +137,7 @@ public class Renderer {
 		renderingPipeline.render(camera, lightPosition, invertedLightPosition, clientWorldSimulation,
 				lightRenderer.getLights(), environmentRenderer.getCubeMapTexture(), exposure);
 		if (forwardPass != null)
-			forwardPass.render(clientWorldSimulation, camera, sunCamera, shadowFBO.getShadowDepth(),
-					shadowFBO.getShadowData());
+			forwardPass.render(camera, sunCamera, shadowFBO.getShadowDepth());
 		particleRenderer.render(particles, camera);
 	}
 
