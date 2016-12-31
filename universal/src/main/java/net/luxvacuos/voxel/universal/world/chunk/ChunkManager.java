@@ -50,7 +50,7 @@ import net.luxvacuos.voxel.universal.world.utils.ChunkNode;
 
 public class ChunkManager implements IDisposable {
 	protected final IDimension dim;
-	protected final ExecutorService executor = Executors.newCachedThreadPool(); //Executors.newFixedThreadPool(5);
+	protected final ExecutorService executor = /*Executors.newCachedThreadPool(); */ Executors.newFixedThreadPool(1);
 	protected IChunkGenerator chunkGenerator = new FlatChunkGenerator();
 
 	protected List<Future<Pair<ChunkNode, ChunkData>>> chunkLoadList;

@@ -42,6 +42,7 @@ public final class Logger {
 	 *            Message
 	 */
 	public static void log(Object... messages) {
+		if(log == null) return;
 		for (Object object : messages)
 			log.info(object);
 
@@ -56,6 +57,7 @@ public final class Logger {
 	 *            Message
 	 */
 	public static void warn(Object... messages) {
+		if(log == null) return;
 		for (Object object : messages)
 			log.error(object);
 	}
@@ -69,6 +71,7 @@ public final class Logger {
 	 *            Message
 	 */
 	public static void error(Object... messages) {
+		if(log == null) return;
 		for (Object object : messages)
 			log.fatal(object);
 	}
