@@ -117,7 +117,6 @@ public class Dimension implements IDimension {
 	@Override
 	public void dispose() {
 		entitiesManager.removeAllEntities();
-		chunkManager.saveChunks();
 		chunkManager.dispose();
 	}
 
