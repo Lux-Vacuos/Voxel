@@ -53,9 +53,9 @@ public class BlockDataArrayTests {
 	@Test
 	public void dataArrayZeroEqualityTestInt() {
 		System.out.print("Testing BlockIntDataArray for Zero Equality... ");
-		for(int x = 0; x < 15; x++) {
-			for(int y = 0; y < 15; y++) {
-				for(int z = 0; z < 15; z++) {
+		for(int x = 0; x < 16; x++) {
+			for(int y = 0; y < 16; y++) {
+				for(int z = 0; z < 16; z++) {
 					assertTrue("Int Array Index not 0 at position (X: " + x +", Y: "+ y + ", Z: " + z + ")", this.bda0.get(x, y, z) == 0);
 				}
 			}
@@ -66,9 +66,9 @@ public class BlockDataArrayTests {
 	@Test
 	public void dataArrayZeroEqualityTestLong() {
 		System.out.print("Testing BlockLongDataArray for Zero Equality... ");
-		for(int x = 0; x < 15; x++) {
-			for(int y = 0; y < 15; y++) {
-				for(int z = 0; z < 15; z++) {
+		for(int x = 0; x < 16; x++) {
+			for(int y = 0; y < 16; y++) {
+				for(int z = 0; z < 16; z++) {
 					assertTrue("Long Array Index not 0 at position (X: " + x +", Y: "+ y + ", Z: " + z + ")", this.bda1.get(x, y, z) == 0);
 				}
 			}
@@ -89,9 +89,9 @@ public class BlockDataArrayTests {
 		this.bda0 = new BlockIntDataArray(randArray);
 		
 		boolean flag;
-		for(int x = 0; x < 15; x++) {
-			for(int y = 0; y < 15; y++) {
-				for(int z = 0; z < 15; z++) {
+		for(int x = 0; x < 16; x++) {
+			for(int y = 0; y < 16; y++) {
+				for(int z = 0; z < 16; z++) {
 					flag = this.bda0.get(x, y, z) == randArray[((16 * 16 * z) + (16 * y)) + x];
 					assertTrue("Int Array Index not " + randArray[((16 * 16 * z) + (16 * y)) + x]
 							+ " at position (X: " + x +", Y: "+ y + ", Z: " + z + "), got " + this.bda0.get(x, y, z), flag);
@@ -114,9 +114,9 @@ public class BlockDataArrayTests {
 		this.bda1 = new BlockLongDataArray(randArray);
 		
 		boolean flag;
-		for(int x = 0; x < 15; x++) {
-			for(int y = 0; y < 15; y++) {
-				for(int z = 0; z < 15; z++) {
+		for(int x = 0; x < 16; x++) {
+			for(int y = 0; y < 16; y++) {
+				for(int z = 0; z < 16; z++) {
 					flag = this.bda1.get(x, y, z) == randArray[((16 * 16 * z) + (16 * y)) + x];
 					assertTrue("Long Array Index not " + randArray[((16 * 16 * z) + (16 * y)) + x]
 							+ " at position (X: " + x +", Y: "+ y + ", Z: " + z + "), got " + this.bda1.get(x, y, z), flag);
