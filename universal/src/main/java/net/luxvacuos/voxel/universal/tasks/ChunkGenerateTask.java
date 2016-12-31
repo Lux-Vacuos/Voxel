@@ -37,6 +37,7 @@ public class ChunkGenerateTask implements Callable<IChunk> {
 	@Override
 	public IChunk call() throws Exception {
 		this.gen.generateChunk(this.chunk, (this.chunk.getX() << 4) , (this.chunk.getZ() << 4));
+		this.chunk.markForRebuild();
 		return this.chunk;
 	}
 

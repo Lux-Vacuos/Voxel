@@ -156,6 +156,10 @@ public final class ChunkData {
 	
 	protected void markFullRebuild() {
 		this.fullRebuild = true;
+		for(ChunkSlice slice : this.slices) {
+			slice.needsBlockRebuild();
+			slice.needsLightRebuild();
+		}
 	}
 	
 	protected void rebuild() {
@@ -172,13 +176,8 @@ public final class ChunkData {
 			if(this.fullRebuild || slice.needsLightRebuild()) {
 				slice.wipeLightData(true, true);
 				slice.rebuildSkyLight(this.heightmap, this.skyLight);
+				slice.rebuildBlockLight();
 			}
-		}
-	}
-	
-	protected void rebuildBlockLight() {
-		for(ChunkSlice slice : this.slices) {
-			if(this.fullRebuild || slice.needsLightRebuild()) slice.rebuildBlockLight();
 		}
 		
 		if(this.fullRebuild) this.fullRebuild = false;
