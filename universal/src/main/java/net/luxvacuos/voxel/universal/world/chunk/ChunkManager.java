@@ -49,7 +49,7 @@ import net.luxvacuos.voxel.universal.world.utils.ChunkNode;
 
 public class ChunkManager implements IDisposable {
 	protected final IDimension dim;
-	protected final ExecutorService executor = Executors.newCachedThreadPool();
+	protected final ExecutorService executor = Executors.newCachedThreadPool(); //Executors.newFixedThreadPool(5);
 	protected IChunkGenerator chunkGenerator = new FlatChunkGenerator();
 
 	protected List<Future<Pair<ChunkNode, ChunkData>>> chunkLoadList;
@@ -125,15 +125,15 @@ public class ChunkManager implements IDisposable {
 					this.loadedChunks.remove(node);
 					this.chunkUnloadList.add(this.executor.submit(new ChunkUnloaderTask(chunk)));
 					this.chunkLock.readLock().lock(); // Downgrade the Write
-														// Lock by acquiring the
-														// Read Lock before
-														// releasing the Write
-														// Lock
+					// Lock by acquiring the
+					// Read Lock before
+					// releasing the Write
+					// Lock
 				} catch (Exception e) {
 
 				} finally {
 					this.chunkLock.writeLock().unlock(); // Remove Write access,
-															// Hold Read access
+					// Hold Read access
 				}
 			}
 		} catch (Exception e) {
@@ -176,7 +176,7 @@ public class ChunkManager implements IDisposable {
 				Logger.log("Chunks saved");
 			}
 		} catch (Exception e) { // XXX: this needs to be done better, but for
-								// debugging, fail fast works for now
+			// debugging, fail fast works for now
 			Logger.error("ChunkSaveTask threw an error during exectuion! Shutting down to try and protect data...");
 			this.executor.shutdownNow();
 			throw new RuntimeException(e);
@@ -192,34 +192,40 @@ public class ChunkManager implements IDisposable {
 				while (iterator.hasNext()) {
 					Future<Pair<ChunkNode, ChunkData>> value = iterator.next();
 					if (value.isCancelled()) { // If the task got cancelled for
-												// any reason, ignore it
+						// any reason, ignore it
 						iterator.remove();
 						continue;
 					}
 
 					if (value.isDone()) { // Non-blocking check to see if the
-											// task is done
+						// task is done
 						Pair<ChunkNode, ChunkData> pair = value.get();
 						iterator.remove();
+						if(this.loadedChunks.containsKey(pair.getFirst())) {
+							continue;
+						}
+
 						IChunk chunk = this.makeChunk(this.dim, pair.getFirst(), pair.getSecond());
+						System.out.println("Loading Chunk "+chunk.getX()+", "+chunk.getZ());
+
 						if (pair.getSecond().shouldGenerate()) {
 							this.chunkGenerateList
-									.add(this.executor.submit(new ChunkGenerateTask(chunk, this.chunkGenerator)));
-						} else {
-							this.chunkLock.writeLock().lock(); // Lock the Chunk
-																// Writer lock
-							try {
-								this.loadedChunks.put(chunk.getNode(), chunk);
-							} catch (Exception e) {
+							.add(this.executor.submit(new ChunkGenerateTask(chunk, this.chunkGenerator)));
+						}
 
-							} finally {
-								this.chunkLock.writeLock().unlock();
-							}
+						this.chunkLock.writeLock().lock(); // Lock the Chunk
+						// Writer lock
+						try {
+							this.loadedChunks.put(chunk.getNode(), chunk);
+						} catch (Exception e) {
+							//TODO: Add Exception handling
+						} finally {
+							this.chunkLock.writeLock().unlock();
 						}
 					}
 				}
 			} catch (Exception e) { // XXX: this needs to be done better, but
-									// for debugging, fail fast works for now
+				// for debugging, fail fast works for now
 				Logger.error(
 						"ChunkLoaderTask threw an error during exectuion! Shutting down to try and protect data...");
 				this.executor.shutdownNow();
@@ -275,10 +281,10 @@ public class ChunkManager implements IDisposable {
 		} finally {
 			this.chunkLock.writeLock().unlock();
 		}
-		
+
 		this.chunkLock.readLock().lock();;
 		try {
-			
+
 			for (IChunk chunk : loadedChunks.values()) {
 				chunk.update(delta);
 			}
