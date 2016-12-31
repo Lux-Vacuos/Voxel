@@ -45,6 +45,8 @@ public class SPWorldState extends AbstractState {
 
 	private IWorld world;
 
+	private SPPauseState pausesState;
+
 	public SPWorldState() {
 		super(StateNames.SP_WORLD);
 	}
@@ -92,11 +94,14 @@ public class SPWorldState extends AbstractState {
 		BlocksResources.createBlocks(window.getResourceLoader());
 		TessellatorShader.getShader();
 		TessellatorBasicShader.getShader();
-		
+
 		Blocks.startRegister("voxel");
 		Blocks.register(new BlockBase(new BlockMaterial("air")));
 		Blocks.register(new RenderBlock(new BlockMaterial("stone"), new BlockFaceAtlas("Stone")));
 		Blocks.finishRegister();
+
+		pausesState = new SPPauseState();
+		pausesState.init();
 	}
 
 	@Override
@@ -104,6 +109,7 @@ public class SPWorldState extends AbstractState {
 		renderer.cleanUp();
 		TessellatorShader.getShader().cleanUp();
 		TessellatorBasicShader.getShader().cleanUp();
+		pausesState.dispose();
 	}
 
 	@Override
@@ -137,26 +143,35 @@ public class SPWorldState extends AbstractState {
 					UIRendering.rgba(255, 255, 255, 255, UIRendering.colorB));
 			Timers.renderDebugDisplay(5, 24, 200, 55);
 		}
+		if (ClientVariables.paused)
+			pausesState.render(voxel, alpha);
 		window.endNVGFrame();
 	}
 
 	@Override
 	public void update(AbstractVoxel voxel, float delta) {
-		world.update(delta);
+		if (!ClientVariables.paused) {
+			world.update(delta);
 
-		KeyboardHandler kbh = ClientInternalSubsystem.getInstance().getGameWindow().getKeyboardHandler();
+			KeyboardHandler kbh = ClientInternalSubsystem.getInstance().getGameWindow().getKeyboardHandler();
 
-		sun.update(camera.getPosition(), worldSimulation.update(delta), delta);
-		ParticleDomain.update(delta, camera);
+			sun.update(camera.getPosition(), worldSimulation.update(delta), delta);
+			ParticleDomain.update(delta, camera);
 
-		if (kbh.isKeyPressed(GLFW.GLFW_KEY_F1))
-			ClientVariables.debug = !ClientVariables.debug;
-		if (kbh.isKeyPressed(GLFW.GLFW_KEY_R))
-			ClientVariables.raining = !ClientVariables.raining;
-		if (kbh.isKeyPressed(GLFW.GLFW_KEY_ESCAPE)) {
-			kbh.ignoreKeyUntilRelease(GLFW.GLFW_KEY_ESCAPE);
-			((PlayerCamera) camera).unlockMouse();
-			StateMachine.setCurrentState(StateNames.SP_PAUSE);
+			if (kbh.isKeyPressed(GLFW.GLFW_KEY_F1))
+				ClientVariables.debug = !ClientVariables.debug;
+			if (kbh.isKeyPressed(GLFW.GLFW_KEY_R))
+				ClientVariables.raining = !ClientVariables.raining;
+			if (kbh.isKeyPressed(GLFW.GLFW_KEY_ESCAPE)) {
+				kbh.ignoreKeyUntilRelease(GLFW.GLFW_KEY_ESCAPE);
+				((PlayerCamera) camera).unlockMouse();
+				ClientVariables.paused = true;
+			}
+		} else if (ClientVariables.exitWorld) {
+			ClientVariables.exitWorld = false;
+			StateMachine.setCurrentState(StateNames.MAIN_MENU);
+		} else {
+			pausesState.update(voxel, delta);
 		}
 	}
 

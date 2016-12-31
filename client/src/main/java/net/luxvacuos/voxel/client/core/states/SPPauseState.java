@@ -20,26 +20,23 @@
 
 package net.luxvacuos.voxel.client.core.states;
 
-import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
-
 import org.lwjgl.glfw.GLFW;
 
 import net.luxvacuos.voxel.client.core.ClientInternalSubsystem;
-//import net.luxvacuos.voxel.client.input.Keyboard;
+import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
-import net.luxvacuos.voxel.client.rendering.api.opengl.Renderer;
 import net.luxvacuos.voxel.client.ui.UIButton;
 import net.luxvacuos.voxel.client.ui.UIWindow;
 import net.luxvacuos.voxel.universal.core.AbstractVoxel;
+import net.luxvacuos.voxel.universal.core.states.AbstractState;
 
 /**
  * Singleplayer Pause State.
  * 
  * @author danirod
  */
-public class SPPauseState extends AbstractFadeState {
+public class SPPauseState extends AbstractState {
 
 	private UIWindow uiWindow;
 	private UIButton exitButton;
@@ -48,7 +45,7 @@ public class SPPauseState extends AbstractFadeState {
 	public SPPauseState() {
 		super(StateNames.SP_PAUSE);
 	}
-	
+
 	@Override
 	public void init() {
 		Window window = ClientInternalSubsystem.getInstance().getGameWindow();
@@ -57,60 +54,30 @@ public class SPPauseState extends AbstractFadeState {
 				"Back to Main Menu");
 		optionsButton = new UIButton(uiWindow.getWidth() / 2 - 100, -uiWindow.getHeight() + 85, 200, 40, "Options");
 		exitButton.setOnButtonPress((button, delta) -> {
-			this.switchTo(StateNames.MAIN_MENU);
+			ClientVariables.exitWorld = true;
 		});
 		optionsButton.setOnButtonPress((button, delta) -> {
-			this.switchTo(StateNames.OPTIONS);
 		});
+		optionsButton.setEnabled(false);
 		uiWindow.addChildren(exitButton);
 		uiWindow.addChildren(optionsButton);
 	}
 
 	@Override
-	public void start() {
-		uiWindow.setFadeAlpha(0);
-	}
-
-	@Override
-	public void end() {
-		uiWindow.setFadeAlpha(1);
-	}
-
-	@Override
 	public void update(AbstractVoxel voxel, float delta) {
 		Window window = ClientInternalSubsystem.getInstance().getGameWindow();
-		while (Mouse.next())
-			uiWindow.update(delta);
-
-		super.update(voxel, delta);
-
-		// while (Keyboard.next()) {
-		// if (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
+		uiWindow.update(delta);
 		if (window.getKeyboardHandler().isKeyPressed(GLFW.GLFW_KEY_ESCAPE)) {
 			window.getKeyboardHandler().ignoreKeyUntilRelease(GLFW.GLFW_KEY_ESCAPE);
-			this.switchTo(StateNames.SP_WORLD);
+			Mouse.setGrabbed(true);
+			ClientVariables.paused = false;
 		}
-		// }
 	}
 
 	@Override
 	public void render(AbstractVoxel voxel, float alpha) {
 		Window window = ClientInternalSubsystem.getInstance().getGameWindow();
-		Renderer.clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		Renderer.clearColors(1, 1, 1, 1);
-		window.beingNVGFrame();
 		uiWindow.render(window.getID());
-		window.endNVGFrame();
-	}
-
-	@Override
-	protected boolean fadeIn(float delta) {
-		return this.uiWindow.fadeIn(4, delta);
-	}
-
-	@Override
-	protected boolean fadeOut(float delta) {
-		return this.uiWindow.fadeOut(4, delta);
 	}
 
 }

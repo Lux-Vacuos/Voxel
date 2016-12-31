@@ -160,7 +160,6 @@ public class Voxel extends AbstractVoxel {
 		TaskManager.addTask(() -> StateMachine.registerState(new OptionsState()));
 		TaskManager.addTask(() -> StateMachine.registerState(new SPCreateWorld()));
 		TaskManager.addTask(() -> StateMachine.registerState(new SPLoadingState()));
-		TaskManager.addTask(() -> StateMachine.registerState(new SPPauseState()));
 		TaskManager.addTask(() -> StateMachine.registerState(new SPSelectionState()));
 		TaskManager.addTask(() -> StateMachine.registerState(new SPWorldState()));
 		//TaskManager.addTask(() -> StateMachine.registerState(new TestState()));
