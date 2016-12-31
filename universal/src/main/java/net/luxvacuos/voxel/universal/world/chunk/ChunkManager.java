@@ -30,6 +30,7 @@ import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -313,7 +314,19 @@ public class ChunkManager implements IDisposable {
 
 	@Override
 	public void dispose() {
-		executor.shutdown();
+		this.chunkLock.readLock().lock();
+		try {
+			if(!this.loadedChunks.isEmpty()) {
+				this.saveChunks();
+			}
+			
+			this.executor.shutdown();
+			this.executor.awaitTermination(30, TimeUnit.SECONDS);
+		} catch (Exception e) {
+
+		} finally {
+			this.chunkLock.readLock().unlock();
+		}
 	}
 
 }
