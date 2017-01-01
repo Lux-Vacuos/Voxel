@@ -24,13 +24,14 @@ import java.util.Collection;
 
 import com.badlogic.gdx.utils.IntMap;
 
+import net.luxvacuos.voxel.universal.world.dimension.Dimension;
 import net.luxvacuos.voxel.universal.world.dimension.IDimension;
 
 public class World implements IWorld {
 
 	private String name;
 	private IDimension activeDimension;
-	private IntMap<IDimension> dims;
+	protected IntMap<IDimension> dims;
 
 	public World(String name) {
 		this.name = name;
@@ -46,8 +47,9 @@ public class World implements IWorld {
 	public void update(float delta) {
 		this.activeDimension.update(delta);
 		for (IDimension dim : this.dims.values()) {
-			if(dim.getID() == this.activeDimension.getID()) continue;
-			
+			if (dim.getID() == this.activeDimension.getID())
+				continue;
+
 			dim.update(delta);
 		}
 	}
@@ -60,13 +62,19 @@ public class World implements IWorld {
 	}
 
 	/*
-	 * TODO:
-	 * The world should be generating the Dimensions within itself, including loading and saving
-	 * any revelant information it needs
+	 * TODO: The world should be generating the Dimensions within itself,
+	 * including loading and saving any revelant information it needs
 	 */
 	@Override
 	public void addDimension(IDimension dimension) {
 		this.dims.put(dimension.getID(), dimension);
+	}
+
+	@Override
+	public void loadDimension(int id) {
+		if (this.dims.containsKey(id))
+			return;
+		this.dims.put(id, new Dimension(this, id));
 	}
 
 	@Override
@@ -86,8 +94,8 @@ public class World implements IWorld {
 
 	@Override
 	public Collection<IDimension> getDimensions() {
-		//return Collections.unmodifiableCollection();
-		return null; //TODO: Fix
+		// return Collections.unmodifiableCollection();
+		return null; // TODO: Fix
 	}
 
 }

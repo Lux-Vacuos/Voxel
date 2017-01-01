@@ -180,7 +180,7 @@ public class ChunkManager implements IDisposable {
 			// debugging, fail fast works for now
 			Logger.error("ChunkSaveTask threw an error during exectuion! Shutting down to try and protect data...");
 			this.executor.shutdownNow();
-			throw new RuntimeException(e);
+			throw new RuntimeException("ChunkLoaderTask threw an error during exectuion! Shutting down to try and protect data...", e);
 		}
 
 		// Check if any of the ChunkLoaderTasks completed
@@ -230,7 +230,7 @@ public class ChunkManager implements IDisposable {
 				Logger.error(
 						"ChunkLoaderTask threw an error during exectuion! Shutting down to try and protect data...");
 				this.executor.shutdownNow();
-				throw new RuntimeException(e);
+				throw new RuntimeException("ChunkLoaderTask threw an error during exectuion! Shutting down to try and protect data...", e);
 			} finally {
 				this.loadLock.unlock();
 			}
@@ -285,7 +285,6 @@ public class ChunkManager implements IDisposable {
 
 		this.chunkLock.readLock().lock();;
 		try {
-
 			for (IChunk chunk : loadedChunks.values()) {
 				chunk.update(delta);
 			}

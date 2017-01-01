@@ -41,6 +41,7 @@ import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.TessellatorBasicS
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.TessellatorShader;
 import net.luxvacuos.voxel.client.rendering.utils.BlockFaceAtlas;
 import net.luxvacuos.voxel.client.util.Maths;
+import net.luxvacuos.voxel.client.world.RenderWorld;
 import net.luxvacuos.voxel.client.world.block.BlocksResources;
 import net.luxvacuos.voxel.client.world.block.RenderBlock;
 import net.luxvacuos.voxel.client.world.block.types.WaterBlock;
@@ -54,7 +55,6 @@ import net.luxvacuos.voxel.universal.core.states.StateMachine;
 import net.luxvacuos.voxel.universal.material.BlockMaterial;
 import net.luxvacuos.voxel.universal.material.MaterialModder;
 import net.luxvacuos.voxel.universal.world.IWorld;
-import net.luxvacuos.voxel.universal.world.World;
 import net.luxvacuos.voxel.universal.world.block.Blocks;
 
 public class SPWorldState extends AbstractState {
@@ -74,9 +74,9 @@ public class SPWorldState extends AbstractState {
 
 	@Override
 	public void start() {
-		world = new World(ClientVariables.worldNameToLoad);
-		world.addDimension(new RenderDimension(world, 0, camera, sun.getCamera(),
-				ClientInternalSubsystem.getInstance().getGameWindow().getResourceLoader()));
+		super.start();
+		world = new RenderWorld(ClientVariables.worldNameToLoad);
+		world.loadDimension(0);
 		world.setActiveDimension(0);
 		((PlayerCamera) camera).setMouse();
 		camera.setPosition(new Vector3d(0, 256, 0));
@@ -85,6 +85,7 @@ public class SPWorldState extends AbstractState {
 
 	@Override
 	public void end() {
+		super.end();
 		world.dispose();
 	}
 

@@ -181,7 +181,7 @@ public class Tessellator {
 			updateGlBuffers(vboID3, vboCapacity, buffer3);
 			updateGLIBOBuffer();
 			updated = false;
-			//clearBuffers();
+			clearBuffers();
 		}
 		shader.start();
 		shader.loadProjectionMatrix(camera.getProjectionMatrix());
@@ -225,7 +225,7 @@ public class Tessellator {
 			updateGlBuffers(vboID3, vboCapacity, buffer3);
 			updateGLIBOBuffer();
 			updated = false;
-			//clearBuffers();
+			clearBuffers();
 		}
 		glCullFace(GL_FRONT);
 		basicShader.start();
@@ -252,7 +252,7 @@ public class Tessellator {
 			updateGlBuffers(vboID3, vboCapacity, buffer3);
 			updateGLIBOBuffer();
 			updated = false;
-			//clearBuffers();
+			clearBuffers();
 		}
 		basicShader.start();
 		basicShader.loadViewMatrix(camera.getViewMatrix(), camera.getPosition());
@@ -606,16 +606,11 @@ public class Tessellator {
 	}
 
 	private void clearBuffers() {
-		if (buffer0 != null)
-			buffer0.clear();
-		if (buffer1 != null)
-			buffer1.clear();
-		if (buffer2 != null)
-			buffer2.clear();
-		if (buffer3 != null)
-			buffer3.clear();
-		if (ibo != null)
-			ibo.clear();
+		buffer0.clear();
+		buffer1.clear();
+		buffer2.clear();
+		buffer3.clear();
+		ibo.clear();
 	}
 
 	public void cleanUp() {

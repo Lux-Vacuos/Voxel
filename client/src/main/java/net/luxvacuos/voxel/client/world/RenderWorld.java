@@ -18,29 +18,22 @@
  * 
  */
 
-package net.luxvacuos.voxel.universal.core;
+package net.luxvacuos.voxel.client.world;
 
-public class GlobalVariables {
+import net.luxvacuos.voxel.client.world.dimension.RenderDimension;
+import net.luxvacuos.voxel.universal.world.World;
 
-	/** The path where all the world data resides */
-	public static String WORLD_PATH;
+public class RenderWorld extends World {
 
-	/** The path for the Settings file */
-	public static String SETTINGS_PATH;
+	public RenderWorld(String name) {
+		super(name);
+	}
 
-	/** The Version of the game */
-	public static String version = "Prototype";
-
-	/** Flag to enable debug mode */
-	public static boolean debug = false;
-
-	/** Updates per Second */
-	public static int UPS = 60;
-
-	/** Chunk Load/Unload Radius */
-	public static int chunk_radius = 4;
-
-	protected GlobalVariables() {
+	@Override
+	public void loadDimension(int id) {
+		if (this.dims.containsKey(id))
+			return;
+		this.dims.put(id, new RenderDimension(this, id));
 	}
 
 }

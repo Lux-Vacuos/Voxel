@@ -24,97 +24,64 @@ import com.badlogic.gdx.utils.Array;
 
 import net.luxvacuos.voxel.client.core.ClientWorldSimulation;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Frustum;
-import net.luxvacuos.voxel.client.resources.ResourceLoader;
 import net.luxvacuos.voxel.client.world.chunks.ClientChunkManager;
 import net.luxvacuos.voxel.client.world.chunks.RenderChunk;
 import net.luxvacuos.voxel.client.world.entities.Camera;
 import net.luxvacuos.voxel.universal.world.IWorld;
 import net.luxvacuos.voxel.universal.world.chunk.IChunk;
+import net.luxvacuos.voxel.universal.world.chunk.generator.ChunkTerrainGenerator;
+import net.luxvacuos.voxel.universal.world.chunk.generator.SimplexNoise;
 import net.luxvacuos.voxel.universal.world.dimension.Dimension;
 import net.luxvacuos.voxel.universal.world.utils.ChunkNode;
 
 public class RenderDimension extends Dimension {
 
-	//private RenderChunk[][] renderChunks;
-	private int maxLoadChunks = 9; //32
+	private int maxLoadChunks = 3;
 	private int renderedChunks = 0;
 
-	public RenderDimension(IWorld world, int id, Camera camera, Camera sunCamera, ResourceLoader loader) {
+	public RenderDimension(IWorld world, int id) {
 		super(world, id);
 		this.chunkManager = new ClientChunkManager(this);
-		//renderChunks = new RenderChunk[maxRenderChunks][maxRenderChunks];
 		Array<ChunkNode> nodes = new Array<>(ChunkNode.class);
 		for (int x = 0; x < maxLoadChunks; x++) {
 			for (int z = 0; z < maxLoadChunks; z++) {
-				//renderChunks[x][z] = new RenderChunk(this);
 				nodes.add(new ChunkNode(x, 0, z));
 			}
 		}
-		
+
 		this.chunkManager.batchLoadChunks(nodes.toArray());
+		
+		ChunkTerrainGenerator gen = new ChunkTerrainGenerator();
+		gen.setNoiseGenerator(new SimplexNoise(256, 0.15f, 0));
+		this.chunkManager.setGenerator(gen);
 	}
 
 	public void render(Camera camera, Camera sunCamera, ClientWorldSimulation clientWorldSimulation, Frustum frustum,
 			int shadowMap) {
-		/*for (IChunk chunk : super.chunkManager.getLoadedChunks()) {
-			renderChunks[chunk.getX() + maxRenderChunks / 2][chunk.getZ() + maxRenderChunks / 2].setChunk(chunk);
-		}*/
 		this.renderedChunks = 0;
-		/*for (int x = 0; x < maxRenderChunks; x++) {
-			for (int z = 0; z < maxRenderChunks; z++) {
-				ChunkNode node = renderChunks[x][z].getNode();
-				if (node == null)
-					continue;
-				if (frustum.cubeInFrustum(node.getX() * 16, 0, node.getZ() * 16, node.getX() * 16 + 16, 256,
-						node.getZ() * 16 + 16)) {
-					renderedChunks++;
-					renderChunks[x][z].render(camera, sunCamera, clientWorldSimulation, shadowMap);
-				}
-			}
-		} */
-		for(IChunk chunk : this.chunkManager.getLoadedChunks()) {
-			if(frustum.cubeInFrustum(chunk.getX() * 16, 0, chunk.getZ() * 16, chunk.getX() * 16 + 16, 256,
+		for (IChunk chunk : this.chunkManager.getLoadedChunks()) {
+			if (frustum.cubeInFrustum(chunk.getX() * 16, 0, chunk.getZ() * 16, chunk.getX() * 16 + 16, 256,
 					chunk.getZ() * 16 + 16)) {
 				this.renderedChunks++;
-				((RenderChunk)chunk).render(camera, sunCamera, clientWorldSimulation, shadowMap);
+				((RenderChunk) chunk).render(camera, sunCamera, clientWorldSimulation, shadowMap);
 			}
 		}
 	}
 
 	public void renderOcclusion(Camera camera, Frustum frustum) {
-		/* for (int x = 0; x < maxLoadChunks; x++) {
-			for (int z = 0; z < maxLoadChunks; z++) {
-				ChunkNode node = renderChunks[x][z].getNode();
-				if (node == null)
-					continue;
-				if (frustum.cubeInFrustum(node.getX() * 16, 0, node.getZ() * 16, node.getX() * 16 + 16, 256,
-						node.getZ() * 16 + 16))
-					renderChunks[x][z].renderOcclusion(camera);
-			}
-		} */
-		for(IChunk chunk : this.chunkManager.getLoadedChunks()) {
-			if(frustum.cubeInFrustum(chunk.getX() * 16, 0, chunk.getZ() * 16, chunk.getX() * 16 + 16, 256,
+		for (IChunk chunk : this.chunkManager.getLoadedChunks()) {
+			if (frustum.cubeInFrustum(chunk.getX() * 16, 0, chunk.getZ() * 16, chunk.getX() * 16 + 16, 256,
 					chunk.getZ() * 16 + 16)) {
-				((RenderChunk)chunk).renderOcclusion(camera);
+				((RenderChunk) chunk).renderOcclusion(camera);
 			}
 		}
 	}
 
 	public void renderShadow(Camera sunCamera, Frustum frustum) {
-		/* for (int x = 0; x < maxLoadChunks; x++) {
-			for (int z = 0; z < maxLoadChunks; z++) {
-				ChunkNode node = renderChunks[x][z].getNode();
-				if (node == null)
-					continue;
-				if (frustum.cubeInFrustum(node.getX() * 16, 0, node.getZ() * 16, node.getX() * 16 + 16, 256,
-						node.getZ() * 16 + 16))
-					renderChunks[x][z].renderShadow(sunCamera);
-			}
-		} */
-		for(IChunk chunk : this.chunkManager.getLoadedChunks()) {
-			if(frustum.cubeInFrustum(chunk.getX() * 16, 0, chunk.getZ() * 16, chunk.getX() * 16 + 16, 256,
+		for (IChunk chunk : this.chunkManager.getLoadedChunks()) {
+			if (frustum.cubeInFrustum(chunk.getX() * 16, 0, chunk.getZ() * 16, chunk.getX() * 16 + 16, 256,
 					chunk.getZ() * 16 + 16)) {
-				((RenderChunk)chunk).renderShadow(sunCamera);
+				((RenderChunk) chunk).renderShadow(sunCamera);
 			}
 		}
 	}

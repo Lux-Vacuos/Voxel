@@ -71,20 +71,19 @@ public class PlayerCamera extends Camera {
 
 		float mouseDX = getDX() * mouseSpeed * delta;
 		float mouseDY = getDY() * mouseSpeed * delta;
-		if (rotation.getY() + mouseDX >= 360) {
+		if (rotation.getY() + mouseDX >= 360)
 			rotation.setY(rotation.getY() + mouseDX - 360);
-		} else if (rotation.getY() + mouseDX < 0) {
+		else if (rotation.getY() + mouseDX < 0)
 			rotation.setY(360 - rotation.getY() + mouseDX);
-		} else {
+		else
 			rotation.setY(rotation.getY() + mouseDX);
-		}
-		if (rotation.getX() - mouseDY >= maxLookDown && rotation.getX() - mouseDY <= maxLookUp) {
+
+		if (rotation.getX() - mouseDY >= maxLookDown && rotation.getX() - mouseDY <= maxLookUp)
 			rotation.setX(rotation.getX() - mouseDY);
-		} else if (rotation.getX() - mouseDY < maxLookDown) {
+		else if (rotation.getX() - mouseDY < maxLookDown)
 			rotation.setX(maxLookDown);
-		} else if (rotation.getX() - mouseDY > maxLookUp) {
+		else if (rotation.getX() - mouseDY > maxLookUp)
 			rotation.setX(maxLookUp);
-		}
 
 		Velocity vel = Components.VELOCITY.get(this);
 
