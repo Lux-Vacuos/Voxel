@@ -181,7 +181,7 @@ public final class ChunkData {
 			if (this.fullRebuild || slice.needsBlockRebuild()) {
 				if (slice.inHeightMap() && !rebuildHeightMap)
 					rebuildHeightMap = true;
-				slice.rebuildBlocks();
+				slice.rebuildBlocks(this.fullRebuild);
 			}
 		}
 		if (rebuildHeightMap)
@@ -244,7 +244,7 @@ public final class ChunkData {
 	protected boolean shouldGenerate() {
 		for (ChunkSlice slice : this.slices) {
 			if (slice.needsBlockRebuild())
-				slice.rebuildBlocks();
+				slice.rebuildBlocks(this.fullRebuild);
 			if (!slice.isEmpty())
 				return false;
 		}

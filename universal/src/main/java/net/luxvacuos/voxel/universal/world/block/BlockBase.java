@@ -24,17 +24,18 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 
 import net.luxvacuos.voxel.universal.material.BlockMaterial;
+import net.luxvacuos.voxel.universal.world.utils.BlockCoords;
 
 public class BlockBase implements IBlock {
 	protected final BlockMaterial material;
 	private BoundingBox aabb = new BoundingBox(new Vector3(0, 0, 0), new Vector3(1, 1, 1));
 	private int id;
 	private int metadata = 0;
-	
+
 	public BlockBase(BlockMaterial material) {
 		this.material = material;
 	}
-	
+
 	public BlockBase(BlockMaterial material, BoundingBox aabb) {
 		this.material = material;
 		this.aabb = aabb;
@@ -44,7 +45,7 @@ public class BlockBase implements IBlock {
 	public int getID() {
 		return this.id;
 	}
-	
+
 	public BlockBase setID(int id) {
 		this.id = id;
 		return this;
@@ -56,8 +57,9 @@ public class BlockBase implements IBlock {
 	}
 
 	@Override
-	public BoundingBox getBoundingBox() {
-		return this.aabb;
+	public BoundingBox getBoundingBox(BlockCoords pos) {
+		return new BoundingBox(new Vector3(pos.getX() + aabb.min.x, pos.getY() + aabb.min.y, pos.getZ() + aabb.min.z),
+				new Vector3(pos.getX() + aabb.max.x, pos.getY() + aabb.max.y, pos.getZ() + aabb.max.z));
 	}
 
 	@Override
@@ -88,7 +90,7 @@ public class BlockBase implements IBlock {
 	@Override
 	public void setPackedMetadata(int packedMetadata) {
 		this.metadata = packedMetadata;
-		
+
 	}
 
 }

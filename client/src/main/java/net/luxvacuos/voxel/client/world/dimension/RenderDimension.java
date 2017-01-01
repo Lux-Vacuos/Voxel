@@ -20,52 +20,90 @@
 
 package net.luxvacuos.voxel.client.world.dimension;
 
-import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.math.collision.BoundingBox;
-
 import net.luxvacuos.voxel.client.core.ClientWorldSimulation;
+import net.luxvacuos.voxel.client.rendering.api.opengl.Frustum;
 import net.luxvacuos.voxel.client.resources.ResourceLoader;
 import net.luxvacuos.voxel.client.world.chunks.RenderChunk;
 import net.luxvacuos.voxel.client.world.entities.Camera;
 import net.luxvacuos.voxel.universal.world.IWorld;
 import net.luxvacuos.voxel.universal.world.chunk.IChunk;
 import net.luxvacuos.voxel.universal.world.dimension.Dimension;
-import net.luxvacuos.voxel.universal.world.dimension.PhysicsSystem;
+import net.luxvacuos.voxel.universal.world.utils.ChunkNode;
 
 public class RenderDimension extends Dimension {
 
 	private RenderChunk[][] renderChunks;
+	private int maxRenderChunks = 32;
+	private int renderedChunks = 0;
 
 	public RenderDimension(IWorld world, int id, Camera camera, Camera sunCamera, ResourceLoader loader) {
 		super(world, id);
-		entitiesManager.getSystem(PhysicsSystem.class)
-				.addBox(new BoundingBox(new Vector3(-500, -1, -500), new Vector3(500, 0, 500)));
-		renderChunks = new RenderChunk[16][16];
-		for (int x = 0; x < 16; x++) {
-			for (int z = 0; z < 16; z++) {
-				renderChunks[x][z] = new RenderChunk();
+		renderChunks = new RenderChunk[maxRenderChunks][maxRenderChunks];
+		for (int x = 0; x < maxRenderChunks; x++) {
+			for (int z = 0; z < maxRenderChunks; z++) {
+				renderChunks[x][z] = new RenderChunk(this);
 			}
 		}
 	}
 
-	public void render(Camera camera, Camera sunCamera, ClientWorldSimulation clientWorldSimulation, int shadowMap) {
+	public void render(Camera camera, Camera sunCamera, ClientWorldSimulation clientWorldSimulation, Frustum frustum,
+			int shadowMap) {
 		for (IChunk chunk : super.chunkManager.getLoadedChunks()) {
-			renderChunks[chunk.getX() + 8][chunk.getZ() + 8].setData(chunk.getChunkData());
-			renderChunks[chunk.getX() + 8][chunk.getZ() + 8].setNode(chunk.getNode());
+			renderChunks[chunk.getX() + maxRenderChunks / 2][chunk.getZ() + maxRenderChunks / 2]
+					.setData(chunk.getChunkData());
+			renderChunks[chunk.getX() + maxRenderChunks / 2][chunk.getZ() + maxRenderChunks / 2]
+					.setNode(chunk.getNode());
 		}
-		for (int x = 0; x < 16; x++) {
-			for (int z = 0; z < 16; z++) {
-				renderChunks[x][z].render(camera, sunCamera, clientWorldSimulation, shadowMap);
+		renderedChunks = 0;
+		for (int x = 0; x < maxRenderChunks; x++) {
+			for (int z = 0; z < maxRenderChunks; z++) {
+				ChunkNode node = renderChunks[x][z].getNode();
+				if (node == null)
+					continue;
+				if (frustum.cubeInFrustum(node.getX() * 16, 0, node.getZ() * 16, node.getX() * 16 + 16, 256,
+						node.getZ() * 16 + 16)) {
+					renderedChunks++;
+					renderChunks[x][z].render(camera, sunCamera, clientWorldSimulation, shadowMap);
+				}
 			}
-
 		}
+	}
+
+	public void renderOcclusion(Camera camera, Frustum frustum) {
+		for (int x = 0; x < maxRenderChunks; x++) {
+			for (int z = 0; z < maxRenderChunks; z++) {
+				ChunkNode node = renderChunks[x][z].getNode();
+				if (node == null)
+					continue;
+				if (frustum.cubeInFrustum(node.getX() * 16, 0, node.getZ() * 16, node.getX() * 16 + 16, 256,
+						node.getZ() * 16 + 16))
+					renderChunks[x][z].renderOcclusion(camera);
+			}
+		}
+	}
+
+	public void renderShadow(Camera sunCamera, Frustum frustum) {
+		for (int x = 0; x < maxRenderChunks; x++) {
+			for (int z = 0; z < maxRenderChunks; z++) {
+				ChunkNode node = renderChunks[x][z].getNode();
+				if (node == null)
+					continue;
+				if (frustum.cubeInFrustum(node.getX() * 16, 0, node.getZ() * 16, node.getX() * 16 + 16, 256,
+						node.getZ() * 16 + 16))
+					renderChunks[x][z].renderShadow(sunCamera);
+			}
+		}
+	}
+
+	public int getRenderedChunks() {
+		return renderedChunks;
 	}
 
 	@Override
 	public void dispose() {
 		super.dispose();
-		for (int x = 0; x < 16; x++) {
-			for (int z = 0; z < 16; z++) {
+		for (int x = 0; x < maxRenderChunks; x++) {
+			for (int z = 0; z < maxRenderChunks; z++) {
 				renderChunks[x][z].dispose();
 			}
 

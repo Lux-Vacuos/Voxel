@@ -121,7 +121,7 @@ public class TestState extends AbstractState {
 
 		worldSimulation = new ClientWorldSimulation();
 		engine = new Engine();
-		physicsSystem = new PhysicsSystem();
+		physicsSystem = new PhysicsSystem(null);
 		physicsSystem.addBox(new BoundingBox(new Vector3(-50, -1, -50), new Vector3(50, 0, 50)));
 		engine.addSystem(physicsSystem);
 		BlocksResources.createBlocks(loader);

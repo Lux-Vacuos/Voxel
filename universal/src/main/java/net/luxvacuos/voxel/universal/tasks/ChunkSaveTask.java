@@ -49,7 +49,6 @@ public class ChunkSaveTask implements Callable<Void> {
 					+ "chunk_" + chunk.getX() + "_" + chunk.getZ() + ".dat";
 			
 			File file = new File(path);
-			if(!file.exists()) file.createNewFile(); //This shouldn't happen, but just in case it does
 			
 			this.out = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(file)));
 			

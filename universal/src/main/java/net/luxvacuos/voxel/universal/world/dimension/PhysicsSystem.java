@@ -42,9 +42,14 @@ public class PhysicsSystem extends EntitySystem {
 	private ImmutableArray<Entity> entities;
 
 	private List<BoundingBox> boxes = new ArrayList<>();
+	private IDimension dim;
 	private Vector3 normalTMP = new Vector3();
 	private double depthTMP;
 	private int faceTMP;
+
+	public PhysicsSystem(IDimension dim) {
+		this.dim = dim;
+	}
 
 	@Override
 	public void addedToEngine(Engine engine) {
@@ -67,6 +72,8 @@ public class PhysicsSystem extends EntitySystem {
 			velocity.setZ(velocity.getZ() * 0.7f - velocity.getZ() * 0.0001f);
 
 			aabb.update(pos.getPosition());
+			if (dim != null)
+				boxes = dim.getGlobalBoundingBox(aabb.getBoundingBox());
 
 			if (aabb.isEnabled())
 				for (BoundingBox boundingBox : boxes) {

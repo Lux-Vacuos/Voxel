@@ -311,6 +311,17 @@ public class ChunkManager implements IDisposable {
 			this.chunkLock.readLock().unlock();
 		}
 	}
+	
+	public IChunk getChunkAt(ChunkNode node){
+		this.chunkLock.readLock().lock();
+		try {
+			return loadedChunks.get(node);
+		} catch (Exception e) {
+			return null;
+		} finally {
+			this.chunkLock.readLock().unlock();
+		}
+	}
 
 	@Override
 	public void dispose() {

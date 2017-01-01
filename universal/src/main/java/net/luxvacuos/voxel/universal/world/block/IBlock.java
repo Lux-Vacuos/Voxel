@@ -2,6 +2,8 @@ package net.luxvacuos.voxel.universal.world.block;
 
 import com.badlogic.gdx.math.collision.BoundingBox;
 
+import net.luxvacuos.voxel.universal.world.utils.BlockCoords;
+
 public interface IBlock {
 	public int getID();
 	
@@ -11,7 +13,7 @@ public interface IBlock {
 	
 	public String getName();
 	
-	public BoundingBox getBoundingBox();
+	public BoundingBox getBoundingBox(BlockCoords pos);
 	
 	public boolean isAffectedByGravity();
 	

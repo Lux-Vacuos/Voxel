@@ -27,13 +27,13 @@ import net.luxvacuos.voxel.client.world.dimension.RenderDimension;
 import net.luxvacuos.voxel.client.world.entities.Camera;
 import net.luxvacuos.voxel.client.world.entities.PlayerCamera;
 import net.luxvacuos.voxel.client.world.entities.Sun;
+import net.luxvacuos.voxel.client.world.materials.AirMaterial;
 import net.luxvacuos.voxel.universal.core.AbstractVoxel;
 import net.luxvacuos.voxel.universal.core.states.AbstractState;
 import net.luxvacuos.voxel.universal.core.states.StateMachine;
 import net.luxvacuos.voxel.universal.material.BlockMaterial;
 import net.luxvacuos.voxel.universal.world.IWorld;
 import net.luxvacuos.voxel.universal.world.World;
-import net.luxvacuos.voxel.universal.world.block.BlockBase;
 import net.luxvacuos.voxel.universal.world.block.Blocks;
 
 public class SPWorldState extends AbstractState {
@@ -58,6 +58,7 @@ public class SPWorldState extends AbstractState {
 				ClientInternalSubsystem.getInstance().getGameWindow().getResourceLoader()));
 		world.setActiveDimension(0);
 		((PlayerCamera) camera).setMouse();
+		camera.setPosition(new Vector3d(0, 5, 0));
 		world.getActiveDimension().getEntitiesManager().addEntity(camera);
 	}
 
@@ -88,16 +89,24 @@ public class SPWorldState extends AbstractState {
 		worldSimulation = new ClientWorldSimulation();
 		renderer = new Renderer(window, camera, sun.getCamera());
 
-		renderer.setDeferredPass((camera, sunCamera, shadowMap) -> {
-			((RenderDimension) world.getActiveDimension()).render(camera, sunCamera, worldSimulation, shadowMap);
+		renderer.setDeferredPass((camera, sunCamera, frustum, shadowMap) -> {
+			((RenderDimension) world.getActiveDimension()).render(camera, sunCamera, worldSimulation, frustum,
+					shadowMap);
+		});
+		renderer.setShadowPass((camera, sunCamera, frustum, shadowMap) -> {
+			((RenderDimension) world.getActiveDimension()).renderShadow(sunCamera, frustum);
+		});
+		renderer.setOcclusionPass((camera, sunCamera, frustum, shadowMap) -> {
+			// ((RenderDimension)
+			// world.getActiveDimension()).renderOcclusion(camera, frustum);
 		});
 		BlocksResources.createBlocks(window.getResourceLoader());
 		TessellatorShader.getShader();
 		TessellatorBasicShader.getShader();
 
 		Blocks.startRegister("voxel");
-		Blocks.register(new BlockBase(new BlockMaterial("air")));
-		Blocks.register(new RenderBlock(new BlockMaterial("stone"), new BlockFaceAtlas("Stone")));
+		Blocks.register(new RenderBlock(new AirMaterial("air"), new BlockFaceAtlas("air")));
+		Blocks.register(new RenderBlock(new BlockMaterial("stone"), new BlockFaceAtlas("stone")));
 		Blocks.finishRegister();
 
 		pausesState = new SPPauseState();
@@ -128,8 +137,10 @@ public class SPWorldState extends AbstractState {
 					"Used VRam: " + WindowManager.getUsedVRAM() + "KB " + " UPS: " + CoreInfo.ups, "Roboto-Bold", 5, 95,
 					20, UIRendering.rgba(220, 220, 220, 255, UIRendering.colorA),
 					UIRendering.rgba(255, 255, 255, 255, UIRendering.colorB));
-			UIRendering.renderText(window.getID(), "Loaded Chunks: " + 0 + "   Rendered Chunks: " + 0, "Roboto-Bold", 5,
-					115, 20, UIRendering.rgba(220, 220, 220, 255, UIRendering.colorA),
+			UIRendering.renderText(window.getID(),
+					"Loaded Chunks: " + world.getActiveDimension().getLoadedChunks().size() + "   Rendered Chunks: "
+							+ ((RenderDimension) world.getActiveDimension()).getRenderedChunks(),
+					"Roboto-Bold", 5, 115, 20, UIRendering.rgba(220, 220, 220, 255, UIRendering.colorA),
 					UIRendering.rgba(255, 255, 255, 255, UIRendering.colorB));
 			UIRendering.renderText(window.getID(),
 					"Position XYZ:  " + camera.getPosition().getX() + "  " + camera.getPosition().getY() + "  "

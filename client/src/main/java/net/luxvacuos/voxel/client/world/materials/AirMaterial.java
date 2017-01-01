@@ -18,34 +18,24 @@
  * 
  */
 
-package net.luxvacuos.voxel.universal.world.dimension;
+package net.luxvacuos.voxel.client.world.materials;
 
-import java.util.Collection;
-import java.util.List;
+import net.luxvacuos.voxel.universal.material.BlockMaterial;
+import net.luxvacuos.voxel.universal.tools.ToolTier;
 
-import com.badlogic.ashley.core.Engine;
-import com.badlogic.gdx.math.collision.BoundingBox;
+public class AirMaterial extends BlockMaterial {
 
-import net.luxvacuos.voxel.universal.world.block.IBlock;
-import net.luxvacuos.voxel.universal.world.chunk.IChunk;
+	public AirMaterial(String name, ToolTier minimumTier) {
+		super(name, minimumTier);
+		super.opacity = 0f;
+		super.canBeBroken = false;
+		super.blocksMovement = false;
+	}
 
-public interface IDimension {
-	
-	public String getWorldName();
-	
-	public int getID();
-
-	public boolean exists();
-	
-	public void update(float delta);
-	
-	public void dispose();
-	
-	public IBlock getBlockAt(int x, int y, int z);
-	
-	public List<BoundingBox> getGlobalBoundingBox(BoundingBox box);
-	
-	public Engine getEntitiesManager();
-	
-	public Collection<IChunk> getLoadedChunks();
+	public AirMaterial(String name) {
+		super(name);
+		super.opacity = 0f;
+		super.canBeBroken = false;
+		super.blocksMovement = false;
+	}
 }

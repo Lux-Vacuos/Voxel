@@ -67,7 +67,7 @@ import net.luxvacuos.voxel.client.core.ClientWorldSimulation;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.Material;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.TessellatorBasicShader;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.TessellatorShader;
-import net.luxvacuos.voxel.client.world.block.RenderBlock;
+import net.luxvacuos.voxel.client.rendering.world.block.IRenderBlock;
 import net.luxvacuos.voxel.client.world.entities.Camera;
 import net.luxvacuos.voxel.universal.world.utils.BlockFace;
 
@@ -332,12 +332,12 @@ public class Tessellator {
 	}
 
 	public void generateCube(double x, double y, double z, float size, boolean top, boolean bottom, boolean left,
-			boolean right, boolean front, boolean back, RenderBlock block) {
+			boolean right, boolean front, boolean back, IRenderBlock block) {
 		generateCube(x, y, z, size, size, size, top, bottom, left, right, front, back, block);
 	}
 
 	public void generateCube(double x, double y, double z, float xsize, float ysize, float zsize, boolean top,
-			boolean bottom, boolean left, boolean right, boolean front, boolean back, RenderBlock block) {
+			boolean bottom, boolean left, boolean right, boolean front, boolean back, IRenderBlock block) {
 		Vector8f texcoords;
 		Vector3d edge1, edge2, tangent;
 		Vector2d deltaUV1, deltaUV2;

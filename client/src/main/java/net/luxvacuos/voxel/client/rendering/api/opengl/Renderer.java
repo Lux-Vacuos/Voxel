@@ -69,7 +69,7 @@ public class Renderer {
 	private Frustum frustum;
 	private Window window;
 
-	private IRenderPass shadowPass, deferredPass, forwardPass;
+	private IRenderPass shadowPass, deferredPass, forwardPass, occlusionPass;
 
 	private float exposure = 1;
 
@@ -116,12 +116,15 @@ public class Renderer {
 			clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 			if (shadowPass != null)
-				shadowPass.render(camera, sunCamera, shadowFBO.getShadowDepth());
+				shadowPass.render(camera, sunCamera, frustum, shadowFBO.getShadowDepth());
 			entityShadowRenderer.renderEntity(entities, sunCamera);
 			shadowFBO.end();
 		}
+
 		frustum.calculateFrustum(camera.getProjectionMatrix(), camera.getViewMatrix());
 		clearBuffer(GL_DEPTH_BUFFER_BIT);
+		if (occlusionPass != null)
+			occlusionPass.render(camera, sunCamera, frustum, shadowFBO.getShadowDepth());
 
 		renderingPipeline.begin();
 		clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -129,7 +132,7 @@ public class Renderer {
 				clientWorldSimulation, lightPosition, 1, false);
 
 		if (deferredPass != null)
-			deferredPass.render(camera, sunCamera, shadowFBO.getShadowDepth());
+			deferredPass.render(camera, sunCamera, frustum, shadowFBO.getShadowDepth());
 
 		entityRenderer.renderEntity(entities, camera, sunCamera, shadowFBO.getShadowDepth());
 		renderingPipeline.end();
@@ -137,7 +140,7 @@ public class Renderer {
 		renderingPipeline.render(camera, lightPosition, invertedLightPosition, clientWorldSimulation,
 				lightRenderer.getLights(), environmentRenderer.getCubeMapTexture(), exposure);
 		if (forwardPass != null)
-			forwardPass.render(camera, sunCamera, shadowFBO.getShadowDepth());
+			forwardPass.render(camera, sunCamera, frustum, shadowFBO.getShadowDepth());
 		particleRenderer.render(particles, camera);
 	}
 
@@ -160,6 +163,10 @@ public class Renderer {
 
 	public void setForwardPass(IRenderPass forwardPass) {
 		this.forwardPass = forwardPass;
+	}
+
+	public void setOcclusionPass(IRenderPass occlusionPass) {
+		this.occlusionPass = occlusionPass;
 	}
 
 	public Frustum getFrustum() {
