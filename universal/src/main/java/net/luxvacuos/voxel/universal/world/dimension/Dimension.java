@@ -53,12 +53,12 @@ public class Dimension implements IDimension {
 	public Dimension(IWorld world, int id) {
 		this.world = world;
 		this.id = id;
-		chunkManager = new ChunkManager(this);
-		entitiesManager = new Engine();
-		entitiesManager.addSystem(new PhysicsSystem(this));
+		this.chunkManager = new ChunkManager(this);
+		this.entitiesManager = new Engine();
+		this.entitiesManager.addSystem(new PhysicsSystem(this));
 		ChunkTerrainGenerator gen = new ChunkTerrainGenerator();
 		gen.setNoiseGenerator(new SimplexNoise(256, 0.15f, 0));
-		chunkManager.setGenerator(gen);
+		this.chunkManager.setGenerator(gen);
 	}
 
 	@Override

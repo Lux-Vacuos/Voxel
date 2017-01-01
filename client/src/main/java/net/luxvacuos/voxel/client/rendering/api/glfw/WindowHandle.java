@@ -83,6 +83,7 @@ public final class WindowHandle {
 
 	public WindowHandle useDebugContext(boolean flag) {
 		this.setWindowHint(GLFW.GLFW_OPENGL_DEBUG_CONTEXT, flag);
+		
 		return this;
 	}
 

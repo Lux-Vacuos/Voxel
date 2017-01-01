@@ -28,7 +28,7 @@ import net.luxvacuos.voxel.universal.world.dimension.IDimension;
 import net.luxvacuos.voxel.universal.world.utils.ChunkNode;
 
 public class Chunk implements IChunk {
-	private final ChunkNode node;
+	protected final ChunkNode node;
 	protected final IDimension dim;
 	protected volatile ChunkData data;
 	protected final ReadWriteLock lock = new ReentrantReadWriteLock();

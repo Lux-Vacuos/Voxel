@@ -18,10 +18,22 @@
  * 
  */
 
-package net.luxvacuos.voxel.client.rendering.world.chunk;
+package net.luxvacuos.voxel.client.world.chunks;
 
-public interface IRenderChunk {
+import net.luxvacuos.voxel.universal.world.chunk.ChunkData;
+import net.luxvacuos.voxel.universal.world.chunk.ChunkManager;
+import net.luxvacuos.voxel.universal.world.dimension.IDimension;
+import net.luxvacuos.voxel.universal.world.utils.ChunkNode;
+
+public class ClientChunkManager extends ChunkManager {
+
+	public ClientChunkManager(IDimension dim) {
+		super(dim);
+	}
 	
-	
+	@Override
+	protected RenderChunk makeChunk(IDimension dim, ChunkNode node, ChunkData data) {
+		return new RenderChunk(dim, node, data);
+	}
 
 }

@@ -35,6 +35,7 @@ import java.util.jar.Manifest;
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWErrorCallback;
+import org.lwjgl.opengl.KHRDebug;
 
 import net.luxvacuos.igl.Logger;
 import net.luxvacuos.voxel.client.api.MoltenAPI;

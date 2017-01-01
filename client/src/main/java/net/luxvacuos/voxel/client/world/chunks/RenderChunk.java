@@ -24,41 +24,40 @@ import net.luxvacuos.voxel.client.core.ClientWorldSimulation;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Tessellator;
 import net.luxvacuos.voxel.client.rendering.world.block.ICustomRenderBlock;
 import net.luxvacuos.voxel.client.rendering.world.block.IRenderBlock;
+import net.luxvacuos.voxel.client.rendering.world.chunk.IRenderChunk;
 import net.luxvacuos.voxel.client.world.block.BlocksResources;
 import net.luxvacuos.voxel.client.world.block.RenderBlock;
 import net.luxvacuos.voxel.client.world.entities.Camera;
 import net.luxvacuos.voxel.universal.world.chunk.Chunk;
-import net.luxvacuos.voxel.universal.world.chunk.IChunk;
+import net.luxvacuos.voxel.universal.world.chunk.ChunkData;
 import net.luxvacuos.voxel.universal.world.dimension.IDimension;
 import net.luxvacuos.voxel.universal.world.utils.ChunkNode;
 
-public class RenderChunk {
+public class RenderChunk extends Chunk implements IRenderChunk {
 
 	private Tessellator tess;
-	private IDimension dim;
-	private IChunk chunk;
 
-	public RenderChunk(IDimension dim) {
-		this.dim = dim;
-		tess = new Tessellator(BlocksResources.getMaterial());
+	public RenderChunk(IDimension dim, ChunkNode node, ChunkData data) {
+		super(dim, node, data);
+		this.tess = new Tessellator(BlocksResources.getMaterial());
 	}
 
 	public void render(Camera camera, Camera sunCamera, ClientWorldSimulation clientWorldSimulation, int shadowMap) {
-		if (chunk.needsMeshRebuild()) {
-			tess.begin();
+		if (this.needsMeshRebuild()) {
+			this.tess.begin();
 			for (int x = 0; x < 16; x++) {
 				for (int z = 0; z < 16; z++) {
 					for (int y = 0; y < 256; y++) {
-						RenderBlock block = (RenderBlock) chunk.getChunkData().getBlockAt(x, y, z);
+						RenderBlock block = (RenderBlock) this.data.getBlockAt(x, y, z);
 						if (!block.isTransparent())
 							if (!block.hasCustomModel()) {
-								tess.generateCube(chunk.getNode().getX() * 16 + x, y, chunk.getNode().getZ() * 16 + z,
+								this.tess.generateCube(this.getX() * 16 + x, y, this.getZ() * 16 + z,
 										1, cullFaceUp(block, x, y, z), cullFaceDown(block, x, y, z),
 										cullFaceEast(block, x, y, z), cullFaceWest(block, x, y, z),
 										cullFaceNorth(block, x, y, z), cullFaceSouth(block, x, y, z), block);
 							} else {
-								((ICustomRenderBlock) block).generateCustomModel(tess, chunk.getNode().getX() * 16 + x,
-										y, chunk.getNode().getZ() * 16 + z, 1, cullFaceUp(block, x, y, z),
+								((ICustomRenderBlock) block).generateCustomModel(this.tess, this.getX() * 16 + x,
+										y, this.getZ() * 16 + z, 1, cullFaceUp(block, x, y, z),
 										cullFaceDown(block, x, y, z), cullFaceEast(block, x, y, z),
 										cullFaceWest(block, x, y, z), cullFaceNorth(block, x, y, z),
 										cullFaceSouth(block, x, y, z));
@@ -67,32 +66,32 @@ public class RenderChunk {
 				}
 
 			}
-			tess.end();
-			((Chunk) chunk).completedMeshRebuild();
+			this.tess.end();
+			this.completedMeshRebuild();
 		}
-		tess.draw(camera, sunCamera, clientWorldSimulation, shadowMap);
+		this.tess.draw(camera, sunCamera, clientWorldSimulation, shadowMap);
 	}
 
 	public void renderShadow(Camera sunCamera) {
-		tess.drawShadow(sunCamera);
+		this.tess.drawShadow(sunCamera);
 	}
 
 	public void renderOcclusion(Camera camera) {
-		tess.drawOcclusion(camera);
+		this.tess.drawOcclusion(camera);
 	}
 
 	private boolean cullFaceWest(RenderBlock block, int x, int y, int z) {
 		if (x > 1 && x < 16) {
-			RenderBlock b = (RenderBlock) chunk.getChunkData().getBlockAt(x - 1, y, z);
+			RenderBlock b = (RenderBlock) this.data.getBlockAt(x - 1, y, z);
 			if (b.getID() == block.getID())
 				return false;
 			if (b.isTransparent() || b.hasCustomModel() || b.isFluid())
 				return true;
 		}
-		if (dim.getBlockAt(chunk.getNode().getX() * 16 + x - 1, y, chunk.getNode().getZ() * 16 + z).getID() == block
+		if (this.dim.getBlockAt(this.getX() * 16 + x - 1, y, this.getZ() * 16 + z).getID() == block
 				.getID())
 			return false;
-		if (((IRenderBlock) dim.getBlockAt(chunk.getNode().getX() * 16 + x - 1, y, chunk.getNode().getZ() * 16 + z))
+		if (((IRenderBlock) dim.getBlockAt(this.getX() * 16 + x - 1, y, this.getZ() * 16 + z))
 				.isTransparent())
 			return true;
 		return false;
@@ -100,16 +99,16 @@ public class RenderChunk {
 
 	private boolean cullFaceEast(RenderBlock block, int x, int y, int z) {
 		if (x > 0 && x < 15) {
-			RenderBlock b = (RenderBlock) chunk.getChunkData().getBlockAt(x + 1, y, z);
+			RenderBlock b = (RenderBlock) this.data.getBlockAt(x + 1, y, z);
 			if (b.getID() == block.getID())
 				return false;
 			if (b.isTransparent() || b.hasCustomModel() || b.isFluid())
 				return true;
 		}
-		if (dim.getBlockAt(chunk.getNode().getX() * 16 + x + 1, y, chunk.getNode().getZ() * 16 + z).getID() == block
+		if (this.dim.getBlockAt(this.getX() * 16 + x + 1, y, this.getZ() * 16 + z).getID() == block
 				.getID())
 			return false;
-		if (((IRenderBlock) dim.getBlockAt(chunk.getNode().getX() * 16 + x + 1, y, chunk.getNode().getZ() * 16 + z))
+		if (((IRenderBlock) dim.getBlockAt(this.getX() * 16 + x + 1, y, this.getZ() * 16 + z))
 				.isTransparent())
 			return true;
 		return false;
@@ -117,7 +116,7 @@ public class RenderChunk {
 
 	private boolean cullFaceDown(RenderBlock block, int x, int y, int z) {
 		if (y > 1 && y < 256) {
-			RenderBlock b = (RenderBlock) chunk.getChunkData().getBlockAt(x, y - 1, z);
+			RenderBlock b = (RenderBlock) this.data.getBlockAt(x, y - 1, z);
 			if (b.getID() == block.getID())
 				return false;
 			if (b.isTransparent() || b.hasCustomModel() || b.isFluid())
@@ -132,7 +131,7 @@ public class RenderChunk {
 
 	private boolean cullFaceUp(RenderBlock block, int x, int y, int z) {
 		if (y > 0 && y < 255) {
-			RenderBlock b = (RenderBlock) chunk.getChunkData().getBlockAt(x, y + 1, z);
+			RenderBlock b = (RenderBlock) this.data.getBlockAt(x, y + 1, z);
 			if (b.getID() == block.getID())
 				return false;
 			if (b.isTransparent() || b.hasCustomModel() || b.isFluid())
@@ -147,16 +146,16 @@ public class RenderChunk {
 
 	private boolean cullFaceNorth(RenderBlock block, int x, int y, int z) {
 		if (z > 1 && z < 16) {
-			RenderBlock b = (RenderBlock) chunk.getChunkData().getBlockAt(x, y, z - 1);
+			RenderBlock b = (RenderBlock) this.data.getBlockAt(x, y, z - 1);
 			if (b.getID() == block.getID())
 				return false;
 			if (b.isTransparent() || b.hasCustomModel() || b.isFluid())
 				return true;
 		}
-		if (dim.getBlockAt(chunk.getNode().getX() * 16 + x, y, chunk.getNode().getZ() * 16 + z - 1).getID() == block
+		if (this.dim.getBlockAt(this.getX() * 16 + x, y, this.getZ() * 16 + z - 1).getID() == block
 				.getID())
 			return false;
-		if (((IRenderBlock) dim.getBlockAt(chunk.getNode().getX() * 16 + x, y, chunk.getNode().getZ() * 16 + z - 1))
+		if (((IRenderBlock) this.dim.getBlockAt(this.getX() * 16 + x, y, this.getZ() * 16 + z - 1))
 				.isTransparent())
 			return true;
 		return false;
@@ -164,33 +163,25 @@ public class RenderChunk {
 
 	private boolean cullFaceSouth(RenderBlock block, int x, int y, int z) {
 		if (z > 0 && z < 15) {
-			RenderBlock b = (RenderBlock) chunk.getChunkData().getBlockAt(x, y, z + 1);
+			RenderBlock b = (RenderBlock) this.data.getBlockAt(x, y, z + 1);
 			if (b.getID() == block.getID())
 				return false;
 			if (b.isTransparent() || b.hasCustomModel() || b.isFluid())
 				return true;
 		}
-		if (dim.getBlockAt(chunk.getNode().getX() * 16 + x, y, chunk.getNode().getZ() * 16 + z + 1).getID() == block
+		if (this.dim.getBlockAt(this.getX() * 16 + x, y, this.getZ() * 16 + z + 1).getID() == block
 				.getID())
 			return false;
-		if (((IRenderBlock) dim.getBlockAt(chunk.getNode().getX() * 16 + x, y, chunk.getNode().getZ() * 16 + z + 1))
+		if (((IRenderBlock) this.dim.getBlockAt(this.getX() * 16 + x, y, this.getZ() * 16 + z + 1))
 				.isTransparent())
 			return true;
 		return false;
 	}
 
-	public ChunkNode getNode() {
-		if (chunk == null)
-			return null;
-		return chunk.getNode();
-	}
-
-	public void setChunk(IChunk chunk) {
-		this.chunk = chunk;
-	}
-
+	@Override
 	public void dispose() {
-		tess.cleanUp();
+		super.dispose();
+		this.tess.cleanUp();
 	}
 
 }
