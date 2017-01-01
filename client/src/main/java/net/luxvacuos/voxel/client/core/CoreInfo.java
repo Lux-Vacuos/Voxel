@@ -37,6 +37,7 @@ public class CoreInfo {
 	public static String LWJGLVer;
 	public static String GLFWVer;
 	public static String OpenGLVer;
+	public static String GLSLVersion;
 	public static String Vendor;
 	public static String Renderer;
 	public static String VkVersion = "No Available";

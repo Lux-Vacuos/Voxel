@@ -26,6 +26,7 @@ import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_RENDERER;
 import static org.lwjgl.opengl.GL11.GL_VENDOR;
 import static org.lwjgl.opengl.GL11.GL_VERSION;
+import static org.lwjgl.opengl.GL20.GL_SHADING_LANGUAGE_VERSION;
 import static org.lwjgl.opengl.GL11.glGetString;
 
 import java.io.IOException;
@@ -35,7 +36,6 @@ import java.util.jar.Manifest;
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWErrorCallback;
-import org.lwjgl.opengl.KHRDebug;
 
 import net.luxvacuos.igl.Logger;
 import net.luxvacuos.voxel.client.api.MoltenAPI;
@@ -128,6 +128,7 @@ public class Voxel extends AbstractVoxel {
 		CoreInfo.LWJGLVer = Version.getVersion();
 		CoreInfo.GLFWVer = GLFW.glfwGetVersionString();
 		CoreInfo.OpenGLVer = glGetString(GL_VERSION);
+		CoreInfo.GLSLVersion = glGetString(GL_SHADING_LANGUAGE_VERSION);
 		CoreInfo.Vendor = glGetString(GL_VENDOR);
 		CoreInfo.Renderer = glGetString(GL_RENDERER);
 		Logger.log("Voxel Client Version: " + ClientVariables.version);
@@ -135,6 +136,7 @@ public class Voxel extends AbstractVoxel {
 		Logger.log("LWJGL Version: " + CoreInfo.LWJGLVer);
 		Logger.log("GLFW Version: " + CoreInfo.GLFWVer);
 		Logger.log("OpenGL Version: " + CoreInfo.OpenGLVer);
+		Logger.log("GLSL Version: " + CoreInfo.GLSLVersion);
 		Logger.log("Vendor: " + CoreInfo.Vendor);
 		Logger.log("Renderer: " + CoreInfo.Renderer);
 		if (bootstrap.getPlatform().equals(Platform.MACOSX)) {
