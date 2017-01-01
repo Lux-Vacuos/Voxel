@@ -73,9 +73,9 @@ import net.luxvacuos.voxel.universal.world.utils.BlockFace;
 
 public class Tessellator {
 
-	private int vaoID, vboID0, vboID1, vboID2, vboID4, iboID, vboCapacity = 64, indicesCounter, iboCapacity = 64;
+	private int vaoID, vboID0, vboID1, vboID2, vboID3, iboID, vboCapacity = 64, indicesCounter, iboCapacity = 64;
 
-	private ByteBuffer buffer0, buffer1, buffer2, buffer4, ibo;
+	private ByteBuffer buffer0, buffer1, buffer2, buffer3, ibo;
 
 	private List<Vector3d> pos, normals;
 	private List<Vector2d> texcoords;
@@ -128,11 +128,11 @@ public class Tessellator {
 		glVertexAttribPointer(2, 3, GL_FLOAT, false, 0, 0);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-		vboID4 = glGenBuffers();
-		glBindBuffer(GL_ARRAY_BUFFER, vboID4);
+		vboID3 = glGenBuffers();
+		glBindBuffer(GL_ARRAY_BUFFER, vboID3);
 		glBufferData(GL_ARRAY_BUFFER, vboCapacity, GL_DYNAMIC_DRAW);
-		glEnableVertexAttribArray(4);
-		glVertexAttribPointer(4, 3, GL_FLOAT, false, 0, 0);
+		glEnableVertexAttribArray(3);
+		glVertexAttribPointer(3, 3, GL_FLOAT, false, 0, 0);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	}
@@ -178,7 +178,7 @@ public class Tessellator {
 			updateGlBuffers(vboID0, vboCapacity, buffer0);
 			updateGlBuffers(vboID1, vboCapacity, buffer1);
 			updateGlBuffers(vboID2, vboCapacity, buffer2);
-			updateGlBuffers(vboID4, vboCapacity, buffer4);
+			updateGlBuffers(vboID3, vboCapacity, buffer3);
 			updateGLIBOBuffer();
 			updated = false;
 			clearBuffers();
@@ -195,7 +195,7 @@ public class Tessellator {
 		glEnableVertexAttribArray(0);
 		glEnableVertexAttribArray(1);
 		glEnableVertexAttribArray(2);
-		glEnableVertexAttribArray(4);
+		glEnableVertexAttribArray(3);
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, material.getDiffuseTexture().getID());
 		glActiveTexture(GL_TEXTURE1);
@@ -212,7 +212,7 @@ public class Tessellator {
 		glDisableVertexAttribArray(0);
 		glDisableVertexAttribArray(1);
 		glDisableVertexAttribArray(2);
-		glDisableVertexAttribArray(4);
+		glDisableVertexAttribArray(3);
 		glBindVertexArray(0);
 		shader.stop();
 	}
@@ -222,7 +222,7 @@ public class Tessellator {
 			updateGlBuffers(vboID0, vboCapacity, buffer0);
 			updateGlBuffers(vboID1, vboCapacity, buffer1);
 			updateGlBuffers(vboID2, vboCapacity, buffer2);
-			updateGlBuffers(vboID4, vboCapacity, buffer4);
+			updateGlBuffers(vboID3, vboCapacity, buffer3);
 			updateGLIBOBuffer();
 			updated = false;
 			clearBuffers();
@@ -249,7 +249,7 @@ public class Tessellator {
 			updateGlBuffers(vboID0, vboCapacity, buffer0);
 			updateGlBuffers(vboID1, vboCapacity, buffer1);
 			updateGlBuffers(vboID2, vboCapacity, buffer2);
-			updateGlBuffers(vboID4, vboCapacity, buffer4);
+			updateGlBuffers(vboID3, vboCapacity, buffer3);
 			updateGLIBOBuffer();
 			updated = false;
 			clearBuffers();
@@ -273,7 +273,7 @@ public class Tessellator {
 		buffer0 = BufferUtils.createByteBuffer((pos.size() * 3) * 4);
 		buffer1 = BufferUtils.createByteBuffer((texcoords.size() * 2) * 4);
 		buffer2 = BufferUtils.createByteBuffer((normals.size() * 3) * 4);
-		buffer4 = BufferUtils.createByteBuffer((tangent.size() * 3) * 4);
+		buffer3 = BufferUtils.createByteBuffer((tangent.size() * 3) * 4);
 		for (int i = 0; i < pos.size(); i++) {
 			buffer0.putFloat((float) pos.get(i).x);
 			buffer0.putFloat((float) pos.get(i).y);
@@ -289,14 +289,14 @@ public class Tessellator {
 			buffer2.putFloat((float) normals.get(i).z);
 		}
 		for (int i = 0; i < tangent.size(); i++) {
-			buffer4.putFloat((float) tangent.get(i).x);
-			buffer4.putFloat((float) tangent.get(i).y);
-			buffer4.putFloat((float) tangent.get(i).z);
+			buffer3.putFloat((float) tangent.get(i).x);
+			buffer3.putFloat((float) tangent.get(i).y);
+			buffer3.putFloat((float) tangent.get(i).z);
 		}
 		buffer0.flip();
 		buffer1.flip();
 		buffer2.flip();
-		buffer4.flip();
+		buffer3.flip();
 		updateIBO((pos.size() * 3) / 2);
 	}
 
@@ -612,8 +612,8 @@ public class Tessellator {
 			buffer1.clear();
 		if (buffer2 != null)
 			buffer2.clear();
-		if (buffer4 != null)
-			buffer4.clear();
+		if (buffer3 != null)
+			buffer3.clear();
 		if (ibo != null)
 			ibo.clear();
 	}
@@ -623,7 +623,7 @@ public class Tessellator {
 		glDeleteBuffers(vboID0);
 		glDeleteBuffers(vboID1);
 		glDeleteBuffers(vboID2);
-		glDeleteBuffers(vboID4);
+		glDeleteBuffers(vboID3);
 		glDeleteBuffers(iboID);
 		glDeleteQueries(occlusion);
 		pos.clear();
