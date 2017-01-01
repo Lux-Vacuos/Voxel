@@ -81,17 +81,20 @@ public final class ChunkSlice {
 	}
 
 	public int getBlockIDAt(int x, int y, int z) {
-		if(this.isEmpty()) return 0;
+		//if(this.isEmpty()) return 0;
+		// TODO: Broken
 		return (int)(this.blockData.get(x, y, z) & BLOCK_ID_MASK);
 	}
 	
 	public int getBlockMetadataAt(int x, int y, int z) {
-		if(this.isEmpty()) return 0;
+		//if(this.isEmpty()) return 0;
+		// TODO: Broken
 		return (int)((this.blockData.get(x, y, z) & BLOCK_METADATA_MASK) >> 32);
 	}
 	
 	public IBlock getBlockAt(int x, int y, int z) {
-		if(this.isEmpty()) return Blocks.getBlockByID(0);
+		//if(this.isEmpty()) return Blocks.getBlockByID(0);
+		// TODO: Broken
 		
 		IBlock block = Blocks.getBlockByID(this.getBlockIDAt(x, y, z));
 		block.setPackedMetadata(this.getBlockMetadataAt(x, y, z));

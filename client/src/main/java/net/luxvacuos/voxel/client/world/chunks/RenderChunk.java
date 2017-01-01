@@ -44,10 +44,11 @@ public class RenderChunk {
 		tess.begin();
 		for (int x = 0; x < 16; x++) {
 			for (int z = 0; z < 16; z++) {
-				for (int y = 0; y < 16; y++) {
+				for (int y = 0; y < 256; y++) {
 					if (data.getBlockAt(x, y, z).getID() != 0) {
-						tess.generateCube(node.getX() * 16 + x, y, node.getZ() * 16 + z, 1, true, false, false, false,
-								false, false, ((RenderBlock) data.getBlockAt(x, y, z)));
+						tess.generateCube(node.getX() * 16 + x, y, node.getZ() * 16 + z, 1, true, true, true, true,
+								true, true, ((RenderBlock) data.getBlockAt(x, y, z)));
+						System.out.println("A");
 					}
 				}
 			}

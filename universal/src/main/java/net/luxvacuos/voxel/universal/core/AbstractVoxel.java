@@ -27,7 +27,7 @@ import net.luxvacuos.voxel.universal.resources.IDisposable;
 
 public abstract class AbstractVoxel implements IVoxel, IDisposable {
 
-	protected IInternalSubsystem internalSubsystem;
+	protected AbstractInternalSubsystem internalSubsystem;
 	protected EngineType engineType;
 	protected IBootstrap bootstrap;
 	protected ModsHandler modsHandler;
@@ -42,10 +42,6 @@ public abstract class AbstractVoxel implements IVoxel, IDisposable {
 
 	public IBootstrap getBootstrap() {
 		return bootstrap;
-	}
-
-	public IInternalSubsystem getInternalSubsystem() {
-		return internalSubsystem;
 	}
 
 }
