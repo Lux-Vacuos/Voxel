@@ -20,10 +20,9 @@
 
 package net.luxvacuos.voxel.universal.world;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+
+import com.badlogic.gdx.utils.IntMap;
 
 import net.luxvacuos.voxel.universal.world.dimension.IDimension;
 
@@ -31,11 +30,11 @@ public class World implements IWorld {
 
 	private String name;
 	private IDimension activeDimension;
-	private List<IDimension> dimensions;
+	private IntMap<IDimension> dims;
 
 	public World(String name) {
 		this.name = name;
-		dimensions = new ArrayList<>();
+		this.dims = new IntMap<>();
 	}
 
 	@Override
@@ -45,32 +44,39 @@ public class World implements IWorld {
 
 	@Override
 	public void update(float delta) {
-		for (IDimension iDimension : dimensions) {
-			iDimension.update(delta);
+		this.activeDimension.update(delta);
+		for (IDimension dim : this.dims.values()) {
+			if(dim.getID() == this.activeDimension.getID()) continue;
+			
+			dim.update(delta);
 		}
 	}
 
 	@Override
 	public void dispose() {
-		for (IDimension iDimension : dimensions) {
-			iDimension.dispose();
+		for (IDimension dim : this.dims.values()) {
+			dim.dispose();
 		}
 	}
 
+	/*
+	 * TODO:
+	 * The world should be generating the Dimensions within itself, including loading and saving
+	 * any revelant information it needs
+	 */
 	@Override
 	public void addDimension(IDimension dimension) {
-		dimensions.add(dimension);
+		this.dims.put(dimension.getID(), dimension);
 	}
 
 	@Override
 	public IDimension getDimension(int id) {
-		// TODO Auto-generated method stub
-		return null;
+		return this.dims.get(id);
 	}
 
 	@Override
 	public void setActiveDimension(int id) {
-		activeDimension = dimensions.get(id);
+		activeDimension = this.dims.get(id);
 	}
 
 	@Override
@@ -80,7 +86,8 @@ public class World implements IWorld {
 
 	@Override
 	public Collection<IDimension> getDimensions() {
-		return Collections.unmodifiableCollection(dimensions);
+		//return Collections.unmodifiableCollection();
+		return null; //TODO: Fix
 	}
 
 }
