@@ -49,10 +49,7 @@ public class RenderDimension extends Dimension {
 	public void render(Camera camera, Camera sunCamera, ClientWorldSimulation clientWorldSimulation, Frustum frustum,
 			int shadowMap) {
 		for (IChunk chunk : super.chunkManager.getLoadedChunks()) {
-			renderChunks[chunk.getX() + maxRenderChunks / 2][chunk.getZ() + maxRenderChunks / 2]
-					.setData(chunk.getChunkData());
-			renderChunks[chunk.getX() + maxRenderChunks / 2][chunk.getZ() + maxRenderChunks / 2]
-					.setNode(chunk.getNode());
+			renderChunks[chunk.getX() + maxRenderChunks / 2][chunk.getZ() + maxRenderChunks / 2].setChunk(chunk);
 		}
 		renderedChunks = 0;
 		for (int x = 0; x < maxRenderChunks; x++) {

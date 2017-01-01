@@ -25,5 +25,7 @@ public interface IChunk extends IDisposable {
 	
 	public boolean needsRebuild();
 	
+	public boolean needsMeshRebuild();
+	
 	public void update(float delta);
 }

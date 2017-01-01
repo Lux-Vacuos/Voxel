@@ -31,7 +31,7 @@ public final class ChunkData {
 
 	private short[] heightmap; // [(Z * WIDTH) + X]
 	ChunkSlice[] slices;
-	private boolean needsRebuild, fullRebuild;
+	private boolean needsRebuild, fullRebuild, needsMeshRebuild;
 	private int skyLight;
 	// TODO: Implement a way to store block metadata
 
@@ -166,9 +166,18 @@ public final class ChunkData {
 	protected boolean needsRebuild() {
 		return this.needsRebuild || this.fullRebuild;
 	}
+	
+	protected boolean needsMeshRebuild(){
+		return this.needsMeshRebuild;
+	}
+	
+	protected void completedMeshRebuild(){
+		this.needsMeshRebuild = false;
+	}
 
 	protected void markFullRebuild() {
 		this.fullRebuild = true;
+		this.needsMeshRebuild = true;
 		for (ChunkSlice slice : this.slices) {
 			slice.needsBlockRebuild();
 			slice.needsLightRebuild();
@@ -176,6 +185,7 @@ public final class ChunkData {
 	}
 
 	protected void rebuild() {
+		this.needsMeshRebuild = true;
 		boolean rebuildHeightMap = false;
 		for (ChunkSlice slice : this.slices) {
 			if (this.fullRebuild || slice.needsBlockRebuild()) {

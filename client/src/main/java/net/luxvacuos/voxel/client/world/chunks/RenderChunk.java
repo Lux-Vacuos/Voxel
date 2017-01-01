@@ -26,16 +26,16 @@ import net.luxvacuos.voxel.client.rendering.world.block.IRenderBlock;
 import net.luxvacuos.voxel.client.world.block.BlocksResources;
 import net.luxvacuos.voxel.client.world.block.RenderBlock;
 import net.luxvacuos.voxel.client.world.entities.Camera;
-import net.luxvacuos.voxel.universal.world.chunk.ChunkData;
+import net.luxvacuos.voxel.universal.world.chunk.Chunk;
+import net.luxvacuos.voxel.universal.world.chunk.IChunk;
 import net.luxvacuos.voxel.universal.world.dimension.IDimension;
 import net.luxvacuos.voxel.universal.world.utils.ChunkNode;
 
 public class RenderChunk {
 
-	private ChunkNode node;
-	protected volatile ChunkData data;
 	private Tessellator tess;
 	private IDimension dim;
+	private IChunk chunk;
 
 	public RenderChunk(IDimension dim) {
 		this.dim = dim;
@@ -43,66 +43,73 @@ public class RenderChunk {
 	}
 
 	public void render(Camera camera, Camera sunCamera, ClientWorldSimulation clientWorldSimulation, int shadowMap) {
-		tess.begin();
-		for (int x = 0; x < 16; x++) {
-			for (int z = 0; z < 16; z++) {
-				for (int y = 0; y < 256; y++) {
-					RenderBlock block = (RenderBlock) data.getBlockAt(x, y, z);
-					if (!block.isTransparent()) {
-						tess.generateCube(node.getX() * 16 + x, y, node.getZ() * 16 + z, 1, cullFaceUp(block, x, y, z),
-								cullFaceDown(block, x, y, z), cullFaceEast(block, x, y, z),
-								cullFaceWest(block, x, y, z), cullFaceNorth(block, x, y, z),
-								cullFaceSouth(block, x, y, z), block);
+		if (chunk.needsMeshRebuild()) {
+			tess.begin();
+			for (int x = 0; x < 16; x++) {
+				for (int z = 0; z < 16; z++) {
+					for (int y = 0; y < 256; y++) {
+						RenderBlock block = (RenderBlock) chunk.getChunkData().getBlockAt(x, y, z);
+						if (!block.isTransparent()) {
+							tess.generateCube(chunk.getNode().getX() * 16 + x, y, chunk.getNode().getZ() * 16 + z, 1,
+									cullFaceUp(block, x, y, z), cullFaceDown(block, x, y, z),
+									cullFaceEast(block, x, y, z), cullFaceWest(block, x, y, z),
+									cullFaceNorth(block, x, y, z), cullFaceSouth(block, x, y, z), block);
+						}
 					}
 				}
-			}
 
+			}
+			tess.end();
+			((Chunk) chunk).completedMeshRebuild();
 		}
-		tess.end();
 		tess.draw(camera, sunCamera, clientWorldSimulation, shadowMap);
 	}
-	
-	public void renderShadow(Camera sunCamera){
+
+	public void renderShadow(Camera sunCamera) {
 		tess.drawShadow(sunCamera);
 	}
-	
-	public void renderOcclusion(Camera camera){
+
+	public void renderOcclusion(Camera camera) {
 		tess.drawOcclusion(camera);
 	}
 
 	private boolean cullFaceWest(RenderBlock block, int x, int y, int z) {
 		if (x > 1 && x < 16) {
-			if (data.getBlockAt(x - 1, y, z).getID() == block.getID())
+			if (chunk.getChunkData().getBlockAt(x - 1, y, z).getID() == block.getID())
 				return false;
-			if (((IRenderBlock) data.getBlockAt(x - 1, y, z)).isTransparent())
+			if (((IRenderBlock) chunk.getChunkData().getBlockAt(x - 1, y, z)).isTransparent())
 				return true;
 		}
-		if (dim.getBlockAt(node.getX() * 16 + x - 1, y, node.getZ() * 16 + z).getID() == block.getID())
+		if (dim.getBlockAt(chunk.getNode().getX() * 16 + x - 1, y, chunk.getNode().getZ() * 16 + z).getID() == block
+				.getID())
 			return false;
-		if (((IRenderBlock) dim.getBlockAt(node.getX() * 16 + x - 1, y, node.getZ() * 16 + z)).isTransparent())
+		if (((IRenderBlock) dim.getBlockAt(chunk.getNode().getX() * 16 + x - 1, y, chunk.getNode().getZ() * 16 + z))
+				.isTransparent())
 			return true;
 		return false;
 	}
 
 	private boolean cullFaceEast(RenderBlock block, int x, int y, int z) {
 		if (x > 0 && x < 15) {
-			if (data.getBlockAt(x + 1, y, z).getID() == block.getID())
+			if (chunk.getChunkData().getBlockAt(x + 1, y, z).getID() == block.getID())
 				return false;
-			if (((IRenderBlock) data.getBlockAt(x + 1, y, z)).isTransparent())
+			if (((IRenderBlock) chunk.getChunkData().getBlockAt(x + 1, y, z)).isTransparent())
 				return true;
 		}
-		if (dim.getBlockAt(node.getX() * 16 + x + 1, y, node.getZ() * 16 + z).getID() == block.getID())
+		if (dim.getBlockAt(chunk.getNode().getX() * 16 + x + 1, y, chunk.getNode().getZ() * 16 + z).getID() == block
+				.getID())
 			return false;
-		if (((IRenderBlock) dim.getBlockAt(node.getX() * 16 + x + 1, y, node.getZ() * 16 + z)).isTransparent())
+		if (((IRenderBlock) dim.getBlockAt(chunk.getNode().getX() * 16 + x + 1, y, chunk.getNode().getZ() * 16 + z))
+				.isTransparent())
 			return true;
 		return false;
 	}
 
 	private boolean cullFaceDown(RenderBlock block, int x, int y, int z) {
 		if (y > 1 && y < 256) {
-			if (data.getBlockAt(x, y - 1, z).getID() == block.getID())
+			if (chunk.getChunkData().getBlockAt(x, y - 1, z).getID() == block.getID())
 				return false;
-			if (((IRenderBlock) data.getBlockAt(x, y - 1, z)).isTransparent())
+			if (((IRenderBlock) chunk.getChunkData().getBlockAt(x, y - 1, z)).isTransparent())
 				return true;
 		}
 		// if (dim.getBlockAt(x, y - 1, z).getID() == block.getID())
@@ -114,9 +121,9 @@ public class RenderChunk {
 
 	private boolean cullFaceUp(RenderBlock block, int x, int y, int z) {
 		if (y > 0 && y < 255) {
-			if (data.getBlockAt(x, y + 1, z).getID() == block.getID())
+			if (chunk.getChunkData().getBlockAt(x, y + 1, z).getID() == block.getID())
 				return false;
-			if (((IRenderBlock) data.getBlockAt(x, y + 1, z)).isTransparent())
+			if (((IRenderBlock) chunk.getChunkData().getBlockAt(x, y + 1, z)).isTransparent())
 				return true;
 		}
 		// if (dim.getBlockAt(x, y + 1, z).getID() == block.getID())
@@ -128,42 +135,44 @@ public class RenderChunk {
 
 	private boolean cullFaceNorth(RenderBlock block, int x, int y, int z) {
 		if (z > 1 && z < 16) {
-			if (data.getBlockAt(x, y, z - 1).getID() == block.getID())
+			if (chunk.getChunkData().getBlockAt(x, y, z - 1).getID() == block.getID())
 				return false;
-			if (((IRenderBlock) data.getBlockAt(x, y, z - 1)).isTransparent())
+			if (((IRenderBlock) chunk.getChunkData().getBlockAt(x, y, z - 1)).isTransparent())
 				return true;
 		}
-		if (dim.getBlockAt(node.getX() * 16 + x, y, node.getZ() * 16 + z - 1).getID() == block.getID())
+		if (dim.getBlockAt(chunk.getNode().getX() * 16 + x, y, chunk.getNode().getZ() * 16 + z - 1).getID() == block
+				.getID())
 			return false;
-		if (((IRenderBlock) dim.getBlockAt(node.getX() * 16 + x, y, node.getZ() * 16 + z - 1)).isTransparent())
+		if (((IRenderBlock) dim.getBlockAt(chunk.getNode().getX() * 16 + x, y, chunk.getNode().getZ() * 16 + z - 1))
+				.isTransparent())
 			return true;
 		return false;
 	}
 
 	private boolean cullFaceSouth(RenderBlock block, int x, int y, int z) {
 		if (z > 0 && z < 15) {
-			if (data.getBlockAt(x, y, z + 1).getID() == block.getID())
+			if (chunk.getChunkData().getBlockAt(x, y, z + 1).getID() == block.getID())
 				return false;
-			if (((IRenderBlock) data.getBlockAt(x, y, z + 1)).isTransparent())
+			if (((IRenderBlock) chunk.getChunkData().getBlockAt(x, y, z + 1)).isTransparent())
 				return true;
 		}
-		if (dim.getBlockAt(node.getX() * 16 + x, y, node.getZ() * 16 + z + 1).getID() == block.getID())
+		if (dim.getBlockAt(chunk.getNode().getX() * 16 + x, y, chunk.getNode().getZ() * 16 + z + 1).getID() == block
+				.getID())
 			return false;
-		if (((IRenderBlock) dim.getBlockAt(node.getX() * 16 + x, y, node.getZ() * 16 + z + 1)).isTransparent())
+		if (((IRenderBlock) dim.getBlockAt(chunk.getNode().getX() * 16 + x, y, chunk.getNode().getZ() * 16 + z + 1))
+				.isTransparent())
 			return true;
 		return false;
 	}
 
-	public void setData(ChunkData data) {
-		this.data = data;
+	public ChunkNode getNode() {
+		if (chunk == null)
+			return null;
+		return chunk.getNode();
 	}
 
-	public void setNode(ChunkNode node) {
-		this.node = node;
-	}
-	
-	public ChunkNode getNode() {
-		return node;
+	public void setChunk(IChunk chunk) {
+		this.chunk = chunk;
 	}
 
 	public void dispose() {
