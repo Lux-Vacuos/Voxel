@@ -134,7 +134,7 @@ public class Tessellator {
 		glEnableVertexAttribArray(3);
 		glVertexAttribPointer(3, 3, GL_FLOAT, false, 0, 0);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
-
+		glBindVertexArray(0);
 	}
 
 	public void begin() {
