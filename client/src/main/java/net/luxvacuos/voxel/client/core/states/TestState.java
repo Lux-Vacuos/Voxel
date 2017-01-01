@@ -146,11 +146,11 @@ public class TestState extends AbstractState {
 		}
 		tess.end();
 
-		renderer.setShadowPass((camera, sunCamera, shadowMap) -> {
+		renderer.setShadowPass((camera, sunCamera, frustum, shadowMap) -> {
 			tess.drawShadow(sunCamera);
 		});
 
-		renderer.setDeferredPass((camera, sunCamera, shadowMap) -> {
+		renderer.setDeferredPass((camera, sunCamera, frustum, shadowMap) -> {
 			tess.draw(camera, sunCamera, worldSimulation, shadowMap);
 		});
 

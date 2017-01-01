@@ -192,7 +192,6 @@ public class Maths {
 	 * @param d
 	 *            Value
 	 * @return Clamped Value
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public static float clamp(double d) {
 		return (float) Math.max(0, Math.min(128, d));
@@ -205,7 +204,6 @@ public class Maths {
 	 * @param d
 	 *            Value
 	 * @return Clamped Value
-	 * @author Guerra24 <pablo230699@hotmail.com>
 	 */
 	public static float clamp(double d, double min, double max) {
 		return (float) Math.max(min, Math.min(max, d));

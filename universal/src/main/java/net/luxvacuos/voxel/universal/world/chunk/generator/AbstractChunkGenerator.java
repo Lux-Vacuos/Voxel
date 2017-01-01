@@ -66,8 +66,9 @@ public abstract class AbstractChunkGenerator implements IChunkGenerator {
 				for(int z = 0; z < 16; z++) {
 					adjWorldZ = worldZ + z;
 					noise = this.noise.eval(adjWorldX, y, adjWorldZ);
+					noise += this.noise.eval(adjWorldX, adjWorldZ);
 					
-					bda[y >> 4].set(x, (y & 0x0F), z, this.generateBlock(x, y, z, noise)); // TODO: BROKEN!
+					bda[y >> 4].set(x, (y & 0x0F), z, this.generateBlock(x, y, z, noise));
 				}
 			}
 		}

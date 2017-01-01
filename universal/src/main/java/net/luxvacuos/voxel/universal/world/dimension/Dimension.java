@@ -38,8 +38,8 @@ import net.luxvacuos.voxel.universal.world.block.Blocks;
 import net.luxvacuos.voxel.universal.world.block.IBlock;
 import net.luxvacuos.voxel.universal.world.chunk.ChunkManager;
 import net.luxvacuos.voxel.universal.world.chunk.IChunk;
-import net.luxvacuos.voxel.universal.world.chunk.generator.FlatChunkGenerator;
-import net.luxvacuos.voxel.universal.world.chunk.generator.FlatNoiseGenerator;
+import net.luxvacuos.voxel.universal.world.chunk.generator.ChunkTerrainGenerator;
+import net.luxvacuos.voxel.universal.world.chunk.generator.SimplexNoise;
 import net.luxvacuos.voxel.universal.world.utils.BlockCoords;
 import net.luxvacuos.voxel.universal.world.utils.ChunkNode;
 
@@ -56,8 +56,8 @@ public class Dimension implements IDimension {
 		chunkManager = new ChunkManager(this);
 		entitiesManager = new Engine();
 		entitiesManager.addSystem(new PhysicsSystem(this));
-		FlatChunkGenerator gen = new FlatChunkGenerator();
-		gen.setNoiseGenerator(new FlatNoiseGenerator(1));
+		ChunkTerrainGenerator gen = new ChunkTerrainGenerator();
+		gen.setNoiseGenerator(new SimplexNoise(256, 0.15f, 0));
 		chunkManager.setGenerator(gen);
 	}
 
@@ -121,12 +121,12 @@ public class Dimension implements IDimension {
 
 	@Override
 	public IBlock getBlockAt(int x, int y, int z) {
-		IChunk c = chunkManager.getChunkAt(ChunkNode.getFromBlockCoords(x, y, z));
+		IChunk c = chunkManager.getChunkAt(ChunkNode.getFromBlockCoords(x, 0, z));
 		if (c == null)
-			return Blocks.getBlockByName("air");
+			return Blocks.getBlockByName("voxel:air");
 		IBlock b = c.getBlockAt(x & 0xF, y, z & 0xF);
 		if (b == null)
-			return Blocks.getBlockByName("air");
+			return Blocks.getBlockByName("voxel:air");
 		return b;
 	}
 

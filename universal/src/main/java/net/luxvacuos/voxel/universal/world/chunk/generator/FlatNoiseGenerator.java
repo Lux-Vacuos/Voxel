@@ -33,4 +33,9 @@ public class FlatNoiseGenerator implements INoiseGenerator {
 		else return 0;
 	}
 
+	@Override
+	public double eval(double x, double z) {
+		return 0;
+	}
+
 }

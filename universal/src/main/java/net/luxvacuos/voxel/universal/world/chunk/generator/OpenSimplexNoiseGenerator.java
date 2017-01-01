@@ -75,6 +75,11 @@ public class OpenSimplexNoiseGenerator implements INoiseGenerator {
 			source[r] = source[i];
 		}
 	}
+	
+	@Override
+	public double eval(double x, double z) {
+		return 0;
+	}
 
 	@Override
 	public double eval(double x, double y, double z) {

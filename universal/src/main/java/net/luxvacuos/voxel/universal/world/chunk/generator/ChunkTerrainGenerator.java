@@ -20,10 +20,25 @@
 
 package net.luxvacuos.voxel.universal.world.chunk.generator;
 
-public interface INoiseGenerator {
+import net.luxvacuos.voxel.universal.world.block.Blocks;
 
-	public double eval(double x, double y, double z);
+public class ChunkTerrainGenerator extends AbstractChunkGenerator {
 
-	public double eval(double x, double z);
+	@Override
+	protected int generateBlock(int x, int y, int z, double noise) {
+		noise += 1;
+		noise *= 128;
+		noise = (int) noise;
+		if (y == noise - 1 && y > 128)
+			return Blocks.getBlockByName("voxel:grass").getID();
+		else if (y == noise - 2 && y > 128)
+			return Blocks.getBlockByName("voxel:dirt").getID();
+		else if (y == noise - 1 && y < 129)
+			return Blocks.getBlockByName("voxel:sand").getID();
+		else if (y < noise - 2)
+			return Blocks.getBlockByName("voxel:stone").getID();
+		else
+			return Blocks.getBlockByName("voxel:air").getID();
+	}
 
 }
