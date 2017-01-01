@@ -222,15 +222,15 @@ public class ResourceLoader implements IDisposable {
 	}
 
 	public Texture loadTextureMisc(String fileName) {
-		return loadTextureMisc(fileName, GL_LINEAR);
+		return loadTextureMisc(fileName, GL_LINEAR, true);
 	}
 
-	public Texture loadTextureMisc(String fileName, int filter) {
+	public Texture loadTextureMisc(String fileName, int filter, boolean textureMipMapAF) {
 		int texture_id = 0;
 		try {
 			Logger.log("Loading Texture: " + fileName + ".png");
 			texture_id = loadTexture("assets/" + ClientVariables.assets + "/textures/" + fileName + ".png", filter,
-					GL_REPEAT, GL_RGBA);
+					GL_REPEAT, GL_RGBA, textureMipMapAF);
 		} catch (Exception e) {
 			throw new LoadTextureException(fileName, e);
 		}
@@ -246,7 +246,7 @@ public class ResourceLoader implements IDisposable {
 	 * @return Texture ID
 	 */
 	public Texture loadTexture(String fileName) {
-		return loadTexture(fileName, GL_LINEAR);
+		return loadTexture(fileName, GL_LINEAR, true);
 	}
 
 	/**
@@ -256,12 +256,12 @@ public class ResourceLoader implements IDisposable {
 	 *            Block Texture Name
 	 * @return Texture ID
 	 */
-	public Texture loadTexture(String fileName, int filter) {
+	public Texture loadTexture(String fileName, int filter, boolean textureMipMapAF) {
 		int texture = 0;
 		try {
 			Logger.log("Loading Texture: " + fileName + ".png");
 			texture = loadTexture("assets/" + ClientVariables.assets + "/textures/" + fileName + ".png", filter,
-					GL_REPEAT, GL_SRGB_ALPHA);
+					GL_REPEAT, GL_SRGB_ALPHA, textureMipMapAF);
 		} catch (Exception e) {
 			throw new LoadTextureException(fileName, e);
 		}
@@ -269,7 +269,8 @@ public class ResourceLoader implements IDisposable {
 		return new Texture(texture);
 	}
 
-	private int loadTexture(String file, int filter, int textureWarp, int format) throws DecodeTextureException {
+	private int loadTexture(String file, int filter, int textureWarp, int format, boolean textureMipMapAF)
+			throws DecodeTextureException {
 		int texture_id = glGenTextures();
 		glBindTexture(GL_TEXTURE_2D, texture_id);
 		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, textureWarp);
@@ -292,15 +293,17 @@ public class ResourceLoader implements IDisposable {
 			glTexImage2D(GL_TEXTURE_2D, 0, format, data.getWidth(), data.getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE,
 					data.getBuffer());
 		}
-		glGenerateMipmap(GL_TEXTURE_2D);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_LOD_BIAS, 0);
+		if (textureMipMapAF) {
+			glGenerateMipmap(GL_TEXTURE_2D);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_LOD_BIAS, 0);
 
-		if (WindowManager.getWindow(windowID).getCapabilities().GL_EXT_texture_filter_anisotropic) {
-			float amount = Math.min(16f, EXTTextureFilterAnisotropic.GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT);
-			glTexParameterf(GL_TEXTURE_2D, EXTTextureFilterAnisotropic.GL_TEXTURE_MAX_ANISOTROPY_EXT, amount);
-		} else {
-			Logger.warn("Anisotropic Filtering not supported");
+			if (WindowManager.getWindow(windowID).getCapabilities().GL_EXT_texture_filter_anisotropic) {
+				float amount = Math.min(16f, EXTTextureFilterAnisotropic.GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT);
+				glTexParameterf(GL_TEXTURE_2D, EXTTextureFilterAnisotropic.GL_TEXTURE_MAX_ANISOTROPY_EXT, amount);
+			} else {
+				Logger.warn("Anisotropic Filtering not supported");
+			}
 		}
 		return texture_id;
 	}

@@ -131,8 +131,8 @@ public class TestState extends AbstractState {
 		Texture test_r = loader.loadTextureMisc("test_state/rusted_iron-r");
 		Texture test_m = loader.loadTextureMisc("test_state/rusted_iron-m");
 
-		Texture blocks = loader.loadTexture("blocks", GL_NEAREST);
-		Texture blocks_n = loader.loadTextureMisc("blocks_n", GL_NEAREST);
+		Texture blocks = loader.loadTexture("blocks", GL_NEAREST, false);
+		Texture blocks_n = loader.loadTextureMisc("blocks_n", GL_NEAREST, false);
 
 		tess = new Tessellator(new Material(new Vector4f(1f), 0.5f, 0f, 0, blocks, blocks_n, null, null, null));
 		RenderBlock t = new RenderBlock(new BlockMaterial("test"), new BlockFaceAtlas("Ice"));

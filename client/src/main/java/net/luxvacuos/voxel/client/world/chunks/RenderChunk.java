@@ -22,6 +22,7 @@ package net.luxvacuos.voxel.client.world.chunks;
 
 import net.luxvacuos.voxel.client.core.ClientWorldSimulation;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Tessellator;
+import net.luxvacuos.voxel.client.rendering.world.block.ICustomRenderBlock;
 import net.luxvacuos.voxel.client.rendering.world.block.IRenderBlock;
 import net.luxvacuos.voxel.client.world.block.BlocksResources;
 import net.luxvacuos.voxel.client.world.block.RenderBlock;
@@ -49,12 +50,19 @@ public class RenderChunk {
 				for (int z = 0; z < 16; z++) {
 					for (int y = 0; y < 256; y++) {
 						RenderBlock block = (RenderBlock) chunk.getChunkData().getBlockAt(x, y, z);
-						if (!block.isTransparent()) {
-							tess.generateCube(chunk.getNode().getX() * 16 + x, y, chunk.getNode().getZ() * 16 + z, 1,
-									cullFaceUp(block, x, y, z), cullFaceDown(block, x, y, z),
-									cullFaceEast(block, x, y, z), cullFaceWest(block, x, y, z),
-									cullFaceNorth(block, x, y, z), cullFaceSouth(block, x, y, z), block);
-						}
+						if (!block.isTransparent())
+							if (!block.hasCustomModel()) {
+								tess.generateCube(chunk.getNode().getX() * 16 + x, y, chunk.getNode().getZ() * 16 + z,
+										1, cullFaceUp(block, x, y, z), cullFaceDown(block, x, y, z),
+										cullFaceEast(block, x, y, z), cullFaceWest(block, x, y, z),
+										cullFaceNorth(block, x, y, z), cullFaceSouth(block, x, y, z), block);
+							} else {
+								((ICustomRenderBlock) block).generateCustomModel(tess, chunk.getNode().getX() * 16 + x,
+										y, chunk.getNode().getZ() * 16 + z, 1, cullFaceUp(block, x, y, z),
+										cullFaceDown(block, x, y, z), cullFaceEast(block, x, y, z),
+										cullFaceWest(block, x, y, z), cullFaceNorth(block, x, y, z),
+										cullFaceSouth(block, x, y, z));
+							}
 					}
 				}
 
@@ -75,9 +83,10 @@ public class RenderChunk {
 
 	private boolean cullFaceWest(RenderBlock block, int x, int y, int z) {
 		if (x > 1 && x < 16) {
-			if (chunk.getChunkData().getBlockAt(x - 1, y, z).getID() == block.getID())
+			RenderBlock b = (RenderBlock) chunk.getChunkData().getBlockAt(x - 1, y, z);
+			if (b.getID() == block.getID())
 				return false;
-			if (((IRenderBlock) chunk.getChunkData().getBlockAt(x - 1, y, z)).isTransparent())
+			if (b.isTransparent() || b.hasCustomModel() || b.isFluid())
 				return true;
 		}
 		if (dim.getBlockAt(chunk.getNode().getX() * 16 + x - 1, y, chunk.getNode().getZ() * 16 + z).getID() == block
@@ -91,9 +100,10 @@ public class RenderChunk {
 
 	private boolean cullFaceEast(RenderBlock block, int x, int y, int z) {
 		if (x > 0 && x < 15) {
-			if (chunk.getChunkData().getBlockAt(x + 1, y, z).getID() == block.getID())
+			RenderBlock b = (RenderBlock) chunk.getChunkData().getBlockAt(x + 1, y, z);
+			if (b.getID() == block.getID())
 				return false;
-			if (((IRenderBlock) chunk.getChunkData().getBlockAt(x + 1, y, z)).isTransparent())
+			if (b.isTransparent() || b.hasCustomModel() || b.isFluid())
 				return true;
 		}
 		if (dim.getBlockAt(chunk.getNode().getX() * 16 + x + 1, y, chunk.getNode().getZ() * 16 + z).getID() == block
@@ -107,9 +117,10 @@ public class RenderChunk {
 
 	private boolean cullFaceDown(RenderBlock block, int x, int y, int z) {
 		if (y > 1 && y < 256) {
-			if (chunk.getChunkData().getBlockAt(x, y - 1, z).getID() == block.getID())
+			RenderBlock b = (RenderBlock) chunk.getChunkData().getBlockAt(x, y - 1, z);
+			if (b.getID() == block.getID())
 				return false;
-			if (((IRenderBlock) chunk.getChunkData().getBlockAt(x, y - 1, z)).isTransparent())
+			if (b.isTransparent() || b.hasCustomModel() || b.isFluid())
 				return true;
 		}
 		// if (dim.getBlockAt(x, y - 1, z).getID() == block.getID())
@@ -121,9 +132,10 @@ public class RenderChunk {
 
 	private boolean cullFaceUp(RenderBlock block, int x, int y, int z) {
 		if (y > 0 && y < 255) {
-			if (chunk.getChunkData().getBlockAt(x, y + 1, z).getID() == block.getID())
+			RenderBlock b = (RenderBlock) chunk.getChunkData().getBlockAt(x, y + 1, z);
+			if (b.getID() == block.getID())
 				return false;
-			if (((IRenderBlock) chunk.getChunkData().getBlockAt(x, y + 1, z)).isTransparent())
+			if (b.isTransparent() || b.hasCustomModel() || b.isFluid())
 				return true;
 		}
 		// if (dim.getBlockAt(x, y + 1, z).getID() == block.getID())
@@ -135,9 +147,10 @@ public class RenderChunk {
 
 	private boolean cullFaceNorth(RenderBlock block, int x, int y, int z) {
 		if (z > 1 && z < 16) {
-			if (chunk.getChunkData().getBlockAt(x, y, z - 1).getID() == block.getID())
+			RenderBlock b = (RenderBlock) chunk.getChunkData().getBlockAt(x, y, z - 1);
+			if (b.getID() == block.getID())
 				return false;
-			if (((IRenderBlock) chunk.getChunkData().getBlockAt(x, y, z - 1)).isTransparent())
+			if (b.isTransparent() || b.hasCustomModel() || b.isFluid())
 				return true;
 		}
 		if (dim.getBlockAt(chunk.getNode().getX() * 16 + x, y, chunk.getNode().getZ() * 16 + z - 1).getID() == block
@@ -151,9 +164,10 @@ public class RenderChunk {
 
 	private boolean cullFaceSouth(RenderBlock block, int x, int y, int z) {
 		if (z > 0 && z < 15) {
-			if (chunk.getChunkData().getBlockAt(x, y, z + 1).getID() == block.getID())
+			RenderBlock b = (RenderBlock) chunk.getChunkData().getBlockAt(x, y, z + 1);
+			if (b.getID() == block.getID())
 				return false;
-			if (((IRenderBlock) chunk.getChunkData().getBlockAt(x, y, z + 1)).isTransparent())
+			if (b.isTransparent() || b.hasCustomModel() || b.isFluid())
 				return true;
 		}
 		if (dim.getBlockAt(chunk.getNode().getX() * 16 + x, y, chunk.getNode().getZ() * 16 + z + 1).getID() == block

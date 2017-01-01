@@ -43,6 +43,7 @@ import net.luxvacuos.voxel.client.rendering.utils.BlockFaceAtlas;
 import net.luxvacuos.voxel.client.util.Maths;
 import net.luxvacuos.voxel.client.world.block.BlocksResources;
 import net.luxvacuos.voxel.client.world.block.RenderBlock;
+import net.luxvacuos.voxel.client.world.block.types.WaterBlock;
 import net.luxvacuos.voxel.client.world.dimension.RenderDimension;
 import net.luxvacuos.voxel.client.world.entities.Camera;
 import net.luxvacuos.voxel.client.world.entities.PlayerCamera;
@@ -128,7 +129,8 @@ public class SPWorldState extends AbstractState {
 
 		Blocks.startRegister("voxel");
 		BlockMaterial airMat = new BlockMaterial("air");
-		airMat = (BlockMaterial) matMod.modify(airMat).canBeBroken(false).setBlocksMovement(false).setOpacity(0f).done();
+		airMat = (BlockMaterial) matMod.modify(airMat).canBeBroken(false).setBlocksMovement(false).setOpacity(0f)
+				.done();
 		Blocks.register(new RenderBlock(airMat, new BlockFaceAtlas("air")));
 		Blocks.register(new RenderBlock(new BlockMaterial("stone"), new BlockFaceAtlas("stone")));
 		Blocks.register(new RenderBlock(new BlockMaterial("grass"), new BlockFaceAtlas("grass", "dirt", "grassSide")));
@@ -138,6 +140,10 @@ public class SPWorldState extends AbstractState {
 		Blocks.register(new RenderBlock(new BlockMaterial("wood"), new BlockFaceAtlas("wood")));
 		Blocks.register(new RenderBlock(new BlockMaterial("leaves"), new BlockFaceAtlas("leaves")));
 		Blocks.register(new RenderBlock(new BlockMaterial("glass"), new BlockFaceAtlas("glass")));
+		BlockMaterial waterMat = new BlockMaterial("water");
+		waterMat = (BlockMaterial) matMod.modify(waterMat).canBeBroken(false).setBlocksMovement(false)
+				.affectedByGravity(true).liquid().done();
+		Blocks.register(new WaterBlock(waterMat, new BlockFaceAtlas("water")));
 		Blocks.finishRegister();
 
 		pausesState = new SPPauseState();
