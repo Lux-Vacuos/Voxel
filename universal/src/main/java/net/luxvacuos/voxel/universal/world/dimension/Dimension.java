@@ -27,7 +27,9 @@ import java.util.List;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
+import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.math.collision.BoundingBox;
+import com.badlogic.gdx.utils.Array;
 
 import net.luxvacuos.voxel.universal.core.GlobalVariables;
 import net.luxvacuos.voxel.universal.ecs.Components;
@@ -80,9 +82,11 @@ public class Dimension implements IDimension {
 	@Override
 	public void update(float delta) {
 		int playerCX = 0, playerCZ = 0;
-		for (Entity players : entitiesManager.getEntitiesFor(Family.all(Player.class).get())) {
+		ImmutableArray<Entity> players = entitiesManager.getEntitiesFor(Family.all(Player.class).get());
+		Array<ChunkNode> toRemove = new Array<>();
+		for (Entity player : players) {
 
-			Position pos = Components.POSITION.get(players);
+			Position pos = Components.POSITION.get(player);
 
 			if (pos.getPosition().x < 0)
 				playerCX = (int) ((pos.getPosition().x - 16) / 16);
@@ -104,15 +108,18 @@ public class Dimension implements IDimension {
 					}
 				}
 			}
-			/*
-			 * for (IChunk chunk : chunkManager.getLoadedChunks()) { if
-			 * (Math.abs(chunk.getNode().getX() - playerCX) >
-			 * GlobalVariables.chunk_radius) {
-			 * chunkManager.unloadChunk(chunk.getNode()); } else if
-			 * (Math.abs(chunk.getNode().getZ() - playerCZ) >
-			 * GlobalVariables.chunk_radius) {
-			 * chunkManager.unloadChunk(chunk.getNode()); } }
-			 */
+
+			for (IChunk chunk : chunkManager.getLoadedChunks()) {
+				if (Math.abs(chunk.getNode().getX() - playerCX) > GlobalVariables.chunk_radius) {
+					toRemove.add(chunk.getNode());
+				} else if (Math.abs(chunk.getNode().getZ() - playerCZ) > GlobalVariables.chunk_radius) {
+					toRemove.add(chunk.getNode());
+				}
+			}
+
+		}
+		for (ChunkNode chunkNode : toRemove) {
+			chunkManager.unloadChunk(chunkNode);
 		}
 
 		chunkManager.update(delta);
