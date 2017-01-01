@@ -56,7 +56,7 @@ public class TessellatorShader extends ShaderProgram {
 	private TessellatorShader() {
 		super(ClientVariables.VERTEX_FILE_TESSELLATOR, ClientVariables.FRAGMENT_FILE_TESSELLATOR,
 				new Attribute(0, "position"), new Attribute(1, "textureCoords"), new Attribute(2, "normal"),
-				new Attribute(3, "data"), new Attribute(4, "tangent"), new Attribute(5, "bitangent"));
+				new Attribute(3, "tangent"));
 		super.storeAllUniformLocations(projectionMatrix, viewMatrix, biasMatrix, projectionLightMatrix, viewLightMatrix,
 				moveFactor, depth, useShadows, cameraPos, material);
 		conectTextureUnits();
