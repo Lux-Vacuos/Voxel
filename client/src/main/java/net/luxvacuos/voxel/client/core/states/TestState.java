@@ -50,7 +50,7 @@ import net.luxvacuos.voxel.client.rendering.api.opengl.objects.ParticleTexture;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.RawModel;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.Texture;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.TexturedModel;
-import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.ShaderInclude;
+import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.ShaderIncludes;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.ShaderProgram;
 import net.luxvacuos.voxel.client.rendering.utils.BlockFaceAtlas;
 import net.luxvacuos.voxel.client.resources.ResourceLoader;
@@ -110,9 +110,9 @@ public class TestState extends AbstractState {
 		camera.setPosition(new Vector3d(0, 2, 0));
 		sun = new Sun(shadowProjectionMatrix);
 
-		ShaderProgram.loadToVFS(new ShaderInclude("/common/common.glsl"));
-		ShaderProgram.loadToVFS(new ShaderInclude("/common/Lighting-PBR.glsl"));
-		ShaderProgram.loadToVFS(new ShaderInclude("/common/Materials.glsl"));
+		ShaderProgram.loadToVFS(new ShaderIncludes("/common/common.glsl"));
+		ShaderProgram.loadToVFS(new ShaderIncludes("/common/Lighting-PBR.glsl"));
+		ShaderProgram.loadToVFS(new ShaderIncludes("/common/Materials.glsl"));
 
 		worldSimulation = new ClientWorldSimulation();
 		renderer = new Renderer(window, camera, sun.getCamera());

@@ -35,8 +35,6 @@ import net.luxvacuos.voxel.client.rendering.api.nanovg.Timers;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.UIRendering;
 import net.luxvacuos.voxel.client.rendering.api.opengl.ParticleDomain;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Renderer;
-import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.ShaderInclude;
-import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.ShaderProgram;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.TessellatorBasicShader;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.TessellatorShader;
 import net.luxvacuos.voxel.client.rendering.utils.BlockFaceAtlas;
@@ -104,9 +102,9 @@ public class SPWorldState extends AbstractState {
 		camera.setPosition(new Vector3d(0, 2, 0));
 		sun = new Sun(shadowProjectionMatrix);
 
-		ShaderProgram.loadToVFS(new ShaderInclude("/common/common.glsl"));
-		ShaderProgram.loadToVFS(new ShaderInclude("/common/Lighting-PBR.glsl"));
-		ShaderProgram.loadToVFS(new ShaderInclude("/common/Materials.glsl"));
+		//ShaderProgram.loadToVFS(new ShaderIncludes("/common/common.glsl"));
+		//ShaderProgram.loadToVFS(new ShaderIncludes("/common/Lighting-PBR.glsl"));
+		//ShaderProgram.loadToVFS(new ShaderIncludes("/common/Materials.glsl"));
 
 		worldSimulation = new ClientWorldSimulation();
 		renderer = new Renderer(window, camera, sun.getCamera());
