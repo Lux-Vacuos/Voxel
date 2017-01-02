@@ -122,9 +122,15 @@ public class SPWorldState extends AbstractState {
 			// ((RenderDimension)
 			// world.getActiveDimension()).renderOcclusion(camera, frustum);
 		});
+
 		BlocksResources.createBlocks(window.getResourceLoader());
 		TessellatorShader.getShader();
 		TessellatorBasicShader.getShader();
+
+		TessellatorShader.getShader().start();
+		TessellatorShader.getShader().loadProjectionMatrix(camera.getProjectionMatrix());
+		TessellatorShader.getShader().loadBiasMatrix(sun.getCamera().getProjectionMatrix());
+		TessellatorShader.getShader().stop();
 
 		MaterialModder matMod = new MaterialModder();
 

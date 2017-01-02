@@ -184,8 +184,6 @@ public class Tessellator {
 			clearBuffers();
 		}
 		shader.start();
-		shader.loadProjectionMatrix(camera.getProjectionMatrix());
-		shader.loadBiasMatrix(sunCamera.getProjectionMatrix());
 		shader.loadViewMatrix(camera.getViewMatrix(), camera.getPosition());
 		shader.loadLightMatrix(sunCamera.getViewMatrix());
 		shader.loadSettings(ClientVariables.useShadows);
