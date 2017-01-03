@@ -25,7 +25,6 @@ in vec2 textureCoords;
 in vec3 normal;
 in vec3 tangent;
 
-out float fadeOut;
 out vec2 pass_textureCoords;
 out vec3 pass_position;
 out vec4 ShadowCoord;

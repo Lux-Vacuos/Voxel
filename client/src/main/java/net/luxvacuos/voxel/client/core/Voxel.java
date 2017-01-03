@@ -26,8 +26,8 @@ import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_RENDERER;
 import static org.lwjgl.opengl.GL11.GL_VENDOR;
 import static org.lwjgl.opengl.GL11.GL_VERSION;
-import static org.lwjgl.opengl.GL20.GL_SHADING_LANGUAGE_VERSION;
 import static org.lwjgl.opengl.GL11.glGetString;
+import static org.lwjgl.opengl.GL20.GL_SHADING_LANGUAGE_VERSION;
 
 import java.io.IOException;
 import java.util.jar.Attributes;
@@ -45,13 +45,10 @@ import net.luxvacuos.voxel.client.core.states.MainMenuState;
 import net.luxvacuos.voxel.client.core.states.OptionsState;
 import net.luxvacuos.voxel.client.core.states.SPCreateWorld;
 import net.luxvacuos.voxel.client.core.states.SPLoadingState;
-import net.luxvacuos.voxel.client.core.states.SPPauseState;
 import net.luxvacuos.voxel.client.core.states.SPSelectionState;
 import net.luxvacuos.voxel.client.core.states.SPWorldState;
 import net.luxvacuos.voxel.client.core.states.SplashScreenState;
 import net.luxvacuos.voxel.client.core.states.StateNames;
-import net.luxvacuos.voxel.client.core.states.TessellatorTestScene;
-import net.luxvacuos.voxel.client.core.states.TestState;
 import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.glfw.WindowManager;
@@ -165,9 +162,9 @@ public class Voxel extends AbstractVoxel {
 		TaskManager.addTask(() -> StateMachine.registerState(new SPCreateWorld()));
 		TaskManager.addTask(() -> StateMachine.registerState(new SPLoadingState()));
 		TaskManager.addTask(() -> StateMachine.registerState(new SPSelectionState()));
-		//TaskManager.addTask(() -> StateMachine.registerState(new SPWorldState()));
+		TaskManager.addTask(() -> StateMachine.registerState(new SPWorldState()));
 		//TaskManager.addTask(() -> StateMachine.registerState(new TestState()));
-		TaskManager.addTask(() -> StateMachine.registerState(new TessellatorTestScene()));
+		//TaskManager.addTask(() -> StateMachine.registerState(new TessellatorTestScene()));
 		StateMachine.registerState(new SplashScreenState());
 		modsHandler.init();
 	}
