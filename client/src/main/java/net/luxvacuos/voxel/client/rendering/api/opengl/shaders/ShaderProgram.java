@@ -175,10 +175,18 @@ public abstract class ShaderProgram {
 			Logger.log("Loading Shader: " + file);
 			String line;
 			while ((line = reader.readLine()) != null) {
-				//TODO: Process ISL Includes here, and discard the line 
-				//XXX: ##include function <name> -> ShaderIncludes.getFunction(name)
-				//XXX: ##include struct <name> -> ShaderIncludes.getStruct(name)
-				//XXX: ##include variable <name> -> ShaderIncludes.getVariable(name)
+				if(line.startsWith("##include")) {
+					String[] split = line.split(" ");
+					String name = split[2];
+					if(split[1].equalsIgnoreCase("variable")) {
+						shaderSource.append(ShaderIncludes.getVariable(name)).append("//\n");
+					} else if(split[1].equalsIgnoreCase("struct")) {
+						shaderSource.append(ShaderIncludes.getStruct(name)).append("//\n");
+					} else if(split[1].equalsIgnoreCase("function")) {
+						shaderSource.append(ShaderIncludes.getFunction(name)).append("//\n");
+					}
+					continue;
+				}
 				shaderSource.append(line).append("//\n");
 			}
 			reader.close();

@@ -19,9 +19,8 @@
 //
 
 #version 330 core
-#extension GL_ARB_shading_language_include : require
 
-#include "/common/Materials.glsl"
+##include struct Material
 
 in float visibility;
 in vec2 pass_textureCoords;

@@ -28,6 +28,7 @@ import net.luxvacuos.voxel.client.rendering.api.glfw.PixelBufferHandle;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.glfw.WindowHandle;
 import net.luxvacuos.voxel.client.rendering.api.glfw.WindowManager;
+import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.ShaderIncludes;
 import net.luxvacuos.voxel.client.resources.ResourceLoader;
 import net.luxvacuos.voxel.client.sound.LibraryLWJGLOpenAL;
 import net.luxvacuos.voxel.client.sound.soundsystem.SoundSystem;
@@ -88,6 +89,10 @@ public class ClientInternalSubsystem extends AbstractInternalSubsystem {
 		loader.loadNVGFont("Poppins-Bold", "Poppins-Bold");
 		loader.loadNVGFont("Poppins-SemiBold", "Poppins-SemiBold");
 		loader.loadNVGFont("Entypo", "Entypo", 40);
+		
+		ShaderIncludes.processIncludeFile("common.isl");
+		ShaderIncludes.processIncludeFile("lighting.isl");
+		ShaderIncludes.processIncludeFile("materials.isl");
 	}
 
 	@Override

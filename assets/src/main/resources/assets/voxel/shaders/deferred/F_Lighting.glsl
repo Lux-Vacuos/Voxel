@@ -19,10 +19,6 @@
 //
 
 #version 330 core
-#extension GL_ARB_shading_language_include : require
-
-#include "/common/common.glsl"
-#include "/common/Lighting-PBR.glsl"
 
 in vec2 textureCoords;
 
@@ -39,6 +35,16 @@ uniform sampler2D composite0;
 uniform int shadowDrawDistance;
 
 #define TRANSITION_DISTANCE 2.5
+
+##include variable pi
+
+##include function DistributionGGX
+
+##include function GeometrySchlickGGX
+
+##include function GeometrySmith
+
+##include function fresnelSchlickRoughness
 
 void main(void) {
 	vec2 texcoord = textureCoords;
