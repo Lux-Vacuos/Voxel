@@ -50,6 +50,7 @@ import net.luxvacuos.voxel.client.core.states.SPSelectionState;
 import net.luxvacuos.voxel.client.core.states.SPWorldState;
 import net.luxvacuos.voxel.client.core.states.SplashScreenState;
 import net.luxvacuos.voxel.client.core.states.StateNames;
+import net.luxvacuos.voxel.client.core.states.TessellatorTestScene;
 import net.luxvacuos.voxel.client.core.states.TestState;
 import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
@@ -164,8 +165,9 @@ public class Voxel extends AbstractVoxel {
 		TaskManager.addTask(() -> StateMachine.registerState(new SPCreateWorld()));
 		TaskManager.addTask(() -> StateMachine.registerState(new SPLoadingState()));
 		TaskManager.addTask(() -> StateMachine.registerState(new SPSelectionState()));
-		TaskManager.addTask(() -> StateMachine.registerState(new SPWorldState()));
+		//TaskManager.addTask(() -> StateMachine.registerState(new SPWorldState()));
 		//TaskManager.addTask(() -> StateMachine.registerState(new TestState()));
+		TaskManager.addTask(() -> StateMachine.registerState(new TessellatorTestScene()));
 		StateMachine.registerState(new SplashScreenState());
 		modsHandler.init();
 	}
