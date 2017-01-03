@@ -89,13 +89,13 @@ public class Dimension implements IDimension {
 			Position pos = Components.POSITION.get(player);
 
 			if (pos.getPosition().x < 0)
-				playerCX = (int) ((pos.getPosition().x - 16) / 16);
+				playerCX = (int) ((pos.getPosition().x - 8) / 16);
 			if (pos.getPosition().z < 0)
-				playerCZ = (int) ((pos.getPosition().z - 16) / 16);
+				playerCZ = (int) ((pos.getPosition().z - 8) / 16);
 			if (pos.getPosition().x > 0)
-				playerCX = (int) ((pos.getPosition().x) / 16);
+				playerCX = (int) ((pos.getPosition().x + 8) / 16);
 			if (pos.getPosition().z > 0)
-				playerCZ = (int) ((pos.getPosition().z) / 16);
+				playerCZ = (int) ((pos.getPosition().z + 8) / 16);
 			ChunkNode node;
 			int xx, zz;
 			for (int zr = -GlobalVariables.chunk_radius; zr <= GlobalVariables.chunk_radius; zr++) {
