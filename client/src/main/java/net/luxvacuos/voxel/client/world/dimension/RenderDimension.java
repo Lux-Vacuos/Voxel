@@ -45,7 +45,7 @@ public class RenderDimension extends Dimension {
 		Array<ChunkNode> nodes = new Array<>(ChunkNode.class);
 		for (int x = 0; x < maxLoadChunks; x++) {
 			for (int z = 0; z < maxLoadChunks; z++) {
-				nodes.add(new ChunkNode(x, 0, z));
+				nodes.add(new ChunkNode(x, z));
 			}
 		}
 

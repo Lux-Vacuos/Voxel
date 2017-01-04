@@ -43,7 +43,7 @@ public class ChunkTests {
 	@Before
 	public void setUp() throws Exception {
 		this.random = new Random();
-		this.node = new ChunkNode(0,0,0);
+		this.node = new ChunkNode(0, 0);
 		this.chunkData = new ChunkData();
 		this.chunk = new Chunk(null, this.node, this.chunkData);
 		this.testBlock = new TestBlock(this.random.nextInt());

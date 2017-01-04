@@ -102,7 +102,7 @@ public class Dimension implements IDimension {
 				zz = playerCZ + zr;
 				for (int xr = -GlobalVariables.chunk_radius; xr <= GlobalVariables.chunk_radius; xr++) {
 					xx = playerCX + xr;
-					node = new ChunkNode(xx, 0, zz);
+					node = new ChunkNode(xx, zz);
 					if (!chunkManager.isChunkLoaded(node)) {
 						chunkManager.loadChunk(node);
 					}
