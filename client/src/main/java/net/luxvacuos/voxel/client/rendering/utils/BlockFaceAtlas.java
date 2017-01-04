@@ -23,29 +23,29 @@ package net.luxvacuos.voxel.client.rendering.utils;
 import net.luxvacuos.voxel.universal.world.utils.BlockFace;
 
 public class BlockFaceAtlas {
-	private final String top, bottom, north, south, east, west;
+	private final String up, down, north, south, east, west;
 	
 	public BlockFaceAtlas(String name) {
-		this.top = name;
-		this.bottom = name;
+		this.up = name;
+		this.down = name;
 		this.north = name;
 		this.south = name;
 		this.east = name;
 		this.west = name;
 	}
 	
-	public BlockFaceAtlas(String top_bottom, String sides) {
-		this.top = top_bottom;
-		this.bottom = top_bottom;
+	public BlockFaceAtlas(String up_down, String sides) {
+		this.up = up_down;
+		this.down = up_down;
 		this.north = sides;
 		this.south = sides;
 		this.east = sides;
 		this.west = sides;
 	}
 	
-	public BlockFaceAtlas(String top, String bottom, String sides) {
-		this.top = top;
-		this.bottom = bottom;
+	public BlockFaceAtlas(String up, String down, String sides) {
+		this.up = up;
+		this.down = down;
 		this.north = sides;
 		this.south = sides;
 		this.east = sides;
@@ -53,8 +53,8 @@ public class BlockFaceAtlas {
 	}
 	
 	public BlockFaceAtlas(String top, String bottom, String north, String south, String east, String west) {
-		this.top = top;
-		this.bottom = bottom;
+		this.up = top;
+		this.down = bottom;
 		this.north = north;
 		this.south = south;
 		this.east = east;
@@ -63,10 +63,10 @@ public class BlockFaceAtlas {
 	
 	public String get(BlockFace face) {
 		switch(face) {
-		case TOP:
-			return this.top;
-		case BOTTOM:
-			return this.bottom;
+		case UP:
+			return this.up;
+		case DOWN:
+			return this.down;
 		case NORTH:
 			return this.north;
 		case SOUTH:

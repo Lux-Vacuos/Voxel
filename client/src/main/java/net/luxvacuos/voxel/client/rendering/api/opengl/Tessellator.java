@@ -341,7 +341,7 @@ public class Tessellator {
 		Vector2d deltaUV1, deltaUV2;
 		float f;
 		if (top) {
-			texcoords = block.getTexCoords(BlockFace.TOP);
+			texcoords = block.getTexCoords(BlockFace.UP);
 			// top face
 			vertex3f(new Vector3d(x, y + ysize, z + zsize));
 			texture2f(new Vector2d(texcoords.getZ(), texcoords.getW()));
@@ -383,7 +383,7 @@ public class Tessellator {
 
 		}
 		if (bottom) {
-			texcoords = block.getTexCoords(BlockFace.BOTTOM);
+			texcoords = block.getTexCoords(BlockFace.DOWN);
 			// bottom face
 			vertex3f(new Vector3d(x, y, z));
 			texture2f(new Vector2d(texcoords.getZ(), texcoords.getW()));
