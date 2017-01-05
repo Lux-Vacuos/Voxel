@@ -31,6 +31,7 @@ import net.luxvacuos.voxel.client.world.entities.Camera;
 import net.luxvacuos.voxel.universal.world.chunk.Chunk;
 import net.luxvacuos.voxel.universal.world.chunk.ChunkData;
 import net.luxvacuos.voxel.universal.world.dimension.IDimension;
+import net.luxvacuos.voxel.universal.world.utils.BlockFace;
 import net.luxvacuos.voxel.universal.world.utils.ChunkNode;
 
 public class RenderChunk extends Chunk implements IRenderChunk {
@@ -52,15 +53,15 @@ public class RenderChunk extends Chunk implements IRenderChunk {
 						if (!block.isTransparent())
 							if (!block.hasCustomModel()) {
 								this.tess.generateCube(this.getX() * 16 + x, y, this.getZ() * 16 + z,
-										1, cullFaceUp(block, x, y, z), cullFaceDown(block, x, y, z),
-										cullFaceEast(block, x, y, z), cullFaceWest(block, x, y, z),
-										cullFaceNorth(block, x, y, z), cullFaceSouth(block, x, y, z), block);
+										1, cullFace(block, BlockFace.UP, x, y, z), cullFace(block, BlockFace.DOWN, x, y, z),
+										cullFace(block, BlockFace.EAST, x, y, z), cullFace(block, BlockFace.WEST, x, y, z),
+										cullFace(block, BlockFace.NORTH, x, y, z), cullFace(block, BlockFace.SOUTH, x, y, z), block);
 							} else {
 								((ICustomRenderBlock) block).generateCustomModel(this.tess, this.getX() * 16 + x,
-										y, this.getZ() * 16 + z, 1, cullFaceUp(block, x, y, z),
-										cullFaceDown(block, x, y, z), cullFaceEast(block, x, y, z),
-										cullFaceWest(block, x, y, z), cullFaceNorth(block, x, y, z),
-										cullFaceSouth(block, x, y, z));
+										y, this.getZ() * 16 + z, 1, cullFace(block, BlockFace.UP, x, y, z),
+										cullFace(block, BlockFace.DOWN, x, y, z), cullFace(block, BlockFace.EAST, x, y, z),
+										cullFace(block, BlockFace.WEST, x, y, z), cullFace(block, BlockFace.NORTH, x, y, z),
+										cullFace(block, BlockFace.SOUTH, x, y, z));
 							}
 					}
 				}
@@ -79,103 +80,46 @@ public class RenderChunk extends Chunk implements IRenderChunk {
 	public void renderOcclusion(Camera camera) {
 		this.tess.drawOcclusion(camera);
 	}
-
-	private boolean cullFaceWest(RenderBlock block, int x, int y, int z) {
-		if (x > 1 && x < 16) {
-			RenderBlock b = (RenderBlock) this.data.getBlockAt(x - 1, y, z);
+	
+	private boolean cullFace(RenderBlock block, BlockFace face, int x, int y, int z) {
+		RenderBlock b;
+		if(this.isBlockOutside(face, x, y, z)) {
+			b = ((RenderBlock) this.data.getBlockAt(x + face.getModX(), y + face.getModY(), z + face.getModZ()));
 			if (b.getID() == block.getID())
 				return false;
 			if (b.isTransparent() || b.hasCustomModel() || b.isFluid())
 				return true;
 		}
-		if (this.dim.getBlockAt(this.getX() * 16 + x - 1, y, this.getZ() * 16 + z).getID() == block
-				.getID())
+		if(!(face == BlockFace.UP || face == BlockFace.DOWN)) {
+			int cx = this.getX() * 16 + x;
+			int cz = this.getZ() * 16 + z;
+			b = ((RenderBlock) this.dim.getBlockAt(cx + face.getModX(), y + face.getModY(), cz + face.getModZ()));
+			
+			if(b == null || b.getID() == block.getID()) 
+				return false;
+			if (b.isTransparent())
+				return true;
+		}
+		return false;
+	}
+	
+	private boolean isBlockOutside(BlockFace face, int x, int y, int z) {
+		switch(face) {
+		case WEST:
+			return (x > 1 && x < 16);
+		case DOWN:
+			return (y > 1 && y < 256);
+		case NORTH:
+			return (z > 1 && z < 16);
+		case EAST:
+			return (x > 0 && x < 15);
+		case UP:
+			return (y > 0 && y < 255);
+		case SOUTH:
+			return (z > 0 && z < 15);
+		default:
 			return false;
-		if (((IRenderBlock) dim.getBlockAt(this.getX() * 16 + x - 1, y, this.getZ() * 16 + z))
-				.isTransparent())
-			return true;
-		return false;
-	}
-
-	private boolean cullFaceEast(RenderBlock block, int x, int y, int z) {
-		if (x > 0 && x < 15) {
-			RenderBlock b = (RenderBlock) this.data.getBlockAt(x + 1, y, z);
-			if (b.getID() == block.getID())
-				return false;
-			if (b.isTransparent() || b.hasCustomModel() || b.isFluid())
-				return true;
 		}
-		if (this.dim.getBlockAt(this.getX() * 16 + x + 1, y, this.getZ() * 16 + z).getID() == block
-				.getID())
-			return false;
-		if (((IRenderBlock) dim.getBlockAt(this.getX() * 16 + x + 1, y, this.getZ() * 16 + z))
-				.isTransparent())
-			return true;
-		return false;
-	}
-
-	private boolean cullFaceDown(RenderBlock block, int x, int y, int z) {
-		if (y > 1 && y < 256) {
-			RenderBlock b = (RenderBlock) this.data.getBlockAt(x, y - 1, z);
-			if (b.getID() == block.getID())
-				return false;
-			if (b.isTransparent() || b.hasCustomModel() || b.isFluid())
-				return true;
-		}
-		// if (dim.getBlockAt(x, y - 1, z).getID() == block.getID())
-		// return false;
-		// if (((IRenderBlock) dim.getBlockAt(x, y - 1, z)).isTransparent())
-		// return true;
-		return false;
-	}
-
-	private boolean cullFaceUp(RenderBlock block, int x, int y, int z) {
-		if (y > 0 && y < 255) {
-			RenderBlock b = (RenderBlock) this.data.getBlockAt(x, y + 1, z);
-			if (b.getID() == block.getID())
-				return false;
-			if (b.isTransparent() || b.hasCustomModel() || b.isFluid())
-				return true;
-		}
-		// if (dim.getBlockAt(x, y + 1, z).getID() == block.getID())
-		// return false;
-		// if (((IRenderBlock) dim.getBlockAt(x, y + 1, z)).isTransparent())
-		// return true;
-		return false;
-	}
-
-	private boolean cullFaceNorth(RenderBlock block, int x, int y, int z) {
-		if (z > 1 && z < 16) {
-			RenderBlock b = (RenderBlock) this.data.getBlockAt(x, y, z - 1);
-			if (b.getID() == block.getID())
-				return false;
-			if (b.isTransparent() || b.hasCustomModel() || b.isFluid())
-				return true;
-		}
-		if (this.dim.getBlockAt(this.getX() * 16 + x, y, this.getZ() * 16 + z - 1).getID() == block
-				.getID())
-			return false;
-		if (((IRenderBlock) this.dim.getBlockAt(this.getX() * 16 + x, y, this.getZ() * 16 + z - 1))
-				.isTransparent())
-			return true;
-		return false;
-	}
-
-	private boolean cullFaceSouth(RenderBlock block, int x, int y, int z) {
-		if (z > 0 && z < 15) {
-			RenderBlock b = (RenderBlock) this.data.getBlockAt(x, y, z + 1);
-			if (b.getID() == block.getID())
-				return false;
-			if (b.isTransparent() || b.hasCustomModel() || b.isFluid())
-				return true;
-		}
-		if (this.dim.getBlockAt(this.getX() * 16 + x, y, this.getZ() * 16 + z + 1).getID() == block
-				.getID())
-			return false;
-		if (((IRenderBlock) this.dim.getBlockAt(this.getX() * 16 + x, y, this.getZ() * 16 + z + 1))
-				.isTransparent())
-			return true;
-		return false;
 	}
 
 	@Override
