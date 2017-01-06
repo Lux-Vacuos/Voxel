@@ -19,7 +19,6 @@ Voxel on the client side requires a modern OpenGL 3.3 compatible card with extra
 
 | Name | Notes |
 | ------------- | ------------- |
-| ARB_shading_language_include | Required to run |
 | EXT_texture_filter_anisotropic | Optional, may cause texture issues if isn't supported |
 
 Voxel can be compiled and run in:
