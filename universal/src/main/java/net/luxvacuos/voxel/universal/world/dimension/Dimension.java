@@ -23,6 +23,7 @@ package net.luxvacuos.voxel.universal.world.dimension;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Random;
 
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
@@ -51,6 +52,7 @@ public class Dimension implements IDimension {
 	protected IWorld world;
 	protected ChunkManager chunkManager;
 	protected Engine entitiesManager;
+	private int maxLoadChunks = 3;
 
 	public Dimension(IWorld world, int id) {
 		this.world = world;
@@ -59,8 +61,15 @@ public class Dimension implements IDimension {
 		this.entitiesManager = new Engine();
 		this.entitiesManager.addSystem(new PhysicsSystem(this));
 		ChunkTerrainGenerator gen = new ChunkTerrainGenerator();
-		gen.setNoiseGenerator(new SimplexNoise(256, 0.15f, 0));
+		gen.setNoiseGenerator(new SimplexNoise(256, 0.15f, new Random().nextInt()));
 		this.chunkManager.setGenerator(gen);
+		Array<ChunkNode> nodes = new Array<>(ChunkNode.class);
+		for (int x = -maxLoadChunks; x <= maxLoadChunks; x++) {
+			for (int z = -maxLoadChunks; z <= maxLoadChunks; z++) {
+				nodes.add(new ChunkNode(x, z));
+			}
+		}
+		this.chunkManager.batchLoadChunks(nodes.toArray());
 	}
 
 	@Override

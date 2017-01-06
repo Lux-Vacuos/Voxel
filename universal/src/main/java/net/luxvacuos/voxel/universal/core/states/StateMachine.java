@@ -43,6 +43,10 @@ public final class StateMachine {
 		Logger.log("StateMachine running");
 		internalState = InternalState.RUNNING;
 	}
+	
+	public static void stop(){
+		internalState = InternalState.STOPPED;
+	}
 
 	public static boolean isRunning() {
 		return internalState == InternalState.RUNNING;

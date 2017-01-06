@@ -99,7 +99,7 @@ public class MainMenuState extends AbstractFadeState {
 		});
 
 		exitButton.setOnButtonPress((button, delta) -> {
-			StateMachine.dispose();
+			StateMachine.stop();
 		});
 
 		playMPButton.setEnabled(false);

@@ -80,7 +80,7 @@ public class PhysicsSystem extends EntitySystem {
 					normalTMP.set(0, 0, 0);
 					if (AABBIntersect(aabb.getBoundingBox().min, aabb.getBoundingBox().max, boundingBox.min,
 							boundingBox.max)) {
-						depthTMP /= 4f;
+						depthTMP /= 3f;
 						if (normalTMP.x > 0 && velocity.getX() > 0) {
 							velocity.setX(0);
 							pos.setX(pos.getX() - depthTMP);

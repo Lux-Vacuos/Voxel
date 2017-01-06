@@ -20,7 +20,7 @@
 
 package net.luxvacuos.voxel.client.world.dimension;
 
-import com.badlogic.gdx.utils.Array;
+import java.util.Random;
 
 import net.luxvacuos.voxel.client.core.ClientWorldSimulation;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Frustum;
@@ -32,27 +32,16 @@ import net.luxvacuos.voxel.universal.world.chunk.IChunk;
 import net.luxvacuos.voxel.universal.world.chunk.generator.ChunkTerrainGenerator;
 import net.luxvacuos.voxel.universal.world.chunk.generator.SimplexNoise;
 import net.luxvacuos.voxel.universal.world.dimension.Dimension;
-import net.luxvacuos.voxel.universal.world.utils.ChunkNode;
 
 public class RenderDimension extends Dimension {
 
-	private int maxLoadChunks = 3;
 	private int renderedChunks = 0;
 
 	public RenderDimension(IWorld world, int id) {
 		super(world, id);
 		this.chunkManager = new ClientChunkManager(this);
-		Array<ChunkNode> nodes = new Array<>(ChunkNode.class);
-		for (int x = 0; x < maxLoadChunks; x++) {
-			for (int z = 0; z < maxLoadChunks; z++) {
-				nodes.add(new ChunkNode(x, z));
-			}
-		}
-
-		this.chunkManager.batchLoadChunks(nodes.toArray());
-		
 		ChunkTerrainGenerator gen = new ChunkTerrainGenerator();
-		gen.setNoiseGenerator(new SimplexNoise(256, 0.15f, 0));
+		gen.setNoiseGenerator(new SimplexNoise(256, 0.15f, new Random().nextInt()));
 		this.chunkManager.setGenerator(gen);
 	}
 
