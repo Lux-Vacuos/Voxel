@@ -23,7 +23,6 @@ package net.luxvacuos.voxel.client.world.chunks;
 import net.luxvacuos.voxel.client.core.ClientWorldSimulation;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Tessellator;
 import net.luxvacuos.voxel.client.rendering.world.block.ICustomRenderBlock;
-import net.luxvacuos.voxel.client.rendering.world.block.IRenderBlock;
 import net.luxvacuos.voxel.client.rendering.world.chunk.IRenderChunk;
 import net.luxvacuos.voxel.client.world.block.BlocksResources;
 import net.luxvacuos.voxel.client.world.block.RenderBlock;

@@ -151,7 +151,8 @@ public class Dimension implements IDimension {
 		List<BoundingBox> array = new ArrayList<>();
 
 		for (int i = (int) Math.floor(box.min.x); i < (int) Math.ceil(box.max.x); i++) {
-			for (int j = (int) Math.floor(box.min.y); j < (int) Math.ceil(box.max.y); j++) {
+			//XXX: Hardcoded 255 limit until custom world height is implemented
+			for (int j = (int) Math.floor(box.min.y); j < (int) Math.min(Math.ceil(box.max.y), 255); j++) {
 				for (int k = (int) Math.floor(box.min.z); k < (int) Math.ceil(box.max.z); k++) {
 					IBlock block = getBlockAt(i, j, k);
 					if (block.hasCollision())
