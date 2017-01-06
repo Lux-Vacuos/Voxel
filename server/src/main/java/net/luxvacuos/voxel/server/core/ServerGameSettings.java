@@ -29,6 +29,7 @@ public class ServerGameSettings extends AbstractGameSettings {
 		ServerVariables.UPS = Integer.parseInt(getValue("UPS", "60"));
 		ServerVariables.chunk_radius = Integer.parseInt(getValue("chunkDistance", "6"));
 		ServerVariables.worldName = getValue("worldName", "world");
+		ServerVariables.port = Integer.parseInt(getValue("port", "44454"));
 	}
 
 	@Override
@@ -36,6 +37,7 @@ public class ServerGameSettings extends AbstractGameSettings {
 		registerValue("UPS", Integer.toString(ServerVariables.UPS));
 		registerValue("chunkDistance", Integer.toString(ServerVariables.chunk_radius));
 		registerValue("worldName", ServerVariables.worldName);
+		registerValue("port", Integer.toString(ServerVariables.port));
 	}
 
 }

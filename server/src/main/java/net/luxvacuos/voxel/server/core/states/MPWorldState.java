@@ -25,6 +25,7 @@ import net.luxvacuos.voxel.server.commands.StopCommand;
 import net.luxvacuos.voxel.server.console.Console;
 import net.luxvacuos.voxel.server.core.ServerVariables;
 import net.luxvacuos.voxel.server.core.ServerWorldSimulation;
+import net.luxvacuos.voxel.server.network.Server;
 import net.luxvacuos.voxel.universal.commands.ICommandManager;
 import net.luxvacuos.voxel.universal.core.AbstractVoxel;
 import net.luxvacuos.voxel.universal.core.states.AbstractState;
@@ -41,6 +42,7 @@ public class MPWorldState extends AbstractState {
 	private IWorld world;
 	private Console console;
 	private ICommandManager commandManager;
+	private Server server;
 
 	public MPWorldState() {
 		super(StateNames.MP_WORLD);
@@ -48,7 +50,7 @@ public class MPWorldState extends AbstractState {
 
 	@Override
 	public void init() {
-		
+
 		worldSimulation = new ServerWorldSimulation();
 
 		MaterialModder matMod = new MaterialModder();
@@ -74,19 +76,23 @@ public class MPWorldState extends AbstractState {
 		world = new World(ServerVariables.worldName);
 		world.loadDimension(0);
 		world.setActiveDimension(0);
-		
+
 		commandManager = new ServerCommandManager();
 		commandManager.registerCommand(new StopCommand());
-		
+
 		console = new Console();
 		console.setCommandManager(commandManager);
 		console.start();
+
+		server = new Server(ServerVariables.port);
+		server.run();
 	}
 
 	@Override
 	public void dispose() {
 		world.dispose();
 		console.stop();
+		server.end();
 	}
 
 	@Override

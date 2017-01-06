@@ -24,7 +24,7 @@ import net.luxvacuos.voxel.universal.core.GlobalVariables;
 
 public class ServerVariables extends GlobalVariables {
 	
-	public static int port = 4059;
+	public static int port = 44454;
 	public static String worldName = "world";
 
 }
