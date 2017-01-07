@@ -222,6 +222,7 @@ public class SPWorldState extends AbstractState {
 			}
 		} else if (ClientVariables.exitWorld) {
 			ClientVariables.exitWorld = false;
+			ClientVariables.paused = false;
 			StateMachine.setCurrentState(StateNames.MAIN_MENU);
 		} else {
 			pausesState.update(voxel, delta);
