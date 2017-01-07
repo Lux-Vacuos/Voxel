@@ -28,6 +28,7 @@ import net.luxvacuos.voxel.client.world.chunks.ClientChunkManager;
 import net.luxvacuos.voxel.client.world.chunks.RenderChunk;
 import net.luxvacuos.voxel.client.world.entities.Camera;
 import net.luxvacuos.voxel.universal.world.IWorld;
+import net.luxvacuos.voxel.universal.world.chunk.FutureChunk;
 import net.luxvacuos.voxel.universal.world.chunk.IChunk;
 import net.luxvacuos.voxel.universal.world.chunk.generator.ChunkTerrainGenerator;
 import net.luxvacuos.voxel.universal.world.chunk.generator.SimplexNoise;
@@ -49,6 +50,8 @@ public class RenderDimension extends Dimension {
 			int shadowMap) {
 		this.renderedChunks = 0;
 		for (IChunk chunk : this.chunkManager.getLoadedChunks()) {
+			if(chunk instanceof FutureChunk) continue;
+			
 			if (frustum.cubeInFrustum(chunk.getX() * 16, 0, chunk.getZ() * 16, chunk.getX() * 16 + 16, 256,
 					chunk.getZ() * 16 + 16)) {
 				this.renderedChunks++;
@@ -59,6 +62,8 @@ public class RenderDimension extends Dimension {
 
 	public void renderOcclusion(Camera camera, Frustum frustum) {
 		for (IChunk chunk : this.chunkManager.getLoadedChunks()) {
+			if(chunk instanceof FutureChunk) continue;
+			
 			if (frustum.cubeInFrustum(chunk.getX() * 16, 0, chunk.getZ() * 16, chunk.getX() * 16 + 16, 256,
 					chunk.getZ() * 16 + 16)) {
 				((RenderChunk) chunk).renderOcclusion(camera);
@@ -68,6 +73,8 @@ public class RenderDimension extends Dimension {
 
 	public void renderShadow(Camera sunCamera, Frustum frustum) {
 		for (IChunk chunk : this.chunkManager.getLoadedChunks()) {
+			if(chunk instanceof FutureChunk) continue;
+			
 			if (frustum.cubeInFrustum(chunk.getX() * 16, 0, chunk.getZ() * 16, chunk.getX() * 16 + 16, 256,
 					chunk.getZ() * 16 + 16)) {
 				((RenderChunk) chunk).renderShadow(sunCamera);

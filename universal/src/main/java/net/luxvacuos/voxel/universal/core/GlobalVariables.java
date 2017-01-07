@@ -33,6 +33,9 @@ public class GlobalVariables {
 
 	/** Flag to enable debug mode */
 	public static boolean debug = false;
+	
+	/** Amount of threads to use for the ChunkManager */
+	public static int chunkmanager_threads = 3;
 
 	/** Updates per Second */
 	public static int UPS = 60;

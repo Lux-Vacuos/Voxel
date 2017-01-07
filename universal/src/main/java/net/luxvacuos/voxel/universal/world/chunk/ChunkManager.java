@@ -37,12 +37,12 @@ import java.util.concurrent.locks.ReentrantLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import net.luxvacuos.igl.Logger;
+import net.luxvacuos.voxel.universal.core.GlobalVariables;
 import net.luxvacuos.voxel.universal.resources.IDisposable;
 import net.luxvacuos.voxel.universal.tasks.ChunkGenerateTask;
 import net.luxvacuos.voxel.universal.tasks.ChunkLoaderTask;
 import net.luxvacuos.voxel.universal.tasks.ChunkSaveTask;
 import net.luxvacuos.voxel.universal.tasks.ChunkUnloaderTask;
-import net.luxvacuos.voxel.universal.util.Pair;
 import net.luxvacuos.voxel.universal.world.chunk.generator.FlatChunkGenerator;
 import net.luxvacuos.voxel.universal.world.chunk.generator.IChunkGenerator;
 import net.luxvacuos.voxel.universal.world.dimension.IDimension;
@@ -50,10 +50,10 @@ import net.luxvacuos.voxel.universal.world.utils.ChunkNode;
 
 public class ChunkManager implements IDisposable {
 	protected final IDimension dim;
-	protected final ExecutorService executor = /*Executors.newCachedThreadPool(); */ Executors.newFixedThreadPool(1);
+	protected final ExecutorService executor = Executors.newFixedThreadPool(GlobalVariables.chunkmanager_threads);
 	protected IChunkGenerator chunkGenerator = new FlatChunkGenerator();
 
-	protected List<Future<Pair<ChunkNode, ChunkData>>> chunkLoadList;
+	protected List<ChunkNode> chunkLoadList;
 	protected List<Future<IChunk>> chunkGenerateList;
 	protected List<Future<IChunk>> chunkUnloadList;
 	protected volatile Map<ChunkNode, IChunk> loadedChunks;
@@ -82,7 +82,8 @@ public class ChunkManager implements IDisposable {
 			if (!this.loadedChunks.containsKey(node)) {
 				this.loadLock.lock();
 				try {
-					this.chunkLoadList.add(this.executor.submit(new ChunkLoaderTask(this.dim, node)));
+					this.chunkLoadList.add(node);
+					this.loadedChunks.put(node, new FutureChunk(this.dim, node, this.executor.submit(new ChunkLoaderTask(this.dim, node))));
 				} catch (Exception e) {
 					Logger.error(e);
 				} finally {
@@ -90,7 +91,7 @@ public class ChunkManager implements IDisposable {
 				}
 			}
 		} catch (Exception e) {
-
+			Logger.error(e);
 		} finally {
 			this.chunkLock.readLock().unlock();
 		}
@@ -102,11 +103,12 @@ public class ChunkManager implements IDisposable {
 		try {
 			for (ChunkNode node : nodes) {
 				if (!this.loadedChunks.containsKey(node)) {
-					this.chunkLoadList.add(this.executor.submit(new ChunkLoaderTask(this.dim, node)));
+					this.chunkLoadList.add(node);
+					this.loadedChunks.put(node, new FutureChunk(this.dim, node, this.executor.submit(new ChunkLoaderTask(this.dim, node))));
 				}
 			}
 		} catch (Exception e) {
-
+			Logger.error(e);
 		} finally {
 			this.chunkLock.readLock().unlock();
 			this.loadLock.unlock();
@@ -131,14 +133,14 @@ public class ChunkManager implements IDisposable {
 					// releasing the Write
 					// Lock
 				} catch (Exception e) {
-
+					Logger.error(e);
 				} finally {
 					this.chunkLock.writeLock().unlock(); // Remove Write access,
 					// Hold Read access
 				}
 			}
 		} catch (Exception e) {
-
+			Logger.error(e);
 		} finally {
 			this.chunkLock.readLock().unlock(); // Release Read access
 		}
@@ -189,38 +191,33 @@ public class ChunkManager implements IDisposable {
 		this.loadLock.lock();
 		if (!this.chunkLoadList.isEmpty()) {
 			try {
-				Iterator<Future<Pair<ChunkNode, ChunkData>>> iterator = this.chunkLoadList.iterator();
+				Iterator<ChunkNode> iterator = this.chunkLoadList.iterator();
 				while (iterator.hasNext()) {
-					Future<Pair<ChunkNode, ChunkData>> value = iterator.next();
-					if (value.isCancelled()) { // If the task got cancelled for
-						// any reason, ignore it
+					ChunkNode node = iterator.next();
+					IChunk chunk = this.loadedChunks.get(node);
+					if(chunk instanceof FutureChunk) {
+						if(((FutureChunk)chunk).isDone()) {
+							iterator.remove();
+							
+							if(chunk.getChunkData().shouldGenerate()) {
+								this.chunkGenerateList
+								.add(this.executor.submit(new ChunkGenerateTask(chunk, this.chunkGenerator)));
+								continue;
+							}
+							
+							IChunk replacement = this.makeChunk(this.dim, chunk.getNode(), chunk.getChunkData());
+							this.chunkLock.writeLock().lock(); // Lock the Chunk
+							// Writer lock
+							try {
+								this.loadedChunks.put(replacement.getNode(), replacement);
+							} catch (Exception e) {
+								//TODO: Add Exception handling
+							} finally {
+								this.chunkLock.writeLock().unlock();
+							}
+						}
+					} else {
 						iterator.remove();
-						continue;
-					}
-
-					if (value.isDone()) { // Non-blocking check to see if the
-						// task is done
-						Pair<ChunkNode, ChunkData> pair = value.get();
-						iterator.remove();
-						if(this.loadedChunks.containsKey(pair.getFirst())) {
-							continue;
-						}
-
-						IChunk chunk = this.makeChunk(this.dim, pair.getFirst(), pair.getSecond());
-						if (pair.getSecond().shouldGenerate()) {
-							this.chunkGenerateList
-							.add(this.executor.submit(new ChunkGenerateTask(chunk, this.chunkGenerator)));
-						}
-
-						this.chunkLock.writeLock().lock(); // Lock the Chunk
-						// Writer lock
-						try {
-							this.loadedChunks.put(chunk.getNode(), chunk);
-						} catch (Exception e) {
-							//TODO: Add Exception handling
-						} finally {
-							this.chunkLock.writeLock().unlock();
-						}
 					}
 				}
 			} catch (Exception e) { // XXX: this needs to be done better, but
@@ -254,7 +251,7 @@ public class ChunkManager implements IDisposable {
 				}
 			}
 		} catch (Exception e) {
-
+			Logger.error(e);
 		} finally {
 			this.unloadLock.unlock();
 		}
@@ -272,11 +269,12 @@ public class ChunkManager implements IDisposable {
 				if (value.isDone()) {
 					IChunk chunk = value.get();
 					iterator.remove();
-					this.loadedChunks.put(chunk.getNode(), chunk);
+					IChunk replacement = this.makeChunk(this.dim, chunk.getNode(), chunk.getChunkData());
+					this.loadedChunks.put(replacement.getNode(), replacement);
 				}
 			}
 		} catch (Exception e) {
-
+			Logger.error(e);
 		} finally {
 			this.chunkLock.writeLock().unlock();
 		}
@@ -284,10 +282,14 @@ public class ChunkManager implements IDisposable {
 		this.chunkLock.readLock().lock();;
 		try {
 			for (IChunk chunk : loadedChunks.values()) {
+				if(chunk instanceof FutureChunk)
+					if(!((FutureChunk)chunk).isDone())
+						continue;
+				
 				chunk.update(delta);
 			}
 		} catch (Exception e) {
-
+			Logger.error(e);
 		} finally {
 			this.chunkLock.readLock().unlock();;
 		}
@@ -301,8 +303,10 @@ public class ChunkManager implements IDisposable {
 	public final Collection<IChunk> getLoadedChunks() {
 		this.chunkLock.readLock().lock();
 		try {
-			return Collections.unmodifiableCollection(this.loadedChunks.values());
+			List<IChunk> collection = new ArrayList<>(this.loadedChunks.values());
+			return Collections.unmodifiableCollection(collection);
 		} catch (Exception e) {
+			Logger.error(e);
 			return null;
 		} finally {
 			this.chunkLock.readLock().unlock();
@@ -312,8 +316,23 @@ public class ChunkManager implements IDisposable {
 	public IChunk getChunkAt(ChunkNode node){
 		this.chunkLock.readLock().lock();
 		try {
-			return loadedChunks.get(node);
+			if(this.loadedChunks.containsKey(node)) {
+				return this.loadedChunks.get(node);
+			} else {
+				this.loadLock.lock();
+				try {
+					this.chunkLoadList.add(node);
+					this.loadedChunks.put(node, new FutureChunk(this.dim, node, this.executor.submit(new ChunkLoaderTask(this.dim, node))));
+					return this.loadedChunks.get(node);
+				} catch (Exception e) {
+					Logger.error(e);
+					return null;
+				} finally {
+					this.loadLock.unlock();
+				}
+			}
 		} catch (Exception e) {
+			Logger.error(e);
 			return null;
 		} finally {
 			this.chunkLock.readLock().unlock();

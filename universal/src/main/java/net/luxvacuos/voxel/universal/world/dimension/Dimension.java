@@ -99,12 +99,14 @@ public class Dimension implements IDimension {
 
 			if (pos.getPosition().x < 0)
 				playerCX = (int) ((pos.getPosition().x - 8) / 16);
+			else
+				playerCX = (int) ((pos.getPosition().x + 8) / 16);
+			
 			if (pos.getPosition().z < 0)
 				playerCZ = (int) ((pos.getPosition().z - 8) / 16);
-			if (pos.getPosition().x > 0)
-				playerCX = (int) ((pos.getPosition().x + 8) / 16);
-			if (pos.getPosition().z > 0)
+			else
 				playerCZ = (int) ((pos.getPosition().z + 8) / 16);
+			
 			ChunkNode node;
 			int xx, zz;
 			for (int zr = -GlobalVariables.chunk_radius; zr <= GlobalVariables.chunk_radius; zr++) {
@@ -137,7 +139,7 @@ public class Dimension implements IDimension {
 
 	@Override
 	public IBlock getBlockAt(int x, int y, int z) {
-		IChunk c = chunkManager.getChunkAt(ChunkNode.getFromBlockCoords(x, 0, z));
+		IChunk c = this.chunkManager.getChunkAt(ChunkNode.getFromBlockCoords(x, 0, z));
 		if (c == null)
 			return Blocks.getBlockByName("voxel:air");
 		IBlock b = c.getBlockAt(x & 0xF, y, z & 0xF);
