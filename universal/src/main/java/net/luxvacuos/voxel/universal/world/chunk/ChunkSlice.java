@@ -22,6 +22,7 @@ package net.luxvacuos.voxel.universal.world.chunk;
 
 import net.luxvacuos.voxel.universal.world.block.Blocks;
 import net.luxvacuos.voxel.universal.world.block.IBlock;
+import net.luxvacuos.voxel.universal.world.utils.BlockBooleanDataArray;
 import net.luxvacuos.voxel.universal.world.utils.BlockIntDataArray;
 import net.luxvacuos.voxel.universal.world.utils.BlockLongDataArray;
 
@@ -56,6 +57,8 @@ public final class ChunkSlice {
 	 * should be transparent to whatever is using it
 	 */
 	private BlockIntDataArray lightData;
+	
+	private BlockBooleanDataArray collisionMap;
 
 	private final byte yOffset; // Used when saving the data to disk, so it can
 								// be put back in the right place
@@ -72,6 +75,7 @@ public final class ChunkSlice {
 		this.inHeightMap = false;
 		this.blockData = new BlockLongDataArray();
 		this.lightData = new BlockIntDataArray();
+		this.collisionMap = new BlockBooleanDataArray();
 	}
 
 	public ChunkSlice(byte offset, BlockLongDataArray blockData, BlockIntDataArray lightData) {
@@ -81,6 +85,7 @@ public final class ChunkSlice {
 		this.blockLightRebuild = true;
 		this.blockData = blockData;
 		this.lightData = lightData;
+		this.collisionMap = new BlockBooleanDataArray();
 	}
 
 	public int getBlockIDAt(int x, int y, int z) {
@@ -108,12 +113,19 @@ public final class ChunkSlice {
 		this.blockRebuild = true;
 		long data = (long) (((block.getPackedMetadata()) << 32) + block.getID());
 		this.blockData.set(x, y, z, data);
+		this.collisionMap.set(x, y, z, block.hasCollision());
 	}
 
 	public boolean isBlockAir(int x, int y, int z) {
 		if (this.isEmpty())
 			return true;
 		return this.blockData.get(x, y, z) == 0;
+	}
+	
+	public boolean hasCollisionData(int x, int y, int z) {
+		if(this.isEmpty())
+			return false;
+		return this.collisionMap.get(x, y, z);
 	}
 
 	public int getSkyLightAt(int x, int y, int z) {
@@ -232,12 +244,20 @@ public final class ChunkSlice {
 		if (this.blockRebuild || fullRebuild) {
 			this.blockRebuild = false;
 			this.numBlocks = 0;
-			long[] rawData = this.blockData.getData();
+			
+			IBlock block = null;
+			long[] rawBlockData = this.blockData.getData();
+			boolean[] rawCollisionData = this.collisionMap.getData();
 
-			for (int i = 0; i < rawData.length; i++) {
-				if (rawData[i] != 0)
+			for (int i = 0; i < rawBlockData.length; i++) {
+				if (rawBlockData[i] != 0) {
 					this.numBlocks++;
+					block = Blocks.getBlockByID(((int)(rawBlockData[i] & BLOCK_ID_MASK)));
+					rawCollisionData[i] = block.hasCollision();
+				}
 			}
+			
+			this.collisionMap = new BlockBooleanDataArray(rawCollisionData);
 		}
 	}
 

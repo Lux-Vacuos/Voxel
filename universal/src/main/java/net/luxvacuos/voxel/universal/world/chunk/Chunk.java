@@ -84,12 +84,18 @@ public class Chunk implements IChunk {
 		this.data.setSkyLight(value);
 	}
 	
+	@Override
 	public void setBlockAt(int x, int y, int z, IBlock block) {
 		// TODO: Update neighboring blocks if block == air
 		this.data.setBlockAt(x, y, z, block);
 		if (block.hasComplexMetadata()) {
 			// TODO: Implement this
 		}
+	}
+	
+	@Override
+	public boolean hasCollisionData(int x, int y, int z) {
+		return this.data.hasCollisionData(x, y, z);
 	}
 
 	@Override
@@ -113,6 +119,7 @@ public class Chunk implements IChunk {
 		return this.data.needsMeshRebuild();
 	}
 	
+	@Override
 	public void completedMeshRebuild(){
 		this.data.completedMeshRebuild();
 	}

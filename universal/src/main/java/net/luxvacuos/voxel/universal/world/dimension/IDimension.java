@@ -26,10 +26,11 @@ import java.util.List;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.gdx.math.collision.BoundingBox;
 
+import net.luxvacuos.voxel.universal.resources.IDisposable;
 import net.luxvacuos.voxel.universal.world.block.IBlock;
 import net.luxvacuos.voxel.universal.world.chunk.IChunk;
 
-public interface IDimension {
+public interface IDimension extends IDisposable {
 	
 	public String getWorldName();
 	
@@ -38,8 +39,6 @@ public interface IDimension {
 	public boolean exists();
 	
 	public void update(float delta);
-	
-	public void dispose();
 	
 	public IBlock getBlockAt(int x, int y, int z);
 	

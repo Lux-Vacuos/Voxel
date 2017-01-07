@@ -207,8 +207,6 @@ public class ChunkManager implements IDisposable {
 						}
 
 						IChunk chunk = this.makeChunk(this.dim, pair.getFirst(), pair.getSecond());
-						System.out.println("Loading Chunk "+chunk.getX()+", "+chunk.getZ());
-
 						if (pair.getSecond().shouldGenerate()) {
 							this.chunkGenerateList
 							.add(this.executor.submit(new ChunkGenerateTask(chunk, this.chunkGenerator)));

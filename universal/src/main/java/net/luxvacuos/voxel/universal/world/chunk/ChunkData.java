@@ -31,12 +31,13 @@ public final class ChunkData {
 
 	private short[] heightmap; // [(Z * WIDTH) + X]
 	ChunkSlice[] slices;
-	private boolean needsRebuild, fullRebuild, needsMeshRebuild;
+	private boolean needsRebuild, fullRebuild, meshRebuild;
 	private int skyLight;
 	// TODO: Implement a way to store block metadata
 
 	protected ChunkData() {
 		this.needsRebuild = false;
+		this.meshRebuild = false;
 		this.fullRebuild = false;
 		this.skyLight = 0;
 		this.heightmap = new short[256]; // 16 * 16
@@ -66,6 +67,10 @@ public final class ChunkData {
 		if (this.heightmap[x * z] < y)
 			return true;
 		return this.slices[this.getSlice(y)].isBlockAir(x, this.modY(y), z);
+	}
+	
+	public boolean hasCollisionData(int x, int y, int z) {
+		return this.slices[this.getSlice(y)].hasCollisionData(x, this.modY(y), z);
 	}
 
 	public void setSkyLight(int value) {
@@ -168,16 +173,16 @@ public final class ChunkData {
 	}
 	
 	protected boolean needsMeshRebuild(){
-		return this.needsMeshRebuild;
+		return this.meshRebuild;
 	}
 	
 	protected void completedMeshRebuild(){
-		this.needsMeshRebuild = false;
+		this.meshRebuild = false;
 	}
 
 	protected void markFullRebuild() {
 		this.fullRebuild = true;
-		this.needsMeshRebuild = true;
+		this.meshRebuild = true;
 		for (ChunkSlice slice : this.slices) {
 			slice.needsBlockRebuild();
 			slice.needsLightRebuild();
@@ -185,7 +190,7 @@ public final class ChunkData {
 	}
 
 	protected void rebuild() {
-		this.needsMeshRebuild = true;
+		this.meshRebuild = true;
 		boolean rebuildHeightMap = false;
 		for (ChunkSlice slice : this.slices) {
 			if (this.fullRebuild || slice.needsBlockRebuild()) {
