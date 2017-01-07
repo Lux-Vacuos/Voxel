@@ -20,6 +20,8 @@
 
 package net.luxvacuos.voxel.universal.commands;
 
+import java.util.Arrays;
+
 import com.badlogic.gdx.utils.Array;
 
 import net.luxvacuos.igl.Logger;
@@ -35,8 +37,9 @@ public abstract class AbstractCommandManager implements ICommandManager {
 	@Override
 	public void command(String command) {
 		for (ICommand iCommand : commands) {
-			if (command.equals(iCommand.getCommand())){
-				iCommand.execute();
+			if (command.startsWith(iCommand.getCommand())) {
+				Object[] data = command.split(" ");
+				iCommand.execute(Arrays.copyOfRange(data, 1, data.length));
 				return;
 			}
 		}

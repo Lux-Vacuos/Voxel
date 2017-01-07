@@ -26,24 +26,25 @@ import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 
 import java.io.File;
 
-import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.core.ClientInternalSubsystem;
+import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
-//import net.luxvacuos.voxel.client.input.Keyboard;
-import net.luxvacuos.voxel.client.rendering.api.nanovg.UIRendering;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Renderer;
 import net.luxvacuos.voxel.client.ui.UIButton;
+import net.luxvacuos.voxel.client.ui.UIEditBox;
 import net.luxvacuos.voxel.client.ui.UIText;
 import net.luxvacuos.voxel.client.ui.UIWindow;
 import net.luxvacuos.voxel.universal.core.AbstractVoxel;
 
 public class SPCreateWorld extends AbstractFadeState {
+	
 	private UIWindow uiWindow;
 	private String worldName = "";
 	private UIText nameT;
 	private UIText optionsT;
 	private UIButton createButton;
 	private UIButton backButton;
+	private UIEditBox worldNam;
 
 	public SPCreateWorld() {
 		super(StateNames.SP_CREATE_WORLD);
@@ -72,10 +73,13 @@ public class SPCreateWorld extends AbstractFadeState {
 			window.getKeyboardHandler().disableTextInput();
 			this.switchTo(StateNames.SP_SELECTION);
 		});
+		worldNam = new UIEditBox(uiWindow.getWidth() / 2f - 150, -uiWindow.getHeight() / 2 + 80, 300, 30, "");
+		worldNam.setFontSize(25);
 		uiWindow.addChildren(nameT);
 		uiWindow.addChildren(optionsT);
 		uiWindow.addChildren(createButton);
 		uiWindow.addChildren(backButton);
+		uiWindow.addChildren(worldNam);
 	}
 
 	@Override
@@ -92,6 +96,9 @@ public class SPCreateWorld extends AbstractFadeState {
 
 	@Override
 	public void update(AbstractVoxel voxel, float delta) {
+		Window window = ClientInternalSubsystem.getInstance().getGameWindow();
+		worldName = window.getKeyboardHandler().handleInput(worldName);
+		worldNam.setText(worldName);
 		uiWindow.update(delta);
 
 		super.update(voxel, delta);
@@ -104,9 +111,6 @@ public class SPCreateWorld extends AbstractFadeState {
 		Renderer.clearColors(1, 1, 1, 1);
 		window.beingNVGFrame();
 		uiWindow.render(window.getID());
-		worldName = window.getKeyboardHandler().handleInput(worldName);
-		UIRendering.renderSearchBox(window.getID(), worldName, "Roboto-Regular", "Entypo",
-				window.getWidth() / 2f - 150f, window.getHeight() / 2f - 85, 300, 20);
 		window.endNVGFrame();
 	}
 

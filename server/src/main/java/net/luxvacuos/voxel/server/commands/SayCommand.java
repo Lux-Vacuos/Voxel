@@ -18,24 +18,25 @@
  * 
  */
 
-package net.luxvacuos.voxel.universal.network.packets;
+package net.luxvacuos.voxel.server.commands;
 
-import java.io.Serializable;
+import net.luxvacuos.voxel.server.network.ServerHandler;
+import net.luxvacuos.voxel.universal.commands.SimpleCommand;
+import net.luxvacuos.voxel.universal.network.packets.Message;
 
-public class WorldTime implements Serializable {
+public class SayCommand extends SimpleCommand {
 
-	private static final long serialVersionUID = -1138644153739323288L;
-	private float time;
-
-	public WorldTime() {
+	public SayCommand() {
+		super("/say");
 	}
 
-	public WorldTime(float time) {
-		this.time = time;
-	}
-
-	public float getTime() {
-		return time;
+	@Override
+	public void execute(Object... data) {
+		String fin = "";
+		for (Object object : data) {
+			fin += " " + (String) object;
+		}
+		ServerHandler.channels.writeAndFlush(new Message("Server", fin));
 	}
 
 }

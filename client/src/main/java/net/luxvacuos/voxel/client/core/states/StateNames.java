@@ -29,7 +29,7 @@ public class StateNames {
 	public static final String MAIN_MENU = "Main_Menu";
 	public static final String MP_LOADING = "MP_Loading";
 	public static final String MP_SELECTION = "MP_Selection";
-	public static final String MULTIPLAYER = "Multiplayer";
+	public static final String MP_WORLD = "MP_World";
 	public static final String OPTIONS = "Options";
 	public static final String SP_CREATE_WORLD = "SP_Create_World";
 	public static final String SPLASH_SCREEN = "Splash_Screen";

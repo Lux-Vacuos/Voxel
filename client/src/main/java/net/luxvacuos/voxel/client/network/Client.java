@@ -29,10 +29,10 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import io.netty.handler.codec.DelimiterBasedFrameDecoder;
-import io.netty.handler.codec.Delimiters;
-import io.netty.handler.codec.string.StringDecoder;
-import io.netty.handler.codec.string.StringEncoder;
+import io.netty.handler.codec.serialization.ClassResolvers;
+import io.netty.handler.codec.serialization.ObjectDecoder;
+import io.netty.handler.codec.serialization.ObjectEncoder;
+import net.luxvacuos.igl.Logger;
 
 public class Client {
 
@@ -57,14 +57,13 @@ public class Client {
 				@Override
 				public void initChannel(SocketChannel channel) throws Exception {
 					ChannelPipeline pipeline = channel.pipeline();
-					pipeline.addLast("framer", new DelimiterBasedFrameDecoder(8192, Delimiters.lineDelimiter()));
-					pipeline.addLast("encoder", new StringEncoder());
-					pipeline.addLast("decoder", new StringDecoder());
+					pipeline.addLast("decoder",
+							new ObjectDecoder(ClassResolvers.softCachingResolver(ClassLoader.getSystemClassLoader())));
+					pipeline.addLast("encoder", new ObjectEncoder());
 					pipeline.addLast("handler", new ClientHandler());
 				}
 			});
 			f = b.connect(host, port).sync();
-			f.channel().writeAndFlush("Hi, HACKhalo2 from the Voxel Server.\n").sync();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -80,6 +79,7 @@ public class Client {
 	}
 
 	public static void main(String[] args) {
+		Logger.init();
 		Client client = new Client("localhost", 44454);
 		client.run();
 	}

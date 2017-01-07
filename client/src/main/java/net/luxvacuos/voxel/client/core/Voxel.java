@@ -41,6 +41,7 @@ import net.luxvacuos.igl.Logger;
 import net.luxvacuos.voxel.client.api.MoltenAPI;
 import net.luxvacuos.voxel.client.core.states.AboutState;
 import net.luxvacuos.voxel.client.core.states.CrashState;
+import net.luxvacuos.voxel.client.core.states.MPSelectionState;
 import net.luxvacuos.voxel.client.core.states.MainMenuState;
 import net.luxvacuos.voxel.client.core.states.OptionsState;
 import net.luxvacuos.voxel.client.core.states.SPCreateWorld;
@@ -163,6 +164,7 @@ public class Voxel extends AbstractVoxel {
 		TaskManager.addTask(() -> StateMachine.registerState(new SPLoadingState()));
 		TaskManager.addTask(() -> StateMachine.registerState(new SPSelectionState()));
 		TaskManager.addTask(() -> StateMachine.registerState(new SPWorldState()));
+		TaskManager.addTask(() -> StateMachine.registerState(new MPSelectionState()));
 		//TaskManager.addTask(() -> StateMachine.registerState(new TestState()));
 		//TaskManager.addTask(() -> StateMachine.registerState(new TessellatorTestScene()));
 		StateMachine.registerState(new SplashScreenState());

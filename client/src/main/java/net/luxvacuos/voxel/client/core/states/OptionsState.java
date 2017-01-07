@@ -61,7 +61,7 @@ public class OptionsState extends AbstractFadeState {
 		uiWindow = new UIWindow(20, window.getHeight() - 20, window.getWidth() - 40, window.getHeight() - 40,
 				"Options");
 
-		exitButton = new UIButton(uiWindow.getWidth() / 2 - 100, -uiWindow.getHeight() + 35, 200, 40, "Back");
+		exitButton = new UIButton(uiWindow.getWidth() / 2 - 100, -uiWindow.getHeight() + 20, 200, 40, "Back");
 		godraysButton = new UIButton(40, -110, 200, 40, "Volumetric Light");
 		shadowsButton = new UIButton(40, -170, 200, 40, "Shadows");
 		dofButton = new UIButton(40, -230, 200, 40, "Depth of Field");

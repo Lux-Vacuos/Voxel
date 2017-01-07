@@ -20,6 +20,7 @@
 
 package net.luxvacuos.voxel.server.core.states;
 
+import net.luxvacuos.voxel.server.commands.SayCommand;
 import net.luxvacuos.voxel.server.commands.ServerCommandManager;
 import net.luxvacuos.voxel.server.commands.StopCommand;
 import net.luxvacuos.voxel.server.console.Console;
@@ -79,6 +80,7 @@ public class MPWorldState extends AbstractState {
 
 		commandManager = new ServerCommandManager();
 		commandManager.registerCommand(new StopCommand());
+		commandManager.registerCommand(new SayCommand());
 
 		console = new Console();
 		console.setCommandManager(commandManager);

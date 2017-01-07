@@ -22,23 +22,23 @@ package net.luxvacuos.voxel.universal.network.packets;
 
 import java.io.Serializable;
 
-import net.luxvacuos.igl.vector.Vector3d;
+public class Message implements Serializable {
 
-public class NetworkPosition implements Serializable {
-	
-	private static final long serialVersionUID = 6432280294007171803L;
-	
-	private Vector3d pos;
+	private static final long serialVersionUID = 9076574605314957994L;
+	private String sender;
+	private String message;
 
-	public NetworkPosition(Vector3d pos) {
-		this.pos = pos;
+	public Message(String sender, String message) {
+		this.sender = sender;
+		this.message = message;
 	}
 
-	public Vector3d getPos() {
-		return pos;
+	public String getMessage() {
+		return message;
 	}
 
-	public void setPos(Vector3d pos) {
-		this.pos = pos;
+	public String getSender() {
+		return sender;
 	}
+
 }

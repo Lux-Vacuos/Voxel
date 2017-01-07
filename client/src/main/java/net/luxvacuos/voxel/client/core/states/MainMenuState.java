@@ -102,8 +102,6 @@ public class MainMenuState extends AbstractFadeState {
 			StateMachine.stop();
 		});
 
-		playMPButton.setEnabled(false);
-
 		uiWindow.addChildren(playButton);
 		uiWindow.addChildren(playMPButton);
 		uiWindow.addChildren(optionsButton);

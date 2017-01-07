@@ -55,7 +55,7 @@ public class AboutState extends AbstractFadeState {
 	public void init() {
 		Window window = ClientInternalSubsystem.getInstance().getGameWindow();
 		uiWindow = new UIWindow(20, window.getHeight() - 20, window.getWidth() - 40, window.getHeight() - 40, "About");
-		UIButton backButton = new UIButton((int) (window.getWidth() / 2f - 100), 40, 200, 40, "Back");
+		UIButton backButton = new UIButton(window.getWidth() / 2f - 100, 40, 200, 40, "Back");
 		backButton.setOnButtonPress((button, delta) -> {
 			this.switchTo(StateNames.MAIN_MENU);
 		});

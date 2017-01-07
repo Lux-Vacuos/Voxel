@@ -61,6 +61,7 @@ public class ClientVariables extends GlobalVariables {
 	public static boolean raining = false;
 	public static String assets = "voxel";
 	public static final boolean WSL = false;
+	public static String server = "";
 
 	/**
 	 * Graphic Settings

@@ -70,7 +70,7 @@ import org.lwjgl.nanovg.NVGTextRow;
 import net.luxvacuos.voxel.client.rendering.api.glfw.WindowManager;
 
 /**
- * This class contains basic rendering methods using NanoVG
+ * GlassUI
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
  *
@@ -335,6 +335,34 @@ public class UIRendering {
 		nvgFill(vg);
 
 		nvgRestore(vg);
+	}
+
+	private static void drawEditBoxBase(long windowID, float x, float y, float w, float h, float fadeAlpha) {
+		long vg = WindowManager.getWindow(windowID).getNVGID();
+		NVGPaint bg = paintA;
+		
+		nvgBoxGradient(vg, x + 1, y + 1 + 1.5f, w - 2, h - 2, 3, 4, rgba(255, 255, 255, (int) (32 * fadeAlpha), colorA),
+				rgba(32, 32, 32, (int) (32 * fadeAlpha), colorB), bg);
+		nvgBeginPath(vg);
+		nvgRoundedRect(vg, x + 1, y + 1, w - 2, h - 2, 4 - 1);
+		nvgFillPaint(vg, bg);
+		nvgFill(vg);
+
+		nvgBeginPath(vg);
+		nvgRoundedRect(vg, x + 0.5f, y + 0.5f, w - 1, h - 1, 4 - 0.5f);
+		nvgStrokeColor(vg, rgba(0, 0, 0, (int) (100 * fadeAlpha), colorA));
+		nvgStroke(vg);
+	}
+
+	public static void renderEditBox(long windowID, String text, String font, float x, float y, float w, float h,
+			float fontSize, float fadeAlpha) {
+		long vg = WindowManager.getWindow(windowID).getNVGID();
+		drawEditBoxBase(windowID, x, y, w, h, fadeAlpha);
+		nvgFontSize(vg, fontSize);
+		nvgFontFace(vg, font);
+		nvgFillColor(vg, UIRendering.rgba(255, 255, 255, (int) (127 * fadeAlpha)));
+		nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
+		nvgText(vg, x + h * 0.3f, y + h * 0.5f, text);
 	}
 
 	public static void renderBox(long windowID, float x, float y, float w, float h, NVGColor color1, NVGColor color2,
