@@ -15,7 +15,7 @@ public class TagLongArray extends AbstractTag {
 		this.value = value;
 	}
 
-	public TagLongArray(NBTInputStream in, boolean anonymous, byte id) throws NBTException, IOException {
+	public TagLongArray(NBTInputStream in, boolean anonymous) throws NBTException, IOException {
 		super(in, anonymous, TagType.LONG_ARRAY.getID());
 		
 		final int size = in.readInt();

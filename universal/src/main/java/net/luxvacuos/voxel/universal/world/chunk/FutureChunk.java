@@ -29,9 +29,9 @@ import net.luxvacuos.voxel.universal.world.utils.ChunkNode;
 
 public class FutureChunk extends Chunk {
 	
-	private final Future<Pair<ChunkNode, ChunkData>> futureData;
+	private final Future<ChunkData> futureData;
 
-	public FutureChunk(IDimension dim, ChunkNode node, Future<Pair<ChunkNode, ChunkData>> future) {
+	public FutureChunk(IDimension dim, ChunkNode node, Future<ChunkData> future) {
 		super(dim, node, null);
 		this.futureData = future;
 	}
@@ -48,12 +48,6 @@ public class FutureChunk extends Chunk {
 		if(!this.isDone())
 			this.waitForFuture();
 		return super.getBlockAt(x, y, z);
-	}
-
-	public void setSunlight(int value) {
-		if(!this.isDone())
-			this.waitForFuture();
-		super.setSunlight(value);
 	}
 	
 	@Override
@@ -110,7 +104,7 @@ public class FutureChunk extends Chunk {
 		if(this.data == null) {
 			if(this.futureData.isDone())
 				try {
-					this.data = this.futureData.get().getSecond();
+					this.data = this.futureData.get();
 				} catch (Exception e) {
 					throw new RuntimeException(e);
 				}
@@ -121,8 +115,7 @@ public class FutureChunk extends Chunk {
 	private void waitForFuture() {
 		if(!this.futureData.isDone()) {
 			try {
-				Pair<ChunkNode, ChunkData> pair = this.futureData.get();
-				this.data = pair.getSecond();
+				this.data = this.futureData.get();
 			} catch (Exception e) {
 				throw new RuntimeException(e);
 			}

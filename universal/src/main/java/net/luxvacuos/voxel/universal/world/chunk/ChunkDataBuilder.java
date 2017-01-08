@@ -20,7 +20,10 @@
 
 package net.luxvacuos.voxel.universal.world.chunk;
 
+import com.hackhalo2.nbt.tags.TagCompound;
+
 import net.luxvacuos.voxel.universal.world.chunk.ChunkData;
+import net.luxvacuos.voxel.universal.world.utils.BlockLongDataArray;
 
 public final class ChunkDataBuilder {
 	private ChunkData data = new ChunkData();
@@ -32,6 +35,19 @@ public final class ChunkDataBuilder {
 			this.data.slices[index] = slice;
 		}
 		
+		return this;
+	}
+	
+	public ChunkDataBuilder setSliceData(int index, long[] data) {
+		if(index >= 0 && index < this.data.slices.length) {
+			this.data.slices[index].setBlockDataArray(new BlockLongDataArray(data));;
+		}
+		
+		return this;
+	}
+	
+	public ChunkDataBuilder setBlockMetadata(TagCompound data) {
+		this.data.setComplexBlockMetadata(data);
 		return this;
 	}
 	

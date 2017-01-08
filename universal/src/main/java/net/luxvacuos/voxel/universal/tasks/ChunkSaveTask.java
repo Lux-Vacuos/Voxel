@@ -21,13 +21,14 @@
 package net.luxvacuos.voxel.universal.tasks;
 
 import java.io.BufferedOutputStream;
-import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.Collection;
 import java.util.concurrent.Callable;
 
 import com.badlogic.ashley.utils.ImmutableArray;
+import com.hackhalo2.nbt.CompoundBuilder;
+import com.hackhalo2.nbt.stream.NBTOutputStream;
 
 import net.luxvacuos.voxel.universal.core.GlobalVariables;
 import net.luxvacuos.voxel.universal.world.chunk.ChunkSlice;
@@ -35,7 +36,6 @@ import net.luxvacuos.voxel.universal.world.chunk.IChunk;
 
 public class ChunkSaveTask implements Callable<Void> {
 	private Collection<IChunk> chunks;
-	private DataOutputStream out;
 
 	public ChunkSaveTask(Collection<IChunk> chunks) {
 		this.chunks = chunks;
@@ -43,45 +43,48 @@ public class ChunkSaveTask implements Callable<Void> {
 
 	@Override
 	public Void call() throws Exception {
+		String path;
+		CompoundBuilder rootCompound = new CompoundBuilder();
+		File file;
+		NBTOutputStream out;
 		for(IChunk chunk : this.chunks) {
-			String path = GlobalVariables.WORLD_PATH + chunk.getDimension().getWorldName()
+			path = GlobalVariables.WORLD_PATH + chunk.getDimension().getWorldName()
 					+ "/" + chunk.getDimension().getID() + "/"
 					+ "chunk_" + chunk.getX() + "_" + chunk.getZ() + ".dat";
+
+			file = new File(path);
+
+			out = new NBTOutputStream(new BufferedOutputStream(new FileOutputStream(file)));
+
+			//Write the chunk coords to the file
+			rootCompound.addInteger("ChunkX", chunk.getX()).addInteger("ChunkZ", chunk.getZ());
 			
-			File file = new File(path);
-			
-			this.out = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(file)));
-			
+			//Write the Complex Block Metadata
+			rootCompound.addCompound(chunk.getChunkData().getComplexBlockMetadata());
+
 			ImmutableArray<ChunkSlice> slices = chunk.getChunkData().getChunkSlices();
-			this.out.writeInt(slices.size());
-			
-			int[] bda0 = null;
-			long[] bda1 = null;
-			boolean wroteLength = false;
+
+			//Write the number of Chunk Slices in the Chunk
+			rootCompound.addInteger("NumSlices", slices.size());
+
+			CompoundBuilder sliceCompound = new CompoundBuilder();
+			int i = 0;
 			for(ChunkSlice slice : slices) {
-				this.out.writeByte(slice.getOffset());
-				
-				if(!slice.isEmpty()) {
-					this.out.writeBoolean(true);
-					wroteLength = true;
-					bda1 = slice.getBlockDataArray().getData();
-					this.out.writeInt(bda1.length);
-					for(int i = 0; i < bda1.length; i++)  this.out.writeLong(bda1[i]);
-					bda1 = null;
-				} else this.out.writeBoolean(false);
-				
-				if(slice.hasLightData()) {
-					this.out.writeBoolean(true);
-					bda0 = slice.getLightDataArray().getData(); //Set bda to the light data
-					if(!wroteLength) this.out.writeInt(bda0.length); //Write the length of the light data array to the stream if needed
-					for(int i = 0; i < bda0.length; i++)  this.out.writeInt(bda0[i]);
-					bda0 = null;
-				} else this.out.writeBoolean(false);
+				sliceCompound.start("ChunkSlice-"+i);
+				sliceCompound.addByte("Offset", slice.getOffset());
+				sliceCompound.addBoolean("Empty", slice.isEmpty());
+
+				if(!slice.isEmpty())
+					sliceCompound.addLongArray("BlockData", slice.getBlockDataArray().getData());
+
+				rootCompound.addCompound(sliceCompound);
+				i++;
 			}
-			
-			this.out.close();
+
+			rootCompound.build().writeNBT(out, false);
+			out.flush();
 		}
-		
+
 		return null;
 	}
 

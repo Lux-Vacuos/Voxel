@@ -252,6 +252,7 @@ public class ChunkManager implements IDisposable {
 			}
 		} catch (Exception e) {
 			Logger.error(e);
+			throw new RuntimeException(e);
 		} finally {
 			this.unloadLock.unlock();
 		}

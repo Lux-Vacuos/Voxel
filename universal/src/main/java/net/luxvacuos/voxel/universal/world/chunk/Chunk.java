@@ -79,10 +79,6 @@ public class Chunk implements IChunk {
 			this.lock.readLock().unlock();
 		}
 	}
-
-	public void setSunlight(int value) {
-		this.data.setSkyLight(value);
-	}
 	
 	@Override
 	public void setBlockAt(int x, int y, int z, IBlock block) {

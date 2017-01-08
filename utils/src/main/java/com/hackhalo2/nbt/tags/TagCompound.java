@@ -101,7 +101,7 @@ public final class TagCompound extends AbstractTag implements INamedTagContainer
 		if(tag == null)
 			throw new NBTTagNotFoundException("No entry of '"+name+"' in this Compound Tag!");
 		
-		if (tagClass.isInstance(tag))
+		if (!tagClass.isInstance(tag))
 			throw new UnexpectedTagTypeException("The entry '"+name
 					+"' should be '"+tagClass.getSimpleName()
 					+"', but is '"+tag.getClass().getSimpleName()+"'");
@@ -158,6 +158,10 @@ public final class TagCompound extends AbstractTag implements INamedTagContainer
 	
 	public int[] getIntArray(String name) throws UnexpectedTagTypeException, NBTTagNotFoundException, NBTException {
 		return this.getTag(name, TagIntArray.class).getValue();
+	}
+	
+	public long[] getLongArray(String name) throws UnexpectedTagTypeException, NBTTagNotFoundException, NBTException {
+		return this.getTag(name, TagLongArray.class).getValue();
 	}
 	
 	public String getString(String name) throws UnexpectedTagTypeException, NBTTagNotFoundException, NBTException {

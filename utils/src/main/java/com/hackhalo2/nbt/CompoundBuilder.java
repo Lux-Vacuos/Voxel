@@ -10,6 +10,7 @@ import com.hackhalo2.nbt.tags.TagInt;
 import com.hackhalo2.nbt.tags.TagIntArray;
 import com.hackhalo2.nbt.tags.TagList;
 import com.hackhalo2.nbt.tags.TagLong;
+import com.hackhalo2.nbt.tags.TagLongArray;
 import com.hackhalo2.nbt.tags.TagShort;
 import com.hackhalo2.nbt.tags.TagString;
 
@@ -340,6 +341,36 @@ public class CompoundBuilder {
 		try {
 			if(this.compound.hasTagByName(name)) {
 				TagIntArray tag = this.compound.getTag(name, TagIntArray.class);
+				tag.setValue(value);
+			}
+		} catch(NBTException e) {
+			e.printStackTrace();
+		}
+
+		return this;
+	}
+
+	//Add an Long Array to the Compound
+	public CompoundBuilder addLongArray(String name, long[] value) {
+		this.checkIfInitialized();
+
+		try {
+			TagLongArray tag = new TagLongArray(name, value);
+			this.compound.addTag(tag);
+		} catch(NBTException e) {
+			e.printStackTrace();
+		}
+
+		return this;
+	}
+
+	//Modify an existing Long Array in the compound by name
+	public CompoundBuilder modifyLongArray(String name, long[] value) {
+		this.checkIfInitialized();
+
+		try {
+			if(this.compound.hasTagByName(name)) {
+				TagLongArray tag = this.compound.getTag(name, TagLongArray.class);
 				tag.setValue(value);
 			}
 		} catch(NBTException e) {

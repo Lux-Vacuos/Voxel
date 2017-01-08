@@ -22,9 +22,12 @@ package net.luxvacuos.voxel.universal.world.chunk;
 
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.utils.Array;
+import com.hackhalo2.nbt.CompoundBuilder;
+import com.hackhalo2.nbt.exceptions.NBTException;
+import com.hackhalo2.nbt.tags.TagCompound;
 
+import net.luxvacuos.igl.Logger;
 import net.luxvacuos.voxel.universal.world.block.IBlock;
-import net.luxvacuos.voxel.universal.world.utils.BlockIntDataArray;
 import net.luxvacuos.voxel.universal.world.utils.BlockLongDataArray;
 
 public final class ChunkData {
@@ -32,16 +35,15 @@ public final class ChunkData {
 	private short[] heightmap; // [(Z * WIDTH) + X]
 	ChunkSlice[] slices;
 	private boolean needsRebuild, fullRebuild, meshRebuild;
-	private int skyLight;
-	// TODO: Implement a way to store block metadata
+	private TagCompound blockMetadata;
 
 	protected ChunkData() {
 		this.needsRebuild = false;
 		this.meshRebuild = false;
 		this.fullRebuild = false;
-		this.skyLight = 0;
 		this.heightmap = new short[256]; // 16 * 16
 		this.slices = new ChunkSlice[16];
+		this.blockMetadata = new TagCompound("BlockMetadata");
 
 		for (int i = 0; i < this.slices.length; i++)
 			this.slices[i] = new ChunkSlice((byte) i);
@@ -53,6 +55,56 @@ public final class ChunkData {
 
 	public int getBlockMetadataAt(int x, int y, int z) {
 		return this.slices[this.getSlice(y)].getBlockMetadataAt(x, this.modY(y), z);
+	}
+	
+	public boolean hasComplexMetadataAt(int x, int y, int z) {
+		return this.blockMetadata.hasTagByName("Metadata_"+x+"_"+y+"_"+z);
+	}
+	
+	public CompoundBuilder generateMetadataBuilderFor(int x, int y, int z) {
+		return new CompoundBuilder().start("Metadata_"+x+"_"+y+"_"+z);
+	}
+	
+	public TagCompound getComplexMetadataAt(int x, int y, int z) {
+		if(this.hasComplexMetadataAt(x, y, z)) {
+			try {
+				return this.blockMetadata.getTag("Metadata_"+x+"_"+y+"_"+z, TagCompound.class);
+			} catch (NBTException e) {
+				Logger.error(e);
+				return this.generateMetadataBuilderFor(x, y, z).build();
+			}
+		} else {
+			return this.generateMetadataBuilderFor(x, y, z).build();
+		}
+	}
+	
+	public void removeComplexMetadataAt(int x, int y, int z) {
+		if(this.blockMetadata.hasTagByName("Metadata_"+x+"_"+y+"_"+z)) {
+			try {
+				this.blockMetadata.removeTag("Metadata_"+x+"_"+y+"_"+z);
+			} catch (NBTException e) {
+				Logger.error(e);
+			}
+		}
+	}
+	
+	public void saveComplexMetadata(TagCompound compound) {
+		try {
+			if(this.blockMetadata.hasTagByName(compound.getName()))
+				this.blockMetadata.removeTag(compound);
+			
+			this.blockMetadata.addTag(compound);
+		} catch (NBTException e) {
+			Logger.error(e);
+		}
+	}
+	
+	public TagCompound getComplexBlockMetadata() {
+		return this.blockMetadata;
+	}
+	
+	protected void setComplexBlockMetadata(TagCompound data) {
+		this.blockMetadata = data;
 	}
 
 	public IBlock getBlockAt(int x, int y, int z) {
@@ -71,75 +123,6 @@ public final class ChunkData {
 	
 	public boolean hasCollisionData(int x, int y, int z) {
 		return this.slices[this.getSlice(y)].hasCollisionData(x, this.modY(y), z);
-	}
-
-	public void setSkyLight(int value) {
-		this.skyLight = value;
-	}
-
-	public int getSkyLightAt(int x, int y, int z) {
-		ChunkSlice slice = this.slices[this.getSlice(y)];
-
-		if (!slice.hasSkyLight())
-			return 0;
-		return slice.getSkyLightAt(x, this.modY(y), z);
-	}
-
-	protected void setSkyLightAt(int x, int y, int z) {
-		this.slices[this.getSlice(y)].setSkyLightAt(x, this.modY(y), z, this.skyLight);
-	}
-
-	public int getBlockLightAt(int x, int y, int z) {
-		return this.slices[this.getSlice(y)].getBlockLightAt(x, this.modY(y), z);
-	}
-
-	protected void setBlockLightAt(int x, int y, int z, int value) {
-		this.slices[this.getSlice(y)].setBlockLightAt(x, this.modY(y), z, value);
-	}
-
-	/**
-	 * Get's the <b>raw, unpacked</b> value from the lightmap
-	 * 
-	 * @param x
-	 * @param y
-	 * @param z
-	 * @return the raw lightmap value at the supplied x, y, and z coordinates
-	 */
-	public int getRawLightDataAt(int x, int y, int z) {
-		return this.slices[this.getSlice(y)].getRawLightDataAt(x, this.modY(y), z);
-	}
-
-	protected void setRawSkyLightAt(int x, int y, int z, int rawValue) {
-		this.slices[this.getSlice(y)].setRawLightDataAt(x, this.modY(y), z, rawValue);
-	}
-
-	/**
-	 * Get's the Chunks Light Data Array<br />
-	 * <br />
-	 * <b>WARNING:<br />
-	 * The data in this array is packed, modifying it without knowing what
-	 * you're doing <i>will</i><br />
-	 * translate your documents into Swahilli, make your TV record "Gigli",
-	 * neuter your pets, and give your laundry static cling.<br />
-	 * YOU HAVE BEEN WARNED!</b>
-	 * 
-	 * @return The light data array
-	 */
-	public final BlockIntDataArray[] getLightDataArrays() {
-		BlockIntDataArray[] array = new BlockIntDataArray[this.slices.length];
-
-		for (int i = 0; i < this.slices.length; i++)
-			array[i] = this.slices[i].getLightDataArray();
-
-		return array;
-	}
-
-	protected void setLightDataArrays(BlockIntDataArray[] arrays) {
-		if (this.slices.length != arrays.length)
-			return;
-
-		for (int i = 0; i < this.slices.length; i++)
-			this.slices[i].setLightDataArray(arrays[i]);
 	}
 
 	public final BlockLongDataArray[] getBlockDataArrays() {
@@ -183,10 +166,8 @@ public final class ChunkData {
 	protected void markFullRebuild() {
 		this.fullRebuild = true;
 		this.meshRebuild = true;
-		for (ChunkSlice slice : this.slices) {
+		for (ChunkSlice slice : this.slices)
 			slice.needsBlockRebuild();
-			slice.needsLightRebuild();
-		}
 	}
 
 	protected void rebuild() {
@@ -201,14 +182,6 @@ public final class ChunkData {
 		}
 		if (rebuildHeightMap)
 			this.buildHeightMap();
-
-		for (ChunkSlice slice : this.slices) {
-			if (this.fullRebuild || slice.needsLightRebuild()) {
-				slice.wipeLightData(true, true);
-				slice.rebuildSkyLight(this.heightmap, this.skyLight);
-				slice.rebuildBlockLight();
-			}
-		}
 
 		if (this.fullRebuild)
 			this.fullRebuild = false;
