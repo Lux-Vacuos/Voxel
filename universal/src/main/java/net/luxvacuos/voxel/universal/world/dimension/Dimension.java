@@ -57,12 +57,9 @@ public class Dimension implements IDimension {
 	public Dimension(IWorld world, int id) {
 		this.world = world;
 		this.id = id;
-		this.chunkManager = new ChunkManager(this);
+		this.setupChunkManager();
 		this.entitiesManager = new Engine();
 		this.entitiesManager.addSystem(new PhysicsSystem(this));
-		ChunkTerrainGenerator gen = new ChunkTerrainGenerator();
-		gen.setNoiseGenerator(new SimplexNoise(256, 0.15f, new Random().nextInt()));
-		this.chunkManager.setGenerator(gen);
 		Array<ChunkNode> nodes = new Array<>(ChunkNode.class);
 		for (int x = -maxLoadChunks; x <= maxLoadChunks; x++) {
 			for (int z = -maxLoadChunks; z <= maxLoadChunks; z++) {
@@ -70,6 +67,13 @@ public class Dimension implements IDimension {
 			}
 		}
 		this.chunkManager.batchLoadChunks(nodes.toArray());
+	}
+	
+	protected void setupChunkManager() {
+		this.chunkManager = new ChunkManager(this);
+		ChunkTerrainGenerator gen = new ChunkTerrainGenerator();
+		gen.setNoiseGenerator(new SimplexNoise(256, 0.15f, new Random().nextInt()));
+		this.chunkManager.setGenerator(gen);
 	}
 
 	@Override

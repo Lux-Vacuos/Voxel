@@ -40,6 +40,10 @@ public class RenderDimension extends Dimension {
 
 	public RenderDimension(IWorld world, int id) {
 		super(world, id);
+	}
+	
+	@Override
+	protected void setupChunkManager() {
 		this.chunkManager = new ClientChunkManager(this);
 		ChunkTerrainGenerator gen = new ChunkTerrainGenerator();
 		gen.setNoiseGenerator(new SimplexNoise(256, 0.15f, new Random().nextInt()));
