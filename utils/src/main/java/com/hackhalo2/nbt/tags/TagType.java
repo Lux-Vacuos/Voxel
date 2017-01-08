@@ -18,7 +18,8 @@ public enum TagType {
 	STRING(8, TagString.class),
 	LIST(9, TagList.class),
 	COMPOUND(10, TagCompound.class),
-	INT_ARRAY(11, TagIntArray.class);
+	INT_ARRAY(11, TagIntArray.class),
+	LONG_ARRAY(12, TagLongArray.class);
 	
 	private final byte id;
 	private final Class<? extends ITag> tagClass;
