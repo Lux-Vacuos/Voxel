@@ -50,7 +50,7 @@ public final class ClientGameSettings extends AbstractGameSettings {
 		ClientVariables.VSYNC = Boolean.parseBoolean(getValue("VSYNC", "false"));
 		ClientVariables.FPS = Integer.parseInt(getValue("FPS", "60"));
 		ClientVariables.UPS = Integer.parseInt(getValue("UPS", "60"));
-		ClientVariables.radius = Integer.parseInt(getValue("DrawDistance", "6"));
+		ClientVariables.chunk_radius = Integer.parseInt(getValue("chunkRadius", "4"));
 
 		// Parse Motion Blur and DoF
 		ClientVariables.useMotionBlur = Boolean.parseBoolean(getValue("useMotionBlur", "false"));
@@ -94,7 +94,7 @@ public final class ClientGameSettings extends AbstractGameSettings {
 		registerValue("VSYNC", Boolean.toString(ClientVariables.VSYNC));
 		registerValue("FPS", Integer.toString(ClientVariables.FPS));
 		registerValue("UPS", Integer.toString(ClientVariables.UPS));
-		registerValue("DrawDistance", Integer.toString(ClientVariables.radius));
+		registerValue("chunkRadius", Integer.toString(ClientVariables.chunk_radius));
 		registerValue("FOV", Integer.toString(ClientVariables.FOV));
 		registerValue("RenderingPipeline", ClientVariables.renderingPipeline);
 		registerValue("Assets", ClientVariables.assets);

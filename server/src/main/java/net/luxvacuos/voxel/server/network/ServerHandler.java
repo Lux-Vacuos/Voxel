@@ -17,10 +17,10 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
 	@Override
 	public void handlerAdded(ChannelHandlerContext context) {
 		Channel channel = context.channel();
-		channels.add(channel);
-		Logger.log("Connected:" + channel.remoteAddress().toString());
-		Logger.log("There are currently " + channels.size() + " clients connected.");
+		Logger.log("Connected: " + channel.remoteAddress().toString());
 		channel.writeAndFlush("Welcome to Voxel Server.");
+		channels.add(channel);
+		Logger.log("There are currently " + channels.size() + " clients connected.");
 	}
 
 	@Override
@@ -31,15 +31,15 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
 	}
 
 	@Override
-	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+	public void channelRead(ChannelHandlerContext ctx, Object obj) throws Exception {
 		try {
-			if (msg instanceof Message) {
-
-			} else if (msg instanceof String) {
-				Logger.log("Client [" + ctx.channel().remoteAddress() + "]: " + msg);
+			if (obj instanceof Message) {
+				handleMessage((Message) obj);
+			} else if (obj instanceof String) {
+				handleString(ctx, (String) obj);
 			}
 		} finally {
-			ReferenceCountUtil.release(msg);
+			ReferenceCountUtil.release(obj);
 		}
 	}
 
@@ -47,6 +47,14 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
 	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
 		cause.printStackTrace();
 		ctx.close();
+	}
+
+	private void handleString(ChannelHandlerContext ctx, String str) {
+		Logger.log("Client [" + ctx.channel().remoteAddress() + "]: " + str);
+	}
+
+	private void handleMessage(Message msg) {
+		Logger.log("[" + msg.getSender() + "]: " + msg.getMessage());
 	}
 
 }

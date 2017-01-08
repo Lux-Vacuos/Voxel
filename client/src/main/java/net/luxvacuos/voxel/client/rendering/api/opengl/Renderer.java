@@ -56,53 +56,50 @@ import net.luxvacuos.voxel.universal.core.TaskManager;
 
 public class Renderer {
 
-	private EntityRenderer entityRenderer;
-	private EntityShadowRenderer entityShadowRenderer;
-	private SkyboxRenderer skyboxRenderer;
-	private RenderingPipeline renderingPipeline;
-	private LightRenderer lightRenderer;
-	private EnvironmentRenderer environmentRenderer;
-	private ParticleRenderer particleRenderer;
+	private static EntityRenderer entityRenderer;
+	private static EntityShadowRenderer entityShadowRenderer;
+	private static SkyboxRenderer skyboxRenderer;
+	private static RenderingPipeline renderingPipeline;
+	private static LightRenderer lightRenderer;
+	private static EnvironmentRenderer environmentRenderer;
+	private static ParticleRenderer particleRenderer;
 
-	private ShadowFBO shadowFBO;
+	private static ShadowFBO shadowFBO;
 
-	private Frustum frustum;
-	private Window window;
+	private static Frustum frustum;
+	private static Window window;
 
-	private IRenderPass shadowPass, deferredPass, forwardPass, occlusionPass;
+	private static IRenderPass shadowPass, deferredPass, forwardPass, occlusionPass;
 
-	private float exposure = 1;
+	private static float exposure = 1;
 
-	public Renderer(Window window, Camera camera, Camera sunCamera) {
-		this.window = window;
+	public static void init(Window window) {
+		Renderer.window = window;
 		if (ClientVariables.shadowMapResolution > GLUtil.getTextureMaxSize())
 			ClientVariables.shadowMapResolution = GLUtil.getTextureMaxSize();
 
 		TaskManager.addTask(() -> frustum = new Frustum());
 		TaskManager.addTask(() -> shadowFBO = new ShadowFBO(ClientVariables.shadowMapResolution,
 				ClientVariables.shadowMapResolution));
-		TaskManager.addTask(() -> entityRenderer = new EntityRenderer(camera.getProjectionMatrix(),
-				sunCamera.getProjectionMatrix(), window.getResourceLoader()));
+		TaskManager.addTask(() -> entityRenderer = new EntityRenderer(window.getResourceLoader()));
 
-		TaskManager.addTask(() -> entityShadowRenderer = new EntityShadowRenderer(sunCamera.getProjectionMatrix()));
-		TaskManager.addTask(
-				() -> skyboxRenderer = new SkyboxRenderer(window.getResourceLoader(), camera.getProjectionMatrix()));
+		TaskManager.addTask(() -> entityShadowRenderer = new EntityShadowRenderer());
+		TaskManager.addTask(() -> skyboxRenderer = new SkyboxRenderer(window.getResourceLoader()));
 		TaskManager.addTask(() -> {
 			if (ClientVariables.renderingPipeline.equals("SinglePass"))
 				renderingPipeline = new SinglePass();
 			else if (ClientVariables.renderingPipeline.equals("MultiPass"))
 				renderingPipeline = new MultiPass();
 		});
-		TaskManager.addTask(() -> particleRenderer = new ParticleRenderer(window.getResourceLoader(),
-				camera.getProjectionMatrix()));
+		TaskManager.addTask(() -> particleRenderer = new ParticleRenderer(window.getResourceLoader()));
 		lightRenderer = new LightRenderer();
 
 		TaskManager.addTask(() -> environmentRenderer = new EnvironmentRenderer(
 				new CubeMapTexture(window.getResourceLoader().createEmptyCubeMap(128, true), 128)));
 	}
 
-	public void render(ImmutableArray<Entity> entities, Map<ParticleTexture, List<Particle>> particles, Camera camera,
-			Camera sunCamera, ClientWorldSimulation clientWorldSimulation, Vector3d lightPosition,
+	public static void render(ImmutableArray<Entity> entities, Map<ParticleTexture, List<Particle>> particles,
+			Camera camera, Camera sunCamera, ClientWorldSimulation clientWorldSimulation, Vector3d lightPosition,
 			Vector3d invertedLightPosition, float alpha) {
 
 		resetState();
@@ -144,7 +141,7 @@ public class Renderer {
 		particleRenderer.render(particles, camera);
 	}
 
-	public void cleanUp() {
+	public static void cleanUp() {
 		environmentRenderer.cleanUp();
 		shadowFBO.cleanUp();
 		entityRenderer.cleanUp();
@@ -153,27 +150,27 @@ public class Renderer {
 		particleRenderer.cleanUp();
 	}
 
-	public void setShadowPass(IRenderPass shadowPass) {
-		this.shadowPass = shadowPass;
+	public static void setShadowPass(IRenderPass shadowPass) {
+		Renderer.shadowPass = shadowPass;
 	}
 
-	public void setDeferredPass(IRenderPass deferredPass) {
-		this.deferredPass = deferredPass;
+	public static void setDeferredPass(IRenderPass deferredPass) {
+		Renderer.deferredPass = deferredPass;
 	}
 
-	public void setForwardPass(IRenderPass forwardPass) {
-		this.forwardPass = forwardPass;
+	public static void setForwardPass(IRenderPass forwardPass) {
+		Renderer.forwardPass = forwardPass;
 	}
 
-	public void setOcclusionPass(IRenderPass occlusionPass) {
-		this.occlusionPass = occlusionPass;
+	public static void setOcclusionPass(IRenderPass occlusionPass) {
+		Renderer.occlusionPass = occlusionPass;
 	}
 
-	public Frustum getFrustum() {
+	public static Frustum getFrustum() {
 		return frustum;
 	}
 
-	public LightRenderer getLightRenderer() {
+	public static LightRenderer getLightRenderer() {
 		return lightRenderer;
 	}
 

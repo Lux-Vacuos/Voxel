@@ -63,7 +63,7 @@ public class ParticleRenderer {
 	private int vbo;
 	private int pointer = 0;
 
-	public ParticleRenderer(ResourceLoader loader, Matrix4d projectionMatrix) {
+	public ParticleRenderer(ResourceLoader loader) {
 		this.loader = loader;
 		this.vbo = loader.createEmptyVBO(INSTANCE_DATA_LENGHT * MAX_INSTANCES);
 		quad = loader.loadToVAO(VERTICES, 2);
@@ -75,13 +75,11 @@ public class ParticleRenderer {
 		loader.addInstacedAttribute(quad.getVaoID(), vbo, 6, 1, INSTANCE_DATA_LENGHT, 20);
 
 		shader = new ParticleShader();
-		shader.start();
-		shader.loadProjectionMatrix(projectionMatrix);
-		shader.stop();
 	}
 
 	public void render(Map<ParticleTexture, List<Particle>> particles, Camera camera) {
 		prepare();
+		shader.loadProjectionMatrix(camera.getProjectionMatrix());
 		for (ParticleTexture texture : particles.keySet()) {
 			bindTexture(texture);
 			List<Particle> particleList = particles.get(texture);

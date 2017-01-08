@@ -61,11 +61,8 @@ public class EntityShadowRenderer {
 
 	private Map<TexturedModel, List<AbstractEntity>> entities = new HashMap<TexturedModel, List<AbstractEntity>>();
 
-	public EntityShadowRenderer(Matrix4d shadowProjectionMatrix) {
+	public EntityShadowRenderer() {
 		shader = new EntityBasicShader();
-		shader.start();
-		shader.loadProjectionMatrix(shadowProjectionMatrix);
-		shader.stop();
 	}
 
 	public void cleanUp() {
@@ -85,6 +82,7 @@ public class EntityShadowRenderer {
 		glCullFace(GL_FRONT);
 		shader.start();
 		shader.loadviewMatrix(sunCamera);
+		shader.loadProjectionMatrix(sunCamera.getProjectionMatrix());
 		renderEntity(entities);
 		shader.stop();
 		entities.clear();

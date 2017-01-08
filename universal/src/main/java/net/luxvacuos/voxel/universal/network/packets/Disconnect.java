@@ -18,24 +18,21 @@
  * 
  */
 
-package net.luxvacuos.voxel.server.commands;
+package net.luxvacuos.voxel.universal.network.packets;
 
-import net.luxvacuos.voxel.server.network.ServerHandler;
-import net.luxvacuos.voxel.universal.commands.SimpleCommand;
-import net.luxvacuos.voxel.universal.core.states.StateMachine;
-import net.luxvacuos.voxel.universal.network.packets.Disconnect;
+import java.io.Serializable;
 
-public class StopCommand extends SimpleCommand {
+public class Disconnect implements Serializable {
 
-	public StopCommand() {
-		super("/stop");
+	private static final long serialVersionUID = 202943491506412821L;
+	private String reason;
+
+	public Disconnect(String reason) {
+		this.reason = reason;
 	}
 
-	@Override
-	public void execute(Object... data) {
-		ServerHandler.channels.writeAndFlush("Stopping Server, Goodbye!");
-		ServerHandler.channels.writeAndFlush(new Disconnect("Stop command"));
-		StateMachine.stop();
+	public String getReason() {
+		return reason;
 	}
 
 }

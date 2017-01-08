@@ -185,9 +185,11 @@ public class Tessellator {
 		}
 		shader.start();
 		shader.loadViewMatrix(camera.getViewMatrix(), camera.getPosition());
+		shader.loadProjectionMatrix(camera.getProjectionMatrix());
 		shader.loadLightMatrix(sunCamera.getViewMatrix());
 		shader.loadSettings(ClientVariables.useShadows);
 		shader.loadMoveFactor(clientWorldSimulation.getMoveFactor());
+		shader.loadBiasMatrix(sunCamera.getProjectionMatrix());
 		shader.loadMaterial(material);
 		glBindVertexArray(vaoID);
 		glEnableVertexAttribArray(0);
@@ -604,11 +606,16 @@ public class Tessellator {
 	}
 
 	private void clearBuffers() {
-		if(this.buffer0 != null) this.buffer0.clear();
-		if(this.buffer1 != null) this.buffer1.clear();
-		if(this.buffer2 != null) this.buffer2.clear();
-		if(this.buffer3 != null) this.buffer3.clear();
-		if(this.ibo != null) this.ibo.clear();
+		if (this.buffer0 != null)
+			this.buffer0.clear();
+		if (this.buffer1 != null)
+			this.buffer1.clear();
+		if (this.buffer2 != null)
+			this.buffer2.clear();
+		if (this.buffer3 != null)
+			this.buffer3.clear();
+		if (this.ibo != null)
+			this.ibo.clear();
 	}
 
 	public void cleanUp() {

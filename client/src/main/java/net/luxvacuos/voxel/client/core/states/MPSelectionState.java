@@ -20,22 +20,29 @@
 
 package net.luxvacuos.voxel.client.core.states;
 
+import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_CENTER;
+import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_MIDDLE;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 
 import net.luxvacuos.voxel.client.core.ClientInternalSubsystem;
+import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Renderer;
 import net.luxvacuos.voxel.client.ui.UIButton;
 import net.luxvacuos.voxel.client.ui.UIEditBox;
+import net.luxvacuos.voxel.client.ui.UIText;
 import net.luxvacuos.voxel.client.ui.UIWindow;
 import net.luxvacuos.voxel.universal.core.AbstractVoxel;
 
 public class MPSelectionState extends AbstractFadeState {
 
 	private UIButton exitButton;
+	private UIButton playButton;
 	private UIEditBox address;
+	private UIText text;
 	private UIWindow uiWindow;
+	private String ip = "";
 
 	public MPSelectionState() {
 		super(StateNames.MP_SELECTION);
@@ -47,20 +54,34 @@ public class MPSelectionState extends AbstractFadeState {
 		uiWindow = new UIWindow(20, window.getHeight() - 20, window.getWidth() - 40, window.getHeight() - 40,
 				"Multiplayer");
 		exitButton = new UIButton(uiWindow.getWidth() / 2f - 100, -uiWindow.getHeight() + 20, 200, 40, "Back");
-		address = new UIEditBox(uiWindow.getWidth() / 2f - 150, -uiWindow.getHeight() / 2 + 40, 300, 30, "IP");
+		playButton = new UIButton(uiWindow.getWidth() / 2f - 100, -uiWindow.getHeight() + 80, 200, 40, "Play");
+		address = new UIEditBox(uiWindow.getWidth() / 2f - 150, -uiWindow.getHeight() / 2 + 40, 300, 30, "");
 		address.setFontSize(25);
+		text = new UIText("Server Address", uiWindow.getWidth() / 2f, -uiWindow.getHeight() / 2 + 80);
+		text.setAlign(NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
 
 		exitButton.setOnButtonPress((button, delta) -> {
 			this.switchTo(StateNames.MAIN_MENU);
 		});
 
+		playButton.setOnButtonPress((button, delta) -> {
+			if (ip.equals(""))
+				return;
+			ClientVariables.server = ip;
+			ip = "";
+			this.switchTo(StateNames.MP_WORLD);
+		});
+
 		uiWindow.addChildren(exitButton);
 		uiWindow.addChildren(address);
+		uiWindow.addChildren(text);
+		uiWindow.addChildren(playButton);
 
 	}
 
 	@Override
 	public void start() {
+		ClientInternalSubsystem.getInstance().getGameWindow().getKeyboardHandler().enableTextInput();
 		uiWindow.setFadeAlpha(0);
 	}
 
@@ -81,6 +102,9 @@ public class MPSelectionState extends AbstractFadeState {
 
 	@Override
 	public void update(AbstractVoxel voxel, float delta) {
+		Window window = ClientInternalSubsystem.getInstance().getGameWindow();
+		ip = window.getKeyboardHandler().handleInput(ip);
+		address.setText(ip);
 		uiWindow.update(delta);
 		super.update(voxel, delta);
 	}

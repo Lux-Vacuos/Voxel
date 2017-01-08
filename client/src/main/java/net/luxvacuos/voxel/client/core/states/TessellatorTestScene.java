@@ -39,7 +39,6 @@ public class TessellatorTestScene extends AbstractState {
 	private Sun sun;
 	private ClientWorldSimulation worldSimulation;
 	private Camera camera;
-	private Renderer renderer;
 	private Tessellator tess;
 
 	public TessellatorTestScene() {
@@ -63,7 +62,6 @@ public class TessellatorTestScene extends AbstractState {
 		sun = new Sun(shadowProjectionMatrix);
 
 		worldSimulation = new ClientWorldSimulation();
-		renderer = new Renderer(window, camera, sun.getCamera());
 
 		worldSimulation = new ClientWorldSimulation();
 		engine = new Engine();
@@ -71,7 +69,7 @@ public class TessellatorTestScene extends AbstractState {
 		physicsSystem.addBox(new BoundingBox(new Vector3(-50, -1, -50), new Vector3(50, 0, 50)));
 		engine.addSystem(physicsSystem);
 		BlocksResources.createBlocks(loader);
-		
+
 		TessellatorShader.getShader();
 		TessellatorBasicShader.getShader();
 
@@ -92,11 +90,11 @@ public class TessellatorTestScene extends AbstractState {
 		}
 		tess.end();
 
-		renderer.setShadowPass((camera, sunCamera, frustum, shadowMap) -> {
+		Renderer.setShadowPass((camera, sunCamera, frustum, shadowMap) -> {
 			tess.drawShadow(sunCamera);
 		});
 
-		renderer.setDeferredPass((camera, sunCamera, frustum, shadowMap) -> {
+		Renderer.setDeferredPass((camera, sunCamera, frustum, shadowMap) -> {
 			tess.draw(camera, sunCamera, worldSimulation, shadowMap);
 		});
 
@@ -115,7 +113,6 @@ public class TessellatorTestScene extends AbstractState {
 
 	@Override
 	public void dispose() {
-		renderer.cleanUp();
 		tess.cleanUp();
 	}
 
@@ -136,8 +133,7 @@ public class TessellatorTestScene extends AbstractState {
 
 	@Override
 	public void render(AbstractVoxel voxel, float alpha) {
-		Window window = ClientInternalSubsystem.getInstance().getGameWindow();
-		renderer.render(physicsSystem.getEngine().getEntities(), ParticleDomain.getParticles(), camera, sun.getCamera(),
+		Renderer.render(physicsSystem.getEngine().getEntities(), ParticleDomain.getParticles(), camera, sun.getCamera(),
 				worldSimulation, sun.getSunPosition(), sun.getInvertedSunPosition(), alpha);
 	}
 

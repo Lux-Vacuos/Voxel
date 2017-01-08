@@ -32,7 +32,7 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.serialization.ClassResolvers;
 import io.netty.handler.codec.serialization.ObjectDecoder;
 import io.netty.handler.codec.serialization.ObjectEncoder;
-import net.luxvacuos.igl.Logger;
+import net.luxvacuos.voxel.client.core.states.MPWorldState;
 
 public class Client {
 
@@ -41,12 +41,10 @@ public class Client {
 	private String host;
 	private int port;
 
-	public Client(String host, int port) {
-		this.host = host;
-		this.port = port;
+	public Client() {
 	}
 
-	public void run() {
+	public void run(MPWorldState state) {
 		workerGroup = new NioEventLoopGroup();
 		try {
 			Bootstrap b = new Bootstrap();
@@ -60,7 +58,7 @@ public class Client {
 					pipeline.addLast("decoder",
 							new ObjectDecoder(ClassResolvers.softCachingResolver(ClassLoader.getSystemClassLoader())));
 					pipeline.addLast("encoder", new ObjectEncoder());
-					pipeline.addLast("handler", new ClientHandler());
+					pipeline.addLast("handler", new ClientHandler(state));
 				}
 			});
 			f = b.connect(host, port).sync();
@@ -78,10 +76,12 @@ public class Client {
 		}
 	}
 
-	public static void main(String[] args) {
-		Logger.init();
-		Client client = new Client("localhost", 44454);
-		client.run();
+	public void setHost(String host) {
+		this.host = host;
+	}
+
+	public void setPort(int port) {
+		this.port = port;
 	}
 
 }

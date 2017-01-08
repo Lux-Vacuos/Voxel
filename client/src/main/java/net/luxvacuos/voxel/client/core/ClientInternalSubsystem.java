@@ -28,7 +28,11 @@ import net.luxvacuos.voxel.client.rendering.api.glfw.PixelBufferHandle;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.glfw.WindowHandle;
 import net.luxvacuos.voxel.client.rendering.api.glfw.WindowManager;
+import net.luxvacuos.voxel.client.rendering.api.opengl.Renderer;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.ShaderIncludes;
+import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.TessellatorBasicShader;
+import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.TessellatorShader;
+import net.luxvacuos.voxel.client.rendering.utils.BlockFaceAtlas;
 import net.luxvacuos.voxel.client.resources.ResourceLoader;
 import net.luxvacuos.voxel.client.sound.LibraryLWJGLOpenAL;
 import net.luxvacuos.voxel.client.sound.soundsystem.SoundSystem;
@@ -36,7 +40,14 @@ import net.luxvacuos.voxel.client.sound.soundsystem.SoundSystemConfig;
 import net.luxvacuos.voxel.client.sound.soundsystem.SoundSystemException;
 import net.luxvacuos.voxel.client.sound.soundsystem.codecs.CodecJOgg;
 import net.luxvacuos.voxel.client.util.LoggerSoundSystem;
+import net.luxvacuos.voxel.client.world.block.BlocksResources;
+import net.luxvacuos.voxel.client.world.block.RenderBlock;
+import net.luxvacuos.voxel.client.world.block.types.WaterBlock;
 import net.luxvacuos.voxel.universal.core.AbstractInternalSubsystem;
+import net.luxvacuos.voxel.universal.core.TaskManager;
+import net.luxvacuos.voxel.universal.material.BlockMaterial;
+import net.luxvacuos.voxel.universal.material.MaterialModder;
+import net.luxvacuos.voxel.universal.world.block.Blocks;
 import net.luxvacuos.voxel.client.core.ClientVariables;
 
 /**
@@ -89,7 +100,7 @@ public class ClientInternalSubsystem extends AbstractInternalSubsystem {
 		loader.loadNVGFont("Poppins-Bold", "Poppins-Bold");
 		loader.loadNVGFont("Poppins-SemiBold", "Poppins-SemiBold");
 		loader.loadNVGFont("Entypo", "Entypo", 40);
-		
+
 		ShaderIncludes.processIncludeFile("common.isl");
 		ShaderIncludes.processIncludeFile("lighting.isl");
 		ShaderIncludes.processIncludeFile("materials.isl");
@@ -109,10 +120,35 @@ public class ClientInternalSubsystem extends AbstractInternalSubsystem {
 			SoundSystemConfig.setLogger(new LoggerSoundSystem());
 			soundSystem = new SoundSystem();
 		}
+		TaskManager.addTask(() -> Renderer.init(getGameWindow()));
+		
+		BlocksResources.createBlocks(getGameWindow().getResourceLoader());
+		
+		MaterialModder matMod = new MaterialModder();
+		Blocks.startRegister("voxel");
+		BlockMaterial airMat = new BlockMaterial("air");
+		airMat = (BlockMaterial) matMod.modify(airMat).canBeBroken(false).setBlocksMovement(false).setOpacity(0f)
+				.done();
+		Blocks.register(new RenderBlock(airMat, new BlockFaceAtlas("air")));
+		Blocks.register(new RenderBlock(new BlockMaterial("stone"), new BlockFaceAtlas("stone")));
+		Blocks.register(new RenderBlock(new BlockMaterial("grass"), new BlockFaceAtlas("grass", "dirt", "grassSide")));
+		Blocks.register(new RenderBlock(new BlockMaterial("dirt"), new BlockFaceAtlas("dirt")));
+		Blocks.register(new RenderBlock(new BlockMaterial("sand"), new BlockFaceAtlas("sand")));
+		Blocks.register(new RenderBlock(new BlockMaterial("cobblestone"), new BlockFaceAtlas("cobblestone")));
+		Blocks.register(new RenderBlock(new BlockMaterial("wood"), new BlockFaceAtlas("wood")));
+		Blocks.register(new RenderBlock(new BlockMaterial("leaves"), new BlockFaceAtlas("leaves")));
+		Blocks.register(new RenderBlock(new BlockMaterial("glass"), new BlockFaceAtlas("glass")));
+		BlockMaterial waterMat = new BlockMaterial("water");
+		waterMat = (BlockMaterial) matMod.modify(waterMat).canBeBroken(false).setBlocksMovement(false)
+				.affectedByGravity(true).liquid().done();
+		Blocks.register(new WaterBlock(waterMat, new BlockFaceAtlas("water")));
+		Blocks.finishRegister();
 	}
 
 	@Override
 	public void postInit() {
+		TessellatorShader.getShader();
+		TessellatorBasicShader.getShader();
 	}
 
 	/**
@@ -124,7 +160,9 @@ public class ClientInternalSubsystem extends AbstractInternalSubsystem {
 		gameSettings.save();
 		if (!ClientVariables.WSL)
 			soundSystem.cleanup();
-
+		TessellatorShader.getShader().cleanUp();
+		TessellatorBasicShader.getShader().cleanUp();
+		Renderer.cleanUp();
 	}
 
 	public SoundSystem getSoundSystem() {

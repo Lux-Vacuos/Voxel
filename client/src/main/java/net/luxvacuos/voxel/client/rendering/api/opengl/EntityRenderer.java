@@ -73,12 +73,8 @@ public class EntityRenderer {
 	private EntityShader shader;
 	private Map<TexturedModel, List<AbstractEntity>> entities = new HashMap<TexturedModel, List<AbstractEntity>>();
 
-	public EntityRenderer(Matrix4d projectionMatrix, Matrix4d shadowProjectionMatrix, ResourceLoader loader) {
+	public EntityRenderer(ResourceLoader loader) {
 		shader = new EntityShader();
-		shader.start();
-		shader.loadProjectionMatrix(projectionMatrix);
-		shader.loadBiasMatrix(shadowProjectionMatrix);
-		shader.stop();
 	}
 
 	public void cleanUp() {
@@ -99,6 +95,8 @@ public class EntityRenderer {
 		shader.loadviewMatrix(camera);
 		shader.loadLightMatrix(sunCamera);
 		shader.useShadows(ClientVariables.useShadows);
+		shader.loadProjectionMatrix(camera.getProjectionMatrix());
+		shader.loadBiasMatrix(sunCamera.getProjectionMatrix());
 		renderEntity(entities, shadowTex);
 		shader.stop();
 		entities.clear();

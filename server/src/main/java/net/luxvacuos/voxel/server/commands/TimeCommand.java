@@ -20,22 +20,35 @@
 
 package net.luxvacuos.voxel.server.commands;
 
-import net.luxvacuos.voxel.server.network.ServerHandler;
+import net.luxvacuos.igl.Logger;
+import net.luxvacuos.voxel.server.core.ServerWorldSimulation;
 import net.luxvacuos.voxel.universal.commands.SimpleCommand;
-import net.luxvacuos.voxel.universal.core.states.StateMachine;
-import net.luxvacuos.voxel.universal.network.packets.Disconnect;
 
-public class StopCommand extends SimpleCommand {
+public class TimeCommand extends SimpleCommand {
 
-	public StopCommand() {
-		super("/stop");
+	private ServerWorldSimulation serverWorldSimulation;
+
+	public TimeCommand(ServerWorldSimulation serverWorldSimulation) {
+		super("/time");
+		this.serverWorldSimulation = serverWorldSimulation;
 	}
 
 	@Override
 	public void execute(Object... data) {
-		ServerHandler.channels.writeAndFlush("Stopping Server, Goodbye!");
-		ServerHandler.channels.writeAndFlush(new Disconnect("Stop command"));
-		StateMachine.stop();
+		if (data.length == 0) {
+			Logger.log("No Option selected");
+			return;
+		}
+		String param = (String) data[0];
+		switch (param) {
+		case "set":
+			serverWorldSimulation.setTime(Integer.parseInt((String) data[1]));
+			Logger.log("Time set to: " + data[1]);
+			break;
+		case "time":
+			Logger.log("Time is: " + serverWorldSimulation.getTime());
+			break;
+		}
 	}
 
 }

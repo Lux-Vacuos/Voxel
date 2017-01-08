@@ -23,15 +23,18 @@ package net.luxvacuos.voxel.server.core.states;
 import net.luxvacuos.voxel.server.commands.SayCommand;
 import net.luxvacuos.voxel.server.commands.ServerCommandManager;
 import net.luxvacuos.voxel.server.commands.StopCommand;
+import net.luxvacuos.voxel.server.commands.TimeCommand;
 import net.luxvacuos.voxel.server.console.Console;
 import net.luxvacuos.voxel.server.core.ServerVariables;
 import net.luxvacuos.voxel.server.core.ServerWorldSimulation;
 import net.luxvacuos.voxel.server.network.Server;
+import net.luxvacuos.voxel.server.network.ServerHandler;
 import net.luxvacuos.voxel.universal.commands.ICommandManager;
 import net.luxvacuos.voxel.universal.core.AbstractVoxel;
 import net.luxvacuos.voxel.universal.core.states.AbstractState;
 import net.luxvacuos.voxel.universal.material.BlockMaterial;
 import net.luxvacuos.voxel.universal.material.MaterialModder;
+import net.luxvacuos.voxel.universal.network.packets.Time;
 import net.luxvacuos.voxel.universal.world.IWorld;
 import net.luxvacuos.voxel.universal.world.World;
 import net.luxvacuos.voxel.universal.world.block.BlockBase;
@@ -81,6 +84,7 @@ public class MPWorldState extends AbstractState {
 		commandManager = new ServerCommandManager();
 		commandManager.registerCommand(new StopCommand());
 		commandManager.registerCommand(new SayCommand());
+		commandManager.registerCommand(new TimeCommand(worldSimulation));
 
 		console = new Console();
 		console.setCommandManager(commandManager);
@@ -101,6 +105,7 @@ public class MPWorldState extends AbstractState {
 	public void update(AbstractVoxel voxel, float delta) {
 		world.update(delta);
 		worldSimulation.update(delta);
+		ServerHandler.channels.writeAndFlush(new Time(worldSimulation.getTime()));
 	}
 
 }

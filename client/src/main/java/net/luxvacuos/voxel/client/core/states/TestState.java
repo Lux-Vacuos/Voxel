@@ -81,7 +81,6 @@ public class TestState extends AbstractState {
 	private Sun sun;
 	private ClientWorldSimulation worldSimulation;
 	private Camera camera;
-	private Renderer renderer;
 	private Tessellator tess;
 	private ParticleSystem particleSystem;
 	private Vector3d particlesPoint;
@@ -113,7 +112,6 @@ public class TestState extends AbstractState {
 		//ShaderProgram.loadToVFS(new ShaderIncludes("/common/Materials.glsl"));
 
 		worldSimulation = new ClientWorldSimulation();
-		renderer = new Renderer(window, camera, sun.getCamera());
 
 		EntityResources.load(loader);
 
@@ -144,19 +142,19 @@ public class TestState extends AbstractState {
 		}
 		tess.end();
 
-		renderer.setShadowPass((camera, sunCamera, frustum, shadowMap) -> {
+		Renderer.setShadowPass((camera, sunCamera, frustum, shadowMap) -> {
 			tess.drawShadow(sunCamera);
 		});
 
-		renderer.setDeferredPass((camera, sunCamera, frustum, shadowMap) -> {
+		Renderer.setDeferredPass((camera, sunCamera, frustum, shadowMap) -> {
 			tess.draw(camera, sunCamera, worldSimulation, shadowMap);
 		});
 
-		renderer.getLightRenderer().addLight(new Light(new Vector3d(-8, 5, -8), new Vector3f(1, 1, 1)));
-		renderer.getLightRenderer().addLight(new Light(new Vector3d(-8, 5, 8), new Vector3f(1, 1, 1)));
-		renderer.getLightRenderer().addLight(new Light(new Vector3d(8, 5, -8), new Vector3f(1, 1, 1)));
-		renderer.getLightRenderer().addLight(new Light(new Vector3d(8, 5, 8), new Vector3f(1, 1, 1)));
-		renderer.getLightRenderer().addLight(new Light(new Vector3d(0, 5, 0), new Vector3f(1, 1, 1)));
+		Renderer.getLightRenderer().addLight(new Light(new Vector3d(-8, 5, -8), new Vector3f(1, 1, 1)));
+		Renderer.getLightRenderer().addLight(new Light(new Vector3d(-8, 5, 8), new Vector3f(1, 1, 1)));
+		Renderer.getLightRenderer().addLight(new Light(new Vector3d(8, 5, -8), new Vector3f(1, 1, 1)));
+		Renderer.getLightRenderer().addLight(new Light(new Vector3d(8, 5, 8), new Vector3f(1, 1, 1)));
+		Renderer.getLightRenderer().addLight(new Light(new Vector3d(0, 5, 0), new Vector3f(1, 1, 1)));
 
 		RawModel sphere = loader.loadObjModel("test_state/sphere");
 
@@ -202,7 +200,6 @@ public class TestState extends AbstractState {
 
 	@Override
 	public void dispose() {
-		renderer.cleanUp();
 		tess.cleanUp();
 	}
 
@@ -249,7 +246,7 @@ public class TestState extends AbstractState {
 	public void render(AbstractVoxel voxel, float alpha) {
 		Window window = ClientInternalSubsystem.getInstance().getGameWindow();
 
-		renderer.render(physicsSystem.getEngine().getEntities(), ParticleDomain.getParticles(), camera, sun.getCamera(),
+		Renderer.render(physicsSystem.getEngine().getEntities(), ParticleDomain.getParticles(), camera, sun.getCamera(),
 				worldSimulation, sun.getSunPosition(), sun.getInvertedSunPosition(), alpha);
 
 		window.beingNVGFrame();

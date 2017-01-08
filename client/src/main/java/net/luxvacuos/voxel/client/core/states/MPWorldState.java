@@ -29,6 +29,7 @@ import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.core.ClientWorldSimulation;
 import net.luxvacuos.voxel.client.core.CoreInfo;
 import net.luxvacuos.voxel.client.input.KeyboardHandler;
+import net.luxvacuos.voxel.client.network.Client;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.glfw.WindowManager;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.Timers;
@@ -46,7 +47,7 @@ import net.luxvacuos.voxel.universal.core.states.AbstractState;
 import net.luxvacuos.voxel.universal.core.states.StateMachine;
 import net.luxvacuos.voxel.universal.world.IWorld;
 
-public class SPWorldState extends AbstractState {
+public class MPWorldState extends AbstractState {
 
 	private Sun sun;
 	private ClientWorldSimulation worldSimulation;
@@ -54,10 +55,12 @@ public class SPWorldState extends AbstractState {
 
 	private IWorld world;
 
+	private Client client;
+
 	private SPPauseState pausesState;
 
-	public SPWorldState() {
-		super(StateNames.SP_WORLD);
+	public MPWorldState() {
+		super(StateNames.MP_WORLD);
 	}
 
 	@Override
@@ -74,18 +77,22 @@ public class SPWorldState extends AbstractState {
 			// ((RenderDimension)
 			// world.getActiveDimension()).renderOcclusion(camera, frustum);
 		});
-		
+
 		world = new RenderWorld(ClientVariables.worldNameToLoad);
 		world.loadDimension(0);
 		world.setActiveDimension(0);
 		((PlayerCamera) camera).setMouse();
 		camera.setPosition(new Vector3d(0, 256, 0));
 		world.getActiveDimension().getEntitiesManager().addEntity(camera);
+		client.setHost(ClientVariables.server);
+		client.setPort(44454);
+		client.run(this);
 	}
 
 	@Override
 	public void end() {
 		super.end();
+		client.end();
 		world.dispose();
 	}
 
@@ -108,6 +115,8 @@ public class SPWorldState extends AbstractState {
 
 		pausesState = new SPPauseState();
 		pausesState.init();
+
+		client = new Client();
 	}
 
 	@Override
@@ -155,13 +164,12 @@ public class SPWorldState extends AbstractState {
 
 	@Override
 	public void update(AbstractVoxel voxel, float delta) {
+		world.update(delta);
+		sun.update(camera.getPosition(), worldSimulation.update(delta), delta);
+		ParticleDomain.update(delta, camera);
+
 		if (!ClientVariables.paused) {
-			world.update(delta);
-
 			KeyboardHandler kbh = ClientInternalSubsystem.getInstance().getGameWindow().getKeyboardHandler();
-
-			sun.update(camera.getPosition(), worldSimulation.update(delta), delta);
-			ParticleDomain.update(delta, camera);
 
 			if (kbh.isKeyPressed(GLFW.GLFW_KEY_F1))
 				ClientVariables.debug = !ClientVariables.debug;
@@ -172,13 +180,18 @@ public class SPWorldState extends AbstractState {
 				((PlayerCamera) camera).unlockMouse();
 				ClientVariables.paused = true;
 			}
-		} else if (ClientVariables.exitWorld) {
-			ClientVariables.exitWorld = false;
-			ClientVariables.paused = false;
-			StateMachine.setCurrentState(StateNames.MAIN_MENU);
 		} else {
 			pausesState.update(voxel, delta);
 		}
+		if (ClientVariables.exitWorld) {
+			ClientVariables.exitWorld = false;
+			ClientVariables.paused = false;
+			StateMachine.setCurrentState(StateNames.MAIN_MENU);
+		}
+	}
+
+	public ClientWorldSimulation getWorldSimulation() {
+		return worldSimulation;
 	}
 
 }
