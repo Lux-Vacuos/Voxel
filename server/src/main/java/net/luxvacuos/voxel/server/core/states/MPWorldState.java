@@ -91,7 +91,7 @@ public class MPWorldState extends AbstractState {
 		console.start();
 
 		server = new Server(ServerVariables.port);
-		server.run();
+		server.run(this);
 	}
 
 	@Override
@@ -106,6 +106,10 @@ public class MPWorldState extends AbstractState {
 		world.update(delta);
 		worldSimulation.update(delta);
 		ServerHandler.channels.writeAndFlush(new Time(worldSimulation.getTime()));
+	}
+	
+	public IWorld getWorld() {
+		return world;
 	}
 
 }

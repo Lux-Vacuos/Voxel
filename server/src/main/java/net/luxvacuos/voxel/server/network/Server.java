@@ -33,6 +33,7 @@ import io.netty.handler.codec.serialization.ClassResolvers;
 import io.netty.handler.codec.serialization.ObjectDecoder;
 import io.netty.handler.codec.serialization.ObjectEncoder;
 import net.luxvacuos.igl.Logger;
+import net.luxvacuos.voxel.server.core.states.MPWorldState;
 
 public class Server {
 
@@ -45,7 +46,7 @@ public class Server {
 		this.port = port;
 	}
 
-	public void run() {
+	public void run(MPWorldState state) {
 		Logger.log("Starting Netty Server");
 		bossGroup = new NioEventLoopGroup();
 		workerGroup = new NioEventLoopGroup();
@@ -59,7 +60,7 @@ public class Server {
 							pipeline.addLast("decoder", new ObjectDecoder(
 									ClassResolvers.softCachingResolver(ClassLoader.getSystemClassLoader())));
 							pipeline.addLast("encoder", new ObjectEncoder());
-							pipeline.addLast("handler", new ServerHandler());
+							pipeline.addLast("handler", new ServerHandler(state));
 						}
 					}).option(ChannelOption.SO_BACKLOG, 128).childOption(ChannelOption.SO_KEEPALIVE, true);
 			f = b.bind(port).sync();
