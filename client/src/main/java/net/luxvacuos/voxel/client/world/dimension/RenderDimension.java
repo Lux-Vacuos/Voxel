@@ -22,6 +22,8 @@ package net.luxvacuos.voxel.client.world.dimension;
 
 import java.util.Random;
 
+import com.badlogic.gdx.math.collision.BoundingBox;
+
 import net.luxvacuos.voxel.client.core.ClientWorldSimulation;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Frustum;
 import net.luxvacuos.voxel.client.world.chunks.ClientChunkManager;
@@ -53,11 +55,13 @@ public class RenderDimension extends Dimension {
 	public void render(Camera camera, Camera sunCamera, ClientWorldSimulation clientWorldSimulation, Frustum frustum,
 			int shadowMap) {
 		this.renderedChunks = 0;
+		BoundingBox aabb;
 		for (IChunk chunk : this.chunkManager.getLoadedChunks()) {
 			if(chunk instanceof FutureChunk) continue;
+			aabb = chunk.getBoundingBox(chunk.getNode());
 			
-			if (frustum.cubeInFrustum(chunk.getX() * 16, 0, chunk.getZ() * 16, chunk.getX() * 16 + 16, 256,
-					chunk.getZ() * 16 + 16)) {
+			if (frustum.cubeInFrustum((float)aabb.min.x, (float)aabb.min.y, (float)aabb.min.z, 
+					(float)aabb.max.x, (float)aabb.max.y, (float)aabb.max.z)) {
 				this.renderedChunks++;
 				((RenderChunk) chunk).render(camera, sunCamera, clientWorldSimulation, shadowMap);
 			}
@@ -65,22 +69,26 @@ public class RenderDimension extends Dimension {
 	}
 
 	public void renderOcclusion(Camera camera, Frustum frustum) {
+		BoundingBox aabb;
 		for (IChunk chunk : this.chunkManager.getLoadedChunks()) {
 			if(chunk instanceof FutureChunk) continue;
+			aabb = chunk.getBoundingBox(chunk.getNode());
 			
-			if (frustum.cubeInFrustum(chunk.getX() * 16, 0, chunk.getZ() * 16, chunk.getX() * 16 + 16, 256,
-					chunk.getZ() * 16 + 16)) {
+			if (frustum.cubeInFrustum((float)aabb.min.x, (float)aabb.min.y, (float)aabb.min.z, 
+					(float)aabb.max.x, (float)aabb.max.y, (float)aabb.max.z)) {
 				((RenderChunk) chunk).renderOcclusion(camera);
 			}
 		}
 	}
 
 	public void renderShadow(Camera sunCamera, Frustum frustum) {
+		BoundingBox aabb;
 		for (IChunk chunk : this.chunkManager.getLoadedChunks()) {
 			if(chunk instanceof FutureChunk) continue;
+			aabb = chunk.getBoundingBox(chunk.getNode());
 			
-			if (frustum.cubeInFrustum(chunk.getX() * 16, 0, chunk.getZ() * 16, chunk.getX() * 16 + 16, 256,
-					chunk.getZ() * 16 + 16)) {
+			if (frustum.cubeInFrustum((float)aabb.min.x, (float)aabb.min.y, (float)aabb.min.z, 
+					(float)aabb.max.x, (float)aabb.max.y, (float)aabb.max.z)) {
 				((RenderChunk) chunk).renderShadow(sunCamera);
 			}
 		}

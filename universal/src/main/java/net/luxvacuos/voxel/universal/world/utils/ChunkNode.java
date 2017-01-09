@@ -20,7 +20,7 @@ public final class ChunkNode {
 	}
 	
 	public Vector3 asVector3() {
-		return new Vector3(this.x, 0, this.z);
+		return new Vector3(this.x * 16, 0, this.z * 16);
 	}
 
 	@Override
