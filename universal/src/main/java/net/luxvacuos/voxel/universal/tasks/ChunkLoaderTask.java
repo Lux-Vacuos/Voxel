@@ -40,10 +40,12 @@ import net.luxvacuos.voxel.universal.world.utils.ChunkNode;
 public class ChunkLoaderTask implements Callable<ChunkData> {
 	private NBTInputStream in = null;
 	private boolean exists;
+	private final ChunkNode node;
 
 	public ChunkLoaderTask(IDimension dim, ChunkNode node) throws IOException, FileNotFoundException {
 		String path = GlobalVariables.WORLD_PATH + dim.getWorldName() + "/" + dim.getID();
 		String fullPath = path + "/" + "chunk_" + node.getX() + "_" + node.getZ() + ".dat";
+		this.node = node;
 		File file = new File(fullPath);
 
 		if (this.exists = (file.exists() && file.length() != 0L)) {

@@ -120,6 +120,9 @@ public class ChunkManager implements IDisposable {
 		try {
 			if (this.loadedChunks.containsKey(node)) {
 				IChunk chunk = this.loadedChunks.get(node);
+				
+				//Make sure that the chunk is fully loaded before trying to unload it
+				if(chunk instanceof FutureChunk) return;
 
 				// Need to release the Read Lock to upgrade to a Write Lock
 				this.chunkLock.readLock().unlock();
@@ -161,10 +164,16 @@ public class ChunkManager implements IDisposable {
 	public void saveChunks() {
 		this.chunkLock.readLock().lock();
 		try {
+			List<IChunk> trueLoadedChunks = new ArrayList<>();
+			for(IChunk chunk : this.loadedChunks.values()) {
+				if(chunk instanceof FutureChunk) continue;
+				trueLoadedChunks.add(chunk);
+			}
+			
 			this.saveTask = this.executor
-					.submit(new ChunkSaveTask(Collections.unmodifiableCollection(this.loadedChunks.values())));
+					.submit(new ChunkSaveTask(Collections.unmodifiableCollection(trueLoadedChunks)));
 		} catch (Exception e) {
-
+			Logger.error(e);
 		} finally {
 			this.chunkLock.readLock().unlock();
 		}
