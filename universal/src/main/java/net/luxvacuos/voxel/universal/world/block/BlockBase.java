@@ -25,7 +25,7 @@ import com.badlogic.gdx.math.collision.BoundingBox;
 import com.hackhalo2.nbt.tags.TagCompound;
 
 import net.luxvacuos.voxel.universal.material.BlockMaterial;
-import net.luxvacuos.voxel.universal.world.utils.BlockCoords;
+import net.luxvacuos.voxel.universal.world.utils.BlockNode;
 
 public class BlockBase implements IBlock {
 	protected final BlockMaterial material;
@@ -59,9 +59,10 @@ public class BlockBase implements IBlock {
 	}
 
 	@Override
-	public BoundingBox getBoundingBox(BlockCoords pos) {
-		return new BoundingBox(new Vector3(pos.getX() + aabb.min.x, pos.getY() + aabb.min.y, pos.getZ() + aabb.min.z),
-				new Vector3(pos.getX() + aabb.max.x, pos.getY() + aabb.max.y, pos.getZ() + aabb.max.z));
+	public BoundingBox getBoundingBox(BlockNode node) {
+		return new BoundingBox(node.asVector3().add(this.aabb.min), node.asVector3().add(this.aabb.max));
+		//return new BoundingBox(new Vector3(pos.getX() + aabb.min.x, pos.getY() + aabb.min.y, pos.getZ() + aabb.min.z),
+		//		new Vector3(pos.getX() + aabb.max.x, pos.getY() + aabb.max.y, pos.getZ() + aabb.max.z));
 	}
 
 	@Override

@@ -1,5 +1,7 @@
 package net.luxvacuos.voxel.universal.world.utils;
 
+import com.badlogic.gdx.math.Vector3;
+
 public final class ChunkNode {
 
 	private final int x, z;
@@ -15,6 +17,10 @@ public final class ChunkNode {
 	
 	public int getZ() {
 		return this.z;
+	}
+	
+	public Vector3 asVector3() {
+		return new Vector3(this.x, 0, this.z);
 	}
 
 	@Override
@@ -49,7 +55,7 @@ public final class ChunkNode {
 		return new ChunkNode(cx, cz);
 	}
 	
-	public static ChunkNode getFromBlockCoords(BlockCoords block) {
+	public static ChunkNode getFromBlockNode(BlockNode block) {
 		int cx = block.getX() >> 4;
 		int cz = block.getZ() >> 4;
 		

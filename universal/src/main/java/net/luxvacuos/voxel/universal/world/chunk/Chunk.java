@@ -23,6 +23,9 @@ package net.luxvacuos.voxel.universal.world.chunk;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
+import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.math.collision.BoundingBox;
+
 import net.luxvacuos.voxel.universal.world.block.IBlock;
 import net.luxvacuos.voxel.universal.world.dimension.IDimension;
 import net.luxvacuos.voxel.universal.world.utils.ChunkNode;
@@ -32,6 +35,7 @@ public class Chunk implements IChunk {
 	protected final IDimension dim;
 	protected volatile ChunkData data;
 	protected final ReadWriteLock lock = new ReentrantReadWriteLock();
+	private BoundingBox aabb = new BoundingBox(new Vector3(0, 0, 0), new Vector3(16, 256, 16));
 
 	protected Chunk(IDimension dim, ChunkNode node, ChunkData data) {
 		this.node = node;
@@ -137,6 +141,11 @@ public class Chunk implements IChunk {
 	@Override
 	public IDimension getDimension() {
 		return this.dim;
+	}
+
+	@Override
+	public BoundingBox getBoundingBox(ChunkNode node) {
+		return new BoundingBox(node.asVector3().add(this.aabb.min), node.asVector3().add(this.aabb.max));
 	}
 
 }

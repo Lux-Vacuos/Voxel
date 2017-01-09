@@ -3,7 +3,7 @@ package net.luxvacuos.voxel.universal.world.block;
 import com.badlogic.gdx.math.collision.BoundingBox;
 import com.hackhalo2.nbt.tags.TagCompound;
 
-import net.luxvacuos.voxel.universal.world.utils.BlockCoords;
+import net.luxvacuos.voxel.universal.world.utils.BlockNode;
 
 public interface IBlock {
 	public int getID();
@@ -14,7 +14,7 @@ public interface IBlock {
 	
 	public String getName();
 	
-	public BoundingBox getBoundingBox(BlockCoords pos);
+	public BoundingBox getBoundingBox(BlockNode pos);
 	
 	public boolean isAffectedByGravity();
 	

@@ -1,10 +1,12 @@
 package net.luxvacuos.voxel.universal.world.utils;
 
-public final class BlockCoords {
+import com.badlogic.gdx.math.Vector3;
+
+public final class BlockNode {
 	
 	private final int x, y, z;
 	
-	public BlockCoords(int x, int y, int z) {
+	public BlockNode(int x, int y, int z) {
 		this.x = x;
 		this.y = y;
 		this.z = z;
@@ -20,6 +22,10 @@ public final class BlockCoords {
 	
 	public int getZ() {
 		return this.z;
+	}
+	
+	public Vector3 asVector3() {
+		return new Vector3(x, y, z);
 	}
 
 }

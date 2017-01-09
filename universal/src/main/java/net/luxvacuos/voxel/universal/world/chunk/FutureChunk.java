@@ -24,6 +24,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Future;
 
+import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.math.collision.BoundingBox;
+
 import net.luxvacuos.igl.Logger;
 import net.luxvacuos.igl.vector.Vector3d;
 import net.luxvacuos.voxel.universal.util.Pair;
@@ -39,6 +42,7 @@ public class FutureChunk implements IChunk {
 	private ChunkData data;
 	private final Future<ChunkData> futureData;
 	private List<Pair<Vector3d, IBlock>> deferredBlocks;
+	private BoundingBox aabb = new BoundingBox(new Vector3(0, 0, 0), new Vector3(16, 256, 16));
 
 	public FutureChunk(IDimension dim, ChunkNode node, Future<ChunkData> future) {
 		this.dim = dim;
@@ -190,6 +194,11 @@ public class FutureChunk implements IChunk {
 	public void dispose() {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public BoundingBox getBoundingBox(ChunkNode node) {
+		return new BoundingBox(node.asVector3().add(this.aabb.min), node.asVector3().add(this.aabb.max));
 	}
 
 }

@@ -25,7 +25,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 
 import net.luxvacuos.voxel.universal.material.BlockMaterial;
-import net.luxvacuos.voxel.universal.world.utils.BlockCoords;
+import net.luxvacuos.voxel.universal.world.utils.BlockNode;
 
 public abstract class AbstractBlockEntityBase extends Entity implements IBlockEntity {
 	protected final BlockMaterial material;
@@ -58,8 +58,8 @@ public abstract class AbstractBlockEntityBase extends Entity implements IBlockEn
 	}
 
 	@Override
-	public BoundingBox getBoundingBox(BlockCoords pos) {
-		return this.aabb;
+	public BoundingBox getBoundingBox(BlockNode node) {
+		return new BoundingBox(node.asVector3().add(this.aabb.min), node.asVector3().add(this.aabb.max));
 	}
 
 	@Override

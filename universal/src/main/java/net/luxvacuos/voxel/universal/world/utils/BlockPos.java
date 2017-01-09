@@ -7,7 +7,7 @@ public final class BlockPos {
 	/**
 	 * The Coords for this block
 	 */
-	private final BlockCoords coords;
+	private final BlockNode coords;
 	
 	/**
 	 * The Dimension this block is in
@@ -19,12 +19,12 @@ public final class BlockPos {
 	 */
 	protected boolean fromSnapshot = false;
 	
-	protected BlockPos(IDimension dimension, BlockCoords coords) {
+	protected BlockPos(IDimension dimension, BlockNode coords) {
 		this.coords = coords;
 		this.dimension = dimension;
 	}
 	
-	public final BlockCoords getCoords() {
+	public final BlockNode getCoords() {
 		return this.coords;
 	}
 	

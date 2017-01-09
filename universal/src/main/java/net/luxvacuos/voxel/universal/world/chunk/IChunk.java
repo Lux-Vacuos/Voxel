@@ -1,5 +1,7 @@
 package net.luxvacuos.voxel.universal.world.chunk;
 
+import com.badlogic.gdx.math.collision.BoundingBox;
+
 import net.luxvacuos.voxel.universal.resources.IDisposable;
 import net.luxvacuos.voxel.universal.world.block.IBlock;
 import net.luxvacuos.voxel.universal.world.dimension.IDimension;
@@ -34,4 +36,6 @@ public interface IChunk extends IDisposable {
 	public void completedMeshRebuild();
 	
 	public void update(float delta);
+	
+	public BoundingBox getBoundingBox(ChunkNode node);
 }

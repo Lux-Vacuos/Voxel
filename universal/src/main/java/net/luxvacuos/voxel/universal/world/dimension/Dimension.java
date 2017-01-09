@@ -43,7 +43,7 @@ import net.luxvacuos.voxel.universal.world.chunk.ChunkManager;
 import net.luxvacuos.voxel.universal.world.chunk.IChunk;
 import net.luxvacuos.voxel.universal.world.chunk.generator.ChunkTerrainGenerator;
 import net.luxvacuos.voxel.universal.world.chunk.generator.SimplexNoise;
-import net.luxvacuos.voxel.universal.world.utils.BlockCoords;
+import net.luxvacuos.voxel.universal.world.utils.BlockNode;
 import net.luxvacuos.voxel.universal.world.utils.ChunkNode;
 
 public class Dimension implements IDimension {
@@ -162,7 +162,7 @@ public class Dimension implements IDimension {
 				for (int k = (int) Math.floor(box.min.z); k < (int) Math.ceil(box.max.z); k++) {
 					IBlock block = getBlockAt(i, j, k);
 					if (block.hasCollision())
-						array.add(block.getBoundingBox(new BlockCoords(i, j, k)));
+						array.add(block.getBoundingBox(new BlockNode(i, j, k)));
 				}
 			}
 		}
