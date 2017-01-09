@@ -22,6 +22,7 @@ package net.luxvacuos.voxel.universal.world.block;
 
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
+import com.hackhalo2.nbt.tags.TagCompound;
 
 import net.luxvacuos.voxel.universal.material.BlockMaterial;
 import net.luxvacuos.voxel.universal.world.utils.BlockCoords;
@@ -31,6 +32,7 @@ public class BlockBase implements IBlock {
 	private BoundingBox aabb = new BoundingBox(new Vector3(0, 0, 0), new Vector3(1, 1, 1));
 	private int id;
 	private int metadata = 0;
+	protected TagCompound complexMetadata = null;
 
 	public BlockBase(BlockMaterial material) {
 		this.material = material;
@@ -79,7 +81,7 @@ public class BlockBase implements IBlock {
 
 	@Override
 	public boolean hasComplexMetadata() {
-		return false;
+		return (this.complexMetadata != null);
 	}
 
 	@Override
@@ -91,6 +93,11 @@ public class BlockBase implements IBlock {
 	public void setPackedMetadata(int packedMetadata) {
 		this.metadata = packedMetadata;
 
+	}
+
+	@Override
+	public void setComplexMetadata(TagCompound metadata) {
+		this.complexMetadata = metadata;
 	}
 
 }

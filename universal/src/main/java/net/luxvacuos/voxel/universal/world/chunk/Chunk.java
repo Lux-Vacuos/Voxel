@@ -69,8 +69,8 @@ public class Chunk implements IChunk {
 		this.lock.readLock().lock();
 		try {
 			IBlock block = this.data.getBlockAt(x, y, z);
-			if (block.hasComplexMetadata()) {
-				// TODO: Implement this
+			if (this.data.hasComplexMetadataAt(x, y, z)) {
+				block.setComplexMetadata(this.data.getComplexMetadataAt(x, y, z));
 			}
 			return block;
 		} catch (Exception e) {
@@ -83,10 +83,11 @@ public class Chunk implements IChunk {
 	@Override
 	public void setBlockAt(int x, int y, int z, IBlock block) {
 		// TODO: Update neighboring blocks if block == air
-		this.data.setBlockAt(x, y, z, block);
 		if (block.hasComplexMetadata()) {
-			// TODO: Implement this
+			//TODO: Implement this
 		}
+		
+		this.data.setBlockAt(x, y, z, block);
 	}
 	
 	@Override

@@ -211,7 +211,7 @@ public class ChunkManager implements IDisposable {
 							try {
 								this.loadedChunks.put(replacement.getNode(), replacement);
 							} catch (Exception e) {
-								//TODO: Add Exception handling
+								Logger.error(e);
 							} finally {
 								this.chunkLock.writeLock().unlock();
 							}
@@ -284,7 +284,7 @@ public class ChunkManager implements IDisposable {
 		try {
 			for (IChunk chunk : loadedChunks.values()) {
 				if(chunk instanceof FutureChunk)
-					if(!((FutureChunk)chunk).isDone())
+					if(!((FutureChunk)chunk).isFutureDone())
 						continue;
 				
 				chunk.update(delta);
