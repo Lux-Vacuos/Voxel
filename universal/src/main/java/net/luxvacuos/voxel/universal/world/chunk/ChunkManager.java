@@ -360,7 +360,7 @@ public class ChunkManager implements IDisposable {
 			this.executor.shutdown();
 			this.executor.awaitTermination(30, TimeUnit.SECONDS);
 		} catch (Exception e) {
-
+			Logger.error(e);
 		} finally {
 			this.chunkLock.readLock().unlock();
 		}

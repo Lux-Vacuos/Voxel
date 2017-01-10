@@ -20,8 +20,23 @@
 
 package net.luxvacuos.voxel.client.rendering.world.chunk;
 
-public interface IRenderChunk {
+import net.luxvacuos.voxel.client.core.ClientWorldSimulation;
+import net.luxvacuos.voxel.client.rendering.api.opengl.Tessellator;
+import net.luxvacuos.voxel.client.world.entities.Camera;
+import net.luxvacuos.voxel.universal.world.chunk.IChunk;
+
+public interface IRenderChunk extends IChunk {
 	
+	public void render(Camera camera, Camera sunCamera, ClientWorldSimulation clientWorldSimulation, int shadowMap);
 	
+	public void renderShadow(Camera sunCamera);
+	
+	public void renderOcclusion(Camera camera);
+	
+	public boolean needsMeshRebuild();
+	
+	public void markMeshRebuild();
+	
+	public Tessellator getTessellator();
 
 }

@@ -114,16 +114,6 @@ public class Chunk implements IChunk {
 	public boolean needsRebuild() {
 		return this.data.needsRebuild();
 	}
-	
-	@Override
-	public boolean needsMeshRebuild() {
-		return this.data.needsMeshRebuild();
-	}
-	
-	@Override
-	public void completedMeshRebuild(){
-		this.data.completedMeshRebuild();
-	}
 
 	@Override
 	public void update(float delta) {

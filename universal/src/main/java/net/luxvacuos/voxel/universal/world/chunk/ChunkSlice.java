@@ -62,6 +62,7 @@ public final class ChunkSlice {
 	public ChunkSlice(byte offset, BlockLongDataArray blockData) {
 		this.yOffset = offset;
 		this.blockRebuild = true;
+		this.inHeightMap = false;
 		this.blockData = blockData;
 		this.collisionMap = new BlockBooleanDataArray();
 	}
@@ -115,7 +116,11 @@ public final class ChunkSlice {
 		this.blockRebuild = true;
 	}
 
-	protected boolean needsBlockRebuild() {
+	protected void markBlockRebuild() {
+		this.blockRebuild = true;
+	}
+	
+	public boolean needsBlockRebuild() {
 		return this.blockRebuild;
 	}
 

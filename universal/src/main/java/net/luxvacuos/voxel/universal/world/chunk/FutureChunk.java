@@ -113,21 +113,6 @@ public class FutureChunk implements IChunk {
 	}
 
 	@Override
-	public boolean needsMeshRebuild() {
-		if(this.isDone()) {
-			return this.data.needsMeshRebuild();
-		} else
-			return false;
-	}
-
-	@Override
-	public void completedMeshRebuild() {
-		if(this.isDone()) {
-			this.data.completedMeshRebuild();
-		}
-	}
-
-	@Override
 	public void update(float delta) {
 		if(this.data != null) {
 			if (this.data.needsRebuild())

@@ -36,12 +36,31 @@ import net.luxvacuos.voxel.universal.world.utils.ChunkNode;
 public class RenderChunk extends Chunk implements IRenderChunk {
 
 	private Tessellator tess;
+	private boolean needsMeshRebuild, isRebuilding;
 
 	public RenderChunk(IDimension dim, ChunkNode node, ChunkData data) {
 		super(dim, node, data);
 		this.tess = new Tessellator(BlocksResources.getMaterial());
 	}
 
+	protected void isRebuilding(boolean flag) {
+		this.isRebuilding = flag;
+	}
+
+	protected void needsMeshRebuild(boolean flag) {
+		this.needsMeshRebuild = flag;
+	}
+
+	@Override
+	public void update(float delta) {
+		if(this.data.needsRebuild()) {
+			this.needsMeshRebuild = true;
+		}
+
+		super.update(delta);
+	}
+
+	@Override
 	public void render(Camera camera, Camera sunCamera, ClientWorldSimulation clientWorldSimulation, int shadowMap) {
 		if (this.needsMeshRebuild()) {
 			this.tess.begin();
@@ -49,7 +68,7 @@ public class RenderChunk extends Chunk implements IRenderChunk {
 				for (int z = 0; z < 16; z++) {
 					for (int y = 0; y < 256; y++) {
 						RenderBlock block = (RenderBlock) this.data.getBlockAt(x, y, z);
-						if (!block.isTransparent())
+						if (!block.isTransparent()) {
 							if (!block.hasCustomModel()) {
 								this.tess.generateCube(this.getX() * 16 + x, y, this.getZ() * 16 + z,
 										1, cullFace(block, BlockFace.UP, x, y, z), cullFace(block, BlockFace.DOWN, x, y, z),
@@ -62,22 +81,48 @@ public class RenderChunk extends Chunk implements IRenderChunk {
 										cullFace(block, BlockFace.WEST, x, y, z), cullFace(block, BlockFace.NORTH, x, y, z),
 										cullFace(block, BlockFace.SOUTH, x, y, z));
 							}
+						}
+						
 					}
 				}
-
 			}
+			
 			this.tess.end();
-			this.completedMeshRebuild();
+			this.needsMeshRebuild(false);
 		}
 		this.tess.draw(camera, sunCamera, clientWorldSimulation, shadowMap);
 	}
 
+	@Override
 	public void renderShadow(Camera sunCamera) {
 		this.tess.drawShadow(sunCamera);
 	}
 
+	@Override
 	public void renderOcclusion(Camera camera) {
 		this.tess.drawOcclusion(camera);
+	}
+
+	@Override
+	public void dispose() {
+		super.dispose();
+		this.tess.cleanUp();
+	}
+
+	@Override
+	public boolean needsMeshRebuild() {
+		return this.needsMeshRebuild && !this.isRebuilding;
+	}
+
+	@Override
+	public void markMeshRebuild() {
+		this.needsMeshRebuild = true;
+
+	}
+
+	@Override
+	public Tessellator getTessellator() {
+		return this.tess;
 	}
 	
 	private boolean cullFace(RenderBlock block, BlockFace face, int x, int y, int z) {
@@ -119,12 +164,6 @@ public class RenderChunk extends Chunk implements IRenderChunk {
 		default:
 			return false;
 		}
-	}
-
-	@Override
-	public void dispose() {
-		super.dispose();
-		this.tess.cleanUp();
 	}
 
 }

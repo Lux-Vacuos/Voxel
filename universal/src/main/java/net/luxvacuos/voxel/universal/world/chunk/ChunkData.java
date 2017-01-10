@@ -34,12 +34,11 @@ public final class ChunkData {
 
 	private short[] heightmap; // [(Z * WIDTH) + X]
 	ChunkSlice[] slices;
-	private boolean needsRebuild, fullRebuild, meshRebuild;
+	private boolean needsRebuild, fullRebuild;
 	private TagCompound blockMetadata;
 
 	protected ChunkData() {
 		this.needsRebuild = false;
-		this.meshRebuild = false;
 		this.fullRebuild = false;
 		this.heightmap = new short[256]; // 16 * 16
 		this.slices = new ChunkSlice[16];
@@ -151,27 +150,17 @@ public final class ChunkData {
 		return new ImmutableArray<ChunkSlice>(array);
 	}
 
-	protected boolean needsRebuild() {
+	public boolean needsRebuild() {
 		return this.needsRebuild || this.fullRebuild;
-	}
-	
-	protected boolean needsMeshRebuild(){
-		return this.meshRebuild;
-	}
-	
-	protected void completedMeshRebuild(){
-		this.meshRebuild = false;
 	}
 
 	protected void markFullRebuild() {
 		this.fullRebuild = true;
-		this.meshRebuild = true;
 		for (ChunkSlice slice : this.slices)
-			slice.needsBlockRebuild();
+			slice.markBlockRebuild();
 	}
 
 	protected void rebuild() {
-		this.meshRebuild = true;
 		boolean rebuildHeightMap = false;
 		for (ChunkSlice slice : this.slices) {
 			if (this.fullRebuild || slice.needsBlockRebuild()) {

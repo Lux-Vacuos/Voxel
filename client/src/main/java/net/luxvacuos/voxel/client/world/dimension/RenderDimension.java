@@ -56,14 +56,19 @@ public class RenderDimension extends Dimension {
 			int shadowMap) {
 		this.renderedChunks = 0;
 		BoundingBox aabb;
+		RenderChunk rChunk;
 		for (IChunk chunk : this.chunkManager.getLoadedChunks()) {
 			if(chunk instanceof FutureChunk) continue;
 			aabb = chunk.getBoundingBox(chunk.getNode());
+			rChunk = (RenderChunk)chunk;
+			
+			//if(rChunk.needsMeshRebuild())
+				//((ClientChunkManager) this.chunkManager).generateChunkMesh(rChunk);
 			
 			if (frustum.cubeInFrustum((float)aabb.min.x, (float)aabb.min.y, (float)aabb.min.z, 
 					(float)aabb.max.x, (float)aabb.max.y, (float)aabb.max.z)) {
 				this.renderedChunks++;
-				((RenderChunk) chunk).render(camera, sunCamera, clientWorldSimulation, shadowMap);
+				rChunk.render(camera, sunCamera, clientWorldSimulation, shadowMap);
 			}
 		}
 	}
