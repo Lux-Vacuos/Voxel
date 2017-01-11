@@ -39,6 +39,8 @@ public class ChunkTerrainGenerator extends AbstractChunkGenerator {
 			return Blocks.getBlockByName("voxel:stone").getID();
 		else if (y < noise - 1 && y < 129)
 			return Blocks.getBlockByName("voxel:stone").getID();
+		else if(y > noise - 1 && y < 129)
+			return Blocks.getBlockByName("voxel:water").getID();
 		else
 			return Blocks.getBlockByName("voxel:air").getID();
 	}
