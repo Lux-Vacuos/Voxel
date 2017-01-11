@@ -29,6 +29,8 @@ import net.luxvacuos.voxel.client.rendering.api.opengl.Frustum;
 import net.luxvacuos.voxel.client.world.chunks.ClientChunkManager;
 import net.luxvacuos.voxel.client.world.chunks.RenderChunk;
 import net.luxvacuos.voxel.client.world.entities.Camera;
+import net.luxvacuos.voxel.universal.ecs.Components;
+import net.luxvacuos.voxel.universal.ecs.components.ChunkLoader;
 import net.luxvacuos.voxel.universal.world.IWorld;
 import net.luxvacuos.voxel.universal.world.chunk.FutureChunk;
 import net.luxvacuos.voxel.universal.world.chunk.IChunk;
@@ -57,19 +59,37 @@ public class RenderDimension extends Dimension {
 		this.renderedChunks = 0;
 		BoundingBox aabb;
 		RenderChunk rChunk;
+		int entityCX = 0, entityCZ = 0;
+
+		ChunkLoader loader = Components.CHUNK_LOADER.get(camera);
+
+		if (camera.getPosition().x < 0)
+			entityCX = (int) ((camera.getPosition().x - 8) / 16);
+		else
+			entityCX = (int) ((camera.getPosition().x + 8) / 16);
+
+		if (camera.getPosition().z < 0)
+			entityCZ = (int) ((camera.getPosition().z - 8) / 16);
+		else
+			entityCZ = (int) ((camera.getPosition().z + 8) / 16);
+
 		for (IChunk chunk : this.chunkManager.getLoadedChunks()) {
 			if (chunk instanceof FutureChunk)
 				continue;
-			aabb = chunk.getBoundingBox(chunk.getNode());
-			if (frustum.cubeInFrustum((float) aabb.min.x, (float) aabb.min.y, (float) aabb.min.z, (float) aabb.max.x,
-					(float) aabb.max.y, (float) aabb.max.z)) {
-				rChunk = (RenderChunk) chunk;
-				if (rChunk.needsMeshRebuild())
-					((ClientChunkManager) this.chunkManager).generateChunkMesh(rChunk);
 
-				this.renderedChunks++;
-				rChunk.render(camera, sunCamera, clientWorldSimulation, shadowMap);
-			}
+			aabb = chunk.getBoundingBox(chunk.getNode());
+			if (Math.abs(chunk.getNode().getX() - entityCX) < loader.getChunkRadius()
+					&& Math.abs(chunk.getNode().getZ() - entityCZ) < loader.getChunkRadius())
+				if (frustum.cubeInFrustum((float) aabb.min.x, (float) aabb.min.y, (float) aabb.min.z,
+						(float) aabb.max.x, (float) aabb.max.y, (float) aabb.max.z)) {
+					rChunk = (RenderChunk) chunk;
+					if (rChunk.needsMeshRebuild())
+						((ClientChunkManager) this.chunkManager).generateChunkMesh(rChunk);
+
+					this.renderedChunks++;
+					rChunk.render(camera, sunCamera, clientWorldSimulation, shadowMap);
+				}
+
 		}
 	}
 
