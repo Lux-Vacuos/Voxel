@@ -23,6 +23,7 @@ package net.luxvacuos.voxel.client.world;
 import net.luxvacuos.voxel.client.rendering.world.IRenderWorld;
 import net.luxvacuos.voxel.client.world.dimension.RenderDimension;
 import net.luxvacuos.voxel.universal.world.World;
+import net.luxvacuos.voxel.universal.world.dimension.IDimension;
 
 public class RenderWorld extends World implements IRenderWorld {
 
@@ -31,10 +32,8 @@ public class RenderWorld extends World implements IRenderWorld {
 	}
 
 	@Override
-	public void loadDimension(int id) {
-		if (this.dims.containsKey(id))
-			return;
-		this.dims.put(id, new RenderDimension(this, id));
+	protected IDimension createDimension(int id) {
+		return new RenderDimension(this, id);
 	}
 
 }

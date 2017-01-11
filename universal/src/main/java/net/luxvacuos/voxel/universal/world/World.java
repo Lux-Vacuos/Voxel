@@ -37,20 +37,26 @@ public class World implements IWorld {
 		this.name = name;
 		this.dims = new IntMap<>();
 	}
+	
+	protected IDimension createDimension(int id) {
+		return new Dimension(this, id);
+	}
 
 	@Override
 	public String getName() {
-		return name;
+		return this.name;
 	}
 
 	@Override
 	public void update(float delta) {
 		this.activeDimension.update(delta);
-		for (IDimension dim : this.dims.values()) {
-			if (dim.getID() == this.activeDimension.getID())
-				continue;
+		if(this.dims.size > 1) {
+			for (IDimension dim : this.dims.values()) {
+				if (dim.getID() == this.activeDimension.getID())
+					continue;
 
-			dim.update(delta);
+				dim.update(delta);
+			}
 		}
 	}
 
@@ -74,7 +80,8 @@ public class World implements IWorld {
 	public void loadDimension(int id) {
 		if (this.dims.containsKey(id))
 			return;
-		this.dims.put(id, new Dimension(this, id));
+		
+		this.dims.put(id, this.createDimension(id));
 	}
 
 	@Override
@@ -84,12 +91,12 @@ public class World implements IWorld {
 
 	@Override
 	public void setActiveDimension(int id) {
-		activeDimension = this.dims.get(id);
+		this.activeDimension = this.dims.get(id);
 	}
 
 	@Override
 	public IDimension getActiveDimension() {
-		return activeDimension;
+		return this.activeDimension;
 	}
 
 	@Override
