@@ -32,6 +32,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
+import com.badlogic.gdx.utils.Array;
+
 import net.luxvacuos.igl.Logger;
 import net.luxvacuos.voxel.universal.core.GlobalVariables;
 import net.luxvacuos.voxel.universal.resources.IDisposable;
@@ -252,10 +254,17 @@ public class ChunkManager implements IDisposable {
 	@Override
 	public void dispose() {
 		try {
+			Array<ChunkNode> toRemove = new Array<>();
 			if (!this.loadedChunks.isEmpty()) {
 				this.saveChunks();
+				for (IChunk chunk : this.loadedChunks.values()) {
+					toRemove.add(chunk.getNode());
+				}
 			}
-
+			
+			for (ChunkNode node : toRemove) {
+				this.unloadChunk(node);
+			}
 			this.executor.shutdown();
 			this.executor.awaitTermination(30, TimeUnit.SECONDS);
 		} catch (Exception e) {

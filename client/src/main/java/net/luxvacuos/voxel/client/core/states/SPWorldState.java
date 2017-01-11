@@ -84,7 +84,7 @@ public class SPWorldState extends AbstractState {
 		camera.setPosition(new Vector3d(0, 256, 0));
 		spawnChunks.setPosition(new Vector3d(0, 0, 0));
 		world.getActiveDimension().getEntitiesManager().addEntity(camera);
-		//world.getActiveDimension().getEntitiesManager().addEntity(spawnChunks);
+		world.getActiveDimension().getEntitiesManager().addEntity(spawnChunks);
 	}
 
 	@Override

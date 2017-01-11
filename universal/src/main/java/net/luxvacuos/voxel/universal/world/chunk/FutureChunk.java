@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Future;
 
+import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 
@@ -54,7 +55,7 @@ public class FutureChunk implements IChunk {
 
 	@Override
 	public ChunkData getChunkData() {
-		if(this.isDone()) {
+		if (this.isDone()) {
 			return this.data;
 		} else {
 			try {
@@ -69,19 +70,19 @@ public class FutureChunk implements IChunk {
 
 	@Override
 	public IBlock getBlockAt(int x, int y, int z) {
-		if(this.isDone()) {
+		if (this.isDone()) {
 			IBlock block = this.data.getBlockAt(x, y, z);
 			if (this.data.hasComplexMetadataAt(x, y, z)) {
 				block.setComplexMetadata(this.data.getComplexMetadataAt(x, y, z));
 			}
 			return block;
-		} else //TODO: Maybe implement a FutureBlock class of some sort?
-			return Blocks.getBlockByName("voxel:air"); 
+		} else // TODO: Maybe implement a FutureBlock class of some sort?
+			return Blocks.getBlockByName("voxel:air");
 	}
 
 	@Override
 	public void setBlockAt(int x, int y, int z, IBlock block) {
-		if(this.isDone()) {
+		if (this.isDone()) {
 			this.data.setBlockAt(x, y, z, block);
 		} else {
 			Vector3d blockPos = new Vector3d(x, y, z);
@@ -91,7 +92,7 @@ public class FutureChunk implements IChunk {
 
 	@Override
 	public boolean hasCollisionData(int x, int y, int z) {
-		if(this.isDone()) {
+		if (this.isDone()) {
 			return this.data.hasCollisionData(x, y, z);
 		} else
 			return false;
@@ -99,40 +100,53 @@ public class FutureChunk implements IChunk {
 
 	@Override
 	public void markForRebuild() {
-		if(this.isDone()) {
+		if (this.isDone()) {
 			this.data.markFullRebuild();
 		}
 	}
 
 	@Override
 	public boolean needsRebuild() {
-		if(this.isDone()) {
+		if (this.isDone()) {
 			return this.data.needsRebuild();
 		} else
 			return false;
 	}
 
 	@Override
+	public void registerChunkLoader(Entity entity) {
+	}
+
+	@Override
+	public void removeChunkLoader(Entity entity) {
+	}
+	
+	@Override
+	public int chunkLoaders() {
+		return 1; // TODO: Return 1 to prevent unloading (?)
+	}
+
+	@Override
 	public void update(float delta) {
-		if(this.data != null) {
+		if (this.data != null) {
 			if (this.data.needsRebuild())
 				this.data.rebuild();
 			// TODO: update BlockEntities
-		} else if(this.futureData.isDone()) {
+		} else if (this.futureData.isDone()) {
 			try {
 				this.data = this.futureData.get();
-				if(!this.deferredBlocks.isEmpty()) {
+				if (!this.deferredBlocks.isEmpty()) {
 					Vector3d blockPos;
 					IBlock block;
-					for(Pair<Vector3d, IBlock> pair : this.deferredBlocks) {
+					for (Pair<Vector3d, IBlock> pair : this.deferredBlocks) {
 						blockPos = pair.getFirst();
 						block = pair.getSecond();
 
 						if (block.hasComplexMetadata()) {
-							//TODO: Implement this
+							// TODO: Implement this
 						}
 
-						this.data.setBlockAt((int)blockPos.x, (int)blockPos.y, (int)blockPos.z, block);
+						this.data.setBlockAt((int) blockPos.x, (int) blockPos.y, (int) blockPos.z, block);
 					}
 				}
 			} catch (Exception e) {
@@ -170,7 +184,7 @@ public class FutureChunk implements IChunk {
 	public boolean isDone() {
 		return (this.isFutureDone() && this.data != null);
 	}
-	
+
 	public boolean isFutureDone() {
 		return this.futureData.isDone();
 	}

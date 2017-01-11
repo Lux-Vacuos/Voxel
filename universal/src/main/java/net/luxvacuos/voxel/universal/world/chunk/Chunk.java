@@ -23,8 +23,10 @@ package net.luxvacuos.voxel.universal.world.chunk;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
+import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
+import com.badlogic.gdx.utils.Array;
 
 import net.luxvacuos.voxel.universal.world.block.IBlock;
 import net.luxvacuos.voxel.universal.world.dimension.IDimension;
@@ -35,6 +37,7 @@ public class Chunk implements IChunk {
 	protected final IDimension dim;
 	protected volatile ChunkData data;
 	protected final ReadWriteLock lock = new ReentrantReadWriteLock();
+	private Array<Entity> chunkLoaders = new Array<>();
 	private BoundingBox aabb = new BoundingBox(new Vector3(0, 0, 0), new Vector3(16, 256, 16));
 
 	protected Chunk(IDimension dim, ChunkNode node, ChunkData data) {
@@ -83,17 +86,17 @@ public class Chunk implements IChunk {
 			this.lock.readLock().unlock();
 		}
 	}
-	
+
 	@Override
 	public void setBlockAt(int x, int y, int z, IBlock block) {
 		// TODO: Update neighboring blocks if block == air
 		if (block.hasComplexMetadata()) {
-			//TODO: Implement this
+			// TODO: Implement this
 		}
-		
+
 		this.data.setBlockAt(x, y, z, block);
 	}
-	
+
 	@Override
 	public boolean hasCollisionData(int x, int y, int z) {
 		return this.data.hasCollisionData(x, y, z);
@@ -113,6 +116,22 @@ public class Chunk implements IChunk {
 	@Override
 	public boolean needsRebuild() {
 		return this.data.needsRebuild();
+	}
+
+	@Override
+	public void registerChunkLoader(Entity entity) {
+		if (!chunkLoaders.contains(entity, true))
+			chunkLoaders.add(entity);
+	}
+
+	@Override
+	public void removeChunkLoader(Entity entity) {
+		chunkLoaders.removeValue(entity, true);
+	}
+	
+	@Override
+	public int chunkLoaders() {
+		return chunkLoaders.size;
 	}
 
 	@Override

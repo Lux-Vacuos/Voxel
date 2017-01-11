@@ -51,7 +51,6 @@ public class Dimension implements IDimension {
 	protected IWorld world;
 	protected ChunkManager chunkManager;
 	protected Engine entitiesManager;
-	private int maxLoadChunks = 3;
 
 	public Dimension(IWorld world, int id) {
 		this.world = world;
@@ -59,13 +58,6 @@ public class Dimension implements IDimension {
 		this.setupChunkManager();
 		this.entitiesManager = new Engine();
 		this.entitiesManager.addSystem(new PhysicsSystem(this));
-		Array<ChunkNode> nodes = new Array<>(ChunkNode.class);
-		for (int x = -maxLoadChunks; x <= maxLoadChunks; x++) {
-			for (int z = -maxLoadChunks; z <= maxLoadChunks; z++) {
-				nodes.add(new ChunkNode(x, z));
-			}
-		}
-		this.chunkManager.batchLoadChunks(nodes.toArray());
 	}
 
 	protected void setupChunkManager() {
@@ -120,21 +112,26 @@ public class Dimension implements IDimension {
 				for (int xr = -chunkRadius; xr <= chunkRadius; xr++) {
 					xx = entityCX + xr;
 					node = new ChunkNode(xx, zz);
-					if (!chunkManager.isChunkLoaded(node)) {
+					if (!chunkManager.isChunkLoaded(node))
 						chunkManager.loadChunk(node);
-					}
+					else
+						chunkManager.getChunkAt(node).registerChunkLoader(entity);
 				}
 			}
-
 			for (IChunk chunk : chunkManager.getLoadedChunks()) {
 				if (Math.abs(chunk.getNode().getX() - entityCX) > chunkRadius) {
-					toRemove.add(chunk.getNode());
+					chunk.removeChunkLoader(entity);
 				} else if (Math.abs(chunk.getNode().getZ() - entityCZ) > chunkRadius) {
-					toRemove.add(chunk.getNode());
+					chunk.removeChunkLoader(entity);
 				}
 			}
 
 		}
+		for (IChunk chunk : chunkManager.getLoadedChunks()) {
+			if (chunk.chunkLoaders() == 0)
+				toRemove.add(chunk.getNode());
+		}
+		
 		for (ChunkNode chunkNode : toRemove) {
 			chunkManager.unloadChunk(chunkNode);
 		}
