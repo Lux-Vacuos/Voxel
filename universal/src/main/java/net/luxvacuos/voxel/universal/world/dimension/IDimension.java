@@ -26,6 +26,7 @@ import java.util.List;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.gdx.math.collision.BoundingBox;
 
+import net.luxvacuos.voxel.universal.core.IWorldSimulation;
 import net.luxvacuos.voxel.universal.resources.IDisposable;
 import net.luxvacuos.voxel.universal.world.block.IBlock;
 import net.luxvacuos.voxel.universal.world.chunk.IChunk;
@@ -35,8 +36,6 @@ public interface IDimension extends IDisposable {
 	public String getWorldName();
 	
 	public int getID();
-
-	public boolean exists();
 	
 	public void update(float delta);
 	
@@ -47,4 +46,6 @@ public interface IDimension extends IDisposable {
 	public Engine getEntitiesManager();
 	
 	public Collection<IChunk> getLoadedChunks();
+	
+	public IWorldSimulation getWorldSimulator();
 }

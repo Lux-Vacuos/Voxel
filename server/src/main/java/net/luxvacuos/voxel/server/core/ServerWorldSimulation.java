@@ -20,9 +20,9 @@
 
 package net.luxvacuos.voxel.server.core;
 
-import net.luxvacuos.voxel.universal.core.AbstractWorldSimulation;
+import net.luxvacuos.voxel.universal.core.WorldSimulation;
 
-public class ServerWorldSimulation extends AbstractWorldSimulation {
+public class ServerWorldSimulation extends WorldSimulation {
 
 	public ServerWorldSimulation() {
 		super(10000);

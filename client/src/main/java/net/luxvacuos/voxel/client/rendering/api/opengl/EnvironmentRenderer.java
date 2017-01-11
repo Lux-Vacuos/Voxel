@@ -43,11 +43,11 @@ import static org.lwjgl.opengl.GL30.glRenderbufferStorage;
 
 import net.luxvacuos.igl.vector.Vector3d;
 import net.luxvacuos.voxel.client.core.ClientVariables;
-import net.luxvacuos.voxel.client.core.ClientWorldSimulation;
 import net.luxvacuos.voxel.client.core.exception.FrameBufferException;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.CubeMapTexture;
 import net.luxvacuos.voxel.client.world.entities.CubeMapCamera;
+import net.luxvacuos.voxel.universal.core.IWorldSimulation;
 
 public class EnvironmentRenderer {
 
@@ -78,7 +78,7 @@ public class EnvironmentRenderer {
 	}
 
 	public void renderEnvironmentMap(Vector3d center, SkyboxRenderer skyboxRenderer,
-			ClientWorldSimulation clientWorldSimulation, Vector3d lightPosition, Window window) {
+			IWorldSimulation clientWorldSimulation, Vector3d lightPosition, Window window) {
 		CubeMapCamera camera = new CubeMapCamera(center);
 		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 		window.setViewport(0, 0, cubeMapTexture.getSize(), cubeMapTexture.getSize());

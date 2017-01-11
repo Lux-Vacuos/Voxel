@@ -44,7 +44,6 @@ import com.badlogic.ashley.utils.ImmutableArray;
 import net.luxvacuos.igl.vector.Matrix4d;
 import net.luxvacuos.igl.vector.Vector3d;
 import net.luxvacuos.voxel.client.core.ClientVariables;
-import net.luxvacuos.voxel.client.core.ClientWorldSimulation;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.CubeMapTexture;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.ParticleTexture;
@@ -52,6 +51,7 @@ import net.luxvacuos.voxel.client.rendering.api.opengl.pipeline.MultiPass;
 import net.luxvacuos.voxel.client.rendering.api.opengl.pipeline.SinglePass;
 import net.luxvacuos.voxel.client.world.entities.Camera;
 import net.luxvacuos.voxel.client.world.particles.Particle;
+import net.luxvacuos.voxel.universal.core.IWorldSimulation;
 import net.luxvacuos.voxel.universal.core.TaskManager;
 
 public class Renderer {
@@ -99,12 +99,12 @@ public class Renderer {
 	}
 
 	public static void render(ImmutableArray<Entity> entities, Map<ParticleTexture, List<Particle>> particles,
-			Camera camera, Camera sunCamera, ClientWorldSimulation clientWorldSimulation, Vector3d lightPosition,
+			Camera camera, Camera sunCamera, IWorldSimulation worldSimulation, Vector3d lightPosition,
 			Vector3d invertedLightPosition, float alpha) {
 
 		resetState();
 
-		environmentRenderer.renderEnvironmentMap(camera.getPosition(), skyboxRenderer, clientWorldSimulation,
+		environmentRenderer.renderEnvironmentMap(camera.getPosition(), skyboxRenderer, worldSimulation,
 				lightPosition, window);
 
 		frustum.calculateFrustum(sunCamera.getProjectionMatrix(), sunCamera.getViewMatrix());
@@ -126,7 +126,7 @@ public class Renderer {
 		renderingPipeline.begin();
 		clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		skyboxRenderer.render(ClientVariables.RED, ClientVariables.GREEN, ClientVariables.BLUE, camera,
-				clientWorldSimulation, lightPosition, 1, false);
+				worldSimulation, lightPosition, 1, false);
 
 		if (deferredPass != null)
 			deferredPass.render(camera, sunCamera, frustum, shadowFBO.getShadowDepth());
@@ -134,7 +134,7 @@ public class Renderer {
 		entityRenderer.renderEntity(entities, camera, sunCamera, shadowFBO.getShadowDepth());
 		renderingPipeline.end();
 		clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		renderingPipeline.render(camera, lightPosition, invertedLightPosition, clientWorldSimulation,
+		renderingPipeline.render(camera, lightPosition, invertedLightPosition, worldSimulation,
 				lightRenderer.getLights(), environmentRenderer.getCubeMapTexture(), exposure);
 		if (forwardPass != null)
 			forwardPass.render(camera, sunCamera, frustum, shadowFBO.getShadowDepth());

@@ -20,10 +20,11 @@
 
 package net.luxvacuos.voxel.client.world;
 
+import net.luxvacuos.voxel.client.rendering.world.IRenderWorld;
 import net.luxvacuos.voxel.client.world.dimension.RenderDimension;
 import net.luxvacuos.voxel.universal.world.World;
 
-public class RenderWorld extends World {
+public class RenderWorld extends World implements IRenderWorld {
 
 	public RenderWorld(String name) {
 		super(name);

@@ -111,11 +111,9 @@ public class TestState extends AbstractState {
 		//ShaderProgram.loadToVFS(new ShaderIncludes("/common/Lighting-PBR.glsl"));
 		//ShaderProgram.loadToVFS(new ShaderIncludes("/common/Materials.glsl"));
 
-		worldSimulation = new ClientWorldSimulation();
-
 		EntityResources.load(loader);
 
-		worldSimulation = new ClientWorldSimulation();
+		worldSimulation = new ClientWorldSimulation(10000);
 		engine = new Engine();
 		physicsSystem = new PhysicsSystem(null);
 		physicsSystem.addBox(new BoundingBox(new Vector3(-50, -1, -50), new Vector3(50, 0, 50)));
