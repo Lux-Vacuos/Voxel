@@ -23,18 +23,14 @@ package net.luxvacuos.voxel.universal.world.chunk;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import net.luxvacuos.igl.Logger;
 import net.luxvacuos.voxel.universal.core.GlobalVariables;
@@ -58,18 +54,18 @@ public class ChunkManager implements IDisposable {
 	protected List<Future<IChunk>> chunkUnloadList;
 	protected volatile Map<ChunkNode, IChunk> loadedChunks;
 
-	protected final Lock loadLock = new ReentrantLock();
-	protected final Lock unloadLock = new ReentrantLock();
-	protected final ReadWriteLock chunkLock = new ReentrantReadWriteLock();
+	protected final Object loadLock = new Object();
+	protected final Object unloadLock = new Object();
+	protected final Object saveLock = new Object();
 
 	private Future<Void> saveTask = null;
 
 	public ChunkManager(IDimension dim) {
 		this.dim = dim;
-		this.chunkGenerateList = new ArrayList<>();
-		this.chunkLoadList = new ArrayList<>();
-		this.chunkUnloadList = new ArrayList<>();
-		this.loadedChunks = new HashMap<>();
+		this.chunkGenerateList = Collections.synchronizedList(new ArrayList<>());
+		this.chunkLoadList = Collections.synchronizedList(new ArrayList<>());
+		this.chunkUnloadList = Collections.synchronizedList(new ArrayList<>());
+		this.loadedChunks = new ConcurrentHashMap<>();
 	}
 
 	public void setGenerator(IChunkGenerator generator) {
@@ -77,231 +73,154 @@ public class ChunkManager implements IDisposable {
 	}
 
 	public final void loadChunk(ChunkNode node) {
-		this.chunkLock.readLock().lock();
-		try {
-			if (!this.loadedChunks.containsKey(node)) {
-				this.loadLock.lock();
-				try {
-					this.chunkLoadList.add(node);
-					this.loadedChunks.put(node, new FutureChunk(this.dim, node, this.executor.submit(new ChunkLoaderTask(this.dim, node))));
-				} catch (Exception e) {
-					Logger.error(e);
-				} finally {
-					this.loadLock.unlock();
-				}
+		if (!this.loadedChunks.containsKey(node)) {
+			synchronized(this.loadLock) {
+				this.chunkLoadList.add(node);
+				this.loadedChunks.put(node, new FutureChunk(this.dim, node, this.executor.submit(new ChunkLoaderTask(this.dim, node))));
 			}
-		} catch (Exception e) {
-			Logger.error(e);
-		} finally {
-			this.chunkLock.readLock().unlock();
 		}
 	}
 
 	public final void batchLoadChunks(ChunkNode... nodes) {
-		this.loadLock.lock();
-		this.chunkLock.readLock().lock();
-		try {
+		synchronized(this.loadLock) {
 			for (ChunkNode node : nodes) {
 				if (!this.loadedChunks.containsKey(node)) {
 					this.chunkLoadList.add(node);
 					this.loadedChunks.put(node, new FutureChunk(this.dim, node, this.executor.submit(new ChunkLoaderTask(this.dim, node))));
 				}
 			}
-		} catch (Exception e) {
-			Logger.error(e);
-		} finally {
-			this.chunkLock.readLock().unlock();
-			this.loadLock.unlock();
 		}
 	}
 
 	public final void unloadChunk(ChunkNode node) {
-		this.chunkLock.readLock().lock();
-		try {
-			if (this.loadedChunks.containsKey(node)) {
-				IChunk chunk = this.loadedChunks.get(node);
-				
-				//Make sure that the chunk is fully loaded before trying to unload it
-				if(chunk instanceof FutureChunk) return;
-
-				// Need to release the Read Lock to upgrade to a Write Lock
-				this.chunkLock.readLock().unlock();
-				this.chunkLock.writeLock().lock();
+		if (this.loadedChunks.containsKey(node)) {
+			synchronized(this.unloadLock) {
 				try {
+					IChunk chunk = this.loadedChunks.get(node);
+
+					//Make sure that the chunk is fully loaded before trying to unload it
+					if(chunk instanceof FutureChunk) return;
+
 					this.loadedChunks.remove(node);
 					this.chunkUnloadList.add(this.executor.submit(new ChunkUnloaderTask(chunk)));
-					this.chunkLock.readLock().lock(); // Downgrade the Write
-					// Lock by acquiring the
-					// Read Lock before
-					// releasing the Write
-					// Lock
 				} catch (Exception e) {
 					Logger.error(e);
-				} finally {
-					this.chunkLock.writeLock().unlock(); // Remove Write access,
-					// Hold Read access
 				}
 			}
-		} catch (Exception e) {
-			Logger.error(e);
-		} finally {
-			this.chunkLock.readLock().unlock(); // Release Read access
 		}
 	}
 
 	public final boolean isChunkLoaded(ChunkNode node) {
-		this.chunkLock.readLock().lock();
-		try {
-			return this.loadedChunks.containsKey(node);
-		} catch (Exception e) {
-			Logger.error(e);
-			return false;
-		} finally {
-			this.chunkLock.readLock().unlock();
-		}
+		return this.loadedChunks.containsKey(node);
 	}
 
 	public void saveChunks() {
-		this.chunkLock.readLock().lock();
-		try {
+		synchronized(this.saveLock) {
 			List<IChunk> trueLoadedChunks = new ArrayList<>();
 			for(IChunk chunk : this.loadedChunks.values()) {
 				if(chunk instanceof FutureChunk) continue;
 				trueLoadedChunks.add(chunk);
 			}
-			
+
 			this.saveTask = this.executor
 					.submit(new ChunkSaveTask(Collections.unmodifiableCollection(trueLoadedChunks)));
-		} catch (Exception e) {
-			Logger.error(e);
-		} finally {
-			this.chunkLock.readLock().unlock();
 		}
 
 	}
 
 	public void update(float delta) {
 		// Check if the save task is done
-		try {
+		synchronized(this.saveLock) {
 			if (this.saveTask != null && this.saveTask.isDone()) {
 				this.saveTask = null;
 				Logger.log("Chunks saved");
 			}
-		} catch (Exception e) { // XXX: this needs to be done better, but for
-			// debugging, fail fast works for now
-			Logger.error("ChunkSaveTask threw an error during exectuion! Shutting down to try and protect data...");
-			this.executor.shutdownNow();
-			throw new RuntimeException("ChunkLoaderTask threw an error during exectuion! Shutting down to try and protect data...", e);
 		}
 
 		// Check if any of the ChunkLoaderTasks completed
 		// Lock the Loader Lock to make sure the underlying List does not get
 		// modified by anything other than the Iterator
-		this.loadLock.lock();
-		if (!this.chunkLoadList.isEmpty()) {
-			try {
-				Iterator<ChunkNode> iterator = this.chunkLoadList.iterator();
-				while (iterator.hasNext()) {
-					ChunkNode node = iterator.next();
-					IChunk chunk = this.loadedChunks.get(node);
-					if(chunk instanceof FutureChunk) {
-						if(((FutureChunk)chunk).isDone()) {
-							iterator.remove();
-							
-							if(chunk.getChunkData().shouldGenerate()) {
-								this.chunkGenerateList
-								.add(this.executor.submit(new ChunkGenerateTask(chunk, this.chunkGenerator)));
-								continue;
-							}
-							
-							IChunk replacement = this.makeChunk(this.dim, chunk.getNode(), chunk.getChunkData());
-							this.chunkLock.writeLock().lock(); // Lock the Chunk
-							// Writer lock
-							try {
+		synchronized(this.loadLock) {
+			if (!this.chunkLoadList.isEmpty()) {
+				try {
+					Iterator<ChunkNode> iterator = this.chunkLoadList.iterator();
+					while (iterator.hasNext()) {
+						ChunkNode node = iterator.next();
+						IChunk chunk = this.loadedChunks.get(node);
+						if(chunk instanceof FutureChunk) {
+							if(((FutureChunk)chunk).isDone()) {
+								iterator.remove();
+
+								if(chunk.getChunkData().shouldGenerate()) {
+									this.chunkGenerateList
+									.add(this.executor.submit(new ChunkGenerateTask(chunk, this.chunkGenerator)));
+									continue;
+								}
+
+								IChunk replacement = this.makeChunk(this.dim, chunk.getNode(), chunk.getChunkData());
 								this.loadedChunks.put(replacement.getNode(), replacement);
-							} catch (Exception e) {
-								Logger.error(e);
-							} finally {
-								this.chunkLock.writeLock().unlock();
 							}
+						} else {
+							iterator.remove();
 						}
-					} else {
-						iterator.remove();
 					}
+				} catch (Exception e) {
+					this.executor.shutdownNow();
+					throw new RuntimeException("ChunkLoaderTask threw an error during exectuion! Shutting down to try and protect data...", e);
 				}
-			} catch (Exception e) { // XXX: this needs to be done better, but
-				// for debugging, fail fast works for now
-				Logger.error(
-						"ChunkLoaderTask threw an error during exectuion! Shutting down to try and protect data...");
-				this.executor.shutdownNow();
-				throw new RuntimeException("ChunkLoaderTask threw an error during exectuion! Shutting down to try and protect data...", e);
-			} finally {
-				this.loadLock.unlock();
 			}
 		}
 
 		Iterator<Future<IChunk>> iterator;
 		Future<IChunk> value;
 
-		this.unloadLock.lock();
-		try {
-			iterator = this.chunkUnloadList.iterator();
-			while (iterator.hasNext()) {
-				value = iterator.next();
-				if (value.isCancelled()) {
-					iterator.remove();
-					continue;
-				}
+		synchronized(this.unloadLock) {
+			try {
+				iterator = this.chunkUnloadList.iterator();
+				while (iterator.hasNext()) {
+					value = iterator.next();
+					if (value.isCancelled()) {
+						iterator.remove();
+						continue;
+					}
 
-				if (value.isDone()) {
-					IChunk chunk = value.get();
-					iterator.remove();
-					chunk.dispose();
+					if (value.isDone()) {
+						IChunk chunk = value.get();
+						iterator.remove();
+						chunk.dispose();
+					}
 				}
+			} catch (Exception e) {
+				Logger.error(e);
 			}
-		} catch (Exception e) {
-			Logger.error(e);
-			throw new RuntimeException(e);
-		} finally {
-			this.unloadLock.unlock();
 		}
 
 		iterator = this.chunkGenerateList.iterator();
-		this.chunkLock.writeLock().lock();
-		try {
-			while (iterator.hasNext()) {
-				value = iterator.next();
-				if (value.isCancelled()) {
-					iterator.remove();
-					continue;
-				}
+		while (iterator.hasNext()) {
+			value = iterator.next();
+			if (value.isCancelled()) {
+				iterator.remove();
+				continue;
+			}
 
-				if (value.isDone()) {
+			if (value.isDone()) {
+				try {
 					IChunk chunk = value.get();
 					iterator.remove();
 					IChunk replacement = this.makeChunk(this.dim, chunk.getNode(), chunk.getChunkData());
 					this.loadedChunks.put(replacement.getNode(), replacement);
+				} catch(Exception e) {
+					Logger.error(e);
 				}
 			}
-		} catch (Exception e) {
-			Logger.error(e);
-		} finally {
-			this.chunkLock.writeLock().unlock();
 		}
 
-		this.chunkLock.readLock().lock();;
-		try {
-			for (IChunk chunk : loadedChunks.values()) {
-				if(chunk instanceof FutureChunk)
-					if(!((FutureChunk)chunk).isFutureDone())
-						continue;
-				
-				chunk.update(delta);
-			}
-		} catch (Exception e) {
-			Logger.error(e);
-		} finally {
-			this.chunkLock.readLock().unlock();;
+		for (IChunk chunk : loadedChunks.values()) {
+			if(chunk instanceof FutureChunk)
+				if(!((FutureChunk)chunk).isFutureDone())
+					continue;
+
+			chunk.update(delta);
 		}
 
 	}
@@ -311,58 +230,33 @@ public class ChunkManager implements IDisposable {
 	}
 
 	public final Collection<IChunk> getLoadedChunks() {
-		this.chunkLock.readLock().lock();
-		try {
-			List<IChunk> collection = new ArrayList<>(this.loadedChunks.values());
-			return Collections.unmodifiableCollection(collection);
-		} catch (Exception e) {
-			Logger.error(e);
-			return null;
-		} finally {
-			this.chunkLock.readLock().unlock();
-		}
+		List<IChunk> collection = new ArrayList<>(this.loadedChunks.values());
+		return Collections.unmodifiableCollection(collection);
 	}
-	
+
 	public IChunk getChunkAt(ChunkNode node){
-		this.chunkLock.readLock().lock();
-		try {
-			if(this.loadedChunks.containsKey(node)) {
+		if(this.loadedChunks.containsKey(node)) {
+			return this.loadedChunks.get(node);
+		} else {
+			synchronized(this.loadLock) {
+				this.chunkLoadList.add(node);
+				this.loadedChunks.put(node, new FutureChunk(this.dim, node, this.executor.submit(new ChunkLoaderTask(this.dim, node))));
 				return this.loadedChunks.get(node);
-			} else {
-				this.loadLock.lock();
-				try {
-					this.chunkLoadList.add(node);
-					this.loadedChunks.put(node, new FutureChunk(this.dim, node, this.executor.submit(new ChunkLoaderTask(this.dim, node))));
-					return this.loadedChunks.get(node);
-				} catch (Exception e) {
-					Logger.error(e);
-					return null;
-				} finally {
-					this.loadLock.unlock();
-				}
 			}
-		} catch (Exception e) {
-			Logger.error(e);
-			return null;
-		} finally {
-			this.chunkLock.readLock().unlock();
 		}
 	}
 
 	@Override
 	public void dispose() {
-		this.chunkLock.readLock().lock();
 		try {
 			if(!this.loadedChunks.isEmpty()) {
 				this.saveChunks();
 			}
-			
+
 			this.executor.shutdown();
 			this.executor.awaitTermination(30, TimeUnit.SECONDS);
 		} catch (Exception e) {
 			Logger.error(e);
-		} finally {
-			this.chunkLock.readLock().unlock();
 		}
 	}
 

@@ -23,13 +23,12 @@ package net.luxvacuos.voxel.universal.tasks;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.concurrent.Callable;
 
 import com.hackhalo2.nbt.stream.NBTInputStream;
 import com.hackhalo2.nbt.tags.TagCompound;
 
+import net.luxvacuos.igl.Logger;
 import net.luxvacuos.voxel.universal.core.GlobalVariables;
 import net.luxvacuos.voxel.universal.world.chunk.ChunkData;
 import net.luxvacuos.voxel.universal.world.chunk.ChunkDataBuilder;
@@ -42,14 +41,20 @@ public class ChunkLoaderTask implements Callable<ChunkData> {
 	private boolean exists;
 	private final ChunkNode node;
 
-	public ChunkLoaderTask(IDimension dim, ChunkNode node) throws IOException, FileNotFoundException {
+	public ChunkLoaderTask(IDimension dim, ChunkNode node) {
 		String path = GlobalVariables.WORLD_PATH + dim.getWorldName() + "/" + dim.getID();
 		String fullPath = path + "/" + "chunk_" + node.getX() + "_" + node.getZ() + ".dat";
 		this.node = node;
 		File file = new File(fullPath);
 
 		if (this.exists = (file.exists() && file.length() != 0L)) {
-			this.in = new NBTInputStream(new BufferedInputStream(new FileInputStream(file)));
+			try {
+				this.in = new NBTInputStream(new BufferedInputStream(new FileInputStream(file)));
+			} catch(Exception e) {
+				Logger.error(e);
+				this.exists = false;
+				new File(path).mkdirs();
+			}
 		} else {
 			new File(path).mkdirs();
 		}
@@ -60,22 +65,22 @@ public class ChunkLoaderTask implements Callable<ChunkData> {
 		ChunkDataBuilder builder = new ChunkDataBuilder();
 		ChunkSlice slice;
 		TagCompound root;
-		
+
 		if(this.exists) {
 			root = new TagCompound(this.in, false);
 			builder.setBlockMetadata(root.getCompound("BlockMetadata"));
 			int slices = root.getInt("NumSlices");
-			
+
 			TagCompound sliceCompound;
 			for(byte i = 0; i < slices; i++) {
 				sliceCompound = root.getCompound("ChunkSlice-"+i);
 				slice = new ChunkSlice(sliceCompound.getByte("Offset"));
 				builder.setSlice(slice.getOffset(), slice);
-				
+
 				if(sliceCompound.getByte("Empty") == 0) {
 					builder.setSliceData(slice.getOffset(), sliceCompound.getLongArray("BlockData"));
 				}
-				
+
 				slice = null;
 			}
 		} else {
@@ -86,7 +91,7 @@ public class ChunkLoaderTask implements Callable<ChunkData> {
 			}
 			builder.setBlockMetadata(new TagCompound("BlockMetadata"));
 		}
-		
+
 		return builder.build();
 
 	}

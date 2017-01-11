@@ -21,14 +21,13 @@
 package net.luxvacuos.voxel.client.world.chunks;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 import net.luxvacuos.igl.Logger;
 import net.luxvacuos.voxel.client.rendering.world.chunk.IRenderChunk;
@@ -39,73 +38,65 @@ import net.luxvacuos.voxel.universal.world.dimension.IDimension;
 import net.luxvacuos.voxel.universal.world.utils.ChunkNode;
 
 public class ClientChunkManager extends ChunkManager {
-	
+
 	protected final ExecutorService mesher = Executors.newFixedThreadPool(1);
-	protected final Lock meshLock = new ReentrantLock();
+	protected final Object meshLock = new Object();
 	protected List<Future<IRenderChunk>> chunkMeshList;
 
 	public ClientChunkManager(IDimension dim) {
 		super(dim);
-		this.chunkMeshList = new ArrayList<>();
+		this.chunkMeshList = Collections.synchronizedList(new ArrayList<>());
 	}
-	
+
 	@Override
 	protected RenderChunk makeChunk(IDimension dim, ChunkNode node, ChunkData data) {
 		RenderChunk chunk = new RenderChunk(dim, node, data);
 		chunk.markMeshRebuild();
 		return chunk;
 	}
-	
+
 	public final void generateChunkMesh(RenderChunk chunk) {
-		this.chunkLock.readLock().lock();
-		this.meshLock.lock();
-		try {
+		synchronized(this.meshLock) {
 			chunk.isRebuilding(true);
 			this.chunkMeshList.add(this.mesher.submit(new MeshGenerateTask(chunk)));
-		} catch(Exception e) {
-			Logger.error(e);
-		} finally {
-			this.meshLock.unlock();
-			this.chunkLock.readLock().unlock();
 		}
 	}
-	
+
 	@Override
 	public void update(float delta) {
-		this.meshLock.lock();
-		try {
-			Iterator<Future<IRenderChunk>> meshed = this.chunkMeshList.iterator();
-			Future<IRenderChunk> value;
-			while(meshed.hasNext()) {
-				value = meshed.next();
-				
-				if(value.isCancelled()) {
-					meshed.remove();
-					continue;
+		synchronized(this.meshLock) {
+			try {
+				Iterator<Future<IRenderChunk>> meshed = this.chunkMeshList.iterator();
+				Future<IRenderChunk> value;
+				while(meshed.hasNext()) {
+					value = meshed.next();
+
+					if(value.isCancelled()) {
+						meshed.remove();
+						continue;
+					}
+
+					if(value.isDone()) {
+						RenderChunk chunk = (RenderChunk)value.get();
+						meshed.remove();
+						chunk.isRebuilding(false);
+						chunk.needsMeshRebuild(false);
+					}
 				}
-				
-				if(value.isDone()) {
-					RenderChunk chunk = (RenderChunk)value.get();
-					meshed.remove();
-					chunk.isRebuilding(false);
-					chunk.needsMeshRebuild(false);
-				}
+			} catch(Exception e) {
+				Logger.error(e);
 			}
-		} catch(Exception e) {
-			Logger.error(e);
-		} finally {
-			this.meshLock.unlock();
 		}
-		
+
 		super.update(delta);
 	}
-	
+
 	@Override
 	public void dispose() {
 		try {
 			this.mesher.shutdown();
 			this.mesher.awaitTermination(30, TimeUnit.SECONDS);
-		} catch (InterruptedException e) {
+		} catch (Exception e) {
 			Logger.error(e);
 		}
 		super.dispose();

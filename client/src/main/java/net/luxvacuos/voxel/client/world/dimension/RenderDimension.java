@@ -62,8 +62,8 @@ public class RenderDimension extends Dimension {
 			aabb = chunk.getBoundingBox(chunk.getNode());
 			rChunk = (RenderChunk)chunk;
 			
-			//if(rChunk.needsMeshRebuild())
-				//((ClientChunkManager) this.chunkManager).generateChunkMesh(rChunk);
+			if(rChunk.needsMeshRebuild())
+				((ClientChunkManager) this.chunkManager).generateChunkMesh(rChunk);
 			
 			if (frustum.cubeInFrustum((float)aabb.min.x, (float)aabb.min.y, (float)aabb.min.z, 
 					(float)aabb.max.x, (float)aabb.max.y, (float)aabb.max.z)) {

@@ -62,7 +62,7 @@ public class RenderChunk extends Chunk implements IRenderChunk {
 
 	@Override
 	public void render(Camera camera, Camera sunCamera, ClientWorldSimulation clientWorldSimulation, int shadowMap) {
-		if (this.needsMeshRebuild()) {
+		/*if (this.needsMeshRebuild()) {
 			this.tess.begin();
 			for (int x = 0; x < 16; x++) {
 				for (int z = 0; z < 16; z++) {
@@ -89,7 +89,7 @@ public class RenderChunk extends Chunk implements IRenderChunk {
 			
 			this.tess.end();
 			this.needsMeshRebuild(false);
-		}
+		}*/
 		this.tess.draw(camera, sunCamera, clientWorldSimulation, shadowMap);
 	}
 
