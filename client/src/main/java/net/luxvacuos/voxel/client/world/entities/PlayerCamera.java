@@ -33,8 +33,10 @@ import net.luxvacuos.voxel.client.core.ClientInternalSubsystem;
 import net.luxvacuos.voxel.client.input.KeyboardHandler;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.util.Maths;
+import net.luxvacuos.voxel.universal.core.GlobalVariables;
 import net.luxvacuos.voxel.universal.ecs.Components;
 import net.luxvacuos.voxel.universal.ecs.components.AABB;
+import net.luxvacuos.voxel.universal.ecs.components.ChunkLoader;
 import net.luxvacuos.voxel.universal.ecs.components.Health;
 import net.luxvacuos.voxel.universal.ecs.components.Rotation;
 import net.luxvacuos.voxel.universal.ecs.components.Scale;
@@ -58,6 +60,8 @@ public class PlayerCamera extends Camera {
 				.setBoundingBox(new Vector3d(-0.25f, -1.4f, -0.25f), new Vector3d(0.25f, 0.2f, 0.25f)));
 		this.speed = 1f;
 		super.add(new Health(20));
+		super.add(new ChunkLoader());
+		Components.CHUNK_LOADER.get(this).setChunkRadius(GlobalVariables.chunk_radius);
 		if (flyMode)
 			Components.AABB.get(this).setEnabled(false);
 		this.viewMatrix = Maths.createViewMatrix(this);

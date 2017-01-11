@@ -32,9 +32,8 @@ import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.math.collision.BoundingBox;
 import com.badlogic.gdx.utils.Array;
 
-import net.luxvacuos.voxel.universal.core.GlobalVariables;
 import net.luxvacuos.voxel.universal.ecs.Components;
-import net.luxvacuos.voxel.universal.ecs.components.Player;
+import net.luxvacuos.voxel.universal.ecs.components.ChunkLoader;
 import net.luxvacuos.voxel.universal.ecs.components.Position;
 import net.luxvacuos.voxel.universal.world.IWorld;
 import net.luxvacuos.voxel.universal.world.block.Blocks;
@@ -68,7 +67,7 @@ public class Dimension implements IDimension {
 		}
 		this.chunkManager.batchLoadChunks(nodes.toArray());
 	}
-	
+
 	protected void setupChunkManager() {
 		this.chunkManager = new ChunkManager(this);
 		ChunkTerrainGenerator gen = new ChunkTerrainGenerator();
@@ -94,29 +93,32 @@ public class Dimension implements IDimension {
 
 	@Override
 	public void update(float delta) {
-		int playerCX = 0, playerCZ = 0;
-		ImmutableArray<Entity> players = entitiesManager.getEntitiesFor(Family.all(Player.class).get());
+		int entityCX = 0, entityCZ = 0, chunkRadius = 0;
+		ImmutableArray<Entity> players = entitiesManager
+				.getEntitiesFor(Family.all(Position.class, ChunkLoader.class).get());
 		Array<ChunkNode> toRemove = new Array<>();
-		for (Entity player : players) {
-
-			Position pos = Components.POSITION.get(player);
+		for (Entity entity : players) {
+			ChunkLoader loader = Components.CHUNK_LOADER.get(entity);
+			Position pos = Components.POSITION.get(entity);
 
 			if (pos.getPosition().x < 0)
-				playerCX = (int) ((pos.getPosition().x - 8) / 16);
+				entityCX = (int) ((pos.getPosition().x - 8) / 16);
 			else
-				playerCX = (int) ((pos.getPosition().x + 8) / 16);
-			
+				entityCX = (int) ((pos.getPosition().x + 8) / 16);
+
 			if (pos.getPosition().z < 0)
-				playerCZ = (int) ((pos.getPosition().z - 8) / 16);
+				entityCZ = (int) ((pos.getPosition().z - 8) / 16);
 			else
-				playerCZ = (int) ((pos.getPosition().z + 8) / 16);
-			
+				entityCZ = (int) ((pos.getPosition().z + 8) / 16);
+
+			chunkRadius = loader.getChunkRadius();
+
 			ChunkNode node;
 			int xx, zz;
-			for (int zr = -GlobalVariables.chunk_radius; zr <= GlobalVariables.chunk_radius; zr++) {
-				zz = playerCZ + zr;
-				for (int xr = -GlobalVariables.chunk_radius; xr <= GlobalVariables.chunk_radius; xr++) {
-					xx = playerCX + xr;
+			for (int zr = -chunkRadius; zr <= chunkRadius; zr++) {
+				zz = entityCZ + zr;
+				for (int xr = -chunkRadius; xr <= chunkRadius; xr++) {
+					xx = entityCX + xr;
 					node = new ChunkNode(xx, zz);
 					if (!chunkManager.isChunkLoaded(node)) {
 						chunkManager.loadChunk(node);
@@ -125,9 +127,9 @@ public class Dimension implements IDimension {
 			}
 
 			for (IChunk chunk : chunkManager.getLoadedChunks()) {
-				if (Math.abs(chunk.getNode().getX() - playerCX) > GlobalVariables.chunk_radius) {
+				if (Math.abs(chunk.getNode().getX() - entityCX) > chunkRadius) {
 					toRemove.add(chunk.getNode());
-				} else if (Math.abs(chunk.getNode().getZ() - playerCZ) > GlobalVariables.chunk_radius) {
+				} else if (Math.abs(chunk.getNode().getZ() - entityCZ) > chunkRadius) {
 					toRemove.add(chunk.getNode());
 				}
 			}
@@ -157,7 +159,7 @@ public class Dimension implements IDimension {
 		List<BoundingBox> array = new ArrayList<>();
 
 		for (int i = (int) Math.floor(box.min.x); i < (int) Math.ceil(box.max.x); i++) {
-			//XXX: Hardcoded 255 limit until custom world height is implemented
+			// XXX: Hardcoded 255 limit until custom world height is implemented
 			for (int j = (int) Math.floor(box.min.y); j < (int) Math.min(Math.ceil(box.max.y), 255); j++) {
 				for (int k = (int) Math.floor(box.min.z); k < (int) Math.ceil(box.max.z); k++) {
 					IBlock block = getBlockAt(i, j, k);

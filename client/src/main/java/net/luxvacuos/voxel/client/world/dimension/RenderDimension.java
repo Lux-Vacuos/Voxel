@@ -43,7 +43,7 @@ public class RenderDimension extends Dimension {
 	public RenderDimension(IWorld world, int id) {
 		super(world, id);
 	}
-	
+
 	@Override
 	protected void setupChunkManager() {
 		this.chunkManager = new ClientChunkManager(this);
@@ -58,15 +58,15 @@ public class RenderDimension extends Dimension {
 		BoundingBox aabb;
 		RenderChunk rChunk;
 		for (IChunk chunk : this.chunkManager.getLoadedChunks()) {
-			if(chunk instanceof FutureChunk) continue;
+			if (chunk instanceof FutureChunk)
+				continue;
 			aabb = chunk.getBoundingBox(chunk.getNode());
-			rChunk = (RenderChunk)chunk;
-			
-			if(rChunk.needsMeshRebuild())
-				((ClientChunkManager) this.chunkManager).generateChunkMesh(rChunk);
-			
-			if (frustum.cubeInFrustum((float)aabb.min.x, (float)aabb.min.y, (float)aabb.min.z, 
-					(float)aabb.max.x, (float)aabb.max.y, (float)aabb.max.z)) {
+			if (frustum.cubeInFrustum((float) aabb.min.x, (float) aabb.min.y, (float) aabb.min.z, (float) aabb.max.x,
+					(float) aabb.max.y, (float) aabb.max.z)) {
+				rChunk = (RenderChunk) chunk;
+				if (rChunk.needsMeshRebuild())
+					((ClientChunkManager) this.chunkManager).generateChunkMesh(rChunk);
+
 				this.renderedChunks++;
 				rChunk.render(camera, sunCamera, clientWorldSimulation, shadowMap);
 			}
@@ -76,11 +76,12 @@ public class RenderDimension extends Dimension {
 	public void renderOcclusion(Camera camera, Frustum frustum) {
 		BoundingBox aabb;
 		for (IChunk chunk : this.chunkManager.getLoadedChunks()) {
-			if(chunk instanceof FutureChunk) continue;
+			if (chunk instanceof FutureChunk)
+				continue;
 			aabb = chunk.getBoundingBox(chunk.getNode());
-			
-			if (frustum.cubeInFrustum((float)aabb.min.x, (float)aabb.min.y, (float)aabb.min.z, 
-					(float)aabb.max.x, (float)aabb.max.y, (float)aabb.max.z)) {
+
+			if (frustum.cubeInFrustum((float) aabb.min.x, (float) aabb.min.y, (float) aabb.min.z, (float) aabb.max.x,
+					(float) aabb.max.y, (float) aabb.max.z)) {
 				((RenderChunk) chunk).renderOcclusion(camera);
 			}
 		}
@@ -89,11 +90,12 @@ public class RenderDimension extends Dimension {
 	public void renderShadow(Camera sunCamera, Frustum frustum) {
 		BoundingBox aabb;
 		for (IChunk chunk : this.chunkManager.getLoadedChunks()) {
-			if(chunk instanceof FutureChunk) continue;
+			if (chunk instanceof FutureChunk)
+				continue;
 			aabb = chunk.getBoundingBox(chunk.getNode());
-			
-			if (frustum.cubeInFrustum((float)aabb.min.x, (float)aabb.min.y, (float)aabb.min.z, 
-					(float)aabb.max.x, (float)aabb.max.y, (float)aabb.max.z)) {
+
+			if (frustum.cubeInFrustum((float) aabb.min.x, (float) aabb.min.y, (float) aabb.min.z, (float) aabb.max.x,
+					(float) aabb.max.y, (float) aabb.max.z)) {
 				((RenderChunk) chunk).renderShadow(sunCamera);
 			}
 		}

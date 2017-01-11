@@ -56,7 +56,7 @@ public class ClientChunkManager extends ChunkManager {
 	}
 
 	public final void generateChunkMesh(RenderChunk chunk) {
-		synchronized(this.meshLock) {
+		synchronized (this.meshLock) {
 			chunk.isRebuilding(true);
 			this.chunkMeshList.add(this.mesher.submit(new MeshGenerateTask(chunk)));
 		}
@@ -64,26 +64,26 @@ public class ClientChunkManager extends ChunkManager {
 
 	@Override
 	public void update(float delta) {
-		synchronized(this.meshLock) {
+		synchronized (this.meshLock) {
 			try {
 				Iterator<Future<IRenderChunk>> meshed = this.chunkMeshList.iterator();
 				Future<IRenderChunk> value;
-				while(meshed.hasNext()) {
+				while (meshed.hasNext()) {
 					value = meshed.next();
 
-					if(value.isCancelled()) {
+					if (value.isCancelled()) {
 						meshed.remove();
 						continue;
 					}
 
-					if(value.isDone()) {
-						RenderChunk chunk = (RenderChunk)value.get();
+					if (value.isDone()) {
+						RenderChunk chunk = (RenderChunk) value.get();
 						meshed.remove();
 						chunk.isRebuilding(false);
 						chunk.needsMeshRebuild(false);
 					}
 				}
-			} catch(Exception e) {
+			} catch (Exception e) {
 				Logger.error(e);
 			}
 		}

@@ -45,12 +45,14 @@ import net.luxvacuos.voxel.universal.core.AbstractVoxel;
 import net.luxvacuos.voxel.universal.core.states.AbstractState;
 import net.luxvacuos.voxel.universal.core.states.StateMachine;
 import net.luxvacuos.voxel.universal.world.IWorld;
+import net.luxvacuos.voxel.universal.world.entities.ChunkLoaderEntity;
 
 public class SPWorldState extends AbstractState {
 
 	private Sun sun;
 	private ClientWorldSimulation worldSimulation;
 	private Camera camera;
+	private ChunkLoaderEntity spawnChunks;
 
 	private IWorld world;
 
@@ -74,13 +76,15 @@ public class SPWorldState extends AbstractState {
 			// ((RenderDimension)
 			// world.getActiveDimension()).renderOcclusion(camera, frustum);
 		});
-		
+
 		world = new RenderWorld(ClientVariables.worldNameToLoad);
 		world.loadDimension(0);
 		world.setActiveDimension(0);
 		((PlayerCamera) camera).setMouse();
 		camera.setPosition(new Vector3d(0, 256, 0));
+		spawnChunks.setPosition(new Vector3d(0, 0, 0));
 		world.getActiveDimension().getEntitiesManager().addEntity(camera);
+		//world.getActiveDimension().getEntitiesManager().addEntity(spawnChunks);
 	}
 
 	@Override
@@ -101,10 +105,11 @@ public class SPWorldState extends AbstractState {
 				ClientVariables.FOV, ClientVariables.NEAR_PLANE, ClientVariables.FAR_PLANE);
 
 		camera = new PlayerCamera(projectionMatrix, window);
-		camera.setPosition(new Vector3d(0, 2, 0));
 		sun = new Sun(shadowProjectionMatrix);
 
 		worldSimulation = new ClientWorldSimulation();
+		
+		spawnChunks = new ChunkLoaderEntity(new Vector3d());
 
 		pausesState = new SPPauseState();
 		pausesState.init();
