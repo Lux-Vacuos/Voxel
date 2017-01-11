@@ -118,6 +118,7 @@ public class SPWorldState extends AbstractState {
 	@Override
 	public void dispose() {
 		pausesState.dispose();
+		world.dispose();
 	}
 
 	@Override

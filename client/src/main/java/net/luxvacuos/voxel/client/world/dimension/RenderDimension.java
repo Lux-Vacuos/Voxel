@@ -138,9 +138,4 @@ public class RenderDimension extends Dimension implements IRenderDimension {
 		return (ClientWorldSimulation)this.worldSimulation;
 	}
 
-	@Override
-	public void dispose() {
-		super.dispose();
-	}
-
 }
