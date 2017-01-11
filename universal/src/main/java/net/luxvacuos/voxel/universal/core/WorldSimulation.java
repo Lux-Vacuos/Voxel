@@ -20,13 +20,17 @@
 
 package net.luxvacuos.voxel.universal.core;
 
-public abstract class AbstractWorldSimulation implements IWorldSimulation {
+public class WorldSimulation implements IWorldSimulation {
 	
 	protected float time = 0;
 	protected float globalTime = 0;
 	protected float rainFactor = 0;
 	
-	protected AbstractWorldSimulation(float time) {
+	public WorldSimulation() {
+		this.time = 10000;
+	}
+	
+	protected WorldSimulation(float time) {
 		this.time = time;
 	}
 
@@ -48,6 +52,11 @@ public abstract class AbstractWorldSimulation implements IWorldSimulation {
 	@Override
 	public void setTime(float time) {
 		this.time = time;
+	}
+
+	@Override
+	public float update(float deltaTime) {
+		return 0;
 	}
 
 }

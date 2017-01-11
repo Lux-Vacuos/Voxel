@@ -34,13 +34,13 @@ import net.luxvacuos.igl.vector.Matrix4d;
 import net.luxvacuos.igl.vector.Vector2d;
 import net.luxvacuos.igl.vector.Vector3d;
 import net.luxvacuos.voxel.client.core.ClientVariables;
-import net.luxvacuos.voxel.client.core.ClientWorldSimulation;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.CubeMapTexture;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.Light;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.RawModel;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.DeferredShadingShader;
 import net.luxvacuos.voxel.client.util.Maths;
 import net.luxvacuos.voxel.client.world.entities.Camera;
+import net.luxvacuos.voxel.universal.core.IWorldSimulation;
 
 /**
  * ImagePass, use inside {@link RenderingPipeline} to process different image
@@ -100,7 +100,7 @@ public abstract class ImagePass implements IImagePass {
 
 	@Override
 	public void process(Camera camera, Matrix4d previousViewMatrix, Vector3d previousCameraPosition,
-			Vector3d lightPosition, Vector3d invertedLightPosition, ClientWorldSimulation clientWorldSimulation,
+			Vector3d lightPosition, Vector3d invertedLightPosition, IWorldSimulation clientWorldSimulation,
 			List<Light> lights, ImagePassFBO[] auxs, RenderingPipeline pipe, RawModel quad,
 			CubeMapTexture environmentMap, float exposure) {
 		fbo.begin();

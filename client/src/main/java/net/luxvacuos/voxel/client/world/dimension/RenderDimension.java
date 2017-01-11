@@ -26,6 +26,7 @@ import com.badlogic.gdx.math.collision.BoundingBox;
 
 import net.luxvacuos.voxel.client.core.ClientWorldSimulation;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Frustum;
+import net.luxvacuos.voxel.client.rendering.world.dimension.IRenderDimension;
 import net.luxvacuos.voxel.client.world.chunks.ClientChunkManager;
 import net.luxvacuos.voxel.client.world.chunks.RenderChunk;
 import net.luxvacuos.voxel.client.world.entities.Camera;
@@ -38,7 +39,7 @@ import net.luxvacuos.voxel.universal.world.chunk.generator.ChunkTerrainGenerator
 import net.luxvacuos.voxel.universal.world.chunk.generator.SimplexNoise;
 import net.luxvacuos.voxel.universal.world.dimension.Dimension;
 
-public class RenderDimension extends Dimension {
+public class RenderDimension extends Dimension implements IRenderDimension {
 
 	private int renderedChunks = 0;
 
@@ -53,9 +54,14 @@ public class RenderDimension extends Dimension {
 		gen.setNoiseGenerator(new SimplexNoise(256, 0.15f, new Random().nextInt()));
 		this.chunkManager.setGenerator(gen);
 	}
+	
+	@Override
+	protected void setupWorldSimulator() {
+		this.worldSimulation = new ClientWorldSimulation(10000);
+	}
 
-	public void render(Camera camera, Camera sunCamera, ClientWorldSimulation clientWorldSimulation, Frustum frustum,
-			int shadowMap) {
+	@Override
+	public void render(Camera camera, Camera sunCamera, Frustum frustum, int shadowMap) {
 		this.renderedChunks = 0;
 		BoundingBox aabb;
 		RenderChunk rChunk;
@@ -87,12 +93,13 @@ public class RenderDimension extends Dimension {
 						((ClientChunkManager) this.chunkManager).generateChunkMesh(rChunk);
 
 					this.renderedChunks++;
-					rChunk.render(camera, sunCamera, clientWorldSimulation, shadowMap);
+					rChunk.render(camera, sunCamera, this.getWorldSimulator(), shadowMap);
 				}
 
 		}
 	}
 
+	@Override
 	public void renderOcclusion(Camera camera, Frustum frustum) {
 		BoundingBox aabb;
 		for (IChunk chunk : this.chunkManager.getLoadedChunks()) {
@@ -107,6 +114,7 @@ public class RenderDimension extends Dimension {
 		}
 	}
 
+	@Override
 	public void renderShadow(Camera sunCamera, Frustum frustum) {
 		BoundingBox aabb;
 		for (IChunk chunk : this.chunkManager.getLoadedChunks()) {
@@ -124,10 +132,10 @@ public class RenderDimension extends Dimension {
 	public int getRenderedChunks() {
 		return renderedChunks;
 	}
-
+	
 	@Override
-	public void dispose() {
-		super.dispose();
+	public ClientWorldSimulation getWorldSimulator() {
+		return (ClientWorldSimulation)this.worldSimulation;
 	}
 
 }

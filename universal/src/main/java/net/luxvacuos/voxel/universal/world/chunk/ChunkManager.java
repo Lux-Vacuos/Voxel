@@ -256,6 +256,7 @@ public class ChunkManager implements IDisposable {
 		try {
 			Array<ChunkNode> toRemove = new Array<>();
 			if (!this.loadedChunks.isEmpty()) {
+				Logger.log("Saving Chunks...");
 				this.saveChunks();
 				for (IChunk chunk : this.loadedChunks.values()) {
 					toRemove.add(chunk.getNode());

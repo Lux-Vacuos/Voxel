@@ -32,6 +32,8 @@ import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.math.collision.BoundingBox;
 import com.badlogic.gdx.utils.Array;
 
+import net.luxvacuos.voxel.universal.core.IWorldSimulation;
+import net.luxvacuos.voxel.universal.core.WorldSimulation;
 import net.luxvacuos.voxel.universal.ecs.Components;
 import net.luxvacuos.voxel.universal.ecs.components.ChunkLoader;
 import net.luxvacuos.voxel.universal.ecs.components.Position;
@@ -49,6 +51,7 @@ public class Dimension implements IDimension {
 
 	private int id;
 	protected IWorld world;
+	protected IWorldSimulation worldSimulation;
 	protected ChunkManager chunkManager;
 	protected Engine entitiesManager;
 
@@ -56,6 +59,7 @@ public class Dimension implements IDimension {
 		this.world = world;
 		this.id = id;
 		this.setupChunkManager();
+		this.setupWorldSimulator();
 		this.entitiesManager = new Engine();
 		this.entitiesManager.addSystem(new PhysicsSystem(this));
 	}
@@ -65,6 +69,10 @@ public class Dimension implements IDimension {
 		ChunkTerrainGenerator gen = new ChunkTerrainGenerator();
 		gen.setNoiseGenerator(new SimplexNoise(256, 0.15f, new Random().nextInt()));
 		this.chunkManager.setGenerator(gen);
+	}
+	
+	protected void setupWorldSimulator() {
+		this.worldSimulation = new WorldSimulation();
 	}
 
 	@Override
@@ -78,13 +86,8 @@ public class Dimension implements IDimension {
 	}
 
 	@Override
-	public boolean exists() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
 	public void update(float delta) {
+		this.worldSimulation.update(delta);
 		int entityCX = 0, entityCZ = 0, chunkRadius = 0;
 		ImmutableArray<Entity> players = entitiesManager
 				.getEntitiesFor(Family.all(Position.class, ChunkLoader.class).get());
@@ -182,6 +185,11 @@ public class Dimension implements IDimension {
 	@Override
 	public Collection<IChunk> getLoadedChunks() {
 		return chunkManager.getLoadedChunks();
+	}
+
+	@Override
+	public WorldSimulation getWorldSimulator() {
+		return (WorldSimulation)this.worldSimulation;
 	}
 
 }

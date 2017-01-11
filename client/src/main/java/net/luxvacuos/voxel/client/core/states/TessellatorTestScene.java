@@ -61,9 +61,7 @@ public class TessellatorTestScene extends AbstractState {
 		camera.setPosition(new Vector3d(0, 2, 0));
 		sun = new Sun(shadowProjectionMatrix);
 
-		worldSimulation = new ClientWorldSimulation();
-
-		worldSimulation = new ClientWorldSimulation();
+		worldSimulation = new ClientWorldSimulation(10000);
 		engine = new Engine();
 		physicsSystem = new PhysicsSystem(null);
 		physicsSystem.addBox(new BoundingBox(new Vector3(-50, -1, -50), new Vector3(50, 0, 50)));

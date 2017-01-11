@@ -50,7 +50,7 @@ import net.luxvacuos.voxel.universal.world.IWorld;
 public class MPWorldState extends AbstractState {
 
 	private Sun sun;
-	private ClientWorldSimulation worldSimulation;
+	//private ClientWorldSimulation worldSimulation;
 	private Camera camera;
 
 	private IWorld world;
@@ -67,8 +67,9 @@ public class MPWorldState extends AbstractState {
 	public void start() {
 		super.start();
 		Renderer.setDeferredPass((camera, sunCamera, frustum, shadowMap) -> {
-			((RenderDimension) world.getActiveDimension()).render(camera, sunCamera, worldSimulation, frustum,
-					shadowMap);
+			//((RenderDimension) world.getActiveDimension()).render(camera, sunCamera, worldSimulation, frustum,
+					//shadowMap);
+			((RenderDimension) world.getActiveDimension()).render(camera, sunCamera, frustum, shadowMap);
 		});
 		Renderer.setShadowPass((camera, sunCamera, frustum, shadowMap) -> {
 			((RenderDimension) world.getActiveDimension()).renderShadow(sunCamera, frustum);
@@ -111,7 +112,7 @@ public class MPWorldState extends AbstractState {
 		camera.setPosition(new Vector3d(0, 2, 0));
 		sun = new Sun(shadowProjectionMatrix);
 
-		worldSimulation = new ClientWorldSimulation();
+		//worldSimulation = new ClientWorldSimulation(10000); //TODO: load from network
 
 		pausesState = new SPPauseState();
 		pausesState.init();
@@ -129,7 +130,7 @@ public class MPWorldState extends AbstractState {
 		Window window = ClientInternalSubsystem.getInstance().getGameWindow();
 
 		Renderer.render(world.getActiveDimension().getEntitiesManager().getEntities(), ParticleDomain.getParticles(),
-				camera, sun.getCamera(), worldSimulation, sun.getSunPosition(), sun.getInvertedSunPosition(), alpha);
+				camera, sun.getCamera(), world.getActiveDimension().getWorldSimulator(), sun.getSunPosition(), sun.getInvertedSunPosition(), alpha);
 
 		window.beingNVGFrame();
 		if (ClientVariables.debug) {
@@ -165,7 +166,7 @@ public class MPWorldState extends AbstractState {
 	@Override
 	public void update(AbstractVoxel voxel, float delta) {
 		world.update(delta);
-		sun.update(camera.getPosition(), worldSimulation.update(delta), delta);
+		sun.update(camera.getPosition(), this.getWorldSimulation().getRotation(), delta);
 		ParticleDomain.update(delta, camera);
 
 		if (!ClientVariables.paused) {
@@ -191,7 +192,7 @@ public class MPWorldState extends AbstractState {
 	}
 
 	public ClientWorldSimulation getWorldSimulation() {
-		return worldSimulation;
+		return (ClientWorldSimulation) this.world.getActiveDimension().getWorldSimulator();
 	}
 
 }
