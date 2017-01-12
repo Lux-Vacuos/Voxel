@@ -94,9 +94,7 @@ project(":universal") {
 project(":utils") {
 	dependencies {
 		compile 'log4j:log4j:1.2.17'
-		compile 'com.esotericsoftware:kryo:4.0.0'
-		compile 'com.esotericsoftware:jsonbeans:0.7'
-		compile group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.1'
+		compile 'com.google.code.findbugs:jsr305:3.0.1'
 		testCompile group: 'junit', name: 'junit', version: '4.12'
 	}
 }

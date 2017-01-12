@@ -22,7 +22,6 @@ package net.luxvacuos.voxel.client.core;
 
 import java.io.File;
 
-import net.luxvacuos.igl.CustomLog;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Icon;
 import net.luxvacuos.voxel.client.rendering.api.glfw.PixelBufferHandle;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
@@ -48,7 +47,6 @@ import net.luxvacuos.voxel.universal.core.TaskManager;
 import net.luxvacuos.voxel.universal.material.BlockMaterial;
 import net.luxvacuos.voxel.universal.material.MaterialModder;
 import net.luxvacuos.voxel.universal.world.block.Blocks;
-import net.luxvacuos.voxel.client.core.ClientVariables;
 
 /**
  * 
@@ -108,7 +106,6 @@ public class ClientInternalSubsystem extends AbstractInternalSubsystem {
 
 	@Override
 	public void init() {
-		CustomLog.getInstance();
 		if (!ClientVariables.WSL) {
 			try {
 				SoundSystemConfig.addLibrary(LibraryLWJGLOpenAL.class);

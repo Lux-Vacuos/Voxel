@@ -20,10 +20,8 @@
 
 package net.luxvacuos.voxel.client.bootstrap;
 
-import com.esotericsoftware.minlog.Log;
-
-import net.luxvacuos.voxel.client.core.Voxel;
 import net.luxvacuos.voxel.client.core.ClientVariables;
+import net.luxvacuos.voxel.client.core.Voxel;
 import net.luxvacuos.voxel.universal.bootstrap.AbstractBootstrap;
 import net.luxvacuos.voxel.universal.bootstrap.Platform;
 
@@ -41,8 +39,6 @@ public class Bootstrap extends AbstractBootstrap {
 
 	@Override
 	public void init() {
-		// Minglog Log level
-		Log.set(Log.LEVEL_INFO);
 		Thread.currentThread().setName("Voxel-Client");
 	}
 
