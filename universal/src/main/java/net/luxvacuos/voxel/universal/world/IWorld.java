@@ -22,16 +22,15 @@ package net.luxvacuos.voxel.universal.world;
 
 import java.util.Collection;
 
+import net.luxvacuos.voxel.universal.resources.IDisposable;
 import net.luxvacuos.voxel.universal.world.dimension.IDimension;
 
-public interface IWorld {
+public interface IWorld extends IDisposable {
 
 	// World Stuff
 	public String getName();
 
 	public void update(float delta);
-
-	public void dispose();
 
 	// Dimension stuff
 	public void addDimension(IDimension dimension);

@@ -64,20 +64,22 @@ public class SPWorldState extends AbstractState {
 	@Override
 	public void start() {
 		super.start();
+		
+		this.world = new RenderWorld(ClientVariables.worldNameToLoad);
+		
 		Renderer.setDeferredPass((camera, sunCamera, frustum, shadowMap) -> {
 			//((RenderDimension) world.getActiveDimension()).render(camera, sunCamera, worldSimulation, frustum,
 					//shadowMap);
-			((RenderDimension)world.getActiveDimension()).render(camera, sunCamera, frustum, shadowMap);
+			((RenderWorld)world).render(camera, sunCamera, frustum, shadowMap);
 		});
 		Renderer.setShadowPass((camera, sunCamera, frustum, shadowMap) -> {
-			((RenderDimension) world.getActiveDimension()).renderShadow(sunCamera, frustum);
+			((RenderWorld)world).renderShadow(sunCamera, frustum);
 		});
 		Renderer.setOcclusionPass((camera, sunCamera, frustum, shadowMap) -> {
 			// ((RenderDimension)
 			// world.getActiveDimension()).renderOcclusion(camera, frustum);
 		});
 
-		world = new RenderWorld(ClientVariables.worldNameToLoad);
 		world.loadDimension(0);
 		world.setActiveDimension(0);
 		((PlayerCamera) camera).setMouse();
@@ -97,10 +99,10 @@ public class SPWorldState extends AbstractState {
 	public void init() {
 		Window window = ClientInternalSubsystem.getInstance().getGameWindow();
 
-		Matrix4d shadowProjectionMatrix = Maths.orthographic(-ClientVariables.shadowMapDrawDistance,
-				ClientVariables.shadowMapDrawDistance, -ClientVariables.shadowMapDrawDistance,
-				ClientVariables.shadowMapDrawDistance, -ClientVariables.shadowMapDrawDistance,
-				ClientVariables.shadowMapDrawDistance, false);
+		Matrix4d shadowProjectionMatrix = Maths.orthographic(
+				-ClientVariables.shadowMapDrawDistance, ClientVariables.shadowMapDrawDistance,
+				-ClientVariables.shadowMapDrawDistance, ClientVariables.shadowMapDrawDistance,
+				-ClientVariables.shadowMapDrawDistance, ClientVariables.shadowMapDrawDistance, false);
 		Matrix4d projectionMatrix = Renderer.createProjectionMatrix(window.getWidth(), window.getHeight(),
 				ClientVariables.FOV, ClientVariables.NEAR_PLANE, ClientVariables.FAR_PLANE);
 
