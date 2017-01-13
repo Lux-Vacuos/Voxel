@@ -35,7 +35,6 @@ public class MultiPass extends RenderingPipeline {
 	private GaussianHorizonal gaussianHorizontal;
 	private GaussianVertical gaussianVertical;
 	private Reflections reflections;
-	private AmbientOcclusion ambientOcclusion;
 	private ColorCorrection colorCorrection;
 	private PointLightPass pointLightPass;
 	private FXAA fxaa;
@@ -61,9 +60,6 @@ public class MultiPass extends RenderingPipeline {
 
 		pointLightPass = new PointLightPass("PointLight", width, height);
 		super.imagePasses.add(pointLightPass);
-
-		ambientOcclusion = new AmbientOcclusion("AmbientOcclusion", width, height);
-		super.imagePasses.add(ambientOcclusion);
 
 		//reflections = new Reflections("Reflections", width, height);
 		//reflections.init();

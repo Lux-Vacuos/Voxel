@@ -107,10 +107,6 @@ public class TestState extends AbstractState {
 		camera.setPosition(new Vector3d(0, 2, 0));
 		sun = new Sun(shadowProjectionMatrix);
 
-		//ShaderProgram.loadToVFS(new ShaderIncludes("/common/common.glsl"));
-		//ShaderProgram.loadToVFS(new ShaderIncludes("/common/Lighting-PBR.glsl"));
-		//ShaderProgram.loadToVFS(new ShaderIncludes("/common/Materials.glsl"));
-
 		EntityResources.load(loader);
 
 		worldSimulation = new ClientWorldSimulation(10000);
@@ -135,7 +131,7 @@ public class TestState extends AbstractState {
 		tess.begin();
 		for (int x = 0; x < 16; x++) {
 			for (int z = 0; z < 16; z++) {
-				tess.generateCube(20 + x, -1, z, 1, true, true, true, true, true, true, t);
+				tess.generateCube(20 + x, 0, z, 1, true, true, true, true, true, true, t);
 			}
 		}
 		tess.end();
@@ -235,7 +231,7 @@ public class TestState extends AbstractState {
 		if (kbh.isKeyPressed(GLFW.GLFW_KEY_ESCAPE)) {
 			kbh.ignoreKeyUntilRelease(GLFW.GLFW_KEY_ESCAPE);
 			((PlayerCamera) camera).unlockMouse();
-			StateMachine.setCurrentState(StateNames.SP_PAUSE);
+			StateMachine.setCurrentState(StateNames.MAIN_MENU);
 		}
 
 	}

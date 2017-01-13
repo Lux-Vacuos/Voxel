@@ -61,3 +61,25 @@ vec3 fresnelSchlickRoughness(float cosTheta, vec3 F0, float roughness) {
     return F0 + (max(vec3(1.0 - roughness), F0) - F0) * pow(1.0 - cosTheta, 5.0);
 }
 ##end
+
+##function computeAmbientOcclusion
+float computeAmbientOcclusion(vec3 position, vec3 normal) {
+	if(useAmbientOcclusion == 1) {
+    	float ambientOcclusion = 0;
+		vec2 filterRadius = vec2(10 / resolution.x, 10 / resolution.y);
+    	for (int i = 0; i < sample_count; ++i) {
+	    	vec2 sampleTexCoord = textureCoords + (poisson16[i] * (filterRadius));
+       		float sampleDepth = texture(gDepth, sampleTexCoord).r;
+       		vec3 samplePos = texture(gPosition, sampleTexCoord).rgb;
+       		vec3 sampleDir = normalize(samplePos - position);
+       		float NdotS = max(dot(normal, sampleDir), 0);
+       		float VPdistSP = distance(position, samplePos);
+       		float a = 1.0 - smoothstep(distanceThreshold, distanceThreshold * 2, VPdistSP);
+       		float b = NdotS;
+	       	ambientOcclusion += (a * b) * 1.3;
+    	}
+	return -(ambientOcclusion / sample_count) + 1;
+	} else
+		return 1;
+}
+##end
