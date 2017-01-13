@@ -36,7 +36,7 @@ public class Light {
 	public Vector3d getPosition() {
 		return position;
 	}
-	
+
 	public Vector3f getColor() {
 		return color;
 	}

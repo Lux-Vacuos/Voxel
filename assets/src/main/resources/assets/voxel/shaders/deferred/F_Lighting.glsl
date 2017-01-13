@@ -84,7 +84,7 @@ void main(void) {
        	float NdotL = max(dot(N, L) - position.w, 0.0) ;      
        	Lo += (kD * image.rgb / PI + brdf) * radiance * NdotL;
 
-    	vec3 ambient = vec3(0.03) * image.rgb;
+		vec3 ambient = max(dot(vec3(0, 1, 0), L) * 0.1, 0.001)  * image.rgb;
     	vec3 color = ambient + Lo;
 		image.rgb = color;
 

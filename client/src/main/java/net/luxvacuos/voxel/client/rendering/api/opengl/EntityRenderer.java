@@ -81,23 +81,23 @@ public class EntityRenderer {
 		shader.cleanUp();
 	}
 
-	public void renderEntity(ImmutableArray<Entity> immutableArray, Camera camera, Camera sunCamera, int shadowTex) {
+	public void renderEntity(ImmutableArray<Entity> immutableArray, Camera camera, Camera sunCamera, ShadowFBO shadow) {
 		for (Entity entity : immutableArray) {
 			if (entity instanceof AbstractEntity && entity.getComponent(RendereableComponent.class) != null) {
 				processEntity((AbstractEntity) entity);
 			}
 		}
-		renderEntity(camera, sunCamera, shadowTex);
+		renderEntity(camera, sunCamera, shadow);
 	}
 
-	private void renderEntity(Camera camera, Camera sunCamera, int shadowTex) {
+	private void renderEntity(Camera camera, Camera sunCamera, ShadowFBO shadow) {
 		shader.start();
 		shader.loadviewMatrix(camera);
 		shader.loadLightMatrix(sunCamera);
 		shader.useShadows(ClientVariables.useShadows);
 		shader.loadProjectionMatrix(camera.getProjectionMatrix());
 		shader.loadBiasMatrix(sunCamera.getProjectionMatrix());
-		renderEntity(entities, shadowTex);
+		renderEntity(entities, shadow);
 		shader.stop();
 		entities.clear();
 	}
@@ -114,9 +114,9 @@ public class EntityRenderer {
 		}
 	}
 
-	private void renderEntity(Map<TexturedModel, List<AbstractEntity>> blockEntities, int shadowTex) {
+	private void renderEntity(Map<TexturedModel, List<AbstractEntity>> blockEntities, ShadowFBO shadow) {
 		for (TexturedModel model : blockEntities.keySet()) {
-			prepareTexturedModel(model, shadowTex);
+			prepareTexturedModel(model, shadow);
 			List<AbstractEntity> batch = blockEntities.get(model);
 			shader.loadMaterial(model.getMaterial());
 			for (AbstractEntity entity : batch) {
@@ -128,7 +128,7 @@ public class EntityRenderer {
 
 	}
 
-	private void prepareTexturedModel(TexturedModel model, int shadowTex) {
+	private void prepareTexturedModel(TexturedModel model, ShadowFBO shadow) {
 		RawModel rawmodel = model.getRawModel();
 		Material material = model.getMaterial();
 		glBindVertexArray(rawmodel.getVaoID());
@@ -147,7 +147,7 @@ public class EntityRenderer {
 		glActiveTexture(GL_TEXTURE4);
 		glBindTexture(GL_TEXTURE_2D, material.getSpecularTexture().getID());
 		glActiveTexture(GL_TEXTURE8);
-		glBindTexture(GL_TEXTURE_2D, shadowTex);
+		glBindTexture(GL_TEXTURE_2D, shadow.getShadowMap());
 	}
 
 	private void unbindTexturedModel() {

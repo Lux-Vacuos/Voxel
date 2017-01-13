@@ -24,6 +24,6 @@ import net.luxvacuos.voxel.client.world.entities.Camera;
 
 public interface IRenderPass {
 
-	public void render(Camera camera, Camera sunCamera, Frustum frustum, int shadowMap);
+	public void render(Camera camera, Camera sunCamera, Frustum frustum, ShadowFBO shadow);
 
 }

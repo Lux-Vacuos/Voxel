@@ -23,7 +23,6 @@ package net.luxvacuos.voxel.client.rendering.api.opengl;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_COMPONENT;
 import static org.lwjgl.opengl.GL11.GL_FLOAT;
 import static org.lwjgl.opengl.GL11.GL_LINEAR;
-import static org.lwjgl.opengl.GL11.GL_RGBA;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_BORDER_COLOR;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_MAG_FILTER;
@@ -37,11 +36,9 @@ import static org.lwjgl.opengl.GL11.glTexImage2D;
 import static org.lwjgl.opengl.GL11.glTexParameterfv;
 import static org.lwjgl.opengl.GL11.glTexParameteri;
 import static org.lwjgl.opengl.GL11.glViewport;
-import static org.lwjgl.opengl.GL12.GL_CLAMP_TO_EDGE;
 import static org.lwjgl.opengl.GL13.GL_CLAMP_TO_BORDER;
 import static org.lwjgl.opengl.GL14.GL_COMPARE_R_TO_TEXTURE;
 import static org.lwjgl.opengl.GL14.GL_TEXTURE_COMPARE_MODE;
-import static org.lwjgl.opengl.GL30.GL_COLOR_ATTACHMENT0;
 import static org.lwjgl.opengl.GL30.GL_DEPTH_ATTACHMENT;
 import static org.lwjgl.opengl.GL30.GL_FRAMEBUFFER;
 import static org.lwjgl.opengl.GL30.GL_FRAMEBUFFER_COMPLETE;
@@ -52,7 +49,6 @@ import static org.lwjgl.opengl.GL30.glCheckFramebufferStatus;
 import static org.lwjgl.opengl.GL30.glDeleteFramebuffers;
 import static org.lwjgl.opengl.GL30.glDeleteRenderbuffers;
 import static org.lwjgl.opengl.GL30.glFramebufferRenderbuffer;
-import static org.lwjgl.opengl.GL30.glFramebufferTexture2D;
 import static org.lwjgl.opengl.GL30.glGenFramebuffers;
 import static org.lwjgl.opengl.GL30.glGenRenderbuffers;
 import static org.lwjgl.opengl.GL30.glRenderbufferStorage;
@@ -68,9 +64,9 @@ import net.luxvacuos.voxel.client.core.exception.FrameBufferException;
 
 public class ShadowFBO {
 
-	private int fbo, shadowRT, depthBuffer;
+	private int fbo, shadowRB;
 
-	private int shadowDepth, shadowData;
+	private int shadowMap;
 
 	private int width, height;
 
@@ -83,29 +79,15 @@ public class ShadowFBO {
 	private void init(int width, int height) {
 
 		fbo = glGenFramebuffers();
-		shadowRT = glGenRenderbuffers();
-		depthBuffer = glGenRenderbuffers();
+		shadowRB = glGenRenderbuffers();
 		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 
-		glBindRenderbuffer(GL_RENDERBUFFER, shadowRT);
-		glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA, width, height);
-		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, shadowRT);
-
-		glBindRenderbuffer(GL_RENDERBUFFER, depthBuffer);
+		glBindRenderbuffer(GL_RENDERBUFFER, shadowRB);
 		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height);
-		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthBuffer);
+		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, shadowRB);
 
-		shadowData = glGenTextures();
-		glBindTexture(GL_TEXTURE_2D, shadowData);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_FLOAT, (ByteBuffer) null);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, shadowData, 0);
-
-		shadowDepth = glGenTextures();
-		glBindTexture(GL_TEXTURE_2D, shadowDepth);
+		shadowMap = glGenTextures();
+		glBindTexture(GL_TEXTURE_2D, shadowMap);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT,
 				(ByteBuffer) null);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -118,7 +100,9 @@ public class ShadowFBO {
 		border.put(borderColor);
 		border.rewind();
 		glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, border);
-		glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, shadowDepth, 0);
+		
+		
+		glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, shadowMap, 0);
 
 		int status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
 		if (status != GL_FRAMEBUFFER_COMPLETE)
@@ -128,11 +112,9 @@ public class ShadowFBO {
 	}
 
 	public void cleanUp() {
-		glDeleteTextures(shadowDepth);
-		glDeleteTextures(shadowData);
+		glDeleteTextures(shadowMap);
 		glDeleteFramebuffers(fbo);
-		glDeleteRenderbuffers(shadowRT);
-		glDeleteRenderbuffers(depthBuffer);
+		glDeleteRenderbuffers(shadowRB);
 	}
 
 	public void begin() {
@@ -145,12 +127,8 @@ public class ShadowFBO {
 		ClientInternalSubsystem.getInstance().getGameWindow().resetViewport();
 	}
 
-	public int getShadowDepth() {
-		return shadowDepth;
-	}
-
-	public int getShadowData() {
-		return shadowData;
+	public int getShadowMap() {
+		return shadowMap;
 	}
 
 }

@@ -173,7 +173,7 @@ public class Tessellator {
 		updated = true;
 	}
 
-	public void draw(Camera camera, Camera sunCamera, ClientWorldSimulation clientWorldSimulation, int shadowMap) {
+	public void draw(Camera camera, Camera sunCamera, ClientWorldSimulation clientWorldSimulation, ShadowFBO shadow) {
 		if (updated) {
 			updateGlBuffers(vboID0, vboCapacity, buffer0);
 			updateGlBuffers(vboID1, vboCapacity, buffer1);
@@ -207,7 +207,7 @@ public class Tessellator {
 		glActiveTexture(GL_TEXTURE4);
 		glBindTexture(GL_TEXTURE_2D, material.getSpecularTexture().getID());
 		glActiveTexture(GL_TEXTURE5);
-		glBindTexture(GL_TEXTURE_2D, shadowMap);
+		glBindTexture(GL_TEXTURE_2D, shadow.getShadowMap());
 		glDrawElements(GL_TRIANGLES, indicesCounter, GL_UNSIGNED_INT, 0);
 		glDisableVertexAttribArray(0);
 		glDisableVertexAttribArray(1);

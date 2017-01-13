@@ -26,6 +26,7 @@ import com.badlogic.gdx.math.collision.BoundingBox;
 
 import net.luxvacuos.voxel.client.core.ClientWorldSimulation;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Frustum;
+import net.luxvacuos.voxel.client.rendering.api.opengl.ShadowFBO;
 import net.luxvacuos.voxel.client.rendering.world.dimension.IRenderDimension;
 import net.luxvacuos.voxel.client.world.chunks.ClientChunkManager;
 import net.luxvacuos.voxel.client.world.chunks.RenderChunk;
@@ -57,11 +58,11 @@ public class RenderDimension extends Dimension implements IRenderDimension {
 	
 	@Override
 	protected void setupWorldSimulator() {
-		this.worldSimulation = new ClientWorldSimulation(10000);
+		this.worldSimulation = new ClientWorldSimulation(6500);
 	}
 
 	@Override
-	public void render(Camera camera, Camera sunCamera, Frustum frustum, int shadowMap) {
+	public void render(Camera camera, Camera sunCamera, Frustum frustum, ShadowFBO shadow) {
 		this.renderedChunks = 0;
 		BoundingBox aabb;
 		RenderChunk rChunk;
@@ -93,7 +94,7 @@ public class RenderDimension extends Dimension implements IRenderDimension {
 						((ClientChunkManager) this.chunkManager).generateChunkMesh(rChunk);
 
 					this.renderedChunks++;
-					rChunk.render(camera, sunCamera, this.getWorldSimulator(), shadowMap);
+					rChunk.render(camera, sunCamera, this.getWorldSimulator(), shadow);
 				}
 
 		}

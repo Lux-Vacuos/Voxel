@@ -92,8 +92,7 @@ void main(void){
         	float NdotL = max(dot(N, L), 0.0);                
 	        Lo += (kD * diffuse.rgb / PI + brdf) * radiance * NdotL; 
     	}
-		vec3 ambient = vec3(0.03) * diffuse.rgb;
-    	vec3 color = ambient + Lo;
+    	vec3 color = Lo;
     	composite.rgb += color;
 
 	}

@@ -104,40 +104,40 @@ public class Renderer {
 
 		resetState();
 
-		environmentRenderer.renderEnvironmentMap(camera.getPosition(), skyboxRenderer, worldSimulation,
-				lightPosition, window);
+		environmentRenderer.renderEnvironmentMap(camera.getPosition(), skyboxRenderer, worldSimulation, lightPosition,
+				window);
 
-		frustum.calculateFrustum(sunCamera.getProjectionMatrix(), sunCamera.getViewMatrix());
+		frustum.calculateFrustum(sunCamera);
 		if (ClientVariables.useShadows) {
 			shadowFBO.begin();
 			clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 			if (shadowPass != null)
-				shadowPass.render(camera, sunCamera, frustum, shadowFBO.getShadowDepth());
+				shadowPass.render(camera, sunCamera, frustum, shadowFBO);
 			entityShadowRenderer.renderEntity(entities, sunCamera);
 			shadowFBO.end();
 		}
 
-		frustum.calculateFrustum(camera.getProjectionMatrix(), camera.getViewMatrix());
+		frustum.calculateFrustum(camera);
 		clearBuffer(GL_DEPTH_BUFFER_BIT);
 		if (occlusionPass != null)
-			occlusionPass.render(camera, sunCamera, frustum, shadowFBO.getShadowDepth());
+			occlusionPass.render(camera, sunCamera, frustum, shadowFBO);
 
 		renderingPipeline.begin();
 		clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		skyboxRenderer.render(ClientVariables.RED, ClientVariables.GREEN, ClientVariables.BLUE, camera,
-				worldSimulation, lightPosition, 1, false);
+		skyboxRenderer.render(ClientVariables.RED, ClientVariables.GREEN, ClientVariables.BLUE, camera, worldSimulation,
+				lightPosition, 1, false);
 
 		if (deferredPass != null)
-			deferredPass.render(camera, sunCamera, frustum, shadowFBO.getShadowDepth());
+			deferredPass.render(camera, sunCamera, frustum, shadowFBO);
 
-		entityRenderer.renderEntity(entities, camera, sunCamera, shadowFBO.getShadowDepth());
+		entityRenderer.renderEntity(entities, camera, sunCamera, shadowFBO);
 		renderingPipeline.end();
 		clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		renderingPipeline.render(camera, lightPosition, invertedLightPosition, worldSimulation,
 				lightRenderer.getLights(), environmentRenderer.getCubeMapTexture(), exposure);
 		if (forwardPass != null)
-			forwardPass.render(camera, sunCamera, frustum, shadowFBO.getShadowDepth());
+			forwardPass.render(camera, sunCamera, frustum, shadowFBO);
 		particleRenderer.render(particles, camera);
 	}
 

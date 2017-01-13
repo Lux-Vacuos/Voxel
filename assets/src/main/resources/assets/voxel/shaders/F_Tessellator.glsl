@@ -29,7 +29,7 @@ in mat3 TBN;
 
 out vec4 [5] out_Color;
 
-uniform sampler2DShadow depth;
+uniform sampler2DShadow shadowMap;
 uniform Material material;
 
 uniform int useShadows;
@@ -38,7 +38,7 @@ const float xPixelOffset = 0.0002;
 const float yPixelOffset = 0.0002;
 
 float lookup(vec2 offSet){
-	return texture(depth, ShadowCoord.xyz + vec3(offSet.x * xPixelOffset, offSet.y * yPixelOffset, 0.0) );
+	return texture(shadowMap, ShadowCoord.xyz + vec3(offSet.x * xPixelOffset, offSet.y * yPixelOffset, 0.0) );
 }
 
 void main(void) {
@@ -60,9 +60,6 @@ void main(void) {
 			for (x = -1.5 ; x <=1.5 ; x+=1.0)
 				shadow += -lookup(vec2(x,y)) + 1;
 		shadow /= 16.0 ;
-		if(ShadowCoord.z > 1.0){
-       		shadow = 0.0;
-       	}
 	}
     
     if(diffuseF.a<0.5) {

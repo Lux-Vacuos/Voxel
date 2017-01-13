@@ -43,52 +43,56 @@ public class MeshGenerateTask implements Callable<IRenderChunk> {
 					RenderBlock block = (RenderBlock) this.chunk.getChunkData().getBlockAt(x, y, z);
 					if (!block.isTransparent()) {
 						if (!block.hasCustomModel()) {
-							this.chunk.getTessellator().generateCube(this.chunk.getX() * 16 + x, y, this.chunk.getZ() * 16 + z,
-									1, cullFace(block, BlockFace.UP, x, y, z), cullFace(block, BlockFace.DOWN, x, y, z),
-									cullFace(block, BlockFace.EAST, x, y, z), cullFace(block, BlockFace.WEST, x, y, z),
-									cullFace(block, BlockFace.NORTH, x, y, z), cullFace(block, BlockFace.SOUTH, x, y, z), block);
-						} else {
-							((ICustomRenderBlock) block).generateCustomModel(this.chunk.getTessellator(), this.chunk.getX() * 16 + x,
-									y, this.chunk.getZ() * 16 + z, 1, cullFace(block, BlockFace.UP, x, y, z),
+							this.chunk.getTessellator().generateCube(this.chunk.getX() * 16 + x, y,
+									this.chunk.getZ() * 16 + z, 1, cullFace(block, BlockFace.UP, x, y, z),
 									cullFace(block, BlockFace.DOWN, x, y, z), cullFace(block, BlockFace.EAST, x, y, z),
 									cullFace(block, BlockFace.WEST, x, y, z), cullFace(block, BlockFace.NORTH, x, y, z),
+									cullFace(block, BlockFace.SOUTH, x, y, z), block);
+						} else {
+							((ICustomRenderBlock) block).generateCustomModel(this.chunk.getTessellator(),
+									this.chunk.getX() * 16 + x, y, this.chunk.getZ() * 16 + z, 1,
+									cullFace(block, BlockFace.UP, x, y, z), cullFace(block, BlockFace.DOWN, x, y, z),
+									cullFace(block, BlockFace.EAST, x, y, z), cullFace(block, BlockFace.WEST, x, y, z),
+									cullFace(block, BlockFace.NORTH, x, y, z),
 									cullFace(block, BlockFace.SOUTH, x, y, z));
 						}
 					}
-					
+
 				}
 			}
 		}
-		
+
 		this.chunk.getTessellator().end();
-		
+
 		return this.chunk;
 	}
-	
+
 	private boolean cullFace(RenderBlock block, BlockFace face, int x, int y, int z) {
 		RenderBlock b;
-		if(this.isBlockOutside(face, x, y, z)) {
-			b = ((RenderBlock) this.chunk.getChunkData().getBlockAt(x + face.getModX(), y + face.getModY(), z + face.getModZ()));
+		if (this.isBlockOutside(face, x, y, z)) {
+			b = ((RenderBlock) this.chunk.getChunkData().getBlockAt(x + face.getModX(), y + face.getModY(),
+					z + face.getModZ()));
 			if (b.getID() == block.getID())
 				return false;
 			if (b.isTransparent() || b.hasCustomModel() || b.isFluid())
 				return true;
 		}
-		if(!(face == BlockFace.UP || face == BlockFace.DOWN)) {
+		if (!(face == BlockFace.UP || face == BlockFace.DOWN)) {
 			int cx = this.chunk.getX() * 16 + x;
 			int cz = this.chunk.getZ() * 16 + z;
-			b = ((RenderBlock) this.chunk.getDimension().getBlockAt(cx + face.getModX(), y + face.getModY(), cz + face.getModZ()));
-			
-			if(b == null || b.getID() == block.getID()) 
+			b = ((RenderBlock) this.chunk.getDimension().getBlockAt(cx + face.getModX(), y + face.getModY(),
+					cz + face.getModZ()));
+
+			if (b == null || b.getID() == block.getID())
 				return false;
-			if (b.isTransparent())
+			if (b.isTransparent() || b.hasCustomModel() || b.isFluid())
 				return true;
 		}
 		return false;
 	}
-	
+
 	private boolean isBlockOutside(BlockFace face, int x, int y, int z) {
-		switch(face) {
+		switch (face) {
 		case WEST:
 			return (x > 1 && x < 16);
 		case DOWN:

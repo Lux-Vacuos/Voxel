@@ -24,6 +24,7 @@ import org.lwjgl.glfw.GLFW;
 
 import net.luxvacuos.igl.vector.Matrix4d;
 import net.luxvacuos.igl.vector.Vector3d;
+import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.voxel.client.core.ClientInternalSubsystem;
 import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.core.CoreInfo;
@@ -34,6 +35,7 @@ import net.luxvacuos.voxel.client.rendering.api.nanovg.Timers;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.UIRendering;
 import net.luxvacuos.voxel.client.rendering.api.opengl.ParticleDomain;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Renderer;
+import net.luxvacuos.voxel.client.rendering.api.opengl.objects.PointLight;
 import net.luxvacuos.voxel.client.util.Maths;
 import net.luxvacuos.voxel.client.world.RenderWorld;
 import net.luxvacuos.voxel.client.world.dimension.RenderDimension;
@@ -49,9 +51,9 @@ import net.luxvacuos.voxel.universal.world.entities.ChunkLoaderEntity;
 public class SPWorldState extends AbstractState {
 
 	private Sun sun;
-	//private ClientWorldSimulation worldSimulation;
 	private Camera camera;
 	private ChunkLoaderEntity spawnChunks;
+	private PointLight light;
 
 	private IWorld world;
 
@@ -64,16 +66,14 @@ public class SPWorldState extends AbstractState {
 	@Override
 	public void start() {
 		super.start();
-		
+
 		this.world = new RenderWorld(ClientVariables.worldNameToLoad);
-		
+
 		Renderer.setDeferredPass((camera, sunCamera, frustum, shadowMap) -> {
-			//((RenderDimension) world.getActiveDimension()).render(camera, sunCamera, worldSimulation, frustum,
-					//shadowMap);
-			((RenderWorld)world).render(camera, sunCamera, frustum, shadowMap);
+			((RenderWorld) world).render(camera, sunCamera, frustum, shadowMap);
 		});
 		Renderer.setShadowPass((camera, sunCamera, frustum, shadowMap) -> {
-			((RenderWorld)world).renderShadow(sunCamera, frustum);
+			((RenderWorld) world).renderShadow(sunCamera, frustum);
 		});
 		Renderer.setOcclusionPass((camera, sunCamera, frustum, shadowMap) -> {
 			// ((RenderDimension)
@@ -99,28 +99,32 @@ public class SPWorldState extends AbstractState {
 	public void init() {
 		Window window = ClientInternalSubsystem.getInstance().getGameWindow();
 
-		Matrix4d shadowProjectionMatrix = Maths.orthographic(
-				-ClientVariables.shadowMapDrawDistance, ClientVariables.shadowMapDrawDistance,
-				-ClientVariables.shadowMapDrawDistance, ClientVariables.shadowMapDrawDistance,
-				-ClientVariables.shadowMapDrawDistance, ClientVariables.shadowMapDrawDistance, false);
+		Matrix4d shadowProjectionMatrix = Maths.orthographic(-ClientVariables.shadowMapDrawDistance,
+				ClientVariables.shadowMapDrawDistance, -ClientVariables.shadowMapDrawDistance,
+				ClientVariables.shadowMapDrawDistance, -ClientVariables.shadowMapDrawDistance,
+				ClientVariables.shadowMapDrawDistance, false);
 		Matrix4d projectionMatrix = Renderer.createProjectionMatrix(window.getWidth(), window.getHeight(),
 				ClientVariables.FOV, ClientVariables.NEAR_PLANE, ClientVariables.FAR_PLANE);
 
 		camera = new PlayerCamera(projectionMatrix, window);
 		sun = new Sun(shadowProjectionMatrix);
 
-		//worldSimulation = new ClientWorldSimulation(10000); //TODO: load the last time from disk
-		
+		// worldSimulation = new ClientWorldSimulation(10000); //TODO: load the last time from disk
+
 		spawnChunks = new ChunkLoaderEntity(new Vector3d());
 
 		pausesState = new SPPauseState();
 		pausesState.init();
+
+		light = new PointLight(new Vector3d(2.5, 130, 28.5), new Vector3f(1, 1, 1));
+		//Renderer.getLightRenderer().addLight(light);
 	}
 
 	@Override
 	public void dispose() {
 		pausesState.dispose();
-		world.dispose();
+		if (world != null)
+			world.dispose();
 	}
 
 	@Override
@@ -128,7 +132,8 @@ public class SPWorldState extends AbstractState {
 		Window window = ClientInternalSubsystem.getInstance().getGameWindow();
 
 		Renderer.render(world.getActiveDimension().getEntitiesManager().getEntities(), ParticleDomain.getParticles(),
-				camera, sun.getCamera(), world.getActiveDimension().getWorldSimulator(), sun.getSunPosition(), sun.getInvertedSunPosition(), alpha);
+				camera, sun.getCamera(), world.getActiveDimension().getWorldSimulator(), sun.getSunPosition(),
+				sun.getInvertedSunPosition(), alpha);
 
 		window.beingNVGFrame();
 		if (ClientVariables.debug) {
@@ -168,7 +173,8 @@ public class SPWorldState extends AbstractState {
 
 			KeyboardHandler kbh = ClientInternalSubsystem.getInstance().getGameWindow().getKeyboardHandler();
 
-			sun.update(camera.getPosition(), ((RenderDimension)this.world.getActiveDimension()).getWorldSimulator().getRotation(), delta);
+			sun.update(camera.getPosition(),
+					((RenderDimension) this.world.getActiveDimension()).getWorldSimulator().getRotation(), delta);
 			ParticleDomain.update(delta, camera);
 
 			if (kbh.isKeyPressed(GLFW.GLFW_KEY_F1))

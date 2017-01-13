@@ -21,6 +21,7 @@
 package net.luxvacuos.voxel.client.world;
 
 import net.luxvacuos.voxel.client.rendering.api.opengl.Frustum;
+import net.luxvacuos.voxel.client.rendering.api.opengl.ShadowFBO;
 import net.luxvacuos.voxel.client.rendering.world.IRenderWorld;
 import net.luxvacuos.voxel.client.world.dimension.RenderDimension;
 import net.luxvacuos.voxel.client.world.entities.Camera;
@@ -39,8 +40,8 @@ public class RenderWorld extends World implements IRenderWorld {
 	}
 
 	@Override
-	public void render(Camera camera, Camera sunCamera, Frustum frustum, int shadowMap) {
-		((RenderDimension)this.getActiveDimension()).render(camera, sunCamera, frustum, shadowMap);
+	public void render(Camera camera, Camera sunCamera, Frustum frustum, ShadowFBO shadow) {
+		((RenderDimension)this.getActiveDimension()).render(camera, sunCamera, frustum, shadow);
 		
 	}
 

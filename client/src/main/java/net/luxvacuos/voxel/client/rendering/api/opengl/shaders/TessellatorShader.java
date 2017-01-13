@@ -49,7 +49,7 @@ public class TessellatorShader extends ShaderProgram {
 	private UniformMatrix viewLightMatrix = new UniformMatrix("viewLightMatrix");
 	private UniformVec3 cameraPos = new UniformVec3("cameraPos");
 	private UniformFloat moveFactor = new UniformFloat("moveFactor");
-	private UniformSampler depth = new UniformSampler("depth");
+	private UniformSampler shadowMap = new UniformSampler("shadowMap");
 	private UniformBoolean useShadows = new UniformBoolean("useShadows");
 	private UniformMaterial material = new UniformMaterial("material");
 
@@ -58,13 +58,13 @@ public class TessellatorShader extends ShaderProgram {
 				new Attribute(0, "position"), new Attribute(1, "textureCoords"), new Attribute(2, "normal"),
 				new Attribute(3, "tangent"));
 		super.storeAllUniformLocations(projectionMatrix, viewMatrix, biasMatrix, projectionLightMatrix, viewLightMatrix,
-				moveFactor, depth, useShadows, cameraPos, material);
+				moveFactor, shadowMap, useShadows, cameraPos, material);
 		conectTextureUnits();
 	}
 
 	private void conectTextureUnits() {
 		super.start();
-		depth.loadTexUnit(5);
+		shadowMap.loadTexUnit(5);
 		super.stop();
 	}
 
