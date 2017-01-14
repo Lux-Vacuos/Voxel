@@ -184,6 +184,30 @@ public class Dimension implements IDimension {
 		IChunk c = this.chunkManager.getChunkAt(ChunkNode.getFromBlockCoords(x, 0, z));
 		if (c == null)
 			return false;
+		
+		//Trigger Block Updates and chunk rebuilds if needed
+		ChunkNode node;
+		BlockNode bNode = new BlockNode(x, y, z);
+		for(int mx = x - 1; mx <= x + 1; mx++) {
+			for(int my = y - 1; my <= y + 1; my++) {
+				for(int mz = z - 1; mz <= z + 1; mz++) {
+					if((mx == x) && (my == y) && (mz == z)) continue;
+					
+					node = ChunkNode.getFromBlockCoords(mx, my, mz);
+					if(!c.getNode().equals(node)) {
+						IChunk mc = this.chunkManager.getChunkAt(node);
+						if(mc != null) { //Mark neighbor chunk for a rebuild
+							mc.markForRebuild();
+						}
+					}
+					
+					//Trigger a block update for blocks that care
+					//XXX: Maybe move to an event system like Bukkit/Spout/Forge?
+					this.getBlockAt(mx, my, mz).onBlockUpdate(bNode, block);
+				}
+			}
+		}
+		
 		c.setBlockAt(x & 0xF, y, z & 0xF, block);
 		return true;
 	}

@@ -25,4 +25,6 @@ public interface IBlock {
 	public boolean hasComplexMetadata();
 	
 	public void setComplexMetadata(TagCompound metadata);
+	
+	public void onBlockUpdate(BlockNode node, IBlock block);
 }

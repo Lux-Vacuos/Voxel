@@ -100,5 +100,10 @@ public class BlockBase implements IBlock {
 	public void setComplexMetadata(TagCompound metadata) {
 		this.complexMetadata = metadata;
 	}
+	
+	@Override
+	public void onBlockUpdate(BlockNode node, IBlock replaced) {
+		//Event Handler for block updates
+	}
 
 }
