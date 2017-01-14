@@ -68,8 +68,7 @@ public class PhysicsSystem extends EntitySystem {
 				((AbstractEntity) entity).update(delta, dim);
 
 			velocity.setX(velocity.getX() * 0.7f - velocity.getX() * 0.0001f);
-//			velocity.setY(velocity.getY() - 9.8f * delta);
-			velocity.setY(velocity.getY() * 0.7f - velocity.getY() * 0.0001f);
+			velocity.setY(velocity.getY() - 9.8f * delta);
 			velocity.setZ(velocity.getZ() * 0.7f - velocity.getZ() * 0.0001f);
 
 			aabb.update(pos.getPosition());

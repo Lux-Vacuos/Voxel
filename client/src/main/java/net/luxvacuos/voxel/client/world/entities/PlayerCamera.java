@@ -65,7 +65,7 @@ public class PlayerCamera extends Camera {
 	private int mouseSpeed = 8;
 	private final int maxLookUp = 90;
 	private final int maxLookDown = -90;
-	private boolean flyMode = true;
+	private boolean flyMode = false;
 	private Vector2d center;
 	private Vector3f normal = new Vector3f();
 	private float depth = 0, maxDepth = 0.01f;
