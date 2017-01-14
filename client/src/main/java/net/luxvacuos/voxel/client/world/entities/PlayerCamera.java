@@ -68,7 +68,8 @@ public class PlayerCamera extends Camera {
 	private boolean flyMode = false;
 	private Vector2d center;
 	private Vector3f normal = new Vector3f();
-	private float depth = 0, maxDepth = 0.1f;
+	private float depth = 0, maxDepth = 0.01f;
+	private Vector3d blockOutlinePos = new Vector3d();
 
 	private static List<BoundingBox> blocks = new ArrayList<>();
 	private static Vector3 tmp = new Vector3();
@@ -154,12 +155,7 @@ public class PlayerCamera extends Camera {
 			if (vel.getY() == 0)
 				jump = false;
 		}
-		if (Mouse.isButtonDown(0)) {
-			setBlock(window.getWidth(), window.getHeight(), Blocks.getBlockByName("air"), dimension);
-		} else if (Mouse.isButtonDown(1)) {
-			setBlock(window.getWidth(), window.getHeight(), Blocks.getBlockByName("glass"), dimension);
-
-		}
+		setBlock(window.getWidth(), window.getHeight(), Blocks.getBlockByName("stone"), dimension);
 	}
 
 	private void setBlock(int ww, int wh, IBlock block, IDimension dimension) {
@@ -213,7 +209,12 @@ public class PlayerCamera extends Camera {
 		int bx = (int) tempX;
 		int by = (int) tempY;
 		int bz = (int) tempZ - 1;
-		setBlock(bx, by, bz, block, dimension);
+		blockOutlinePos.set(bx + 0.5, by + 0.5f, bz + 0.5);
+		if (Mouse.isButtonDown(0)) {
+			setBlock(bx, by, bz, Blocks.getBlockByName("air"), dimension);
+		} else if (Mouse.isButtonDown(1)) {
+			setBlock(bx, by, bz, block, dimension);
+		}
 	}
 
 	private void setBlock(int bx, int by, int bz, IBlock block, IDimension dimension) {
@@ -252,6 +253,10 @@ public class PlayerCamera extends Camera {
 
 	public void setDepth(float depth) {
 		this.depth = depth;
+	}
+
+	public Vector3d getBlockOutlinePos() {
+		return blockOutlinePos;
 	}
 
 }

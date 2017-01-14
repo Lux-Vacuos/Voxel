@@ -136,7 +136,7 @@ public abstract class ImagePass implements IImagePass {
 	 */
 	@Override
 	public void dispose() {
-		shader.cleanUp();
+		shader.dispose();
 		fbo.cleanUp();
 	}
 

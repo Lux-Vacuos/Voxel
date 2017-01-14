@@ -42,6 +42,7 @@ import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.glfw.WindowManager;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.Timers;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.UIRendering;
+import net.luxvacuos.voxel.client.rendering.api.opengl.BlockOutlineRenderer;
 import net.luxvacuos.voxel.client.rendering.api.opengl.ParticleDomain;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Renderer;
 import net.luxvacuos.voxel.client.util.Maths;
@@ -60,6 +61,7 @@ public class SPWorldState extends AbstractState {
 
 	private Sun sun;
 	private Camera camera;
+	private BlockOutlineRenderer blockOutlineRenderer;
 	private ChunkLoaderEntity spawnChunks;
 
 	private IWorld world;
@@ -98,6 +100,11 @@ public class SPWorldState extends AbstractState {
 			// ((RenderDimension)
 			// world.getActiveDimension()).renderOcclusion(camera, frustum);
 		});
+		Renderer.setForwardPass((camera, sunCamera, frustum, shadowMap) -> {
+			Vector3d pos = ((PlayerCamera) camera).getBlockOutlinePos();
+			blockOutlineRenderer.render(camera,
+					world.getActiveDimension().getBlockAt((int) pos.getX(), (int) pos.getY(), (int) pos.getZ()));
+		});
 
 		world.loadDimension(0);
 		world.setActiveDimension(0);
@@ -130,6 +137,8 @@ public class SPWorldState extends AbstractState {
 		camera = new PlayerCamera(projectionMatrix, window);
 		sun = new Sun(shadowProjectionMatrix);
 
+		blockOutlineRenderer = new BlockOutlineRenderer(window.getResourceLoader());
+
 		// worldSimulation = new ClientWorldSimulation(10000); //TODO: load the
 		// last time from disk
 
@@ -142,6 +151,7 @@ public class SPWorldState extends AbstractState {
 	@Override
 	public void dispose() {
 		pausesState.dispose();
+		blockOutlineRenderer.dispose();
 		if (world != null)
 			world.dispose();
 	}
@@ -195,6 +205,7 @@ public class SPWorldState extends AbstractState {
 			sun.update(camera.getPosition(),
 					((RenderDimension) this.world.getActiveDimension()).getWorldSimulator().getRotation(), delta);
 			ParticleDomain.update(delta, camera);
+			blockOutlineRenderer.getPosition().set(((PlayerCamera) camera).getBlockOutlinePos());
 
 			if (kbh.isKeyPressed(GLFW.GLFW_KEY_F1))
 				ClientVariables.debug = !ClientVariables.debug;

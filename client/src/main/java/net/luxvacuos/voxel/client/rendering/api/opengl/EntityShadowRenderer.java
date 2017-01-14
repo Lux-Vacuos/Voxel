@@ -66,7 +66,7 @@ public class EntityShadowRenderer {
 	}
 
 	public void cleanUp() {
-		shader.cleanUp();
+		shader.dispose();
 	}
 
 	public void renderEntity(ImmutableArray<Entity> immutableArray, Camera sunCamera) {

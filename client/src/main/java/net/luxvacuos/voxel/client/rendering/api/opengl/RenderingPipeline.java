@@ -213,7 +213,7 @@ public abstract class RenderingPipeline implements IRenderingPipeline {
 		for (ImagePass imagePass : imagePasses) {
 			imagePass.dispose();
 		}
-		finalShader.cleanUp();
+		finalShader.dispose();
 	}
 
 	public RenderingPipelineFBO getMainFBO() {

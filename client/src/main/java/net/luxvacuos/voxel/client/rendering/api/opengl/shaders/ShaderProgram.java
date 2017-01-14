@@ -50,6 +50,7 @@ import net.luxvacuos.voxel.client.core.exception.CompileShaderException;
 import net.luxvacuos.voxel.client.core.exception.LoadShaderException;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.Attribute;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.IUniform;
+import net.luxvacuos.voxel.universal.resources.IDisposable;
 
 /**
  * Shader Program, Use to create shaders
@@ -57,7 +58,7 @@ import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.IUniform;
  * @author Guerra24 <pablo230699@hotmail.com>
  * @category Rendering
  */
-public abstract class ShaderProgram {
+public abstract class ShaderProgram implements IDisposable {
 	/**
 	 * Program ID
 	 */
@@ -139,7 +140,8 @@ public abstract class ShaderProgram {
 	 * Clear all the shader loaded data
 	 * 
 	 */
-	public void cleanUp() {
+	@Override
+	public void dispose() {
 		stop();
 		glDeleteProgram(programID);
 	}

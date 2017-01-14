@@ -159,8 +159,8 @@ public class ClientInternalSubsystem extends AbstractInternalSubsystem {
 		gameSettings.save();
 		if (!ClientVariables.WSL)
 			soundSystem.cleanup();
-		TessellatorShader.getShader().cleanUp();
-		TessellatorBasicShader.getShader().cleanUp();
+		TessellatorShader.getShader().dispose();
+		TessellatorBasicShader.getShader().dispose();
 		Renderer.cleanUp();
 	}
 

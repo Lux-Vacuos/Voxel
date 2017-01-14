@@ -178,7 +178,7 @@ public class ParticleRenderer {
 	}
 
 	public void cleanUp() {
-		shader.cleanUp();
+		shader.dispose();
 	}
 
 }
