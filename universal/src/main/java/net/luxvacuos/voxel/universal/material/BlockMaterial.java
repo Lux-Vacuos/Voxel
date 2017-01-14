@@ -23,112 +23,142 @@ package net.luxvacuos.voxel.universal.material;
 import net.luxvacuos.voxel.universal.tools.ToolTier;
 
 public class BlockMaterial extends ObjectMaterial {
-	
+
 	/** Flag to see if this BlockMaterial is a liquid */
 	protected boolean liquid = false;
-	
+
 	/** Flag to see if this BlockMaterial should block movement */
 	protected boolean blocksMovement = true;
-	
+
 	/** Flag to see if this BlockMaterial requires a tool to break */
 	protected boolean requiresTool = false;
-	
+
 	/** The lowest ToolTier needed to break this BlockMaterial */
 	protected ToolTier minimumTier = ToolTier.ZERO;
-	
+
 	/** Flag to see if this BlockMaterial can be broken */
 	protected boolean canBeBroken = true;
-	
+
 	/** Flag to see if this BlockMaterial is affected by gravity */
 	protected boolean affectedByGravity = false;
-	
+
 	/** Flag to see if this BlockMaterial provides light */
 	protected boolean providesLight = false;
-	
+
+	/** Flag to see if this BlockMaterial is visible */
+	protected boolean visible = true;
+
 	/** The amount of light this BlockMaterial provides */
 	protected byte lightAmount = -1;
-	
+
 	public BlockMaterial(String name) {
 		super(name);
 		this.objectType = Type.BLOCK;
 	}
-	
+
 	public BlockMaterial(String name, ToolTier minimumTier) {
 		super(name);
 		this.objectType = Type.BLOCK;
 		this.minimumTier = minimumTier;
 	}
-	
+
 	/**
 	 * Returns if this BlockMaterial is a liquid
-	 * @return <b>true</b> if this BlockMaterial is a liquid, <b>false</b> otherwise
+	 * 
+	 * @return <b>true</b> if this BlockMaterial is a liquid, <b>false</b>
+	 *         otherwise
 	 */
 	public boolean isLiquid() {
 		return this.liquid;
 	}
-	
+
 	/**
 	 * Returns if this BlockMaterial is solid
-	 * @return <b>true</b> if this BlockMaterial is solid, <b>false</b> otherwise
+	 * 
+	 * @return <b>true</b> if this BlockMaterial is solid, <b>false</b>
+	 *         otherwise
 	 */
 	public boolean isSolid() {
 		return !(this.liquid);
 	}
-	
+
 	/**
 	 * Returns if this BlockMaterial should block movement
-	 * @return <b>true</b> if this BlockMaterial blocks movement, <b>false</b> otherwise
+	 * 
+	 * @return <b>true</b> if this BlockMaterial blocks movement, <b>false</b>
+	 *         otherwise
 	 */
 	public boolean blocksMovement() {
 		return this.blocksMovement;
 	}
-	
+
 	/**
 	 * Returns if this BlockMaterial requires a tool to break effectively
-	 * @return <b>true</b> if this BlockMaterial requires a tool, <b>false</b> otherwise
+	 * 
+	 * @return <b>true</b> if this BlockMaterial requires a tool, <b>false</b>
+	 *         otherwise
 	 */
 	public boolean requiresTool() {
 		return this.requiresTool;
 	}
-	
+
 	/**
 	 * Gets the minimum ToolTier needed to break this BlockMaterial
+	 * 
 	 * @return the minimum ToolTier needed to break this BlockMaterial
 	 */
 	public ToolTier getTierNeeded() {
 		return this.minimumTier;
 	}
-	
+
 	/**
 	 * Returns if this BlockMaterial can be broken
-	 * @return <b>true</b> if this BlockMaterial can be broken, <b>false</b> otherwise
+	 * 
+	 * @return <b>true</b> if this BlockMaterial can be broken, <b>false</b>
+	 *         otherwise
 	 */
 	public boolean canBeBroken() {
 		return this.canBeBroken;
 	}
-	
+
 	/**
 	 * Returns if this BlockMaterial is affected by gravity
-	 * @return <b>true</b> if this BlockMaterial is affected by gravity, <b>false</b> otherwise
+	 * 
+	 * @return <b>true</b> if this BlockMaterial is affected by gravity,
+	 *         <b>false</b> otherwise
 	 */
 	public boolean affectedByGravity() {
 		return this.affectedByGravity;
 	}
-	
+
 	/**
 	 * Returns if this BlockMaterial provides light
-	 * @return <b>true</b> if this BlockMaterial provides light, <b>false</b> otherwise
+	 * 
+	 * @return <b>true</b> if this BlockMaterial provides light, <b>false</b>
+	 *         otherwise
 	 */
 	public boolean providesLight() {
 		return this.providesLight;
 	}
-	
+
 	/**
-	 * Gets the amount of light this BlockMaterial provides, or -1 if it doesn't provide any light
+	 * Gets the amount of light this BlockMaterial provides, or -1 if it doesn't
+	 * provide any light
+	 * 
 	 * @return 0 to Byte.MAX_VALUE, or -1 for no light
 	 */
 	public byte lightAmount() {
 		return this.lightAmount;
+	}
+
+	/**
+	 * Returns if this BlockMaterial is visible
+	 * 
+	 * @return <b>true</b> if this BlockMaterial is visible, <b>false</b>
+	 *         otherwise
+	 */
+	public boolean isVisible() {
+		return visible;
 	}
 
 }

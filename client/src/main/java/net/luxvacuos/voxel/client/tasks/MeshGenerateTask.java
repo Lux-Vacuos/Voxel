@@ -41,7 +41,7 @@ public class MeshGenerateTask implements Callable<IRenderChunk> {
 			for (int z = 0; z < 16; z++) {
 				for (int y = 0; y < 256; y++) {
 					RenderBlock block = (RenderBlock) this.chunk.getChunkData().getBlockAt(x, y, z);
-					if (!block.isTransparent()) {
+					if (block.isVisible()) {
 						if (!block.hasCustomModel()) {
 							this.chunk.getTessellator().generateCube(this.chunk.getX() * 16 + x, y,
 									this.chunk.getZ() * 16 + z, 1, cullFace(block, BlockFace.UP, x, y, z),

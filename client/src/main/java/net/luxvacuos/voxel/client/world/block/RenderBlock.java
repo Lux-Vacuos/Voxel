@@ -38,7 +38,7 @@ public class RenderBlock extends BlockBase implements IRenderBlock {
 		super(material);
 		this.atlas = atlas;
 	}
-	
+
 	public RenderBlock(BlockMaterial material, BoundingBox aabb, BlockFaceAtlas atlas) {
 		super(material, aabb);
 		this.atlas = atlas;
@@ -52,6 +52,11 @@ public class RenderBlock extends BlockBase implements IRenderBlock {
 	@Override
 	public boolean isTransparent() {
 		return this.material.isTransparent();
+	}
+
+	@Override
+	public boolean isVisible() {
+		return this.material.isVisible();
 	}
 
 	@Override

@@ -62,7 +62,7 @@ void main(void) {
 		shadow /= 16.0 ;
 	}
     
-    if(diffuseF.a<0.5) {
+    if(diffuseF.a < 1) {
 		discard;
 	}
 

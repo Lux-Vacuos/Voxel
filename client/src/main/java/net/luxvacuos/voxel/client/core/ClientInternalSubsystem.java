@@ -118,14 +118,14 @@ public class ClientInternalSubsystem extends AbstractInternalSubsystem {
 			soundSystem = new SoundSystem();
 		}
 		TaskManager.addTask(() -> Renderer.init(getGameWindow()));
-		
+
 		BlocksResources.createBlocks(getGameWindow().getResourceLoader());
-		
+
 		MaterialModder matMod = new MaterialModder();
 		Blocks.startRegister("voxel");
 		BlockMaterial airMat = new BlockMaterial("air");
 		airMat = (BlockMaterial) matMod.modify(airMat).canBeBroken(false).setBlocksMovement(false).setOpacity(0f)
-				.done();
+				.setVisible(false).done();
 		Blocks.register(new RenderBlock(airMat, new BlockFaceAtlas("air")));
 		Blocks.register(new RenderBlock(new BlockMaterial("stone"), new BlockFaceAtlas("stone")));
 		Blocks.register(new RenderBlock(new BlockMaterial("grass"), new BlockFaceAtlas("grass", "dirt", "grassSide")));
@@ -134,10 +134,12 @@ public class ClientInternalSubsystem extends AbstractInternalSubsystem {
 		Blocks.register(new RenderBlock(new BlockMaterial("cobblestone"), new BlockFaceAtlas("cobblestone")));
 		Blocks.register(new RenderBlock(new BlockMaterial("wood"), new BlockFaceAtlas("wood")));
 		Blocks.register(new RenderBlock(new BlockMaterial("leaves"), new BlockFaceAtlas("leaves")));
-		Blocks.register(new RenderBlock(new BlockMaterial("glass"), new BlockFaceAtlas("glass")));
+		BlockMaterial glassMat = new BlockMaterial("glass");
+		glassMat = (BlockMaterial) matMod.modify(glassMat).setOpacity(0.0f).done();
+		Blocks.register(new RenderBlock(glassMat, new BlockFaceAtlas("glass")));
 		BlockMaterial waterMat = new BlockMaterial("water");
 		waterMat = (BlockMaterial) matMod.modify(waterMat).canBeBroken(false).setBlocksMovement(false)
-				.affectedByGravity(true).liquid().done();
+				.affectedByGravity(true).liquid().setOpacity(0.2f).done();
 		Blocks.register(new WaterBlock(waterMat, new BlockFaceAtlas("water")));
 		Blocks.finishRegister();
 	}

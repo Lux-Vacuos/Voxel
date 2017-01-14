@@ -22,13 +22,9 @@
 
 in vec2 pass_textureCoords;
 
-out vec4 out_color;
-
 uniform sampler2D alpha;
 
 void main(void) {
-	float alpha = texture(alpha,pass_textureCoords).a;
-	if(alpha == 0)
+	if(texture(alpha,pass_textureCoords).a < 1)
 		discard;
-	out_color.r = alpha;
 }

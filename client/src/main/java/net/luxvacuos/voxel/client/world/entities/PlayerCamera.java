@@ -155,9 +155,9 @@ public class PlayerCamera extends Camera {
 				jump = false;
 		}
 		if (Mouse.isButtonDown(0)) {
-			setBlock(window.getWidth(), window.getHeight(), Blocks.getBlockByID(0), dimension);
+			setBlock(window.getWidth(), window.getHeight(), Blocks.getBlockByName("air"), dimension);
 		} else if (Mouse.isButtonDown(1)) {
-			setBlock(window.getWidth(), window.getHeight(), Blocks.getBlockByID(1), dimension);
+			setBlock(window.getWidth(), window.getHeight(), Blocks.getBlockByName("glass"), dimension);
 
 		}
 	}

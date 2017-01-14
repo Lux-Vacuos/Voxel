@@ -29,6 +29,8 @@ public interface IRenderBlock {
 	
 	public boolean isTransparent();
 	
+	public boolean isVisible();
+	
 	public boolean hasCustomModel();
 	
 	public boolean hasObjModel();
