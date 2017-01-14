@@ -180,7 +180,6 @@ public class Tessellator {
 		glEnableVertexAttribArray(0);
 		glEnableVertexAttribArray(1);
 		glEnableVertexAttribArray(2);
-		glEnableVertexAttribArray(3);
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, material.getDiffuseTexture().getID());
 		glActiveTexture(GL_TEXTURE1);
@@ -197,7 +196,6 @@ public class Tessellator {
 		glDisableVertexAttribArray(0);
 		glDisableVertexAttribArray(1);
 		glDisableVertexAttribArray(2);
-		glDisableVertexAttribArray(3);
 		glBindVertexArray(0);
 		shader.stop();
 	}
