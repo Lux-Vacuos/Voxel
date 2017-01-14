@@ -79,7 +79,7 @@ void main(void){
         	vec3 L = normalize(pointLightsPosition[i] - position.rgb);
         	vec3 H = normalize(V + L);
         	float distance = length(pointLightsPosition[i] - position.rgb);
-        	float attenuation = 1.0 / distance * distance;
+			float attenuation = 1.0 / (distance * distance);
 	        vec3 radiance = pointLightsColor[i] * attenuation;        
 		
         	float NDF = DistributionGGX(N, H, roughness);        

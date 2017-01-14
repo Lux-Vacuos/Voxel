@@ -33,12 +33,12 @@ import static org.lwjgl.opengl.GL13.GL_TEXTURE8;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE_CUBE_MAP;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
 
-import net.luxvacuos.voxel.client.rendering.api.opengl.IPipeline;
-import net.luxvacuos.voxel.client.rendering.api.opengl.ImagePass;
-import net.luxvacuos.voxel.client.rendering.api.opengl.ImagePassFBO;
+import net.luxvacuos.voxel.client.rendering.api.opengl.IDeferredPipeline;
+import net.luxvacuos.voxel.client.rendering.api.opengl.DeferredPass;
+import net.luxvacuos.voxel.client.rendering.api.opengl.FBO;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.CubeMapTexture;
 
-public class Reflections extends ImagePass {
+public class Reflections extends DeferredPass {
 
 
 	public Reflections(String name, int width, int height) {
@@ -46,7 +46,7 @@ public class Reflections extends ImagePass {
 	}
 
 	@Override
-	public void render(ImagePassFBO[] auxs, IPipeline pipe, CubeMapTexture environmentMap) {
+	public void render(FBO[] auxs, IDeferredPipeline pipe, CubeMapTexture environmentMap) {
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, pipe.getMainFBO().getDiffuseTex());
 		glActiveTexture(GL_TEXTURE1);

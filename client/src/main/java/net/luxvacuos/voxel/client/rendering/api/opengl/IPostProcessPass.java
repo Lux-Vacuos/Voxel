@@ -20,27 +20,20 @@
 
 package net.luxvacuos.voxel.client.rendering.api.opengl;
 
-import java.util.List;
-
 import net.luxvacuos.igl.vector.Matrix4d;
 import net.luxvacuos.igl.vector.Vector3d;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.CubeMapTexture;
-import net.luxvacuos.voxel.client.rendering.api.opengl.objects.Light;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.RawModel;
 import net.luxvacuos.voxel.client.world.entities.Camera;
-import net.luxvacuos.voxel.universal.core.IWorldSimulation;
+import net.luxvacuos.voxel.universal.resources.IDisposable;
 
-public interface IImagePass {
+public interface IPostProcessPass extends IDisposable {
 
 	public void init();
 
-	public void process(Camera camera, Matrix4d previousViewMatrix, Vector3d previousCameraPosition,
-			Vector3d lightPosition, Vector3d invertedLightPosition, IWorldSimulation clientWorldSimulation,
-			List<Light> lights, ImagePassFBO[] auxs, IPipeline pipe, RawModel quad,
-			CubeMapTexture environmentMap, float exposure);
+	public void process(Camera camera, Matrix4d previousViewMatrix, Vector3d previousCameraPosition, FBO[] auxs,
+			RawModel quad);
 
-	public void render(ImagePassFBO[] auxs, IPipeline pipe, CubeMapTexture environmentMap);
-
-	public void dispose();
+	public void render(FBO[] auxs);
 
 }

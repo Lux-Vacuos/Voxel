@@ -6,19 +6,19 @@ import static org.lwjgl.opengl.GL13.GL_TEXTURE1;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE6;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
 
-import net.luxvacuos.voxel.client.rendering.api.opengl.IPipeline;
-import net.luxvacuos.voxel.client.rendering.api.opengl.ImagePass;
-import net.luxvacuos.voxel.client.rendering.api.opengl.ImagePassFBO;
+import net.luxvacuos.voxel.client.rendering.api.opengl.IDeferredPipeline;
+import net.luxvacuos.voxel.client.rendering.api.opengl.DeferredPass;
+import net.luxvacuos.voxel.client.rendering.api.opengl.FBO;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.CubeMapTexture;
 
-public class VolumetricLight extends ImagePass {
+public class VolumetricLight extends DeferredPass {
 
 	public VolumetricLight(String name, int width, int height) {
 		super(name, width, height);
 	}
 
 	@Override
-	public void render(ImagePassFBO[] auxs, IPipeline pipe, CubeMapTexture environmentMap) {
+	public void render(FBO[] auxs, IDeferredPipeline pipe, CubeMapTexture environmentMap) {
 		glActiveTexture(GL_TEXTURE1);
 		glBindTexture(GL_TEXTURE_2D, pipe.getMainFBO().getPositionTex());
 		glActiveTexture(GL_TEXTURE6);

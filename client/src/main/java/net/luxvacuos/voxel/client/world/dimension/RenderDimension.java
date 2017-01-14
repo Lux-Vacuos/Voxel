@@ -56,7 +56,7 @@ public class RenderDimension extends Dimension implements IRenderDimension {
 		gen.setNoiseGenerator(new SimplexNoise(256, 0.15f, rgn.nextInt()));
 		this.chunkManager.setGenerator(gen);
 	}
-	
+
 	@Override
 	protected void setupWorldSimulator() {
 		this.worldSimulation = new ClientWorldSimulation(6500);
@@ -72,14 +72,14 @@ public class RenderDimension extends Dimension implements IRenderDimension {
 		ChunkLoader loader = Components.CHUNK_LOADER.get(camera);
 
 		if (camera.getPosition().x < 0)
-			entityCX = (int) ((camera.getPosition().x - 8) / 16);
+			entityCX = (int) ((camera.getPosition().x - 16) / 16);
 		else
-			entityCX = (int) ((camera.getPosition().x + 8) / 16);
+			entityCX = (int) ((camera.getPosition().x) / 16);
 
 		if (camera.getPosition().z < 0)
-			entityCZ = (int) ((camera.getPosition().z - 8) / 16);
+			entityCZ = (int) ((camera.getPosition().z - 16) / 16);
 		else
-			entityCZ = (int) ((camera.getPosition().z + 8) / 16);
+			entityCZ = (int) ((camera.getPosition().z) / 16);
 
 		for (IChunk chunk : this.chunkManager.getLoadedChunks()) {
 			if (chunk instanceof FutureChunk)
@@ -134,10 +134,10 @@ public class RenderDimension extends Dimension implements IRenderDimension {
 	public int getRenderedChunks() {
 		return renderedChunks;
 	}
-	
+
 	@Override
 	public ClientWorldSimulation getWorldSimulator() {
-		return (ClientWorldSimulation)this.worldSimulation;
+		return (ClientWorldSimulation) this.worldSimulation;
 	}
 
 }

@@ -40,7 +40,6 @@ import java.util.List;
 
 import org.lwjgl.opengl.GL11;
 
-import net.luxvacuos.igl.Logger;
 import net.luxvacuos.igl.vector.Matrix4d;
 import net.luxvacuos.igl.vector.Vector2d;
 import net.luxvacuos.igl.vector.Vector3d;
@@ -56,23 +55,21 @@ import net.luxvacuos.voxel.client.world.entities.Camera;
 import net.luxvacuos.voxel.universal.core.IWorldSimulation;
 import net.luxvacuos.voxel.universal.core.TaskManager;
 
-public abstract class DeferredPipeline implements IPipeline {
+public abstract class DeferredPipeline implements IDeferredPipeline {
 
 	protected RenderingPipelineFBO mainFBO;
 	protected int width, height;
-	protected List<ImagePass> imagePasses;
+	protected List<IDeferredPass> imagePasses;
 	private Matrix4d previousViewMatrix;
 	private Vector3d previousCameraPosition;
 	private RawModel quad;
-	private ImagePassFBO[] auxs;
+	private FBO[] auxs;
 	private DeferredShadingShader finalShader;
 	private String name;
 
 	public DeferredPipeline(String name) {
 		this.name = name;
-		Logger.log("Using " + name + " Rendering Pipeline");
 		Window window = ClientInternalSubsystem.getInstance().getGameWindow();
-
 		width = (int) (window.getWidth() * window.getPixelRatio());
 		height = (int) (window.getHeight() * window.getPixelRatio());
 
@@ -85,7 +82,7 @@ public abstract class DeferredPipeline implements IPipeline {
 
 		mainFBO = new RenderingPipelineFBO(width, height);
 		imagePasses = new ArrayList<>();
-		auxs = new ImagePassFBO[3];
+		auxs = new FBO[3];
 
 		previousCameraPosition = new Vector3d();
 		previousViewMatrix = new Matrix4d();
@@ -96,8 +93,8 @@ public abstract class DeferredPipeline implements IPipeline {
 		finalShader.loadSkyColor(ClientVariables.skyColor);
 		finalShader.stop();
 		init();
-		for (ImagePass imagePass : imagePasses) {
-			TaskManager.addTask(() -> imagePass.init());
+		for (IDeferredPass deferredPass : imagePasses) {
+			TaskManager.addTask(() -> deferredPass.init());
 		}
 	}
 
@@ -117,17 +114,19 @@ public abstract class DeferredPipeline implements IPipeline {
 		mainFBO.end();
 	}
 
+	@Override
 	public void preRender(Camera camera, Vector3d lightPosition, Vector3d invertedLightPosition,
 			IWorldSimulation clientWorldSimulation, List<Light> lights, CubeMapTexture environmentMap, float exposure) {
-		for (ImagePass imagePass : imagePasses) {
-			imagePass.process(camera, previousViewMatrix, previousCameraPosition, lightPosition, invertedLightPosition,
-					clientWorldSimulation, lights, auxs, this, quad, environmentMap, exposure);
+		for (IDeferredPass deferredPass : imagePasses) {
+			deferredPass.process(camera, previousViewMatrix, previousCameraPosition, lightPosition,
+					invertedLightPosition, clientWorldSimulation, lights, auxs, this, quad, environmentMap, exposure);
 		}
 		previousViewMatrix = Maths.createViewMatrix(camera);
 		previousCameraPosition = camera.getPosition();
 	}
 
-	public void render(ImagePassFBO postProcess) {
+	@Override
+	public void render(FBO postProcess) {
 		finalShader.start();
 		glBindVertexArray(quad.getVaoID());
 		glEnableVertexAttribArray(0);
@@ -146,8 +145,8 @@ public abstract class DeferredPipeline implements IPipeline {
 	@Override
 	public void dispose() {
 		mainFBO.cleanUp();
-		for (ImagePass imagePass : imagePasses) {
-			imagePass.dispose();
+		for (IDeferredPass deferredPass : imagePasses) {
+			deferredPass.dispose();
 		}
 		finalShader.dispose();
 	}

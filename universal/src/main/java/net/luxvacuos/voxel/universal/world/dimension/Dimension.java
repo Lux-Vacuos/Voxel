@@ -75,7 +75,7 @@ public class Dimension implements IDimension {
 		try {
 			this.worldSimulation.setTime(this.data.getFloat("Time"));
 			this.worldSimulation.setRainFactor(this.data.getFloat("RainFactor"));
-			if(this.data.hasTagByName("Seed")) {
+			if (this.data.hasTagByName("Seed")) {
 				seed = this.data.getLong("Seed");
 			} else {
 				seed = new Random().nextLong();
@@ -122,14 +122,14 @@ public class Dimension implements IDimension {
 			Position pos = Components.POSITION.get(entity);
 
 			if (pos.getPosition().x < 0)
-				entityCX = (int) ((pos.getPosition().x - 8) / 16);
+				entityCX = (int) ((pos.getPosition().x - 16) / 16);
 			else
-				entityCX = (int) ((pos.getPosition().x + 8) / 16);
+				entityCX = (int) ((pos.getPosition().x) / 16);
 
 			if (pos.getPosition().z < 0)
-				entityCZ = (int) ((pos.getPosition().z - 8) / 16);
+				entityCZ = (int) ((pos.getPosition().z - 16) / 16);
 			else
-				entityCZ = (int) ((pos.getPosition().z + 8) / 16);
+				entityCZ = (int) ((pos.getPosition().z) / 16);
 
 			chunkRadius = loader.getChunkRadius();
 
@@ -184,30 +184,32 @@ public class Dimension implements IDimension {
 		IChunk c = this.chunkManager.getChunkAt(ChunkNode.getFromBlockCoords(x, 0, z));
 		if (c == null)
 			return false;
-		
-		//Trigger Block Updates and chunk rebuilds if needed
+
+		// Trigger Block Updates and chunk rebuilds if needed
 		ChunkNode node;
 		BlockNode bNode = new BlockNode(x, y, z);
-		for(int mx = x - 1; mx <= x + 1; mx++) {
-			for(int my = y - 1; my <= y + 1; my++) {
-				for(int mz = z - 1; mz <= z + 1; mz++) {
-					if((mx == x) && (my == y) && (mz == z)) continue;
-					
+		for (int mx = x - 1; mx <= x + 1; mx++) {
+			for (int my = y - 1; my <= y + 1; my++) {
+				for (int mz = z - 1; mz <= z + 1; mz++) {
+					if ((mx == x) && (my == y) && (mz == z))
+						continue;
+
 					node = ChunkNode.getFromBlockCoords(mx, my, mz);
-					if(!c.getNode().equals(node)) {
+					if (!c.getNode().equals(node)) {
 						IChunk mc = this.chunkManager.getChunkAt(node);
-						if(mc != null) { //Mark neighbor chunk for a rebuild
+						if (mc != null) { // Mark neighbor chunk for a rebuild
 							mc.markForRebuild();
 						}
 					}
-					
-					//Trigger a block update for blocks that care
-					//XXX: Maybe move to an event system like Bukkit/Spout/Forge?
+
+					// Trigger a block update for blocks that care
+					// XXX: Maybe move to an event system like
+					// Bukkit/Spout/Forge?
 					this.getBlockAt(mx, my, mz).onBlockUpdate(bNode, block);
 				}
 			}
 		}
-		
+
 		c.setBlockAt(x & 0xF, y, z & 0xF, block);
 		return true;
 	}
@@ -236,13 +238,14 @@ public class Dimension implements IDimension {
 		try {
 			out = new NBTOutputStream(new BufferedOutputStream(new FileOutputStream(file)));
 			CompoundBuilder builder = new CompoundBuilder().modify(this.data);
-			builder.modifyFloat("Time", this.worldSimulation.getTime()).modifyFloat("RainFactor", this.worldSimulation.getRainFactor());
-			//builder.addBoolean("IsRaining", false);
+			builder.modifyFloat("Time", this.worldSimulation.getTime()).modifyFloat("RainFactor",
+					this.worldSimulation.getRainFactor());
+			// builder.addBoolean("IsRaining", false);
 			builder.build().writeNBT(out, false);
 		} catch (Exception e) {
 			Logger.error(e);
 		} finally {
-			if(out != null) {
+			if (out != null) {
 				try {
 					out.close();
 				} catch (IOException e) {

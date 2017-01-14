@@ -64,7 +64,7 @@ public final class ClientGameSettings extends AbstractGameSettings {
 		ClientVariables.FOV = Integer.parseInt(getValue("FOV", "90"));
 
 		// Parse rendering pipeline
-		ClientVariables.renderingPipeline = getValue("RenderingPipeline", "MultiPass");
+		ClientVariables.renderingPipeline = getValue("DeferredPipeline", "MultiPass");
 
 		// Parse assetsPack
 		ClientVariables.assets = getValue("Assets", "voxel");
@@ -96,7 +96,7 @@ public final class ClientGameSettings extends AbstractGameSettings {
 		registerValue("UPS", Integer.toString(ClientVariables.UPS));
 		registerValue("chunkRadius", Integer.toString(ClientVariables.chunk_radius));
 		registerValue("FOV", Integer.toString(ClientVariables.FOV));
-		registerValue("RenderingPipeline", ClientVariables.renderingPipeline);
+		registerValue("DeferredPipeline", ClientVariables.renderingPipeline);
 		registerValue("Assets", ClientVariables.assets);
 		registerValue("shadowMapResolution", Integer.toString(ClientVariables.shadowMapResolution));
 		registerValue("shadowMapDrawDistance", Integer.toString(ClientVariables.shadowMapDrawDistance));

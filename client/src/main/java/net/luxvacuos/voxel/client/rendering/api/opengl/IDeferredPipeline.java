@@ -20,7 +20,16 @@
 
 package net.luxvacuos.voxel.client.rendering.api.opengl;
 
-public interface IPipeline {
+import java.util.List;
+
+import net.luxvacuos.igl.vector.Vector3d;
+import net.luxvacuos.voxel.client.rendering.api.opengl.objects.CubeMapTexture;
+import net.luxvacuos.voxel.client.rendering.api.opengl.objects.Light;
+import net.luxvacuos.voxel.client.world.entities.Camera;
+import net.luxvacuos.voxel.universal.core.IWorldSimulation;
+import net.luxvacuos.voxel.universal.resources.IDisposable;
+
+public interface IDeferredPipeline extends IDisposable {
 
 	public void init();
 
@@ -28,7 +37,10 @@ public interface IPipeline {
 
 	public void end();
 
-	public void dispose();
+	public void preRender(Camera camera, Vector3d lightPosition, Vector3d invertedLightPosition,
+			IWorldSimulation clientWorldSimulation, List<Light> lights, CubeMapTexture environmentMap, float exposure);
+	
+	public void render(FBO postProcess);
 	
 	public RenderingPipelineFBO getMainFBO();
 

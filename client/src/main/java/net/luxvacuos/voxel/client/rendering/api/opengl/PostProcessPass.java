@@ -28,28 +28,16 @@ import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
 import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 
-import java.util.List;
-
 import net.luxvacuos.igl.vector.Matrix4d;
 import net.luxvacuos.igl.vector.Vector2d;
 import net.luxvacuos.igl.vector.Vector3d;
 import net.luxvacuos.voxel.client.core.ClientVariables;
-import net.luxvacuos.voxel.client.rendering.api.opengl.objects.CubeMapTexture;
-import net.luxvacuos.voxel.client.rendering.api.opengl.objects.Light;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.RawModel;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.DeferredShadingShader;
 import net.luxvacuos.voxel.client.util.Maths;
 import net.luxvacuos.voxel.client.world.entities.Camera;
-import net.luxvacuos.voxel.universal.core.IWorldSimulation;
 
-/**
- * ImagePass, use inside {@link RenderingPipeline} to process different image
- * passes.
- *
- * @author Guerra24 <pablo230699@hotmail.com>
- *
- */
-public abstract class ImagePass implements IImagePass {
+public abstract class PostProcessPass implements IPostProcessPass {
 
 	/**
 	 * Deferred Shader
@@ -58,7 +46,7 @@ public abstract class ImagePass implements IImagePass {
 	/**
 	 * FBO
 	 */
-	private ImagePassFBO fbo;
+	private FBO fbo;
 
 	/**
 	 * Width and Height of the FBO
@@ -69,8 +57,6 @@ public abstract class ImagePass implements IImagePass {
 	 */
 	private String name;
 
-	private static Matrix4d tmp;
-
 	/**
 	 * 
 	 * @param width
@@ -78,7 +64,7 @@ public abstract class ImagePass implements IImagePass {
 	 * @param height
 	 *            Height
 	 */
-	public ImagePass(String name, int width, int height) {
+	public PostProcessPass(String name, int width, int height) {
 		this.name = name;
 		this.width = width;
 		this.height = height;
@@ -89,7 +75,7 @@ public abstract class ImagePass implements IImagePass {
 	 */
 	@Override
 	public void init() {
-		fbo = new ImagePassFBO(width, height);
+		fbo = new FBO(width, height);
 		shader = new DeferredShadingShader(name);
 		shader.start();
 		shader.loadTransformation(Maths.createTransformationMatrix(new Vector2d(0, 0), new Vector2d(1, 1)));
@@ -99,30 +85,20 @@ public abstract class ImagePass implements IImagePass {
 	}
 
 	@Override
-	public void process(Camera camera, Matrix4d previousViewMatrix, Vector3d previousCameraPosition,
-			Vector3d lightPosition, Vector3d invertedLightPosition, IWorldSimulation clientWorldSimulation,
-			List<Light> lights, ImagePassFBO[] auxs, IPipeline pipe, RawModel quad,
-			CubeMapTexture environmentMap, float exposure) {
+	public void process(Camera camera, Matrix4d previousViewMatrix, Vector3d previousCameraPosition, FBO[] auxs,
+			RawModel quad) {
 		fbo.begin();
 		shader.start();
 		shader.loadUnderWater(false);
 		shader.loadMotionBlurData(camera, previousViewMatrix, previousCameraPosition);
-		shader.loadLightPosition(lightPosition, invertedLightPosition);
 		shader.loadviewMatrix(camera);
 		shader.loadSettings(ClientVariables.useDOF, ClientVariables.useFXAA, ClientVariables.useMotionBlur,
 				ClientVariables.useVolumetricLight, ClientVariables.useReflections, ClientVariables.useAmbientOcclusion,
 				ClientVariables.shadowMapDrawDistance);
-		shader.loadSunPosition(Maths.convertTo2F(new Vector3d(lightPosition), camera.getProjectionMatrix(),
-				Maths.createViewMatrixRot(camera.getRotation().getX(), camera.getRotation().getY(),
-						camera.getRotation().getZ(), tmp),
-				width, height));
-		shader.loadExposure(exposure);
-		shader.loadPointLightsPos(lights);
-		shader.loadTime(clientWorldSimulation.getTime());
 		Renderer.clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glBindVertexArray(quad.getVaoID());
 		glEnableVertexAttribArray(0);
-		render(auxs, pipe, environmentMap);
+		render(auxs);
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, quad.getVertexCount());
 		glDisableVertexAttribArray(0);
 		glBindVertexArray(0);
@@ -140,7 +116,7 @@ public abstract class ImagePass implements IImagePass {
 		fbo.cleanUp();
 	}
 
-	public ImagePassFBO getFbo() {
+	public FBO getFbo() {
 		return fbo;
 	}
 

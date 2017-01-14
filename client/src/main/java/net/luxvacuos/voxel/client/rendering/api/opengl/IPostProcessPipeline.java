@@ -18,30 +18,22 @@
  * 
  */
 
-package net.luxvacuos.voxel.client.rendering.api.opengl.pipeline;
+package net.luxvacuos.voxel.client.rendering.api.opengl;
 
-import net.luxvacuos.voxel.client.rendering.api.opengl.PostProcessPipeline;
+import net.luxvacuos.voxel.client.world.entities.Camera;
+import net.luxvacuos.voxel.universal.resources.IDisposable;
 
-public class PostProcess extends PostProcessPipeline {
+public interface IPostProcessPipeline extends IDisposable {
 
-	private FXAA fxaa;
-	private MotionBlur motionBlur;
-	private DepthOfField depthOfField;
+	public void init();
 
-	public PostProcess() {
-		super("PostProcess");
-	}
+	public void begin();
 
-	@Override
-	public void init() {
-		fxaa = new FXAA("FXAA", width, height);
-		super.imagePasses.add(fxaa);
-
-		motionBlur = new MotionBlur("MotionBlur", width, height);
-		super.imagePasses.add(motionBlur);
-
-		depthOfField = new DepthOfField("DoF", width, height);
-		super.imagePasses.add(depthOfField);
-	}
-
+	public void end();
+	
+	public void preRender(Camera camera);
+	
+	public void render();
+	
+	public FBO getFBO();
 }

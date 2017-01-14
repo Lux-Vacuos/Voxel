@@ -52,22 +52,21 @@ import static org.lwjgl.opengl.GL30.glFramebufferTexture2D;
 import static org.lwjgl.opengl.GL30.glGenFramebuffers;
 import static org.lwjgl.opengl.GL30.glGenRenderbuffers;
 import static org.lwjgl.opengl.GL30.glRenderbufferStorage;
-import static org.lwjgl.opengl.GL32.glFramebufferTexture;
 
 import java.nio.ByteBuffer;
 
 import net.luxvacuos.voxel.client.core.ClientInternalSubsystem;
 import net.luxvacuos.voxel.client.core.exception.FrameBufferException;
 
-public class ImagePassFBO {
+public class FBO {
 
 	private int fbo, rt, depthBuffer;
 
-	private int tex, depthTex;
+	private int tex;
 
 	private int width, height;
 
-	public ImagePassFBO(int width, int height) {
+	public FBO(int width, int height) {
 		this.width = width;
 		this.height = height;
 		init();
@@ -83,6 +82,10 @@ public class ImagePassFBO {
 		glBindRenderbuffer(GL_RENDERBUFFER, rt);
 		glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA16F, width, height);
 		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, rt);
+		
+		glBindRenderbuffer(GL_RENDERBUFFER, depthBuffer);
+		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height);
+		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthBuffer);
 
 		tex = glGenTextures();
 		glBindTexture(GL_TEXTURE_2D, tex);
@@ -92,16 +95,6 @@ public class ImagePassFBO {
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex, 0);
-
-		depthTex = glGenTextures();
-		glBindTexture(GL_TEXTURE_2D, depthTex);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT,
-				(ByteBuffer) null);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, depthTex, 0);
 
 		int status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
 		if (status != GL_FRAMEBUFFER_COMPLETE)
@@ -122,7 +115,6 @@ public class ImagePassFBO {
 
 	public void cleanUp() {
 		glDeleteTextures(tex);
-		glDeleteTextures(depthTex);
 		glDeleteFramebuffers(fbo);
 		glDeleteRenderbuffers(rt);
 		glDeleteRenderbuffers(depthBuffer);
@@ -131,7 +123,7 @@ public class ImagePassFBO {
 	public int getTexture() {
 		return tex;
 	}
-	
+
 	public int getFbo() {
 		return fbo;
 	}

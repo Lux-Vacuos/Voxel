@@ -33,39 +33,33 @@ import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.luxvacuos.igl.Logger;
 import net.luxvacuos.igl.vector.Matrix4d;
 import net.luxvacuos.igl.vector.Vector2d;
 import net.luxvacuos.igl.vector.Vector3d;
 import net.luxvacuos.voxel.client.core.ClientInternalSubsystem;
 import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
-import net.luxvacuos.voxel.client.rendering.api.opengl.objects.CubeMapTexture;
-import net.luxvacuos.voxel.client.rendering.api.opengl.objects.Light;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.RawModel;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.DeferredShadingShader;
 import net.luxvacuos.voxel.client.util.Maths;
 import net.luxvacuos.voxel.client.world.entities.Camera;
-import net.luxvacuos.voxel.universal.core.IWorldSimulation;
 import net.luxvacuos.voxel.universal.core.TaskManager;
 
-public abstract class RenderingPipeline implements IPipeline {
+public abstract class PostProcessPipeline implements IPostProcessPipeline {
 
-	protected ImagePassFBO fbo;
+	protected FBO fbo;
 	protected int width, height;
-	protected List<ImagePass> imagePasses;
+	protected List<IPostProcessPass> imagePasses;
 	private Matrix4d previousViewMatrix;
 	private Vector3d previousCameraPosition;
 	private RawModel quad;
-	private ImagePassFBO[] auxs;
+	private FBO[] auxs;
 	private DeferredShadingShader finalShader;
 	private String name;
 
-	public RenderingPipeline(String name) {
+	public PostProcessPipeline(String name) {
 		this.name = name;
-		Logger.log("Using " + name + " Rendering Pipeline");
 		Window window = ClientInternalSubsystem.getInstance().getGameWindow();
-
 		width = (int) (window.getWidth() * window.getPixelRatio());
 		height = (int) (window.getHeight() * window.getPixelRatio());
 
@@ -75,9 +69,9 @@ public abstract class RenderingPipeline implements IPipeline {
 			height = GLUtil.getTextureMaxSize();
 		float[] positions = { -1, 1, -1, -1, 1, 1, 1, -1 };
 		quad = window.getResourceLoader().loadToVAO(positions, 2);
-		fbo = new ImagePassFBO(width, height);
+		fbo = new FBO(width, height);
 		imagePasses = new ArrayList<>();
-		auxs = new ImagePassFBO[3];
+		auxs = new FBO[3];
 
 		previousCameraPosition = new Vector3d();
 		previousViewMatrix = new Matrix4d();
@@ -88,8 +82,8 @@ public abstract class RenderingPipeline implements IPipeline {
 		finalShader.loadSkyColor(ClientVariables.skyColor);
 		finalShader.stop();
 		init();
-		for (ImagePass imagePass : imagePasses) {
-			TaskManager.addTask(() -> imagePass.init());
+		for (IPostProcessPass deferredPass : imagePasses) {
+			TaskManager.addTask(() -> deferredPass.init());
 		}
 	}
 
@@ -103,17 +97,17 @@ public abstract class RenderingPipeline implements IPipeline {
 		fbo.end();
 	}
 
-	public void preRender(Camera camera, Vector3d lightPosition, Vector3d invertedLightPosition,
-			IWorldSimulation clientWorldSimulation, List<Light> lights, CubeMapTexture environmentMap, float exposure) {
+	@Override
+	public void preRender(Camera camera) {
 		auxs[0] = fbo;
-		for (ImagePass imagePass : imagePasses) {
-			imagePass.process(camera, previousViewMatrix, previousCameraPosition, lightPosition, invertedLightPosition,
-					clientWorldSimulation, lights, auxs, this, quad, environmentMap, exposure);
+		for (IPostProcessPass deferredPass : imagePasses) {
+			deferredPass.process(camera, previousViewMatrix, previousCameraPosition, auxs, quad);
 		}
 		previousViewMatrix = Maths.createViewMatrix(camera);
 		previousCameraPosition = camera.getPosition();
 	}
 
+	@Override
 	public void render() {
 		finalShader.start();
 		glBindVertexArray(quad.getVaoID());
@@ -129,18 +123,14 @@ public abstract class RenderingPipeline implements IPipeline {
 	@Override
 	public void dispose() {
 		fbo.cleanUp();
-		for (ImagePass imagePass : imagePasses) {
-			imagePass.dispose();
+		for (IPostProcessPass deferredPass : imagePasses) {
+			deferredPass.dispose();
 		}
 		finalShader.dispose();
 	}
 
 	@Override
-	public RenderingPipelineFBO getMainFBO() {
-		return null;
-	}
-
-	public ImagePassFBO getFbo() {
+	public FBO getFBO() {
 		return fbo;
 	}
 

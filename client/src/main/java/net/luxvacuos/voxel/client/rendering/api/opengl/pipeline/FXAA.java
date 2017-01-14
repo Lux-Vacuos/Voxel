@@ -25,19 +25,17 @@ import static org.lwjgl.opengl.GL11.glBindTexture;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE6;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
 
-import net.luxvacuos.voxel.client.rendering.api.opengl.IPipeline;
-import net.luxvacuos.voxel.client.rendering.api.opengl.ImagePass;
-import net.luxvacuos.voxel.client.rendering.api.opengl.ImagePassFBO;
-import net.luxvacuos.voxel.client.rendering.api.opengl.objects.CubeMapTexture;
+import net.luxvacuos.voxel.client.rendering.api.opengl.FBO;
+import net.luxvacuos.voxel.client.rendering.api.opengl.PostProcessPass;
 
-public class FXAA extends ImagePass {
+public class FXAA extends PostProcessPass {
 
 	public FXAA(String name, int width, int height) {
 		super(name, width, height);
 	}
 
 	@Override
-	public void render(ImagePassFBO[] auxs, IPipeline pipe, CubeMapTexture environmentMap) {
+	public void render(FBO[] auxs) {
 		glActiveTexture(GL_TEXTURE6);
 		glBindTexture(GL_TEXTURE_2D, auxs[0].getTexture());
 	}
