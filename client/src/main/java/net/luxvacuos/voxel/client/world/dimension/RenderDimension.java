@@ -23,6 +23,7 @@ package net.luxvacuos.voxel.client.world.dimension;
 import java.util.Random;
 
 import com.badlogic.gdx.math.collision.BoundingBox;
+import com.hackhalo2.nbt.tags.TagCompound;
 
 import net.luxvacuos.voxel.client.core.ClientWorldSimulation;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Frustum;
@@ -44,15 +45,15 @@ public class RenderDimension extends Dimension implements IRenderDimension {
 
 	private int renderedChunks = 0;
 
-	public RenderDimension(IWorld world, int id) {
-		super(world, id);
+	public RenderDimension(IWorld world, TagCompound data, int id) {
+		super(world, data, id);
 	}
 
 	@Override
-	protected void setupChunkManager() {
+	protected void setupChunkManager(Random rgn) {
 		this.chunkManager = new ClientChunkManager(this);
 		ChunkTerrainGenerator gen = new ChunkTerrainGenerator();
-		gen.setNoiseGenerator(new SimplexNoise(256, 0.15f, new Random().nextInt()));
+		gen.setNoiseGenerator(new SimplexNoise(256, 0.15f, rgn.nextInt()));
 		this.chunkManager.setGenerator(gen);
 	}
 	

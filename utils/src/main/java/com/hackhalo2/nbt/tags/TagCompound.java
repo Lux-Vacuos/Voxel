@@ -120,6 +120,7 @@ public final class TagCompound extends AbstractTag implements INamedTagContainer
 		}
 		
 		out.writeByte(TagType.END.getID());
+		out.flush();
 	}
 	
 	//Helper Functions

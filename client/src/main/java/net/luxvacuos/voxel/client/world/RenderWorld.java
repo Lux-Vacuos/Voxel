@@ -20,6 +20,8 @@
 
 package net.luxvacuos.voxel.client.world;
 
+import com.hackhalo2.nbt.tags.TagCompound;
+
 import net.luxvacuos.voxel.client.rendering.api.opengl.Frustum;
 import net.luxvacuos.voxel.client.rendering.api.opengl.ShadowFBO;
 import net.luxvacuos.voxel.client.rendering.world.IRenderWorld;
@@ -35,8 +37,8 @@ public class RenderWorld extends World implements IRenderWorld {
 	}
 
 	@Override
-	protected IDimension createDimension(int id) {
-		return new RenderDimension(this, id);
+	protected IDimension createDimension(int id, TagCompound data) {
+		return new RenderDimension(this, data, id);
 	}
 
 	@Override

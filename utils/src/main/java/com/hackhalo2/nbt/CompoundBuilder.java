@@ -221,8 +221,11 @@ public class CompoundBuilder {
 		try {
 			if(this.compound.hasTagByName(name)) {
 				TagFloat tag = this.compound.getTag(name, TagFloat.class);
+				this.compound.removeTag(tag);
 				tag.setValue(value);
-			}
+				this.compound.addTag(tag);
+			} else 
+				return this.addFloat(name, value);
 		} catch(NBTException e) {
 			e.printStackTrace();
 		}

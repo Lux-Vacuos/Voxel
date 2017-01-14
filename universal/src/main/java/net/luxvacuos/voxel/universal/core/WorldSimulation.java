@@ -43,6 +43,11 @@ public class WorldSimulation implements IWorldSimulation {
 	public float getRainFactor() {
 		return this.rainFactor;
 	}
+	
+	@Override
+	public void setRainFactor(float rainFactor) {
+		this.rainFactor = rainFactor;
+	}
 
 	@Override
 	public float getTime() {

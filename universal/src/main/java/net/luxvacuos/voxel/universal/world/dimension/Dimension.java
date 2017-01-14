@@ -20,6 +20,10 @@
 
 package net.luxvacuos.voxel.universal.world.dimension;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -31,7 +35,13 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.math.collision.BoundingBox;
 import com.badlogic.gdx.utils.Array;
+import com.hackhalo2.nbt.CompoundBuilder;
+import com.hackhalo2.nbt.stream.NBTOutputStream;
+import com.hackhalo2.nbt.tags.TagCompound;
+import com.hackhalo2.nbt.tags.TagLong;
 
+import net.luxvacuos.igl.Logger;
+import net.luxvacuos.voxel.universal.core.GlobalVariables;
 import net.luxvacuos.voxel.universal.core.IWorldSimulation;
 import net.luxvacuos.voxel.universal.core.WorldSimulation;
 import net.luxvacuos.voxel.universal.ecs.Components;
@@ -54,20 +64,35 @@ public class Dimension implements IDimension {
 	protected IWorldSimulation worldSimulation;
 	protected ChunkManager chunkManager;
 	protected Engine entitiesManager;
+	protected TagCompound data;
 
-	public Dimension(IWorld world, int id) {
+	public Dimension(IWorld world, TagCompound data, int id) {
 		this.world = world;
+		this.data = data;
 		this.id = id;
-		this.setupChunkManager();
 		this.setupWorldSimulator();
+		long seed = 0l;
+		try {
+			this.worldSimulation.setTime(this.data.getFloat("Time"));
+			this.worldSimulation.setRainFactor(this.data.getFloat("RainFactor"));
+			if(this.data.hasTagByName("Seed")) {
+				seed = this.data.getLong("Seed");
+			} else {
+				seed = new Random().nextLong();
+				this.data.addTag(new TagLong("Seed", seed));
+			}
+		} catch (Exception e) {
+			Logger.error(e);
+		}
+		this.setupChunkManager(new Random(seed));
 		this.entitiesManager = new Engine();
 		this.entitiesManager.addSystem(new PhysicsSystem(this));
 	}
 
-	protected void setupChunkManager() {
+	protected void setupChunkManager(Random rgn) {
 		this.chunkManager = new ChunkManager(this);
 		ChunkTerrainGenerator gen = new ChunkTerrainGenerator();
-		gen.setNoiseGenerator(new SimplexNoise(256, 0.15f, new Random().nextInt()));
+		gen.setNoiseGenerator(new SimplexNoise(256, 0.15f, rgn.nextInt()));
 		this.chunkManager.setGenerator(gen);
 	}
 
@@ -182,6 +207,25 @@ public class Dimension implements IDimension {
 
 	@Override
 	public void dispose() {
+		File file = new File(GlobalVariables.WORLD_PATH + this.world.getName() + "/dim" + this.id + "_data.nbt");
+		NBTOutputStream out = null;
+		try {
+			out = new NBTOutputStream(new BufferedOutputStream(new FileOutputStream(file)));
+			CompoundBuilder builder = new CompoundBuilder().modify(this.data);
+			builder.modifyFloat("Time", this.worldSimulation.getTime()).modifyFloat("RainFactor", this.worldSimulation.getRainFactor());
+			//builder.addBoolean("IsRaining", false);
+			builder.build().writeNBT(out, false);
+		} catch (Exception e) {
+			Logger.error(e);
+		} finally {
+			if(out != null) {
+				try {
+					out.close();
+				} catch (IOException e) {
+					Logger.error(e);
+				}
+			}
+		}
 		entitiesManager.removeAllEntities();
 		chunkManager.dispose();
 	}

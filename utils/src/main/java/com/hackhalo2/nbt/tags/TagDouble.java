@@ -17,7 +17,7 @@ public final class TagDouble extends AbstractTag {
 	public TagDouble(NBTInputStream in, boolean anonymous) throws NBTException, IOException {
 		 super(in, anonymous, TagType.DOUBLE.getID());
 		 
-		 this.value = in.readShort();
+		 this.value = in.readDouble();
 	}
 	
 	public double getValue() {

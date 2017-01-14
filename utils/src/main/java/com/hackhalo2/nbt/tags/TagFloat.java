@@ -17,7 +17,7 @@ public final class TagFloat extends AbstractTag {
 	public TagFloat(NBTInputStream in, boolean anonymous) throws NBTException, IOException {
 		 super(in, anonymous, TagType.FLOAT.getID());
 		 
-		 this.value = in.readShort();
+		 this.value = in.readFloat();
 	}
 	
 	public float getValue() {

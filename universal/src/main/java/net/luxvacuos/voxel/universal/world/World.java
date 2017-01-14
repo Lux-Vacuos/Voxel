@@ -20,10 +20,20 @@
 
 package net.luxvacuos.voxel.universal.world;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.Collection;
+import java.util.Random;
 
 import com.badlogic.gdx.utils.IntMap;
+import com.hackhalo2.nbt.CompoundBuilder;
+import com.hackhalo2.nbt.stream.NBTInputStream;
+import com.hackhalo2.nbt.tags.TagCompound;
 
+import net.luxvacuos.igl.Logger;
+import net.luxvacuos.voxel.universal.core.GlobalVariables;
 import net.luxvacuos.voxel.universal.world.dimension.Dimension;
 import net.luxvacuos.voxel.universal.world.dimension.IDimension;
 
@@ -38,8 +48,8 @@ public class World implements IWorld {
 		this.dims = new IntMap<>();
 	}
 	
-	protected IDimension createDimension(int id) {
-		return new Dimension(this, id);
+	protected IDimension createDimension(int id, TagCompound data) {
+		return new Dimension(this, data, id);
 	}
 
 	@Override
@@ -81,7 +91,32 @@ public class World implements IWorld {
 		if (this.dims.containsKey(id))
 			return;
 		
-		this.dims.put(id, this.createDimension(id));
+		File file = new File(GlobalVariables.WORLD_PATH + this.name + "/dim" + id + "_data.nbt");
+		TagCompound data = null;
+		NBTInputStream in = null;
+		try {
+			if(file.createNewFile()) { //True if the file was created
+				CompoundBuilder builder = new CompoundBuilder().start();
+				builder.addFloat("Time", 6500).addFloat("RainFactor", 0);
+				builder.addLong("Seed", new Random().nextLong());
+				data = builder.build();
+			} else {
+				in = new NBTInputStream(new BufferedInputStream(new FileInputStream(file)));
+				data = new TagCompound(in, false);
+			}
+		} catch (Exception e) {
+			Logger.error(e);
+		} finally {
+			if(in != null) {
+				try {
+					in.close();
+				} catch (IOException e) {
+					Logger.error(e);
+				}
+			}
+		}
+		
+		this.dims.put(id, this.createDimension(id, data));
 	}
 
 	@Override

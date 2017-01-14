@@ -29,6 +29,8 @@ public interface IWorldSimulation {
 	
 	public float getRainFactor();
 	
+	public void setRainFactor(float rainFactor);
+	
 	public float getTime();
 	
 	public void setTime(float time);

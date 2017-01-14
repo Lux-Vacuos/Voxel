@@ -17,7 +17,7 @@ public final class TagLong extends AbstractTag {
 	public TagLong(NBTInputStream in, boolean anonymous) throws NBTException, IOException {
 		 super(in, anonymous, TagType.LONG.getID());
 		 
-		 this.value = in.readShort();
+		 this.value = in.readLong();
 	}
 	
 	public long getValue() {

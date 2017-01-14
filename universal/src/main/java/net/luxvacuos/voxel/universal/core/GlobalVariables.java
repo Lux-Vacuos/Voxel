@@ -43,7 +43,6 @@ public class GlobalVariables {
 	/** Chunk Load/Unload Radius */
 	public static int chunk_radius = 3;
 
-	protected GlobalVariables() {
-	}
+	protected GlobalVariables() { }
 
 }
