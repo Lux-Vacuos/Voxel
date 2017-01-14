@@ -23,7 +23,6 @@
 in vec3 position;
 in vec2 textureCoords;
 in vec3 normal;
-in vec3 tangent;
 
 out vec2 pass_textureCoords;
 out vec3 pass_position;
@@ -49,6 +48,17 @@ void main() {
 	
 	vec4 positionRelativeToCam = viewMatrix * worldPosition;
 	gl_Position = projectionMatrix * positionRelativeToCam;
+
+	vec3 tangent;
+
+	vec3 c1 = cross(normal, vec3(0.0, 0.0, 1.0));
+	vec3 c2 = cross(normal, vec3(0.0, 1.0, 0.0));
+
+	if(length(c1) > length(c2) ) {
+		tangent = c1;
+	} else {
+		tangent = c2;
+	}
 
 	vec3 T = normalize(tangent);
 	vec3 N = normalize(normal);
