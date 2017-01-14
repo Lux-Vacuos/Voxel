@@ -20,26 +20,28 @@
 
 package net.luxvacuos.voxel.client.rendering.api.opengl.pipeline;
 
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
-import static org.lwjgl.opengl.GL11.glBindTexture;
-import static org.lwjgl.opengl.GL13.GL_TEXTURE6;
-import static org.lwjgl.opengl.GL13.glActiveTexture;
+import net.luxvacuos.voxel.client.rendering.api.opengl.RenderingPipeline;
 
-import net.luxvacuos.voxel.client.rendering.api.opengl.IPipeline;
-import net.luxvacuos.voxel.client.rendering.api.opengl.ImagePass;
-import net.luxvacuos.voxel.client.rendering.api.opengl.ImagePassFBO;
-import net.luxvacuos.voxel.client.rendering.api.opengl.objects.CubeMapTexture;
+public class PostProcess extends RenderingPipeline {
 
-public class DepthOfField extends ImagePass {
+	private FXAA fxaa;
+	private MotionBlur motionBlur;
+	private DepthOfField depthOfField;
 
-	public DepthOfField(String name, int width, int height) {
-		super(name, width, height);
+	public PostProcess() {
+		super("PostProcess");
 	}
 
 	@Override
-	public void render(ImagePassFBO[] auxs, IPipeline pipe, CubeMapTexture environmentMap) {
-		glActiveTexture(GL_TEXTURE6);
-		glBindTexture(GL_TEXTURE_2D, auxs[0].getTexture());
+	public void init() {
+		fxaa = new FXAA("FXAA", width, height);
+		super.imagePasses.add(fxaa);
+
+		motionBlur = new MotionBlur("MotionBlur", width, height);
+		super.imagePasses.add(motionBlur);
+
+		depthOfField = new DepthOfField("DoF", width, height);
+		super.imagePasses.add(depthOfField);
 	}
 
 }

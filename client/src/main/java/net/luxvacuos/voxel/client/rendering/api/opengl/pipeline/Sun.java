@@ -22,13 +22,13 @@ package net.luxvacuos.voxel.client.rendering.api.opengl.pipeline;
 
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11.glBindTexture;
-import static org.lwjgl.opengl.GL13.*;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE5;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
 
+import net.luxvacuos.voxel.client.rendering.api.opengl.IPipeline;
 import net.luxvacuos.voxel.client.rendering.api.opengl.ImagePass;
 import net.luxvacuos.voxel.client.rendering.api.opengl.ImagePassFBO;
-import net.luxvacuos.voxel.client.rendering.api.opengl.RenderingPipeline;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.CubeMapTexture;
 
 public class Sun extends ImagePass {
@@ -38,7 +38,7 @@ public class Sun extends ImagePass {
 	}
 
 	@Override
-	public void render(ImagePassFBO[] auxs, RenderingPipeline pipe, CubeMapTexture environmentMap) {
+	public void render(ImagePassFBO[] auxs, IPipeline pipe, CubeMapTexture environmentMap) {
 		auxs[1] = getFbo();
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, pipe.getMainFBO().getDiffuseTex());

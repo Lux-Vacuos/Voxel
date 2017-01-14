@@ -20,6 +20,7 @@
 
 package net.luxvacuos.voxel.client.rendering.api.opengl;
 
+import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11.GL_TRIANGLE_STRIP;
 import static org.lwjgl.opengl.GL11.glBindTexture;
@@ -28,10 +29,16 @@ import static org.lwjgl.opengl.GL13.GL_TEXTURE6;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
 import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
 import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
+import static org.lwjgl.opengl.GL30.GL_DRAW_FRAMEBUFFER;
+import static org.lwjgl.opengl.GL30.GL_READ_FRAMEBUFFER;
+import static org.lwjgl.opengl.GL30.glBindFramebuffer;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
+import static org.lwjgl.opengl.GL30.glBlitFramebuffer;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.lwjgl.opengl.GL11;
 
 import net.luxvacuos.igl.Logger;
 import net.luxvacuos.igl.vector.Matrix4d;
@@ -49,9 +56,9 @@ import net.luxvacuos.voxel.client.world.entities.Camera;
 import net.luxvacuos.voxel.universal.core.IWorldSimulation;
 import net.luxvacuos.voxel.universal.core.TaskManager;
 
-public abstract class RenderingPipeline implements IPipeline {
+public abstract class DeferredPipeline implements IPipeline {
 
-	protected ImagePassFBO fbo;
+	protected RenderingPipelineFBO mainFBO;
 	protected int width, height;
 	protected List<ImagePass> imagePasses;
 	private Matrix4d previousViewMatrix;
@@ -61,7 +68,7 @@ public abstract class RenderingPipeline implements IPipeline {
 	private DeferredShadingShader finalShader;
 	private String name;
 
-	public RenderingPipeline(String name) {
+	public DeferredPipeline(String name) {
 		this.name = name;
 		Logger.log("Using " + name + " Rendering Pipeline");
 		Window window = ClientInternalSubsystem.getInstance().getGameWindow();
@@ -75,7 +82,8 @@ public abstract class RenderingPipeline implements IPipeline {
 			height = GLUtil.getTextureMaxSize();
 		float[] positions = { -1, 1, -1, -1, 1, 1, 1, -1 };
 		quad = window.getResourceLoader().loadToVAO(positions, 2);
-		fbo = new ImagePassFBO(width, height);
+
+		mainFBO = new RenderingPipelineFBO(width, height);
 		imagePasses = new ArrayList<>();
 		auxs = new ImagePassFBO[3];
 
@@ -93,19 +101,24 @@ public abstract class RenderingPipeline implements IPipeline {
 		}
 	}
 
+	/**
+	 * Begin Rendering
+	 */
 	@Override
 	public void begin() {
-		fbo.begin();
+		mainFBO.begin();
 	}
 
+	/**
+	 * End rendering
+	 */
 	@Override
 	public void end() {
-		fbo.end();
+		mainFBO.end();
 	}
 
 	public void preRender(Camera camera, Vector3d lightPosition, Vector3d invertedLightPosition,
 			IWorldSimulation clientWorldSimulation, List<Light> lights, CubeMapTexture environmentMap, float exposure) {
-		auxs[0] = fbo;
 		for (ImagePass imagePass : imagePasses) {
 			imagePass.process(camera, previousViewMatrix, previousCameraPosition, lightPosition, invertedLightPosition,
 					clientWorldSimulation, lights, auxs, this, quad, environmentMap, exposure);
@@ -114,7 +127,7 @@ public abstract class RenderingPipeline implements IPipeline {
 		previousCameraPosition = camera.getPosition();
 	}
 
-	public void render() {
+	public void render(ImagePassFBO postProcess) {
 		finalShader.start();
 		glBindVertexArray(quad.getVaoID());
 		glEnableVertexAttribArray(0);
@@ -124,24 +137,23 @@ public abstract class RenderingPipeline implements IPipeline {
 		glDisableVertexAttribArray(0);
 		glBindVertexArray(0);
 		finalShader.stop();
+
+		glBindFramebuffer(GL_READ_FRAMEBUFFER, mainFBO.getFbo());
+		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, postProcess.getFbo());
+		glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_DEPTH_BUFFER_BIT, GL11.GL_NEAREST);
 	}
 
 	@Override
 	public void dispose() {
-		fbo.cleanUp();
+		mainFBO.cleanUp();
 		for (ImagePass imagePass : imagePasses) {
 			imagePass.dispose();
 		}
 		finalShader.dispose();
 	}
 
-	@Override
 	public RenderingPipelineFBO getMainFBO() {
-		return null;
-	}
-
-	public ImagePassFBO getFbo() {
-		return fbo;
+		return mainFBO;
 	}
 
 	public String getName() {

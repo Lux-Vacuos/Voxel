@@ -131,5 +131,9 @@ public class ImagePassFBO {
 	public int getTexture() {
 		return tex;
 	}
+	
+	public int getFbo() {
+		return fbo;
+	}
 
 }

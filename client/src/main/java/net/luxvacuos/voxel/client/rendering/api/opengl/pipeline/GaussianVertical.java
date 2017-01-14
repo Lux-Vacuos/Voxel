@@ -25,9 +25,9 @@ import static org.lwjgl.opengl.GL11.glBindTexture;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE6;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
 
+import net.luxvacuos.voxel.client.rendering.api.opengl.IPipeline;
 import net.luxvacuos.voxel.client.rendering.api.opengl.ImagePass;
 import net.luxvacuos.voxel.client.rendering.api.opengl.ImagePassFBO;
-import net.luxvacuos.voxel.client.rendering.api.opengl.RenderingPipeline;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.CubeMapTexture;
 
 public class GaussianVertical extends ImagePass {
@@ -37,7 +37,7 @@ public class GaussianVertical extends ImagePass {
 	}
 
 	@Override
-	public void render(ImagePassFBO[] auxs, RenderingPipeline pipe, CubeMapTexture environmentMap) {
+	public void render(ImagePassFBO[] auxs, IPipeline pipe, CubeMapTexture environmentMap) {
 		glActiveTexture(GL_TEXTURE6);
 		glBindTexture(GL_TEXTURE_2D, auxs[0].getTexture());
 	}

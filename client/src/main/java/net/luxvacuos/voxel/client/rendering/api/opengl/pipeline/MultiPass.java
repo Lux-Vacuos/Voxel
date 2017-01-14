@@ -20,9 +20,9 @@
 
 package net.luxvacuos.voxel.client.rendering.api.opengl.pipeline;
 
-import net.luxvacuos.voxel.client.rendering.api.opengl.RenderingPipeline;
+import net.luxvacuos.voxel.client.rendering.api.opengl.DeferredPipeline;
 
-public class MultiPass extends RenderingPipeline {
+public class MultiPass extends DeferredPipeline {
 
 	public MultiPass() {
 		super("MultiPass");
@@ -37,9 +37,6 @@ public class MultiPass extends RenderingPipeline {
 	private Reflections reflections;
 	private ColorCorrection colorCorrection;
 	private PointLightPass pointLightPass;
-	private FXAA fxaa;
-	private MotionBlur motionBlur;
-	private DepthOfField depthOfField;
 
 	@Override
 	public void init() {
@@ -75,14 +72,6 @@ public class MultiPass extends RenderingPipeline {
 		colorCorrection = new ColorCorrection("ColorCorrection", width, height);
 		super.imagePasses.add(colorCorrection);
 
-		fxaa = new FXAA("FXAA", width, height);
-		super.imagePasses.add(fxaa);
-
-		motionBlur = new MotionBlur("MotionBlur", width, height);
-		super.imagePasses.add(motionBlur);
-
-		depthOfField = new DepthOfField("DoF", width, height);
-		super.imagePasses.add(depthOfField);
 	}
 
 }

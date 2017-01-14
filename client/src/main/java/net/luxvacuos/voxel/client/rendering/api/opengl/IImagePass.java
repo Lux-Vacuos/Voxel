@@ -36,10 +36,10 @@ public interface IImagePass {
 
 	public void process(Camera camera, Matrix4d previousViewMatrix, Vector3d previousCameraPosition,
 			Vector3d lightPosition, Vector3d invertedLightPosition, IWorldSimulation clientWorldSimulation,
-			List<Light> lights, ImagePassFBO[] auxs, RenderingPipeline pipe, RawModel quad,
+			List<Light> lights, ImagePassFBO[] auxs, IPipeline pipe, RawModel quad,
 			CubeMapTexture environmentMap, float exposure);
 
-	public void render(ImagePassFBO[] auxs, RenderingPipeline pipe, CubeMapTexture environmentMap);
+	public void render(ImagePassFBO[] auxs, IPipeline pipe, CubeMapTexture environmentMap);
 
 	public void dispose();
 

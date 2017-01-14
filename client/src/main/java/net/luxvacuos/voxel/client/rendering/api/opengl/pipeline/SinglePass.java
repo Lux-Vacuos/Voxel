@@ -20,9 +20,9 @@
 
 package net.luxvacuos.voxel.client.rendering.api.opengl.pipeline;
 
-import net.luxvacuos.voxel.client.rendering.api.opengl.RenderingPipeline;
+import net.luxvacuos.voxel.client.rendering.api.opengl.DeferredPipeline;
 
-public class SinglePass extends RenderingPipeline {
+public class SinglePass extends DeferredPipeline {
 
 	public SinglePass() {
 		super("SinglePass");

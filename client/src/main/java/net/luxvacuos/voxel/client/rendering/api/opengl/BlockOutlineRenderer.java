@@ -203,8 +203,10 @@ public class BlockOutlineRenderer implements IDisposable {
 		glDeleteVertexArrays(vaoID);
 		glDeleteBuffers(vboID0);
 		glDeleteBuffers(iboID);
-		this.buffer0.clear();
-		this.ibo.clear();
+		if (this.buffer0 != null)
+			this.buffer0.clear();
+		if (this.ibo != null)
+			this.ibo.clear();
 		pos.clear();
 		shader.dispose();
 	}

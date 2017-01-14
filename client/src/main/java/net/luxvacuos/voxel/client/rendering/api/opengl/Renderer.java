@@ -48,6 +48,7 @@ import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.CubeMapTexture;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.ParticleTexture;
 import net.luxvacuos.voxel.client.rendering.api.opengl.pipeline.MultiPass;
+import net.luxvacuos.voxel.client.rendering.api.opengl.pipeline.PostProcess;
 import net.luxvacuos.voxel.client.rendering.api.opengl.pipeline.SinglePass;
 import net.luxvacuos.voxel.client.world.entities.Camera;
 import net.luxvacuos.voxel.client.world.particles.Particle;
@@ -59,6 +60,7 @@ public class Renderer {
 	private static EntityRenderer entityRenderer;
 	private static EntityShadowRenderer entityShadowRenderer;
 	private static SkyboxRenderer skyboxRenderer;
+	private static DeferredPipeline deferredPipeline;
 	private static RenderingPipeline renderingPipeline;
 	private static LightRenderer lightRenderer;
 	private static EnvironmentRenderer environmentRenderer;
@@ -87,10 +89,11 @@ public class Renderer {
 		TaskManager.addTask(() -> skyboxRenderer = new SkyboxRenderer(window.getResourceLoader()));
 		TaskManager.addTask(() -> {
 			if (ClientVariables.renderingPipeline.equals("SinglePass"))
-				renderingPipeline = new SinglePass();
+				deferredPipeline = new SinglePass();
 			else if (ClientVariables.renderingPipeline.equals("MultiPass"))
-				renderingPipeline = new MultiPass();
+				deferredPipeline = new MultiPass();
 		});
+		TaskManager.addTask(() -> renderingPipeline = new PostProcess());
 		TaskManager.addTask(() -> particleRenderer = new ParticleRenderer(window.getResourceLoader()));
 		lightRenderer = new LightRenderer();
 
@@ -123,22 +126,32 @@ public class Renderer {
 		if (occlusionPass != null)
 			occlusionPass.render(camera, sunCamera, frustum, shadowFBO);
 
-		renderingPipeline.begin();
+		deferredPipeline.begin();
 		clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		skyboxRenderer.render(ClientVariables.RED, ClientVariables.GREEN, ClientVariables.BLUE, camera, worldSimulation,
 				lightPosition, 1, false);
-
 		if (deferredPass != null)
 			deferredPass.render(camera, sunCamera, frustum, shadowFBO);
-
 		entityRenderer.renderEntity(entities, camera, sunCamera, shadowFBO);
-		renderingPipeline.end();
-		clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		renderingPipeline.render(camera, lightPosition, invertedLightPosition, worldSimulation,
+		deferredPipeline.end();
+
+		deferredPipeline.preRender(camera, lightPosition, invertedLightPosition, worldSimulation,
 				lightRenderer.getLights(), environmentRenderer.getCubeMapTexture(), exposure);
+
+		renderingPipeline.begin();
+		clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		deferredPipeline.render(renderingPipeline.getFbo());
 		if (forwardPass != null)
 			forwardPass.render(camera, sunCamera, frustum, shadowFBO);
 		particleRenderer.render(particles, camera);
+		renderingPipeline.end();
+		
+		renderingPipeline.preRender(camera, lightPosition, invertedLightPosition, worldSimulation,
+				lightRenderer.getLights(), environmentRenderer.getCubeMapTexture(), exposure);
+		
+		clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		renderingPipeline.render();
+
 	}
 
 	public static void cleanUp() {
@@ -146,6 +159,7 @@ public class Renderer {
 		shadowFBO.cleanUp();
 		entityRenderer.cleanUp();
 		entityShadowRenderer.cleanUp();
+		deferredPipeline.dispose();
 		renderingPipeline.dispose();
 		particleRenderer.cleanUp();
 	}

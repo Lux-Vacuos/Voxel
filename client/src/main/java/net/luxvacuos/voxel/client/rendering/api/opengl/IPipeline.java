@@ -20,7 +20,7 @@
 
 package net.luxvacuos.voxel.client.rendering.api.opengl;
 
-public interface IRenderingPipeline {
+public interface IPipeline {
 
 	public void init();
 
@@ -29,5 +29,7 @@ public interface IRenderingPipeline {
 	public void end();
 
 	public void dispose();
+	
+	public RenderingPipelineFBO getMainFBO();
 
 }
