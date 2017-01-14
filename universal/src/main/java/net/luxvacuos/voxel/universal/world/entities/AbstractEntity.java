@@ -22,13 +22,15 @@ package net.luxvacuos.voxel.universal.world.entities;
 
 import com.badlogic.ashley.core.Entity;
 
+import net.luxvacuos.voxel.universal.world.dimension.IDimension;
+
 public abstract class AbstractEntity extends Entity {
 
-	public void update(float delta) {
+	public void update(float delta, IDimension dimension) {
 
 	}
 
-	public void afterUpdate(float delta) {
+	public void afterUpdate(float delta, IDimension dimension) {
 
 	}
 }

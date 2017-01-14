@@ -65,7 +65,7 @@ public class PhysicsSystem extends EntitySystem {
 			Health health = Components.HEALTH.get(entity);
 
 			if (entity instanceof AbstractEntity)
-				((AbstractEntity) entity).update(delta);
+				((AbstractEntity) entity).update(delta, dim);
 
 			velocity.setX(velocity.getX() * 0.7f - velocity.getX() * 0.0001f);
 			velocity.setY(velocity.getY() - 9.8f * delta);
@@ -115,7 +115,7 @@ public class PhysicsSystem extends EntitySystem {
 			pos.setZ(pos.getZ() + velocity.getZ() * delta);
 
 			if (entity instanceof AbstractEntity)
-				((AbstractEntity) entity).afterUpdate(delta);
+				((AbstractEntity) entity).afterUpdate(delta, dim);
 
 		}
 	}

@@ -25,13 +25,25 @@ import static net.luxvacuos.voxel.client.input.Mouse.getDY;
 import static net.luxvacuos.voxel.client.input.Mouse.setCursorPosition;
 import static net.luxvacuos.voxel.client.input.Mouse.setGrabbed;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.lwjgl.glfw.GLFW;
 
+import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.math.collision.BoundingBox;
+
 import net.luxvacuos.igl.vector.Matrix4d;
+import net.luxvacuos.igl.vector.Vector2d;
 import net.luxvacuos.igl.vector.Vector3d;
+import net.luxvacuos.igl.vector.Vector3f;
+import net.luxvacuos.igl.vector.Vector4d;
 import net.luxvacuos.voxel.client.core.ClientInternalSubsystem;
+import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.input.KeyboardHandler;
+import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
+import net.luxvacuos.voxel.client.resources.DRay;
 import net.luxvacuos.voxel.client.util.Maths;
 import net.luxvacuos.voxel.universal.core.GlobalVariables;
 import net.luxvacuos.voxel.universal.ecs.Components;
@@ -41,6 +53,9 @@ import net.luxvacuos.voxel.universal.ecs.components.Health;
 import net.luxvacuos.voxel.universal.ecs.components.Rotation;
 import net.luxvacuos.voxel.universal.ecs.components.Scale;
 import net.luxvacuos.voxel.universal.ecs.components.Velocity;
+import net.luxvacuos.voxel.universal.world.block.Blocks;
+import net.luxvacuos.voxel.universal.world.block.IBlock;
+import net.luxvacuos.voxel.universal.world.dimension.IDimension;
 
 public class PlayerCamera extends Camera {
 
@@ -51,6 +66,12 @@ public class PlayerCamera extends Camera {
 	private final int maxLookUp = 90;
 	private final int maxLookDown = -90;
 	private boolean flyMode = false;
+	private Vector2d center;
+	private Vector3f normal = new Vector3f();
+	private float depth = 0, maxDepth = 0.1f;
+
+	private static List<BoundingBox> blocks = new ArrayList<>();
+	private static Vector3 tmp = new Vector3();
 
 	public PlayerCamera(Matrix4d projectionMatrix, Window window) {
 		this.projectionMatrix = projectionMatrix;
@@ -65,10 +86,11 @@ public class PlayerCamera extends Camera {
 		if (flyMode)
 			Components.AABB.get(this).setEnabled(false);
 		this.viewMatrix = Maths.createViewMatrix(this);
+		center = new Vector2d(window.getWidth() / 2, window.getHeight() / 2);
 	}
 
 	@Override
-	public void update(float delta) {
+	public void update(float delta, IDimension dimension) {
 		Window window = ClientInternalSubsystem.getInstance().getGameWindow();
 		KeyboardHandler kbh = window.getKeyboardHandler();
 		Rotation rotation = Components.ROTATION.get(this);
@@ -124,16 +146,90 @@ public class PlayerCamera extends Camera {
 				speed = 0.2f;
 			else
 				speed = 1f;
+			if (kbh.isCtrlPressed())
+				speed = 2f;
+			else
+				speed = 1f;
 
 			if (vel.getY() == 0)
 				jump = false;
+		}
+		if (Mouse.isButtonDown(0)) {
+			setBlock(window.getWidth(), window.getHeight(), Blocks.getBlockByID(0), dimension);
+		} else if (Mouse.isButtonDown(1)) {
+			setBlock(window.getWidth(), window.getHeight(), Blocks.getBlockByID(1), dimension);
 
 		}
 	}
 
+	private void setBlock(int ww, int wh, IBlock block, IDimension dimension) {
+
+		float z = (2 * ClientVariables.NEAR_PLANE) / (ClientVariables.FAR_PLANE + ClientVariables.NEAR_PLANE
+				- depth * (ClientVariables.FAR_PLANE - ClientVariables.NEAR_PLANE));
+		if (z > maxDepth)
+			return;
+		Vector4d viewport = new Vector4d(0, 0, ww, wh);
+		Vector3d wincoord = new Vector3d(ww / 2, wh / 2, depth);
+		Vector3d objcoord = new Vector3d();
+		Matrix4d mvp = new Matrix4d();
+		Matrix4d.mul(getProjectionMatrix(), getViewMatrix(), mvp);
+		objcoord = mvp.unproject(wincoord, viewport, objcoord);
+		double bcx = 0, bcy = 0, bcz = 0;
+		blocks = dimension
+				.getGlobalBoundingBox(new BoundingBox(new Vector3(objcoord.x - 0.1, objcoord.y - 0.1, objcoord.z - 0.1),
+						new Vector3(objcoord.x + 0.1, objcoord.y + 0.1, objcoord.z + 0.1)));
+		for (BoundingBox boundingBox : blocks) {
+			if (Maths.intersectRayBounds(dRay.getRay(), boundingBox, tmp)) {
+				bcx = boundingBox.getCenterX();
+				bcy = boundingBox.getCenterY();
+				bcz = boundingBox.getCenterZ();
+
+				break;
+			}
+
+		}
+
+		double tempx = (bcx);
+		int tempX = (int) tempx;
+		if (objcoord.x < 0) {
+			tempx = (bcx);
+			tempX = (int) tempx - 1;
+		}
+
+		double tempz = (bcz);
+		int tempZ = (int) tempz;
+		if (objcoord.z > 0) {
+			tempz = (bcz);
+			tempZ = (int) tempz + 1;
+		}
+
+		double tempy = (bcy);
+		int tempY = (int) tempy;
+		if (objcoord.y < 0) {
+			tempy = (bcz);
+			tempY = (int) tempy - 1;
+		}
+
+		int bx = (int) tempX;
+		int by = (int) tempY;
+		int bz = (int) tempZ - 1;
+		setBlock(bx, by, bz, block, dimension);
+	}
+
+	private void setBlock(int bx, int by, int bz, IBlock block, IDimension dimension) {
+		if (block.getID() != 0) {
+			bx += (int) (normal.x * 1.5f);
+			by += (int) (normal.y * 1.5f);
+			bz += (int) (normal.z * 1.5f);
+		}
+		dimension.setBlockAt(bx, by, bz, block);
+	}
+
 	@Override
-	public void afterUpdate(float delta) {
+	public void afterUpdate(float delta, IDimension dimension) {
+		Window window = ClientInternalSubsystem.getInstance().getGameWindow();
 		viewMatrix = Maths.createViewMatrix(this);
+		dRay = new DRay(getProjectionMatrix(), getViewMatrix(), center, window.getWidth(), window.getHeight());
 	}
 
 	public void setMouse() {
@@ -148,6 +244,14 @@ public class PlayerCamera extends Camera {
 
 	public boolean isUnderWater() {
 		return underWater;
+	}
+
+	public Vector3f getNormal() {
+		return normal;
+	}
+
+	public void setDepth(float depth) {
+		this.depth = depth;
 	}
 
 }

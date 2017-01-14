@@ -41,6 +41,8 @@ public interface IDimension extends IDisposable {
 	
 	public IBlock getBlockAt(int x, int y, int z);
 	
+	public boolean setBlockAt(int x, int y, int z, IBlock block);
+	
 	public List<BoundingBox> getGlobalBoundingBox(BoundingBox box);
 	
 	public Engine getEntitiesManager();

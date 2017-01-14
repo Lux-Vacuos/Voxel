@@ -20,11 +20,20 @@
 
 package net.luxvacuos.voxel.client.core.states;
 
+import static org.lwjgl.opengl.GL11.GL_DEPTH_COMPONENT;
+import static org.lwjgl.opengl.GL11.GL_FLOAT;
+import static org.lwjgl.opengl.GL11.GL_RGB;
+import static org.lwjgl.opengl.GL11.glReadBuffer;
+import static org.lwjgl.opengl.GL11.glReadPixels;
+import static org.lwjgl.opengl.GL30.GL_COLOR_ATTACHMENT2;
+
+import java.nio.FloatBuffer;
+
+import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFW;
 
 import net.luxvacuos.igl.vector.Matrix4d;
 import net.luxvacuos.igl.vector.Vector3d;
-import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.voxel.client.core.ClientInternalSubsystem;
 import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.core.CoreInfo;
@@ -35,7 +44,6 @@ import net.luxvacuos.voxel.client.rendering.api.nanovg.Timers;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.UIRendering;
 import net.luxvacuos.voxel.client.rendering.api.opengl.ParticleDomain;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Renderer;
-import net.luxvacuos.voxel.client.rendering.api.opengl.objects.PointLight;
 import net.luxvacuos.voxel.client.util.Maths;
 import net.luxvacuos.voxel.client.world.RenderWorld;
 import net.luxvacuos.voxel.client.world.dimension.RenderDimension;
@@ -53,11 +61,13 @@ public class SPWorldState extends AbstractState {
 	private Sun sun;
 	private Camera camera;
 	private ChunkLoaderEntity spawnChunks;
-	private PointLight light;
 
 	private IWorld world;
 
 	private SPPauseState pausesState;
+
+	FloatBuffer p;
+	FloatBuffer c;
 
 	public SPWorldState() {
 		super(StateNames.SP_WORLD);
@@ -68,9 +78,18 @@ public class SPWorldState extends AbstractState {
 		super.start();
 
 		this.world = new RenderWorld(ClientVariables.worldNameToLoad);
+		Window window = ClientInternalSubsystem.getInstance().getGameWindow();
 
 		Renderer.setDeferredPass((camera, sunCamera, frustum, shadowMap) -> {
 			((RenderWorld) world).render(camera, sunCamera, frustum, shadowMap);
+			glReadPixels(window.getWidth() / 2, window.getHeight() / 2, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, p);
+			c.clear();
+			glReadBuffer(GL_COLOR_ATTACHMENT2);
+			glReadPixels(window.getWidth() / 2, window.getHeight() / 2, 1, 1, GL_RGB, GL_FLOAT, c);
+
+			PlayerCamera cam = (PlayerCamera) camera;
+			cam.setDepth(p.get(0));
+			cam.getNormal().set(c.get(0), c.get(1), c.get(2));
 		});
 		Renderer.setShadowPass((camera, sunCamera, frustum, shadowMap) -> {
 			((RenderWorld) world).renderShadow(sunCamera, frustum);
@@ -97,6 +116,8 @@ public class SPWorldState extends AbstractState {
 
 	@Override
 	public void init() {
+		p = BufferUtils.createFloatBuffer(1);
+		c = BufferUtils.createFloatBuffer(3);
 		Window window = ClientInternalSubsystem.getInstance().getGameWindow();
 
 		Matrix4d shadowProjectionMatrix = Maths.orthographic(-ClientVariables.shadowMapDrawDistance,
@@ -109,15 +130,13 @@ public class SPWorldState extends AbstractState {
 		camera = new PlayerCamera(projectionMatrix, window);
 		sun = new Sun(shadowProjectionMatrix);
 
-		// worldSimulation = new ClientWorldSimulation(10000); //TODO: load the last time from disk
+		// worldSimulation = new ClientWorldSimulation(10000); //TODO: load the
+		// last time from disk
 
 		spawnChunks = new ChunkLoaderEntity(new Vector3d());
 
 		pausesState = new SPPauseState();
 		pausesState.init();
-
-		light = new PointLight(new Vector3d(2.5, 130, 28.5), new Vector3f(1, 1, 1));
-		//Renderer.getLightRenderer().addLight(light);
 	}
 
 	@Override

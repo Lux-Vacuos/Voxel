@@ -70,7 +70,7 @@ public class Dimension implements IDimension {
 		gen.setNoiseGenerator(new SimplexNoise(256, 0.15f, new Random().nextInt()));
 		this.chunkManager.setGenerator(gen);
 	}
-	
+
 	protected void setupWorldSimulator() {
 		this.worldSimulation = new WorldSimulation();
 	}
@@ -134,7 +134,7 @@ public class Dimension implements IDimension {
 			if (chunk.chunkLoaders() == 0)
 				toRemove.add(chunk.getNode());
 		}
-		
+
 		for (ChunkNode chunkNode : toRemove) {
 			chunkManager.unloadChunk(chunkNode);
 		}
@@ -152,6 +152,15 @@ public class Dimension implements IDimension {
 		if (b == null)
 			return Blocks.getBlockByName("voxel:air");
 		return b;
+	}
+
+	@Override
+	public boolean setBlockAt(int x, int y, int z, IBlock block) {
+		IChunk c = this.chunkManager.getChunkAt(ChunkNode.getFromBlockCoords(x, 0, z));
+		if (c == null)
+			return false;
+		c.setBlockAt(x & 0xF, y, z & 0xF, block);
+		return true;
 	}
 
 	@Override
@@ -189,7 +198,7 @@ public class Dimension implements IDimension {
 
 	@Override
 	public WorldSimulation getWorldSimulator() {
-		return (WorldSimulation)this.worldSimulation;
+		return (WorldSimulation) this.worldSimulation;
 	}
 
 }

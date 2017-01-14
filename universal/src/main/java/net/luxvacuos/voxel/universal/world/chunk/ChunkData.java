@@ -55,19 +55,19 @@ public final class ChunkData {
 	public int getBlockMetadataAt(int x, int y, int z) {
 		return this.slices[this.getSlice(y)].getBlockMetadataAt(x, this.modY(y), z);
 	}
-	
+
 	public boolean hasComplexMetadataAt(int x, int y, int z) {
-		return this.blockMetadata.hasTagByName("Metadata_"+x+"_"+y+"_"+z);
+		return this.blockMetadata.hasTagByName("Metadata_" + x + "_" + y + "_" + z);
 	}
-	
+
 	public CompoundBuilder generateMetadataBuilderFor(int x, int y, int z) {
-		return new CompoundBuilder().start("Metadata_"+x+"_"+y+"_"+z);
+		return new CompoundBuilder().start("Metadata_" + x + "_" + y + "_" + z);
 	}
-	
+
 	public TagCompound getComplexMetadataAt(int x, int y, int z) {
-		if(this.hasComplexMetadataAt(x, y, z)) {
+		if (this.hasComplexMetadataAt(x, y, z)) {
 			try {
-				return this.blockMetadata.getTag("Metadata_"+x+"_"+y+"_"+z, TagCompound.class);
+				return this.blockMetadata.getTag("Metadata_" + x + "_" + y + "_" + z, TagCompound.class);
 			} catch (NBTException e) {
 				Logger.error(e);
 				return this.generateMetadataBuilderFor(x, y, z).build();
@@ -76,32 +76,32 @@ public final class ChunkData {
 			return this.generateMetadataBuilderFor(x, y, z).build();
 		}
 	}
-	
+
 	public void removeComplexMetadataAt(int x, int y, int z) {
-		if(this.blockMetadata.hasTagByName("Metadata_"+x+"_"+y+"_"+z)) {
+		if (this.blockMetadata.hasTagByName("Metadata_" + x + "_" + y + "_" + z)) {
 			try {
-				this.blockMetadata.removeTag("Metadata_"+x+"_"+y+"_"+z);
+				this.blockMetadata.removeTag("Metadata_" + x + "_" + y + "_" + z);
 			} catch (NBTException e) {
 				Logger.error(e);
 			}
 		}
 	}
-	
+
 	public void saveComplexMetadata(TagCompound compound) {
 		try {
-			if(this.blockMetadata.hasTagByName(compound.getName()))
+			if (this.blockMetadata.hasTagByName(compound.getName()))
 				this.blockMetadata.removeTag(compound);
-			
+
 			this.blockMetadata.addTag(compound);
 		} catch (NBTException e) {
 			Logger.error(e);
 		}
 	}
-	
+
 	public TagCompound getComplexBlockMetadata() {
 		return this.blockMetadata;
 	}
-	
+
 	protected void setComplexBlockMetadata(TagCompound data) {
 		this.blockMetadata = data;
 	}
@@ -111,6 +111,7 @@ public final class ChunkData {
 	}
 
 	protected void setBlockAt(int x, int y, int z, IBlock block) {
+		this.needsRebuild = true;
 		this.slices[this.getSlice(y)].setBlockAt(x, this.modY(y), z, block);
 	}
 
@@ -119,7 +120,7 @@ public final class ChunkData {
 			return true;
 		return this.slices[this.getSlice(y)].isBlockAir(x, this.modY(y), z);
 	}
-	
+
 	public boolean hasCollisionData(int x, int y, int z) {
 		return this.slices[this.getSlice(y)].hasCollisionData(x, this.modY(y), z);
 	}
