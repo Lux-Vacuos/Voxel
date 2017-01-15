@@ -20,6 +20,7 @@
 
 package net.luxvacuos.voxel.universal.world.chunk;
 
+import com.hackhalo2.nbt.exceptions.NBTException;
 import com.hackhalo2.nbt.tags.TagCompound;
 
 import net.luxvacuos.voxel.universal.world.chunk.ChunkData;
@@ -27,32 +28,34 @@ import net.luxvacuos.voxel.universal.world.utils.BlockLongDataArray;
 
 public final class ChunkDataBuilder {
 	private ChunkData data = new ChunkData();
-	
+
 	public ChunkDataBuilder() { }
-	
-	public ChunkDataBuilder setSlice(int index, ChunkSlice slice) {
+
+	public ChunkDataBuilder setSlice(int index, TagCompound data) throws NBTException {
 		if(index >= 0 && index < this.data.slices.length) {
+			ChunkSlice slice = new ChunkSlice(data.getByte("Offset"));
+			if(data.getByte("Empty") == 0) {
+				slice.setBlockDataArray(new BlockLongDataArray(data.getLongArray("BlockData")));
+			}
+			
 			this.data.slices[index] = slice;
 		}
 		
 		return this;
 	}
 	
-	public ChunkDataBuilder setSliceData(int index, long[] data) {
-		if(index >= 0 && index < this.data.slices.length) {
-			this.data.slices[index].setBlockDataArray(new BlockLongDataArray(data));;
-		}
-		
+	public ChunkDataBuilder newSlice(int index) {
+		this.data.slices[index] = new ChunkSlice((byte)index);
 		return this;
 	}
-	
+
 	public ChunkDataBuilder setBlockMetadata(TagCompound data) {
 		this.data.setComplexBlockMetadata(data);
 		return this;
 	}
-	
+
 	public ChunkData build() {
 		this.data.markFullRebuild();
-		 return this.data;
+		return this.data;
 	}
 }

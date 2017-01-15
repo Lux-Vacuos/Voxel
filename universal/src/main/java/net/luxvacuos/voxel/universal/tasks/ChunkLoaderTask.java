@@ -32,7 +32,6 @@ import net.luxvacuos.igl.Logger;
 import net.luxvacuos.voxel.universal.core.GlobalVariables;
 import net.luxvacuos.voxel.universal.world.chunk.ChunkData;
 import net.luxvacuos.voxel.universal.world.chunk.ChunkDataBuilder;
-import net.luxvacuos.voxel.universal.world.chunk.ChunkSlice;
 import net.luxvacuos.voxel.universal.world.dimension.IDimension;
 import net.luxvacuos.voxel.universal.world.utils.ChunkNode;
 
@@ -63,7 +62,6 @@ public class ChunkLoaderTask implements Callable<ChunkData> {
 	@Override
 	public ChunkData call() throws Exception {
 		ChunkDataBuilder builder = new ChunkDataBuilder();
-		ChunkSlice slice;
 		TagCompound root;
 
 		if(this.exists) {
@@ -71,24 +69,13 @@ public class ChunkLoaderTask implements Callable<ChunkData> {
 			builder.setBlockMetadata(root.getCompound("BlockMetadata"));
 			int slices = root.getInt("NumSlices");
 
-			TagCompound sliceCompound;
-			for(byte i = 0; i < slices; i++) {
-				sliceCompound = root.getCompound("ChunkSlice-"+i);
-				slice = new ChunkSlice(sliceCompound.getByte("Offset"));
-				builder.setSlice(slice.getOffset(), slice);
-
-				if(sliceCompound.getByte("Empty") == 0) {
-					builder.setSliceData(slice.getOffset(), sliceCompound.getLongArray("BlockData"));
-				}
-
-				slice = null;
-			}
+			for(byte i = 0; i < slices; i++)
+				builder.setSlice(i, root.getCompound("ChunkSlice-"+i));
+			
 		} else {
-			for (byte i = 0; i < 16; i++) {
-				slice = new ChunkSlice(i);
-				builder.setSlice(i, slice);
-				slice = null;
-			}
+			for (byte i = 0; i < 16; i++)
+				builder.newSlice(i);
+			
 			builder.setBlockMetadata(new TagCompound("BlockMetadata"));
 		}
 
