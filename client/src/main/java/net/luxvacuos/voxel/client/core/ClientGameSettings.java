@@ -75,6 +75,9 @@ public final class ClientGameSettings extends AbstractGameSettings {
 		// Parse Shadow Map Resolution and Shadow Draw Distance.
 		ClientVariables.shadowMapResolution = Integer.parseInt(getValue("shadowMapResolution", "4096"));
 		ClientVariables.shadowMapDrawDistance = Integer.parseInt(getValue("shadowMapDrawDistance", "60"));
+
+		// Parse Chromatic Aberration
+		ClientVariables.useChromaticAberration = Boolean.parseBoolean(getValue("useChromaticAberration", "false"));
 	}
 
 	/**
@@ -100,6 +103,7 @@ public final class ClientGameSettings extends AbstractGameSettings {
 		registerValue("Assets", ClientVariables.assets);
 		registerValue("shadowMapResolution", Integer.toString(ClientVariables.shadowMapResolution));
 		registerValue("shadowMapDrawDistance", Integer.toString(ClientVariables.shadowMapDrawDistance));
+		registerValue("useChromaticAberration", Boolean.toString(ClientVariables.useChromaticAberration));
 	}
 
 }

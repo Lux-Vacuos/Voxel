@@ -77,6 +77,7 @@ public class DeferredShadingShader extends ShaderProgram {
 	private UniformBoolean useReflections = new UniformBoolean("useReflections");
 	private UniformBoolean useVolumetricLight = new UniformBoolean("useVolumetricLight");
 	private UniformBoolean useAmbientOcclusion = new UniformBoolean("useAmbientOcclusion");
+	private UniformBoolean useChromaticAberration = new UniformBoolean("useChromaticAberration");
 
 	private UniformSampler gDiffuse = new UniformSampler("gDiffuse");
 	private UniformSampler gPosition = new UniformSampler("gPosition");
@@ -109,7 +110,7 @@ public class DeferredShadingShader extends ShaderProgram {
 				invertedLightPosition, skyColor, resolution, sunPositionInScreen, exposure, time, camUnderWaterOffset,
 				shadowDrawDistance, camUnderWater, useFXAA, useDOF, useMotionBlur, useReflections, useVolumetricLight,
 				useAmbientOcclusion, gDiffuse, gPosition, gNormal, gDepth, gPBR, gMask, composite0, composite1,
-				gEnvironment, totalPointLights);
+				gEnvironment, totalPointLights,useChromaticAberration);
 		connectTextureUnits();
 	}
 
@@ -183,7 +184,7 @@ public class DeferredShadingShader extends ShaderProgram {
 	}
 
 	public void loadSettings(boolean useDOF, boolean useFXAA, boolean useMotionBlur, boolean useVolumetricLight,
-			boolean useReflections, boolean useAmbientOcclusion, int shadowDrawDistance) {
+			boolean useReflections, boolean useAmbientOcclusion, int shadowDrawDistance, boolean useChromaticAberration) {
 		this.useDOF.loadBoolean(useDOF);
 		this.useFXAA.loadBoolean(useFXAA);
 		this.useMotionBlur.loadBoolean(useMotionBlur);
@@ -191,6 +192,7 @@ public class DeferredShadingShader extends ShaderProgram {
 		this.useReflections.loadBoolean(useReflections);
 		this.useAmbientOcclusion.loadBoolean(useAmbientOcclusion);
 		this.shadowDrawDistance.loadInteger(shadowDrawDistance);
+		this.useChromaticAberration.loadBoolean(useChromaticAberration);
 	}
 
 	public void loadMotionBlurData(Camera camera, Matrix4d previousViewMatrix, Vector3d previousCameraPosition) {

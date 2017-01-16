@@ -94,7 +94,7 @@ public abstract class PostProcessPass implements IPostProcessPass {
 		shader.loadviewMatrix(camera);
 		shader.loadSettings(ClientVariables.useDOF, ClientVariables.useFXAA, ClientVariables.useMotionBlur,
 				ClientVariables.useVolumetricLight, ClientVariables.useReflections, ClientVariables.useAmbientOcclusion,
-				ClientVariables.shadowMapDrawDistance);
+				ClientVariables.shadowMapDrawDistance, ClientVariables.useChromaticAberration);
 		Renderer.clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glBindVertexArray(quad.getVaoID());
 		glEnableVertexAttribArray(0);

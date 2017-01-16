@@ -104,7 +104,7 @@ public abstract class DeferredPass implements IDeferredPass {
 		shader.loadviewMatrix(camera);
 		shader.loadSettings(ClientVariables.useDOF, ClientVariables.useFXAA, ClientVariables.useMotionBlur,
 				ClientVariables.useVolumetricLight, ClientVariables.useReflections, ClientVariables.useAmbientOcclusion,
-				ClientVariables.shadowMapDrawDistance);
+				ClientVariables.shadowMapDrawDistance, ClientVariables.useChromaticAberration);
 		shader.loadSunPosition(Maths.convertTo2F(new Vector3d(lightPosition), camera.getProjectionMatrix(),
 				Maths.createViewMatrixRot(camera.getRotation().getX(), camera.getRotation().getY(),
 						camera.getRotation().getZ(), tmp),

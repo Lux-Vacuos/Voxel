@@ -74,6 +74,7 @@ public class ClientVariables extends GlobalVariables {
 	public static boolean useParallax = false;
 	public static boolean useReflections = false;
 	public static boolean useAmbientOcclusion = false;
+	public static boolean useChromaticAberration = false;
 	public static int shadowMapResolution = 4096;
 	public static int shadowMapDrawDistance = 60;
 	public static final float WAVE_SPEED = 4f;

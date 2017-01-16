@@ -49,12 +49,13 @@ public class OptionsState extends AbstractFadeState {
 	private UIButton reflectionsButton;
 	private UIButton parallaxButton;
 	private UIButton ambientOccButton;
+	private UIButton chromaticAberrationButton;
 	private UIWindow uiWindow;
 
 	public OptionsState() {
 		super(StateNames.OPTIONS);
 	}
-	
+
 	@Override
 	public void init() {
 		Window window = ClientInternalSubsystem.getInstance().getGameWindow();
@@ -73,6 +74,7 @@ public class OptionsState extends AbstractFadeState {
 		parallaxButton.setEnabled(false);
 
 		ambientOccButton = new UIButton(260, -230, 200, 40, "Ambient Occlusion");
+		chromaticAberrationButton = new UIButton(260, -290, 200, 40, "Chromatic Aberration");
 
 		if (ClientVariables.useVolumetricLight) {
 			godraysButton.setText("Volumetric Light: ON");
@@ -136,6 +138,14 @@ public class OptionsState extends AbstractFadeState {
 		} else {
 			ambientOccButton.setText("Ambient Occlusion: OFF");
 			ambientOccButton.setColor(255, 100, 100, 255);
+		}
+
+		if (ClientVariables.useChromaticAberration) {
+			chromaticAberrationButton.setText("Chromatic Aberration: ON");
+			chromaticAberrationButton.setColor(100, 255, 100, 255);
+		} else {
+			chromaticAberrationButton.setText("Chromatic Aberration: OFF");
+			chromaticAberrationButton.setColor(255, 100, 100, 255);
 		}
 
 		exitButton.setOnButtonPress((button, delta) -> {
@@ -235,6 +245,17 @@ public class OptionsState extends AbstractFadeState {
 				ambientOccButton.setColor(255, 100, 100, 255);
 			}
 		});
+		
+		chromaticAberrationButton.setOnButtonPress((button, delta) -> {
+			ClientVariables.useChromaticAberration = !ClientVariables.useChromaticAberration;
+			if (ClientVariables.useChromaticAberration) {
+				chromaticAberrationButton.setText("Chromatic Aberration: ON");
+				chromaticAberrationButton.setColor(100, 255, 100, 255);
+			} else {
+				chromaticAberrationButton.setText("Chromatic Aberration: OFF");
+				chromaticAberrationButton.setColor(255, 100, 100, 255);
+			}
+		});
 
 		uiWindow.addChildren(exitButton);
 		uiWindow.addChildren(shadowsButton);
@@ -245,6 +266,7 @@ public class OptionsState extends AbstractFadeState {
 		uiWindow.addChildren(motionBlurButton);
 		uiWindow.addChildren(reflectionsButton);
 		uiWindow.addChildren(ambientOccButton);
+		uiWindow.addChildren(chromaticAberrationButton);
 	}
 
 	@Override

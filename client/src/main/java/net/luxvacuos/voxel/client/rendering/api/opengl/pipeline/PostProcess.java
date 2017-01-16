@@ -25,6 +25,7 @@ import net.luxvacuos.voxel.client.rendering.api.opengl.PostProcessPipeline;
 public class PostProcess extends PostProcessPipeline {
 
 	private FXAA fxaa;
+	private ChromaticAberration chromaticAberration;
 	private MotionBlur motionBlur;
 	private DepthOfField depthOfField;
 
@@ -34,14 +35,18 @@ public class PostProcess extends PostProcessPipeline {
 
 	@Override
 	public void init() {
-		fxaa = new FXAA("FXAA", width, height);
-		super.imagePasses.add(fxaa);
+		chromaticAberration = new ChromaticAberration("ChromaticAberration", width, height);
+		super.imagePasses.add(chromaticAberration);
+
+		depthOfField = new DepthOfField("DoF", width, height);
+		super.imagePasses.add(depthOfField);
 
 		motionBlur = new MotionBlur("MotionBlur", width, height);
 		super.imagePasses.add(motionBlur);
 
-		depthOfField = new DepthOfField("DoF", width, height);
-		super.imagePasses.add(depthOfField);
+		fxaa = new FXAA("FXAA", width, height);
+		super.imagePasses.add(fxaa);
+
 	}
 
 }
