@@ -26,6 +26,7 @@ import com.hackhalo2.nbt.CompoundBuilder;
 import com.hackhalo2.nbt.tags.TagCompound;
 
 import net.luxvacuos.voxel.universal.material.BlockMaterial;
+import net.luxvacuos.voxel.universal.tools.ToolTier;
 import net.luxvacuos.voxel.universal.world.utils.BlockNode;
 
 public class BlockBase implements IBlock {
@@ -82,6 +83,11 @@ public class BlockBase implements IBlock {
 	@Override
 	public boolean hasComplexMetadata() {
 		return (this.complexMetadata != null);
+	}
+	
+	@Override
+	public ToolTier getToolTier() {
+		return this.material.getTierNeeded();
 	}
 	
 	@Override

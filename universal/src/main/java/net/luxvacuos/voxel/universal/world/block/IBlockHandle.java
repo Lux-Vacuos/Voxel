@@ -22,6 +22,8 @@ package net.luxvacuos.voxel.universal.world.block;
 
 import com.hackhalo2.nbt.tags.TagCompound;
 
+import net.luxvacuos.voxel.universal.tools.ToolTier;
+
 public interface IBlockHandle {
 	
 	public int getID();
@@ -33,6 +35,8 @@ public interface IBlockHandle {
 	public boolean isFluid();
 
 	public boolean hasComplexMetadata();
+	
+	public ToolTier getToolTier();
 	
 	public TagCompound getComplexMetaData();
 

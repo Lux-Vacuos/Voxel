@@ -53,6 +53,7 @@ import net.luxvacuos.voxel.universal.ecs.components.Health;
 import net.luxvacuos.voxel.universal.ecs.components.Rotation;
 import net.luxvacuos.voxel.universal.ecs.components.Scale;
 import net.luxvacuos.voxel.universal.ecs.components.Velocity;
+import net.luxvacuos.voxel.universal.tools.ToolTier;
 import net.luxvacuos.voxel.universal.world.block.Blocks;
 import net.luxvacuos.voxel.universal.world.block.IBlock;
 import net.luxvacuos.voxel.universal.world.dimension.IDimension;
@@ -70,6 +71,9 @@ public class PlayerCamera extends Camera {
 	private Vector3f normal = new Vector3f();
 	private float depth = 0, maxDepth = 0.01f;
 	private Vector3d blockOutlinePos = new Vector3d();
+	private ToolTier tool = ToolTier.ZERO;
+
+	private float breakTime, resetTime;
 
 	private static List<BoundingBox> blocks = new ArrayList<>();
 	private static Vector3 tmp = new Vector3();
@@ -155,10 +159,10 @@ public class PlayerCamera extends Camera {
 			if (vel.getY() == 0)
 				jump = false;
 		}
-		setBlock(window.getWidth(), window.getHeight(), Blocks.getBlockByName("stone"), dimension);
+		setBlock(window.getWidth(), window.getHeight(), Blocks.getBlockByName("stone"), dimension, delta);
 	}
 
-	private void setBlock(int ww, int wh, IBlock block, IDimension dimension) {
+	private void setBlock(int ww, int wh, IBlock block, IDimension dimension, float delta) {
 
 		float z = (2 * ClientVariables.NEAR_PLANE) / (ClientVariables.FAR_PLANE + ClientVariables.NEAR_PLANE
 				- depth * (ClientVariables.FAR_PLANE - ClientVariables.NEAR_PLANE));
@@ -210,10 +214,24 @@ public class PlayerCamera extends Camera {
 		int by = (int) tempY;
 		int bz = (int) tempZ - 1;
 		blockOutlinePos.set(bx + 0.5, by + 0.5f, bz + 0.5);
-		if (Mouse.isButtonDown(0)) {
-			setBlock(bx, by, bz, Blocks.getBlockByName("air"), dimension);
-		} else if (Mouse.isButtonDown(1)) {
-			setBlock(bx, by, bz, block, dimension);
+		resetTime += 10 * delta;
+		if (resetTime >= 1) {
+			if (Mouse.isButtonDown(0)) {
+				IBlock tBlock = dimension.getBlockAt(bx, by, bz);
+				if (ToolTier.isSufficient(tool, tBlock.getToolTier())) {
+					breakTime += tool.getMultiplier() / tBlock.getToolTier().getMultiplier() * delta;
+					if (breakTime > 1) {
+						setBlock(bx, by, bz, Blocks.getBlockByName("air"), dimension);
+						resetTime = 0;
+						breakTime = 0;
+					}
+				}
+			} else if (Mouse.isButtonDown(1)) {
+				setBlock(bx, by, bz, block, dimension);
+				resetTime = 0;
+			} else {
+				breakTime = 0;
+			}
 		}
 	}
 
