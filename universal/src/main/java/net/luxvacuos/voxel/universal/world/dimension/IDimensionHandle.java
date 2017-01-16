@@ -20,30 +20,11 @@
 
 package net.luxvacuos.voxel.universal.world.dimension;
 
-import java.util.Collection;
-import java.util.List;
-
-import com.badlogic.ashley.core.Engine;
-import com.badlogic.gdx.math.collision.BoundingBox;
-
-import net.luxvacuos.voxel.universal.core.IWorldSimulation;
-import net.luxvacuos.voxel.universal.util.IUpdatable;
+import net.luxvacuos.voxel.universal.resources.IDisposable;
 import net.luxvacuos.voxel.universal.world.block.IBlock;
-import net.luxvacuos.voxel.universal.world.chunk.IChunk;
 
-public interface IDimension extends IDimensionHandle, IUpdatable {
+public interface IDimensionHandle extends IDisposable {
 	
-	public String getWorldName();
-	
-	public int getID();
-	
-	public boolean setBlockAt(int x, int y, int z, IBlock block);
-	
-	public List<BoundingBox> getGlobalBoundingBox(BoundingBox box);
-	
-	public Engine getEntitiesManager();
-	
-	public Collection<IChunk> getLoadedChunks();
-	
-	public IWorldSimulation getWorldSimulator();
+	public IBlock getBlockAt(int x, int y, int z);
+
 }

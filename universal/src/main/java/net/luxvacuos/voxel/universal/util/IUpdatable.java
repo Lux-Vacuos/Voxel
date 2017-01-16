@@ -18,30 +18,10 @@
  * 
  */
 
-package net.luxvacuos.voxel.universal.world;
+package net.luxvacuos.voxel.universal.util;
 
-import java.util.Collection;
-
-import net.luxvacuos.voxel.universal.resources.IDisposable;
-import net.luxvacuos.voxel.universal.util.IUpdatable;
-import net.luxvacuos.voxel.universal.world.dimension.IDimension;
-
-public interface IWorld extends IUpdatable, IDisposable {
-
-	// World Stuff
-	public String getName();
-
-	// Dimension stuff
-	public void addDimension(IDimension dimension);
+public interface IUpdatable {
 	
-	public void loadDimension(int id);
-	
-	public IDimension getDimension(int id);
-
-	public void setActiveDimension(int id);
-
-	public IDimension getActiveDimension();
-
-	public Collection<IDimension> getDimensions();
+	public void update(final float delta);
 
 }

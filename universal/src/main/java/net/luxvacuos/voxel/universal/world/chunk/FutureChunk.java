@@ -171,12 +171,6 @@ public class FutureChunk implements IChunk {
 	}
 
 	@Override
-	public ChunkSnapshot takeSnapshot() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public IDimension getDimension() {
 		return this.dim;
 	}

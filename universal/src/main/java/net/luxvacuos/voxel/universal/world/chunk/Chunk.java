@@ -103,12 +103,6 @@ public class Chunk implements IChunk {
 	}
 
 	@Override
-	public ChunkSnapshot takeSnapshot() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public void markForRebuild() {
 		this.data.markFullRebuild();
 	}

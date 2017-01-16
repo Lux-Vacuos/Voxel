@@ -18,30 +18,22 @@
  * 
  */
 
-package net.luxvacuos.voxel.universal.world;
+package net.luxvacuos.voxel.universal.world.block;
 
-import java.util.Collection;
+import com.hackhalo2.nbt.tags.TagCompound;
 
-import net.luxvacuos.voxel.universal.resources.IDisposable;
-import net.luxvacuos.voxel.universal.util.IUpdatable;
-import net.luxvacuos.voxel.universal.world.dimension.IDimension;
-
-public interface IWorld extends IUpdatable, IDisposable {
-
-	// World Stuff
+public interface IBlockHandle {
+	
+	public int getID();
+	
 	public String getName();
-
-	// Dimension stuff
-	public void addDimension(IDimension dimension);
 	
-	public void loadDimension(int id);
+	public boolean isAffectedByGravity();
 	
-	public IDimension getDimension(int id);
+	public boolean isFluid();
 
-	public void setActiveDimension(int id);
-
-	public IDimension getActiveDimension();
-
-	public Collection<IDimension> getDimensions();
+	public boolean hasComplexMetadata();
+	
+	public TagCompound getComplexMetaData();
 
 }
