@@ -80,6 +80,6 @@ float computeAmbientOcclusion(vec3 position, vec3 normal) {
     	}
 	return -(ambientOcclusion / sample_count) + 1;
 	} else
-		return 1;
+		return 1.0;
 }
 ##end
