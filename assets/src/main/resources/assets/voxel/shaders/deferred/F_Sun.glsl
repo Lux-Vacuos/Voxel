@@ -32,7 +32,7 @@ void main(void){
 	vec2 texcoord = textureCoords;
 	vec4 image = vec4(0.0);
 	vec4 data1 = texture(gMask, texcoord);
-    if(data1.r > 0 && data1.a == 1){
+    if(data1.a == 1){
 		image = texture(gDiffuse, texcoord);
     }
     out_Color = image;

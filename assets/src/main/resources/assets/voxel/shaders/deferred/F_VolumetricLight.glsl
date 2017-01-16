@@ -35,6 +35,12 @@ uniform int useVolumetricLight;
 
 const int NUM_SAMPLES = 50;
 
+const float exposure = 0.1/NUM_SAMPLES;
+const float decay = 0.95;
+const float density	= 1.0;
+const float weight = 8.0;
+float illuminationDecay = 2.0;
+
 void main(void){
 	vec2 texcoord = textureCoords;
 	vec4 position = texture(gPosition,texcoord);
@@ -46,11 +52,6 @@ void main(void){
 	vec4 image = vec4(0.0);
 	if(useVolumetricLight == 1){
 		if (lightDirDOTviewDir>0.0){
-			float exposure	= 0.1/NUM_SAMPLES;
-			float decay		= 0.95;
-			float density	= 1;
-			float weight	= 8.0;
-			float illuminationDecay = 2;
 			vec2 pos = vec2(0.0);
 			pos.x = (sunPositionInScreen.x) / resolution.x;
 			pos.y = (sunPositionInScreen.y) / resolution.y;
