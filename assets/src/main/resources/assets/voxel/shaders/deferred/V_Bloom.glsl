@@ -20,19 +20,13 @@
 
 #version 330 core
 
-in vec2 textureCoords;
+in vec2 position;
 
-out vec4 out_Color;
+out vec2 textureCoords;
 
-uniform sampler2D composite0;
+uniform mat4 transformationMatrix;
 
 void main(void){
-	vec2 texcoord = textureCoords;
-	vec4 image = vec4(0.0);
-	vec4 result = vec4(0.0);
-	image = texture(composite0, texcoord);
-	float brightness = dot(image.rgb, vec3(0.2126, 0.7152, 0.0722));
-    if(brightness > 1)
-		result = vec4(clamp(image.rgb, vec3(0.0), vec3(16.0)), 1.0);
-	out_Color = result;
+	gl_Position = transformationMatrix * vec4(position, -0.8, 1.0);
+	textureCoords = vec2((position.x+1.0)/2.0, (position.y+1.0)/2.0);
 }

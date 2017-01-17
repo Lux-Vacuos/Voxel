@@ -50,6 +50,7 @@ public class OptionsState extends AbstractFadeState {
 	private UIButton parallaxButton;
 	private UIButton ambientOccButton;
 	private UIButton chromaticAberrationButton;
+	private UIButton lensFlaresButton;
 	private UIWindow uiWindow;
 
 	public OptionsState() {
@@ -75,6 +76,7 @@ public class OptionsState extends AbstractFadeState {
 
 		ambientOccButton = new UIButton(260, -230, 200, 40, "Ambient Occlusion");
 		chromaticAberrationButton = new UIButton(260, -290, 200, 40, "Chromatic Aberration");
+		lensFlaresButton = new UIButton(260, -350, 200, 40, "Lens Flares");
 
 		if (ClientVariables.useVolumetricLight) {
 			godraysButton.setText("Volumetric Light: ON");
@@ -146,6 +148,14 @@ public class OptionsState extends AbstractFadeState {
 		} else {
 			chromaticAberrationButton.setText("Chromatic Aberration: OFF");
 			chromaticAberrationButton.setColor(255, 100, 100, 255);
+		}
+		
+		if (ClientVariables.useLensFlares) {
+			lensFlaresButton.setText("Lens Flares: ON");
+			lensFlaresButton.setColor(100, 255, 100, 255);
+		} else {
+			lensFlaresButton.setText("Lens Flares: OFF");
+			lensFlaresButton.setColor(255, 100, 100, 255);
 		}
 
 		exitButton.setOnButtonPress((button, delta) -> {
@@ -256,6 +266,17 @@ public class OptionsState extends AbstractFadeState {
 				chromaticAberrationButton.setColor(255, 100, 100, 255);
 			}
 		});
+		
+		lensFlaresButton.setOnButtonPress((button, delta) -> {
+			ClientVariables.useLensFlares = !ClientVariables.useLensFlares;
+			if (ClientVariables.useLensFlares) {
+				lensFlaresButton.setText("Lens Flares: ON");
+				lensFlaresButton.setColor(100, 255, 100, 255);
+			} else {
+				lensFlaresButton.setText("Lens Flares: OFF");
+				lensFlaresButton.setColor(255, 100, 100, 255);
+			}
+		});
 
 		uiWindow.addChildren(exitButton);
 		uiWindow.addChildren(shadowsButton);
@@ -267,6 +288,7 @@ public class OptionsState extends AbstractFadeState {
 		uiWindow.addChildren(reflectionsButton);
 		uiWindow.addChildren(ambientOccButton);
 		uiWindow.addChildren(chromaticAberrationButton);
+		uiWindow.addChildren(lensFlaresButton);
 	}
 
 	@Override

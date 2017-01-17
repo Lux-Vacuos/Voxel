@@ -78,6 +78,7 @@ public class DeferredShadingShader extends ShaderProgram {
 	private UniformBoolean useVolumetricLight = new UniformBoolean("useVolumetricLight");
 	private UniformBoolean useAmbientOcclusion = new UniformBoolean("useAmbientOcclusion");
 	private UniformBoolean useChromaticAberration = new UniformBoolean("useChromaticAberration");
+	private UniformBoolean useLensFlares = new UniformBoolean("useLensFlares");
 
 	private UniformSampler gDiffuse = new UniformSampler("gDiffuse");
 	private UniformSampler gPosition = new UniformSampler("gPosition");
@@ -87,7 +88,8 @@ public class DeferredShadingShader extends ShaderProgram {
 	private UniformSampler gMask = new UniformSampler("gMask");
 	private UniformSampler composite0 = new UniformSampler("composite0");
 	private UniformSampler composite1 = new UniformSampler("composite1");
-	private UniformSampler gEnvironment = new UniformSampler("gEnvironment");
+	private UniformSampler composite2 = new UniformSampler("composite2");
+	private UniformSampler composite3 = new UniformSampler("composite3");
 
 	private static float tTime = 0;
 
@@ -110,7 +112,7 @@ public class DeferredShadingShader extends ShaderProgram {
 				invertedLightPosition, skyColor, resolution, sunPositionInScreen, exposure, time, camUnderWaterOffset,
 				shadowDrawDistance, camUnderWater, useFXAA, useDOF, useMotionBlur, useReflections, useVolumetricLight,
 				useAmbientOcclusion, gDiffuse, gPosition, gNormal, gDepth, gPBR, gMask, composite0, composite1,
-				gEnvironment, totalPointLights,useChromaticAberration);
+				composite2, totalPointLights,useChromaticAberration, composite3, useLensFlares);
 		connectTextureUnits();
 	}
 
@@ -128,7 +130,8 @@ public class DeferredShadingShader extends ShaderProgram {
 		gMask.loadTexUnit(5);
 		composite0.loadTexUnit(6);
 		composite1.loadTexUnit(7);
-		gEnvironment.loadTexUnit(8);
+		composite2.loadTexUnit(8);
+		composite3.loadTexUnit(9);
 		super.stop();
 	}
 
@@ -184,7 +187,7 @@ public class DeferredShadingShader extends ShaderProgram {
 	}
 
 	public void loadSettings(boolean useDOF, boolean useFXAA, boolean useMotionBlur, boolean useVolumetricLight,
-			boolean useReflections, boolean useAmbientOcclusion, int shadowDrawDistance, boolean useChromaticAberration) {
+			boolean useReflections, boolean useAmbientOcclusion, int shadowDrawDistance, boolean useChromaticAberration, boolean useLensFlares) {
 		this.useDOF.loadBoolean(useDOF);
 		this.useFXAA.loadBoolean(useFXAA);
 		this.useMotionBlur.loadBoolean(useMotionBlur);
@@ -193,6 +196,7 @@ public class DeferredShadingShader extends ShaderProgram {
 		this.useAmbientOcclusion.loadBoolean(useAmbientOcclusion);
 		this.shadowDrawDistance.loadInteger(shadowDrawDistance);
 		this.useChromaticAberration.loadBoolean(useChromaticAberration);
+		this.useLensFlares.loadBoolean(useLensFlares);
 	}
 
 	public void loadMotionBlurData(Camera camera, Matrix4d previousViewMatrix, Vector3d previousCameraPosition) {

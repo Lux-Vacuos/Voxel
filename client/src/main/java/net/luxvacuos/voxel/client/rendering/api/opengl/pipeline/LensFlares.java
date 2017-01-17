@@ -23,24 +23,37 @@ package net.luxvacuos.voxel.client.rendering.api.opengl.pipeline;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11.glBindTexture;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE6;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE7;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE8;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
 
-import net.luxvacuos.voxel.client.rendering.api.opengl.IDeferredPipeline;
+import net.luxvacuos.voxel.client.core.ClientInternalSubsystem;
 import net.luxvacuos.voxel.client.rendering.api.opengl.DeferredPass;
 import net.luxvacuos.voxel.client.rendering.api.opengl.FBO;
+import net.luxvacuos.voxel.client.rendering.api.opengl.IDeferredPipeline;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.CubeMapTexture;
+import net.luxvacuos.voxel.client.rendering.api.opengl.objects.Texture;
 
-public class ColorCorrection extends DeferredPass {
+public class LensFlares extends DeferredPass {
 
+	private static Texture lensColor;
 
-	public ColorCorrection(String name, int width, int height) {
+	public LensFlares(String name, int width, int height) {
 		super(name, width, height);
+		if (lensColor == null)
+			lensColor = ClientInternalSubsystem.getInstance().getGameWindow().getResourceLoader()
+					.loadTextureMisc("lens/lens_color");
 	}
 
 	@Override
 	public void render(FBO[] auxs, IDeferredPipeline pipe, CubeMapTexture environmentMap) {
 		glActiveTexture(GL_TEXTURE6);
 		glBindTexture(GL_TEXTURE_2D, auxs[0].getTexture());
+		glActiveTexture(GL_TEXTURE7);
+		glBindTexture(GL_TEXTURE_2D, auxs[1].getTexture());
+		glActiveTexture(GL_TEXTURE8);
+		glBindTexture(GL_TEXTURE_2D, lensColor.getID());
+		auxs[1] = auxs[0];
 	}
 
 }

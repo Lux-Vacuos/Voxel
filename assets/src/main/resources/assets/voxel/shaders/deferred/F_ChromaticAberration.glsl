@@ -32,11 +32,12 @@ uniform mat4 inverseProjectionMatrix;
 uniform mat4 inverseViewMatrix;
 uniform mat4 previousViewMatrix;
 uniform sampler2D composite0;
+uniform sampler2D composite1;
 uniform sampler2D gDepth;
 
 uniform int useChromaticAberration;
 
-const float max_distort = 0.02;
+const float max_distort = 0.08;
 const int num_iter = 12;
 const float reci_num_iter_f = 1.0 / float(num_iter);
 

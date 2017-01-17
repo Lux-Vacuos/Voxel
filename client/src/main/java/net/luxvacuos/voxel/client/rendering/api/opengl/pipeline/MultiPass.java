@@ -36,6 +36,9 @@ public class MultiPass extends DeferredPipeline {
 	private GaussianVertical gaussianVertical;
 	private Reflections reflections;
 	private ColorCorrection colorCorrection;
+	private LensFlares lensFlares;
+	private LensFlareMod lensFlareMod;
+	private Bloom bloom;
 	private PointLightPass pointLightPass;
 
 	@Override
@@ -68,10 +71,19 @@ public class MultiPass extends DeferredPipeline {
 		super.imagePasses.add(gaussianHorizontal);
 
 		super.imagePasses.add(gaussianVertical);
-
+		
+		bloom = new Bloom("Bloom", width, height);
+		super.imagePasses.add(bloom);
+		
+		lensFlares = new LensFlares("LensFlares", width, height);
+		super.imagePasses.add(lensFlares);
+		
+		lensFlareMod = new LensFlareMod("LensFlaresMod", width, height);
+		super.imagePasses.add(lensFlareMod);
+		
 		colorCorrection = new ColorCorrection("ColorCorrection", width, height);
 		super.imagePasses.add(colorCorrection);
-
+		
 	}
 
 }

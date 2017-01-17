@@ -118,7 +118,7 @@ void main(void){
 	finalColour = mix (vec4(0.0), finalColour, factorSun);
 	float smoothSphere = (0.9995 - vl) / (0.9995 - 0.9999);
 	if(vl > 0.9995){
-		finalColour = mix(finalColour, mix(finalColour, vec4(2.0), smoothSphere), factorSun);
+		finalColour = mix(finalColour, mix(finalColour, vec4(16.0), smoothSphere), factorSun);
 	}
 
     out_Color[0] = finalColour;

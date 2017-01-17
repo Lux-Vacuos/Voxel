@@ -32,8 +32,8 @@ uniform sampler2D gNormal;
 uniform sampler2D gMask;
 uniform sampler2D gPBR;
 uniform sampler2D gDiffuse;
-uniform samplerCube gEnvironment;
 uniform sampler2D composite0;
+uniform samplerCube composite2;
 uniform sampler2DShadow gDepth;
 
 uniform int useReflections;
@@ -87,7 +87,7 @@ void main(void){
     			} while(rayDist < currentWorldDist);
 
 				vec4 newColor = texture(composite0, newScreen.xy/2.0 + 0.5);
-				vec4 enviromentMap = texture(gEnvironment, refl);
+				vec4 enviromentMap = texture(composite2, refl);
 
  				float fact = 1.0;
     			if (dot(refl, cameraToWorldNorm) < 0)

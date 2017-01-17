@@ -25,14 +25,11 @@ in vec2 textureCoords;
 out vec4 out_Color;
 
 uniform sampler2D composite0;
+uniform sampler2D composite1;
 
 void main(void){
 	vec2 texcoord = textureCoords;
-	vec4 image = vec4(0.0);
-	vec4 result = vec4(0.0);
-	image = texture(composite0, texcoord);
-	float brightness = dot(image.rgb, vec3(0.2126, 0.7152, 0.0722));
-    if(brightness > 1)
-		result = vec4(clamp(image.rgb, vec3(0.0), vec3(16.0)), 1.0);
-	out_Color = result;
+    vec4 hdrColor = texture(composite1, texcoord);
+    hdrColor += texture(composite0, texcoord);
+    out_Color = hdrColor;
 }
