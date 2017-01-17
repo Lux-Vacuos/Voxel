@@ -183,32 +183,21 @@ public class PlayerCamera extends Camera {
 				bcx = boundingBox.getCenterX();
 				bcy = boundingBox.getCenterY();
 				bcz = boundingBox.getCenterZ();
-
 				break;
 			}
-
 		}
 
-		double tempx = (bcx);
-		int tempX = (int) tempx;
-		if (objcoord.x < 0) {
-			tempx = (bcx);
-			tempX = (int) tempx - 1;
-		}
+		int tempX = (int) bcx;
+		if (objcoord.x < 0)
+			tempX = (int) bcx - 1;
 
-		double tempz = (bcz);
-		int tempZ = (int) tempz;
-		if (objcoord.z > 0) {
-			tempz = (bcz);
-			tempZ = (int) tempz + 1;
-		}
+		int tempZ = (int) bcz;
+		if (objcoord.z > 0)
+			tempZ = (int) bcz + 1;
 
-		double tempy = (bcy);
-		int tempY = (int) tempy;
-		if (objcoord.y < 0) {
-			tempy = (bcz);
-			tempY = (int) tempy - 1;
-		}
+		int tempY = (int) bcy;
+		if (objcoord.y < 0)
+			tempY = (int) bcy - 1;
 
 		int bx = (int) tempX;
 		int by = (int) tempY;
