@@ -26,6 +26,7 @@ import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 import org.lwjgl.nanovg.NanoVG;
 
 import net.luxvacuos.voxel.client.core.ClientInternalSubsystem;
+import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Renderer;
 import net.luxvacuos.voxel.client.ui.UIText;
@@ -60,7 +61,10 @@ public class SPLoadingState extends AbstractState {
 
 	@Override
 	public void start() {
-		StateMachine.setCurrentState(StateNames.SP_WORLD);
+		if (ClientVariables.TEST_MODE)
+			StateMachine.setCurrentState(StateNames.TEST);
+		else
+			StateMachine.setCurrentState(StateNames.SP_WORLD);
 	}
 
 	@Override

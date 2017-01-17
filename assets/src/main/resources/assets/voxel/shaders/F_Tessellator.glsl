@@ -46,12 +46,10 @@ void main(void) {
 	vec4 diffuseF = texture(material.diffuseTex, pass_textureCoords);
 	float roughnessF = texture(material.roughnessTex, pass_textureCoords).r;
 	float metallicF = texture(material.metallicTex, pass_textureCoords).r;
-	float specularF = texture(material.specularTex, pass_textureCoords).r;
 
    	diffuseF *= material.diffuse;
 	roughnessF *= material.roughness;
 	metallicF *= material.metallic;
-	specularF *= material.specular;
 
 	float shadow = 0;
 	if(useShadows == 1){
@@ -73,6 +71,6 @@ void main(void) {
 	out_Color[0] = diffuseF;
 	out_Color[1] = vec4(pass_position.xyz,shadow);
 	out_Color[2] = vec4(normal.xyz,0);
-	out_Color[3] = vec4(roughnessF, metallicF, specularF, 0.0);
+	out_Color[3] = vec4(roughnessF, metallicF, 0.0, 0.0);
 	out_Color[4] = vec4(0.0);
 }

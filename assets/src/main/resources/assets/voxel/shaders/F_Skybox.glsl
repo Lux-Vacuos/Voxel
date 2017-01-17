@@ -89,17 +89,7 @@ void main(void){
 	float tt = time / 10;
 
 	float f = clouds(tt);
-	
-	float fac = max(dot(vec3(0,1,0),normalize(lightPosition)),-1.0);
-	fac = clamp(fac,0.02,1.0);
-	f *= fac;
-	
-    vec4 finalColour = vec4(fogColour,1.0);
-    finalColour.rgb *= fac;
-    factor = clamp(factor, 0.0, 1.0);
-    finalColour = mix(finalColour, vec4(f,f,f,1.0), factor);
-    finalColour *= factor;
-    */
+ */   
     float factor = (LOWER_LIMIT - textureCoords.y) / (LOWER_LIMIT - UPPER_LIMIT);
     float factorSun = clamp((textureCoords.y - SUN_LOWER_LIMIT) / (SUN_UPPER_LIMIT - SUN_LOWER_LIMIT), 0.0, 1.0);
     vec4 finalColour = vec4(fogColour, 1.0);
@@ -113,17 +103,15 @@ void main(void){
 
     float vl = dot(V, L);
 
-	float normalDotLight = max(dot(vec3(0,1,0),L),0.002);
-    finalColour *= normalDotLight;
+    finalColour *=  max(dot(vec3(0,1,0),L),0.002);
 	finalColour = mix (vec4(0.0), finalColour, factorSun);
-	float smoothSphere = (0.9995 - vl) / (0.9995 - 0.9999);
-	if(vl > 0.9995){
-		finalColour = mix(finalColour, mix(finalColour, vec4(16.0), smoothSphere), factorSun);
-	}
+	if(vl > 0.999) 
+		finalColour = mix(finalColour, mix(finalColour, vec4(1.0), (0.999 - vl) / (0.999 - 0.9991)), factorSun);
+	
 
     out_Color[0] = finalColour;
     out_Color[1] = vec4(pass_position.xyz,0);
     out_Color[2] = vec4(0.0);
     out_Color[3] = vec4(0.0);
-    out_Color[4] = vec4(0,0,0,1);
+    out_Color[4] = vec4(1 * ((0.9 - vl) / (0.9 - 0.9991)),0,0,1);
 }

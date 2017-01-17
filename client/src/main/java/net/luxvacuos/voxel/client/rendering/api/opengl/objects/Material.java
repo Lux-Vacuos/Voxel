@@ -30,16 +30,15 @@ import net.luxvacuos.voxel.client.resources.ResourceLoader;
 public class Material {
 
 	private Vector4f diffuse;
-	private float roughness, metallic, specular;
-	private Texture diffuseTexture, normalTexture, roughnessTexture, metallicTexture, specularTexture;
-	private static Texture dDiffuse, dNormal, dRoughness, dMetallic, dSpecular;
+	private float roughness, metallic;
+	private Texture diffuseTexture, normalTexture, roughnessTexture, metallicTexture;
+	private static Texture dDiffuse, dNormal, dRoughness, dMetallic;
 
 	public static void init(ResourceLoader loader) {
 		dDiffuse = loader.loadTextureMisc("def/d");
 		dNormal = loader.loadTextureMisc("def/d_n");
 		dRoughness = loader.loadTextureMisc("def/d_r");
 		dMetallic = loader.loadTextureMisc("def/d_m");
-		dSpecular = loader.loadTextureMisc("def/d_s");
 	}
 
 	/**
@@ -57,12 +56,11 @@ public class Material {
 	 * @param normal
 	 *            Normal texture.
 	 */
-	public Material(Vector4f diffuse, float roughness, float metallic, float specular, Texture diffuseTexture,
-			Texture normalTexture, Texture roughnessTexture, Texture metallicTexture, Texture specularTexture) {
+	public Material(Vector4f diffuse, float roughness, float metallic, Texture diffuseTexture, Texture normalTexture,
+			Texture roughnessTexture, Texture metallicTexture) {
 		this.diffuse = diffuse;
 		this.roughness = roughness;
 		this.metallic = metallic;
-		this.specular = specular;
 		if (diffuseTexture == null)
 			this.diffuseTexture = dDiffuse;
 		else
@@ -79,10 +77,6 @@ public class Material {
 			this.metallicTexture = dMetallic;
 		else
 			this.metallicTexture = metallicTexture;
-		if (specularTexture == null)
-			this.specularTexture = dSpecular;
-		else
-			this.specularTexture = specularTexture;
 	}
 
 	public Vector4f getDiffuse() {
@@ -95,10 +89,6 @@ public class Material {
 
 	public float getRoughness() {
 		return roughness;
-	}
-
-	public float getSpecular() {
-		return specular;
 	}
 
 	public Texture getDiffuseTexture() {
@@ -117,10 +107,6 @@ public class Material {
 		return roughnessTexture;
 	}
 
-	public Texture getSpecularTexture() {
-		return specularTexture;
-	}
-
 	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof Material)
@@ -128,9 +114,9 @@ public class Material {
 		Material t = (Material) obj;
 		return t.getDiffuse().getX() == diffuse.getX() && t.getDiffuse().getY() == diffuse.getY()
 				&& t.getDiffuse().getZ() == diffuse.getZ() && t.getRoughness() == roughness
-				&& t.getMetallic() == metallic && t.getSpecular() == specular && t.getDiffuse().equals(diffuse)
+				&& t.getMetallic() == metallic && t.getDiffuse().equals(diffuse)
 				&& t.getNormalTexture().equals(normalTexture) && t.getRoughnessTexture().equals(roughnessTexture)
-				&& t.getMetallicTexture().equals(metallicTexture) && t.getSpecularTexture().equals(specularTexture);
+				&& t.getMetallicTexture().equals(metallicTexture);
 	}
 
 }

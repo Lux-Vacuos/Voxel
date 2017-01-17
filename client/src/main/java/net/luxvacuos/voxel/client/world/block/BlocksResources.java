@@ -41,7 +41,7 @@ public class BlocksResources {
 		Texture blocks_n = loader.loadTextureMisc("blocks_n", GL_NEAREST, false);
 		Texture blocks_r = loader.loadTextureMisc("blocks_r", GL_NEAREST, false);
 		Texture blocks_m = loader.loadTextureMisc("blocks_m", GL_NEAREST, false);
-		material = new Material(new Vector4f(1f), 1f, 1f, 0, blocks, blocks_n, blocks_r, blocks_m, null);
+		material = new Material(new Vector4f(1f), 1f, 1f, blocks, blocks_n, blocks_r, blocks_m);
 		loadTexCoords();
 	}
 

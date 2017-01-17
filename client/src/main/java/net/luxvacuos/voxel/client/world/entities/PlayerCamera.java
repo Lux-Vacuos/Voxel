@@ -166,7 +166,7 @@ public class PlayerCamera extends Camera {
 
 		float z = (2 * ClientVariables.NEAR_PLANE) / (ClientVariables.FAR_PLANE + ClientVariables.NEAR_PLANE
 				- depth * (ClientVariables.FAR_PLANE - ClientVariables.NEAR_PLANE));
-		if (z > maxDepth)
+		if (z > maxDepth || ClientVariables.TEST_MODE)
 			return;
 		Vector4d viewport = new Vector4d(0, 0, ww, wh);
 		Vector3d wincoord = new Vector3d(ww / 2, wh / 2, depth);

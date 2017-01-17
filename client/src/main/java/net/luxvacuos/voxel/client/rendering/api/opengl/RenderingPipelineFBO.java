@@ -62,9 +62,6 @@ import static org.lwjgl.opengl.GL30.glRenderbufferStorage;
 import static org.lwjgl.opengl.GL32.glFramebufferTexture;
 
 import java.nio.ByteBuffer;
-import java.nio.IntBuffer;
-
-import org.lwjgl.BufferUtils;
 
 import net.luxvacuos.voxel.client.core.ClientInternalSubsystem;
 import net.luxvacuos.voxel.client.core.exception.FrameBufferException;
@@ -179,10 +176,7 @@ public class RenderingPipelineFBO {
 
 		int buffer[] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3,
 				GL_COLOR_ATTACHMENT4 };
-		IntBuffer buffers = BufferUtils.createIntBuffer(buffer.length);
-		buffers.put(buffer);
-		buffers.flip();
-		glDrawBuffers(buffers);
+		glDrawBuffers(buffer);
 
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}

@@ -43,6 +43,9 @@ public class GlobalVariables {
 	/** Chunk Load/Unload Radius */
 	public static int chunk_radius = 3;
 
+	/** Enable Test Mode */
+	public static boolean TEST_MODE = false;
+
 	protected GlobalVariables() { }
 
 }

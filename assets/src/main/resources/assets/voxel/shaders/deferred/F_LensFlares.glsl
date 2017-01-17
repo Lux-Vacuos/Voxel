@@ -38,7 +38,7 @@ vec4 textureDistorted(sampler2D tex, vec2 texcoord, vec2 direction, vec3 distort
     return vec4(texture(tex, texcoord + direction * distortion.r).r, texture(tex, texcoord + direction * distortion.g).g, texture(tex, texcoord + direction * distortion.b).b, 1.0);
 }
 
-void main(){
+void main() {
 	vec4 result = vec4(0.0);
     if(useLensFlares == 1) {
 	    vec2 texcoord = -textureCoords + vec2(1.0);

@@ -29,7 +29,7 @@ uniform vec3 lightPosition;
 uniform sampler2D gDiffuse;
 uniform sampler2D gPosition;
 uniform sampler2D gNormal;
-uniform sampler2D gPBR; // R = roughness, G = metallic, B = specular
+uniform sampler2D gPBR; // R = roughness, G = metallic
 uniform sampler2D gMask;
 uniform sampler2D gDepth;
 uniform sampler2D composite0;
@@ -113,7 +113,6 @@ void main(void) {
 		vec3 ambient = max(dot(vec3(0, 1, 0), L) * 0.1, 0.001) * image.rgb * computeAmbientOcclusion(position.rgb, N);
     	vec3 color = ambient + Lo;
 		image.rgb = color;
-
 	}
     image += texture(composite0, texcoord);
 	out_Color = image;
