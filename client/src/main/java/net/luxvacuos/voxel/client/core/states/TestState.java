@@ -186,7 +186,7 @@ public class TestState extends AbstractState {
 		mat5.getComponent(Scale.class).setScale(0.5f);
 
 		rocket = new BasicEntity(new TexturedModel(loader.loadObjModel("test_state/Rocket"),
-				new Material(new Vector4f(0.8f), 0.5f, 0, null, null, null, null)));
+				new Material(new Vector4f(0.8f, 0.8f, 0.8f, 1.0f), 0.5f, 0, null, null, null, null)));
 		rocket.getComponent(Position.class).set(0, 0, -5);
 
 		plane = new BasicEntity(new TexturedModel(loader.loadObjModel("test_state/plane"),

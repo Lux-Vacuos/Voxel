@@ -149,9 +149,7 @@ public class PlayerCamera extends Camera {
 
 			if (kbh.isShiftPressed() && !jump)
 				speed = 0.2f;
-			else
-				speed = 1f;
-			if (kbh.isCtrlPressed())
+			else if (kbh.isCtrlPressed())
 				speed = 2f;
 			else
 				speed = 1f;

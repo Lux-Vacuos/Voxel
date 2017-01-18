@@ -170,8 +170,6 @@ public class Voxel extends AbstractVoxel {
 		TaskManager.addTask(() -> StateMachine.registerState(new MPWorldState()));
 		if (ClientVariables.TEST_MODE)
 			TaskManager.addTask(() -> StateMachine.registerState(new TestState()));
-		// TaskManager.addTask(() -> StateMachine.registerState(new
-		// TessellatorTestScene()));
 		StateMachine.registerState(new SplashScreenState());
 		modsHandler.init();
 	}

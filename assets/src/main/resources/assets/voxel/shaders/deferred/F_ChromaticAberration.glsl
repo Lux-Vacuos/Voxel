@@ -37,7 +37,7 @@ uniform sampler2D gDepth;
 
 uniform int useChromaticAberration;
 
-const float max_distort = 0.08;
+const float max_distort = 0.04;
 const int num_iter = 12;
 const float reci_num_iter_f = 1.0 / float(num_iter);
 

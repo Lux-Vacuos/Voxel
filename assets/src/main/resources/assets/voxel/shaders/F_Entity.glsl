@@ -34,23 +34,24 @@ uniform Material material;
 
 uniform int useShadows;
 
-const float xPixelOffset = 0.0002;
-const float yPixelOffset = 0.0002;
-
-float lookup(vec2 offSet){
-	float shadow;
-	if(ShadowCoord[0].x > 0 && ShadowCoord[0].x < 1 && ShadowCoord[0].y > 0 && ShadowCoord[0].y < 1) {
-		shadow = texture(shadowMap[0], ShadowCoord[0].xyz + vec3(offSet.x * xPixelOffset, offSet.y * yPixelOffset, 0.0));
-	} else if(ShadowCoord[1].x > 0 && ShadowCoord[1].x < 1 && ShadowCoord[1].y > 0 && ShadowCoord[1].y < 1) {
-		shadow = texture(shadowMap[1], ShadowCoord[1].xyz + vec3(offSet.x * xPixelOffset, offSet.y * yPixelOffset, 0.0));
-	} else if(ShadowCoord[2].x > 0 && ShadowCoord[2].x < 1 && ShadowCoord[2].y > 0 && ShadowCoord[2].y < 1) {
-		shadow = texture(shadowMap[2], ShadowCoord[2].xyz + vec3(offSet.x * xPixelOffset, offSet.y * yPixelOffset, 0.0));
-	} else if(ShadowCoord[3].x > 0 && ShadowCoord[3].x < 1 && ShadowCoord[3].y > 0 && ShadowCoord[3].y < 1) {
-		shadow = texture(shadowMap[3], ShadowCoord[3].xyz + vec3(offSet.x * xPixelOffset, offSet.y * yPixelOffset, 0.0));
-	} else {
-		shadow = 1;
+float lookup(vec2 offset){
+	if(ShadowCoord[3].x > 0 && ShadowCoord[3].x < 1 && ShadowCoord[3].y > 0 && ShadowCoord[3].y < 1) {
+		if(ShadowCoord[2].x > 0 && ShadowCoord[2].x < 1 && ShadowCoord[2].y > 0 && ShadowCoord[2].y < 1) {
+			if(ShadowCoord[1].x > 0 && ShadowCoord[1].x < 1 && ShadowCoord[1].y > 0 && ShadowCoord[1].y < 1) {
+				if(ShadowCoord[0].x > 0 && ShadowCoord[0].x < 1 && ShadowCoord[0].y > 0 && ShadowCoord[0].y < 1) {
+					offset *= 1.0 / textureSize(shadowMap[0], 0);
+					return texture(shadowMap[0], ShadowCoord[0].xyz + vec3(offset.x,offset.y, 0));
+				} 
+				offset *= 1.0 / textureSize(shadowMap[1], 0);
+				return texture(shadowMap[1], ShadowCoord[1].xyz + vec3(offset.x,offset.y, 0));
+			}
+			offset *= 1.0 / textureSize(shadowMap[2], 0);
+			return texture(shadowMap[2], ShadowCoord[2].xyz + vec3(offset.x,offset.y, 0));
+		} 
+		offset *= 1.0 / textureSize(shadowMap[2], 0);
+		return texture(shadowMap[3], ShadowCoord[3].xyz + vec3(offset.x,offset.y, 0));
 	}
-	return shadow;
+	return 1.0;
 }
 
 void main(void) {
@@ -65,16 +66,16 @@ void main(void) {
 
 	float shadow = 0;
 	if(useShadows == 1){
-		float x,y;
-		for (y = -1.5 ; y <=1.5 ; y+=1.0)
-			for (x = -1.5 ; x <=1.5 ; x+=1.0)
-				shadow += -lookup(vec2(x,y)) + 1;
-		shadow /= 16.0 ;
+		for(int x = -1; x <= 1; ++x) {
+	    	for(int y = -1; y <= 1; ++y) {
+				shadow += -lookup(vec2(x, y)) + 1;
+	    	}    
+		}
+		shadow /= 9.0;
 	}
     
     if(diffuseF.a < 1)
 		discard;
-	
 
 	vec3 normal = texture(material.normalTex, pass_textureCoords).rgb;
 	normal = normalize(normal * 2.0 - 1.0);
