@@ -42,17 +42,27 @@ public class EntityShader extends ShaderProgram {
 	private UniformMatrix projectionMatrix = new UniformMatrix("projectionMatrix");
 	private UniformMatrix viewMatrix = new UniformMatrix("viewMatrix");
 	private UniformMatrix biasMatrix = new UniformMatrix("biasMatrix");
-	private UniformMatrix projectionLightMatrix = new UniformMatrix("projectionLightMatrix");
+	private UniformMatrix projectionLightMatrix[];
 	private UniformMatrix viewLightMatrix = new UniformMatrix("viewLightMatrix");
-	private UniformSampler shadowMap = new UniformSampler("shadowMap");
+	private UniformSampler shadowMap[];
 	private UniformBoolean useShadows = new UniformBoolean("useShadows");
 	private UniformMaterial material = new UniformMaterial("material");
 
 	public EntityShader() {
 		super(ClientVariables.VERTEX_FILE_ENTITY, ClientVariables.FRAGMENT_FILE_ENTITY, new Attribute(0, "position"),
 				new Attribute(1, "textureCoords"), new Attribute(2, "normals"), new Attribute(3, "tangent"));
-		super.storeAllUniformLocations(transformationMatrix, projectionMatrix, viewMatrix, biasMatrix,
-				projectionLightMatrix, viewLightMatrix, shadowMap, useShadows, material);
+		projectionLightMatrix = new UniformMatrix[4];
+		for (int x = 0; x < 4; x++) {
+			projectionLightMatrix[x] = new UniformMatrix("projectionLightMatrix[" + x + "]");
+		}
+		super.storeUniformArray(projectionLightMatrix);
+		shadowMap = new UniformSampler[4];
+		for (int x = 0; x < 4; x++) {
+			shadowMap[x] = new UniformSampler("shadowMap[" + x + "]");
+		}
+		super.storeUniformArray(shadowMap);
+		super.storeAllUniformLocations(transformationMatrix, projectionMatrix, viewMatrix, biasMatrix, viewLightMatrix,
+				useShadows, material);
 		connectTextureUnits();
 	}
 
@@ -62,7 +72,10 @@ public class EntityShader extends ShaderProgram {
 	 */
 	private void connectTextureUnits() {
 		super.start();
-		shadowMap.loadTexUnit(8);
+		shadowMap[0].loadTexUnit(8);
+		shadowMap[1].loadTexUnit(9);
+		shadowMap[2].loadTexUnit(10);
+		shadowMap[3].loadTexUnit(11);
 		super.stop();
 	}
 
@@ -80,7 +93,7 @@ public class EntityShader extends ShaderProgram {
 		transformationMatrix.loadMatrix(matrix);
 	}
 
-	public void loadBiasMatrix(Matrix4d shadowProjectionMatrix) {
+	public void loadBiasMatrix(Matrix4d[] shadowProjectionMatrix) {
 		Matrix4d biasMatrix = new Matrix4d();
 		biasMatrix.m00 = 0.5f;
 		biasMatrix.m11 = 0.5f;
@@ -89,7 +102,9 @@ public class EntityShader extends ShaderProgram {
 		biasMatrix.m31 = 0.5f;
 		biasMatrix.m32 = 0.5f;
 		this.biasMatrix.loadMatrix(biasMatrix);
-		projectionLightMatrix.loadMatrix(shadowProjectionMatrix);
+		for (int x = 0; x < 4; x++) {
+			this.projectionLightMatrix[x].loadMatrix(shadowProjectionMatrix[x]);
+		}
 	}
 
 	public void loadLightMatrix(Camera sunCamera) {

@@ -10,11 +10,11 @@ public class Sun {
 	private Vector3d invertedSunPosition = new Vector3d(0, 0, 0);
 	private SunCamera camera;
 
-	public Sun(Matrix4d shadowProjectionMatrix) {
+	public Sun(Matrix4d[] shadowProjectionMatrix) {
 		camera = new SunCamera(shadowProjectionMatrix);
 	}
 
-	public Sun(Vector3d rotation, Matrix4d shadowProjectionMatrix) {
+	public Sun(Vector3d rotation, Matrix4d[] shadowProjectionMatrix) {
 		this.rotation = rotation;
 		camera = new SunCamera(shadowProjectionMatrix);
 	}

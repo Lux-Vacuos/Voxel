@@ -26,14 +26,14 @@ in vec3 normal;
 
 out vec2 pass_textureCoords;
 out vec3 pass_position;
-out vec4 ShadowCoord;
+out vec4 ShadowCoord[4];
 out mat3 TBN;
 
 uniform float moveFactor;
 uniform vec3 cameraPos;
 uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;
-uniform mat4 projectionLightMatrix;
+uniform mat4 projectionLightMatrix[4];;
 uniform mat4 viewLightMatrix;
 uniform mat4 biasMatrix;
 
@@ -67,8 +67,10 @@ void main() {
 	TBN = mat3(T, B, N);
 	
 	if(useShadows == 1){
-		vec4 posLight = viewLightMatrix * vec4(pass_position, 1.0);
-		vec4 a = projectionLightMatrix * posLight;
-		ShadowCoord = biasMatrix * a;
+		vec4 posLight = viewLightMatrix * vec4(position, 1.0);
+		ShadowCoord[0] = biasMatrix * projectionLightMatrix[0] * posLight;
+		ShadowCoord[1] = biasMatrix * projectionLightMatrix[1] * posLight;
+		ShadowCoord[2] = biasMatrix * projectionLightMatrix[2] * posLight;
+		ShadowCoord[3] = biasMatrix * projectionLightMatrix[3] * posLight;
 	}
 }

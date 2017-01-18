@@ -73,8 +73,8 @@ public final class ClientGameSettings extends AbstractGameSettings {
 		ClientVariables.useAmbientOcclusion = Boolean.parseBoolean(getValue("useAmbientOcclusion", "false"));
 
 		// Parse Shadow Map Resolution and Shadow Draw Distance.
-		ClientVariables.shadowMapResolution = Integer.parseInt(getValue("shadowMapResolution", "4096"));
-		ClientVariables.shadowMapDrawDistance = Integer.parseInt(getValue("shadowMapDrawDistance", "60"));
+		ClientVariables.shadowMapResolution = Integer.parseInt(getValue("shadowMapResolution", "512"));
+		ClientVariables.shadowMapDrawDistance = Integer.parseInt(getValue("shadowMapDrawDistance", "200"));
 
 		// Parse Chromatic Aberration and Lens Flares
 		ClientVariables.useChromaticAberration = Boolean.parseBoolean(getValue("useChromaticAberration", "false"));

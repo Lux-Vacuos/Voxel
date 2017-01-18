@@ -94,7 +94,21 @@ public class TestState extends AbstractState {
 		Window window = ClientInternalSubsystem.getInstance().getGameWindow();
 		ResourceLoader loader = window.getResourceLoader();
 
-		Matrix4d shadowProjectionMatrix = Maths.orthographic(-ClientVariables.shadowMapDrawDistance,
+		Matrix4d[] shadowProjectionMatrix = new Matrix4d[4];
+
+		shadowProjectionMatrix[0] = Maths.orthographic(-ClientVariables.shadowMapDrawDistance / 32,
+				ClientVariables.shadowMapDrawDistance / 32, -ClientVariables.shadowMapDrawDistance / 32,
+				ClientVariables.shadowMapDrawDistance / 32, -ClientVariables.shadowMapDrawDistance,
+				ClientVariables.shadowMapDrawDistance, false);
+		shadowProjectionMatrix[1] = Maths.orthographic(-ClientVariables.shadowMapDrawDistance / 16,
+				ClientVariables.shadowMapDrawDistance / 16, -ClientVariables.shadowMapDrawDistance / 16,
+				ClientVariables.shadowMapDrawDistance / 16, -ClientVariables.shadowMapDrawDistance,
+				ClientVariables.shadowMapDrawDistance, false);
+		shadowProjectionMatrix[2] = Maths.orthographic(-ClientVariables.shadowMapDrawDistance / 4,
+				ClientVariables.shadowMapDrawDistance / 4, -ClientVariables.shadowMapDrawDistance / 4,
+				ClientVariables.shadowMapDrawDistance / 4, -ClientVariables.shadowMapDrawDistance,
+				ClientVariables.shadowMapDrawDistance, false);
+		shadowProjectionMatrix[3] = Maths.orthographic(-ClientVariables.shadowMapDrawDistance,
 				ClientVariables.shadowMapDrawDistance, -ClientVariables.shadowMapDrawDistance,
 				ClientVariables.shadowMapDrawDistance, -ClientVariables.shadowMapDrawDistance,
 				ClientVariables.shadowMapDrawDistance, false);

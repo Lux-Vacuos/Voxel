@@ -23,13 +23,13 @@
 ##include struct Material
 
 in vec2 pass_textureCoords;
-in vec3 pass_position;
-in vec4 ShadowCoord;
+in vec4 pass_position;
+in vec4 ShadowCoord[4];
 in mat3 TBN;
 
 out vec4 [5] out_Color;
 
-uniform sampler2DShadow shadowMap;
+uniform sampler2DShadow shadowMap[4];
 uniform Material material;
 
 uniform int useShadows;
@@ -38,7 +38,19 @@ const float xPixelOffset = 0.0002;
 const float yPixelOffset = 0.0002;
 
 float lookup(vec2 offSet){
-	return texture(shadowMap, ShadowCoord.xyz + vec3(offSet.x * xPixelOffset, offSet.y * yPixelOffset, 0.0) );
+	float shadow;
+	if(ShadowCoord[0].x > 0 && ShadowCoord[0].x < 1 && ShadowCoord[0].y > 0 && ShadowCoord[0].y < 1) {
+		shadow = texture(shadowMap[0], ShadowCoord[0].xyz + vec3(offSet.x * xPixelOffset, offSet.y * yPixelOffset, 0.0));
+	} else if(ShadowCoord[1].x > 0 && ShadowCoord[1].x < 1 && ShadowCoord[1].y > 0 && ShadowCoord[1].y < 1) {
+		shadow = texture(shadowMap[1], ShadowCoord[1].xyz + vec3(offSet.x * xPixelOffset, offSet.y * yPixelOffset, 0.0));
+	} else if(ShadowCoord[2].x > 0 && ShadowCoord[2].x < 1 && ShadowCoord[2].y > 0 && ShadowCoord[2].y < 1) {
+		shadow = texture(shadowMap[2], ShadowCoord[2].xyz + vec3(offSet.x * xPixelOffset, offSet.y * yPixelOffset, 0.0));
+	} else if(ShadowCoord[3].x > 0 && ShadowCoord[3].x < 1 && ShadowCoord[3].y > 0 && ShadowCoord[3].y < 1) {
+		shadow = texture(shadowMap[3], ShadowCoord[3].xyz + vec3(offSet.x * xPixelOffset, offSet.y * yPixelOffset, 0.0));
+	} else {
+		shadow = 1;
+	}
+	return shadow;
 }
 
 void main(void) {
@@ -60,9 +72,9 @@ void main(void) {
 		shadow /= 16.0 ;
 	}
     
-    if(diffuseF.a < 1) {
+    if(diffuseF.a < 1)
 		discard;
-	}
+	
 
 	vec3 normal = texture(material.normalTex, pass_textureCoords).rgb;
 	normal = normalize(normal * 2.0 - 1.0);

@@ -27,13 +27,13 @@ in vec3 tangent;
 
 out vec2 pass_textureCoords;
 out vec4 pass_position;
-out vec4 ShadowCoord;
+out vec4 ShadowCoord[4];
 out mat3 TBN;
 
 uniform mat4 transformationMatrix;
 uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;
-uniform mat4 projectionLightMatrix;
+uniform mat4 projectionLightMatrix[4];
 uniform mat4 viewLightMatrix;
 uniform mat4 biasMatrix;
 
@@ -53,7 +53,9 @@ void main() {
 	pass_position = worldPosition;
 	if(useShadows == 1){
 		vec4 posLight = viewLightMatrix * worldPosition;
-		vec4 a = projectionLightMatrix * posLight;
-		ShadowCoord = biasMatrix * a;
+		ShadowCoord[0] = biasMatrix * projectionLightMatrix[0] * posLight;
+		ShadowCoord[1] = biasMatrix * projectionLightMatrix[1] * posLight;
+		ShadowCoord[2] = biasMatrix * projectionLightMatrix[2] * posLight;
+		ShadowCoord[3] = biasMatrix * projectionLightMatrix[3] * posLight;
 	}
 }

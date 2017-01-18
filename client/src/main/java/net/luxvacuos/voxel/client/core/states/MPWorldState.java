@@ -50,7 +50,7 @@ import net.luxvacuos.voxel.universal.world.IWorld;
 public class MPWorldState extends AbstractState {
 
 	private Sun sun;
-	//private ClientWorldSimulation worldSimulation;
+	// private ClientWorldSimulation worldSimulation;
 	private Camera camera;
 
 	private IWorld world;
@@ -67,8 +67,9 @@ public class MPWorldState extends AbstractState {
 	public void start() {
 		super.start();
 		Renderer.setDeferredPass((camera, sunCamera, frustum, shadowMap) -> {
-			//((RenderDimension) world.getActiveDimension()).render(camera, sunCamera, worldSimulation, frustum,
-					//shadowMap);
+			// ((RenderDimension) world.getActiveDimension()).render(camera,
+			// sunCamera, worldSimulation, frustum,
+			// shadowMap);
 			((RenderDimension) world.getActiveDimension()).render(camera, sunCamera, frustum, shadowMap);
 		});
 		Renderer.setShadowPass((camera, sunCamera, frustum, shadowMap) -> {
@@ -100,11 +101,25 @@ public class MPWorldState extends AbstractState {
 	@Override
 	public void init() {
 		Window window = ClientInternalSubsystem.getInstance().getGameWindow();
+		Matrix4d[] shadowProjectionMatrix = new Matrix4d[4];
 
-		Matrix4d shadowProjectionMatrix = Maths.orthographic(-ClientVariables.shadowMapDrawDistance,
+		shadowProjectionMatrix[0] = Maths.orthographic(-ClientVariables.shadowMapDrawDistance / 32,
+				ClientVariables.shadowMapDrawDistance / 32, -ClientVariables.shadowMapDrawDistance / 32,
+				ClientVariables.shadowMapDrawDistance / 32, -ClientVariables.shadowMapDrawDistance,
+				ClientVariables.shadowMapDrawDistance, false);
+		shadowProjectionMatrix[1] = Maths.orthographic(-ClientVariables.shadowMapDrawDistance / 16,
+				ClientVariables.shadowMapDrawDistance / 16, -ClientVariables.shadowMapDrawDistance / 16,
+				ClientVariables.shadowMapDrawDistance / 16, -ClientVariables.shadowMapDrawDistance,
+				ClientVariables.shadowMapDrawDistance, false);
+		shadowProjectionMatrix[2] = Maths.orthographic(-ClientVariables.shadowMapDrawDistance / 4,
+				ClientVariables.shadowMapDrawDistance / 4, -ClientVariables.shadowMapDrawDistance / 4,
+				ClientVariables.shadowMapDrawDistance / 4, -ClientVariables.shadowMapDrawDistance,
+				ClientVariables.shadowMapDrawDistance, false);
+		shadowProjectionMatrix[3] = Maths.orthographic(-ClientVariables.shadowMapDrawDistance,
 				ClientVariables.shadowMapDrawDistance, -ClientVariables.shadowMapDrawDistance,
 				ClientVariables.shadowMapDrawDistance, -ClientVariables.shadowMapDrawDistance,
 				ClientVariables.shadowMapDrawDistance, false);
+
 		Matrix4d projectionMatrix = Renderer.createProjectionMatrix(window.getWidth(), window.getHeight(),
 				ClientVariables.FOV, ClientVariables.NEAR_PLANE, ClientVariables.FAR_PLANE);
 
@@ -112,7 +127,8 @@ public class MPWorldState extends AbstractState {
 		camera.setPosition(new Vector3d(0, 2, 0));
 		sun = new Sun(shadowProjectionMatrix);
 
-		//worldSimulation = new ClientWorldSimulation(10000); //TODO: load from network
+		// worldSimulation = new ClientWorldSimulation(10000); //TODO: load from
+		// network
 
 		pausesState = new SPPauseState();
 		pausesState.init();
@@ -130,7 +146,8 @@ public class MPWorldState extends AbstractState {
 		Window window = ClientInternalSubsystem.getInstance().getGameWindow();
 
 		Renderer.render(world.getActiveDimension().getEntitiesManager().getEntities(), ParticleDomain.getParticles(),
-				camera, sun.getCamera(), world.getActiveDimension().getWorldSimulator(), sun.getSunPosition(), sun.getInvertedSunPosition(), alpha);
+				camera, sun.getCamera(), world.getActiveDimension().getWorldSimulator(), sun.getSunPosition(),
+				sun.getInvertedSunPosition(), alpha);
 
 		window.beingNVGFrame();
 		if (ClientVariables.debug) {

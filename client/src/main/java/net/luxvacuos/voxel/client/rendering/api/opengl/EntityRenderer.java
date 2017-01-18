@@ -27,9 +27,12 @@ import static org.lwjgl.opengl.GL11.glBindTexture;
 import static org.lwjgl.opengl.GL11.glDrawElements;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE1;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE10;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE11;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE2;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE3;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE8;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE9;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
 import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
 import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
@@ -52,6 +55,7 @@ import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.EntityShader;
 import net.luxvacuos.voxel.client.resources.ResourceLoader;
 import net.luxvacuos.voxel.client.util.Maths;
 import net.luxvacuos.voxel.client.world.entities.Camera;
+import net.luxvacuos.voxel.client.world.entities.SunCamera;
 import net.luxvacuos.voxel.client.world.entities.components.RendereableComponent;
 import net.luxvacuos.voxel.universal.ecs.Components;
 import net.luxvacuos.voxel.universal.ecs.components.Position;
@@ -95,7 +99,7 @@ public class EntityRenderer {
 		shader.loadLightMatrix(sunCamera);
 		shader.useShadows(ClientVariables.useShadows);
 		shader.loadProjectionMatrix(camera.getProjectionMatrix());
-		shader.loadBiasMatrix(sunCamera.getProjectionMatrix());
+		shader.loadBiasMatrix(((SunCamera) sunCamera).getProj());
 		renderEntity(entities, shadow);
 		shader.stop();
 		entities.clear();
@@ -144,7 +148,13 @@ public class EntityRenderer {
 		glActiveTexture(GL_TEXTURE3);
 		glBindTexture(GL_TEXTURE_2D, material.getMetallicTexture().getID());
 		glActiveTexture(GL_TEXTURE8);
-		glBindTexture(GL_TEXTURE_2D, shadow.getShadowMap());
+		glBindTexture(GL_TEXTURE_2D, shadow.getShadowMaps()[0]);
+		glActiveTexture(GL_TEXTURE9);
+		glBindTexture(GL_TEXTURE_2D, shadow.getShadowMaps()[1]);
+		glActiveTexture(GL_TEXTURE10);
+		glBindTexture(GL_TEXTURE_2D, shadow.getShadowMaps()[2]);
+		glActiveTexture(GL_TEXTURE11);
+		glBindTexture(GL_TEXTURE_2D, shadow.getShadowMaps()[3]);
 	}
 
 	private void unbindTexturedModel() {

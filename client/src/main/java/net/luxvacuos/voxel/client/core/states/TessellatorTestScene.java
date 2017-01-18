@@ -26,6 +26,7 @@ import net.luxvacuos.voxel.client.world.block.RenderBlock;
 import net.luxvacuos.voxel.client.world.entities.Camera;
 import net.luxvacuos.voxel.client.world.entities.PlayerCamera;
 import net.luxvacuos.voxel.client.world.entities.Sun;
+import net.luxvacuos.voxel.client.world.entities.SunCamera;
 import net.luxvacuos.voxel.universal.core.AbstractVoxel;
 import net.luxvacuos.voxel.universal.core.states.AbstractState;
 import net.luxvacuos.voxel.universal.core.states.StateMachine;
@@ -50,7 +51,21 @@ public class TessellatorTestScene extends AbstractState {
 		Window window = ClientInternalSubsystem.getInstance().getGameWindow();
 		ResourceLoader loader = window.getResourceLoader();
 
-		Matrix4d shadowProjectionMatrix = Maths.orthographic(-ClientVariables.shadowMapDrawDistance,
+		Matrix4d[] shadowProjectionMatrix = new Matrix4d[4];
+
+		shadowProjectionMatrix[0] = Maths.orthographic(-ClientVariables.shadowMapDrawDistance / 32,
+				ClientVariables.shadowMapDrawDistance / 32, -ClientVariables.shadowMapDrawDistance / 32,
+				ClientVariables.shadowMapDrawDistance / 32, -ClientVariables.shadowMapDrawDistance,
+				ClientVariables.shadowMapDrawDistance, false);
+		shadowProjectionMatrix[1] = Maths.orthographic(-ClientVariables.shadowMapDrawDistance / 16,
+				ClientVariables.shadowMapDrawDistance / 16, -ClientVariables.shadowMapDrawDistance / 16,
+				ClientVariables.shadowMapDrawDistance / 16, -ClientVariables.shadowMapDrawDistance,
+				ClientVariables.shadowMapDrawDistance, false);
+		shadowProjectionMatrix[2] = Maths.orthographic(-ClientVariables.shadowMapDrawDistance / 4,
+				ClientVariables.shadowMapDrawDistance / 4, -ClientVariables.shadowMapDrawDistance / 4,
+				ClientVariables.shadowMapDrawDistance / 4, -ClientVariables.shadowMapDrawDistance,
+				ClientVariables.shadowMapDrawDistance, false);
+		shadowProjectionMatrix[3] = Maths.orthographic(-ClientVariables.shadowMapDrawDistance,
 				ClientVariables.shadowMapDrawDistance, -ClientVariables.shadowMapDrawDistance,
 				ClientVariables.shadowMapDrawDistance, -ClientVariables.shadowMapDrawDistance,
 				ClientVariables.shadowMapDrawDistance, false);
@@ -73,7 +88,7 @@ public class TessellatorTestScene extends AbstractState {
 
 		TessellatorShader.getShader().start();
 		TessellatorShader.getShader().loadProjectionMatrix(camera.getProjectionMatrix());
-		TessellatorShader.getShader().loadBiasMatrix(sun.getCamera().getProjectionMatrix());
+		TessellatorShader.getShader().loadBiasMatrix(((SunCamera) sun.getCamera()).getProj());
 		TessellatorShader.getShader().stop();
 
 		tess = new Tessellator(BlocksResources.getMaterial());

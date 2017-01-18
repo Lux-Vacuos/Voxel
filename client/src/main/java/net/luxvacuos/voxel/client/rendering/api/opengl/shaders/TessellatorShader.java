@@ -45,25 +45,38 @@ public class TessellatorShader extends ShaderProgram {
 	private UniformMatrix projectionMatrix = new UniformMatrix("projectionMatrix");
 	private UniformMatrix viewMatrix = new UniformMatrix("viewMatrix");
 	private UniformMatrix biasMatrix = new UniformMatrix("biasMatrix");
-	private UniformMatrix projectionLightMatrix = new UniformMatrix("projectionLightMatrix");
+	private UniformMatrix projectionLightMatrix[];
 	private UniformMatrix viewLightMatrix = new UniformMatrix("viewLightMatrix");
+	private UniformSampler shadowMap[];
 	private UniformVec3 cameraPos = new UniformVec3("cameraPos");
 	private UniformFloat moveFactor = new UniformFloat("moveFactor");
-	private UniformSampler shadowMap = new UniformSampler("shadowMap");
 	private UniformBoolean useShadows = new UniformBoolean("useShadows");
 	private UniformMaterial material = new UniformMaterial("material");
 
 	private TessellatorShader() {
 		super(ClientVariables.VERTEX_FILE_TESSELLATOR, ClientVariables.FRAGMENT_FILE_TESSELLATOR,
 				new Attribute(0, "position"), new Attribute(1, "textureCoords"), new Attribute(2, "normal"));
-		super.storeAllUniformLocations(projectionMatrix, viewMatrix, biasMatrix, projectionLightMatrix, viewLightMatrix,
-				moveFactor, shadowMap, useShadows, cameraPos, material);
+		projectionLightMatrix = new UniformMatrix[4];
+		for (int x = 0; x < 4; x++) {
+			projectionLightMatrix[x] = new UniformMatrix("projectionLightMatrix[" + x + "]");
+		}
+		super.storeUniformArray(projectionLightMatrix);
+		shadowMap = new UniformSampler[4];
+		for (int x = 0; x < 4; x++) {
+			shadowMap[x] = new UniformSampler("shadowMap[" + x + "]");
+		}
+		super.storeUniformArray(shadowMap);
+		super.storeAllUniformLocations(projectionMatrix, viewMatrix, biasMatrix, viewLightMatrix, moveFactor,
+				useShadows, cameraPos, material);
 		conectTextureUnits();
 	}
 
 	private void conectTextureUnits() {
 		super.start();
-		shadowMap.loadTexUnit(5);
+		shadowMap[0].loadTexUnit(5);
+		shadowMap[1].loadTexUnit(6);
+		shadowMap[2].loadTexUnit(7);
+		shadowMap[3].loadTexUnit(8);
 		super.stop();
 	}
 
@@ -82,7 +95,7 @@ public class TessellatorShader extends ShaderProgram {
 		cameraPos.loadVec3(cameraPosition);
 	}
 
-	public void loadBiasMatrix(Matrix4d shadowProjectionMatrix) {
+	public void loadBiasMatrix(Matrix4d[] shadowProjectionMatrix) {
 		Matrix4d biasMatrix = new Matrix4d();
 		biasMatrix.m00 = 0.5f;
 		biasMatrix.m11 = 0.5f;
@@ -91,7 +104,9 @@ public class TessellatorShader extends ShaderProgram {
 		biasMatrix.m31 = 0.5f;
 		biasMatrix.m32 = 0.5f;
 		this.biasMatrix.loadMatrix(biasMatrix);
-		projectionLightMatrix.loadMatrix(shadowProjectionMatrix);
+		for (int x = 0; x < 4; x++) {
+			this.projectionLightMatrix[x].loadMatrix(shadowProjectionMatrix[x]);
+		}
 	}
 
 	public void loadMaterial(Material mat) {

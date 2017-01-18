@@ -50,6 +50,7 @@ import net.luxvacuos.voxel.client.rendering.api.opengl.objects.ParticleTexture;
 import net.luxvacuos.voxel.client.rendering.api.opengl.pipeline.MultiPass;
 import net.luxvacuos.voxel.client.rendering.api.opengl.pipeline.PostProcess;
 import net.luxvacuos.voxel.client.world.entities.Camera;
+import net.luxvacuos.voxel.client.world.entities.SunCamera;
 import net.luxvacuos.voxel.client.world.particles.Particle;
 import net.luxvacuos.voxel.universal.core.IWorldSimulation;
 import net.luxvacuos.voxel.universal.core.TaskManager;
@@ -104,11 +105,48 @@ public class Renderer {
 		environmentRenderer.renderEnvironmentMap(camera.getPosition(), skyboxRenderer, worldSimulation, lightPosition,
 				window);
 
-		frustum.calculateFrustum(sunCamera);
 		if (ClientVariables.useShadows) {
-			shadowFBO.begin();
-			clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			SunCamera sCam = (SunCamera) sunCamera;
 
+			sCam.switchProjectionMatrix(0);
+			frustum.calculateFrustum(sunCamera);
+
+			shadowFBO.begin();
+			shadowFBO.changeTexture(0);
+			clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			if (shadowPass != null)
+				shadowPass.render(camera, sunCamera, frustum, shadowFBO);
+			entityShadowRenderer.renderEntity(entities, sunCamera);
+			shadowFBO.end();
+
+			sCam.switchProjectionMatrix(1);
+			frustum.calculateFrustum(sunCamera);
+
+			shadowFBO.begin();
+			shadowFBO.changeTexture(1);
+			clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			if (shadowPass != null)
+				shadowPass.render(camera, sunCamera, frustum, shadowFBO);
+			entityShadowRenderer.renderEntity(entities, sunCamera);
+			shadowFBO.end();
+
+			sCam.switchProjectionMatrix(2);
+			frustum.calculateFrustum(sunCamera);
+
+			shadowFBO.begin();
+			shadowFBO.changeTexture(2);
+			clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			if (shadowPass != null)
+				shadowPass.render(camera, sunCamera, frustum, shadowFBO);
+			entityShadowRenderer.renderEntity(entities, sunCamera);
+			shadowFBO.end();
+
+			sCam.switchProjectionMatrix(3);
+			frustum.calculateFrustum(sunCamera);
+
+			shadowFBO.begin();
+			shadowFBO.changeTexture(3);
+			clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			if (shadowPass != null)
 				shadowPass.render(camera, sunCamera, frustum, shadowFBO);
 			entityShadowRenderer.renderEntity(entities, sunCamera);
@@ -121,27 +159,27 @@ public class Renderer {
 			occlusionPass.render(camera, sunCamera, frustum, shadowFBO);
 
 		deferredPipeline.begin();
-		
+
 		clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		skyboxRenderer.render(ClientVariables.RED, ClientVariables.GREEN, ClientVariables.BLUE, camera, worldSimulation,
 				lightPosition, 1, false);
 		if (deferredPass != null)
 			deferredPass.render(camera, sunCamera, frustum, shadowFBO);
 		entityRenderer.renderEntity(entities, camera, sunCamera, shadowFBO);
-		
+
 		deferredPipeline.end();
 
 		deferredPipeline.preRender(camera, lightPosition, invertedLightPosition, worldSimulation,
 				lightRenderer.getLights(), environmentRenderer.getCubeMapTexture(), exposure);
 
 		postProcessPipeline.begin();
-		
+
 		clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		deferredPipeline.render(postProcessPipeline.getFBO());
 		if (forwardPass != null)
 			forwardPass.render(camera, sunCamera, frustum, shadowFBO);
 		particleRenderer.render(particles, camera);
-		
+
 		postProcessPipeline.end();
 
 		postProcessPipeline.preRender(camera);

@@ -29,13 +29,16 @@ public class SunCamera extends Camera {
 
 	private Vector2d center;
 
-	public SunCamera(Matrix4d projectionMatrix) {
-		this.projectionMatrix = projectionMatrix;
+	private Matrix4d[] proj;
+
+	public SunCamera(Matrix4d[] proj) {
+		this.proj = proj;
+		this.projectionMatrix = proj[0];
 		center = new Vector2d(2048, 2048);
 		dRay = new DRay(projectionMatrix, Maths.createViewMatrix(this), center, 0, 0);
 		this.viewMatrix = Maths.createViewMatrix(this);
 	}
-	
+
 	public void updateShadowRay(boolean inverted) {
 
 		if (inverted)
@@ -46,8 +49,16 @@ public class SunCamera extends Camera {
 			dRay = new DRay(projectionMatrix, Maths.createViewMatrix(this), center, 4096, 4096);
 		viewMatrix = Maths.createViewMatrix(this);
 	}
-	
-	public DRay getDRay(){
+
+	public void switchProjectionMatrix(int id) {
+		this.projectionMatrix = this.proj[id];
+	}
+
+	public Matrix4d[] getProj() {
+		return proj;
+	}
+
+	public DRay getDRay() {
 		return dRay;
 	}
 
