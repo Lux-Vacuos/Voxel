@@ -23,7 +23,7 @@
 ##include struct Material
 
 in vec2 pass_textureCoords;
-in vec4 pass_position;
+in vec3 pass_position;
 in vec4 ShadowCoord[4];
 in mat3 TBN;
 

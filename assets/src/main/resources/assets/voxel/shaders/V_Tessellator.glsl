@@ -33,7 +33,7 @@ uniform float moveFactor;
 uniform vec3 cameraPos;
 uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;
-uniform mat4 projectionLightMatrix[4];;
+uniform mat4 projectionLightMatrix[4];
 uniform mat4 viewLightMatrix;
 uniform mat4 biasMatrix;
 
