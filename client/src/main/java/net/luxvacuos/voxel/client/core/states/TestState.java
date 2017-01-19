@@ -20,6 +20,8 @@
 
 package net.luxvacuos.voxel.client.core.states;
 
+import static org.lwjgl.opengl.GL11.GL_NEAREST;
+
 import org.lwjgl.glfw.GLFW;
 
 import com.badlogic.ashley.core.Engine;
@@ -100,9 +102,9 @@ public class TestState extends AbstractState {
 				ClientVariables.shadowMapDrawDistance / 32, -ClientVariables.shadowMapDrawDistance / 32,
 				ClientVariables.shadowMapDrawDistance / 32, -ClientVariables.shadowMapDrawDistance,
 				ClientVariables.shadowMapDrawDistance, false);
-		shadowProjectionMatrix[1] = Maths.orthographic(-ClientVariables.shadowMapDrawDistance / 16,
-				ClientVariables.shadowMapDrawDistance / 16, -ClientVariables.shadowMapDrawDistance / 16,
-				ClientVariables.shadowMapDrawDistance / 16, -ClientVariables.shadowMapDrawDistance,
+		shadowProjectionMatrix[1] = Maths.orthographic(-ClientVariables.shadowMapDrawDistance / 10,
+				ClientVariables.shadowMapDrawDistance / 10, -ClientVariables.shadowMapDrawDistance / 10,
+				ClientVariables.shadowMapDrawDistance / 10, -ClientVariables.shadowMapDrawDistance,
 				ClientVariables.shadowMapDrawDistance, false);
 		shadowProjectionMatrix[2] = Maths.orthographic(-ClientVariables.shadowMapDrawDistance / 4,
 				ClientVariables.shadowMapDrawDistance / 4, -ClientVariables.shadowMapDrawDistance / 4,

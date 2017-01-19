@@ -107,9 +107,9 @@ public class MPWorldState extends AbstractState {
 				ClientVariables.shadowMapDrawDistance / 32, -ClientVariables.shadowMapDrawDistance / 32,
 				ClientVariables.shadowMapDrawDistance / 32, -ClientVariables.shadowMapDrawDistance,
 				ClientVariables.shadowMapDrawDistance, false);
-		shadowProjectionMatrix[1] = Maths.orthographic(-ClientVariables.shadowMapDrawDistance / 16,
-				ClientVariables.shadowMapDrawDistance / 16, -ClientVariables.shadowMapDrawDistance / 16,
-				ClientVariables.shadowMapDrawDistance / 16, -ClientVariables.shadowMapDrawDistance,
+		shadowProjectionMatrix[1] = Maths.orthographic(-ClientVariables.shadowMapDrawDistance / 10,
+				ClientVariables.shadowMapDrawDistance / 10, -ClientVariables.shadowMapDrawDistance / 10,
+				ClientVariables.shadowMapDrawDistance / 10, -ClientVariables.shadowMapDrawDistance,
 				ClientVariables.shadowMapDrawDistance, false);
 		shadowProjectionMatrix[2] = Maths.orthographic(-ClientVariables.shadowMapDrawDistance / 4,
 				ClientVariables.shadowMapDrawDistance / 4, -ClientVariables.shadowMapDrawDistance / 4,
