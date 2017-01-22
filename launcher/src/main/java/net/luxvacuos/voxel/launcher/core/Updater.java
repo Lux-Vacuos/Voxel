@@ -47,7 +47,7 @@ public class Updater {
 
 	private Gson gson;
 	private VersionsHandler versionsHandler;
-	private File local = new File(Bootstrap.getPrefix() + LauncherVariables.PROJECT + "/CONFIG/local.json");
+	private File local = new File(Bootstrap.getPrefix() + LauncherVariables.PROJECT + "/" + LauncherVariables.CONFIG +"/local.json");
 	private Version downloadingVersion = null;
 	private boolean downloading = false;
 	private boolean downloaded = false;
