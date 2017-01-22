@@ -80,7 +80,6 @@ public class Login extends GridPane {
 		loginPane.add(passText, 0, 2);
 
 		passField = new PasswordField();
-		passField.setEditable(false);
 		loginPane.add(passField, 0, 3);
 		add(loginPane, 0, 1);
 
@@ -102,7 +101,6 @@ public class Login extends GridPane {
 						Platform.runLater(() -> {
 							stage.hide();
 							stage.setScene(new Scene(ui.getMainStage()));
-							stage.getScene().setCursor(LauncherVariables.cursor);
 							stage.centerOnScreen();
 							stage.show();
 							ui.getMainStage().userName.setText("Welcome, " + userField.getText());
@@ -113,7 +111,7 @@ public class Login extends GridPane {
 							userField.setText("");
 							passField.setText("");
 							userField.setEditable(true);
-							// passField.setEditable(true);
+							passField.setEditable(true);
 							loginProgress.setVisible(false);
 							loginProgress.setProgress(0);
 							message.setText("Invalid credentials");
@@ -123,7 +121,7 @@ public class Login extends GridPane {
 						userField.setText("");
 						passField.setText("");
 						userField.setEditable(true);
-						// passField.setEditable(true);
+						passField.setEditable(true);
 						loginProgress.setVisible(false);
 						loginProgress.setProgress(0);
 						message.setText("Unkown Error, please try again");
@@ -135,7 +133,7 @@ public class Login extends GridPane {
 
 		Hyperlink link = new Hyperlink("Don't have an account?");
 		link.setOnAction((event) -> {
-			ui.getHostServices().showDocument("#"); // TODO: Implement
+			ui.getHostServices().showDocument("https://account.luxvacuos.net/register.php");
 		});
 
 		bottom.add(link, 1, 0);

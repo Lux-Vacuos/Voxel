@@ -31,7 +31,7 @@ import net.luxvacuos.voxel.launcher.util.Logger;
 public class DownloadsHelper {
 	static boolean download(String local, String host) {
 		try {
-			URL url = new URL(LauncherVariables.host + host);
+			URL url = new URL(LauncherVariables.HOST + host);
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 			BufferedInputStream in = new BufferedInputStream(connection.getInputStream());
 			FileOutputStream fos = new FileOutputStream(local);

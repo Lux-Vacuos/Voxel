@@ -18,23 +18,22 @@
  * 
  */
 
-package net.luxvacuos.voxel.launcher.core;
+package net.luxvacuos.voxel.launcher.remote;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class LauncherVariables {
-
-	public static String VERSION = "999.999.999"; // Mark as 999.999.999 to prevent update in development
-	public static boolean apt = false;
-	public static final String HOST = "https://s3.luxvacuos.net";
-	public static final String API = "https://api.luxvacuos.net/v1";
-	public static final String PROJECT = "voxel";
-	public static final String CONFIG = "config";
-	public static final String LIBRARIES = "libraries";
-	public static final String SEPARATOR = System.getProperty("path.separator");
-
-	public static String username;
-	public static List<String> userArgs = new ArrayList<>();
+public class StatusBoolean {
+	
+	private boolean status;
+	
+	public StatusBoolean(boolean status) {
+		this.status = status;
+	}
+	
+	public void setStatus(boolean status) {
+		this.status = status;
+	}
+	
+	public boolean isStatus() {
+		return status;
+	}
 
 }

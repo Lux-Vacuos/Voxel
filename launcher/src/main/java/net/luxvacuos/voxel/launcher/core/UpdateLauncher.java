@@ -19,9 +19,9 @@ public class UpdateLauncher {
 	public boolean checkUpdate() {
 		if (!LauncherVariables.apt) {
 			URL url;
-			String latest = LauncherVariables.version;
+			String latest = LauncherVariables.VERSION;
 			try {
-				url = new URL(LauncherVariables.host + "/launcher/version");
+				url = new URL(LauncherVariables.HOST + "/launcher/version");
 				URLConnection conn = url.openConnection();
 				BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 				latest = bufferedReader.readLine();
@@ -29,7 +29,7 @@ public class UpdateLauncher {
 			}
 
 			String[] vrs = latest.split("\\.");
-			String[] vrsl = LauncherVariables.version.split("\\.");
+			String[] vrsl = LauncherVariables.VERSION.split("\\.");
 			if (Integer.parseInt(vrs[0]) > Integer.parseInt(vrsl[0])) {
 				return true;
 			}
@@ -48,9 +48,9 @@ public class UpdateLauncher {
 	}
 
 	public void downloadAndRun(Stage stg) throws IOException {
-		if (new File(Bootstrap.getPrefix() + LauncherVariables.project + "/launcher.jar").exists()) {
+		if (new File(Bootstrap.getPrefix() + LauncherVariables.PROJECT + "/launcher.jar").exists()) {
 			ProcessBuilder pb = new ProcessBuilder("java", "-jar",
-					Bootstrap.getPrefix() + LauncherVariables.project + "/launcher.jar");
+					Bootstrap.getPrefix() + LauncherVariables.PROJECT + "/launcher.jar");
 			pb.start();
 			javafx.application.Platform.runLater(() -> stg.close());
 			return;
@@ -58,10 +58,10 @@ public class UpdateLauncher {
 		Logger.log("Updating Launcher");
 		new Thread(() -> {
 			try {
-				DownloadsHelper.download(Bootstrap.getPrefix() + LauncherVariables.project + "/launcher.jar",
+				DownloadsHelper.download(Bootstrap.getPrefix() + LauncherVariables.PROJECT + "/launcher.jar",
 						"/launcher/launcher.jar");
 				ProcessBuilder pb = new ProcessBuilder("java", "-jar",
-						Bootstrap.getPrefix() + LauncherVariables.project + "/launcher.jar");
+						Bootstrap.getPrefix() + LauncherVariables.PROJECT + "/launcher.jar");
 				pb.start();
 				javafx.application.Platform.runLater(() -> stg.close());
 			} catch (Exception e) {

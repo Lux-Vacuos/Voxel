@@ -20,8 +20,11 @@
 
 package net.luxvacuos.voxel.launcher.ui;
 
+import java.io.IOException;
+import java.util.jar.Attributes;
+import java.util.jar.Manifest;
+
 import javafx.application.Application;
-import javafx.scene.ImageCursor;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
@@ -42,15 +45,26 @@ public class MainUI extends Application {
 	private UpdateLauncher updateLauncher;
 
 	public static void main(String[] args) {
-		Logger.log("Version: " + LauncherVariables.version);
-		Logger.log("Dist Server: " + LauncherVariables.host);
-		Logger.log("Auth Server: " + LauncherVariables.authHost);
 		launch(args);
 	}
 
 	@Override
 	public void start(Stage stage) throws Exception {
 		Thread.currentThread().setName("Voxel-Launcher");
+
+		try {
+			Manifest manifest = new Manifest(getClass().getClassLoader().getResourceAsStream("META-INF/MANIFEST.MF"));
+			Attributes attr = manifest.getMainAttributes();
+			String t = attr.getValue("Specification-Version");
+			if (t != null)
+				LauncherVariables.VERSION = t;
+		} catch (IOException E) {
+			E.printStackTrace();
+		}
+		Logger.log("Version: " + LauncherVariables.VERSION);
+		Logger.log("Dist Server: " + LauncherVariables.HOST);
+		Logger.log("API Server: " + LauncherVariables.API);
+
 		Updater.getUpdater().getRemoteVersions();
 		updateLauncher = new UpdateLauncher();
 
@@ -59,15 +73,12 @@ public class MainUI extends Application {
 		stage.setTitle("Voxel Launcher");
 		stage.getIcons().add(new Image(getClass().getClassLoader().getResourceAsStream("assets/icons/icon32.png")));
 		stage.getIcons().add(new Image(getClass().getClassLoader().getResourceAsStream("assets/icons/icon64.png")));
-		LauncherVariables.cursor = new ImageCursor(
-				new Image(getClass().getClassLoader().getResourceAsStream("assets/cursors/arrow.png")));
 		if (updateLauncher.checkUpdate()) {
 			updateStage = new Update(stage, this);
 			stage.setScene(new Scene(updateStage));
 			stage.sizeToScene();
 		} else {
 			stage.setScene(new Scene(loginStage));
-			stage.getScene().setCursor(LauncherVariables.cursor);
 			stage.setMinHeight(720);
 			stage.setMinWidth(1280);
 			stage.setWidth(1280);

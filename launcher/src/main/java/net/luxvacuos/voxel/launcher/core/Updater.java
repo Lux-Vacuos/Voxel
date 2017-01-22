@@ -47,7 +47,7 @@ public class Updater {
 
 	private Gson gson;
 	private VersionsHandler versionsHandler;
-	private File local = new File(Bootstrap.getPrefix() + LauncherVariables.project + "/config/local.json");
+	private File local = new File(Bootstrap.getPrefix() + LauncherVariables.PROJECT + "/CONFIG/local.json");
 	private Version downloadingVersion = null;
 	private boolean downloading = false;
 	private boolean downloaded = false;
@@ -55,22 +55,22 @@ public class Updater {
 
 	private Updater() {
 		gson = new Gson();
-		new File(Bootstrap.getPrefix() + LauncherVariables.project + "/" + LauncherVariables.config + "/").mkdirs();
-		new File(Bootstrap.getPrefix() + LauncherVariables.project + "/" + LauncherVariables.config + "/versions/")
+		new File(Bootstrap.getPrefix() + LauncherVariables.PROJECT + "/" + LauncherVariables.CONFIG + "/").mkdirs();
+		new File(Bootstrap.getPrefix() + LauncherVariables.PROJECT + "/" + LauncherVariables.CONFIG + "/versions/")
 				.mkdirs();
 	}
 
 	public void downloadAndRun() throws JsonSyntaxException, JsonIOException, FileNotFoundException {
 		VersionKey key = versionsHandler.getVersions().get(0);
 		if (DownloadsHelper.download(
-				Bootstrap.getPrefix() + LauncherVariables.project + "/" + LauncherVariables.config + "/versions/"
+				Bootstrap.getPrefix() + LauncherVariables.PROJECT + "/" + LauncherVariables.CONFIG + "/versions/"
 						+ key.name + "-" + key.version + ".json",
-				"/" + LauncherVariables.project + "/" + LauncherVariables.config + "/versions/" + key.name + "-"
+				"/" + LauncherVariables.PROJECT + "/" + LauncherVariables.CONFIG + "/versions/" + key.name + "-"
 						+ key.version + ".json")) {
 			Version ver = gson
 					.fromJson(
-							new FileReader(Bootstrap.getPrefix() + LauncherVariables.project + "/"
-									+ LauncherVariables.config + "/versions/" + key.name + "-" + key.version + ".json"),
+							new FileReader(Bootstrap.getPrefix() + LauncherVariables.PROJECT + "/"
+									+ LauncherVariables.CONFIG + "/versions/" + key.name + "-" + key.version + ".json"),
 							Version.class);
 			downloadingVersion = ver;
 			downloading = true;
@@ -102,11 +102,11 @@ public class Updater {
 		new Thread(() -> {
 			try {
 				if (DownloadsHelper.download(
-						Bootstrap.getPrefix() + LauncherVariables.project + "/" + LauncherVariables.config
+						Bootstrap.getPrefix() + LauncherVariables.PROJECT + "/" + LauncherVariables.CONFIG
 								+ "/remote.json",
-						"/" + LauncherVariables.project + "/" + LauncherVariables.config + "/remote.json")) {
-					File remote = new File(Bootstrap.getPrefix() + LauncherVariables.project + "/"
-							+ LauncherVariables.config + "/remote.json");
+						"/" + LauncherVariables.PROJECT + "/" + LauncherVariables.CONFIG + "/remote.json")) {
+					File remote = new File(Bootstrap.getPrefix() + LauncherVariables.PROJECT + "/"
+							+ LauncherVariables.CONFIG + "/remote.json");
 					Files.copy(remote.toPath(), local.toPath(), REPLACE_EXISTING);
 					remote.delete();
 				}
@@ -123,20 +123,20 @@ public class Updater {
 		StringBuilder builder = new StringBuilder();
 		int size = ver.getLibs().size();
 		int count = 0;
-		builder.append(builder.append(Bootstrap.getPrefix() + LauncherVariables.project + "/"
-				+ LauncherVariables.libraries + "/" + ver.getDomain() + "/" + ver.getName() + "/" + ver.getVersion()
-				+ "/" + ver.getName() + "-" + ver.getVersion() + ".jar" + LauncherVariables.separator));
+		builder.append(builder.append(Bootstrap.getPrefix() + LauncherVariables.PROJECT + "/"
+				+ LauncherVariables.LIBRARIES + "/" + ver.getDomain() + "/" + ver.getName() + "/" + ver.getVersion()
+				+ "/" + ver.getName() + "-" + ver.getVersion() + ".jar" + LauncherVariables.SEPARATOR));
 		for (Library library : ver.getLibs()) {
 			count++;
 			builder.append(library.getClassPath());
 			if (count == size)
-				builder.append(Bootstrap.getPrefix() + LauncherVariables.project + "/" + LauncherVariables.libraries
+				builder.append(Bootstrap.getPrefix() + LauncherVariables.PROJECT + "/" + LauncherVariables.LIBRARIES
 						+ "/" + library.getDomain() + "/" + library.getName() + "/" + library.getVersion() + "/"
 						+ library.getName() + "-" + library.getVersion() + ".jar");
 			else
-				builder.append(Bootstrap.getPrefix() + LauncherVariables.project + "/" + LauncherVariables.libraries
+				builder.append(Bootstrap.getPrefix() + LauncherVariables.PROJECT + "/" + LauncherVariables.LIBRARIES
 						+ "/" + library.getDomain() + "/" + library.getName() + "/" + library.getVersion() + "/"
-						+ library.getName() + "-" + library.getVersion() + ".jar" + LauncherVariables.separator);
+						+ library.getName() + "-" + library.getVersion() + ".jar" + LauncherVariables.SEPARATOR);
 		}
 		return builder.toString();
 	}

@@ -83,7 +83,7 @@ public class PerRunLog extends FileAppender {
 			} else {
 				newFileName = fileName + HIPHEN + timeStampFormat.format(new Date());
 			}
-			return Bootstrap.getPrefix() + LauncherVariables.project + "/" + logFile.getParent() + File.separator + newFileName;
+			return Bootstrap.getPrefix() + LauncherVariables.PROJECT + "/" + logFile.getParent() + File.separator + newFileName;
 		}
 		return null;
 	}
