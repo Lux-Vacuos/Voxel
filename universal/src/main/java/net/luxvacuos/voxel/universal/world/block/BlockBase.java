@@ -27,14 +27,18 @@ import com.hackhalo2.nbt.tags.TagCompound;
 
 import net.luxvacuos.voxel.universal.material.BlockMaterial;
 import net.luxvacuos.voxel.universal.tools.ToolTier;
+import net.luxvacuos.voxel.universal.world.chunk.IChunk;
+import net.luxvacuos.voxel.universal.world.dimension.IDimension;
 import net.luxvacuos.voxel.universal.world.utils.BlockNode;
 
 public class BlockBase implements IBlock {
+	private int x = 0, y = 0, z = 0;
 	protected final BlockMaterial material;
 	private BoundingBox aabb = new BoundingBox(new Vector3(0, 0, 0), new Vector3(1, 1, 1));
 	private int id;
 	private int metadata = 0;
 	protected TagCompound complexMetadata = null;
+	private IChunk chunk = null;
 
 	public BlockBase(BlockMaterial material) {
 		this.material = material;
@@ -117,6 +121,54 @@ public class BlockBase implements IBlock {
 	@Override
 	public void onBlockUpdate(BlockNode node, IBlock replaced) {
 		//Event Handler for block updates
+	}
+
+	@Override
+	public void setChunk(IChunk chunk) {
+		if(this.chunk == null)
+			this.chunk = chunk;
+	}
+
+	@Override
+	public IChunk getChunk() {
+		return this.chunk;
+	}
+
+	@Override
+	public IDimension getDimension() {
+		if(this.chunk != null)
+			return this.chunk.getDimension();
+		
+		return null;
+	}
+
+	@Override
+	public int getX() {
+		return this.x;
+	}
+
+	@Override
+	public int getY() {
+		return this.y;
+	}
+
+	@Override
+	public int getZ() {
+		return this.z;
+	}
+
+	@Override
+	public void setPosition(int x, int y, int z) {
+		this.x = x;
+		this.y = y;
+		this.z = z;
+	}
+
+	@Override
+	public void setPosition(BlockNode node) {
+		this.x = node.getX();
+		this.y = node.getY();
+		this.z = node.getZ();
 	}
 
 }

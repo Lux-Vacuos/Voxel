@@ -76,6 +76,7 @@ public class Chunk implements IChunk {
 		this.lock.readLock().lock();
 		try {
 			IBlock block = this.data.getBlockAt(x, y, z);
+			block.setChunk(this);
 			if (this.data.hasComplexMetadataAt(x, y, z)) {
 				block.setComplexMetadata(this.data.getComplexMetadataAt(x, y, z));
 			}

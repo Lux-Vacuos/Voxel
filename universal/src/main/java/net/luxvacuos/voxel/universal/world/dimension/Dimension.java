@@ -170,12 +170,18 @@ public class Dimension implements IDimension {
 
 	@Override
 	public IBlock getBlockAt(int x, int y, int z) {
+		IBlock block = Blocks.getBlockByName("voxel:air");
+		block.setPosition(x, y, z);
+		
 		IChunk c = this.chunkManager.getChunkAt(ChunkNode.getFromBlockCoords(x, 0, z));
 		if (c == null)
-			return Blocks.getBlockByName("voxel:air");
+			return block;
+		
 		IBlock b = c.getBlockAt(x & 0xF, y, z & 0xF);
 		if (b == null)
-			return Blocks.getBlockByName("voxel:air");
+			return block;
+		
+		b.setPosition(x, y, z);
 		return b;
 	}
 
@@ -222,7 +228,7 @@ public class Dimension implements IDimension {
 			// XXX: Hardcoded 256* limit until custom world height is implemented
 			for (int j = (int) Math.floor(box.min.y); j < (int) Math.min(Math.ceil(box.max.y), 256); j++) {
 				for (int k = (int) Math.floor(box.min.z); k < (int) Math.ceil(box.max.z); k++) {
-					IBlock block = getBlockAt(i, j, k);
+					IBlock block = this.getBlockAt(i, j, k);
 					if (block.hasCollision())
 						array.add(block.getBoundingBox(new BlockNode(i, j, k)));
 				}
