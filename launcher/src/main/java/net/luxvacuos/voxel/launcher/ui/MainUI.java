@@ -20,20 +20,16 @@
 
 package net.luxvacuos.voxel.launcher.ui;
 
-import java.io.IOException;
-import java.util.jar.Attributes;
-import java.util.jar.Manifest;
-
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import net.luxvacuos.voxel.launcher.core.LauncherVariables;
 import net.luxvacuos.voxel.launcher.core.UpdateLauncher;
-import net.luxvacuos.voxel.launcher.core.Updater;
 import net.luxvacuos.voxel.launcher.ui.stages.Login;
 import net.luxvacuos.voxel.launcher.ui.stages.Main;
 import net.luxvacuos.voxel.launcher.ui.stages.Update;
+import net.luxvacuos.voxel.launcher.updater.VersionsManager;
 import net.luxvacuos.voxel.launcher.util.Logger;
 
 public class MainUI extends Application {
@@ -52,20 +48,11 @@ public class MainUI extends Application {
 	public void start(Stage stage) throws Exception {
 		Thread.currentThread().setName("Voxel-Launcher");
 
-		try {
-			Manifest manifest = new Manifest(getClass().getClassLoader().getResourceAsStream("META-INF/MANIFEST.MF"));
-			Attributes attr = manifest.getMainAttributes();
-			String t = attr.getValue("Specification-Version");
-			if (t != null)
-				LauncherVariables.VERSION = t;
-		} catch (IOException E) {
-			E.printStackTrace();
-		}
 		Logger.log("Version: " + LauncherVariables.VERSION);
 		Logger.log("Dist Server: " + LauncherVariables.HOST);
 		Logger.log("API Server: " + LauncherVariables.API);
 
-		Updater.getUpdater().getRemoteVersions();
+		VersionsManager.getVersionsManager().update();
 		updateLauncher = new UpdateLauncher();
 
 		loginStage = new Login(stage, this);

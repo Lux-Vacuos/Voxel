@@ -18,7 +18,7 @@
  * 
  */
 
-package net.luxvacuos.voxel.launcher.core;
+package net.luxvacuos.voxel.launcher.updater;
 
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
@@ -27,6 +27,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.List;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonIOException;
@@ -34,43 +35,68 @@ import com.google.gson.JsonSyntaxException;
 
 import net.luxvacuos.voxel.launcher.bootstrap.Bootstrap;
 import net.luxvacuos.voxel.launcher.bootstrap.Bootstrap.Platform;
+import net.luxvacuos.voxel.launcher.core.LauncherVariables;
 
-public class Updater {
+public class VersionsManager {
 
-	private static Updater updater;
+	private static VersionsManager versionsManager;
 
-	public static Updater getUpdater() {
-		if (updater == null)
-			updater = new Updater();
-		return updater;
+	public static VersionsManager getVersionsManager() {
+		if (versionsManager == null)
+			versionsManager = new VersionsManager();
+		return versionsManager;
 	}
 
+	private File local = new File(
+			Bootstrap.getPrefix() + LauncherVariables.PROJECT + "/" + LauncherVariables.CONFIG + "/local.json");
 	private Gson gson;
-	private VersionsHandler versionsHandler;
-	private File local = new File(Bootstrap.getPrefix() + LauncherVariables.PROJECT + "/" + LauncherVariables.CONFIG +"/local.json");
+	private RemoteVersions remoteVersions;
 	private Version downloadingVersion = null;
 	private boolean downloading = false;
 	private boolean downloaded = false;
 	private boolean launched = false;
 
-	private Updater() {
+	private VersionsManager() {
 		gson = new Gson();
-		new File(Bootstrap.getPrefix() + LauncherVariables.PROJECT + "/" + LauncherVariables.CONFIG + "/").mkdirs();
-		new File(Bootstrap.getPrefix() + LauncherVariables.PROJECT + "/" + LauncherVariables.CONFIG + "/versions/")
-				.mkdirs();
 	}
 
-	public void downloadAndRun() throws JsonSyntaxException, JsonIOException, FileNotFoundException {
-		VersionKey key = versionsHandler.getVersions().get(0);
+	public void update() {
+		new Thread(() -> {
+			try {
+				if (DownloadsHelper.download(
+						Bootstrap.getPrefix() + LauncherVariables.PROJECT + "/" + LauncherVariables.CONFIG
+								+ "/remote.json",
+						"/" + LauncherVariables.PROJECT + "/" + LauncherVariables.CONFIG + "/remote.json")) {
+					File remote = new File(Bootstrap.getPrefix() + LauncherVariables.PROJECT + "/"
+							+ LauncherVariables.CONFIG + "/remote.json");
+					Files.copy(remote.toPath(), local.toPath(), REPLACE_EXISTING);
+					remote.delete();
+				}
+				if (local.exists()) {
+					remoteVersions = gson.fromJson(new FileReader(local), RemoteVersions.class);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}).start();
+	}
+
+	public void downloadAndRun(String version, VersionKey key)
+			throws JsonSyntaxException, JsonIOException, FileNotFoundException {
+		File fv = new File(Bootstrap.getPrefix() + LauncherVariables.PROJECT + "/" + LauncherVariables.CONFIG
+				+ "/versions/" + version + "/");
+		if (!fv.exists())
+			fv.mkdirs();
 		if (DownloadsHelper.download(
 				Bootstrap.getPrefix() + LauncherVariables.PROJECT + "/" + LauncherVariables.CONFIG + "/versions/"
-						+ key.name + "-" + key.version + ".json",
-				"/" + LauncherVariables.PROJECT + "/" + LauncherVariables.CONFIG + "/versions/" + key.name + "-"
-						+ key.version + ".json")) {
+						+ version + "/" + key.name + "-" + key.version + ".json",
+				"/" + LauncherVariables.PROJECT + "/" + LauncherVariables.CONFIG + "/versions/" + version + "/"
+						+ key.name + "-" + key.version + ".json")) {
 			Version ver = gson
 					.fromJson(
-							new FileReader(Bootstrap.getPrefix() + LauncherVariables.PROJECT + "/"
-									+ LauncherVariables.CONFIG + "/versions/" + key.name + "-" + key.version + ".json"),
+							new FileReader(
+									Bootstrap.getPrefix() + LauncherVariables.PROJECT + "/" + LauncherVariables.CONFIG
+											+ "/versions/" + version + "/" + key.name + "-" + key.version + ".json"),
 							Version.class);
 			downloadingVersion = ver;
 			downloading = true;
@@ -98,25 +124,10 @@ public class Updater {
 		}
 	}
 
-	public void getRemoteVersions() {
-		new Thread(() -> {
-			try {
-				if (DownloadsHelper.download(
-						Bootstrap.getPrefix() + LauncherVariables.PROJECT + "/" + LauncherVariables.CONFIG
-								+ "/remote.json",
-						"/" + LauncherVariables.PROJECT + "/" + LauncherVariables.CONFIG + "/remote.json")) {
-					File remote = new File(Bootstrap.getPrefix() + LauncherVariables.PROJECT + "/"
-							+ LauncherVariables.CONFIG + "/remote.json");
-					Files.copy(remote.toPath(), local.toPath(), REPLACE_EXISTING);
-					remote.delete();
-				}
-				if (local.exists()) {
-					versionsHandler = gson.fromJson(new FileReader(local), VersionsHandler.class);
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}).start();
+	public void downloadAndRun() throws JsonSyntaxException, JsonIOException, FileNotFoundException {
+		String key = (String) remoteVersions.getVersions().keySet().toArray()[0];
+		List<VersionKey> versions = remoteVersions.getVersions(key);
+		downloadAndRun(key, versions.get(0));
 	}
 
 	private String getClassPath(Version ver) {
@@ -141,10 +152,6 @@ public class Updater {
 		return builder.toString();
 	}
 
-	public boolean isDownloading() {
-		return downloading;
-	}
-
 	public Version getDownloadingVersion() {
 		return downloadingVersion;
 	}
@@ -153,12 +160,12 @@ public class Updater {
 		return downloaded;
 	}
 
-	public boolean isLaunched() {
-		return launched;
+	public boolean isDownloading() {
+		return downloading;
 	}
 
-	public VersionsHandler getVersionsHandler() {
-		return versionsHandler;
+	public boolean isLaunched() {
+		return launched;
 	}
 
 }

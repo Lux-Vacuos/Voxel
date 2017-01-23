@@ -40,14 +40,15 @@ import javafx.scene.text.Text;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import net.luxvacuos.voxel.launcher.core.LauncherVariables;
-import net.luxvacuos.voxel.launcher.core.Updater;
 import net.luxvacuos.voxel.launcher.ui.MainUI;
+import net.luxvacuos.voxel.launcher.updater.VersionsManager;
 
 public class Main extends BorderPane {
 
 	private Button playButton;
 	private ProgressBar download;
 	Text userName;
+	WebView browser;
 
 	private TextField wf;
 	private TextField hf;
@@ -59,8 +60,7 @@ public class Main extends BorderPane {
 		Tab home = new Tab("Home");
 		home.setClosable(false);
 
-		WebView browser = new WebView();
-		browser.getEngine().load("https://luxvacuos.net/");
+		browser = new WebView();
 		browser.minWidth(342);
 		browser.minHeight(370);
 		home.setContent(browser);
@@ -78,7 +78,7 @@ public class Main extends BorderPane {
 				LauncherVariables.userArgs.add(hf.getText());
 
 				try {
-					Updater.getUpdater().downloadAndRun();
+					VersionsManager.getVersionsManager().downloadAndRun();
 					Platform.runLater(() -> playButton.setText("Launching..."));
 				} catch (JsonSyntaxException | JsonIOException | FileNotFoundException e) {
 					Platform.runLater(() -> {
@@ -89,7 +89,8 @@ public class Main extends BorderPane {
 				}
 			}).start();
 
-			while (!Updater.getUpdater().isDownloading() && !Updater.getUpdater().isDownloaded()) {
+			while (!VersionsManager.getVersionsManager().isDownloading()
+					&& !VersionsManager.getVersionsManager().isDownloaded()) {
 				try {
 					Thread.sleep(100);
 				} catch (InterruptedException e) {
@@ -98,9 +99,9 @@ public class Main extends BorderPane {
 			}
 
 			new Thread(() -> {
-				while (Updater.getUpdater().isDownloading()) {
-					Platform.runLater(() -> download
-							.setProgress(Updater.getUpdater().getDownloadingVersion().getDownloadProgress()));
+				while (VersionsManager.getVersionsManager().isDownloading()) {
+					Platform.runLater(() -> download.setProgress(
+							VersionsManager.getVersionsManager().getDownloadingVersion().getDownloadProgress()));
 					try {
 						Thread.sleep(100);
 					} catch (InterruptedException e) {
@@ -115,7 +116,7 @@ public class Main extends BorderPane {
 
 			new Thread(() -> {
 				try {
-					while (!Updater.getUpdater().isLaunched()) {
+					while (!VersionsManager.getVersionsManager().isLaunched()) {
 						Thread.sleep(100);
 					}
 					Thread.sleep(1000);
@@ -180,6 +181,10 @@ public class Main extends BorderPane {
 		setCenter(tabPane);
 		setBottom(bottom);
 		autosize();
+	}
+	
+	public WebView getBrowser() {
+		return browser;
 	}
 
 }

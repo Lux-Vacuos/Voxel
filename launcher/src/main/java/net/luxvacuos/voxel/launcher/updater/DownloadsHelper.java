@@ -18,7 +18,7 @@
  * 
  */
 
-package net.luxvacuos.voxel.launcher.core;
+package net.luxvacuos.voxel.launcher.updater;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -26,10 +26,15 @@ import java.io.FileOutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import net.luxvacuos.voxel.launcher.core.LauncherVariables;
 import net.luxvacuos.voxel.launcher.util.Logger;
 
 public class DownloadsHelper {
-	static boolean download(String local, String host) {
+	
+	private DownloadsHelper() {
+	}
+	
+	public static boolean download(String local, String host) {
 		try {
 			URL url = new URL(LauncherVariables.HOST + host);
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -45,6 +50,7 @@ public class DownloadsHelper {
 			in.close();
 			return true;
 		} catch (Exception e) {
+			e.printStackTrace();
 			Logger.error("Download failed: " + host);
 			return false;
 		}

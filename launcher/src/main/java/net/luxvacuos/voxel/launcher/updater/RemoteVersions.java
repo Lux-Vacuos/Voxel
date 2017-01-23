@@ -18,23 +18,22 @@
  * 
  */
 
-package net.luxvacuos.voxel.launcher.core;
+package net.luxvacuos.voxel.launcher.updater;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-public class LauncherVariables {
+public class RemoteVersions {
 
-	public static final String VERSION = "0.0.15"; //TODO: UPDATE THIS FOR ANY BINARY RELEASE!!
-	public static boolean apt = false;
-	public static final String HOST = "https://s3.luxvacuos.net";
-	public static final String API = "https://api.luxvacuos.net/v1";
-	public static final String PROJECT = "voxel";
-	public static final String CONFIG = "config";
-	public static final String LIBRARIES = "libraries";
-	public static final String SEPARATOR = System.getProperty("path.separator");
+	private Map<String, List<VersionKey>> versions = new HashMap<>();
 
-	public static String username = "devel";
-	public static List<String> userArgs = new ArrayList<>();
+	public Map<String, List<VersionKey>> getVersions() {
+		return versions;
+	}
+
+	public List<VersionKey> getVersions(String key) {
+		return versions.get(key);
+	}
 
 }

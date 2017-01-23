@@ -99,11 +99,10 @@ public class Login extends GridPane {
 					if (AuthHelper.login(userField.getText(), passField.getText())) {
 						LauncherVariables.username = userField.getText();
 						Platform.runLater(() -> {
-							stage.hide();
 							stage.setScene(new Scene(ui.getMainStage()));
 							stage.centerOnScreen();
-							stage.show();
 							ui.getMainStage().userName.setText("Welcome, " + userField.getText());
+							ui.getMainStage().browser.getEngine().load("https://luxvacuos.net/");
 							passField.setText("");
 						});
 					} else

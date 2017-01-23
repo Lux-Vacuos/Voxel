@@ -18,47 +18,59 @@
  * 
  */
 
-package net.luxvacuos.voxel.launcher.core;
+package net.luxvacuos.voxel.launcher.updater;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import net.luxvacuos.voxel.launcher.bootstrap.Bootstrap;
+import net.luxvacuos.voxel.launcher.core.LauncherVariables;
 
 /**
- * Library, virtual representation of a library.
+ * Object for handling versions in the launcher.
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
  *
  */
-public class Library {
+public class Version {
 
-	private String name;
 	private String version;
+	private String name;
+	private String type;
 	private String domain;
-	private List<Library> dependencies;
+	private List<Library> libs;
+
+	private transient float downloadProgress;
 
 	/**
 	 * 
 	 * @param name
-	 *            Library Name
+	 *            Project Name
 	 * @param domain
-	 *            Library Domain
+	 *            Project Domain
 	 * @param version
-	 *            Library Version
+	 *            Project Version
+	 * @param type
+	 *            Type of Version
 	 */
-	public Library(String name, String domain, String version) {
+	public Version(String name, String domain, String version, String type) {
 		this.name = name;
-		this.version = version;
 		this.domain = domain;
-		dependencies = new ArrayList<>();
+		this.version = version;
+		this.type = type;
+		libs = new ArrayList<>();
 	}
 
 	/**
-	 * Download the library and the dependencies
+	 * Downloads the jar from the server in {@link LauncherVariables#host} and
+	 * their respective libraries and dependencies.
 	 */
 	public void download() {
+		downloadProgress = 0;
+
+		float add = 100f / getTotalLibs();
+		add /= 100f;
 		new File(Bootstrap.getPrefix() + LauncherVariables.PROJECT + "/" + LauncherVariables.LIBRARIES + "/" + domain
 				+ "/" + name + "/" + version + "/").mkdirs();
 		if (!new File(Bootstrap.getPrefix() + LauncherVariables.PROJECT + "/" + LauncherVariables.LIBRARIES + "/"
@@ -68,44 +80,43 @@ public class Library {
 							+ "/" + name + "/" + version + "/" + name + "-" + version + ".jar",
 					"/" + LauncherVariables.PROJECT + "/" + LauncherVariables.LIBRARIES + "/" + domain + "/" + name
 							+ "/" + version + "/" + name + "-" + version + ".jar");
-		for (Library library : dependencies) {
+		downloadProgress += add;
+		for (Library library : libs) {
 			library.download();
+			downloadProgress += add * library.getTotalDeps();
 		}
+		downloadProgress = 1f;
 	}
 
-	public float getTotalDeps() {
-		float total = 1f;
-		for (Library library : dependencies) {
+	public float getTotalLibs() {
+		float total = 1;
+		for (Library library : libs) {
 			total += library.getTotalDeps();
 		}
 		return total;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public String getDomain() {
-		return domain;
 	}
 
 	public String getVersion() {
 		return version;
 	}
 
-	public List<Library> getDependencies() {
-		return dependencies;
+	public String getType() {
+		return type;
 	}
 
-	public String getClassPath() {
-		StringBuilder builder = new StringBuilder();
-		for (Library library : getDependencies()) {
-			builder.append(Bootstrap.getPrefix() + LauncherVariables.PROJECT + "/" + LauncherVariables.LIBRARIES + "/" + library.getDomain() + "/"
-					+ library.getName() + "/" + library.getVersion() + "/" + library.getName() + "-"
-					+ library.getVersion() + ".jar" + LauncherVariables.SEPARATOR);
-			builder.append(library.getClassPath());
-		}
-		return builder.toString();
+	public String getDomain() {
+		return domain;
 	}
 
+	public String getName() {
+		return name;
+	}
+
+	public List<Library> getLibs() {
+		return libs;
+	}
+
+	public float getDownloadProgress() {
+		return downloadProgress;
+	}
 }

@@ -20,6 +20,8 @@
 
 package net.luxvacuos.voxel.launcher.core;
 
+import net.luxvacuos.voxel.launcher.updater.VersionKey;
+
 public class Profile {
 
 	private String name;

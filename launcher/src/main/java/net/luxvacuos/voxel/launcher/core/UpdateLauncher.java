@@ -9,6 +9,7 @@ import java.net.URLConnection;
 
 import javafx.stage.Stage;
 import net.luxvacuos.voxel.launcher.bootstrap.Bootstrap;
+import net.luxvacuos.voxel.launcher.updater.DownloadsHelper;
 import net.luxvacuos.voxel.launcher.util.Logger;
 
 public class UpdateLauncher {

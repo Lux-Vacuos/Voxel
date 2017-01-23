@@ -21,9 +21,6 @@
 package net.luxvacuos.voxel.launcher.bootstrap;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.jar.Attributes;
-import java.util.jar.Manifest;
 
 import net.luxvacuos.voxel.launcher.core.LauncherVariables;
 import net.luxvacuos.voxel.launcher.ui.MainUI;
@@ -101,13 +98,13 @@ public class Bootstrap {
 	 *            Args
 	 */
 	public static void main(String[] args) {
-
 		Thread.currentThread().setName("Voxel-Launcher-Bootstrap");
 		new File(Bootstrap.getPrefix() + LauncherVariables.PROJECT + "/libraries/").mkdirs();
 
 		parseArgs(args);
 
 		MainUI.main(args);
+
 	}
 
 	private static void parseArgs(String[] args) {

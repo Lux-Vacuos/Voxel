@@ -23,6 +23,8 @@ package net.luxvacuos.voxel.launcher.core;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.luxvacuos.voxel.launcher.updater.VersionKey;
+
 public class VersionsHandler {
 
 	private List<VersionKey> versions;
