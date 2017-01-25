@@ -31,7 +31,10 @@ import org.lwjgl.glfw.GLFW;
 
 import net.luxvacuos.voxel.client.core.ClientInternalSubsystem;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
+import net.luxvacuos.voxel.client.rendering.api.nanovg.NWindow;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.UIRendering;
+import net.luxvacuos.voxel.client.rendering.api.nanovg.WM;
+import net.luxvacuos.voxel.client.rendering.api.nanovg.NRendering.BackgroundStyle;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Renderer;
 import net.luxvacuos.voxel.client.ui.UIButton;
 import net.luxvacuos.voxel.client.ui.UIWindow;
@@ -64,6 +67,12 @@ public class MainMenuState extends AbstractFadeState {
 	@Override
 	public void init() {
 		Window window = ClientInternalSubsystem.getInstance().getGameWindow();
+		NWindow nWindow0 = new NWindow(180, 300, 300, 200, "Nano Window Manager - 0");
+		nWindow0.setBackgroundStyle(BackgroundStyle.TRANSPARENT);
+		NWindow nWindow1 = new NWindow(180, 640, 300, 200, "Nano Window Manager - 1");
+		nWindow1.setResizable(false);
+		NWindow nWindow2 = new NWindow(750, 300, 300, 200, "Nano Window Manager - 2");
+
 		uiWindow = new UIWindow(20, window.getHeight() - 20, window.getWidth() - 40, window.getHeight() - 40,
 				"Main Menu");
 
@@ -108,11 +117,29 @@ public class MainMenuState extends AbstractFadeState {
 		uiWindow.addChildren(aboutButton);
 		uiWindow.addChildren(exitButton);
 
+		nWindow0.setOnRender((windowID) -> {
+		});
+		nWindow0.setOnUpdate((delta, windowID, nWindow) -> {
+		});
+		nWindow1.setOnRender((windowID) -> {
+		});
+		nWindow1.setOnUpdate((delta, windowID, nWindow) -> {
+		});
+		nWindow2.setOnRender((windowID) -> {
+		});
+		nWindow2.setOnUpdate((delta, windowID, nWindow) -> {
+		});
+
+		WM.getWM().addWindow(nWindow0);
+		WM.getWM().addWindow(nWindow1);
+		WM.getWM().addWindow(nWindow2);
+
 		scripting = new Scripting();
 		script = scripting.compile("test");
 		bindings = new SimpleBindings();
 		bindings.put("window", uiWindow);
 		bindings.put("kb", window.getKeyboardHandler());
+
 	}
 
 	@Override
@@ -132,12 +159,14 @@ public class MainMenuState extends AbstractFadeState {
 		Renderer.clearColors(1, 1, 1, 1);
 		window.beingNVGFrame();
 		uiWindow.render(window.getID());
+		WM.getWM().render(window.getID());
 		window.endNVGFrame();
 	}
 
 	@Override
 	public void update(AbstractVoxel voxel, float delta) {
 		uiWindow.update(delta);
+		WM.getWM().update(delta, ClientInternalSubsystem.getInstance().getGameWindow().getID());
 		try {
 			script.eval(bindings);
 		} catch (ScriptException e) {
@@ -145,7 +174,6 @@ public class MainMenuState extends AbstractFadeState {
 		}
 		if (ClientInternalSubsystem.getInstance().getGameWindow().getKeyboardHandler().isKeyPressed(GLFW.GLFW_KEY_T))
 			script = scripting.compile("test");
-
 		super.update(voxel, delta);
 	}
 
@@ -158,5 +186,4 @@ public class MainMenuState extends AbstractFadeState {
 	protected boolean fadeOut(float delta) {
 		return this.uiWindow.fadeOut(4, delta);
 	}
-
 }

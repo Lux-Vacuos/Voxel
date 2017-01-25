@@ -30,8 +30,8 @@ public abstract class UIComponent {
 
 	protected Queue<UIComponent> childrens;
 	protected float x, y;
-	protected float rootX, rootY;
-	protected float rootW, rootH;
+	public float rootX, rootY;
+	public float rootW, rootH;
 	protected float width, height;
 	protected float fadeAlpha = 1;
 	protected boolean enabled = true;
@@ -62,6 +62,10 @@ public abstract class UIComponent {
 				uIComponent.update(delta);
 			}
 		}
+	}
+
+	public void dispose() {
+
 	}
 
 	public void addChildren(UIComponent comp) {
