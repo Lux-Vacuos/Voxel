@@ -49,8 +49,7 @@ public final class ChunkHandle implements IChunkHandle {
 
 	@Override
 	public IBlockHandle getBlockAt(int x, int y, int z) {
-		// TODO Auto-generated method stub
-		return null;
+		return this.parentChunk.getBlockAt(x, y, z).getHandle();
 	}
 
 	@Override
