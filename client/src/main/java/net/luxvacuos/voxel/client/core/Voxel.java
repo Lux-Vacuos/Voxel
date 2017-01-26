@@ -39,7 +39,6 @@ import org.lwjgl.glfw.GLFWErrorCallback;
 
 import net.luxvacuos.igl.Logger;
 import net.luxvacuos.voxel.client.api.MoltenAPI;
-import net.luxvacuos.voxel.client.core.states.AboutState;
 import net.luxvacuos.voxel.client.core.states.CrashState;
 import net.luxvacuos.voxel.client.core.states.MPSelectionState;
 import net.luxvacuos.voxel.client.core.states.MPWorldState;
@@ -159,7 +158,6 @@ public class Voxel extends AbstractVoxel {
 	@Override
 	public void init() throws Exception {
 		internalSubsystem.init();
-		TaskManager.addTask(() -> StateMachine.registerState(new AboutState()));
 		TaskManager.addTask(() -> StateMachine.registerState(new MainMenuState()));
 		TaskManager.addTask(() -> StateMachine.registerState(new OptionsState()));
 		TaskManager.addTask(() -> StateMachine.registerState(new SPCreateWorld()));

@@ -18,10 +18,8 @@
  * 
  */
 
-package net.luxvacuos.voxel.client.rendering.api.nanovg;
+package net.luxvacuos.voxel.client.ui.nextui;
 
-public interface OnUpdate {
-
-	public void update(float delta, long windowID, NWindow nWindow);
-
+public enum Alignment {
+	LEFT, CENTER, RIGHT, TOP, BOTTOM, LEFT_BOTTOM, LEFT_TOP, RIGHT_BOTTOM, RIGHT_TOP
 }

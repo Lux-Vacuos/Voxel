@@ -27,7 +27,7 @@ import net.luxvacuos.voxel.client.input.Mouse;
 
 public class NWM implements IWM {
 
-	private List<NWindow> windows;
+	private List<INWindow> windows;
 
 	public NWM() {
 		windows = new ArrayList<>();
@@ -35,52 +35,60 @@ public class NWM implements IWM {
 
 	@Override
 	public void render(long windowID) {
-		for (NWindow nWindow : windows) {
+		for (INWindow nWindow : windows) {
 			nWindow.render(windowID, this);
 		}
 	}
 
 	@Override
 	public void update(float delta, long windowID) {
-		List<NWindow> toRemove = new ArrayList<>();
-		NWindow toTop = null;
-		for (NWindow nWindow : windows) {
-			if (nWindow.exit) {
+		List<INWindow> toRemove = new ArrayList<>();
+		INWindow toTop = null;
+		for (INWindow nWindow : windows) {
+			if (nWindow.shouldClose()) {
 				nWindow.dispose();
 				toRemove.add(nWindow);
 				continue;
 			}
 			if (nWindow.insideWindow() && Mouse.isButtonDown(0))
 				toTop = nWindow;
-			nWindow.update(delta, windowID, this);
 		}
 		windows.removeAll(toRemove);
 		if (toTop != null) {
-			if (windows.get(windows.size() - 1) != toTop) {
-				windows.remove(toTop);
-				windows.add(toTop);
-			}
+			INWindow top = windows.get(windows.size() - 1);
+			if (top != toTop)
+				if (!top.isAlwaysOnTop()) {
+					windows.remove(toTop);
+					windows.add(toTop);
+				} else
+					toTop.update(delta, windowID, this);
 		}
+
+		if (!windows.isEmpty()) {
+			windows.get(windows.size() - 1).update(delta, windowID, this);
+		}
+
 	}
-	
+
 	@Override
 	public void dispose() {
-		for (NWindow nWindow : windows) {
+		for (INWindow nWindow : windows) {
 			nWindow.dispose();
 		}
 	}
 
-	public List<NWindow> getWindows() {
+	public List<INWindow> getWindows() {
 		return windows;
 	}
 
 	@Override
-	public void addWindow(NWindow window) {
+	public void addWindow(INWindow window) {
+		window.initApp();
 		this.windows.add(window);
 	}
 
 	@Override
-	public void removeWindow(NWindow window) {
+	public void removeWindow(INWindow window) {
 		window.dispose();
 		this.windows.remove(window);
 	}

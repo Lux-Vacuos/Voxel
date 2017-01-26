@@ -18,10 +18,28 @@
  * 
  */
 
-package net.luxvacuos.voxel.client.rendering.api.nanovg;
+package net.luxvacuos.voxel.client.ui.nextui;
 
-public interface OnRender {
-	
-	public void render(long windowID);
+import net.luxvacuos.voxel.client.rendering.api.glfw.WindowManager;
+import net.luxvacuos.voxel.client.rendering.api.nanovg.UIRendering;
+
+public class Image extends Component {
+
+	private int image;
+
+	public Image(float x, float y, float w, float h, int image) {
+		this.x = x;
+		this.y = y;
+		this.w = w;
+		this.h = h;
+		this.image = image;
+	}
+
+	@Override
+	public void render(long windowID) {
+		UIRendering.renderImage(windowID, rootComponent.rootX + alignedX,
+				WindowManager.getWindow(windowID).getHeight() - rootComponent.rootY - alignedY - h, w, h, image, 1);
+		super.render(windowID);
+	}
 
 }

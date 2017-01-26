@@ -26,21 +26,16 @@ import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.glfw.WindowManager;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.NRendering.BackgroundStyle;
 
-public class NWindow {
-
-	public enum WindowClose {
-		DISPOSE, DO_NOTHING
-	};
+public abstract class NWindow implements INWindow {
 
 	private String title, font = "Roboto-Bold";
-	private boolean draggable = true, decorations = true, resizable = true, maximized, hidden = false;
+	private boolean draggable = true, decorations = true, resizable = true, maximized, hidden = false, exit,
+			alwaysOnTop;
 	private BackgroundStyle backgroundStyle = BackgroundStyle.SOLID;
 	private NVGColor backgroundColor = UIRendering.rgba(0, 0, 0, 255);
-	private float x, y, w, h, oldX, oldY, oldW, oldH;
+	protected float x, y, w, h;
+	private float oldX, oldY, oldW, oldH;
 	private WindowClose windowClose = WindowClose.DISPOSE;
-	private OnRender onRender;
-	private OnUpdate onUpdate;
-	protected boolean exit, focus; // TODO: Implement Focus
 
 	public NWindow(float x, float y, float w, float h, String title) {
 		this.title = title;
@@ -50,14 +45,16 @@ public class NWindow {
 		this.h = h;
 	}
 
+	@Override
 	public void render(long windowID, NWM nwm) {
 		if (!hidden) {
 			NRendering.renderWindow(windowID, title, font, x, WindowManager.getWindow(windowID).getHeight() - y, w, h,
 					backgroundStyle, backgroundColor, decorations, resizable);
-			onRender.render(windowID);
+			renderApp(windowID);
 		}
 	}
 
+	@Override
 	public void update(float delta, long windowID, NWM nwm) {
 		if (decorations || hidden) {
 			if (Mouse.isButtonDown(0)) {
@@ -68,13 +65,7 @@ public class NWindow {
 				}
 				if (Mouse.getX() > x + w - 31 && Mouse.getY() < y - 2 && Mouse.getX() < x + w - 2
 						&& Mouse.getY() > y - 31) {
-					switch (windowClose) {
-					case DISPOSE:
-						exit = true;
-						break;
-					case DO_NOTHING:
-						break;
-					}
+					closeWindow();
 				}
 				if (Mouse.getX() > x + w - 62 && Mouse.getY() < y - 2 && Mouse.getX() < x + w - 33
 						&& Mouse.getY() > y - 31 && resizable) {
@@ -102,52 +93,50 @@ public class NWindow {
 				}
 			}
 		}
-		onUpdate.update(delta, windowID, this);
+		updateApp(delta);
 	}
 
+	@Override
 	public void dispose() {
+		disposeApp();
 	}
 
+	@Override
 	public boolean insideWindow() {
 		return Mouse.getX() > x && Mouse.getX() < x + w && Mouse.getY() > y - h && Mouse.getY() < y;
 	}
 
+	@Override
 	public void setDraggable(boolean draggable) {
 		this.draggable = draggable;
 	}
 
+	@Override
 	public void setDecorations(boolean decorations) {
 		this.decorations = decorations;
 	}
 
+	@Override
 	public void setResizable(boolean resizable) {
 		this.resizable = resizable;
 	}
 
+	@Override
 	public void setBackgroundStyle(BackgroundStyle backgroundStyle) {
 		this.backgroundStyle = backgroundStyle;
 	}
 
-	public BackgroundStyle getBackgroundStyle() {
-		return backgroundStyle;
-	}
-
+	@Override
 	public void setTitle(String title) {
 		this.title = title;
 	}
 
+	@Override
 	public void setWindowClose(WindowClose windowClose) {
 		this.windowClose = windowClose;
 	}
 
-	public void setOnRender(OnRender onRender) {
-		this.onRender = onRender;
-	}
-	
-	public void setOnUpdate(OnUpdate onUpdate) {
-		this.onUpdate = onUpdate;
-	}
-
+	@Override
 	public void setBackgroundColor(float r, float g, float b, float a) {
 		backgroundColor.r(r);
 		backgroundColor.g(g);
@@ -155,36 +144,75 @@ public class NWindow {
 		backgroundColor.a(a);
 	}
 
+	@Override
 	public void setHidden(boolean hidden) {
 		this.hidden = hidden;
 	}
+	
+	@Override
+	public void setAlwaysOnTop(boolean alwaysOnTop) {
+		this.alwaysOnTop = alwaysOnTop;
+	}
 
+	@Override
+	public BackgroundStyle getBackgroundStyle() {
+		return backgroundStyle;
+	}
+
+	@Override
 	public float getWidth() {
 		return w;
 	}
 
+	@Override
 	public float getHeight() {
 		return h;
 	}
 
+	@Override
 	public float getX() {
 		return x;
 	}
 
+	@Override
 	public float getY() {
 		return y;
 	}
 
-	public boolean isDecorations() {
+	@Override
+	public boolean hasDecorations() {
 		return decorations;
 	}
 
+	@Override
 	public boolean isResizable() {
 		return resizable;
 	}
 
+	@Override
 	public boolean isDraggable() {
 		return draggable;
+	}
+
+	@Override
+	public boolean shouldClose() {
+		return exit;
+	}
+	
+	@Override
+	public boolean isAlwaysOnTop() {
+		return alwaysOnTop;
+	}
+
+	@Override
+	public void closeWindow() {
+		switch (windowClose) {
+		case DISPOSE:
+			exit = true;
+			break;
+		case DO_NOTHING:
+			break;
+		}
 	}
 
 }

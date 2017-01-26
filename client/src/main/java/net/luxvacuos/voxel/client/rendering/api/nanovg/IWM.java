@@ -28,8 +28,8 @@ public interface IWM extends IDisposable {
 
 	public void update(float delta, long windowID);
 
-	public void addWindow(NWindow window);
+	public void addWindow(INWindow window);
 
-	public void removeWindow(NWindow window);
+	public void removeWindow(INWindow window);
 
 }
