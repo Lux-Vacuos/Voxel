@@ -21,7 +21,6 @@
 package net.luxvacuos.voxel.client.ui.menus;
 
 import net.luxvacuos.voxel.client.core.states.StateNames;
-import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.UIRendering;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.WM;
 import net.luxvacuos.voxel.client.ui.nextui.Alignment;
@@ -69,11 +68,11 @@ public class MainMenu extends RootComponent {
 		});
 
 		optionsButton.setOnButtonPress((button, delta) -> {
-			StateMachine.setCurrentState(StateNames.OPTIONS);
+			WM.getWM().addWindow(new OptionsMenu(w / 2 - 420 + x, y - 40, 840, 600));
 		});
 
 		aboutButton.setOnButtonPress((button, delta) -> {
-			WM.getWM().addWindow(new AboutMenu(x + 200, y - 40, w - 400, 600));
+			WM.getWM().addWindow(new AboutMenu(w / 2 - 420 + x, y - 40, 840, 600));
 		});
 
 		exitButton.setOnButtonPress((button, delta) -> {

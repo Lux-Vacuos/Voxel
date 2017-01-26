@@ -90,7 +90,7 @@ public class ClientInternalSubsystem extends AbstractInternalSubsystem {
 		handle.setPixelBuffer(pb);
 		this.gameWindowID = WindowManager.createWindow(handle, ClientVariables.VSYNC);
 		Window window = WindowManager.getWindow(this.gameWindowID);
-		WM.setWM(new NWM());
+		WM.setWM(new NWM(window));
 
 		ResourceLoader loader = window.getResourceLoader();
 		loader.loadNVGFont("Roboto-Bold", "Roboto-Bold");

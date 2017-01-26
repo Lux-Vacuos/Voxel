@@ -109,7 +109,7 @@ public abstract class Component {
 			alignedY += rootComponent.rootH;
 			break;
 		default:
-			throw new UnsupportedOperationException("Invalid Alignment: " + alignment.name());
+			throw new UnsupportedOperationException("Invalid Alignment: " + windowAlignment.name());
 		}
 	}
 

@@ -24,24 +24,27 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.luxvacuos.voxel.client.input.Mouse;
+import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 
 public class NWM implements IWM {
 
 	private List<INWindow> windows;
+	private Window window;
 
-	public NWM() {
+	public NWM(Window window) {
+		this.window = window;
 		windows = new ArrayList<>();
 	}
 
 	@Override
-	public void render(long windowID) {
+	public void render() {
 		for (INWindow nWindow : windows) {
-			nWindow.render(windowID, this);
+			nWindow.render(window.getID(), this);
 		}
 	}
 
 	@Override
-	public void update(float delta, long windowID) {
+	public void update(float delta) {
 		List<INWindow> toRemove = new ArrayList<>();
 		INWindow toTop = null;
 		for (INWindow nWindow : windows) {
@@ -61,11 +64,11 @@ public class NWM implements IWM {
 					windows.remove(toTop);
 					windows.add(toTop);
 				} else
-					toTop.update(delta, windowID, this);
+					toTop.update(delta, window.getID(), this);
 		}
 
 		if (!windows.isEmpty()) {
-			windows.get(windows.size() - 1).update(delta, windowID, this);
+			windows.get(windows.size() - 1).update(delta, window.getID(), this);
 		}
 
 	}
@@ -84,6 +87,7 @@ public class NWM implements IWM {
 	@Override
 	public void addWindow(INWindow window) {
 		window.initApp();
+		window.update(0, this.window.getID(), this);
 		this.windows.add(window);
 	}
 

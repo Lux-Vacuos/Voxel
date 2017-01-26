@@ -43,7 +43,6 @@ import net.luxvacuos.voxel.client.core.states.CrashState;
 import net.luxvacuos.voxel.client.core.states.MPSelectionState;
 import net.luxvacuos.voxel.client.core.states.MPWorldState;
 import net.luxvacuos.voxel.client.core.states.MainMenuState;
-import net.luxvacuos.voxel.client.core.states.OptionsState;
 import net.luxvacuos.voxel.client.core.states.SPCreateWorld;
 import net.luxvacuos.voxel.client.core.states.SPLoadingState;
 import net.luxvacuos.voxel.client.core.states.SPSelectionState;
@@ -159,7 +158,6 @@ public class Voxel extends AbstractVoxel {
 	public void init() throws Exception {
 		internalSubsystem.init();
 		TaskManager.addTask(() -> StateMachine.registerState(new MainMenuState()));
-		TaskManager.addTask(() -> StateMachine.registerState(new OptionsState()));
 		TaskManager.addTask(() -> StateMachine.registerState(new SPCreateWorld()));
 		TaskManager.addTask(() -> StateMachine.registerState(new SPLoadingState()));
 		TaskManager.addTask(() -> StateMachine.registerState(new SPSelectionState()));

@@ -18,65 +18,63 @@
  * 
  */
 
-package net.luxvacuos.voxel.client.core.states;
-
-import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
+package net.luxvacuos.voxel.client.ui.menus;
 
 import net.luxvacuos.voxel.client.core.ClientInternalSubsystem;
 import net.luxvacuos.voxel.client.core.ClientVariables;
-import net.luxvacuos.voxel.client.input.Mouse;
-import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
-import net.luxvacuos.voxel.client.rendering.api.opengl.Renderer;
-import net.luxvacuos.voxel.client.ui.UIButton;
-import net.luxvacuos.voxel.client.ui.UIWindow;
-import net.luxvacuos.voxel.universal.core.AbstractVoxel;
-import net.luxvacuos.voxel.universal.core.states.StateMachine;
+import net.luxvacuos.voxel.client.ui.nextui.Alignment;
+import net.luxvacuos.voxel.client.ui.nextui.Button;
+import net.luxvacuos.voxel.client.ui.nextui.RootComponent;
 
-/**
- * Options State, here all the options are stored.
- * 
- * @author danirod
- */
-public class OptionsState extends AbstractFadeState {
+public class OptionsMenu extends RootComponent {
 
-	private UIButton exitButton;
-	private UIButton dofButton;
-	private UIButton shadowsButton;
-	private UIButton godraysButton;
-	private UIButton fxaaButton;
-	private UIButton motionBlurButton;
-	private UIButton reflectionsButton;
-	private UIButton parallaxButton;
-	private UIButton ambientOccButton;
-	private UIButton chromaticAberrationButton;
-	private UIButton lensFlaresButton;
-	private UIWindow uiWindow;
-
-	public OptionsState() {
-		super(StateNames.OPTIONS);
+	public OptionsMenu(float x, float y, float w, float h) {
+		super(x, y, w, h, "Options");
 	}
 
 	@Override
-	public void init() {
-		Window window = ClientInternalSubsystem.getInstance().getGameWindow();
-		uiWindow = new UIWindow(20, window.getHeight() - 20, window.getWidth() - 40, window.getHeight() - 40,
-				"Options");
+	public void initApp() {
+		super.setAlwaysOnTop(true);
+		Button backButton = new Button(0, 40, 200, 40, "Close");
+		backButton.setAlignment(Alignment.CENTER);
+		backButton.setWindowAlignment(Alignment.BOTTOM);
+		backButton.setOnButtonPress((button, delta) -> {
+			ClientInternalSubsystem.getInstance().getGameSettings().update();
+			ClientInternalSubsystem.getInstance().getGameSettings().save();
+			super.closeWindow();
+		});
 
-		exitButton = new UIButton(uiWindow.getWidth() / 2 - 100, -uiWindow.getHeight() + 20, 200, 40, "Back");
-		godraysButton = new UIButton(40, -110, 200, 40, "Volumetric Light");
-		shadowsButton = new UIButton(40, -170, 200, 40, "Shadows");
-		dofButton = new UIButton(40, -230, 200, 40, "Depth of Field");
-		fxaaButton = new UIButton(40, -290, 200, 40, "FXAA");
-		motionBlurButton = new UIButton(40, -350, 200, 40, "Motion Blur");
+		Button godraysButton = new Button(40, -40, 200, 40, "Volumetric Light");
+		Button shadowsButton = new Button(40, -100, 200, 40, "Shadows");
+		Button dofButton = new Button(40, -160, 200, 40, "Depth of Field");
+		Button fxaaButton = new Button(40, -220, 200, 40, "FXAA");
+		Button motionBlurButton = new Button(40, -280, 200, 40, "Motion Blur");
+		Button reflectionsButton = new Button(260, -40, 200, 40, "Reflections");
+		Button parallaxButton = new Button(260, -100, 200, 40, "Parallax");
+		Button ambientOccButton = new Button(260, -160, 200, 40, "Ambient Occlusion");
+		Button chromaticAberrationButton = new Button(260, -220, 200, 40, "Chromatic Aberration");
+		Button lensFlaresButton = new Button(260, -280, 200, 40, "Lens Flares");
 
-		reflectionsButton = new UIButton(260, -110, 200, 40, "Reflections");
-		parallaxButton = new UIButton(260, -170, 200, 40, "Parallax");
-		parallaxButton.setEnabled(false);
-
-		ambientOccButton = new UIButton(260, -230, 200, 40, "Ambient Occlusion");
-		chromaticAberrationButton = new UIButton(260, -290, 200, 40, "Chromatic Aberration");
-		lensFlaresButton = new UIButton(260, -350, 200, 40, "Lens Flares");
+		godraysButton.setWindowAlignment(Alignment.LEFT_TOP);
+		godraysButton.setAlignment(Alignment.RIGHT_BOTTOM);
+		shadowsButton.setWindowAlignment(Alignment.LEFT_TOP);
+		shadowsButton.setAlignment(Alignment.RIGHT_BOTTOM);
+		dofButton.setWindowAlignment(Alignment.LEFT_TOP);
+		dofButton.setAlignment(Alignment.RIGHT_BOTTOM);
+		fxaaButton.setWindowAlignment(Alignment.LEFT_TOP);
+		fxaaButton.setAlignment(Alignment.RIGHT_BOTTOM);
+		motionBlurButton.setWindowAlignment(Alignment.LEFT_TOP);
+		motionBlurButton.setAlignment(Alignment.RIGHT_BOTTOM);
+		reflectionsButton.setWindowAlignment(Alignment.LEFT_TOP);
+		reflectionsButton.setAlignment(Alignment.RIGHT_BOTTOM);
+		parallaxButton.setWindowAlignment(Alignment.LEFT_TOP);
+		parallaxButton.setAlignment(Alignment.RIGHT_BOTTOM);
+		ambientOccButton.setWindowAlignment(Alignment.LEFT_TOP);
+		ambientOccButton.setAlignment(Alignment.RIGHT_BOTTOM);
+		chromaticAberrationButton.setWindowAlignment(Alignment.LEFT_TOP);
+		chromaticAberrationButton.setAlignment(Alignment.RIGHT_BOTTOM);
+		lensFlaresButton.setWindowAlignment(Alignment.LEFT_TOP);
+		lensFlaresButton.setAlignment(Alignment.RIGHT_BOTTOM);
 
 		if (ClientVariables.useVolumetricLight) {
 			godraysButton.setText("Volumetric Light: ON");
@@ -149,7 +147,7 @@ public class OptionsState extends AbstractFadeState {
 			chromaticAberrationButton.setText("Chromatic Aberration: OFF");
 			chromaticAberrationButton.setColor(255, 100, 100, 255);
 		}
-		
+
 		if (ClientVariables.useLensFlares) {
 			lensFlaresButton.setText("Lens Flares: ON");
 			lensFlaresButton.setColor(100, 255, 100, 255);
@@ -157,12 +155,6 @@ public class OptionsState extends AbstractFadeState {
 			lensFlaresButton.setText("Lens Flares: OFF");
 			lensFlaresButton.setColor(255, 100, 100, 255);
 		}
-
-		exitButton.setOnButtonPress((button, delta) -> {
-			ClientInternalSubsystem.getInstance().getGameSettings().update();
-			ClientInternalSubsystem.getInstance().getGameSettings().save();
-			this.switchTo(StateMachine.getPreviousState().getName());
-		});
 
 		shadowsButton.setOnButtonPress((button, delta) -> {
 			ClientVariables.useShadows = !ClientVariables.useShadows;
@@ -255,7 +247,7 @@ public class OptionsState extends AbstractFadeState {
 				ambientOccButton.setColor(255, 100, 100, 255);
 			}
 		});
-		
+
 		chromaticAberrationButton.setOnButtonPress((button, delta) -> {
 			ClientVariables.useChromaticAberration = !ClientVariables.useChromaticAberration;
 			if (ClientVariables.useChromaticAberration) {
@@ -266,7 +258,7 @@ public class OptionsState extends AbstractFadeState {
 				chromaticAberrationButton.setColor(255, 100, 100, 255);
 			}
 		});
-		
+
 		lensFlaresButton.setOnButtonPress((button, delta) -> {
 			ClientVariables.useLensFlares = !ClientVariables.useLensFlares;
 			if (ClientVariables.useLensFlares) {
@@ -278,55 +270,19 @@ public class OptionsState extends AbstractFadeState {
 			}
 		});
 
-		uiWindow.addChildren(exitButton);
-		uiWindow.addChildren(shadowsButton);
-		uiWindow.addChildren(dofButton);
-		uiWindow.addChildren(godraysButton);
-		uiWindow.addChildren(fxaaButton);
-		uiWindow.addChildren(parallaxButton);
-		uiWindow.addChildren(motionBlurButton);
-		uiWindow.addChildren(reflectionsButton);
-		uiWindow.addChildren(ambientOccButton);
-		uiWindow.addChildren(chromaticAberrationButton);
-		uiWindow.addChildren(lensFlaresButton);
-	}
+		super.addComponent(backButton);
+		super.addComponent(shadowsButton);
+		super.addComponent(dofButton);
+		super.addComponent(godraysButton);
+		super.addComponent(fxaaButton);
+		super.addComponent(parallaxButton);
+		super.addComponent(motionBlurButton);
+		super.addComponent(reflectionsButton);
+		super.addComponent(ambientOccButton);
+		super.addComponent(chromaticAberrationButton);
+		super.addComponent(lensFlaresButton);
 
-	@Override
-	public void start() {
-		uiWindow.setFadeAlpha(0);
-	}
-
-	@Override
-	public void end() {
-		uiWindow.setFadeAlpha(1);
-	}
-
-	@Override
-	public void update(AbstractVoxel voxel, float delta) {
-		while (Mouse.next()) {
-			uiWindow.update(delta);
-		}
-		super.update(voxel, delta);
-	}
-
-	@Override
-	public void render(AbstractVoxel voxel, float alpha) {
-		Window window = ClientInternalSubsystem.getInstance().getGameWindow();
-		Renderer.clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		Renderer.clearColors(1, 1, 1, 1);
-		window.beingNVGFrame();
-		uiWindow.render(window.getID());
-		window.endNVGFrame();
-	}
-
-	@Override
-	protected boolean fadeIn(float delta) {
-		return this.uiWindow.fadeIn(4, delta);
-	}
-
-	@Override
-	protected boolean fadeOut(float delta) {
-		return this.uiWindow.fadeOut(4, delta);
+		super.initApp();
 	}
 
 }

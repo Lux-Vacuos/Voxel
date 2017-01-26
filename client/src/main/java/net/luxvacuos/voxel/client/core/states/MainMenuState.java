@@ -85,13 +85,13 @@ public class MainMenuState extends AbstractState {
 		Renderer.clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		Renderer.clearColors(1, 1, 1, 1);
 		window.beingNVGFrame();
-		WM.getWM().render(window.getID());
+		WM.getWM().render();
 		window.endNVGFrame();
 	}
 
 	@Override
 	public void update(AbstractVoxel voxel, float delta) {
-		WM.getWM().update(delta, ClientInternalSubsystem.getInstance().getGameWindow().getID());
+		WM.getWM().update(delta);
 		try {
 			script.eval(bindings);
 		} catch (ScriptException e) {

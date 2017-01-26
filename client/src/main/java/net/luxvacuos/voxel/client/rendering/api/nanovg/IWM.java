@@ -24,9 +24,9 @@ import net.luxvacuos.voxel.universal.resources.IDisposable;
 
 public interface IWM extends IDisposable {
 
-	public void render(long windowID);
+	public void render();
 
-	public void update(float delta, long windowID);
+	public void update(float delta);
 
 	public void addWindow(INWindow window);
 

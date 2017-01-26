@@ -466,7 +466,7 @@ public class UIRendering {
 			float y, float w, float h, NVGColor color, boolean mouseInside, float fontSize, float fadeAlpha) {
 		long vg = WindowManager.getWindow(windowID).getNVGID();
 		NVGPaint bg = paintA;
-		float cornerRadius = 4.0f;
+		float cornerRadius = 0.0f;
 		float tw, iw = 0;
 
 		if (mouseInside) {
@@ -474,6 +474,7 @@ public class UIRendering {
 			y += 1;
 			w -= 2;
 			h -= 2;
+			fontSize -= 1f;
 		}
 
 		nvgLinearGradient(vg, x, y, x, y + h,
