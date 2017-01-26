@@ -20,7 +20,8 @@
 
 package net.luxvacuos.voxel.universal.world.block;
 
-public interface IBlockEntity extends IBlock {
+import net.luxvacuos.voxel.universal.util.IUpdatable;
 
-	public void update(float delta);
+public interface IBlockEntity extends IBlock, IUpdatable {
+	
 }

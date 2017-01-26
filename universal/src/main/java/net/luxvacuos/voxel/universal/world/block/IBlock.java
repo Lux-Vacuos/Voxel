@@ -6,8 +6,9 @@ import com.hackhalo2.nbt.tags.TagCompound;
 import net.luxvacuos.voxel.universal.world.chunk.IChunk;
 import net.luxvacuos.voxel.universal.world.dimension.IDimension;
 import net.luxvacuos.voxel.universal.world.utils.BlockNode;
+import net.luxvacuos.voxel.universal.world.utils.IHandleable;
 
-public interface IBlock extends IBlockHandle {
+public interface IBlock extends IBlockHandle, IHandleable<IBlockHandle> {
 	
 	public int getPackedMetadata();
 	

@@ -20,22 +20,48 @@
 
 package net.luxvacuos.voxel.universal.world.chunk;
 
-import net.luxvacuos.voxel.universal.resources.IDisposable;
 import net.luxvacuos.voxel.universal.world.block.IBlockHandle;
 import net.luxvacuos.voxel.universal.world.dimension.IDimensionHandle;
 import net.luxvacuos.voxel.universal.world.utils.ChunkNode;
-import net.luxvacuos.voxel.universal.world.utils.IHandle;
 
-public interface IChunkHandle extends IHandle, IDisposable {
+public final class ChunkHandle implements IChunkHandle {
 	
-	public ChunkNode getNode();
+	private IChunk parentChunk;
 
-	public int getX();
+	ChunkHandle(IChunk chunk) {
+		this.parentChunk = chunk;
+	}
 
-	public int getZ();
+	@Override
+	public ChunkNode getNode() {
+		return this.parentChunk.getNode();
+	}
 
-	public IBlockHandle getBlockAt(int x, int y, int z);
-	
-	public IDimensionHandle getDimension();
+	@Override
+	public int getX() {
+		return this.parentChunk.getX();
+	}
+
+	@Override
+	public int getZ() {
+		return this.parentChunk.getZ();
+	}
+
+	@Override
+	public IBlockHandle getBlockAt(int x, int y, int z) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public IDimensionHandle getDimension() {
+		return this.parentChunk.getDimension().getHandle();
+	}
+
+	@Override
+	public void dispose() {
+		// TODO Auto-generated method stub
+
+	}
 
 }

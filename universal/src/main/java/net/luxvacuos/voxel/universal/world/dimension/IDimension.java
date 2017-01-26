@@ -30,14 +30,21 @@ import net.luxvacuos.voxel.universal.core.IWorldSimulation;
 import net.luxvacuos.voxel.universal.util.IUpdatable;
 import net.luxvacuos.voxel.universal.world.block.IBlock;
 import net.luxvacuos.voxel.universal.world.chunk.IChunk;
+import net.luxvacuos.voxel.universal.world.utils.IHandleable;
 
-public interface IDimension extends IDimensionHandle, IUpdatable {
+public interface IDimension extends IDimensionHandle, IHandleable<IDimensionHandle>, IUpdatable {
 	
 	public String getWorldName();
 	
 	public int getID();
 	
+	@Override
+	public IBlock getBlockAt(int x, int y, int z);
+	
 	public boolean setBlockAt(int x, int y, int z, IBlock block);
+	
+	@Override
+	public IChunk getChunkAt(int x, int y, int z);
 	
 	public List<BoundingBox> getGlobalBoundingBox(BoundingBox box);
 	

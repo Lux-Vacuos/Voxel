@@ -20,15 +20,32 @@
 
 package net.luxvacuos.voxel.universal.world.dimension;
 
-import net.luxvacuos.voxel.universal.resources.IDisposable;
 import net.luxvacuos.voxel.universal.world.block.IBlockHandle;
 import net.luxvacuos.voxel.universal.world.chunk.IChunkHandle;
-import net.luxvacuos.voxel.universal.world.utils.IHandle;
 
-public interface IDimensionHandle extends IHandle, IDisposable {
+public final class DimensionHandle implements IDimensionHandle {
 	
-	public IBlockHandle getBlockAt(int x, int y, int z);
-	
-	public IChunkHandle getChunkAt(int x, int y, int z);
+	private IDimension parentDim;
+
+	DimensionHandle(IDimension dim) {
+		this.parentDim = dim;
+	}
+
+	@Override
+	public IBlockHandle getBlockAt(int x, int y, int z) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public IChunkHandle getChunkAt(int x, int y, int z) {
+		return this.parentDim.getChunkAt(x, y, z).getHandle();
+	}
+
+	@Override
+	public void dispose() {
+		// TODO Auto-generated method stub
+
+	}
 
 }

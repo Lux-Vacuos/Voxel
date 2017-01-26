@@ -152,4 +152,9 @@ public class Chunk implements IChunk {
 		return new BoundingBox(node.asVector3().add(this.aabb.min), node.asVector3().add(this.aabb.max));
 	}
 
+	@Override
+	public IChunkHandle getHandle() {
+		return new ChunkHandle(this);
+	}
+
 }

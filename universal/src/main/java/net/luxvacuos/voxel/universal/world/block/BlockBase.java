@@ -171,4 +171,9 @@ public class BlockBase implements IBlock {
 		this.z = node.getZ();
 	}
 
+	@Override
+	public IBlockHandle getHandle() {
+		return new BlockHandle(this);
+	}
+
 }

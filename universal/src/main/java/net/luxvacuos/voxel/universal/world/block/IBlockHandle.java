@@ -25,8 +25,9 @@ import com.hackhalo2.nbt.tags.TagCompound;
 import net.luxvacuos.voxel.universal.tools.ToolTier;
 import net.luxvacuos.voxel.universal.world.chunk.IChunkHandle;
 import net.luxvacuos.voxel.universal.world.dimension.IDimensionHandle;
+import net.luxvacuos.voxel.universal.world.utils.IHandle;
 
-public interface IBlockHandle {
+public interface IBlockHandle extends IHandle {
 	
 	public int getID();
 	

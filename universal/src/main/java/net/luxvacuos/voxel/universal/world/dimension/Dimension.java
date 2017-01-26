@@ -167,6 +167,11 @@ public class Dimension implements IDimension {
 		chunkManager.update(delta);
 		entitiesManager.update(delta);
 	}
+	
+	@Override
+	public IChunk getChunkAt(int x, int y, int z) {
+		return this.chunkManager.getChunkAt(ChunkNode.getFromBlockCoords(x, y, z));
+	}
 
 	@Override
 	public IBlock getBlockAt(int x, int y, int z) {
@@ -276,6 +281,11 @@ public class Dimension implements IDimension {
 	@Override
 	public WorldSimulation getWorldSimulator() {
 		return (WorldSimulation) this.worldSimulation;
+	}
+
+	@Override
+	public IDimensionHandle getHandle() {
+		return new DimensionHandle(this);
 	}
 
 }
