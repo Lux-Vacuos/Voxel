@@ -25,11 +25,17 @@ import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 
 import net.luxvacuos.voxel.client.core.ClientInternalSubsystem;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
+import net.luxvacuos.voxel.client.rendering.api.nanovg.WM;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Renderer;
-import net.luxvacuos.voxel.client.ui.UIImage;
-import net.luxvacuos.voxel.client.ui.UIPanel;
+import net.luxvacuos.voxel.client.ui.menus.MainMenu;
+import net.luxvacuos.voxel.client.ui.nextui.Alignment;
+import net.luxvacuos.voxel.client.ui.nextui.Image;
+import net.luxvacuos.voxel.client.ui.nextui.RootComponent;
+import net.luxvacuos.voxel.client.ui.nextui.Spinner;
 import net.luxvacuos.voxel.universal.core.AbstractVoxel;
 import net.luxvacuos.voxel.universal.core.TaskManager;
+import net.luxvacuos.voxel.universal.core.states.AbstractState;
+import net.luxvacuos.voxel.universal.core.states.StateMachine;
 
 /**
  * Splash screen State, show only in the load.
@@ -37,11 +43,9 @@ import net.luxvacuos.voxel.universal.core.TaskManager;
  * @author Guerra24 <pablo230699@hotmail.com>
  *
  */
-public class SplashScreenState extends AbstractFadeState {
+public class SplashScreenState extends AbstractState {
 
-	private UIPanel uIPanel;
-	private UIImage luxVacuosLogo;
-	private float wait = 0;
+	private RootComponent component;
 
 	public SplashScreenState() {
 		super(StateNames.SPLASH_SCREEN);
@@ -50,33 +54,33 @@ public class SplashScreenState extends AbstractFadeState {
 	@Override
 	public void init() {
 		Window window = ClientInternalSubsystem.getInstance().getGameWindow();
-		uIPanel = new UIPanel(window.getWidth() / 2, window.getHeight() / 2, 0, 0);
-		uIPanel.setBorderColor(0, 0, 0, 0);
-		uIPanel.setFillColor(0, 0, 0, 0);
-		uIPanel.setGradientColor(0, 0, 0, 0);
 
-		luxVacuosLogo = new UIImage(-256, 256, 512, 512, ClientInternalSubsystem.getInstance().getGameWindow()
-				.getResourceLoader().loadNVGTexture("LuxVacuos-Logo"));
-		/*
-		 * luxVacuosLogo.setOnUpdate(new OnAction() { private float speed = 0;
-		 * 
-		 * @Override public void onAction(UIComponent component, float delta) {
-		 * UIImage img = (UIImage) component; if (img.getY() < 200 + 100 &&
-		 * speed <= 1) speed += 1 * delta; else if (speed > 0) speed -= 1 *
-		 * delta; else speed = 0; speed = Maths.clamp(speed, 0, 1);
-		 * img.addPosition(0, speed); } });
-		 */
-		uIPanel.addChildren(luxVacuosLogo);
-	}
+		component = new RootComponent(-2, window.getHeight() + 33, window.getWidth() + 4, window.getHeight() + 35, "");
+		component.setAlwaysOnTop(true);
+		component.setDecorations(false);
+		component.setBackgroundColor(1, 1, 1, 1);
+		Image lv = new Image(0, 0, 512, 512, ClientInternalSubsystem.getInstance().getGameWindow().getResourceLoader()
+				.loadNVGTexture("LuxVacuos-Logo"));
+		lv.setAlignment(Alignment.CENTER);
+		lv.setWindowAlignment(Alignment.CENTER);
 
-	@Override
-	public void start() {
-		uIPanel.setFadeAlpha(0);
+		Spinner spinner = new Spinner(0, -220, 20);
+		spinner.setWindowAlignment(Alignment.CENTER);
+
+		component.addComponent(lv);
+		component.addComponent(spinner);
+
+		WM.getWM().addWindow(component);
 	}
 
 	@Override
 	public void end() {
-		uIPanel.setFadeAlpha(1);
+		super.end();
+		component.closeWindow();
+		Window window = ClientInternalSubsystem.getInstance().getGameWindow();
+		RootComponent mainMenu = new MainMenu(20, window.getHeight() - 20, window.getWidth() - 40,
+				window.getHeight() - 40);
+		WM.getWM().addWindow(mainMenu);
 	}
 
 	@Override
@@ -85,30 +89,15 @@ public class SplashScreenState extends AbstractFadeState {
 		Renderer.clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		Renderer.clearColors(1, 1, 1, 1);
 		window.beingNVGFrame();
-		uIPanel.render(window.getID());
+		WM.getWM().render();
 		window.endNVGFrame();
 	}
 
 	@Override
 	public void update(AbstractVoxel voxel, float delta) {
-		wait += 1 * delta;
-		if (wait > 2)
-			uIPanel.update(delta);
-
-		if (wait > 3 && !this.switching && TaskManager.isEmpty())
-			this.switchTo(StateNames.MAIN_MENU);
-
-		super.update(voxel, delta);
-	}
-
-	@Override
-	protected boolean fadeIn(float delta) {
-		return this.uIPanel.fadeIn(4, delta);
-	}
-
-	@Override
-	protected boolean fadeOut(float delta) {
-		return this.uIPanel.fadeOut(4, delta);
+		WM.getWM().update(delta);
+		if (TaskManager.isEmpty())
+			StateMachine.setCurrentState(StateNames.MAIN_MENU);
 	}
 
 }

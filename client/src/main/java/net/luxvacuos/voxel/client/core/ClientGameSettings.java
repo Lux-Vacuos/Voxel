@@ -20,6 +20,7 @@
 
 package net.luxvacuos.voxel.client.core;
 
+import net.luxvacuos.voxel.client.rendering.api.nanovg.WM;
 import net.luxvacuos.voxel.universal.core.AbstractGameSettings;
 
 /**
@@ -79,6 +80,8 @@ public final class ClientGameSettings extends AbstractGameSettings {
 		// Parse Chromatic Aberration and Lens Flares
 		ClientVariables.useChromaticAberration = Boolean.parseBoolean(getValue("useChromaticAberration", "false"));
 		ClientVariables.useLensFlares = Boolean.parseBoolean(getValue("useLensFlares", "false"));
+		
+		WM.invertWindowButtons = Boolean.parseBoolean(getValue("WM_InvertButtons", "false"));
 	}
 
 	/**
@@ -106,6 +109,7 @@ public final class ClientGameSettings extends AbstractGameSettings {
 		registerValue("shadowMapDrawDistance", Integer.toString(ClientVariables.shadowMapDrawDistance));
 		registerValue("useChromaticAberration", Boolean.toString(ClientVariables.useChromaticAberration));
 		registerValue("useLensFlares", Boolean.toString(ClientVariables.useLensFlares));
+		registerValue("WM_InvertButtons", Boolean.toString(WM.invertWindowButtons));
 	}
 
 }

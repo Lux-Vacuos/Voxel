@@ -28,7 +28,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.ParticleTexture;
-import net.luxvacuos.voxel.client.resources.ResourceLoader;
 import net.luxvacuos.voxel.client.resources.models.InsertionSort;
 import net.luxvacuos.voxel.client.world.entities.Camera;
 import net.luxvacuos.voxel.client.world.particles.Particle;
@@ -37,7 +36,7 @@ public class ParticleDomain {
 
 	private static Map<ParticleTexture, List<Particle>> particles;
 
-	public static void init(ResourceLoader loader) {
+	public static void init() {
 		particles = new HashMap<ParticleTexture, List<Particle>>();
 	}
 

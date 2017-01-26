@@ -31,7 +31,7 @@ import net.luxvacuos.voxel.client.rendering.api.nanovg.NRendering;
 public class Text extends Component {
 	private String text, font = "Roboto-Regular";
 	private int align = NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE;
-	private int fontSize = 25;
+	private float fontSize = 25;
 	private NVGColor color = NRendering.rgba(255, 255, 255, 255, NVGColor.create());
 
 	public Text(String text, float x, float y) {
@@ -65,7 +65,7 @@ public class Text extends Component {
 		color.a(a);
 	}
 
-	public void setFontSize(int fontSize) {
+	public void setFontSize(float fontSize) {
 		this.fontSize = fontSize;
 	}
 

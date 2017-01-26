@@ -57,7 +57,6 @@ public class ClientVariables extends GlobalVariables {
 	public static float GREEN = 0.8f;
 	public static float BLUE = 1f;
 	public static Vector3d skyColor = new Vector3d(ClientVariables.RED, ClientVariables.GREEN, ClientVariables.BLUE);
-	public static boolean runningOnMac = false;
 	public static boolean raining = false;
 	public static String assets = "voxel";
 	public static final boolean WSL = false;

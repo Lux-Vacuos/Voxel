@@ -25,6 +25,8 @@ import net.luxvacuos.igl.Logger;
 public final class WM {
 
 	private static IWM iwm;
+	
+	public static boolean invertWindowButtons = false;
 
 	public static void setWM(IWM iwm) {
 		if (WM.iwm != null)

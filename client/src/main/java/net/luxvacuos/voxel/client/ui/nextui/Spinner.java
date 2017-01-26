@@ -21,14 +21,36 @@
 package net.luxvacuos.voxel.client.ui.nextui;
 
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
-import net.luxvacuos.voxel.universal.resources.IDisposable;
+import net.luxvacuos.voxel.client.rendering.api.nanovg.NRendering;
 
-public interface IComponent extends IDisposable {
+public class Spinner extends Component {
+
+	private float progress = 0;
+	private float r;
+
+	public Spinner(float x, float y, float r) {
+		this.x = x;
+		this.y = y;
+		this.r = r;
+		this.w = r;
+		this.h = r;
+	}
+
+	@Override
+	public void render(Window window) {
+		NRendering.renderSpinner(window.getNVGID(), rootComponent.rootX + alignedX,
+				window.getHeight() - rootComponent.rootY - alignedY - h, r, progress);
+	}
+
+	@Override
+	public void update(float delta, Window window) {
+		super.update(delta, window);
+		progress += 1 * delta;
+	}
 	
-	public void init();
-	
-	public void render(Window window);
-	
-	public void update(float delta, Window window);
+	@Override
+	public void setAlignment(Alignment alignment) {
+		throw new UnsupportedOperationException("Not Available");
+	}
 
 }

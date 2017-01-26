@@ -48,8 +48,8 @@ public abstract class NWindow implements INWindow {
 	@Override
 	public void render(Window window, NWM nwm) {
 		if (!hidden) {
-			NRendering.renderWindow(window.getNVGID(), title, font, x, window.getHeight() - y, w, h,
-					backgroundStyle, backgroundColor, decorations, resizable);
+			NRendering.renderWindow(window.getNVGID(), title, font, x, window.getHeight() - y, w, h, backgroundStyle,
+					backgroundColor, decorations, WM.invertWindowButtons, resizable);
 			renderApp(window);
 		}
 	}
@@ -58,33 +58,59 @@ public abstract class NWindow implements INWindow {
 	public void update(float delta, Window window, NWM nwm) {
 		if (decorations || hidden) {
 			if (Mouse.isButtonDown(0)) {
+				if (WM.invertWindowButtons) {
+					if (Mouse.getX() > x + 33 && Mouse.getY() < y - 2 && Mouse.getX() < x + 62
+							&& Mouse.getY() > y - 31 && resizable) {
+						maximized = !maximized;
+						if (maximized) {
+							oldX = x;
+							oldY = y;
+							oldW = w;
+							oldH = h;
+							x = 0;
+							y = window.getHeight();
+							w = window.getWidth();
+							h = window.getHeight();
+						} else {
+							x = oldX;
+							y = oldY;
+							w = oldW;
+							h = oldH;
+						}
+					}
+					if (Mouse.getX() > x + 2 && Mouse.getY() < y - 2 && Mouse.getX() < x + 32
+							&& Mouse.getY() > y - 31) {
+						closeWindow();
+					}
+				} else {
+					if (Mouse.getX() > x + w - 62 && Mouse.getY() < y - 2 && Mouse.getX() < x + w - 33
+							&& Mouse.getY() > y - 31 && resizable) {
+						maximized = !maximized;
+						if (maximized) {
+							oldX = x;
+							oldY = y;
+							oldW = w;
+							oldH = h;
+							x = 0;
+							y = window.getHeight();
+							w = window.getWidth();
+							h = window.getHeight();
+						} else {
+							x = oldX;
+							y = oldY;
+							w = oldW;
+							h = oldH;
+						}
+					}
+					if (Mouse.getX() > x + w - 31 && Mouse.getY() < y - 2 && Mouse.getX() < x + w - 2
+							&& Mouse.getY() > y - 31) {
+						closeWindow();
+					}
+				}
 				if (Mouse.getX() > x && Mouse.getY() < y && Mouse.getX() < x + w && Mouse.getY() > y - 32 && draggable
 						&& !maximized) {
 					x += Mouse.getDX();
 					y += Mouse.getDY();
-				}
-				if (Mouse.getX() > x + w - 31 && Mouse.getY() < y - 2 && Mouse.getX() < x + w - 2
-						&& Mouse.getY() > y - 31) {
-					closeWindow();
-				}
-				if (Mouse.getX() > x + w - 62 && Mouse.getY() < y - 2 && Mouse.getX() < x + w - 33
-						&& Mouse.getY() > y - 31 && resizable) {
-					maximized = !maximized;
-					if (maximized) {
-						oldX = x;
-						oldY = y;
-						oldW = w;
-						oldH = h;
-						x = 0;
-						y = window.getHeight();
-						w = window.getWidth();
-						h = window.getHeight();
-					} else {
-						x = oldX;
-						y = oldY;
-						w = oldW;
-						h = oldH;
-					}
 				}
 				if (Mouse.getX() > x + w - 20 && Mouse.getY() < y - h + 20 && Mouse.getX() < x + w + 20
 						&& Mouse.getY() > y - h - 20 && resizable) {
@@ -148,7 +174,7 @@ public abstract class NWindow implements INWindow {
 	public void setHidden(boolean hidden) {
 		this.hidden = hidden;
 	}
-	
+
 	@Override
 	public void setAlwaysOnTop(boolean alwaysOnTop) {
 		this.alwaysOnTop = alwaysOnTop;
@@ -198,7 +224,7 @@ public abstract class NWindow implements INWindow {
 	public boolean shouldClose() {
 		return exit;
 	}
-	
+
 	@Override
 	public boolean isAlwaysOnTop() {
 		return alwaysOnTop;

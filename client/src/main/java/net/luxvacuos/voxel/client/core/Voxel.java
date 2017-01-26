@@ -58,7 +58,6 @@ import net.luxvacuos.voxel.client.rendering.api.opengl.Renderer;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.Material;
 import net.luxvacuos.voxel.universal.api.ModsHandler;
 import net.luxvacuos.voxel.universal.bootstrap.AbstractBootstrap;
-import net.luxvacuos.voxel.universal.bootstrap.Platform;
 import net.luxvacuos.voxel.universal.core.AbstractVoxel;
 import net.luxvacuos.voxel.universal.core.EngineType;
 import net.luxvacuos.voxel.universal.core.TaskManager;
@@ -137,14 +136,12 @@ public class Voxel extends AbstractVoxel {
 		Logger.log("GLSL Version: " + CoreInfo.GLSLVersion);
 		Logger.log("Vendor: " + CoreInfo.Vendor);
 		Logger.log("Renderer: " + CoreInfo.Renderer);
-		if (bootstrap.getPlatform().equals(Platform.MACOSX)) {
-			ClientVariables.runningOnMac = true;
-		}
 		modsHandler = new ModsHandler(this);
 		modsHandler.setMoltenAPI(new MoltenAPI());
 		modsHandler.preInit();
-		Material.init(ClientInternalSubsystem.getInstance().getGameWindow().getResourceLoader());
-		ParticleDomain.init(ClientInternalSubsystem.getInstance().getGameWindow().getResourceLoader());
+		TaskManager.addTask(
+				() -> Material.init(ClientInternalSubsystem.getInstance().getGameWindow().getResourceLoader()));
+		TaskManager.addTask(() -> ParticleDomain.init());
 	}
 
 	/**

@@ -28,6 +28,7 @@ import net.luxvacuos.voxel.client.rendering.api.opengl.objects.Material;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.Texture;
 import net.luxvacuos.voxel.client.resources.ResourceLoader;
 import net.luxvacuos.voxel.client.resources.models.TessellatorTextureAtlas;
+import net.luxvacuos.voxel.universal.core.TaskManager;
 
 public class BlocksResources {
 
@@ -36,13 +37,13 @@ public class BlocksResources {
 
 	public static void createBlocks(ResourceLoader loader) {
 
-		tessellatorTextureAtlas = new TessellatorTextureAtlas(256, 256);
 		Texture blocks = loader.loadTexture("blocks", GL_NEAREST, false);
 		Texture blocks_n = loader.loadTextureMisc("blocks_n", GL_NEAREST, false);
 		Texture blocks_r = loader.loadTextureMisc("blocks_r", GL_NEAREST, false);
 		Texture blocks_m = loader.loadTextureMisc("blocks_m", GL_NEAREST, false);
 		material = new Material(new Vector4f(1f), 1f, 1f, blocks, blocks_n, blocks_r, blocks_m);
-		loadTexCoords();
+		TaskManager.addTask(() -> tessellatorTextureAtlas = new TessellatorTextureAtlas(256, 256));
+		TaskManager.addTask(() -> loadTexCoords());
 	}
 
 	private static void loadTexCoords() {

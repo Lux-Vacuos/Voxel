@@ -31,7 +31,7 @@ public class TaskManager {
 	private static boolean crashed = false;
 
 	public static void update() {
-		if(crashed)
+		if (crashed)
 			return;
 		if (!tasks.isEmpty()) {
 			timer += 1 * 0.33;
@@ -49,8 +49,8 @@ public class TaskManager {
 	public static boolean isEmpty() {
 		return tasks.isEmpty();
 	}
-	
-	public static void crash(){
+
+	public static void crash() {
 		crashed = true;
 	}
 

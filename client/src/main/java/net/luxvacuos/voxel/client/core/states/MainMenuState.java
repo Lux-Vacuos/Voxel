@@ -33,8 +33,6 @@ import net.luxvacuos.voxel.client.core.ClientInternalSubsystem;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.WM;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Renderer;
-import net.luxvacuos.voxel.client.ui.menus.MainMenu;
-import net.luxvacuos.voxel.client.ui.nextui.RootComponent;
 import net.luxvacuos.voxel.universal.core.AbstractVoxel;
 import net.luxvacuos.voxel.universal.core.Scripting;
 import net.luxvacuos.voxel.universal.core.states.AbstractState;
@@ -58,15 +56,9 @@ public class MainMenuState extends AbstractState {
 	public void init() {
 		Window window = ClientInternalSubsystem.getInstance().getGameWindow();
 
-		RootComponent mainMenu = new MainMenu(20, window.getHeight() - 20, window.getWidth() - 40,
-				window.getHeight() - 40);
-
-		WM.getWM().addWindow(mainMenu);
-
 		scripting = new Scripting();
 		script = scripting.compile("test");
 		bindings = new SimpleBindings();
-		bindings.put("window", window);
 		bindings.put("kb", window.getKeyboardHandler());
 
 	}

@@ -187,17 +187,6 @@ public class Maths {
 	}
 
 	/**
-	 * Clamp the value to Generation Terrain
-	 * 
-	 * @param d
-	 *            Value
-	 * @return Clamped Value
-	 */
-	public static float clamp(double d) {
-		return (float) Math.max(0, Math.min(128, d));
-	}
-
-	/**
 	 * 
 	 * Clamp a value
 	 * 
