@@ -23,22 +23,44 @@ package net.luxvacuos.voxel.client.ui.nextui;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.NRendering;
 
-public class Image extends Component {
+public class EditBox extends Component {
+	private String text, font = "Poppins-Medium";
+	private float fontSize = 20f;
 
-	private int image;
-
-	public Image(float x, float y, float w, float h, int image) {
+	public EditBox(float x, float y, float width, float height, String text) {
 		this.x = x;
 		this.y = y;
-		this.w = w;
-		this.h = h;
-		this.image = image;
+		this.w = width;
+		this.h = height;
+		this.text = text;
 	}
 
 	@Override
 	public void render(Window window) {
-		NRendering.renderImage(window.getNVGID(), rootComponent.rootX + alignedX,
-				window.getHeight() - rootComponent.rootY - alignedY - h, w, h, image, 1);
+		NRendering.renderEditBox(window.getNVGID(), text, font, rootComponent.rootX + alignedX,
+				window.getHeight() - rootComponent.rootY - alignedY - h, w, h, fontSize);
 	}
 
+	@Override
+	public void update(float delta, Window window) {
+		window.getKeyboardHandler().enableTextInput();
+		text = window.getKeyboardHandler().handleInput(text);
+		super.update(delta, window);
+	}
+
+	public void setFontSize(float fontSize) {
+		this.fontSize = fontSize;
+	}
+
+	public void setFont(String font) {
+		this.font = font;
+	}
+
+	public void setText(String text) {
+		this.text = text;
+	}
+
+	public String getText() {
+		return text;
+	}
 }

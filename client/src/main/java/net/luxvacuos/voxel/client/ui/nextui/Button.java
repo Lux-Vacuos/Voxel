@@ -25,14 +25,14 @@ import java.nio.ByteBuffer;
 import org.lwjgl.nanovg.NVGColor;
 
 import net.luxvacuos.voxel.client.input.Mouse;
-import net.luxvacuos.voxel.client.rendering.api.glfw.WindowManager;
-import net.luxvacuos.voxel.client.rendering.api.nanovg.UIRendering;
+import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
+import net.luxvacuos.voxel.client.rendering.api.nanovg.NRendering;
 import net.luxvacuos.voxel.client.ui.OnAction;
 
 public class Button extends Component {
 
 	private String text = "missigno", font = "Poppins-Medium", entypo = "Entypo";
-	private NVGColor color = UIRendering.rgba(255, 255, 255, 255);
+	private NVGColor color = NRendering.rgba(255, 255, 255, 255);
 	private ByteBuffer preicon;
 	private OnAction onPress;
 	private float fontSize = 21;
@@ -47,20 +47,18 @@ public class Button extends Component {
 	}
 
 	@Override
-	public void render(long windowID) {
-		UIRendering.renderButton(windowID, preicon, text, font, entypo, rootComponent.rootX + alignedX,
-				WindowManager.getWindow(windowID).getHeight() - rootComponent.rootY - alignedY - h, w, h, color,
-				this.insideButton(), fontSize, 1);
-		super.render(windowID);
+	public void render(Window window) {
+		NRendering.renderButton(window.getNVGID(), preicon, text, font, entypo, rootComponent.rootX + alignedX,
+				window.getHeight() - rootComponent.rootY - alignedY - h, w, h, color, this.insideButton(), fontSize);
 	}
 
 	@Override
-	public void update(float delta) {
+	public void update(float delta, Window window) {
 		if (onPress != null)
 			if (pressed() && !pressed)
 				onPress.onAction(null, delta);
 		pressed = pressed();
-		super.update(delta);
+		super.update(delta, window);
 	}
 
 	public boolean insideButton() {
@@ -76,8 +74,11 @@ public class Button extends Component {
 			return false;
 	}
 
-	public void setColor(int r, int g, int b, int a) {
-		UIRendering.rgba(r, g, b, a, color);
+	public void setColor(float r, float g, float b, float a) {
+		color.r(r);
+		color.g(g);
+		color.b(b);
+		color.a(a);
 	}
 
 	public void setText(String text) {

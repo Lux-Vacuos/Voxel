@@ -20,16 +20,20 @@
 
 package net.luxvacuos.voxel.client.ui.nextui;
 
-public abstract class Component {
+import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
+
+public abstract class Component implements IComponent {
 
 	protected RootComponent rootComponent;
-	protected Alignment alignment = Alignment.LEFT_TOP, windowAlignment = Alignment.LEFT_BOTTOM;
+	protected Alignment alignment = Alignment.RIGHT_TOP, windowAlignment = Alignment.LEFT_BOTTOM;
 	protected float alignedX, alignedY, x, y, w, h;
 
+	@Override
 	public void init() {
 	}
 
-	public void update(float delta) {
+	@Override
+	public void update(float delta, Window window) {
 		// TODO: Optimize this Sh*t
 		switch (alignment) {
 		case LEFT:
@@ -113,9 +117,7 @@ public abstract class Component {
 		}
 	}
 
-	public void render(long windowID) {
-	}
-
+	@Override
 	public void dispose() {
 	}
 

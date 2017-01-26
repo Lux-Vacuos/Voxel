@@ -22,6 +22,7 @@ package net.luxvacuos.voxel.client.ui.menus;
 
 import net.luxvacuos.voxel.client.core.ClientInternalSubsystem;
 import net.luxvacuos.voxel.client.core.ClientVariables;
+import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.ui.nextui.Alignment;
 import net.luxvacuos.voxel.client.ui.nextui.Button;
 import net.luxvacuos.voxel.client.ui.nextui.RootComponent;
@@ -33,8 +34,10 @@ public class OptionsMenu extends RootComponent {
 	}
 
 	@Override
-	public void initApp() {
+	public void initApp(Window window) {
 		super.setAlwaysOnTop(true);
+		super.setBackgroundColor(0.4f, 0.4f, 0.4f, 1f);
+		
 		Button backButton = new Button(0, 40, 200, 40, "Close");
 		backButton.setAlignment(Alignment.CENTER);
 		backButton.setWindowAlignment(Alignment.BOTTOM);
@@ -78,92 +81,92 @@ public class OptionsMenu extends RootComponent {
 
 		if (ClientVariables.useVolumetricLight) {
 			godraysButton.setText("Volumetric Light: ON");
-			godraysButton.setColor(100, 255, 100, 255);
+			godraysButton.setColor(0.2f, 1.0f, 0.2f, 1.0f);
 		} else {
 			godraysButton.setText("Volumetric Light: OFF");
-			godraysButton.setColor(255, 100, 100, 255);
+			godraysButton.setColor(1.0f, 0.2f, 0.2f, 1.0f);
 		}
 
 		if (ClientVariables.useShadows) {
 			shadowsButton.setText("Shadows: ON");
-			shadowsButton.setColor(100, 255, 100, 255);
+			shadowsButton.setColor(0.2f, 1.0f, 0.2f, 1.0f);
 		} else {
 			shadowsButton.setText("Shadows: OFF");
-			shadowsButton.setColor(255, 100, 100, 255);
+			shadowsButton.setColor(1.0f, 0.2f, 0.2f, 1.0f);
 		}
 
 		if (ClientVariables.useDOF) {
 			dofButton.setText("Depth of Field: ON");
-			dofButton.setColor(100, 255, 100, 255);
+			dofButton.setColor(0.2f, 1.0f, 0.2f, 1.0f);
 		} else {
 			dofButton.setText("Depth of Field: OFF");
-			dofButton.setColor(255, 100, 100, 255);
+			dofButton.setColor(1.0f, 0.2f, 0.2f, 1.0f);
 		}
 
 		if (ClientVariables.useFXAA) {
 			fxaaButton.setText("FXAA: ON");
-			fxaaButton.setColor(100, 255, 100, 255);
+			fxaaButton.setColor(0.2f, 1.0f, 0.2f, 1.0f);
 		} else {
 			fxaaButton.setText("FXAA: OFF");
-			fxaaButton.setColor(255, 100, 100, 255);
+			fxaaButton.setColor(1.0f, 0.2f, 0.2f, 1.0f);
 		}
 
 		if (ClientVariables.useMotionBlur) {
 			motionBlurButton.setText("Motion Blur: ON");
-			motionBlurButton.setColor(100, 255, 100, 255);
+			motionBlurButton.setColor(0.2f, 1.0f, 0.2f, 1.0f);
 		} else {
 			motionBlurButton.setText("Motion Blur: OFF");
-			motionBlurButton.setColor(255, 100, 100, 255);
+			motionBlurButton.setColor(1.0f, 0.2f, 0.2f, 1.0f);
 		}
 
 		if (ClientVariables.useReflections) {
 			reflectionsButton.setText("Reflections: ON");
-			reflectionsButton.setColor(100, 255, 100, 255);
+			reflectionsButton.setColor(0.2f, 1.0f, 0.2f, 1.0f);
 		} else {
 			reflectionsButton.setText("Reflections: OFF");
-			reflectionsButton.setColor(255, 100, 100, 255);
+			reflectionsButton.setColor(1.0f, 0.2f, 0.2f, 1.0f);
 		}
 
 		if (ClientVariables.useParallax) {
 			parallaxButton.setText("Parallax: ON");
-			parallaxButton.setColor(100, 255, 100, 255);
+			parallaxButton.setColor(0.2f, 1.0f, 0.2f, 1.0f);
 		} else {
 			parallaxButton.setText("Parallax: OFF");
-			parallaxButton.setColor(255, 100, 100, 255);
+			parallaxButton.setColor(1.0f, 0.2f, 0.2f, 1.0f);
 		}
 
 		if (ClientVariables.useAmbientOcclusion) {
 			ambientOccButton.setText("Ambient Occlusion: ON");
-			ambientOccButton.setColor(100, 255, 100, 255);
+			ambientOccButton.setColor(0.2f, 1.0f, 0.2f, 1.0f);
 		} else {
 			ambientOccButton.setText("Ambient Occlusion: OFF");
-			ambientOccButton.setColor(255, 100, 100, 255);
+			ambientOccButton.setColor(1.0f, 0.2f, 0.2f, 1.0f);
 		}
 
 		if (ClientVariables.useChromaticAberration) {
 			chromaticAberrationButton.setText("Chromatic Aberration: ON");
-			chromaticAberrationButton.setColor(100, 255, 100, 255);
+			chromaticAberrationButton.setColor(0.2f, 1.0f, 0.2f, 1.0f);
 		} else {
 			chromaticAberrationButton.setText("Chromatic Aberration: OFF");
-			chromaticAberrationButton.setColor(255, 100, 100, 255);
+			chromaticAberrationButton.setColor(1.0f, 0.2f, 0.2f, 1.0f);
 		}
 
 		if (ClientVariables.useLensFlares) {
 			lensFlaresButton.setText("Lens Flares: ON");
-			lensFlaresButton.setColor(100, 255, 100, 255);
+			lensFlaresButton.setColor(0.2f, 1.0f, 0.2f, 1.0f);
 		} else {
 			lensFlaresButton.setText("Lens Flares: OFF");
-			lensFlaresButton.setColor(255, 100, 100, 255);
+			lensFlaresButton.setColor(1.0f, 0.2f, 0.2f, 1.0f);
 		}
 
 		shadowsButton.setOnButtonPress((button, delta) -> {
 			ClientVariables.useShadows = !ClientVariables.useShadows;
 			if (ClientVariables.useShadows) {
 				shadowsButton.setText("Shadows: ON");
-				shadowsButton.setColor(100, 255, 100, 255);
+				shadowsButton.setColor(0.2f, 1.0f, 0.2f, 1.0f);
 			} else {
 				shadowsButton.setText("Shadows: OFF");
-				shadowsButton.setColor(255, 100, 100, 255);
+				shadowsButton.setColor(1.0f, 0.2f, 0.2f, 1.0f);
 			}
 		});
 
@@ -171,10 +174,10 @@ public class OptionsMenu extends RootComponent {
 			ClientVariables.useDOF = !ClientVariables.useDOF;
 			if (ClientVariables.useDOF) {
 				dofButton.setText("Depth of Field: ON");
-				dofButton.setColor(100, 255, 100, 255);
+				dofButton.setColor(0.2f, 1.0f, 0.2f, 1.0f);
 			} else {
 				dofButton.setText("Depth of Field: OFF");
-				dofButton.setColor(255, 100, 100, 255);
+				dofButton.setColor(1.0f, 0.2f, 0.2f, 1.0f);
 			}
 
 		});
@@ -183,10 +186,10 @@ public class OptionsMenu extends RootComponent {
 			ClientVariables.useVolumetricLight = !ClientVariables.useVolumetricLight;
 			if (ClientVariables.useVolumetricLight) {
 				godraysButton.setText("Volumetric Light: ON");
-				godraysButton.setColor(100, 255, 100, 255);
+				godraysButton.setColor(0.2f, 1.0f, 0.2f, 1.0f);
 			} else {
 				godraysButton.setText("Volumetric Light: OFF");
-				godraysButton.setColor(255, 100, 100, 255);
+				godraysButton.setColor(1.0f, 0.2f, 0.2f, 1.0f);
 			}
 		});
 
@@ -195,10 +198,10 @@ public class OptionsMenu extends RootComponent {
 
 			if (ClientVariables.useFXAA) {
 				fxaaButton.setText("FXAA: ON");
-				fxaaButton.setColor(100, 255, 100, 255);
+				fxaaButton.setColor(0.2f, 1.0f, 0.2f, 1.0f);
 			} else {
 				fxaaButton.setText("FXAA: OFF");
-				fxaaButton.setColor(255, 100, 100, 255);
+				fxaaButton.setColor(1.0f, 0.2f, 0.2f, 1.0f);
 			}
 		});
 
@@ -206,10 +209,10 @@ public class OptionsMenu extends RootComponent {
 			ClientVariables.useParallax = !ClientVariables.useParallax;
 			if (ClientVariables.useParallax) {
 				parallaxButton.setText("Parallax: ON");
-				parallaxButton.setColor(100, 255, 100, 255);
+				parallaxButton.setColor(0.2f, 1.0f, 0.2f, 1.0f);
 			} else {
 				parallaxButton.setText("Parallax: OFF");
-				parallaxButton.setColor(255, 100, 100, 255);
+				parallaxButton.setColor(1.0f, 0.2f, 0.2f, 1.0f);
 			}
 
 		});
@@ -218,10 +221,10 @@ public class OptionsMenu extends RootComponent {
 			ClientVariables.useMotionBlur = !ClientVariables.useMotionBlur;
 			if (ClientVariables.useMotionBlur) {
 				motionBlurButton.setText("Motion Blur: ON");
-				motionBlurButton.setColor(100, 255, 100, 255);
+				motionBlurButton.setColor(0.2f, 1.0f, 0.2f, 1.0f);
 			} else {
 				motionBlurButton.setText("Motion Blur: OFF");
-				motionBlurButton.setColor(255, 100, 100, 255);
+				motionBlurButton.setColor(1.0f, 0.2f, 0.2f, 1.0f);
 			}
 
 		});
@@ -230,10 +233,10 @@ public class OptionsMenu extends RootComponent {
 			ClientVariables.useReflections = !ClientVariables.useReflections;
 			if (ClientVariables.useReflections) {
 				reflectionsButton.setText("Reflections: ON");
-				reflectionsButton.setColor(100, 255, 100, 255);
+				reflectionsButton.setColor(0.2f, 1.0f, 0.2f, 1.0f);
 			} else {
 				reflectionsButton.setText("Reflections: OFF");
-				reflectionsButton.setColor(255, 100, 100, 255);
+				reflectionsButton.setColor(1.0f, 0.2f, 0.2f, 1.0f);
 			}
 		});
 
@@ -241,10 +244,10 @@ public class OptionsMenu extends RootComponent {
 			ClientVariables.useAmbientOcclusion = !ClientVariables.useAmbientOcclusion;
 			if (ClientVariables.useAmbientOcclusion) {
 				ambientOccButton.setText("Ambient Occlusion: ON");
-				ambientOccButton.setColor(100, 255, 100, 255);
+				ambientOccButton.setColor(0.2f, 1.0f, 0.2f, 1.0f);
 			} else {
 				ambientOccButton.setText("Ambient Occlusion: OFF");
-				ambientOccButton.setColor(255, 100, 100, 255);
+				ambientOccButton.setColor(1.0f, 0.2f, 0.2f, 1.0f);
 			}
 		});
 
@@ -252,10 +255,10 @@ public class OptionsMenu extends RootComponent {
 			ClientVariables.useChromaticAberration = !ClientVariables.useChromaticAberration;
 			if (ClientVariables.useChromaticAberration) {
 				chromaticAberrationButton.setText("Chromatic Aberration: ON");
-				chromaticAberrationButton.setColor(100, 255, 100, 255);
+				chromaticAberrationButton.setColor(0.2f, 1.0f, 0.2f, 1.0f);
 			} else {
 				chromaticAberrationButton.setText("Chromatic Aberration: OFF");
-				chromaticAberrationButton.setColor(255, 100, 100, 255);
+				chromaticAberrationButton.setColor(1.0f, 0.2f, 0.2f, 1.0f);
 			}
 		});
 
@@ -263,10 +266,10 @@ public class OptionsMenu extends RootComponent {
 			ClientVariables.useLensFlares = !ClientVariables.useLensFlares;
 			if (ClientVariables.useLensFlares) {
 				lensFlaresButton.setText("Lens Flares: ON");
-				lensFlaresButton.setColor(100, 255, 100, 255);
+				lensFlaresButton.setColor(0.2f, 1.0f, 0.2f, 1.0f);
 			} else {
 				lensFlaresButton.setText("Lens Flares: OFF");
-				lensFlaresButton.setColor(255, 100, 100, 255);
+				lensFlaresButton.setColor(1.0f, 0.2f, 0.2f, 1.0f);
 			}
 		});
 
@@ -282,7 +285,7 @@ public class OptionsMenu extends RootComponent {
 		super.addComponent(chromaticAberrationButton);
 		super.addComponent(lensFlaresButton);
 
-		super.initApp();
+		super.initApp(window);
 	}
 
 }

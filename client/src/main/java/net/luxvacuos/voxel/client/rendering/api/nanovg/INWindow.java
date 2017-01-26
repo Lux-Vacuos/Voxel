@@ -20,26 +20,28 @@
 
 package net.luxvacuos.voxel.client.rendering.api.nanovg;
 
+import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.NRendering.BackgroundStyle;
-import net.luxvacuos.voxel.universal.resources.IDisposable;
 
-public interface INWindow extends IDisposable {
+public interface INWindow {
 
 	public enum WindowClose {
 		DISPOSE, DO_NOTHING
 	};
 
-	public void initApp();
+	public void initApp(Window window);
 
-	public void renderApp(long windowID);
+	public void renderApp(Window window);
 
-	public void updateApp(float delta);
+	public void updateApp(float delta, Window window);
 
-	public void disposeApp();
+	public void disposeApp(Window window);
 
-	public void render(long windowID, NWM nwm);
+	public void render(Window window, NWM nwm);
 
-	public void update(float delta, long windowID, NWM nwm);
+	public void update(float delta, Window window, NWM nwm);
+	
+	public void dispose(Window window);
 
 	public boolean insideWindow();
 

@@ -70,11 +70,11 @@ import org.lwjgl.nanovg.NVGTextRow;
 import net.luxvacuos.voxel.client.rendering.api.glfw.WindowManager;
 
 /**
- * GlassUI
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
  *
  */
+@Deprecated
 public class UIRendering {
 
 	public static final NVGPaint paintA = NVGPaint.create();

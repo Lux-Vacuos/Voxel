@@ -39,7 +39,7 @@ public class NWM implements IWM {
 	@Override
 	public void render() {
 		for (INWindow nWindow : windows) {
-			nWindow.render(window.getID(), this);
+			nWindow.render(window, this);
 		}
 	}
 
@@ -49,7 +49,7 @@ public class NWM implements IWM {
 		INWindow toTop = null;
 		for (INWindow nWindow : windows) {
 			if (nWindow.shouldClose()) {
-				nWindow.dispose();
+				nWindow.dispose(window);
 				toRemove.add(nWindow);
 				continue;
 			}
@@ -64,11 +64,11 @@ public class NWM implements IWM {
 					windows.remove(toTop);
 					windows.add(toTop);
 				} else
-					toTop.update(delta, window.getID(), this);
+					toTop.update(delta, window, this);
 		}
 
 		if (!windows.isEmpty()) {
-			windows.get(windows.size() - 1).update(delta, window.getID(), this);
+			windows.get(windows.size() - 1).update(delta, window, this);
 		}
 
 	}
@@ -76,7 +76,7 @@ public class NWM implements IWM {
 	@Override
 	public void dispose() {
 		for (INWindow nWindow : windows) {
-			nWindow.dispose();
+			nWindow.dispose(window);
 		}
 	}
 
@@ -86,14 +86,14 @@ public class NWM implements IWM {
 
 	@Override
 	public void addWindow(INWindow window) {
-		window.initApp();
-		window.update(0, this.window.getID(), this);
+		window.initApp(this.window);
+		window.update(0, this.window, this);
 		this.windows.add(window);
 	}
 
 	@Override
 	public void removeWindow(INWindow window) {
-		window.dispose();
+		window.dispose(this.window);
 		this.windows.remove(window);
 	}
 

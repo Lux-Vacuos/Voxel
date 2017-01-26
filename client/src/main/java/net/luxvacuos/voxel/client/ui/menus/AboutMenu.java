@@ -26,6 +26,7 @@ import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_RIGHT;
 import net.luxvacuos.voxel.client.core.ClientInternalSubsystem;
 import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.core.CoreInfo;
+import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.ui.nextui.Alignment;
 import net.luxvacuos.voxel.client.ui.nextui.Button;
 import net.luxvacuos.voxel.client.ui.nextui.Image;
@@ -39,9 +40,11 @@ public class AboutMenu extends RootComponent {
 	}
 
 	@Override
-	public void initApp() {
+	public void initApp(Window window) {
 		super.setAlwaysOnTop(true);
 		super.setResizable(false);
+		super.setBackgroundColor(0.4f, 0.4f, 0.4f, 1f);
+		
 		Button backButton = new Button(0, 40, 200, 40, "Close");
 		backButton.setAlignment(Alignment.CENTER);
 		backButton.setWindowAlignment(Alignment.BOTTOM);
@@ -88,25 +91,32 @@ public class AboutMenu extends RootComponent {
 		Text openglR = new Text(CoreInfo.OpenGLVer, -30, -380);
 		openglR.setAlign(NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE);
 		openglR.setWindowAlignment(Alignment.RIGHT_TOP);
+		
+		Text glslL = new Text("GLSL Version", 30, -410);
+		glslL.setFont("Roboto-Bold");
+		glslL.setWindowAlignment(Alignment.LEFT_TOP);
+		Text glslR = new Text(CoreInfo.GLSLVersion, -30, -410);
+		glslR.setAlign(NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE);
+		glslR.setWindowAlignment(Alignment.RIGHT_TOP);
 
-		Text vkL = new Text("Vulkan Version", 30, -410);
+		Text vkL = new Text("Vulkan Version", 30, -440);
 		vkL.setFont("Roboto-Bold");
 		vkL.setWindowAlignment(Alignment.LEFT_TOP);
-		Text vkR = new Text(CoreInfo.VkVersion, -30, -410);
+		Text vkR = new Text(CoreInfo.VkVersion, -30, -440);
 		vkR.setAlign(NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE);
 		vkR.setWindowAlignment(Alignment.RIGHT_TOP);
 
-		Text vendorL = new Text("Vendor", 30, -440);
+		Text vendorL = new Text("Vendor", 30, -470);
 		vendorL.setFont("Roboto-Bold");
 		vendorL.setWindowAlignment(Alignment.LEFT_TOP);
-		Text vendorR = new Text(CoreInfo.Vendor, -30, -440);
+		Text vendorR = new Text(CoreInfo.Vendor, -30, -470);
 		vendorR.setAlign(NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE);
 		vendorR.setWindowAlignment(Alignment.RIGHT_TOP);
 
-		Text rendererL = new Text("Renderer", 30, -470);
+		Text rendererL = new Text("Renderer", 30, -500);
 		rendererL.setFont("Roboto-Bold");
 		rendererL.setWindowAlignment(Alignment.LEFT_TOP);
-		Text rendererR = new Text(CoreInfo.Renderer, -30, -470);
+		Text rendererR = new Text(CoreInfo.Renderer, -30, -500);
 		rendererR.setAlign(NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE);
 		rendererR.setWindowAlignment(Alignment.RIGHT_TOP);
 
@@ -122,6 +132,8 @@ public class AboutMenu extends RootComponent {
 		super.addComponent(glfwR);
 		super.addComponent(openglL);
 		super.addComponent(openglR);
+		super.addComponent(glslL);
+		super.addComponent(glslR);
 		super.addComponent(vkL);
 		super.addComponent(vkR);
 		super.addComponent(vendorL);
@@ -129,7 +141,7 @@ public class AboutMenu extends RootComponent {
 		super.addComponent(rendererL);
 		super.addComponent(rendererR);
 
-		super.initApp();
+		super.initApp(window);
 	}
 
 }

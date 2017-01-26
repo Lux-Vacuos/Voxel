@@ -21,24 +21,14 @@
 package net.luxvacuos.voxel.client.ui.nextui;
 
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
-import net.luxvacuos.voxel.client.rendering.api.nanovg.NRendering;
+import net.luxvacuos.voxel.universal.resources.IDisposable;
 
-public class Image extends Component {
-
-	private int image;
-
-	public Image(float x, float y, float w, float h, int image) {
-		this.x = x;
-		this.y = y;
-		this.w = w;
-		this.h = h;
-		this.image = image;
-	}
-
-	@Override
-	public void render(Window window) {
-		NRendering.renderImage(window.getNVGID(), rootComponent.rootX + alignedX,
-				window.getHeight() - rootComponent.rootY - alignedY - h, w, h, image, 1);
-	}
+public interface IComponent extends IDisposable {
+	
+	public void init();
+	
+	public void render(Window windwo);
+	
+	public void update(float delta, Window window);
 
 }

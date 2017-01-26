@@ -20,8 +20,8 @@
 
 package net.luxvacuos.voxel.client.rendering.api.nanovg;
 
-import static net.luxvacuos.voxel.client.rendering.api.nanovg.UIRendering.colorA;
-import static net.luxvacuos.voxel.client.rendering.api.nanovg.UIRendering.rgba;
+import static net.luxvacuos.voxel.client.rendering.api.nanovg.NRendering.colorA;
+import static net.luxvacuos.voxel.client.rendering.api.nanovg.NRendering.rgba;
 import static org.lwjgl.glfw.GLFW.glfwGetTime;
 import static org.lwjgl.glfw.GLFW.glfwSetTime;
 import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_BOTTOM;

@@ -23,6 +23,7 @@ package net.luxvacuos.voxel.client.ui.nextui;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.NWindow;
 
 public class RootComponent extends NWindow {
@@ -40,32 +41,32 @@ public class RootComponent extends NWindow {
 	}
 
 	@Override
-	public void initApp() {
+	public void initApp(Window window) {
 		for (Component component : components) {
 			component.init();
 		}
 	}
 
 	@Override
-	public void renderApp(long windowID) {
+	public void renderApp(Window window) {
 		for (Component component : components) {
-			component.render(windowID);
+			component.render(window);
 		}
 	}
 
 	@Override
-	public void updateApp(float delta) {
+	public void updateApp(float delta, Window window) {
 		rootX = x + 2;
 		rootY = y - h + 2;
 		rootW = w - 4;
 		rootH = h - 35;
 		for (Component component : components) {
-			component.update(delta);
+			component.update(delta, window);
 		}
 	}
 
 	@Override
-	public void disposeApp() {
+	public void disposeApp(Window window) {
 		for (Component component : components) {
 			component.dispose();
 		}

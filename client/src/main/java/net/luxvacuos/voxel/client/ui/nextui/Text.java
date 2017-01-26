@@ -25,14 +25,14 @@ import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_MIDDLE;
 
 import org.lwjgl.nanovg.NVGColor;
 
-import net.luxvacuos.voxel.client.rendering.api.glfw.WindowManager;
-import net.luxvacuos.voxel.client.rendering.api.nanovg.UIRendering;
+import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
+import net.luxvacuos.voxel.client.rendering.api.nanovg.NRendering;
 
 public class Text extends Component {
 	private String text, font = "Roboto-Regular";
 	private int align = NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE;
 	private int fontSize = 25;
-	private NVGColor color = UIRendering.rgba(255, 255, 255, 255, NVGColor.create());
+	private NVGColor color = NRendering.rgba(255, 255, 255, 255, NVGColor.create());
 
 	public Text(String text, float x, float y) {
 		this.text = text;
@@ -41,9 +41,9 @@ public class Text extends Component {
 	}
 
 	@Override
-	public void render(long windowID) {
-		UIRendering.renderText(windowID, text, font, align, rootComponent.rootX + alignedX,
-				WindowManager.getWindow(windowID).getHeight() - rootComponent.rootY - alignedY, fontSize, color, 1);
+	public void render(Window window) {
+		NRendering.renderText(window.getNVGID(), text, font, align, rootComponent.rootX + alignedX,
+				window.getHeight() - rootComponent.rootY - alignedY, fontSize, color);
 	}
 
 	public void setAlign(int align) {
@@ -58,8 +58,11 @@ public class Text extends Component {
 		this.text = text;
 	}
 
-	public void setColor(int r, int g, int b, int a) {
-		UIRendering.rgba(r, g, b, a, color);
+	public void setColor(float r, float g, float b, float a) {
+		color.r(r);
+		color.g(g);
+		color.b(b);
+		color.a(a);
 	}
 
 	public void setFontSize(int fontSize) {

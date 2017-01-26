@@ -23,7 +23,7 @@ package net.luxvacuos.voxel.client.rendering.api.nanovg;
 import org.lwjgl.nanovg.NVGColor;
 
 import net.luxvacuos.voxel.client.input.Mouse;
-import net.luxvacuos.voxel.client.rendering.api.glfw.WindowManager;
+import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.NRendering.BackgroundStyle;
 
 public abstract class NWindow implements INWindow {
@@ -32,7 +32,7 @@ public abstract class NWindow implements INWindow {
 	private boolean draggable = true, decorations = true, resizable = true, maximized, hidden = false, exit,
 			alwaysOnTop;
 	private BackgroundStyle backgroundStyle = BackgroundStyle.SOLID;
-	private NVGColor backgroundColor = UIRendering.rgba(0, 0, 0, 255);
+	private NVGColor backgroundColor = NRendering.rgba(0, 0, 0, 255);
 	protected float x, y, w, h;
 	private float oldX, oldY, oldW, oldH;
 	private WindowClose windowClose = WindowClose.DISPOSE;
@@ -46,16 +46,16 @@ public abstract class NWindow implements INWindow {
 	}
 
 	@Override
-	public void render(long windowID, NWM nwm) {
+	public void render(Window window, NWM nwm) {
 		if (!hidden) {
-			NRendering.renderWindow(windowID, title, font, x, WindowManager.getWindow(windowID).getHeight() - y, w, h,
+			NRendering.renderWindow(window.getNVGID(), title, font, x, window.getHeight() - y, w, h,
 					backgroundStyle, backgroundColor, decorations, resizable);
-			renderApp(windowID);
+			renderApp(window);
 		}
 	}
 
 	@Override
-	public void update(float delta, long windowID, NWM nwm) {
+	public void update(float delta, Window window, NWM nwm) {
 		if (decorations || hidden) {
 			if (Mouse.isButtonDown(0)) {
 				if (Mouse.getX() > x && Mouse.getY() < y && Mouse.getX() < x + w && Mouse.getY() > y - 32 && draggable
@@ -76,9 +76,9 @@ public abstract class NWindow implements INWindow {
 						oldW = w;
 						oldH = h;
 						x = 0;
-						y = WindowManager.getWindow(windowID).getHeight();
-						w = WindowManager.getWindow(windowID).getWidth();
-						h = WindowManager.getWindow(windowID).getHeight();
+						y = window.getHeight();
+						w = window.getWidth();
+						h = window.getHeight();
 					} else {
 						x = oldX;
 						y = oldY;
@@ -93,12 +93,12 @@ public abstract class NWindow implements INWindow {
 				}
 			}
 		}
-		updateApp(delta);
+		updateApp(delta, window);
 	}
 
 	@Override
-	public void dispose() {
-		disposeApp();
+	public void dispose(Window window) {
+		disposeApp(window);
 	}
 
 	@Override

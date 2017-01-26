@@ -26,6 +26,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import net.luxvacuos.voxel.client.core.exception.ComponentAdditionException;
 import net.luxvacuos.voxel.client.util.Maths;
 
+@Deprecated
 public abstract class UIComponent {
 
 	protected Queue<UIComponent> childrens;
