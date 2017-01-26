@@ -20,25 +20,30 @@
 
 package net.luxvacuos.voxel.universal.ecs.components;
 
+import com.hackhalo2.nbt.CompoundBuilder;
 import com.hackhalo2.nbt.exceptions.NBTException;
 import com.hackhalo2.nbt.tags.TagCompound;
 
 public class ChunkLoader implements VoxelComponent {
-	
+
 	private int chunkRadius = 10;
-	
+
 	@Override
 	public void load(TagCompound compound) throws NBTException {
+		if(compound.hasTagByName("ChunkRadius")) {
+			this.chunkRadius = compound.getInt("ChunkRadius");
+		}
 	}
 
 	@Override
 	public TagCompound save() {
-		return null;
+		return new CompoundBuilder().start("ChunkLoaderCompound").addInteger("ChunkRadius", this.chunkRadius).build();
 	}
-	
+
 	public int getChunkRadius() {
-		return chunkRadius;
+		return this.chunkRadius;
 	}
+
 	public void setChunkRadius(int chunkRadius) {
 		this.chunkRadius = chunkRadius;
 	}
