@@ -61,7 +61,7 @@ import net.luxvacuos.voxel.universal.ecs.Components;
 import net.luxvacuos.voxel.universal.ecs.components.Position;
 import net.luxvacuos.voxel.universal.ecs.components.Rotation;
 import net.luxvacuos.voxel.universal.ecs.components.Scale;
-import net.luxvacuos.voxel.universal.world.entities.AbstractEntity;
+import net.luxvacuos.voxel.universal.ecs.entities.AbstractEntity;
 
 /**
  * Entity Rendering

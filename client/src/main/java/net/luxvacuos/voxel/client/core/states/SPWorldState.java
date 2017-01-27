@@ -55,7 +55,7 @@ import net.luxvacuos.voxel.universal.core.AbstractVoxel;
 import net.luxvacuos.voxel.universal.core.states.AbstractState;
 import net.luxvacuos.voxel.universal.core.states.StateMachine;
 import net.luxvacuos.voxel.universal.world.IWorld;
-import net.luxvacuos.voxel.universal.world.entities.ChunkLoaderEntity;
+import net.luxvacuos.voxel.universal.ecs.entities.ChunkLoaderEntity;
 
 public class SPWorldState extends AbstractState {
 

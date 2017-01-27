@@ -36,7 +36,7 @@ import net.luxvacuos.voxel.universal.ecs.components.AABB;
 import net.luxvacuos.voxel.universal.ecs.components.Health;
 import net.luxvacuos.voxel.universal.ecs.components.Position;
 import net.luxvacuos.voxel.universal.ecs.components.Velocity;
-import net.luxvacuos.voxel.universal.world.entities.AbstractEntity;
+import net.luxvacuos.voxel.universal.ecs.entities.AbstractEntity;
 
 public class PhysicsSystem extends EntitySystem {
 	private ImmutableArray<Entity> entities;

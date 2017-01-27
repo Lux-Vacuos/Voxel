@@ -18,22 +18,19 @@
  * 
  */
 
-package net.luxvacuos.voxel.universal.world.entities;
+package net.luxvacuos.voxel.universal.ecs.entities;
 
-import net.luxvacuos.igl.vector.Vector3d;
-import net.luxvacuos.voxel.universal.ecs.Components;
-import net.luxvacuos.voxel.universal.ecs.components.ChunkLoader;
-import net.luxvacuos.voxel.universal.ecs.components.Position;
+import com.badlogic.ashley.core.Entity;
 
-public class ChunkLoaderEntity extends AbstractEntity {
+import net.luxvacuos.voxel.universal.world.dimension.IDimension;
 
-	public ChunkLoaderEntity(Vector3d position) {
-		super.add(new Position(position));
-		super.add(new ChunkLoader());
+public abstract class AbstractEntity extends Entity {
+
+	public void update(float delta, IDimension dimension) {
+
 	}
 
-	public void setPosition(Vector3d position) {
-		Components.POSITION.get(this).set(position);
-	}
+	public void afterUpdate(float delta, IDimension dimension) {
 
+	}
 }
