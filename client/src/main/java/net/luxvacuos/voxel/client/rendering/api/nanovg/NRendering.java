@@ -122,7 +122,7 @@ public class NRendering {
 	}
 
 	public static void renderWindow(long vg, String title, String font, float x, float y, float w, float h,
-			BackgroundStyle backgroundStyle, NVGColor backgroundColor, boolean decorations, boolean reverseBtns,
+			BackgroundStyle backgroundStyle, NVGColor backgroundColor, boolean decorations, boolean invertBtns,
 			boolean resizable) {
 		float cornerRadius = 0.0f;
 		NVGPaint shadowPaint = paintA;
@@ -150,7 +150,7 @@ public class NRendering {
 			break;
 		}
 		if (decorations) {
-			if (reverseBtns) {
+			if (invertBtns) {
 				// Button Close
 				renderWindowButton(vg, x + 2, y + 2, 29, 29, rgba(200, 0, 0, 200, colorB), ButtonStyle.EXIT);
 				// Button Maximize
@@ -350,38 +350,22 @@ public class NRendering {
 
 	}
 
-	public static void renderThumbnails(long vg, float x, float y, float w, float h, int[] images, int nimages,
-			float t) {
-		float cornerRadius = 3.0f;
+	public static void renderScrollPane(long vg, float x, float y, float w, float h, int total, float t, int hSize,
+			float cardW, float cardH) {
 		NVGPaint shadowPaint = paintA, imgPaint = paintB, fadePaint = paintC;
 		float ix, iy, iw, ih;
-		float thumb = 60.0f;
 		float arry = 30.5f;
-		float stackh = (nimages / 2) * (thumb + 10) + 10;
+		float stackh = (total / hSize) * (cardH + 10) + 10;
 		int i;
 		float u = (1 + (float) Math.cos(t * 0.5f)) * 0.5f;
 		float u2 = (1 - (float) Math.cos(t * 0.2f)) * 0.5f;
 		float scrollh, dv;
 
 		nvgSave(vg);
-		// nvgClearState(vg);
-
-		// Drop shadow
-		nvgBoxGradient(vg, x, y + 4, w, h, cornerRadius * 2, 20, rgba(0, 0, 0, 128, colorA), rgba(0, 0, 0, 0, colorB),
-				shadowPaint);
-		nvgBeginPath(vg);
-		nvgRect(vg, x - 10, y - 10, w + 20, h + 30);
-		nvgRoundedRect(vg, x, y, w, h, cornerRadius);
-		nvgPathWinding(vg, NVG_HOLE);
-		nvgFillPaint(vg, shadowPaint);
-		nvgFill(vg);
 
 		// Window
 		nvgBeginPath(vg);
-		nvgRoundedRect(vg, x, y, w, h, cornerRadius);
-		nvgMoveTo(vg, x - 10, y + arry);
-		nvgLineTo(vg, x + 1, y + arry - 11);
-		nvgLineTo(vg, x + 1, y + arry + 11);
+		nvgRect(vg, x, y, w, h);
 		nvgFillColor(vg, rgba(200, 200, 200, 255, colorA));
 		nvgFill(vg);
 
@@ -389,56 +373,34 @@ public class NRendering {
 		nvgScissor(vg, x, y, w, h);
 		nvgTranslate(vg, 0, -(stackh - h) * u);
 
-		dv = 1.0f / (float) (nimages - 1);
+		dv = 1.0f / (float) (total - 1);
 
 		try (MemoryStack stack = MemoryStack.stackPush()) {
-			IntBuffer imgw = stack.mallocInt(1), imgh = stack.mallocInt(1);
 
-			for (i = 0; i < nimages; i++) {
-				float tx, ty, v, a;
+			for (i = 0; i < total; i++) {
+				float tx, ty;
 				tx = x + 10;
 				ty = y + 10;
-				tx += (i % 2) * (thumb + 10);
-				ty += (i / 2) * (thumb + 10);
-				nvgImageSize(vg, images[i], imgw, imgh);
-				if (imgw.get(0) < imgh.get(0)) {
-					iw = thumb;
-					ih = iw * (float) imgh.get(0) / (float) imgw.get(0);
-					ix = 0;
-					iy = -(ih - thumb) * 0.5f;
-				} else {
-					ih = thumb;
-					iw = ih * (float) imgw.get(0) / (float) imgh.get(0);
-					ix = -(iw - thumb) * 0.5f;
-					iy = 0;
-				}
+				tx += (i % hSize) * (cardW + 10);
+				ty += (i / hSize) * (cardH + 10);
 
-				v = i * dv;
-				a = Maths.clamp((u2 - v) / dv, 0, 1);
-
-				if (a < 1.0f)
-					renderSpinner(vg, tx + thumb / 2, ty + thumb / 2, thumb * 0.25f, t);
-
-				nvgImagePattern(vg, tx + ix, ty + iy, iw, ih, 0.0f / 180.0f * NVG_PI, images[i], a, imgPaint);
-				nvgBeginPath(vg);
-				nvgRoundedRect(vg, tx, ty, thumb, thumb, 5);
-				nvgFillPaint(vg, imgPaint);
-				nvgFill(vg);
-
-				nvgBoxGradient(vg, tx - 1, ty, thumb + 2, thumb + 2, 5, 3, rgba(0, 0, 0, 128, colorA),
+				nvgBoxGradient(vg, tx - 1, ty, cardW + 2, cardH + 2, 0, 3, rgba(0, 0, 0, 128, colorA),
 						rgba(0, 0, 0, 0, colorB), shadowPaint);
 				nvgBeginPath(vg);
-				nvgRect(vg, tx - 5, ty - 5, thumb + 10, thumb + 10);
-				nvgRoundedRect(vg, tx, ty, thumb, thumb, 6);
+				nvgRect(vg, tx - 5, ty - 5, cardW + 10, cardH + 10);
+				nvgRect(vg, tx, ty, cardW, cardH);
 				nvgPathWinding(vg, NVG_HOLE);
 				nvgFillPaint(vg, shadowPaint);
 				nvgFill(vg);
 
 				nvgBeginPath(vg);
-				nvgRoundedRect(vg, tx + 0.5f, ty + 0.5f, thumb - 1, thumb - 1, 4 - 0.5f);
+				nvgRect(vg, tx + 0.5f, ty + 0.5f, cardW - 1, cardH - 1);
 				nvgStrokeWidth(vg, 1.0f);
 				nvgStrokeColor(vg, rgba(255, 255, 255, 192, colorA));
 				nvgStroke(vg);
+
+				renderText(vg, "World0", "Roboto-Regular", NVG_ALIGN_CENTER | NVG_ALIGN_LEFT, tx, ty + cardH, 30,
+						rgba(255, 255, 255, 255, colorA));
 			}
 		}
 		nvgRestore(vg);
@@ -462,18 +424,16 @@ public class NRendering {
 		nvgBoxGradient(vg, x + w - 12 + 1, y + 4 + 1, 8, h - 8, 3, 4, rgba(0, 0, 0, 32, colorA),
 				rgba(0, 0, 0, 92, colorB), shadowPaint);
 		nvgBeginPath(vg);
-		nvgRoundedRect(vg, x + w - 12, y + 4, 8, h - 8, 3);
+		nvgRect(vg, x + w - 12, y + 4, 8, h - 8);
 		nvgFillPaint(vg, shadowPaint);
-		// nvgFillColor(vg, rgba(255,0,0,128, color));
 		nvgFill(vg);
 
 		scrollh = (h / stackh) * (h - 8);
 		nvgBoxGradient(vg, x + w - 12 - 1, y + 4 + (h - 8 - scrollh) * u - 1, 8, scrollh, 3, 4,
 				rgba(220, 220, 220, 255, colorA), rgba(128, 128, 128, 255, colorB), shadowPaint);
 		nvgBeginPath(vg);
-		nvgRoundedRect(vg, x + w - 12 + 1, y + 4 + 1 + (h - 8 - scrollh) * u, 8 - 2, scrollh - 2, 2);
+		nvgRect(vg, x + w - 12 + 1, y + 4 + 1 + (h - 8 - scrollh) * u, 8 - 2, scrollh - 2);
 		nvgFillPaint(vg, shadowPaint);
-		// nvgFillColor(vg, rgba(0,0,0,128, color));
 		nvgFill(vg);
 
 		nvgRestore(vg);

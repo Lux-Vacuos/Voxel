@@ -25,6 +25,9 @@ import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_MIDDLE;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+
 import net.luxvacuos.voxel.client.core.ClientInternalSubsystem;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Renderer;
@@ -91,7 +94,11 @@ public class CrashState extends AbstractState {
 		error.setAlign(NVG_ALIGN_MIDDLE);
 		error.setFont("Px437_IBM_VGA8");
 
-		errorMessage = new UIParagraph(t.getMessage(), -370, -40, 740, 400, 740, 400);
+		StringWriter sw = new StringWriter();
+		PrintWriter pw = new PrintWriter(sw);
+		t.printStackTrace(pw);
+
+		errorMessage = new UIParagraph(sw.toString(), -370, -40, 740, 400, 740, 400);
 		errorMessage.setFont("Px437_IBM_VGA8");
 
 		uIPanel.addChildren(titleBack);

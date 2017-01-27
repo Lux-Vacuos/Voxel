@@ -18,23 +18,41 @@
  * 
  */
 
-package net.luxvacuos.voxel.launcher.core;
+package net.luxvacuos.voxel.client.ui.nextui;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class LauncherVariables {
+import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 
-	public static final String VERSION = "0.0.16"; //TODO: UPDATE THIS FOR ANY BINARY RELEASE!!
-	public static boolean apt = false;
-	public static final String HOST = "https://s3.luxvacuos.net";
-	public static final String API = "https://api.luxvacuos.net/v1";
-	public static final String PROJECT = "voxel";
-	public static final String CONFIG = "config";
-	public static final String LIBRARIES = "libraries";
-	public static final String SEPARATOR = System.getProperty("path.separator");
+public class PaneComponent {
+	
+	private List<Component> components = new ArrayList<>();
+	protected float alignedX, alignedY, x, y, w, h;
 
-	public static String username = "devel";
-	public static List<String> userArgs = new ArrayList<>();
+	public PaneComponent(float x, float y, float w, float h) {
+		this.x = x;
+		this.y = y;
+		this.w = w;
+		this.h = h;
+	}
+	
+	public void init() {
+		for (Component component : components) {
+			component.init();
+		}
+	}
+
+	public void render(Window window) {
+		for (Component component : components) {
+			component.render(window);
+		}
+	}
+	
+	public void update(float delta, Window window) {
+		for (Component component : components) {
+			component.update(delta, window);
+		}
+	}
 
 }

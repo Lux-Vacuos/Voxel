@@ -70,7 +70,8 @@ public class Client {
 	public void end() {
 		workerGroup.shutdownGracefully();
 		try {
-			f.channel().closeFuture().sync();
+			if (f != null)
+				f.channel().closeFuture().sync();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}

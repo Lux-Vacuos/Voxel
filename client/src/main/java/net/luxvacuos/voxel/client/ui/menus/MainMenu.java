@@ -27,6 +27,7 @@ import net.luxvacuos.voxel.client.rendering.api.nanovg.WM;
 import net.luxvacuos.voxel.client.ui.nextui.Alignment;
 import net.luxvacuos.voxel.client.ui.nextui.Button;
 import net.luxvacuos.voxel.client.ui.nextui.RootComponent;
+import net.luxvacuos.voxel.client.ui.nextui.ScrollPane;
 import net.luxvacuos.voxel.universal.core.states.StateMachine;
 
 public class MainMenu extends RootComponent {
@@ -38,7 +39,7 @@ public class MainMenu extends RootComponent {
 	@Override
 	public void initApp(Window window) {
 		super.setBackgroundColor(0.4f, 0.4f, 0.4f, 1f);
-		
+
 		Button playButton = new Button(0, 120, 200, 40, "Singleplayer");
 		Button playMPButton = new Button(0, 60, 200, 40, "Multiplayer");
 		Button optionsButton = new Button(0, 0, 200, 40, "Options");
@@ -82,6 +83,11 @@ public class MainMenu extends RootComponent {
 			StateMachine.stop();
 		});
 
+		ScrollPane pane = new ScrollPane(0, 0, 370, 200, 340f, 60f);
+		pane.setItems(10);
+		pane.setColls(1);
+		
+		//super.addComponent(pane);
 		super.addComponent(playButton);
 		super.addComponent(playMPButton);
 		super.addComponent(optionsButton);
@@ -89,5 +95,5 @@ public class MainMenu extends RootComponent {
 		super.addComponent(exitButton);
 		super.initApp(window);
 	}
-	
+
 }
