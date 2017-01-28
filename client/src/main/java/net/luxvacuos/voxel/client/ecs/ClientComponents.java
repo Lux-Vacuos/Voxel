@@ -20,10 +20,15 @@
 
 package net.luxvacuos.voxel.client.ecs;
 
+import com.badlogic.ashley.core.ComponentMapper;
+
+import net.luxvacuos.voxel.client.ecs.components.RendereableComponent;
 import net.luxvacuos.voxel.universal.ecs.Components;
 
 public class ClientComponents extends Components {
 
 	private ClientComponents() { }
+	
+	public static final ComponentMapper<RendereableComponent> RENDERABLE = ComponentMapper.getFor(RendereableComponent.class);
 
 }

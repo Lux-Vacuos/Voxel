@@ -48,6 +48,8 @@ import com.badlogic.ashley.utils.ImmutableArray;
 
 import net.luxvacuos.igl.vector.Matrix4d;
 import net.luxvacuos.voxel.client.core.ClientVariables;
+import net.luxvacuos.voxel.client.ecs.ClientComponents;
+import net.luxvacuos.voxel.client.ecs.components.RendereableComponent;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.Material;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.RawModel;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.TexturedModel;
@@ -56,7 +58,6 @@ import net.luxvacuos.voxel.client.resources.ResourceLoader;
 import net.luxvacuos.voxel.client.util.Maths;
 import net.luxvacuos.voxel.client.world.entities.Camera;
 import net.luxvacuos.voxel.client.world.entities.SunCamera;
-import net.luxvacuos.voxel.client.world.entities.components.RendereableComponent;
 import net.luxvacuos.voxel.universal.ecs.Components;
 import net.luxvacuos.voxel.universal.ecs.components.Position;
 import net.luxvacuos.voxel.universal.ecs.components.Rotation;
@@ -106,7 +107,7 @@ public class EntityRenderer {
 	}
 
 	private void processEntity(AbstractEntity entity) {
-		TexturedModel entityModel = entity.getComponent(RendereableComponent.class).model;
+		TexturedModel entityModel = ClientComponents.RENDERABLE.get(entity).getModel();
 		List<AbstractEntity> batch = entities.get(entityModel);
 		if (batch != null) {
 			batch.add(entity);
