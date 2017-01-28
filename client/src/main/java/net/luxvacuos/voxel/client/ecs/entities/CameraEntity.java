@@ -18,13 +18,15 @@
  * 
  */
 
-package net.luxvacuos.voxel.client.world.entities;
+package net.luxvacuos.voxel.client.ecs.entities;
 
 import net.luxvacuos.igl.vector.Matrix4d;
 import net.luxvacuos.igl.vector.Vector3d;
+import net.luxvacuos.voxel.client.ecs.ClientComponents;
+import net.luxvacuos.voxel.client.ecs.components.ProjectionMatrix;
+import net.luxvacuos.voxel.client.ecs.components.ViewMatrix;
 import net.luxvacuos.voxel.client.resources.DRay;
 import net.luxvacuos.voxel.universal.ecs.Components;
-import net.luxvacuos.voxel.universal.ecs.components.Player;
 import net.luxvacuos.voxel.universal.ecs.components.Position;
 import net.luxvacuos.voxel.universal.ecs.components.Rotation;
 import net.luxvacuos.voxel.universal.ecs.entities.AbstractEntity;
@@ -34,15 +36,15 @@ import net.luxvacuos.voxel.universal.ecs.entities.AbstractEntity;
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
  */
-public abstract class Camera extends AbstractEntity {
+public class CameraEntity extends AbstractEntity {
 
-	protected Matrix4d projectionMatrix, viewMatrix;
 	protected DRay dRay;
 
-	public Camera() {
+	protected CameraEntity() {
 		this.add(new Position());
 		this.add(new Rotation());
-		this.add(new Player());
+		this.add(new ViewMatrix(new Matrix4d()));
+		this.add(new ProjectionMatrix(new Matrix4d()));
 	}
 
 	public Vector3d getPosition() {
@@ -62,19 +64,19 @@ public abstract class Camera extends AbstractEntity {
 	}
 
 	public Matrix4d getProjectionMatrix() {
-		return projectionMatrix;
+		return ClientComponents.PROJECTION_MATRIX.get(this).getProjectionMatrix();
 	}
 
 	public Matrix4d getViewMatrix() {
-		return viewMatrix;
+		return ClientComponents.VIEW_MATRIX.get(this).getViewMatrix();
 	}
 
 	public void setProjectionMatrix(Matrix4d projectionMatrix) {
-		this.projectionMatrix = projectionMatrix;
+		ClientComponents.PROJECTION_MATRIX.get(this).setProjectionMatrix(projectionMatrix);
 	}
 
 	public void setViewMatrix(Matrix4d viewMatrix) {
-		this.viewMatrix = viewMatrix;
+		ClientComponents.VIEW_MATRIX.get(this).setViewMatrix(viewMatrix);
 	}
 
 }

@@ -18,15 +18,16 @@
  * 
  */
 
-package net.luxvacuos.voxel.client.world.entities;
+package net.luxvacuos.voxel.client.ecs.entities;
 
 import net.luxvacuos.igl.vector.Matrix4d;
 import net.luxvacuos.igl.vector.Vector3d;
+import net.luxvacuos.voxel.client.ecs.ClientComponents;
 import net.luxvacuos.voxel.client.util.Maths;
 import net.luxvacuos.voxel.universal.ecs.Components;
 import net.luxvacuos.voxel.universal.ecs.components.Rotation;
 
-public class CubeMapCamera extends Camera {
+public class CubeMapCamera extends CameraEntity {
 
 	private static final float NEAR_PLANE = 0.1f;
 	private static final float FAR_PLANE = 1000f;
@@ -74,17 +75,18 @@ public class CubeMapCamera extends Camera {
 		float y_scale = (float) ((1f / Math.tan(Math.toRadians(FOV / 2f))));
 		float x_scale = y_scale / ASPECT_RATIO;
 		float frustum_length = FAR_PLANE - NEAR_PLANE;
-		projectionMatrix = new Matrix4d();
+		Matrix4d projectionMatrix = new Matrix4d();
 		projectionMatrix.m00 = x_scale;
 		projectionMatrix.m11 = y_scale;
 		projectionMatrix.m22 = -((FAR_PLANE + NEAR_PLANE) / frustum_length);
 		projectionMatrix.m23 = -1;
 		projectionMatrix.m32 = -((2 * NEAR_PLANE * FAR_PLANE) / frustum_length);
 		projectionMatrix.m33 = 0;
+		ClientComponents.PROJECTION_MATRIX.get(this).setProjectionMatrix(projectionMatrix);
 	}
 
 	private void updateViewMatrix() {
-		viewMatrix = Maths.createViewMatrix(this);
+		ClientComponents.VIEW_MATRIX.get(this).setViewMatrix(Maths.createViewMatrix(this));
 	}
 
 }

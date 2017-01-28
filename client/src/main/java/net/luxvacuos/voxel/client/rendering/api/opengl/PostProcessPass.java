@@ -32,10 +32,10 @@ import net.luxvacuos.igl.vector.Matrix4d;
 import net.luxvacuos.igl.vector.Vector2d;
 import net.luxvacuos.igl.vector.Vector3d;
 import net.luxvacuos.voxel.client.core.ClientVariables;
+import net.luxvacuos.voxel.client.ecs.entities.CameraEntity;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.RawModel;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.DeferredShadingShader;
 import net.luxvacuos.voxel.client.util.Maths;
-import net.luxvacuos.voxel.client.world.entities.Camera;
 
 public abstract class PostProcessPass implements IPostProcessPass {
 
@@ -85,7 +85,7 @@ public abstract class PostProcessPass implements IPostProcessPass {
 	}
 
 	@Override
-	public void process(Camera camera, Matrix4d previousViewMatrix, Vector3d previousCameraPosition, FBO[] auxs,
+	public void process(CameraEntity camera, Matrix4d previousViewMatrix, Vector3d previousCameraPosition, FBO[] auxs,
 			RawModel quad) {
 		fbo.begin();
 		shader.start();

@@ -45,13 +45,13 @@ import net.luxvacuos.igl.vector.Vector2d;
 import net.luxvacuos.igl.vector.Vector3d;
 import net.luxvacuos.voxel.client.core.ClientInternalSubsystem;
 import net.luxvacuos.voxel.client.core.ClientVariables;
+import net.luxvacuos.voxel.client.ecs.entities.CameraEntity;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.CubeMapTexture;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.Light;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.RawModel;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.DeferredShadingShader;
 import net.luxvacuos.voxel.client.util.Maths;
-import net.luxvacuos.voxel.client.world.entities.Camera;
 import net.luxvacuos.voxel.universal.core.IWorldSimulation;
 import net.luxvacuos.voxel.universal.core.TaskManager;
 
@@ -115,7 +115,7 @@ public abstract class DeferredPipeline implements IDeferredPipeline {
 	}
 
 	@Override
-	public void preRender(Camera camera, Vector3d lightPosition, Vector3d invertedLightPosition,
+	public void preRender(CameraEntity camera, Vector3d lightPosition, Vector3d invertedLightPosition,
 			IWorldSimulation clientWorldSimulation, List<Light> lights, CubeMapTexture environmentMap, float exposure) {
 		for (IDeferredPass deferredPass : imagePasses) {
 			deferredPass.process(camera, previousViewMatrix, previousCameraPosition, lightPosition,

@@ -22,11 +22,11 @@ package net.luxvacuos.voxel.client.rendering.api.opengl.shaders;
 
 import net.luxvacuos.igl.vector.Matrix4d;
 import net.luxvacuos.voxel.client.core.ClientVariables;
+import net.luxvacuos.voxel.client.ecs.entities.CameraEntity;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.Attribute;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.UniformMatrix;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.UniformSampler;
 import net.luxvacuos.voxel.client.util.Maths;
-import net.luxvacuos.voxel.client.world.entities.Camera;
 
 public class EntityBasicShader extends ShaderProgram {
 
@@ -64,7 +64,7 @@ public class EntityBasicShader extends ShaderProgram {
 	 * @param camera
 	 *            Camera
 	 */
-	public void loadviewMatrix(Camera camera) {
+	public void loadviewMatrix(CameraEntity camera) {
 		viewMatrix.loadMatrix(Maths.createViewMatrix(camera));
 	}
 

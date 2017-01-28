@@ -18,7 +18,7 @@
  * 
  */
 
-package net.luxvacuos.voxel.client.world.entities;
+package net.luxvacuos.voxel.client.ecs.entities;
 
 import static net.luxvacuos.voxel.client.input.Mouse.getDX;
 import static net.luxvacuos.voxel.client.input.Mouse.getDY;
@@ -40,6 +40,7 @@ import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.igl.vector.Vector4d;
 import net.luxvacuos.voxel.client.core.ClientInternalSubsystem;
 import net.luxvacuos.voxel.client.core.ClientVariables;
+import net.luxvacuos.voxel.client.ecs.ClientComponents;
 import net.luxvacuos.voxel.client.input.KeyboardHandler;
 import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
@@ -50,6 +51,7 @@ import net.luxvacuos.voxel.universal.ecs.Components;
 import net.luxvacuos.voxel.universal.ecs.components.AABB;
 import net.luxvacuos.voxel.universal.ecs.components.ChunkLoader;
 import net.luxvacuos.voxel.universal.ecs.components.Health;
+import net.luxvacuos.voxel.universal.ecs.components.Player;
 import net.luxvacuos.voxel.universal.ecs.components.Rotation;
 import net.luxvacuos.voxel.universal.ecs.components.Scale;
 import net.luxvacuos.voxel.universal.ecs.components.Velocity;
@@ -58,7 +60,7 @@ import net.luxvacuos.voxel.universal.world.block.Blocks;
 import net.luxvacuos.voxel.universal.world.block.IBlock;
 import net.luxvacuos.voxel.universal.world.dimension.IDimension;
 
-public class PlayerCamera extends Camera {
+public class PlayerCamera extends CameraEntity {
 
 	private boolean jump = false;
 	private float speed;
@@ -79,18 +81,20 @@ public class PlayerCamera extends Camera {
 	private static Vector3 tmp = new Vector3();
 
 	public PlayerCamera(Matrix4d projectionMatrix, Window window) {
-		this.projectionMatrix = projectionMatrix;
+		this.add(new Player());
 		this.add(new Velocity());
 		this.add(new Scale());
 		this.add(new AABB(new Vector3d(-0.25f, -1.4f, -0.25f), new Vector3d(0.25f, 0.2f, 0.25f))
 				.setBoundingBox(new Vector3d(-0.25f, -1.4f, -0.25f), new Vector3d(0.25f, 0.2f, 0.25f)));
 		this.speed = 1f;
-		super.add(new Health(20));
-		super.add(new ChunkLoader());
-		Components.CHUNK_LOADER.get(this).setChunkRadius(GlobalVariables.chunk_radius);
+		this.add(new Health(20));
+		this.add(new ChunkLoader(GlobalVariables.chunk_radius));
+		
 		if (flyMode)
 			Components.AABB.get(this).setEnabled(false);
-		this.viewMatrix = Maths.createViewMatrix(this);
+		
+		ClientComponents.PROJECTION_MATRIX.get(this).setProjectionMatrix(projectionMatrix);
+		ClientComponents.VIEW_MATRIX.get(this).setViewMatrix(Maths.createViewMatrix(this));
 		center = new Vector2d(window.getWidth() / 2, window.getHeight() / 2);
 	}
 
@@ -234,7 +238,7 @@ public class PlayerCamera extends Camera {
 	@Override
 	public void afterUpdate(float delta, IDimension dimension) {
 		Window window = ClientInternalSubsystem.getInstance().getGameWindow();
-		viewMatrix = Maths.createViewMatrix(this);
+		ClientComponents.VIEW_MATRIX.get(this).setViewMatrix(Maths.createViewMatrix(this));
 		dRay = new DRay(getProjectionMatrix(), getViewMatrix(), center, window.getWidth(), window.getHeight());
 	}
 

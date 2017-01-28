@@ -20,10 +20,10 @@
 
 package net.luxvacuos.voxel.client.rendering.api.opengl;
 
-import net.luxvacuos.voxel.client.world.entities.Camera;
+import net.luxvacuos.voxel.client.ecs.entities.CameraEntity;
 
 public interface IRenderPass {
 
-	public void render(Camera camera, Camera sunCamera, Frustum frustum, ShadowFBO shadow);
+	public void render(CameraEntity camera, CameraEntity sunCamera, Frustum frustum, ShadowFBO shadow);
 
 }

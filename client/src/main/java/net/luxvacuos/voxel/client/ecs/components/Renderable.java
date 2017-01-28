@@ -6,11 +6,11 @@ import com.hackhalo2.nbt.tags.TagCompound;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.TexturedModel;
 import net.luxvacuos.voxel.universal.ecs.components.VoxelComponent;
 
-public class RendereableComponent implements VoxelComponent {
+public class Renderable implements VoxelComponent {
 
 	private TexturedModel model;
 	
-	public RendereableComponent(TexturedModel model) {
+	public Renderable(TexturedModel model) {
 		this.model = model;
 	}
 	

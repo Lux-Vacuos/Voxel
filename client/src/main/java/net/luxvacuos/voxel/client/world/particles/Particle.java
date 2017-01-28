@@ -22,9 +22,9 @@ package net.luxvacuos.voxel.client.world.particles;
 
 import net.luxvacuos.igl.vector.Vector2d;
 import net.luxvacuos.igl.vector.Vector3d;
+import net.luxvacuos.voxel.client.ecs.entities.CameraEntity;
 import net.luxvacuos.voxel.client.rendering.api.opengl.ParticleDomain;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.ParticleTexture;
-import net.luxvacuos.voxel.client.world.entities.Camera;
 
 public class Particle {
 
@@ -56,7 +56,7 @@ public class Particle {
 		ParticleDomain.addParticle(this);
 	}
 
-	public boolean update(float delta, Camera camera) {
+	public boolean update(float delta, CameraEntity camera) {
 		velocity.y += -9.8 * gravityEffect * delta;
 		Vector3d change = new Vector3d(velocity);
 		change.scale(delta);

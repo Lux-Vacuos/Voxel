@@ -42,11 +42,11 @@ import org.lwjgl.BufferUtils;
 
 import net.luxvacuos.igl.vector.Matrix4d;
 import net.luxvacuos.igl.vector.Vector3d;
+import net.luxvacuos.voxel.client.ecs.entities.CameraEntity;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.ParticleTexture;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.RawModel;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.ParticleShader;
 import net.luxvacuos.voxel.client.resources.ResourceLoader;
-import net.luxvacuos.voxel.client.world.entities.Camera;
 import net.luxvacuos.voxel.client.world.particles.Particle;
 
 public class ParticleRenderer {
@@ -77,7 +77,7 @@ public class ParticleRenderer {
 		shader = new ParticleShader();
 	}
 
-	public void render(Map<ParticleTexture, List<Particle>> particles, Camera camera) {
+	public void render(Map<ParticleTexture, List<Particle>> particles, CameraEntity camera) {
 		prepare();
 		shader.loadProjectionMatrix(camera.getProjectionMatrix());
 		for (ParticleTexture texture : particles.keySet()) {

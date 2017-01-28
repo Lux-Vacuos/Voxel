@@ -21,11 +21,11 @@
 package net.luxvacuos.voxel.client.world.chunks;
 
 import net.luxvacuos.voxel.client.core.ClientWorldSimulation;
+import net.luxvacuos.voxel.client.ecs.entities.CameraEntity;
 import net.luxvacuos.voxel.client.rendering.api.opengl.ShadowFBO;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Tessellator;
 import net.luxvacuos.voxel.client.rendering.world.chunk.IRenderChunk;
 import net.luxvacuos.voxel.client.world.block.BlocksResources;
-import net.luxvacuos.voxel.client.world.entities.Camera;
 import net.luxvacuos.voxel.universal.world.chunk.Chunk;
 import net.luxvacuos.voxel.universal.world.chunk.ChunkData;
 import net.luxvacuos.voxel.universal.world.dimension.IDimension;
@@ -59,17 +59,17 @@ public class RenderChunk extends Chunk implements IRenderChunk {
 	}
 
 	@Override
-	public void render(Camera camera, Camera sunCamera, ClientWorldSimulation clientWorldSimulation, ShadowFBO shadow) {
+	public void render(CameraEntity camera, CameraEntity sunCamera, ClientWorldSimulation clientWorldSimulation, ShadowFBO shadow) {
 		this.tess.draw(camera, sunCamera, clientWorldSimulation, shadow);
 	}
 
 	@Override
-	public void renderShadow(Camera sunCamera) {
+	public void renderShadow(CameraEntity sunCamera) {
 		this.tess.drawShadow(sunCamera);
 	}
 
 	@Override
-	public void renderOcclusion(Camera camera) {
+	public void renderOcclusion(CameraEntity camera) {
 		this.tess.drawOcclusion(camera);
 	}
 

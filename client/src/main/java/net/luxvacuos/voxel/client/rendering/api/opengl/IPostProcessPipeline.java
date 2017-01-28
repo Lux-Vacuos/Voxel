@@ -20,7 +20,7 @@
 
 package net.luxvacuos.voxel.client.rendering.api.opengl;
 
-import net.luxvacuos.voxel.client.world.entities.Camera;
+import net.luxvacuos.voxel.client.ecs.entities.CameraEntity;
 import net.luxvacuos.voxel.universal.resources.IDisposable;
 
 public interface IPostProcessPipeline extends IDisposable {
@@ -31,7 +31,7 @@ public interface IPostProcessPipeline extends IDisposable {
 
 	public void end();
 	
-	public void preRender(Camera camera);
+	public void preRender(CameraEntity camera);
 	
 	public void render();
 	

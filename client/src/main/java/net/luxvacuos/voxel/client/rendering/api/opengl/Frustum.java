@@ -26,7 +26,7 @@ import org.lwjgl.BufferUtils;
 
 import net.luxvacuos.igl.vector.Matrix4d;
 import net.luxvacuos.igl.vector.Vector3d;
-import net.luxvacuos.voxel.client.world.entities.Camera;
+import net.luxvacuos.voxel.client.ecs.entities.CameraEntity;
 
 /**
  * Frustum Culling
@@ -76,7 +76,7 @@ public class Frustum {
 	/**
 	 * Updates the frustum view
 	 */
-	public void calculateFrustum(Camera camera) {
+	public void calculateFrustum(CameraEntity camera) {
 		double[] clip = new double[16];
 
 		Matrix4d.mul(camera.getProjectionMatrix(), camera.getViewMatrix(), clip_);

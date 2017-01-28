@@ -28,6 +28,9 @@ import net.luxvacuos.voxel.client.core.ClientInternalSubsystem;
 import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.core.ClientWorldSimulation;
 import net.luxvacuos.voxel.client.core.CoreInfo;
+import net.luxvacuos.voxel.client.ecs.entities.CameraEntity;
+import net.luxvacuos.voxel.client.ecs.entities.PlayerCamera;
+import net.luxvacuos.voxel.client.ecs.entities.Sun;
 import net.luxvacuos.voxel.client.input.KeyboardHandler;
 import net.luxvacuos.voxel.client.network.Client;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
@@ -39,9 +42,6 @@ import net.luxvacuos.voxel.client.rendering.api.opengl.Renderer;
 import net.luxvacuos.voxel.client.util.Maths;
 import net.luxvacuos.voxel.client.world.RenderWorld;
 import net.luxvacuos.voxel.client.world.dimension.RenderDimension;
-import net.luxvacuos.voxel.client.world.entities.Camera;
-import net.luxvacuos.voxel.client.world.entities.PlayerCamera;
-import net.luxvacuos.voxel.client.world.entities.Sun;
 import net.luxvacuos.voxel.universal.core.AbstractVoxel;
 import net.luxvacuos.voxel.universal.core.states.AbstractState;
 import net.luxvacuos.voxel.universal.core.states.StateMachine;
@@ -51,7 +51,7 @@ public class MPWorldState extends AbstractState {
 
 	private Sun sun;
 	// private ClientWorldSimulation worldSimulation;
-	private Camera camera;
+	private CameraEntity camera;
 
 	private IWorld world;
 

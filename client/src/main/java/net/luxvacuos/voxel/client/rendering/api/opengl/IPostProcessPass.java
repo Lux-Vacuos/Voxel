@@ -22,15 +22,15 @@ package net.luxvacuos.voxel.client.rendering.api.opengl;
 
 import net.luxvacuos.igl.vector.Matrix4d;
 import net.luxvacuos.igl.vector.Vector3d;
+import net.luxvacuos.voxel.client.ecs.entities.CameraEntity;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.RawModel;
-import net.luxvacuos.voxel.client.world.entities.Camera;
 import net.luxvacuos.voxel.universal.resources.IDisposable;
 
 public interface IPostProcessPass extends IDisposable {
 
 	public void init();
 
-	public void process(Camera camera, Matrix4d previousViewMatrix, Vector3d previousCameraPosition, FBO[] auxs,
+	public void process(CameraEntity camera, Matrix4d previousViewMatrix, Vector3d previousCameraPosition, FBO[] auxs,
 			RawModel quad);
 
 	public void render(FBO[] auxs);

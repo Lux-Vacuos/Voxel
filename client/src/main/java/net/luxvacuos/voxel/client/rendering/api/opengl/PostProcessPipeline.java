@@ -38,11 +38,11 @@ import net.luxvacuos.igl.vector.Vector2d;
 import net.luxvacuos.igl.vector.Vector3d;
 import net.luxvacuos.voxel.client.core.ClientInternalSubsystem;
 import net.luxvacuos.voxel.client.core.ClientVariables;
+import net.luxvacuos.voxel.client.ecs.entities.CameraEntity;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.RawModel;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.DeferredShadingShader;
 import net.luxvacuos.voxel.client.util.Maths;
-import net.luxvacuos.voxel.client.world.entities.Camera;
 import net.luxvacuos.voxel.universal.core.TaskManager;
 
 public abstract class PostProcessPipeline implements IPostProcessPipeline {
@@ -98,7 +98,7 @@ public abstract class PostProcessPipeline implements IPostProcessPipeline {
 	}
 
 	@Override
-	public void preRender(Camera camera) {
+	public void preRender(CameraEntity camera) {
 		auxs[0] = fbo;
 		for (IPostProcessPass deferredPass : imagePasses) {
 			deferredPass.process(camera, previousViewMatrix, previousCameraPosition, auxs, quad);

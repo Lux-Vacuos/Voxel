@@ -1,4 +1,4 @@
-package net.luxvacuos.voxel.client.world.entities;
+package net.luxvacuos.voxel.client.ecs;
 
 import net.luxvacuos.voxel.client.resources.ResourceLoader;
 

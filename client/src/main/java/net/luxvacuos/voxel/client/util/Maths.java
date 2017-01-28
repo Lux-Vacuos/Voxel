@@ -30,7 +30,7 @@ import net.luxvacuos.igl.vector.Matrix4d;
 import net.luxvacuos.igl.vector.Vector2d;
 import net.luxvacuos.igl.vector.Vector3d;
 import net.luxvacuos.igl.vector.Vector4d;
-import net.luxvacuos.voxel.client.world.entities.Camera;
+import net.luxvacuos.voxel.client.ecs.entities.CameraEntity;
 
 /**
  * Maths
@@ -93,7 +93,7 @@ public class Maths {
 	 *            Camera
 	 * @return View Matrixd
 	 */
-	public static Matrix4d createViewMatrix(Camera camera) {
+	public static Matrix4d createViewMatrix(CameraEntity camera) {
 		Matrix4d viewMatrix = new Matrix4d();
 		viewMatrix.setIdentity();
 		createViewMatrixRot(camera.getRotation().getX(), camera.getRotation().getY(), camera.getRotation().getZ(),

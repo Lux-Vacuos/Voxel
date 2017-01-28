@@ -26,12 +26,12 @@ import com.badlogic.gdx.math.collision.BoundingBox;
 import com.hackhalo2.nbt.tags.TagCompound;
 
 import net.luxvacuos.voxel.client.core.ClientWorldSimulation;
+import net.luxvacuos.voxel.client.ecs.entities.CameraEntity;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Frustum;
 import net.luxvacuos.voxel.client.rendering.api.opengl.ShadowFBO;
 import net.luxvacuos.voxel.client.rendering.world.dimension.IRenderDimension;
 import net.luxvacuos.voxel.client.world.chunks.ClientChunkManager;
 import net.luxvacuos.voxel.client.world.chunks.RenderChunk;
-import net.luxvacuos.voxel.client.world.entities.Camera;
 import net.luxvacuos.voxel.universal.ecs.Components;
 import net.luxvacuos.voxel.universal.ecs.components.ChunkLoader;
 import net.luxvacuos.voxel.universal.world.IWorld;
@@ -63,7 +63,7 @@ public class RenderDimension extends Dimension implements IRenderDimension {
 	}
 
 	@Override
-	public void render(Camera camera, Camera sunCamera, Frustum frustum, ShadowFBO shadow) {
+	public void render(CameraEntity camera, CameraEntity sunCamera, Frustum frustum, ShadowFBO shadow) {
 		this.renderedChunks = 0;
 		BoundingBox aabb;
 		RenderChunk rChunk;
@@ -102,7 +102,7 @@ public class RenderDimension extends Dimension implements IRenderDimension {
 	}
 
 	@Override
-	public void renderOcclusion(Camera camera, Frustum frustum) {
+	public void renderOcclusion(CameraEntity camera, Frustum frustum) {
 		BoundingBox aabb;
 		for (IChunk chunk : this.chunkManager.getLoadedChunks()) {
 			if (chunk instanceof FutureChunk)
@@ -117,7 +117,7 @@ public class RenderDimension extends Dimension implements IRenderDimension {
 	}
 
 	@Override
-	public void renderShadow(Camera sunCamera, Frustum frustum) {
+	public void renderShadow(CameraEntity sunCamera, Frustum frustum) {
 		BoundingBox aabb;
 		for (IChunk chunk : this.chunkManager.getLoadedChunks()) {
 			if (chunk instanceof FutureChunk)

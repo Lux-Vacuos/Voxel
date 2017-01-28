@@ -49,15 +49,15 @@ import com.badlogic.ashley.utils.ImmutableArray;
 import net.luxvacuos.igl.vector.Matrix4d;
 import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.ecs.ClientComponents;
-import net.luxvacuos.voxel.client.ecs.components.RendereableComponent;
+import net.luxvacuos.voxel.client.ecs.components.Renderable;
+import net.luxvacuos.voxel.client.ecs.entities.CameraEntity;
+import net.luxvacuos.voxel.client.ecs.entities.SunCamera;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.Material;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.RawModel;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.TexturedModel;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.EntityShader;
 import net.luxvacuos.voxel.client.resources.ResourceLoader;
 import net.luxvacuos.voxel.client.util.Maths;
-import net.luxvacuos.voxel.client.world.entities.Camera;
-import net.luxvacuos.voxel.client.world.entities.SunCamera;
 import net.luxvacuos.voxel.universal.ecs.Components;
 import net.luxvacuos.voxel.universal.ecs.components.Position;
 import net.luxvacuos.voxel.universal.ecs.components.Rotation;
@@ -85,22 +85,22 @@ public class EntityRenderer {
 		shader.dispose();
 	}
 
-	public void renderEntity(ImmutableArray<Entity> immutableArray, Camera camera, Camera sunCamera, ShadowFBO shadow) {
+	public void renderEntity(ImmutableArray<Entity> immutableArray, CameraEntity camera, CameraEntity sunCamera, ShadowFBO shadow) {
 		for (Entity entity : immutableArray) {
-			if (entity instanceof AbstractEntity && entity.getComponent(RendereableComponent.class) != null) {
+			if (entity instanceof AbstractEntity && entity.getComponent(Renderable.class) != null) {
 				processEntity((AbstractEntity) entity);
 			}
 		}
 		renderEntity(camera, sunCamera, shadow);
 	}
 
-	private void renderEntity(Camera camera, Camera sunCamera, ShadowFBO shadow) {
+	private void renderEntity(CameraEntity camera, CameraEntity sunCamera, ShadowFBO shadow) {
 		shader.start();
 		shader.loadviewMatrix(camera);
 		shader.loadLightMatrix(sunCamera);
 		shader.useShadows(ClientVariables.useShadows);
 		shader.loadProjectionMatrix(camera.getProjectionMatrix());
-		shader.loadBiasMatrix(((SunCamera) sunCamera).getProj());
+		shader.loadBiasMatrix(((SunCamera) sunCamera).getProjectionArray());
 		renderEntity(entities, shadow);
 		shader.stop();
 		entities.clear();

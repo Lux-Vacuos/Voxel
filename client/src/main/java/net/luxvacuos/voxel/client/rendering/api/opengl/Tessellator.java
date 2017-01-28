@@ -66,12 +66,12 @@ import net.luxvacuos.igl.vector.Vector3d;
 import net.luxvacuos.igl.vector.Vector8f;
 import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.core.ClientWorldSimulation;
+import net.luxvacuos.voxel.client.ecs.entities.CameraEntity;
+import net.luxvacuos.voxel.client.ecs.entities.SunCamera;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.Material;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.TessellatorBasicShader;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.TessellatorShader;
 import net.luxvacuos.voxel.client.rendering.world.block.IRenderBlock;
-import net.luxvacuos.voxel.client.world.entities.Camera;
-import net.luxvacuos.voxel.client.world.entities.SunCamera;
 import net.luxvacuos.voxel.universal.world.utils.BlockFace;
 
 public class Tessellator {
@@ -162,7 +162,7 @@ public class Tessellator {
 		updated = true;
 	}
 
-	public void draw(Camera camera, Camera sunCamera, ClientWorldSimulation clientWorldSimulation, ShadowFBO shadow) {
+	public void draw(CameraEntity camera, CameraEntity sunCamera, ClientWorldSimulation clientWorldSimulation, ShadowFBO shadow) {
 		if (updated) {
 			updateGlBuffers(vboID0, vboCapacity, buffer0);
 			updateGlBuffers(vboID1, vboCapacity, buffer1);
@@ -177,7 +177,7 @@ public class Tessellator {
 		shader.loadLightMatrix(sunCamera.getViewMatrix());
 		shader.loadSettings(ClientVariables.useShadows);
 		shader.loadMoveFactor(clientWorldSimulation.getMoveFactor());
-		shader.loadBiasMatrix(((SunCamera) sunCamera).getProj());
+		shader.loadBiasMatrix(((SunCamera) sunCamera).getProjectionArray());
 		shader.loadMaterial(material);
 		glBindVertexArray(vaoID);
 		glEnableVertexAttribArray(0);
@@ -207,7 +207,7 @@ public class Tessellator {
 		shader.stop();
 	}
 
-	public void drawShadow(Camera sunCamera) {
+	public void drawShadow(CameraEntity sunCamera) {
 		if (updated) {
 			updateGlBuffers(vboID0, vboCapacity, buffer0);
 			updateGlBuffers(vboID1, vboCapacity, buffer1);
@@ -233,7 +233,7 @@ public class Tessellator {
 		glCullFace(GL_BACK);
 	}
 
-	public void drawOcclusion(Camera camera) {
+	public void drawOcclusion(CameraEntity camera) {
 		if (updated) {
 			updateGlBuffers(vboID0, vboCapacity, buffer0);
 			updateGlBuffers(vboID1, vboCapacity, buffer1);

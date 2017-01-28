@@ -18,44 +18,45 @@
  * 
  */
 
-package net.luxvacuos.voxel.client.world.entities;
+package net.luxvacuos.voxel.client.ecs.entities;
 
 import net.luxvacuos.igl.vector.Matrix4d;
 import net.luxvacuos.igl.vector.Vector2d;
+import net.luxvacuos.voxel.client.ecs.ClientComponents;
 import net.luxvacuos.voxel.client.resources.DRay;
 import net.luxvacuos.voxel.client.util.Maths;
 
-public class SunCamera extends Camera {
+public class SunCamera extends CameraEntity {
 
 	private Vector2d center;
 
-	private Matrix4d[] proj;
+	private Matrix4d[] projectionArray;
 
-	public SunCamera(Matrix4d[] proj) {
-		this.proj = proj;
-		this.projectionMatrix = proj[0];
+	public SunCamera(Matrix4d[] projectionArray) {
+		this.projectionArray = projectionArray;
 		center = new Vector2d(2048, 2048);
-		dRay = new DRay(projectionMatrix, Maths.createViewMatrix(this), center, 0, 0);
-		this.viewMatrix = Maths.createViewMatrix(this);
+		dRay = new DRay(this.getProjectionMatrix(), Maths.createViewMatrix(this), center, 0, 0);
+		ClientComponents.VIEW_MATRIX.get(this).setViewMatrix(Maths.createViewMatrix(this));
+		ClientComponents.PROJECTION_MATRIX.get(this).setProjectionMatrix(projectionArray[0]);
 	}
 
 	public void updateShadowRay(boolean inverted) {
 
 		if (inverted)
-			dRay = new DRay(projectionMatrix, Maths.createViewMatrixPos(this.getPosition(), Maths
+			dRay = new DRay(this.getProjectionMatrix(), Maths.createViewMatrixPos(this.getPosition(), Maths
 					.createViewMatrixRot(getRotation().getX() + 180, getRotation().getY(), getRotation().getZ(), null)),
 					center, 4096, 4096);
 		else
-			dRay = new DRay(projectionMatrix, Maths.createViewMatrix(this), center, 4096, 4096);
-		viewMatrix = Maths.createViewMatrix(this);
+			dRay = new DRay(this.getProjectionMatrix(), Maths.createViewMatrix(this), center, 4096, 4096);
+		ClientComponents.VIEW_MATRIX.get(this).setViewMatrix(Maths.createViewMatrix(this));
 	}
 
 	public void switchProjectionMatrix(int id) {
-		this.projectionMatrix = this.proj[id];
+		ClientComponents.PROJECTION_MATRIX.get(this).setProjectionMatrix(this.projectionArray[id]);
 	}
 
-	public Matrix4d[] getProj() {
-		return proj;
+	public Matrix4d[] getProjectionArray() {
+		return projectionArray;
 	}
 
 	public DRay getDRay() {

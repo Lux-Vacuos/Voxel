@@ -44,13 +44,13 @@ import com.badlogic.ashley.utils.ImmutableArray;
 import net.luxvacuos.igl.vector.Matrix4d;
 import net.luxvacuos.igl.vector.Vector3d;
 import net.luxvacuos.voxel.client.core.ClientVariables;
+import net.luxvacuos.voxel.client.ecs.entities.CameraEntity;
+import net.luxvacuos.voxel.client.ecs.entities.SunCamera;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.CubeMapTexture;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.ParticleTexture;
 import net.luxvacuos.voxel.client.rendering.api.opengl.pipeline.MultiPass;
 import net.luxvacuos.voxel.client.rendering.api.opengl.pipeline.PostProcess;
-import net.luxvacuos.voxel.client.world.entities.Camera;
-import net.luxvacuos.voxel.client.world.entities.SunCamera;
 import net.luxvacuos.voxel.client.world.particles.Particle;
 import net.luxvacuos.voxel.universal.core.IWorldSimulation;
 import net.luxvacuos.voxel.universal.core.TaskManager;
@@ -97,7 +97,7 @@ public class Renderer {
 	}
 
 	public static void render(ImmutableArray<Entity> entities, Map<ParticleTexture, List<Particle>> particles,
-			Camera camera, Camera sunCamera, IWorldSimulation worldSimulation, Vector3d lightPosition,
+			CameraEntity camera, CameraEntity sunCamera, IWorldSimulation worldSimulation, Vector3d lightPosition,
 			Vector3d invertedLightPosition, float alpha) {
 
 		resetState();

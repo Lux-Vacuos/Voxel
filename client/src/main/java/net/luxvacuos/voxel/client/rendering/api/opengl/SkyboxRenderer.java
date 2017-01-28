@@ -32,11 +32,11 @@ import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 
 import net.luxvacuos.igl.vector.Vector3d;
+import net.luxvacuos.voxel.client.ecs.entities.CameraEntity;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.RawModel;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.SkyboxShader;
 import net.luxvacuos.voxel.client.resources.ResourceLoader;
 import net.luxvacuos.voxel.client.util.Maths;
-import net.luxvacuos.voxel.client.world.entities.Camera;
 import net.luxvacuos.voxel.universal.core.IWorldSimulation;
 
 /**
@@ -72,7 +72,7 @@ public class SkyboxRenderer {
 	 * @param delta
 	 *            Delta
 	 */
-	public void render(float r, float g, float b, Camera camera, IWorldSimulation clientWorldSimulation,
+	public void render(float r, float g, float b, CameraEntity camera, IWorldSimulation clientWorldSimulation,
 			Vector3d lightPosition, float exposure, boolean applyGamma) {
 		glDepthMask(false);
 		glDisable(GL_CULL_FACE);

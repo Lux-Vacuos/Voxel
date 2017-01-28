@@ -1,4 +1,4 @@
-package net.luxvacuos.voxel.client.world.entities;
+package net.luxvacuos.voxel.client.ecs.entities;
 
 import net.luxvacuos.igl.vector.Matrix4d;
 import net.luxvacuos.igl.vector.Vector3d;
@@ -32,7 +32,7 @@ public class Sun {
 				camera.getDRay().direction.z * 10);
 	}
 
-	public Camera getCamera() {
+	public CameraEntity getCamera() {
 		return camera;
 	}
 

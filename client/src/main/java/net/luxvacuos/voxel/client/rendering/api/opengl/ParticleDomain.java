@@ -27,9 +27,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import net.luxvacuos.voxel.client.ecs.entities.CameraEntity;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.ParticleTexture;
 import net.luxvacuos.voxel.client.resources.models.InsertionSort;
-import net.luxvacuos.voxel.client.world.entities.Camera;
 import net.luxvacuos.voxel.client.world.particles.Particle;
 
 public class ParticleDomain {
@@ -40,7 +40,7 @@ public class ParticleDomain {
 		particles = new HashMap<ParticleTexture, List<Particle>>();
 	}
 
-	public static void update(float delta, Camera camera) {
+	public static void update(float delta, CameraEntity camera) {
 		Iterator<Entry<ParticleTexture, List<Particle>>> mapIterator = particles.entrySet().iterator();
 		while (mapIterator.hasNext()) {
 			List<Particle> list = mapIterator.next().getValue();

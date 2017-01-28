@@ -49,10 +49,10 @@ import com.badlogic.gdx.math.collision.BoundingBox;
 
 import net.luxvacuos.igl.vector.Vector3d;
 import net.luxvacuos.igl.vector.Vector3f;
+import net.luxvacuos.voxel.client.ecs.entities.CameraEntity;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.BlockOutlineShader;
 import net.luxvacuos.voxel.client.resources.ResourceLoader;
 import net.luxvacuos.voxel.client.util.Maths;
-import net.luxvacuos.voxel.client.world.entities.Camera;
 import net.luxvacuos.voxel.universal.resources.IDisposable;
 import net.luxvacuos.voxel.universal.world.block.IBlock;
 import net.luxvacuos.voxel.universal.world.utils.BlockNode;
@@ -177,7 +177,7 @@ public class BlockOutlineRenderer implements IDisposable {
 
 	}
 
-	public void render(Camera camera, IBlock block) {
+	public void render(CameraEntity camera, IBlock block) {
 		begin();
 		this.generateCube(block);
 		end();

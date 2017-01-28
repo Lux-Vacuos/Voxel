@@ -1,7 +1,7 @@
 /*
  * This file is part of Voxel
  * 
- * Copyright (C) 2016-2017 Lux Vacuos
+ * Copyright (C) 2016 Lux Vacuos
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,42 +18,40 @@
  * 
  */
 
-package net.luxvacuos.voxel.universal.ecs.components;
+package net.luxvacuos.voxel.client.ecs.components;
 
-import com.hackhalo2.nbt.CompoundBuilder;
 import com.hackhalo2.nbt.exceptions.NBTException;
 import com.hackhalo2.nbt.tags.TagCompound;
 
-public class ChunkLoader implements VoxelComponent {
+import net.luxvacuos.igl.vector.Matrix4d;
+import net.luxvacuos.voxel.universal.ecs.components.VoxelComponent;
 
-	private int chunkRadius = 10;
-	
-	public ChunkLoader() {
-		
+public class ProjectionMatrix implements VoxelComponent {
+
+	private Matrix4d projectionMatrix;
+
+	public ProjectionMatrix(Matrix4d projectionMatrix) {
+		this.projectionMatrix = projectionMatrix;
 	}
 	
-	public ChunkLoader(int chunkRadius) {
-		this.chunkRadius = chunkRadius;
+	public Matrix4d getProjectionMatrix() {
+		return this.projectionMatrix;
+	}
+	
+	public void setProjectionMatrix(Matrix4d projectionMatrix) {
+		this.projectionMatrix = projectionMatrix;
 	}
 
 	@Override
 	public void load(TagCompound compound) throws NBTException {
-		if(compound.hasTagByName("ChunkRadius")) {
-			this.chunkRadius = compound.getInt("ChunkRadius");
-		}
+		// TODO Auto-generated method stub
+
 	}
 
 	@Override
 	public TagCompound save() {
-		return new CompoundBuilder().start("ChunkLoaderCompound").addInteger("ChunkRadius", this.chunkRadius).build();
-	}
-
-	public int getChunkRadius() {
-		return this.chunkRadius;
-	}
-
-	public void setChunkRadius(int chunkRadius) {
-		this.chunkRadius = chunkRadius;
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

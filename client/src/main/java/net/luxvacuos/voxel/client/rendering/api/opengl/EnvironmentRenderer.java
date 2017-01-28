@@ -44,9 +44,9 @@ import static org.lwjgl.opengl.GL30.glRenderbufferStorage;
 import net.luxvacuos.igl.vector.Vector3d;
 import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.core.exception.FrameBufferException;
+import net.luxvacuos.voxel.client.ecs.entities.CubeMapCamera;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.CubeMapTexture;
-import net.luxvacuos.voxel.client.world.entities.CubeMapCamera;
 import net.luxvacuos.voxel.universal.core.IWorldSimulation;
 
 public class EnvironmentRenderer {

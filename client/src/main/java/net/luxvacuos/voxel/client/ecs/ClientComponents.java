@@ -22,13 +22,19 @@ package net.luxvacuos.voxel.client.ecs;
 
 import com.badlogic.ashley.core.ComponentMapper;
 
-import net.luxvacuos.voxel.client.ecs.components.RendereableComponent;
+import net.luxvacuos.voxel.client.ecs.components.ProjectionMatrix;
+import net.luxvacuos.voxel.client.ecs.components.Renderable;
+import net.luxvacuos.voxel.client.ecs.components.ViewMatrix;
 import net.luxvacuos.voxel.universal.ecs.Components;
 
 public class ClientComponents extends Components {
 
 	private ClientComponents() { }
 	
-	public static final ComponentMapper<RendereableComponent> RENDERABLE = ComponentMapper.getFor(RendereableComponent.class);
+	public static final ComponentMapper<Renderable> RENDERABLE = ComponentMapper.getFor(Renderable.class);
+	
+	public static final ComponentMapper<ViewMatrix> VIEW_MATRIX = ComponentMapper.getFor(ViewMatrix.class);
+	
+	public static final ComponentMapper<ProjectionMatrix> PROJECTION_MATRIX = ComponentMapper.getFor(ProjectionMatrix.class);
 
 }

@@ -44,12 +44,12 @@ import com.badlogic.ashley.utils.ImmutableArray;
 
 import net.luxvacuos.igl.vector.Matrix4d;
 import net.luxvacuos.voxel.client.ecs.ClientComponents;
-import net.luxvacuos.voxel.client.ecs.components.RendereableComponent;
+import net.luxvacuos.voxel.client.ecs.components.Renderable;
+import net.luxvacuos.voxel.client.ecs.entities.CameraEntity;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.RawModel;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.TexturedModel;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.EntityBasicShader;
 import net.luxvacuos.voxel.client.util.Maths;
-import net.luxvacuos.voxel.client.world.entities.Camera;
 import net.luxvacuos.voxel.universal.ecs.Components;
 import net.luxvacuos.voxel.universal.ecs.components.Position;
 import net.luxvacuos.voxel.universal.ecs.components.Rotation;
@@ -70,16 +70,16 @@ public class EntityShadowRenderer {
 		shader.dispose();
 	}
 
-	public void renderEntity(ImmutableArray<Entity> immutableArray, Camera sunCamera) {
+	public void renderEntity(ImmutableArray<Entity> immutableArray, CameraEntity sunCamera) {
 		for (Entity entity : immutableArray) {
-			if (entity instanceof AbstractEntity && entity.getComponent(RendereableComponent.class) != null) {
+			if (entity instanceof AbstractEntity && entity.getComponent(Renderable.class) != null) {
 				processEntity((AbstractEntity) entity);
 			}
 		}
 		renderEntity(sunCamera);
 	}
 
-	private void renderEntity(Camera sunCamera) {
+	private void renderEntity(CameraEntity sunCamera) {
 		glCullFace(GL_FRONT);
 		shader.start();
 		shader.loadviewMatrix(sunCamera);
