@@ -14,18 +14,12 @@ subprojects {
 	}
 }
 
-project(":ashley") {
-	dependencies { compile project(':utils') }
-}
-
 project(":client") {
 
 	project.ext.lwjglVersion = "3.1.1"
 
 	dependencies {
-		compile project(':ashley')
 		compile project(':universal')
-		compile project(':utils')
 		compile project(':assets')
 		compile 'de.jarnbjo:j-ogg-all:1.0.0'
 		compile 'org.jcraft:jorbis:0.0.17'
@@ -71,9 +65,7 @@ project(":client") {
 
 project(":server") {
 	dependencies {
-		compile project(':ashley')
 		compile project(':universal')
-		compile project(':utils')
 		compile 'io.netty:netty-all:4.1.6.Final'
 		testCompile group: 'junit', name: 'junit', version: '4.12'
 	}
@@ -89,7 +81,6 @@ project(":universal") {
 	dependencies {
 		compile 'org.codehaus.groovy:groovy:2.4.7'
 		compile 'org.codehaus.groovy:groovy-jsr223:2.4.7'
-		compile project(':ashley')
 		compile project(':utils')
 		testCompile group: 'junit', name: 'junit', version: '4.12'
 	}

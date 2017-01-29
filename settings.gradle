@@ -1,2 +1,2 @@
 rootProject.name = 'Voxel'
-include 'ashley', 'utils', 'client', 'server', 'universal', 'launcher', 'assets'
+include 'utils', 'client', 'server', 'universal', 'launcher', 'assets'
