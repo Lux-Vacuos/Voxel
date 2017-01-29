@@ -28,19 +28,19 @@ import java.net.URLConnection;
 
 import com.google.gson.Gson;
 
-import net.luxvacuos.voxel.launcher.remote.StatusBoolean;
+import net.luxvacuos.voxel.launcher.remote.StatusLogin;
 
 public class AuthHelper {
 
 	private static Gson gson = new Gson();
 
-	public static boolean login(String user, String pass) throws IOException {
+	public static StatusLogin login(String user, String pass) throws IOException {
 		if (user == "" || user.equals(""))
-			return false;
+			return new StatusLogin(false, "");
 		URL url = new URL(LauncherVariables.API + "/auth/login/" + user + "/" + pass);
 		URLConnection conn = url.openConnection();
 		BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-		StatusBoolean res = gson.fromJson(bufferedReader, StatusBoolean.class);
-		return res.isStatus();
+		StatusLogin res = gson.fromJson(bufferedReader, StatusLogin.class);
+		return res;
 	}
 }

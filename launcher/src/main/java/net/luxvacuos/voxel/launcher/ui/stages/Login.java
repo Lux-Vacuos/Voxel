@@ -36,6 +36,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import net.luxvacuos.voxel.launcher.core.AuthHelper;
 import net.luxvacuos.voxel.launcher.core.LauncherVariables;
+import net.luxvacuos.voxel.launcher.remote.StatusLogin;
 import net.luxvacuos.voxel.launcher.ui.MainUI;
 
 public class Login extends GridPane {
@@ -96,7 +97,9 @@ public class Login extends GridPane {
 			loginProgress.setProgress(-1);
 			new Thread(() -> {
 				try {
-					if (AuthHelper.login(userField.getText(), passField.getText())) {
+					StatusLogin status = AuthHelper.login(userField.getText(), passField.getText());
+					if (status.isStatus()) {
+						LauncherVariables.status = status;
 						LauncherVariables.username = userField.getText();
 						Platform.runLater(() -> {
 							stage.setScene(new Scene(ui.getMainStage()));

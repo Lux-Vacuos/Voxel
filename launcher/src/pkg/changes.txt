@@ -1,2 +1,2 @@
-release date=13:50 08.25.2016,version=0.0.10
- * Disabled login
+release date=2:16 01.29.2017,version=0.1.0
+ * Please check https://github.com/Lux-Vacuos/Voxel

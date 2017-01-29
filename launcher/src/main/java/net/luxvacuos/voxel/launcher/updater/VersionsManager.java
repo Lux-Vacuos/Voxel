@@ -109,10 +109,11 @@ public class VersionsManager {
 			if (Bootstrap.getPlatform().equals(Platform.MACOSX)) {
 				pb = new ProcessBuilder("java", "-XX:+UseG1GC", "-XstartOnFirstThread", "-Xmx1G", "-classpath",
 						getClassPath(ver), "net.luxvacuos.voxel.client.bootstrap.Bootstrap", "-username",
-						LauncherVariables.username);
+						LauncherVariables.username, "-uuid", LauncherVariables.status.getUuid());
 			} else {
 				pb = new ProcessBuilder("java", "-XX:+UseG1GC", "-Xmx1G", "-classpath", getClassPath(ver),
-						"net.luxvacuos.voxel.client.bootstrap.Bootstrap", "-username", LauncherVariables.username);
+						"net.luxvacuos.voxel.client.bootstrap.Bootstrap", "-username", LauncherVariables.username,
+						"-uuid", LauncherVariables.status.getUuid());
 			}
 			pb.command().addAll(LauncherVariables.userArgs);
 			try {
