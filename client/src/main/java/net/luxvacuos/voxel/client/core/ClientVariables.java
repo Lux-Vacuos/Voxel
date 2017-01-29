@@ -22,6 +22,7 @@ package net.luxvacuos.voxel.client.core;
 
 import net.luxvacuos.igl.vector.Vector3d;
 import net.luxvacuos.voxel.universal.core.GlobalVariables;
+import net.luxvacuos.voxel.universal.remote.User;
 
 /**
  * Voxel Global Variables
@@ -41,7 +42,7 @@ public class ClientVariables extends GlobalVariables {
 	/**
 	 * Users Stuff
 	 */
-	public static String username = "";
+	public static User user;
 	/**
 	 * Game Settings
 	 */

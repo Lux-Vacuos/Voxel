@@ -24,6 +24,7 @@ import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.core.Voxel;
 import net.luxvacuos.voxel.universal.bootstrap.AbstractBootstrap;
 import net.luxvacuos.voxel.universal.bootstrap.Platform;
+import net.luxvacuos.voxel.universal.remote.User;
 
 /**
  * Bootstrap, this initializes the game path using <b>AppData</b> on Windows and
@@ -46,7 +47,6 @@ public class Bootstrap extends AbstractBootstrap {
 	public void parseArgs(String[] args) {
 		// Booleans to prevent setting a previously set value
 		boolean gaveWidth = false, gaveHeight = false;
-
 		// Iterate through array
 		for (int i = 0; i < args.length; i++) {
 			switch (args[i]) {
@@ -72,8 +72,8 @@ public class Bootstrap extends AbstractBootstrap {
 				break;
 			// Check for username
 			case "-username":
-				// Set username
-				ClientVariables.username = args[++i];
+				// Setup user
+				ClientVariables.user = new User(args[++i], args[++i]);
 				break;
 			default:
 				// If there is an unknown arg throw exception
