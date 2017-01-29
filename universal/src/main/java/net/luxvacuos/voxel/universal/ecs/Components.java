@@ -43,4 +43,12 @@ public class Components {
 	public static final ComponentMapper<AABB> AABB = ComponentMapper.getFor(AABB.class);
 	
 	public static final ComponentMapper<ChunkLoader> CHUNK_LOADER = ComponentMapper.getFor(ChunkLoader.class);
+	
+	public static final ComponentMapper<NBTComponent> NBT = ComponentMapper.getFor(NBTComponent.class);
+	
+	public static final ComponentMapper<Player> PLAYER = ComponentMapper.getFor(Player.class);
+	
+	public static final ComponentMapper<Name> NAME = ComponentMapper.getFor(Name.class);
+	
+	public static final ComponentMapper<UUIDComponent> UUID = ComponentMapper.getFor(UUIDComponent.class);
 }
