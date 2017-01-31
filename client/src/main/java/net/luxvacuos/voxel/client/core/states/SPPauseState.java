@@ -53,10 +53,10 @@ public class SPPauseState extends AbstractState {
 		exitButton = new UIButton(uiWindow.getWidth() / 2 - 100, -uiWindow.getHeight() + 35, 200, 40,
 				"Back to Main Menu");
 		optionsButton = new UIButton(uiWindow.getWidth() / 2 - 100, -uiWindow.getHeight() + 85, 200, 40, "Options");
-		exitButton.setOnButtonPress((button, delta) -> {
+		exitButton.setOnButtonPress(() -> {
 			ClientVariables.exitWorld = true;
 		});
-		optionsButton.setOnButtonPress((button, delta) -> {
+		optionsButton.setOnButtonPress(() -> {
 		});
 		optionsButton.setEnabled(false);
 		uiWindow.addChildren(exitButton);

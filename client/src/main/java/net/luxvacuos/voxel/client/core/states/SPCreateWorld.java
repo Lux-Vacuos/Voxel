@@ -60,7 +60,7 @@ public class SPCreateWorld extends AbstractFadeState {
 		optionsT = new UIText("Options", uiWindow.getWidth() / 2, -uiWindow.getHeight() / 2);
 		optionsT.setAlign(NVG_ALIGN_CENTER);
 		createButton = new UIButton(uiWindow.getWidth() / 2 - 210, -uiWindow.getHeight() + 35, 200, 40, "Create World");
-		createButton.setOnButtonPress((button, delta) -> {
+		createButton.setOnButtonPress(() -> {
 			if (!worldName.equals("")) {
 				window.getKeyboardHandler().disableTextInput();
 				new File(ClientVariables.WORLD_PATH + worldName).mkdirs();
@@ -69,7 +69,7 @@ public class SPCreateWorld extends AbstractFadeState {
 			}
 		});
 		backButton = new UIButton(uiWindow.getWidth() / 2 + 10, -uiWindow.getHeight() + 35, 200, 40, "Back");
-		backButton.setOnButtonPress((button, delta) -> {
+		backButton.setOnButtonPress(() -> {
 			window.getKeyboardHandler().disableTextInput();
 			this.switchTo(StateNames.SP_SELECTION);
 		});

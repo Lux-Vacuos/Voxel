@@ -70,16 +70,16 @@ public class SPSelectionState extends AbstractFadeState {
 		playButton = new UIButton(uiWindow.getWidth() - 230, -150, 200, 40, "Load World");
 		createButton = new UIButton(uiWindow.getWidth() - 230, -100, 200, 40, "Create World");
 
-		exitButton.setOnButtonPress((button, delta) -> {
+		exitButton.setOnButtonPress(() -> {
 			this.switchTo(StateNames.MAIN_MENU);
 		});
-		playButton.setOnButtonPress((button, delta) -> {
+		playButton.setOnButtonPress(() -> {
 			if (!worldName.equals("")) {
 				this.switchTo(StateNames.SP_LOADING);
 			}
 		});
 
-		createButton.setOnButtonPress((button, delta) -> {
+		createButton.setOnButtonPress(() -> {
 			this.switchTo(StateNames.SP_CREATE_WORLD);
 		});
 

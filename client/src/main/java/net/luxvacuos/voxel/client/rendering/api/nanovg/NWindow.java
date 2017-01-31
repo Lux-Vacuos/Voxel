@@ -59,8 +59,8 @@ public abstract class NWindow implements INWindow {
 		if (decorations || hidden) {
 			if (Mouse.isButtonDown(0)) {
 				if (WM.invertWindowButtons) {
-					if (Mouse.getX() > x + 33 && Mouse.getY() < y - 2 && Mouse.getX() < x + 62
-							&& Mouse.getY() > y - 31 && resizable) {
+					if (Mouse.getX() > x + 33 && Mouse.getY() < y - 2 && Mouse.getX() < x + 62 && Mouse.getY() > y - 31
+							&& resizable) {
 						maximized = !maximized;
 						if (maximized) {
 							oldX = x;
@@ -80,6 +80,7 @@ public abstract class NWindow implements INWindow {
 					}
 					if (Mouse.getX() > x + 2 && Mouse.getY() < y - 2 && Mouse.getX() < x + 32
 							&& Mouse.getY() > y - 31) {
+						onClose();
 						closeWindow();
 					}
 				} else {
@@ -104,6 +105,7 @@ public abstract class NWindow implements INWindow {
 					}
 					if (Mouse.getX() > x + w - 31 && Mouse.getY() < y - 2 && Mouse.getX() < x + w - 2
 							&& Mouse.getY() > y - 31) {
+						onClose();
 						closeWindow();
 					}
 				}
@@ -113,7 +115,7 @@ public abstract class NWindow implements INWindow {
 					y += Mouse.getDY();
 				}
 				if (Mouse.getX() > x + w - 20 && Mouse.getY() < y - h + 20 && Mouse.getX() < x + w + 20
-						&& Mouse.getY() > y - h - 20 && resizable) {
+						&& Mouse.getY() > y - h - 20 && resizable && !maximized) {
 					w += Mouse.getDX();
 					h -= Mouse.getDY();
 				}
@@ -125,6 +127,10 @@ public abstract class NWindow implements INWindow {
 	@Override
 	public void dispose(Window window) {
 		disposeApp(window);
+	}
+
+	@Override
+	public void onClose() {
 	}
 
 	@Override
@@ -237,6 +243,9 @@ public abstract class NWindow implements INWindow {
 			exit = true;
 			break;
 		case DO_NOTHING:
+			break;
+		case HIDE:
+			hidden = true;
 			break;
 		}
 	}

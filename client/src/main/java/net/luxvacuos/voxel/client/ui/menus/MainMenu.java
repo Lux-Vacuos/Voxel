@@ -32,6 +32,8 @@ import net.luxvacuos.voxel.universal.core.states.StateMachine;
 
 public class MainMenu extends RootComponent {
 
+	private boolean open = false; // X: Temporal Fix
+
 	public MainMenu(float x, float y, float w, float h) {
 		super(x, y, w, h, "Main Menu");
 	}
@@ -63,37 +65,65 @@ public class MainMenu extends RootComponent {
 		exitButton.setAlignment(Alignment.CENTER);
 		exitButton.setWindowAlignment(Alignment.CENTER);
 
-		playButton.setOnButtonPress((button, delta) -> {
+		playButton.setOnButtonPress(() -> {
 			StateMachine.setCurrentState(StateNames.SP_SELECTION);
 		});
 
-		playMPButton.setOnButtonPress((button, delta) -> {
+		playMPButton.setOnButtonPress(() -> {
 			WM.getWM().addWindow(new MultiplayerMenu(w / 2 - 420 + x, y - 40, 840, 600));
 		});
 
-		optionsButton.setOnButtonPress((button, delta) -> {
+		optionsButton.setOnButtonPress(() -> {
 			WM.getWM().addWindow(new OptionsMenu(w / 2 - 420 + x, y - 40, 840, 600));
 		});
 
-		aboutButton.setOnButtonPress((button, delta) -> {
+		aboutButton.setOnButtonPress(() -> {
 			WM.getWM().addWindow(new AboutMenu(w / 2 - 420 + x, y - 40, 840, 630));
 		});
 
-		exitButton.setOnButtonPress((button, delta) -> {
+		exitButton.setOnButtonPress(() -> {
 			StateMachine.stop();
 		});
 
 		ScrollPane pane = new ScrollPane(0, 0, 370, 200, 340f, 60f);
 		pane.setItems(10);
 		pane.setColls(1);
-		
-		//super.addComponent(pane);
+
+		// super.addComponent(pane);
 		super.addComponent(playButton);
 		super.addComponent(playMPButton);
 		super.addComponent(optionsButton);
 		super.addComponent(aboutButton);
 		super.addComponent(exitButton);
+		super.setWindowClose(WindowClose.DO_NOTHING);
 		super.initApp(window);
+	}
+
+	@Override
+	public void onClose() {
+		if (!open) {
+			open = true;
+			RootComponent closeDialog = new RootComponent(w / 2 - 100, y - h / 2 + 50, 260, 100, "Exit Voxel?");
+			Button close = new Button(60, 0, 100, 40, "Exit");
+			close.setAlignment(Alignment.CENTER);
+			close.setWindowAlignment(Alignment.CENTER);
+			close.setOnButtonPress(() -> {
+				StateMachine.dispose();
+			});
+			Button cancel = new Button(-60, 0, 100, 40, "Cancel");
+			cancel.setAlignment(Alignment.CENTER);
+			cancel.setWindowAlignment(Alignment.CENTER);
+			cancel.setOnButtonPress(() -> {
+				closeDialog.closeWindow();
+				open = false;
+			});
+			closeDialog.addComponent(close);
+			closeDialog.addComponent(cancel);
+			closeDialog.setBackgroundColor(0.4f, 0.4f, 0.4f, 1f);
+			closeDialog.setAlwaysOnTop(true);
+			closeDialog.setResizable(false);
+			WM.getWM().addWindow(closeDialog);
+		}
 	}
 
 }

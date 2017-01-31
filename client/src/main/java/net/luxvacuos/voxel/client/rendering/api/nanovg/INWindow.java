@@ -26,7 +26,7 @@ import net.luxvacuos.voxel.client.rendering.api.nanovg.NRendering.BackgroundStyl
 public interface INWindow {
 
 	public enum WindowClose {
-		DISPOSE, DO_NOTHING
+		DISPOSE, DO_NOTHING, HIDE
 	};
 
 	public void initApp(Window window);
@@ -36,6 +36,8 @@ public interface INWindow {
 	public void updateApp(float delta, Window window);
 
 	public void disposeApp(Window window);
+	
+	public void onClose();
 
 	public void render(Window window, NWM nwm);
 

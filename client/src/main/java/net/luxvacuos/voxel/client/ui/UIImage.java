@@ -46,7 +46,7 @@ public class UIImage extends UIComponent {
 	@Override
 	public void update(float delta) {
 		if (onUpdate != null)
-			onUpdate.onAction(this, delta);
+			onUpdate.onAction();
 		super.update(delta);
 	}
 

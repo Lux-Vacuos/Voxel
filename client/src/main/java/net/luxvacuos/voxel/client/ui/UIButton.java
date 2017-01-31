@@ -75,7 +75,7 @@ public class UIButton extends UIComponent {
 	public void update(float delta) {
 		if (enabled)
 			if (pressed() && onPress != null)
-				onPress.onAction(this, delta);
+				onPress.onAction();
 		super.update(delta);
 	}
 

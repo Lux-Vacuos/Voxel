@@ -48,7 +48,7 @@ public class MultiplayerMenu extends RootComponent {
 		Button backButton = new Button(0, 40, 200, 40, "Close");
 		backButton.setAlignment(Alignment.CENTER);
 		backButton.setWindowAlignment(Alignment.BOTTOM);
-		backButton.setOnButtonPress((button, delta) -> {
+		backButton.setOnButtonPress(() -> {
 			ClientInternalSubsystem.getInstance().getGameSettings().update();
 			ClientInternalSubsystem.getInstance().getGameSettings().save();
 			super.closeWindow();
@@ -65,7 +65,7 @@ public class MultiplayerMenu extends RootComponent {
 		text.setAlign(NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
 		text.setWindowAlignment(Alignment.CENTER);
 
-		playButton.setOnButtonPress((button, delta) -> {
+		playButton.setOnButtonPress(() -> {
 			String ip = address.getText();
 			if (ip.equals(""))
 				return;

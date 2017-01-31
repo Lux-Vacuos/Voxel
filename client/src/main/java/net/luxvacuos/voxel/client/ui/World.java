@@ -44,7 +44,7 @@ public class World extends UIComponent {
 		addChildren(uIText);
 
 		UIButton btn = new UIButton(w - 60, 2, 58, h - 4, "Info");
-		btn.setOnButtonPress((button, delta) -> {
+		btn.setOnButtonPress(() -> {
 			info.setEnabled(!info.isEnabled());
 		});
 		addChildren(btn);

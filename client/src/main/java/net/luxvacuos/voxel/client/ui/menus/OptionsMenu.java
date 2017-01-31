@@ -37,11 +37,11 @@ public class OptionsMenu extends RootComponent {
 	public void initApp(Window window) {
 		super.setAlwaysOnTop(true);
 		super.setBackgroundColor(0.4f, 0.4f, 0.4f, 1f);
-		
+
 		Button backButton = new Button(0, 40, 200, 40, "Close");
 		backButton.setAlignment(Alignment.CENTER);
 		backButton.setWindowAlignment(Alignment.BOTTOM);
-		backButton.setOnButtonPress((button, delta) -> {
+		backButton.setOnButtonPress(() -> {
 			ClientInternalSubsystem.getInstance().getGameSettings().update();
 			ClientInternalSubsystem.getInstance().getGameSettings().save();
 			super.closeWindow();
@@ -159,7 +159,7 @@ public class OptionsMenu extends RootComponent {
 			lensFlaresButton.setColor(1.0f, 0.2f, 0.2f, 1.0f);
 		}
 
-		shadowsButton.setOnButtonPress((button, delta) -> {
+		shadowsButton.setOnButtonPress(() -> {
 			ClientVariables.useShadows = !ClientVariables.useShadows;
 			if (ClientVariables.useShadows) {
 				shadowsButton.setText("Shadows: ON");
@@ -170,7 +170,7 @@ public class OptionsMenu extends RootComponent {
 			}
 		});
 
-		dofButton.setOnButtonPress((button, delta) -> {
+		dofButton.setOnButtonPress(() -> {
 			ClientVariables.useDOF = !ClientVariables.useDOF;
 			if (ClientVariables.useDOF) {
 				dofButton.setText("Depth of Field: ON");
@@ -182,7 +182,7 @@ public class OptionsMenu extends RootComponent {
 
 		});
 
-		godraysButton.setOnButtonPress((button, delta) -> {
+		godraysButton.setOnButtonPress(() -> {
 			ClientVariables.useVolumetricLight = !ClientVariables.useVolumetricLight;
 			if (ClientVariables.useVolumetricLight) {
 				godraysButton.setText("Volumetric Light: ON");
@@ -193,7 +193,7 @@ public class OptionsMenu extends RootComponent {
 			}
 		});
 
-		fxaaButton.setOnButtonPress((button, delta) -> {
+		fxaaButton.setOnButtonPress(() -> {
 			ClientVariables.useFXAA = !ClientVariables.useFXAA;
 
 			if (ClientVariables.useFXAA) {
@@ -205,7 +205,7 @@ public class OptionsMenu extends RootComponent {
 			}
 		});
 
-		parallaxButton.setOnButtonPress((button, delta) -> {
+		parallaxButton.setOnButtonPress(() -> {
 			ClientVariables.useParallax = !ClientVariables.useParallax;
 			if (ClientVariables.useParallax) {
 				parallaxButton.setText("Parallax: ON");
@@ -217,7 +217,7 @@ public class OptionsMenu extends RootComponent {
 
 		});
 
-		motionBlurButton.setOnButtonPress((button, delta) -> {
+		motionBlurButton.setOnButtonPress(() -> {
 			ClientVariables.useMotionBlur = !ClientVariables.useMotionBlur;
 			if (ClientVariables.useMotionBlur) {
 				motionBlurButton.setText("Motion Blur: ON");
@@ -229,7 +229,7 @@ public class OptionsMenu extends RootComponent {
 
 		});
 
-		reflectionsButton.setOnButtonPress((button, delta) -> {
+		reflectionsButton.setOnButtonPress(() -> {
 			ClientVariables.useReflections = !ClientVariables.useReflections;
 			if (ClientVariables.useReflections) {
 				reflectionsButton.setText("Reflections: ON");
@@ -240,7 +240,7 @@ public class OptionsMenu extends RootComponent {
 			}
 		});
 
-		ambientOccButton.setOnButtonPress((button, delta) -> {
+		ambientOccButton.setOnButtonPress(() -> {
 			ClientVariables.useAmbientOcclusion = !ClientVariables.useAmbientOcclusion;
 			if (ClientVariables.useAmbientOcclusion) {
 				ambientOccButton.setText("Ambient Occlusion: ON");
@@ -251,7 +251,7 @@ public class OptionsMenu extends RootComponent {
 			}
 		});
 
-		chromaticAberrationButton.setOnButtonPress((button, delta) -> {
+		chromaticAberrationButton.setOnButtonPress(() -> {
 			ClientVariables.useChromaticAberration = !ClientVariables.useChromaticAberration;
 			if (ClientVariables.useChromaticAberration) {
 				chromaticAberrationButton.setText("Chromatic Aberration: ON");
@@ -262,7 +262,7 @@ public class OptionsMenu extends RootComponent {
 			}
 		});
 
-		lensFlaresButton.setOnButtonPress((button, delta) -> {
+		lensFlaresButton.setOnButtonPress(() -> {
 			ClientVariables.useLensFlares = !ClientVariables.useLensFlares;
 			if (ClientVariables.useLensFlares) {
 				lensFlaresButton.setText("Lens Flares: ON");

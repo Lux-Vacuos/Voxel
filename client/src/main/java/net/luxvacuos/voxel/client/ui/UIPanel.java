@@ -51,7 +51,7 @@ public class UIPanel extends UIComponent {
 	@Override
 	public void update(float delta) {
 		if (pressed() && onPress != null)
-			onPress.onAction(this, delta);
+			onPress.onAction();
 		super.update(delta);
 	}
 

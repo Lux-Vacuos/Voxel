@@ -56,7 +56,7 @@ public class Button extends Component {
 	public void update(float delta, Window window) {
 		if (onPress != null)
 			if (pressed() && !pressed)
-				onPress.onAction(null, delta);
+				onPress.onAction();
 		pressed = pressed();
 		super.update(delta, window);
 	}

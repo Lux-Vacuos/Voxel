@@ -48,7 +48,7 @@ public class AboutMenu extends RootComponent {
 		Button backButton = new Button(0, 40, 200, 40, "Close");
 		backButton.setAlignment(Alignment.CENTER);
 		backButton.setWindowAlignment(Alignment.BOTTOM);
-		backButton.setOnButtonPress((button, delta) -> {
+		backButton.setOnButtonPress(() -> {
 			super.closeWindow();
 		});
 
