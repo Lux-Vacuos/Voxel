@@ -70,7 +70,7 @@ public class MainMenu extends RootComponent {
 		});
 
 		playMPButton.setOnButtonPress(() -> {
-			WM.getWM().addWindow(new MultiplayerMenu(appW / 2 - 420 + appX, appY, 840, 600));
+			WM.getWM().addWindow(new MultiplayerMenu(appW / 2 - 250 + appX, appY - 100, 500, 400));
 		});
 
 		optionsButton.setOnButtonPress(() -> {
@@ -78,7 +78,7 @@ public class MainMenu extends RootComponent {
 		});
 
 		aboutButton.setOnButtonPress(() -> {
-			WM.getWM().addWindow(new AboutMenu(appW / 2 - 420 + appX, appY, 840, 630));
+			WM.getWM().addWindow(new AboutMenu(appW / 2 - 420 + appX, appY, 840, 600));
 		});
 
 		exitButton.setOnButtonPress(() -> {

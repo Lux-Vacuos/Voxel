@@ -28,7 +28,6 @@ import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.core.CoreInfo;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.ui.nextui.Alignment;
-import net.luxvacuos.voxel.client.ui.nextui.Button;
 import net.luxvacuos.voxel.client.ui.nextui.Image;
 import net.luxvacuos.voxel.client.ui.nextui.RootComponent;
 import net.luxvacuos.voxel.client.ui.nextui.Text;
@@ -44,13 +43,6 @@ public class AboutMenu extends RootComponent {
 		super.setAlwaysOnTop(true);
 		super.setResizable(false);
 		super.setBackgroundColor(0.4f, 0.4f, 0.4f, 1f);
-
-		Button backButton = new Button(0, 40, 200, 40, "Close");
-		backButton.setAlignment(Alignment.CENTER);
-		backButton.setWindowAlignment(Alignment.BOTTOM);
-		backButton.setOnButtonPress(() -> {
-			super.closeWindow();
-		});
 
 		Image voxelLogo = new Image(0, -40, 400, 200,
 				ClientInternalSubsystem.getInstance().getGameWindow().getResourceLoader().loadNVGTexture("Voxel-Logo"));
@@ -120,7 +112,6 @@ public class AboutMenu extends RootComponent {
 		rendererR.setAlign(NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE);
 		rendererR.setWindowAlignment(Alignment.RIGHT_TOP);
 
-		super.addComponent(backButton);
 		super.addComponent(voxelLogo);
 		super.addComponent(versionL);
 		super.addComponent(versionR);

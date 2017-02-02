@@ -44,17 +44,9 @@ public class MultiplayerMenu extends RootComponent {
 	public void initApp(Window window) {
 		super.setAlwaysOnTop(true);
 		super.setBackgroundColor(0.4f, 0.4f, 0.4f, 1f);
+		super.setResizable(false);
 		
-		Button backButton = new Button(0, 40, 200, 40, "Close");
-		backButton.setAlignment(Alignment.CENTER);
-		backButton.setWindowAlignment(Alignment.BOTTOM);
-		backButton.setOnButtonPress(() -> {
-			ClientInternalSubsystem.getInstance().getGameSettings().update();
-			ClientInternalSubsystem.getInstance().getGameSettings().save();
-			super.closeWindow();
-		});
-
-		Button playButton = new Button(0, 100, 200, 40, "Play");
+		Button playButton = new Button(0, 40, 200, 40, "Play");
 		playButton.setAlignment(Alignment.CENTER);
 		playButton.setWindowAlignment(Alignment.BOTTOM);
 		EditBox address = new EditBox(0, 0, 300, 30, "");
@@ -74,7 +66,6 @@ public class MultiplayerMenu extends RootComponent {
 			StateMachine.setCurrentState(StateNames.MP_WORLD);
 		});
 
-		super.addComponent(backButton);
 		super.addComponent(address);
 		super.addComponent(text);
 		super.addComponent(playButton);
