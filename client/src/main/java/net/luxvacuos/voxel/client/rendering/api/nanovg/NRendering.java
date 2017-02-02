@@ -98,10 +98,10 @@ public class NRendering {
 
 		if (invertBtns) {
 			// Button Close
-			renderWindowButton(vg, x + 2, y + 2, 29, 29, rgba(200, 0, 0, 200, colorB), ButtonStyle.EXIT);
+			renderWindowButton(vg, x, y + 2, 29, 29, rgba(200, 0, 0, 200, colorB), ButtonStyle.EXIT);
 			// Button Maximize
 			if (resizable)
-				renderWindowButton(vg, x + 33, y + 2, 29, 29, rgba(100, 100, 100, 200, colorB), ButtonStyle.MAXIMIZE);
+				renderWindowButton(vg, x + 31, y + 2, 29, 29, rgba(100, 100, 100, 200, colorB), ButtonStyle.MAXIMIZE);
 		} else {
 			// Button Close
 			renderWindowButton(vg, x + w - 31, y + 2, 29, 29, rgba(200, 0, 0, 200, colorB), ButtonStyle.EXIT);
