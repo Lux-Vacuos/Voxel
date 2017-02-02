@@ -22,104 +22,97 @@ package net.luxvacuos.voxel.client.rendering.api.nanovg;
 
 import org.lwjgl.nanovg.NVGColor;
 
+import static org.lwjgl.nanovg.NanoVG.*;
+
 import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.NRendering.BackgroundStyle;
 
-public abstract class NWindow implements INWindow {
+public abstract class NanoWindow implements IWindow {
 
-	private String title, font = "Roboto-Bold";
 	private boolean draggable = true, decorations = true, resizable = true, maximized, hidden = false, exit,
 			alwaysOnTop;
 	private BackgroundStyle backgroundStyle = BackgroundStyle.SOLID;
 	private NVGColor backgroundColor = NRendering.rgba(0, 0, 0, 255);
-	protected float x, y, w, h;
+	private float x, y, w, h;
+	protected float appX, appY, appW, appH;
 	private float oldX, oldY, oldW, oldH;
 	private WindowClose windowClose = WindowClose.DISPOSE;
+	private ITitleBar titleBar;
 
-	public NWindow(float x, float y, float w, float h, String title) {
-		this.title = title;
+	public NanoWindow(float x, float y, float w, float h, String title) {
 		this.x = x;
 		this.y = y;
 		this.w = w;
 		this.h = h;
+		titleBar = new TitleBar(title, 30);
+		titleBar.setOnMaximize((window) -> {
+			if (resizable) {
+				maximized = !maximized;
+				if (maximized) {
+					oldX = this.x;
+					oldY = this.y;
+					oldW = this.w;
+					oldH = this.h;
+					this.x = 0;
+					this.y = window.getHeight();
+					this.w = window.getWidth();
+					this.h = window.getHeight();
+				} else {
+					this.x = oldX;
+					this.y = oldY;
+					this.w = oldW;
+					this.h = oldH;
+				}
+			}
+		});
+		titleBar.setOnExit((window) -> {
+			onClose();
+			closeWindow();
+		});
+		titleBar.setOnDrag((window) -> {
+			if (draggable && !maximized) {
+				this.x += Mouse.getDX();
+				this.y += Mouse.getDY();
+			}
+		});
 	}
 
 	@Override
-	public void render(Window window, NWM nwm) {
+	public void render(Window window, IWindowManager nanoWindowManager) {
 		if (!hidden) {
-			NRendering.renderWindow(window.getNVGID(), title, font, x, window.getHeight() - y, w, h, backgroundStyle,
-					backgroundColor, decorations, WM.invertWindowButtons, resizable);
+			NRendering.renderWindow(window.getNVGID(), x, window.getHeight() - y, w, h, backgroundStyle,
+					backgroundColor, decorations, titleBar.isEnabled());
+			titleBar.render(window, this);
+			nvgSave(window.getNVGID());
+			nvgScissor(window.getNVGID(), appX, window.getHeight() - appY, appW, appH);
 			renderApp(window);
+			nvgRestore(window.getNVGID());
 		}
 	}
 
 	@Override
-	public void update(float delta, Window window, NWM nwm) {
+	public void update(float delta, Window window, IWindowManager nanoWindowManager) {
 		if (decorations || hidden) {
+			titleBar.update(window, this);
 			if (Mouse.isButtonDown(0)) {
-				if (WM.invertWindowButtons) {
-					if (Mouse.getX() > x + 33 && Mouse.getY() < y - 2 && Mouse.getX() < x + 62 && Mouse.getY() > y - 31
-							&& resizable) {
-						maximized = !maximized;
-						if (maximized) {
-							oldX = x;
-							oldY = y;
-							oldW = w;
-							oldH = h;
-							x = 0;
-							y = window.getHeight();
-							w = window.getWidth();
-							h = window.getHeight();
-						} else {
-							x = oldX;
-							y = oldY;
-							w = oldW;
-							h = oldH;
-						}
-					}
-					if (Mouse.getX() > x + 2 && Mouse.getY() < y - 2 && Mouse.getX() < x + 32
-							&& Mouse.getY() > y - 31) {
-						onClose();
-						closeWindow();
-					}
-				} else {
-					if (Mouse.getX() > x + w - 62 && Mouse.getY() < y - 2 && Mouse.getX() < x + w - 33
-							&& Mouse.getY() > y - 31 && resizable) {
-						maximized = !maximized;
-						if (maximized) {
-							oldX = x;
-							oldY = y;
-							oldW = w;
-							oldH = h;
-							x = 0;
-							y = window.getHeight();
-							w = window.getWidth();
-							h = window.getHeight();
-						} else {
-							x = oldX;
-							y = oldY;
-							w = oldW;
-							h = oldH;
-						}
-					}
-					if (Mouse.getX() > x + w - 31 && Mouse.getY() < y - 2 && Mouse.getX() < x + w - 2
-							&& Mouse.getY() > y - 31) {
-						onClose();
-						closeWindow();
-					}
-				}
-				if (Mouse.getX() > x && Mouse.getY() < y && Mouse.getX() < x + w && Mouse.getY() > y - 32 && draggable
-						&& !maximized) {
-					x += Mouse.getDX();
-					y += Mouse.getDY();
-				}
 				if (Mouse.getX() > x + w - 20 && Mouse.getY() < y - h + 20 && Mouse.getX() < x + w + 20
 						&& Mouse.getY() > y - h - 20 && resizable && !maximized) {
 					w += Mouse.getDX();
 					h -= Mouse.getDY();
 				}
 			}
+		}
+		if (titleBar.isEnabled()) {
+			appX = x + 2;
+			appY = y - 4 - titleBar.getH();
+			appW = w - 4;
+			appH = h - 4 - titleBar.getH() - 2;
+		} else {
+			appX = x + 2;
+			appY = y - 2;
+			appW = w - 4;
+			appH = h - 4;
 		}
 		updateApp(delta, window);
 	}
@@ -159,11 +152,6 @@ public abstract class NWindow implements INWindow {
 	}
 
 	@Override
-	public void setTitle(String title) {
-		this.title = title;
-	}
-
-	@Override
 	public void setWindowClose(WindowClose windowClose) {
 		this.windowClose = windowClose;
 	}
@@ -184,6 +172,10 @@ public abstract class NWindow implements INWindow {
 	@Override
 	public void setAlwaysOnTop(boolean alwaysOnTop) {
 		this.alwaysOnTop = alwaysOnTop;
+	}
+	@Override
+	public void toggleTitleBar(){
+		this.titleBar.setEnabled(!this.titleBar.isEnabled());
 	}
 
 	@Override

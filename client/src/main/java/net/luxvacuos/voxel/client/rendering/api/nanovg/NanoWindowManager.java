@@ -26,39 +26,39 @@ import java.util.List;
 import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 
-public class NWM implements IWM {
+public class NanoWindowManager implements IWindowManager {
 
-	private List<INWindow> windows;
+	private List<IWindow> windows;
 	private Window window;
 
-	public NWM(Window window) {
+	public NanoWindowManager(Window window) {
 		this.window = window;
 		windows = new ArrayList<>();
 	}
 
 	@Override
 	public void render() {
-		for (INWindow nWindow : windows) {
-			nWindow.render(window, this);
+		for (IWindow window : windows) {
+			window.render(this.window, this);
 		}
 	}
 
 	@Override
 	public void update(float delta) {
-		List<INWindow> toRemove = new ArrayList<>();
-		INWindow toTop = null;
-		for (INWindow nWindow : windows) {
-			if (nWindow.shouldClose()) {
-				nWindow.dispose(window);
-				toRemove.add(nWindow);
+		List<IWindow> toRemove = new ArrayList<>();
+		IWindow toTop = null;
+		for (IWindow window : windows) {
+			if (window.shouldClose()) {
+				window.dispose(this.window);
+				toRemove.add(window);
 				continue;
 			}
-			if (nWindow.insideWindow() && Mouse.isButtonDown(0))
-				toTop = nWindow;
+			if (window.insideWindow() && Mouse.isButtonDown(0))
+				toTop = window;
 		}
 		windows.removeAll(toRemove);
 		if (toTop != null) {
-			INWindow top = windows.get(windows.size() - 1);
+			IWindow top = windows.get(windows.size() - 1);
 			if (top != toTop)
 				if (!top.isAlwaysOnTop()) {
 					windows.remove(toTop);
@@ -75,24 +75,24 @@ public class NWM implements IWM {
 
 	@Override
 	public void dispose() {
-		for (INWindow nWindow : windows) {
-			nWindow.dispose(window);
+		for (IWindow window : windows) {
+			window.dispose(this.window);
 		}
 	}
 
-	public List<INWindow> getWindows() {
+	public List<IWindow> getWindows() {
 		return windows;
 	}
 
 	@Override
-	public void addWindow(INWindow window) {
+	public void addWindow(IWindow window) {
 		window.initApp(this.window);
 		window.update(0, this.window, this);
 		this.windows.add(window);
 	}
 
 	@Override
-	public void removeWindow(INWindow window) {
+	public void removeWindow(IWindow window) {
 		window.dispose(this.window);
 		this.windows.remove(window);
 	}

@@ -70,15 +70,15 @@ public class MainMenu extends RootComponent {
 		});
 
 		playMPButton.setOnButtonPress(() -> {
-			WM.getWM().addWindow(new MultiplayerMenu(w / 2 - 420 + x, y - 40, 840, 600));
+			WM.getWM().addWindow(new MultiplayerMenu(appW / 2 - 420 + appX, appY, 840, 600));
 		});
 
 		optionsButton.setOnButtonPress(() -> {
-			WM.getWM().addWindow(new OptionsMenu(w / 2 - 420 + x, y - 40, 840, 600));
+			WM.getWM().addWindow(new OptionsMenu(appW / 2 - 420 + appX, appY, 840, 600));
 		});
 
 		aboutButton.setOnButtonPress(() -> {
-			WM.getWM().addWindow(new AboutMenu(w / 2 - 420 + x, y - 40, 840, 630));
+			WM.getWM().addWindow(new AboutMenu(appW / 2 - 420 + appX, appY, 840, 630));
 		});
 
 		exitButton.setOnButtonPress(() -> {
@@ -103,7 +103,8 @@ public class MainMenu extends RootComponent {
 	public void onClose() {
 		if (!open) {
 			open = true;
-			RootComponent closeDialog = new RootComponent(w / 2 - 100, y - h / 2 + 50, 260, 100, "Exit Voxel?");
+			RootComponent closeDialog = new RootComponent(appW / 2 - 100, appY - appH / 2 + 50, 260, 100,
+					"Exit Voxel?");
 			Button close = new Button(60, 0, 100, 40, "Exit");
 			close.setAlignment(Alignment.CENTER);
 			close.setWindowAlignment(Alignment.CENTER);

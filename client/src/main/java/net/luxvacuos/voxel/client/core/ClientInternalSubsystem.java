@@ -27,7 +27,7 @@ import net.luxvacuos.voxel.client.rendering.api.glfw.PixelBufferHandle;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.glfw.WindowHandle;
 import net.luxvacuos.voxel.client.rendering.api.glfw.WindowManager;
-import net.luxvacuos.voxel.client.rendering.api.nanovg.NWM;
+import net.luxvacuos.voxel.client.rendering.api.nanovg.NanoWindowManager;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.WM;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Renderer;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.ShaderIncludes;
@@ -90,7 +90,7 @@ public class ClientInternalSubsystem extends AbstractInternalSubsystem {
 		handle.setPixelBuffer(pb);
 		this.gameWindowID = WindowManager.createWindow(handle, ClientVariables.VSYNC);
 		Window window = WindowManager.getWindow(this.gameWindowID);
-		WM.setWM(new NWM(window));
+		WM.setWM(new NanoWindowManager(window));
 
 		ResourceLoader loader = window.getResourceLoader();
 		loader.loadNVGFont("Roboto-Bold", "Roboto-Bold");

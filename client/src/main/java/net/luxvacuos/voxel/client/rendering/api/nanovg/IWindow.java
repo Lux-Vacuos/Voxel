@@ -23,7 +23,7 @@ package net.luxvacuos.voxel.client.rendering.api.nanovg;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.NRendering.BackgroundStyle;
 
-public interface INWindow {
+public interface IWindow {
 
 	public enum WindowClose {
 		DISPOSE, DO_NOTHING, HIDE
@@ -36,13 +36,13 @@ public interface INWindow {
 	public void updateApp(float delta, Window window);
 
 	public void disposeApp(Window window);
-	
+
 	public void onClose();
 
-	public void render(Window window, NWM nwm);
+	public void render(Window window, IWindowManager nanoWindowManager);
 
-	public void update(float delta, Window window, NWM nwm);
-	
+	public void update(float delta, Window window, IWindowManager nanoWindowManager);
+
 	public void dispose(Window window);
 
 	public boolean insideWindow();
@@ -55,8 +55,6 @@ public interface INWindow {
 
 	public void setBackgroundStyle(BackgroundStyle backgroundStyle);
 
-	public void setTitle(String title);
-
 	public void setWindowClose(WindowClose windowClose);
 
 	public void setBackgroundColor(float r, float g, float b, float a);
@@ -64,6 +62,8 @@ public interface INWindow {
 	public void setHidden(boolean hidden);
 
 	public void setAlwaysOnTop(boolean alwaysOnTop);
+
+	public void toggleTitleBar();
 
 	public BackgroundStyle getBackgroundStyle();
 

@@ -44,7 +44,7 @@ public class AboutMenu extends RootComponent {
 		super.setAlwaysOnTop(true);
 		super.setResizable(false);
 		super.setBackgroundColor(0.4f, 0.4f, 0.4f, 1f);
-		
+
 		Button backButton = new Button(0, 40, 200, 40, "Close");
 		backButton.setAlignment(Alignment.CENTER);
 		backButton.setWindowAlignment(Alignment.BOTTOM);
@@ -91,7 +91,7 @@ public class AboutMenu extends RootComponent {
 		Text openglR = new Text(CoreInfo.OpenGLVer, -30, -380);
 		openglR.setAlign(NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE);
 		openglR.setWindowAlignment(Alignment.RIGHT_TOP);
-		
+
 		Text glslL = new Text("GLSL Version", 30, -410);
 		glslL.setFont("Roboto-Bold");
 		glslL.setWindowAlignment(Alignment.LEFT_TOP);

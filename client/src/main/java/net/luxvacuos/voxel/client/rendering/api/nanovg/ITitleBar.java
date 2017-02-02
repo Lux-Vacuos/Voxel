@@ -20,23 +20,24 @@
 
 package net.luxvacuos.voxel.client.rendering.api.nanovg;
 
-import net.luxvacuos.igl.Logger;
+import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 
-public final class WM {
+public interface ITitleBar {
 
-	private static IWindowManager iwm;
-	
-	public static boolean invertWindowButtons = false;
+	public void render(Window window, IWindow iWindow);
 
-	public static void setWM(IWindowManager iwm) {
-		if (WM.iwm != null)
-			WM.iwm.dispose();
-		WM.iwm = iwm;
-		Logger.log("Window Manager: " + iwm.getClass().getSimpleName());
-	}
+	public void update(Window window, IWindow iWindow);
 
-	public static IWindowManager getWM() {
-		return iwm;
-	}
+	public float getH();
+
+	public void setOnExit(Event onclick);
+
+	public void setOnMaximize(Event onclick);
+
+	public void setOnDrag(Event event);
+
+	public boolean isEnabled();
+
+	public void setEnabled(boolean enabled);
 
 }

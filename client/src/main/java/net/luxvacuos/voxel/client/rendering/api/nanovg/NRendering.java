@@ -20,34 +20,7 @@
 
 package net.luxvacuos.voxel.client.rendering.api.nanovg;
 
-import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_CENTER;
-import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_LEFT;
-import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_MIDDLE;
-import static org.lwjgl.nanovg.NanoVG.NVG_HOLE;
-import static org.lwjgl.nanovg.NanoVG.NVG_PI;
-import static org.lwjgl.nanovg.NanoVG.nvgBeginPath;
 import static org.lwjgl.nanovg.NanoVG.*;
-import static org.lwjgl.nanovg.NanoVG.nvgFill;
-import static org.lwjgl.nanovg.NanoVG.nvgFillColor;
-import static org.lwjgl.nanovg.NanoVG.nvgFillPaint;
-import static org.lwjgl.nanovg.NanoVG.nvgFontBlur;
-import static org.lwjgl.nanovg.NanoVG.nvgFontFace;
-import static org.lwjgl.nanovg.NanoVG.nvgFontSize;
-import static org.lwjgl.nanovg.NanoVG.nvgImagePattern;
-import static org.lwjgl.nanovg.NanoVG.nvgImageSize;
-import static org.lwjgl.nanovg.NanoVG.nvgLineTo;
-import static org.lwjgl.nanovg.NanoVG.nvgLinearGradient;
-import static org.lwjgl.nanovg.NanoVG.nvgMoveTo;
-import static org.lwjgl.nanovg.NanoVG.nvgPathWinding;
-import static org.lwjgl.nanovg.NanoVG.nvgRect;
-import static org.lwjgl.nanovg.NanoVG.nvgRestore;
-import static org.lwjgl.nanovg.NanoVG.nvgRoundedRect;
-import static org.lwjgl.nanovg.NanoVG.nvgSave;
-import static org.lwjgl.nanovg.NanoVG.nvgStroke;
-import static org.lwjgl.nanovg.NanoVG.nvgStrokeColor;
-import static org.lwjgl.nanovg.NanoVG.nvgText;
-import static org.lwjgl.nanovg.NanoVG.nvgTextAlign;
-import static org.lwjgl.nanovg.NanoVG.nvgTextBounds;
 import static org.lwjgl.system.MemoryUtil.memAllocInt;
 import static org.lwjgl.system.MemoryUtil.memFree;
 import static org.lwjgl.system.MemoryUtil.memUTF8;
@@ -61,9 +34,6 @@ import org.lwjgl.nanovg.NVGColor;
 import org.lwjgl.nanovg.NVGPaint;
 import org.lwjgl.nanovg.NVGTextRow;
 import org.lwjgl.system.MemoryStack;
-
-import net.luxvacuos.voxel.client.rendering.api.glfw.WindowManager;
-import net.luxvacuos.voxel.client.util.Maths;
 
 /**
  *
@@ -121,18 +91,55 @@ public class NRendering {
 		return color;
 	}
 
-	public static void renderWindow(long vg, String title, String font, float x, float y, float w, float h,
-			BackgroundStyle backgroundStyle, NVGColor backgroundColor, boolean decorations, boolean invertBtns,
-			boolean resizable) {
-		float cornerRadius = 0.0f;
+	public static void renderTitleBar(long vg, String title, String font, float x, float y, float w, float h,
+			boolean invertBtns, boolean resizable) {
+
+		nvgSave(vg);
+
+		if (invertBtns) {
+			// Button Close
+			renderWindowButton(vg, x + 2, y + 2, 29, 29, rgba(200, 0, 0, 200, colorB), ButtonStyle.EXIT);
+			// Button Maximize
+			if (resizable)
+				renderWindowButton(vg, x + 33, y + 2, 29, 29, rgba(100, 100, 100, 200, colorB), ButtonStyle.MAXIMIZE);
+		} else {
+			// Button Close
+			renderWindowButton(vg, x + w - 31, y + 2, 29, 29, rgba(200, 0, 0, 200, colorB), ButtonStyle.EXIT);
+			// Button Maximize
+			if (resizable)
+				renderWindowButton(vg, x + w - 62, y + 2, 29, 29, rgba(100, 100, 100, 200, colorB),
+						ButtonStyle.MAXIMIZE);
+		}
+
+		// Title
+		nvgFontSize(vg, 18.0f);
+		nvgFontFace(vg, font);
+		nvgTextAlign(vg, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
+
+		nvgFontBlur(vg, 2);
+		nvgFillColor(vg, rgba(0, 0, 0, 128, colorA));
+		nvgText(vg, x + w / 2, y + 16 + 1, title);
+
+		nvgFontBlur(vg, 0);
+		nvgFillColor(vg, rgba(220, 220, 220, 255, colorA));
+		nvgText(vg, x + w / 2, y + 16, title);
+
+		nvgRestore(vg);
+	}
+
+	public static void renderWindow(long vg, float x, float y, float w, float h, BackgroundStyle backgroundStyle,
+			NVGColor backgroundColor, boolean decorations, boolean titleBar) {
 		NVGPaint shadowPaint = paintA;
 
 		nvgSave(vg);
 		if (decorations) {
 			// Window
 			nvgBeginPath(vg);
-			nvgRoundedRect(vg, x, y, w, h, cornerRadius);
-			nvgRoundedRect(vg, x + 2, y + 33, w - 4, h - 35, cornerRadius);
+			nvgRect(vg, x, y, w, h);
+			if (titleBar)
+				nvgRect(vg, x + 2, y + 33, w - 4, h - 35);
+			else
+				nvgRect(vg, x + 2, y + 2, w - 4, h - 4);
 			nvgPathWinding(vg, NVG_HOLE);
 			nvgFillColor(vg, rgba(120, 120, 120, 255, colorA));
 			nvgFill(vg);
@@ -142,7 +149,10 @@ public class NRendering {
 		switch (backgroundStyle) {
 		case SOLID:
 			nvgBeginPath(vg);
-			nvgRoundedRect(vg, x + 2, y + 33, w - 4, h - 35, cornerRadius);
+			if (titleBar)
+				nvgRect(vg, x + 2, y + 33, w - 4, h - 35);
+			else
+				nvgRect(vg, x + 2, y + 2, w - 4, h - 4);
 			nvgFillColor(vg, backgroundColor);
 			nvgFill(vg);
 			break;
@@ -150,44 +160,16 @@ public class NRendering {
 			break;
 		}
 		if (decorations) {
-			if (invertBtns) {
-				// Button Close
-				renderWindowButton(vg, x + 2, y + 2, 29, 29, rgba(200, 0, 0, 200, colorB), ButtonStyle.EXIT);
-				// Button Maximize
-				if (resizable)
-					renderWindowButton(vg, x + 33, y + 2, 29, 29, rgba(100, 100, 100, 200, colorB),
-							ButtonStyle.MAXIMIZE);
-			} else {
-				// Button Close
-				renderWindowButton(vg, x + w - 31, y + 2, 29, 29, rgba(200, 0, 0, 200, colorB), ButtonStyle.EXIT);
-				// Button Maximize
-				if (resizable)
-					renderWindowButton(vg, x + w - 62, y + 2, 29, 29, rgba(100, 100, 100, 200, colorB),
-							ButtonStyle.MAXIMIZE);
-			}
-
 			// Drop shadow
-			nvgBoxGradient(vg, x, y + 2, w, h, cornerRadius * 2, 10, rgba(0, 0, 0, 128, colorA),
-					rgba(0, 0, 0, 0, colorB), shadowPaint);
+			nvgBoxGradient(vg, x, y + 2, w, h, 0, 10, rgba(0, 0, 0, 128, colorA), rgba(0, 0, 0, 0, colorB),
+					shadowPaint);
 			nvgBeginPath(vg);
 			nvgRect(vg, x - 10, y - 10, w + 20, h + 30);
-			nvgRoundedRect(vg, x, y, w, h, cornerRadius);
+			nvgRect(vg, x, y, w, h);
 			nvgPathWinding(vg, NVG_HOLE);
 			nvgFillPaint(vg, shadowPaint);
 			nvgFill(vg);
 
-			// Title
-			nvgFontSize(vg, 18.0f);
-			nvgFontFace(vg, font);
-			nvgTextAlign(vg, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
-
-			nvgFontBlur(vg, 2);
-			nvgFillColor(vg, rgba(0, 0, 0, 128, colorA));
-			nvgText(vg, x + w / 2, y + 16 + 1, title);
-
-			nvgFontBlur(vg, 0);
-			nvgFillColor(vg, rgba(220, 220, 220, 255, colorA));
-			nvgText(vg, x + w / 2, y + 16, title);
 		}
 
 		nvgRestore(vg);

@@ -20,23 +20,16 @@
 
 package net.luxvacuos.voxel.client.rendering.api.nanovg;
 
-import net.luxvacuos.igl.Logger;
+import net.luxvacuos.voxel.universal.resources.IDisposable;
 
-public final class WM {
+public interface IWindowManager extends IDisposable {
 
-	private static IWindowManager iwm;
-	
-	public static boolean invertWindowButtons = false;
+	public void render();
 
-	public static void setWM(IWindowManager iwm) {
-		if (WM.iwm != null)
-			WM.iwm.dispose();
-		WM.iwm = iwm;
-		Logger.log("Window Manager: " + iwm.getClass().getSimpleName());
-	}
+	public void update(float delta);
 
-	public static IWindowManager getWM() {
-		return iwm;
-	}
+	public void addWindow(IWindow window);
+
+	public void removeWindow(IWindow window);
 
 }

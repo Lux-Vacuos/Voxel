@@ -24,9 +24,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
-import net.luxvacuos.voxel.client.rendering.api.nanovg.NWindow;
+import net.luxvacuos.voxel.client.rendering.api.nanovg.NanoWindow;
 
-public class RootComponent extends NWindow {
+public class RootComponent extends NanoWindow {
 
 	private List<Component> components = new ArrayList<>();
 
@@ -34,10 +34,10 @@ public class RootComponent extends NWindow {
 
 	public RootComponent(float x, float y, float w, float h, String title) {
 		super(x, y, w, h, title);
-		rootX = x + 2;
-		rootY = y - h + 2;
-		rootW = w - 4;
-		rootH = h - 35;
+		rootX = appX;
+		rootY = appY - appH;
+		rootW = appW;
+		rootH = appH;
 	}
 
 	@Override
@@ -56,10 +56,10 @@ public class RootComponent extends NWindow {
 
 	@Override
 	public void updateApp(float delta, Window window) {
-		rootX = x + 2;
-		rootY = y - h + 2;
-		rootW = w - 4;
-		rootH = h - 35;
+		rootX = appX;
+		rootY = appY - appH;
+		rootW = appW;
+		rootH = appH;
 		for (Component component : components) {
 			component.update(delta, window);
 		}
