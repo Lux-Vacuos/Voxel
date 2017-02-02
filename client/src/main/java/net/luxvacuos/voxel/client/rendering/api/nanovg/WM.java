@@ -20,7 +20,13 @@
 
 package net.luxvacuos.voxel.client.rendering.api.nanovg;
 
+import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_CENTER;
+import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_MIDDLE;
+
 import net.luxvacuos.igl.Logger;
+import net.luxvacuos.voxel.client.ui.nextui.Alignment;
+import net.luxvacuos.voxel.client.ui.nextui.RootComponent;
+import net.luxvacuos.voxel.client.ui.nextui.Text;
 
 public final class WM {
 
@@ -37,6 +43,82 @@ public final class WM {
 
 	public static IWindowManager getWM() {
 		return iwm;
+	}
+	
+	public static void generateTestWindows(){
+		Text win0T = new Text("Default Window", 0, 0);
+		win0T.setAlign(NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
+		win0T.setWindowAlignment(Alignment.CENTER);
+
+		Text win1T = new Text("Can't be resized", 0, 0);
+		win1T.setAlign(NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
+		win1T.setWindowAlignment(Alignment.CENTER);
+
+		Text win2T = new Text("Disabled titlebar", 0, 0);
+		win2T.setAlign(NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
+		win2T.setWindowAlignment(Alignment.CENTER);
+
+		Text win3T = new Text("No decorations", 0, 0);
+		win3T.setAlign(NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
+		win3T.setWindowAlignment(Alignment.CENTER);
+
+		Text win4T = new Text("No decorations and disabled titlebar", 0, 0);
+		win4T.setAlign(NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
+		win4T.setWindowAlignment(Alignment.CENTER);
+		win4T.setFontSize(15);
+
+		RootComponent win0 = new RootComponent(20, 700, 200, 200, "Window0");
+		win0.addComponent(win0T);
+		RootComponent win1 = new RootComponent(240, 700, 200, 200, "Window1");
+		win1.addComponent(win1T);
+		win1.setResizable(false);
+		RootComponent win2 = new RootComponent(480, 700, 200, 200, "Window2");
+		win2.addComponent(win2T);
+		win2.toggleTitleBar();
+		RootComponent win3 = new RootComponent(700, 700, 200, 200, "Window3");
+		win3.addComponent(win3T);
+		win3.setDecorations(false);
+		RootComponent win4 = new RootComponent(920, 700, 200, 200, "Window4");
+		win4.addComponent(win4T);
+		win4.toggleTitleBar();
+		win4.setDecorations(false);
+
+		RootComponent win5 = new RootComponent(20, 480, 200, 200, "Window5");
+		win5.setBackgroundColor(0.4f, 0.4f, 0.4f, 1f);
+		RootComponent win6 = new RootComponent(240, 480, 200, 200, "Window6");
+		win6.setBackgroundColor(0.4f, 0.4f, 0.4f, 1f);
+		win6.setResizable(false);
+		RootComponent win7 = new RootComponent(480, 480, 200, 200, "Window7");
+		win7.setBackgroundColor(0.4f, 0.4f, 0.4f, 1f);
+		win7.toggleTitleBar();
+		RootComponent win8 = new RootComponent(700, 480, 200, 200, "Window8");
+		win8.setBackgroundColor(0.4f, 0.4f, 0.4f, 1f);
+		win8.setDecorations(false);
+		RootComponent win9 = new RootComponent(920, 480, 200, 200, "Window9");
+		win9.setBackgroundColor(0.4f, 0.4f, 0.4f, 1f);
+		win9.toggleTitleBar();
+		win9.setDecorations(false);
+
+		win0.setAlwaysOnTop(true);
+		win1.setAlwaysOnTop(true);
+		win2.setAlwaysOnTop(true);
+		win3.setAlwaysOnTop(true);
+		win4.setAlwaysOnTop(true);
+		win5.setAlwaysOnTop(true);
+		win6.setAlwaysOnTop(true);
+		win7.setAlwaysOnTop(true);
+		win8.setAlwaysOnTop(true);
+		win9.setAlwaysOnTop(true);
+		WM.getWM().addWindow(win0);
+		WM.getWM().addWindow(win1);
+		WM.getWM().addWindow(win2);
+		WM.getWM().addWindow(win3);
+		WM.getWM().addWindow(win4);
+		WM.getWM().addWindow(win5);
+		WM.getWM().addWindow(win6);
+		WM.getWM().addWindow(win7);
+		WM.getWM().addWindow(win8);
+		WM.getWM().addWindow(win9);
 	}
 
 }

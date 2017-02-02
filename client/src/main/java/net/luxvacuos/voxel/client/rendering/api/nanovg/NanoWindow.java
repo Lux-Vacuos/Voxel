@@ -83,7 +83,8 @@ public abstract class NanoWindow implements IWindow {
 		if (!hidden) {
 			NRendering.renderWindow(window.getNVGID(), x, window.getHeight() - y, w, h, backgroundStyle,
 					backgroundColor, decorations, titleBar.isEnabled());
-			titleBar.render(window, this);
+			if (decorations)
+				titleBar.render(window, this);
 			nvgSave(window.getNVGID());
 			nvgScissor(window.getNVGID(), appX, window.getHeight() - appY, appW, appH);
 			renderApp(window);
@@ -93,7 +94,7 @@ public abstract class NanoWindow implements IWindow {
 
 	@Override
 	public void update(float delta, Window window, IWindowManager nanoWindowManager) {
-		if (decorations || hidden) {
+		if (decorations && !hidden) {
 			titleBar.update(window, this);
 			if (Mouse.isButtonDown(0)) {
 				if (Mouse.getX() > x + w - 20 && Mouse.getY() < y - h + 20 && Mouse.getX() < x + w + 20
@@ -173,8 +174,9 @@ public abstract class NanoWindow implements IWindow {
 	public void setAlwaysOnTop(boolean alwaysOnTop) {
 		this.alwaysOnTop = alwaysOnTop;
 	}
+
 	@Override
-	public void toggleTitleBar(){
+	public void toggleTitleBar() {
 		this.titleBar.setEnabled(!this.titleBar.isEnabled());
 	}
 

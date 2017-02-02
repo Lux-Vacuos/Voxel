@@ -90,11 +90,13 @@ public class MainMenu extends RootComponent {
 		pane.setColls(1);
 
 		// super.addComponent(pane);
+
 		super.addComponent(playButton);
 		super.addComponent(playMPButton);
 		super.addComponent(optionsButton);
 		super.addComponent(aboutButton);
 		super.addComponent(exitButton);
+
 		super.setWindowClose(WindowClose.DO_NOTHING);
 		super.initApp(window);
 	}
