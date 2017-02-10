@@ -20,7 +20,40 @@
 
 package net.luxvacuos.voxel.client.rendering.api.nanovg;
 
-import static org.lwjgl.nanovg.NanoVG.*;
+import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_CENTER;
+import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_LEFT;
+import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_MIDDLE;
+import static org.lwjgl.nanovg.NanoVG.NVG_CCW;
+import static org.lwjgl.nanovg.NanoVG.NVG_CW;
+import static org.lwjgl.nanovg.NanoVG.NVG_HOLE;
+import static org.lwjgl.nanovg.NanoVG.NVG_PI;
+import static org.lwjgl.nanovg.NanoVG.nvgArc;
+import static org.lwjgl.nanovg.NanoVG.nvgBeginPath;
+import static org.lwjgl.nanovg.NanoVG.nvgBoxGradient;
+import static org.lwjgl.nanovg.NanoVG.nvgClosePath;
+import static org.lwjgl.nanovg.NanoVG.nvgFill;
+import static org.lwjgl.nanovg.NanoVG.nvgFillColor;
+import static org.lwjgl.nanovg.NanoVG.nvgFillPaint;
+import static org.lwjgl.nanovg.NanoVG.nvgFontBlur;
+import static org.lwjgl.nanovg.NanoVG.nvgFontFace;
+import static org.lwjgl.nanovg.NanoVG.nvgFontSize;
+import static org.lwjgl.nanovg.NanoVG.nvgImagePattern;
+import static org.lwjgl.nanovg.NanoVG.nvgImageSize;
+import static org.lwjgl.nanovg.NanoVG.nvgLineTo;
+import static org.lwjgl.nanovg.NanoVG.nvgLinearGradient;
+import static org.lwjgl.nanovg.NanoVG.nvgMoveTo;
+import static org.lwjgl.nanovg.NanoVG.nvgPathWinding;
+import static org.lwjgl.nanovg.NanoVG.nvgRect;
+import static org.lwjgl.nanovg.NanoVG.nvgRestore;
+import static org.lwjgl.nanovg.NanoVG.nvgSave;
+import static org.lwjgl.nanovg.NanoVG.nvgScissor;
+import static org.lwjgl.nanovg.NanoVG.nvgStroke;
+import static org.lwjgl.nanovg.NanoVG.nvgStrokeColor;
+import static org.lwjgl.nanovg.NanoVG.nvgStrokeWidth;
+import static org.lwjgl.nanovg.NanoVG.nvgText;
+import static org.lwjgl.nanovg.NanoVG.nvgTextAlign;
+import static org.lwjgl.nanovg.NanoVG.nvgTextBounds;
+import static org.lwjgl.nanovg.NanoVG.nvgTranslate;
 import static org.lwjgl.system.MemoryUtil.memAllocInt;
 import static org.lwjgl.system.MemoryUtil.memFree;
 import static org.lwjgl.system.MemoryUtil.memUTF8;
@@ -28,12 +61,16 @@ import static org.lwjgl.system.MemoryUtil.memUTF8;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
+import java.util.List;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.nanovg.NVGColor;
 import org.lwjgl.nanovg.NVGPaint;
 import org.lwjgl.nanovg.NVGTextRow;
 import org.lwjgl.system.MemoryStack;
+
+import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
+import net.luxvacuos.voxel.client.ui.nextui.ScrollPaneElement;
 
 /**
  *
@@ -161,7 +198,7 @@ public class NRendering {
 		}
 		if (decorations) {
 			// Drop shadow
-			nvgBoxGradient(vg, x, y + 2, w, h, 0, 10, rgba(0, 0, 0, 128, colorA), rgba(0, 0, 0, 0, colorB),
+			nvgBoxGradient(vg, x, y + 5, w, h, 0, 20, rgba(0, 0, 0, 128, colorA), rgba(0, 0, 0, 0, colorB),
 					shadowPaint);
 			nvgBeginPath(vg);
 			nvgRect(vg, x - 10, y - 10, w + 20, h + 30);
@@ -187,9 +224,6 @@ public class NRendering {
 			nvgBeginPath(vg);
 			nvgMoveTo(vg, x + 8, y + 8);
 			nvgLineTo(vg, x + w - 8, y + h - 8);
-			nvgStrokeColor(vg, rgba(0, 0, 0, 200, colorA));
-			nvgStroke(vg);
-			nvgBeginPath(vg);
 			nvgMoveTo(vg, x + 8, y + h - 8);
 			nvgLineTo(vg, x + w - 8, y + 8);
 			nvgStrokeColor(vg, rgba(0, 0, 0, 200, colorA));
@@ -199,23 +233,8 @@ public class NRendering {
 			nvgBeginPath(vg);
 			nvgMoveTo(vg, x + 8, y + 8);
 			nvgLineTo(vg, x + w - 8, y + 8);
-			nvgStrokeColor(vg, rgba(0, 0, 0, 200, colorA));
-			nvgStroke(vg);
-
-			nvgBeginPath(vg);
-			nvgMoveTo(vg, x + w - 8, y + h - 8);
-			nvgLineTo(vg, x + w - 8, y + 8);
-			nvgStrokeColor(vg, rgba(0, 0, 0, 200, colorA));
-			nvgStroke(vg);
-
-			nvgBeginPath(vg);
-			nvgMoveTo(vg, x + w - 8, y + h - 8);
+			nvgLineTo(vg, x + w - 8, y + h - 8);
 			nvgLineTo(vg, x + 8, y + h - 8);
-			nvgStrokeColor(vg, rgba(0, 0, 0, 200, colorA));
-			nvgStroke(vg);
-
-			nvgBeginPath(vg);
-			nvgMoveTo(vg, x + 8, y + h - 8);
 			nvgLineTo(vg, x + 8, y + 8);
 			nvgStrokeColor(vg, rgba(0, 0, 0, 200, colorA));
 			nvgStroke(vg);
@@ -332,16 +351,12 @@ public class NRendering {
 
 	}
 
-	public static void renderScrollPane(long vg, float x, float y, float w, float h, int total, float t, int hSize,
-			float cardW, float cardH) {
-		NVGPaint shadowPaint = paintA, imgPaint = paintB, fadePaint = paintC;
-		float ix, iy, iw, ih;
-		float arry = 30.5f;
-		float stackh = (total / hSize) * (cardH + 10) + 10;
+	public static void renderScrollPane(long vg, float x, float y, float w, float h, float t, int hSize, float cardW,
+			float cardH, List<ScrollPaneElement> elements, Window window) {
+		float stackh = (elements.size() / hSize) * (cardH + 10) + 10;
 		int i;
 		float u = (1 + (float) Math.cos(t * 0.5f)) * 0.5f;
-		float u2 = (1 - (float) Math.cos(t * 0.2f)) * 0.5f;
-		float scrollh, dv;
+		float scrollh;
 
 		nvgSave(vg);
 
@@ -355,68 +370,63 @@ public class NRendering {
 		nvgScissor(vg, x, y, w, h);
 		nvgTranslate(vg, 0, -(stackh - h) * u);
 
-		dv = 1.0f / (float) (total - 1);
-
 		try (MemoryStack stack = MemoryStack.stackPush()) {
 
-			for (i = 0; i < total; i++) {
+			for (i = 0; i < elements.size(); i++) {
 				float tx, ty;
 				tx = x + 10;
 				ty = y + 10;
 				tx += (i % hSize) * (cardW + 10);
 				ty += (i / hSize) * (cardH + 10);
 
-				nvgBoxGradient(vg, tx - 1, ty, cardW + 2, cardH + 2, 0, 3, rgba(0, 0, 0, 128, colorA),
-						rgba(0, 0, 0, 0, colorB), shadowPaint);
-				nvgBeginPath(vg);
-				nvgRect(vg, tx - 5, ty - 5, cardW + 10, cardH + 10);
-				nvgRect(vg, tx, ty, cardW, cardH);
-				nvgPathWinding(vg, NVG_HOLE);
-				nvgFillPaint(vg, shadowPaint);
-				nvgFill(vg);
-
 				nvgBeginPath(vg);
 				nvgRect(vg, tx + 0.5f, ty + 0.5f, cardW - 1, cardH - 1);
 				nvgStrokeWidth(vg, 1.0f);
-				nvgStrokeColor(vg, rgba(255, 255, 255, 192, colorA));
+				nvgStrokeColor(vg, rgba(64, 64, 64, 255, colorA));
 				nvgStroke(vg);
-
-				renderText(vg, "World0", "Roboto-Regular", NVG_ALIGN_CENTER | NVG_ALIGN_LEFT, tx, ty + cardH, 30,
-						rgba(255, 255, 255, 255, colorA));
+				ScrollPaneElement e = elements.get(i);
+				e.setX(tx);
+				e.setY(window.getHeight() - ty - cardH);
+				e.render(window);
 			}
 		}
 		nvgRestore(vg);
 
-		// Hide fades
-		nvgLinearGradient(vg, x, y, x, y + 6, rgba(200, 200, 200, 255, colorA), rgba(200, 200, 200, 0, colorB),
-				fadePaint);
-		nvgBeginPath(vg);
-		nvgRect(vg, x + 4, y, w - 8, 6);
-		nvgFillPaint(vg, fadePaint);
-		nvgFill(vg);
-
-		nvgLinearGradient(vg, x, y + h, x, y + h - 6, rgba(200, 200, 200, 255, colorA), rgba(200, 200, 200, 0, colorB),
-				fadePaint);
-		nvgBeginPath(vg);
-		nvgRect(vg, x + 4, y + h - 6, w - 8, 6);
-		nvgFillPaint(vg, fadePaint);
-		nvgFill(vg);
-
 		// Scroll bar
-		nvgBoxGradient(vg, x + w - 12 + 1, y + 4 + 1, 8, h - 8, 3, 4, rgba(0, 0, 0, 32, colorA),
-				rgba(0, 0, 0, 92, colorB), shadowPaint);
 		nvgBeginPath(vg);
-		nvgRect(vg, x + w - 12, y + 4, 8, h - 8);
-		nvgFillPaint(vg, shadowPaint);
+		nvgRect(vg, x + w - 14, y + 14, 14, h - 28);
+		nvgFillColor(vg, rgba(0, 0, 0, 64, colorB));
 		nvgFill(vg);
 
 		scrollh = (h / stackh) * (h - 8);
-		nvgBoxGradient(vg, x + w - 12 - 1, y + 4 + (h - 8 - scrollh) * u - 1, 8, scrollh, 3, 4,
-				rgba(220, 220, 220, 255, colorA), rgba(128, 128, 128, 255, colorB), shadowPaint);
 		nvgBeginPath(vg);
-		nvgRect(vg, x + w - 12 + 1, y + 4 + 1 + (h - 8 - scrollh) * u, 8 - 2, scrollh - 2);
-		nvgFillPaint(vg, shadowPaint);
+		nvgRect(vg, x + w - 14, y + 14 + (h - 8 - scrollh) * u, 14, scrollh - 20);
+		nvgFillColor(vg, rgba(220, 220, 220, 255, colorB));
 		nvgFill(vg);
+
+		nvgBeginPath(vg);
+		nvgRect(vg, x + w - 14, y, 14, 14);
+		nvgFillColor(vg, rgba(0, 0, 0, 64, colorB));
+		nvgFill(vg);
+
+		nvgBeginPath(vg);
+		nvgMoveTo(vg, x + w - 12, y + 10);
+		nvgLineTo(vg, x + w - 7, y + 3);
+		nvgLineTo(vg, x + w - 2, y + 10);
+		nvgStrokeColor(vg, rgba(0, 0, 0, 200, colorA));
+		nvgStroke(vg);
+
+		nvgBeginPath(vg);
+		nvgRect(vg, x + w - 14, y + h - 14, 14, 14);
+		nvgFillColor(vg, rgba(0, 0, 0, 64, colorB));
+		nvgFill(vg);
+
+		nvgBeginPath(vg);
+		nvgMoveTo(vg, x + w - 12, y + h - 10);
+		nvgLineTo(vg, x + w - 7, y + h - 3);
+		nvgLineTo(vg, x + w - 2, y + h - 10);
+		nvgStrokeColor(vg, rgba(0, 0, 0, 200, colorA));
+		nvgStroke(vg);
 
 		nvgRestore(vg);
 	}

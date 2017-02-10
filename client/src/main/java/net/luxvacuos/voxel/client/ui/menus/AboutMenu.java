@@ -34,6 +34,8 @@ import net.luxvacuos.voxel.client.ui.nextui.Text;
 
 public class AboutMenu extends RootComponent {
 
+	private static Image voxelLogo;
+
 	public AboutMenu(float x, float y, float w, float h) {
 		super(x, y, w, h, "About");
 	}
@@ -44,10 +46,12 @@ public class AboutMenu extends RootComponent {
 		super.setResizable(false);
 		super.setBackgroundColor(0.4f, 0.4f, 0.4f, 1f);
 
-		Image voxelLogo = new Image(0, -40, 400, 200,
-				ClientInternalSubsystem.getInstance().getGameWindow().getResourceLoader().loadNVGTexture("Voxel-Logo"));
-		voxelLogo.setAlignment(Alignment.BOTTOM);
-		voxelLogo.setWindowAlignment(Alignment.TOP);
+		if (voxelLogo == null) {
+			voxelLogo = new Image(0, -40, 400, 200, ClientInternalSubsystem.getInstance().getGameWindow()
+					.getResourceLoader().loadNVGTexture("Voxel-Logo"));
+			voxelLogo.setAlignment(Alignment.BOTTOM);
+			voxelLogo.setWindowAlignment(Alignment.TOP);
+		}
 
 		Text versionL = new Text("Version", 30, -260);
 		versionL.setFont("Roboto-Bold");

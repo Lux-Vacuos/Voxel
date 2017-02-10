@@ -20,14 +20,12 @@
 
 package net.luxvacuos.voxel.client.ui.menus;
 
-import net.luxvacuos.voxel.client.core.states.StateNames;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.NRendering;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.WM;
 import net.luxvacuos.voxel.client.ui.nextui.Alignment;
 import net.luxvacuos.voxel.client.ui.nextui.Button;
 import net.luxvacuos.voxel.client.ui.nextui.RootComponent;
-import net.luxvacuos.voxel.client.ui.nextui.ScrollPane;
 import net.luxvacuos.voxel.universal.core.states.StateMachine;
 
 public class MainMenu extends RootComponent {
@@ -66,7 +64,7 @@ public class MainMenu extends RootComponent {
 		exitButton.setWindowAlignment(Alignment.CENTER);
 
 		playButton.setOnButtonPress(() -> {
-			StateMachine.setCurrentState(StateNames.SP_SELECTION);
+			WM.getWM().addWindow(new WorldMenu(appW / 2 - 420 + appX, appY, 840, 600));
 		});
 
 		playMPButton.setOnButtonPress(() -> {
@@ -84,12 +82,6 @@ public class MainMenu extends RootComponent {
 		exitButton.setOnButtonPress(() -> {
 			StateMachine.stop();
 		});
-
-		ScrollPane pane = new ScrollPane(0, 0, 370, 200, 340f, 60f);
-		pane.setItems(10);
-		pane.setColls(1);
-
-		// super.addComponent(pane);
 
 		super.addComponent(playButton);
 		super.addComponent(playMPButton);

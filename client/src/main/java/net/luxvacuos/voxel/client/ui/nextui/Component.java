@@ -24,7 +24,7 @@ import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 
 public abstract class Component implements IComponent {
 
-	protected RootComponent rootComponent;
+	protected Root rootComponent;
 	protected Alignment alignment = Alignment.RIGHT_TOP, windowAlignment = Alignment.LEFT_BOTTOM;
 	protected float alignedX, alignedY, x, y, w, h;
 
