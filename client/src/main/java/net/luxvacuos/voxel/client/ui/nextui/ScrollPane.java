@@ -30,7 +30,7 @@ import net.luxvacuos.voxel.client.util.Maths;
 
 public class ScrollPane extends Component {
 
-	private float scroll;
+	private float scroll = 6.25f;
 	private float cardW, cardH;
 
 	private int colls = 3;

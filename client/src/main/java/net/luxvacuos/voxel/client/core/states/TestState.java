@@ -20,8 +20,6 @@
 
 package net.luxvacuos.voxel.client.core.states;
 
-import static org.lwjgl.opengl.GL11.GL_NEAREST;
-
 import org.lwjgl.glfw.GLFW;
 
 import com.badlogic.ashley.core.Engine;
@@ -36,11 +34,11 @@ import net.luxvacuos.voxel.client.core.ClientInternalSubsystem;
 import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.core.ClientWorldSimulation;
 import net.luxvacuos.voxel.client.core.CoreInfo;
+import net.luxvacuos.voxel.client.ecs.EntityResources;
+import net.luxvacuos.voxel.client.ecs.entities.BasicEntity;
 import net.luxvacuos.voxel.client.ecs.entities.CameraEntity;
 import net.luxvacuos.voxel.client.ecs.entities.PlayerCamera;
 import net.luxvacuos.voxel.client.ecs.entities.Sun;
-import net.luxvacuos.voxel.client.ecs.EntityResources;
-import net.luxvacuos.voxel.client.ecs.entities.BasicEntity;
 import net.luxvacuos.voxel.client.input.KeyboardHandler;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.glfw.WindowManager;

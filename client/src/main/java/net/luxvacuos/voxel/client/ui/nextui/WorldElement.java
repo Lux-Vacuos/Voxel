@@ -46,9 +46,15 @@ public class WorldElement extends ScrollPaneElement {
 
 		if (pressed() && !pressed) {
 			ClientVariables.worldNameToLoad = new String(worldName);
-			worldMenu.worldName.setText("World Name: " + worldName);
+			worldMenu.worldName.setText("Name: " + worldName);
 		}
 		pressed = pressed();
+	}
+	
+	@Override
+	public void dispose() {
+		ClientVariables.worldNameToLoad = "";
+		super.dispose();
 	}
 
 	public boolean insideButton() {

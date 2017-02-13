@@ -20,6 +20,8 @@
 
 package net.luxvacuos.voxel.client.rendering.api.nanovg;
 
+import org.lwjgl.nanovg.NVGLUFramebuffer;
+
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.NRendering.BackgroundStyle;
 
@@ -28,6 +30,8 @@ public interface IWindow {
 	public enum WindowClose {
 		DISPOSE, DO_NOTHING, HIDE
 	};
+	
+	public void init(Window window);
 
 	public void initApp(Window window);
 
@@ -74,6 +78,8 @@ public interface IWindow {
 	public float getX();
 
 	public float getY();
+	
+	public NVGLUFramebuffer getFBO();
 
 	public boolean hasDecorations();
 

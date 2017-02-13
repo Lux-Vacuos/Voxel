@@ -54,8 +54,8 @@ import net.luxvacuos.voxel.client.world.dimension.RenderDimension;
 import net.luxvacuos.voxel.universal.core.AbstractVoxel;
 import net.luxvacuos.voxel.universal.core.states.AbstractState;
 import net.luxvacuos.voxel.universal.core.states.StateMachine;
-import net.luxvacuos.voxel.universal.world.IWorld;
 import net.luxvacuos.voxel.universal.ecs.entities.ChunkLoaderEntity;
+import net.luxvacuos.voxel.universal.world.IWorld;
 
 public class SPWorldState extends AbstractState {
 
@@ -80,6 +80,7 @@ public class SPWorldState extends AbstractState {
 		super.start();
 
 		this.world = new RenderWorld(ClientVariables.worldNameToLoad);
+		ClientVariables.worldNameToLoad = "";
 		Window window = ClientInternalSubsystem.getInstance().getGameWindow();
 
 		Renderer.setDeferredPass((camera, sunCamera, frustum, shadowMap) -> {

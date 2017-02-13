@@ -42,9 +42,7 @@ import net.luxvacuos.voxel.client.api.MoltenAPI;
 import net.luxvacuos.voxel.client.core.states.CrashState;
 import net.luxvacuos.voxel.client.core.states.MPWorldState;
 import net.luxvacuos.voxel.client.core.states.MainMenuState;
-import net.luxvacuos.voxel.client.core.states.SPCreateWorld;
 import net.luxvacuos.voxel.client.core.states.SPLoadingState;
-import net.luxvacuos.voxel.client.core.states.SPSelectionState;
 import net.luxvacuos.voxel.client.core.states.SPWorldState;
 import net.luxvacuos.voxel.client.core.states.SplashScreenState;
 import net.luxvacuos.voxel.client.core.states.StateNames;
@@ -154,9 +152,7 @@ public class Voxel extends AbstractVoxel {
 	public void init() throws Exception {
 		internalSubsystem.init();
 		TaskManager.addTask(() -> StateMachine.registerState(new MainMenuState()));
-		TaskManager.addTask(() -> StateMachine.registerState(new SPCreateWorld()));
 		TaskManager.addTask(() -> StateMachine.registerState(new SPLoadingState()));
-		TaskManager.addTask(() -> StateMachine.registerState(new SPSelectionState()));
 		TaskManager.addTask(() -> StateMachine.registerState(new SPWorldState()));
 		TaskManager.addTask(() -> StateMachine.registerState(new MPWorldState()));
 		if (ClientVariables.TEST_MODE)

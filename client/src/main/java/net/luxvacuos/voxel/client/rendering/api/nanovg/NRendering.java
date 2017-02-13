@@ -20,40 +20,7 @@
 
 package net.luxvacuos.voxel.client.rendering.api.nanovg;
 
-import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_CENTER;
-import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_LEFT;
-import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_MIDDLE;
-import static org.lwjgl.nanovg.NanoVG.NVG_CCW;
-import static org.lwjgl.nanovg.NanoVG.NVG_CW;
-import static org.lwjgl.nanovg.NanoVG.NVG_HOLE;
-import static org.lwjgl.nanovg.NanoVG.NVG_PI;
-import static org.lwjgl.nanovg.NanoVG.nvgArc;
-import static org.lwjgl.nanovg.NanoVG.nvgBeginPath;
-import static org.lwjgl.nanovg.NanoVG.nvgBoxGradient;
-import static org.lwjgl.nanovg.NanoVG.nvgClosePath;
-import static org.lwjgl.nanovg.NanoVG.nvgFill;
-import static org.lwjgl.nanovg.NanoVG.nvgFillColor;
-import static org.lwjgl.nanovg.NanoVG.nvgFillPaint;
-import static org.lwjgl.nanovg.NanoVG.nvgFontBlur;
-import static org.lwjgl.nanovg.NanoVG.nvgFontFace;
-import static org.lwjgl.nanovg.NanoVG.nvgFontSize;
-import static org.lwjgl.nanovg.NanoVG.nvgImagePattern;
-import static org.lwjgl.nanovg.NanoVG.nvgImageSize;
-import static org.lwjgl.nanovg.NanoVG.nvgLineTo;
-import static org.lwjgl.nanovg.NanoVG.nvgLinearGradient;
-import static org.lwjgl.nanovg.NanoVG.nvgMoveTo;
-import static org.lwjgl.nanovg.NanoVG.nvgPathWinding;
-import static org.lwjgl.nanovg.NanoVG.nvgRect;
-import static org.lwjgl.nanovg.NanoVG.nvgRestore;
-import static org.lwjgl.nanovg.NanoVG.nvgSave;
-import static org.lwjgl.nanovg.NanoVG.nvgScissor;
-import static org.lwjgl.nanovg.NanoVG.nvgStroke;
-import static org.lwjgl.nanovg.NanoVG.nvgStrokeColor;
-import static org.lwjgl.nanovg.NanoVG.nvgStrokeWidth;
-import static org.lwjgl.nanovg.NanoVG.nvgText;
-import static org.lwjgl.nanovg.NanoVG.nvgTextAlign;
-import static org.lwjgl.nanovg.NanoVG.nvgTextBounds;
-import static org.lwjgl.nanovg.NanoVG.nvgTranslate;
+import static org.lwjgl.nanovg.NanoVG.*;
 import static org.lwjgl.system.MemoryUtil.memAllocInt;
 import static org.lwjgl.system.MemoryUtil.memFree;
 import static org.lwjgl.system.MemoryUtil.memUTF8;
@@ -178,7 +145,7 @@ public class NRendering {
 			else
 				nvgRect(vg, x + 2, y + 2, w - 4, h - 4);
 			nvgPathWinding(vg, NVG_HOLE);
-			nvgFillColor(vg, rgba(120, 120, 120, 255, colorA));
+			nvgFillColor(vg, rgba(120, 120, 120, 100, colorA));
 			nvgFill(vg);
 		}
 
@@ -254,12 +221,23 @@ public class NRendering {
 
 	public static void renderImage(long vg, float x, float y, float w, float h, int image, float alpha) {
 		NVGPaint imgPaint = paintB;
-		IntBuffer imgw = memAllocInt(1), imgh = memAllocInt(1);
 		nvgSave(vg);
-		nvgImageSize(vg, image, imgw, imgh);
 		nvgImagePattern(vg, x, y, w, h, 0.0f / 180.0f * NVG_PI, image, alpha, imgPaint);
 		nvgBeginPath(vg);
 		nvgRect(vg, x, y, w, h);
+		nvgFillPaint(vg, imgPaint);
+		nvgFill(vg);
+		nvgRestore(vg);
+	}
+	
+	public static void renderImage(long vg, float x, float y, int image, float alpha) {
+		NVGPaint imgPaint = paintB;
+		IntBuffer imgw = memAllocInt(1), imgh = memAllocInt(1);
+		nvgSave(vg);
+		nvgImageSize(vg, image, imgw, imgh);
+		nvgImagePattern(vg, x, y, imgw.get(0), imgh.get(0), 0, image, alpha, imgPaint);
+		nvgBeginPath(vg);
+		nvgRect(vg, x, y, imgw.get(0), imgh.get(0));
 		nvgFillPaint(vg, imgPaint);
 		nvgFill(vg);
 		nvgRestore(vg);
@@ -454,7 +432,7 @@ public class NRendering {
 
 		nvgRestore(vg);
 	}
-
+	
 	public static ByteBuffer cpToUTF8(int cp) {
 		return memUTF8(new String(Character.toChars(cp)), true);
 	}

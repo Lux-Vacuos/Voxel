@@ -28,11 +28,9 @@ public class StateNames {
 	public static final String MAIN_MENU = "Main_Menu";
 	public static final String MP_LOADING = "MP_Loading";
 	public static final String MP_WORLD = "MP_World";
-	public static final String SP_CREATE_WORLD = "SP_Create_World";
 	public static final String SPLASH_SCREEN = "Splash_Screen";
 	public static final String SP_LOADING = "SP_Loading";
 	public static final String SP_PAUSE = "SP_Pause";
-	public static final String SP_SELECTION = "SP_Selection";
 	public static final String SP_WORLD = "SP_World";
 	public static final String TEST = "Test";
 	public static final String CRASH = "Crash";

@@ -82,11 +82,8 @@ public class ClientInternalSubsystem extends AbstractInternalSubsystem {
 		WindowHandle handle = WindowManager.generateHandle(ClientVariables.WIDTH, ClientVariables.HEIGHT, "Voxel");
 		handle.canResize(false).isVisible(false).setIcon(icons).setCursor("arrow").useDebugContext(true);
 		PixelBufferHandle pb = new PixelBufferHandle();
-		pb.setDepthBits(32);
-		pb.setRedBits(16);
-		pb.setBlueBits(16);
-		pb.setGreenBits(16);
 		pb.setSrgbCapable(1);
+		pb.setSamples(4);
 		handle.setPixelBuffer(pb);
 		this.gameWindowID = WindowManager.createWindow(handle, ClientVariables.VSYNC);
 		Window window = WindowManager.getWindow(this.gameWindowID);

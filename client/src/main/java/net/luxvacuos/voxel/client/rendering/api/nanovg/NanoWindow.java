@@ -20,13 +20,20 @@
 
 package net.luxvacuos.voxel.client.rendering.api.nanovg;
 
-import org.lwjgl.nanovg.NVGColor;
+import static org.lwjgl.nanovg.NanoVG.nvgScissor;
+import static org.lwjgl.nanovg.NanoVGGL3.nvgluBindFramebuffer;
+import static org.lwjgl.nanovg.NanoVGGL3.nvgluCreateFramebuffer;
+import static org.lwjgl.nanovg.NanoVGGL3.nvgluDeleteFramebuffer;
+import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 
-import static org.lwjgl.nanovg.NanoVG.*;
+import org.lwjgl.nanovg.NVGColor;
+import org.lwjgl.nanovg.NVGLUFramebuffer;
 
 import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.NRendering.BackgroundStyle;
+import net.luxvacuos.voxel.client.rendering.api.opengl.Renderer;
 
 public abstract class NanoWindow implements IWindow {
 
@@ -39,6 +46,7 @@ public abstract class NanoWindow implements IWindow {
 	private float oldX, oldY, oldW, oldH;
 	private WindowClose windowClose = WindowClose.DISPOSE;
 	private ITitleBar titleBar;
+	private NVGLUFramebuffer fbo;
 
 	public NanoWindow(float x, float y, float w, float h, String title) {
 		this.x = x;
@@ -83,16 +91,29 @@ public abstract class NanoWindow implements IWindow {
 	}
 
 	@Override
+	public void init(Window window) {
+		fbo = nvgluCreateFramebuffer(window.getNVGID(), (int) (window.getWidth() * window.getPixelRatio()),
+				(int) (window.getHeight() * window.getPixelRatio()), 0);
+		initApp(window);
+	}
+
+	@Override
 	public void render(Window window, IWindowManager nanoWindowManager) {
 		if (!hidden) {
+			nvgluBindFramebuffer(window.getNVGID(), fbo);
+			window.resetViewport();
+			Renderer.clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			Renderer.clearColors(0, 0, 0, 0);
+
+			window.beingNVGFrame();
 			NRendering.renderWindow(window.getNVGID(), x, window.getHeight() - y, w, h, backgroundStyle,
 					backgroundColor, decorations, titleBar.isEnabled());
 			if (decorations)
 				titleBar.render(window, this);
-			nvgSave(window.getNVGID());
 			nvgScissor(window.getNVGID(), appX, window.getHeight() - appY, appW, appH);
 			renderApp(window);
-			nvgRestore(window.getNVGID());
+			window.endNVGFrame();
+			nvgluBindFramebuffer(window.getNVGID(), null);
 		}
 	}
 
@@ -124,6 +145,7 @@ public abstract class NanoWindow implements IWindow {
 
 	@Override
 	public void dispose(Window window) {
+		nvgluDeleteFramebuffer(window.getNVGID(), fbo);
 		disposeApp(window);
 	}
 
@@ -207,6 +229,11 @@ public abstract class NanoWindow implements IWindow {
 	@Override
 	public float getY() {
 		return y;
+	}
+
+	@Override
+	public NVGLUFramebuffer getFBO() {
+		return fbo;
 	}
 
 	@Override

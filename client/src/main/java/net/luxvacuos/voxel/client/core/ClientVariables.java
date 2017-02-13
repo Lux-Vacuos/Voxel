@@ -84,7 +84,7 @@ public class ClientVariables extends GlobalVariables {
 	 * World Settings
 	 */
 	public static boolean generateChunks = true;
-	public static String worldNameToLoad;
+	public static String worldNameToLoad = "";
 	public static boolean paused = false, exitWorld = false;
 	/**
 	 * Shader Files
@@ -103,5 +103,8 @@ public class ClientVariables extends GlobalVariables {
 	public static final String FRAGMENT_FILE_TESSELLATOR_BASIC = "F_TessellatorBasic.glsl";
 	public static final String VERTEX_FILE_BLOCK_OUTLINE = "V_BlockOutline.glsl";
 	public static final String FRAGMENT_FILE_BLOCK_OUTLINE = "F_BlockOutline.glsl";
+	
+	public static final String VERTEX_WINDOW_MANAGER = "V_WindowManager.glsl";
+	public static final String FRAGMENT_WINDOW_MANAGER = "F_WindowManager.glsl";
 
 }

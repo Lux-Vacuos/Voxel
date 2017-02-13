@@ -73,12 +73,9 @@ public class MainMenuState extends AbstractState {
 
 	@Override
 	public void render(AbstractVoxel voxel, float delta) {
-		Window window = ClientInternalSubsystem.getInstance().getGameWindow();
 		Renderer.clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		Renderer.clearColors(1, 1, 1, 1);
-		window.beingNVGFrame();
 		WM.getWM().render();
-		window.endNVGFrame();
 	}
 
 	@Override
