@@ -64,7 +64,7 @@ public class MainMenu extends RootComponent {
 		exitButton.setWindowAlignment(Alignment.CENTER);
 
 		playButton.setOnButtonPress(() -> {
-			WM.getWM().addWindow(new WorldMenu(appW / 2 - 420 + appX, appY, 840, 600));
+			WM.getWM().addWindow(new WorldMenu(appW / 2 - 420 + appX, appY, 840, 600, this));
 		});
 
 		playMPButton.setOnButtonPress(() -> {
@@ -103,7 +103,7 @@ public class MainMenu extends RootComponent {
 			close.setAlignment(Alignment.CENTER);
 			close.setWindowAlignment(Alignment.CENTER);
 			close.setOnButtonPress(() -> {
-				StateMachine.dispose();
+				StateMachine.stop();
 			});
 			Button cancel = new Button(-60, 0, 100, 40, "Cancel");
 			cancel.setAlignment(Alignment.CENTER);

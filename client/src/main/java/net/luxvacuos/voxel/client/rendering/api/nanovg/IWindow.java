@@ -64,6 +64,8 @@ public interface IWindow {
 	public void setBackgroundColor(float r, float g, float b, float a);
 
 	public void setHidden(boolean hidden);
+	
+	public void setAsBackground(boolean background);
 
 	public void setAlwaysOnTop(boolean alwaysOnTop);
 
@@ -84,6 +86,8 @@ public interface IWindow {
 	public boolean hasDecorations();
 
 	public boolean isResizable();
+	
+	public boolean isBackground();
 
 	public boolean isDraggable();
 

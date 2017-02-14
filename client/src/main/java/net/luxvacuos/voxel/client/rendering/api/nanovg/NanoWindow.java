@@ -38,7 +38,7 @@ import net.luxvacuos.voxel.client.rendering.api.opengl.Renderer;
 public abstract class NanoWindow implements IWindow {
 
 	private boolean draggable = true, decorations = true, resizable = true, maximized, hidden = false, exit,
-			alwaysOnTop;
+			alwaysOnTop, background;
 	private BackgroundStyle backgroundStyle = BackgroundStyle.SOLID;
 	private NVGColor backgroundColor = NRendering.rgba(0, 0, 0, 255);
 	private float x, y, w, h;
@@ -131,7 +131,7 @@ public abstract class NanoWindow implements IWindow {
 		}
 		if (titleBar.isEnabled()) {
 			appX = x + 2;
-			appY = y - 4 - titleBar.getH();
+			appY = y - 2 - titleBar.getH();
 			appW = w - 4;
 			appH = h - 4 - titleBar.getH();
 		} else {
@@ -200,6 +200,11 @@ public abstract class NanoWindow implements IWindow {
 	public void setAlwaysOnTop(boolean alwaysOnTop) {
 		this.alwaysOnTop = alwaysOnTop;
 	}
+	
+	@Override
+	public void setAsBackground(boolean background) {
+		this.background = background;
+	}
 
 	@Override
 	public void toggleTitleBar() {
@@ -254,6 +259,11 @@ public abstract class NanoWindow implements IWindow {
 	@Override
 	public boolean shouldClose() {
 		return exit;
+	}
+	
+	@Override
+	public boolean isBackground() {
+		return background;
 	}
 
 	@Override

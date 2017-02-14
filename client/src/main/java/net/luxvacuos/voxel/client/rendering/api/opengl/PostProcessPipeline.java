@@ -20,28 +20,18 @@
 
 package net.luxvacuos.voxel.client.rendering.api.opengl;
 
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
-import static org.lwjgl.opengl.GL11.GL_TRIANGLE_STRIP;
-import static org.lwjgl.opengl.GL11.glBindTexture;
-import static org.lwjgl.opengl.GL11.glDrawArrays;
-import static org.lwjgl.opengl.GL13.GL_TEXTURE6;
-import static org.lwjgl.opengl.GL13.glActiveTexture;
-import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
-import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
-import static org.lwjgl.opengl.GL30.glBindVertexArray;
+import static org.lwjgl.nanovg.NanoVG.NVG_IMAGE_FLIPY;
+import static org.lwjgl.nanovg.NanoVG.nvgDeleteImage;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import net.luxvacuos.igl.vector.Matrix4d;
-import net.luxvacuos.igl.vector.Vector2d;
 import net.luxvacuos.igl.vector.Vector3d;
-import net.luxvacuos.voxel.client.core.ClientInternalSubsystem;
-import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.ecs.entities.CameraEntity;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
+import net.luxvacuos.voxel.client.rendering.api.nanovg.NRendering;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.RawModel;
-import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.DeferredShadingShader;
 import net.luxvacuos.voxel.client.util.Maths;
 import net.luxvacuos.voxel.universal.core.TaskManager;
 
@@ -54,12 +44,13 @@ public abstract class PostProcessPipeline implements IPostProcessPipeline {
 	private Vector3d previousCameraPosition;
 	private RawModel quad;
 	private FBO[] auxs;
-	private DeferredShadingShader finalShader;
 	private String name;
+	private int texture = 0;
+	private Window window;
 
-	public PostProcessPipeline(String name) {
+	public PostProcessPipeline(String name, Window window) {
 		this.name = name;
-		Window window = ClientInternalSubsystem.getInstance().getGameWindow();
+		this.window = window;
 		width = (int) (window.getWidth() * window.getPixelRatio());
 		height = (int) (window.getHeight() * window.getPixelRatio());
 
@@ -75,12 +66,6 @@ public abstract class PostProcessPipeline implements IPostProcessPipeline {
 
 		previousCameraPosition = new Vector3d();
 		previousViewMatrix = new Matrix4d();
-		finalShader = new DeferredShadingShader("Final");
-		finalShader.start();
-		finalShader.loadTransformation(Maths.createTransformationMatrix(new Vector2d(0, 0), new Vector2d(1, 1)));
-		finalShader.loadResolution(new Vector2d(window.getWidth(), window.getHeight()));
-		finalShader.loadSkyColor(ClientVariables.skyColor);
-		finalShader.stop();
 		init();
 		for (IPostProcessPass deferredPass : imagePasses) {
 			TaskManager.addTask(() -> deferredPass.init());
@@ -98,40 +83,35 @@ public abstract class PostProcessPipeline implements IPostProcessPipeline {
 	}
 
 	@Override
-	public void preRender(CameraEntity camera) {
+	public void preRender(long nvg, CameraEntity camera) {
 		auxs[0] = fbo;
 		for (IPostProcessPass deferredPass : imagePasses) {
 			deferredPass.process(camera, previousViewMatrix, previousCameraPosition, auxs, quad);
 		}
 		previousViewMatrix = Maths.createViewMatrix(camera);
 		previousCameraPosition = camera.getPosition();
-	}
-
-	@Override
-	public void render() {
-		finalShader.start();
-		glBindVertexArray(quad.getVaoID());
-		glEnableVertexAttribArray(0);
-		glActiveTexture(GL_TEXTURE6);
-		glBindTexture(GL_TEXTURE_2D, auxs[0].getTexture());
-		glDrawArrays(GL_TRIANGLE_STRIP, 0, quad.getVertexCount());
-		glDisableVertexAttribArray(0);
-		glBindVertexArray(0);
-		finalShader.stop();
+		if (texture == 0)
+			texture = NRendering.generateImageFromTexture(nvg, auxs[0].getTexture(), width, height,
+					NVG_IMAGE_FLIPY);
 	}
 
 	@Override
 	public void dispose() {
+		nvgDeleteImage(window.getNVGID(), texture);
 		fbo.cleanUp();
 		for (IPostProcessPass deferredPass : imagePasses) {
 			deferredPass.dispose();
 		}
-		finalShader.dispose();
 	}
 
 	@Override
 	public FBO getFBO() {
 		return fbo;
+	}
+
+	@Override
+	public int getResultTexture() {
+		return texture;
 	}
 
 	public String getName() {

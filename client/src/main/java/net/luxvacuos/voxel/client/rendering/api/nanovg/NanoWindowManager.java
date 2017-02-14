@@ -20,12 +20,16 @@
 
 package net.luxvacuos.voxel.client.rendering.api.nanovg;
 
+import static org.lwjgl.nanovg.NanoVGGL3.nvgluBindFramebuffer;
 import static org.lwjgl.opengl.GL11.GL_BLEND;
+import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.glDisable;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.effects.Final;
@@ -33,6 +37,7 @@ import net.luxvacuos.voxel.client.rendering.api.nanovg.effects.GaussianH;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.effects.GaussianV;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.effects.MaskBlur;
 import net.luxvacuos.voxel.client.rendering.api.opengl.GLUtil;
+import net.luxvacuos.voxel.client.rendering.api.opengl.Renderer;
 
 public class NanoWindowManager implements IWindowManager {
 
@@ -64,11 +69,17 @@ public class NanoWindowManager implements IWindowManager {
 			window.render(this.window, this);
 		}
 		glDisable(GL_BLEND);
+		nvgluBindFramebuffer(window.getNVGID(), composite.getFbos()[0]);
+		Renderer.clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		nvgluBindFramebuffer(window.getNVGID(), null);
 		for (IWindow window : windows) {
 			composite.render(window, this.window);
 		}
 		this.window.beingNVGFrame();
 		NRendering.renderImage(this.window.getNVGID(), 0, 0, composite.getFbos()[0].image(), 1f);
+		if(ClientVariables.debug) {
+			Timers.renderDebugDisplay(5, 24, 200, 55);
+		}
 		this.window.endNVGFrame();
 	}
 
@@ -82,7 +93,7 @@ public class NanoWindowManager implements IWindowManager {
 				toRemove.add(window);
 				continue;
 			}
-			if (window.insideWindow() && Mouse.isButtonDown(0))
+			if (window.insideWindow() && !window.isBackground() && Mouse.isButtonDown(0))
 				toTop = window;
 		}
 		windows.removeAll(toRemove);
@@ -119,6 +130,13 @@ public class NanoWindowManager implements IWindowManager {
 		window.init(this.window);
 		window.update(0, this.window, this);
 		this.windows.add(window);
+	}
+
+	@Override
+	public void addWindow(int ord, IWindow window) {
+		window.init(this.window);
+		window.update(0, this.window, this);
+		this.windows.add(ord, window);
 	}
 
 	@Override

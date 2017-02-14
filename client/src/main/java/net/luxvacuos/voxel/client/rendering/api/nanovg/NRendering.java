@@ -21,6 +21,7 @@
 package net.luxvacuos.voxel.client.rendering.api.nanovg;
 
 import static org.lwjgl.nanovg.NanoVG.*;
+import static org.lwjgl.nanovg.NanoVGGL3.*;
 import static org.lwjgl.system.MemoryUtil.memAllocInt;
 import static org.lwjgl.system.MemoryUtil.memFree;
 import static org.lwjgl.system.MemoryUtil.memUTF8;
@@ -431,6 +432,10 @@ public class NRendering {
 		nvgFill(vg);
 
 		nvgRestore(vg);
+	}
+	
+	public static int generateImageFromTexture(long vg, int texID, int w, int h, int flags){
+		return nvglCreateImageFromHandle(vg, texID, w, h, flags);
 	}
 	
 	public static ByteBuffer cpToUTF8(int cp) {

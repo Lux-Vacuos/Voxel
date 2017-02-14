@@ -18,19 +18,31 @@
  * 
  */
 
-package net.luxvacuos.voxel.client.core.states;
+package net.luxvacuos.voxel.client.ui.menus;
 
-public class StateNames {
+import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
+import net.luxvacuos.voxel.client.rendering.api.opengl.Renderer;
+import net.luxvacuos.voxel.client.ui.nextui.Image;
+import net.luxvacuos.voxel.client.ui.nextui.RootComponent;
 
-	private StateNames() {
+public class GameWindow extends RootComponent {
+
+	public GameWindow(float x, float y, float w, float h) {
+		super(x, y, w, h, "Voxel");
 	}
 
-	public static final String MAIN_MENU = "Main_Menu";
-	public static final String MP_LOADING = "MP_Loading";
-	public static final String MP_WORLD = "MP_World";
-	public static final String SPLASH_SCREEN = "Splash_Screen";
-	public static final String SP_WORLD = "SP_World";
-	public static final String TEST = "Test";
-	public static final String CRASH = "Crash";
+	@Override
+	public void initApp(Window window) {
+		super.setBackgroundColor(0.0f, 0.0f, 0.0f, 1f);
+		super.setResizable(false);
+		super.setDecorations(false);
+		super.setAsBackground(true);
+
+		Image game = new Image(0, 0, appW, appH, Renderer.getResultTexture());
+
+		super.addComponent(game);
+
+		super.initApp(window);
+	}
 
 }

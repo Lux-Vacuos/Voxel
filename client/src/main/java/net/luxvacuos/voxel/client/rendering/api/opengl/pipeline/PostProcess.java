@@ -20,6 +20,7 @@
 
 package net.luxvacuos.voxel.client.rendering.api.opengl.pipeline;
 
+import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.opengl.PostProcessPipeline;
 
 public class PostProcess extends PostProcessPipeline {
@@ -29,8 +30,8 @@ public class PostProcess extends PostProcessPipeline {
 	private MotionBlur motionBlur;
 	private DepthOfField depthOfField;
 
-	public PostProcess() {
-		super("PostProcess");
+	public PostProcess(Window window) {
+		super("PostProcess", window);
 	}
 
 	@Override

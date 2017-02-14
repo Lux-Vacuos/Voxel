@@ -95,4 +95,5 @@ void main(void){
 	} else {
 		out_Color = texture(composite0,textureCoords);
 	}
+    out_Color.a = 1;
 }

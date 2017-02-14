@@ -88,7 +88,7 @@ public class Renderer {
 		TaskManager.addTask(() -> entityShadowRenderer = new EntityShadowRenderer());
 		TaskManager.addTask(() -> skyboxRenderer = new SkyboxRenderer(window.getResourceLoader()));
 		TaskManager.addTask(() -> deferredPipeline = new MultiPass());
-		TaskManager.addTask(() -> postProcessPipeline = new PostProcess());
+		TaskManager.addTask(() -> postProcessPipeline = new PostProcess(window));
 		TaskManager.addTask(() -> particleRenderer = new ParticleRenderer(window.getResourceLoader()));
 		lightRenderer = new LightRenderer();
 
@@ -182,11 +182,7 @@ public class Renderer {
 
 		postProcessPipeline.end();
 
-		postProcessPipeline.preRender(camera);
-
-		clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		postProcessPipeline.render();
-
+		postProcessPipeline.preRender(window.getNVGID(), camera);
 	}
 
 	public static void cleanUp() {
@@ -197,6 +193,10 @@ public class Renderer {
 		deferredPipeline.dispose();
 		postProcessPipeline.dispose();
 		particleRenderer.cleanUp();
+	}
+
+	public static int getResultTexture() {
+		return postProcessPipeline.getResultTexture();
 	}
 
 	public static void setShadowPass(IRenderPass shadowPass) {

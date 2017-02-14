@@ -20,6 +20,8 @@
 
 package net.luxvacuos.voxel.client.core.states;
 
+import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_COMPONENT;
 import static org.lwjgl.opengl.GL11.GL_FLOAT;
 import static org.lwjgl.opengl.GL11.GL_RGB;
@@ -36,18 +38,18 @@ import net.luxvacuos.igl.vector.Matrix4d;
 import net.luxvacuos.igl.vector.Vector3d;
 import net.luxvacuos.voxel.client.core.ClientInternalSubsystem;
 import net.luxvacuos.voxel.client.core.ClientVariables;
-import net.luxvacuos.voxel.client.core.CoreInfo;
 import net.luxvacuos.voxel.client.ecs.entities.CameraEntity;
 import net.luxvacuos.voxel.client.ecs.entities.PlayerCamera;
 import net.luxvacuos.voxel.client.ecs.entities.Sun;
 import net.luxvacuos.voxel.client.input.KeyboardHandler;
+import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
-import net.luxvacuos.voxel.client.rendering.api.glfw.WindowManager;
-import net.luxvacuos.voxel.client.rendering.api.nanovg.Timers;
-import net.luxvacuos.voxel.client.rendering.api.nanovg.UIRendering;
+import net.luxvacuos.voxel.client.rendering.api.nanovg.WM;
 import net.luxvacuos.voxel.client.rendering.api.opengl.BlockOutlineRenderer;
 import net.luxvacuos.voxel.client.rendering.api.opengl.ParticleDomain;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Renderer;
+import net.luxvacuos.voxel.client.ui.menus.GameWindow;
+import net.luxvacuos.voxel.client.ui.menus.PauseWindow;
 import net.luxvacuos.voxel.client.util.Maths;
 import net.luxvacuos.voxel.client.world.RenderWorld;
 import net.luxvacuos.voxel.client.world.dimension.RenderDimension;
@@ -63,10 +65,10 @@ public class SPWorldState extends AbstractState {
 	private CameraEntity camera;
 	private BlockOutlineRenderer blockOutlineRenderer;
 	private ChunkLoaderEntity spawnChunks;
+	private GameWindow gameWindow;
+	private PauseWindow pauseWindow;
 
 	private IWorld world;
-
-	private SPPauseState pausesState;
 
 	FloatBuffer p;
 	FloatBuffer c;
@@ -114,6 +116,12 @@ public class SPWorldState extends AbstractState {
 		spawnChunks.setPosition(new Vector3d(0, 0, 0));
 		world.getActiveDimension().getEntitiesManager().addEntity(camera);
 		world.getActiveDimension().getEntitiesManager().addEntity(spawnChunks);
+
+		Renderer.render(world.getActiveDimension().getEntitiesManager().getEntities(), ParticleDomain.getParticles(),
+				camera, sun.getCamera(), world.getActiveDimension().getWorldSimulator(), sun.getSunPosition(),
+				sun.getInvertedSunPosition(), 0);
+		gameWindow = new GameWindow(-2, window.getHeight() + 33, window.getWidth() + 4, window.getHeight() + 35);
+		WM.getWM().addWindow(0, gameWindow);
 	}
 
 	@Override
@@ -155,14 +163,10 @@ public class SPWorldState extends AbstractState {
 		blockOutlineRenderer = new BlockOutlineRenderer(window.getResourceLoader());
 
 		spawnChunks = new ChunkLoaderEntity(new Vector3d());
-
-		pausesState = new SPPauseState();
-		pausesState.init();
 	}
 
 	@Override
 	public void dispose() {
-		pausesState.dispose();
 		blockOutlineRenderer.dispose();
 		if (world != null)
 			world.dispose();
@@ -170,49 +174,21 @@ public class SPWorldState extends AbstractState {
 
 	@Override
 	public void render(AbstractVoxel voxel, float alpha) {
-		Window window = ClientInternalSubsystem.getInstance().getGameWindow();
-
 		Renderer.render(world.getActiveDimension().getEntitiesManager().getEntities(), ParticleDomain.getParticles(),
 				camera, sun.getCamera(), world.getActiveDimension().getWorldSimulator(), sun.getSunPosition(),
 				sun.getInvertedSunPosition(), alpha);
-
-		window.beingNVGFrame();
-		if (ClientVariables.debug) {
-			UIRendering.renderText(window.getID(), "Voxel " + " (" + ClientVariables.version + ")", "Roboto-Bold", 5,
-					12, 20, UIRendering.rgba(220, 220, 220, 255, UIRendering.colorA),
-					UIRendering.rgba(255, 255, 255, 255, UIRendering.colorB));
-			UIRendering.renderText(window.getID(),
-					"Used VRam: " + WindowManager.getUsedVRAM() + "KB " + " UPS: " + CoreInfo.ups, "Roboto-Bold", 5, 95,
-					20, UIRendering.rgba(220, 220, 220, 255, UIRendering.colorA),
-					UIRendering.rgba(255, 255, 255, 255, UIRendering.colorB));
-			UIRendering.renderText(window.getID(),
-					"Loaded Chunks: " + world.getActiveDimension().getLoadedChunks().size() + "   Rendered Chunks: "
-							+ ((RenderDimension) world.getActiveDimension()).getRenderedChunks(),
-					"Roboto-Bold", 5, 115, 20, UIRendering.rgba(220, 220, 220, 255, UIRendering.colorA),
-					UIRendering.rgba(255, 255, 255, 255, UIRendering.colorB));
-			UIRendering.renderText(window.getID(),
-					"Position XYZ:  " + camera.getPosition().getX() + "  " + camera.getPosition().getY() + "  "
-							+ camera.getPosition().getZ(),
-					"Roboto-Bold", 5, 135, 20, UIRendering.rgba(220, 220, 220, 255, UIRendering.colorA),
-					UIRendering.rgba(255, 255, 255, 255, UIRendering.colorB));
-			UIRendering.renderText(window.getID(),
-					"Pitch Yaw Roll: " + camera.getRotation().getX() + " " + camera.getRotation().getY() + " "
-							+ camera.getRotation().getZ(),
-					"Roboto-Bold", 5, 155, 20, UIRendering.rgba(220, 220, 220, 255, UIRendering.colorA),
-					UIRendering.rgba(255, 255, 255, 255, UIRendering.colorB));
-			Timers.renderDebugDisplay(5, 24, 200, 55);
-		}
-		if (ClientVariables.paused)
-			pausesState.render(voxel, alpha);
-		window.endNVGFrame();
+		Renderer.clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		Renderer.clearColors(1, 1, 1, 1);
+		WM.getWM().render();
 	}
 
 	@Override
 	public void update(AbstractVoxel voxel, float delta) {
+		WM.getWM().update(delta);
+		Window window = ClientInternalSubsystem.getInstance().getGameWindow();
+		KeyboardHandler kbh = window.getKeyboardHandler();
 		if (!ClientVariables.paused) {
 			world.update(delta);
-
-			KeyboardHandler kbh = ClientInternalSubsystem.getInstance().getGameWindow().getKeyboardHandler();
 
 			sun.update(camera.getPosition(),
 					((RenderDimension) this.world.getActiveDimension()).getWorldSimulator().getRotation(), delta);
@@ -227,13 +203,22 @@ public class SPWorldState extends AbstractState {
 				kbh.ignoreKeyUntilRelease(GLFW.GLFW_KEY_ESCAPE);
 				((PlayerCamera) camera).unlockMouse();
 				ClientVariables.paused = true;
+				pauseWindow = new PauseWindow(20, window.getHeight() - 20, window.getWidth() - 40, window.getHeight() - 40);
+				WM.getWM().addWindow(pauseWindow);
 			}
 		} else if (ClientVariables.exitWorld) {
+			gameWindow.closeWindow();
+			pauseWindow.closeWindow();
 			ClientVariables.exitWorld = false;
 			ClientVariables.paused = false;
 			StateMachine.setCurrentState(StateNames.MAIN_MENU);
 		} else {
-			pausesState.update(voxel, delta);
+			if (kbh.isKeyPressed(GLFW.GLFW_KEY_ESCAPE)) {
+				kbh.ignoreKeyUntilRelease(GLFW.GLFW_KEY_ESCAPE);
+				Mouse.setGrabbed(true);
+				ClientVariables.paused = false;
+				pauseWindow.closeWindow();
+			}
 		}
 	}
 

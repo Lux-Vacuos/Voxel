@@ -30,6 +30,8 @@ public interface IWindowManager extends IDisposable {
 
 	public void addWindow(IWindow window);
 
+	public void addWindow(int ord, IWindow window);
+
 	public void removeWindow(IWindow window);
 
 }

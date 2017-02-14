@@ -20,7 +20,7 @@
 
 package net.luxvacuos.voxel.client.rendering.api.nanovg;
 
-import static org.lwjgl.nanovg.NanoVG.NVG_IMAGE_GENERATE_MIPMAPS;
+import static org.lwjgl.nanovg.NanoVG.*;
 import static org.lwjgl.nanovg.NanoVGGL3.nvgluCreateFramebuffer;
 import static org.lwjgl.nanovg.NanoVGGL3.nvgluDeleteFramebuffer;
 
@@ -41,8 +41,8 @@ public class Composite {
 	public Composite(Window window, int width, int height) {
 		effects = new ArrayList<>();
 		fbos = new NVGLUFramebuffer[2];
-		fbos[0] = nvgluCreateFramebuffer(window.getNVGID(), width, height, NVG_IMAGE_GENERATE_MIPMAPS);
-		fbos[1] = nvgluCreateFramebuffer(window.getNVGID(), width, height, NVG_IMAGE_GENERATE_MIPMAPS);
+		fbos[0] = nvgluCreateFramebuffer(window.getNVGID(), width, height, 0);
+		fbos[1] = nvgluCreateFramebuffer(window.getNVGID(), width, height, 0);
 		float[] positions = { -1, 1, -1, -1, 1, 1, 1, -1 };
 		quad = window.getResourceLoader().loadToVAO(positions, 2);
 	}

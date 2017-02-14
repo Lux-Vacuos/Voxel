@@ -27,6 +27,7 @@ import java.nio.file.Files;
 import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.core.states.StateNames;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
+import net.luxvacuos.voxel.client.rendering.api.nanovg.NanoWindow;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.WM;
 import net.luxvacuos.voxel.client.ui.nextui.Alignment;
 import net.luxvacuos.voxel.client.ui.nextui.Button;
@@ -39,9 +40,11 @@ import net.luxvacuos.voxel.universal.core.states.StateMachine;
 public class WorldMenu extends RootComponent {
 
 	public Text worldName;
+	private NanoWindow root;
 
-	public WorldMenu(float x, float y, float w, float h) {
+	public WorldMenu(float x, float y, float w, float h, NanoWindow root) {
 		super(x, y, w, h, "Worlds");
+		this.root = root;
 	}
 
 	@Override
@@ -72,7 +75,9 @@ public class WorldMenu extends RootComponent {
 		loadButton.setOnButtonPress(() -> {
 			if (ClientVariables.worldNameToLoad != "") {
 				super.closeWindow();
-				StateMachine.setCurrentState(StateNames.SP_LOADING);
+				root.setWindowClose(WindowClose.DISPOSE);
+				root.closeWindow();
+				StateMachine.setCurrentState(StateNames.SP_WORLD);
 			}
 		});
 

@@ -88,6 +88,8 @@ public abstract class PostProcessPass implements IPostProcessPass {
 	public void process(CameraEntity camera, Matrix4d previousViewMatrix, Vector3d previousCameraPosition, FBO[] auxs,
 			RawModel quad) {
 		fbo.begin();
+		Renderer.clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		Renderer.clearColors(0, 0, 0, 1);
 		shader.start();
 		shader.loadUnderWater(false);
 		shader.loadMotionBlurData(camera, previousViewMatrix, previousCameraPosition);
@@ -95,7 +97,6 @@ public abstract class PostProcessPass implements IPostProcessPass {
 		shader.loadSettings(ClientVariables.useDOF, ClientVariables.useFXAA, ClientVariables.useMotionBlur,
 				ClientVariables.useVolumetricLight, ClientVariables.useReflections, ClientVariables.useAmbientOcclusion,
 				ClientVariables.shadowMapDrawDistance, ClientVariables.useChromaticAberration, ClientVariables.useLensFlares);
-		Renderer.clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glBindVertexArray(quad.getVaoID());
 		glEnableVertexAttribArray(0);
 		render(auxs);

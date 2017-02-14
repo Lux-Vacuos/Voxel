@@ -57,8 +57,6 @@ public class MPWorldState extends AbstractState {
 
 	private Client client;
 
-	private SPPauseState pausesState;
-
 	public MPWorldState() {
 		super(StateNames.MP_WORLD);
 	}
@@ -130,15 +128,12 @@ public class MPWorldState extends AbstractState {
 		// worldSimulation = new ClientWorldSimulation(10000); //TODO: load from
 		// network
 
-		pausesState = new SPPauseState();
-		pausesState.init();
 
 		client = new Client();
 	}
 
 	@Override
 	public void dispose() {
-		pausesState.dispose();
 	}
 
 	@Override
@@ -175,8 +170,6 @@ public class MPWorldState extends AbstractState {
 					UIRendering.rgba(255, 255, 255, 255, UIRendering.colorB));
 			Timers.renderDebugDisplay(5, 24, 200, 55);
 		}
-		if (ClientVariables.paused)
-			pausesState.render(voxel, alpha);
 		window.endNVGFrame();
 	}
 
@@ -199,7 +192,6 @@ public class MPWorldState extends AbstractState {
 				ClientVariables.paused = true;
 			}
 		} else {
-			pausesState.update(voxel, delta);
 		}
 		if (ClientVariables.exitWorld) {
 			ClientVariables.exitWorld = false;
