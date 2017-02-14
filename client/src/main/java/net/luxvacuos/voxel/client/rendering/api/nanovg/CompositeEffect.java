@@ -57,12 +57,6 @@ public abstract class CompositeEffect implements IDisposable {
 	}
 
 	public void render(NVGLUFramebuffer[] fbos, RawModel quad, Window wnd, IWindow window) {
-		glBindTexture(GL_TEXTURE_2D, fbos[0].texture());
-		glGenerateMipmap(GL_TEXTURE_2D);
-		glBindTexture(GL_TEXTURE_2D, 0);
-		glBindTexture(GL_TEXTURE_2D, fbos[1].texture());
-		glGenerateMipmap(GL_TEXTURE_2D);
-		glBindTexture(GL_TEXTURE_2D, 0);
 		nvgluBindFramebuffer(wnd.getNVGID(), fbos[0]);
 		shader.start();
 		shader.loadFrame(new Vector4f(window.getX(), window.getY(), window.getWidth(), window.getHeight()));

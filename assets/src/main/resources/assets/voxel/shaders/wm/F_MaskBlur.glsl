@@ -32,6 +32,6 @@ uniform vec4 frame;
 void main(void){
     vec4 window = texture(window, textureCoords);
     out_Color = texture(image, textureCoords);
-    if(gl_FragCoord.x > frame.x - 5 && gl_FragCoord.y > frame.y - frame.w - 2 && gl_FragCoord.x < frame.x + frame.z + 5 && gl_FragCoord.y < frame.y)
+    if(gl_FragCoord.x > frame.x && gl_FragCoord.y > frame.y - frame.w && gl_FragCoord.x < frame.x + frame.z && gl_FragCoord.y < frame.y)
         out_Color.a = 0;
 }
