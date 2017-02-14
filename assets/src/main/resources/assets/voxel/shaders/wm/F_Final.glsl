@@ -20,13 +20,15 @@
 
 #version 330 core
 
-in vec2 position;
+in vec2 textureCoords;
 
-out vec2 textureCoords;
+out vec4 out_Color;
 
-uniform mat4 transformationMatrix;
+uniform sampler2D image;
+uniform sampler2D window;
 
 void main(void){
-	gl_Position = transformationMatrix * vec4(position, -0.8, 1.0);
-	textureCoords = vec2((position.x+1.0)/2.0, (position.y+1.0)/2.0);
+    vec4 source = texture(image,textureCoords);
+    vec4 window = texture(window,textureCoords);
+    out_Color = mix(source, window, window.a);
 }

@@ -21,22 +21,26 @@
 package net.luxvacuos.voxel.client.rendering.api.nanovg.shaders;
 
 import net.luxvacuos.igl.vector.Matrix4d;
-import net.luxvacuos.voxel.client.core.ClientVariables;
+import net.luxvacuos.igl.vector.Vector2f;
+import net.luxvacuos.igl.vector.Vector4f;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.ShaderProgram;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.Attribute;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.UniformMatrix;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.UniformSampler;
+import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.UniformVec2;
+import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.UniformVec4;
 
 public class WindowManagerShader extends ShaderProgram {
 
 	private UniformMatrix transformationMatrix = new UniformMatrix("transformationMatrix");
 	private UniformSampler image = new UniformSampler("image");
 	private UniformSampler window = new UniformSampler("window");
+	private UniformVec2 resolution = new UniformVec2("resolution");
+	private UniformVec4 frame = new UniformVec4("frame");
 
-	public WindowManagerShader() {
-		super(ClientVariables.VERTEX_WINDOW_MANAGER, ClientVariables.FRAGMENT_WINDOW_MANAGER,
-				new Attribute(0, "position"));
-		super.storeAllUniformLocations(transformationMatrix, image, window);
+	public WindowManagerShader(String type) {
+		super("wm/V_" + type + ".glsl", "wm/F_" + type + ".glsl", new Attribute(0, "position"));
+		super.storeAllUniformLocations(transformationMatrix, image, window, resolution, frame);
 		connectTextureUnits();
 	}
 
@@ -45,6 +49,14 @@ public class WindowManagerShader extends ShaderProgram {
 		image.loadTexUnit(0);
 		window.loadTexUnit(1);
 		super.stop();
+	}
+	
+	public void loadFrame(Vector4f frame){
+		this.frame.loadVec4(frame);
+	}
+
+	public void loadResolution(Vector2f res) {
+		resolution.loadVec2(res);
 	}
 
 	public void loadTransformation(Matrix4d matrix) {

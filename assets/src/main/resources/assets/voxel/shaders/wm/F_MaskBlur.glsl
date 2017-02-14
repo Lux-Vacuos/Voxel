@@ -26,19 +26,12 @@ out vec4 out_Color;
 
 uniform sampler2D image;
 uniform sampler2D window;
+uniform vec2 resolution;
+uniform vec4 frame;
 
 void main(void){
-    vec4 source = texture(image,textureCoords);
-    vec4 window = texture(window,textureCoords);
-    if(window.a < 1 && window.r != 0 && window.g != 0 && window.b != 0) {
-        vec3 sum = source.rgb;
-        for (int i = -4; i < 4; i++) {
-		    for (int j = -4; j < 4; j++) {
-			    sum += texture(image, textureCoords + vec2(j, i) * 0.002 ).rgb;
-    		}
-	    }
-	    sum /= 65.0;
-        source.rgb = sum;
-    }
-    out_Color = mix(source, window, window.a);
+    vec4 window = texture(window, textureCoords);
+    out_Color = texture(image, textureCoords);
+    if(gl_FragCoord.x > frame.x - 5 && gl_FragCoord.y > frame.y - frame.w - 2 && gl_FragCoord.x < frame.x + frame.z + 5 && gl_FragCoord.y < frame.y)
+        out_Color.a = 0;
 }
