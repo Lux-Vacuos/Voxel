@@ -18,7 +18,7 @@
  * 
  */
 
-package net.luxvacuos.voxel.client.ui.nextui;
+package net.luxvacuos.voxel.client.ui;
 
 import java.nio.ByteBuffer;
 
@@ -27,7 +27,6 @@ import org.lwjgl.nanovg.NVGColor;
 import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.NRendering;
-import net.luxvacuos.voxel.client.ui.OnAction;
 
 public class Button extends Component {
 

@@ -21,36 +21,29 @@
 package net.luxvacuos.voxel.client.ui;
 
 import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_LEFT;
-import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_TOP;
+import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_MIDDLE;
 
 import org.lwjgl.nanovg.NVGColor;
 
-import net.luxvacuos.voxel.client.rendering.api.glfw.WindowManager;
-import net.luxvacuos.voxel.client.rendering.api.nanovg.UIRendering;
+import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
+import net.luxvacuos.voxel.client.rendering.api.nanovg.NRendering;
 
-public class UIParagraph extends UIComponent {
-
+public class Text extends Component {
 	private String text, font = "Roboto-Regular";
-	private int align = NVG_ALIGN_LEFT | NVG_ALIGN_TOP;
-	private int fontSize = 25;
-	private NVGColor color = UIRendering.rgba(255, 255, 255, 255, NVGColor.create());
-	private float mx, my;
+	private int align = NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE;
+	private float fontSize = 25;
+	private NVGColor color = NRendering.rgba(255, 255, 255, 255, NVGColor.create());
 
-	public UIParagraph(String text, float x, float y, float w, float h, float mx, float my) {
+	public Text(String text, float x, float y) {
 		this.text = text;
 		this.x = x;
 		this.y = y;
-		this.width = w;
-		this.height = h;
-		this.mx = mx;
-		this.my = my;
 	}
 
 	@Override
-	public void render(long windowID) {
-		UIRendering.renderParagraph(windowID, rootX + x, WindowManager.getWindow(windowID).getHeight() - rootY - y,
-				width, height, mx, my, fontSize, font, text, align, color);
-		super.render(windowID);
+	public void render(Window window) {
+		NRendering.renderText(window.getNVGID(), text, font, align, rootComponent.rootX + alignedX,
+				window.getHeight() - rootComponent.rootY - alignedY, fontSize, color);
 	}
 
 	public void setAlign(int align) {
@@ -65,11 +58,20 @@ public class UIParagraph extends UIComponent {
 		this.text = text;
 	}
 
-	public void setColor(int r, int g, int b, int a) {
-		UIRendering.rgba(r, g, b, a, color);
+	public void setColor(float r, float g, float b, float a) {
+		color.r(r);
+		color.g(g);
+		color.b(b);
+		color.a(a);
 	}
 
-	public void setFontSize(int fontSize) {
+	public void setFontSize(float fontSize) {
 		this.fontSize = fontSize;
 	}
+
+	@Override
+	public void setAlignment(Alignment alignment) {
+		throw new UnsupportedOperationException("Please use setAlign method for text alignment");
+	}
+
 }

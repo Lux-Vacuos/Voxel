@@ -20,8 +20,45 @@
 
 package net.luxvacuos.voxel.client.rendering.api.nanovg;
 
-import static org.lwjgl.nanovg.NanoVG.*;
-import static org.lwjgl.nanovg.NanoVGGL3.*;
+import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_CENTER;
+import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_LEFT;
+import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_MIDDLE;
+import static org.lwjgl.nanovg.NanoVG.NVG_CCW;
+import static org.lwjgl.nanovg.NanoVG.NVG_CW;
+import static org.lwjgl.nanovg.NanoVG.NVG_HOLE;
+import static org.lwjgl.nanovg.NanoVG.NVG_PI;
+import static org.lwjgl.nanovg.NanoVG.nnvgText;
+import static org.lwjgl.nanovg.NanoVG.nnvgTextBreakLines;
+import static org.lwjgl.nanovg.NanoVG.nvgArc;
+import static org.lwjgl.nanovg.NanoVG.nvgBeginPath;
+import static org.lwjgl.nanovg.NanoVG.nvgBoxGradient;
+import static org.lwjgl.nanovg.NanoVG.nvgClosePath;
+import static org.lwjgl.nanovg.NanoVG.nvgFill;
+import static org.lwjgl.nanovg.NanoVG.nvgFillColor;
+import static org.lwjgl.nanovg.NanoVG.nvgFillPaint;
+import static org.lwjgl.nanovg.NanoVG.nvgFontBlur;
+import static org.lwjgl.nanovg.NanoVG.nvgFontFace;
+import static org.lwjgl.nanovg.NanoVG.nvgFontSize;
+import static org.lwjgl.nanovg.NanoVG.nvgImagePattern;
+import static org.lwjgl.nanovg.NanoVG.nvgImageSize;
+import static org.lwjgl.nanovg.NanoVG.nvgLineTo;
+import static org.lwjgl.nanovg.NanoVG.nvgLinearGradient;
+import static org.lwjgl.nanovg.NanoVG.nvgMoveTo;
+import static org.lwjgl.nanovg.NanoVG.nvgPathWinding;
+import static org.lwjgl.nanovg.NanoVG.nvgRect;
+import static org.lwjgl.nanovg.NanoVG.nvgRestore;
+import static org.lwjgl.nanovg.NanoVG.nvgSave;
+import static org.lwjgl.nanovg.NanoVG.nvgScissor;
+import static org.lwjgl.nanovg.NanoVG.nvgStroke;
+import static org.lwjgl.nanovg.NanoVG.nvgStrokeColor;
+import static org.lwjgl.nanovg.NanoVG.nvgStrokeWidth;
+import static org.lwjgl.nanovg.NanoVG.nvgText;
+import static org.lwjgl.nanovg.NanoVG.nvgTextAlign;
+import static org.lwjgl.nanovg.NanoVG.nvgTextBounds;
+import static org.lwjgl.nanovg.NanoVG.nvgTextMetrics;
+import static org.lwjgl.nanovg.NanoVG.nvgTranslate;
+import static org.lwjgl.nanovg.NanoVGGL3.nvglCreateImageFromHandle;
+import static org.lwjgl.system.MemoryUtil.memAddress;
 import static org.lwjgl.system.MemoryUtil.memAllocInt;
 import static org.lwjgl.system.MemoryUtil.memFree;
 import static org.lwjgl.system.MemoryUtil.memUTF8;
@@ -38,7 +75,7 @@ import org.lwjgl.nanovg.NVGTextRow;
 import org.lwjgl.system.MemoryStack;
 
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
-import net.luxvacuos.voxel.client.ui.nextui.ScrollPaneElement;
+import net.luxvacuos.voxel.client.ui.ScrollPaneElement;
 
 /**
  *
@@ -230,7 +267,7 @@ public class NRendering {
 		nvgFill(vg);
 		nvgRestore(vg);
 	}
-	
+
 	public static void renderImage(long vg, float x, float y, int image, float alpha) {
 		NVGPaint imgPaint = paintB;
 		IntBuffer imgw = memAllocInt(1), imgh = memAllocInt(1);
@@ -433,11 +470,47 @@ public class NRendering {
 
 		nvgRestore(vg);
 	}
-	
-	public static int generateImageFromTexture(long vg, int texID, int w, int h, int flags){
+
+	public static void renderParagraph(long vg, float x, float y, float width, float fontSize, String font, String text,
+			int align, NVGColor color) {
+		if (text == null)
+			text = "";
+		ByteBuffer paragraph = memUTF8(text);
+
+		nvgSave(vg);
+
+		nvgFontSize(vg, fontSize);
+		nvgFontFace(vg, font);
+		nvgTextAlign(vg, align);
+		nvgTextMetrics(vg, null, null, lineh);
+
+		long start = memAddress(paragraph);
+		long end = start + paragraph.remaining();
+		int nrows;
+		while ((nrows = nnvgTextBreakLines(vg, start, end, width, memAddress(rows), 3)) != 0) {
+			for (int i = 0; i < nrows; i++) {
+				NVGTextRow row = rows.get(i);
+				nvgFillColor(vg, color);
+				nnvgText(vg, x, y, row.start(), row.end());
+				y += lineh.get(0);
+			}
+			start = rows.get(nrows - 1).next();
+		}
+
+		nvgRestore(vg);
+	}
+
+	public static void renderBox(long vg, float x, float y, float w, float h, NVGColor color) {
+		nvgBeginPath(vg);
+		nvgRect(vg, x + 1, y + 1, w - 2, h - 2);
+		nvgFillColor(vg, color);
+		nvgFill(vg);
+	}
+
+	public static int generateImageFromTexture(long vg, int texID, int w, int h, int flags) {
 		return nvglCreateImageFromHandle(vg, texID, w, h, flags);
 	}
-	
+
 	public static ByteBuffer cpToUTF8(int cp) {
 		return memUTF8(new String(Character.toChars(cp)), true);
 	}

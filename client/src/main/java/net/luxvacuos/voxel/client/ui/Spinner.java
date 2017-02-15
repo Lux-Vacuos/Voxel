@@ -20,38 +20,37 @@
 
 package net.luxvacuos.voxel.client.ui;
 
-import net.luxvacuos.voxel.client.rendering.api.glfw.WindowManager;
-import net.luxvacuos.voxel.client.rendering.api.nanovg.UIRendering;
+import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
+import net.luxvacuos.voxel.client.rendering.api.nanovg.NRendering;
 
-public class UIImage extends UIComponent {
+public class Spinner extends Component {
 
-	private int image;
-	private OnAction onUpdate;
+	private float progress = 0;
+	private float r;
 
-	public UIImage(float x, float y, float w, float h, int image) {
+	public Spinner(float x, float y, float r) {
 		this.x = x;
 		this.y = y;
-		this.width = w;
-		this.height = h;
-		this.image = image;
+		this.r = r;
+		this.w = r;
+		this.h = r;
 	}
 
 	@Override
-	public void render(long windowID) {
-		UIRendering.renderImage(windowID, rootX + x, WindowManager.getWindow(windowID).getHeight() - rootY - y,
-				width, height, image, fadeAlpha);
-		super.render(windowID);
+	public void render(Window window) {
+		NRendering.renderSpinner(window.getNVGID(), rootComponent.rootX + alignedX,
+				window.getHeight() - rootComponent.rootY - alignedY - h, r, progress);
 	}
 
 	@Override
-	public void update(float delta) {
-		if (onUpdate != null)
-			onUpdate.onAction();
-		super.update(delta);
+	public void update(float delta, Window window) {
+		super.update(delta, window);
+		progress += 1 * delta;
 	}
-
-	public void setOnUpdate(OnAction onUpdate) {
-		this.onUpdate = onUpdate;
+	
+	@Override
+	public void setAlignment(Alignment alignment) {
+		throw new UnsupportedOperationException("Not Available");
 	}
 
 }

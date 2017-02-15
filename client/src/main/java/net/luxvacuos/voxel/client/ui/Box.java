@@ -18,27 +18,35 @@
  * 
  */
 
-package net.luxvacuos.voxel.client.ui.nextui;
+package net.luxvacuos.voxel.client.ui;
+
+import org.lwjgl.nanovg.NVGColor;
 
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.NRendering;
 
-public class Image extends Component {
+public class Box extends Component {
 
-	private int image;
+	private NVGColor color = NRendering.rgba(255, 255, 255, 255);
 
-	public Image(float x, float y, float w, float h, int image) {
+	public Box(float x, float y, float w, float h) {
 		this.x = x;
 		this.y = y;
 		this.w = w;
 		this.h = h;
-		this.image = image;
 	}
 
 	@Override
 	public void render(Window window) {
-		NRendering.renderImage(window.getNVGID(), rootComponent.rootX + alignedX,
-				window.getHeight() - rootComponent.rootY - alignedY - h, w, h, image, 1);
+		NRendering.renderBox(window.getNVGID(), rootComponent.rootX + alignedX,
+				window.getHeight() - rootComponent.rootY - alignedY - h, w, h, color);
+	}
+
+	public void setColor(float r, float g, float b, float a) {
+		color.r(r);
+		color.g(g);
+		color.b(b);
+		color.a(a);
 	}
 
 }

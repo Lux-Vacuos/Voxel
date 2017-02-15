@@ -22,8 +22,8 @@ package net.luxvacuos.voxel.client.ui.menus;
 
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Renderer;
-import net.luxvacuos.voxel.client.ui.nextui.Image;
-import net.luxvacuos.voxel.client.ui.nextui.RootComponent;
+import net.luxvacuos.voxel.client.ui.Image;
+import net.luxvacuos.voxel.client.ui.RootComponent;
 
 public class GameWindow extends RootComponent {
 

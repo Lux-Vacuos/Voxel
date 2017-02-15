@@ -24,9 +24,9 @@ import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_CENTER;
 import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_MIDDLE;
 
 import net.luxvacuos.igl.Logger;
-import net.luxvacuos.voxel.client.ui.nextui.Alignment;
-import net.luxvacuos.voxel.client.ui.nextui.RootComponent;
-import net.luxvacuos.voxel.client.ui.nextui.Text;
+import net.luxvacuos.voxel.client.ui.Alignment;
+import net.luxvacuos.voxel.client.ui.RootComponent;
+import net.luxvacuos.voxel.client.ui.Text;
 
 public final class WM {
 

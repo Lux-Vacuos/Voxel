@@ -18,7 +18,7 @@
  * 
  */
 
-package net.luxvacuos.voxel.client.ui.nextui;
+package net.luxvacuos.voxel.client.ui;
 
 import java.util.ArrayList;
 import java.util.List;

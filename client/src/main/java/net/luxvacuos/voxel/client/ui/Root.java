@@ -18,17 +18,17 @@
  * 
  */
 
-package net.luxvacuos.voxel.client.ui.nextui;
+package net.luxvacuos.voxel.client.ui;
 
-import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
-import net.luxvacuos.voxel.universal.resources.IDisposable;
+public class Root {
+	
+	protected float rootX, rootY, rootW, rootH;
 
-public interface IComponent extends IDisposable {
-	
-	public void init();
-	
-	public void render(Window window);
-	
-	public void update(float delta, Window window);
+	public Root(float rootX, float rootY, float rootW, float rootH) {
+		this.rootX = rootX;
+		this.rootY = rootY;
+		this.rootW = rootW;
+		this.rootH = rootH;
+	}
 
 }

@@ -18,17 +18,8 @@
  * 
  */
 
-package net.luxvacuos.voxel.client.ui.nextui;
+package net.luxvacuos.voxel.client.ui;
 
-public class Root {
-	
-	protected float rootX, rootY, rootW, rootH;
-
-	public Root(float rootX, float rootY, float rootW, float rootH) {
-		this.rootX = rootX;
-		this.rootY = rootY;
-		this.rootW = rootW;
-		this.rootH = rootH;
-	}
-
+public enum Alignment {
+	LEFT, CENTER, RIGHT, TOP, BOTTOM, LEFT_BOTTOM, LEFT_TOP, RIGHT_BOTTOM, RIGHT_TOP
 }

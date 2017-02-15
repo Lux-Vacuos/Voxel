@@ -23,9 +23,9 @@ package net.luxvacuos.voxel.client.ui.menus;
 import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.WM;
-import net.luxvacuos.voxel.client.ui.nextui.Alignment;
-import net.luxvacuos.voxel.client.ui.nextui.Button;
-import net.luxvacuos.voxel.client.ui.nextui.RootComponent;
+import net.luxvacuos.voxel.client.ui.Alignment;
+import net.luxvacuos.voxel.client.ui.Button;
+import net.luxvacuos.voxel.client.ui.RootComponent;
 
 public class PauseWindow extends RootComponent {
 

@@ -18,21 +18,29 @@
  * 
  */
 
-package net.luxvacuos.voxel.client.ui.nextui;
+package net.luxvacuos.voxel.client.ui;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 
-public class ScrollPaneElement {
-
+public class PaneComponent {
+	
 	private List<Component> components = new ArrayList<>();
+	protected float alignedX, alignedY, x, y, w, h;
 
-	protected Root root;
-
-	public ScrollPaneElement(float x, float y, float w, float h) {
-		root = new Root(x, y - h, w, h);
+	public PaneComponent(float x, float y, float w, float h) {
+		this.x = x;
+		this.y = y;
+		this.w = w;
+		this.h = h;
+	}
+	
+	public void init() {
+		for (Component component : components) {
+			component.init();
+		}
 	}
 
 	public void render(Window window) {
@@ -40,32 +48,11 @@ public class ScrollPaneElement {
 			component.render(window);
 		}
 	}
-
+	
 	public void update(float delta, Window window) {
 		for (Component component : components) {
 			component.update(delta, window);
 		}
-	}
-
-	public void dispose() {
-		for (Component component : components) {
-			component.dispose();
-		}
-		components.clear();
-	}
-
-	public void addComponent(Component component) {
-		component.rootComponent = root;
-		component.init();
-		components.add(component);
-	}
-
-	public void setX(float x) {
-		root.rootX = x;
-	}
-
-	public void setY(float y) {
-		root.rootY = y;
 	}
 
 }

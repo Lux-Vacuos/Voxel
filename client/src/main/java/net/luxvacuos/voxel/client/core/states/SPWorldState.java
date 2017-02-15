@@ -80,7 +80,7 @@ public class SPWorldState extends AbstractState {
 	@Override
 	public void start() {
 		super.start();
-
+		
 		this.world = new RenderWorld(ClientVariables.worldNameToLoad);
 		ClientVariables.worldNameToLoad = "";
 		Window window = ClientInternalSubsystem.getInstance().getGameWindow();

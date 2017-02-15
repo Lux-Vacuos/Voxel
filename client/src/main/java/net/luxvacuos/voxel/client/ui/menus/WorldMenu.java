@@ -29,12 +29,12 @@ import net.luxvacuos.voxel.client.core.states.StateNames;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.NanoWindow;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.WM;
-import net.luxvacuos.voxel.client.ui.nextui.Alignment;
-import net.luxvacuos.voxel.client.ui.nextui.Button;
-import net.luxvacuos.voxel.client.ui.nextui.RootComponent;
-import net.luxvacuos.voxel.client.ui.nextui.ScrollPane;
-import net.luxvacuos.voxel.client.ui.nextui.Text;
-import net.luxvacuos.voxel.client.ui.nextui.WorldElement;
+import net.luxvacuos.voxel.client.ui.Alignment;
+import net.luxvacuos.voxel.client.ui.Button;
+import net.luxvacuos.voxel.client.ui.RootComponent;
+import net.luxvacuos.voxel.client.ui.ScrollPane;
+import net.luxvacuos.voxel.client.ui.Text;
+import net.luxvacuos.voxel.client.ui.WorldElement;
 import net.luxvacuos.voxel.universal.core.states.StateMachine;
 
 public class WorldMenu extends RootComponent {

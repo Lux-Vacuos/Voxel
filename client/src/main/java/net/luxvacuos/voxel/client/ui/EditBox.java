@@ -18,39 +18,49 @@
  * 
  */
 
-package net.luxvacuos.voxel.client.ui.nextui;
+package net.luxvacuos.voxel.client.ui;
 
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.NRendering;
 
-public class Spinner extends Component {
+public class EditBox extends Component {
+	private String text, font = "Poppins-Medium";
+	private float fontSize = 20f;
 
-	private float progress = 0;
-	private float r;
-
-	public Spinner(float x, float y, float r) {
+	public EditBox(float x, float y, float width, float height, String text) {
 		this.x = x;
 		this.y = y;
-		this.r = r;
-		this.w = r;
-		this.h = r;
+		this.w = width;
+		this.h = height;
+		this.text = text;
 	}
 
 	@Override
 	public void render(Window window) {
-		NRendering.renderSpinner(window.getNVGID(), rootComponent.rootX + alignedX,
-				window.getHeight() - rootComponent.rootY - alignedY - h, r, progress);
+		NRendering.renderEditBox(window.getNVGID(), text, font, rootComponent.rootX + alignedX,
+				window.getHeight() - rootComponent.rootY - alignedY - h, w, h, fontSize);
 	}
 
 	@Override
 	public void update(float delta, Window window) {
+		window.getKeyboardHandler().enableTextInput();
+		text = window.getKeyboardHandler().handleInput(text);
 		super.update(delta, window);
-		progress += 1 * delta;
-	}
-	
-	@Override
-	public void setAlignment(Alignment alignment) {
-		throw new UnsupportedOperationException("Not Available");
 	}
 
+	public void setFontSize(float fontSize) {
+		this.fontSize = fontSize;
+	}
+
+	public void setFont(String font) {
+		this.font = font;
+	}
+
+	public void setText(String text) {
+		this.text = text;
+	}
+
+	public String getText() {
+		return text;
+	}
 }

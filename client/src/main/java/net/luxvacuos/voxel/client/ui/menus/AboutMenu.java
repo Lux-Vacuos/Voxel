@@ -27,10 +27,10 @@ import net.luxvacuos.voxel.client.core.ClientInternalSubsystem;
 import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.core.CoreInfo;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
-import net.luxvacuos.voxel.client.ui.nextui.Alignment;
-import net.luxvacuos.voxel.client.ui.nextui.Image;
-import net.luxvacuos.voxel.client.ui.nextui.RootComponent;
-import net.luxvacuos.voxel.client.ui.nextui.Text;
+import net.luxvacuos.voxel.client.ui.Alignment;
+import net.luxvacuos.voxel.client.ui.Image;
+import net.luxvacuos.voxel.client.ui.RootComponent;
+import net.luxvacuos.voxel.client.ui.Text;
 
 public class AboutMenu extends RootComponent {
 

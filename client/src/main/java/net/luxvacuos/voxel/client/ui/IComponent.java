@@ -18,41 +18,17 @@
  * 
  */
 
-package net.luxvacuos.voxel.client.ui.nextui;
-
-import java.util.ArrayList;
-import java.util.List;
+package net.luxvacuos.voxel.client.ui;
 
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
+import net.luxvacuos.voxel.universal.resources.IDisposable;
 
-public class PaneComponent {
+public interface IComponent extends IDisposable {
 	
-	private List<Component> components = new ArrayList<>();
-	protected float alignedX, alignedY, x, y, w, h;
-
-	public PaneComponent(float x, float y, float w, float h) {
-		this.x = x;
-		this.y = y;
-		this.w = w;
-		this.h = h;
-	}
+	public void init();
 	
-	public void init() {
-		for (Component component : components) {
-			component.init();
-		}
-	}
-
-	public void render(Window window) {
-		for (Component component : components) {
-			component.render(window);
-		}
-	}
+	public void render(Window window);
 	
-	public void update(float delta, Window window) {
-		for (Component component : components) {
-			component.update(delta, window);
-		}
-	}
+	public void update(float delta, Window window);
 
 }
