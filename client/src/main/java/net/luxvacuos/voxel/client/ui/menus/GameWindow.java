@@ -37,6 +37,7 @@ public class GameWindow extends RootComponent {
 		super.setResizable(false);
 		super.setDecorations(false);
 		super.setAsBackground(true);
+		super.setBlurBehind(false);
 
 		Image game = new Image(0, 0, appW, appH, Renderer.getResultTexture());
 

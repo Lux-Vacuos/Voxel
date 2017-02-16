@@ -20,6 +20,8 @@
 
 package net.luxvacuos.voxel.client.ui.menus;
 
+import net.luxvacuos.voxel.client.core.ClientVariables;
+import net.luxvacuos.voxel.client.core.states.StateNames;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.NRendering;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.WM;
@@ -64,7 +66,12 @@ public class MainMenu extends RootComponent {
 		exitButton.setWindowAlignment(Alignment.CENTER);
 
 		playButton.setOnButtonPress(() -> {
-			WM.getWM().addWindow(new WorldMenu(appW / 2 - 420 + appX, appY, 840, 600, this));
+			if (ClientVariables.TEST_MODE) {
+				super.setWindowClose(WindowClose.DISPOSE);
+				super.closeWindow();
+				StateMachine.setCurrentState(StateNames.TEST);
+			} else
+				WM.getWM().addWindow(new WorldMenu(appW / 2 - 420 + appX, appY, 840, 600, this));
 		});
 
 		playMPButton.setOnButtonPress(() -> {

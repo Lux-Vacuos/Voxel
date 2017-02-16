@@ -48,6 +48,7 @@ public class CrashWindow extends RootComponent {
 		super.setAlwaysOnTop(true);
 		super.toggleTitleBar();
 		super.setBackgroundColor(0, 0.5f, 1, 1);
+		super.setBlurBehind(false);
 
 		window.getResourceLoader().loadNVGFont("Px437_IBM_VGA8", "Px437_IBM_VGA8");
 

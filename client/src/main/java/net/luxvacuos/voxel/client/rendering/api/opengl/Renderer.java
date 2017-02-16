@@ -186,13 +186,20 @@ public class Renderer {
 	}
 
 	public static void cleanUp() {
-		environmentRenderer.cleanUp();
-		shadowFBO.cleanUp();
-		entityRenderer.cleanUp();
-		entityShadowRenderer.cleanUp();
-		deferredPipeline.dispose();
-		postProcessPipeline.dispose();
-		particleRenderer.cleanUp();
+		if (entityRenderer != null)
+			environmentRenderer.cleanUp();
+		if (shadowFBO != null)
+			shadowFBO.cleanUp();
+		if (entityRenderer != null)
+			entityRenderer.cleanUp();
+		if (entityShadowRenderer != null)
+			entityShadowRenderer.cleanUp();
+		if (deferredPipeline != null)
+			deferredPipeline.dispose();
+		if (postProcessPipeline != null)
+			postProcessPipeline.dispose();
+		if (particleRenderer != null)
+			particleRenderer.cleanUp();
 	}
 
 	public static int getResultTexture() {

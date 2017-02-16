@@ -42,7 +42,7 @@ public class CrashState extends AbstractState {
 	@Override
 	public void start() {
 		Window window = ClientInternalSubsystem.getInstance().getGameWindow();
-		WM.getWM().addWindow(new CrashWindow(-2, window.getHeight() + 2, window.getWidth() + 4, window.getHeight() + 4, new Throwable("no_se.exe")));
+		WM.getWM().addWindow(new CrashWindow(-2, window.getHeight() + 2, window.getWidth() + 4, window.getHeight() + 4, t));
 	}
 
 	@Override

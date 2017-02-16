@@ -38,7 +38,7 @@ import net.luxvacuos.voxel.client.rendering.api.opengl.Renderer;
 public abstract class NanoWindow implements IWindow {
 
 	private boolean draggable = true, decorations = true, resizable = true, maximized, hidden = false, exit,
-			alwaysOnTop, background;
+			alwaysOnTop, background, blurBehind = true;
 	private BackgroundStyle backgroundStyle = BackgroundStyle.SOLID;
 	private NVGColor backgroundColor = NRendering.rgba(0, 0, 0, 255);
 	private float x, y, w, h;
@@ -205,6 +205,11 @@ public abstract class NanoWindow implements IWindow {
 	public void setAsBackground(boolean background) {
 		this.background = background;
 	}
+	
+	@Override
+	public void setBlurBehind(boolean blur) {
+		blurBehind = blur;
+	}
 
 	@Override
 	public void toggleTitleBar() {
@@ -254,6 +259,11 @@ public abstract class NanoWindow implements IWindow {
 	@Override
 	public boolean isDraggable() {
 		return draggable;
+	}
+	
+	@Override
+	public boolean doBlurBehind() {
+		return blurBehind;
 	}
 
 	@Override

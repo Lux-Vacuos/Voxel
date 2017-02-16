@@ -59,6 +59,7 @@ public abstract class CompositeEffect implements IDisposable {
 		nvgluBindFramebuffer(wnd.getNVGID(), fbos[0]);
 		shader.start();
 		shader.loadFrame(new Vector4f(window.getX(), window.getY(), window.getWidth(), window.getHeight()));
+		shader.loadBlurBehind(window.doBlurBehind());
 		glBindVertexArray(quad.getVaoID());
 		glEnableVertexAttribArray(0);
 		glActiveTexture(GL_TEXTURE0);

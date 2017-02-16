@@ -25,6 +25,7 @@ import net.luxvacuos.igl.vector.Vector2f;
 import net.luxvacuos.igl.vector.Vector4f;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.ShaderProgram;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.Attribute;
+import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.UniformBoolean;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.UniformMatrix;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.UniformSampler;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.UniformVec2;
@@ -37,10 +38,11 @@ public class WindowManagerShader extends ShaderProgram {
 	private UniformSampler window = new UniformSampler("window");
 	private UniformVec2 resolution = new UniformVec2("resolution");
 	private UniformVec4 frame = new UniformVec4("frame");
+	private UniformBoolean blurBehind = new UniformBoolean("blurBehind");
 
 	public WindowManagerShader(String type) {
 		super("wm/V_" + type + ".glsl", "wm/F_" + type + ".glsl", new Attribute(0, "position"));
-		super.storeAllUniformLocations(transformationMatrix, image, window, resolution, frame);
+		super.storeAllUniformLocations(transformationMatrix, image, window, resolution, frame, blurBehind);
 		connectTextureUnits();
 	}
 
@@ -50,13 +52,17 @@ public class WindowManagerShader extends ShaderProgram {
 		window.loadTexUnit(1);
 		super.stop();
 	}
-	
-	public void loadFrame(Vector4f frame){
+
+	public void loadFrame(Vector4f frame) {
 		this.frame.loadVec4(frame);
 	}
 
 	public void loadResolution(Vector2f res) {
 		resolution.loadVec2(res);
+	}
+
+	public void loadBlurBehind(boolean blur) {
+		blurBehind.loadBoolean(blur);
 	}
 
 	public void loadTransformation(Matrix4d matrix) {

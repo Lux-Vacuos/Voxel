@@ -99,10 +99,6 @@ public class SPWorldState extends AbstractState {
 		Renderer.setShadowPass((camera, sunCamera, frustum, shadowMap) -> {
 			((RenderWorld) world).renderShadow(sunCamera, frustum);
 		});
-		Renderer.setOcclusionPass((camera, sunCamera, frustum, shadowMap) -> {
-			// ((RenderDimension)
-			// world.getActiveDimension()).renderOcclusion(camera, frustum);
-		});
 		Renderer.setForwardPass((camera, sunCamera, frustum, shadowMap) -> {
 			Vector3d pos = ((PlayerCamera) camera).getBlockOutlinePos();
 			blockOutlineRenderer.render(camera,

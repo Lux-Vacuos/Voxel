@@ -68,6 +68,8 @@ public interface IWindow {
 	public void setAsBackground(boolean background);
 
 	public void setAlwaysOnTop(boolean alwaysOnTop);
+	
+	public void setBlurBehind(boolean blur);
 
 	public void toggleTitleBar();
 
@@ -92,6 +94,8 @@ public interface IWindow {
 	public boolean isDraggable();
 
 	public boolean shouldClose();
+	
+	public boolean doBlurBehind();
 
 	public void closeWindow();
 

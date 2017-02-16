@@ -20,6 +20,9 @@
 
 package net.luxvacuos.voxel.client.core.states;
 
+import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
+
 import org.lwjgl.glfw.GLFW;
 
 import com.badlogic.ashley.core.Engine;
@@ -33,17 +36,15 @@ import net.luxvacuos.igl.vector.Vector4f;
 import net.luxvacuos.voxel.client.core.ClientInternalSubsystem;
 import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.core.ClientWorldSimulation;
-import net.luxvacuos.voxel.client.core.CoreInfo;
 import net.luxvacuos.voxel.client.ecs.EntityResources;
 import net.luxvacuos.voxel.client.ecs.entities.BasicEntity;
 import net.luxvacuos.voxel.client.ecs.entities.CameraEntity;
 import net.luxvacuos.voxel.client.ecs.entities.PlayerCamera;
 import net.luxvacuos.voxel.client.ecs.entities.Sun;
 import net.luxvacuos.voxel.client.input.KeyboardHandler;
+import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
-import net.luxvacuos.voxel.client.rendering.api.glfw.WindowManager;
-import net.luxvacuos.voxel.client.rendering.api.nanovg.Timers;
-import net.luxvacuos.voxel.client.rendering.api.nanovg.UIRendering;
+import net.luxvacuos.voxel.client.rendering.api.nanovg.WM;
 import net.luxvacuos.voxel.client.rendering.api.opengl.ParticleDomain;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Renderer;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Tessellator;
@@ -55,6 +56,8 @@ import net.luxvacuos.voxel.client.rendering.api.opengl.objects.Texture;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.TexturedModel;
 import net.luxvacuos.voxel.client.rendering.utils.BlockFaceAtlas;
 import net.luxvacuos.voxel.client.resources.ResourceLoader;
+import net.luxvacuos.voxel.client.ui.menus.GameWindow;
+import net.luxvacuos.voxel.client.ui.menus.PauseWindow;
 import net.luxvacuos.voxel.client.util.Maths;
 import net.luxvacuos.voxel.client.world.block.BlocksResources;
 import net.luxvacuos.voxel.client.world.block.RenderBlock;
@@ -82,6 +85,8 @@ public class TestState extends AbstractState {
 	private Tessellator tess;
 	private ParticleSystem particleSystem;
 	private Vector3d particlesPoint;
+	private GameWindow gameWindow;
+	private PauseWindow pauseWindow;
 
 	private BasicEntity mat1, mat2, mat3, mat4, mat5, rocket, plane, character;
 
@@ -126,7 +131,6 @@ public class TestState extends AbstractState {
 		physicsSystem = new PhysicsSystem(null);
 		physicsSystem.addBox(new BoundingBox(new Vector3(-50, -1, -50), new Vector3(50, 0, 50)));
 		engine.addSystem(physicsSystem);
-		BlocksResources.createBlocks(loader);
 
 		Texture test = loader.loadTexture("test_state/rusted_iron");
 		Texture test_n = loader.loadTextureMisc("test_state/rusted_iron-n");
@@ -134,24 +138,6 @@ public class TestState extends AbstractState {
 		Texture test_m = loader.loadTextureMisc("test_state/rusted_iron-m");
 
 		tess = new Tessellator(BlocksResources.getMaterial());
-		RenderBlock t = new RenderBlock(new BlockMaterial("test"), new BlockFaceAtlas("Ice"));
-		t.setID(1);
-
-		tess.begin();
-		for (int x = 0; x < 16; x++) {
-			for (int z = 0; z < 16; z++) {
-				tess.generateCube(20 + x, 0, z, 1, true, true, true, true, true, true, t);
-			}
-		}
-		tess.end();
-
-		Renderer.setShadowPass((camera, sunCamera, frustum, shadowMap) -> {
-			tess.drawShadow(sunCamera);
-		});
-
-		Renderer.setDeferredPass((camera, sunCamera, frustum, shadowMap) -> {
-			tess.draw(camera, sunCamera, worldSimulation, shadowMap);
-		});
 
 		Renderer.getLightRenderer().addLight(new Light(new Vector3d(-8, 5, -8), new Vector3f(1, 1, 1)));
 		Renderer.getLightRenderer().addLight(new Light(new Vector3d(-8, 5, 8), new Vector3f(1, 1, 1)));
@@ -204,6 +190,7 @@ public class TestState extends AbstractState {
 				3f, 6f);
 		particleSystem.setDirection(new Vector3d(0, -1, 0), 0.4f);
 		particlesPoint = new Vector3d(0, 1.7f, -5);
+
 	}
 
 	@Override
@@ -213,6 +200,24 @@ public class TestState extends AbstractState {
 
 	@Override
 	public void start() {
+		Window window = ClientInternalSubsystem.getInstance().getGameWindow();
+		Renderer.setShadowPass((camera, sunCamera, frustum, shadowMap) -> {
+			tess.drawShadow(sunCamera);
+		});
+
+		Renderer.setDeferredPass((camera, sunCamera, frustum, shadowMap) -> {
+			tess.draw(camera, sunCamera, worldSimulation, shadowMap);
+		});
+		RenderBlock t = new RenderBlock(new BlockMaterial("test"), new BlockFaceAtlas("leaves"));
+		t.setID(1);
+		tess.begin();
+		for (int x = 0; x < 16; x++) {
+			for (int z = 0; z < 16; z++) {
+				tess.generateCube(20 + x, 0, z, 1, true, true, true, true, true, true, t);
+			}
+		}
+		tess.end();
+		camera.setPosition(new Vector3d(0, 2, 0));
 		physicsSystem.getEngine().addEntity(camera);
 		physicsSystem.getEngine().addEntity(plane);
 		physicsSystem.getEngine().addEntity(mat1);
@@ -223,6 +228,10 @@ public class TestState extends AbstractState {
 		physicsSystem.getEngine().addEntity(rocket);
 		physicsSystem.getEngine().addEntity(character);
 		((PlayerCamera) camera).setMouse();
+		Renderer.render(engine.getEntities(), ParticleDomain.getParticles(), camera, sun.getCamera(), worldSimulation,
+				sun.getSunPosition(), sun.getInvertedSunPosition(), 0);
+		gameWindow = new GameWindow(-2, window.getHeight() + 33, window.getWidth() + 4, window.getHeight() + 35);
+		WM.getWM().addWindow(0, gameWindow);
 	}
 
 	@Override
@@ -232,57 +241,52 @@ public class TestState extends AbstractState {
 
 	@Override
 	public void update(AbstractVoxel voxel, float delta) {
-		KeyboardHandler kbh = ClientInternalSubsystem.getInstance().getGameWindow().getKeyboardHandler();
+		WM.getWM().update(delta);
+		Window window = ClientInternalSubsystem.getInstance().getGameWindow();
+		KeyboardHandler kbh = window.getKeyboardHandler();
+		if (!ClientVariables.paused) {
 
-		engine.update(delta);
-		sun.update(camera.getPosition(), worldSimulation.update(delta), delta);
-		particleSystem.generateParticles(particlesPoint, delta);
-		ParticleDomain.update(delta, camera);
+			engine.update(delta);
+			sun.update(camera.getPosition(), worldSimulation.update(delta), delta);
+			particleSystem.generateParticles(particlesPoint, delta);
+			ParticleDomain.update(delta, camera);
 
-		if (kbh.isKeyPressed(GLFW.GLFW_KEY_F1))
-			ClientVariables.debug = !ClientVariables.debug;
-		if (kbh.isKeyPressed(GLFW.GLFW_KEY_R))
-			ClientVariables.raining = !ClientVariables.raining;
-		if (kbh.isKeyPressed(GLFW.GLFW_KEY_ESCAPE)) {
-			kbh.ignoreKeyUntilRelease(GLFW.GLFW_KEY_ESCAPE);
-			((PlayerCamera) camera).unlockMouse();
+			if (kbh.isKeyPressed(GLFW.GLFW_KEY_F1))
+				ClientVariables.debug = !ClientVariables.debug;
+			if (kbh.isKeyPressed(GLFW.GLFW_KEY_R))
+				ClientVariables.raining = !ClientVariables.raining;
+			if (kbh.isKeyPressed(GLFW.GLFW_KEY_ESCAPE)) {
+				kbh.ignoreKeyUntilRelease(GLFW.GLFW_KEY_ESCAPE);
+				((PlayerCamera) camera).unlockMouse();
+				ClientVariables.paused = true;
+				pauseWindow = new PauseWindow(20, window.getHeight() - 20, window.getWidth() - 40,
+						window.getHeight() - 40);
+				WM.getWM().addWindow(pauseWindow);
+			}
+		} else if (ClientVariables.exitWorld) {
+			gameWindow.closeWindow();
+			pauseWindow.closeWindow();
+			ClientVariables.exitWorld = false;
+			ClientVariables.paused = false;
 			StateMachine.setCurrentState(StateNames.MAIN_MENU);
+		} else {
+			if (kbh.isKeyPressed(GLFW.GLFW_KEY_ESCAPE)) {
+				kbh.ignoreKeyUntilRelease(GLFW.GLFW_KEY_ESCAPE);
+				Mouse.setGrabbed(true);
+				ClientVariables.paused = false;
+				pauseWindow.closeWindow();
+			}
 		}
 
 	}
 
 	@Override
 	public void render(AbstractVoxel voxel, float alpha) {
-		Window window = ClientInternalSubsystem.getInstance().getGameWindow();
-
-		Renderer.render(physicsSystem.getEngine().getEntities(), ParticleDomain.getParticles(), camera, sun.getCamera(),
-				worldSimulation, sun.getSunPosition(), sun.getInvertedSunPosition(), alpha);
-
-		window.beingNVGFrame();
-		if (ClientVariables.debug) {
-			UIRendering.renderText(window.getID(), "Voxel " + " (" + ClientVariables.version + ")", "Roboto-Bold", 5,
-					12, 20, UIRendering.rgba(220, 220, 220, 255, UIRendering.colorA),
-					UIRendering.rgba(255, 255, 255, 255, UIRendering.colorB));
-			UIRendering.renderText(window.getID(),
-					"Used VRam: " + WindowManager.getUsedVRAM() + "KB " + " UPS: " + CoreInfo.ups, "Roboto-Bold", 5, 95,
-					20, UIRendering.rgba(220, 220, 220, 255, UIRendering.colorA),
-					UIRendering.rgba(255, 255, 255, 255, UIRendering.colorB));
-			UIRendering.renderText(window.getID(), "Loaded Chunks: " + 0 + "   Rendered Chunks: " + 0, "Roboto-Bold", 5,
-					115, 20, UIRendering.rgba(220, 220, 220, 255, UIRendering.colorA),
-					UIRendering.rgba(255, 255, 255, 255, UIRendering.colorB));
-			UIRendering.renderText(window.getID(),
-					"Position XYZ:  " + camera.getPosition().getX() + "  " + camera.getPosition().getY() + "  "
-							+ camera.getPosition().getZ(),
-					"Roboto-Bold", 5, 135, 20, UIRendering.rgba(220, 220, 220, 255, UIRendering.colorA),
-					UIRendering.rgba(255, 255, 255, 255, UIRendering.colorB));
-			UIRendering.renderText(window.getID(),
-					"Pitch Yaw Roll: " + camera.getRotation().getX() + " " + camera.getRotation().getY() + " "
-							+ camera.getRotation().getZ(),
-					"Roboto-Bold", 5, 155, 20, UIRendering.rgba(220, 220, 220, 255, UIRendering.colorA),
-					UIRendering.rgba(255, 255, 255, 255, UIRendering.colorB));
-			Timers.renderDebugDisplay(5, 24, 200, 55);
-		}
-		window.endNVGFrame();
+		Renderer.render(engine.getEntities(), ParticleDomain.getParticles(), camera, sun.getCamera(), worldSimulation,
+				sun.getSunPosition(), sun.getInvertedSunPosition(), alpha);
+		Renderer.clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		Renderer.clearColors(1, 1, 1, 1);
+		WM.getWM().render();
 	}
 
 }

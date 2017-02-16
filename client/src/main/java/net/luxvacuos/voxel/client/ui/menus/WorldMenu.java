@@ -53,7 +53,7 @@ public class WorldMenu extends RootComponent {
 		super.setResizable(false);
 		super.setAlwaysOnTop(true);
 
-		ScrollPane pane = new ScrollPane(0, 0, appW / 2, appH, appW / 2 - 35, 60f);
+		ScrollPane pane = new ScrollPane(0, 0, appW / 2, appH - 1, appW / 2 - 35, 60f);
 		pane.setColls(1);
 
 		File worldPath = new File(ClientVariables.WORLD_PATH);

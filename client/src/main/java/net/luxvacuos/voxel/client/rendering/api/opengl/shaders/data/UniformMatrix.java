@@ -23,14 +23,17 @@ package net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data;
 import static org.lwjgl.opengl.GL20.glUniformMatrix4fv;
 
 import java.nio.DoubleBuffer;
+import java.nio.FloatBuffer;
 
 import org.lwjgl.BufferUtils;
 
 import net.luxvacuos.igl.vector.Matrix4d;
+import net.luxvacuos.igl.vector.Matrix4f;
 
 public class UniformMatrix extends Uniform {
 
-	private DoubleBuffer matrixBuffer = BufferUtils.createDoubleBuffer(16);
+	private static DoubleBuffer matrixBuffer = BufferUtils.createDoubleBuffer(16);
+	private  static FloatBuffer matrixFBuffer = BufferUtils.createFloatBuffer(16);
 
 	public UniformMatrix(String name) {
 		super(name);
@@ -63,4 +66,11 @@ public class UniformMatrix extends Uniform {
 		glUniformMatrix4fv(super.getLocation(), false, fm);
 	}
 
+	
+	public void loadMatrix(Matrix4f matrix){
+		matrixFBuffer.clear();
+		matrix.store(matrixFBuffer);
+		matrixFBuffer.flip();
+		glUniformMatrix4fv(super.getLocation(), false, matrixFBuffer);
+	}
 }

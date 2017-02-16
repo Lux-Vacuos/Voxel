@@ -48,7 +48,15 @@ public class PauseWindow extends RootComponent {
 			ClientVariables.exitWorld = true;
 		});
 		
+		Button optionsButton = new Button(0, 100, 200, 40, "Options");
+		optionsButton.setAlignment(Alignment.CENTER);
+		optionsButton.setWindowAlignment(Alignment.BOTTOM);
+		optionsButton.setOnButtonPress(() -> {
+			WM.getWM().addWindow(new OptionsMenu(appW / 2 - 420 + appX, appY, 840, 600));
+		});
+		
 		super.addComponent(backButton);
+		super.addComponent(optionsButton);
 
 		super.initApp(window);
 	}
