@@ -20,12 +20,14 @@
 
 package net.luxvacuos.voxel.client.ui;
 
+import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.NRendering;
 
 public class EditBox extends Component {
 	private String text, font = "Poppins-Medium";
 	private float fontSize = 20f;
+	private boolean selected = false;
 
 	public EditBox(float x, float y, float width, float height, String text) {
 		this.x = x;
@@ -43,9 +45,24 @@ public class EditBox extends Component {
 
 	@Override
 	public void update(float delta, Window window) {
-		window.getKeyboardHandler().enableTextInput();
-		text = window.getKeyboardHandler().handleInput(text);
+		if (Mouse.isButtonDown(0)) {
+			if (insideBox()) {
+				window.getKeyboardHandler().enableTextInput();
+				window.getKeyboardHandler().clearInputData();
+				selected = true;
+			} else {
+				selected = false;
+			}
+		}
+		if (selected)
+			text = window.getKeyboardHandler().handleInput(text);
 		super.update(delta, window);
+	}
+
+	public boolean insideBox() {
+		return Mouse.getX() > rootComponent.rootX + alignedX && Mouse.getY() > rootComponent.rootY + alignedY
+				&& Mouse.getX() < rootComponent.rootX + alignedX + w
+				&& Mouse.getY() < rootComponent.rootY + alignedY + h;
 	}
 
 	public void setFontSize(float fontSize) {

@@ -73,6 +73,10 @@ public final class KeyboardHandler implements IDisposable {
 		this.charCallback.setEndabled(false);
 	}
 	
+	public void clearInputData(){
+		this.charCallback.getData().clear();
+	}
+	
 	public String handleInput(String input) {
 		if(!this.charCallback.hasData()) return this.handleBackspace(input);
 		String result = input;

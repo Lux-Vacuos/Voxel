@@ -65,14 +65,7 @@ public class CreateWorldMenu extends RootComponent {
 		super.addComponent(create);
 		super.addComponent(text);
 
-		window.getKeyboardHandler().enableTextInput();
 		super.initApp(window);
-	}
-
-	@Override
-	public void disposeApp(Window window) {
-		super.disposeApp(window);
-		window.getKeyboardHandler().disableTextInput();
 	}
 
 }

@@ -89,7 +89,7 @@ public class WorldMenu extends RootComponent {
 			WM.getWM().addWindow(new CreateWorldMenu(appW / 2 - 250 + appX, appY - 100, 500, 400));
 		});
 
-		worldName = new Text("World Name: ", 40, -40);
+		worldName = new Text("Name: ", 40, -40);
 		worldName.setWindowAlignment(Alignment.TOP);
 
 		super.addComponent(pane);

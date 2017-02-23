@@ -44,7 +44,7 @@ public class MultiplayerMenu extends RootComponent {
 		super.setAlwaysOnTop(true);
 		super.setBackgroundColor(0.4f, 0.4f, 0.4f, 1f);
 		super.setResizable(false);
-		
+
 		Button playButton = new Button(0, 40, 200, 40, "Play");
 		playButton.setAlignment(Alignment.CENTER);
 		playButton.setWindowAlignment(Alignment.BOTTOM);
@@ -68,14 +68,7 @@ public class MultiplayerMenu extends RootComponent {
 		super.addComponent(address);
 		super.addComponent(text);
 		super.addComponent(playButton);
-		window.getKeyboardHandler().enableTextInput();
 		super.initApp(window);
-	}
-	
-	@Override
-	public void disposeApp(Window window) {
-		super.disposeApp(window);
-		window.getKeyboardHandler().disableTextInput();
 	}
 
 }
