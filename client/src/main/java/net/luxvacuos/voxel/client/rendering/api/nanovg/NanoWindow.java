@@ -85,9 +85,9 @@ public abstract class NanoWindow implements IWindow {
 			}
 		});
 		appX = x + 2;
-		appY = y - 4 - titleBar.getH();
+		appY = y - 3 - titleBar.getH();
 		appW = w - 4;
-		appH = h - 4 - titleBar.getH();
+		appH = h - 5 - titleBar.getH();
 	}
 
 	@Override
@@ -131,9 +131,9 @@ public abstract class NanoWindow implements IWindow {
 		}
 		if (titleBar.isEnabled()) {
 			appX = x + 2;
-			appY = y - 2 - titleBar.getH();
+			appY = y - 3 - titleBar.getH();
 			appW = w - 4;
-			appH = h - 4 - titleBar.getH();
+			appH = h - 5 - titleBar.getH();
 		} else {
 			appX = x + 2;
 			appY = y - 2;

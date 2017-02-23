@@ -83,7 +83,6 @@ public class ClientInternalSubsystem extends AbstractInternalSubsystem {
 		handle.canResize(false).isVisible(false).setIcon(icons).setCursor("arrow").useDebugContext(true);
 		PixelBufferHandle pb = new PixelBufferHandle();
 		pb.setSrgbCapable(1);
-		pb.setSamples(4);
 		handle.setPixelBuffer(pb);
 		this.gameWindowID = WindowManager.createWindow(handle, ClientVariables.VSYNC);
 		Window window = WindowManager.getWindow(this.gameWindowID);

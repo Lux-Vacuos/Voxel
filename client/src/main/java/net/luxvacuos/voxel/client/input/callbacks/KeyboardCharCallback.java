@@ -65,7 +65,7 @@ public class KeyboardCharCallback extends GLFWCharCallback {
 			
 			charr = new String(Character.toChars(codepoint));
 			
-			if(this.lastChar.equals(charr) && ((System.currentTimeMillis() - this.lastPress) < 250)) return; //0.25 seconds
+			if(this.lastChar.equals(charr) && ((System.currentTimeMillis() - this.lastPress) < 50)) return; //0.05 seconds
 			
 			this.lastChar = charr;
 			this.lastPress = System.currentTimeMillis();

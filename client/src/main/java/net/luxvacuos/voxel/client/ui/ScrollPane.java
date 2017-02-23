@@ -30,7 +30,7 @@ import net.luxvacuos.voxel.client.util.Maths;
 
 public class ScrollPane extends Component {
 
-	private float scroll = 6.25f;
+	private float scroll = 0f;
 	private float cardW, cardH;
 
 	private int colls = 3;
@@ -49,19 +49,30 @@ public class ScrollPane extends Component {
 	@Override
 	public void render(Window window) {
 		NRendering.renderScrollPane(window.getNVGID(), rootComponent.rootX + alignedX,
-				window.getHeight() - rootComponent.rootY - alignedY - h, w, h, scroll, colls, cardW, cardH, elements, window);
+				window.getHeight() - rootComponent.rootY - alignedY - h, w, h, scroll, colls, cardW, cardH, elements,
+				window);
 	}
 
 	@Override
 	public void update(float delta, Window window) {
-		scroll += Mouse.getDWheel();
-		scroll = Maths.clamp(scroll, 0, 6.25f);
+		if (Mouse.isButtonDown(0)) {
+			if (Mouse.getX() > rootComponent.rootX + alignedX + w - 14
+					&& Mouse.getX() < rootComponent.rootX + alignedX + w && Mouse.getY() > rootComponent.rootY + alignedY + h - 14 && Mouse.getY() < rootComponent.rootY + alignedY + h) {
+				scroll -= 1 * delta * 4;
+			}
+			if (Mouse.getX() > rootComponent.rootX + alignedX + w - 14
+					&& Mouse.getX() < rootComponent.rootX + alignedX + w && Mouse.getY() > rootComponent.rootY + alignedY && Mouse.getY() < rootComponent.rootY + alignedY + 14) {
+				scroll += 1 * delta * 4;
+			}
+		}
+		scroll += Mouse.getDWheel() * delta * 4;
+		scroll = Maths.clamp(scroll, 0, 1f);
 		for (ScrollPaneElement scrollPaneElement : elements) {
 			scrollPaneElement.update(delta, window);
 		}
 		super.update(delta, window);
 	}
-	
+
 	@Override
 	public void dispose() {
 		for (ScrollPaneElement scrollPaneElement : elements) {
@@ -73,7 +84,7 @@ public class ScrollPane extends Component {
 	public void setColls(int colls) {
 		this.colls = colls;
 	}
-	
+
 	public void addElement(ScrollPaneElement component) {
 		elements.add(component);
 	}

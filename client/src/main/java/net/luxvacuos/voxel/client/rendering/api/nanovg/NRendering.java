@@ -56,7 +56,6 @@ import static org.lwjgl.nanovg.NanoVG.nvgText;
 import static org.lwjgl.nanovg.NanoVG.nvgTextAlign;
 import static org.lwjgl.nanovg.NanoVG.nvgTextBounds;
 import static org.lwjgl.nanovg.NanoVG.nvgTextMetrics;
-import static org.lwjgl.nanovg.NanoVG.nvgTranslate;
 import static org.lwjgl.nanovg.NanoVGGL3.nvglCreateImageFromHandle;
 import static org.lwjgl.system.MemoryUtil.memAddress;
 import static org.lwjgl.system.MemoryUtil.memAllocInt;
@@ -72,7 +71,6 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.nanovg.NVGColor;
 import org.lwjgl.nanovg.NVGPaint;
 import org.lwjgl.nanovg.NVGTextRow;
-import org.lwjgl.system.MemoryStack;
 
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.ui.ScrollPaneElement;
@@ -301,6 +299,8 @@ public class NRendering {
 	public static void renderEditBox(long vg, String text, String font, float x, float y, float w, float h,
 			float fontSize) {
 		renderEditBoxBase(vg, x, y, w, h);
+		nvgSave(vg);
+		nvgScissor(vg, x, y, w, h);
 		nvgFontSize(vg, fontSize);
 		nvgFontFace(vg, font);
 		nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
@@ -308,6 +308,7 @@ public class NRendering {
 		nvgText(vg, x + h * 0.3f, y + h * 0.5f, text);
 		nvgFillColor(vg, rgba(255, 255, 255, 100, colorA));
 		nvgText(vg, x + h * 0.3f, y + h * 0.5f, text);
+		nvgRestore(vg);
 	}
 
 	public static void renderButton(long vg, ByteBuffer preicon, String text, String font, String entypo, float x,
@@ -371,7 +372,7 @@ public class NRendering {
 			float cardH, List<ScrollPaneElement> elements, Window window) {
 		float stackh = (elements.size() / hSize) * (cardH + 10) + 10;
 		int i;
-		float u = (1 + (float) Math.cos(t * 0.5f)) * 0.5f;
+		float u = t;
 		float scrollh;
 
 		nvgSave(vg);
@@ -384,27 +385,23 @@ public class NRendering {
 
 		nvgSave(vg);
 		nvgScissor(vg, x, y, w, h);
-		nvgTranslate(vg, 0, -(stackh - h) * u);
 
-		try (MemoryStack stack = MemoryStack.stackPush()) {
+		for (i = 0; i < elements.size(); i++) {
+			float tx, ty;
+			tx = x + 10;
+			ty = y + 10;
+			tx += (i % hSize) * (cardW + 10);
+			ty += (i / hSize) * (cardH + 10) - (stackh - h) * u;
 
-			for (i = 0; i < elements.size(); i++) {
-				float tx, ty;
-				tx = x + 10;
-				ty = y + 10;
-				tx += (i % hSize) * (cardW + 10);
-				ty += (i / hSize) * (cardH + 10);
-
-				nvgBeginPath(vg);
-				nvgRect(vg, tx + 0.5f, ty + 0.5f, cardW - 1, cardH - 1);
-				nvgStrokeWidth(vg, 1.0f);
-				nvgStrokeColor(vg, rgba(64, 64, 64, 255, colorA));
-				nvgStroke(vg);
-				ScrollPaneElement e = elements.get(i);
-				e.setX(tx);
-				e.setY(window.getHeight() - ty - cardH);
-				e.render(window);
-			}
+			nvgBeginPath(vg);
+			nvgRect(vg, tx + 0.5f, ty + 0.5f, cardW - 1, cardH - 1);
+			nvgStrokeWidth(vg, 1.0f);
+			nvgStrokeColor(vg, rgba(64, 64, 64, 255, colorA));
+			nvgStroke(vg);
+			ScrollPaneElement e = elements.get(i);
+			e.setX(tx);
+			e.setY(window.getHeight() - ty - cardH);
+			e.render(window);
 		}
 		nvgRestore(vg);
 
