@@ -46,8 +46,11 @@ public class World implements IWorld {
 	public World(String name) {
 		this.name = name;
 		this.dims = new IntMap<>();
+		File file = new File(GlobalVariables.WORLD_PATH + this.name);
+		if (!file.exists())
+			file.mkdirs();
 	}
-	
+
 	protected IDimension createDimension(int id, TagCompound data) {
 		return new Dimension(this, data, id);
 	}
@@ -60,7 +63,7 @@ public class World implements IWorld {
 	@Override
 	public void update(float delta) {
 		this.activeDimension.update(delta);
-		if(this.dims.size > 1) {
+		if (this.dims.size > 1) {
 			for (IDimension dim : this.dims.values()) {
 				if (dim.getID() == this.activeDimension.getID())
 					continue;
@@ -90,12 +93,12 @@ public class World implements IWorld {
 	public void loadDimension(int id) {
 		if (this.dims.containsKey(id))
 			return;
-		
+
 		File file = new File(GlobalVariables.WORLD_PATH + this.name + "/dim" + id + "_data.nbt");
 		TagCompound data = null;
 		NBTInputStream in = null;
 		try {
-			if(file.createNewFile()) { //True if the file was created
+			if (file.createNewFile()) { // True if the file was created
 				CompoundBuilder builder = new CompoundBuilder().start();
 				builder.addFloat("Time", 6500).addFloat("RainFactor", 0);
 				builder.addLong("Seed", new Random().nextLong());
@@ -107,7 +110,7 @@ public class World implements IWorld {
 		} catch (Exception e) {
 			Logger.error(e);
 		} finally {
-			if(in != null) {
+			if (in != null) {
 				try {
 					in.close();
 				} catch (IOException e) {
@@ -115,7 +118,7 @@ public class World implements IWorld {
 				}
 			}
 		}
-		
+
 		this.dims.put(id, this.createDimension(id, data));
 	}
 

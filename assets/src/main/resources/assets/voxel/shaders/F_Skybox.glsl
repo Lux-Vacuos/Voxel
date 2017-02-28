@@ -33,8 +33,8 @@ uniform vec3 lightPosition;
 #define LOWER_LIMIT  -0.8
 #define UPPER_LIMIT  0.2
 
-#define SUN_LOWER_LIMIT  -0.2
-#define SUN_UPPER_LIMIT  -0.15
+#define SUN_LOWER_LIMIT  -0.1
+#define SUN_UPPER_LIMIT  0.0
 
 #define CLOUD_COVER  0.55
 #define CLOUD_SHARPNESS  0.005

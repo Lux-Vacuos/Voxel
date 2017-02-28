@@ -33,6 +33,7 @@ uniform sampler2D gPBR; // R = roughness, G = metallic
 uniform sampler2D gMask;
 uniform sampler2D gDepth;
 uniform sampler2D composite0;
+uniform samplerCube composite1;
 uniform int shadowDrawDistance;
 uniform int useAmbientOcclusion;
 uniform vec2 resolution;
@@ -109,8 +110,10 @@ void main(void) {
 	
        	float NdotL = max(dot(N, L) - position.w, 0.0) ;      
        	Lo += (kD * image.rgb / PI + brdf) * radiance * NdotL;
-
-		vec3 ambient = max(dot(vec3(0, 1, 0), L) * 0.1, 0.001) * image.rgb * computeAmbientOcclusion(position.rgb, N);
+		
+		vec3 irradiance = texture(composite1, N).rgb;
+		vec3 diffuse = irradiance * image.rgb;
+		vec3 ambient = (kD * diffuse) * computeAmbientOcclusion(position.rgb, N);
     	vec3 color = ambient + Lo;
 		image.rgb = color;
 	}

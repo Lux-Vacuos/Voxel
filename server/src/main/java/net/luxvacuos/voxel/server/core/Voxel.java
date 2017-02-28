@@ -62,7 +62,7 @@ public class Voxel extends AbstractVoxel {
 		}
 		Logger.log("Starting Server");
 		ServerVariables.SETTINGS_PATH = bootstrap.getPrefix() + "/config/settings.conf";
-		ServerVariables.WORLD_PATH = bootstrap.getPrefix() + "/world/";
+		ServerVariables.WORLD_PATH = bootstrap.getPrefix() + "/";
 
 		internalSubsystem = ServerInternalSubsystem.getInstance();
 		internalSubsystem.preInit();

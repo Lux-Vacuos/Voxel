@@ -103,5 +103,7 @@ public class ClientVariables extends GlobalVariables {
 	public static final String FRAGMENT_FILE_TESSELLATOR_BASIC = "F_TessellatorBasic.glsl";
 	public static final String VERTEX_FILE_BLOCK_OUTLINE = "V_BlockOutline.glsl";
 	public static final String FRAGMENT_FILE_BLOCK_OUTLINE = "F_BlockOutline.glsl";
+	public static final String VERTEX_IRRADIANCE_CAPTURE = "V_IrradianceCapture.glsl";
+	public static final String FRAGMENT_IRRADIANCE_CAPTURE = "F_IrradianceCapture.glsl";
 	
 }

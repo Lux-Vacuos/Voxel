@@ -23,6 +23,10 @@ package net.luxvacuos.voxel.server.core;
 import java.io.File;
 
 import net.luxvacuos.voxel.universal.core.AbstractInternalSubsystem;
+import net.luxvacuos.voxel.universal.material.BlockMaterial;
+import net.luxvacuos.voxel.universal.material.MaterialModder;
+import net.luxvacuos.voxel.universal.world.block.BlockBase;
+import net.luxvacuos.voxel.universal.world.block.Blocks;
 
 public class ServerInternalSubsystem extends AbstractInternalSubsystem {
 
@@ -42,6 +46,30 @@ public class ServerInternalSubsystem extends AbstractInternalSubsystem {
 		gameSettings = new ServerGameSettings();
 		gameSettings.load(new File(ServerVariables.SETTINGS_PATH));
 		gameSettings.read();
+	}
+
+	@Override
+	public void init() {
+		MaterialModder matMod = new MaterialModder();
+
+		Blocks.startRegister("voxel");
+		BlockMaterial airMat = new BlockMaterial("air");
+		airMat = (BlockMaterial) matMod.modify(airMat).canBeBroken(false).setBlocksMovement(false).setOpacity(0f)
+				.done();
+		Blocks.register(new BlockBase(airMat));
+		Blocks.register(new BlockBase(new BlockMaterial("stone")));
+		Blocks.register(new BlockBase(new BlockMaterial("grass")));
+		Blocks.register(new BlockBase(new BlockMaterial("dirt")));
+		Blocks.register(new BlockBase(new BlockMaterial("sand")));
+		Blocks.register(new BlockBase(new BlockMaterial("cobblestone")));
+		Blocks.register(new BlockBase(new BlockMaterial("wood")));
+		Blocks.register(new BlockBase(new BlockMaterial("leaves")));
+		Blocks.register(new BlockBase(new BlockMaterial("glass")));
+		BlockMaterial waterMat = new BlockMaterial("water");
+		waterMat = (BlockMaterial) matMod.modify(waterMat).canBeBroken(false).setBlocksMovement(false)
+				.affectedByGravity(true).liquid().done();
+		Blocks.register(new BlockBase(waterMat));
+		Blocks.finishRegister();
 	}
 
 	@Override

@@ -65,6 +65,7 @@ public class Renderer {
 	private static LightRenderer lightRenderer;
 	private static EnvironmentRenderer environmentRenderer;
 	private static ParticleRenderer particleRenderer;
+	private static IrradianceCapture irradianceCapture;
 
 	private static ShadowFBO shadowFBO;
 
@@ -91,7 +92,7 @@ public class Renderer {
 		TaskManager.addTask(() -> postProcessPipeline = new PostProcess(window));
 		TaskManager.addTask(() -> particleRenderer = new ParticleRenderer(window.getResourceLoader()));
 		lightRenderer = new LightRenderer();
-
+		TaskManager.addTask(() -> irradianceCapture = new IrradianceCapture(window.getResourceLoader()));
 		TaskManager.addTask(() -> environmentRenderer = new EnvironmentRenderer(
 				new CubeMapTexture(window.getResourceLoader().createEmptyCubeMap(128, true), 128)));
 	}
@@ -104,6 +105,7 @@ public class Renderer {
 
 		environmentRenderer.renderEnvironmentMap(camera.getPosition(), skyboxRenderer, worldSimulation, lightPosition,
 				window);
+		irradianceCapture.render(window, environmentRenderer.getCubeMapTexture().getID());
 
 		if (ClientVariables.useShadows) {
 			SunCamera sCam = (SunCamera) sunCamera;
@@ -170,7 +172,7 @@ public class Renderer {
 		deferredPipeline.end();
 
 		deferredPipeline.preRender(camera, lightPosition, invertedLightPosition, worldSimulation,
-				lightRenderer.getLights(), environmentRenderer.getCubeMapTexture(), exposure);
+				lightRenderer.getLights(), irradianceCapture.getCubeMapTexture(), exposure);
 
 		postProcessPipeline.begin();
 
@@ -179,14 +181,13 @@ public class Renderer {
 		if (forwardPass != null)
 			forwardPass.render(camera, sunCamera, frustum, shadowFBO);
 		particleRenderer.render(particles, camera);
-
 		postProcessPipeline.end();
 
 		postProcessPipeline.preRender(window.getNVGID(), camera);
 	}
 
 	public static void cleanUp() {
-		if (entityRenderer != null)
+		if (environmentRenderer != null)
 			environmentRenderer.cleanUp();
 		if (shadowFBO != null)
 			shadowFBO.cleanUp();
@@ -200,6 +201,8 @@ public class Renderer {
 			postProcessPipeline.dispose();
 		if (particleRenderer != null)
 			particleRenderer.cleanUp();
+		if (irradianceCapture != null)
+			irradianceCapture.dispose();
 	}
 
 	public static int getResultTexture() {

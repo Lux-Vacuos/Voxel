@@ -32,13 +32,9 @@ import net.luxvacuos.voxel.server.network.ServerHandler;
 import net.luxvacuos.voxel.universal.commands.ICommandManager;
 import net.luxvacuos.voxel.universal.core.AbstractVoxel;
 import net.luxvacuos.voxel.universal.core.states.AbstractState;
-import net.luxvacuos.voxel.universal.material.BlockMaterial;
-import net.luxvacuos.voxel.universal.material.MaterialModder;
 import net.luxvacuos.voxel.universal.network.packets.Time;
 import net.luxvacuos.voxel.universal.world.IWorld;
 import net.luxvacuos.voxel.universal.world.World;
-import net.luxvacuos.voxel.universal.world.block.BlockBase;
-import net.luxvacuos.voxel.universal.world.block.Blocks;
 
 public class MPWorldState extends AbstractState {
 
@@ -57,26 +53,6 @@ public class MPWorldState extends AbstractState {
 
 		worldSimulation = new ServerWorldSimulation();
 
-		MaterialModder matMod = new MaterialModder();
-
-		Blocks.startRegister("voxel");
-		BlockMaterial airMat = new BlockMaterial("air");
-		airMat = (BlockMaterial) matMod.modify(airMat).canBeBroken(false).setBlocksMovement(false).setOpacity(0f)
-				.done();
-		Blocks.register(new BlockBase(airMat));
-		Blocks.register(new BlockBase(new BlockMaterial("stone")));
-		Blocks.register(new BlockBase(new BlockMaterial("grass")));
-		Blocks.register(new BlockBase(new BlockMaterial("dirt")));
-		Blocks.register(new BlockBase(new BlockMaterial("sand")));
-		Blocks.register(new BlockBase(new BlockMaterial("cobblestone")));
-		Blocks.register(new BlockBase(new BlockMaterial("wood")));
-		Blocks.register(new BlockBase(new BlockMaterial("leaves")));
-		Blocks.register(new BlockBase(new BlockMaterial("glass")));
-		BlockMaterial waterMat = new BlockMaterial("water");
-		waterMat = (BlockMaterial) matMod.modify(waterMat).canBeBroken(false).setBlocksMovement(false)
-				.affectedByGravity(true).liquid().done();
-		Blocks.register(new BlockBase(waterMat));
-		Blocks.finishRegister();
 		world = new World(ServerVariables.worldName);
 		world.loadDimension(0);
 		world.setActiveDimension(0);
@@ -107,7 +83,7 @@ public class MPWorldState extends AbstractState {
 		worldSimulation.update(delta);
 		ServerHandler.channels.writeAndFlush(new Time(worldSimulation.getTime()));
 	}
-	
+
 	public IWorld getWorld() {
 		return world;
 	}

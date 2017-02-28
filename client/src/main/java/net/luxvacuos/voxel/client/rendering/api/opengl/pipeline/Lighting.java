@@ -28,12 +28,14 @@ import static org.lwjgl.opengl.GL13.GL_TEXTURE2;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE3;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE4;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE5;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE6;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE7;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE_CUBE_MAP;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
 
-import net.luxvacuos.voxel.client.rendering.api.opengl.IDeferredPipeline;
 import net.luxvacuos.voxel.client.rendering.api.opengl.DeferredPass;
 import net.luxvacuos.voxel.client.rendering.api.opengl.FBO;
+import net.luxvacuos.voxel.client.rendering.api.opengl.IDeferredPipeline;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.CubeMapTexture;
 
 public class Lighting extends DeferredPass {
@@ -56,8 +58,10 @@ public class Lighting extends DeferredPass {
 		glBindTexture(GL_TEXTURE_2D, pipe.getMainFBO().getPbrTex());
 		glActiveTexture(GL_TEXTURE5);
 		glBindTexture(GL_TEXTURE_2D, pipe.getMainFBO().getMaskTex());
-		glActiveTexture(GL_TEXTURE7);
+		glActiveTexture(GL_TEXTURE6);
 		glBindTexture(GL_TEXTURE_2D, auxs[0].getTexture());
+		glActiveTexture(GL_TEXTURE7);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, environmentMap.getID());
 	}
 
 }
