@@ -48,6 +48,8 @@ public class EntityShader extends ShaderProgram {
 	private UniformBoolean useShadows = new UniformBoolean("useShadows");
 	private UniformMaterial material = new UniformMaterial("material");
 
+	private boolean loadedShadowMatrix = false, loadedProjectionMatrix = false;
+
 	public EntityShader() {
 		super(ClientVariables.VERTEX_FILE_ENTITY, ClientVariables.FRAGMENT_FILE_ENTITY, new Attribute(0, "position"),
 				new Attribute(1, "textureCoords"), new Attribute(2, "normals"), new Attribute(3, "tangent"));
@@ -94,16 +96,19 @@ public class EntityShader extends ShaderProgram {
 	}
 
 	public void loadBiasMatrix(Matrix4d[] shadowProjectionMatrix) {
-		Matrix4d biasMatrix = new Matrix4d();
-		biasMatrix.m00 = 0.5f;
-		biasMatrix.m11 = 0.5f;
-		biasMatrix.m22 = 0.5f;
-		biasMatrix.m30 = 0.5f;
-		biasMatrix.m31 = 0.5f;
-		biasMatrix.m32 = 0.5f;
-		this.biasMatrix.loadMatrix(biasMatrix);
-		for (int x = 0; x < 4; x++) {
-			this.projectionLightMatrix[x].loadMatrix(shadowProjectionMatrix[x]);
+		if (!loadedShadowMatrix) {
+			Matrix4d biasMatrix = new Matrix4d();
+			biasMatrix.m00 = 0.5f;
+			biasMatrix.m11 = 0.5f;
+			biasMatrix.m22 = 0.5f;
+			biasMatrix.m30 = 0.5f;
+			biasMatrix.m31 = 0.5f;
+			biasMatrix.m32 = 0.5f;
+			this.biasMatrix.loadMatrix(biasMatrix);
+			for (int x = 0; x < 4; x++) {
+				this.projectionLightMatrix[x].loadMatrix(shadowProjectionMatrix[x]);
+			}
+			loadedShadowMatrix = true;
 		}
 	}
 
@@ -132,6 +137,9 @@ public class EntityShader extends ShaderProgram {
 	 *            Projection Matrixd
 	 */
 	public void loadProjectionMatrix(Matrix4d projection) {
-		projectionMatrix.loadMatrix(projection);
+		if (!loadedProjectionMatrix) {
+			projectionMatrix.loadMatrix(projection);
+			loadedProjectionMatrix = true;
+		}
 	}
 }

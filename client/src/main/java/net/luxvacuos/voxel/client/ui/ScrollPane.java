@@ -65,7 +65,7 @@ public class ScrollPane extends Component {
 				scroll += 1 * delta * 4;
 			}
 		}
-		scroll += Mouse.getDWheel() * delta * 4;
+		scroll -= Mouse.getDWheel() * delta * 4;
 		scroll = Maths.clamp(scroll, 0, 1f);
 		for (ScrollPaneElement scrollPaneElement : elements) {
 			scrollPaneElement.update(delta, window);

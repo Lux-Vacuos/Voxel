@@ -88,7 +88,7 @@ public class EnvironmentRenderer {
 			camera.switchToFace(i);
 			Renderer.clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			skyboxRenderer.render(ClientVariables.RED, ClientVariables.GREEN, ClientVariables.BLUE, camera,
-					clientWorldSimulation, lightPosition, 1, true);
+					clientWorldSimulation, lightPosition);
 		}
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		window.resetViewport();

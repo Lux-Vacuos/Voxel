@@ -28,8 +28,6 @@ public interface ITitleBar {
 
 	public void update(Window window, IWindow iWindow);
 
-	public float getH();
-
 	public void setOnExit(Event onclick);
 
 	public void setOnMaximize(Event onclick);

@@ -73,7 +73,7 @@ public class SkyboxRenderer {
 	 *            Delta
 	 */
 	public void render(float r, float g, float b, CameraEntity camera, IWorldSimulation clientWorldSimulation,
-			Vector3d lightPosition, float exposure, boolean applyGamma) {
+			Vector3d lightPosition) {
 		glDepthMask(false);
 		glDisable(GL_CULL_FACE);
 		shader.start();

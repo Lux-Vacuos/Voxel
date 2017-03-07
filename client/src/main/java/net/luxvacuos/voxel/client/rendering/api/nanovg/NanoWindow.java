@@ -53,7 +53,7 @@ public abstract class NanoWindow implements IWindow {
 		this.y = y;
 		this.w = w;
 		this.h = h;
-		titleBar = new TitleBar(title, 30);
+		titleBar = new TitleBar(title);
 		titleBar.setOnMaximize((window) -> {
 			if (resizable) {
 				maximized = !maximized;
@@ -85,9 +85,9 @@ public abstract class NanoWindow implements IWindow {
 			}
 		});
 		appX = x + 2;
-		appY = y - 3 - titleBar.getH();
+		appY = y - 3 - TitleBar.HEIGHT;
 		appW = w - 4;
-		appH = h - 5 - titleBar.getH();
+		appH = h - 5 - TitleBar.HEIGHT;
 	}
 
 	@Override
@@ -131,9 +131,9 @@ public abstract class NanoWindow implements IWindow {
 		}
 		if (titleBar.isEnabled()) {
 			appX = x + 2;
-			appY = y - 3 - titleBar.getH();
+			appY = y - 3 - TitleBar.HEIGHT;
 			appW = w - 4;
-			appH = h - 5 - titleBar.getH();
+			appH = h - 5 - TitleBar.HEIGHT;
 		} else {
 			appX = x + 2;
 			appY = y - 2;

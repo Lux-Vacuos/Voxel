@@ -24,22 +24,22 @@ import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 
 public class TitleBar implements ITitleBar {
+	
+	public static final float HEIGHT = 30;
 
-	private float h;
 	private boolean enabled = true;
 	private String title, font = "Roboto-Bold";
 	private Event exit, maximize, drag;
 
-	public TitleBar(String title, float h) {
+	public TitleBar(String title) {
 		this.title = title;
-		this.h = h;
 	}
 
 	@Override
 	public void render(Window window, IWindow iWindow) {
 		if (enabled) {
 			NRendering.renderTitleBar(window.getNVGID(), title, font, iWindow.getX() + 2,
-					window.getHeight() - iWindow.getY(), iWindow.getWidth() - 2, h, WM.invertWindowButtons,
+					window.getHeight() - iWindow.getY(), iWindow.getWidth() - 2, HEIGHT, WM.invertWindowButtons,
 					iWindow.isResizable());
 		}
 	}
@@ -72,10 +72,6 @@ public class TitleBar implements ITitleBar {
 			}
 	}
 
-	@Override
-	public float getH() {
-		return h;
-	}
 
 	@Override
 	public boolean isEnabled() {

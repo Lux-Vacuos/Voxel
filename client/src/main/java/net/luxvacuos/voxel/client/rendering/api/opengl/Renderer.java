@@ -164,7 +164,7 @@ public class Renderer {
 
 		clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		skyboxRenderer.render(ClientVariables.RED, ClientVariables.GREEN, ClientVariables.BLUE, camera, worldSimulation,
-				lightPosition, 1, false);
+				lightPosition);
 		if (deferredPass != null)
 			deferredPass.render(camera, sunCamera, frustum, shadowFBO);
 		entityRenderer.renderEntity(entities, camera, sunCamera, shadowFBO);
