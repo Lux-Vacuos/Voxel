@@ -45,7 +45,7 @@ public class Lighting extends DeferredPass {
 	}
 
 	@Override
-	public void render(FBO[] auxs, IDeferredPipeline pipe, CubeMapTexture environmentMap) {
+	public void render(FBO[] auxs, IDeferredPipeline pipe, CubeMapTexture irradianceCapture, CubeMapTexture environmentMap) {
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, pipe.getMainFBO().getDiffuseTex());
 		glActiveTexture(GL_TEXTURE1);

@@ -18,7 +18,7 @@ public class VolumetricLight extends DeferredPass {
 	}
 
 	@Override
-	public void render(FBO[] auxs, IDeferredPipeline pipe, CubeMapTexture environmentMap) {
+	public void render(FBO[] auxs, IDeferredPipeline pipe, CubeMapTexture irradianceCapture, CubeMapTexture environmentMap) {
 		glActiveTexture(GL_TEXTURE1);
 		glBindTexture(GL_TEXTURE_2D, pipe.getMainFBO().getPositionTex());
 		glActiveTexture(GL_TEXTURE6);

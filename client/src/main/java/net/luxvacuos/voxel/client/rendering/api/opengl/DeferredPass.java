@@ -94,8 +94,8 @@ public abstract class DeferredPass implements IDeferredPass {
 	@Override
 	public void process(CameraEntity camera, Matrix4d previousViewMatrix, Vector3d previousCameraPosition,
 			Vector3d lightPosition, Vector3d invertedLightPosition, IWorldSimulation clientWorldSimulation,
-			List<Light> lights, FBO[] auxs, IDeferredPipeline pipe, RawModel quad, CubeMapTexture environmentMap,
-			float exposure) {
+			List<Light> lights, FBO[] auxs, IDeferredPipeline pipe, RawModel quad, CubeMapTexture irradianceCapture,
+			CubeMapTexture environmentMap, float exposure) {
 		fbo.begin();
 		shader.start();
 		shader.loadUnderWater(false);
@@ -104,7 +104,8 @@ public abstract class DeferredPass implements IDeferredPass {
 		shader.loadviewMatrix(camera);
 		shader.loadSettings(ClientVariables.useDOF, ClientVariables.useFXAA, ClientVariables.useMotionBlur,
 				ClientVariables.useVolumetricLight, ClientVariables.useReflections, ClientVariables.useAmbientOcclusion,
-				ClientVariables.shadowMapDrawDistance, ClientVariables.useChromaticAberration, ClientVariables.useLensFlares);
+				ClientVariables.shadowMapDrawDistance, ClientVariables.useChromaticAberration,
+				ClientVariables.useLensFlares);
 		shader.loadSunPosition(Maths.convertTo2F(new Vector3d(lightPosition), camera.getProjectionMatrix(),
 				Maths.createViewMatrixRot(camera.getRotation().getX(), camera.getRotation().getY(),
 						camera.getRotation().getZ(), tmp),
@@ -115,7 +116,7 @@ public abstract class DeferredPass implements IDeferredPass {
 		Renderer.clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glBindVertexArray(quad.getVaoID());
 		glEnableVertexAttribArray(0);
-		render(auxs, pipe, environmentMap);
+		render(auxs, pipe, irradianceCapture, environmentMap);
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, quad.getVertexCount());
 		glDisableVertexAttribArray(0);
 		glBindVertexArray(0);

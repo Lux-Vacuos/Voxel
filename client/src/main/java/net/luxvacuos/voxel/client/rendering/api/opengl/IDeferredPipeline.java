@@ -38,7 +38,7 @@ public interface IDeferredPipeline extends IDisposable {
 	public void end();
 
 	public void preRender(CameraEntity camera, Vector3d lightPosition, Vector3d invertedLightPosition,
-			IWorldSimulation clientWorldSimulation, List<Light> lights, CubeMapTexture environmentMap, float exposure);
+			IWorldSimulation clientWorldSimulation, List<Light> lights, CubeMapTexture irradianceCapture, CubeMapTexture environmentMap, float exposure);
 	
 	public void render(FBO postProcess);
 	

@@ -21,8 +21,6 @@
 package net.luxvacuos.voxel.client.rendering.api.opengl;
 
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL11.glBindTexture;
-import static org.lwjgl.opengl.GL11.glDrawBuffer;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE_CUBE_MAP;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE_CUBE_MAP_POSITIVE_X;
 import static org.lwjgl.opengl.GL14.GL_DEPTH_COMPONENT24;
@@ -39,6 +37,7 @@ import static org.lwjgl.opengl.GL30.glFramebufferRenderbuffer;
 import static org.lwjgl.opengl.GL30.glFramebufferTexture2D;
 import static org.lwjgl.opengl.GL30.glGenFramebuffers;
 import static org.lwjgl.opengl.GL30.glGenRenderbuffers;
+import static org.lwjgl.opengl.GL30.glGenerateMipmap;
 import static org.lwjgl.opengl.GL30.glRenderbufferStorage;
 
 import net.luxvacuos.igl.vector.Vector3d;
@@ -89,6 +88,7 @@ public class EnvironmentRenderer {
 			Renderer.clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			skyboxRenderer.render(ClientVariables.RED, ClientVariables.GREEN, ClientVariables.BLUE, camera,
 					clientWorldSimulation, lightPosition);
+			glGenerateMipmap(GL_TEXTURE_2D);
 		}
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		window.resetViewport();

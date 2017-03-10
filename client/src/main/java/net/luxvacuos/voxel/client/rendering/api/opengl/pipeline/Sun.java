@@ -38,7 +38,7 @@ public class Sun extends DeferredPass {
 	}
 
 	@Override
-	public void render(FBO[] auxs, IDeferredPipeline pipe, CubeMapTexture environmentMap) {
+	public void render(FBO[] auxs, IDeferredPipeline pipe, CubeMapTexture irradianceCapture, CubeMapTexture environmentMap) {
 		auxs[1] = getFbo();
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, pipe.getMainFBO().getDiffuseTex());

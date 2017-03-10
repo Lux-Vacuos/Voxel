@@ -172,7 +172,7 @@ public class Renderer {
 		deferredPipeline.end();
 
 		deferredPipeline.preRender(camera, lightPosition, invertedLightPosition, worldSimulation,
-				lightRenderer.getLights(), irradianceCapture.getCubeMapTexture(), exposure);
+				lightRenderer.getLights(), irradianceCapture.getCubeMapTexture(), environmentRenderer.getCubeMapTexture(), exposure);
 
 		postProcessPipeline.begin();
 

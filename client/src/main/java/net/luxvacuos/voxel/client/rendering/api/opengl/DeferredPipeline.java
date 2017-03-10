@@ -116,10 +116,12 @@ public abstract class DeferredPipeline implements IDeferredPipeline {
 
 	@Override
 	public void preRender(CameraEntity camera, Vector3d lightPosition, Vector3d invertedLightPosition,
-			IWorldSimulation clientWorldSimulation, List<Light> lights, CubeMapTexture environmentMap, float exposure) {
+			IWorldSimulation clientWorldSimulation, List<Light> lights, CubeMapTexture irradianceCapture,
+			CubeMapTexture environmentMap, float exposure) {
 		for (IDeferredPass deferredPass : imagePasses) {
 			deferredPass.process(camera, previousViewMatrix, previousCameraPosition, lightPosition,
-					invertedLightPosition, clientWorldSimulation, lights, auxs, this, quad, environmentMap, exposure);
+					invertedLightPosition, clientWorldSimulation, lights, auxs, this, quad, irradianceCapture,
+					environmentMap, exposure);
 		}
 		previousViewMatrix = Maths.createViewMatrix(camera);
 		previousCameraPosition = camera.getPosition();

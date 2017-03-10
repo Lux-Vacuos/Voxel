@@ -38,8 +38,8 @@ public interface IDeferredPass extends IDisposable {
 	public void process(CameraEntity camera, Matrix4d previousViewMatrix, Vector3d previousCameraPosition,
 			Vector3d lightPosition, Vector3d invertedLightPosition, IWorldSimulation clientWorldSimulation,
 			List<Light> lights, FBO[] auxs, IDeferredPipeline pipe, RawModel quad,
-			CubeMapTexture environmentMap, float exposure);
+			CubeMapTexture irradianceCapture, CubeMapTexture environmentMap, float exposure);
 
-	public void render(FBO[] auxs, IDeferredPipeline pipe, CubeMapTexture environmentMap);
+	public void render(FBO[] auxs, IDeferredPipeline pipe, CubeMapTexture irradianceCapture, CubeMapTexture environmentMap);
 
 }
