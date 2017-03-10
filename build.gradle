@@ -82,6 +82,7 @@ project(":universal") {
 		compile 'org.codehaus.groovy:groovy:2.4.7'
 		compile 'org.codehaus.groovy:groovy-jsr223:2.4.7'
 		compile project(':utils')
+		compile project(':modules:api')
 		testCompile group: 'junit', name: 'junit', version: '4.12'
 	}
 }
