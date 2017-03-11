@@ -61,7 +61,7 @@ public class Lighting extends DeferredPass {
 		glActiveTexture(GL_TEXTURE6);
 		glBindTexture(GL_TEXTURE_2D, auxs[0].getTexture());
 		glActiveTexture(GL_TEXTURE7);
-		glBindTexture(GL_TEXTURE_CUBE_MAP, environmentMap.getID());
+		glBindTexture(GL_TEXTURE_CUBE_MAP, irradianceCapture.getID());
 	}
 
 }

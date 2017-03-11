@@ -37,22 +37,6 @@ public class DisplayUtils {
 	private Sync sync;
 
 	public DisplayUtils() {
-		String osName = System.getProperty("os.name");
-
-		if (osName.startsWith("Win")) {
-			Thread timerAccuracyThread = new Thread(new Runnable() {
-				public void run() {
-					try {
-						Thread.sleep(Long.MAX_VALUE);
-					} catch (Exception e) {
-					}
-				}
-			});
-
-			timerAccuracyThread.setName("LWJGL Timer");
-			timerAccuracyThread.setDaemon(true);
-			timerAccuracyThread.start();
-		}
 		sync = new Sync();
 	}
 
