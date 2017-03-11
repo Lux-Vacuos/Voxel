@@ -18,20 +18,17 @@
  * 
  */
 
-package net.luxvacuos.voxel.client.core.states;
+package net.luxvacuos.voxel.universal.network;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.EventLoopGroup;
 
-public class StateNames {
+public abstract class AbstractNettyNetworkHandler {
+	protected ChannelFuture future;
+	protected EventLoopGroup workGroup;
+	
 
-	private StateNames() {
+	public AbstractNettyNetworkHandler() {
+		// TODO Auto-generated constructor stub
 	}
-
-	public static final String MAIN_MENU = "Main_Menu";
-	public static final String MP_LOADING = "MP_Loading";
-	public static final String MP_WORLD = "MP_World";
-	public static final String SPLASH_SCREEN = "Splash_Screen";
-	public static final String SP_WORLD = "SP_World";
-	public static final String TEST = "Test";
-	public static final String CRASH = "Crash";
-	public static final String WORLD_SIM = "World_Sim";
 
 }

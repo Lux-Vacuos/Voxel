@@ -23,7 +23,6 @@ project(":client") {
 		compile project(':assets')
 		compile 'de.jarnbjo:j-ogg-all:1.0.0'
 		compile 'org.jcraft:jorbis:0.0.17'
-		compile 'io.netty:netty-all:4.1.6.Final'
 
 		// LWJGL dependencies
 		compile "org.lwjgl:lwjgl:${lwjglVersion}"
@@ -66,7 +65,6 @@ project(":client") {
 project(":server") {
 	dependencies {
 		compile project(':universal')
-		compile 'io.netty:netty-all:4.1.6.Final'
 		testCompile group: 'junit', name: 'junit', version: '4.12'
 	}
 }
@@ -81,6 +79,7 @@ project(":universal") {
 	dependencies {
 		compile 'org.codehaus.groovy:groovy:2.4.7'
 		compile 'org.codehaus.groovy:groovy-jsr223:2.4.7'
+		compile 'io.netty:netty-all:4.1.6.Final'
 		compile project(':utils')
 		compile project(':modules:api')
 		testCompile group: 'junit', name: 'junit', version: '4.12'

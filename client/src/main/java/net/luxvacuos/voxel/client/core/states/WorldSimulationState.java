@@ -1,7 +1,7 @@
 /*
  * This file is part of Voxel
  * 
- * Copyright (C) 2016-2017 Lux Vacuos
+ * Copyright (C) 2016 Lux Vacuos
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,18 +20,26 @@
 
 package net.luxvacuos.voxel.client.core.states;
 
-public class StateNames {
+import net.luxvacuos.voxel.client.network.Client;
+import net.luxvacuos.voxel.universal.core.AbstractVoxel;
+import net.luxvacuos.voxel.universal.core.states.AbstractState;
+import net.luxvacuos.voxel.universal.world.IWorld;
 
-	private StateNames() {
+public class WorldSimulationState extends AbstractState {
+	//Network Handler Interface (localhost, LAN, Web)
+	private IWorld world;
+	private Client client;
+
+	public WorldSimulationState() {
+		super(StateNames.WORLD_SIM);
 	}
+	
+	
 
-	public static final String MAIN_MENU = "Main_Menu";
-	public static final String MP_LOADING = "MP_Loading";
-	public static final String MP_WORLD = "MP_World";
-	public static final String SPLASH_SCREEN = "Splash_Screen";
-	public static final String SP_WORLD = "SP_World";
-	public static final String TEST = "Test";
-	public static final String CRASH = "Crash";
-	public static final String WORLD_SIM = "World_Sim";
+	@Override
+	public void update(AbstractVoxel voxel, float delta) {
+		// TODO Auto-generated method stub
+		
+	}
 
 }
