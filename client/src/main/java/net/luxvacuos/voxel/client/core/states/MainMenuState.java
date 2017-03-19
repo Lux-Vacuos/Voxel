@@ -60,7 +60,6 @@ public class MainMenuState extends AbstractState {
 		script = scripting.compile("test");
 		bindings = new SimpleBindings();
 		bindings.put("kb", window.getKeyboardHandler());
-
 	}
 
 	@Override

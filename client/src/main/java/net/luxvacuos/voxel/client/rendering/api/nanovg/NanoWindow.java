@@ -192,6 +192,14 @@ public abstract class NanoWindow implements IWindow {
 	}
 
 	@Override
+	public void setBackgroundColor(String hex) {
+		backgroundColor.r(Integer.valueOf(hex.substring(1, 3), 16) / 255f);
+		backgroundColor.g(Integer.valueOf(hex.substring(3, 5), 16) / 255f);
+		backgroundColor.b(Integer.valueOf(hex.substring(5, 7), 16) / 255f);
+		backgroundColor.a(Integer.valueOf(hex.substring(7, 9), 16) / 255f);
+	}
+
+	@Override
 	public void setHidden(boolean hidden) {
 		this.hidden = hidden;
 	}
@@ -200,12 +208,12 @@ public abstract class NanoWindow implements IWindow {
 	public void setAlwaysOnTop(boolean alwaysOnTop) {
 		this.alwaysOnTop = alwaysOnTop;
 	}
-	
+
 	@Override
 	public void setAsBackground(boolean background) {
 		this.background = background;
 	}
-	
+
 	@Override
 	public void setBlurBehind(boolean blur) {
 		blurBehind = blur;
@@ -260,9 +268,9 @@ public abstract class NanoWindow implements IWindow {
 	public boolean isDraggable() {
 		return draggable;
 	}
-	
+
 	@Override
-	public boolean doBlurBehind() {
+	public boolean hasBlurBehind() {
 		return blurBehind;
 	}
 
@@ -270,7 +278,7 @@ public abstract class NanoWindow implements IWindow {
 	public boolean shouldClose() {
 		return exit;
 	}
-	
+
 	@Override
 	public boolean isBackground() {
 		return background;

@@ -27,6 +27,7 @@ import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.glDisable;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import net.luxvacuos.voxel.client.core.ClientVariables;
@@ -45,6 +46,7 @@ public class NanoWindowManager implements IWindowManager {
 	private Window window;
 	private Composite composite;
 	private int width, height;
+	private IWindow focused;
 
 	public NanoWindowManager(Window window) {
 		this.window = window;
@@ -77,7 +79,7 @@ public class NanoWindowManager implements IWindowManager {
 		}
 		this.window.beingNVGFrame();
 		NRendering.renderImage(this.window.getNVGID(), 0, 0, composite.getFbos()[0].image(), 1f);
-		if(ClientVariables.debug) {
+		if (ClientVariables.debug) {
 			Timers.renderDebugDisplay(5, 24, 200, 55);
 		}
 		this.window.endNVGFrame();
@@ -85,32 +87,38 @@ public class NanoWindowManager implements IWindowManager {
 
 	@Override
 	public void update(float delta) {
-		List<IWindow> toRemove = new ArrayList<>();
+		List<IWindow> tmp = new ArrayList<>();
 		IWindow toTop = null;
 		for (IWindow window : windows) {
 			if (window.shouldClose()) {
 				window.dispose(this.window);
-				toRemove.add(window);
+				tmp.add(window);
 				continue;
 			}
 			if (window.insideWindow() && !window.isBackground() && Mouse.isButtonDown(0))
 				toTop = window;
 		}
-		windows.removeAll(toRemove);
+		windows.removeAll(tmp);
+		tmp.clear();
 		if (toTop != null) {
 			IWindow top = windows.get(windows.size() - 1);
 			if (top != toTop)
 				if (!top.isAlwaysOnTop()) {
 					windows.remove(toTop);
 					windows.add(toTop);
-				} else
-					toTop.update(delta, window, this);
+				}
 		}
-
-		if (!windows.isEmpty()) {
-			windows.get(windows.size() - 1).update(delta, window, this);
+		tmp.addAll(windows);
+		Collections.reverse(tmp);
+		for (IWindow window : tmp) {
+			if (window.insideWindow() && Mouse.isButtonDown(0)) {
+				focused = window;
+				break;
+			}
 		}
-
+		if (focused != null)
+			focused.update(delta, window, this);
+		tmp.clear();
 	}
 
 	@Override

@@ -29,7 +29,7 @@ import java.io.StringWriter;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.ui.Alignment;
 import net.luxvacuos.voxel.client.ui.Box;
-import net.luxvacuos.voxel.client.ui.Paragraph;
+import net.luxvacuos.voxel.client.ui.TextArea;
 import net.luxvacuos.voxel.client.ui.RootComponent;
 import net.luxvacuos.voxel.client.ui.Text;
 
@@ -86,7 +86,7 @@ public class CrashWindow extends RootComponent {
 		PrintWriter pw = new PrintWriter(sw);
 		t.printStackTrace(pw);
 
-		Paragraph errorMessage = new Paragraph(sw.toString(), -370, -40, 744);
+		TextArea errorMessage = new TextArea(sw.toString(), -370, -40, 744);
 		errorMessage.setFont("Px437_IBM_VGA8");
 		errorMessage.setWindowAlignment(Alignment.CENTER);
 

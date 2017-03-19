@@ -42,7 +42,6 @@ public class AboutMenu extends RootComponent {
 
 	@Override
 	public void initApp(Window window) {
-		super.setAlwaysOnTop(true);
 		super.setResizable(false);
 		super.setBackgroundColor(0.4f, 0.4f, 0.4f, 1f);
 

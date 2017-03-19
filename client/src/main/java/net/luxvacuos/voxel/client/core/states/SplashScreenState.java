@@ -56,10 +56,10 @@ public class SplashScreenState extends AbstractState {
 		Window window = ClientInternalSubsystem.getInstance().getGameWindow();
 
 		component = new RootComponent(-2, window.getHeight() + 33, window.getWidth() + 4, window.getHeight() + 35, "");
-		component.setAlwaysOnTop(true);
 		component.setDecorations(false);
 		component.setBackgroundColor(1, 1, 1, 1);
 		component.setBlurBehind(false);
+		component.setAsBackground(true);
 		Image lv = new Image(0, 0, 512, 512, ClientInternalSubsystem.getInstance().getGameWindow().getResourceLoader()
 				.loadNVGTexture("LuxVacuos-Logo"));
 		lv.setAlignment(Alignment.CENTER);

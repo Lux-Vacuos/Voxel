@@ -62,6 +62,8 @@ public interface IWindow {
 	public void setWindowClose(WindowClose windowClose);
 
 	public void setBackgroundColor(float r, float g, float b, float a);
+	
+	public void setBackgroundColor(String hex);
 
 	public void setHidden(boolean hidden);
 	
@@ -70,7 +72,7 @@ public interface IWindow {
 	public void setAlwaysOnTop(boolean alwaysOnTop);
 	
 	public void setBlurBehind(boolean blur);
-
+	
 	public void toggleTitleBar();
 
 	public BackgroundStyle getBackgroundStyle();
@@ -95,8 +97,8 @@ public interface IWindow {
 
 	public boolean shouldClose();
 	
-	public boolean doBlurBehind();
-
+	public boolean hasBlurBehind();
+	
 	public void closeWindow();
 
 	public boolean isAlwaysOnTop();

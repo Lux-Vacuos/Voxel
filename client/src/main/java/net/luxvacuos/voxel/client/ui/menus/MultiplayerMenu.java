@@ -41,7 +41,6 @@ public class MultiplayerMenu extends RootComponent {
 
 	@Override
 	public void initApp(Window window) {
-		super.setAlwaysOnTop(true);
 		super.setBackgroundColor(0.4f, 0.4f, 0.4f, 1f);
 		super.setResizable(false);
 

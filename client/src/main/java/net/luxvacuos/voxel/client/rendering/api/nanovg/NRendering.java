@@ -201,7 +201,7 @@ public class NRendering {
 		}
 		if (decorations) {
 			// Drop shadow
-			nvgBoxGradient(vg, x, y + 5, w, h, 0, 20, rgba(0, 0, 0, 128, colorA), rgba(0, 0, 0, 0, colorB),
+			nvgBoxGradient(vg, x, y + 10, w, h, 0, 20, rgba(0, 0, 0, 80, colorA), rgba(0, 0, 0, 0, colorB),
 					shadowPaint);
 			nvgBeginPath(vg);
 			nvgRect(vg, x - 10, y - 10, w + 20, h + 30);

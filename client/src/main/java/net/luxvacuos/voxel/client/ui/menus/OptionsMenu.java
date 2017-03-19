@@ -35,7 +35,6 @@ public class OptionsMenu extends RootComponent {
 
 	@Override
 	public void initApp(Window window) {
-		super.setAlwaysOnTop(true);
 		super.setBackgroundColor(0.4f, 0.4f, 0.4f, 1f);
 
 		Button backButton = new Button(0, 40, 200, 40, "Close");

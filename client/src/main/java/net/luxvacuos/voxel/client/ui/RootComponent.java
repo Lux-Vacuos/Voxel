@@ -73,5 +73,5 @@ public class RootComponent extends NanoWindow {
 		component.init();
 		components.add(component);
 	}
-
+	
 }

@@ -41,6 +41,7 @@ public class MainMenu extends RootComponent {
 	@Override
 	public void initApp(Window window) {
 		super.setBackgroundColor(0.4f, 0.4f, 0.4f, 1f);
+		super.setAsBackground(true);
 
 		Button playButton = new Button(0, 120, 200, 40, "Singleplayer");
 		Button playMPButton = new Button(0, 60, 200, 40, "Multiplayer");

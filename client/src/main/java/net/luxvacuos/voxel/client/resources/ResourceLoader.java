@@ -98,7 +98,6 @@ import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.core.exception.DecodeTextureException;
 import net.luxvacuos.voxel.client.core.exception.LoadOBJModelException;
 import net.luxvacuos.voxel.client.core.exception.LoadTextureException;
-import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.glfw.WindowManager;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.RawModel;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.RawTexture;
@@ -311,14 +310,13 @@ public class ResourceLoader implements IDisposable {
 	}
 
 	public void loadNVGFont(String filename, String name, int size) throws LoadTextureException {
-		Window window = WindowManager.getWindow(this.windowID);
 		Logger.log("Loading NVGFont: " + filename + ".ttf");
 		int font = 0;
 		try {
 			ByteBuffer buffer = ioResourceToByteBuffer(
 					"assets/" + ClientVariables.assets + "/fonts/" + filename + ".ttf", size * 1024);
 			nvgFont.add(buffer);
-			font = nvgCreateFontMem(window.getNVGID(), name, buffer, 0);
+			font = nvgCreateFontMem(nvgID, name, buffer, 0);
 		} catch (IOException e) {
 			throw new LoadTextureException(filename, e);
 		}
@@ -327,14 +325,13 @@ public class ResourceLoader implements IDisposable {
 	}
 
 	public int loadNVGTexture(String file) throws LoadTextureException {
-		Window window = WindowManager.getWindow(this.windowID);
 		ByteBuffer buffer = null;
 		int tex = 0;
 		try {
 			Logger.log("Loading NVGTexture: " + file + ".png");
 			buffer = ioResourceToByteBuffer("assets/" + ClientVariables.assets + "/textures/menu/" + file + ".png",
 					8 * 1024);
-			tex = nvgCreateImageMem(window.getNVGID(), 0, buffer);
+			tex = nvgCreateImageMem(nvgID, 0, buffer);
 		} catch (Exception e) {
 			throw new LoadTextureException(file, e);
 		}

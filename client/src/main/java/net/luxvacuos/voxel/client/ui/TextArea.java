@@ -28,14 +28,14 @@ import org.lwjgl.nanovg.NVGColor;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.NRendering;
 
-public class Paragraph extends Component {
+public class TextArea extends Component {
 
 	private String text, font = "Roboto-Regular";
 	private int align = NVG_ALIGN_LEFT | NVG_ALIGN_TOP;
 	private float fontSize = 25;
 	private NVGColor color = NRendering.rgba(255, 255, 255, 255, NVGColor.create());
 
-	public Paragraph(String text, float x, float y, float w) {
+	public TextArea(String text, float x, float y, float w) {
 		this.text = text;
 		this.x = x;
 		this.y = y;
@@ -59,6 +59,10 @@ public class Paragraph extends Component {
 
 	public void setText(String text) {
 		this.text = text;
+	}
+	
+	public String getText() {
+		return text;
 	}
 
 	public void setColor(float r, float g, float b, float a) {

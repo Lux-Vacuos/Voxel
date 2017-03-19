@@ -20,6 +20,9 @@
 
 package net.luxvacuos.voxel.client.ui.menus;
 
+import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_CENTER;
+import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_MIDDLE;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -28,13 +31,14 @@ import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.core.states.StateNames;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.NanoWindow;
-import net.luxvacuos.voxel.client.rendering.api.nanovg.WM;
 import net.luxvacuos.voxel.client.ui.Alignment;
 import net.luxvacuos.voxel.client.ui.Button;
+import net.luxvacuos.voxel.client.ui.EditBox;
 import net.luxvacuos.voxel.client.ui.RootComponent;
 import net.luxvacuos.voxel.client.ui.ScrollPane;
 import net.luxvacuos.voxel.client.ui.Text;
 import net.luxvacuos.voxel.client.ui.WorldElement;
+import net.luxvacuos.voxel.universal.core.TaskManager;
 import net.luxvacuos.voxel.universal.core.states.StateMachine;
 
 public class WorldMenu extends RootComponent {
@@ -51,8 +55,51 @@ public class WorldMenu extends RootComponent {
 	public void initApp(Window window) {
 		super.setBackgroundColor(0.4f, 0.4f, 0.4f, 1f);
 		super.setResizable(false);
-		super.setAlwaysOnTop(true);
 
+		worldName = new Text("Name: ", 40, -40);
+		worldName.setWindowAlignment(Alignment.TOP);
+		createList(window);
+
+		super.initApp(window);
+	}
+
+	private void createWorld(Window window) {
+		EditBox nameB = new EditBox(0, 0, 300, 30, "");
+		nameB.setAlignment(Alignment.CENTER);
+		nameB.setWindowAlignment(Alignment.CENTER);
+
+		Button create = new Button(0, 100, 200, 40, "Create");
+		create.setAlignment(Alignment.CENTER);
+		create.setWindowAlignment(Alignment.BOTTOM);
+		create.setOnButtonPress(() -> {
+			new File(ClientVariables.WORLD_PATH + nameB.getText()).mkdirs();
+			TaskManager.addTask(() -> {
+				super.disposeApp(window);
+				createList(window);
+			});
+		});
+
+		Button back = new Button(0, 40, 200, 40, "Back");
+		back.setAlignment(Alignment.CENTER);
+		back.setWindowAlignment(Alignment.BOTTOM);
+		back.setOnButtonPress(() -> {
+			TaskManager.addTask(() -> {
+				super.disposeApp(window);
+				createList(window);
+			});
+		});
+
+		Text text = new Text("Name", 0, 80);
+		text.setAlign(NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
+		text.setWindowAlignment(Alignment.CENTER);
+
+		super.addComponent(nameB);
+		super.addComponent(create);
+		super.addComponent(back);
+		super.addComponent(text);
+	}
+
+	private void createList(Window window) {
 		ScrollPane pane = new ScrollPane(0, 0, appW / 2, appH, appW / 2 - 35, 60f);
 		pane.setColls(1);
 
@@ -85,20 +132,17 @@ public class WorldMenu extends RootComponent {
 		createButton.setAlignment(Alignment.CENTER);
 		createButton.setWindowAlignment(Alignment.RIGHT_BOTTOM);
 		createButton.setOnButtonPress(() -> {
-			super.closeWindow();
-			WM.getWM().addWindow(new CreateWorldMenu(appW / 2 - 250 + appX, appY - 100, 500, 400));
+			TaskManager.addTask(() -> {
+				super.disposeApp(window);
+				createWorld(window);
+			});
 		});
-
-		worldName = new Text("Name: ", 40, -40);
-		worldName.setWindowAlignment(Alignment.TOP);
 
 		super.addComponent(pane);
 		super.addComponent(loadButton);
 		super.addComponent(createButton);
 
 		super.addComponent(worldName);
-
-		super.initApp(window);
 	}
 
 }
