@@ -30,7 +30,7 @@ import net.luxvacuos.voxel.client.rendering.api.nanovg.NRendering;
 
 public class TextArea extends Component {
 
-	private String text, font = "Roboto-Regular";
+	private String text, font = "Poppins-Regular";
 	private int align = NVG_ALIGN_LEFT | NVG_ALIGN_TOP;
 	private float fontSize = 25;
 	private NVGColor color = NRendering.rgba(255, 255, 255, 255, NVGColor.create());

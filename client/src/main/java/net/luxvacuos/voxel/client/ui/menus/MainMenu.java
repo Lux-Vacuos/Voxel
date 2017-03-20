@@ -27,12 +27,12 @@ import net.luxvacuos.voxel.client.rendering.api.nanovg.NRendering;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.WM;
 import net.luxvacuos.voxel.client.ui.Alignment;
 import net.luxvacuos.voxel.client.ui.Button;
+import net.luxvacuos.voxel.client.ui.ModalWindow;
 import net.luxvacuos.voxel.client.ui.RootComponent;
+import net.luxvacuos.voxel.universal.core.TaskManager;
 import net.luxvacuos.voxel.universal.core.states.StateMachine;
 
 public class MainMenu extends RootComponent {
-
-	private boolean open = false; // X: Temporal Fix
 
 	public MainMenu(float x, float y, float w, float h) {
 		super(x, y, w, h, "Main Menu");
@@ -103,30 +103,13 @@ public class MainMenu extends RootComponent {
 
 	@Override
 	public void onClose() {
-		if (!open) {
-			open = true;
-			RootComponent closeDialog = new RootComponent(appW / 2 - 100, appY - appH / 2 + 50, 260, 100,
-					"Exit Voxel?");
-			Button close = new Button(60, 0, 100, 40, "Exit");
-			close.setAlignment(Alignment.CENTER);
-			close.setWindowAlignment(Alignment.CENTER);
-			close.setOnButtonPress(() -> {
+		ModalWindow window = new ModalWindow(340, 200, "Are you sure you want to close Voxel?", "Close Voxel");
+		WM.getWM().addWindow(window);
+		TaskManager.addTask(() -> {
+			window.setOnAccept(() -> {
 				StateMachine.stop();
 			});
-			Button cancel = new Button(-60, 0, 100, 40, "Cancel");
-			cancel.setAlignment(Alignment.CENTER);
-			cancel.setWindowAlignment(Alignment.CENTER);
-			cancel.setOnButtonPress(() -> {
-				closeDialog.closeWindow();
-				open = false;
-			});
-			closeDialog.addComponent(close);
-			closeDialog.addComponent(cancel);
-			closeDialog.setBackgroundColor(0.4f, 0.4f, 0.4f, 1f);
-			closeDialog.setAlwaysOnTop(true);
-			closeDialog.setResizable(false);
-			WM.getWM().addWindow(closeDialog);
-		}
+		});
 	}
 
 }

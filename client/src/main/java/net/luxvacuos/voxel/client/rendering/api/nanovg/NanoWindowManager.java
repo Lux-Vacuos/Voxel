@@ -138,6 +138,7 @@ public class NanoWindowManager implements IWindowManager {
 		window.init(this.window);
 		window.update(0, this.window, this);
 		this.windows.add(window);
+		this.focused = window;
 	}
 
 	@Override
@@ -145,6 +146,7 @@ public class NanoWindowManager implements IWindowManager {
 		window.init(this.window);
 		window.update(0, this.window, this);
 		this.windows.add(ord, window);
+		this.focused = window;
 	}
 
 	@Override
