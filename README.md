@@ -37,9 +37,9 @@ The main method is stored inside the Bootstrap class found in the package of the
 
 | Name          | Variable Type | Default Value  | Description    | Client, Server or Universal |
 | ------------- | -------------:| :-------------:| --------------:| -----------:|
-| -width        | integer       | 720            | Display Width  | Client Only |
-| -height       | integer       | 1280           | Display Height | Client Only |
+| -width        | integer       | 1280           | Display Width   | Client Only |
+| -height       | integer       | 720            | Display Height  | Client Only |
 | -username     | string        | (empty)        | Username to use when connecting to a server | Client Only |
-| -port         | integer       | 4059           | Server's port  | Server Only |
-| -ui           | (boolean)     | false          | Enable Server UI  | Server Only |
+| -port         | integer       | 4059           | Server's port   | Server Only |
+| -ui           | (boolean)     | false          | Enable Server UI | Server Only |
 
