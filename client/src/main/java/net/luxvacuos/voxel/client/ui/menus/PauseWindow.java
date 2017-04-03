@@ -21,6 +21,7 @@
 package net.luxvacuos.voxel.client.ui.menus;
 
 import net.luxvacuos.voxel.client.core.ClientVariables;
+import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.WM;
 import net.luxvacuos.voxel.client.ui.Alignment;
@@ -36,6 +37,7 @@ public class PauseWindow extends RootComponent {
 	@Override
 	public void initApp(Window window) {
 		super.setBackgroundColor(0.4f, 0.4f, 0.4f, 0.5f);
+		super.setAsBackground(true);
 		
 		Button backButton = new Button(0, 40, 200, 40, "Back to Main Menu");
 		backButton.setAlignment(Alignment.CENTER);
@@ -64,6 +66,7 @@ public class PauseWindow extends RootComponent {
 	@Override
 	public void onClose() {
 		ClientVariables.paused = false;
+		Mouse.setGrabbed(true);
 	}
 
 }

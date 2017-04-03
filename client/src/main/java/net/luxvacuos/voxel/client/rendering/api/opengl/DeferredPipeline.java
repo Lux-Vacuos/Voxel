@@ -21,6 +21,7 @@
 package net.luxvacuos.voxel.client.rendering.api.opengl;
 
 import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.GL_NEAREST;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11.GL_TRIANGLE_STRIP;
 import static org.lwjgl.opengl.GL11.glBindTexture;
@@ -38,8 +39,6 @@ import static org.lwjgl.opengl.GL30.glBlitFramebuffer;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.lwjgl.opengl.GL11;
-
 import net.luxvacuos.igl.vector.Matrix4d;
 import net.luxvacuos.igl.vector.Vector2d;
 import net.luxvacuos.igl.vector.Vector3d;
@@ -50,6 +49,7 @@ import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.CubeMapTexture;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.Light;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.RawModel;
+import net.luxvacuos.voxel.client.rendering.api.opengl.objects.Texture;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.DeferredShadingShader;
 import net.luxvacuos.voxel.client.util.Maths;
 import net.luxvacuos.voxel.universal.core.IWorldSimulation;
@@ -88,7 +88,6 @@ public abstract class DeferredPipeline implements IDeferredPipeline {
 		previousViewMatrix = new Matrix4d();
 		finalShader = new DeferredShadingShader("Final");
 		finalShader.start();
-		finalShader.loadTransformation(Maths.createTransformationMatrix(new Vector2d(0, 0), new Vector2d(1, 1)));
 		finalShader.loadResolution(new Vector2d(window.getWidth(), window.getHeight()));
 		finalShader.loadSkyColor(ClientVariables.skyColor);
 		finalShader.stop();
@@ -117,12 +116,16 @@ public abstract class DeferredPipeline implements IDeferredPipeline {
 	@Override
 	public void preRender(CameraEntity camera, Vector3d lightPosition, Vector3d invertedLightPosition,
 			IWorldSimulation clientWorldSimulation, List<Light> lights, CubeMapTexture irradianceCapture,
-			CubeMapTexture environmentMap, float exposure) {
+			CubeMapTexture environmentMap, Texture brdfLUT, float exposure) {
+		glBindVertexArray(quad.getVaoID());
+		glEnableVertexAttribArray(0);
 		for (IDeferredPass deferredPass : imagePasses) {
 			deferredPass.process(camera, previousViewMatrix, previousCameraPosition, lightPosition,
 					invertedLightPosition, clientWorldSimulation, lights, auxs, this, quad, irradianceCapture,
-					environmentMap, exposure);
+					environmentMap, brdfLUT, exposure);
 		}
+		glDisableVertexAttribArray(0);
+		glBindVertexArray(0);
 		previousViewMatrix = Maths.createViewMatrix(camera);
 		previousCameraPosition = camera.getPosition();
 	}
@@ -141,7 +144,7 @@ public abstract class DeferredPipeline implements IDeferredPipeline {
 
 		glBindFramebuffer(GL_READ_FRAMEBUFFER, mainFBO.getFbo());
 		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, postProcess.getFbo());
-		glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_DEPTH_BUFFER_BIT, GL11.GL_NEAREST);
+		glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_DEPTH_BUFFER_BIT, GL_NEAREST);
 	}
 
 	@Override

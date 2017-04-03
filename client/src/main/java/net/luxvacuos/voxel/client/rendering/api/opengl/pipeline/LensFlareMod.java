@@ -51,7 +51,8 @@ public class LensFlareMod extends DeferredPass {
 	}
 
 	@Override
-	public void render(FBO[] auxs, IDeferredPipeline pipe, CubeMapTexture irradianceCapture, CubeMapTexture environmentMap) {
+	public void render(FBO[] auxs, IDeferredPipeline pipe, CubeMapTexture irradianceCapture,
+			CubeMapTexture environmentMap, Texture brdfLUT) {
 		glActiveTexture(GL_TEXTURE6);
 		glBindTexture(GL_TEXTURE_2D, auxs[0].getTexture());
 		glActiveTexture(GL_TEXTURE7);

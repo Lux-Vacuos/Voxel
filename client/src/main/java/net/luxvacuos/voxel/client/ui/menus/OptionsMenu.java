@@ -37,15 +37,6 @@ public class OptionsMenu extends RootComponent {
 	public void initApp(Window window) {
 		super.setBackgroundColor(0.4f, 0.4f, 0.4f, 1f);
 
-		Button backButton = new Button(0, 40, 200, 40, "Close");
-		backButton.setAlignment(Alignment.CENTER);
-		backButton.setWindowAlignment(Alignment.BOTTOM);
-		backButton.setOnButtonPress(() -> {
-			ClientInternalSubsystem.getInstance().getGameSettings().update();
-			ClientInternalSubsystem.getInstance().getGameSettings().save();
-			super.closeWindow();
-		});
-
 		Button godraysButton = new Button(40, -40, 200, 40, "Volumetric Light");
 		Button shadowsButton = new Button(40, -100, 200, 40, "Shadows");
 		Button dofButton = new Button(40, -160, 200, 40, "Depth of Field");
@@ -272,7 +263,6 @@ public class OptionsMenu extends RootComponent {
 			}
 		});
 
-		super.addComponent(backButton);
 		super.addComponent(shadowsButton);
 		super.addComponent(dofButton);
 		super.addComponent(godraysButton);
@@ -285,6 +275,12 @@ public class OptionsMenu extends RootComponent {
 		super.addComponent(lensFlaresButton);
 
 		super.initApp(window);
+	}
+	
+	@Override
+	public void onClose() {
+		ClientInternalSubsystem.getInstance().getGameSettings().update();
+		ClientInternalSubsystem.getInstance().getGameSettings().save();
 	}
 
 }

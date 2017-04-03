@@ -22,6 +22,9 @@ package net.luxvacuos.voxel.client.rendering.api.opengl;
 
 import static org.lwjgl.nanovg.NanoVG.NVG_IMAGE_FLIPY;
 import static org.lwjgl.nanovg.NanoVG.nvgDeleteImage;
+import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
+import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
+import static org.lwjgl.opengl.GL30.glBindVertexArray;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -85,14 +88,17 @@ public abstract class PostProcessPipeline implements IPostProcessPipeline {
 	@Override
 	public void preRender(long nvg, CameraEntity camera) {
 		auxs[0] = fbo;
+		glBindVertexArray(quad.getVaoID());
+		glEnableVertexAttribArray(0);
 		for (IPostProcessPass deferredPass : imagePasses) {
 			deferredPass.process(camera, previousViewMatrix, previousCameraPosition, auxs, quad);
 		}
+		glDisableVertexAttribArray(0);
+		glBindVertexArray(0);
 		previousViewMatrix = Maths.createViewMatrix(camera);
 		previousCameraPosition = camera.getPosition();
 		if (texture == 0)
-			texture = NRendering.generateImageFromTexture(nvg, auxs[0].getTexture(), width, height,
-					NVG_IMAGE_FLIPY);
+			texture = NRendering.generateImageFromTexture(nvg, auxs[0].getTexture(), width, height, NVG_IMAGE_FLIPY);
 	}
 
 	@Override

@@ -24,9 +24,6 @@ import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_TRIANGLE_STRIP;
 import static org.lwjgl.opengl.GL11.glDrawArrays;
-import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
-import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
-import static org.lwjgl.opengl.GL30.glBindVertexArray;
 
 import net.luxvacuos.igl.vector.Matrix4d;
 import net.luxvacuos.igl.vector.Vector2d;
@@ -35,7 +32,6 @@ import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.ecs.entities.CameraEntity;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.RawModel;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.DeferredShadingShader;
-import net.luxvacuos.voxel.client.util.Maths;
 
 public abstract class PostProcessPass implements IPostProcessPass {
 
@@ -78,7 +74,6 @@ public abstract class PostProcessPass implements IPostProcessPass {
 		fbo = new FBO(width, height);
 		shader = new DeferredShadingShader(name);
 		shader.start();
-		shader.loadTransformation(Maths.createTransformationMatrix(new Vector2d(0, 0), new Vector2d(1, 1)));
 		shader.loadResolution(new Vector2d(width, height));
 		shader.loadSkyColor(ClientVariables.skyColor);
 		shader.stop();
@@ -96,13 +91,11 @@ public abstract class PostProcessPass implements IPostProcessPass {
 		shader.loadviewMatrix(camera);
 		shader.loadSettings(ClientVariables.useDOF, ClientVariables.useFXAA, ClientVariables.useMotionBlur,
 				ClientVariables.useVolumetricLight, ClientVariables.useReflections, ClientVariables.useAmbientOcclusion,
-				ClientVariables.shadowMapDrawDistance, ClientVariables.useChromaticAberration, ClientVariables.useLensFlares);
-		glBindVertexArray(quad.getVaoID());
-		glEnableVertexAttribArray(0);
+				ClientVariables.shadowMapDrawDistance, ClientVariables.useChromaticAberration,
+				ClientVariables.useLensFlares);
+
 		render(auxs);
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, quad.getVertexCount());
-		glDisableVertexAttribArray(0);
-		glBindVertexArray(0);
 		shader.stop();
 		fbo.end();
 		auxs[0] = getFbo();

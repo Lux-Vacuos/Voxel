@@ -42,45 +42,25 @@ public final class ClientGameSettings extends AbstractGameSettings {
 
 	@Override
 	public void read() {
-		// Parse Shadow, Volumetric Light and FXAA
 		ClientVariables.useShadows = Boolean.parseBoolean(getValue("useShadows", "false"));
 		ClientVariables.useVolumetricLight = Boolean.parseBoolean(getValue("useVolumetricLight", "false"));
 		ClientVariables.useFXAA = Boolean.parseBoolean(getValue("useFXAA", "false"));
-
-		// Parse VSync, FPS, UPS and radius
 		ClientVariables.VSYNC = Boolean.parseBoolean(getValue("VSYNC", "false"));
 		ClientVariables.FPS = Integer.parseInt(getValue("FPS", "60"));
 		ClientVariables.UPS = Integer.parseInt(getValue("UPS", "60"));
 		ClientVariables.chunk_radius = Integer.parseInt(getValue("chunkRadius", "4"));
-
-		// Parse Motion Blur and DoF
 		ClientVariables.useMotionBlur = Boolean.parseBoolean(getValue("useMotionBlur", "false"));
 		ClientVariables.useDOF = Boolean.parseBoolean(getValue("useDOF", "false"));
-
-		// Parse Reflections and Parallax
 		ClientVariables.useReflections = Boolean.parseBoolean(getValue("useReflections", "false"));
 		ClientVariables.useParallax = Boolean.parseBoolean(getValue("useParallax", "false"));
-
-		// Parse FoV
 		ClientVariables.FOV = Integer.parseInt(getValue("FOV", "90"));
-
-		// Parse rendering pipeline
 		ClientVariables.renderingPipeline = getValue("DeferredPipeline", "MultiPass");
-
-		// Parse assetsPack
 		ClientVariables.assets = getValue("Assets", "voxel");
-
-		// Parse Ambient Occlusion
 		ClientVariables.useAmbientOcclusion = Boolean.parseBoolean(getValue("useAmbientOcclusion", "false"));
-
-		// Parse Shadow Map Resolution and Shadow Draw Distance.
-		ClientVariables.shadowMapResolution = Integer.parseInt(getValue("shadowMapResolution", "512"));
+		ClientVariables.shadowMapResolution = Integer.parseInt(getValue("shadowMapResolution", "1024"));
 		ClientVariables.shadowMapDrawDistance = Integer.parseInt(getValue("shadowMapDrawDistance", "200"));
-
-		// Parse Chromatic Aberration and Lens Flares
 		ClientVariables.useChromaticAberration = Boolean.parseBoolean(getValue("useChromaticAberration", "false"));
 		ClientVariables.useLensFlares = Boolean.parseBoolean(getValue("useLensFlares", "false"));
-		
 		WM.invertWindowButtons = Boolean.parseBoolean(getValue("WM_InvertButtons", "false"));
 	}
 

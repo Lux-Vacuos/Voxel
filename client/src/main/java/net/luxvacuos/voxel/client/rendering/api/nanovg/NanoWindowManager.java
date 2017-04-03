@@ -20,6 +20,8 @@
 
 package net.luxvacuos.voxel.client.rendering.api.nanovg;
 
+import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_LEFT;
+import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_MIDDLE;
 import static org.lwjgl.nanovg.NanoVGGL3.nvgluBindFramebuffer;
 import static org.lwjgl.opengl.GL11.GL_BLEND;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
@@ -30,9 +32,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.lwjgl.glfw.GLFW;
+
 import net.luxvacuos.voxel.client.core.ClientVariables;
+import net.luxvacuos.voxel.client.core.CoreInfo;
 import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
+import net.luxvacuos.voxel.client.rendering.api.glfw.WindowManager;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.effects.Final;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.effects.GaussianH;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.effects.GaussianV;
@@ -81,6 +87,13 @@ public class NanoWindowManager implements IWindowManager {
 		NRendering.renderImage(this.window.getNVGID(), 0, 0, composite.getFbos()[0].image(), 1f);
 		if (ClientVariables.debug) {
 			Timers.renderDebugDisplay(5, 24, 200, 55);
+			NRendering.renderText(window.getNVGID(), "Voxel " + " (" + ClientVariables.version + ")", "Roboto-Bold",
+					NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE, 5, 12, 20,
+					NRendering.rgba(220, 220, 220, 255, NRendering.colorA));
+			NRendering.renderText(window.getNVGID(),
+					"Used VRam: " + WindowManager.getUsedVRAM() + "KB " + " UPS: " + CoreInfo.ups, "Roboto-Bold",
+					NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE, 5, 95, 20,
+					NRendering.rgba(220, 220, 220, 255, NRendering.colorA));
 		}
 		this.window.endNVGFrame();
 	}
@@ -119,6 +132,8 @@ public class NanoWindowManager implements IWindowManager {
 		if (focused != null)
 			focused.update(delta, window, this);
 		tmp.clear();
+		if (window.getKeyboardHandler().isKeyPressed(GLFW.GLFW_KEY_F1))
+			ClientVariables.debug = !ClientVariables.debug;
 	}
 
 	@Override

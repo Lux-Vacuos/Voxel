@@ -34,6 +34,7 @@ import static org.lwjgl.opengl.GL11.glClearColor;
 import static org.lwjgl.opengl.GL11.glCullFace;
 import static org.lwjgl.opengl.GL11.glDisable;
 import static org.lwjgl.opengl.GL11.glEnable;
+import static org.lwjgl.opengl.GL32.GL_TEXTURE_CUBE_MAP_SEAMLESS;
 
 import java.util.List;
 import java.util.Map;
@@ -66,6 +67,7 @@ public class Renderer {
 	private static EnvironmentRenderer environmentRenderer;
 	private static ParticleRenderer particleRenderer;
 	private static IrradianceCapture irradianceCapture;
+	private static PreFilteredEnvironment preFilteredEnvironment;
 
 	private static ShadowFBO shadowFBO;
 
@@ -94,7 +96,8 @@ public class Renderer {
 		lightRenderer = new LightRenderer();
 		TaskManager.addTask(() -> irradianceCapture = new IrradianceCapture(window.getResourceLoader()));
 		TaskManager.addTask(() -> environmentRenderer = new EnvironmentRenderer(
-				new CubeMapTexture(window.getResourceLoader().createEmptyCubeMap(128, true), 128)));
+				new CubeMapTexture(window.getResourceLoader().createEmptyCubeMap(128, true, false), 128)));
+		TaskManager.addTask(() -> preFilteredEnvironment = new PreFilteredEnvironment(window));
 	}
 
 	public static void render(ImmutableArray<Entity> entities, Map<ParticleTexture, List<Particle>> particles,
@@ -106,6 +109,7 @@ public class Renderer {
 		environmentRenderer.renderEnvironmentMap(camera.getPosition(), skyboxRenderer, worldSimulation, lightPosition,
 				window);
 		irradianceCapture.render(window, environmentRenderer.getCubeMapTexture().getID());
+		preFilteredEnvironment.render(window, environmentRenderer.getCubeMapTexture().getID());
 
 		if (ClientVariables.useShadows) {
 			SunCamera sCam = (SunCamera) sunCamera;
@@ -119,34 +123,28 @@ public class Renderer {
 			if (shadowPass != null)
 				shadowPass.render(camera, sunCamera, frustum, shadowFBO);
 			entityShadowRenderer.renderEntity(entities, sunCamera);
-			shadowFBO.end();
 
 			sCam.switchProjectionMatrix(1);
 			frustum.calculateFrustum(sunCamera);
 
-			shadowFBO.begin();
 			shadowFBO.changeTexture(1);
 			clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			if (shadowPass != null)
 				shadowPass.render(camera, sunCamera, frustum, shadowFBO);
 			entityShadowRenderer.renderEntity(entities, sunCamera);
-			shadowFBO.end();
 
 			sCam.switchProjectionMatrix(2);
 			frustum.calculateFrustum(sunCamera);
 
-			shadowFBO.begin();
 			shadowFBO.changeTexture(2);
 			clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			if (shadowPass != null)
 				shadowPass.render(camera, sunCamera, frustum, shadowFBO);
 			entityShadowRenderer.renderEntity(entities, sunCamera);
-			shadowFBO.end();
 
 			sCam.switchProjectionMatrix(3);
 			frustum.calculateFrustum(sunCamera);
 
-			shadowFBO.begin();
 			shadowFBO.changeTexture(3);
 			clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			if (shadowPass != null)
@@ -172,7 +170,8 @@ public class Renderer {
 		deferredPipeline.end();
 
 		deferredPipeline.preRender(camera, lightPosition, invertedLightPosition, worldSimulation,
-				lightRenderer.getLights(), irradianceCapture.getCubeMapTexture(), environmentRenderer.getCubeMapTexture(), exposure);
+				lightRenderer.getLights(), irradianceCapture.getCubeMapTexture(),
+				preFilteredEnvironment.getCubeMapTexture(), preFilteredEnvironment.getBRDFLUT(), exposure);
 
 		postProcessPipeline.begin();
 
@@ -203,6 +202,8 @@ public class Renderer {
 			particleRenderer.cleanUp();
 		if (irradianceCapture != null)
 			irradianceCapture.dispose();
+		if (preFilteredEnvironment != null)
+			preFilteredEnvironment.dispose();
 	}
 
 	public static int getResultTexture() {
@@ -238,6 +239,7 @@ public class Renderer {
 		glEnable(GL_CULL_FACE);
 		glCullFace(GL_BACK);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
 	}
 
 	public static void resetState() {

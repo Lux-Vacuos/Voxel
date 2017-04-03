@@ -26,6 +26,7 @@ import net.luxvacuos.igl.vector.Vector3d;
 import net.luxvacuos.voxel.client.ecs.entities.CameraEntity;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.CubeMapTexture;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.Light;
+import net.luxvacuos.voxel.client.rendering.api.opengl.objects.Texture;
 import net.luxvacuos.voxel.universal.core.IWorldSimulation;
 import net.luxvacuos.voxel.universal.resources.IDisposable;
 
@@ -38,10 +39,11 @@ public interface IDeferredPipeline extends IDisposable {
 	public void end();
 
 	public void preRender(CameraEntity camera, Vector3d lightPosition, Vector3d invertedLightPosition,
-			IWorldSimulation clientWorldSimulation, List<Light> lights, CubeMapTexture irradianceCapture, CubeMapTexture environmentMap, float exposure);
-	
+			IWorldSimulation clientWorldSimulation, List<Light> lights, CubeMapTexture irradianceCapture,
+			CubeMapTexture environmentMap, Texture brdfLUT, float exposure);
+
 	public void render(FBO postProcess);
-	
+
 	public RenderingPipelineFBO getMainFBO();
 
 }

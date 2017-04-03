@@ -20,7 +20,7 @@
 
 package net.luxvacuos.voxel.client.rendering.api.opengl;
 
-import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_COMPONENT;
 import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
@@ -31,7 +31,6 @@ import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE_CUBE_MAP;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE_CUBE_MAP_POSITIVE_X;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
-import static org.lwjgl.opengl.GL14.GL_DEPTH_COMPONENT24;
 import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
 import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
 import static org.lwjgl.opengl.GL30.GL_COLOR_ATTACHMENT0;
@@ -44,7 +43,6 @@ import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import static org.lwjgl.opengl.GL30.glCheckFramebufferStatus;
 import static org.lwjgl.opengl.GL30.glDeleteFramebuffers;
 import static org.lwjgl.opengl.GL30.glDeleteRenderbuffers;
-import static org.lwjgl.opengl.GL30.glFramebufferRenderbuffer;
 import static org.lwjgl.opengl.GL30.glFramebufferTexture2D;
 import static org.lwjgl.opengl.GL30.glGenFramebuffers;
 import static org.lwjgl.opengl.GL30.glGenRenderbuffers;
@@ -82,14 +80,13 @@ public class IrradianceCapture implements IDisposable {
 		shader = new IrradianceCaptureShader();
 		camera = new CubeMapCamera(new Vector3d());
 		cube = loader.loadToVAO(VERTICES, 3);
-		cubeMapTexture = new CubeMapTexture(loader.createEmptyCubeMap(32, true), 32);
+		cubeMapTexture = new CubeMapTexture(loader.createEmptyCubeMap(32, true, false), 32);
 		fbo = glGenFramebuffers();
 		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 
 		depthBuffer = glGenRenderbuffers();
 		glBindRenderbuffer(GL_RENDERBUFFER, depthBuffer);
 		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, cubeMapTexture.getSize(), cubeMapTexture.getSize());
-		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_COMPONENT24, GL_RENDERBUFFER, depthBuffer);
 
 		glBindTexture(GL_TEXTURE_CUBE_MAP, cubeMapTexture.getID());
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X,
@@ -108,21 +105,21 @@ public class IrradianceCapture implements IDisposable {
 		window.setViewport(0, 0, cubeMapTexture.getSize(), cubeMapTexture.getSize());
 		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 		shader.start();
+		glBindVertexArray(cube.getVaoID());
+		glEnableVertexAttribArray(0);
 		shader.loadProjectionMatrix(camera.getProjectionMatrix());
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, envMap);
 		for (int i = 0; i < 6; i++) {
 			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
 					cubeMapTexture.getID(), 0);
 			camera.switchToFace(i);
 			shader.loadviewMatrix(camera);
 			Renderer.clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-			glBindVertexArray(cube.getVaoID());
-			glEnableVertexAttribArray(0);
-			glActiveTexture(GL_TEXTURE0);
-			glBindTexture(GL_TEXTURE_CUBE_MAP, envMap);
 			glDrawArrays(GL_TRIANGLES, 0, cube.getVertexCount());
-			glDisableVertexAttribArray(0);
-			glBindVertexArray(0);
 		}
+		glDisableVertexAttribArray(0);
+		glBindVertexArray(0);
 		shader.stop();
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		window.resetViewport();

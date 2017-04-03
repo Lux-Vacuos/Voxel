@@ -28,6 +28,7 @@ import net.luxvacuos.voxel.client.ecs.entities.CameraEntity;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.CubeMapTexture;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.Light;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.RawModel;
+import net.luxvacuos.voxel.client.rendering.api.opengl.objects.Texture;
 import net.luxvacuos.voxel.universal.core.IWorldSimulation;
 import net.luxvacuos.voxel.universal.resources.IDisposable;
 
@@ -37,9 +38,9 @@ public interface IDeferredPass extends IDisposable {
 
 	public void process(CameraEntity camera, Matrix4d previousViewMatrix, Vector3d previousCameraPosition,
 			Vector3d lightPosition, Vector3d invertedLightPosition, IWorldSimulation clientWorldSimulation,
-			List<Light> lights, FBO[] auxs, IDeferredPipeline pipe, RawModel quad,
-			CubeMapTexture irradianceCapture, CubeMapTexture environmentMap, float exposure);
+			List<Light> lights, FBO[] auxs, IDeferredPipeline pipe, RawModel quad, CubeMapTexture irradianceCapture,
+			CubeMapTexture environmentMap, Texture brdfLUT, float exposure);
 
-	public void render(FBO[] auxs, IDeferredPipeline pipe, CubeMapTexture irradianceCapture, CubeMapTexture environmentMap);
-
+	public void render(FBO[] auxs, IDeferredPipeline pipe, CubeMapTexture irradianceCapture,
+			CubeMapTexture environmentMap, Texture brdfLUT);
 }

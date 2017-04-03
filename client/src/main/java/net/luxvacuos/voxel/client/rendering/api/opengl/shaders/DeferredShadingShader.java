@@ -44,7 +44,6 @@ import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.UniformVec3;
  */
 public class DeferredShadingShader extends ShaderProgram {
 
-	private UniformMatrix transformationMatrix = new UniformMatrix("transformationMatrix");
 	private UniformMatrix projectionMatrix = new UniformMatrix("projectionMatrix");
 	private UniformMatrix viewMatrix = new UniformMatrix("viewMatrix");
 	private UniformMatrix inverseProjectionMatrix = new UniformMatrix("inverseProjectionMatrix");
@@ -107,7 +106,7 @@ public class DeferredShadingShader extends ShaderProgram {
 		}
 		super.storeUniformArray(pointLightsPosition);
 		super.storeUniformArray(pointLightsColor);
-		super.storeAllUniformLocations(transformationMatrix, projectionMatrix, viewMatrix, inverseProjectionMatrix,
+		super.storeAllUniformLocations(projectionMatrix, viewMatrix, inverseProjectionMatrix,
 				inverseViewMatrix, previousViewMatrix, cameraPosition, previousCameraPosition, lightPosition,
 				invertedLightPosition, skyColor, resolution, sunPositionInScreen, exposure, time, camUnderWaterOffset,
 				shadowDrawDistance, camUnderWater, useFXAA, useDOF, useMotionBlur, useReflections, useVolumetricLight,
@@ -216,16 +215,6 @@ public class DeferredShadingShader extends ShaderProgram {
 	 */
 	public void loadviewMatrix(CameraEntity camera) {
 		this.viewMatrix.loadMatrix(camera.getViewMatrix());
-	}
-
-	/**
-	 * Loads Transformation Matrixd to the shader
-	 * 
-	 * @param matrix
-	 *            Transformation Matrixd
-	 */
-	public void loadTransformation(Matrix4d matrix) {
-		transformationMatrix.loadMatrix(matrix);
 	}
 
 }

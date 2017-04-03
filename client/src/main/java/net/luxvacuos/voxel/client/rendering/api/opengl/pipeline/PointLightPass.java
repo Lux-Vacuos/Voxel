@@ -35,6 +35,7 @@ import net.luxvacuos.voxel.client.rendering.api.opengl.IDeferredPipeline;
 import net.luxvacuos.voxel.client.rendering.api.opengl.DeferredPass;
 import net.luxvacuos.voxel.client.rendering.api.opengl.FBO;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.CubeMapTexture;
+import net.luxvacuos.voxel.client.rendering.api.opengl.objects.Texture;
 
 public class PointLightPass extends DeferredPass {
 
@@ -43,7 +44,8 @@ public class PointLightPass extends DeferredPass {
 	}
 
 	@Override
-	public void render(FBO[] auxs, IDeferredPipeline pipe, CubeMapTexture irradianceCapture, CubeMapTexture environmentMap) {
+	public void render(FBO[] auxs, IDeferredPipeline pipe, CubeMapTexture irradianceCapture,
+			CubeMapTexture environmentMap, Texture brdfLUT) {
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, pipe.getMainFBO().getDiffuseTex());
 		glActiveTexture(GL_TEXTURE1);

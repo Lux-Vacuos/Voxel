@@ -191,8 +191,6 @@ public class SPWorldState extends AbstractState {
 			ParticleDomain.update(delta, camera);
 			blockOutlineRenderer.getPosition().set(((PlayerCamera) camera).getBlockOutlinePos());
 
-			if (kbh.isKeyPressed(GLFW.GLFW_KEY_F1))
-				ClientVariables.debug = !ClientVariables.debug;
 			if (kbh.isKeyPressed(GLFW.GLFW_KEY_R))
 				ClientVariables.raining = !ClientVariables.raining;
 			if (kbh.isKeyPressed(GLFW.GLFW_KEY_ESCAPE)) {

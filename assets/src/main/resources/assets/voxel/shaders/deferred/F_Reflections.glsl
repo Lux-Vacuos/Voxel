@@ -33,6 +33,7 @@ uniform sampler2D gMask;
 uniform sampler2D gPBR;
 uniform sampler2D gDiffuse;
 uniform sampler2D composite0;
+uniform sampler2D composite1;
 uniform samplerCube composite2;
 uniform sampler2DShadow gDepth;
 
@@ -56,7 +57,7 @@ void main(void){
     		float cameraToWorldDist = length(cameraToWorld);
     		vec3 cameraToWorldNorm = normalize(cameraToWorld);
     		vec3 refl = normalize(reflect(cameraToWorldNorm, normal));	
-    		vec3 newPos;
+    		/*vec3 newPos;
     		vec4 newScreen;
     		vec3 rayTrace = position;
     		float currentWorldDist, rayDist;
@@ -72,26 +73,30 @@ void main(void){
        			if (newScreen.x > 1 || newScreen.x < -1 || newScreen.y > 1 || newScreen.y < -1 || newScreen.z > 1 || newScreen.z < -1 || cameraToWorldDist > currentWorldDist || dot(refl, cameraToWorldNorm) < 0)
 	       			break;
    			} while(rayDist < currentWorldDist);
-
-			vec3 V = normalize(cameraPosition - position);
+*/
+			vec3 N = normalize(normal);
+	    	vec3 V = normalize(cameraPosition - position);
+			vec3 R = reflect(-V, N);
 			vec3 F0 = vec3(0.04); 
 			F0 = mix(F0, texture(gDiffuse, texcoord).rgb, pbr.g);
-			vec3 F = fresnelSchlickRoughness(max(dot(normal, V), 0.0), F0, pbr.r);
 
-			vec4 newColor = texture(composite0, newScreen.xy/2.0 + 0.5);
-			vec4 enviromentMap = textureLod(composite2, refl, pbr.r * MAX_REFLECTION_LOD);
+    		vec3 prefilteredColor = textureLod(composite2, R,  pbr.r * MAX_REFLECTION_LOD).rgb; 
 
+			vec3 F = fresnelSchlickRoughness(max(dot(N, V), 0.0), F0,  pbr.r);
+			vec2 envBRDF = texture(composite1, vec2(max(dot(N, V), 0.0), pbr.r)).rg;
+			vec3 specular = prefilteredColor * (F * envBRDF.x + envBRDF.y);
+
+			//vec4 newColor = texture(composite0, newScreen.xy/2.0 + 0.5);
  			float fact = 1.0;
-    		if (dot(refl, cameraToWorldNorm) < 0)
+    		/*if (dot(refl, cameraToWorldNorm) < 0)
 	    		fact = 0.0;
     		else if (newScreen.x > 1 || newScreen.x < -1 || newScreen.y > 1 || newScreen.y < -1)
 		       	fact = 0.0;
     		else if (cameraToWorldDist > currentWorldDist)
 		       	fact = 0.0;
 			else if(newScreen.z < -1)
-					fact = 0.0;
-			vec4 finalReflection = mix(enviromentMap, newColor, fact);
-			image.rgb = image.rgb + max(finalReflection.rgb, 0.0) * F;
+					fact = 0.0;*/
+			image.rgb += specular;
 		}
 	}
 	out_Color = image;

@@ -24,9 +24,6 @@ import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_TRIANGLE_STRIP;
 import static org.lwjgl.opengl.GL11.glDrawArrays;
-import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
-import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
-import static org.lwjgl.opengl.GL30.glBindVertexArray;
 
 import java.util.List;
 
@@ -38,6 +35,7 @@ import net.luxvacuos.voxel.client.ecs.entities.CameraEntity;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.CubeMapTexture;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.Light;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.RawModel;
+import net.luxvacuos.voxel.client.rendering.api.opengl.objects.Texture;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.DeferredShadingShader;
 import net.luxvacuos.voxel.client.util.Maths;
 import net.luxvacuos.voxel.universal.core.IWorldSimulation;
@@ -85,7 +83,6 @@ public abstract class DeferredPass implements IDeferredPass {
 		fbo = new FBO(width, height);
 		shader = new DeferredShadingShader(name);
 		shader.start();
-		shader.loadTransformation(Maths.createTransformationMatrix(new Vector2d(0, 0), new Vector2d(1, 1)));
 		shader.loadResolution(new Vector2d(width, height));
 		shader.loadSkyColor(ClientVariables.skyColor);
 		shader.stop();
@@ -95,7 +92,7 @@ public abstract class DeferredPass implements IDeferredPass {
 	public void process(CameraEntity camera, Matrix4d previousViewMatrix, Vector3d previousCameraPosition,
 			Vector3d lightPosition, Vector3d invertedLightPosition, IWorldSimulation clientWorldSimulation,
 			List<Light> lights, FBO[] auxs, IDeferredPipeline pipe, RawModel quad, CubeMapTexture irradianceCapture,
-			CubeMapTexture environmentMap, float exposure) {
+			CubeMapTexture environmentMap, Texture brdfLUT, float exposure) {
 		fbo.begin();
 		shader.start();
 		shader.loadUnderWater(false);
@@ -114,12 +111,8 @@ public abstract class DeferredPass implements IDeferredPass {
 		shader.loadPointLightsPos(lights);
 		shader.loadTime(clientWorldSimulation.getTime());
 		Renderer.clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		glBindVertexArray(quad.getVaoID());
-		glEnableVertexAttribArray(0);
-		render(auxs, pipe, irradianceCapture, environmentMap);
+		render(auxs, pipe, irradianceCapture, environmentMap, brdfLUT);
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, quad.getVertexCount());
-		glDisableVertexAttribArray(0);
-		glBindVertexArray(0);
 		shader.stop();
 		fbo.end();
 		auxs[0] = getFbo();

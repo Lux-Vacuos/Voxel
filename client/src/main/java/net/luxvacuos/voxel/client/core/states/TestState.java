@@ -164,15 +164,14 @@ public class TestState extends AbstractState {
 		mat4.getComponent(Position.class).set(9, 1, 0);
 
 		mat5 = new BasicEntity(new TexturedModel(loader.loadObjModel("test_state/dragon"),
-				new Material(new Vector4f(1), 1f, 1f, loader.loadTexture("test_state/gold-scuffed"),
-						loader.loadTextureMisc("test_state/gold-scuffed_n"),
-						loader.loadTextureMisc("test_state/gold-scuffed_r"),
-						loader.loadTextureMisc("test_state/gold-scuffed_m"))));
+				new Material(new Vector4f(1), 1f, 0f, loader.loadTexture("test_state/scuffed-plastic"),
+						loader.loadTextureMisc("test_state/scuffed-plastic_n"),
+						loader.loadTextureMisc("test_state/scuffed-plastic_r"), null)));
 		mat5.getComponent(Position.class).set(-7, 0, 0);
 		mat5.getComponent(Scale.class).setScale(0.5f);
 
 		rocket = new BasicEntity(new TexturedModel(loader.loadObjModel("test_state/Rocket"),
-				new Material(new Vector4f(0.8f, 0.8f, 0.8f, 1.0f), 1f, 0, null, null, null, null)));
+				new Material(new Vector4f(0.5f, 0.5f, 0.5f, 1.0f), 0.5f, 0, null, null, null, null)));
 		rocket.getComponent(Position.class).set(0, 0, -5);
 
 		plane = new BasicEntity(new TexturedModel(loader.loadObjModel("test_state/plane"),
@@ -182,7 +181,7 @@ public class TestState extends AbstractState {
 		plane.getComponent(Scale.class).setScale(2f);
 
 		character = new BasicEntity(new TexturedModel(loader.loadObjModel("test_state/character"),
-				new Material(new Vector4f(1), 1, 0, loader.loadTexture("test_state/character"), null, null, null)));
+				new Material(new Vector4f(1), 0.5f, 0, loader.loadTexture("test_state/character"), null, null, null)));
 		character.getComponent(Position.class).set(0, 0, 5);
 		character.getComponent(Scale.class).setScale(0.21f);
 
@@ -251,8 +250,6 @@ public class TestState extends AbstractState {
 			particleSystem.generateParticles(particlesPoint, delta);
 			ParticleDomain.update(delta, camera);
 
-			if (kbh.isKeyPressed(GLFW.GLFW_KEY_F1))
-				ClientVariables.debug = !ClientVariables.debug;
 			if (kbh.isKeyPressed(GLFW.GLFW_KEY_R))
 				ClientVariables.raining = !ClientVariables.raining;
 			if (kbh.isKeyPressed(GLFW.GLFW_KEY_ESCAPE)) {

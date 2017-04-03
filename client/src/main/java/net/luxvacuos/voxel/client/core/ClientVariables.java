@@ -51,7 +51,7 @@ public class ClientVariables extends GlobalVariables {
 	public static int FOV = 90;
 	public static int WIDTH = 1280;
 	public static int HEIGHT = 720;
-	
+
 	public static final float NEAR_PLANE = 0.1f;
 	public static final float FAR_PLANE = 1000f;
 	public static float RED = 0.32f;
@@ -76,7 +76,7 @@ public class ClientVariables extends GlobalVariables {
 	public static boolean useAmbientOcclusion = false;
 	public static boolean useChromaticAberration = false;
 	public static boolean useLensFlares = false;
-	public static int shadowMapResolution = 512;
+	public static int shadowMapResolution = 1024;
 	public static int shadowMapDrawDistance = 200;
 	public static final float WAVE_SPEED = 4f;
 	public static String renderingPipeline = "MultiPass";
@@ -105,5 +105,9 @@ public class ClientVariables extends GlobalVariables {
 	public static final String FRAGMENT_FILE_BLOCK_OUTLINE = "F_BlockOutline.glsl";
 	public static final String VERTEX_IRRADIANCE_CAPTURE = "V_IrradianceCapture.glsl";
 	public static final String FRAGMENT_IRRADIANCE_CAPTURE = "F_IrradianceCapture.glsl";
-	
+	public static final String VERTEX_PRE_FILTERED_ENV = "V_PreFilteredEnvironment.glsl";
+	public static final String FRAGMENT_PRE_FILTERED_ENV = "F_PreFilteredEnvironment.glsl";
+	public static final String VERTEX_BRDF_INTEGRATION_MAP = "V_BRDFIntegrationMap.glsl";
+	public static final String FRAGMENT_BRDF_INTEGRATION_MAP = "F_BRDFIntegrationMap.glsl";
+
 }
