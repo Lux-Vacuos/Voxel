@@ -179,6 +179,8 @@ public class PreFilteredEnvironment implements IDisposable {
 	@Override
 	public void dispose() {
 		shader.dispose();
+		brdfLUT.dispose();
+		cubeMapTexture.dispose();
 		glDeleteRenderbuffers(depthBuffer);
 		glDeleteFramebuffers(fbo);
 	}

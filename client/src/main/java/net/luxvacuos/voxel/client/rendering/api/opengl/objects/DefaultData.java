@@ -20,53 +20,24 @@
 
 package net.luxvacuos.voxel.client.rendering.api.opengl.objects;
 
-import net.luxvacuos.voxel.universal.resources.IDisposable;
+import net.luxvacuos.voxel.client.resources.ResourceLoader;
 
-/**
- * Textured Model
- * 
- * @author Guerra24 <pablo230699@hotmail.com>
- * @category Assets
- */
-public class TexturedModel implements IDisposable {
+public final class DefaultData {
 
-	/**
-	 * Raw Model
-	 */
-	private RawModel rawModel;
-	/**
-	 * Material
-	 */
-	private Material material;
+	public static Texture diffuse, normal, roughness, metallic;
 
-	/**
-	 * Constructor, Create a Textured Model
-	 * 
-	 * @param model
-	 *            RawModel
-	 * @param texture
-	 *            Texture
-	 */
-	public TexturedModel(RawModel model, Material material) {
-		this.rawModel = model;
-		this.material = material;
-	}
-	
-	@Override
-	public void dispose() {
-		material.dispose();
+	public static void init(ResourceLoader loader) {
+		diffuse = loader.loadTextureMisc("def/d");
+		normal = loader.loadTextureMisc("def/d_n");
+		roughness = loader.loadTextureMisc("def/d_r");
+		metallic = loader.loadTextureMisc("def/d_m");
 	}
 
-	/**
-	 * Get Raw Model
-	 * 
-	 * @return RawModel
-	 */
-	public RawModel getRawModel() {
-		return rawModel;
+	public static void dispose() {
+		diffuse.dispose();
+		normal.dispose();
+		roughness.dispose();
+		metallic.dispose();
 	}
 
-	public Material getMaterial() {
-		return material;
-	}
 }

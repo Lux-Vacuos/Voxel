@@ -51,8 +51,6 @@ import net.luxvacuos.voxel.client.rendering.api.opengl.Tessellator;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.Light;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.Material;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.ParticleTexture;
-import net.luxvacuos.voxel.client.rendering.api.opengl.objects.RawModel;
-import net.luxvacuos.voxel.client.rendering.api.opengl.objects.Texture;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.TexturedModel;
 import net.luxvacuos.voxel.client.rendering.utils.BlockFaceAtlas;
 import net.luxvacuos.voxel.client.resources.ResourceLoader;
@@ -89,6 +87,9 @@ public class TestState extends AbstractState {
 	private PauseWindow pauseWindow;
 
 	private BasicEntity mat1, mat2, mat3, mat4, mat5, rocket, plane, character;
+
+	private TexturedModel sphere, dragon, rocketM, planeM, characterM;
+	private ParticleTexture fire;
 
 	public TestState() {
 		super(StateNames.TEST);
@@ -132,10 +133,12 @@ public class TestState extends AbstractState {
 		physicsSystem.addBox(new BoundingBox(new Vector3(-50, -1, -50), new Vector3(50, 0, 50)));
 		engine.addSystem(physicsSystem);
 
-		Texture test = loader.loadTexture("test_state/rusted_iron");
-		Texture test_n = loader.loadTextureMisc("test_state/rusted_iron-n");
-		Texture test_r = loader.loadTextureMisc("test_state/rusted_iron-r");
-		Texture test_m = loader.loadTextureMisc("test_state/rusted_iron-m");
+		Material sphereMaterial = new Material(new Vector4f(1f), 1f, 1f);
+		sphereMaterial.setDiffuseTexture(loader.loadTexture("test_state/rusted_iron"));
+		sphereMaterial.setNormalTexture(loader.loadTextureMisc("test_state/rusted_iron-n"));
+		sphereMaterial.setRoughnessTexture(loader.loadTextureMisc("test_state/rusted_iron-r"));
+		sphereMaterial.setMetallicTexture(loader.loadTextureMisc("test_state/rusted_iron-m"));
+		sphere = new TexturedModel(loader.loadObjModel("test_state/sphere"), sphereMaterial);
 
 		tess = new Tessellator(BlocksResources.getMaterial());
 
@@ -145,48 +148,58 @@ public class TestState extends AbstractState {
 		Renderer.getLightRenderer().addLight(new Light(new Vector3d(8, 5, 8), new Vector3f(1, 1, 1)));
 		Renderer.getLightRenderer().addLight(new Light(new Vector3d(0, 5, 0), new Vector3f(1, 1, 1)));
 
-		RawModel sphere = loader.loadObjModel("test_state/sphere");
-
-		mat1 = new BasicEntity(
-				new TexturedModel(sphere, new Material(new Vector4f(1f), 1f, 1f, test, test_n, test_r, test_m)));
+		mat1 = new BasicEntity(sphere);
 		mat1.getComponent(Position.class).set(0, 1, 0);
 
-		mat2 = new BasicEntity(
-				new TexturedModel(sphere, new Material(new Vector4f(1f), 1f, 1f, test, test_n, test_r, test_m)));
+		mat2 = new BasicEntity(sphere);
 		mat2.getComponent(Position.class).set(3, 1, 0);
 
-		mat3 = new BasicEntity(
-				new TexturedModel(sphere, new Material(new Vector4f(1f), 1f, 1f, test, test_n, test_r, test_m)));
+		mat3 = new BasicEntity(sphere);
 		mat3.getComponent(Position.class).set(6, 1, 0);
 
-		mat4 = new BasicEntity(
-				new TexturedModel(sphere, new Material(new Vector4f(1f), 1f, 1f, test, test_n, test_r, test_m)));
+		mat4 = new BasicEntity(sphere);
 		mat4.getComponent(Position.class).set(9, 1, 0);
 
-		mat5 = new BasicEntity(new TexturedModel(loader.loadObjModel("test_state/dragon"),
-				new Material(new Vector4f(1), 1f, 0f, loader.loadTexture("test_state/scuffed-plastic"),
-						loader.loadTextureMisc("test_state/scuffed-plastic_n"),
-						loader.loadTextureMisc("test_state/scuffed-plastic_r"), null)));
+		Material dragonMat = new Material(new Vector4f(1), 1f, 0f);
+		dragonMat.setDiffuseTexture(loader.loadTexture("test_state/scuffed-plastic"));
+		dragonMat.setNormalTexture(loader.loadTextureMisc("test_state/scuffed-plastic_n"));
+		dragonMat.setRoughnessTexture(loader.loadTextureMisc("test_state/scuffed-plastic_r"));
+
+		dragon = new TexturedModel(loader.loadObjModel("test_state/dragon"), dragonMat);
+
+		mat5 = new BasicEntity(dragon);
+
 		mat5.getComponent(Position.class).set(-7, 0, 0);
 		mat5.getComponent(Scale.class).setScale(0.5f);
 
-		rocket = new BasicEntity(new TexturedModel(loader.loadObjModel("test_state/Rocket"),
-				new Material(new Vector4f(0.5f, 0.5f, 0.5f, 1.0f), 0.5f, 0, null, null, null, null)));
+		rocketM = new TexturedModel(loader.loadObjModel("test_state/Rocket"),
+				new Material(new Vector4f(0.8f, 0.8f, 0.8f, 1.0f), 0.5f, 0));
+
+		rocket = new BasicEntity(rocketM);
 		rocket.getComponent(Position.class).set(0, 0, -5);
 
-		plane = new BasicEntity(new TexturedModel(loader.loadObjModel("test_state/plane"),
-				new Material(new Vector4f(1), 1f, 0, loader.loadTexture("test_state/mahogfloor"),
-						loader.loadTextureMisc("test_state/mahogfloor_n"),
-						loader.loadTextureMisc("test_state/mahogfloor_r"), null)));
+		Material planeMat = new Material(new Vector4f(1), 1f, 0);
+		planeMat.setDiffuseTexture(loader.loadTexture("test_state/mahogfloor"));
+		planeMat.setNormalTexture(loader.loadTextureMisc("test_state/mahogfloor_n"));
+		planeMat.setRoughnessTexture(loader.loadTextureMisc("test_state/mahogfloor_r"));
+
+		planeM = new TexturedModel(loader.loadObjModel("test_state/plane"), planeMat);
+
+		plane = new BasicEntity(planeM);
 		plane.getComponent(Scale.class).setScale(2f);
 
-		character = new BasicEntity(new TexturedModel(loader.loadObjModel("test_state/character"),
-				new Material(new Vector4f(1), 0.5f, 0, loader.loadTexture("test_state/character"), null, null, null)));
+		Material characterMat = new Material(new Vector4f(1), 0.5f, 0);
+		characterMat.setDiffuseTexture(loader.loadTexture("test_state/character"));
+
+		characterM = new TexturedModel(loader.loadObjModel("test_state/character"), characterMat);
+
+		character = new BasicEntity(characterM);
 		character.getComponent(Position.class).set(0, 0, 5);
 		character.getComponent(Scale.class).setScale(0.21f);
 
-		particleSystem = new ParticleSystem(new ParticleTexture(loader.loadTexture("particles/fire0"), 4), 1000, 1, -1f,
-				3f, 6f);
+		fire = new ParticleTexture(loader.loadTexture("particles/fire0").getID(), 4);
+
+		particleSystem = new ParticleSystem(fire, 1000, 1, -1f, 3f, 6f);
 		particleSystem.setDirection(new Vector3d(0, -1, 0), 0.4f);
 		particlesPoint = new Vector3d(0, 1.7f, -5);
 
@@ -195,6 +208,12 @@ public class TestState extends AbstractState {
 	@Override
 	public void dispose() {
 		tess.cleanUp();
+		sphere.dispose();
+		dragon.dispose();
+		characterM.dispose();
+		fire.dispose();
+		planeM.dispose();
+		rocketM.dispose();
 	}
 
 	@Override
@@ -207,6 +226,7 @@ public class TestState extends AbstractState {
 		Renderer.setDeferredPass((camera, sunCamera, frustum, shadowMap) -> {
 			tess.draw(camera, sunCamera, worldSimulation, shadowMap);
 		});
+		
 		RenderBlock t = new RenderBlock(new BlockMaterial("test"), new BlockFaceAtlas("leaves"));
 		t.setID(1);
 		tess.begin();

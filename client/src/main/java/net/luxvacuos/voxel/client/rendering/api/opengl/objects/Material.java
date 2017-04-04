@@ -21,25 +21,17 @@
 package net.luxvacuos.voxel.client.rendering.api.opengl.objects;
 
 import net.luxvacuos.igl.vector.Vector4f;
-import net.luxvacuos.voxel.client.resources.ResourceLoader;
+import net.luxvacuos.voxel.universal.resources.IDisposable;
 
 /**
  * Material
  * 
  */
-public class Material {
+public class Material implements IDisposable {
 
 	private Vector4f diffuse;
 	private float roughness, metallic;
 	private Texture diffuseTexture, normalTexture, roughnessTexture, metallicTexture;
-	private static Texture dDiffuse, dNormal, dRoughness, dMetallic;
-
-	public static void init(ResourceLoader loader) {
-		dDiffuse = loader.loadTextureMisc("def/d");
-		dNormal = loader.loadTextureMisc("def/d_n");
-		dRoughness = loader.loadTextureMisc("def/d_r");
-		dMetallic = loader.loadTextureMisc("def/d_m");
-	}
 
 	/**
 	 * 
@@ -56,27 +48,30 @@ public class Material {
 	 * @param normal
 	 *            Normal texture.
 	 */
-	public Material(Vector4f diffuse, float roughness, float metallic, Texture diffuseTexture, Texture normalTexture,
-			Texture roughnessTexture, Texture metallicTexture) {
+	public Material(Vector4f diffuse, float roughness, float metallic) {
 		this.diffuse = diffuse;
 		this.roughness = roughness;
 		this.metallic = metallic;
-		if (diffuseTexture == null)
-			this.diffuseTexture = dDiffuse;
-		else
-			this.diffuseTexture = diffuseTexture;
-		if (normalTexture == null)
-			this.normalTexture = dNormal;
-		else
-			this.normalTexture = normalTexture;
-		if (roughnessTexture == null)
-			this.roughnessTexture = dRoughness;
-		else
-			this.roughnessTexture = roughnessTexture;
-		if (metallicTexture == null)
-			this.metallicTexture = dMetallic;
-		else
-			this.metallicTexture = metallicTexture;
+		this.diffuseTexture = DefaultData.diffuse;
+		this.normalTexture = DefaultData.normal;
+		this.roughnessTexture = DefaultData.roughness;
+		this.metallicTexture = DefaultData.metallic;
+	}
+
+	public void setDiffuseTexture(Texture diffuseTexture) {
+		this.diffuseTexture = diffuseTexture;
+	}
+
+	public void setNormalTexture(Texture normalTexture) {
+		this.normalTexture = normalTexture;
+	}
+
+	public void setRoughnessTexture(Texture roughnessTexture) {
+		this.roughnessTexture = roughnessTexture;
+	}
+
+	public void setMetallicTexture(Texture metallicTexture) {
+		this.metallicTexture = metallicTexture;
 	}
 
 	public Vector4f getDiffuse() {
@@ -105,6 +100,18 @@ public class Material {
 
 	public Texture getRoughnessTexture() {
 		return roughnessTexture;
+	}
+
+	@Override
+	public void dispose() {
+		if (diffuseTexture != null)
+			diffuseTexture.dispose();
+		if (metallicTexture != null)
+			metallicTexture.dispose();
+		if (normalTexture != null)
+			normalTexture.dispose();
+		if (roughnessTexture != null)
+			roughnessTexture.dispose();
 	}
 
 	@Override

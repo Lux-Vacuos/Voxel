@@ -50,9 +50,7 @@ import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.glfw.WindowManager;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.Timers;
-import net.luxvacuos.voxel.client.rendering.api.opengl.ParticleDomain;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Renderer;
-import net.luxvacuos.voxel.client.rendering.api.opengl.objects.Material;
 import net.luxvacuos.voxel.universal.api.ModsHandler;
 import net.luxvacuos.voxel.universal.bootstrap.AbstractBootstrap;
 import net.luxvacuos.voxel.universal.core.AbstractVoxel;
@@ -136,9 +134,6 @@ public class Voxel extends AbstractVoxel {
 		modsHandler = new ModsHandler(this);
 		modsHandler.setMoltenAPI(new MoltenAPI());
 		modsHandler.preInit();
-		TaskManager.addTask(
-				() -> Material.init(ClientInternalSubsystem.getInstance().getGameWindow().getResourceLoader()));
-		TaskManager.addTask(() -> ParticleDomain.init());
 	}
 
 	/**

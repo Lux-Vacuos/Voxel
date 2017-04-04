@@ -20,13 +20,17 @@
 
 package net.luxvacuos.voxel.client.rendering.api.opengl.objects;
 
+import static org.lwjgl.opengl.GL11.glDeleteTextures;
+
+import net.luxvacuos.voxel.universal.resources.IDisposable;
+
 /**
- * Model Texture
+ * Texture
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
  * @category Assets
  */
-public class Texture {
+public class Texture implements IDisposable {
 	/**
 	 * Texture ID
 	 */
@@ -49,6 +53,11 @@ public class Texture {
 	 */
 	public int getID() {
 		return textureID;
+	}
+
+	@Override
+	public void dispose() {
+		glDeleteTextures(textureID);
 	}
 
 	@Override

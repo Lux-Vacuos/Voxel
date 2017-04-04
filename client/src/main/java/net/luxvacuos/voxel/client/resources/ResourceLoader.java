@@ -38,7 +38,6 @@ import static org.lwjgl.opengl.GL11.GL_TEXTURE_WRAP_T;
 import static org.lwjgl.opengl.GL11.GL_UNPACK_ALIGNMENT;
 import static org.lwjgl.opengl.GL11.GL_UNSIGNED_BYTE;
 import static org.lwjgl.opengl.GL11.glBindTexture;
-import static org.lwjgl.opengl.GL11.glDeleteTextures;
 import static org.lwjgl.opengl.GL11.glGenTextures;
 import static org.lwjgl.opengl.GL11.glPixelStorei;
 import static org.lwjgl.opengl.GL11.glTexImage2D;
@@ -125,10 +124,6 @@ public class ResourceLoader implements IDisposable {
 	 * NanoVG Data
 	 */
 	private List<Integer> nvgData = new ArrayList<Integer>();
-	/**
-	 * Texture List
-	 */
-	private List<Integer> textures = new ArrayList<Integer>();
 	/**
 	 * NanoVG Fonts
 	 */
@@ -231,7 +226,6 @@ public class ResourceLoader implements IDisposable {
 		} catch (Exception e) {
 			throw new LoadTextureException(fileName, e);
 		}
-		textures.add(texture_id);
 		return new Texture(texture_id);
 	}
 
@@ -262,7 +256,6 @@ public class ResourceLoader implements IDisposable {
 		} catch (Exception e) {
 			throw new LoadTextureException(fileName, e);
 		}
-		textures.add(texture);
 		return new Texture(texture);
 	}
 
@@ -302,6 +295,7 @@ public class ResourceLoader implements IDisposable {
 				Logger.warn("Anisotropic Filtering not supported");
 			}
 		}
+		glBindTexture(GL_TEXTURE_2D, 0);
 		return texture_id;
 	}
 
@@ -352,7 +346,7 @@ public class ResourceLoader implements IDisposable {
 
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		textures.add(texID);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 		return texID;
 	}
 
@@ -380,7 +374,6 @@ public class ResourceLoader implements IDisposable {
 			glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
 		}
 		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
-		textures.add(texID);
 		return texID;
 	}
 
@@ -748,10 +741,6 @@ public class ResourceLoader implements IDisposable {
 		for (int vbo : vbos) {
 			glDeleteBuffers(vbo);
 		}
-		for (int texture : textures) {
-			glDeleteTextures(texture);
-		}
-
 		for (int texture : nvgData) {
 			nvgDeleteImage(nvgID, texture);
 		}

@@ -29,7 +29,9 @@ import net.luxvacuos.voxel.client.rendering.api.glfw.WindowHandle;
 import net.luxvacuos.voxel.client.rendering.api.glfw.WindowManager;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.NanoWindowManager;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.WM;
+import net.luxvacuos.voxel.client.rendering.api.opengl.ParticleDomain;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Renderer;
+import net.luxvacuos.voxel.client.rendering.api.opengl.objects.DefaultData;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.ShaderIncludes;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.TessellatorBasicShader;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.TessellatorShader;
@@ -101,7 +103,9 @@ public class ClientInternalSubsystem extends AbstractInternalSubsystem {
 		TaskManager.addTask(() -> ShaderIncludes.processIncludeFile("common.isl"));
 		TaskManager.addTask(() -> ShaderIncludes.processIncludeFile("lighting.isl"));
 		TaskManager.addTask(() -> ShaderIncludes.processIncludeFile("materials.isl"));
-
+		TaskManager.addTask(
+				() -> DefaultData.init(ClientInternalSubsystem.getInstance().getGameWindow().getResourceLoader()));
+		TaskManager.addTask(() -> ParticleDomain.init());
 	}
 
 	@Override
@@ -120,7 +124,7 @@ public class ClientInternalSubsystem extends AbstractInternalSubsystem {
 			TaskManager.addTask(() -> soundSystem = new SoundSystem());
 		}
 		TaskManager.addTask(() -> Renderer.init(getGameWindow()));
-		TaskManager.addTask(() -> BlocksResources.createBlocks(getGameWindow().getResourceLoader()));
+		TaskManager.addTask(() -> BlocksResources.init(getGameWindow().getResourceLoader()));
 		TaskManager.addTask(() -> {
 			MaterialModder matMod = new MaterialModder();
 			Blocks.startRegister("voxel");
@@ -162,6 +166,7 @@ public class ClientInternalSubsystem extends AbstractInternalSubsystem {
 		gameSettings.save();
 		if (!ClientVariables.WSL)
 			soundSystem.cleanup();
+		DefaultData.dispose();
 		TessellatorShader.getShader().dispose();
 		TessellatorBasicShader.getShader().dispose();
 		Renderer.cleanUp();

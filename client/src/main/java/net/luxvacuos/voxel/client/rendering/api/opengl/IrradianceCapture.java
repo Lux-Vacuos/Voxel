@@ -128,6 +128,7 @@ public class IrradianceCapture implements IDisposable {
 	@Override
 	public void dispose() {
 		shader.dispose();
+		cubeMapTexture.dispose();
 		glDeleteRenderbuffers(depthBuffer);
 		glDeleteFramebuffers(fbo);
 	}

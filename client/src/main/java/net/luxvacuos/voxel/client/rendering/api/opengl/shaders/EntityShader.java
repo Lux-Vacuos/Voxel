@@ -48,7 +48,7 @@ public class EntityShader extends ShaderProgram {
 	private UniformBoolean useShadows = new UniformBoolean("useShadows");
 	private UniformMaterial material = new UniformMaterial("material");
 
-	private boolean loadedShadowMatrix = false, loadedProjectionMatrix = false;
+	private boolean loadedShadowMatrix = false;
 
 	public EntityShader() {
 		super(ClientVariables.VERTEX_FILE_ENTITY, ClientVariables.FRAGMENT_FILE_ENTITY, new Attribute(0, "position"),
@@ -137,9 +137,6 @@ public class EntityShader extends ShaderProgram {
 	 *            Projection Matrixd
 	 */
 	public void loadProjectionMatrix(Matrix4d projection) {
-		if (!loadedProjectionMatrix) {
-			projectionMatrix.loadMatrix(projection);
-			loadedProjectionMatrix = true;
-		}
+		projectionMatrix.loadMatrix(projection);
 	}
 }

@@ -37,17 +37,15 @@ import net.luxvacuos.voxel.client.rendering.api.opengl.objects.Texture;
 
 public class LensFlareMod extends DeferredPass {
 
-	private static Texture lensDirt;
-	private static Texture lensStar;
+	private Texture lensDirt;
+	private Texture lensStar;
 
 	public LensFlareMod(String name, int width, int height) {
 		super(name, width, height);
-		if (lensDirt == null)
-			lensDirt = ClientInternalSubsystem.getInstance().getGameWindow().getResourceLoader()
-					.loadTextureMisc("lens/lens_dirt");
-		if (lensStar == null)
-			lensStar = ClientInternalSubsystem.getInstance().getGameWindow().getResourceLoader()
-					.loadTextureMisc("lens/lens_star");
+		lensDirt = ClientInternalSubsystem.getInstance().getGameWindow().getResourceLoader()
+				.loadTextureMisc("lens/lens_dirt");
+		lensStar = ClientInternalSubsystem.getInstance().getGameWindow().getResourceLoader()
+				.loadTextureMisc("lens/lens_star");
 	}
 
 	@Override
@@ -61,6 +59,13 @@ public class LensFlareMod extends DeferredPass {
 		glBindTexture(GL_TEXTURE_2D, lensStar.getID());
 		glActiveTexture(GL_TEXTURE9);
 		glBindTexture(GL_TEXTURE_2D, auxs[1].getTexture());
+	}
+
+	@Override
+	public void dispose() {
+		super.dispose();
+		lensDirt.dispose();
+		lensStar.dispose();
 	}
 
 }

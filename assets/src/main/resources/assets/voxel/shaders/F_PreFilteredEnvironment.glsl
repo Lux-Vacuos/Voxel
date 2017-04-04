@@ -29,7 +29,7 @@ uniform float roughness;
 
 #define PI 3.14159265359f
 
-const uint SAMPLE_COUNT = 1024u;
+const uint SAMPLE_COUNT = 128u;
 
 float RadicalInverse_VdC(uint bits) {
     bits = (bits << 16u) | (bits >> 16u);

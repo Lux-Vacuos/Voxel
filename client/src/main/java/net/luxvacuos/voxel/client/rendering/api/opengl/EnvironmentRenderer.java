@@ -27,8 +27,8 @@ import static org.lwjgl.opengl.GL11.glBindTexture;
 import static org.lwjgl.opengl.GL11.glDrawBuffer;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE_CUBE_MAP;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE_CUBE_MAP_POSITIVE_X;
-import static org.lwjgl.opengl.GL14.GL_DEPTH_COMPONENT24;
 import static org.lwjgl.opengl.GL30.GL_COLOR_ATTACHMENT0;
+import static org.lwjgl.opengl.GL30.GL_DEPTH_ATTACHMENT;
 import static org.lwjgl.opengl.GL30.GL_FRAMEBUFFER;
 import static org.lwjgl.opengl.GL30.GL_FRAMEBUFFER_COMPLETE;
 import static org.lwjgl.opengl.GL30.GL_RENDERBUFFER;
@@ -65,7 +65,7 @@ public class EnvironmentRenderer {
 		depthBuffer = glGenRenderbuffers();
 		glBindRenderbuffer(GL_RENDERBUFFER, depthBuffer);
 		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, cubeMapTexture.getSize(), cubeMapTexture.getSize());
-		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_COMPONENT24, GL_RENDERBUFFER, depthBuffer);
+		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthBuffer);
 
 		glBindTexture(GL_TEXTURE_CUBE_MAP, cubeMapTexture.getID());
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X,
@@ -83,7 +83,7 @@ public class EnvironmentRenderer {
 
 	public void renderEnvironmentMap(Vector3d center, SkyboxRenderer skyboxRenderer,
 			IWorldSimulation clientWorldSimulation, Vector3d lightPosition, Window window) {
-		camera.getPosition().set(center);
+		camera.setPosition(center);
 		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 		window.setViewport(0, 0, cubeMapTexture.getSize(), cubeMapTexture.getSize());
 		for (int i = 0; i < 6; i++) {

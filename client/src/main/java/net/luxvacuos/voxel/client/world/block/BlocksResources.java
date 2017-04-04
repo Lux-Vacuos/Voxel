@@ -35,15 +35,23 @@ public class BlocksResources {
 	private static TessellatorTextureAtlas tessellatorTextureAtlas;
 	private static Material material;
 
-	public static void createBlocks(ResourceLoader loader) {
+	public static void init(ResourceLoader loader) {
 
 		Texture blocks = loader.loadTexture("blocks", GL_NEAREST, false);
 		Texture blocks_n = loader.loadTextureMisc("blocks_n", GL_NEAREST, false);
 		Texture blocks_r = loader.loadTextureMisc("blocks_r", GL_NEAREST, false);
 		Texture blocks_m = loader.loadTextureMisc("blocks_m", GL_NEAREST, false);
-		material = new Material(new Vector4f(1f), 1f, 1f, blocks, blocks_n, blocks_r, blocks_m);
+		material = new Material(new Vector4f(1f), 1f, 1f);
+		material.setDiffuseTexture(blocks);
+		material.setNormalTexture(blocks_n);
+		material.setRoughnessTexture(blocks_r);
+		material.setMetallicTexture(blocks_m);
 		TaskManager.addTask(() -> tessellatorTextureAtlas = new TessellatorTextureAtlas(256, 256));
 		TaskManager.addTask(() -> loadTexCoords());
+	}
+
+	public static void dispose() {
+		material.dispose();
 	}
 
 	private static void loadTexCoords() {

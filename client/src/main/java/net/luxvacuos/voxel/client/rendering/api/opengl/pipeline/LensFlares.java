@@ -36,13 +36,12 @@ import net.luxvacuos.voxel.client.rendering.api.opengl.objects.Texture;
 
 public class LensFlares extends DeferredPass {
 
-	private static Texture lensColor;
+	private Texture lensColor;
 
 	public LensFlares(String name, int width, int height) {
 		super(name, width, height);
-		if (lensColor == null)
-			lensColor = ClientInternalSubsystem.getInstance().getGameWindow().getResourceLoader()
-					.loadTextureMisc("lens/lens_color");
+		lensColor = ClientInternalSubsystem.getInstance().getGameWindow().getResourceLoader()
+				.loadTextureMisc("lens/lens_color");
 	}
 
 	@Override
@@ -55,6 +54,12 @@ public class LensFlares extends DeferredPass {
 		glActiveTexture(GL_TEXTURE8);
 		glBindTexture(GL_TEXTURE_2D, lensColor.getID());
 		auxs[1] = auxs[0];
+	}
+
+	@Override
+	public void dispose() {
+		super.dispose();
+		lensColor.dispose();
 	}
 
 }

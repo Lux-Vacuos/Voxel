@@ -53,7 +53,7 @@ public class TessellatorShader extends ShaderProgram {
 	private UniformBoolean useShadows = new UniformBoolean("useShadows");
 	private UniformMaterial material = new UniformMaterial("material");
 
-	private boolean loadedShadowMatrix = false, loadedProjectionMatrix = false;
+	private boolean loadedShadowMatrix = false;
 
 	private TessellatorShader() {
 		super(ClientVariables.VERTEX_FILE_TESSELLATOR, ClientVariables.FRAGMENT_FILE_TESSELLATOR,
@@ -137,10 +137,7 @@ public class TessellatorShader extends ShaderProgram {
 	 *            Projection Matrixd
 	 */
 	public void loadProjectionMatrix(Matrix4d projection) {
-		if (!loadedProjectionMatrix) {
-			projectionMatrix.loadMatrix(projection);
-			loadedProjectionMatrix = true;
-		}
+		projectionMatrix.loadMatrix(projection);
 	}
 
 }
