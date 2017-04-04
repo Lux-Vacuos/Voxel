@@ -88,10 +88,8 @@ public class SPWorldState extends AbstractState {
 		Renderer.setDeferredPass((camera, sunCamera, frustum, shadowMap) -> {
 			((RenderWorld) world).render(camera, sunCamera, frustum, shadowMap);
 			glReadPixels(window.getWidth() / 2, window.getHeight() / 2, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, p);
-			c.clear();
 			glReadBuffer(GL_COLOR_ATTACHMENT2);
 			glReadPixels(window.getWidth() / 2, window.getHeight() / 2, 1, 1, GL_RGB, GL_FLOAT, c);
-
 			PlayerCamera cam = (PlayerCamera) camera;
 			cam.setDepth(p.get(0));
 			cam.getNormal().set(c.get(0), c.get(1), c.get(2));

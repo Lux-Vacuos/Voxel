@@ -34,10 +34,13 @@ uniform sampler2D gMask;
 uniform sampler2D gDepth;
 uniform sampler2D composite0;
 uniform samplerCube composite1;
+uniform samplerCube composite2;
+uniform sampler2D composite3;
 uniform int shadowDrawDistance;
 uniform int useAmbientOcclusion;
 uniform vec2 resolution;
 
+const float MAX_REFLECTION_LOD = 5.0;
 const float distanceThreshold = 2;
 const int sample_count = 16;
 const vec2 poisson16[] = vec2[](
@@ -84,6 +87,7 @@ void main(void) {
 
 		vec3 N = normalize(normal.rgb);
 	    vec3 V = normalize(cameraPosition - position.rgb);
+		vec3 R = reflect(-V, N);
 
 		float roughness = pbr.r;
 		float metallic = pbr.g;
@@ -113,7 +117,12 @@ void main(void) {
 		
 		vec3 irradiance = texture(composite1, N).rgb;
 		vec3 diffuse = irradiance * image.rgb;
-		vec3 ambient = (kD * diffuse) * computeAmbientOcclusion(position.rgb, N);
+
+		vec3 prefilteredColor = textureLod(composite2, R, roughness * MAX_REFLECTION_LOD).rgb; 
+		vec2 envBRDF = texture(composite3, vec2(max(dot(N, V), 0.0), roughness)).rg;
+		vec3 specular = prefilteredColor * (F * envBRDF.x + envBRDF.y);
+
+		vec3 ambient = (kD * diffuse + specular) * computeAmbientOcclusion(position.rgb, N);
     	vec3 color = ambient + Lo;
 		image.rgb = color;
 	}

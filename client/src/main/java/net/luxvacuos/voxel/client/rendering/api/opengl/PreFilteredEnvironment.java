@@ -140,6 +140,7 @@ public class PreFilteredEnvironment implements IDisposable {
 		brdfIntegrationMapShader.stop();
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		window.resetViewport();
+		brdfIntegrationMapShader.dispose();
 	}
 
 	public void render(Window window, int envMap) {
@@ -178,7 +179,6 @@ public class PreFilteredEnvironment implements IDisposable {
 	@Override
 	public void dispose() {
 		shader.dispose();
-		brdfIntegrationMapShader.dispose();
 		glDeleteRenderbuffers(depthBuffer);
 		glDeleteFramebuffers(fbo);
 	}

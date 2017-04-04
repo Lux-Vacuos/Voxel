@@ -102,8 +102,8 @@ public class IrradianceCapture implements IDisposable {
 	}
 
 	public void render(Window window, int envMap) {
-		window.setViewport(0, 0, cubeMapTexture.getSize(), cubeMapTexture.getSize());
 		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+		window.setViewport(0, 0, cubeMapTexture.getSize(), cubeMapTexture.getSize());
 		shader.start();
 		glBindVertexArray(cube.getVaoID());
 		glEnableVertexAttribArray(0);

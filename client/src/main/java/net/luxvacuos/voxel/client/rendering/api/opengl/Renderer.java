@@ -119,7 +119,7 @@ public class Renderer {
 
 			shadowFBO.begin();
 			shadowFBO.changeTexture(0);
-			clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			clearBuffer(GL_DEPTH_BUFFER_BIT);
 			if (shadowPass != null)
 				shadowPass.render(camera, sunCamera, frustum, shadowFBO);
 			entityShadowRenderer.renderEntity(entities, sunCamera);
@@ -128,7 +128,7 @@ public class Renderer {
 			frustum.calculateFrustum(sunCamera);
 
 			shadowFBO.changeTexture(1);
-			clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			clearBuffer(GL_DEPTH_BUFFER_BIT);
 			if (shadowPass != null)
 				shadowPass.render(camera, sunCamera, frustum, shadowFBO);
 			entityShadowRenderer.renderEntity(entities, sunCamera);
@@ -137,7 +137,7 @@ public class Renderer {
 			frustum.calculateFrustum(sunCamera);
 
 			shadowFBO.changeTexture(2);
-			clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			clearBuffer(GL_DEPTH_BUFFER_BIT);
 			if (shadowPass != null)
 				shadowPass.render(camera, sunCamera, frustum, shadowFBO);
 			entityShadowRenderer.renderEntity(entities, sunCamera);
@@ -146,7 +146,7 @@ public class Renderer {
 			frustum.calculateFrustum(sunCamera);
 
 			shadowFBO.changeTexture(3);
-			clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			clearBuffer(GL_DEPTH_BUFFER_BIT);
 			if (shadowPass != null)
 				shadowPass.render(camera, sunCamera, frustum, shadowFBO);
 			entityShadowRenderer.renderEntity(entities, sunCamera);

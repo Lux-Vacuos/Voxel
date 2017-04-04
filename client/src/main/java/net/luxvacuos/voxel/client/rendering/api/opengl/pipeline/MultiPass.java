@@ -61,9 +61,9 @@ public class MultiPass extends DeferredPipeline {
 		pointLightPass = new PointLightPass("PointLight", width, height);
 		super.imagePasses.add(pointLightPass);
 
-		reflections = new Reflections("Reflections", width, height);
-		reflections.init();
-		super.imagePasses.add(reflections);
+		//reflections = new Reflections("Reflections", width, height);
+		//reflections.init();
+		//super.imagePasses.add(reflections);
 
 		bloomMask = new BloomMask("BloomMask", width, height);
 		super.imagePasses.add(bloomMask);

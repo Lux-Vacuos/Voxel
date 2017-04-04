@@ -55,6 +55,7 @@ public class EnvironmentRenderer {
 
 	private int fbo, depthBuffer;
 	private CubeMapTexture cubeMapTexture;
+	private CubeMapCamera camera;
 
 	public EnvironmentRenderer(CubeMapTexture cubeMap) {
 		this.cubeMapTexture = cubeMap;
@@ -77,11 +78,12 @@ public class EnvironmentRenderer {
 		glDrawBuffer(GL_COLOR_ATTACHMENT0);
 
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		camera = new CubeMapCamera(new Vector3d());
 	}
 
 	public void renderEnvironmentMap(Vector3d center, SkyboxRenderer skyboxRenderer,
 			IWorldSimulation clientWorldSimulation, Vector3d lightPosition, Window window) {
-		CubeMapCamera camera = new CubeMapCamera(center);
+		camera.getPosition().set(center);
 		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 		window.setViewport(0, 0, cubeMapTexture.getSize(), cubeMapTexture.getSize());
 		for (int i = 0; i < 6; i++) {

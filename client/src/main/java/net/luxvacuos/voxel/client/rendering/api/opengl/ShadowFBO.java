@@ -48,11 +48,10 @@ import static org.lwjgl.opengl.GL30.glBindRenderbuffer;
 import static org.lwjgl.opengl.GL30.glCheckFramebufferStatus;
 import static org.lwjgl.opengl.GL30.glDeleteFramebuffers;
 import static org.lwjgl.opengl.GL30.glDeleteRenderbuffers;
-import static org.lwjgl.opengl.GL30.glFramebufferRenderbuffer;
 import static org.lwjgl.opengl.GL30.glGenFramebuffers;
 import static org.lwjgl.opengl.GL30.glGenRenderbuffers;
 import static org.lwjgl.opengl.GL30.glRenderbufferStorage;
-import static org.lwjgl.opengl.GL32.*;
+import static org.lwjgl.opengl.GL32.glFramebufferTexture;
 
 import java.nio.ByteBuffer;
 
@@ -84,7 +83,6 @@ public class ShadowFBO {
 
 		glBindRenderbuffer(GL_RENDERBUFFER, shadowRB);
 		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height);
-		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, shadowRB);
 
 		shadowMaps[0] = glGenTextures();
 		glBindTexture(GL_TEXTURE_2D, shadowMaps[0]);
@@ -156,11 +154,11 @@ public class ShadowFBO {
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		ClientInternalSubsystem.getInstance().getGameWindow().resetViewport();
 	}
-	
-	public void changeTexture(int id){
+
+	public void changeTexture(int id) {
 		glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, shadowMaps[id], 0);
 	}
-	
+
 	public int[] getShadowMaps() {
 		return shadowMaps;
 	}
