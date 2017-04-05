@@ -37,6 +37,8 @@ public interface ITitleBar {
 	public boolean isEnabled();
 
 	public void setEnabled(boolean enabled);
+	
+	public void setTitle(String title);
 
 	public String getTitle();
 

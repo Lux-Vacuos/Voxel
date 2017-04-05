@@ -52,6 +52,7 @@ public abstract class NanoWindow implements IWindow {
 	private double lastLoopTime;
 	private Thread thread;
 	private int UPS = 60;
+	private float lastUpdate;
 
 	public NanoWindow(float x, float y, float w, float h, String title) {
 		this.x = x;
@@ -111,6 +112,7 @@ public abstract class NanoWindow implements IWindow {
 				accumulator += delta;
 				while (accumulator >= interval) {
 					updateApp(delta, window);
+					lastUpdate = 0;
 					accumulator -= interval;
 				}
 				sync.sync(UPS);
@@ -163,6 +165,7 @@ public abstract class NanoWindow implements IWindow {
 			appW = w - 4;
 			appH = h - 4;
 		}
+		lastUpdate += 1 * delta;
 	}
 
 	@Override
@@ -270,6 +273,16 @@ public abstract class NanoWindow implements IWindow {
 	@Override
 	public float getY() {
 		return y;
+	}
+
+	@Override
+	public float getLastUpdate() {
+		return lastUpdate;
+	}
+
+	@Override
+	public Thread getThread() {
+		return thread;
 	}
 
 	@Override

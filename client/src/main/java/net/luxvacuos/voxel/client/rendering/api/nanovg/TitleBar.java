@@ -39,9 +39,23 @@ public class TitleBar implements ITitleBar {
 	@Override
 	public void render(Window window, IWindow iWindow) {
 		if (enabled) {
-			NRendering.renderTitleBar(window.getNVGID(), title, font, iWindow.getX() + 2,
-					window.getHeight() - iWindow.getY(), iWindow.getWidth() - 2, HEIGHT, WM.invertWindowButtons,
-					iWindow.isResizable());
+
+			if (iWindow.getLastUpdate() > 5) {
+				if (!iWindow.getThread().isAlive())
+					NRendering.renderTitleBar(window.getNVGID(), title + " (Not responding) (Thread died)", font,
+							iWindow.getX() + 2, window.getHeight() - iWindow.getY(), iWindow.getWidth() - 2, HEIGHT,
+							WM.invertWindowButtons, iWindow.isResizable());
+				else
+					NRendering.renderTitleBar(window.getNVGID(), title + " (Not responding)", font, iWindow.getX() + 2,
+							window.getHeight() - iWindow.getY(), iWindow.getWidth() - 2, HEIGHT, WM.invertWindowButtons,
+							iWindow.isResizable());
+
+			} else {
+				NRendering.renderTitleBar(window.getNVGID(), title, font, iWindow.getX() + 2,
+						window.getHeight() - iWindow.getY(), iWindow.getWidth() - 2, HEIGHT, WM.invertWindowButtons,
+						iWindow.isResizable());
+			}
+
 		}
 	}
 
@@ -106,6 +120,10 @@ public class TitleBar implements ITitleBar {
 	@Override
 	public void setOnDrag(Event event) {
 		this.drag = event;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
 	}
 
 	@Override

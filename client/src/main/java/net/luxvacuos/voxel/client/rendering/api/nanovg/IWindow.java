@@ -30,7 +30,7 @@ public interface IWindow {
 	public enum WindowClose {
 		DISPOSE, DO_NOTHING, HIDE
 	};
-	
+
 	public void init(Window window);
 
 	public void initApp(Window window);
@@ -62,17 +62,17 @@ public interface IWindow {
 	public void setWindowClose(WindowClose windowClose);
 
 	public void setBackgroundColor(float r, float g, float b, float a);
-	
+
 	public void setBackgroundColor(String hex);
 
 	public void setHidden(boolean hidden);
-	
+
 	public void setAsBackground(boolean background);
 
 	public void setAlwaysOnTop(boolean alwaysOnTop);
-	
+
 	public void setBlurBehind(boolean blur);
-	
+
 	public void toggleTitleBar();
 
 	public BackgroundStyle getBackgroundStyle();
@@ -84,21 +84,25 @@ public interface IWindow {
 	public float getX();
 
 	public float getY();
-	
+
+	public float getLastUpdate();
+
+	public Thread getThread();
+
 	public NVGLUFramebuffer getFBO();
 
 	public boolean hasDecorations();
 
 	public boolean isResizable();
-	
+
 	public boolean isBackground();
 
 	public boolean isDraggable();
 
 	public boolean shouldClose();
-	
+
 	public boolean hasBlurBehind();
-	
+
 	public void closeWindow();
 
 	public boolean isAlwaysOnTop();
