@@ -31,14 +31,16 @@ import org.lwjgl.nanovg.NVGColor;
 import org.lwjgl.nanovg.NVGLUFramebuffer;
 
 import net.luxvacuos.voxel.client.input.Mouse;
+import net.luxvacuos.voxel.client.rendering.api.glfw.Sync;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
+import net.luxvacuos.voxel.client.rendering.api.glfw.WindowManager;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.NRendering.BackgroundStyle;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Renderer;
 
 public abstract class NanoWindow implements IWindow {
 
 	private boolean draggable = true, decorations = true, resizable = true, maximized, hidden = false, exit,
-			alwaysOnTop, background, blurBehind = true;
+			alwaysOnTop, background, blurBehind = true, running = true;
 	private BackgroundStyle backgroundStyle = BackgroundStyle.SOLID;
 	private NVGColor backgroundColor = NRendering.rgba(0, 0, 0, 255);
 	private float x, y, w, h;
@@ -47,6 +49,9 @@ public abstract class NanoWindow implements IWindow {
 	private WindowClose windowClose = WindowClose.DISPOSE;
 	private ITitleBar titleBar;
 	private NVGLUFramebuffer fbo;
+	private double lastLoopTime;
+	private Thread thread;
+	private int UPS = 30;
 
 	public NanoWindow(float x, float y, float w, float h, String title) {
 		this.x = x;
@@ -95,6 +100,23 @@ public abstract class NanoWindow implements IWindow {
 		fbo = nvgluCreateFramebuffer(window.getNVGID(), (int) (window.getWidth() * window.getPixelRatio()),
 				(int) (window.getHeight() * window.getPixelRatio()), 0);
 		initApp(window);
+		thread = new Thread(() -> {
+			lastLoopTime = WindowManager.getTime();
+			float delta = 0;
+			float accumulator = 0f;
+			float interval = 1f / UPS;
+			Sync sync = new Sync();
+			while (running) {
+				delta = getDelta();
+				accumulator += delta;
+				while (accumulator >= interval) {
+					updateApp(delta, window);
+					accumulator -= interval;
+				}
+				sync.sync(UPS);
+			}
+		});
+		thread.start();
 	}
 
 	@Override
@@ -140,11 +162,11 @@ public abstract class NanoWindow implements IWindow {
 			appW = w - 4;
 			appH = h - 4;
 		}
-		updateApp(delta, window);
 	}
 
 	@Override
 	public void dispose(Window window) {
+		running = false;
 		nvgluDeleteFramebuffer(window.getNVGID(), fbo);
 		disposeApp(window);
 	}
@@ -301,6 +323,13 @@ public abstract class NanoWindow implements IWindow {
 			hidden = true;
 			break;
 		}
+	}
+
+	public float getDelta() {
+		double time = WindowManager.getTime();
+		float delta = (float) (time - this.lastLoopTime);
+		this.lastLoopTime = time;
+		return delta;
 	}
 
 }

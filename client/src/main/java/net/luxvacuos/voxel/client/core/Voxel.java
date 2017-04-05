@@ -199,8 +199,8 @@ public class Voxel extends AbstractVoxel {
 		float alpha = 0;
 		Window window = ClientInternalSubsystem.getInstance().getGameWindow();
 		while (StateMachine.isRunning() && !(window.isCloseRequested())) {
-			TaskManager.update();
 			Timers.startCPUTimer();
+			TaskManager.update();
 			if (window.getTimeCount() > 1f) {
 				CoreInfo.ups = CoreInfo.upsCount;
 				CoreInfo.upsCount = 0;
@@ -209,6 +209,7 @@ public class Voxel extends AbstractVoxel {
 			delta = window.getDelta();
 			accumulator += delta;
 			while (accumulator >= interval) {
+				WindowManager.update();
 				update(interval);
 				accumulator -= interval;
 			}
@@ -219,7 +220,6 @@ public class Voxel extends AbstractVoxel {
 			Timers.stopGPUTimer();
 			Timers.update();
 			window.updateDisplay(ClientVariables.FPS);
-			WindowManager.update();
 		}
 	}
 

@@ -37,6 +37,7 @@ import org.lwjgl.glfw.GLFW;
 import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.core.CoreInfo;
 import net.luxvacuos.voxel.client.input.Mouse;
+import net.luxvacuos.voxel.client.rendering.api.glfw.Sync;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.glfw.WindowManager;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.effects.Final;
@@ -45,6 +46,7 @@ import net.luxvacuos.voxel.client.rendering.api.nanovg.effects.GaussianV;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.effects.MaskBlur;
 import net.luxvacuos.voxel.client.rendering.api.opengl.GLUtil;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Renderer;
+import net.luxvacuos.voxel.universal.core.TaskManager;
 
 public class NanoWindowManager implements IWindowManager {
 
@@ -53,22 +55,77 @@ public class NanoWindowManager implements IWindowManager {
 	private Composite composite;
 	private int width, height;
 	private IWindow focused;
+	private boolean running = true;
+	private double lastLoopTime;
 
-	public NanoWindowManager(Window window) {
-		this.window = window;
+	public NanoWindowManager(Window win) {
+		this.window = win;
 		windows = new ArrayList<>();
-		width = (int) (window.getWidth() * window.getPixelRatio());
-		height = (int) (window.getHeight() * window.getPixelRatio());
+		width = (int) (win.getWidth() * win.getPixelRatio());
+		height = (int) (win.getHeight() * win.getPixelRatio());
 
 		if (width > GLUtil.getTextureMaxSize())
 			width = GLUtil.getTextureMaxSize();
 		if (height > GLUtil.getTextureMaxSize())
 			height = GLUtil.getTextureMaxSize();
-		composite = new Composite(window, width, height);
+		composite = new Composite(win, width, height);
 		composite.addEffect(new MaskBlur(width, height));
 		composite.addEffect(new GaussianH(width, height));
 		composite.addEffect(new GaussianV(width, height));
 		composite.addEffect(new Final(width, height));
+
+		Thread th = new Thread(() -> {
+			lastLoopTime = WindowManager.getTime();
+			float delta = 0;
+			float accumulator = 0f;
+			float interval = 1f / ClientVariables.UPS;
+			Sync sync = new Sync();
+			while (running) {
+				delta = getDelta();
+				accumulator += delta;
+				while (accumulator >= interval) {
+					List<IWindow> tmp = new ArrayList<>();
+					IWindow toTop = null;
+					for (IWindow window : windows) {
+						if (window.shouldClose()) {
+							TaskManager.addTask(() -> {
+								window.dispose(this.window);
+							});
+							tmp.add(window);
+							continue;
+						}
+						if (window.insideWindow() && !window.isBackground() && Mouse.isButtonDown(0))
+							toTop = window;
+					}
+					windows.removeAll(tmp);
+					tmp.clear();
+					if (toTop != null) {
+						IWindow top = windows.get(windows.size() - 1);
+						if (top != toTop)
+							if (!top.isAlwaysOnTop()) {
+								windows.remove(toTop);
+								windows.add(toTop);
+							}
+					}
+					tmp.addAll(windows);
+					Collections.reverse(tmp);
+					for (IWindow window : tmp) {
+						if (window.insideWindow() && Mouse.isButtonDown(0)) {
+							focused = window;
+							break;
+						}
+					}
+					if (focused != null)
+						focused.update(interval, window, this);
+					tmp.clear();
+					if (window.getKeyboardHandler().isKeyPressed(GLFW.GLFW_KEY_F1))
+						ClientVariables.debug = !ClientVariables.debug;
+					accumulator -= interval;
+				}
+				sync.sync(ClientVariables.UPS);
+			}
+		});
+		th.start();
 	}
 
 	@Override
@@ -100,48 +157,16 @@ public class NanoWindowManager implements IWindowManager {
 
 	@Override
 	public void update(float delta) {
-		List<IWindow> tmp = new ArrayList<>();
-		IWindow toTop = null;
-		for (IWindow window : windows) {
-			if (window.shouldClose()) {
-				window.dispose(this.window);
-				tmp.add(window);
-				continue;
-			}
-			if (window.insideWindow() && !window.isBackground() && Mouse.isButtonDown(0))
-				toTop = window;
-		}
-		windows.removeAll(tmp);
-		tmp.clear();
-		if (toTop != null) {
-			IWindow top = windows.get(windows.size() - 1);
-			if (top != toTop)
-				if (!top.isAlwaysOnTop()) {
-					windows.remove(toTop);
-					windows.add(toTop);
-				}
-		}
-		tmp.addAll(windows);
-		Collections.reverse(tmp);
-		for (IWindow window : tmp) {
-			if (window.insideWindow() && Mouse.isButtonDown(0)) {
-				focused = window;
-				break;
-			}
-		}
-		if (focused != null)
-			focused.update(delta, window, this);
-		tmp.clear();
-		if (window.getKeyboardHandler().isKeyPressed(GLFW.GLFW_KEY_F1))
-			ClientVariables.debug = !ClientVariables.debug;
 	}
 
 	@Override
 	public void dispose() {
+		running = false;
 		composite.dispose(window);
 		for (IWindow window : windows) {
 			window.dispose(this.window);
 		}
+		windows.clear();
 	}
 
 	public List<IWindow> getWindows() {
@@ -150,24 +175,36 @@ public class NanoWindowManager implements IWindowManager {
 
 	@Override
 	public void addWindow(IWindow window) {
-		window.init(this.window);
-		window.update(0, this.window, this);
-		this.windows.add(window);
-		this.focused = window;
+		TaskManager.addTask(() -> {
+			window.init(this.window);
+			window.update(0, this.window, this);
+			this.windows.add(window);
+			this.focused = window;
+		});
 	}
 
 	@Override
 	public void addWindow(int ord, IWindow window) {
-		window.init(this.window);
-		window.update(0, this.window, this);
-		this.windows.add(ord, window);
-		this.focused = window;
+		TaskManager.addTask(() -> {
+			window.init(this.window);
+			window.update(0, this.window, this);
+			this.windows.add(ord, window);
+			this.focused = window;
+		});
 	}
 
 	@Override
 	public void removeWindow(IWindow window) {
-		window.dispose(this.window);
-		this.windows.remove(window);
+		TaskManager.addTask(() -> {
+			window.closeWindow();
+		});
+	}
+
+	public float getDelta() {
+		double time = WindowManager.getTime();
+		float delta = (float) (time - this.lastLoopTime);
+		this.lastLoopTime = time;
+		return delta;
 	}
 
 }

@@ -22,6 +22,7 @@ package net.luxvacuos.voxel.client.core;
 
 import java.io.File;
 
+import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Icon;
 import net.luxvacuos.voxel.client.rendering.api.glfw.PixelBufferHandle;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
@@ -88,6 +89,7 @@ public class ClientInternalSubsystem extends AbstractInternalSubsystem {
 		handle.setPixelBuffer(pb);
 		this.gameWindowID = WindowManager.createWindow(handle, ClientVariables.VSYNC);
 		Window window = WindowManager.getWindow(this.gameWindowID);
+		Mouse.setWindow(window);
 		WM.setWM(new NanoWindowManager(window));
 
 		ResourceLoader loader = window.getResourceLoader();

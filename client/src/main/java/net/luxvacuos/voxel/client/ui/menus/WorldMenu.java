@@ -124,7 +124,7 @@ public class WorldMenu extends RootComponent {
 				super.closeWindow();
 				root.setWindowClose(WindowClose.DISPOSE);
 				root.closeWindow();
-				StateMachine.setCurrentState(StateNames.SP_WORLD);
+				TaskManager.addTask(() -> StateMachine.setCurrentState(StateNames.SP_WORLD));
 			}
 		});
 

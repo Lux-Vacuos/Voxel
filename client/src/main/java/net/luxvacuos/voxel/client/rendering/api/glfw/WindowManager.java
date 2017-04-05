@@ -219,6 +219,7 @@ public final class WindowManager {
 
 	public static void update() {
 		glfwPollEvents();
+		Mouse.poll();
 	}
 
 	public static double getTime() {

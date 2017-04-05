@@ -22,7 +22,6 @@ package net.luxvacuos.voxel.client.input;
 
 import org.lwjgl.glfw.GLFW;
 
-import net.luxvacuos.voxel.client.core.ClientInternalSubsystem;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.glfw.WindowManager;
 
@@ -55,10 +54,12 @@ public class Mouse {
 	private static boolean clipPostionToDisplay = true;
 
 	private static boolean isMouseInsideWindow = true;
+	
+	private static Window window;
 
 	public static void addMoveEvent(double mouseX, double mouseY) {
 		latestX = (int) mouseX;
-		latestY = ClientInternalSubsystem.getInstance().getGameWindow().getHeight() - (int) mouseY;
+		latestY = window.getHeight() - (int) mouseY;
 
 		lastxEvents[queue.getNextPos()] = xEvents[queue.getNextPos()];
 		lastyEvents[queue.getNextPos()] = yEvents[queue.getNextPos()];
@@ -120,7 +121,6 @@ public class Mouse {
 		lastY = y;
 
 		if (!grabbed && clipPostionToDisplay) {
-			Window window = ClientInternalSubsystem.getInstance().getGameWindow();
 			if (latestX < 0)
 				latestX = 0;
 			if (latestY < 0)
@@ -136,7 +136,7 @@ public class Mouse {
 	}
 
 	public static void setGrabbed(boolean grab) {
-		GLFW.glfwSetInputMode(ClientInternalSubsystem.getInstance().getGameWindow().getID(), GLFW.GLFW_CURSOR,
+		GLFW.glfwSetInputMode(window.getID(), GLFW.GLFW_CURSOR,
 				grab ? GLFW.GLFW_CURSOR_DISABLED : GLFW.GLFW_CURSOR_NORMAL);
 		grabbed = grab;
 	}
@@ -146,7 +146,7 @@ public class Mouse {
 	}
 
 	public static boolean isButtonDown(int button) {
-		return GLFW.glfwGetMouseButton(ClientInternalSubsystem.getInstance().getGameWindow().getID(), button) == GLFW.GLFW_PRESS;
+		return GLFW.glfwGetMouseButton(window.getID(), button) == GLFW.GLFW_PRESS;
 	}
 
 	public static boolean next() {
@@ -220,7 +220,11 @@ public class Mouse {
 	}
 
 	public static void setCursorPosition(int new_x, int new_y) {
-		GLFW.glfwSetCursorPos(ClientInternalSubsystem.getInstance().getGameWindow().getID(), new_x, new_y);
+		GLFW.glfwSetCursorPos(window.getID(), new_x, new_y);
+	}
+	
+	public static void setWindow(Window window) {
+		Mouse.window = window;
 	}
 
 }

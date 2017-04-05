@@ -22,8 +22,6 @@ package net.luxvacuos.voxel.client.rendering.api.glfw;
 
 import static org.lwjgl.glfw.GLFW.glfwSwapBuffers;
 
-import net.luxvacuos.voxel.client.input.Mouse;
-
 public class Window extends AbstractWindow {
 
 	protected Window(long windowID, int width, int height) {
@@ -33,7 +31,6 @@ public class Window extends AbstractWindow {
 	@Override
 	public void updateDisplay(int fps) {
 		glfwSwapBuffers(this.windowID);
-		Mouse.poll();
 		this.displayUtils.checkErrors();
 		this.displayUtils.sync(fps);
 	}
