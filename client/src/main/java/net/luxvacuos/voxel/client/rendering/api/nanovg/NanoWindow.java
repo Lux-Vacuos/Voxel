@@ -119,7 +119,7 @@ public abstract class NanoWindow implements IWindow {
 			}
 		});
 		thread.setName(titleBar.getTitle());
-		thread.start();
+		// thread.start();
 	}
 
 	@Override
@@ -165,7 +165,8 @@ public abstract class NanoWindow implements IWindow {
 			appW = w - 4;
 			appH = h - 4;
 		}
-		lastUpdate += 1 * delta;
+		// lastUpdate += 1 * delta;
+		updateApp(delta, window);
 	}
 
 	@Override

@@ -91,7 +91,7 @@ public class NanoWindowManager implements IWindowManager {
 			}
 		});
 		th.setName("Nano Window Manager");
-		th.start();
+		//th.start();
 	}
 
 	@Override
@@ -166,6 +166,7 @@ public class NanoWindowManager implements IWindowManager {
 
 	@Override
 	public void update(float delta) {
+		updateThread(delta);
 	}
 
 	@Override
