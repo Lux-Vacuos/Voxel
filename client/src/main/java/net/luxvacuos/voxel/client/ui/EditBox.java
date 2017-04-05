@@ -40,7 +40,7 @@ public class EditBox extends Component {
 	@Override
 	public void render(Window window) {
 		NRendering.renderEditBox(window.getNVGID(), text, font, rootComponent.rootX + alignedX,
-				window.getHeight() - rootComponent.rootY - alignedY - h, w, h, fontSize);
+				window.getHeight() - rootComponent.rootY - alignedY - h, w, h, fontSize, selected);
 	}
 
 	@Override

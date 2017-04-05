@@ -91,7 +91,7 @@ public class NanoWindowManager implements IWindowManager {
 			}
 		});
 		th.setName("Nano Window Manager");
-		//th.start();
+		// th.start();
 	}
 
 	@Override
@@ -120,6 +120,9 @@ public class NanoWindowManager implements IWindowManager {
 			NRendering.renderText(window.getNVGID(),
 					"Used VRam: " + WindowManager.getUsedVRAM() + "KB " + " UPS: " + CoreInfo.ups, "Roboto-Bold",
 					NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE, 5, 95, 20,
+					NRendering.rgba(220, 220, 220, 255, NRendering.colorA));
+			NRendering.renderText(window.getNVGID(), "Used RAM: " + Runtime.getRuntime().totalMemory() / 1028 + "KB ",
+					"Roboto-Bold", NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE, 5, 110, 20,
 					NRendering.rgba(220, 220, 220, 255, NRendering.colorA));
 		}
 		this.window.endNVGFrame();

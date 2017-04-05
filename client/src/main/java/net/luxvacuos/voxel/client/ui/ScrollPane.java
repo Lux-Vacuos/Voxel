@@ -58,11 +58,11 @@ public class ScrollPane extends Component {
 		if (Mouse.isButtonDown(0)) {
 			if (Mouse.getX() > rootComponent.rootX + alignedX + w - 14
 					&& Mouse.getX() < rootComponent.rootX + alignedX + w && Mouse.getY() > rootComponent.rootY + alignedY + h - 14 && Mouse.getY() < rootComponent.rootY + alignedY + h) {
-				scroll -= 1 * delta * 4;
+				scroll -= 1 * delta * 2;
 			}
 			if (Mouse.getX() > rootComponent.rootX + alignedX + w - 14
 					&& Mouse.getX() < rootComponent.rootX + alignedX + w && Mouse.getY() > rootComponent.rootY + alignedY && Mouse.getY() < rootComponent.rootY + alignedY + 14) {
-				scroll += 1 * delta * 4;
+				scroll += 1 * delta * 2;
 			}
 		}
 		scroll -= Mouse.getDWheel() * delta * 4;

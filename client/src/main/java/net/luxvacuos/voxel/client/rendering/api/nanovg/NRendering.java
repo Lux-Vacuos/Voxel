@@ -281,24 +281,30 @@ public class NRendering {
 		memFree(imgw);
 	}
 
-	public static void renderEditBoxBase(long vg, float x, float y, float w, float h) {
-		NVGPaint bg = paintA;
-		nvgBoxGradient(vg, x + 1, y + 1 + 1.5f, w - 2, h - 2, 3, 4, rgba(255, 255, 255, 255, colorA),
-				rgba(32, 32, 32, 100, colorB), bg);
+	public static void renderEditBoxBase(long vg, float x, float y, float w, float h, boolean selected) {
+		nvgSave(vg);
 		nvgBeginPath(vg);
 		nvgRect(vg, x + 1, y + 1, w - 2, h - 2);
-		nvgFillPaint(vg, bg);
+		if (selected)
+			nvgFillColor(vg, rgba(255, 255, 255, 255, colorA));
+		else
+			nvgFillColor(vg, rgba(150, 150, 150, 255, colorA));
 		nvgFill(vg);
 
 		nvgBeginPath(vg);
 		nvgRect(vg, x + 0.5f, y + 0.5f, w - 1, h - 1);
-		nvgStrokeColor(vg, rgba(0, 0, 0, 100, colorA));
+		if (selected)
+			nvgStrokeColor(vg, rgba(200, 200, 200, 255, colorA));
+		else
+			nvgStrokeColor(vg, rgba(0, 0, 0, 100, colorA));
+		nvgStrokeWidth(vg, 2);
 		nvgStroke(vg);
+		nvgRestore(vg);
 	}
 
 	public static void renderEditBox(long vg, String text, String font, float x, float y, float w, float h,
-			float fontSize) {
-		renderEditBoxBase(vg, x, y, w, h);
+			float fontSize, boolean selected) {
+		renderEditBoxBase(vg, x, y, w, h, selected);
 		nvgSave(vg);
 		nvgScissor(vg, x, y, w, h);
 		nvgFontSize(vg, fontSize);
@@ -395,6 +401,8 @@ public class NRendering {
 
 			nvgBeginPath(vg);
 			nvgRect(vg, tx + 0.5f, ty + 0.5f, cardW - 1, cardH - 1);
+			nvgFillColor(vg, rgba(150, 150, 150, 255, colorA));
+			nvgFill(vg);
 			nvgStrokeWidth(vg, 1.0f);
 			nvgStrokeColor(vg, rgba(64, 64, 64, 255, colorA));
 			nvgStroke(vg);
