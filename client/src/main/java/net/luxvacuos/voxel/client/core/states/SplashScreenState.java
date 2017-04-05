@@ -55,7 +55,7 @@ public class SplashScreenState extends AbstractState {
 	public void init() {
 		Window window = ClientInternalSubsystem.getInstance().getGameWindow();
 
-		component = new RootComponent(-2, window.getHeight() + 33, window.getWidth() + 4, window.getHeight() + 35, "");
+		component = new RootComponent(-2, window.getHeight() + 33, window.getWidth() + 4, window.getHeight() + 35, "splash");
 		component.setDecorations(false);
 		component.setBackgroundColor(1, 1, 1, 1);
 		component.setBlurBehind(false);

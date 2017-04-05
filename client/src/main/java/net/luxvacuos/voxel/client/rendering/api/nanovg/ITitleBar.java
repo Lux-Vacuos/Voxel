@@ -38,4 +38,6 @@ public interface ITitleBar {
 
 	public void setEnabled(boolean enabled);
 
+	public String getTitle();
+
 }

@@ -51,7 +51,7 @@ public abstract class NanoWindow implements IWindow {
 	private NVGLUFramebuffer fbo;
 	private double lastLoopTime;
 	private Thread thread;
-	private int UPS = 30;
+	private int UPS = 60;
 
 	public NanoWindow(float x, float y, float w, float h, String title) {
 		this.x = x;
@@ -116,6 +116,7 @@ public abstract class NanoWindow implements IWindow {
 				sync.sync(UPS);
 			}
 		});
+		thread.setName(titleBar.getTitle());
 		thread.start();
 	}
 

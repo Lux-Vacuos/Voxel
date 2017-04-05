@@ -21,8 +21,6 @@
 package net.luxvacuos.voxel.client.core;
 
 import static org.lwjgl.glfw.GLFW.glfwInit;
-import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_RENDERER;
 import static org.lwjgl.opengl.GL11.GL_VENDOR;
 import static org.lwjgl.opengl.GL11.GL_VERSION;
@@ -50,7 +48,6 @@ import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.glfw.WindowManager;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.Timers;
-import net.luxvacuos.voxel.client.rendering.api.opengl.Renderer;
 import net.luxvacuos.voxel.universal.api.ModsHandler;
 import net.luxvacuos.voxel.universal.bootstrap.AbstractBootstrap;
 import net.luxvacuos.voxel.universal.core.AbstractVoxel;
@@ -108,13 +105,11 @@ public class Voxel extends AbstractVoxel {
 
 		ClientVariables.SETTINGS_PATH = bootstrap.getPrefix() + "/config/settings.conf";
 		ClientVariables.WORLD_PATH = bootstrap.getPrefix() + "/world/";
-
 		internalSubsystem = ClientInternalSubsystem.getInstance();
 		internalSubsystem.preInit();
 		ClientInternalSubsystem.getInstance().getGameWindow().setVisible(true);
-		Renderer.clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		Renderer.clearColors(1, 1, 1, 1);
 		ClientInternalSubsystem.getInstance().getGameWindow().updateDisplay(ClientVariables.FPS);
+		StateMachine.registerState(new SplashScreenState());
 		Timers.initDebugDisplay();
 		CoreInfo.platform = bootstrap.getPlatform();
 		CoreInfo.LWJGLVer = Version.getVersion();
@@ -150,7 +145,6 @@ public class Voxel extends AbstractVoxel {
 		TaskManager.addTask(() -> StateMachine.registerState(new MPWorldState()));
 		if (ClientVariables.TEST_MODE)
 			TaskManager.addTask(() -> StateMachine.registerState(new TestState()));
-		StateMachine.registerState(new SplashScreenState());
 		modsHandler.init();
 	}
 

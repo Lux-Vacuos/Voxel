@@ -101,17 +101,16 @@ public class ClientInternalSubsystem extends AbstractInternalSubsystem {
 		loader.loadNVGFont("Poppins-Bold", "Poppins-Bold");
 		loader.loadNVGFont("Poppins-SemiBold", "Poppins-SemiBold");
 		loader.loadNVGFont("Entypo", "Entypo", 40);
+	}
 
+	@Override
+	public void init() {
 		TaskManager.addTask(() -> ShaderIncludes.processIncludeFile("common.isl"));
 		TaskManager.addTask(() -> ShaderIncludes.processIncludeFile("lighting.isl"));
 		TaskManager.addTask(() -> ShaderIncludes.processIncludeFile("materials.isl"));
 		TaskManager.addTask(
 				() -> DefaultData.init(ClientInternalSubsystem.getInstance().getGameWindow().getResourceLoader()));
 		TaskManager.addTask(() -> ParticleDomain.init());
-	}
-
-	@Override
-	public void init() {
 		if (!ClientVariables.WSL) {
 			TaskManager.addTask(() -> {
 				try {

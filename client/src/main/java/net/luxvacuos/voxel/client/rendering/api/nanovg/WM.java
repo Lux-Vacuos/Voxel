@@ -99,16 +99,6 @@ public final class WM {
 		win9.toggleTitleBar();
 		win9.setDecorations(false);
 
-		win0.setAlwaysOnTop(true);
-		win1.setAlwaysOnTop(true);
-		win2.setAlwaysOnTop(true);
-		win3.setAlwaysOnTop(true);
-		win4.setAlwaysOnTop(true);
-		win5.setAlwaysOnTop(true);
-		win6.setAlwaysOnTop(true);
-		win7.setAlwaysOnTop(true);
-		win8.setAlwaysOnTop(true);
-		win9.setAlwaysOnTop(true);
 		WM.getWM().addWindow(win0);
 		WM.getWM().addWindow(win1);
 		WM.getWM().addWindow(win2);

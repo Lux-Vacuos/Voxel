@@ -108,4 +108,9 @@ public class TitleBar implements ITitleBar {
 		this.drag = event;
 	}
 
+	@Override
+	public String getTitle() {
+		return title;
+	}
+
 }

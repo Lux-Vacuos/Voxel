@@ -84,61 +84,31 @@ public class NanoWindowManager implements IWindowManager {
 				delta = getDelta();
 				accumulator += delta;
 				while (accumulator >= interval) {
-					List<IWindow> tmp = new ArrayList<>();
-					IWindow toTop = null;
-					for (IWindow window : windows) {
-						if (window.shouldClose()) {
-							TaskManager.addTask(() -> {
-								window.dispose(this.window);
-							});
-							tmp.add(window);
-							continue;
-						}
-						if (window.insideWindow() && !window.isBackground() && Mouse.isButtonDown(0))
-							toTop = window;
-					}
-					windows.removeAll(tmp);
-					tmp.clear();
-					if (toTop != null) {
-						IWindow top = windows.get(windows.size() - 1);
-						if (top != toTop)
-							if (!top.isAlwaysOnTop()) {
-								windows.remove(toTop);
-								windows.add(toTop);
-							}
-					}
-					tmp.addAll(windows);
-					Collections.reverse(tmp);
-					for (IWindow window : tmp) {
-						if (window.insideWindow() && Mouse.isButtonDown(0)) {
-							focused = window;
-							break;
-						}
-					}
-					if (focused != null)
-						focused.update(interval, window, this);
-					tmp.clear();
-					if (window.getKeyboardHandler().isKeyPressed(GLFW.GLFW_KEY_F1))
-						ClientVariables.debug = !ClientVariables.debug;
+					updateThread(interval);
 					accumulator -= interval;
 				}
 				sync.sync(ClientVariables.UPS);
 			}
 		});
+		th.setName("Nano Window Manager");
 		th.start();
 	}
 
 	@Override
 	public void render() {
-		for (IWindow window : windows) {
-			window.render(this.window, this);
+		synchronized (windows) {
+			for (IWindow window : windows) {
+				window.render(this.window, this);
+			}
 		}
 		glDisable(GL_BLEND);
 		nvgluBindFramebuffer(window.getNVGID(), composite.getFbos()[0]);
 		Renderer.clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		nvgluBindFramebuffer(window.getNVGID(), null);
-		for (IWindow window : windows) {
-			composite.render(window, this.window);
+		synchronized (windows) {
+			for (IWindow window : windows) {
+				composite.render(window, this.window);
+			}
 		}
 		this.window.beingNVGFrame();
 		NRendering.renderImage(this.window.getNVGID(), 0, 0, composite.getFbos()[0].image(), 1f);
@@ -153,6 +123,45 @@ public class NanoWindowManager implements IWindowManager {
 					NRendering.rgba(220, 220, 220, 255, NRendering.colorA));
 		}
 		this.window.endNVGFrame();
+	}
+
+	private void updateThread(float delta) {
+		List<IWindow> tmp = new ArrayList<>();
+		IWindow toTop = null;
+		for (IWindow window : windows) {
+			if (window.shouldClose()) {
+				TaskManager.addTask(() -> {
+					window.dispose(this.window);
+				});
+				tmp.add(window);
+				continue;
+			}
+			if (window.insideWindow() && !window.isBackground() && Mouse.isButtonDown(0))
+				toTop = window;
+		}
+		windows.removeAll(tmp);
+		tmp.clear();
+		if (toTop != null) {
+			IWindow top = windows.get(windows.size() - 1);
+			if (top != toTop)
+				if (!top.isAlwaysOnTop()) {
+					windows.remove(toTop);
+					windows.add(toTop);
+				}
+		}
+		tmp.addAll(windows);
+		Collections.reverse(tmp);
+		for (IWindow window : tmp) {
+			if (window.insideWindow() && Mouse.isButtonDown(0)) {
+				focused = window;
+				break;
+			}
+		}
+		if (focused != null)
+			focused.update(delta, window, this);
+		tmp.clear();
+		if (window.getKeyboardHandler().isKeyPressed(GLFW.GLFW_KEY_F1))
+			ClientVariables.debug = !ClientVariables.debug;
 	}
 
 	@Override
