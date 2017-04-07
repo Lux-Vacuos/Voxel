@@ -38,11 +38,6 @@ import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.TessellatorBasicS
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.TessellatorShader;
 import net.luxvacuos.voxel.client.rendering.utils.BlockFaceAtlas;
 import net.luxvacuos.voxel.client.resources.ResourceLoader;
-import net.luxvacuos.voxel.client.sound.LibraryLWJGLOpenAL;
-import net.luxvacuos.voxel.client.sound.soundsystem.SoundSystem;
-import net.luxvacuos.voxel.client.sound.soundsystem.SoundSystemConfig;
-import net.luxvacuos.voxel.client.sound.soundsystem.SoundSystemException;
-import net.luxvacuos.voxel.client.sound.soundsystem.codecs.CodecJOgg;
 import net.luxvacuos.voxel.client.util.LoggerSoundSystem;
 import net.luxvacuos.voxel.client.world.block.BlocksResources;
 import net.luxvacuos.voxel.client.world.block.RenderBlock;
@@ -52,6 +47,11 @@ import net.luxvacuos.voxel.universal.core.TaskManager;
 import net.luxvacuos.voxel.universal.material.BlockMaterial;
 import net.luxvacuos.voxel.universal.material.MaterialModder;
 import net.luxvacuos.voxel.universal.world.block.Blocks;
+import paulscode.sound.SoundSystem;
+import paulscode.sound.SoundSystemConfig;
+import paulscode.sound.SoundSystemException;
+import paulscode.sound.codecs.CodecJOgg;
+import paulscode.sound.libraries.LibraryLWJGLOpenAL;
 
 /**
  * 

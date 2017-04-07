@@ -22,7 +22,7 @@ package net.luxvacuos.voxel.client.util;
 
 import static net.luxvacuos.igl.Logger.*;
 
-import net.luxvacuos.voxel.client.sound.soundsystem.SoundSystemLogger;
+import paulscode.sound.SoundSystemLogger;
 
 public class LoggerSoundSystem extends SoundSystemLogger {
 
