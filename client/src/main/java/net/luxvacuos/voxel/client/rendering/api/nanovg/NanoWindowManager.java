@@ -160,6 +160,9 @@ public class NanoWindowManager implements IWindowManager {
 				break;
 			}
 		}
+		for (IWindow window : tmp) {
+			window.alwaysUpdate(delta, this.window, this);
+		}
 		if (focused != null)
 			focused.update(delta, window, this);
 		tmp.clear();

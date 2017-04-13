@@ -25,7 +25,7 @@ import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 
 public class TitleBar implements ITitleBar {
 
-	public static final float HEIGHT = 30;
+	public static final float HEIGHT = 33;
 
 	private boolean enabled = true;
 	private String title, font = "Roboto-Bold";

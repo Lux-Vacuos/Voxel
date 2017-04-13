@@ -39,6 +39,8 @@ public interface IWindow {
 
 	public void updateApp(float delta, Window window);
 
+	public void alwaysUpdateApp(float delta, Window window);
+
 	public void disposeApp(Window window);
 
 	public void onClose();
@@ -46,6 +48,8 @@ public interface IWindow {
 	public void render(Window window, IWindowManager nanoWindowManager);
 
 	public void update(float delta, Window window, IWindowManager nanoWindowManager);
+
+	public void alwaysUpdate(float delta, Window window, IWindowManager nanoWindowManager);
 
 	public void dispose(Window window);
 

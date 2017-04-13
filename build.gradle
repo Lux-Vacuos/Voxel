@@ -22,7 +22,6 @@ project(":client") {
 		compile project(':universal')
 		compile project(':assets')
 		compile 'de.jarnbjo:j-ogg-all:1.0.0'
-		compile 'org.jcraft:jorbis:0.0.17'
 
 		// LWJGL dependencies
 		compile "org.lwjgl:lwjgl:${lwjglVersion}"

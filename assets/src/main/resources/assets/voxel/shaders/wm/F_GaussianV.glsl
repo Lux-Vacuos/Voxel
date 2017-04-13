@@ -32,24 +32,25 @@ void main(void){
     vec4 result = vec4(0.0);
     vec4 mask = texture(image, textureCoords);
     if(mask.a == 0) {
-        result += textureLod(image, blurTexCoords[0], 0) * 0.024418;
-        result += textureLod(image, blurTexCoords[1], 0) * 0.032928;
-        result += textureLod(image, blurTexCoords[2], 0) * 0.042669;
-        result += textureLod(image, blurTexCoords[3], 0) * 0.05313;
-        result += textureLod(image, blurTexCoords[4], 0) * 0.06357;
-        result += textureLod(image, blurTexCoords[5], 0) * 0.073088;
-        result += textureLod(image, blurTexCoords[6], 0) * 0.080748;
-        result += textureLod(image, blurTexCoords[7], 0) * 0.085724;
-        result += textureLod(image, blurTexCoords[8], 0) * 0.08745;
-        result += textureLod(image, blurTexCoords[9], 0) * 0.085724;
-        result += textureLod(image, blurTexCoords[10], 0) * 0.080748;
-        result += textureLod(image, blurTexCoords[11], 0) * 0.073088;
-        result += textureLod(image, blurTexCoords[12], 0) * 0.06357;
-        result += textureLod(image, blurTexCoords[13], 0) * 0.05313;
-        result += textureLod(image, blurTexCoords[14], 0) * 0.042669;
-        result += textureLod(image, blurTexCoords[15], 0) * 0.032928;
-        result += textureLod(image, blurTexCoords[16], 0) * 0.024418;
+        result += texture(image, blurTexCoords[0]) * 0.024418;
+        result += texture(image, blurTexCoords[1]) * 0.032928;
+        result += texture(image, blurTexCoords[2]) * 0.042669;
+        result += texture(image, blurTexCoords[3]) * 0.05313;
+        result += texture(image, blurTexCoords[4]) * 0.06357;
+        result += texture(image, blurTexCoords[5]) * 0.073088;
+        result += texture(image, blurTexCoords[6]) * 0.080748;
+        result += texture(image, blurTexCoords[7]) * 0.085724;
+        result += texture(image, blurTexCoords[8]) * 0.08745;
+        result += texture(image, blurTexCoords[9]) * 0.085724;
+        result += texture(image, blurTexCoords[10]) * 0.080748;
+        result += texture(image, blurTexCoords[11]) * 0.073088;
+        result += texture(image, blurTexCoords[12]) * 0.06357;
+        result += texture(image, blurTexCoords[13]) * 0.05313;
+        result += texture(image, blurTexCoords[14]) * 0.042669;
+        result += texture(image, blurTexCoords[15]) * 0.032928;
+        result += texture(image, blurTexCoords[16]) * 0.024418;
         out_Color = result;
+        out_Color.a = 0;
     } else {
         out_Color = texture(image, textureCoords);
     }

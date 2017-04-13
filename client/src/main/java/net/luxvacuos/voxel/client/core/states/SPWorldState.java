@@ -44,6 +44,7 @@ import net.luxvacuos.voxel.client.ecs.entities.Sun;
 import net.luxvacuos.voxel.client.input.KeyboardHandler;
 import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
+import net.luxvacuos.voxel.client.rendering.api.nanovg.NRendering;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.WM;
 import net.luxvacuos.voxel.client.rendering.api.opengl.BlockOutlineRenderer;
 import net.luxvacuos.voxel.client.rendering.api.opengl.ParticleDomain;
@@ -80,7 +81,7 @@ public class SPWorldState extends AbstractState {
 	@Override
 	public void start() {
 		super.start();
-		
+
 		this.world = new RenderWorld(ClientVariables.worldNameToLoad);
 		ClientVariables.worldNameToLoad = "";
 		Window window = ClientInternalSubsystem.getInstance().getGameWindow();
@@ -114,7 +115,8 @@ public class SPWorldState extends AbstractState {
 		Renderer.render(world.getActiveDimension().getEntitiesManager().getEntities(), ParticleDomain.getParticles(),
 				camera, sun.getCamera(), world.getActiveDimension().getWorldSimulator(), sun.getSunPosition(),
 				sun.getInvertedSunPosition(), 0);
-		gameWindow = new GameWindow(-2, window.getHeight() + 33, window.getWidth() + 4, window.getHeight() + 35);
+		gameWindow = new GameWindow(-2 - NRendering.BORDER_SIZE / 2f, ClientVariables.HEIGHT + 2 + NRendering.BORDER_SIZE / 2f,
+				ClientVariables.WIDTH + 4 + NRendering.BORDER_SIZE, ClientVariables.HEIGHT + 4 + NRendering.BORDER_SIZE);
 		WM.getWM().addWindow(0, gameWindow);
 	}
 
@@ -195,7 +197,8 @@ public class SPWorldState extends AbstractState {
 				kbh.ignoreKeyUntilRelease(GLFW.GLFW_KEY_ESCAPE);
 				((PlayerCamera) camera).unlockMouse();
 				ClientVariables.paused = true;
-				pauseWindow = new PauseWindow(20, window.getHeight() - 20, window.getWidth() - 40, window.getHeight() - 40);
+				pauseWindow = new PauseWindow(20, window.getHeight() - 20, window.getWidth() - 40,
+						window.getHeight() - 40);
 				WM.getWM().addWindow(pauseWindow);
 			}
 		} else if (ClientVariables.exitWorld) {

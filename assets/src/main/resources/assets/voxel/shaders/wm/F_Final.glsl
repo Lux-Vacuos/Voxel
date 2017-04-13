@@ -31,4 +31,5 @@ void main(void){
     vec4 source = texture(image,textureCoords);
     vec4 window = texture(window,textureCoords);
     out_Color = mix(source, window, window.a);
+    out_Color.a = 1;
 }

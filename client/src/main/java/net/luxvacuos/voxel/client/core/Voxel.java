@@ -269,9 +269,9 @@ public class Voxel extends AbstractVoxel {
 		Logger.log("Cleaning Resources");
 		internalSubsystem.dispose();
 		modsHandler.dispose();
-		WindowManager.closeAllDisplays();
 		GLFW.glfwSetErrorCallback(null).free();
 		StateMachine.dispose();
+		WindowManager.closeAllDisplays();
 	}
 
 }

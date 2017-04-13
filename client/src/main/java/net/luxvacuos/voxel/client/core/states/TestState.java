@@ -44,6 +44,7 @@ import net.luxvacuos.voxel.client.ecs.entities.Sun;
 import net.luxvacuos.voxel.client.input.KeyboardHandler;
 import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
+import net.luxvacuos.voxel.client.rendering.api.nanovg.NRendering;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.WM;
 import net.luxvacuos.voxel.client.rendering.api.opengl.ParticleDomain;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Renderer;
@@ -218,7 +219,6 @@ public class TestState extends AbstractState {
 
 	@Override
 	public void start() {
-		Window window = ClientInternalSubsystem.getInstance().getGameWindow();
 		Renderer.setShadowPass((camera, sunCamera, frustum, shadowMap) -> {
 			tess.drawShadow(sunCamera);
 		});
@@ -226,7 +226,7 @@ public class TestState extends AbstractState {
 		Renderer.setDeferredPass((camera, sunCamera, frustum, shadowMap) -> {
 			tess.draw(camera, sunCamera, worldSimulation, shadowMap);
 		});
-		
+
 		RenderBlock t = new RenderBlock(new BlockMaterial("test"), new BlockFaceAtlas("leaves"));
 		t.setID(1);
 		tess.begin();
@@ -249,7 +249,10 @@ public class TestState extends AbstractState {
 		((PlayerCamera) camera).setMouse();
 		Renderer.render(engine.getEntities(), ParticleDomain.getParticles(), camera, sun.getCamera(), worldSimulation,
 				sun.getSunPosition(), sun.getInvertedSunPosition(), 0);
-		gameWindow = new GameWindow(-2, window.getHeight() + 33, window.getWidth() + 4, window.getHeight() + 35);
+		gameWindow = new GameWindow(-2 - NRendering.BORDER_SIZE / 2f,
+				ClientVariables.HEIGHT + 2 + NRendering.BORDER_SIZE / 2f,
+				ClientVariables.WIDTH + 4 + NRendering.BORDER_SIZE,
+				ClientVariables.HEIGHT + 4 + NRendering.BORDER_SIZE);
 		WM.getWM().addWindow(0, gameWindow);
 	}
 

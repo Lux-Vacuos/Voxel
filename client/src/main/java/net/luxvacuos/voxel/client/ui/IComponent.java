@@ -30,5 +30,7 @@ public interface IComponent extends IDisposable {
 	public void render(Window window);
 	
 	public void update(float delta, Window window);
+	
+	public void alwaysUpdate(float delta, Window window);
 
 }

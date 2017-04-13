@@ -67,9 +67,8 @@ public class ClientInternalSubsystem extends AbstractInternalSubsystem {
 		return instance;
 	}
 
-	private long gameWindowID;
-
 	private SoundSystem soundSystem;
+	private Window window;
 
 	private ClientInternalSubsystem() {
 	}
@@ -87,8 +86,8 @@ public class ClientInternalSubsystem extends AbstractInternalSubsystem {
 		PixelBufferHandle pb = new PixelBufferHandle();
 		pb.setSrgbCapable(1);
 		handle.setPixelBuffer(pb);
-		this.gameWindowID = WindowManager.createWindow(handle, ClientVariables.VSYNC);
-		Window window = WindowManager.getWindow(this.gameWindowID);
+		long gameWindowID = WindowManager.createWindow(handle, ClientVariables.VSYNC);
+		window = WindowManager.getWindow(gameWindowID);
 		Mouse.setWindow(window);
 		WM.setWM(new NanoWindowManager(window));
 
@@ -110,20 +109,18 @@ public class ClientInternalSubsystem extends AbstractInternalSubsystem {
 		TaskManager.addTask(() -> ShaderIncludes.processIncludeFile("materials.isl"));
 		TaskManager.addTask(
 				() -> DefaultData.init(ClientInternalSubsystem.getInstance().getGameWindow().getResourceLoader()));
-		TaskManager.addTask(() -> ParticleDomain.init());
 		if (!ClientVariables.WSL) {
-			TaskManager.addTask(() -> {
-				try {
-					SoundSystemConfig.addLibrary(LibraryLWJGLOpenAL.class);
-					SoundSystemConfig.setCodec("ogg", CodecJOgg.class);
-				} catch (SoundSystemException e) {
-					e.printStackTrace();
-				}
-			});
+			try {
+				SoundSystemConfig.addLibrary(LibraryLWJGLOpenAL.class);
+				SoundSystemConfig.setCodec("ogg", CodecJOgg.class);
+			} catch (SoundSystemException e) {
+				e.printStackTrace();
+			}
 			SoundSystemConfig.setSoundFilesPackage("assets/" + ClientVariables.assets + "/sounds/");
 			SoundSystemConfig.setLogger(new LoggerSoundSystem());
-			TaskManager.addTask(() -> soundSystem = new SoundSystem());
+			soundSystem = new SoundSystem();
 		}
+		TaskManager.addTask(() -> ParticleDomain.init());
 		TaskManager.addTask(() -> Renderer.init(getGameWindow()));
 		TaskManager.addTask(() -> BlocksResources.init(getGameWindow().getResourceLoader()));
 		TaskManager.addTask(() -> {
@@ -165,21 +162,17 @@ public class ClientInternalSubsystem extends AbstractInternalSubsystem {
 	@Override
 	public void dispose() {
 		gameSettings.save();
+		DefaultData.dispose();
 		if (!ClientVariables.WSL)
 			soundSystem.cleanup();
-		DefaultData.dispose();
 		TessellatorShader.getShader().dispose();
 		TessellatorBasicShader.getShader().dispose();
 		Renderer.cleanUp();
 		WM.getWM().dispose();
 	}
 
-	public SoundSystem getSoundSystem() {
-		return soundSystem;
-	}
-
 	public Window getGameWindow() {
-		return WindowManager.getWindow(this.gameWindowID);
+		return window;
 	}
 
 }

@@ -90,10 +90,10 @@ public abstract class NanoWindow implements IWindow {
 				this.y += Mouse.getDY();
 			}
 		});
-		appX = x + 2;
-		appY = y - 3 - TitleBar.HEIGHT;
-		appW = w - 4;
-		appH = h - 5 - TitleBar.HEIGHT;
+		appX = x + 2 + NRendering.BORDER_SIZE / 2f;
+		appY = y - TitleBar.HEIGHT;
+		appW = w - 4 - NRendering.BORDER_SIZE;
+		appH = h - 2 - TitleBar.HEIGHT - NRendering.BORDER_SIZE / 2f;
 	}
 
 	@Override
@@ -154,19 +154,24 @@ public abstract class NanoWindow implements IWindow {
 				}
 			}
 		}
-		if (titleBar.isEnabled()) {
-			appX = x + 2;
-			appY = y - 3 - TitleBar.HEIGHT;
-			appW = w - 4;
-			appH = h - 5 - TitleBar.HEIGHT;
-		} else {
-			appX = x + 2;
-			appY = y - 2;
-			appW = w - 4;
-			appH = h - 4;
-		}
 		// lastUpdate += 1 * delta;
 		updateApp(delta, window);
+	}
+	
+	@Override
+	public void alwaysUpdate(float delta, Window window, IWindowManager nanoWindowManager) {
+		if (titleBar.isEnabled()) {
+			appX = x + 2 + NRendering.BORDER_SIZE / 2f;
+			appY = y - TitleBar.HEIGHT;
+			appW = w - 4 - NRendering.BORDER_SIZE;
+			appH = h - 2 - TitleBar.HEIGHT - NRendering.BORDER_SIZE / 2f;
+		} else {
+			appX = x + 2 + NRendering.BORDER_SIZE / 2f;
+			appY = y - 2 - NRendering.BORDER_SIZE / 2f;
+			appW = w - 4 - NRendering.BORDER_SIZE;
+			appH = h - 4 - NRendering.BORDER_SIZE;
+		}
+		alwaysUpdateApp(delta, window);
 	}
 
 	@Override

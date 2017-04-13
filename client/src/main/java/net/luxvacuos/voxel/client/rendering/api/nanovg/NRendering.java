@@ -20,7 +20,7 @@
 
 package net.luxvacuos.voxel.client.rendering.api.nanovg;
 
-import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_CENTER;
+import static org.lwjgl.nanovg.NanoVG.*;
 import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_LEFT;
 import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_MIDDLE;
 import static org.lwjgl.nanovg.NanoVG.NVG_CCW;
@@ -109,6 +109,8 @@ public class NRendering {
 
 	private static final FloatBuffer lineh = BufferUtils.createFloatBuffer(1);
 	private static final NVGTextRow.Buffer rows = NVGTextRow.create(3);
+	
+	public static final float BORDER_SIZE = 10;
 
 	private static boolean isBlack(NVGColor col) {
 		return col.r() == 0.0f && col.g() == 0.0f && col.b() == 0.0f && col.a() == 0.0f;
@@ -156,13 +158,13 @@ public class NRendering {
 		nvgFontFace(vg, font);
 		nvgTextAlign(vg, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
 
-		nvgFontBlur(vg, 2);
+		nvgFontBlur(vg, 4);
 		nvgFillColor(vg, rgba(0, 0, 0, 128, colorA));
-		nvgText(vg, x + w / 2, y + 16 + 1, title);
+		nvgText(vg, x + w / 2, y + TitleBar.HEIGHT / 2f + 1, title);
 
 		nvgFontBlur(vg, 0);
-		nvgFillColor(vg, rgba(220, 220, 220, 255, colorA));
-		nvgText(vg, x + w / 2, y + 16, title);
+		nvgFillColor(vg, rgba(255, 255, 255, 255, colorA));
+		nvgText(vg, x + w / 2, y + TitleBar.HEIGHT / 2f, title);
 
 		nvgRestore(vg);
 	}
@@ -177,11 +179,11 @@ public class NRendering {
 			nvgBeginPath(vg);
 			nvgRect(vg, x, y, w, h);
 			if (titleBar)
-				nvgRect(vg, x + 2, y + 33, w - 4, h - 35);
+				nvgRect(vg, x + 2 + BORDER_SIZE / 2f, y + TitleBar.HEIGHT, w - 4 - BORDER_SIZE, h - 35 - BORDER_SIZE);
 			else
-				nvgRect(vg, x + 2, y + 2, w - 4, h - 4);
+				nvgRect(vg, x + 2 + BORDER_SIZE / 2f, y + 2 + BORDER_SIZE / 2f, w - 4 - BORDER_SIZE, h - 4 - BORDER_SIZE);
 			nvgPathWinding(vg, NVG_HOLE);
-			nvgFillColor(vg, rgba(120, 120, 120, 100, colorA));
+			nvgFillColor(vg, rgba(120, 120, 120, 120, colorA));
 			nvgFill(vg);
 		}
 
@@ -190,9 +192,9 @@ public class NRendering {
 		case SOLID:
 			nvgBeginPath(vg);
 			if (titleBar)
-				nvgRect(vg, x + 2, y + 33, w - 4, h - 35);
+				nvgRect(vg, x + 2 + BORDER_SIZE / 2f, y + TitleBar.HEIGHT, w - 4 - BORDER_SIZE, h - 35 - BORDER_SIZE / 2f);
 			else
-				nvgRect(vg, x + 2, y + 2, w - 4, h - 4);
+				nvgRect(vg, x + 2 + BORDER_SIZE / 2f, y + 2 + BORDER_SIZE / 2f, w - 4 - BORDER_SIZE, h - 4 - BORDER_SIZE);
 			nvgFillColor(vg, backgroundColor);
 			nvgFill(vg);
 			break;

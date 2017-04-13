@@ -20,20 +20,17 @@
 
 package net.luxvacuos.voxel.client.rendering.api.nanovg.shaders;
 
-import net.luxvacuos.igl.vector.Matrix4d;
 import net.luxvacuos.igl.vector.Vector2f;
 import net.luxvacuos.igl.vector.Vector4f;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.ShaderProgram;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.Attribute;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.UniformBoolean;
-import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.UniformMatrix;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.UniformSampler;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.UniformVec2;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.UniformVec4;
 
 public class WindowManagerShader extends ShaderProgram {
 
-	private UniformMatrix transformationMatrix = new UniformMatrix("transformationMatrix");
 	private UniformSampler image = new UniformSampler("image");
 	private UniformSampler window = new UniformSampler("window");
 	private UniformVec2 resolution = new UniformVec2("resolution");
@@ -42,7 +39,7 @@ public class WindowManagerShader extends ShaderProgram {
 
 	public WindowManagerShader(String type) {
 		super("wm/V_" + type + ".glsl", "wm/F_" + type + ".glsl", new Attribute(0, "position"));
-		super.storeAllUniformLocations(transformationMatrix, image, window, resolution, frame, blurBehind);
+		super.storeAllUniformLocations(image, window, resolution, frame, blurBehind);
 		connectTextureUnits();
 	}
 
@@ -63,10 +60,6 @@ public class WindowManagerShader extends ShaderProgram {
 
 	public void loadBlurBehind(boolean blur) {
 		blurBehind.loadBoolean(blur);
-	}
-
-	public void loadTransformation(Matrix4d matrix) {
-		transformationMatrix.loadMatrix(matrix);
 	}
 
 }

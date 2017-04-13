@@ -31,9 +31,13 @@ public abstract class Component implements IComponent {
 	@Override
 	public void init() {
 	}
-
+	
 	@Override
 	public void update(float delta, Window window) {
+	}
+
+	@Override
+	public void alwaysUpdate(float delta, Window window) {
 		// TODO: Optimize this Sh*t
 		switch (alignment) {
 		case LEFT:

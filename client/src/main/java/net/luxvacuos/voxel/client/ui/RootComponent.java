@@ -51,12 +51,19 @@ public class RootComponent extends NanoWindow {
 
 	@Override
 	public void updateApp(float delta, Window window) {
+		for (Component component : components) {
+			component.update(delta, window);
+		}
+	}
+	
+	@Override
+	public void alwaysUpdateApp(float delta, Window window) {
 		root.rootX = appX;
 		root.rootY = appY - appH;
 		root.rootW = appW;
 		root.rootH = appH;
 		for (Component component : components) {
-			component.update(delta, window);
+			component.alwaysUpdate(delta, window);
 		}
 	}
 

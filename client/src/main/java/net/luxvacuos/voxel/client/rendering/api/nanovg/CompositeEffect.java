@@ -34,13 +34,11 @@ import static org.lwjgl.opengl.GL30.glBindVertexArray;
 
 import org.lwjgl.nanovg.NVGLUFramebuffer;
 
-import net.luxvacuos.igl.vector.Vector2d;
 import net.luxvacuos.igl.vector.Vector2f;
 import net.luxvacuos.igl.vector.Vector4f;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.shaders.WindowManagerShader;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.RawModel;
-import net.luxvacuos.voxel.client.util.Maths;
 import net.luxvacuos.voxel.universal.resources.IDisposable;
 
 public abstract class CompositeEffect implements IDisposable {
@@ -51,7 +49,6 @@ public abstract class CompositeEffect implements IDisposable {
 		shader = new WindowManagerShader(name);
 		shader.start();
 		shader.loadResolution(new Vector2f(width, height));
-		shader.loadTransformation(Maths.createTransformationMatrix(new Vector2d(0, 0), new Vector2d(1, 1)));
 		shader.stop();
 	}
 
