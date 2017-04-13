@@ -91,15 +91,15 @@ public abstract class NanoWindow implements IWindow {
 			}
 		});
 		if (titleBar.isEnabled()) {
-			appX = x + 2 + NRendering.BORDER_SIZE / 2f;
+			appX = x + NRendering.BORDER_SIZE / 2f;
 			appY = y - TitleBar.HEIGHT;
-			appW = w - 4 - NRendering.BORDER_SIZE;
-			appH = h - 2 - TitleBar.HEIGHT - NRendering.BORDER_SIZE / 2f;
+			appW = w - NRendering.BORDER_SIZE;
+			appH = h - TitleBar.HEIGHT - NRendering.BORDER_SIZE / 2f;
 		} else {
-			appX = x + 2 + NRendering.BORDER_SIZE / 2f;
-			appY = y - 2 - NRendering.BORDER_SIZE / 2f;
-			appW = w - 4 - NRendering.BORDER_SIZE;
-			appH = h - 4 - NRendering.BORDER_SIZE;
+			appX = x + NRendering.BORDER_SIZE / 2f;
+			appY = y - NRendering.BORDER_SIZE / 2f;
+			appW = w - NRendering.BORDER_SIZE;
+			appH = h - NRendering.BORDER_SIZE;
 		}
 	}
 
@@ -164,19 +164,19 @@ public abstract class NanoWindow implements IWindow {
 		// lastUpdate += 1 * delta;
 		updateApp(delta, window);
 	}
-	
+
 	@Override
 	public void alwaysUpdate(float delta, Window window, IWindowManager nanoWindowManager) {
 		if (titleBar.isEnabled()) {
-			appX = x + 2 + NRendering.BORDER_SIZE / 2f;
+			appX = x + NRendering.BORDER_SIZE / 2f;
 			appY = y - TitleBar.HEIGHT;
-			appW = w - 4 - NRendering.BORDER_SIZE;
-			appH = h - 2 - TitleBar.HEIGHT - NRendering.BORDER_SIZE / 2f;
+			appW = w - NRendering.BORDER_SIZE;
+			appH = h - TitleBar.HEIGHT - NRendering.BORDER_SIZE / 2f;
 		} else {
-			appX = x + 2 + NRendering.BORDER_SIZE / 2f;
-			appY = y - 2 - NRendering.BORDER_SIZE / 2f;
-			appW = w - 4 - NRendering.BORDER_SIZE;
-			appH = h - 4 - NRendering.BORDER_SIZE;
+			appX = x + NRendering.BORDER_SIZE / 2f;
+			appY = y - NRendering.BORDER_SIZE / 2f;
+			appW = w - NRendering.BORDER_SIZE;
+			appH = h - NRendering.BORDER_SIZE;
 		}
 		alwaysUpdateApp(delta, window);
 	}

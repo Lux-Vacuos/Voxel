@@ -34,9 +34,8 @@ public class ModalWindow extends RootComponent {
 	private Button accept;
 
 	public ModalWindow(float w, float h, String text, String title) {
-		super(-2 - NRendering.BORDER_SIZE / 2f, ClientVariables.HEIGHT + 2 + NRendering.BORDER_SIZE / 2f,
-				ClientVariables.WIDTH + 4 + NRendering.BORDER_SIZE, ClientVariables.HEIGHT + 4 + NRendering.BORDER_SIZE,
-				"");
+		super(-(NRendering.BORDER_SIZE / 2f), ClientVariables.HEIGHT + NRendering.BORDER_SIZE / 2f,
+				ClientVariables.WIDTH + NRendering.BORDER_SIZE, ClientVariables.HEIGHT + NRendering.BORDER_SIZE, "");
 		this.mwW = w;
 		this.mwH = h;
 		this.text = text;

@@ -249,10 +249,9 @@ public class TestState extends AbstractState {
 		((PlayerCamera) camera).setMouse();
 		Renderer.render(engine.getEntities(), ParticleDomain.getParticles(), camera, sun.getCamera(), worldSimulation,
 				sun.getSunPosition(), sun.getInvertedSunPosition(), 0);
-		gameWindow = new GameWindow(-2 - NRendering.BORDER_SIZE / 2f,
-				ClientVariables.HEIGHT + 2 + NRendering.BORDER_SIZE / 2f,
-				ClientVariables.WIDTH + 4 + NRendering.BORDER_SIZE,
-				ClientVariables.HEIGHT + 4 + NRendering.BORDER_SIZE);
+		gameWindow = new GameWindow(-(NRendering.BORDER_SIZE / 2f),
+				ClientVariables.HEIGHT + NRendering.BORDER_SIZE / 2f, ClientVariables.WIDTH + NRendering.BORDER_SIZE,
+				ClientVariables.HEIGHT + NRendering.BORDER_SIZE);
 		WM.getWM().addWindow(0, gameWindow);
 	}
 

@@ -21,41 +21,6 @@
 package net.luxvacuos.voxel.client.rendering.api.nanovg;
 
 import static org.lwjgl.nanovg.NanoVG.*;
-import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_LEFT;
-import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_MIDDLE;
-import static org.lwjgl.nanovg.NanoVG.NVG_CCW;
-import static org.lwjgl.nanovg.NanoVG.NVG_CW;
-import static org.lwjgl.nanovg.NanoVG.NVG_HOLE;
-import static org.lwjgl.nanovg.NanoVG.NVG_PI;
-import static org.lwjgl.nanovg.NanoVG.nnvgText;
-import static org.lwjgl.nanovg.NanoVG.nnvgTextBreakLines;
-import static org.lwjgl.nanovg.NanoVG.nvgArc;
-import static org.lwjgl.nanovg.NanoVG.nvgBeginPath;
-import static org.lwjgl.nanovg.NanoVG.nvgBoxGradient;
-import static org.lwjgl.nanovg.NanoVG.nvgClosePath;
-import static org.lwjgl.nanovg.NanoVG.nvgFill;
-import static org.lwjgl.nanovg.NanoVG.nvgFillColor;
-import static org.lwjgl.nanovg.NanoVG.nvgFillPaint;
-import static org.lwjgl.nanovg.NanoVG.nvgFontBlur;
-import static org.lwjgl.nanovg.NanoVG.nvgFontFace;
-import static org.lwjgl.nanovg.NanoVG.nvgFontSize;
-import static org.lwjgl.nanovg.NanoVG.nvgImagePattern;
-import static org.lwjgl.nanovg.NanoVG.nvgImageSize;
-import static org.lwjgl.nanovg.NanoVG.nvgLineTo;
-import static org.lwjgl.nanovg.NanoVG.nvgLinearGradient;
-import static org.lwjgl.nanovg.NanoVG.nvgMoveTo;
-import static org.lwjgl.nanovg.NanoVG.nvgPathWinding;
-import static org.lwjgl.nanovg.NanoVG.nvgRect;
-import static org.lwjgl.nanovg.NanoVG.nvgRestore;
-import static org.lwjgl.nanovg.NanoVG.nvgSave;
-import static org.lwjgl.nanovg.NanoVG.nvgScissor;
-import static org.lwjgl.nanovg.NanoVG.nvgStroke;
-import static org.lwjgl.nanovg.NanoVG.nvgStrokeColor;
-import static org.lwjgl.nanovg.NanoVG.nvgStrokeWidth;
-import static org.lwjgl.nanovg.NanoVG.nvgText;
-import static org.lwjgl.nanovg.NanoVG.nvgTextAlign;
-import static org.lwjgl.nanovg.NanoVG.nvgTextBounds;
-import static org.lwjgl.nanovg.NanoVG.nvgTextMetrics;
 import static org.lwjgl.nanovg.NanoVGGL3.nvglCreateImageFromHandle;
 import static org.lwjgl.system.MemoryUtil.memAddress;
 import static org.lwjgl.system.MemoryUtil.memAllocInt;
@@ -73,6 +38,7 @@ import org.lwjgl.nanovg.NVGPaint;
 import org.lwjgl.nanovg.NVGTextRow;
 
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
+import net.luxvacuos.voxel.client.rendering.api.glfw.WindowManager;
 import net.luxvacuos.voxel.client.ui.ScrollPaneElement;
 
 /**
@@ -110,7 +76,7 @@ public class NRendering {
 	private static final FloatBuffer lineh = BufferUtils.createFloatBuffer(1);
 	private static final NVGTextRow.Buffer rows = NVGTextRow.create(3);
 
-	public static final float BORDER_SIZE = 10;
+	public static float BORDER_SIZE = 20;
 
 	private static boolean isBlack(NVGColor col) {
 		return col.r() == 0.0f && col.g() == 0.0f && col.b() == 0.0f && col.a() == 0.0f;
@@ -179,11 +145,10 @@ public class NRendering {
 			nvgBeginPath(vg);
 			nvgRect(vg, x, y, w, h);
 			if (titleBar)
-				nvgRect(vg, x + 2 + BORDER_SIZE / 2f, y + TitleBar.HEIGHT, w - 4 - BORDER_SIZE,
-						h - TitleBar.HEIGHT + 3 - BORDER_SIZE);
+				nvgRect(vg, x + BORDER_SIZE / 2f, y + TitleBar.HEIGHT, w - BORDER_SIZE,
+						h - TitleBar.HEIGHT - BORDER_SIZE);
 			else
-				nvgRect(vg, x + 2 + BORDER_SIZE / 2f, y + 2 + BORDER_SIZE / 2f, w - 4 - BORDER_SIZE,
-						h - 4 - BORDER_SIZE);
+				nvgRect(vg, x + BORDER_SIZE / 2f, y + BORDER_SIZE / 2f, w - BORDER_SIZE, h - BORDER_SIZE);
 			nvgPathWinding(vg, NVG_HOLE);
 			nvgFillColor(vg, rgba(31, 31, 31, 120, colorA));
 			nvgFill(vg);
@@ -194,11 +159,9 @@ public class NRendering {
 		case SOLID:
 			nvgBeginPath(vg);
 			if (titleBar)
-				nvgRect(vg, x + 2 + BORDER_SIZE / 2f, y + TitleBar.HEIGHT, w - 4 - BORDER_SIZE,
-						h - 35 - BORDER_SIZE / 2f);
+				nvgRect(vg, x + BORDER_SIZE / 2f, y + TitleBar.HEIGHT, w - BORDER_SIZE, h - TitleBar.HEIGHT - BORDER_SIZE / 2f);
 			else
-				nvgRect(vg, x + 2 + BORDER_SIZE / 2f, y + 2 + BORDER_SIZE / 2f, w - 4 - BORDER_SIZE,
-						h - 4 - BORDER_SIZE);
+				nvgRect(vg, x + BORDER_SIZE / 2f, y + BORDER_SIZE / 2f, w - BORDER_SIZE, h - BORDER_SIZE);
 			nvgFillColor(vg, backgroundColor);
 			nvgFill(vg);
 			break;
@@ -300,10 +263,10 @@ public class NRendering {
 		nvgBeginPath(vg);
 		nvgRect(vg, x + 0.5f, y + 0.5f, w - 1, h - 1);
 		if (selected)
-			nvgStrokeColor(vg, rgba(200, 200, 200, 255, colorA));
+			nvgStrokeColor(vg, rgba(50, 50, 50, 255, colorA));
 		else
-			nvgStrokeColor(vg, rgba(0, 0, 0, 100, colorA));
-		nvgStrokeWidth(vg, 2);
+			nvgStrokeColor(vg, rgba(70, 70, 70, 255, colorA));
+		nvgStrokeWidth(vg, 1);
 		nvgStroke(vg);
 		nvgRestore(vg);
 	}
@@ -325,7 +288,6 @@ public class NRendering {
 
 	public static void renderButton(long vg, ByteBuffer preicon, String text, String font, String entypo, float x,
 			float y, float w, float h, NVGColor color, boolean mouseInside, float fontSize) {
-		NVGPaint bg = paintA;
 		float tw, iw = 0;
 
 		if (mouseInside) {
@@ -336,15 +298,9 @@ public class NRendering {
 			fontSize -= 1f;
 		}
 
-		nvgLinearGradient(vg, x, y, x, y + h, rgba(255, 255, 255, (isBlack(color) ? 16 : 32), colorB),
-				rgba(0, 0, 0, (isBlack(color) ? 16 : 32), colorC), bg);
 		nvgBeginPath(vg);
 		nvgRect(vg, x + 1, y + 1, w - 2, h - 2);
-		if (!isBlack(color)) {
-			nvgFillColor(vg, color);
-			nvgFill(vg);
-		}
-		nvgFillPaint(vg, bg);
+		nvgFillColor(vg, color);
 		nvgFill(vg);
 
 		nvgBeginPath(vg);
@@ -373,10 +329,8 @@ public class NRendering {
 		nvgFontSize(vg, fontSize);
 		nvgFontFace(vg, font);
 		nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
-		nvgFillColor(vg, rgba(0, 0, 0, 255, colorA));
+		nvgFillColor(vg, rgba(60, 60, 60, 255, colorA));
 		nvgText(vg, x + w * 0.5f - tw * 0.5f + iw * 0.25f, y + h * 0.5f - 1, text);
-		nvgFillColor(vg, rgba(255, 255, 255, 100, colorA));
-		nvgText(vg, x + w * 0.5f - tw * 0.5f + iw * 0.25f, y + h * 0.5f, text);
 
 	}
 
@@ -516,6 +470,29 @@ public class NRendering {
 		nvgRect(vg, x + 1, y + 1, w - 2, h - 2);
 		nvgFillColor(vg, color);
 		nvgFill(vg);
+	}
+
+	public static void renderSlider(long vg, float pos, float x, float y, float w, float h) {
+
+		nvgSave(vg);
+		// Slot
+		nvgBeginPath(vg);
+		nvgRect(vg, x - 6, y, w + 12, h);
+		nvgFillColor(vg, rgba(71, 71, 71, 255, colorA));
+		nvgFill(vg);
+
+		nvgBeginPath(vg);
+		nvgRect(vg, x + 0.5f - 6, y + 0.5f, w - 1 + 12, h - 1);
+		nvgStrokeColor(vg, rgba(0, 0, 0, 255, colorA));
+		nvgStroke(vg);
+
+		// Knob
+		nvgBeginPath(vg);
+		nvgRect(vg, x + (int) (pos * w) - 5, y + 1, 10, h - 2);
+		nvgFillColor(vg, rgba(200, 200, 200, 255, colorB));
+		nvgFill(vg);
+
+		nvgRestore(vg);
 	}
 
 	public static int generateImageFromTexture(long vg, int texID, int w, int h, int flags) {

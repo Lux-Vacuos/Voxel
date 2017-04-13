@@ -20,12 +20,18 @@
 
 package net.luxvacuos.voxel.client.ui.menus;
 
+import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_LEFT;
+import static org.lwjgl.nanovg.NanoVG.*;
+
 import net.luxvacuos.voxel.client.core.ClientInternalSubsystem;
 import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
+import net.luxvacuos.voxel.client.rendering.api.nanovg.NRendering;
 import net.luxvacuos.voxel.client.ui.Alignment;
 import net.luxvacuos.voxel.client.ui.Button;
 import net.luxvacuos.voxel.client.ui.RootComponent;
+import net.luxvacuos.voxel.client.ui.Slider;
+import net.luxvacuos.voxel.client.ui.Text;
 
 public class OptionsMenu extends RootComponent {
 
@@ -47,6 +53,8 @@ public class OptionsMenu extends RootComponent {
 		Button ambientOccButton = new Button(260, -160, 200, 40, "Ambient Occlusion");
 		Button chromaticAberrationButton = new Button(260, -220, 200, 40, "Chromatic Aberration");
 		Button lensFlaresButton = new Button(260, -280, 200, 40, "Lens Flares");
+		Text wmBorderText = new Text("Window Border: " + NRendering.BORDER_SIZE / 2f, 520, -40);
+		Slider wmBorder = new Slider(520, -60, 200, 20, NRendering.BORDER_SIZE / 80f);
 
 		godraysButton.setWindowAlignment(Alignment.LEFT_TOP);
 		godraysButton.setAlignment(Alignment.RIGHT_BOTTOM);
@@ -68,6 +76,13 @@ public class OptionsMenu extends RootComponent {
 		chromaticAberrationButton.setAlignment(Alignment.RIGHT_BOTTOM);
 		lensFlaresButton.setWindowAlignment(Alignment.LEFT_TOP);
 		lensFlaresButton.setAlignment(Alignment.RIGHT_BOTTOM);
+		wmBorderText.setWindowAlignment(Alignment.LEFT_TOP);
+		wmBorderText.setFontSize(20);
+		wmBorderText.setAlign(NVG_ALIGN_LEFT | NVG_ALIGN_TOP);
+		wmBorder.setWindowAlignment(Alignment.LEFT_TOP);
+		wmBorder.setAlignment(Alignment.RIGHT_BOTTOM);
+		wmBorder.setPrecision(40f);
+		wmBorder.useCustomPrecision(true);
 
 		if (ClientVariables.useVolumetricLight) {
 			godraysButton.setText("Volumetric Light: ON");
@@ -262,6 +277,11 @@ public class OptionsMenu extends RootComponent {
 				lensFlaresButton.setColor(1.0f, 0.2f, 0.2f, 1.0f);
 			}
 		});
+		
+		wmBorder.setOnPress(() -> {
+			NRendering.BORDER_SIZE = wmBorder.getPosition() * 80f;
+			wmBorderText.setText("Window Border: " + NRendering.BORDER_SIZE / 2f);
+		});
 
 		super.addComponent(shadowsButton);
 		super.addComponent(dofButton);
@@ -273,6 +293,8 @@ public class OptionsMenu extends RootComponent {
 		super.addComponent(ambientOccButton);
 		super.addComponent(chromaticAberrationButton);
 		super.addComponent(lensFlaresButton);
+		super.addComponent(wmBorderText);
+		super.addComponent(wmBorder);
 
 		super.initApp(window);
 	}
