@@ -36,7 +36,7 @@ public class PauseWindow extends RootComponent {
 
 	@Override
 	public void initApp(Window window) {
-		super.setBackgroundColor(0.4f, 0.4f, 0.4f, 0.5f);
+		super.setBackgroundColor("#1F1F1F78");
 		super.setAsBackground(true);
 		
 		Button backButton = new Button(0, 40, 200, 40, "Back to Main Menu");

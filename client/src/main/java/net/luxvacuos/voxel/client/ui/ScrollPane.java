@@ -57,11 +57,15 @@ public class ScrollPane extends Component {
 	public void update(float delta, Window window) {
 		if (Mouse.isButtonDown(0)) {
 			if (Mouse.getX() > rootComponent.rootX + alignedX + w - 14
-					&& Mouse.getX() < rootComponent.rootX + alignedX + w && Mouse.getY() > rootComponent.rootY + alignedY + h - 14 && Mouse.getY() < rootComponent.rootY + alignedY + h) {
+					&& Mouse.getX() < rootComponent.rootX + alignedX + w
+					&& Mouse.getY() > rootComponent.rootY + alignedY + h - 14
+					&& Mouse.getY() < rootComponent.rootY + alignedY + h) {
 				scroll -= 1 * delta * 2;
 			}
 			if (Mouse.getX() > rootComponent.rootX + alignedX + w - 14
-					&& Mouse.getX() < rootComponent.rootX + alignedX + w && Mouse.getY() > rootComponent.rootY + alignedY && Mouse.getY() < rootComponent.rootY + alignedY + 14) {
+					&& Mouse.getX() < rootComponent.rootX + alignedX + w
+					&& Mouse.getY() > rootComponent.rootY + alignedY
+					&& Mouse.getY() < rootComponent.rootY + alignedY + 14) {
 				scroll += 1 * delta * 2;
 			}
 		}
@@ -71,6 +75,14 @@ public class ScrollPane extends Component {
 			scrollPaneElement.update(delta, window);
 		}
 		super.update(delta, window);
+	}
+
+	@Override
+	public void alwaysUpdate(float delta, Window window) {
+		super.alwaysUpdate(delta, window);
+		for (ScrollPaneElement scrollPaneElement : elements) {
+			scrollPaneElement.alwaysUpdate(delta, window);
+		}
 	}
 
 	@Override

@@ -46,6 +46,12 @@ public class ScrollPaneElement {
 			component.update(delta, window);
 		}
 	}
+	
+	public void alwaysUpdate(float delta, Window window) {
+		for (Component component : components) {
+			component.alwaysUpdate(delta, window);
+		}
+	}
 
 	public void dispose() {
 		for (Component component : components) {

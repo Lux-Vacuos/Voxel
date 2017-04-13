@@ -33,14 +33,14 @@ public class GameWindow extends RootComponent {
 
 	@Override
 	public void initApp(Window window) {
-		super.setBackgroundColor(0.0f, 0.0f, 0.0f, 1f);
+		super.setBackgroundColor(0.0f, 0.0f, 0.0f, 0.5f);
 		super.setResizable(false);
 		super.setDecorations(false);
 		super.setAsBackground(true);
 		super.setBlurBehind(false);
 		super.toggleTitleBar();
 
-		Image game = new Image(0, 0, appW, appH, Renderer.getResultTexture());
+		Image game = new Image(0, 0, appW, appH + 26, Renderer.getResultTexture());
 
 		super.addComponent(game);
 

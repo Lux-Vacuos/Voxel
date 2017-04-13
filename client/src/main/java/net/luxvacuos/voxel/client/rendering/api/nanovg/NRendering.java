@@ -109,7 +109,7 @@ public class NRendering {
 
 	private static final FloatBuffer lineh = BufferUtils.createFloatBuffer(1);
 	private static final NVGTextRow.Buffer rows = NVGTextRow.create(3);
-	
+
 	public static final float BORDER_SIZE = 10;
 
 	private static boolean isBlack(NVGColor col) {
@@ -179,11 +179,13 @@ public class NRendering {
 			nvgBeginPath(vg);
 			nvgRect(vg, x, y, w, h);
 			if (titleBar)
-				nvgRect(vg, x + 2 + BORDER_SIZE / 2f, y + TitleBar.HEIGHT, w - 4 - BORDER_SIZE, h - 35 - BORDER_SIZE);
+				nvgRect(vg, x + 2 + BORDER_SIZE / 2f, y + TitleBar.HEIGHT, w - 4 - BORDER_SIZE,
+						h - TitleBar.HEIGHT + 3 - BORDER_SIZE);
 			else
-				nvgRect(vg, x + 2 + BORDER_SIZE / 2f, y + 2 + BORDER_SIZE / 2f, w - 4 - BORDER_SIZE, h - 4 - BORDER_SIZE);
+				nvgRect(vg, x + 2 + BORDER_SIZE / 2f, y + 2 + BORDER_SIZE / 2f, w - 4 - BORDER_SIZE,
+						h - 4 - BORDER_SIZE);
 			nvgPathWinding(vg, NVG_HOLE);
-			nvgFillColor(vg, rgba(120, 120, 120, 120, colorA));
+			nvgFillColor(vg, rgba(31, 31, 31, 120, colorA));
 			nvgFill(vg);
 		}
 
@@ -192,9 +194,11 @@ public class NRendering {
 		case SOLID:
 			nvgBeginPath(vg);
 			if (titleBar)
-				nvgRect(vg, x + 2 + BORDER_SIZE / 2f, y + TitleBar.HEIGHT, w - 4 - BORDER_SIZE, h - 35 - BORDER_SIZE / 2f);
+				nvgRect(vg, x + 2 + BORDER_SIZE / 2f, y + TitleBar.HEIGHT, w - 4 - BORDER_SIZE,
+						h - 35 - BORDER_SIZE / 2f);
 			else
-				nvgRect(vg, x + 2 + BORDER_SIZE / 2f, y + 2 + BORDER_SIZE / 2f, w - 4 - BORDER_SIZE, h - 4 - BORDER_SIZE);
+				nvgRect(vg, x + 2 + BORDER_SIZE / 2f, y + 2 + BORDER_SIZE / 2f, w - 4 - BORDER_SIZE,
+						h - 4 - BORDER_SIZE);
 			nvgFillColor(vg, backgroundColor);
 			nvgFill(vg);
 			break;

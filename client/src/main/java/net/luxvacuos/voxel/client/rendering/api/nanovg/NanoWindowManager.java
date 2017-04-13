@@ -160,11 +160,11 @@ public class NanoWindowManager implements IWindowManager {
 				break;
 			}
 		}
+		if (focused != null)
+			focused.update(delta, window, this);
 		for (IWindow window : tmp) {
 			window.alwaysUpdate(delta, this.window, this);
 		}
-		if (focused != null)
-			focused.update(delta, window, this);
 		tmp.clear();
 		if (window.getKeyboardHandler().isKeyPressed(GLFW.GLFW_KEY_F1))
 			ClientVariables.debug = !ClientVariables.debug;
@@ -194,6 +194,7 @@ public class NanoWindowManager implements IWindowManager {
 		TaskManager.addTask(() -> {
 			window.init(this.window);
 			window.update(0, this.window, this);
+			window.alwaysUpdate(0, this.window, this);
 			this.windows.add(window);
 			this.focused = window;
 		});
@@ -204,6 +205,7 @@ public class NanoWindowManager implements IWindowManager {
 		TaskManager.addTask(() -> {
 			window.init(this.window);
 			window.update(0, this.window, this);
+			window.alwaysUpdate(0, this.window, this);
 			this.windows.add(ord, window);
 			this.focused = window;
 		});

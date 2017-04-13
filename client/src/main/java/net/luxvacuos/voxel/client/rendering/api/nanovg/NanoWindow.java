@@ -90,10 +90,17 @@ public abstract class NanoWindow implements IWindow {
 				this.y += Mouse.getDY();
 			}
 		});
-		appX = x + 2 + NRendering.BORDER_SIZE / 2f;
-		appY = y - TitleBar.HEIGHT;
-		appW = w - 4 - NRendering.BORDER_SIZE;
-		appH = h - 2 - TitleBar.HEIGHT - NRendering.BORDER_SIZE / 2f;
+		if (titleBar.isEnabled()) {
+			appX = x + 2 + NRendering.BORDER_SIZE / 2f;
+			appY = y - TitleBar.HEIGHT;
+			appW = w - 4 - NRendering.BORDER_SIZE;
+			appH = h - 2 - TitleBar.HEIGHT - NRendering.BORDER_SIZE / 2f;
+		} else {
+			appX = x + 2 + NRendering.BORDER_SIZE / 2f;
+			appY = y - 2 - NRendering.BORDER_SIZE / 2f;
+			appW = w - 4 - NRendering.BORDER_SIZE;
+			appH = h - 4 - NRendering.BORDER_SIZE;
+		}
 	}
 
 	@Override
