@@ -146,7 +146,7 @@ public class NRendering {
 			nvgRect(vg, x, y, w, h);
 			if (titleBar)
 				nvgRect(vg, x + BORDER_SIZE / 2f, y + TitleBar.HEIGHT, w - BORDER_SIZE,
-						h - TitleBar.HEIGHT - BORDER_SIZE);
+						h - TitleBar.HEIGHT - BORDER_SIZE / 2f);
 			else
 				nvgRect(vg, x + BORDER_SIZE / 2f, y + BORDER_SIZE / 2f, w - BORDER_SIZE, h - BORDER_SIZE);
 			nvgPathWinding(vg, NVG_HOLE);
@@ -159,7 +159,8 @@ public class NRendering {
 		case SOLID:
 			nvgBeginPath(vg);
 			if (titleBar)
-				nvgRect(vg, x + BORDER_SIZE / 2f, y + TitleBar.HEIGHT, w - BORDER_SIZE, h - TitleBar.HEIGHT - BORDER_SIZE / 2f);
+				nvgRect(vg, x + BORDER_SIZE / 2f, y + TitleBar.HEIGHT, w - BORDER_SIZE,
+						h - TitleBar.HEIGHT - BORDER_SIZE / 2f);
 			else
 				nvgRect(vg, x + BORDER_SIZE / 2f, y + BORDER_SIZE / 2f, w - BORDER_SIZE, h - BORDER_SIZE);
 			nvgFillColor(vg, backgroundColor);
