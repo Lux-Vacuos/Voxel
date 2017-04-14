@@ -63,7 +63,7 @@ public class StreamThread extends SimpleThread
 /**
  * Name of this class.
  */    
-    protected String className = "CommandThread";
+    protected String className = "StreamThread";
     
 /**
  * Constructor:  Grabs a handle to the message logger and instantiates the 
