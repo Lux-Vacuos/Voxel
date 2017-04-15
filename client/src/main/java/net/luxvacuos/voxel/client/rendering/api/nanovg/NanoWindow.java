@@ -70,6 +70,17 @@ public abstract class NanoWindow implements IWindow {
 		this.h = h;
 		this.title = title;
 		titleBar = new TitleBar(this);
+		if (titleBar.isEnabled()) {
+			appX = x + NRendering.BORDER_SIZE / 2f;
+			appY = y - TitleBar.HEIGHT;
+			appW = w - NRendering.BORDER_SIZE;
+			appH = h - TitleBar.HEIGHT - NRendering.BORDER_SIZE / 2f;
+		} else {
+			appX = x + NRendering.BORDER_SIZE / 2f;
+			appY = y - NRendering.BORDER_SIZE / 2f;
+			appW = w - NRendering.BORDER_SIZE;
+			appH = h - NRendering.BORDER_SIZE;
+		}
 	}
 
 	@Override
@@ -137,17 +148,6 @@ public abstract class NanoWindow implements IWindow {
 				this.y += Mouse.getDY();
 			}
 		});
-		if (titleBar.isEnabled()) {
-			appX = x + NRendering.BORDER_SIZE / 2f;
-			appY = y - TitleBar.HEIGHT;
-			appW = w - NRendering.BORDER_SIZE;
-			appH = h - TitleBar.HEIGHT - NRendering.BORDER_SIZE / 2f;
-		} else {
-			appX = x + NRendering.BORDER_SIZE / 2f;
-			appY = y - NRendering.BORDER_SIZE / 2f;
-			appW = w - NRendering.BORDER_SIZE;
-			appH = h - NRendering.BORDER_SIZE;
-		}
 
 		thread = new Thread(() -> {
 			lastLoopTime = WindowManager.getTime();
