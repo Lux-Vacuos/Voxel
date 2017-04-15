@@ -110,6 +110,8 @@ public class NRendering {
 			// Button Maximize
 			if (resizable)
 				renderWindowButton(vg, x + 31, y + 2, 29, 29, rgba(100, 100, 100, 200, colorB), ButtonStyle.MAXIMIZE);
+
+			renderWindowButton(vg, x + 62, y + 2, 29, 29, rgba(100, 100, 100, 200, colorB), ButtonStyle.MINIMIZE);
 		} else {
 			// Button Close
 			renderWindowButton(vg, x + w - 31, y + 2, 29, 29, rgba(200, 0, 0, 200, colorB), ButtonStyle.EXIT);
@@ -117,8 +119,7 @@ public class NRendering {
 			if (resizable)
 				renderWindowButton(vg, x + w - 62, y + 2, 29, 29, rgba(100, 100, 100, 200, colorB),
 						ButtonStyle.MAXIMIZE);
-			renderWindowButton(vg, x + w - 93, y + 2, 29, 29, rgba(100, 100, 100, 200, colorB),
-					ButtonStyle.MINIMIZE);
+			renderWindowButton(vg, x + w - 93, y + 2, 29, 29, rgba(100, 100, 100, 200, colorB), ButtonStyle.MINIMIZE);
 		}
 
 		// Title

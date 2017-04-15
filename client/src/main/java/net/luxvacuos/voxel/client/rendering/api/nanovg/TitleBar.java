@@ -74,6 +74,9 @@ public class TitleBar implements ITitleBar {
 				dragging = Mouse.isButtonDown(0);
 				drag.event(window);
 			}
+			if (minizime(iWindow)) {
+			}
+
 		}
 	}
 
@@ -81,6 +84,16 @@ public class TitleBar implements ITitleBar {
 		return Mouse.getX() > iWindow.getX() && Mouse.getY() < iWindow.getY()
 				&& Mouse.getX() < iWindow.getX() + iWindow.getWidth()
 				&& Mouse.getY() > iWindow.getY() - TitleBar.HEIGHT;
+	}
+
+	private boolean exit(IWindow iWindow) {
+		if (WM.invertWindowButtons)
+			return Mouse.getX() > iWindow.getX() + 2 && Mouse.getY() < iWindow.getY() - 2
+					&& Mouse.getX() < iWindow.getX() + 32 && Mouse.getY() > iWindow.getY() - 31;
+		else
+			return Mouse.getX() > iWindow.getX() + iWindow.getWidth() - 31 && Mouse.getY() < iWindow.getY() - 2
+					&& Mouse.getX() < iWindow.getX() + iWindow.getWidth() - 2 && Mouse.getY() > iWindow.getY() - 31;
+
 	}
 
 	private boolean maximize(IWindow iWindow) {
@@ -93,13 +106,13 @@ public class TitleBar implements ITitleBar {
 
 	}
 
-	private boolean exit(IWindow iWindow) {
+	private boolean minizime(IWindow iWindow) {
 		if (WM.invertWindowButtons)
-			return Mouse.getX() > iWindow.getX() + 2 && Mouse.getY() < iWindow.getY() - 2
-					&& Mouse.getX() < iWindow.getX() + 32 && Mouse.getY() > iWindow.getY() - 31;
+			return Mouse.getX() > iWindow.getX() + 63 && Mouse.getY() < iWindow.getY() - 2
+					&& Mouse.getX() < iWindow.getX() + 93 && Mouse.getY() > iWindow.getY() - 31;
 		else
-			return Mouse.getX() > iWindow.getX() + iWindow.getWidth() - 31 && Mouse.getY() < iWindow.getY() - 2
-					&& Mouse.getX() < iWindow.getX() + iWindow.getWidth() - 2 && Mouse.getY() > iWindow.getY() - 31;
+			return Mouse.getX() > iWindow.getX() + iWindow.getWidth() - 94 && Mouse.getY() < iWindow.getY() - 2
+					&& Mouse.getX() < iWindow.getX() + iWindow.getWidth() - 65 && Mouse.getY() > iWindow.getY() - 31;
 
 	}
 
