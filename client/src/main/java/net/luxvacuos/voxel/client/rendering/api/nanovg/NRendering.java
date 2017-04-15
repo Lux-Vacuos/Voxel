@@ -49,7 +49,7 @@ import net.luxvacuos.voxel.client.ui.ScrollPaneElement;
 public class NRendering {
 
 	private static enum ButtonStyle {
-		EXIT, MAXIMIZE
+		EXIT, MAXIMIZE, MINIMIZE
 	};
 
 	public static enum BackgroundStyle {
@@ -117,6 +117,8 @@ public class NRendering {
 			if (resizable)
 				renderWindowButton(vg, x + w - 62, y + 2, 29, 29, rgba(100, 100, 100, 200, colorB),
 						ButtonStyle.MAXIMIZE);
+			renderWindowButton(vg, x + w - 93, y + 2, 29, 29, rgba(100, 100, 100, 200, colorB),
+					ButtonStyle.MINIMIZE);
 		}
 
 		// Title
@@ -210,6 +212,14 @@ public class NRendering {
 			nvgLineTo(vg, x + 8, y + h - 8);
 			nvgLineTo(vg, x + 8, y + 8);
 			nvgStrokeColor(vg, rgba(0, 0, 0, 200, colorA));
+			nvgStroke(vg);
+			break;
+		case MINIMIZE:
+			nvgBeginPath(vg);
+			nvgMoveTo(vg, x + 8, y + h / 2);
+			nvgLineTo(vg, x + w - 8, y + h / 2);
+			nvgStrokeColor(vg, rgba(0, 0, 0, 200, colorA));
+			nvgStrokeWidth(vg, 2f);
 			nvgStroke(vg);
 			break;
 		}

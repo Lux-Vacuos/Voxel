@@ -40,7 +40,7 @@ import net.luxvacuos.voxel.client.rendering.api.opengl.Renderer;
 public abstract class NanoWindow implements IWindow {
 
 	private boolean draggable = true, decorations = true, resizable = true, maximized, hidden = false, exit,
-			alwaysOnTop, background, blurBehind = true, running = true;
+			alwaysOnTop, background, blurBehind = true, running = true, resizing;
 	private BackgroundStyle backgroundStyle = BackgroundStyle.SOLID;
 	private NVGColor backgroundColor = NRendering.rgba(0, 0, 0, 255);
 	private float x, y, w, h;
@@ -153,12 +153,10 @@ public abstract class NanoWindow implements IWindow {
 	public void update(float delta, Window window, IWindowManager nanoWindowManager) {
 		if (decorations && !hidden) {
 			titleBar.update(window, this);
-			if (Mouse.isButtonDown(0)) {
-				if (Mouse.getX() > x + w - 20 && Mouse.getY() < y - h + 20 && Mouse.getX() < x + w + 20
-						&& Mouse.getY() > y - h - 20 && resizable && !maximized) {
-					w += Mouse.getDX();
-					h -= Mouse.getDY();
-				}
+			if ((Mouse.isButtonDown(0) && canResize()) || resizing) {
+				resizing = Mouse.isButtonDown(0);
+				w += Mouse.getDX();
+				h -= Mouse.getDY();
 			}
 		}
 		// lastUpdate += 1 * delta;
@@ -190,6 +188,11 @@ public abstract class NanoWindow implements IWindow {
 
 	@Override
 	public void onClose() {
+	}
+
+	private boolean canResize() {
+		return Mouse.getX() > x + w - 20 && Mouse.getY() < y - h + 20 && Mouse.getX() < x + w + 20
+				&& Mouse.getY() > y - h - 20 && resizable && !maximized;
 	}
 
 	@Override

@@ -27,7 +27,7 @@ public class TitleBar implements ITitleBar {
 
 	public static final float HEIGHT = 33;
 
-	private boolean enabled = true;
+	private boolean enabled = true, dragging;
 	private String title, font = "Roboto-Bold";
 	private Event exit, maximize, drag;
 	private boolean pressedExit, pressedMaximize;
@@ -70,11 +70,17 @@ public class TitleBar implements ITitleBar {
 				exit.event(window);
 			pressedExit = Mouse.isButtonDown(0) && exit(iWindow);
 
-			if (Mouse.isButtonDown(0))
-				if (Mouse.getX() > iWindow.getX() && Mouse.getY() < iWindow.getY()
-						&& Mouse.getX() < iWindow.getX() + iWindow.getWidth() && Mouse.getY() > iWindow.getY() - 32)
-					drag.event(window);
+			if ((Mouse.isButtonDown(0) && canDrag(iWindow)) || dragging) {
+				dragging = Mouse.isButtonDown(0);
+				drag.event(window);
+			}
 		}
+	}
+
+	private boolean canDrag(IWindow iWindow) {
+		return Mouse.getX() > iWindow.getX() && Mouse.getY() < iWindow.getY()
+				&& Mouse.getX() < iWindow.getX() + iWindow.getWidth()
+				&& Mouse.getY() > iWindow.getY() - TitleBar.HEIGHT;
 	}
 
 	private boolean maximize(IWindow iWindow) {
