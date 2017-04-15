@@ -38,8 +38,8 @@ import org.lwjgl.nanovg.NVGPaint;
 import org.lwjgl.nanovg.NVGTextRow;
 
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
-import net.luxvacuos.voxel.client.rendering.api.glfw.WindowManager;
 import net.luxvacuos.voxel.client.ui.ScrollPaneElement;
+import net.luxvacuos.voxel.client.ui.TitleBar;
 
 /**
  *
@@ -48,8 +48,8 @@ import net.luxvacuos.voxel.client.ui.ScrollPaneElement;
  */
 public class NRendering {
 
-	private static enum ButtonStyle {
-		EXIT, MAXIMIZE, MINIMIZE
+	public static enum ButtonStyle {
+		CLOSE, MAXIMIZE, MINIMIZE
 	};
 
 	public static enum BackgroundStyle {
@@ -78,10 +78,6 @@ public class NRendering {
 
 	public static float BORDER_SIZE = 20;
 
-	private static boolean isBlack(NVGColor col) {
-		return col.r() == 0.0f && col.g() == 0.0f && col.b() == 0.0f && col.a() == 0.0f;
-	}
-
 	public static NVGColor rgba(int r, int g, int b, int a, NVGColor color) {
 		color.r(r / 255.0f);
 		color.g(g / 255.0f);
@@ -99,42 +95,20 @@ public class NRendering {
 		return color;
 	}
 
-	public static void renderTitleBar(long vg, String title, String font, float x, float y, float w, float h,
-			boolean invertBtns, boolean resizable) {
+	public static void renderTitleBarText(long vg, String text, String font, int align, float x, float y, float fontSize) {
 
 		nvgSave(vg);
-
-		if (invertBtns) {
-			// Button Close
-			renderWindowButton(vg, x, y + 2, 29, 29, rgba(200, 0, 0, 200, colorB), ButtonStyle.EXIT);
-			// Button Maximize
-			if (resizable)
-				renderWindowButton(vg, x + 31, y + 2, 29, 29, rgba(100, 100, 100, 200, colorB), ButtonStyle.MAXIMIZE);
-
-			renderWindowButton(vg, x + 62, y + 2, 29, 29, rgba(100, 100, 100, 200, colorB), ButtonStyle.MINIMIZE);
-		} else {
-			// Button Close
-			renderWindowButton(vg, x + w - 31, y + 2, 29, 29, rgba(200, 0, 0, 200, colorB), ButtonStyle.EXIT);
-			// Button Maximize
-			if (resizable)
-				renderWindowButton(vg, x + w - 62, y + 2, 29, 29, rgba(100, 100, 100, 200, colorB),
-						ButtonStyle.MAXIMIZE);
-			renderWindowButton(vg, x + w - 93, y + 2, 29, 29, rgba(100, 100, 100, 200, colorB), ButtonStyle.MINIMIZE);
-		}
-
-		// Title
-		nvgFontSize(vg, 18.0f);
+		nvgFontSize(vg, fontSize);
 		nvgFontFace(vg, font);
 		nvgTextAlign(vg, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
 
 		nvgFontBlur(vg, 4);
-		nvgFillColor(vg, rgba(0, 0, 0, 128, colorA));
-		nvgText(vg, x + w / 2, y + TitleBar.HEIGHT / 2f + 1, title);
+		nvgFillColor(vg, rgba(0, 0, 0, 255, colorA));
+		nvgText(vg, x , y + 1, text);
 
 		nvgFontBlur(vg, 0);
 		nvgFillColor(vg, rgba(255, 255, 255, 255, colorA));
-		nvgText(vg, x + w / 2, y + TitleBar.HEIGHT / 2f, title);
-
+		nvgText(vg, x, y, text);
 		nvgRestore(vg);
 	}
 
@@ -196,32 +170,33 @@ public class NRendering {
 		nvgFill(vg);
 
 		switch (style) {
-		case EXIT:
+		case CLOSE:
 			nvgBeginPath(vg);
-			nvgMoveTo(vg, x + 8, y + 8);
-			nvgLineTo(vg, x + w - 8, y + h - 8);
-			nvgMoveTo(vg, x + 8, y + h - 8);
-			nvgLineTo(vg, x + w - 8, y + 8);
-			nvgStrokeColor(vg, rgba(0, 0, 0, 200, colorA));
+			nvgMoveTo(vg, x + w / 2 - 6, y + h / 2 - 6);
+			nvgLineTo(vg, x + w / 2 + 6, y + h / 2 + 6);
+			nvgMoveTo(vg, x + w / 2 - 6, y + h / 2 + 6);
+			nvgLineTo(vg, x + w / 2 + 6, y + h / 2 - 6);
+			nvgStrokeColor(vg, rgba(0, 0, 0, 255, colorA));
 			nvgStroke(vg);
 			break;
 		case MAXIMIZE:
 			nvgBeginPath(vg);
-			nvgMoveTo(vg, x + 8, y + 8);
-			nvgLineTo(vg, x + w - 8, y + 8);
-			nvgLineTo(vg, x + w - 8, y + h - 8);
-			nvgLineTo(vg, x + 8, y + h - 8);
-			nvgLineTo(vg, x + 8, y + 8);
-			nvgStrokeColor(vg, rgba(0, 0, 0, 200, colorA));
+			nvgMoveTo(vg, x + w / 2 - 6, y + h / 2 - 6);
+			nvgLineTo(vg, x + w / 2 + 6, y + h / 2 - 6);
+			nvgLineTo(vg, x + w / 2 + 6, y + h / 2 + 6);
+			nvgLineTo(vg, x + w / 2 - 6, y + h / 2 + 6);
+			nvgLineTo(vg, x + w / 2 - 6, y + h / 2 - 6);
+			nvgStrokeColor(vg, rgba(0, 0, 0, 255, colorA));
 			nvgStroke(vg);
 			break;
 		case MINIMIZE:
 			nvgBeginPath(vg);
-			nvgMoveTo(vg, x + 8, y + h / 2);
-			nvgLineTo(vg, x + w - 8, y + h / 2);
-			nvgStrokeColor(vg, rgba(0, 0, 0, 200, colorA));
-			nvgStrokeWidth(vg, 2f);
+			nvgMoveTo(vg,  x + w / 2 - 6, y + h / 2);
+			nvgLineTo(vg,  x + w / 2 + 6, y + h / 2);
+			nvgStrokeColor(vg, rgba(0, 0, 0, 255, colorA));
 			nvgStroke(vg);
+			break;
+		default:
 			break;
 		}
 

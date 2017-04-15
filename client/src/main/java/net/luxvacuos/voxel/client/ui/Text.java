@@ -29,10 +29,10 @@ import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.NRendering;
 
 public class Text extends Component {
-	private String text, font = "Roboto-Regular";
-	private int align = NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE;
-	private float fontSize = 25;
-	private NVGColor color = NRendering.rgba(255, 255, 255, 255, NVGColor.create());
+	protected String text, font = "Poppins-Medium";
+	protected int align = NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE;
+	protected float fontSize = 25;
+	protected NVGColor color = NRendering.rgba(255, 255, 255, 255, NVGColor.create());
 
 	public Text(String text, float x, float y) {
 		this.text = text;

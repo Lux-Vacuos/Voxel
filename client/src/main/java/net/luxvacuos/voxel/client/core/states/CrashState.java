@@ -23,8 +23,8 @@ package net.luxvacuos.voxel.client.core.states;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 
-import net.luxvacuos.voxel.client.core.ClientInternalSubsystem;
-import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
+import net.luxvacuos.voxel.client.core.ClientVariables;
+import net.luxvacuos.voxel.client.rendering.api.nanovg.NRendering;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.WM;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Renderer;
 import net.luxvacuos.voxel.client.ui.menus.CrashWindow;
@@ -41,8 +41,9 @@ public class CrashState extends AbstractState {
 
 	@Override
 	public void start() {
-		Window window = ClientInternalSubsystem.getInstance().getGameWindow();
-		WM.getWM().addWindow(new CrashWindow(-2, window.getHeight() + 2, window.getWidth() + 4, window.getHeight() + 4, t));
+		WM.getWM().addWindow(new CrashWindow(-(NRendering.BORDER_SIZE / 2f),
+				ClientVariables.HEIGHT + NRendering.BORDER_SIZE / 2f, ClientVariables.WIDTH + NRendering.BORDER_SIZE,
+				ClientVariables.HEIGHT + NRendering.BORDER_SIZE, t));
 	}
 
 	@Override

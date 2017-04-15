@@ -18,28 +18,26 @@
  * 
  */
 
-package net.luxvacuos.voxel.client.rendering.api.nanovg;
+package net.luxvacuos.voxel.client.ui;
 
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
+import net.luxvacuos.voxel.client.rendering.api.nanovg.Event;
+import net.luxvacuos.voxel.universal.resources.IDisposable;
 
-public interface ITitleBar {
+public interface ITitleBar extends IDisposable {
 
-	public void render(Window window, IWindow iWindow);
+	public void render(Window window);
 
-	public void update(Window window, IWindow iWindow);
+	public void update(float delta, Window window);
 
-	public void setOnExit(Event onclick);
+	public void alwaysUpdate(float delta, Window window);
 
-	public void setOnMaximize(Event onclick);
-
+	public void addComponent(Component component);
+	
 	public void setOnDrag(Event event);
 
 	public boolean isEnabled();
 
 	public void setEnabled(boolean enabled);
-	
-	public void setTitle(String title);
-
-	public String getTitle();
 
 }

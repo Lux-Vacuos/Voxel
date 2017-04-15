@@ -89,8 +89,6 @@ public interface IWindow {
 
 	public float getY();
 
-	public float getLastUpdate();
-
 	public Thread getThread();
 
 	public NVGLUFramebuffer getFBO();

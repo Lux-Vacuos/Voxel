@@ -31,7 +31,7 @@ import net.luxvacuos.voxel.client.rendering.api.nanovg.NRendering;
 public class Button extends Component {
 
 	private String text = "missigno", font = "Poppins-Medium", entypo = "Entypo";
-	private NVGColor color = NRendering.rgba(255, 255, 255, 255);
+	protected NVGColor color = NRendering.rgba(255, 255, 255, 255);
 	private ByteBuffer preicon;
 	private OnAction onPress;
 	private float fontSize = 21;
@@ -78,6 +78,13 @@ public class Button extends Component {
 		color.g(g);
 		color.b(b);
 		color.a(a);
+	}
+	
+	public void setColor(String hex) {
+		color.r(Integer.valueOf(hex.substring(1, 3), 16) / 255f);
+		color.g(Integer.valueOf(hex.substring(3, 5), 16) / 255f);
+		color.b(Integer.valueOf(hex.substring(5, 7), 16) / 255f);
+		color.a(Integer.valueOf(hex.substring(7, 9), 16) / 255f);
 	}
 
 	public void setText(String text) {
