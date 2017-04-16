@@ -23,10 +23,12 @@ package net.luxvacuos.voxel.client.ui.menus;
 import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
+import net.luxvacuos.voxel.client.rendering.api.nanovg.NRendering;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.WM;
 import net.luxvacuos.voxel.client.ui.Alignment;
 import net.luxvacuos.voxel.client.ui.Button;
 import net.luxvacuos.voxel.client.ui.RootComponent;
+import net.luxvacuos.voxel.client.ui.TitleBar;
 
 public class PauseWindow extends RootComponent {
 
@@ -38,31 +40,33 @@ public class PauseWindow extends RootComponent {
 	public void initApp(Window window) {
 		super.setBackgroundColor("#1F1F1F78");
 		super.setAsBackground(true);
-		
+
 		Button backButton = new Button(0, 40, 200, 40, "Back to Main Menu");
 		backButton.setAlignment(Alignment.CENTER);
 		backButton.setWindowAlignment(Alignment.BOTTOM);
 		backButton.setOnButtonPress(() -> {
 			super.closeWindow();
-			RootComponent mainMenu = new MainMenu(20, window.getHeight() - 20, window.getWidth() - 40,
-					window.getHeight() - 40);
+			RootComponent mainMenu = new MainMenu(NRendering.BORDER_SIZE + 10,
+					ClientVariables.HEIGHT - TitleBar.HEIGHT - 10,
+					ClientVariables.WIDTH - NRendering.BORDER_SIZE * 2f - 20,
+					ClientVariables.HEIGHT - TitleBar.HEIGHT - NRendering.BORDER_SIZE - 20);
 			WM.getWM().addWindow(mainMenu);
 			ClientVariables.exitWorld = true;
 		});
-		
+
 		Button optionsButton = new Button(0, 100, 200, 40, "Options");
 		optionsButton.setAlignment(Alignment.CENTER);
 		optionsButton.setWindowAlignment(Alignment.BOTTOM);
 		optionsButton.setOnButtonPress(() -> {
-			WM.getWM().addWindow(new OptionsMenu(appW / 2 - 420 + appX, appY, 840, 600));
+			WM.getWM().addWindow(new OptionsMenu(w / 2 - 420 + x, y - 40, 840, 600));
 		});
-		
+
 		super.addComponent(backButton);
 		super.addComponent(optionsButton);
 
 		super.initApp(window);
 	}
-	
+
 	@Override
 	public void onClose() {
 		ClientVariables.paused = false;

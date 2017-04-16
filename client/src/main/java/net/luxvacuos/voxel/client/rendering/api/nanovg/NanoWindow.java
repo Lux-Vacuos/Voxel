@@ -52,8 +52,7 @@ public abstract class NanoWindow implements IWindow {
 			alwaysOnTop, background, blurBehind = true, running = true, resizing;
 	private BackgroundStyle backgroundStyle = BackgroundStyle.SOLID;
 	private NVGColor backgroundColor = NRendering.rgba(0, 0, 0, 255);
-	private float x, y, w, h;
-	protected float appX, appY, appW, appH;
+	protected float x, y, w, h;
 	private float oldX, oldY, oldW, oldH;
 	private WindowClose windowClose = WindowClose.DISPOSE;
 	private ITitleBar titleBar;
@@ -70,17 +69,6 @@ public abstract class NanoWindow implements IWindow {
 		this.h = h;
 		this.title = title;
 		titleBar = new TitleBar(this);
-		if (titleBar.isEnabled()) {
-			appX = x + NRendering.BORDER_SIZE / 2f;
-			appY = y - TitleBar.HEIGHT;
-			appW = w - NRendering.BORDER_SIZE;
-			appH = h - TitleBar.HEIGHT - NRendering.BORDER_SIZE / 2f;
-		} else {
-			appX = x + NRendering.BORDER_SIZE / 2f;
-			appY = y - NRendering.BORDER_SIZE / 2f;
-			appW = w - NRendering.BORDER_SIZE;
-			appH = h - NRendering.BORDER_SIZE;
-		}
 	}
 
 	@Override
@@ -88,7 +76,7 @@ public abstract class NanoWindow implements IWindow {
 		fbo = nvgluCreateFramebuffer(wind.getNVGID(), (int) (wind.getWidth() * wind.getPixelRatio()),
 				(int) (wind.getHeight() * wind.getPixelRatio()), 0);
 		initApp(wind);
-		TitleBarButton close = new TitleBarButton(-1, -1, 28, 28);
+		TitleBarButton close = new TitleBarButton(0, -1, 28, 28);
 		close.setOnButtonPress(() -> {
 			onClose();
 			closeWindow();
@@ -98,7 +86,7 @@ public abstract class NanoWindow implements IWindow {
 		close.setAlignment(Alignment.LEFT_BOTTOM);
 		close.setStyle(ButtonStyle.CLOSE);
 
-		TitleBarButton maximize = new TitleBarButton(-30, -1, 28, 28);
+		TitleBarButton maximize = new TitleBarButton(-29, -1, 28, 28);
 		maximize.setOnButtonPress(() -> {
 			if (resizable) {
 				maximized = !maximized;
@@ -108,7 +96,7 @@ public abstract class NanoWindow implements IWindow {
 					oldW = this.w;
 					oldH = this.h;
 					this.x = 0;
-					this.y = ClientVariables.HEIGHT;
+					this.y = ClientVariables.HEIGHT - TitleBar.HEIGHT;
 					this.w = ClientVariables.WIDTH;
 					this.h = ClientVariables.HEIGHT;
 				} else {
@@ -124,7 +112,7 @@ public abstract class NanoWindow implements IWindow {
 		maximize.setAlignment(Alignment.LEFT_BOTTOM);
 		maximize.setStyle(ButtonStyle.MAXIMIZE);
 
-		TitleBarButton minimize = new TitleBarButton(-59, -1, 28, 28);
+		TitleBarButton minimize = new TitleBarButton(-58, -1, 28, 28);
 		minimize.setOnButtonPress(() -> {
 		});
 		minimize.setColor("#646464C8");
@@ -139,7 +127,7 @@ public abstract class NanoWindow implements IWindow {
 		titleBar.addComponent(close);
 		if (resizable)
 			titleBar.addComponent(maximize);
-		//titleBar.addComponent(minimize);
+		titleBar.addComponent(minimize);
 		titleBar.addComponent(titleText);
 
 		titleBar.setOnDrag((window) -> {
@@ -181,7 +169,7 @@ public abstract class NanoWindow implements IWindow {
 					backgroundColor, decorations, titleBar.isEnabled());
 			if (decorations)
 				titleBar.render(window);
-			nvgScissor(window.getNVGID(), appX, window.getHeight() - appY, appW, appH);
+			nvgScissor(window.getNVGID(), x, window.getHeight() - y, w, h);
 			renderApp(window);
 			window.endNVGFrame();
 			nvgluBindFramebuffer(window.getNVGID(), null);
@@ -205,17 +193,6 @@ public abstract class NanoWindow implements IWindow {
 	@Override
 	public void alwaysUpdate(float delta, Window window, IWindowManager nanoWindowManager) {
 		titleBar.alwaysUpdate(delta, window);
-		if (titleBar.isEnabled()) {
-			appX = x + NRendering.BORDER_SIZE / 2f;
-			appY = y - TitleBar.HEIGHT;
-			appW = w - NRendering.BORDER_SIZE;
-			appH = h - TitleBar.HEIGHT - NRendering.BORDER_SIZE / 2f;
-		} else {
-			appX = x + NRendering.BORDER_SIZE / 2f;
-			appY = y - NRendering.BORDER_SIZE / 2f;
-			appW = w - NRendering.BORDER_SIZE;
-			appH = h - NRendering.BORDER_SIZE;
-		}
 		alwaysUpdateApp(delta, window);
 	}
 
@@ -237,7 +214,8 @@ public abstract class NanoWindow implements IWindow {
 
 	@Override
 	public boolean insideWindow() {
-		return Mouse.getX() > x && Mouse.getX() < x + w && Mouse.getY() > y - h && Mouse.getY() < y;
+		return Mouse.getX() > x - NRendering.BORDER_SIZE && Mouse.getX() < x + w + NRendering.BORDER_SIZE
+				&& Mouse.getY() > y - h - NRendering.BORDER_SIZE && Mouse.getY() < y + TitleBar.HEIGHT;
 	}
 
 	@Override

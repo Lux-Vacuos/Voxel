@@ -53,5 +53,6 @@ void main(void){
         out_Color.a = 0;
     } else {
         out_Color = texture(image, textureCoords);
+        out_Color.a = 1;
     }
 }

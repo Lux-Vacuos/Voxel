@@ -41,7 +41,7 @@ public class Console extends RootComponent {
 	public void initApp(Window window) {
 		super.setBackgroundColor("#1F1F1F78");
 
-		text = new TextArea("Voxel Console (WIP) \n > ", 0, 0, super.appW);
+		text = new TextArea("Voxel Console (WIP) \n > ", 0, 0, w);
 		text.setWindowAlignment(Alignment.LEFT_TOP);
 		text.setFontSize(25);
 		super.addComponent(text);

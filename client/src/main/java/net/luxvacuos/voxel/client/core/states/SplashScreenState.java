@@ -24,13 +24,16 @@ import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 
 import net.luxvacuos.voxel.client.core.ClientInternalSubsystem;
+import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
+import net.luxvacuos.voxel.client.rendering.api.nanovg.NRendering;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.WM;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Renderer;
 import net.luxvacuos.voxel.client.ui.Alignment;
 import net.luxvacuos.voxel.client.ui.Image;
 import net.luxvacuos.voxel.client.ui.RootComponent;
 import net.luxvacuos.voxel.client.ui.Spinner;
+import net.luxvacuos.voxel.client.ui.TitleBar;
 import net.luxvacuos.voxel.client.ui.menus.MainMenu;
 import net.luxvacuos.voxel.universal.core.AbstractVoxel;
 import net.luxvacuos.voxel.universal.core.TaskManager;
@@ -53,9 +56,8 @@ public class SplashScreenState extends AbstractState {
 
 	@Override
 	public void init() {
-		Window window = ClientInternalSubsystem.getInstance().getGameWindow();
-
-		component = new RootComponent(-2, window.getHeight() + 33, window.getWidth() + 4, window.getHeight() + 35, "splash");
+		component = new RootComponent(0, ClientVariables.HEIGHT, ClientVariables.WIDTH, ClientVariables.HEIGHT,
+				"splash");
 		component.setDecorations(false);
 		component.setBackgroundColor(1, 1, 1, 1);
 		component.setBlurBehind(false);
@@ -78,9 +80,9 @@ public class SplashScreenState extends AbstractState {
 	public void end() {
 		super.end();
 		component.closeWindow();
-		Window window = ClientInternalSubsystem.getInstance().getGameWindow();
-		RootComponent mainMenu = new MainMenu(20, window.getHeight() - 20, window.getWidth() - 40,
-				window.getHeight() - 40);
+		RootComponent mainMenu = new MainMenu(NRendering.BORDER_SIZE + 10,
+				ClientVariables.HEIGHT - TitleBar.HEIGHT - 10, ClientVariables.WIDTH - NRendering.BORDER_SIZE * 2f - 20,
+				ClientVariables.HEIGHT - TitleBar.HEIGHT - NRendering.BORDER_SIZE - 20);
 		WM.getWM().addWindow(mainMenu);
 	}
 

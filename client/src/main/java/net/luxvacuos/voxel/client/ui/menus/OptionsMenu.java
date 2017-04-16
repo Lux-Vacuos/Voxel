@@ -53,8 +53,8 @@ public class OptionsMenu extends RootComponent {
 		Button ambientOccButton = new Button(260, -160, 200, 40, "Ambient Occlusion");
 		Button chromaticAberrationButton = new Button(260, -220, 200, 40, "Chromatic Aberration");
 		Button lensFlaresButton = new Button(260, -280, 200, 40, "Lens Flares");
-		Text wmBorderText = new Text("Window Border: " + NRendering.BORDER_SIZE / 2f, 520, -40);
-		Slider wmBorder = new Slider(520, -60, 200, 20, NRendering.BORDER_SIZE / 80f);
+		Text wmBorderText = new Text("Window Border: " + NRendering.BORDER_SIZE, 520, -40);
+		Slider wmBorder = new Slider(520, -60, 200, 20, NRendering.BORDER_SIZE / 40f);
 
 		godraysButton.setWindowAlignment(Alignment.LEFT_TOP);
 		godraysButton.setAlignment(Alignment.RIGHT_BOTTOM);
@@ -277,10 +277,10 @@ public class OptionsMenu extends RootComponent {
 				lensFlaresButton.setColor(1.0f, 0.2f, 0.2f, 1.0f);
 			}
 		});
-		
+
 		wmBorder.setOnPress(() -> {
-			NRendering.BORDER_SIZE = wmBorder.getPosition() * 80f;
-			wmBorderText.setText("Window Border: " + NRendering.BORDER_SIZE / 2f);
+			NRendering.BORDER_SIZE = wmBorder.getPosition() * 40f;
+			wmBorderText.setText("Window Border: " + NRendering.BORDER_SIZE);
 		});
 
 		super.addComponent(shadowsButton);
@@ -298,7 +298,7 @@ public class OptionsMenu extends RootComponent {
 
 		super.initApp(window);
 	}
-	
+
 	@Override
 	public void onClose() {
 		ClientInternalSubsystem.getInstance().getGameSettings().update();

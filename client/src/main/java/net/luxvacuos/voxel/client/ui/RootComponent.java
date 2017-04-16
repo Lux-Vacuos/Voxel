@@ -34,8 +34,8 @@ public class RootComponent extends NanoWindow {
 
 	public RootComponent(float x, float y, float w, float h, String title) {
 		super(x, y, w, h, title);
-		
-		root = new Root(appX, appY - appH, appW, appH);
+
+		root = new Root(x, y - h, w, h);
 	}
 
 	@Override
@@ -55,13 +55,13 @@ public class RootComponent extends NanoWindow {
 			component.update(delta, window);
 		}
 	}
-	
+
 	@Override
 	public void alwaysUpdateApp(float delta, Window window) {
-		root.rootX = appX;
-		root.rootY = appY - appH;
-		root.rootW = appW;
-		root.rootH = appH;
+		root.rootX = x;
+		root.rootY = y - h;
+		root.rootW = w;
+		root.rootH = h;
 		for (Component component : components) {
 			component.alwaysUpdate(delta, window);
 		}
@@ -80,5 +80,5 @@ public class RootComponent extends NanoWindow {
 		component.init();
 		components.add(component);
 	}
-	
+
 }

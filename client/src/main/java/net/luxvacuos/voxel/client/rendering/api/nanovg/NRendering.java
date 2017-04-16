@@ -95,7 +95,8 @@ public class NRendering {
 		return color;
 	}
 
-	public static void renderTitleBarText(long vg, String text, String font, int align, float x, float y, float fontSize) {
+	public static void renderTitleBarText(long vg, String text, String font, int align, float x, float y,
+			float fontSize) {
 
 		nvgSave(vg);
 		nvgFontSize(vg, fontSize);
@@ -104,7 +105,7 @@ public class NRendering {
 
 		nvgFontBlur(vg, 4);
 		nvgFillColor(vg, rgba(0, 0, 0, 255, colorA));
-		nvgText(vg, x , y + 1, text);
+		nvgText(vg, x, y + 1, text);
 
 		nvgFontBlur(vg, 0);
 		nvgFillColor(vg, rgba(255, 255, 255, 255, colorA));
@@ -121,12 +122,12 @@ public class NRendering {
 			// Window
 			nvgBeginPath(vg);
 			nvgRect(vg, x, y, w, h);
-			if (titleBar)
-				nvgRect(vg, x + BORDER_SIZE / 2f, y + TitleBar.HEIGHT, w - BORDER_SIZE,
-						h - TitleBar.HEIGHT - BORDER_SIZE / 2f);
-			else
-				nvgRect(vg, x + BORDER_SIZE / 2f, y + BORDER_SIZE / 2f, w - BORDER_SIZE, h - BORDER_SIZE);
 			nvgPathWinding(vg, NVG_HOLE);
+			if (titleBar)
+				nvgRect(vg, x - BORDER_SIZE, y - TitleBar.HEIGHT, w + BORDER_SIZE * 2f,
+						h + TitleBar.HEIGHT + BORDER_SIZE);
+			else
+				nvgRect(vg, x - BORDER_SIZE, y - BORDER_SIZE, w + BORDER_SIZE * 2f, h + BORDER_SIZE * 2f);
 			nvgFillColor(vg, rgba(31, 31, 31, 120, colorA));
 			nvgFill(vg);
 		}
@@ -135,11 +136,7 @@ public class NRendering {
 		switch (backgroundStyle) {
 		case SOLID:
 			nvgBeginPath(vg);
-			if (titleBar)
-				nvgRect(vg, x + BORDER_SIZE / 2f, y + TitleBar.HEIGHT, w - BORDER_SIZE,
-						h - TitleBar.HEIGHT - BORDER_SIZE / 2f);
-			else
-				nvgRect(vg, x + BORDER_SIZE / 2f, y + BORDER_SIZE / 2f, w - BORDER_SIZE, h - BORDER_SIZE);
+			nvgRect(vg, x, y, w, h);
 			nvgFillColor(vg, backgroundColor);
 			nvgFill(vg);
 			break;
@@ -148,11 +145,13 @@ public class NRendering {
 		}
 		if (decorations) {
 			// Drop shadow
-			nvgBoxGradient(vg, x, y + 10, w, h, 0, 20, rgba(0, 0, 0, 80, colorA), rgba(0, 0, 0, 0, colorB),
+			nvgBoxGradient(vg, x - BORDER_SIZE, y + 10 - TitleBar.HEIGHT, w + BORDER_SIZE * 2f,
+					h + TitleBar.HEIGHT + BORDER_SIZE, 0, 20, rgba(0, 0, 0, 80, colorA), rgba(0, 0, 0, 0, colorB),
 					shadowPaint);
 			nvgBeginPath(vg);
-			nvgRect(vg, x - 10, y - 10, w + 20, h + 30);
-			nvgRect(vg, x, y, w, h);
+			nvgRect(vg, x - 10 - BORDER_SIZE, y - 10 - TitleBar.HEIGHT, w + 20 + BORDER_SIZE * 2f,
+					h + 30 + TitleBar.HEIGHT + BORDER_SIZE);
+			nvgRect(vg, x - BORDER_SIZE, y - TitleBar.HEIGHT, w + BORDER_SIZE * 2f, h + TitleBar.HEIGHT + BORDER_SIZE);
 			nvgPathWinding(vg, NVG_HOLE);
 			nvgFillPaint(vg, shadowPaint);
 			nvgFill(vg);
@@ -191,8 +190,8 @@ public class NRendering {
 			break;
 		case MINIMIZE:
 			nvgBeginPath(vg);
-			nvgMoveTo(vg,  x + w / 2 - 6, y + h / 2);
-			nvgLineTo(vg,  x + w / 2 + 6, y + h / 2);
+			nvgMoveTo(vg, x + w / 2 - 6, y + h / 2);
+			nvgLineTo(vg, x + w / 2 + 6, y + h / 2);
 			nvgStrokeColor(vg, rgba(0, 0, 0, 255, colorA));
 			nvgStroke(vg);
 			break;

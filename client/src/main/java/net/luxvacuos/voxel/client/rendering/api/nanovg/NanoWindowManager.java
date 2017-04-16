@@ -70,8 +70,8 @@ public class NanoWindowManager implements IWindowManager {
 			height = GLUtil.getTextureMaxSize();
 		composite = new Composite(win, width, height);
 		composite.addEffect(new MaskBlur(width, height));
-		composite.addEffect(new GaussianH(width, height));
 		composite.addEffect(new GaussianV(width, height));
+		composite.addEffect(new GaussianH(width, height));
 		composite.addEffect(new Final(width, height));
 
 		Thread th = new Thread(() -> {

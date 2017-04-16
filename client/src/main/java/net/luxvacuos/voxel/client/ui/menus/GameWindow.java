@@ -40,7 +40,7 @@ public class GameWindow extends RootComponent {
 		super.setBlurBehind(false);
 		super.toggleTitleBar();
 
-		Image game = new Image(0, 0, appW, appH + 26, Renderer.getResultTexture());
+		Image game = new Image(0, 0, w, h, Renderer.getResultTexture());
 
 		super.addComponent(game);
 

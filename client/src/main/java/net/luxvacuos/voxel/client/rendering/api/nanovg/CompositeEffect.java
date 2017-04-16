@@ -39,6 +39,7 @@ import net.luxvacuos.igl.vector.Vector4f;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.shaders.WindowManagerShader;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.RawModel;
+import net.luxvacuos.voxel.client.ui.TitleBar;
 import net.luxvacuos.voxel.universal.resources.IDisposable;
 
 public abstract class CompositeEffect implements IDisposable {
@@ -55,7 +56,9 @@ public abstract class CompositeEffect implements IDisposable {
 	public void render(NVGLUFramebuffer[] fbos, RawModel quad, Window wnd, IWindow window) {
 		nvgluBindFramebuffer(wnd.getNVGID(), fbos[0]);
 		shader.start();
-		shader.loadFrame(new Vector4f(window.getX(), window.getY(), window.getWidth(), window.getHeight()));
+		shader.loadFrame(new Vector4f(window.getX() - NRendering.BORDER_SIZE, window.getY() + TitleBar.HEIGHT,
+				window.getWidth() + NRendering.BORDER_SIZE * 2f,
+				window.getHeight() + TitleBar.HEIGHT + NRendering.BORDER_SIZE));
 		shader.loadBlurBehind(window.hasBlurBehind());
 		glBindVertexArray(quad.getVaoID());
 		glEnableVertexAttribArray(0);

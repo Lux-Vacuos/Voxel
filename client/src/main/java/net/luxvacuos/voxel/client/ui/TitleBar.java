@@ -27,6 +27,7 @@ import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.Event;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.IWindow;
+import net.luxvacuos.voxel.client.rendering.api.nanovg.NRendering;
 
 public class TitleBar implements ITitleBar {
 
@@ -40,7 +41,8 @@ public class TitleBar implements ITitleBar {
 
 	public TitleBar(IWindow window) {
 		this.window = window;
-		root = new Root(this.window.getX(), this.window.getY() - HEIGHT, this.window.getWidth(), HEIGHT);
+		root = new Root(this.window.getX() + NRendering.BORDER_SIZE / 2f, this.window.getY() - HEIGHT,
+				this.window.getWidth() - NRendering.BORDER_SIZE, HEIGHT);
 	}
 
 	@Override
@@ -69,7 +71,7 @@ public class TitleBar implements ITitleBar {
 	public void alwaysUpdate(float delta, Window window) {
 		if (enabled) {
 			root.rootX = this.window.getX();
-			root.rootY = this.window.getY() - HEIGHT;
+			root.rootY = this.window.getY();
 			root.rootW = this.window.getWidth();
 			root.rootH = HEIGHT;
 			for (Component component : components) {
@@ -91,9 +93,9 @@ public class TitleBar implements ITitleBar {
 	}
 
 	private boolean canDrag(IWindow iWindow) {
-		return Mouse.getX() > iWindow.getX() && Mouse.getY() < iWindow.getY()
+		return Mouse.getX() > iWindow.getX() && Mouse.getY() < iWindow.getY() + HEIGHT
 				&& Mouse.getX() < iWindow.getX() + iWindow.getWidth()
-				&& Mouse.getY() > iWindow.getY() - TitleBar.HEIGHT;
+				&& Mouse.getY() > iWindow.getY();
 	}
 
 	@Override

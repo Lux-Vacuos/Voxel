@@ -72,19 +72,19 @@ public class MainMenu extends RootComponent {
 				super.closeWindow();
 				StateMachine.setCurrentState(StateNames.TEST);
 			} else
-				WM.getWM().addWindow(new WorldMenu(appW / 2 - 420 + appX, appY, 840, 600, this));
+				WM.getWM().addWindow(new WorldMenu(w / 2 - 420 + x, y - 40, 840, 600, this));
 		});
 
 		playMPButton.setOnButtonPress(() -> {
-			WM.getWM().addWindow(new MultiplayerMenu(appW / 2 - 250 + appX, appY - 100, 500, 400));
+			WM.getWM().addWindow(new MultiplayerMenu(w / 2 - 250 + x, y - 100, 500, 400));
 		});
 
 		optionsButton.setOnButtonPress(() -> {
-			WM.getWM().addWindow(new OptionsMenu(appW / 2 - 420 + appX, appY, 840, 600));
+			WM.getWM().addWindow(new OptionsMenu(w / 2 - 420 + x, y - 40, 840, 600));
 		});
 
 		aboutButton.setOnButtonPress(() -> {
-			WM.getWM().addWindow(new AboutMenu(appW / 2 - 420 + appX, appY, 840, 600));
+			WM.getWM().addWindow(new AboutMenu(w / 2 - 420 + x, y - 40, 840, 600));
 		});
 
 		exitButton.setOnButtonPress(() -> {

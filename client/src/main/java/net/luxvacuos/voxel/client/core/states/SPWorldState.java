@@ -49,6 +49,7 @@ import net.luxvacuos.voxel.client.rendering.api.nanovg.WM;
 import net.luxvacuos.voxel.client.rendering.api.opengl.BlockOutlineRenderer;
 import net.luxvacuos.voxel.client.rendering.api.opengl.ParticleDomain;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Renderer;
+import net.luxvacuos.voxel.client.ui.TitleBar;
 import net.luxvacuos.voxel.client.ui.menus.GameWindow;
 import net.luxvacuos.voxel.client.ui.menus.PauseWindow;
 import net.luxvacuos.voxel.client.util.Maths;
@@ -115,9 +116,7 @@ public class SPWorldState extends AbstractState {
 		Renderer.render(world.getActiveDimension().getEntitiesManager().getEntities(), ParticleDomain.getParticles(),
 				camera, sun.getCamera(), world.getActiveDimension().getWorldSimulator(), sun.getSunPosition(),
 				sun.getInvertedSunPosition(), 0);
-		gameWindow = new GameWindow(-(NRendering.BORDER_SIZE / 2f),
-				ClientVariables.HEIGHT + NRendering.BORDER_SIZE / 2f, ClientVariables.WIDTH + NRendering.BORDER_SIZE,
-				ClientVariables.HEIGHT + NRendering.BORDER_SIZE);
+		gameWindow = new GameWindow(0, ClientVariables.HEIGHT, ClientVariables.WIDTH, ClientVariables.HEIGHT);
 		WM.getWM().addWindow(0, gameWindow);
 	}
 
@@ -198,8 +197,10 @@ public class SPWorldState extends AbstractState {
 				kbh.ignoreKeyUntilRelease(GLFW.GLFW_KEY_ESCAPE);
 				((PlayerCamera) camera).unlockMouse();
 				ClientVariables.paused = true;
-				pauseWindow = new PauseWindow(20, window.getHeight() - 20, window.getWidth() - 40,
-						window.getHeight() - 40);
+				pauseWindow = new PauseWindow(NRendering.BORDER_SIZE + 10,
+						ClientVariables.HEIGHT - TitleBar.HEIGHT - 10,
+						ClientVariables.WIDTH - NRendering.BORDER_SIZE * 2f - 20,
+						ClientVariables.HEIGHT - TitleBar.HEIGHT - NRendering.BORDER_SIZE - 20);
 				WM.getWM().addWindow(pauseWindow);
 			}
 		} else if (ClientVariables.exitWorld) {

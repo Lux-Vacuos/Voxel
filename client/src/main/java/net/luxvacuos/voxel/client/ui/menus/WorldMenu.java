@@ -100,7 +100,7 @@ public class WorldMenu extends RootComponent {
 	}
 
 	private void createList(Window window) {
-		ScrollPane pane = new ScrollPane(0, 0, appW / 2, appH, appW / 2 - 35, 60f);
+		ScrollPane pane = new ScrollPane(0, 0, w / 2, h, w / 2 - 35, 60f);
 		pane.setColls(1);
 
 		File worldPath = new File(ClientVariables.WORLD_PATH);
@@ -109,7 +109,7 @@ public class WorldMenu extends RootComponent {
 		try {
 			Files.walk(worldPath.toPath(), 1).forEach(filePath -> {
 				if (Files.isDirectory(filePath) && !filePath.toFile().equals(worldPath)) {
-					pane.addElement(new WorldElement(appW / 2 - 35, 60, filePath.getFileName().toString(), this));
+					pane.addElement(new WorldElement(w / 2 - 35, 60, filePath.getFileName().toString(), this));
 				}
 			});
 		} catch (IOException e) {

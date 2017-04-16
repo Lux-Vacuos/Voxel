@@ -25,7 +25,6 @@ import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_TOP;
 
 import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
-import net.luxvacuos.voxel.client.rendering.api.nanovg.NRendering;
 
 public class ModalWindow extends RootComponent {
 
@@ -34,8 +33,7 @@ public class ModalWindow extends RootComponent {
 	private Button accept;
 
 	public ModalWindow(float w, float h, String text, String title) {
-		super(-(NRendering.BORDER_SIZE / 2f), ClientVariables.HEIGHT + NRendering.BORDER_SIZE / 2f,
-				ClientVariables.WIDTH + NRendering.BORDER_SIZE, ClientVariables.HEIGHT + NRendering.BORDER_SIZE, "");
+		super(0, ClientVariables.HEIGHT, ClientVariables.WIDTH, ClientVariables.HEIGHT, "");
 		this.mwW = w;
 		this.mwH = h;
 		this.text = text;
