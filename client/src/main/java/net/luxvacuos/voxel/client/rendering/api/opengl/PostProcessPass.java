@@ -93,7 +93,7 @@ public abstract class PostProcessPass implements IPostProcessPass {
 		shader.loadSettings((boolean) REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/dof"),
 				(boolean) REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/fxaa"),
 				(boolean) REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/motionBlur"), false, false, false, 0,
-				(boolean) REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/chromatricAberration"), false);
+				(boolean) REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/chromaticAberration"), false);
 
 		render(auxs);
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, quad.getVertexCount());

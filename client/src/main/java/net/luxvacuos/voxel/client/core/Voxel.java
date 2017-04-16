@@ -256,7 +256,6 @@ public class Voxel extends AbstractVoxel {
 		if (!StateMachine.isRunning())
 			StateMachine.run();
 		StateMachine.setCurrentState(StateNames.CRASH);
-		TaskManager.crash();
 		Mouse.setGrabbed(false);
 		loop();
 		dispose();

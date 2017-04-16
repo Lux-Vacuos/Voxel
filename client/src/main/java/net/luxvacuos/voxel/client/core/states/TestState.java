@@ -116,7 +116,7 @@ public class TestState extends AbstractState {
 		shadowProjectionMatrix[3] = Maths.orthographic(-shadowDrawDistance, shadowDrawDistance, -shadowDrawDistance,
 				shadowDrawDistance, -shadowDrawDistance, shadowDrawDistance, false);
 		Matrix4d projectionMatrix = Renderer.createProjectionMatrix(window.getWidth(), window.getHeight(),
-				(int) REGISTRY.getRegistryItem("/Voxel/Settings/Core/fps"), ClientVariables.NEAR_PLANE,
+				(int) REGISTRY.getRegistryItem("/Voxel/Settings/Core/fov"), ClientVariables.NEAR_PLANE,
 				ClientVariables.FAR_PLANE);
 
 		camera = new PlayerCamera(projectionMatrix, window);

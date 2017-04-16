@@ -28,11 +28,8 @@ public class TaskManager {
 	private static Queue<Runnable> tasks = new LinkedList<>();
 
 	private static float timer;
-	private static boolean crashed = false;
 
 	public static void update() {
-		if (crashed)
-			return;
 		if (!tasks.isEmpty()) {
 			timer += 1 * 0.33;
 			if (timer > 1) {
@@ -48,10 +45,6 @@ public class TaskManager {
 
 	public static boolean isEmpty() {
 		return tasks.isEmpty();
-	}
-
-	public static void crash() {
-		crashed = true;
 	}
 
 }

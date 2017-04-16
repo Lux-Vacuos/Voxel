@@ -134,7 +134,6 @@ public class Voxel extends AbstractVoxel {
 
 	@Override
 	public void handleError(Throwable e) {
-		TaskManager.crash();
 		e.printStackTrace();
 		dispose();
 	}

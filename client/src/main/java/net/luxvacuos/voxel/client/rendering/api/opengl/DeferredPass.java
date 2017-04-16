@@ -104,7 +104,7 @@ public abstract class DeferredPass implements IDeferredPass {
 				(boolean) REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/volumetricLight"),
 				(boolean) REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/reflections"),
 				(boolean) REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/ambientOcclusion"),
-				(int) REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/shadowsDistance"), false,
+				(int) REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/shadowsDrawDistance"), false,
 				(boolean) REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/lensFlares"));
 		shader.loadSunPosition(Maths.convertTo2F(new Vector3d(lightPosition), camera.getProjectionMatrix(),
 				Maths.createViewMatrixRot(camera.getRotation().getX(), camera.getRotation().getY(),
