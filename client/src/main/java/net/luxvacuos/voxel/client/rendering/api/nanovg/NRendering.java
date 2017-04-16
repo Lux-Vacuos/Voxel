@@ -76,7 +76,7 @@ public class NRendering {
 	private static final FloatBuffer lineh = BufferUtils.createFloatBuffer(1);
 	private static final NVGTextRow.Buffer rows = NVGTextRow.create(3);
 
-	public static float BORDER_SIZE = 20;
+	public static float BORDER_SIZE = 10;
 
 	public static NVGColor rgba(int r, int g, int b, int a, NVGColor color) {
 		color.r(r / 255.0f);

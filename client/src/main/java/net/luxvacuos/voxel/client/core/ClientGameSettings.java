@@ -63,7 +63,7 @@ public final class ClientGameSettings extends AbstractGameSettings {
 		ClientVariables.useChromaticAberration = Boolean.parseBoolean(getValue("useChromaticAberration", "false"));
 		ClientVariables.useLensFlares = Boolean.parseBoolean(getValue("useLensFlares", "false"));
 		WM.invertWindowButtons = Boolean.parseBoolean(getValue("WM_InvertButtons", "false"));
-		NRendering.BORDER_SIZE = Integer.parseInt(getValue("WM_BorderSize", "20"));
+		NRendering.BORDER_SIZE = Integer.parseInt(getValue("WM_BorderSize", "10"));
 	}
 
 	/**
