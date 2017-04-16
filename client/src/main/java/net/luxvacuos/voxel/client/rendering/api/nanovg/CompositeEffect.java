@@ -20,6 +20,7 @@
 
 package net.luxvacuos.voxel.client.rendering.api.nanovg;
 
+import static net.luxvacuos.voxel.universal.core.GlobalVariables.REGISTRY;
 import static org.lwjgl.nanovg.NanoVGGL3.nvgluBindFramebuffer;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11.GL_TRIANGLE_STRIP;
@@ -39,7 +40,6 @@ import net.luxvacuos.igl.vector.Vector4f;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.shaders.WindowManagerShader;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.RawModel;
-import net.luxvacuos.voxel.client.ui.TitleBar;
 import net.luxvacuos.voxel.universal.resources.IDisposable;
 
 public abstract class CompositeEffect implements IDisposable {
@@ -54,11 +54,12 @@ public abstract class CompositeEffect implements IDisposable {
 	}
 
 	public void render(NVGLUFramebuffer[] fbos, RawModel quad, Window wnd, IWindow window) {
+		float borderSize = (float) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/borderSize");
+		float titleBarHeight = (float) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/titleBarHeight");
 		nvgluBindFramebuffer(wnd.getNVGID(), fbos[0]);
 		shader.start();
-		shader.loadFrame(new Vector4f(window.getX() - NRendering.BORDER_SIZE, window.getY() + TitleBar.HEIGHT,
-				window.getWidth() + NRendering.BORDER_SIZE * 2f,
-				window.getHeight() + TitleBar.HEIGHT + NRendering.BORDER_SIZE));
+		shader.loadFrame(new Vector4f(window.getX() - borderSize, window.getY() + titleBarHeight,
+				window.getWidth() + borderSize * 2f, window.getHeight() + titleBarHeight + borderSize));
 		shader.loadBlurBehind(window.hasBlurBehind());
 		glBindVertexArray(quad.getVaoID());
 		glEnableVertexAttribArray(0);

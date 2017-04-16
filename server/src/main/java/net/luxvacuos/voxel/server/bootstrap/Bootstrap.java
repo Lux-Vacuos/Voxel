@@ -23,7 +23,6 @@ package net.luxvacuos.voxel.server.bootstrap;
 import java.io.File;
 import java.io.IOException;
 
-import net.luxvacuos.voxel.server.core.ServerVariables;
 import net.luxvacuos.voxel.server.core.Voxel;
 import net.luxvacuos.voxel.universal.bootstrap.AbstractBootstrap;
 
@@ -47,16 +46,8 @@ public class Bootstrap extends AbstractBootstrap {
 
 	@Override
 	public void parseArgs(String[] args) {
-		boolean gavePort = false;
 		for (int i = 0; i < args.length; i++) {
 			switch (args[i]) {
-			case "-port":
-				if (gavePort)
-					throw new IllegalStateException("Port already given");
-				// Convert and set height
-				ServerVariables.port = Integer.parseInt(args[++i]);
-				gavePort = true;
-				break;
 			default:
 				if (args[i].startsWith("-")) {
 					throw new IllegalArgumentException("Unknown argument: " + args[i].substring(1));

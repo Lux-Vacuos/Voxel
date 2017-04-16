@@ -20,6 +20,7 @@
 
 package net.luxvacuos.voxel.client.rendering.api.opengl;
 
+import static net.luxvacuos.voxel.universal.core.GlobalVariables.REGISTRY;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_TRIANGLE_STRIP;
@@ -99,10 +100,12 @@ public abstract class DeferredPass implements IDeferredPass {
 		shader.loadMotionBlurData(camera, previousViewMatrix, previousCameraPosition);
 		shader.loadLightPosition(lightPosition, invertedLightPosition);
 		shader.loadviewMatrix(camera);
-		shader.loadSettings(ClientVariables.useDOF, ClientVariables.useFXAA, ClientVariables.useMotionBlur,
-				ClientVariables.useVolumetricLight, ClientVariables.useReflections, ClientVariables.useAmbientOcclusion,
-				ClientVariables.shadowMapDrawDistance, ClientVariables.useChromaticAberration,
-				ClientVariables.useLensFlares);
+		shader.loadSettings(false, false, false,
+				(boolean) REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/volumetricLight"),
+				(boolean) REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/reflections"),
+				(boolean) REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/ambientOcclusion"),
+				(int) REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/shadowsDistance"), false,
+				(boolean) REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/lensFlares"));
 		shader.loadSunPosition(Maths.convertTo2F(new Vector3d(lightPosition), camera.getProjectionMatrix(),
 				Maths.createViewMatrixRot(camera.getRotation().getX(), camera.getRotation().getY(),
 						camera.getRotation().getZ(), tmp),

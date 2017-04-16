@@ -43,6 +43,7 @@ import net.luxvacuos.voxel.client.world.block.BlocksResources;
 import net.luxvacuos.voxel.client.world.block.RenderBlock;
 import net.luxvacuos.voxel.client.world.block.types.WaterBlock;
 import net.luxvacuos.voxel.universal.core.AbstractInternalSubsystem;
+import net.luxvacuos.voxel.universal.core.GlobalVariables;
 import net.luxvacuos.voxel.universal.core.TaskManager;
 import net.luxvacuos.voxel.universal.material.BlockMaterial;
 import net.luxvacuos.voxel.universal.material.MaterialModder;
@@ -86,7 +87,8 @@ public class ClientInternalSubsystem extends AbstractInternalSubsystem {
 		PixelBufferHandle pb = new PixelBufferHandle();
 		pb.setSrgbCapable(1);
 		handle.setPixelBuffer(pb);
-		long gameWindowID = WindowManager.createWindow(handle, ClientVariables.VSYNC);
+		long gameWindowID = WindowManager.createWindow(handle,
+				(boolean) GlobalVariables.REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/vsync"));
 		window = WindowManager.getWindow(gameWindowID);
 		Mouse.setWindow(window);
 		WM.setWM(new NanoWindowManager(window));
@@ -116,7 +118,8 @@ public class ClientInternalSubsystem extends AbstractInternalSubsystem {
 			} catch (SoundSystemException e) {
 				e.printStackTrace();
 			}
-			SoundSystemConfig.setSoundFilesPackage("assets/" + ClientVariables.assets + "/sounds/");
+			SoundSystemConfig.setSoundFilesPackage("assets/"
+					+ GlobalVariables.REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/assets") + "/sounds/");
 			SoundSystemConfig.setLogger(new LoggerSoundSystem());
 			soundSystem = new SoundSystem();
 		}

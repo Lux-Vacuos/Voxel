@@ -37,6 +37,8 @@ public interface ITitleBar extends IDisposable {
 	public void setOnDrag(Event event);
 
 	public boolean isEnabled();
+	
+	public boolean isDragging();
 
 	public void setEnabled(boolean enabled);
 

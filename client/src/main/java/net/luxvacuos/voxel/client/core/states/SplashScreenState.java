@@ -20,20 +20,19 @@
 
 package net.luxvacuos.voxel.client.core.states;
 
+import static net.luxvacuos.voxel.universal.core.GlobalVariables.REGISTRY;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 
 import net.luxvacuos.voxel.client.core.ClientInternalSubsystem;
 import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
-import net.luxvacuos.voxel.client.rendering.api.nanovg.NRendering;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.WM;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Renderer;
 import net.luxvacuos.voxel.client.ui.Alignment;
 import net.luxvacuos.voxel.client.ui.Image;
 import net.luxvacuos.voxel.client.ui.RootComponent;
 import net.luxvacuos.voxel.client.ui.Spinner;
-import net.luxvacuos.voxel.client.ui.TitleBar;
 import net.luxvacuos.voxel.client.ui.menus.MainMenu;
 import net.luxvacuos.voxel.universal.core.AbstractVoxel;
 import net.luxvacuos.voxel.universal.core.TaskManager;
@@ -80,9 +79,11 @@ public class SplashScreenState extends AbstractState {
 	public void end() {
 		super.end();
 		component.closeWindow();
-		RootComponent mainMenu = new MainMenu(NRendering.BORDER_SIZE + 10,
-				ClientVariables.HEIGHT - TitleBar.HEIGHT - 10, ClientVariables.WIDTH - NRendering.BORDER_SIZE * 2f - 20,
-				ClientVariables.HEIGHT - TitleBar.HEIGHT - NRendering.BORDER_SIZE - 20);
+		float borderSize = (float) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/borderSize");
+		float titleBarHeight = (float) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/titleBarHeight");
+		RootComponent mainMenu = new MainMenu(borderSize + 10, ClientVariables.HEIGHT - titleBarHeight - 10,
+				ClientVariables.WIDTH - borderSize * 2f - 20,
+				ClientVariables.HEIGHT - titleBarHeight - borderSize - 20);
 		WM.getWM().addWindow(mainMenu);
 	}
 

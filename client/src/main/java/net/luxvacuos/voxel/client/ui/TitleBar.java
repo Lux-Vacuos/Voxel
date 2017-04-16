@@ -20,6 +20,8 @@
 
 package net.luxvacuos.voxel.client.ui;
 
+import static net.luxvacuos.voxel.universal.core.GlobalVariables.REGISTRY;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,11 +29,8 @@ import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.Event;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.IWindow;
-import net.luxvacuos.voxel.client.rendering.api.nanovg.NRendering;
 
 public class TitleBar implements ITitleBar {
-
-	public static final float HEIGHT = 30;
 
 	private boolean enabled = true, dragging;
 	private Event drag;
@@ -41,8 +40,8 @@ public class TitleBar implements ITitleBar {
 
 	public TitleBar(IWindow window) {
 		this.window = window;
-		root = new Root(this.window.getX() + NRendering.BORDER_SIZE / 2f, this.window.getY() - HEIGHT,
-				this.window.getWidth() - NRendering.BORDER_SIZE, HEIGHT);
+		root = new Root(this.window.getX(), this.window.getY(), this.window.getWidth(),
+				(float) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/titleBarHeight"));
 	}
 
 	@Override
@@ -73,7 +72,7 @@ public class TitleBar implements ITitleBar {
 			root.rootX = this.window.getX();
 			root.rootY = this.window.getY();
 			root.rootW = this.window.getWidth();
-			root.rootH = HEIGHT;
+			root.rootH = (float) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/titleBarHeight");
 			for (Component component : components) {
 				component.alwaysUpdate(delta, window);
 			}
@@ -93,9 +92,10 @@ public class TitleBar implements ITitleBar {
 	}
 
 	private boolean canDrag(IWindow iWindow) {
-		return Mouse.getX() > iWindow.getX() && Mouse.getY() < iWindow.getY() + HEIGHT
-				&& Mouse.getX() < iWindow.getX() + iWindow.getWidth()
-				&& Mouse.getY() > iWindow.getY();
+		return Mouse.getX() > iWindow.getX()
+				&& Mouse.getY() < iWindow.getY()
+						+ (float) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/titleBarHeight")
+				&& Mouse.getX() < iWindow.getX() + iWindow.getWidth() && Mouse.getY() > iWindow.getY();
 	}
 
 	@Override
@@ -109,6 +109,11 @@ public class TitleBar implements ITitleBar {
 	@Override
 	public boolean isEnabled() {
 		return enabled;
+	}
+
+	@Override
+	public boolean isDragging() {
+		return dragging;
 	}
 
 	@Override

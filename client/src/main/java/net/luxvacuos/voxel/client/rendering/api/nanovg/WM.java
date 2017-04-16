@@ -32,8 +32,6 @@ public final class WM {
 
 	private static IWindowManager iwm;
 	
-	public static boolean invertWindowButtons = false;
-
 	public static void setWM(IWindowManager iwm) {
 		if (WM.iwm != null)
 			WM.iwm.dispose();

@@ -20,15 +20,15 @@
 
 package net.luxvacuos.voxel.client.ui.menus;
 
+import static net.luxvacuos.voxel.universal.core.GlobalVariables.REGISTRY;
+
 import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
-import net.luxvacuos.voxel.client.rendering.api.nanovg.NRendering;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.WM;
 import net.luxvacuos.voxel.client.ui.Alignment;
 import net.luxvacuos.voxel.client.ui.Button;
 import net.luxvacuos.voxel.client.ui.RootComponent;
-import net.luxvacuos.voxel.client.ui.TitleBar;
 
 public class PauseWindow extends RootComponent {
 
@@ -46,10 +46,11 @@ public class PauseWindow extends RootComponent {
 		backButton.setWindowAlignment(Alignment.BOTTOM);
 		backButton.setOnButtonPress(() -> {
 			super.closeWindow();
-			RootComponent mainMenu = new MainMenu(NRendering.BORDER_SIZE + 10,
-					ClientVariables.HEIGHT - TitleBar.HEIGHT - 10,
-					ClientVariables.WIDTH - NRendering.BORDER_SIZE * 2f - 20,
-					ClientVariables.HEIGHT - TitleBar.HEIGHT - NRendering.BORDER_SIZE - 20);
+			float borderSize = (float) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/borderSize");
+			float titleBarHeight = (float) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/titleBarHeight");
+			RootComponent mainMenu = new MainMenu(borderSize + 10, ClientVariables.HEIGHT - titleBarHeight - 10,
+					ClientVariables.WIDTH - borderSize * 2f - 20,
+					ClientVariables.HEIGHT - titleBarHeight - borderSize - 20);
 			WM.getWM().addWindow(mainMenu);
 			ClientVariables.exitWorld = true;
 		});

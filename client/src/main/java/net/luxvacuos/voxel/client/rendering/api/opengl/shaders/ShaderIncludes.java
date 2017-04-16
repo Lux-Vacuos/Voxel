@@ -27,10 +27,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import net.luxvacuos.igl.Logger;
-import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.core.Voxel;
 import net.luxvacuos.voxel.client.core.exception.IncludeShaderException;
 import net.luxvacuos.voxel.client.core.exception.LoadShaderException;
+import net.luxvacuos.voxel.universal.core.GlobalVariables;
 
 public final class ShaderIncludes {
 	
@@ -47,7 +47,7 @@ public final class ShaderIncludes {
 		BufferedReader reader = null;
 		try {
 			filet = Voxel.class.getClassLoader()
-					.getResourceAsStream("assets/" + ClientVariables.assets + "/shaders/includes/" + name);
+					.getResourceAsStream("assets/" + GlobalVariables.REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/assets") + "/shaders/includes/" + name);
 			reader = new BufferedReader(new InputStreamReader(filet));
 			Logger.log("Processing Shader Include File: " + name);
 			String line;

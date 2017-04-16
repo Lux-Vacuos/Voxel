@@ -20,6 +20,7 @@
 
 package net.luxvacuos.voxel.client.rendering.api.opengl;
 
+import static net.luxvacuos.voxel.universal.core.GlobalVariables.REGISTRY;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_TRIANGLE_STRIP;
@@ -89,10 +90,10 @@ public abstract class PostProcessPass implements IPostProcessPass {
 		shader.loadUnderWater(false);
 		shader.loadMotionBlurData(camera, previousViewMatrix, previousCameraPosition);
 		shader.loadviewMatrix(camera);
-		shader.loadSettings(ClientVariables.useDOF, ClientVariables.useFXAA, ClientVariables.useMotionBlur,
-				ClientVariables.useVolumetricLight, ClientVariables.useReflections, ClientVariables.useAmbientOcclusion,
-				ClientVariables.shadowMapDrawDistance, ClientVariables.useChromaticAberration,
-				ClientVariables.useLensFlares);
+		shader.loadSettings((boolean) REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/dof"),
+				(boolean) REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/fxaa"),
+				(boolean) REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/motionBlur"), false, false, false, 0,
+				(boolean) REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/chromatricAberration"), false);
 
 		render(auxs);
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, quad.getVertexCount());

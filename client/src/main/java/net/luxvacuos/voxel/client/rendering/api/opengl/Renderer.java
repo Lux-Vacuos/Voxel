@@ -20,6 +20,7 @@
 
 package net.luxvacuos.voxel.client.rendering.api.opengl;
 
+import static net.luxvacuos.voxel.universal.core.GlobalVariables.REGISTRY;
 import static org.lwjgl.opengl.GL11.GL_BACK;
 import static org.lwjgl.opengl.GL11.GL_BLEND;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
@@ -53,6 +54,7 @@ import net.luxvacuos.voxel.client.rendering.api.opengl.objects.ParticleTexture;
 import net.luxvacuos.voxel.client.rendering.api.opengl.pipeline.MultiPass;
 import net.luxvacuos.voxel.client.rendering.api.opengl.pipeline.PostProcess;
 import net.luxvacuos.voxel.client.world.particles.Particle;
+import net.luxvacuos.voxel.universal.core.GlobalVariables;
 import net.luxvacuos.voxel.universal.core.IWorldSimulation;
 import net.luxvacuos.voxel.universal.core.TaskManager;
 
@@ -78,14 +80,17 @@ public class Renderer {
 
 	private static float exposure = 1;
 
+	private static int shadowResolution;
+
 	public static void init(Window window) {
 		Renderer.window = window;
-		if (ClientVariables.shadowMapResolution > GLUtil.getTextureMaxSize())
-			ClientVariables.shadowMapResolution = GLUtil.getTextureMaxSize();
+		shadowResolution = (int) GlobalVariables.REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/shadowsResolution");
+
+		if (shadowResolution > GLUtil.getTextureMaxSize())
+			shadowResolution = GLUtil.getTextureMaxSize();
 
 		TaskManager.addTask(() -> frustum = new Frustum());
-		TaskManager.addTask(() -> shadowFBO = new ShadowFBO(ClientVariables.shadowMapResolution,
-				ClientVariables.shadowMapResolution));
+		TaskManager.addTask(() -> shadowFBO = new ShadowFBO(shadowResolution, shadowResolution));
 		TaskManager.addTask(() -> entityRenderer = new EntityRenderer(window.getResourceLoader()));
 
 		TaskManager.addTask(() -> entityShadowRenderer = new EntityShadowRenderer());
@@ -111,7 +116,7 @@ public class Renderer {
 		irradianceCapture.render(window, environmentRenderer.getCubeMapTexture().getID());
 		preFilteredEnvironment.render(window, environmentRenderer.getCubeMapTexture().getID());
 
-		if (ClientVariables.useShadows) {
+		if ((boolean) REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/shadows")) {
 			SunCamera sCam = (SunCamera) sunCamera;
 
 			sCam.switchProjectionMatrix(0);

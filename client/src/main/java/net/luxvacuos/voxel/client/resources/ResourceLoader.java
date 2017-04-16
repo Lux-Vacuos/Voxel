@@ -93,7 +93,6 @@ import org.lwjgl.opengl.EXTTextureFilterAnisotropic;
 import net.luxvacuos.igl.Logger;
 import net.luxvacuos.igl.vector.Vector2f;
 import net.luxvacuos.igl.vector.Vector3f;
-import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.core.exception.DecodeTextureException;
 import net.luxvacuos.voxel.client.core.exception.LoadOBJModelException;
 import net.luxvacuos.voxel.client.core.exception.LoadTextureException;
@@ -102,6 +101,7 @@ import net.luxvacuos.voxel.client.rendering.api.opengl.objects.RawModel;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.RawTexture;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.Texture;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.VertexNM;
+import net.luxvacuos.voxel.universal.core.GlobalVariables;
 import net.luxvacuos.voxel.universal.resources.IDisposable;
 
 /**
@@ -221,7 +221,7 @@ public class ResourceLoader implements IDisposable {
 		int texture_id = 0;
 		try {
 			Logger.log("Loading Texture: " + fileName + ".png");
-			texture_id = loadTexture("assets/" + ClientVariables.assets + "/textures/" + fileName + ".png", filter,
+			texture_id = loadTexture("assets/" + GlobalVariables.REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/assets") + "/textures/" + fileName + ".png", filter,
 					GL_REPEAT, GL_RGBA, textureMipMapAF);
 		} catch (Exception e) {
 			throw new LoadTextureException(fileName, e);
@@ -251,7 +251,7 @@ public class ResourceLoader implements IDisposable {
 		int texture = 0;
 		try {
 			Logger.log("Loading Texture: " + fileName + ".png");
-			texture = loadTexture("assets/" + ClientVariables.assets + "/textures/" + fileName + ".png", filter,
+			texture = loadTexture("assets/" + GlobalVariables.REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/assets") + "/textures/" + fileName + ".png", filter,
 					GL_REPEAT, GL_SRGB_ALPHA, textureMipMapAF);
 		} catch (Exception e) {
 			throw new LoadTextureException(fileName, e);
@@ -308,7 +308,7 @@ public class ResourceLoader implements IDisposable {
 		int font = 0;
 		try {
 			ByteBuffer buffer = ioResourceToByteBuffer(
-					"assets/" + ClientVariables.assets + "/fonts/" + filename + ".ttf", size * 1024);
+					"assets/" + GlobalVariables.REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/assets") + "/fonts/" + filename + ".ttf", size * 1024);
 			nvgFont.add(buffer);
 			font = nvgCreateFontMem(nvgID, name, buffer, 0);
 		} catch (IOException e) {
@@ -323,7 +323,7 @@ public class ResourceLoader implements IDisposable {
 		int tex = 0;
 		try {
 			Logger.log("Loading NVGTexture: " + file + ".png");
-			buffer = ioResourceToByteBuffer("assets/" + ClientVariables.assets + "/textures/menu/" + file + ".png",
+			buffer = ioResourceToByteBuffer("assets/" + GlobalVariables.REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/assets") + "/textures/menu/" + file + ".png",
 					8 * 1024);
 			tex = nvgCreateImageMem(nvgID, 0, buffer);
 		} catch (Exception e) {
@@ -339,7 +339,7 @@ public class ResourceLoader implements IDisposable {
 
 		for (int i = 0; i < textureFiles.length; i++) {
 			RawTexture data = decodeTextureFile(
-					"assets/" + ClientVariables.assets + "/textures/skybox/" + textureFiles[i] + ".png");
+					"assets/" + GlobalVariables.REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/assets") + "/textures/skybox/" + textureFiles[i] + ".png");
 			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGBA, data.getWidth(), data.getHeight(), 0, GL_RGBA,
 					GL_UNSIGNED_BYTE, data.getBuffer());
 		}
@@ -420,7 +420,7 @@ public class ResourceLoader implements IDisposable {
 	 */
 	public RawModel loadObjModel(String fileName) {
 		InputStream file = getClass().getClassLoader()
-				.getResourceAsStream("assets/" + ClientVariables.assets + "/models/" + fileName + ".obj");
+				.getResourceAsStream("assets/" + GlobalVariables.REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/assets") + "/models/" + fileName + ".obj");
 		Logger.log("Loading Model: " + fileName + ".obj");
 		BufferedReader reader = new BufferedReader(new InputStreamReader(file));
 		String line;

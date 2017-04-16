@@ -23,6 +23,7 @@ package net.luxvacuos.voxel.server.core;
 import java.io.File;
 
 import net.luxvacuos.voxel.universal.core.AbstractInternalSubsystem;
+import net.luxvacuos.voxel.universal.core.GlobalVariables;
 import net.luxvacuos.voxel.universal.material.BlockMaterial;
 import net.luxvacuos.voxel.universal.material.MaterialModder;
 import net.luxvacuos.voxel.universal.world.block.BlockBase;
@@ -44,7 +45,7 @@ public class ServerInternalSubsystem extends AbstractInternalSubsystem {
 	@Override
 	public void preInit() {
 		gameSettings = new ServerGameSettings();
-		gameSettings.load(new File(ServerVariables.SETTINGS_PATH));
+		gameSettings.load(new File(GlobalVariables.SETTINGS_PATH));
 		gameSettings.read();
 	}
 

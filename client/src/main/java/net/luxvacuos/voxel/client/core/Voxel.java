@@ -20,6 +20,7 @@
 
 package net.luxvacuos.voxel.client.core;
 
+import static net.luxvacuos.voxel.universal.core.GlobalVariables.REGISTRY;
 import static org.lwjgl.glfw.GLFW.glfwInit;
 import static org.lwjgl.opengl.GL11.GL_RENDERER;
 import static org.lwjgl.opengl.GL11.GL_VENDOR;
@@ -108,7 +109,8 @@ public class Voxel extends AbstractVoxel {
 		internalSubsystem = ClientInternalSubsystem.getInstance();
 		internalSubsystem.preInit();
 		ClientInternalSubsystem.getInstance().getGameWindow().setVisible(true);
-		ClientInternalSubsystem.getInstance().getGameWindow().updateDisplay(ClientVariables.FPS);
+		ClientInternalSubsystem.getInstance().getGameWindow()
+				.updateDisplay((int) REGISTRY.getRegistryItem("/Voxel/Settings/Core/fps"));
 		StateMachine.registerState(new SplashScreenState());
 		Timers.initDebugDisplay();
 		CoreInfo.platform = bootstrap.getPlatform();
@@ -189,8 +191,9 @@ public class Voxel extends AbstractVoxel {
 	public void loop() {
 		float delta = 0;
 		float accumulator = 0f;
-		float interval = 1f / ClientVariables.UPS;
+		float interval = 1f / (int) REGISTRY.getRegistryItem("/Voxel/Settings/Core/ups");
 		float alpha = 0;
+		int fps = (int) REGISTRY.getRegistryItem("/Voxel/Settings/Core/fps");
 		Window window = ClientInternalSubsystem.getInstance().getGameWindow();
 		while (StateMachine.isRunning() && !(window.isCloseRequested())) {
 			Timers.startCPUTimer();
@@ -213,7 +216,7 @@ public class Voxel extends AbstractVoxel {
 			render(alpha);
 			Timers.stopGPUTimer();
 			Timers.update();
-			window.updateDisplay(ClientVariables.FPS);
+			window.updateDisplay(fps);
 		}
 	}
 

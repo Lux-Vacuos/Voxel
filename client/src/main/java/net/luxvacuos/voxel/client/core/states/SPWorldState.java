@@ -20,6 +20,7 @@
 
 package net.luxvacuos.voxel.client.core.states;
 
+import static net.luxvacuos.voxel.universal.core.GlobalVariables.REGISTRY;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_COMPONENT;
@@ -44,18 +45,17 @@ import net.luxvacuos.voxel.client.ecs.entities.Sun;
 import net.luxvacuos.voxel.client.input.KeyboardHandler;
 import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
-import net.luxvacuos.voxel.client.rendering.api.nanovg.NRendering;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.WM;
 import net.luxvacuos.voxel.client.rendering.api.opengl.BlockOutlineRenderer;
 import net.luxvacuos.voxel.client.rendering.api.opengl.ParticleDomain;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Renderer;
-import net.luxvacuos.voxel.client.ui.TitleBar;
 import net.luxvacuos.voxel.client.ui.menus.GameWindow;
 import net.luxvacuos.voxel.client.ui.menus.PauseWindow;
 import net.luxvacuos.voxel.client.util.Maths;
 import net.luxvacuos.voxel.client.world.RenderWorld;
 import net.luxvacuos.voxel.client.world.dimension.RenderDimension;
 import net.luxvacuos.voxel.universal.core.AbstractVoxel;
+import net.luxvacuos.voxel.universal.core.GlobalVariables;
 import net.luxvacuos.voxel.universal.core.states.AbstractState;
 import net.luxvacuos.voxel.universal.core.states.StateMachine;
 import net.luxvacuos.voxel.universal.ecs.entities.ChunkLoaderEntity;
@@ -134,24 +134,20 @@ public class SPWorldState extends AbstractState {
 
 		Matrix4d[] shadowProjectionMatrix = new Matrix4d[4];
 
-		shadowProjectionMatrix[0] = Maths.orthographic(-ClientVariables.shadowMapDrawDistance / 32,
-				ClientVariables.shadowMapDrawDistance / 32, -ClientVariables.shadowMapDrawDistance / 32,
-				ClientVariables.shadowMapDrawDistance / 32, -ClientVariables.shadowMapDrawDistance,
-				ClientVariables.shadowMapDrawDistance, false);
-		shadowProjectionMatrix[1] = Maths.orthographic(-ClientVariables.shadowMapDrawDistance / 10,
-				ClientVariables.shadowMapDrawDistance / 10, -ClientVariables.shadowMapDrawDistance / 10,
-				ClientVariables.shadowMapDrawDistance / 10, -ClientVariables.shadowMapDrawDistance,
-				ClientVariables.shadowMapDrawDistance, false);
-		shadowProjectionMatrix[2] = Maths.orthographic(-ClientVariables.shadowMapDrawDistance / 4,
-				ClientVariables.shadowMapDrawDistance / 4, -ClientVariables.shadowMapDrawDistance / 4,
-				ClientVariables.shadowMapDrawDistance / 4, -ClientVariables.shadowMapDrawDistance,
-				ClientVariables.shadowMapDrawDistance, false);
-		shadowProjectionMatrix[3] = Maths.orthographic(-ClientVariables.shadowMapDrawDistance,
-				ClientVariables.shadowMapDrawDistance, -ClientVariables.shadowMapDrawDistance,
-				ClientVariables.shadowMapDrawDistance, -ClientVariables.shadowMapDrawDistance,
-				ClientVariables.shadowMapDrawDistance, false);
+		int shadowDrawDistance = (int) GlobalVariables.REGISTRY
+				.getRegistryItem("/Voxel/Settings/Graphics/shadowsDrawDistance");
+
+		shadowProjectionMatrix[0] = Maths.orthographic(-shadowDrawDistance / 32, shadowDrawDistance / 32,
+				-shadowDrawDistance / 32, shadowDrawDistance / 32, -shadowDrawDistance, shadowDrawDistance, false);
+		shadowProjectionMatrix[1] = Maths.orthographic(-shadowDrawDistance / 10, shadowDrawDistance / 10,
+				-shadowDrawDistance / 10, shadowDrawDistance / 10, -shadowDrawDistance, shadowDrawDistance, false);
+		shadowProjectionMatrix[2] = Maths.orthographic(-shadowDrawDistance / 4, shadowDrawDistance / 4,
+				-shadowDrawDistance / 4, shadowDrawDistance / 4, -shadowDrawDistance, shadowDrawDistance, false);
+		shadowProjectionMatrix[3] = Maths.orthographic(-shadowDrawDistance, shadowDrawDistance, -shadowDrawDistance,
+				shadowDrawDistance, -shadowDrawDistance, shadowDrawDistance, false);
 		Matrix4d projectionMatrix = Renderer.createProjectionMatrix(window.getWidth(), window.getHeight(),
-				ClientVariables.FOV, ClientVariables.NEAR_PLANE, ClientVariables.FAR_PLANE);
+				(int) REGISTRY.getRegistryItem("/Voxel/Settings/Core/fps"), ClientVariables.NEAR_PLANE,
+				ClientVariables.FAR_PLANE);
 
 		camera = new PlayerCamera(projectionMatrix, window);
 		sun = new Sun(shadowProjectionMatrix);
@@ -197,10 +193,11 @@ public class SPWorldState extends AbstractState {
 				kbh.ignoreKeyUntilRelease(GLFW.GLFW_KEY_ESCAPE);
 				((PlayerCamera) camera).unlockMouse();
 				ClientVariables.paused = true;
-				pauseWindow = new PauseWindow(NRendering.BORDER_SIZE + 10,
-						ClientVariables.HEIGHT - TitleBar.HEIGHT - 10,
-						ClientVariables.WIDTH - NRendering.BORDER_SIZE * 2f - 20,
-						ClientVariables.HEIGHT - TitleBar.HEIGHT - NRendering.BORDER_SIZE - 20);
+				float borderSize = (float) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/borderSize");
+				float titleBarHeight = (float) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/titleBarHeight");
+				pauseWindow = new PauseWindow(borderSize + 10, ClientVariables.HEIGHT - titleBarHeight - 10,
+						ClientVariables.WIDTH - borderSize * 2f - 20,
+						ClientVariables.HEIGHT - titleBarHeight - borderSize - 20);
 				WM.getWM().addWindow(pauseWindow);
 			}
 		} else if (ClientVariables.exitWorld) {

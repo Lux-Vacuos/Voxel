@@ -47,7 +47,8 @@ public class Slider extends Component {
 				if (customPrecision)
 					pos = (float) (Math.floor(pos * precision) / precision);
 				pos = Maths.clamp(pos, 0, 1);
-				onPress.onAction();
+				if (onPress != null)
+					onPress.onAction();
 			}
 		super.update(delta, window);
 	}
@@ -67,11 +68,11 @@ public class Slider extends Component {
 	public void setOnPress(OnAction onPress) {
 		this.onPress = onPress;
 	}
-	
+
 	public void useCustomPrecision(boolean customPrecision) {
 		this.customPrecision = customPrecision;
 	}
-	
+
 	public void setPrecision(float precision) {
 		this.precision = precision;
 	}

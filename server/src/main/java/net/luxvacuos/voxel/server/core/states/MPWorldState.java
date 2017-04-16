@@ -20,12 +20,13 @@
 
 package net.luxvacuos.voxel.server.core.states;
 
+import static net.luxvacuos.voxel.universal.core.GlobalVariables.REGISTRY;
+
 import net.luxvacuos.voxel.server.commands.SayCommand;
 import net.luxvacuos.voxel.server.commands.ServerCommandManager;
 import net.luxvacuos.voxel.server.commands.StopCommand;
 import net.luxvacuos.voxel.server.commands.TimeCommand;
 import net.luxvacuos.voxel.server.console.Console;
-import net.luxvacuos.voxel.server.core.ServerVariables;
 import net.luxvacuos.voxel.server.core.ServerWorldSimulation;
 import net.luxvacuos.voxel.server.network.Server;
 import net.luxvacuos.voxel.server.network.ServerHandler;
@@ -53,7 +54,7 @@ public class MPWorldState extends AbstractState {
 
 		worldSimulation = new ServerWorldSimulation();
 
-		world = new World(ServerVariables.worldName);
+		world = new World((String) REGISTRY.getRegistryItem("/Voxel/Simulation/World/name"));
 		world.loadDimension(0);
 		world.setActiveDimension(0);
 
@@ -66,7 +67,7 @@ public class MPWorldState extends AbstractState {
 		console.setCommandManager(commandManager);
 		console.start();
 
-		server = new Server(ServerVariables.port);
+		server = new Server((int) REGISTRY.getRegistryItem("/Voxel/Server/port"));
 		server.run(this);
 	}
 

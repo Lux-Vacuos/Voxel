@@ -24,6 +24,7 @@ import net.luxvacuos.voxel.universal.api.ModsHandler;
 import net.luxvacuos.voxel.universal.bootstrap.AbstractBootstrap;
 import net.luxvacuos.voxel.universal.bootstrap.IBootstrap;
 import net.luxvacuos.voxel.universal.resources.IDisposable;
+import net.luxvacuos.voxel.universal.util.registry.SimpleRegistry;
 
 public abstract class AbstractVoxel implements IVoxel, IDisposable {
 
@@ -34,6 +35,7 @@ public abstract class AbstractVoxel implements IVoxel, IDisposable {
 
 	public AbstractVoxel(AbstractBootstrap bootstrap) {
 		this.bootstrap = bootstrap;
+		GlobalVariables.REGISTRY = new SimpleRegistry<>();
 	}
 
 	public EngineType getEngineType() {

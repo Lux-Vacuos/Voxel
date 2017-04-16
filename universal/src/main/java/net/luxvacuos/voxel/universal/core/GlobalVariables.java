@@ -20,6 +20,8 @@
 
 package net.luxvacuos.voxel.universal.core;
 
+import net.luxvacuos.voxel.universal.util.registry.IRegistry;
+
 public class GlobalVariables {
 
 	/** The path where all the world data resides */
@@ -37,14 +39,14 @@ public class GlobalVariables {
 	/** Amount of threads to use for the ChunkManager */
 	public static int chunkmanager_threads = 3;
 
-	/** Updates per Second */
-	public static int UPS = 60;
-
 	/** Chunk Load/Unload Radius */
 	public static int chunk_radius = 3;
 
 	/** Enable Test Mode */
 	public static boolean TEST_MODE = false;
+	
+	/** Registry */
+	public static IRegistry<String, Object> REGISTRY;
 
 	protected GlobalVariables() { }
 

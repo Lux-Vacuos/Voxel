@@ -20,6 +20,7 @@
 
 package net.luxvacuos.voxel.client.rendering.api.nanovg;
 
+import static net.luxvacuos.voxel.universal.core.GlobalVariables.REGISTRY;
 import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_CENTER;
 import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_MIDDLE;
 import static org.lwjgl.nanovg.NanoVG.nvgScissor;
@@ -96,7 +97,8 @@ public abstract class NanoWindow implements IWindow {
 					oldW = this.w;
 					oldH = this.h;
 					this.x = 0;
-					this.y = ClientVariables.HEIGHT - TitleBar.HEIGHT;
+					this.y = ClientVariables.HEIGHT
+							- (float) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/titleBarHeight");
 					this.w = ClientVariables.WIDTH;
 					this.h = ClientVariables.HEIGHT;
 				} else {
@@ -187,7 +189,8 @@ public abstract class NanoWindow implements IWindow {
 			}
 		}
 		// lastUpdate += 1 * delta;
-		updateApp(delta, window);
+		if (!resizing)
+			updateApp(delta, window);
 	}
 
 	@Override
@@ -214,8 +217,9 @@ public abstract class NanoWindow implements IWindow {
 
 	@Override
 	public boolean insideWindow() {
-		return Mouse.getX() > x - NRendering.BORDER_SIZE && Mouse.getX() < x + w + NRendering.BORDER_SIZE
-				&& Mouse.getY() > y - h - NRendering.BORDER_SIZE && Mouse.getY() < y + TitleBar.HEIGHT;
+		float borderSize = (float) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/borderSize");
+		return Mouse.getX() > x - borderSize && Mouse.getX() < x + w + borderSize && Mouse.getY() > y - h - borderSize
+				&& Mouse.getY() < y + (float) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/titleBarHeight");
 	}
 
 	@Override
@@ -352,6 +356,16 @@ public abstract class NanoWindow implements IWindow {
 	@Override
 	public boolean isAlwaysOnTop() {
 		return alwaysOnTop;
+	}
+
+	@Override
+	public boolean isDragging() {
+		return titleBar.isDragging();
+	}
+
+	@Override
+	public boolean isResizing() {
+		return resizing;
 	}
 
 	@Override

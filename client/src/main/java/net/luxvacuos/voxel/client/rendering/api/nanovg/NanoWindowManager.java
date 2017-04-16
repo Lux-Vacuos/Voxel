@@ -20,6 +20,7 @@
 
 package net.luxvacuos.voxel.client.rendering.api.nanovg;
 
+import static net.luxvacuos.voxel.universal.core.GlobalVariables.REGISTRY;
 import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_LEFT;
 import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_MIDDLE;
 import static org.lwjgl.nanovg.NanoVGGL3.nvgluBindFramebuffer;
@@ -76,9 +77,10 @@ public class NanoWindowManager implements IWindowManager {
 
 		Thread th = new Thread(() -> {
 			lastLoopTime = WindowManager.getTime();
+			int ups = (int) REGISTRY.getRegistryItem("/Voxel/Settings/Core/ups");
 			float delta = 0;
 			float accumulator = 0f;
-			float interval = 1f / ClientVariables.UPS;
+			float interval = 1f / ups;
 			Sync sync = new Sync();
 			while (running) {
 				delta = getDelta();
@@ -87,7 +89,7 @@ public class NanoWindowManager implements IWindowManager {
 					updateThread(interval);
 					accumulator -= interval;
 				}
-				sync.sync(ClientVariables.UPS);
+				sync.sync(ups);
 			}
 		});
 		th.setName("Nano Window Manager");
@@ -139,7 +141,7 @@ public class NanoWindowManager implements IWindowManager {
 				tmp.add(window);
 				continue;
 			}
-			if (window.insideWindow() && !window.isBackground() && Mouse.isButtonDown(0))
+			if (window.insideWindow() && !window.isBackground() && Mouse.isButtonDown(0) && !focused.isDragging() && !focused.isResizing())
 				toTop = window;
 		}
 		windows.removeAll(tmp);
@@ -155,7 +157,7 @@ public class NanoWindowManager implements IWindowManager {
 		tmp.addAll(windows);
 		Collections.reverse(tmp);
 		for (IWindow window : tmp) {
-			if (window.insideWindow() && Mouse.isButtonDown(0)) {
+			if (window.insideWindow() && Mouse.isButtonDown(0) && !focused.isDragging() && !focused.isResizing()) {
 				focused = window;
 				break;
 			}

@@ -35,8 +35,6 @@ public class ClientVariables extends GlobalVariables {
 	/**
 	 * Display Data
 	 */
-	public static int FPS = 60;
-	public static boolean VSYNC = false;
 	public static final String Title = "Voxel";
 
 	/**
@@ -48,9 +46,6 @@ public class ClientVariables extends GlobalVariables {
 	 */
 	public static boolean onServer = false;
 	public static String version = "Development Version";
-	public static int FOV = 90;
-	public static int WIDTH = 1280;
-	public static int HEIGHT = 720;
 
 	public static final float NEAR_PLANE = 0.1f;
 	public static final float FAR_PLANE = 1000f;
@@ -59,27 +54,15 @@ public class ClientVariables extends GlobalVariables {
 	public static float BLUE = 1f;
 	public static Vector3d skyColor = new Vector3d(ClientVariables.RED, ClientVariables.GREEN, ClientVariables.BLUE);
 	public static boolean raining = false;
-	public static String assets = "voxel";
 	public static final boolean WSL = false;
 	public static String server = "";
 
 	/**
-	 * Graphic Settings
+	 * All Settings
 	 */
-	public static boolean useShadows = false;
-	public static boolean useFXAA = false;
-	public static boolean useDOF = false;
-	public static boolean useMotionBlur = false;
-	public static boolean useVolumetricLight = false;
-	public static boolean useParallax = false;
-	public static boolean useReflections = false;
-	public static boolean useAmbientOcclusion = false;
-	public static boolean useChromaticAberration = false;
-	public static boolean useLensFlares = false;
-	public static int shadowMapResolution = 1024;
-	public static int shadowMapDrawDistance = 200;
+	public static int WIDTH = 1280;
+	public static int HEIGHT = 720;
 	public static final float WAVE_SPEED = 4f;
-	public static String renderingPipeline = "MultiPass";
 	/**
 	 * World Settings
 	 */
@@ -109,5 +92,9 @@ public class ClientVariables extends GlobalVariables {
 	public static final String FRAGMENT_PRE_FILTERED_ENV = "F_PreFilteredEnvironment.glsl";
 	public static final String VERTEX_BRDF_INTEGRATION_MAP = "V_BRDFIntegrationMap.glsl";
 	public static final String FRAGMENT_BRDF_INTEGRATION_MAP = "F_BRDFIntegrationMap.glsl";
+	
+	public static void syncSettings(){
+		
+	}
 
 }

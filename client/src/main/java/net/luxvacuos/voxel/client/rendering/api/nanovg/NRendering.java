@@ -20,7 +20,43 @@
 
 package net.luxvacuos.voxel.client.rendering.api.nanovg;
 
-import static org.lwjgl.nanovg.NanoVG.*;
+import static net.luxvacuos.voxel.universal.core.GlobalVariables.REGISTRY;
+import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_CENTER;
+import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_LEFT;
+import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_MIDDLE;
+import static org.lwjgl.nanovg.NanoVG.NVG_CCW;
+import static org.lwjgl.nanovg.NanoVG.NVG_CW;
+import static org.lwjgl.nanovg.NanoVG.NVG_HOLE;
+import static org.lwjgl.nanovg.NanoVG.NVG_PI;
+import static org.lwjgl.nanovg.NanoVG.nnvgText;
+import static org.lwjgl.nanovg.NanoVG.nnvgTextBreakLines;
+import static org.lwjgl.nanovg.NanoVG.nvgArc;
+import static org.lwjgl.nanovg.NanoVG.nvgBeginPath;
+import static org.lwjgl.nanovg.NanoVG.nvgBoxGradient;
+import static org.lwjgl.nanovg.NanoVG.nvgClosePath;
+import static org.lwjgl.nanovg.NanoVG.nvgFill;
+import static org.lwjgl.nanovg.NanoVG.nvgFillColor;
+import static org.lwjgl.nanovg.NanoVG.nvgFillPaint;
+import static org.lwjgl.nanovg.NanoVG.nvgFontBlur;
+import static org.lwjgl.nanovg.NanoVG.nvgFontFace;
+import static org.lwjgl.nanovg.NanoVG.nvgFontSize;
+import static org.lwjgl.nanovg.NanoVG.nvgImagePattern;
+import static org.lwjgl.nanovg.NanoVG.nvgImageSize;
+import static org.lwjgl.nanovg.NanoVG.nvgLineTo;
+import static org.lwjgl.nanovg.NanoVG.nvgLinearGradient;
+import static org.lwjgl.nanovg.NanoVG.nvgMoveTo;
+import static org.lwjgl.nanovg.NanoVG.nvgPathWinding;
+import static org.lwjgl.nanovg.NanoVG.nvgRect;
+import static org.lwjgl.nanovg.NanoVG.nvgRestore;
+import static org.lwjgl.nanovg.NanoVG.nvgSave;
+import static org.lwjgl.nanovg.NanoVG.nvgScissor;
+import static org.lwjgl.nanovg.NanoVG.nvgStroke;
+import static org.lwjgl.nanovg.NanoVG.nvgStrokeColor;
+import static org.lwjgl.nanovg.NanoVG.nvgStrokeWidth;
+import static org.lwjgl.nanovg.NanoVG.nvgText;
+import static org.lwjgl.nanovg.NanoVG.nvgTextAlign;
+import static org.lwjgl.nanovg.NanoVG.nvgTextBounds;
+import static org.lwjgl.nanovg.NanoVG.nvgTextMetrics;
 import static org.lwjgl.nanovg.NanoVGGL3.nvglCreateImageFromHandle;
 import static org.lwjgl.system.MemoryUtil.memAddress;
 import static org.lwjgl.system.MemoryUtil.memAllocInt;
@@ -39,7 +75,6 @@ import org.lwjgl.nanovg.NVGTextRow;
 
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.ui.ScrollPaneElement;
-import net.luxvacuos.voxel.client.ui.TitleBar;
 
 /**
  *
@@ -75,8 +110,6 @@ public class NRendering {
 
 	private static final FloatBuffer lineh = BufferUtils.createFloatBuffer(1);
 	private static final NVGTextRow.Buffer rows = NVGTextRow.create(3);
-
-	public static float BORDER_SIZE = 10;
 
 	public static NVGColor rgba(int r, int g, int b, int a, NVGColor color) {
 		color.r(r / 255.0f);
@@ -116,6 +149,8 @@ public class NRendering {
 	public static void renderWindow(long vg, float x, float y, float w, float h, BackgroundStyle backgroundStyle,
 			NVGColor backgroundColor, boolean decorations, boolean titleBar) {
 		NVGPaint shadowPaint = paintA;
+		float borderSize = (float) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/borderSize");
+		float titleBarHeight = (float) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/titleBarHeight");
 
 		nvgSave(vg);
 		if (decorations) {
@@ -124,10 +159,9 @@ public class NRendering {
 			nvgRect(vg, x, y, w, h);
 			nvgPathWinding(vg, NVG_HOLE);
 			if (titleBar)
-				nvgRect(vg, x - BORDER_SIZE, y - TitleBar.HEIGHT, w + BORDER_SIZE * 2f,
-						h + TitleBar.HEIGHT + BORDER_SIZE);
+				nvgRect(vg, x - borderSize, y - titleBarHeight, w + borderSize * 2f, h + titleBarHeight + borderSize);
 			else
-				nvgRect(vg, x - BORDER_SIZE, y - BORDER_SIZE, w + BORDER_SIZE * 2f, h + BORDER_SIZE * 2f);
+				nvgRect(vg, x - borderSize, y - borderSize, w + borderSize * 2f, h + borderSize * 2f);
 			nvgFillColor(vg, rgba(31, 31, 31, 120, colorA));
 			nvgFill(vg);
 		}
@@ -145,13 +179,13 @@ public class NRendering {
 		}
 		if (decorations) {
 			// Drop shadow
-			nvgBoxGradient(vg, x - BORDER_SIZE, y + 10 - TitleBar.HEIGHT, w + BORDER_SIZE * 2f,
-					h + TitleBar.HEIGHT + BORDER_SIZE, 0, 20, rgba(0, 0, 0, 80, colorA), rgba(0, 0, 0, 0, colorB),
+			nvgBoxGradient(vg, x - borderSize, y + 10 - titleBarHeight, w + borderSize * 2f,
+					h + titleBarHeight + borderSize, 0, 20, rgba(0, 0, 0, 80, colorA), rgba(0, 0, 0, 0, colorB),
 					shadowPaint);
 			nvgBeginPath(vg);
-			nvgRect(vg, x - 10 - BORDER_SIZE, y - 10 - TitleBar.HEIGHT, w + 20 + BORDER_SIZE * 2f,
-					h + 30 + TitleBar.HEIGHT + BORDER_SIZE);
-			nvgRect(vg, x - BORDER_SIZE, y - TitleBar.HEIGHT, w + BORDER_SIZE * 2f, h + TitleBar.HEIGHT + BORDER_SIZE);
+			nvgRect(vg, x - 10 - borderSize, y - 10 - titleBarHeight, w + 20 + borderSize * 2f,
+					h + 30 + titleBarHeight + borderSize);
+			nvgRect(vg, x - borderSize, y - titleBarHeight, w + borderSize * 2f, h + titleBarHeight + borderSize);
 			nvgPathWinding(vg, NVG_HOLE);
 			nvgFillPaint(vg, shadowPaint);
 			nvgFill(vg);

@@ -20,13 +20,12 @@
 
 package net.luxvacuos.voxel.client.ui.menus;
 
+import static net.luxvacuos.voxel.universal.core.GlobalVariables.REGISTRY;
 import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_LEFT;
-import static org.lwjgl.nanovg.NanoVG.*;
+import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_TOP;
 
 import net.luxvacuos.voxel.client.core.ClientInternalSubsystem;
-import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
-import net.luxvacuos.voxel.client.rendering.api.nanovg.NRendering;
 import net.luxvacuos.voxel.client.ui.Alignment;
 import net.luxvacuos.voxel.client.ui.Button;
 import net.luxvacuos.voxel.client.ui.RootComponent;
@@ -53,8 +52,9 @@ public class OptionsMenu extends RootComponent {
 		Button ambientOccButton = new Button(260, -160, 200, 40, "Ambient Occlusion");
 		Button chromaticAberrationButton = new Button(260, -220, 200, 40, "Chromatic Aberration");
 		Button lensFlaresButton = new Button(260, -280, 200, 40, "Lens Flares");
-		Text wmBorderText = new Text("Window Border: " + NRendering.BORDER_SIZE, 520, -40);
-		Slider wmBorder = new Slider(520, -60, 200, 20, NRendering.BORDER_SIZE / 40f);
+		float border = (float) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/borderSize");
+		Text wmBorderText = new Text("Window Border: " + border, 520, -40);
+		Slider wmBorder = new Slider(520, -60, 200, 20, border / 40f);
 
 		godraysButton.setWindowAlignment(Alignment.LEFT_TOP);
 		godraysButton.setAlignment(Alignment.RIGHT_BOTTOM);
@@ -84,7 +84,7 @@ public class OptionsMenu extends RootComponent {
 		wmBorder.setPrecision(40f);
 		wmBorder.useCustomPrecision(true);
 
-		if (ClientVariables.useVolumetricLight) {
+		if ((boolean) REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/volumetricLight")) {
 			godraysButton.setText("Volumetric Light: ON");
 			godraysButton.setColor(0.2f, 1.0f, 0.2f, 1.0f);
 		} else {
@@ -92,7 +92,7 @@ public class OptionsMenu extends RootComponent {
 			godraysButton.setColor(1.0f, 0.2f, 0.2f, 1.0f);
 		}
 
-		if (ClientVariables.useShadows) {
+		if ((boolean) REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/shadows")) {
 			shadowsButton.setText("Shadows: ON");
 			shadowsButton.setColor(0.2f, 1.0f, 0.2f, 1.0f);
 		} else {
@@ -100,7 +100,7 @@ public class OptionsMenu extends RootComponent {
 			shadowsButton.setColor(1.0f, 0.2f, 0.2f, 1.0f);
 		}
 
-		if (ClientVariables.useDOF) {
+		if ((boolean) REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/dof")) {
 			dofButton.setText("Depth of Field: ON");
 			dofButton.setColor(0.2f, 1.0f, 0.2f, 1.0f);
 		} else {
@@ -108,7 +108,7 @@ public class OptionsMenu extends RootComponent {
 			dofButton.setColor(1.0f, 0.2f, 0.2f, 1.0f);
 		}
 
-		if (ClientVariables.useFXAA) {
+		if ((boolean) REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/fxaa")) {
 			fxaaButton.setText("FXAA: ON");
 			fxaaButton.setColor(0.2f, 1.0f, 0.2f, 1.0f);
 		} else {
@@ -116,7 +116,7 @@ public class OptionsMenu extends RootComponent {
 			fxaaButton.setColor(1.0f, 0.2f, 0.2f, 1.0f);
 		}
 
-		if (ClientVariables.useMotionBlur) {
+		if ((boolean) REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/motionBlur")) {
 			motionBlurButton.setText("Motion Blur: ON");
 			motionBlurButton.setColor(0.2f, 1.0f, 0.2f, 1.0f);
 		} else {
@@ -124,7 +124,7 @@ public class OptionsMenu extends RootComponent {
 			motionBlurButton.setColor(1.0f, 0.2f, 0.2f, 1.0f);
 		}
 
-		if (ClientVariables.useReflections) {
+		if ((boolean) REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/reflections")) {
 			reflectionsButton.setText("Reflections: ON");
 			reflectionsButton.setColor(0.2f, 1.0f, 0.2f, 1.0f);
 		} else {
@@ -132,7 +132,7 @@ public class OptionsMenu extends RootComponent {
 			reflectionsButton.setColor(1.0f, 0.2f, 0.2f, 1.0f);
 		}
 
-		if (ClientVariables.useParallax) {
+		if ((boolean) REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/parallax")) {
 			parallaxButton.setText("Parallax: ON");
 			parallaxButton.setColor(0.2f, 1.0f, 0.2f, 1.0f);
 		} else {
@@ -140,7 +140,7 @@ public class OptionsMenu extends RootComponent {
 			parallaxButton.setColor(1.0f, 0.2f, 0.2f, 1.0f);
 		}
 
-		if (ClientVariables.useAmbientOcclusion) {
+		if ((boolean) REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/ambientOcclusion")) {
 			ambientOccButton.setText("Ambient Occlusion: ON");
 			ambientOccButton.setColor(0.2f, 1.0f, 0.2f, 1.0f);
 		} else {
@@ -148,7 +148,7 @@ public class OptionsMenu extends RootComponent {
 			ambientOccButton.setColor(1.0f, 0.2f, 0.2f, 1.0f);
 		}
 
-		if (ClientVariables.useChromaticAberration) {
+		if ((boolean) REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/chromaticAberration")) {
 			chromaticAberrationButton.setText("Chromatic Aberration: ON");
 			chromaticAberrationButton.setColor(0.2f, 1.0f, 0.2f, 1.0f);
 		} else {
@@ -156,7 +156,7 @@ public class OptionsMenu extends RootComponent {
 			chromaticAberrationButton.setColor(1.0f, 0.2f, 0.2f, 1.0f);
 		}
 
-		if (ClientVariables.useLensFlares) {
+		if ((boolean) REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/lensFlares")) {
 			lensFlaresButton.setText("Lens Flares: ON");
 			lensFlaresButton.setColor(0.2f, 1.0f, 0.2f, 1.0f);
 		} else {
@@ -165,122 +165,139 @@ public class OptionsMenu extends RootComponent {
 		}
 
 		shadowsButton.setOnButtonPress(() -> {
-			ClientVariables.useShadows = !ClientVariables.useShadows;
-			if (ClientVariables.useShadows) {
+			boolean val = (boolean) REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/shadows");
+			val = !val;
+			if (val) {
 				shadowsButton.setText("Shadows: ON");
 				shadowsButton.setColor(0.2f, 1.0f, 0.2f, 1.0f);
 			} else {
 				shadowsButton.setText("Shadows: OFF");
 				shadowsButton.setColor(1.0f, 0.2f, 0.2f, 1.0f);
 			}
+			REGISTRY.register("/Voxel/Settings/Graphics/shadows", val);
 		});
 
 		dofButton.setOnButtonPress(() -> {
-			ClientVariables.useDOF = !ClientVariables.useDOF;
-			if (ClientVariables.useDOF) {
+			boolean val = (boolean) REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/dof");
+			val = !val;
+			if (val) {
 				dofButton.setText("Depth of Field: ON");
 				dofButton.setColor(0.2f, 1.0f, 0.2f, 1.0f);
 			} else {
 				dofButton.setText("Depth of Field: OFF");
 				dofButton.setColor(1.0f, 0.2f, 0.2f, 1.0f);
 			}
-
+			REGISTRY.register("/Voxel/Settings/Graphics/dof", val);
 		});
 
 		godraysButton.setOnButtonPress(() -> {
-			ClientVariables.useVolumetricLight = !ClientVariables.useVolumetricLight;
-			if (ClientVariables.useVolumetricLight) {
+			boolean val = (boolean) REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/volumetricLight");
+			val = !val;
+			if (val) {
 				godraysButton.setText("Volumetric Light: ON");
 				godraysButton.setColor(0.2f, 1.0f, 0.2f, 1.0f);
 			} else {
 				godraysButton.setText("Volumetric Light: OFF");
 				godraysButton.setColor(1.0f, 0.2f, 0.2f, 1.0f);
 			}
+			REGISTRY.register("/Voxel/Settings/Graphics/volumetricLight", val);
 		});
 
 		fxaaButton.setOnButtonPress(() -> {
-			ClientVariables.useFXAA = !ClientVariables.useFXAA;
-
-			if (ClientVariables.useFXAA) {
+			boolean val = (boolean) REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/fxaa");
+			val = !val;
+			if (val) {
 				fxaaButton.setText("FXAA: ON");
 				fxaaButton.setColor(0.2f, 1.0f, 0.2f, 1.0f);
 			} else {
 				fxaaButton.setText("FXAA: OFF");
 				fxaaButton.setColor(1.0f, 0.2f, 0.2f, 1.0f);
 			}
+			REGISTRY.register("/Voxel/Settings/Graphics/fxaa", val);
 		});
 
 		parallaxButton.setOnButtonPress(() -> {
-			ClientVariables.useParallax = !ClientVariables.useParallax;
-			if (ClientVariables.useParallax) {
+			boolean val = (boolean) REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/parallax");
+			val = !val;
+			if (val) {
 				parallaxButton.setText("Parallax: ON");
 				parallaxButton.setColor(0.2f, 1.0f, 0.2f, 1.0f);
 			} else {
 				parallaxButton.setText("Parallax: OFF");
 				parallaxButton.setColor(1.0f, 0.2f, 0.2f, 1.0f);
 			}
-
+			REGISTRY.register("/Voxel/Settings/Graphics/parallax", val);
 		});
 
 		motionBlurButton.setOnButtonPress(() -> {
-			ClientVariables.useMotionBlur = !ClientVariables.useMotionBlur;
-			if (ClientVariables.useMotionBlur) {
+			boolean val = (boolean) REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/motionBlur");
+			val = !val;
+			if (val) {
 				motionBlurButton.setText("Motion Blur: ON");
 				motionBlurButton.setColor(0.2f, 1.0f, 0.2f, 1.0f);
 			} else {
 				motionBlurButton.setText("Motion Blur: OFF");
 				motionBlurButton.setColor(1.0f, 0.2f, 0.2f, 1.0f);
 			}
-
+			REGISTRY.register("/Voxel/Settings/Graphics/motionBlur", val);
 		});
 
 		reflectionsButton.setOnButtonPress(() -> {
-			ClientVariables.useReflections = !ClientVariables.useReflections;
-			if (ClientVariables.useReflections) {
+			boolean val = (boolean) REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/reflections");
+			val = !val;
+			if (val) {
 				reflectionsButton.setText("Reflections: ON");
 				reflectionsButton.setColor(0.2f, 1.0f, 0.2f, 1.0f);
 			} else {
 				reflectionsButton.setText("Reflections: OFF");
 				reflectionsButton.setColor(1.0f, 0.2f, 0.2f, 1.0f);
 			}
+			REGISTRY.register("/Voxel/Settings/Graphics/reflections", val);
 		});
 
 		ambientOccButton.setOnButtonPress(() -> {
-			ClientVariables.useAmbientOcclusion = !ClientVariables.useAmbientOcclusion;
-			if (ClientVariables.useAmbientOcclusion) {
+			boolean val = (boolean) REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/ambientOcclusion");
+			val = !val;
+			if (val) {
 				ambientOccButton.setText("Ambient Occlusion: ON");
 				ambientOccButton.setColor(0.2f, 1.0f, 0.2f, 1.0f);
 			} else {
 				ambientOccButton.setText("Ambient Occlusion: OFF");
 				ambientOccButton.setColor(1.0f, 0.2f, 0.2f, 1.0f);
 			}
+			REGISTRY.register("/Voxel/Settings/Graphics/ambientOcclusion", val);
 		});
 
 		chromaticAberrationButton.setOnButtonPress(() -> {
-			ClientVariables.useChromaticAberration = !ClientVariables.useChromaticAberration;
-			if (ClientVariables.useChromaticAberration) {
+			boolean val = (boolean) REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/chromaticAberration");
+			val = !val;
+			if (val) {
 				chromaticAberrationButton.setText("Chromatic Aberration: ON");
 				chromaticAberrationButton.setColor(0.2f, 1.0f, 0.2f, 1.0f);
 			} else {
 				chromaticAberrationButton.setText("Chromatic Aberration: OFF");
 				chromaticAberrationButton.setColor(1.0f, 0.2f, 0.2f, 1.0f);
 			}
+			REGISTRY.register("/Voxel/Settings/Graphics/chromaticAberration", val);
 		});
 
 		lensFlaresButton.setOnButtonPress(() -> {
-			ClientVariables.useLensFlares = !ClientVariables.useLensFlares;
-			if (ClientVariables.useLensFlares) {
+			boolean val = (boolean) REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/lensFlares");
+			val = !val;
+			if (val) {
 				lensFlaresButton.setText("Lens Flares: ON");
 				lensFlaresButton.setColor(0.2f, 1.0f, 0.2f, 1.0f);
 			} else {
 				lensFlaresButton.setText("Lens Flares: OFF");
 				lensFlaresButton.setColor(1.0f, 0.2f, 0.2f, 1.0f);
 			}
+			REGISTRY.register("/Voxel/Settings/Graphics/lensFlares", val);
 		});
 
 		wmBorder.setOnPress(() -> {
-			NRendering.BORDER_SIZE = wmBorder.getPosition() * 40f;
-			wmBorderText.setText("Window Border: " + NRendering.BORDER_SIZE);
+			float val = wmBorder.getPosition() * 40f;
+			REGISTRY.register("/Voxel/Settings/WindowManager/borderSize", val);
+			wmBorderText.setText("Window Border: " + val);
 		});
 
 		super.addComponent(shadowsButton);
@@ -297,6 +314,10 @@ public class OptionsMenu extends RootComponent {
 		super.addComponent(wmBorder);
 
 		super.initApp(window);
+	}
+
+	private void graphicOptions() {
+
 	}
 
 	@Override

@@ -62,6 +62,7 @@ import net.luxvacuos.voxel.client.core.exception.DecodeTextureException;
 import net.luxvacuos.voxel.client.core.exception.GLFWException;
 import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.resources.ResourceLoader;
+import net.luxvacuos.voxel.universal.core.GlobalVariables;
 
 public final class WindowManager {
 
@@ -96,7 +97,9 @@ public final class WindowManager {
 			ByteBuffer imageBuffer;
 			try {
 				imageBuffer = ResourceLoader.ioResourceToByteBuffer(
-						"assets/" + ClientVariables.assets + "/cursors/" + handle.cursor + ".png", 8 * 1024);
+						"assets/" + GlobalVariables.REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/assets")
+								+ "/cursors/" + handle.cursor + ".png",
+						8 * 1024);
 			} catch (IOException e) {
 				throw new GLFWException(e);
 			}
@@ -128,7 +131,9 @@ public final class WindowManager {
 				ByteBuffer imageBuffer;
 				try {
 					imageBuffer = ResourceLoader.ioResourceToByteBuffer(
-							"assets/" + ClientVariables.assets + "/icons/" + icon.path + ".png", 8 * 1024);
+							"assets/" + GlobalVariables.REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/assets")
+									+ "/icons/" + icon.path + ".png",
+							8 * 1024);
 				} catch (IOException e) {
 					throw new GLFWException(e);
 				}

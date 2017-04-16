@@ -100,6 +100,10 @@ public interface IWindow {
 	public boolean isBackground();
 
 	public boolean isDraggable();
+	
+	public boolean isDragging();
+	
+	public boolean isResizing();
 
 	public boolean shouldClose();
 

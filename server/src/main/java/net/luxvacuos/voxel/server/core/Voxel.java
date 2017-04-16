@@ -20,6 +20,8 @@
 
 package net.luxvacuos.voxel.server.core;
 
+import static net.luxvacuos.voxel.universal.core.GlobalVariables.REGISTRY;
+
 import java.io.IOException;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
@@ -30,6 +32,7 @@ import net.luxvacuos.voxel.server.core.states.StateNames;
 import net.luxvacuos.voxel.universal.bootstrap.AbstractBootstrap;
 import net.luxvacuos.voxel.universal.core.AbstractVoxel;
 import net.luxvacuos.voxel.universal.core.EngineType;
+import net.luxvacuos.voxel.universal.core.GlobalVariables;
 import net.luxvacuos.voxel.universal.core.TaskManager;
 import net.luxvacuos.voxel.universal.core.states.StateMachine;
 import net.luxvacuos.voxel.universal.util.PerRunLog;
@@ -56,18 +59,18 @@ public class Voxel extends AbstractVoxel {
 			Attributes attr = manifest.getMainAttributes();
 			String t = attr.getValue("Specification-Version");
 			if (t != null)
-				ServerVariables.version = t;
+				GlobalVariables.version = t;
 		} catch (IOException E) {
 			E.printStackTrace();
 		}
 		Logger.log("Starting Server");
-		ServerVariables.SETTINGS_PATH = bootstrap.getPrefix() + "/config/settings.conf";
-		ServerVariables.WORLD_PATH = bootstrap.getPrefix() + "/";
+		GlobalVariables.SETTINGS_PATH = bootstrap.getPrefix() + "/config/settings.conf";
+		GlobalVariables.WORLD_PATH = bootstrap.getPrefix() + "/";
 
 		internalSubsystem = ServerInternalSubsystem.getInstance();
 		internalSubsystem.preInit();
 		CoreInfo.platform = bootstrap.getPlatform();
-		Logger.log("Voxel Server Version: " + ServerVariables.version);
+		Logger.log("Voxel Server Version: " + GlobalVariables.version);
 		Logger.log("Running on: " + CoreInfo.platform);
 	}
 
@@ -102,9 +105,10 @@ public class Voxel extends AbstractVoxel {
 
 	@Override
 	public void loop() {
+		int ups = (int) REGISTRY.getRegistryItem("/Voxel/Settings/Core/ups");
 		float delta = 0;
 		float accumulator = 0f;
-		float interval = 1f / ServerVariables.UPS;
+		float interval = 1f / ups;
 		while (StateMachine.isRunning()) {
 			TaskManager.update();
 			if (timeCount > 1f) {
@@ -118,7 +122,7 @@ public class Voxel extends AbstractVoxel {
 				update(interval);
 				accumulator -= interval;
 			}
-			sync.sync(ServerVariables.UPS);
+			sync.sync(ups);
 		}
 	}
 

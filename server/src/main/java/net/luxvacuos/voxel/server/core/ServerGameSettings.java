@@ -20,24 +20,40 @@
 
 package net.luxvacuos.voxel.server.core;
 
+import static net.luxvacuos.voxel.universal.core.GlobalVariables.REGISTRY;
+
+import net.luxvacuos.igl.Logger;
 import net.luxvacuos.voxel.universal.core.AbstractGameSettings;
 
 public class ServerGameSettings extends AbstractGameSettings {
 
 	@Override
 	public void read() {
-		ServerVariables.UPS = Integer.parseInt(getValue("UPS", "20"));
-		ServerVariables.chunk_radius = Integer.parseInt(getValue("chunkRadius", "6"));
-		ServerVariables.worldName = getValue("worldName", "world");
-		ServerVariables.port = Integer.parseInt(getValue("port", "44454"));
+		Logger.log("Loading data to registry...");
+		
+		REGISTRY.register("/Voxel/Settings/Core/ups", 			Integer.parseInt(getValue("UPS", "20")));
+		REGISTRY.register("/Voxel/Settings/World/chunkRadius", 	Integer.parseInt(getValue("chunkRadius", "6")));
+		
+		REGISTRY.register("/Voxel/Simulation/World/name", 		getValue("worldName", "world"));
+		
+		REGISTRY.register("/Voxel/Server/port", 				Integer.parseInt(getValue("port", "44454")));
+		
+		Logger.log("Load completed");
 	}
 
 	@Override
 	public void update() {
-		registerValue("UPS", Integer.toString(ServerVariables.UPS));
-		registerValue("chunkRadius", Integer.toString(ServerVariables.chunk_radius));
-		registerValue("worldName", ServerVariables.worldName);
-		registerValue("port", Integer.toString(ServerVariables.port));
+		Logger.log("Updating registry...");
+		registerValue("SettingsVersion", Integer.toString(ServerGameSettings.VERSION));
+		
+		registerValue("UPS", 			Integer.toString((int) REGISTRY.getRegistryItem("/Voxel/Settings/Core/ups")));
+		registerValue("chunkRadius", 	Integer.toString((int) REGISTRY.getRegistryItem("/Voxel/Settings/World/chunkRadius")));
+		
+		registerValue("worldName", 		(String) REGISTRY.getRegistryItem("/Voxel/Simulation/World/name"));
+		
+		registerValue("port", 			Integer.toString((int) REGISTRY.getRegistryItem("/Voxel/Server/port")));
+		
+		Logger.log("Updated completed");
 	}
 
 }

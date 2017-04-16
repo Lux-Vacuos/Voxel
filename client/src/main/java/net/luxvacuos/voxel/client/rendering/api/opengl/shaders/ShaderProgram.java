@@ -45,11 +45,11 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 import net.luxvacuos.igl.Logger;
-import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.core.exception.CompileShaderException;
 import net.luxvacuos.voxel.client.core.exception.LoadShaderException;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.Attribute;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.IUniform;
+import net.luxvacuos.voxel.universal.core.GlobalVariables;
 import net.luxvacuos.voxel.universal.resources.IDisposable;
 
 /**
@@ -171,7 +171,7 @@ public abstract class ShaderProgram implements IDisposable {
 	private int loadShader(String file, int type) {
 		StringBuilder shaderSource = new StringBuilder();
 		InputStream filet = getClass().getClassLoader()
-				.getResourceAsStream("assets/" + ClientVariables.assets + "/shaders/" + file);
+				.getResourceAsStream("assets/" + GlobalVariables.REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/assets") + "/shaders/" + file);
 		try {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(filet));
 			Logger.log("Loading Shader: " + file);

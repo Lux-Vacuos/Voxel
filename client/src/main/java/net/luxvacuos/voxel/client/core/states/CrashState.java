@@ -24,7 +24,6 @@ import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 
 import net.luxvacuos.voxel.client.core.ClientVariables;
-import net.luxvacuos.voxel.client.rendering.api.nanovg.NRendering;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.WM;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Renderer;
 import net.luxvacuos.voxel.client.ui.menus.CrashWindow;
@@ -41,9 +40,8 @@ public class CrashState extends AbstractState {
 
 	@Override
 	public void start() {
-		WM.getWM().addWindow(new CrashWindow(-(NRendering.BORDER_SIZE / 2f),
-				ClientVariables.HEIGHT + NRendering.BORDER_SIZE / 2f, ClientVariables.WIDTH + NRendering.BORDER_SIZE,
-				ClientVariables.HEIGHT + NRendering.BORDER_SIZE, t));
+		WM.getWM().addWindow(
+				new CrashWindow(0, ClientVariables.HEIGHT, ClientVariables.WIDTH, ClientVariables.HEIGHT, t));
 	}
 
 	@Override

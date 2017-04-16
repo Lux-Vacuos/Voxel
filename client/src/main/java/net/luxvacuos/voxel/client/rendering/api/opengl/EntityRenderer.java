@@ -20,6 +20,7 @@
 
 package net.luxvacuos.voxel.client.rendering.api.opengl;
 
+import static net.luxvacuos.voxel.universal.core.GlobalVariables.REGISTRY;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
 import static org.lwjgl.opengl.GL11.GL_UNSIGNED_INT;
@@ -47,7 +48,6 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.utils.ImmutableArray;
 
 import net.luxvacuos.igl.vector.Matrix4d;
-import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.ecs.ClientComponents;
 import net.luxvacuos.voxel.client.ecs.components.Renderable;
 import net.luxvacuos.voxel.client.ecs.entities.CameraEntity;
@@ -85,7 +85,8 @@ public class EntityRenderer {
 		shader.dispose();
 	}
 
-	public void renderEntity(ImmutableArray<Entity> immutableArray, CameraEntity camera, CameraEntity sunCamera, ShadowFBO shadow) {
+	public void renderEntity(ImmutableArray<Entity> immutableArray, CameraEntity camera, CameraEntity sunCamera,
+			ShadowFBO shadow) {
 		for (Entity entity : immutableArray) {
 			if (entity instanceof AbstractEntity && entity.getComponent(Renderable.class) != null) {
 				processEntity((AbstractEntity) entity);
@@ -98,7 +99,7 @@ public class EntityRenderer {
 		shader.start();
 		shader.loadviewMatrix(camera);
 		shader.loadLightMatrix(sunCamera);
-		shader.useShadows(ClientVariables.useShadows);
+		shader.useShadows((boolean) REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/shadows"));
 		shader.loadProjectionMatrix(camera.getProjectionMatrix());
 		shader.loadBiasMatrix(((SunCamera) sunCamera).getProjectionArray());
 		renderEntity(entities, shadow);

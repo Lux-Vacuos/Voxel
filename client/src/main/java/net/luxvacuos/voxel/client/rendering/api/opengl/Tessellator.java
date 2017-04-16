@@ -20,6 +20,7 @@
 
 package net.luxvacuos.voxel.client.rendering.api.opengl;
 
+import static net.luxvacuos.voxel.universal.core.GlobalVariables.REGISTRY;
 import static org.lwjgl.opengl.GL11.GL_BACK;
 import static org.lwjgl.opengl.GL11.GL_FLOAT;
 import static org.lwjgl.opengl.GL11.GL_FRONT;
@@ -64,7 +65,6 @@ import org.lwjgl.BufferUtils;
 import net.luxvacuos.igl.vector.Vector2d;
 import net.luxvacuos.igl.vector.Vector3d;
 import net.luxvacuos.igl.vector.Vector8f;
-import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.core.ClientWorldSimulation;
 import net.luxvacuos.voxel.client.ecs.entities.CameraEntity;
 import net.luxvacuos.voxel.client.ecs.entities.SunCamera;
@@ -162,7 +162,8 @@ public class Tessellator {
 		updated = true;
 	}
 
-	public void draw(CameraEntity camera, CameraEntity sunCamera, ClientWorldSimulation clientWorldSimulation, ShadowFBO shadow) {
+	public void draw(CameraEntity camera, CameraEntity sunCamera, ClientWorldSimulation clientWorldSimulation,
+			ShadowFBO shadow) {
 		if (updated) {
 			updateGlBuffers(vboID0, vboCapacity, buffer0);
 			updateGlBuffers(vboID1, vboCapacity, buffer1);
@@ -175,7 +176,7 @@ public class Tessellator {
 		shader.loadViewMatrix(camera.getViewMatrix(), camera.getPosition());
 		shader.loadProjectionMatrix(camera.getProjectionMatrix());
 		shader.loadLightMatrix(sunCamera.getViewMatrix());
-		shader.loadSettings(ClientVariables.useShadows);
+		shader.loadSettings((boolean) REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/shadows"));
 		shader.loadMoveFactor(clientWorldSimulation.getMoveFactor());
 		shader.loadBiasMatrix(((SunCamera) sunCamera).getProjectionArray());
 		shader.loadMaterial(material);
