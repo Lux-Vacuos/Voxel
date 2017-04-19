@@ -26,13 +26,18 @@ import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_TOP;
 
 import net.luxvacuos.voxel.client.core.ClientInternalSubsystem;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
+import net.luxvacuos.voxel.client.rendering.api.nanovg.NRendering.ButtonStyle;
 import net.luxvacuos.voxel.client.ui.Alignment;
 import net.luxvacuos.voxel.client.ui.Button;
 import net.luxvacuos.voxel.client.ui.RootComponent;
 import net.luxvacuos.voxel.client.ui.Slider;
 import net.luxvacuos.voxel.client.ui.Text;
+import net.luxvacuos.voxel.client.ui.TitleBarButton;
+import net.luxvacuos.voxel.universal.core.TaskManager;
 
 public class OptionsMenu extends RootComponent {
+
+	private TitleBarButton backButton;
 
 	public OptionsMenu(float x, float y, float w, float h) {
 		super(x, y, w, h, "Options");
@@ -42,6 +47,61 @@ public class OptionsMenu extends RootComponent {
 	public void initApp(Window window) {
 		super.setBackgroundColor(0.4f, 0.4f, 0.4f, 1f);
 
+		backButton = new TitleBarButton(0, -1, 28, 28);
+		backButton.setAlignment(Alignment.RIGHT_BOTTOM);
+		backButton.setWindowAlignment(Alignment.LEFT_TOP);
+		backButton.setColor("#646464C8");
+		backButton.setStyle(ButtonStyle.LEFT_ARROW);
+		backButton.setEnabled(false);
+		super.getTitleBar().addComponent(backButton);
+
+		mainMenu(window);
+
+		super.initApp(window);
+	}
+
+	private void mainMenu(Window window) {
+		Button graphics = new Button(40, -40, 200, 40, "Graphics");
+		graphics.setWindowAlignment(Alignment.LEFT_TOP);
+		graphics.setAlignment(Alignment.RIGHT_BOTTOM);
+
+		graphics.setOnButtonPress(() -> {
+			TaskManager.addTask(() -> {
+				super.disposeApp(window);
+				graphicOptions();
+				backButton.setOnButtonPress(() -> {
+					TaskManager.addTask(() -> {
+						super.disposeApp(window);
+						backButton.setEnabled(false);
+						mainMenu(window);
+					});
+				});
+			});
+		});
+		
+		Button wm = new Button(40, -100, 200, 40, "Window Manager");
+		wm.setWindowAlignment(Alignment.LEFT_TOP);
+		wm.setAlignment(Alignment.RIGHT_BOTTOM);
+		
+		wm.setOnButtonPress(() -> {
+			TaskManager.addTask(() -> {
+				super.disposeApp(window);
+				wmOptions();
+				backButton.setOnButtonPress(() -> {
+					TaskManager.addTask(() -> {
+						super.disposeApp(window);
+						backButton.setEnabled(false);
+						mainMenu(window);
+					});
+				});
+			});
+		});
+		
+		super.addComponent(graphics);
+		super.addComponent(wm);
+	}
+	
+	private void graphicOptions() {
 		Button godraysButton = new Button(40, -40, 200, 40, "Volumetric Light");
 		Button shadowsButton = new Button(40, -100, 200, 40, "Shadows");
 		Button dofButton = new Button(40, -160, 200, 40, "Depth of Field");
@@ -52,9 +112,6 @@ public class OptionsMenu extends RootComponent {
 		Button ambientOccButton = new Button(260, -160, 200, 40, "Ambient Occlusion");
 		Button chromaticAberrationButton = new Button(260, -220, 200, 40, "Chromatic Aberration");
 		Button lensFlaresButton = new Button(260, -280, 200, 40, "Lens Flares");
-		float border = (float) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/borderSize");
-		Text wmBorderText = new Text("Window Border: " + border, 520, -40);
-		Slider wmBorder = new Slider(520, -60, 200, 20, border / 40f);
 
 		godraysButton.setWindowAlignment(Alignment.LEFT_TOP);
 		godraysButton.setAlignment(Alignment.RIGHT_BOTTOM);
@@ -76,13 +133,6 @@ public class OptionsMenu extends RootComponent {
 		chromaticAberrationButton.setAlignment(Alignment.RIGHT_BOTTOM);
 		lensFlaresButton.setWindowAlignment(Alignment.LEFT_TOP);
 		lensFlaresButton.setAlignment(Alignment.RIGHT_BOTTOM);
-		wmBorderText.setWindowAlignment(Alignment.LEFT_TOP);
-		wmBorderText.setFontSize(20);
-		wmBorderText.setAlign(NVG_ALIGN_LEFT | NVG_ALIGN_TOP);
-		wmBorder.setWindowAlignment(Alignment.LEFT_TOP);
-		wmBorder.setAlignment(Alignment.RIGHT_BOTTOM);
-		wmBorder.setPrecision(40f);
-		wmBorder.useCustomPrecision(true);
 
 		if ((boolean) REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/volumetricLight")) {
 			godraysButton.setText("Volumetric Light: ON");
@@ -294,12 +344,6 @@ public class OptionsMenu extends RootComponent {
 			REGISTRY.register("/Voxel/Settings/Graphics/lensFlares", val);
 		});
 
-		wmBorder.setOnPress(() -> {
-			float val = wmBorder.getPosition() * 40f;
-			REGISTRY.register("/Voxel/Settings/WindowManager/borderSize", val);
-			wmBorderText.setText("Window Border: " + val);
-		});
-
 		super.addComponent(shadowsButton);
 		super.addComponent(dofButton);
 		super.addComponent(godraysButton);
@@ -310,14 +354,31 @@ public class OptionsMenu extends RootComponent {
 		super.addComponent(ambientOccButton);
 		super.addComponent(chromaticAberrationButton);
 		super.addComponent(lensFlaresButton);
+		backButton.setEnabled(true);
+	}
+	
+	private void wmOptions(){
+		float border = (float) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/borderSize");
+		Text wmBorderText = new Text("Window Border: " + border, 40, -40);
+		Slider wmBorder = new Slider(40, -60, 200, 20, border / 40f);
+		
+		wmBorderText.setWindowAlignment(Alignment.LEFT_TOP);
+		wmBorderText.setFontSize(20);
+		wmBorderText.setAlign(NVG_ALIGN_LEFT | NVG_ALIGN_TOP);
+		wmBorder.setWindowAlignment(Alignment.LEFT_TOP);
+		wmBorder.setAlignment(Alignment.RIGHT_BOTTOM);
+		wmBorder.setPrecision(40f);
+		wmBorder.useCustomPrecision(true);
+		
+		wmBorder.setOnPress(() -> {
+			float val = wmBorder.getPosition() * 40f;
+			REGISTRY.register("/Voxel/Settings/WindowManager/borderSize", val);
+			wmBorderText.setText("Window Border: " + val);
+		});
+		
 		super.addComponent(wmBorderText);
 		super.addComponent(wmBorder);
-
-		super.initApp(window);
-	}
-
-	private void graphicOptions() {
-
+		backButton.setEnabled(true);
 	}
 
 	@Override

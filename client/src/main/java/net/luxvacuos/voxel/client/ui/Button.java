@@ -30,12 +30,12 @@ import net.luxvacuos.voxel.client.rendering.api.nanovg.NRendering;
 
 public class Button extends Component {
 
-	private String text = "missigno", font = "Poppins-Medium", entypo = "Entypo";
+	protected String text = "missigno", font = "Poppins-Medium", entypo = "Entypo";
 	protected NVGColor color = NRendering.rgba(255, 255, 255, 255);
-	private ByteBuffer preicon;
-	private OnAction onPress;
-	private float fontSize = 21;
-	private boolean pressed = false;
+	protected ByteBuffer preicon;
+	protected OnAction onPress;
+	protected float fontSize = 21;
+	protected boolean pressed = false, enabled = true;
 
 	public Button(float x, float y, float w, float h, String text) {
 		this.x = x;
@@ -47,12 +47,16 @@ public class Button extends Component {
 
 	@Override
 	public void render(Window window) {
+		if (!enabled)
+			return;
 		NRendering.renderButton(window.getNVGID(), preicon, text, font, entypo, rootComponent.rootX + alignedX,
 				window.getHeight() - rootComponent.rootY - alignedY - h, w, h, color, this.insideButton(), fontSize);
 	}
 
 	@Override
 	public void update(float delta, Window window) {
+		if (!enabled)
+			return;
 		if (onPress != null)
 			if (pressed() && !pressed)
 				onPress.onAction();
@@ -79,7 +83,7 @@ public class Button extends Component {
 		color.b(b);
 		color.a(a);
 	}
-	
+
 	public void setColor(String hex) {
 		color.r(Integer.valueOf(hex.substring(1, 3), 16) / 255f);
 		color.g(Integer.valueOf(hex.substring(3, 5), 16) / 255f);
@@ -109,6 +113,14 @@ public class Button extends Component {
 
 	public void setFontSize(float fontSize) {
 		this.fontSize = fontSize;
+	}
+
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+	}
+
+	public boolean isEnabled() {
+		return enabled;
 	}
 
 }

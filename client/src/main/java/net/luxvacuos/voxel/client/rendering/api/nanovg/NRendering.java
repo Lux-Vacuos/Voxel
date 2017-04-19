@@ -84,7 +84,7 @@ import net.luxvacuos.voxel.client.ui.ScrollPaneElement;
 public class NRendering {
 
 	public static enum ButtonStyle {
-		CLOSE, MAXIMIZE, MINIMIZE
+		CLOSE, MAXIMIZE, MINIMIZE, NONE, LEFT_ARROW, RIGHT_ARROW
 	};
 
 	public static enum BackgroundStyle {
@@ -188,9 +188,8 @@ public class NRendering {
 						h + 30 + titleBarHeight + borderSize);
 				nvgRect(vg, x - borderSize, y - titleBarHeight, w + borderSize * 2f, h + titleBarHeight + borderSize);
 			} else {
-				nvgBoxGradient(vg, x - borderSize, y + 10 - borderSize, w + borderSize * 2f,
-						h + borderSize * 2f, 0, 20, rgba(0, 0, 0, 80, colorA), rgba(0, 0, 0, 0, colorB),
-						shadowPaint);
+				nvgBoxGradient(vg, x - borderSize, y + 10 - borderSize, w + borderSize * 2f, h + borderSize * 2f, 0, 20,
+						rgba(0, 0, 0, 80, colorA), rgba(0, 0, 0, 0, colorB), shadowPaint);
 				nvgBeginPath(vg);
 				nvgRect(vg, x - 10 - borderSize, y - 10 - borderSize, w + 20 + borderSize * 2f,
 						h + 30 + borderSize * 2f);
@@ -239,7 +238,27 @@ public class NRendering {
 			nvgStrokeColor(vg, rgba(0, 0, 0, 255, colorA));
 			nvgStroke(vg);
 			break;
-		default:
+		case LEFT_ARROW:
+			nvgBeginPath(vg);
+			nvgMoveTo(vg, x + w / 2, y + h / 2 + 6);
+			nvgLineTo(vg, x + w / 2 - 6, y + h / 2);
+			nvgLineTo(vg, x + w / 2, y + h / 2 - 6);
+			nvgMoveTo(vg, x + w / 2 - 6, y + h / 2);
+			nvgLineTo(vg, x + w / 2 + 6, y + h / 2);
+			nvgStrokeColor(vg, rgba(0, 0, 0, 255, colorA));
+			nvgStroke(vg);
+			break;
+		case RIGHT_ARROW:
+			nvgBeginPath(vg);
+			nvgMoveTo(vg, x + w / 2, y + h / 2 + 6);
+			nvgLineTo(vg, x + w / 2 + 6, y + h / 2);
+			nvgLineTo(vg, x + w / 2, y + h / 2 - 6);
+			nvgMoveTo(vg, x + w / 2 + 6, y + h / 2);
+			nvgLineTo(vg, x + w / 2 - 6, y + h / 2);
+			nvgStrokeColor(vg, rgba(0, 0, 0, 255, colorA));
+			nvgStroke(vg);
+			break;
+		case NONE:
 			break;
 		}
 

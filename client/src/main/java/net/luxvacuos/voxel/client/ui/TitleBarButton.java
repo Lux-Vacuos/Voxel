@@ -26,7 +26,7 @@ import net.luxvacuos.voxel.client.rendering.api.nanovg.NRendering.ButtonStyle;
 
 public class TitleBarButton extends Button {
 
-	private ButtonStyle style;
+	private ButtonStyle style = ButtonStyle.NONE;
 
 	public TitleBarButton(float x, float y, float w, float h) {
 		super(x, y, w, h, "");
@@ -34,6 +34,8 @@ public class TitleBarButton extends Button {
 
 	@Override
 	public void render(Window window) {
+		if (!enabled)
+			return;
 		NRendering.renderWindowButton(window.getNVGID(), rootComponent.rootX + alignedX,
 				window.getHeight() - rootComponent.rootY - alignedY - h, w, h, color, style);
 	}
