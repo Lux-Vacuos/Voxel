@@ -58,8 +58,12 @@ public abstract class CompositeEffect implements IDisposable {
 		float titleBarHeight = (float) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/titleBarHeight");
 		nvgluBindFramebuffer(wnd.getNVGID(), fbos[0]);
 		shader.start();
-		shader.loadFrame(new Vector4f(window.getX() - borderSize, window.getY() + titleBarHeight,
-				window.getWidth() + borderSize * 2f, window.getHeight() + titleBarHeight + borderSize));
+		if (window.getTitleBar().isEnabled())
+			shader.loadFrame(new Vector4f(window.getX() - borderSize, window.getY() + titleBarHeight,
+					window.getWidth() + borderSize * 2f, window.getHeight() + titleBarHeight + borderSize));
+		else
+			shader.loadFrame(new Vector4f(window.getX() - borderSize, window.getY() + borderSize,
+					window.getWidth() + borderSize * 2f, window.getHeight() + borderSize * 2f));
 		shader.loadBlurBehind(window.hasBlurBehind());
 		glBindVertexArray(quad.getVaoID());
 		glEnableVertexAttribArray(0);

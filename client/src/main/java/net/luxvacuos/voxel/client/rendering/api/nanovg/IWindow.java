@@ -24,6 +24,7 @@ import org.lwjgl.nanovg.NVGLUFramebuffer;
 
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.NRendering.BackgroundStyle;
+import net.luxvacuos.voxel.client.ui.ITitleBar;
 
 public interface IWindow {
 
@@ -104,6 +105,8 @@ public interface IWindow {
 	public boolean isDragging();
 	
 	public boolean isResizing();
+	
+	public ITitleBar getTitleBar();
 
 	public boolean shouldClose();
 

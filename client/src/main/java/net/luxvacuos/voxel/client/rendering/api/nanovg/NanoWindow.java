@@ -369,6 +369,11 @@ public abstract class NanoWindow implements IWindow {
 	}
 
 	@Override
+	public ITitleBar getTitleBar() {
+		return titleBar;
+	}
+
+	@Override
 	public void closeWindow() {
 		switch (windowClose) {
 		case DISPOSE:

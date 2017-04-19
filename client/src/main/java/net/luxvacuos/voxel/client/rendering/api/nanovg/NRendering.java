@@ -179,13 +179,23 @@ public class NRendering {
 		}
 		if (decorations) {
 			// Drop shadow
-			nvgBoxGradient(vg, x - borderSize, y + 10 - titleBarHeight, w + borderSize * 2f,
-					h + titleBarHeight + borderSize, 0, 20, rgba(0, 0, 0, 80, colorA), rgba(0, 0, 0, 0, colorB),
-					shadowPaint);
-			nvgBeginPath(vg);
-			nvgRect(vg, x - 10 - borderSize, y - 10 - titleBarHeight, w + 20 + borderSize * 2f,
-					h + 30 + titleBarHeight + borderSize);
-			nvgRect(vg, x - borderSize, y - titleBarHeight, w + borderSize * 2f, h + titleBarHeight + borderSize);
+			if (titleBar) {
+				nvgBoxGradient(vg, x - borderSize, y + 10 - titleBarHeight, w + borderSize * 2f,
+						h + titleBarHeight + borderSize, 0, 20, rgba(0, 0, 0, 80, colorA), rgba(0, 0, 0, 0, colorB),
+						shadowPaint);
+				nvgBeginPath(vg);
+				nvgRect(vg, x - 10 - borderSize, y - 10 - titleBarHeight, w + 20 + borderSize * 2f,
+						h + 30 + titleBarHeight + borderSize);
+				nvgRect(vg, x - borderSize, y - titleBarHeight, w + borderSize * 2f, h + titleBarHeight + borderSize);
+			} else {
+				nvgBoxGradient(vg, x - borderSize, y + 10 - borderSize, w + borderSize * 2f,
+						h + borderSize * 2f, 0, 20, rgba(0, 0, 0, 80, colorA), rgba(0, 0, 0, 0, colorB),
+						shadowPaint);
+				nvgBeginPath(vg);
+				nvgRect(vg, x - 10 - borderSize, y - 10 - borderSize, w + 20 + borderSize * 2f,
+						h + 30 + borderSize * 2f);
+				nvgRect(vg, x - borderSize, y - titleBarHeight, w + borderSize * 2f, h + titleBarHeight + borderSize);
+			}
 			nvgPathWinding(vg, NVG_HOLE);
 			nvgFillPaint(vg, shadowPaint);
 			nvgFill(vg);
