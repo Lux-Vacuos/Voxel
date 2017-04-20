@@ -51,8 +51,10 @@ public class OptionsMenu extends RootComponent {
 		backButton.setAlignment(Alignment.RIGHT_BOTTOM);
 		backButton.setWindowAlignment(Alignment.LEFT_TOP);
 		backButton.setColor("#646464C8");
+		backButton.setHighlightColor("#FFFFFFC8");
 		backButton.setStyle(ButtonStyle.LEFT_ARROW);
 		backButton.setEnabled(false);
+		
 		super.getTitleBar().addComponent(backButton);
 
 		mainMenu(window);

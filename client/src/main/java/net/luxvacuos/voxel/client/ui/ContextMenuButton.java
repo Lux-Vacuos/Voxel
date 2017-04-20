@@ -22,26 +22,21 @@ package net.luxvacuos.voxel.client.ui;
 
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.NRendering;
-import net.luxvacuos.voxel.client.rendering.api.nanovg.NRendering.ButtonStyle;
 
-public class TitleBarButton extends Button {
+public class ContextMenuButton extends Button {
 
-	private ButtonStyle style = ButtonStyle.NONE;
-
-	public TitleBarButton(float x, float y, float w, float h) {
-		super(x, y, w, h, "");
+	public ContextMenuButton(float x, float y, float w, float h, String text) {
+		super(x, y, w, h, text);
+		setColor(1, 1, 1, 0.8f);
+		setHighlightColor(0.7f, 0.7f, 0.7f, 0.8f);
 	}
 
 	@Override
 	public void render(Window window) {
 		if (!enabled)
 			return;
-		NRendering.renderWindowButton(window.getNVGID(), rootComponent.rootX + alignedX,
-				window.getHeight() - rootComponent.rootY - alignedY - h, w, h, color, style, inside, highlight);
-	}
-
-	public void setStyle(ButtonStyle style) {
-		this.style = style;
+		NRendering.renderContexMenuButton(window.getNVGID(), text, font, rootComponent.rootX + alignedX,
+				window.getHeight() - rootComponent.rootY - alignedY - h, w, h, color, fontSize, inside, highlight);
 	}
 
 }

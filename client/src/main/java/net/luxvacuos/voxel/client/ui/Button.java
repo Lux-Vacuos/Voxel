@@ -31,11 +31,11 @@ import net.luxvacuos.voxel.client.rendering.api.nanovg.NRendering;
 public class Button extends Component {
 
 	protected String text = "missigno", font = "Poppins-Medium", entypo = "Entypo";
-	protected NVGColor color = NRendering.rgba(255, 255, 255, 255);
+	protected NVGColor color = NRendering.rgba(255, 255, 255, 255), highlight = NRendering.rgba(100, 100, 100, 255);
 	protected ByteBuffer preicon;
 	protected OnAction onPress;
 	protected float fontSize = 21;
-	protected boolean pressed = false, enabled = true;
+	protected boolean pressed = false, enabled = true, inside;
 
 	public Button(float x, float y, float w, float h, String text) {
 		this.x = x;
@@ -50,7 +50,7 @@ public class Button extends Component {
 		if (!enabled)
 			return;
 		NRendering.renderButton(window.getNVGID(), preicon, text, font, entypo, rootComponent.rootX + alignedX,
-				window.getHeight() - rootComponent.rootY - alignedY - h, w, h, color, this.insideButton(), fontSize);
+				window.getHeight() - rootComponent.rootY - alignedY - h, w, h, color, inside, fontSize);
 	}
 
 	@Override
@@ -61,13 +61,14 @@ public class Button extends Component {
 			if (pressed() && !pressed)
 				onPress.onAction();
 		pressed = pressed();
+		inside = insideButton();
 		super.update(delta, window);
 	}
 
 	public boolean insideButton() {
 		return Mouse.getX() > rootComponent.rootX + alignedX && Mouse.getY() > rootComponent.rootY + alignedY
 				&& Mouse.getX() < rootComponent.rootX + alignedX + w
-				&& Mouse.getY() < rootComponent.rootY + alignedY + h;
+				&& Mouse.getY() <= rootComponent.rootY + alignedY + h;
 	}
 
 	public boolean pressed() {
@@ -89,6 +90,20 @@ public class Button extends Component {
 		color.g(Integer.valueOf(hex.substring(3, 5), 16) / 255f);
 		color.b(Integer.valueOf(hex.substring(5, 7), 16) / 255f);
 		color.a(Integer.valueOf(hex.substring(7, 9), 16) / 255f);
+	}
+	
+	public void setHighlightColor(float r, float g, float b, float a) {
+		highlight.r(r);
+		highlight.g(g);
+		highlight.b(b);
+		highlight.a(a);
+	}
+	
+	public void setHighlightColor(String hex) {
+		highlight.r(Integer.valueOf(hex.substring(1, 3), 16) / 255f);
+		highlight.g(Integer.valueOf(hex.substring(3, 5), 16) / 255f);
+		highlight.b(Integer.valueOf(hex.substring(5, 7), 16) / 255f);
+		highlight.a(Integer.valueOf(hex.substring(7, 9), 16) / 255f);
 	}
 
 	public void setText(String text) {

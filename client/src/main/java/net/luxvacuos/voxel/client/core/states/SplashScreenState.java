@@ -57,6 +57,7 @@ public class SplashScreenState extends AbstractState {
 	public void init() {
 		component = new RootComponent(0, ClientVariables.HEIGHT, ClientVariables.WIDTH, ClientVariables.HEIGHT,
 				"splash");
+		component.toggleTitleBar();
 		component.setDecorations(false);
 		component.setBackgroundColor(1, 1, 1, 1);
 		component.setBlurBehind(false);

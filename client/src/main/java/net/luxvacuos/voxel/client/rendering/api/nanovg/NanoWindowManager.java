@@ -141,7 +141,8 @@ public class NanoWindowManager implements IWindowManager {
 				tmp.add(window);
 				continue;
 			}
-			if (window.insideWindow() && !window.isBackground() && Mouse.isButtonDown(0) && !focused.isDragging() && !focused.isResizing())
+			if (window.insideWindow() && !window.isBackground() && (Mouse.isButtonDown(0) || Mouse.isButtonDown(1))
+					&& !focused.isDragging() && !focused.isResizing())
 				toTop = window;
 		}
 		windows.removeAll(tmp);
@@ -157,7 +158,8 @@ public class NanoWindowManager implements IWindowManager {
 		tmp.addAll(windows);
 		Collections.reverse(tmp);
 		for (IWindow window : tmp) {
-			if (window.insideWindow() && Mouse.isButtonDown(0) && !focused.isDragging() && !focused.isResizing()) {
+			if (window.insideWindow() && (Mouse.isButtonDown(0) || Mouse.isButtonDown(1)) && !focused.isDragging()
+					&& !focused.isResizing()) {
 				focused = window;
 				break;
 			}

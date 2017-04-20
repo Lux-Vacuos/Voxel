@@ -111,6 +111,14 @@ public class NRendering {
 	private static final FloatBuffer lineh = BufferUtils.createFloatBuffer(1);
 	private static final NVGTextRow.Buffer rows = NVGTextRow.create(3);
 
+	public static NVGColor rgba(float r, float g, float b, float a, NVGColor color) {
+		color.r(r);
+		color.g(g);
+		color.b(b);
+		color.a(a);
+		return color;
+	}
+
 	public static NVGColor rgba(int r, int g, int b, int a, NVGColor color) {
 		color.r(r / 255.0f);
 		color.g(g / 255.0f);
@@ -205,10 +213,14 @@ public class NRendering {
 	}
 
 	public static void renderWindowButton(long vg, float x, float y, float w, float h, NVGColor color,
-			ButtonStyle style) {
+			ButtonStyle style, boolean highlight, NVGColor highlightColor) {
+		nvgSave(vg);
 		nvgBeginPath(vg);
 		nvgRect(vg, x, y, w, h);
-		nvgFillColor(vg, color);
+		if (highlight)
+			nvgFillColor(vg, highlightColor);
+		else
+			nvgFillColor(vg, color);
 		nvgFill(vg);
 
 		switch (style) {
@@ -261,7 +273,7 @@ public class NRendering {
 		case NONE:
 			break;
 		}
-
+		nvgRestore(vg);
 	}
 
 	public static void renderText(long vg, String text, String font, int align, float x, float y, float fontSize,
@@ -336,20 +348,16 @@ public class NRendering {
 	}
 
 	public static void renderButton(long vg, ByteBuffer preicon, String text, String font, String entypo, float x,
-			float y, float w, float h, NVGColor color, boolean mouseInside, float fontSize) {
+			float y, float w, float h, NVGColor color, boolean highlight, float fontSize) {
 		float tw, iw = 0;
-
-		if (mouseInside) {
-			x += 1;
-			y += 1;
-			w -= 2;
-			h -= 2;
-			fontSize -= 1f;
-		}
+		nvgSave(vg);
 
 		nvgBeginPath(vg);
 		nvgRect(vg, x + 1, y + 1, w - 2, h - 2);
-		nvgFillColor(vg, color);
+		if (highlight)
+			nvgFillColor(vg, rgba(color.r() - 0.2f, color.g() - 0.2f, color.b() - 0.2f, color.a(), colorA));
+		else
+			nvgFillColor(vg, color);
 		nvgFill(vg);
 
 		nvgBeginPath(vg);
@@ -379,8 +387,8 @@ public class NRendering {
 		nvgFontFace(vg, font);
 		nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
 		nvgFillColor(vg, rgba(60, 60, 60, 255, colorA));
-		nvgText(vg, x + w * 0.5f - tw * 0.5f + iw * 0.25f, y + h * 0.5f - 1, text);
-
+		nvgText(vg, x + w * 0.5f - tw * 0.5f + iw * 0.25f, y + h * 0.5f, text);
+		nvgRestore(vg);
 	}
 
 	public static void renderScrollPane(long vg, float x, float y, float w, float h, float t, int hSize, float cardW,
@@ -541,6 +549,26 @@ public class NRendering {
 		nvgFillColor(vg, rgba(200, 200, 200, 255, colorB));
 		nvgFill(vg);
 
+		nvgRestore(vg);
+	}
+
+	public static void renderContexMenuButton(long vg, String text, String font, float x, float y, float w, float h,
+			NVGColor color, float fontSize, boolean highlight, NVGColor highlightColor) {
+		nvgSave(vg);
+
+		nvgBeginPath(vg);
+		nvgRect(vg, x, y, w, h);
+		if (highlight)
+			nvgFillColor(vg, highlightColor);
+		else
+			nvgFillColor(vg, color);
+		nvgFill(vg);
+
+		nvgFontSize(vg, fontSize);
+		nvgFontFace(vg, font);
+		nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
+		nvgFillColor(vg, rgba(60, 60, 60, 255, colorA));
+		nvgText(vg, x + 10f, y + h * 0.5f, text);
 		nvgRestore(vg);
 	}
 
