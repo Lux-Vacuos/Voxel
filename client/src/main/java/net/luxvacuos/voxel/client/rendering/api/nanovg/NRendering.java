@@ -348,14 +348,14 @@ public class NRendering {
 	}
 
 	public static void renderButton(long vg, ByteBuffer preicon, String text, String font, String entypo, float x,
-			float y, float w, float h, NVGColor color, boolean highlight, float fontSize) {
+			float y, float w, float h, NVGColor color, boolean highlight, float fontSize, NVGColor highlightColor) {
 		float tw, iw = 0;
 		nvgSave(vg);
 
 		nvgBeginPath(vg);
 		nvgRect(vg, x + 1, y + 1, w - 2, h - 2);
 		if (highlight)
-			nvgFillColor(vg, rgba(color.r() - 0.2f, color.g() - 0.2f, color.b() - 0.2f, color.a(), colorA));
+			nvgFillColor(vg, highlightColor);
 		else
 			nvgFillColor(vg, color);
 		nvgFill(vg);
@@ -524,7 +524,7 @@ public class NRendering {
 
 	public static void renderBox(long vg, float x, float y, float w, float h, NVGColor color) {
 		nvgBeginPath(vg);
-		nvgRect(vg, x + 1, y + 1, w - 2, h - 2);
+		nvgRect(vg, x, y, w, h);
 		nvgFillColor(vg, color);
 		nvgFill(vg);
 	}
@@ -569,6 +569,80 @@ public class NRendering {
 		nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
 		nvgFillColor(vg, rgba(60, 60, 60, 255, colorA));
 		nvgText(vg, x + 10f, y + h * 0.5f, text);
+		nvgRestore(vg);
+	}
+
+	public static void renderToggleButton(long vg, String text, String font, float x, float y, float w, float h,
+			NVGColor color, float fontSize, boolean status, NVGColor highlightColor) {
+		nvgSave(vg);
+
+		nvgBeginPath(vg);
+		nvgRect(vg, x, y, w, h);
+		if (status)
+			nvgFillColor(vg,
+					rgba(highlightColor.r() - 0.4f, highlightColor.g() - 0.4f, highlightColor.b() - 0.4f, 1f, colorA));
+		else
+			nvgFillColor(vg, rgba(0, 0, 0, 255, colorA));
+		nvgFill(vg);
+
+		nvgBeginPath(vg);
+		nvgRect(vg, x + 3, y + 3, w - 6, h - 6);
+		nvgPathWinding(vg, NVG_HOLE);
+		nvgRect(vg, x, y, w, h);
+		if (status)
+			nvgFillColor(vg, highlightColor);
+		else
+			nvgFillColor(vg, color);
+		nvgFill(vg);
+
+		nvgBeginPath(vg);
+		if (status)
+			nvgRect(vg, x + w - h + 5, y + 5, h - 10, h - 10);
+		else
+			nvgRect(vg, x + 5, y + 5, h - 10, h - 10);
+		nvgFillColor(vg, color);
+		nvgFill(vg);
+
+		nvgRestore(vg);
+	}
+
+	public static void renderScrollBarV(long vg, float x, float y, float w, float h, float pos, float sizeV) {
+		float scrollv;
+		float scrollBarSize = (float) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/scrollBarSize");
+
+		nvgSave(vg);
+		// Scroll bar
+		nvgBeginPath(vg);
+		nvgRect(vg, x + w - scrollBarSize, y + scrollBarSize, scrollBarSize, h - scrollBarSize * 2f);
+		nvgFillColor(vg, rgba(0, 0, 0, 64, colorB));
+		nvgFill(vg);
+
+		scrollv = (h / sizeV) * (h / 2);
+		nvgBeginPath(vg);
+		nvgRect(vg, x + w - scrollBarSize, y + scrollBarSize + (h - 8 - scrollv) * pos, scrollBarSize,
+				scrollv - scrollBarSize * 2f + 8);
+		nvgFillColor(vg, rgba(220, 220, 220, 255, colorB));
+		nvgFill(vg);
+
+		nvgBeginPath(vg);
+		nvgRect(vg, x + w - scrollBarSize, y, scrollBarSize, scrollBarSize);
+		nvgFillColor(vg, rgba(0, 0, 0, 100, colorB));
+		nvgFill(vg);
+		nvgBeginPath(vg);
+		nvgRect(vg, x + w - scrollBarSize, y + h - scrollBarSize, scrollBarSize, scrollBarSize);
+		nvgFillColor(vg, rgba(0, 0, 0, 100, colorB));
+		nvgFill(vg);
+
+		nvgBeginPath(vg);
+		nvgMoveTo(vg, x + w - scrollBarSize / 2 - 6, y + scrollBarSize / 2 + 5);
+		nvgLineTo(vg, x + w - scrollBarSize / 2, y + scrollBarSize / 2 - 5);
+		nvgLineTo(vg, x + w - scrollBarSize / 2 + 6, y + scrollBarSize / 2 + 5);
+		nvgMoveTo(vg, x + w - scrollBarSize / 2 - 6, y + h - scrollBarSize / 2 - 5);
+		nvgLineTo(vg, x + w - scrollBarSize / 2, y + h - scrollBarSize / 2 + 5);
+		nvgLineTo(vg, x + w - scrollBarSize / 2 + 6, y + h - scrollBarSize / 2 - 5);
+		nvgStrokeColor(vg, rgba(0, 0, 0, 255, colorA));
+		nvgStroke(vg);
+
 		nvgRestore(vg);
 	}
 

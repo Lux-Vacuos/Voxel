@@ -38,7 +38,7 @@ public class ContextMenu extends RootComponent {
 		ContextMenuButton btn1 = new ContextMenuButton(0, 0, 180, 25, "Test1");
 		ContextMenuButton btn2 = new ContextMenuButton(0, -25, 180, 25, "Test2");
 		ContextMenuButton btn3 = new ContextMenuButton(0, -50, 180, 25, "Test3");
-		ContextMenuButton btn4 = new ContextMenuButton(0, -75, 180, 25, "Test3");
+		ContextMenuButton btn4 = new ContextMenuButton(0, -75, 180, 25, "Test4");
 		
 		btn1.setWindowAlignment(Alignment.LEFT_TOP);
 		btn1.setAlignment(Alignment.RIGHT_BOTTOM);

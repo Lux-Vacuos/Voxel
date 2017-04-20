@@ -31,7 +31,7 @@ import net.luxvacuos.voxel.client.rendering.api.nanovg.NRendering;
 public class Button extends Component {
 
 	protected String text = "missigno", font = "Poppins-Medium", entypo = "Entypo";
-	protected NVGColor color = NRendering.rgba(255, 255, 255, 255), highlight = NRendering.rgba(100, 100, 100, 255);
+	protected NVGColor color = NRendering.rgba(255, 255, 255, 255), highlight = NRendering.rgba(190, 190, 190, 255);
 	protected ByteBuffer preicon;
 	protected OnAction onPress;
 	protected float fontSize = 21;
@@ -50,7 +50,7 @@ public class Button extends Component {
 		if (!enabled)
 			return;
 		NRendering.renderButton(window.getNVGID(), preicon, text, font, entypo, rootComponent.rootX + alignedX,
-				window.getHeight() - rootComponent.rootY - alignedY - h, w, h, color, inside, fontSize);
+				window.getHeight() - rootComponent.rootY - alignedY - h, w, h, color, inside, fontSize, highlight);
 	}
 
 	@Override

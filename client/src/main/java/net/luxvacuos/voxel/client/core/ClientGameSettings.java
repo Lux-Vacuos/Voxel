@@ -68,6 +68,7 @@ public final class ClientGameSettings extends AbstractGameSettings {
 		REGISTRY.register("/Voxel/Settings/WindowManager/invertButtons", 	Boolean.parseBoolean(getValue("WM_InvertButtons", "false")));
 		REGISTRY.register("/Voxel/Settings/WindowManager/borderSize", 		Float.parseFloat(getValue("WM_BorderSize", "10")));
 		REGISTRY.register("/Voxel/Settings/WindowManager/titleBarHeight", 	Float.parseFloat(getValue("WM_TitleBarHeight", "30")));
+		REGISTRY.register("/Voxel/Settings/WindowManager/scrollBarSize", 	Float.parseFloat(getValue("WM_ScrollBarSize", "16")));
 		
 		REGISTRY.register("/Voxel/Settings/World/chunkRadius", 				Integer.parseInt(getValue("chunkRadius", "4")));
 		
@@ -105,6 +106,7 @@ public final class ClientGameSettings extends AbstractGameSettings {
 		registerValue("WM_InvertButtons", 		Boolean.toString((boolean) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/invertButtons")));
 		registerValue("WM_BorderSize", 			Float.toString((float) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/borderSize")));
 		registerValue("WM_TitleBarHeight", 		Float.toString((float) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/titleBarHeight")));
+		registerValue("WM_ScrollBarSize", 		Float.toString((float) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/scrollBarSize")));
 		
 		registerValue("chunkRadius", 			Integer.toString((int) REGISTRY.getRegistryItem("/Voxel/Settings/World/chunkRadius")));
 		Logger.log("Updated completed");
