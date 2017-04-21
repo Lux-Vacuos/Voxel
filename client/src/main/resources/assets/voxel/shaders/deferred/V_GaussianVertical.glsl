@@ -22,18 +22,17 @@
 
 in vec2 position;
 
-out vec2 textureCoords;
-out vec2 blurTexCoords[11];
+out vec2 blurTexCoords[17];
 
 uniform vec2 resolution;
 
 void main(void){
 	gl_Position = vec4(position, -0.8, 1.0);
-	textureCoords = vec2((position.x+1.0)/2.0, (position.y+1.0)/2.0);
+	vec2 textureCoords = vec2((position.x+1.0)/2.0, (position.y+1.0)/2.0);
 	
 	vec2 pixelSize = 1.0 / resolution;
 	
-	for(int i = -5; i <= 5; i++){
-		blurTexCoords[i+5] = textureCoords + vec2(0.0, pixelSize.y * i);
+	for(int i = -9; i <= 9; i++){
+		blurTexCoords[i+9] = textureCoords + vec2(0.0, pixelSize.y * i);
 	}
 }

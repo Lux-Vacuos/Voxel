@@ -56,16 +56,20 @@ public abstract class CompositeEffect implements IDisposable {
 	public void render(NVGLUFramebuffer[] fbos, RawModel quad, Window wnd, IWindow window) {
 		float borderSize = (float) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/borderSize");
 		float titleBarHeight = (float) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/titleBarHeight");
+		float pixelRatio = wnd.getPixelRatio();
 		nvgluBindFramebuffer(wnd.getNVGID(), fbos[0]);
 		shader.start();
 		if (window.getTitleBar().isEnabled() && window.hasDecorations())
-			shader.loadFrame(new Vector4f(window.getX() - borderSize, window.getY() + titleBarHeight,
-					window.getWidth() + borderSize * 2f, window.getHeight() + titleBarHeight + borderSize));
+			shader.loadFrame(new Vector4f((window.getX() - borderSize) * pixelRatio,
+					(window.getY() + titleBarHeight) * pixelRatio, (window.getWidth() + borderSize * 2f) * pixelRatio,
+					(window.getHeight() + titleBarHeight + borderSize) * pixelRatio));
 		else if (!window.hasDecorations())
-			shader.loadFrame(new Vector4f(window.getX(), window.getY(), window.getWidth(), window.getHeight()));
+			shader.loadFrame(new Vector4f(window.getX() * pixelRatio, window.getY() * pixelRatio,
+					window.getWidth() * pixelRatio, window.getHeight() * pixelRatio));
 		else
-			shader.loadFrame(new Vector4f(window.getX() - borderSize, window.getY() + borderSize,
-					window.getWidth() + borderSize * 2f, window.getHeight() + borderSize * 2f));
+			shader.loadFrame(new Vector4f((window.getX() - borderSize) * pixelRatio,
+					(window.getY() + borderSize) * pixelRatio, (window.getWidth() + borderSize * 2f) * pixelRatio,
+					(window.getHeight() + borderSize * 2f) * pixelRatio));
 		shader.loadBlurBehind(window.hasBlurBehind());
 		glBindVertexArray(quad.getVaoID());
 		glEnableVertexAttribArray(0);

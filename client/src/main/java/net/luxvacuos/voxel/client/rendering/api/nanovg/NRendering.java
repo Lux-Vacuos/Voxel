@@ -288,7 +288,7 @@ public class NRendering {
 	public static void renderImage(long vg, float x, float y, float w, float h, int image, float alpha) {
 		NVGPaint imgPaint = paintB;
 		nvgSave(vg);
-		nvgImagePattern(vg, x, y, w, h, 0.0f / 180.0f * NVG_PI, image, alpha, imgPaint);
+		nvgImagePattern(vg, x, y, w, h, 0, image, alpha, imgPaint);
 		nvgBeginPath(vg);
 		nvgRect(vg, x, y, w, h);
 		nvgFillPaint(vg, imgPaint);
