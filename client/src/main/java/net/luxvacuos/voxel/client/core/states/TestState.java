@@ -88,9 +88,9 @@ public class TestState extends AbstractState {
 	private GameWindow gameWindow;
 	private PauseWindow pauseWindow;
 
-	private BasicEntity mat1, mat2, mat3, mat4, mat5, rocket, plane, character;
+	private BasicEntity mat1, mat2, mat3, mat4, mat5, rocket, plane, character, cerberus;
 
-	private TexturedModel sphere, dragon, rocketM, planeM, characterM;
+	private TexturedModel sphere, dragon, rocketM, planeM, characterM, cerberusM;
 	private ParticleTexture fire;
 
 	public TestState() {
@@ -195,6 +195,18 @@ public class TestState extends AbstractState {
 		character.getComponent(Position.class).set(0, 0, 5);
 		character.getComponent(Scale.class).setScale(0.21f);
 
+		Material cerberusMat = new Material(new Vector4f(1), 0.5f, 0);
+		cerberusMat.setDiffuseTexture(loader.loadTexture("test_state/cerberus"));
+		cerberusMat.setRoughnessTexture(loader.loadTextureMisc("test_state/cerberus_r"));
+		cerberusMat.setNormalTexture(loader.loadTextureMisc("test_state/cerberus_n"));
+		cerberusMat.setMetallicTexture(loader.loadTextureMisc("test_state/cerberus_m"));
+
+		cerberusM = new TexturedModel(loader.loadObjModel("test_state/cerberus"), cerberusMat);
+
+		cerberus = new BasicEntity(cerberusM);
+		cerberus.getComponent(Position.class).set(5, 1.25f, 5);
+		cerberus.getComponent(Scale.class).setScale(0.5f);
+
 		fire = new ParticleTexture(loader.loadTexture("particles/fire0").getID(), 4);
 
 		particleSystem = new ParticleSystem(fire, 1000, 1, -1f, 3f, 6f);
@@ -212,6 +224,7 @@ public class TestState extends AbstractState {
 		fire.dispose();
 		planeM.dispose();
 		rocketM.dispose();
+		cerberusM.dispose();
 	}
 
 	@Override
@@ -243,6 +256,7 @@ public class TestState extends AbstractState {
 		physicsSystem.getEngine().addEntity(mat5);
 		physicsSystem.getEngine().addEntity(rocket);
 		physicsSystem.getEngine().addEntity(character);
+		physicsSystem.getEngine().addEntity(cerberus);
 		((PlayerCamera) camera).setMouse();
 		Renderer.render(engine.getEntities(), ParticleDomain.getParticles(), camera, sun.getCamera(), worldSimulation,
 				sun.getSunPosition(), sun.getInvertedSunPosition(), 0);

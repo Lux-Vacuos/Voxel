@@ -36,7 +36,7 @@ public class Material implements IDisposable {
 	/**
 	 * 
 	 * @param baseColor
-	 *            Color, set alpha to -1 when using textures.
+	 *            Color.
 	 * @param roughness
 	 *            Material Roughness.
 	 * @param metallic
