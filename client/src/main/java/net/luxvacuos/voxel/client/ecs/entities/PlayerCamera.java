@@ -32,19 +32,17 @@ import org.lwjgl.glfw.GLFW;
 
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
+import com.badlogic.gdx.math.collision.Ray;
 
 import net.luxvacuos.igl.vector.Matrix4d;
 import net.luxvacuos.igl.vector.Vector2d;
 import net.luxvacuos.igl.vector.Vector3d;
-import net.luxvacuos.igl.vector.Vector3f;
-import net.luxvacuos.igl.vector.Vector4d;
 import net.luxvacuos.voxel.client.core.ClientInternalSubsystem;
-import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.ecs.ClientComponents;
 import net.luxvacuos.voxel.client.input.KeyboardHandler;
 import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
-import net.luxvacuos.voxel.client.resources.DRay;
+import net.luxvacuos.voxel.client.resources.CastRay;
 import net.luxvacuos.voxel.client.util.Maths;
 import net.luxvacuos.voxel.universal.core.GlobalVariables;
 import net.luxvacuos.voxel.universal.ecs.Components;
@@ -70,15 +68,17 @@ public class PlayerCamera extends CameraEntity {
 	private final int maxLookDown = -90;
 	private boolean flyMode = false;
 	private Vector2d center;
-	private Vector3f normal = new Vector3f();
-	private float depth = 0, maxDepth = 0.01f;
 	private Vector3d blockOutlinePos = new Vector3d();
 	private ToolTier tool = ToolTier.ZERO;
 
 	private float breakTime, resetTime;
+	private static Vector3 tmp = new Vector3();
 
 	private static List<BoundingBox> blocks = new ArrayList<>();
-	private static Vector3 tmp = new Vector3();
+	private static final int MAX_INTERATION = 8;
+	private static final float PRECISION = 16f;
+	private Vector3d normalTMP = new Vector3d();
+	private double depthTMP;
 
 	public PlayerCamera(Matrix4d projectionMatrix, Window window) {
 		this.add(new Player());
@@ -89,13 +89,14 @@ public class PlayerCamera extends CameraEntity {
 		this.speed = 1f;
 		this.add(new Health(20));
 		this.add(new ChunkLoader(GlobalVariables.chunk_radius));
-		
+
 		if (flyMode)
 			Components.AABB.get(this).setEnabled(false);
-		
+
 		ClientComponents.PROJECTION_MATRIX.get(this).setProjectionMatrix(projectionMatrix);
 		ClientComponents.VIEW_MATRIX.get(this).setViewMatrix(Maths.createViewMatrix(this));
 		center = new Vector2d(window.getWidth() / 2, window.getHeight() / 2);
+		castRay = new CastRay(getProjectionMatrix(), getViewMatrix(), center, window.getWidth(), window.getHeight());
 	}
 
 	@Override
@@ -161,49 +162,50 @@ public class PlayerCamera extends CameraEntity {
 			if (vel.getY() == 0)
 				jump = false;
 		}
-		setBlock(window.getWidth(), window.getHeight(), Blocks.getBlockByName("stone"), dimension, delta);
 	}
 
-	private void setBlock(int ww, int wh, IBlock block, IDimension dimension, float delta) {
+	private void setBlock(IBlock block, IDimension dimension, float delta) {
 
-		float z = (2 * ClientVariables.NEAR_PLANE) / (ClientVariables.FAR_PLANE + ClientVariables.NEAR_PLANE
-				- depth * (ClientVariables.FAR_PLANE - ClientVariables.NEAR_PLANE));
-		if (z > maxDepth || ClientVariables.TEST_MODE)
-			return;
-		Vector4d viewport = new Vector4d(0, 0, ww, wh);
-		Vector3d wincoord = new Vector3d(ww / 2, wh / 2, depth);
-		Vector3d objcoord = new Vector3d();
-		Matrix4d mvp = new Matrix4d();
-		Matrix4d.mul(getProjectionMatrix(), getViewMatrix(), mvp);
-		objcoord = mvp.unproject(wincoord, viewport, objcoord);
+		Ray ray = castRay.getRay();
+		BoundingBox box = new BoundingBox();
+		Vector3d org = new Vector3d(ray.origin);
+		Vector3d dir = new Vector3d(ray.direction);
+		Vector3d dir1 = new Vector3d(ray.direction);
+		dir.div(PRECISION);
+		Vector3d pos = new Vector3d();
+		int it = 0;
 		double bcx = 0, bcy = 0, bcz = 0;
-		blocks = dimension
-				.getGlobalBoundingBox(new BoundingBox(new Vector3(objcoord.x - 0.1, objcoord.y - 0.1, objcoord.z - 0.1),
-						new Vector3(objcoord.x + 0.1, objcoord.y + 0.1, objcoord.z + 0.1)));
-		for (BoundingBox boundingBox : blocks) {
-			if (Maths.intersectRayBounds(dRay.getRay(), boundingBox, tmp)) {
-				bcx = boundingBox.getCenterX();
-				bcy = boundingBox.getCenterY();
-				bcz = boundingBox.getCenterZ();
-				break;
+		CAST: while (true) {
+			Vector3d.add(dir, dir1, dir);
+			pos.set(org);
+			Vector3d.add(pos, dir, pos);
+			box.set(new Vector3(pos.x - 0.1, pos.y - 0.1, pos.z - 0.1),
+					new Vector3(pos.x + 0.1, pos.y + 0.1, pos.z + 0.1));
+			blocks = dimension.getGlobalBoundingBox(box);
+			for (BoundingBox boundingBox : blocks) {
+				if (Maths.intersectRayBounds(ray, boundingBox, tmp)) {
+					placeDirection(box.min, box.max, boundingBox.min, boundingBox.max);
+					bcx = boundingBox.getCenterX();
+					bcy = boundingBox.getCenterY();
+					bcz = boundingBox.getCenterZ();
+					break CAST;
+				}
 			}
+			it++;
+			if (it > MAX_INTERATION)
+				break;
 		}
+		int bx = (int) bcx;
+		if (pos.x < 0)
+			bx = (int) bcx - 1;
 
-		int tempX = (int) bcx;
-		if (objcoord.x < 0)
-			tempX = (int) bcx - 1;
+		int bz = (int) bcz;
+		if (pos.z > 0)
+			bz = (int) bcz;
 
-		int tempZ = (int) bcz;
-		if (objcoord.z > 0)
-			tempZ = (int) bcz + 1;
-
-		int tempY = (int) bcy;
-		if (objcoord.y < 0)
-			tempY = (int) bcy - 1;
-
-		int bx = (int) tempX;
-		int by = (int) tempY;
-		int bz = (int) tempZ - 1;
+		int by = (int) bcy;
+		if (pos.y < 0)
+			by = (int) bcy - 1;
 		blockOutlinePos.set(bx + 0.5, by + 0.5f, bz + 0.5);
 		resetTime += 10 * delta;
 		if (resetTime >= 1) {
@@ -228,18 +230,36 @@ public class PlayerCamera extends CameraEntity {
 
 	private void setBlock(int bx, int by, int bz, IBlock block, IDimension dimension) {
 		if (block.getID() != 0) {
-			bx += (int) (normal.x * 1.5f);
-			by += (int) (normal.y * 1.5f);
-			bz += (int) (normal.z * 1.5f);
+			bx -= (int) normalTMP.x;
+			by -= (int) normalTMP.y;
+			bz -= (int) normalTMP.z;
 		}
 		dimension.setBlockAt(bx, by, bz, block);
+	}
+
+	private boolean placeDirection(final Vector3 mina, final Vector3 maxa, final Vector3 minb, final Vector3 maxb) {
+		final Vector3d faces[] = { new Vector3d(-1, 0, 0), new Vector3d(1, 0, 0), new Vector3d(0, -1, 0),
+				new Vector3d(0, 1, 0), new Vector3d(0, 0, -1), new Vector3d(0, 0, 1) };
+		double distances[] = { (maxb.x - mina.x), (maxa.x - minb.x), (maxb.y - mina.y), (maxa.y - minb.y),
+				(maxb.z - mina.z), (maxa.z - minb.z) };
+		for (int i = 0; i < 6; i++) {
+			if (distances[i] < 0.0f)
+				return false;
+			if ((i == 0) || (distances[i] < depthTMP)) {
+				normalTMP = faces[i];
+				depthTMP = distances[i];
+			}
+
+		}
+		return true;
 	}
 
 	@Override
 	public void afterUpdate(float delta, IDimension dimension) {
 		Window window = ClientInternalSubsystem.getInstance().getGameWindow();
 		ClientComponents.VIEW_MATRIX.get(this).setViewMatrix(Maths.createViewMatrix(this));
-		dRay = new DRay(getProjectionMatrix(), getViewMatrix(), center, window.getWidth(), window.getHeight());
+		castRay.update(getProjectionMatrix(), getViewMatrix(), center, window.getWidth(), window.getHeight());
+		setBlock(Blocks.getBlockByName("stone"), dimension, delta);
 	}
 
 	public void setMouse() {
@@ -254,14 +274,6 @@ public class PlayerCamera extends CameraEntity {
 
 	public boolean isUnderWater() {
 		return underWater;
-	}
-
-	public Vector3f getNormal() {
-		return normal;
-	}
-
-	public void setDepth(float depth) {
-		this.depth = depth;
 	}
 
 	public Vector3d getBlockOutlinePos() {

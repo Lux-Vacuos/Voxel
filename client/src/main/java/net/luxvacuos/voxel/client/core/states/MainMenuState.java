@@ -72,13 +72,6 @@ public class MainMenuState extends AbstractState {
 	@Override
 	public void update(AbstractVoxel voxel, float delta) {
 		WM.getWM().update(delta);
-		try {
-			script.eval(bindings);
-		} catch (ScriptException e) {
-			e.printStackTrace();
-		}
-		if (ClientInternalSubsystem.getInstance().getGameWindow().getKeyboardHandler().isKeyPressed(GLFW.GLFW_KEY_T))
-			script = scripting.compile("test");
 	}
 
 }

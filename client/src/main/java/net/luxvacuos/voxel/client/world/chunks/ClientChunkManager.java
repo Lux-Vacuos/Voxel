@@ -39,7 +39,7 @@ import net.luxvacuos.voxel.universal.world.utils.ChunkNode;
 
 public class ClientChunkManager extends ChunkManager {
 
-	protected final ExecutorService mesher = Executors.newFixedThreadPool(1);
+	protected final ExecutorService mesher = Executors.newSingleThreadExecutor();
 	protected final Object meshLock = new Object();
 	protected List<Future<IRenderChunk>> chunkMeshList;
 

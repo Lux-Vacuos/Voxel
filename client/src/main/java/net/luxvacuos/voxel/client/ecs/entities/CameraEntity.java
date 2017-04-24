@@ -25,7 +25,7 @@ import net.luxvacuos.igl.vector.Vector3d;
 import net.luxvacuos.voxel.client.ecs.ClientComponents;
 import net.luxvacuos.voxel.client.ecs.components.ProjectionMatrix;
 import net.luxvacuos.voxel.client.ecs.components.ViewMatrix;
-import net.luxvacuos.voxel.client.resources.DRay;
+import net.luxvacuos.voxel.client.resources.CastRay;
 import net.luxvacuos.voxel.universal.ecs.Components;
 import net.luxvacuos.voxel.universal.ecs.components.Position;
 import net.luxvacuos.voxel.universal.ecs.components.Rotation;
@@ -38,7 +38,7 @@ import net.luxvacuos.voxel.universal.ecs.entities.AbstractEntity;
  */
 public class CameraEntity extends AbstractEntity {
 
-	protected DRay dRay;
+	protected CastRay castRay;
 
 	protected CameraEntity() {
 		this.add(new Position());

@@ -23,7 +23,7 @@ package net.luxvacuos.voxel.client.ecs.entities;
 import net.luxvacuos.igl.vector.Matrix4d;
 import net.luxvacuos.igl.vector.Vector2d;
 import net.luxvacuos.voxel.client.ecs.ClientComponents;
-import net.luxvacuos.voxel.client.resources.DRay;
+import net.luxvacuos.voxel.client.resources.CastRay;
 import net.luxvacuos.voxel.client.util.Maths;
 
 public class SunCamera extends CameraEntity {
@@ -34,8 +34,8 @@ public class SunCamera extends CameraEntity {
 
 	public SunCamera(Matrix4d[] projectionArray) {
 		this.projectionArray = projectionArray;
-		center = new Vector2d(2048, 2048);
-		dRay = new DRay(this.getProjectionMatrix(), Maths.createViewMatrix(this), center, 0, 0);
+		center = new Vector2d(1024, 1024);
+		castRay = new CastRay(this.getProjectionMatrix(), Maths.createViewMatrix(this), center, 2048, 2048);
 		ClientComponents.VIEW_MATRIX.get(this).setViewMatrix(Maths.createViewMatrix(this));
 		ClientComponents.PROJECTION_MATRIX.get(this).setProjectionMatrix(projectionArray[0]);
 	}
@@ -43,11 +43,11 @@ public class SunCamera extends CameraEntity {
 	public void updateShadowRay(boolean inverted) {
 
 		if (inverted)
-			dRay = new DRay(this.getProjectionMatrix(), Maths.createViewMatrixPos(this.getPosition(), Maths
+			castRay.update(this.getProjectionMatrix(), Maths.createViewMatrixPos(this.getPosition(), Maths
 					.createViewMatrixRot(getRotation().getX() + 180, getRotation().getY(), getRotation().getZ(), null)),
-					center, 4096, 4096);
+					center, 2048, 2048);
 		else
-			dRay = new DRay(this.getProjectionMatrix(), Maths.createViewMatrix(this), center, 4096, 4096);
+			castRay.update(this.getProjectionMatrix(), Maths.createViewMatrix(this), center, 2048, 2048);
 		ClientComponents.VIEW_MATRIX.get(this).setViewMatrix(Maths.createViewMatrix(this));
 	}
 
@@ -59,8 +59,8 @@ public class SunCamera extends CameraEntity {
 		return projectionArray;
 	}
 
-	public DRay getDRay() {
-		return dRay;
+	public CastRay getDRay() {
+		return castRay;
 	}
 
 }

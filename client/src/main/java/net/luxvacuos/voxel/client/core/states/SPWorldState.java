@@ -23,12 +23,6 @@ package net.luxvacuos.voxel.client.core.states;
 import static net.luxvacuos.voxel.universal.core.GlobalVariables.REGISTRY;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11.GL_DEPTH_COMPONENT;
-import static org.lwjgl.opengl.GL11.GL_FLOAT;
-import static org.lwjgl.opengl.GL11.GL_RGB;
-import static org.lwjgl.opengl.GL11.glReadBuffer;
-import static org.lwjgl.opengl.GL11.glReadPixels;
-import static org.lwjgl.opengl.GL30.GL_COLOR_ATTACHMENT2;
 
 import java.nio.FloatBuffer;
 
@@ -85,16 +79,8 @@ public class SPWorldState extends AbstractState {
 
 		this.world = new RenderWorld(ClientVariables.worldNameToLoad);
 		ClientVariables.worldNameToLoad = "";
-		Window window = ClientInternalSubsystem.getInstance().getGameWindow();
-
 		Renderer.setDeferredPass((camera, sunCamera, frustum, shadowMap) -> {
 			((RenderWorld) world).render(camera, sunCamera, frustum, shadowMap);
-			glReadPixels(window.getWidth() / 2, window.getHeight() / 2, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, p);
-			glReadBuffer(GL_COLOR_ATTACHMENT2);
-			glReadPixels(window.getWidth() / 2, window.getHeight() / 2, 1, 1, GL_RGB, GL_FLOAT, c);
-			PlayerCamera cam = (PlayerCamera) camera;
-			cam.setDepth(p.get(0));
-			cam.getNormal().set(c.get(0), c.get(1), c.get(2));
 		});
 		Renderer.setShadowPass((camera, sunCamera, frustum, shadowMap) -> {
 			((RenderWorld) world).renderShadow(sunCamera, frustum);
