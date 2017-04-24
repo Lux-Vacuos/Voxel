@@ -39,9 +39,6 @@ public class GlobalVariables {
 	/** Amount of threads to use for the ChunkManager */
 	public static int chunkmanager_threads = 3;
 
-	/** Chunk Load/Unload Radius */
-	public static int chunk_radius = 3;
-
 	/** Enable Test Mode */
 	public static boolean TEST_MODE = false;
 	

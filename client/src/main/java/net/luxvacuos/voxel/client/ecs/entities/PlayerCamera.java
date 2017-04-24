@@ -24,6 +24,7 @@ import static net.luxvacuos.voxel.client.input.Mouse.getDX;
 import static net.luxvacuos.voxel.client.input.Mouse.getDY;
 import static net.luxvacuos.voxel.client.input.Mouse.setCursorPosition;
 import static net.luxvacuos.voxel.client.input.Mouse.setGrabbed;
+import static net.luxvacuos.voxel.universal.core.GlobalVariables.REGISTRY;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +45,6 @@ import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.resources.CastRay;
 import net.luxvacuos.voxel.client.util.Maths;
-import net.luxvacuos.voxel.universal.core.GlobalVariables;
 import net.luxvacuos.voxel.universal.ecs.Components;
 import net.luxvacuos.voxel.universal.ecs.components.AABB;
 import net.luxvacuos.voxel.universal.ecs.components.ChunkLoader;
@@ -88,7 +88,7 @@ public class PlayerCamera extends CameraEntity {
 				.setBoundingBox(new Vector3d(-0.25f, -1.4f, -0.25f), new Vector3d(0.25f, 0.2f, 0.25f)));
 		this.speed = 1f;
 		this.add(new Health(20));
-		this.add(new ChunkLoader(GlobalVariables.chunk_radius));
+		this.add(new ChunkLoader((int) REGISTRY.getRegistryItem("/Voxel/Settings/World/chunkRadius")));
 
 		if (flyMode)
 			Components.AABB.get(this).setEnabled(false);

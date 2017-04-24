@@ -24,7 +24,6 @@ import net.luxvacuos.igl.vector.Matrix4d;
 import net.luxvacuos.igl.vector.Vector3d;
 import net.luxvacuos.voxel.client.ecs.ClientComponents;
 import net.luxvacuos.voxel.client.util.Maths;
-import net.luxvacuos.voxel.universal.core.GlobalVariables;
 import net.luxvacuos.voxel.universal.ecs.Components;
 import net.luxvacuos.voxel.universal.ecs.components.ChunkLoader;
 import net.luxvacuos.voxel.universal.ecs.components.Rotation;
@@ -38,7 +37,7 @@ public class CubeMapCamera extends CameraEntity {
 
 	public CubeMapCamera(Vector3d position) {
 		Components.POSITION.get(this).set(position);
-		this.add(new ChunkLoader(GlobalVariables.chunk_radius));
+		this.add(new ChunkLoader(2));
 		createProjectionMatrix();
 	}
 
