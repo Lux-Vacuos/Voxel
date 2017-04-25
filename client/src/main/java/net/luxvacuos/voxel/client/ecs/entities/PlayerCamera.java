@@ -45,6 +45,7 @@ import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.resources.CastRay;
 import net.luxvacuos.voxel.client.util.Maths;
+import net.luxvacuos.voxel.universal.core.GlobalVariables;
 import net.luxvacuos.voxel.universal.ecs.Components;
 import net.luxvacuos.voxel.universal.ecs.components.AABB;
 import net.luxvacuos.voxel.universal.ecs.components.ChunkLoader;
@@ -75,7 +76,7 @@ public class PlayerCamera extends CameraEntity {
 	private static Vector3 tmp = new Vector3();
 
 	private static List<BoundingBox> blocks = new ArrayList<>();
-	private static final int MAX_INTERATION = 8;
+	private static final int MAX_INTERATION = 64;
 	private static final float PRECISION = 16f;
 	private Vector3d normalTMP = new Vector3d();
 	private double depthTMP;
@@ -166,21 +167,24 @@ public class PlayerCamera extends CameraEntity {
 
 	private void setBlock(IBlock block, IDimension dimension, float delta) {
 
+		if (GlobalVariables.TEST_MODE)
+			return;
+
 		Ray ray = castRay.getRay();
 		BoundingBox box = new BoundingBox();
 		Vector3d org = new Vector3d(ray.origin);
-		Vector3d dir = new Vector3d(ray.direction);
-		Vector3d dir1 = new Vector3d(ray.direction);
-		dir.div(PRECISION);
+		Vector3d dir = new Vector3d();
+		Vector3d incr = new Vector3d(ray.direction);
+		incr.div(PRECISION);
 		Vector3d pos = new Vector3d();
 		int it = 0;
 		double bcx = 0, bcy = 0, bcz = 0;
 		CAST: while (true) {
-			Vector3d.add(dir, dir1, dir);
+			Vector3d.add(dir, incr, dir);
 			pos.set(org);
 			Vector3d.add(pos, dir, pos);
-			box.set(new Vector3(pos.x - 0.1, pos.y - 0.1, pos.z - 0.1),
-					new Vector3(pos.x + 0.1, pos.y + 0.1, pos.z + 0.1));
+			box.set(new Vector3(pos.x - 0.1f, pos.y - 0.1f, pos.z - 0.1f),
+					new Vector3(pos.x + 0.1f, pos.y + 0.1f, pos.z + 0.1f));
 			blocks = dimension.getGlobalBoundingBox(box);
 			for (BoundingBox boundingBox : blocks) {
 				if (Maths.intersectRayBounds(ray, boundingBox, tmp)) {

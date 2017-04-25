@@ -31,9 +31,9 @@ void main(void){
 
 	vec2 texcoord = textureCoords;
 	vec4 image = vec4(0.0);
-	vec4 data1 = texture(gMask, texcoord);
-    if(data1.r > 0 && data1.a == 1) {
-		image = mix(texture(gDiffuse, texcoord), vec4(1.0), 0.2) * data1.r;
+	vec4 mask = texture(gMask, texcoord);
+    if(mask.a == 1) {
+		image = texture(gDiffuse, texcoord);
     }
     out_Color = image;
 

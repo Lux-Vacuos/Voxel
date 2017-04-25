@@ -28,7 +28,7 @@ uniform sampler2D composite0;
 uniform sampler2D composite1;
 uniform float exposure;
 
-#define GAMMA  2.2
+#define GAMMA 2.2
 
 void main(void){
 	vec2 texcoord = textureCoords;
