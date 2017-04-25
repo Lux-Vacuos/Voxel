@@ -63,6 +63,7 @@ public class VersionsManager {
 	public void update() {
 		new Thread(() -> {
 			try {
+				local.getParentFile().mkdirs();
 				if (DownloadsHelper.download(
 						Bootstrap.getPrefix() + LauncherVariables.PROJECT + "/" + LauncherVariables.CONFIG
 								+ "/remote.json",
