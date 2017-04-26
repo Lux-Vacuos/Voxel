@@ -148,6 +148,7 @@ public class ClientInternalSubsystem extends AbstractInternalSubsystem {
 			waterMat = (BlockMaterial) matMod.modify(waterMat).canBeBroken(false).setBlocksMovement(false)
 					.affectedByGravity(true).liquid().setOpacity(0.2f).done();
 			Blocks.register(new WaterBlock(waterMat, new BlockFaceAtlas("water")));
+			Blocks.register(new RenderBlock(new BlockMaterial("ice"), new BlockFaceAtlas("ice")));
 			Blocks.finishRegister();
 		});
 	}

@@ -27,7 +27,7 @@ public class WorldSimulation implements IWorldSimulation {
 	protected float rainFactor = 0;
 	
 	public WorldSimulation() {
-		this.time = 10000;
+		this.time = 6000;
 	}
 	
 	protected WorldSimulation(float time) {

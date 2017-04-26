@@ -8,95 +8,83 @@ import net.luxvacuos.igl.vector.Vector3d;
 
 public class Position implements VoxelComponent {
 
-	private double x, y, z;
-	
+	private Vector3d position;
+
 	public Position() {
-		this.x = 0;
-		this.y = 0;
-		this.z = 0;
+		position = new Vector3d();
 	}
-	
-	public Position(float x, float y, float z) {
-		this.x = x;
-		this.y = y;
-		this.z = z;
+
+	public Position(double x, double y, double z) {
+		position = new Vector3d(x, y, z);
 	}
-	
+
 	public Position(Vector3d vec) {
-		this.x = vec.x;
-		this.y = vec.y;
-		this.z = vec.z;
+		position = new Vector3d(vec);
 	}
-	
+
 	public Vector3d getPosition() {
-		return new Vector3d(this.x, this.y, this.z);
+		return position;
 	}
-	
+
 	public double getX() {
-		return this.x;
+		return this.position.x;
 	}
-	
+
 	public double getY() {
-		return this.y;
+		return this.position.y;
 	}
-	
+
 	public double getZ() {
-		return this.z;
+		return this.position.z;
 	}
-	
+
 	public Position setX(double x) {
-		this.x = x;
-		
+		this.position.x = x;
 		return this;
 	}
-	
+
 	public Position setY(double y) {
-		this.y = y;
-		
+		this.position.y = y;
 		return this;
 	}
-	
+
 	public Position setZ(double z) {
-		this.z = z;
-		
+		this.position.z = z;
 		return this;
 	}
-	
+
 	public Position set(double x, double y, double z) {
-		this.x = x;
-		this.y = y;
-		this.z = z;
-		
+		position.set(x, y, z);
+
 		return this;
 	}
-	
+
 	public Position set(Vector3d vec) {
-		this.x = vec.x;
-		this.y = vec.y;
-		this.z = vec.z;
-		
+		position.set(vec);
+
 		return this;
 	}
-	
+
 	@Override
 	public String toString() {
-		return "[x:" + this.x + "]" + "[y:" + this.y + "]" + "[z:" + this.z + "]";
+		return "[x:" + this.position.x + "]" + "[y:" + this.position.y + "]" + "[z:" + this.position.z + "]";
 	}
 
 	@Override
 	public void load(TagCompound compound) throws NBTException {
-		this.x = compound.getDouble("PosX");
-		this.y = compound.getDouble("PosY");
-		this.z = compound.getDouble("PosZ");
-		
+		this.position.x = compound.getDouble("PosX");
+		this.position.y = compound.getDouble("PosY");
+		this.position.z = compound.getDouble("PosZ");
+
 	}
 
 	@Override
 	public TagCompound save() {
 		CompoundBuilder builder = new CompoundBuilder().start("PositionComponent");
-		
-		builder.addDouble("PosX", this.x).addDouble("PosY", this.y).addDouble("PosZ", this.z);
-		
+
+		builder.addDouble("PosX", this.position.x).addDouble("PosY", this.position.y).addDouble("PosZ",
+				this.position.z);
+
 		return builder.build();
 	}
 }

@@ -31,6 +31,7 @@ import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 
+import net.luxvacuos.igl.vector.Vector3d;
 import net.luxvacuos.voxel.universal.ecs.Components;
 import net.luxvacuos.voxel.universal.ecs.components.AABB;
 import net.luxvacuos.voxel.universal.ecs.components.Health;
@@ -58,6 +59,7 @@ public class PhysicsSystem extends EntitySystem {
 
 	@Override
 	public void update(float delta) {
+		Vector3d tmp = new Vector3d();
 		for (Entity entity : entities) {
 			Position pos = Components.POSITION.get(entity);
 			Velocity velocity = Components.VELOCITY.get(entity);
@@ -67,13 +69,13 @@ public class PhysicsSystem extends EntitySystem {
 			if (entity instanceof AbstractEntity)
 				((AbstractEntity) entity).update(delta, dim);
 
-			velocity.setX(velocity.getX() * 0.7f - velocity.getX() * 0.0001f);
-			velocity.setY(velocity.getY() - 9.8f * delta);
-			velocity.setZ(velocity.getZ() * 0.7f - velocity.getZ() * 0.0001f);
-
 			aabb.update(pos.getPosition());
 			if (dim != null)
 				boxes = dim.getGlobalBoundingBox(aabb.getBoundingBox());
+
+			velocity.setX(velocity.getX() * 0.7f - velocity.getX() * 0.0001f);
+			velocity.setY(velocity.getY() - 15f * delta);
+			velocity.setZ(velocity.getZ() * 0.7f - velocity.getZ() * 0.0001f);
 
 			if (aabb.isEnabled())
 				for (BoundingBox boundingBox : boxes) {
@@ -110,13 +112,12 @@ public class PhysicsSystem extends EntitySystem {
 						}
 					}
 				}
-			pos.setX(pos.getX() + velocity.getX() * delta);
-			pos.setY(pos.getY() + velocity.getY() * delta);
-			pos.setZ(pos.getZ() + velocity.getZ() * delta);
+			tmp.set(velocity.getVelocity());
+			tmp.scale(delta);
+			Vector3d.add(pos.getPosition(), tmp, pos.getPosition());
 
 			if (entity instanceof AbstractEntity)
 				((AbstractEntity) entity).afterUpdate(delta, dim);
-
 		}
 	}
 

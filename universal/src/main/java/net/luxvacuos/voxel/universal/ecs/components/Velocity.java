@@ -7,95 +7,90 @@ import com.hackhalo2.nbt.tags.TagCompound;
 import net.luxvacuos.igl.vector.Vector3d;
 
 public class Velocity implements VoxelComponent {
-private double x, y, z;
-	
+	private Vector3d velocity;
+
 	public Velocity() {
-		this.x = 0;
-		this.y = 0;
-		this.z = 0;
+		velocity = new Vector3d();
 	}
-	
-	public Velocity(float x, float y, float z) {
-		this.x = x;
-		this.y = y;
-		this.z = z;
+
+	public Velocity(double x, double y, double z) {
+		velocity = new Vector3d(x, y, z);
 	}
-	
+
 	public Velocity(Vector3d vec) {
-		this.x = vec.x;
-		this.y = vec.y;
-		this.z = vec.z;
+		velocity = new Vector3d(vec);
 	}
-	
+
 	public Vector3d getVelocity() {
-		return new Vector3d(this.x, this.y, this.z);
+		return velocity;
 	}
-	
+
 	public double getX() {
-		return this.x;
+		return this.velocity.x;
 	}
-	
+
 	public double getY() {
-		return this.y;
+		return this.velocity.y;
 	}
-	
+
 	public double getZ() {
-		return this.z;
+		return this.velocity.z;
 	}
-	
+
 	public Velocity setX(double x) {
-		this.x = x;
-		
+		this.velocity.x = x;
+
 		return this;
 	}
-	
+
 	public Velocity setY(double y) {
-		this.y = y;
-		
+		this.velocity.y = y;
+
 		return this;
 	}
-	
+
 	public Velocity setZ(double z) {
-		this.z = z;
-		
+		this.velocity.z = z;
+
 		return this;
 	}
-	
+
 	public Velocity set(double x, double y, double z) {
-		this.x = x;
-		this.y = y;
-		this.z = z;
-		
+		this.velocity.x = x;
+		this.velocity.y = y;
+		this.velocity.z = z;
+
 		return this;
 	}
-	
+
 	public Velocity set(Vector3d vec) {
-		this.x = vec.x;
-		this.y = vec.y;
-		this.z = vec.z;
-		
+		this.velocity.x = vec.x;
+		this.velocity.y = vec.y;
+		this.velocity.z = vec.z;
+
 		return this;
 	}
-	
+
 	@Override
 	public String toString() {
-		return "[x:" + this.x + "]" + "[y:" + this.y + "]" + "[z:" + this.z + "]";
+		return "[x:" + this.velocity.x + "]" + "[y:" + this.velocity.y + "]" + "[z:" + this.velocity.z + "]";
 	}
-	
+
 	@Override
 	public void load(TagCompound compound) throws NBTException {
-		this.x = compound.getDouble("VelX");
-		this.y = compound.getDouble("VelY");
-		this.z = compound.getDouble("VelZ");
-		
+		this.velocity.x = compound.getDouble("VelX");
+		this.velocity.y = compound.getDouble("VelY");
+		this.velocity.z = compound.getDouble("VelZ");
+
 	}
 
 	@Override
 	public TagCompound save() {
 		CompoundBuilder builder = new CompoundBuilder().start("VelocityComponent");
-		
-		builder.addDouble("VelX", this.x).addDouble("VelY", this.y).addDouble("VelZ", this.z);
-		
+
+		builder.addDouble("VelX", this.velocity.x).addDouble("VelY", this.velocity.y).addDouble("VelZ",
+				this.velocity.z);
+
 		return builder.build();
 	}
 }

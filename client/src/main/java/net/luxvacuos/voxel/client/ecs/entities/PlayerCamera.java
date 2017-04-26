@@ -85,8 +85,7 @@ public class PlayerCamera extends CameraEntity {
 		this.add(new Player());
 		this.add(new Velocity());
 		this.add(new Scale());
-		this.add(new AABB(new Vector3d(-0.25f, -1.4f, -0.25f), new Vector3d(0.25f, 0.2f, 0.25f))
-				.setBoundingBox(new Vector3d(-0.25f, -1.4f, -0.25f), new Vector3d(0.25f, 0.2f, 0.25f)));
+		this.add(new AABB(new Vector3d(-0.25f, -1.5f, -0.25f), new Vector3d(0.25f, 0.2f, 0.25f)));
 		this.speed = 1f;
 		this.add(new Health(20));
 		this.add(new ChunkLoader((int) REGISTRY.getRegistryItem("/Voxel/Settings/World/chunkRadius")));
@@ -149,7 +148,7 @@ public class PlayerCamera extends CameraEntity {
 				vel.setY(-5f * this.speed);
 		} else {
 			if (kbh.isKeyPressed(GLFW.GLFW_KEY_SPACE) && !jump) {
-				vel.setY(5f);
+				vel.setY(6f);
 				jump = true;
 			}
 
@@ -160,7 +159,7 @@ public class PlayerCamera extends CameraEntity {
 			else
 				speed = 1f;
 
-			if (vel.getY() == 0)
+			if (vel.getY() == 0 && !kbh.isKeyPressed(GLFW.GLFW_KEY_SPACE))
 				jump = false;
 		}
 	}
@@ -204,14 +203,14 @@ public class PlayerCamera extends CameraEntity {
 			bx = (int) bcx - 1;
 
 		int bz = (int) bcz;
-		if (pos.z > 0)
-			bz = (int) bcz;
+		if (pos.z < 0)
+			bz = (int) bcz - 1;
 
 		int by = (int) bcy;
 		if (pos.y < 0)
 			by = (int) bcy - 1;
 		blockOutlinePos.set(bx + 0.5, by + 0.5f, bz + 0.5);
-		resetTime += 10 * delta;
+		resetTime += 5f * delta;
 		if (resetTime >= 1) {
 			if (Mouse.isButtonDown(0)) {
 				IBlock tBlock = dimension.getBlockAt(bx, by, bz);
