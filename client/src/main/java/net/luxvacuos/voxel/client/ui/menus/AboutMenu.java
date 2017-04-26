@@ -29,12 +29,12 @@ import net.luxvacuos.voxel.client.core.CoreInfo;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.ui.Alignment;
 import net.luxvacuos.voxel.client.ui.Image;
-import net.luxvacuos.voxel.client.ui.RootComponent;
+import net.luxvacuos.voxel.client.ui.RootComponentWindow;
 import net.luxvacuos.voxel.client.ui.Text;
 
-public class AboutMenu extends RootComponent {
+public class AboutMenu extends RootComponentWindow {
 
-	private static Image voxelLogo;
+	private static int logo = 0;
 
 	public AboutMenu(float x, float y, float w, float h) {
 		super(x, y, w, h, "About");
@@ -44,13 +44,12 @@ public class AboutMenu extends RootComponent {
 	public void initApp(Window window) {
 		super.setResizable(false);
 		super.setBackgroundColor(0.4f, 0.4f, 0.4f, 1f);
-
-		if (voxelLogo == null) {
-			voxelLogo = new Image(0, -40, 400, 200, ClientInternalSubsystem.getInstance().getGameWindow()
-					.getResourceLoader().loadNVGTexture("Voxel-Logo"));
-			voxelLogo.setAlignment(Alignment.BOTTOM);
-			voxelLogo.setWindowAlignment(Alignment.TOP);
-		}
+		if (logo == 0)
+			logo = ClientInternalSubsystem.getInstance().getGameWindow().getResourceLoader()
+					.loadNVGTexture("Voxel-Logo");
+		Image voxelLogo = new Image(0, -40, 400, 200, logo);
+		voxelLogo.setAlignment(Alignment.BOTTOM);
+		voxelLogo.setWindowAlignment(Alignment.TOP);
 
 		Text versionL = new Text("Version", 30, -260);
 		versionL.setFont("Roboto-Bold");

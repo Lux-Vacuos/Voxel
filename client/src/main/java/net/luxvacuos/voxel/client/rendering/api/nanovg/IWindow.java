@@ -101,11 +101,15 @@ public interface IWindow {
 	public boolean isBackground();
 
 	public boolean isDraggable();
-	
+
 	public boolean isDragging();
-	
+
 	public boolean isResizing();
-	
+
+	public boolean isMinimized();
+
+	public boolean isHidden();
+
 	public ITitleBar getTitleBar();
 
 	public boolean shouldClose();

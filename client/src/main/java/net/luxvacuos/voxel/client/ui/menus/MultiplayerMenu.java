@@ -29,11 +29,11 @@ import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.ui.Alignment;
 import net.luxvacuos.voxel.client.ui.Button;
 import net.luxvacuos.voxel.client.ui.EditBox;
-import net.luxvacuos.voxel.client.ui.RootComponent;
+import net.luxvacuos.voxel.client.ui.RootComponentWindow;
 import net.luxvacuos.voxel.client.ui.Text;
 import net.luxvacuos.voxel.universal.core.states.StateMachine;
 
-public class MultiplayerMenu extends RootComponent {
+public class MultiplayerMenu extends RootComponentWindow {
 
 	public MultiplayerMenu(float x, float y, float w, float h) {
 		super(x, y, w, h, "Multiplayer");

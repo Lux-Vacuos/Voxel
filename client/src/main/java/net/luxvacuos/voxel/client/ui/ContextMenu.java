@@ -23,7 +23,7 @@ package net.luxvacuos.voxel.client.ui;
 import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 
-public class ContextMenu extends RootComponent {
+public class ContextMenu extends RootComponentWindow {
 
 	public ContextMenu() {
 		super(Mouse.getX() - 5, Mouse.getY() + 5, 180, 100, "Panel");

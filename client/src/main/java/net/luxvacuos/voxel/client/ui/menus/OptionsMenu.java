@@ -29,7 +29,10 @@ import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.NRendering.ButtonStyle;
 import net.luxvacuos.voxel.client.ui.Alignment;
 import net.luxvacuos.voxel.client.ui.Button;
-import net.luxvacuos.voxel.client.ui.RootComponent;
+import net.luxvacuos.voxel.client.ui.Container;
+import net.luxvacuos.voxel.client.ui.Direction;
+import net.luxvacuos.voxel.client.ui.FlowLayout;
+import net.luxvacuos.voxel.client.ui.RootComponentWindow;
 import net.luxvacuos.voxel.client.ui.ScrollArea;
 import net.luxvacuos.voxel.client.ui.Slider;
 import net.luxvacuos.voxel.client.ui.Text;
@@ -37,7 +40,7 @@ import net.luxvacuos.voxel.client.ui.TitleBarButton;
 import net.luxvacuos.voxel.client.ui.ToggleButton;
 import net.luxvacuos.voxel.universal.core.TaskManager;
 
-public class OptionsMenu extends RootComponent {
+public class OptionsMenu extends RootComponentWindow {
 
 	private TitleBarButton backButton;
 
@@ -51,14 +54,14 @@ public class OptionsMenu extends RootComponent {
 		super.setResizable(false);
 
 		backButton = new TitleBarButton(0, -1, 28, 28);
-		backButton.setAlignment(Alignment.RIGHT_BOTTOM);
 		backButton.setWindowAlignment(Alignment.LEFT_TOP);
+		backButton.setAlignment(Alignment.RIGHT_BOTTOM);
 		backButton.setColor("#646464C8");
 		backButton.setHighlightColor("#FFFFFFC8");
 		backButton.setStyle(ButtonStyle.LEFT_ARROW);
 		backButton.setEnabled(false);
 
-		super.getTitleBar().addComponent(backButton);
+		super.getTitleBar().getLeft().addComponent(backButton);
 
 		mainMenu(window);
 
@@ -107,47 +110,47 @@ public class OptionsMenu extends RootComponent {
 	}
 
 	private void graphicOptions() {
-		ToggleButton godraysButton = new ToggleButton(-50, -10, 80, 30,
+		ToggleButton godraysButton = new ToggleButton(-50, 0, 80, 30,
 				(boolean) REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/volumetricLight"));
-		ToggleButton shadowsButton = new ToggleButton(-50, -50, 80, 30,
+		ToggleButton shadowsButton = new ToggleButton(-50, 0, 80, 30,
 				(boolean) REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/shadows"));
-		ToggleButton dofButton = new ToggleButton(-50, -90, 80, 30,
+		ToggleButton dofButton = new ToggleButton(-50, 0, 80, 30,
 				(boolean) REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/dof"));
-		ToggleButton fxaaButton = new ToggleButton(-50, -130, 80, 30,
+		ToggleButton fxaaButton = new ToggleButton(-50, 0, 80, 30,
 				(boolean) REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/fxaa"));
-		ToggleButton motionBlurButton = new ToggleButton(-50, -170, 80, 30,
+		ToggleButton motionBlurButton = new ToggleButton(-50, 0, 80, 30,
 				(boolean) REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/motionBlur"));
-		ToggleButton reflectionsButton = new ToggleButton(-50, -210, 80, 30,
+		ToggleButton reflectionsButton = new ToggleButton(-50, 0, 80, 30,
 				(boolean) REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/reflections"));
-		ToggleButton parallaxButton = new ToggleButton(-50, -250, 80, 30,
+		ToggleButton parallaxButton = new ToggleButton(-50, 0, 80, 30,
 				(boolean) REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/parallax"));
-		ToggleButton ambientOccButton = new ToggleButton(-50, -290, 80, 30,
+		ToggleButton ambientOccButton = new ToggleButton(-50, 0, 80, 30,
 				(boolean) REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/ambientOcclusion"));
-		ToggleButton chromaticAberrationButton = new ToggleButton(-50, -330, 80, 30,
+		ToggleButton chromaticAberrationButton = new ToggleButton(-50, 0, 80, 30,
 				(boolean) REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/chromaticAberration"));
-		ToggleButton lensFlaresButton = new ToggleButton(-50, -370, 80, 30,
+		ToggleButton lensFlaresButton = new ToggleButton(-50, 0, 80, 30,
 				(boolean) REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/lensFlares"));
 
-		godraysButton.setWindowAlignment(Alignment.RIGHT_TOP);
-		godraysButton.setAlignment(Alignment.LEFT_BOTTOM);
-		shadowsButton.setWindowAlignment(Alignment.RIGHT_TOP);
-		shadowsButton.setAlignment(Alignment.LEFT_BOTTOM);
-		dofButton.setWindowAlignment(Alignment.RIGHT_TOP);
-		dofButton.setAlignment(Alignment.LEFT_BOTTOM);
-		fxaaButton.setWindowAlignment(Alignment.RIGHT_TOP);
-		fxaaButton.setAlignment(Alignment.LEFT_BOTTOM);
-		motionBlurButton.setWindowAlignment(Alignment.RIGHT_TOP);
-		motionBlurButton.setAlignment(Alignment.LEFT_BOTTOM);
-		reflectionsButton.setWindowAlignment(Alignment.RIGHT_TOP);
-		reflectionsButton.setAlignment(Alignment.LEFT_BOTTOM);
-		parallaxButton.setWindowAlignment(Alignment.RIGHT_TOP);
-		parallaxButton.setAlignment(Alignment.LEFT_BOTTOM);
-		ambientOccButton.setWindowAlignment(Alignment.RIGHT_TOP);
-		ambientOccButton.setAlignment(Alignment.LEFT_BOTTOM);
-		chromaticAberrationButton.setWindowAlignment(Alignment.RIGHT_TOP);
-		chromaticAberrationButton.setAlignment(Alignment.LEFT_BOTTOM);
-		lensFlaresButton.setWindowAlignment(Alignment.RIGHT_TOP);
-		lensFlaresButton.setAlignment(Alignment.LEFT_BOTTOM);
+		godraysButton.setWindowAlignment(Alignment.RIGHT);
+		godraysButton.setAlignment(Alignment.RIGHT);
+		shadowsButton.setWindowAlignment(Alignment.RIGHT);
+		shadowsButton.setAlignment(Alignment.RIGHT);
+		dofButton.setWindowAlignment(Alignment.RIGHT);
+		dofButton.setAlignment(Alignment.RIGHT);
+		fxaaButton.setWindowAlignment(Alignment.RIGHT);
+		fxaaButton.setAlignment(Alignment.RIGHT);
+		motionBlurButton.setWindowAlignment(Alignment.RIGHT);
+		motionBlurButton.setAlignment(Alignment.RIGHT);
+		reflectionsButton.setWindowAlignment(Alignment.RIGHT);
+		reflectionsButton.setAlignment(Alignment.RIGHT);
+		parallaxButton.setWindowAlignment(Alignment.RIGHT);
+		parallaxButton.setAlignment(Alignment.RIGHT);
+		ambientOccButton.setWindowAlignment(Alignment.RIGHT);
+		ambientOccButton.setAlignment(Alignment.RIGHT);
+		chromaticAberrationButton.setWindowAlignment(Alignment.RIGHT);
+		chromaticAberrationButton.setAlignment(Alignment.RIGHT);
+		lensFlaresButton.setWindowAlignment(Alignment.RIGHT);
+		lensFlaresButton.setAlignment(Alignment.RIGHT);
 
 		shadowsButton.setOnButtonPress(
 				() -> REGISTRY.register("/Voxel/Settings/Graphics/shadows", shadowsButton.getStatus()));
@@ -167,54 +170,96 @@ public class OptionsMenu extends RootComponent {
 				.register("/Voxel/Settings/Graphics/chromaticAberration", chromaticAberrationButton.getStatus()));
 		lensFlaresButton.setOnButtonPress(
 				() -> REGISTRY.register("/Voxel/Settings/Graphics/lensFlares", lensFlaresButton.getStatus()));
-		
-		Text godText = new Text("Volumetric Light", 20, -25);
-		godText.setWindowAlignment(Alignment.LEFT_TOP);
-		Text shadowsText = new Text("Shadows", 20, -65);
-		shadowsText.setWindowAlignment(Alignment.LEFT_TOP);
-		Text dofText = new Text("Depht of Field", 20, -105);
-		dofText.setWindowAlignment(Alignment.LEFT_TOP);
-		Text fxaaText = new Text("FXAA", 20, -145);
-		fxaaText.setWindowAlignment(Alignment.LEFT_TOP);
-		Text motionBlurText = new Text("Motion Blur", 20, -185);
-		motionBlurText.setWindowAlignment(Alignment.LEFT_TOP);
-		Text reflectionsText = new Text("Reflections", 20, -225);
-		reflectionsText.setWindowAlignment(Alignment.LEFT_TOP);
-		Text parallaxText = new Text("Parallax Mapping", 20, -265);
-		parallaxText.setWindowAlignment(Alignment.LEFT_TOP);
-		Text ambientOccText = new Text("Ambient Occlusion", 20, -305);
-		ambientOccText.setWindowAlignment(Alignment.LEFT_TOP);
-		Text chromaticAberrationText = new Text("Chromatic Aberration", 20, -345);
-		chromaticAberrationText.setWindowAlignment(Alignment.LEFT_TOP);
-		Text lensFlaresText = new Text("Lens Flares", 20, -385);
-		lensFlaresText.setWindowAlignment(Alignment.LEFT_TOP);
-		
-		ScrollArea area = new ScrollArea(0, 0, w, h, 0, 400);
-		
-		area.addComponent(godraysButton);
-		area.addComponent(shadowsButton);
-		area.addComponent(dofButton);
-		area.addComponent(fxaaButton);
-		area.addComponent(motionBlurButton);
-		area.addComponent(reflectionsButton);
-		area.addComponent(parallaxButton);
-		area.addComponent(ambientOccButton);
-		area.addComponent(chromaticAberrationButton);
-		area.addComponent(lensFlaresButton);
-		
-		area.addComponent(godText);
-		area.addComponent(shadowsText);
-		area.addComponent(dofText);
-		area.addComponent(fxaaText);
-		area.addComponent(motionBlurText);
-		area.addComponent(reflectionsText);
-		area.addComponent(parallaxText);
-		area.addComponent(ambientOccText);
-		area.addComponent(chromaticAberrationText);
-		area.addComponent(lensFlaresText);
-		
+
+		Text godText = new Text("Volumetric Light", 20, 0);
+		godText.setWindowAlignment(Alignment.LEFT);
+		Text shadowsText = new Text("Shadows", 20, 0);
+		shadowsText.setWindowAlignment(Alignment.LEFT);
+		Text dofText = new Text("Depht of Field", 20, 0);
+		dofText.setWindowAlignment(Alignment.LEFT);
+		Text fxaaText = new Text("FXAA", 20, 0);
+		fxaaText.setWindowAlignment(Alignment.LEFT);
+		Text motionBlurText = new Text("Motion Blur", 20, 0);
+		motionBlurText.setWindowAlignment(Alignment.LEFT);
+		Text reflectionsText = new Text("Reflections", 20, 0);
+		reflectionsText.setWindowAlignment(Alignment.LEFT);
+		Text parallaxText = new Text("Parallax Mapping", 20, 0);
+		parallaxText.setWindowAlignment(Alignment.LEFT);
+		Text ambientOccText = new Text("Ambient Occlusion", 20, 0);
+		ambientOccText.setWindowAlignment(Alignment.LEFT);
+		Text chromaticAberrationText = new Text("Chromatic Aberration", 20, 0);
+		chromaticAberrationText.setWindowAlignment(Alignment.LEFT);
+		Text lensFlaresText = new Text("Lens Flares", 20, 0);
+		lensFlaresText.setWindowAlignment(Alignment.LEFT);
+
+		ScrollArea area = new ScrollArea(0, 0, w, h, 0, 0);
+		area.setLayout(new FlowLayout(Direction.DOWN, 10, 10));
+
+		Container godrays = new Container(0, 0, w, 30);
+		godrays.setWindowAlignment(Alignment.RIGHT_TOP);
+		godrays.setAlignment(Alignment.LEFT_BOTTOM);
+		Container shadows = new Container(0, 0, w, 30);
+		shadows.setWindowAlignment(Alignment.RIGHT_TOP);
+		shadows.setAlignment(Alignment.LEFT_BOTTOM);
+		Container dof = new Container(0, 0, w, 30);
+		dof.setWindowAlignment(Alignment.RIGHT_TOP);
+		dof.setAlignment(Alignment.LEFT_BOTTOM);
+		Container fxaa = new Container(0, 0, w, 30);
+		fxaa.setWindowAlignment(Alignment.RIGHT_TOP);
+		fxaa.setAlignment(Alignment.LEFT_BOTTOM);
+		Container motionBlur = new Container(0, 0, w, 30);
+		motionBlur.setWindowAlignment(Alignment.RIGHT_TOP);
+		motionBlur.setAlignment(Alignment.LEFT_BOTTOM);
+		Container reflections = new Container(0, 0, w, 30);
+		reflections.setWindowAlignment(Alignment.RIGHT_TOP);
+		reflections.setAlignment(Alignment.LEFT_BOTTOM);
+		Container parallax = new Container(0, 0, w, 30);
+		parallax.setWindowAlignment(Alignment.RIGHT_TOP);
+		parallax.setAlignment(Alignment.LEFT_BOTTOM);
+		Container occlusion = new Container(0, 0, w, 30);
+		occlusion.setWindowAlignment(Alignment.RIGHT_TOP);
+		occlusion.setAlignment(Alignment.LEFT_BOTTOM);
+		Container aberration = new Container(0, 0, w, 30);
+		aberration.setWindowAlignment(Alignment.RIGHT_TOP);
+		aberration.setAlignment(Alignment.LEFT_BOTTOM);
+		Container lens = new Container(0, 0, w, 30);
+		lens.setWindowAlignment(Alignment.RIGHT_TOP);
+		lens.setAlignment(Alignment.LEFT_BOTTOM);
+
+		godrays.addComponent(godraysButton);
+		godrays.addComponent(godText);
+		shadows.addComponent(shadowsButton);
+		shadows.addComponent(shadowsText);
+		dof.addComponent(dofButton);
+		dof.addComponent(dofText);
+		fxaa.addComponent(fxaaButton);
+		fxaa.addComponent(fxaaText);
+		motionBlur.addComponent(motionBlurButton);
+		motionBlur.addComponent(motionBlurText);
+		reflections.addComponent(reflectionsButton);
+		reflections.addComponent(reflectionsText);
+		parallax.addComponent(parallaxButton);
+		parallax.addComponent(parallaxText);
+		occlusion.addComponent(ambientOccButton);
+		occlusion.addComponent(ambientOccText);
+		aberration.addComponent(chromaticAberrationButton);
+		aberration.addComponent(chromaticAberrationText);
+		lens.addComponent(lensFlaresButton);
+		lens.addComponent(lensFlaresText);
+
+		area.addComponent(godrays);
+		area.addComponent(shadows);
+		area.addComponent(dof);
+		area.addComponent(fxaa);
+		area.addComponent(motionBlur);
+		area.addComponent(reflections);
+		area.addComponent(parallax);
+		area.addComponent(occlusion);
+		area.addComponent(aberration);
+		area.addComponent(lens);
+
 		super.addComponent(area);
-		
+
 		backButton.setEnabled(true);
 	}
 
@@ -237,8 +282,28 @@ public class OptionsMenu extends RootComponent {
 			wmBorderText.setText("Window Border: " + val);
 		});
 
+		float scroll = (float) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/scrollBarSize");
+		Text wmScrollText = new Text("Scroll Bar Size: " + scroll, 40, -85);
+		Slider wmScroll = new Slider(40, -105, 200, 20, scroll / 40f);
+
+		wmScrollText.setWindowAlignment(Alignment.LEFT_TOP);
+		wmScrollText.setFontSize(20);
+		wmScrollText.setAlign(NVG_ALIGN_LEFT | NVG_ALIGN_TOP);
+		wmScroll.setWindowAlignment(Alignment.LEFT_TOP);
+		wmScroll.setAlignment(Alignment.RIGHT_BOTTOM);
+		wmScroll.setPrecision(40f);
+		wmScroll.useCustomPrecision(true);
+
+		wmScroll.setOnPress(() -> {
+			float val = wmScroll.getPosition() * 40f;
+			REGISTRY.register("/Voxel/Settings/WindowManager/scrollBarSize", val);
+			wmScrollText.setText("Scroll Bar Size: " + val);
+		});
+
 		super.addComponent(wmBorderText);
 		super.addComponent(wmBorder);
+		super.addComponent(wmScrollText);
+		super.addComponent(wmScroll);
 		backButton.setEnabled(true);
 	}
 

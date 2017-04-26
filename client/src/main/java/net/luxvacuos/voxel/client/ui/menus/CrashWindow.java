@@ -30,10 +30,10 @@ import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.ui.Alignment;
 import net.luxvacuos.voxel.client.ui.Box;
 import net.luxvacuos.voxel.client.ui.TextArea;
-import net.luxvacuos.voxel.client.ui.RootComponent;
+import net.luxvacuos.voxel.client.ui.RootComponentWindow;
 import net.luxvacuos.voxel.client.ui.Text;
 
-public class CrashWindow extends RootComponent {
+public class CrashWindow extends RootComponentWindow {
 
 	private Throwable t;
 

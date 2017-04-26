@@ -22,9 +22,6 @@ package net.luxvacuos.voxel.client.ui;
 
 import static net.luxvacuos.voxel.universal.core.GlobalVariables.REGISTRY;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.Event;
@@ -34,22 +31,25 @@ public class TitleBar implements ITitleBar {
 
 	private boolean enabled = true, dragging;
 	private Event drag;
-	private List<Component> components = new ArrayList<>();
 	private IWindow window;
-	protected Root root;
+	private RootComponent left, right, center;
 
 	public TitleBar(IWindow window) {
 		this.window = window;
-		root = new Root(this.window.getX(), this.window.getY(), this.window.getWidth(),
+		left = new RootComponent(this.window.getX(), this.window.getY(), this.window.getWidth(),
+				(float) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/titleBarHeight"));
+		right = new RootComponent(this.window.getX(), this.window.getY(), this.window.getWidth(),
+				(float) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/titleBarHeight"));
+		center = new RootComponent(this.window.getX(), this.window.getY(), this.window.getWidth(),
 				(float) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/titleBarHeight"));
 	}
 
 	@Override
 	public void render(Window window) {
 		if (enabled) {
-			for (Component component : components) {
-				component.render(window);
-			}
+			left.render(window);
+			right.render(window);
+			center.render(window);
 		}
 	}
 
@@ -60,35 +60,43 @@ public class TitleBar implements ITitleBar {
 				dragging = Mouse.isButtonDown(0);
 				drag.event(window);
 			}
-			for (Component component : components) {
-				component.update(delta, window);
-			}
+			left.update(delta, window);
+			right.update(delta, window);
+			center.update(delta, window);
 		}
 	}
 
 	@Override
 	public void alwaysUpdate(float delta, Window window) {
 		if (enabled) {
-			root.rootX = this.window.getX();
-			root.rootY = this.window.getY();
-			root.rootW = this.window.getWidth();
-			root.rootH = (float) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/titleBarHeight");
-			for (Component component : components) {
-				component.alwaysUpdate(delta, window);
-			}
+			float titleBarHeight = (float) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/titleBarHeight");
+			left.alwaysUpdate(delta, window, this.window.getX(), this.window.getY() + titleBarHeight,
+					this.window.getWidth(), titleBarHeight);
+			right.alwaysUpdate(delta, window, this.window.getX(), this.window.getY() + titleBarHeight,
+					this.window.getWidth(), titleBarHeight);
+			center.alwaysUpdate(delta, window, this.window.getX(), this.window.getY() + titleBarHeight,
+					this.window.getWidth(), titleBarHeight);
 		}
-	}
-
-	@Override
-	public void addComponent(Component component) {
-		component.rootComponent = root;
-		component.init();
-		components.add(component);
 	}
 
 	@Override
 	public void setOnDrag(Event event) {
 		this.drag = event;
+	}
+
+	@Override
+	public RootComponent getLeft() {
+		return left;
+	}
+
+	@Override
+	public RootComponent getRight() {
+		return right;
+	}
+
+	@Override
+	public RootComponent getCenter() {
+		return center;
 	}
 
 	private boolean canDrag(IWindow iWindow) {
@@ -100,10 +108,7 @@ public class TitleBar implements ITitleBar {
 
 	@Override
 	public void dispose() {
-		for (Component component : components) {
-			component.dispose();
-		}
-		components.clear();
+		left.dispose();
 	}
 
 	@Override

@@ -23,11 +23,11 @@ package net.luxvacuos.voxel.client.ui.menus;
 import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.ui.Alignment;
-import net.luxvacuos.voxel.client.ui.RootComponent;
+import net.luxvacuos.voxel.client.ui.RootComponentWindow;
 import net.luxvacuos.voxel.client.ui.TextArea;
 import net.luxvacuos.voxel.universal.commands.ICommandManager;
 
-public class Console extends RootComponent {
+public class Console extends RootComponentWindow {
 
 	private ICommandManager manager;
 	private TextArea text;

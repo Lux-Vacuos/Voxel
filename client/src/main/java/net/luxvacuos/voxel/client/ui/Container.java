@@ -21,29 +21,44 @@
 package net.luxvacuos.voxel.client.ui;
 
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
-import net.luxvacuos.voxel.client.rendering.api.nanovg.Event;
-import net.luxvacuos.voxel.universal.resources.IDisposable;
 
-public interface ITitleBar extends IDisposable {
+public class Container extends Component {
 
-	public void render(Window window);
+	protected RootComponent comp;
 
-	public void update(float delta, Window window);
+	public Container(float x, float y, float w, float h) {
+		this.x = x;
+		this.y = y;
+		this.w = w;
+		this.h = h;
+		comp = new RootComponent(x, y - h, w, h);
+	}
 
-	public void alwaysUpdate(float delta, Window window);
+	@Override
+	public void render(Window window) {
+		comp.render(window);
+	}
 
-	public RootComponent getLeft();
+	@Override
+	public void update(float delta, Window window) {
+		comp.update(delta, window);
+		super.update(delta, window);
+	}
 
-	public RootComponent getRight();
+	@Override
+	public void alwaysUpdate(float delta, Window window) {
+		super.alwaysUpdate(delta, window);
+		comp.alwaysUpdate(delta, window, rootComponent.rootX + alignedX, rootComponent.rootY + alignedY + h, w, h);
+	}
 
-	public RootComponent getCenter();
+	@Override
+	public void dispose() {
+		comp.dispose();
+		super.dispose();
+	}
 
-	public void setOnDrag(Event event);
-
-	public boolean isEnabled();
-
-	public boolean isDragging();
-
-	public void setEnabled(boolean enabled);
+	public void addComponent(Component component) {
+		comp.addComponent(component);
+	}
 
 }

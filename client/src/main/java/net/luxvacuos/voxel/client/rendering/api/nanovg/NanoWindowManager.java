@@ -109,12 +109,14 @@ public class NanoWindowManager implements IWindowManager {
 		nvgluBindFramebuffer(window.getNVGID(), null);
 		synchronized (windows) {
 			for (IWindow window : windows) {
-				composite.render(window, this.window);
+				if (!window.isHidden() && !window.isMinimized())
+					composite.render(window, this.window);
 			}
 		}
-		window.setViewport(0, 0,  window.getWidth(), window.getHeight());
+		window.setViewport(0, 0, window.getWidth(), window.getHeight());
 		this.window.beingNVGFrame();
-		NRendering.renderImage(this.window.getNVGID(), 0, 0, window.getWidth(), window.getHeight(), composite.getFbos()[0].image(), 1f);
+		NRendering.renderImage(this.window.getNVGID(), 0, 0, window.getWidth(), window.getHeight(),
+				composite.getFbos()[0].image(), 1f);
 		if (ClientVariables.debug) {
 			Timers.renderDebugDisplay(5, 24, 200, 55);
 			NRendering.renderText(window.getNVGID(), "Voxel " + " (" + ClientVariables.version + ")", "Roboto-Bold",
@@ -142,16 +144,18 @@ public class NanoWindowManager implements IWindowManager {
 				tmp.add(window);
 				continue;
 			}
-			if (window.insideWindow() && !window.isBackground() && (Mouse.isButtonDown(0) || Mouse.isButtonDown(1))
-					&& !focused.isDragging() && !focused.isResizing())
+			if (window.insideWindow() && !window.isBackground() && !window.isHidden() && !window.isMinimized()
+					&& (Mouse.isButtonDown(0) || Mouse.isButtonDown(1)) && !focused.isDragging()
+					&& !focused.isResizing()) {
 				toTop = window;
+			}
 		}
 		windows.removeAll(tmp);
 		tmp.clear();
 		if (toTop != null) {
 			IWindow top = windows.get(windows.size() - 1);
 			if (top != toTop)
-				if (!top.isAlwaysOnTop()) {
+				if (!top.isAlwaysOnTop() && !top.isHidden() && !top.isMinimized()) {
 					windows.remove(toTop);
 					windows.add(toTop);
 				}
@@ -159,7 +163,8 @@ public class NanoWindowManager implements IWindowManager {
 		tmp.addAll(windows);
 		Collections.reverse(tmp);
 		for (IWindow window : tmp) {
-			if (window.insideWindow() && (Mouse.isButtonDown(0) || Mouse.isButtonDown(1)) && !focused.isDragging()
+			if (window.insideWindow() && !window.isHidden() && !window.isMinimized()
+					&& (Mouse.isButtonDown(0) || Mouse.isButtonDown(1)) && !focused.isDragging()
 					&& !focused.isResizing()) {
 				focused = window;
 				break;

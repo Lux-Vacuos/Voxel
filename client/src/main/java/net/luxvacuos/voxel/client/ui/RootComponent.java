@@ -24,51 +24,44 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
-import net.luxvacuos.voxel.client.rendering.api.nanovg.NanoWindow;
 
-public class RootComponent extends NanoWindow {
+public class RootComponent {
 
 	private List<Component> components = new ArrayList<>();
 
 	protected Root root;
+	protected ILayout layout;
 
-	public RootComponent(float x, float y, float w, float h, String title) {
-		super(x, y, w, h, title);
-
+	public RootComponent(float x, float y, float w, float h) {
+		layout = new EmptyLayout();
 		root = new Root(x, y - h, w, h);
 	}
 
-	@Override
-	public void initApp(Window window) {
-	}
-
-	@Override
-	public void renderApp(Window window) {
+	public void render(Window window) {
 		for (Component component : components) {
 			component.render(window);
 		}
 	}
 
-	@Override
-	public void updateApp(float delta, Window window) {
+	public void update(float delta, Window window) {
 		for (Component component : components) {
 			component.update(delta, window);
 		}
 	}
 
-	@Override
-	public void alwaysUpdateApp(float delta, Window window) {
+	public void alwaysUpdate(float delta, Window window, float x, float y, float w, float h) {
 		root.rootX = x;
 		root.rootY = y - h;
 		root.rootW = w;
 		root.rootH = h;
+		layout.preBuild();
 		for (Component component : components) {
+			layout.build(component);
 			component.alwaysUpdate(delta, window);
 		}
 	}
 
-	@Override
-	public void disposeApp(Window window) {
+	public void dispose() {
 		for (Component component : components) {
 			component.dispose();
 		}
@@ -79,6 +72,14 @@ public class RootComponent extends NanoWindow {
 		component.rootComponent = root;
 		component.init();
 		components.add(component);
+	}
+
+	public void setLayout(ILayout layout) {
+		this.layout = layout;
+	}
+	
+	public ILayout getLayout() {
+		return layout;
 	}
 
 }

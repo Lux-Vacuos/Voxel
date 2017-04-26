@@ -26,7 +26,7 @@ import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_TOP;
 import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 
-public class ModalWindow extends RootComponent {
+public class ModalWindow extends RootComponentWindow {
 
 	private float mwW, mwH;
 	private String text, title;

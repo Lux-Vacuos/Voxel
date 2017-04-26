@@ -20,30 +20,6 @@
 
 package net.luxvacuos.voxel.client.ui;
 
-import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
-import net.luxvacuos.voxel.client.rendering.api.nanovg.Event;
-import net.luxvacuos.voxel.universal.resources.IDisposable;
-
-public interface ITitleBar extends IDisposable {
-
-	public void render(Window window);
-
-	public void update(float delta, Window window);
-
-	public void alwaysUpdate(float delta, Window window);
-
-	public RootComponent getLeft();
-
-	public RootComponent getRight();
-
-	public RootComponent getCenter();
-
-	public void setOnDrag(Event event);
-
-	public boolean isEnabled();
-
-	public boolean isDragging();
-
-	public void setEnabled(boolean enabled);
-
+public abstract class Layout implements ILayout {
+	
 }

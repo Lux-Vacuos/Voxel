@@ -29,7 +29,7 @@ public class Slider extends Component {
 
 	private float pos, precision;
 	private OnAction onPress;
-	private boolean customPrecision;
+	private boolean customPrecision, move;
 
 	public Slider(float x, float y, float w, float h, float position) {
 		this.x = x;
@@ -41,15 +41,15 @@ public class Slider extends Component {
 
 	@Override
 	public void update(float delta, Window window) {
-		if (insideSlider())
-			if (Mouse.isButtonDown(0)) {
-				pos = (Mouse.getX() - rootComponent.rootX - alignedX) / w;
-				if (customPrecision)
-					pos = (float) (Math.floor(pos * precision) / precision);
-				pos = Maths.clamp(pos, 0, 1);
-				if (onPress != null)
-					onPress.onAction();
-			}
+		if ((Mouse.isButtonDown(0) && insideSlider()) || move) {
+			move = Mouse.isButtonDown(0);
+			pos = (Mouse.getX() - rootComponent.rootX - alignedX) / w;
+			if (customPrecision)
+				pos = (float) (Math.floor(pos * precision) / precision);
+			pos = Maths.clamp(pos, 0, 1);
+			if (onPress != null)
+				onPress.onAction();
+		}
 		super.update(delta, window);
 	}
 

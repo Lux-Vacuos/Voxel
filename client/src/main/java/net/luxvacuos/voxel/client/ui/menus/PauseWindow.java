@@ -28,9 +28,9 @@ import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.WM;
 import net.luxvacuos.voxel.client.ui.Alignment;
 import net.luxvacuos.voxel.client.ui.Button;
-import net.luxvacuos.voxel.client.ui.RootComponent;
+import net.luxvacuos.voxel.client.ui.RootComponentWindow;
 
-public class PauseWindow extends RootComponent {
+public class PauseWindow extends RootComponentWindow {
 
 	public PauseWindow(float x, float y, float w, float h) {
 		super(x, y, w, h, "Pause");
@@ -48,7 +48,7 @@ public class PauseWindow extends RootComponent {
 			super.closeWindow();
 			float borderSize = (float) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/borderSize");
 			float titleBarHeight = (float) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/titleBarHeight");
-			RootComponent mainMenu = new MainMenu(borderSize + 10, ClientVariables.HEIGHT - titleBarHeight - 10,
+			RootComponentWindow mainMenu = new MainMenu(borderSize + 10, ClientVariables.HEIGHT - titleBarHeight - 10,
 					ClientVariables.WIDTH - borderSize * 2f - 20,
 					ClientVariables.HEIGHT - titleBarHeight - borderSize - 20);
 			WM.getWM().addWindow(mainMenu);

@@ -21,10 +21,9 @@
 package net.luxvacuos.voxel.client.ui;
 
 import static net.luxvacuos.voxel.universal.core.GlobalVariables.REGISTRY;
-import static org.lwjgl.nanovg.NanoVG.*;
-
-import java.util.ArrayList;
-import java.util.List;
+import static org.lwjgl.nanovg.NanoVG.nvgRestore;
+import static org.lwjgl.nanovg.NanoVG.nvgSave;
+import static org.lwjgl.nanovg.NanoVG.nvgScissor;
 
 import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
@@ -33,9 +32,7 @@ import net.luxvacuos.voxel.client.util.Maths;
 
 public class ScrollArea extends Component {
 
-	private List<Component> components = new ArrayList<>();
-
-	protected Root root;
+	protected RootComponent comp;
 	protected float maxW, maxH, scrollW, scrollH;
 
 	private boolean moveV;
@@ -47,7 +44,7 @@ public class ScrollArea extends Component {
 		this.h = h;
 		this.maxW = maxW;
 		this.maxH = maxH;
-		root = new Root(x, y - h, w, h);
+		comp = new RootComponent(x, y - h, w, h);
 	}
 
 	@Override
@@ -58,9 +55,7 @@ public class ScrollArea extends Component {
 		nvgSave(window.getNVGID());
 		nvgScissor(window.getNVGID(), rootComponent.rootX + alignedX,
 				window.getHeight() - rootComponent.rootY - alignedY - h, w, h);
-		for (Component component : components) {
-			component.render(window);
-		}
+		comp.render(window);
 		nvgRestore(window.getNVGID());
 		NRendering.renderScrollBarV(window.getNVGID(), rootComponent.rootX + alignedX,
 				window.getHeight() - rootComponent.rootY - alignedY - h, w, h, scrollH / maxH, maxH);
@@ -68,8 +63,8 @@ public class ScrollArea extends Component {
 
 	@Override
 	public void update(float delta, Window window) {
+		float scrollBarSize = (float) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/scrollBarSize");
 		if (Mouse.isButtonDown(0)) {
-			float scrollBarSize = (float) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/scrollBarSize");
 			if (Mouse.getX() > rootComponent.rootX + alignedX + w - scrollBarSize
 					&& Mouse.getX() < rootComponent.rootX + alignedX + w
 					&& Mouse.getY() > rootComponent.rootY + alignedY + h - scrollBarSize
@@ -82,38 +77,32 @@ public class ScrollArea extends Component {
 					&& Mouse.getY() < rootComponent.rootY + alignedY + scrollBarSize) {
 				scrollH += 200 * delta;
 			}
-			if ((Mouse.isButtonDown(0) && scrollBarV(scrollBarSize)) || moveV) {
-				moveV = Mouse.isButtonDown(0);
-				scrollH -= Mouse.getDY() * 2f;
-			}
+		}
+		if ((Mouse.isButtonDown(0) && scrollBarV(scrollBarSize)) || moveV) {
+			moveV = Mouse.isButtonDown(0);
+			scrollH -= Mouse.getDY() * 2f;
 		}
 		scrollH -= Mouse.getDWheel() * 16;
 		scrollH = Maths.clamp(scrollH, 0, maxH);
-		for (Component component : components) {
-			component.update(delta, window);
-		}
+		comp.update(delta, window);
 		super.update(delta, window);
 	}
 
 	@Override
 	public void alwaysUpdate(float delta, Window window) {
 		super.alwaysUpdate(delta, window);
-		root.rootX = rootComponent.rootX + alignedX;
-		root.rootY = rootComponent.rootY - alignedY - h + h + scrollH;
-		root.rootW = w;
-		root.rootH = h;
-		for (Component component : components) {
-			component.alwaysUpdate(delta, window);
-		}
+		comp.alwaysUpdate(delta, window, rootComponent.rootX + alignedX, rootComponent.rootY - alignedY + h + scrollH,
+				w, h);
 	}
 
 	@Override
 	public void dispose() {
-		for (Component component : components) {
-			component.dispose();
-		}
-		components.clear();
+		comp.dispose();
 		super.dispose();
+	}
+	
+	public void setLayout(ILayout layout){
+		comp.setLayout(layout);
 	}
 
 	private boolean scrollBarV(float scrollBarSize) {
@@ -127,9 +116,7 @@ public class ScrollArea extends Component {
 	}
 
 	public void addComponent(Component component) {
-		component.rootComponent = root;
-		component.init();
-		components.add(component);
+		comp.addComponent(component);
 	}
 
 }

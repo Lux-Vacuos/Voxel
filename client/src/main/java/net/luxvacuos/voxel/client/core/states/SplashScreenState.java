@@ -31,7 +31,7 @@ import net.luxvacuos.voxel.client.rendering.api.nanovg.WM;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Renderer;
 import net.luxvacuos.voxel.client.ui.Alignment;
 import net.luxvacuos.voxel.client.ui.Image;
-import net.luxvacuos.voxel.client.ui.RootComponent;
+import net.luxvacuos.voxel.client.ui.RootComponentWindow;
 import net.luxvacuos.voxel.client.ui.Spinner;
 import net.luxvacuos.voxel.client.ui.menus.MainMenu;
 import net.luxvacuos.voxel.universal.core.AbstractVoxel;
@@ -47,7 +47,7 @@ import net.luxvacuos.voxel.universal.core.states.StateMachine;
  */
 public class SplashScreenState extends AbstractState {
 
-	private RootComponent component;
+	private RootComponentWindow component;
 
 	public SplashScreenState() {
 		super(StateNames.SPLASH_SCREEN);
@@ -55,7 +55,7 @@ public class SplashScreenState extends AbstractState {
 
 	@Override
 	public void init() {
-		component = new RootComponent(0, ClientVariables.HEIGHT, ClientVariables.WIDTH, ClientVariables.HEIGHT,
+		component = new RootComponentWindow(0, ClientVariables.HEIGHT, ClientVariables.WIDTH, ClientVariables.HEIGHT,
 				"splash");
 		component.toggleTitleBar();
 		component.setDecorations(false);
@@ -82,7 +82,7 @@ public class SplashScreenState extends AbstractState {
 		component.closeWindow();
 		float borderSize = (float) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/borderSize");
 		float titleBarHeight = (float) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/titleBarHeight");
-		RootComponent mainMenu = new MainMenu(borderSize + 10, ClientVariables.HEIGHT - titleBarHeight - 10,
+		RootComponentWindow mainMenu = new MainMenu(borderSize + 10, ClientVariables.HEIGHT - titleBarHeight - 10,
 				ClientVariables.WIDTH - borderSize * 2f - 20,
 				ClientVariables.HEIGHT - titleBarHeight - borderSize - 20);
 		WM.getWM().addWindow(mainMenu);

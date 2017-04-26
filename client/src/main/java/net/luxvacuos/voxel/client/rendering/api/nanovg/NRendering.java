@@ -634,12 +634,12 @@ public class NRendering {
 		nvgFill(vg);
 
 		nvgBeginPath(vg);
-		nvgMoveTo(vg, x + w - scrollBarSize / 2 - 6, y + scrollBarSize / 2 + 5);
-		nvgLineTo(vg, x + w - scrollBarSize / 2, y + scrollBarSize / 2 - 5);
-		nvgLineTo(vg, x + w - scrollBarSize / 2 + 6, y + scrollBarSize / 2 + 5);
-		nvgMoveTo(vg, x + w - scrollBarSize / 2 - 6, y + h - scrollBarSize / 2 - 5);
-		nvgLineTo(vg, x + w - scrollBarSize / 2, y + h - scrollBarSize / 2 + 5);
-		nvgLineTo(vg, x + w - scrollBarSize / 2 + 6, y + h - scrollBarSize / 2 - 5);
+		nvgMoveTo(vg, x + w - scrollBarSize / 2 - 6, y + scrollBarSize / 2 + 4);
+		nvgLineTo(vg, x + w - scrollBarSize / 2, y + scrollBarSize / 2 - 4);
+		nvgLineTo(vg, x + w - scrollBarSize / 2 + 6, y + scrollBarSize / 2 + 4);
+		nvgMoveTo(vg, x + w - scrollBarSize / 2 - 6, y + h - scrollBarSize / 2 - 4);
+		nvgLineTo(vg, x + w - scrollBarSize / 2, y + h - scrollBarSize / 2 + 4);
+		nvgLineTo(vg, x + w - scrollBarSize / 2 + 6, y + h - scrollBarSize / 2 - 4);
 		nvgStrokeColor(vg, rgba(0, 0, 0, 255, colorA));
 		nvgStroke(vg);
 

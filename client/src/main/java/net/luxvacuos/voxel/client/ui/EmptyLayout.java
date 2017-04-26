@@ -17,33 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * 
  */
-
 package net.luxvacuos.voxel.client.ui;
 
-import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
-import net.luxvacuos.voxel.client.rendering.api.nanovg.Event;
-import net.luxvacuos.voxel.universal.resources.IDisposable;
+public class EmptyLayout extends Layout {
 
-public interface ITitleBar extends IDisposable {
+	@Override
+	public void preBuild() {
+	}
 
-	public void render(Window window);
-
-	public void update(float delta, Window window);
-
-	public void alwaysUpdate(float delta, Window window);
-
-	public RootComponent getLeft();
-
-	public RootComponent getRight();
-
-	public RootComponent getCenter();
-
-	public void setOnDrag(Event event);
-
-	public boolean isEnabled();
-
-	public boolean isDragging();
-
-	public void setEnabled(boolean enabled);
+	@Override
+	public void build(Component component) {
+	}
 
 }

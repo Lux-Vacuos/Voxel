@@ -23,9 +23,9 @@ package net.luxvacuos.voxel.client.ui.menus;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Renderer;
 import net.luxvacuos.voxel.client.ui.Image;
-import net.luxvacuos.voxel.client.ui.RootComponent;
+import net.luxvacuos.voxel.client.ui.RootComponentWindow;
 
-public class GameWindow extends RootComponent {
+public class GameWindow extends RootComponentWindow {
 
 	public GameWindow(float x, float y, float w, float h) {
 		super(x, y, w, h, "Voxel");

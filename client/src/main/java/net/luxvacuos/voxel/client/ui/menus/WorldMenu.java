@@ -34,14 +34,14 @@ import net.luxvacuos.voxel.client.rendering.api.nanovg.NanoWindow;
 import net.luxvacuos.voxel.client.ui.Alignment;
 import net.luxvacuos.voxel.client.ui.Button;
 import net.luxvacuos.voxel.client.ui.EditBox;
-import net.luxvacuos.voxel.client.ui.RootComponent;
+import net.luxvacuos.voxel.client.ui.RootComponentWindow;
 import net.luxvacuos.voxel.client.ui.ScrollPane;
 import net.luxvacuos.voxel.client.ui.Text;
 import net.luxvacuos.voxel.client.ui.WorldElement;
 import net.luxvacuos.voxel.universal.core.TaskManager;
 import net.luxvacuos.voxel.universal.core.states.StateMachine;
 
-public class WorldMenu extends RootComponent {
+public class WorldMenu extends RootComponentWindow {
 
 	public Text worldName;
 	private NanoWindow root;

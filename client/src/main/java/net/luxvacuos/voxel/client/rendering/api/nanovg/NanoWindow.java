@@ -42,6 +42,8 @@ import net.luxvacuos.voxel.client.rendering.api.nanovg.NRendering.BackgroundStyl
 import net.luxvacuos.voxel.client.rendering.api.nanovg.NRendering.ButtonStyle;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Renderer;
 import net.luxvacuos.voxel.client.ui.Alignment;
+import net.luxvacuos.voxel.client.ui.Direction;
+import net.luxvacuos.voxel.client.ui.FlowLayout;
 import net.luxvacuos.voxel.client.ui.ITitleBar;
 import net.luxvacuos.voxel.client.ui.TitleBar;
 import net.luxvacuos.voxel.client.ui.TitleBarButton;
@@ -50,7 +52,7 @@ import net.luxvacuos.voxel.client.ui.TitleBarText;
 public abstract class NanoWindow implements IWindow {
 
 	private boolean draggable = true, decorations = true, resizable = true, maximized, hidden = false, exit,
-			alwaysOnTop, background, blurBehind = true, running = true, resizing;
+			alwaysOnTop, background, blurBehind = true, running = true, resizing, minimized;
 	private BackgroundStyle backgroundStyle = BackgroundStyle.SOLID;
 	private NVGColor backgroundColor = NRendering.rgba(0, 0, 0, 255);
 	protected float x, y, w, h;
@@ -76,20 +78,23 @@ public abstract class NanoWindow implements IWindow {
 	public void init(Window wind) {
 		fbo = nvgluCreateFramebuffer(wind.getNVGID(), (int) (wind.getWidth() * wind.getPixelRatio()),
 				(int) (wind.getHeight() * wind.getPixelRatio()), 0);
+		titleBar.getLeft().setLayout(new FlowLayout(Direction.RIGHT, 1, 0));
+		titleBar.getRight().setLayout(new FlowLayout(Direction.LEFT, 1, 0));
 		initApp(wind);
-		TitleBarButton close = new TitleBarButton(0, -1, 28, 28);
-		close.setOnButtonPress(() -> {
+
+		TitleBarButton closeBtn = new TitleBarButton(0, -1, 28, 28);
+		closeBtn.setOnButtonPress(() -> {
 			onClose();
 			closeWindow();
 		});
-		close.setColor("#646464C8");
-		close.setHighlightColor("#FF0000C8");
-		close.setWindowAlignment(Alignment.RIGHT_TOP);
-		close.setAlignment(Alignment.LEFT_BOTTOM);
-		close.setStyle(ButtonStyle.CLOSE);
+		closeBtn.setColor("#646464C8");
+		closeBtn.setHighlightColor("#FF0000C8");
+		closeBtn.setWindowAlignment(Alignment.RIGHT_TOP);
+		closeBtn.setAlignment(Alignment.LEFT_BOTTOM);
+		closeBtn.setStyle(ButtonStyle.CLOSE);
 
-		TitleBarButton maximize = new TitleBarButton(-29, -1, 28, 28);
-		maximize.setOnButtonPress(() -> {
+		TitleBarButton maximizeBtn = new TitleBarButton(0, -1, 28, 28);
+		maximizeBtn.setOnButtonPress(() -> {
 			if (resizable) {
 				maximized = !maximized;
 				if (maximized) {
@@ -110,30 +115,34 @@ public abstract class NanoWindow implements IWindow {
 				}
 			}
 		});
-		maximize.setColor("#646464C8");
-		maximize.setHighlightColor("#FFFFFFC8");
-		maximize.setWindowAlignment(Alignment.RIGHT_TOP);
-		maximize.setAlignment(Alignment.LEFT_BOTTOM);
-		maximize.setStyle(ButtonStyle.MAXIMIZE);
+		maximizeBtn.setColor("#646464C8");
+		maximizeBtn.setHighlightColor("#FFFFFFC8");
+		maximizeBtn.setWindowAlignment(Alignment.RIGHT_TOP);
+		maximizeBtn.setAlignment(Alignment.LEFT_BOTTOM);
+		maximizeBtn.setStyle(ButtonStyle.MAXIMIZE);
 
-		TitleBarButton minimize = new TitleBarButton(-58, -1, 28, 28);
-		minimize.setOnButtonPress(() -> {
+		TitleBarButton minimizeBtn = new TitleBarButton(0, -1, 28, 28);
+		minimizeBtn.setOnButtonPress(() -> {
+			minimized = !minimized;
+			if (minimized) {
+			} else {
+			}
 		});
-		minimize.setColor("#646464C8");
-		minimize.setHighlightColor("#FFFFFFC8");
-		minimize.setWindowAlignment(Alignment.RIGHT_TOP);
-		minimize.setAlignment(Alignment.LEFT_BOTTOM);
-		minimize.setStyle(ButtonStyle.MINIMIZE);
+		minimizeBtn.setColor("#646464C8");
+		minimizeBtn.setHighlightColor("#FFFFFFC8");
+		minimizeBtn.setWindowAlignment(Alignment.RIGHT_TOP);
+		minimizeBtn.setAlignment(Alignment.LEFT_BOTTOM);
+		minimizeBtn.setStyle(ButtonStyle.MINIMIZE);
 
 		TitleBarText titleText = new TitleBarText(title, 0, 0);
 		titleText.setWindowAlignment(Alignment.CENTER);
 		titleText.setAlign(NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
 
-		titleBar.addComponent(close);
+		titleBar.getRight().addComponent(closeBtn);
 		if (resizable)
-			titleBar.addComponent(maximize);
-		titleBar.addComponent(minimize);
-		titleBar.addComponent(titleText);
+			titleBar.getRight().addComponent(maximizeBtn);
+		// titleBar.getRight().addComponent(minimizeBtn);
+		titleBar.getCenter().addComponent(titleText);
 
 		titleBar.setOnDrag((window) -> {
 			if (draggable && !maximized) {
@@ -163,7 +172,7 @@ public abstract class NanoWindow implements IWindow {
 
 	@Override
 	public void render(Window window, IWindowManager nanoWindowManager) {
-		if (!hidden) {
+		if (!hidden && !minimized) {
 			nvgluBindFramebuffer(window.getNVGID(), fbo);
 			window.resetViewport();
 			Renderer.clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -183,7 +192,7 @@ public abstract class NanoWindow implements IWindow {
 
 	@Override
 	public void update(float delta, Window window, IWindowManager nanoWindowManager) {
-		if (decorations && !hidden) {
+		if (decorations && !hidden && !minimized) {
 			titleBar.update(delta, window);
 			if ((Mouse.isButtonDown(0) && canResize()) || resizing) {
 				resizing = Mouse.isButtonDown(0);
@@ -192,7 +201,7 @@ public abstract class NanoWindow implements IWindow {
 			}
 		}
 		// lastUpdate += 1 * delta;
-		if (!resizing)
+		if (!resizing && !minimized)
 			updateApp(delta, window);
 	}
 
@@ -215,7 +224,7 @@ public abstract class NanoWindow implements IWindow {
 
 	private boolean canResize() {
 		return Mouse.getX() > x + w - 20 && Mouse.getY() < y - h + 20 && Mouse.getX() < x + w + 20
-				&& Mouse.getY() > y - h - 20 && resizable && !maximized;
+				&& Mouse.getY() > y - h - 20 && resizable && !maximized && !minimized;
 	}
 
 	@Override
@@ -370,12 +379,28 @@ public abstract class NanoWindow implements IWindow {
 
 	@Override
 	public boolean isDragging() {
-		return titleBar.isDragging();
+		if (minimized || hidden)
+			return false;
+		else
+			return titleBar.isDragging();
 	}
 
 	@Override
 	public boolean isResizing() {
-		return resizing;
+		if (minimized || hidden)
+			return false;
+		else
+			return resizing;
+	}
+
+	@Override
+	public boolean isMinimized() {
+		return minimized;
+	}
+
+	@Override
+	public boolean isHidden() {
+		return hidden;
 	}
 
 	@Override

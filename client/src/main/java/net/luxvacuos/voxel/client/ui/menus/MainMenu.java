@@ -30,11 +30,11 @@ import net.luxvacuos.voxel.client.ui.Alignment;
 import net.luxvacuos.voxel.client.ui.Button;
 import net.luxvacuos.voxel.client.ui.ContextMenu;
 import net.luxvacuos.voxel.client.ui.ModalWindow;
-import net.luxvacuos.voxel.client.ui.RootComponent;
+import net.luxvacuos.voxel.client.ui.RootComponentWindow;
 import net.luxvacuos.voxel.universal.core.TaskManager;
 import net.luxvacuos.voxel.universal.core.states.StateMachine;
 
-public class MainMenu extends RootComponent {
+public class MainMenu extends RootComponentWindow {
 
 	private boolean pressed = false;
 
