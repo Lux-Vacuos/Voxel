@@ -29,7 +29,6 @@ import net.luxvacuos.voxel.launcher.core.UpdateLauncher;
 import net.luxvacuos.voxel.launcher.ui.stages.Login;
 import net.luxvacuos.voxel.launcher.ui.stages.Main;
 import net.luxvacuos.voxel.launcher.ui.stages.Update;
-import net.luxvacuos.voxel.launcher.updater.VersionsManager;
 import net.luxvacuos.voxel.launcher.util.Logger;
 
 public class MainUI extends Application {
@@ -46,13 +45,10 @@ public class MainUI extends Application {
 
 	@Override
 	public void start(Stage stage) throws Exception {
-		Thread.currentThread().setName("Voxel-Launcher");
-
+		Thread.currentThread().setName("Launcher");
 		Logger.log("Version: " + LauncherVariables.VERSION);
-		Logger.log("Dist Server: " + LauncherVariables.HOST);
 		Logger.log("API Server: " + LauncherVariables.API);
 
-		VersionsManager.getVersionsManager().update();
 		updateLauncher = new UpdateLauncher();
 
 		loginStage = new Login(stage, this);

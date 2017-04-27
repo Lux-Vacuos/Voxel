@@ -39,9 +39,9 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
+import net.luxvacuos.adus.core.VersionsManager;
 import net.luxvacuos.voxel.launcher.core.LauncherVariables;
 import net.luxvacuos.voxel.launcher.ui.MainUI;
-import net.luxvacuos.voxel.launcher.updater.VersionsManager;
 
 public class Main extends BorderPane {
 
@@ -69,62 +69,28 @@ public class Main extends BorderPane {
 
 		playButton = new Button("Play");
 		playButton.setOnAction((event) -> {
-
 			new Thread(() -> {
-
 				LauncherVariables.userArgs.add("-width");
 				LauncherVariables.userArgs.add(wf.getText());
 				LauncherVariables.userArgs.add("-height");
 				LauncherVariables.userArgs.add(hf.getText());
-
 				try {
-					VersionsManager.getVersionsManager().downloadAndRun();
-					Platform.runLater(() -> playButton.setText("Launching..."));
+					VersionsManager.getVersionsManager().downloadAndRun(LauncherVariables.userArgs);
+					Platform.runLater(() -> {
+						playButton.setText("Launching...");
+						stage.close();
+					});
 				} catch (JsonSyntaxException | JsonIOException | FileNotFoundException e) {
 					Platform.runLater(() -> {
 						playButton.setText("Error downloading, try again");
 						playButton.setDisable(false);
 					});
+					e.printStackTrace();
 					return;
 				}
 			}).start();
-
-			while (!VersionsManager.getVersionsManager().isDownloading()
-					&& !VersionsManager.getVersionsManager().isDownloaded()) {
-				try {
-					Thread.sleep(100);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
-
-			new Thread(() -> {
-				while (VersionsManager.getVersionsManager().isDownloading()) {
-					Platform.runLater(() -> download.setProgress(
-							VersionsManager.getVersionsManager().getDownloadingVersion().getDownloadProgress()));
-					try {
-						Thread.sleep(100);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-				}
-				Platform.runLater(() -> download.setProgress(1f));
-			}).start();
-
 			playButton.setText("Downloading... Please Wait");
 			playButton.setDisable(true);
-
-			new Thread(() -> {
-				try {
-					while (!VersionsManager.getVersionsManager().isLaunched()) {
-						Thread.sleep(100);
-					}
-					Thread.sleep(1000);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-				Platform.runLater(() -> stage.close());
-			}).start();
 		});
 		playButton.setMinSize(160, 60);
 		playButton.setFont(new Font(16));

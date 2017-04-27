@@ -29,6 +29,7 @@ import org.apache.log4j.FileAppender;
 import org.apache.log4j.Layout;
 import org.apache.log4j.spi.ErrorCode;
 
+import net.luxvacuos.adus.core.ProjectVariables;
 import net.luxvacuos.voxel.launcher.bootstrap.Bootstrap;
 import net.luxvacuos.voxel.launcher.core.LauncherVariables;
 
@@ -83,7 +84,7 @@ public class PerRunLog extends FileAppender {
 			} else {
 				newFileName = fileName + HIPHEN + timeStampFormat.format(new Date());
 			}
-			return Bootstrap.getPrefix() + LauncherVariables.PROJECT + "/" + logFile.getParent() + File.separator + newFileName;
+			return Bootstrap.getPrefix() + ProjectVariables.CONFIG.getProject() + "/" + logFile.getParent() + File.separator + newFileName;
 		}
 		return null;
 	}

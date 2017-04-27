@@ -1,0 +1,6 @@
+{
+   "host":"https://s3.luxvacuos.net",
+   "project":"voxel",
+   "configPath":"config",
+   "librariesPath":"libraries"
+}

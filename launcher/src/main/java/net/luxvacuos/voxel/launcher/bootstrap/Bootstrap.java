@@ -20,8 +20,7 @@
 
 package net.luxvacuos.voxel.launcher.bootstrap;
 
-import java.io.File;
-
+import net.luxvacuos.adus.core.ADUS;
 import net.luxvacuos.voxel.launcher.core.LauncherVariables;
 import net.luxvacuos.voxel.launcher.ui.MainUI;
 
@@ -98,11 +97,8 @@ public class Bootstrap {
 	 *            Args
 	 */
 	public static void main(String[] args) {
-		Thread.currentThread().setName("Voxel-Launcher-Bootstrap");
-		new File(Bootstrap.getPrefix() + LauncherVariables.PROJECT + "/libraries/").mkdirs();
-
+		ADUS.init();
 		parseArgs(args);
-
 		MainUI.main(args);
 
 	}
