@@ -22,8 +22,8 @@ package net.luxvacuos.voxel.client.rendering.api.opengl;
 
 import java.util.List;
 
-import net.luxvacuos.igl.vector.Vector3d;
 import net.luxvacuos.voxel.client.ecs.entities.CameraEntity;
+import net.luxvacuos.voxel.client.ecs.entities.Sun;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.CubeMapTexture;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.Light;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.Texture;
@@ -38,9 +38,9 @@ public interface IDeferredPipeline extends IDisposable {
 
 	public void end();
 
-	public void preRender(CameraEntity camera, Vector3d lightPosition, Vector3d invertedLightPosition,
-			IWorldSimulation clientWorldSimulation, List<Light> lights, CubeMapTexture irradianceCapture,
-			CubeMapTexture environmentMap, Texture brdfLUT, float exposure);
+	public void preRender(CameraEntity camera, Sun sun, IWorldSimulation clientWorldSimulation, List<Light> lights,
+			CubeMapTexture irradianceCapture, CubeMapTexture environmentMap, Texture brdfLUT, ShadowFBO shadowFBO,
+			float exposure);
 
 	public void render(FBO postProcess);
 

@@ -27,17 +27,11 @@ layout(location = 3) in vec3 tangent;
 
 out vec2 pass_textureCoords;
 out vec4 pass_position;
-out vec4 ShadowCoord[4];
 out mat3 TBN;
 
 uniform mat4 transformationMatrix;
 uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;
-uniform mat4 projectionLightMatrix[4];
-uniform mat4 viewLightMatrix;
-uniform mat4 biasMatrix;
-
-uniform int useShadows;
 
 void main() {
 	vec4 worldPosition = transformationMatrix * vec4(position, 1.0);
@@ -49,13 +43,5 @@ void main() {
 	T = normalize(T - dot(T, N) * N);
 	vec3 B = cross(N, T);
 	TBN = mat3(T, B, N);
-
 	pass_position = worldPosition;
-	if(useShadows == 1){
-		vec4 posLight = viewLightMatrix * worldPosition;
-		ShadowCoord[0] = biasMatrix * projectionLightMatrix[0] * posLight;
-		ShadowCoord[1] = biasMatrix * projectionLightMatrix[1] * posLight;
-		ShadowCoord[2] = biasMatrix * projectionLightMatrix[2] * posLight;
-		ShadowCoord[3] = biasMatrix * projectionLightMatrix[3] * posLight;
-	}
 }

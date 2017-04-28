@@ -55,7 +55,7 @@ public class DeferredShadingShader extends ShaderProgram {
 	private UniformVec3 lightPosition = new UniformVec3("lightPosition");
 	private UniformVec3 invertedLightPosition = new UniformVec3("invertedLightPosition");
 	private UniformVec3 skyColor = new UniformVec3("skyColor");
-	
+
 	private UniformVec3 pointLightsPosition[];
 	private UniformVec3 pointLightsColor[];
 	private UniformInteger totalPointLights = new UniformInteger("totalPointLights");
@@ -78,6 +78,7 @@ public class DeferredShadingShader extends ShaderProgram {
 	private UniformBoolean useAmbientOcclusion = new UniformBoolean("useAmbientOcclusion");
 	private UniformBoolean useChromaticAberration = new UniformBoolean("useChromaticAberration");
 	private UniformBoolean useLensFlares = new UniformBoolean("useLensFlares");
+	private UniformBoolean useShadows = new UniformBoolean("useShadows");
 
 	private UniformSampler gDiffuse = new UniformSampler("gDiffuse");
 	private UniformSampler gPosition = new UniformSampler("gPosition");
@@ -90,8 +91,14 @@ public class DeferredShadingShader extends ShaderProgram {
 	private UniformSampler composite2 = new UniformSampler("composite2");
 	private UniformSampler composite3 = new UniformSampler("composite3");
 
-	private static float tTime = 0;
+	private UniformMatrix projectionLightMatrix[];
+	private UniformMatrix viewLightMatrix = new UniformMatrix("viewLightMatrix");
+	private UniformMatrix biasMatrix = new UniformMatrix("biasMatrix");
+	private UniformSampler shadowMap[];
 
+	private boolean loadedShadowMatrix = false;
+
+	private static float tTime = 0;
 	private static Matrix4d iPM, iVM;
 
 	public DeferredShadingShader(String type) {
@@ -106,12 +113,22 @@ public class DeferredShadingShader extends ShaderProgram {
 		}
 		super.storeUniformArray(pointLightsPosition);
 		super.storeUniformArray(pointLightsColor);
-		super.storeAllUniformLocations(projectionMatrix, viewMatrix, inverseProjectionMatrix,
-				inverseViewMatrix, previousViewMatrix, cameraPosition, previousCameraPosition, lightPosition,
-				invertedLightPosition, skyColor, resolution, sunPositionInScreen, exposure, time, camUnderWaterOffset,
-				shadowDrawDistance, camUnderWater, useFXAA, useDOF, useMotionBlur, useReflections, useVolumetricLight,
-				useAmbientOcclusion, gDiffuse, gPosition, gNormal, gDepth, gPBR, gMask, composite0, composite1,
-				composite2, totalPointLights,useChromaticAberration, composite3, useLensFlares);
+		projectionLightMatrix = new UniformMatrix[4];
+		for (int x = 0; x < 4; x++) {
+			projectionLightMatrix[x] = new UniformMatrix("projectionLightMatrix[" + x + "]");
+		}
+		super.storeUniformArray(projectionLightMatrix);
+		shadowMap = new UniformSampler[4];
+		for (int x = 0; x < 4; x++) {
+			shadowMap[x] = new UniformSampler("shadowMap[" + x + "]");
+		}
+		super.storeUniformArray(shadowMap);
+		super.storeAllUniformLocations(projectionMatrix, viewMatrix, inverseProjectionMatrix, inverseViewMatrix,
+				previousViewMatrix, cameraPosition, previousCameraPosition, lightPosition, invertedLightPosition,
+				skyColor, resolution, sunPositionInScreen, exposure, time, camUnderWaterOffset, shadowDrawDistance,
+				camUnderWater, useFXAA, useDOF, useMotionBlur, useReflections, useVolumetricLight, useAmbientOcclusion,
+				gDiffuse, gPosition, gNormal, gDepth, gPBR, gMask, composite0, composite1, composite2, totalPointLights,
+				useChromaticAberration, composite3, useLensFlares, biasMatrix, viewLightMatrix, useShadows);
 		connectTextureUnits();
 	}
 
@@ -131,6 +148,10 @@ public class DeferredShadingShader extends ShaderProgram {
 		composite1.loadTexUnit(7);
 		composite2.loadTexUnit(8);
 		composite3.loadTexUnit(9);
+		shadowMap[0].loadTexUnit(10);
+		shadowMap[1].loadTexUnit(11);
+		shadowMap[2].loadTexUnit(12);
+		shadowMap[3].loadTexUnit(13);
 		super.stop();
 	}
 
@@ -175,6 +196,27 @@ public class DeferredShadingShader extends ShaderProgram {
 		totalPointLights.loadInteger(lights.size());
 	}
 
+	public void loadBiasMatrix(Matrix4d[] shadowProjectionMatrix) {
+		if (!loadedShadowMatrix) {
+			Matrix4d biasMatrix = new Matrix4d();
+			biasMatrix.m00 = 0.5f;
+			biasMatrix.m11 = 0.5f;
+			biasMatrix.m22 = 0.5f;
+			biasMatrix.m30 = 0.5f;
+			biasMatrix.m31 = 0.5f;
+			biasMatrix.m32 = 0.5f;
+			this.biasMatrix.loadMatrix(biasMatrix);
+			for (int x = 0; x < 4; x++) {
+				this.projectionLightMatrix[x].loadMatrix(shadowProjectionMatrix[x]);
+			}
+			loadedShadowMatrix = true;
+		}
+	}
+
+	public void loadLightMatrix(Matrix4d sunCameraViewMatrix) {
+		viewLightMatrix.loadMatrix(sunCameraViewMatrix);
+	}
+
 	/**
 	 * Load Display Resolution
 	 * 
@@ -186,7 +228,8 @@ public class DeferredShadingShader extends ShaderProgram {
 	}
 
 	public void loadSettings(boolean useDOF, boolean useFXAA, boolean useMotionBlur, boolean useVolumetricLight,
-			boolean useReflections, boolean useAmbientOcclusion, int shadowDrawDistance, boolean useChromaticAberration, boolean useLensFlares) {
+			boolean useReflections, boolean useAmbientOcclusion, int shadowDrawDistance, boolean useChromaticAberration,
+			boolean useLensFlares, boolean useShadows) {
 		this.useDOF.loadBoolean(useDOF);
 		this.useFXAA.loadBoolean(useFXAA);
 		this.useMotionBlur.loadBoolean(useMotionBlur);
@@ -196,6 +239,7 @@ public class DeferredShadingShader extends ShaderProgram {
 		this.shadowDrawDistance.loadInteger(shadowDrawDistance);
 		this.useChromaticAberration.loadBoolean(useChromaticAberration);
 		this.useLensFlares.loadBoolean(useLensFlares);
+		this.useShadows.loadBoolean(useShadows);
 	}
 
 	public void loadMotionBlurData(CameraEntity camera, Matrix4d previousViewMatrix, Vector3d previousCameraPosition) {

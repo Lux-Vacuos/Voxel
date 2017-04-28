@@ -38,7 +38,12 @@ uniform samplerCube composite2;
 uniform sampler2D composite3;
 uniform int shadowDrawDistance;
 uniform int useAmbientOcclusion;
+uniform int useShadows;
 uniform vec2 resolution;
+uniform mat4 projectionLightMatrix[4];
+uniform mat4 viewLightMatrix;
+uniform mat4 biasMatrix;
+uniform sampler2DShadow shadowMap[4];
 
 const float MAX_REFLECTION_LOD = 5.0;
 const float distanceThreshold = 2;
@@ -76,6 +81,8 @@ const vec2 poisson16[] = vec2[](
 
 ##include function computeAmbientOcclusion
 
+##include function computeShadow
+
 void main(void) {
 	vec2 texcoord = textureCoords;
 	vec4 mask = texture(gMask, texcoord);
@@ -112,7 +119,7 @@ void main(void) {
        	float denominator = max(dot(V, N), 0.0) * max(dot(L, N), 0.0) + 0.001; 
         vec3 brdf = nominator / denominator;
 	
-       	float NdotL = max(dot(N, L) - position.w, 0.0) ;      
+       	float NdotL = max(dot(N, L) - computeShadow(position), 0.0) ;      
        	Lo += (kD * image.rgb / PI + brdf) * radiance * NdotL;
 		
 		vec3 irradiance = texture(composite1, N).rgb;

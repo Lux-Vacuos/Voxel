@@ -44,9 +44,9 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.utils.ImmutableArray;
 
 import net.luxvacuos.igl.vector.Matrix4d;
-import net.luxvacuos.igl.vector.Vector3d;
 import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.ecs.entities.CameraEntity;
+import net.luxvacuos.voxel.client.ecs.entities.Sun;
 import net.luxvacuos.voxel.client.ecs.entities.SunCamera;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.CubeMapTexture;
@@ -106,20 +106,19 @@ public class Renderer {
 	}
 
 	public static void render(ImmutableArray<Entity> entities, Map<ParticleTexture, List<Particle>> particles,
-			CameraEntity camera, CameraEntity sunCamera, IWorldSimulation worldSimulation, Vector3d lightPosition,
-			Vector3d invertedLightPosition, float alpha) {
+			CameraEntity camera, IWorldSimulation worldSimulation, Sun sun, float alpha) {
 
 		resetState();
 
-		environmentRenderer.renderEnvironmentMap(camera.getPosition(), skyboxRenderer, worldSimulation, lightPosition,
-				window);
+		environmentRenderer.renderEnvironmentMap(camera.getPosition(), skyboxRenderer, worldSimulation,
+				sun.getSunPosition(), window);
 		irradianceCapture.render(window, environmentRenderer.getCubeMapTexture().getID());
 		preFilteredEnvironment.render(window, environmentRenderer.getCubeMapTexture().getID());
+		SunCamera sunCamera = (SunCamera) sun.getCamera();
 
 		if ((boolean) REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/shadows")) {
-			SunCamera sCam = (SunCamera) sunCamera;
 
-			sCam.switchProjectionMatrix(0);
+			sunCamera.switchProjectionMatrix(0);
 			frustum.calculateFrustum(sunCamera);
 
 			shadowFBO.begin();
@@ -129,7 +128,7 @@ public class Renderer {
 				shadowPass.render(camera, sunCamera, frustum, shadowFBO);
 			entityShadowRenderer.renderEntity(entities, sunCamera);
 
-			sCam.switchProjectionMatrix(1);
+			sunCamera.switchProjectionMatrix(1);
 			frustum.calculateFrustum(sunCamera);
 
 			shadowFBO.changeTexture(1);
@@ -138,7 +137,7 @@ public class Renderer {
 				shadowPass.render(camera, sunCamera, frustum, shadowFBO);
 			entityShadowRenderer.renderEntity(entities, sunCamera);
 
-			sCam.switchProjectionMatrix(2);
+			sunCamera.switchProjectionMatrix(2);
 			frustum.calculateFrustum(sunCamera);
 
 			shadowFBO.changeTexture(2);
@@ -147,7 +146,7 @@ public class Renderer {
 				shadowPass.render(camera, sunCamera, frustum, shadowFBO);
 			entityShadowRenderer.renderEntity(entities, sunCamera);
 
-			sCam.switchProjectionMatrix(3);
+			sunCamera.switchProjectionMatrix(3);
 			frustum.calculateFrustum(sunCamera);
 
 			shadowFBO.changeTexture(3);
@@ -167,16 +166,16 @@ public class Renderer {
 
 		clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		skyboxRenderer.render(ClientVariables.RED, ClientVariables.GREEN, ClientVariables.BLUE, camera, worldSimulation,
-				lightPosition);
+				sun.getSunPosition());
 		if (deferredPass != null)
 			deferredPass.render(camera, sunCamera, frustum, shadowFBO);
-		entityRenderer.renderEntity(entities, camera, sunCamera, shadowFBO);
+		entityRenderer.renderEntity(entities, camera);
 
 		deferredPipeline.end();
 
-		deferredPipeline.preRender(camera, lightPosition, invertedLightPosition, worldSimulation,
-				lightRenderer.getLights(), irradianceCapture.getCubeMapTexture(),
-				preFilteredEnvironment.getCubeMapTexture(), preFilteredEnvironment.getBRDFLUT(), exposure);
+		deferredPipeline.preRender(camera, sun, worldSimulation, lightRenderer.getLights(),
+				irradianceCapture.getCubeMapTexture(), preFilteredEnvironment.getCubeMapTexture(),
+				preFilteredEnvironment.getBRDFLUT(), shadowFBO, exposure);
 
 		postProcessPipeline.begin();
 

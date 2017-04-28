@@ -23,12 +23,6 @@ package net.luxvacuos.voxel.client.core.states;
 import static net.luxvacuos.voxel.universal.core.GlobalVariables.REGISTRY;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11.GL_DEPTH_COMPONENT;
-import static org.lwjgl.opengl.GL11.GL_FLOAT;
-import static org.lwjgl.opengl.GL11.GL_RGB;
-import static org.lwjgl.opengl.GL11.glReadBuffer;
-import static org.lwjgl.opengl.GL11.glReadPixels;
-import static org.lwjgl.opengl.GL30.GL_COLOR_ATTACHMENT2;
 
 import java.nio.FloatBuffer;
 
@@ -92,7 +86,7 @@ public class MPWorldState extends AbstractState {
 		Window window = ClientInternalSubsystem.getInstance().getGameWindow();
 
 		Renderer.setDeferredPass((camera, sunCamera, frustum, shadowMap) -> {
-			((RenderWorld) world).render(camera, sunCamera, frustum, shadowMap);
+			((RenderWorld) world).render(camera, frustum);
 		});
 		Renderer.setShadowPass((camera, sunCamera, frustum, shadowMap) -> {
 			((RenderWorld) world).renderShadow(sunCamera, frustum);
@@ -112,8 +106,7 @@ public class MPWorldState extends AbstractState {
 		world.getActiveDimension().getEntitiesManager().addEntity(spawnChunks);
 
 		Renderer.render(world.getActiveDimension().getEntitiesManager().getEntities(), ParticleDomain.getParticles(),
-				camera, sun.getCamera(), world.getActiveDimension().getWorldSimulator(), sun.getSunPosition(),
-				sun.getInvertedSunPosition(), 0);
+				camera, world.getActiveDimension().getWorldSimulator(), sun, 0);
 		gameWindow = new GameWindow(-2, window.getHeight() + 33, window.getWidth() + 4, window.getHeight() + 35);
 		WM.getWM().addWindow(0, gameWindow);
 		client.setHost(ClientVariables.server);
@@ -170,8 +163,7 @@ public class MPWorldState extends AbstractState {
 	@Override
 	public void render(AbstractVoxel voxel, float alpha) {
 		Renderer.render(world.getActiveDimension().getEntitiesManager().getEntities(), ParticleDomain.getParticles(),
-				camera, sun.getCamera(), world.getActiveDimension().getWorldSimulator(), sun.getSunPosition(),
-				sun.getInvertedSunPosition(), alpha);
+				camera, world.getActiveDimension().getWorldSimulator(), sun, alpha);
 		Renderer.clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		Renderer.clearColors(1, 1, 1, 1);
 		WM.getWM().render();

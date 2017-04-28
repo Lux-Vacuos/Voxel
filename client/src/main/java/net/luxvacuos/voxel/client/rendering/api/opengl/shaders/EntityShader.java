@@ -25,10 +25,8 @@ import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.ecs.entities.CameraEntity;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.Material;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.Attribute;
-import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.UniformBoolean;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.UniformMaterial;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.UniformMatrix;
-import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.UniformSampler;
 
 /**
  * Entity Shader
@@ -41,48 +39,12 @@ public class EntityShader extends ShaderProgram {
 	private UniformMatrix transformationMatrix = new UniformMatrix("transformationMatrix");
 	private UniformMatrix projectionMatrix = new UniformMatrix("projectionMatrix");
 	private UniformMatrix viewMatrix = new UniformMatrix("viewMatrix");
-	private UniformMatrix biasMatrix = new UniformMatrix("biasMatrix");
-	private UniformMatrix projectionLightMatrix[];
-	private UniformMatrix viewLightMatrix = new UniformMatrix("viewLightMatrix");
-	private UniformSampler shadowMap[];
-	private UniformBoolean useShadows = new UniformBoolean("useShadows");
 	private UniformMaterial material = new UniformMaterial("material");
-
-	private boolean loadedShadowMatrix = false;
 
 	public EntityShader() {
 		super(ClientVariables.VERTEX_FILE_ENTITY, ClientVariables.FRAGMENT_FILE_ENTITY, new Attribute(0, "position"),
 				new Attribute(1, "textureCoords"), new Attribute(2, "normals"), new Attribute(3, "tangent"));
-		projectionLightMatrix = new UniformMatrix[4];
-		for (int x = 0; x < 4; x++) {
-			projectionLightMatrix[x] = new UniformMatrix("projectionLightMatrix[" + x + "]");
-		}
-		super.storeUniformArray(projectionLightMatrix);
-		shadowMap = new UniformSampler[4];
-		for (int x = 0; x < 4; x++) {
-			shadowMap[x] = new UniformSampler("shadowMap[" + x + "]");
-		}
-		super.storeUniformArray(shadowMap);
-		super.storeAllUniformLocations(transformationMatrix, projectionMatrix, viewMatrix, biasMatrix, viewLightMatrix,
-				useShadows, material);
-		connectTextureUnits();
-	}
-
-	/**
-	 * Loads Textures ID
-	 * 
-	 */
-	private void connectTextureUnits() {
-		super.start();
-		shadowMap[0].loadTexUnit(8);
-		shadowMap[1].loadTexUnit(9);
-		shadowMap[2].loadTexUnit(10);
-		shadowMap[3].loadTexUnit(11);
-		super.stop();
-	}
-
-	public void useShadows(boolean value) {
-		useShadows.loadBoolean(value);
+		super.storeAllUniformLocations(transformationMatrix, projectionMatrix, viewMatrix, material);
 	}
 
 	/**
@@ -93,27 +55,6 @@ public class EntityShader extends ShaderProgram {
 	 */
 	public void loadTransformationMatrix(Matrix4d matrix) {
 		transformationMatrix.loadMatrix(matrix);
-	}
-
-	public void loadBiasMatrix(Matrix4d[] shadowProjectionMatrix) {
-		if (!loadedShadowMatrix) {
-			Matrix4d biasMatrix = new Matrix4d();
-			biasMatrix.m00 = 0.5f;
-			biasMatrix.m11 = 0.5f;
-			biasMatrix.m22 = 0.5f;
-			biasMatrix.m30 = 0.5f;
-			biasMatrix.m31 = 0.5f;
-			biasMatrix.m32 = 0.5f;
-			this.biasMatrix.loadMatrix(biasMatrix);
-			for (int x = 0; x < 4; x++) {
-				this.projectionLightMatrix[x].loadMatrix(shadowProjectionMatrix[x]);
-			}
-			loadedShadowMatrix = true;
-		}
-	}
-
-	public void loadLightMatrix(CameraEntity sunCamera) {
-		viewLightMatrix.loadMatrix(sunCamera.getViewMatrix());
 	}
 
 	public void loadMaterial(Material mat) {

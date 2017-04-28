@@ -45,6 +45,7 @@ import net.luxvacuos.igl.vector.Vector3d;
 import net.luxvacuos.voxel.client.core.ClientInternalSubsystem;
 import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.ecs.entities.CameraEntity;
+import net.luxvacuos.voxel.client.ecs.entities.Sun;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.CubeMapTexture;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.Light;
@@ -114,15 +115,14 @@ public abstract class DeferredPipeline implements IDeferredPipeline {
 	}
 
 	@Override
-	public void preRender(CameraEntity camera, Vector3d lightPosition, Vector3d invertedLightPosition,
-			IWorldSimulation clientWorldSimulation, List<Light> lights, CubeMapTexture irradianceCapture,
-			CubeMapTexture environmentMap, Texture brdfLUT, float exposure) {
+	public void preRender(CameraEntity camera, Sun sun, IWorldSimulation clientWorldSimulation, List<Light> lights,
+			CubeMapTexture irradianceCapture, CubeMapTexture environmentMap, Texture brdfLUT, ShadowFBO shadowFBO,
+			float exposure) {
 		glBindVertexArray(quad.getVaoID());
 		glEnableVertexAttribArray(0);
 		for (IDeferredPass deferredPass : imagePasses) {
-			deferredPass.process(camera, previousViewMatrix, previousCameraPosition, lightPosition,
-					invertedLightPosition, clientWorldSimulation, lights, auxs, this, quad, irradianceCapture,
-					environmentMap, brdfLUT, exposure);
+			deferredPass.process(camera, sun, previousViewMatrix, previousCameraPosition, clientWorldSimulation, lights,
+					auxs, this, quad, irradianceCapture, environmentMap, brdfLUT, shadowFBO, exposure);
 		}
 		glDisableVertexAttribArray(0);
 		glBindVertexArray(0);

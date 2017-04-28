@@ -24,7 +24,6 @@ import com.hackhalo2.nbt.tags.TagCompound;
 
 import net.luxvacuos.voxel.client.ecs.entities.CameraEntity;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Frustum;
-import net.luxvacuos.voxel.client.rendering.api.opengl.ShadowFBO;
 import net.luxvacuos.voxel.client.rendering.world.IRenderWorld;
 import net.luxvacuos.voxel.client.world.dimension.RenderDimension;
 import net.luxvacuos.voxel.universal.world.World;
@@ -42,21 +41,21 @@ public class RenderWorld extends World implements IRenderWorld {
 	}
 
 	@Override
-	public void render(CameraEntity camera, CameraEntity sunCamera, Frustum frustum, ShadowFBO shadow) {
-		((RenderDimension)this.getActiveDimension()).render(camera, sunCamera, frustum, shadow);
-		
+	public void render(CameraEntity camera, Frustum frustum) {
+		((RenderDimension) this.getActiveDimension()).render(camera, frustum);
+
 	}
 
 	@Override
 	public void renderOcclusion(CameraEntity camera, Frustum frustum) {
-		((RenderDimension)this.getActiveDimension()).renderOcclusion(camera, frustum);
-		
+		((RenderDimension) this.getActiveDimension()).renderOcclusion(camera, frustum);
+
 	}
 
 	@Override
 	public void renderShadow(CameraEntity sunCamera, Frustum frustum) {
-		((RenderDimension)this.getActiveDimension()).renderShadow(sunCamera, frustum);
-		
+		((RenderDimension) this.getActiveDimension()).renderShadow(sunCamera, frustum);
+
 	}
 
 }

@@ -7,6 +7,7 @@ import static org.lwjgl.opengl.GL13.GL_TEXTURE6;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
 
 import net.luxvacuos.voxel.client.rendering.api.opengl.IDeferredPipeline;
+import net.luxvacuos.voxel.client.rendering.api.opengl.ShadowFBO;
 import net.luxvacuos.voxel.client.rendering.api.opengl.DeferredPass;
 import net.luxvacuos.voxel.client.rendering.api.opengl.FBO;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.CubeMapTexture;
@@ -20,7 +21,7 @@ public class VolumetricLight extends DeferredPass {
 
 	@Override
 	public void render(FBO[] auxs, IDeferredPipeline pipe, CubeMapTexture irradianceCapture,
-			CubeMapTexture environmentMap, Texture brdfLUT) {
+			CubeMapTexture environmentMap, Texture brdfLUT, ShadowFBO shadow) {
 		glActiveTexture(GL_TEXTURE1);
 		glBindTexture(GL_TEXTURE_2D, pipe.getMainFBO().getPositionTex());
 		glActiveTexture(GL_TEXTURE6);

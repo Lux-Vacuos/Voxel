@@ -22,7 +22,6 @@ package net.luxvacuos.voxel.client.world.chunks;
 
 import net.luxvacuos.voxel.client.core.ClientWorldSimulation;
 import net.luxvacuos.voxel.client.ecs.entities.CameraEntity;
-import net.luxvacuos.voxel.client.rendering.api.opengl.ShadowFBO;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Tessellator;
 import net.luxvacuos.voxel.client.rendering.world.chunk.IRenderChunk;
 import net.luxvacuos.voxel.client.world.block.BlocksResources;
@@ -59,8 +58,8 @@ public class RenderChunk extends Chunk implements IRenderChunk {
 	}
 
 	@Override
-	public void render(CameraEntity camera, CameraEntity sunCamera, ClientWorldSimulation clientWorldSimulation, ShadowFBO shadow) {
-		this.tess.draw(camera, sunCamera, clientWorldSimulation, shadow);
+	public void render(CameraEntity camera, ClientWorldSimulation clientWorldSimulation) {
+		this.tess.draw(camera, clientWorldSimulation);
 	}
 
 	@Override

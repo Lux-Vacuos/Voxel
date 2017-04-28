@@ -83,3 +83,48 @@ float computeAmbientOcclusion(vec3 position, vec3 normal) {
 		return 1.0;
 }
 ##end
+
+##function computeShadow
+
+vec4 ShadowCoord[4];
+
+float lookup(vec2 offset){
+	if(ShadowCoord[3].x > 0 && ShadowCoord[3].x < 1 && ShadowCoord[3].y > 0 && ShadowCoord[3].y < 1) {
+		if(ShadowCoord[2].x > 0 && ShadowCoord[2].x < 1 && ShadowCoord[2].y > 0 && ShadowCoord[2].y < 1) {
+			if(ShadowCoord[1].x > 0 && ShadowCoord[1].x < 1 && ShadowCoord[1].y > 0 && ShadowCoord[1].y < 1) {
+				if(ShadowCoord[0].x > 0 && ShadowCoord[0].x < 1 && ShadowCoord[0].y > 0 && ShadowCoord[0].y < 1) {
+					offset *= 1.0 / textureSize(shadowMap[0], 0);
+					return texture(shadowMap[0], ShadowCoord[0].xyz + vec3(offset.x,offset.y, 0));
+				} 
+				offset *= 1.0 / textureSize(shadowMap[1], 0);
+				return texture(shadowMap[1], ShadowCoord[1].xyz + vec3(offset.x,offset.y, 0));
+			}
+			offset *= 1.0 / textureSize(shadowMap[2], 0);
+			return texture(shadowMap[2], ShadowCoord[2].xyz + vec3(offset.x,offset.y, 0));
+		} 
+		offset *= 1.0 / textureSize(shadowMap[2], 0);
+		return texture(shadowMap[3], ShadowCoord[3].xyz + vec3(offset.x,offset.y, 0));
+	}
+	return 1.0;
+}
+
+float computeShadow(vec4 position){
+    if(useShadows == 1){
+        float shadow = 0;
+		vec4 posLight = viewLightMatrix * position;
+		ShadowCoord[0] = biasMatrix * projectionLightMatrix[0] * posLight;
+		ShadowCoord[1] = biasMatrix * projectionLightMatrix[1] * posLight;
+		ShadowCoord[2] = biasMatrix * projectionLightMatrix[2] * posLight;
+		ShadowCoord[3] = biasMatrix * projectionLightMatrix[3] * posLight;
+		for(int x = -1; x <= 1; ++x) {
+	    	for(int y = -1; y <= 1; ++y) {
+				shadow += -lookup(vec2(x, y)) + 1;
+	    	}    
+		}
+		shadow /= 9.0;
+        return shadow;
+	} else
+        return 0;
+}
+
+##end

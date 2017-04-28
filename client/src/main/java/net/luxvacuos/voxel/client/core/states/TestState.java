@@ -234,7 +234,7 @@ public class TestState extends AbstractState {
 		});
 
 		Renderer.setDeferredPass((camera, sunCamera, frustum, shadowMap) -> {
-			tess.draw(camera, sunCamera, worldSimulation, shadowMap);
+			tess.draw(camera, worldSimulation);
 		});
 
 		RenderBlock t = new RenderBlock(new BlockMaterial("test"), new BlockFaceAtlas("leaves"));
@@ -258,8 +258,7 @@ public class TestState extends AbstractState {
 		physicsSystem.getEngine().addEntity(character);
 		physicsSystem.getEngine().addEntity(cerberus);
 		((PlayerCamera) camera).setMouse();
-		Renderer.render(engine.getEntities(), ParticleDomain.getParticles(), camera, sun.getCamera(), worldSimulation,
-				sun.getSunPosition(), sun.getInvertedSunPosition(), 0);
+		Renderer.render(engine.getEntities(), ParticleDomain.getParticles(), camera, worldSimulation, sun, 0);
 		gameWindow = new GameWindow(0, ClientVariables.HEIGHT, ClientVariables.WIDTH, ClientVariables.HEIGHT);
 		WM.getWM().addWindow(0, gameWindow);
 	}
@@ -313,8 +312,7 @@ public class TestState extends AbstractState {
 
 	@Override
 	public void render(AbstractVoxel voxel, float alpha) {
-		Renderer.render(engine.getEntities(), ParticleDomain.getParticles(), camera, sun.getCamera(), worldSimulation,
-				sun.getSunPosition(), sun.getInvertedSunPosition(), alpha);
+		Renderer.render(engine.getEntities(), ParticleDomain.getParticles(), camera, worldSimulation, sun, alpha);
 		Renderer.clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		Renderer.clearColors(1, 1, 1, 1);
 		WM.getWM().render();

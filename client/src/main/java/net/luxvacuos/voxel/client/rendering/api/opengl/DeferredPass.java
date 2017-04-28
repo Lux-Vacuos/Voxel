@@ -33,6 +33,8 @@ import net.luxvacuos.igl.vector.Vector2d;
 import net.luxvacuos.igl.vector.Vector3d;
 import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.ecs.entities.CameraEntity;
+import net.luxvacuos.voxel.client.ecs.entities.Sun;
+import net.luxvacuos.voxel.client.ecs.entities.SunCamera;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.CubeMapTexture;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.Light;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.RawModel;
@@ -90,31 +92,34 @@ public abstract class DeferredPass implements IDeferredPass {
 	}
 
 	@Override
-	public void process(CameraEntity camera, Matrix4d previousViewMatrix, Vector3d previousCameraPosition,
-			Vector3d lightPosition, Vector3d invertedLightPosition, IWorldSimulation clientWorldSimulation,
-			List<Light> lights, FBO[] auxs, IDeferredPipeline pipe, RawModel quad, CubeMapTexture irradianceCapture,
-			CubeMapTexture environmentMap, Texture brdfLUT, float exposure) {
+	public void process(CameraEntity camera, Sun sun, Matrix4d previousViewMatrix, Vector3d previousCameraPosition,
+			IWorldSimulation clientWorldSimulation, List<Light> lights, FBO[] auxs, IDeferredPipeline pipe,
+			RawModel quad, CubeMapTexture irradianceCapture, CubeMapTexture environmentMap, Texture brdfLUT,
+			ShadowFBO shadowFBO, float exposure) {
 		fbo.begin();
 		shader.start();
 		shader.loadUnderWater(false);
 		shader.loadMotionBlurData(camera, previousViewMatrix, previousCameraPosition);
-		shader.loadLightPosition(lightPosition, invertedLightPosition);
+		shader.loadLightPosition(sun.getSunPosition(), sun.getInvertedSunPosition());
 		shader.loadviewMatrix(camera);
 		shader.loadSettings(false, false, false,
 				(boolean) REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/volumetricLight"),
 				(boolean) REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/reflections"),
 				(boolean) REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/ambientOcclusion"),
 				(int) REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/shadowsDrawDistance"), false,
-				(boolean) REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/lensFlares"));
-		shader.loadSunPosition(Maths.convertTo2F(new Vector3d(lightPosition), camera.getProjectionMatrix(),
+				(boolean) REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/lensFlares"),
+				(boolean) REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/shadows"));
+		shader.loadSunPosition(Maths.convertTo2F(new Vector3d(sun.getSunPosition()), camera.getProjectionMatrix(),
 				Maths.createViewMatrixRot(camera.getRotation().getX(), camera.getRotation().getY(),
 						camera.getRotation().getZ(), tmp),
 				width, height));
 		shader.loadExposure(exposure);
 		shader.loadPointLightsPos(lights);
 		shader.loadTime(clientWorldSimulation.getTime());
+		shader.loadLightMatrix(sun.getCamera().getViewMatrix());
+		shader.loadBiasMatrix(((SunCamera) sun.getCamera()).getProjectionArray());
 		Renderer.clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		render(auxs, pipe, irradianceCapture, environmentMap, brdfLUT);
+		render(auxs, pipe, irradianceCapture, environmentMap, brdfLUT, shadowFBO);
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, quad.getVertexCount());
 		shader.stop();
 		fbo.end();

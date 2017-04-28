@@ -34,10 +34,6 @@ import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE1;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE2;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE3;
-import static org.lwjgl.opengl.GL13.GL_TEXTURE5;
-import static org.lwjgl.opengl.GL13.GL_TEXTURE6;
-import static org.lwjgl.opengl.GL13.GL_TEXTURE7;
-import static org.lwjgl.opengl.GL13.GL_TEXTURE8;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
 import static org.lwjgl.opengl.GL15.GL_ARRAY_BUFFER;
 import static org.lwjgl.opengl.GL15.GL_DYNAMIC_DRAW;
@@ -67,7 +63,6 @@ import net.luxvacuos.igl.vector.Vector3d;
 import net.luxvacuos.igl.vector.Vector8f;
 import net.luxvacuos.voxel.client.core.ClientWorldSimulation;
 import net.luxvacuos.voxel.client.ecs.entities.CameraEntity;
-import net.luxvacuos.voxel.client.ecs.entities.SunCamera;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.Material;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.TessellatorBasicShader;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.TessellatorShader;
@@ -162,8 +157,7 @@ public class Tessellator {
 		updated = true;
 	}
 
-	public void draw(CameraEntity camera, CameraEntity sunCamera, ClientWorldSimulation clientWorldSimulation,
-			ShadowFBO shadow) {
+	public void draw(CameraEntity camera, ClientWorldSimulation clientWorldSimulation) {
 		if (updated) {
 			updateGlBuffers(vboID0, vboCapacity, buffer0);
 			updateGlBuffers(vboID1, vboCapacity, buffer1);
@@ -175,10 +169,8 @@ public class Tessellator {
 		shader.start();
 		shader.loadViewMatrix(camera.getViewMatrix(), camera.getPosition());
 		shader.loadProjectionMatrix(camera.getProjectionMatrix());
-		shader.loadLightMatrix(sunCamera.getViewMatrix());
 		shader.loadSettings((boolean) REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/shadows"));
 		shader.loadMoveFactor(clientWorldSimulation.getMoveFactor());
-		shader.loadBiasMatrix(((SunCamera) sunCamera).getProjectionArray());
 		shader.loadMaterial(material);
 		glBindVertexArray(vaoID);
 		glEnableVertexAttribArray(0);
@@ -192,14 +184,6 @@ public class Tessellator {
 		glBindTexture(GL_TEXTURE_2D, material.getRoughnessTexture().getID());
 		glActiveTexture(GL_TEXTURE3);
 		glBindTexture(GL_TEXTURE_2D, material.getMetallicTexture().getID());
-		glActiveTexture(GL_TEXTURE5);
-		glBindTexture(GL_TEXTURE_2D, shadow.getShadowMaps()[0]);
-		glActiveTexture(GL_TEXTURE6);
-		glBindTexture(GL_TEXTURE_2D, shadow.getShadowMaps()[1]);
-		glActiveTexture(GL_TEXTURE7);
-		glBindTexture(GL_TEXTURE_2D, shadow.getShadowMaps()[2]);
-		glActiveTexture(GL_TEXTURE8);
-		glBindTexture(GL_TEXTURE_2D, shadow.getShadowMaps()[3]);
 		glDrawElements(GL_TRIANGLES, indicesCounter, GL_UNSIGNED_INT, 0);
 		glDisableVertexAttribArray(0);
 		glDisableVertexAttribArray(1);

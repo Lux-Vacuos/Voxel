@@ -22,21 +22,12 @@ package net.luxvacuos.voxel.client.rendering.api.opengl.pipeline;
 
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11.glBindTexture;
-import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
-import static org.lwjgl.opengl.GL13.GL_TEXTURE1;
-import static org.lwjgl.opengl.GL13.GL_TEXTURE2;
-import static org.lwjgl.opengl.GL13.GL_TEXTURE3;
-import static org.lwjgl.opengl.GL13.GL_TEXTURE4;
-import static org.lwjgl.opengl.GL13.GL_TEXTURE5;
-import static org.lwjgl.opengl.GL13.GL_TEXTURE6;
 import static org.lwjgl.opengl.GL13.*;
-import static org.lwjgl.opengl.GL13.GL_TEXTURE8;
-import static org.lwjgl.opengl.GL13.GL_TEXTURE_CUBE_MAP;
-import static org.lwjgl.opengl.GL13.glActiveTexture;
 
 import net.luxvacuos.voxel.client.rendering.api.opengl.DeferredPass;
 import net.luxvacuos.voxel.client.rendering.api.opengl.FBO;
 import net.luxvacuos.voxel.client.rendering.api.opengl.IDeferredPipeline;
+import net.luxvacuos.voxel.client.rendering.api.opengl.ShadowFBO;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.CubeMapTexture;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.Texture;
 
@@ -48,7 +39,7 @@ public class Lighting extends DeferredPass {
 
 	@Override
 	public void render(FBO[] auxs, IDeferredPipeline pipe, CubeMapTexture irradianceCapture,
-			CubeMapTexture environmentMap, Texture brdfLUT) {
+			CubeMapTexture environmentMap, Texture brdfLUT, ShadowFBO shadow) {
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, pipe.getMainFBO().getDiffuseTex());
 		glActiveTexture(GL_TEXTURE1);
@@ -69,6 +60,14 @@ public class Lighting extends DeferredPass {
 		glBindTexture(GL_TEXTURE_CUBE_MAP, environmentMap.getID());
 		glActiveTexture(GL_TEXTURE9);
 		glBindTexture(GL_TEXTURE_2D, brdfLUT.getID());
+		glActiveTexture(GL_TEXTURE10);
+		glBindTexture(GL_TEXTURE_2D, shadow.getShadowMaps()[0]);
+		glActiveTexture(GL_TEXTURE11);
+		glBindTexture(GL_TEXTURE_2D, shadow.getShadowMaps()[1]);
+		glActiveTexture(GL_TEXTURE12);
+		glBindTexture(GL_TEXTURE_2D, shadow.getShadowMaps()[2]);
+		glActiveTexture(GL_TEXTURE13);
+		glBindTexture(GL_TEXTURE_2D, shadow.getShadowMaps()[3]);
 	}
 
 }

@@ -80,7 +80,7 @@ public class SPWorldState extends AbstractState {
 		this.world = new RenderWorld(ClientVariables.worldNameToLoad);
 		ClientVariables.worldNameToLoad = "";
 		Renderer.setDeferredPass((camera, sunCamera, frustum, shadowMap) -> {
-			((RenderWorld) world).render(camera, sunCamera, frustum, shadowMap);
+			((RenderWorld) world).render(camera, frustum);
 		});
 		Renderer.setShadowPass((camera, sunCamera, frustum, shadowMap) -> {
 			((RenderWorld) world).renderShadow(sunCamera, frustum);
@@ -100,8 +100,7 @@ public class SPWorldState extends AbstractState {
 		world.getActiveDimension().getEntitiesManager().addEntity(spawnChunks);
 
 		Renderer.render(world.getActiveDimension().getEntitiesManager().getEntities(), ParticleDomain.getParticles(),
-				camera, sun.getCamera(), world.getActiveDimension().getWorldSimulator(), sun.getSunPosition(),
-				sun.getInvertedSunPosition(), 0);
+				camera, world.getActiveDimension().getWorldSimulator(), sun, 0);
 		gameWindow = new GameWindow(0, ClientVariables.HEIGHT, ClientVariables.WIDTH, ClientVariables.HEIGHT);
 		WM.getWM().addWindow(0, gameWindow);
 	}
@@ -153,8 +152,7 @@ public class SPWorldState extends AbstractState {
 	@Override
 	public void render(AbstractVoxel voxel, float alpha) {
 		Renderer.render(world.getActiveDimension().getEntitiesManager().getEntities(), ParticleDomain.getParticles(),
-				camera, sun.getCamera(), world.getActiveDimension().getWorldSimulator(), sun.getSunPosition(),
-				sun.getInvertedSunPosition(), alpha);
+				camera, world.getActiveDimension().getWorldSimulator(), sun, alpha);
 		Renderer.clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		Renderer.clearColors(1, 1, 1, 1);
 		WM.getWM().render();

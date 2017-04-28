@@ -28,7 +28,6 @@ import com.hackhalo2.nbt.tags.TagCompound;
 import net.luxvacuos.voxel.client.core.ClientWorldSimulation;
 import net.luxvacuos.voxel.client.ecs.entities.CameraEntity;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Frustum;
-import net.luxvacuos.voxel.client.rendering.api.opengl.ShadowFBO;
 import net.luxvacuos.voxel.client.rendering.world.dimension.IRenderDimension;
 import net.luxvacuos.voxel.client.world.chunks.ClientChunkManager;
 import net.luxvacuos.voxel.client.world.chunks.RenderChunk;
@@ -63,7 +62,7 @@ public class RenderDimension extends Dimension implements IRenderDimension {
 	}
 
 	@Override
-	public void render(CameraEntity camera, CameraEntity sunCamera, Frustum frustum, ShadowFBO shadow) {
+	public void render(CameraEntity camera, Frustum frustum) {
 		this.renderedChunks = 0;
 		BoundingBox aabb;
 		RenderChunk rChunk;
@@ -95,7 +94,7 @@ public class RenderDimension extends Dimension implements IRenderDimension {
 						((ClientChunkManager) this.chunkManager).generateChunkMesh(rChunk);
 
 					this.renderedChunks++;
-					rChunk.render(camera, sunCamera, this.getWorldSimulator(), shadow);
+					rChunk.render(camera, this.getWorldSimulator());
 				}
 
 		}

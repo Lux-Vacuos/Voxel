@@ -29,7 +29,6 @@ import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.UniformBoole
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.UniformFloat;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.UniformMaterial;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.UniformMatrix;
-import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.UniformSampler;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.UniformVec3;
 
 public class TessellatorShader extends ShaderProgram {
@@ -44,42 +43,15 @@ public class TessellatorShader extends ShaderProgram {
 
 	private UniformMatrix projectionMatrix = new UniformMatrix("projectionMatrix");
 	private UniformMatrix viewMatrix = new UniformMatrix("viewMatrix");
-	private UniformMatrix biasMatrix = new UniformMatrix("biasMatrix");
-	private UniformMatrix projectionLightMatrix[];
-	private UniformMatrix viewLightMatrix = new UniformMatrix("viewLightMatrix");
-	private UniformSampler shadowMap[];
 	private UniformVec3 cameraPos = new UniformVec3("cameraPos");
 	private UniformFloat moveFactor = new UniformFloat("moveFactor");
 	private UniformBoolean useShadows = new UniformBoolean("useShadows");
 	private UniformMaterial material = new UniformMaterial("material");
 
-	private boolean loadedShadowMatrix = false;
-
 	private TessellatorShader() {
 		super(ClientVariables.VERTEX_FILE_TESSELLATOR, ClientVariables.FRAGMENT_FILE_TESSELLATOR,
 				new Attribute(0, "position"), new Attribute(1, "textureCoords"), new Attribute(2, "normal"));
-		projectionLightMatrix = new UniformMatrix[4];
-		for (int x = 0; x < 4; x++) {
-			projectionLightMatrix[x] = new UniformMatrix("projectionLightMatrix[" + x + "]");
-		}
-		super.storeUniformArray(projectionLightMatrix);
-		shadowMap = new UniformSampler[4];
-		for (int x = 0; x < 4; x++) {
-			shadowMap[x] = new UniformSampler("shadowMap[" + x + "]");
-		}
-		super.storeUniformArray(shadowMap);
-		super.storeAllUniformLocations(projectionMatrix, viewMatrix, biasMatrix, viewLightMatrix, moveFactor,
-				useShadows, cameraPos, material);
-		conectTextureUnits();
-	}
-
-	private void conectTextureUnits() {
-		super.start();
-		shadowMap[0].loadTexUnit(5);
-		shadowMap[1].loadTexUnit(6);
-		shadowMap[2].loadTexUnit(7);
-		shadowMap[3].loadTexUnit(8);
-		super.stop();
+		super.storeAllUniformLocations(projectionMatrix, viewMatrix, moveFactor, useShadows, cameraPos, material);
 	}
 
 	/**
@@ -97,29 +69,8 @@ public class TessellatorShader extends ShaderProgram {
 		cameraPos.loadVec3(cameraPosition);
 	}
 
-	public void loadBiasMatrix(Matrix4d[] shadowProjectionMatrix) {
-		if (!loadedShadowMatrix) {
-			Matrix4d biasMatrix = new Matrix4d();
-			biasMatrix.m00 = 0.5f;
-			biasMatrix.m11 = 0.5f;
-			biasMatrix.m22 = 0.5f;
-			biasMatrix.m30 = 0.5f;
-			biasMatrix.m31 = 0.5f;
-			biasMatrix.m32 = 0.5f;
-			this.biasMatrix.loadMatrix(biasMatrix);
-			for (int x = 0; x < 4; x++) {
-				this.projectionLightMatrix[x].loadMatrix(shadowProjectionMatrix[x]);
-			}
-			loadedShadowMatrix = true;
-		}
-	}
-
 	public void loadMaterial(Material mat) {
 		this.material.loadMaterial(mat);
-	}
-
-	public void loadLightMatrix(Matrix4d sunCameraViewMatrix) {
-		viewLightMatrix.loadMatrix(sunCameraViewMatrix);
 	}
 
 	public void loadMoveFactor(float factor) {
