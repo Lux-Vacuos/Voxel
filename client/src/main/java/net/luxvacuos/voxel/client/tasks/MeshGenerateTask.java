@@ -77,17 +77,15 @@ public class MeshGenerateTask implements Callable<IRenderChunk> {
 			if (b.isTransparent() || b.hasCustomModel() || b.isFluid())
 				return true;
 		}
-		if (!(face == BlockFace.UP || face == BlockFace.DOWN)) {
-			int cx = this.chunk.getX() * 16 + x;
-			int cz = this.chunk.getZ() * 16 + z;
-			b = ((RenderBlock) this.chunk.getDimension().getBlockAt(cx + face.getModX(), y + face.getModY(),
-					cz + face.getModZ()));
+		int cx = this.chunk.getX() * 16 + x;
+		int cz = this.chunk.getZ() * 16 + z;
+		b = ((RenderBlock) this.chunk.getDimension().getBlockAt(cx + face.getModX(), y + face.getModY(),
+				cz + face.getModZ()));
 
-			if (b == null || b.getID() == block.getID())
-				return false;
-			if (b.isTransparent() || b.hasCustomModel() || b.isFluid())
-				return true;
-		}
+		if (b == null || b.getID() == block.getID())
+			return false;
+		if (b.isTransparent() || b.hasCustomModel() || b.isFluid())
+			return true;
 		return false;
 	}
 

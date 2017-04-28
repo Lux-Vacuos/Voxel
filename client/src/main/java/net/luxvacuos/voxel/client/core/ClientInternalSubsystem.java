@@ -149,6 +149,7 @@ public class ClientInternalSubsystem extends AbstractInternalSubsystem {
 					.affectedByGravity(true).liquid().setOpacity(0.2f).done();
 			Blocks.register(new WaterBlock(waterMat, new BlockFaceAtlas("water")));
 			Blocks.register(new RenderBlock(new BlockMaterial("ice"), new BlockFaceAtlas("ice")));
+			//Blocks.register(new RenderBlock(new BlockMaterial("pedestal"), new BlockFaceAtlas("pedestaltop", "pedestalbottom", "pedestal")));
 			Blocks.finishRegister();
 		});
 	}
