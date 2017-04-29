@@ -75,6 +75,7 @@ public class ServerInternalSubsystem extends AbstractInternalSubsystem {
 
 	@Override
 	public void dispose() {
+		gameSettings.update();
 		gameSettings.save();
 	}
 

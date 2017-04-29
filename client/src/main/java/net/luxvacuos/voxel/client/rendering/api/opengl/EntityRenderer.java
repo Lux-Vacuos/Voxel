@@ -44,8 +44,8 @@ import com.badlogic.ashley.utils.ImmutableArray;
 
 import net.luxvacuos.igl.vector.Matrix4d;
 import net.luxvacuos.voxel.client.ecs.ClientComponents;
-import net.luxvacuos.voxel.client.ecs.components.Renderable;
 import net.luxvacuos.voxel.client.ecs.entities.CameraEntity;
+import net.luxvacuos.voxel.client.ecs.entities.RenderEntity;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.Material;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.RawModel;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.TexturedModel;
@@ -56,7 +56,6 @@ import net.luxvacuos.voxel.universal.ecs.Components;
 import net.luxvacuos.voxel.universal.ecs.components.Position;
 import net.luxvacuos.voxel.universal.ecs.components.Rotation;
 import net.luxvacuos.voxel.universal.ecs.components.Scale;
-import net.luxvacuos.voxel.universal.ecs.entities.AbstractEntity;
 
 /**
  * Entity Rendering
@@ -69,7 +68,7 @@ public class EntityRenderer {
 	 * Entity Shader
 	 */
 	private EntityShader shader;
-	private Map<TexturedModel, List<AbstractEntity>> entities = new HashMap<TexturedModel, List<AbstractEntity>>();
+	private Map<TexturedModel, List<RenderEntity>> entities = new HashMap<TexturedModel, List<RenderEntity>>();
 
 	public EntityRenderer(ResourceLoader loader) {
 		shader = new EntityShader();
@@ -81,8 +80,8 @@ public class EntityRenderer {
 
 	public void renderEntity(ImmutableArray<Entity> immutableArray, CameraEntity camera) {
 		for (Entity entity : immutableArray) {
-			if (entity instanceof AbstractEntity && entity.getComponent(Renderable.class) != null) {
-				processEntity((AbstractEntity) entity);
+			if (entity instanceof RenderEntity) {
+				processEntity((RenderEntity) entity);
 			}
 		}
 		renderEntity(camera);
@@ -97,24 +96,24 @@ public class EntityRenderer {
 		entities.clear();
 	}
 
-	private void processEntity(AbstractEntity entity) {
+	private void processEntity(RenderEntity entity) {
 		TexturedModel entityModel = ClientComponents.RENDERABLE.get(entity).getModel();
-		List<AbstractEntity> batch = entities.get(entityModel);
+		List<RenderEntity> batch = entities.get(entityModel);
 		if (batch != null) {
 			batch.add(entity);
 		} else {
-			List<AbstractEntity> newBatch = new ArrayList<AbstractEntity>();
+			List<RenderEntity> newBatch = new ArrayList<RenderEntity>();
 			newBatch.add(entity);
 			entities.put(entityModel, newBatch);
 		}
 	}
 
-	private void renderEntity(Map<TexturedModel, List<AbstractEntity>> blockEntities) {
+	private void renderEntity(Map<TexturedModel, List<RenderEntity>> blockEntities) {
 		for (TexturedModel model : blockEntities.keySet()) {
 			prepareTexturedModel(model);
-			List<AbstractEntity> batch = blockEntities.get(model);
+			List<RenderEntity> batch = blockEntities.get(model);
 			shader.loadMaterial(model.getMaterial());
-			for (AbstractEntity entity : batch) {
+			for (RenderEntity entity : batch) {
 				prepareInstance(entity);
 				glDrawElements(GL_TRIANGLES, model.getRawModel().getVertexCount(), GL_UNSIGNED_INT, 0);
 			}
@@ -149,7 +148,7 @@ public class EntityRenderer {
 		glBindVertexArray(0);
 	}
 
-	private void prepareInstance(AbstractEntity entity) {
+	private void prepareInstance(RenderEntity entity) {
 		Position pos = Components.POSITION.get(entity);
 		Rotation rot = Components.ROTATION.get(entity);
 		Scale scale = Components.SCALE.get(entity);

@@ -26,17 +26,22 @@ import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_MIDDLE;
 import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.core.states.StateNames;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
+import net.luxvacuos.voxel.client.rendering.api.nanovg.NanoWindow;
 import net.luxvacuos.voxel.client.ui.Alignment;
 import net.luxvacuos.voxel.client.ui.Button;
 import net.luxvacuos.voxel.client.ui.EditBox;
 import net.luxvacuos.voxel.client.ui.RootComponentWindow;
 import net.luxvacuos.voxel.client.ui.Text;
+import net.luxvacuos.voxel.universal.core.TaskManager;
 import net.luxvacuos.voxel.universal.core.states.StateMachine;
 
 public class MultiplayerMenu extends RootComponentWindow {
 
-	public MultiplayerMenu(float x, float y, float w, float h) {
+	private NanoWindow root;
+
+	public MultiplayerMenu(float x, float y, float w, float h, NanoWindow root) {
 		super(x, y, w, h, "Multiplayer");
+		this.root = root;
 	}
 
 	@Override
@@ -57,11 +62,14 @@ public class MultiplayerMenu extends RootComponentWindow {
 
 		playButton.setOnButtonPress(() -> {
 			String ip = address.getText();
-			if (ip.equals(""))
-				return;
-			ClientVariables.server = ip;
-			address.setText("");
-			StateMachine.setCurrentState(StateNames.MP_WORLD);
+			if (!ip.equals("")) {
+				ClientVariables.server = ip;
+				address.setText("");
+				super.closeWindow();
+				root.setWindowClose(WindowClose.DISPOSE);
+				root.closeWindow();
+				TaskManager.addTask(() -> StateMachine.setCurrentState(StateNames.MP_WORLD));
+			}
 		});
 
 		super.addComponent(address);

@@ -18,23 +18,26 @@
  * 
  */
 
-package net.luxvacuos.voxel.universal.ecs.entities;
+package net.luxvacuos.voxel.client.world;
 
-import net.luxvacuos.igl.vector.Vector3d;
-import net.luxvacuos.voxel.universal.ecs.Components;
-import net.luxvacuos.voxel.universal.ecs.components.ChunkLoader;
-import net.luxvacuos.voxel.universal.ecs.components.Position;
+import com.hackhalo2.nbt.tags.TagCompound;
 
-public class ChunkLoaderEntity extends VoxelEntity {
+import io.netty.channel.Channel;
+import net.luxvacuos.voxel.client.world.dimension.NetworkDimension;
+import net.luxvacuos.voxel.universal.world.dimension.IDimension;
 
-	public ChunkLoaderEntity(Vector3d position) {
-		super("loader");
-		super.add(new Position(position));
-		super.add(new ChunkLoader());
+public class NetworkWorld extends RenderWorld {
+
+	private Channel channel;
+	
+	public NetworkWorld(String name, Channel channel) {
+		super(name);
+		this.channel = channel;
 	}
-
-	public void setPosition(Vector3d position) {
-		Components.POSITION.get(this).set(position);
+	
+	@Override
+	protected IDimension createDimension(int id, TagCompound data) {
+		return new NetworkDimension(this, data, id, channel);
 	}
 
 }

@@ -24,9 +24,6 @@ import static net.luxvacuos.voxel.universal.core.GlobalVariables.REGISTRY;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 
-import java.nio.FloatBuffer;
-
-import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFW;
 
 import net.luxvacuos.igl.vector.Matrix4d;
@@ -48,6 +45,7 @@ import net.luxvacuos.voxel.client.rendering.api.opengl.Renderer;
 import net.luxvacuos.voxel.client.ui.menus.GameWindow;
 import net.luxvacuos.voxel.client.ui.menus.PauseWindow;
 import net.luxvacuos.voxel.client.util.Maths;
+import net.luxvacuos.voxel.client.world.NetworkWorld;
 import net.luxvacuos.voxel.client.world.RenderWorld;
 import net.luxvacuos.voxel.client.world.dimension.RenderDimension;
 import net.luxvacuos.voxel.universal.core.AbstractVoxel;
@@ -55,6 +53,8 @@ import net.luxvacuos.voxel.universal.core.GlobalVariables;
 import net.luxvacuos.voxel.universal.core.states.AbstractState;
 import net.luxvacuos.voxel.universal.core.states.StateMachine;
 import net.luxvacuos.voxel.universal.ecs.entities.ChunkLoaderEntity;
+import net.luxvacuos.voxel.universal.network.packets.ClientConnect;
+import net.luxvacuos.voxel.universal.network.packets.ClientDisconnect;
 import net.luxvacuos.voxel.universal.world.IWorld;
 
 public class MPWorldState extends AbstractState {
@@ -70,9 +70,6 @@ public class MPWorldState extends AbstractState {
 
 	private IWorld world;
 
-	FloatBuffer p;
-	FloatBuffer c;
-
 	public MPWorldState() {
 		super(StateNames.MP_WORLD);
 	}
@@ -80,11 +77,11 @@ public class MPWorldState extends AbstractState {
 	@Override
 	public void start() {
 		super.start();
-
-		this.world = new RenderWorld(ClientVariables.worldNameToLoad);
+		client.setHost(ClientVariables.server);
+		client.setPort(44454);
+		client.run(this);
+		this.world = new NetworkWorld("mp", client.getChannel());
 		ClientVariables.worldNameToLoad = "";
-		Window window = ClientInternalSubsystem.getInstance().getGameWindow();
-
 		Renderer.setDeferredPass((camera, sunCamera, frustum, shadowMap) -> {
 			((RenderWorld) world).render(camera, frustum);
 		});
@@ -107,24 +104,23 @@ public class MPWorldState extends AbstractState {
 
 		Renderer.render(world.getActiveDimension().getEntitiesManager().getEntities(), ParticleDomain.getParticles(),
 				camera, world.getActiveDimension().getWorldSimulator(), sun, 0);
-		gameWindow = new GameWindow(-2, window.getHeight() + 33, window.getWidth() + 4, window.getHeight() + 35);
+		gameWindow = new GameWindow(0, ClientVariables.HEIGHT, ClientVariables.WIDTH, ClientVariables.HEIGHT);
 		WM.getWM().addWindow(0, gameWindow);
-		client.setHost(ClientVariables.server);
-		client.setPort(44454);
-		client.run(this);
+		client.getChannel()
+				.writeAndFlush(new ClientConnect(ClientVariables.user.getUUID(), ClientVariables.user.getUsername()));
 	}
 
 	@Override
 	public void end() {
 		super.end();
+		client.getChannel().writeAndFlush(
+				new ClientDisconnect(ClientVariables.user.getUUID(), ClientVariables.user.getUsername()));
 		client.end();
 		world.dispose();
 	}
 
 	@Override
 	public void init() {
-		p = BufferUtils.createFloatBuffer(1);
-		c = BufferUtils.createFloatBuffer(3);
 		Window window = ClientInternalSubsystem.getInstance().getGameWindow();
 
 		Matrix4d[] shadowProjectionMatrix = new Matrix4d[4];
@@ -144,7 +140,8 @@ public class MPWorldState extends AbstractState {
 				(int) REGISTRY.getRegistryItem("/Voxel/Settings/Core/fov"), ClientVariables.NEAR_PLANE,
 				ClientVariables.FAR_PLANE);
 
-		camera = new PlayerCamera(projectionMatrix, window);
+		camera = new PlayerCamera(projectionMatrix, ClientVariables.user.getUsername(),
+				ClientVariables.user.getUUID().toString());
 		sun = new Sun(shadowProjectionMatrix);
 
 		blockOutlineRenderer = new BlockOutlineRenderer(window.getResourceLoader());
@@ -182,16 +179,17 @@ public class MPWorldState extends AbstractState {
 			ParticleDomain.update(delta, camera);
 			blockOutlineRenderer.getPosition().set(((PlayerCamera) camera).getBlockOutlinePos());
 
-			if (kbh.isKeyPressed(GLFW.GLFW_KEY_F1))
-				ClientVariables.debug = !ClientVariables.debug;
 			if (kbh.isKeyPressed(GLFW.GLFW_KEY_R))
 				ClientVariables.raining = !ClientVariables.raining;
 			if (kbh.isKeyPressed(GLFW.GLFW_KEY_ESCAPE)) {
 				kbh.ignoreKeyUntilRelease(GLFW.GLFW_KEY_ESCAPE);
 				((PlayerCamera) camera).unlockMouse();
 				ClientVariables.paused = true;
-				pauseWindow = new PauseWindow(20, window.getHeight() - 20, window.getWidth() - 40,
-						window.getHeight() - 40);
+				float borderSize = (float) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/borderSize");
+				float titleBarHeight = (float) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/titleBarHeight");
+				pauseWindow = new PauseWindow(borderSize + 10, ClientVariables.HEIGHT - titleBarHeight - 10,
+						ClientVariables.WIDTH - borderSize * 2f - 20,
+						ClientVariables.HEIGHT - titleBarHeight - borderSize - 20);
 				WM.getWM().addWindow(pauseWindow);
 			}
 		} else if (ClientVariables.exitWorld) {

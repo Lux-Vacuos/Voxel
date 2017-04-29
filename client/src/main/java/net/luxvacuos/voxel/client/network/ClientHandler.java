@@ -1,14 +1,22 @@
 package net.luxvacuos.voxel.client.network;
 
+import static net.luxvacuos.voxel.universal.core.GlobalVariables.REGISTRY;
+
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.util.ReferenceCountUtil;
 import net.luxvacuos.igl.Logger;
 import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.core.states.MPWorldState;
+import net.luxvacuos.voxel.client.rendering.api.nanovg.WM;
+import net.luxvacuos.voxel.client.ui.RootComponentWindow;
+import net.luxvacuos.voxel.client.ui.menus.MainMenu;
+import net.luxvacuos.voxel.client.world.dimension.NetworkDimension;
 import net.luxvacuos.voxel.universal.network.packets.Disconnect;
 import net.luxvacuos.voxel.universal.network.packets.Message;
+import net.luxvacuos.voxel.universal.network.packets.SetBlock;
 import net.luxvacuos.voxel.universal.network.packets.Time;
+import net.luxvacuos.voxel.universal.world.block.Blocks;
 
 public class ClientHandler extends ChannelInboundHandlerAdapter {
 
@@ -29,6 +37,8 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
 				handleTime((Time) obj);
 			} else if (obj instanceof Disconnect) {
 				handleDisconnect((Disconnect) obj);
+			} else if (obj instanceof SetBlock) {
+				handleSetBlock((SetBlock) obj);
 			}
 		} finally {
 			ReferenceCountUtil.release(obj);
@@ -54,6 +64,17 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
 	}
 
 	private void handleDisconnect(Disconnect disconnect) {
+		float borderSize = (float) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/borderSize");
+		float titleBarHeight = (float) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/titleBarHeight");
+		RootComponentWindow mainMenu = new MainMenu(borderSize + 10, ClientVariables.HEIGHT - titleBarHeight - 10,
+				ClientVariables.WIDTH - borderSize * 2f - 20,
+				ClientVariables.HEIGHT - titleBarHeight - borderSize - 20);
+		WM.getWM().addWindow(mainMenu);
 		ClientVariables.exitWorld = true;
+	}
+
+	private void handleSetBlock(SetBlock obj) {
+		NetworkDimension dim = (NetworkDimension) state.getWorld().getActiveDimension();
+		dim.setBlockAtFromN(obj.getX(), obj.getY(), obj.getZ(), Blocks.getBlockByID(obj.getBlock()));
 	}
 }

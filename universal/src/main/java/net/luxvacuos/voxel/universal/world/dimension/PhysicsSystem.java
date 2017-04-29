@@ -36,7 +36,7 @@ import net.luxvacuos.voxel.universal.ecs.components.AABB;
 import net.luxvacuos.voxel.universal.ecs.components.Health;
 import net.luxvacuos.voxel.universal.ecs.components.Position;
 import net.luxvacuos.voxel.universal.ecs.components.Velocity;
-import net.luxvacuos.voxel.universal.ecs.entities.AbstractEntity;
+import net.luxvacuos.voxel.universal.ecs.entities.VoxelEntity;
 
 public class PhysicsSystem extends EntitySystem {
 	private ImmutableArray<Entity> entities;
@@ -64,8 +64,11 @@ public class PhysicsSystem extends EntitySystem {
 			AABB aabb = Components.AABB.get(entity);
 			Health health = Components.HEALTH.get(entity);
 
-			if (entity instanceof AbstractEntity)
-				((AbstractEntity) entity).update(delta, dim);
+			if (entity instanceof VoxelEntity)
+				((VoxelEntity) entity).beforeUpdate(delta);
+
+			if (entity instanceof VoxelEntity)
+				((VoxelEntity) entity).update(delta);
 
 			velocity.setX(velocity.getX() * 0.7f - velocity.getX() * 0.0001f);
 			velocity.setY(velocity.getY() - 15f * delta);
@@ -114,8 +117,11 @@ public class PhysicsSystem extends EntitySystem {
 			pos.setY(pos.getY() + velocity.getY() * delta);
 			pos.setZ(pos.getZ() + velocity.getZ() * delta);
 
-			if (entity instanceof AbstractEntity)
-				((AbstractEntity) entity).afterUpdate(delta, dim);
+			if (entity instanceof VoxelEntity)
+				((VoxelEntity) entity).afterUpdate(delta);
+			
+			if (entity instanceof VoxelEntity)
+				((VoxelEntity) entity).updateDim(delta, dim);
 
 		}
 	}

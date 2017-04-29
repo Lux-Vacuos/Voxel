@@ -21,11 +21,10 @@
 package net.luxvacuos.voxel.client.network;
 
 import io.netty.bootstrap.Bootstrap;
-import io.netty.channel.ChannelFuture;
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.ChannelPipeline;
-import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
@@ -33,11 +32,10 @@ import io.netty.handler.codec.serialization.ClassResolvers;
 import io.netty.handler.codec.serialization.ObjectDecoder;
 import io.netty.handler.codec.serialization.ObjectEncoder;
 import net.luxvacuos.voxel.client.core.states.MPWorldState;
+import net.luxvacuos.voxel.universal.network.AbstractNettyNetworkHandler;
 
-public class Client {
+public class Client extends AbstractNettyNetworkHandler {
 
-	private ChannelFuture f;
-	private EventLoopGroup workerGroup;
 	private String host;
 	private int port;
 
@@ -45,10 +43,10 @@ public class Client {
 	}
 
 	public void run(MPWorldState state) {
-		workerGroup = new NioEventLoopGroup();
+		workGroup = new NioEventLoopGroup();
 		try {
 			Bootstrap b = new Bootstrap();
-			b.group(workerGroup);
+			b.group(workGroup);
 			b.channel(NioSocketChannel.class);
 			b.option(ChannelOption.SO_KEEPALIVE, true);
 			b.handler(new ChannelInitializer<SocketChannel>() {
@@ -61,20 +59,24 @@ public class Client {
 					pipeline.addLast("handler", new ClientHandler(state));
 				}
 			});
-			f = b.connect(host, port).sync();
+			future = b.connect(host, port).sync();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
 	}
 
 	public void end() {
-		workerGroup.shutdownGracefully();
+		workGroup.shutdownGracefully();
 		try {
-			if (f != null)
-				f.channel().closeFuture().sync();
+			if (future != null)
+				future.channel().closeFuture().sync();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public Channel getChannel() {
+		return future.channel();
 	}
 
 	public void setHost(String host) {

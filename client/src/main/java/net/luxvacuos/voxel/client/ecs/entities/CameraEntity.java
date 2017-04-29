@@ -27,22 +27,25 @@ import net.luxvacuos.voxel.client.ecs.components.ProjectionMatrix;
 import net.luxvacuos.voxel.client.ecs.components.ViewMatrix;
 import net.luxvacuos.voxel.client.resources.CastRay;
 import net.luxvacuos.voxel.universal.ecs.Components;
-import net.luxvacuos.voxel.universal.ecs.components.Position;
-import net.luxvacuos.voxel.universal.ecs.components.Rotation;
-import net.luxvacuos.voxel.universal.ecs.entities.AbstractEntity;
+import net.luxvacuos.voxel.universal.ecs.entities.PlayerEntity;
 
 /**
  * Camera
  * 
  * @author Guerra24 <pablo230699@hotmail.com>
  */
-public class CameraEntity extends AbstractEntity {
+public class CameraEntity extends PlayerEntity {
 
 	protected CastRay castRay;
 
-	protected CameraEntity() {
-		this.add(new Position());
-		this.add(new Rotation());
+	protected CameraEntity(String name) {
+		super(name);
+		this.add(new ViewMatrix(new Matrix4d()));
+		this.add(new ProjectionMatrix(new Matrix4d()));
+	}
+
+	protected CameraEntity(String name, String uuid) {
+		super(name, uuid);
 		this.add(new ViewMatrix(new Matrix4d()));
 		this.add(new ProjectionMatrix(new Matrix4d()));
 	}

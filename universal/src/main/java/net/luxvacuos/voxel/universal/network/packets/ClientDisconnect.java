@@ -18,19 +18,29 @@
  * 
  */
 
-package net.luxvacuos.voxel.universal.ecs.entities;
 
-import com.badlogic.ashley.core.Entity;
+package net.luxvacuos.voxel.universal.network.packets;
 
-import net.luxvacuos.voxel.universal.world.dimension.IDimension;
+import java.io.Serializable;
+import java.util.UUID;
 
-public abstract class AbstractEntity extends Entity {
+public class ClientDisconnect implements Serializable {
+	
+	private static final long serialVersionUID = -412901296311160346L;
+	private UUID uuid;
+	private String name;
 
-	public void update(float delta, IDimension dimension) {
-
+	public ClientDisconnect(UUID uuid, String name) {
+		this.uuid = uuid;
+		this.name = name;
 	}
 
-	public void afterUpdate(float delta, IDimension dimension) {
-
+	public UUID getUuid() {
+		return uuid;
 	}
+
+	public String getName() {
+		return name;
+	}
+
 }

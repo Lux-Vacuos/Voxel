@@ -18,23 +18,28 @@
  * 
  */
 
-package net.luxvacuos.voxel.universal.ecs.entities;
+package net.luxvacuos.voxel.universal.network.packets;
 
-import net.luxvacuos.igl.vector.Vector3d;
-import net.luxvacuos.voxel.universal.ecs.Components;
-import net.luxvacuos.voxel.universal.ecs.components.ChunkLoader;
-import net.luxvacuos.voxel.universal.ecs.components.Position;
+import java.io.Serializable;
+import java.util.UUID;
 
-public class ChunkLoaderEntity extends VoxelEntity {
+public class ClientConnect implements Serializable {
 
-	public ChunkLoaderEntity(Vector3d position) {
-		super("loader");
-		super.add(new Position(position));
-		super.add(new ChunkLoader());
+	private static final long serialVersionUID = -3582448215718975795L;
+	private UUID uuid;
+	private String name;
+
+	public ClientConnect(UUID uuid, String name) {
+		this.uuid = uuid;
+		this.name = name;
 	}
 
-	public void setPosition(Vector3d position) {
-		Components.POSITION.get(this).set(position);
+	public UUID getUuid() {
+		return uuid;
+	}
+
+	public String getName() {
+		return name;
 	}
 
 }

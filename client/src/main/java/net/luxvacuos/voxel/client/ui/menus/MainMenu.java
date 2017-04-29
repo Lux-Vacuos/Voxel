@@ -80,7 +80,7 @@ public class MainMenu extends RootComponentWindow {
 		});
 
 		playMPButton.setOnButtonPress(() -> {
-			WM.getWM().addWindow(new MultiplayerMenu(w / 2 - 250 + x, y - 100, 500, 400));
+			WM.getWM().addWindow(new MultiplayerMenu(w / 2 - 250 + x, y - 100, 500, 400, this));
 		});
 
 		optionsButton.setOnButtonPress(() -> {

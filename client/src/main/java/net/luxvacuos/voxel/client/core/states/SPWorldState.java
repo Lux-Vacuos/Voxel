@@ -24,9 +24,6 @@ import static net.luxvacuos.voxel.universal.core.GlobalVariables.REGISTRY;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 
-import java.nio.FloatBuffer;
-
-import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFW;
 
 import net.luxvacuos.igl.vector.Matrix4d;
@@ -65,9 +62,6 @@ public class SPWorldState extends AbstractState {
 	private PauseWindow pauseWindow;
 
 	private IWorld world;
-
-	FloatBuffer p;
-	FloatBuffer c;
 
 	public SPWorldState() {
 		super(StateNames.SP_WORLD);
@@ -113,8 +107,6 @@ public class SPWorldState extends AbstractState {
 
 	@Override
 	public void init() {
-		p = BufferUtils.createFloatBuffer(1);
-		c = BufferUtils.createFloatBuffer(3);
 		Window window = ClientInternalSubsystem.getInstance().getGameWindow();
 
 		Matrix4d[] shadowProjectionMatrix = new Matrix4d[4];
@@ -134,7 +126,8 @@ public class SPWorldState extends AbstractState {
 				(int) REGISTRY.getRegistryItem("/Voxel/Settings/Core/fov"), ClientVariables.NEAR_PLANE,
 				ClientVariables.FAR_PLANE);
 
-		camera = new PlayerCamera(projectionMatrix, window);
+		camera = new PlayerCamera(projectionMatrix, ClientVariables.user.getUsername(),
+				ClientVariables.user.getUUID().toString());
 		sun = new Sun(shadowProjectionMatrix);
 
 		blockOutlineRenderer = new BlockOutlineRenderer(window.getResourceLoader());

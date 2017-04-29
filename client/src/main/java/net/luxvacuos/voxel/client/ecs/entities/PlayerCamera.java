@@ -24,7 +24,6 @@ import static net.luxvacuos.voxel.client.input.Mouse.getDX;
 import static net.luxvacuos.voxel.client.input.Mouse.getDY;
 import static net.luxvacuos.voxel.client.input.Mouse.setCursorPosition;
 import static net.luxvacuos.voxel.client.input.Mouse.setGrabbed;
-import static net.luxvacuos.voxel.universal.core.GlobalVariables.REGISTRY;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +38,7 @@ import net.luxvacuos.igl.vector.Matrix4d;
 import net.luxvacuos.igl.vector.Vector2d;
 import net.luxvacuos.igl.vector.Vector3d;
 import net.luxvacuos.voxel.client.core.ClientInternalSubsystem;
+import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.ecs.ClientComponents;
 import net.luxvacuos.voxel.client.input.KeyboardHandler;
 import net.luxvacuos.voxel.client.input.Mouse;
@@ -47,12 +47,7 @@ import net.luxvacuos.voxel.client.resources.CastRay;
 import net.luxvacuos.voxel.client.util.Maths;
 import net.luxvacuos.voxel.universal.core.GlobalVariables;
 import net.luxvacuos.voxel.universal.ecs.Components;
-import net.luxvacuos.voxel.universal.ecs.components.AABB;
-import net.luxvacuos.voxel.universal.ecs.components.ChunkLoader;
-import net.luxvacuos.voxel.universal.ecs.components.Health;
-import net.luxvacuos.voxel.universal.ecs.components.Player;
 import net.luxvacuos.voxel.universal.ecs.components.Rotation;
-import net.luxvacuos.voxel.universal.ecs.components.Scale;
 import net.luxvacuos.voxel.universal.ecs.components.Velocity;
 import net.luxvacuos.voxel.universal.tools.ToolTier;
 import net.luxvacuos.voxel.universal.world.block.Blocks;
@@ -81,26 +76,22 @@ public class PlayerCamera extends CameraEntity {
 	private Vector3d normalTMP = new Vector3d();
 	private double depthTMP;
 
-	public PlayerCamera(Matrix4d projectionMatrix, Window window) {
-		this.add(new Player());
-		this.add(new Velocity());
-		this.add(new Scale());
-		this.add(new AABB(new Vector3d(-0.25f, -1.5f, -0.25f), new Vector3d(0.25f, 0.2f, 0.25f)));
+	public PlayerCamera(Matrix4d projectionMatrix, String name, String uuid) {
+		super(name, uuid);
 		this.speed = 1f;
-		this.add(new Health(20));
-		this.add(new ChunkLoader((int) REGISTRY.getRegistryItem("/Voxel/Settings/World/chunkRadius")));
 
 		if (flyMode)
 			Components.AABB.get(this).setEnabled(false);
 
 		ClientComponents.PROJECTION_MATRIX.get(this).setProjectionMatrix(projectionMatrix);
 		ClientComponents.VIEW_MATRIX.get(this).setViewMatrix(Maths.createViewMatrix(this));
-		center = new Vector2d(window.getWidth() / 2, window.getHeight() / 2);
-		castRay = new CastRay(getProjectionMatrix(), getViewMatrix(), center, window.getWidth(), window.getHeight());
+		center = new Vector2d(ClientVariables.WIDTH / 2, ClientVariables.HEIGHT / 2);
+		castRay = new CastRay(getProjectionMatrix(), getViewMatrix(), center, ClientVariables.WIDTH,
+				ClientVariables.HEIGHT);
 	}
 
 	@Override
-	public void update(float delta, IDimension dimension) {
+	public void update(float delta) {
 		Window window = ClientInternalSubsystem.getInstance().getGameWindow();
 		KeyboardHandler kbh = window.getKeyboardHandler();
 		Rotation rotation = Components.ROTATION.get(this);
@@ -258,11 +249,14 @@ public class PlayerCamera extends CameraEntity {
 	}
 
 	@Override
-	public void afterUpdate(float delta, IDimension dimension) {
-		Window window = ClientInternalSubsystem.getInstance().getGameWindow();
+	public void afterUpdate(float delta) {
 		ClientComponents.VIEW_MATRIX.get(this).setViewMatrix(Maths.createViewMatrix(this));
-		castRay.update(getProjectionMatrix(), getViewMatrix(), center, window.getWidth(), window.getHeight());
-		setBlock(Blocks.getBlockByName("stone"), dimension, delta);
+	}
+
+	@Override
+	public void updateDim(float delta, IDimension dim) {
+		castRay.update(getProjectionMatrix(), getViewMatrix(), center, ClientVariables.WIDTH, ClientVariables.HEIGHT);
+		setBlock(Blocks.getBlockByName("stone"), dim, delta);
 	}
 
 	public void setMouse() {

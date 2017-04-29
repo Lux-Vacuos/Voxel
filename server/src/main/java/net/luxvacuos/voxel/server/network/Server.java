@@ -21,7 +21,6 @@
 package net.luxvacuos.voxel.server.network;
 
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.ChannelPipeline;
@@ -34,12 +33,11 @@ import io.netty.handler.codec.serialization.ObjectDecoder;
 import io.netty.handler.codec.serialization.ObjectEncoder;
 import net.luxvacuos.igl.Logger;
 import net.luxvacuos.voxel.server.core.states.MPWorldState;
+import net.luxvacuos.voxel.universal.network.AbstractNettyNetworkHandler;
 
-public class Server {
+public class Server extends AbstractNettyNetworkHandler {
 
-	private ChannelFuture f;
 	private EventLoopGroup bossGroup;
-	private EventLoopGroup workerGroup;
 	private int port;
 
 	public Server(int port) {
@@ -49,10 +47,10 @@ public class Server {
 	public void run(MPWorldState state) {
 		Logger.log("Starting Netty Server");
 		bossGroup = new NioEventLoopGroup();
-		workerGroup = new NioEventLoopGroup();
+		workGroup = new NioEventLoopGroup();
 		try {
 			ServerBootstrap b = new ServerBootstrap();
-			b.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class)
+			b.group(bossGroup, workGroup).channel(NioServerSocketChannel.class)
 					.childHandler(new ChannelInitializer<SocketChannel>() {
 						@Override
 						public void initChannel(SocketChannel channel) throws Exception {
@@ -63,17 +61,17 @@ public class Server {
 							pipeline.addLast("handler", new ServerHandler(state));
 						}
 					}).option(ChannelOption.SO_BACKLOG, 128).childOption(ChannelOption.SO_KEEPALIVE, true);
-			f = b.bind(port).sync();
+			future = b.bind(port).sync();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
 	}
 
 	public void end() {
-		workerGroup.shutdownGracefully();
+		workGroup.shutdownGracefully();
 		bossGroup.shutdownGracefully();
 		try {
-			f.channel().closeFuture().sync();
+			future.channel().closeFuture().sync();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}

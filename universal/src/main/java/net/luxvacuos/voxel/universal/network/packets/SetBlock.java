@@ -18,23 +18,37 @@
  * 
  */
 
-package net.luxvacuos.voxel.universal.ecs.entities;
+package net.luxvacuos.voxel.universal.network.packets;
 
-import net.luxvacuos.igl.vector.Vector3d;
-import net.luxvacuos.voxel.universal.ecs.Components;
-import net.luxvacuos.voxel.universal.ecs.components.ChunkLoader;
-import net.luxvacuos.voxel.universal.ecs.components.Position;
+import java.io.Serializable;
 
-public class ChunkLoaderEntity extends VoxelEntity {
+public class SetBlock implements Serializable {
 
-	public ChunkLoaderEntity(Vector3d position) {
-		super("loader");
-		super.add(new Position(position));
-		super.add(new ChunkLoader());
+	private static final long serialVersionUID = 5816401172772848175L;
+	private int x, y, z;
+	private int block;
+
+	public SetBlock(int x, int y, int z, int block) {
+		this.x = x;
+		this.y = y;
+		this.z = z;
+		this.block = block;
 	}
 
-	public void setPosition(Vector3d position) {
-		Components.POSITION.get(this).set(position);
+	public int getX() {
+		return x;
+	}
+
+	public int getY() {
+		return y;
+	}
+
+	public int getZ() {
+		return z;
+	}
+
+	public int getBlock() {
+		return block;
 	}
 
 }

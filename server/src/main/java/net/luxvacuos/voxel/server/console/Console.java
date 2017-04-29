@@ -46,6 +46,7 @@ public class Console {
 			}
 		});
 		thread.setDaemon(true);
+		thread.setName("Commands");
 		thread.start();
 	}
 

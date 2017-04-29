@@ -38,7 +38,7 @@ import net.luxvacuos.voxel.client.core.ClientInternalSubsystem;
 import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.core.ClientWorldSimulation;
 import net.luxvacuos.voxel.client.ecs.EntityResources;
-import net.luxvacuos.voxel.client.ecs.entities.BasicEntity;
+import net.luxvacuos.voxel.client.ecs.entities.RenderEntity;
 import net.luxvacuos.voxel.client.ecs.entities.CameraEntity;
 import net.luxvacuos.voxel.client.ecs.entities.PlayerCamera;
 import net.luxvacuos.voxel.client.ecs.entities.Sun;
@@ -88,7 +88,7 @@ public class TestState extends AbstractState {
 	private GameWindow gameWindow;
 	private PauseWindow pauseWindow;
 
-	private BasicEntity mat1, mat2, mat3, mat4, mat5, rocket, plane, character, cerberus;
+	private RenderEntity mat1, mat2, mat3, mat4, mat5, rocket, plane, character, cerberus;
 
 	private TexturedModel sphere, dragon, rocketM, planeM, characterM, cerberusM;
 	private ParticleTexture fire;
@@ -119,7 +119,8 @@ public class TestState extends AbstractState {
 				(int) REGISTRY.getRegistryItem("/Voxel/Settings/Core/fov"), ClientVariables.NEAR_PLANE,
 				ClientVariables.FAR_PLANE);
 
-		camera = new PlayerCamera(projectionMatrix, window);
+		camera = new PlayerCamera(projectionMatrix, ClientVariables.user.getUsername(),
+				ClientVariables.user.getUUID().toString());
 		camera.setPosition(new Vector3d(0, 2, 0));
 		sun = new Sun(shadowProjectionMatrix);
 
@@ -146,16 +147,16 @@ public class TestState extends AbstractState {
 		Renderer.getLightRenderer().addLight(new Light(new Vector3d(8, 5, 8), new Vector3f(1, 1, 1)));
 		Renderer.getLightRenderer().addLight(new Light(new Vector3d(0, 5, 0), new Vector3f(1, 1, 1)));
 
-		mat1 = new BasicEntity(sphere);
+		mat1 = new RenderEntity("",sphere);
 		mat1.getComponent(Position.class).set(0, 1, 0);
 
-		mat2 = new BasicEntity(sphere);
+		mat2 = new RenderEntity("",sphere);
 		mat2.getComponent(Position.class).set(3, 1, 0);
 
-		mat3 = new BasicEntity(sphere);
+		mat3 = new RenderEntity("",sphere);
 		mat3.getComponent(Position.class).set(6, 1, 0);
 
-		mat4 = new BasicEntity(sphere);
+		mat4 = new RenderEntity("",sphere);
 		mat4.getComponent(Position.class).set(9, 1, 0);
 
 		Material dragonMat = new Material(new Vector4f(1), 1f, 0f);
@@ -165,7 +166,7 @@ public class TestState extends AbstractState {
 
 		dragon = new TexturedModel(loader.loadObjModel("test_state/dragon"), dragonMat);
 
-		mat5 = new BasicEntity(dragon);
+		mat5 = new RenderEntity("",dragon);
 
 		mat5.getComponent(Position.class).set(-7, 0, 0);
 		mat5.getComponent(Scale.class).setScale(0.5f);
@@ -173,7 +174,7 @@ public class TestState extends AbstractState {
 		rocketM = new TexturedModel(loader.loadObjModel("test_state/Rocket"),
 				new Material(new Vector4f(0.8f, 0.8f, 0.8f, 1.0f), 0.5f, 0));
 
-		rocket = new BasicEntity(rocketM);
+		rocket = new RenderEntity("",rocketM);
 		rocket.getComponent(Position.class).set(0, 0, -5);
 
 		Material planeMat = new Material(new Vector4f(1), 1f, 0);
@@ -183,7 +184,7 @@ public class TestState extends AbstractState {
 
 		planeM = new TexturedModel(loader.loadObjModel("test_state/plane"), planeMat);
 
-		plane = new BasicEntity(planeM);
+		plane = new RenderEntity("",planeM);
 		plane.getComponent(Scale.class).setScale(2f);
 
 		Material characterMat = new Material(new Vector4f(1), 0.5f, 0);
@@ -191,7 +192,7 @@ public class TestState extends AbstractState {
 
 		characterM = new TexturedModel(loader.loadObjModel("test_state/character"), characterMat);
 
-		character = new BasicEntity(characterM);
+		character = new RenderEntity("",characterM);
 		character.getComponent(Position.class).set(0, 0, 5);
 		character.getComponent(Scale.class).setScale(0.21f);
 
@@ -203,7 +204,7 @@ public class TestState extends AbstractState {
 
 		cerberusM = new TexturedModel(loader.loadObjModel("test_state/cerberus"), cerberusMat);
 
-		cerberus = new BasicEntity(cerberusM);
+		cerberus = new RenderEntity("",cerberusM);
 		cerberus.getComponent(Position.class).set(5, 1.25f, 5);
 		cerberus.getComponent(Scale.class).setScale(0.5f);
 

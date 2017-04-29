@@ -28,12 +28,19 @@ import net.luxvacuos.voxel.universal.ecs.components.NBTComponent;
 import net.luxvacuos.voxel.universal.ecs.components.Name;
 import net.luxvacuos.voxel.universal.ecs.components.UUIDComponent;
 import net.luxvacuos.voxel.universal.util.IUpdatable;
+import net.luxvacuos.voxel.universal.world.dimension.IDimension;
 
 public class VoxelEntity extends Entity implements IUpdatable {
 
 	public VoxelEntity(String name) {
 		this.add(new Name(name));
 		this.add(new UUIDComponent());
+		this.add(new NBTComponent());
+	}
+	
+	public VoxelEntity(String name, String uuid) {
+		this.add(new Name(name));
+		this.add(new UUIDComponent(uuid));
 		this.add(new NBTComponent());
 	}
 	
@@ -51,6 +58,11 @@ public class VoxelEntity extends Entity implements IUpdatable {
 	}
 	
 	public void afterUpdate(float delta) {
+		
+	}
+	
+	//XXX: This needs a better way to update
+	public void updateDim(float delta, IDimension dim){
 		
 	}
 	
