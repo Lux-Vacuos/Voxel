@@ -21,6 +21,9 @@
 package net.luxvacuos.voxel.client.core;
 
 import static net.luxvacuos.voxel.universal.core.GlobalVariables.REGISTRY;
+import static org.lwjgl.assimp.Assimp.aiGetVersionMajor;
+import static org.lwjgl.assimp.Assimp.aiGetVersionMinor;
+import static org.lwjgl.assimp.Assimp.aiGetVersionRevision;
 import static org.lwjgl.glfw.GLFW.glfwInit;
 import static org.lwjgl.opengl.GL11.GL_RENDERER;
 import static org.lwjgl.opengl.GL11.GL_VENDOR;
@@ -53,6 +56,7 @@ import net.luxvacuos.voxel.universal.api.ModsHandler;
 import net.luxvacuos.voxel.universal.bootstrap.AbstractBootstrap;
 import net.luxvacuos.voxel.universal.core.AbstractVoxel;
 import net.luxvacuos.voxel.universal.core.EngineType;
+import net.luxvacuos.voxel.universal.core.GlobalVariables;
 import net.luxvacuos.voxel.universal.core.TaskManager;
 import net.luxvacuos.voxel.universal.core.states.StateMachine;
 import net.luxvacuos.voxel.universal.util.PerRunLog;
@@ -104,8 +108,9 @@ public class Voxel extends AbstractVoxel {
 		if (!glfwInit())
 			throw new IllegalStateException("Unable to initialize GLFW");
 
-		ClientVariables.SETTINGS_PATH = bootstrap.getPrefix() + "/config/settings.conf";
-		ClientVariables.WORLD_PATH = bootstrap.getPrefix() + "/world/";
+		ClientVariables.initRuntimeVariables();
+		GlobalVariables.REGISTRY.register("/Voxel/Settings/file", bootstrap.getPrefix() + "/config/settings.conf");
+		GlobalVariables.REGISTRY.register("/Voxel/Settings/World/directory", bootstrap.getPrefix() + "/world/");
 		internalSubsystem = ClientInternalSubsystem.getInstance();
 		internalSubsystem.preInit();
 		ClientInternalSubsystem.getInstance().getGameWindow().setVisible(true);
@@ -126,6 +131,7 @@ public class Voxel extends AbstractVoxel {
 		Logger.log("GLFW Version: " + CoreInfo.GLFWVer);
 		Logger.log("OpenGL Version: " + CoreInfo.OpenGLVer);
 		Logger.log("GLSL Version: " + CoreInfo.GLSLVersion);
+		Logger.log("Assimp: " + aiGetVersionMajor() + "." + aiGetVersionMinor() + "." + aiGetVersionRevision());
 		Logger.log("Vendor: " + CoreInfo.Vendor);
 		Logger.log("Renderer: " + CoreInfo.Renderer);
 		modsHandler = new ModsHandler(this);

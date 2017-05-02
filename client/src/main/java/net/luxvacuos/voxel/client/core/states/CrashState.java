@@ -20,10 +20,10 @@
 
 package net.luxvacuos.voxel.client.core.states;
 
+import static net.luxvacuos.voxel.universal.core.GlobalVariables.REGISTRY;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 
-import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.WM;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Renderer;
 import net.luxvacuos.voxel.client.ui.menus.CrashWindow;
@@ -40,8 +40,10 @@ public class CrashState extends AbstractState {
 
 	@Override
 	public void start() {
-		WM.getWM().addWindow(
-				new CrashWindow(0, ClientVariables.HEIGHT, ClientVariables.WIDTH, ClientVariables.HEIGHT, t));
+		WM.getWM()
+				.addWindow(new CrashWindow(0, (int) REGISTRY.getRegistryItem("/Voxel/Display/height"),
+						(int) REGISTRY.getRegistryItem("/Voxel/Display/width"),
+						(int) REGISTRY.getRegistryItem("/Voxel/Display/height"), t));
 	}
 
 	@Override

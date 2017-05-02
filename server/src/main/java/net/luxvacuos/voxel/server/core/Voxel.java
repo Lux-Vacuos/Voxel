@@ -64,8 +64,8 @@ public class Voxel extends AbstractVoxel {
 			E.printStackTrace();
 		}
 		Logger.log("Starting Server");
-		GlobalVariables.SETTINGS_PATH = bootstrap.getPrefix() + "/config/settings.conf";
-		GlobalVariables.WORLD_PATH = bootstrap.getPrefix() + "/";
+		GlobalVariables.REGISTRY.register("/Voxel/Settings/file", bootstrap.getPrefix() + "/config/settings.conf");
+		GlobalVariables.REGISTRY.register("/Voxel/Settings/World/directory", bootstrap.getPrefix() + "/");
 
 		internalSubsystem = ServerInternalSubsystem.getInstance();
 		internalSubsystem.preInit();

@@ -24,6 +24,7 @@ import static net.luxvacuos.voxel.client.input.Mouse.getDX;
 import static net.luxvacuos.voxel.client.input.Mouse.getDY;
 import static net.luxvacuos.voxel.client.input.Mouse.setCursorPosition;
 import static net.luxvacuos.voxel.client.input.Mouse.setGrabbed;
+import static net.luxvacuos.voxel.universal.core.GlobalVariables.REGISTRY;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +39,6 @@ import net.luxvacuos.igl.vector.Matrix4d;
 import net.luxvacuos.igl.vector.Vector2d;
 import net.luxvacuos.igl.vector.Vector3d;
 import net.luxvacuos.voxel.client.core.ClientInternalSubsystem;
-import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.ecs.ClientComponents;
 import net.luxvacuos.voxel.client.input.KeyboardHandler;
 import net.luxvacuos.voxel.client.input.Mouse;
@@ -85,9 +85,10 @@ public class PlayerCamera extends CameraEntity {
 
 		ClientComponents.PROJECTION_MATRIX.get(this).setProjectionMatrix(projectionMatrix);
 		ClientComponents.VIEW_MATRIX.get(this).setViewMatrix(Maths.createViewMatrix(this));
-		center = new Vector2d(ClientVariables.WIDTH / 2, ClientVariables.HEIGHT / 2);
-		castRay = new CastRay(getProjectionMatrix(), getViewMatrix(), center, ClientVariables.WIDTH,
-				ClientVariables.HEIGHT);
+		int width = (int) REGISTRY.getRegistryItem("/Voxel/Display/width");
+		int height = (int) REGISTRY.getRegistryItem("/Voxel/Display/height");
+		center = new Vector2d(width / 2, height / 2);
+		castRay = new CastRay(getProjectionMatrix(), getViewMatrix(), center, width, height);
 	}
 
 	@Override
@@ -255,7 +256,9 @@ public class PlayerCamera extends CameraEntity {
 
 	@Override
 	public void updateDim(float delta, IDimension dim) {
-		castRay.update(getProjectionMatrix(), getViewMatrix(), center, ClientVariables.WIDTH, ClientVariables.HEIGHT);
+		castRay.update(getProjectionMatrix(), getViewMatrix(), center,
+				(int) REGISTRY.getRegistryItem("/Voxel/Display/width"),
+				(int) REGISTRY.getRegistryItem("/Voxel/Display/height"));
 		setBlock(Blocks.getBlockByName("stone"), dim, delta);
 	}
 

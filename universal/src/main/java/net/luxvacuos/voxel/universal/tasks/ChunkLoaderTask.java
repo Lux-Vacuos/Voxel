@@ -41,7 +41,7 @@ public class ChunkLoaderTask implements Callable<ChunkData> {
 	private final ChunkNode node;
 
 	public ChunkLoaderTask(IDimension dim, ChunkNode node) {
-		String path = GlobalVariables.WORLD_PATH + dim.getWorldName() + "/" + dim.getID();
+		String path = GlobalVariables.REGISTRY.getRegistryItem("/Voxel/Settings/World/directory") + dim.getWorldName() + "/" + dim.getID();
 		String fullPath = path + "/" + "chunk_" + node.getX() + "_" + node.getZ() + ".dat";
 		this.node = node;
 		File file = new File(fullPath);

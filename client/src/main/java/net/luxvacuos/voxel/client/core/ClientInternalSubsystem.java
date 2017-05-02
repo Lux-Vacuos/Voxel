@@ -22,6 +22,8 @@ package net.luxvacuos.voxel.client.core;
 
 import java.io.File;
 
+import static net.luxvacuos.voxel.universal.core.GlobalVariables.*;
+
 import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Icon;
 import net.luxvacuos.voxel.client.rendering.api.glfw.PixelBufferHandle;
@@ -43,7 +45,6 @@ import net.luxvacuos.voxel.client.world.block.BlocksResources;
 import net.luxvacuos.voxel.client.world.block.RenderBlock;
 import net.luxvacuos.voxel.client.world.block.types.WaterBlock;
 import net.luxvacuos.voxel.universal.core.AbstractInternalSubsystem;
-import net.luxvacuos.voxel.universal.core.GlobalVariables;
 import net.luxvacuos.voxel.universal.core.TaskManager;
 import net.luxvacuos.voxel.universal.material.BlockMaterial;
 import net.luxvacuos.voxel.universal.material.MaterialModder;
@@ -77,18 +78,19 @@ public class ClientInternalSubsystem extends AbstractInternalSubsystem {
 	@Override
 	public void preInit() {
 		gameSettings = new ClientGameSettings();
-		gameSettings.load(new File(ClientVariables.SETTINGS_PATH));
+		gameSettings.load(new File((String) REGISTRY.getRegistryItem("/Voxel/Settings/file")));
 		gameSettings.read();
 
 		Icon[] icons = new Icon[] { new Icon("icon32"), new Icon("icon64") };
 
-		WindowHandle handle = WindowManager.generateHandle(ClientVariables.WIDTH, ClientVariables.HEIGHT, "Voxel");
+		WindowHandle handle = WindowManager.generateHandle((int) REGISTRY.getRegistryItem("/Voxel/Display/width"),
+				(int) REGISTRY.getRegistryItem("/Voxel/Display/height"), "Voxel");
 		handle.canResize(false).isVisible(false).setIcon(icons).setCursor("arrow").useDebugContext(true);
 		PixelBufferHandle pb = new PixelBufferHandle();
 		pb.setSrgbCapable(1);
 		handle.setPixelBuffer(pb);
 		long gameWindowID = WindowManager.createWindow(handle,
-				(boolean) GlobalVariables.REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/vsync"));
+				(boolean) REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/vsync"));
 		window = WindowManager.getWindow(gameWindowID);
 		Mouse.setWindow(window);
 		WM.setWM(new NanoWindowManager(window));
@@ -118,8 +120,8 @@ public class ClientInternalSubsystem extends AbstractInternalSubsystem {
 			} catch (SoundSystemException e) {
 				e.printStackTrace();
 			}
-			SoundSystemConfig.setSoundFilesPackage("assets/"
-					+ GlobalVariables.REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/assets") + "/sounds/");
+			SoundSystemConfig.setSoundFilesPackage(
+					"assets/" + REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/assets") + "/sounds/");
 			SoundSystemConfig.setLogger(new LoggerSoundSystem());
 			soundSystem = new SoundSystem();
 		}
@@ -149,7 +151,9 @@ public class ClientInternalSubsystem extends AbstractInternalSubsystem {
 					.affectedByGravity(true).liquid().setOpacity(0.2f).done();
 			Blocks.register(new WaterBlock(waterMat, new BlockFaceAtlas("water")));
 			Blocks.register(new RenderBlock(new BlockMaterial("ice"), new BlockFaceAtlas("ice")));
-			//Blocks.register(new RenderBlock(new BlockMaterial("pedestal"), new BlockFaceAtlas("pedestaltop", "pedestalbottom", "pedestal")));
+			// Blocks.register(new RenderBlock(new BlockMaterial("pedestal"),
+			// new BlockFaceAtlas("pedestaltop", "pedestalbottom",
+			// "pedestal")));
 			Blocks.finishRegister();
 		});
 	}

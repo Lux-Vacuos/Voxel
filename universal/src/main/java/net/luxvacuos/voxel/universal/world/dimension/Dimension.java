@@ -244,7 +244,7 @@ public class Dimension implements IDimension {
 
 	@Override
 	public void dispose() {
-		File file = new File(GlobalVariables.WORLD_PATH + this.world.getName() + "/dim" + this.id + "_data.nbt");
+		File file = new File(GlobalVariables.REGISTRY.getRegistryItem("/Voxel/Settings/World/directory") + this.world.getName() + "/dim" + this.id + "_data.nbt");
 		NBTOutputStream out = null;
 		try {
 			out = new NBTOutputStream(new BufferedOutputStream(new FileOutputStream(file)));

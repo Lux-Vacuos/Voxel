@@ -20,6 +20,8 @@
 
 package net.luxvacuos.voxel.universal.world.chunk;
 
+import static net.luxvacuos.voxel.universal.core.GlobalVariables.REGISTRY;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -30,12 +32,10 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
 
 import com.badlogic.gdx.utils.Array;
 
 import net.luxvacuos.igl.Logger;
-import net.luxvacuos.voxel.universal.core.GlobalVariables;
 import net.luxvacuos.voxel.universal.resources.IDisposable;
 import net.luxvacuos.voxel.universal.tasks.ChunkGenerateTask;
 import net.luxvacuos.voxel.universal.tasks.ChunkLoaderTask;
@@ -48,7 +48,7 @@ import net.luxvacuos.voxel.universal.world.utils.ChunkNode;
 
 public class ChunkManager implements IDisposable {
 	protected final IDimension dim;
-	protected final ExecutorService executor = Executors.newFixedThreadPool(GlobalVariables.chunkmanager_threads);
+	protected final ExecutorService executor = Executors.newFixedThreadPool((int) REGISTRY.getRegistryItem("/Voxel/Settings/World/chunkManagerThreads"));
 	protected IChunkGenerator chunkGenerator = new FlatChunkGenerator();
 
 	protected List<ChunkNode> chunkLoadList;

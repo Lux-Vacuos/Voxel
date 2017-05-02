@@ -24,21 +24,12 @@ import net.luxvacuos.voxel.universal.util.registry.IRegistry;
 
 public class GlobalVariables {
 
-	/** The path where all the world data resides */
-	public static String WORLD_PATH;
-
-	/** The path for the Settings file */
-	public static String SETTINGS_PATH;
-
 	/** The Version of the game */
 	public static String version = "Prototype";
 
 	/** Flag to enable debug mode */
 	public static boolean debug = false;
 	
-	/** Amount of threads to use for the ChunkManager */
-	public static int chunkmanager_threads = 3;
-
 	/** Enable Test Mode */
 	public static boolean TEST_MODE = false;
 	

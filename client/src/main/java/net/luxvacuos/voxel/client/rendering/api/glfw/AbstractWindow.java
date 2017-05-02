@@ -42,6 +42,7 @@ import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GLCapabilities;
 
 import net.luxvacuos.voxel.client.input.KeyboardHandler;
+import net.luxvacuos.voxel.client.resources.AssimpResourceLoader;
 import net.luxvacuos.voxel.client.resources.ResourceLoader;
 
 public abstract class AbstractWindow implements IWindow {
@@ -72,6 +73,7 @@ public abstract class AbstractWindow implements IWindow {
 
 	protected long nvgID;
 	protected ResourceLoader resourceLoader;
+	protected AssimpResourceLoader assimpResourceLoader;
 
 	protected double lastLoopTime;
 	protected float timeCount;
@@ -196,6 +198,12 @@ public abstract class AbstractWindow implements IWindow {
 		if (this.resourceLoader == null)
 			this.resourceLoader = new ResourceLoader(this.windowID, this.nvgID);
 		return this.resourceLoader;
+	}
+	
+	public AssimpResourceLoader getAssimpResourceLoader() {
+		if(this.assimpResourceLoader == null)
+			this.assimpResourceLoader = new AssimpResourceLoader(getResourceLoader());
+		return this.assimpResourceLoader;
 	}
 
 	public KeyboardHandler getKeyboardHandler() {

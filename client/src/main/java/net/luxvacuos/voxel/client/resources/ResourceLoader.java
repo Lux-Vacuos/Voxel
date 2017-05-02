@@ -634,7 +634,7 @@ public class ResourceLoader implements IDisposable {
 				source.close();
 			}
 		}
-
+		buffer.put((byte) 0);
 		buffer.flip();
 		return buffer;
 	}

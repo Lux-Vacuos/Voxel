@@ -48,9 +48,10 @@ public class PauseWindow extends RootComponentWindow {
 			super.closeWindow();
 			float borderSize = (float) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/borderSize");
 			float titleBarHeight = (float) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/titleBarHeight");
-			RootComponentWindow mainMenu = new MainMenu(borderSize + 10, ClientVariables.HEIGHT - titleBarHeight - 10,
-					ClientVariables.WIDTH - borderSize * 2f - 20,
-					ClientVariables.HEIGHT - titleBarHeight - borderSize - 20);
+			int height = (int) REGISTRY.getRegistryItem("/Voxel/Display/height");
+			RootComponentWindow mainMenu = new MainMenu(borderSize + 10, height - titleBarHeight - 10,
+					(int) REGISTRY.getRegistryItem("/Voxel/Display/width") - borderSize * 2f - 20,
+					height - titleBarHeight - borderSize - 20);
 			WM.getWM().addWindow(mainMenu);
 			ClientVariables.exitWorld = true;
 		});

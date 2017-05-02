@@ -48,7 +48,7 @@ public class ChunkSaveTask implements Callable<Void> {
 		File file;
 		NBTOutputStream out;
 		for(IChunk chunk : this.chunks) {
-			path = GlobalVariables.WORLD_PATH + chunk.getDimension().getWorldName()
+			path = GlobalVariables.REGISTRY.getRegistryItem("/Voxel/Settings/World/directory") + chunk.getDimension().getWorldName()
 					+ "/" + chunk.getDimension().getID() + "/"
 					+ "chunk_" + chunk.getX() + "_" + chunk.getZ() + ".dat";
 

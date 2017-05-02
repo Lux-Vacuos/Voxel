@@ -113,6 +113,11 @@ public class MainMenu extends RootComponentWindow {
 
 		super.updateApp(delta, window);
 	}
+	
+	@Override
+	public void alwaysUpdateApp(float delta, Window window) {
+		super.alwaysUpdateApp(delta, window);
+	}
 
 	@Override
 	public void onClose() {

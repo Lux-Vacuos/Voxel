@@ -33,7 +33,6 @@ import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 import org.lwjgl.nanovg.NVGColor;
 import org.lwjgl.nanovg.NVGLUFramebuffer;
 
-import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Sync;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
@@ -98,15 +97,16 @@ public abstract class NanoWindow implements IWindow {
 			if (resizable) {
 				maximized = !maximized;
 				if (maximized) {
+					int height = (int) REGISTRY.getRegistryItem("/Voxel/Display/height");
 					oldX = this.x;
 					oldY = this.y;
 					oldW = this.w;
 					oldH = this.h;
 					this.x = 0;
-					this.y = ClientVariables.HEIGHT
+					this.y = height
 							- (float) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/titleBarHeight");
-					this.w = ClientVariables.WIDTH;
-					this.h = ClientVariables.HEIGHT;
+					this.w = (int) REGISTRY.getRegistryItem("/Voxel/Display/width");
+					this.h = height;
 				} else {
 					this.x = oldX;
 					this.y = oldY;

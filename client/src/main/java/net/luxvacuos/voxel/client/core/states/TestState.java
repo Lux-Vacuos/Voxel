@@ -38,9 +38,9 @@ import net.luxvacuos.voxel.client.core.ClientInternalSubsystem;
 import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.core.ClientWorldSimulation;
 import net.luxvacuos.voxel.client.ecs.EntityResources;
-import net.luxvacuos.voxel.client.ecs.entities.RenderEntity;
 import net.luxvacuos.voxel.client.ecs.entities.CameraEntity;
 import net.luxvacuos.voxel.client.ecs.entities.PlayerCamera;
+import net.luxvacuos.voxel.client.ecs.entities.RenderEntity;
 import net.luxvacuos.voxel.client.ecs.entities.Sun;
 import net.luxvacuos.voxel.client.input.KeyboardHandler;
 import net.luxvacuos.voxel.client.input.Mouse;
@@ -54,6 +54,7 @@ import net.luxvacuos.voxel.client.rendering.api.opengl.objects.Material;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.ParticleTexture;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.TexturedModel;
 import net.luxvacuos.voxel.client.rendering.utils.BlockFaceAtlas;
+import net.luxvacuos.voxel.client.resources.AssimpResourceLoader;
 import net.luxvacuos.voxel.client.resources.ResourceLoader;
 import net.luxvacuos.voxel.client.ui.menus.GameWindow;
 import net.luxvacuos.voxel.client.ui.menus.PauseWindow;
@@ -147,16 +148,16 @@ public class TestState extends AbstractState {
 		Renderer.getLightRenderer().addLight(new Light(new Vector3d(8, 5, 8), new Vector3f(1, 1, 1)));
 		Renderer.getLightRenderer().addLight(new Light(new Vector3d(0, 5, 0), new Vector3f(1, 1, 1)));
 
-		mat1 = new RenderEntity("",sphere);
+		mat1 = new RenderEntity("", sphere);
 		mat1.getComponent(Position.class).set(0, 1, 0);
 
-		mat2 = new RenderEntity("",sphere);
+		mat2 = new RenderEntity("", sphere);
 		mat2.getComponent(Position.class).set(3, 1, 0);
 
-		mat3 = new RenderEntity("",sphere);
+		mat3 = new RenderEntity("", sphere);
 		mat3.getComponent(Position.class).set(6, 1, 0);
 
-		mat4 = new RenderEntity("",sphere);
+		mat4 = new RenderEntity("", sphere);
 		mat4.getComponent(Position.class).set(9, 1, 0);
 
 		Material dragonMat = new Material(new Vector4f(1), 1f, 0f);
@@ -166,7 +167,7 @@ public class TestState extends AbstractState {
 
 		dragon = new TexturedModel(loader.loadObjModel("test_state/dragon"), dragonMat);
 
-		mat5 = new RenderEntity("",dragon);
+		mat5 = new RenderEntity("", dragon);
 
 		mat5.getComponent(Position.class).set(-7, 0, 0);
 		mat5.getComponent(Scale.class).setScale(0.5f);
@@ -174,7 +175,7 @@ public class TestState extends AbstractState {
 		rocketM = new TexturedModel(loader.loadObjModel("test_state/Rocket"),
 				new Material(new Vector4f(0.8f, 0.8f, 0.8f, 1.0f), 0.5f, 0));
 
-		rocket = new RenderEntity("",rocketM);
+		rocket = new RenderEntity("", rocketM);
 		rocket.getComponent(Position.class).set(0, 0, -5);
 
 		Material planeMat = new Material(new Vector4f(1), 1f, 0);
@@ -184,7 +185,7 @@ public class TestState extends AbstractState {
 
 		planeM = new TexturedModel(loader.loadObjModel("test_state/plane"), planeMat);
 
-		plane = new RenderEntity("",planeM);
+		plane = new RenderEntity("", planeM);
 		plane.getComponent(Scale.class).setScale(2f);
 
 		Material characterMat = new Material(new Vector4f(1), 0.5f, 0);
@@ -192,7 +193,7 @@ public class TestState extends AbstractState {
 
 		characterM = new TexturedModel(loader.loadObjModel("test_state/character"), characterMat);
 
-		character = new RenderEntity("",characterM);
+		character = new RenderEntity("", characterM);
 		character.getComponent(Position.class).set(0, 0, 5);
 		character.getComponent(Scale.class).setScale(0.21f);
 
@@ -204,7 +205,7 @@ public class TestState extends AbstractState {
 
 		cerberusM = new TexturedModel(loader.loadObjModel("test_state/cerberus"), cerberusMat);
 
-		cerberus = new RenderEntity("",cerberusM);
+		cerberus = new RenderEntity("", cerberusM);
 		cerberus.getComponent(Position.class).set(5, 1.25f, 5);
 		cerberus.getComponent(Scale.class).setScale(0.5f);
 
@@ -214,6 +215,8 @@ public class TestState extends AbstractState {
 		particleSystem.setDirection(new Vector3d(0, -1, 0), 0.4f);
 		particlesPoint = new Vector3d(0, 1.7f, -5);
 
+		AssimpResourceLoader aLoader = window.getAssimpResourceLoader();
+		// aLoader.loadModel("test_state/plane.obj");
 	}
 
 	@Override
@@ -260,7 +263,9 @@ public class TestState extends AbstractState {
 		physicsSystem.getEngine().addEntity(cerberus);
 		((PlayerCamera) camera).setMouse();
 		Renderer.render(engine.getEntities(), ParticleDomain.getParticles(), camera, worldSimulation, sun, 0);
-		gameWindow = new GameWindow(0, ClientVariables.HEIGHT, ClientVariables.WIDTH, ClientVariables.HEIGHT);
+		gameWindow = new GameWindow(0, (int) REGISTRY.getRegistryItem("/Voxel/Display/height"),
+				(int) REGISTRY.getRegistryItem("/Voxel/Display/width"),
+				(int) REGISTRY.getRegistryItem("/Voxel/Display/height"));
 		WM.getWM().addWindow(0, gameWindow);
 	}
 
@@ -289,9 +294,10 @@ public class TestState extends AbstractState {
 				ClientVariables.paused = true;
 				float borderSize = (float) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/borderSize");
 				float titleBarHeight = (float) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/titleBarHeight");
-				pauseWindow = new PauseWindow(borderSize + 10, ClientVariables.HEIGHT - titleBarHeight - 10,
-						ClientVariables.WIDTH - borderSize * 2f - 20,
-						ClientVariables.HEIGHT - titleBarHeight - borderSize - 20);
+				int height = (int) REGISTRY.getRegistryItem("/Voxel/Display/height");
+				pauseWindow = new PauseWindow(borderSize + 10, height - titleBarHeight - 10,
+						(int) REGISTRY.getRegistryItem("/Voxel/Display/width") - borderSize * 2f - 20,
+						height - titleBarHeight - borderSize - 20);
 				WM.getWM().addWindow(pauseWindow);
 			}
 		} else if (ClientVariables.exitWorld) {

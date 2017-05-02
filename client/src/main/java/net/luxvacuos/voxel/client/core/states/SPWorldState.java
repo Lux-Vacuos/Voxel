@@ -95,7 +95,9 @@ public class SPWorldState extends AbstractState {
 
 		Renderer.render(world.getActiveDimension().getEntitiesManager().getEntities(), ParticleDomain.getParticles(),
 				camera, world.getActiveDimension().getWorldSimulator(), sun, 0);
-		gameWindow = new GameWindow(0, ClientVariables.HEIGHT, ClientVariables.WIDTH, ClientVariables.HEIGHT);
+		gameWindow = new GameWindow(0, (int) REGISTRY.getRegistryItem("/Voxel/Display/height"),
+				(int) REGISTRY.getRegistryItem("/Voxel/Display/width"),
+				(int) REGISTRY.getRegistryItem("/Voxel/Display/height"));
 		WM.getWM().addWindow(0, gameWindow);
 	}
 
@@ -172,9 +174,10 @@ public class SPWorldState extends AbstractState {
 				ClientVariables.paused = true;
 				float borderSize = (float) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/borderSize");
 				float titleBarHeight = (float) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/titleBarHeight");
-				pauseWindow = new PauseWindow(borderSize + 10, ClientVariables.HEIGHT - titleBarHeight - 10,
-						ClientVariables.WIDTH - borderSize * 2f - 20,
-						ClientVariables.HEIGHT - titleBarHeight - borderSize - 20);
+				int height = (int) REGISTRY.getRegistryItem("/Voxel/Display/height");
+				pauseWindow = new PauseWindow(borderSize + 10, height - titleBarHeight - 10,
+						(int) REGISTRY.getRegistryItem("/Voxel/Display/width") - borderSize * 2f - 20,
+						height - titleBarHeight - borderSize - 20);
 				WM.getWM().addWindow(pauseWindow);
 			}
 		} else if (ClientVariables.exitWorld) {

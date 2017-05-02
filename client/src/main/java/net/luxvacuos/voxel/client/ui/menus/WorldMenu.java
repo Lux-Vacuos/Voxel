@@ -38,6 +38,7 @@ import net.luxvacuos.voxel.client.ui.RootComponentWindow;
 import net.luxvacuos.voxel.client.ui.ScrollPane;
 import net.luxvacuos.voxel.client.ui.Text;
 import net.luxvacuos.voxel.client.ui.WorldElement;
+import net.luxvacuos.voxel.universal.core.GlobalVariables;
 import net.luxvacuos.voxel.universal.core.TaskManager;
 import net.luxvacuos.voxel.universal.core.states.StateMachine;
 
@@ -72,7 +73,8 @@ public class WorldMenu extends RootComponentWindow {
 		create.setAlignment(Alignment.CENTER);
 		create.setWindowAlignment(Alignment.BOTTOM);
 		create.setOnButtonPress(() -> {
-			new File(ClientVariables.WORLD_PATH + nameB.getText()).mkdirs();
+			new File(GlobalVariables.REGISTRY.getRegistryItem("/Voxel/Settings/World/directory") + nameB.getText())
+					.mkdirs();
 			TaskManager.addTask(() -> {
 				super.disposeApp(window);
 				createList(window);
@@ -103,7 +105,7 @@ public class WorldMenu extends RootComponentWindow {
 		ScrollPane pane = new ScrollPane(0, 0, w / 2, h, w / 2 - 35, 60f);
 		pane.setColls(1);
 
-		File worldPath = new File(ClientVariables.WORLD_PATH);
+		File worldPath = new File((String) GlobalVariables.REGISTRY.getRegistryItem("/Voxel/Settings/World/directory"));
 		if (!worldPath.exists())
 			worldPath.mkdirs();
 		try {

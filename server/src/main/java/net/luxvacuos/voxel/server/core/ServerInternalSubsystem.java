@@ -45,7 +45,7 @@ public class ServerInternalSubsystem extends AbstractInternalSubsystem {
 	@Override
 	public void preInit() {
 		gameSettings = new ServerGameSettings();
-		gameSettings.load(new File(GlobalVariables.SETTINGS_PATH));
+		gameSettings.load(new File((String) GlobalVariables.REGISTRY.getRegistryItem("/Voxel/Settings/file")));
 		gameSettings.read();
 	}
 

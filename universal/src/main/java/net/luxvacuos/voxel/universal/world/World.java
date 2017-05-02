@@ -46,7 +46,7 @@ public class World implements IWorld {
 	public World(String name) {
 		this.name = name;
 		this.dims = new IntMap<>();
-		File file = new File(GlobalVariables.WORLD_PATH + this.name);
+		File file = new File(GlobalVariables.REGISTRY.getRegistryItem("/Voxel/Settings/World/directory") + this.name);
 		if (!file.exists())
 			file.mkdirs();
 	}
@@ -94,7 +94,7 @@ public class World implements IWorld {
 		if (this.dims.containsKey(id))
 			return;
 
-		File file = new File(GlobalVariables.WORLD_PATH + this.name + "/dim" + id + "_data.nbt");
+		File file = new File(GlobalVariables.REGISTRY.getRegistryItem("/Voxel/Settings/World/directory") + this.name + "/dim" + id + "_data.nbt");
 		TagCompound data = null;
 		NBTInputStream in = null;
 		try {

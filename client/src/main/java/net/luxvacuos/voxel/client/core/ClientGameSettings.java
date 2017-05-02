@@ -71,6 +71,7 @@ public final class ClientGameSettings extends AbstractGameSettings {
 		REGISTRY.register("/Voxel/Settings/WindowManager/scrollBarSize", 	Float.parseFloat(getValue("WM_ScrollBarSize", "16")));
 		
 		REGISTRY.register("/Voxel/Settings/World/chunkRadius", 				Integer.parseInt(getValue("chunkRadius", "4")));
+		REGISTRY.register("/Voxel/Settings/World/chunkManagerThreads", 		Integer.parseInt(getValue("chunkManagerThreads", "3")));
 		
 		Logger.log("Load completed");
 	}
@@ -109,6 +110,7 @@ public final class ClientGameSettings extends AbstractGameSettings {
 		registerValue("WM_ScrollBarSize", 		Float.toString((float) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/scrollBarSize")));
 		
 		registerValue("chunkRadius", 			Integer.toString((int) REGISTRY.getRegistryItem("/Voxel/Settings/World/chunkRadius")));
+		registerValue("chunkManagerThreads", 	Integer.toString((int) REGISTRY.getRegistryItem("/Voxel/Settings/World/chunkManagerThreads")));
 		Logger.log("Updated completed");
 	}
 

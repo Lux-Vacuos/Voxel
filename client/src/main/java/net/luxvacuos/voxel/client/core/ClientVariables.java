@@ -33,18 +33,12 @@ import net.luxvacuos.voxel.universal.remote.User;
 public class ClientVariables extends GlobalVariables {
 
 	/**
-	 * Display Data
-	 */
-	public static final String Title = "Voxel";
-
-	/**
 	 * Users Stuff
 	 */
 	public static User user;
 	/**
 	 * Game Settings
 	 */
-	public static boolean onServer = false;
 	public static String version = "Development Version";
 
 	public static final float NEAR_PLANE = 0.1f;
@@ -93,8 +87,10 @@ public class ClientVariables extends GlobalVariables {
 	public static final String VERTEX_BRDF_INTEGRATION_MAP = "V_BRDFIntegrationMap.glsl";
 	public static final String FRAGMENT_BRDF_INTEGRATION_MAP = "F_BRDFIntegrationMap.glsl";
 	
-	public static void syncSettings(){
-		
+	
+	public static void initRuntimeVariables(){
+		REGISTRY.register("/Voxel/Display/width", WIDTH);
+		REGISTRY.register("/Voxel/Display/height", HEIGHT);
 	}
 
 }
