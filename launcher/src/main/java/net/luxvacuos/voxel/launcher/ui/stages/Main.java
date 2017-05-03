@@ -74,6 +74,9 @@ public class Main extends BorderPane {
 				LauncherVariables.userArgs.add(wf.getText());
 				LauncherVariables.userArgs.add("-height");
 				LauncherVariables.userArgs.add(hf.getText());
+				LauncherVariables.userArgs.add("-username");
+				LauncherVariables.userArgs.add(LauncherVariables.username);
+				LauncherVariables.userArgs.add(LauncherVariables.status.getUuid());
 				try {
 					VersionsManager.getVersionsManager().downloadAndRun(LauncherVariables.userArgs);
 					Platform.runLater(() -> {
@@ -148,7 +151,7 @@ public class Main extends BorderPane {
 		setBottom(bottom);
 		autosize();
 	}
-	
+
 	public WebView getBrowser() {
 		return browser;
 	}
