@@ -80,7 +80,6 @@ public abstract class NanoWindow implements IWindow {
 		titleBar.getLeft().setLayout(new FlowLayout(Direction.RIGHT, 1, 0));
 		titleBar.getRight().setLayout(new FlowLayout(Direction.LEFT, 1, 0));
 		initApp(wind);
-
 		TitleBarButton closeBtn = new TitleBarButton(0, -1, 28, 28);
 		closeBtn.setOnButtonPress(() -> {
 			onClose();
@@ -103,8 +102,7 @@ public abstract class NanoWindow implements IWindow {
 					oldW = this.w;
 					oldH = this.h;
 					this.x = 0;
-					this.y = height
-							- (float) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/titleBarHeight");
+					this.y = height - (float) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/titleBarHeight");
 					this.w = (int) REGISTRY.getRegistryItem("/Voxel/Display/width");
 					this.h = height;
 				} else {
@@ -123,10 +121,7 @@ public abstract class NanoWindow implements IWindow {
 
 		TitleBarButton minimizeBtn = new TitleBarButton(0, -1, 28, 28);
 		minimizeBtn.setOnButtonPress(() -> {
-			minimized = !minimized;
-			if (minimized) {
-			} else {
-			}
+			minimized = true;
 		});
 		minimizeBtn.setColor("#646464C8");
 		minimizeBtn.setHighlightColor("#FFFFFFC8");
@@ -141,7 +136,7 @@ public abstract class NanoWindow implements IWindow {
 		titleBar.getRight().addComponent(closeBtn);
 		if (resizable)
 			titleBar.getRight().addComponent(maximizeBtn);
-		// titleBar.getRight().addComponent(minimizeBtn);
+		titleBar.getRight().addComponent(minimizeBtn);
 		titleBar.getCenter().addComponent(titleText);
 
 		titleBar.setOnDrag((window) -> {
@@ -338,8 +333,18 @@ public abstract class NanoWindow implements IWindow {
 	}
 
 	@Override
+	public String getTitle() {
+		return title;
+	}
+
+	@Override
 	public NVGLUFramebuffer getFBO() {
 		return fbo;
+	}
+
+	@Override
+	public void toggleMinimize() {
+		minimized = !minimized;
 	}
 
 	@Override

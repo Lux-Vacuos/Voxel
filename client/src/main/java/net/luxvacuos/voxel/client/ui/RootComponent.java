@@ -74,10 +74,15 @@ public class RootComponent {
 		components.add(component);
 	}
 
+	public void removeComponent(Component component) {
+		component.dispose();
+		components.remove(component);
+	}
+
 	public void setLayout(ILayout layout) {
 		this.layout = layout;
 	}
-	
+
 	public ILayout getLayout() {
 		return layout;
 	}

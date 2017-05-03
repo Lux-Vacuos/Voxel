@@ -57,8 +57,16 @@ public class Container extends Component {
 		super.dispose();
 	}
 
+	public void setLayout(ILayout layout) {
+		comp.setLayout(layout);
+	}
+
 	public void addComponent(Component component) {
 		comp.addComponent(component);
+	}
+	
+	public void removeComponent(Component component){
+		comp.removeComponent(component);
 	}
 
 }

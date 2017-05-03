@@ -78,6 +78,8 @@ public interface IWindow {
 
 	public void setBlurBehind(boolean blur);
 
+	public void toggleMinimize();
+
 	public void toggleTitleBar();
 
 	public BackgroundStyle getBackgroundStyle();
@@ -91,6 +93,8 @@ public interface IWindow {
 	public float getY();
 
 	public Thread getThread();
+	
+	public String getTitle();
 
 	public NVGLUFramebuffer getFBO();
 

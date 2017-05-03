@@ -297,8 +297,9 @@ public class TestState extends AbstractState {
 				int height = (int) REGISTRY.getRegistryItem("/Voxel/Display/height");
 				pauseWindow = new PauseWindow(borderSize + 10, height - titleBarHeight - 10,
 						(int) REGISTRY.getRegistryItem("/Voxel/Display/width") - borderSize * 2f - 20,
-						height - titleBarHeight - borderSize - 20);
+						height - titleBarHeight - borderSize - 50);
 				WM.getWM().addWindow(pauseWindow);
+				WM.getWM().toggleShell();
 			}
 		} else if (ClientVariables.exitWorld) {
 			gameWindow.closeWindow();
@@ -312,6 +313,7 @@ public class TestState extends AbstractState {
 				Mouse.setGrabbed(true);
 				ClientVariables.paused = false;
 				pauseWindow.closeWindow();
+				WM.getWM().toggleShell();
 			}
 		}
 

@@ -51,7 +51,7 @@ public class PauseWindow extends RootComponentWindow {
 			int height = (int) REGISTRY.getRegistryItem("/Voxel/Display/height");
 			RootComponentWindow mainMenu = new MainMenu(borderSize + 10, height - titleBarHeight - 10,
 					(int) REGISTRY.getRegistryItem("/Voxel/Display/width") - borderSize * 2f - 20,
-					height - titleBarHeight - borderSize - 20);
+					height - titleBarHeight - borderSize - 50);
 			WM.getWM().addWindow(mainMenu);
 			ClientVariables.exitWorld = true;
 		});
@@ -73,6 +73,7 @@ public class PauseWindow extends RootComponentWindow {
 	public void onClose() {
 		ClientVariables.paused = false;
 		Mouse.setGrabbed(true);
+		WM.getWM().toggleShell();
 	}
 
 }

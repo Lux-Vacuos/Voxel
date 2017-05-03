@@ -20,26 +20,10 @@
 
 package net.luxvacuos.voxel.client.rendering.api.nanovg;
 
-import net.luxvacuos.voxel.universal.resources.IDisposable;
-
-public interface IWindowManager extends IDisposable {
-
-	public void render();
-
-	public void update(float delta);
-
-	public void addWindow(IWindow window);
-
-	public void addWindow(int ord, IWindow window);
-
-	public void removeWindow(IWindow window);
+public interface IShell {
 
 	public void notifyAdd(IWindow window);
 
 	public void notifyClose(IWindow window);
-
-	public void setShell(IShell shell);
-
-	public void toggleShell();
 
 }

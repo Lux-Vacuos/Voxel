@@ -348,7 +348,8 @@ public class NRendering {
 	}
 
 	public static void renderButton(long vg, ByteBuffer preicon, String text, String font, String entypo, float x,
-			float y, float w, float h, NVGColor color, boolean highlight, float fontSize, NVGColor highlightColor) {
+			float y, float w, float h, NVGColor color, boolean highlight, float fontSize, NVGColor highlightColor,
+			NVGColor textColor) {
 		float tw, iw = 0;
 		nvgSave(vg);
 
@@ -386,7 +387,7 @@ public class NRendering {
 		nvgFontSize(vg, fontSize);
 		nvgFontFace(vg, font);
 		nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
-		nvgFillColor(vg, rgba(60, 60, 60, 255, colorA));
+		nvgFillColor(vg, textColor);
 		nvgText(vg, x + w * 0.5f - tw * 0.5f + iw * 0.25f, y + h * 0.5f, text);
 		nvgRestore(vg);
 	}

@@ -58,6 +58,7 @@ public class NanoWindowManager implements IWindowManager {
 	private IWindow focused;
 	private boolean running = true;
 	private double lastLoopTime;
+	private IShell shell;
 
 	public NanoWindowManager(Window win) {
 		this.window = win;
@@ -138,6 +139,7 @@ public class NanoWindowManager implements IWindowManager {
 		IWindow toTop = null;
 		for (IWindow window : windows) {
 			if (window.shouldClose()) {
+				notifyClose(window);
 				TaskManager.addTask(() -> {
 					window.dispose(this.window);
 				});
@@ -207,6 +209,7 @@ public class NanoWindowManager implements IWindowManager {
 			window.alwaysUpdate(0, this.window, this);
 			this.windows.add(window);
 			this.focused = window;
+			notifyAdd(window);
 		});
 	}
 
@@ -218,6 +221,7 @@ public class NanoWindowManager implements IWindowManager {
 			window.alwaysUpdate(0, this.window, this);
 			this.windows.add(ord, window);
 			this.focused = window;
+			notifyAdd(window);
 		});
 	}
 
@@ -226,6 +230,31 @@ public class NanoWindowManager implements IWindowManager {
 		TaskManager.addTask(() -> {
 			window.closeWindow();
 		});
+	}
+
+	@Override
+	public void notifyClose(IWindow window) {
+		if (this.shell != null)
+			if (window.hasDecorations() && !window.isHidden())
+				this.shell.notifyClose(window);
+	}
+
+	@Override
+	public void notifyAdd(IWindow window) {
+		if (this.shell != null)
+			if (window.hasDecorations() && !window.isHidden())
+				this.shell.notifyAdd(window);
+	}
+
+	@Override
+	public void setShell(IShell shell) {
+		this.shell = shell;
+	}
+
+	@Override
+	public void toggleShell() {
+		if (shell != null)
+			((IWindow) shell).setHidden(!((IWindow) shell).isHidden());
 	}
 
 	public float getDelta() {
