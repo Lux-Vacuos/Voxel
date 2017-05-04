@@ -33,6 +33,10 @@ public interface IWindowManager extends IDisposable {
 	public void addWindow(int ord, IWindow window);
 
 	public void removeWindow(IWindow window);
+	
+	public void bringToFront(IWindow window);
+	
+	public boolean isOnTop(IWindow window);
 
 	public void notifyAdd(IWindow window);
 

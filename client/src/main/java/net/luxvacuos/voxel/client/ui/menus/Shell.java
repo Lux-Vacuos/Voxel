@@ -26,12 +26,14 @@ import java.util.Map;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.IShell;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.IWindow;
+import net.luxvacuos.voxel.client.rendering.api.nanovg.WM;
 import net.luxvacuos.voxel.client.ui.Button;
 import net.luxvacuos.voxel.client.ui.Component;
 import net.luxvacuos.voxel.client.ui.Container;
 import net.luxvacuos.voxel.client.ui.Direction;
 import net.luxvacuos.voxel.client.ui.FlowLayout;
 import net.luxvacuos.voxel.client.ui.RootComponentWindow;
+import net.luxvacuos.voxel.universal.core.GlobalVariables;
 
 public class Shell extends RootComponentWindow implements IShell {
 
@@ -40,16 +42,17 @@ public class Shell extends RootComponentWindow implements IShell {
 
 	public Shell(float x, float y, float w, float h) {
 		super(x, y, w, h, "Shell");
+		GlobalVariables.REGISTRY.register("/Voxel/Settings/WindowManager/shellHeight", y);
 	}
 
 	@Override
 	public void initApp(Window window) {
 		buttons = new HashMap<>();
-		super.setAlwaysOnTop(true);
 		super.setDecorations(false);
 		super.initApp(window);
 		super.setBackgroundColor("#1F1F1F78");
 		super.setLayout(new FlowLayout(Direction.RIGHT, 0, 0));
+		super.setAsBackground(true);
 		Container left = new Container(0, 0, 82, 30);
 		Button btn = new Button(0, 0, 80, 30, "Start");
 		btn.setColor("#00000000");
@@ -63,12 +66,24 @@ public class Shell extends RootComponentWindow implements IShell {
 	}
 
 	@Override
+	public void disposeApp(Window window) {
+		super.disposeApp(window);
+		GlobalVariables.REGISTRY.register("/Voxel/Settings/WindowManager/shellHeight", 0f);
+	}
+
+	@Override
 	public void notifyAdd(IWindow window) {
 		Button btn = new Button(0, 0, 100, 30, window.getTitle());
 		btn.setColor("#00000000");
 		btn.setHighlightColor("#FFFFFF64");
 		btn.setTextColor("#FFFFFFFF");
 		btn.setOnButtonPress(() -> {
+			if (!WM.getWM().isOnTop(window)) {
+				WM.getWM().bringToFront(window);
+				return;
+			}
+			if (window.isMinimized())
+				WM.getWM().bringToFront(window);
 			window.toggleMinimize();
 		});
 		apps.addComponent(btn);

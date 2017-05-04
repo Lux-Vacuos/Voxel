@@ -81,6 +81,8 @@ public interface IWindow {
 	public void toggleMinimize();
 
 	public void toggleTitleBar();
+	
+	public void toggleMaximize();
 
 	public BackgroundStyle getBackgroundStyle();
 
@@ -113,6 +115,8 @@ public interface IWindow {
 	public boolean isMinimized();
 
 	public boolean isHidden();
+	
+	public boolean isMaximized();
 
 	public ITitleBar getTitleBar();
 

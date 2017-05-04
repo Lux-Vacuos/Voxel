@@ -91,6 +91,7 @@ public class ClientVariables extends GlobalVariables {
 	public static void initRuntimeVariables(){
 		REGISTRY.register("/Voxel/Display/width", WIDTH);
 		REGISTRY.register("/Voxel/Display/height", HEIGHT);
+		GlobalVariables.REGISTRY.register("/Voxel/Settings/WindowManager/shellHeight", 0f);
 	}
 
 }

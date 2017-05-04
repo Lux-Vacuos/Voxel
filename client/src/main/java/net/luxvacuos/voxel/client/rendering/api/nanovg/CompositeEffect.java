@@ -59,13 +59,16 @@ public abstract class CompositeEffect implements IDisposable {
 		float pixelRatio = wnd.getPixelRatio();
 		nvgluBindFramebuffer(wnd.getNVGID(), fbos[0]);
 		shader.start();
-		if (window.getTitleBar().isEnabled() && window.hasDecorations())
+		if (window.getTitleBar().isEnabled() && window.hasDecorations() && !window.isMaximized())
 			shader.loadFrame(new Vector4f((window.getX() - borderSize) * pixelRatio,
 					(window.getY() + titleBarHeight) * pixelRatio, (window.getWidth() + borderSize * 2f) * pixelRatio,
 					(window.getHeight() + titleBarHeight + borderSize) * pixelRatio));
 		else if (!window.hasDecorations())
 			shader.loadFrame(new Vector4f(window.getX() * pixelRatio, window.getY() * pixelRatio,
 					window.getWidth() * pixelRatio, window.getHeight() * pixelRatio));
+		else if(window.isMaximized())
+			shader.loadFrame(new Vector4f(window.getX() * pixelRatio, (window.getY() + titleBarHeight) * pixelRatio,
+					window.getWidth() * pixelRatio, (window.getHeight() + titleBarHeight) * pixelRatio));
 		else
 			shader.loadFrame(new Vector4f((window.getX() - borderSize) * pixelRatio,
 					(window.getY() + borderSize) * pixelRatio, (window.getWidth() + borderSize * 2f) * pixelRatio,

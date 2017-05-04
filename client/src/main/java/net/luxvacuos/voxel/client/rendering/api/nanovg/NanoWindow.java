@@ -93,25 +93,7 @@ public abstract class NanoWindow implements IWindow {
 
 		TitleBarButton maximizeBtn = new TitleBarButton(0, -1, 28, 28);
 		maximizeBtn.setOnButtonPress(() -> {
-			if (resizable) {
-				maximized = !maximized;
-				if (maximized) {
-					int height = (int) REGISTRY.getRegistryItem("/Voxel/Display/height");
-					oldX = this.x;
-					oldY = this.y;
-					oldW = this.w;
-					oldH = this.h;
-					this.x = 0;
-					this.y = height - (float) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/titleBarHeight");
-					this.w = (int) REGISTRY.getRegistryItem("/Voxel/Display/width");
-					this.h = height;
-				} else {
-					this.x = oldX;
-					this.y = oldY;
-					this.w = oldW;
-					this.h = oldH;
-				}
-			}
+			toggleMaximize();
 		});
 		maximizeBtn.setColor("#646464C8");
 		maximizeBtn.setHighlightColor("#FFFFFFC8");
@@ -175,7 +157,7 @@ public abstract class NanoWindow implements IWindow {
 
 			window.beingNVGFrame();
 			NRendering.renderWindow(window.getNVGID(), x, window.getHeight() - y, w, h, backgroundStyle,
-					backgroundColor, decorations, titleBar.isEnabled());
+					backgroundColor, decorations, titleBar.isEnabled(), maximized);
 			if (decorations)
 				titleBar.render(window);
 			nvgScissor(window.getNVGID(), x, window.getHeight() - y, w, h);
@@ -303,6 +285,30 @@ public abstract class NanoWindow implements IWindow {
 	}
 
 	@Override
+	public void toggleMaximize() {
+		if (resizable) {
+			maximized = !maximized;
+			if (maximized) {
+				int height = (int) REGISTRY.getRegistryItem("/Voxel/Display/height");
+				oldX = this.x;
+				oldY = this.y;
+				oldW = this.w;
+				oldH = this.h;
+				this.x = 0;
+				this.y = height - (float) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/titleBarHeight");
+				this.w = (int) REGISTRY.getRegistryItem("/Voxel/Display/width");
+				this.h = height - (float) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/titleBarHeight")
+						- (float) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/shellHeight");
+			} else {
+				this.x = oldX;
+				this.y = oldY;
+				this.w = oldW;
+				this.h = oldH;
+			}
+		}
+	}
+
+	@Override
 	public BackgroundStyle getBackgroundStyle() {
 		return backgroundStyle;
 	}
@@ -406,6 +412,11 @@ public abstract class NanoWindow implements IWindow {
 	@Override
 	public boolean isHidden() {
 		return hidden;
+	}
+
+	@Override
+	public boolean isMaximized() {
+		return maximized;
 	}
 
 	@Override

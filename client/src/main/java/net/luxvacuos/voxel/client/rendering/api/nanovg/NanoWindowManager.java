@@ -233,6 +233,22 @@ public class NanoWindowManager implements IWindowManager {
 	}
 
 	@Override
+	public void bringToFront(IWindow window) {
+		IWindow top = windows.get(windows.size() - 1);
+		if (top != window)
+			if (!top.isAlwaysOnTop() && !top.isHidden() && !top.isMinimized()) {
+				windows.remove(window);
+				windows.add(window);
+			}
+	}
+
+	@Override
+	public boolean isOnTop(IWindow window) {
+		IWindow top = windows.get(windows.size() - 1);
+		return top == window;
+	}
+
+	@Override
 	public void notifyClose(IWindow window) {
 		if (this.shell != null)
 			if (window.hasDecorations() && !window.isHidden())

@@ -22,21 +22,17 @@ package net.luxvacuos.voxel.client.ui.menus;
 
 import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.core.states.StateNames;
-import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.NRendering;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.WM;
 import net.luxvacuos.voxel.client.ui.Alignment;
 import net.luxvacuos.voxel.client.ui.Button;
-import net.luxvacuos.voxel.client.ui.ContextMenu;
 import net.luxvacuos.voxel.client.ui.ModalWindow;
 import net.luxvacuos.voxel.client.ui.RootComponentWindow;
 import net.luxvacuos.voxel.universal.core.TaskManager;
 import net.luxvacuos.voxel.universal.core.states.StateMachine;
 
 public class MainMenu extends RootComponentWindow {
-
-	private boolean pressed = false;
 
 	public MainMenu(float x, float y, float w, float h) {
 		super(x, y, w, h, "Main Menu");
@@ -102,20 +98,6 @@ public class MainMenu extends RootComponentWindow {
 
 		super.setWindowClose(WindowClose.DO_NOTHING);
 		super.initApp(window);
-	}
-
-	@Override
-	public void updateApp(float delta, Window window) {
-		if (Mouse.isButtonDown(1) && !pressed)
-			WM.getWM().addWindow(new ContextMenu());
-		pressed = Mouse.isButtonDown(1);
-
-		super.updateApp(delta, window);
-	}
-	
-	@Override
-	public void alwaysUpdateApp(float delta, Window window) {
-		super.alwaysUpdateApp(delta, window);
 	}
 
 	@Override

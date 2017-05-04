@@ -29,10 +29,12 @@ import net.luxvacuos.voxel.client.rendering.api.nanovg.IWindow;
 
 public class TitleBar implements ITitleBar {
 
-	private boolean enabled = true, dragging;
+	private boolean enabled = true, dragging, pressed;
 	private Event drag;
 	private IWindow window;
 	private RootComponent left, right, center;
+	private float time;
+	private boolean count;
 
 	public TitleBar(IWindow window) {
 		this.window = window;
@@ -59,6 +61,24 @@ public class TitleBar implements ITitleBar {
 			if ((Mouse.isButtonDown(0) && canDrag(this.window)) || dragging) {
 				dragging = Mouse.isButtonDown(0);
 				drag.event(window);
+			}
+			if (Mouse.isButtonDown(0) && canDrag(this.window) || pressed) {
+				if (!pressed) {
+					count = true;
+					if (time != 0) {
+						this.window.toggleMaximize();
+						time = 0;
+						count = false;
+					}
+				}
+				pressed = Mouse.isButtonDown(0);
+			}
+			if (count) {
+				time += 1 * delta;
+				if (time > 0.5f) {
+					count = false;
+					time = 0;
+				}
 			}
 			left.update(delta, window);
 			right.update(delta, window);

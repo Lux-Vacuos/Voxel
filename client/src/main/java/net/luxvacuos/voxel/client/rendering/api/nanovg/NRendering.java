@@ -155,23 +155,31 @@ public class NRendering {
 	}
 
 	public static void renderWindow(long vg, float x, float y, float w, float h, BackgroundStyle backgroundStyle,
-			NVGColor backgroundColor, boolean decorations, boolean titleBar) {
+			NVGColor backgroundColor, boolean decorations, boolean titleBar, boolean maximized) {
 		NVGPaint shadowPaint = paintA;
 		float borderSize = (float) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/borderSize");
 		float titleBarHeight = (float) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/titleBarHeight");
 
 		nvgSave(vg);
 		if (decorations) {
-			// Window
-			nvgBeginPath(vg);
-			nvgRect(vg, x, y, w, h);
-			nvgPathWinding(vg, NVG_HOLE);
-			if (titleBar)
-				nvgRect(vg, x - borderSize, y - titleBarHeight, w + borderSize * 2f, h + titleBarHeight + borderSize);
-			else
-				nvgRect(vg, x - borderSize, y - borderSize, w + borderSize * 2f, h + borderSize * 2f);
-			nvgFillColor(vg, rgba(31, 31, 31, 120, colorA));
-			nvgFill(vg);
+			if (maximized) {
+				nvgBeginPath(vg);
+				nvgRect(vg, x, y - titleBarHeight, w, titleBarHeight);
+				nvgFillColor(vg, rgba(31, 31, 31, 120, colorA));
+				nvgFill(vg);
+			} else {
+				// Window
+				nvgBeginPath(vg);
+				nvgRect(vg, x, y, w, h);
+				nvgPathWinding(vg, NVG_HOLE);
+				if (titleBar)
+					nvgRect(vg, x - borderSize, y - titleBarHeight, w + borderSize * 2f,
+							h + titleBarHeight + borderSize);
+				else
+					nvgRect(vg, x - borderSize, y - borderSize, w + borderSize * 2f, h + borderSize * 2f);
+				nvgFillColor(vg, rgba(31, 31, 31, 120, colorA));
+				nvgFill(vg);
+			}
 		}
 
 		// Background
@@ -185,7 +193,7 @@ public class NRendering {
 		case TRANSPARENT:
 			break;
 		}
-		if (decorations) {
+		if (decorations && !maximized) {
 			// Drop shadow
 			if (titleBar) {
 				nvgBoxGradient(vg, x - borderSize, y + 10 - titleBarHeight, w + borderSize * 2f,

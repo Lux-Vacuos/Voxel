@@ -25,5 +25,5 @@ public interface IShell {
 	public void notifyAdd(IWindow window);
 
 	public void notifyClose(IWindow window);
-
+	
 }
