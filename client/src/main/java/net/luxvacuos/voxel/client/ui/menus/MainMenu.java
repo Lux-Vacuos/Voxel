@@ -67,6 +67,7 @@ public class MainMenu extends RootComponentWindow {
 
 		playButton.setOnButtonPress(() -> {
 			if (ClientVariables.TEST_MODE) {
+				WM.getWM().toggleShell();
 				super.setWindowClose(WindowClose.DISPOSE);
 				super.closeWindow();
 				StateMachine.setCurrentState(StateNames.TEST);

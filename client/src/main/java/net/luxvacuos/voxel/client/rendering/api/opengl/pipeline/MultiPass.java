@@ -32,8 +32,8 @@ public class MultiPass extends DeferredPipeline {
 	private VolumetricLight volumetricLight;
 	private Sun sun;
 	private BloomMask bloomMask;
-	private GaussianHorizonal gaussianHorizontal;
-	private GaussianVertical gaussianVertical;
+	private GaussianHorizonal gH1, gH2;
+	private GaussianVertical gV1, gV2;
 	private Reflections reflections;
 	private ColorCorrection colorCorrection;
 	private LensFlares lensFlares;
@@ -49,11 +49,11 @@ public class MultiPass extends DeferredPipeline {
 		volumetricLight = new VolumetricLight("VolumetricLight", width, height);
 		super.imagePasses.add(volumetricLight);
 
-		gaussianHorizontal = new GaussianHorizonal("GaussianHorizontal", width / 4, height / 4);
-		super.imagePasses.add(gaussianHorizontal);
+		gH1 = new GaussianHorizonal("GaussianHorizontal", width / 2, height / 2);
+		super.imagePasses.add(gH1);
 
-		gaussianVertical = new GaussianVertical("GaussianVertical", width / 4, height / 4);
-		super.imagePasses.add(gaussianVertical);
+		gV1 = new GaussianVertical("GaussianVertical", width / 2, height / 2);
+		super.imagePasses.add(gV1);
 
 		lighting = new Lighting("Lighting", width, height);
 		super.imagePasses.add(lighting);
@@ -68,9 +68,14 @@ public class MultiPass extends DeferredPipeline {
 		bloomMask = new BloomMask("BloomMask", width, height);
 		super.imagePasses.add(bloomMask);
 
-		super.imagePasses.add(gaussianHorizontal);
-
-		super.imagePasses.add(gaussianVertical);
+		super.imagePasses.add(gH1);
+		super.imagePasses.add(gV1);
+		
+		gH2 = new GaussianHorizonal("GaussianHorizontal", width / 4, height / 4);
+		super.imagePasses.add(gH2);
+		
+		gV2 = new GaussianVertical("GaussianVertical", width / 4, height / 4);
+		super.imagePasses.add(gV2);
 		
 		bloom = new Bloom("Bloom", width, height);
 		super.imagePasses.add(bloom);
