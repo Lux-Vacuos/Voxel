@@ -20,6 +20,14 @@
 
 package net.luxvacuos.voxel.client.rendering.api.opengl.objects;
 
+import static org.lwjgl.assimp.Assimp.AI_MATKEY_COLOR_DIFFUSE;
+import static org.lwjgl.assimp.Assimp.aiGetErrorString;
+import static org.lwjgl.assimp.Assimp.aiGetMaterialColor;
+import static org.lwjgl.assimp.Assimp.aiTextureType_NONE;
+
+import org.lwjgl.assimp.AIColor4D;
+import org.lwjgl.assimp.AIMaterial;
+
 import net.luxvacuos.igl.vector.Vector4f;
 import net.luxvacuos.voxel.universal.resources.IDisposable;
 
@@ -50,6 +58,24 @@ public class Material implements IDisposable {
 	 */
 	public Material(Vector4f diffuse, float roughness, float metallic) {
 		this.diffuse = diffuse;
+		this.roughness = roughness;
+		this.metallic = metallic;
+		this.diffuseTexture = DefaultData.diffuse;
+		this.normalTexture = DefaultData.normal;
+		this.roughnessTexture = DefaultData.roughness;
+		this.metallicTexture = DefaultData.metallic;
+	}
+
+	/**
+	 * 
+	 * @param material Assimp Material
+	 */
+	public Material(AIMaterial material) {
+		AIColor4D diffuse = AIColor4D.create();
+		if (aiGetMaterialColor(material, AI_MATKEY_COLOR_DIFFUSE, aiTextureType_NONE, 0, diffuse) != 0) {
+			throw new IllegalStateException(aiGetErrorString());
+		}
+		this.diffuse = new Vector4f(diffuse.r(), diffuse.g(), diffuse.b(), diffuse.a());
 		this.roughness = roughness;
 		this.metallic = metallic;
 		this.diffuseTexture = DefaultData.diffuse;

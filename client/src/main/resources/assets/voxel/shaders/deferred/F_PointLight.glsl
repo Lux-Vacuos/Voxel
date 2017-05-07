@@ -20,6 +20,8 @@
 
 #version 330 core
 
+##include struct Light
+
 in vec2 textureCoords;
 in vec4 posPos;
 
@@ -29,9 +31,8 @@ uniform vec3 cameraPosition;
 uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;
 
-uniform vec3 pointLightsPosition[256];
-uniform vec3 pointLightsColor[256];
-uniform int totalPointLights;
+uniform Light lights[128];
+uniform int totalLights;
 
 uniform sampler2D gDiffuse;
 uniform sampler2D gPosition;
@@ -49,6 +50,22 @@ uniform sampler2D composite0;
 ##include function GeometrySmith
 
 ##include function fresnelSchlickRoughness
+
+vec3 calcLight(Light light, vec3 position, vec3 diffuse, vec3 L, vec3 N, vec3 V, vec3 kD, vec3 F, float roughness) {
+    vec3 H = normalize(V + L);
+    float distance = length(light.position - position);
+	float attenuation = 1.0 / (distance * distance);
+	vec3 radiance = light.color * attenuation;   
+			
+    float NDF = DistributionGGX(N, H, roughness);        
+	float G = GeometrySmith(N, V, L, roughness);      			
+    vec3 nominator = NDF * G * F;
+    float denominator = totalLights * max(dot(V, N), 0.0) * max(dot(L, N), 0.0) + 0.001; 
+	vec3 brdf = nominator / denominator;
+			
+    float NdotL = max(dot(N, L), 0.0);                
+	return (kD * diffuse / PI + brdf) * radiance * NdotL; 
+}
 
 void main(void){
 	vec2 texcoord = textureCoords;
@@ -75,22 +92,18 @@ void main(void){
 	    kD *= 1.0 - metallic;	  
 	
     	vec3 Lo = vec3(0.0);
-		for(int i = 0; i < totalPointLights; ++i) {
-        	vec3 L = normalize(pointLightsPosition[i] - position.rgb);
-        	vec3 H = normalize(V + L);
-        	float distance = length(pointLightsPosition[i] - position.rgb);
-			float attenuation = 1.0 / (distance * distance);
-	        vec3 radiance = pointLightsColor[i] * attenuation;        
-		
-        	float NDF = DistributionGGX(N, H, roughness);        
-	        float G = GeometrySmith(N, V, L, roughness);      
-		
-        	vec3 nominator = NDF * G * F;
-        	float denominator = totalPointLights * max(dot(V, N), 0.0) * max(dot(L, N), 0.0) + 0.001; 
-	        vec3 brdf = nominator / denominator;
-		
-        	float NdotL = max(dot(N, L), 0.0);                
-	        Lo += (kD * diffuse.rgb / PI + brdf) * radiance * NdotL; 
+		for(int i = 0; i < totalLights; i++) {
+			vec3 L = normalize(lights[i].position - position.rgb);
+			if(lights[i].type == 0) 
+				Lo += calcLight(lights[i], position.rgb, diffuse.rgb, L, N, V, kD, F, roughness);
+			else if(lights[i].type == 1) {
+				float theta = dot(L, normalize(-lights[i].direction));
+				float epsilon = lights[i].inRadius - lights[i].radius;
+				float intensity = clamp((theta - lights[i].radius) / epsilon, 0.0, 1.0);    
+				if(intensity > 0.0) {
+					Lo += calcLight(lights[i], position.rgb, diffuse.rgb, L, N, V, kD, F, roughness) * intensity;
+				}
+			}
     	}
     	vec3 color = Lo;
     	composite.rgb += color;

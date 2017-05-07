@@ -128,3 +128,14 @@ float computeShadow(vec4 position){
 }
 
 ##end
+
+##struct Light
+struct Light {
+	vec3 position;
+	vec3 color;
+	vec3 direction;
+	float radius;
+	float inRadius;
+	int type;
+};
+##end

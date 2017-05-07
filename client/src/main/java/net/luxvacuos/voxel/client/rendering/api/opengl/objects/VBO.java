@@ -25,58 +25,39 @@ import static org.lwjgl.opengl.GL15.glBufferData;
 import static org.lwjgl.opengl.GL15.glDeleteBuffers;
 import static org.lwjgl.opengl.GL15.glGenBuffers;
 
-import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
-
-import org.lwjgl.BufferUtils;
-
 import net.luxvacuos.voxel.universal.resources.IDisposable;
 
 public class VBO implements IDisposable {
-	
+
 	private final int vboId;
 	private final int type;
-	
-	private VBO(int vboId, int type){
+
+	private VBO(int vboId, int type) {
 		this.vboId = vboId;
 		this.type = type;
 	}
-	
-	public static VBO create(int type){
+
+	public static VBO create(int type) {
 		int id = glGenBuffers();
 		return new VBO(id, type);
 	}
-	
-	public void bind(){
+
+	public void bind() {
 		glBindBuffer(type, vboId);
 	}
-	
-	public void unbind(){
+
+	public void unbind() {
 		glBindBuffer(type, 0);
 	}
-	
-	public void storeData(float[] data, int param){
-		FloatBuffer buffer = BufferUtils.createFloatBuffer(data.length);
-		buffer.put(data);
-		buffer.flip();
-		storeData(buffer, param);
+
+	public void storeData(int[] data, int param) {
+		glBufferData(type, data, param);
 	}
 
-	public void storeData(int[] data, int param){
-		IntBuffer buffer = BufferUtils.createIntBuffer(data.length);
-		buffer.put(data);
-		buffer.flip();
-		storeData(buffer, param);
-	}
-	
-	public void storeData(IntBuffer data, int param){
+	public void storeData(float[] data, int param) {
 		glBufferData(type, data, param);
 	}
-	
-	public void storeData(FloatBuffer data, int param){
-		glBufferData(type, data, param);
-	}
-	
+
 	@Override
 	public void dispose() {
 		glDeleteBuffers(vboId);

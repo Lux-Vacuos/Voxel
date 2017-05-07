@@ -20,39 +20,43 @@
 
 package net.luxvacuos.voxel.client.resources;
 
+import static org.lwjgl.assimp.Assimp.AI_SCENE_FLAGS_INCOMPLETE;
+import static org.lwjgl.assimp.Assimp.aiGetErrorString;
+import static org.lwjgl.assimp.Assimp.aiImportFile;
+import static org.lwjgl.assimp.Assimp.aiProcess_FlipUVs;
+import static org.lwjgl.assimp.Assimp.aiProcess_GenNormals;
+import static org.lwjgl.assimp.Assimp.aiProcess_OptimizeMeshes;
+import static org.lwjgl.assimp.Assimp.aiProcess_SplitLargeMeshes;
 import static org.lwjgl.assimp.Assimp.*;
 
-import java.io.IOException;
+import java.io.File;
 
 import org.lwjgl.assimp.AIScene;
 
 import net.luxvacuos.igl.Logger;
+import net.luxvacuos.voxel.client.rendering.api.opengl.objects.Model;
 import net.luxvacuos.voxel.universal.core.GlobalVariables;
 
 public class AssimpResourceLoader {
-	
+
 	private ResourceLoader loader;
 
 	public AssimpResourceLoader(ResourceLoader loader) {
 		this.loader = loader;
 	}
 
-	public void loadModel(String file) {
-		AIScene scene = null;
-		try {
-			scene = aiImportFile(
-					ResourceLoader.ioResourceToByteBuffer(
-							"assets/" + GlobalVariables.REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/assets")
-									+ "/models/" + file,
-							8192),
-					aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_GenNormals | aiProcess_SplitLargeMeshes
-							| aiProcess_OptimizeMeshes);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+	public Model loadModel(String filePath) {
+		String fileName = Thread.currentThread().getContextClassLoader().getResource("assets/"
+				+ GlobalVariables.REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/assets") + "/models/" + filePath)
+				.getFile();
+		File file = new File(fileName);
+		AIScene scene = aiImportFile(file.getAbsolutePath(),
+				aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_GenNormals | aiProcess_SplitLargeMeshes
+						| aiProcess_OptimizeMeshes | aiProcess_CalcTangentSpace);
 		if (scene == null || scene.mFlags() == AI_SCENE_FLAGS_INCOMPLETE || scene.mRootNode() == null) {
 			Logger.error(aiGetErrorString());
 		}
+		return new Model(scene);
 	}
 
 }

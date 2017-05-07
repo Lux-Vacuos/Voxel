@@ -97,7 +97,7 @@ public class VAO implements IDisposable {
 		dataVbo.unbind();
 		dataVbos.add(dataVbo);
 	}
-	
+
 	@Override
 	public void dispose() {
 		glDeleteVertexArrays(id);

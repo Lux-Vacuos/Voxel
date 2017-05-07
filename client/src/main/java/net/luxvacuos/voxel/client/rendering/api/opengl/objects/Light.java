@@ -20,25 +20,53 @@
 
 package net.luxvacuos.voxel.client.rendering.api.opengl.objects;
 
-import net.luxvacuos.igl.vector.Vector3d;
 import net.luxvacuos.igl.vector.Vector3f;
 
 public class Light {
 
-	private Vector3d position;
+	private Vector3f position;
 	private Vector3f color;
+	private Vector3f direction;
+	private float radius, inRadius;
+	private int type;
 
-	public Light(Vector3d position, Vector3f color) {
+	public Light(Vector3f position, Vector3f color, Vector3f direction, float radius, float inRadius) {
 		this.position = position;
 		this.color = color;
+		this.direction = direction;
+		this.radius = radius;
+		this.inRadius = inRadius;
+		type = 1;
 	}
 
-	public Vector3d getPosition() {
+	public Light(Vector3f position, Vector3f color) {
+		this.position = position;
+		this.color = color;
+		type = 0;
+	}
+
+	public Vector3f getPosition() {
 		return position;
 	}
 
 	public Vector3f getColor() {
 		return color;
+	}
+
+	public Vector3f getDirection() {
+		return direction;
+	}
+
+	public float getRadius() {
+		return radius;
+	}
+
+	public float getInRadius() {
+		return inRadius;
+	}
+
+	public int getType() {
+		return type;
 	}
 
 }

@@ -9,11 +9,11 @@ import net.luxvacuos.voxel.universal.ecs.components.VoxelComponent;
 public class Renderable implements VoxelComponent {
 
 	private TexturedModel model;
-	
+
 	public Renderable(TexturedModel model) {
 		this.model = model;
 	}
-	
+
 	public TexturedModel getModel() {
 		return this.model;
 	}
@@ -21,7 +21,7 @@ public class Renderable implements VoxelComponent {
 	@Override
 	public void load(TagCompound compound) throws NBTException {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override

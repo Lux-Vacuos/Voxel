@@ -142,11 +142,13 @@ public class TestState extends AbstractState {
 
 		tess = new Tessellator(BlocksResources.getMaterial());
 
-		Renderer.getLightRenderer().addLight(new Light(new Vector3d(-8, 5, -8), new Vector3f(1, 1, 1)));
-		Renderer.getLightRenderer().addLight(new Light(new Vector3d(-8, 5, 8), new Vector3f(1, 1, 1)));
-		Renderer.getLightRenderer().addLight(new Light(new Vector3d(8, 5, -8), new Vector3f(1, 1, 1)));
-		Renderer.getLightRenderer().addLight(new Light(new Vector3d(8, 5, 8), new Vector3f(1, 1, 1)));
-		Renderer.getLightRenderer().addLight(new Light(new Vector3d(0, 5, 0), new Vector3f(1, 1, 1)));
+		Renderer.getLightRenderer().addLight(new Light(new Vector3f(-8, 5, -8), new Vector3f(1, 1, 1)));
+		Renderer.getLightRenderer().addLight(new Light(new Vector3f(-8, 5, 8), new Vector3f(1, 1, 1)));
+		Renderer.getLightRenderer().addLight(new Light(new Vector3f(8, 5, -8), new Vector3f(1, 1, 1)));
+		Renderer.getLightRenderer().addLight(new Light(new Vector3f(8, 5, 8), new Vector3f(1, 1, 1)));
+		Renderer.getLightRenderer().addLight(new Light(new Vector3f(0, 5, 0), new Vector3f(1, 1, 1)));
+		Renderer.getLightRenderer()
+				.addLight(new Light(new Vector3f(0, 5, 12), new Vector3f(100, 100, 100), new Vector3f(0, -0.5f, -1f), 20, 15));
 
 		mat1 = new RenderEntity("", sphere);
 		mat1.getComponent(Position.class).set(0, 1, 0);
@@ -216,7 +218,8 @@ public class TestState extends AbstractState {
 		particlesPoint = new Vector3d(0, 1.7f, -5);
 
 		AssimpResourceLoader aLoader = window.getAssimpResourceLoader();
-		// aLoader.loadModel("test_state/plane.obj");
+		// aLoader.loadModel("test_state/test.fbx");
+		//worldSimulation.setTime(22000);
 	}
 
 	@Override
