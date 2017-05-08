@@ -61,7 +61,8 @@ public class AssimpResourceLoader {
 		AIScene scene = aiImportFileFromMemory(bFile,
 				aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_GenNormals | aiProcess_SplitLargeMeshes
 						| aiProcess_OptimizeMeshes | aiProcess_CalcTangentSpace | aiProcess_ImproveCacheLocality
-						| aiProcess_ValidateDataStructure | aiProcess_FindInvalidData | aiProcess_FixInfacingNormals,
+						| aiProcess_ValidateDataStructure | aiProcess_FindInvalidData | aiProcess_FixInfacingNormals
+						| aiProcess_JoinIdenticalVertices,
 				ext);
 		if (scene == null || scene.mFlags() == AI_SCENE_FLAGS_INCOMPLETE || scene.mRootNode() == null) {
 			Logger.error(aiGetErrorString());

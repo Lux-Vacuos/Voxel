@@ -45,11 +45,11 @@ public class CubeMapCamera extends CameraEntity {
 		switch (faceIndex) {
 		case 0:
 			rotation.setX(0);
-			rotation.setY(90);
+			rotation.setY(-90);
 			break;
 		case 1:
 			rotation.setX(0);
-			rotation.setY(-90);
+			rotation.setY(90);
 			break;
 		case 2:
 			rotation.setX(90);

@@ -20,9 +20,13 @@
 
 package net.luxvacuos.voxel.client.rendering.api.opengl.objects;
 
-import static org.lwjgl.assimp.Assimp.*;
-import static org.lwjgl.assimp.Assimp.aiGetErrorString;
-import static org.lwjgl.assimp.Assimp.*;
+import static org.lwjgl.assimp.Assimp.AI_MATKEY_COLOR_DIFFUSE;
+import static org.lwjgl.assimp.Assimp.AI_MATKEY_COLOR_SPECULAR;
+import static org.lwjgl.assimp.Assimp.aiGetMaterialColor;
+import static org.lwjgl.assimp.Assimp.aiGetMaterialTexture;
+import static org.lwjgl.assimp.Assimp.aiGetMaterialTextureCount;
+import static org.lwjgl.assimp.Assimp.aiReturn_SUCCESS;
+import static org.lwjgl.assimp.Assimp.aiTextureType_DIFFUSE;
 import static org.lwjgl.assimp.Assimp.aiTextureType_NONE;
 
 import java.nio.FloatBuffer;
@@ -90,10 +94,10 @@ public class Material implements IDisposable {
 		if (aiGetMaterialColor(material, AI_MATKEY_COLOR_DIFFUSE, aiTextureType_NONE, 0, diffuse) == aiReturn_SUCCESS) {
 			this.diffuse = new Vector4f(diffuse.r(), diffuse.g(), diffuse.b(), diffuse.a());
 		}
-		/*if (aiGetMaterialColor(material, AI_MATKEY_COLOR_SPECULAR, aiTextureType_NONE, 0, data) == aiReturn_SUCCESS) {
+		if (aiGetMaterialColor(material, AI_MATKEY_COLOR_SPECULAR, aiTextureType_NONE, 0, data) == aiReturn_SUCCESS) {
 			this.roughness = data.r();
-			this.metallic = data.b();
-		}*/
+			this.metallic = data.g();
+		}
 		if (aiGetMaterialTextureCount(material, aiTextureType_DIFFUSE) > 0) {
 			AIString path = AIString.create();
 			if (aiGetMaterialTexture(material, aiTextureType_DIFFUSE, 0, path, (IntBuffer) null, (IntBuffer) null,

@@ -136,11 +136,11 @@ public class TestState extends AbstractState {
 
 		tess = new Tessellator(BlocksResources.getMaterial());
 
-		Renderer.getLightRenderer().addLight(new Light(new Vector3f(-8, 5, -8), new Vector3f(1, 1, 1)));
-		Renderer.getLightRenderer().addLight(new Light(new Vector3f(-8, 5, 8), new Vector3f(1, 1, 1)));
-		Renderer.getLightRenderer().addLight(new Light(new Vector3f(8, 5, -8), new Vector3f(1, 1, 1)));
-		Renderer.getLightRenderer().addLight(new Light(new Vector3f(8, 5, 8), new Vector3f(1, 1, 1)));
-		Renderer.getLightRenderer().addLight(new Light(new Vector3f(0, 5, 0), new Vector3f(1, 1, 1)));
+		//Renderer.getLightRenderer().addLight(new Light(new Vector3f(-8, 5, -8), new Vector3f(1, 1, 1)));
+		//Renderer.getLightRenderer().addLight(new Light(new Vector3f(-8, 5, 8), new Vector3f(1, 1, 1)));
+		//Renderer.getLightRenderer().addLight(new Light(new Vector3f(8, 5, -8), new Vector3f(1, 1, 1)));
+		//Renderer.getLightRenderer().addLight(new Light(new Vector3f(8, 5, 8), new Vector3f(1, 1, 1)));
+		//Renderer.getLightRenderer().addLight(new Light(new Vector3f(0, 5, 0), new Vector3f(1, 1, 1)));
 		Renderer.getLightRenderer().addLight(new Light(new Vector3f(5, 5, 12), new Vector3f(100, 100, 100),
 				new Vector3f(-0.5f, -0.5f, -1f), 20, 15));
 		Renderer.getLightRenderer().addLight(new Light(new Vector3f(-5, 5, 12), new Vector3f(100, 100, 100),
@@ -175,11 +175,11 @@ public class TestState extends AbstractState {
 		plane = new RenderEntity("", planeM);
 		plane.getComponent(Scale.class).setScale(1f);
 
-		characterM = aLoader.loadModel("levels/test_state/models/character.blend");
+		characterM = aLoader.loadModel("levels/test_state/models/monkey.blend");
 
 		character = new RenderEntity("", characterM);
 		character.getComponent(Position.class).set(0, 0, 5);
-		character.getComponent(Scale.class).setScale(0.21f);
+		//character.getComponent(Scale.class).setScale(0.21f);
 
 		cerberusM = aLoader.loadModel("levels/test_state/models/cerberus.blend");
 
@@ -193,7 +193,7 @@ public class TestState extends AbstractState {
 		particleSystem.setDirection(new Vector3d(0, -1, 0), 0.4f);
 		particlesPoint = new Vector3d(0, 1.7f, -5);
 
-		worldSimulation.setTime(22000);
+		//worldSimulation.setTime(22000);
 	}
 
 	@Override
@@ -261,7 +261,7 @@ public class TestState extends AbstractState {
 
 			engine.update(delta);
 			sun.update(camera.getPosition(), worldSimulation.update(delta), delta);
-			particleSystem.generateParticles(particlesPoint, delta);
+			//particleSystem.generateParticles(particlesPoint, delta);
 			ParticleDomain.update(delta, camera);
 
 			if (kbh.isKeyPressed(GLFW.GLFW_KEY_R))

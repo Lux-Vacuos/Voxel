@@ -31,7 +31,7 @@ public class GlobalVariables {
 	public static boolean debug = false;
 	
 	/** Enable Test Mode */
-	public static boolean TEST_MODE = false;
+	public static boolean TEST_MODE = true;
 	
 	/** Registry */
 	public static IRegistry<String, Object> REGISTRY;
