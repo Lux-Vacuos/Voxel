@@ -42,7 +42,7 @@ public class LensFlares extends DeferredPass {
 	public LensFlares(String name, int width, int height) {
 		super(name, width, height);
 		lensColor = ClientInternalSubsystem.getInstance().getGameWindow().getResourceLoader()
-				.loadTextureMisc("lens/lens_color");
+				.loadTextureMisc("textures/lens/lens_color.png");
 	}
 
 	@Override

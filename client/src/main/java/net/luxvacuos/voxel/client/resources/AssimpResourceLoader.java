@@ -20,16 +20,21 @@
 
 package net.luxvacuos.voxel.client.resources;
 
-import static org.lwjgl.assimp.Assimp.AI_SCENE_FLAGS_INCOMPLETE;
+import static org.lwjgl.assimp.Assimp.*;
 import static org.lwjgl.assimp.Assimp.aiGetErrorString;
-import static org.lwjgl.assimp.Assimp.aiImportFile;
+import static org.lwjgl.assimp.Assimp.aiImportFileFromMemory;
+import static org.lwjgl.assimp.Assimp.aiProcess_CalcTangentSpace;
+import static org.lwjgl.assimp.Assimp.aiProcess_FindInvalidData;
 import static org.lwjgl.assimp.Assimp.aiProcess_FlipUVs;
 import static org.lwjgl.assimp.Assimp.aiProcess_GenNormals;
+import static org.lwjgl.assimp.Assimp.aiProcess_ImproveCacheLocality;
 import static org.lwjgl.assimp.Assimp.aiProcess_OptimizeMeshes;
 import static org.lwjgl.assimp.Assimp.aiProcess_SplitLargeMeshes;
-import static org.lwjgl.assimp.Assimp.*;
+import static org.lwjgl.assimp.Assimp.aiProcess_Triangulate;
+import static org.lwjgl.assimp.Assimp.aiProcess_ValidateDataStructure;
 
-import java.io.File;
+import java.io.IOException;
+import java.nio.ByteBuffer;
 
 import org.lwjgl.assimp.AIScene;
 
@@ -39,24 +44,29 @@ import net.luxvacuos.voxel.universal.core.GlobalVariables;
 
 public class AssimpResourceLoader {
 
-	private ResourceLoader loader;
-
-	public AssimpResourceLoader(ResourceLoader loader) {
-		this.loader = loader;
+	public AssimpResourceLoader() {
 	}
 
 	public Model loadModel(String filePath) {
-		String fileName = Thread.currentThread().getContextClassLoader().getResource("assets/"
-				+ GlobalVariables.REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/assets") + "/models/" + filePath)
-				.getFile();
-		File file = new File(fileName);
-		AIScene scene = aiImportFile(file.getAbsolutePath(),
+		Logger.log("Loading Model: " + filePath);
+		String fileName = "assets/" + GlobalVariables.REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/assets") + "/"
+				+ filePath;
+		String ext = fileName.split("\\.")[1];
+		ByteBuffer bFile = null;
+		try {
+			bFile = ResourceLoader.ioResourceToByteBuffer(fileName, 512);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		AIScene scene = aiImportFileFromMemory(bFile,
 				aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_GenNormals | aiProcess_SplitLargeMeshes
-						| aiProcess_OptimizeMeshes | aiProcess_CalcTangentSpace);
+						| aiProcess_OptimizeMeshes | aiProcess_CalcTangentSpace | aiProcess_ImproveCacheLocality
+						| aiProcess_ValidateDataStructure | aiProcess_FindInvalidData | aiProcess_FixInfacingNormals,
+				ext);
 		if (scene == null || scene.mFlags() == AI_SCENE_FLAGS_INCOMPLETE || scene.mRootNode() == null) {
 			Logger.error(aiGetErrorString());
 		}
-		return new Model(scene);
+		return new Model(scene, filePath.substring(0, filePath.lastIndexOf("/")));
 	}
 
 }

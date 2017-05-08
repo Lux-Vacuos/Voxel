@@ -220,9 +220,10 @@ public class ResourceLoader implements IDisposable {
 	public Texture loadTextureMisc(String fileName, int filter, boolean textureMipMapAF) {
 		int texture_id = 0;
 		try {
-			Logger.log("Loading Texture: " + fileName + ".png");
-			texture_id = loadTexture("assets/" + GlobalVariables.REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/assets") + "/textures/" + fileName + ".png", filter,
-					GL_REPEAT, GL_RGBA, textureMipMapAF);
+			Logger.log("Loading Texture: " + fileName);
+			texture_id = loadTexture("assets/"
+					+ GlobalVariables.REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/assets") + "/" + fileName,
+					filter, GL_REPEAT, GL_RGBA, textureMipMapAF);
 		} catch (Exception e) {
 			throw new LoadTextureException(fileName, e);
 		}
@@ -250,9 +251,10 @@ public class ResourceLoader implements IDisposable {
 	public Texture loadTexture(String fileName, int filter, boolean textureMipMapAF) {
 		int texture = 0;
 		try {
-			Logger.log("Loading Texture: " + fileName + ".png");
-			texture = loadTexture("assets/" + GlobalVariables.REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/assets") + "/textures/" + fileName + ".png", filter,
-					GL_REPEAT, GL_SRGB_ALPHA, textureMipMapAF);
+			Logger.log("Loading Texture: " + fileName);
+			texture = loadTexture("assets/"
+					+ GlobalVariables.REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/assets") + "/" + fileName,
+					filter, GL_REPEAT, GL_SRGB_ALPHA, textureMipMapAF);
 		} catch (Exception e) {
 			throw new LoadTextureException(fileName, e);
 		}
@@ -308,7 +310,9 @@ public class ResourceLoader implements IDisposable {
 		int font = 0;
 		try {
 			ByteBuffer buffer = ioResourceToByteBuffer(
-					"assets/" + GlobalVariables.REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/assets") + "/fonts/" + filename + ".ttf", size * 1024);
+					"assets/" + GlobalVariables.REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/assets") + "/fonts/"
+							+ filename + ".ttf",
+					size * 1024);
 			nvgFont.add(buffer);
 			font = nvgCreateFontMem(nvgID, name, buffer, 0);
 		} catch (IOException e) {
@@ -323,7 +327,9 @@ public class ResourceLoader implements IDisposable {
 		int tex = 0;
 		try {
 			Logger.log("Loading NVGTexture: " + file + ".png");
-			buffer = ioResourceToByteBuffer("assets/" + GlobalVariables.REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/assets") + "/textures/menu/" + file + ".png",
+			buffer = ioResourceToByteBuffer(
+					"assets/" + GlobalVariables.REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/assets")
+							+ "/textures/menu/" + file + ".png",
 					8 * 1024);
 			tex = nvgCreateImageMem(nvgID, 0, buffer);
 		} catch (Exception e) {
@@ -339,7 +345,8 @@ public class ResourceLoader implements IDisposable {
 
 		for (int i = 0; i < textureFiles.length; i++) {
 			RawTexture data = decodeTextureFile(
-					"assets/" + GlobalVariables.REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/assets") + "/textures/skybox/" + textureFiles[i] + ".png");
+					"assets/" + GlobalVariables.REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/assets")
+							+ "/textures/skybox/" + textureFiles[i] + ".png");
 			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGBA, data.getWidth(), data.getHeight(), 0, GL_RGBA,
 					GL_UNSIGNED_BYTE, data.getBuffer());
 		}
@@ -419,8 +426,9 @@ public class ResourceLoader implements IDisposable {
 	 *             Exception in case of error
 	 */
 	public RawModel loadObjModel(String fileName) {
-		InputStream file = getClass().getClassLoader()
-				.getResourceAsStream("assets/" + GlobalVariables.REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/assets") + "/models/" + fileName + ".obj");
+		InputStream file = getClass().getClassLoader().getResourceAsStream(
+				"assets/" + GlobalVariables.REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/assets") + "/models/"
+						+ fileName + ".obj");
 		Logger.log("Loading Model: " + fileName + ".obj");
 		BufferedReader reader = new BufferedReader(new InputStreamReader(file));
 		String line;

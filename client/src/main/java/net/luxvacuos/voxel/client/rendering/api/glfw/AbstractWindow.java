@@ -78,8 +78,7 @@ public abstract class AbstractWindow implements IWindow {
 	protected double lastLoopTime;
 	protected float timeCount;
 
-	protected AbstractWindow(long windowID, int width,
-			int height) {
+	protected AbstractWindow(long windowID, int width, int height) {
 		this.windowID = windowID;
 		this.displayUtils = new DisplayUtils();
 		this.width = width;
@@ -199,10 +198,10 @@ public abstract class AbstractWindow implements IWindow {
 			this.resourceLoader = new ResourceLoader(this.windowID, this.nvgID);
 		return this.resourceLoader;
 	}
-	
+
 	public AssimpResourceLoader getAssimpResourceLoader() {
-		if(this.assimpResourceLoader == null)
-			this.assimpResourceLoader = new AssimpResourceLoader(getResourceLoader());
+		if (this.assimpResourceLoader == null)
+			this.assimpResourceLoader = new AssimpResourceLoader();
 		return this.assimpResourceLoader;
 	}
 

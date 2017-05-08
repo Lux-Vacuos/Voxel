@@ -3,18 +3,18 @@ package net.luxvacuos.voxel.client.ecs.components;
 import com.hackhalo2.nbt.exceptions.NBTException;
 import com.hackhalo2.nbt.tags.TagCompound;
 
-import net.luxvacuos.voxel.client.rendering.api.opengl.objects.TexturedModel;
+import net.luxvacuos.voxel.client.rendering.api.opengl.objects.Model;
 import net.luxvacuos.voxel.universal.ecs.components.VoxelComponent;
 
 public class Renderable implements VoxelComponent {
 
-	private TexturedModel model;
+	private Model model;
 
-	public Renderable(TexturedModel model) {
+	public Renderable(Model model) {
 		this.model = model;
 	}
 
-	public TexturedModel getModel() {
+	public Model getModel() {
 		return this.model;
 	}
 

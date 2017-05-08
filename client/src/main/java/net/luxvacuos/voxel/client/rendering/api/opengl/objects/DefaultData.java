@@ -27,10 +27,10 @@ public final class DefaultData {
 	public static Texture diffuse, normal, roughness, metallic;
 
 	public static void init(ResourceLoader loader) {
-		diffuse = loader.loadTextureMisc("def/d");
-		normal = loader.loadTextureMisc("def/d_n");
-		roughness = loader.loadTextureMisc("def/d_r");
-		metallic = loader.loadTextureMisc("def/d_m");
+		diffuse = loader.loadTextureMisc("textures/def/d.png");
+		normal = loader.loadTextureMisc("textures/def/d_n.png");
+		roughness = loader.loadTextureMisc("textures/def/d_r.png");
+		metallic = loader.loadTextureMisc("textures/def/d_m.png");
 	}
 
 	public static void dispose() {

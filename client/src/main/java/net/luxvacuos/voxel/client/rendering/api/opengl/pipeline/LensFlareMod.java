@@ -44,9 +44,9 @@ public class LensFlareMod extends DeferredPass {
 	public LensFlareMod(String name, int width, int height) {
 		super(name, width, height);
 		lensDirt = ClientInternalSubsystem.getInstance().getGameWindow().getResourceLoader()
-				.loadTextureMisc("lens/lens_dirt");
+				.loadTextureMisc("textures/lens/lens_dirt.png");
 		lensStar = ClientInternalSubsystem.getInstance().getGameWindow().getResourceLoader()
-				.loadTextureMisc("lens/lens_star");
+				.loadTextureMisc("textures/lens/lens_star.png");
 	}
 
 	@Override

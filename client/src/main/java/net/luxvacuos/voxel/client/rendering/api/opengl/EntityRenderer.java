@@ -30,9 +30,6 @@ import static org.lwjgl.opengl.GL13.GL_TEXTURE1;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE2;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE3;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
-import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
-import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
-import static org.lwjgl.opengl.GL30.glBindVertexArray;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -47,8 +44,8 @@ import net.luxvacuos.voxel.client.ecs.ClientComponents;
 import net.luxvacuos.voxel.client.ecs.entities.CameraEntity;
 import net.luxvacuos.voxel.client.ecs.entities.RenderEntity;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.Material;
-import net.luxvacuos.voxel.client.rendering.api.opengl.objects.RawModel;
-import net.luxvacuos.voxel.client.rendering.api.opengl.objects.TexturedModel;
+import net.luxvacuos.voxel.client.rendering.api.opengl.objects.Mesh;
+import net.luxvacuos.voxel.client.rendering.api.opengl.objects.Model;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.EntityShader;
 import net.luxvacuos.voxel.client.resources.ResourceLoader;
 import net.luxvacuos.voxel.client.util.Maths;
@@ -68,7 +65,7 @@ public class EntityRenderer {
 	 * Entity Shader
 	 */
 	private EntityShader shader;
-	private Map<TexturedModel, List<RenderEntity>> entities = new HashMap<TexturedModel, List<RenderEntity>>();
+	private Map<Model, List<RenderEntity>> entities = new HashMap<Model, List<RenderEntity>>();
 
 	public EntityRenderer(ResourceLoader loader) {
 		shader = new EntityShader();
@@ -97,7 +94,7 @@ public class EntityRenderer {
 	}
 
 	private void processEntity(RenderEntity entity) {
-		TexturedModel entityModel = ClientComponents.RENDERABLE.get(entity).getModel();
+		Model entityModel = ClientComponents.RENDERABLE.get(entity).getModel();
 		List<RenderEntity> batch = entities.get(entityModel);
 		if (batch != null) {
 			batch.add(entity);
@@ -108,28 +105,25 @@ public class EntityRenderer {
 		}
 	}
 
-	private void renderEntity(Map<TexturedModel, List<RenderEntity>> blockEntities) {
-		for (TexturedModel model : blockEntities.keySet()) {
-			prepareTexturedModel(model);
+	private void renderEntity(Map<Model, List<RenderEntity>> blockEntities) {
+		for (Model model : blockEntities.keySet()) {
 			List<RenderEntity> batch = blockEntities.get(model);
-			shader.loadMaterial(model.getMaterial());
 			for (RenderEntity entity : batch) {
 				prepareInstance(entity);
-				glDrawElements(GL_TRIANGLES, model.getRawModel().getVertexCount(), GL_UNSIGNED_INT, 0);
+				for (Mesh mesh : model.getMeshes()) {
+					Material mat = model.getMaterials().get(mesh.getAiMesh().mMaterialIndex());
+					prepareTexturedModel(mesh, mat);
+					shader.loadMaterial(mat);
+					glDrawElements(GL_TRIANGLES, mesh.getMesh().getIndexCount(), GL_UNSIGNED_INT, 0);
+					unbindTexturedModel(mesh);
+				}
 			}
-			unbindTexturedModel();
 		}
 
 	}
 
-	private void prepareTexturedModel(TexturedModel model) {
-		RawModel rawmodel = model.getRawModel();
-		Material material = model.getMaterial();
-		glBindVertexArray(rawmodel.getVaoID());
-		glEnableVertexAttribArray(0);
-		glEnableVertexAttribArray(1);
-		glEnableVertexAttribArray(2);
-		glEnableVertexAttribArray(3);
+	private void prepareTexturedModel(Mesh mesh, Material material) {
+		mesh.getMesh().bind(0, 1, 2, 3);
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, material.getDiffuseTexture().getID());
 		glActiveTexture(GL_TEXTURE1);
@@ -140,12 +134,8 @@ public class EntityRenderer {
 		glBindTexture(GL_TEXTURE_2D, material.getMetallicTexture().getID());
 	}
 
-	private void unbindTexturedModel() {
-		glDisableVertexAttribArray(0);
-		glDisableVertexAttribArray(1);
-		glDisableVertexAttribArray(2);
-		glDisableVertexAttribArray(3);
-		glBindVertexArray(0);
+	private void unbindTexturedModel(Mesh mesh) {
+		mesh.getMesh().unbind(0, 1, 2, 3);
 	}
 
 	private void prepareInstance(RenderEntity entity) {

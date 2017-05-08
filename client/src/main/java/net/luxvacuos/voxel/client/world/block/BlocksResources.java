@@ -37,10 +37,10 @@ public class BlocksResources {
 
 	public static void init(ResourceLoader loader) {
 
-		Texture blocks = loader.loadTexture("blocks", GL_NEAREST, false);
-		Texture blocks_n = loader.loadTextureMisc("blocks_n", GL_NEAREST, false);
-		Texture blocks_r = loader.loadTextureMisc("blocks_r", GL_NEAREST, false);
-		Texture blocks_m = loader.loadTextureMisc("blocks_m", GL_NEAREST, false);
+		Texture blocks = loader.loadTexture("textures/blocks.png", GL_NEAREST, false);
+		Texture blocks_n = loader.loadTextureMisc("textures/blocks_n.png", GL_NEAREST, false);
+		Texture blocks_r = loader.loadTextureMisc("textures/blocks_r.png", GL_NEAREST, false);
+		Texture blocks_m = loader.loadTextureMisc("textures/blocks_m.png", GL_NEAREST, false);
 		material = new Material(new Vector4f(1f), 1f, 1f);
 		material.setDiffuseTexture(blocks);
 		material.setNormalTexture(blocks_n);

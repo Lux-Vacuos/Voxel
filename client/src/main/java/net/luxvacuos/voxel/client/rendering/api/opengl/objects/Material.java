@@ -20,15 +20,20 @@
 
 package net.luxvacuos.voxel.client.rendering.api.opengl.objects;
 
-import static org.lwjgl.assimp.Assimp.AI_MATKEY_COLOR_DIFFUSE;
+import static org.lwjgl.assimp.Assimp.*;
 import static org.lwjgl.assimp.Assimp.aiGetErrorString;
-import static org.lwjgl.assimp.Assimp.aiGetMaterialColor;
+import static org.lwjgl.assimp.Assimp.*;
 import static org.lwjgl.assimp.Assimp.aiTextureType_NONE;
+
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 
 import org.lwjgl.assimp.AIColor4D;
 import org.lwjgl.assimp.AIMaterial;
+import org.lwjgl.assimp.AIString;
 
 import net.luxvacuos.igl.vector.Vector4f;
+import net.luxvacuos.voxel.client.core.ClientInternalSubsystem;
 import net.luxvacuos.voxel.universal.resources.IDisposable;
 
 /**
@@ -68,20 +73,59 @@ public class Material implements IDisposable {
 
 	/**
 	 * 
-	 * @param material Assimp Material
+	 * @param material
+	 *            Assimp Material
 	 */
-	public Material(AIMaterial material) {
-		AIColor4D diffuse = AIColor4D.create();
-		if (aiGetMaterialColor(material, AI_MATKEY_COLOR_DIFFUSE, aiTextureType_NONE, 0, diffuse) != 0) {
-			throw new IllegalStateException(aiGetErrorString());
-		}
-		this.diffuse = new Vector4f(diffuse.r(), diffuse.g(), diffuse.b(), diffuse.a());
-		this.roughness = roughness;
-		this.metallic = metallic;
+	public Material(AIMaterial material, String rootPath) {
+		this.diffuse = new Vector4f(0.8f, 0.8f, 0.8f, 1);
+		this.roughness = 0.5f;
+		this.metallic = 0;
 		this.diffuseTexture = DefaultData.diffuse;
 		this.normalTexture = DefaultData.normal;
 		this.roughnessTexture = DefaultData.roughness;
 		this.metallicTexture = DefaultData.metallic;
+
+		AIColor4D diffuse = AIColor4D.create();
+		AIColor4D data = AIColor4D.create();
+		if (aiGetMaterialColor(material, AI_MATKEY_COLOR_DIFFUSE, aiTextureType_NONE, 0, diffuse) == aiReturn_SUCCESS) {
+			this.diffuse = new Vector4f(diffuse.r(), diffuse.g(), diffuse.b(), diffuse.a());
+		}
+		/*if (aiGetMaterialColor(material, AI_MATKEY_COLOR_SPECULAR, aiTextureType_NONE, 0, data) == aiReturn_SUCCESS) {
+			this.roughness = data.r();
+			this.metallic = data.b();
+		}*/
+		if (aiGetMaterialTextureCount(material, aiTextureType_DIFFUSE) > 0) {
+			AIString path = AIString.create();
+			if (aiGetMaterialTexture(material, aiTextureType_DIFFUSE, 0, path, (IntBuffer) null, (IntBuffer) null,
+					(FloatBuffer) null, (IntBuffer) null, (IntBuffer) null, (IntBuffer) null) == aiReturn_SUCCESS)
+				this.diffuseTexture = loadTexture(path, rootPath);
+
+		}
+		if (aiGetMaterialTextureCount(material, aiTextureType_DIFFUSE) > 1) {
+			AIString path = AIString.create();
+			if (aiGetMaterialTexture(material, aiTextureType_DIFFUSE, 1, path, (IntBuffer) null, (IntBuffer) null,
+					(FloatBuffer) null, (IntBuffer) null, (IntBuffer) null, (IntBuffer) null) == aiReturn_SUCCESS)
+				this.normalTexture = loadTextureMisc(path, rootPath);
+
+		}
+		if (aiGetMaterialTextureCount(material, aiTextureType_DIFFUSE) > 2) {
+			AIString path = AIString.create();
+			if (aiGetMaterialTexture(material, aiTextureType_DIFFUSE, 2, path, (IntBuffer) null, (IntBuffer) null,
+					(FloatBuffer) null, (IntBuffer) null, (IntBuffer) null, (IntBuffer) null) == aiReturn_SUCCESS) {
+				this.roughnessTexture = loadTextureMisc(path, rootPath);
+				this.roughness = 1f;
+			}
+
+		}
+		if (aiGetMaterialTextureCount(material, aiTextureType_DIFFUSE) > 3) {
+			AIString path = AIString.create();
+			if (aiGetMaterialTexture(material, aiTextureType_DIFFUSE, 3, path, (IntBuffer) null, (IntBuffer) null,
+					(FloatBuffer) null, (IntBuffer) null, (IntBuffer) null, (IntBuffer) null) == aiReturn_SUCCESS) {
+				this.metallicTexture = loadTextureMisc(path, rootPath);
+				this.metallic = 1f;
+			}
+
+		}
 	}
 
 	public void setDiffuseTexture(Texture diffuseTexture) {
@@ -150,6 +194,33 @@ public class Material implements IDisposable {
 				&& t.getMetallic() == metallic && t.getDiffuse().equals(diffuse)
 				&& t.getNormalTexture().equals(normalTexture) && t.getRoughnessTexture().equals(roughnessTexture)
 				&& t.getMetallicTexture().equals(metallicTexture);
+	}
+
+	private static Texture loadTexture(AIString path, String rootPath) {
+		String file = path.dataString();
+		file = file.replace("\\", "/");
+		file = file.replace("//", "");
+		int count = file.split("\\.").length;
+		count--;
+		count /= 2;
+		for (int i = 0; i < count; i++)
+			rootPath = rootPath.substring(0, rootPath.lastIndexOf("/"));
+		file = file.substring(2);
+		return ClientInternalSubsystem.getInstance().getGameWindow().getResourceLoader().loadTexture(rootPath + file);
+	}
+
+	private static Texture loadTextureMisc(AIString path, String rootPath) {
+		String file = path.dataString();
+		file = file.replace("\\", "/");
+		file = file.replace("//", "");
+		int count = file.split("\\.").length;
+		count--;
+		count /= 2;
+		for (int i = 0; i < count; i++)
+			rootPath = rootPath.substring(0, rootPath.lastIndexOf("/"));
+		file = file.substring(2);
+		return ClientInternalSubsystem.getInstance().getGameWindow().getResourceLoader()
+				.loadTextureMisc(rootPath + file);
 	}
 
 }

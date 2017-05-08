@@ -20,7 +20,7 @@
 
 package net.luxvacuos.voxel.client.rendering.api.opengl.objects;
 
-import static org.lwjgl.assimp.Assimp.*;
+import static org.lwjgl.assimp.Assimp.aiReleaseImport;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +37,7 @@ public class Model implements IDisposable {
 	private List<Mesh> meshes;
 	private List<Material> materials;
 
-	public Model(AIScene scene) {
+	public Model(AIScene scene, String rootPath) {
 		this.scene = scene;
 
 		int meshCount = scene.mNumMeshes();
@@ -51,13 +51,17 @@ public class Model implements IDisposable {
 		PointerBuffer materialsBuffer = scene.mMaterials();
 		materials = new ArrayList<>();
 		for (int i = 0; i < materialCount; ++i) {
-			materials.add(new Material(AIMaterial.create(materialsBuffer.get(i))));
+			materials.add(new Material(AIMaterial.create(materialsBuffer.get(i)), rootPath));
 		}
 	}
 
 	@Override
 	public void dispose() {
-		aiReleaseImport(scene);
+		try {
+			aiReleaseImport(scene);
+		} catch (NullPointerException e) {
+			// XXX: Assimp + animations = NPE...
+		}
 		for (Material material : materials) {
 			material.dispose();
 		}
@@ -65,12 +69,11 @@ public class Model implements IDisposable {
 			mesh.dispose();
 		}
 	}
-	
-	
+
 	public List<Material> getMaterials() {
 		return materials;
 	}
-	
+
 	public List<Mesh> getMeshes() {
 		return meshes;
 	}

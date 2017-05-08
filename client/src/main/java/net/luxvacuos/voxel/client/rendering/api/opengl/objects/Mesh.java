@@ -45,6 +45,7 @@ public class Mesh implements IDisposable {
 		this.aiMesh = aiMesh;
 
 		mesh = VAO.create();
+		mesh.bind();
 
 		List<Vector3f> pos = new ArrayList<>();
 		List<Vector2f> tex = new ArrayList<>();
@@ -53,15 +54,19 @@ public class Mesh implements IDisposable {
 
 		for (int i = 0; i < aiMesh.mNumVertices(); i++) {
 			AIVector3D position = aiMesh.mVertices().get(i);
-			AIVector3D texcoord = aiMesh.mTextureCoords(0).get(i);
+			AIVector3D texcoord = null;
+			if (aiMesh.mTextureCoords(0) != null)
+				texcoord = aiMesh.mTextureCoords(0).get(i);
 			AIVector3D normal = aiMesh.mNormals().get(i);
 			AIVector3D tangent = aiMesh.mTangents().get(i);
 			pos.add(new Vector3f(position.x(), position.y(), position.z()));
-			tex.add(new Vector2f(texcoord.x(), texcoord.y()));
+			if (aiMesh.mTextureCoords(0).get(i) != null)
+				tex.add(new Vector2f(texcoord.x(), texcoord.y()));
+			else
+				tex.add(new Vector2f(0, 0));
 			nor.add(new Vector3f(normal.x(), normal.y(), normal.z()));
 			tan.add(new Vector3f(tangent.x(), tangent.y(), tangent.z()));
 		}
-
 		loadData(pos, tex, nor, tan);
 
 		int faceCount = aiMesh.mNumFaces();
@@ -79,6 +84,7 @@ public class Mesh implements IDisposable {
 		int[] ind = new int[elementCount];
 		elementArrayBufferData.get(ind);
 		mesh.createIndexBuffer(ind, GL_STATIC_DRAW);
+		mesh.unbind();
 	}
 
 	@Override

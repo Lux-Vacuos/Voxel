@@ -107,11 +107,11 @@ public class VAO implements IDisposable {
 		indexVbo.dispose();
 	}
 
-	private void bind() {
+	public void bind() {
 		glBindVertexArray(id);
 	}
 
-	private void unbind() {
+	public void unbind() {
 		glBindVertexArray(0);
 	}
 
