@@ -21,8 +21,6 @@
 package net.luxvacuos.voxel.client.ui.menus;
 
 import static net.luxvacuos.voxel.universal.core.GlobalVariables.REGISTRY;
-import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_LEFT;
-import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_TOP;
 
 import net.luxvacuos.voxel.client.core.ClientInternalSubsystem;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
@@ -265,16 +263,15 @@ public class OptionsMenu extends RootComponentWindow {
 
 	private void wmOptions() {
 		float border = (float) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/borderSize");
-		Text wmBorderText = new Text("Window Border: " + border, 40, -40);
-		Slider wmBorder = new Slider(40, -60, 200, 20, border / 40f);
+		Text wmBorderText = new Text("Window Border: " + border, 20, 0);
+		Slider wmBorder = new Slider(-56, 0, 200, 20, border / 40f);
 
-		wmBorderText.setWindowAlignment(Alignment.LEFT_TOP);
-		wmBorderText.setFontSize(20);
-		wmBorderText.setAlign(NVG_ALIGN_LEFT | NVG_ALIGN_TOP);
-		wmBorder.setWindowAlignment(Alignment.LEFT_TOP);
-		wmBorder.setAlignment(Alignment.RIGHT_BOTTOM);
+		wmBorderText.setWindowAlignment(Alignment.LEFT);
+
 		wmBorder.setPrecision(40f);
 		wmBorder.useCustomPrecision(true);
+		wmBorder.setAlignment(Alignment.RIGHT);
+		wmBorder.setWindowAlignment(Alignment.RIGHT);
 
 		wmBorder.setOnPress(() -> {
 			float val = wmBorder.getPosition() * 40f;
@@ -282,17 +279,22 @@ public class OptionsMenu extends RootComponentWindow {
 			wmBorderText.setText("Window Border: " + val);
 		});
 
-		float scroll = (float) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/scrollBarSize");
-		Text wmScrollText = new Text("Scroll Bar Size: " + scroll, 40, -85);
-		Slider wmScroll = new Slider(40, -105, 200, 20, scroll / 40f);
+		Container borderC = new Container(0, 0, w, 20);
+		borderC.setWindowAlignment(Alignment.RIGHT_TOP);
+		borderC.setAlignment(Alignment.LEFT_BOTTOM);
+		borderC.addComponent(wmBorderText);
+		borderC.addComponent(wmBorder);
 
-		wmScrollText.setWindowAlignment(Alignment.LEFT_TOP);
-		wmScrollText.setFontSize(20);
-		wmScrollText.setAlign(NVG_ALIGN_LEFT | NVG_ALIGN_TOP);
-		wmScroll.setWindowAlignment(Alignment.LEFT_TOP);
-		wmScroll.setAlignment(Alignment.RIGHT_BOTTOM);
+		float scroll = (float) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/scrollBarSize");
+		Text wmScrollText = new Text("Scroll Bar Size: " + scroll, 20, 0);
+		Slider wmScroll = new Slider(-56, 0, 200, 20, scroll / 40f);
+
+		wmScrollText.setWindowAlignment(Alignment.LEFT);
+
 		wmScroll.setPrecision(40f);
 		wmScroll.useCustomPrecision(true);
+		wmScroll.setAlignment(Alignment.RIGHT);
+		wmScroll.setWindowAlignment(Alignment.RIGHT);
 
 		wmScroll.setOnPress(() -> {
 			float val = wmScroll.getPosition() * 40f;
@@ -300,10 +302,64 @@ public class OptionsMenu extends RootComponentWindow {
 			wmScrollText.setText("Scroll Bar Size: " + val);
 		});
 
-		super.addComponent(wmBorderText);
-		super.addComponent(wmBorder);
-		super.addComponent(wmScrollText);
-		super.addComponent(wmScroll);
+		Container scrollC = new Container(0, 0, w, 20);
+		scrollC.setWindowAlignment(Alignment.RIGHT_TOP);
+		scrollC.setAlignment(Alignment.LEFT_BOTTOM);
+		scrollC.addComponent(wmScrollText);
+		scrollC.addComponent(wmScroll);
+
+		float title = (float) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/titleBarHeight");
+		Text wmTitleText = new Text("Title Bar Size: " + title, 20, 0);
+		Slider wmTitle = new Slider(-56, 0, 200, 20, title / 40f);
+
+		wmTitleText.setWindowAlignment(Alignment.LEFT);
+
+		wmTitle.setPrecision(40f);
+		wmTitle.useCustomPrecision(true);
+		wmTitle.setAlignment(Alignment.RIGHT);
+		wmTitle.setWindowAlignment(Alignment.RIGHT);
+
+		wmTitle.setOnPress(() -> {
+			float val = wmTitle.getPosition() * 40f;
+			REGISTRY.register("/Voxel/Settings/WindowManager/titleBarHeight", val);
+			wmTitleText.setText("Title Bar Size: " + val);
+		});
+
+		Container titleC = new Container(0, 0, w, 20);
+		titleC.setWindowAlignment(Alignment.RIGHT_TOP);
+		titleC.setAlignment(Alignment.LEFT_BOTTOM);
+		titleC.addComponent(wmTitleText);
+		titleC.addComponent(wmTitle);
+
+		ToggleButton titleBorderButton = new ToggleButton(-50, 0, 80, 30,
+				(boolean) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/titleBarBorder"));
+
+		titleBorderButton.setWindowAlignment(Alignment.RIGHT);
+		titleBorderButton.setAlignment(Alignment.RIGHT);
+
+		titleBorderButton.setOnButtonPress(
+				() -> REGISTRY.register("/Voxel/Settings/WindowManager/titleBarBorder", titleBorderButton.getStatus()));
+
+		Text titleBorderText = new Text("Title Bar Border", 20, 0);
+		titleBorderText.setWindowAlignment(Alignment.LEFT);
+
+		Container titleBorder = new Container(0, 0, w, 30);
+		titleBorder.setWindowAlignment(Alignment.RIGHT_TOP);
+		titleBorder.setAlignment(Alignment.LEFT_BOTTOM);
+
+		titleBorder.addComponent(titleBorderButton);
+		titleBorder.addComponent(titleBorderText);
+
+		ScrollArea area = new ScrollArea(0, 0, w, h, 0, 0);
+		area.setLayout(new FlowLayout(Direction.DOWN, 10, 10));
+
+		area.addComponent(borderC);
+		area.addComponent(scrollC);
+		area.addComponent(titleC);
+		area.addComponent(titleBorder);
+
+		super.addComponent(area);
+
 		backButton.setEnabled(true);
 	}
 

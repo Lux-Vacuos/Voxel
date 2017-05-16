@@ -144,7 +144,7 @@ public abstract class NanoWindow implements IWindow {
 				sync.sync(UPS);
 			}
 		});
-		// thread.start();
+		//thread.start();
 	}
 
 	@Override
@@ -177,7 +177,6 @@ public abstract class NanoWindow implements IWindow {
 				h -= Mouse.getDY();
 			}
 		}
-		// lastUpdate += 1 * delta;
 		if (!resizing && !minimized)
 			updateApp(delta, window);
 	}

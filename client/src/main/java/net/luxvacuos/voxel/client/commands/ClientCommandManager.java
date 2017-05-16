@@ -18,24 +18,10 @@
  * 
  */
 
-package net.luxvacuos.voxel.universal.core;
+package net.luxvacuos.voxel.client.commands;
 
-import net.luxvacuos.voxel.universal.util.registry.IRegistry;
+import net.luxvacuos.voxel.universal.commands.AbstractCommandManager;
 
-public class GlobalVariables {
-
-	/** The Version of the game */
-	public static String version = "Prototype";
-
-	/** Flag to enable debug mode */
-	public static boolean debug = false;
-	
-	/** Enable Test Mode */
-	public static boolean TEST_MODE = false;
-	
-	/** Registry */
-	public static IRegistry<String, Object> REGISTRY;
-
-	protected GlobalVariables() { }
+public class ClientCommandManager extends AbstractCommandManager {
 
 }

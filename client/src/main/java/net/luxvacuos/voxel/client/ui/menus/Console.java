@@ -20,6 +20,10 @@
 
 package net.luxvacuos.voxel.client.ui.menus;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
 import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.ui.Alignment;
@@ -31,7 +35,9 @@ public class Console extends RootComponentWindow {
 
 	private ICommandManager manager;
 	private TextArea text;
+	private String textBuffer = "";
 	private boolean selected;
+	private boolean running = true;
 
 	public Console(float x, float y, float w, float h) {
 		super(x, y, w, h, "Console");
@@ -41,17 +47,36 @@ public class Console extends RootComponentWindow {
 	public void initApp(Window window) {
 		super.setBackgroundColor("#1F1F1F78");
 
-		text = new TextArea("Voxel Console (WIP) \n > ", 0, 0, w);
+		text = new TextArea(textBuffer, 0, 0, w);
 		text.setWindowAlignment(Alignment.LEFT_TOP);
 		text.setFontSize(25);
 		super.addComponent(text);
-
 		super.initApp(window);
+		Thread thread = new Thread(() -> {
+			BufferedReader bufferedreader = new BufferedReader(new InputStreamReader(System.in));
+			String command;
+			try {
+				while (running && (command = bufferedreader.readLine()) != null) {
+					// this.manager.command(command);
+					textBuffer += command + "\n";
+				}
+			} catch (IOException ioe) {
+			}
+		});
+		thread.setDaemon(true);
+		thread.setName("Command Thread");
+		thread.start();
+		textBuffer = "Voxel Console (WIP) \n > ";
+	}
+
+	@Override
+	public void disposeApp(Window window) {
+		running = false;
+		super.disposeApp(window);
 	}
 
 	@Override
 	public void updateApp(float delta, Window window) {
-
 		if (Mouse.isButtonDown(0)) {
 			if (super.insideWindow()) {
 				window.getKeyboardHandler().enableTextInput();
@@ -61,11 +86,13 @@ public class Console extends RootComponentWindow {
 				selected = false;
 			}
 		}
-		if (selected) {
-			text.setText(window.getKeyboardHandler().handleInput(text.getText()));
-		}
-
 		super.updateApp(delta, window);
+	}
+	
+	@Override
+	public void alwaysUpdateApp(float delta, Window window) {
+		text.setText(textBuffer);
+		super.alwaysUpdateApp(delta, window);
 	}
 
 }

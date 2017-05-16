@@ -20,7 +20,7 @@
 
 package net.luxvacuos.voxel.client.rendering.api.opengl.objects;
 
-import static org.lwjgl.assimp.Assimp.AI_MATKEY_COLOR_DIFFUSE;
+import static org.lwjgl.assimp.Assimp.*;
 import static org.lwjgl.assimp.Assimp.AI_MATKEY_COLOR_SPECULAR;
 import static org.lwjgl.assimp.Assimp.aiGetMaterialColor;
 import static org.lwjgl.assimp.Assimp.aiGetMaterialTexture;
@@ -105,10 +105,13 @@ public class Material implements IDisposable {
 				this.diffuseTexture = loadTexture(path, rootPath);
 
 		}
-		if (aiGetMaterialTextureCount(material, aiTextureType_DIFFUSE) > 1) {
+		if (aiGetMaterialTextureCount(material, aiTextureType_DIFFUSE) > 1 || aiGetMaterialTextureCount(material, aiTextureType_NORMALS) > 0) {
 			AIString path = AIString.create();
 			if (aiGetMaterialTexture(material, aiTextureType_DIFFUSE, 1, path, (IntBuffer) null, (IntBuffer) null,
-					(FloatBuffer) null, (IntBuffer) null, (IntBuffer) null, (IntBuffer) null) == aiReturn_SUCCESS)
+					(FloatBuffer) null, (IntBuffer) null, (IntBuffer) null, (IntBuffer) null) == aiReturn_SUCCESS
+					|| aiGetMaterialTexture(material, aiTextureType_NORMALS, 1, path, (IntBuffer) null,
+							(IntBuffer) null, (FloatBuffer) null, (IntBuffer) null, (IntBuffer) null,
+							(IntBuffer) null) == aiReturn_SUCCESS)
 				this.normalTexture = loadTextureMisc(path, rootPath);
 
 		}

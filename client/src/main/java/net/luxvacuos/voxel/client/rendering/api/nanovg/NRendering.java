@@ -159,6 +159,7 @@ public class NRendering {
 		NVGPaint shadowPaint = paintA;
 		float borderSize = (float) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/borderSize");
 		float titleBarHeight = (float) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/titleBarHeight");
+		boolean titleBarBorder = (boolean) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/titleBarBorder");
 
 		nvgSave(vg);
 		if (decorations) {
@@ -173,8 +174,12 @@ public class NRendering {
 				nvgRect(vg, x, y, w, h);
 				nvgPathWinding(vg, NVG_HOLE);
 				if (titleBar)
-					nvgRect(vg, x - borderSize, y - titleBarHeight, w + borderSize * 2f,
-							h + titleBarHeight + borderSize);
+					if (titleBarBorder)
+						nvgRect(vg, x - borderSize, y - titleBarHeight - borderSize, w + borderSize * 2f,
+								h + titleBarHeight + borderSize * 2f);
+					else
+						nvgRect(vg, x - borderSize, y - titleBarHeight, w + borderSize * 2f,
+								h + titleBarHeight + borderSize);
 				else
 					nvgRect(vg, x - borderSize, y - borderSize, w + borderSize * 2f, h + borderSize * 2f);
 				nvgFillColor(vg, rgba(31, 31, 31, 120, colorA));

@@ -56,17 +56,25 @@ public abstract class CompositeEffect implements IDisposable {
 	public void render(NVGLUFramebuffer[] fbos, RawModel quad, Window wnd, IWindow window) {
 		float borderSize = (float) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/borderSize");
 		float titleBarHeight = (float) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/titleBarHeight");
+		boolean titleBarBorder = (boolean) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/titleBarBorder");
 		float pixelRatio = wnd.getPixelRatio();
 		nvgluBindFramebuffer(wnd.getNVGID(), fbos[0]);
 		shader.start();
 		if (window.getTitleBar().isEnabled() && window.hasDecorations() && !window.isMaximized())
-			shader.loadFrame(new Vector4f((window.getX() - borderSize) * pixelRatio,
-					(window.getY() + titleBarHeight) * pixelRatio, (window.getWidth() + borderSize * 2f) * pixelRatio,
-					(window.getHeight() + titleBarHeight + borderSize) * pixelRatio));
+			if (titleBarBorder)
+				shader.loadFrame(new Vector4f((window.getX() - borderSize) * pixelRatio,
+						(window.getY() + titleBarHeight + borderSize) * pixelRatio,
+						(window.getWidth() + borderSize * 2f) * pixelRatio,
+						(window.getHeight() + titleBarHeight + borderSize * 2f) * pixelRatio));
+			else
+				shader.loadFrame(new Vector4f((window.getX() - borderSize) * pixelRatio,
+						(window.getY() + titleBarHeight) * pixelRatio,
+						(window.getWidth() + borderSize * 2f) * pixelRatio,
+						(window.getHeight() + titleBarHeight + borderSize) * pixelRatio));
 		else if (!window.hasDecorations())
 			shader.loadFrame(new Vector4f(window.getX() * pixelRatio, window.getY() * pixelRatio,
 					window.getWidth() * pixelRatio, window.getHeight() * pixelRatio));
-		else if(window.isMaximized())
+		else if (window.isMaximized())
 			shader.loadFrame(new Vector4f(window.getX() * pixelRatio, (window.getY() + titleBarHeight) * pixelRatio,
 					window.getWidth() * pixelRatio, (window.getHeight() + titleBarHeight) * pixelRatio));
 		else

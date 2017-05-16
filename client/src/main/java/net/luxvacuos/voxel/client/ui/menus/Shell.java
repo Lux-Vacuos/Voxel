@@ -58,8 +58,10 @@ public class Shell extends RootComponentWindow implements IShell {
 		btn.setColor("#00000000");
 		btn.setHighlightColor("#FFFFFF64");
 		btn.setTextColor("#FFFFFFFF");
+		btn.setOnButtonPress(() -> {
+		});
 		left.addComponent(btn);
-		super.addComponent(left);
+		//super.addComponent(left);
 		apps = new Container(0, 0, super.w - 100, 30);
 		apps.setLayout(new FlowLayout(Direction.RIGHT, 0, 0));
 		super.addComponent(apps);
@@ -73,6 +75,8 @@ public class Shell extends RootComponentWindow implements IShell {
 
 	@Override
 	public void notifyAdd(IWindow window) {
+		if (!(window.hasDecorations() && !window.isHidden()))
+			return;
 		Button btn = new Button(0, 0, 100, 30, window.getTitle());
 		btn.setColor("#00000000");
 		btn.setHighlightColor("#FFFFFF64");
@@ -92,6 +96,8 @@ public class Shell extends RootComponentWindow implements IShell {
 
 	@Override
 	public void notifyClose(IWindow window) {
+		if (!(window.hasDecorations() && !window.isHidden()))
+			return;
 		apps.removeComponent(buttons.get(window.hashCode()));
 		buttons.remove(window.hashCode());
 	}

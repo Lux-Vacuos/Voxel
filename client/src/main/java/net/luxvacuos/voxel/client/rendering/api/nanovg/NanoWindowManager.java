@@ -165,8 +165,7 @@ public class NanoWindowManager implements IWindowManager {
 		tmp.addAll(windows);
 		Collections.reverse(tmp);
 		for (IWindow window : tmp) {
-			if (window.insideWindow() && !window.isHidden() && !window.isMinimized()
-					&& (Mouse.isButtonDown(0) || Mouse.isButtonDown(1)) && !focused.isDragging()
+			if (window.insideWindow() && !window.isHidden() && !window.isMinimized() && !focused.isDragging()
 					&& !focused.isResizing()) {
 				focused = window;
 				break;
@@ -251,8 +250,7 @@ public class NanoWindowManager implements IWindowManager {
 	@Override
 	public void notifyClose(IWindow window) {
 		if (this.shell != null)
-			if (window.hasDecorations() && !window.isHidden())
-				this.shell.notifyClose(window);
+			this.shell.notifyClose(window);
 	}
 
 	@Override
