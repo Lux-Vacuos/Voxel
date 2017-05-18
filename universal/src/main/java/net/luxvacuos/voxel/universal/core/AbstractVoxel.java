@@ -20,6 +20,10 @@
 
 package net.luxvacuos.voxel.universal.core;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import net.luxvacuos.igl.Logger;
 import net.luxvacuos.voxel.universal.api.ModsHandler;
 import net.luxvacuos.voxel.universal.bootstrap.AbstractBootstrap;
 import net.luxvacuos.voxel.universal.bootstrap.IBootstrap;
@@ -33,12 +37,41 @@ public abstract class AbstractVoxel implements IVoxel, IDisposable {
 	protected IBootstrap bootstrap;
 	protected ModsHandler modsHandler;
 
+	private List<ISubsystem> subsystems;
+
 	public AbstractVoxel(AbstractBootstrap bootstrap) {
 		this.bootstrap = bootstrap;
 		GlobalVariables.REGISTRY = new SimpleRegistry<>();
+		subsystems = new ArrayList<>();
 	}
 
-	public EngineType getEngineType() {
+	@Override
+	public void initSubsystems() {
+		Logger.log("Initializing Subsystems");
+		for (ISubsystem subsystem : subsystems) {
+			Logger.log("--- " + subsystem.getClass().getSimpleName());
+			subsystem.init();
+		}
+		Logger.log("--- ");
+	}
+
+	@Override
+	public void dispose() {
+		Logger.log("Stopping Subsystems");
+		for (ISubsystem subsystem : subsystems) {
+			Logger.log("--- " + subsystem.getClass().getSimpleName());
+			subsystem.dispose();
+		}
+		Logger.log("--- ");
+	}
+
+	@Override
+	public void addSubsystem(ISubsystem subsystem) {
+		subsystems.add(subsystem);
+	}
+
+	@Override
+	public EngineType getType() {
 		return engineType;
 	}
 

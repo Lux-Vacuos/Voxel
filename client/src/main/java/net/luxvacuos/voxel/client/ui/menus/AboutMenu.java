@@ -23,9 +23,9 @@ package net.luxvacuos.voxel.client.ui.menus;
 import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_MIDDLE;
 import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_RIGHT;
 
-import net.luxvacuos.voxel.client.core.ClientInternalSubsystem;
 import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.core.CoreInfo;
+import net.luxvacuos.voxel.client.core.GraphicalSubsystem;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.ui.Alignment;
 import net.luxvacuos.voxel.client.ui.Image;
@@ -45,7 +45,7 @@ public class AboutMenu extends RootComponentWindow {
 		super.setResizable(false);
 		super.setBackgroundColor(0.4f, 0.4f, 0.4f, 1f);
 		if (logo == 0)
-			logo = ClientInternalSubsystem.getInstance().getGameWindow().getResourceLoader()
+			logo = GraphicalSubsystem.getMainWindow().getResourceLoader()
 					.loadNVGTexture("Voxel-Logo");
 		Image voxelLogo = new Image(0, -40, 400, 200, logo);
 		voxelLogo.setAlignment(Alignment.BOTTOM);

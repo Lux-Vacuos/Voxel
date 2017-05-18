@@ -21,6 +21,7 @@
 package net.luxvacuos.voxel.client.core;
 
 import net.luxvacuos.igl.vector.Vector3d;
+import net.luxvacuos.voxel.universal.bootstrap.IBootstrap;
 import net.luxvacuos.voxel.universal.core.GlobalVariables;
 import net.luxvacuos.voxel.universal.remote.User;
 
@@ -88,10 +89,13 @@ public class ClientVariables extends GlobalVariables {
 	public static final String FRAGMENT_BRDF_INTEGRATION_MAP = "F_BRDFIntegrationMap.glsl";
 	
 	
-	public static void initRuntimeVariables(){
+	public static void initRuntimeVariables(IBootstrap bootstrap){
 		REGISTRY.register("/Voxel/Display/width", WIDTH);
 		REGISTRY.register("/Voxel/Display/height", HEIGHT);
-		GlobalVariables.REGISTRY.register("/Voxel/Settings/WindowManager/shellHeight", 0f);
+		REGISTRY.register("/Voxel/Settings/WindowManager/shellHeight", 0f);
+		REGISTRY.register("/Voxel/Settings/file", bootstrap.getPrefix() + "/config/settings.conf");
+		REGISTRY.register("/Voxel/Settings/World/directory", bootstrap.getPrefix() + "/world/");
+
 	}
 
 }

@@ -24,7 +24,6 @@ import static net.luxvacuos.voxel.universal.core.GlobalVariables.REGISTRY;
 import static org.lwjgl.assimp.Assimp.aiGetVersionMajor;
 import static org.lwjgl.assimp.Assimp.aiGetVersionMinor;
 import static org.lwjgl.assimp.Assimp.aiGetVersionRevision;
-import static org.lwjgl.glfw.GLFW.glfwInit;
 import static org.lwjgl.opengl.GL11.GL_RENDERER;
 import static org.lwjgl.opengl.GL11.GL_VENDOR;
 import static org.lwjgl.opengl.GL11.GL_VERSION;
@@ -56,7 +55,6 @@ import net.luxvacuos.voxel.universal.api.ModsHandler;
 import net.luxvacuos.voxel.universal.bootstrap.AbstractBootstrap;
 import net.luxvacuos.voxel.universal.core.AbstractVoxel;
 import net.luxvacuos.voxel.universal.core.EngineType;
-import net.luxvacuos.voxel.universal.core.GlobalVariables;
 import net.luxvacuos.voxel.universal.core.TaskManager;
 import net.luxvacuos.voxel.universal.core.states.StateMachine;
 import net.luxvacuos.voxel.universal.util.PerRunLog;
@@ -78,7 +76,7 @@ public class Voxel extends AbstractVoxel {
 		super(bootstrap);
 		GLFW.glfwSetErrorCallback(this.errorfun);
 		super.engineType = EngineType.CLIENT;
-		build();
+		init();
 	}
 
 	/**
@@ -89,10 +87,17 @@ public class Voxel extends AbstractVoxel {
 	 *             Throws Exception in case of error
 	 */
 	@Override
-	public void preInit() throws Exception {
-
+	public void init() {
 		PerRunLog.setBootstrap(bootstrap);
 		Logger.init();
+		Logger.log("Starting Client");
+
+		super.addSubsystem(new ClientCoreSubsystem());
+		super.addSubsystem(new GraphicalSubsystem());
+
+		ClientVariables.initRuntimeVariables(bootstrap);
+
+		super.initSubsystems();
 
 		try {
 			Manifest manifest = new Manifest(getClass().getClassLoader().getResourceAsStream("META-INF/MANIFEST.MF"));
@@ -103,21 +108,12 @@ public class Voxel extends AbstractVoxel {
 		} catch (IOException E) {
 			E.printStackTrace();
 		}
-		Logger.log("Starting Client");
 
-		if (!glfwInit())
-			throw new IllegalStateException("Unable to initialize GLFW");
-
-		ClientVariables.initRuntimeVariables();
-		GlobalVariables.REGISTRY.register("/Voxel/Settings/file", bootstrap.getPrefix() + "/config/settings.conf");
-		GlobalVariables.REGISTRY.register("/Voxel/Settings/World/directory", bootstrap.getPrefix() + "/world/");
 		internalSubsystem = ClientInternalSubsystem.getInstance();
 		internalSubsystem.preInit();
-		ClientInternalSubsystem.getInstance().getGameWindow().setVisible(true);
-		ClientInternalSubsystem.getInstance().getGameWindow()
-				.updateDisplay((int) REGISTRY.getRegistryItem("/Voxel/Settings/Core/fps"));
+
 		StateMachine.registerState(new SplashScreenState());
-		Timers.initDebugDisplay();
+
 		CoreInfo.platform = bootstrap.getPlatform();
 		CoreInfo.LWJGLVer = Version.getVersion();
 		CoreInfo.GLFWVer = GLFW.glfwGetVersionString();
@@ -137,16 +133,7 @@ public class Voxel extends AbstractVoxel {
 		modsHandler = new ModsHandler(this);
 		modsHandler.setMoltenAPI(new MoltenAPI());
 		modsHandler.preInit();
-	}
 
-	/**
-	 * Init. Start loading assets.
-	 * 
-	 * @throws Exception
-	 *             Throws Exception in case of error
-	 */
-	@Override
-	public void init() throws Exception {
 		internalSubsystem.init();
 		TaskManager.addTask(() -> StateMachine.registerState(new MainMenuState()));
 		TaskManager.addTask(() -> StateMachine.registerState(new SPWorldState()));
@@ -154,53 +141,35 @@ public class Voxel extends AbstractVoxel {
 		if (ClientVariables.TEST_MODE)
 			TaskManager.addTask(() -> StateMachine.registerState(new TestState()));
 		modsHandler.init();
-	}
-
-	/**
-	 * 
-	 * PostInit. Set the states and do final stuff
-	 * 
-	 * @throws Exception
-	 *             Throws Exception in case of error
-	 */
-	@Override
-	public void postInit() throws Exception {
-		TaskManager.addTask(() -> ClientInternalSubsystem.getInstance().getGameSettings().save());
 		modsHandler.postInit();
 		internalSubsystem.postInit();
 		StateMachine.setCurrentState(StateNames.SPLASH_SCREEN);
-	}
-
-	/**
-	 * Main Loop
-	 */
-	@Override
-	public void build() {
 		try {
-			preInit();
-			init();
-			postInit();
 			StateMachine.run();
-			loop();
+			update();
 			dispose();
-			GLFW.glfwTerminate();
 		} catch (Throwable t) {
 			t.printStackTrace(System.err);
 			handleError(t);
 		}
 	}
 
+	@Override
+	public void restart() {
+		throw new UnsupportedOperationException("Not Implemented");
+	}
+
 	/**
 	 * Main Loop
 	 */
 	@Override
-	public void loop() {
+	public void update() {
 		float delta = 0;
 		float accumulator = 0f;
 		float interval = 1f / (int) REGISTRY.getRegistryItem("/Voxel/Settings/Core/ups");
 		float alpha = 0;
 		int fps = (int) REGISTRY.getRegistryItem("/Voxel/Settings/Core/fps");
-		Window window = ClientInternalSubsystem.getInstance().getGameWindow();
+		Window window = GraphicalSubsystem.getMainWindow();
 		while (StateMachine.isRunning() && !(window.isCloseRequested())) {
 			Timers.startCPUTimer();
 			TaskManager.update();
@@ -213,40 +182,18 @@ public class Voxel extends AbstractVoxel {
 			accumulator += delta;
 			while (accumulator >= interval) {
 				WindowManager.update();
-				update(interval);
+				CoreInfo.upsCount++;
+				StateMachine.update(this, interval);
 				accumulator -= interval;
 			}
 			alpha = accumulator / interval;
 			Timers.stopCPUTimer();
 			Timers.startGPUTimer();
-			render(alpha);
+			StateMachine.render(this, alpha);
+			window.updateDisplay(fps);
 			Timers.stopGPUTimer();
 			Timers.update();
-			window.updateDisplay(fps);
 		}
-	}
-
-	/**
-	 * Render method
-	 * 
-	 * @param alpha
-	 *            Alpha for update
-	 */
-	public void render(float alpha) {
-		StateMachine.render(this, alpha);
-	}
-
-	/**
-	 * 
-	 * Update method
-	 * 
-	 * @param delta
-	 *            Delta for update
-	 */
-	@Override
-	public void update(float delta) {
-		CoreInfo.upsCount++;
-		StateMachine.update(this, delta);
 	}
 
 	/**
@@ -263,7 +210,7 @@ public class Voxel extends AbstractVoxel {
 			StateMachine.run();
 		StateMachine.setCurrentState(StateNames.CRASH);
 		Mouse.setGrabbed(false);
-		loop();
+		update();
 		dispose();
 		GLFW.glfwTerminate();
 	}
@@ -274,12 +221,12 @@ public class Voxel extends AbstractVoxel {
 	 */
 	@Override
 	public void dispose() {
-		Logger.log("Cleaning Resources");
+		super.dispose();
 		internalSubsystem.dispose();
 		modsHandler.dispose();
 		GLFW.glfwSetErrorCallback(null).free();
 		StateMachine.dispose();
-		WindowManager.closeAllDisplays();
+		GLFW.glfwTerminate();
 	}
 
 }

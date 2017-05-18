@@ -54,7 +54,7 @@ public abstract class NanoWindow implements IWindow {
 			alwaysOnTop, background, blurBehind = true, running = true, resizing, minimized;
 	private BackgroundStyle backgroundStyle = BackgroundStyle.SOLID;
 	private NVGColor backgroundColor = NRendering.rgba(0, 0, 0, 255);
-	protected float x, y, w, h;
+	protected float x, y, w, h, minW = 300, minH = 300;
 	private float oldX, oldY, oldW, oldH;
 	private WindowClose windowClose = WindowClose.DISPOSE;
 	private ITitleBar titleBar;
@@ -144,7 +144,7 @@ public abstract class NanoWindow implements IWindow {
 				sync.sync(UPS);
 			}
 		});
-		//thread.start();
+		// thread.start();
 	}
 
 	@Override
@@ -173,8 +173,19 @@ public abstract class NanoWindow implements IWindow {
 			titleBar.update(delta, window);
 			if ((Mouse.isButtonDown(0) && canResize()) || resizing) {
 				resizing = Mouse.isButtonDown(0);
-				w += Mouse.getDX();
-				h -= Mouse.getDY();
+				if (w > minW)
+					w += Mouse.getDX();
+				else {
+					if (Mouse.getDX() > 0)
+						w += Mouse.getDX();
+				}
+				if (h > minH)
+					h -= Mouse.getDY();
+				else {
+					if (Mouse.getDY() < 0)
+						h -= Mouse.getDY();
+				}
+
 			}
 		}
 		if (!resizing && !minimized)

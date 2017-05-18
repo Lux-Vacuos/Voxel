@@ -21,19 +21,19 @@
 package net.luxvacuos.voxel.universal.core;
 
 public interface IVoxel {
-
-	public void preInit() throws Exception;
-
-	public void init() throws Exception;
-
-	public void postInit() throws Exception;
-
-	public void build();
-
-	public void loop();
-
-	public void update(float delta);
+	
+	public void init();
+	
+	public void initSubsystems();
+	
+	public void restart();
+	
+	public void update();
 
 	public void handleError(Throwable e);
+	
+	public void addSubsystem(ISubsystem subsystem);
+	
+	public EngineType getType();
 
 }

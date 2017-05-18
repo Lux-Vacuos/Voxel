@@ -55,7 +55,7 @@ import static org.lwjgl.opengl.GL30.glRenderbufferStorage;
 
 import java.nio.ByteBuffer;
 
-import net.luxvacuos.voxel.client.core.ClientInternalSubsystem;
+import net.luxvacuos.voxel.client.core.GraphicalSubsystem;
 import net.luxvacuos.voxel.client.core.exception.FrameBufferException;
 
 public class FBO {
@@ -82,7 +82,7 @@ public class FBO {
 		glBindRenderbuffer(GL_RENDERBUFFER, rt);
 		glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA16F, width, height);
 		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, rt);
-		
+
 		glBindRenderbuffer(GL_RENDERBUFFER, depthBuffer);
 		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height);
 		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthBuffer);
@@ -110,7 +110,7 @@ public class FBO {
 
 	public void end() {
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-		ClientInternalSubsystem.getInstance().getGameWindow().resetViewport();
+		GraphicalSubsystem.getMainWindow().resetViewport();
 	}
 
 	public void cleanUp() {

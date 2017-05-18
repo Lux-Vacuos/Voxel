@@ -36,7 +36,7 @@ public class ModsHandler {
 
 	private List<IMod> mods;
 
-	public ModsHandler(AbstractVoxel abstractVoxel) throws Exception {
+	public ModsHandler(AbstractVoxel abstractVoxel) {
 		modLoader = new ModLoader();
 		modLoader.loadMods(this, abstractVoxel.getBootstrap().getPrefix());
 		mods = new ArrayList<>();

@@ -21,10 +21,10 @@
 package net.luxvacuos.voxel.client.ui.menus;
 
 import net.luxvacuos.voxel.client.core.ClientVariables;
+import net.luxvacuos.voxel.client.core.GraphicalSubsystem;
 import net.luxvacuos.voxel.client.core.states.StateNames;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.NRendering;
-import net.luxvacuos.voxel.client.rendering.api.nanovg.WM;
 import net.luxvacuos.voxel.client.ui.Alignment;
 import net.luxvacuos.voxel.client.ui.Button;
 import net.luxvacuos.voxel.client.ui.ModalWindow;
@@ -67,24 +67,25 @@ public class MainMenu extends RootComponentWindow {
 
 		playButton.setOnButtonPress(() -> {
 			if (ClientVariables.TEST_MODE) {
-				WM.getWM().toggleShell();
+				GraphicalSubsystem.getWindowManager().toggleShell();
 				super.setWindowClose(WindowClose.DISPOSE);
 				super.closeWindow();
 				StateMachine.setCurrentState(StateNames.TEST);
 			} else
-				WM.getWM().addWindow(new WorldMenu(w / 2 - 420 + x, y - 40, 840, 600, this));
+				GraphicalSubsystem.getWindowManager().addWindow(new WorldMenu(w / 2 - 420 + x, y - 40, 840, 600, this));
 		});
 
 		playMPButton.setOnButtonPress(() -> {
-			WM.getWM().addWindow(new MultiplayerMenu(w / 2 - 250 + x, y - 100, 500, 400, this));
+			GraphicalSubsystem.getWindowManager()
+					.addWindow(new MultiplayerMenu(w / 2 - 250 + x, y - 100, 500, 400, this));
 		});
 
 		optionsButton.setOnButtonPress(() -> {
-			WM.getWM().addWindow(new OptionsMenu(w / 2 - 420 + x, y - 40, 840, 600));
+			GraphicalSubsystem.getWindowManager().addWindow(new OptionsMenu(w / 2 - 420 + x, y - 40, 840, 600));
 		});
 
 		aboutButton.setOnButtonPress(() -> {
-			WM.getWM().addWindow(new AboutMenu(w / 2 - 420 + x, y - 40, 840, 600));
+			GraphicalSubsystem.getWindowManager().addWindow(new AboutMenu(w / 2 - 420 + x, y - 40, 840, 600));
 		});
 
 		exitButton.setOnButtonPress(() -> {
@@ -104,7 +105,7 @@ public class MainMenu extends RootComponentWindow {
 	@Override
 	public void onClose() {
 		ModalWindow window = new ModalWindow(340, 200, "Are you sure you want to close Voxel?", "Close Voxel");
-		WM.getWM().addWindow(window);
+		GraphicalSubsystem.getWindowManager().addWindow(window);
 		TaskManager.addTask(() -> {
 			window.setOnAccept(() -> {
 				StateMachine.stop();

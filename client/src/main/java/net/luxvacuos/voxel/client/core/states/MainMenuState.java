@@ -24,14 +24,10 @@ import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 
 import javax.script.CompiledScript;
-import javax.script.ScriptException;
 import javax.script.SimpleBindings;
 
-import org.lwjgl.glfw.GLFW;
-
-import net.luxvacuos.voxel.client.core.ClientInternalSubsystem;
+import net.luxvacuos.voxel.client.core.GraphicalSubsystem;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
-import net.luxvacuos.voxel.client.rendering.api.nanovg.WM;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Renderer;
 import net.luxvacuos.voxel.universal.core.AbstractVoxel;
 import net.luxvacuos.voxel.universal.core.Scripting;
@@ -54,7 +50,7 @@ public class MainMenuState extends AbstractState {
 
 	@Override
 	public void init() {
-		Window window = ClientInternalSubsystem.getInstance().getGameWindow();
+		Window window = GraphicalSubsystem.getMainWindow();
 
 		scripting = new Scripting();
 		script = scripting.compile("test");
@@ -66,12 +62,12 @@ public class MainMenuState extends AbstractState {
 	public void render(AbstractVoxel voxel, float delta) {
 		Renderer.clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		Renderer.clearColors(1, 1, 1, 1);
-		WM.getWM().render();
+		GraphicalSubsystem.getWindowManager().render();
 	}
 
 	@Override
 	public void update(AbstractVoxel voxel, float delta) {
-		WM.getWM().update(delta);
+		GraphicalSubsystem.getWindowManager().update(delta);
 	}
 
 }

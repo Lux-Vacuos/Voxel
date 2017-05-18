@@ -23,9 +23,9 @@ package net.luxvacuos.voxel.client.ui.menus;
 import static net.luxvacuos.voxel.universal.core.GlobalVariables.REGISTRY;
 
 import net.luxvacuos.voxel.client.core.ClientVariables;
+import net.luxvacuos.voxel.client.core.GraphicalSubsystem;
 import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
-import net.luxvacuos.voxel.client.rendering.api.nanovg.WM;
 import net.luxvacuos.voxel.client.ui.Alignment;
 import net.luxvacuos.voxel.client.ui.Button;
 import net.luxvacuos.voxel.client.ui.RootComponentWindow;
@@ -52,7 +52,7 @@ public class PauseWindow extends RootComponentWindow {
 			RootComponentWindow mainMenu = new MainMenu(borderSize + 10, height - titleBarHeight - 10,
 					(int) REGISTRY.getRegistryItem("/Voxel/Display/width") - borderSize * 2f - 20,
 					height - titleBarHeight - borderSize - 50);
-			WM.getWM().addWindow(mainMenu);
+			GraphicalSubsystem.getWindowManager().addWindow(mainMenu);
 			ClientVariables.exitWorld = true;
 		});
 
@@ -60,7 +60,7 @@ public class PauseWindow extends RootComponentWindow {
 		optionsButton.setAlignment(Alignment.CENTER);
 		optionsButton.setWindowAlignment(Alignment.BOTTOM);
 		optionsButton.setOnButtonPress(() -> {
-			WM.getWM().addWindow(new OptionsMenu(w / 2 - 420 + x, y - 40, 840, 600));
+			GraphicalSubsystem.getWindowManager().addWindow(new OptionsMenu(w / 2 - 420 + x, y - 40, 840, 600));
 		});
 
 		super.addComponent(backButton);
@@ -73,7 +73,7 @@ public class PauseWindow extends RootComponentWindow {
 	public void onClose() {
 		ClientVariables.paused = false;
 		Mouse.setGrabbed(true);
-		WM.getWM().toggleShell();
+		GraphicalSubsystem.getWindowManager().toggleShell();
 	}
 
 }

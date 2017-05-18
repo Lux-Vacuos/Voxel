@@ -42,8 +42,8 @@ import java.util.List;
 import net.luxvacuos.igl.vector.Matrix4d;
 import net.luxvacuos.igl.vector.Vector2d;
 import net.luxvacuos.igl.vector.Vector3d;
-import net.luxvacuos.voxel.client.core.ClientInternalSubsystem;
 import net.luxvacuos.voxel.client.core.ClientVariables;
+import net.luxvacuos.voxel.client.core.GraphicalSubsystem;
 import net.luxvacuos.voxel.client.ecs.entities.CameraEntity;
 import net.luxvacuos.voxel.client.ecs.entities.Sun;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
@@ -70,7 +70,7 @@ public abstract class DeferredPipeline implements IDeferredPipeline {
 
 	public DeferredPipeline(String name) {
 		this.name = name;
-		Window window = ClientInternalSubsystem.getInstance().getGameWindow();
+		Window window = GraphicalSubsystem.getMainWindow();
 		width = (int) (window.getWidth() * window.getPixelRatio());
 		height = (int) (window.getHeight() * window.getPixelRatio());
 

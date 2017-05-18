@@ -20,22 +20,14 @@
 
 package net.luxvacuos.voxel.universal.core;
 
-public abstract class AbstractInternalSubsystem implements IInternalSubsystem {
+import net.luxvacuos.voxel.universal.resources.IDisposable;
 
-	@Override
-	public void preInit() {
-	}
+public interface ISubsystem extends IDisposable {
 
-	@Override
-	public void init() {
-	}
-
-	@Override
-	public void postInit() {
-	}
-
-	@Override
-	public void dispose() {
-	}
+	public void init();
+	
+	public void restart();
+	
+	public void update(float delta);
 
 }

@@ -24,9 +24,8 @@ import static net.luxvacuos.voxel.universal.core.GlobalVariables.REGISTRY;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 
-import net.luxvacuos.voxel.client.core.ClientInternalSubsystem;
+import net.luxvacuos.voxel.client.core.GraphicalSubsystem;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
-import net.luxvacuos.voxel.client.rendering.api.nanovg.WM;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Renderer;
 import net.luxvacuos.voxel.client.ui.Alignment;
 import net.luxvacuos.voxel.client.ui.Image;
@@ -63,8 +62,8 @@ public class SplashScreenState extends AbstractState {
 		component.setBackgroundColor(1, 1, 1, 1);
 		component.setBlurBehind(false);
 		component.setAsBackground(true);
-		Image lv = new Image(0, 0, 512, 512, ClientInternalSubsystem.getInstance().getGameWindow().getResourceLoader()
-				.loadNVGTexture("LuxVacuos-Logo"));
+		Image lv = new Image(0, 0, 512, 512,
+				GraphicalSubsystem.getMainWindow().getResourceLoader().loadNVGTexture("LuxVacuos-Logo"));
 		lv.setAlignment(Alignment.CENTER);
 		lv.setWindowAlignment(Alignment.CENTER);
 
@@ -74,7 +73,7 @@ public class SplashScreenState extends AbstractState {
 		component.addComponent(lv);
 		component.addComponent(spinner);
 
-		WM.getWM().addWindow(component);
+		GraphicalSubsystem.getWindowManager().addWindow(component);
 	}
 
 	@Override
@@ -82,30 +81,30 @@ public class SplashScreenState extends AbstractState {
 		super.end();
 		component.closeWindow();
 		Shell shell = new Shell(0, 30, (int) REGISTRY.getRegistryItem("/Voxel/Display/width"), 30);
-		WM.getWM().addWindow(shell);
-		WM.getWM().setShell(shell);
+		GraphicalSubsystem.getWindowManager().addWindow(shell);
+		GraphicalSubsystem.getWindowManager().setShell(shell);
 		float borderSize = (float) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/borderSize");
 		float titleBarHeight = (float) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/titleBarHeight");
 		int height = (int) REGISTRY.getRegistryItem("/Voxel/Display/height");
 		RootComponentWindow mainMenu = new MainMenu(borderSize + 10, height - titleBarHeight - 10,
 				(int) REGISTRY.getRegistryItem("/Voxel/Display/width") - borderSize * 2f - 20,
 				height - titleBarHeight - borderSize - 50);
-		WM.getWM().addWindow(mainMenu);
+		GraphicalSubsystem.getWindowManager().addWindow(mainMenu);
 	}
 
 	@Override
 	public void render(AbstractVoxel voxel, float alpha) {
-		Window window = ClientInternalSubsystem.getInstance().getGameWindow();
+		Window window = GraphicalSubsystem.getMainWindow();
 		Renderer.clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		Renderer.clearColors(1, 1, 1, 1);
 		window.beingNVGFrame();
-		WM.getWM().render();
+		GraphicalSubsystem.getWindowManager().render();
 		window.endNVGFrame();
 	}
 
 	@Override
 	public void update(AbstractVoxel voxel, float delta) {
-		WM.getWM().update(delta);
+		GraphicalSubsystem.getWindowManager().update(delta);
 		if (TaskManager.isEmpty())
 			StateMachine.setCurrentState(StateNames.MAIN_MENU);
 	}

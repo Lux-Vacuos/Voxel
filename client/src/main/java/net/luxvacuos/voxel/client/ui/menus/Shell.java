@@ -23,10 +23,10 @@ package net.luxvacuos.voxel.client.ui.menus;
 import java.util.HashMap;
 import java.util.Map;
 
+import net.luxvacuos.voxel.client.core.GraphicalSubsystem;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.IShell;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.IWindow;
-import net.luxvacuos.voxel.client.rendering.api.nanovg.WM;
 import net.luxvacuos.voxel.client.ui.Button;
 import net.luxvacuos.voxel.client.ui.Component;
 import net.luxvacuos.voxel.client.ui.Container;
@@ -61,7 +61,7 @@ public class Shell extends RootComponentWindow implements IShell {
 		btn.setOnButtonPress(() -> {
 		});
 		left.addComponent(btn);
-		//super.addComponent(left);
+		// super.addComponent(left);
 		apps = new Container(0, 0, super.w - 100, 30);
 		apps.setLayout(new FlowLayout(Direction.RIGHT, 0, 0));
 		super.addComponent(apps);
@@ -70,6 +70,7 @@ public class Shell extends RootComponentWindow implements IShell {
 	@Override
 	public void disposeApp(Window window) {
 		super.disposeApp(window);
+		buttons.clear();
 		GlobalVariables.REGISTRY.register("/Voxel/Settings/WindowManager/shellHeight", 0f);
 	}
 
@@ -82,12 +83,12 @@ public class Shell extends RootComponentWindow implements IShell {
 		btn.setHighlightColor("#FFFFFF64");
 		btn.setTextColor("#FFFFFFFF");
 		btn.setOnButtonPress(() -> {
-			if (!WM.getWM().isOnTop(window)) {
-				WM.getWM().bringToFront(window);
+			if (!GraphicalSubsystem.getWindowManager().isOnTop(window) &&  !window.isMinimized()) {
+				GraphicalSubsystem.getWindowManager().bringToFront(window);
 				return;
 			}
 			if (window.isMinimized())
-				WM.getWM().bringToFront(window);
+				GraphicalSubsystem.getWindowManager().bringToFront(window);
 			window.toggleMinimize();
 		});
 		apps.addComponent(btn);

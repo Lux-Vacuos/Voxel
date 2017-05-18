@@ -63,7 +63,7 @@ import static org.lwjgl.opengl.GL32.glFramebufferTexture;
 
 import java.nio.ByteBuffer;
 
-import net.luxvacuos.voxel.client.core.ClientInternalSubsystem;
+import net.luxvacuos.voxel.client.core.GraphicalSubsystem;
 import net.luxvacuos.voxel.client.core.exception.FrameBufferException;
 
 public class RenderingPipelineFBO {
@@ -204,7 +204,7 @@ public class RenderingPipelineFBO {
 
 	public void end() {
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-		ClientInternalSubsystem.getInstance().getGameWindow().resetViewport();
+		GraphicalSubsystem.getMainWindow().resetViewport();
 	}
 
 	public int getDiffuseTex() {

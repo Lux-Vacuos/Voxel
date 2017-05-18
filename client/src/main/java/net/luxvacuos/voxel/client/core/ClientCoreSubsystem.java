@@ -18,24 +18,34 @@
  * 
  */
 
-package net.luxvacuos.voxel.universal.core;
+package net.luxvacuos.voxel.client.core;
 
-public abstract class AbstractInternalSubsystem implements IInternalSubsystem {
+import static net.luxvacuos.voxel.universal.core.GlobalVariables.REGISTRY;
 
-	@Override
-	public void preInit() {
-	}
+import java.io.File;
+
+import net.luxvacuos.voxel.universal.core.CoreSubsystem;
+
+public class ClientCoreSubsystem extends CoreSubsystem {
 
 	@Override
 	public void init() {
+		gameSettings = new ClientGameSettings();
+		gameSettings.load(new File((String) REGISTRY.getRegistryItem("/Voxel/Settings/file")));
+		gameSettings.read();
 	}
 
 	@Override
-	public void postInit() {
+	public void restart() {
+	}
+
+	@Override
+	public void update(float delta) {
 	}
 
 	@Override
 	public void dispose() {
+		gameSettings.save();
 	}
 
 }

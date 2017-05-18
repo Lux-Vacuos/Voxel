@@ -217,6 +217,8 @@ public final class WindowManager {
 
 	public static void closeAllDisplays() {
 		for (Window window : windows) {
+			if (!window.created)
+				continue;
 			window.dispose();
 			window.closeDisplay();
 		}

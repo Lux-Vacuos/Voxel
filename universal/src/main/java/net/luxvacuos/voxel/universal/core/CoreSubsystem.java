@@ -20,22 +20,28 @@
 
 package net.luxvacuos.voxel.universal.core;
 
-public abstract class AbstractInternalSubsystem implements IInternalSubsystem {
-
-	@Override
-	public void preInit() {
-	}
+public class CoreSubsystem implements ISubsystem {
+	
+	protected static AbstractGameSettings gameSettings;
 
 	@Override
 	public void init() {
 	}
 
 	@Override
-	public void postInit() {
+	public void restart() {
+	}
+
+	@Override
+	public void update(float delta) {
 	}
 
 	@Override
 	public void dispose() {
+	}
+	
+	public static AbstractGameSettings getGameSettings() {
+		return gameSettings;
 	}
 
 }

@@ -28,10 +28,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 
 import net.luxvacuos.voxel.client.core.ClientVariables;
+import net.luxvacuos.voxel.client.core.GraphicalSubsystem;
 import net.luxvacuos.voxel.client.core.states.StateNames;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.NanoWindow;
-import net.luxvacuos.voxel.client.rendering.api.nanovg.WM;
 import net.luxvacuos.voxel.client.ui.Alignment;
 import net.luxvacuos.voxel.client.ui.Button;
 import net.luxvacuos.voxel.client.ui.EditBox;
@@ -124,7 +124,7 @@ public class WorldMenu extends RootComponentWindow {
 		loadButton.setWindowAlignment(Alignment.RIGHT_BOTTOM);
 		loadButton.setOnButtonPress(() -> {
 			if (ClientVariables.worldNameToLoad != "") {
-				WM.getWM().toggleShell();
+				GraphicalSubsystem.getWindowManager().toggleShell();
 				super.closeWindow();
 				root.setWindowClose(WindowClose.DISPOSE);
 				root.closeWindow();

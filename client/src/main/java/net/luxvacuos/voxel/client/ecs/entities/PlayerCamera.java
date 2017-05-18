@@ -38,7 +38,7 @@ import com.badlogic.gdx.math.collision.Ray;
 import net.luxvacuos.igl.vector.Matrix4d;
 import net.luxvacuos.igl.vector.Vector2d;
 import net.luxvacuos.igl.vector.Vector3d;
-import net.luxvacuos.voxel.client.core.ClientInternalSubsystem;
+import net.luxvacuos.voxel.client.core.GraphicalSubsystem;
 import net.luxvacuos.voxel.client.ecs.ClientComponents;
 import net.luxvacuos.voxel.client.input.KeyboardHandler;
 import net.luxvacuos.voxel.client.input.Mouse;
@@ -93,7 +93,7 @@ public class PlayerCamera extends CameraEntity {
 
 	@Override
 	public void update(float delta) {
-		Window window = ClientInternalSubsystem.getInstance().getGameWindow();
+		Window window = GraphicalSubsystem.getMainWindow();
 		KeyboardHandler kbh = window.getKeyboardHandler();
 		Rotation rotation = Components.ROTATION.get(this);
 
@@ -263,8 +263,8 @@ public class PlayerCamera extends CameraEntity {
 	}
 
 	public void setMouse() {
-		setCursorPosition(ClientInternalSubsystem.getInstance().getGameWindow().getWidth() / 2,
-				ClientInternalSubsystem.getInstance().getGameWindow().getHeight() / 2);
+		setCursorPosition(GraphicalSubsystem.getMainWindow().getWidth() / 2,
+				GraphicalSubsystem.getMainWindow().getHeight() / 2);
 		setGrabbed(true);
 	}
 

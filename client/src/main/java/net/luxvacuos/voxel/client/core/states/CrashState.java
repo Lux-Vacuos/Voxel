@@ -24,7 +24,7 @@ import static net.luxvacuos.voxel.universal.core.GlobalVariables.REGISTRY;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 
-import net.luxvacuos.voxel.client.rendering.api.nanovg.WM;
+import net.luxvacuos.voxel.client.core.GraphicalSubsystem;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Renderer;
 import net.luxvacuos.voxel.client.ui.menus.CrashWindow;
 import net.luxvacuos.voxel.universal.core.AbstractVoxel;
@@ -40,7 +40,7 @@ public class CrashState extends AbstractState {
 
 	@Override
 	public void start() {
-		WM.getWM()
+		GraphicalSubsystem.getWindowManager()
 				.addWindow(new CrashWindow(0, (int) REGISTRY.getRegistryItem("/Voxel/Display/height"),
 						(int) REGISTRY.getRegistryItem("/Voxel/Display/width"),
 						(int) REGISTRY.getRegistryItem("/Voxel/Display/height"), t));
@@ -50,12 +50,12 @@ public class CrashState extends AbstractState {
 	public void render(AbstractVoxel voxel, float delta) {
 		Renderer.clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		Renderer.clearColors(1, 1, 1, 1);
-		WM.getWM().render();
+		GraphicalSubsystem.getWindowManager().render();
 	}
 
 	@Override
 	public void update(AbstractVoxel voxel, float delta) {
-		WM.getWM().update(delta);
+		GraphicalSubsystem.getWindowManager().update(delta);
 	}
 
 }

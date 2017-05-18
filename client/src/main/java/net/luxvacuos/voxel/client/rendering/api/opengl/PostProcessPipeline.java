@@ -48,7 +48,7 @@ public abstract class PostProcessPipeline implements IPostProcessPipeline {
 	private RawModel quad;
 	private FBO[] auxs;
 	private String name;
-	private int texture = 0;
+	private int texture = -1;
 	private Window window;
 
 	public PostProcessPipeline(String name, Window window) {
@@ -97,13 +97,14 @@ public abstract class PostProcessPipeline implements IPostProcessPipeline {
 		glBindVertexArray(0);
 		previousViewMatrix = Maths.createViewMatrix(camera);
 		previousCameraPosition = camera.getPosition();
-		if (texture == 0)
+		if (texture == -1)
 			texture = NRendering.generateImageFromTexture(nvg, auxs[0].getTexture(), width, height, NVG_IMAGE_FLIPY);
 	}
 
 	@Override
 	public void dispose() {
-		nvgDeleteImage(window.getNVGID(), texture);
+		if (texture != -1)
+			nvgDeleteImage(window.getNVGID(), texture);
 		fbo.cleanUp();
 		for (IPostProcessPass deferredPass : imagePasses) {
 			deferredPass.dispose();

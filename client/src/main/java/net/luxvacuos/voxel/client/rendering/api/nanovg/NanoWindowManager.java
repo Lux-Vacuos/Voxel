@@ -155,12 +155,7 @@ public class NanoWindowManager implements IWindowManager {
 		windows.removeAll(tmp);
 		tmp.clear();
 		if (toTop != null) {
-			IWindow top = windows.get(windows.size() - 1);
-			if (top != toTop)
-				if (!top.isAlwaysOnTop() && !top.isHidden() && !top.isMinimized()) {
-					windows.remove(toTop);
-					windows.add(toTop);
-				}
+			bringToFront(toTop);
 		}
 		tmp.addAll(windows);
 		Collections.reverse(tmp);
@@ -235,7 +230,7 @@ public class NanoWindowManager implements IWindowManager {
 	public void bringToFront(IWindow window) {
 		IWindow top = windows.get(windows.size() - 1);
 		if (top != window)
-			if (!top.isAlwaysOnTop() && !top.isHidden() && !top.isMinimized()) {
+			if (!top.isAlwaysOnTop() && !top.isHidden()) {
 				windows.remove(window);
 				windows.add(window);
 			}

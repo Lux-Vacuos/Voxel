@@ -22,7 +22,6 @@ package net.luxvacuos.voxel.client.ui.menus;
 
 import static net.luxvacuos.voxel.universal.core.GlobalVariables.REGISTRY;
 
-import net.luxvacuos.voxel.client.core.ClientInternalSubsystem;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.NRendering.ButtonStyle;
 import net.luxvacuos.voxel.client.ui.Alignment;
@@ -36,6 +35,7 @@ import net.luxvacuos.voxel.client.ui.Slider;
 import net.luxvacuos.voxel.client.ui.Text;
 import net.luxvacuos.voxel.client.ui.TitleBarButton;
 import net.luxvacuos.voxel.client.ui.ToggleButton;
+import net.luxvacuos.voxel.universal.core.CoreSubsystem;
 import net.luxvacuos.voxel.universal.core.TaskManager;
 
 public class OptionsMenu extends RootComponentWindow {
@@ -365,8 +365,8 @@ public class OptionsMenu extends RootComponentWindow {
 
 	@Override
 	public void onClose() {
-		ClientInternalSubsystem.getInstance().getGameSettings().update();
-		ClientInternalSubsystem.getInstance().getGameSettings().save();
+		CoreSubsystem.getGameSettings().update();
+		CoreSubsystem.getGameSettings().save();
 	}
 
 }

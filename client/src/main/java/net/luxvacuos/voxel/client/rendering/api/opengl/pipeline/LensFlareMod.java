@@ -28,7 +28,7 @@ import static org.lwjgl.opengl.GL13.GL_TEXTURE8;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE9;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
 
-import net.luxvacuos.voxel.client.core.ClientInternalSubsystem;
+import net.luxvacuos.voxel.client.core.GraphicalSubsystem;
 import net.luxvacuos.voxel.client.rendering.api.opengl.DeferredPass;
 import net.luxvacuos.voxel.client.rendering.api.opengl.FBO;
 import net.luxvacuos.voxel.client.rendering.api.opengl.IDeferredPipeline;
@@ -43,9 +43,9 @@ public class LensFlareMod extends DeferredPass {
 
 	public LensFlareMod(String name, int width, int height) {
 		super(name, width, height);
-		lensDirt = ClientInternalSubsystem.getInstance().getGameWindow().getResourceLoader()
+		lensDirt = GraphicalSubsystem.getMainWindow().getResourceLoader()
 				.loadTextureMisc("textures/lens/lens_dirt.png");
-		lensStar = ClientInternalSubsystem.getInstance().getGameWindow().getResourceLoader()
+		lensStar = GraphicalSubsystem.getMainWindow().getResourceLoader()
 				.loadTextureMisc("textures/lens/lens_star.png");
 	}
 

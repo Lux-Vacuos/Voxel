@@ -28,9 +28,9 @@ import org.lwjgl.glfw.GLFW;
 
 import net.luxvacuos.igl.vector.Matrix4d;
 import net.luxvacuos.igl.vector.Vector3d;
-import net.luxvacuos.voxel.client.core.ClientInternalSubsystem;
 import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.core.ClientWorldSimulation;
+import net.luxvacuos.voxel.client.core.GraphicalSubsystem;
 import net.luxvacuos.voxel.client.ecs.entities.CameraEntity;
 import net.luxvacuos.voxel.client.ecs.entities.PlayerCamera;
 import net.luxvacuos.voxel.client.ecs.entities.Sun;
@@ -38,7 +38,6 @@ import net.luxvacuos.voxel.client.input.KeyboardHandler;
 import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.network.Client;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
-import net.luxvacuos.voxel.client.rendering.api.nanovg.WM;
 import net.luxvacuos.voxel.client.rendering.api.opengl.BlockOutlineRenderer;
 import net.luxvacuos.voxel.client.rendering.api.opengl.ParticleDomain;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Renderer;
@@ -107,7 +106,7 @@ public class MPWorldState extends AbstractState {
 		gameWindow = new GameWindow(0, (int) REGISTRY.getRegistryItem("/Voxel/Display/height"),
 				(int) REGISTRY.getRegistryItem("/Voxel/Display/width"),
 				(int) REGISTRY.getRegistryItem("/Voxel/Display/height"));
-		WM.getWM().addWindow(0, gameWindow);
+		GraphicalSubsystem.getWindowManager().addWindow(0, gameWindow);
 		client.getChannel()
 				.writeAndFlush(new ClientConnect(ClientVariables.user.getUUID(), ClientVariables.user.getUsername()));
 	}
@@ -123,7 +122,7 @@ public class MPWorldState extends AbstractState {
 
 	@Override
 	public void init() {
-		Window window = ClientInternalSubsystem.getInstance().getGameWindow();
+		Window window = GraphicalSubsystem.getMainWindow();
 
 		Matrix4d[] shadowProjectionMatrix = new Matrix4d[4];
 
@@ -165,13 +164,13 @@ public class MPWorldState extends AbstractState {
 				camera, world.getActiveDimension().getWorldSimulator(), sun, alpha);
 		Renderer.clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		Renderer.clearColors(1, 1, 1, 1);
-		WM.getWM().render();
+		GraphicalSubsystem.getWindowManager().render();
 	}
 
 	@Override
 	public void update(AbstractVoxel voxel, float delta) {
-		WM.getWM().update(delta);
-		Window window = ClientInternalSubsystem.getInstance().getGameWindow();
+		GraphicalSubsystem.getWindowManager().update(delta);
+		Window window = GraphicalSubsystem.getMainWindow();
 		KeyboardHandler kbh = window.getKeyboardHandler();
 		if (!ClientVariables.paused) {
 			world.update(delta);
@@ -193,8 +192,8 @@ public class MPWorldState extends AbstractState {
 				pauseWindow = new PauseWindow(borderSize + 10, height - titleBarHeight - 10,
 						(int) REGISTRY.getRegistryItem("/Voxel/Display/width") - borderSize * 2f - 20,
 						height - titleBarHeight - borderSize - 50);
-				WM.getWM().addWindow(pauseWindow);
-				WM.getWM().toggleShell();
+				GraphicalSubsystem.getWindowManager().addWindow(pauseWindow);
+				GraphicalSubsystem.getWindowManager().toggleShell();
 			}
 		} else if (ClientVariables.exitWorld) {
 			gameWindow.closeWindow();
@@ -208,7 +207,7 @@ public class MPWorldState extends AbstractState {
 				Mouse.setGrabbed(true);
 				ClientVariables.paused = false;
 				pauseWindow.closeWindow();
-				WM.getWM().toggleShell();
+				GraphicalSubsystem.getWindowManager().toggleShell();
 			}
 		}
 	}

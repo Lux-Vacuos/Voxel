@@ -20,7 +20,7 @@
 
 package net.luxvacuos.voxel.client.rendering.api.opengl.objects;
 
-import static org.lwjgl.assimp.Assimp.*;
+import static org.lwjgl.assimp.Assimp.AI_MATKEY_COLOR_DIFFUSE;
 import static org.lwjgl.assimp.Assimp.AI_MATKEY_COLOR_SPECULAR;
 import static org.lwjgl.assimp.Assimp.aiGetMaterialColor;
 import static org.lwjgl.assimp.Assimp.aiGetMaterialTexture;
@@ -28,6 +28,7 @@ import static org.lwjgl.assimp.Assimp.aiGetMaterialTextureCount;
 import static org.lwjgl.assimp.Assimp.aiReturn_SUCCESS;
 import static org.lwjgl.assimp.Assimp.aiTextureType_DIFFUSE;
 import static org.lwjgl.assimp.Assimp.aiTextureType_NONE;
+import static org.lwjgl.assimp.Assimp.aiTextureType_NORMALS;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
@@ -37,7 +38,7 @@ import org.lwjgl.assimp.AIMaterial;
 import org.lwjgl.assimp.AIString;
 
 import net.luxvacuos.igl.vector.Vector4f;
-import net.luxvacuos.voxel.client.core.ClientInternalSubsystem;
+import net.luxvacuos.voxel.client.core.GraphicalSubsystem;
 import net.luxvacuos.voxel.universal.resources.IDisposable;
 
 /**
@@ -213,7 +214,7 @@ public class Material implements IDisposable {
 		for (int i = 0; i < count; i++)
 			rootPath = rootPath.substring(0, rootPath.lastIndexOf("/"));
 		file = file.substring(2);
-		return ClientInternalSubsystem.getInstance().getGameWindow().getResourceLoader().loadTexture(rootPath + file);
+		return GraphicalSubsystem.getMainWindow().getResourceLoader().loadTexture(rootPath + file);
 	}
 
 	private static Texture loadTextureMisc(AIString path, String rootPath) {
@@ -226,7 +227,7 @@ public class Material implements IDisposable {
 		for (int i = 0; i < count; i++)
 			rootPath = rootPath.substring(0, rootPath.lastIndexOf("/"));
 		file = file.substring(2);
-		return ClientInternalSubsystem.getInstance().getGameWindow().getResourceLoader()
+		return GraphicalSubsystem.getMainWindow().getResourceLoader()
 				.loadTextureMisc(rootPath + file);
 	}
 

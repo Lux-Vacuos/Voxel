@@ -20,17 +20,8 @@
 
 package net.luxvacuos.voxel.client.core;
 
-import java.io.File;
+import static net.luxvacuos.voxel.universal.core.GlobalVariables.REGISTRY;
 
-import static net.luxvacuos.voxel.universal.core.GlobalVariables.*;
-
-import net.luxvacuos.voxel.client.input.Mouse;
-import net.luxvacuos.voxel.client.rendering.api.glfw.Icon;
-import net.luxvacuos.voxel.client.rendering.api.glfw.PixelBufferHandle;
-import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
-import net.luxvacuos.voxel.client.rendering.api.glfw.WindowHandle;
-import net.luxvacuos.voxel.client.rendering.api.glfw.WindowManager;
-import net.luxvacuos.voxel.client.rendering.api.nanovg.NanoWindowManager;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.WM;
 import net.luxvacuos.voxel.client.rendering.api.opengl.ParticleDomain;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Renderer;
@@ -39,7 +30,6 @@ import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.ShaderIncludes;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.TessellatorBasicShader;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.TessellatorShader;
 import net.luxvacuos.voxel.client.rendering.utils.BlockFaceAtlas;
-import net.luxvacuos.voxel.client.resources.ResourceLoader;
 import net.luxvacuos.voxel.client.util.LoggerSoundSystem;
 import net.luxvacuos.voxel.client.world.block.BlocksResources;
 import net.luxvacuos.voxel.client.world.block.RenderBlock;
@@ -70,40 +60,12 @@ public class ClientInternalSubsystem extends AbstractInternalSubsystem {
 	}
 
 	private SoundSystem soundSystem;
-	private Window window;
 
 	private ClientInternalSubsystem() {
 	}
 
 	@Override
 	public void preInit() {
-		gameSettings = new ClientGameSettings();
-		gameSettings.load(new File((String) REGISTRY.getRegistryItem("/Voxel/Settings/file")));
-		gameSettings.read();
-
-		Icon[] icons = new Icon[] { new Icon("icon32"), new Icon("icon64") };
-
-		WindowHandle handle = WindowManager.generateHandle((int) REGISTRY.getRegistryItem("/Voxel/Display/width"),
-				(int) REGISTRY.getRegistryItem("/Voxel/Display/height"), "Voxel");
-		handle.canResize(false).isVisible(false).setIcon(icons).setCursor("arrow").useDebugContext(true);
-		PixelBufferHandle pb = new PixelBufferHandle();
-		pb.setSrgbCapable(1);
-		handle.setPixelBuffer(pb);
-		long gameWindowID = WindowManager.createWindow(handle,
-				(boolean) REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/vsync"));
-		window = WindowManager.getWindow(gameWindowID);
-		Mouse.setWindow(window);
-		WM.setWM(new NanoWindowManager(window));
-
-		ResourceLoader loader = window.getResourceLoader();
-		loader.loadNVGFont("Roboto-Bold", "Roboto-Bold");
-		loader.loadNVGFont("Roboto-Regular", "Roboto-Regular");
-		loader.loadNVGFont("Poppins-Regular", "Poppins-Regular");
-		loader.loadNVGFont("Poppins-Light", "Poppins-Light");
-		loader.loadNVGFont("Poppins-Medium", "Poppins-Medium");
-		loader.loadNVGFont("Poppins-Bold", "Poppins-Bold");
-		loader.loadNVGFont("Poppins-SemiBold", "Poppins-SemiBold");
-		loader.loadNVGFont("Entypo", "Entypo", 40);
 	}
 
 	@Override
@@ -111,8 +73,7 @@ public class ClientInternalSubsystem extends AbstractInternalSubsystem {
 		TaskManager.addTask(() -> ShaderIncludes.processIncludeFile("common.isl"));
 		TaskManager.addTask(() -> ShaderIncludes.processIncludeFile("lighting.isl"));
 		TaskManager.addTask(() -> ShaderIncludes.processIncludeFile("materials.isl"));
-		TaskManager.addTask(
-				() -> DefaultData.init(ClientInternalSubsystem.getInstance().getGameWindow().getResourceLoader()));
+		TaskManager.addTask(() -> DefaultData.init(GraphicalSubsystem.getMainWindow().getResourceLoader()));
 		if (!ClientVariables.WSL) {
 			try {
 				SoundSystemConfig.addLibrary(LibraryLWJGLOpenAL.class);
@@ -126,8 +87,8 @@ public class ClientInternalSubsystem extends AbstractInternalSubsystem {
 			soundSystem = new SoundSystem();
 		}
 		TaskManager.addTask(() -> ParticleDomain.init());
-		TaskManager.addTask(() -> Renderer.init(getGameWindow()));
-		TaskManager.addTask(() -> BlocksResources.init(getGameWindow().getResourceLoader()));
+		TaskManager.addTask(() -> Renderer.init(GraphicalSubsystem.getMainWindow()));
+		TaskManager.addTask(() -> BlocksResources.init(GraphicalSubsystem.getMainWindow().getResourceLoader()));
 		TaskManager.addTask(() -> {
 			MaterialModder matMod = new MaterialModder();
 			Blocks.startRegister("voxel");
@@ -170,18 +131,12 @@ public class ClientInternalSubsystem extends AbstractInternalSubsystem {
 	 */
 	@Override
 	public void dispose() {
-		gameSettings.save();
 		DefaultData.dispose();
 		if (!ClientVariables.WSL)
 			soundSystem.cleanup();
 		TessellatorShader.getShader().dispose();
 		TessellatorBasicShader.getShader().dispose();
 		Renderer.cleanUp();
-		WM.getWM().dispose();
-	}
-
-	public Window getGameWindow() {
-		return window;
 	}
 
 }

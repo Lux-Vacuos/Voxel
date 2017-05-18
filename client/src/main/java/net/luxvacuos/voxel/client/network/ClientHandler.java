@@ -7,8 +7,8 @@ import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.util.ReferenceCountUtil;
 import net.luxvacuos.igl.Logger;
 import net.luxvacuos.voxel.client.core.ClientVariables;
+import net.luxvacuos.voxel.client.core.GraphicalSubsystem;
 import net.luxvacuos.voxel.client.core.states.MPWorldState;
-import net.luxvacuos.voxel.client.rendering.api.nanovg.WM;
 import net.luxvacuos.voxel.client.ui.RootComponentWindow;
 import net.luxvacuos.voxel.client.ui.menus.MainMenu;
 import net.luxvacuos.voxel.client.world.dimension.NetworkDimension;
@@ -70,7 +70,7 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
 		RootComponentWindow mainMenu = new MainMenu(borderSize + 10, height - titleBarHeight - 10,
 				(int) REGISTRY.getRegistryItem("/Voxel/Display/width") - borderSize * 2f - 20,
 				height - titleBarHeight - borderSize - 20);
-		WM.getWM().addWindow(mainMenu);
+		GraphicalSubsystem.getWindowManager().addWindow(mainMenu);
 		ClientVariables.exitWorld = true;
 	}
 

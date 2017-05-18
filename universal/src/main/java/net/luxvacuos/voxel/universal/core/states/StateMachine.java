@@ -71,7 +71,7 @@ public final class StateMachine {
 	}
 
 	public static boolean render(AbstractVoxel voxel, float alpha) {
-		if (currentState == null || voxel.getEngineType() != EngineType.CLIENT)
+		if (currentState == null || voxel.getType() != EngineType.CLIENT)
 			return false;
 
 		currentState.render(voxel, alpha);
@@ -113,6 +113,7 @@ public final class StateMachine {
 			if (state instanceof IDisposable)
 				((IDisposable) state).dispose();
 		}
+		registeredStates.clear();
 	}
 
 	public static InternalState getInternalState() {

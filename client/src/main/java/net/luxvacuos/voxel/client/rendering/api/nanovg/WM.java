@@ -23,27 +23,14 @@ package net.luxvacuos.voxel.client.rendering.api.nanovg;
 import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_CENTER;
 import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_MIDDLE;
 
-import net.luxvacuos.igl.Logger;
+import net.luxvacuos.voxel.client.core.GraphicalSubsystem;
 import net.luxvacuos.voxel.client.ui.Alignment;
 import net.luxvacuos.voxel.client.ui.RootComponentWindow;
 import net.luxvacuos.voxel.client.ui.Text;
 
 public final class WM {
 
-	private static IWindowManager iwm;
-	
-	public static void setWM(IWindowManager iwm) {
-		if (WM.iwm != null)
-			WM.iwm.dispose();
-		WM.iwm = iwm;
-		Logger.log("Window Manager: " + iwm.getClass().getSimpleName());
-	}
-
-	public static IWindowManager getWM() {
-		return iwm;
-	}
-	
-	public static void generateTestWindows(){
+	public static void generateTestWindows() {
 		Text win0T = new Text("Default Window", 0, 0);
 		win0T.setAlign(NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
 		win0T.setWindowAlignment(Alignment.CENTER);
@@ -97,16 +84,16 @@ public final class WM {
 		win9.toggleTitleBar();
 		win9.setDecorations(false);
 
-		WM.getWM().addWindow(win0);
-		WM.getWM().addWindow(win1);
-		WM.getWM().addWindow(win2);
-		WM.getWM().addWindow(win3);
-		WM.getWM().addWindow(win4);
-		WM.getWM().addWindow(win5);
-		WM.getWM().addWindow(win6);
-		WM.getWM().addWindow(win7);
-		WM.getWM().addWindow(win8);
-		WM.getWM().addWindow(win9);
+		GraphicalSubsystem.getWindowManager().addWindow(win0);
+		GraphicalSubsystem.getWindowManager().addWindow(win1);
+		GraphicalSubsystem.getWindowManager().addWindow(win2);
+		GraphicalSubsystem.getWindowManager().addWindow(win3);
+		GraphicalSubsystem.getWindowManager().addWindow(win4);
+		GraphicalSubsystem.getWindowManager().addWindow(win5);
+		GraphicalSubsystem.getWindowManager().addWindow(win6);
+		GraphicalSubsystem.getWindowManager().addWindow(win7);
+		GraphicalSubsystem.getWindowManager().addWindow(win8);
+		GraphicalSubsystem.getWindowManager().addWindow(win9);
 	}
 
 }

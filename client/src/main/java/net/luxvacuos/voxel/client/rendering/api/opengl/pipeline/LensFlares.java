@@ -27,7 +27,7 @@ import static org.lwjgl.opengl.GL13.GL_TEXTURE7;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE8;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
 
-import net.luxvacuos.voxel.client.core.ClientInternalSubsystem;
+import net.luxvacuos.voxel.client.core.GraphicalSubsystem;
 import net.luxvacuos.voxel.client.rendering.api.opengl.DeferredPass;
 import net.luxvacuos.voxel.client.rendering.api.opengl.FBO;
 import net.luxvacuos.voxel.client.rendering.api.opengl.IDeferredPipeline;
@@ -41,7 +41,7 @@ public class LensFlares extends DeferredPass {
 
 	public LensFlares(String name, int width, int height) {
 		super(name, width, height);
-		lensColor = ClientInternalSubsystem.getInstance().getGameWindow().getResourceLoader()
+		lensColor = GraphicalSubsystem.getMainWindow().getResourceLoader()
 				.loadTextureMisc("textures/lens/lens_color.png");
 	}
 
