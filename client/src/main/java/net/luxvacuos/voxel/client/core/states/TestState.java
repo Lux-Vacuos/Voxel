@@ -35,7 +35,7 @@ import net.luxvacuos.igl.vector.Vector3d;
 import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.core.ClientWorldSimulation;
-import net.luxvacuos.voxel.client.core.GraphicalSubsystem;
+import net.luxvacuos.voxel.client.core.subsystems.GraphicalSubsystem;
 import net.luxvacuos.voxel.client.ecs.EntityResources;
 import net.luxvacuos.voxel.client.ecs.entities.CameraEntity;
 import net.luxvacuos.voxel.client.ecs.entities.PlayerCamera;

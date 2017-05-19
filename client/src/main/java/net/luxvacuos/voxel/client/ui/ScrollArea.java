@@ -27,7 +27,7 @@ import static org.lwjgl.nanovg.NanoVG.nvgScissor;
 
 import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
-import net.luxvacuos.voxel.client.rendering.api.nanovg.NRendering;
+import net.luxvacuos.voxel.client.rendering.api.nanovg.themes.Theme;
 import net.luxvacuos.voxel.client.util.Maths;
 
 public class ScrollArea extends Component {
@@ -49,15 +49,15 @@ public class ScrollArea extends Component {
 
 	@Override
 	public void render(Window window) {
-		NRendering.renderBox(window.getNVGID(), rootComponent.rootX + alignedX,
+		Theme.renderBox(window.getNVGID(), rootComponent.rootX + alignedX,
 				window.getHeight() - rootComponent.rootY - alignedY - h, w, h,
-				NRendering.rgba(0.6f, 0.6f, 0.6f, 0f, NRendering.colorB));
+				Theme.rgba(0.6f, 0.6f, 0.6f, 0f, Theme.colorB));
 		nvgSave(window.getNVGID());
 		nvgScissor(window.getNVGID(), rootComponent.rootX + alignedX,
 				window.getHeight() - rootComponent.rootY - alignedY - h, w, h);
 		comp.render(window);
 		nvgRestore(window.getNVGID());
-		NRendering.renderScrollBarV(window.getNVGID(), rootComponent.rootX + alignedX,
+		Theme.renderScrollBarV(window.getNVGID(), rootComponent.rootX + alignedX,
 				window.getHeight() - rootComponent.rootY - alignedY - h, w, h, scrollH / maxH, maxH);
 	}
 

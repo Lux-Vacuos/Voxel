@@ -22,13 +22,18 @@ package net.luxvacuos.voxel.universal.bootstrap;
 
 import net.luxvacuos.igl.Logger;
 
+/**
+ * Bootstrap, this initializes the game path using <b>AppData</b> on Windows and
+ * <b>user.home</b> on Linux and OS X
+ * 
+ * @author Guerra24 <pablo230699@hotmail.com>
+ */
 public abstract class AbstractBootstrap implements IBootstrap {
 
-	protected String prefix;
-	private Platform platform;
+	protected static String prefix;
+	private static Platform platform;
 
 	public AbstractBootstrap(String[] args) {
-		init();
 		try {
 			parseArgs(args);
 		} catch (ArrayIndexOutOfBoundsException aioe) {
@@ -38,10 +43,10 @@ public abstract class AbstractBootstrap implements IBootstrap {
 			Logger.error(ex);
 			System.exit(1);
 		}
+		init();
 	}
 
-	@Override
-	public Platform getPlatform() {
+	public static Platform getPlatform() {
 		if (platform == null) {
 			// Convert os.name and os.arch to lower case
 			final String OS = System.getProperty("os.name").toLowerCase();
@@ -66,6 +71,10 @@ public abstract class AbstractBootstrap implements IBootstrap {
 		}
 
 		return platform;
+	}
+
+	public static String getPrefix() {
+		return prefix;
 	}
 
 }

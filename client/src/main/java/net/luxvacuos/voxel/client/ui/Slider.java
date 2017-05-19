@@ -22,7 +22,7 @@ package net.luxvacuos.voxel.client.ui;
 
 import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
-import net.luxvacuos.voxel.client.rendering.api.nanovg.NRendering;
+import net.luxvacuos.voxel.client.rendering.api.nanovg.themes.Theme;
 import net.luxvacuos.voxel.client.util.Maths;
 
 public class Slider extends Component {
@@ -55,7 +55,7 @@ public class Slider extends Component {
 
 	@Override
 	public void render(Window window) {
-		NRendering.renderSlider(window.getNVGID(), pos, rootComponent.rootX + alignedX,
+		Theme.renderSlider(window.getNVGID(), pos, rootComponent.rootX + alignedX,
 				window.getHeight() - rootComponent.rootY - alignedY - h, w, h);
 	}
 

@@ -18,18 +18,22 @@
  * 
  */
 
-package net.luxvacuos.voxel.client.core;
+package net.luxvacuos.voxel.client.core.subsystems;
 
 import static net.luxvacuos.voxel.universal.core.GlobalVariables.REGISTRY;
 
 import java.io.File;
 
+import net.luxvacuos.voxel.client.bootstrap.Bootstrap;
+import net.luxvacuos.voxel.client.core.ClientGameSettings;
 import net.luxvacuos.voxel.universal.core.CoreSubsystem;
 
 public class ClientCoreSubsystem extends CoreSubsystem {
 
 	@Override
 	public void init() {
+		super.init();
+		REGISTRY.register("/Voxel/Settings/World/directory", Bootstrap.getPrefix() + "/world/");
 		gameSettings = new ClientGameSettings();
 		gameSettings.load(new File((String) REGISTRY.getRegistryItem("/Voxel/Settings/file")));
 		gameSettings.read();
@@ -45,6 +49,7 @@ public class ClientCoreSubsystem extends CoreSubsystem {
 
 	@Override
 	public void dispose() {
+		gameSettings.update();
 		gameSettings.save();
 	}
 

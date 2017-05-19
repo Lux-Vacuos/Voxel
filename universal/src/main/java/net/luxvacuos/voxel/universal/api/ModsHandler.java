@@ -25,6 +25,7 @@ import java.util.List;
 
 import net.luxvacuos.igl.Logger;
 import net.luxvacuos.voxel.universal.api.mod.IMod;
+import net.luxvacuos.voxel.universal.bootstrap.AbstractBootstrap;
 import net.luxvacuos.voxel.universal.core.AbstractVoxel;
 
 /**
@@ -38,7 +39,7 @@ public class ModsHandler {
 
 	public ModsHandler(AbstractVoxel abstractVoxel) {
 		modLoader = new ModLoader();
-		modLoader.loadMods(this, abstractVoxel.getBootstrap().getPrefix());
+		modLoader.loadMods(this, AbstractBootstrap.getPrefix());
 		mods = new ArrayList<>();
 	}
 

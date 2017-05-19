@@ -33,7 +33,7 @@ import net.luxvacuos.igl.vector.Matrix4d;
 import net.luxvacuos.igl.vector.Vector3d;
 import net.luxvacuos.voxel.client.ecs.entities.CameraEntity;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
-import net.luxvacuos.voxel.client.rendering.api.nanovg.NRendering;
+import net.luxvacuos.voxel.client.rendering.api.nanovg.themes.Theme;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.RawModel;
 import net.luxvacuos.voxel.client.util.Maths;
 import net.luxvacuos.voxel.universal.core.TaskManager;
@@ -98,7 +98,7 @@ public abstract class PostProcessPipeline implements IPostProcessPipeline {
 		previousViewMatrix = Maths.createViewMatrix(camera);
 		previousCameraPosition = camera.getPosition();
 		if (texture == -1)
-			texture = NRendering.generateImageFromTexture(nvg, auxs[0].getTexture(), width, height, NVG_IMAGE_FLIPY);
+			texture = Theme.generateImageFromTexture(nvg, auxs[0].getTexture(), width, height, NVG_IMAGE_FLIPY);
 	}
 
 	@Override

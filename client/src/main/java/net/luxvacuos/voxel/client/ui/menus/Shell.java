@@ -23,7 +23,7 @@ package net.luxvacuos.voxel.client.ui.menus;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.luxvacuos.voxel.client.core.GraphicalSubsystem;
+import net.luxvacuos.voxel.client.core.subsystems.GraphicalSubsystem;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.IShell;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.IWindow;

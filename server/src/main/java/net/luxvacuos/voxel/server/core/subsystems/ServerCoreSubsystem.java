@@ -18,36 +18,39 @@
  * 
  */
 
-package net.luxvacuos.voxel.client.ui;
+package net.luxvacuos.voxel.server.core.subsystems;
 
-import static org.lwjgl.nanovg.NanoVG.nvgDeleteImage;
+import static net.luxvacuos.voxel.universal.core.GlobalVariables.REGISTRY;
 
-import net.luxvacuos.voxel.client.core.subsystems.GraphicalSubsystem;
-import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
-import net.luxvacuos.voxel.client.rendering.api.nanovg.themes.Theme;
+import java.io.File;
 
-public class Image extends Component {
+import net.luxvacuos.voxel.server.bootstrap.Bootstrap;
+import net.luxvacuos.voxel.server.core.ServerGameSettings;
+import net.luxvacuos.voxel.universal.core.CoreSubsystem;
 
-	private int image;
+public class ServerCoreSubsystem extends CoreSubsystem {
 
-	public Image(float x, float y, float w, float h, int image) {
-		this.x = x;
-		this.y = y;
-		this.w = w;
-		this.h = h;
-		this.image = image;
+	@Override
+	public void init() {
+		super.init();
+		REGISTRY.register("/Voxel/Settings/World/directory", Bootstrap.getPrefix() + "/");
+		gameSettings = new ServerGameSettings();
+		gameSettings.load(new File((String) REGISTRY.getRegistryItem("/Voxel/Settings/file")));
+		gameSettings.read();
 	}
 
 	@Override
-	public void render(Window window) {
-		Theme.renderImage(window.getNVGID(), rootComponent.rootX + alignedX,
-				window.getHeight() - rootComponent.rootY - alignedY - h, w, h, image, 1);
+	public void restart() {
 	}
-	
+
+	@Override
+	public void update(float delta) {
+	}
+
 	@Override
 	public void dispose() {
-		super.dispose();
-		nvgDeleteImage(GraphicalSubsystem.getMainWindow().getNVGID(), image);
+		gameSettings.update();
+		gameSettings.save();
 	}
 
 }

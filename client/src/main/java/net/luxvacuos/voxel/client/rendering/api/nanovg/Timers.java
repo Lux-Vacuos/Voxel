@@ -20,8 +20,8 @@
 
 package net.luxvacuos.voxel.client.rendering.api.nanovg;
 
-import static net.luxvacuos.voxel.client.rendering.api.nanovg.NRendering.colorA;
-import static net.luxvacuos.voxel.client.rendering.api.nanovg.NRendering.rgba;
+import static net.luxvacuos.voxel.client.rendering.api.nanovg.themes.Theme.colorA;
+import static net.luxvacuos.voxel.client.rendering.api.nanovg.themes.Theme.rgba;
 import static org.lwjgl.glfw.GLFW.glfwGetTime;
 import static org.lwjgl.glfw.GLFW.glfwSetTime;
 import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_BOTTOM;
@@ -60,7 +60,7 @@ import java.util.Arrays;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL;
 
-import net.luxvacuos.voxel.client.core.GraphicalSubsystem;
+import net.luxvacuos.voxel.client.core.subsystems.GraphicalSubsystem;
 
 public class Timers {
 

@@ -38,7 +38,7 @@ import org.lwjgl.assimp.AIMaterial;
 import org.lwjgl.assimp.AIString;
 
 import net.luxvacuos.igl.vector.Vector4f;
-import net.luxvacuos.voxel.client.core.GraphicalSubsystem;
+import net.luxvacuos.voxel.client.core.subsystems.GraphicalSubsystem;
 import net.luxvacuos.voxel.universal.resources.IDisposable;
 
 /**

@@ -21,7 +21,7 @@
 package net.luxvacuos.voxel.client.ui;
 
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
-import net.luxvacuos.voxel.client.rendering.api.nanovg.NRendering;
+import net.luxvacuos.voxel.client.rendering.api.nanovg.themes.Theme;
 
 public class Spinner extends Component {
 
@@ -38,7 +38,7 @@ public class Spinner extends Component {
 
 	@Override
 	public void render(Window window) {
-		NRendering.renderSpinner(window.getNVGID(), rootComponent.rootX + alignedX,
+		Theme.renderSpinner(window.getNVGID(), rootComponent.rootX + alignedX,
 				window.getHeight() - rootComponent.rootY - alignedY - h, r, progress);
 	}
 

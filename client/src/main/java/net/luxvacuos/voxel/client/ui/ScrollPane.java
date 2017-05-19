@@ -25,7 +25,7 @@ import java.util.List;
 
 import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
-import net.luxvacuos.voxel.client.rendering.api.nanovg.NRendering;
+import net.luxvacuos.voxel.client.rendering.api.nanovg.themes.Theme;
 import net.luxvacuos.voxel.client.util.Maths;
 
 public class ScrollPane extends Component {
@@ -48,7 +48,7 @@ public class ScrollPane extends Component {
 
 	@Override
 	public void render(Window window) {
-		NRendering.renderScrollPane(window.getNVGID(), rootComponent.rootX + alignedX,
+		Theme.renderScrollPane(window.getNVGID(), rootComponent.rootX + alignedX,
 				window.getHeight() - rootComponent.rootY - alignedY - h, w, h, scroll, colls, cardW, cardH, elements,
 				window);
 	}

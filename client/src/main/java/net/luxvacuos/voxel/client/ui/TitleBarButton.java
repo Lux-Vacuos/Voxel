@@ -21,8 +21,8 @@
 package net.luxvacuos.voxel.client.ui;
 
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
-import net.luxvacuos.voxel.client.rendering.api.nanovg.NRendering;
-import net.luxvacuos.voxel.client.rendering.api.nanovg.NRendering.ButtonStyle;
+import net.luxvacuos.voxel.client.rendering.api.nanovg.themes.Theme;
+import net.luxvacuos.voxel.client.rendering.api.nanovg.themes.Theme.ButtonStyle;
 
 public class TitleBarButton extends Button {
 
@@ -36,7 +36,7 @@ public class TitleBarButton extends Button {
 	public void render(Window window) {
 		if (!enabled)
 			return;
-		NRendering.renderWindowButton(window.getNVGID(), rootComponent.rootX + alignedX,
+		Theme.renderTitleBarButton(window.getNVGID(), rootComponent.rootX + alignedX,
 				window.getHeight() - rootComponent.rootY - alignedY - h, w, h, color, style, inside, highlight);
 	}
 

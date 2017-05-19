@@ -27,7 +27,7 @@ import static org.lwjgl.opengl.GL13.GL_TEXTURE7;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE8;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
 
-import net.luxvacuos.voxel.client.core.GraphicalSubsystem;
+import net.luxvacuos.voxel.client.core.subsystems.GraphicalSubsystem;
 import net.luxvacuos.voxel.client.rendering.api.opengl.DeferredPass;
 import net.luxvacuos.voxel.client.rendering.api.opengl.FBO;
 import net.luxvacuos.voxel.client.rendering.api.opengl.IDeferredPipeline;

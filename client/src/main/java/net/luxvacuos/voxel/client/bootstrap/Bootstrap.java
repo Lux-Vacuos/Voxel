@@ -26,12 +26,6 @@ import net.luxvacuos.voxel.universal.bootstrap.AbstractBootstrap;
 import net.luxvacuos.voxel.universal.bootstrap.Platform;
 import net.luxvacuos.voxel.universal.remote.User;
 
-/**
- * Bootstrap, this initializes the game path using <b>AppData</b> on Windows and
- * <b>user.home</b> on Linux and OS X
- * 
- * @author Guerra24 <pablo230699@hotmail.com>
- */
 public class Bootstrap extends AbstractBootstrap {
 
 	public Bootstrap(String[] args) {
@@ -41,6 +35,16 @@ public class Bootstrap extends AbstractBootstrap {
 	@Override
 	public void init() {
 		Thread.currentThread().setName("Voxel-Client");
+		if (getPlatform().equals(Platform.WINDOWS_32) || getPlatform().equals(Platform.WINDOWS_64))
+			prefix = System.getenv("AppData");
+		else if (getPlatform().equals(Platform.LINUX_32) || getPlatform().equals(Platform.LINUX_64))
+			prefix = System.getProperty("user.home");
+		else if (getPlatform().equals(Platform.MACOSX)) {
+			prefix = System.getProperty("user.home");
+			prefix += "/Library/Application Support";
+		}
+		prefix += "/.voxel";
+		new Voxel();
 	}
 
 	@Override
@@ -86,30 +90,8 @@ public class Bootstrap extends AbstractBootstrap {
 		}
 	}
 
-	@Override
-	public String getPrefix() {
-		if (prefix == null) {
-			if (getPlatform().equals(Platform.WINDOWS_32) || getPlatform().equals(Platform.WINDOWS_64))
-				prefix = System.getenv("AppData");
-			else if (getPlatform().equals(Platform.LINUX_32) || getPlatform().equals(Platform.LINUX_64))
-				prefix = System.getProperty("user.home");
-			else if (getPlatform().equals(Platform.MACOSX)) {
-				prefix = System.getProperty("user.home");
-				prefix += "/Library/Application Support";
-			}
-			prefix += "/.voxel";
-		}
-		return prefix;
-	}
-
-	/**
-	 * Main method
-	 * 
-	 * @param args
-	 *            Args
-	 */
 	public static void main(String[] args) {
-		new Voxel(new Bootstrap(args));
+		new Bootstrap(args);
 	}
 
 }

@@ -18,8 +18,12 @@
  * 
  */
 
-package net.luxvacuos.voxel.client.rendering.api.nanovg;
+package net.luxvacuos.voxel.client.rendering.api.nanovg.themes;
 
+import static net.luxvacuos.voxel.client.rendering.api.nanovg.themes.Theme.colorA;
+import static net.luxvacuos.voxel.client.rendering.api.nanovg.themes.Theme.colorB;
+import static net.luxvacuos.voxel.client.rendering.api.nanovg.themes.Theme.paintA;
+import static net.luxvacuos.voxel.client.rendering.api.nanovg.themes.Theme.paintB;
 import static net.luxvacuos.voxel.universal.core.GlobalVariables.REGISTRY;
 import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_CENTER;
 import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_LEFT;
@@ -57,7 +61,6 @@ import static org.lwjgl.nanovg.NanoVG.nvgText;
 import static org.lwjgl.nanovg.NanoVG.nvgTextAlign;
 import static org.lwjgl.nanovg.NanoVG.nvgTextBounds;
 import static org.lwjgl.nanovg.NanoVG.nvgTextMetrics;
-import static org.lwjgl.nanovg.NanoVGGL3.nvglCreateImageFromHandle;
 import static org.lwjgl.system.MemoryUtil.memAddress;
 import static org.lwjgl.system.MemoryUtil.memAllocInt;
 import static org.lwjgl.system.MemoryUtil.memFree;
@@ -74,44 +77,17 @@ import org.lwjgl.nanovg.NVGPaint;
 import org.lwjgl.nanovg.NVGTextRow;
 
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
+import net.luxvacuos.voxel.client.rendering.api.nanovg.themes.Theme.BackgroundStyle;
+import net.luxvacuos.voxel.client.rendering.api.nanovg.themes.Theme.ButtonStyle;
 import net.luxvacuos.voxel.client.ui.ScrollPaneElement;
 
-/**
- *
- * Nano UI
- *
- */
-public class NRendering {
+public class NanoTheme implements ITheme {
 
-	public static enum ButtonStyle {
-		CLOSE, MAXIMIZE, MINIMIZE, NONE, LEFT_ARROW, RIGHT_ARROW
-	};
+	private final FloatBuffer lineh = BufferUtils.createFloatBuffer(1);
+	private final NVGTextRow.Buffer rows = NVGTextRow.create(3);
 
-	public static enum BackgroundStyle {
-		SOLID, TRANSPARENT
-	};
-
-	public static final NVGPaint paintA = NVGPaint.create();
-	public static final NVGPaint paintB = NVGPaint.create();
-	public static final NVGPaint paintC = NVGPaint.create();
-	public static final NVGColor colorA = NVGColor.create();
-	public static final NVGColor colorB = NVGColor.create();
-	public static final NVGColor colorC = NVGColor.create();
-
-	public static final ByteBuffer ICON_SEARCH = cpToUTF8(0x1F50D);
-	public static final ByteBuffer ICON_CIRCLED_CROSS = cpToUTF8(0x2716);
-	public static final ByteBuffer ICON_CHEVRON_RIGHT = cpToUTF8(0xE75E);
-	public static final ByteBuffer ICON_CHECK = cpToUTF8(0x2713);
-	public static final ByteBuffer ICON_LOGIN = cpToUTF8(0xE740);
-	public static final ByteBuffer ICON_TRASH = cpToUTF8(0xE729);
-	public static final ByteBuffer ICON_INFORMATION_SOURCE = cpToUTF8(0x2139);
-	public static final ByteBuffer ICON_GEAR = cpToUTF8(0x2699);
-	public static final ByteBuffer ICON_BLACK_RIGHT_POINTING_TRIANGLE = cpToUTF8(0x25B6);
-
-	private static final FloatBuffer lineh = BufferUtils.createFloatBuffer(1);
-	private static final NVGTextRow.Buffer rows = NVGTextRow.create(3);
-
-	public static NVGColor rgba(float r, float g, float b, float a, NVGColor color) {
+	@Override
+	public NVGColor rgba(float r, float g, float b, float a, NVGColor color) {
 		color.r(r);
 		color.g(g);
 		color.b(b);
@@ -119,7 +95,8 @@ public class NRendering {
 		return color;
 	}
 
-	public static NVGColor rgba(int r, int g, int b, int a, NVGColor color) {
+	@Override
+	public NVGColor rgba(int r, int g, int b, int a, NVGColor color) {
 		color.r(r / 255.0f);
 		color.g(g / 255.0f);
 		color.b(b / 255.0f);
@@ -127,7 +104,8 @@ public class NRendering {
 		return color;
 	}
 
-	public static NVGColor rgba(int r, int g, int b, int a) {
+	@Override
+	public NVGColor rgba(int r, int g, int b, int a) {
 		NVGColor color = NVGColor.create();
 		color.r(r / 255.0f);
 		color.g(g / 255.0f);
@@ -136,25 +114,8 @@ public class NRendering {
 		return color;
 	}
 
-	public static void renderTitleBarText(long vg, String text, String font, int align, float x, float y,
-			float fontSize) {
-
-		nvgSave(vg);
-		nvgFontSize(vg, fontSize);
-		nvgFontFace(vg, font);
-		nvgTextAlign(vg, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
-
-		nvgFontBlur(vg, 4);
-		nvgFillColor(vg, rgba(0, 0, 0, 255, colorA));
-		nvgText(vg, x, y + 1, text);
-
-		nvgFontBlur(vg, 0);
-		nvgFillColor(vg, rgba(255, 255, 255, 255, colorA));
-		nvgText(vg, x, y, text);
-		nvgRestore(vg);
-	}
-
-	public static void renderWindow(long vg, float x, float y, float w, float h, BackgroundStyle backgroundStyle,
+	@Override
+	public void renderWindow(long vg, float x, float y, float w, float h, BackgroundStyle backgroundStyle,
 			NVGColor backgroundColor, boolean decorations, boolean titleBar, boolean maximized) {
 		NVGPaint shadowPaint = paintA;
 		float borderSize = (float) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/borderSize");
@@ -203,8 +164,8 @@ public class NRendering {
 			if (titleBar) {
 				if (titleBarBorder) {
 					nvgBoxGradient(vg, x - borderSize, y + 10 - titleBarHeight - borderSize, w + borderSize * 2f,
-							h + titleBarHeight + borderSize  * 2f, 0, 20, rgba(0, 0, 0, 80, colorA), rgba(0, 0, 0, 0, colorB),
-							shadowPaint);
+							h + titleBarHeight + borderSize * 2f, 0, 20, rgba(0, 0, 0, 80, colorA),
+							rgba(0, 0, 0, 0, colorB), shadowPaint);
 					nvgBeginPath(vg);
 					nvgRect(vg, x - 10 - borderSize, y - 10 - titleBarHeight - borderSize, w + 20 + borderSize * 2f,
 							h + 30 + titleBarHeight + borderSize * 2f);
@@ -238,8 +199,26 @@ public class NRendering {
 		nvgRestore(vg);
 	}
 
-	public static void renderWindowButton(long vg, float x, float y, float w, float h, NVGColor color,
-			ButtonStyle style, boolean highlight, NVGColor highlightColor) {
+	@Override
+	public void renderTitleBarText(long vg, String text, String font, int align, float x, float y, float fontSize) {
+		nvgSave(vg);
+		nvgFontSize(vg, fontSize);
+		nvgFontFace(vg, font);
+		nvgTextAlign(vg, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
+
+		nvgFontBlur(vg, 4);
+		nvgFillColor(vg, rgba(0, 0, 0, 255, colorA));
+		nvgText(vg, x, y + 1, text);
+
+		nvgFontBlur(vg, 0);
+		nvgFillColor(vg, rgba(255, 255, 255, 255, colorA));
+		nvgText(vg, x, y, text);
+		nvgRestore(vg);
+	}
+
+	@Override
+	public void renderTitleBarButton(long vg, float x, float y, float w, float h, NVGColor color, ButtonStyle style,
+			boolean highlight, NVGColor highlightColor) {
 		nvgSave(vg);
 		nvgBeginPath(vg);
 		nvgRect(vg, x, y, w, h);
@@ -302,7 +281,8 @@ public class NRendering {
 		nvgRestore(vg);
 	}
 
-	public static void renderText(long vg, String text, String font, int align, float x, float y, float fontSize,
+	@Override
+	public void renderText(long vg, String text, String font, int align, float x, float y, float fontSize,
 			NVGColor color) {
 		nvgFontSize(vg, fontSize);
 		nvgFontFace(vg, font);
@@ -311,7 +291,8 @@ public class NRendering {
 		nvgText(vg, x, y, text);
 	}
 
-	public static void renderImage(long vg, float x, float y, float w, float h, int image, float alpha) {
+	@Override
+	public void renderImage(long vg, float x, float y, float w, float h, int image, float alpha) {
 		NVGPaint imgPaint = paintB;
 		nvgSave(vg);
 		nvgImagePattern(vg, x, y, w, h, 0, image, alpha, imgPaint);
@@ -322,7 +303,8 @@ public class NRendering {
 		nvgRestore(vg);
 	}
 
-	public static void renderImage(long vg, float x, float y, int image, float alpha) {
+	@Override
+	public void renderImage(long vg, float x, float y, int image, float alpha) {
 		NVGPaint imgPaint = paintB;
 		IntBuffer imgw = memAllocInt(1), imgh = memAllocInt(1);
 		nvgSave(vg);
@@ -337,7 +319,8 @@ public class NRendering {
 		memFree(imgw);
 	}
 
-	public static void renderEditBoxBase(long vg, float x, float y, float w, float h, boolean selected) {
+	@Override
+	public void renderEditBoxBase(long vg, float x, float y, float w, float h, boolean selected) {
 		nvgSave(vg);
 		nvgBeginPath(vg);
 		nvgRect(vg, x + 1, y + 1, w - 2, h - 2);
@@ -358,8 +341,9 @@ public class NRendering {
 		nvgRestore(vg);
 	}
 
-	public static void renderEditBox(long vg, String text, String font, float x, float y, float w, float h,
-			float fontSize, boolean selected) {
+	@Override
+	public void renderEditBox(long vg, String text, String font, float x, float y, float w, float h, float fontSize,
+			boolean selected) {
 		renderEditBoxBase(vg, x, y, w, h, selected);
 		nvgSave(vg);
 		nvgScissor(vg, x, y, w, h);
@@ -373,8 +357,9 @@ public class NRendering {
 		nvgRestore(vg);
 	}
 
-	public static void renderButton(long vg, ByteBuffer preicon, String text, String font, String entypo, float x,
-			float y, float w, float h, NVGColor color, boolean highlight, float fontSize, NVGColor highlightColor,
+	@Override
+	public void renderButton(long vg, ByteBuffer preicon, String text, String font, String entypo, float x, float y,
+			float w, float h, NVGColor color, boolean highlight, float fontSize, NVGColor highlightColor,
 			NVGColor textColor) {
 		float tw, iw = 0;
 		nvgSave(vg);
@@ -418,7 +403,64 @@ public class NRendering {
 		nvgRestore(vg);
 	}
 
-	public static void renderScrollPane(long vg, float x, float y, float w, float h, float t, int hSize, float cardW,
+	@Override
+	public void renderContexMenuButton(long vg, String text, String font, float x, float y, float w, float h,
+			NVGColor color, float fontSize, boolean highlight, NVGColor highlightColor) {
+		nvgSave(vg);
+
+		nvgBeginPath(vg);
+		nvgRect(vg, x, y, w, h);
+		if (highlight)
+			nvgFillColor(vg, highlightColor);
+		else
+			nvgFillColor(vg, color);
+		nvgFill(vg);
+
+		nvgFontSize(vg, fontSize);
+		nvgFontFace(vg, font);
+		nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
+		nvgFillColor(vg, rgba(60, 60, 60, 255, colorA));
+		nvgText(vg, x + 10f, y + h * 0.5f, text);
+		nvgRestore(vg);
+	}
+
+	@Override
+	public void renderToggleButton(long vg, String text, String font, float x, float y, float w, float h,
+			NVGColor color, float fontSize, boolean status, NVGColor highlightColor) {
+		nvgSave(vg);
+
+		nvgBeginPath(vg);
+		nvgRect(vg, x, y, w, h);
+		if (status)
+			nvgFillColor(vg,
+					rgba(highlightColor.r() - 0.4f, highlightColor.g() - 0.4f, highlightColor.b() - 0.4f, 1f, colorA));
+		else
+			nvgFillColor(vg, rgba(0, 0, 0, 255, colorA));
+		nvgFill(vg);
+
+		nvgBeginPath(vg);
+		nvgRect(vg, x + 3, y + 3, w - 6, h - 6);
+		nvgPathWinding(vg, NVG_HOLE);
+		nvgRect(vg, x, y, w, h);
+		if (status)
+			nvgFillColor(vg, highlightColor);
+		else
+			nvgFillColor(vg, color);
+		nvgFill(vg);
+
+		nvgBeginPath(vg);
+		if (status)
+			nvgRect(vg, x + w - h + 5, y + 5, h - 10, h - 10);
+		else
+			nvgRect(vg, x + 5, y + 5, h - 10, h - 10);
+		nvgFillColor(vg, color);
+		nvgFill(vg);
+
+		nvgRestore(vg);
+	}
+
+	@Override
+	public void renderScrollPane(long vg, float x, float y, float w, float h, float t, int hSize, float cardW,
 			float cardH, List<ScrollPaneElement> elements, Window window) {
 		float stackh = (elements.size() / hSize) * (cardH + 10) + 10;
 		int i;
@@ -496,7 +538,8 @@ public class NRendering {
 		nvgRestore(vg);
 	}
 
-	public static void renderSpinner(long vg, float cx, float cy, float r, float t) {
+	@Override
+	public void renderSpinner(long vg, float cx, float cy, float r, float t) {
 		float a0 = 0.0f + t * 6;
 		float a1 = NVG_PI + t * 6;
 		float r0 = r;
@@ -520,7 +563,8 @@ public class NRendering {
 		nvgRestore(vg);
 	}
 
-	public static void renderParagraph(long vg, float x, float y, float width, float fontSize, String font, String text,
+	@Override
+	public void renderParagraph(long vg, float x, float y, float width, float fontSize, String font, String text,
 			int align, NVGColor color) {
 		if (text == null)
 			text = "";
@@ -549,14 +593,16 @@ public class NRendering {
 		nvgRestore(vg);
 	}
 
-	public static void renderBox(long vg, float x, float y, float w, float h, NVGColor color) {
+	@Override
+	public void renderBox(long vg, float x, float y, float w, float h, NVGColor color) {
 		nvgBeginPath(vg);
 		nvgRect(vg, x, y, w, h);
 		nvgFillColor(vg, color);
 		nvgFill(vg);
 	}
 
-	public static void renderSlider(long vg, float pos, float x, float y, float w, float h) {
+	@Override
+	public void renderSlider(long vg, float pos, float x, float y, float w, float h) {
 
 		nvgSave(vg);
 		// Slot
@@ -579,61 +625,8 @@ public class NRendering {
 		nvgRestore(vg);
 	}
 
-	public static void renderContexMenuButton(long vg, String text, String font, float x, float y, float w, float h,
-			NVGColor color, float fontSize, boolean highlight, NVGColor highlightColor) {
-		nvgSave(vg);
-
-		nvgBeginPath(vg);
-		nvgRect(vg, x, y, w, h);
-		if (highlight)
-			nvgFillColor(vg, highlightColor);
-		else
-			nvgFillColor(vg, color);
-		nvgFill(vg);
-
-		nvgFontSize(vg, fontSize);
-		nvgFontFace(vg, font);
-		nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
-		nvgFillColor(vg, rgba(60, 60, 60, 255, colorA));
-		nvgText(vg, x + 10f, y + h * 0.5f, text);
-		nvgRestore(vg);
-	}
-
-	public static void renderToggleButton(long vg, String text, String font, float x, float y, float w, float h,
-			NVGColor color, float fontSize, boolean status, NVGColor highlightColor) {
-		nvgSave(vg);
-
-		nvgBeginPath(vg);
-		nvgRect(vg, x, y, w, h);
-		if (status)
-			nvgFillColor(vg,
-					rgba(highlightColor.r() - 0.4f, highlightColor.g() - 0.4f, highlightColor.b() - 0.4f, 1f, colorA));
-		else
-			nvgFillColor(vg, rgba(0, 0, 0, 255, colorA));
-		nvgFill(vg);
-
-		nvgBeginPath(vg);
-		nvgRect(vg, x + 3, y + 3, w - 6, h - 6);
-		nvgPathWinding(vg, NVG_HOLE);
-		nvgRect(vg, x, y, w, h);
-		if (status)
-			nvgFillColor(vg, highlightColor);
-		else
-			nvgFillColor(vg, color);
-		nvgFill(vg);
-
-		nvgBeginPath(vg);
-		if (status)
-			nvgRect(vg, x + w - h + 5, y + 5, h - 10, h - 10);
-		else
-			nvgRect(vg, x + 5, y + 5, h - 10, h - 10);
-		nvgFillColor(vg, color);
-		nvgFill(vg);
-
-		nvgRestore(vg);
-	}
-
-	public static void renderScrollBarV(long vg, float x, float y, float w, float h, float pos, float sizeV) {
+	@Override
+	public void renderScrollBarV(long vg, float x, float y, float w, float h, float pos, float sizeV) {
 		float scrollv;
 		float scrollBarSize = (float) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/scrollBarSize");
 
@@ -671,14 +664,6 @@ public class NRendering {
 		nvgStroke(vg);
 
 		nvgRestore(vg);
-	}
-
-	public static int generateImageFromTexture(long vg, int texID, int w, int h, int flags) {
-		return nvglCreateImageFromHandle(vg, texID, w, h, flags);
-	}
-
-	public static ByteBuffer cpToUTF8(int cp) {
-		return memUTF8(new String(Character.toChars(cp)), true);
 	}
 
 }

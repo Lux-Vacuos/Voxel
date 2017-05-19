@@ -26,14 +26,14 @@ import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_TOP;
 import org.lwjgl.nanovg.NVGColor;
 
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
-import net.luxvacuos.voxel.client.rendering.api.nanovg.NRendering;
+import net.luxvacuos.voxel.client.rendering.api.nanovg.themes.Theme;
 
 public class TextArea extends Component {
 
 	private String text, font = "Poppins-Regular";
 	private int align = NVG_ALIGN_LEFT | NVG_ALIGN_TOP;
 	private float fontSize = 25;
-	private NVGColor color = NRendering.rgba(255, 255, 255, 255, NVGColor.create());
+	private NVGColor color = Theme.rgba(255, 255, 255, 255, NVGColor.create());
 
 	public TextArea(String text, float x, float y, float w) {
 		this.text = text;
@@ -44,7 +44,7 @@ public class TextArea extends Component {
 
 	@Override
 	public void render(Window window) {
-		NRendering.renderParagraph(window.getNVGID(), rootComponent.rootX + alignedX,
+		Theme.renderParagraph(window.getNVGID(), rootComponent.rootX + alignedX,
 				window.getHeight() - rootComponent.rootY - alignedY, w, fontSize, font, text,
 				align, color);
 	}

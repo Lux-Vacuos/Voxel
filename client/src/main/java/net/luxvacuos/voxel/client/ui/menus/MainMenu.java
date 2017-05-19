@@ -21,10 +21,10 @@
 package net.luxvacuos.voxel.client.ui.menus;
 
 import net.luxvacuos.voxel.client.core.ClientVariables;
-import net.luxvacuos.voxel.client.core.GraphicalSubsystem;
 import net.luxvacuos.voxel.client.core.states.StateNames;
+import net.luxvacuos.voxel.client.core.subsystems.GraphicalSubsystem;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
-import net.luxvacuos.voxel.client.rendering.api.nanovg.NRendering;
+import net.luxvacuos.voxel.client.rendering.api.nanovg.themes.Theme;
 import net.luxvacuos.voxel.client.ui.Alignment;
 import net.luxvacuos.voxel.client.ui.Button;
 import net.luxvacuos.voxel.client.ui.ModalWindow;
@@ -48,11 +48,11 @@ public class MainMenu extends RootComponentWindow {
 		Button aboutButton = new Button(0, -60, 200, 40, "About");
 		Button exitButton = new Button(0, -120, 200, 40, "Exit");
 
-		playButton.setPreicon(NRendering.ICON_BLACK_RIGHT_POINTING_TRIANGLE);
-		playMPButton.setPreicon(NRendering.ICON_BLACK_RIGHT_POINTING_TRIANGLE);
-		optionsButton.setPreicon(NRendering.ICON_GEAR);
-		aboutButton.setPreicon(NRendering.ICON_INFORMATION_SOURCE);
-		exitButton.setPreicon(NRendering.ICON_LOGIN);
+		playButton.setPreicon(Theme.ICON_BLACK_RIGHT_POINTING_TRIANGLE);
+		playMPButton.setPreicon(Theme.ICON_BLACK_RIGHT_POINTING_TRIANGLE);
+		optionsButton.setPreicon(Theme.ICON_GEAR);
+		aboutButton.setPreicon(Theme.ICON_INFORMATION_SOURCE);
+		exitButton.setPreicon(Theme.ICON_LOGIN);
 
 		playButton.setAlignment(Alignment.CENTER);
 		playButton.setWindowAlignment(Alignment.CENTER);

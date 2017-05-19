@@ -57,7 +57,7 @@ public class ServerGameSettings extends AbstractGameSettings {
 		
 		registerValue("worldName", 				(String) REGISTRY.getRegistryItem("/Voxel/Simulation/World/name"));
 		
-		Logger.log("Updated completed");
+		Logger.log("Update completed");
 	}
 
 }

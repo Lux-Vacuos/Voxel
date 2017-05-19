@@ -26,13 +26,13 @@ import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_MIDDLE;
 import org.lwjgl.nanovg.NVGColor;
 
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
-import net.luxvacuos.voxel.client.rendering.api.nanovg.NRendering;
+import net.luxvacuos.voxel.client.rendering.api.nanovg.themes.Theme;
 
 public class Text extends Component {
 	protected String text, font = "Poppins-Medium";
 	protected int align = NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE;
 	protected float fontSize = 25;
-	protected NVGColor color = NRendering.rgba(255, 255, 255, 255, NVGColor.create());
+	protected NVGColor color = Theme.rgba(255, 255, 255, 255, NVGColor.create());
 
 	public Text(String text, float x, float y) {
 		this.text = text;
@@ -42,7 +42,7 @@ public class Text extends Component {
 
 	@Override
 	public void render(Window window) {
-		NRendering.renderText(window.getNVGID(), text, font, align, rootComponent.rootX + alignedX,
+		Theme.renderText(window.getNVGID(), text, font, align, rootComponent.rootX + alignedX,
 				window.getHeight() - rootComponent.rootY - alignedY, fontSize, color);
 	}
 

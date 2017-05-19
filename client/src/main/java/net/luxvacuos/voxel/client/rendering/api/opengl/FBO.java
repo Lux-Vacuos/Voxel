@@ -55,8 +55,8 @@ import static org.lwjgl.opengl.GL30.glRenderbufferStorage;
 
 import java.nio.ByteBuffer;
 
-import net.luxvacuos.voxel.client.core.GraphicalSubsystem;
 import net.luxvacuos.voxel.client.core.exception.FrameBufferException;
+import net.luxvacuos.voxel.client.core.subsystems.GraphicalSubsystem;
 
 public class FBO {
 

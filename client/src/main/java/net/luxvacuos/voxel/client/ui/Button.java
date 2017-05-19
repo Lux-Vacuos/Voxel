@@ -26,13 +26,13 @@ import org.lwjgl.nanovg.NVGColor;
 
 import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
-import net.luxvacuos.voxel.client.rendering.api.nanovg.NRendering;
+import net.luxvacuos.voxel.client.rendering.api.nanovg.themes.Theme;
 
 public class Button extends Component {
 
 	protected String text = "missigno", font = "Poppins-Medium", entypo = "Entypo";
-	protected NVGColor color = NRendering.rgba(255, 255, 255, 255), highlight = NRendering.rgba(190, 190, 190, 255),
-			textColor = NRendering.rgba(60, 60, 60, 255);
+	protected NVGColor color = Theme.rgba(255, 255, 255, 255), highlight = Theme.rgba(190, 190, 190, 255),
+			textColor = Theme.rgba(60, 60, 60, 255);
 	protected ByteBuffer preicon;
 	protected OnAction onPress;
 	protected float fontSize = 21;
@@ -50,7 +50,7 @@ public class Button extends Component {
 	public void render(Window window) {
 		if (!enabled)
 			return;
-		NRendering.renderButton(window.getNVGID(), preicon, text, font, entypo, rootComponent.rootX + alignedX,
+		Theme.renderButton(window.getNVGID(), preicon, text, font, entypo, rootComponent.rootX + alignedX,
 				window.getHeight() - rootComponent.rootY - alignedY - h, w, h, color, inside, fontSize, highlight,
 				textColor);
 	}

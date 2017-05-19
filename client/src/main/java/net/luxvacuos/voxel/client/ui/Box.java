@@ -23,11 +23,11 @@ package net.luxvacuos.voxel.client.ui;
 import org.lwjgl.nanovg.NVGColor;
 
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
-import net.luxvacuos.voxel.client.rendering.api.nanovg.NRendering;
+import net.luxvacuos.voxel.client.rendering.api.nanovg.themes.Theme;
 
 public class Box extends Component {
 
-	private NVGColor color = NRendering.rgba(255, 255, 255, 255);
+	private NVGColor color = Theme.rgba(255, 255, 255, 255);
 
 	public Box(float x, float y, float w, float h) {
 		this.x = x;
@@ -38,7 +38,7 @@ public class Box extends Component {
 
 	@Override
 	public void render(Window window) {
-		NRendering.renderBox(window.getNVGID(), rootComponent.rootX + alignedX,
+		Theme.renderBox(window.getNVGID(), rootComponent.rootX + alignedX,
 				window.getHeight() - rootComponent.rootY - alignedY - h, w, h, color);
 	}
 

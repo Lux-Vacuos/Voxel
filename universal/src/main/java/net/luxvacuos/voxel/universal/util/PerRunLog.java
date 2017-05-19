@@ -29,16 +29,11 @@ import org.apache.log4j.FileAppender;
 import org.apache.log4j.Layout;
 import org.apache.log4j.spi.ErrorCode;
 
-import net.luxvacuos.voxel.universal.bootstrap.IBootstrap;
+import net.luxvacuos.voxel.universal.bootstrap.AbstractBootstrap;
 
 public class PerRunLog extends FileAppender {
 
 	private static SimpleDateFormat timeStampFormat;
-	private static IBootstrap bootstrap;
-
-	public static void setBootstrap(IBootstrap bootstrap) {
-		PerRunLog.bootstrap = bootstrap;
-	}
 
 	static {
 		timeStampFormat = new SimpleDateFormat("yyyy-MM-dd-h-mm-ss-a");
@@ -87,7 +82,7 @@ public class PerRunLog extends FileAppender {
 			} else {
 				newFileName = fileName + HIPHEN + timeStampFormat.format(new Date());
 			}
-			return bootstrap.getPrefix() + "/" + logFile.getParent() + File.separator + newFileName;
+			return AbstractBootstrap.getPrefix() + "/" + logFile.getParent() + File.separator + newFileName;
 		}
 		return null;
 	}

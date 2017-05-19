@@ -20,12 +20,36 @@
 
 package net.luxvacuos.voxel.universal.core;
 
+import static net.luxvacuos.voxel.universal.core.GlobalVariables.REGISTRY;
+
+import java.io.IOException;
+import java.util.jar.Attributes;
+import java.util.jar.Manifest;
+
+import net.luxvacuos.voxel.universal.bootstrap.AbstractBootstrap;
+import net.luxvacuos.voxel.universal.util.registry.SimpleRegistry;
+
 public class CoreSubsystem implements ISubsystem {
 	
 	protected static AbstractGameSettings gameSettings;
+	public static int ups;
+	public static int upsCount;
 
 	@Override
 	public void init() {
+		try {
+			Manifest manifest = new Manifest(getClass().getClassLoader().getResourceAsStream("META-INF/MANIFEST.MF"));
+			Attributes attr = manifest.getMainAttributes();
+			String t = attr.getValue("Specification-Version");
+			if (t != null)
+				GlobalVariables.version = t;
+		} catch (IOException E) {
+			E.printStackTrace();
+		}
+		GlobalVariables.REGISTRY = new SimpleRegistry<>();
+		REGISTRY.register("/Voxel/Settings/file", AbstractBootstrap.getPrefix() + "/config/settings.conf");
+		REGISTRY.register("/Voxel/System/os",
+				System.getProperty("os.name") + " " + System.getProperty("os.arch").toUpperCase());
 	}
 
 	@Override

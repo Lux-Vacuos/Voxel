@@ -37,8 +37,9 @@ import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Sync;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.glfw.WindowManager;
-import net.luxvacuos.voxel.client.rendering.api.nanovg.NRendering.BackgroundStyle;
-import net.luxvacuos.voxel.client.rendering.api.nanovg.NRendering.ButtonStyle;
+import net.luxvacuos.voxel.client.rendering.api.nanovg.themes.Theme;
+import net.luxvacuos.voxel.client.rendering.api.nanovg.themes.Theme.BackgroundStyle;
+import net.luxvacuos.voxel.client.rendering.api.nanovg.themes.Theme.ButtonStyle;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Renderer;
 import net.luxvacuos.voxel.client.ui.Alignment;
 import net.luxvacuos.voxel.client.ui.Direction;
@@ -53,7 +54,7 @@ public abstract class NanoWindow implements IWindow {
 	private boolean draggable = true, decorations = true, resizable = true, maximized, hidden = false, exit,
 			alwaysOnTop, background, blurBehind = true, running = true, resizing, minimized;
 	private BackgroundStyle backgroundStyle = BackgroundStyle.SOLID;
-	private NVGColor backgroundColor = NRendering.rgba(0, 0, 0, 255);
+	private NVGColor backgroundColor = Theme.rgba(0, 0, 0, 255);
 	protected float x, y, w, h, minW = 300, minH = 300;
 	private float oldX, oldY, oldW, oldH;
 	private WindowClose windowClose = WindowClose.DISPOSE;
@@ -156,8 +157,8 @@ public abstract class NanoWindow implements IWindow {
 			Renderer.clearColors(0, 0, 0, 0);
 
 			window.beingNVGFrame();
-			NRendering.renderWindow(window.getNVGID(), x, window.getHeight() - y, w, h, backgroundStyle,
-					backgroundColor, decorations, titleBar.isEnabled(), maximized);
+			Theme.renderWindow(window.getNVGID(), x, window.getHeight() - y, w, h, backgroundStyle, backgroundColor,
+					decorations, titleBar.isEnabled(), maximized);
 			if (decorations)
 				titleBar.render(window);
 			nvgScissor(window.getNVGID(), x, window.getHeight() - y, w, h);
@@ -218,9 +219,16 @@ public abstract class NanoWindow implements IWindow {
 	public boolean insideWindow() {
 		float borderSize = (float) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/borderSize");
 		if (titleBar.isEnabled() && decorations)
-			return Mouse.getX() > x - borderSize && Mouse.getX() < x + w + borderSize
-					&& Mouse.getY() > y - h - borderSize && Mouse.getY() < y
-							+ (float) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/titleBarHeight");
+			if ((boolean) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/titleBarBorder"))
+				return Mouse.getX() > x - borderSize && Mouse.getX() < x + w + borderSize
+						&& Mouse.getY() > y - h - borderSize
+						&& Mouse.getY() < y
+								+ (float) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/titleBarHeight")
+								+ borderSize;
+			else
+				return Mouse.getX() > x - borderSize && Mouse.getX() < x + w + borderSize
+						&& Mouse.getY() > y - h - borderSize && Mouse.getY() < y
+								+ (float) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/titleBarHeight");
 		else if (!decorations)
 			return Mouse.getX() > x && Mouse.getX() < x + w && Mouse.getY() > y - h && Mouse.getY() < y;
 		else

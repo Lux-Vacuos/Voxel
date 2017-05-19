@@ -18,77 +18,21 @@
  * 
  */
 
-package net.luxvacuos.voxel.client.core;
+package net.luxvacuos.voxel.client.core.subsystems;
 
-import static net.luxvacuos.voxel.universal.core.GlobalVariables.REGISTRY;
-
-import net.luxvacuos.voxel.client.rendering.api.nanovg.WM;
-import net.luxvacuos.voxel.client.rendering.api.opengl.ParticleDomain;
-import net.luxvacuos.voxel.client.rendering.api.opengl.Renderer;
-import net.luxvacuos.voxel.client.rendering.api.opengl.objects.DefaultData;
-import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.ShaderIncludes;
-import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.TessellatorBasicShader;
-import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.TessellatorShader;
 import net.luxvacuos.voxel.client.rendering.utils.BlockFaceAtlas;
-import net.luxvacuos.voxel.client.util.LoggerSoundSystem;
-import net.luxvacuos.voxel.client.world.block.BlocksResources;
 import net.luxvacuos.voxel.client.world.block.RenderBlock;
 import net.luxvacuos.voxel.client.world.block.types.WaterBlock;
-import net.luxvacuos.voxel.universal.core.AbstractInternalSubsystem;
+import net.luxvacuos.voxel.universal.core.ISubsystem;
 import net.luxvacuos.voxel.universal.core.TaskManager;
 import net.luxvacuos.voxel.universal.material.BlockMaterial;
 import net.luxvacuos.voxel.universal.material.MaterialModder;
 import net.luxvacuos.voxel.universal.world.block.Blocks;
-import paulscode.sound.SoundSystem;
-import paulscode.sound.SoundSystemConfig;
-import paulscode.sound.SoundSystemException;
-import paulscode.sound.codecs.CodecJOgg;
-import paulscode.sound.libraries.LibraryLWJGLOpenAL;
 
-/**
- * 
- * @author Guerra24 <pablo230699@hotmail.com>
- */
-public class ClientInternalSubsystem extends AbstractInternalSubsystem {
-
-	private static ClientInternalSubsystem instance = null;
-
-	public static ClientInternalSubsystem getInstance() {
-		if (instance == null)
-			instance = new ClientInternalSubsystem();
-		return instance;
-	}
-
-	private SoundSystem soundSystem;
-
-	private ClientInternalSubsystem() {
-	}
-
-	@Override
-	public void preInit() {
-	}
+public class WorldSubsystem implements ISubsystem {
 
 	@Override
 	public void init() {
-		TaskManager.addTask(() -> ShaderIncludes.processIncludeFile("common.isl"));
-		TaskManager.addTask(() -> ShaderIncludes.processIncludeFile("lighting.isl"));
-		TaskManager.addTask(() -> ShaderIncludes.processIncludeFile("materials.isl"));
-		TaskManager.addTask(() -> DefaultData.init(GraphicalSubsystem.getMainWindow().getResourceLoader()));
-		if (!ClientVariables.WSL) {
-			try {
-				SoundSystemConfig.addLibrary(LibraryLWJGLOpenAL.class);
-				SoundSystemConfig.setCodec("ogg", CodecJOgg.class);
-			} catch (SoundSystemException e) {
-				e.printStackTrace();
-			}
-			SoundSystemConfig.setSoundFilesPackage(
-					"assets/" + REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/assets") + "/sounds/");
-			SoundSystemConfig.setLogger(new LoggerSoundSystem());
-			soundSystem = new SoundSystem();
-		}
-		TaskManager.addTask(() -> ParticleDomain.init());
-		TaskManager.addTask(() -> Renderer.init(GraphicalSubsystem.getMainWindow()));
-		TaskManager.addTask(() -> BlocksResources.init(GraphicalSubsystem.getMainWindow().getResourceLoader()));
 		TaskManager.addTask(() -> {
 			MaterialModder matMod = new MaterialModder();
 			Blocks.startRegister("voxel");
@@ -120,23 +64,14 @@ public class ClientInternalSubsystem extends AbstractInternalSubsystem {
 	}
 
 	@Override
-	public void postInit() {
-		TaskManager.addTask(() -> TessellatorShader.getShader());
-		TaskManager.addTask(() -> TessellatorBasicShader.getShader());
+	public void restart() {
 	}
 
-	/**
-	 * Disposes all objects
-	 * 
-	 */
+	@Override
+	public void update(float delta) {
+	}
+
 	@Override
 	public void dispose() {
-		DefaultData.dispose();
-		if (!ClientVariables.WSL)
-			soundSystem.cleanup();
-		TessellatorShader.getShader().dispose();
-		TessellatorBasicShader.getShader().dispose();
-		Renderer.cleanUp();
 	}
-
 }

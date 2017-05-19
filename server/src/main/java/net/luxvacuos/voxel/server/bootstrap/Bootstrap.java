@@ -36,12 +36,18 @@ public class Bootstrap extends AbstractBootstrap {
 	public void init() {
 		Thread.currentThread().setName("Voxel-Server");
 		try {
+			prefix = new File(".").getCanonicalPath().toString();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		try {
 			File file = new File(new File(".").getCanonicalPath() + "/logs");
 			if (!file.exists())
 				file.mkdirs();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		new Voxel();
 	}
 
 	@Override
@@ -58,20 +64,8 @@ public class Bootstrap extends AbstractBootstrap {
 		}
 	}
 
-	@Override
-	public String getPrefix() {
-		if (prefix == null) {
-			try {
-				prefix = new File(".").getCanonicalPath().toString();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		return prefix;
-	}
-
 	public static void main(String[] args) throws Exception {
-		new Voxel(new Bootstrap(args));
+		new Bootstrap(args);
 	}
 
 }

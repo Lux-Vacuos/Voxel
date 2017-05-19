@@ -28,8 +28,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 
 import net.luxvacuos.voxel.client.core.ClientVariables;
-import net.luxvacuos.voxel.client.core.GraphicalSubsystem;
 import net.luxvacuos.voxel.client.core.states.StateNames;
+import net.luxvacuos.voxel.client.core.subsystems.GraphicalSubsystem;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.NanoWindow;
 import net.luxvacuos.voxel.client.ui.Alignment;

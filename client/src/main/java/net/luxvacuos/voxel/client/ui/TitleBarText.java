@@ -21,7 +21,7 @@
 package net.luxvacuos.voxel.client.ui;
 
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
-import net.luxvacuos.voxel.client.rendering.api.nanovg.NRendering;
+import net.luxvacuos.voxel.client.rendering.api.nanovg.themes.Theme;
 
 public class TitleBarText extends Text {
 
@@ -31,7 +31,7 @@ public class TitleBarText extends Text {
 
 	@Override
 	public void render(Window window) {
-		NRendering.renderTitleBarText(window.getNVGID(), text, font, align, rootComponent.rootX + alignedX,
+		Theme.renderTitleBarText(window.getNVGID(), text, font, align, rootComponent.rootX + alignedX,
 				window.getHeight() - rootComponent.rootY - alignedY, fontSize);
 	}
 

@@ -36,7 +36,6 @@ import java.util.List;
 import org.lwjgl.glfw.GLFW;
 
 import net.luxvacuos.voxel.client.core.ClientVariables;
-import net.luxvacuos.voxel.client.core.CoreInfo;
 import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Sync;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
@@ -45,8 +44,10 @@ import net.luxvacuos.voxel.client.rendering.api.nanovg.effects.Final;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.effects.GaussianH;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.effects.GaussianV;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.effects.MaskBlur;
+import net.luxvacuos.voxel.client.rendering.api.nanovg.themes.Theme;
 import net.luxvacuos.voxel.client.rendering.api.opengl.GLUtil;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Renderer;
+import net.luxvacuos.voxel.universal.core.CoreSubsystem;
 import net.luxvacuos.voxel.universal.core.TaskManager;
 
 public class NanoWindowManager implements IWindowManager {
@@ -95,6 +96,7 @@ public class NanoWindowManager implements IWindowManager {
 		});
 		th.setName("Nano Window Manager");
 		// th.start();
+		REGISTRY.register("/Voxel/Settings/WindowManager/shellHeight", 0f);
 	}
 
 	@Override
@@ -116,20 +118,20 @@ public class NanoWindowManager implements IWindowManager {
 		}
 		window.setViewport(0, 0, window.getWidth(), window.getHeight());
 		this.window.beingNVGFrame();
-		NRendering.renderImage(this.window.getNVGID(), 0, 0, window.getWidth(), window.getHeight(),
+		Theme.renderImage(this.window.getNVGID(), 0, 0, window.getWidth(), window.getHeight(),
 				composite.getFbos()[0].image(), 1f);
 		if (ClientVariables.debug) {
 			Timers.renderDebugDisplay(5, 24, 200, 55);
-			NRendering.renderText(window.getNVGID(), "Voxel " + " (" + ClientVariables.version + ")", "Roboto-Bold",
+			Theme.renderText(window.getNVGID(), "Voxel " + " (" + ClientVariables.version + ")", "Roboto-Bold",
 					NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE, 5, 12, 20,
-					NRendering.rgba(220, 220, 220, 255, NRendering.colorA));
-			NRendering.renderText(window.getNVGID(),
-					"Used VRam: " + WindowManager.getUsedVRAM() + "KB " + " UPS: " + CoreInfo.ups, "Roboto-Bold",
+					Theme.rgba(220, 220, 220, 255, Theme.colorA));
+			Theme.renderText(window.getNVGID(),
+					"Used VRam: " + WindowManager.getUsedVRAM() + "KB " + " UPS: " + CoreSubsystem.ups, "Roboto-Bold",
 					NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE, 5, 95, 20,
-					NRendering.rgba(220, 220, 220, 255, NRendering.colorA));
-			NRendering.renderText(window.getNVGID(), "Used RAM: " + Runtime.getRuntime().totalMemory() / 1028 + "KB ",
+					Theme.rgba(220, 220, 220, 255, Theme.colorA));
+			Theme.renderText(window.getNVGID(), "Used RAM: " + Runtime.getRuntime().totalMemory() / 1028 + "KB ",
 					"Roboto-Bold", NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE, 5, 110, 20,
-					NRendering.rgba(220, 220, 220, 255, NRendering.colorA));
+					Theme.rgba(220, 220, 220, 255, Theme.colorA));
 		}
 		this.window.endNVGFrame();
 	}

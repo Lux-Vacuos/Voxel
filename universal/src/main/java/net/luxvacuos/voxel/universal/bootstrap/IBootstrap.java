@@ -26,8 +26,4 @@ public interface IBootstrap {
 
 	public void init();
 
-	public String getPrefix();
-
-	public Platform getPlatform();
-
 }

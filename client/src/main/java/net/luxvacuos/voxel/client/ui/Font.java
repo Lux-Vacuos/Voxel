@@ -18,24 +18,35 @@
  * 
  */
 
-package net.luxvacuos.voxel.universal.core;
+package net.luxvacuos.voxel.client.ui;
 
-public abstract class AbstractInternalSubsystem implements IInternalSubsystem {
+import java.nio.ByteBuffer;
 
-	@Override
-	public void preInit() {
-	}
+import net.luxvacuos.voxel.universal.resources.IDisposable;
 
-	@Override
-	public void init() {
-	}
+public class Font implements IDisposable {
 
-	@Override
-	public void postInit() {
+	private String font;
+	private ByteBuffer buffer;
+	private int fontID;
+
+	public Font(String font, ByteBuffer buffer, int fontID) {
+		this.font = font;
+		this.buffer = buffer;
+		this.fontID = fontID;
 	}
 
 	@Override
 	public void dispose() {
+		buffer.clear();
+	}
+
+	public String getFont() {
+		return font;
+	}
+
+	public int getFontID() {
+		return fontID;
 	}
 
 }

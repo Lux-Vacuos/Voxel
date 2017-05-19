@@ -22,7 +22,6 @@ package net.luxvacuos.voxel.client.resources;
 
 import static org.lwjgl.nanovg.NanoVG.nvgCreateFontMem;
 import static org.lwjgl.nanovg.NanoVG.nvgCreateImageMem;
-import static org.lwjgl.nanovg.NanoVG.nvgDeleteImage;
 import static org.lwjgl.opengl.GL11.GL_FLOAT;
 import static org.lwjgl.opengl.GL11.GL_LINEAR;
 import static org.lwjgl.opengl.GL11.GL_LINEAR_MIPMAP_LINEAR;
@@ -101,6 +100,7 @@ import net.luxvacuos.voxel.client.rendering.api.opengl.objects.RawModel;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.RawTexture;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.Texture;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.VertexNM;
+import net.luxvacuos.voxel.client.ui.Font;
 import net.luxvacuos.voxel.universal.core.GlobalVariables;
 import net.luxvacuos.voxel.universal.resources.IDisposable;
 
@@ -120,14 +120,6 @@ public class ResourceLoader implements IDisposable {
 	 * VBOs List
 	 */
 	private List<Integer> vbos = new ArrayList<Integer>();
-	/**
-	 * NanoVG Data
-	 */
-	private List<Integer> nvgData = new ArrayList<Integer>();
-	/**
-	 * NanoVG Fonts
-	 */
-	private List<ByteBuffer> nvgFont = new ArrayList<ByteBuffer>();
 	private long windowID, nvgID;
 
 	public ResourceLoader(long windowID, long nvgID) {
@@ -261,8 +253,7 @@ public class ResourceLoader implements IDisposable {
 		return new Texture(texture);
 	}
 
-	private int loadTexture(String file, int filter, int textureWarp, int format, boolean textureMipMapAF)
-			throws DecodeTextureException {
+	private int loadTexture(String file, int filter, int textureWarp, int format, boolean textureMipMapAF) {
 		int texture_id = glGenTextures();
 		glBindTexture(GL_TEXTURE_2D, texture_id);
 		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, textureWarp);
@@ -301,28 +292,27 @@ public class ResourceLoader implements IDisposable {
 		return texture_id;
 	}
 
-	public void loadNVGFont(String filename, String name) throws LoadTextureException {
-		loadNVGFont(filename, name, 150);
+	public Font loadNVGFont(String filename, String name) {
+		return loadNVGFont(filename, name, 150);
 	}
 
-	public void loadNVGFont(String filename, String name, int size) throws LoadTextureException {
+	public Font loadNVGFont(String filename, String name, int size) {
 		Logger.log("Loading NVGFont: " + filename + ".ttf");
 		int font = 0;
+		ByteBuffer buffer = null;
 		try {
-			ByteBuffer buffer = ioResourceToByteBuffer(
+			buffer = ioResourceToByteBuffer(
 					"assets/" + GlobalVariables.REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/assets") + "/fonts/"
 							+ filename + ".ttf",
 					size * 1024);
-			nvgFont.add(buffer);
 			font = nvgCreateFontMem(nvgID, name, buffer, 0);
 		} catch (IOException e) {
-			throw new LoadTextureException(filename, e);
+			e.printStackTrace();
 		}
-		if (font == -1)
-			Logger.error("Fail to load Font");
+		return new Font(name, buffer, font);
 	}
 
-	public int loadNVGTexture(String file) throws LoadTextureException {
+	public int loadNVGTexture(String file) {
 		ByteBuffer buffer = null;
 		int tex = 0;
 		try {
@@ -335,11 +325,10 @@ public class ResourceLoader implements IDisposable {
 		} catch (Exception e) {
 			throw new LoadTextureException(file, e);
 		}
-		nvgData.add(tex);
 		return tex;
 	}
 
-	public int loadCubeMap(String[] textureFiles) throws DecodeTextureException {
+	public int loadCubeMap(String[] textureFiles) {
 		int texID = glGenTextures();
 		glBindTexture(GL_TEXTURE_CUBE_MAP, texID);
 
@@ -384,7 +373,7 @@ public class ResourceLoader implements IDisposable {
 		return texID;
 	}
 
-	private RawTexture decodeTextureFile(String file) throws DecodeTextureException {
+	private RawTexture decodeTextureFile(String file) {
 		int width = 0;
 		int height = 0;
 		int component = 0;
@@ -748,9 +737,6 @@ public class ResourceLoader implements IDisposable {
 		}
 		for (int vbo : vbos) {
 			glDeleteBuffers(vbo);
-		}
-		for (int texture : nvgData) {
-			nvgDeleteImage(nvgID, texture);
 		}
 	}
 

@@ -38,7 +38,7 @@ import com.badlogic.gdx.math.collision.Ray;
 import net.luxvacuos.igl.vector.Matrix4d;
 import net.luxvacuos.igl.vector.Vector2d;
 import net.luxvacuos.igl.vector.Vector3d;
-import net.luxvacuos.voxel.client.core.GraphicalSubsystem;
+import net.luxvacuos.voxel.client.core.subsystems.GraphicalSubsystem;
 import net.luxvacuos.voxel.client.ecs.ClientComponents;
 import net.luxvacuos.voxel.client.input.KeyboardHandler;
 import net.luxvacuos.voxel.client.input.Mouse;

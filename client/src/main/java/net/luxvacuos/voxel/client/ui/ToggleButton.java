@@ -21,7 +21,7 @@
 package net.luxvacuos.voxel.client.ui;
 
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
-import net.luxvacuos.voxel.client.rendering.api.nanovg.NRendering;
+import net.luxvacuos.voxel.client.rendering.api.nanovg.themes.Theme;
 
 public class ToggleButton extends Button {
 
@@ -44,7 +44,7 @@ public class ToggleButton extends Button {
 	public void render(Window window) {
 		if (!enabled)
 			return;
-		NRendering.renderToggleButton(window.getNVGID(), text, font, rootComponent.rootX + alignedX,
+		Theme.renderToggleButton(window.getNVGID(), text, font, rootComponent.rootX + alignedX,
 				window.getHeight() - rootComponent.rootY - alignedY - h, w, h, color, fontSize, status, highlight);
 	}
 

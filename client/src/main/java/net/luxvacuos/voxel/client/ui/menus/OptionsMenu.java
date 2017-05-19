@@ -23,7 +23,7 @@ package net.luxvacuos.voxel.client.ui.menus;
 import static net.luxvacuos.voxel.universal.core.GlobalVariables.REGISTRY;
 
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
-import net.luxvacuos.voxel.client.rendering.api.nanovg.NRendering.ButtonStyle;
+import net.luxvacuos.voxel.client.rendering.api.nanovg.themes.Theme.ButtonStyle;
 import net.luxvacuos.voxel.client.ui.Alignment;
 import net.luxvacuos.voxel.client.ui.Button;
 import net.luxvacuos.voxel.client.ui.Container;

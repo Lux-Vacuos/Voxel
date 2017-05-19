@@ -23,7 +23,7 @@ package net.luxvacuos.voxel.client.rendering.api.nanovg;
 import org.lwjgl.nanovg.NVGLUFramebuffer;
 
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
-import net.luxvacuos.voxel.client.rendering.api.nanovg.NRendering.BackgroundStyle;
+import net.luxvacuos.voxel.client.rendering.api.nanovg.themes.Theme.BackgroundStyle;
 import net.luxvacuos.voxel.client.ui.ITitleBar;
 
 public interface IWindow {

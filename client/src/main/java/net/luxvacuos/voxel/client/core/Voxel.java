@@ -21,128 +21,69 @@
 package net.luxvacuos.voxel.client.core;
 
 import static net.luxvacuos.voxel.universal.core.GlobalVariables.REGISTRY;
-import static org.lwjgl.assimp.Assimp.aiGetVersionMajor;
-import static org.lwjgl.assimp.Assimp.aiGetVersionMinor;
-import static org.lwjgl.assimp.Assimp.aiGetVersionRevision;
-import static org.lwjgl.opengl.GL11.GL_RENDERER;
-import static org.lwjgl.opengl.GL11.GL_VENDOR;
-import static org.lwjgl.opengl.GL11.GL_VERSION;
-import static org.lwjgl.opengl.GL11.glGetString;
-import static org.lwjgl.opengl.GL20.GL_SHADING_LANGUAGE_VERSION;
 
-import java.io.IOException;
-import java.util.jar.Attributes;
-import java.util.jar.Manifest;
-
-import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWErrorCallback;
 
 import net.luxvacuos.igl.Logger;
-import net.luxvacuos.voxel.client.api.MoltenAPI;
+import net.luxvacuos.voxel.client.bootstrap.Bootstrap;
 import net.luxvacuos.voxel.client.core.states.CrashState;
 import net.luxvacuos.voxel.client.core.states.MPWorldState;
 import net.luxvacuos.voxel.client.core.states.MainMenuState;
 import net.luxvacuos.voxel.client.core.states.SPWorldState;
-import net.luxvacuos.voxel.client.core.states.SplashScreenState;
 import net.luxvacuos.voxel.client.core.states.StateNames;
 import net.luxvacuos.voxel.client.core.states.TestState;
+import net.luxvacuos.voxel.client.core.subsystems.ClientCoreSubsystem;
+import net.luxvacuos.voxel.client.core.subsystems.GraphicalSubsystem;
+import net.luxvacuos.voxel.client.core.subsystems.SoundSubsystem;
 import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.glfw.WindowManager;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.Timers;
-import net.luxvacuos.voxel.universal.api.ModsHandler;
-import net.luxvacuos.voxel.universal.bootstrap.AbstractBootstrap;
 import net.luxvacuos.voxel.universal.core.AbstractVoxel;
+import net.luxvacuos.voxel.universal.core.CoreSubsystem;
 import net.luxvacuos.voxel.universal.core.EngineType;
 import net.luxvacuos.voxel.universal.core.TaskManager;
 import net.luxvacuos.voxel.universal.core.states.StateMachine;
-import net.luxvacuos.voxel.universal.util.PerRunLog;
 
-/**
- * Voxel's Heart, the main object where the loop is stored.
- * 
- * @author Guerra24 <pablo230699@hotmail.com>
- * @category Kernel
- */
 public class Voxel extends AbstractVoxel {
 
-	GLFWErrorCallback errorfun = GLFWErrorCallback.createPrint(System.err);
-
-	/**
-	 * Create the instance and set some variables
-	 */
-	public Voxel(AbstractBootstrap bootstrap) {
-		super(bootstrap);
-		GLFW.glfwSetErrorCallback(this.errorfun);
+	public Voxel() {
+		GLFW.glfwSetErrorCallback(GLFWErrorCallback.createPrint(System.err));
 		super.engineType = EngineType.CLIENT;
 		init();
 	}
 
 	/**
-	 * 
-	 * PreInit. Initializes basic stuff.
-	 * 
-	 * @throws Exception
-	 *             Throws Exception in case of error
+	 * Init function
 	 */
 	@Override
 	public void init() {
-		PerRunLog.setBootstrap(bootstrap);
 		Logger.init();
 		Logger.log("Starting Client");
 
 		super.addSubsystem(new ClientCoreSubsystem());
 		super.addSubsystem(new GraphicalSubsystem());
-
-		ClientVariables.initRuntimeVariables(bootstrap);
+		if (!ClientVariables.WSL)
+			super.addSubsystem(new SoundSubsystem());
 
 		super.initSubsystems();
-
-		try {
-			Manifest manifest = new Manifest(getClass().getClassLoader().getResourceAsStream("META-INF/MANIFEST.MF"));
-			Attributes attr = manifest.getMainAttributes();
-			String t = attr.getValue("Specification-Version");
-			if (t != null)
-				ClientVariables.version = t;
-		} catch (IOException E) {
-			E.printStackTrace();
-		}
-
-		internalSubsystem = ClientInternalSubsystem.getInstance();
-		internalSubsystem.preInit();
-
-		StateMachine.registerState(new SplashScreenState());
-
-		CoreInfo.platform = bootstrap.getPlatform();
-		CoreInfo.LWJGLVer = Version.getVersion();
-		CoreInfo.GLFWVer = GLFW.glfwGetVersionString();
-		CoreInfo.OpenGLVer = glGetString(GL_VERSION);
-		CoreInfo.GLSLVersion = glGetString(GL_SHADING_LANGUAGE_VERSION);
-		CoreInfo.Vendor = glGetString(GL_VENDOR);
-		CoreInfo.Renderer = glGetString(GL_RENDERER);
+		
 		Logger.log("Voxel Client Version: " + ClientVariables.version);
-		Logger.log("Running on: " + CoreInfo.platform);
-		Logger.log("LWJGL Version: " + CoreInfo.LWJGLVer);
-		Logger.log("GLFW Version: " + CoreInfo.GLFWVer);
-		Logger.log("OpenGL Version: " + CoreInfo.OpenGLVer);
-		Logger.log("GLSL Version: " + CoreInfo.GLSLVersion);
-		Logger.log("Assimp: " + aiGetVersionMajor() + "." + aiGetVersionMinor() + "." + aiGetVersionRevision());
-		Logger.log("Vendor: " + CoreInfo.Vendor);
-		Logger.log("Renderer: " + CoreInfo.Renderer);
-		modsHandler = new ModsHandler(this);
-		modsHandler.setMoltenAPI(new MoltenAPI());
-		modsHandler.preInit();
+		Logger.log("Running on: " + Bootstrap.getPlatform());
+		Logger.log("LWJGL Version: " + REGISTRY.getRegistryItem("/Voxel/System/lwjgl"));
+		Logger.log("GLFW Version: " + REGISTRY.getRegistryItem("/Voxel/System/glfw"));
+		Logger.log("OpenGL Version: " + REGISTRY.getRegistryItem("/Voxel/System/opengl"));
+		Logger.log("GLSL Version: " + REGISTRY.getRegistryItem("/Voxel/System/glsl"));
+		Logger.log("Assimp: " + REGISTRY.getRegistryItem("/Voxel/System/assimp"));
+		Logger.log("Vendor: " + REGISTRY.getRegistryItem("/Voxel/System/vendor"));
+		Logger.log("Renderer: " + REGISTRY.getRegistryItem("/Voxel/System/renderer"));
 
-		internalSubsystem.init();
 		TaskManager.addTask(() -> StateMachine.registerState(new MainMenuState()));
 		TaskManager.addTask(() -> StateMachine.registerState(new SPWorldState()));
 		TaskManager.addTask(() -> StateMachine.registerState(new MPWorldState()));
 		if (ClientVariables.TEST_MODE)
 			TaskManager.addTask(() -> StateMachine.registerState(new TestState()));
-		modsHandler.init();
-		modsHandler.postInit();
-		internalSubsystem.postInit();
 		StateMachine.setCurrentState(StateNames.SPLASH_SCREEN);
 		try {
 			StateMachine.run();
@@ -152,11 +93,6 @@ public class Voxel extends AbstractVoxel {
 			t.printStackTrace(System.err);
 			handleError(t);
 		}
-	}
-
-	@Override
-	public void restart() {
-		throw new UnsupportedOperationException("Not Implemented");
 	}
 
 	/**
@@ -174,16 +110,16 @@ public class Voxel extends AbstractVoxel {
 			Timers.startCPUTimer();
 			TaskManager.update();
 			if (window.getTimeCount() > 1f) {
-				CoreInfo.ups = CoreInfo.upsCount;
-				CoreInfo.upsCount = 0;
+				CoreSubsystem.ups = CoreSubsystem.upsCount;
+				CoreSubsystem.upsCount = 0;
 				window.setTimeCount(window.getTimeCount() - 1);
 			}
 			delta = window.getDelta();
 			accumulator += delta;
 			while (accumulator >= interval) {
 				WindowManager.update();
-				CoreInfo.upsCount++;
 				StateMachine.update(this, interval);
+				CoreSubsystem.upsCount++;
 				accumulator -= interval;
 			}
 			alpha = accumulator / interval;
@@ -215,16 +151,9 @@ public class Voxel extends AbstractVoxel {
 		GLFW.glfwTerminate();
 	}
 
-	/**
-	 * Dispose method, all loaded stuff is cleaned
-	 * 
-	 */
 	@Override
 	public void dispose() {
 		super.dispose();
-		internalSubsystem.dispose();
-		modsHandler.dispose();
-		GLFW.glfwSetErrorCallback(null).free();
 		StateMachine.dispose();
 		GLFW.glfwTerminate();
 	}

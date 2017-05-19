@@ -18,36 +18,15 @@
  * 
  */
 
-package net.luxvacuos.voxel.server.core;
+package net.luxvacuos.voxel.server.core.subsystems;
 
-import java.io.File;
-
-import net.luxvacuos.voxel.universal.core.AbstractInternalSubsystem;
-import net.luxvacuos.voxel.universal.core.GlobalVariables;
+import net.luxvacuos.voxel.universal.core.ISubsystem;
 import net.luxvacuos.voxel.universal.material.BlockMaterial;
 import net.luxvacuos.voxel.universal.material.MaterialModder;
 import net.luxvacuos.voxel.universal.world.block.BlockBase;
 import net.luxvacuos.voxel.universal.world.block.Blocks;
 
-public class ServerInternalSubsystem extends AbstractInternalSubsystem {
-
-	private static ServerInternalSubsystem instance = null;
-
-	public static ServerInternalSubsystem getInstance() {
-		if (instance == null)
-			instance = new ServerInternalSubsystem();
-		return instance;
-	}
-
-	private ServerInternalSubsystem() {
-	}
-
-	@Override
-	public void preInit() {
-		gameSettings = new ServerGameSettings();
-		gameSettings.load(new File((String) GlobalVariables.REGISTRY.getRegistryItem("/Voxel/Settings/file")));
-		gameSettings.read();
-	}
+public class WorldSubsystem implements ISubsystem {
 
 	@Override
 	public void init() {
@@ -74,9 +53,15 @@ public class ServerInternalSubsystem extends AbstractInternalSubsystem {
 	}
 
 	@Override
+	public void restart() {
+	}
+
+	@Override
+	public void update(float delta) {
+	}
+
+	@Override
 	public void dispose() {
-		gameSettings.update();
-		gameSettings.save();
 	}
 
 }

@@ -113,7 +113,7 @@ public final class ClientGameSettings extends AbstractGameSettings {
 		
 		registerValue("chunkRadius", 			Integer.toString((int) REGISTRY.getRegistryItem("/Voxel/Settings/World/chunkRadius")));
 		registerValue("chunkManagerThreads", 	Integer.toString((int) REGISTRY.getRegistryItem("/Voxel/Settings/World/chunkManagerThreads")));
-		Logger.log("Updated completed");
+		Logger.log("Update completed");
 	}
 
 }

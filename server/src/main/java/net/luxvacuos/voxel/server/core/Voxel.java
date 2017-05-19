@@ -22,20 +22,17 @@ package net.luxvacuos.voxel.server.core;
 
 import static net.luxvacuos.voxel.universal.core.GlobalVariables.REGISTRY;
 
-import java.io.IOException;
-import java.util.jar.Attributes;
-import java.util.jar.Manifest;
-
 import net.luxvacuos.igl.Logger;
+import net.luxvacuos.voxel.server.bootstrap.Bootstrap;
 import net.luxvacuos.voxel.server.core.states.MPWorldState;
 import net.luxvacuos.voxel.server.core.states.StateNames;
-import net.luxvacuos.voxel.universal.bootstrap.AbstractBootstrap;
+import net.luxvacuos.voxel.server.core.subsystems.ServerCoreSubsystem;
 import net.luxvacuos.voxel.universal.core.AbstractVoxel;
+import net.luxvacuos.voxel.universal.core.CoreSubsystem;
 import net.luxvacuos.voxel.universal.core.EngineType;
 import net.luxvacuos.voxel.universal.core.GlobalVariables;
 import net.luxvacuos.voxel.universal.core.TaskManager;
 import net.luxvacuos.voxel.universal.core.states.StateMachine;
-import net.luxvacuos.voxel.universal.util.PerRunLog;
 
 public class Voxel extends AbstractVoxel {
 
@@ -43,59 +40,30 @@ public class Voxel extends AbstractVoxel {
 	private float timeCount;
 	private Sync sync;
 
-	public Voxel(AbstractBootstrap bootstrap) {
-		super(bootstrap);
+	public Voxel() {
 		super.engineType = EngineType.SERVER;
-		build();
+		init();
 	}
 
 	@Override
-	public void preInit() throws Exception {
-		PerRunLog.setBootstrap(bootstrap);
+	public void init() {
 		Logger.init();
-
-		try {
-			Manifest manifest = new Manifest(getClass().getClassLoader().getResourceAsStream("META-INF/MANIFEST.MF"));
-			Attributes attr = manifest.getMainAttributes();
-			String t = attr.getValue("Specification-Version");
-			if (t != null)
-				GlobalVariables.version = t;
-		} catch (IOException E) {
-			E.printStackTrace();
-		}
 		Logger.log("Starting Server");
-		GlobalVariables.REGISTRY.register("/Voxel/Settings/file", bootstrap.getPrefix() + "/config/settings.conf");
-		GlobalVariables.REGISTRY.register("/Voxel/Settings/World/directory", bootstrap.getPrefix() + "/");
 
-		internalSubsystem = ServerInternalSubsystem.getInstance();
-		internalSubsystem.preInit();
-		CoreInfo.platform = bootstrap.getPlatform();
+		super.addSubsystem(new ServerCoreSubsystem());
+
+		super.initSubsystems();
+
 		Logger.log("Voxel Server Version: " + GlobalVariables.version);
-		Logger.log("Running on: " + CoreInfo.platform);
-	}
-
-	@Override
-	public void init() throws Exception {
-		internalSubsystem.init();
+		Logger.log("Running on: " + Bootstrap.getPlatform());
+		
 		StateMachine.registerState(new MPWorldState());
-	}
-
-	@Override
-	public void postInit() throws Exception {
 		sync = new Sync();
 		lastLoopTime = System.currentTimeMillis() / 1000l;
-		internalSubsystem.postInit();
 		StateMachine.setCurrentState(StateNames.MP_WORLD);
-	}
-
-	@Override
-	public void build() {
 		try {
-			preInit();
-			init();
-			postInit();
 			StateMachine.run();
-			loop();
+			update();
 			dispose();
 		} catch (Throwable t) {
 			t.printStackTrace(System.err);
@@ -104,7 +72,7 @@ public class Voxel extends AbstractVoxel {
 	}
 
 	@Override
-	public void loop() {
+	public void update() {
 		int ups = (int) REGISTRY.getRegistryItem("/Voxel/Settings/Core/ups");
 		float delta = 0;
 		float accumulator = 0f;
@@ -112,24 +80,19 @@ public class Voxel extends AbstractVoxel {
 		while (StateMachine.isRunning()) {
 			TaskManager.update();
 			if (timeCount > 1f) {
-				CoreInfo.ups = CoreInfo.upsCount;
-				CoreInfo.upsCount = 0;
+				CoreSubsystem.ups = CoreSubsystem.upsCount;
+				CoreSubsystem.upsCount = 0;
 				timeCount--;
 			}
 			delta = getDelta();
 			accumulator += delta;
 			while (accumulator >= interval) {
-				update(interval);
+				StateMachine.update(this, interval);
+				CoreSubsystem.upsCount++;
 				accumulator -= interval;
 			}
 			sync.sync(ups);
 		}
-	}
-
-	@Override
-	public void update(float delta) {
-		CoreInfo.upsCount++;
-		StateMachine.update(this, delta);
 	}
 
 	@Override
@@ -140,8 +103,8 @@ public class Voxel extends AbstractVoxel {
 
 	@Override
 	public void dispose() {
+		super.dispose();
 		Logger.log("Cleaning Resources");
-		internalSubsystem.dispose();
 		StateMachine.dispose();
 	}
 
