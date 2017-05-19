@@ -36,6 +36,7 @@ import net.luxvacuos.voxel.client.core.states.TestState;
 import net.luxvacuos.voxel.client.core.subsystems.ClientCoreSubsystem;
 import net.luxvacuos.voxel.client.core.subsystems.GraphicalSubsystem;
 import net.luxvacuos.voxel.client.core.subsystems.SoundSubsystem;
+import net.luxvacuos.voxel.client.core.subsystems.WorldSubsystem;
 import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.glfw.WindowManager;
@@ -66,6 +67,7 @@ public class Voxel extends AbstractVoxel {
 		super.addSubsystem(new GraphicalSubsystem());
 		if (!ClientVariables.WSL)
 			super.addSubsystem(new SoundSubsystem());
+		super.addSubsystem(new WorldSubsystem());
 
 		super.initSubsystems();
 		

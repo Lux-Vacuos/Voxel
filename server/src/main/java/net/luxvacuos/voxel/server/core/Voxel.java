@@ -27,6 +27,7 @@ import net.luxvacuos.voxel.server.bootstrap.Bootstrap;
 import net.luxvacuos.voxel.server.core.states.MPWorldState;
 import net.luxvacuos.voxel.server.core.states.StateNames;
 import net.luxvacuos.voxel.server.core.subsystems.ServerCoreSubsystem;
+import net.luxvacuos.voxel.server.core.subsystems.WorldSubsystem;
 import net.luxvacuos.voxel.universal.core.AbstractVoxel;
 import net.luxvacuos.voxel.universal.core.CoreSubsystem;
 import net.luxvacuos.voxel.universal.core.EngineType;
@@ -51,6 +52,7 @@ public class Voxel extends AbstractVoxel {
 		Logger.log("Starting Server");
 
 		super.addSubsystem(new ServerCoreSubsystem());
+		super.addSubsystem(new WorldSubsystem());
 
 		super.initSubsystems();
 
