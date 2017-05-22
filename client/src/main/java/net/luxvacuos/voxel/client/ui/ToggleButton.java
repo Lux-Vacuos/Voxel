@@ -36,8 +36,6 @@ public class ToggleButton extends Button {
 				onToggle.onAction();
 		};
 		this.status = st;
-		setColor(1f, 1f, 1f, 1f);
-		setHighlightColor(0.5f, 1f, 0.5f, 1f);
 	}
 
 	@Override
@@ -45,7 +43,7 @@ public class ToggleButton extends Button {
 		if (!enabled)
 			return;
 		Theme.renderToggleButton(window.getNVGID(), text, font, rootComponent.rootX + alignedX,
-				window.getHeight() - rootComponent.rootY - alignedY - h, w, h, color, fontSize, status, highlight);
+				window.getHeight() - rootComponent.rootY - alignedY - h, w, h, fontSize, status);
 	}
 
 	@Override

@@ -20,11 +20,12 @@
 
 package net.luxvacuos.voxel.client.ui;
 
-import static net.luxvacuos.voxel.universal.core.GlobalVariables.REGISTRY;
+import static net.luxvacuos.voxel.universal.core.subsystems.CoreSubsystem.REGISTRY;
 import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_LEFT;
 import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_TOP;
 
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
+import net.luxvacuos.voxel.universal.util.registry.Key;
 
 public class ModalWindow extends RootComponentWindow {
 
@@ -33,9 +34,9 @@ public class ModalWindow extends RootComponentWindow {
 	private Button accept;
 
 	public ModalWindow(float w, float h, String text, String title) {
-		super(0, (int) REGISTRY.getRegistryItem("/Voxel/Display/height"),
-				(int) REGISTRY.getRegistryItem("/Voxel/Display/width"),
-				(int) REGISTRY.getRegistryItem("/Voxel/Display/height"), "");
+		super(0, (int) REGISTRY.getRegistryItem(new Key("/Voxel/Display/height")),
+				(int) REGISTRY.getRegistryItem(new Key("/Voxel/Display/width")),
+				(int) REGISTRY.getRegistryItem(new Key("/Voxel/Display/height")), "");
 		this.mwW = w;
 		this.mwH = h;
 		this.text = text;

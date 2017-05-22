@@ -29,7 +29,8 @@ import com.hackhalo2.nbt.stream.NBTInputStream;
 import com.hackhalo2.nbt.tags.TagCompound;
 
 import net.luxvacuos.igl.Logger;
-import net.luxvacuos.voxel.universal.core.GlobalVariables;
+import net.luxvacuos.voxel.universal.core.subsystems.CoreSubsystem;
+import net.luxvacuos.voxel.universal.util.registry.Key;
 import net.luxvacuos.voxel.universal.world.chunk.ChunkData;
 import net.luxvacuos.voxel.universal.world.chunk.ChunkDataBuilder;
 import net.luxvacuos.voxel.universal.world.dimension.IDimension;
@@ -41,7 +42,8 @@ public class ChunkLoaderTask implements Callable<ChunkData> {
 	private final ChunkNode node;
 
 	public ChunkLoaderTask(IDimension dim, ChunkNode node) {
-		String path = GlobalVariables.REGISTRY.getRegistryItem("/Voxel/Settings/World/directory") + dim.getWorldName() + "/" + dim.getID();
+		String path = CoreSubsystem.REGISTRY.getRegistryItem(new Key("/Voxel/Settings/World/directory"))
+				+ dim.getWorldName() + "/" + dim.getID();
 		String fullPath = path + "/" + "chunk_" + node.getX() + "_" + node.getZ() + ".dat";
 		this.node = node;
 		File file = new File(fullPath);
@@ -49,7 +51,7 @@ public class ChunkLoaderTask implements Callable<ChunkData> {
 		if (this.exists = (file.exists() && file.length() != 0L)) {
 			try {
 				this.in = new NBTInputStream(new BufferedInputStream(new FileInputStream(file)));
-			} catch(Exception e) {
+			} catch (Exception e) {
 				Logger.error(e);
 				this.exists = false;
 				new File(path).mkdirs();
@@ -64,18 +66,18 @@ public class ChunkLoaderTask implements Callable<ChunkData> {
 		ChunkDataBuilder builder = new ChunkDataBuilder();
 		TagCompound root;
 
-		if(this.exists) {
+		if (this.exists) {
 			root = new TagCompound(this.in, false);
 			builder.setBlockMetadata(root.getCompound("BlockMetadata"));
 			int slices = root.getInt("NumSlices");
 
-			for(byte i = 0; i < slices; i++)
-				builder.setSlice(i, root.getCompound("ChunkSlice-"+i));
-			
+			for (byte i = 0; i < slices; i++)
+				builder.setSlice(i, root.getCompound("ChunkSlice-" + i));
+
 		} else {
 			for (byte i = 0; i < 16; i++)
 				builder.newSlice(i);
-			
+
 			builder.setBlockMetadata(new TagCompound("BlockMetadata"));
 		}
 

@@ -20,7 +20,7 @@
 
 package net.luxvacuos.voxel.client.ui.menus;
 
-import static net.luxvacuos.voxel.universal.core.GlobalVariables.REGISTRY;
+import static net.luxvacuos.voxel.universal.core.subsystems.CoreSubsystem.REGISTRY;
 
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.themes.Theme.ButtonStyle;
@@ -35,8 +35,9 @@ import net.luxvacuos.voxel.client.ui.Slider;
 import net.luxvacuos.voxel.client.ui.Text;
 import net.luxvacuos.voxel.client.ui.TitleBarButton;
 import net.luxvacuos.voxel.client.ui.ToggleButton;
-import net.luxvacuos.voxel.universal.core.CoreSubsystem;
 import net.luxvacuos.voxel.universal.core.TaskManager;
+import net.luxvacuos.voxel.universal.core.subsystems.CoreSubsystem;
+import net.luxvacuos.voxel.universal.util.registry.Key;
 
 public class OptionsMenu extends RootComponentWindow {
 
@@ -54,8 +55,6 @@ public class OptionsMenu extends RootComponentWindow {
 		backButton = new TitleBarButton(0, -1, 28, 28);
 		backButton.setWindowAlignment(Alignment.LEFT_TOP);
 		backButton.setAlignment(Alignment.RIGHT_BOTTOM);
-		backButton.setColor("#646464C8");
-		backButton.setHighlightColor("#FFFFFFC8");
 		backButton.setStyle(ButtonStyle.LEFT_ARROW);
 		backButton.setEnabled(false);
 
@@ -109,25 +108,25 @@ public class OptionsMenu extends RootComponentWindow {
 
 	private void graphicOptions() {
 		ToggleButton godraysButton = new ToggleButton(-50, 0, 80, 30,
-				(boolean) REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/volumetricLight"));
+				(boolean) REGISTRY.getRegistryItem(new Key("/Voxel/Settings/Graphics/volumetricLight")));
 		ToggleButton shadowsButton = new ToggleButton(-50, 0, 80, 30,
-				(boolean) REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/shadows"));
+				(boolean) REGISTRY.getRegistryItem(new Key("/Voxel/Settings/Graphics/shadows")));
 		ToggleButton dofButton = new ToggleButton(-50, 0, 80, 30,
-				(boolean) REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/dof"));
+				(boolean) REGISTRY.getRegistryItem(new Key("/Voxel/Settings/Graphics/dof")));
 		ToggleButton fxaaButton = new ToggleButton(-50, 0, 80, 30,
-				(boolean) REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/fxaa"));
+				(boolean) REGISTRY.getRegistryItem(new Key("/Voxel/Settings/Graphics/fxaa")));
 		ToggleButton motionBlurButton = new ToggleButton(-50, 0, 80, 30,
-				(boolean) REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/motionBlur"));
+				(boolean) REGISTRY.getRegistryItem(new Key("/Voxel/Settings/Graphics/motionBlur")));
 		ToggleButton reflectionsButton = new ToggleButton(-50, 0, 80, 30,
-				(boolean) REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/reflections"));
+				(boolean) REGISTRY.getRegistryItem(new Key("/Voxel/Settings/Graphics/reflections")));
 		ToggleButton parallaxButton = new ToggleButton(-50, 0, 80, 30,
-				(boolean) REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/parallax"));
+				(boolean) REGISTRY.getRegistryItem(new Key("/Voxel/Settings/Graphics/parallax")));
 		ToggleButton ambientOccButton = new ToggleButton(-50, 0, 80, 30,
-				(boolean) REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/ambientOcclusion"));
+				(boolean) REGISTRY.getRegistryItem(new Key("/Voxel/Settings/Graphics/ambientOcclusion")));
 		ToggleButton chromaticAberrationButton = new ToggleButton(-50, 0, 80, 30,
-				(boolean) REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/chromaticAberration"));
+				(boolean) REGISTRY.getRegistryItem(new Key("/Voxel/Settings/Graphics/chromaticAberration")));
 		ToggleButton lensFlaresButton = new ToggleButton(-50, 0, 80, 30,
-				(boolean) REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/lensFlares"));
+				(boolean) REGISTRY.getRegistryItem(new Key("/Voxel/Settings/Graphics/lensFlares")));
 
 		godraysButton.setWindowAlignment(Alignment.RIGHT);
 		godraysButton.setAlignment(Alignment.RIGHT);
@@ -151,23 +150,26 @@ public class OptionsMenu extends RootComponentWindow {
 		lensFlaresButton.setAlignment(Alignment.RIGHT);
 
 		shadowsButton.setOnButtonPress(
-				() -> REGISTRY.register("/Voxel/Settings/Graphics/shadows", shadowsButton.getStatus()));
-		dofButton.setOnButtonPress(() -> REGISTRY.register("/Voxel/Settings/Graphics/dof", dofButton.getStatus()));
-		godraysButton.setOnButtonPress(
-				() -> REGISTRY.register("/Voxel/Settings/Graphics/volumetricLight", godraysButton.getStatus()));
-		fxaaButton.setOnButtonPress(() -> REGISTRY.register("/Voxel/Settings/Graphics/fxaa", fxaaButton.getStatus()));
+				() -> REGISTRY.register(new Key("/Voxel/Settings/Graphics/shadows"), shadowsButton.getStatus()));
+		dofButton.setOnButtonPress(
+				() -> REGISTRY.register(new Key("/Voxel/Settings/Graphics/dof"), dofButton.getStatus()));
+		godraysButton.setOnButtonPress(() -> REGISTRY.register(new Key("/Voxel/Settings/Graphics/volumetricLight"),
+				godraysButton.getStatus()));
+		fxaaButton.setOnButtonPress(
+				() -> REGISTRY.register(new Key("/Voxel/Settings/Graphics/fxaa"), fxaaButton.getStatus()));
 		parallaxButton.setOnButtonPress(
-				() -> REGISTRY.register("/Voxel/Settings/Graphics/parallax", parallaxButton.getStatus()));
+				() -> REGISTRY.register(new Key("/Voxel/Settings/Graphics/parallax"), parallaxButton.getStatus()));
 		motionBlurButton.setOnButtonPress(
-				() -> REGISTRY.register("/Voxel/Settings/Graphics/motionBlur", motionBlurButton.getStatus()));
-		reflectionsButton.setOnButtonPress(
-				() -> REGISTRY.register("/Voxel/Settings/Graphics/reflections", reflectionsButton.getStatus()));
-		ambientOccButton.setOnButtonPress(
-				() -> REGISTRY.register("/Voxel/Settings/Graphics/ambientOcclusion", ambientOccButton.getStatus()));
-		chromaticAberrationButton.setOnButtonPress(() -> REGISTRY
-				.register("/Voxel/Settings/Graphics/chromaticAberration", chromaticAberrationButton.getStatus()));
+				() -> REGISTRY.register(new Key("/Voxel/Settings/Graphics/motionBlur"), motionBlurButton.getStatus()));
+		reflectionsButton.setOnButtonPress(() -> REGISTRY.register(new Key("/Voxel/Settings/Graphics/reflections"),
+				reflectionsButton.getStatus()));
+		ambientOccButton.setOnButtonPress(() -> REGISTRY.register(new Key("/Voxel/Settings/Graphics/ambientOcclusion"),
+				ambientOccButton.getStatus()));
+		chromaticAberrationButton
+				.setOnButtonPress(() -> REGISTRY.register(new Key("/Voxel/Settings/Graphics/chromaticAberration"),
+						chromaticAberrationButton.getStatus()));
 		lensFlaresButton.setOnButtonPress(
-				() -> REGISTRY.register("/Voxel/Settings/Graphics/lensFlares", lensFlaresButton.getStatus()));
+				() -> REGISTRY.register(new Key("/Voxel/Settings/Graphics/lensFlares"), lensFlaresButton.getStatus()));
 
 		Text godText = new Text("Volumetric Light", 20, 0);
 		godText.setWindowAlignment(Alignment.LEFT);
@@ -262,7 +264,7 @@ public class OptionsMenu extends RootComponentWindow {
 	}
 
 	private void wmOptions() {
-		float border = (float) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/borderSize");
+		float border = (float) REGISTRY.getRegistryItem(new Key("/Voxel/Settings/WindowManager/borderSize"));
 		Text wmBorderText = new Text("Window Border: " + border, 20, 0);
 		Slider wmBorder = new Slider(-56, 0, 200, 20, border / 40f);
 
@@ -275,7 +277,7 @@ public class OptionsMenu extends RootComponentWindow {
 
 		wmBorder.setOnPress(() -> {
 			float val = wmBorder.getPosition() * 40f;
-			REGISTRY.register("/Voxel/Settings/WindowManager/borderSize", val);
+			REGISTRY.register(new Key("/Voxel/Settings/WindowManager/borderSize"), val);
 			wmBorderText.setText("Window Border: " + val);
 		});
 
@@ -285,7 +287,7 @@ public class OptionsMenu extends RootComponentWindow {
 		borderC.addComponent(wmBorderText);
 		borderC.addComponent(wmBorder);
 
-		float scroll = (float) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/scrollBarSize");
+		float scroll = (float) REGISTRY.getRegistryItem(new Key("/Voxel/Settings/WindowManager/scrollBarSize"));
 		Text wmScrollText = new Text("Scroll Bar Size: " + scroll, 20, 0);
 		Slider wmScroll = new Slider(-56, 0, 200, 20, scroll / 40f);
 
@@ -298,7 +300,7 @@ public class OptionsMenu extends RootComponentWindow {
 
 		wmScroll.setOnPress(() -> {
 			float val = wmScroll.getPosition() * 40f;
-			REGISTRY.register("/Voxel/Settings/WindowManager/scrollBarSize", val);
+			REGISTRY.register(new Key("/Voxel/Settings/WindowManager/scrollBarSize"), val);
 			wmScrollText.setText("Scroll Bar Size: " + val);
 		});
 
@@ -308,7 +310,7 @@ public class OptionsMenu extends RootComponentWindow {
 		scrollC.addComponent(wmScrollText);
 		scrollC.addComponent(wmScroll);
 
-		float title = (float) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/titleBarHeight");
+		float title = (float) REGISTRY.getRegistryItem(new Key("/Voxel/Settings/WindowManager/titleBarHeight"));
 		Text wmTitleText = new Text("Title Bar Size: " + title, 20, 0);
 		Slider wmTitle = new Slider(-56, 0, 200, 20, title / 40f);
 
@@ -321,7 +323,7 @@ public class OptionsMenu extends RootComponentWindow {
 
 		wmTitle.setOnPress(() -> {
 			float val = wmTitle.getPosition() * 40f;
-			REGISTRY.register("/Voxel/Settings/WindowManager/titleBarHeight", val);
+			REGISTRY.register(new Key("/Voxel/Settings/WindowManager/titleBarHeight"), val);
 			wmTitleText.setText("Title Bar Size: " + val);
 		});
 
@@ -332,13 +334,13 @@ public class OptionsMenu extends RootComponentWindow {
 		titleC.addComponent(wmTitle);
 
 		ToggleButton titleBorderButton = new ToggleButton(-50, 0, 80, 30,
-				(boolean) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/titleBarBorder"));
+				(boolean) REGISTRY.getRegistryItem(new Key("/Voxel/Settings/WindowManager/titleBarBorder")));
 
 		titleBorderButton.setWindowAlignment(Alignment.RIGHT);
 		titleBorderButton.setAlignment(Alignment.RIGHT);
 
-		titleBorderButton.setOnButtonPress(
-				() -> REGISTRY.register("/Voxel/Settings/WindowManager/titleBarBorder", titleBorderButton.getStatus()));
+		titleBorderButton.setOnButtonPress(() -> REGISTRY
+				.register(new Key("/Voxel/Settings/WindowManager/titleBarBorder"), titleBorderButton.getStatus()));
 
 		Text titleBorderText = new Text("Title Bar Border", 20, 0);
 		titleBorderText.setWindowAlignment(Alignment.LEFT);
@@ -365,8 +367,7 @@ public class OptionsMenu extends RootComponentWindow {
 
 	@Override
 	public void onClose() {
-		CoreSubsystem.getGameSettings().update();
-		CoreSubsystem.getGameSettings().save();
+		CoreSubsystem.REGISTRY.save();
 	}
 
 }

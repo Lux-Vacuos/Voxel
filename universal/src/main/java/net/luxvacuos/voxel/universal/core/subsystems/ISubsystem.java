@@ -18,7 +18,7 @@
  * 
  */
 
-package net.luxvacuos.voxel.universal.core;
+package net.luxvacuos.voxel.universal.core.subsystems;
 
 import net.luxvacuos.voxel.universal.resources.IDisposable;
 

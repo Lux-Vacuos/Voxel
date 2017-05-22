@@ -20,44 +20,27 @@
 
 package net.luxvacuos.voxel.server.core;
 
-import static net.luxvacuos.voxel.universal.core.GlobalVariables.REGISTRY;
+import static net.luxvacuos.voxel.universal.core.subsystems.CoreSubsystem.REGISTRY;
 
-import net.luxvacuos.igl.Logger;
 import net.luxvacuos.voxel.universal.core.AbstractGameSettings;
+import net.luxvacuos.voxel.universal.util.registry.Key;
 
 public class ServerGameSettings extends AbstractGameSettings {
 
 	@Override
 	public void read() {
-		Logger.log("Loading data to registry...");
-		
-		REGISTRY.register("/Voxel/Settings/Core/ups", 			Integer.parseInt(getValue("UPS", "20")));
-		
-		REGISTRY.register("/Voxel/Server/port", 				Integer.parseInt(getValue("port", "44454")));
-		
-		REGISTRY.register("/Voxel/Settings/World/chunkRadius", 	Integer.parseInt(getValue("chunkRadius", "6")));
-		REGISTRY.register("/Voxel/Settings/World/chunkManagerThreads", 		Integer.parseInt(getValue("chunkManagerThreads", "3")));
-		
-		REGISTRY.register("/Voxel/Simulation/World/name", 		getValue("worldName", "world"));
-		
-		Logger.log("Load completed");
+		REGISTRY.register(new Key("/Voxel/Settings/Core/ups", true), 					Integer.parseInt(getValue("UPS", "20")));
+
+		REGISTRY.register(new Key("/Voxel/Server/port", true),						 	Integer.parseInt(getValue("port", "44454")));
+
+		REGISTRY.register(new Key("/Voxel/Settings/World/chunkRadius", true), 			Integer.parseInt(getValue("chunkRadius", "6")));
+		REGISTRY.register(new Key("/Voxel/Settings/World/chunkManagerThreads", true), 	Integer.parseInt(getValue("chunkManagerThreads", "3")));
+
+		REGISTRY.register(new Key("/Voxel/Simulation/World/name", true), 				getValue("worldName", "world"));
 	}
 
 	@Override
 	public void update() {
-		Logger.log("Updating registry...");
-		registerValue("SettingsVersion", 		Integer.toString(ServerGameSettings.VERSION));
-		
-		registerValue("UPS", 					Integer.toString((int) REGISTRY.getRegistryItem("/Voxel/Settings/Core/ups")));
-		
-		registerValue("port", 					Integer.toString((int) REGISTRY.getRegistryItem("/Voxel/Server/port")));
-		
-		registerValue("chunkRadius", 			Integer.toString((int) REGISTRY.getRegistryItem("/Voxel/Settings/World/chunkRadius")));
-		registerValue("chunkManagerThreads", 	Integer.toString((int) REGISTRY.getRegistryItem("/Voxel/Settings/World/chunkManagerThreads")));
-		
-		registerValue("worldName", 				(String) REGISTRY.getRegistryItem("/Voxel/Simulation/World/name"));
-		
-		Logger.log("Update completed");
 	}
 
 }

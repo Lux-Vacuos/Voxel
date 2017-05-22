@@ -117,7 +117,7 @@ public class SoundSystem
 /**
  * Indicates the currently loaded sound-library, or null if none.
  */
-    private static Class currentLibrary = null;
+    private static Class<? extends Library> currentLibrary = null;
     
 /**
  * Becomes true when the sound library has been initialized.
@@ -149,12 +149,12 @@ public class SoundSystem
 
         linkDefaultLibrariesAndCodecs();
 
-        LinkedList<Class> libraries = SoundSystemConfig.getLibraries();
+        LinkedList<Class<? extends Library>> libraries = SoundSystemConfig.getLibraries();
 
         if( libraries != null )
         {
-            ListIterator<Class> i = libraries.listIterator();
-            Class c;
+            ListIterator<Class<? extends Library>> i = libraries.listIterator();
+            Class<? extends Library> c;
             while( i.hasNext() )
             {
                 c = i.next();
@@ -186,7 +186,7 @@ public class SoundSystem
  * See {@link paulscode.sound.SoundSystemConfig SoundSystemConfig} for
  * information about chosing a sound library.
  */
-    public SoundSystem( Class libraryClass ) throws SoundSystemException
+    public SoundSystem( Class<? extends Library> libraryClass ) throws SoundSystemException
     {
         // create the message logger:
         logger = SoundSystemConfig.getLogger();
@@ -220,7 +220,7 @@ public class SoundSystem
  * See {@link paulscode.sound.SoundSystemConfig SoundSystemConfig} for
  * information about chosing a sound library.
  */
-    protected void init( Class libraryClass ) throws SoundSystemException
+    protected void init( Class<? extends Library> libraryClass ) throws SoundSystemException
     {
         message( "", 0 );
         message( "Starting up " + className + "...", 0 );
@@ -1358,7 +1358,7 @@ public class SoundSystem
  * See {@link paulscode.sound.SoundSystemConfig SoundSystemConfig} for
  * information about chosing a sound library.
  */
-    public boolean switchLibrary( Class libraryClass )
+    public boolean switchLibrary( Class<? extends Library> libraryClass )
                                                     throws SoundSystemException
     {
         synchronized( SoundSystemConfig.THREAD_SYNC )
@@ -1467,7 +1467,7 @@ public class SoundSystem
  * See {@link paulscode.sound.SoundSystemConfig SoundSystemConfig} for
  * information about chosing a sound library.
  */
-    public boolean newLibrary( Class libraryClass )
+    public boolean newLibrary( Class<? extends Library> libraryClass )
                                                      throws SoundSystemException
     {
         initialized( SET, false );
@@ -1508,7 +1508,7 @@ public class SoundSystem
  * See {@link paulscode.sound.SoundSystemConfig SoundSystemConfig} for
  * information about chosing a sound library.
  */
-    private void CommandNewLibrary( Class libraryClass )
+    private void CommandNewLibrary( Class<? extends Library> libraryClass )
     {
         initialized( SET, false );
         
@@ -2354,7 +2354,8 @@ public class SoundSystem
  * @param newCommand Command to queue, or null to execute commands.  
  * @return True if more commands exist, false if queue is empty.
  */
-    public boolean CommandQueue( CommandObject newCommand )
+    @SuppressWarnings("unchecked")
+	public boolean CommandQueue( CommandObject newCommand )
     {
         synchronized( SoundSystemConfig.THREAD_SYNC )
         {
@@ -2726,7 +2727,7 @@ public class SoundSystem
  * @param libraryClass Libary type to check.
  * @return True or false.
  */
-    public static boolean libraryCompatible( Class libraryClass )
+    public static boolean libraryCompatible( Class<? extends Library> libraryClass )
     {
         // create the message logger:
         SoundSystemLogger logger = SoundSystemConfig.getLogger();
@@ -2755,7 +2756,7 @@ public class SoundSystem
  * Returns the currently loaded library, or -1 if none.
  * @return Global library identifier
  */
-    public static Class currentLibrary()
+    public static Class<? extends Library> currentLibrary()
     {
         return( currentLibrary( GET, null ) );
     }
@@ -2810,8 +2811,8 @@ public class SoundSystem
  * @param value New value if action is SET, otherwise XXX.
  * @return value of boolean 'initialized'.
  */
-    private static Class currentLibrary( boolean action,
-                                                      Class value )
+    private static Class<? extends Library> currentLibrary( boolean action,
+    		Class<? extends Library> value )
     {
         synchronized( SoundSystemConfig.THREAD_SYNC )
         {

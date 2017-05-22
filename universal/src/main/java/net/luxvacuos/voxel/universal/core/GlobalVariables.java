@@ -20,8 +20,6 @@
 
 package net.luxvacuos.voxel.universal.core;
 
-import net.luxvacuos.voxel.universal.util.registry.IRegistry;
-
 public class GlobalVariables {
 
 	/** The Version of the game */
@@ -33,9 +31,6 @@ public class GlobalVariables {
 	/** Enable Test Mode */
 	public static boolean TEST_MODE = false;
 	
-	/** Registry */
-	public static IRegistry<String, Object> REGISTRY;
-
 	protected GlobalVariables() { }
 
 }

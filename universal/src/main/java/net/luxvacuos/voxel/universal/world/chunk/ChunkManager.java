@@ -20,7 +20,7 @@
 
 package net.luxvacuos.voxel.universal.world.chunk;
 
-import static net.luxvacuos.voxel.universal.core.GlobalVariables.REGISTRY;
+import static net.luxvacuos.voxel.universal.core.subsystems.CoreSubsystem.REGISTRY;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -41,6 +41,7 @@ import net.luxvacuos.voxel.universal.tasks.ChunkGenerateTask;
 import net.luxvacuos.voxel.universal.tasks.ChunkLoaderTask;
 import net.luxvacuos.voxel.universal.tasks.ChunkSaveTask;
 import net.luxvacuos.voxel.universal.tasks.ChunkUnloaderTask;
+import net.luxvacuos.voxel.universal.util.registry.Key;
 import net.luxvacuos.voxel.universal.world.chunk.generator.FlatChunkGenerator;
 import net.luxvacuos.voxel.universal.world.chunk.generator.IChunkGenerator;
 import net.luxvacuos.voxel.universal.world.dimension.IDimension;
@@ -48,7 +49,8 @@ import net.luxvacuos.voxel.universal.world.utils.ChunkNode;
 
 public class ChunkManager implements IDisposable {
 	protected final IDimension dim;
-	protected final ExecutorService executor = Executors.newFixedThreadPool((int) REGISTRY.getRegistryItem("/Voxel/Settings/World/chunkManagerThreads"));
+	protected final ExecutorService executor = Executors
+			.newFixedThreadPool((int) REGISTRY.getRegistryItem(new Key("/Voxel/Settings/World/chunkManagerThreads")));
 	protected IChunkGenerator chunkGenerator = new FlatChunkGenerator();
 
 	protected List<ChunkNode> chunkLoadList;
@@ -262,7 +264,7 @@ public class ChunkManager implements IDisposable {
 					toRemove.add(chunk.getNode());
 				}
 			}
-			
+
 			for (ChunkNode node : toRemove) {
 				this.unloadChunk(node);
 			}

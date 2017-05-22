@@ -20,12 +20,13 @@
 
 package net.luxvacuos.voxel.client.ui;
 
-import static net.luxvacuos.voxel.universal.core.GlobalVariables.REGISTRY;
+import static net.luxvacuos.voxel.universal.core.subsystems.CoreSubsystem.REGISTRY;
 
 import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.Event;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.IWindow;
+import net.luxvacuos.voxel.universal.util.registry.Key;
 
 public class TitleBar implements ITitleBar {
 
@@ -39,11 +40,11 @@ public class TitleBar implements ITitleBar {
 	public TitleBar(IWindow window) {
 		this.window = window;
 		left = new RootComponent(this.window.getX(), this.window.getY(), this.window.getWidth(),
-				(float) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/titleBarHeight"));
+				(float) REGISTRY.getRegistryItem(new Key("/Voxel/Settings/WindowManager/titleBarHeight")));
 		right = new RootComponent(this.window.getX(), this.window.getY(), this.window.getWidth(),
-				(float) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/titleBarHeight"));
+				(float) REGISTRY.getRegistryItem(new Key("/Voxel/Settings/WindowManager/titleBarHeight")));
 		center = new RootComponent(this.window.getX(), this.window.getY(), this.window.getWidth(),
-				(float) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/titleBarHeight"));
+				(float) REGISTRY.getRegistryItem(new Key("/Voxel/Settings/WindowManager/titleBarHeight")));
 	}
 
 	@Override
@@ -89,7 +90,7 @@ public class TitleBar implements ITitleBar {
 	@Override
 	public void alwaysUpdate(float delta, Window window) {
 		if (enabled) {
-			float titleBarHeight = (float) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/titleBarHeight");
+			float titleBarHeight = (float) REGISTRY.getRegistryItem(new Key("/Voxel/Settings/WindowManager/titleBarHeight"));
 			left.alwaysUpdate(delta, window, this.window.getX(), this.window.getY() + titleBarHeight,
 					this.window.getWidth(), titleBarHeight);
 			right.alwaysUpdate(delta, window, this.window.getX(), this.window.getY() + titleBarHeight,
@@ -122,7 +123,7 @@ public class TitleBar implements ITitleBar {
 	private boolean canDrag(IWindow iWindow) {
 		return Mouse.getX() > iWindow.getX()
 				&& Mouse.getY() < iWindow.getY()
-						+ (float) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/titleBarHeight")
+						+ (float) REGISTRY.getRegistryItem(new Key("/Voxel/Settings/WindowManager/titleBarHeight"))
 				&& Mouse.getX() < iWindow.getX() + iWindow.getWidth() && Mouse.getY() > iWindow.getY();
 	}
 

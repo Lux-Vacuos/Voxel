@@ -30,7 +30,8 @@ import com.badlogic.ashley.utils.ImmutableArray;
 import com.hackhalo2.nbt.CompoundBuilder;
 import com.hackhalo2.nbt.stream.NBTOutputStream;
 
-import net.luxvacuos.voxel.universal.core.GlobalVariables;
+import net.luxvacuos.voxel.universal.core.subsystems.CoreSubsystem;
+import net.luxvacuos.voxel.universal.util.registry.Key;
 import net.luxvacuos.voxel.universal.world.chunk.ChunkSlice;
 import net.luxvacuos.voxel.universal.world.chunk.IChunk;
 
@@ -48,7 +49,7 @@ public class ChunkSaveTask implements Callable<Void> {
 		File file;
 		NBTOutputStream out;
 		for(IChunk chunk : this.chunks) {
-			path = GlobalVariables.REGISTRY.getRegistryItem("/Voxel/Settings/World/directory") + chunk.getDimension().getWorldName()
+			path = CoreSubsystem.REGISTRY.getRegistryItem(new Key("/Voxel/Settings/World/directory")) + chunk.getDimension().getWorldName()
 					+ "/" + chunk.getDimension().getID() + "/"
 					+ "chunk_" + chunk.getX() + "_" + chunk.getZ() + ".dat";
 

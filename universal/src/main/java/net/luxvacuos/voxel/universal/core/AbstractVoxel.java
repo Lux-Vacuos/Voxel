@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.luxvacuos.igl.Logger;
+import net.luxvacuos.voxel.universal.core.subsystems.ISubsystem;
 import net.luxvacuos.voxel.universal.resources.IDisposable;
 
 public abstract class AbstractVoxel implements IVoxel, IDisposable {
@@ -54,6 +55,13 @@ public abstract class AbstractVoxel implements IVoxel, IDisposable {
 			subsystem.restart();
 		}
 		Logger.log("--- ");
+	}
+	
+	@Override
+	public void updateSubsystems(float delta) {
+		for (ISubsystem subsystem : subsystems) {
+			subsystem.update(delta);
+		}
 	}
 
 	@Override

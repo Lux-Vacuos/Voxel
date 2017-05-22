@@ -20,7 +20,7 @@
 
 package net.luxvacuos.voxel.client.core.subsystems;
 
-import static net.luxvacuos.voxel.universal.core.GlobalVariables.REGISTRY;
+import static net.luxvacuos.voxel.universal.core.subsystems.CoreSubsystem.REGISTRY;
 import static org.lwjgl.assimp.Assimp.aiGetVersionMajor;
 import static org.lwjgl.assimp.Assimp.aiGetVersionMinor;
 import static org.lwjgl.assimp.Assimp.aiGetVersionRevision;
@@ -46,8 +46,10 @@ import net.luxvacuos.voxel.client.rendering.api.glfw.WindowManager;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.IWindowManager;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.NanoWindowManager;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.Timers;
+import net.luxvacuos.voxel.client.rendering.api.nanovg.themes.ITheme;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.themes.NanoTheme;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.themes.Theme;
+import net.luxvacuos.voxel.client.rendering.api.nanovg.themes.ThemeManager;
 import net.luxvacuos.voxel.client.rendering.api.opengl.ParticleDomain;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Renderer;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.DefaultData;
@@ -57,13 +59,15 @@ import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.TessellatorShader
 import net.luxvacuos.voxel.client.resources.ResourceLoader;
 import net.luxvacuos.voxel.client.ui.Font;
 import net.luxvacuos.voxel.client.world.block.BlocksResources;
-import net.luxvacuos.voxel.universal.core.ISubsystem;
 import net.luxvacuos.voxel.universal.core.TaskManager;
 import net.luxvacuos.voxel.universal.core.states.StateMachine;
+import net.luxvacuos.voxel.universal.core.subsystems.ISubsystem;
+import net.luxvacuos.voxel.universal.util.registry.Key;
 
 public class GraphicalSubsystem implements ISubsystem {
 
 	private static IWindowManager windowManager;
+	private static ThemeManager themeManager;
 	private static Window window;
 
 	private Font robotoRegular, robotoBold, poppinsRegular, poppinsLight, poppinsMedium, poppinsBold, poppinsSemiBold,
@@ -71,28 +75,36 @@ public class GraphicalSubsystem implements ISubsystem {
 
 	@Override
 	public void init() {
-		REGISTRY.register("/Voxel/Display/width", ClientVariables.WIDTH);
-		REGISTRY.register("/Voxel/Display/height", ClientVariables.HEIGHT);
+		REGISTRY.register(new Key("/Voxel/Display/width"), ClientVariables.WIDTH);
+		REGISTRY.register(new Key("/Voxel/Display/height"), ClientVariables.HEIGHT);
 
 		if (!glfwInit())
 			throw new IllegalStateException("Unable to initialize GLFW");
 
 		Icon[] icons = new Icon[] { new Icon("icon32"), new Icon("icon64") };
-		WindowHandle handle = WindowManager.generateHandle((int) REGISTRY.getRegistryItem("/Voxel/Display/width"),
-				(int) REGISTRY.getRegistryItem("/Voxel/Display/height"), "Voxel");
+		WindowHandle handle = WindowManager.generateHandle(
+				(int) REGISTRY.getRegistryItem(new Key("/Voxel/Display/width")),
+				(int) REGISTRY.getRegistryItem(new Key("/Voxel/Display/height")), "Voxel");
 		handle.canResize(false).isVisible(false).setIcon(icons).setCursor("arrow").useDebugContext(true);
 		PixelBufferHandle pb = new PixelBufferHandle();
 		pb.setSrgbCapable(1);
 		handle.setPixelBuffer(pb);
 		long gameWindowID = WindowManager.createWindow(handle,
-				(boolean) REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/vsync"));
+				(boolean) REGISTRY.getRegistryItem(new Key("/Voxel/Settings/Graphics/vsync")));
 		window = WindowManager.getWindow(gameWindowID);
 		Mouse.setWindow(window);
-		Theme.setTheme(new NanoTheme());
+		themeManager = new ThemeManager();
+		themeManager.addTheme(new NanoTheme());
+		ITheme theme = themeManager
+				.getTheme((String) REGISTRY.getRegistryItem(new Key("/Voxel/Settings/WindowManager/theme")));
+		if (theme == null)
+			theme = themeManager.getTheme("Nano");
+		Theme.setTheme(theme);
+
 		setWindowManager(new NanoWindowManager(window));
 
 		window.setVisible(true);
-		window.updateDisplay((int) REGISTRY.getRegistryItem("/Voxel/Settings/Core/fps"));
+		window.updateDisplay((int) REGISTRY.getRegistryItem(new Key("/Voxel/Settings/Core/fps")));
 		Timers.initDebugDisplay();
 		ResourceLoader loader = window.getResourceLoader();
 		robotoRegular = loader.loadNVGFont("Roboto-Regular", "Roboto-Regular");
@@ -113,14 +125,15 @@ public class GraphicalSubsystem implements ISubsystem {
 		TaskManager.addTask(() -> TessellatorShader.getShader());
 		TaskManager.addTask(() -> TessellatorBasicShader.getShader());
 		StateMachine.registerState(new SplashScreenState());
-		REGISTRY.register("/Voxel/System/lwjgl", Version.getVersion());
-		REGISTRY.register("/Voxel/System/glfw", GLFW.glfwGetVersionString());
-		REGISTRY.register("/Voxel/System/opengl", glGetString(GL_VERSION));
-		REGISTRY.register("/Voxel/System/glsl", glGetString(GL_SHADING_LANGUAGE_VERSION));
-		REGISTRY.register("/Voxel/System/vendor", glGetString(GL_VENDOR));
-		REGISTRY.register("/Voxel/System/renderer", glGetString(GL_RENDERER));
-		REGISTRY.register("/Voxel/System/assimp", aiGetVersionMajor() + "." + aiGetVersionMinor() + "." + aiGetVersionRevision());
-		REGISTRY.register("/Voxel/System/vk", "Not Available");
+		REGISTRY.register(new Key("/Voxel/System/lwjgl"), Version.getVersion());
+		REGISTRY.register(new Key("/Voxel/System/glfw"), GLFW.glfwGetVersionString());
+		REGISTRY.register(new Key("/Voxel/System/opengl"), glGetString(GL_VERSION));
+		REGISTRY.register(new Key("/Voxel/System/glsl"), glGetString(GL_SHADING_LANGUAGE_VERSION));
+		REGISTRY.register(new Key("/Voxel/System/vendor"), glGetString(GL_VENDOR));
+		REGISTRY.register(new Key("/Voxel/System/renderer"), glGetString(GL_RENDERER));
+		REGISTRY.register(new Key("/Voxel/System/assimp"),
+				aiGetVersionMajor() + "." + aiGetVersionMinor() + "." + aiGetVersionRevision());
+		REGISTRY.register(new Key("/Voxel/System/vk"), "Not Available");
 	}
 
 	@Override
@@ -129,6 +142,7 @@ public class GraphicalSubsystem implements ISubsystem {
 
 	@Override
 	public void update(float delta) {
+		WindowManager.update();
 	}
 
 	@Override

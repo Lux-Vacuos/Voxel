@@ -114,7 +114,7 @@ public class SoundSystemConfig
 /**
  * List of library types in their order of priority.
  */
-    private static LinkedList<Class> libraries;
+    private static LinkedList<Class<? extends Library>> libraries;
 
 /**
  * List of codecs and the file formats they are associated with.
@@ -225,7 +225,7 @@ public class SoundSystemConfig
  * load libraries in the order that they were entered into the list.
  * @param libraryClass Derivitive of class 'Library'.
 */
-    public static void addLibrary( Class libraryClass )
+    public static void addLibrary( Class<? extends Library> libraryClass )
                                                      throws SoundSystemException
     {
         if( libraryClass == null )
@@ -237,7 +237,7 @@ public class SoundSystemConfig
                               "extend class 'Library' in method 'addLibrary'" );
 
         if( libraries == null )
-            libraries = new LinkedList<Class>();
+            libraries = new LinkedList<>();
 
         if( !libraries.contains( libraryClass ) )
             libraries.add( libraryClass );
@@ -247,7 +247,7 @@ public class SoundSystemConfig
  * Removes the specified library from the list of library types.
  * @param libraryClass Derivitive of class 'Library'.
 */
-    public static void removeLibrary( Class libraryClass )
+    public static void removeLibrary( Class<? extends Library> libraryClass )
                                                      throws SoundSystemException
     {
         if( libraries == null || libraryClass == null )
@@ -260,7 +260,7 @@ public class SoundSystemConfig
  * Returns the list of library types.
  * @return LinkedList of classes derived from 'Library', or null if none were specified.
 */
-    public static LinkedList<Class> getLibraries()
+    public static LinkedList<Class<? extends Library>> getLibraries()
     {
         return libraries;
     }
@@ -270,7 +270,7 @@ public class SoundSystemConfig
  * @param libraryClass Library type to check.
  * @return True or false.
 */
-    public static boolean libraryCompatible( Class libraryClass )
+    public static boolean libraryCompatible( Class<? extends Library> libraryClass )
     {
         if( libraryClass == null )
         {
@@ -303,7 +303,7 @@ public class SoundSystemConfig
  * @param libraryClass Derivitive of class 'Library'.
  * @return String containing the library title.
 */
-    public static String getLibraryTitle( Class libraryClass )
+    public static String getLibraryTitle( Class<? extends Library> libraryClass )
     {
         if( libraryClass == null )
         {
@@ -335,7 +335,7 @@ public class SoundSystemConfig
  * @param libraryClass Derivitive of class 'Library'.
  * @return String containing the library title.
 */
-    public static String getLibraryDescription( Class libraryClass )
+    public static String getLibraryDescription( Class<? extends Library> libraryClass )
     {
         if( libraryClass == null )
         {
@@ -367,7 +367,7 @@ public class SoundSystemConfig
  * @param libraryClass Derivitive of class 'Library'.
  * @return True if byte-order reversal is required.
 */
-    public static boolean reverseByteOrder( Class libraryClass )
+    public static boolean reverseByteOrder( Class<? extends Library> libraryClass )
     {
         if( libraryClass == null )
         {

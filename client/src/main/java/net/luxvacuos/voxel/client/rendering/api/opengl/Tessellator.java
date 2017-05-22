@@ -20,7 +20,6 @@
 
 package net.luxvacuos.voxel.client.rendering.api.opengl;
 
-import static net.luxvacuos.voxel.universal.core.GlobalVariables.REGISTRY;
 import static org.lwjgl.opengl.GL11.GL_BACK;
 import static org.lwjgl.opengl.GL11.GL_FLOAT;
 import static org.lwjgl.opengl.GL11.GL_FRONT;
@@ -169,7 +168,6 @@ public class Tessellator {
 		shader.start();
 		shader.loadViewMatrix(camera.getViewMatrix(), camera.getPosition());
 		shader.loadProjectionMatrix(camera.getProjectionMatrix());
-		shader.loadSettings((boolean) REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/shadows"));
 		shader.loadMoveFactor(clientWorldSimulation.getMoveFactor());
 		shader.loadMaterial(material);
 		glBindVertexArray(vaoID);

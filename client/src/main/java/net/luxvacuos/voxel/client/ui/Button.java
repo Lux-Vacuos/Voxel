@@ -22,8 +22,6 @@ package net.luxvacuos.voxel.client.ui;
 
 import java.nio.ByteBuffer;
 
-import org.lwjgl.nanovg.NVGColor;
-
 import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.themes.Theme;
@@ -31,8 +29,6 @@ import net.luxvacuos.voxel.client.rendering.api.nanovg.themes.Theme;
 public class Button extends Component {
 
 	protected String text = "missigno", font = "Poppins-Medium", entypo = "Entypo";
-	protected NVGColor color = Theme.rgba(255, 255, 255, 255), highlight = Theme.rgba(190, 190, 190, 255),
-			textColor = Theme.rgba(60, 60, 60, 255);
 	protected ByteBuffer preicon;
 	protected OnAction onPress;
 	protected float fontSize = 21;
@@ -51,8 +47,7 @@ public class Button extends Component {
 		if (!enabled)
 			return;
 		Theme.renderButton(window.getNVGID(), preicon, text, font, entypo, rootComponent.rootX + alignedX,
-				window.getHeight() - rootComponent.rootY - alignedY - h, w, h, color, inside, fontSize, highlight,
-				textColor);
+				window.getHeight() - rootComponent.rootY - alignedY - h, w, h, inside, fontSize);
 	}
 
 	@Override
@@ -80,47 +75,6 @@ public class Button extends Component {
 			return false;
 	}
 
-	public void setColor(float r, float g, float b, float a) {
-		color.r(r);
-		color.g(g);
-		color.b(b);
-		color.a(a);
-	}
-
-	public void setColor(String hex) {
-		color.r(Integer.valueOf(hex.substring(1, 3), 16) / 255f);
-		color.g(Integer.valueOf(hex.substring(3, 5), 16) / 255f);
-		color.b(Integer.valueOf(hex.substring(5, 7), 16) / 255f);
-		color.a(Integer.valueOf(hex.substring(7, 9), 16) / 255f);
-	}
-
-	public void setHighlightColor(float r, float g, float b, float a) {
-		highlight.r(r);
-		highlight.g(g);
-		highlight.b(b);
-		highlight.a(a);
-	}
-
-	public void setHighlightColor(String hex) {
-		highlight.r(Integer.valueOf(hex.substring(1, 3), 16) / 255f);
-		highlight.g(Integer.valueOf(hex.substring(3, 5), 16) / 255f);
-		highlight.b(Integer.valueOf(hex.substring(5, 7), 16) / 255f);
-		highlight.a(Integer.valueOf(hex.substring(7, 9), 16) / 255f);
-	}
-
-	public void setTextColor(float r, float g, float b, float a) {
-		textColor.r(r);
-		textColor.g(g);
-		textColor.b(b);
-		textColor.a(a);
-	}
-
-	public void setTextColor(String hex) {
-		textColor.r(Integer.valueOf(hex.substring(1, 3), 16) / 255f);
-		textColor.g(Integer.valueOf(hex.substring(3, 5), 16) / 255f);
-		textColor.b(Integer.valueOf(hex.substring(5, 7), 16) / 255f);
-		textColor.a(Integer.valueOf(hex.substring(7, 9), 16) / 255f);
-	}
 
 	public void setText(String text) {
 		this.text = text;

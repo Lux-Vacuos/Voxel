@@ -32,19 +32,12 @@ import net.luxvacuos.voxel.client.ui.ScrollPaneElement;
 
 public interface ITheme {
 
-	public NVGColor rgba(float r, float g, float b, float a, NVGColor color);
-
-	public NVGColor rgba(int r, int g, int b, int a, NVGColor color);
-
-	public NVGColor rgba(int r, int g, int b, int a);
-
 	public void renderWindow(long vg, float x, float y, float w, float h, BackgroundStyle backgroundStyle,
 			NVGColor backgroundColor, boolean decorations, boolean titleBar, boolean maximized);
 
 	public void renderTitleBarText(long vg, String text, String font, int align, float x, float y, float fontSize);
 
-	public void renderTitleBarButton(long vg, float x, float y, float w, float h, NVGColor color, ButtonStyle style,
-			boolean highlight, NVGColor highlightColor);
+	public void renderTitleBarButton(long vg, float x, float y, float w, float h, ButtonStyle style, boolean highlight);
 
 	public void renderText(long vg, String text, String font, int align, float x, float y, float fontSize,
 			NVGColor color);
@@ -59,14 +52,13 @@ public interface ITheme {
 			boolean selected);
 
 	public void renderButton(long vg, ByteBuffer preicon, String text, String font, String entypo, float x, float y,
-			float w, float h, NVGColor color, boolean highlight, float fontSize, NVGColor highlightColor,
-			NVGColor textColor);
+			float w, float h, boolean highlight, float fontSize);
 
 	public void renderContexMenuButton(long vg, String text, String font, float x, float y, float w, float h,
-			NVGColor color, float fontSize, boolean highlight, NVGColor highlightColor);
+			float fontSize, boolean highlight);
 
 	public void renderToggleButton(long vg, String text, String font, float x, float y, float w, float h,
-			NVGColor color, float fontSize, boolean status, NVGColor highlightColor);
+			float fontSize, boolean status);
 
 	public void renderScrollPane(long vg, float x, float y, float w, float h, float t, int hSize, float cardW,
 			float cardH, List<ScrollPaneElement> elements, Window window);
@@ -81,4 +73,6 @@ public interface ITheme {
 	public void renderSlider(long vg, float pos, float x, float y, float w, float h);
 
 	public void renderScrollBarV(long vg, float x, float y, float w, float h, float pos, float sizeV);
+	
+	public String getName();
 }

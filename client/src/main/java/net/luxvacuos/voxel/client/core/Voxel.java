@@ -20,7 +20,7 @@
 
 package net.luxvacuos.voxel.client.core;
 
-import static net.luxvacuos.voxel.universal.core.GlobalVariables.REGISTRY;
+import static net.luxvacuos.voxel.universal.core.subsystems.CoreSubsystem.REGISTRY;
 
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWErrorCallback;
@@ -39,13 +39,13 @@ import net.luxvacuos.voxel.client.core.subsystems.SoundSubsystem;
 import net.luxvacuos.voxel.client.core.subsystems.WorldSubsystem;
 import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
-import net.luxvacuos.voxel.client.rendering.api.glfw.WindowManager;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.Timers;
 import net.luxvacuos.voxel.universal.core.AbstractVoxel;
-import net.luxvacuos.voxel.universal.core.CoreSubsystem;
 import net.luxvacuos.voxel.universal.core.EngineType;
 import net.luxvacuos.voxel.universal.core.TaskManager;
 import net.luxvacuos.voxel.universal.core.states.StateMachine;
+import net.luxvacuos.voxel.universal.core.subsystems.CoreSubsystem;
+import net.luxvacuos.voxel.universal.util.registry.Key;
 
 public class Voxel extends AbstractVoxel {
 
@@ -70,16 +70,16 @@ public class Voxel extends AbstractVoxel {
 		super.addSubsystem(new WorldSubsystem());
 
 		super.initSubsystems();
-		
+
 		Logger.log("Voxel Client Version: " + ClientVariables.version);
 		Logger.log("Running on: " + Bootstrap.getPlatform());
-		Logger.log("LWJGL Version: " + REGISTRY.getRegistryItem("/Voxel/System/lwjgl"));
-		Logger.log("GLFW Version: " + REGISTRY.getRegistryItem("/Voxel/System/glfw"));
-		Logger.log("OpenGL Version: " + REGISTRY.getRegistryItem("/Voxel/System/opengl"));
-		Logger.log("GLSL Version: " + REGISTRY.getRegistryItem("/Voxel/System/glsl"));
-		Logger.log("Assimp: " + REGISTRY.getRegistryItem("/Voxel/System/assimp"));
-		Logger.log("Vendor: " + REGISTRY.getRegistryItem("/Voxel/System/vendor"));
-		Logger.log("Renderer: " + REGISTRY.getRegistryItem("/Voxel/System/renderer"));
+		Logger.log("LWJGL Version: " + REGISTRY.getRegistryItem(new Key("/Voxel/System/lwjgl")));
+		Logger.log("GLFW Version: " + REGISTRY.getRegistryItem(new Key("/Voxel/System/glfw")));
+		Logger.log("OpenGL Version: " + REGISTRY.getRegistryItem(new Key("/Voxel/System/opengl")));
+		Logger.log("GLSL Version: " + REGISTRY.getRegistryItem(new Key("/Voxel/System/glsl")));
+		Logger.log("Assimp: " + REGISTRY.getRegistryItem(new Key("/Voxel/System/assimp")));
+		Logger.log("Vendor: " + REGISTRY.getRegistryItem(new Key("/Voxel/System/vendor")));
+		Logger.log("Renderer: " + REGISTRY.getRegistryItem(new Key("/Voxel/System/renderer")));
 
 		TaskManager.addTask(() -> StateMachine.registerState(new MainMenuState()));
 		TaskManager.addTask(() -> StateMachine.registerState(new SPWorldState()));
@@ -104,9 +104,9 @@ public class Voxel extends AbstractVoxel {
 	public void update() {
 		float delta = 0;
 		float accumulator = 0f;
-		float interval = 1f / (int) REGISTRY.getRegistryItem("/Voxel/Settings/Core/ups");
+		float interval = 1f / (int) REGISTRY.getRegistryItem(new Key("/Voxel/Settings/Core/ups"));
 		float alpha = 0;
-		int fps = (int) REGISTRY.getRegistryItem("/Voxel/Settings/Core/fps");
+		int fps = (int) REGISTRY.getRegistryItem(new Key("/Voxel/Settings/Core/fps"));
 		Window window = GraphicalSubsystem.getMainWindow();
 		while (StateMachine.isRunning() && !(window.isCloseRequested())) {
 			Timers.startCPUTimer();
@@ -119,7 +119,7 @@ public class Voxel extends AbstractVoxel {
 			delta = window.getDelta();
 			accumulator += delta;
 			while (accumulator >= interval) {
-				WindowManager.update();
+				super.updateSubsystems(interval);
 				StateMachine.update(this, interval);
 				CoreSubsystem.upsCount++;
 				accumulator -= interval;

@@ -101,8 +101,9 @@ import net.luxvacuos.voxel.client.rendering.api.opengl.objects.RawTexture;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.Texture;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.VertexNM;
 import net.luxvacuos.voxel.client.ui.Font;
-import net.luxvacuos.voxel.universal.core.GlobalVariables;
+import net.luxvacuos.voxel.universal.core.subsystems.CoreSubsystem;
 import net.luxvacuos.voxel.universal.resources.IDisposable;
+import net.luxvacuos.voxel.universal.util.registry.Key;
 
 /**
  * This objects handles all loading methods from any type of data, models,
@@ -214,7 +215,7 @@ public class ResourceLoader implements IDisposable {
 		try {
 			Logger.log("Loading Texture: " + fileName);
 			texture_id = loadTexture("assets/"
-					+ GlobalVariables.REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/assets") + "/" + fileName,
+					+ CoreSubsystem.REGISTRY.getRegistryItem(new Key("/Voxel/Settings/Graphics/assets")) + "/" + fileName,
 					filter, GL_REPEAT, GL_RGBA, textureMipMapAF);
 		} catch (Exception e) {
 			throw new LoadTextureException(fileName, e);
@@ -245,7 +246,7 @@ public class ResourceLoader implements IDisposable {
 		try {
 			Logger.log("Loading Texture: " + fileName);
 			texture = loadTexture("assets/"
-					+ GlobalVariables.REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/assets") + "/" + fileName,
+					+ CoreSubsystem.REGISTRY.getRegistryItem(new Key("/Voxel/Settings/Graphics/assets")) + "/" + fileName,
 					filter, GL_REPEAT, GL_SRGB_ALPHA, textureMipMapAF);
 		} catch (Exception e) {
 			throw new LoadTextureException(fileName, e);
@@ -302,7 +303,7 @@ public class ResourceLoader implements IDisposable {
 		ByteBuffer buffer = null;
 		try {
 			buffer = ioResourceToByteBuffer(
-					"assets/" + GlobalVariables.REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/assets") + "/fonts/"
+					"assets/" + CoreSubsystem.REGISTRY.getRegistryItem(new Key("/Voxel/Settings/Graphics/assets")) + "/fonts/"
 							+ filename + ".ttf",
 					size * 1024);
 			font = nvgCreateFontMem(nvgID, name, buffer, 0);
@@ -318,7 +319,7 @@ public class ResourceLoader implements IDisposable {
 		try {
 			Logger.log("Loading NVGTexture: " + file + ".png");
 			buffer = ioResourceToByteBuffer(
-					"assets/" + GlobalVariables.REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/assets")
+					"assets/" + CoreSubsystem.REGISTRY.getRegistryItem(new Key("/Voxel/Settings/Graphics/assets"))
 							+ "/textures/menu/" + file + ".png",
 					8 * 1024);
 			tex = nvgCreateImageMem(nvgID, 0, buffer);
@@ -334,7 +335,7 @@ public class ResourceLoader implements IDisposable {
 
 		for (int i = 0; i < textureFiles.length; i++) {
 			RawTexture data = decodeTextureFile(
-					"assets/" + GlobalVariables.REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/assets")
+					"assets/" + CoreSubsystem.REGISTRY.getRegistryItem(new Key("/Voxel/Settings/Graphics/assets"))
 							+ "/textures/skybox/" + textureFiles[i] + ".png");
 			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGBA, data.getWidth(), data.getHeight(), 0, GL_RGBA,
 					GL_UNSIGNED_BYTE, data.getBuffer());
@@ -416,7 +417,7 @@ public class ResourceLoader implements IDisposable {
 	 */
 	public RawModel loadObjModel(String fileName) {
 		InputStream file = getClass().getClassLoader().getResourceAsStream(
-				"assets/" + GlobalVariables.REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/assets") + "/models/"
+				"assets/" + CoreSubsystem.REGISTRY.getRegistryItem(new Key("/Voxel/Settings/Graphics/assets")) + "/models/"
 						+ fileName + ".obj");
 		Logger.log("Loading Model: " + fileName + ".obj");
 		BufferedReader reader = new BufferedReader(new InputStreamReader(file));

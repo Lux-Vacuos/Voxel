@@ -73,16 +73,36 @@ public class Theme {
 		return nvglCreateImageFromHandle(vg, texID, w, h, flags);
 	}
 
-	public static NVGColor rgba(float r, float g, float b, float a, NVGColor color) {
-		return theme.rgba(r, g, b, a, color);
-	}
-
 	public static NVGColor rgba(int r, int g, int b, int a, NVGColor color) {
-		return theme.rgba(r, g, b, a, color);
+		return setColor(r / 255f, g / 255f, b / 255f, a / 255f, color);
 	}
 
 	public static NVGColor rgba(int r, int g, int b, int a) {
-		return theme.rgba(r, g, b, a);
+		return setColor(r / 255f, g / 255f, b / 255f, a / 255f);
+	}
+
+	public static NVGColor setColor(float r, float g, float b, float a, NVGColor color) {
+		color.r(r);
+		color.g(g);
+		color.b(b);
+		color.a(a);
+		return color;
+	}
+
+	public static NVGColor setColor(float r, float g, float b, float a) {
+		return setColor(r, g, b, a, NVGColor.create());
+	}
+
+	public static NVGColor setColor(String hex, NVGColor color) {
+		color.r(Integer.valueOf(hex.substring(1, 3), 16) / 255f);
+		color.g(Integer.valueOf(hex.substring(3, 5), 16) / 255f);
+		color.b(Integer.valueOf(hex.substring(5, 7), 16) / 255f);
+		color.a(Integer.valueOf(hex.substring(7, 9), 16) / 255f);
+		return color;
+	}
+
+	public static NVGColor setColor(String hex) {
+		return setColor(hex, NVGColor.create());
 	}
 
 	public static void renderWindow(long vg, float x, float y, float w, float h, BackgroundStyle backgroundStyle,
@@ -97,9 +117,9 @@ public class Theme {
 
 	}
 
-	public static void renderTitleBarButton(long vg, float x, float y, float w, float h, NVGColor color,
-			ButtonStyle style, boolean highlight, NVGColor highlightColor) {
-		theme.renderTitleBarButton(vg, x, y, w, h, color, style, highlight, highlightColor);
+	public static void renderTitleBarButton(long vg, float x, float y, float w, float h, ButtonStyle style,
+			boolean highlight) {
+		theme.renderTitleBarButton(vg, x, y, w, h, style, highlight);
 
 	}
 
@@ -127,20 +147,18 @@ public class Theme {
 	}
 
 	public static void renderButton(long vg, ByteBuffer preicon, String text, String font, String entypo, float x,
-			float y, float w, float h, NVGColor color, boolean highlight, float fontSize, NVGColor highlightColor,
-			NVGColor textColor) {
-		theme.renderButton(vg, preicon, text, font, entypo, x, y, w, h, color, highlight, fontSize, highlightColor,
-				textColor);
+			float y, float w, float h, boolean highlight, float fontSize) {
+		theme.renderButton(vg, preicon, text, font, entypo, x, y, w, h, highlight, fontSize);
 	}
 
 	public static void renderContexMenuButton(long vg, String text, String font, float x, float y, float w, float h,
-			NVGColor color, float fontSize, boolean highlight, NVGColor highlightColor) {
-		theme.renderContexMenuButton(vg, text, font, x, y, w, h, color, fontSize, highlight, highlightColor);
+			float fontSize, boolean highlight) {
+		theme.renderContexMenuButton(vg, text, font, x, y, w, h, fontSize, highlight);
 	}
 
 	public static void renderToggleButton(long vg, String text, String font, float x, float y, float w, float h,
-			NVGColor color, float fontSize, boolean status, NVGColor highlightColor) {
-		theme.renderToggleButton(vg, text, font, x, y, w, h, color, fontSize, status, highlightColor);
+			float fontSize, boolean status) {
+		theme.renderToggleButton(vg, text, font, x, y, w, h, fontSize, status);
 	}
 
 	public static void renderScrollPane(long vg, float x, float y, float w, float h, float t, int hSize, float cardW,

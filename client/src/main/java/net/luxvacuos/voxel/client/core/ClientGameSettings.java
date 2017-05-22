@@ -19,10 +19,10 @@
  */
 
 package net.luxvacuos.voxel.client.core;
-import static net.luxvacuos.voxel.universal.core.GlobalVariables.REGISTRY;
+import static net.luxvacuos.voxel.universal.core.subsystems.CoreSubsystem.REGISTRY;
 
-import net.luxvacuos.igl.Logger;
 import net.luxvacuos.voxel.universal.core.AbstractGameSettings;
+import net.luxvacuos.voxel.universal.util.registry.Key;
 
 /**
  * 
@@ -43,38 +43,35 @@ public final class ClientGameSettings extends AbstractGameSettings {
 
 	@Override
 	public void read() {
-		Logger.log("Loading data to registry...");
-			
-		REGISTRY.register("/Voxel/Settings/Core/fps", 						Integer.parseInt(getValue("FPS", "60")));
-		REGISTRY.register("/Voxel/Settings/Core/ups", 						Integer.parseInt(getValue("UPS", "60")));
-		REGISTRY.register("/Voxel/Settings/Core/fov", 						Integer.parseInt(getValue("FOV", "90")));
+		REGISTRY.register(new Key("/Voxel/Settings/Core/fps", true), 						60);
+		REGISTRY.register(new Key("/Voxel/Settings/Core/ups", true), 						60);
+		REGISTRY.register(new Key("/Voxel/Settings/Core/fov", true), 						90);
 		
-		REGISTRY.register("/Voxel/Settings/Graphics/shadows",			 	Boolean.parseBoolean(getValue("useShadows", "false")));
-		REGISTRY.register("/Voxel/Settings/Graphics/shadowsResolution", 	Integer.parseInt(getValue("shadowMapResolution", "1024")));
-		REGISTRY.register("/Voxel/Settings/Graphics/shadowsDrawDistance", 	Integer.parseInt(getValue("shadowMapDrawDistance", "200")));
-		REGISTRY.register("/Voxel/Settings/Graphics/volumetricLight", 		Boolean.parseBoolean(getValue("useVolumetricLight", "false")));
-		REGISTRY.register("/Voxel/Settings/Graphics/fxaa", 					Boolean.parseBoolean(getValue("useFXAA", "false")));
-		REGISTRY.register("/Voxel/Settings/Graphics/vsync", 				Boolean.parseBoolean(getValue("VSYNC", "false")));
-		REGISTRY.register("/Voxel/Settings/Graphics/motionBlur", 			Boolean.parseBoolean(getValue("useMotionBlur", "false")));
-		REGISTRY.register("/Voxel/Settings/Graphics/dof", 					Boolean.parseBoolean(getValue("useDOF", "false")));
-		REGISTRY.register("/Voxel/Settings/Graphics/reflections", 			Boolean.parseBoolean(getValue("useReflections", "false")));
-		REGISTRY.register("/Voxel/Settings/Graphics/parallax",				Boolean.parseBoolean(getValue("useParallax", "false")));
-		REGISTRY.register("/Voxel/Settings/Graphics/ambientOcclusion", 		Boolean.parseBoolean(getValue("useAmbientOcclusion", "false")));
-		REGISTRY.register("/Voxel/Settings/Graphics/chromaticAberration", 	Boolean.parseBoolean(getValue("useChromaticAberration", "false")));
-		REGISTRY.register("/Voxel/Settings/Graphics/lensFlares", 			Boolean.parseBoolean(getValue("useLensFlares", "false")));
-		REGISTRY.register("/Voxel/Settings/Graphics/pipeline", 				getValue("DeferredPipeline", "MultiPass"));
-		REGISTRY.register("/Voxel/Settings/Graphics/assets", 				getValue("Assets", "voxel"));
+		REGISTRY.register(new Key("/Voxel/Settings/Graphics/shadows", true),				false);
+		REGISTRY.register(new Key("/Voxel/Settings/Graphics/shadowsResolution", true), 		1024);
+		REGISTRY.register(new Key("/Voxel/Settings/Graphics/shadowsDrawDistance", true), 	200);
+		REGISTRY.register(new Key("/Voxel/Settings/Graphics/volumetricLight", true), 		false);
+		REGISTRY.register(new Key("/Voxel/Settings/Graphics/fxaa", true), 					false);
+		REGISTRY.register(new Key("/Voxel/Settings/Graphics/vsync", true), 					false);
+		REGISTRY.register(new Key("/Voxel/Settings/Graphics/motionBlur", true), 			false);
+		REGISTRY.register(new Key("/Voxel/Settings/Graphics/dof", true), 					false);
+		REGISTRY.register(new Key("/Voxel/Settings/Graphics/reflections", true), 			false);
+		REGISTRY.register(new Key("/Voxel/Settings/Graphics/parallax", true),				false);
+		REGISTRY.register(new Key("/Voxel/Settings/Graphics/ambientOcclusion", true), 		false);
+		REGISTRY.register(new Key("/Voxel/Settings/Graphics/chromaticAberration", true), 	false);
+		REGISTRY.register(new Key("/Voxel/Settings/Graphics/lensFlares", true), 			false);
+		REGISTRY.register(new Key("/Voxel/Settings/Graphics/pipeline", true), 				"MultiPass");
+		REGISTRY.register(new Key("/Voxel/Settings/Graphics/assets", true), 				"voxel");
 		
-		REGISTRY.register("/Voxel/Settings/WindowManager/invertButtons", 	Boolean.parseBoolean(getValue("WM_InvertButtons", "false")));
-		REGISTRY.register("/Voxel/Settings/WindowManager/borderSize", 		Float.parseFloat(getValue("WM_BorderSize", "10")));
-		REGISTRY.register("/Voxel/Settings/WindowManager/titleBarHeight", 	Float.parseFloat(getValue("WM_TitleBarHeight", "30")));
-		REGISTRY.register("/Voxel/Settings/WindowManager/scrollBarSize", 	Float.parseFloat(getValue("WM_ScrollBarSize", "16")));
-		REGISTRY.register("/Voxel/Settings/WindowManager/titleBarBorder", 	Boolean.parseBoolean(getValue("WM_TitleBarBorder", "false")));
+		REGISTRY.register(new Key("/Voxel/Settings/WindowManager/invertButtons", true), 	false);
+		REGISTRY.register(new Key("/Voxel/Settings/WindowManager/borderSize", true), 		10f);
+		REGISTRY.register(new Key("/Voxel/Settings/WindowManager/titleBarHeight", true), 	30f);
+		REGISTRY.register(new Key("/Voxel/Settings/WindowManager/scrollBarSize", true), 	16f);
+		REGISTRY.register(new Key("/Voxel/Settings/WindowManager/titleBarBorder", true), 	false);
+		REGISTRY.register(new Key("/Voxel/Settings/WindowManager/theme", true), 			"Nano");
 		
-		REGISTRY.register("/Voxel/Settings/World/chunkRadius", 				Integer.parseInt(getValue("chunkRadius", "4")));
-		REGISTRY.register("/Voxel/Settings/World/chunkManagerThreads", 		Integer.parseInt(getValue("chunkManagerThreads", "3")));
-		
-		Logger.log("Load completed");
+		REGISTRY.register(new Key("/Voxel/Settings/World/chunkRadius", true), 				4);
+		REGISTRY.register(new Key("/Voxel/Settings/World/chunkManagerThreads", true), 		3);
 	}
 
 	/**
@@ -82,38 +79,6 @@ public final class ClientGameSettings extends AbstractGameSettings {
 	 */
 	@Override
 	public void update() {
-		Logger.log("Updating registry...");
-		registerValue("SettingsVersion", Integer.toString(ClientGameSettings.VERSION));
-		
-		registerValue("FPS", 					Integer.toString((int) REGISTRY.getRegistryItem("/Voxel/Settings/Core/fps")));
-		registerValue("UPS", 					Integer.toString((int) REGISTRY.getRegistryItem("/Voxel/Settings/Core/ups")));
-		registerValue("FOV", 					Integer.toString((int) REGISTRY.getRegistryItem("/Voxel/Settings/Core/fov")));
-		
-		registerValue("useShadows", 			Boolean.toString((boolean) REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/shadows")));
-		registerValue("shadowMapResolution",  	Integer.toString((int) REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/shadowsResolution")));
-		registerValue("shadowMapDrawDistance", 	Integer.toString((int) REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/shadowsDrawDistance")));
-		registerValue("useVolumetricLight", 	Boolean.toString((boolean) REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/volumetricLight")));
-		registerValue("useFXAA",				Boolean.toString((boolean) REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/fxaa")));
-		registerValue("VSYNC",  				Boolean.toString((boolean) REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/vsync")));
-		registerValue("useMotionBlur", 			Boolean.toString((boolean) REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/motionBlur")));
-		registerValue("useDOF", 				Boolean.toString((boolean) REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/dof")));
-		registerValue("useReflections", 		Boolean.toString((boolean) REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/reflections")));
-		registerValue("useParallax", 			Boolean.toString((boolean) REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/parallax")));
-		registerValue("useAmbientOcclusion", 	Boolean.toString((boolean) REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/ambientOcclusion")));
-		registerValue("useChromaticAberration", Boolean.toString((boolean) REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/chromaticAberration")));
-		registerValue("useLensFlares", 			Boolean.toString((boolean) REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/lensFlares")));
-		registerValue("DeferredPipeline", 		(String) REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/pipeline"));
-		registerValue("Assets", 				(String) REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/assets"));
-		
-		registerValue("WM_InvertButtons", 		Boolean.toString((boolean) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/invertButtons")));
-		registerValue("WM_BorderSize", 			Float.toString((float) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/borderSize")));
-		registerValue("WM_TitleBarHeight", 		Float.toString((float) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/titleBarHeight")));
-		registerValue("WM_ScrollBarSize", 		Float.toString((float) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/scrollBarSize")));
-		registerValue("WM_TitleBarBorder", 		Boolean.toString((boolean) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/titleBarBorder")));
-		
-		registerValue("chunkRadius", 			Integer.toString((int) REGISTRY.getRegistryItem("/Voxel/Settings/World/chunkRadius")));
-		registerValue("chunkManagerThreads", 	Integer.toString((int) REGISTRY.getRegistryItem("/Voxel/Settings/World/chunkManagerThreads")));
-		Logger.log("Update completed");
 	}
 
 }

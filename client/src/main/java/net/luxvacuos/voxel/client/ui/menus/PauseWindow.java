@@ -20,7 +20,7 @@
 
 package net.luxvacuos.voxel.client.ui.menus;
 
-import static net.luxvacuos.voxel.universal.core.GlobalVariables.REGISTRY;
+import static net.luxvacuos.voxel.universal.core.subsystems.CoreSubsystem.REGISTRY;
 
 import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.core.subsystems.GraphicalSubsystem;
@@ -29,6 +29,7 @@ import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.ui.Alignment;
 import net.luxvacuos.voxel.client.ui.Button;
 import net.luxvacuos.voxel.client.ui.RootComponentWindow;
+import net.luxvacuos.voxel.universal.util.registry.Key;
 
 public class PauseWindow extends RootComponentWindow {
 
@@ -46,11 +47,11 @@ public class PauseWindow extends RootComponentWindow {
 		backButton.setWindowAlignment(Alignment.BOTTOM);
 		backButton.setOnButtonPress(() -> {
 			super.closeWindow();
-			float borderSize = (float) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/borderSize");
-			float titleBarHeight = (float) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/titleBarHeight");
-			int height = (int) REGISTRY.getRegistryItem("/Voxel/Display/height");
+			float borderSize = (float) REGISTRY.getRegistryItem(new Key("/Voxel/Settings/WindowManager/borderSize"));
+			float titleBarHeight = (float) REGISTRY.getRegistryItem(new Key("/Voxel/Settings/WindowManager/titleBarHeight"));
+			int height = (int) REGISTRY.getRegistryItem(new Key("/Voxel/Display/height"));
 			RootComponentWindow mainMenu = new MainMenu(borderSize + 10, height - titleBarHeight - 10,
-					(int) REGISTRY.getRegistryItem("/Voxel/Display/width") - borderSize * 2f - 20,
+					(int) REGISTRY.getRegistryItem(new Key("/Voxel/Display/width")) - borderSize * 2f - 20,
 					height - titleBarHeight - borderSize - 50);
 			GraphicalSubsystem.getWindowManager().addWindow(mainMenu);
 			ClientVariables.exitWorld = true;

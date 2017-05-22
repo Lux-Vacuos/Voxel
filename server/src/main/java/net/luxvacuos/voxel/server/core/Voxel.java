@@ -20,7 +20,7 @@
 
 package net.luxvacuos.voxel.server.core;
 
-import static net.luxvacuos.voxel.universal.core.GlobalVariables.REGISTRY;
+import static net.luxvacuos.voxel.universal.core.subsystems.CoreSubsystem.REGISTRY;
 
 import net.luxvacuos.igl.Logger;
 import net.luxvacuos.voxel.server.bootstrap.Bootstrap;
@@ -29,11 +29,12 @@ import net.luxvacuos.voxel.server.core.states.StateNames;
 import net.luxvacuos.voxel.server.core.subsystems.ServerCoreSubsystem;
 import net.luxvacuos.voxel.server.core.subsystems.WorldSubsystem;
 import net.luxvacuos.voxel.universal.core.AbstractVoxel;
-import net.luxvacuos.voxel.universal.core.CoreSubsystem;
 import net.luxvacuos.voxel.universal.core.EngineType;
 import net.luxvacuos.voxel.universal.core.GlobalVariables;
 import net.luxvacuos.voxel.universal.core.TaskManager;
 import net.luxvacuos.voxel.universal.core.states.StateMachine;
+import net.luxvacuos.voxel.universal.core.subsystems.CoreSubsystem;
+import net.luxvacuos.voxel.universal.util.registry.Key;
 
 public class Voxel extends AbstractVoxel {
 
@@ -75,7 +76,7 @@ public class Voxel extends AbstractVoxel {
 
 	@Override
 	public void update() {
-		int ups = (int) REGISTRY.getRegistryItem("/Voxel/Settings/Core/ups");
+		int ups = (int) REGISTRY.getRegistryItem(new Key("/Voxel/Settings/Core/ups"));
 		float delta = 0;
 		float accumulator = 0f;
 		float interval = 1f / ups;

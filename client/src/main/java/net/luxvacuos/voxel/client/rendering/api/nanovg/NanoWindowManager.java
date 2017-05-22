@@ -20,13 +20,10 @@
 
 package net.luxvacuos.voxel.client.rendering.api.nanovg;
 
-import static net.luxvacuos.voxel.universal.core.GlobalVariables.REGISTRY;
+import static net.luxvacuos.voxel.universal.core.subsystems.CoreSubsystem.REGISTRY;
 import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_LEFT;
 import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_MIDDLE;
-import static org.lwjgl.nanovg.NanoVGGL3.nvgluBindFramebuffer;
 import static org.lwjgl.opengl.GL11.GL_BLEND;
-import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.glDisable;
 
 import java.util.ArrayList;
@@ -46,9 +43,9 @@ import net.luxvacuos.voxel.client.rendering.api.nanovg.effects.GaussianV;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.effects.MaskBlur;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.themes.Theme;
 import net.luxvacuos.voxel.client.rendering.api.opengl.GLUtil;
-import net.luxvacuos.voxel.client.rendering.api.opengl.Renderer;
-import net.luxvacuos.voxel.universal.core.CoreSubsystem;
 import net.luxvacuos.voxel.universal.core.TaskManager;
+import net.luxvacuos.voxel.universal.core.subsystems.CoreSubsystem;
+import net.luxvacuos.voxel.universal.util.registry.Key;
 
 public class NanoWindowManager implements IWindowManager {
 
@@ -79,7 +76,7 @@ public class NanoWindowManager implements IWindowManager {
 
 		Thread th = new Thread(() -> {
 			lastLoopTime = WindowManager.getTime();
-			int ups = (int) REGISTRY.getRegistryItem("/Voxel/Settings/Core/ups");
+			int ups = (int) REGISTRY.getRegistryItem(new Key("/Voxel/Settings/Core/ups"));
 			float delta = 0;
 			float accumulator = 0f;
 			float interval = 1f / ups;
@@ -96,39 +93,29 @@ public class NanoWindowManager implements IWindowManager {
 		});
 		th.setName("Nano Window Manager");
 		// th.start();
-		REGISTRY.register("/Voxel/Settings/WindowManager/shellHeight", 0f);
+		REGISTRY.register(new Key("/Voxel/Settings/WindowManager/shellHeight"), 0f);
 	}
 
 	@Override
 	public void render() {
-		synchronized (windows) {
-			for (IWindow window : windows) {
-				window.render(this.window, this);
-			}
+		for (IWindow window : windows) {
+			window.render(this.window, this);
 		}
 		glDisable(GL_BLEND);
-		nvgluBindFramebuffer(window.getNVGID(), composite.getFbos()[0]);
-		Renderer.clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		nvgluBindFramebuffer(window.getNVGID(), null);
-		synchronized (windows) {
-			for (IWindow window : windows) {
-				if (!window.isHidden() && !window.isMinimized())
-					composite.render(window, this.window);
-			}
+		for (IWindow window : windows) {
+			if (!window.isHidden() && !window.isMinimized())
+				composite.render(window, this.window);
 		}
-		window.setViewport(0, 0, window.getWidth(), window.getHeight());
-		this.window.beingNVGFrame();
-		Theme.renderImage(this.window.getNVGID(), 0, 0, window.getWidth(), window.getHeight(),
-				composite.getFbos()[0].image(), 1f);
+		window.beingNVGFrame();
+		Theme.renderImage(this.window.getNVGID(), 0, 0, window.getWidth() / window.getPixelRatio(),
+				window.getHeight() / window.getPixelRatio(), composite.getFbos()[0].image(), 1f);
 		if (ClientVariables.debug) {
 			Timers.renderDebugDisplay(5, 24, 200, 55);
 			Theme.renderText(window.getNVGID(), "Voxel " + " (" + ClientVariables.version + ")", "Roboto-Bold",
-					NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE, 5, 12, 20,
-					Theme.rgba(220, 220, 220, 255, Theme.colorA));
+					NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE, 5, 12, 20, Theme.rgba(220, 220, 220, 255, Theme.colorA));
 			Theme.renderText(window.getNVGID(),
 					"Used VRam: " + WindowManager.getUsedVRAM() + "KB " + " UPS: " + CoreSubsystem.ups, "Roboto-Bold",
-					NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE, 5, 95, 20,
-					Theme.rgba(220, 220, 220, 255, Theme.colorA));
+					NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE, 5, 95, 20, Theme.rgba(220, 220, 220, 255, Theme.colorA));
 			Theme.renderText(window.getNVGID(), "Used RAM: " + Runtime.getRuntime().totalMemory() / 1028 + "KB ",
 					"Roboto-Bold", NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE, 5, 110, 20,
 					Theme.rgba(220, 220, 220, 255, Theme.colorA));

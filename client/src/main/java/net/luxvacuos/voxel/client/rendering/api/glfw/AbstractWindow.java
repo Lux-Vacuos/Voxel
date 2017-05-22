@@ -111,7 +111,7 @@ public abstract class AbstractWindow implements IWindow {
 	public void resetViewport() {
 		glViewport(0, 0, (int) (width * pixelRatio), (int) (height * pixelRatio));
 	}
-
+	
 	public void setViewport(int x, int y, int width, int height) {
 		glViewport(0, 0, width, height);
 	}

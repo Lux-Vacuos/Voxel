@@ -20,7 +20,7 @@
 
 package net.luxvacuos.voxel.server.core.states;
 
-import static net.luxvacuos.voxel.universal.core.GlobalVariables.REGISTRY;
+import static net.luxvacuos.voxel.universal.core.subsystems.CoreSubsystem.REGISTRY;
 
 import net.luxvacuos.voxel.server.commands.SayCommand;
 import net.luxvacuos.voxel.server.commands.ServerCommandManager;
@@ -34,6 +34,7 @@ import net.luxvacuos.voxel.universal.commands.ICommandManager;
 import net.luxvacuos.voxel.universal.core.AbstractVoxel;
 import net.luxvacuos.voxel.universal.core.states.AbstractState;
 import net.luxvacuos.voxel.universal.network.packets.Time;
+import net.luxvacuos.voxel.universal.util.registry.Key;
 import net.luxvacuos.voxel.universal.world.IWorld;
 import net.luxvacuos.voxel.universal.world.World;
 
@@ -54,7 +55,7 @@ public class MPWorldState extends AbstractState {
 
 		worldSimulation = new ServerWorldSimulation();
 
-		world = new World((String) REGISTRY.getRegistryItem("/Voxel/Simulation/World/name"));
+		world = new World((String) REGISTRY.getRegistryItem(new Key("/Voxel/Simulation/World/name")));
 		world.loadDimension(0);
 		world.setActiveDimension(0);
 
@@ -67,7 +68,7 @@ public class MPWorldState extends AbstractState {
 		console.setCommandManager(commandManager);
 		console.start();
 
-		server = new Server((int) REGISTRY.getRegistryItem("/Voxel/Server/port"));
+		server = new Server((int) REGISTRY.getRegistryItem(new Key("/Voxel/Server/port")));
 		server.run(this);
 	}
 

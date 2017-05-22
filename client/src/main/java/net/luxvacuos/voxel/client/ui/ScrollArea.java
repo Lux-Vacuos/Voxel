@@ -20,7 +20,7 @@
 
 package net.luxvacuos.voxel.client.ui;
 
-import static net.luxvacuos.voxel.universal.core.GlobalVariables.REGISTRY;
+import static net.luxvacuos.voxel.universal.core.subsystems.CoreSubsystem.REGISTRY;
 import static org.lwjgl.nanovg.NanoVG.nvgRestore;
 import static org.lwjgl.nanovg.NanoVG.nvgSave;
 import static org.lwjgl.nanovg.NanoVG.nvgScissor;
@@ -29,6 +29,7 @@ import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.themes.Theme;
 import net.luxvacuos.voxel.client.util.Maths;
+import net.luxvacuos.voxel.universal.util.registry.Key;
 
 public class ScrollArea extends Component {
 
@@ -51,7 +52,7 @@ public class ScrollArea extends Component {
 	public void render(Window window) {
 		Theme.renderBox(window.getNVGID(), rootComponent.rootX + alignedX,
 				window.getHeight() - rootComponent.rootY - alignedY - h, w, h,
-				Theme.rgba(0.6f, 0.6f, 0.6f, 0f, Theme.colorB));
+				Theme.setColor(0.6f, 0.6f, 0.6f, 0f, Theme.colorB));
 		nvgSave(window.getNVGID());
 		nvgScissor(window.getNVGID(), rootComponent.rootX + alignedX,
 				window.getHeight() - rootComponent.rootY - alignedY - h, w, h);
@@ -63,7 +64,7 @@ public class ScrollArea extends Component {
 
 	@Override
 	public void update(float delta, Window window) {
-		float scrollBarSize = (float) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/scrollBarSize");
+		float scrollBarSize = (float) REGISTRY.getRegistryItem(new Key("/Voxel/Settings/WindowManager/scrollBarSize"));
 		if (Mouse.isButtonDown(0)) {
 			if (Mouse.getX() > rootComponent.rootX + alignedX + w - scrollBarSize
 					&& Mouse.getX() < rootComponent.rootX + alignedX + w
@@ -100,8 +101,8 @@ public class ScrollArea extends Component {
 		comp.dispose();
 		super.dispose();
 	}
-	
-	public void setLayout(ILayout layout){
+
+	public void setLayout(ILayout layout) {
 		comp.setLayout(layout);
 	}
 

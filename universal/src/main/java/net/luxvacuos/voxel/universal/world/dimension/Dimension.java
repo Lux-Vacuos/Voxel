@@ -41,12 +41,13 @@ import com.hackhalo2.nbt.tags.TagCompound;
 import com.hackhalo2.nbt.tags.TagLong;
 
 import net.luxvacuos.igl.Logger;
-import net.luxvacuos.voxel.universal.core.GlobalVariables;
 import net.luxvacuos.voxel.universal.core.IWorldSimulation;
 import net.luxvacuos.voxel.universal.core.WorldSimulation;
+import net.luxvacuos.voxel.universal.core.subsystems.CoreSubsystem;
 import net.luxvacuos.voxel.universal.ecs.Components;
 import net.luxvacuos.voxel.universal.ecs.components.ChunkLoader;
 import net.luxvacuos.voxel.universal.ecs.components.Position;
+import net.luxvacuos.voxel.universal.util.registry.Key;
 import net.luxvacuos.voxel.universal.world.IWorld;
 import net.luxvacuos.voxel.universal.world.block.Blocks;
 import net.luxvacuos.voxel.universal.world.block.IBlock;
@@ -167,7 +168,7 @@ public class Dimension implements IDimension {
 		chunkManager.update(delta);
 		entitiesManager.update(delta);
 	}
-	
+
 	@Override
 	public IChunk getChunkAt(int x, int y, int z) {
 		return this.chunkManager.getChunkAt(ChunkNode.getFromBlockCoords(x, y, z));
@@ -177,15 +178,15 @@ public class Dimension implements IDimension {
 	public IBlock getBlockAt(int x, int y, int z) {
 		IBlock block = Blocks.getBlockByName("voxel:air");
 		block.setPosition(x, y, z);
-		
+
 		IChunk c = this.chunkManager.getChunkAt(ChunkNode.getFromBlockCoords(x, 0, z));
 		if (c == null)
 			return block;
-		
+
 		IBlock b = c.getBlockAt(x & 0xF, y, z & 0xF);
 		if (b == null)
 			return block;
-		
+
 		b.setPosition(x, y, z);
 		return b;
 	}
@@ -230,7 +231,8 @@ public class Dimension implements IDimension {
 		List<BoundingBox> array = new ArrayList<>();
 
 		for (int i = (int) Math.floor(box.min.x); i < (int) Math.ceil(box.max.x); i++) {
-			// XXX: Hardcoded 256* limit until custom world height is implemented
+			// XXX: Hardcoded 256* limit until custom world height is
+			// implemented
 			for (int j = (int) Math.floor(box.min.y); j < (int) Math.min(Math.ceil(box.max.y), 256); j++) {
 				for (int k = (int) Math.floor(box.min.z); k < (int) Math.ceil(box.max.z); k++) {
 					IBlock block = this.getBlockAt(i, j, k);
@@ -244,7 +246,8 @@ public class Dimension implements IDimension {
 
 	@Override
 	public void dispose() {
-		File file = new File(GlobalVariables.REGISTRY.getRegistryItem("/Voxel/Settings/World/directory") + this.world.getName() + "/dim" + this.id + "_data.nbt");
+		File file = new File(CoreSubsystem.REGISTRY.getRegistryItem(new Key("/Voxel/Settings/World/directory"))
+				+ this.world.getName() + "/dim" + this.id + "_data.nbt");
 		NBTOutputStream out = null;
 		try {
 			out = new NBTOutputStream(new BufferedOutputStream(new FileOutputStream(file)));

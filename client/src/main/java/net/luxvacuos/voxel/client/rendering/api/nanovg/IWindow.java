@@ -78,10 +78,14 @@ public interface IWindow {
 
 	public void setBlurBehind(boolean blur);
 
+	public void setMinWidth(int width);
+
+	public void setMinHeight(int height);
+
 	public void toggleMinimize();
 
 	public void toggleTitleBar();
-	
+
 	public void toggleMaximize();
 
 	public BackgroundStyle getBackgroundStyle();
@@ -95,7 +99,7 @@ public interface IWindow {
 	public float getY();
 
 	public Thread getThread();
-	
+
 	public String getTitle();
 
 	public NVGLUFramebuffer getFBO();
@@ -115,7 +119,7 @@ public interface IWindow {
 	public boolean isMinimized();
 
 	public boolean isHidden();
-	
+
 	public boolean isMaximized();
 
 	public ITitleBar getTitleBar();

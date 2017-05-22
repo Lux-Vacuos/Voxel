@@ -33,7 +33,8 @@ import net.luxvacuos.voxel.client.ui.Container;
 import net.luxvacuos.voxel.client.ui.Direction;
 import net.luxvacuos.voxel.client.ui.FlowLayout;
 import net.luxvacuos.voxel.client.ui.RootComponentWindow;
-import net.luxvacuos.voxel.universal.core.GlobalVariables;
+import net.luxvacuos.voxel.universal.core.subsystems.CoreSubsystem;
+import net.luxvacuos.voxel.universal.util.registry.Key;
 
 public class Shell extends RootComponentWindow implements IShell {
 
@@ -42,7 +43,7 @@ public class Shell extends RootComponentWindow implements IShell {
 
 	public Shell(float x, float y, float w, float h) {
 		super(x, y, w, h, "Shell");
-		GlobalVariables.REGISTRY.register("/Voxel/Settings/WindowManager/shellHeight", y);
+		CoreSubsystem.REGISTRY.register(new Key("/Voxel/Settings/WindowManager/shellHeight"), y);
 	}
 
 	@Override
@@ -55,9 +56,9 @@ public class Shell extends RootComponentWindow implements IShell {
 		super.setAsBackground(true);
 		Container left = new Container(0, 0, 82, 30);
 		Button btn = new Button(0, 0, 80, 30, "Start");
-		btn.setColor("#00000000");
-		btn.setHighlightColor("#FFFFFF64");
-		btn.setTextColor("#FFFFFFFF");
+		// btn.setColor("#00000000");
+		// btn.setHighlightColor("#FFFFFF64");
+		// btn.setTextColor("#FFFFFFFF");
 		btn.setOnButtonPress(() -> {
 		});
 		left.addComponent(btn);
@@ -71,7 +72,7 @@ public class Shell extends RootComponentWindow implements IShell {
 	public void disposeApp(Window window) {
 		super.disposeApp(window);
 		buttons.clear();
-		GlobalVariables.REGISTRY.register("/Voxel/Settings/WindowManager/shellHeight", 0f);
+		CoreSubsystem.REGISTRY.register(new Key("/Voxel/Settings/WindowManager/shellHeight"), 0f);
 	}
 
 	@Override
@@ -79,11 +80,11 @@ public class Shell extends RootComponentWindow implements IShell {
 		if (!(window.hasDecorations() && !window.isHidden()))
 			return;
 		Button btn = new Button(0, 0, 100, 30, window.getTitle());
-		btn.setColor("#00000000");
-		btn.setHighlightColor("#FFFFFF64");
-		btn.setTextColor("#FFFFFFFF");
+		// btn.setColor("#00000000");
+		// btn.setHighlightColor("#FFFFFF64");
+		// btn.setTextColor("#FFFFFFFF");
 		btn.setOnButtonPress(() -> {
-			if (!GraphicalSubsystem.getWindowManager().isOnTop(window) &&  !window.isMinimized()) {
+			if (!GraphicalSubsystem.getWindowManager().isOnTop(window) && !window.isMinimized()) {
 				GraphicalSubsystem.getWindowManager().bringToFront(window);
 				return;
 			}

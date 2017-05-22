@@ -1,6 +1,6 @@
 package net.luxvacuos.voxel.client.network;
 
-import static net.luxvacuos.voxel.universal.core.GlobalVariables.REGISTRY;
+import static net.luxvacuos.voxel.universal.core.subsystems.CoreSubsystem.REGISTRY;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
@@ -16,6 +16,7 @@ import net.luxvacuos.voxel.universal.network.packets.Disconnect;
 import net.luxvacuos.voxel.universal.network.packets.Message;
 import net.luxvacuos.voxel.universal.network.packets.SetBlock;
 import net.luxvacuos.voxel.universal.network.packets.Time;
+import net.luxvacuos.voxel.universal.util.registry.Key;
 import net.luxvacuos.voxel.universal.world.block.Blocks;
 
 public class ClientHandler extends ChannelInboundHandlerAdapter {
@@ -64,11 +65,12 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
 	}
 
 	private void handleDisconnect(Disconnect disconnect) {
-		float borderSize = (float) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/borderSize");
-		float titleBarHeight = (float) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/titleBarHeight");
-		int height = (int) REGISTRY.getRegistryItem("/Voxel/Display/height");
+		float borderSize = (float) REGISTRY.getRegistryItem(new Key("/Voxel/Settings/WindowManager/borderSize"));
+		float titleBarHeight = (float) REGISTRY
+				.getRegistryItem(new Key("/Voxel/Settings/WindowManager/titleBarHeight"));
+		int height = (int) REGISTRY.getRegistryItem(new Key("/Voxel/Display/height"));
 		RootComponentWindow mainMenu = new MainMenu(borderSize + 10, height - titleBarHeight - 10,
-				(int) REGISTRY.getRegistryItem("/Voxel/Display/width") - borderSize * 2f - 20,
+				(int) REGISTRY.getRegistryItem(new Key("/Voxel/Display/width")) - borderSize * 2f - 20,
 				height - titleBarHeight - borderSize - 20);
 		GraphicalSubsystem.getWindowManager().addWindow(mainMenu);
 		ClientVariables.exitWorld = true;

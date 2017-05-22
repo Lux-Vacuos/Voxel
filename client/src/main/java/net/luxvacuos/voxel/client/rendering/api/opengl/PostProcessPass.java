@@ -20,7 +20,7 @@
 
 package net.luxvacuos.voxel.client.rendering.api.opengl;
 
-import static net.luxvacuos.voxel.universal.core.GlobalVariables.REGISTRY;
+import static net.luxvacuos.voxel.universal.core.subsystems.CoreSubsystem.REGISTRY;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_TRIANGLE_STRIP;
@@ -33,6 +33,7 @@ import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.ecs.entities.CameraEntity;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.RawModel;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.DeferredShadingShader;
+import net.luxvacuos.voxel.universal.util.registry.Key;
 
 public abstract class PostProcessPass implements IPostProcessPass {
 
@@ -90,10 +91,10 @@ public abstract class PostProcessPass implements IPostProcessPass {
 		shader.loadUnderWater(false);
 		shader.loadMotionBlurData(camera, previousViewMatrix, previousCameraPosition);
 		shader.loadviewMatrix(camera);
-		shader.loadSettings((boolean) REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/dof"),
-				(boolean) REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/fxaa"),
-				(boolean) REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/motionBlur"), false, false, false, 0,
-				(boolean) REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/chromaticAberration"), false, false);
+		shader.loadSettings((boolean) REGISTRY.getRegistryItem(new Key("/Voxel/Settings/Graphics/dof")),
+				(boolean) REGISTRY.getRegistryItem(new Key("/Voxel/Settings/Graphics/fxaa")),
+				(boolean) REGISTRY.getRegistryItem(new Key("/Voxel/Settings/Graphics/motionBlur")), false, false, false, 0,
+				(boolean) REGISTRY.getRegistryItem(new Key("/Voxel/Settings/Graphics/chromaticAberration")), false, false);
 
 		render(auxs);
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, quad.getVertexCount());

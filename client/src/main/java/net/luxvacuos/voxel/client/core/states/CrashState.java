@@ -20,7 +20,7 @@
 
 package net.luxvacuos.voxel.client.core.states;
 
-import static net.luxvacuos.voxel.universal.core.GlobalVariables.REGISTRY;
+import static net.luxvacuos.voxel.universal.core.subsystems.CoreSubsystem.REGISTRY;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 
@@ -29,6 +29,7 @@ import net.luxvacuos.voxel.client.rendering.api.opengl.Renderer;
 import net.luxvacuos.voxel.client.ui.menus.CrashWindow;
 import net.luxvacuos.voxel.universal.core.AbstractVoxel;
 import net.luxvacuos.voxel.universal.core.states.AbstractState;
+import net.luxvacuos.voxel.universal.util.registry.Key;
 
 public class CrashState extends AbstractState {
 
@@ -41,9 +42,9 @@ public class CrashState extends AbstractState {
 	@Override
 	public void start() {
 		GraphicalSubsystem.getWindowManager()
-				.addWindow(new CrashWindow(0, (int) REGISTRY.getRegistryItem("/Voxel/Display/height"),
-						(int) REGISTRY.getRegistryItem("/Voxel/Display/width"),
-						(int) REGISTRY.getRegistryItem("/Voxel/Display/height"), t));
+				.addWindow(new CrashWindow(0, (int) REGISTRY.getRegistryItem(new Key("/Voxel/Display/height")),
+						(int) REGISTRY.getRegistryItem(new Key("/Voxel/Display/width")),
+						(int) REGISTRY.getRegistryItem(new Key("/Voxel/Display/height")), t));
 	}
 
 	@Override

@@ -38,6 +38,7 @@ package paulscode.sound;
  */
 public class SoundSystemException extends Exception
 {
+	private static final long serialVersionUID = -9148848201133894799L;
 /**
  * Global identifier for no problem.
  */

@@ -18,26 +18,30 @@
  * 
  */
 
-package net.luxvacuos.voxel.universal.core;
+package net.luxvacuos.voxel.client.rendering.api.nanovg.themes;
 
-import net.luxvacuos.voxel.universal.core.subsystems.ISubsystem;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
-public interface IVoxel {
-	
-	public void init();
-	
-	public void initSubsystems();
-	
-	public void restart();
-	
-	public void update();
-	
-	public void updateSubsystems(float delta);
+public class ThemeManager {
 
-	public void handleError(Throwable e);
+	private Map<String, ITheme> themes;
+
+	public ThemeManager() {
+		themes = new HashMap<>();
+	}
+
+	public void addTheme(ITheme theme) {
+		themes.put(theme.getName(), theme);
+	}
+
+	public ITheme getTheme(String name) {
+		return themes.get(name);
+	}
 	
-	public void addSubsystem(ISubsystem subsystem);
-	
-	public EngineType getType();
+	public Collection<ITheme> getThemes(){
+		return themes.values();
+	}
 
 }

@@ -27,8 +27,6 @@ public class ContextMenuButton extends Button {
 
 	public ContextMenuButton(float x, float y, float w, float h, String text) {
 		super(x, y, w, h, text);
-		setColor(1, 1, 1, 0.8f);
-		setHighlightColor(0.7f, 0.7f, 0.7f, 0.8f);
 	}
 
 	@Override
@@ -36,7 +34,7 @@ public class ContextMenuButton extends Button {
 		if (!enabled)
 			return;
 		Theme.renderContexMenuButton(window.getNVGID(), text, font, rootComponent.rootX + alignedX,
-				window.getHeight() - rootComponent.rootY - alignedY - h, w, h, color, fontSize, inside, highlight);
+				window.getHeight() - rootComponent.rootY - alignedY - h, w, h, fontSize, inside);
 	}
 
 }

@@ -25,7 +25,6 @@ import net.luxvacuos.igl.vector.Vector3d;
 import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.Material;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.Attribute;
-import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.UniformBoolean;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.UniformFloat;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.UniformMaterial;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.UniformMatrix;
@@ -45,13 +44,12 @@ public class TessellatorShader extends ShaderProgram {
 	private UniformMatrix viewMatrix = new UniformMatrix("viewMatrix");
 	private UniformVec3 cameraPos = new UniformVec3("cameraPos");
 	private UniformFloat moveFactor = new UniformFloat("moveFactor");
-	private UniformBoolean useShadows = new UniformBoolean("useShadows");
 	private UniformMaterial material = new UniformMaterial("material");
 
 	private TessellatorShader() {
 		super(ClientVariables.VERTEX_FILE_TESSELLATOR, ClientVariables.FRAGMENT_FILE_TESSELLATOR,
 				new Attribute(0, "position"), new Attribute(1, "textureCoords"), new Attribute(2, "normal"));
-		super.storeAllUniformLocations(projectionMatrix, viewMatrix, moveFactor, useShadows, cameraPos, material);
+		super.storeAllUniformLocations(projectionMatrix, viewMatrix, moveFactor, cameraPos, material);
 	}
 
 	/**
@@ -77,9 +75,6 @@ public class TessellatorShader extends ShaderProgram {
 		moveFactor.loadFloat(factor);
 	}
 
-	public void loadSettings(boolean useShadows) {
-		this.useShadows.loadBoolean(useShadows);
-	}
 
 	/**
 	 * Loads Projection Matrixd to the shader

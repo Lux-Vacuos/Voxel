@@ -20,7 +20,7 @@
 
 package net.luxvacuos.voxel.client.core.states;
 
-import static net.luxvacuos.voxel.universal.core.GlobalVariables.REGISTRY;
+import static net.luxvacuos.voxel.universal.core.subsystems.CoreSubsystem.REGISTRY;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 
@@ -45,10 +45,10 @@ import net.luxvacuos.voxel.client.util.Maths;
 import net.luxvacuos.voxel.client.world.RenderWorld;
 import net.luxvacuos.voxel.client.world.dimension.RenderDimension;
 import net.luxvacuos.voxel.universal.core.AbstractVoxel;
-import net.luxvacuos.voxel.universal.core.GlobalVariables;
 import net.luxvacuos.voxel.universal.core.states.AbstractState;
 import net.luxvacuos.voxel.universal.core.states.StateMachine;
 import net.luxvacuos.voxel.universal.ecs.entities.ChunkLoaderEntity;
+import net.luxvacuos.voxel.universal.util.registry.Key;
 import net.luxvacuos.voxel.universal.world.IWorld;
 
 public class SPWorldState extends AbstractState {
@@ -94,9 +94,9 @@ public class SPWorldState extends AbstractState {
 
 		Renderer.render(world.getActiveDimension().getEntitiesManager().getEntities(), ParticleDomain.getParticles(),
 				camera, world.getActiveDimension().getWorldSimulator(), sun, 0);
-		gameWindow = new GameWindow(0, (int) REGISTRY.getRegistryItem("/Voxel/Display/height"),
-				(int) REGISTRY.getRegistryItem("/Voxel/Display/width"),
-				(int) REGISTRY.getRegistryItem("/Voxel/Display/height"));
+		gameWindow = new GameWindow(0, (int) REGISTRY.getRegistryItem(new Key("/Voxel/Display/height")),
+				(int) REGISTRY.getRegistryItem(new Key("/Voxel/Display/width")),
+				(int) REGISTRY.getRegistryItem(new Key("/Voxel/Display/height")));
 		GraphicalSubsystem.getWindowManager().addWindow(0, gameWindow);
 	}
 
@@ -112,8 +112,8 @@ public class SPWorldState extends AbstractState {
 
 		Matrix4d[] shadowProjectionMatrix = new Matrix4d[4];
 
-		int shadowDrawDistance = (int) GlobalVariables.REGISTRY
-				.getRegistryItem("/Voxel/Settings/Graphics/shadowsDrawDistance");
+		int shadowDrawDistance = (int) REGISTRY
+				.getRegistryItem(new Key("/Voxel/Settings/Graphics/shadowsDrawDistance"));
 
 		shadowProjectionMatrix[0] = Maths.orthographic(-shadowDrawDistance / 32, shadowDrawDistance / 32,
 				-shadowDrawDistance / 32, shadowDrawDistance / 32, -shadowDrawDistance, shadowDrawDistance, false);
@@ -124,7 +124,7 @@ public class SPWorldState extends AbstractState {
 		shadowProjectionMatrix[3] = Maths.orthographic(-shadowDrawDistance, shadowDrawDistance, -shadowDrawDistance,
 				shadowDrawDistance, -shadowDrawDistance, shadowDrawDistance, false);
 		Matrix4d projectionMatrix = Renderer.createProjectionMatrix(window.getWidth(), window.getHeight(),
-				(int) REGISTRY.getRegistryItem("/Voxel/Settings/Core/fov"), ClientVariables.NEAR_PLANE,
+				(int) REGISTRY.getRegistryItem(new Key("/Voxel/Settings/Core/fov")), ClientVariables.NEAR_PLANE,
 				ClientVariables.FAR_PLANE);
 
 		camera = new PlayerCamera(projectionMatrix, ClientVariables.user.getUsername(),
@@ -171,11 +171,13 @@ public class SPWorldState extends AbstractState {
 				kbh.ignoreKeyUntilRelease(GLFW.GLFW_KEY_ESCAPE);
 				((PlayerCamera) camera).unlockMouse();
 				ClientVariables.paused = true;
-				float borderSize = (float) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/borderSize");
-				float titleBarHeight = (float) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/titleBarHeight");
-				int height = (int) REGISTRY.getRegistryItem("/Voxel/Display/height");
+				float borderSize = (float) REGISTRY
+						.getRegistryItem(new Key("/Voxel/Settings/WindowManager/borderSize"));
+				float titleBarHeight = (float) REGISTRY
+						.getRegistryItem(new Key("/Voxel/Settings/WindowManager/titleBarHeight"));
+				int height = (int) REGISTRY.getRegistryItem(new Key("/Voxel/Display/height"));
 				pauseWindow = new PauseWindow(borderSize + 10, height - titleBarHeight - 10,
-						(int) REGISTRY.getRegistryItem("/Voxel/Display/width") - borderSize * 2f - 20,
+						(int) REGISTRY.getRegistryItem(new Key("/Voxel/Display/width")) - borderSize * 2f - 20,
 						height - titleBarHeight - borderSize - 50);
 				GraphicalSubsystem.getWindowManager().addWindow(pauseWindow);
 				GraphicalSubsystem.getWindowManager().toggleShell();

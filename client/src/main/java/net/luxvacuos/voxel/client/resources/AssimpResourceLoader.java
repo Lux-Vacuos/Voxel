@@ -20,7 +20,7 @@
 
 package net.luxvacuos.voxel.client.resources;
 
-import static org.lwjgl.assimp.Assimp.*;
+import static org.lwjgl.assimp.Assimp.AI_SCENE_FLAGS_INCOMPLETE;
 import static org.lwjgl.assimp.Assimp.aiGetErrorString;
 import static org.lwjgl.assimp.Assimp.aiImportFileFromMemory;
 import static org.lwjgl.assimp.Assimp.aiProcess_CalcTangentSpace;
@@ -28,6 +28,7 @@ import static org.lwjgl.assimp.Assimp.aiProcess_FindInvalidData;
 import static org.lwjgl.assimp.Assimp.aiProcess_FlipUVs;
 import static org.lwjgl.assimp.Assimp.aiProcess_GenNormals;
 import static org.lwjgl.assimp.Assimp.aiProcess_ImproveCacheLocality;
+import static org.lwjgl.assimp.Assimp.aiProcess_JoinIdenticalVertices;
 import static org.lwjgl.assimp.Assimp.aiProcess_OptimizeMeshes;
 import static org.lwjgl.assimp.Assimp.aiProcess_SplitLargeMeshes;
 import static org.lwjgl.assimp.Assimp.aiProcess_Triangulate;
@@ -40,7 +41,8 @@ import org.lwjgl.assimp.AIScene;
 
 import net.luxvacuos.igl.Logger;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.Model;
-import net.luxvacuos.voxel.universal.core.GlobalVariables;
+import net.luxvacuos.voxel.universal.core.subsystems.CoreSubsystem;
+import net.luxvacuos.voxel.universal.util.registry.Key;
 
 public class AssimpResourceLoader {
 
@@ -49,7 +51,7 @@ public class AssimpResourceLoader {
 
 	public Model loadModel(String filePath) {
 		Logger.log("Loading Model: " + filePath);
-		String fileName = "assets/" + GlobalVariables.REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/assets") + "/"
+		String fileName = "assets/" + CoreSubsystem.REGISTRY.getRegistryItem(new Key("/Voxel/Settings/Graphics/assets")) + "/"
 				+ filePath;
 		String ext = fileName.split("\\.")[1];
 		ByteBuffer bFile = null;

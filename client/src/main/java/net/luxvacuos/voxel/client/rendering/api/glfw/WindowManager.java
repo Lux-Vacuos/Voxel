@@ -62,7 +62,8 @@ import net.luxvacuos.voxel.client.core.exception.DecodeTextureException;
 import net.luxvacuos.voxel.client.core.exception.GLFWException;
 import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.resources.ResourceLoader;
-import net.luxvacuos.voxel.universal.core.GlobalVariables;
+import net.luxvacuos.voxel.universal.core.subsystems.CoreSubsystem;
+import net.luxvacuos.voxel.universal.util.registry.Key;
 
 public final class WindowManager {
 
@@ -97,7 +98,7 @@ public final class WindowManager {
 			ByteBuffer imageBuffer;
 			try {
 				imageBuffer = ResourceLoader.ioResourceToByteBuffer(
-						"assets/" + GlobalVariables.REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/assets")
+						"assets/" + CoreSubsystem.REGISTRY.getRegistryItem(new Key("/Voxel/Settings/Graphics/assets"))
 								+ "/cursors/" + handle.cursor + ".png",
 						8 * 1024);
 			} catch (IOException e) {
@@ -130,10 +131,9 @@ public final class WindowManager {
 			for (Icon icon : handle.icons) {
 				ByteBuffer imageBuffer;
 				try {
-					imageBuffer = ResourceLoader.ioResourceToByteBuffer(
-							"assets/" + GlobalVariables.REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/assets")
-									+ "/icons/" + icon.path + ".png",
-							8 * 1024);
+					imageBuffer = ResourceLoader.ioResourceToByteBuffer("assets/"
+							+ CoreSubsystem.REGISTRY.getRegistryItem(new Key("/Voxel/Settings/Graphics/assets"))
+							+ "/icons/" + icon.path + ".png", 8 * 1024);
 				} catch (IOException e) {
 					throw new GLFWException(e);
 				}

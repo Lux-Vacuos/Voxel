@@ -24,7 +24,7 @@ import static net.luxvacuos.voxel.client.input.Mouse.getDX;
 import static net.luxvacuos.voxel.client.input.Mouse.getDY;
 import static net.luxvacuos.voxel.client.input.Mouse.setCursorPosition;
 import static net.luxvacuos.voxel.client.input.Mouse.setGrabbed;
-import static net.luxvacuos.voxel.universal.core.GlobalVariables.REGISTRY;
+import static net.luxvacuos.voxel.universal.core.subsystems.CoreSubsystem.REGISTRY;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,6 +50,7 @@ import net.luxvacuos.voxel.universal.ecs.Components;
 import net.luxvacuos.voxel.universal.ecs.components.Rotation;
 import net.luxvacuos.voxel.universal.ecs.components.Velocity;
 import net.luxvacuos.voxel.universal.tools.ToolTier;
+import net.luxvacuos.voxel.universal.util.registry.Key;
 import net.luxvacuos.voxel.universal.world.block.Blocks;
 import net.luxvacuos.voxel.universal.world.block.IBlock;
 import net.luxvacuos.voxel.universal.world.dimension.IDimension;
@@ -85,8 +86,8 @@ public class PlayerCamera extends CameraEntity {
 
 		ClientComponents.PROJECTION_MATRIX.get(this).setProjectionMatrix(projectionMatrix);
 		ClientComponents.VIEW_MATRIX.get(this).setViewMatrix(Maths.createViewMatrix(this));
-		int width = (int) REGISTRY.getRegistryItem("/Voxel/Display/width");
-		int height = (int) REGISTRY.getRegistryItem("/Voxel/Display/height");
+		int width = (int) REGISTRY.getRegistryItem(new Key("/Voxel/Display/width"));
+		int height = (int) REGISTRY.getRegistryItem(new Key("/Voxel/Display/height"));
 		center = new Vector2d(width / 2, height / 2);
 		castRay = new CastRay(getProjectionMatrix(), getViewMatrix(), center, width, height);
 	}
@@ -257,8 +258,8 @@ public class PlayerCamera extends CameraEntity {
 	@Override
 	public void updateDim(float delta, IDimension dim) {
 		castRay.update(getProjectionMatrix(), getViewMatrix(), center,
-				(int) REGISTRY.getRegistryItem("/Voxel/Display/width"),
-				(int) REGISTRY.getRegistryItem("/Voxel/Display/height"));
+				(int) REGISTRY.getRegistryItem(new Key("/Voxel/Display/width")),
+				(int) REGISTRY.getRegistryItem(new Key("/Voxel/Display/height")));
 		setBlock(Blocks.getBlockByName("stone"), dim, delta);
 	}
 

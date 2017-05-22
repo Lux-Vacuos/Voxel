@@ -20,7 +20,7 @@
 
 package net.luxvacuos.voxel.client.rendering.api.opengl;
 
-import static net.luxvacuos.voxel.universal.core.GlobalVariables.REGISTRY;
+import static net.luxvacuos.voxel.universal.core.subsystems.CoreSubsystem.REGISTRY;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_TRIANGLE_STRIP;
@@ -42,6 +42,7 @@ import net.luxvacuos.voxel.client.rendering.api.opengl.objects.Texture;
 import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.DeferredShadingShader;
 import net.luxvacuos.voxel.client.util.Maths;
 import net.luxvacuos.voxel.universal.core.IWorldSimulation;
+import net.luxvacuos.voxel.universal.util.registry.Key;
 
 public abstract class DeferredPass implements IDeferredPass {
 
@@ -103,12 +104,12 @@ public abstract class DeferredPass implements IDeferredPass {
 		shader.loadLightPosition(sun.getSunPosition(), sun.getInvertedSunPosition());
 		shader.loadviewMatrix(camera);
 		shader.loadSettings(false, false, false,
-				(boolean) REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/volumetricLight"),
-				(boolean) REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/reflections"),
-				(boolean) REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/ambientOcclusion"),
-				(int) REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/shadowsDrawDistance"), false,
-				(boolean) REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/lensFlares"),
-				(boolean) REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/shadows"));
+				(boolean) REGISTRY.getRegistryItem(new Key("/Voxel/Settings/Graphics/volumetricLight")),
+				(boolean) REGISTRY.getRegistryItem(new Key("/Voxel/Settings/Graphics/reflections")),
+				(boolean) REGISTRY.getRegistryItem(new Key("/Voxel/Settings/Graphics/ambientOcclusion")),
+				(int) REGISTRY.getRegistryItem(new Key("/Voxel/Settings/Graphics/shadowsDrawDistance")), false,
+				(boolean) REGISTRY.getRegistryItem(new Key("/Voxel/Settings/Graphics/lensFlares")),
+				(boolean) REGISTRY.getRegistryItem(new Key("/Voxel/Settings/Graphics/shadows")));
 		shader.loadSunPosition(Maths.convertTo2F(new Vector3d(sun.getSunPosition()), camera.getProjectionMatrix(),
 				Maths.createViewMatrixRot(camera.getRotation().getX(), camera.getRotation().getY(),
 						camera.getRotation().getZ(), tmp),

@@ -20,10 +20,11 @@
 
 package net.luxvacuos.voxel.client.core.subsystems;
 
-import static net.luxvacuos.voxel.universal.core.GlobalVariables.REGISTRY;
+import static net.luxvacuos.voxel.universal.core.subsystems.CoreSubsystem.REGISTRY;
 
 import net.luxvacuos.voxel.client.util.LoggerSoundSystem;
-import net.luxvacuos.voxel.universal.core.ISubsystem;
+import net.luxvacuos.voxel.universal.core.subsystems.ISubsystem;
+import net.luxvacuos.voxel.universal.util.registry.Key;
 import paulscode.sound.SoundSystem;
 import paulscode.sound.SoundSystemConfig;
 import paulscode.sound.SoundSystemException;
@@ -43,7 +44,7 @@ public class SoundSubsystem implements ISubsystem {
 			e.printStackTrace();
 		}
 		SoundSystemConfig.setSoundFilesPackage(
-				"assets/" + REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/assets") + "/sounds/");
+				"assets/" + REGISTRY.getRegistryItem(new Key("/Voxel/Settings/Graphics/assets")) + "/sounds/");
 		SoundSystemConfig.setLogger(new LoggerSoundSystem());
 		soundSystem = new SoundSystem();
 	}

@@ -18,20 +18,22 @@
  * 
  */
 
-package net.luxvacuos.voxel.universal.core;
-
-import static net.luxvacuos.voxel.universal.core.GlobalVariables.REGISTRY;
+package net.luxvacuos.voxel.universal.core.subsystems;
 
 import java.io.IOException;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 
 import net.luxvacuos.voxel.universal.bootstrap.AbstractBootstrap;
-import net.luxvacuos.voxel.universal.util.registry.SimpleRegistry;
+import net.luxvacuos.voxel.universal.core.AbstractGameSettings;
+import net.luxvacuos.voxel.universal.core.GlobalVariables;
+import net.luxvacuos.voxel.universal.util.registry.Key;
+import net.luxvacuos.voxel.universal.util.registry.SystemRegistry;
 
 public class CoreSubsystem implements ISubsystem {
-	
+
 	protected static AbstractGameSettings gameSettings;
+	public static SystemRegistry REGISTRY;
 	public static int ups;
 	public static int upsCount;
 
@@ -46,9 +48,9 @@ public class CoreSubsystem implements ISubsystem {
 		} catch (IOException E) {
 			E.printStackTrace();
 		}
-		GlobalVariables.REGISTRY = new SimpleRegistry<>();
-		REGISTRY.register("/Voxel/Settings/file", AbstractBootstrap.getPrefix() + "/config/settings.conf");
-		REGISTRY.register("/Voxel/System/os",
+		REGISTRY = new SystemRegistry();
+		REGISTRY.register(new Key("/Voxel/Settings/file"), AbstractBootstrap.getPrefix() + "/config/registry.json");
+		REGISTRY.register(new Key("/Voxel/System/os"),
 				System.getProperty("os.name") + " " + System.getProperty("os.arch").toUpperCase());
 	}
 
@@ -63,7 +65,7 @@ public class CoreSubsystem implements ISubsystem {
 	@Override
 	public void dispose() {
 	}
-	
+
 	public static AbstractGameSettings getGameSettings() {
 		return gameSettings;
 	}

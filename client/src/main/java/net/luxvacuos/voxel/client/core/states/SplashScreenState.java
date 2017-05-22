@@ -20,7 +20,7 @@
 
 package net.luxvacuos.voxel.client.core.states;
 
-import static net.luxvacuos.voxel.universal.core.GlobalVariables.REGISTRY;
+import static net.luxvacuos.voxel.universal.core.subsystems.CoreSubsystem.REGISTRY;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 
@@ -37,6 +37,7 @@ import net.luxvacuos.voxel.universal.core.AbstractVoxel;
 import net.luxvacuos.voxel.universal.core.TaskManager;
 import net.luxvacuos.voxel.universal.core.states.AbstractState;
 import net.luxvacuos.voxel.universal.core.states.StateMachine;
+import net.luxvacuos.voxel.universal.util.registry.Key;
 
 /**
  * Splash screen State, show only in the load.
@@ -54,9 +55,9 @@ public class SplashScreenState extends AbstractState {
 
 	@Override
 	public void init() {
-		component = new RootComponentWindow(0, (int) REGISTRY.getRegistryItem("/Voxel/Display/height"),
-				(int) REGISTRY.getRegistryItem("/Voxel/Display/width"),
-				(int) REGISTRY.getRegistryItem("/Voxel/Display/height"), "splash");
+		component = new RootComponentWindow(0, (int) REGISTRY.getRegistryItem(new Key("/Voxel/Display/height")),
+				(int) REGISTRY.getRegistryItem(new Key("/Voxel/Display/width")),
+				(int) REGISTRY.getRegistryItem(new Key("/Voxel/Display/height")), "splash");
 		component.toggleTitleBar();
 		component.setDecorations(false);
 		component.setBackgroundColor(1, 1, 1, 1);
@@ -80,14 +81,15 @@ public class SplashScreenState extends AbstractState {
 	public void end() {
 		super.end();
 		component.closeWindow();
-		Shell shell = new Shell(0, 30, (int) REGISTRY.getRegistryItem("/Voxel/Display/width"), 30);
+		Shell shell = new Shell(0, 30, (int) REGISTRY.getRegistryItem(new Key("/Voxel/Display/width")), 30);
 		GraphicalSubsystem.getWindowManager().addWindow(shell);
 		GraphicalSubsystem.getWindowManager().setShell(shell);
-		float borderSize = (float) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/borderSize");
-		float titleBarHeight = (float) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/titleBarHeight");
-		int height = (int) REGISTRY.getRegistryItem("/Voxel/Display/height");
+		float borderSize = (float) REGISTRY.getRegistryItem(new Key("/Voxel/Settings/WindowManager/borderSize"));
+		float titleBarHeight = (float) REGISTRY
+				.getRegistryItem(new Key("/Voxel/Settings/WindowManager/titleBarHeight"));
+		int height = (int) REGISTRY.getRegistryItem(new Key("/Voxel/Display/height"));
 		RootComponentWindow mainMenu = new MainMenu(borderSize + 10, height - titleBarHeight - 10,
-				(int) REGISTRY.getRegistryItem("/Voxel/Display/width") - borderSize * 2f - 20,
+				(int) REGISTRY.getRegistryItem(new Key("/Voxel/Display/width")) - borderSize * 2f - 20,
 				height - titleBarHeight - borderSize - 50);
 		GraphicalSubsystem.getWindowManager().addWindow(mainMenu);
 	}

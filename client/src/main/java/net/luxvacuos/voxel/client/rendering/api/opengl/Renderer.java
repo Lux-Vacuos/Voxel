@@ -20,7 +20,7 @@
 
 package net.luxvacuos.voxel.client.rendering.api.opengl;
 
-import static net.luxvacuos.voxel.universal.core.GlobalVariables.REGISTRY;
+import static net.luxvacuos.voxel.universal.core.subsystems.CoreSubsystem.REGISTRY;
 import static org.lwjgl.opengl.GL11.GL_BACK;
 import static org.lwjgl.opengl.GL11.GL_BLEND;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
@@ -54,9 +54,9 @@ import net.luxvacuos.voxel.client.rendering.api.opengl.objects.ParticleTexture;
 import net.luxvacuos.voxel.client.rendering.api.opengl.pipeline.MultiPass;
 import net.luxvacuos.voxel.client.rendering.api.opengl.pipeline.PostProcess;
 import net.luxvacuos.voxel.client.world.particles.Particle;
-import net.luxvacuos.voxel.universal.core.GlobalVariables;
 import net.luxvacuos.voxel.universal.core.IWorldSimulation;
 import net.luxvacuos.voxel.universal.core.TaskManager;
+import net.luxvacuos.voxel.universal.util.registry.Key;
 
 public class Renderer {
 
@@ -84,7 +84,7 @@ public class Renderer {
 
 	public static void init(Window window) {
 		Renderer.window = window;
-		shadowResolution = (int) GlobalVariables.REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/shadowsResolution");
+		shadowResolution = (int) REGISTRY.getRegistryItem(new Key("/Voxel/Settings/Graphics/shadowsResolution"));
 
 		if (shadowResolution > GLUtil.getTextureMaxSize())
 			shadowResolution = GLUtil.getTextureMaxSize();
@@ -116,7 +116,7 @@ public class Renderer {
 		preFilteredEnvironment.render(window, environmentRenderer.getCubeMapTexture().getID());
 		SunCamera sunCamera = (SunCamera) sun.getCamera();
 
-		if ((boolean) REGISTRY.getRegistryItem("/Voxel/Settings/Graphics/shadows")) {
+		if ((boolean) REGISTRY.getRegistryItem(new Key("/Voxel/Settings/Graphics/shadows"))) {
 
 			sunCamera.switchProjectionMatrix(0);
 			frustum.calculateFrustum(sunCamera);

@@ -20,13 +20,14 @@
 
 package net.luxvacuos.voxel.universal.ecs.entities;
 
-import static net.luxvacuos.voxel.universal.core.GlobalVariables.REGISTRY;
+import static net.luxvacuos.voxel.universal.core.subsystems.CoreSubsystem.REGISTRY;
 
 import net.luxvacuos.igl.vector.Vector3d;
 import net.luxvacuos.voxel.universal.ecs.components.AABB;
 import net.luxvacuos.voxel.universal.ecs.components.ChunkLoader;
 import net.luxvacuos.voxel.universal.ecs.components.Health;
 import net.luxvacuos.voxel.universal.ecs.components.Player;
+import net.luxvacuos.voxel.universal.util.registry.Key;
 
 public class PlayerEntity extends BasicEntity {
 
@@ -35,7 +36,7 @@ public class PlayerEntity extends BasicEntity {
 		this.add(new Player());
 		this.add(new AABB(new Vector3d(-0.25f, -1.5f, -0.25f), new Vector3d(0.25f, 0.2f, 0.25f)));
 		this.add(new Health(20));
-		this.add(new ChunkLoader((int) REGISTRY.getRegistryItem("/Voxel/Settings/World/chunkRadius")));
+		this.add(new ChunkLoader((int) REGISTRY.getRegistryItem(new Key("/Voxel/Settings/World/chunkRadius"))));
 	}
 
 	public PlayerEntity(String name, String uuid) {
@@ -43,7 +44,7 @@ public class PlayerEntity extends BasicEntity {
 		this.add(new Player());
 		this.add(new AABB(new Vector3d(-0.25f, -1.5f, -0.25f), new Vector3d(0.25f, 0.2f, 0.25f)));
 		this.add(new Health(20));
-		this.add(new ChunkLoader((int) REGISTRY.getRegistryItem("/Voxel/Settings/World/chunkRadius")));
+		this.add(new ChunkLoader((int) REGISTRY.getRegistryItem(new Key("/Voxel/Settings/World/chunkRadius"))));
 	}
 
 }

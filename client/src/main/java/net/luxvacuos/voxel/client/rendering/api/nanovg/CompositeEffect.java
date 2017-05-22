@@ -20,7 +20,7 @@
 
 package net.luxvacuos.voxel.client.rendering.api.nanovg;
 
-import static net.luxvacuos.voxel.universal.core.GlobalVariables.REGISTRY;
+import static net.luxvacuos.voxel.universal.core.subsystems.CoreSubsystem.REGISTRY;
 import static org.lwjgl.nanovg.NanoVGGL3.nvgluBindFramebuffer;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11.GL_TRIANGLE_STRIP;
@@ -41,6 +41,7 @@ import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.nanovg.shaders.WindowManagerShader;
 import net.luxvacuos.voxel.client.rendering.api.opengl.objects.RawModel;
 import net.luxvacuos.voxel.universal.resources.IDisposable;
+import net.luxvacuos.voxel.universal.util.registry.Key;
 
 public abstract class CompositeEffect implements IDisposable {
 
@@ -54,9 +55,11 @@ public abstract class CompositeEffect implements IDisposable {
 	}
 
 	public void render(NVGLUFramebuffer[] fbos, RawModel quad, Window wnd, IWindow window) {
-		float borderSize = (float) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/borderSize");
-		float titleBarHeight = (float) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/titleBarHeight");
-		boolean titleBarBorder = (boolean) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/titleBarBorder");
+		float borderSize = (float) REGISTRY.getRegistryItem(new Key("/Voxel/Settings/WindowManager/borderSize"));
+		float titleBarHeight = (float) REGISTRY
+				.getRegistryItem(new Key("/Voxel/Settings/WindowManager/titleBarHeight"));
+		boolean titleBarBorder = (boolean) REGISTRY
+				.getRegistryItem(new Key("/Voxel/Settings/WindowManager/titleBarBorder"));
 		float pixelRatio = wnd.getPixelRatio();
 		nvgluBindFramebuffer(wnd.getNVGID(), fbos[0]);
 		shader.start();

@@ -33,7 +33,8 @@ import com.hackhalo2.nbt.stream.NBTInputStream;
 import com.hackhalo2.nbt.tags.TagCompound;
 
 import net.luxvacuos.igl.Logger;
-import net.luxvacuos.voxel.universal.core.GlobalVariables;
+import net.luxvacuos.voxel.universal.core.subsystems.CoreSubsystem;
+import net.luxvacuos.voxel.universal.util.registry.Key;
 import net.luxvacuos.voxel.universal.world.dimension.Dimension;
 import net.luxvacuos.voxel.universal.world.dimension.IDimension;
 
@@ -46,7 +47,8 @@ public class World implements IWorld {
 	public World(String name) {
 		this.name = name;
 		this.dims = new IntMap<>();
-		File file = new File(GlobalVariables.REGISTRY.getRegistryItem("/Voxel/Settings/World/directory") + this.name);
+		File file = new File(
+				CoreSubsystem.REGISTRY.getRegistryItem(new Key("/Voxel/Settings/World/directory")) + this.name);
 		if (!file.exists())
 			file.mkdirs();
 	}
@@ -94,7 +96,8 @@ public class World implements IWorld {
 		if (this.dims.containsKey(id))
 			return;
 
-		File file = new File(GlobalVariables.REGISTRY.getRegistryItem("/Voxel/Settings/World/directory") + this.name + "/dim" + id + "_data.nbt");
+		File file = new File(CoreSubsystem.REGISTRY.getRegistryItem(new Key("/Voxel/Settings/World/directory"))
+				+ this.name + "/dim" + id + "_data.nbt");
 		TagCompound data = null;
 		NBTInputStream in = null;
 		try {

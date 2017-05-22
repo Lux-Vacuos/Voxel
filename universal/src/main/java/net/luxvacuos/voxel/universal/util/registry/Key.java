@@ -18,26 +18,50 @@
  * 
  */
 
-package net.luxvacuos.voxel.universal.core;
+package net.luxvacuos.voxel.universal.util.registry;
 
-import net.luxvacuos.voxel.universal.core.subsystems.ISubsystem;
+public class Key implements Comparable<Key> {
 
-public interface IVoxel {
-	
-	public void init();
-	
-	public void initSubsystems();
-	
-	public void restart();
-	
-	public void update();
-	
-	public void updateSubsystems(float delta);
+	private String key;
+	private boolean save;
 
-	public void handleError(Throwable e);
-	
-	public void addSubsystem(ISubsystem subsystem);
-	
-	public EngineType getType();
+	public Key(String key) {
+		this.key = key;
+	}
+
+	public Key(String key, boolean save) {
+		this.key = key;
+		this.save = save;
+	}
+
+	@Override
+	public int compareTo(Key o) {
+		return key.compareTo(o.getKey());
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof Key)
+			return key.equals(((Key) obj).getKey());
+		return false;
+	}
+
+	@Override
+	public int hashCode() {
+		return key.hashCode();
+	}
+
+	@Override
+	public String toString() {
+		return key;
+	}
+
+	public String getKey() {
+		return key;
+	}
+
+	public boolean saveKey() {
+		return save;
+	}
 
 }

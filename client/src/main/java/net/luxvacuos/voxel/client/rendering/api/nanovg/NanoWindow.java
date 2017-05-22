@@ -20,7 +20,7 @@
 
 package net.luxvacuos.voxel.client.rendering.api.nanovg;
 
-import static net.luxvacuos.voxel.universal.core.GlobalVariables.REGISTRY;
+import static net.luxvacuos.voxel.universal.core.subsystems.CoreSubsystem.REGISTRY;
 import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_CENTER;
 import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_MIDDLE;
 import static org.lwjgl.nanovg.NanoVG.nvgScissor;
@@ -28,7 +28,6 @@ import static org.lwjgl.nanovg.NanoVGGL3.nvgluBindFramebuffer;
 import static org.lwjgl.nanovg.NanoVGGL3.nvgluCreateFramebuffer;
 import static org.lwjgl.nanovg.NanoVGGL3.nvgluDeleteFramebuffer;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 
 import org.lwjgl.nanovg.NVGColor;
 import org.lwjgl.nanovg.NVGLUFramebuffer;
@@ -48,6 +47,7 @@ import net.luxvacuos.voxel.client.ui.ITitleBar;
 import net.luxvacuos.voxel.client.ui.TitleBar;
 import net.luxvacuos.voxel.client.ui.TitleBarButton;
 import net.luxvacuos.voxel.client.ui.TitleBarText;
+import net.luxvacuos.voxel.universal.util.registry.Key;
 
 public abstract class NanoWindow implements IWindow {
 
@@ -86,8 +86,6 @@ public abstract class NanoWindow implements IWindow {
 			onClose();
 			closeWindow();
 		});
-		closeBtn.setColor("#646464C8");
-		closeBtn.setHighlightColor("#FF0000C8");
 		closeBtn.setWindowAlignment(Alignment.RIGHT_TOP);
 		closeBtn.setAlignment(Alignment.LEFT_BOTTOM);
 		closeBtn.setStyle(ButtonStyle.CLOSE);
@@ -96,8 +94,6 @@ public abstract class NanoWindow implements IWindow {
 		maximizeBtn.setOnButtonPress(() -> {
 			toggleMaximize();
 		});
-		maximizeBtn.setColor("#646464C8");
-		maximizeBtn.setHighlightColor("#FFFFFFC8");
 		maximizeBtn.setWindowAlignment(Alignment.RIGHT_TOP);
 		maximizeBtn.setAlignment(Alignment.LEFT_BOTTOM);
 		maximizeBtn.setStyle(ButtonStyle.MAXIMIZE);
@@ -106,8 +102,6 @@ public abstract class NanoWindow implements IWindow {
 		minimizeBtn.setOnButtonPress(() -> {
 			minimized = true;
 		});
-		minimizeBtn.setColor("#646464C8");
-		minimizeBtn.setHighlightColor("#FFFFFFC8");
 		minimizeBtn.setWindowAlignment(Alignment.RIGHT_TOP);
 		minimizeBtn.setAlignment(Alignment.LEFT_BOTTOM);
 		minimizeBtn.setStyle(ButtonStyle.MINIMIZE);
@@ -152,10 +146,8 @@ public abstract class NanoWindow implements IWindow {
 	public void render(Window window, IWindowManager nanoWindowManager) {
 		if (!hidden && !minimized) {
 			nvgluBindFramebuffer(window.getNVGID(), fbo);
-			window.resetViewport();
-			Renderer.clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			Renderer.clearBuffer(GL_COLOR_BUFFER_BIT);
 			Renderer.clearColors(0, 0, 0, 0);
-
 			window.beingNVGFrame();
 			Theme.renderWindow(window.getNVGID(), x, window.getHeight() - y, w, h, backgroundStyle, backgroundColor,
 					decorations, titleBar.isEnabled(), maximized);
@@ -217,18 +209,19 @@ public abstract class NanoWindow implements IWindow {
 
 	@Override
 	public boolean insideWindow() {
-		float borderSize = (float) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/borderSize");
+		float borderSize = (float) REGISTRY.getRegistryItem(new Key("/Voxel/Settings/WindowManager/borderSize"));
 		if (titleBar.isEnabled() && decorations)
-			if ((boolean) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/titleBarBorder"))
+			if ((boolean) REGISTRY.getRegistryItem(new Key("/Voxel/Settings/WindowManager/titleBarBorder")))
 				return Mouse.getX() > x - borderSize && Mouse.getX() < x + w + borderSize
 						&& Mouse.getY() > y - h - borderSize
 						&& Mouse.getY() < y
-								+ (float) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/titleBarHeight")
+								+ (float) REGISTRY
+										.getRegistryItem(new Key("/Voxel/Settings/WindowManager/titleBarHeight"))
 								+ borderSize;
 			else
 				return Mouse.getX() > x - borderSize && Mouse.getX() < x + w + borderSize
-						&& Mouse.getY() > y - h - borderSize && Mouse.getY() < y
-								+ (float) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/titleBarHeight");
+						&& Mouse.getY() > y - h - borderSize && Mouse.getY() < y + (float) REGISTRY
+								.getRegistryItem(new Key("/Voxel/Settings/WindowManager/titleBarHeight"));
 		else if (!decorations)
 			return Mouse.getX() > x && Mouse.getX() < x + w && Mouse.getY() > y - h && Mouse.getY() < y;
 		else
@@ -298,6 +291,16 @@ public abstract class NanoWindow implements IWindow {
 	}
 
 	@Override
+	public void setMinWidth(int width) {
+		this.minW = width;
+	}
+
+	@Override
+	public void setMinHeight(int height) {
+		this.minH = height;
+	}
+
+	@Override
 	public void toggleTitleBar() {
 		this.titleBar.setEnabled(!this.titleBar.isEnabled());
 	}
@@ -307,16 +310,18 @@ public abstract class NanoWindow implements IWindow {
 		if (resizable) {
 			maximized = !maximized;
 			if (maximized) {
-				int height = (int) REGISTRY.getRegistryItem("/Voxel/Display/height");
+				int height = (int) REGISTRY.getRegistryItem(new Key("/Voxel/Display/height"));
 				oldX = this.x;
 				oldY = this.y;
 				oldW = this.w;
 				oldH = this.h;
 				this.x = 0;
-				this.y = height - (float) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/titleBarHeight");
-				this.w = (int) REGISTRY.getRegistryItem("/Voxel/Display/width");
-				this.h = height - (float) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/titleBarHeight")
-						- (float) REGISTRY.getRegistryItem("/Voxel/Settings/WindowManager/shellHeight");
+				this.y = height
+						- (float) REGISTRY.getRegistryItem(new Key("/Voxel/Settings/WindowManager/titleBarHeight"));
+				this.w = (int) REGISTRY.getRegistryItem(new Key("/Voxel/Display/width"));
+				this.h = height
+						- (float) REGISTRY.getRegistryItem(new Key("/Voxel/Settings/WindowManager/titleBarHeight"))
+						- (float) REGISTRY.getRegistryItem(new Key("/Voxel/Settings/WindowManager/shellHeight"));
 			} else {
 				this.x = oldX;
 				this.y = oldY;
