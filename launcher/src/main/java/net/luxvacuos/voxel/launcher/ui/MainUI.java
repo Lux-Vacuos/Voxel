@@ -47,7 +47,6 @@ public class MainUI extends Application {
 	public void start(Stage stage) throws Exception {
 		Thread.currentThread().setName("Launcher");
 		Logger.log("Version: " + LauncherVariables.VERSION);
-		Logger.log("API Server: " + LauncherVariables.API);
 
 		updateLauncher = new UpdateLauncher();
 

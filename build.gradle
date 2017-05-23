@@ -74,6 +74,7 @@ project(":launcher") {
 		compile 'log4j:log4j:1.2.17'
 		compile 'com.google.code.gson:gson:2.8.0'
 		compile project(':modules:adus')
+		compile project(':modules:api')
 		testCompile group: 'junit', name: 'junit', version: '4.12'
 	}
 }

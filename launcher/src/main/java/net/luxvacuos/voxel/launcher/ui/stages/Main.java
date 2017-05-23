@@ -76,7 +76,7 @@ public class Main extends BorderPane {
 				LauncherVariables.userArgs.add(hf.getText());
 				LauncherVariables.userArgs.add("-username");
 				LauncherVariables.userArgs.add(LauncherVariables.username);
-				LauncherVariables.userArgs.add(LauncherVariables.status.getUuid());
+				LauncherVariables.userArgs.add(LauncherVariables.res.getUuid());
 				try {
 					VersionsManager.getVersionsManager().downloadAndRun(LauncherVariables.userArgs);
 					Platform.runLater(() -> {
