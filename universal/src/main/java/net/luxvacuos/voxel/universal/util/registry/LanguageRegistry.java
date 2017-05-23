@@ -35,12 +35,10 @@ import com.google.gson.reflect.TypeToken;
 
 public class LanguageRegistry extends PersistentRegistry<String, String> {
 
-	@Override
-	public void load(File database) {
-		this.database = database;
+	public void load(String filename) {
 		BufferedReader reader = null;
 		try {
-			InputStream file = getClass().getClassLoader().getResourceAsStream(database.getPath());
+			InputStream file = getClass().getClassLoader().getResourceAsStream(filename);
 			reader = new BufferedReader(new InputStreamReader(file));
 			Type type = new TypeToken<HashMap<String, String>>() {
 			}.getType();
@@ -54,6 +52,11 @@ public class LanguageRegistry extends PersistentRegistry<String, String> {
 				}
 			}
 		}
+	}
+
+	@Override
+	public void load(File database) {
+		throw new UnsupportedOperationException("Use load(String)");
 	}
 
 	@Override

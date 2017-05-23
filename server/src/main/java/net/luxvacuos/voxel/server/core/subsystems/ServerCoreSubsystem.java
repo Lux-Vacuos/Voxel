@@ -37,9 +37,8 @@ public class ServerCoreSubsystem extends CoreSubsystem {
 		gameSettings.read();
 		REGISTRY.load(new File((String) REGISTRY.getRegistryItem(new Key("/Voxel/Settings/file"))));
 		REGISTRY.save();
-		LANG.load(
-				new File("assets/" + CoreSubsystem.REGISTRY.getRegistryItem(new Key("/Voxel/Settings/Graphics/assets"))
-						+ "/langs/" + REGISTRY.getRegistryItem(new Key("/Voxel/Settings/Regional/lang")) + ".json"));
+		LANG.load("assets/" + CoreSubsystem.REGISTRY.getRegistryItem(new Key("/Voxel/Settings/Graphics/assets"))
+				+ "/langs/" + REGISTRY.getRegistryItem(new Key("/Voxel/Settings/Regional/lang")) + ".json");
 	}
 
 }
