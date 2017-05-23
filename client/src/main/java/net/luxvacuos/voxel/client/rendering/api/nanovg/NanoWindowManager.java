@@ -107,8 +107,8 @@ public class NanoWindowManager implements IWindowManager {
 				composite.render(window, this.window);
 		}
 		window.beingNVGFrame();
-		Theme.renderImage(this.window.getNVGID(), 0, 0, window.getWidth() / window.getPixelRatio(),
-				window.getHeight() / window.getPixelRatio(), composite.getFbos()[0].image(), 1f);
+		Theme.renderImage(this.window.getNVGID(), 0, 0, window.getWidth(), window.getHeight(),
+				composite.getFbos()[0].image(), 1f);
 		if (ClientVariables.debug) {
 			Timers.renderDebugDisplay(5, 24, 200, 55);
 			Theme.renderText(window.getNVGID(), "Voxel " + " (" + ClientVariables.version + ")", "Roboto-Bold",

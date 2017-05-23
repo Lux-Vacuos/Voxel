@@ -31,8 +31,8 @@ import net.luxvacuos.voxel.client.ui.Alignment;
 import net.luxvacuos.voxel.client.ui.Image;
 import net.luxvacuos.voxel.client.ui.RootComponentWindow;
 import net.luxvacuos.voxel.client.ui.Spinner;
-import net.luxvacuos.voxel.client.ui.menus.MainMenu;
-import net.luxvacuos.voxel.client.ui.menus.Shell;
+import net.luxvacuos.voxel.client.ui.windows.MainWindow;
+import net.luxvacuos.voxel.client.ui.windows.Shell;
 import net.luxvacuos.voxel.universal.core.AbstractVoxel;
 import net.luxvacuos.voxel.universal.core.TaskManager;
 import net.luxvacuos.voxel.universal.core.states.AbstractState;
@@ -88,7 +88,7 @@ public class SplashScreenState extends AbstractState {
 		float titleBarHeight = (float) REGISTRY
 				.getRegistryItem(new Key("/Voxel/Settings/WindowManager/titleBarHeight"));
 		int height = (int) REGISTRY.getRegistryItem(new Key("/Voxel/Display/height"));
-		RootComponentWindow mainMenu = new MainMenu(borderSize + 10, height - titleBarHeight - 10,
+		RootComponentWindow mainMenu = new MainWindow(borderSize + 10, height - titleBarHeight - 10,
 				(int) REGISTRY.getRegistryItem(new Key("/Voxel/Display/width")) - borderSize * 2f - 20,
 				height - titleBarHeight - borderSize - 50);
 		GraphicalSubsystem.getWindowManager().addWindow(mainMenu);

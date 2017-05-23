@@ -18,8 +18,9 @@
  * 
  */
 
-package net.luxvacuos.voxel.client.ui.menus;
+package net.luxvacuos.voxel.client.ui.windows;
 
+import static net.luxvacuos.voxel.universal.core.subsystems.CoreSubsystem.LANG;
 import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_CENTER;
 import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_MIDDLE;
 
@@ -44,13 +45,13 @@ import net.luxvacuos.voxel.universal.core.states.StateMachine;
 import net.luxvacuos.voxel.universal.core.subsystems.CoreSubsystem;
 import net.luxvacuos.voxel.universal.util.registry.Key;
 
-public class WorldMenu extends RootComponentWindow {
+public class WorldWindow extends RootComponentWindow {
 
 	public Text worldName;
 	private NanoWindow root;
 
-	public WorldMenu(float x, float y, float w, float h, NanoWindow root) {
-		super(x, y, w, h, "Worlds");
+	public WorldWindow(float x, float y, float w, float h, NanoWindow root) {
+		super(x, y, w, h, LANG.getRegistryItem("voxel.worldwindow.name"));
 		this.root = root;
 	}
 
@@ -59,7 +60,7 @@ public class WorldMenu extends RootComponentWindow {
 		super.setBackgroundColor(0.4f, 0.4f, 0.4f, 1f);
 		super.setResizable(false);
 
-		worldName = new Text("Name: ", 40, -40);
+		worldName = new Text(LANG.getRegistryItem("voxel.worldwindow.txtname"), 40, -40);
 		worldName.setWindowAlignment(Alignment.TOP);
 		createList(window);
 
@@ -71,7 +72,7 @@ public class WorldMenu extends RootComponentWindow {
 		nameB.setAlignment(Alignment.CENTER);
 		nameB.setWindowAlignment(Alignment.CENTER);
 
-		Button create = new Button(0, 100, 200, 40, "Create");
+		Button create = new Button(0, 100, 200, 40, LANG.getRegistryItem("voxel.worldwindow.create.btncreate"));
 		create.setAlignment(Alignment.CENTER);
 		create.setWindowAlignment(Alignment.BOTTOM);
 		create.setOnButtonPress(() -> {
@@ -83,7 +84,7 @@ public class WorldMenu extends RootComponentWindow {
 			});
 		});
 
-		Button back = new Button(0, 40, 200, 40, "Back");
+		Button back = new Button(0, 40, 200, 40, LANG.getRegistryItem("voxel.worldwindow.create.btnback"));
 		back.setAlignment(Alignment.CENTER);
 		back.setWindowAlignment(Alignment.BOTTOM);
 		back.setOnButtonPress(() -> {
@@ -120,7 +121,7 @@ public class WorldMenu extends RootComponentWindow {
 			e.printStackTrace();
 		}
 
-		Button loadButton = new Button(-210, 100, 200, 40, "Load World");
+		Button loadButton = new Button(-210, 100, 200, 40, LANG.getRegistryItem("voxel.worldwindow.list.btnload"));
 		loadButton.setAlignment(Alignment.CENTER);
 		loadButton.setWindowAlignment(Alignment.RIGHT_BOTTOM);
 		loadButton.setOnButtonPress(() -> {
@@ -133,7 +134,7 @@ public class WorldMenu extends RootComponentWindow {
 			}
 		});
 
-		Button createButton = new Button(-210, 40, 200, 40, "Create World");
+		Button createButton = new Button(-210, 40, 200, 40, LANG.getRegistryItem("voxel.worldwindow.list.btncreate"));
 		createButton.setAlignment(Alignment.CENTER);
 		createButton.setWindowAlignment(Alignment.RIGHT_BOTTOM);
 		createButton.setOnButtonPress(() -> {

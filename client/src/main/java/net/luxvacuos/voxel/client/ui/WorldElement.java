@@ -23,21 +23,21 @@ package net.luxvacuos.voxel.client.ui;
 import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
-import net.luxvacuos.voxel.client.ui.menus.WorldMenu;
+import net.luxvacuos.voxel.client.ui.windows.WorldWindow;
 
 public class WorldElement extends ScrollPaneElement {
 
 	private boolean pressed = false;
 	private String worldName;
-	private WorldMenu worldMenu;
+	private WorldWindow worldWindow;
 
-	public WorldElement(float w, float h, String name, WorldMenu worldMenu) {
+	public WorldElement(float w, float h, String name, WorldWindow worldWindow) {
 		super(0, 0, w, h);
 		Text n = new Text(name, 0, 0);
 		n.setWindowAlignment(Alignment.LEFT);
 		addComponent(n);
 		worldName = name;
-		this.worldMenu = worldMenu;
+		this.worldWindow = worldWindow;
 	}
 
 	@Override
@@ -46,7 +46,7 @@ public class WorldElement extends ScrollPaneElement {
 
 		if (pressed() && !pressed) {
 			ClientVariables.worldNameToLoad = new String(worldName);
-			worldMenu.worldName.setText("Name: " + worldName);
+			worldWindow.worldName.setText("Name: " + worldName);
 		}
 		pressed = pressed();
 	}

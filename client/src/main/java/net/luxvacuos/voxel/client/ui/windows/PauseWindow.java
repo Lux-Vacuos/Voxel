@@ -18,7 +18,7 @@
  * 
  */
 
-package net.luxvacuos.voxel.client.ui.menus;
+package net.luxvacuos.voxel.client.ui.windows;
 
 import static net.luxvacuos.voxel.universal.core.subsystems.CoreSubsystem.REGISTRY;
 
@@ -50,7 +50,7 @@ public class PauseWindow extends RootComponentWindow {
 			float borderSize = (float) REGISTRY.getRegistryItem(new Key("/Voxel/Settings/WindowManager/borderSize"));
 			float titleBarHeight = (float) REGISTRY.getRegistryItem(new Key("/Voxel/Settings/WindowManager/titleBarHeight"));
 			int height = (int) REGISTRY.getRegistryItem(new Key("/Voxel/Display/height"));
-			RootComponentWindow mainMenu = new MainMenu(borderSize + 10, height - titleBarHeight - 10,
+			RootComponentWindow mainMenu = new MainWindow(borderSize + 10, height - titleBarHeight - 10,
 					(int) REGISTRY.getRegistryItem(new Key("/Voxel/Display/width")) - borderSize * 2f - 20,
 					height - titleBarHeight - borderSize - 50);
 			GraphicalSubsystem.getWindowManager().addWindow(mainMenu);
@@ -61,7 +61,7 @@ public class PauseWindow extends RootComponentWindow {
 		optionsButton.setAlignment(Alignment.CENTER);
 		optionsButton.setWindowAlignment(Alignment.BOTTOM);
 		optionsButton.setOnButtonPress(() -> {
-			GraphicalSubsystem.getWindowManager().addWindow(new OptionsMenu(w / 2 - 420 + x, y - 40, 840, 600));
+			GraphicalSubsystem.getWindowManager().addWindow(new OptionsWindow(w / 2 - 420 + x, y - 40, 840, 600));
 		});
 
 		super.addComponent(backButton);

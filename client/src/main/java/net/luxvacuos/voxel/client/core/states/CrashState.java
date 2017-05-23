@@ -26,7 +26,7 @@ import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 
 import net.luxvacuos.voxel.client.core.subsystems.GraphicalSubsystem;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Renderer;
-import net.luxvacuos.voxel.client.ui.menus.CrashWindow;
+import net.luxvacuos.voxel.client.ui.windows.CrashWindow;
 import net.luxvacuos.voxel.universal.core.AbstractVoxel;
 import net.luxvacuos.voxel.universal.core.states.AbstractState;
 import net.luxvacuos.voxel.universal.util.registry.Key;

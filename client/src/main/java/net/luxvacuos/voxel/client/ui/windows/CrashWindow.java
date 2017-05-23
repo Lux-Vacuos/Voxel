@@ -18,7 +18,7 @@
  * 
  */
 
-package net.luxvacuos.voxel.client.ui.menus;
+package net.luxvacuos.voxel.client.ui.windows;
 
 import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_CENTER;
 import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_MIDDLE;

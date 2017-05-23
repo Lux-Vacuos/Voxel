@@ -72,6 +72,8 @@ public final class ClientGameSettings extends AbstractGameSettings {
 		
 		REGISTRY.register(new Key("/Voxel/Settings/World/chunkRadius", true), 				4);
 		REGISTRY.register(new Key("/Voxel/Settings/World/chunkManagerThreads", true), 		3);
+		
+		REGISTRY.register(new Key("/Voxel/Settings/Regional/lang", true), 					"en_US");
 	}
 
 	/**

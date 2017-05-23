@@ -10,7 +10,7 @@ import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.core.states.MPWorldState;
 import net.luxvacuos.voxel.client.core.subsystems.GraphicalSubsystem;
 import net.luxvacuos.voxel.client.ui.RootComponentWindow;
-import net.luxvacuos.voxel.client.ui.menus.MainMenu;
+import net.luxvacuos.voxel.client.ui.windows.MainWindow;
 import net.luxvacuos.voxel.client.world.dimension.NetworkDimension;
 import net.luxvacuos.voxel.universal.network.packets.Disconnect;
 import net.luxvacuos.voxel.universal.network.packets.Message;
@@ -69,7 +69,7 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
 		float titleBarHeight = (float) REGISTRY
 				.getRegistryItem(new Key("/Voxel/Settings/WindowManager/titleBarHeight"));
 		int height = (int) REGISTRY.getRegistryItem(new Key("/Voxel/Display/height"));
-		RootComponentWindow mainMenu = new MainMenu(borderSize + 10, height - titleBarHeight - 10,
+		RootComponentWindow mainMenu = new MainWindow(borderSize + 10, height - titleBarHeight - 10,
 				(int) REGISTRY.getRegistryItem(new Key("/Voxel/Display/width")) - borderSize * 2f - 20,
 				height - titleBarHeight - borderSize - 20);
 		GraphicalSubsystem.getWindowManager().addWindow(mainMenu);

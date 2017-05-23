@@ -18,8 +18,9 @@
  * 
  */
 
-package net.luxvacuos.voxel.client.ui.menus;
+package net.luxvacuos.voxel.client.ui.windows;
 
+import static net.luxvacuos.voxel.universal.core.subsystems.CoreSubsystem.LANG;
 import static net.luxvacuos.voxel.universal.core.subsystems.CoreSubsystem.REGISTRY;
 import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_MIDDLE;
 import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_RIGHT;
@@ -33,10 +34,10 @@ import net.luxvacuos.voxel.client.ui.RootComponentWindow;
 import net.luxvacuos.voxel.client.ui.Text;
 import net.luxvacuos.voxel.universal.util.registry.Key;
 
-public class AboutMenu extends RootComponentWindow {
+public class AboutWindow extends RootComponentWindow {
 
-	public AboutMenu(float x, float y, float w, float h) {
-		super(x, y, w, h, "About");
+	public AboutWindow(float x, float y, float w, float h) {
+		super(x, y, w, h, LANG.getRegistryItem("voxel.aboutwindow.name"));
 	}
 
 	@Override
@@ -49,63 +50,63 @@ public class AboutMenu extends RootComponentWindow {
 		voxelLogo.setAlignment(Alignment.BOTTOM);
 		voxelLogo.setWindowAlignment(Alignment.TOP);
 
-		Text versionL = new Text("Version", 30, -260);
+		Text versionL = new Text(LANG.getRegistryItem("voxel.aboutwindow.txtversion"), 30, -260);
 		versionL.setFont("Roboto-Bold");
 		versionL.setWindowAlignment(Alignment.LEFT_TOP);
 		Text versionR = new Text(" (" + ClientVariables.version + ")", -30, -260);
 		versionR.setAlign(NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE);
 		versionR.setWindowAlignment(Alignment.RIGHT_TOP);
 
-		Text osL = new Text("Operative System", 30, -290);
+		Text osL = new Text(LANG.getRegistryItem("voxel.aboutwindow.txtos"), 30, -290);
 		osL.setFont("Roboto-Bold");
 		osL.setWindowAlignment(Alignment.LEFT_TOP);
 		Text osR = new Text((String) REGISTRY.getRegistryItem(new Key("/Voxel/System/os")), -30, -290);
 		osR.setAlign(NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE);
 		osR.setWindowAlignment(Alignment.RIGHT_TOP);
 
-		Text lwjglL = new Text("LWJGL Version", 30, -320);
+		Text lwjglL = new Text(LANG.getRegistryItem("voxel.aboutwindow.txtlwjgl"), 30, -320);
 		lwjglL.setFont("Roboto-Bold");
 		lwjglL.setWindowAlignment(Alignment.LEFT_TOP);
 		Text lwjglR = new Text((String) REGISTRY.getRegistryItem(new Key("/Voxel/System/lwjgl")), -30, -320);
 		lwjglR.setAlign(NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE);
 		lwjglR.setWindowAlignment(Alignment.RIGHT_TOP);
 
-		Text glfwL = new Text("GLFW Version", 30, -350);
+		Text glfwL = new Text(LANG.getRegistryItem("voxel.aboutwindow.txtglfw"), 30, -350);
 		glfwL.setFont("Roboto-Bold");
 		glfwL.setWindowAlignment(Alignment.LEFT_TOP);
 		Text glfwR = new Text((String) REGISTRY.getRegistryItem(new Key("/Voxel/System/glfw")), -30, -350);
 		glfwR.setAlign(NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE);
 		glfwR.setWindowAlignment(Alignment.RIGHT_TOP);
 
-		Text openglL = new Text("OpenGL Version", 30, -380);
+		Text openglL = new Text(LANG.getRegistryItem("voxel.aboutwindow.txtogl"), 30, -380);
 		openglL.setFont("Roboto-Bold");
 		openglL.setWindowAlignment(Alignment.LEFT_TOP);
 		Text openglR = new Text((String) REGISTRY.getRegistryItem(new Key("/Voxel/System/opengl")), -30, -380);
 		openglR.setAlign(NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE);
 		openglR.setWindowAlignment(Alignment.RIGHT_TOP);
 
-		Text glslL = new Text("GLSL Version", 30, -410);
+		Text glslL = new Text(LANG.getRegistryItem("voxel.aboutwindow.txtglsl"), 30, -410);
 		glslL.setFont("Roboto-Bold");
 		glslL.setWindowAlignment(Alignment.LEFT_TOP);
 		Text glslR = new Text((String) REGISTRY.getRegistryItem(new Key("/Voxel/System/glsl")), -30, -410);
 		glslR.setAlign(NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE);
 		glslR.setWindowAlignment(Alignment.RIGHT_TOP);
 
-		Text vkL = new Text("Vulkan Version", 30, -440);
+		Text vkL = new Text(LANG.getRegistryItem("voxel.aboutwindow.txtvk"), 30, -440);
 		vkL.setFont("Roboto-Bold");
 		vkL.setWindowAlignment(Alignment.LEFT_TOP);
 		Text vkR = new Text((String) REGISTRY.getRegistryItem(new Key("/Voxel/System/vk")), -30, -440);
 		vkR.setAlign(NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE);
 		vkR.setWindowAlignment(Alignment.RIGHT_TOP);
 
-		Text vendorL = new Text("Vendor", 30, -470);
+		Text vendorL = new Text(LANG.getRegistryItem("voxel.aboutwindow.txtvendor"), 30, -470);
 		vendorL.setFont("Roboto-Bold");
 		vendorL.setWindowAlignment(Alignment.LEFT_TOP);
 		Text vendorR = new Text((String) REGISTRY.getRegistryItem(new Key("/Voxel/System/vendor")), -30, -470);
 		vendorR.setAlign(NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE);
 		vendorR.setWindowAlignment(Alignment.RIGHT_TOP);
 
-		Text rendererL = new Text("Renderer", 30, -500);
+		Text rendererL = new Text(LANG.getRegistryItem("voxel.aboutwindow.txtrenderer"), 30, -500);
 		rendererL.setFont("Roboto-Bold");
 		rendererL.setWindowAlignment(Alignment.LEFT_TOP);
 		Text rendererR = new Text((String) REGISTRY.getRegistryItem(new Key("/Voxel/System/renderer")), -30, -500);

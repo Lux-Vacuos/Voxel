@@ -28,11 +28,13 @@ import net.luxvacuos.voxel.universal.bootstrap.AbstractBootstrap;
 import net.luxvacuos.voxel.universal.core.AbstractGameSettings;
 import net.luxvacuos.voxel.universal.core.GlobalVariables;
 import net.luxvacuos.voxel.universal.util.registry.Key;
+import net.luxvacuos.voxel.universal.util.registry.LanguageRegistry;
 import net.luxvacuos.voxel.universal.util.registry.SystemRegistry;
 
 public class CoreSubsystem implements ISubsystem {
 
 	protected static AbstractGameSettings gameSettings;
+	public static LanguageRegistry LANG;
 	public static SystemRegistry REGISTRY;
 	public static int ups;
 	public static int upsCount;
@@ -52,6 +54,7 @@ public class CoreSubsystem implements ISubsystem {
 		REGISTRY.register(new Key("/Voxel/Settings/file"), AbstractBootstrap.getPrefix() + "/config/registry.json");
 		REGISTRY.register(new Key("/Voxel/System/os"),
 				System.getProperty("os.name") + " " + System.getProperty("os.arch").toUpperCase());
+		LANG = new LanguageRegistry();
 	}
 
 	@Override
@@ -64,6 +67,7 @@ public class CoreSubsystem implements ISubsystem {
 
 	@Override
 	public void dispose() {
+		REGISTRY.save();
 	}
 
 	public static AbstractGameSettings getGameSettings() {

@@ -18,7 +18,7 @@
  * 
  */
 
-package net.luxvacuos.voxel.client.ui.menus;
+package net.luxvacuos.voxel.client.ui.windows;
 
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Renderer;

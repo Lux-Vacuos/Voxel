@@ -18,7 +18,7 @@
  * 
  */
 
-package net.luxvacuos.voxel.client.ui.menus;
+package net.luxvacuos.voxel.client.ui.windows;
 
 import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.core.states.StateNames;
@@ -32,21 +32,23 @@ import net.luxvacuos.voxel.client.ui.RootComponentWindow;
 import net.luxvacuos.voxel.universal.core.TaskManager;
 import net.luxvacuos.voxel.universal.core.states.StateMachine;
 
-public class MainMenu extends RootComponentWindow {
+import static net.luxvacuos.voxel.universal.core.subsystems.CoreSubsystem.*;
 
-	public MainMenu(float x, float y, float w, float h) {
-		super(x, y, w, h, "Main Menu");
+public class MainWindow extends RootComponentWindow {
+
+	public MainWindow(float x, float y, float w, float h) {
+		super(x, y, w, h, LANG.getRegistryItem("voxel.mainwindow.name"));
 	}
 
 	@Override
 	public void initApp(Window window) {
 		super.setBackgroundColor(0.4f, 0.4f, 0.4f, 1f);
 
-		Button playButton = new Button(0, 120, 200, 40, "Singleplayer");
-		Button playMPButton = new Button(0, 60, 200, 40, "Multiplayer");
-		Button optionsButton = new Button(0, 0, 200, 40, "Options");
-		Button aboutButton = new Button(0, -60, 200, 40, "About");
-		Button exitButton = new Button(0, -120, 200, 40, "Exit");
+		Button playButton = new Button(0, 120, 200, 40, LANG.getRegistryItem("voxel.mainwindow.btnplay"));
+		Button playMPButton = new Button(0, 60, 200, 40, LANG.getRegistryItem("voxel.mainwindow.btnmp"));
+		Button optionsButton = new Button(0, 0, 200, 40, LANG.getRegistryItem("voxel.mainwindow.btnoptions"));
+		Button aboutButton = new Button(0, -60, 200, 40, LANG.getRegistryItem("voxel.mainwindow.btnabout"));
+		Button exitButton = new Button(0, -120, 200, 40, LANG.getRegistryItem("voxel.mainwindow.btnexit"));
 
 		playButton.setPreicon(Theme.ICON_BLACK_RIGHT_POINTING_TRIANGLE);
 		playMPButton.setPreicon(Theme.ICON_BLACK_RIGHT_POINTING_TRIANGLE);
@@ -72,7 +74,8 @@ public class MainMenu extends RootComponentWindow {
 				super.closeWindow();
 				StateMachine.setCurrentState(StateNames.TEST);
 			} else
-				GraphicalSubsystem.getWindowManager().addWindow(new WorldMenu(w / 2 - 420 + x, y - 40, 840, 600, this));
+				GraphicalSubsystem.getWindowManager()
+						.addWindow(new WorldWindow(w / 2 - 420 + x, y - 40, 840, 600, this));
 		});
 
 		playMPButton.setOnButtonPress(() -> {
@@ -81,11 +84,11 @@ public class MainMenu extends RootComponentWindow {
 		});
 
 		optionsButton.setOnButtonPress(() -> {
-			GraphicalSubsystem.getWindowManager().addWindow(new OptionsMenu(w / 2 - 420 + x, y - 40, 840, 600));
+			GraphicalSubsystem.getWindowManager().addWindow(new OptionsWindow(w / 2 - 420 + x, y - 40, 840, 600));
 		});
 
 		aboutButton.setOnButtonPress(() -> {
-			GraphicalSubsystem.getWindowManager().addWindow(new AboutMenu(w / 2 - 420 + x, y - 40, 840, 600));
+			GraphicalSubsystem.getWindowManager().addWindow(new AboutWindow(w / 2 - 420 + x, y - 40, 840, 600));
 		});
 
 		exitButton.setOnButtonPress(() -> {
@@ -104,7 +107,8 @@ public class MainMenu extends RootComponentWindow {
 
 	@Override
 	public void onClose() {
-		ModalWindow window = new ModalWindow(340, 200, "Are you sure you want to close Voxel?", "Close Voxel");
+		ModalWindow window = new ModalWindow(340, 200, LANG.getRegistryItem("voxel.mainwindow.modal.txtclose"),
+				LANG.getRegistryItem("voxel.mainwindow.modal.name"));
 		GraphicalSubsystem.getWindowManager().addWindow(window);
 		TaskManager.addTask(() -> {
 			window.setOnAccept(() -> {

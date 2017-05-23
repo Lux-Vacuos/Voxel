@@ -86,7 +86,6 @@ public class SystemRegistry extends PersistentRegistry<Key, Object> {
 				}.getType();
 				Map<String, Object> load = gson.fromJson(reader, type);
 				for (String key : load.keySet()) {
-					System.out.println(key + ":" + load.get(key));
 					this.registry.put(new Key(key, true), load.get(key));
 				}
 			} catch (IOException e) {

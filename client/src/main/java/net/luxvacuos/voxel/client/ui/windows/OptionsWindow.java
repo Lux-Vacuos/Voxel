@@ -18,8 +18,9 @@
  * 
  */
 
-package net.luxvacuos.voxel.client.ui.menus;
+package net.luxvacuos.voxel.client.ui.windows;
 
+import static net.luxvacuos.voxel.universal.core.subsystems.CoreSubsystem.LANG;
 import static net.luxvacuos.voxel.universal.core.subsystems.CoreSubsystem.REGISTRY;
 
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
@@ -39,12 +40,12 @@ import net.luxvacuos.voxel.universal.core.TaskManager;
 import net.luxvacuos.voxel.universal.core.subsystems.CoreSubsystem;
 import net.luxvacuos.voxel.universal.util.registry.Key;
 
-public class OptionsMenu extends RootComponentWindow {
+public class OptionsWindow extends RootComponentWindow {
 
 	private TitleBarButton backButton;
 
-	public OptionsMenu(float x, float y, float w, float h) {
-		super(x, y, w, h, "Options");
+	public OptionsWindow(float x, float y, float w, float h) {
+		super(x, y, w, h, LANG.getRegistryItem("voxel.optionswindow.name"));
 	}
 
 	@Override
@@ -66,7 +67,7 @@ public class OptionsMenu extends RootComponentWindow {
 	}
 
 	private void mainMenu(Window window) {
-		Button graphics = new Button(40, -40, 200, 40, "Graphics");
+		Button graphics = new Button(40, -40, 200, 40, LANG.getRegistryItem("voxel.optionswindow.btngraphics"));
 		graphics.setWindowAlignment(Alignment.LEFT_TOP);
 		graphics.setAlignment(Alignment.RIGHT_BOTTOM);
 
@@ -84,7 +85,7 @@ public class OptionsMenu extends RootComponentWindow {
 			});
 		});
 
-		Button wm = new Button(40, -100, 200, 40, "Window Manager");
+		Button wm = new Button(40, -100, 200, 40, LANG.getRegistryItem("voxel.optionswindow.btnwm"));
 		wm.setWindowAlignment(Alignment.LEFT_TOP);
 		wm.setAlignment(Alignment.RIGHT_BOTTOM);
 
@@ -171,25 +172,25 @@ public class OptionsMenu extends RootComponentWindow {
 		lensFlaresButton.setOnButtonPress(
 				() -> REGISTRY.register(new Key("/Voxel/Settings/Graphics/lensFlares"), lensFlaresButton.getStatus()));
 
-		Text godText = new Text("Volumetric Light", 20, 0);
+		Text godText = new Text(LANG.getRegistryItem("voxel.optionswindow.graphics.volumetriclight"), 20, 0);
 		godText.setWindowAlignment(Alignment.LEFT);
-		Text shadowsText = new Text("Shadows", 20, 0);
+		Text shadowsText = new Text(LANG.getRegistryItem("voxel.optionswindow.graphics.shadows"), 20, 0);
 		shadowsText.setWindowAlignment(Alignment.LEFT);
-		Text dofText = new Text("Depht of Field", 20, 0);
+		Text dofText = new Text(LANG.getRegistryItem("voxel.optionswindow.graphics.dof"), 20, 0);
 		dofText.setWindowAlignment(Alignment.LEFT);
-		Text fxaaText = new Text("FXAA", 20, 0);
+		Text fxaaText = new Text(LANG.getRegistryItem("voxel.optionswindow.graphics.fxaa"), 20, 0);
 		fxaaText.setWindowAlignment(Alignment.LEFT);
-		Text motionBlurText = new Text("Motion Blur", 20, 0);
+		Text motionBlurText = new Text(LANG.getRegistryItem("voxel.optionswindow.graphics.motionblur"), 20, 0);
 		motionBlurText.setWindowAlignment(Alignment.LEFT);
-		Text reflectionsText = new Text("Reflections", 20, 0);
+		Text reflectionsText = new Text(LANG.getRegistryItem("voxel.optionswindow.graphics.reflections"), 20, 0);
 		reflectionsText.setWindowAlignment(Alignment.LEFT);
-		Text parallaxText = new Text("Parallax Mapping", 20, 0);
+		Text parallaxText = new Text(LANG.getRegistryItem("voxel.optionswindow.graphics.parallax"), 20, 0);
 		parallaxText.setWindowAlignment(Alignment.LEFT);
-		Text ambientOccText = new Text("Ambient Occlusion", 20, 0);
+		Text ambientOccText = new Text(LANG.getRegistryItem("voxel.optionswindow.graphics.ao"), 20, 0);
 		ambientOccText.setWindowAlignment(Alignment.LEFT);
-		Text chromaticAberrationText = new Text("Chromatic Aberration", 20, 0);
+		Text chromaticAberrationText = new Text(LANG.getRegistryItem("voxel.optionswindow.graphics.chromatic"), 20, 0);
 		chromaticAberrationText.setWindowAlignment(Alignment.LEFT);
-		Text lensFlaresText = new Text("Lens Flares", 20, 0);
+		Text lensFlaresText = new Text(LANG.getRegistryItem("voxel.optionswindow.graphics.lensflares"), 20, 0);
 		lensFlaresText.setWindowAlignment(Alignment.LEFT);
 
 		ScrollArea area = new ScrollArea(0, 0, w, h, 0, 0);
@@ -265,7 +266,7 @@ public class OptionsMenu extends RootComponentWindow {
 
 	private void wmOptions() {
 		float border = (float) REGISTRY.getRegistryItem(new Key("/Voxel/Settings/WindowManager/borderSize"));
-		Text wmBorderText = new Text("Window Border: " + border, 20, 0);
+		Text wmBorderText = new Text(LANG.getRegistryItem("voxel.optionswindow.wm.border") + ": " + border, 20, 0);
 		Slider wmBorder = new Slider(-56, 0, 200, 20, border / 40f);
 
 		wmBorderText.setWindowAlignment(Alignment.LEFT);
@@ -278,7 +279,7 @@ public class OptionsMenu extends RootComponentWindow {
 		wmBorder.setOnPress(() -> {
 			float val = wmBorder.getPosition() * 40f;
 			REGISTRY.register(new Key("/Voxel/Settings/WindowManager/borderSize"), val);
-			wmBorderText.setText("Window Border: " + val);
+			wmBorderText.setText(LANG.getRegistryItem("voxel.optionswindow.wm.border") + ": " + val);
 		});
 
 		Container borderC = new Container(0, 0, w, 20);
@@ -288,7 +289,8 @@ public class OptionsMenu extends RootComponentWindow {
 		borderC.addComponent(wmBorder);
 
 		float scroll = (float) REGISTRY.getRegistryItem(new Key("/Voxel/Settings/WindowManager/scrollBarSize"));
-		Text wmScrollText = new Text("Scroll Bar Size: " + scroll, 20, 0);
+		Text wmScrollText = new Text(LANG.getRegistryItem("voxel.optionswindow.wm.scrollsize") + ": " + scroll,
+				20, 0);
 		Slider wmScroll = new Slider(-56, 0, 200, 20, scroll / 40f);
 
 		wmScrollText.setWindowAlignment(Alignment.LEFT);
@@ -301,7 +303,7 @@ public class OptionsMenu extends RootComponentWindow {
 		wmScroll.setOnPress(() -> {
 			float val = wmScroll.getPosition() * 40f;
 			REGISTRY.register(new Key("/Voxel/Settings/WindowManager/scrollBarSize"), val);
-			wmScrollText.setText("Scroll Bar Size: " + val);
+			wmScrollText.setText(LANG.getRegistryItem("voxel.optionswindow.wm.scrollsize") + ": " + val);
 		});
 
 		Container scrollC = new Container(0, 0, w, 20);
@@ -311,7 +313,8 @@ public class OptionsMenu extends RootComponentWindow {
 		scrollC.addComponent(wmScroll);
 
 		float title = (float) REGISTRY.getRegistryItem(new Key("/Voxel/Settings/WindowManager/titleBarHeight"));
-		Text wmTitleText = new Text("Title Bar Size: " + title, 20, 0);
+		Text wmTitleText = new Text(LANG.getRegistryItem("voxel.optionswindow.wm.titlebarsize") + ": " + title,
+				20, 0);
 		Slider wmTitle = new Slider(-56, 0, 200, 20, title / 40f);
 
 		wmTitleText.setWindowAlignment(Alignment.LEFT);
@@ -324,7 +327,7 @@ public class OptionsMenu extends RootComponentWindow {
 		wmTitle.setOnPress(() -> {
 			float val = wmTitle.getPosition() * 40f;
 			REGISTRY.register(new Key("/Voxel/Settings/WindowManager/titleBarHeight"), val);
-			wmTitleText.setText("Title Bar Size: " + val);
+			wmTitleText.setText(LANG.getRegistryItem("voxel.optionswindow.wm.titlebarsize") + ": " + val);
 		});
 
 		Container titleC = new Container(0, 0, w, 20);
@@ -342,7 +345,7 @@ public class OptionsMenu extends RootComponentWindow {
 		titleBorderButton.setOnButtonPress(() -> REGISTRY
 				.register(new Key("/Voxel/Settings/WindowManager/titleBarBorder"), titleBorderButton.getStatus()));
 
-		Text titleBorderText = new Text("Title Bar Border", 20, 0);
+		Text titleBorderText = new Text(LANG.getRegistryItem("voxel.optionswindow.wm.titlebarborder"), 20, 0);
 		titleBorderText.setWindowAlignment(Alignment.LEFT);
 
 		Container titleBorder = new Container(0, 0, w, 30);

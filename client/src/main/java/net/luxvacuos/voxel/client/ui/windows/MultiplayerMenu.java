@@ -18,8 +18,9 @@
  * 
  */
 
-package net.luxvacuos.voxel.client.ui.menus;
+package net.luxvacuos.voxel.client.ui.windows;
 
+import static net.luxvacuos.voxel.universal.core.subsystems.CoreSubsystem.LANG;
 import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_CENTER;
 import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_MIDDLE;
 
@@ -40,7 +41,7 @@ public class MultiplayerMenu extends RootComponentWindow {
 	private NanoWindow root;
 
 	public MultiplayerMenu(float x, float y, float w, float h, NanoWindow root) {
-		super(x, y, w, h, "Multiplayer");
+		super(x, y, w, h, LANG.getRegistryItem("voxel.mpwindow.name"));
 		this.root = root;
 	}
 
@@ -49,14 +50,14 @@ public class MultiplayerMenu extends RootComponentWindow {
 		super.setBackgroundColor(0.4f, 0.4f, 0.4f, 1f);
 		super.setResizable(false);
 
-		Button playButton = new Button(0, 40, 200, 40, "Play");
+		Button playButton = new Button(0, 40, 200, 40, LANG.getRegistryItem("voxel.mpwindow.btnplay"));
 		playButton.setAlignment(Alignment.CENTER);
 		playButton.setWindowAlignment(Alignment.BOTTOM);
 		EditBox address = new EditBox(0, 0, 300, 30, "");
 		address.setAlignment(Alignment.CENTER);
 		address.setWindowAlignment(Alignment.CENTER);
 		address.setFontSize(25);
-		Text text = new Text("Server Address", 0, 80);
+		Text text = new Text(LANG.getRegistryItem("voxel.mpwindow.txtadd"), 0, 80);
 		text.setAlign(NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
 		text.setWindowAlignment(Alignment.CENTER);
 
