@@ -25,5 +25,9 @@ public interface IShell {
 	public void notifyAdd(IWindow window);
 
 	public void notifyClose(IWindow window);
+
+	public void toggleShell();
+
+	public boolean isEnabled();
 	
 }

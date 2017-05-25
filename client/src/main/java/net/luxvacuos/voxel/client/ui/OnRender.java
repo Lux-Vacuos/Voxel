@@ -18,34 +18,10 @@
  * 
  */
 
-package net.luxvacuos.voxel.client.rendering.api.nanovg;
+package net.luxvacuos.voxel.client.ui;
 
-import net.luxvacuos.voxel.universal.resources.IDisposable;
-
-public interface IWindowManager extends IDisposable {
-
-	public void render();
-
-	public void update(float delta);
-
-	public void addWindow(IWindow window);
-
-	public void addWindow(int ord, IWindow window);
-
-	public void removeWindow(IWindow window);
-
-	public void bringToFront(IWindow window);
-
-	public boolean isOnTop(IWindow window);
-
-	public void notifyAdd(IWindow window);
-
-	public void notifyClose(IWindow window);
-
-	public void setShell(IShell shell);
-
-	public void toggleShell();
-
-	public boolean isShellEnabled();
+public interface OnRender {
+	
+	public void onRender(long nvg, float x, float y, float w, float h);
 
 }

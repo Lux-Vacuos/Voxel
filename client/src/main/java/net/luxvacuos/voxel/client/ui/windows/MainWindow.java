@@ -92,7 +92,7 @@ public class MainWindow extends RootComponentWindow {
 		});
 
 		exitButton.setOnButtonPress(() -> {
-			StateMachine.stop();
+			onClose();
 		});
 
 		super.addComponent(playButton);
@@ -112,7 +112,18 @@ public class MainWindow extends RootComponentWindow {
 		GraphicalSubsystem.getWindowManager().addWindow(window);
 		TaskManager.addTask(() -> {
 			window.setOnAccept(() -> {
-				StateMachine.stop();
+				new Thread(() -> {
+					try {
+						Thread.sleep(1000);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+					TaskManager.addTask(() -> StateMachine.stop());
+				}).start();
+				super.setWindowClose(WindowClose.DISPOSE);
+				super.closeWindow();
+				window.closeWindow();
+				GraphicalSubsystem.getWindowManager().toggleShell();
 			});
 		});
 	}

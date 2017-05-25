@@ -124,7 +124,7 @@ public class TitleBar implements ITitleBar {
 		return Mouse.getX() > iWindow.getX()
 				&& Mouse.getY() < iWindow.getY()
 						+ (float) REGISTRY.getRegistryItem(new Key("/Voxel/Settings/WindowManager/titleBarHeight"))
-				&& Mouse.getX() < iWindow.getX() + iWindow.getWidth() && Mouse.getY() > iWindow.getY();
+				&& Mouse.getX() < iWindow.getX() + iWindow.getWidth() - 87 && Mouse.getY() > iWindow.getY();
 	}
 
 	@Override

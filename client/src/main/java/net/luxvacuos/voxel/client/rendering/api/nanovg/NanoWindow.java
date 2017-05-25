@@ -32,6 +32,7 @@ import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import org.lwjgl.nanovg.NVGColor;
 import org.lwjgl.nanovg.NVGLUFramebuffer;
 
+import net.luxvacuos.voxel.client.core.subsystems.GraphicalSubsystem;
 import net.luxvacuos.voxel.client.input.Mouse;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Sync;
 import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
@@ -51,8 +52,8 @@ import net.luxvacuos.voxel.universal.util.registry.Key;
 
 public abstract class NanoWindow implements IWindow {
 
-	private boolean draggable = true, decorations = true, resizable = true, maximized, hidden = false, exit,
-			alwaysOnTop, background, blurBehind = true, running = true, resizing, minimized;
+	private boolean draggable = true, decorations = true, resizable = true, maximized, hidden, exit, alwaysOnTop,
+			background, blurBehind = true, running = true, resizing, minimized, closeButton = true;
 	private BackgroundStyle backgroundStyle = BackgroundStyle.SOLID;
 	private NVGColor backgroundColor = Theme.rgba(0, 0, 0, 255);
 	protected float x, y, w, h, minW = 300, minH = 300;
@@ -109,11 +110,12 @@ public abstract class NanoWindow implements IWindow {
 		TitleBarText titleText = new TitleBarText(title, 0, 0);
 		titleText.setWindowAlignment(Alignment.CENTER);
 		titleText.setAlign(NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
-
-		titleBar.getRight().addComponent(closeBtn);
+		if (closeButton)
+			titleBar.getRight().addComponent(closeBtn);
 		if (resizable)
 			titleBar.getRight().addComponent(maximizeBtn);
-		titleBar.getRight().addComponent(minimizeBtn);
+		if (GraphicalSubsystem.getWindowManager().isShellEnabled())
+			titleBar.getRight().addComponent(minimizeBtn);
 		titleBar.getCenter().addComponent(titleText);
 
 		titleBar.setOnDrag((window) -> {
@@ -242,6 +244,11 @@ public abstract class NanoWindow implements IWindow {
 	@Override
 	public void setResizable(boolean resizable) {
 		this.resizable = resizable;
+	}
+
+	@Override
+	public void setCloseButton(boolean closeButton) {
+		this.closeButton = closeButton;
 	}
 
 	@Override

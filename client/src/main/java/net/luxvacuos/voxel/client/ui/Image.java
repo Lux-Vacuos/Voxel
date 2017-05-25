@@ -29,6 +29,7 @@ import net.luxvacuos.voxel.client.rendering.api.nanovg.themes.Theme;
 public class Image extends Component {
 
 	private int image;
+	private boolean deleteOnClose;
 
 	public Image(float x, float y, float w, float h, int image) {
 		this.x = x;
@@ -38,16 +39,26 @@ public class Image extends Component {
 		this.image = image;
 	}
 
+	public Image(float x, float y, float w, float h, int image, boolean deleteOnClose) {
+		this.x = x;
+		this.y = y;
+		this.w = w;
+		this.h = h;
+		this.image = image;
+		this.deleteOnClose = deleteOnClose;
+	}
+
 	@Override
 	public void render(Window window) {
 		Theme.renderImage(window.getNVGID(), rootComponent.rootX + alignedX,
 				window.getHeight() - rootComponent.rootY - alignedY - h, w, h, image, 1);
 	}
-	
+
 	@Override
 	public void dispose() {
 		super.dispose();
-		nvgDeleteImage(GraphicalSubsystem.getMainWindow().getNVGID(), image);
+		if (deleteOnClose)
+			nvgDeleteImage(GraphicalSubsystem.getMainWindow().getNVGID(), image);
 	}
 
 }

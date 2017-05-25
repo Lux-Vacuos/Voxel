@@ -252,7 +252,14 @@ public class NanoWindowManager implements IWindowManager {
 	@Override
 	public void toggleShell() {
 		if (shell != null)
-			((IWindow) shell).setHidden(!((IWindow) shell).isHidden());
+			shell.toggleShell();
+	}
+
+	@Override
+	public boolean isShellEnabled() {
+		if (shell != null)
+			return shell.isEnabled();
+		return false;
 	}
 
 	public float getDelta() {

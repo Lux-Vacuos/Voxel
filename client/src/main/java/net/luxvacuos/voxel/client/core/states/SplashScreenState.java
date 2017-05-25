@@ -31,8 +31,10 @@ import net.luxvacuos.voxel.client.ui.Alignment;
 import net.luxvacuos.voxel.client.ui.Image;
 import net.luxvacuos.voxel.client.ui.RootComponentWindow;
 import net.luxvacuos.voxel.client.ui.Spinner;
+import net.luxvacuos.voxel.client.ui.windows.BackgroundWindow;
 import net.luxvacuos.voxel.client.ui.windows.MainWindow;
 import net.luxvacuos.voxel.client.ui.windows.Shell;
+import net.luxvacuos.voxel.client.ui.windows.InitialSettingsWindow;
 import net.luxvacuos.voxel.universal.core.AbstractVoxel;
 import net.luxvacuos.voxel.universal.core.TaskManager;
 import net.luxvacuos.voxel.universal.core.states.AbstractState;
@@ -81,7 +83,12 @@ public class SplashScreenState extends AbstractState {
 	public void end() {
 		super.end();
 		component.closeWindow();
-		Shell shell = new Shell(0, 30, (int) REGISTRY.getRegistryItem(new Key("/Voxel/Display/width")), 30);
+		GraphicalSubsystem.getWindowManager().addWindow(0,
+				new BackgroundWindow(0, (int) REGISTRY.getRegistryItem(new Key("/Voxel/Display/height")),
+						(int) REGISTRY.getRegistryItem(new Key("/Voxel/Display/width")),
+						(int) REGISTRY.getRegistryItem(new Key("/Voxel/Display/height"))));
+
+		/*Shell shell = new Shell(0, 30, (int) REGISTRY.getRegistryItem(new Key("/Voxel/Display/width")), 30);
 		GraphicalSubsystem.getWindowManager().addWindow(shell);
 		GraphicalSubsystem.getWindowManager().setShell(shell);
 		float borderSize = (float) REGISTRY.getRegistryItem(new Key("/Voxel/Settings/WindowManager/borderSize"));
@@ -91,7 +98,12 @@ public class SplashScreenState extends AbstractState {
 		RootComponentWindow mainMenu = new MainWindow(borderSize + 10, height - titleBarHeight - 10,
 				(int) REGISTRY.getRegistryItem(new Key("/Voxel/Display/width")) - borderSize * 2f - 20,
 				height - titleBarHeight - borderSize - 50);
-		GraphicalSubsystem.getWindowManager().addWindow(mainMenu);
+		GraphicalSubsystem.getWindowManager().addWindow(mainMenu);*/
+		int ww = (int) REGISTRY.getRegistryItem(new Key("/Voxel/Display/width"));
+		int wh = (int) REGISTRY.getRegistryItem(new Key("/Voxel/Display/height"));
+		int x = ww / 2 - 512;
+		int y = wh / 2 - 300;
+		GraphicalSubsystem.getWindowManager().addWindow(new InitialSettingsWindow(x, wh - y, 1024, 600));
 	}
 
 	@Override

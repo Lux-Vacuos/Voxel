@@ -42,5 +42,8 @@
 	"voxel.aboutwindow.txtglsl":"GLSL Version",
 	"voxel.aboutwindow.txtvk":"Vulkan Version",
 	"voxel.aboutwindow.txtvendor":"Vendor",
-	"voxel.aboutwindow.txtrenderer":"Renderer"
+	"voxel.aboutwindow.txtrenderer":"Renderer",
+	"voxel.initialsettingswindow.name":"Welcome",
+	"voxel.initialsettingswindow.btnnext":"Next",
+	"voxel.initialsettingswindow.txtinfo":"This is the initial configuration window, it opens in the first run or manually through the settings. Press the \"Next\" button to continue."
 }

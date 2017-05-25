@@ -61,6 +61,8 @@ public interface IWindow {
 	public void setDecorations(boolean decorations);
 
 	public void setResizable(boolean resizable);
+	
+	public void setCloseButton(boolean closeButton);
 
 	public void setBackgroundStyle(BackgroundStyle backgroundStyle);
 

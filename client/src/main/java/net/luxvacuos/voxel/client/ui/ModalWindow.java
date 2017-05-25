@@ -31,7 +31,7 @@ public class ModalWindow extends RootComponentWindow {
 
 	private float mwW, mwH;
 	private String text, title;
-	private Button accept;
+	private Button accept, cancel;
 
 	public ModalWindow(float w, float h, String text, String title) {
 		super(0, (int) REGISTRY.getRegistryItem(new Key("/Voxel/Display/height")),
@@ -68,7 +68,7 @@ public class ModalWindow extends RootComponentWindow {
 		accept.setAlignment(Alignment.LEFT_TOP);
 		accept.setWindowAlignment(Alignment.CENTER);
 
-		Button cancel = new Button(10, -mwH / 2f + 20, 100, 30, "Cancel");
+		cancel = new Button(10, -mwH / 2f + 20, 100, 30, "Cancel");
 		cancel.setAlignment(Alignment.RIGHT_TOP);
 		cancel.setWindowAlignment(Alignment.CENTER);
 		cancel.setOnButtonPress(() -> {
@@ -86,6 +86,10 @@ public class ModalWindow extends RootComponentWindow {
 
 	public void setOnAccept(OnAction action) {
 		accept.setOnButtonPress(action);
+	}
+
+	public void setOnCancel(OnAction action) {
+		cancel.setOnButtonPress(action);
 	}
 
 }

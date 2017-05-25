@@ -106,7 +106,7 @@ public class MPWorldState extends AbstractState {
 		gameWindow = new GameWindow(0, (int) REGISTRY.getRegistryItem(new Key("/Voxel/Display/height")),
 				(int) REGISTRY.getRegistryItem(new Key("/Voxel/Display/width")),
 				(int) REGISTRY.getRegistryItem(new Key("/Voxel/Display/height")));
-		GraphicalSubsystem.getWindowManager().addWindow(0, gameWindow);
+		GraphicalSubsystem.getWindowManager().addWindow(gameWindow);
 		client.getChannel()
 				.writeAndFlush(new ClientConnect(ClientVariables.user.getUUID(), ClientVariables.user.getUsername()));
 	}

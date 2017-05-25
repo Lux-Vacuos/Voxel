@@ -33,6 +33,7 @@ import net.luxvacuos.voxel.client.ui.Container;
 import net.luxvacuos.voxel.client.ui.Direction;
 import net.luxvacuos.voxel.client.ui.FlowLayout;
 import net.luxvacuos.voxel.client.ui.RootComponentWindow;
+import net.luxvacuos.voxel.universal.core.TaskManager;
 import net.luxvacuos.voxel.universal.core.subsystems.CoreSubsystem;
 import net.luxvacuos.voxel.universal.util.registry.Key;
 
@@ -40,6 +41,8 @@ public class Shell extends RootComponentWindow implements IShell {
 
 	private Map<Integer, Component> buttons;
 	private Container apps;
+	private boolean enabled = false;
+	private boolean fadeIn, fadeOut;
 
 	public Shell(float x, float y, float w, float h) {
 		super(x, y, w, h, "Shell");
@@ -54,8 +57,8 @@ public class Shell extends RootComponentWindow implements IShell {
 		super.setBackgroundColor("#1F1F1F78");
 		super.setLayout(new FlowLayout(Direction.RIGHT, 0, 0));
 		super.setAsBackground(true);
-		Container left = new Container(0, 0, 82, 30);
-		Button btn = new Button(0, 0, 80, 30, "Start");
+		Container left = new Container(0, 0, 82, h);
+		Button btn = new Button(0, 0, 80, h, "Start");
 		// btn.setColor("#00000000");
 		// btn.setHighlightColor("#FFFFFF64");
 		// btn.setTextColor("#FFFFFFFF");
@@ -63,9 +66,29 @@ public class Shell extends RootComponentWindow implements IShell {
 		});
 		left.addComponent(btn);
 		// super.addComponent(left);
-		apps = new Container(0, 0, super.w - 100, 30);
+		apps = new Container(0, 0, super.w - 100, h);
 		apps.setLayout(new FlowLayout(Direction.RIGHT, 0, 0));
 		super.addComponent(apps);
+	}
+
+	@Override
+	public void alwaysUpdateApp(float delta, Window window) {
+		if (fadeIn) {
+			y += 100f * delta;
+			if (y >= h) {
+				fadeIn = false;
+				y = h;
+			}
+		}
+		if (fadeOut) {
+			y -= 100f * delta;
+			if (y <= 0) {
+				super.setHidden(!enabled);
+				fadeOut = false;
+				y = 0;
+			}
+		}
+		super.alwaysUpdateApp(delta, window);
 	}
 
 	@Override
@@ -79,7 +102,7 @@ public class Shell extends RootComponentWindow implements IShell {
 	public void notifyAdd(IWindow window) {
 		if (!(window.hasDecorations() && !window.isHidden()))
 			return;
-		Button btn = new Button(0, 0, 100, 30, window.getTitle());
+		Button btn = new Button(0, 0, 100, h, window.getTitle());
 		// btn.setColor("#00000000");
 		// btn.setHighlightColor("#FFFFFF64");
 		// btn.setTextColor("#FFFFFFFF");
@@ -102,6 +125,25 @@ public class Shell extends RootComponentWindow implements IShell {
 			return;
 		apps.removeComponent(buttons.get(window.hashCode()));
 		buttons.remove(window.hashCode());
+	}
+
+	@Override
+	public void toggleShell() {
+		enabled = !enabled;
+		if (enabled) {
+			TaskManager.addTask(() -> GraphicalSubsystem.getWindowManager().bringToFront(this));
+			fadeIn = true;
+			fadeOut = false;
+			super.setHidden(!enabled);
+		} else {
+			fadeIn = false;
+			fadeOut = true;
+		}
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return enabled;
 	}
 
 }
