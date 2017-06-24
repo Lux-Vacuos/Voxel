@@ -33,8 +33,8 @@ import com.hackhalo2.nbt.stream.NBTInputStream;
 import com.hackhalo2.nbt.tags.TagCompound;
 
 import net.luxvacuos.igl.Logger;
-import net.luxvacuos.voxel.universal.core.subsystems.CoreSubsystem;
-import net.luxvacuos.voxel.universal.util.registry.Key;
+import net.luxvacuos.lightengine.universal.core.subsystems.CoreSubsystem;
+import net.luxvacuos.lightengine.universal.util.registry.Key;
 import net.luxvacuos.voxel.universal.world.dimension.Dimension;
 import net.luxvacuos.voxel.universal.world.dimension.IDimension;
 

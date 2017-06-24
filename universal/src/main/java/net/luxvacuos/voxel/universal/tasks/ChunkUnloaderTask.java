@@ -30,8 +30,8 @@ import com.badlogic.ashley.utils.ImmutableArray;
 import com.hackhalo2.nbt.CompoundBuilder;
 import com.hackhalo2.nbt.stream.NBTOutputStream;
 
-import net.luxvacuos.voxel.universal.core.subsystems.CoreSubsystem;
-import net.luxvacuos.voxel.universal.util.registry.Key;
+import net.luxvacuos.lightengine.universal.core.subsystems.CoreSubsystem;
+import net.luxvacuos.lightengine.universal.util.registry.Key;
 import net.luxvacuos.voxel.universal.world.chunk.ChunkSlice;
 import net.luxvacuos.voxel.universal.world.chunk.IChunk;
 

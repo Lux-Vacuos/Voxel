@@ -20,7 +20,7 @@
 
 package net.luxvacuos.voxel.client.rendering.world.block;
 
-import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.EntityShader;
+import net.luxvacuos.lightengine.client.rendering.api.opengl.shaders.EntityShader;
 
 public interface IRenderBlockEntity extends IRenderBlock {
 

@@ -20,23 +20,23 @@
 
 package net.luxvacuos.voxel.client.ui.windows;
 
-import static net.luxvacuos.voxel.universal.core.subsystems.CoreSubsystem.LANG;
+import static net.luxvacuos.lightengine.universal.core.subsystems.CoreSubsystem.LANG;
 import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_CENTER;
 import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_MIDDLE;
 
+import net.luxvacuos.lightengine.client.rendering.api.glfw.Window;
+import net.luxvacuos.lightengine.client.rendering.api.nanovg.NanoWindow;
+import net.luxvacuos.lightengine.client.ui.Alignment;
+import net.luxvacuos.lightengine.client.ui.Button;
+import net.luxvacuos.lightengine.client.ui.ComponentWindow;
+import net.luxvacuos.lightengine.client.ui.EditBox;
+import net.luxvacuos.lightengine.client.ui.Text;
+import net.luxvacuos.lightengine.universal.core.TaskManager;
+import net.luxvacuos.lightengine.universal.core.states.StateMachine;
 import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.core.states.StateNames;
-import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
-import net.luxvacuos.voxel.client.rendering.api.nanovg.NanoWindow;
-import net.luxvacuos.voxel.client.ui.Alignment;
-import net.luxvacuos.voxel.client.ui.Button;
-import net.luxvacuos.voxel.client.ui.EditBox;
-import net.luxvacuos.voxel.client.ui.RootComponentWindow;
-import net.luxvacuos.voxel.client.ui.Text;
-import net.luxvacuos.voxel.universal.core.TaskManager;
-import net.luxvacuos.voxel.universal.core.states.StateMachine;
 
-public class MultiplayerMenu extends RootComponentWindow {
+public class MultiplayerMenu extends ComponentWindow {
 
 	private NanoWindow root;
 

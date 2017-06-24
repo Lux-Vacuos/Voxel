@@ -20,7 +20,7 @@
 
 package net.luxvacuos.voxel.client.core.states;
 
-import static net.luxvacuos.voxel.universal.core.subsystems.CoreSubsystem.REGISTRY;
+import static net.luxvacuos.lightengine.universal.core.subsystems.CoreSubsystem.REGISTRY;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 
@@ -28,37 +28,32 @@ import org.lwjgl.glfw.GLFW;
 
 import net.luxvacuos.igl.vector.Matrix4d;
 import net.luxvacuos.igl.vector.Vector3d;
+import net.luxvacuos.lightengine.client.core.ClientWorldSimulation;
+import net.luxvacuos.lightengine.client.core.subsystems.GraphicalSubsystem;
+import net.luxvacuos.lightengine.client.ecs.entities.CameraEntity;
+import net.luxvacuos.lightengine.client.ecs.entities.Sun;
+import net.luxvacuos.lightengine.client.input.KeyboardHandler;
+import net.luxvacuos.lightengine.client.input.Mouse;
+import net.luxvacuos.lightengine.client.rendering.api.glfw.Window;
+import net.luxvacuos.lightengine.client.rendering.api.opengl.ParticleDomain;
+import net.luxvacuos.lightengine.client.rendering.api.opengl.Renderer;
+import net.luxvacuos.lightengine.client.ui.windows.GameWindow;
+import net.luxvacuos.lightengine.client.util.Maths;
+import net.luxvacuos.lightengine.universal.core.states.AbstractState;
+import net.luxvacuos.lightengine.universal.core.states.StateMachine;
+import net.luxvacuos.lightengine.universal.util.registry.Key;
 import net.luxvacuos.voxel.client.core.ClientVariables;
-import net.luxvacuos.voxel.client.core.ClientWorldSimulation;
-import net.luxvacuos.voxel.client.core.subsystems.GraphicalSubsystem;
-import net.luxvacuos.voxel.client.ecs.entities.CameraEntity;
 import net.luxvacuos.voxel.client.ecs.entities.PlayerCamera;
-import net.luxvacuos.voxel.client.ecs.entities.Sun;
-import net.luxvacuos.voxel.client.input.KeyboardHandler;
-import net.luxvacuos.voxel.client.input.Mouse;
-import net.luxvacuos.voxel.client.network.Client;
-import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.opengl.BlockOutlineRenderer;
-import net.luxvacuos.voxel.client.rendering.api.opengl.ParticleDomain;
-import net.luxvacuos.voxel.client.rendering.api.opengl.Renderer;
-import net.luxvacuos.voxel.client.ui.windows.GameWindow;
 import net.luxvacuos.voxel.client.ui.windows.PauseWindow;
-import net.luxvacuos.voxel.client.util.Maths;
-import net.luxvacuos.voxel.client.world.NetworkWorld;
 import net.luxvacuos.voxel.client.world.RenderWorld;
 import net.luxvacuos.voxel.client.world.dimension.RenderDimension;
-import net.luxvacuos.voxel.universal.core.AbstractVoxel;
-import net.luxvacuos.voxel.universal.core.states.AbstractState;
-import net.luxvacuos.voxel.universal.core.states.StateMachine;
 import net.luxvacuos.voxel.universal.ecs.entities.ChunkLoaderEntity;
-import net.luxvacuos.voxel.universal.network.packets.ClientConnect;
-import net.luxvacuos.voxel.universal.network.packets.ClientDisconnect;
-import net.luxvacuos.voxel.universal.util.registry.Key;
 import net.luxvacuos.voxel.universal.world.IWorld;
 
 public class MPWorldState extends AbstractState {
 
-	private Client client;
+	//private Client client;
 
 	private Sun sun;
 	private CameraEntity camera;
@@ -76,10 +71,10 @@ public class MPWorldState extends AbstractState {
 	@Override
 	public void start() {
 		super.start();
-		client.setHost(ClientVariables.server);
-		client.setPort(44454);
-		client.run(this);
-		this.world = new NetworkWorld("mp", client.getChannel());
+		//client.setHost(ClientVariables.server);
+		//client.setPort(44454);
+		//client.run(this);
+		//this.world = new NetworkWorld("mp", client.getChannel());
 		ClientVariables.worldNameToLoad = "";
 		Renderer.setDeferredPass((camera, sunCamera, frustum, shadowMap) -> {
 			((RenderWorld) world).render(camera, frustum);
@@ -107,16 +102,16 @@ public class MPWorldState extends AbstractState {
 				(int) REGISTRY.getRegistryItem(new Key("/Voxel/Display/width")),
 				(int) REGISTRY.getRegistryItem(new Key("/Voxel/Display/height")));
 		GraphicalSubsystem.getWindowManager().addWindow(gameWindow);
-		client.getChannel()
-				.writeAndFlush(new ClientConnect(ClientVariables.user.getUUID(), ClientVariables.user.getUsername()));
+		//client.getChannel()
+		//		.writeAndFlush(new ClientConnect(ClientVariables.user.getUUID(), ClientVariables.user.getUsername()));
 	}
 
 	@Override
 	public void end() {
 		super.end();
-		client.getChannel().writeAndFlush(
-				new ClientDisconnect(ClientVariables.user.getUUID(), ClientVariables.user.getUsername()));
-		client.end();
+		//client.getChannel().writeAndFlush(
+		//		new ClientDisconnect(ClientVariables.user.getUUID(), ClientVariables.user.getUsername()));
+		//client.end();
 		world.dispose();
 	}
 
@@ -143,12 +138,12 @@ public class MPWorldState extends AbstractState {
 
 		camera = new PlayerCamera(projectionMatrix, ClientVariables.user.getUsername(),
 				ClientVariables.user.getUUID().toString());
-		sun = new Sun(shadowProjectionMatrix);
+		sun = new Sun(new Vector3d(),shadowProjectionMatrix);
 
 		blockOutlineRenderer = new BlockOutlineRenderer(window.getResourceLoader());
 
 		spawnChunks = new ChunkLoaderEntity(new Vector3d());
-		client = new Client();
+		//client = new Client();
 	}
 
 	@Override
@@ -159,7 +154,7 @@ public class MPWorldState extends AbstractState {
 	}
 
 	@Override
-	public void render(AbstractVoxel voxel, float alpha) {
+	public void render(float alpha) {
 		Renderer.render(world.getActiveDimension().getEntitiesManager().getEntities(), ParticleDomain.getParticles(),
 				camera, world.getActiveDimension().getWorldSimulator(), sun, alpha);
 		Renderer.clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -168,7 +163,7 @@ public class MPWorldState extends AbstractState {
 	}
 
 	@Override
-	public void update(AbstractVoxel voxel, float delta) {
+	public void update(float delta) {
 		GraphicalSubsystem.getWindowManager().update(delta);
 		Window window = GraphicalSubsystem.getMainWindow();
 		KeyboardHandler kbh = window.getKeyboardHandler();

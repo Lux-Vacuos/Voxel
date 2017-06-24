@@ -24,7 +24,9 @@ import com.hackhalo2.nbt.CompoundBuilder;
 import com.hackhalo2.nbt.exceptions.NBTException;
 import com.hackhalo2.nbt.tags.TagCompound;
 
-public class ChunkLoader implements VoxelComponent {
+import net.luxvacuos.lightengine.universal.ecs.components.LEComponent;
+
+public class ChunkLoader implements LEComponent {
 
 	private int chunkRadius = 10;
 	

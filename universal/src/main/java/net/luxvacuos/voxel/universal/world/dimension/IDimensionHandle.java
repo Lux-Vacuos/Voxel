@@ -20,7 +20,7 @@
 
 package net.luxvacuos.voxel.universal.world.dimension;
 
-import net.luxvacuos.voxel.universal.resources.IDisposable;
+import net.luxvacuos.lightengine.universal.resources.IDisposable;
 import net.luxvacuos.voxel.universal.world.block.IBlockHandle;
 import net.luxvacuos.voxel.universal.world.chunk.IChunkHandle;
 import net.luxvacuos.voxel.universal.world.utils.IHandle;

@@ -30,7 +30,7 @@ import com.badlogic.gdx.math.collision.BoundingBox;
 
 import net.luxvacuos.igl.Logger;
 import net.luxvacuos.igl.vector.Vector3d;
-import net.luxvacuos.voxel.universal.util.Pair;
+import net.luxvacuos.lightengine.universal.util.Pair;
 import net.luxvacuos.voxel.universal.world.block.Blocks;
 import net.luxvacuos.voxel.universal.world.block.IBlock;
 import net.luxvacuos.voxel.universal.world.dimension.IDimension;

@@ -20,40 +20,41 @@
 
 package net.luxvacuos.voxel.client.ui.windows;
 
-import static net.luxvacuos.voxel.universal.core.subsystems.CoreSubsystem.LANG;
-import static net.luxvacuos.voxel.universal.core.subsystems.CoreSubsystem.REGISTRY;
+import static net.luxvacuos.lightengine.universal.core.subsystems.CoreSubsystem.LANG;
+import static net.luxvacuos.lightengine.universal.core.subsystems.CoreSubsystem.REGISTRY;
 
-import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
-import net.luxvacuos.voxel.client.rendering.api.nanovg.themes.Theme.ButtonStyle;
-import net.luxvacuos.voxel.client.ui.Alignment;
-import net.luxvacuos.voxel.client.ui.Button;
-import net.luxvacuos.voxel.client.ui.Container;
-import net.luxvacuos.voxel.client.ui.Direction;
-import net.luxvacuos.voxel.client.ui.FlowLayout;
-import net.luxvacuos.voxel.client.ui.RootComponentWindow;
-import net.luxvacuos.voxel.client.ui.ScrollArea;
-import net.luxvacuos.voxel.client.ui.Slider;
-import net.luxvacuos.voxel.client.ui.Text;
-import net.luxvacuos.voxel.client.ui.TitleBarButton;
-import net.luxvacuos.voxel.client.ui.ToggleButton;
-import net.luxvacuos.voxel.universal.core.TaskManager;
-import net.luxvacuos.voxel.universal.core.subsystems.CoreSubsystem;
-import net.luxvacuos.voxel.universal.util.registry.Key;
+import net.luxvacuos.lightengine.client.rendering.api.glfw.Window;
+import net.luxvacuos.lightengine.client.rendering.api.nanovg.themes.Theme.ButtonStyle;
+import net.luxvacuos.lightengine.client.ui.Alignment;
+import net.luxvacuos.lightengine.client.ui.Button;
+import net.luxvacuos.lightengine.client.ui.ComponentWindow;
+import net.luxvacuos.lightengine.client.ui.Container;
+import net.luxvacuos.lightengine.client.ui.Direction;
+import net.luxvacuos.lightengine.client.ui.FlowLayout;
+import net.luxvacuos.lightengine.client.ui.ScrollArea;
+import net.luxvacuos.lightengine.client.ui.Slider;
+import net.luxvacuos.lightengine.client.ui.Text;
+import net.luxvacuos.lightengine.client.ui.TitleBarButton;
+import net.luxvacuos.lightengine.client.ui.ToggleButton;
+import net.luxvacuos.lightengine.universal.core.TaskManager;
+import net.luxvacuos.lightengine.universal.core.subsystems.CoreSubsystem;
+import net.luxvacuos.lightengine.universal.util.registry.Key;
 
-public class OptionsWindow extends RootComponentWindow {
+public class OptionsWindow extends ComponentWindow {
 
 	private TitleBarButton backButton;
 
-	public OptionsWindow(float x, float y, float w, float h) {
-		super(x, y, w, h, LANG.getRegistryItem("voxel.optionswindow.name"));
+	public OptionsWindow() {
+		super((int) REGISTRY.getRegistryItem(new Key("/Light Engine/Display/width")) / 2 - 420,
+				(int) REGISTRY.getRegistryItem(new Key("/Light Engine/Display/height")) / 2 + 300, 840, 600,
+				LANG.getRegistryItem("voxel.optionswindow.name"));
 	}
 
 	@Override
 	public void initApp(Window window) {
 		super.setBackgroundColor(0.4f, 0.4f, 0.4f, 1f);
-		super.setResizable(false);
 
-		backButton = new TitleBarButton(0, -1, 28, 28);
+		backButton = new TitleBarButton(0, 0, 28, 28);
 		backButton.setWindowAlignment(Alignment.LEFT_TOP);
 		backButton.setAlignment(Alignment.RIGHT_BOTTOM);
 		backButton.setStyle(ButtonStyle.LEFT_ARROW);
@@ -109,25 +110,25 @@ public class OptionsWindow extends RootComponentWindow {
 
 	private void graphicOptions() {
 		ToggleButton godraysButton = new ToggleButton(-50, 0, 80, 30,
-				(boolean) REGISTRY.getRegistryItem(new Key("/Voxel/Settings/Graphics/volumetricLight")));
+				(boolean) REGISTRY.getRegistryItem(new Key("/Light Engine/Settings/Graphics/volumetricLight")));
 		ToggleButton shadowsButton = new ToggleButton(-50, 0, 80, 30,
-				(boolean) REGISTRY.getRegistryItem(new Key("/Voxel/Settings/Graphics/shadows")));
+				(boolean) REGISTRY.getRegistryItem(new Key("/Light Engine/Settings/Graphics/shadows")));
 		ToggleButton dofButton = new ToggleButton(-50, 0, 80, 30,
-				(boolean) REGISTRY.getRegistryItem(new Key("/Voxel/Settings/Graphics/dof")));
+				(boolean) REGISTRY.getRegistryItem(new Key("/Light Engine/Settings/Graphics/dof")));
 		ToggleButton fxaaButton = new ToggleButton(-50, 0, 80, 30,
-				(boolean) REGISTRY.getRegistryItem(new Key("/Voxel/Settings/Graphics/fxaa")));
+				(boolean) REGISTRY.getRegistryItem(new Key("/Light Engine/Settings/Graphics/fxaa")));
 		ToggleButton motionBlurButton = new ToggleButton(-50, 0, 80, 30,
-				(boolean) REGISTRY.getRegistryItem(new Key("/Voxel/Settings/Graphics/motionBlur")));
+				(boolean) REGISTRY.getRegistryItem(new Key("/Light Engine/Settings/Graphics/motionBlur")));
 		ToggleButton reflectionsButton = new ToggleButton(-50, 0, 80, 30,
-				(boolean) REGISTRY.getRegistryItem(new Key("/Voxel/Settings/Graphics/reflections")));
+				(boolean) REGISTRY.getRegistryItem(new Key("/Light Engine/Settings/Graphics/reflections")));
 		ToggleButton parallaxButton = new ToggleButton(-50, 0, 80, 30,
-				(boolean) REGISTRY.getRegistryItem(new Key("/Voxel/Settings/Graphics/parallax")));
+				(boolean) REGISTRY.getRegistryItem(new Key("/Light Engine/Settings/Graphics/parallax")));
 		ToggleButton ambientOccButton = new ToggleButton(-50, 0, 80, 30,
-				(boolean) REGISTRY.getRegistryItem(new Key("/Voxel/Settings/Graphics/ambientOcclusion")));
+				(boolean) REGISTRY.getRegistryItem(new Key("/Light Engine/Settings/Graphics/ambientOcclusion")));
 		ToggleButton chromaticAberrationButton = new ToggleButton(-50, 0, 80, 30,
-				(boolean) REGISTRY.getRegistryItem(new Key("/Voxel/Settings/Graphics/chromaticAberration")));
+				(boolean) REGISTRY.getRegistryItem(new Key("/Light Engine/Settings/Graphics/chromaticAberration")));
 		ToggleButton lensFlaresButton = new ToggleButton(-50, 0, 80, 30,
-				(boolean) REGISTRY.getRegistryItem(new Key("/Voxel/Settings/Graphics/lensFlares")));
+				(boolean) REGISTRY.getRegistryItem(new Key("/Light Engine/Settings/Graphics/lensFlares")));
 
 		godraysButton.setWindowAlignment(Alignment.RIGHT);
 		godraysButton.setAlignment(Alignment.RIGHT);
@@ -151,26 +152,25 @@ public class OptionsWindow extends RootComponentWindow {
 		lensFlaresButton.setAlignment(Alignment.RIGHT);
 
 		shadowsButton.setOnButtonPress(
-				() -> REGISTRY.register(new Key("/Voxel/Settings/Graphics/shadows"), shadowsButton.getStatus()));
+				() -> REGISTRY.register(new Key("/Light Engine/Settings/Graphics/shadows"), shadowsButton.getStatus()));
 		dofButton.setOnButtonPress(
-				() -> REGISTRY.register(new Key("/Voxel/Settings/Graphics/dof"), dofButton.getStatus()));
-		godraysButton.setOnButtonPress(() -> REGISTRY.register(new Key("/Voxel/Settings/Graphics/volumetricLight"),
-				godraysButton.getStatus()));
+				() -> REGISTRY.register(new Key("/Light Engine/Settings/Graphics/dof"), dofButton.getStatus()));
+		godraysButton.setOnButtonPress(() -> REGISTRY
+				.register(new Key("/Light Engine/Settings/Graphics/volumetricLight"), godraysButton.getStatus()));
 		fxaaButton.setOnButtonPress(
-				() -> REGISTRY.register(new Key("/Voxel/Settings/Graphics/fxaa"), fxaaButton.getStatus()));
-		parallaxButton.setOnButtonPress(
-				() -> REGISTRY.register(new Key("/Voxel/Settings/Graphics/parallax"), parallaxButton.getStatus()));
-		motionBlurButton.setOnButtonPress(
-				() -> REGISTRY.register(new Key("/Voxel/Settings/Graphics/motionBlur"), motionBlurButton.getStatus()));
-		reflectionsButton.setOnButtonPress(() -> REGISTRY.register(new Key("/Voxel/Settings/Graphics/reflections"),
-				reflectionsButton.getStatus()));
-		ambientOccButton.setOnButtonPress(() -> REGISTRY.register(new Key("/Voxel/Settings/Graphics/ambientOcclusion"),
-				ambientOccButton.getStatus()));
-		chromaticAberrationButton
-				.setOnButtonPress(() -> REGISTRY.register(new Key("/Voxel/Settings/Graphics/chromaticAberration"),
-						chromaticAberrationButton.getStatus()));
-		lensFlaresButton.setOnButtonPress(
-				() -> REGISTRY.register(new Key("/Voxel/Settings/Graphics/lensFlares"), lensFlaresButton.getStatus()));
+				() -> REGISTRY.register(new Key("/Light Engine/Settings/Graphics/fxaa"), fxaaButton.getStatus()));
+		parallaxButton.setOnButtonPress(() -> REGISTRY.register(new Key("/Light Engine/Settings/Graphics/parallax"),
+				parallaxButton.getStatus()));
+		motionBlurButton.setOnButtonPress(() -> REGISTRY.register(new Key("/Light Engine/Settings/Graphics/motionBlur"),
+				motionBlurButton.getStatus()));
+		reflectionsButton.setOnButtonPress(() -> REGISTRY
+				.register(new Key("/Light Engine/Settings/Graphics/reflections"), reflectionsButton.getStatus()));
+		ambientOccButton.setOnButtonPress(() -> REGISTRY
+				.register(new Key("/Light Engine/Settings/Graphics/ambientOcclusion"), ambientOccButton.getStatus()));
+		chromaticAberrationButton.setOnButtonPress(() -> REGISTRY.register(
+				new Key("/Light Engine/Settings/Graphics/chromaticAberration"), chromaticAberrationButton.getStatus()));
+		lensFlaresButton.setOnButtonPress(() -> REGISTRY.register(new Key("/Light Engine/Settings/Graphics/lensFlares"),
+				lensFlaresButton.getStatus()));
 
 		Text godText = new Text(LANG.getRegistryItem("voxel.optionswindow.graphics.volumetriclight"), 20, 0);
 		godText.setWindowAlignment(Alignment.LEFT);
@@ -188,7 +188,8 @@ public class OptionsWindow extends RootComponentWindow {
 		parallaxText.setWindowAlignment(Alignment.LEFT);
 		Text ambientOccText = new Text(LANG.getRegistryItem("voxel.optionswindow.graphics.ao"), 20, 0);
 		ambientOccText.setWindowAlignment(Alignment.LEFT);
-		Text chromaticAberrationText = new Text(LANG.getRegistryItem("voxel.optionswindow.graphics.chromatic"), 20, 0);
+		Text chromaticAberrationText = new Text(LANG.getRegistryItem("voxel.optionswindow.graphics.chromatic"),
+				20, 0);
 		chromaticAberrationText.setWindowAlignment(Alignment.LEFT);
 		Text lensFlaresText = new Text(LANG.getRegistryItem("voxel.optionswindow.graphics.lensflares"), 20, 0);
 		lensFlaresText.setWindowAlignment(Alignment.LEFT);
@@ -197,35 +198,35 @@ public class OptionsWindow extends RootComponentWindow {
 		area.setLayout(new FlowLayout(Direction.DOWN, 10, 10));
 
 		Container godrays = new Container(0, 0, w, 30);
-		godrays.setWindowAlignment(Alignment.RIGHT_TOP);
-		godrays.setAlignment(Alignment.LEFT_BOTTOM);
+		godrays.setWindowAlignment(Alignment.LEFT_TOP);
+		godrays.setAlignment(Alignment.RIGHT_BOTTOM);
 		Container shadows = new Container(0, 0, w, 30);
-		shadows.setWindowAlignment(Alignment.RIGHT_TOP);
-		shadows.setAlignment(Alignment.LEFT_BOTTOM);
+		shadows.setWindowAlignment(Alignment.LEFT_TOP);
+		shadows.setAlignment(Alignment.RIGHT_BOTTOM);
 		Container dof = new Container(0, 0, w, 30);
-		dof.setWindowAlignment(Alignment.RIGHT_TOP);
-		dof.setAlignment(Alignment.LEFT_BOTTOM);
+		dof.setWindowAlignment(Alignment.LEFT_TOP);
+		dof.setAlignment(Alignment.RIGHT_BOTTOM);
 		Container fxaa = new Container(0, 0, w, 30);
-		fxaa.setWindowAlignment(Alignment.RIGHT_TOP);
-		fxaa.setAlignment(Alignment.LEFT_BOTTOM);
+		fxaa.setWindowAlignment(Alignment.LEFT_TOP);
+		fxaa.setAlignment(Alignment.RIGHT_BOTTOM);
 		Container motionBlur = new Container(0, 0, w, 30);
-		motionBlur.setWindowAlignment(Alignment.RIGHT_TOP);
-		motionBlur.setAlignment(Alignment.LEFT_BOTTOM);
+		motionBlur.setWindowAlignment(Alignment.LEFT_TOP);
+		motionBlur.setAlignment(Alignment.RIGHT_BOTTOM);
 		Container reflections = new Container(0, 0, w, 30);
-		reflections.setWindowAlignment(Alignment.RIGHT_TOP);
-		reflections.setAlignment(Alignment.LEFT_BOTTOM);
+		reflections.setWindowAlignment(Alignment.LEFT_TOP);
+		reflections.setAlignment(Alignment.RIGHT_BOTTOM);
 		Container parallax = new Container(0, 0, w, 30);
-		parallax.setWindowAlignment(Alignment.RIGHT_TOP);
-		parallax.setAlignment(Alignment.LEFT_BOTTOM);
+		parallax.setWindowAlignment(Alignment.LEFT_TOP);
+		parallax.setAlignment(Alignment.RIGHT_BOTTOM);
 		Container occlusion = new Container(0, 0, w, 30);
-		occlusion.setWindowAlignment(Alignment.RIGHT_TOP);
-		occlusion.setAlignment(Alignment.LEFT_BOTTOM);
+		occlusion.setWindowAlignment(Alignment.LEFT_TOP);
+		occlusion.setAlignment(Alignment.RIGHT_BOTTOM);
 		Container aberration = new Container(0, 0, w, 30);
-		aberration.setWindowAlignment(Alignment.RIGHT_TOP);
-		aberration.setAlignment(Alignment.LEFT_BOTTOM);
+		aberration.setWindowAlignment(Alignment.LEFT_TOP);
+		aberration.setAlignment(Alignment.RIGHT_BOTTOM);
 		Container lens = new Container(0, 0, w, 30);
-		lens.setWindowAlignment(Alignment.RIGHT_TOP);
-		lens.setAlignment(Alignment.LEFT_BOTTOM);
+		lens.setWindowAlignment(Alignment.LEFT_TOP);
+		lens.setAlignment(Alignment.RIGHT_BOTTOM);
 
 		godrays.addComponent(godraysButton);
 		godrays.addComponent(godText);
@@ -248,6 +249,17 @@ public class OptionsWindow extends RootComponentWindow {
 		lens.addComponent(lensFlaresButton);
 		lens.addComponent(lensFlaresText);
 
+		godrays.setResizeH(true);
+		shadows.setResizeH(true);
+		dof.setResizeH(true);
+		fxaa.setResizeH(true);
+		motionBlur.setResizeH(true);
+		reflections.setResizeH(true);
+		parallax.setResizeH(true);
+		occlusion.setResizeH(true);
+		aberration.setResizeH(true);
+		lens.setResizeH(true);
+		
 		area.addComponent(godrays);
 		area.addComponent(shadows);
 		area.addComponent(dof);
@@ -265,8 +277,9 @@ public class OptionsWindow extends RootComponentWindow {
 	}
 
 	private void wmOptions() {
-		float border = (float) REGISTRY.getRegistryItem(new Key("/Voxel/Settings/WindowManager/borderSize"));
-		Text wmBorderText = new Text(LANG.getRegistryItem("voxel.optionswindow.wm.border") + ": " + border, 20, 0);
+		float border = (float) REGISTRY.getRegistryItem(new Key("/Light Engine/Settings/WindowManager/borderSize"));
+		Text wmBorderText = new Text(LANG.getRegistryItem("voxel.optionswindow.wm.border") + ": " + border, 20,
+				0);
 		Slider wmBorder = new Slider(-56, 0, 200, 20, border / 40f);
 
 		wmBorderText.setWindowAlignment(Alignment.LEFT);
@@ -278,17 +291,17 @@ public class OptionsWindow extends RootComponentWindow {
 
 		wmBorder.setOnPress(() -> {
 			float val = wmBorder.getPosition() * 40f;
-			REGISTRY.register(new Key("/Voxel/Settings/WindowManager/borderSize"), val);
+			REGISTRY.register(new Key("/Light Engine/Settings/WindowManager/borderSize"), val);
 			wmBorderText.setText(LANG.getRegistryItem("voxel.optionswindow.wm.border") + ": " + val);
 		});
 
 		Container borderC = new Container(0, 0, w, 20);
-		borderC.setWindowAlignment(Alignment.RIGHT_TOP);
-		borderC.setAlignment(Alignment.LEFT_BOTTOM);
+		borderC.setWindowAlignment(Alignment.LEFT_TOP);
+		borderC.setAlignment(Alignment.RIGHT_BOTTOM);
 		borderC.addComponent(wmBorderText);
 		borderC.addComponent(wmBorder);
 
-		float scroll = (float) REGISTRY.getRegistryItem(new Key("/Voxel/Settings/WindowManager/scrollBarSize"));
+		float scroll = (float) REGISTRY.getRegistryItem(new Key("/Light Engine/Settings/WindowManager/scrollBarSize"));
 		Text wmScrollText = new Text(LANG.getRegistryItem("voxel.optionswindow.wm.scrollsize") + ": " + scroll,
 				20, 0);
 		Slider wmScroll = new Slider(-56, 0, 200, 20, scroll / 40f);
@@ -302,17 +315,17 @@ public class OptionsWindow extends RootComponentWindow {
 
 		wmScroll.setOnPress(() -> {
 			float val = wmScroll.getPosition() * 40f;
-			REGISTRY.register(new Key("/Voxel/Settings/WindowManager/scrollBarSize"), val);
+			REGISTRY.register(new Key("/Light Engine/Settings/WindowManager/scrollBarSize"), val);
 			wmScrollText.setText(LANG.getRegistryItem("voxel.optionswindow.wm.scrollsize") + ": " + val);
 		});
 
 		Container scrollC = new Container(0, 0, w, 20);
-		scrollC.setWindowAlignment(Alignment.RIGHT_TOP);
-		scrollC.setAlignment(Alignment.LEFT_BOTTOM);
+		scrollC.setWindowAlignment(Alignment.LEFT_TOP);
+		scrollC.setAlignment(Alignment.RIGHT_BOTTOM);
 		scrollC.addComponent(wmScrollText);
 		scrollC.addComponent(wmScroll);
 
-		float title = (float) REGISTRY.getRegistryItem(new Key("/Voxel/Settings/WindowManager/titleBarHeight"));
+		float title = (float) REGISTRY.getRegistryItem(new Key("/Light Engine/Settings/WindowManager/titleBarHeight"));
 		Text wmTitleText = new Text(LANG.getRegistryItem("voxel.optionswindow.wm.titlebarsize") + ": " + title,
 				20, 0);
 		Slider wmTitle = new Slider(-56, 0, 200, 20, title / 40f);
@@ -326,38 +339,43 @@ public class OptionsWindow extends RootComponentWindow {
 
 		wmTitle.setOnPress(() -> {
 			float val = wmTitle.getPosition() * 40f;
-			REGISTRY.register(new Key("/Voxel/Settings/WindowManager/titleBarHeight"), val);
+			REGISTRY.register(new Key("/Light Engine/Settings/WindowManager/titleBarHeight"), val);
 			wmTitleText.setText(LANG.getRegistryItem("voxel.optionswindow.wm.titlebarsize") + ": " + val);
 		});
 
 		Container titleC = new Container(0, 0, w, 20);
-		titleC.setWindowAlignment(Alignment.RIGHT_TOP);
-		titleC.setAlignment(Alignment.LEFT_BOTTOM);
+		titleC.setWindowAlignment(Alignment.LEFT_TOP);
+		titleC.setAlignment(Alignment.RIGHT_BOTTOM);
 		titleC.addComponent(wmTitleText);
 		titleC.addComponent(wmTitle);
 
 		ToggleButton titleBorderButton = new ToggleButton(-50, 0, 80, 30,
-				(boolean) REGISTRY.getRegistryItem(new Key("/Voxel/Settings/WindowManager/titleBarBorder")));
+				(boolean) REGISTRY.getRegistryItem(new Key("/Light Engine/Settings/WindowManager/titleBarBorder")));
 
 		titleBorderButton.setWindowAlignment(Alignment.RIGHT);
 		titleBorderButton.setAlignment(Alignment.RIGHT);
 
-		titleBorderButton.setOnButtonPress(() -> REGISTRY
-				.register(new Key("/Voxel/Settings/WindowManager/titleBarBorder"), titleBorderButton.getStatus()));
+		titleBorderButton.setOnButtonPress(() -> REGISTRY.register(
+				new Key("/Light Engine/Settings/WindowManager/titleBarBorder"), titleBorderButton.getStatus()));
 
 		Text titleBorderText = new Text(LANG.getRegistryItem("voxel.optionswindow.wm.titlebarborder"), 20, 0);
 		titleBorderText.setWindowAlignment(Alignment.LEFT);
 
 		Container titleBorder = new Container(0, 0, w, 30);
-		titleBorder.setWindowAlignment(Alignment.RIGHT_TOP);
-		titleBorder.setAlignment(Alignment.LEFT_BOTTOM);
+		titleBorder.setWindowAlignment(Alignment.LEFT_TOP);
+		titleBorder.setAlignment(Alignment.RIGHT_BOTTOM);
 
 		titleBorder.addComponent(titleBorderButton);
 		titleBorder.addComponent(titleBorderText);
 
 		ScrollArea area = new ScrollArea(0, 0, w, h, 0, 0);
 		area.setLayout(new FlowLayout(Direction.DOWN, 10, 10));
-
+		
+		borderC.setResizeH(true);
+		scrollC.setResizeH(true);
+		titleC.setResizeH(true);
+		titleBorder.setResizeH(true);
+		
 		area.addComponent(borderC);
 		area.addComponent(scrollC);
 		area.addComponent(titleC);

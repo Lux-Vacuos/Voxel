@@ -24,14 +24,14 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-import net.luxvacuos.voxel.client.input.Mouse;
-import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
-import net.luxvacuos.voxel.client.ui.Alignment;
-import net.luxvacuos.voxel.client.ui.RootComponentWindow;
-import net.luxvacuos.voxel.client.ui.TextArea;
+import net.luxvacuos.lightengine.client.input.Mouse;
+import net.luxvacuos.lightengine.client.rendering.api.glfw.Window;
+import net.luxvacuos.lightengine.client.ui.Alignment;
+import net.luxvacuos.lightengine.client.ui.ComponentWindow;
+import net.luxvacuos.lightengine.client.ui.TextArea;
 import net.luxvacuos.voxel.universal.commands.ICommandManager;
 
-public class Console extends RootComponentWindow {
+public class Console extends ComponentWindow {
 
 	private ICommandManager manager;
 	private TextArea text;

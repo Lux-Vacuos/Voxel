@@ -20,8 +20,8 @@
 
 package net.luxvacuos.voxel.client.rendering.world.dimension;
 
-import net.luxvacuos.voxel.client.ecs.entities.CameraEntity;
-import net.luxvacuos.voxel.client.rendering.api.opengl.Frustum;
+import net.luxvacuos.lightengine.client.ecs.entities.CameraEntity;
+import net.luxvacuos.lightengine.client.rendering.api.opengl.Frustum;
 import net.luxvacuos.voxel.universal.world.dimension.IDimension;
 
 public interface IRenderDimension extends IDimension {

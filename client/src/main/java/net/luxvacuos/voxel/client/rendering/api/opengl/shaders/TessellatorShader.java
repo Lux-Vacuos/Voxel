@@ -22,13 +22,14 @@ package net.luxvacuos.voxel.client.rendering.api.opengl.shaders;
 
 import net.luxvacuos.igl.vector.Matrix4d;
 import net.luxvacuos.igl.vector.Vector3d;
+import net.luxvacuos.lightengine.client.rendering.api.opengl.objects.Material;
+import net.luxvacuos.lightengine.client.rendering.api.opengl.shaders.ShaderProgram;
+import net.luxvacuos.lightengine.client.rendering.api.opengl.shaders.data.Attribute;
+import net.luxvacuos.lightengine.client.rendering.api.opengl.shaders.data.UniformFloat;
+import net.luxvacuos.lightengine.client.rendering.api.opengl.shaders.data.UniformMaterial;
+import net.luxvacuos.lightengine.client.rendering.api.opengl.shaders.data.UniformMatrix;
+import net.luxvacuos.lightengine.client.rendering.api.opengl.shaders.data.UniformVec3;
 import net.luxvacuos.voxel.client.core.ClientVariables;
-import net.luxvacuos.voxel.client.rendering.api.opengl.objects.Material;
-import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.Attribute;
-import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.UniformFloat;
-import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.UniformMaterial;
-import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.UniformMatrix;
-import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.data.UniformVec3;
 
 public class TessellatorShader extends ShaderProgram {
 

@@ -24,11 +24,11 @@ import static org.lwjgl.opengl.GL11.GL_NEAREST;
 
 import net.luxvacuos.igl.vector.Vector2d;
 import net.luxvacuos.igl.vector.Vector4f;
-import net.luxvacuos.voxel.client.rendering.api.opengl.objects.Material;
-import net.luxvacuos.voxel.client.rendering.api.opengl.objects.Texture;
-import net.luxvacuos.voxel.client.resources.ResourceLoader;
+import net.luxvacuos.lightengine.client.rendering.api.opengl.objects.Material;
+import net.luxvacuos.lightengine.client.rendering.api.opengl.objects.Texture;
+import net.luxvacuos.lightengine.client.resources.ResourceLoader;
+import net.luxvacuos.lightengine.universal.core.TaskManager;
 import net.luxvacuos.voxel.client.resources.models.TessellatorTextureAtlas;
-import net.luxvacuos.voxel.universal.core.TaskManager;
 
 public class BlocksResources {
 

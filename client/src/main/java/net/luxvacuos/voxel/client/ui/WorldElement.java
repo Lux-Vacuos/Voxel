@@ -20,53 +20,27 @@
 
 package net.luxvacuos.voxel.client.ui;
 
+import net.luxvacuos.lightengine.client.ui.Button;
+import net.luxvacuos.lightengine.client.ui.Container;
 import net.luxvacuos.voxel.client.core.ClientVariables;
-import net.luxvacuos.voxel.client.input.Mouse;
-import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
-import net.luxvacuos.voxel.client.ui.windows.WorldWindow;
 
-public class WorldElement extends ScrollPaneElement {
+public class WorldElement extends Container {
+	
+	private String name;
 
-	private boolean pressed = false;
-	private String worldName;
-	private WorldWindow worldWindow;
-
-	public WorldElement(float w, float h, String name, WorldWindow worldWindow) {
+	public WorldElement(float w, float h, String name) {
 		super(0, 0, w, h);
-		Text n = new Text(name, 0, 0);
-		n.setWindowAlignment(Alignment.LEFT);
-		addComponent(n);
-		worldName = name;
-		this.worldWindow = worldWindow;
-	}
-
-	@Override
-	public void update(float delta, Window window) {
-		super.update(delta, window);
-
-		if (pressed() && !pressed) {
-			ClientVariables.worldNameToLoad = new String(worldName);
-			worldWindow.worldName.setText("Name: " + worldName);
-		}
-		pressed = pressed();
+		this.name = name;
 	}
 	
 	@Override
-	public void dispose() {
-		ClientVariables.worldNameToLoad = "";
-		super.dispose();
-	}
-
-	public boolean insideButton() {
-		return Mouse.getX() > root.rootX && Mouse.getY() > root.rootY && Mouse.getX() < root.rootX + root.rootW
-				&& Mouse.getY() < root.rootY + root.rootH;
-	}
-
-	public boolean pressed() {
-		if (insideButton())
-			return Mouse.isButtonDown(0);
-		else
-			return false;
+	public void init() {
+		Button btn = new Button(0, 0, w, h, name);
+		btn.setOnButtonPress(() -> {
+			ClientVariables.worldNameToLoad = name;
+		});
+		super.addComponent(btn);
+		super.init();
 	}
 
 }

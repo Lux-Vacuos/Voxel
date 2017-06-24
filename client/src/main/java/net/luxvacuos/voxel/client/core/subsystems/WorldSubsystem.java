@@ -20,19 +20,34 @@
 
 package net.luxvacuos.voxel.client.core.subsystems;
 
+import net.luxvacuos.lightengine.universal.core.TaskManager;
+import net.luxvacuos.lightengine.universal.core.subsystems.ISubsystem;
+import net.luxvacuos.lightengine.universal.util.registry.Key;
+import net.luxvacuos.voxel.client.bootstrap.Bootstrap;
+import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.TessellatorBasicShader;
+import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.TessellatorShader;
 import net.luxvacuos.voxel.client.rendering.utils.BlockFaceAtlas;
+import net.luxvacuos.voxel.client.world.block.BlocksResources;
 import net.luxvacuos.voxel.client.world.block.RenderBlock;
 import net.luxvacuos.voxel.client.world.block.types.WaterBlock;
-import net.luxvacuos.voxel.universal.core.TaskManager;
-import net.luxvacuos.voxel.universal.core.subsystems.ISubsystem;
 import net.luxvacuos.voxel.universal.material.BlockMaterial;
 import net.luxvacuos.voxel.universal.material.MaterialModder;
 import net.luxvacuos.voxel.universal.world.block.Blocks;
+
+import static net.luxvacuos.lightengine.universal.core.subsystems.CoreSubsystem.*;
+
+import net.luxvacuos.lightengine.client.core.subsystems.GraphicalSubsystem;
 
 public class WorldSubsystem implements ISubsystem {
 
 	@Override
 	public void init() {
+		REGISTRY.register(new Key("/Voxel/Settings/World/directory"), Bootstrap.getPrefix() + "/world/");
+		REGISTRY.register(new Key("/Voxel/Settings/World/chunkManagerThreads", true), 2);
+		REGISTRY.register(new Key("/Voxel/Settings/World/chunkRadius", true), 4);
+		TaskManager.addTask(() -> {
+			BlocksResources.init(GraphicalSubsystem.getMainWindow().getResourceLoader());
+		});
 		TaskManager.addTask(() -> {
 			MaterialModder matMod = new MaterialModder();
 			Blocks.startRegister("voxel");
@@ -73,5 +88,8 @@ public class WorldSubsystem implements ISubsystem {
 
 	@Override
 	public void dispose() {
+		BlocksResources.dispose();
+		TessellatorShader.getShader().dispose();
+		TessellatorBasicShader.getShader().dispose();
 	}
 }

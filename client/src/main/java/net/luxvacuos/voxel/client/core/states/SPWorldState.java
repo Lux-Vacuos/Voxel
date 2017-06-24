@@ -20,7 +20,7 @@
 
 package net.luxvacuos.voxel.client.core.states;
 
-import static net.luxvacuos.voxel.universal.core.subsystems.CoreSubsystem.REGISTRY;
+import static net.luxvacuos.lightengine.universal.core.subsystems.CoreSubsystem.REGISTRY;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 
@@ -28,27 +28,26 @@ import org.lwjgl.glfw.GLFW;
 
 import net.luxvacuos.igl.vector.Matrix4d;
 import net.luxvacuos.igl.vector.Vector3d;
+import net.luxvacuos.lightengine.client.core.subsystems.GraphicalSubsystem;
+import net.luxvacuos.lightengine.client.ecs.entities.CameraEntity;
+import net.luxvacuos.lightengine.client.ecs.entities.Sun;
+import net.luxvacuos.lightengine.client.input.KeyboardHandler;
+import net.luxvacuos.lightengine.client.input.Mouse;
+import net.luxvacuos.lightengine.client.rendering.api.glfw.Window;
+import net.luxvacuos.lightengine.client.rendering.api.opengl.ParticleDomain;
+import net.luxvacuos.lightengine.client.rendering.api.opengl.Renderer;
+import net.luxvacuos.lightengine.client.ui.windows.GameWindow;
+import net.luxvacuos.lightengine.client.util.Maths;
+import net.luxvacuos.lightengine.universal.core.states.AbstractState;
+import net.luxvacuos.lightengine.universal.core.states.StateMachine;
+import net.luxvacuos.lightengine.universal.util.registry.Key;
 import net.luxvacuos.voxel.client.core.ClientVariables;
-import net.luxvacuos.voxel.client.core.subsystems.GraphicalSubsystem;
-import net.luxvacuos.voxel.client.ecs.entities.CameraEntity;
 import net.luxvacuos.voxel.client.ecs.entities.PlayerCamera;
-import net.luxvacuos.voxel.client.ecs.entities.Sun;
-import net.luxvacuos.voxel.client.input.KeyboardHandler;
-import net.luxvacuos.voxel.client.input.Mouse;
-import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
 import net.luxvacuos.voxel.client.rendering.api.opengl.BlockOutlineRenderer;
-import net.luxvacuos.voxel.client.rendering.api.opengl.ParticleDomain;
-import net.luxvacuos.voxel.client.rendering.api.opengl.Renderer;
-import net.luxvacuos.voxel.client.ui.windows.GameWindow;
 import net.luxvacuos.voxel.client.ui.windows.PauseWindow;
-import net.luxvacuos.voxel.client.util.Maths;
 import net.luxvacuos.voxel.client.world.RenderWorld;
 import net.luxvacuos.voxel.client.world.dimension.RenderDimension;
-import net.luxvacuos.voxel.universal.core.AbstractVoxel;
-import net.luxvacuos.voxel.universal.core.states.AbstractState;
-import net.luxvacuos.voxel.universal.core.states.StateMachine;
 import net.luxvacuos.voxel.universal.ecs.entities.ChunkLoaderEntity;
-import net.luxvacuos.voxel.universal.util.registry.Key;
 import net.luxvacuos.voxel.universal.world.IWorld;
 
 public class SPWorldState extends AbstractState {
@@ -94,9 +93,9 @@ public class SPWorldState extends AbstractState {
 
 		Renderer.render(world.getActiveDimension().getEntitiesManager().getEntities(), ParticleDomain.getParticles(),
 				camera, world.getActiveDimension().getWorldSimulator(), sun, 0);
-		gameWindow = new GameWindow(0, (int) REGISTRY.getRegistryItem(new Key("/Voxel/Display/height")),
-				(int) REGISTRY.getRegistryItem(new Key("/Voxel/Display/width")),
-				(int) REGISTRY.getRegistryItem(new Key("/Voxel/Display/height")));
+		gameWindow = new GameWindow(0, (int) REGISTRY.getRegistryItem(new Key("/Light Engine/Display/height")),
+				(int) REGISTRY.getRegistryItem(new Key("/Light Engine/Display/width")),
+				(int) REGISTRY.getRegistryItem(new Key("/Light Engine/Display/height")));
 		GraphicalSubsystem.getWindowManager().addWindow(gameWindow);
 	}
 
@@ -113,7 +112,7 @@ public class SPWorldState extends AbstractState {
 		Matrix4d[] shadowProjectionMatrix = new Matrix4d[4];
 
 		int shadowDrawDistance = (int) REGISTRY
-				.getRegistryItem(new Key("/Voxel/Settings/Graphics/shadowsDrawDistance"));
+				.getRegistryItem(new Key("/Light Engine/Settings/Graphics/shadowsDrawDistance"));
 
 		shadowProjectionMatrix[0] = Maths.orthographic(-shadowDrawDistance / 32, shadowDrawDistance / 32,
 				-shadowDrawDistance / 32, shadowDrawDistance / 32, -shadowDrawDistance, shadowDrawDistance, false);
@@ -124,12 +123,12 @@ public class SPWorldState extends AbstractState {
 		shadowProjectionMatrix[3] = Maths.orthographic(-shadowDrawDistance, shadowDrawDistance, -shadowDrawDistance,
 				shadowDrawDistance, -shadowDrawDistance, shadowDrawDistance, false);
 		Matrix4d projectionMatrix = Renderer.createProjectionMatrix(window.getWidth(), window.getHeight(),
-				(int) REGISTRY.getRegistryItem(new Key("/Voxel/Settings/Core/fov")), ClientVariables.NEAR_PLANE,
+				(int) REGISTRY.getRegistryItem(new Key("/Light Engine/Settings/Core/fov")), ClientVariables.NEAR_PLANE,
 				ClientVariables.FAR_PLANE);
 
 		camera = new PlayerCamera(projectionMatrix, ClientVariables.user.getUsername(),
 				ClientVariables.user.getUUID().toString());
-		sun = new Sun(shadowProjectionMatrix);
+		sun = new Sun(new Vector3d(), shadowProjectionMatrix);
 
 		blockOutlineRenderer = new BlockOutlineRenderer(window.getResourceLoader());
 
@@ -144,7 +143,7 @@ public class SPWorldState extends AbstractState {
 	}
 
 	@Override
-	public void render(AbstractVoxel voxel, float alpha) {
+	public void render(float alpha) {
 		Renderer.render(world.getActiveDimension().getEntitiesManager().getEntities(), ParticleDomain.getParticles(),
 				camera, world.getActiveDimension().getWorldSimulator(), sun, alpha);
 		Renderer.clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -153,7 +152,7 @@ public class SPWorldState extends AbstractState {
 	}
 
 	@Override
-	public void update(AbstractVoxel voxel, float delta) {
+	public void update(float delta) {
 		GraphicalSubsystem.getWindowManager().update(delta);
 		Window window = GraphicalSubsystem.getMainWindow();
 		KeyboardHandler kbh = window.getKeyboardHandler();
@@ -172,12 +171,12 @@ public class SPWorldState extends AbstractState {
 				((PlayerCamera) camera).unlockMouse();
 				ClientVariables.paused = true;
 				float borderSize = (float) REGISTRY
-						.getRegistryItem(new Key("/Voxel/Settings/WindowManager/borderSize"));
+						.getRegistryItem(new Key("/Light Engine/Settings/WindowManager/borderSize"));
 				float titleBarHeight = (float) REGISTRY
-						.getRegistryItem(new Key("/Voxel/Settings/WindowManager/titleBarHeight"));
-				int height = (int) REGISTRY.getRegistryItem(new Key("/Voxel/Display/height"));
+						.getRegistryItem(new Key("/Light Engine/Settings/WindowManager/titleBarHeight"));
+				int height = (int) REGISTRY.getRegistryItem(new Key("/Light Engine/Display/height"));
 				pauseWindow = new PauseWindow(borderSize + 10, height - titleBarHeight - 10,
-						(int) REGISTRY.getRegistryItem(new Key("/Voxel/Display/width")) - borderSize * 2f - 20,
+						(int) REGISTRY.getRegistryItem(new Key("/Light Engine/Display/width")) - borderSize * 2f - 20,
 						height - titleBarHeight - borderSize - 50);
 				GraphicalSubsystem.getWindowManager().addWindow(pauseWindow);
 				GraphicalSubsystem.getWindowManager().toggleShell();

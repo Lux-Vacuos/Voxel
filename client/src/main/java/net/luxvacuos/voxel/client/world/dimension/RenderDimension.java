@@ -25,9 +25,9 @@ import java.util.Random;
 import com.badlogic.gdx.math.collision.BoundingBox;
 import com.hackhalo2.nbt.tags.TagCompound;
 
-import net.luxvacuos.voxel.client.core.ClientWorldSimulation;
-import net.luxvacuos.voxel.client.ecs.entities.CameraEntity;
-import net.luxvacuos.voxel.client.rendering.api.opengl.Frustum;
+import net.luxvacuos.lightengine.client.core.ClientWorldSimulation;
+import net.luxvacuos.lightengine.client.ecs.entities.CameraEntity;
+import net.luxvacuos.lightengine.client.rendering.api.opengl.Frustum;
 import net.luxvacuos.voxel.client.rendering.world.dimension.IRenderDimension;
 import net.luxvacuos.voxel.client.world.chunks.ClientChunkManager;
 import net.luxvacuos.voxel.client.world.chunks.RenderChunk;

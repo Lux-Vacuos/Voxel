@@ -3,7 +3,7 @@ package net.luxvacuos.voxel.universal.world.chunk;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.math.collision.BoundingBox;
 
-import net.luxvacuos.voxel.universal.util.IUpdatable;
+import net.luxvacuos.lightengine.universal.util.IUpdatable;
 import net.luxvacuos.voxel.universal.world.block.IBlock;
 import net.luxvacuos.voxel.universal.world.dimension.IDimension;
 import net.luxvacuos.voxel.universal.world.utils.ChunkNode;

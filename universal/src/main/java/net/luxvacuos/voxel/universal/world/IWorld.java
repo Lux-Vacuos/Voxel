@@ -22,8 +22,8 @@ package net.luxvacuos.voxel.universal.world;
 
 import java.util.Collection;
 
-import net.luxvacuos.voxel.universal.resources.IDisposable;
-import net.luxvacuos.voxel.universal.util.IUpdatable;
+import net.luxvacuos.lightengine.universal.resources.IDisposable;
+import net.luxvacuos.lightengine.universal.util.IUpdatable;
 import net.luxvacuos.voxel.universal.world.dimension.IDimension;
 
 public interface IWorld extends IUpdatable, IDisposable {

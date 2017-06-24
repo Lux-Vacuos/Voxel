@@ -22,8 +22,8 @@ package net.luxvacuos.voxel.client.world;
 
 import com.hackhalo2.nbt.tags.TagCompound;
 
-import net.luxvacuos.voxel.client.ecs.entities.CameraEntity;
-import net.luxvacuos.voxel.client.rendering.api.opengl.Frustum;
+import net.luxvacuos.lightengine.client.ecs.entities.CameraEntity;
+import net.luxvacuos.lightengine.client.rendering.api.opengl.Frustum;
 import net.luxvacuos.voxel.client.rendering.world.IRenderWorld;
 import net.luxvacuos.voxel.client.world.dimension.RenderDimension;
 import net.luxvacuos.voxel.universal.world.World;

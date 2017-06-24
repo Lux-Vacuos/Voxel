@@ -20,18 +20,19 @@
 
 package net.luxvacuos.voxel.client.core.states;
 
+import static net.luxvacuos.lightengine.universal.core.subsystems.CoreSubsystem.REGISTRY;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 
-import javax.script.CompiledScript;
-import javax.script.SimpleBindings;
-
-import net.luxvacuos.voxel.client.core.subsystems.GraphicalSubsystem;
-import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
-import net.luxvacuos.voxel.client.rendering.api.opengl.Renderer;
-import net.luxvacuos.voxel.universal.core.AbstractVoxel;
-import net.luxvacuos.voxel.universal.core.Scripting;
-import net.luxvacuos.voxel.universal.core.states.AbstractState;
+import net.luxvacuos.lightengine.client.core.subsystems.GraphicalSubsystem;
+import net.luxvacuos.lightengine.client.rendering.api.opengl.Renderer;
+import net.luxvacuos.lightengine.client.ui.windows.BackgroundWindow;
+import net.luxvacuos.lightengine.universal.core.TaskManager;
+import net.luxvacuos.lightengine.universal.core.states.AbstractState;
+import net.luxvacuos.lightengine.universal.core.states.StateMachine;
+import net.luxvacuos.lightengine.universal.util.registry.Key;
+import net.luxvacuos.voxel.client.core.subsystems.WorldSubsystem;
+import net.luxvacuos.voxel.client.ui.windows.InitialSettingsWindow;
 
 /**
  * Main Menu State, this is the menu show after the splash screen fade out.
@@ -39,34 +40,53 @@ import net.luxvacuos.voxel.universal.core.states.AbstractState;
  * @author danirod
  */
 public class MainMenuState extends AbstractState {
-
-	private Scripting scripting;
-	private CompiledScript script;
-	private SimpleBindings bindings;
+	
+	private WorldSubsystem subsystem;
 
 	public MainMenuState() {
 		super(StateNames.MAIN_MENU);
 	}
-
+	
 	@Override
 	public void init() {
-		Window window = GraphicalSubsystem.getMainWindow();
-
-		scripting = new Scripting();
-		script = scripting.compile("test");
-		bindings = new SimpleBindings();
-		bindings.put("kb", window.getKeyboardHandler());
+		subsystem =new WorldSubsystem();
+		subsystem.init();
+		TaskManager.addTask(() -> {
+			StateMachine.registerState(new SPWorldState());
+		});
+		super.init();
+	}
+	
+	@Override
+	public void start() {
+		super.start();
+		GraphicalSubsystem.getWindowManager().toggleShell();
+		GraphicalSubsystem.getWindowManager().addWindow(0,
+				new BackgroundWindow(0, (int) REGISTRY.getRegistryItem(new Key("/Light Engine/Display/height")),
+						(int) REGISTRY.getRegistryItem(new Key("/Light Engine/Display/width")),
+						(int) REGISTRY.getRegistryItem(new Key("/Light Engine/Display/height"))));
+		int ww = (int) REGISTRY.getRegistryItem(new Key("/Light Engine/Display/width"));
+		int wh = (int) REGISTRY.getRegistryItem(new Key("/Light Engine/Display/height"));
+		int x = ww / 2 - 512;
+		int y = wh / 2 - 300;
+		GraphicalSubsystem.getWindowManager().addWindow(new InitialSettingsWindow(x, wh - y, 1024, 600));
+	}
+	
+	@Override
+	public void dispose() {
+		subsystem.dispose();
+		super.dispose();
 	}
 
 	@Override
-	public void render(AbstractVoxel voxel, float delta) {
+	public void render(float delta) {
 		Renderer.clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		Renderer.clearColors(1, 1, 1, 1);
 		GraphicalSubsystem.getWindowManager().render();
 	}
 
 	@Override
-	public void update(AbstractVoxel voxel, float delta) {
+	public void update(float delta) {
 		GraphicalSubsystem.getWindowManager().update(delta);
 	}
 

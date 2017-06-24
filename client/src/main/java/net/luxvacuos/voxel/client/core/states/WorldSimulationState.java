@@ -20,26 +20,22 @@
 
 package net.luxvacuos.voxel.client.core.states;
 
-import net.luxvacuos.voxel.client.network.Client;
-import net.luxvacuos.voxel.universal.core.AbstractVoxel;
-import net.luxvacuos.voxel.universal.core.states.AbstractState;
+import net.luxvacuos.lightengine.universal.core.states.AbstractState;
 import net.luxvacuos.voxel.universal.world.IWorld;
 
 public class WorldSimulationState extends AbstractState {
 	//Network Handler Interface (localhost, LAN, Web)
 	private IWorld world;
-	private Client client;
+	//private Client client;
 
 	public WorldSimulationState() {
 		super(StateNames.WORLD_SIM);
 	}
-	
-	
 
 	@Override
-	public void update(AbstractVoxel voxel, float delta) {
-		// TODO Auto-generated method stub
-		
+	public void update( float arg1) {
 	}
+	
+	
 
 }

@@ -20,7 +20,7 @@
 
 package net.luxvacuos.voxel.universal.world.chunk;
 
-import static net.luxvacuos.voxel.universal.core.subsystems.CoreSubsystem.REGISTRY;
+import static net.luxvacuos.lightengine.universal.core.subsystems.CoreSubsystem.REGISTRY;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -36,12 +36,12 @@ import java.util.concurrent.Future;
 import com.badlogic.gdx.utils.Array;
 
 import net.luxvacuos.igl.Logger;
-import net.luxvacuos.voxel.universal.resources.IDisposable;
+import net.luxvacuos.lightengine.universal.resources.IDisposable;
+import net.luxvacuos.lightengine.universal.util.registry.Key;
 import net.luxvacuos.voxel.universal.tasks.ChunkGenerateTask;
 import net.luxvacuos.voxel.universal.tasks.ChunkLoaderTask;
 import net.luxvacuos.voxel.universal.tasks.ChunkSaveTask;
 import net.luxvacuos.voxel.universal.tasks.ChunkUnloaderTask;
-import net.luxvacuos.voxel.universal.util.registry.Key;
 import net.luxvacuos.voxel.universal.world.chunk.generator.FlatChunkGenerator;
 import net.luxvacuos.voxel.universal.world.chunk.generator.IChunkGenerator;
 import net.luxvacuos.voxel.universal.world.dimension.IDimension;

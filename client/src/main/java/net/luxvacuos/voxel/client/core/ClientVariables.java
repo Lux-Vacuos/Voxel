@@ -21,7 +21,7 @@
 package net.luxvacuos.voxel.client.core;
 
 import net.luxvacuos.igl.vector.Vector3d;
-import net.luxvacuos.voxel.universal.core.GlobalVariables;
+import net.luxvacuos.lightengine.universal.core.GlobalVariables;
 import net.luxvacuos.voxel.universal.remote.User;
 
 /**
@@ -66,25 +66,10 @@ public class ClientVariables extends GlobalVariables {
 	/**
 	 * Shader Files
 	 */
-	public static final String VERTEX_FILE_ENTITY = "V_Entity.glsl";
-	public static final String FRAGMENT_FILE_ENTITY = "F_Entity.glsl";
-	public static final String VERTEX_FILE_ENTITY_BASIC = "V_EntityBasic.glsl";
-	public static final String FRAGMENT_FILE_ENTITY_BASIC = "F_EntityBasic.glsl";
-	public static final String VERTEX_FILE_SKYBOX = "V_Skybox.glsl";
-	public static final String FRAGMENT_FILE_SKYBOX = "F_Skybox.glsl";
-	public static final String VERTEX_FILE_PARTICLE = "V_Particle.glsl";
-	public static final String FRAGMENT_FILE_PARTICLE = "F_Particle.glsl";
 	public static final String VERTEX_FILE_TESSELLATOR = "V_Tessellator.glsl";
 	public static final String FRAGMENT_FILE_TESSELLATOR = "F_Tessellator.glsl";
 	public static final String VERTEX_FILE_TESSELLATOR_BASIC = "V_TessellatorBasic.glsl";
 	public static final String FRAGMENT_FILE_TESSELLATOR_BASIC = "F_TessellatorBasic.glsl";
 	public static final String VERTEX_FILE_BLOCK_OUTLINE = "V_BlockOutline.glsl";
 	public static final String FRAGMENT_FILE_BLOCK_OUTLINE = "F_BlockOutline.glsl";
-	public static final String VERTEX_IRRADIANCE_CAPTURE = "V_IrradianceCapture.glsl";
-	public static final String FRAGMENT_IRRADIANCE_CAPTURE = "F_IrradianceCapture.glsl";
-	public static final String VERTEX_PRE_FILTERED_ENV = "V_PreFilteredEnvironment.glsl";
-	public static final String FRAGMENT_PRE_FILTERED_ENV = "F_PreFilteredEnvironment.glsl";
-	public static final String VERTEX_BRDF_INTEGRATION_MAP = "V_BRDFIntegrationMap.glsl";
-	public static final String FRAGMENT_BRDF_INTEGRATION_MAP = "F_BRDFIntegrationMap.glsl";
-
 }

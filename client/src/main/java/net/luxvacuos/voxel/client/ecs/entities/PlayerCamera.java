@@ -20,11 +20,11 @@
 
 package net.luxvacuos.voxel.client.ecs.entities;
 
-import static net.luxvacuos.voxel.client.input.Mouse.getDX;
-import static net.luxvacuos.voxel.client.input.Mouse.getDY;
-import static net.luxvacuos.voxel.client.input.Mouse.setCursorPosition;
-import static net.luxvacuos.voxel.client.input.Mouse.setGrabbed;
-import static net.luxvacuos.voxel.universal.core.subsystems.CoreSubsystem.REGISTRY;
+import static net.luxvacuos.lightengine.client.input.Mouse.getDX;
+import static net.luxvacuos.lightengine.client.input.Mouse.getDY;
+import static net.luxvacuos.lightengine.client.input.Mouse.setCursorPosition;
+import static net.luxvacuos.lightengine.client.input.Mouse.setGrabbed;
+import static net.luxvacuos.lightengine.universal.core.subsystems.CoreSubsystem.REGISTRY;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,24 +38,27 @@ import com.badlogic.gdx.math.collision.Ray;
 import net.luxvacuos.igl.vector.Matrix4d;
 import net.luxvacuos.igl.vector.Vector2d;
 import net.luxvacuos.igl.vector.Vector3d;
-import net.luxvacuos.voxel.client.core.subsystems.GraphicalSubsystem;
-import net.luxvacuos.voxel.client.ecs.ClientComponents;
-import net.luxvacuos.voxel.client.input.KeyboardHandler;
-import net.luxvacuos.voxel.client.input.Mouse;
-import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
-import net.luxvacuos.voxel.client.resources.CastRay;
-import net.luxvacuos.voxel.client.util.Maths;
-import net.luxvacuos.voxel.universal.core.GlobalVariables;
+import net.luxvacuos.lightengine.client.core.subsystems.GraphicalSubsystem;
+import net.luxvacuos.lightengine.client.ecs.ClientComponents;
+import net.luxvacuos.lightengine.client.ecs.entities.CameraEntity;
+import net.luxvacuos.lightengine.client.input.KeyboardHandler;
+import net.luxvacuos.lightengine.client.input.Mouse;
+import net.luxvacuos.lightengine.client.rendering.api.glfw.Window;
+import net.luxvacuos.lightengine.client.resources.CastRay;
+import net.luxvacuos.lightengine.client.util.Maths;
+import net.luxvacuos.lightengine.universal.core.GlobalVariables;
+import net.luxvacuos.lightengine.universal.ecs.components.Rotation;
+import net.luxvacuos.lightengine.universal.ecs.components.Velocity;
+import net.luxvacuos.lightengine.universal.util.registry.Key;
 import net.luxvacuos.voxel.universal.ecs.Components;
-import net.luxvacuos.voxel.universal.ecs.components.Rotation;
-import net.luxvacuos.voxel.universal.ecs.components.Velocity;
+import net.luxvacuos.voxel.universal.ecs.components.ChunkLoader;
+import net.luxvacuos.voxel.universal.ecs.entities.IDimensionEntity;
 import net.luxvacuos.voxel.universal.tools.ToolTier;
-import net.luxvacuos.voxel.universal.util.registry.Key;
 import net.luxvacuos.voxel.universal.world.block.Blocks;
 import net.luxvacuos.voxel.universal.world.block.IBlock;
 import net.luxvacuos.voxel.universal.world.dimension.IDimension;
 
-public class PlayerCamera extends CameraEntity {
+public class PlayerCamera extends CameraEntity implements IDimensionEntity {
 
 	private boolean jump = false;
 	private float speed;
@@ -86,8 +89,9 @@ public class PlayerCamera extends CameraEntity {
 
 		ClientComponents.PROJECTION_MATRIX.get(this).setProjectionMatrix(projectionMatrix);
 		ClientComponents.VIEW_MATRIX.get(this).setViewMatrix(Maths.createViewMatrix(this));
-		int width = (int) REGISTRY.getRegistryItem(new Key("/Voxel/Display/width"));
-		int height = (int) REGISTRY.getRegistryItem(new Key("/Voxel/Display/height"));
+		this.add(new ChunkLoader((int) REGISTRY.getRegistryItem(new Key("/Voxel/Settings/World/chunkRadius"))));
+		int width = (int) REGISTRY.getRegistryItem(new Key("/Light Engine/Display/width"));
+		int height = (int) REGISTRY.getRegistryItem(new Key("/Light Engine/Display/height"));
 		center = new Vector2d(width / 2, height / 2);
 		castRay = new CastRay(getProjectionMatrix(), getViewMatrix(), center, width, height);
 	}
@@ -258,8 +262,8 @@ public class PlayerCamera extends CameraEntity {
 	@Override
 	public void updateDim(float delta, IDimension dim) {
 		castRay.update(getProjectionMatrix(), getViewMatrix(), center,
-				(int) REGISTRY.getRegistryItem(new Key("/Voxel/Display/width")),
-				(int) REGISTRY.getRegistryItem(new Key("/Voxel/Display/height")));
+				(int) REGISTRY.getRegistryItem(new Key("/Light Engine/Display/width")),
+				(int) REGISTRY.getRegistryItem(new Key("/Light Engine/Display/height")));
 		setBlock(Blocks.getBlockByName("stone"), dim, delta);
 	}
 

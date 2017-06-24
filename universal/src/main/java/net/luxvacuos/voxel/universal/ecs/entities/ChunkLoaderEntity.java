@@ -21,11 +21,12 @@
 package net.luxvacuos.voxel.universal.ecs.entities;
 
 import net.luxvacuos.igl.vector.Vector3d;
+import net.luxvacuos.lightengine.universal.ecs.components.Position;
+import net.luxvacuos.lightengine.universal.ecs.entities.LEEntity;
 import net.luxvacuos.voxel.universal.ecs.Components;
 import net.luxvacuos.voxel.universal.ecs.components.ChunkLoader;
-import net.luxvacuos.voxel.universal.ecs.components.Position;
 
-public class ChunkLoaderEntity extends VoxelEntity {
+public class ChunkLoaderEntity extends LEEntity {
 
 	public ChunkLoaderEntity(Vector3d position) {
 		super("loader");

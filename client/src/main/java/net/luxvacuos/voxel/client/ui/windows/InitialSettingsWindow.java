@@ -20,19 +20,19 @@
 
 package net.luxvacuos.voxel.client.ui.windows;
 
-import static net.luxvacuos.voxel.universal.core.subsystems.CoreSubsystem.LANG;
-import static net.luxvacuos.voxel.universal.core.subsystems.CoreSubsystem.REGISTRY;
+import static net.luxvacuos.lightengine.universal.core.subsystems.CoreSubsystem.LANG;
+import static net.luxvacuos.lightengine.universal.core.subsystems.CoreSubsystem.REGISTRY;
 
-import net.luxvacuos.voxel.client.core.subsystems.GraphicalSubsystem;
-import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
-import net.luxvacuos.voxel.client.ui.Alignment;
-import net.luxvacuos.voxel.client.ui.Button;
-import net.luxvacuos.voxel.client.ui.RootComponentWindow;
-import net.luxvacuos.voxel.client.ui.TextArea;
-import net.luxvacuos.voxel.universal.core.TaskManager;
-import net.luxvacuos.voxel.universal.util.registry.Key;
+import net.luxvacuos.lightengine.client.core.subsystems.GraphicalSubsystem;
+import net.luxvacuos.lightengine.client.rendering.api.glfw.Window;
+import net.luxvacuos.lightengine.client.ui.Alignment;
+import net.luxvacuos.lightengine.client.ui.Button;
+import net.luxvacuos.lightengine.client.ui.ComponentWindow;
+import net.luxvacuos.lightengine.client.ui.TextArea;
+import net.luxvacuos.lightengine.universal.core.TaskManager;
+import net.luxvacuos.lightengine.universal.util.registry.Key;
 
-public class InitialSettingsWindow extends RootComponentWindow {
+public class InitialSettingsWindow extends ComponentWindow {
 
 	public InitialSettingsWindow(float x, float y, float w, float h) {
 		super(x, y, w, h, LANG.getRegistryItem("voxel.initialsettingswindow.name"));
@@ -53,17 +53,11 @@ public class InitialSettingsWindow extends RootComponentWindow {
 		next.setWindowAlignment(Alignment.BOTTOM);
 		next.setOnButtonPress(() -> {
 			super.closeWindow();
-			Shell shell = new Shell(0, 0, (int) REGISTRY.getRegistryItem(new Key("/Voxel/Display/width")), 30);
-			TaskManager.addTask(() -> GraphicalSubsystem.getWindowManager().addWindow(shell));
-			TaskManager.addTask(() -> GraphicalSubsystem.getWindowManager().setShell(shell));
-			float borderSize = (float) REGISTRY.getRegistryItem(new Key("/Voxel/Settings/WindowManager/borderSize"));
-			float titleBarHeight = (float) REGISTRY
-					.getRegistryItem(new Key("/Voxel/Settings/WindowManager/titleBarHeight"));
-			int height = (int) REGISTRY.getRegistryItem(new Key("/Voxel/Display/height"));
-			RootComponentWindow mainMenu = new MainWindow(borderSize + 10, height - titleBarHeight - 10,
-					(int) REGISTRY.getRegistryItem(new Key("/Voxel/Display/width")) - borderSize * 2f - 20,
-					height - titleBarHeight - borderSize - 50);
-			TaskManager.addTask(() -> GraphicalSubsystem.getWindowManager().addWindow(mainMenu));
+			int ww = (int) REGISTRY.getRegistryItem(new Key("/Light Engine/Display/width"));
+			int wh = (int) REGISTRY.getRegistryItem(new Key("/Light Engine/Display/height"));
+			int x = ww / 2 - 512;
+			int y = wh / 2 - 300;
+			TaskManager.addTask(() -> GraphicalSubsystem.getWindowManager().addWindow(new MainWindow(x, wh - y, 1024, 600)));
 			TaskManager.addTask(() -> GraphicalSubsystem.getWindowManager().toggleShell());
 		});
 		super.addComponent(next);

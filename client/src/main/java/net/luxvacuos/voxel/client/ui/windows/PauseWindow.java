@@ -20,18 +20,15 @@
 
 package net.luxvacuos.voxel.client.ui.windows;
 
-import static net.luxvacuos.voxel.universal.core.subsystems.CoreSubsystem.REGISTRY;
-
+import net.luxvacuos.lightengine.client.core.subsystems.GraphicalSubsystem;
+import net.luxvacuos.lightengine.client.input.Mouse;
+import net.luxvacuos.lightengine.client.rendering.api.glfw.Window;
+import net.luxvacuos.lightengine.client.ui.Alignment;
+import net.luxvacuos.lightengine.client.ui.Button;
+import net.luxvacuos.lightengine.client.ui.ComponentWindow;
 import net.luxvacuos.voxel.client.core.ClientVariables;
-import net.luxvacuos.voxel.client.core.subsystems.GraphicalSubsystem;
-import net.luxvacuos.voxel.client.input.Mouse;
-import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
-import net.luxvacuos.voxel.client.ui.Alignment;
-import net.luxvacuos.voxel.client.ui.Button;
-import net.luxvacuos.voxel.client.ui.RootComponentWindow;
-import net.luxvacuos.voxel.universal.util.registry.Key;
 
-public class PauseWindow extends RootComponentWindow {
+public class PauseWindow extends ComponentWindow {
 
 	public PauseWindow(float x, float y, float w, float h) {
 		super(x, y, w, h, "Pause");
@@ -47,13 +44,6 @@ public class PauseWindow extends RootComponentWindow {
 		backButton.setWindowAlignment(Alignment.BOTTOM);
 		backButton.setOnButtonPress(() -> {
 			super.closeWindow();
-			float borderSize = (float) REGISTRY.getRegistryItem(new Key("/Voxel/Settings/WindowManager/borderSize"));
-			float titleBarHeight = (float) REGISTRY.getRegistryItem(new Key("/Voxel/Settings/WindowManager/titleBarHeight"));
-			int height = (int) REGISTRY.getRegistryItem(new Key("/Voxel/Display/height"));
-			RootComponentWindow mainMenu = new MainWindow(borderSize + 10, height - titleBarHeight - 10,
-					(int) REGISTRY.getRegistryItem(new Key("/Voxel/Display/width")) - borderSize * 2f - 20,
-					height - titleBarHeight - borderSize - 50);
-			GraphicalSubsystem.getWindowManager().addWindow(mainMenu);
 			ClientVariables.exitWorld = true;
 		});
 
@@ -61,7 +51,7 @@ public class PauseWindow extends RootComponentWindow {
 		optionsButton.setAlignment(Alignment.CENTER);
 		optionsButton.setWindowAlignment(Alignment.BOTTOM);
 		optionsButton.setOnButtonPress(() -> {
-			GraphicalSubsystem.getWindowManager().addWindow(new OptionsWindow(w / 2 - 420 + x, y - 40, 840, 600));
+			GraphicalSubsystem.getWindowManager().addWindow(new OptionsWindow());
 		});
 
 		super.addComponent(backButton);

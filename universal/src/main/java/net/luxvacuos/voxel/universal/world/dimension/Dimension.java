@@ -41,13 +41,13 @@ import com.hackhalo2.nbt.tags.TagCompound;
 import com.hackhalo2.nbt.tags.TagLong;
 
 import net.luxvacuos.igl.Logger;
-import net.luxvacuos.voxel.universal.core.IWorldSimulation;
-import net.luxvacuos.voxel.universal.core.WorldSimulation;
-import net.luxvacuos.voxel.universal.core.subsystems.CoreSubsystem;
+import net.luxvacuos.lightengine.universal.core.IWorldSimulation;
+import net.luxvacuos.lightengine.universal.core.WorldSimulation;
+import net.luxvacuos.lightengine.universal.core.subsystems.CoreSubsystem;
+import net.luxvacuos.lightengine.universal.ecs.components.Position;
+import net.luxvacuos.lightengine.universal.util.registry.Key;
 import net.luxvacuos.voxel.universal.ecs.Components;
 import net.luxvacuos.voxel.universal.ecs.components.ChunkLoader;
-import net.luxvacuos.voxel.universal.ecs.components.Position;
-import net.luxvacuos.voxel.universal.util.registry.Key;
 import net.luxvacuos.voxel.universal.world.IWorld;
 import net.luxvacuos.voxel.universal.world.block.Blocks;
 import net.luxvacuos.voxel.universal.world.block.IBlock;
@@ -75,7 +75,7 @@ public class Dimension implements IDimension {
 		long seed = 0l;
 		try {
 			this.worldSimulation.setTime(this.data.getFloat("Time"));
-			this.worldSimulation.setRainFactor(this.data.getFloat("RainFactor"));
+			//this.worldSimulation.setRainFactor(this.data.getFloat("RainFactor"));
 			if (this.data.hasTagByName("Seed")) {
 				seed = this.data.getLong("Seed");
 			} else {
@@ -253,7 +253,8 @@ public class Dimension implements IDimension {
 			out = new NBTOutputStream(new BufferedOutputStream(new FileOutputStream(file)));
 			CompoundBuilder builder = new CompoundBuilder().modify(this.data);
 			builder.modifyFloat("Time", this.worldSimulation.getTime()).modifyFloat("RainFactor",
-					this.worldSimulation.getRainFactor());
+					//this.worldSimulation.getRainFactor()
+					0);
 			// builder.addBoolean("IsRaining", false);
 			builder.build().writeNBT(out, false);
 		} catch (Exception e) {

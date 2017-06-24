@@ -20,31 +20,17 @@
 
 package net.luxvacuos.voxel.client.bootstrap;
 
+import net.luxvacuos.lightengine.universal.core.GlobalVariables;
+import net.luxvacuos.lightengine.universal.core.TaskManager;
+import net.luxvacuos.lightengine.universal.core.states.StateMachine;
 import net.luxvacuos.voxel.client.core.ClientVariables;
-import net.luxvacuos.voxel.client.core.Voxel;
-import net.luxvacuos.voxel.universal.bootstrap.AbstractBootstrap;
-import net.luxvacuos.voxel.universal.bootstrap.Platform;
+import net.luxvacuos.voxel.client.core.states.MainMenuState;
 import net.luxvacuos.voxel.universal.remote.User;
 
-public class Bootstrap extends AbstractBootstrap {
+public class Bootstrap extends net.luxvacuos.lightengine.client.bootstrap.Bootstrap {
 
 	public Bootstrap(String[] args) {
 		super(args);
-	}
-
-	@Override
-	public void init() {
-		Thread.currentThread().setName("Voxel-Client");
-		if (getPlatform().equals(Platform.WINDOWS_32) || getPlatform().equals(Platform.WINDOWS_64))
-			prefix = System.getenv("AppData");
-		else if (getPlatform().equals(Platform.LINUX_32) || getPlatform().equals(Platform.LINUX_64))
-			prefix = System.getProperty("user.home");
-		else if (getPlatform().equals(Platform.MACOSX)) {
-			prefix = System.getProperty("user.home");
-			prefix += "/Library/Application Support";
-		}
-		prefix += "/.voxel";
-		new Voxel();
 	}
 
 	@Override
@@ -91,6 +77,8 @@ public class Bootstrap extends AbstractBootstrap {
 	}
 
 	public static void main(String[] args) {
+		GlobalVariables.PROJECT = "Voxel";
+		TaskManager.addTask(() -> StateMachine.registerState(new MainMenuState()));
 		new Bootstrap(args);
 	}
 

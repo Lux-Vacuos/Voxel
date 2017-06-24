@@ -20,7 +20,7 @@
 
 package net.luxvacuos.voxel.universal.world.block;
 
-import net.luxvacuos.voxel.universal.util.IUpdatable;
+import net.luxvacuos.lightengine.universal.util.IUpdatable;
 
 public interface IBlockEntity extends IBlock, IUpdatable {
 	

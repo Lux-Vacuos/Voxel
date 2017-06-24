@@ -20,7 +20,7 @@
 
 package net.luxvacuos.voxel.client.ui.windows;
 
-import static net.luxvacuos.voxel.universal.core.subsystems.CoreSubsystem.LANG;
+import static net.luxvacuos.lightengine.universal.core.subsystems.CoreSubsystem.LANG;
 import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_CENTER;
 import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_MIDDLE;
 
@@ -28,27 +28,32 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 
+import net.luxvacuos.lightengine.client.core.subsystems.GraphicalSubsystem;
+import net.luxvacuos.lightengine.client.rendering.api.glfw.Window;
+import net.luxvacuos.lightengine.client.rendering.api.nanovg.NanoWindow;
+import net.luxvacuos.lightengine.client.rendering.api.nanovg.themes.Theme.ButtonStyle;
+import net.luxvacuos.lightengine.client.ui.Alignment;
+import net.luxvacuos.lightengine.client.ui.Button;
+import net.luxvacuos.lightengine.client.ui.ComponentWindow;
+import net.luxvacuos.lightengine.client.ui.Direction;
+import net.luxvacuos.lightengine.client.ui.EditBox;
+import net.luxvacuos.lightengine.client.ui.FlowLayout;
+import net.luxvacuos.lightengine.client.ui.ScrollArea;
+import net.luxvacuos.lightengine.client.ui.Text;
+import net.luxvacuos.lightengine.client.ui.TitleBarButton;
+import net.luxvacuos.lightengine.universal.core.TaskManager;
+import net.luxvacuos.lightengine.universal.core.states.StateMachine;
+import net.luxvacuos.lightengine.universal.core.subsystems.CoreSubsystem;
+import net.luxvacuos.lightengine.universal.util.registry.Key;
 import net.luxvacuos.voxel.client.core.ClientVariables;
 import net.luxvacuos.voxel.client.core.states.StateNames;
-import net.luxvacuos.voxel.client.core.subsystems.GraphicalSubsystem;
-import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
-import net.luxvacuos.voxel.client.rendering.api.nanovg.NanoWindow;
-import net.luxvacuos.voxel.client.ui.Alignment;
-import net.luxvacuos.voxel.client.ui.Button;
-import net.luxvacuos.voxel.client.ui.EditBox;
-import net.luxvacuos.voxel.client.ui.RootComponentWindow;
-import net.luxvacuos.voxel.client.ui.ScrollPane;
-import net.luxvacuos.voxel.client.ui.Text;
 import net.luxvacuos.voxel.client.ui.WorldElement;
-import net.luxvacuos.voxel.universal.core.TaskManager;
-import net.luxvacuos.voxel.universal.core.states.StateMachine;
-import net.luxvacuos.voxel.universal.core.subsystems.CoreSubsystem;
-import net.luxvacuos.voxel.universal.util.registry.Key;
 
-public class WorldWindow extends RootComponentWindow {
+public class WorldWindow extends ComponentWindow {
 
 	public Text worldName;
 	private NanoWindow root;
+	private TitleBarButton backButton;
 
 	public WorldWindow(float x, float y, float w, float h, NanoWindow root) {
 		super(x, y, w, h, LANG.getRegistryItem("voxel.worldwindow.name"));
@@ -59,6 +64,14 @@ public class WorldWindow extends RootComponentWindow {
 	public void initApp(Window window) {
 		super.setBackgroundColor(0.4f, 0.4f, 0.4f, 1f);
 		super.setResizable(false);
+		
+		backButton = new TitleBarButton(0, 0, 28, 28);
+		backButton.setWindowAlignment(Alignment.LEFT_TOP);
+		backButton.setAlignment(Alignment.RIGHT_BOTTOM);
+		backButton.setStyle(ButtonStyle.LEFT_ARROW);
+		backButton.setEnabled(false);
+
+		super.getTitleBar().getLeft().addComponent(backButton);
 
 		worldName = new Text(LANG.getRegistryItem("voxel.worldwindow.txtname"), 40, -40);
 		worldName.setWindowAlignment(Alignment.TOP);
@@ -76,45 +89,41 @@ public class WorldWindow extends RootComponentWindow {
 		create.setAlignment(Alignment.CENTER);
 		create.setWindowAlignment(Alignment.BOTTOM);
 		create.setOnButtonPress(() -> {
-			new File(CoreSubsystem.REGISTRY.getRegistryItem(new Key("/Voxel/Settings/World/directory")) + nameB.getText())
-					.mkdirs();
+			new File(CoreSubsystem.REGISTRY.getRegistryItem(new Key("/Voxel/Settings/World/directory"))
+					+ nameB.getText()).mkdirs();
 			TaskManager.addTask(() -> {
+				backButton.setEnabled(false);
 				super.disposeApp(window);
 				createList(window);
 			});
 		});
-
-		Button back = new Button(0, 40, 200, 40, LANG.getRegistryItem("voxel.worldwindow.create.btnback"));
-		back.setAlignment(Alignment.CENTER);
-		back.setWindowAlignment(Alignment.BOTTOM);
-		back.setOnButtonPress(() -> {
-			TaskManager.addTask(() -> {
-				super.disposeApp(window);
-				createList(window);
-			});
-		});
-
+		
 		Text text = new Text("Name", 0, 80);
 		text.setAlign(NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
 		text.setWindowAlignment(Alignment.CENTER);
 
 		super.addComponent(nameB);
 		super.addComponent(create);
-		super.addComponent(back);
 		super.addComponent(text);
 	}
 
 	private void createList(Window window) {
-		ScrollPane pane = new ScrollPane(0, 0, w / 2, h, w / 2 - 35, 60f);
-		pane.setColls(1);
+		backButton.setEnabled(false);
+		ScrollArea area = new ScrollArea(0, 0, w / 2, h, 0, 0);
+		area.setLayout(new FlowLayout(Direction.DOWN, 10, 10));
+		area.setResizeH(false);
 
-		File worldPath = new File((String) CoreSubsystem.REGISTRY.getRegistryItem(new Key("/Voxel/Settings/World/directory")));
+		File worldPath = new File(
+				(String) CoreSubsystem.REGISTRY.getRegistryItem(new Key("/Voxel/Settings/World/directory")));
 		if (!worldPath.exists())
 			worldPath.mkdirs();
 		try {
 			Files.walk(worldPath.toPath(), 1).forEach(filePath -> {
 				if (Files.isDirectory(filePath) && !filePath.toFile().equals(worldPath)) {
-					pane.addElement(new WorldElement(w / 2 - 35, 60, filePath.getFileName().toString(), this));
+					WorldElement el = new WorldElement(w / 2, 40, filePath.getFileName().toString());
+					el.setWindowAlignment(Alignment.LEFT_TOP);
+					el.setAlignment(Alignment.RIGHT_BOTTOM);
+					area.addComponent(el);
 				}
 			});
 		} catch (IOException e) {
@@ -141,10 +150,17 @@ public class WorldWindow extends RootComponentWindow {
 			TaskManager.addTask(() -> {
 				super.disposeApp(window);
 				createWorld(window);
+				backButton.setEnabled(true);
+				backButton.setOnButtonPress(() -> {
+					TaskManager.addTask(() -> {
+						super.disposeApp(window);
+						createList(window);
+					});
+				});
 			});
 		});
 
-		super.addComponent(pane);
+		super.addComponent(area);
 		super.addComponent(loadButton);
 		super.addComponent(createButton);
 

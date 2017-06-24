@@ -20,9 +20,9 @@
 
 package net.luxvacuos.voxel.server.commands;
 
+import net.luxvacuos.lightengine.universal.core.states.StateMachine;
 import net.luxvacuos.voxel.server.network.ServerHandler;
 import net.luxvacuos.voxel.universal.commands.SimpleCommand;
-import net.luxvacuos.voxel.universal.core.states.StateMachine;
 import net.luxvacuos.voxel.universal.network.packets.Disconnect;
 
 public class StopCommand extends SimpleCommand {

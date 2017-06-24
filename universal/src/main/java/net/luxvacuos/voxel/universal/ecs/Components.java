@@ -24,31 +24,13 @@ import com.badlogic.ashley.core.ComponentMapper;
 
 import net.luxvacuos.voxel.universal.ecs.components.*;
 
-public class Components {
+public class Components extends net.luxvacuos.lightengine.universal.ecs.Components {
 
 	protected Components() {
 		throw new RuntimeException("Cannot Initialize the Components class!");
 	}
 
-	public static final ComponentMapper<Position> POSITION = ComponentMapper.getFor(Position.class);
-
-	public static final ComponentMapper<Rotation> ROTATION = ComponentMapper.getFor(Rotation.class);
-
-	public static final ComponentMapper<Scale> SCALE = ComponentMapper.getFor(Scale.class);
-
-	public static final ComponentMapper<Velocity> VELOCITY = ComponentMapper.getFor(Velocity.class);
-
-	public static final ComponentMapper<Health> HEALTH = ComponentMapper.getFor(Health.class);
-
-	public static final ComponentMapper<AABB> AABB = ComponentMapper.getFor(AABB.class);
 	
 	public static final ComponentMapper<ChunkLoader> CHUNK_LOADER = ComponentMapper.getFor(ChunkLoader.class);
 	
-	public static final ComponentMapper<NBTComponent> NBT = ComponentMapper.getFor(NBTComponent.class);
-	
-	public static final ComponentMapper<Player> PLAYER = ComponentMapper.getFor(Player.class);
-	
-	public static final ComponentMapper<Name> NAME = ComponentMapper.getFor(Name.class);
-	
-	public static final ComponentMapper<UUIDComponent> UUID = ComponentMapper.getFor(UUIDComponent.class);
 }

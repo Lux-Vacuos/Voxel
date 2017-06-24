@@ -23,8 +23,8 @@ package net.luxvacuos.voxel.server.bootstrap;
 import java.io.File;
 import java.io.IOException;
 
+import net.luxvacuos.lightengine.universal.bootstrap.AbstractBootstrap;
 import net.luxvacuos.voxel.server.core.Voxel;
-import net.luxvacuos.voxel.universal.bootstrap.AbstractBootstrap;
 
 public class Bootstrap extends AbstractBootstrap {
 

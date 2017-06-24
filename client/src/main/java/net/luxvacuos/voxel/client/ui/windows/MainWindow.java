@@ -20,21 +20,19 @@
 
 package net.luxvacuos.voxel.client.ui.windows;
 
-import net.luxvacuos.voxel.client.core.ClientVariables;
-import net.luxvacuos.voxel.client.core.states.StateNames;
-import net.luxvacuos.voxel.client.core.subsystems.GraphicalSubsystem;
-import net.luxvacuos.voxel.client.rendering.api.glfw.Window;
-import net.luxvacuos.voxel.client.rendering.api.nanovg.themes.Theme;
-import net.luxvacuos.voxel.client.ui.Alignment;
-import net.luxvacuos.voxel.client.ui.Button;
-import net.luxvacuos.voxel.client.ui.ModalWindow;
-import net.luxvacuos.voxel.client.ui.RootComponentWindow;
-import net.luxvacuos.voxel.universal.core.TaskManager;
-import net.luxvacuos.voxel.universal.core.states.StateMachine;
+import static net.luxvacuos.lightengine.universal.core.subsystems.CoreSubsystem.LANG;
 
-import static net.luxvacuos.voxel.universal.core.subsystems.CoreSubsystem.*;
+import net.luxvacuos.lightengine.client.core.subsystems.GraphicalSubsystem;
+import net.luxvacuos.lightengine.client.rendering.api.glfw.Window;
+import net.luxvacuos.lightengine.client.rendering.api.nanovg.themes.Theme;
+import net.luxvacuos.lightengine.client.ui.Alignment;
+import net.luxvacuos.lightengine.client.ui.Button;
+import net.luxvacuos.lightengine.client.ui.ComponentWindow;
+import net.luxvacuos.lightengine.client.ui.ModalWindow;
+import net.luxvacuos.lightengine.universal.core.TaskManager;
+import net.luxvacuos.lightengine.universal.core.states.StateMachine;
 
-public class MainWindow extends RootComponentWindow {
+public class MainWindow extends ComponentWindow {
 
 	public MainWindow(float x, float y, float w, float h) {
 		super(x, y, w, h, LANG.getRegistryItem("voxel.mainwindow.name"));
@@ -68,14 +66,7 @@ public class MainWindow extends RootComponentWindow {
 		exitButton.setWindowAlignment(Alignment.CENTER);
 
 		playButton.setOnButtonPress(() -> {
-			if (ClientVariables.TEST_MODE) {
-				GraphicalSubsystem.getWindowManager().toggleShell();
-				super.setWindowClose(WindowClose.DISPOSE);
-				super.closeWindow();
-				StateMachine.setCurrentState(StateNames.TEST);
-			} else
-				GraphicalSubsystem.getWindowManager()
-						.addWindow(new WorldWindow(w / 2 - 420 + x, y - 40, 840, 600, this));
+			GraphicalSubsystem.getWindowManager().addWindow(new WorldWindow(w / 2 - 420 + x, y - 40, 840, 600, this));
 		});
 
 		playMPButton.setOnButtonPress(() -> {
@@ -84,7 +75,7 @@ public class MainWindow extends RootComponentWindow {
 		});
 
 		optionsButton.setOnButtonPress(() -> {
-			GraphicalSubsystem.getWindowManager().addWindow(new OptionsWindow(w / 2 - 420 + x, y - 40, 840, 600));
+			GraphicalSubsystem.getWindowManager().addWindow(new OptionsWindow());
 		});
 
 		aboutButton.setOnButtonPress(() -> {

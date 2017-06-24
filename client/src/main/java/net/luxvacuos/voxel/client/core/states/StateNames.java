@@ -25,7 +25,7 @@ public class StateNames {
 	private StateNames() {
 	}
 
-	public static final String MAIN_MENU = "Main_Menu";
+	public static final String MAIN_MENU = "_main";
 	public static final String MP_LOADING = "MP_Loading";
 	public static final String MP_WORLD = "MP_World";
 	public static final String SPLASH_SCREEN = "Splash_Screen";
