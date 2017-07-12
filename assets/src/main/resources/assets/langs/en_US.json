@@ -22,6 +22,8 @@
 	"voxel.optionswindow.graphics.ao":"Ambient Occlusion",
 	"voxel.optionswindow.graphics.chromatic":"Chromatic Aberration",
 	"voxel.optionswindow.graphics.lensflares":"Lens Flares",
+	"voxel.optionswindow.graphics.shadowres":"Shadow Resolution",
+	"voxel.optionswindow.graphics.shadowdis":"Shadow Distance",
 	"voxel.optionswindow.btnwm":"Window Manager",
 	"voxel.optionswindow.wm.border":"Window Border",
 	"voxel.optionswindow.wm.scrollsize":"Scroll Bar size",

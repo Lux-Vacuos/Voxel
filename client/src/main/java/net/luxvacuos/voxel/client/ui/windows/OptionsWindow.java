@@ -23,6 +23,8 @@ package net.luxvacuos.voxel.client.ui.windows;
 import static net.luxvacuos.lightengine.universal.core.subsystems.CoreSubsystem.LANG;
 import static net.luxvacuos.lightengine.universal.core.subsystems.CoreSubsystem.REGISTRY;
 
+import java.util.Arrays;
+
 import net.luxvacuos.lightengine.client.rendering.api.glfw.Window;
 import net.luxvacuos.lightengine.client.rendering.api.nanovg.themes.Theme.ButtonStyle;
 import net.luxvacuos.lightengine.client.ui.Alignment;
@@ -30,6 +32,8 @@ import net.luxvacuos.lightengine.client.ui.Button;
 import net.luxvacuos.lightengine.client.ui.ComponentWindow;
 import net.luxvacuos.lightengine.client.ui.Container;
 import net.luxvacuos.lightengine.client.ui.Direction;
+import net.luxvacuos.lightengine.client.ui.DropDown;
+import net.luxvacuos.lightengine.client.ui.EditBox;
 import net.luxvacuos.lightengine.client.ui.FlowLayout;
 import net.luxvacuos.lightengine.client.ui.ScrollArea;
 import net.luxvacuos.lightengine.client.ui.Slider;
@@ -129,6 +133,11 @@ public class OptionsWindow extends ComponentWindow {
 				(boolean) REGISTRY.getRegistryItem(new Key("/Light Engine/Settings/Graphics/chromaticAberration")));
 		ToggleButton lensFlaresButton = new ToggleButton(-50, 0, 80, 30,
 				(boolean) REGISTRY.getRegistryItem(new Key("/Light Engine/Settings/Graphics/lensFlares")));
+		DropDown<Integer> shadowResDropdown = new DropDown<>(-50, 0, 180, 30,
+				(int) REGISTRY.getRegistryItem(new Key("/Light Engine/Settings/Graphics/shadowsResolution")),
+				Arrays.asList(128, 256, 512, 1024, 2048, 4096));
+		EditBox shadowDistance = new EditBox(-50, 0, 180, 30, Integer.toString(
+				(int) REGISTRY.getRegistryItem(new Key("/Light Engine/Settings/Graphics/shadowsDrawDistance"))));
 
 		godraysButton.setWindowAlignment(Alignment.RIGHT);
 		godraysButton.setAlignment(Alignment.RIGHT);
@@ -150,6 +159,10 @@ public class OptionsWindow extends ComponentWindow {
 		chromaticAberrationButton.setAlignment(Alignment.RIGHT);
 		lensFlaresButton.setWindowAlignment(Alignment.RIGHT);
 		lensFlaresButton.setAlignment(Alignment.RIGHT);
+		shadowResDropdown.setWindowAlignment(Alignment.RIGHT);
+		shadowResDropdown.setAlignment(Alignment.RIGHT);
+		shadowDistance.setWindowAlignment(Alignment.RIGHT);
+		shadowDistance.setAlignment(Alignment.RIGHT);
 
 		shadowsButton.setOnButtonPress(
 				() -> REGISTRY.register(new Key("/Light Engine/Settings/Graphics/shadows"), shadowsButton.getStatus()));
@@ -171,6 +184,12 @@ public class OptionsWindow extends ComponentWindow {
 				new Key("/Light Engine/Settings/Graphics/chromaticAberration"), chromaticAberrationButton.getStatus()));
 		lensFlaresButton.setOnButtonPress(() -> REGISTRY.register(new Key("/Light Engine/Settings/Graphics/lensFlares"),
 				lensFlaresButton.getStatus()));
+		shadowResDropdown
+				.setOnButtonPress(() -> REGISTRY.register(new Key("/Light Engine/Settings/Graphics/shadowsResolution"),
+						shadowResDropdown.getValue().intValue()));
+		shadowDistance
+				.setOnUnselect(() -> REGISTRY.register(new Key("/Light Engine/Settings/Graphics/shadowsDrawDistance"),
+						Integer.parseInt(shadowDistance.getText())));
 
 		Text godText = new Text(LANG.getRegistryItem("voxel.optionswindow.graphics.volumetriclight"), 20, 0);
 		godText.setWindowAlignment(Alignment.LEFT);
@@ -188,11 +207,14 @@ public class OptionsWindow extends ComponentWindow {
 		parallaxText.setWindowAlignment(Alignment.LEFT);
 		Text ambientOccText = new Text(LANG.getRegistryItem("voxel.optionswindow.graphics.ao"), 20, 0);
 		ambientOccText.setWindowAlignment(Alignment.LEFT);
-		Text chromaticAberrationText = new Text(LANG.getRegistryItem("voxel.optionswindow.graphics.chromatic"),
-				20, 0);
+		Text chromaticAberrationText = new Text(LANG.getRegistryItem("voxel.optionswindow.graphics.chromatic"), 20, 0);
 		chromaticAberrationText.setWindowAlignment(Alignment.LEFT);
 		Text lensFlaresText = new Text(LANG.getRegistryItem("voxel.optionswindow.graphics.lensflares"), 20, 0);
 		lensFlaresText.setWindowAlignment(Alignment.LEFT);
+		Text shadowResText = new Text(LANG.getRegistryItem("voxel.optionswindow.graphics.shadowres"), 20, 0);
+		shadowResText.setWindowAlignment(Alignment.LEFT);
+		Text shadowDisText = new Text(LANG.getRegistryItem("voxel.optionswindow.graphics.shadowdis"), 20, 0);
+		shadowDisText.setWindowAlignment(Alignment.LEFT);
 
 		ScrollArea area = new ScrollArea(0, 0, w, h, 0, 0);
 		area.setLayout(new FlowLayout(Direction.DOWN, 10, 10));
@@ -227,6 +249,12 @@ public class OptionsWindow extends ComponentWindow {
 		Container lens = new Container(0, 0, w, 30);
 		lens.setWindowAlignment(Alignment.LEFT_TOP);
 		lens.setAlignment(Alignment.RIGHT_BOTTOM);
+		Container shadowRes = new Container(0, 0, w, 30);
+		shadowRes.setWindowAlignment(Alignment.LEFT_TOP);
+		shadowRes.setAlignment(Alignment.RIGHT_BOTTOM);
+		Container shadowDis = new Container(0, 0, w, 30);
+		shadowDis.setWindowAlignment(Alignment.LEFT_TOP);
+		shadowDis.setAlignment(Alignment.RIGHT_BOTTOM);
 
 		godrays.addComponent(godraysButton);
 		godrays.addComponent(godText);
@@ -248,6 +276,10 @@ public class OptionsWindow extends ComponentWindow {
 		aberration.addComponent(chromaticAberrationText);
 		lens.addComponent(lensFlaresButton);
 		lens.addComponent(lensFlaresText);
+		shadowRes.addComponent(shadowResDropdown);
+		shadowRes.addComponent(shadowResText);
+		shadowDis.addComponent(shadowDistance);
+		shadowDis.addComponent(shadowDisText);
 
 		godrays.setResizeH(true);
 		shadows.setResizeH(true);
@@ -259,7 +291,9 @@ public class OptionsWindow extends ComponentWindow {
 		occlusion.setResizeH(true);
 		aberration.setResizeH(true);
 		lens.setResizeH(true);
-		
+		shadowRes.setResizeH(true);
+		shadowDis.setResizeH(true);
+
 		area.addComponent(godrays);
 		area.addComponent(shadows);
 		area.addComponent(dof);
@@ -270,6 +304,8 @@ public class OptionsWindow extends ComponentWindow {
 		area.addComponent(occlusion);
 		area.addComponent(aberration);
 		area.addComponent(lens);
+		area.addComponent(shadowRes);
+		area.addComponent(shadowDis);
 
 		super.addComponent(area);
 
@@ -278,8 +314,7 @@ public class OptionsWindow extends ComponentWindow {
 
 	private void wmOptions() {
 		float border = (float) REGISTRY.getRegistryItem(new Key("/Light Engine/Settings/WindowManager/borderSize"));
-		Text wmBorderText = new Text(LANG.getRegistryItem("voxel.optionswindow.wm.border") + ": " + border, 20,
-				0);
+		Text wmBorderText = new Text(LANG.getRegistryItem("voxel.optionswindow.wm.border") + ": " + border, 20, 0);
 		Slider wmBorder = new Slider(-56, 0, 200, 20, border / 40f);
 
 		wmBorderText.setWindowAlignment(Alignment.LEFT);
@@ -302,8 +337,7 @@ public class OptionsWindow extends ComponentWindow {
 		borderC.addComponent(wmBorder);
 
 		float scroll = (float) REGISTRY.getRegistryItem(new Key("/Light Engine/Settings/WindowManager/scrollBarSize"));
-		Text wmScrollText = new Text(LANG.getRegistryItem("voxel.optionswindow.wm.scrollsize") + ": " + scroll,
-				20, 0);
+		Text wmScrollText = new Text(LANG.getRegistryItem("voxel.optionswindow.wm.scrollsize") + ": " + scroll, 20, 0);
 		Slider wmScroll = new Slider(-56, 0, 200, 20, scroll / 40f);
 
 		wmScrollText.setWindowAlignment(Alignment.LEFT);
@@ -326,8 +360,7 @@ public class OptionsWindow extends ComponentWindow {
 		scrollC.addComponent(wmScroll);
 
 		float title = (float) REGISTRY.getRegistryItem(new Key("/Light Engine/Settings/WindowManager/titleBarHeight"));
-		Text wmTitleText = new Text(LANG.getRegistryItem("voxel.optionswindow.wm.titlebarsize") + ": " + title,
-				20, 0);
+		Text wmTitleText = new Text(LANG.getRegistryItem("voxel.optionswindow.wm.titlebarsize") + ": " + title, 20, 0);
 		Slider wmTitle = new Slider(-56, 0, 200, 20, title / 40f);
 
 		wmTitleText.setWindowAlignment(Alignment.LEFT);
@@ -370,12 +403,12 @@ public class OptionsWindow extends ComponentWindow {
 
 		ScrollArea area = new ScrollArea(0, 0, w, h, 0, 0);
 		area.setLayout(new FlowLayout(Direction.DOWN, 10, 10));
-		
+
 		borderC.setResizeH(true);
 		scrollC.setResizeH(true);
 		titleC.setResizeH(true);
 		titleBorder.setResizeH(true);
-		
+
 		area.addComponent(borderC);
 		area.addComponent(scrollC);
 		area.addComponent(titleC);

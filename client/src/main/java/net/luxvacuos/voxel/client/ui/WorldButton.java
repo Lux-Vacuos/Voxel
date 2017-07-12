@@ -20,34 +20,23 @@
 
 package net.luxvacuos.voxel.client.ui;
 
-import static org.lwjgl.nanovg.NanoVG.*;
+import net.luxvacuos.lightengine.client.rendering.api.glfw.Window;
+import net.luxvacuos.lightengine.client.rendering.api.nanovg.themes.Theme;
+import net.luxvacuos.lightengine.client.ui.Button;
 
-import net.luxvacuos.lightengine.client.ui.Alignment;
-import net.luxvacuos.lightengine.client.ui.Container;
-import net.luxvacuos.lightengine.client.ui.Text;
-import net.luxvacuos.voxel.client.core.ClientVariables;
+public class WorldButton extends Button {
 
-public class WorldElement extends Container {
-	
-	private String name;
-
-	public WorldElement(float w, float h, String name) {
-		super(0, 0, w, h);
-		this.name = name;
+	public WorldButton(float x, float y, float w, float h, String text) {
+		super(x, y, w, h, text);
 	}
-	
+
 	@Override
-	public void init() {
-		WorldButton btn = new WorldButton(0, 0, w, h, name);
-		btn.setOnButtonPress(() -> {
-			ClientVariables.worldNameToLoad = name;
-		});
-		Text txt = new Text(name, 0, 0);
-		txt.setAlign(NVG_ALIGN_LEFT | NVG_ALIGN_TOP);
-		txt.setWindowAlignment(Alignment.LEFT_TOP);
-		super.addComponent(btn);
-		super.addComponent(txt);
-		super.init();
+	public void render(Window window) {
+		if (!enabled)
+			return;
+		Theme.renderBox(window.getNVGID(), rootComponent.rootX + alignedX,
+				window.getHeight() - rootComponent.rootY - alignedY - h, w, h,
+				Theme.setColor(0.6f, 0.6f, 0.6f, 1f, Theme.colorA), 0f, 0f, 0, 0f);
 	}
 
 }

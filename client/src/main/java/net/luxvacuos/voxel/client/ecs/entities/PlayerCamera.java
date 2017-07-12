@@ -66,7 +66,7 @@ public class PlayerCamera extends CameraEntity implements IDimensionEntity {
 	private int mouseSpeed = 8;
 	private final int maxLookUp = 90;
 	private final int maxLookDown = -90;
-	private boolean flyMode = false;
+	private boolean flyMode = true;
 	private Vector2d center;
 	private Vector3d blockOutlinePos = new Vector3d();
 	private ToolTier tool = ToolTier.ZERO;

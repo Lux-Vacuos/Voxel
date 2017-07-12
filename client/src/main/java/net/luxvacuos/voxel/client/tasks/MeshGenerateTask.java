@@ -36,6 +36,9 @@ public class MeshGenerateTask implements Callable<IRenderChunk> {
 
 	@Override
 	public IRenderChunk call() throws Exception {
+		while(this.chunk.getTessellator() == null)
+			Thread.sleep(100);
+			
 		this.chunk.getTessellator().begin();
 		for (int x = 0; x < 16; x++) {
 			for (int z = 0; z < 16; z++) {

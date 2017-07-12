@@ -29,6 +29,7 @@ import net.luxvacuos.lightengine.client.ui.Alignment;
 import net.luxvacuos.lightengine.client.ui.Button;
 import net.luxvacuos.lightengine.client.ui.ComponentWindow;
 import net.luxvacuos.lightengine.client.ui.TextArea;
+import net.luxvacuos.lightengine.client.ui.windows.Profiler;
 import net.luxvacuos.lightengine.universal.core.TaskManager;
 import net.luxvacuos.lightengine.universal.util.registry.Key;
 
@@ -57,7 +58,9 @@ public class InitialSettingsWindow extends ComponentWindow {
 			int wh = (int) REGISTRY.getRegistryItem(new Key("/Light Engine/Display/height"));
 			int x = ww / 2 - 512;
 			int y = wh / 2 - 300;
-			TaskManager.addTask(() -> GraphicalSubsystem.getWindowManager().addWindow(new MainWindow(x, wh - y, 1024, 600)));
+			TaskManager.addTask(
+					() -> GraphicalSubsystem.getWindowManager().addWindow(new MainWindow(x, wh - y, 1024, 600)));
+			TaskManager.addTask(() -> GraphicalSubsystem.getWindowManager().addWindow(new Profiler()));
 			TaskManager.addTask(() -> GraphicalSubsystem.getWindowManager().toggleShell());
 		});
 		super.addComponent(next);

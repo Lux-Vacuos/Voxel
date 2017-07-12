@@ -43,8 +43,10 @@ public class WorldSubsystem implements ISubsystem {
 	@Override
 	public void init() {
 		REGISTRY.register(new Key("/Voxel/Settings/World/directory"), Bootstrap.getPrefix() + "/world/");
-		REGISTRY.register(new Key("/Voxel/Settings/World/chunkManagerThreads", true), 2);
-		REGISTRY.register(new Key("/Voxel/Settings/World/chunkRadius", true), 4);
+		if (!REGISTRY.hasRegistryItem(new Key("/Voxel/Settings/World/chunkManagerThreads")))
+			REGISTRY.register(new Key("/Voxel/Settings/World/chunkManagerThreads", true), 2);
+		if (!REGISTRY.hasRegistryItem(new Key("/Voxel/Settings/World/chunkRadius")))
+			REGISTRY.register(new Key("/Voxel/Settings/World/chunkRadius", true), 4);
 		TaskManager.addTask(() -> {
 			BlocksResources.init(GraphicalSubsystem.getMainWindow().getResourceLoader());
 		});
@@ -76,6 +78,10 @@ public class WorldSubsystem implements ISubsystem {
 			// "pedestal")));
 			Blocks.finishRegister();
 		});
+		TaskManager.addTask(() -> {
+			TessellatorShader.getShader();
+			TessellatorBasicShader.getShader();
+		});
 	}
 
 	@Override
@@ -91,5 +97,9 @@ public class WorldSubsystem implements ISubsystem {
 		BlocksResources.dispose();
 		TessellatorShader.getShader().dispose();
 		TessellatorBasicShader.getShader().dispose();
+	}
+
+	@Override
+	public void render(float arg0) {
 	}
 }

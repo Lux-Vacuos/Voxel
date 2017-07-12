@@ -38,6 +38,7 @@ import net.luxvacuos.lightengine.client.rendering.api.opengl.ParticleDomain;
 import net.luxvacuos.lightengine.client.rendering.api.opengl.Renderer;
 import net.luxvacuos.lightengine.client.ui.windows.GameWindow;
 import net.luxvacuos.lightengine.client.util.Maths;
+import net.luxvacuos.lightengine.universal.core.TaskManager;
 import net.luxvacuos.lightengine.universal.core.states.AbstractState;
 import net.luxvacuos.lightengine.universal.core.states.StateMachine;
 import net.luxvacuos.lightengine.universal.util.registry.Key;
@@ -60,6 +61,7 @@ public class SPWorldState extends AbstractState {
 	private PauseWindow pauseWindow;
 
 	private IWorld world;
+	private boolean loaded;
 
 	public SPWorldState() {
 		super(StateNames.SP_WORLD);
@@ -68,35 +70,38 @@ public class SPWorldState extends AbstractState {
 	@Override
 	public void start() {
 		super.start();
+		TaskManager.addTask(() -> {
 
-		this.world = new RenderWorld(ClientVariables.worldNameToLoad);
-		ClientVariables.worldNameToLoad = "";
-		Renderer.setDeferredPass((camera, sunCamera, frustum, shadowMap) -> {
-			((RenderWorld) world).render(camera, frustum);
-		});
-		Renderer.setShadowPass((camera, sunCamera, frustum, shadowMap) -> {
-			((RenderWorld) world).renderShadow(sunCamera, frustum);
-		});
-		Renderer.setForwardPass((camera, sunCamera, frustum, shadowMap) -> {
-			Vector3d pos = ((PlayerCamera) camera).getBlockOutlinePos();
-			blockOutlineRenderer.render(camera,
-					world.getActiveDimension().getBlockAt((int) pos.getX(), (int) pos.getY(), (int) pos.getZ()));
-		});
+			this.world = new RenderWorld(ClientVariables.worldNameToLoad);
+			ClientVariables.worldNameToLoad = "";
+			Renderer.setDeferredPass((camera, sunCamera, frustum, shadowMap) -> {
+				((RenderWorld) world).render(camera, frustum);
+			});
+			Renderer.setShadowPass((camera, sunCamera, frustum, shadowMap) -> {
+				((RenderWorld) world).renderShadow(sunCamera, frustum);
+			});
+			Renderer.setForwardPass((camera, sunCamera, frustum, shadowMap) -> {
+				Vector3d pos = ((PlayerCamera) camera).getBlockOutlinePos();
+				blockOutlineRenderer.render(camera,
+						world.getActiveDimension().getBlockAt((int) pos.getX(), (int) pos.getY(), (int) pos.getZ()));
+			});
 
-		world.loadDimension(0);
-		world.setActiveDimension(0);
-		((PlayerCamera) camera).setMouse();
-		camera.setPosition(new Vector3d(0, 256, 0));
-		spawnChunks.setPosition(new Vector3d(0, 0, 0));
-		world.getActiveDimension().getEntitiesManager().addEntity(camera);
-		world.getActiveDimension().getEntitiesManager().addEntity(spawnChunks);
+			world.loadDimension(0);
+			world.setActiveDimension(0);
+			((PlayerCamera) camera).setMouse();
+			camera.setPosition(new Vector3d(0, 256, 0));
+			spawnChunks.setPosition(new Vector3d(0, 0, 0));
+			world.getActiveDimension().getEntitiesManager().addEntity(camera);
+			world.getActiveDimension().getEntitiesManager().addEntity(spawnChunks);
 
-		Renderer.render(world.getActiveDimension().getEntitiesManager().getEntities(), ParticleDomain.getParticles(),
-				camera, world.getActiveDimension().getWorldSimulator(), sun, 0);
-		gameWindow = new GameWindow(0, (int) REGISTRY.getRegistryItem(new Key("/Light Engine/Display/height")),
-				(int) REGISTRY.getRegistryItem(new Key("/Light Engine/Display/width")),
-				(int) REGISTRY.getRegistryItem(new Key("/Light Engine/Display/height")));
-		GraphicalSubsystem.getWindowManager().addWindow(gameWindow);
+			Renderer.render(world.getActiveDimension().getEntitiesManager().getEntities(),
+					ParticleDomain.getParticles(), camera, world.getActiveDimension().getWorldSimulator(), sun, 0);
+			gameWindow = new GameWindow(0, (int) REGISTRY.getRegistryItem(new Key("/Light Engine/Display/height")),
+					(int) REGISTRY.getRegistryItem(new Key("/Light Engine/Display/width")),
+					(int) REGISTRY.getRegistryItem(new Key("/Light Engine/Display/height")));
+			GraphicalSubsystem.getWindowManager().addWindow(gameWindow);
+			loaded = true;
+		});
 	}
 
 	@Override
@@ -128,9 +133,8 @@ public class SPWorldState extends AbstractState {
 
 		camera = new PlayerCamera(projectionMatrix, ClientVariables.user.getUsername(),
 				ClientVariables.user.getUUID().toString());
-		sun = new Sun(new Vector3d(), shadowProjectionMatrix);
-
-		blockOutlineRenderer = new BlockOutlineRenderer(window.getResourceLoader());
+		sun = new Sun(new Vector3d(5, 0, 40), shadowProjectionMatrix);
+		TaskManager.addTask(() -> blockOutlineRenderer = new BlockOutlineRenderer(window.getResourceLoader()));
 
 		spawnChunks = new ChunkLoaderEntity(new Vector3d());
 	}
@@ -144,6 +148,8 @@ public class SPWorldState extends AbstractState {
 
 	@Override
 	public void render(float alpha) {
+		if (!loaded)
+			return;
 		Renderer.render(world.getActiveDimension().getEntitiesManager().getEntities(), ParticleDomain.getParticles(),
 				camera, world.getActiveDimension().getWorldSimulator(), sun, alpha);
 		Renderer.clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -153,12 +159,13 @@ public class SPWorldState extends AbstractState {
 
 	@Override
 	public void update(float delta) {
+		if (!loaded)
+			return;
 		GraphicalSubsystem.getWindowManager().update(delta);
 		Window window = GraphicalSubsystem.getMainWindow();
 		KeyboardHandler kbh = window.getKeyboardHandler();
 		if (!ClientVariables.paused) {
 			world.update(delta);
-
 			sun.update(camera.getPosition(),
 					((RenderDimension) this.world.getActiveDimension()).getWorldSimulator().getRotation(), delta);
 			ParticleDomain.update(delta, camera);

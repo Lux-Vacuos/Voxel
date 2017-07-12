@@ -84,7 +84,7 @@ public class ClientChunkManager extends ChunkManager {
 					}
 				}
 			} catch (Exception e) {
-				Logger.error(e);
+				e.printStackTrace();
 			}
 		}
 

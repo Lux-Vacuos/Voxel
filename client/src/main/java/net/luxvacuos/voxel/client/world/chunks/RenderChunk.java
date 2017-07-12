@@ -22,6 +22,7 @@ package net.luxvacuos.voxel.client.world.chunks;
 
 import net.luxvacuos.lightengine.client.core.ClientWorldSimulation;
 import net.luxvacuos.lightengine.client.ecs.entities.CameraEntity;
+import net.luxvacuos.lightengine.universal.core.TaskManager;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Tessellator;
 import net.luxvacuos.voxel.client.rendering.world.chunk.IRenderChunk;
 import net.luxvacuos.voxel.client.world.block.BlocksResources;
@@ -37,7 +38,7 @@ public class RenderChunk extends Chunk implements IRenderChunk {
 
 	public RenderChunk(IDimension dim, ChunkNode node, ChunkData data) {
 		super(dim, node, data);
-		this.tess = new Tessellator(BlocksResources.getMaterial());
+		TaskManager.addTask(() -> this.tess = new Tessellator(BlocksResources.getMaterial()));
 	}
 
 	protected void isRebuilding(boolean flag) {
@@ -59,23 +60,27 @@ public class RenderChunk extends Chunk implements IRenderChunk {
 
 	@Override
 	public void render(CameraEntity camera, ClientWorldSimulation clientWorldSimulation) {
-		this.tess.draw(camera, clientWorldSimulation);
+		if (tess != null)
+			this.tess.draw(camera, clientWorldSimulation);
 	}
 
 	@Override
 	public void renderShadow(CameraEntity sunCamera) {
-		this.tess.drawShadow(sunCamera);
+		if (tess != null)
+			this.tess.drawShadow(sunCamera);
 	}
 
 	@Override
 	public void renderOcclusion(CameraEntity camera) {
-		this.tess.drawOcclusion(camera);
+		if (tess != null)
+			this.tess.drawOcclusion(camera);
 	}
 
 	@Override
 	public void dispose() {
 		super.dispose();
-		this.tess.cleanUp();
+		if (tess != null)
+			TaskManager.addTask(() -> this.tess.cleanUp());
 	}
 
 	@Override
