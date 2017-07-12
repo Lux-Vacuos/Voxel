@@ -20,7 +20,7 @@ project(":client") {
 		compile project(':universal')
 		compile project(':assets')
 		compile 'de.jarnbjo:j-ogg-all:1.0.0'
-		compile files('lib/client-0.0.10-develop-06885e6.jar')
+		compile files('lib/client-0.0.10-develop-c5095be.jar')
 
 		// LWJGL dependencies
 		compile "org.lwjgl:lwjgl:${lwjglVersion}"
