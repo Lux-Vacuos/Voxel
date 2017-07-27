@@ -20,7 +20,7 @@ project(":client") {
 		compile project(':universal')
 		compile project(':assets')
 		compile 'de.jarnbjo:j-ogg-all:1.0.0'
-		compile files('lib/client-0.0.10-develop-c5095be.jar')
+		compile files('lib/client-0.0.10-develop-7861a0d.jar')
 
 		// LWJGL dependencies
 		compile "org.lwjgl:lwjgl:${lwjglVersion}"
@@ -68,7 +68,7 @@ project(":server") {
 	dependencies {
 		compile project(':universal')
 		compile project(':assets')
-		compile files('lib/server-0.0.10-develop-06885e6.jar')
+		compile files('lib/server-0.0.10-develop-7861a0d.jar')
 		testCompile group: 'junit', name: 'junit', version: '4.12'
 	}
 }
@@ -88,7 +88,7 @@ project(":universal") {
 		compile 'org.codehaus.groovy:groovy:2.4.7'
 		compile 'org.codehaus.groovy:groovy-jsr223:2.4.7'
 		compile 'io.netty:netty-all:4.1.9.Final'
-		compile files('lib/universal-0.0.10-develop-06885e6.jar')
+		compile files('lib/universal-0.0.10-develop-7861a0d.jar')
 		compile project(':utils')
 		compile project(':modules:api')
 		testCompile group: 'junit', name: 'junit', version: '4.12'

@@ -20,41 +20,23 @@
 
 package net.luxvacuos.voxel.universal.world.dimension;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.ashley.core.EntitySystem;
-import com.badlogic.ashley.core.Family;
-import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 
+import net.luxvacuos.lightengine.universal.ecs.Components;
 import net.luxvacuos.lightengine.universal.ecs.components.AABB;
 import net.luxvacuos.lightengine.universal.ecs.components.Health;
 import net.luxvacuos.lightengine.universal.ecs.components.Position;
 import net.luxvacuos.lightengine.universal.ecs.components.Velocity;
 import net.luxvacuos.lightengine.universal.ecs.entities.LEEntity;
-import net.luxvacuos.voxel.universal.ecs.Components;
 import net.luxvacuos.voxel.universal.ecs.entities.IDimensionEntity;
 
-public class PhysicsSystem extends EntitySystem {
-	private ImmutableArray<Entity> entities;
-
-	private List<BoundingBox> boxes = new ArrayList<>();
+public class PhysicsSystem extends net.luxvacuos.lightengine.universal.world.PhysicsSystem {
 	private IDimension dim;
-	private Vector3 normalTMP = new Vector3();
-	private double depthTMP;
-	private int faceTMP;
 
 	public PhysicsSystem(IDimension dim) {
 		this.dim = dim;
-	}
-
-	@Override
-	public void addedToEngine(Engine engine) {
-		entities = engine.getEntitiesFor(Family.all(Position.class, Velocity.class, AABB.class).get());
 	}
 
 	@Override
@@ -71,14 +53,16 @@ public class PhysicsSystem extends EntitySystem {
 			if (entity instanceof LEEntity)
 				((LEEntity) entity).update(delta);
 
+			if (aabb.isGravity())
+				velocity.setY(velocity.getY() - 15f * delta);
+			else
+				velocity.setY(velocity.getY() * 0.7f - velocity.getY() * 0.0001f);
 			velocity.setX(velocity.getX() * 0.7f - velocity.getX() * 0.0001f);
-			velocity.setY(velocity.getY() * 0.7f - velocity.getY() * 0.0001f);
-			//velocity.setY(velocity.getY() - 15f * delta);
 			velocity.setZ(velocity.getZ() * 0.7f - velocity.getZ() * 0.0001f);
 
 			aabb.update(pos.getPosition());
-			if (dim != null)
-				boxes = dim.getGlobalBoundingBox(aabb.getBoundingBox());
+
+			boxes = dim.getGlobalBoundingBox(aabb.getBoundingBox());
 
 			if (aabb.isEnabled())
 				for (BoundingBox boundingBox : boxes) {
@@ -124,7 +108,6 @@ public class PhysicsSystem extends EntitySystem {
 
 			if (entity instanceof IDimensionEntity)
 				((IDimensionEntity) entity).updateDim(delta, dim);
-
 		}
 	}
 
@@ -145,14 +128,6 @@ public class PhysicsSystem extends EntitySystem {
 		}
 		return true;
 
-	}
-
-	public List<BoundingBox> getBoxes() {
-		return boxes;
-	}
-
-	public void addBox(BoundingBox box) {
-		boxes.add(box);
 	}
 
 }

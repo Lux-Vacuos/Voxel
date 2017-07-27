@@ -21,8 +21,6 @@
 package net.luxvacuos.voxel.client.core.states;
 
 import static net.luxvacuos.lightengine.universal.core.subsystems.CoreSubsystem.REGISTRY;
-import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 
 import org.lwjgl.glfw.GLFW;
 
@@ -35,6 +33,7 @@ import net.luxvacuos.lightengine.client.ecs.entities.Sun;
 import net.luxvacuos.lightengine.client.input.KeyboardHandler;
 import net.luxvacuos.lightengine.client.input.Mouse;
 import net.luxvacuos.lightengine.client.rendering.api.glfw.Window;
+import net.luxvacuos.lightengine.client.rendering.api.opengl.LightRenderer;
 import net.luxvacuos.lightengine.client.rendering.api.opengl.ParticleDomain;
 import net.luxvacuos.lightengine.client.rendering.api.opengl.Renderer;
 import net.luxvacuos.lightengine.client.ui.windows.GameWindow;
@@ -53,7 +52,7 @@ import net.luxvacuos.voxel.universal.world.IWorld;
 
 public class MPWorldState extends AbstractState {
 
-	//private Client client;
+	// private Client client;
 
 	private Sun sun;
 	private CameraEntity camera;
@@ -61,6 +60,7 @@ public class MPWorldState extends AbstractState {
 	private ChunkLoaderEntity spawnChunks;
 	private GameWindow gameWindow;
 	private PauseWindow pauseWindow;
+	private LightRenderer lightRenderer;
 
 	private IWorld world;
 
@@ -71,10 +71,10 @@ public class MPWorldState extends AbstractState {
 	@Override
 	public void start() {
 		super.start();
-		//client.setHost(ClientVariables.server);
-		//client.setPort(44454);
-		//client.run(this);
-		//this.world = new NetworkWorld("mp", client.getChannel());
+		// client.setHost(ClientVariables.server);
+		// client.setPort(44454);
+		// client.run(this);
+		// this.world = new NetworkWorld("mp", client.getChannel());
 		ClientVariables.worldNameToLoad = "";
 		Renderer.setDeferredPass((camera, sunCamera, frustum, shadowMap) -> {
 			((RenderWorld) world).render(camera, frustum);
@@ -87,31 +87,34 @@ public class MPWorldState extends AbstractState {
 			blockOutlineRenderer.render(camera,
 					world.getActiveDimension().getBlockAt((int) pos.getX(), (int) pos.getY(), (int) pos.getZ()));
 		});
+		lightRenderer = new LightRenderer();
 
 		world.loadDimension(0);
 		world.setActiveDimension(0);
-		((PlayerCamera) camera).setMouse();
+		Mouse.setGrabbed(true);
 		camera.setPosition(new Vector3d(0, 256, 0));
 		spawnChunks.setPosition(new Vector3d(0, 0, 0));
 		world.getActiveDimension().getEntitiesManager().addEntity(camera);
 		world.getActiveDimension().getEntitiesManager().addEntity(spawnChunks);
 
 		Renderer.render(world.getActiveDimension().getEntitiesManager().getEntities(), ParticleDomain.getParticles(),
-				camera, world.getActiveDimension().getWorldSimulator(), sun, 0);
+				null, lightRenderer, camera, world.getActiveDimension().getWorldSimulator(), sun, 0);
 		gameWindow = new GameWindow(0, (int) REGISTRY.getRegistryItem(new Key("/Voxel/Display/height")),
 				(int) REGISTRY.getRegistryItem(new Key("/Voxel/Display/width")),
 				(int) REGISTRY.getRegistryItem(new Key("/Voxel/Display/height")));
 		GraphicalSubsystem.getWindowManager().addWindow(gameWindow);
-		//client.getChannel()
-		//		.writeAndFlush(new ClientConnect(ClientVariables.user.getUUID(), ClientVariables.user.getUsername()));
+		// client.getChannel()
+		// .writeAndFlush(new ClientConnect(ClientVariables.user.getUUID(),
+		// ClientVariables.user.getUsername()));
 	}
 
 	@Override
 	public void end() {
 		super.end();
-		//client.getChannel().writeAndFlush(
-		//		new ClientDisconnect(ClientVariables.user.getUUID(), ClientVariables.user.getUsername()));
-		//client.end();
+		// client.getChannel().writeAndFlush(
+		// new ClientDisconnect(ClientVariables.user.getUUID(),
+		// ClientVariables.user.getUsername()));
+		// client.end();
 		world.dispose();
 	}
 
@@ -138,12 +141,12 @@ public class MPWorldState extends AbstractState {
 
 		camera = new PlayerCamera(projectionMatrix, ClientVariables.user.getUsername(),
 				ClientVariables.user.getUUID().toString());
-		sun = new Sun(new Vector3d(),shadowProjectionMatrix);
+		sun = new Sun(new Vector3d(), shadowProjectionMatrix);
 
 		blockOutlineRenderer = new BlockOutlineRenderer(window.getResourceLoader());
 
 		spawnChunks = new ChunkLoaderEntity(new Vector3d());
-		//client = new Client();
+		// client = new Client();
 	}
 
 	@Override
@@ -156,15 +159,11 @@ public class MPWorldState extends AbstractState {
 	@Override
 	public void render(float alpha) {
 		Renderer.render(world.getActiveDimension().getEntitiesManager().getEntities(), ParticleDomain.getParticles(),
-				camera, world.getActiveDimension().getWorldSimulator(), sun, alpha);
-		Renderer.clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		Renderer.clearColors(1, 1, 1, 1);
-		GraphicalSubsystem.getWindowManager().render();
+				null, lightRenderer, camera, world.getActiveDimension().getWorldSimulator(), sun, alpha);
 	}
 
 	@Override
 	public void update(float delta) {
-		GraphicalSubsystem.getWindowManager().update(delta);
 		Window window = GraphicalSubsystem.getMainWindow();
 		KeyboardHandler kbh = window.getKeyboardHandler();
 		if (!ClientVariables.paused) {

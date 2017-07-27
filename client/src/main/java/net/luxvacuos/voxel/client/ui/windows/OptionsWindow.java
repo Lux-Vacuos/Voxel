@@ -25,8 +25,10 @@ import static net.luxvacuos.lightengine.universal.core.subsystems.CoreSubsystem.
 
 import java.util.Arrays;
 
+import net.luxvacuos.lightengine.client.core.subsystems.GraphicalSubsystem;
 import net.luxvacuos.lightengine.client.rendering.api.glfw.Window;
 import net.luxvacuos.lightengine.client.rendering.api.nanovg.themes.Theme.ButtonStyle;
+import net.luxvacuos.lightengine.client.rendering.api.opengl.Renderer;
 import net.luxvacuos.lightengine.client.ui.Alignment;
 import net.luxvacuos.lightengine.client.ui.Button;
 import net.luxvacuos.lightengine.client.ui.ComponentWindow;
@@ -184,9 +186,11 @@ public class OptionsWindow extends ComponentWindow {
 				new Key("/Light Engine/Settings/Graphics/chromaticAberration"), chromaticAberrationButton.getStatus()));
 		lensFlaresButton.setOnButtonPress(() -> REGISTRY.register(new Key("/Light Engine/Settings/Graphics/lensFlares"),
 				lensFlaresButton.getStatus()));
-		shadowResDropdown
-				.setOnButtonPress(() -> REGISTRY.register(new Key("/Light Engine/Settings/Graphics/shadowsResolution"),
-						shadowResDropdown.getValue().intValue()));
+		shadowResDropdown.setOnButtonPress(() -> {
+			REGISTRY.register(new Key("/Light Engine/Settings/Graphics/shadowsResolution"),
+					shadowResDropdown.getValue().intValue());
+			TaskManager.addTask(() -> Renderer.reloadShadowMaps());
+		});
 		shadowDistance
 				.setOnUnselect(() -> REGISTRY.register(new Key("/Light Engine/Settings/Graphics/shadowsDrawDistance"),
 						Integer.parseInt(shadowDistance.getText())));
@@ -314,105 +318,116 @@ public class OptionsWindow extends ComponentWindow {
 
 	private void wmOptions() {
 		float border = (float) REGISTRY.getRegistryItem(new Key("/Light Engine/Settings/WindowManager/borderSize"));
-		Text wmBorderText = new Text(LANG.getRegistryItem("voxel.optionswindow.wm.border") + ": " + border, 20, 0);
-		Slider wmBorder = new Slider(-56, 0, 200, 20, border / 40f);
-
+		Text wmBorderText = new Text(LANG.getRegistryItem("voxel.optionswindow.wm.border") + ": " + border, 20,
+				0);
 		wmBorderText.setWindowAlignment(Alignment.LEFT);
+		float scroll = (float) REGISTRY.getRegistryItem(new Key("/Light Engine/Settings/WindowManager/scrollBarSize"));
+		Text wmScrollText = new Text(LANG.getRegistryItem("voxel.optionswindow.wm.scrollsize") + ": " + scroll,
+				20, 0);
+		wmScrollText.setWindowAlignment(Alignment.LEFT);
+		float title = (float) REGISTRY.getRegistryItem(new Key("/Light Engine/Settings/WindowManager/titleBarHeight"));
+		Text wmTitleText = new Text(LANG.getRegistryItem("voxel.optionswindow.wm.titlebarsize") + ": " + title,
+				20, 0);
+		wmTitleText.setWindowAlignment(Alignment.LEFT);
+		Text titleBorderText = new Text(LANG.getRegistryItem("voxel.optionswindow.wm.titlebarborder"), 20, 0);
+		titleBorderText.setWindowAlignment(Alignment.LEFT);
+		Text compositorText = new Text(LANG.getRegistryItem("voxel.optionswindow.wm.compositor"), 20, 0);
+		compositorText.setWindowAlignment(Alignment.LEFT);
 
+		Slider wmBorder = new Slider(-56, 0, 200, 20, border / 40f);
 		wmBorder.setPrecision(40f);
 		wmBorder.useCustomPrecision(true);
+		Slider wmScroll = new Slider(-56, 0, 200, 20, scroll / 40f);
+		wmScroll.setPrecision(40f);
+		wmScroll.useCustomPrecision(true);
+		Slider wmTitle = new Slider(-56, 0, 200, 20, title / 40f);
+		wmTitle.setPrecision(40f);
+		wmTitle.useCustomPrecision(true);
+
 		wmBorder.setAlignment(Alignment.RIGHT);
 		wmBorder.setWindowAlignment(Alignment.RIGHT);
+		wmScroll.setAlignment(Alignment.RIGHT);
+		wmScroll.setWindowAlignment(Alignment.RIGHT);
+		wmTitle.setAlignment(Alignment.RIGHT);
+		wmTitle.setWindowAlignment(Alignment.RIGHT);
 
 		wmBorder.setOnPress(() -> {
 			float val = wmBorder.getPosition() * 40f;
 			REGISTRY.register(new Key("/Light Engine/Settings/WindowManager/borderSize"), val);
 			wmBorderText.setText(LANG.getRegistryItem("voxel.optionswindow.wm.border") + ": " + val);
 		});
-
-		Container borderC = new Container(0, 0, w, 20);
-		borderC.setWindowAlignment(Alignment.LEFT_TOP);
-		borderC.setAlignment(Alignment.RIGHT_BOTTOM);
-		borderC.addComponent(wmBorderText);
-		borderC.addComponent(wmBorder);
-
-		float scroll = (float) REGISTRY.getRegistryItem(new Key("/Light Engine/Settings/WindowManager/scrollBarSize"));
-		Text wmScrollText = new Text(LANG.getRegistryItem("voxel.optionswindow.wm.scrollsize") + ": " + scroll, 20, 0);
-		Slider wmScroll = new Slider(-56, 0, 200, 20, scroll / 40f);
-
-		wmScrollText.setWindowAlignment(Alignment.LEFT);
-
-		wmScroll.setPrecision(40f);
-		wmScroll.useCustomPrecision(true);
-		wmScroll.setAlignment(Alignment.RIGHT);
-		wmScroll.setWindowAlignment(Alignment.RIGHT);
-
 		wmScroll.setOnPress(() -> {
 			float val = wmScroll.getPosition() * 40f;
 			REGISTRY.register(new Key("/Light Engine/Settings/WindowManager/scrollBarSize"), val);
 			wmScrollText.setText(LANG.getRegistryItem("voxel.optionswindow.wm.scrollsize") + ": " + val);
 		});
-
-		Container scrollC = new Container(0, 0, w, 20);
-		scrollC.setWindowAlignment(Alignment.LEFT_TOP);
-		scrollC.setAlignment(Alignment.RIGHT_BOTTOM);
-		scrollC.addComponent(wmScrollText);
-		scrollC.addComponent(wmScroll);
-
-		float title = (float) REGISTRY.getRegistryItem(new Key("/Light Engine/Settings/WindowManager/titleBarHeight"));
-		Text wmTitleText = new Text(LANG.getRegistryItem("voxel.optionswindow.wm.titlebarsize") + ": " + title, 20, 0);
-		Slider wmTitle = new Slider(-56, 0, 200, 20, title / 40f);
-
-		wmTitleText.setWindowAlignment(Alignment.LEFT);
-
-		wmTitle.setPrecision(40f);
-		wmTitle.useCustomPrecision(true);
-		wmTitle.setAlignment(Alignment.RIGHT);
-		wmTitle.setWindowAlignment(Alignment.RIGHT);
-
 		wmTitle.setOnPress(() -> {
 			float val = wmTitle.getPosition() * 40f;
 			REGISTRY.register(new Key("/Light Engine/Settings/WindowManager/titleBarHeight"), val);
 			wmTitleText.setText(LANG.getRegistryItem("voxel.optionswindow.wm.titlebarsize") + ": " + val);
 		});
 
-		Container titleC = new Container(0, 0, w, 20);
-		titleC.setWindowAlignment(Alignment.LEFT_TOP);
-		titleC.setAlignment(Alignment.RIGHT_BOTTOM);
-		titleC.addComponent(wmTitleText);
-		titleC.addComponent(wmTitle);
-
 		ToggleButton titleBorderButton = new ToggleButton(-50, 0, 80, 30,
 				(boolean) REGISTRY.getRegistryItem(new Key("/Light Engine/Settings/WindowManager/titleBarBorder")));
-
-		titleBorderButton.setWindowAlignment(Alignment.RIGHT);
-		titleBorderButton.setAlignment(Alignment.RIGHT);
+		ToggleButton compositorButton = new ToggleButton(-50, 0, 80, 30,
+				(boolean) REGISTRY.getRegistryItem(new Key("/Light Engine/Settings/WindowManager/compositor")));
 
 		titleBorderButton.setOnButtonPress(() -> REGISTRY.register(
 				new Key("/Light Engine/Settings/WindowManager/titleBarBorder"), titleBorderButton.getStatus()));
+		compositorButton.setOnButtonPress(() -> {
+			REGISTRY.register(new Key("/Light Engine/Settings/WindowManager/compositor"), compositorButton.getStatus());
+			if (compositorButton.getStatus())
+				GraphicalSubsystem.getWindowManager().enableCompositor();
+			else
+				GraphicalSubsystem.getWindowManager().disableCompositor();
+		});
 
-		Text titleBorderText = new Text(LANG.getRegistryItem("voxel.optionswindow.wm.titlebarborder"), 20, 0);
-		titleBorderText.setWindowAlignment(Alignment.LEFT);
-
-		Container titleBorder = new Container(0, 0, w, 30);
-		titleBorder.setWindowAlignment(Alignment.LEFT_TOP);
-		titleBorder.setAlignment(Alignment.RIGHT_BOTTOM);
-
-		titleBorder.addComponent(titleBorderButton);
-		titleBorder.addComponent(titleBorderText);
+		titleBorderButton.setWindowAlignment(Alignment.RIGHT);
+		titleBorderButton.setAlignment(Alignment.RIGHT);
+		compositorButton.setWindowAlignment(Alignment.RIGHT);
+		compositorButton.setAlignment(Alignment.RIGHT);
 
 		ScrollArea area = new ScrollArea(0, 0, w, h, 0, 0);
 		area.setLayout(new FlowLayout(Direction.DOWN, 10, 10));
+
+		Container borderC = new Container(0, 0, w, 20);
+		borderC.setWindowAlignment(Alignment.LEFT_TOP);
+		borderC.setAlignment(Alignment.RIGHT_BOTTOM);
+		Container scrollC = new Container(0, 0, w, 20);
+		scrollC.setWindowAlignment(Alignment.LEFT_TOP);
+		scrollC.setAlignment(Alignment.RIGHT_BOTTOM);
+		Container titleC = new Container(0, 0, w, 20);
+		titleC.setWindowAlignment(Alignment.LEFT_TOP);
+		titleC.setAlignment(Alignment.RIGHT_BOTTOM);
+		Container titleBorder = new Container(0, 0, w, 30);
+		titleBorder.setWindowAlignment(Alignment.LEFT_TOP);
+		titleBorder.setAlignment(Alignment.RIGHT_BOTTOM);
+		Container compositor = new Container(0, 0, w, 30);
+		compositor.setWindowAlignment(Alignment.LEFT_TOP);
+		compositor.setAlignment(Alignment.RIGHT_BOTTOM);
+
+		borderC.addComponent(wmBorderText);
+		borderC.addComponent(wmBorder);
+		scrollC.addComponent(wmScrollText);
+		scrollC.addComponent(wmScroll);
+		titleC.addComponent(wmTitleText);
+		titleC.addComponent(wmTitle);
+		titleBorder.addComponent(titleBorderButton);
+		titleBorder.addComponent(titleBorderText);
+		compositor.addComponent(compositorButton);
+		compositor.addComponent(compositorText);
 
 		borderC.setResizeH(true);
 		scrollC.setResizeH(true);
 		titleC.setResizeH(true);
 		titleBorder.setResizeH(true);
+		compositor.setResizeH(true);
 
 		area.addComponent(borderC);
 		area.addComponent(scrollC);
 		area.addComponent(titleC);
 		area.addComponent(titleBorder);
+		area.addComponent(compositor);
 
 		super.addComponent(area);
 

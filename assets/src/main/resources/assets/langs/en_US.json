@@ -29,6 +29,7 @@
 	"voxel.optionswindow.wm.scrollsize":"Scroll Bar size",
 	"voxel.optionswindow.wm.titlebarsize":"Title Bar size",
 	"voxel.optionswindow.wm.titlebarborder":"Title Bar border",
+	"voxel.optionswindow.wm.compositor":"Compositor",
 	"voxel.worldwindow.name":"Worlds",
 	"voxel.worldwindow.txtname":"Name: ",
 	"voxel.worldwindow.create.btncreate":"Create",

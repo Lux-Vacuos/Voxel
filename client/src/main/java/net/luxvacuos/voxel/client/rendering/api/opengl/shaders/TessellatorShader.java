@@ -49,7 +49,8 @@ public class TessellatorShader extends ShaderProgram {
 
 	private TessellatorShader() {
 		super(ClientVariables.VERTEX_FILE_TESSELLATOR, ClientVariables.FRAGMENT_FILE_TESSELLATOR,
-				new Attribute(0, "position"), new Attribute(1, "textureCoords"), new Attribute(2, "normal"));
+				ClientVariables.GEOMETRY_FILE_TESSELLATOR, new Attribute(0, "position"),
+				new Attribute(1, "textureCoords"));
 		super.storeAllUniformLocations(projectionMatrix, viewMatrix, moveFactor, cameraPos, material);
 	}
 
@@ -75,7 +76,6 @@ public class TessellatorShader extends ShaderProgram {
 	public void loadMoveFactor(float factor) {
 		moveFactor.loadFloat(factor);
 	}
-
 
 	/**
 	 * Loads Projection Matrixd to the shader

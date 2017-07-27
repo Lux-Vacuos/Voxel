@@ -104,17 +104,16 @@ public class MainWindow extends ComponentWindow {
 		TaskManager.addTask(() -> {
 			window.setOnAccept(() -> {
 				new Thread(() -> {
-					try {
-						Thread.sleep(1000);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
+					while (GraphicalSubsystem.getWindowManager().getTotalWindows() > 0)
+						try {
+							Thread.sleep(400);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
 					TaskManager.addTask(() -> StateMachine.stop());
 				}).start();
 				super.setWindowClose(WindowClose.DISPOSE);
-				super.closeWindow();
-				window.closeWindow();
-				GraphicalSubsystem.getWindowManager().toggleShell();
+				GraphicalSubsystem.getWindowManager().closeAllWindows();
 			});
 		});
 	}

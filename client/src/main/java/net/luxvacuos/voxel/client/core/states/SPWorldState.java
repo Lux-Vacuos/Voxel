@@ -21,19 +21,19 @@
 package net.luxvacuos.voxel.client.core.states;
 
 import static net.luxvacuos.lightengine.universal.core.subsystems.CoreSubsystem.REGISTRY;
-import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 
 import org.lwjgl.glfw.GLFW;
 
 import net.luxvacuos.igl.vector.Matrix4d;
 import net.luxvacuos.igl.vector.Vector3d;
 import net.luxvacuos.lightengine.client.core.subsystems.GraphicalSubsystem;
+import net.luxvacuos.lightengine.client.ecs.ClientComponents;
 import net.luxvacuos.lightengine.client.ecs.entities.CameraEntity;
 import net.luxvacuos.lightengine.client.ecs.entities.Sun;
 import net.luxvacuos.lightengine.client.input.KeyboardHandler;
 import net.luxvacuos.lightengine.client.input.Mouse;
 import net.luxvacuos.lightengine.client.rendering.api.glfw.Window;
+import net.luxvacuos.lightengine.client.rendering.api.opengl.LightRenderer;
 import net.luxvacuos.lightengine.client.rendering.api.opengl.ParticleDomain;
 import net.luxvacuos.lightengine.client.rendering.api.opengl.Renderer;
 import net.luxvacuos.lightengine.client.ui.windows.GameWindow;
@@ -59,6 +59,7 @@ public class SPWorldState extends AbstractState {
 	private ChunkLoaderEntity spawnChunks;
 	private GameWindow gameWindow;
 	private PauseWindow pauseWindow;
+	private LightRenderer lightRenderer;
 
 	private IWorld world;
 	private boolean loaded;
@@ -70,32 +71,39 @@ public class SPWorldState extends AbstractState {
 	@Override
 	public void start() {
 		super.start();
+		Renderer.setDeferredPass((camera, sunCamera, frustum, shadowMap) -> {
+			((RenderWorld) world).render(camera, frustum);
+		});
+		Renderer.setShadowPass((camera, sunCamera, frustum, shadowMap) -> {
+			((RenderWorld) world).renderShadow(sunCamera, frustum);
+		});
+		Renderer.setForwardPass((camera, sunCamera, frustum, shadowMap) -> {
+			Vector3d pos = ((PlayerCamera) camera).getBlockOutlinePos();
+			blockOutlineRenderer.render(camera,
+					world.getActiveDimension().getBlockAt((int) pos.getX(), (int) pos.getY(), (int) pos.getZ()));
+		});
+		Renderer.setOnResize(() -> {
+			ClientComponents.PROJECTION_MATRIX.get(camera)
+					.setProjectionMatrix(Renderer.createProjectionMatrix(
+							(int) REGISTRY.getRegistryItem(new Key("/Light Engine/Display/width")),
+							(int) REGISTRY.getRegistryItem(new Key("/Light Engine/Display/height")),
+							(int) REGISTRY.getRegistryItem(new Key("/Light Engine/Settings/Core/fov")),
+							ClientVariables.NEAR_PLANE, ClientVariables.FAR_PLANE));
+		});
+		world = new RenderWorld(ClientVariables.worldNameToLoad);
+		ClientVariables.worldNameToLoad = "";
+		world.loadDimension(0);
+		world.setActiveDimension(0);
+		camera.setPosition(new Vector3d(0, 256, 0));
+		spawnChunks.setPosition(new Vector3d(0, 0, 0));
+		world.getActiveDimension().getEntitiesManager().addEntity(camera);
+		world.getActiveDimension().getEntitiesManager().addEntity(spawnChunks);
 		TaskManager.addTask(() -> {
-
-			this.world = new RenderWorld(ClientVariables.worldNameToLoad);
-			ClientVariables.worldNameToLoad = "";
-			Renderer.setDeferredPass((camera, sunCamera, frustum, shadowMap) -> {
-				((RenderWorld) world).render(camera, frustum);
-			});
-			Renderer.setShadowPass((camera, sunCamera, frustum, shadowMap) -> {
-				((RenderWorld) world).renderShadow(sunCamera, frustum);
-			});
-			Renderer.setForwardPass((camera, sunCamera, frustum, shadowMap) -> {
-				Vector3d pos = ((PlayerCamera) camera).getBlockOutlinePos();
-				blockOutlineRenderer.render(camera,
-						world.getActiveDimension().getBlockAt((int) pos.getX(), (int) pos.getY(), (int) pos.getZ()));
-			});
-
-			world.loadDimension(0);
-			world.setActiveDimension(0);
-			((PlayerCamera) camera).setMouse();
-			camera.setPosition(new Vector3d(0, 256, 0));
-			spawnChunks.setPosition(new Vector3d(0, 0, 0));
-			world.getActiveDimension().getEntitiesManager().addEntity(camera);
-			world.getActiveDimension().getEntitiesManager().addEntity(spawnChunks);
-
+			Mouse.setGrabbed(true);
+			lightRenderer = new LightRenderer();
 			Renderer.render(world.getActiveDimension().getEntitiesManager().getEntities(),
-					ParticleDomain.getParticles(), camera, world.getActiveDimension().getWorldSimulator(), sun, 0);
+					ParticleDomain.getParticles(), null, lightRenderer, camera,
+					world.getActiveDimension().getWorldSimulator(), sun, 0);
 			gameWindow = new GameWindow(0, (int) REGISTRY.getRegistryItem(new Key("/Light Engine/Display/height")),
 					(int) REGISTRY.getRegistryItem(new Key("/Light Engine/Display/width")),
 					(int) REGISTRY.getRegistryItem(new Key("/Light Engine/Display/height")));
@@ -108,6 +116,9 @@ public class SPWorldState extends AbstractState {
 	public void end() {
 		super.end();
 		world.dispose();
+		TaskManager.addTask(() -> {
+			lightRenderer.dispose();
+		});
 	}
 
 	@Override
@@ -151,17 +162,13 @@ public class SPWorldState extends AbstractState {
 		if (!loaded)
 			return;
 		Renderer.render(world.getActiveDimension().getEntitiesManager().getEntities(), ParticleDomain.getParticles(),
-				camera, world.getActiveDimension().getWorldSimulator(), sun, alpha);
-		Renderer.clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		Renderer.clearColors(1, 1, 1, 1);
-		GraphicalSubsystem.getWindowManager().render();
+				null, lightRenderer, camera, world.getActiveDimension().getWorldSimulator(), sun, alpha);
 	}
 
 	@Override
 	public void update(float delta) {
 		if (!loaded)
 			return;
-		GraphicalSubsystem.getWindowManager().update(delta);
 		Window window = GraphicalSubsystem.getMainWindow();
 		KeyboardHandler kbh = window.getKeyboardHandler();
 		if (!ClientVariables.paused) {

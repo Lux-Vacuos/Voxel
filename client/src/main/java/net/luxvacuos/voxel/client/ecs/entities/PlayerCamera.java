@@ -22,7 +22,6 @@ package net.luxvacuos.voxel.client.ecs.entities;
 
 import static net.luxvacuos.lightengine.client.input.Mouse.getDX;
 import static net.luxvacuos.lightengine.client.input.Mouse.getDY;
-import static net.luxvacuos.lightengine.client.input.Mouse.setCursorPosition;
 import static net.luxvacuos.lightengine.client.input.Mouse.setGrabbed;
 import static net.luxvacuos.lightengine.universal.core.subsystems.CoreSubsystem.REGISTRY;
 
@@ -66,7 +65,7 @@ public class PlayerCamera extends CameraEntity implements IDimensionEntity {
 	private int mouseSpeed = 8;
 	private final int maxLookUp = 90;
 	private final int maxLookDown = -90;
-	private boolean flyMode = true;
+	private boolean flyMode = false;
 	private Vector2d center;
 	private Vector3d blockOutlinePos = new Vector3d();
 	private ToolTier tool = ToolTier.ZERO;
@@ -86,7 +85,7 @@ public class PlayerCamera extends CameraEntity implements IDimensionEntity {
 
 		if (flyMode)
 			Components.AABB.get(this).setEnabled(false);
-
+		Components.AABB.get(this).setGravity(!flyMode);
 		ClientComponents.PROJECTION_MATRIX.get(this).setProjectionMatrix(projectionMatrix);
 		ClientComponents.VIEW_MATRIX.get(this).setViewMatrix(Maths.createViewMatrix(this));
 		this.add(new ChunkLoader((int) REGISTRY.getRegistryItem(new Key("/Voxel/Settings/World/chunkRadius"))));
@@ -264,13 +263,7 @@ public class PlayerCamera extends CameraEntity implements IDimensionEntity {
 		castRay.update(getProjectionMatrix(), getViewMatrix(), center,
 				(int) REGISTRY.getRegistryItem(new Key("/Light Engine/Display/width")),
 				(int) REGISTRY.getRegistryItem(new Key("/Light Engine/Display/height")));
-		setBlock(Blocks.getBlockByName("stone"), dim, delta);
-	}
-
-	public void setMouse() {
-		setCursorPosition(GraphicalSubsystem.getMainWindow().getWidth() / 2,
-				GraphicalSubsystem.getMainWindow().getHeight() / 2);
-		setGrabbed(true);
+		setBlock(Blocks.getBlockByName("glass"), dim, delta);
 	}
 
 	public void unlockMouse() {

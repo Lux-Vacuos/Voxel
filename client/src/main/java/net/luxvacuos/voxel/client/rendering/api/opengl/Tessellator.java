@@ -70,11 +70,11 @@ import net.luxvacuos.voxel.universal.world.utils.BlockFace;
 
 public class Tessellator {
 
-	private int vaoID, vboID0, vboID1, vboID2, iboID, vboCapacity = 64, indicesCounter, iboCapacity = 64;
+	private int vaoID, vboID0, vboID1, iboID, vboCapacity = 64, indicesCounter, iboCapacity = 64;
 
-	private ByteBuffer buffer0, buffer1, buffer2, ibo;
+	private ByteBuffer buffer0, buffer1, ibo;
 
-	private List<Vector3d> pos, normals;
+	private List<Vector3d> pos;
 	private List<Vector2d> texcoords;
 	private List<Integer> indices;
 
@@ -89,7 +89,6 @@ public class Tessellator {
 		this.material = material;
 		pos = new ArrayList<Vector3d>();
 		texcoords = new ArrayList<Vector2d>();
-		normals = new ArrayList<Vector3d>();
 		indices = new ArrayList<Integer>();
 		shader = TessellatorShader.getShader();
 		basicShader = TessellatorBasicShader.getShader();
@@ -116,20 +115,12 @@ public class Tessellator {
 		glVertexAttribPointer(1, 2, GL_FLOAT, false, 0, 0);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-		vboID2 = glGenBuffers();
-		glBindBuffer(GL_ARRAY_BUFFER, vboID2);
-		glBufferData(GL_ARRAY_BUFFER, vboCapacity, GL_DYNAMIC_DRAW);
-		glEnableVertexAttribArray(2);
-		glVertexAttribPointer(2, 3, GL_FLOAT, false, 0, 0);
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-
 		glBindVertexArray(0);
 	}
 
 	public void begin() {
 		pos.clear();
 		texcoords.clear();
-		normals.clear();
 	}
 
 	public void vertex3f(Vector3d pos) {
@@ -140,19 +131,14 @@ public class Tessellator {
 		this.texcoords.add(texcoords);
 	}
 
-	public void normal3f(Vector3d normals) {
-		this.normals.add(normals);
-	}
-
 	public void indice(int ind) {
 		this.indices.add(ind);
 	}
 
 	public void end() {
-		loadData(pos, texcoords, normals);
+		loadData(pos, texcoords);
 		pos.clear();
 		texcoords.clear();
-		normals.clear();
 		updated = true;
 	}
 
@@ -160,7 +146,6 @@ public class Tessellator {
 		if (updated) {
 			updateGlBuffers(vboID0, vboCapacity, buffer0);
 			updateGlBuffers(vboID1, vboCapacity, buffer1);
-			updateGlBuffers(vboID2, vboCapacity, buffer2);
 			updateGLIBOBuffer();
 			updated = false;
 			clearBuffers();
@@ -173,7 +158,6 @@ public class Tessellator {
 		glBindVertexArray(vaoID);
 		glEnableVertexAttribArray(0);
 		glEnableVertexAttribArray(1);
-		glEnableVertexAttribArray(2);
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, material.getDiffuseTexture().getID());
 		glActiveTexture(GL_TEXTURE1);
@@ -185,7 +169,6 @@ public class Tessellator {
 		glDrawElements(GL_TRIANGLES, indicesCounter, GL_UNSIGNED_INT, 0);
 		glDisableVertexAttribArray(0);
 		glDisableVertexAttribArray(1);
-		glDisableVertexAttribArray(2);
 		glBindVertexArray(0);
 		shader.stop();
 	}
@@ -194,7 +177,6 @@ public class Tessellator {
 		if (updated) {
 			updateGlBuffers(vboID0, vboCapacity, buffer0);
 			updateGlBuffers(vboID1, vboCapacity, buffer1);
-			updateGlBuffers(vboID2, vboCapacity, buffer2);
 			updateGLIBOBuffer();
 			updated = false;
 			clearBuffers();
@@ -220,7 +202,6 @@ public class Tessellator {
 		if (updated) {
 			updateGlBuffers(vboID0, vboCapacity, buffer0);
 			updateGlBuffers(vboID1, vboCapacity, buffer1);
-			updateGlBuffers(vboID2, vboCapacity, buffer2);
 			updateGLIBOBuffer();
 			updated = false;
 			clearBuffers();
@@ -240,10 +221,9 @@ public class Tessellator {
 		basicShader.stop();
 	}
 
-	public void loadData(List<Vector3d> pos, List<Vector2d> texcoords, List<Vector3d> normals) {
+	public void loadData(List<Vector3d> pos, List<Vector2d> texcoords) {
 		buffer0 = BufferUtils.createByteBuffer((pos.size() * 3) * 4);
 		buffer1 = BufferUtils.createByteBuffer((texcoords.size() * 2) * 4);
-		buffer2 = BufferUtils.createByteBuffer((normals.size() * 3) * 4);
 		for (int i = 0; i < pos.size(); i++) {
 			buffer0.putFloat((float) pos.get(i).x);
 			buffer0.putFloat((float) pos.get(i).y);
@@ -253,14 +233,8 @@ public class Tessellator {
 			buffer1.putFloat((float) texcoords.get(i).x);
 			buffer1.putFloat((float) texcoords.get(i).y);
 		}
-		for (int i = 0; i < normals.size(); i++) {
-			buffer2.putFloat((float) normals.get(i).x);
-			buffer2.putFloat((float) normals.get(i).y);
-			buffer2.putFloat((float) normals.get(i).z);
-		}
 		buffer0.flip();
 		buffer1.flip();
-		buffer2.flip();
 		updateIBO((pos.size() * 3) / 2);
 	}
 
@@ -308,19 +282,15 @@ public class Tessellator {
 			// top face
 			vertex3f(new Vector3d(x, y + ysize, z + zsize));
 			texture2f(new Vector2d(texcoords.getZ(), texcoords.getW()));
-			normal3f(new Vector3d(0, 1, 0));
 
 			vertex3f(new Vector3d(x + xsize, y + ysize, z + zsize));
 			texture2f(new Vector2d(texcoords.getI(), texcoords.getJ()));
-			normal3f(new Vector3d(0, 1, 0));
 
 			vertex3f(new Vector3d(x + xsize, y + ysize, z));
 			texture2f(new Vector2d(texcoords.getK(), texcoords.getL()));
-			normal3f(new Vector3d(0, 1, 0));
 
 			vertex3f(new Vector3d(x, y + ysize, z));
 			texture2f(new Vector2d(texcoords.getX(), texcoords.getY()));
-			normal3f(new Vector3d(0, 1, 0));
 
 		}
 		if (bottom) {
@@ -328,19 +298,15 @@ public class Tessellator {
 			// bottom face
 			vertex3f(new Vector3d(x, y, z));
 			texture2f(new Vector2d(texcoords.getZ(), texcoords.getW()));
-			normal3f(new Vector3d(0, -1, 0));
 
 			vertex3f(new Vector3d(x + xsize, y, z));
 			texture2f(new Vector2d(texcoords.getI(), texcoords.getJ()));
-			normal3f(new Vector3d(0, -1, 0));
 
 			vertex3f(new Vector3d(x + xsize, y, z + zsize));
 			texture2f(new Vector2d(texcoords.getK(), texcoords.getL()));
-			normal3f(new Vector3d(0, -1, 0));
 
 			vertex3f(new Vector3d(x, y, z + zsize));
 			texture2f(new Vector2d(texcoords.getX(), texcoords.getY()));
-			normal3f(new Vector3d(0, -1, 0));
 
 		}
 
@@ -349,19 +315,15 @@ public class Tessellator {
 			// back face
 			vertex3f(new Vector3d(x, y, z + zsize));
 			texture2f(new Vector2d(texcoords.getX(), texcoords.getY()));
-			normal3f(new Vector3d(0, 0, 1));
 
 			vertex3f(new Vector3d(x + xsize, y, z + zsize));
 			texture2f(new Vector2d(texcoords.getK(), texcoords.getL()));
-			normal3f(new Vector3d(0, 0, 1));
 
 			vertex3f(new Vector3d(x + xsize, y + ysize, z + zsize));
 			texture2f(new Vector2d(texcoords.getI(), texcoords.getJ()));
-			normal3f(new Vector3d(0, 0, 1));
 
 			vertex3f(new Vector3d(x, y + ysize, z + zsize));
 			texture2f(new Vector2d(texcoords.getZ(), texcoords.getW()));
-			normal3f(new Vector3d(0, 0, 1));
 
 		}
 		if (front) {
@@ -369,19 +331,15 @@ public class Tessellator {
 			texcoords = block.getTexCoords(BlockFace.NORTH);
 			vertex3f(new Vector3d(x, y + ysize, z));
 			texture2f(new Vector2d(texcoords.getZ(), texcoords.getW()));
-			normal3f(new Vector3d(0, 0, -1));
 
 			vertex3f(new Vector3d(x + xsize, y + ysize, z));
 			texture2f(new Vector2d(texcoords.getI(), texcoords.getJ()));
-			normal3f(new Vector3d(0, 0, -1));
 
 			vertex3f(new Vector3d(x + xsize, y, z));
 			texture2f(new Vector2d(texcoords.getK(), texcoords.getL()));
-			normal3f(new Vector3d(0, 0, -1));
 
 			vertex3f(new Vector3d(x, y, z));
 			texture2f(new Vector2d(texcoords.getX(), texcoords.getY()));
-			normal3f(new Vector3d(0, 0, -1));
 
 		}
 		if (right) {
@@ -389,19 +347,15 @@ public class Tessellator {
 			// right face
 			vertex3f(new Vector3d(x, y, z));
 			texture2f(new Vector2d(texcoords.getK(), texcoords.getL()));
-			normal3f(new Vector3d(-1, 0, 0));
 
 			vertex3f(new Vector3d(x, y, z + zsize));
 			texture2f(new Vector2d(texcoords.getX(), texcoords.getY()));
-			normal3f(new Vector3d(-1, 0, 0));
 
 			vertex3f(new Vector3d(x, y + ysize, z + zsize));
 			texture2f(new Vector2d(texcoords.getZ(), texcoords.getW()));
-			normal3f(new Vector3d(-1, 0, 0));
 
 			vertex3f(new Vector3d(x, y + ysize, z));
 			texture2f(new Vector2d(texcoords.getI(), texcoords.getJ()));
-			normal3f(new Vector3d(-1, 0, 0));
 
 		}
 		if (left) {
@@ -409,19 +363,15 @@ public class Tessellator {
 			// left face
 			vertex3f(new Vector3d(x + xsize, y, z + zsize));
 			texture2f(new Vector2d(texcoords.getK(), texcoords.getL()));
-			normal3f(new Vector3d(1, 0, 0));
 
 			vertex3f(new Vector3d(x + xsize, y, z));
 			texture2f(new Vector2d(texcoords.getX(), texcoords.getY()));
-			normal3f(new Vector3d(1, 0, 0));
 
 			vertex3f(new Vector3d(x + xsize, y + ysize, z));
 			texture2f(new Vector2d(texcoords.getZ(), texcoords.getW()));
-			normal3f(new Vector3d(1, 0, 0));
 
 			vertex3f(new Vector3d(x + xsize, y + ysize, z + zsize));
 			texture2f(new Vector2d(texcoords.getI(), texcoords.getJ()));
-			normal3f(new Vector3d(1, 0, 0));
 
 		}
 	}
@@ -431,8 +381,6 @@ public class Tessellator {
 			this.buffer0.clear();
 		if (this.buffer1 != null)
 			this.buffer1.clear();
-		if (this.buffer2 != null)
-			this.buffer2.clear();
 		if (this.ibo != null)
 			this.ibo.clear();
 	}
@@ -441,12 +389,10 @@ public class Tessellator {
 		glDeleteVertexArrays(vaoID);
 		glDeleteBuffers(vboID0);
 		glDeleteBuffers(vboID1);
-		glDeleteBuffers(vboID2);
 		glDeleteBuffers(iboID);
 		glDeleteQueries(occlusion);
 		pos.clear();
 		texcoords.clear();
-		normals.clear();
 		clearBuffers();
 	}
 

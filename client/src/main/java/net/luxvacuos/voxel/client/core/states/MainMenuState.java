@@ -21,11 +21,8 @@
 package net.luxvacuos.voxel.client.core.states;
 
 import static net.luxvacuos.lightengine.universal.core.subsystems.CoreSubsystem.REGISTRY;
-import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 
 import net.luxvacuos.lightengine.client.core.subsystems.GraphicalSubsystem;
-import net.luxvacuos.lightengine.client.rendering.api.opengl.Renderer;
 import net.luxvacuos.lightengine.client.ui.windows.BackgroundWindow;
 import net.luxvacuos.lightengine.universal.core.TaskManager;
 import net.luxvacuos.lightengine.universal.core.states.AbstractState;
@@ -84,14 +81,10 @@ public class MainMenuState extends AbstractState {
 
 	@Override
 	public void render(float delta) {
-		Renderer.clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		Renderer.clearColors(1, 1, 1, 1);
-		GraphicalSubsystem.getWindowManager().render();
 	}
 
 	@Override
 	public void update(float delta) {
-		GraphicalSubsystem.getWindowManager().update(delta);
 	}
 
 }

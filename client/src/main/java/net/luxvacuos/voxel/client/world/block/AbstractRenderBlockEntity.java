@@ -26,12 +26,12 @@ import net.luxvacuos.igl.vector.Vector8f;
 import net.luxvacuos.voxel.client.rendering.utils.BlockFaceAtlas;
 import net.luxvacuos.voxel.client.rendering.world.block.ICustomRenderBlock;
 import net.luxvacuos.voxel.client.rendering.world.block.IObjRenderBlock;
-import net.luxvacuos.voxel.client.rendering.world.block.IRenderBlockEntity;
+import net.luxvacuos.voxel.client.rendering.world.block.IRenderBlock;
 import net.luxvacuos.voxel.universal.material.BlockMaterial;
 import net.luxvacuos.voxel.universal.world.block.AbstractBlockEntityBase;
 import net.luxvacuos.voxel.universal.world.utils.BlockFace;
 
-public abstract class AbstractRenderBlockEntity extends AbstractBlockEntityBase implements IRenderBlockEntity {
+public abstract class AbstractRenderBlockEntity extends AbstractBlockEntityBase implements IRenderBlock {
 	protected final BlockFaceAtlas atlas;
 
 	protected AbstractRenderBlockEntity(BlockMaterial material, BlockFaceAtlas atlas) {

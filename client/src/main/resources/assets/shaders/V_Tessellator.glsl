@@ -22,11 +22,9 @@
 
 layout(location = 0) in vec3 position;
 layout(location = 1) in vec2 textureCoords;
-layout(location = 2) in vec3 normal;
 
-out vec2 pass_textureCoords;
-out vec3 pass_position;
-out mat3 TBN;
+out vec2 pass_textureCoordsV;
+out vec3 pass_positionV;
 
 uniform float moveFactor;
 uniform vec3 cameraPos;
@@ -37,27 +35,10 @@ uniform int useParallax;
 
 void main() {
 	vec3 pos = position - cameraPos;
-	pass_position = position;
+	pass_positionV = position;
 	vec4 worldPosition = vec4(pos, 1.0);
-	pass_textureCoords = textureCoords;
+	pass_textureCoordsV = textureCoords;
 	
 	vec4 positionRelativeToCam = viewMatrix * worldPosition;
 	gl_Position = projectionMatrix * positionRelativeToCam;
-
-	vec3 tangent;
-
-	vec3 c1 = cross(normal, vec3(0.0, 0.0, 1.0));
-	vec3 c2 = cross(normal, vec3(0.0, 1.0, 0.0));
-
-	if(length(c1) > length(c2) ) {
-		tangent = c1;
-	} else {
-		tangent = c2;
-	}
-
-	vec3 T = normalize(tangent);
-	vec3 N = normalize(normal);
-	T = normalize(T - dot(T, N) * N);
-	vec3 B = cross(N, T);
-	TBN = mat3(T, B, N);
 }
