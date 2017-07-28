@@ -20,9 +20,11 @@
 
 package net.luxvacuos.voxel.server.commands;
 
+import java.io.PrintStream;
+
+import net.luxvacuos.lightengine.universal.commands.SimpleCommand;
 import net.luxvacuos.lightengine.universal.core.states.StateMachine;
 import net.luxvacuos.voxel.server.network.ServerHandler;
-import net.luxvacuos.voxel.universal.commands.SimpleCommand;
 import net.luxvacuos.voxel.universal.network.packets.Disconnect;
 
 public class StopCommand extends SimpleCommand {
@@ -32,7 +34,7 @@ public class StopCommand extends SimpleCommand {
 	}
 
 	@Override
-	public void execute(Object... data) {
+	public void execute(PrintStream out, Object... data) {
 		ServerHandler.channels.writeAndFlush("Stopping Server, Goodbye!");
 		ServerHandler.channels.writeAndFlush(new Disconnect("Stop command"));
 		StateMachine.stop();

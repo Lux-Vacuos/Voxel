@@ -20,34 +20,15 @@
 
 package net.luxvacuos.voxel.server.bootstrap;
 
-import java.io.File;
-import java.io.IOException;
+import net.luxvacuos.lightengine.universal.core.GlobalVariables;
+import net.luxvacuos.lightengine.universal.core.TaskManager;
+import net.luxvacuos.lightengine.universal.core.states.StateMachine;
+import net.luxvacuos.voxel.server.core.states.MPWorldState;
 
-import net.luxvacuos.lightengine.universal.bootstrap.AbstractBootstrap;
-import net.luxvacuos.voxel.server.core.Voxel;
-
-public class Bootstrap extends AbstractBootstrap {
+public class Bootstrap extends net.luxvacuos.lightengine.server.bootstrap.Bootstrap {
 
 	public Bootstrap(String[] args) {
 		super(args);
-	}
-
-	@Override
-	public void init() {
-		Thread.currentThread().setName("Voxel-Server");
-		try {
-			prefix = new File(".").getCanonicalPath().toString();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		try {
-			File file = new File(new File(".").getCanonicalPath() + "/logs");
-			if (!file.exists())
-				file.mkdirs();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		new Voxel();
 	}
 
 	@Override
@@ -65,6 +46,8 @@ public class Bootstrap extends AbstractBootstrap {
 	}
 
 	public static void main(String[] args) throws Exception {
+		GlobalVariables.PROJECT = "Voxel";
+		TaskManager.addTask(() -> StateMachine.registerState(new MPWorldState()));
 		new Bootstrap(args);
 	}
 

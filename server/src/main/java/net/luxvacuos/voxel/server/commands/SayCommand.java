@@ -20,8 +20,10 @@
 
 package net.luxvacuos.voxel.server.commands;
 
+import java.io.PrintStream;
+
+import net.luxvacuos.lightengine.universal.commands.SimpleCommand;
 import net.luxvacuos.voxel.server.network.ServerHandler;
-import net.luxvacuos.voxel.universal.commands.SimpleCommand;
 import net.luxvacuos.voxel.universal.network.packets.Message;
 
 public class SayCommand extends SimpleCommand {
@@ -31,7 +33,7 @@ public class SayCommand extends SimpleCommand {
 	}
 
 	@Override
-	public void execute(Object... data) {
+	public void execute(PrintStream out, Object... data) {
 		String fin = "";
 		for (Object object : data) {
 			fin += " " + (String) object;

@@ -68,7 +68,8 @@ public class WorldSubsystem implements ISubsystem {
 			Blocks.register(new RenderBlock(new BlockMaterial("leaves"), new BlockFaceAtlas("leaves")));
 			BlockMaterial glassMat = new BlockMaterial("glass");
 			glassMat = (BlockMaterial) matMod.modify(glassMat).setOpacity(0.0f).done();
-			Blocks.register(new GlassPaneBlock(glassMat, new BlockFaceAtlas("glass")));
+			Blocks.register(new RenderBlock(glassMat, new BlockFaceAtlas("glass")));
+			Blocks.register(new GlassPaneBlock(glassMat, new BlockFaceAtlas("glass_pane")));
 			BlockMaterial waterMat = new BlockMaterial("water");
 			waterMat = (BlockMaterial) matMod.modify(waterMat).canBeBroken(false).setBlocksMovement(false)
 					.affectedByGravity(true).liquid().setOpacity(0.2f).done();

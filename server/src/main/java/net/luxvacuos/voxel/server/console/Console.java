@@ -24,7 +24,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-import net.luxvacuos.voxel.universal.commands.ICommandManager;
+import net.luxvacuos.lightengine.universal.commands.ICommandManager;
 
 public class Console {
 

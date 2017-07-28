@@ -20,7 +20,7 @@
 
 package net.luxvacuos.voxel.server.core.subsystems;
 
-import net.luxvacuos.voxel.universal.core.subsystems.ISubsystem;
+import net.luxvacuos.lightengine.universal.core.subsystems.ISubsystem;
 import net.luxvacuos.voxel.universal.material.BlockMaterial;
 import net.luxvacuos.voxel.universal.material.MaterialModder;
 import net.luxvacuos.voxel.universal.world.block.BlockBase;
@@ -54,6 +54,10 @@ public class WorldSubsystem implements ISubsystem {
 
 	@Override
 	public void restart() {
+	}
+
+	@Override
+	public void render(float alpga) {
 	}
 
 	@Override

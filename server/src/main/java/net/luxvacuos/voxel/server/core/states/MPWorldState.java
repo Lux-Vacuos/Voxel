@@ -20,21 +20,20 @@
 
 package net.luxvacuos.voxel.server.core.states;
 
-import static net.luxvacuos.voxel.universal.core.subsystems.CoreSubsystem.REGISTRY;
+import static net.luxvacuos.lightengine.universal.core.subsystems.CoreSubsystem.REGISTRY;
 
+import net.luxvacuos.lightengine.server.commands.ServerCommandManager;
+import net.luxvacuos.lightengine.server.core.ServerWorldSimulation;
+import net.luxvacuos.lightengine.universal.commands.ICommandManager;
+import net.luxvacuos.lightengine.universal.commands.TimeCommand;
+import net.luxvacuos.lightengine.universal.core.states.AbstractState;
+import net.luxvacuos.lightengine.universal.util.registry.Key;
 import net.luxvacuos.voxel.server.commands.SayCommand;
-import net.luxvacuos.voxel.server.commands.ServerCommandManager;
 import net.luxvacuos.voxel.server.commands.StopCommand;
-import net.luxvacuos.voxel.server.commands.TimeCommand;
 import net.luxvacuos.voxel.server.console.Console;
-import net.luxvacuos.voxel.server.core.ServerWorldSimulation;
 import net.luxvacuos.voxel.server.network.Server;
 import net.luxvacuos.voxel.server.network.ServerHandler;
-import net.luxvacuos.voxel.universal.commands.ICommandManager;
-import net.luxvacuos.voxel.universal.core.AbstractVoxel;
-import net.luxvacuos.voxel.universal.core.states.AbstractState;
 import net.luxvacuos.voxel.universal.network.packets.Time;
-import net.luxvacuos.voxel.universal.util.registry.Key;
 import net.luxvacuos.voxel.universal.world.IWorld;
 import net.luxvacuos.voxel.universal.world.World;
 
@@ -52,14 +51,13 @@ public class MPWorldState extends AbstractState {
 
 	@Override
 	public void init() {
-
 		worldSimulation = new ServerWorldSimulation();
 
 		world = new World((String) REGISTRY.getRegistryItem(new Key("/Voxel/Simulation/World/name")));
 		world.loadDimension(0);
 		world.setActiveDimension(0);
 
-		commandManager = new ServerCommandManager();
+		commandManager = new ServerCommandManager(System.out);
 		commandManager.registerCommand(new StopCommand());
 		commandManager.registerCommand(new SayCommand());
 		commandManager.registerCommand(new TimeCommand(worldSimulation));
@@ -80,7 +78,7 @@ public class MPWorldState extends AbstractState {
 	}
 
 	@Override
-	public void update(AbstractVoxel voxel, float delta) {
+	public void update(float delta) {
 		world.update(delta);
 		worldSimulation.update(delta);
 		ServerHandler.channels.writeAndFlush(new Time(worldSimulation.getTime()));

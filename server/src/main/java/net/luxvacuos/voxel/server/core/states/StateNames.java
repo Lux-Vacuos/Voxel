@@ -25,6 +25,6 @@ public class StateNames {
 	private StateNames() {
 	}
 
-	public static final String MP_WORLD = "MP_World";
+	public static final String MP_WORLD = "_main";
 
 }
