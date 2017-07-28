@@ -66,7 +66,7 @@ public class MPWorldState extends AbstractState {
 		console.setCommandManager(commandManager);
 		console.start();
 
-		server = new Server((int) REGISTRY.getRegistryItem(new Key("/Voxel/Server/port")));
+		server = new Server((int) REGISTRY.getRegistryItem(new Key("/Light Engine/Server/port")));
 		server.run(this);
 	}
 
