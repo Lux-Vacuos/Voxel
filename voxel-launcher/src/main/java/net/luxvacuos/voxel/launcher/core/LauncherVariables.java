@@ -27,7 +27,7 @@ import net.luxvacuos.api.responses.LoginResponse;
 
 public class LauncherVariables {
 
-	public static final String VERSION = "0.1.5"; //TODO: UPDATE THIS FOR ANY BINARY RELEASE!!
+	public static final String VERSION = "0.1.6"; //TODO: UPDATE THIS FOR ANY BINARY RELEASE!!
 	public static boolean apt = false;
 	public static final String HOST = "https://s3.luxvacuos.net";
 

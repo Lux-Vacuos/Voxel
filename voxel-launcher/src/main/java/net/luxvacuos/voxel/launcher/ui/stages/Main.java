@@ -20,8 +20,6 @@
 
 package net.luxvacuos.voxel.launcher.ui.stages;
 
-import java.io.FileNotFoundException;
-
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
 
@@ -83,7 +81,7 @@ public class Main extends BorderPane {
 						playButton.setText("Launching...");
 						stage.close();
 					});
-				} catch (JsonSyntaxException | JsonIOException | FileNotFoundException e) {
+				} catch (JsonSyntaxException | JsonIOException e) {
 					Platform.runLater(() -> {
 						playButton.setText("Error downloading, try again");
 						playButton.setDisable(false);
@@ -102,7 +100,7 @@ public class Main extends BorderPane {
 		download = new ProgressBar(0);
 		download.setMinWidth(300);
 		download.setPrefWidth(4000);
-		bottom.setBottom(download);
+		//bottom.setBottom(download);
 
 		GridPane left = new GridPane();
 		left.setAlignment(Pos.CENTER);

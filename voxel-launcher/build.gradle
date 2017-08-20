@@ -12,8 +12,8 @@ apply plugin: 'pkg4j'
 apply plugin: 'application'
 
 mainClassName = 'net.luxvacuos.voxel.launcher.bootstrap.Bootstrap'
-def opt = "1"
-def mversion = "0.1.5"
+def opt = "0"
+def mversion = "0.1.6"
 
 sourceSets {
     main {
