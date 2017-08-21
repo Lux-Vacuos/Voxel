@@ -1,6 +1,11 @@
-assets/game/world/
-
 # Created by https://www.gitignore.io
+
+
+### VisualStudioCode ###
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
 
 ### Gradle ###
 .gradle
@@ -76,3 +81,7 @@ release.properties
 dependency-reduced-pom.xml
 buildNumber.properties
 
+.DS_Store
+
+### Blender ###
+*.blend1
