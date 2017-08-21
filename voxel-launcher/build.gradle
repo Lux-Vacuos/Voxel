@@ -1,0 +1,68 @@
+buildscript {
+    repositories {
+        mavenCentral()
+         jcenter()
+    }
+    dependencies {
+        classpath 'org.jamel.pkg4j:pkg4j-gradle:0.0.6'
+    }
+}
+
+apply plugin: 'pkg4j'
+apply plugin: 'application'
+
+mainClassName = 'net.luxvacuos.voxel.launcher.bootstrap.Bootstrap'
+def opt = "1"
+def mversion = "0.1.6"
+
+sourceSets {
+    main {
+        java.srcDir("${projectDir}/src/main/java/")
+        resources.srcDir("${projectDir}/src/main/resources")
+    }
+    
+    test {
+		java.srcDirs = ["${projectDir}/src/test/java/"]
+	}
+}
+if(opt == "")
+	version = mversion
+else
+	version = mversion + "-" + opt
+
+pkg {
+    name = "voxel-launcher"
+	author = "Lux Vacuos"
+    description = "Voxel Standalone Launcher"
+    changes = "src/pkg/changes.txt"
+	section = "games"
+
+    dirs {
+		create "/usr/lib/voxel"
+		pack dir: "src/pkg/bin", prefix: "/usr/bin", mode: "775"
+        pack dir: "build/libs", prefix: "/usr/lib/voxel"
+    }
+
+    depends {
+        on "openjdk-8-jre"
+        on "openjfx"
+    }
+
+}
+
+jar {
+	manifest {
+        attributes (
+			"Main-Class": "$mainClassName",
+			"Specification-Title": "Voxel-Launcher",
+			"Specification-Version": version,
+			"Specification-Vendor": "Lux Vacuos",
+			"Implementation-Title": "net.luxvacuos.voxel.launcher",
+			"Implementation-Version": build,
+			"Implementation-Vendor": "Lux Vacuos"
+			)
+    }
+    from {
+    	configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+   	}
+}

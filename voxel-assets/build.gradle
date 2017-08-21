@@ -1,0 +1,15 @@
+plugins {
+	id 'net.nemerosa.versioning' version '2.0.0'
+}
+
+sourceSets {
+	main {
+		resources.srcDir("${projectDir}/src/main/resources")
+	}
+}
+
+jar {
+	version = versioning.info.full
+}
+
+
