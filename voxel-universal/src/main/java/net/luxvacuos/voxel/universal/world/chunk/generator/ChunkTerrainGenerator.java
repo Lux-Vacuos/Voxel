@@ -1,7 +1,7 @@
 /*
  * This file is part of Voxel
  * 
- * Copyright (C) 2016-2017 Lux Vacuos
+ * Copyright (C) 2016-2018 Lux Vacuos
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,7 +25,11 @@ import net.luxvacuos.voxel.universal.world.block.Blocks;
 public class ChunkTerrainGenerator extends AbstractChunkGenerator {
 
 	@Override
-	protected int generateBlock(int x, int y, int z, double noise) {
+	protected int generateBlock(int x, int y, int z, double noise, double noise3D) {
+		noise3D *= 8;
+		if (noise3D > 0.8)
+			return Blocks.getBlockByName("voxel:air").getID();
+
 		noise += 1;
 		noise *= 128;
 		noise = (int) noise;
@@ -39,7 +43,7 @@ public class ChunkTerrainGenerator extends AbstractChunkGenerator {
 			return Blocks.getBlockByName("voxel:stone").getID();
 		else if (y < noise - 1 && y < 129)
 			return Blocks.getBlockByName("voxel:stone").getID();
-		else if(y > noise - 1 && y < 129)
+		else if (y > noise - 1 && y < 129)
 			return Blocks.getBlockByName("voxel:water").getID();
 		else
 			return Blocks.getBlockByName("voxel:air").getID();

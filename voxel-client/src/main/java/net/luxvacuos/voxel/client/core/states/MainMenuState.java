@@ -1,7 +1,7 @@
 /*
  * This file is part of Voxel
  * 
- * Copyright (C) 2016-2017 Lux Vacuos
+ * Copyright (C) 2016-2018 Lux Vacuos
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -39,38 +39,36 @@ import net.luxvacuos.voxel.client.ui.windows.InitialSettingsWindow;
 public class MainMenuState extends AbstractState {
 
 	private WorldSubsystem subsystem;
-	private BackgroundWindow backgroundWindow;
+	private BackgroundWindow background;
 
 	public MainMenuState() {
-		super(StateNames.MAIN_MENU);
+		super(StateNames.MAIN);
 	}
 
 	@Override
 	public void init() {
 		subsystem = new WorldSubsystem();
 		subsystem.init();
-		TaskManager.addTask(() -> {
-			StateMachine.registerState(new SPWorldState());
-		});
+		TaskManager.tm.addTaskBackgroundThread(() -> StateMachine.registerState(new SPWorldState()));
 		super.init();
 	}
 
 	@Override
 	public void start() {
 		super.start();
-		GraphicalSubsystem.getWindowManager().toggleShell();
-		if (!GraphicalSubsystem.getWindowManager().existWindow(backgroundWindow)) {
-			backgroundWindow = new BackgroundWindow(0,
-					(int) REGISTRY.getRegistryItem(new Key("/Light Engine/Display/height")),
-					(int) REGISTRY.getRegistryItem(new Key("/Light Engine/Display/width")),
-					(int) REGISTRY.getRegistryItem(new Key("/Light Engine/Display/height")));
-			GraphicalSubsystem.getWindowManager().addWindow(0, backgroundWindow);
-		}
+		background = new BackgroundWindow();
+		GraphicalSubsystem.getWindowManager().addWindow(0, background);
 		int ww = (int) REGISTRY.getRegistryItem(new Key("/Light Engine/Display/width"));
 		int wh = (int) REGISTRY.getRegistryItem(new Key("/Light Engine/Display/height"));
 		int x = ww / 2 - 512;
 		int y = wh / 2 - 300;
 		GraphicalSubsystem.getWindowManager().addWindow(new InitialSettingsWindow(x, wh - y, 1024, 600));
+	}
+	
+	@Override
+	public void end() {
+		background.closeWindow();
+		super.end();
 	}
 
 	@Override

@@ -8,27 +8,32 @@ buildscript {
     }
 }
 
-apply plugin: 'pkg4j'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+apply plugin: 'java'
 apply plugin: 'application'
+apply plugin: 'pkg4j'
 
+sourceCompatibility = '10'
 mainClassName = 'net.luxvacuos.voxel.launcher.bootstrap.Bootstrap'
 def opt = "1"
 def mversion = "0.1.6"
 
-sourceSets {
-    main {
-        java.srcDir("${projectDir}/src/main/java/")
-        resources.srcDir("${projectDir}/src/main/resources")
-    }
-    
-    test {
-		java.srcDirs = ["${projectDir}/src/test/java/"]
-	}
-}
 if(opt == "")
 	version = mversion
 else
 	version = mversion + "-" + opt
+
+sourceSets {
+	main {
+		java.srcDir("${projectDir}/src/main/java/")
+		resources.srcDir("${projectDir}/src/main/resources")
+	}	
+	test {
+		java.srcDirs("${projectDir}/src/test/java/")
+		resources.srcDir("${projectDir}/src/test/resources")
+	}
+}
 
 pkg {
     name = "voxel-launcher"
@@ -48,6 +53,15 @@ pkg {
         on "openjfx"
     }
 
+}
+
+dependencies {
+	compile 'log4j:log4j:1.2.17'
+	compile 'com.google.code.gson:gson:2.8.0'
+	compile project(':modules:adus')
+	compile project(':modules:api')
+
+	testCompile group: 'junit', name: 'junit', version: '4.12'
 }
 
 jar {

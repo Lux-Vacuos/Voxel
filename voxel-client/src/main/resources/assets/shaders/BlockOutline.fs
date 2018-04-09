@@ -1,7 +1,7 @@
 //
 // This file is part of Voxel
 // 
-// Copyright (C) 2016-2017 Lux Vacuos
+// Copyright (C) 2016-2018 Lux Vacuos
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -17,28 +17,13 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 //
- 
-#version 330 core
 
-layout(location = 0) in vec3 position;
-layout(location = 1) in vec2 textureCoords;
 
-out vec2 pass_textureCoordsV;
-out vec3 pass_positionV;
+in vec3 pass_Color;
 
-uniform float moveFactor;
-uniform vec3 cameraPos;
-uniform mat4 projectionMatrix;
-uniform mat4 viewMatrix;
-
-uniform int useParallax;
+out vec4 out_Color;
 
 void main() {
-	vec3 pos = position - cameraPos;
-	pass_positionV = position;
-	vec4 worldPosition = vec4(pos, 1.0);
-	pass_textureCoordsV = textureCoords;
-	
-	vec4 positionRelativeToCam = viewMatrix * worldPosition;
-	gl_Position = projectionMatrix * positionRelativeToCam;
+    out_Color.a = 1.0;
+    out_Color.rgb = pass_Color;
 }

@@ -1,7 +1,7 @@
 /*
  * This file is part of Voxel
  * 
- * Copyright (C) 2016-2017 Lux Vacuos
+ * Copyright (C) 2016-2018 Lux Vacuos
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,7 +21,8 @@
 package net.luxvacuos.voxel.client.rendering.world.dimension;
 
 import net.luxvacuos.lightengine.client.ecs.entities.CameraEntity;
-import net.luxvacuos.lightengine.client.rendering.api.opengl.Frustum;
+import net.luxvacuos.lightengine.client.rendering.opengl.Frustum;
+import net.luxvacuos.lightengine.universal.ecs.entities.BasicEntity;
 import net.luxvacuos.voxel.universal.world.dimension.IDimension;
 
 public interface IRenderDimension extends IDimension {
@@ -31,5 +32,9 @@ public interface IRenderDimension extends IDimension {
 	public void renderOcclusion(CameraEntity camera, Frustum frustum);
 
 	public void renderShadow(CameraEntity sunCamera, Frustum frustum);
+	
+	public void setCamera(CameraEntity camera);
+	
+	public void setPlayer(BasicEntity player);
 
 }

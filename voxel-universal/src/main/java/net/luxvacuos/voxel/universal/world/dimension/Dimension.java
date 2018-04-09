@@ -1,7 +1,7 @@
 /*
  * This file is part of Voxel
  * 
- * Copyright (C) 2016-2017 Lux Vacuos
+ * Copyright (C) 2016-2018 Lux Vacuos
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,7 +27,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
+import java.util.UUID;
+
+import org.joml.Vector3f;
 
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
@@ -44,7 +48,9 @@ import net.luxvacuos.igl.Logger;
 import net.luxvacuos.lightengine.universal.core.IWorldSimulation;
 import net.luxvacuos.lightengine.universal.core.WorldSimulation;
 import net.luxvacuos.lightengine.universal.core.subsystems.CoreSubsystem;
-import net.luxvacuos.lightengine.universal.ecs.components.Position;
+import net.luxvacuos.lightengine.universal.ecs.entities.LEEntity;
+import net.luxvacuos.lightengine.universal.ecs.entities.PlayerEntity;
+import net.luxvacuos.lightengine.universal.network.AbstractChannelHandler;
 import net.luxvacuos.lightengine.universal.util.registry.Key;
 import net.luxvacuos.voxel.universal.ecs.Components;
 import net.luxvacuos.voxel.universal.ecs.components.ChunkLoader;
@@ -58,13 +64,11 @@ import net.luxvacuos.voxel.universal.world.chunk.generator.SimplexNoise;
 import net.luxvacuos.voxel.universal.world.utils.BlockNode;
 import net.luxvacuos.voxel.universal.world.utils.ChunkNode;
 
-public class Dimension implements IDimension {
+public class Dimension extends AbstractChannelHandler implements IDimension {
 
 	private int id;
 	protected IWorld world;
-	protected IWorldSimulation worldSimulation;
 	protected ChunkManager chunkManager;
-	protected Engine entitiesManager;
 	protected TagCompound data;
 
 	public Dimension(IWorld world, TagCompound data, int id) {
@@ -74,8 +78,8 @@ public class Dimension implements IDimension {
 		this.setupWorldSimulator();
 		long seed = 0l;
 		try {
-			this.worldSimulation.setTime(this.data.getFloat("Time"));
-			//this.worldSimulation.setRainFactor(this.data.getFloat("RainFactor"));
+			super.worldSimulation.setTime(this.data.getFloat("Time"));
+			// super.worldSimulation.setRainFactor(this.data.getFloat("RainFactor"));
 			if (this.data.hasTagByName("Seed")) {
 				seed = this.data.getLong("Seed");
 			} else {
@@ -86,8 +90,8 @@ public class Dimension implements IDimension {
 			Logger.error(e);
 		}
 		this.setupChunkManager(new Random(seed));
-		this.entitiesManager = new Engine();
-		this.entitiesManager.addSystem(new PhysicsSystem(this));
+		super.engine = new Engine();
+		super.engine.addSystem(new PhysicsSystem(this));
 	}
 
 	protected void setupChunkManager(Random rgn) {
@@ -98,7 +102,7 @@ public class Dimension implements IDimension {
 	}
 
 	protected void setupWorldSimulator() {
-		this.worldSimulation = new WorldSimulation();
+		super.worldSimulation = new WorldSimulation();
 	}
 
 	@Override
@@ -113,24 +117,22 @@ public class Dimension implements IDimension {
 
 	@Override
 	public void update(float delta) {
-		this.worldSimulation.update(delta);
 		int entityCX = 0, entityCZ = 0, chunkRadius = 0;
-		ImmutableArray<Entity> players = entitiesManager
-				.getEntitiesFor(Family.all(Position.class, ChunkLoader.class).get());
+		ImmutableArray<Entity> players = super.engine.getEntitiesFor(Family.all(ChunkLoader.class).get());
 		Array<ChunkNode> toRemove = new Array<>();
 		for (Entity entity : players) {
 			ChunkLoader loader = Components.CHUNK_LOADER.get(entity);
-			Position pos = Components.POSITION.get(entity);
+			Vector3f position = ((LEEntity) entity).getPosition();
 
-			if (pos.getPosition().x < 0)
-				entityCX = (int) ((pos.getPosition().x - 16) / 16);
+			if (position.x < 0)
+				entityCX = (int) ((position.x - 16) / 16);
 			else
-				entityCX = (int) ((pos.getPosition().x) / 16);
+				entityCX = (int) ((position.x) / 16);
 
-			if (pos.getPosition().z < 0)
-				entityCZ = (int) ((pos.getPosition().z - 16) / 16);
+			if (position.z < 0)
+				entityCZ = (int) ((position.z - 16) / 16);
 			else
-				entityCZ = (int) ((pos.getPosition().z) / 16);
+				entityCZ = (int) ((position.z) / 16);
 
 			chunkRadius = loader.getChunkRadius();
 
@@ -157,7 +159,7 @@ public class Dimension implements IDimension {
 
 		}
 		for (IChunk chunk : chunkManager.getLoadedChunks()) {
-			if (chunk.chunkLoaders() == 0)
+			if (chunk.chunkLoaders() <= 0)
 				toRemove.add(chunk.getNode());
 		}
 
@@ -166,7 +168,20 @@ public class Dimension implements IDimension {
 		}
 
 		chunkManager.update(delta);
-		entitiesManager.update(delta);
+		super.worldSimulation.update(delta);
+		super.engine.update(delta);
+	}
+
+	@Override
+	public void beforeUpdate(float delta) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void afterUpdate(float delta) {
+		// TODO Auto-generated method stub
+
 	}
 
 	@Override
@@ -252,8 +267,8 @@ public class Dimension implements IDimension {
 		try {
 			out = new NBTOutputStream(new BufferedOutputStream(new FileOutputStream(file)));
 			CompoundBuilder builder = new CompoundBuilder().modify(this.data);
-			builder.modifyFloat("Time", this.worldSimulation.getTime()).modifyFloat("RainFactor",
-					//this.worldSimulation.getRainFactor()
+			builder.modifyFloat("Time", super.worldSimulation.getTime()).modifyFloat("RainFactor",
+					// super.worldSimulation.getRainFactor()
 					0);
 			// builder.addBoolean("IsRaining", false);
 			builder.build().writeNBT(out, false);
@@ -268,13 +283,13 @@ public class Dimension implements IDimension {
 				}
 			}
 		}
-		entitiesManager.removeAllEntities();
+		super.engine.removeAllEntities();
 		chunkManager.dispose();
 	}
 
 	@Override
 	public Engine getEntitiesManager() {
-		return entitiesManager;
+		return super.engine;
 	}
 
 	@Override
@@ -283,13 +298,23 @@ public class Dimension implements IDimension {
 	}
 
 	@Override
-	public WorldSimulation getWorldSimulator() {
-		return (WorldSimulation) this.worldSimulation;
+	public IDimensionHandle getHandle() {
+		return new DimensionHandle(this);
 	}
 
 	@Override
-	public IDimensionHandle getHandle() {
-		return new DimensionHandle(this);
+	public Map<UUID, PlayerEntity> getPlayers() {
+		return super.players;
+	}
+
+	@Override
+	public Engine getEngine() {
+		return super.engine;
+	}
+
+	@Override
+	public IWorldSimulation getWorldSimulation() {
+		return super.worldSimulation;
 	}
 
 }

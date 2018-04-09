@@ -1,7 +1,7 @@
 /*
  * This file is part of Voxel
  * 
- * Copyright (C) 2016-2017 Lux Vacuos
+ * Copyright (C) 2016-2018 Lux Vacuos
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,7 +22,6 @@ package net.luxvacuos.voxel.client.world.block;
 
 import com.badlogic.gdx.math.collision.BoundingBox;
 
-import net.luxvacuos.igl.vector.Vector8f;
 import net.luxvacuos.voxel.client.rendering.utils.BlockFaceAtlas;
 import net.luxvacuos.voxel.client.rendering.world.block.ICustomRenderBlock;
 import net.luxvacuos.voxel.client.rendering.world.block.IObjRenderBlock;
@@ -30,6 +29,7 @@ import net.luxvacuos.voxel.client.rendering.world.block.IRenderBlock;
 import net.luxvacuos.voxel.universal.material.BlockMaterial;
 import net.luxvacuos.voxel.universal.world.block.AbstractBlockEntityBase;
 import net.luxvacuos.voxel.universal.world.utils.BlockFace;
+import net.luxvacuos.voxel.universal.world.utils.Vector8f;
 
 public abstract class AbstractRenderBlockEntity extends AbstractBlockEntityBase implements IRenderBlock {
 	protected final BlockFaceAtlas atlas;
@@ -38,7 +38,7 @@ public abstract class AbstractRenderBlockEntity extends AbstractBlockEntityBase 
 		super(material);
 		this.atlas = atlas;
 	}
-	
+
 	protected AbstractRenderBlockEntity(BlockMaterial material, BoundingBox aabb, BlockFaceAtlas atlas) {
 		super(material, aabb);
 		this.atlas = atlas;

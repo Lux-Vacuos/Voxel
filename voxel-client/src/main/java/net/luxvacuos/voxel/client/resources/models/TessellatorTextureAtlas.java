@@ -1,7 +1,7 @@
 /*
  * This file is part of Voxel
  * 
- * Copyright (C) 2016-2017 Lux Vacuos
+ * Copyright (C) 2016-2018 Lux Vacuos
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,8 +23,9 @@ package net.luxvacuos.voxel.client.resources.models;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.luxvacuos.igl.vector.Vector2d;
-import net.luxvacuos.igl.vector.Vector8f;
+import org.joml.Vector2f;
+
+import net.luxvacuos.voxel.universal.world.utils.Vector8f;
 
 public class TessellatorTextureAtlas {
 
@@ -40,7 +41,7 @@ public class TessellatorTextureAtlas {
 		ay = 16f / (float) height;
 	}
 
-	public void registerTextureCoords(String name, Vector2d texcoords) {
+	public void registerTextureCoords(String name, Vector2f texcoords) {
 		Vector8f tex = new Vector8f(texcoords.x / width, (texcoords.y / height) + ay, texcoords.x / width,
 				texcoords.y / height, (texcoords.x / width) + ax, texcoords.y / height, (texcoords.x / width) + ax,
 				(texcoords.y / height) + ay);

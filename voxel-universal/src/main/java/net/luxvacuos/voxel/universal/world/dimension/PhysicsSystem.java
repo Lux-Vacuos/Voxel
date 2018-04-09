@@ -1,7 +1,7 @@
 /*
  * This file is part of Voxel
  * 
- * Copyright (C) 2016-2017 Lux Vacuos
+ * Copyright (C) 2016-2018 Lux Vacuos
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,113 +21,23 @@
 package net.luxvacuos.voxel.universal.world.dimension;
 
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.math.collision.BoundingBox;
 
-import net.luxvacuos.lightengine.universal.ecs.Components;
-import net.luxvacuos.lightengine.universal.ecs.components.AABB;
-import net.luxvacuos.lightengine.universal.ecs.components.Health;
-import net.luxvacuos.lightengine.universal.ecs.components.Position;
-import net.luxvacuos.lightengine.universal.ecs.components.Velocity;
-import net.luxvacuos.lightengine.universal.ecs.entities.LEEntity;
 import net.luxvacuos.voxel.universal.ecs.entities.IDimensionEntity;
 
 public class PhysicsSystem extends net.luxvacuos.lightengine.universal.world.PhysicsSystem {
+	
 	private IDimension dim;
-
-	public PhysicsSystem(IDimension dim) {
+	
+	public  PhysicsSystem(IDimension dim) {
 		this.dim = dim;
 	}
-
+	
 	@Override
-	public void update(float delta) {
-		for (Entity entity : entities) {
-			Position pos = Components.POSITION.get(entity);
-			Velocity velocity = Components.VELOCITY.get(entity);
-			AABB aabb = Components.AABB.get(entity);
-			Health health = Components.HEALTH.get(entity);
+	protected void update(float delta, Entity entity) {
+		super.update(delta, entity);
 
-			if (entity instanceof LEEntity)
-				((LEEntity) entity).beforeUpdate(delta);
-
-			if (entity instanceof LEEntity)
-				((LEEntity) entity).update(delta);
-
-			if (aabb.isGravity())
-				velocity.setY(velocity.getY() - 15f * delta);
-			else
-				velocity.setY(velocity.getY() * 0.7f - velocity.getY() * 0.0001f);
-			velocity.setX(velocity.getX() * 0.7f - velocity.getX() * 0.0001f);
-			velocity.setZ(velocity.getZ() * 0.7f - velocity.getZ() * 0.0001f);
-
-			aabb.update(pos.getPosition());
-
-			boxes = dim.getGlobalBoundingBox(aabb.getBoundingBox());
-
-			if (aabb.isEnabled())
-				for (BoundingBox boundingBox : boxes) {
-					normalTMP.set(0, 0, 0);
-					if (AABBIntersect(aabb.getBoundingBox().min, aabb.getBoundingBox().max, boundingBox.min,
-							boundingBox.max)) {
-						depthTMP /= 3f;
-						if (normalTMP.x > 0 && velocity.getX() > 0) {
-							velocity.setX(0);
-							pos.setX(pos.getX() - depthTMP);
-						}
-						if (normalTMP.x < 0 && velocity.getX() < 0) {
-							velocity.setX(0);
-							pos.setX(pos.getX() + depthTMP);
-						}
-
-						if (normalTMP.y > 0 && velocity.getY() > 0)
-							velocity.setY(0);
-						if (normalTMP.y < 0 && velocity.getY() < 0) {
-							if (health != null && velocity.getY() < -10f) {
-								health.take((float) (velocity.getY() * 0.4f));
-							}
-							velocity.setY(0);
-							pos.setY(pos.getY() + depthTMP);
-						}
-
-						if (normalTMP.z > 0 && velocity.getZ() > 0) {
-							velocity.setZ(0);
-							pos.setZ(pos.getZ() - depthTMP);
-						}
-						if (normalTMP.z < 0 && velocity.getZ() < 0) {
-							velocity.setZ(0);
-							pos.setZ(pos.getZ() + depthTMP);
-						}
-					}
-				}
-			pos.setX(pos.getX() + velocity.getX() * delta);
-			pos.setY(pos.getY() + velocity.getY() * delta);
-			pos.setZ(pos.getZ() + velocity.getZ() * delta);
-
-			if (entity instanceof LEEntity)
-				((LEEntity) entity).afterUpdate(delta);
-
-			if (entity instanceof IDimensionEntity)
-				((IDimensionEntity) entity).updateDim(delta, dim);
-		}
-	}
-
-	private boolean AABBIntersect(final Vector3 mina, final Vector3 maxa, final Vector3 minb, final Vector3 maxb) {
-		final Vector3 faces[] = { new Vector3(-1, 0, 0), new Vector3(1, 0, 0), new Vector3(0, -1, 0),
-				new Vector3(0, 1, 0), new Vector3(0, 0, -1), new Vector3(0, 0, 1) };
-		double distances[] = { (maxb.x - mina.x), (maxa.x - minb.x), (maxb.y - mina.y), (maxa.y - minb.y),
-				(maxb.z - mina.z), (maxa.z - minb.z) };
-		for (int i = 0; i < 6; i++) {
-			if (distances[i] < 0.0f)
-				return false;
-			if ((i == 0) || (distances[i] < depthTMP)) {
-				faceTMP = i;
-				normalTMP = faces[i];
-				depthTMP = distances[i];
-			}
-
-		}
-		return true;
-
+		if (entity instanceof IDimensionEntity)
+			((IDimensionEntity) entity).updateDim(delta, dim);
 	}
 
 }

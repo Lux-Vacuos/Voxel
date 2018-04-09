@@ -4,3 +4,6 @@
 [submodule "modules/adus"]
 	path = modules/adus
 	url = https://github.com/Lux-Vacuos/ADUS.git
+[submodule "LightEngine"]
+	path = LightEngine
+	url = https://github.com/Lux-Vacuos/LightEngine.git

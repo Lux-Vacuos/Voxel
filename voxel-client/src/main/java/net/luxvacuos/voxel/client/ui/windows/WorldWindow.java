@@ -1,7 +1,7 @@
 /*
  * This file is part of Voxel
  * 
- * Copyright (C) 2016-2017 Lux Vacuos
+ * Copyright (C) 2016-2018 Lux Vacuos
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,8 @@
 
 package net.luxvacuos.voxel.client.ui.windows;
 
-import static net.luxvacuos.lightengine.universal.core.subsystems.CoreSubsystem.*;
+import static net.luxvacuos.lightengine.universal.core.subsystems.CoreSubsystem.LANG;
+import static net.luxvacuos.lightengine.universal.core.subsystems.CoreSubsystem.REGISTRY;
 import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_CENTER;
 import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_MIDDLE;
 
@@ -29,9 +30,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 
 import net.luxvacuos.lightengine.client.core.subsystems.GraphicalSubsystem;
-import net.luxvacuos.lightengine.client.rendering.api.glfw.Window;
-import net.luxvacuos.lightengine.client.rendering.api.nanovg.NanoWindow;
-import net.luxvacuos.lightengine.client.rendering.api.nanovg.themes.Theme.ButtonStyle;
+import net.luxvacuos.lightengine.client.rendering.glfw.Window;
+import net.luxvacuos.lightengine.client.rendering.nanovg.IWindow;
+import net.luxvacuos.lightengine.client.rendering.nanovg.themes.Theme.ButtonStyle;
 import net.luxvacuos.lightengine.client.ui.Alignment;
 import net.luxvacuos.lightengine.client.ui.Button;
 import net.luxvacuos.lightengine.client.ui.ComponentWindow;
@@ -51,12 +52,10 @@ import net.luxvacuos.voxel.client.ui.WorldElement;
 public class WorldWindow extends ComponentWindow {
 
 	public Text worldName;
-	private NanoWindow root;
 	private TitleBarButton backButton;
 
-	public WorldWindow(float x, float y, float w, float h, NanoWindow root) {
+	public WorldWindow(int x, int y, int w, int h) {
 		super(x, y, w, h, LANG.getRegistryItem("voxel.worldwindow.name"));
-		this.root = root;
 	}
 
 	@Override
@@ -84,7 +83,7 @@ public class WorldWindow extends ComponentWindow {
 		Text error = new Text("", 0, 50);
 		error.setAlign(NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
 		error.setWindowAlignment(Alignment.CENTER);
-		
+
 		EditBox nameB = new EditBox(0, 0, 300, 30, "");
 		nameB.setAlignment(Alignment.CENTER);
 		nameB.setWindowAlignment(Alignment.CENTER);
@@ -96,7 +95,7 @@ public class WorldWindow extends ComponentWindow {
 			File f = new File(REGISTRY.getRegistryItem(new Key("/Voxel/Settings/World/directory")) + nameB.getText());
 			if (!f.exists()) {
 				f.mkdirs();
-				TaskManager.addTask(() -> {
+				TaskManager.tm.addTaskRenderThread(() -> {
 					backButton.setEnabled(false);
 					super.disposeApp();
 					createList(window);
@@ -107,7 +106,7 @@ public class WorldWindow extends ComponentWindow {
 		Text text = new Text("Name", 0, 80);
 		text.setAlign(NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
 		text.setWindowAlignment(Alignment.CENTER);
-		
+
 		super.addComponent(nameB);
 		super.addComponent(create);
 		super.addComponent(text);
@@ -128,7 +127,7 @@ public class WorldWindow extends ComponentWindow {
 			Files.walk(worldPath.toPath(), 1).forEach(filePath -> {
 				if (Files.isDirectory(filePath) && !filePath.toFile().equals(worldPath)) {
 					WorldElement el = new WorldElement(
-							w / 2 - (float) REGISTRY
+							w / 2 - (int) REGISTRY
 									.getRegistryItem(new Key("/Light Engine/Settings/WindowManager/scrollBarSize")),
 							50, filePath.getFileName().toString());
 					el.setWindowAlignment(Alignment.LEFT_TOP);
@@ -147,9 +146,10 @@ public class WorldWindow extends ComponentWindow {
 			if (ClientVariables.worldNameToLoad != "") {
 				GraphicalSubsystem.getWindowManager().toggleShell();
 				super.closeWindow();
+				IWindow root = GraphicalSubsystem.getWindowManager().getWindowByClass("MainWindow");
 				root.setWindowClose(WindowClose.DISPOSE);
 				root.closeWindow();
-				TaskManager.addTask(() -> StateMachine.setCurrentState(StateNames.SP_WORLD));
+				TaskManager.tm.addTaskBackgroundThread(() -> StateMachine.setCurrentState(StateNames.SP_WORLD));
 			}
 		});
 
@@ -157,12 +157,12 @@ public class WorldWindow extends ComponentWindow {
 		createButton.setAlignment(Alignment.CENTER);
 		createButton.setWindowAlignment(Alignment.RIGHT_BOTTOM);
 		createButton.setOnButtonPress(() -> {
-			TaskManager.addTask(() -> {
+			TaskManager.tm.addTaskRenderThread(() -> {
 				super.disposeApp();
 				createWorld(window);
 				backButton.setEnabled(true);
 				backButton.setOnButtonPress(() -> {
-					TaskManager.addTask(() -> {
+					TaskManager.tm.addTaskRenderThread(() -> {
 						super.disposeApp();
 						createList(window);
 					});

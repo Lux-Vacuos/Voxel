@@ -1,7 +1,7 @@
 /*
  * This file is part of Voxel
  * 
- * Copyright (C) 2016-2017 Lux Vacuos
+ * Copyright (C) 2016-2018 Lux Vacuos
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,8 +20,8 @@
 
 package net.luxvacuos.voxel.client.world.chunks;
 
-import net.luxvacuos.lightengine.client.core.ClientWorldSimulation;
 import net.luxvacuos.lightengine.client.ecs.entities.CameraEntity;
+import net.luxvacuos.lightengine.universal.core.IWorldSimulation;
 import net.luxvacuos.lightengine.universal.core.TaskManager;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Tessellator;
 import net.luxvacuos.voxel.client.rendering.world.chunk.IRenderChunk;
@@ -38,7 +38,8 @@ public class RenderChunk extends Chunk implements IRenderChunk {
 
 	public RenderChunk(IDimension dim, ChunkNode node, ChunkData data) {
 		super(dim, node, data);
-		TaskManager.addTask(() -> this.tess = new Tessellator(BlocksResources.getMaterial()));
+		this.tess = new Tessellator(BlocksResources.getMaterial());
+		TaskManager.tm.addTaskRenderThread(() -> this.tess.initGL());
 	}
 
 	protected void isRebuilding(boolean flag) {
@@ -59,28 +60,24 @@ public class RenderChunk extends Chunk implements IRenderChunk {
 	}
 
 	@Override
-	public void render(CameraEntity camera, ClientWorldSimulation clientWorldSimulation) {
-		if (tess != null)
-			this.tess.draw(camera, clientWorldSimulation);
+	public void render(CameraEntity camera, IWorldSimulation clientWorldSimulation) {
+		this.tess.draw(camera, clientWorldSimulation);
 	}
 
 	@Override
 	public void renderShadow(CameraEntity sunCamera) {
-		if (tess != null)
-			this.tess.drawShadow(sunCamera);
+		this.tess.drawShadow(sunCamera);
 	}
 
 	@Override
 	public void renderOcclusion(CameraEntity camera) {
-		if (tess != null)
-			this.tess.drawOcclusion(camera);
+		this.tess.drawOcclusion(camera);
 	}
 
 	@Override
 	public void dispose() {
 		super.dispose();
-		if (tess != null)
-			TaskManager.addTask(() -> this.tess.cleanUp());
+		TaskManager.tm.addTaskRenderThread(() -> this.tess.cleanUp());
 	}
 
 	@Override

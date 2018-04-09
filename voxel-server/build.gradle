@@ -1,23 +1,35 @@
 plugins {
+	id 'eclipse'
+	id 'idea'
+	id 'java'
 	id 'application'
-	id 'net.nemerosa.versioning' version '2.0.0'
+	id 'net.nemerosa.versioning' version '2.6.1'
 }
 
+sourceCompatibility = '10'
 mainClassName = 'net.luxvacuos.voxel.server.bootstrap.Bootstrap'
 
 sourceSets {
-    main {
-        java.srcDir("${projectDir}/src/main/java/")
-        resources.srcDir("${projectDir}/src/main/resources")
-    }
-    
-    test {
-		java.srcDirs = ["${projectDir}/src/test/java/"]
+	main {
+		java.srcDir("${projectDir}/src/main/java/")
+		resources.srcDir("${projectDir}/src/main/resources")
+	}	
+	test {
+		java.srcDirs("${projectDir}/src/test/java/")
+		resources.srcDir("${projectDir}/src/test/resources")
 	}
 }
 
+dependencies {
+	compile project(':voxel-universal')
+	compile project(':voxel-assets')
+	compile project(':lightengine-server')
+
+	testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
 jar {
-	version = "0.0.10-" + versioning.info.full
+	version = "0.0.11-" + versioning.info.full
 	manifest {
         attributes (
 			"Specification-Title": "Voxel-Server",

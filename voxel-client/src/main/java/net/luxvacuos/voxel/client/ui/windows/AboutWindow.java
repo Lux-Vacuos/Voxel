@@ -1,7 +1,7 @@
 /*
  * This file is part of Voxel
  * 
- * Copyright (C) 2016-2017 Lux Vacuos
+ * Copyright (C) 2016-2018 Lux Vacuos
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,11 +31,11 @@ import net.luxvacuos.lightengine.client.ui.ComponentWindow;
 import net.luxvacuos.lightengine.client.ui.Image;
 import net.luxvacuos.lightengine.client.ui.Text;
 import net.luxvacuos.lightengine.universal.util.registry.Key;
-import net.luxvacuos.voxel.client.core.ClientVariables;
+import net.luxvacuos.lightengine.universal.util.registry.KeyCache;
 
 public class AboutWindow extends ComponentWindow {
 
-	public AboutWindow(float x, float y, float w, float h) {
+	public AboutWindow(int x, int y, int w, int h) {
 		super(x, y, w, h, LANG.getRegistryItem("voxel.aboutwindow.name"));
 	}
 
@@ -51,7 +51,8 @@ public class AboutWindow extends ComponentWindow {
 
 		Text versionL = new Text(LANG.getRegistryItem("voxel.aboutwindow.txtversion"), 30, -260);
 		versionL.setWindowAlignment(Alignment.LEFT_TOP);
-		Text versionR = new Text(" (" + ClientVariables.version + ")", -30, -260);
+		Text versionR = new Text((String) REGISTRY.getRegistryItem(KeyCache.getKey("/Light Engine/version")), -30,
+				-260);
 		versionR.setAlign(NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE);
 		versionR.setWindowAlignment(Alignment.RIGHT_TOP);
 
@@ -99,7 +100,8 @@ public class AboutWindow extends ComponentWindow {
 
 		Text rendererL = new Text(LANG.getRegistryItem("voxel.aboutwindow.txtrenderer"), 30, -500);
 		rendererL.setWindowAlignment(Alignment.LEFT_TOP);
-		Text rendererR = new Text((String) REGISTRY.getRegistryItem(new Key("/Light Engine/System/renderer")), -30, -500);
+		Text rendererR = new Text((String) REGISTRY.getRegistryItem(new Key("/Light Engine/System/renderer")), -30,
+				-500);
 		rendererR.setAlign(NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE);
 		rendererR.setWindowAlignment(Alignment.RIGHT_TOP);
 

@@ -1,7 +1,7 @@
 /*
  * This file is part of Voxel
  * 
- * Copyright (C) 2016-2017 Lux Vacuos
+ * Copyright (C) 2016-2018 Lux Vacuos
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,19 +24,12 @@ import static net.luxvacuos.lightengine.universal.core.subsystems.CoreSubsystem.
 
 import org.lwjgl.glfw.GLFW;
 
-import net.luxvacuos.igl.vector.Matrix4d;
-import net.luxvacuos.igl.vector.Vector3d;
 import net.luxvacuos.lightengine.client.core.ClientWorldSimulation;
 import net.luxvacuos.lightengine.client.core.subsystems.GraphicalSubsystem;
 import net.luxvacuos.lightengine.client.ecs.entities.CameraEntity;
 import net.luxvacuos.lightengine.client.ecs.entities.Sun;
 import net.luxvacuos.lightengine.client.input.KeyboardHandler;
 import net.luxvacuos.lightengine.client.input.MouseHandler;
-import net.luxvacuos.lightengine.client.rendering.api.glfw.Window;
-import net.luxvacuos.lightengine.client.rendering.api.opengl.LightRenderer;
-import net.luxvacuos.lightengine.client.rendering.api.opengl.ParticleDomain;
-import net.luxvacuos.lightengine.client.rendering.api.opengl.Renderer;
-import net.luxvacuos.lightengine.client.ui.windows.GameWindow;
 import net.luxvacuos.lightengine.client.util.Maths;
 import net.luxvacuos.lightengine.universal.core.states.AbstractState;
 import net.luxvacuos.lightengine.universal.core.states.StateMachine;
@@ -54,13 +47,13 @@ public class MPWorldState extends AbstractState {
 
 	// private Client client;
 
-	private Sun sun;
+/*	private Sun sun;
 	private CameraEntity camera;
 	private BlockOutlineRenderer blockOutlineRenderer;
 	private ChunkLoaderEntity spawnChunks;
 	private GameWindow gameWindow;
 	private PauseWindow pauseWindow;
-	private LightRenderer lightRenderer;
+	private LightRenderer lightRenderer;*/
 
 	private IWorld world;
 
@@ -75,7 +68,7 @@ public class MPWorldState extends AbstractState {
 		// client.setPort(44454);
 		// client.run(this);
 		// this.world = new NetworkWorld("mp", client.getChannel());
-		ClientVariables.worldNameToLoad = "";
+		/*ClientVariables.worldNameToLoad = "";
 		Renderer.setDeferredPass((camera, sunCamera, frustum, shadowMap) -> {
 			((RenderWorld) world).render(camera, frustum);
 		});
@@ -102,7 +95,7 @@ public class MPWorldState extends AbstractState {
 		gameWindow = new GameWindow(0, (int) REGISTRY.getRegistryItem(new Key("/Voxel/Display/height")),
 				(int) REGISTRY.getRegistryItem(new Key("/Voxel/Display/width")),
 				(int) REGISTRY.getRegistryItem(new Key("/Voxel/Display/height")));
-		GraphicalSubsystem.getWindowManager().addWindow(gameWindow);
+		GraphicalSubsystem.getWindowManager().addWindow(gameWindow);*/
 		// client.getChannel()
 		// .writeAndFlush(new ClientConnect(ClientVariables.user.getUUID(),
 		// ClientVariables.user.getUsername()));
@@ -120,7 +113,7 @@ public class MPWorldState extends AbstractState {
 
 	@Override
 	public void init() {
-		Window window = GraphicalSubsystem.getMainWindow();
+		/*Window window = GraphicalSubsystem.getMainWindow();
 
 		Matrix4d[] shadowProjectionMatrix = new Matrix4d[4];
 
@@ -145,26 +138,26 @@ public class MPWorldState extends AbstractState {
 
 		blockOutlineRenderer = new BlockOutlineRenderer(window.getResourceLoader());
 
-		spawnChunks = new ChunkLoaderEntity(new Vector3d());
+		spawnChunks = new ChunkLoaderEntity(new Vector3d());*/
 		// client = new Client();
 	}
 
 	@Override
 	public void dispose() {
-		blockOutlineRenderer.dispose();
+		//blockOutlineRenderer.dispose();
 		if (world != null)
 			world.dispose();
 	}
 
 	@Override
 	public void render(float alpha) {
-		Renderer.render(world.getActiveDimension().getEntitiesManager().getEntities(), ParticleDomain.getParticles(),
-				null, lightRenderer, camera, world.getActiveDimension().getWorldSimulator(), sun, alpha);
+	//	Renderer.render(world.getActiveDimension().getEntitiesManager().getEntities(), ParticleDomain.getParticles(),
+	//			null, lightRenderer, camera, world.getActiveDimension().getWorldSimulator(), sun, alpha);
 	}
 
 	@Override
 	public void update(float delta) {
-		Window window = GraphicalSubsystem.getMainWindow();
+	/*	Window window = GraphicalSubsystem.getMainWindow();
 		KeyboardHandler kbh = window.getKeyboardHandler();
 		if (!ClientVariables.paused) {
 			world.update(delta);
@@ -174,20 +167,19 @@ public class MPWorldState extends AbstractState {
 			ParticleDomain.update(delta, camera);
 			blockOutlineRenderer.getPosition().set(((PlayerCamera) camera).getBlockOutlinePos());
 
-			if (kbh.isKeyPressed(GLFW.GLFW_KEY_R))
-				ClientVariables.raining = !ClientVariables.raining;
 			if (kbh.isKeyPressed(GLFW.GLFW_KEY_ESCAPE)) {
 				kbh.ignoreKeyUntilRelease(GLFW.GLFW_KEY_ESCAPE);
 				MouseHandler.setGrabbed(GraphicalSubsystem.getMainWindow().getID(), false);
 				ClientVariables.paused = true;
-				float borderSize = (float) REGISTRY
-						.getRegistryItem(new Key("/Voxel/Settings/WindowManager/borderSize"));
-				float titleBarHeight = (float) REGISTRY
-						.getRegistryItem(new Key("/Voxel/Settings/WindowManager/titleBarHeight"));
-				int height = (int) REGISTRY.getRegistryItem(new Key("/Voxel/Display/height"));
+				int borderSize = (int) REGISTRY
+						.getRegistryItem(new Key("/Light Engine/Settings/WindowManager/borderSize"));
+				int titleBarHeight = (int) REGISTRY
+						.getRegistryItem(new Key("/Light Engine/Settings/WindowManager/titleBarHeight"));
+				int height = (int) REGISTRY.getRegistryItem(new Key("/Light Engine/Display/height"));
 				pauseWindow = new PauseWindow(borderSize + 10, height - titleBarHeight - 10,
-						(int) REGISTRY.getRegistryItem(new Key("/Voxel/Display/width")) - borderSize * 2f - 20,
-						height - titleBarHeight - borderSize - 50);
+						(int) ((int) REGISTRY.getRegistryItem(new Key("/Light Engine/Display/width")) - borderSize * 2f
+								- 20),
+						(int) (height - titleBarHeight - borderSize - 50));
 				GraphicalSubsystem.getWindowManager().addWindow(pauseWindow);
 				GraphicalSubsystem.getWindowManager().toggleShell();
 			}
@@ -205,12 +197,12 @@ public class MPWorldState extends AbstractState {
 				pauseWindow.closeWindow();
 				GraphicalSubsystem.getWindowManager().toggleShell();
 			}
-		}
+		}*/
 	}
 
-	public ClientWorldSimulation getWorldSimulation() {
-		return (ClientWorldSimulation) this.world.getActiveDimension().getWorldSimulator();
-	}
+	//public ClientWorldSimulation getWorldSimulation() {
+	//	return (ClientWorldSimulation) this.world.getActiveDimension().getWorldSimulator();
+	//}
 
 	public IWorld getWorld() {
 		return world;

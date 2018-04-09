@@ -1,7 +1,7 @@
 /*
  * This file is part of Voxel
  * 
- * Copyright (C) 2016-2017 Lux Vacuos
+ * Copyright (C) 2016-2018 Lux Vacuos
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,7 +33,7 @@ public class GlassPaneBlock extends RenderBlock implements ICustomRenderBlock {
 	}
 
 	@Override
-	public void generateCustomModel(Tessellator tess, double x, double y, double z, float globalScale, boolean top,
+	public void generateCustomModel(Tessellator tess, float x, float y, float z, float globalScale, boolean top,
 			boolean bottom, boolean left, boolean right, boolean front, boolean back) {
 		if (!left && right)
 			tess.generateCube(x + 0.4f * globalScale, y, z + 0.4f * globalScale, 0.6f * globalScale, globalScale,

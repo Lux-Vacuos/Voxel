@@ -1,15 +1,23 @@
 plugins {
-	id 'net.nemerosa.versioning' version '2.0.0'
+	id 'eclipse'
+	id 'idea'
+	id 'java'
+	id 'net.nemerosa.versioning' version '2.6.1'
 }
+
+sourceCompatibility = '10'
 
 sourceSets {
 	main {
+		java.srcDir("${projectDir}/src/main/java/")
 		resources.srcDir("${projectDir}/src/main/resources")
+	}	
+	test {
+		java.srcDirs("${projectDir}/src/test/java/")
+		resources.srcDir("${projectDir}/src/test/resources")
 	}
 }
 
 jar {
 	version = versioning.info.full
 }
-
-

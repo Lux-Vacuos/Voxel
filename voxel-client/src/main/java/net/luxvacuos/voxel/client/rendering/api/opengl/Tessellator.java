@@ -1,7 +1,7 @@
 /*
  * This file is part of Voxel
  * 
- * Copyright (C) 2016-2017 Lux Vacuos
+ * Copyright (C) 2016-2018 Lux Vacuos
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,14 +20,11 @@
 
 package net.luxvacuos.voxel.client.rendering.api.opengl;
 
-import static org.lwjgl.opengl.GL11.GL_BACK;
 import static org.lwjgl.opengl.GL11.GL_FLOAT;
-import static org.lwjgl.opengl.GL11.GL_FRONT;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
 import static org.lwjgl.opengl.GL11.GL_UNSIGNED_INT;
 import static org.lwjgl.opengl.GL11.glBindTexture;
-import static org.lwjgl.opengl.GL11.glCullFace;
 import static org.lwjgl.opengl.GL11.glDrawElements;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE1;
@@ -55,18 +52,18 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.joml.Vector2f;
+import org.joml.Vector3f;
 import org.lwjgl.BufferUtils;
 
-import net.luxvacuos.igl.vector.Vector2d;
-import net.luxvacuos.igl.vector.Vector3d;
-import net.luxvacuos.igl.vector.Vector8f;
-import net.luxvacuos.lightengine.client.core.ClientWorldSimulation;
 import net.luxvacuos.lightengine.client.ecs.entities.CameraEntity;
-import net.luxvacuos.lightengine.client.rendering.api.opengl.objects.Material;
-import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.TessellatorBasicShader;
-import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.TessellatorShader;
+import net.luxvacuos.lightengine.client.rendering.opengl.objects.Material;
+import net.luxvacuos.lightengine.universal.core.IWorldSimulation;
+import net.luxvacuos.voxel.client.rendering.shaders.TessellatorBasicShader;
+import net.luxvacuos.voxel.client.rendering.shaders.TessellatorShader;
 import net.luxvacuos.voxel.client.rendering.world.block.IRenderBlock;
 import net.luxvacuos.voxel.universal.world.utils.BlockFace;
+import net.luxvacuos.voxel.universal.world.utils.Vector8f;
 
 public class Tessellator {
 
@@ -74,22 +71,25 @@ public class Tessellator {
 
 	private ByteBuffer buffer0, buffer1, ibo;
 
-	private List<Vector3d> pos;
-	private List<Vector2d> texcoords;
+	private List<Vector3f> pos;
+	private List<Vector2f> texcoords;
 	private List<Integer> indices;
 
 	private int occlusion;
 	private Material material;
-	private boolean updated = false;
+	private boolean updated = false, glInit;
 
 	private TessellatorShader shader;
 	private TessellatorBasicShader basicShader;
 
 	public Tessellator(Material material) {
 		this.material = material;
-		pos = new ArrayList<Vector3d>();
-		texcoords = new ArrayList<Vector2d>();
+		pos = new ArrayList<Vector3f>();
+		texcoords = new ArrayList<Vector2f>();
 		indices = new ArrayList<Integer>();
+	}
+
+	public void initGL() {
 		shader = TessellatorShader.getShader();
 		basicShader = TessellatorBasicShader.getShader();
 
@@ -116,6 +116,7 @@ public class Tessellator {
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 		glBindVertexArray(0);
+		glInit = true;
 	}
 
 	public void begin() {
@@ -123,11 +124,11 @@ public class Tessellator {
 		texcoords.clear();
 	}
 
-	public void vertex3f(Vector3d pos) {
+	public void vertex3f(Vector3f pos) {
 		this.pos.add(pos);
 	}
 
-	public void texture2f(Vector2d texcoords) {
+	public void texture2f(Vector2f texcoords) {
 		this.texcoords.add(texcoords);
 	}
 
@@ -136,13 +137,16 @@ public class Tessellator {
 	}
 
 	public void end() {
+		clearBuffers();
 		loadData(pos, texcoords);
 		pos.clear();
 		texcoords.clear();
 		updated = true;
 	}
 
-	public void draw(CameraEntity camera, ClientWorldSimulation clientWorldSimulation) {
+	public void draw(CameraEntity camera, IWorldSimulation clientWorldSimulation) {
+		if (!glInit)
+			return;
 		if (updated) {
 			updateGlBuffers(vboID0, vboCapacity, buffer0);
 			updateGlBuffers(vboID1, vboCapacity, buffer1);
@@ -153,7 +157,7 @@ public class Tessellator {
 		shader.start();
 		shader.loadViewMatrix(camera.getViewMatrix(), camera.getPosition());
 		shader.loadProjectionMatrix(camera.getProjectionMatrix());
-		shader.loadMoveFactor(clientWorldSimulation.getMoveFactor());
+		shader.loadMoveFactor(0); // TODO: Move factor 🤔
 		shader.loadMaterial(material);
 		glBindVertexArray(vaoID);
 		glEnableVertexAttribArray(0);
@@ -174,6 +178,8 @@ public class Tessellator {
 	}
 
 	public void drawShadow(CameraEntity sunCamera) {
+		if (!glInit)
+			return;
 		if (updated) {
 			updateGlBuffers(vboID0, vboCapacity, buffer0);
 			updateGlBuffers(vboID1, vboCapacity, buffer1);
@@ -181,7 +187,6 @@ public class Tessellator {
 			updated = false;
 			clearBuffers();
 		}
-		glCullFace(GL_FRONT);
 		basicShader.start();
 		basicShader.loadViewMatrix(sunCamera.getViewMatrix(), sunCamera.getPosition());
 		basicShader.loadProjectionMatrix(sunCamera.getProjectionMatrix());
@@ -195,10 +200,11 @@ public class Tessellator {
 		glDisableVertexAttribArray(1);
 		glBindVertexArray(0);
 		basicShader.stop();
-		glCullFace(GL_BACK);
 	}
 
 	public void drawOcclusion(CameraEntity camera) {
+		if (!glInit)
+			return;
 		if (updated) {
 			updateGlBuffers(vboID0, vboCapacity, buffer0);
 			updateGlBuffers(vboID1, vboCapacity, buffer1);
@@ -221,7 +227,7 @@ public class Tessellator {
 		basicShader.stop();
 	}
 
-	public void loadData(List<Vector3d> pos, List<Vector2d> texcoords) {
+	public void loadData(List<Vector3f> pos, List<Vector2f> texcoords) {
 		buffer0 = BufferUtils.createByteBuffer((pos.size() * 3) * 4);
 		buffer1 = BufferUtils.createByteBuffer((texcoords.size() * 2) * 4);
 		for (int i = 0; i < pos.size(); i++) {
@@ -269,109 +275,109 @@ public class Tessellator {
 
 	}
 
-	public void generateCube(double x, double y, double z, float size, boolean top, boolean bottom, boolean left,
+	public void generateCube(float x, float y, float z, float size, boolean top, boolean bottom, boolean left,
 			boolean right, boolean front, boolean back, IRenderBlock block) {
 		generateCube(x, y, z, size, size, size, top, bottom, left, right, front, back, block);
 	}
 
-	public void generateCube(double x, double y, double z, float xsize, float ysize, float zsize, boolean top,
+	public void generateCube(float x, float y, float z, float xsize, float ysize, float zsize, boolean top,
 			boolean bottom, boolean left, boolean right, boolean front, boolean back, IRenderBlock block) {
 		Vector8f texcoords;
 		if (top) {
 			texcoords = block.getTexCoords(BlockFace.UP);
 			// top face
-			vertex3f(new Vector3d(x, y + ysize, z + zsize));
-			texture2f(new Vector2d(texcoords.getZ(), texcoords.getW()));
+			vertex3f(new Vector3f(x, y + ysize, z + zsize));
+			texture2f(new Vector2f(texcoords.getZ(), texcoords.getW()));
 
-			vertex3f(new Vector3d(x + xsize, y + ysize, z + zsize));
-			texture2f(new Vector2d(texcoords.getI(), texcoords.getJ()));
+			vertex3f(new Vector3f(x + xsize, y + ysize, z + zsize));
+			texture2f(new Vector2f(texcoords.getI(), texcoords.getJ()));
 
-			vertex3f(new Vector3d(x + xsize, y + ysize, z));
-			texture2f(new Vector2d(texcoords.getK(), texcoords.getL()));
+			vertex3f(new Vector3f(x + xsize, y + ysize, z));
+			texture2f(new Vector2f(texcoords.getK(), texcoords.getL()));
 
-			vertex3f(new Vector3d(x, y + ysize, z));
-			texture2f(new Vector2d(texcoords.getX(), texcoords.getY()));
+			vertex3f(new Vector3f(x, y + ysize, z));
+			texture2f(new Vector2f(texcoords.getX(), texcoords.getY()));
 
 		}
 		if (bottom) {
 			texcoords = block.getTexCoords(BlockFace.DOWN);
 			// bottom face
-			vertex3f(new Vector3d(x, y, z));
-			texture2f(new Vector2d(texcoords.getZ(), texcoords.getW()));
+			vertex3f(new Vector3f(x, y, z));
+			texture2f(new Vector2f(texcoords.getZ(), texcoords.getW()));
 
-			vertex3f(new Vector3d(x + xsize, y, z));
-			texture2f(new Vector2d(texcoords.getI(), texcoords.getJ()));
+			vertex3f(new Vector3f(x + xsize, y, z));
+			texture2f(new Vector2f(texcoords.getI(), texcoords.getJ()));
 
-			vertex3f(new Vector3d(x + xsize, y, z + zsize));
-			texture2f(new Vector2d(texcoords.getK(), texcoords.getL()));
+			vertex3f(new Vector3f(x + xsize, y, z + zsize));
+			texture2f(new Vector2f(texcoords.getK(), texcoords.getL()));
 
-			vertex3f(new Vector3d(x, y, z + zsize));
-			texture2f(new Vector2d(texcoords.getX(), texcoords.getY()));
+			vertex3f(new Vector3f(x, y, z + zsize));
+			texture2f(new Vector2f(texcoords.getX(), texcoords.getY()));
 
 		}
 
 		if (back) {
 			texcoords = block.getTexCoords(BlockFace.SOUTH);
 			// back face
-			vertex3f(new Vector3d(x, y, z + zsize));
-			texture2f(new Vector2d(texcoords.getX(), texcoords.getY()));
+			vertex3f(new Vector3f(x, y, z + zsize));
+			texture2f(new Vector2f(texcoords.getX(), texcoords.getY()));
 
-			vertex3f(new Vector3d(x + xsize, y, z + zsize));
-			texture2f(new Vector2d(texcoords.getK(), texcoords.getL()));
+			vertex3f(new Vector3f(x + xsize, y, z + zsize));
+			texture2f(new Vector2f(texcoords.getK(), texcoords.getL()));
 
-			vertex3f(new Vector3d(x + xsize, y + ysize, z + zsize));
-			texture2f(new Vector2d(texcoords.getI(), texcoords.getJ()));
+			vertex3f(new Vector3f(x + xsize, y + ysize, z + zsize));
+			texture2f(new Vector2f(texcoords.getI(), texcoords.getJ()));
 
-			vertex3f(new Vector3d(x, y + ysize, z + zsize));
-			texture2f(new Vector2d(texcoords.getZ(), texcoords.getW()));
+			vertex3f(new Vector3f(x, y + ysize, z + zsize));
+			texture2f(new Vector2f(texcoords.getZ(), texcoords.getW()));
 
 		}
 		if (front) {
 			// front face
 			texcoords = block.getTexCoords(BlockFace.NORTH);
-			vertex3f(new Vector3d(x, y + ysize, z));
-			texture2f(new Vector2d(texcoords.getZ(), texcoords.getW()));
+			vertex3f(new Vector3f(x, y + ysize, z));
+			texture2f(new Vector2f(texcoords.getZ(), texcoords.getW()));
 
-			vertex3f(new Vector3d(x + xsize, y + ysize, z));
-			texture2f(new Vector2d(texcoords.getI(), texcoords.getJ()));
+			vertex3f(new Vector3f(x + xsize, y + ysize, z));
+			texture2f(new Vector2f(texcoords.getI(), texcoords.getJ()));
 
-			vertex3f(new Vector3d(x + xsize, y, z));
-			texture2f(new Vector2d(texcoords.getK(), texcoords.getL()));
+			vertex3f(new Vector3f(x + xsize, y, z));
+			texture2f(new Vector2f(texcoords.getK(), texcoords.getL()));
 
-			vertex3f(new Vector3d(x, y, z));
-			texture2f(new Vector2d(texcoords.getX(), texcoords.getY()));
+			vertex3f(new Vector3f(x, y, z));
+			texture2f(new Vector2f(texcoords.getX(), texcoords.getY()));
 
 		}
 		if (right) {
 			texcoords = block.getTexCoords(BlockFace.EAST);
 			// right face
-			vertex3f(new Vector3d(x, y, z));
-			texture2f(new Vector2d(texcoords.getK(), texcoords.getL()));
+			vertex3f(new Vector3f(x, y, z));
+			texture2f(new Vector2f(texcoords.getK(), texcoords.getL()));
 
-			vertex3f(new Vector3d(x, y, z + zsize));
-			texture2f(new Vector2d(texcoords.getX(), texcoords.getY()));
+			vertex3f(new Vector3f(x, y, z + zsize));
+			texture2f(new Vector2f(texcoords.getX(), texcoords.getY()));
 
-			vertex3f(new Vector3d(x, y + ysize, z + zsize));
-			texture2f(new Vector2d(texcoords.getZ(), texcoords.getW()));
+			vertex3f(new Vector3f(x, y + ysize, z + zsize));
+			texture2f(new Vector2f(texcoords.getZ(), texcoords.getW()));
 
-			vertex3f(new Vector3d(x, y + ysize, z));
-			texture2f(new Vector2d(texcoords.getI(), texcoords.getJ()));
+			vertex3f(new Vector3f(x, y + ysize, z));
+			texture2f(new Vector2f(texcoords.getI(), texcoords.getJ()));
 
 		}
 		if (left) {
 			texcoords = block.getTexCoords(BlockFace.WEST);
 			// left face
-			vertex3f(new Vector3d(x + xsize, y, z + zsize));
-			texture2f(new Vector2d(texcoords.getK(), texcoords.getL()));
+			vertex3f(new Vector3f(x + xsize, y, z + zsize));
+			texture2f(new Vector2f(texcoords.getK(), texcoords.getL()));
 
-			vertex3f(new Vector3d(x + xsize, y, z));
-			texture2f(new Vector2d(texcoords.getX(), texcoords.getY()));
+			vertex3f(new Vector3f(x + xsize, y, z));
+			texture2f(new Vector2f(texcoords.getX(), texcoords.getY()));
 
-			vertex3f(new Vector3d(x + xsize, y + ysize, z));
-			texture2f(new Vector2d(texcoords.getZ(), texcoords.getW()));
+			vertex3f(new Vector3f(x + xsize, y + ysize, z));
+			texture2f(new Vector2f(texcoords.getZ(), texcoords.getW()));
 
-			vertex3f(new Vector3d(x + xsize, y + ysize, z + zsize));
-			texture2f(new Vector2d(texcoords.getI(), texcoords.getJ()));
+			vertex3f(new Vector3f(x + xsize, y + ysize, z + zsize));
+			texture2f(new Vector2f(texcoords.getI(), texcoords.getJ()));
 
 		}
 	}
@@ -393,6 +399,7 @@ public class Tessellator {
 		glDeleteQueries(occlusion);
 		pos.clear();
 		texcoords.clear();
+		indices.clear();
 		clearBuffers();
 	}
 

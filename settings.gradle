@@ -1,2 +1,9 @@
 rootProject.name = 'Voxel'
-include 'voxel-client', 'voxel-server', 'voxel-universal', 'voxel-launcher', 'voxel-assets', 'modules:api', 'modules:adus'
+include 'voxel-client', 'voxel-server', 'voxel-universal', 'voxel-launcher', 'voxel-assets', 'modules:api', 'modules:adus', 'lightengine-utils', 'lightengine-client', 'lightengine-server', 'lightengine-universal', 'lightengine-tools', 'lightengine-jbullet'
+
+project(':lightengine-utils').projectDir = new File('LightEngine/lightengine-utils')
+project(':lightengine-client').projectDir = new File('LightEngine/lightengine-client')
+project(':lightengine-server').projectDir = new File('LightEngine/lightengine-server')
+project(':lightengine-universal').projectDir = new File('LightEngine/lightengine-universal')
+project(':lightengine-tools').projectDir = new File('LightEngine/lightengine-tools')
+project(':lightengine-jbullet').projectDir = new File('LightEngine/lightengine-jbullet')

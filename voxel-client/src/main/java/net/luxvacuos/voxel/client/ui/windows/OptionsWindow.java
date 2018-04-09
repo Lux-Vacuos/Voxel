@@ -1,5 +1,5 @@
 /*
- * This file is part of Voxel
+ * This file is part of Light Engine
  * 
  * Copyright (C) 2016-2017 Lux Vacuos
  *
@@ -23,12 +23,13 @@ package net.luxvacuos.voxel.client.ui.windows;
 import static net.luxvacuos.lightengine.universal.core.subsystems.CoreSubsystem.LANG;
 import static net.luxvacuos.lightengine.universal.core.subsystems.CoreSubsystem.REGISTRY;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import net.luxvacuos.lightengine.client.core.subsystems.GraphicalSubsystem;
-import net.luxvacuos.lightengine.client.rendering.api.nanovg.WindowMessage;
-import net.luxvacuos.lightengine.client.rendering.api.nanovg.themes.Theme.ButtonStyle;
-import net.luxvacuos.lightengine.client.rendering.api.opengl.Renderer;
+import net.luxvacuos.lightengine.client.rendering.nanovg.WindowMessage;
+import net.luxvacuos.lightengine.client.rendering.nanovg.themes.Theme.ButtonStyle;
+import net.luxvacuos.lightengine.client.rendering.nanovg.themes.ThemeManager;
 import net.luxvacuos.lightengine.client.ui.Alignment;
 import net.luxvacuos.lightengine.client.ui.Button;
 import net.luxvacuos.lightengine.client.ui.ComponentWindow;
@@ -37,6 +38,7 @@ import net.luxvacuos.lightengine.client.ui.Direction;
 import net.luxvacuos.lightengine.client.ui.DropDown;
 import net.luxvacuos.lightengine.client.ui.EditBox;
 import net.luxvacuos.lightengine.client.ui.FlowLayout;
+import net.luxvacuos.lightengine.client.ui.Notification;
 import net.luxvacuos.lightengine.client.ui.ScrollArea;
 import net.luxvacuos.lightengine.client.ui.Slider;
 import net.luxvacuos.lightengine.client.ui.Text;
@@ -44,6 +46,7 @@ import net.luxvacuos.lightengine.client.ui.TitleBarButton;
 import net.luxvacuos.lightengine.client.ui.ToggleButton;
 import net.luxvacuos.lightengine.universal.core.TaskManager;
 import net.luxvacuos.lightengine.universal.core.subsystems.CoreSubsystem;
+import net.luxvacuos.lightengine.universal.core.subsystems.EventSubsystem;
 import net.luxvacuos.lightengine.universal.util.registry.Key;
 
 public class OptionsWindow extends ComponentWindow {
@@ -78,12 +81,12 @@ public class OptionsWindow extends ComponentWindow {
 		graphics.setAlignment(Alignment.RIGHT_BOTTOM);
 
 		graphics.setOnButtonPress(() -> {
-			TaskManager.addTask(() -> {
+			TaskManager.tm.addTaskRenderThread(() -> {
 				super.disposeApp();
 				graphicOptions();
 				super.initApp();
 				backButton.setOnButtonPress(() -> {
-					TaskManager.addTask(() -> {
+					TaskManager.tm.addTaskRenderThread(() -> {
 						super.disposeApp();
 						backButton.setEnabled(false);
 						mainMenu();
@@ -98,12 +101,12 @@ public class OptionsWindow extends ComponentWindow {
 		wm.setAlignment(Alignment.RIGHT_BOTTOM);
 
 		wm.setOnButtonPress(() -> {
-			TaskManager.addTask(() -> {
+			TaskManager.tm.addTaskRenderThread(() -> {
 				super.disposeApp();
 				wmOptions();
 				super.initApp();
 				backButton.setOnButtonPress(() -> {
-					TaskManager.addTask(() -> {
+					TaskManager.tm.addTaskRenderThread(() -> {
 						super.disposeApp();
 						backButton.setEnabled(false);
 						mainMenu();
@@ -144,9 +147,6 @@ public class OptionsWindow extends ComponentWindow {
 		EditBox shadowDistance = new EditBox(-50, 0, 180, 30, Integer.toString(
 				(int) REGISTRY.getRegistryItem(new Key("/Light Engine/Settings/Graphics/shadowsDrawDistance"))));
 
-		int distanceV = (int) REGISTRY.getRegistryItem(new Key("/Voxel/Settings/World/chunkRadius"));
-		Slider distanceSlider = new Slider(-56, 0, 200, 20, distanceV / 40f);
-
 		godraysButton.setWindowAlignment(Alignment.RIGHT);
 		godraysButton.setAlignment(Alignment.RIGHT);
 		shadowsButton.setWindowAlignment(Alignment.RIGHT);
@@ -172,11 +172,6 @@ public class OptionsWindow extends ComponentWindow {
 		shadowDistance.setWindowAlignment(Alignment.RIGHT);
 		shadowDistance.setAlignment(Alignment.RIGHT);
 
-		distanceSlider.setPrecision(40f);
-		distanceSlider.useCustomPrecision(true);
-		distanceSlider.setAlignment(Alignment.RIGHT);
-		distanceSlider.setWindowAlignment(Alignment.RIGHT);
-
 		shadowsButton.setOnButtonPress(
 				() -> REGISTRY.register(new Key("/Light Engine/Settings/Graphics/shadows"), shadowsButton.getStatus()));
 		dofButton.setOnButtonPress(
@@ -200,20 +195,12 @@ public class OptionsWindow extends ComponentWindow {
 		shadowResDropdown.setOnButtonPress(() -> {
 			REGISTRY.register(new Key("/Light Engine/Settings/Graphics/shadowsResolution"),
 					shadowResDropdown.getValue().intValue());
-			TaskManager.addTask(() -> Renderer.reloadShadowMaps());
+			EventSubsystem.triggerEvent("voxel.renderer.resetshadowmap");
 		});
 		shadowDistance.setOnUnselect(() -> {
 			REGISTRY.register(new Key("/Light Engine/Settings/Graphics/shadowsDrawDistance"),
 					Integer.parseInt(shadowDistance.getText()));
-		});
-
-		Text distanceText = new Text(LANG.getRegistryItem("voxel.optionswindow.graphics.distance") + ": " + distanceV,
-				20, 0);
-		distanceText.setWindowAlignment(Alignment.LEFT);
-		distanceSlider.setOnPress(() -> {
-			int val = (int) (distanceSlider.getPosition() * 40f);
-			REGISTRY.register(new Key("/Voxel/Settings/World/chunkRadius"), val);
-			distanceText.setText(LANG.getRegistryItem("voxel.optionswindow.graphics.distance") + ": " + val);
+			EventSubsystem.triggerEvent("voxel.renderer.resetshadowmatrix");
 		});
 
 		Text godText = new Text(LANG.getRegistryItem("voxel.optionswindow.graphics.volumetriclight"), 20, 0);
@@ -280,9 +267,6 @@ public class OptionsWindow extends ComponentWindow {
 		Container shadowDis = new Container(0, 0, w, 30);
 		shadowDis.setWindowAlignment(Alignment.LEFT_TOP);
 		shadowDis.setAlignment(Alignment.RIGHT_BOTTOM);
-		Container distance = new Container(0, 0, w, 30);
-		distance.setWindowAlignment(Alignment.LEFT_TOP);
-		distance.setAlignment(Alignment.RIGHT_BOTTOM);
 
 		godrays.addComponent(godraysButton);
 		godrays.addComponent(godText);
@@ -308,8 +292,6 @@ public class OptionsWindow extends ComponentWindow {
 		shadowRes.addComponent(shadowResText);
 		shadowDis.addComponent(shadowDistance);
 		shadowDis.addComponent(shadowDisText);
-		distance.addComponent(distanceSlider);
-		distance.addComponent(distanceText);
 
 		godrays.setResizeH(true);
 		shadows.setResizeH(true);
@@ -323,7 +305,6 @@ public class OptionsWindow extends ComponentWindow {
 		lens.setResizeH(true);
 		shadowRes.setResizeH(true);
 		shadowDis.setResizeH(true);
-		distance.setResizeH(true);
 
 		area.addComponent(godrays);
 		area.addComponent(shadows);
@@ -337,7 +318,6 @@ public class OptionsWindow extends ComponentWindow {
 		area.addComponent(lens);
 		area.addComponent(shadowRes);
 		area.addComponent(shadowDis);
-		area.addComponent(distance);
 
 		super.addComponent(area);
 
@@ -345,19 +325,19 @@ public class OptionsWindow extends ComponentWindow {
 	}
 
 	private void wmOptions() {
-		float border = (float) REGISTRY.getRegistryItem(new Key("/Light Engine/Settings/WindowManager/borderSize"));
+		int border = (int) REGISTRY.getRegistryItem(new Key("/Light Engine/Settings/WindowManager/borderSize"));
 		Text wmBorderText = new Text(LANG.getRegistryItem("voxel.optionswindow.wm.border") + ": " + border, 20, 0);
 		wmBorderText.setWindowAlignment(Alignment.LEFT);
-		float scroll = (float) REGISTRY.getRegistryItem(new Key("/Light Engine/Settings/WindowManager/scrollBarSize"));
+		int scroll = (int) REGISTRY.getRegistryItem(new Key("/Light Engine/Settings/WindowManager/scrollBarSize"));
 		Text wmScrollText = new Text(LANG.getRegistryItem("voxel.optionswindow.wm.scrollsize") + ": " + scroll, 20, 0);
 		wmScrollText.setWindowAlignment(Alignment.LEFT);
-		float title = (float) REGISTRY.getRegistryItem(new Key("/Light Engine/Settings/WindowManager/titleBarHeight"));
+		int title = (int) REGISTRY.getRegistryItem(new Key("/Light Engine/Settings/WindowManager/titleBarHeight"));
 		Text wmTitleText = new Text(LANG.getRegistryItem("voxel.optionswindow.wm.titlebarsize") + ": " + title, 20, 0);
 		wmTitleText.setWindowAlignment(Alignment.LEFT);
-		Text titleBorderText = new Text(LANG.getRegistryItem("voxel.optionswindow.wm.titlebarborder"), 20, 0);
-		titleBorderText.setWindowAlignment(Alignment.LEFT);
 		Text compositorText = new Text(LANG.getRegistryItem("voxel.optionswindow.wm.compositor"), 20, 0);
 		compositorText.setWindowAlignment(Alignment.LEFT);
+		Text themeText = new Text(LANG.getRegistryItem("voxel.optionswindow.wm.theme"), 20, 0);
+		themeText.setWindowAlignment(Alignment.LEFT);
 
 		Slider wmBorder = new Slider(-56, 0, 200, 20, border / 40f);
 		wmBorder.setPrecision(40f);
@@ -368,6 +348,11 @@ public class OptionsWindow extends ComponentWindow {
 		Slider wmTitle = new Slider(-56, 0, 200, 20, title / 40f);
 		wmTitle.setPrecision(40f);
 		wmTitle.useCustomPrecision(true);
+		ToggleButton compositorButton = new ToggleButton(-50, 0, 80, 30,
+				(boolean) REGISTRY.getRegistryItem(new Key("/Light Engine/Settings/WindowManager/compositor")));
+		DropDown<String> themeDropdown = new DropDown<String>(-50, 0, 180, 30,
+				(String) REGISTRY.getRegistryItem(new Key("/Light Engine/Settings/WindowManager/theme")),
+				new ArrayList<>(ThemeManager.getThemes().keySet()));
 
 		wmBorder.setAlignment(Alignment.RIGHT);
 		wmBorder.setWindowAlignment(Alignment.RIGHT);
@@ -375,42 +360,39 @@ public class OptionsWindow extends ComponentWindow {
 		wmScroll.setWindowAlignment(Alignment.RIGHT);
 		wmTitle.setAlignment(Alignment.RIGHT);
 		wmTitle.setWindowAlignment(Alignment.RIGHT);
+		compositorButton.setWindowAlignment(Alignment.RIGHT);
+		compositorButton.setAlignment(Alignment.RIGHT);
+		themeDropdown.setWindowAlignment(Alignment.RIGHT);
+		themeDropdown.setAlignment(Alignment.RIGHT);
 
 		wmBorder.setOnPress(() -> {
-			float val = wmBorder.getPosition() * 40f;
+			int val = (int) (wmBorder.getPosition() * 40f);
 			REGISTRY.register(new Key("/Light Engine/Settings/WindowManager/borderSize"), val);
 			wmBorderText.setText(LANG.getRegistryItem("voxel.optionswindow.wm.border") + ": " + val);
+			GraphicalSubsystem.getWindowManager().notifyAllWindows(WindowMessage.WM_COMPOSITOR_RELOAD, null);
 		});
 		wmScroll.setOnPress(() -> {
-			float val = wmScroll.getPosition() * 40f;
+			int val = (int) (wmScroll.getPosition() * 40f);
 			REGISTRY.register(new Key("/Light Engine/Settings/WindowManager/scrollBarSize"), val);
 			wmScrollText.setText(LANG.getRegistryItem("voxel.optionswindow.wm.scrollsize") + ": " + val);
+			GraphicalSubsystem.getWindowManager().notifyAllWindows(WindowMessage.WM_COMPOSITOR_RELOAD, null);
 		});
 		wmTitle.setOnPress(() -> {
-			float val = wmTitle.getPosition() * 40f;
+			int val = (int) (wmTitle.getPosition() * 40f);
 			REGISTRY.register(new Key("/Light Engine/Settings/WindowManager/titleBarHeight"), val);
 			wmTitleText.setText(LANG.getRegistryItem("voxel.optionswindow.wm.titlebarsize") + ": " + val);
+			GraphicalSubsystem.getWindowManager().notifyAllWindows(WindowMessage.WM_COMPOSITOR_RELOAD, null);
 		});
-
-		ToggleButton titleBorderButton = new ToggleButton(-50, 0, 80, 30,
-				(boolean) REGISTRY.getRegistryItem(new Key("/Light Engine/Settings/WindowManager/titleBarBorder")));
-		ToggleButton compositorButton = new ToggleButton(-50, 0, 80, 30,
-				(boolean) REGISTRY.getRegistryItem(new Key("/Light Engine/Settings/WindowManager/compositor")));
-
-		titleBorderButton.setOnButtonPress(() -> REGISTRY.register(
-				new Key("/Light Engine/Settings/WindowManager/titleBarBorder"), titleBorderButton.getStatus()));
 		compositorButton.setOnButtonPress(() -> {
-			REGISTRY.register(new Key("/Light Engine/Settings/WindowManager/compositor"), compositorButton.getStatus());
 			if (compositorButton.getStatus())
 				GraphicalSubsystem.getWindowManager().enableCompositor();
 			else
 				GraphicalSubsystem.getWindowManager().disableCompositor();
 		});
-
-		titleBorderButton.setWindowAlignment(Alignment.RIGHT);
-		titleBorderButton.setAlignment(Alignment.RIGHT);
-		compositorButton.setWindowAlignment(Alignment.RIGHT);
-		compositorButton.setAlignment(Alignment.RIGHT);
+		themeDropdown.setOnButtonPress(() -> {
+			REGISTRY.register(new Key("/Light Engine/Settings/WindowManager/theme"), themeDropdown.getValue());
+			ThemeManager.setTheme(themeDropdown.getValue());
+		});
 
 		ScrollArea area = new ScrollArea(0, 0, w, h, 0, 0);
 		area.setLayout(new FlowLayout(Direction.DOWN, 10, 10));
@@ -424,12 +406,12 @@ public class OptionsWindow extends ComponentWindow {
 		Container titleC = new Container(0, 0, w, 20);
 		titleC.setWindowAlignment(Alignment.LEFT_TOP);
 		titleC.setAlignment(Alignment.RIGHT_BOTTOM);
-		Container titleBorder = new Container(0, 0, w, 30);
-		titleBorder.setWindowAlignment(Alignment.LEFT_TOP);
-		titleBorder.setAlignment(Alignment.RIGHT_BOTTOM);
 		Container compositor = new Container(0, 0, w, 30);
 		compositor.setWindowAlignment(Alignment.LEFT_TOP);
 		compositor.setAlignment(Alignment.RIGHT_BOTTOM);
+		Container theme = new Container(0, 0, w, 30);
+		theme.setWindowAlignment(Alignment.LEFT_TOP);
+		theme.setAlignment(Alignment.RIGHT_BOTTOM);
 
 		borderC.addComponent(wmBorderText);
 		borderC.addComponent(wmBorder);
@@ -437,22 +419,22 @@ public class OptionsWindow extends ComponentWindow {
 		scrollC.addComponent(wmScroll);
 		titleC.addComponent(wmTitleText);
 		titleC.addComponent(wmTitle);
-		titleBorder.addComponent(titleBorderButton);
-		titleBorder.addComponent(titleBorderText);
 		compositor.addComponent(compositorButton);
 		compositor.addComponent(compositorText);
+		theme.addComponent(themeDropdown);
+		theme.addComponent(themeText);
 
 		borderC.setResizeH(true);
 		scrollC.setResizeH(true);
 		titleC.setResizeH(true);
-		titleBorder.setResizeH(true);
 		compositor.setResizeH(true);
+		theme.setResizeH(true);
 
 		area.addComponent(borderC);
 		area.addComponent(scrollC);
 		area.addComponent(titleC);
-		area.addComponent(titleBorder);
 		area.addComponent(compositor);
+		area.addComponent(theme);
 
 		super.addComponent(area);
 
@@ -461,8 +443,12 @@ public class OptionsWindow extends ComponentWindow {
 
 	@Override
 	public void processWindowMessage(int message, Object param) {
-		if (message == WindowMessage.WM_CLOSE)
+		if (message == WindowMessage.WM_CLOSE) {
 			CoreSubsystem.REGISTRY.save();
+			GraphicalSubsystem.getWindowManager().getShell().getNotificationsWindow().notifyWindow(
+					WindowMessage.WM_SHELL_NOTIFICATION_ADD,
+					new Notification("Settings Saved", "Settings has been saved correctly."));
+		}
 		super.processWindowMessage(message, param);
 	}
 

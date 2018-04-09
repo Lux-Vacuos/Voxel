@@ -1,7 +1,7 @@
 /*
  * This file is part of Voxel
  * 
- * Copyright (C) 2016-2017 Lux Vacuos
+ * Copyright (C) 2016-2018 Lux Vacuos
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,12 +24,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Future;
 
+import org.joml.Vector3f;
+
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 
 import net.luxvacuos.igl.Logger;
-import net.luxvacuos.igl.vector.Vector3d;
 import net.luxvacuos.lightengine.universal.util.Pair;
 import net.luxvacuos.voxel.universal.world.block.Blocks;
 import net.luxvacuos.voxel.universal.world.block.IBlock;
@@ -42,7 +43,7 @@ public class FutureChunk implements IChunk {
 	private IDimension dim;
 	private ChunkData data;
 	private final Future<ChunkData> futureData;
-	private List<Pair<Vector3d, IBlock>> deferredBlocks;
+	private List<Pair<Vector3f, IBlock>> deferredBlocks;
 	private BoundingBox aabb = new BoundingBox(new Vector3(0, 0, 0), new Vector3(16, 256, 16));
 
 	public FutureChunk(IDimension dim, ChunkNode node, Future<ChunkData> future) {
@@ -50,7 +51,7 @@ public class FutureChunk implements IChunk {
 		this.node = node;
 		this.data = null;
 		this.futureData = future;
-		this.deferredBlocks = new ArrayList<Pair<Vector3d, IBlock>>();
+		this.deferredBlocks = new ArrayList<Pair<Vector3f, IBlock>>();
 	}
 
 	@Override
@@ -85,8 +86,8 @@ public class FutureChunk implements IChunk {
 		if (this.isDone()) {
 			this.data.setBlockAt(x, y, z, block);
 		} else {
-			Vector3d blockPos = new Vector3d(x, y, z);
-			this.deferredBlocks.add(new Pair<Vector3d, IBlock>(blockPos, block));
+			Vector3f blockPos = new Vector3f(x, y, z);
+			this.deferredBlocks.add(new Pair<Vector3f, IBlock>(blockPos, block));
 		}
 	}
 
@@ -136,9 +137,9 @@ public class FutureChunk implements IChunk {
 			try {
 				this.data = this.futureData.get();
 				if (!this.deferredBlocks.isEmpty()) {
-					Vector3d blockPos;
+					Vector3f blockPos;
 					IBlock block;
-					for (Pair<Vector3d, IBlock> pair : this.deferredBlocks) {
+					for (Pair<Vector3f, IBlock> pair : this.deferredBlocks) {
 						blockPos = pair.getFirst();
 						block = pair.getSecond();
 
@@ -153,6 +154,19 @@ public class FutureChunk implements IChunk {
 				throw new RuntimeException(e);
 			}
 		}
+	}
+	
+
+	@Override
+	public void beforeUpdate(float delta) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void afterUpdate(float delta) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override

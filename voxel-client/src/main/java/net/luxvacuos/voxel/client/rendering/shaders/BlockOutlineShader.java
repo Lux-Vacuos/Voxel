@@ -1,7 +1,7 @@
 /*
  * This file is part of Voxel
  * 
- * Copyright (C) 2016-2017 Lux Vacuos
+ * Copyright (C) 2016-2018 Lux Vacuos
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,14 +18,15 @@
  * 
  */
 
-package net.luxvacuos.voxel.client.rendering.api.opengl.shaders;
+package net.luxvacuos.voxel.client.rendering.shaders;
 
-import net.luxvacuos.igl.vector.Matrix4d;
-import net.luxvacuos.igl.vector.Vector3f;
-import net.luxvacuos.lightengine.client.rendering.api.opengl.shaders.ShaderProgram;
-import net.luxvacuos.lightengine.client.rendering.api.opengl.shaders.data.Attribute;
-import net.luxvacuos.lightengine.client.rendering.api.opengl.shaders.data.UniformMatrix;
-import net.luxvacuos.lightengine.client.rendering.api.opengl.shaders.data.UniformVec3;
+import org.joml.Matrix4f;
+import org.joml.Vector3f;
+
+import net.luxvacuos.lightengine.client.rendering.shaders.ShaderProgram;
+import net.luxvacuos.lightengine.client.rendering.shaders.data.Attribute;
+import net.luxvacuos.lightengine.client.rendering.shaders.data.UniformMatrix;
+import net.luxvacuos.lightengine.client.rendering.shaders.data.UniformVec3;
 import net.luxvacuos.voxel.client.core.ClientVariables;
 
 public class BlockOutlineShader extends ShaderProgram {
@@ -45,15 +46,15 @@ public class BlockOutlineShader extends ShaderProgram {
 		this.color.loadVec3(color);
 	}
 
-	public void loadViewMatrix(Matrix4d cameraViewMatrix) {
+	public void loadViewMatrix(Matrix4f cameraViewMatrix) {
 		viewMatrix.loadMatrix(cameraViewMatrix);
 	}
 
-	public void loadProjectionMatrix(Matrix4d projection) {
+	public void loadProjectionMatrix(Matrix4f projection) {
 		projectionMatrix.loadMatrix(projection);
 	}
 
-	public void loadTransformationMatrix(Matrix4d matrix) {
+	public void loadTransformationMatrix(Matrix4f matrix) {
 		transformationMatrix.loadMatrix(matrix);
 	}
 

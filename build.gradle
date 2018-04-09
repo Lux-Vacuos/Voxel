@@ -1,99 +1,10 @@
 subprojects {
-	apply plugin: "eclipse"
-	apply plugin: "idea"
-	apply plugin: "java"
+	project.ext.globalVersion = "0.0.10"
 	
-	sourceCompatibility = 1.8
-
 	repositories {
 		mavenCentral()
 		maven { url "https://oss.sonatype.org/content/repositories/releases/" }
-		maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
 	}
 }
 
-project(":voxel-client") {
-
-	project.ext.lwjglVersion = "3.1.2"
-
-	dependencies {
-		compile project(':voxel-universal')
-		compile project(':voxel-assets')
-		compile 'de.jarnbjo:j-ogg-all:1.0.0'
-		compile files('lib/lightengine-client-0.0.10-develop-a3c0ca8.jar')
-
-		// LWJGL dependencies
-		compile "org.lwjgl:lwjgl:${lwjglVersion}"
-		compile "org.lwjgl:lwjgl-glfw:${lwjglVersion}"
-		compile "org.lwjgl:lwjgl-jemalloc:${lwjglVersion}"
-		compile "org.lwjgl:lwjgl-nanovg:${lwjglVersion}"
-		compile "org.lwjgl:lwjgl-openal:${lwjglVersion}"
-		compile "org.lwjgl:lwjgl-opengl:${lwjglVersion}"
-		compile "org.lwjgl:lwjgl-stb:${lwjglVersion}"
-		compile "org.lwjgl:lwjgl-vulkan:${lwjglVersion}"
-		compile "org.lwjgl:lwjgl-assimp:${lwjglVersion}"
-		// LWJGL natives Windows
-		runtime "org.lwjgl:lwjgl:${lwjglVersion}:natives-windows"
-		runtime "org.lwjgl:lwjgl-opengl:${lwjglVersion}:natives-windows"
-		runtime "org.lwjgl:lwjgl-glfw:${lwjglVersion}:natives-windows"
-		runtime "org.lwjgl:lwjgl-jemalloc:${lwjglVersion}:natives-windows"
-		runtime "org.lwjgl:lwjgl-nanovg:${lwjglVersion}:natives-windows"
-		runtime "org.lwjgl:lwjgl-openal:${lwjglVersion}:natives-windows"
-		runtime "org.lwjgl:lwjgl-stb:${lwjglVersion}:natives-windows"
-		runtime "org.lwjgl:lwjgl-assimp:${lwjglVersion}:natives-windows"
-		// LWJGL Natives Linux
-		runtime "org.lwjgl:lwjgl:${lwjglVersion}:natives-linux"
-		runtime "org.lwjgl:lwjgl-opengl:${lwjglVersion}:natives-linux"
-		runtime "org.lwjgl:lwjgl-glfw:${lwjglVersion}:natives-linux"
-		runtime "org.lwjgl:lwjgl-jemalloc:${lwjglVersion}:natives-linux"
-		runtime "org.lwjgl:lwjgl-nanovg:${lwjglVersion}:natives-linux"
-		runtime "org.lwjgl:lwjgl-openal:${lwjglVersion}:natives-linux"
-		runtime "org.lwjgl:lwjgl-stb:${lwjglVersion}:natives-linux"
-		runtime "org.lwjgl:lwjgl-assimp:${lwjglVersion}:natives-linux"
-		// LWJGL Natives OSX
-		runtime "org.lwjgl:lwjgl:${lwjglVersion}:natives-macos"
-		runtime "org.lwjgl:lwjgl-opengl:${lwjglVersion}:natives-macos"
-		runtime "org.lwjgl:lwjgl-glfw:${lwjglVersion}:natives-macos"
-		runtime "org.lwjgl:lwjgl-jemalloc:${lwjglVersion}:natives-macos"
-		runtime "org.lwjgl:lwjgl-nanovg:${lwjglVersion}:natives-macos"
-		runtime "org.lwjgl:lwjgl-openal:${lwjglVersion}:natives-macos"
-		runtime "org.lwjgl:lwjgl-stb:${lwjglVersion}:natives-macos"
-		runtime "org.lwjgl:lwjgl-assimp:${lwjglVersion}:natives-macos"
-
-		testCompile group: 'junit', name: 'junit', version: '4.12'
-	}
-}
-
-project(":voxel-server") {
-	dependencies {
-		compile project(':voxel-universal')
-		compile project(':voxel-assets')
-		compile files('lib/lightengine-server-0.0.10-develop-a3c0ca8.jar')
-		testCompile group: 'junit', name: 'junit', version: '4.12'
-	}
-}
-
-project(":voxel-launcher") {
-	dependencies {
-		compile 'log4j:log4j:1.2.17'
-		compile 'com.google.code.gson:gson:2.8.0'
-		compile project(':modules:adus')
-		compile project(':modules:api')
-		testCompile group: 'junit', name: 'junit', version: '4.12'
-	}
-}
-
-project(":voxel-universal") {
-	dependencies {
-		compile 'org.codehaus.groovy:groovy:2.4.7'
-		compile 'org.codehaus.groovy:groovy-jsr223:2.4.7'
-		compile 'io.netty:netty-all:4.1.9.Final'
-		compile 'log4j:log4j:1.2.17'
-		compile files('lib/lightengine-universal-0.0.10-develop-a3c0ca8.jar')
-		compile files('lib/lightengine-utils-0.0.4-develop-a3c0ca8.jar')
-		compile project(':modules:api')
-		testCompile group: 'junit', name: 'junit', version: '4.12'
-	}
-}
-
-task wrapper(type: Wrapper) { gradleVersion = '4.1' }
+task wrapper(type: Wrapper) { gradleVersion = '4.6' }

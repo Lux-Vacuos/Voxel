@@ -1,7 +1,8 @@
+
 /*
  * This file is part of Voxel
  * 
- * Copyright (C) 2016-2017 Lux Vacuos
+ * Copyright (C) 2016-2018 Lux Vacuos
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,37 +19,24 @@
  * 
  */
 
-package net.luxvacuos.voxel.server.bootstrap;
-
+import net.luxvacuos.lightengine.server.bootstrap.Bootstrap;
 import net.luxvacuos.lightengine.universal.core.GlobalVariables;
+import net.luxvacuos.lightengine.universal.core.IEngineLoader;
 import net.luxvacuos.lightengine.universal.core.TaskManager;
 import net.luxvacuos.lightengine.universal.core.states.StateMachine;
 import net.luxvacuos.voxel.server.core.states.MPWorldState;
 
-public class Bootstrap extends net.luxvacuos.lightengine.server.bootstrap.Bootstrap {
-
-	public Bootstrap(String[] args) {
-		super(args);
-	}
+public class EngineLoader implements IEngineLoader {
 
 	@Override
-	public void parseArgs(String[] args) {
-		for (int i = 0; i < args.length; i++) {
-			switch (args[i]) {
-			default:
-				if (args[i].startsWith("-")) {
-					throw new IllegalArgumentException("Unknown argument: " + args[i].substring(1));
-				} else {
-					throw new IllegalArgumentException("Unknown token: " + args[i]);
-				}
-			}
-		}
+	public void loadExternal() {
+		TaskManager.tm.addTaskMainThread(() -> StateMachine.registerState(new MPWorldState()));
 	}
 
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) {
 		GlobalVariables.PROJECT = "Voxel";
-		TaskManager.addTask(() -> StateMachine.registerState(new MPWorldState()));
-		new Bootstrap(args);
+		// TODO: Move this
+		new Bootstrap(args, new EngineLoader());
 	}
 
 }

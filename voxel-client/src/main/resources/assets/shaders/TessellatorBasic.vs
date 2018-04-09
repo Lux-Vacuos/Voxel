@@ -1,7 +1,7 @@
 //
 // This file is part of Voxel
 // 
-// Copyright (C) 2016-2017 Lux Vacuos
+// Copyright (C) 2016-2018 Lux Vacuos
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -17,8 +17,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 //
-
-#version 330 core
 
 in vec3 position;
 in vec2 textureCoords;

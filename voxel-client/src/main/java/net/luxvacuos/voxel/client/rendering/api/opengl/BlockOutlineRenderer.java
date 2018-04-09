@@ -1,7 +1,7 @@
 /*
  * This file is part of Voxel
  * 
- * Copyright (C) 2016-2017 Lux Vacuos
+ * Copyright (C) 2016-2018 Lux Vacuos
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -43,17 +43,15 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.joml.Vector3f;
 import org.lwjgl.BufferUtils;
 
 import com.badlogic.gdx.math.collision.BoundingBox;
 
-import net.luxvacuos.igl.vector.Vector3d;
-import net.luxvacuos.igl.vector.Vector3f;
 import net.luxvacuos.lightengine.client.ecs.entities.CameraEntity;
-import net.luxvacuos.lightengine.client.resources.ResourceLoader;
 import net.luxvacuos.lightengine.client.util.Maths;
 import net.luxvacuos.lightengine.universal.resources.IDisposable;
-import net.luxvacuos.voxel.client.rendering.api.opengl.shaders.BlockOutlineShader;
+import net.luxvacuos.voxel.client.rendering.shaders.BlockOutlineShader;
 import net.luxvacuos.voxel.universal.world.block.IBlock;
 import net.luxvacuos.voxel.universal.world.utils.BlockNode;
 
@@ -63,13 +61,13 @@ public class BlockOutlineRenderer implements IDisposable {
 
 	private ByteBuffer buffer0, ibo;
 
-	private List<Vector3d> pos;
+	private List<Vector3f> pos;
 
 	private BlockOutlineShader shader;
 	private Vector3f color;
-	private Vector3d position = new Vector3d();
+	private Vector3f position = new Vector3f();
 
-	public BlockOutlineRenderer(ResourceLoader loader) {
+	public BlockOutlineRenderer() {
 		shader = new BlockOutlineShader();
 		color = new Vector3f(0.8f, 0.8f, 0.8f);
 		pos = new ArrayList<>();
@@ -92,7 +90,7 @@ public class BlockOutlineRenderer implements IDisposable {
 		pos.clear();
 	}
 
-	public void vertex3f(Vector3d pos) {
+	public void vertex3f(Vector3f pos) {
 		this.pos.add(pos);
 	}
 
@@ -101,7 +99,7 @@ public class BlockOutlineRenderer implements IDisposable {
 		pos.clear();
 	}
 
-	public void loadData(List<Vector3d> pos) {
+	public void loadData(List<Vector3f> pos) {
 		buffer0 = BufferUtils.createByteBuffer((pos.size() * 3) * 4);
 		for (int i = 0; i < pos.size(); i++) {
 			buffer0.putFloat((float) pos.get(i).x);
@@ -144,36 +142,37 @@ public class BlockOutlineRenderer implements IDisposable {
 
 	public void generateCube(IBlock block) {
 		BoundingBox box = block.getBoundingBox(new BlockNode(0, 0, 0));
-		double x = box.min.x - 0.5;
-		double y = box.min.y - 0.5;
-		double z = box.min.z - 0.5;
-		double xsize = box.max.x;
-		double ysize = box.max.y;
-		double zsize = box.max.z;
-		vertex3f(new Vector3d(x, y + ysize, z + zsize));
-		vertex3f(new Vector3d(x + xsize, y + ysize, z + zsize));
-		vertex3f(new Vector3d(x + xsize, y + ysize, z));
-		vertex3f(new Vector3d(x, y + ysize, z));
+		// TODO: Casts
+		float x = (float) (box.min.x - 0.5);
+		float y = (float) (box.min.y - 0.5);
+		float z = (float) (box.min.z - 0.5);
+		float xsize = (float) box.max.x;
+		float ysize = (float) box.max.y;
+		float zsize = (float) box.max.z;
+		vertex3f(new Vector3f(x, y + ysize, z + zsize));
+		vertex3f(new Vector3f(x + xsize, y + ysize, z + zsize));
+		vertex3f(new Vector3f(x + xsize, y + ysize, z));
+		vertex3f(new Vector3f(x, y + ysize, z));
 
-		vertex3f(new Vector3d(x, y, z + zsize));
-		vertex3f(new Vector3d(x + xsize, y, z + zsize));
-		vertex3f(new Vector3d(x + xsize, y + ysize, z + zsize));
-		vertex3f(new Vector3d(x, y + ysize, z + zsize));
+		vertex3f(new Vector3f(x, y, z + zsize));
+		vertex3f(new Vector3f(x + xsize, y, z + zsize));
+		vertex3f(new Vector3f(x + xsize, y + ysize, z + zsize));
+		vertex3f(new Vector3f(x, y + ysize, z + zsize));
 
-		vertex3f(new Vector3d(x, y, z + zsize));
-		vertex3f(new Vector3d(x, y, z));
-		vertex3f(new Vector3d(x + xsize, y, z));
-		vertex3f(new Vector3d(x + xsize, y, z + zsize));
+		vertex3f(new Vector3f(x, y, z + zsize));
+		vertex3f(new Vector3f(x, y, z));
+		vertex3f(new Vector3f(x + xsize, y, z));
+		vertex3f(new Vector3f(x + xsize, y, z + zsize));
 
-		vertex3f(new Vector3d(x, y, z));
-		vertex3f(new Vector3d(x, y, z + zsize));
-		vertex3f(new Vector3d(x, y + ysize, z + zsize));
-		vertex3f(new Vector3d(x, y + ysize, z));
+		vertex3f(new Vector3f(x, y, z));
+		vertex3f(new Vector3f(x, y, z + zsize));
+		vertex3f(new Vector3f(x, y + ysize, z + zsize));
+		vertex3f(new Vector3f(x, y + ysize, z));
 
-		vertex3f(new Vector3d(x, y + ysize, z));
-		vertex3f(new Vector3d(x + xsize, y + ysize, z));
-		vertex3f(new Vector3d(x + xsize, y, z));
-		vertex3f(new Vector3d(x, y, z));
+		vertex3f(new Vector3f(x, y + ysize, z));
+		vertex3f(new Vector3f(x + xsize, y + ysize, z));
+		vertex3f(new Vector3f(x + xsize, y, z));
+		vertex3f(new Vector3f(x, y, z));
 
 	}
 
@@ -189,7 +188,7 @@ public class BlockOutlineRenderer implements IDisposable {
 		shader.loadColor(color);
 		shader.loadProjectionMatrix(camera.getProjectionMatrix());
 		shader.loadViewMatrix(camera.getViewMatrix());
-		shader.loadTransformationMatrix(Maths.createTransformationMatrix(position, 0, 0, 0, 1.01));
+		shader.loadTransformationMatrix(Maths.createTransformationMatrix(position, 0, 0, 0, 1.01f));
 		glBindVertexArray(vaoID);
 		glEnableVertexAttribArray(0);
 		glDrawElements(GL_LINE_STRIP, indicesCounter, GL_UNSIGNED_INT, 0);
@@ -215,7 +214,7 @@ public class BlockOutlineRenderer implements IDisposable {
 		return color;
 	}
 
-	public Vector3d getPosition() {
+	public Vector3f getPosition() {
 		return position;
 	}
 

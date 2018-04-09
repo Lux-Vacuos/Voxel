@@ -1,7 +1,7 @@
 /*
  * This file is part of Voxel
  * 
- * Copyright (C) 2016-2017 Lux Vacuos
+ * Copyright (C) 2016-2018 Lux Vacuos
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,23 +20,24 @@
 
 package net.luxvacuos.voxel.client.ui;
 
-import static org.lwjgl.nanovg.NanoVG.*;
+import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_LEFT;
+import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_TOP;
 
-import net.luxvacuos.lightengine.client.rendering.api.glfw.Window;
+import net.luxvacuos.lightengine.client.rendering.glfw.Window;
 import net.luxvacuos.lightengine.client.ui.Alignment;
 import net.luxvacuos.lightengine.client.ui.Container;
 import net.luxvacuos.lightengine.client.ui.Text;
 import net.luxvacuos.voxel.client.core.ClientVariables;
 
 public class WorldElement extends Container {
-	
+
 	private String name;
 
 	public WorldElement(float w, float h, String name) {
 		super(0, 0, w, h);
 		this.name = name;
 	}
-	
+
 	@Override
 	public void init(Window window) {
 		super.init(window);

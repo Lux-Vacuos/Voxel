@@ -1,7 +1,7 @@
 /*
  * This file is part of Voxel
  * 
- * Copyright (C) 2016-2017 Lux Vacuos
+ * Copyright (C) 2016-2018 Lux Vacuos
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,13 +20,13 @@
 
 package net.luxvacuos.voxel.server.core.subsystems;
 
-import net.luxvacuos.lightengine.universal.core.subsystems.ISubsystem;
+import net.luxvacuos.lightengine.universal.core.subsystems.UniversalSubsystem;
 import net.luxvacuos.voxel.universal.material.BlockMaterial;
 import net.luxvacuos.voxel.universal.material.MaterialModder;
 import net.luxvacuos.voxel.universal.world.block.BlockBase;
 import net.luxvacuos.voxel.universal.world.block.Blocks;
 
-public class WorldSubsystem implements ISubsystem {
+public class WorldSubsystem extends UniversalSubsystem {
 
 	@Override
 	public void init() {
@@ -50,22 +50,6 @@ public class WorldSubsystem implements ISubsystem {
 				.affectedByGravity(true).liquid().done();
 		Blocks.register(new BlockBase(waterMat));
 		Blocks.finishRegister();
-	}
-
-	@Override
-	public void restart() {
-	}
-
-	@Override
-	public void render(float alpga) {
-	}
-
-	@Override
-	public void update(float delta) {
-	}
-
-	@Override
-	public void dispose() {
 	}
 
 }

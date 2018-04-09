@@ -1,7 +1,7 @@
 /*
  * This file is part of Voxel
  * 
- * Copyright (C) 2016-2017 Lux Vacuos
+ * Copyright (C) 2016-2018 Lux Vacuos
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,14 +20,14 @@
 
 package net.luxvacuos.voxel.client.rendering.world.chunk;
 
-import net.luxvacuos.lightengine.client.core.ClientWorldSimulation;
 import net.luxvacuos.lightengine.client.ecs.entities.CameraEntity;
+import net.luxvacuos.lightengine.universal.core.IWorldSimulation;
 import net.luxvacuos.voxel.client.rendering.api.opengl.Tessellator;
 import net.luxvacuos.voxel.universal.world.chunk.IChunk;
 
 public interface IRenderChunk extends IChunk {
 
-	public void render(CameraEntity camera, ClientWorldSimulation clientWorldSimulation);
+	public void render(CameraEntity camera, IWorldSimulation clientWorldSimulation);
 
 	public void renderShadow(CameraEntity sunCamera);
 

@@ -1,7 +1,7 @@
 /*
  * This file is part of Voxel
  * 
- * Copyright (C) 2016-2017 Lux Vacuos
+ * Copyright (C) 2016-2018 Lux Vacuos
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,22 +20,17 @@
 
 package net.luxvacuos.voxel.universal.ecs.entities;
 
-import net.luxvacuos.igl.vector.Vector3d;
-import net.luxvacuos.lightengine.universal.ecs.components.Position;
-import net.luxvacuos.lightengine.universal.ecs.entities.LEEntity;
-import net.luxvacuos.voxel.universal.ecs.Components;
+import org.joml.Vector3f;
+
+import net.luxvacuos.lightengine.universal.ecs.entities.BasicEntity;
 import net.luxvacuos.voxel.universal.ecs.components.ChunkLoader;
 
-public class ChunkLoaderEntity extends LEEntity {
+public class ChunkLoaderEntity extends BasicEntity {
 
-	public ChunkLoaderEntity(Vector3d position) {
+	public ChunkLoaderEntity(Vector3f position) {
 		super("loader");
-		super.add(new Position(position));
+		super.setPosition(position);
 		super.add(new ChunkLoader());
-	}
-
-	public void setPosition(Vector3d position) {
-		Components.POSITION.get(this).set(position);
 	}
 
 }

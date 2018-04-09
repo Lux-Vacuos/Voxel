@@ -1,7 +1,7 @@
 /*
  * This file is part of Voxel
  * 
- * Copyright (C) 2016-2017 Lux Vacuos
+ * Copyright (C) 2016-2018 Lux Vacuos
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,7 +27,11 @@ import com.hackhalo2.nbt.tags.TagCompound;
 
 import net.luxvacuos.lightengine.client.core.ClientWorldSimulation;
 import net.luxvacuos.lightengine.client.ecs.entities.CameraEntity;
-import net.luxvacuos.lightengine.client.rendering.api.opengl.Frustum;
+import net.luxvacuos.lightengine.client.ecs.entities.Sun;
+import net.luxvacuos.lightengine.client.network.IRenderData;
+import net.luxvacuos.lightengine.client.rendering.opengl.Frustum;
+import net.luxvacuos.lightengine.universal.core.IWorldSimulation;
+import net.luxvacuos.lightengine.universal.ecs.entities.BasicEntity;
 import net.luxvacuos.voxel.client.rendering.world.dimension.IRenderDimension;
 import net.luxvacuos.voxel.client.world.chunks.ClientChunkManager;
 import net.luxvacuos.voxel.client.world.chunks.RenderChunk;
@@ -40,12 +44,16 @@ import net.luxvacuos.voxel.universal.world.chunk.generator.ChunkTerrainGenerator
 import net.luxvacuos.voxel.universal.world.chunk.generator.SimplexNoise;
 import net.luxvacuos.voxel.universal.world.dimension.Dimension;
 
-public class RenderDimension extends Dimension implements IRenderDimension {
+public class RenderDimension extends Dimension implements IRenderDimension, IRenderData {
 
 	private int renderedChunks = 0;
+	protected BasicEntity player;
+	protected CameraEntity camera;
+	protected Sun sun;
 
 	public RenderDimension(IWorld world, TagCompound data, int id) {
 		super(world, data, id);
+		sun = new Sun();
 	}
 
 	@Override
@@ -59,6 +67,12 @@ public class RenderDimension extends Dimension implements IRenderDimension {
 	@Override
 	protected void setupWorldSimulator() {
 		this.worldSimulation = new ClientWorldSimulation(6500);
+	}
+
+	@Override
+	public void update(float delta) {
+		super.update(delta);
+		this.sun.update(worldSimulation.getRotation(), delta);
 	}
 
 	@Override
@@ -94,7 +108,7 @@ public class RenderDimension extends Dimension implements IRenderDimension {
 						((ClientChunkManager) this.chunkManager).generateChunkMesh(rChunk);
 
 					this.renderedChunks++;
-					rChunk.render(camera, this.getWorldSimulator());
+					rChunk.render(camera, super.worldSimulation);
 				}
 
 		}
@@ -130,13 +144,39 @@ public class RenderDimension extends Dimension implements IRenderDimension {
 		}
 	}
 
+	@Override
+	public void setCamera(CameraEntity camera) {
+		this.camera = camera;
+	}
+
+	@Override
+	public void setPlayer(BasicEntity player) {
+		if (this.player != null)
+			engine.removeEntity(this.player);
+		this.player = player;
+		if (player instanceof CameraEntity)
+			this.camera = (CameraEntity) player;
+		engine.addEntity(this.player);
+		this.player.addEntity(sun.getCamera());
+	}
+
 	public int getRenderedChunks() {
 		return renderedChunks;
 	}
 
 	@Override
-	public ClientWorldSimulation getWorldSimulator() {
-		return (ClientWorldSimulation) this.worldSimulation;
+	public IWorldSimulation getWorldSimulation() {
+		return this.worldSimulation;
+	}
+
+	@Override
+	public CameraEntity getCamera() {
+		return camera;
+	}
+
+	@Override
+	public Sun getSun() {
+		return sun;
 	}
 
 }

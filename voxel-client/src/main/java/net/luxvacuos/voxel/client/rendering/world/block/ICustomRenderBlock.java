@@ -1,7 +1,7 @@
 /*
  * This file is part of Voxel
  * 
- * Copyright (C) 2016-2017 Lux Vacuos
+ * Copyright (C) 2016-2018 Lux Vacuos
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,6 +24,6 @@ import net.luxvacuos.voxel.client.rendering.api.opengl.Tessellator;
 
 public interface ICustomRenderBlock {
 
-	public void generateCustomModel(Tessellator tess, double x, double y, double z, float globalScale, boolean top,
+	public void generateCustomModel(Tessellator tess, float x, float y, float z, float globalScale, boolean top,
 			boolean bottom, boolean left, boolean right, boolean front, boolean back);
 }

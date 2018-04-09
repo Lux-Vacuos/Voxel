@@ -1,7 +1,7 @@
 /*
  * This file is part of Voxel
  * 
- * Copyright (C) 2016-2017 Lux Vacuos
+ * Copyright (C) 2016-2018 Lux Vacuos
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -73,6 +73,18 @@ public class World implements IWorld {
 				dim.update(delta);
 			}
 		}
+	}
+	
+	@Override
+	public void beforeUpdate(float delta) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void afterUpdate(float delta) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override

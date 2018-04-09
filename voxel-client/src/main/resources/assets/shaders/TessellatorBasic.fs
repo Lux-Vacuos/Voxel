@@ -1,7 +1,7 @@
 //
 // This file is part of Voxel
 // 
-// Copyright (C) 2016-2017 Lux Vacuos
+// Copyright (C) 2016-2018 Lux Vacuos
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,13 +18,11 @@
 // 
 //
 
-#version 330 core
-
 in vec2 pass_textureCoords;
 
 uniform sampler2D alpha;
 
 void main(void) {
-	if(texture(alpha,pass_textureCoords).a < 1)
+	if(texture(alpha,pass_textureCoords).a < 1.0)
 		discard;
 }

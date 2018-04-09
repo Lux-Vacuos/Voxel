@@ -1,7 +1,7 @@
 /*
  * This file is part of Voxel
  * 
- * Copyright (C) 2016-2017 Lux Vacuos
+ * Copyright (C) 2016-2018 Lux Vacuos
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,8 +20,8 @@
 
 package net.luxvacuos.voxel.client.ui;
 
-import net.luxvacuos.lightengine.client.rendering.api.glfw.Window;
-import net.luxvacuos.lightengine.client.rendering.api.nanovg.themes.Theme;
+import net.luxvacuos.lightengine.client.rendering.glfw.Window;
+import net.luxvacuos.lightengine.client.rendering.nanovg.themes.Theme;
 import net.luxvacuos.lightengine.client.ui.Button;
 
 public class WorldButton extends Button {

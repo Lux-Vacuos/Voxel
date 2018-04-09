@@ -1,7 +1,7 @@
 /*
  * This file is part of Voxel
  * 
- * Copyright (C) 2016-2017 Lux Vacuos
+ * Copyright (C) 2016-2018 Lux Vacuos
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,12 +28,11 @@ import net.luxvacuos.lightengine.client.ui.Alignment;
 import net.luxvacuos.lightengine.client.ui.Button;
 import net.luxvacuos.lightengine.client.ui.ComponentWindow;
 import net.luxvacuos.lightengine.client.ui.TextArea;
-import net.luxvacuos.lightengine.universal.core.TaskManager;
 import net.luxvacuos.lightengine.universal.util.registry.Key;
 
 public class InitialSettingsWindow extends ComponentWindow {
 
-	public InitialSettingsWindow(float x, float y, float w, float h) {
+	public InitialSettingsWindow(int x, int y, int w, int h) {
 		super(x, y, w, h, LANG.getRegistryItem("voxel.initialsettingswindow.name"));
 	}
 
@@ -56,9 +55,9 @@ public class InitialSettingsWindow extends ComponentWindow {
 			int wh = (int) REGISTRY.getRegistryItem(new Key("/Light Engine/Display/height"));
 			int x = ww / 2 - 512;
 			int y = wh / 2 - 300;
-			TaskManager.addTask(
-					() -> GraphicalSubsystem.getWindowManager().addWindow(new MainWindow(x, wh - y, 1024, 600)));
-			TaskManager.addTask(() -> GraphicalSubsystem.getWindowManager().toggleShell());
+
+			GraphicalSubsystem.getWindowManager().toggleShell();
+			GraphicalSubsystem.getWindowManager().addWindow(new MainWindow(x, wh - y, 1024, 600));
 		});
 		super.addComponent(next);
 

@@ -1,19 +1,31 @@
-plugins { id 'net.nemerosa.versioning' version '2.0.0' }
+plugins {
+	id 'eclipse'
+	id 'idea'
+	id 'java'
+	id 'net.nemerosa.versioning' version '2.6.1'
+}
 
+sourceCompatibility = '10'
 
 sourceSets {
 	main {
 		java.srcDir("${projectDir}/src/main/java/")
 		resources.srcDir("${projectDir}/src/main/resources")
-	}
-	
+	}	
 	test {
-		java.srcDirs = ["${projectDir}/src/test/java/"]
+		java.srcDirs("${projectDir}/src/test/java/")
+		resources.srcDir("${projectDir}/src/test/resources")
 	}
 }
 
+dependencies {
+	compile project(':modules:api')
+	compile project(':lightengine-universal')
+	testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
 jar {
-	version = "0.0.10-" + versioning.info.full
+	version = "0.0.11-" + versioning.info.full
 	manifest {
 		attributes (
 				"Specification-Title": "Voxel-Universal",

@@ -1,7 +1,7 @@
 /*
  * This file is part of Voxel
  * 
- * Copyright (C) 2016-2017 Lux Vacuos
+ * Copyright (C) 2016-2018 Lux Vacuos
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,7 +22,7 @@ package net.luxvacuos.voxel.client.ui.windows;
 
 import net.luxvacuos.lightengine.client.core.subsystems.GraphicalSubsystem;
 import net.luxvacuos.lightengine.client.input.MouseHandler;
-import net.luxvacuos.lightengine.client.rendering.api.nanovg.WindowMessage;
+import net.luxvacuos.lightengine.client.rendering.nanovg.WindowMessage;
 import net.luxvacuos.lightengine.client.ui.Alignment;
 import net.luxvacuos.lightengine.client.ui.Button;
 import net.luxvacuos.lightengine.client.ui.ComponentWindow;
@@ -30,8 +30,8 @@ import net.luxvacuos.voxel.client.core.ClientVariables;
 
 public class PauseWindow extends ComponentWindow {
 
-	public PauseWindow(float x, float y, float w, float h) {
-		super(x, y, w, h, "Pause");
+	public PauseWindow() {
+		super("Pause");
 	}
 
 	@Override
@@ -64,10 +64,11 @@ public class PauseWindow extends ComponentWindow {
 		if (message == WindowMessage.WM_CLOSE && ((WindowClose) param) == WindowClose.DISPOSE) {
 			ClientVariables.paused = false;
 			MouseHandler.setGrabbed(GraphicalSubsystem.getMainWindow().getID(), true);
-			GraphicalSubsystem.getWindowManager().toggleShell();
 			super.processWindowMessage(message, param);
 		} else if (message == WindowMessage.WM_CLOSE && ((WindowClose) param) == WindowClose.DO_NOTHING) {
 			super.processWindowMessage(message, WindowClose.DISPOSE);
+		} else {
+			super.processWindowMessage(message, param);
 		}
 	}
 

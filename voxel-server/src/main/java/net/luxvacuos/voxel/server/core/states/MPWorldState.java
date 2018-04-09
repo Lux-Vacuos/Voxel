@@ -1,7 +1,7 @@
 /*
  * This file is part of Voxel
  * 
- * Copyright (C) 2016-2017 Lux Vacuos
+ * Copyright (C) 2016-2018 Lux Vacuos
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -44,7 +44,7 @@ public class MPWorldState extends AbstractState {
 	private Console console;
 	private ICommandManager commandManager;
 	private Server server;
-
+	
 	public MPWorldState() {
 		super(StateNames.MP_WORLD);
 	}

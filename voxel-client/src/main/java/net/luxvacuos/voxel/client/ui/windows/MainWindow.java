@@ -1,7 +1,7 @@
 /*
  * This file is part of Voxel
  * 
- * Copyright (C) 2016-2017 Lux Vacuos
+ * Copyright (C) 2016-2018 Lux Vacuos
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,8 +23,8 @@ package net.luxvacuos.voxel.client.ui.windows;
 import static net.luxvacuos.lightengine.universal.core.subsystems.CoreSubsystem.LANG;
 
 import net.luxvacuos.lightengine.client.core.subsystems.GraphicalSubsystem;
-import net.luxvacuos.lightengine.client.rendering.api.nanovg.WindowMessage;
-import net.luxvacuos.lightengine.client.rendering.api.nanovg.themes.Theme;
+import net.luxvacuos.lightengine.client.rendering.nanovg.WindowMessage;
+import net.luxvacuos.lightengine.client.rendering.nanovg.themes.Theme;
 import net.luxvacuos.lightengine.client.ui.Alignment;
 import net.luxvacuos.lightengine.client.ui.Button;
 import net.luxvacuos.lightengine.client.ui.ComponentWindow;
@@ -34,7 +34,7 @@ import net.luxvacuos.lightengine.universal.core.states.StateMachine;
 
 public class MainWindow extends ComponentWindow {
 
-	public MainWindow(float x, float y, float w, float h) {
+	public MainWindow(int x, int y, int w, int h) {
 		super(x, y, w, h, LANG.getRegistryItem("voxel.mainwindow.name"));
 	}
 
@@ -66,12 +66,11 @@ public class MainWindow extends ComponentWindow {
 		exitButton.setWindowAlignment(Alignment.CENTER);
 
 		playButton.setOnButtonPress(() -> {
-			GraphicalSubsystem.getWindowManager().addWindow(new WorldWindow(w / 2 - 420 + x, y - 40, 840, 600, this));
+			GraphicalSubsystem.getWindowManager().addWindow(new WorldWindow(w / 2 - 420 + x, y - 40, 840, 600));
 		});
 
 		playMPButton.setOnButtonPress(() -> {
-			GraphicalSubsystem.getWindowManager()
-					.addWindow(new MultiplayerMenu(w / 2 - 250 + x, y - 100, 500, 400, this));
+			GraphicalSubsystem.getWindowManager().addWindow(new MultiplayerMenu(w / 2 - 250 + x, y - 100, 500, 400));
 		});
 
 		optionsButton.setOnButtonPress(() -> {
@@ -95,7 +94,6 @@ public class MainWindow extends ComponentWindow {
 		super.setWindowClose(WindowClose.DO_NOTHING);
 		super.initApp();
 	}
-	
 
 	@Override
 	public void processWindowMessage(int message, Object param) {
@@ -106,10 +104,9 @@ public class MainWindow extends ComponentWindow {
 			case DISPOSE:
 				break;
 			case DO_NOTHING:
-				ModalWindow window = new ModalWindow(340, 200, LANG.getRegistryItem("voxel.mainwindow.modal.txtclose"),
-						LANG.getRegistryItem("voxel.mainwindow.modal.name"));
+				ModalWindow window = new ModalWindow(340, 200, "", "Exit Demo");
 				GraphicalSubsystem.getWindowManager().addWindow(window);
-				TaskManager.addTask(() -> {
+				TaskManager.tm.addTaskMainThread(() -> {
 					window.setOnAccept(() -> {
 						new Thread(() -> {
 							while (GraphicalSubsystem.getWindowManager().getTotalWindows() > 0)
@@ -118,7 +115,7 @@ public class MainWindow extends ComponentWindow {
 								} catch (InterruptedException e) {
 									e.printStackTrace();
 								}
-							TaskManager.addTask(() -> StateMachine.stop());
+							TaskManager.tm.addTaskMainThread(() -> StateMachine.dispose());
 						}).start();
 						super.setWindowClose(WindowClose.DISPOSE);
 						GraphicalSubsystem.getWindowManager().closeAllWindows();
