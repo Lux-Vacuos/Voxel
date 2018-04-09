@@ -58,7 +58,7 @@ public abstract class AbstractChunkGenerator implements IChunkGenerator {
 	public void generateChunk(IChunk chunk, int worldX, int worldZ) {
 		BlockLongDataArray[] bda = chunk.getChunkData().getBlockDataArrays();
 		int adjWorldX, adjWorldZ;
-		double noise, noise3D;
+		double noise = 0, noise3D = 0;
 
 		for (int y = 0; y < 256; y++) { // TODO: Make this dynamic based on world settings
 			for (int x = 0; x < 16; x++) {
@@ -66,7 +66,7 @@ public abstract class AbstractChunkGenerator implements IChunkGenerator {
 				for (int z = 0; z < 16; z++) {
 					adjWorldZ = worldZ + z;
 					noise = this.noise.eval(adjWorldX, adjWorldZ);
-					noise3D = this.noise.eval(adjWorldX, y, adjWorldZ);
+					//noise3D = this.noise.eval(adjWorldX, y, adjWorldZ);
 
 					bda[y >> 4].set(x, (y & 0x0F), z, this.generateBlock(x, y, z, noise, noise3D));
 				}

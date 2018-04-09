@@ -146,6 +146,8 @@ public class OptionsWindow extends ComponentWindow {
 				Arrays.asList(128, 256, 512, 1024, 2048, 4096));
 		EditBox shadowDistance = new EditBox(-50, 0, 180, 30, Integer.toString(
 				(int) REGISTRY.getRegistryItem(new Key("/Light Engine/Settings/Graphics/shadowsDrawDistance"))));
+		EditBox chunkDistance = new EditBox(-50, 0, 180, 30, Integer.toString(
+				(int) REGISTRY.getRegistryItem(new Key("/Voxel/Settings/World/chunkRadius"))));
 
 		godraysButton.setWindowAlignment(Alignment.RIGHT);
 		godraysButton.setAlignment(Alignment.RIGHT);
@@ -171,6 +173,8 @@ public class OptionsWindow extends ComponentWindow {
 		shadowResDropdown.setAlignment(Alignment.RIGHT);
 		shadowDistance.setWindowAlignment(Alignment.RIGHT);
 		shadowDistance.setAlignment(Alignment.RIGHT);
+		chunkDistance.setWindowAlignment(Alignment.RIGHT);
+		chunkDistance.setAlignment(Alignment.RIGHT);
 
 		shadowsButton.setOnButtonPress(
 				() -> REGISTRY.register(new Key("/Light Engine/Settings/Graphics/shadows"), shadowsButton.getStatus()));
@@ -195,12 +199,16 @@ public class OptionsWindow extends ComponentWindow {
 		shadowResDropdown.setOnButtonPress(() -> {
 			REGISTRY.register(new Key("/Light Engine/Settings/Graphics/shadowsResolution"),
 					shadowResDropdown.getValue().intValue());
-			EventSubsystem.triggerEvent("voxel.renderer.resetshadowmap");
+			EventSubsystem.triggerEvent("lightengine.renderer.resetshadowmap");
 		});
 		shadowDistance.setOnUnselect(() -> {
 			REGISTRY.register(new Key("/Light Engine/Settings/Graphics/shadowsDrawDistance"),
 					Integer.parseInt(shadowDistance.getText()));
-			EventSubsystem.triggerEvent("voxel.renderer.resetshadowmatrix");
+			EventSubsystem.triggerEvent("lightengine.renderer.resetshadowmatrix");
+		});
+		chunkDistance.setOnUnselect( () -> {
+			REGISTRY.register(new Key("/Voxel/Settings/World/chunkRadius"), Integer.parseInt(chunkDistance.getText()));
+			EventSubsystem.triggerEvent("voxel.world.chunkRadius");
 		});
 
 		Text godText = new Text(LANG.getRegistryItem("voxel.optionswindow.graphics.volumetriclight"), 20, 0);
@@ -227,6 +235,8 @@ public class OptionsWindow extends ComponentWindow {
 		shadowResText.setWindowAlignment(Alignment.LEFT);
 		Text shadowDisText = new Text(LANG.getRegistryItem("voxel.optionswindow.graphics.shadowdis"), 20, 0);
 		shadowDisText.setWindowAlignment(Alignment.LEFT);
+		Text chunkDisText = new Text(LANG.getRegistryItem("voxel.optionswindow.graphics.chunkdis"), 20, 0);
+		chunkDisText.setWindowAlignment(Alignment.LEFT);
 
 		ScrollArea area = new ScrollArea(0, 0, w, h, 0, 0);
 		area.setLayout(new FlowLayout(Direction.DOWN, 10, 10));
@@ -267,6 +277,9 @@ public class OptionsWindow extends ComponentWindow {
 		Container shadowDis = new Container(0, 0, w, 30);
 		shadowDis.setWindowAlignment(Alignment.LEFT_TOP);
 		shadowDis.setAlignment(Alignment.RIGHT_BOTTOM);
+		Container chunkDis = new Container(0, 0, w, 30);
+		chunkDis.setWindowAlignment(Alignment.LEFT_TOP);
+		chunkDis.setAlignment(Alignment.RIGHT_BOTTOM);
 
 		godrays.addComponent(godraysButton);
 		godrays.addComponent(godText);
@@ -292,6 +305,8 @@ public class OptionsWindow extends ComponentWindow {
 		shadowRes.addComponent(shadowResText);
 		shadowDis.addComponent(shadowDistance);
 		shadowDis.addComponent(shadowDisText);
+		chunkDis.addComponent(chunkDistance);
+		chunkDis.addComponent(chunkDisText);
 
 		godrays.setResizeH(true);
 		shadows.setResizeH(true);
@@ -305,6 +320,7 @@ public class OptionsWindow extends ComponentWindow {
 		lens.setResizeH(true);
 		shadowRes.setResizeH(true);
 		shadowDis.setResizeH(true);
+		chunkDis.setResizeH(true);
 
 		area.addComponent(godrays);
 		area.addComponent(shadows);
@@ -318,6 +334,7 @@ public class OptionsWindow extends ComponentWindow {
 		area.addComponent(lens);
 		area.addComponent(shadowRes);
 		area.addComponent(shadowDis);
+		area.addComponent(chunkDis);
 
 		super.addComponent(area);
 

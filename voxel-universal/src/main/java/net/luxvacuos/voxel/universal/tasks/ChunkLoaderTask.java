@@ -28,7 +28,6 @@ import java.util.concurrent.Callable;
 import com.hackhalo2.nbt.stream.NBTInputStream;
 import com.hackhalo2.nbt.tags.TagCompound;
 
-import net.luxvacuos.igl.Logger;
 import net.luxvacuos.lightengine.universal.core.subsystems.CoreSubsystem;
 import net.luxvacuos.lightengine.universal.util.registry.Key;
 import net.luxvacuos.voxel.universal.world.chunk.ChunkData;
@@ -38,35 +37,23 @@ import net.luxvacuos.voxel.universal.world.utils.ChunkNode;
 
 public class ChunkLoaderTask implements Callable<ChunkData> {
 	private NBTInputStream in = null;
-	private boolean exists;
-	private final ChunkNode node;
+	private File file;
+	private String path;
 
 	public ChunkLoaderTask(IDimension dim, ChunkNode node) {
-		String path = CoreSubsystem.REGISTRY.getRegistryItem(new Key("/Voxel/Settings/World/directory"))
-				+ dim.getWorldName() + "/" + dim.getID();
+		path = CoreSubsystem.REGISTRY.getRegistryItem(new Key("/Voxel/Settings/World/directory")) + dim.getWorldName()
+				+ "/" + dim.getID();
 		String fullPath = path + "/" + "chunk_" + node.getX() + "_" + node.getZ() + ".dat";
-		this.node = node;
-		File file = new File(fullPath);
-
-		if (this.exists = (file.exists() && file.length() != 0L)) {
-			try {
-				this.in = new NBTInputStream(new BufferedInputStream(new FileInputStream(file)));
-			} catch (Exception e) {
-				Logger.error(e);
-				this.exists = false;
-				new File(path).mkdirs();
-			}
-		} else {
-			new File(path).mkdirs();
-		}
+		file = new File(fullPath);
 	}
 
 	@Override
 	public ChunkData call() throws Exception {
 		ChunkDataBuilder builder = new ChunkDataBuilder();
 		TagCompound root;
-
-		if (this.exists) {
+		// So.. moving file checking heavily improves performance on windows
+		if (file.exists() && file.length() != 0L) {
+			this.in = new NBTInputStream(new BufferedInputStream(new FileInputStream(file)));
 			root = new TagCompound(this.in, false);
 			builder.setBlockMetadata(root.getCompound("BlockMetadata"));
 			int slices = root.getInt("NumSlices");
@@ -79,6 +66,7 @@ public class ChunkLoaderTask implements Callable<ChunkData> {
 				builder.newSlice(i);
 
 			builder.setBlockMetadata(new TagCompound("BlockMetadata"));
+			new File(path).mkdirs();
 		}
 
 		return builder.build();

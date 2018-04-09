@@ -26,7 +26,7 @@
 	"voxel.optionswindow.graphics.lensflares":"Lens Flares",
 	"voxel.optionswindow.graphics.shadowres":"Shadow Resolution",
 	"voxel.optionswindow.graphics.shadowdis":"Shadow Distance",
-	"voxel.optionswindow.graphics.distance":"Chunk Distance",
+	"voxel.optionswindow.graphics.chunkdis":"Chunk Distance",
 	"voxel.optionswindow.btnwm":"Window Manager",
 	"voxel.optionswindow.wm.border":"Window Border",
 	"voxel.optionswindow.wm.scrollsize":"Scroll Bar size",

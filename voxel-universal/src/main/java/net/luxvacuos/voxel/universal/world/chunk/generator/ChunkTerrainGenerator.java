@@ -26,9 +26,9 @@ public class ChunkTerrainGenerator extends AbstractChunkGenerator {
 
 	@Override
 	protected int generateBlock(int x, int y, int z, double noise, double noise3D) {
-		noise3D *= 8;
-		if (noise3D > 0.8)
-			return Blocks.getBlockByName("voxel:air").getID();
+		//noise3D *= 8;
+		//if (noise3D > 0.8)
+//			return Blocks.getBlockByName("voxel:air").getID();
 
 		noise += 1;
 		noise *= 128;

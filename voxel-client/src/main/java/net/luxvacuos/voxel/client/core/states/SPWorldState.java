@@ -66,7 +66,7 @@ public class SPWorldState extends AbstractState {
 			((RenderWorld) world).renderShadow(sunCamera, frustum);
 		});
 		GraphicalSubsystem.getRenderer().setForwardPass((camera, sunCamera, frustum, shadowMap) -> {
-			Vector3f pos = ((PlayerCamera) camera).getBlockOutlinePos();
+			Vector3f pos = this.camera.getBlockOutlinePos();
 			blockOutlineRenderer.render(camera,
 					world.getActiveDimension().getBlockAt((int) pos.x(), (int) pos.y(), (int) pos.z()));
 		});

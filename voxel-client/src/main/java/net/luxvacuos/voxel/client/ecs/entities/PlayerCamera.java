@@ -36,6 +36,8 @@ import net.luxvacuos.lightengine.client.input.MouseHandler;
 import net.luxvacuos.lightengine.client.rendering.glfw.Window;
 import net.luxvacuos.lightengine.client.resources.CastRay;
 import net.luxvacuos.lightengine.universal.core.GlobalVariables;
+import net.luxvacuos.lightengine.universal.core.subsystems.EventSubsystem;
+import net.luxvacuos.lightengine.universal.util.IEvent;
 import net.luxvacuos.lightengine.universal.util.registry.Key;
 import net.luxvacuos.voxel.client.util.Maths;
 import net.luxvacuos.voxel.universal.ecs.Components;
@@ -59,6 +61,7 @@ public class PlayerCamera extends FreeCamera implements IDimensionEntity {
 	private static final float PRECISION = 16f;
 	private Vector3f normalTMP = new Vector3f();
 	private double depthTMP;
+	private IEvent chunkRadius;
 
 	public PlayerCamera(String name, String uuid) {
 		super(name, uuid);
@@ -71,13 +74,16 @@ public class PlayerCamera extends FreeCamera implements IDimensionEntity {
 		castRay = new CastRay(getProjectionMatrix(), getViewMatrix(), center,
 				(int) REGISTRY.getRegistryItem(new Key("/Light Engine/Display/width")),
 				(int) REGISTRY.getRegistryItem(new Key("/Light Engine/Display/height")));
+		chunkRadius = EventSubsystem.addEvent("voxel.world.chunkRadius", () -> {
+			Components.CHUNK_LOADER.get(this)
+					.setChunkRadius((int) REGISTRY.getRegistryItem(new Key("/Voxel/Settings/World/chunkRadius")));
+		});
 	}
 
 	@Override
-	public void update(float delta) {
-		super.update(delta);
-		Components.CHUNK_LOADER.get(this)
-				.setChunkRadius((int) REGISTRY.getRegistryItem(new Key("/Voxel/Settings/World/chunkRadius")));
+	public void dispose() {
+		super.dispose();
+		EventSubsystem.removeEvent("voxel.world.chunkRadius", chunkRadius);
 	}
 
 	private void setBlock(IBlock block, IDimension dimension, float delta, MouseHandler mh) {
@@ -181,7 +187,7 @@ public class PlayerCamera extends FreeCamera implements IDimensionEntity {
 				(int) REGISTRY.getRegistryItem(new Key("/Light Engine/Display/width")),
 				(int) REGISTRY.getRegistryItem(new Key("/Light Engine/Display/height")));
 		Window window = GraphicalSubsystem.getMainWindow();
-		setBlock(Blocks.getBlockByName("stone"), dim, delta, window.getMouseHandler());
+		setBlock(Blocks.getBlockByName("pedestal"), dim, delta, window.getMouseHandler());
 	}
 
 	public Vector3f getBlockOutlinePos() {

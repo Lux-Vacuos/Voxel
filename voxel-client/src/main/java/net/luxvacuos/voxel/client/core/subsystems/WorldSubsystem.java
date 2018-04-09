@@ -54,32 +54,33 @@ public class WorldSubsystem extends UniversalSubsystem {
 		TaskManager.tm.addTaskBackgroundThread(() -> {
 			MaterialModder matMod = new MaterialModder();
 			Blocks.startRegister("voxel");
-			BlockMaterial airMat = new BlockMaterial("air");
-			airMat = (BlockMaterial) matMod.modify(airMat).canBeBroken(false).setBlocksMovement(false).setOpacity(0f)
-					.setVisible(false).done();
-			Blocks.register(new RenderBlock(airMat, new BlockFaceAtlas("air")));
-			Blocks.register(new RenderBlock(new BlockMaterial("stone"), new BlockFaceAtlas("stone")));
-			Blocks.register(
-					new RenderBlock(new BlockMaterial("grass"), new BlockFaceAtlas("grass", "dirt", "grassSide")));
-			Blocks.register(new RenderBlock(new BlockMaterial("dirt"), new BlockFaceAtlas("dirt")));
-			Blocks.register(new RenderBlock(new BlockMaterial("sand"), new BlockFaceAtlas("sand")));
-			Blocks.register(new RenderBlock(new BlockMaterial("cobblestone"), new BlockFaceAtlas("cobblestone")));
-			Blocks.register(new RenderBlock(new BlockMaterial("wood"), new BlockFaceAtlas("wood")));
-			Blocks.register(new RenderBlock(new BlockMaterial("leaves"), new BlockFaceAtlas("leaves")));
-			BlockMaterial glassMat = new BlockMaterial("glass");
-			glassMat = (BlockMaterial) matMod.modify(glassMat).setOpacity(0.0f).done();
-			Blocks.register(new RenderBlock(glassMat, new BlockFaceAtlas("glass")));
-			BlockMaterial glassPaneMat = new BlockMaterial("glassPane");
-			glassPaneMat = (BlockMaterial) matMod.modify(glassMat).setOpacity(0.0f).done();
-			Blocks.register(new GlassPaneBlock(glassPaneMat, new BlockFaceAtlas("glassPane")));
-			BlockMaterial waterMat = new BlockMaterial("water");
-			waterMat = (BlockMaterial) matMod.modify(waterMat).canBeBroken(false).setBlocksMovement(false)
-					.affectedByGravity(true).liquid().setOpacity(0.2f).done();
-			Blocks.register(new WaterBlock(waterMat, new BlockFaceAtlas("water")));
-			Blocks.register(new RenderBlock(new BlockMaterial("ice"), new BlockFaceAtlas("ice")));
-			// Blocks.register(new RenderBlock(new BlockMaterial("pedestal"),
-			// new BlockFaceAtlas("pedestaltop", "pedestalbottom",
-			// "pedestal")));
+			{
+				BlockMaterial airMat = new BlockMaterial("air");
+				airMat = (BlockMaterial) matMod.modify(airMat).canBeBroken(false).setBlocksMovement(false)
+						.setOpacity(0f).setVisible(false).done();
+				Blocks.register(new RenderBlock(airMat, new BlockFaceAtlas("air")));
+				Blocks.register(new RenderBlock(new BlockMaterial("stone"), new BlockFaceAtlas("stone")));
+				Blocks.register(
+						new RenderBlock(new BlockMaterial("grass"), new BlockFaceAtlas("grass", "dirt", "grassSide")));
+				Blocks.register(new RenderBlock(new BlockMaterial("dirt"), new BlockFaceAtlas("dirt")));
+				Blocks.register(new RenderBlock(new BlockMaterial("sand"), new BlockFaceAtlas("sand")));
+				Blocks.register(new RenderBlock(new BlockMaterial("cobblestone"), new BlockFaceAtlas("cobblestone")));
+				Blocks.register(new RenderBlock(new BlockMaterial("wood"), new BlockFaceAtlas("wood")));
+				Blocks.register(new RenderBlock(new BlockMaterial("leaves"), new BlockFaceAtlas("leaves")));
+				BlockMaterial glassMat = new BlockMaterial("glass");
+				glassMat = (BlockMaterial) matMod.modify(glassMat).setOpacity(0.0f).done();
+				Blocks.register(new RenderBlock(glassMat, new BlockFaceAtlas("glass")));
+				BlockMaterial glassPaneMat = new BlockMaterial("glassPane");
+				glassPaneMat = (BlockMaterial) matMod.modify(glassMat).setOpacity(0.0f).done();
+				Blocks.register(new GlassPaneBlock(glassPaneMat, new BlockFaceAtlas("glassPane")));
+				BlockMaterial waterMat = new BlockMaterial("water");
+				waterMat = (BlockMaterial) matMod.modify(waterMat).canBeBroken(false).setBlocksMovement(false)
+						.affectedByGravity(true).liquid().setOpacity(0.2f).done();
+				Blocks.register(new WaterBlock(waterMat, new BlockFaceAtlas("water")));
+				Blocks.register(new RenderBlock(new BlockMaterial("ice"), new BlockFaceAtlas("ice")));
+				Blocks.register(new RenderBlock(new BlockMaterial("pedestal"),
+						new BlockFaceAtlas("pedestaltop", "pedestalbottom", "pedestal")));
+			}
 			Blocks.finishRegister();
 		});
 		TaskManager.tm.addTaskRenderThread(() -> {

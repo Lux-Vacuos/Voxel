@@ -27,6 +27,7 @@ import com.hackhalo2.nbt.exceptions.NBTException;
 import com.hackhalo2.nbt.tags.TagCompound;
 
 import net.luxvacuos.igl.Logger;
+import net.luxvacuos.voxel.universal.world.block.Blocks;
 import net.luxvacuos.voxel.universal.world.block.IBlock;
 import net.luxvacuos.voxel.universal.world.utils.BlockLongDataArray;
 
@@ -107,7 +108,12 @@ public final class ChunkData {
 	}
 
 	public IBlock getBlockAt(int x, int y, int z) {
-		return this.slices[this.getSlice(y)].getBlockAt(x, this.modY(y), z);
+		//TODO: Added temporarily 
+		try {
+			return this.slices[this.getSlice(y)].getBlockAt(x, this.modY(y), z);
+		} catch (ArrayIndexOutOfBoundsException e) {
+			return Blocks.getBlockByName("air");
+		}
 	}
 
 	protected void setBlockAt(int x, int y, int z, IBlock block) {
