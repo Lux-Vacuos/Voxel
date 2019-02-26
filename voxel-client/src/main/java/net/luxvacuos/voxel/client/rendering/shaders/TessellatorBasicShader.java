@@ -23,10 +23,10 @@ package net.luxvacuos.voxel.client.rendering.shaders;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
-import net.luxvacuos.lightengine.client.rendering.shaders.ShaderProgram;
-import net.luxvacuos.lightengine.client.rendering.shaders.data.Attribute;
-import net.luxvacuos.lightengine.client.rendering.shaders.data.UniformMatrix;
-import net.luxvacuos.lightengine.client.rendering.shaders.data.UniformVec3;
+import net.luxvacuos.lightengine.client.rendering.opengl.shaders.ShaderProgram;
+import net.luxvacuos.lightengine.client.rendering.opengl.shaders.data.Attribute;
+import net.luxvacuos.lightengine.client.rendering.opengl.shaders.data.UniformMatrix;
+import net.luxvacuos.lightengine.client.rendering.opengl.shaders.data.UniformVec3;
 import net.luxvacuos.voxel.client.core.ClientVariables;
 
 public class TessellatorBasicShader extends ShaderProgram {
@@ -47,14 +47,14 @@ public class TessellatorBasicShader extends ShaderProgram {
 	private TessellatorBasicShader() {
 		super(ClientVariables.VERTEX_FILE_TESSELLATOR_BASIC, ClientVariables.FRAGMENT_FILE_TESSELLATOR_BASIC,
 				new Attribute(0, "position"), new Attribute(1, "textureCoords"));
-		super.storeAllUniformLocations(projectionMatrix, viewMatrix, cameraPos);
+		super.storeUniforms(projectionMatrix, viewMatrix, cameraPos);
+		super.validate();
 	}
 
 	/**
 	 * Loads View Matrixd to the shader
 	 * 
-	 * @param camera
-	 *            Camera
+	 * @param camera Camera
 	 */
 	public void loadViewMatrix(Matrix4f cameraViewMatrix, Vector3f cameraPosition) {
 		Matrix4f mat = new Matrix4f(cameraViewMatrix);
@@ -68,8 +68,7 @@ public class TessellatorBasicShader extends ShaderProgram {
 	/**
 	 * Loads Projection Matrixd to the shader
 	 * 
-	 * @param projection
-	 *            Projection Matrixd
+	 * @param projection Projection Matrixd
 	 */
 	public void loadProjectionMatrix(Matrix4f projection) {
 		projectionMatrix.loadMatrix(projection);

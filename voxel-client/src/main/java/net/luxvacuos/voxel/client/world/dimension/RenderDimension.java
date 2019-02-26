@@ -28,7 +28,7 @@ import com.hackhalo2.nbt.tags.TagCompound;
 import net.luxvacuos.lightengine.client.core.ClientWorldSimulation;
 import net.luxvacuos.lightengine.client.ecs.entities.CameraEntity;
 import net.luxvacuos.lightengine.client.ecs.entities.Sun;
-import net.luxvacuos.lightengine.client.network.IRenderData;
+import net.luxvacuos.lightengine.client.network.IRenderingData;
 import net.luxvacuos.lightengine.client.rendering.opengl.Frustum;
 import net.luxvacuos.lightengine.universal.core.IWorldSimulation;
 import net.luxvacuos.lightengine.universal.ecs.entities.BasicEntity;
@@ -44,7 +44,7 @@ import net.luxvacuos.voxel.universal.world.chunk.generator.ChunkTerrainGenerator
 import net.luxvacuos.voxel.universal.world.chunk.generator.SimplexNoise;
 import net.luxvacuos.voxel.universal.world.dimension.Dimension;
 
-public class RenderDimension extends Dimension implements IRenderDimension, IRenderData {
+public class RenderDimension extends Dimension implements IRenderDimension, IRenderingData {
 
 	private int renderedChunks = 0;
 	protected BasicEntity player;
@@ -100,16 +100,17 @@ public class RenderDimension extends Dimension implements IRenderDimension, IRen
 
 			aabb = chunk.getBoundingBox(chunk.getNode());
 			if (Math.abs(chunk.getNode().getX() - entityCX) < loader.getChunkRadius()
-					&& Math.abs(chunk.getNode().getZ() - entityCZ) < loader.getChunkRadius())
-				if (frustum.cubeInFrustum((float) aabb.min.x, (float) aabb.min.y, (float) aabb.min.z,
-						(float) aabb.max.x, (float) aabb.max.y, (float) aabb.max.z)) {
-					rChunk = (RenderChunk) chunk;
-					if (rChunk.needsMeshRebuild())
-						((ClientChunkManager) this.chunkManager).generateChunkMesh(rChunk);
+					&& Math.abs(chunk.getNode().getZ() - entityCZ) < loader.getChunkRadius()) {
+				// if (frustum.cubeInFrustum((float) aabb.min.x, (float) aabb.min.y, (float)
+				// aabb.min.z,
+				// (float) aabb.max.x, (float) aabb.max.y, (float) aabb.max.z)) {
+				rChunk = (RenderChunk) chunk;
+				if (rChunk.needsMeshRebuild())
+					((ClientChunkManager) this.chunkManager).generateChunkMesh(rChunk);
 
-					this.renderedChunks++;
-					rChunk.render(camera, super.worldSimulation);
-				}
+				this.renderedChunks++;
+				rChunk.render(camera, super.worldSimulation);
+			}
 
 		}
 	}
@@ -122,10 +123,10 @@ public class RenderDimension extends Dimension implements IRenderDimension, IRen
 				continue;
 			aabb = chunk.getBoundingBox(chunk.getNode());
 
-			if (frustum.cubeInFrustum((float) aabb.min.x, (float) aabb.min.y, (float) aabb.min.z, (float) aabb.max.x,
-					(float) aabb.max.y, (float) aabb.max.z)) {
+			//if (frustum.cubeInFrustum((float) aabb.min.x, (float) aabb.min.y, (float) aabb.min.z, (float) aabb.max.x,
+				//	(float) aabb.max.y, (float) aabb.max.z)) {
 				((RenderChunk) chunk).renderOcclusion(camera);
-			}
+			//}
 		}
 	}
 
@@ -137,10 +138,10 @@ public class RenderDimension extends Dimension implements IRenderDimension, IRen
 				continue;
 			aabb = chunk.getBoundingBox(chunk.getNode());
 
-			if (frustum.cubeInFrustum((float) aabb.min.x, (float) aabb.min.y, (float) aabb.min.z, (float) aabb.max.x,
-					(float) aabb.max.y, (float) aabb.max.z)) {
+			//if (frustum.cubeInFrustum((float) aabb.min.x, (float) aabb.min.y, (float) aabb.min.z, (float) aabb.max.x,
+					//(float) aabb.max.y, (float) aabb.max.z)) {
 				((RenderChunk) chunk).renderShadow(sunCamera);
-			}
+			//}
 		}
 	}
 

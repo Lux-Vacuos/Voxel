@@ -22,8 +22,7 @@
 import java.util.Random;
 import java.util.UUID;
 
-import net.luxvacuos.lightengine.client.bootstrap.Bootstrap;
-import net.luxvacuos.lightengine.universal.core.GlobalVariables;
+import net.luxvacuos.lightengine.client.loader.ClientLoader;
 import net.luxvacuos.lightengine.universal.core.IEngineLoader;
 import net.luxvacuos.lightengine.universal.core.TaskManager;
 import net.luxvacuos.lightengine.universal.core.states.StateMachine;
@@ -37,13 +36,11 @@ public class EngineLoader implements IEngineLoader {
 	public void loadExternal() {
 		TaskManager.tm.addTaskMainThread(() -> StateMachine.registerState(new MainMenuState()));
 	}
-	
+
 	public static void main(String[] args) {
-		GlobalVariables.PROJECT = "Voxel";
 		// TODO: Move this
 		ClientVariables.user = new User("user" + new Random().nextInt(), UUID.randomUUID().toString());
-		new Bootstrap(args, new EngineLoader());
+		new ClientLoader(new EngineLoader(), "-p", "Voxel");
 	}
-
 
 }

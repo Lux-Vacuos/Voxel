@@ -1,11 +1,11 @@
 plugins {
-	id 'eclipse'
-	id 'idea'
-	id 'java'
-	id 'net.nemerosa.versioning' version '2.6.1'
+	id "net.nemerosa.versioning" version "2.7.1"
+	id "eclipse"
+	id "idea"
+	id "java"
 }
 
-sourceCompatibility = '10'
+sourceCompatibility = "11"
 
 sourceSets {
 	main {
@@ -19,9 +19,9 @@ sourceSets {
 }
 
 dependencies {
-	compile project(':modules:api')
-	compile project(':lightengine-universal')
-	testCompile group: 'junit', name: 'junit', version: '4.12'
+	compile project(":modules:api")
+	compile project(":lightengine-universal")
+	testCompile group: "junit", name: "junit", version: "4.12"
 }
 
 jar {

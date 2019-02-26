@@ -48,7 +48,7 @@ public class MainMenuState extends AbstractState {
 	@Override
 	public void init() {
 		subsystem = new WorldSubsystem();
-		subsystem.init();
+		subsystem.init(null);
 		TaskManager.tm.addTaskBackgroundThread(() -> StateMachine.registerState(new SPWorldState()));
 		super.init();
 	}

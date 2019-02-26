@@ -187,7 +187,7 @@ public class PlayerCamera extends FreeCamera implements IDimensionEntity {
 				(int) REGISTRY.getRegistryItem(new Key("/Light Engine/Display/width")),
 				(int) REGISTRY.getRegistryItem(new Key("/Light Engine/Display/height")));
 		Window window = GraphicalSubsystem.getMainWindow();
-		setBlock(Blocks.getBlockByName("pedestal"), dim, delta, window.getMouseHandler());
+		setBlock(Blocks.getBlockByName("ice"), dim, delta, window.getMouseHandler());
 	}
 
 	public Vector3f getBlockOutlinePos() {

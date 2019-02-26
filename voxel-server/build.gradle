@@ -1,13 +1,13 @@
 plugins {
-	id 'eclipse'
-	id 'idea'
-	id 'java'
-	id 'application'
-	id 'net.nemerosa.versioning' version '2.6.1'
+	id "net.nemerosa.versioning" version "2.7.1"
+	id "eclipse"
+	id "idea"
+	id "java"
+	id "application"
 }
 
-sourceCompatibility = '10'
-mainClassName = 'net.luxvacuos.voxel.server.bootstrap.Bootstrap'
+sourceCompatibility = "11"
+mainClassName = "net.luxvacuos.voxel.server.bootstrap.Bootstrap"
 
 sourceSets {
 	main {
@@ -21,11 +21,11 @@ sourceSets {
 }
 
 dependencies {
-	compile project(':voxel-universal')
-	compile project(':voxel-assets')
-	compile project(':lightengine-server')
+	compile project(":voxel-universal")
+	compile project(":voxel-assets")
+	compile project(":lightengine-server")
 
-	testCompile group: 'junit', name: 'junit', version: '4.12'
+	testCompile group: "junit", name: "junit", version: "4.12"
 }
 
 jar {

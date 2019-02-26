@@ -30,6 +30,7 @@ import net.luxvacuos.lightengine.client.core.subsystems.GraphicalSubsystem;
 import net.luxvacuos.lightengine.client.rendering.nanovg.WindowMessage;
 import net.luxvacuos.lightengine.client.rendering.nanovg.themes.Theme.ButtonStyle;
 import net.luxvacuos.lightengine.client.rendering.nanovg.themes.ThemeManager;
+import net.luxvacuos.lightengine.client.rendering.opengl.RenderingSettings;
 import net.luxvacuos.lightengine.client.ui.Alignment;
 import net.luxvacuos.lightengine.client.ui.Button;
 import net.luxvacuos.lightengine.client.ui.ComponentWindow;
@@ -121,33 +122,24 @@ public class OptionsWindow extends ComponentWindow {
 	}
 
 	private void graphicOptions() {
-		ToggleButton godraysButton = new ToggleButton(-50, 0, 80, 30,
-				(boolean) REGISTRY.getRegistryItem(new Key("/Light Engine/Settings/Graphics/volumetricLight")));
-		ToggleButton shadowsButton = new ToggleButton(-50, 0, 80, 30,
-				(boolean) REGISTRY.getRegistryItem(new Key("/Light Engine/Settings/Graphics/shadows")));
-		ToggleButton dofButton = new ToggleButton(-50, 0, 80, 30,
-				(boolean) REGISTRY.getRegistryItem(new Key("/Light Engine/Settings/Graphics/dof")));
-		ToggleButton fxaaButton = new ToggleButton(-50, 0, 80, 30,
-				(boolean) REGISTRY.getRegistryItem(new Key("/Light Engine/Settings/Graphics/fxaa")));
-		ToggleButton motionBlurButton = new ToggleButton(-50, 0, 80, 30,
-				(boolean) REGISTRY.getRegistryItem(new Key("/Light Engine/Settings/Graphics/motionBlur")));
-		ToggleButton reflectionsButton = new ToggleButton(-50, 0, 80, 30,
-				(boolean) REGISTRY.getRegistryItem(new Key("/Light Engine/Settings/Graphics/reflections")));
-		ToggleButton parallaxButton = new ToggleButton(-50, 0, 80, 30,
-				(boolean) REGISTRY.getRegistryItem(new Key("/Light Engine/Settings/Graphics/parallax")));
-		ToggleButton ambientOccButton = new ToggleButton(-50, 0, 80, 30,
-				(boolean) REGISTRY.getRegistryItem(new Key("/Light Engine/Settings/Graphics/ambientOcclusion")));
+		RenderingSettings renderingSettings = GraphicalSubsystem.getRenderingSettings();
+
+		ToggleButton godraysButton = new ToggleButton(-50, 0, 80, 30, renderingSettings.volumetricLightEnabled);
+		ToggleButton shadowsButton = new ToggleButton(-50, 0, 80, 30, renderingSettings.shadowsEnabled);
+		ToggleButton dofButton = new ToggleButton(-50, 0, 80, 30, renderingSettings.depthOfFieldEnabled);
+		ToggleButton fxaaButton = new ToggleButton(-50, 0, 80, 30, renderingSettings.fxaaEnabled);
+		ToggleButton motionBlurButton = new ToggleButton(-50, 0, 80, 30, renderingSettings.motionBlurEnabled);
+		ToggleButton reflectionsButton = new ToggleButton(-50, 0, 80, 30, renderingSettings.ssrEnabled);
+		ToggleButton parallaxButton = new ToggleButton(-50, 0, 80, 30, renderingSettings.parallaxEnabled);
+		ToggleButton ambientOccButton = new ToggleButton(-50, 0, 80, 30, renderingSettings.ambientOcclusionEnabled);
 		ToggleButton chromaticAberrationButton = new ToggleButton(-50, 0, 80, 30,
-				(boolean) REGISTRY.getRegistryItem(new Key("/Light Engine/Settings/Graphics/chromaticAberration")));
-		ToggleButton lensFlaresButton = new ToggleButton(-50, 0, 80, 30,
-				(boolean) REGISTRY.getRegistryItem(new Key("/Light Engine/Settings/Graphics/lensFlares")));
-		DropDown<Integer> shadowResDropdown = new DropDown<>(-50, 0, 180, 30,
-				(int) REGISTRY.getRegistryItem(new Key("/Light Engine/Settings/Graphics/shadowsResolution")),
+				renderingSettings.chromaticAberrationEnabled);
+		ToggleButton lensFlaresButton = new ToggleButton(-50, 0, 80, 30, renderingSettings.lensFlaresEnabled);
+		DropDown<Integer> shadowResDropdown = new DropDown<>(-50, 0, 180, 30, renderingSettings.shadowsResolution,
 				Arrays.asList(128, 256, 512, 1024, 2048, 4096));
-		EditBox shadowDistance = new EditBox(-50, 0, 180, 30, Integer.toString(
-				(int) REGISTRY.getRegistryItem(new Key("/Light Engine/Settings/Graphics/shadowsDrawDistance"))));
-		EditBox chunkDistance = new EditBox(-50, 0, 180, 30, Integer.toString(
-				(int) REGISTRY.getRegistryItem(new Key("/Voxel/Settings/World/chunkRadius"))));
+		EditBox shadowDistance = new EditBox(-50, 0, 180, 30, Integer.toString(renderingSettings.shadowsDrawDistance));
+		EditBox chunkDistance = new EditBox(-50, 0, 180, 30,
+				Integer.toString((int) REGISTRY.getRegistryItem(new Key("/Voxel/Settings/World/chunkRadius"))));
 
 		godraysButton.setWindowAlignment(Alignment.RIGHT);
 		godraysButton.setAlignment(Alignment.RIGHT);
@@ -176,37 +168,27 @@ public class OptionsWindow extends ComponentWindow {
 		chunkDistance.setWindowAlignment(Alignment.RIGHT);
 		chunkDistance.setAlignment(Alignment.RIGHT);
 
-		shadowsButton.setOnButtonPress(
-				() -> REGISTRY.register(new Key("/Light Engine/Settings/Graphics/shadows"), shadowsButton.getStatus()));
-		dofButton.setOnButtonPress(
-				() -> REGISTRY.register(new Key("/Light Engine/Settings/Graphics/dof"), dofButton.getStatus()));
-		godraysButton.setOnButtonPress(() -> REGISTRY
-				.register(new Key("/Light Engine/Settings/Graphics/volumetricLight"), godraysButton.getStatus()));
-		fxaaButton.setOnButtonPress(
-				() -> REGISTRY.register(new Key("/Light Engine/Settings/Graphics/fxaa"), fxaaButton.getStatus()));
-		parallaxButton.setOnButtonPress(() -> REGISTRY.register(new Key("/Light Engine/Settings/Graphics/parallax"),
-				parallaxButton.getStatus()));
-		motionBlurButton.setOnButtonPress(() -> REGISTRY.register(new Key("/Light Engine/Settings/Graphics/motionBlur"),
-				motionBlurButton.getStatus()));
-		reflectionsButton.setOnButtonPress(() -> REGISTRY
-				.register(new Key("/Light Engine/Settings/Graphics/reflections"), reflectionsButton.getStatus()));
-		ambientOccButton.setOnButtonPress(() -> REGISTRY
-				.register(new Key("/Light Engine/Settings/Graphics/ambientOcclusion"), ambientOccButton.getStatus()));
-		chromaticAberrationButton.setOnButtonPress(() -> REGISTRY.register(
-				new Key("/Light Engine/Settings/Graphics/chromaticAberration"), chromaticAberrationButton.getStatus()));
-		lensFlaresButton.setOnButtonPress(() -> REGISTRY.register(new Key("/Light Engine/Settings/Graphics/lensFlares"),
-				lensFlaresButton.getStatus()));
+		shadowsButton.setOnButtonPress(() -> renderingSettings.shadowsEnabled = shadowsButton.getStatus());
+		dofButton.setOnButtonPress(() -> renderingSettings.depthOfFieldEnabled = dofButton.getStatus());
+		godraysButton.setOnButtonPress(() -> renderingSettings.volumetricLightEnabled = godraysButton.getStatus());
+		fxaaButton.setOnButtonPress(() -> renderingSettings.fxaaEnabled = fxaaButton.getStatus());
+		parallaxButton.setOnButtonPress(() -> renderingSettings.parallaxEnabled = parallaxButton.getStatus());
+		motionBlurButton.setOnButtonPress(() -> renderingSettings.motionBlurEnabled = motionBlurButton.getStatus());
+		reflectionsButton.setOnButtonPress(() -> renderingSettings.ssrEnabled = reflectionsButton.getStatus());
+		ambientOccButton
+				.setOnButtonPress(() -> renderingSettings.ambientOcclusionEnabled = ambientOccButton.getStatus());
+		chromaticAberrationButton.setOnButtonPress(
+				() -> renderingSettings.chromaticAberrationEnabled = chromaticAberrationButton.getStatus());
+		lensFlaresButton.setOnButtonPress(() -> renderingSettings.lensFlaresEnabled = lensFlaresButton.getStatus());
 		shadowResDropdown.setOnButtonPress(() -> {
-			REGISTRY.register(new Key("/Light Engine/Settings/Graphics/shadowsResolution"),
-					shadowResDropdown.getValue().intValue());
+			renderingSettings.shadowsResolution = shadowResDropdown.getValue().intValue();
 			EventSubsystem.triggerEvent("lightengine.renderer.resetshadowmap");
 		});
 		shadowDistance.setOnUnselect(() -> {
-			REGISTRY.register(new Key("/Light Engine/Settings/Graphics/shadowsDrawDistance"),
-					Integer.parseInt(shadowDistance.getText()));
+			renderingSettings.shadowsDrawDistance = Integer.parseInt(shadowDistance.getText());
 			EventSubsystem.triggerEvent("lightengine.renderer.resetshadowmatrix");
 		});
-		chunkDistance.setOnUnselect( () -> {
+		chunkDistance.setOnUnselect(() -> {
 			REGISTRY.register(new Key("/Voxel/Settings/World/chunkRadius"), Integer.parseInt(chunkDistance.getText()));
 			EventSubsystem.triggerEvent("voxel.world.chunkRadius");
 		});

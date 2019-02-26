@@ -36,12 +36,13 @@ public final class Blocks {
 	private static int index = 0;
 	private static String prefix = null;
 
-	private Blocks() { }
+	private Blocks() {
+	}
 
 	public static void startRegister(String prefix) {
 		String lowercase = prefix.toLowerCase();
 
-		if(!registeredPrefixes.contains(lowercase, true)) {
+		if (!registeredPrefixes.contains(lowercase, true)) {
 			Logger.log("Registering new prefix '" + lowercase + "'");
 			registeredPrefixes.add(lowercase);
 		}
@@ -50,15 +51,19 @@ public final class Blocks {
 	}
 
 	public static void register(IBlock block) {
-		if(prefix == null || block.getName() == null)
+		if (prefix == null || block.getName() == null)
 			throw new IllegalStateException("Cannot register blocks with null prefix or block name!");
 
 		String prefixedBlockName = (prefix + ":" + block.getName()).toLowerCase();
-		
-		if(block instanceof BlockBase) ((BlockBase)block).setID(index);
-		else if(block instanceof AbstractBlockEntityBase) ((AbstractBlockEntityBase)block).setID(index);
-		else throw new IllegalStateException("Supplied block " + block.getName() + " has an unsupported base class IBlock implementation " + block.getClass().getSuperclass());
-		
+
+		if (block instanceof BlockBase)
+			((BlockBase) block).setID(index);
+		else if (block instanceof AbstractBlockEntityBase)
+			((AbstractBlockEntityBase) block).setID(index);
+		else
+			throw new IllegalStateException("Supplied block " + block.getName()
+					+ " has an unsupported base class IBlock implementation " + block.getClass().getSuperclass());
+
 		index++;
 
 		Logger.log("Registering block '" + prefixedBlockName + "' with ID " + block.getID());
@@ -73,7 +78,7 @@ public final class Blocks {
 	}
 
 	public static IBlock getBlockByID(int id) {
-		if(blocks.containsKey(id)) 
+		if (blocks.containsKey(id))
 			return blocks.get(id);
 		else {
 			Logger.warn("ID " + id + " did not return any blocks from registry!");
@@ -84,8 +89,8 @@ public final class Blocks {
 	public static IBlock getBlockByName(String name) {
 		String lowercase = name.toLowerCase();
 
-		if(isNamePrefixed(lowercase)) {
-			if(blockNameToID.containsKey(lowercase))
+		if (isNamePrefixed(lowercase)) {
+			if (blockNameToID.containsKey(lowercase))
 				return blocks.get(blockNameToID.get(lowercase, 0));
 			else {
 				Logger.warn("Prefixed name '" + name + "' did not return any blocks from registry!");
@@ -94,37 +99,39 @@ public final class Blocks {
 		}
 
 		String prefixed;
-
-		for(String prefix : registeredPrefixes) {
-			prefixed = prefix + ":" + lowercase;
-			if(blockNameToID.containsKey(prefixed))
-				return blocks.get(blockNameToID.get(prefixed, 0));
+		synchronized (registeredPrefixes) {
+			for (String prefix : registeredPrefixes) {
+				prefixed = prefix + ":" + lowercase;
+				if (blockNameToID.containsKey(prefixed))
+					return blocks.get(blockNameToID.get(prefixed, 0));
+			}
 		}
 
 		Logger.warn("Name '" + name + "' did not return any blocks from registry!");
 		return null;
 	}
-	
+
 	public static Set<IBlock> getAllBlocksByName(String name) {
 		Set<IBlock> list = new HashSet<IBlock>();
 		String lowercase = name.toLowerCase();
-		
-		if(isNamePrefixed(lowercase)) {
-			if(blockNameToID.containsKey(lowercase))
+
+		if (isNamePrefixed(lowercase)) {
+			if (blockNameToID.containsKey(lowercase))
 				list.add(blocks.get(blockNameToID.get(lowercase, 0)));
 			else {
 				Logger.warn("Prefixed name '" + name + "' did not return any blocks from registry!");
 			}
 		} else {
 			String prefixed;
-			
-			for(String prefix : registeredPrefixes) {
-				prefixed = prefix + ":" + lowercase;
-				if(blockNameToID.containsKey(prefixed))
-					list.add(blocks.get(blockNameToID.get(prefixed, 0)));
+			synchronized (registeredPrefixes) {
+				for (String prefix : registeredPrefixes) {
+					prefixed = prefix + ":" + lowercase;
+					if (blockNameToID.containsKey(prefixed))
+						list.add(blocks.get(blockNameToID.get(prefixed, 0)));
+				}
 			}
 		}
-		
+
 		Logger.log("Found " + list.size() + " blocks with name '" + name + "' in Registry");
 		return list;
 	}

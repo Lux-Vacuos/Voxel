@@ -25,7 +25,8 @@ import static net.luxvacuos.lightengine.universal.util.registry.KeyCache.getKey;
 
 import net.luxvacuos.lightengine.client.core.subsystems.GraphicalSubsystem;
 import net.luxvacuos.lightengine.universal.core.TaskManager;
-import net.luxvacuos.lightengine.universal.core.subsystems.UniversalSubsystem;
+import net.luxvacuos.lightengine.universal.core.subsystems.Subsystem;
+import net.luxvacuos.lightengine.universal.loader.EngineData;
 import net.luxvacuos.lightengine.universal.util.registry.Key;
 import net.luxvacuos.voxel.client.rendering.shaders.TessellatorBasicShader;
 import net.luxvacuos.voxel.client.rendering.shaders.TessellatorShader;
@@ -38,11 +39,10 @@ import net.luxvacuos.voxel.universal.material.BlockMaterial;
 import net.luxvacuos.voxel.universal.material.MaterialModder;
 import net.luxvacuos.voxel.universal.world.block.Blocks;
 
-public class WorldSubsystem extends UniversalSubsystem {
+public class WorldSubsystem extends Subsystem {
 
 	@Override
-	public void init() {
-
+	public void init(EngineData ed) {
 		REGISTRY.register(new Key("/Voxel/Settings/World/directory"),
 				REGISTRY.getRegistryItem(getKey("/Light Engine/System/userDir")) + "/world/");
 		if (!REGISTRY.hasRegistryItem(new Key("/Voxel/Settings/World/chunkManagerThreads")))

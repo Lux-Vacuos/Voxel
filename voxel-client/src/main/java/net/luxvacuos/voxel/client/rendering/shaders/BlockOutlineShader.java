@@ -23,10 +23,10 @@ package net.luxvacuos.voxel.client.rendering.shaders;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
-import net.luxvacuos.lightengine.client.rendering.shaders.ShaderProgram;
-import net.luxvacuos.lightengine.client.rendering.shaders.data.Attribute;
-import net.luxvacuos.lightengine.client.rendering.shaders.data.UniformMatrix;
-import net.luxvacuos.lightengine.client.rendering.shaders.data.UniformVec3;
+import net.luxvacuos.lightengine.client.rendering.opengl.shaders.ShaderProgram;
+import net.luxvacuos.lightengine.client.rendering.opengl.shaders.data.Attribute;
+import net.luxvacuos.lightengine.client.rendering.opengl.shaders.data.UniformMatrix;
+import net.luxvacuos.lightengine.client.rendering.opengl.shaders.data.UniformVec3;
 import net.luxvacuos.voxel.client.core.ClientVariables;
 
 public class BlockOutlineShader extends ShaderProgram {
@@ -39,7 +39,8 @@ public class BlockOutlineShader extends ShaderProgram {
 	public BlockOutlineShader() {
 		super(ClientVariables.VERTEX_FILE_BLOCK_OUTLINE, ClientVariables.FRAGMENT_FILE_BLOCK_OUTLINE,
 				new Attribute(0, "position"));
-		super.storeAllUniformLocations(color, viewMatrix, projectionMatrix, transformationMatrix);
+		super.storeUniforms(color, viewMatrix, projectionMatrix, transformationMatrix);
+		super.validate();
 	}
 
 	public void loadColor(Vector3f color) {

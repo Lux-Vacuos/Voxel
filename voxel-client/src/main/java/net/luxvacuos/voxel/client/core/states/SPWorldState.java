@@ -24,11 +24,20 @@ import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
 
 import net.luxvacuos.lightengine.client.core.subsystems.GraphicalSubsystem;
+import net.luxvacuos.lightengine.client.ecs.entities.CameraEntity;
+import net.luxvacuos.lightengine.client.ecs.entities.Sun;
+import net.luxvacuos.lightengine.client.ecs.entities.SunCamera;
 import net.luxvacuos.lightengine.client.input.KeyboardHandler;
 import net.luxvacuos.lightengine.client.input.MouseHandler;
-import net.luxvacuos.lightengine.client.network.IRenderData;
+import net.luxvacuos.lightengine.client.network.IRenderingData;
 import net.luxvacuos.lightengine.client.rendering.glfw.Window;
 import net.luxvacuos.lightengine.client.rendering.opengl.ParticleDomain;
+import net.luxvacuos.lightengine.client.rendering.opengl.ShadowFBO;
+import net.luxvacuos.lightengine.client.rendering.opengl.objects.CubeMapTexture;
+import net.luxvacuos.lightengine.client.rendering.opengl.objects.Texture;
+import net.luxvacuos.lightengine.client.rendering.opengl.IRenderPass.IForwardPass;
+import net.luxvacuos.lightengine.client.rendering.opengl.IRenderPass.IGBufferPass;
+import net.luxvacuos.lightengine.client.rendering.opengl.IRenderPass.IShadowPass;
 import net.luxvacuos.lightengine.universal.core.TaskManager;
 import net.luxvacuos.lightengine.universal.core.states.AbstractState;
 import net.luxvacuos.lightengine.universal.core.states.StateMachine;
@@ -41,7 +50,7 @@ import net.luxvacuos.voxel.client.world.RenderWorld;
 import net.luxvacuos.voxel.universal.ecs.entities.ChunkLoaderEntity;
 import net.luxvacuos.voxel.universal.world.IWorld;
 
-public class SPWorldState extends AbstractState {
+public class SPWorldState extends AbstractState implements IGBufferPass, IShadowPass, IForwardPass {
 
 	private BlockOutlineRenderer blockOutlineRenderer;
 	private ChunkLoaderEntity spawnChunks;
@@ -58,18 +67,10 @@ public class SPWorldState extends AbstractState {
 	public void start() {
 		super.start();
 		GraphicalSubsystem.getRenderer().init();
+		GraphicalSubsystem.getRenderer().setGBufferPass(this);
+		GraphicalSubsystem.getRenderer().setShadowPass(this);
+		GraphicalSubsystem.getRenderer().setForwardPass(this);
 		MouseHandler.setGrabbed(GraphicalSubsystem.getMainWindow().getID(), true);
-		GraphicalSubsystem.getRenderer().setDeferredPass((camera, sunCamera, frustum, shadowMap) -> {
-			((RenderWorld) world).render(camera, frustum);
-		});
-		GraphicalSubsystem.getRenderer().setShadowPass((camera, sunCamera, frustum, shadowMap) -> {
-			((RenderWorld) world).renderShadow(sunCamera, frustum);
-		});
-		GraphicalSubsystem.getRenderer().setForwardPass((camera, sunCamera, frustum, shadowMap) -> {
-			Vector3f pos = this.camera.getBlockOutlinePos();
-			blockOutlineRenderer.render(camera,
-					world.getActiveDimension().getBlockAt((int) pos.x(), (int) pos.y(), (int) pos.z()));
-		});
 		camera = new PlayerCamera(ClientVariables.user.getUsername(), ClientVariables.user.getUUID().toString());
 		camera.setPosition(0, 256, 0);
 		world = new RenderWorld(ClientVariables.worldNameToLoad);
@@ -102,8 +103,26 @@ public class SPWorldState extends AbstractState {
 	}
 
 	@Override
+	public void forwardPass(CameraEntity camera, Sun sun, ShadowFBO shadow, CubeMapTexture irradiance,
+			CubeMapTexture environmentMap, Texture brdfLUT) {
+		//Vector3f pos = this.camera.getBlockOutlinePos();
+		//blockOutlineRenderer.render(camera,w
+				//world.getActiveDimension().getBlockAt((int) pos.x(), (int) pos.y(), (int) pos.z()));
+	}
+
+	@Override
+	public void shadowPass(SunCamera camera) {
+		((RenderWorld) world).renderShadow(camera, null);
+	}
+
+	@Override
+	public void gBufferPass(CameraEntity camera) {
+		((RenderWorld) world).render(camera, null);
+	}
+
+	@Override
 	public void render(float alpha) {
-		GraphicalSubsystem.getRenderer().render((IRenderData) world.getActiveDimension(), alpha);
+		GraphicalSubsystem.getRenderer().render((IRenderingData) world.getActiveDimension(), alpha);
 	}
 
 	@Override
@@ -112,7 +131,7 @@ public class SPWorldState extends AbstractState {
 
 		KeyboardHandler kbh = window.getKeyboardHandler();
 		if (!ClientVariables.paused) {
-			ParticleDomain.update(delta, ((IRenderData) world.getActiveDimension()).getCamera());
+			ParticleDomain.update(delta, ((IRenderingData) world.getActiveDimension()).getCamera());
 			world.update(delta);
 			if (kbh.isKeyPressed(GLFW.GLFW_KEY_ESCAPE)) {
 				kbh.ignoreKeyUntilRelease(GLFW.GLFW_KEY_ESCAPE);
