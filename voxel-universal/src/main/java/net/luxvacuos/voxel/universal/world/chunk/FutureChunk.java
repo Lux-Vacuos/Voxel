@@ -35,6 +35,7 @@ import net.luxvacuos.lightengine.universal.util.Pair;
 import net.luxvacuos.voxel.universal.world.block.Blocks;
 import net.luxvacuos.voxel.universal.world.block.IBlock;
 import net.luxvacuos.voxel.universal.world.dimension.IDimension;
+import net.luxvacuos.voxel.universal.world.utils.BlockNode;
 import net.luxvacuos.voxel.universal.world.utils.ChunkNode;
 
 public class FutureChunk implements IChunk {
@@ -72,19 +73,15 @@ public class FutureChunk implements IChunk {
 	@Override
 	public IBlock getBlockAt(int x, int y, int z) {
 		if (this.isDone()) {
-			IBlock block = this.data.getBlockAt(x, y, z);
-			if (this.data.hasComplexMetadataAt(x, y, z)) {
-				block.setComplexMetadata(this.data.getComplexMetadataAt(x, y, z));
-			}
-			return block;
+			return this.data.get(x, y, z);
 		} else // TODO: Maybe implement a FutureBlock class of some sort?
-			return Blocks.getBlockByName("voxel:air");
+			return Blocks.getBlockByName("voxel:air").newInstance(new BlockNode(x, y, z));
 	}
 
 	@Override
 	public void setBlockAt(int x, int y, int z, IBlock block) {
 		if (this.isDone()) {
-			this.data.setBlockAt(x, y, z, block);
+			this.data.set(x, y, z, block);
 		} else {
 			Vector3f blockPos = new Vector3f(x, y, z);
 			this.deferredBlocks.add(new Pair<Vector3f, IBlock>(blockPos, block));
@@ -94,7 +91,7 @@ public class FutureChunk implements IChunk {
 	@Override
 	public boolean hasCollisionData(int x, int y, int z) {
 		if (this.isDone()) {
-			return this.data.hasCollisionData(x, y, z);
+			return false;
 		} else
 			return false;
 	}
@@ -102,7 +99,7 @@ public class FutureChunk implements IChunk {
 	@Override
 	public void markForRebuild() {
 		if (this.isDone()) {
-			this.data.markFullRebuild();
+			this.data.markForRebuild();
 		}
 	}
 
@@ -143,11 +140,7 @@ public class FutureChunk implements IChunk {
 						blockPos = pair.getFirst();
 						block = pair.getSecond();
 
-						if (block.hasComplexMetadata()) {
-							// TODO: Implement this
-						}
-
-						this.data.setBlockAt((int) blockPos.x, (int) blockPos.y, (int) blockPos.z, block);
+						this.data.set((int) blockPos.x, (int) blockPos.y, (int) blockPos.z, block);
 					}
 				}
 			} catch (Exception e) {
@@ -159,14 +152,10 @@ public class FutureChunk implements IChunk {
 
 	@Override
 	public void beforeUpdate(float delta) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void afterUpdate(float delta) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
@@ -177,6 +166,12 @@ public class FutureChunk implements IChunk {
 	@Override
 	public int getX() {
 		return this.node.getX();
+	}
+	
+
+	@Override
+	public int getY() {
+		return node.getY();
 	}
 
 	@Override
@@ -199,8 +194,6 @@ public class FutureChunk implements IChunk {
 
 	@Override
 	public void dispose() {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
@@ -208,9 +201,5 @@ public class FutureChunk implements IChunk {
 		return new BoundingBox(node.asVector3().add(this.aabb.min), node.asVector3().add(this.aabb.max));
 	}
 
-	@Override
-	public IChunkHandle getHandle() {
-		return new ChunkHandle(this);
-	}
 
 }

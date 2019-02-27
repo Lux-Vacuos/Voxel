@@ -24,23 +24,28 @@ import com.badlogic.gdx.math.Vector3;
 
 public final class ChunkNode {
 
-	private final int x, z;
-	
-	public ChunkNode(int x, int z) {
+	private final int x, y, z;
+
+	public ChunkNode(int x, int y, int z) {
 		this.x = x;
+		this.y = y;
 		this.z = z;
 	}
-	
+
 	public int getX() {
 		return this.x;
 	}
-	
+
+	public int getY() {
+		return y;
+	}
+
 	public int getZ() {
 		return this.z;
 	}
-	
+
 	public Vector3 asVector3() {
-		return new Vector3(this.x * 16, 0, this.z * 16);
+		return new Vector3(this.x * 16, this.y * 16, this.z * 16);
 	}
 
 	@Override
@@ -48,6 +53,7 @@ public final class ChunkNode {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + x;
+		result = prime * result + y;
 		result = prime * result + z;
 		return result;
 	}
@@ -67,18 +73,20 @@ public final class ChunkNode {
 			return false;
 		return true;
 	}
-	
+
 	public static ChunkNode getFromBlockCoords(int x, int y, int z) {
 		int cx = x >> 4;
+		int cy = y >> 4;
 		int cz = z >> 4;
-		
-		return new ChunkNode(cx, cz);
+
+		return new ChunkNode(cx, cy, cz);
 	}
-	
+
 	public static ChunkNode getFromBlockNode(BlockNode block) {
 		int cx = block.getX() >> 4;
+		int cy = block.getY() >> 4;
 		int cz = block.getZ() >> 4;
-		
-		return new ChunkNode(cx, cz);
+
+		return new ChunkNode(cx, cy, cz);
 	}
 }

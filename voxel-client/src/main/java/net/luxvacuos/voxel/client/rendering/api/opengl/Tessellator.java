@@ -20,33 +20,35 @@
 
 package net.luxvacuos.voxel.client.rendering.api.opengl;
 
-import static org.lwjgl.opengl.GL11.GL_FLOAT;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
-import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
-import static org.lwjgl.opengl.GL11.GL_UNSIGNED_INT;
-import static org.lwjgl.opengl.GL11.glBindTexture;
-import static org.lwjgl.opengl.GL11.glDrawElements;
-import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
-import static org.lwjgl.opengl.GL13.GL_TEXTURE1;
-import static org.lwjgl.opengl.GL13.GL_TEXTURE2;
-import static org.lwjgl.opengl.GL13.GL_TEXTURE3;
-import static org.lwjgl.opengl.GL13.glActiveTexture;
-import static org.lwjgl.opengl.GL15.GL_ARRAY_BUFFER;
-import static org.lwjgl.opengl.GL15.GL_DYNAMIC_DRAW;
-import static org.lwjgl.opengl.GL15.GL_ELEMENT_ARRAY_BUFFER;
-import static org.lwjgl.opengl.GL15.glBindBuffer;
-import static org.lwjgl.opengl.GL15.glBufferData;
-import static org.lwjgl.opengl.GL15.glBufferSubData;
-import static org.lwjgl.opengl.GL15.glDeleteBuffers;
-import static org.lwjgl.opengl.GL15.glDeleteQueries;
-import static org.lwjgl.opengl.GL15.glGenBuffers;
-import static org.lwjgl.opengl.GL15.glGenQueries;
-import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
-import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
-import static org.lwjgl.opengl.GL20.glVertexAttribPointer;
-import static org.lwjgl.opengl.GL30.glBindVertexArray;
-import static org.lwjgl.opengl.GL30.glDeleteVertexArrays;
-import static org.lwjgl.opengl.GL30.glGenVertexArrays;
+import static org.lwjgl.opengl.GL11C.GL_FLOAT;
+import static org.lwjgl.opengl.GL11C.GL_TEXTURE_2D;
+import static org.lwjgl.opengl.GL11C.GL_TRIANGLES;
+import static org.lwjgl.opengl.GL11C.GL_UNSIGNED_INT;
+import static org.lwjgl.opengl.GL11C.glBindTexture;
+import static org.lwjgl.opengl.GL11C.glDrawElements;
+import static org.lwjgl.opengl.GL13C.GL_TEXTURE0;
+import static org.lwjgl.opengl.GL13C.GL_TEXTURE1;
+import static org.lwjgl.opengl.GL13C.GL_TEXTURE2;
+import static org.lwjgl.opengl.GL13C.GL_TEXTURE3;
+import static org.lwjgl.opengl.GL13C.glActiveTexture;
+import static org.lwjgl.opengl.GL15C.GL_ARRAY_BUFFER;
+import static org.lwjgl.opengl.GL15C.GL_DYNAMIC_DRAW;
+import static org.lwjgl.opengl.GL15C.GL_ELEMENT_ARRAY_BUFFER;
+import static org.lwjgl.opengl.GL15C.glBindBuffer;
+import static org.lwjgl.opengl.GL15C.glBufferData;
+import static org.lwjgl.opengl.GL15C.glBufferSubData;
+import static org.lwjgl.opengl.GL15C.glDeleteBuffers;
+import static org.lwjgl.opengl.GL15C.glDeleteQueries;
+import static org.lwjgl.opengl.GL15C.glGenBuffers;
+import static org.lwjgl.opengl.GL15C.glGenQueries;
+import static org.lwjgl.opengl.GL20C.glDisableVertexAttribArray;
+import static org.lwjgl.opengl.GL20C.glEnableVertexAttribArray;
+import static org.lwjgl.opengl.GL20C.glVertexAttribPointer;
+import static org.lwjgl.opengl.GL30C.glBindVertexArray;
+import static org.lwjgl.opengl.GL30C.glDeleteVertexArrays;
+import static org.lwjgl.opengl.GL30C.glGenVertexArrays;
+import static org.lwjgl.system.MemoryUtil.memFree;
+import static org.lwjgl.system.MemoryUtil.memRealloc;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
@@ -54,7 +56,6 @@ import java.util.List;
 
 import org.joml.Vector2f;
 import org.joml.Vector3f;
-import org.lwjgl.BufferUtils;
 
 import net.luxvacuos.lightengine.client.ecs.entities.CameraEntity;
 import net.luxvacuos.lightengine.client.rendering.opengl.objects.Material;
@@ -137,7 +138,6 @@ public class Tessellator {
 	}
 
 	public void end() {
-		clearBuffers();
 		loadData(pos, texcoords);
 		pos.clear();
 		texcoords.clear();
@@ -152,7 +152,6 @@ public class Tessellator {
 			updateGlBuffers(vboID1, vboCapacity, buffer1);
 			updateGLIBOBuffer();
 			updated = false;
-			clearBuffers();
 		}
 		shader.start();
 		shader.loadViewMatrix(camera.getViewMatrix(), camera.getPosition());
@@ -163,13 +162,13 @@ public class Tessellator {
 		glEnableVertexAttribArray(0);
 		glEnableVertexAttribArray(1);
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, material.getDiffuseTexture().getID());
+		glBindTexture(GL_TEXTURE_2D, material.getDiffuseTexture().getTexture());
 		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_2D, material.getNormalTexture().getID());
+		glBindTexture(GL_TEXTURE_2D, material.getNormalTexture().getTexture());
 		glActiveTexture(GL_TEXTURE2);
-		glBindTexture(GL_TEXTURE_2D, material.getRoughnessTexture().getID());
+		glBindTexture(GL_TEXTURE_2D, material.getRoughnessTexture().getTexture());
 		glActiveTexture(GL_TEXTURE3);
-		glBindTexture(GL_TEXTURE_2D, material.getMetallicTexture().getID());
+		glBindTexture(GL_TEXTURE_2D, material.getMetallicTexture().getTexture());
 		glDrawElements(GL_TRIANGLES, indicesCounter, GL_UNSIGNED_INT, 0);
 		glDisableVertexAttribArray(0);
 		glDisableVertexAttribArray(1);
@@ -185,7 +184,6 @@ public class Tessellator {
 			updateGlBuffers(vboID1, vboCapacity, buffer1);
 			updateGLIBOBuffer();
 			updated = false;
-			clearBuffers();
 		}
 		basicShader.start();
 		basicShader.loadViewMatrix(sunCamera.getViewMatrix(), sunCamera.getPosition());
@@ -194,7 +192,7 @@ public class Tessellator {
 		glEnableVertexAttribArray(0);
 		glEnableVertexAttribArray(1);
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, material.getDiffuseTexture().getID());
+		glBindTexture(GL_TEXTURE_2D, material.getDiffuseTexture().getTexture());
 		glDrawElements(GL_TRIANGLES, indicesCounter, GL_UNSIGNED_INT, 0);
 		glDisableVertexAttribArray(0);
 		glDisableVertexAttribArray(1);
@@ -210,7 +208,6 @@ public class Tessellator {
 			updateGlBuffers(vboID1, vboCapacity, buffer1);
 			updateGLIBOBuffer();
 			updated = false;
-			clearBuffers();
 		}
 		basicShader.start();
 		basicShader.loadViewMatrix(camera.getViewMatrix(), camera.getPosition());
@@ -219,7 +216,7 @@ public class Tessellator {
 		glEnableVertexAttribArray(0);
 		glEnableVertexAttribArray(1);
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, material.getDiffuseTexture().getID());
+		glBindTexture(GL_TEXTURE_2D, material.getDiffuseTexture().getTexture());
 		glDrawElements(GL_TRIANGLES, indicesCounter, GL_UNSIGNED_INT, 0);
 		glDisableVertexAttribArray(0);
 		glDisableVertexAttribArray(1);
@@ -228,16 +225,16 @@ public class Tessellator {
 	}
 
 	public void loadData(List<Vector3f> pos, List<Vector2f> texcoords) {
-		buffer0 = BufferUtils.createByteBuffer((pos.size() * 3) * 4);
-		buffer1 = BufferUtils.createByteBuffer((texcoords.size() * 2) * 4);
+		buffer0 = memRealloc(buffer0, pos.size() * 3 * 4);
+		buffer1 = memRealloc(buffer1, texcoords.size() * 2 * 4);
 		for (int i = 0; i < pos.size(); i++) {
-			buffer0.putFloat((float) pos.get(i).x);
-			buffer0.putFloat((float) pos.get(i).y);
-			buffer0.putFloat((float) pos.get(i).z);
+			buffer0.putFloat(pos.get(i).x);
+			buffer0.putFloat(pos.get(i).y);
+			buffer0.putFloat(pos.get(i).z);
 		}
 		for (int i = 0; i < texcoords.size(); i++) {
-			buffer1.putFloat((float) texcoords.get(i).x);
-			buffer1.putFloat((float) texcoords.get(i).y);
+			buffer1.putFloat(texcoords.get(i).x);
+			buffer1.putFloat(texcoords.get(i).y);
 		}
 		buffer0.flip();
 		buffer1.flip();
@@ -246,7 +243,7 @@ public class Tessellator {
 
 	public void updateIBO(int count) {
 		indicesCounter = count;
-		ibo = BufferUtils.createByteBuffer(count * 4);
+		ibo = memRealloc(ibo, count * 4);
 		for (int i = 0, bytes = 0; bytes < count; i += 4, bytes += 6) {
 			ibo.putInt(i);
 			ibo.putInt(i + 1);
@@ -258,11 +255,11 @@ public class Tessellator {
 		ibo.flip();
 	}
 
-	public void updateGlBuffers(int vbo, int vboCapacity, ByteBuffer data) {
-		vboCapacity = data.capacity();
+	public void updateGlBuffers(int vbo, int vboCapacity, ByteBuffer buf) {
+		vboCapacity = buf.capacity();
 		glBindBuffer(GL_ARRAY_BUFFER, vbo);
 		glBufferData(GL_ARRAY_BUFFER, vboCapacity, GL_DYNAMIC_DRAW);
-		glBufferSubData(GL_ARRAY_BUFFER, 0, data);
+		glBufferSubData(GL_ARRAY_BUFFER, 0, buf);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
 
@@ -382,15 +379,6 @@ public class Tessellator {
 		}
 	}
 
-	private void clearBuffers() {
-		if (this.buffer0 != null)
-			this.buffer0.clear();
-		if (this.buffer1 != null)
-			this.buffer1.clear();
-		if (this.ibo != null)
-			this.ibo.clear();
-	}
-
 	public void cleanUp() {
 		glDeleteVertexArrays(vaoID);
 		glDeleteBuffers(vboID0);
@@ -400,7 +388,9 @@ public class Tessellator {
 		pos.clear();
 		texcoords.clear();
 		indices.clear();
-		clearBuffers();
+		memFree(buffer0);
+		memFree(buffer1);
+		memFree(ibo);
 	}
 
 	public int getOcclusion() {

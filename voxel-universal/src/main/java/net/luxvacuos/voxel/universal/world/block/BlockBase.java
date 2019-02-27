@@ -20,160 +20,94 @@
 
 package net.luxvacuos.voxel.universal.world.block;
 
-import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.math.collision.BoundingBox;
-import com.hackhalo2.nbt.CompoundBuilder;
-import com.hackhalo2.nbt.tags.TagCompound;
-
-import net.luxvacuos.voxel.universal.material.BlockMaterial;
-import net.luxvacuos.voxel.universal.tools.ToolTier;
 import net.luxvacuos.voxel.universal.world.chunk.IChunk;
 import net.luxvacuos.voxel.universal.world.dimension.IDimension;
 import net.luxvacuos.voxel.universal.world.utils.BlockNode;
 
 public class BlockBase implements IBlock {
-	private int x = 0, y = 0, z = 0;
-	protected final BlockMaterial material;
-	private BoundingBox aabb = new BoundingBox(new Vector3(0, 0, 0), new Vector3(1, 1, 1));
-	private int id;
-	private int metadata = 0;
-	protected TagCompound complexMetadata = null;
-	private IChunk chunk = null;
 
-	public BlockBase(BlockMaterial material) {
-		this.material = material;
-	}
+	private String name;
+	private BlockNode node;
+	private int metadata;
+	private IChunk chunk;
 
-	public BlockBase(BlockMaterial material, BoundingBox aabb) {
-		this.material = material;
-		this.aabb = aabb;
-	}
-
-	@Override
-	public int getID() {
-		return this.id;
-	}
-
-	public BlockBase setID(int id) {
-		this.id = id;
-		return this;
+	public BlockBase(BlockNode node, String name) {
+		this.node = node;
+		this.name = name;
 	}
 
 	@Override
 	public String getName() {
-		return this.material.getName();
-	}
-
-	@Override
-	public BoundingBox getBoundingBox(BlockNode node) {
-		return new BoundingBox(node.asVector3().add(this.aabb.min), node.asVector3().add(this.aabb.max));
-	}
-
-	@Override
-	public boolean isAffectedByGravity() {
-		return this.material.affectedByGravity();
-	}
-
-	@Override
-	public boolean hasCollision() {
-		return this.material.blocksMovement();
-	}
-
-	@Override
-	public boolean isFluid() {
-		return this.material.isLiquid();
-	}
-
-	@Override
-	public boolean hasComplexMetadata() {
-		return (this.complexMetadata != null);
-	}
-	
-	@Override
-	public ToolTier getToolTier() {
-		return this.material.getTierNeeded();
-	}
-	
-	@Override
-	public TagCompound getComplexMetaData() {
-		if(this.complexMetadata == null)
-			this.complexMetadata = new CompoundBuilder().start().build();
-		
-		return this.complexMetadata;
-	}
-
-	@Override
-	public int getPackedMetadata() {
-		return this.metadata;
-	}
-
-	@Override
-	public void setPackedMetadata(int packedMetadata) {
-		this.metadata = packedMetadata;
-
-	}
-
-	@Override
-	public void setComplexMetadata(TagCompound metadata) {
-		this.complexMetadata = metadata;
-	}
-	
-	@Override
-	public void onBlockUpdate(BlockNode node, IBlock replaced) {
-		//Event Handler for block updates
-	}
-
-	@Override
-	public void setChunk(IChunk chunk) {
-		if(this.chunk == null)
-			this.chunk = chunk;
-	}
-
-	@Override
-	public IChunk getChunk() {
-		return this.chunk;
-	}
-
-	@Override
-	public IDimension getDimension() {
-		if(this.chunk != null)
-			return this.chunk.getDimension();
-		
-		return null;
-	}
-
-	@Override
-	public int getX() {
-		return this.x;
-	}
-
-	@Override
-	public int getY() {
-		return this.y;
-	}
-
-	@Override
-	public int getZ() {
-		return this.z;
+		return name;
 	}
 
 	@Override
 	public void setPosition(int x, int y, int z) {
-		this.x = x;
-		this.y = y;
-		this.z = z;
+		this.node.setX(x);
+		this.node.setY(y);
+		this.node.setZ(z);
+	}
+
+	@Override
+	public int getBlockX() {
+		return node.getX();
+	}
+
+	@Override
+	public int getBlockY() {
+		return node.getY();
+	}
+
+	@Override
+	public int getBlockZ() {
+		return node.getZ();
 	}
 
 	@Override
 	public void setPosition(BlockNode node) {
-		this.x = node.getX();
-		this.y = node.getY();
-		this.z = node.getZ();
+		this.node = node;
 	}
 
 	@Override
-	public IBlockHandle getHandle() {
-		return new BlockHandle(this);
+	public BlockNode getPosition() {
+		return node;
+	}
+
+	@Override
+	public void setMetadata(int metadata) {
+		this.metadata = metadata;
+	}
+
+	@Override
+	public int getMetadata() {
+		return metadata;
+	}
+
+	@Override
+	public void setChunk(IChunk chunk) {
+		this.chunk = chunk;
+	}
+
+	@Override
+	public IChunk getChunk() {
+		return chunk;
+	}
+
+	@Override
+	public IDimension getDimension() {
+		if (this.chunk != null)
+			return this.chunk.getDimension();
+		return null;
+	}
+
+	@Override
+	public boolean hasBlockEntity() {
+		return false;
+	}
+
+	@Override
+	public IBlockEntity createBlockEntity() {
+		return null;
 	}
 
 }

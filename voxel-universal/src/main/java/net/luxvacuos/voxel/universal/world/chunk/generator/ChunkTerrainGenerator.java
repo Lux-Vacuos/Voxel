@@ -21,32 +21,34 @@
 package net.luxvacuos.voxel.universal.world.chunk.generator;
 
 import net.luxvacuos.voxel.universal.world.block.Blocks;
+import net.luxvacuos.voxel.universal.world.block.IBlock;
+import net.luxvacuos.voxel.universal.world.utils.BlockNode;
 
 public class ChunkTerrainGenerator extends AbstractChunkGenerator {
 
 	@Override
-	protected int generateBlock(int x, int y, int z, double noise, double noise3D) {
-		//noise3D *= 8;
-		//if (noise3D > 0.8)
+	protected IBlock generateBlock(int x, int y, int z, double noise, double noise3D) {
+		// noise3D *= 8;
+		// if (noise3D > 0.8)
 //			return Blocks.getBlockByName("voxel:air").getID();
 
 		noise += 1;
 		noise *= 128;
 		noise = (int) noise;
 		if (y == noise - 1 && y > 128)
-			return Blocks.getBlockByName("voxel:grass").getID();
+			return Blocks.getBlockByName("voxel:grass").newInstance(new BlockNode(x, y, z));
 		else if (y == noise - 2 && y > 128)
-			return Blocks.getBlockByName("voxel:dirt").getID();
+			return Blocks.getBlockByName("voxel:dirt").newInstance(new BlockNode(x, y, z));
 		else if (y == noise - 1 && y < 129)
-			return Blocks.getBlockByName("voxel:sand").getID();
+			return Blocks.getBlockByName("voxel:sand").newInstance(new BlockNode(x, y, z));
 		else if (y < noise - 2 && y > 128)
-			return Blocks.getBlockByName("voxel:stone").getID();
+			return Blocks.getBlockByName("voxel:stone").newInstance(new BlockNode(x, y, z));
 		else if (y < noise - 1 && y < 129)
-			return Blocks.getBlockByName("voxel:stone").getID();
+			return Blocks.getBlockByName("voxel:stone").newInstance(new BlockNode(x, y, z));
 		else if (y > noise - 1 && y < 129)
-			return Blocks.getBlockByName("voxel:water").getID();
+			return Blocks.getBlockByName("voxel:water").newInstance(new BlockNode(x, y, z));
 		else
-			return Blocks.getBlockByName("voxel:air").getID();
+			return Blocks.getBlockByName("voxel:air").newInstance(new BlockNode(x, y, z));
 	}
 
 }

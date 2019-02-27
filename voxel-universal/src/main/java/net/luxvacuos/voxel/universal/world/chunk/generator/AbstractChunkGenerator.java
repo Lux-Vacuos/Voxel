@@ -22,8 +22,9 @@ package net.luxvacuos.voxel.universal.world.chunk.generator;
 
 import java.util.Random;
 
+import net.luxvacuos.voxel.universal.world.block.IBlock;
+import net.luxvacuos.voxel.universal.world.chunk.ChunkData;
 import net.luxvacuos.voxel.universal.world.chunk.IChunk;
-import net.luxvacuos.voxel.universal.world.utils.BlockLongDataArray;
 
 public abstract class AbstractChunkGenerator implements IChunkGenerator {
 	protected Random rng = null;
@@ -55,20 +56,20 @@ public abstract class AbstractChunkGenerator implements IChunkGenerator {
 	}
 
 	@Override
-	public void generateChunk(IChunk chunk, int worldX, int worldZ) {
-		BlockLongDataArray[] bda = chunk.getChunkData().getBlockDataArrays();
-		int adjWorldX, adjWorldZ;
+	public void generateChunk(IChunk chunk, int worldX, int worldY, int worldZ) {
+		ChunkData data = chunk.getChunkData();
+		int adjWorldX, adjWorldY, adjWorldZ;
 		double noise = 0, noise3D = 0;
 
-		for (int y = 0; y < 256; y++) { // TODO: Make this dynamic based on world settings
+		for (int y = 0; y < 16; y++) {
+			adjWorldY = worldY + y;
 			for (int x = 0; x < 16; x++) {
 				adjWorldX = worldX + x;
 				for (int z = 0; z < 16; z++) {
 					adjWorldZ = worldZ + z;
 					noise = this.noise.eval(adjWorldX, adjWorldZ);
-					//noise3D = this.noise.eval(adjWorldX, y, adjWorldZ);
-
-					bda[y >> 4].set(x, (y & 0x0F), z, this.generateBlock(x, y, z, noise, noise3D));
+					// noise3D = this.noise.eval(adjWorldX, y, adjWorldZ);
+					data.set(x, y, z, this.generateBlock(adjWorldX, adjWorldY, adjWorldZ, noise, noise3D));
 				}
 			}
 		}
@@ -76,5 +77,5 @@ public abstract class AbstractChunkGenerator implements IChunkGenerator {
 		chunk.markForRebuild();
 	}
 
-	protected abstract int generateBlock(int chunkX, int chunkY, int chunkZ, double noise, double noise3D);
+	protected abstract IBlock generateBlock(int chunkX, int chunkY, int chunkZ, double noise, double noise3D);
 }

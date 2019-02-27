@@ -38,7 +38,7 @@ public class NetworkDimension extends RenderDimension {
 	
 	@Override
 	public boolean setBlockAt(int x, int y, int z, IBlock block) {
-		channel.writeAndFlush(new SetBlock(x, y, z, block.getID()));
+		channel.writeAndFlush(new SetBlock(x, y, z, block.getName()));
 		return true;
 	}
 	

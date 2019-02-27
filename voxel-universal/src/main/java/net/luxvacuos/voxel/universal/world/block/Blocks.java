@@ -20,124 +20,59 @@
 
 package net.luxvacuos.voxel.universal.world.block;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
-
-import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.IntMap;
-import com.esotericsoftware.kryonet.util.ObjectIntMap;
 
 import net.luxvacuos.igl.Logger;
 
-public final class Blocks {
-	private static final IntMap<IBlock> blocks = new IntMap<IBlock>(64);
-	private static final ObjectIntMap<String> blockNameToID = new ObjectIntMap<String>(64);
-	private static final Array<String> registeredPrefixes = new Array<String>();
-	private static int index = 0;
-	private static String prefix = null;
+public class Blocks {
+
+	private static final Map<String, IBlockInfo<?>> blocks = new HashMap<>();
+	private static final Map<String, List<IBlockInfo<?>>> prefixedBlocks = new HashMap<>();
 
 	private Blocks() {
 	}
 
-	public static void startRegister(String prefix) {
-		String lowercase = prefix.toLowerCase();
+	public static void register(IBlockInfo<?> block) {
+		blocks.put(block.getName(), block);
 
-		if (!registeredPrefixes.contains(lowercase, true)) {
-			Logger.log("Registering new prefix '" + lowercase + "'");
-			registeredPrefixes.add(lowercase);
-		}
-
-		Blocks.prefix = lowercase;
-	}
-
-	public static void register(IBlock block) {
-		if (prefix == null || block.getName() == null)
-			throw new IllegalStateException("Cannot register blocks with null prefix or block name!");
-
-		String prefixedBlockName = (prefix + ":" + block.getName()).toLowerCase();
-
-		if (block instanceof BlockBase)
-			((BlockBase) block).setID(index);
-		else if (block instanceof AbstractBlockEntityBase)
-			((AbstractBlockEntityBase) block).setID(index);
-		else
-			throw new IllegalStateException("Supplied block " + block.getName()
-					+ " has an unsupported base class IBlock implementation " + block.getClass().getSuperclass());
-
-		index++;
-
-		Logger.log("Registering block '" + prefixedBlockName + "' with ID " + block.getID());
-
-		blockNameToID.put(prefixedBlockName, block.getID());
-		blocks.put(block.getID(), block);
-	}
-
-	public static void finishRegister() {
-		prefix = null;
-		index += 100;
-	}
-
-	public static IBlock getBlockByID(int id) {
-		if (blocks.containsKey(id))
-			return blocks.get(id);
+		List<IBlockInfo<?>> prefixBlocks = prefixedBlocks.get(block.getName().split(":")[0]);
+		if (prefixBlocks != null)
+			prefixBlocks.add(block);
 		else {
-			Logger.warn("ID " + id + " did not return any blocks from registry!");
-			return null;
+			List<IBlockInfo<?>> newPrefixBlocks = new ArrayList<>();
+			newPrefixBlocks.add(block);
+			prefixedBlocks.put(block.getName().split(":")[0], newPrefixBlocks);
 		}
+		Logger.log("Registered block:" + block.getName().split(":")[0] + ":" + block.getName());
 	}
 
-	public static IBlock getBlockByName(String name) {
-		String lowercase = name.toLowerCase();
-
-		if (isNamePrefixed(lowercase)) {
-			if (blockNameToID.containsKey(lowercase))
-				return blocks.get(blockNameToID.get(lowercase, 0));
-			else {
-				Logger.warn("Prefixed name '" + name + "' did not return any blocks from registry!");
-				return null;
-			}
-		}
-
-		String prefixed;
-		synchronized (registeredPrefixes) {
-			for (String prefix : registeredPrefixes) {
-				prefixed = prefix + ":" + lowercase;
-				if (blockNameToID.containsKey(prefixed))
-					return blocks.get(blockNameToID.get(prefixed, 0));
-			}
-		}
-
-		Logger.warn("Name '" + name + "' did not return any blocks from registry!");
+	public static IBlockInfo<?> getBlockByName(String name) {
+		if (blocks.containsKey(name))
+			return blocks.get(name);
+		else
+			Logger.warn(name + " was not found");
 		return null;
 	}
 
-	public static Set<IBlock> getAllBlocksByName(String name) {
-		Set<IBlock> list = new HashSet<IBlock>();
-		String lowercase = name.toLowerCase();
-
-		if (isNamePrefixed(lowercase)) {
-			if (blockNameToID.containsKey(lowercase))
-				list.add(blocks.get(blockNameToID.get(lowercase, 0)));
-			else {
-				Logger.warn("Prefixed name '" + name + "' did not return any blocks from registry!");
-			}
-		} else {
-			String prefixed;
-			synchronized (registeredPrefixes) {
-				for (String prefix : registeredPrefixes) {
-					prefixed = prefix + ":" + lowercase;
-					if (blockNameToID.containsKey(prefixed))
-						list.add(blocks.get(blockNameToID.get(prefixed, 0)));
-				}
-			}
-		}
-
-		Logger.log("Found " + list.size() + " blocks with name '" + name + "' in Registry");
-		return list;
+	public static IBlockInfo<?> getBlockByBlock(IBlock block) {
+		return blocks.get(block.getName());
 	}
 
-	private static boolean isNamePrefixed(String name) {
-		return name.contains(":");
+	public static Set<IBlockInfo<?>> getBlocksByPrefix(String prefix) {
+		Set<IBlockInfo<?>> list = new HashSet<>();
+		List<IBlockInfo<?>> prefixList = prefixedBlocks.get(prefix);
+		if (prefix == null) {
+			Logger.warn("There are no blocks with prefix: " + prefix);
+			return list;
+		}
+		list.addAll(prefixList);
+		Logger.log("Found " + list.size() + " blocks with prefix: " + prefix);
+		return list;
 	}
 
 }

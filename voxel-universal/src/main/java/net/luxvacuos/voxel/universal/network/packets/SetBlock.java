@@ -26,9 +26,9 @@ public class SetBlock implements Serializable {
 
 	private static final long serialVersionUID = 5816401172772848175L;
 	private int x, y, z;
-	private int block;
+	private String block;
 
-	public SetBlock(int x, int y, int z, int block) {
+	public SetBlock(int x, int y, int z, String block) {
 		this.x = x;
 		this.y = y;
 		this.z = z;
@@ -47,7 +47,7 @@ public class SetBlock implements Serializable {
 		return z;
 	}
 
-	public int getBlock() {
+	public String getBlock() {
 		return block;
 	}
 

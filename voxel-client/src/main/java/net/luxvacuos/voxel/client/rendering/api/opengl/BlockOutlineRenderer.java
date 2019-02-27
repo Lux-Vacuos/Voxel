@@ -188,7 +188,7 @@ public class BlockOutlineRenderer implements IDisposable {
 		shader.loadColor(color);
 		shader.loadProjectionMatrix(camera.getProjectionMatrix());
 		shader.loadViewMatrix(camera.getViewMatrix());
-		position.set(block.getX() + 0.5f, block.getY() + 0.5f, block.getZ() + 0.5f);
+		position.set(block.getBlockX() + 0.5f, block.getBlockY() + 0.5f, block.getBlockZ() + 0.5f);
 		shader.loadTransformationMatrix(Maths.createTransformationMatrix(position, 0, 0, 0, 1.01f));
 		glBindVertexArray(vaoID);
 		glEnableVertexAttribArray(0);

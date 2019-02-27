@@ -21,41 +21,48 @@
 package net.luxvacuos.voxel.universal.world.chunk;
 
 import com.hackhalo2.nbt.exceptions.NBTException;
+import com.hackhalo2.nbt.exceptions.NBTTagNotFoundException;
+import com.hackhalo2.nbt.exceptions.UnexpectedTagTypeException;
 import com.hackhalo2.nbt.tags.TagCompound;
 
-import net.luxvacuos.voxel.universal.world.chunk.ChunkData;
-import net.luxvacuos.voxel.universal.world.utils.BlockLongDataArray;
+import net.luxvacuos.voxel.universal.world.block.BlockBase;
+import net.luxvacuos.voxel.universal.world.block.IBlock;
+import net.luxvacuos.voxel.universal.world.utils.BlockNode;
 
-public final class ChunkDataBuilder {
+public class ChunkDataBuilder {
+
 	private ChunkData data = new ChunkData();
 
-	public ChunkDataBuilder() { }
+	public ChunkDataBuilder() {
+	}
 
-	public ChunkDataBuilder setSlice(int index, TagCompound data) throws NBTException {
-		if(index >= 0 && index < this.data.slices.length) {
-			ChunkSlice slice = new ChunkSlice(data.getByte("Offset"));
-			if(data.getByte("Empty") == 0) {
-				slice.setBlockDataArray(new BlockLongDataArray(data.getLongArray("BlockData")));
-			}
-			
-			this.data.slices[index] = slice;
+	public ChunkDataBuilder setEmpty(boolean val) {
+		data.setEmpty(val);
+		return this;
+	}
+
+	public ChunkDataBuilder setBlockEntityData(TagCompound data) {
+		this.data.setBlockEntityData(data);
+		return this;
+	}
+
+	public ChunkDataBuilder setBlocks(TagCompound blocks)
+			throws UnexpectedTagTypeException, NBTTagNotFoundException, NBTException {
+		for (int i = 0; i < 4096; ++i) {
+			TagCompound blockT = blocks.getCompound(Integer.toString(i));
+			int z = i / (16 * 16);
+			i -= (z * 16 * 16);
+			int y = i / 16;
+			int x = i % 16;
+			IBlock block = new BlockBase(new BlockNode(x, y, z), blockT.getString("Name"));
+			block.setMetadata(blockT.getInt("Metadata"));
+			data.set(i, block);
 		}
-		
-		return this;
-	}
-	
-	public ChunkDataBuilder newSlice(int index) {
-		this.data.slices[index] = new ChunkSlice((byte)index);
-		return this;
-	}
-
-	public ChunkDataBuilder setBlockMetadata(TagCompound data) {
-		this.data.setComplexBlockMetadata(data);
 		return this;
 	}
 
 	public ChunkData build() {
-		this.data.markFullRebuild();
-		return this.data;
+		return data;
 	}
+
 }

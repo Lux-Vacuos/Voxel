@@ -99,8 +99,8 @@ public class RenderDimension extends Dimension implements IRenderDimension, IRen
 				continue;
 
 			aabb = chunk.getBoundingBox(chunk.getNode());
-			if (Math.abs(chunk.getNode().getX() - entityCX) < loader.getChunkRadius()
-					&& Math.abs(chunk.getNode().getZ() - entityCZ) < loader.getChunkRadius()) {
+			//if (Math.abs(chunk.getNode().getX() - entityCX) < loader.getChunkRadius()
+					//&& Math.abs(chunk.getNode().getZ() - entityCZ) < loader.getChunkRadius()) {
 				// if (frustum.cubeInFrustum((float) aabb.min.x, (float) aabb.min.y, (float)
 				// aabb.min.z,
 				// (float) aabb.max.x, (float) aabb.max.y, (float) aabb.max.z)) {
@@ -110,7 +110,7 @@ public class RenderDimension extends Dimension implements IRenderDimension, IRen
 
 				this.renderedChunks++;
 				rChunk.render(camera, super.worldSimulation);
-			}
+			//}
 
 		}
 	}

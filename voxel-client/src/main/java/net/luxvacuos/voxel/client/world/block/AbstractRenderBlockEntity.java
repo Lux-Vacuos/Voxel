@@ -24,7 +24,7 @@ import com.badlogic.gdx.math.collision.BoundingBox;
 
 import net.luxvacuos.voxel.client.rendering.utils.BlockFaceAtlas;
 import net.luxvacuos.voxel.client.rendering.world.block.ICustomRenderBlock;
-import net.luxvacuos.voxel.client.rendering.world.block.IObjRenderBlock;
+import net.luxvacuos.voxel.client.rendering.world.block.IExternalModel;
 import net.luxvacuos.voxel.client.rendering.world.block.IRenderBlock;
 import net.luxvacuos.voxel.universal.material.BlockMaterial;
 import net.luxvacuos.voxel.universal.world.block.AbstractBlockEntityBase;
@@ -55,13 +55,18 @@ public abstract class AbstractRenderBlockEntity extends AbstractBlockEntityBase 
 	}
 
 	@Override
+	public boolean isVisible() {
+		return this.material.isVisible();
+	}
+
+	@Override
 	public boolean hasCustomModel() {
 		return (this instanceof ICustomRenderBlock);
 	}
 
 	@Override
-	public boolean hasObjModel() {
-		return (this instanceof IObjRenderBlock);
+	public boolean hasExternalModel() {
+		return (this instanceof IExternalModel);
 	}
 
 }

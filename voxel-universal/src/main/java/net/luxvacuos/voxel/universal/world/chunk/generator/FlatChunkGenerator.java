@@ -20,13 +20,19 @@
 
 package net.luxvacuos.voxel.universal.world.chunk.generator;
 
+import net.luxvacuos.voxel.universal.world.block.Blocks;
+import net.luxvacuos.voxel.universal.world.block.IBlock;
+import net.luxvacuos.voxel.universal.world.utils.BlockNode;
+
 public class FlatChunkGenerator extends AbstractChunkGenerator {
 
-	public FlatChunkGenerator() { }
+	public FlatChunkGenerator() {
+	}
 
 	@Override
-	protected int generateBlock(int chunkX, int chunkY, int chunkZ, double noise, double noise3D) {
-		return (int)noise;
+	protected IBlock generateBlock(int x, int y, int z, double noise, double noise3D) {
+		return noise == 1 ? Blocks.getBlockByName("voxel:stone").newInstance(new BlockNode(x, y, z))
+				: Blocks.getBlockByName("voxel:air").newInstance(new BlockNode(x, y, z));
 	}
 
 }

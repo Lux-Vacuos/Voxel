@@ -23,8 +23,9 @@ package net.luxvacuos.voxel.client.tasks;
 import java.util.concurrent.Callable;
 
 import net.luxvacuos.voxel.client.rendering.world.block.ICustomRenderBlock;
+import net.luxvacuos.voxel.client.rendering.world.block.IRenderBlock;
 import net.luxvacuos.voxel.client.rendering.world.chunk.IRenderChunk;
-import net.luxvacuos.voxel.client.world.block.RenderBlock;
+import net.luxvacuos.voxel.universal.world.block.IBlock;
 import net.luxvacuos.voxel.universal.world.utils.BlockFace;
 
 public class MeshGenerateTask implements Callable<IRenderChunk> {
@@ -39,25 +40,25 @@ public class MeshGenerateTask implements Callable<IRenderChunk> {
 		this.chunk.getTessellator().begin();
 		for (int x = 0; x < 16; x++) {
 			for (int z = 0; z < 16; z++) {
-				for (int y = 0; y < 256; y++) {
-					RenderBlock block = (RenderBlock) this.chunk.getChunkData().getBlockAt(x, y, z);
+				for (int y = 0; y < 16; y++) {
+					IRenderBlock block = (IRenderBlock) this.chunk.getChunkData().get(x, y, z);
 					if (block.isVisible()) {
 						if (!block.hasCustomModel()) {
-							this.chunk.getTessellator().generateCube(this.chunk.getX() * 16 + x, y,
-									this.chunk.getZ() * 16 + z, 1, cullFace(block, BlockFace.UP, x, y, z),
-									cullFace(block, BlockFace.DOWN, x, y, z), cullFace(block, BlockFace.EAST, x, y, z),
-									cullFace(block, BlockFace.WEST, x, y, z), cullFace(block, BlockFace.NORTH, x, y, z),
+							this.chunk.getTessellator().generateCube(this.chunk.getX() * 16 + x,
+									this.chunk.getY() * 16 + y, this.chunk.getZ() * 16 + z, 1,
+									cullFace(block, BlockFace.UP, x, y, z), cullFace(block, BlockFace.DOWN, x, y, z),
+									cullFace(block, BlockFace.EAST, x, y, z), cullFace(block, BlockFace.WEST, x, y, z),
+									cullFace(block, BlockFace.NORTH, x, y, z),
 									cullFace(block, BlockFace.SOUTH, x, y, z), block);
 						} else {
 							((ICustomRenderBlock) block).generateCustomModel(this.chunk.getTessellator(),
-									this.chunk.getX() * 16 + x, y, this.chunk.getZ() * 16 + z, 1,
-									cullFace(block, BlockFace.UP, x, y, z), cullFace(block, BlockFace.DOWN, x, y, z),
+									this.chunk.getX() * 16 + x, this.chunk.getY() * 16 + y, this.chunk.getZ() * 16 + z,
+									1, cullFace(block, BlockFace.UP, x, y, z), cullFace(block, BlockFace.DOWN, x, y, z),
 									cullFace(block, BlockFace.EAST, x, y, z), cullFace(block, BlockFace.WEST, x, y, z),
 									cullFace(block, BlockFace.NORTH, x, y, z),
 									cullFace(block, BlockFace.SOUTH, x, y, z));
 						}
 					}
-
 				}
 			}
 		}
@@ -67,24 +68,25 @@ public class MeshGenerateTask implements Callable<IRenderChunk> {
 		return this.chunk;
 	}
 
-	private boolean cullFace(RenderBlock block, BlockFace face, int x, int y, int z) {
-		RenderBlock b;
+	private boolean cullFace(IRenderBlock block, BlockFace face, int x, int y, int z) {
+		IRenderBlock rb;
+		IBlock b;
 		if (this.isBlockOutside(face, x, y, z)) {
-			b = ((RenderBlock) this.chunk.getChunkData().getBlockAt(x + face.getModX(), y + face.getModY(),
+			rb = (IRenderBlock) (b = this.chunk.getChunkData().getBlockAt(x + face.getModX(), y + face.getModY(),
 					z + face.getModZ()));
-			if (b.getID() == block.getID())
+			if (b.getID() == ((IBlock) block).getID())
 				return false;
-			if (b.isTransparent() || b.hasCustomModel() || b.isFluid())
+			if (rb.isTransparent() || rb.hasCustomModel() || b.isFluid())
 				return true;
 		}
 		int cx = this.chunk.getX() * 16 + x;
 		int cz = this.chunk.getZ() * 16 + z;
-		b = ((RenderBlock) this.chunk.getDimension().getBlockAt(cx + face.getModX(), y + face.getModY(),
+		rb = (IRenderBlock) (b = this.chunk.getDimension().getBlockAt(cx + face.getModX(), y + face.getModY(),
 				cz + face.getModZ()));
 
-		if (b == null || b.getID() == block.getID())
+		if (b == null || b.getID() == ((IBlock) block).getID())
 			return false;
-		if (b.isTransparent() || b.hasCustomModel() || b.isFluid())
+		if (rb.isTransparent() || rb.hasCustomModel() || b.isFluid())
 			return true;
 		return false;
 	}

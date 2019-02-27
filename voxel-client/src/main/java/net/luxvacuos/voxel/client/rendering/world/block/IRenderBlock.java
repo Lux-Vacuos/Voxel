@@ -33,6 +33,6 @@ public interface IRenderBlock {
 	
 	public boolean hasCustomModel();
 	
-	public boolean hasObjModel();
+	public boolean hasExternalModel();
 
 }

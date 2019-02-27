@@ -33,6 +33,7 @@ import net.luxvacuos.voxel.universal.world.dimension.IDimension;
 import net.luxvacuos.voxel.universal.world.utils.ChunkNode;
 
 public class Chunk implements IChunk {
+
 	protected final ChunkNode node;
 	protected final IDimension dim;
 	protected volatile ChunkData data;
@@ -47,6 +48,30 @@ public class Chunk implements IChunk {
 	}
 
 	@Override
+	public void beforeUpdate(float delta) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void update(float delta) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void afterUpdate(float delta) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void dispose() {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
 	public ChunkNode getNode() {
 		return this.node;
 	}
@@ -58,7 +83,7 @@ public class Chunk implements IChunk {
 
 	void setChunkData(ChunkData data) {
 		this.data = data;
-		this.data.markFullRebuild();
+		this.markForRebuild();
 	}
 
 	@Override
@@ -67,50 +92,44 @@ public class Chunk implements IChunk {
 	}
 
 	@Override
+	public int getY() {
+		return this.node.getY();
+	}
+
+	@Override
 	public int getZ() {
 		return this.node.getZ();
 	}
 
 	@Override
-	public IBlock getBlockAt(int x, int y, int z) {
-		this.lock.readLock().lock();
-		try {
-			IBlock block = this.data.getBlockAt(x, y, z);
-			block.setChunk(this);
-			if (this.data.hasComplexMetadataAt(x, y, z)) {
-				block.setComplexMetadata(this.data.getComplexMetadataAt(x, y, z));
-			}
-			return block;
-		} catch (Exception e) {
-			return null;
-		} finally {
-			this.lock.readLock().unlock();
-		}
+	public void setBlockAt(int x, int y, int z, IBlock block) {
+		block.setChunk(this);
+		this.data.set(x, y, z, block);
 	}
 
 	@Override
-	public void setBlockAt(int x, int y, int z, IBlock block) {
-		// TODO: Update neighboring blocks if block == air
-		if (block.hasComplexMetadata()) {
-			// TODO: Implement this
-		}
+	public IBlock getBlockAt(int x, int y, int z) {
+		return data.get(x, y, z);
+	}
 
-		this.data.setBlockAt(x, y, z, block);
+	@Override
+	public IDimension getDimension() {
+		return null;
 	}
 
 	@Override
 	public boolean hasCollisionData(int x, int y, int z) {
-		return this.data.hasCollisionData(x, y, z);
+		return false;
 	}
 
 	@Override
 	public void markForRebuild() {
-		this.data.markFullRebuild();
+		data.markForRebuild();
 	}
 
 	@Override
 	public boolean needsRebuild() {
-		return this.data.needsRebuild();
+		return data.needsRebuild();
 	}
 
 	@Override
@@ -123,52 +142,15 @@ public class Chunk implements IChunk {
 	public void removeChunkLoader(Entity entity) {
 		chunkLoaders.removeValue(entity, true);
 	}
-	
+
 	@Override
 	public int chunkLoaders() {
 		return chunkLoaders.size;
 	}
 
 	@Override
-	public void update(float delta) {
-		if (this.data.needsRebuild())
-			this.data.rebuild();
-		// TODO: update BlockEntities
-	}
-	
-
-	@Override
-	public void beforeUpdate(float delta) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void afterUpdate(float delta) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void dispose() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public IDimension getDimension() {
-		return this.dim;
-	}
-
-	@Override
 	public BoundingBox getBoundingBox(ChunkNode node) {
 		return new BoundingBox(node.asVector3().add(this.aabb.min), node.asVector3().add(this.aabb.max));
 	}
-
-	@Override
-	public IChunkHandle getHandle() {
-		return new ChunkHandle(this);
-	}
-
 
 }

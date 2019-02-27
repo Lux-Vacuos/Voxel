@@ -18,12 +18,27 @@
  * 
  */
 
-package net.luxvacuos.voxel.client.rendering.world.block;
+package net.luxvacuos.voxel.universal.world.block.type;
 
-import net.luxvacuos.voxel.client.resources.models.RendereableTexturedModel;
+import com.badlogic.gdx.math.collision.BoundingBox;
 
-public interface IObjRenderBlock {
-	
-	public RendereableTexturedModel getModel();
+import net.luxvacuos.voxel.universal.material.BlockMaterial;
+import net.luxvacuos.voxel.universal.world.block.BlockBase;
+import net.luxvacuos.voxel.universal.world.block.BlockInfo;
+import net.luxvacuos.voxel.universal.world.utils.BlockNode;
+
+public class DefaultBlockInfo extends BlockInfo<BlockBase> {
+	public DefaultBlockInfo(BlockMaterial material, String name) {
+		super(material, name);
+	}
+
+	public DefaultBlockInfo(BlockMaterial material, String name, BoundingBox aabb) {
+		super(material, name, aabb);
+	}
+
+	@Override
+	public BlockBase newInstance(BlockNode node) {
+		return new BlockBase(node, name);
+	}
 
 }

@@ -77,7 +77,7 @@ public class ChunkManager implements IDisposable {
 	}
 
 	public final void loadChunk(ChunkNode node) {
-		if (!this.loadedChunks.containsKey(node)) {
+		if (!this.loadedChunks.containsKey(node) && !this.chunkLoadList.contains(node)) {
 			synchronized (this.loadLock) {
 				this.chunkLoadList.add(node);
 				this.loadedChunks.put(node,
@@ -89,7 +89,7 @@ public class ChunkManager implements IDisposable {
 	public final void batchLoadChunks(ChunkNode... nodes) {
 		synchronized (this.loadLock) {
 			for (ChunkNode node : nodes) {
-				if (!this.loadedChunks.containsKey(node)) {
+				if (!this.loadedChunks.containsKey(node) && !this.chunkLoadList.contains(node)) {
 					this.chunkLoadList.add(node);
 					this.loadedChunks.put(node,
 							new FutureChunk(this.dim, node, this.executor.submit(new ChunkLoaderTask(this.dim, node))));
@@ -123,14 +123,13 @@ public class ChunkManager implements IDisposable {
 	}
 
 	public void saveChunks() {
+		List<IChunk> trueLoadedChunks = new ArrayList<>();
+		for (IChunk chunk : this.loadedChunks.values()) {
+			if (chunk instanceof FutureChunk)
+				continue;
+			trueLoadedChunks.add(chunk);
+		}
 		synchronized (this.saveLock) {
-			List<IChunk> trueLoadedChunks = new ArrayList<>();
-			for (IChunk chunk : this.loadedChunks.values()) {
-				if (chunk instanceof FutureChunk)
-					continue;
-				trueLoadedChunks.add(chunk);
-			}
-
 			this.saveTask = this.executor
 					.submit(new ChunkSaveTask(Collections.unmodifiableCollection(trueLoadedChunks)));
 		}
@@ -160,7 +159,7 @@ public class ChunkManager implements IDisposable {
 							if (((FutureChunk) chunk).isDone()) {
 								iterator.remove();
 
-								if (chunk.getChunkData().shouldGenerate()) {
+								if (chunk.getChunkData().isEmpty()) {
 									this.chunkGenerateList.add(
 											this.executor.submit(new ChunkGenerateTask(chunk, this.chunkGenerator)));
 									continue;

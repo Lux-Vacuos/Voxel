@@ -18,24 +18,12 @@
  * 
  */
 
-package net.luxvacuos.voxel.universal.world.chunk;
+package net.luxvacuos.voxel.client.rendering.world.block;
 
-import net.luxvacuos.lightengine.universal.resources.IDisposable;
-import net.luxvacuos.voxel.universal.world.block.IBlockHandle;
-import net.luxvacuos.voxel.universal.world.dimension.IDimensionHandle;
-import net.luxvacuos.voxel.universal.world.utils.ChunkNode;
-import net.luxvacuos.voxel.universal.world.utils.IHandle;
+import net.luxvacuos.lightengine.client.rendering.opengl.objects.Model;
 
-public interface IChunkHandle extends IHandle, IDisposable {
+public interface IExternalModel {
 	
-	public ChunkNode getNode();
-
-	public int getX();
-
-	public int getZ();
-
-	public IBlockHandle getBlockAt(int x, int y, int z);
-	
-	public IDimensionHandle getDimension();
+	public Model getModel();
 
 }

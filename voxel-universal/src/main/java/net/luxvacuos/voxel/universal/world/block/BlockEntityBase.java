@@ -20,37 +20,12 @@
 
 package net.luxvacuos.voxel.universal.world.block;
 
-import com.hackhalo2.nbt.tags.TagCompound;
+import net.luxvacuos.voxel.universal.world.utils.BlockNode;
 
-import net.luxvacuos.voxel.universal.tools.ToolTier;
-import net.luxvacuos.voxel.universal.world.chunk.IChunkHandle;
-import net.luxvacuos.voxel.universal.world.dimension.IDimensionHandle;
-import net.luxvacuos.voxel.universal.world.utils.IHandle;
+public abstract class BlockEntityBase extends BlockBase implements IBlockEntity {
 
-public interface IBlockHandle extends IHandle {
-	
-	public int getID();
-	
-	public String getName();
-	
-	public int getX();
-	
-	public int getY();
-	
-	public int getZ();
-	
-	public boolean isAffectedByGravity();
-	
-	public boolean isFluid();
-
-	public boolean hasComplexMetadata();
-	
-	public ToolTier getToolTier();
-	
-	public IChunkHandle getChunk();
-	
-	public IDimensionHandle getDimension();
-	
-	public TagCompound getComplexMetaData();
+	public BlockEntityBase(BlockNode node, String name) {
+		super(node, name);
+	}
 
 }

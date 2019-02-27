@@ -18,17 +18,30 @@
  * 
  */
 
-package net.luxvacuos.voxel.universal.world.dimension;
+package net.luxvacuos.voxel.universal.world.utils;
 
-import net.luxvacuos.lightengine.universal.resources.IDisposable;
-import net.luxvacuos.voxel.universal.world.block.IBlockHandle;
-import net.luxvacuos.voxel.universal.world.chunk.IChunkHandle;
-import net.luxvacuos.voxel.universal.world.utils.IHandle;
+public class BlockStringArray {
+	
+	private final String[] data;
 
-public interface IDimensionHandle extends IHandle, IDisposable {
+	public BlockStringArray() {
+		this.data = new String[4096];
+	}
 	
-	public IBlockHandle getBlockAt(int x, int y, int z);
+	public BlockStringArray(String[] data) {
+		this.data = data;
+	}
 	
-	public IChunkHandle getChunkAt(int x, int y, int z);
+	public String get(int x, int y, int z) {
+		return this.data[(16 * 16 * z) + (16 * y) + x];
+	}
+	
+	public void set(int x, int y, int z, String data) {
+		this.data[(16 * 16 * z) + (16 * y) + x] = data;
+	}
+	
+	public final String[] getData() {
+		return this.data;
+	}
 
 }

@@ -34,6 +34,7 @@ import net.luxvacuos.voxel.client.rendering.utils.BlockFaceAtlas;
 import net.luxvacuos.voxel.client.world.block.BlocksResources;
 import net.luxvacuos.voxel.client.world.block.RenderBlock;
 import net.luxvacuos.voxel.client.world.block.types.GlassPaneBlock;
+import net.luxvacuos.voxel.client.world.block.types.TestComplexDataBlock;
 import net.luxvacuos.voxel.client.world.block.types.WaterBlock;
 import net.luxvacuos.voxel.universal.material.BlockMaterial;
 import net.luxvacuos.voxel.universal.material.MaterialModder;
@@ -77,7 +78,7 @@ public class WorldSubsystem extends Subsystem {
 				waterMat = (BlockMaterial) matMod.modify(waterMat).canBeBroken(false).setBlocksMovement(false)
 						.affectedByGravity(true).liquid().setOpacity(0.2f).done();
 				Blocks.register(new WaterBlock(waterMat, new BlockFaceAtlas("water")));
-				Blocks.register(new RenderBlock(new BlockMaterial("ice"), new BlockFaceAtlas("ice")));
+				Blocks.register(new TestComplexDataBlock(new BlockMaterial("ice"), new BlockFaceAtlas("ice")));
 				Blocks.register(new RenderBlock(new BlockMaterial("pedestal"),
 						new BlockFaceAtlas("pedestaltop", "pedestalbottom", "pedestal")));
 			}

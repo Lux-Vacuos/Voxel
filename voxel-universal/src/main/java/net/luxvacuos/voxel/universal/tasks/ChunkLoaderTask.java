@@ -43,7 +43,7 @@ public class ChunkLoaderTask implements Callable<ChunkData> {
 	public ChunkLoaderTask(IDimension dim, ChunkNode node) {
 		path = CoreSubsystem.REGISTRY.getRegistryItem(new Key("/Voxel/Settings/World/directory")) + dim.getWorldName()
 				+ "/" + dim.getID();
-		String fullPath = path + "/" + "chunk_" + node.getX() + "_" + node.getZ() + ".dat";
+		String fullPath = path + "/" + node.getX() + "_" + node.getY() + "_" + node.getZ() + ".dat";
 		file = new File(fullPath);
 	}
 
@@ -55,18 +55,14 @@ public class ChunkLoaderTask implements Callable<ChunkData> {
 		if (file.exists() && file.length() != 0L) {
 			this.in = new NBTInputStream(new BufferedInputStream(new FileInputStream(file)));
 			root = new TagCompound(this.in, false);
-			builder.setBlockMetadata(root.getCompound("BlockMetadata"));
-			int slices = root.getInt("NumSlices");
+			// Load Complex Block Metadata
+			builder.setBlockEntityData(root.getCompound("BlockMetadata"));
+			builder.setEmpty(root.getByte("Empty") == 1);
 
-			for (byte i = 0; i < slices; i++)
-				builder.setSlice(i, root.getCompound("ChunkSlice-" + i));
+			// Load Blocks
+			builder.setBlocks(root.getCompound("Blocks"));
 
-		} else {
-			for (byte i = 0; i < 16; i++)
-				builder.newSlice(i);
-
-			builder.setBlockMetadata(new TagCompound("BlockMetadata"));
-			new File(path).mkdirs();
+			this.in.close();
 		}
 
 		return builder.build();

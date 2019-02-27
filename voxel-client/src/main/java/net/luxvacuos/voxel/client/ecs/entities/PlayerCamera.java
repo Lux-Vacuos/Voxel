@@ -30,6 +30,7 @@ import org.joml.Vector3f;
 
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
+import com.hackhalo2.nbt.exceptions.NBTException;
 
 import net.luxvacuos.lightengine.client.core.subsystems.GraphicalSubsystem;
 import net.luxvacuos.lightengine.client.input.MouseHandler;
@@ -138,6 +139,13 @@ public class PlayerCamera extends FreeCamera implements IDimensionEntity {
 		if (resetTime >= 1) {
 			if (mh.isButtonPressed(0)) {
 				IBlock tBlock = dimension.getBlockAt(bx, by, bz);
+				if(tBlock.hasComplexMetadata()) {
+					try {
+						System.out.println(tBlock.getComplexMetaData().getInt("TestInt"));
+					} catch (NBTException e) {
+						e.printStackTrace();
+					}
+				}
 				if (ToolTier.isSufficient(tool, tBlock.getToolTier())) {
 					breakTime += tool.getMultiplier() / tBlock.getToolTier().getMultiplier() * delta;
 					if (breakTime > 1) {

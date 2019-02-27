@@ -117,7 +117,7 @@ public class Dimension extends AbstractChannelHandler implements IDimension {
 
 	@Override
 	public void update(float delta) {
-		int entityCX = 0, entityCZ = 0, chunkRadius = 0;
+		int entityCX = 0, entityCY = 0, entityCZ = 0, chunkRadius = 0;
 		ImmutableArray<Entity> players = super.engine.getEntitiesFor(Family.all(ChunkLoader.class).get());
 		Array<ChunkNode> toRemove = new Array<>();
 		for (Entity entity : players) {
@@ -130,6 +130,11 @@ public class Dimension extends AbstractChannelHandler implements IDimension {
 				entityCX = (int) ((position.x) / 16);
 
 			if (position.z < 0)
+				entityCY = (int) ((position.y - 16) / 16);
+			else
+				entityCY = (int) ((position.y) / 16);
+
+			if (position.z < 0)
 				entityCZ = (int) ((position.z - 16) / 16);
 			else
 				entityCZ = (int) ((position.z) / 16);
@@ -137,22 +142,24 @@ public class Dimension extends AbstractChannelHandler implements IDimension {
 			chunkRadius = loader.getChunkRadius();
 
 			ChunkNode node;
-			int xx, zz;
+			int xx, yy, zz;
 			for (int zr = -chunkRadius; zr <= chunkRadius; zr++) {
 				zz = entityCZ + zr;
-				for (int xr = -chunkRadius; xr <= chunkRadius; xr++) {
-					xx = entityCX + xr;
-					node = new ChunkNode(xx, zz);
-					if (!chunkManager.isChunkLoaded(node))
-						chunkManager.loadChunk(node);
-					else
-						chunkManager.getChunkAt(node).registerChunkLoader(entity);
+				for (int yr = -chunkRadius; yr <= chunkRadius; yr++) {
+					yy = entityCY + yr;
+					for (int xr = -chunkRadius; xr <= chunkRadius; xr++) {
+						xx = entityCX + xr;
+						node = new ChunkNode(xx, yy, zz);
+						if (!chunkManager.isChunkLoaded(node))
+							chunkManager.loadChunk(node);
+						else
+							chunkManager.getChunkAt(node).registerChunkLoader(entity);
+					}
 				}
 			}
 			for (IChunk chunk : chunkManager.getLoadedChunks()) {
-				if (Math.abs(chunk.getNode().getX() - entityCX) > chunkRadius) {
-					chunk.removeChunkLoader(entity);
-				} else if (Math.abs(chunk.getNode().getZ() - entityCZ) > chunkRadius) {
+				if (Math.abs(chunk.getNode().getX() - entityCX) > chunkRadius
+						|| Math.abs(chunk.getNode().getZ() - entityCZ) > chunkRadius) {
 					chunk.removeChunkLoader(entity);
 				}
 			}
@@ -191,14 +198,14 @@ public class Dimension extends AbstractChannelHandler implements IDimension {
 
 	@Override
 	public IBlock getBlockAt(int x, int y, int z) {
-		IBlock block = Blocks.getBlockByName("voxel:air");
+		IBlock block = Blocks.getBlockByName("voxel:air").newInstance(new BlockNode(x, y, z));
 		block.setPosition(x, y, z);
 
-		IChunk c = this.chunkManager.getChunkAt(ChunkNode.getFromBlockCoords(x, 0, z));
+		IChunk c = this.chunkManager.getChunkAt(ChunkNode.getFromBlockCoords(x, y, z));
 		if (c == null)
 			return block;
 
-		IBlock b = c.getBlockAt(x & 0xF, y, z & 0xF);
+		IBlock b = c.getBlockAt(x & 0xF, y & 0xF, z & 0xF);
 		if (b == null)
 			return block;
 
@@ -208,7 +215,7 @@ public class Dimension extends AbstractChannelHandler implements IDimension {
 
 	@Override
 	public boolean setBlockAt(int x, int y, int z, IBlock block) {
-		IChunk c = this.chunkManager.getChunkAt(ChunkNode.getFromBlockCoords(x, 0, z));
+		IChunk c = this.chunkManager.getChunkAt(ChunkNode.getFromBlockCoords(x, y, z));
 		if (c == null)
 			return false;
 
@@ -232,12 +239,12 @@ public class Dimension extends AbstractChannelHandler implements IDimension {
 					// Trigger a block update for blocks that care
 					// XXX: Maybe move to an event system like
 					// Bukkit/Spout/Forge?
-					this.getBlockAt(mx, my, mz).onBlockUpdate(bNode, block);
+					// this.getBlockAt(mx, my, mz).onBlockUpdate(bNode, block);
 				}
 			}
 		}
 
-		c.setBlockAt(x & 0xF, y, z & 0xF, block);
+		c.setBlockAt(x & 0xF, y & 0xF, z & 0xF, block);
 		return true;
 	}
 
@@ -251,8 +258,8 @@ public class Dimension extends AbstractChannelHandler implements IDimension {
 			for (int j = (int) Math.floor(box.min.y); j < (int) Math.min(Math.ceil(box.max.y), 256); j++) {
 				for (int k = (int) Math.floor(box.min.z); k < (int) Math.ceil(box.max.z); k++) {
 					IBlock block = this.getBlockAt(i, j, k);
-					if (block.hasCollision())
-						array.add(block.getBoundingBox(new BlockNode(i, j, k)));
+					if (Blocks.getBlockByBlock(block).getMaterial().blocksMovement())
+						array.add(Blocks.getBlockByBlock(block).getBoundingBox(new BlockNode(i, j, k)));
 				}
 			}
 		}
@@ -295,11 +302,6 @@ public class Dimension extends AbstractChannelHandler implements IDimension {
 	@Override
 	public Collection<IChunk> getLoadedChunks() {
 		return chunkManager.getLoadedChunks();
-	}
-
-	@Override
-	public IDimensionHandle getHandle() {
-		return new DimensionHandle(this);
 	}
 
 	@Override

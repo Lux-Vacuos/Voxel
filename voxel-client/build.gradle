@@ -28,8 +28,6 @@ dependencies {
 	compile project(":voxel-universal")
 	compile project(":voxel-assets")
 	compile project(":lightengine-client")
-
-	testCompile group: "junit", name: "junit", version: "4.12"
 }
 
 jar {

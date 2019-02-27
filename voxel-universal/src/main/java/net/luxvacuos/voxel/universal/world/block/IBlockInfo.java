@@ -18,33 +18,21 @@
  * 
  */
 
-package net.luxvacuos.voxel.universal.world.dimension;
+package net.luxvacuos.voxel.universal.world.block;
 
-import net.luxvacuos.voxel.universal.world.block.IBlockHandle;
-import net.luxvacuos.voxel.universal.world.chunk.IChunkHandle;
+import com.badlogic.gdx.math.collision.BoundingBox;
 
-public final class DimensionHandle implements IDimensionHandle {
+import net.luxvacuos.voxel.universal.material.BlockMaterial;
+import net.luxvacuos.voxel.universal.world.utils.BlockNode;
+
+public interface IBlockInfo<T extends IBlock> {
 	
-	private IDimension parentDim;
-
-	DimensionHandle(IDimension dim) {
-		this.parentDim = dim;
-	}
-
-	@Override
-	public IBlockHandle getBlockAt(int x, int y, int z) {
-		return this.parentDim.getBlockAt(x, y, z).getHandle();
-	}
-
-	@Override
-	public IChunkHandle getChunkAt(int x, int y, int z) {
-		return this.parentDim.getChunkAt(x, y, z).getHandle();
-	}
-
-	@Override
-	public void dispose() {
-		// TODO Auto-generated method stub
-
-	}
+	public String getName();
+	
+	public BlockMaterial getMaterial();
+	
+	public BoundingBox getBoundingBox(BlockNode pos);
+	
+	public T newInstance(BlockNode node);
 
 }

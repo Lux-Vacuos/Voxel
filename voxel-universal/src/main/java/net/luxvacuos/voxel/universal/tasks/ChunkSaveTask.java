@@ -26,13 +26,12 @@ import java.io.FileOutputStream;
 import java.util.Collection;
 import java.util.concurrent.Callable;
 
-import com.badlogic.ashley.utils.ImmutableArray;
 import com.hackhalo2.nbt.CompoundBuilder;
 import com.hackhalo2.nbt.stream.NBTOutputStream;
 
 import net.luxvacuos.lightengine.universal.core.subsystems.CoreSubsystem;
 import net.luxvacuos.lightengine.universal.util.registry.Key;
-import net.luxvacuos.voxel.universal.world.chunk.ChunkSlice;
+import net.luxvacuos.voxel.universal.world.block.IBlock;
 import net.luxvacuos.voxel.universal.world.chunk.IChunk;
 
 public class ChunkSaveTask implements Callable<Void> {
@@ -48,42 +47,37 @@ public class ChunkSaveTask implements Callable<Void> {
 		CompoundBuilder rootCompound = new CompoundBuilder();
 		File file;
 		NBTOutputStream out;
-		for(IChunk chunk : this.chunks) {
-			path = CoreSubsystem.REGISTRY.getRegistryItem(new Key("/Voxel/Settings/World/directory")) + chunk.getDimension().getWorldName()
-					+ "/" + chunk.getDimension().getID() + "/"
-					+ "chunk_" + chunk.getX() + "_" + chunk.getZ() + ".dat";
+		for (IChunk chunk : this.chunks) {
+			path = CoreSubsystem.REGISTRY.getRegistryItem(new Key("/Voxel/Settings/World/directory"))
+					+ chunk.getDimension().getWorldName() + "/" + chunk.getDimension().getID() + "/" + "chunk_"
+					+ chunk.getX() + "_" + chunk.getY() + "_" + chunk.getZ() + ".dat";
 
 			file = new File(path);
 
 			out = new NBTOutputStream(new BufferedOutputStream(new FileOutputStream(file)));
 
-			//Write the chunk coords to the file
-			rootCompound.addInteger("ChunkX", chunk.getX()).addInteger("ChunkZ", chunk.getZ());
+			// Write the chunk coords to the file
+			rootCompound.addInteger("ChunkX", chunk.getX()).addInteger("ChunkY", chunk.getY()).addInteger("ChunkZ",
+					chunk.getZ());
 			
-			//Write the Complex Block Metadata
-			rootCompound.addCompound(chunk.getChunkData().getComplexBlockMetadata());
+			rootCompound.addBoolean("Empty", chunk.getChunkData().isEmpty());
 
-			ImmutableArray<ChunkSlice> slices = chunk.getChunkData().getChunkSlices();
+			// Write the Complex Block Metadata
+			rootCompound.addCompound(chunk.getChunkData().getBlockEntityData());
 
-			//Write the number of Chunk Slices in the Chunk
-			rootCompound.addInteger("NumSlices", slices.size());
-
-			CompoundBuilder sliceCompound = new CompoundBuilder();
-			int i = 0;
-			for(ChunkSlice slice : slices) {
-				sliceCompound.start("ChunkSlice-"+i);
-				sliceCompound.addByte("Offset", slice.getOffset());
-				sliceCompound.addBoolean("Empty", slice.isEmpty());
-
-				if(!slice.isEmpty())
-					sliceCompound.addLongArray("BlockData", slice.getBlockDataArray().getData());
-
-				rootCompound.addCompound(sliceCompound);
-				i++;
+			// Write blocks
+			CompoundBuilder blocksCompound = new CompoundBuilder().start();
+			for (IBlock b : chunk.getChunkData().getBlocks()) {
+				CompoundBuilder blockCompound = new CompoundBuilder().start();
+				blockCompound.addString("Name", b.getName());
+				blockCompound.addInteger("Metadata", b.getMetadata());
+				blocksCompound.addCompound(blockCompound);
 			}
 
+			rootCompound.addCompound(blocksCompound);
+
 			rootCompound.build().writeNBT(out, false);
-			out.flush();
+			out.close();
 		}
 
 		return null;
